@@ -638,7 +638,7 @@ class DashboardController extends Controller
         $chartsArray = $this->addChart( $chartsArray, $fundedTotalFeesByInvestigatorTopArr, "Total Fees per Investigator (Funded) (Top 10)",'pie',$layoutArray);
         //17. Total Fees per Investigator (non-Funded) (Top 10)
         $unFundedTotalFeesByInvestigatorTopArr = $this->getTopArray($unFundedTotalFeesByInvestigatorArr);
-        $chartsArray = $this->addChart( $chartsArray, $unFundedTotalFeesByInvestigatorTopArr, "Total Fees per Investigator (non-Funded) (Top 10)",'pie',$layoutArray);
+        $chartsArray = $this->addChart( $chartsArray, $unFundedTotalFeesByInvestigatorTopArr, "Total Fees per Investigator (Non-Funded) (Top 10)",'pie',$layoutArray);
         ////////////////////////////////////////
 
         //18. Generated Invoices by Status from Funded Projects (Total invoiced $152K)
@@ -649,7 +649,7 @@ class DashboardController extends Controller
         $layoutArray = array(
             'height' => 600,
             'width' =>  600,
-            'title' => "Generated Invoices by Status from Funded Projects (Total invoiced $".$totalFees.")"
+            'title' => "Generated Invoices for Funded Projects (Total invoiced $".$totalFees.")"
         );
 
         $labels = array('Paid','Unpaid (Due)');
@@ -678,10 +678,10 @@ class DashboardController extends Controller
         );
         //19. Generated Invoices by Status per Funded Project (Top 10)
         $fundedTotalFeesByProjectTopArr = $this->getTopArray($fundedTotalFeesByProjectArr);
-        $chartsArray = $this->addChart( $chartsArray, $fundedTotalFeesByProjectTopArr, "Generated Invoices by Status per Funded Project (Top 10)",'pie',$layoutArray);
+        $chartsArray = $this->addChart( $chartsArray, $fundedTotalFeesByProjectTopArr, "Generated Invoices for Funded Project per PI (Top 10)",'pie',$layoutArray);
         //20. Generated Invoices by Status per PI (Top 10)
         $unFundedTotalFeesByProjectTopArr = $this->getTopArray($unFundedTotalFeesByProjectArr);
-        $chartsArray = $this->addChart( $chartsArray, $unFundedTotalFeesByProjectTopArr, "Generated Invoices by Status per PI (Top 10)",'pie',$layoutArray);
+        $chartsArray = $this->addChart( $chartsArray, $unFundedTotalFeesByProjectTopArr, "Generated Invoices for Non-Funded Project per PI (Top 10)",'pie',$layoutArray);
         //////////////////////////////////////////////
 
         return array(
