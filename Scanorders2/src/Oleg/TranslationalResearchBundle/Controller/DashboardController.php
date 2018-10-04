@@ -562,10 +562,10 @@ class DashboardController extends Controller
                 $fundedTotalFeesByProjectArr[$investigatorIndex] = $totalFee;
             } else {
                 //20. Generated Invoices by Status per PI (Top 10)
-                if (isset($unFundedTotalFeesByProjectArr[$projectIndex])) {
-                    $totalFee = $unFundedTotalFeesByProjectArr[$projectIndex] + $totalFee;
+                if (isset($unFundedTotalFeesByProjectArr[$investigatorIndex])) {
+                    $totalFee = $unFundedTotalFeesByProjectArr[$investigatorIndex] + $totalFee;
                 }
-                $unFundedTotalFeesByProjectArr[$projectIndex] = $totalFee;
+                $unFundedTotalFeesByProjectArr[$investigatorIndex] = $totalFee;
             }
             /////////////////////////////////////////
 
