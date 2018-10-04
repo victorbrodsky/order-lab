@@ -141,7 +141,11 @@ class DashboardController extends Controller
             'title' => "Principle Investigators by Affiliation"
         );
 
-        $labels = array('WCM Pathology Faculty','WCM Other Departmental Faculty','Other Institutions');
+        $labels = array(
+            'WCM Pathology Faculty'." ".$piWcmPathologyCounter,
+            'WCM Other Departmental Faculty'." ".$piWcmCounter,
+            'Other Institutions'." ".$piOtherCounter
+        );
         $values = array($piWcmPathologyCounter,$piWcmCounter,$piOtherCounter);
 
         $chartDataArray['values'] = $values;
@@ -160,17 +164,17 @@ class DashboardController extends Controller
         ///////////// 2. Total number of projects (XXX) per PI (Top 5/10) (APPROVED & CLOSED) - $piProjectCountArr //////////////
         $piProjectCountTopArr = $this->getTopArray($piProjectCountArr);
         //Projects per PI
-        $chartsArray = $this->addChart( $chartsArray, $piProjectCountTopArr, "Total number of projects per PI (Top 10)");
+        $chartsArray = $this->addChart( $chartsArray, $piProjectCountTopArr, "Total number of projects per PI (Top 10)","pie",null," ");
         ///////////// EOF top $piProjectCountArr //////////////
 
         /////////// 3,4 Total number of Funded/Un-Funded Projects per PI (Top 10) ////////////////
         //3. Funded Projects per PI
         $piFundedProjectCountTopArr = $this->getTopArray($piFundedProjectCountArr);
-        $chartsArray = $this->addChart( $chartsArray, $piFundedProjectCountTopArr, "Total number of Funded Projects per PI (Top 10)");
+        $chartsArray = $this->addChart( $chartsArray, $piFundedProjectCountTopArr, "Total number of Funded Projects per PI (Top 10)","pie",null," ");
         //4. Un-Funded Projects per PI
         $piUnFundedProjectCountTopArr = $this->getTopArray($piUnFundedProjectCountArr);
         //Funded Projects per PI
-        $chartsArray = $this->addChart( $chartsArray, $piUnFundedProjectCountTopArr, "Total number of Non-Funded Projects per PI (Top 10)");
+        $chartsArray = $this->addChart( $chartsArray, $piUnFundedProjectCountTopArr, "Total number of Non-Funded Projects per PI (Top 10)","pie",null," ");
         /////////// EOF 3,4 Total number of Funded/Un-Funded Projects per PI (Top 10) ////////////////
 
         return array(
@@ -326,7 +330,7 @@ class DashboardController extends Controller
             'title' => "Total Number of Work Requests by Funding Source"
         );
 
-        $labels = array('Funded','Non-Funded');
+        $labels = array('Funded'." ".$fundedRequestCount,'Non-Funded'." ".$notFundedRequestCount);
         $values = array($fundedRequestCount,$notFundedRequestCount);
 
         $chartDataArray['values'] = $values;
@@ -346,22 +350,22 @@ class DashboardController extends Controller
         $requestPerProjectTopArr = $this->getTopArray($requestPerProjectArr);
         $layoutArray = array(
             'height' => 600,
-            'width' => 800,
+            'width' => 1200,
         );
-        $chartsArray = $this->addChart( $chartsArray, $requestPerProjectTopArr, "Total number of Requests per Project (Top 10)",'pie',$layoutArray);
+        $chartsArray = $this->addChart( $chartsArray, $requestPerProjectTopArr, "Total number of Requests per Project (Top 10)",'pie',$layoutArray," ");
         ////////////////////
 
         //7,8. Total number of Requests per Funded/Un-Funded Project (Top 10)
         $layoutArray = array(
             'height' => 600,
-            'width' => 800,
+            'width' => 1200,
         );
         //7. Total number of Requests per Funded Project (Top 10)
         $fundedRequestPerProjectTopArr = $this->getTopArray($fundedRequestPerProjectArr);
-        $chartsArray = $this->addChart( $chartsArray, $fundedRequestPerProjectTopArr, "Total number of Requests per Funded Project (Top 10)",'pie',$layoutArray);
+        $chartsArray = $this->addChart( $chartsArray, $fundedRequestPerProjectTopArr, "Total number of Requests per Funded Project (Top 10)",'pie',$layoutArray," ");
         //8. Total number of Requests per Non_Funded Project (Top 10)
         $unFundedRequestPerProjectTopArr = $this->getTopArray($unFundedRequestPerProjectArr);
-        $chartsArray = $this->addChart( $chartsArray, $unFundedRequestPerProjectTopArr, "Total number of Requests per Non-Funded Project (Top 10)",'pie',$layoutArray);
+        $chartsArray = $this->addChart( $chartsArray, $unFundedRequestPerProjectTopArr, "Total number of Requests per Non-Funded Project (Top 10)",'pie',$layoutArray," ");
         ////////////////////
 
         //9. TRP Service Productivity by Category Types (Top 10)
@@ -371,7 +375,7 @@ class DashboardController extends Controller
             'height' => 600,
             'width' => 1200,
         );
-        $chartsArray = $this->addChart( $chartsArray, $quantityCountByCategoryTopArr, "TRP Service Productivity by Category Types (Top 10)",'pie',$layoutArray);
+        $chartsArray = $this->addChart( $chartsArray, $quantityCountByCategoryTopArr, "TRP Service Productivity by Category Types (Top 10)",'pie',$layoutArray," ");
         ///////////////////////////
 
         //10,11. TRP Service Productivity for Funded/Not-Funded Projects (Top 10)
@@ -381,10 +385,10 @@ class DashboardController extends Controller
         );
         //10. TRP Service Productivity for Funded Projects (Top 10)
         $fundedQuantityCountByCategoryTopArr = $this->getTopArray($fundedQuantityCountByCategoryArr);
-        $chartsArray = $this->addChart( $chartsArray, $fundedQuantityCountByCategoryTopArr, "TRP Service Productivity for Funded Projects (Top 10)",'pie',$layoutArray);
+        $chartsArray = $this->addChart( $chartsArray, $fundedQuantityCountByCategoryTopArr, "TRP Service Productivity for Funded Projects (Top 10)",'pie',$layoutArray," ");
         //11. TRP Service Productivity for Non-Funded Projects (Top 10)
         $unFundedQuantityCountByCategoryTopArr = $this->getTopArray($unFundedQuantityCountByCategoryArr);
-        $chartsArray = $this->addChart( $chartsArray, $unFundedQuantityCountByCategoryTopArr, "TRP Service Productivity for Non-Funded Projects (Top 10)",'pie',$layoutArray);
+        $chartsArray = $this->addChart( $chartsArray, $unFundedQuantityCountByCategoryTopArr, "TRP Service Productivity for Non-Funded Projects (Top 10)",'pie',$layoutArray," ");
         ////////////////////////////////
 
         return array(
