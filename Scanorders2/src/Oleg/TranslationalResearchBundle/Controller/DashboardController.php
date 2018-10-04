@@ -377,7 +377,7 @@ class DashboardController extends Controller
         //10,11. TRP Service Productivity for Funded/Not-Funded Projects (Top 10)
         $layoutArray = array(
             'height' => 600,
-            'width' => 1400,
+            'width' => 1600,
         );
         //10. TRP Service Productivity for Funded Projects (Top 10)
         $fundedQuantityCountByCategoryTopArr = $this->getTopArray($fundedQuantityCountByCategoryArr);
