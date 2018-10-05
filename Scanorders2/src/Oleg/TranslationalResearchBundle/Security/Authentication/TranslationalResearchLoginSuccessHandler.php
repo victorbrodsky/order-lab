@@ -109,7 +109,7 @@ class TranslationalResearchLoginSuccessHandler extends LoginSuccessHandler {
 
         }
 
-        $redirectResponse = parent::onAuthenticationSuccess($request,$token);
+        //$redirectResponse = parent::onAuthenticationSuccess($request,$token);
 
         return $redirectResponse;
     }
