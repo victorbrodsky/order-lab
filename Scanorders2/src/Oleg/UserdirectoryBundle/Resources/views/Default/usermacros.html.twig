@@ -2232,12 +2232,13 @@
             {% set addClassStr = addClass %}
         {% endif %}
 
-        {% if callback is not defined %}
-            {% set callback = null %}
+        {% set callbackStr = "" %}
+        {% if callback is defined and callback %}
+            {% set callbackStr = callback %}
         {% endif %}
 
         <div style="align-content: center;">
-            <button class="btn btn-default {{ addClassStr }}" onClick="addNewObject(this,'{{ classname }}',{{ callback }})" type='button'>{{ title }}</button>
+            <button class="btn btn-default {{ addClassStr }}" onClick="addNewObject(this,'{{ classname }}','{{ callbackStr }}')" type='button'>{{ title }}</button>
         </div>
     {% endif %}
 {% endmacro %}
