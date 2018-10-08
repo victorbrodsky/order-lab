@@ -391,6 +391,24 @@ function handsonTableInit(handsometableDataArr,tableFormCycle) {
 
             return cellProperties;
         },
+        afterPaste: function(data,coord) {
+            //console.log('afterPaste: data=');
+            //console.log(data);
+            //console.log('afterPaste: coord=');
+            //console.log(coord);
+
+            var startRow = coord[0]['startRow'];
+            var endRow = coord[0]['endRow'];
+            //console.log('afterPaste: startRow='+startRow+'; endRow='+endRow);
+
+            var index = 0;
+            for( var row=startRow; row<=endRow; row++ ) {  //foreach column
+                var newValue = data[index][0];
+                transresBarcodeParser(row,newValue);
+                index++;
+            }
+
+        },
         afterChange: function (change, source) {
             if (source === 'loadData') {
                 //console.log("ignore source="+source);
@@ -407,7 +425,7 @@ function handsonTableInit(handsometableDataArr,tableFormCycle) {
                 var oldValue = changeData[2];
                 var newValue = changeData[3];
                 //console.log("prop="+prop);
-                //console.log("oldValue="+oldValue+"; newValue="+newValue);
+                //console.log("columnNumber="+columnNumber+", rowNumber="+rowNumber+": oldValue="+oldValue+"; newValue="+newValue);
 
                 //console.log("header="+_columnData_scanorder[columnNumber].header);
                 //if( _columnData_scanorder[columnNumber].header != "Barcode") {

@@ -1230,12 +1230,14 @@ class ProjectController extends Controller
                 $eventType = "Project Updated";
                 $transresUtil->setEventLog($project,$eventType,$msg.$eventResetMsg,$testing);
 
+                //add resubmit comment
                 $reSubmitReviewComment = $form->get('reSubmitReviewComment')->getData();
                 if( $reSubmitReviewComment ) {
                     $transresUtil->addCommentToCurrentProjectState($project,$reSubmitReviewComment);
                 }
                 //exit("Resubmit; comment=".$reSubmitReviewComment);
 
+                //redirect to review action or to the original project resubmit page
                 $review = $transresUtil->getSingleReviewByProject($project);
                 $transitionName = $transresUtil->getSingleTransitionNameByProject($project);
                 if( $review && $transitionName ) {
