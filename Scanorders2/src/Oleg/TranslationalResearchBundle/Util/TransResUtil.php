@@ -1615,6 +1615,26 @@ class TransResUtil
         return $reviews;
     }
 
+    public function getSingleReviewByProject($project) {
+        $reviews = $this->getReviewsByProjectAndState($project,$project->getState());
+        //take the first review
+        if( count($reviews) == 1 ) {
+            return $reviews[0];
+        }
+        return null;
+    }
+
+    public function getSingleTransitionNameByProject($project) {
+        $workflow = $this->container->get('state_machine.transres_project');
+        $transitions = $workflow->getEnabledTransitions($project);
+        //take the first $transition
+        if( count($transitions) == 1 ) {
+            $transition = $transitions[0];
+            return $transition->getName();
+        }
+        return null;
+    }
+
     //NOT USED
 //    public function getReviewByProjectAndReviewidAndState($project, $reviewId, $state) {
 //
@@ -1950,6 +1970,28 @@ class TransResUtil
 //        $from = $froms[0];
 //
 //        return $from;
+    }
+
+    //return transres-Project-3371-irb_review;  "irb_review" if the current stage is "irb_missinginfo" or "admin_missinginfo"
+    public function getProjectThreadIdByCurrentState($project) {
+//        $workflow = $this->container->get('state_machine.transres_project');
+//        $transitions = $workflow->getEnabledTransitions($project);
+//        foreach( $transitions as $transition ) {
+//            foreach( $transition->getTos() as $to ) {
+//
+//            }
+//        }
+        $prefix = "unknown";
+        $state = $project->getState(); //"irb_missinginfo" or "admin_missinginfo"
+        //echo "state=$state <br>";
+        if( strpos($state,"_") !== false ) {
+            $stateArr = explode("_",$state);
+            //echo "stateArr=".count($stateArr)."<br>";
+            if( count($stateArr) == 2 ) {
+                $prefix = $stateArr[0];
+            }
+        }
+        return "transres-Project-".$project->getId()."-".$prefix."_review";
     }
 
     public function isUserAllowedReview( $review ) {
@@ -2330,9 +2372,9 @@ class TransResUtil
             $body = "Additional information is needed for the project request $oid '$projectTitle' in order to complete the '$originalStateLabel' stage.";
 
             //The following comment has been provided by the reviewer: [most recent value of comment field added by reviewer]
-            $reviewComments = $this->getReviewComments($project);
+            $reviewComments = $this->getReviewComments($project,"<hr>");
 
-            $body = $body . $break.$break. "The following comments has been provided:".$break.$reviewComments;
+            $body = $body . $break.$break. "The following comments has been provided:".$break."<hr>".$reviewComments;
 
             $body = $body . $break.$break. "The review process will resume once the requested information is added.";
 
@@ -2831,6 +2873,206 @@ class TransResUtil
         //echo $level.": prefix=[$prefix]<br>";
         return $prefix;
     }
+
+    public function addCommentToCurrentProjectState($project,$commentStr) {
+
+        if( !$commentStr ) {
+            return null;
+        }
+
+        //$userServiceUtil = $this->container->get('user_service_utility');
+        $commentManager = $this->container->get('fos_comment.manager.comment');
+        $threadManager = $this->container->get('fos_comment.manager.thread');
+        $author = $this->secTokenStorage->getToken()->getUser();
+
+        $threadId = $this->getProjectThreadIdByCurrentState($project);
+
+        //$uri . "/project/review/" . $project->getId();
+        $permalink = $this->container->get('router')->generate(
+            'translationalresearch_project_review',
+            array(
+                'id' => $project->getId(),
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+
+        if( !$threadId || !$permalink ) {
+            //exit("Exit: ThreadId or Permalink not defined.");
+            return null;
+        }
+
+        //echo "threadId=".$threadId."<br>";
+        //echo "permalink=".$permalink."<br>";
+
+        $thread = $threadManager->findThreadById($threadId);
+
+        if( null === $thread ) {
+            $thread = $threadManager->createThread();
+            $thread->setId($threadId);
+
+            //$permalink = $uri . "/project/review/" . $entity->getId();
+            $thread->setPermalink($permalink);
+
+            // Add the thread
+            $threadManager->saveThread($thread);
+        }
+
+        //set Author
+        $parentComment = null;
+        $comment = $commentManager->createComment($thread,$parentComment);
+        $comment->setAuthor($author);
+
+//        if( $createDateStr ) {
+//            $createDate = $this->transformDatestrToDate($createDateStr);
+//            $comment->setCreatedAt($createDate);
+//        }
+
+        //set Depth
+        //$comment->setDepth(0);
+
+        //set Prefix
+        //$comment->setPrefix($prefix);
+
+        //set comment body
+        $comment->setBody($commentStr);
+
+//        $authorTypeArr = $this->getAuthorType($project);
+//        if( $authorTypeArr && count($authorTypeArr) > 0 ) {
+//            $comment->setAuthorType($authorTypeArr['type']);
+//            $comment->setAuthorTypeDescription($authorTypeArr['description']);
+//        }
+
+        if ($commentManager->saveComment($comment) !== false) {
+            //exit("Comment saved successful!!!");
+            //return $this->getViewHandler()->handle($this->onCreateCommentSuccess($form, $threadId, null));
+            //View::createRouteRedirect('fos_comment_get_thread_comment', array('id' => $id, 'commentId' => $form->getData()->getId()), 201);
+        }
+
+        return $comment;
+    }
+//    public function getAuthorType( $entity ) {
+//
+//        if( !$this->secTokenStorage->getToken() ) {
+//            //not authenticated
+//            return null;
+//        }
+//
+//        $authorTypeArr = array();
+//
+//        if( $entity->getEntityName() == "Project" ) {
+//            $specialtyStr = null;
+//            $projectSpecialty = $entity->getProjectSpecialty();
+//            if( $projectSpecialty ) {
+//                $specialtyStr = $projectSpecialty->getUppercaseName();
+//                $specialtyStr = "_" . $specialtyStr;
+//            }
+//        }
+//
+//        if( $entity->getEntityName() == "Request" ) {
+//            $specialtyStr = null;
+//            $project = $entity->getProject();
+//            $projectSpecialty = $project->getProjectSpecialty();
+//            if( $projectSpecialty ) {
+//                $specialtyStr = $projectSpecialty->getUppercaseName();
+//                $specialtyStr = "_" . $specialtyStr;
+//            }
+//        }
+//
+//        if( $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyStr) ) {
+//            //$authorType = "Administrator";
+//            $authorTypeArr['type'] = "Administrator";
+//            $authorTypeArr['description'] = "Administrator";
+//            return $authorTypeArr;
+//        }
+//        if( $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER'.$specialtyStr) ) {
+//            //$authorType = "Primary Reviewer";
+//            $authorTypeArr['type'] = "Administrator";
+//            $authorTypeArr['description'] = "Primary Reviewer";
+//            return $authorTypeArr;
+//        }
+//
+//        //if not found
+//        $transresUtil = $this->container->get('transres_util');
+//        $transresRequestUtil = $this->container->get('transres_request_util');
+//        $user = $this->secTokenStorage->getToken()->getUser();
+//
+//        //1) check if the user is entity requester
+//        //$entity = $this->getEntityFromComment($comment);
+//        if( !$entity ) {
+//            return null;
+//        }
+//
+//        //check if reviewer
+//        if( $entity->getEntityName() == "Project" ) {
+//            if ($transresUtil->isProjectReviewer($entity)) {
+//                //return "Reviewer";
+//                $authorTypeArr['type'] = "Reviewer";
+//                $authorTypeArr['description'] = "Reviewer";
+//                return $authorTypeArr;
+//            }
+//        }
+//
+//        if( $entity->getEntityName() == "Request" ) {
+//            if( $transresRequestUtil->isRequestStateReviewer($entity,"progress") ) {
+//                //return "Reviewer";
+//                $authorTypeArr['type'] = "Reviewer";
+//                $authorTypeArr['description'] = "Reviewer";
+//                return $authorTypeArr;
+//            }
+//        }
+//
+//        if( $entity->getEntityName() == "Project" ) {
+//            return $this->getProjectRequesterAuthorType($entity,$user);
+//        }
+//
+//        //if( $entity->getEntityName() == "Request" ) {
+//        //    return $this->getRequestRequesterAuthorType($entity,$user);
+//        //}
+//
+//        return null;
+//    }
+//    public function getProjectRequesterAuthorType( $entity, $user ) {
+//
+//        //check if requester
+//        if( $entity->getSubmitter() && $entity->getSubmitter()->getId() == $user->getId() ) {
+//            //return "Submitter";
+//            $authorTypeArr['type'] = "Requester";
+//            $authorTypeArr['description'] = "Submitter";
+//            return $authorTypeArr;
+//        }
+//        if( $entity->getPrincipalInvestigators()->contains($user) ) {
+//            //return "Principal Investigator";
+//            $authorTypeArr['type'] = "Requester";
+//            $authorTypeArr['description'] = "Principal Investigator";
+//            return $authorTypeArr;
+//        }
+//        if( $entity->getCoInvestigators()->contains($user) ) {
+//            //return "Co-Investigator";
+//            $authorTypeArr['type'] = "Requester";
+//            $authorTypeArr['description'] = "Co-Investigator";
+//            return $authorTypeArr;
+//        }
+//        if( $entity->getPathologists()->contains($user) ) {
+//            //return "Pathologist";
+//            $authorTypeArr['type'] = "Requester";
+//            $authorTypeArr['description'] = "Pathologist";
+//            return $authorTypeArr;
+//        }
+//        if( $entity->getContacts()->contains($user) ) {
+//            //return "Contact";
+//            $authorTypeArr['type'] = "Requester";
+//            $authorTypeArr['description'] = "Contact";
+//            return $authorTypeArr;
+//        }
+//        if( $entity->getBillingContacts()->contains($user) ) {
+//            //return "Billing Contact";
+//            $authorTypeArr['type'] = "Requester";
+//            $authorTypeArr['description'] = "Billing Contact";
+//            return $authorTypeArr;
+//        }
+//
+//        return null;
+//    }
 
     public function getProjectShowUrl($project) {
         $projectUrl = $this->container->get('router')->generate(

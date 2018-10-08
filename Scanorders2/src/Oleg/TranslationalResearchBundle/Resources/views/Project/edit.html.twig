@@ -74,7 +74,29 @@
 
         {% if edit_form.reSubmitReview is defined %}
             {#{% set showComment = true %}#}
-            {{ form_widget(edit_form.reSubmitReview) }}
+            {#comment:<br>#}
+            {#transres-Project-3371-irb_review#}
+            {#{% set threadId = "transres-" ~ project.getEntityName() ~ "-" ~ project.id ~ "-" ~ "irb_review" %}#}
+            {% set threadId = transres_util.getProjectThreadIdByCurrentState(project) %}
+            {#threadId={{ threadId }}<br>#}
+            {#{% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': threadId} %}#}
+
+            <div class="well">
+                {{ form_widget(edit_form.reSubmitReview) }}
+                <br>
+
+                {#{{ formmacros.field(edit_form.reSubmitReviewComment) }}#}
+                <p>
+                {{ form_row(edit_form.reSubmitReviewComment) }}
+                </p>
+
+                <hr>
+                {#All previous comments:<br>#}
+                {#{{ transres_util.getReviewComments(project)|raw }}#}
+                {#<br>#}
+                {{ render(controller('OlegTranslationalResearchBundle:Project:threadCommentsShow', { 'id': threadId })) }}
+                {#<hr>#}
+            </div>
         {% endif %}
 
         {% if edit_form.updateProject is defined %}

@@ -373,17 +373,19 @@
                             {% if transres_util.isProjectStateRequesterResubmit(project) %}
                                 <li>
                                     <a href="{{ path(translationalresearch_sitename~'_project_edit', { 'id': project.id }) }}"
-                                    >Edit and Resubmit Project</a>
+                                    >Edit/Resubmit Project</a>
                                 </li>
-                            {% endif %}
+                            {% else %}
 
-                            {#add verification: requester => project is on the draft stage or in the reject stage#}
-                            {#{% if transres_util.isAdminOrPrimaryReviewer() or transres_util.isProjectEditableByRequester(project) %}#}
-                            {% if transres_permission_util.hasProjectPermission("update",project) %}
-                                <li>
-                                    <a href="{{ path(translationalresearch_sitename~'_project_edit', { 'id': project.id }) }}"
-                                    >Edit Project</a>
-                                </li>
+                                {#add verification: requester => project is on the draft stage or in the reject stage#}
+                                {#{% if transres_util.isAdminOrPrimaryReviewer() or transres_util.isProjectEditableByRequester(project) %}#}
+                                {% if transres_permission_util.hasProjectPermission("update",project) %}
+                                    <li>
+                                        <a href="{{ path(translationalresearch_sitename~'_project_edit', { 'id': project.id }) }}"
+                                        >Edit Project</a>
+                                    </li>
+                                {% endif %}
+
                             {% endif %}
 
                             {% if transres_util.isAdminOrPrimaryReviewer() %}

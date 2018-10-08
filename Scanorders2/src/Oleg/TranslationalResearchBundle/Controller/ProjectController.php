@@ -1230,7 +1230,27 @@ class ProjectController extends Controller
                 $eventType = "Project Updated";
                 $transresUtil->setEventLog($project,$eventType,$msg.$eventResetMsg,$testing);
 
-                return $this->redirectToRoute('translationalresearch_project_resubmit', array('id' => $project->getId()));
+                $reSubmitReviewComment = $form->get('reSubmitReviewComment')->getData();
+                if( $reSubmitReviewComment ) {
+                    $transresUtil->addCommentToCurrentProjectState($project,$reSubmitReviewComment);
+                }
+                //exit("Resubmit; comment=".$reSubmitReviewComment);
+
+                $review = $transresUtil->getSingleReviewByProject($project);
+                $transitionName = $transresUtil->getSingleTransitionNameByProject($project);
+                if( $review && $transitionName ) {
+                    //http://127.0.0.1/order/translational-research/project-review-transition/irb_review_resubmit/3371/1218
+                    //@Route("/project-review-transition/{transitionName}/{id}/{reviewId}", name="translationalresearch_transition_action_by_review")
+                    return $this->redirectToRoute('translationalresearch_transition_action_by_review',
+                        array(
+                            'transitionName' => $transitionName,
+                            'id' => $project->getId(),
+                            'reviewId' => $review->getId()
+                        )
+                    );
+                } else {
+                    return $this->redirectToRoute('translationalresearch_project_resubmit', array('id' => $project->getId()));
+                }
             }
 
             $this->get('session')->getFlashBag()->add(

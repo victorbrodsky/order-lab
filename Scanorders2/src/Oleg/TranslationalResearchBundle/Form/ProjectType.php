@@ -14,6 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -683,8 +684,15 @@ class ProjectType extends AbstractType
         }
         if( $this->params['reSubmitReview'] === true ) {
             $builder->add('reSubmitReview', SubmitType::class, array(
-                'label' => 'Resubmit Project',
+                'label' => 'Save Changes and Resubmit Project',
                 'attr' => array('class'=>'btn btn-success')
+            ));
+
+            $builder->add('reSubmitReviewComment',TextareaType::class,array(
+                'label' => "Resubmit Comment:",
+                'required' => false,
+                'mapped' => false,
+                'attr' => array('class'=>'form-control textarea')
             ));
         }
         if( $this->params['updateProject'] === true ) {
