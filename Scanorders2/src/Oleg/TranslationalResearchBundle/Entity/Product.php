@@ -231,6 +231,12 @@ class Product {
         $this->note = $note;
     }
 
-    
+    public function getQuantity() {
+        $quantity = $this->getCompleted();
+        if( !$quantity ) {
+            $quantity = $this->getRequested();
+        }
+        return $quantity;
+    }
 
 }

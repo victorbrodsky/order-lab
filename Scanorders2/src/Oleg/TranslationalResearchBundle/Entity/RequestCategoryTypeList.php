@@ -146,6 +146,10 @@ class RequestCategoryTypeList extends ListAbstract
         return $this->getProductId() . " (" .$this->getSection() . ") - " . $this->getName() . ": $" . $this->getFee() . "/" . $this->getFeeUnit();
     }
 
+    public function getProductIdAndName() {
+        return $this->getProductId() . " " . $this->getName();
+    }
+
     public function getShortInfo() {
         return $this->getProductId() . " (" .$this->getSection() . ")";
     }
