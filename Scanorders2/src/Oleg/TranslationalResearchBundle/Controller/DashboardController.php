@@ -755,7 +755,7 @@ class DashboardController extends Controller
         $layoutArray = array(
             'height' => 600,
             'width' =>  1000,
-            'title' => "18. Generated Invoices from Funded Projects (Total invoiced $".$totalThisInvoiceVerificationFees."; Total invoices: ".$totalFoundedInvoices.", 'Paid in Full' invoices: ".$paidInvoices.")"
+            'title' => "Generated Invoices from Funded Projects (Total invoiced $".$totalThisInvoiceVerificationFees."; Total invoices: ".$totalFoundedInvoices.", 'Paid in Full' invoices: ".$paidInvoices.")"
         );
 
         $labels = array('Paid'.' - $'.$totalFundedPaidFees,'Unpaid (Due)'.' - $'.$totalFundedDueFees);
@@ -807,7 +807,7 @@ class DashboardController extends Controller
         //$invoicePaidFeeArr
         //$invoiceTotalFeeTopArr = $this->getTopArray($invoicesFeesByPiArr);
 
-        $chartsArray = $this->addChart( $chartsArray, $invoicesFeesByPiArrTop, "20. Generated Invoices by Status per PI (Top 10)",'pie',$layoutArray);
+        $chartsArray = $this->addChart( $chartsArray, $invoicesFeesByPiArrTop, "Generated Invoices by Status per PI (Top 10)",'pie',$layoutArray);
         //////////////////////////////////////////////
 
         return array(
@@ -1308,6 +1308,8 @@ class DashboardController extends Controller
 
                 if( count($descr) > 0 ) {
                     $index = $index . " $" . $value . " (" . implode(", ",$descr) . ")";
+                } else {
+                    $index = $index . " $" . $value;
                 }
 
                 $piProjectCountTopShortArr[$index] = $value;
