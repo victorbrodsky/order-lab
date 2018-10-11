@@ -1587,8 +1587,8 @@ class TransResRequestUtil
 
         return $emails;
     }
-    //get emails: admins, technician
-    public function getRequestAdminEmails($transresRequest,$asEmail=true) {
+    //get emails: admins, technicians
+    public function getRequestAdminTechEmails($transresRequest,$asEmail=true) {
         $transresUtil = $this->container->get('transres_util');
 
         $emails = array();
@@ -1640,7 +1640,7 @@ class TransResRequestUtil
 
         $emails = $this->getRequestEmails($transresRequest);
 
-        $admins = $this->getRequestAdminEmails($transresRequest);
+        $admins = $this->getRequestAdminTechEmails($transresRequest); //admins, technicians
 
         //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
         $emailUtil->sendEmail( $emails, $subject, $body, $admins, $senderEmail );
@@ -1680,15 +1680,17 @@ class TransResRequestUtil
             }
         }
         
-        $emails = array();
+//        $emails = array();
+//        //0) get ROLE_TRANSRES_ADMIN
+//        $adminUsers = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole("ROLE_TRANSRES_ADMIN".$specialtyPostfix);
+//        foreach( $adminUsers as $user ) {
+//            if( $user ) {
+//                $emails[] = $user->getSingleEmail();
+//            }
+//        }
 
-        //0) get ROLE_TRANSRES_ADMIN
-        $adminUsers = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole("ROLE_TRANSRES_ADMIN".$specialtyPostfix);
-        foreach( $adminUsers as $user ) {
-            if( $user ) {
-                $emails[] = $user->getSingleEmail();
-            }
-        }
+        //0) get admins, technicians
+        $emails = $this->getRequestAdminTechEmails($transresRequest); //admins, technicians
 
         //1) get ROLE_TRANSRES_BILLING_ADMIN
         $billingUsers = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole("ROLE_TRANSRES_BILLING_ADMIN".$specialtyPostfix);
@@ -1818,7 +1820,8 @@ class TransResRequestUtil
         }
 
         //1) get ROLE_TRANSRES_BILLING_ADMIN
-        $adminUsers = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole("ROLE_TRANSRES_ADMIN".$specialtyPostfix);
+        //$adminUsers = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole("ROLE_TRANSRES_ADMIN".$specialtyPostfix);
+        $adminUsers = $this->getRequestAdminTechEmails($transresRequest,false); //admins, technicians
         foreach( $adminUsers as $user ) {
             if( $user ) {
                 $emails[] = $user->getSingleEmail();
@@ -1937,7 +1940,7 @@ class TransResRequestUtil
         }
 
         //send ccs to admin
-        $admins = $this->getRequestAdminEmails($transresRequest);
+        $admins = $this->getRequestAdminTechEmails($transresRequest); //admins, technicians
 
         //Add trp@med.cornell.edu to site settings and use it for Cc for Work Request status change to "Completed" and "Completed and Notified"
         $ccNotifyEmail = $transresUtil->getTransresSiteProjectParameter('notifyEmail',$project);
@@ -2987,7 +2990,7 @@ class TransResRequestUtil
         $asEmail=false;
         //$onlyAdmin=true;
         //$admins = $transresUtil->getTransResAdminEmails($project->getProjectSpecialty(),$asEmail,$onlyAdmin);
-        $admins = $this->getRequestAdminEmails($transresRequest,$asEmail);
+        $admins = $this->getRequestAdminTechEmails($transresRequest,$asEmail); //admins, technicians
         foreach($admins as $admin) {
             $adminSingleEmail = $admin->getSingleEmail();
             $adminEmailInfos[] = $admin->getUsernameOptimal()." (".$adminSingleEmail.")";
