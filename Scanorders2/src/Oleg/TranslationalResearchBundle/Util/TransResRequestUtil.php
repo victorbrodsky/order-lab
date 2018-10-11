@@ -1825,6 +1825,9 @@ class TransResRequestUtil
             }
         }
 
+        //Add trp@med.cornell.edu to site settings and use it for Cc for Work Request status change to "Completed" and "Completed and Notified"
+        $ccNotifyEmail = $transresUtil->getTransresSiteProjectParameter('notifyEmail',$project);
+
         //Subject: Draft Translation Research Invoice for Request [Request ID] of Project [Project Title]
         //$subject = "Request ".$transresRequest->getOid()." has been sent to ".$label;
         //Subject: Work request APCP28-REQ27 has been completed and is ready for submitter notification
@@ -1869,7 +1872,7 @@ class TransResRequestUtil
 
         //3) Send email        $emails, $subject, $message, $ccs=null, $fromEmail=null
         $senderEmail = $transresUtil->getTransresSiteProjectParameter('fromEmail',$project);
-        $emailUtil->sendEmail( $emails, $subject, $body, null, $senderEmail );
+        $emailUtil->sendEmail( $emails, $subject, $body, $ccNotifyEmail, $senderEmail );
 
         //4) set event log
         if( !$testing ) {
@@ -1935,6 +1938,13 @@ class TransResRequestUtil
 
         //send ccs to admin
         $admins = $this->getRequestAdminEmails($transresRequest);
+
+        //Add trp@med.cornell.edu to site settings and use it for Cc for Work Request status change to "Completed" and "Completed and Notified"
+        $ccNotifyEmail = $transresUtil->getTransresSiteProjectParameter('notifyEmail',$project);
+        if( $ccNotifyEmail ) {
+            $admins[] = $ccNotifyEmail;
+            $admins = array_unique($admins);
+        }
 
         //send by email
         $senderEmail = $transresUtil->getTransresSiteProjectParameter('fromEmail',$project);

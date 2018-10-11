@@ -241,6 +241,13 @@ class TransResSiteParameters {
     private $fromEmail;
 
     /**
+     * Add trp@med.cornell.edu to site settings and use it for Cc for Work Request status change to "Completed" and "Completed and Notified"
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $notifyEmail;
+
+    /**
      * Translational Research Email Notification Asking To Contact With Concerns:
      * Please review the deliverables and comments (if any), and if you have any concerns,
      * contact the Translational Research group by emailing User Name (email)...
@@ -730,6 +737,22 @@ class TransResSiteParameters {
     public function setFromEmail($fromEmail)
     {
         $this->fromEmail = $fromEmail;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNotifyEmail()
+    {
+        return $this->notifyEmail;
+    }
+
+    /**
+     * @param mixed $notifyEmail
+     */
+    public function setNotifyEmail($notifyEmail)
+    {
+        $this->notifyEmail = $notifyEmail;
     }
 
     /**

@@ -200,6 +200,11 @@ class SiteParameterType extends AbstractType
             'required' => false,
             'attr' => array('class' => 'textarea form-control')
         ));
+        $builder->add('notifyEmail', null, array(
+            'label' => 'Cc for email notification when Work Request\' status change to "Completed" and "Completed and Notified" (trp@med.cornell.edu):',
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
 
         $builder->add('emailNoteConcern', null, array(
             'label' => "Translational Research Email Notification Asking To Contact With Concerns:",
