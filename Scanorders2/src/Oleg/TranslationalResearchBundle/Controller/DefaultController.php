@@ -429,11 +429,12 @@ class DefaultController extends Controller
                             $comment->setObject($entity);
                             echo $comment->getEntityId()." ";
 
-                            //$em->flush($comment);
-                            if (($count % $batchSize) === 0) {
-                                $em->flush();
-                                $em->clear(); // Detaches all objects from Doctrine!
-                            }
+                            $em->flush($comment);
+
+//                            if (($count % $batchSize) === 0) {
+//                                $em->flush();
+//                                $em->clear(); // Detaches all objects from Doctrine!
+//                            }
 
                             $count++;
                         }
