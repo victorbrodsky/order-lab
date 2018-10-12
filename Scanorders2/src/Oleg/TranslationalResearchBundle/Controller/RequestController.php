@@ -35,6 +35,7 @@ use Oleg\TranslationalResearchBundle\Entity\TransResRequest;
 use Oleg\TranslationalResearchBundle\Form\FilterRequestType;
 use Oleg\TranslationalResearchBundle\Form\TransResRequestType;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
+use Oleg\UserdirectoryBundle\Form\ListFilterType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -2273,15 +2274,52 @@ class RequestController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
+
+        $filterform = $this->createForm(ListFilterType::class, null, array(
+            'method' => 'GET',
+        ));
+        $filterform->handleRequest($request);
+        $search = $filterform['search']->getData();
+
         $repository = $em->getRepository('OlegTranslationalResearchBundle:RequestCategoryTypeList');
         $dql =  $repository->createQueryBuilder("list");
         $dql->select('list');
 
+        if( $search ) {
+            $searchStr = "";
+
+            if( is_numeric($search) ) {
+                //echo "int <br>";
+                $searchInt = intval($search);
+                $searchStr = "list.id = :searchInt OR";
+                $dqlParameters['searchInt'] = $searchInt;
+            }
+
+            $searchStr = $searchStr."
+                LOWER(list.name) LIKE LOWER(:search) 
+                OR LOWER(list.abbreviation) LIKE LOWER(:search) 
+                OR LOWER(list.shortname) LIKE LOWER(:search) 
+                OR LOWER(list.description) LIKE LOWER(:search)
+                ";
+
+            $searchStr = $searchStr . " OR LOWER(list.section) LIKE LOWER(:search)";
+            $searchStr = $searchStr . " OR LOWER(list.productId) LIKE LOWER(:search)";
+            $searchStr = $searchStr . " OR LOWER(list.feeUnit) LIKE LOWER(:search)";
+            $searchStr = $searchStr . " OR LOWER(list.fee) LIKE LOWER(:search)";
+
+            $dql->andWhere($searchStr);
+            $dqlParameters['search'] = '%'.$search.'%';
+        }
+
         $limit = 30;
         $query = $em->createQuery($dql);
 
+        if( count($dqlParameters) > 0 ) {
+            $query->setParameters( $dqlParameters );
+        }
+
         $paginationParams = array(
-            'defaultSortFieldName' => 'list.id',
+            'defaultSortFieldName' => 'list.orderinlist',
             'defaultSortDirection' => 'ASC',
             'wrap-queries' => true
         );
@@ -2300,6 +2338,7 @@ class RequestController extends Controller
         }
 
         return array(
+            'filterform' => $filterform->createView(),
             'fees' => $fees,
             'title' => "Fee Schedule",
             'adminUser' => $adminUser
