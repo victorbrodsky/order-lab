@@ -1128,6 +1128,7 @@ class RequestController extends Controller
             //$category = $filterform['category']->getData();
             $projectSpecialties = $filterform['projectSpecialty']->getData();
             $searchStr = $filterform['comment']->getData();
+            $sampleName = $filterform['sampleName']->getData();
             $startDate = $filterform['startDate']->getData();
             $endDate = $filterform['endDate']->getData();
             $principalInvestigators = $filterform['principalInvestigators']->getData();
@@ -1667,6 +1668,13 @@ class RequestController extends Controller
             }
         }
 
+        if( $sampleName ) {
+            $dql->leftJoin('transresRequest.dataResults','dataResults');
+            $dql->andWhere("dataResults.barcode LIKE :sampleName");
+            $dqlParameters["sampleName"] = "%".$sampleName."%";
+            $advancedFilter++;
+        }
+
         if( $principalInvestigators && count($principalInvestigators)>0 ) {
             $dql->andWhere("principalInvestigators.id IN (:principalInvestigators)");
             $principalInvestigatorsIdsArr = array();
@@ -1685,12 +1693,12 @@ class RequestController extends Controller
                 $dqlParameters["categoryId"] = $category;
             }
             if ($searchStr) {
+                $dql->leftJoin('transresRequest.dataResults','dataResults');
                 //$dql->andWhere("(category.name LIKE :categoryStr OR category.productId LIKE :categoryStr OR category.feeUnit LIKE :categoryStr OR category.fee LIKE :categoryStr)");
-                $commentCriterion = "products.comment LIKE :searchStr OR products.note LIKE :searchStr OR transresRequest.comment LIKE :searchStr";
+                $commentCriterion = "products.comment LIKE :searchStr OR products.note LIKE :searchStr OR transresRequest.comment LIKE :searchStr OR dataResults.comment LIKE :searchStr";
                 $dqlParameters["searchStr"] = "%".$searchStr."%";
 
-                //TODO: add search fos bundle comments
-                //'thread_id = transres-Request-13541-billing'
+                //add search fos bundle comments
                 $requestCommentIds = $transresRequestUtil->getRequestIdsByFosComment($searchStr);
                 if( count($requestCommentIds) > 0 ) {
                     $commentCriterion = $commentCriterion . " OR " . "transresRequest.id IN (:requestCommentIds)";
