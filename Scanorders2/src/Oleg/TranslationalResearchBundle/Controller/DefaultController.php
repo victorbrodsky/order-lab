@@ -405,6 +405,7 @@ class DefaultController extends Controller
         $comments = $query->getResult();
         echo "comments count=".count($comments)."<br>";
 
+        $batchSize = 20;
         $count = 0;
 
         foreach($comments as $comment) {
@@ -427,7 +428,13 @@ class DefaultController extends Controller
                         if( $entity ) {
                             $comment->setObject($entity);
                             echo $comment->getEntityId()." ";
-                            $em->flush($comment);
+
+                            //$em->flush($comment);
+                            if (($count % $batchSize) === 0) {
+                                $em->flush($comment);
+                                $em->clear(); // Detaches all objects from Doctrine!
+                            }
+
                             $count++;
                         }
                     }
@@ -435,6 +442,9 @@ class DefaultController extends Controller
 
             }
         }
+
+        $em->flush(); //Persist objects that did not make up an entire batch
+        $em->clear();
 
         return $count;
     }
