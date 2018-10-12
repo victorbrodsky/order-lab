@@ -1686,8 +1686,19 @@ class RequestController extends Controller
             }
             if ($searchStr) {
                 //$dql->andWhere("(category.name LIKE :categoryStr OR category.productId LIKE :categoryStr OR category.feeUnit LIKE :categoryStr OR category.fee LIKE :categoryStr)");
-                $dql->andWhere("products.comment LIKE :searchStr");
+                $commentCriterion = "products.comment LIKE :searchStr OR products.note LIKE :searchStr OR transresRequest.comment LIKE :searchStr";
                 $dqlParameters["searchStr"] = "%".$searchStr."%";
+
+                //TODO: add search fos bundle comments
+                //'thread_id = transres-Request-13541-billing'
+                $requestCommentIds = $transresRequestUtil->getRequestIdsByFosComment($searchStr);
+                if( count($requestCommentIds) > 0 ) {
+                    $commentCriterion = $commentCriterion . " OR " . "transresRequest.id IN (:requestCommentIds)";
+                    $dqlParameters["requestCommentIds"] = $requestCommentIds;
+                }
+
+                $dql->andWhere($commentCriterion);
+
                 $advancedFilter++;
             }
         }

@@ -3159,6 +3159,53 @@ class TransResRequestUtil
 
         return $msg;
     }
+
+    //search fos bundle comments user_fosComment: 'thread_id = transres-Request-13541-billing'
+    public function getRequestIdsByFosComment( $searchStr ) {
+        $repository = $this->em->getRepository('OlegUserdirectoryBundle:FosComment');
+        $dql =  $repository->createQueryBuilder("foscomment");
+        $dql->select('foscomment');
+
+
+        $dql->where("foscomment.body LIKE :searchStr");
+        $dql->andWhere("foscomment.entityName = 'TransResRequest'");
+        //$dql->andWhere("(foscomment.entityName IS NULL OR foscomment.entityName = 'TransResRequest')");
+
+        $query = $this->em->createQuery($dql);
+
+        $query->setParameters(array(
+            "searchStr" => "%".$searchStr."%",
+        ));
+
+        $comments = $query->getResult();
+        //echo "comments count=".count($comments)."<br>";
+
+        $requestIds = array();
+
+        foreach($comments as $comment) {
+            $requestId = $comment->getEntityId();
+            if( $requestId ) {
+                $requestIds[] = $requestId;
+            } else {
+                //OLD CASE when entityName was not recorded. Delete when all comments will be re-populated with object properties
+                $commentId = $comment->getThread();
+                //echo "commentId=".$commentId."<br>";
+                //get request ID from $commentId 'transres-Request-13541-billing'
+                $commentIdArr = explode("-", $commentId);
+                if (count($commentIdArr) >= 3) {
+                    $requestId = $commentIdArr[2];
+                    if ($requestId) {
+                        $requestIds[] = $requestId;
+                        //echo "requestId=".$requestId."<br>";
+                    }
+                }
+            }
+        }
+        //echo "requestIds count=".count($requestIds)."<br>";
+
+        return $requestIds;
+    }
+
 }
 
 

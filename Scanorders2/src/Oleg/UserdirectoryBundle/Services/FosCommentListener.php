@@ -69,10 +69,15 @@ class FosCommentListener implements EventSubscriberInterface {
         $comment = $event->getComment();
         $entity = $this->getEntityFromComment($comment);
 
-        $authorTypeArr = $this->getAuthorType($entity);
-        if( $authorTypeArr && count($authorTypeArr) > 0 ) {
-            $comment->setAuthorType($authorTypeArr['type']);
-            $comment->setAuthorTypeDescription($authorTypeArr['description']);
+        if( $entity ) {
+            //send comment entity properties
+            $comment->setObject($entity);
+
+            $authorTypeArr = $this->getAuthorType($entity);
+            if( $authorTypeArr && count($authorTypeArr) > 0 ) {
+                $comment->setAuthorType($authorTypeArr['type']);
+                $comment->setAuthorTypeDescription($authorTypeArr['description']);
+            }
         }
 
         //$this->sendEmails($event,$comment,$entity);

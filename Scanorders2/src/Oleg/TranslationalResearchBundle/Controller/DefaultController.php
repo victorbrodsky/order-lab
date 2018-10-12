@@ -307,7 +307,7 @@ class DefaultController extends Controller
     }
 
     /**
-     * http://localhost/order/translational-research/update-projects-implicit-date
+     * http://127.0.0.1/order/translational-research/update-projects-implicit-date
      *
      * @Route("/update-projects-implicit-date", name="translationalresearch_update_projects_implicit_date")
      */
@@ -316,7 +316,10 @@ class DefaultController extends Controller
             return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
         }
 
-        exit("updateProjectsImplicitDateAction: Not allowed");
+        //exit("updateProjectsImplicitDateAction: Not allowed");
+
+        $count = $this->updateCommentObject($request);
+        exit("<br>End of update comment's object: ".$count);
 
         $count = $this->updateInvoicePaidDue($request);
         exit("End of update invoice's paid and due: ".$count);
@@ -383,6 +386,57 @@ class DefaultController extends Controller
 
         //exit("End of update project's implicit dates: ".$i);
         return $i-1;
+    }
+
+    public function updateCommentObject(Request $request) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository('OlegUserdirectoryBundle:FosComment');
+        $dql =  $repository->createQueryBuilder("foscomment");
+        $dql->select('foscomment');
+
+        $dql->where("foscomment.entityName IS NULL");
+
+        $query = $em->createQuery($dql);
+
+        $comments = $query->getResult();
+        echo "comments count=".count($comments)."<br>";
+
+        $count = 0;
+
+        foreach($comments as $comment) {
+            if( !$comment->getEntityId() || !$comment->getEntityName() || !$comment->getEntityNamespace() ) {
+
+                $commentId = $comment->getThread();
+                //echo "commentId=".$commentId."<br>";
+                //get request ID from $commentId 'transres-Request-13541-billing'
+                $commentIdArr = explode("-", $commentId);
+                if( count($commentIdArr) >= 3 ) {
+                    $threadEntityName = $commentIdArr[1];
+                    $requestId = $commentIdArr[2];
+                    if( $threadEntityName && $requestId ) {
+
+                        if( $threadEntityName == "Request" ) {
+                            $threadEntityName = "TransResRequest";
+                        }
+
+                        $entity = $em->getRepository('OlegTranslationalResearchBundle:'.$threadEntityName)->find($requestId);
+                        if( $entity ) {
+                            $comment->setObject($entity);
+                            echo $comment->getEntityId()." ";
+                            $em->flush($comment);
+                            $count++;
+                        }
+                    }
+                }
+
+            }
+        }
+
+        return $count;
     }
 
 
