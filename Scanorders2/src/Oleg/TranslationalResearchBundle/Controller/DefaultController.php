@@ -431,7 +431,7 @@ class DefaultController extends Controller
 
                             //$em->flush($comment);
                             if (($count % $batchSize) === 0) {
-                                $em->flush($comment);
+                                $em->flush();
                                 $em->clear(); // Detaches all objects from Doctrine!
                             }
 
