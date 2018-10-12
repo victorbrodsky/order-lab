@@ -316,7 +316,7 @@ class DefaultController extends Controller
             return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
         }
 
-        //exit("updateProjectsImplicitDateAction: Not allowed");
+        exit("updateProjectsImplicitDateAction: Not allowed");
 
         $count = $this->updateCommentObject($request);
         exit("<br>End of update comment's object: ".$count);
