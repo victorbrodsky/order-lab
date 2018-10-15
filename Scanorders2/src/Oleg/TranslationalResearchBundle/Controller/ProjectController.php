@@ -970,7 +970,7 @@ class ProjectController extends Controller
                 $startProjectReview = true;
             }
 
-            $transresUtil->assignMinimumProjectRoles($project);
+            $transresUtil->assignMinimumProjectRoles($project); //new
 
             $project->calculateAndSetImplicitExpirationDate();
 
@@ -1109,6 +1109,8 @@ class ProjectController extends Controller
         $project = $this->createProjectEntity($user,$project);
 
         ///////////// get originals /////////////
+        $originalProjectSpecialty = $project->getProjectSpecialty();
+
         //IRB Reviews
         $originalIrbReviews = new ArrayCollection();
         foreach ($project->getIrbReviews() as $review) {
@@ -1187,7 +1189,7 @@ class ProjectController extends Controller
                 }
             }
 
-            $transresUtil->assignMinimumProjectRoles($project);
+            $transresUtil->assignMinimumProjectRoles($project); //edit
 
             $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($project, "document");
             $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($project, "irbApprovalLetter");
@@ -1202,6 +1204,49 @@ class ProjectController extends Controller
             if (!$testing) {
                 $em->persist($project);
                 $em->flush();
+            }
+
+            //if specialty is changed
+            if( $originalProjectSpecialty->getId() != $project->getProjectSpecialty()->getId() ) {
+
+                $transresPdfUtil = $this->get('transres_pdf_generator');
+
+                //eventlog
+//                $eventType = "Project Updated";
+//                $msgSpecialtyChanged = "Project specialty changed to ".$project->getProjectSpecialty();
+//                $transresUtil->setEventLog($project,$eventType,$msgSpecialtyChanged,$testing);
+
+                $project->generateOid();
+
+                //regenerate request Oid
+                foreach($project->getRequests() as $transresRequest) {
+                    $transresRequest->generateOid();
+
+                    //regenerate invoice Oid
+                    foreach($transresRequest->getInvoices() as $invoice){
+                        $invoice->generateOid($transresRequest);
+                    }
+                }
+
+                //eventlog
+                $eventType = "Project Updated";
+                $msgSpecialtyChanged = "Project specialty changed to ".$project->getProjectSpecialty().
+                    " All associated work request's and invoice's IDs have been updated. All latest Invoice PDFs have been regenerated.";
+                $transresUtil->setEventLog($project,$eventType,$msgSpecialtyChanged,$testing);
+
+                $em->flush();
+                //exit("Changed specialty");
+
+                //regenarate latest invoice PDF
+                foreach($project->getRequests() as $transresRequest) {
+                    foreach($transresRequest->getInvoices() as $invoice){
+                        //regenarate latest invoice PDF
+                        if( $invoice->getLatestVersion() ) {
+                            //echo "regenaret Invoice PDF for " . $invoice->getOid()."<br>";
+                            $transresPdfUtil->generateInvoicePdf($invoice,$user);
+                        }
+                    }
+                }
             }
 
             //process form nodes
