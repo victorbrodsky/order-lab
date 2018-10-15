@@ -28,9 +28,9 @@ class TransResListController extends ListController
     protected $sitename = "translationalresearch";
     protected $postPath = "_translationalresearch";
 
+    //     * @Route("/list/antibodies/", name="antibodies-list_translationalresearch")
     /**
      * @Route("/list/translational-research-request-category-types/", name="transresrequestcategorytypes-list_translationalresearch")
-     * @Route("/list/antibodies/", name="antibodies-list_translationalresearch")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:index.html.twig")
@@ -47,6 +47,27 @@ class TransResListController extends ListController
 
         return $this->getList($request);
     }
+
+    //Custom Antibody list
+    /**
+     * @Route("/list/antibodies/", name="antibodies-list_translationalresearch")
+     *
+     * @Method("GET")
+     * @Template("OlegTranslationalResearchBundle:Request:antibodies.html.twig")
+     */
+    public function indexAntibodiesAction(Request $request)
+    {
+        if(
+            false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') &&
+            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN') &&
+            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE')
+        ) {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
+        return $this->getList($request);
+    }
+
 
     /**
      * @Route("/list/translational-research-request-category-types/", name="transresrequestcategorytypes_create_translationalresearch")

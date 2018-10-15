@@ -296,6 +296,7 @@
                             </li>
 
                             {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') or is_granted('ROLE_TRANSRES_EXECUTIVE') %}
+                                <hr style="margin-top: 10px; margin-bottom: 10px;">
                                 <li>
                                     <a href="{{ path('transresrequestcategorytypes-list_translationalresearch') }}">Category Type List Management</a>
                                 </li>
@@ -329,8 +330,13 @@
                                 </li>
 
                                 <li>
-                                    <a href="{{ path(translationalresearch_sitename~'_dashboard_financial',{'filter[startDate]':startDate,'filter[endDate]':endDate,'filter[projectSpecialty]':0, 'filter[compareType]':'work request submission date'}) }}"
-                                    >Financial Statistics</a>
+                                    <a href="{{ path(translationalresearch_sitename~'_dashboard_financial_request',{'filter[startDate]':startDate,'filter[endDate]':endDate,'filter[projectSpecialty]':0, 'filter[compareType]':'work request submission date'}) }}"
+                                    >Work Request's Financial Statistics</a>
+                                </li>
+
+                                <li>
+                                    <a href="{{ path(translationalresearch_sitename~'_dashboard_financial_invoice',{'filter[startDate]':startDate,'filter[endDate]':endDate,'filter[projectSpecialty]':0, 'filter[compareType]':'work request submission date'}) }}"
+                                    >Invoice's Financial Statistics</a>
                                 </li>
 
                                 {#<hr>#}
