@@ -46,14 +46,20 @@
             <div class="col-xs-2">
                 {{ formmacros.fielddate(filterform.endDate,'allow-future-date') }}
             </div>
-            <div class="col-xs-3">
+            <div class="col-xs-2">
                 {% if filterform.projectSpecialty is defined %}
                     {{ form_widget(filterform.projectSpecialty, {'attr': {'placeholder': 'Specialty'}}) }}
                 {% endif %}
             </div>
-            <div class="col-xs-3">
+            <div class="col-xs-2">
                 {% if filterform.compareType is defined %}
                     {{ form_widget(filterform.compareType, {'attr': {'placeholder': 'Compare Type'}}) }}
+                {% endif %}
+            </div>
+            <div class="col-xs-2">
+                {% if filterform.exploded is defined %}
+                    {{ formmacros.checkbox(filterform.exploded) }}
+                    {#Exploded View {{ form_widget(filterform.explodedView) }}#}
                 {% endif %}
             </div>
             <div class="col-xs-2">

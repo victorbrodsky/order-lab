@@ -424,6 +424,9 @@ class DashboardController extends Controller
         $filterform = $this->getFilter(true);
         $filterform->handleRequest($request);
 
+        $explodedView = $filterform['exploded']->getData();
+        //echo "explodedView=".$explodedView."<br>";
+
         $startDate = $filterform['startDate']->getData();
         $endDate = $filterform['endDate']->getData();
 
@@ -597,10 +600,10 @@ class DashboardController extends Controller
             'width' => 800,
         );
         //13. Total Fees per Funded Project (Top 10)
-        $fundedTotalFeesByRequestTopArr = $this->getTopArray($fundedTotalFeesByRequestArr);
+        $fundedTotalFeesByRequestTopArr = $this->getTopArray($fundedTotalFeesByRequestArr,$explodedView);
         $chartsArray = $this->addChart( $chartsArray, $fundedTotalFeesByRequestTopArr, "Total Fees per Funded Project (Top 10)",'pie',$layoutArray,"- $");
         //14. Total Fees per non-funded Project (Top 10)
-        $unFundedTotalFeesByRequestTopArr = $this->getTopArray($unFundedTotalFeesByRequestArr);
+        $unFundedTotalFeesByRequestTopArr = $this->getTopArray($unFundedTotalFeesByRequestArr,$explodedView);
         $chartsArray = $this->addChart( $chartsArray, $unFundedTotalFeesByRequestTopArr, "Total Fees per Non-Funded Project (Top 10)",'pie',$layoutArray,"- $");
         ////////////////////////////////
 
@@ -609,7 +612,7 @@ class DashboardController extends Controller
             'height' => 600,
             'width' => 800,
         );
-        $totalFeesByInvestigatorTopArr = $this->getTopArray($totalFeesByInvestigatorArr);
+        $totalFeesByInvestigatorTopArr = $this->getTopArray($totalFeesByInvestigatorArr,$explodedView);
         $chartsArray = $this->addChart( $chartsArray, $totalFeesByInvestigatorTopArr, "Total Fees per Investigator (Top 10)",'pie',$layoutArray,"- $");
         ////////////////////////////
 
@@ -622,10 +625,10 @@ class DashboardController extends Controller
             'width' => 800,
         );
         //16. Total Fees per Investigator (Funded) (Top 10)
-        $fundedTotalFeesByInvestigatorTopArr = $this->getTopArray($fundedTotalFeesByInvestigatorArr);
+        $fundedTotalFeesByInvestigatorTopArr = $this->getTopArray($fundedTotalFeesByInvestigatorArr,$explodedView);
         $chartsArray = $this->addChart( $chartsArray, $fundedTotalFeesByInvestigatorTopArr, "Total Fees per Investigator (Funded) (Top 10)",'pie',$layoutArray,"- $");
         //17. Total Fees per Investigator (non-Funded) (Top 10)
-        $unFundedTotalFeesByInvestigatorTopArr = $this->getTopArray($unFundedTotalFeesByInvestigatorArr);
+        $unFundedTotalFeesByInvestigatorTopArr = $this->getTopArray($unFundedTotalFeesByInvestigatorArr,$explodedView);
         $chartsArray = $this->addChart( $chartsArray, $unFundedTotalFeesByInvestigatorTopArr, "Total Fees per Investigator (Non-Funded) (Top 10)",'pie',$layoutArray,"- $");
         ////////////////////////////////////////
 
@@ -657,7 +660,8 @@ class DashboardController extends Controller
         $filterform = $this->getFilter(true);
         $filterform->handleRequest($request);
 
-        $showOther = true;
+        $showOther = $filterform['exploded']->getData();
+        //echo "showOther=".$showOther."<br>";
 
         $startDate = $filterform['startDate']->getData();
         $endDate = $filterform['endDate']->getData();
@@ -1348,7 +1352,8 @@ class DashboardController extends Controller
     public function getTopArray($piProjectCountArr, $showOthers=false, $descriptionArr=array(), $maxLen=50) {
         arsort($piProjectCountArr);
         $limit = 10;
-        //$limit = 0;
+        //$limit = 3;
+        //$showOthers = true;
         $count = 1;
         $piProjectCountTopArr = array();
         foreach($piProjectCountArr as $username=>$value) {
@@ -1360,6 +1365,7 @@ class DashboardController extends Controller
                 }
             } else {
                 if( $showOthers ) {
+                    //echo "show Others <br>";
                     if (isset($piProjectCountTopArr['Other'])) {
                         $value = $piProjectCountTopArr['Other'] + $value;
                     } else {
