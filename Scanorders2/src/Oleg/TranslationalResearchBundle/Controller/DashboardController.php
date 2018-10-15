@@ -430,8 +430,8 @@ class DashboardController extends Controller
         $startDate = $filterform['startDate']->getData();
         $endDate = $filterform['endDate']->getData();
 
-        $compareType = $filterform['compareType']->getData();
-        $compareType = str_replace("-"," ",$compareType);
+        //$compareType = $filterform['compareType']->getData();
+       // $compareType = str_replace("-"," ",$compareType);
 
         $projectSpecialty = $filterform['projectSpecialty']->getData();
         if ($projectSpecialty != 0) {
@@ -450,7 +450,7 @@ class DashboardController extends Controller
         //16. Total Fees per Investigator (Funded) (Top 10)
         //17. Total Fees per Investigator (non-Funded) (Top 10)
 
-        $transRequests = $this->getRequestsByFilter($startDate, $endDate, $projectSpecialtyObjects, true, $compareType);
+        $transRequests = $this->getRequestsByFilter($startDate, $endDate, $projectSpecialtyObjects, true);
 
         $subtotalFees = 0;
         $fundedTotalFees = 0;
@@ -506,7 +506,7 @@ class DashboardController extends Controller
                 } else {
                     $totalFee = $subtotalFee;
                 }
-                $totalFee = number_format($totalFee,2);
+                $totalFee = $this->getNumberFormat($totalFee);
                 $fundedTotalFeesByRequestArr[$projectIndex] = $totalFee;
             } else {
                 //12. Total Fees by Work Requests (Total $400K)
@@ -517,7 +517,7 @@ class DashboardController extends Controller
                 } else {
                     $totalFee = $subtotalFee;
                 }
-                $totalFee = number_format($totalFee,2);
+                $totalFee = $this->getNumberFormat($totalFee);
                 $unFundedTotalFeesByRequestArr[$projectIndex] = $totalFee;
             }
             /////////////////////
@@ -528,7 +528,7 @@ class DashboardController extends Controller
             } else {
                 $totalFee = $subtotalFee;
             }
-            $totalFee = number_format($totalFee,2);
+            $totalFee = $this->getNumberFormat($totalFee);
             $totalFeesByInvestigatorArr[$investigatorIndex] = $totalFee;
             /////////////////////////////
 
@@ -541,7 +541,7 @@ class DashboardController extends Controller
                 } else {
                     $totalFee = $subtotalFee;
                 }
-                $totalFee = number_format($totalFee,2);
+                $totalFee = $this->getNumberFormat($totalFee);
                 $fundedTotalFeesByInvestigatorArr[$investigatorIndex] = $totalFee;
             } else {
                 //17. Total Fees per Investigator (non-Funded) (Top 10)
@@ -550,7 +550,7 @@ class DashboardController extends Controller
                 } else {
                     $totalFee = $subtotalFee;
                 }
-                $totalFee = number_format($totalFee,2);
+                $totalFee = $this->getNumberFormat($totalFee);
                 $unFundedTotalFeesByInvestigatorArr[$projectIndex] = $totalFee;
             }
             ////////////////////////////////////////
@@ -563,7 +563,7 @@ class DashboardController extends Controller
         $dataArray = array();
         $chartDataArray = array();
         $type = 'pie';
-        $subtotalFees = number_format($subtotalFees,2);
+        $subtotalFees = $this->getNumberFormat($subtotalFees);
 
         $layoutArray = array(
             'height' => 600,
@@ -571,8 +571,8 @@ class DashboardController extends Controller
             'title' => "Total Fees by Work Requests (Total $".$subtotalFees.")"
         );
 
-        $fundedTotalFees = number_format($fundedTotalFees,2);
-        $unFundedTotalFees = number_format($unFundedTotalFees,2);
+        $fundedTotalFees = $this->getNumberFormat($fundedTotalFees);
+        $unFundedTotalFees = $this->getNumberFormat($unFundedTotalFees);
 
         $labels = array('Funded - $'.$fundedTotalFees,'Non-Funded - $'.$unFundedTotalFees);
         $values = array($fundedTotalFees,$unFundedTotalFees);
@@ -657,7 +657,7 @@ class DashboardController extends Controller
         $transresRequestUtil = $this->container->get('transres_request_util');
         $em = $this->getDoctrine()->getManager();
 
-        $filterform = $this->getFilter(true);
+        $filterform = $this->getFilter(true,true);
         $filterform->handleRequest($request);
 
         $showOther = $filterform['exploded']->getData();
@@ -903,7 +903,7 @@ class DashboardController extends Controller
         );
     }
 
-    public function getFilter( $withCompareType=false ) {
+    public function getFilter( $withExploded=true, $withCompareType=false ) {
         $transresUtil = $this->container->get('transres_util');
         //////////// Filter ////////////
         //default date range from today to 1 year back
@@ -917,11 +917,16 @@ class DashboardController extends Controller
             //'endDate' => $today
             "projectSpecialty" => true,
             "projectSpecialties" => $projectSpecialtiesWithAll,
-            "compareType" => false
+            "compareType" => false,
+            "exploded" => true
         );
 
         if( $withCompareType ) {
             $params["compareType"] = true;
+        }
+
+        if( $withExploded ) {
+            $params["exploded"] = true;
         }
 
         $filterform = $this->createForm(FilterDashboardType::class, null,array(
@@ -1176,7 +1181,9 @@ class DashboardController extends Controller
         $params = array(
             //'startDate' => $today,
             //'endDate' => $today
-            "projectSpecialty" => false
+            "projectSpecialty" => false,
+            "compareType" => false,
+            "exploded" => false
         );
         $filterform = $this->createForm(FilterDashboardType::class, null, array(
             'method' => 'GET',
@@ -1347,6 +1354,9 @@ class DashboardController extends Controller
         );
     }
 
+    public function getNumberFormat($number,$digits=null) {
+        return number_format($number,$digits);
+    }
 
     //select top 10, BUT make sure the other PIs are still shown as "Other"
     public function getTopArray($piProjectCountArr, $showOthers=false, $descriptionArr=array(), $maxLen=50) {
@@ -1766,7 +1776,7 @@ class DashboardController extends Controller
         $dqlParameters = array();
 
         if( $startDate ) {
-            $startDateCriterion = 'request.createDate >= :startDate';
+            //$startDateCriterion = 'request.createDate >= :startDate';
             if( $compareType == 'work request submission date' ) {
                 $startDateCriterion = 'request.createDate >= :startDate';
             } elseif( $compareType == 'last invoice generation date' ) {
@@ -1787,7 +1797,7 @@ class DashboardController extends Controller
             //echo "endDate=" . $endDate->format('Y-m-d H:i:s') . "<br>";
             $dql->andWhere('request.createDate <= :endDate');
 
-            $endDateCriterion = 'request.createDate <= :endDate';
+            //$endDateCriterion = 'request.createDate <= :endDate';
             if( $compareType == 'work request submission date' ) {
                 $endDateCriterion = 'request.createDate <= :endDate';
             } elseif( $compareType == 'last invoice generation date' ) {

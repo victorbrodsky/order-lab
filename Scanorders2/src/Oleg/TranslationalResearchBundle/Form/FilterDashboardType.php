@@ -107,11 +107,13 @@ class FilterDashboardType extends AbstractType
             ));
         }
 
-        $builder->add('exploded', CheckboxType::class, array(
-            'label' => "Exploded View",
-            'required' => false,
-            //'attr' => array('class' => 'form-control checkbox')
-        ));
+        if( $this->params['exploded'] ) {
+            $builder->add('exploded', CheckboxType::class, array(
+                'label' => "Exploded View",
+                'required' => false,
+                //'attr' => array('class' => 'form-control checkbox')
+            ));
+        }
 
 //        $builder->add('searchId', TextType::class, array(
 //            'required'=>false,
