@@ -360,7 +360,7 @@ class TransResRequestType extends AbstractType
             if( $this->params['cycle'] != 'new' ) {
                 $transresRequest = $this->params['transresRequest'];
                 if ($transresRequest && $transresRequest->getProgressState() != 'draft') {
-                    $saveAsDraftLabel = "Save Changes and Revert Status to Draft";
+                    $saveAsDraftLabel = "Update Changes and Revert Status to Draft";
                 }
             }
             $builder->add('saveAsDraft', SubmitType::class, array(
@@ -371,7 +371,7 @@ class TransResRequestType extends AbstractType
         }
         if( $this->params['saveAsUpdate'] === true ) {
             $builder->add('saveAsUpdate', SubmitType::class, array(
-                'label' => 'Save Changes',
+                'label' => 'Update Changes',
                 //'attr' => array('class'=>'btn btn-warning', 'onclick'=>'transresValidateHandsonTable();')
                 'attr' => array('class'=>'btn btn-warning', 'onclick'=>'return transresValidateRequest(false);')
             ));
@@ -387,13 +387,13 @@ class TransResRequestType extends AbstractType
 
         if( $this->params['saveAsUpdateChangeProgressState'] === true ) {
             $builder->add('saveAsUpdateChangeProgressState', SubmitType::class, array(
-                'label' => 'Save Changes and Completion Status',
+                'label' => 'Update Changes and Completion Status',
                 'attr' => array('class'=>'btn btn-success', 'onclick'=>'return transresValidateRequest(false);')
             ));
         }
         if( $this->params['saveAsUpdateChangeBillingState'] === true ) {
             $builder->add('saveAsUpdateChangeBillingState', SubmitType::class, array(
-                'label' => 'Save Changes and Billing Status',
+                'label' => 'Update Changes and Billing Status',
                 'attr' => array('class'=>'btn btn-success', 'onclick'=>'return transresValidateRequest(false);')
             ));
         }
