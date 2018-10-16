@@ -462,6 +462,7 @@ class RequestController extends Controller
             }
 
             //edit
+            //echo "clicked btn=".$form->getClickedButton()->getName()."<br>";
             if ($form->getClickedButton() && 'saveAsDraft' === $form->getClickedButton()->getName()) {
                 //Save Project as Draft => state='draft'
                 $transresRequest->setProgressState('draft');
@@ -537,6 +538,16 @@ class RequestController extends Controller
             $msg = str_replace($break,"<br>",$msg);
             $transresUtil->setEventLog($transresRequest,$eventType,$msg);
             //////////// EOF Event Log and Email for Update //////////////////
+
+            //Update and Change the State
+            if ($form->getClickedButton() && 'saveAsUpdateChangeProgressState' === $form->getClickedButton()->getName()) {
+                //exit('saveAsUpdateChangeProgressState');
+                return $this->redirectToRoute('translationalresearch_request_review_progress_state', array('id' => $transresRequest->getId()));
+            }
+            if ($form->getClickedButton() && 'saveAsUpdateChangeBillingState' === $form->getClickedButton()->getName()) {
+                //exit('saveAsUpdateChangeBillingState');
+                return $this->redirectToRoute('translationalresearch_request_review_billing_state', array('id' => $transresRequest->getId()));
+            }
 
             return $this->redirectToRoute('translationalresearch_request_show', array('id' => $transresRequest->getId()));
         }
@@ -1993,6 +2004,8 @@ class RequestController extends Controller
             'saveAsDraft' => false,
             'saveAsComplete' => false,
             'updateRequest' => false,
+            'saveAsUpdateChangeProgressState' => false,
+            'saveAsUpdateChangeBillingState' => false,
             //'projects' => null,
             'availableProjects' => null,
             'billingStateChoiceArr' => $billingStateChoiceArr,
@@ -2048,6 +2061,14 @@ class RequestController extends Controller
             //Make sure that the Request can be edited only in the "Draft" stage. Admin can edit the Request in any stage.
             if( $params['admin'] ) {
                 $params['saveAsUpdate'] = true;
+            }
+
+            //show "Update Changes and Completion/Billing Status"
+            if( $transresRequest->getProgressState() != 'draft' ) {
+                $params['saveAsUpdateChangeProgressState'] = true;
+            }
+            if( $transresRequest->getBillingState() != 'draft' ) {
+                $params['saveAsUpdateChangeBillingState'] = true;
             }
         }
 

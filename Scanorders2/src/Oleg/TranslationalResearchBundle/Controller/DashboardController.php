@@ -164,6 +164,7 @@ class DashboardController extends Controller
         ///////////// EOF 1. Principle Investigators by Affiliation ///////////////////
 
         ///////////// 2. Total number of projects (XXX) per PI (Top 5/10) (APPROVED & CLOSED) - $piProjectCountArr //////////////
+        //TODO: add link to the filtered project list by PI
         $piProjectCountTopArr = $this->getTopArray($piProjectCountArr); // getTopArray(
         //Projects per PI
         //                              $chartsArray, $dataArr,              $title,                                $type='pie', $layoutArray=null, $valuePrefixLabel=null
@@ -871,7 +872,7 @@ class DashboardController extends Controller
             'width' => 800,
         );
         //19. Generated Invoices by Status per Funded Project (Top 10)
-        $invoicesByProjectTopArr = $this->getTopArray($invoicesByProjectArr,$showOther); // addChart(
+        $invoicesByProjectTopArr = $this->getTopArray($invoicesByProjectArr,$showOther);
         $invoicesFeesByProjectTopArr = $this->getTopArray($invoicesFeesByProjectArr,$showOther);
         //merge two to attach fees to label
         $invoicesByProjectTopArr = $this->attachSecondValueToFirstLabel($invoicesByProjectTopArr,$invoicesFeesByProjectTopArr,"-$");
@@ -885,7 +886,7 @@ class DashboardController extends Controller
             array("paid $","-$","limegreen",$invoicePaidFeeArr),
             array("due $","-$","red",$invoiceDueFeeArr)
         );
-        $invoicesFeesByPiArrTop = $this->getTopArray($invoicesFeesByPiArr,$showOther,$descriptionArr); // getTopArray(
+        $invoicesFeesByPiArrTop = $this->getTopArray($invoicesFeesByPiArr,$showOther,$descriptionArr);
 
         //merge two to attach fees to label
         //$invoicesByPiTopArr = $this->attachSecondValueToFirstLabel($invoicesByPiTopArr,$invoicesFeesByPiTopArr,"-$");

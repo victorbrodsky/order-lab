@@ -164,6 +164,13 @@
             {{ form_widget(form.saveAsComplete) }}
         {% endif %}
 
+        {% if form.saveAsUpdateChangeProgressState is defined %}
+            {{ form_widget(form.saveAsUpdateChangeProgressState) }}
+        {% endif %}
+        {% if form.saveAsUpdateChangeBillingState is defined %}
+            {{ form_widget(form.saveAsUpdateChangeBillingState) }}
+        {% endif %}
+
         <div id="projectError" class="alert alert-danger" style="display: none; margin: 5px;"></div>
 
     {{ form_end(form) }}
