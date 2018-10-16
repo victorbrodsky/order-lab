@@ -9,6 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\Constraints\Date;
 
 
@@ -82,6 +83,7 @@ class DashboardController extends Controller
             $pis = $project->getPrincipalInvestigators();
             foreach ($pis as $pi) {
                 $userName = $pi->getUsernameOptimal();
+                $userId = $pi->getId();
 
                 //1. Principle Investigators by Affiliation
                 if( $this->isUserBelongsToInstitution($pi,$wcmPathology) ) {
@@ -96,12 +98,20 @@ class DashboardController extends Controller
                 }
 
                 //2. Total number of projects (XXX) per PI (Top 5/10) (APPROVED & CLOSED)
-                if (isset($piProjectCountArr[$userName])) {
-                    $count = $piProjectCountArr[$userName] + 1;
+//                if (isset($piProjectCountArr[$userName])) {
+//                    $count = $piProjectCountArr[$userName] + 1;
+//                } else {
+//                    $count = 1;
+//                }
+//                $piProjectCountArr[$userName] = $count;
+                if( isset($piProjectCountArr[$userId]) && isset($piProjectCountArr[$userId]['value']) ) {
+                    $count = $piProjectCountArr[$userId]['value'] + 1;
                 } else {
                     $count = 1;
                 }
-                $piProjectCountArr[$userName] = $count;
+                $piProjectCountArr[$userId]['value'] = $count;
+                $piProjectCountArr[$userId]['label'] = $userName;
+                $piProjectCountArr[$userId]['show-path'] = "project";
 
                 /////////// 3,4 Total number of Funded/Un-Funded Projects per PI (Top 10) ////////////////
                 if( $fundingNumber ) {
@@ -165,10 +175,13 @@ class DashboardController extends Controller
 
         ///////////// 2. Total number of projects (XXX) per PI (Top 5/10) (APPROVED & CLOSED) - $piProjectCountArr //////////////
         //TODO: add link to the filtered project list by PI
-        $piProjectCountTopArr = $this->getTopArray($piProjectCountArr); // getTopArray(
+        $piProjectCountTopArr = $this->getTopMultiArray($piProjectCountArr); // getTopArray(
+        echo "<pre>";
+        print_r($piProjectCountTopArr);
+        echo "</pre>";
         //Projects per PI
         //                              $chartsArray, $dataArr,              $title,                                $type='pie', $layoutArray=null, $valuePrefixLabel=null
-        $chartsArray = $this->addChart( $chartsArray, $piProjectCountTopArr, "Total number of projects per PI (Top 10)","pie",null,"-"); // addChart(
+        $chartsArray = $this->addChartByMultiArray( $chartsArray, $piProjectCountTopArr, "Total number of projects per PI (Top 10)","pie",null,"-"); // addChart(
         ///////////// EOF top $piProjectCountArr //////////////
 
         /////////// 3,4 Total number of Funded/Un-Funded Projects per PI (Top 10) ////////////////
@@ -1420,8 +1433,75 @@ class DashboardController extends Controller
 
         return $piProjectCountTopArr;
     }
+    public function  getTopMultiArray($piProjectCountArr, $showOthers=false, $descriptionArr=array(), $maxLen=50) {
+        //arsort($piProjectCountArr);
+        usort($piProjectCountArr, function($a, $b) {
+            return $b['value'] - $a['value'];
+        });
 
-    function tokenTruncate($string, $your_desired_width) {
+//        echo "<pre>";
+//        print_r($piProjectCountArr);
+//        echo "</pre>";
+
+        $limit = 10;
+        //$limit = 3;
+        //$showOthers = true;
+        $count = 1;
+        $piProjectCountTopArr = array();
+        foreach($piProjectCountArr as $id=>$arr) {
+            $value = $arr['value'];
+            $label = $arr['label'];
+            $showPath = $arr['show-path'];
+            //echo $username.": ".$count."<br>";
+            if( $count <= $limit || !$limit ) {
+                if( $value && $value != 0 ) {
+                    //echo "add value=".$value."<br>";
+                    $piProjectCountTopArr[$id]['value'] = $value;
+                    $piProjectCountTopArr[$id]['label'] = $label;
+                    $piProjectCountTopArr[$id]['show-path'] = $showPath;
+                }
+            } else {
+                if( $showOthers ) {
+                    //echo "show Others <br>";
+//                    if (isset($piProjectCountTopArr['Other'])) {
+//                        $value = $piProjectCountTopArr['Other'] + $value;
+//                    } else {
+//                        //$value = 1;
+//                    }
+//                    $piProjectCountTopArr['Other'] = $value;
+
+                    if( isset($piProjectCountTopArr[$id]) && isset($piProjectCountTopArr[$id]['value']) ) {
+                        $count = $piProjectCountTopArr[$id]['value'] + 1;
+                    } else {
+                        $count = 1;
+                    }
+                    $piProjectCountArr[0]['value'] = $count;
+                    $piProjectCountArr[0]['label'] = "Other";
+                    $piProjectCountArr[0]['show-path'] = $showPath;
+
+                }
+            }
+            $count++;
+        }
+
+        if( $maxLen ) {
+            $piProjectCountTopShortArr = array();
+            foreach($piProjectCountTopArr as $id=>$arr) {
+                $value = $arr['value'];
+                $label = $arr['label'];
+                $showPath = $arr['show-path'];
+                $label = $this->tokenTruncate($label,$maxLen);
+                $piProjectCountTopShortArr[$id]['value'] = $value;
+                $piProjectCountTopShortArr[$id]['label'] = $label;
+                $piProjectCountTopShortArr[$id]['show-path'] = $showPath;
+            }
+            return $piProjectCountTopShortArr;
+        }
+
+        return $piProjectCountTopArr;
+    }
+
+    public function tokenTruncate($string, $your_desired_width) {
         $parts = preg_split('/([\s\n\r]+)/', $string, null, PREG_SPLIT_DELIM_CAPTURE);
         $parts_count = count($parts);
 
@@ -1479,6 +1559,93 @@ class DashboardController extends Controller
                 if( $valuePrefixLabel && $value ) {
                     $label = $label . " " . $valuePrefixLabel . $value;
                 }
+                $labels[] = $label;
+                $values[] = $value;
+                //$text[] = $value;
+            }
+        }
+
+        if( count($values) == 0 ) {
+            return $chartsArray;
+        }
+
+        $xAxis = "labels";
+        $yAxis = "values";
+        if( $type == "bar" || $type == "stack" ) {
+            $xAxis = "x";
+            $yAxis = "y";
+        }
+
+        $chartDataArray = array();
+        $chartDataArray[$xAxis] = $labels;
+        $chartDataArray[$yAxis] = $values;
+        $chartDataArray['type'] = $type;
+
+        //$chartDataArray["text"] = "111";
+        $chartDataArray["textinfo"] = "value+percent";
+        //hoverinfo: label+text+value+percent
+        $chartDataArray["outsidetextfont"] = array('size'=>1,'color'=>'white');
+        $chartDataArray['direction'] = 'clockwise';
+
+        $dataArray[] = $chartDataArray;
+
+        //$chartsArray['layout'] = $layoutArray;
+        //$chartsArray['data'] = $dataArray;
+
+//        echo "<pre>";
+//        print_r($dataArray);
+//        echo "</pre>";
+
+        $chartsArray[] = array(
+            'layout' => $layoutArray,
+            'data' => $dataArray
+        );
+
+        return $chartsArray;
+    }
+    public function addChartByMultiArray( $chartsArray, $dataArr, $title, $type='pie', $layoutArray=null, $valuePrefixLabel=null ) {
+
+        if( count($dataArr) == 0 ) {
+            return $chartsArray;
+        }
+
+        $labels = array();
+        $values = array();
+        //$text = array();
+
+        if( !$layoutArray ) {
+            $layoutArray = array(
+                'height' => 600,
+                'width' => 600,
+            );
+        }
+
+        if( $title ) {
+            $layoutArray['title'] = $title;
+        }
+
+        foreach( $dataArr as $id=>$arr ) {
+            $value = $arr['value'];
+            $label = $arr['label'];
+            $showPath = $arr['show-path'];
+            if( $type == "bar" || ($value && $value != 0) ) {
+                if( $valuePrefixLabel && $value ) {
+                    $label = $label . " " . $valuePrefixLabel . $value;
+                }
+
+                if( $showPath ) {
+                    $link = $this->container->get('router')->generate(
+                        'translationalresearch_project_index',
+                        array(
+                            'filter[principalInvestigators][]' => $id,
+                        ),
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    );
+                    $linkLabel = "link";
+                    $link = '<a target="_blank" href="'.$link.'">'.$linkLabel.'</a>';
+                    $label = $label . " " . $link;
+                }
+
                 $labels[] = $label;
                 $values[] = $value;
                 //$text[] = $value;
