@@ -188,10 +188,30 @@ doctrine:
 
 monolog:
     handlers:
+#        filter_for_errors:
+#            type: fingers_crossed
+#            # if *one* log is error or higher, pass *all* to file_log
+#            action_level: error
+#            handler: file
         main:
             type: fingers_crossed
             action_level: notice
             handler: file
+#        main:
+#            type: rotating_file
+#            path:  '%kernel.logs_dir%/%kernel.environment%.log'
+#            action_level: notice
+#            max_files: 0
+#        error_level:
+#            type:  rotating_file
+#            max_files: 0
+#            path:  "%kernel.logs_dir%/error_%kernel.environment%.log"
+#            level: error
+#        notice_level:
+#            type:  rotating_file
+#            max_files: 0
+#            path:  "%kernel.logs_dir%/%kernel.environment%.log"
+#            level: notice
         file:
             type: stream
             level: debug
