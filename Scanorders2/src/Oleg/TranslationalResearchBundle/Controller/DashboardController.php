@@ -351,7 +351,6 @@ class DashboardController extends Controller
 //                $count = 1;
 //            }
 //            $requestPerProjectArr[$projectIndex] = $count;
-
             if( isset($requestPerProjectArr[$projectId]) && isset($requestPerProjectArr[$projectId]['value']) ) {
                 $count = $requestPerProjectArr[$projectId]['value'] + 1;
             } else {
@@ -368,20 +367,40 @@ class DashboardController extends Controller
             //7,8. Total number of Requests per Funded/Un-Funded Project (Top 10)
             if( $transRequest->getFundedAccountNumber() ) {
                 //7. Total number of Requests per Funded Project (Top 10)
-                if (isset($fundedRequestPerProjectArr[$projectIndex])) {
-                    $count = $fundedRequestPerProjectArr[$projectIndex] + 1;
+//                if (isset($fundedRequestPerProjectArr[$projectIndex])) {
+//                    $count = $fundedRequestPerProjectArr[$projectIndex] + 1;
+//                } else {
+//                    $count = 1;
+//                }
+//                $fundedRequestPerProjectArr[$projectIndex] = $count;
+                if( isset($fundedRequestPerProjectArr[$projectId]) && isset($fundedRequestPerProjectArr[$projectId]['value']) ) {
+                    $count = $fundedRequestPerProjectArr[$projectId]['value'] + 1;
                 } else {
                     $count = 1;
                 }
-                $fundedRequestPerProjectArr[$projectIndex] = $count;
+                $fundedRequestPerProjectArr[$projectId]['value'] = $count;
+                $fundedRequestPerProjectArr[$projectId]['label'] = $projectIndex;
+                $fundedRequestPerProjectArr[$projectId]['objectid'] = $projectId;
+                $fundedRequestPerProjectArr[$projectId]['pi'] = $piIdArr;
+                $fundedRequestPerProjectArr[$projectId]['show-path'] = "request";
             } else {
                 //8. Total number of Requests per Non_Funded Project (Top 10)
-                if (isset($unFundedRequestPerProjectArr[$projectIndex])) {
-                    $count = $unFundedRequestPerProjectArr[$projectIndex] + 1;
+//                if (isset($unFundedRequestPerProjectArr[$projectIndex])) {
+//                    $count = $unFundedRequestPerProjectArr[$projectIndex] + 1;
+//                } else {
+//                    $count = 1;
+//                }
+//                $unFundedRequestPerProjectArr[$projectIndex] = $count;
+                if( isset($unFundedRequestPerProjectArr[$projectId]) && isset($unFundedRequestPerProjectArr[$projectId]['value']) ) {
+                    $count = $unFundedRequestPerProjectArr[$projectId]['value'] + 1;
                 } else {
                     $count = 1;
                 }
-                $unFundedRequestPerProjectArr[$projectIndex] = $count;
+                $unFundedRequestPerProjectArr[$projectId]['value'] = $count;
+                $unFundedRequestPerProjectArr[$projectId]['label'] = $projectIndex;
+                $unFundedRequestPerProjectArr[$projectId]['objectid'] = $projectId;
+                $unFundedRequestPerProjectArr[$projectId]['pi'] = $piIdArr;
+                $unFundedRequestPerProjectArr[$projectId]['show-path'] = "request";
             }
             //////////////////////
 
@@ -465,7 +484,7 @@ class DashboardController extends Controller
 //        $requestPerProjectTopArr = $this->getTopArray($requestPerProjectArr);
 //        $chartsArray = $this->addChart( $chartsArray, $requestPerProjectTopArr, "6. Total number of Requests per Project (Top 10)",'pie',$layoutArray,"-");
         $requestPerProjectTopArr = $this->getTopMultiArray($requestPerProjectArr,$explodedView);
-        $filterArr['funded'] = true;
+        $filterArr['funded'] = null;
         $chartsArray = $this->addChartByMultiArray( $chartsArray, $requestPerProjectTopArr, $filterArr, "6. Total number of Requests per Project (Top 10)","pie",$layoutArray,"-");
         ////////////////////
 
@@ -475,11 +494,17 @@ class DashboardController extends Controller
             'width' => 1200,
         );
         //7. Total number of Requests per Funded Project (Top 10)
-        $fundedRequestPerProjectTopArr = $this->getTopArray($fundedRequestPerProjectArr);
-        $chartsArray = $this->addChart( $chartsArray, $fundedRequestPerProjectTopArr, "Total number of Requests per Funded Project (Top 10)",'pie',$layoutArray,"-");
+        //$fundedRequestPerProjectTopArr = $this->getTopArray($fundedRequestPerProjectArr);
+        //$chartsArray = $this->addChart( $chartsArray, $fundedRequestPerProjectTopArr, "Total number of Requests per Funded Project (Top 10)",'pie',$layoutArray,"-");
+        $fundedRequestPerProjectTopArr = $this->getTopMultiArray($fundedRequestPerProjectArr,$explodedView);
+        $filterArr['funded'] = true;
+        $chartsArray = $this->addChartByMultiArray( $chartsArray, $fundedRequestPerProjectTopArr, $filterArr, "Total number of Requests per Funded Project (Top 10)","pie",$layoutArray,"-");
         //8. Total number of Requests per Non_Funded Project (Top 10)
-        $unFundedRequestPerProjectTopArr = $this->getTopArray($unFundedRequestPerProjectArr);
-        $chartsArray = $this->addChart( $chartsArray, $unFundedRequestPerProjectTopArr, "Total number of Requests per Non-Funded Project (Top 10)",'pie',$layoutArray,"-");
+        //$unFundedRequestPerProjectTopArr = $this->getTopArray($unFundedRequestPerProjectArr);
+        //$chartsArray = $this->addChart( $chartsArray, $unFundedRequestPerProjectTopArr, "Total number of Requests per Non-Funded Project (Top 10)",'pie',$layoutArray,"-");
+        $unFundedRequestPerProjectTopArr = $this->getTopMultiArray($unFundedRequestPerProjectArr,$explodedView);
+        $filterArr['funded'] = false;
+        $chartsArray = $this->addChartByMultiArray( $chartsArray, $unFundedRequestPerProjectTopArr, $filterArr, "Total number of Requests per Non-Funded Project (Top 10)","pie",$layoutArray,"-");
         ////////////////////
 
         //9. TRP Service Productivity by Category Types (Top 10)
