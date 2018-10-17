@@ -38,6 +38,9 @@ class DashboardController extends Controller
         $filterform = $this->getFilter();
         $filterform->handleRequest($request);
 
+        $explodedView = $filterform['exploded']->getData();
+        //echo "explodedView=".$explodedView."<br>";
+
         $startDate = $filterform['startDate']->getData();
         $endDate = $filterform['endDate']->getData();
         $projectSpecialty = $filterform['projectSpecialty']->getData();
@@ -45,6 +48,14 @@ class DashboardController extends Controller
             $projectSpecialtyObject = $em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->find($projectSpecialty);
             $projectSpecialtyObjects[] = $projectSpecialtyObject;
         }
+
+        $filterArr = array(
+            'startDate'=>$startDate,
+            'endDate'=>$endDate,
+            'projectSpecialtyObjects' => $projectSpecialtyObjects,
+            'exploded' => $explodedView,
+            'funded' => null
+        );
 
         $projects = $this->getProjectsByFilter($startDate,$endDate,$projectSpecialtyObjects);
         //echo "projects=".count($projects)."<br>";
@@ -76,7 +87,8 @@ class DashboardController extends Controller
 
         foreach($projects as $project) {
 
-            $fundingNumber = $project->getFundedAccountNumber();
+            //$fundingNumber = $project->getFundedAccountNumber();
+            $fundingNumber = $project->getFunded();
 
             //1. Principle Investigators by Affiliation
             //2. Total number of projects (XXX) per PI (Top 5/10) (APPROVED & CLOSED)
@@ -111,32 +123,51 @@ class DashboardController extends Controller
                 }
                 $piProjectCountArr[$userId]['value'] = $count;
                 $piProjectCountArr[$userId]['label'] = $userName;
+                $piProjectCountArr[$userId]['userid'] = $userId;
                 $piProjectCountArr[$userId]['show-path'] = "project";
 
                 /////////// 3,4 Total number of Funded/Un-Funded Projects per PI (Top 10) ////////////////
                 if( $fundingNumber ) {
                     // 3. Total number of Funded Projects per PI (Top 10)
-                    if (isset($piFundedProjectCountArr[$userName])) {
-                        $count = $piFundedProjectCountArr[$userName] + 1;
+//                    if (isset($piFundedProjectCountArr[$userName])) {
+//                        $count = $piFundedProjectCountArr[$userName] + 1;
+//                    } else {
+//                        $count = 1;
+//                    }
+//                    $piFundedProjectCountArr[$userName] = $count;
+                    if( isset($piFundedProjectCountArr[$userId]) && isset($piFundedProjectCountArr[$userId]['value']) ) {
+                        $count = $piFundedProjectCountArr[$userId]['value'] + 1;
                     } else {
                         $count = 1;
                     }
-                    $piFundedProjectCountArr[$userName] = $count;
+                    $piFundedProjectCountArr[$userId]['value'] = $count;
+                    $piFundedProjectCountArr[$userId]['label'] = $userName;
+                    $piFundedProjectCountArr[$userId]['userid'] = $userId;
+                    $piFundedProjectCountArr[$userId]['show-path'] = "project";
                 } else {
                     //4. Total number of Non-Funded Projects per PI (Top 10)
-                    if (isset($piUnFundedProjectCountArr[$userName])) {
-                        $count = $piUnFundedProjectCountArr[$userName] + 1;
+//                    if (isset($piUnFundedProjectCountArr[$userName])) {
+//                        $count = $piUnFundedProjectCountArr[$userName] + 1;
+//                    } else {
+//                        $count = 1;
+//                    }
+//                    $piUnFundedProjectCountArr[$userName] = $count;
+                    if( isset($piUnFundedProjectCountArr[$userId]) && isset($piUnFundedProjectCountArr[$userId]['value']) ) {
+                        $count = $piUnFundedProjectCountArr[$userId]['value'] + 1;
                     } else {
                         $count = 1;
                     }
-                    $piUnFundedProjectCountArr[$userName] = $count;
+                    $piUnFundedProjectCountArr[$userId]['value'] = $count;
+                    $piUnFundedProjectCountArr[$userId]['label'] = $userName;
+                    $piUnFundedProjectCountArr[$userId]['userid'] = $userId;
+                    $piUnFundedProjectCountArr[$userId]['show-path'] = "project";
                 }
                 /////////// EOF 3,4 Total number of Funded/Un-Funded Projects per PI (Top 10) ////////////////
 
 
 
-            }
-        } //foreach $projects
+            } //foreach $pi
+        } //foreach $project
 
         $chartsArray = array();
 
@@ -175,23 +206,27 @@ class DashboardController extends Controller
 
         ///////////// 2. Total number of projects (XXX) per PI (Top 5/10) (APPROVED & CLOSED) - $piProjectCountArr //////////////
         //TODO: add link to the filtered project list by PI
-        $piProjectCountTopArr = $this->getTopMultiArray($piProjectCountArr); // getTopArray(
-        echo "<pre>";
-        print_r($piProjectCountTopArr);
-        echo "</pre>";
+        $piProjectCountTopArr = $this->getTopMultiArray($piProjectCountArr,$explodedView); // getTopArray(
+        $filterArr['funded'] = null;
         //Projects per PI
         //                              $chartsArray, $dataArr,              $title,                                $type='pie', $layoutArray=null, $valuePrefixLabel=null
-        $chartsArray = $this->addChartByMultiArray( $chartsArray, $piProjectCountTopArr, "Total number of projects per PI (Top 10)","pie",null,"-"); // addChart(
+        $chartsArray = $this->addChartByMultiArray( $chartsArray, $piProjectCountTopArr, $filterArr, "Total number of projects per PI (Top 10)","pie",null,"-"); // addChart(
         ///////////// EOF top $piProjectCountArr //////////////
 
         /////////// 3,4 Total number of Funded/Un-Funded Projects per PI (Top 10) ////////////////
         //3. Funded Projects per PI
-        $piFundedProjectCountTopArr = $this->getTopArray($piFundedProjectCountArr);
-        $chartsArray = $this->addChart( $chartsArray, $piFundedProjectCountTopArr, "Total number of Funded Projects per PI (Top 10)","pie",null,"-");
+        //$piFundedProjectCountTopArr = $this->getTopArray($piFundedProjectCountArr);
+        //$chartsArray = $this->addChart( $chartsArray, $piFundedProjectCountTopArr, "Total number of Funded Projects per PI (Top 10)","pie",null,"-");
+        $piFundedProjectCountTopArr = $this->getTopMultiArray($piFundedProjectCountArr,$explodedView);
+        $filterArr['funded'] = true;
+        $chartsArray = $this->addChartByMultiArray( $chartsArray, $piFundedProjectCountTopArr, $filterArr, "Total number of Funded Projects per PI (Top 10)","pie",null,"-");
         //4. Un-Funded Projects per PI
-        $piUnFundedProjectCountTopArr = $this->getTopArray($piUnFundedProjectCountArr);
+        //$piUnFundedProjectCountTopArr = $this->getTopArray($piUnFundedProjectCountArr);
         //Funded Projects per PI
-        $chartsArray = $this->addChart( $chartsArray, $piUnFundedProjectCountTopArr, "Total number of Non-Funded Projects per PI (Top 10)","pie",null,"-");
+        //$chartsArray = $this->addChart( $chartsArray, $piUnFundedProjectCountTopArr, "Total number of Non-Funded Projects per PI (Top 10)","pie",null,"-");
+        $piUnFundedProjectCountTopArr = $this->getTopMultiArray($piUnFundedProjectCountArr,$explodedView);
+        $filterArr['funded'] = false;
+        $chartsArray = $this->addChartByMultiArray( $chartsArray, $piUnFundedProjectCountTopArr, $filterArr, "Total number of Non-Funded Projects per PI (Top 10)","pie",null,"-");
         /////////// EOF 3,4 Total number of Funded/Un-Funded Projects per PI (Top 10) ////////////////
 
         return array(
@@ -1446,42 +1481,50 @@ class DashboardController extends Controller
         $limit = 10;
         //$limit = 3;
         //$showOthers = true;
+
+        $otherUserIds = array();
+        $otherId = 'Other';
+
         $count = 1;
         $piProjectCountTopArr = array();
         foreach($piProjectCountArr as $id=>$arr) {
             $value = $arr['value'];
             $label = $arr['label'];
+            $userid = $arr['userid'];
             $showPath = $arr['show-path'];
+            //echo "value=".$value."<br>";
             //echo $username.": ".$count."<br>";
-            if( $count <= $limit || !$limit ) {
-                if( $value && $value != 0 ) {
-                    //echo "add value=".$value."<br>";
-                    $piProjectCountTopArr[$id]['value'] = $value;
-                    $piProjectCountTopArr[$id]['label'] = $label;
-                    $piProjectCountTopArr[$id]['show-path'] = $showPath;
-                }
-            } else {
-                if( $showOthers ) {
-                    //echo "show Others <br>";
-//                    if (isset($piProjectCountTopArr['Other'])) {
-//                        $value = $piProjectCountTopArr['Other'] + $value;
-//                    } else {
-//                        //$value = 1;
-//                    }
-//                    $piProjectCountTopArr['Other'] = $value;
-
-                    if( isset($piProjectCountTopArr[$id]) && isset($piProjectCountTopArr[$id]['value']) ) {
-                        $count = $piProjectCountTopArr[$id]['value'] + 1;
-                    } else {
-                        $count = 1;
+            if( $value && $value != 0 ) {
+                if ($count <= $limit || !$limit) {
+                    //if ($value && $value != 0) {
+                        //echo "add value=".$value."<br>";
+                        $piProjectCountTopArr[$id]['value'] = $value;
+                        $piProjectCountTopArr[$id]['label'] = $label;
+                        $piProjectCountTopArr[$id]['show-path'] = $showPath;
+                        $piProjectCountTopArr[$id]['userid'] = $userid;
+                    //}
+                } else {
+                    if ($showOthers) {
+                        //echo "show Others <br>";
+                        if (isset($piProjectCountTopArr[$otherId]) && isset($piProjectCountTopArr[$otherId]['value'])) {
+                            $thisValue = $piProjectCountTopArr[$otherId]['value'] + $value;
+                        } else {
+                            $thisValue = $value;
+                        }
+                        //echo $label.": ".$value."=>".$thisValue."<br>";
+                        $piProjectCountTopArr[$otherId]['value'] = $thisValue;
+                        $piProjectCountTopArr[$otherId]['label'] = "Other";
+                        $piProjectCountTopArr[$otherId]['show-path'] = $showPath;
+                        $piProjectCountTopArr[$otherId]['userid'] = null;
+                        $otherUserIds[] = $userid;
                     }
-                    $piProjectCountArr[0]['value'] = $count;
-                    $piProjectCountArr[0]['label'] = "Other";
-                    $piProjectCountArr[0]['show-path'] = $showPath;
-
                 }
             }
             $count++;
+        }
+
+        if( $showOthers ) {
+            $piProjectCountTopArr[$otherId]['userid'] = $otherUserIds;
         }
 
         if( $maxLen ) {
@@ -1490,10 +1533,13 @@ class DashboardController extends Controller
                 $value = $arr['value'];
                 $label = $arr['label'];
                 $showPath = $arr['show-path'];
+                $userid = $arr['userid'];
+                //echo "userid=".$userid."<br>";
                 $label = $this->tokenTruncate($label,$maxLen);
                 $piProjectCountTopShortArr[$id]['value'] = $value;
                 $piProjectCountTopShortArr[$id]['label'] = $label;
                 $piProjectCountTopShortArr[$id]['show-path'] = $showPath;
+                $piProjectCountTopShortArr[$id]['userid'] = $userid;
             }
             return $piProjectCountTopShortArr;
         }
@@ -1603,11 +1649,28 @@ class DashboardController extends Controller
 
         return $chartsArray;
     }
-    public function addChartByMultiArray( $chartsArray, $dataArr, $title, $type='pie', $layoutArray=null, $valuePrefixLabel=null ) {
+    public function addChartByMultiArray( $chartsArray, $dataArr, $filterArr, $title, $type='pie', $layoutArray=null, $valuePrefixLabel=null ) {
 
         if( count($dataArr) == 0 ) {
             return $chartsArray;
         }
+
+        $startDate = $filterArr['startDate'];
+        $endDate = $filterArr['endDate'];
+        $projectSpecialtyObjects = $filterArr['projectSpecialtyObjects'];
+        $funded = $filterArr['funded'];
+        //$exploded = $filterArr['exploded'];
+
+        if( $startDate ) {
+            $startDateStr = $startDate->format('m/d/Y');
+        }
+        if( $endDate ) {
+            $endDateStr = $endDate->format('m/d/Y');
+        }
+
+//        echo "<pre>";
+//        print_r($dataArr);
+//        echo "</pre>";
 
         $labels = array();
         $values = array();
@@ -1628,26 +1691,58 @@ class DashboardController extends Controller
             $value = $arr['value'];
             $label = $arr['label'];
             $showPath = $arr['show-path'];
+            $userid = $arr['userid'];
+            $link = null;
             if( $type == "bar" || ($value && $value != 0) ) {
                 if( $valuePrefixLabel && $value ) {
                     $label = $label . " " . $valuePrefixLabel . $value;
                 }
 
-                if( $showPath ) {
+                if( $showPath == 'project' ) {
+
+                    $filterArr = array(
+                        //'filter[principalInvestigators][]' => $userid,
+                        'filter[state][0]' => 'final_approved',
+                        'filter[state][1]' => 'closed',
+                        'filter[startDate]' => $startDateStr,
+                        'filter[endDate]' => $endDateStr
+                    );
+
+                    if( $funded === true ) {
+                        $filterArr['filter[fundingType]'] = 'Funded';
+                    }
+                    if( $funded === false ) {
+                        $filterArr['filter[fundingType]'] = 'Non-Funded';
+                    }
+
+                    //echo "id=$id<br>";
+                    if( $id == 'Other' && is_array($userid) ) {
+                        //$userid = null;
+                        //echo "Other userid=$userid<br>";
+                        //$useridArr = explode(",",$userid);
+                        $userIndex = 0;
+                        foreach($userid as $thisUserid) {
+                            $filterArr['filter[principalInvestigators]['.$userIndex.']'] = $thisUserid;
+                            $userIndex++;
+                        }
+                    } else {
+                        $filterArr['filter[principalInvestigators][]'] = $userid;
+                    }
+
                     $link = $this->container->get('router')->generate(
                         'translationalresearch_project_index',
-                        array(
-                            'filter[principalInvestigators][]' => $id,
-                        ),
+                        $filterArr,
                         UrlGeneratorInterface::ABSOLUTE_URL
                     );
-                    $linkLabel = "link";
-                    $link = '<a target="_blank" href="'.$link.'">'.$linkLabel.'</a>';
-                    $label = $label . " " . $link;
+                    //$linkLabel = "link";
+                    //$label = '<font color="red">'.$label.'</font>';
+                    //$label = '<a target="_blank" href="'.$link.'">'.$label.'</a>';
+                    //$label = $label . " " . $link;
                 }
 
                 $labels[] = $label;
                 $values[] = $value;
+                $links[] = $link;
                 //$text[] = $value;
             }
         }
@@ -1668,6 +1763,7 @@ class DashboardController extends Controller
         $chartDataArray[$yAxis] = $values;
         $chartDataArray['type'] = $type;
 
+        $chartDataArray["links"] = $links;
         //$chartDataArray["text"] = "111";
         $chartDataArray["textinfo"] = "value+percent";
         //hoverinfo: label+text+value+percent

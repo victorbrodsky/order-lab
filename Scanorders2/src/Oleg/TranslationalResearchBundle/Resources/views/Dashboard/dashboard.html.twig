@@ -83,6 +83,7 @@
 
     {% javascripts
     '@OlegUserdirectoryBundle/Resources/public/charts/plotly/plotly.js'
+    '@OlegTranslationalResearchBundle/Resources/public/form/js/transres-plotly.js'
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
@@ -91,58 +92,72 @@
     {#<script src="https://cdnjs.cloudflare.com/ajax/libs/numeric/1.2.6/numeric.min.js"></script>#}
 
     <script type="text/javascript">
-        $(document).ready(function() {
 
-//            var data = [{
-//                values: [19, 26, 55],
-//                labels: ['Residential', 'Non-Residential', 'Utility'],
-//                type: 'pie'
-//            }];
-//            var layout = {
-//                height: 400,
-//                width: 500
-//            };
+        var charts = {{ chartsArray|json_encode|raw }};
 
-            var charts = {{ chartsArray|json_encode|raw }};
+        {#$(document).ready(function() {#}
 
-            if( charts.length == 0 ) {
-                document.getElementById("charts").innerHTML = "No Data to Display";
-            }
+{#//            var data = [{#}
+{#//                values: [19, 26, 55],#}
+{#//                labels: ['Residential', 'Non-Residential', 'Utility'],#}
+{#//                type: 'pie'#}
+{#//            }];#}
+{#//            var layout = {#}
+{#//                height: 400,#}
+{#//                width: 500#}
+{#//            };#}
 
-            for( var i = 0; i < charts.length; i++ ) {
+            {#var charts = {{ chartsArray|json_encode|raw }};#}
 
-                if( charts[i]['newline'] && charts[i]['newline'] == true ) {
-                    console.log("newline");
-                    var newline = document.createElement("div");
-                    newline.style.float = "left";
-                    newline.style.width = "100%";
-                    //newline.setAttribute('id', divId);
-                    document.getElementById("charts").appendChild(newline);
-                } else {
+            {#if( charts.length == 0 ) {#}
+                {#document.getElementById("charts").innerHTML = "No Data to Display";#}
+            {#}#}
 
-                    var divId = 'chart-' + i;
-                    var div = document.createElement("div");
-                    div.style.float = "left";
-                    div.style.margin = "10px";
-                    div.setAttribute('id', divId);
-                    document.getElementById("charts").appendChild(div);
+            {#for( var i = 0; i < charts.length; i++ ) {#}
 
-                    var layout = charts[i]['layout'];
-                    var data = charts[i]['data'];
+                {#if( charts[i]['newline'] && charts[i]['newline'] == true ) {#}
+                    {#console.log("newline");#}
+                    {#var newline = document.createElement("div");#}
+                    {#newline.style.float = "left";#}
+                    {#newline.style.width = "100%";#}
+                    {#//newline.setAttribute('id', divId);#}
+                    {#document.getElementById("charts").appendChild(newline);#}
+                {#} else {#}
+
+                    {#var divId = 'chart-' + i;#}
+                    {#var div = document.createElement("div");#}
+                    {#div.style.float = "left";#}
+                    {#div.style.margin = "10px";#}
+                    {#div.setAttribute('id', divId);#}
+                    {#document.getElementById("charts").appendChild(div);#}
+
+                    {#var layout = charts[i]['layout'];#}
+                    {#var data = charts[i]['data'];#}
 
                     {#//var layout = {{ layoutArray|json_encode|raw }};#}
                     {#//var data = {{ dataArray|json_encode|raw }};#}
 
-                    //console.log("data:");
-                    //console.log(data);
+                    {#//console.log("data:");#}
+                    {#//console.log(data);#}
 
-                    Plotly.newPlot(divId, data, layout);
-                }
-            }
+                    {#var myPlot = Plotly.newPlot(divId, data, layout);#}
+
+                    {#if( 1 ) {#}
+                        {#myPlot.on('plotly_click', function(data){#}
+                            {#var pts = '111';#}
+{#//                            for(var i=0; i < data.points.length; i++){#}
+{#//                                pts = 'x = '+data.points[i].x +'\ny = '+#}
+{#//                                        data.points[i].y.toPrecision(4) + '\n\n';#}
+{#//                            }#}
+                            {#alert('Closest point clicked:\n\n'+pts);#}
+                        {#});#}
+                    {#}#}
+                {#}#}
+            {#}#}
 
 
 
-        });
+        {#});#}
     </script>
 
 {% endblock %}
