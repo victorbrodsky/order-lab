@@ -49,6 +49,13 @@ class DashboardController extends Controller
             $projectSpecialtyObjects[] = $projectSpecialtyObject;
         }
 
+        if( $startDate ) {
+            $startDateStr = $startDate->format('m/d/Y');
+        }
+        if( $endDate ) {
+            $endDateStr = $endDate->format('m/d/Y');
+        }
+
         $filterArr = array(
             'startDate'=>$startDate,
             'endDate'=>$endDate,
@@ -97,6 +104,20 @@ class DashboardController extends Controller
                 $userName = $pi->getUsernameOptimal();
                 $userId = $pi->getId();
 
+//                $linkFilterArr = array(
+//                    //'filter[principalInvestigators][]' => $objectid,
+//                    'filter[state][0]' => 'final_approved',
+//                    'filter[state][1]' => 'closed',
+//                    'filter[startDate]' => $startDateStr,
+//                    'filter[endDate]' => $endDateStr
+//                );
+//                if( $fundingNumber === true ) {
+//                    $linkFilterArr['filter[fundingType]'] = 'Funded';
+//                }
+//                if( $fundingNumber === false ) {
+//                    $linkFilterArr['filter[fundingType]'] = 'Non-Funded';
+//                }
+
                 //1. Principle Investigators by Affiliation
                 if( $this->isUserBelongsToInstitution($pi,$wcmPathology) ) {
                     //WCM Pathology Faculty - WCM Department of Pathology and Laboratory Medicine in any Title’s department field
@@ -123,8 +144,17 @@ class DashboardController extends Controller
                 }
                 $piProjectCountArr[$userId]['value'] = $count;
                 $piProjectCountArr[$userId]['label'] = $userName;
-                $piProjectCountArr[$userId]['userid'] = $userId;
+                $piProjectCountArr[$userId]['objectid'] = $userId;
+                $piProjectCountArr[$userId]['pi'] = $userId;
                 $piProjectCountArr[$userId]['show-path'] = "project";
+
+                //$linkFilterArr['filter[fundingType]'] = null;
+//                $link = $this->container->get('router')->generate(
+//                    'translationalresearch_request_index_filter',
+//                    $linkFilterArr,
+//                    UrlGeneratorInterface::ABSOLUTE_URL
+//                );
+//                $piProjectCountArr[$userId]['show-path'] = $link;
 
                 /////////// 3,4 Total number of Funded/Un-Funded Projects per PI (Top 10) ////////////////
                 if( $fundingNumber ) {
@@ -142,7 +172,8 @@ class DashboardController extends Controller
                     }
                     $piFundedProjectCountArr[$userId]['value'] = $count;
                     $piFundedProjectCountArr[$userId]['label'] = $userName;
-                    $piFundedProjectCountArr[$userId]['userid'] = $userId;
+                    $piFundedProjectCountArr[$userId]['objectid'] = $userId;
+                    $piFundedProjectCountArr[$userId]['pi'] = $userId;
                     $piFundedProjectCountArr[$userId]['show-path'] = "project";
                 } else {
                     //4. Total number of Non-Funded Projects per PI (Top 10)
@@ -159,7 +190,8 @@ class DashboardController extends Controller
                     }
                     $piUnFundedProjectCountArr[$userId]['value'] = $count;
                     $piUnFundedProjectCountArr[$userId]['label'] = $userName;
-                    $piUnFundedProjectCountArr[$userId]['userid'] = $userId;
+                    $piUnFundedProjectCountArr[$userId]['objectid'] = $userId;
+                    $piUnFundedProjectCountArr[$userId]['pi'] = $userId;
                     $piUnFundedProjectCountArr[$userId]['show-path'] = "project";
                 }
                 /////////// EOF 3,4 Total number of Funded/Un-Funded Projects per PI (Top 10) ////////////////
@@ -256,6 +288,7 @@ class DashboardController extends Controller
         $filterform = $this->getFilter();
         $filterform->handleRequest($request);
 
+        $explodedView = $filterform['exploded']->getData();
         $startDate = $filterform['startDate']->getData();
         $endDate = $filterform['endDate']->getData();
         $projectSpecialty = $filterform['projectSpecialty']->getData();
@@ -263,6 +296,14 @@ class DashboardController extends Controller
             $projectSpecialtyObject = $em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->find($projectSpecialty);
             $projectSpecialtyObjects[] = $projectSpecialtyObject;
         }
+
+        $filterArr = array(
+            'startDate'=>$startDate,
+            'endDate'=>$endDate,
+            'projectSpecialtyObjects' => $projectSpecialtyObjects,
+            'exploded' => $explodedView,
+            'funded' => null
+        );
 
         $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
         //echo "requests=".count($requests)."<br>";
@@ -281,11 +322,14 @@ class DashboardController extends Controller
 
             $project = $transRequest->getProject();
             $projectIndex = $project->getOid(false);
+            $projectId = $project->getId();
             $pis = $project->getPrincipalInvestigators();
             $piInfoArr = array();
+            $piIdArr = array();
             foreach( $pis as $pi ) {
                 if( $pi ) {
                     $piInfoArr[] = $pi->getUsernameOptimal();
+                    $piIdArr[] = $pi->getId();
                 }
             }
             if( count($piInfoArr) > 0 ) {
@@ -301,12 +345,24 @@ class DashboardController extends Controller
             //////////////////////
 
             //6. Total number of Requests per Project (Top 10)
-            if (isset($requestPerProjectArr[$projectIndex])) {
-                $count = $requestPerProjectArr[$projectIndex] + 1;
+//            if (isset($requestPerProjectArr[$projectIndex])) {
+//                $count = $requestPerProjectArr[$projectIndex] + 1;
+//            } else {
+//                $count = 1;
+//            }
+//            $requestPerProjectArr[$projectIndex] = $count;
+
+            if( isset($requestPerProjectArr[$projectId]) && isset($requestPerProjectArr[$projectId]['value']) ) {
+                $count = $requestPerProjectArr[$projectId]['value'] + 1;
             } else {
                 $count = 1;
             }
-            $requestPerProjectArr[$projectIndex] = $count;
+            $requestPerProjectArr[$projectId]['value'] = $count;
+            $requestPerProjectArr[$projectId]['label'] = $projectIndex;
+            $requestPerProjectArr[$projectId]['objectid'] = $projectId;
+            $requestPerProjectArr[$projectId]['pi'] = $piIdArr;
+            $requestPerProjectArr[$projectId]['show-path'] = "request";
+            //$requestPerProjectArr[$projectId]['projectid'] = $projectId;
             //////////////////////
 
             //7,8. Total number of Requests per Funded/Un-Funded Project (Top 10)
@@ -401,12 +457,16 @@ class DashboardController extends Controller
         ////////////////////
 
         //6. Total number of Requests per Project (Top 10)
-        $requestPerProjectTopArr = $this->getTopArray($requestPerProjectArr);
         $layoutArray = array(
             'height' => 600,
             'width' => 1200,
         );
-        $chartsArray = $this->addChart( $chartsArray, $requestPerProjectTopArr, "Total number of Requests per Project (Top 10)",'pie',$layoutArray,"-");
+        //$requestPerProjectTopArr = $this->getTopArray($requestPerProjectArr);
+//        $requestPerProjectTopArr = $this->getTopArray($requestPerProjectArr);
+//        $chartsArray = $this->addChart( $chartsArray, $requestPerProjectTopArr, "6. Total number of Requests per Project (Top 10)",'pie',$layoutArray,"-");
+        $requestPerProjectTopArr = $this->getTopMultiArray($requestPerProjectArr,$explodedView);
+        $filterArr['funded'] = true;
+        $chartsArray = $this->addChartByMultiArray( $chartsArray, $requestPerProjectTopArr, $filterArr, "6. Total number of Requests per Project (Top 10)","pie",$layoutArray,"-");
         ////////////////////
 
         //7,8. Total number of Requests per Funded/Un-Funded Project (Top 10)
@@ -1482,7 +1542,7 @@ class DashboardController extends Controller
         //$limit = 3;
         //$showOthers = true;
 
-        $otherUserIds = array();
+        $otherObjectids = array();
         $otherId = 'Other';
 
         $count = 1;
@@ -1490,19 +1550,18 @@ class DashboardController extends Controller
         foreach($piProjectCountArr as $id=>$arr) {
             $value = $arr['value'];
             $label = $arr['label'];
-            $userid = $arr['userid'];
+            $objectid = $arr['objectid'];
             $showPath = $arr['show-path'];
+            $pi = $arr['pi'];
             //echo "value=".$value."<br>";
             //echo $username.": ".$count."<br>";
             if( $value && $value != 0 ) {
                 if ($count <= $limit || !$limit) {
-                    //if ($value && $value != 0) {
-                        //echo "add value=".$value."<br>";
-                        $piProjectCountTopArr[$id]['value'] = $value;
-                        $piProjectCountTopArr[$id]['label'] = $label;
-                        $piProjectCountTopArr[$id]['show-path'] = $showPath;
-                        $piProjectCountTopArr[$id]['userid'] = $userid;
-                    //}
+                    $piProjectCountTopArr[$id]['value'] = $value;
+                    $piProjectCountTopArr[$id]['label'] = $label;
+                    $piProjectCountTopArr[$id]['show-path'] = $showPath;
+                    $piProjectCountTopArr[$id]['objectid'] = $objectid;
+                    $piProjectCountTopArr[$id]['pi'] = $pi;
                 } else {
                     if ($showOthers) {
                         //echo "show Others <br>";
@@ -1515,8 +1574,9 @@ class DashboardController extends Controller
                         $piProjectCountTopArr[$otherId]['value'] = $thisValue;
                         $piProjectCountTopArr[$otherId]['label'] = "Other";
                         $piProjectCountTopArr[$otherId]['show-path'] = $showPath;
-                        $piProjectCountTopArr[$otherId]['userid'] = null;
-                        $otherUserIds[] = $userid;
+                        $piProjectCountTopArr[$otherId]['objectid'] = null;
+                        $piProjectCountTopArr[$otherId]['pi'] = $pi;
+                        $otherObjectids[] = $objectid;
                     }
                 }
             }
@@ -1524,7 +1584,7 @@ class DashboardController extends Controller
         }
 
         if( $showOthers ) {
-            $piProjectCountTopArr[$otherId]['userid'] = $otherUserIds;
+            $piProjectCountTopArr[$otherId]['objectid'] = $otherObjectids;
         }
 
         if( $maxLen ) {
@@ -1533,13 +1593,15 @@ class DashboardController extends Controller
                 $value = $arr['value'];
                 $label = $arr['label'];
                 $showPath = $arr['show-path'];
-                $userid = $arr['userid'];
-                //echo "userid=".$userid."<br>";
+                $pi = $arr['pi'];
+                $objectid = $arr['objectid'];
+                //echo "objectid=".$objectid."<br>";
                 $label = $this->tokenTruncate($label,$maxLen);
                 $piProjectCountTopShortArr[$id]['value'] = $value;
                 $piProjectCountTopShortArr[$id]['label'] = $label;
                 $piProjectCountTopShortArr[$id]['show-path'] = $showPath;
-                $piProjectCountTopShortArr[$id]['userid'] = $userid;
+                $piProjectCountTopShortArr[$id]['objectid'] = $objectid;
+                $piProjectCountTopShortArr[$id]['pi'] = $pi;
             }
             return $piProjectCountTopShortArr;
         }
@@ -1661,6 +1723,11 @@ class DashboardController extends Controller
         $funded = $filterArr['funded'];
         //$exploded = $filterArr['exploded'];
 
+//        $projectId = null;
+//        if( isset($filterArr['funded']) ) {
+//            $projectId = $filterArr['projectId'];
+//        }
+
         if( $startDate ) {
             $startDateStr = $startDate->format('m/d/Y');
         }
@@ -1691,7 +1758,8 @@ class DashboardController extends Controller
             $value = $arr['value'];
             $label = $arr['label'];
             $showPath = $arr['show-path'];
-            $userid = $arr['userid'];
+            $objectid = $arr['objectid'];
+            $pi = $arr['pi'];
             $link = null;
             if( $type == "bar" || ($value && $value != 0) ) {
                 if( $valuePrefixLabel && $value ) {
@@ -1700,8 +1768,7 @@ class DashboardController extends Controller
 
                 if( $showPath == 'project' ) {
 
-                    $filterArr = array(
-                        //'filter[principalInvestigators][]' => $userid,
+                    $linkFilterArr = array(
                         'filter[state][0]' => 'final_approved',
                         'filter[state][1]' => 'closed',
                         'filter[startDate]' => $startDateStr,
@@ -1709,31 +1776,80 @@ class DashboardController extends Controller
                     );
 
                     if( $funded === true ) {
-                        $filterArr['filter[fundingType]'] = 'Funded';
+                        $linkFilterArr['filter[fundingType]'] = 'Funded';
                     }
                     if( $funded === false ) {
-                        $filterArr['filter[fundingType]'] = 'Non-Funded';
+                        $linkFilterArr['filter[fundingType]'] = 'Non-Funded';
                     }
 
-                    //echo "id=$id<br>";
-                    if( $id == 'Other' && is_array($userid) ) {
-                        //$userid = null;
-                        //echo "Other userid=$userid<br>";
-                        //$useridArr = explode(",",$userid);
+                    if( $id === 'Other' && is_array($objectid) ) {
                         $userIndex = 0;
-                        foreach($userid as $thisUserid) {
-                            $filterArr['filter[principalInvestigators]['.$userIndex.']'] = $thisUserid;
+                        foreach($objectid as $thisObjectid) {
+                            $linkFilterArr['filter[principalInvestigators]['.$userIndex.']'] = $thisObjectid;
                             $userIndex++;
                         }
                     } else {
-                        $filterArr['filter[principalInvestigators][]'] = $userid;
+                        $linkFilterArr['filter[principalInvestigators][]'] = $objectid;
                     }
 
                     $link = $this->container->get('router')->generate(
                         'translationalresearch_project_index',
-                        $filterArr,
+                        $linkFilterArr,
                         UrlGeneratorInterface::ABSOLUTE_URL
                     );
+                    //$linkLabel = "link";
+                    //$label = '<font color="red">'.$label.'</font>';
+                    //$label = '<a target="_blank" href="'.$link.'">'.$label.'</a>';
+                    //$label = $label . " " . $link;
+                }
+
+                if( $showPath == 'request' ) {
+
+                    $linkFilterArr = array(
+                        'filter[project]' => $objectid,
+                        'filter[progressState][0]' => 'active',
+                        'filter[progressState][1]' => 'completed',
+                        'filter[progressState][2]' => 'completedNotified',
+                        'filter[progressState][3]' => 'pendingInvestigatorInput',
+                        'filter[progressState][4]' => 'pendingHistology',
+                        'filter[progressState][5]' => 'pendingImmunohistochemistry',
+                        'filter[progressState][6]' => 'pendingMolecular',
+                        'filter[progressState][7]' => 'pendingCaseRetrieval',
+                        'filter[progressState][8]' => 'pendingTissueMicroArray',
+                        'filter[progressState][9]' => 'pendingSlideScanning',
+                        'filter[startDate]' => $startDateStr,
+                        'filter[endDate]' => $endDateStr
+                    );
+
+                    if( $funded === true ) {
+                        $linkFilterArr['filter[fundingType]'] = 'Funded';
+                    }
+                    if( $funded === false ) {
+                        $linkFilterArr['filter[fundingType]'] = 'Non-Funded';
+                    }
+
+                    if( $id === 'Other' ) {
+                        $linkFilterArr = null;
+                    } else {
+                        if( is_array($pi) ) {
+                            $userIndex = 0;
+                            foreach($pi as $thisPi) {
+                                $linkFilterArr['filter[principalInvestigators]['.$userIndex.']'] = $thisPi;
+                                $userIndex++;
+                            }
+                        } else {
+                            $linkFilterArr['filter[principalInvestigators][]'] = $pi;
+                        }
+                    }
+
+                    if( $linkFilterArr ) {
+                        //echo "### $label<br>";
+                        $link = $this->container->get('router')->generate(
+                            'translationalresearch_request_index_filter',
+                            $linkFilterArr,
+                            UrlGeneratorInterface::ABSOLUTE_URL
+                        );
+                    }
                     //$linkLabel = "link";
                     //$label = '<font color="red">'.$label.'</font>';
                     //$label = '<a target="_blank" href="'.$link.'">'.$label.'</a>';
