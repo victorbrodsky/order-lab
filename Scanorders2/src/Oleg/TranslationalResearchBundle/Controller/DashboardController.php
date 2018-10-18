@@ -508,7 +508,7 @@ class DashboardController extends Controller
 
         //9. TRP Service Productivity by Category Types (Top 10)
         //9- Group work requests Based on what is ordered (“Category”) & sorted by Total Quantity (1 work request ordering 1000 slides counts as 1000)
-        $quantityCountByCategoryTopArr = $this->getTopArray($quantityCountByCategoryArr);
+        $quantityCountByCategoryTopArr = $this->getTopArray($quantityCountByCategoryArr,$explodedView);
         $layoutArray = array(
             'height' => 600,
             'width' => 1200,
@@ -522,10 +522,10 @@ class DashboardController extends Controller
             'width' => 1200,
         );
         //10. TRP Service Productivity for Funded Projects (Top 10)
-        $fundedQuantityCountByCategoryTopArr = $this->getTopArray($fundedQuantityCountByCategoryArr);
+        $fundedQuantityCountByCategoryTopArr = $this->getTopArray($fundedQuantityCountByCategoryArr,$explodedView);
         $chartsArray = $this->addChart( $chartsArray, $fundedQuantityCountByCategoryTopArr, "TRP Service Productivity for Funded Projects (Top 10)",'pie',$layoutArray,"-");
         //11. TRP Service Productivity for Non-Funded Projects (Top 10)
-        $unFundedQuantityCountByCategoryTopArr = $this->getTopArray($unFundedQuantityCountByCategoryArr);
+        $unFundedQuantityCountByCategoryTopArr = $this->getTopArray($unFundedQuantityCountByCategoryArr,$explodedView);
         $chartsArray = $this->addChart( $chartsArray, $unFundedQuantityCountByCategoryTopArr, "TRP Service Productivity for Non-Funded Projects (Top 10)",'pie',$layoutArray,"-");
         ////////////////////////////////
 
@@ -534,12 +534,14 @@ class DashboardController extends Controller
 //        $joinedQuantityCountByCategoryArr = array();
 //        foreach($fundedQuantityCountByCategoryArr as $trpIndex=>$value) {
 //            $joinedQuantityCountByCategoryArr[$trpIndex]['Funded'] = $value;
+//        }
+//        foreach($unFundedQuantityCountByCategoryArr as $trpIndex=>$value) {
 //            $joinedQuantityCountByCategoryArr[$trpIndex]['Not-Funded'] = $value;
 //        }
-        //Projects
+        //TRP Services
         $combinedTrpData = array();
-        $combinedTrpData['Funded'] = $fundedQuantityCountByCategoryArr;
-        $combinedTrpData['Not-Funded'] = $unFundedQuantityCountByCategoryArr;
+        $combinedTrpData['Funded'] = $fundedQuantityCountByCategoryTopArr;  //$fundedQuantityCountByCategoryArr;
+        $combinedTrpData['Not-Funded'] = $unFundedQuantityCountByCategoryTopArr;    //$unFundedQuantityCountByCategoryArr;
         $chartsArray = $this->addStackedChart( $chartsArray, $combinedTrpData, "TRP Service Productivity by Category Type (Stacked by Funded/Not-Funded)", "stack");
         /////////////////////////////
 
