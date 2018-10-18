@@ -33,8 +33,6 @@ class DashboardController extends Controller
             return $this->redirect($this->generateUrl($this->container->getParameter('translationalresearch.sitename') . '-nopermission'));
         }
 
-        $this->getTestCritical();
-
         $em = $this->getDoctrine()->getManager();
 
         $filterform = $this->getFilter();
@@ -444,7 +442,6 @@ class DashboardController extends Controller
             }
             ///////////////////////////
 
-
         } //foreach $requests
 
         $chartsArray = array();
@@ -531,6 +528,20 @@ class DashboardController extends Controller
         $unFundedQuantityCountByCategoryTopArr = $this->getTopArray($unFundedQuantityCountByCategoryArr);
         $chartsArray = $this->addChart( $chartsArray, $unFundedQuantityCountByCategoryTopArr, "TRP Service Productivity for Non-Funded Projects (Top 10)",'pie',$layoutArray,"-");
         ////////////////////////////////
+
+        //TODO: 6) Add double bar chart for the "TRP Service Productivity by Category Type" chart (Funded - Non-Funded)
+        //Merge: $fundedQuantityCountByCategoryArr and $unFundedQuantityCountByCategoryArr
+//        $joinedQuantityCountByCategoryArr = array();
+//        foreach($fundedQuantityCountByCategoryArr as $trpIndex=>$value) {
+//            $joinedQuantityCountByCategoryArr[$trpIndex]['Funded'] = $value;
+//            $joinedQuantityCountByCategoryArr[$trpIndex]['Not-Funded'] = $value;
+//        }
+        //Projects
+        $combinedTrpData = array();
+        $combinedTrpData['Funded'] = $fundedQuantityCountByCategoryArr;
+        $combinedTrpData['Not-Funded'] = $unFundedQuantityCountByCategoryArr;
+        $chartsArray = $this->addStackedChart( $chartsArray, $combinedTrpData, "TRP Service Productivity by Category Type (Stacked by Funded/Not-Funded)", "stack");
+        /////////////////////////////
 
         return array(
             'title' => "WORK REQUESTS STATISTICS".", ".count($requests)." Total Matching Requests",

@@ -188,92 +188,18 @@ doctrine:
 
 monolog:
     handlers:
-#        main:
-#            type: fingers_crossed
-#            action_level: notice
-#            handler: file
-#        file:
-#            type: stream
-#            level: debug
-#        syslog:
-#            type: syslog
-#            level: error
-#        console:
-#            type: console
-#        filter_for_errors:
-#            type: fingers_crossed
-#            # if *one* log is error or higher, pass *all* to file_log
-#            action_level: error
-#            handler: file
-#        main_critical:
-#            type: fingers_crossed
-#            action_level: critical
-#            handler: buffered_critical
-#        buffered_critical:
-#            type: buffer
-#            handler: swift_critical
-#        swift_critical:
-#            type: swift_mailer
-#            from_email: '%default_system_email%'
-#            to_email: '%default_system_email%'
-#            subject: SCANORDER Critical error occurred!
-#            level: debug
-##            handler: nested
-#        #######################
-#        main_error:
-#            type:         fingers_crossed
-#            action_level: error
-#            handler:      grouped_error
-#        grouped_error:
-#            type:    group
-#            members: [streamed, buffered_error]
-#        streamed:
-#            type:  stream
-#            path:  "%kernel.logs_dir%/%kernel.environment%.log"
-#            level: debug
-#        buffered_error:
-#            type:    buffer
-#            handler: swift_error
-#        swift_error:
-#            type:       swift_mailer
-#            from_email: '%default_system_email%'
-#            to_email:   '%default_system_email%'
-#            subject:    SCANORDER Non-critical error occurred
-#            level:      debug
-##            handler:    nested
         main:
-            type:         fingers_crossed
-            path: '%kernel.logs_dir%/%kernel.environment%_CRITICAL.log'
-            action_level: critical
-            max_files: 0
-            handler: grouped
-        grouped:
-            type:    group
-            members: [streamed, deduplicated]
-        streamed:
-            type: rotating_file
-            path: '%kernel.logs_dir%/%kernel.environment%.log'
-            action_level: critical
-            max_files: 0
-        deduplicated:
-            type:    deduplication
-            handler: swift
-        swift:
-            type: swift_mailer
-            from_email: '%default_system_email%'
-            to_email: '%default_system_email%'
-            subject: SCANORDER error occurred!
+            type: fingers_crossed
+            action_level: notice
+            handler: file
+        file:
+            type: stream
             level: debug
-#        nested:
-#            type:  fingers_crossed
-#            path:  '%kernel.logs_dir%/%kernel.environment%.log'
-#            level: notice
-#            max_files: 0
-#            handler: console
-#        console:
-#            type: console
-
-
+        syslog:
+            type: syslog
+            level: error
+        console:
+            type: console
 
 # Swiftmailer Configuration
 # Not Used. Swiftmailer's send and spool flush overwritten by getSwiftMailer and sendSpooledEmails
