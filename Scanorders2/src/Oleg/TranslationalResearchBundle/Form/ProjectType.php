@@ -689,7 +689,7 @@ class ProjectType extends AbstractType
             ));
 
             $builder->add('reSubmitReviewComment',TextareaType::class,array(
-                'label' => "Resubmit Comment:",
+                'label' => "Submitter's comment associated with resubmitting:",
                 'required' => false,
                 'mapped' => false,
                 'attr' => array('class'=>'form-control textarea')

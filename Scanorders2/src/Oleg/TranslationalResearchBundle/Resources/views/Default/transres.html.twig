@@ -327,6 +327,7 @@
 {% macro projectFormShow( form, project, cycle ) %}
 
     {% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+    {#{% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}#}
 
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         <div class="panel panel-default">
@@ -350,6 +351,27 @@
                     {% endif %}
 
                     {{ transres.projectDocument(form,project,cycle) }}
+
+                    {% if project.getInvolveHumanTissue() == "Yes" and project.getHumanTissueForms()|length > 0 %}
+                        <div class="well well-sm">
+                            <p><b>Project's Tissue Form(s):</b></p>
+                            {% for tissueFormDocument in project.getHumanTissueForms() %}
+                                {% set absolutePath = tissueFormDocument.getAbsoluteUploadFullPath() %}
+                                <p>
+                                <a href="{{ absolutePath }}" target="_blank">
+                                    {#<img alt="{{ tissueFormDocument.getOriginalname() }}"#}
+                                         {#src="{{ absolutePath }}"#}
+                                         {#alt="Tissue Form"#}
+                                        {#style="display:block; max-width:100px; max-height:100px;"#}
+                                    {#/>#}
+                                    {{ tissueFormDocument.getOriginalname() }} (uploaded {{ tissueFormDocument.getCreatedate()|date('m/d/Y H:i:s') }})
+                                </a>
+                                {#{{ usermacros.showDocumentAsImage(tissueFormDocument,'Tissue Form','') }}#}
+                                </p>
+                                {#<br>#}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
 
                 </div>
             </div>

@@ -685,7 +685,11 @@ class Invoice {
     {
         if( $this->paid != $paid ) {
             //exit("change paid date");
-            $this->setPaidDate(new \DateTime());
+            if( $paid ) {
+                $this->setPaidDate(new \DateTime());
+            } else {
+                $this->setPaidDate(NULL);
+            }
         }
         $this->paid = $paid;
     }
