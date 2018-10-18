@@ -529,20 +529,11 @@ class DashboardController extends Controller
         $chartsArray = $this->addChart( $chartsArray, $unFundedQuantityCountByCategoryTopArr, "TRP Service Productivity for Non-Funded Projects (Top 10)",'pie',$layoutArray,"-");
         ////////////////////////////////
 
-        //TODO: 6) Add double bar chart for the "TRP Service Productivity by Category Type" chart (Funded - Non-Funded)
-        //Merge: $fundedQuantityCountByCategoryArr and $unFundedQuantityCountByCategoryArr
-//        $joinedQuantityCountByCategoryArr = array();
-//        foreach($fundedQuantityCountByCategoryArr as $trpIndex=>$value) {
-//            $joinedQuantityCountByCategoryArr[$trpIndex]['Funded'] = $value;
-//        }
-//        foreach($unFundedQuantityCountByCategoryArr as $trpIndex=>$value) {
-//            $joinedQuantityCountByCategoryArr[$trpIndex]['Not-Funded'] = $value;
-//        }
-        //TRP Services
+        //6) Add double bar chart for the "TRP Service Productivity by Category Type" chart (Funded - Non-Funded)
         $combinedTrpData = array();
         $combinedTrpData['Funded'] = $fundedQuantityCountByCategoryTopArr;  //$fundedQuantityCountByCategoryArr;
         $combinedTrpData['Not-Funded'] = $unFundedQuantityCountByCategoryTopArr;    //$unFundedQuantityCountByCategoryArr;
-        $chartsArray = $this->addStackedChart( $chartsArray, $combinedTrpData, "TRP Service Productivity by Category Type (Stacked by Funded/Not-Funded)", "stack");
+        $chartsArray = $this->addStackedChart( $chartsArray, $combinedTrpData, "TRP Service Productivity by Category Type", "stack");
         /////////////////////////////
 
         return array(
