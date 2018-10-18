@@ -7,6 +7,7 @@
 /web/.well-known/
 #/app/bootstrap.php.cache
 /app/cache/*
+/app/spool/*
 
 #Symfony 3
 /node_modules/
