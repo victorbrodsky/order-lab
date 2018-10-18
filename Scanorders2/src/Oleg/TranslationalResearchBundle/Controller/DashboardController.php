@@ -33,6 +33,8 @@ class DashboardController extends Controller
             return $this->redirect($this->generateUrl($this->container->getParameter('translationalresearch.sitename') . '-nopermission'));
         }
 
+        $this->getTestCritical();
+
         $em = $this->getDoctrine()->getManager();
 
         $filterform = $this->getFilter();

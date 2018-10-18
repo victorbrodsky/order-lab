@@ -327,7 +327,6 @@
 {% macro projectFormShow( form, project, cycle ) %}
 
     {% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
-    {#{% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}#}
 
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         <div class="panel panel-default">
@@ -359,16 +358,9 @@
                                 {% set absolutePath = tissueFormDocument.getAbsoluteUploadFullPath() %}
                                 <p>
                                 <a href="{{ absolutePath }}" target="_blank">
-                                    {#<img alt="{{ tissueFormDocument.getOriginalname() }}"#}
-                                         {#src="{{ absolutePath }}"#}
-                                         {#alt="Tissue Form"#}
-                                        {#style="display:block; max-width:100px; max-height:100px;"#}
-                                    {#/>#}
                                     {{ tissueFormDocument.getOriginalname() }} (uploaded {{ tissueFormDocument.getCreatedate()|date('m/d/Y H:i:s') }})
                                 </a>
-                                {#{{ usermacros.showDocumentAsImage(tissueFormDocument,'Tissue Form','') }}#}
                                 </p>
-                                {#<br>#}
                             {% endfor %}
                         </div>
                     {% endif %}
