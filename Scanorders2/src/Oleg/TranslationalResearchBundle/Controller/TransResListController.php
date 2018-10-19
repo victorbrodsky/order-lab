@@ -65,6 +65,18 @@ class TransResListController extends ListController
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
+
+//        return array(
+//            'entities' => $entities,
+//            'displayName' => $mapper['displayName'],
+//            'linkToListId' => $mapper['linkToListId'],
+//            'pathbase' => $pathbase,
+//            'withCreateNewEntityLink' => $createNew,
+//            'filterform' => $filterform->createView(),
+//            'routename' => $routeName,
+//            'sitename' => $this->sitename,
+//        );
+        
         return $this->getList($request);
     }
 
