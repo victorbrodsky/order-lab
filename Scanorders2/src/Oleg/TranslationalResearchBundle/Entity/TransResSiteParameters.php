@@ -218,6 +218,13 @@ class TransResSiteParameters {
      */
     private $barcodeSize;
 
+    /**
+     * Packing Slip font size
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $transresPackingSlipFontSize;
+
     //Project:
     /**
      * The answers you provide must reflect what has been requested in the approved IRB and the approved tissue request form.
@@ -689,6 +696,22 @@ class TransResSiteParameters {
     public function setBarcodeSize($barcodeSize)
     {
         $this->barcodeSize = $barcodeSize;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTransresPackingSlipFontSize()
+    {
+        return $this->transresPackingSlipFontSize;
+    }
+
+    /**
+     * @param mixed $transresPackingSlipFontSize
+     */
+    public function setTransresPackingSlipFontSize($transresPackingSlipFontSize)
+    {
+        $this->transresPackingSlipFontSize = $transresPackingSlipFontSize;
     }
 
     /**

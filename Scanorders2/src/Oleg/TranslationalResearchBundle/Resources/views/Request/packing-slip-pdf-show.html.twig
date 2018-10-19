@@ -25,6 +25,10 @@
     <input type="hidden" id="formcycle" value="{{ cycle }}" />
     <input type="hidden" id="barcode_image_size" value="{{ barcodeImageSize }}" />
 
+    {% if packingSlipFontSize is defined and packingSlipFontSize %}
+        <div style="font-size: {{ packingSlipFontSize }}px;">
+    {% endif %}
+
     {#<h4 class="text-info" align="center">#}
         {#{{ title }}#}
     {#</h4>#}
@@ -192,6 +196,10 @@
             {{ transres_request_util.getTransresSiteParameter('transresPackingSlipFooter2',transresRequest) }}
         </h6>
     </div>
+
+    {% if packingSlipFontSize is defined and packingSlipFontSize %}
+        </div> {#packingSlipFontSize#}
+    {% endif %}
 
 {% endblock %}
 

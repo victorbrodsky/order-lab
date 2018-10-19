@@ -330,6 +330,12 @@ class PackingSlipController extends Controller
             $barcodeImageSize = "54";
         }
 
+        //body size
+        $packingSlipFontSize = $transresRequestUtil->getTransresSiteParameter('transresPackingSlipFontSize',$transresRequest);
+        if( !$packingSlipFontSize ) {
+            $packingSlipFontSize = "14";
+        }
+
         return array(
             'transresRequest' => $transresRequest,
             'invoice' => $invoice,
@@ -340,7 +346,8 @@ class PackingSlipController extends Controller
             'cycle' => $cycle,
             'title' => "Packing Slip for Work Request ID ".$transresRequest->getOid(),
             'barcodeImageSize' => $barcodeImageSize,
-            'barcodeTdSize' => ($barcodeImageSize*2+10)."px;"
+            'barcodeTdSize' => ($barcodeImageSize*2+10)."px;",
+            'packingSlipFontSize' => $packingSlipFontSize
         );
     }
 }

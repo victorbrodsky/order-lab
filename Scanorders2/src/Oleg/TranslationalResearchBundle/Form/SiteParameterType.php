@@ -180,7 +180,13 @@ class SiteParameterType extends AbstractType
         ));
 
         $builder->add('barcodeSize', null, array(
-            'label' => "Packing Slip Barcode size (i.e. 54):",
+            'label' => "Packing Slip Barcode size (i.e. 54px):",
+            'required' => false,
+            'attr' => array('class' => 'form-control')
+        ));
+
+        $builder->add('transresPackingSlipFontSize', null, array(
+            'label' => "Packing Slip Font size (i.e. 14px):",
             'required' => false,
             'attr' => array('class' => 'form-control')
         ));
