@@ -49,12 +49,12 @@ class DashboardController extends Controller
             $projectSpecialtyObjects[] = $projectSpecialtyObject;
         }
 
-        if( $startDate ) {
-            $startDateStr = $startDate->format('m/d/Y');
-        }
-        if( $endDate ) {
-            $endDateStr = $endDate->format('m/d/Y');
-        }
+//        if( $startDate ) {
+//            $startDateStr = $startDate->format('m/d/Y');
+//        }
+//        if( $endDate ) {
+//            $endDateStr = $endDate->format('m/d/Y');
+//        }
 
         $filterArr = array(
             'startDate'=>$startDate,
@@ -291,6 +291,7 @@ class DashboardController extends Controller
         $explodedView = $filterform['exploded']->getData();
         $startDate = $filterform['startDate']->getData();
         $endDate = $filterform['endDate']->getData();
+
         $projectSpecialty = $filterform['projectSpecialty']->getData();
         if( $projectSpecialty != 0 ) {
             $projectSpecialtyObject = $em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->find($projectSpecialty);
@@ -484,7 +485,7 @@ class DashboardController extends Controller
 //        $chartsArray = $this->addChart( $chartsArray, $requestPerProjectTopArr, "6. Total number of Requests per Project (Top 10)",'pie',$layoutArray,"-");
         $requestPerProjectTopArr = $this->getTopMultiArray($requestPerProjectArr,$explodedView);
         $filterArr['funded'] = null;
-        $chartsArray = $this->addChartByMultiArray( $chartsArray, $requestPerProjectTopArr, $filterArr, "6. Total number of Requests per Project (Top 10)","pie",$layoutArray,"-");
+        $chartsArray = $this->addChartByMultiArray( $chartsArray, $requestPerProjectTopArr, $filterArr, "Total number of Requests per Project (Top 10)","pie",$layoutArray,"-");
         ////////////////////
 
         //7,8. Total number of Requests per Funded/Un-Funded Project (Top 10)
@@ -1803,7 +1804,8 @@ class DashboardController extends Controller
                         'filter[state][0]' => 'final_approved',
                         'filter[state][1]' => 'closed',
                         'filter[startDate]' => $startDateStr,
-                        'filter[endDate]' => $endDateStr
+                        'filter[endDate]' => $endDateStr,
+                        'filter[]' => $projectSpecialtyObjects
                     );
 
                     if( $funded === true ) {
@@ -1811,6 +1813,11 @@ class DashboardController extends Controller
                     }
                     if( $funded === false ) {
                         $linkFilterArr['filter[fundingType]'] = 'Non-Funded';
+                    }
+
+                    if( count($projectSpecialtyObjects) > 0 ) {
+                        $projectSpecialtyObject = $projectSpecialtyObjects[0];
+                        $linkFilterArr['filter[projectSpecialty]'] = $projectSpecialtyObject->getId();
                     }
 
                     if( $id === 'Other' && is_array($objectid) ) {
@@ -1857,6 +1864,11 @@ class DashboardController extends Controller
                     }
                     if( $funded === false ) {
                         $linkFilterArr['filter[fundingType]'] = 'Non-Funded';
+                    }
+
+                    if( count($projectSpecialtyObjects) > 0 ) {
+                        $projectSpecialtyObject = $projectSpecialtyObjects[0];
+                        $linkFilterArr['filter[projectSpecialty]'] = $projectSpecialtyObject->getId();
                     }
 
                     if( $id === 'Other' ) {
