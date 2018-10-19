@@ -38,6 +38,7 @@ framework:
 #        save_path: ~
     session:
         cookie_lifetime: 0 #Setting a cookie_lifetime to 0 will cause the cookie to live only as long as the browser remains open
+        save_path: '%kernel.project_dir%/var/sessions/%kernel.environment%'
     fragments:       ~
 #    fragments: { path: /_fragment }
     http_method_override: true
