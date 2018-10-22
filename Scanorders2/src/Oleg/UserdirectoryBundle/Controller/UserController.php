@@ -4380,7 +4380,7 @@ class UserController extends Controller
 
         $userSecUtil = $this->container->get('user_security_utility');
 
-        //$em = $this->getDoctrine()->getManager();
+        $em = $this->getDoctrine()->getManager();
 
         //testing
 //        $em = $this->getDoctrine()->getManager();
@@ -4408,9 +4408,43 @@ class UserController extends Controller
 //        }
 //        exit('testing');
 
+        $inst1 = null;
+        $inst2 = null;
+
+        $mapper = array(
+            'prefix' => 'Oleg',
+            'bundleName' => 'UserdirectoryBundle',
+            'className' => 'Institution'
+        );
+
+        //$wcmcpathology
+        //$wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+        //navbarFilterInstitution1
+        $wcmc = $userSecUtil->getSiteSettingParameter('navbarFilterInstitution1');
+        if( $wcmc ) {
+            $wcmcpathology = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+                "Pathology and Laboratory Medicine",
+                $wcmc,
+                $mapper
+            );
+            $inst1 = $wcmc->getAbbreviation();
+        }
+
+        //$nyppathology
+        //$nyp = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("NYP");
+        $nyp = $userSecUtil->getSiteSettingParameter('navbarFilterInstitution2');
+        if( $nyp ) {
+            $nyppathology = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+                "Pathology and Laboratory Medicine",
+                $nyp,
+                $mapper
+            );
+            $inst2 = $nyp->getAbbreviation();
+        }
+
         //$fileName = WCM-Pathology-Phone-List-MM-DD-YYYY-HH-MM.xlsx
         $currentDate = date('m-d-Y-H-i');
-        $fileName = "WCM-Pathology-Phone-List-".$currentDate.".xlsx";
+        $fileName = $inst1."-Pathology-Phone-List-".$currentDate.".xlsx";
         //$fileName = "users_".$currentDate.".xls";
         $fileName = str_replace("  ", " ", $fileName);
         $fileName = str_replace(" ", "_", $fileName);
@@ -4426,14 +4460,16 @@ class UserController extends Controller
         $userDownloadUtil = $this->container->get('user_download_utility');
 
         ////////////// WCM Pathology Employees //////////////
-        $filter = "WCM Pathology Employees";
+        $filter = "$inst1 Pathology Employees";
         $params = array('filter'=>$filter,'time'=>'current_only','limitFlag'=>null);
         $res = $this->indexUser($request,$params);
         $users = $res['entities'];
+        //echo "count users=".count($users)."<br>";
+        //exit("inst1=$inst1; inst2=$inst2");
         ////////////// EOF WCM Pathology Employees //////////////
 
         ////////////// WCM Pathology Employees Download Faculty //////////////
-        $filterFaculty = "WCM Pathology Employees Download Faculty";
+        $filterFaculty = "$inst1 Pathology Employees Download Faculty";
         $paramsFaculty = array('filter'=>$filterFaculty,'time'=>'current_only','limitFlag'=>null);
         $res = $this->indexUser($request,$paramsFaculty);
         $usersFaculty = $res['entities'];
@@ -4498,14 +4534,14 @@ class UserController extends Controller
 
 
         ///////////////////// Housestaff - Residents //////////////////////////
-        $filterHousestaffResidents = "WCM or NYP Pathology Residents";
+        $filterHousestaffResidents = "$inst1 or $inst2 Pathology Residents";
         $housestaffResidentsParams = array('filter'=>$filterHousestaffResidents,'time'=>'current_only','limitFlag'=>null);
         $resHousestaffResidents = $this->indexUser($request,$housestaffResidentsParams);
         $housestaffResidents = $resHousestaffResidents['entities'];
         ///////////////////// EOF Housestaff //////////////////////////
 
         ///////////////////// Housestaff - Fellows //////////////////////////
-        $filterHousestaffFellows = "WCM or NYP Pathology Fellows";
+        $filterHousestaffFellows = "$inst1 or $inst2 Pathology Fellows";
         $housestaffFellowsParams = array('filter'=>$filterHousestaffFellows,'time'=>'current_only','limitFlag'=>null);
         $resHousestaffFellows = $this->indexUser($request,$housestaffFellowsParams);
         $housestaffFellows = $resHousestaffFellows['entities'];
@@ -4651,12 +4687,47 @@ class UserController extends Controller
         }
 
         $em = $this->getDoctrine()->getManager();
+        $userSecUtil = $this->get('user_security_utility');
         $userDownloadUtil = $this->container->get('user_download_utility');
+
+        $inst1 = null;
+        $inst2 = null;
+
+        $mapper = array(
+            'prefix' => 'Oleg',
+            'bundleName' => 'UserdirectoryBundle',
+            'className' => 'Institution'
+        );
+
+        //$wcmcpathology
+        //$wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+        //navbarFilterInstitution1
+        $wcmc = $userSecUtil->getSiteSettingParameter('navbarFilterInstitution1');
+        if( $wcmc ) {
+            $wcmcpathology = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+                "Pathology and Laboratory Medicine",
+                $wcmc,
+                $mapper
+            );
+            $inst1 = $wcmc->getAbbreviation();
+        }
+
+        //$nyppathology
+        //$nyp = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("NYP");
+        $nyp = $userSecUtil->getSiteSettingParameter('navbarFilterInstitution2');
+        if( $nyp ) {
+            $nyppathology = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+                "Pathology and Laboratory Medicine",
+                $nyp,
+                $mapper
+            );
+            $inst2 = $nyp->getAbbreviation();
+        }
 
         //get users
         //$users = $em->getRepository('OlegUserdirectoryBundle:User')->findAll();
         ////////////// WCM Pathology Employees Download Faculty //////////////
-        $filterFaculty = "WCM Pathology Employees Download Faculty";
+        $filterFaculty = "$inst1 Pathology Employees Download Faculty";
         $paramsFaculty = array('filter'=>$filterFaculty,'time'=>'current_only','limitFlag'=>null);
         $res = $this->indexUser($request,$paramsFaculty);
         $facultyUsers = $res['entities'];
@@ -4664,7 +4735,7 @@ class UserController extends Controller
         ////////////// EOF WCM Pathology Employees //////////////
 
         ////////////// WCM Pathology Employees //////////////
-        $filter = "WCM Pathology Employees";
+        $filter = "$inst1 Pathology Employees";
         $params = array('filter'=>$filter,'time'=>'current_only','limitFlag'=>null);
         $res = $this->indexUser($request,$params);
         $users = $res['entities'];
