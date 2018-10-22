@@ -6564,7 +6564,7 @@ class AdminController extends Controller
             "1090" => array('CalllogEntryTagsList','calllogentrytags-list','Call Log Entry Tags List'),
             "1100" => array('SpecialtyList','transresprojectspecialties-list','Translational Research Project Specialty List'),
             "1110" => array('ProjectTypeList','transresprojecttypes-list','Translational Research Project Type List'),
-            "1120" => array('RequestCategoryTypeList','transresrequestcategorytypes-list','Translational Research Request Category Type List'),
+            "1120" => array('RequestCategoryTypeList','transresrequestcategorytypes-list','Translational Research Request Products/Services List'),
             //"1050" => array('','-list'),
 
             //Add scan order lists

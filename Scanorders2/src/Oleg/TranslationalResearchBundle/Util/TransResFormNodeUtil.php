@@ -307,7 +307,7 @@ class TransResFormNodeUtil
         //category (fees) - RequestCategoryTypeList ('Form Field - Dropdown Menu')
         $formParams = array(
             'parent' => $productSectionArray,
-            'name' => "Category Type",
+            'name' => "Products/Services",
             'objectType' => $objectTypeDropDown,
             'classNamespace' => "Oleg\\TranslationalResearchBundle\\Entity",
             'className' => "RequestCategoryTypeList"

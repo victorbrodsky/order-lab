@@ -1054,7 +1054,7 @@ class RequestController extends Controller
         $submitter = null;
         $progressStates = null;
         $billingStates = null;
-        $category = null;
+        $categories = null;
         $projectSpecialties = null;
         $projectFilter = null;
         $searchStr = null;
@@ -1128,8 +1128,8 @@ class RequestController extends Controller
         }
 
         if(1) {
-            if (isset($filterform['category'])) {
-                $category = $filterform['category']->getData();
+            if (isset($filterform['categories'])) {
+                $categories = $filterform['categories']->getData();
             }
 
             $requestId = $filterform['requestId']->getData();
@@ -1137,7 +1137,7 @@ class RequestController extends Controller
             $submitter = $filterform['submitter']->getData();
             $progressStates = $filterform['progressState']->getData();
             $billingStates = $filterform['billingState']->getData();
-            //$category = $filterform['category']->getData();
+            //$categories = $filterform['categories']->getData();
             $projectSpecialties = $filterform['projectSpecialty']->getData();
             $searchStr = $filterform['comment']->getData();
             $sampleName = $filterform['sampleName']->getData();
@@ -1237,7 +1237,7 @@ class RequestController extends Controller
         $ids = array();
         if ($formnode) {
             //echo "use formnode<br>";
-            if ($category) {
+            if ($categories) {
                 $categoryIds = $transresRequestUtil->getRequestIdsFormNodeByCategory($category);
                 $ids = array_merge($ids, $categoryIds);
             }
@@ -1699,10 +1699,12 @@ class RequestController extends Controller
 
         if( !$formnode ) {
             $dql->leftJoin('transresRequest.products','products');
-            if ($category) {
+            if( $categories && count($categories) > 0 ) {
                 $dql->leftJoin('products.category','category');
-                $dql->andWhere("category.id = :categoryId");
-                $dqlParameters["categoryId"] = $category;
+                //$dql->andWhere("category.id = :categoryId");
+                //$dqlParameters["categoryId"] = $category;
+                $dql->andWhere("category.id IN (:categoryIds)"); //TODO: categories
+                $dqlParameters["categoryIds"] = $categories;
             }
             if ($searchStr) {
                 $dql->leftJoin('transresRequest.dataResults','dataResults');
@@ -1980,7 +1982,7 @@ class RequestController extends Controller
             );
             //$categoryListLink = " (<a target='_blank' href=" . $categoryListUrl . ">" . "Category Type List Management" . "</a>)";
             //glyphicon glyphicon-wrench
-            $categoryListLink = " <a data-toggle='tooltip' title='Category Type List Management' href=".$categoryListUrl."><span class='glyphicon glyphicon-wrench'></span></a>";
+            $categoryListLink = " <a data-toggle='tooltip' title='Products/Services List Management' href=".$categoryListUrl."><span class='glyphicon glyphicon-wrench'></span></a>";
         }
 
         //for non-funded projects, show "Funding Number (Optional):"

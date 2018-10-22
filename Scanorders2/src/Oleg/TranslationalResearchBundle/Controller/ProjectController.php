@@ -72,8 +72,8 @@ class ProjectController extends Controller
      *
      * @Route("/projects/", name="translationalresearch_project_index")
      * @Route("/my-projects/", name="translationalresearch_my_project_index")
-     * @Route("/projects-where-i-am-requester/", name="translationalresearch_my_request_project_index")
-     * @Route("/draft-projects-where-i-am-requester/", name="translationalresearch_my_request_project_draft_index")
+     * @Route("/projects-where-i-am-the-requester/", name="translationalresearch_my_request_project_index")
+     * @Route("/draft-projects-where-i-am-the-requester/", name="translationalresearch_my_request_project_draft_index")
      * @Route("/projects-i-have-reviewed/", name="translationalresearch_my_reviewed_project_index")
      * @Route("/projects-pending-my-review/", name="translationalresearch_my_pending_review_project_index")
      * @Route("/projects-awaiting-additional-info-to-be-reviewed/", name="translationalresearch_my_missinginfo_review_project_index")

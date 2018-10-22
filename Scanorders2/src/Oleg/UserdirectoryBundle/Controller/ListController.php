@@ -2614,7 +2614,7 @@ class ListController extends Controller
                 break;
             case "transresrequestcategorytypes":
                 $className = "RequestCategoryTypeList";
-                $displayName = "Translational Research Request Category Type List";
+                $displayName = "Translational Research Request Products/Services List";
                 $bundleName = "TranslationalResearchBundle";
                 break;
             case "transresirbapprovaltypes":

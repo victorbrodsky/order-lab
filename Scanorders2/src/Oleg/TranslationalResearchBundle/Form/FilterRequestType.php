@@ -68,12 +68,12 @@ class FilterRequestType extends AbstractType
         ));
 
         if(1) {
-            $builder->add('category', EntityType::class, array(
+            $builder->add('categories', EntityType::class, array(
                 'class' => 'OlegTranslationalResearchBundle:RequestCategoryTypeList',
                 'label' => false,
                 'choice_label' => "getOptimalAbbreviationName",
                 'required' => false,
-                'multiple' => false,
+                'multiple' => true,
                 'attr' => array('class' => 'combobox combobox-width'),
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('list')

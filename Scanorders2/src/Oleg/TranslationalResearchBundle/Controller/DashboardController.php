@@ -514,7 +514,7 @@ class DashboardController extends Controller
             'height' => 600,
             'width' => 1200,
         );
-        $chartsArray = $this->addChart( $chartsArray, $quantityCountByCategoryTopArr, "TRP Service Productivity by Category Types (Top 10)",'pie',$layoutArray,"-");
+        $chartsArray = $this->addChart( $chartsArray, $quantityCountByCategoryTopArr, "TRP Service Productivity by Products/Services (Top 10)",'pie',$layoutArray,"-");
         ///////////////////////////
 
         //10,11. TRP Service Productivity for Funded/Not-Funded Projects (Top 10)
@@ -534,7 +534,7 @@ class DashboardController extends Controller
         $combinedTrpData = array();
         $combinedTrpData['Funded'] = $fundedQuantityCountByCategoryTopArr;  //$fundedQuantityCountByCategoryArr;
         $combinedTrpData['Not-Funded'] = $unFundedQuantityCountByCategoryTopArr;    //$unFundedQuantityCountByCategoryArr;
-        $chartsArray = $this->addStackedChart( $chartsArray, $combinedTrpData, "TRP Service Productivity by Category Type", "stack");
+        $chartsArray = $this->addStackedChart( $chartsArray, $combinedTrpData, "TRP Service Productivity by Products/Services", "stack");
         /////////////////////////////
 
         return array(
