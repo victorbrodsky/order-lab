@@ -230,7 +230,7 @@ class FilterType extends AbstractType
                 'Exempt from IRB Approval' => 'Exempt from IRB Approval',
                 'Not Exempt from IRB Approval' => 'Not Exempt from IRB Approval'
             ),
-            'attr' => array('class' => 'combobox', 'placeholder'=>'Exempt from IRB Approval'),
+            'attr' => array('class' => 'combobox', 'placeholder'=>'IRB Approval'),
         ));
 
         $builder->add('fromExpectedCompletionDate', DateTimeType::class, array(

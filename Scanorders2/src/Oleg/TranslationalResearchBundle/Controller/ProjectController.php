@@ -78,8 +78,8 @@ class ProjectController extends Controller
      * @Route("/projects-pending-my-review/", name="translationalresearch_my_pending_review_project_index")
      * @Route("/projects-awaiting-additional-info-to-be-reviewed/", name="translationalresearch_my_missinginfo_review_project_index")
      *
-     * @Route("/active-expired-projects/", name="translationalresearch_active_expired_project_index")
-     * @Route("/active-expired-soon-projects/", name="translationalresearch_active_expired_soon_project_index")
+     * @Route("/active-project-requests-with-expired-approval/", name="translationalresearch_active_expired_project_index")
+     * @Route("/active-project-requests-with-approval-expiring-soon/", name="translationalresearch_active_expired_soon_project_index")
      *
      * @Template("OlegTranslationalResearchBundle:Project:index.html.twig")
      * @Method("GET")

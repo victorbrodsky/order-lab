@@ -75,7 +75,7 @@
         {% if is_granted('ROLE_TRANSRES_ADMIN') %}
             <br>
             <p>
-                <a class="btn btn-warning" href="{{ path(translationalresearch_sitename~'_project_edit', { 'id': project.id }) }}">Edit project</a>
+                <a class="btn btn-warning" href="{{ path(translationalresearch_sitename~'_project_edit', { 'id': project.id }) }}">Edit Project Request</a>
             </p>
         {% endif %}
         {#{{ transres.projectHeader(project) }}#}

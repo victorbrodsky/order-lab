@@ -246,7 +246,7 @@ class ProjectType extends AbstractType
         ));
 
         $builder->add('numberOfCases',TextType::class,array(
-            'label' => "Number Of Cases:",
+            'label' => "Number of Cases:",
             'required' => false,
             'attr' => array('class'=>'form-control digit-mask mask-text-align-left')
         ));

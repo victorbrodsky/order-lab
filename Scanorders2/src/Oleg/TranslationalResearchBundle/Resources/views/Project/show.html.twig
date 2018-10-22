@@ -21,7 +21,7 @@
     {#{% if is_granted('ROLE_TRANSRES_ADMIN') or transres_util.isProjectEditableByRequester(project) %}#}
     {% if transres_permission_util.hasProjectPermission('update',project) %}
         <p>
-            <a class="btn btn-warning" href="{{ path(translationalresearch_sitename~'_project_edit', { 'id': project.id }) }}">Edit project</a>
+            <a class="btn btn-warning" href="{{ path(translationalresearch_sitename~'_project_edit', { 'id': project.id }) }}">Edit Project Request</a>
         </p>
         <br>
     {% endif %}
@@ -86,7 +86,7 @@
         {% if transres_permission_util.hasProjectPermission('update',project) %}
             <br>
             <p>
-                <a class="btn btn-warning" href="{{ path(translationalresearch_sitename~'_project_edit', { 'id': project.id }) }}">Edit project</a>
+                <a class="btn btn-warning" href="{{ path(translationalresearch_sitename~'_project_edit', { 'id': project.id }) }}">Edit Project Request</a>
             </p>
         {% endif %}
         {#{{ transres.projectHeader(project) }}#}
@@ -103,7 +103,7 @@
             {#{{ form_end(delete_form) }}#}
             <a general-data-confirm="Are you sure you want to delete project {{ project.oid }}?"
                href="{{ path(translationalresearch_sitename~'_project_delete_get', { 'id': project.id }) }}"
-               target="_blank">Delete Project (Visible to Platform Admin only)</a>
+               target="_blank">Delete Project Request (Visible to Platform Admin Only)</a>
         {% endif %}
 
     </div>

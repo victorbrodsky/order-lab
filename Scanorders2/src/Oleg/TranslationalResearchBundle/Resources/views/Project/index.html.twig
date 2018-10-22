@@ -300,7 +300,9 @@
                     {#{{ project.getRequests()|length }}#}
                     {% if project.getRequests()|length > 0 %}
                         <a href="{{ path(translationalresearch_sitename~'_request_index', { 'id': project.id }) }}"
-                           target="_blank">{{ project.getRequests()|length }}</a>
+                           target="_blank"
+                           data-toggle="tooltip" title="Show all work requests associated with this project"
+                        >{{ project.getRequests()|length }}</a>
                     {% else %}
                         {{ project.getRequests()|length }}
                     {% endif %}
@@ -357,7 +359,7 @@
 
                             <li>
                                 <a href="{{ path(translationalresearch_sitename~'_project_show', { 'id': project.id }) }}"
-                                >Show Project</a>
+                                >Show project request details</a>
                             </li>
 
 
@@ -382,7 +384,7 @@
                                 {% if transres_permission_util.hasProjectPermission("update",project) %}
                                     <li>
                                         <a href="{{ path(translationalresearch_sitename~'_project_edit', { 'id': project.id }) }}"
-                                        >Edit Project</a>
+                                        >Edit project request</a>
                                     </li>
                                 {% endif %}
 
@@ -392,7 +394,7 @@
                                 {% if eventObjectTypeId is defined and eventObjectTypeId %}
                                     <li>
                                     <a href="{{ path('translationalresearch_event-log-per-object_log', { 'filter[objectType][]': eventObjectTypeId, 'filter[objectId]': project.id}) }}"
-                                        >View Event Log</a>
+                                        >View events associated with this project request</a>
                                     {#<a href="{{ path('translationalresearch_event-log-per-object_log', { 'objectType': eventObjectTypeId, 'objectId': project.id}) }}"#}
                                     {#>View Event Log</a>#}
                                     </li>
@@ -456,7 +458,7 @@
                                 {% if project.getRequests()|length > 0 %}
                                     <li>
                                         <a href="{{ path(translationalresearch_sitename~'_request_index', { 'id': project.id }) }}"
-                                           >Show Associated Requests</a>
+                                           >Show associated work requests</a>
                                     </li>
                                 {% endif %}
                             {#{% endif %}#}
@@ -478,7 +480,7 @@
                                 <li>
                                     <a general-data-confirm="Are you sure you want to cancel project {{ project.oid }}?"
                                        href="{{ path(translationalresearch_sitename~'_project_cancel', { 'id': project.id }) }}"
-                                       >Cancel Project</a>
+                                       >Cancel project request</a>
                                 </li>
                             {% endif %}
 
@@ -486,7 +488,7 @@
                                 <li>
                                     <a general-data-confirm="Are you sure you want to delete project {{ project.oid }}?"
                                        href="{{ path(translationalresearch_sitename~'_project_delete_get', { 'id': project.id }) }}"
-                                       target="_blank">Delete Project (Visible to Platform Admin only)</a>
+                                       target="_blank">Delete project request (Visible to Platform Admin Only)</a>
                                 </li>
                             {% endif %}
 

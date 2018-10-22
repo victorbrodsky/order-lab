@@ -786,10 +786,10 @@ class AuthUtil {
             $this->logger->notice("search Ldap: ldapBindDN=".$ldapBindDN);
             $sr = ldap_search($cnx, $ldapBindDN, $filter, $LDAPFieldsToFind);
             if( $sr ) {
-                $this->logger->error("search Ldap: ldap_search OK with filter=" . $filter . "; bindDn=".$ldapBindDN);
+                $this->logger->notice("search Ldap: ldap_search OK with filter=" . $filter . "; bindDn=".$ldapBindDN);
                 $info = ldap_get_entries($cnx, $sr);
                 if( $info["count"] > 0 ) {
-                    $this->logger->error("search Ldap: info: displayName=".$info[0]['displayname'][0]);
+                    $this->logger->notice("search Ldap: info: displayName=".$info[0]['displayname'][0]);
                     break;
                 } else {
                     $this->logger->error("search Ldap: ldap_search NOTOK = info null");
