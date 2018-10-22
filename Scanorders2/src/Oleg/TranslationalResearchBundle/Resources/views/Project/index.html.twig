@@ -135,10 +135,13 @@
 
                     <br>
                     <div class="row">
-                        <div class="col-xs-6">
+                        <div class="col-xs-4">
+                            {{ form_widget(filterform.briefDescription) }}
+                        </div>
+                        <div class="col-xs-4">
                             {{ formmacros.fielddate(filterform.fromImplicitExpDate,'allow-future-date') }}
                         </div>
-                        <div class="col-xs-6">
+                        <div class="col-xs-4">
                             {{ formmacros.fielddate(filterform.toImplicitExpDate,'allow-future-date') }}
                         </div>
                     </div>

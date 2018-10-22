@@ -263,6 +263,8 @@ class ProjectController extends Controller
         $fromImplicitExpDate = $filterform['fromImplicitExpDate']->getData();
         $toImplicitExpDate = $filterform['toImplicitExpDate']->getData();
 
+        $briefDescription = $filterform['briefDescription']->getData();
+
         //$showMatchingAndTotal = $filterform['showMatchingAndTotal']->getData();
 //        $archived = $filterform['completed']->getData();
 //        $complete = $filterform['review']->getData();
@@ -355,6 +357,12 @@ class ProjectController extends Controller
         if( $exportId ) {
             $dql->andWhere("project.exportId LIKE :exportId");
             $dqlParameters["exportId"] = "%".$exportId."%";
+            $advancedFilter++;
+        }
+
+        if( $briefDescription ) {
+            $dql->andWhere("project.description LIKE :description");
+            $dqlParameters["description"] = "%".$briefDescription."%";
             $advancedFilter++;
         }
 

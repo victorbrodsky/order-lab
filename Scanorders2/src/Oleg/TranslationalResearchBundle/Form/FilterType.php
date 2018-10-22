@@ -265,6 +265,12 @@ class FilterType extends AbstractType
             'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'To IRB/IACUC Expiration Date'),
         ));
 
+        $builder->add('briefDescription', TextType::class, array(
+            'required'=>false,
+            'label' => false,
+            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'Brief Description'),
+        ));
+
 //        $builder->add('showMatchingAndTotal', ChoiceType::class, array(
 //            'label' => false,
 //            'required' => true,
