@@ -187,6 +187,7 @@ doctrine:
 #            namespace: query_cache_ns
 #            apc: ~
 
+#https://symfony.com/doc/3.4/logging.html
 monolog:
     handlers:
 #        main:
@@ -201,36 +202,26 @@ monolog:
 #            level: error
 #        console:
 #            type: console
-        applog:
-            type: stream
-            path: '%kernel.logs_dir%/%kernel.environment%_ERROR.log'
-            level: error
-            handler: deduplicated
-        deduplicated:
-            type: deduplication
-            handler: swift
-        swift:
-            type: swift_mailer
-            from_email: '%default_system_email%'
-            to_email: '%default_system_email%'
-            subject: 'An Error Occurred! %%message%%'
-            level: error
-#        main_error:
-#            type: fingers_crossed
-#            action_level: error
-#            handler: file
         main:
             type: rotating_file
             path: '%kernel.logs_dir%/%kernel.environment%.log'
-            level: notice
             max_files: 0
-#            handler: file
-#        file:
-#            type: stream
-#            level: notice
-        syslog:
-            type: syslog
+            level: notice
+        nested_error:
+            type: stream
+            path: '%kernel.logs_dir%/%kernel.environment%_ERROR.log'
             level: error
+#            handler: deduplicated
+#        deduplicated:
+#            type: deduplication
+#            handler: swift
+#        swift:
+#            type: swift_mailer
+#            from_email: '%default_system_email%'
+#            to_email: '%default_system_email%'
+#            subject: 'An Error Occurred! %%message%%'
+#            level: error
+
 
 # Swiftmailer Configuration
 # Not Used. Swiftmailer's send and spool flush overwritten by getSwiftMailer and sendSpooledEmails
