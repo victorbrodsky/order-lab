@@ -592,13 +592,13 @@ class ProjectController extends Controller
 //            ;
             $showOnlyMyProjectsCriterion = $this->getProjectWhereIamRequester();
 
-            $myReviewProjectsCriterion = $this->getProjectWhereIamReviewer();
-            $showOnlyMyProjectsCriterion = $showOnlyMyProjectsCriterion . " OR " . $myReviewProjectsCriterion;
+            //$myReviewProjectsCriterion = $this->getProjectWhereIamReviewer();
+            //$showOnlyMyProjectsCriterion = $showOnlyMyProjectsCriterion . " OR " . $myReviewProjectsCriterion;
 
             $dql->andWhere($showOnlyMyProjectsCriterion);
 
             $dqlParameters["userId"] = $user->getId();
-            $title = "My Project Requests, where I am a Requester or a Reviewer";
+            $title = "My Project Requests, where I am a Requester";
         }
 
         if( $routeName == "translationalresearch_my_request_project_index" ) {
