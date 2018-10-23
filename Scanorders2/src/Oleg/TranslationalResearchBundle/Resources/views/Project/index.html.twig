@@ -234,7 +234,7 @@
 
             {% set projectTitle = project.getTitle() %}
 
-            <tr class="{{ trclassname }}" style="border-bottom: 1px solid #C6C6C6;" data-toggle="tooltip" title="{{ projectTitle }}">
+            <tr class="{{ trclassname }}" data-toggle="tooltip" title="{{ projectTitle }}">
                 <td>
                     <a href="{{ path(translationalresearch_sitename~'_project_show', { 'id': project.id }) }}" target="_blank">{{ project.oid }}</a>
                 </td>
