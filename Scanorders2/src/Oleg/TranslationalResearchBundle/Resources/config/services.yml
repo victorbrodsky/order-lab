@@ -85,7 +85,7 @@ framework:
                 - final_review
                 - final_approved
                 - final_rejected
-                # canceled
+                # canceled - project can be canceled from any state. Transitions are not defined to not clog the workflow diagram.
                 - canceled
                 # closed
                 - closed

@@ -2285,7 +2285,7 @@ class RequestController extends Controller
 
 
     /**
-     * @Route("/request/fees-schedule", name="translationalresearch_fees_schedule")
+     * @Route("/request/fee-schedule", name="translationalresearch_fees_schedule")
      * @Template("OlegTranslationalResearchBundle:Request:fee-schedule.html.twig")
      * @Method("GET")
      */

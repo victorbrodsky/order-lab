@@ -30,7 +30,7 @@ class TransResListController extends ListController
 
     //     * @Route("/list/antibodies/", name="antibodies-list_translationalresearch")
     /**
-     * @Route("/list/translational-research-request-category-types/", name="transresrequestcategorytypes-list_translationalresearch")
+     * @Route("/list/translational-research-request-products-and-services/", name="transresrequestcategorytypes-list_translationalresearch")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:index.html.twig")
@@ -64,25 +64,16 @@ class TransResListController extends ListController
         ) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
-
-
-//        return array(
-//            'entities' => $entities,
-//            'displayName' => $mapper['displayName'],
-//            'linkToListId' => $mapper['linkToListId'],
-//            'pathbase' => $pathbase,
-//            'withCreateNewEntityLink' => $createNew,
-//            'filterform' => $filterform->createView(),
-//            'routename' => $routeName,
-//            'sitename' => $this->sitename,
-//        );
         
-        return $this->getList($request);
+        $listArr = $this->getList($request);
+        $listArr['title'] = "Antibodies";
+
+        return $listArr;
     }
 
 
     /**
-     * @Route("/list/translational-research-request-category-types/", name="transresrequestcategorytypes_create_translationalresearch")
+     * @Route("/list/translational-research-request-products-and-services/", name="transresrequestcategorytypes_create_translationalresearch")
      * @Route("/list/antibodies/", name="antibodies_create_translationalresearch")
      *
      * @Method("POST")
@@ -101,7 +92,7 @@ class TransResListController extends ListController
     }
 
     /**
-     * @Route("/list/translational-research-request-category-types/new", name="transresrequestcategorytypes_new_translationalresearch")
+     * @Route("/list/translational-research-request-products-and-services/new", name="transresrequestcategorytypes_new_translationalresearch")
      * @Route("/list/antibodies/new", name="antibodies_new_translationalresearch")
      *
      * @Method("GET")
@@ -120,7 +111,7 @@ class TransResListController extends ListController
     }
 
     /**
-     * @Route("/list/translational-research-request-category-types/{id}", name="transresrequestcategorytypes_show_translationalresearch")
+     * @Route("/list/translational-research-request-products-and-services/{id}", name="transresrequestcategorytypes_show_translationalresearch")
      * @Route("/list/antibodies/{id}", name="antibodies_show_translationalresearch")
      *
      * @Method("GET")
@@ -140,7 +131,7 @@ class TransResListController extends ListController
     }
 
     /**
-     * @Route("/list/translational-research-request-category-types/{id}/edit", name="transresrequestcategorytypes_edit_translationalresearch")
+     * @Route("/list/translational-research-request-products-and-services/{id}/edit", name="transresrequestcategorytypes_edit_translationalresearch")
      * @Route("/list/antibodies/{id}/edit", name="antibodies_edit_translationalresearch")
      *
      * @Method("GET")
@@ -159,7 +150,7 @@ class TransResListController extends ListController
     }
 
     /**
-     * @Route("/list/translational-research-request-category-types/{id}", name="transresrequestcategorytypes_update_translationalresearch")
+     * @Route("/list/translational-research-request-products-and-services/{id}", name="transresrequestcategorytypes_update_translationalresearch")
      * @Route("/list/antibodies/{id}", name="antibodies_update_translationalresearch")
      *
      * @Method("PUT")

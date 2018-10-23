@@ -38,6 +38,7 @@
         <thead>
             <tr>
                 <th>{{ knp_pagination_sortable(entities, 'ID', 'ent.id') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Name', 'ent.name') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Alternative Name', 'ent.altname') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Company', 'ent.company') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Catalog', 'ent.catalog') }}</th>
@@ -68,6 +69,10 @@
             <tr>
                 <td>
                     {{ ent.id }}
+                </td>
+
+                <td>
+                    {{ ent.name }}
                 </td>
 
                 <td>
