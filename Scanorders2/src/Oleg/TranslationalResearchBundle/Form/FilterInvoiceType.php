@@ -128,19 +128,19 @@ class FilterInvoiceType extends AbstractType
         $builder->add('idSearch', null, array(
             'label' => false,
             'required' => false,
-            'attr' => array('class' => 'form-control', 'placeholder' => "Search by ID")
+            'attr' => array('class' => 'form-control', 'placeholder' => "Invoice ID")
         ));
 
         $builder->add('totalMin', null, array(
             'label' => false,
             'required' => false,
-            'attr' => array('class' => 'form-control', 'placeholder' => "Total Min")
+            'attr' => array('class' => 'form-control', 'placeholder' => "Total Amount Minimum")
         ));
 
         $builder->add('totalMax', null, array(
             'label' => false,
             'required' => false,
-            'attr' => array('class' => 'form-control', 'placeholder' => "Total Max")
+            'attr' => array('class' => 'form-control', 'placeholder' => "Total Amount Maximum")
         ));
 
         $builder->add('startDate', DateTimeType::class, array(
@@ -169,7 +169,7 @@ class FilterInvoiceType extends AbstractType
         $builder->add('fundingNumber', TextType::class, array(
             'required'=>false,
             'label' => false,
-            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'Search by Fund Number'),
+            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'Fund Number'),
         ));
 
         $builder->add('fundingType',ChoiceType::class, array(
@@ -186,7 +186,7 @@ class FilterInvoiceType extends AbstractType
         $builder->add('irbNumber', TextType::class, array(
             'required'=>false,
             'label' => false,
-            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'Search by IRB Number'),
+            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'IRB Number'),
         ));
 
 //        $builder->add('complexFilterList', null, array(
