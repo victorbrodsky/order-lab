@@ -178,7 +178,7 @@ class RequestFormNodeController extends Controller
     /**
      * Get TransResRequest Edit page
      *
-     * @Route("/request/edit/{id}", name="translationalresearch_request_formnode_edit")
+     * @Route("/work-request/edit/{id}", name="translationalresearch_request_formnode_edit")
      * @Template("OlegTranslationalResearchBundle:RequestFormnode:edit.html.twig")
      * @Method({"GET", "POST"})
      */
@@ -318,7 +318,7 @@ class RequestFormNodeController extends Controller
     /**
      * Finds and displays a request entity.
      *
-     * @Route("/request/show/{id}", name="translationalresearch_request_formnode_show")
+     * @Route("/work-request/show/{id}", name="translationalresearch_request_formnode_show")
      * @Template("OlegTranslationalResearchBundle:RequestFormnode:show.html.twig")
      * @Method("GET")
      */

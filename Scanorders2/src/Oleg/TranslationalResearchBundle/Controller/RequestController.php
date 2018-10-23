@@ -277,7 +277,7 @@ class RequestController extends Controller
     /**
      * Get TransResRequest Edit page
      *
-     * @Route("/request/edit/{id}", name="translationalresearch_request_edit")
+     * @Route("/work-request/edit/{id}", name="translationalresearch_request_edit")
      * @Template("OlegTranslationalResearchBundle:Request:new.html.twig")
      * @Method({"GET", "POST"})
      */
@@ -847,8 +847,8 @@ class RequestController extends Controller
     /**
      * Displays the list of requests for the given project.
      *
-     * @Route("/request/show/{id}", name="translationalresearch_request_show")
-     * @Route("/request/show-with-packingslip/{id}", name="translationalresearch_request_show_with_packingslip")
+     * @Route("/work-request/show/{id}", name="translationalresearch_request_show")
+     * @Route("/work-request/show-with-packingslip/{id}", name="translationalresearch_request_show_with_packingslip")
      * @Template("OlegTranslationalResearchBundle:Request:new.html.twig")
      * @Method("GET")
      */

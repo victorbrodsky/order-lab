@@ -52,7 +52,7 @@ class PackingSlipController extends Controller
     /**
      * Generate Packing Slip
      *
-     * @Route("/generate-packing_slip/{id}", name="translationalresearch_generate_packing_slip")
+     * @Route("/generate-packing-slip/{id}", name="translationalresearch_generate_packing_slip")
      * @Template("OlegTranslationalResearchBundle:Request:new.html.twig")
      * @Method("GET")
      */
@@ -140,7 +140,7 @@ class PackingSlipController extends Controller
     /**
      * E-Mail Packing Slip to PIs and Submitter
      *
-     * @Route("/email-packing_slip/{id}", name="translationalresearch_email_packing_slip")
+     * @Route("/email-packing-slip/{id}", name="translationalresearch_email_packing_slip")
      * @Method("GET")
      */
     public function emailPackingSlipAction(Request $request, TransResRequest $transresRequest)
@@ -207,7 +207,7 @@ class PackingSlipController extends Controller
     /**
      * E-Mail Packing Slip to PIs and Submitter for Confirmation + Change Request Status to 'Pending Investigator'
      *
-     * @Route("/email-packing_slip_and_change_status_pending_investigator/{id}", name="translationalresearch_email_packing_slip_change_status_pending_investigator")
+     * @Route("/email-packing-slip-and-change-status-to-pending-investigator/{id}", name="translationalresearch_email_packing_slip_change_status_pending_investigator")
      * @Method("GET")
      */
     public function emailPackingSlipChangeStatusPendingInvestigatorAction(Request $request, TransResRequest $transresRequest)
