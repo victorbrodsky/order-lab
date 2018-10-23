@@ -64,7 +64,7 @@ class FilterRequestType extends AbstractType
         $builder->add('comment', TextType::class, array(
             'required'=>false,
             'label' => false,
-            'attr' => array('class'=>'form-control form-control-modif limit-font-size submit-on-enter-field'),
+            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'Comment Text'),
         ));
 
         if(1) {
@@ -219,7 +219,7 @@ class FilterRequestType extends AbstractType
         $builder->add('requestId', TextType::class, array(
             'required'=>false,
             'label' => false,
-            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'Request ID'),
+            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'Work Request ID'),
         ));
 
         $builder->add('sampleName', TextType::class, array(

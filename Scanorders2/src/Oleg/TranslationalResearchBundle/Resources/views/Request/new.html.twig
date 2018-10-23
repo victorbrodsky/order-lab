@@ -228,14 +228,7 @@
     %}
     <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
-
-    {#{% stylesheets#}
-    {#'bundles/olegorderform/handsontable/jquery.handsontable.full.css' filter='cssrewrite'#}
-    {#'bundles/olegorderform/form/css/handsontable.css' filter='cssrewrite'#}
-    {#%}#}
-    {#<link rel="stylesheet" href="{{ asset_url }}" />#}
-    {#{% endstylesheets %}#}
-
+    
     {% stylesheets
     'bundles/oleguserdirectory/handsontable-5/dist/handsontable.full.css' filter='cssrewrite'
     'bundles/olegorderform/form/css/handsontable.css' filter='cssrewrite'
@@ -243,12 +236,12 @@
     <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
 
-    {% stylesheets
-    'bundles/oleguserdirectory/bwip-js/lib/demo.css' filter='cssrewrite'
-    'bundles/oleguserdirectory/bwip-js/lib/jquery-ui.min.css' filter='cssrewrite'
-    %}
-    <link rel="stylesheet" href="{{ asset_url }}" />
-    {% endstylesheets %}
+    {#{% stylesheets#}
+    {#'bundles/oleguserdirectory/bwip-js/lib/demo.css' filter='cssrewrite'#}
+    {#'bundles/oleguserdirectory/bwip-js/lib/jquery-ui.min.css' filter='cssrewrite'#}
+    {#%}#}
+    {#<link rel="stylesheet" href="{{ asset_url }}" />#}
+    {#{% endstylesheets %}#}
 
 {% endblock %}
 
