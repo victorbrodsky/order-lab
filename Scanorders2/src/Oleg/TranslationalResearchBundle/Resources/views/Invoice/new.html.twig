@@ -31,7 +31,7 @@
 
     {% if transresRequest is defined %}
         <p>
-            <a href="{{ path('translationalresearch_invoice_index', {'id': transresRequest.id }) }}" target="_blank">Show Associated Invoices for this Request ID {{ transresRequest.oid }}</a>
+            <a href="{{ path('translationalresearch_invoice_index', {'id': transresRequest.id }) }}" target="_blank">Show associated invoices for this work request {{ transresRequest.oid }}</a>
         </p>
     {% endif %}
 
@@ -322,10 +322,10 @@
         {% endif %}
 
         {% if invoice.documents|length > 0 %}
-            {#Send the Latest Invoice PDF by Email#}
+            {#Send the most recent invoice PDF by e-mail#}
             <p>
             <a class="btn btn-warning" href="{{ path('translationalresearch_invoice_send_pdf_email', {'oid': invoice.oid }) }}"
-            >Send the Latest Invoice PDF by Email to PI{{ transres_request_util.getInvoicePisStr(invoice) }}</a>
+            >Send the most recent invoice PDF by e-mail to PI{{ transres_request_util.getInvoicePisStr(invoice) }}</a>
             </p>
         {% endif %}
 
@@ -358,7 +358,7 @@
     {% if transresRequest is defined %}
         <br>
         <p>
-            <a href="{{ path('translationalresearch_invoice_index', {'id': transresRequest.id }) }}" target="_blank">Show Associated Invoices for the same Request ID {{ transresRequest.oid }}</a>
+            <a href="{{ path('translationalresearch_invoice_index', {'id': transresRequest.id }) }}" target="_blank">Show associated invoices for the same work request {{ transresRequest.oid }}</a>
         </p>
     {% endif %}
 

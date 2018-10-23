@@ -152,11 +152,11 @@
                                 {% if invoice.documents|length > 0 %}
                                     {% if transres_request_util.isUserHasInvoicePermission(invoice,"send-invoice-pdf-email") %}
                                         <li>
-                                            {#Send the Latest Invoice PDF by Email#}
+                                            {#Send the most recent invoice PDF by e-mail#}
                                             <a
                                                 general-data-confirm="Are you sure you want to send the latest invoice {{ invoice.oid }} pdf by email to PI?"
                                                 href="{{ path('translationalresearch_invoice_send_pdf_email', {'oid': invoice.oid }) }}"
-                                            >Send the Latest Invoice PDF by Email to PI{{ transres_request_util.getInvoicePisStr(invoice) }}</a>
+                                            >Send the most recent invoice PDF by e-mail to PI{{ transres_request_util.getInvoicePisStr(invoice) }}</a>
                                         </li>
                                     {% endif %}
                                 {% endif %}
@@ -200,7 +200,7 @@
                                     <li>
                                         <a target="_blank"
                                            href="{{ path('translationalresearch_invoice_download_recent', {'id': invoice.id }) }}"
-                                        >Show The Latest PDF Invoice</a>
+                                        >Show most recent invoice PDF</a>
                                     </li>
                                 {% endif %}
                             {% endif %}

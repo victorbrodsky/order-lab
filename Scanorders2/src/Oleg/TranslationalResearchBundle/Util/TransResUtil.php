@@ -3638,10 +3638,10 @@ class TransResUtil
         $ews->setCellValue('K1', 'Completion Status');
 
         $ews->setCellValue('L1', 'Invoice(s) Issued');
-        $ews->setCellValue('M1', 'Latest Invoice Total($)');
-        $ews->setCellValue('N1', 'Latest Invoice Paid($)');
-        $ews->setCellValue('O1', 'Latest Invoice Due($)');
-        $ews->setCellValue('P1', 'Latest Invoice Comment');
+        $ews->setCellValue('M1', 'Most Recent Invoice Total($)');
+        $ews->setCellValue('N1', 'Most Recent Invoice Paid($)');
+        $ews->setCellValue('O1', 'Most Recent Invoice Due($)');
+        $ews->setCellValue('P1', 'Most Recent Invoice Comment');
 
         $ews->getStyle('A1:P1')->applyFromArray($styleBoldArray);
 

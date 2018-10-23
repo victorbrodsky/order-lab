@@ -69,10 +69,10 @@
                 <th>Products/Services</th>
                 <th title="Total Calculated Request's Fee">Total Fees</th>
                 <th title="Number of All Invoices">Invoices</th>
-                <th title="Status of the Latest Invoice">Invoice Status</th>
-                <th title="Total Amount of the Latest Issued Invoices">Invoice Total</th>
-                <th title="Paid Amount of the Latest Issued Invoices">Invoice Paid</th>
-                <th title="Due Amount of the Latest Issued Invoices">Invoice Due</th>
+                <th title="Status of the most recent invoice status">Invoice Status</th>
+                <th title="Total amount of the most recent issued invoices">Invoice Total</th>
+                <th title="Paid amount of the most recent issued invoices">Invoice Paid</th>
+                <th title="Due amount of the most recent issued invoices">Invoice Due</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -175,7 +175,7 @@
                     {% set invoicesCount = transresRequest.invoices|length %}
                     {% if invoicesCount > 0 %}
                         {% if latestInvoice and transres_request_util.isUserHasInvoicePermission(latestInvoice,"update") %}
-                            <a target="_blank" data-toggle="tooltip" title="Show Associated Invoices"
+                            <a target="_blank" data-toggle="tooltip" title="Show associated invoices"
                                href="{{ path(translationalresearch_sitename~'_invoice_index', { 'id': transresRequest.id }) }} "
                             >{{ invoicesCount }}</a>
                         {% else %}
@@ -288,13 +288,13 @@
                                         <a general-data-confirm="Are you sure you want to E-Mail Packing Slip to PIs and Submitter for Review?"
                                            target="_blank"
                                            href="{{ path(translationalresearch_sitename~'_email_packing_slip', { 'id': transresRequest.id }) }}"
-                                        >E-Mail Packing Slip PDF to PIs and Submitter for Review</a>
+                                        >E-mail packing slip PDF to PIs and submitter for review</a>
                                     </li>
                                     <li>
                                         <a general-data-confirm="Are you sure you want to E-Mail Packing Slip to PIs and Submitter for Confirmation + Change Request Status to 'Pending Investigator'?"
                                            target="_blank"
                                            href="{{ path(translationalresearch_sitename~'_email_packing_slip_change_status_pending_investigator', { 'id': transresRequest.id }) }}"
-                                        >E-Mail Packing Slip PDF to PIs and Submitter for Confirmation + Change Request Status to 'Pending Investigator'</a>
+                                        >E-Mail packing slip PDF to PIs and submitter for confirmation + Change request status to 'Pending Investigator'</a>
                                     </li>
                                 {% endif %}
                             {% endif %}
@@ -304,14 +304,14 @@
                                 {% if transres_permission_util.areInvoicesShowableToUser(transresRequest.project) %}
                                     <li>
                                         <a href="{{ path(translationalresearch_sitename~'_invoice_index', { 'id': transresRequest.id }) }} "
-                                        >Show Associated Invoices</a>
+                                        >Show associated invoices</a>
                                     </li>
                                 {% endif %}
                             {% endif %}
                             {% if transres_request_util.isUserHasInvoicePermission(null,"create") %}
                                 <li>
                                     <a href="{{ path(translationalresearch_sitename~'_invoice_new', { 'id': transresRequest.id }) }} "
-                                    >Create New Invoice</a>
+                                    >Create new invoice</a>
                                 </li>
                             {% endif %}
 
@@ -321,7 +321,7 @@
 
                                 {% if transres_request_util.isUserHasInvoicePermission(latestInvoice,"view") %}
                                     <li>
-                                        <a href="{{ path('translationalresearch_invoice_show', {'oid': latestInvoice.oid }) }}">Show Latest Invoice</a>
+                                        <a href="{{ path('translationalresearch_invoice_show', {'oid': latestInvoice.oid }) }}">Show most recent invoice</a>
                                     </li>
                                 {% endif %}
 
@@ -329,7 +329,7 @@
 
                                     {% if transres_request_util.isUserHasInvoicePermission(latestInvoice,"update") %}
                                         <li>
-                                            <a href="{{ path('translationalresearch_invoice_edit', {'oid': latestInvoice.oid }) }}">Edit Latest Invoice</a>
+                                            <a href="{{ path('translationalresearch_invoice_edit', {'oid': latestInvoice.oid }) }}">Edit most recent invoice</a>
                                         </li>
                                     {% endif %}
 
@@ -337,15 +337,15 @@
                                         <li>
                                             <a target="_blank"
                                                href="{{ path('translationalresearch_invoice_download_recent', {'id': latestInvoice.id }) }}"
-                                            >Show The Latest PDF Invoice</a>
+                                            >Show most recent invoice PDF</a>
                                         </li>
                                     {% endif %}
 
                                     {% if transres_request_util.isUserHasInvoicePermission(latestInvoice,"update") %}
                                         {% if latestInvoice.documents|length > 0 %}
-                                            {% set generateLabel = "Regenerate Latest Invoice PDF" %}
+                                            {% set generateLabel = "Regenerate the most recent invoice PDF" %}
                                         {% else %}
-                                            {% set generateLabel = "Generate Latest Invoice PDF" %}
+                                            {% set generateLabel = "Generate the most recent invoice PDF" %}
                                         {% endif %}
                                         <li>
                                             <a
@@ -357,11 +357,11 @@
 
                                     {% if latestInvoice.documents|length > 0 and transres_request_util.isUserHasInvoicePermission(latestInvoice,"send-invoice-pdf-email") %}
                                         <li>
-                                            {#Send the Latest Invoice PDF by Email#}
+                                            {#Send the most recent invoice PDF by e-mail#}
                                             <a
                                                 general-data-confirm="Are you sure you want to send the latest invoice {{ latestInvoice.oid }} pdf by email to PI?"
                                                 href="{{ path('translationalresearch_invoice_send_pdf_email', {'oid': latestInvoice.oid }) }}"
-                                            >Send the Latest Invoice PDF by Email to PI{{ transres_request_util.getInvoicePisStr(latestInvoice) }}</a>
+                                            >Send the most recent invoice PDF by e-mail to PI{{ transres_request_util.getInvoicePisStr(latestInvoice) }}</a>
                                         </li>
                                     {% endif %}
 
@@ -373,14 +373,14 @@
                                             {#{% if status == "Paid Partially" %}#}
                                                 {#<li>#}
                                                     {#<a href="#" data-toggle="modal" data-target="#modal_update_invoice_{{ latestInvoice.oid }}"#}
-                                                    {#>Change the Latest Invoice Status to {{ status }} (update 'Paid' value)</a>#}
+                                                    {#>Change the Most Recent Status to {{ status }} (update 'Paid' value)</a>#}
                                                 {#</li>#}
                                             {#{% else %}#}
                                                 {#<li>#}
                                                     {#<a#}
                                                             {#general-data-confirm="Are you sure you want to change the status of this invoice {{ latestInvoice.oid }} to {{ status }}?"#}
                                                             {#href="{{ path('translationalresearch_invoice_change_status', {'oid':latestInvoice.oid, 'status':status }) }}"#}
-                                                    {#>Change the Latest Invoice Status to {{ status }}</a>#}
+                                                    {#>Change the Most Recent Invoice Status to {{ status }}</a>#}
                                                 {#</li>#}
                                             {#{% endif %}#}
 
@@ -391,7 +391,7 @@
                                     {% if transres_request_util.isUserHasInvoicePermission(latestInvoice,"change-status") %}
                                         <li>
                                             <a href="#" data-toggle="modal" data-target="#modal_update_invoice_{{ latestInvoice.oid }}"
-                                            >Update Latest Invoice Status</a>
+                                            >Update status of the most recent invoice</a>
                                         </li>
                                     {% endif %}
 
@@ -401,7 +401,7 @@
                                     {#<li>#}
                                         {#<a target="_blank"#}
                                            {#href="{{ path('translationalresearch_invoice_download_recent', {'id': latestInvoice.id }) }}"#}
-                                        {#>Show The Latest PDF Invoice</a>#}
+                                        {#>Show most recent invoice PDF</a>#}
                                     {#</li>#}
                                 {#{% endif %}#}
 
