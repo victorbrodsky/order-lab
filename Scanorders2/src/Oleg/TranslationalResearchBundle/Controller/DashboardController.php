@@ -545,7 +545,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * @Route("/work-request-financial-statistics/", name="translationalresearch_dashboard_financial_request")
+     * @Route("/productivity-statistics-based-on-work-requests/", name="translationalresearch_dashboard_financial_request")
      * @Template("OlegTranslationalResearchBundle:Dashboard:dashboard.html.twig")
      */
     public function requestFinancialStatisticsAction( Request $request )
@@ -781,7 +781,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * @Route("/invoice-financial-statistics/", name="translationalresearch_dashboard_financial_invoice")
+     * @Route("/financial-statistics-based-on-invoices/", name="translationalresearch_dashboard_financial_invoice")
      * @Template("OlegTranslationalResearchBundle:Dashboard:dashboard.html.twig")
      */
     public function invoiceFinancialStatisticsAction( Request $request )

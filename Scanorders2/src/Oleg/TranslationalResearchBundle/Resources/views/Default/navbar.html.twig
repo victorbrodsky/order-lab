@@ -316,27 +316,27 @@
                         {% set endDate = "now"|date("m/d/Y") %}
 
                         <li id="nav-bar-translationalresearch-dashboard" class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dashboard<b class="caret"></b></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dashboards<b class="caret"></b></a>
                             <ul class="dropdown-menu">
 
                                 <li>
                                     <a href="{{ path(translationalresearch_sitename~'_dashboard_project',{'filter[exploded]':1,'filter[startDate]':startDate,'filter[endDate]':endDate,'filter[projectSpecialty]':0}) }}"
-                                    >PI/Project Statistics</a>
+                                    >PI/Project statistics</a>
                                 </li>
 
                                 <li>
                                     <a href="{{ path(translationalresearch_sitename~'_dashboard_request',{'filter[exploded]':1,'filter[startDate]':startDate,'filter[endDate]':endDate,'filter[projectSpecialty]':0}) }}"
-                                    >Work Requests Statistics</a>
+                                    >Work request statistics</a>
                                 </li>
 
                                 <li>
                                     <a href="{{ path(translationalresearch_sitename~'_dashboard_financial_request',{'filter[exploded]':1,'filter[startDate]':startDate,'filter[endDate]':endDate,'filter[projectSpecialty]':0, 'filter[compareType]':'work request submission date'}) }}"
-                                    >Work Request's Financial Statistics</a>
+                                    >Productivity statistics based on work requests</a>
                                 </li>
 
                                 <li>
                                     <a href="{{ path(translationalresearch_sitename~'_dashboard_financial_invoice',{'filter[exploded]':1,'filter[startDate]':startDate,'filter[endDate]':endDate,'filter[projectSpecialty]':0, 'filter[compareType]':'work request submission date'}) }}"
-                                    >Invoice's Financial Statistics</a>
+                                    >Financial statistics based on invoices</a>
                                 </li>
 
                                 {#<hr>#}
@@ -357,7 +357,7 @@
 
                                 <li>
                                     <a href="{{ path(translationalresearch_sitename~'_dashboard_compare',{'filter[startDate]':startDate,'filter[endDate]':endDate}) }}"
-                                    >Comparison Statistics</a>
+                                    >Comparison statistics</a>
                                 </li>
 
                                 {% if allProjectIdsArr is defined %}

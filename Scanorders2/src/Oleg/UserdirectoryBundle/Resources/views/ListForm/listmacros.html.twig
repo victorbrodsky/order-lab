@@ -155,7 +155,7 @@
             <th>{{ knp_pagination_sortable(entities, 'Creation Date', 'ent.createdate') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Updated By', 'updatedby.username') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Updated On', 'ent.updatedon') }}</th>
-            {#<th>Actions</th>#}
+            <th>Actions</th>
         </tr>
         </thead>
         <tbody data-link="row" class="rowlink" data-target="a.list-row-mainlink">
@@ -409,6 +409,54 @@
                 {#<td class="rowlink-skip">#}
                     {#<a class="btn btn-xs btn-default" href="{{ path(pathbase~'_edit', { 'id': entity.id }) }}">Edit</a>#}
                 {#</td>#}
+                <td class="rowlink-skip">
+
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            Action <span class="caret"></span>
+                        </button>
+
+                        <ul class="dropdown-menu dropdown-menu-right">
+
+                            <li>
+                                {#{% if linkToListId and not postPath %}#}
+                                    {#<a class="list-row-mainlink" href="{{ path('platform_list_manager_element', { 'linkToListId':linkToListId,'entityId': entity.id }) }}">Show</a>#}
+                                {#{% else %}#}
+                                    {#<a class="list-row-mainlink" href="{{ path(pathbase~'_edit'~postPath, { 'id': entity.id }) }}">Edit</a>#}
+                                {#{% endif %}#}
+                                <a class="list-row-mainlink" href="{{ path(pathbase~'_edit'~postPath, { 'id': entity.id }) }}">Edit</a>
+                            </li>
+
+                            {#<li>#}
+                            {#<a#}
+                                {#href="{{ path('platform_list_manager_element_change_type') }}">Test#}
+                            {#</a>#}
+                            {#</li>#}
+
+                            {% if entity.getType()|lower != 'disabled' %}
+                                <li>
+                                    <a
+                                        general-data-confirm="Are you sure you would like to disable this entry?"
+                                        href="{{ path('platform_list_manager_element_change_type', { 'pathbase':pathbase, 'entityId':entity.id, 'type':'disabled' }) }}">Disable
+                                    </a>
+                                </li>
+                            {% endif %}
+                            {% if entity.getType()|lower != 'default' and entity.getType()|lower != 'user-added' %}
+                                <li>
+                                    <a
+                                        general-data-confirm="Are you sure you would like to enable and set this entry's type to 'Default'?"
+                                        href="{{ path('platform_list_manager_element_change_type', { 'pathbase':pathbase, 'entityId':entity.id, 'type':'default' }) }}">Enable
+                                    </a>
+                                </li>
+                            {% endif %}
+
+                        </ul>
+
+                    </div>
+
+
+                </td>
+
             </tr>
         {% endfor %}
 

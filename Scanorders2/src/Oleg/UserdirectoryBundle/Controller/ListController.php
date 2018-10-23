@@ -3333,6 +3333,9 @@ class ListController extends Controller
      */
     public function deleteAction(Request $request, $id)
     {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
+        }
 
         return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
         //return $this->deleteList($request, $id);
@@ -3467,4 +3470,38 @@ class ListController extends Controller
         );
     }
 
+    /**
+     * @Route("/change-list-element-type/{pathbase}/{entityId}/{type}", name="platform_list_manager_element_change_type")
+     * @Method("GET")
+     */
+    public function changeTypeAction( Request $request, $pathbase, $entityId, $type ) {
+
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        //echo "data: $pathbase, $entityId, $type <br>";
+
+        $mapper = $this->classListMapper($pathbase,$request);
+        //echo "bundleName=".$mapper['bundleName']."<br>";
+        //echo "className=".$mapper['className']."<br>";
+        $entity = $em->getRepository($mapper['bundleName'].':'.$mapper['className'])->find($entityId);
+        //echo "entity=".$entity."<br>";
+
+        if( $type ) {
+            $entity->setType($type);
+            $em->flush($entity);
+
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                "The type of the list entry '" . $entity . "' has been changed to '" . $type . "'"
+            );
+        }
+
+        //exit();
+        return $this->redirect( $this->generateUrl($pathbase.'-list') );
+    }
+    
 }
