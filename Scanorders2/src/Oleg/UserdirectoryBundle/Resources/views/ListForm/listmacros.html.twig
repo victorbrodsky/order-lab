@@ -427,12 +427,6 @@
                                 <a class="list-row-mainlink" href="{{ path(pathbase~'_edit'~postPath, { 'id': entity.id }) }}">Edit</a>
                             </li>
 
-                            {#<li>#}
-                            {#<a#}
-                                {#href="{{ path('platform_list_manager_element_change_type') }}">Test#}
-                            {#</a>#}
-                            {#</li>#}
-
                             {% if entity.getType()|lower != 'disabled' %}
                                 <li>
                                     <a
