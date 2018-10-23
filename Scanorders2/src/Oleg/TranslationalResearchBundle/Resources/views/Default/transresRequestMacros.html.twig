@@ -884,7 +884,7 @@
                     {% if cycle != "new" and cycle != "edit" %}
                         <a  class="btn btn-primary"
                             href="{{ path(translationalresearch_sitename~'_generate_packing_slip', { 'id': transresRequest.id }) }}"
-                            >Generate and View Packing Slip PDF</a>
+                            >Generate and view packing slip PDF</a>
 
                         <a class="btn btn-success"
                            href="{{ path(translationalresearch_sitename~'_email_packing_slip', { 'id': transresRequest.id }) }}"
@@ -906,7 +906,7 @@
                                     id="latest-packing-slip-pdf-view"
                                     target="_blank"
                                     href="{{ path(translationalresearch_sitename~'_file_view', { 'id': transresRequest.packingSlipPdfs[0].id }) }}"
-                                >Show Packing Slip PDF</a>
+                                >Show packing slip PDF</a>
                                 {#</div>#}
                             {% endif %}
                             <div class="row withpaddingtop">

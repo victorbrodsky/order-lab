@@ -145,20 +145,20 @@
                         <ul class="dropdown-menu dropdown-menu-right">
 
                             <li>
-                                <a href="{{ path(translationalresearch_sitename~'_request_formnode_show', { 'id': transresRequest.id }) }}" target="_blank">Show Request</a>
+                                <a href="{{ path(translationalresearch_sitename~'_request_formnode_show', { 'id': transresRequest.id }) }}" target="_blank">Show work request details</a>
                             </li>
 
 
                             {% if is_granted('ROLE_TRANSRES_ADMIN') or transresRequest.submitter.id == app.user.id %}
                                 <li>
-                                    <a href="{{ path(translationalresearch_sitename~'_request_formnode_edit', { 'id': transresRequest.id }) }}" target="_blank">Edit Work Request</a>
+                                    <a href="{{ path(translationalresearch_sitename~'_request_formnode_edit', { 'id': transresRequest.id }) }}" target="_blank">Edit work request</a>
                                 </li>
                             {% endif %}
 
                             {% if transres_request_util.isRequestProgressReviewable(transresRequest) %}
                             {% if transres_util.isAdminOrPrimaryReviewer() or transres_request_util.isRequestProgressReviewer(transresRequest) %}
                                 <li>
-                                    <a href="{{ path(translationalresearch_sitename~'_request_formnode_review_progress_state', { 'id': transresRequest.id }) }} " target="_blank">Change Completion Status</a>
+                                    <a href="{{ path(translationalresearch_sitename~'_request_formnode_review_progress_state', { 'id': transresRequest.id }) }} " target="_blank">Change work progress status</a>
                                 </li>
                             {% endif %}
                             {% endif %}
@@ -166,7 +166,7 @@
                             {% if transres_request_util.isRequestBillingReviewable(transresRequest) %}
                             {% if transres_util.isAdminOrPrimaryReviewer() or transres_request_util.isRequestBillingReviewer(transresRequest) %}
                                 <li>
-                                    <a href="{{ path(translationalresearch_sitename~'_request_formnode_review_billing_state', { 'id': transresRequest.id }) }} " target="_blank">Change Billing Status</a>
+                                    <a href="{{ path(translationalresearch_sitename~'_request_formnode_review_billing_state', { 'id': transresRequest.id }) }} " target="_blank">Change billing status</a>
                                 </li>
                             {% endif %}
                             {% endif %}
@@ -187,7 +187,7 @@
             </tr>
             <tr class="table-no-border">
                 <td style="display: none">
-                    <a href="{{ path(translationalresearch_sitename~'_request_formnode_show', { 'id': transresRequest.id }) }}" target="_blank">Show Request</a>
+                    <a href="{{ path(translationalresearch_sitename~'_request_formnode_show', { 'id': transresRequest.id }) }}" target="_blank">Show work request details</a>
                 </td>
                 {{ user_formnode_utility.getFormNodeHolderShortInfo(transresRequest,transresRequest.messageCategory,1,trclassname)|raw }}
             </tr>

@@ -281,7 +281,7 @@ class PackingSlipController extends Controller
 
 
     /**
-     * Show Packing Slip PDF version of Work Request
+     * Show packing slip PDF version of Work Request
      * http://localhost/order/translational-research/work-request/download-packing-slip-pdf/3
      *
      * @Route("/download-packing-slip-pdf/{id}", name="translationalresearch_packing_slip_download")

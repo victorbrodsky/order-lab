@@ -65,7 +65,7 @@
             <p>
                 <a class="btn btn-default"
                    href="{{ path(translationalresearch_sitename~'_request_edit', { 'id': transresRequest.id }) }}"
-                >Edit Work Request</a>
+                >Edit work request</a>
             </p>
             <br>
         {% endif %}
@@ -190,14 +190,14 @@
             {#<p>#}
                 {#<a class="btn btn-default"#}
                    {#href="{{ path(translationalresearch_sitename~'_request_edit', { 'id': transresRequest.id }) }}"#}
-                {#>Edit Work Request</a>#}
+                {#>Edit work request</a>#}
             {#</p>#}
         {#{% endif %}#}
         {% if transres_permission_util.hasRequestPermission("update",transresRequest) %}
             <p>
                 <a class="btn btn-default"
                    href="{{ path(translationalresearch_sitename~'_request_edit', { 'id': transresRequest.id }) }}"
-                >Edit Work Request</a>
+                >Edit work request</a>
             </p>
         {% endif %}
     {% endif %}

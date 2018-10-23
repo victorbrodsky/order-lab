@@ -228,7 +228,7 @@
 
                             <li>
                                 <a href="{{ path(translationalresearch_sitename~'_request_show', { 'id': transresRequest.id }) }}"
-                                >Show Request</a>
+                                >Show work request details</a>
                             </li>
 
 
@@ -244,7 +244,7 @@
                             {% if transres_permission_util.hasRequestPermission("update",transresRequest) %}
                                 <li>
                                     <a href="{{ path(translationalresearch_sitename~'_request_edit', { 'id': transresRequest.id }) }}"
-                                    >Edit Work Request</a>
+                                    >Edit work request</a>
                                 </li>
                             {% endif %}
 
@@ -253,7 +253,7 @@
                             {% if transres_permission_util.hasRequestPermission('progress-review',transresRequest) %}
                                 <li>
                                     <a href="{{ path(translationalresearch_sitename~'_request_review_progress_state', { 'id': transresRequest.id }) }} "
-                                    >Change Completion Status</a>
+                                    >Change work progress status</a>
                                 </li>
                             {% endif %}
                             {#{% endif %}#}
@@ -263,7 +263,7 @@
                             {% if transres_permission_util.hasRequestPermission('billing-review',transresRequest) %}
                                 <li>
                                     <a href="{{ path(translationalresearch_sitename~'_request_review_billing_state', { 'id': transresRequest.id }) }} "
-                                    >Change Billing Status</a>
+                                    >Change billing status</a>
                                 </li>
                             {% endif %}
                             {#{% endif %}#}
@@ -272,17 +272,17 @@
                             {% if transres_permission_util.hasRequestPermission("packing-slip",transresRequest) %}
                                 <li class="divider"></li>
                                 <li>
-                                    <a general-data-confirm="Are you sure you want to Generate and View Packing Slip PDF?"
+                                    <a general-data-confirm="Are you sure you want to generate and view packing slip PDF?"
                                        target="_blank"
                                        href="{{ path(translationalresearch_sitename~'_generate_packing_slip', { 'id': transresRequest.id }) }}"
-                                    >Generate and View Packing Slip PDF</a>
+                                    >Generate and view packing slip PDF</a>
                                 </li>
                                 {% if transresRequest.packingSlipPdfs|length > 0 %}
                                     <li>
                                         <a
                                            target="_blank"
                                            href="{{ path(translationalresearch_sitename~'_file_view', { 'id': transresRequest.packingSlipPdfs[0].id }) }}"
-                                        >Show Packing Slip PDF</a>
+                                        >Show packing slip PDF</a>
                                     </li>
                                     <li>
                                         <a general-data-confirm="Are you sure you want to E-Mail Packing Slip to PIs and Submitter for Review?"
@@ -417,7 +417,7 @@
             </tr>
             {#<tr class="table-no-border">#}
                 {#<td style="display: none">#}
-                    {#<a href="{{ path(translationalresearch_sitename~'_request_show', { 'id': transresRequest.id }) }}" target="_blank">Show Request</a>#}
+                    {#<a href="{{ path(translationalresearch_sitename~'_request_show', { 'id': transresRequest.id }) }}" target="_blank">Show work request details</a>#}
                 {#</td>#}
                 {#{{ user_formnode_utility.getFormNodeHolderShortInfo(transresRequest,transresRequest.messageCategory,1,trclassname)|raw }}#}
             {#</tr>#}
