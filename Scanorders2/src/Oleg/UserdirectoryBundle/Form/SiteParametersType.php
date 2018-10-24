@@ -321,7 +321,7 @@ class SiteParametersType extends AbstractType
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'autoAssignInstitution' ) {
             $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-                $institution = $event->getData()->getDefaultOrganizationRecipient();
+                $institution = $event->getData()->getAutoAssignInstitution();
                 $form = $event->getForm();
 
                 $label = null;
@@ -1016,6 +1016,39 @@ class SiteParametersType extends AbstractType
                 'label' => 'Translational Research Project Request Specialty Selection Note:',
                 'attr' => array('class' => 'form-control')
             ));
+        }
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'transresDashboardInstitution' ) {
+//            $builder->add('transresDashboardInstitution', null, array(
+//                'label' => 'Pathology Department for Translational Research Dashboard:',
+//                'attr' => array('class' => 'form-control')
+//            ));
+            $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+                $institution = $event->getData()->getTransresDashboardInstitution();
+                $form = $event->getForm();
+
+                $label = null;
+                if( $institution ) {
+                    $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
+                }
+                if( !$label ) {
+                    $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
+                }
+
+                $form->add('transresDashboardInstitution', CustomSelectorType::class, array(
+                    'label' => "Pathology Department for Translational Research Dashboard - ".$label,
+                    'required' => false,
+                    'attr' => array(
+                        'class' => 'ajax-combobox-compositetree',
+                        'type' => 'hidden',
+                        'data-compositetree-bundlename' => 'UserdirectoryBundle',
+                        'data-compositetree-classname' => 'Institution',
+                        'data-label-prefix' => 'Auto-Assign Institution name -',  //'Originating Organizational Group',
+                        'data-label-postfix' => ''
+                    ),
+                    'classtype' => 'institution'
+                ));
+            });
         }
     }
     

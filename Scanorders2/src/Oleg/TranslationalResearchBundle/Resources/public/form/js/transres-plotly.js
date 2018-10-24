@@ -23,11 +23,6 @@ $(document).ready(function() {
 
         if( charts[i]['newline'] && charts[i]['newline'] == true ) {
             //console.log("newline");
-            // var newline = document.createElement("div");
-            // newline.style.float = "left";
-            // newline.style.width = "100%";
-            // //newline.setAttribute('id', divId);
-            // document.getElementById("charts").appendChild(newline);
             transresAddNewLine();
         } else {
 

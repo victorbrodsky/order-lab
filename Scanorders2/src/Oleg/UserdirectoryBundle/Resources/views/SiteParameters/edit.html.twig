@@ -133,6 +133,10 @@
             {{ treemacros.compositeTreeNode(edit_form.autoAssignInstitution,cycle,"noprototype") }}
         {% endif %}
 
+        {% if edit_form.transresDashboardInstitution is defined %}
+            {{ treemacros.compositeTreeNode(edit_form.transresDashboardInstitution,cycle,"noprototype") }}
+        {% endif %}
+
         {% if edit_form.platformLogos is defined %}
 
             {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}

@@ -1087,6 +1087,14 @@ class SiteParameters {
      */
     private $transresProjectSelectionNote;
 
+    /**
+     * Pathology Department for Translational Research Dashboard
+     *
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
+     */
+    private $transresDashboardInstitution;
+
+
 
     function __construct( $addobjects=true )
     {
@@ -3796,6 +3804,23 @@ class SiteParameters {
         $this->transresProjectSelectionNote = $transresProjectSelectionNote;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getTransresDashboardInstitution()
+    {
+        return $this->transresDashboardInstitution;
+    }
+
+    /**
+     * @param mixed $transresDashboardInstitution
+     */
+    public function setTransresDashboardInstitution($transresDashboardInstitution)
+    {
+        $this->transresDashboardInstitution = $transresDashboardInstitution;
+    }
+
+    
     
 
 }

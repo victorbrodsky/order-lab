@@ -37,6 +37,7 @@ class DashboardController extends Controller
             return $this->redirect($this->generateUrl($this->container->getParameter('translationalresearch.sitename') . '-nopermission'));
         }
 
+        $userSecUtil = $this->container->get('user_security_utility');
         $em = $this->getDoctrine()->getManager();
 
         $filterform = $this->getFilter();
@@ -75,17 +76,28 @@ class DashboardController extends Controller
         $piWcmPathologyCounter = 0;
         $piWcmCounter = 0;
         $piOtherCounter = 0;
-        $mapper = array(
-            'prefix' => 'Oleg',
-            'bundleName' => 'UserdirectoryBundle',
-            'className' => 'Institution'
-        );
-        $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
-        $wcmPathology = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
-            "Pathology and Laboratory Medicine",
-            $wcmc,
-            $mapper
-        );
+//        $mapper = array(
+//            'prefix' => 'Oleg',
+//            'bundleName' => 'UserdirectoryBundle',
+//            'className' => 'Institution'
+//        );
+//        $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+//        $wcmPathology = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+//            "Pathology and Laboratory Medicine",
+//            $wcmc,
+//            $mapper
+//        );
+        $departmentAbbreviation = "Department";
+        $institutionAbbreviation = "Institution";
+        $institution = null;
+        $department = $userSecUtil->getSiteSettingParameter('transresDashboardInstitution');
+        if( $department ) {
+            $departmentAbbreviation = $department."";
+            $institution = $department->getParent();
+            if( $institution ) {
+                $institutionAbbreviation = $institution."";
+            }
+        }
         ////////////////////
 
         //2. Total number of projects (XXX) per PI (Top 5/10) (APPROVED & CLOSED)
@@ -123,10 +135,10 @@ class DashboardController extends Controller
 //                }
 
                 //1. Principle Investigators by Affiliation
-                if( $this->isUserBelongsToInstitution($pi,$wcmPathology) ) {
+                if( $this->isUserBelongsToInstitution($pi,$department) ) {
                     //WCM Pathology Faculty - WCM Department of Pathology and Laboratory Medicine in any Title’s department field
                     $piWcmPathologyCounter++;
-                } elseif ( $this->isUserBelongsToInstitution($pi,$wcmc) ) {
+                } elseif ( $this->isUserBelongsToInstitution($pi,$institution) ) {
                     //WCM Other Departmental Faculty - WCM institution
                     $piWcmCounter++;
                 } else {
@@ -219,8 +231,8 @@ class DashboardController extends Controller
         );
 
         $labels = array(
-            'WCM Pathology Faculty'." ".$piWcmPathologyCounter,
-            'WCM Other Departmental Faculty'." ".$piWcmCounter,
+            "$institutionAbbreviation $departmentAbbreviation Faculty"." ".$piWcmPathologyCounter,
+            "$institutionAbbreviation Other Departmental Faculty"." ".$piWcmCounter,
             //'Other Institutions'." ".$piOtherCounter
         );
         //$values = array($piWcmPathologyCounter,$piWcmCounter,$piOtherCounter);
@@ -2139,6 +2151,10 @@ class DashboardController extends Controller
     }
 
     public function isUserBelongsToInstitution($user, $parentInstitution) {
+        if( !$parentInstitution ) {
+            return false;
+        }
+
         $em = $this->getDoctrine()->getManager();
 
         //get all user's institutions
