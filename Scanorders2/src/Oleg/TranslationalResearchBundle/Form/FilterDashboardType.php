@@ -109,7 +109,7 @@ class FilterDashboardType extends AbstractType
 
         if( $this->params['exploded'] ) {
             $builder->add('exploded', CheckboxType::class, array(
-                'label' => "Exploded View",
+                'label' => "Show only the top ten ",
                 'required' => false,
                 //'attr' => array('class' => 'form-control checkbox')
             ));

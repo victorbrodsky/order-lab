@@ -233,7 +233,7 @@
                     {% if invoicesInfos.count > 0 %}
                         <a target="_blank" data-toggle="tooltip" title="Show all issued invoices associated with this project"
                            href="{{ path(translationalresearch_sitename~'_invoice_index_filter', {
-                               'filter[idSearch]': project.oid,
+                               'filter[idSearch]': project.getOid(false),
                                'filter[status][0]': 'Unpaid/Issued',
                                'filter[status][1]': 'Paid in Full',
                                'filter[status][2]': 'Paid Partially',
