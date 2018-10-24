@@ -92,7 +92,7 @@
                     {% if invoice.documents|length > 0 %}
                         {% if transres_request_util.isUserHasInvoicePermission(invoice,"view-pdf") %}
                             {#Replace PDF number ({{ invoice.documents|length }}) by eye icon on the Invoice list#}
-                            <a  data-toggle="tooltip" title="Show the Latest PDF"
+                            <a  data-toggle="tooltip" title="Show the most recent PDF invoice"
                                 target="_blank"
                                 href="{{ path('translationalresearch_invoice_download_recent', {'id': invoice.id }) }}"
                             ><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>

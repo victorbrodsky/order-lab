@@ -18,6 +18,10 @@ use Symfony\Component\Validator\Constraints\Date;
  */
 class DashboardController extends Controller
 {
+
+    private $width = 1200;
+    private $height = 600;
+
     /**
      * @Route("/pi-project-statistics/", name="translationalresearch_dashboard_project")
      * @Template("OlegTranslationalResearchBundle:Dashboard:dashboard.html.twig")
@@ -209,8 +213,8 @@ class DashboardController extends Controller
         $type = 'pie';
 
         $layoutArray = array(
-            'height' => 600,
-            'width' =>  600,
+            'height' => $this->height,
+            'width' =>  $this->width,
             'title' => "Principle Investigators by Affiliation"
         );
 
@@ -234,6 +238,7 @@ class DashboardController extends Controller
             'layout' => $layoutArray,
             'data' => $dataArray
         );
+        $chartsArray[] = array('newline'=>true);
         ///////////// EOF 1. Principle Investigators by Affiliation ///////////////////
 
         ///////////// 2. Total number of projects (XXX) per PI (Top 5/10) (APPROVED & CLOSED) - $piProjectCountArr //////////////
@@ -453,8 +458,8 @@ class DashboardController extends Controller
         $type = 'pie';
 
         $layoutArray = array(
-            'height' => 600,
-            'width' =>  800,
+            'height' => $this->height,
+            'width' =>  $this->width,
             'title' => "Total Number of Work Requests by Funding Source"
         );
 
@@ -473,12 +478,13 @@ class DashboardController extends Controller
             'layout' => $layoutArray,
             'data' => $dataArray
         );
+        $chartsArray[] = array('newline'=>true);
         ////////////////////
 
         //6. Total number of Requests per Project (Top 10)
         $layoutArray = array(
-            'height' => 600,
-            'width' => 1200,
+            'height' => $this->height,
+            'width' => $this->width,
         );
         //$requestPerProjectTopArr = $this->getTopArray($requestPerProjectArr);
 //        $requestPerProjectTopArr = $this->getTopArray($requestPerProjectArr);
@@ -490,8 +496,8 @@ class DashboardController extends Controller
 
         //7,8. Total number of Requests per Funded/Un-Funded Project (Top 10)
         $layoutArray = array(
-            'height' => 600,
-            'width' => 1200,
+            'height' => $this->height,
+            'width' => $this->width,
         );
         //7. Total number of Requests per Funded Project (Top 10)
         //$fundedRequestPerProjectTopArr = $this->getTopArray($fundedRequestPerProjectArr);
@@ -511,16 +517,16 @@ class DashboardController extends Controller
         //9- Group work requests Based on what is ordered (“Category”) & sorted by Total Quantity (1 work request ordering 1000 slides counts as 1000)
         $quantityCountByCategoryTopArr = $this->getTopArray($quantityCountByCategoryArr,$explodedView);
         $layoutArray = array(
-            'height' => 600,
-            'width' => 1200,
+            'height' => $this->height,
+            'width' => $this->width,
         );
         $chartsArray = $this->addChart( $chartsArray, $quantityCountByCategoryTopArr, "TRP Service Productivity by Products/Services (Top 10)",'pie',$layoutArray,"-");
         ///////////////////////////
 
         //10,11. TRP Service Productivity for Funded/Not-Funded Projects (Top 10)
         $layoutArray = array(
-            'height' => 600,
-            'width' => 1200,
+            'height' => $this->height,
+            'width' => $this->width,
         );
         //10. TRP Service Productivity for Funded Projects (Top 10)
         $fundedQuantityCountByCategoryTopArr = $this->getTopArray($fundedQuantityCountByCategoryArr,$explodedView);
@@ -707,8 +713,8 @@ class DashboardController extends Controller
         $subtotalFees = $this->getNumberFormat($subtotalFees);
 
         $layoutArray = array(
-            'height' => 600,
-            'width' =>  600,
+            'height' => $this->height,
+            'width' =>  $this->width,
             'title' => "Total Fees by Work Requests (Total $".$subtotalFees.")"
         );
 
@@ -730,15 +736,14 @@ class DashboardController extends Controller
             'layout' => $layoutArray,
             'data' => $dataArray
         );
-        /////////////////////
-
         $chartsArray[] = array('newline'=>true);
+        /////////////////////
 
         //13. Total Fees per Funded Project (Top 10)
         //14. Total Fees per non-funded Project (Top 10)
         $layoutArray = array(
-            'height' => 600,
-            'width' => 800,
+            'height' => $this->height,
+            'width' => $this->width,
         );
         //13. Total Fees per Funded Project (Top 10)
         $fundedTotalFeesByRequestTopArr = $this->getTopArray($fundedTotalFeesByRequestArr,$explodedView);
@@ -750,20 +755,20 @@ class DashboardController extends Controller
 
         //15. Total Fees per Investigator (Top 10)
         $layoutArray = array(
-            'height' => 600,
-            'width' => 800,
+            'height' => $this->height,
+            'width' => $this->width,
         );
         $totalFeesByInvestigatorTopArr = $this->getTopArray($totalFeesByInvestigatorArr,$explodedView);
         $chartsArray = $this->addChart( $chartsArray, $totalFeesByInvestigatorTopArr, "Total Fees per Investigator (Top 10)",'pie',$layoutArray,"- $");
         ////////////////////////////
 
-        $chartsArray[] = array('newline'=>true);
+        //$chartsArray[] = array('newline'=>true);
 
         //16. Total Fees per Investigator (Funded) (Top 10)
         //17. Total Fees per Investigator (non-Funded) (Top 10)
         $layoutArray = array(
-            'height' => 600,
-            'width' => 800,
+            'height' => $this->height,
+            'width' => $this->width,
         );
         //16. Total Fees per Investigator (Funded) (Top 10)
         $fundedTotalFeesByInvestigatorTopArr = $this->getTopArray($fundedTotalFeesByInvestigatorArr,$explodedView);
@@ -980,8 +985,8 @@ class DashboardController extends Controller
         //$totalFundedFees = $totalFundedPaidFees + $totalFundedDueFees;
 
         $layoutArray = array(
-            'height' => 600,
-            'width' =>  1000,
+            'height' => $this->height,
+            'width' =>  $this->width,
             'title' => "Generated Invoices from Funded Projects (Total invoiced $".$totalThisInvoiceVerificationFees."; Total invoices: ".$totalInvoices.", 'Paid in Full' invoices: ".$paidInvoices.")"
         );
 
@@ -1001,15 +1006,14 @@ class DashboardController extends Controller
             'layout' => $layoutArray,
             'data' => $dataArray
         );
-        /////////////////////////////
-
         $chartsArray[] = array('newline'=>true);
+        /////////////////////////////
 
         //19. Generated Invoices by Status per Funded Project (Top 10)
         //20. Generated Invoices by Status per PI (Top 10)
         $layoutArray = array(
-            'height' => 600,
-            'width' => 800,
+            'height' => $this->height,
+            'width' => $this->width,
         );
         //19. Generated Invoices by Status per Funded Project (Top 10)
         $invoicesByProjectTopArr = $this->getTopArray($invoicesByProjectArr,$showOther);
@@ -1118,8 +1122,8 @@ class DashboardController extends Controller
         //////////// EOF Filter ////////////
 
         $layoutArray = array(
-            'height' => 600,
-            'width' =>  600,
+            'height' => $this->height,
+            'width' =>  $this->width,
         );
 
 //            var data = [{
@@ -1249,6 +1253,7 @@ class DashboardController extends Controller
                 'layout' => $layoutArray,
                 'data' => $dataArray
             );
+            $chartsArray[] = array('newline'=>true);
         }
 
 
@@ -1336,8 +1341,8 @@ class DashboardController extends Controller
         $title = "Dashboard: Comparison Statistics";
 
         $layoutArray = array(
-            'height' => 600,
-            'width' => 600,
+            'height' => $this->height,
+            'width' => $this->width,
         );
 
 //            var data = [{
@@ -1685,8 +1690,8 @@ class DashboardController extends Controller
 
         if( !$layoutArray ) {
             $layoutArray = array(
-                'height' => 600,
-                'width' => 600,
+                'height' => $this->height,
+                'width' => $this->width,
             );
         }
 
@@ -1741,6 +1746,8 @@ class DashboardController extends Controller
             'data' => $dataArray
         );
 
+        $chartsArray[] = array('newline'=>true);
+
         return $chartsArray;
     }
     public function addChartByMultiArray( $chartsArray, $dataArr, $filterArr, $title, $type='pie', $layoutArray=null, $valuePrefixLabel=null ) {
@@ -1777,8 +1784,8 @@ class DashboardController extends Controller
 
         if( !$layoutArray ) {
             $layoutArray = array(
-                'height' => 600,
-                'width' => 600,
+                'height' => $this->height,
+                'width' => $this->width,
             );
         }
 
@@ -1943,6 +1950,8 @@ class DashboardController extends Controller
             'data' => $dataArray
         );
 
+        $chartsArray[] = array('newline'=>true);
+
         return $chartsArray;
     }
 
@@ -1951,6 +1960,18 @@ class DashboardController extends Controller
         if( count($combinedDataArr) == 0 ) {
             return $chartsArray;
         }
+
+        $layoutArray = array(
+            'height' => $this->height,
+            'width' => $this->width,
+            'margin' => array('b'=>200)
+//            'yaxis' => array(
+//                'automargin' => true
+//            ),
+//            'xaxis' => array(
+//                'automargin' => true,
+//            ),
+        );
 
         $layoutArray['title'] = $title;
         $layoutArray['barmode'] = 'stack';
@@ -1990,6 +2011,7 @@ class DashboardController extends Controller
             'layout' => $layoutArray,
             'data' => $stackDataArray
         );
+        $chartsArray[] = array('newline'=>true);
 
         return $chartsArray;
     }

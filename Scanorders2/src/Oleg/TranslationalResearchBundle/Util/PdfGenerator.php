@@ -46,7 +46,7 @@ class PdfGenerator
 
         //generate file name
         $fileFullReportUniqueName = $this->constructUniqueFileName($invoice,"Invoice-PDF");
-        $logger->notice("Start to generate PDF Invoice ID=".$invoice->getOid()."; filename=".$fileFullReportUniqueName);
+        $logger->notice("Start to generate PDF invoice ID=".$invoice->getOid()."; filename=".$fileFullReportUniqueName);
 
         //check and create Report and temp folders
         $reportsUploadPath = "transres/InvoicePDF";  //$userSecUtil->getSiteSettingParameter('reportsUploadPathFellApp');
