@@ -2083,7 +2083,7 @@ class ListController extends Controller
                 }
 
                 $event = "<strong>".$field.$text."</strong>".": "."old value=".$oldValue.", new value=".$newValue;
-                echo "event=".$event."<br>";
+                //echo "event=".$event."<br>";
                 //exit();
 
                 $changeArr[] = $event;
@@ -2613,8 +2613,9 @@ class ListController extends Controller
                 $bundleName = "TranslationalResearchBundle";
                 break;
             case "transresrequestcategorytypes":
+            case "translationalresearchfeesschedule":
                 $className = "RequestCategoryTypeList";
-                $displayName = "Translational Research Request Products/Services List";
+                $displayName = "Translational Research Request Products/Services (Fee Schedule) List";
                 $bundleName = "TranslationalResearchBundle";
                 break;
             case "transresirbapprovaltypes":
@@ -3471,16 +3472,27 @@ class ListController extends Controller
     }
 
     /**
-     * @Route("/change-list-element-type/{pathbase}/{entityId}/{type}", name="platform_list_manager_element_change_type")
+     * @Route("/change-list-element-type/{type}/{entityId}/{pathbase}/{postpath}", name="platform_list_manager_element_change_type")
      * @Method("GET")
      */
-    public function changeTypeAction( Request $request, $pathbase, $entityId, $type ) {
+    public function changeTypeAction( Request $request, $type, $entityId, $pathbase, $postpath=null ) {
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
+        $additionalSitename = null;
+
+        if( $pathbase == "translationalresearchfeesschedule" ) {
+            $additionalSitename = $this->container->getParameter('translationalresearch.sitename');
+            if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ) {
+                return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+            }
+        } else {
+            if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+                return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename') . '-order-nopermission'));
+            }
         }
 
         $em = $this->getDoctrine()->getManager();
+        $userSecUtil = $this->get('user_security_utility');
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         //echo "data: $pathbase, $entityId, $type <br>";
 
@@ -3494,14 +3506,26 @@ class ListController extends Controller
             $entity->setType($type);
             $em->flush($entity);
 
+            $event = "The type of the list entry '" . $entity . "' has been changed to '" . $type . "'";
+
             $this->get('session')->getFlashBag()->add(
                 'notice',
-                "The type of the list entry '" . $entity . "' has been changed to '" . $type . "'"
+                $event
             );
+
+            //$userSecUtil = $this->get('user_security_utility');
+            //echo "event=".$event."<br>";
+            //print_r($removedCollections);
+            //exit();
+            $userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'),$event,$user,$entity,$request,'List Updated');
+
+            if( $additionalSitename ) {
+                $userSecUtil->createUserEditEvent($additionalSitename,$event,$user,$entity,$request,'List Updated');
+            }
         }
 
         //exit();
-        return $this->redirect( $this->generateUrl($pathbase.'-list') );
+        return $this->redirect( $this->generateUrl($pathbase.'-list'.$postpath) );
     }
     
 }

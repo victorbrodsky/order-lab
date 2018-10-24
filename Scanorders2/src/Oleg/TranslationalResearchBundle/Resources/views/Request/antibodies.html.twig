@@ -55,6 +55,7 @@
                 <th>{{ knp_pagination_sortable(entities, 'Comment', 'ent.comment') }}</th>
                 {#<th>{{ knp_pagination_sortable(entities, 'Datasheet', 'ent.datasheet') }}</th>#}
                 <th>Datasheet</th>
+                <th>{{ knp_pagination_sortable(entities, 'Type', 'ent.type') }}</th>
 
                 {% if is_granted('ROLE_TRANSRES_ADMIN') %}
                     <th>Actions</th>
@@ -151,6 +152,9 @@
                     {% endfor %}
                 </td>
 
+                <td>
+                    {{ ent.type }}
+                </td>
 
                 {% if is_granted('ROLE_TRANSRES_ADMIN') %}
                     <td class="rowlink-skip">
@@ -165,6 +169,23 @@
                                     <a href="{{ path('antibodies_edit_translationalresearch', { 'id': ent.id }) }}"
                                     >Edit</a>
                                 </li>
+
+                                {% if ent.getType()|lower != 'disabled' %}
+                                    <li>
+                                        <a
+                                                general-data-confirm="Are you sure you would like to disable this entry?"
+                                                href="{{ path('platform_list_manager_element_change_type', { 'pathbase':pathbase, 'entityId':ent.id, 'type':'disabled', 'postpath':postPath }) }}">Disable
+                                        </a>
+                                    </li>
+                                {% endif %}
+                                {% if ent.getType()|lower != 'default' and ent.getType()|lower != 'user-added' %}
+                                    <li>
+                                        <a
+                                                general-data-confirm="Are you sure you would like to enable and set this entry's type to 'Default'?"
+                                                href="{{ path('platform_list_manager_element_change_type', { 'pathbase':pathbase, 'entityId':ent.id, 'type':'default', 'postpath':postPath }) }}">Enable
+                                        </a>
+                                    </li>
+                                {% endif %}
 
                             </ul>
 

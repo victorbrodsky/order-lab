@@ -28,7 +28,6 @@ class TransResListController extends ListController
     protected $sitename = "translationalresearch";
     protected $postPath = "_translationalresearch";
 
-    //     * @Route("/list/antibodies/", name="antibodies-list_translationalresearch")
     /**
      * @Route("/list/translational-research-request-products-and-services/", name="transresrequestcategorytypes-list_translationalresearch")
      *
@@ -67,6 +66,7 @@ class TransResListController extends ListController
         
         $listArr = $this->getList($request);
         $listArr['title'] = "Antibodies";
+        $listArr['postPath'] = "_translationalresearch";
 
         return $listArr;
     }

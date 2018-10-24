@@ -1982,7 +1982,7 @@ class RequestController extends Controller
             );
             //$categoryListLink = " (<a target='_blank' href=" . $categoryListUrl . ">" . "Category Type List Management" . "</a>)";
             //glyphicon glyphicon-wrench
-            $categoryListLink = " <a data-toggle='tooltip' title='Products/Services List Management' href=".$categoryListUrl."><span class='glyphicon glyphicon-wrench'></span></a>";
+            $categoryListLink = " <a data-toggle='tooltip' title='Products/Services (Fee Schedule) List Management' href=".$categoryListUrl."><span class='glyphicon glyphicon-wrench'></span></a>";
         }
 
         //for non-funded projects, show "Funding Number (Optional):"
@@ -2285,7 +2285,7 @@ class RequestController extends Controller
 
 
     /**
-     * @Route("/request/fee-schedule", name="translationalresearch_fees_schedule")
+     * @Route("/request/fee-schedule", name="translationalresearchfeesschedule-list")
      * @Template("OlegTranslationalResearchBundle:Request:fee-schedule.html.twig")
      * @Method("GET")
      */
@@ -2296,8 +2296,7 @@ class RequestController extends Controller
         }
 
         $em = $this->getDoctrine()->getManager();
-
-
+        
         $filterform = $this->createForm(ListFilterType::class, null, array(
             'method' => 'GET',
         ));
@@ -2364,7 +2363,8 @@ class RequestController extends Controller
             'filterform' => $filterform->createView(),
             'fees' => $fees,
             'title' => "Fee Schedule",
-            'adminUser' => $adminUser
+            'adminUser' => $adminUser,
+            'pathbase' => "translationalresearchfeesschedule"
         );
     }
 

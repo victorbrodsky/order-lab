@@ -44,6 +44,7 @@
                 <th>{{ knp_pagination_sortable(fees, 'Catalog', 'list.section') }}</th>
                 <th>{{ knp_pagination_sortable(fees, 'Fee', 'list.fee') }}</th>
                 <th>{{ knp_pagination_sortable(fees, 'Unit', 'list.feeUnit') }}</th>
+                <th>{{ knp_pagination_sortable(fees, 'Type', 'list.type') }}</th>
 
                 {% if adminUser %}
                     <th>Actions</th>
@@ -82,6 +83,10 @@
                     {{ fee.getFeeUnitStr() }}
                 </td>
 
+                <td>
+                    {{ fee.type }}
+                </td>
+
                 {% if adminUser %}
                     <td class="rowlink-skip">
                         <div class="btn-group">
@@ -95,6 +100,23 @@
                                     <a href="{{ path('transresrequestcategorytypes_edit_translationalresearch', { 'id': fee.id }) }}"
                                     >Edit</a>
                                 </li>
+
+                                {% if fee.getType()|lower != 'disabled' %}
+                                    <li>
+                                        <a
+                                                general-data-confirm="Are you sure you would like to disable this entry?"
+                                                href="{{ path('platform_list_manager_element_change_type', { 'pathbase':pathbase, 'entityId':fee.id, 'type':'disabled' }) }}">Disable
+                                        </a>
+                                    </li>
+                                {% endif %}
+                                {% if fee.getType()|lower != 'default' and fee.getType()|lower != 'user-added' %}
+                                    <li>
+                                        <a
+                                                general-data-confirm="Are you sure you would like to enable and set this entry's type to 'Default'?"
+                                                href="{{ path('platform_list_manager_element_change_type', { 'pathbase':pathbase, 'entityId':fee.id, 'type':'default' }) }}">Enable
+                                        </a>
+                                    </li>
+                                {% endif %}
 
                             </ul>
 
