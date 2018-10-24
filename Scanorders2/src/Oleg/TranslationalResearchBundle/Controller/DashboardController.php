@@ -72,21 +72,10 @@ class DashboardController extends Controller
         $projects = $this->getProjectsByFilter($startDate,$endDate,$projectSpecialtyObjects);
         //echo "projects=".count($projects)."<br>";
 
-        //1. Principle Investigators by Affiliation
+        /////////////// 1. Principle Investigators by Affiliation /////////////////////
         $piWcmPathologyCounter = 0;
         $piWcmCounter = 0;
         $piOtherCounter = 0;
-//        $mapper = array(
-//            'prefix' => 'Oleg',
-//            'bundleName' => 'UserdirectoryBundle',
-//            'className' => 'Institution'
-//        );
-//        $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
-//        $wcmPathology = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
-//            "Pathology and Laboratory Medicine",
-//            $wcmc,
-//            $mapper
-//        );
         $departmentAbbreviation = "Department";
         $institutionAbbreviation = "Institution";
         $institution = null;
@@ -98,7 +87,7 @@ class DashboardController extends Controller
                 $institutionAbbreviation = $institution."";
             }
         }
-        ////////////////////
+        /////////////// EOF 1. Principle Investigators by Affiliation /////////////////////
 
         //2. Total number of projects (XXX) per PI (Top 5/10) (APPROVED & CLOSED)
         $piProjectCountArr = array();

@@ -341,7 +341,7 @@ class TransResRequestType extends AbstractType
             'label'=> "Business Purpose(s):",
             'required'=> true,
             'multiple' => true,
-            'attr' => array('class'=>'combobox combobox-width'),
+            'attr' => array('class'=>'combobox combobox-width tarnsresrequest-businessPurposes'),
             'query_builder' => function(EntityRepository $er) {
                 return $er->createQueryBuilder('list')
                     ->where("list.type = :typedef OR list.type = :typeadd")

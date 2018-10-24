@@ -126,6 +126,16 @@ class RequestController extends Controller
             foreach( $transreqPis as $transreqPi ) {
                 $transresRequest->addPrincipalInvestigator($transreqPi);
             }
+
+            //pre-populate "Business Purpose(s)" by Project's Type:
+            //if project type = "USCAP Submission", set the default value for the Business Purpose of the new Work Request as "USCAP-related"
+            if( $project->getProjectType() && $project->getProjectType()->getName() == "USCAP Submission" ) {
+                $businessPurpose = $em->getRepository('OlegTranslationalResearchBundle:BusinessPurposeList')->findOneByName("USCAP-related");
+                //echo "businessPurpose=".$businessPurpose."<br>";
+                if( $businessPurpose ) {
+                    $transresRequest->addBusinessPurpose($businessPurpose);
+                }
+            }
         }
 
         $form = $this->createRequestForm($transresRequest,$cycle,$request); //new

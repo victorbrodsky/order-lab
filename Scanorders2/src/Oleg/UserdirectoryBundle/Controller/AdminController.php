@@ -8400,7 +8400,8 @@ class AdminController extends Controller
             "Experimental Research (Descriptive Study)",
             "Clinical Research (Case Study)",
             "Clinical trial (JCTO & Clinical Trials)",
-            "Education/Teaching (Pathology Faculty)"
+            "Education/Teaching (Pathology Faculty)",
+            "USCAP Submission"
         );
 
         $count = 10;

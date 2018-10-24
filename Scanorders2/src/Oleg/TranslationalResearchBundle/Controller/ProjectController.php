@@ -2243,6 +2243,7 @@ class ProjectController extends Controller
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
+        $em = $this->getDoctrine()->getManager();
         $transresUtil = $this->container->get('transres_util');
 
         if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
@@ -2273,12 +2274,23 @@ class ProjectController extends Controller
             $fundedStr = "Funded";
         }
 
+        //if project type = "USCAP Submission", set the default value for the Business Purpose of the new Work Request as "USCAP-related"
+        $businessPurposesArr = array();
+        if( $project->getProjectType() && $project->getProjectType()->getName() == "USCAP Submission" ) {
+            $businessPurpose = $em->getRepository('OlegTranslationalResearchBundle:BusinessPurposeList')->findOneByName("USCAP-related");
+            //echo "businessPurpose=".$businessPurpose."<br>";
+            if( $businessPurpose ) {
+                $businessPurposesArr[] = $businessPurpose->getId();
+            }
+        }
+
         $output = array(
             "fundedAccountNumber" => $project->getFundedAccountNumber(),
             "implicitExpirationDate" => $implicitExpirationDate,
             "principalInvestigators" => $projectPisArr,
             "contact" => $billingContactId, //BillingContact,
-            "fundedStr" => $fundedStr
+            "fundedStr" => $fundedStr,
+            "businessPurposes" => $businessPurposesArr
         );
 
         $response = new Response();

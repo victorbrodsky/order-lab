@@ -302,7 +302,7 @@
                 //var projectId = $('#oleg_translationalresearchbundle_request_project').val();
                 transresPrepopulateProjectDetails( $('#oleg_translationalresearchbundle_request_project') );
 
-                //update tarnsresrequest-fundedAccountNumber by tarnsresrequest-project
+                //update project related request's fields
                 $('#oleg_translationalresearchbundle_request_project').on("change", function(event) {
                     //console.log("project changed: change");
                     //var projectId = $(this).val();
@@ -368,7 +368,7 @@
 
             //validate "Requested Quantity" in product and service
             $("form[name^=oleg_translationalresearchbundle_request]").find(".required").each(function( index ) {
-                console.log( "Required: "+index + ": " + $( this ).text() );
+                //console.log( "Required: "+index + ": " + $( this ).text() );
                 label = $( this ).text();   //$(this).find("label").text();
                 value = null;
 
@@ -430,19 +430,19 @@
                 if (confirmationSubmit.length) {
                     if (confirmationSubmit.is(':checked')) {
                         //ok confirmed
-                        console.log("ok confirmed");
+                        //console.log("ok confirmed");
                     } else {
                         var msg = "Please confirm the agreement in order to submit a new work request.";
                         $("#projectError").show();
                         $("#projectError").html(msg);
-                        console.log("not confirmed");
+                        //console.log("not confirmed");
                         transresShowBtn();
                         return false;
                     }
                 }
             }
 
-            console.log("transresValidateRequest: finished");
+            //console.log("transresValidateRequest: finished");
 
             transresValidateHandsonTable();
         }
@@ -466,7 +466,7 @@
                 return;
             }
 
-            console.log("projectId="+projectId);
+            //console.log("projectId="+projectId);
             if( projectId ) {
                 //console.log("get project account number");
 
@@ -494,6 +494,10 @@
                     //set supportEndDate (project's irbExpirationDate)
                     $("#oleg_translationalresearchbundle_request_supportEndDate").val(response.implicitExpirationDate);
 
+                    //set businessPurposes (project's projectType)
+                    //if project type = "USCAP Submission", set the default value for the Business Purpose of the new Work Request as "USCAP-related"
+                    $("#oleg_translationalresearchbundle_request_businessPurposes").select2('val',response.businessPurposes);
+
                     $('#transer-funded').val(response.fundedStr);
 
                 }).done(function() {
@@ -508,6 +512,7 @@
                 $("#oleg_translationalresearchbundle_request_supportEndDate").val(null);
                 $("#oleg_translationalresearchbundle_request_principalInvestigators").select2('val',null);
                 $("#oleg_translationalresearchbundle_request_contact").select2('val',null);
+                $("#oleg_translationalresearchbundle_request_businessPurposes").select2('val',null);
                 $('#transer-funded').val(null);
             }
         }
