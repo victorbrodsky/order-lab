@@ -16,6 +16,8 @@
  *  limitations under the License.
  */
 
+namespace Oleg\TranslationalResearchBundle\Command;
+
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -23,7 +25,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class CronInvoiceReminderEmail extends ContainerAwareCommand {
+class CronCommand extends ContainerAwareCommand {
 
     protected function configure() {
         $this
@@ -40,7 +42,11 @@ class CronInvoiceReminderEmail extends ContainerAwareCommand {
         //$logger->notice("Cron job processing FellApp from Google Drive finished with result=".$result);
         //$output->writeln($result);
 
-        
+        $transresRequestUtil = $this->getContainer()->get('transres_request_util');
+
+        $result = $transresRequestUtil->sendReminderUnpaidInvoices();
+
+        $output->writeln($result);
 
     }
 

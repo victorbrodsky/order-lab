@@ -261,6 +261,7 @@ class Invoice {
      */
     private $paidDate;
 
+    
 
     public function __construct($user=null) {
         $this->setSubmitter($user);

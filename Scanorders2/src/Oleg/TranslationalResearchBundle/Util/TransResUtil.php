@@ -2754,7 +2754,12 @@ class TransResUtil
     }
 
     public function getTransResProjectSpecialties( $userAllowed=true ) {
-        $user = $this->secTokenStorage->getToken()->getUser();
+
+        if( $this->secTokenStorage->getToken() ) {
+            $user = $this->secTokenStorage->getToken()->getUser();
+        } else {
+            $user = null;
+        }
 
         $specialties = $this->em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->findBy(
             array(
@@ -2766,7 +2771,7 @@ class TransResUtil
         $allowedSpecialties = array();
 
         foreach($specialties as $specialty) {
-            if( $userAllowed ) {
+            if( $userAllowed && $user ) {
                 if( $this->isUserAllowedSpecialtyObject($specialty, $user) ) {
                     $allowedSpecialties[] = $specialty;
                 }

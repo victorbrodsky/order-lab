@@ -186,7 +186,7 @@
 
                                 {% if transres_request_util.isUserHasInvoicePermission(invoice,"change-status") %}
                                     <li>
-                                        <a href="#" data-toggle="modal" data-target="#modal_update_invoice_{{ invoice.oid }}"
+                                        <a href="#" data-toggle="modal" data-target="#modal_update_invoice_{{ invoice.getCleanOid() }}"
                                         >Update Invoice Status</a>
                                     </li>
                                 {% endif %}

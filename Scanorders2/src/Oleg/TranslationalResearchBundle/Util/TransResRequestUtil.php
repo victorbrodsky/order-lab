@@ -3206,6 +3206,51 @@ class TransResRequestUtil
         return $requestIds;
     }
 
+    public function sendReminderUnpaidInvoices() {
+        $transresUtil = $this->container->get('transres_util');
+
+        $resultArr = array();
+
+        $projectSpecialties = $transresUtil->getTransResProjectSpecialties(false);
+        foreach($projectSpecialties as $projectSpecialty) {
+            $resultArr[] = $this->sendReminderUnpaidInvoicesBySpecialty($projectSpecialty);
+        }
+
+        $result = implode("; ",$resultArr);
+
+        return $result;
+    }
+    public function sendReminderUnpaidInvoicesBySpecialty( $projectSpecialty ) {
+        $result = "" . $projectSpecialty;
+
+        //invoiceReminderSchedule
+        //invoiceReminderSubject
+        //invoiceReminderBody
+        //invoiceReminderEmail
+
+        $repository = $this->em->getRepository('OlegTranslationalResearchBundle:Invoice');
+        $dql =  $repository->createQueryBuilder("invoice");
+        $dql->select('invoice');
+
+
+        $dql->where("invoice.status = :unpaid"); //Unpaid/Issued
+        //$dql->andWhere("foscomment.entityName = 'TransResRequest'");
+        //$dql->andWhere("(foscomment.entityName IS NULL OR foscomment.entityName = 'TransResRequest')");
+
+        $query = $this->em->createQuery($dql);
+
+        $query->setParameters(
+            array(
+                "unpaid" => "Unpaid/Issued",
+            )
+        );
+
+        $invoices = $query->getResult();
+        echo "count invoices=".count($invoices)."<br>";
+
+        return $result;
+    }
+
 }
 
 
