@@ -106,6 +106,32 @@ class TransResSiteParameters {
      */
     private $transresNotificationEmailSubject;
 
+    ////////// Invoice reminder email ////////////
+    /**
+     * Translational Research Unpaid Invoice Reminder Schedule in Months
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $invoiceReminderSchedule;
+
+    /**
+     * Translational Research Reminder Email Subject
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $invoiceReminderSubject;
+
+    /**
+     * Translational Research Unpaid Invoice Reminder Email Body
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $invoiceReminderBody;
+
+    /**
+     * Translational Research Reminder Email - Send From the Following Address
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $invoiceReminderEmail;
+    ////////// EOF Invoice reminder email ////////////
+
     /**
      * Email body for notification email is being to send to the Request's PI when Request status is changed to "Completed and Notified"
      * @ORM\Column(type="text", nullable=true)
@@ -794,6 +820,69 @@ class TransResSiteParameters {
         $this->emailNoteConcern = $emailNoteConcern;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getInvoiceReminderSchedule()
+    {
+        return $this->invoiceReminderSchedule;
+    }
+
+    /**
+     * @param mixed $invoiceReminderSchedule
+     */
+    public function setInvoiceReminderSchedule($invoiceReminderSchedule)
+    {
+        $this->invoiceReminderSchedule = $invoiceReminderSchedule;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInvoiceReminderSubject()
+    {
+        return $this->invoiceReminderSubject;
+    }
+
+    /**
+     * @param mixed $invoiceReminderSubject
+     */
+    public function setInvoiceReminderSubject($invoiceReminderSubject)
+    {
+        $this->invoiceReminderSubject = $invoiceReminderSubject;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInvoiceReminderBody()
+    {
+        return $this->invoiceReminderBody;
+    }
+
+    /**
+     * @param mixed $invoiceReminderBody
+     */
+    public function setInvoiceReminderBody($invoiceReminderBody)
+    {
+        $this->invoiceReminderBody = $invoiceReminderBody;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInvoiceReminderEmail()
+    {
+        return $this->invoiceReminderEmail;
+    }
+
+    /**
+     * @param mixed $invoiceReminderEmail
+     */
+    public function setInvoiceReminderEmail($invoiceReminderEmail)
+    {
+        $this->invoiceReminderEmail = $invoiceReminderEmail;
+    }
 
     
 

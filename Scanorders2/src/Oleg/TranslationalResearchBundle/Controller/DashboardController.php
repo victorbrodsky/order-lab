@@ -21,6 +21,8 @@ class DashboardController extends Controller
 
     private $width = 1200;
     private $height = 600;
+    private $otherId = "All other [[otherStr]] combined";
+    private $otherSearchStr = "All other ";
 
     /**
      * @Route("/pi-project-statistics/", name="translationalresearch_dashboard_project")
@@ -43,8 +45,8 @@ class DashboardController extends Controller
         $filterform = $this->getFilter();
         $filterform->handleRequest($request);
 
-        $explodedView = $filterform['exploded']->getData();
-        //echo "explodedView=".$explodedView."<br>";
+        $showLimited = $filterform['showLimited']->getData();
+        //echo "showLimited=".$showLimited."<br>";
 
         $startDate = $filterform['startDate']->getData();
         $endDate = $filterform['endDate']->getData();
@@ -65,7 +67,7 @@ class DashboardController extends Controller
             'startDate'=>$startDate,
             'endDate'=>$endDate,
             'projectSpecialtyObjects' => $projectSpecialtyObjects,
-            'exploded' => $explodedView,
+            'showLimited' => $showLimited,
             'funded' => null
         );
 
@@ -244,7 +246,8 @@ class DashboardController extends Controller
 
         ///////////// 2. Total number of projects (XXX) per PI (Top 5/10) (APPROVED & CLOSED) - $piProjectCountArr //////////////
         //TODO: add link to the filtered project list by PI
-        $piProjectCountTopArr = $this->getTopMultiArray($piProjectCountArr,$explodedView); // getTopArray(
+        $showOther = $this->getOtherStr($showLimited,"PIs");
+        $piProjectCountTopArr = $this->getTopMultiArray($piProjectCountArr,$showOther); // getTopMultiArray(
         $filterArr['funded'] = null;
         //Projects per PI
         //                              $chartsArray, $dataArr,              $title,                                $type='pie', $layoutArray=null, $valuePrefixLabel=null
@@ -253,16 +256,14 @@ class DashboardController extends Controller
 
         /////////// 3,4 Total number of Funded/Un-Funded Projects per PI (Top 10) ////////////////
         //3. Funded Projects per PI
-        //$piFundedProjectCountTopArr = $this->getTopArray($piFundedProjectCountArr);
-        //$chartsArray = $this->addChart( $chartsArray, $piFundedProjectCountTopArr, "Total number of Funded Projects per PI (Top 10)","pie",null,"-");
-        $piFundedProjectCountTopArr = $this->getTopMultiArray($piFundedProjectCountArr,$explodedView);
+        $showOther = $this->getOtherStr($showLimited,"PIs");
+        $piFundedProjectCountTopArr = $this->getTopMultiArray($piFundedProjectCountArr,$showOther);
         $filterArr['funded'] = true;
         $chartsArray = $this->addChartByMultiArray( $chartsArray, $piFundedProjectCountTopArr, $filterArr, "Total number of Funded Projects per PI (Top 10)","pie",null,"-");
         //4. Un-Funded Projects per PI
-        //$piUnFundedProjectCountTopArr = $this->getTopArray($piUnFundedProjectCountArr);
         //Funded Projects per PI
-        //$chartsArray = $this->addChart( $chartsArray, $piUnFundedProjectCountTopArr, "Total number of Non-Funded Projects per PI (Top 10)","pie",null,"-");
-        $piUnFundedProjectCountTopArr = $this->getTopMultiArray($piUnFundedProjectCountArr,$explodedView);
+        $showOther = $this->getOtherStr($showLimited,"PIs");
+        $piUnFundedProjectCountTopArr = $this->getTopMultiArray($piUnFundedProjectCountArr,$showOther);
         $filterArr['funded'] = false;
         $chartsArray = $this->addChartByMultiArray( $chartsArray, $piUnFundedProjectCountTopArr, $filterArr, "Total number of Non-Funded Projects per PI (Top 10)","pie",null,"-");
         /////////// EOF 3,4 Total number of Funded/Un-Funded Projects per PI (Top 10) ////////////////
@@ -294,7 +295,7 @@ class DashboardController extends Controller
         $filterform = $this->getFilter();
         $filterform->handleRequest($request);
 
-        $explodedView = $filterform['exploded']->getData();
+        $showLimited = $filterform['showLimited']->getData();
         $startDate = $filterform['startDate']->getData();
         $endDate = $filterform['endDate']->getData();
 
@@ -308,7 +309,7 @@ class DashboardController extends Controller
             'startDate'=>$startDate,
             'endDate'=>$endDate,
             'projectSpecialtyObjects' => $projectSpecialtyObjects,
-            'exploded' => $explodedView,
+            'showLimited' => $showLimited,
             'funded' => null
         );
 
@@ -487,10 +488,8 @@ class DashboardController extends Controller
             'height' => $this->height,
             'width' => $this->width,
         );
-        //$requestPerProjectTopArr = $this->getTopArray($requestPerProjectArr);
-//        $requestPerProjectTopArr = $this->getTopArray($requestPerProjectArr);
-//        $chartsArray = $this->addChart( $chartsArray, $requestPerProjectTopArr, "6. Total number of Requests per Project (Top 10)",'pie',$layoutArray,"-");
-        $requestPerProjectTopArr = $this->getTopMultiArray($requestPerProjectArr,$explodedView);
+        $showOther = $this->getOtherStr($showLimited,"Projects");
+        $requestPerProjectTopArr = $this->getTopMultiArray($requestPerProjectArr,$showOther);
         $filterArr['funded'] = null;
         $chartsArray = $this->addChartByMultiArray( $chartsArray, $requestPerProjectTopArr, $filterArr, "Total number of Requests per Project (Top 10)","pie",$layoutArray,"-");
         ////////////////////
@@ -501,22 +500,21 @@ class DashboardController extends Controller
             'width' => $this->width,
         );
         //7. Total number of Requests per Funded Project (Top 10)
-        //$fundedRequestPerProjectTopArr = $this->getTopArray($fundedRequestPerProjectArr);
-        //$chartsArray = $this->addChart( $chartsArray, $fundedRequestPerProjectTopArr, "Total number of Requests per Funded Project (Top 10)",'pie',$layoutArray,"-");
-        $fundedRequestPerProjectTopArr = $this->getTopMultiArray($fundedRequestPerProjectArr,$explodedView);
+        $showOther = $this->getOtherStr($showLimited,"Projects");
+        $fundedRequestPerProjectTopArr = $this->getTopMultiArray($fundedRequestPerProjectArr,$showOther);
         $filterArr['funded'] = true;
         $chartsArray = $this->addChartByMultiArray( $chartsArray, $fundedRequestPerProjectTopArr, $filterArr, "Total number of Requests per Funded Project (Top 10)","pie",$layoutArray,"-");
         //8. Total number of Requests per Non_Funded Project (Top 10)
-        //$unFundedRequestPerProjectTopArr = $this->getTopArray($unFundedRequestPerProjectArr);
-        //$chartsArray = $this->addChart( $chartsArray, $unFundedRequestPerProjectTopArr, "Total number of Requests per Non-Funded Project (Top 10)",'pie',$layoutArray,"-");
-        $unFundedRequestPerProjectTopArr = $this->getTopMultiArray($unFundedRequestPerProjectArr,$explodedView);
+        $showOther = $this->getOtherStr($showLimited,"Projects");
+        $unFundedRequestPerProjectTopArr = $this->getTopMultiArray($unFundedRequestPerProjectArr,$showOther);
         $filterArr['funded'] = false;
         $chartsArray = $this->addChartByMultiArray( $chartsArray, $unFundedRequestPerProjectTopArr, $filterArr, "Total number of Requests per Non-Funded Project (Top 10)","pie",$layoutArray,"-");
         ////////////////////
 
         //9. TRP Service Productivity by Category Types (Top 10)
         //9- Group work requests Based on what is ordered (“Category”) & sorted by Total Quantity (1 work request ordering 1000 slides counts as 1000)
-        $quantityCountByCategoryTopArr = $this->getTopArray($quantityCountByCategoryArr,$explodedView);
+        $showOther = $this->getOtherStr($showLimited,"Products/Services");
+        $quantityCountByCategoryTopArr = $this->getTopArray($quantityCountByCategoryArr,$showOther);
         $layoutArray = array(
             'height' => $this->height,
             'width' => $this->width,
@@ -530,10 +528,12 @@ class DashboardController extends Controller
             'width' => $this->width,
         );
         //10. TRP Service Productivity for Funded Projects (Top 10)
-        $fundedQuantityCountByCategoryTopArr = $this->getTopArray($fundedQuantityCountByCategoryArr,$explodedView);
+        $showOther = $this->getOtherStr($showLimited,"Projects");
+        $fundedQuantityCountByCategoryTopArr = $this->getTopArray($fundedQuantityCountByCategoryArr,$showOther);
         $chartsArray = $this->addChart( $chartsArray, $fundedQuantityCountByCategoryTopArr, "TRP Service Productivity for Funded Projects (Top 10)",'pie',$layoutArray,"-");
         //11. TRP Service Productivity for Non-Funded Projects (Top 10)
-        $unFundedQuantityCountByCategoryTopArr = $this->getTopArray($unFundedQuantityCountByCategoryArr,$explodedView);
+        $showOther = $this->getOtherStr($showLimited,"Projects");
+        $unFundedQuantityCountByCategoryTopArr = $this->getTopArray($unFundedQuantityCountByCategoryArr,$showOther);
         $chartsArray = $this->addChart( $chartsArray, $unFundedQuantityCountByCategoryTopArr, "TRP Service Productivity for Non-Funded Projects (Top 10)",'pie',$layoutArray,"-");
         ////////////////////////////////
 
@@ -572,8 +572,8 @@ class DashboardController extends Controller
         $filterform = $this->getFilter(true);
         $filterform->handleRequest($request);
 
-        $explodedView = $filterform['exploded']->getData();
-        //echo "explodedView=".$explodedView."<br>";
+        $showLimited = $filterform['showLimited']->getData();
+        //echo "showLimited=".$showLimited."<br>";
 
         $startDate = $filterform['startDate']->getData();
         $endDate = $filterform['endDate']->getData();
@@ -747,10 +747,12 @@ class DashboardController extends Controller
             'width' => $this->width,
         );
         //13. Total Fees per Funded Project (Top 10)
-        $fundedTotalFeesByRequestTopArr = $this->getTopArray($fundedTotalFeesByRequestArr,$explodedView);
+        $showOther = $this->getOtherStr($showLimited,"Projects");
+        $fundedTotalFeesByRequestTopArr = $this->getTopArray($fundedTotalFeesByRequestArr,$showOther);
         $chartsArray = $this->addChart( $chartsArray, $fundedTotalFeesByRequestTopArr, "Total Fees per Funded Project (Top 10)",'pie',$layoutArray,"- $");
         //14. Total Fees per non-funded Project (Top 10)
-        $unFundedTotalFeesByRequestTopArr = $this->getTopArray($unFundedTotalFeesByRequestArr,$explodedView);
+        $showOther = $this->getOtherStr($showLimited,"Projects");
+        $unFundedTotalFeesByRequestTopArr = $this->getTopArray($unFundedTotalFeesByRequestArr,$showOther);
         $chartsArray = $this->addChart( $chartsArray, $unFundedTotalFeesByRequestTopArr, "Total Fees per Non-Funded Project (Top 10)",'pie',$layoutArray,"- $");
         ////////////////////////////////
 
@@ -759,7 +761,8 @@ class DashboardController extends Controller
             'height' => $this->height,
             'width' => $this->width,
         );
-        $totalFeesByInvestigatorTopArr = $this->getTopArray($totalFeesByInvestigatorArr,$explodedView);
+        $showOther = $this->getOtherStr($showLimited,"Investigators");
+        $totalFeesByInvestigatorTopArr = $this->getTopArray($totalFeesByInvestigatorArr,$showOther);
         $chartsArray = $this->addChart( $chartsArray, $totalFeesByInvestigatorTopArr, "Total Fees per Investigator (Top 10)",'pie',$layoutArray,"- $");
         ////////////////////////////
 
@@ -772,10 +775,12 @@ class DashboardController extends Controller
             'width' => $this->width,
         );
         //16. Total Fees per Investigator (Funded) (Top 10)
-        $fundedTotalFeesByInvestigatorTopArr = $this->getTopArray($fundedTotalFeesByInvestigatorArr,$explodedView);
+        $showOther = $this->getOtherStr($showLimited,"Investigators");
+        $fundedTotalFeesByInvestigatorTopArr = $this->getTopArray($fundedTotalFeesByInvestigatorArr,$showOther);
         $chartsArray = $this->addChart( $chartsArray, $fundedTotalFeesByInvestigatorTopArr, "Total Fees per Investigator (Funded) (Top 10)",'pie',$layoutArray,"- $");
         //17. Total Fees per Investigator (non-Funded) (Top 10)
-        $unFundedTotalFeesByInvestigatorTopArr = $this->getTopArray($unFundedTotalFeesByInvestigatorArr,$explodedView);
+        $showOther = $this->getOtherStr($showLimited,"Investigators");
+        $unFundedTotalFeesByInvestigatorTopArr = $this->getTopArray($unFundedTotalFeesByInvestigatorArr,$showOther);
         $chartsArray = $this->addChart( $chartsArray, $unFundedTotalFeesByInvestigatorTopArr, "Total Fees per Investigator (Non-Funded) (Top 10)",'pie',$layoutArray,"- $");
         ////////////////////////////////////////
 
@@ -807,8 +812,8 @@ class DashboardController extends Controller
         $filterform = $this->getFilter(true,true);
         $filterform->handleRequest($request);
 
-        $showOther = $filterform['exploded']->getData();
-        //echo "showOther=".$showOther."<br>";
+        $showLimited = $filterform['showLimited']->getData();
+        //echo "showLimited=".$showLimited."<br>";
 
         $startDate = $filterform['startDate']->getData();
         $endDate = $filterform['endDate']->getData();
@@ -1017,6 +1022,7 @@ class DashboardController extends Controller
             'width' => $this->width,
         );
         //19. Generated Invoices by Status per Funded Project (Top 10)
+        $showOther = $this->getOtherStr($showLimited,"Projects");
         $invoicesByProjectTopArr = $this->getTopArray($invoicesByProjectArr,$showOther);
         $invoicesFeesByProjectTopArr = $this->getTopArray($invoicesFeesByProjectArr,$showOther);
         //merge two to attach fees to label
@@ -1031,6 +1037,7 @@ class DashboardController extends Controller
             array("paid $","-$","limegreen",$invoicePaidFeeArr),
             array("due $","-$","red",$invoiceDueFeeArr)
         );
+        $showOther = $this->getOtherStr($showLimited,"PIs");
         $invoicesFeesByPiArrTop = $this->getTopArray($invoicesFeesByPiArr,$showOther,$descriptionArr);
 
         //merge two to attach fees to label
@@ -1049,7 +1056,7 @@ class DashboardController extends Controller
         );
     }
 
-    public function getFilter( $withExploded=true, $withCompareType=false ) {
+    public function getFilter( $showLimited=false, $withCompareType=false ) {
         $transresUtil = $this->container->get('transres_util');
         //////////// Filter ////////////
         //default date range from today to 1 year back
@@ -1064,15 +1071,15 @@ class DashboardController extends Controller
             "projectSpecialty" => true,
             "projectSpecialties" => $projectSpecialtiesWithAll,
             "compareType" => false,
-            "exploded" => true
+            "showLimited" => true
         );
 
         if( $withCompareType ) {
             $params["compareType"] = true;
         }
 
-        if( $withExploded ) {
-            $params["exploded"] = true;
+        if( $showLimited ) {
+            $params["showLimited"] = $showLimited;
         }
 
         $filterform = $this->createForm(FilterDashboardType::class, null,array(
@@ -1330,7 +1337,7 @@ class DashboardController extends Controller
             //'endDate' => $today
             "projectSpecialty" => false,
             "compareType" => false,
-            "exploded" => false
+            "showLimited" => true
         );
         $filterform = $this->createForm(FilterDashboardType::class, null, array(
             'method' => 'GET',
@@ -1505,12 +1512,22 @@ class DashboardController extends Controller
         return number_format($number,$digits);
     }
 
+    public function getOtherStr( $showLimited, $otherPrefix ) {
+        if( $showLimited ) {
+            return false; //show top ten only without others
+        }
+        return $otherPrefix;
+    }
+
     //select top 10, BUT make sure the other PIs are still shown as "Other"
     public function getTopArray($piProjectCountArr, $showOthers=false, $descriptionArr=array(), $maxLen=50) {
         arsort($piProjectCountArr);
         $limit = 10;
         //$limit = 3;
         //$showOthers = true;
+        //$otherId = "All other $showOthers combined";
+        $otherId = str_replace("[[otherStr]]",$showOthers,$this->otherId);
+
         $count = 1;
         $piProjectCountTopArr = array();
         foreach($piProjectCountArr as $username=>$value) {
@@ -1521,14 +1538,14 @@ class DashboardController extends Controller
                     $piProjectCountTopArr[$username] = $value;
                 }
             } else {
-                if( $showOthers ) {
+                if( $showOthers !== false ) {
                     //echo "show Others <br>";
-                    if (isset($piProjectCountTopArr['Other'])) {
-                        $value = $piProjectCountTopArr['Other'] + $value;
+                    if (isset($piProjectCountTopArr[$otherId])) {
+                        $value = $piProjectCountTopArr[$otherId] + $value;
                     } else {
                         //$value = 1;
                     }
-                    $piProjectCountTopArr['Other'] = $value;
+                    $piProjectCountTopArr[$otherId] = $value;
                 }
             }
             $count++;
@@ -1580,8 +1597,10 @@ class DashboardController extends Controller
         //$limit = 3;
         //$showOthers = true;
 
+        //$otherId = "All other $showOthers combined";
+        $otherId = str_replace("[[otherStr]]",$showOthers,$this->otherId);
+
         $otherObjectids = array();
-        $otherId = 'Other';
 
         $count = 1;
         $piProjectCountTopArr = array();
@@ -1601,7 +1620,7 @@ class DashboardController extends Controller
                     $piProjectCountTopArr[$id]['objectid'] = $objectid;
                     $piProjectCountTopArr[$id]['pi'] = $pi;
                 } else {
-                    if ($showOthers) {
+                    if( $showOthers !== false ) {
                         //echo "show Others <br>";
                         if (isset($piProjectCountTopArr[$otherId]) && isset($piProjectCountTopArr[$otherId]['value'])) {
                             $thisValue = $piProjectCountTopArr[$otherId]['value'] + $value;
@@ -1610,7 +1629,7 @@ class DashboardController extends Controller
                         }
                         //echo $label.": ".$value."=>".$thisValue."<br>";
                         $piProjectCountTopArr[$otherId]['value'] = $thisValue;
-                        $piProjectCountTopArr[$otherId]['label'] = "Other";
+                        $piProjectCountTopArr[$otherId]['label'] = $otherId;
                         $piProjectCountTopArr[$otherId]['show-path'] = $showPath;
                         $piProjectCountTopArr[$otherId]['objectid'] = null;
                         $piProjectCountTopArr[$otherId]['pi'] = $pi;
@@ -1761,7 +1780,6 @@ class DashboardController extends Controller
         $endDate = $filterArr['endDate'];
         $projectSpecialtyObjects = $filterArr['projectSpecialtyObjects'];
         $funded = $filterArr['funded'];
-        //$exploded = $filterArr['exploded'];
 
 //        $projectId = null;
 //        if( isset($filterArr['funded']) ) {
@@ -1828,7 +1846,7 @@ class DashboardController extends Controller
                         $linkFilterArr['filter[projectSpecialty]'] = $projectSpecialtyObject->getId();
                     }
 
-                    if( $id === 'Other' && is_array($objectid) ) {
+                    if( strpos($id, $this->otherSearchStr) !== false && is_array($objectid) ) {
                         $userIndex = 0;
                         foreach($objectid as $thisObjectid) {
                             $linkFilterArr['filter[principalInvestigators]['.$userIndex.']'] = $thisObjectid;
@@ -1879,7 +1897,7 @@ class DashboardController extends Controller
                         $linkFilterArr['filter[projectSpecialty]'] = $projectSpecialtyObject->getId();
                     }
 
-                    if( $id === 'Other' ) {
+                    if( strpos($id, $this->otherSearchStr) !== false ) {
                         $linkFilterArr = null;
                     } else {
                         if( is_array($pi) ) {

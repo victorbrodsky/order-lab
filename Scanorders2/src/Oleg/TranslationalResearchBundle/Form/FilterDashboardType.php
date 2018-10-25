@@ -107,9 +107,9 @@ class FilterDashboardType extends AbstractType
             ));
         }
 
-        if( $this->params['exploded'] ) {
-            $builder->add('exploded', CheckboxType::class, array(
-                'label' => "Show 'Other'",  //"Show only the top ten ",
+        if( $this->params['showLimited'] ) {
+            $builder->add('showLimited', CheckboxType::class, array(
+                'label' => "Show only the top ten", //"Show the full data set on each graph",  //"Show only the top ten",
                 'required' => false,
                 //'attr' => array('class' => 'form-control checkbox')
             ));

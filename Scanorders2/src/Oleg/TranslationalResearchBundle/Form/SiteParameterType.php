@@ -72,6 +72,32 @@ class SiteParameterType extends AbstractType
             },
         ));
 
+        ////////// Invoice reminder email ////////////
+        $builder->add('invoiceReminderEmail', null, array(
+            'label' => "Translational Research Reminder Email - Send From the Following Address:",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+
+        $builder->add('invoiceReminderSchedule', null, array(
+            'label' => "Translational Research Unpaid Invoice Reminder Schedule in Months:",
+            'required' => false,
+            'attr' => array('class' => 'form-control')
+        ));
+
+        $builder->add('invoiceReminderSubject', null, array(
+            'label' => "Translational Research Unpaid Invoice Reminder Email Subject:",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+
+        $builder->add('invoiceReminderBody', null, array(
+            'label' => "Translational Research Unpaid Invoice Reminder Email Body:",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+        ////////// EOF Invoice reminder email ////////////
+
         $builder->add('transresLogos', CollectionType::class, array(
             'entry_type' => DocumentType::class,
             'label' => 'Invoice Logo(s):',

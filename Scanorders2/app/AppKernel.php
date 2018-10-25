@@ -83,7 +83,7 @@ class AppKernel extends Kernel
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {
 
             //disable opcache for dev and test environment
-            ini_set('opcache.enable',false);
+            //ini_set('opcache.enable',false);
 
             $bundles[] = new Symfony\Bundle\DebugBundle\DebugBundle();
             $bundles[] = new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle();

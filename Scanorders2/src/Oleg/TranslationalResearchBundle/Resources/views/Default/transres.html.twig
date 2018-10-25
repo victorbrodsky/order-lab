@@ -1569,6 +1569,21 @@
                 {{ formmacros.field(form.transresNotificationEmailSubject) }}
                 {{ formmacros.field(form.transresNotificationEmail) }}
 
+                <hr>
+                <h4>Translational Research Unpaid Invoice Reminder Email</h4>
+                <p>
+                    Please use naming notation:
+                    [[INVOICE ID]] is for invoice ID,
+                    [[INVOICE AMOUNT DUE]] is for the amount due,
+                    [[INVOICE ISSUE DATE AND DAYS AGO]] is for invoice issue date,
+                    [[REQUEST SHOW URL]] is for Request Show Url,
+                    [[PROJECT SHOW URL]] is for Project Show Url,
+                </p>
+                {{ formmacros.field(form.invoiceReminderEmail) }}
+                {{ formmacros.field(form.invoiceReminderSchedule) }}
+                {{ formmacros.field(form.invoiceReminderSubject) }}
+                {{ formmacros.field(form.invoiceReminderBody) }}
+
             </div>
         </div>
     </div>

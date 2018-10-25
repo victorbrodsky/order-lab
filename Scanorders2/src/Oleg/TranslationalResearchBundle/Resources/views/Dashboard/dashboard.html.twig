@@ -57,10 +57,9 @@
                 {% endif %}
             </div>
             <div class="col-xs-2">
-                {% if filterform.exploded is defined %}
-                    {#{{ formmacros.checkbox(filterform.exploded) }}#}
-                    {#{{ form_row(filterform.exploded) }}#}
-                    {{ form_label(filterform.exploded) }}&nbsp;{{ form_widget(filterform.exploded) }}
+                {% if filterform.showLimited is defined %}
+                    {#{{ formmacros.checkbox(filterform.showLimited) }}#}
+                    {{ form_label(filterform.showLimited) }}&nbsp;{{ form_widget(filterform.showLimited) }}
                 {% endif %}
             </div>
             <div class="col-xs-2" align="left">
