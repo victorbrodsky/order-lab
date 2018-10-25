@@ -423,8 +423,9 @@
 
         {{ formmacros.field(formproduct.comment) }}
 
-        {{ formmacros.field(formproduct.note) }}
-
+        {% if formproduct.note is defined %}
+            {{ formmacros.field(formproduct.note) }}
+        {% endif %}
     </div>
 
 {% endmacro %}

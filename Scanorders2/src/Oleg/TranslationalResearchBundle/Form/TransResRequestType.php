@@ -356,7 +356,7 @@ class TransResRequestType extends AbstractType
 
 
         if( $this->params['saveAsDraft'] === true ) {
-            $saveAsDraftLabel = "Save Request as Draft";
+            $saveAsDraftLabel = "Save Work Request as Draft";
             if( $this->params['cycle'] != 'new' ) {
                 $transresRequest = $this->params['transresRequest'];
                 if ($transresRequest && $transresRequest->getProgressState() != 'draft') {

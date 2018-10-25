@@ -225,7 +225,7 @@ class FilterRequestType extends AbstractType
         $builder->add('sampleName', TextType::class, array(
             'required'=>false,
             'label' => false,
-            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'Sample Name'),
+            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'Deliverable Barcode ID'),
         ));
 
 //        $builder->add('showMatchingAndTotal', ChoiceType::class, array(
