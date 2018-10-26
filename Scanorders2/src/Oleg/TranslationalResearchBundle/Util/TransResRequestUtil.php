@@ -3222,11 +3222,13 @@ class TransResRequestUtil
     }
     public function sendReminderUnpaidInvoicesBySpecialty( $projectSpecialty ) {
         $transresUtil = $this->container->get('transres_util');
+        $emailUtil = $this->container->get('user_mailer_utility');
 
         $invoiceDueDateMax = null;
         $maxReminderCount = null;
         $newline = "\n";
         $result = "" . $projectSpecialty;
+        $resultArr = array();
 
         //$invoiceReminderSchedule: invoiceDueDateMax,reminderIntervalMonths,maxReminderCount (i.e. 3,3,5)
         $invoiceReminderSchedule = $transresUtil->getTransresSiteProjectParameter('invoiceReminderSchedule',null,$projectSpecialty); //6,9,12,15,18
@@ -3234,13 +3236,17 @@ class TransResRequestUtil
         if( $invoiceReminderSchedule ) {
             $invoiceReminderScheduleArr = explode(",",$invoiceReminderSchedule);
             if( count($invoiceReminderScheduleArr) == 3 ) {
-                $invoiceDueDateMax = $invoiceReminderScheduleArr[0];    //datetime
-                $reminderInterval = $invoiceReminderScheduleArr[1];     //months
+                $invoiceDueDateMax = $invoiceReminderScheduleArr[0];    //number of months
+                $reminderInterval = $invoiceReminderScheduleArr[1];     //number of months
                 $maxReminderCount = $invoiceReminderScheduleArr[2];     //integer
             }
         } else {
             return "No invoiceReminderSchedule is set";
         }
+        //testing
+        $invoiceDueDateMax = 1;
+        $reminderInterval = 1;
+        $maxReminderCount = 5;
 
         if( !$invoiceDueDateMax ) {
             return "invoiceDueDateMax is not set. Invoice reminder emails are not sent.";
@@ -3255,10 +3261,13 @@ class TransResRequestUtil
         $reminderInterval = trim($reminderInterval);
         $maxReminderCount = trim($maxReminderCount);
 
+        $params = array();
+
         $invoiceReminderSubject = $transresUtil->getTransresSiteProjectParameter('invoiceReminderSubject',null,$projectSpecialty);
         $invoiceReminderBody = $transresUtil->getTransresSiteProjectParameter('invoiceReminderBody',null,$projectSpecialty);
         $invoiceReminderEmail = $transresUtil->getTransresSiteProjectParameter('invoiceReminderEmail',null,$projectSpecialty);
-        echo "settings: $invoiceReminderSchedule, $invoiceReminderSubject, $invoiceReminderBody, $invoiceReminderEmail".$newline;
+        //echo "settings: $invoiceReminderSchedule, $invoiceReminderSubject, $invoiceReminderBody, $invoiceReminderEmail".$newline;
+        echo "invoiceReminderSchedule=$invoiceReminderSchedule".$newline;
 
         //Send email reminder email if (issueDate does not exist, so use dueDate):
         //1. (dueDate < currentDate - invoiceDueDateMax) AND
@@ -3270,44 +3279,112 @@ class TransResRequestUtil
         $dql =  $repository->createQueryBuilder("invoice");
         $dql->select('invoice');
 
+        $dql->leftJoin('invoice.transresRequest','transresRequest');
+        $dql->leftJoin('transresRequest.project','project');
+        $dql->leftJoin('project.projectSpecialty','projectSpecialty');
 
-        $dql->where("invoice.status = :unpaid"); //Unpaid/Issued
-        //$dql->andWhere("foscomment.entityName = 'TransResRequest'");
-        //$dql->andWhere("(foscomment.entityName IS NULL OR foscomment.entityName = 'TransResRequest')");
+        $dql->where("projectSpecialty.id = :specialtyId");
+        $params["specialtyId"] = $projectSpecialty->getId();
+
+        $dql->andWhere("invoice.status = :unpaid"); //Unpaid/Issued
+        $params["unpaid"] = "Unpaid/Issued";
 
         /////////1. (dueDate < currentDate - invoiceDueDateMax) //////////////
         //overDueDate = currentDate - invoiceDueDateMax;
         $overDueDate = new \DateTime("-".$invoiceDueDateMax." months");
-        echo "overDueDate=".$overDueDate->format('Y-m-d H:i:s').$newline;
-        $dql->andWhere("invoice.dueDate < :overDueDate");
+        //echo "overDueDate=".$overDueDate->format('Y-m-d H:i:s').$newline;
+        $dql->andWhere("invoice.dueDate IS NOT NULL AND invoice.dueDate < :overDueDate");
+        $params["overDueDate"] = $overDueDate->format('Y-m-d H:i:s');
         ////////////// EOF //////////////
 
         /////////.2 (invoiceLastReminderSentDate IS NULL OR invoiceLastReminderSentDate < currentDate - reminderInterval) ///////////
         $overDueReminderDate = new \DateTime("-".$reminderInterval." months");
         $dql->andWhere("invoice.invoiceLastReminderSentDate IS NULL OR invoice.invoiceLastReminderSentDate < :overDueReminderDate");
+        $params["overDueReminderDate"] = $overDueReminderDate->format('Y-m-d H:i:s');
         ////////////// EOF //////////////
 
         /////////3. (invoiceReminderCount < maxReminderCount) ////////////////////////
-        $dql->andWhere("invoice.invoiceReminderCount < :maxReminderCount");
+        $dql->andWhere("invoice.invoiceReminderCount IS NULL OR invoice.invoiceReminderCount < :maxReminderCount");
+        $params["maxReminderCount"] = $maxReminderCount;
         ////////////// EOF //////////////
 
         $query = $this->em->createQuery($dql);
 
         $query->setParameters(
-            array(
-                "unpaid" => "Unpaid/Issued",
-                "overDueDate" => $overDueDate->format('Y-m-d H:i:s'),
-                "overDueReminderDate" => $overDueReminderDate->format('Y-m-d H:i:s'),
-                "maxReminderCount" => $maxReminderCount
-            )
+//            array(
+//                "unpaid" => "Unpaid/Issued",
+//                "overDueDate" => $overDueDate->format('Y-m-d H:i:s'),
+//                "overDueReminderDate" => $overDueReminderDate->format('Y-m-d H:i:s'),
+//                "maxReminderCount" => $maxReminderCount
+//            )
+            $params
         );
 
         $invoices = $query->getResult();
-        echo "count invoices=".count($invoices)."$newline";
+        echo "$projectSpecialty count invoices=".count($invoices)."$newline";
 
         foreach($invoices as $invoice) {
-            echo "send reminder email for invoice=".$invoice."$newline";
+            $dueDateStr = null;
+            $dueDate = $invoice->getDueDate();
+            if( $dueDate ) {
+                $dueDateStr = $dueDate->format('Y-m-d');
+            }
+
+            $lastSentDateStr = null;
+            $lastSentDate = $invoice->getInvoiceLastReminderSentDate();
+            if( $lastSentDate ) {
+                $lastSentDateStr = $dueDate->format('Y-m-d');
+            }
+
+            echo "###Reminder email (ID#".$invoice->getId()."): dueDate=".$dueDateStr.", reminderConter=".$invoice->getInvoiceReminderCount().", lastSentDate=".$lastSentDateStr."$newline";
+
+            //set last reminder date
+            $invoice->setInvoiceLastReminderSentDate(new \DateTime());
+
+            //set reminder counter
+            $invoiceReminderCounter = $invoice->getInvoiceReminderCount();
+            if( !$invoiceReminderCounter ) {
+                $invoiceReminderCounter = 0;
+            }
+            $invoiceReminderCounter = intval($invoiceReminderCounter);
+            $invoiceReminderCounter++;
+            $invoice->setInvoiceReminderCount($invoiceReminderCounter);
+
+            //send email
+            $piEmailArr = $this->getInvoicePis($invoice);
+            if( count($piEmailArr) == 0 ) {
+                //return "There are no PI and/or Billing Contact emails. Email has not been sent.";
+                $resultArr[] = "There are no PI and/or Billing Contact emails. Email has not been sent.";
+            }
+
+            $salesperson = $invoice->getSalesperson();
+            if( $salesperson ) {
+                $salespersonEmail = $salesperson->getSingleEmail();
+                if( $salespersonEmail ) {
+                    $ccs = $salespersonEmail;
+                }
+            }
+            if( !$ccs ) {
+                $submitter = $invoice->getSubmitter();
+                if( $submitter ) {
+                    $submitterEmail = $submitter->getSingleEmail();
+                    if( $submitterEmail ) {
+                        $ccs = $submitterEmail;
+                    }
+                }
+            }
+
+            //Attachment: Invoice PDF
+            $invoicePDF = $invoice->getRecentPDF();
+            if( $invoicePDF ) {
+                $attachmentPath = $invoicePDF->getAbsoluteUploadFullPath();
+            }
+
+            //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
+            $emailUtil->sendEmail( $piEmailArr, $invoiceReminderSubject, $invoiceReminderBody, null, $invoiceReminderEmail, $attachmentPath );
         }
+
+        $result = implode("; ",$resultArr);
 
         return $result;
     }
