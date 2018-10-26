@@ -3235,7 +3235,7 @@ class TransResRequestUtil
         $invoiceReminderEmail = $transresUtil->getTransresSiteProjectParameter('invoiceReminderEmail',null,$projectSpecialty);
         echo "settings: $invoiceReminderSchedule, $invoiceReminderSubject, $invoiceReminderBody, $invoiceReminderEmail".$newline;
 
-        //Send email reminder email if
+        //Send email reminder email if (issueDate does not exist, so use dueDate):
         // (issueDate + invoiceDueDateMax < currentDate) AND
         // (invoiceLastReminderSentDate IS NULL OR invoiceLastReminderSentDate + reminderInterval < currentDate) AND
         // (invoiceReminderCount < maxReminderCount)
@@ -3249,6 +3249,8 @@ class TransResRequestUtil
         $dql->where("invoice.status = :unpaid"); //Unpaid/Issued
         //$dql->andWhere("foscomment.entityName = 'TransResRequest'");
         //$dql->andWhere("(foscomment.entityName IS NULL OR foscomment.entityName = 'TransResRequest')");
+
+        $dql->andWhere("invoice.dueDate");
 
         $query = $this->em->createQuery($dql);
 
