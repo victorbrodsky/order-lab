@@ -109,7 +109,7 @@ class TransResSiteParameters {
     ////////// Invoice reminder email ////////////
     /**
      * Translational Research Unpaid Invoice Reminder Schedule in Months
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     private $invoiceReminderSchedule;
 

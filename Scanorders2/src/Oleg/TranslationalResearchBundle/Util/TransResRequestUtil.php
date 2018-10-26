@@ -3221,12 +3221,25 @@ class TransResRequestUtil
         return $result;
     }
     public function sendReminderUnpaidInvoicesBySpecialty( $projectSpecialty ) {
+        $transresUtil = $this->container->get('transres_util');
+
+        $newline = "\n";
+
         $result = "" . $projectSpecialty;
 
-        //invoiceReminderSchedule
-        //invoiceReminderSubject
-        //invoiceReminderBody
-        //invoiceReminderEmail
+        //$invoiceReminderSchedule: invoiceDueDateMax,maxReminderCount (i.e. 3,5)
+        $invoiceReminderSchedule = $transresUtil->getTransresSiteProjectParameter('invoiceReminderSchedule',null,$projectSpecialty); //6,9,12,15,18
+
+        $invoiceReminderSubject = $transresUtil->getTransresSiteProjectParameter('invoiceReminderSubject',null,$projectSpecialty);
+        $invoiceReminderBody = $transresUtil->getTransresSiteProjectParameter('invoiceReminderBody',null,$projectSpecialty);
+        $invoiceReminderEmail = $transresUtil->getTransresSiteProjectParameter('invoiceReminderEmail',null,$projectSpecialty);
+        echo "settings: $invoiceReminderSchedule, $invoiceReminderSubject, $invoiceReminderBody, $invoiceReminderEmail".$newline;
+
+        //Send email reminder email if
+        // (issueDate + invoiceDueDateMax < currentDate) AND
+        // (invoiceLastReminderSentDate IS NULL OR invoiceLastReminderSentDate + reminderInterval < currentDate) AND
+        // (invoiceReminderCount < maxReminderCount)
+        //When email sent, set invoiceLastReminderSentDate=currentDate, invoiceReminderCount++
 
         $repository = $this->em->getRepository('OlegTranslationalResearchBundle:Invoice');
         $dql =  $repository->createQueryBuilder("invoice");
@@ -3246,7 +3259,11 @@ class TransResRequestUtil
         );
 
         $invoices = $query->getResult();
-        echo "count invoices=".count($invoices)."<br>";
+        echo "count invoices=".count($invoices)."$newline";
+
+        foreach($invoices as $invoice) {
+            echo "send reminder email for invoice=".$invoice."$newline";
+        }
 
         return $result;
     }

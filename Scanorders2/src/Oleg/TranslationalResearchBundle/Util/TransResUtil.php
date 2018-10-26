@@ -4420,13 +4420,16 @@ class TransResUtil
         return $res;
     }
 
-    public function getTransresSiteProjectParameter($fieldName,$project) {
+    public function getTransresSiteProjectParameter( $fieldName, $project=null, $projectSpecialty=null ) {
 
         if( !$fieldName ) {
             throw new \Exception("Field name is empty");
         }
 
-        $projectSpecialty = $project->getProjectSpecialty();
+        if( !$projectSpecialty ) {
+            $projectSpecialty = $project->getProjectSpecialty();
+        }
+
         $projectSpecialtyAbbreviation = $projectSpecialty->getAbbreviation();
 
         $siteParameter = $this->findCreateSiteParameterEntity($projectSpecialtyAbbreviation);
@@ -4442,7 +4445,6 @@ class TransResUtil
     }
     public function findCreateSiteParameterEntity($specialtyStr) {
         $em = $this->em;
-        $user = $this->secTokenStorage->getToken()->getUser();
 
         //$entity = $em->getRepository('OlegTranslationalResearchBundle:TransResSiteParameters')->findOneByOid($specialtyStr);
 
@@ -4475,6 +4477,11 @@ class TransResUtil
         if( !$specialty ) {
             throw new \Exception("SpecialtyList is not found by specialty abbreviation '" . $specialtyStr . "'");
         } else {
+            if( $this->secTokenStorage->getToken() ) {
+                $user = $this->secTokenStorage->getToken()->getUser();
+            } else {
+                $user = null;
+            }
             $entity = new TransResSiteParameters($user);
 
             $entity->setProjectSpecialty($specialty);

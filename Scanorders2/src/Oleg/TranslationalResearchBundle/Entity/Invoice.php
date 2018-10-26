@@ -261,7 +261,22 @@ class Invoice {
      */
     private $paidDate;
 
+    /**
+     * Invoice Last Reminder Sent Date
+     *
+     * @var \DateTime
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $invoiceLastReminderSentDate;
+
+    /**
+     * Count of the invoice reminder emails
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $invoiceReminderCount;
     
+
 
     public function __construct($user=null) {
         $this->setSubmitter($user);
@@ -816,6 +831,39 @@ class Invoice {
         $this->paidDate = $paidDate;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getInvoiceLastReminderSentDate()
+    {
+        return $this->invoiceLastReminderSentDate;
+    }
+
+    /**
+     * @param mixed $invoiceLastReminderSentDate
+     */
+    public function setInvoiceLastReminderSentDate($invoiceLastReminderSentDate)
+    {
+        $this->invoiceLastReminderSentDate = $invoiceLastReminderSentDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInvoiceReminderCount()
+    {
+        return $this->invoiceReminderCount;
+    }
+
+    /**
+     * @param mixed $invoiceReminderCount
+     */
+    public function setInvoiceReminderCount($invoiceReminderCount)
+    {
+        $this->invoiceReminderCount = $invoiceReminderCount;
+    }
+
+
 //    public function getInvoiceAddItems()
 //    {
 //        return $this->invoiceAddItems;
@@ -903,5 +951,9 @@ class Invoice {
         $oid = str_replace("(","-",$oid);
         $oid = str_replace(")","-",$oid);
         return $oid;
+    }
+    
+    public function __toString() {
+        return "".$this->getId();
     }
 }
