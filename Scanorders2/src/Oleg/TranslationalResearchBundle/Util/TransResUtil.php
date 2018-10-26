@@ -3506,7 +3506,7 @@ class TransResUtil
             if( $dueDate ) {
                 $dueDateStr = $dueDate->format('Y-m-d');
                 //TODO: $daysAgo =
-                $daysAgo = $this->timeElapsedString($dueDate);
+                $daysAgo = $this->timeElapsedString($dueDate,true);
                 if( $daysAgo ) {
                     $dueDateStr = $dueDateStr . " " . $daysAgo;
                 }
@@ -3519,9 +3519,10 @@ class TransResUtil
 
         return $text;
     }
+    //TODO: change it days only
     function timeElapsedString($datetime, $full = false) {
-        $now = new DateTime;
-        $ago = new DateTime($datetime);
+        $now = new \DateTime();
+        $ago = $datetime;   //new \DateTime($datetime);
         $diff = $now->diff($ago);
 
         $diff->w = floor($diff->d / 7);
