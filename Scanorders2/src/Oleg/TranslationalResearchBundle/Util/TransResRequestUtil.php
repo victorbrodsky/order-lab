@@ -3223,12 +3223,37 @@ class TransResRequestUtil
     public function sendReminderUnpaidInvoicesBySpecialty( $projectSpecialty ) {
         $transresUtil = $this->container->get('transres_util');
 
+        $invoiceDueDateMax = null;
+        $maxReminderCount = null;
         $newline = "\n";
-
         $result = "" . $projectSpecialty;
 
-        //$invoiceReminderSchedule: invoiceDueDateMax,maxReminderCount (i.e. 3,5)
+        //$invoiceReminderSchedule: invoiceDueDateMax,reminderIntervalMonths,maxReminderCount (i.e. 3,3,5)
         $invoiceReminderSchedule = $transresUtil->getTransresSiteProjectParameter('invoiceReminderSchedule',null,$projectSpecialty); //6,9,12,15,18
+
+        if( $invoiceReminderSchedule ) {
+            $invoiceReminderScheduleArr = explode(",",$invoiceReminderSchedule);
+            if( count($invoiceReminderScheduleArr) == 3 ) {
+                $invoiceDueDateMax = $invoiceReminderScheduleArr[0];    //datetime
+                $reminderInterval = $invoiceReminderScheduleArr[1];     //months
+                $maxReminderCount = $invoiceReminderScheduleArr[2];     //integer
+            }
+        } else {
+            return "No invoiceReminderSchedule is set";
+        }
+
+        if( !$invoiceDueDateMax ) {
+            return "invoiceDueDateMax is not set. Invoice reminder emails are not sent.";
+        }
+        if( !$reminderInterval ) {
+            return "reminderInterval is not set. Invoice reminder emails are not sent.";
+        }
+        if( !$maxReminderCount ) {
+            return "maxReminderCount is not set. Invoice reminder emails are not sent.";
+        }
+        $invoiceDueDateMax = trim($invoiceDueDateMax);
+        $reminderInterval = trim($reminderInterval);
+        $maxReminderCount = trim($maxReminderCount);
 
         $invoiceReminderSubject = $transresUtil->getTransresSiteProjectParameter('invoiceReminderSubject',null,$projectSpecialty);
         $invoiceReminderBody = $transresUtil->getTransresSiteProjectParameter('invoiceReminderBody',null,$projectSpecialty);
@@ -3236,9 +3261,9 @@ class TransResRequestUtil
         echo "settings: $invoiceReminderSchedule, $invoiceReminderSubject, $invoiceReminderBody, $invoiceReminderEmail".$newline;
 
         //Send email reminder email if (issueDate does not exist, so use dueDate):
-        // (issueDate + invoiceDueDateMax < currentDate) AND
-        // (invoiceLastReminderSentDate IS NULL OR invoiceLastReminderSentDate + reminderInterval < currentDate) AND
-        // (invoiceReminderCount < maxReminderCount)
+        //1. (dueDate < currentDate - invoiceDueDateMax) AND
+        //2. (invoiceLastReminderSentDate IS NULL OR invoiceLastReminderSentDate < currentDate - reminderInterval) AND
+        //3. (invoiceReminderCount < maxReminderCount)
         //When email sent, set invoiceLastReminderSentDate=currentDate, invoiceReminderCount++
 
         $repository = $this->em->getRepository('OlegTranslationalResearchBundle:Invoice');
@@ -3250,13 +3275,30 @@ class TransResRequestUtil
         //$dql->andWhere("foscomment.entityName = 'TransResRequest'");
         //$dql->andWhere("(foscomment.entityName IS NULL OR foscomment.entityName = 'TransResRequest')");
 
-        $dql->andWhere("invoice.dueDate");
+        /////////1. (dueDate < currentDate - invoiceDueDateMax) //////////////
+        //overDueDate = currentDate - invoiceDueDateMax;
+        $overDueDate = new \DateTime("-".$invoiceDueDateMax." months");
+        echo "overDueDate=".$overDueDate->format('Y-m-d H:i:s').$newline;
+        $dql->andWhere("invoice.dueDate < :overDueDate");
+        ////////////// EOF //////////////
+
+        /////////.2 (invoiceLastReminderSentDate IS NULL OR invoiceLastReminderSentDate < currentDate - reminderInterval) ///////////
+        $overDueReminderDate = new \DateTime("-".$reminderInterval." months");
+        $dql->andWhere("invoice.invoiceLastReminderSentDate IS NULL OR invoice.invoiceLastReminderSentDate < :overDueReminderDate");
+        ////////////// EOF //////////////
+
+        /////////3. (invoiceReminderCount < maxReminderCount) ////////////////////////
+        $dql->andWhere("invoice.invoiceReminderCount < :maxReminderCount");
+        ////////////// EOF //////////////
 
         $query = $this->em->createQuery($dql);
 
         $query->setParameters(
             array(
                 "unpaid" => "Unpaid/Issued",
+                "overDueDate" => $overDueDate->format('Y-m-d H:i:s'),
+                "overDueReminderDate" => $overDueReminderDate->format('Y-m-d H:i:s'),
+                "maxReminderCount" => $maxReminderCount
             )
         );
 
