@@ -3227,7 +3227,7 @@ class TransResRequestUtil
         $invoiceDueDateMax = null;
         $maxReminderCount = null;
         $newline = "\n";
-        $result = "" . $projectSpecialty;
+        //$result = "" . $projectSpecialty;
         $resultArr = array();
 
         //$invoiceReminderSchedule: invoiceDueDateMax,reminderIntervalMonths,maxReminderCount (i.e. 3,3,5)
@@ -3351,37 +3351,46 @@ class TransResRequestUtil
             $invoice->setInvoiceReminderCount($invoiceReminderCounter);
 
             //send email
-            $piEmailArr = $this->getInvoicePis($invoice);
-            if( count($piEmailArr) == 0 ) {
-                //return "There are no PI and/or Billing Contact emails. Email has not been sent.";
-                $resultArr[] = "There are no PI and/or Billing Contact emails. Email has not been sent.";
-            }
-
-            $salesperson = $invoice->getSalesperson();
-            if( $salesperson ) {
-                $salespersonEmail = $salesperson->getSingleEmail();
-                if( $salespersonEmail ) {
-                    $ccs = $salespersonEmail;
+            if(1) {
+                $piEmailArr = $this->getInvoicePis($invoice);
+                if (count($piEmailArr) == 0) {
+                    //return "There are no PI and/or Billing Contact emails. Email has not been sent.";
+                    $resultArr[] = "There are no PI and/or Billing Contact emails. Email has not been sent.";
                 }
-            }
-            if( !$ccs ) {
-                $submitter = $invoice->getSubmitter();
-                if( $submitter ) {
-                    $submitterEmail = $submitter->getSingleEmail();
-                    if( $submitterEmail ) {
-                        $ccs = $submitterEmail;
+
+                $salesperson = $invoice->getSalesperson();
+                if ($salesperson) {
+                    $salespersonEmail = $salesperson->getSingleEmail();
+                    if ($salespersonEmail) {
+                        $ccs = $salespersonEmail;
                     }
                 }
-            }
+                if (!$ccs) {
+                    $submitter = $invoice->getSubmitter();
+                    if ($submitter) {
+                        $submitterEmail = $submitter->getSingleEmail();
+                        if ($submitterEmail) {
+                            $ccs = $submitterEmail;
+                        }
+                    }
+                }
 
-            //Attachment: Invoice PDF
-            $invoicePDF = $invoice->getRecentPDF();
-            if( $invoicePDF ) {
-                $attachmentPath = $invoicePDF->getAbsoluteUploadFullPath();
-            }
+                //Attachment: Invoice PDF
+                $attachmentPath = null;
+                $invoicePDF = $invoice->getRecentPDF();
+                if ($invoicePDF) {
+                    $attachmentPath = $invoicePDF->getAbsoluteUploadFullPath();
+                }
 
-            //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
-            $emailUtil->sendEmail( $piEmailArr, $invoiceReminderSubject, $invoiceReminderBody, null, $invoiceReminderEmail, $attachmentPath );
+                //replace [[...]]
+                $transresRequest = $invoice->getTransresRequest();
+                $project = $transresRequest->getProject();
+                $invoiceReminderSubject = $transresUtil->replaceTextByNamingConvention($invoiceReminderSubject,$project,$transresRequest,$invoice);
+                $invoiceReminderBody = $transresUtil->replaceTextByNamingConvention($invoiceReminderBody,$project,$transresRequest,$invoice);
+
+                //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
+                $emailUtil->sendEmail( $piEmailArr, $invoiceReminderSubject, $invoiceReminderBody, $ccs, $invoiceReminderEmail, $attachmentPath );
+            }
         }
 
         $result = implode("; ",$resultArr);

@@ -463,11 +463,17 @@ class Document {
     public function getAbsoluteUploadFullPath()
     {
         $scheme = "http";
-        if( stripos($_SERVER['SERVER_PROTOCOL'],'https') === true ) {
+        if( isset($_SERVER['SERVER_PROTOCOL']) && stripos($_SERVER['SERVER_PROTOCOL'],'https') === true ) {
             $scheme = "https";
         }
 
-        return $scheme."://" . $_SERVER['SERVER_NAME'] . "/order/" . $this->getUploadDirectory().'/'.$this->getUniquename();
+        if( isset($_SERVER['SERVER_NAME']) ) {
+            $serverName = $_SERVER['SERVER_NAME'];
+        } else {
+            $serverName = "127.0.0.1";
+        }
+
+        return $scheme."://" . $serverName . "/order/" . $this->getUploadDirectory().'/'.$this->getUniquename();
 
         //return $this->getUploadDirectory().'/'.$this->getUniquename();
         //return "http://collage.med.cornell.edu/".$this->getRelativeUploadFullPath();
