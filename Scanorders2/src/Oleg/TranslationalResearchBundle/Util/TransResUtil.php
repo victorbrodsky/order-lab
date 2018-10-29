@@ -3505,12 +3505,13 @@ class TransResUtil
             $dueDate = $invoice->getDueDate();
             if( $dueDate ) {
                 $dueDateStr = $dueDate->format('Y-m-d');
-                //TODO: $daysAgo =
-                $daysAgo = $this->timeElapsedString($dueDate,true);
+                //add "(x days ago)"
+                $daysAgo = $this->daysElapsedString($dueDate);
                 if( $daysAgo ) {
-                    $dueDateStr = $dueDateStr . " " . $daysAgo;
+                    $dueDateStr = $dueDateStr . " (" . $daysAgo . ")";
                 }
             }
+            //echo "ago=".$dueDateStr."\n";
             $text = str_replace("[[INVOICE DUE DATE AND DAYS AGO]]", $dueDateStr, $text);
 
             //[[INVOICE AMOUNT DUE]]
@@ -3519,34 +3520,15 @@ class TransResUtil
 
         return $text;
     }
-    //TODO: change it days only
-    function timeElapsedString($datetime, $full = false) {
+    function daysElapsedString($agoDateTime) {
         $now = new \DateTime();
-        $ago = $datetime;   //new \DateTime($datetime);
-        $diff = $now->diff($ago);
-
-        $diff->w = floor($diff->d / 7);
-        $diff->d -= $diff->w * 7;
-
-        $string = array(
-            'y' => 'year',
-            'm' => 'month',
-            'w' => 'week',
-            'd' => 'day',
-            'h' => 'hour',
-            'i' => 'minute',
-            's' => 'second',
-        );
-        foreach ($string as $k => &$v) {
-            if ($diff->$k) {
-                $v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? 's' : '');
-            } else {
-                unset($string[$k]);
-            }
+        $diff = $now->diff($agoDateTime);
+        $days = $diff->format("%a");
+        if( $days ) {
+            return $days . " days ago";
+        } else {
+            return "just now";
         }
-
-        if (!$full) $string = array_slice($string, 0, 1);
-        return $string ? implode(', ', $string) . ' ago' : 'just now';
     }
 
 

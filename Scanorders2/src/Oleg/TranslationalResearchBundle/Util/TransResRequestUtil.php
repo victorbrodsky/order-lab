@@ -3350,6 +3350,9 @@ class TransResRequestUtil
             $invoiceReminderCounter++;
             $invoice->setInvoiceReminderCount($invoiceReminderCounter);
 
+            //save to DB
+            //$this->em->flush($invoice);
+
             //send email
             if(1) {
                 $piEmailArr = $this->getInvoicePis($invoice);
