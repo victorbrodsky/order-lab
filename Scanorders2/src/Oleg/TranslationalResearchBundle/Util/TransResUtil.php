@@ -3201,7 +3201,8 @@ class TransResUtil
 
         //2) irbExpirationDate
         if( $notExpired ) {
-            $dql->andWhere("project.irbExpirationDate >= CURRENT_DATE()");
+            //$dql->andWhere("project.irbExpirationDate >= CURRENT_DATE()");
+            $dql->andWhere("project.implicitExpirationDate IS NULL OR project.implicitExpirationDate >= CURRENT_DATE()");
         }
 
         //3) logged in user is requester (only if not admin)

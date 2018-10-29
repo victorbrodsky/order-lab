@@ -2046,6 +2046,7 @@ class RequestController extends Controller
             $params['saveAsComplete'] = true;
 
             if( $routeName == "translationalresearch_new_standalone_request" ) {
+                //getAvailableProjects($finalApproved=true, $notExpired=true, $requester=true, $reviewer=true)
                 $availableProjects = $transresUtil->getAvailableProjects(true,true,true,false);
                 $params['availableProjects'] = $availableProjects;
             } else {

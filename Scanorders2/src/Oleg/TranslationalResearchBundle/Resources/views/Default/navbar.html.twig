@@ -424,7 +424,7 @@
 
                             {% if is_granted('ROLE_TRANSRES_ADMIN') %}
                                 <hr style="margin-top: 10px; margin-bottom: 10px;">
-                                <li><a href="{{ path(translationalresearch_sitename~'_unpaid_invoice_reminder') }}">Send Reminder for Unpaid Invoices (visible to Admin only)</a></li>
+                                <li><a href="{{ path(translationalresearch_sitename~'_unpaid_invoice_reminder') }}">Send e-mail reminders for unpaid invoices now</a></li>
                             {% endif %}
 
                             {#{% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}#}
