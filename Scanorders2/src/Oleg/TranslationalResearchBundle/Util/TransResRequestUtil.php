@@ -3228,6 +3228,7 @@ class TransResRequestUtil
         $systemuser = $userSecUtil->findSystemUser();
 
         $invoiceDueDateMax = null;
+        $reminderInterval = null;
         $maxReminderCount = null;
         //$newline = "\n";
         //$newline = "<br>";
@@ -3260,6 +3261,7 @@ class TransResRequestUtil
         if( !$maxReminderCount ) {
             return "maxReminderCount is not set. Invoice reminder emails are not sent.";
         }
+
         $invoiceDueDateMax = trim($invoiceDueDateMax);
         $reminderInterval = trim($reminderInterval);
         $maxReminderCount = trim($maxReminderCount);
@@ -3267,7 +3269,15 @@ class TransResRequestUtil
         $params = array();
 
         $invoiceReminderSubject = $transresUtil->getTransresSiteProjectParameter('invoiceReminderSubject',null,$projectSpecialty);
+        if( !$invoiceReminderSubject ) {
+            $invoiceReminderSubject = "[TRP] Translational Research Unpaid Invoice Reminder: [[INVOICE ID]]";
+        }
+
         $invoiceReminderBody = $transresUtil->getTransresSiteProjectParameter('invoiceReminderBody',null,$projectSpecialty);
+        if( !$invoiceReminderBody ) {
+            $invoiceReminderBody = "Our records show that we have not received the $[[INVOICE AMOUNT DUE]] payment for the attached invoice  [[INVOICE ID]] issued on [[INVOICE DUE DATE AND DAYS AGO]].";
+        }
+
         $invoiceReminderEmail = $transresUtil->getTransresSiteProjectParameter('invoiceReminderEmail',null,$projectSpecialty);
         //echo "settings: $invoiceReminderSchedule, $invoiceReminderSubject, $invoiceReminderBody, $invoiceReminderEmail".$newline;
         //echo "invoiceReminderSchedule=$invoiceReminderSchedule".$newline;
