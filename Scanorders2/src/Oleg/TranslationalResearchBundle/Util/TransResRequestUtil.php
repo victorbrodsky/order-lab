@@ -3240,6 +3240,10 @@ class TransResRequestUtil
         //$newline = "\n";
         //$newline = "<br>";
         $resultArr = array();
+        $sentInvoiceEmailsArr = array();
+
+        //$testing = true;
+        $testing = false;
 
         //$invoiceReminderSchedule: invoiceDueDateMax,reminderIntervalMonths,maxReminderCount (i.e. 3,3,5)
         $invoiceReminderSchedule = $transresUtil->getTransresSiteProjectParameter('invoiceReminderSchedule',null,$projectSpecialty); //6,9,12,15,18
@@ -3255,9 +3259,11 @@ class TransResRequestUtil
             return "No invoiceReminderSchedule is set";
         }
         //testing
-        //$invoiceDueDateMax = 1;
-        //$reminderInterval = 1;
-        //$maxReminderCount = 5;
+        if( $testing ) {
+            $invoiceDueDateMax = 1;
+            $reminderInterval = 1;
+            $maxReminderCount = 5;
+        }
 
         if( !$invoiceDueDateMax ) {
             return "invoiceDueDateMax is not set. Invoice reminder emails are not sent.";
@@ -3375,7 +3381,9 @@ class TransResRequestUtil
             $invoice->setInvoiceReminderCount($invoiceReminderCounter);
 
             //save to DB (disable for testing)
-            $this->em->flush($invoice);
+            if( !$testing ) {
+                $this->em->flush($invoice);
+            }
 
             //send email
             if(1) {
@@ -3418,17 +3426,22 @@ class TransResRequestUtil
 
                 //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
                 $emailUtil->sendEmail( $piEmailArr, $invoiceReminderSubject, $invoiceReminderBody, $ccs, $invoiceReminderEmail, $attachmentPath );
+
+                $sentInvoiceEmailsArr[] = "Reminder email for the unpaid Invoice ".$invoice->getOid(). " has been sent to ".implode(";",$piEmailArr) . "; ccs:".$ccs;
+            }
+        }
+
+        //EventLog
+        if( count($sentInvoiceEmailsArr) > 0 ) {
+            $eventType = "Unpaid Invoice Reminder Email";
+            //$userSecUtil->createUserEditEvent($this->container->getParameter('translationalresearch.sitename'), $result, $systemuser, $invoices, null, $eventType);
+            foreach($sentInvoiceEmailsArr as $invoiceMsg) {
+                //$msg = "Reminder email for the unpaid Invoice ".$invoice->getOid(). " has been sent.";
+                $userSecUtil->createUserEditEvent($this->container->getParameter('translationalresearch.sitename'), $invoiceMsg, $systemuser, $invoice, null, $eventType);
             }
         }
 
         $result = implode("<br>",$resultArr);
-
-        //EventLog
-        if( count($invoices) > 0 ) {
-            $eventType = "Unpaid Invoice Reminder Email";
-            //$transresUtil->setEventLog($transresRequest,$eventType,$result);
-            $userSecUtil->createUserEditEvent($this->container->getParameter('translationalresearch.sitename'), $result, $systemuser, $invoices, null, $eventType);
-        }
 
         return $result;
     }
