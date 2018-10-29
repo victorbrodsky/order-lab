@@ -3199,7 +3199,7 @@ class TransResUtil
             //$dqlParameters = array("state" => "final_approved");
         }
 
-        //2) irbExpirationDate
+        //2) irb/iacuc ExpirationDate (implicitExpirationDate)
         if( $notExpired ) {
             //$dql->andWhere("project.irbExpirationDate >= CURRENT_DATE()");
             $dql->andWhere("project.implicitExpirationDate IS NULL OR project.implicitExpirationDate >= CURRENT_DATE()");
