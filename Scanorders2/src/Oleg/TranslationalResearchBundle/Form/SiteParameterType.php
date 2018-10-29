@@ -80,7 +80,9 @@ class SiteParameterType extends AbstractType
         ));
 
         $builder->add('invoiceReminderSchedule', null, array(
-            'label' => "Translational Research Unpaid Invoice Reminder Schedule in Months:",
+            'label' => "Translational Research Unpaid Invoice Reminder Schedule 
+            (overdue in months,reminder interval in months,max reminder count. 
+            For example, '6,3,5' will send reminder emails after 6 months overdue every 3 months for 5 times):",
             'required' => false,
             'attr' => array('class' => 'form-control')
         ));

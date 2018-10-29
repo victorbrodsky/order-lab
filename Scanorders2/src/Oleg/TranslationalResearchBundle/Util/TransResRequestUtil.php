@@ -3236,17 +3236,17 @@ class TransResRequestUtil
         if( $invoiceReminderSchedule ) {
             $invoiceReminderScheduleArr = explode(",",$invoiceReminderSchedule);
             if( count($invoiceReminderScheduleArr) == 3 ) {
-                $invoiceDueDateMax = $invoiceReminderScheduleArr[0];    //number of months
-                $reminderInterval = $invoiceReminderScheduleArr[1];     //number of months
-                $maxReminderCount = $invoiceReminderScheduleArr[2];     //integer
+                $invoiceDueDateMax = $invoiceReminderScheduleArr[0];    //over due in months (integer)
+                $reminderInterval = $invoiceReminderScheduleArr[1];     //reminder interval in months (integer)
+                $maxReminderCount = $invoiceReminderScheduleArr[2];     //max reminder count (integer)
             }
         } else {
             return "No invoiceReminderSchedule is set";
         }
         //testing
-        $invoiceDueDateMax = 1;
-        $reminderInterval = 1;
-        $maxReminderCount = 5;
+        //$invoiceDueDateMax = 1;
+        //$reminderInterval = 1;
+        //$maxReminderCount = 5;
 
         if( !$invoiceDueDateMax ) {
             return "invoiceDueDateMax is not set. Invoice reminder emails are not sent.";
