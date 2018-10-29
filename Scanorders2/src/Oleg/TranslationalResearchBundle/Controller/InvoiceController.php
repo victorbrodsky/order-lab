@@ -1610,4 +1610,27 @@ class InvoiceController extends Controller
         $response = new Response($res);
         return $response;
     }
+
+
+    /**
+     * @Route("/unpaid-invoice-reminder/", name="translationalresearch_unpaid_invoice_reminder")
+     * @Method({"GET"})
+     */
+    public function unpaidInvoiceReminderAction( Request $request )
+    {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ) {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
+        $transresRequestUtil = $this->getContainer()->get('transres_request_util');
+
+        $result = $transresRequestUtil->sendReminderUnpaidInvoices();
+
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            $result
+        );
+
+        return $this->redirectToRoute('translationalresearch_invoice_index_all');
+    }
 }

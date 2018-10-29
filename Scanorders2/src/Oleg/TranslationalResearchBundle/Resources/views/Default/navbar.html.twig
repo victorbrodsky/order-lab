@@ -422,6 +422,11 @@
                                 <li><a href="{{ path(translationalresearch_sitename~'_siteparameters') }}">Site Settings</a></li>
                             {% endif %}
 
+                            {% if is_granted('ROLE_TRANSRES_ADMIN') %}
+                                <hr style="margin-top: 10px; margin-bottom: 10px;">
+                                <li><a href="{{ path(translationalresearch_sitename~'_unpaid_invoice_reminder') }}">Send Reminder for Unpaid Invoices (visible to Admin only)</a></li>
+                            {% endif %}
+
                             {#{% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}#}
                                 {#<hr style="margin-top: 10px; margin-bottom: 10px;">#}
                                 {#<li><a href="{{ path('translationalresearch_import_old_data') }}">Import Old Data</a></li>#}
