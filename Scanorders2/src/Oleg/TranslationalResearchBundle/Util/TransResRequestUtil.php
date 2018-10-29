@@ -3222,12 +3222,15 @@ class TransResRequestUtil
     }
     public function sendReminderUnpaidInvoicesBySpecialty( $projectSpecialty ) {
         $transresUtil = $this->container->get('transres_util');
+        $userSecUtil = $this->container->get('user_security_utility');
         $emailUtil = $this->container->get('user_mailer_utility');
+        $logger = $this->container->get('logger');
+        $systemuser = $userSecUtil->findSystemUser();
 
         $invoiceDueDateMax = null;
         $maxReminderCount = null;
-        $newline = "\n";
-        //$result = "" . $projectSpecialty;
+        //$newline = "\n";
+        //$newline = "<br>";
         $resultArr = array();
 
         //$invoiceReminderSchedule: invoiceDueDateMax,reminderIntervalMonths,maxReminderCount (i.e. 3,3,5)
@@ -3267,7 +3270,7 @@ class TransResRequestUtil
         $invoiceReminderBody = $transresUtil->getTransresSiteProjectParameter('invoiceReminderBody',null,$projectSpecialty);
         $invoiceReminderEmail = $transresUtil->getTransresSiteProjectParameter('invoiceReminderEmail',null,$projectSpecialty);
         //echo "settings: $invoiceReminderSchedule, $invoiceReminderSubject, $invoiceReminderBody, $invoiceReminderEmail".$newline;
-        echo "invoiceReminderSchedule=$invoiceReminderSchedule".$newline;
+        //echo "invoiceReminderSchedule=$invoiceReminderSchedule".$newline;
 
         //Send email reminder email if (issueDate does not exist, so use dueDate):
         //1. (dueDate < currentDate - invoiceDueDateMax) AND
@@ -3321,7 +3324,7 @@ class TransResRequestUtil
         );
 
         $invoices = $query->getResult();
-        echo "$projectSpecialty count invoices=".count($invoices)."$newline";
+        //echo "$projectSpecialty count invoices=".count($invoices)."$newline";
 
         foreach($invoices as $invoice) {
             $dueDateStr = null;
@@ -3333,10 +3336,14 @@ class TransResRequestUtil
             $lastSentDateStr = null;
             $lastSentDate = $invoice->getInvoiceLastReminderSentDate();
             if( $lastSentDate ) {
-                $lastSentDateStr = $dueDate->format('Y-m-d');
+                $lastSentDateStr = $lastSentDate->format('Y-m-d');
             }
 
-            echo "###Reminder email (ID#".$invoice->getId()."): dueDate=".$dueDateStr.", reminderConter=".$invoice->getInvoiceReminderCount().", lastSentDate=".$lastSentDateStr."$newline";
+            //echo "###Reminder email (ID#".$invoice->getId()."): dueDate=".$dueDateStr.", reminderConter=".$invoice->getInvoiceReminderCount().", lastSentDate=".$lastSentDateStr."$newline";
+            $msg = "Sending reminder email for Invoice ".$invoice->getOid().
+                ": dueDate=".$dueDateStr.", lastSentDate=".$lastSentDateStr.", reminderEmailConter=".$invoice->getInvoiceReminderCount();
+            $logger->notice($msg);
+            $resultArr[] = $msg;
 
             //set last reminder date
             $invoice->setInvoiceLastReminderSentDate(new \DateTime());
@@ -3350,15 +3357,16 @@ class TransResRequestUtil
             $invoiceReminderCounter++;
             $invoice->setInvoiceReminderCount($invoiceReminderCounter);
 
-            //save to DB
-            //$this->em->flush($invoice);
+            //save to DB (disable for testing)
+            $this->em->flush($invoice);
 
             //send email
             if(1) {
                 $piEmailArr = $this->getInvoicePis($invoice);
                 if (count($piEmailArr) == 0) {
                     //return "There are no PI and/or Billing Contact emails. Email has not been sent.";
-                    $resultArr[] = "There are no PI and/or Billing Contact emails. Email has not been sent.";
+                    $resultArr[] = "There are no PI and/or Billing Contact emails. Email has not been sent for Invoice ".$invoice->getOid();
+                    continue;
                 }
 
                 $salesperson = $invoice->getSalesperson();
@@ -3396,7 +3404,14 @@ class TransResRequestUtil
             }
         }
 
-        $result = implode("; ",$resultArr);
+        $result = implode("<br>",$resultArr);
+
+        //EventLog
+        if( count($invoices) > 0 ) {
+            $eventType = "Unpaid Invoice Reminder Email";
+            //$transresUtil->setEventLog($transresRequest,$eventType,$result);
+            $userSecUtil->createUserEditEvent($this->container->getParameter('translationalresearch.sitename'), $result, $systemuser, $invoices, null, $eventType);
+        }
 
         return $result;
     }
