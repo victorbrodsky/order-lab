@@ -1622,7 +1622,7 @@ class InvoiceController extends Controller
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
-        $transresRequestUtil = $this->getContainer()->get('transres_request_util');
+        $transresRequestUtil = $this->get('transres_request_util');
 
         $result = $transresRequestUtil->sendReminderUnpaidInvoices();
 
@@ -1631,6 +1631,6 @@ class InvoiceController extends Controller
             $result
         );
 
-        return $this->redirectToRoute('translationalresearch_invoice_index_all');
+        return $this->redirectToRoute('translationalresearch_invoice_index_filter');
     }
 }

@@ -3213,10 +3213,17 @@ class TransResRequestUtil
 
         $projectSpecialties = $transresUtil->getTransResProjectSpecialties(false);
         foreach($projectSpecialties as $projectSpecialty) {
-            $resultArr[] = $this->sendReminderUnpaidInvoicesBySpecialty($projectSpecialty);
+            $result = $this->sendReminderUnpaidInvoicesBySpecialty($projectSpecialty);
+            if( $result ) {
+                $resultArr[] = $result;
+            }
         }
 
-        $result = implode("; ",$resultArr);
+        if( count($resultArr) > 0 ) {
+            $result = implode("; ", $resultArr);
+        } else {
+            $result = "There are no overdue unpaid invoices corresponding to the site setting parameters.";
+        }
 
         return $result;
     }
