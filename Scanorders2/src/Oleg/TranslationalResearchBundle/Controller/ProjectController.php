@@ -563,12 +563,13 @@ class ProjectController extends Controller
             $dqlParameters["userId"] = $user->getId();
         }
 
-        //Non admin, Primary Reviewers and Executive can see all projects.
+        //Non admin, Primary Reviewers, Reviewers and Executive can see all projects.
         // All other users can view only their projects
         // (where they are requesters: PI, Pathologists Involved, Co-Investigators, Contacts, Billing Contacts or reviewers)
         if( 
-            $transresUtil->isAdminOrPrimaryReviewerOrExecutive() || 
-            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN')
+            $transresUtil->isAdminOrPrimaryReviewerOrExecutive()
+            || $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN')
+            || $transresUtil->hasReviewerRoles()
         ) {
             $showOnlyMyProjects = false;
         } else {
@@ -707,8 +708,8 @@ class ProjectController extends Controller
             ;
 
             $dql->andWhere($myPendingProjectsCriterion);
-
             $dqlParameters["userId"] = $user->getId();
+
             $title = "Project Requests Pending My Review";
         }
 
