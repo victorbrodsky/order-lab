@@ -320,6 +320,11 @@
                             <ul class="dropdown-menu">
 
                                 <li>
+                                    <a href="{{ path(translationalresearch_sitename~'_dashboard_choices',{'filter[startDate]':startDate,'filter[endDate]':endDate,'filter[projectSpecialty]':0}) }}"
+                                    >Statistics</a>
+                                </li>
+
+                                <li>
                                     <a href="{{ path(translationalresearch_sitename~'_dashboard_project',{'filter[startDate]':startDate,'filter[endDate]':endDate,'filter[projectSpecialty]':0}) }}"
                                     >PI/Project statistics</a>
                                 </li>

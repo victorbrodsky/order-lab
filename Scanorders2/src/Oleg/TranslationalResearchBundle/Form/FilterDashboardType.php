@@ -115,6 +115,16 @@ class FilterDashboardType extends AbstractType
             ));
         }
 
+        if( isset($this->params['chartType']) && $this->params['chartType'] ) {
+            $builder->add('chartType', ChoiceType::class, array(
+                'label' => false,
+                'choices' => $this->params['chartTypes'],
+                'multiple' => true,
+                'required' => false,
+                'attr' => array('class' => 'combobox', 'placeholder' => "Chart Type")
+            ));
+        }
+
 //        $builder->add('searchId', TextType::class, array(
 //            'required'=>false,
 //            'label' => false,
