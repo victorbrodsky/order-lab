@@ -958,6 +958,22 @@ class Invoice {
         $oid = str_replace(")","-",$oid);
         return $oid;
     }
+
+    public function getDueAndDaysStr() {
+        $dueDate = $this->getDueDate();
+        if( $dueDate ) {
+            $now = new \DateTime();
+            $diff = $now->diff($dueDate);
+            $days = $diff->format("%a");
+            if ($days) {
+                return $dueDate->format('Y-m-d') . " (" . $days . " days ago" . ")";
+            } else {
+                return $dueDate->format('Y-m-d') . " (" . "just now" . ")";;
+            }
+        } else {
+            return null;
+        }
+    }
     
     public function __toString() {
         return "".$this->getId();

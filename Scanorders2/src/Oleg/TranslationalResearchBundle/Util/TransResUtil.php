@@ -3502,17 +3502,7 @@ class TransResUtil
             $text = str_replace("[[INVOICE ID]]", $invoice->getOid(), $text);
 
             //[[INVOICE DUE DATE AND DAYS AGO]]
-            $dueDateStr = null;
-            $dueDate = $invoice->getDueDate();
-            if( $dueDate ) {
-                $dueDateStr = $dueDate->format('Y-m-d');
-                //add "(x days ago)"
-                $daysAgo = $this->daysElapsedString($dueDate);
-                if( $daysAgo ) {
-                    $dueDateStr = $dueDateStr . " (" . $daysAgo . ")";
-                }
-            }
-            //echo "ago=".$dueDateStr."\n";
+            $dueDateStr = $invoice->getDueAndDaysStr();
             $text = str_replace("[[INVOICE DUE DATE AND DAYS AGO]]", $dueDateStr, $text);
 
             //[[INVOICE AMOUNT DUE]]
@@ -3521,16 +3511,16 @@ class TransResUtil
 
         return $text;
     }
-    function daysElapsedString($agoDateTime) {
-        $now = new \DateTime();
-        $diff = $now->diff($agoDateTime);
-        $days = $diff->format("%a");
-        if( $days ) {
-            return $days . " days ago";
-        } else {
-            return "just now";
-        }
-    }
+//    function daysElapsedString($agoDateTime) {
+//        $now = new \DateTime();
+//        $diff = $now->diff($agoDateTime);
+//        $days = $diff->format("%a");
+//        if( $days ) {
+//            return $days . " days ago";
+//        } else {
+//            return "just now";
+//        }
+//    }
 
 
     //get Issued Invoices

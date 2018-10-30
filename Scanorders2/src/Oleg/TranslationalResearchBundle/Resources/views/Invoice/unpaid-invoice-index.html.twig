@@ -29,7 +29,7 @@
         {% for invoice in invoiceGroup %}
 
             <p>
-                <a href="{{ path('translationalresearch_invoice_show', {'oid': invoice.oid}) }}">{{ invoice.oid }}</a>
+                <a href="{{ path('translationalresearch_invoice_show', {'oid': invoice.oid}) }}">{{ invoice.oid }}, due on {{ invoice.getDueAndDaysStr() }}</a>
             </p>
 
         {% endfor %}

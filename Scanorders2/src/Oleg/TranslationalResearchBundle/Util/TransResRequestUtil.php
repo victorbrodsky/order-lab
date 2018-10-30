@@ -3264,6 +3264,7 @@ class TransResRequestUtil
         }
         //testing
         if( $testing ) {
+            echo "Warning testing mode!!! <br>";
             $invoiceDueDateMax = 1;
             $reminderInterval = 1;
             $maxReminderCount = 5;
