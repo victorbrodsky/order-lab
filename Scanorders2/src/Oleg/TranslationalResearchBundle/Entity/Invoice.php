@@ -914,6 +914,12 @@ class Invoice {
         return $oid;
     }
 
+    public function getProjectSpecialty() {
+        $transresRequest = $this->getTransresRequest();
+        $project = $transresRequest->getProject();
+        return $project->getProjectSpecialty();
+    }
+
     public function getSerializeStr() {
         //$str = serialize($this);
 

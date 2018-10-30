@@ -117,29 +117,9 @@ class TranslationalResearchLoggerController extends LoggerController
      */
     public function transresEventLogPerObjectAction(Request $request)
     {
-        if (false == $this->get('security.authorization_checker')->isGranted("ROLE_CALLLOG_USER")) {
-            return $this->redirect($this->generateUrl('calllog-nopermission'));
+        if (false == $this->get('security.authorization_checker')->isGranted("ROLE_TRANSRES_ADMIN")) {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
-
-        //permission if user change filter parameter
-//        //Start Date, Start Time, End Date, End Time, User [Select2 dropdown), Event Type [Entity Updated], [Free Text Search value for Event column] [Filter Button]
-//        //$filterform = $this->createForm(new LoggerFilterType($params), null);
-//        $filterform = $this->createLoggerFilter($request,$params);
-//
-//        //$filterform->submit($request);
-//        $filterform->handleRequest($request);
-
-        //filter[objectType][]=4
-        //filter[objectId]=178
-
-//        $filter = $request->query->get('filter');
-//
-//        if( count($filter) > 0 ) {
-//            $objectTypes = $filter['objectType'];
-//            $objectId = $filter['objectId'];
-//        }
-//        echo "$objectTypes, $objectId <br>";
-//        exit();
 
         $params = array(
             'sitename' => $this->container->getParameter('translationalresearch.sitename'),
@@ -164,7 +144,7 @@ class TranslationalResearchLoggerController extends LoggerController
                 'warning',
                 "Object Type is not defined."
             );
-            return $this->redirect($this->generateUrl('calllog-nopermission'));
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
         //permission: check if user has permission to view the specified object
@@ -182,9 +162,9 @@ class TranslationalResearchLoggerController extends LoggerController
         }
 
         //echo "objectName=".$objectName."<br>";
-        if( $objectName != "Project" ) {
-            return $this->redirect($this->generateUrl('calllog-nopermission'));
-        }
+        //if( $objectName != "Project" ) {
+        //    return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        //}
 
         $subjectEntity = $em->getRepository($objectNamespaceClean.':'.$objectName)->find($objectId);
         if( !$subjectEntity ) {
@@ -192,18 +172,20 @@ class TranslationalResearchLoggerController extends LoggerController
                 'warning',
                 "Object not found by ID ".$objectId
             );
-            return $this->redirect($this->generateUrl('calllog-nopermission'));
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
 
         $transresUtil = $this->container->get('transres_util');
 
-        if( $transresUtil->isUserAllowedSpecialtyObject($subjectEntity->getProjectSpecialty()) === false ) {
-            $this->get('session')->getFlashBag()->add(
-                'warning',
-                "You don't have a permission to access the ".$subjectEntity->getProjectSpecialty()." project specialty"
-            );
-            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        if( method_exists($subjectEntity, "getProjectSpecialty") ) {
+            if( $transresUtil->isUserAllowedSpecialtyObject($subjectEntity->getProjectSpecialty()) === false ) {
+                $this->get('session')->getFlashBag()->add(
+                    'warning',
+                    "You don't have a permission to access the ".$subjectEntity->getProjectSpecialty()." project specialty"
+                );
+                return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+            }
         }
 
         //$builder = $filterform->getBuilder();

@@ -3206,28 +3206,32 @@ class TransResRequestUtil
         return $requestIds;
     }
 
-    public function sendReminderUnpaidInvoices() {
+    public function sendReminderUnpaidInvoices($showSummary=false) {
         $transresUtil = $this->container->get('transres_util');
 
         $resultArr = array();
 
         $projectSpecialties = $transresUtil->getTransResProjectSpecialties(false);
         foreach($projectSpecialties as $projectSpecialty) {
-            $result = $this->sendReminderUnpaidInvoicesBySpecialty($projectSpecialty);
-            if( $result ) {
-                $resultArr[] = $result;
+            $results = $this->sendReminderUnpaidInvoicesBySpecialty($projectSpecialty,$showSummary);
+            if( $results ) {
+                $resultArr[] = $results;
             }
         }
 
+        if( $showSummary ) {
+            return $resultArr;
+        }
+
         if( count($resultArr) > 0 ) {
-            $result = implode("; ", $resultArr);
+            $result = implode(", ", $resultArr);
         } else {
             $result = "There are no overdue unpaid invoices corresponding to the site setting parameters.";
         }
 
         return $result;
     }
-    public function sendReminderUnpaidInvoicesBySpecialty( $projectSpecialty ) {
+    public function sendReminderUnpaidInvoicesBySpecialty( $projectSpecialty, $showSummary=false ) {
         $transresUtil = $this->container->get('transres_util');
         $userSecUtil = $this->container->get('user_security_utility');
         $emailUtil = $this->container->get('user_mailer_utility');
@@ -3242,8 +3246,8 @@ class TransResRequestUtil
         $resultArr = array();
         $sentInvoiceEmailsArr = array();
 
-        //$testing = true;
         $testing = false;
+        //$testing = true;
 
         //$invoiceReminderSchedule: invoiceDueDateMax,reminderIntervalMonths,maxReminderCount (i.e. 3,3,5)
         $invoiceReminderSchedule = $transresUtil->getTransresSiteProjectParameter('invoiceReminderSchedule',null,$projectSpecialty); //6,9,12,15,18
@@ -3312,7 +3316,7 @@ class TransResRequestUtil
         $dql->where("projectSpecialty.id = :specialtyId");
         $params["specialtyId"] = $projectSpecialty->getId();
 
-        $dql->andWhere("invoice.status = :unpaid"); //Unpaid/Issued
+        $dql->andWhere("invoice.status = :unpaid AND invoice.latestVersion = TRUE"); //Unpaid/Issued
         $params["unpaid"] = "Unpaid/Issued";
 
         /////////1. (dueDate < currentDate - invoiceDueDateMax) //////////////
@@ -3349,6 +3353,10 @@ class TransResRequestUtil
         $invoices = $query->getResult();
         //echo "$projectSpecialty count invoices=".count($invoices)."$newline";
 
+        if( $showSummary ) {
+            return $invoices;
+        }
+
         foreach($invoices as $invoice) {
             $dueDateStr = null;
             $dueDate = $invoice->getDueDate();
@@ -3363,10 +3371,10 @@ class TransResRequestUtil
             }
 
             //echo "###Reminder email (ID#".$invoice->getId()."): dueDate=".$dueDateStr.", reminderConter=".$invoice->getInvoiceReminderCount().", lastSentDate=".$lastSentDateStr."$newline";
-            $msg = "Sending reminder email for Invoice ".$invoice->getOid().
-                ": dueDate=".$dueDateStr.", lastSentDate=".$lastSentDateStr.", reminderEmailConter=".$invoice->getInvoiceReminderCount();
-            $logger->notice($msg);
-            $resultArr[] = $msg;
+            //$msg = "Sending reminder email for Invoice ".$invoice->getOid();
+            //": dueDate=".$dueDateStr.", lastSentDate=".$lastSentDateStr.", reminderEmailConter=".$invoice->getInvoiceReminderCount();
+            $logger->notice("Sending reminder email for Invoice ".$invoice->getOid());
+            $resultArr[] = $invoice->getOid();
 
             //set last reminder date
             $invoice->setInvoiceLastReminderSentDate(new \DateTime());
@@ -3443,7 +3451,7 @@ class TransResRequestUtil
             $logger->notice("There are no overdue unpaid invoices corresponding to the site setting parameters for ".$projectSpecialty);
         }
 
-        $result = implode("<br>",$resultArr);
+        $result = implode(", ",$resultArr);
 
         return $result;
     }

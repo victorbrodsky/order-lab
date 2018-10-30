@@ -588,6 +588,14 @@ class InvoiceController extends Controller
             $metaTitle = $title;
         }
 
+        $eventObjectType = $em->getRepository('OlegUserdirectoryBundle:EventObjectTypeList')->findOneByName("Invoice");
+        if( $eventObjectType ) {
+            $eventObjectTypeId = $eventObjectType->getId();
+        } else {
+            $eventObjectTypeId = null;
+        }
+        //echo "eventObjectTypeId=".$eventObjectTypeId."<br>";
+
         return array(
             'invoices' => $invoices,
             'transresRequest' => $transresRequest,
@@ -595,6 +603,7 @@ class InvoiceController extends Controller
             'metaTitle' => $metaTitle,
             'filterform' => $filterform->createView(),
             'advancedFilter' => $advancedFilter,
+            'eventObjectTypeId' => $eventObjectTypeId
             //'latestVersion' => $latestVersion
         );
     }
@@ -1613,7 +1622,8 @@ class InvoiceController extends Controller
 
 
     /**
-     * @Route("/unpaid-invoice-reminder/", name="translationalresearch_unpaid_invoice_reminder")
+     * @Route("/unpaid-invoice-reminder/show-summary", name="translationalresearch_unpaid_invoice_reminder_show")
+     * @Route("/unpaid-invoice-reminder/send-emails", name="translationalresearch_unpaid_invoice_reminder_send")
      * @Method({"GET"})
      */
     public function unpaidInvoiceReminderAction( Request $request )
@@ -1624,11 +1634,34 @@ class InvoiceController extends Controller
 
         $transresRequestUtil = $this->get('transres_request_util');
 
-        $result = $transresRequestUtil->sendReminderUnpaidInvoices();
+        $routeName = $request->get('_route');
+        $showSummary = false;
+
+        if( $routeName == "translationalresearch_unpaid_invoice_reminder_show" ) {
+            $showSummary = true;
+        }
+
+        $results = $transresRequestUtil->sendReminderUnpaidInvoices($showSummary);
+
+        if( $showSummary === true ) {
+            $invoiceCounter = 0;
+
+            foreach($results as $result) {
+                $invoiceCounter = $invoiceCounter + count($result);
+            }
+
+            return $this->render("OlegTranslationalResearchBundle:Invoice:unpaid-invoice-index.html.twig",
+                array(
+                    'title' => $invoiceCounter." Unpaid Invoices",
+                    'invoiceGroups' => $results,
+                    'invoiceCounter' => $invoiceCounter
+                )
+            );
+        }
 
         $this->get('session')->getFlashBag()->add(
             'notice',
-            $result
+            "Sending reminder emails for unpaid invoices: ".$results
         );
 
         return $this->redirectToRoute('translationalresearch_invoice_index_filter');

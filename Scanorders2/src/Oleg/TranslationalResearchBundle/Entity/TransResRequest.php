@@ -792,7 +792,10 @@ class TransResRequest {
     //////////////// EOF fields /////////////////////////
 
 
-
+    public function getProjectSpecialty() {
+        $project = $this->getProject();
+        return $project->getProjectSpecialty();
+    }
 
     /**
      * projectOid + "-RED-" + ID; Example: "HP8-REQ1" or "APCP7-REQ1"
