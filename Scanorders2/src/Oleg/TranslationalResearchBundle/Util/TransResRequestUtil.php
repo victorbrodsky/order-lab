@@ -3439,6 +3439,8 @@ class TransResRequestUtil
                 //$msg = "Reminder email for the unpaid Invoice ".$invoice->getOid(). " has been sent.";
                 $userSecUtil->createUserEditEvent($this->container->getParameter('translationalresearch.sitename'), $invoiceMsg, $systemuser, $invoice, null, $eventType);
             }
+        } else {
+            $logger->notice("There are no overdue unpaid invoices corresponding to the site setting parameters: project Specialty=".$projectSpecialty);
         }
 
         $result = implode("<br>",$resultArr);
