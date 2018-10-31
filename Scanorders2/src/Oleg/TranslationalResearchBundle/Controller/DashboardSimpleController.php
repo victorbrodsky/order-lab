@@ -693,13 +693,13 @@ class DashboardSimpleController extends Controller
                 $fundedTotalFeesByInvestigatorArr[$investigatorIndex] = $totalFee;
             } else {
                 //17. Total Fees per Investigator (non-Funded) (Top 10)
-                if (isset($unFundedTotalFeesByInvestigatorArr[$projectIndex])) {
-                    $totalFee = $unFundedTotalFeesByInvestigatorArr[$projectIndex] + $subtotalFee;
+                if (isset($unFundedTotalFeesByInvestigatorArr[$investigatorIndex])) {
+                    $totalFee = $unFundedTotalFeesByInvestigatorArr[$investigatorIndex] + $subtotalFee;
                 } else {
                     $totalFee = $subtotalFee;
                 }
                 $totalFee = $this->getNumberFormat($totalFee);
-                $unFundedTotalFeesByInvestigatorArr[$projectIndex] = $totalFee;
+                $unFundedTotalFeesByInvestigatorArr[$investigatorIndex] = $totalFee;
             }
             ////////////////////////////////////////
 

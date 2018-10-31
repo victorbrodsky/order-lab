@@ -75,6 +75,21 @@ class DashboardUtil
             "10. TRP Service Productivity for Funded Projects (Top 10)" =>      "service-productivity-by-service-per-funded-projects",
             "11. TRP Service Productivity for Non-Funded Projects (Top 10)" =>  "service-productivity-by-service-per-nonfunded-projects",
             "11a. TRP Service Productivity by Products/Services" =>             "service-productivity-by-service-compare-funded-vs-nonfunded-projects",
+            //Productivity statistics based on work requests
+            "12. Total Fees by Work Requests" =>                                "fees-by-requests",
+            "13. Total Fees per Funded Project (Top 10)" =>                     "fees-by-requests-per-funded-projects",
+            "14. Total Fees per Non-Funded Project (Top 10)" =>                 "fees-by-requests-per-nonfunded-projects",
+            "15. Total Fees per Investigator (Top 10)" =>                       "fees-by-investigators",
+            "16. Total Fees per Investigator (Funded) (Top 10)" =>              "fees-by-investigators-per-funded-projects",
+            "17. Total Fees per Investigator (Non-Funded) (Top 10)" =>          "fees-by-investigators-per-nonfunded-projects",
+            //Financial statistics based on invoices
+            "" => "",
+            "" => "",
+            "" => "",
+            "" => "",
+            "" => "",
+            "" => "",
+            "" => "",
             "" => "",
             "" => "",
             "" => "",
@@ -557,7 +572,65 @@ class DashboardUtil
         return $chartsArray;
     }
 
+    public function getStackedChart( $combinedDataArr, $title ) {
 
+        if( count($combinedDataArr) == 0 ) {
+            return array();
+        }
+
+        $layoutArray = array(
+            'height' => $this->height,
+            'width' => $this->width,
+            'margin' => array('b'=>200)
+//            'yaxis' => array(
+//                'automargin' => true
+//            ),
+//            'xaxis' => array(
+//                'automargin' => true,
+//            ),
+        );
+
+        $layoutArray['title'] = $title;
+        $layoutArray['barmode'] = 'stack';
+
+        $stackDataArray = array();
+        $xAxis = "x";
+        $yAxis = "y";
+
+        foreach($combinedDataArr as $name=>$dataArr) {
+            $chartDataArray = array();
+            $labels = array();
+            $values = array();
+            foreach ($dataArr as $label => $value) {
+                //if ($value) {
+                $labels[] = $label;
+                $values[] = $value;
+                //}
+            }
+
+            //if( count($values) == 0 ) {
+            //    continue;
+            //}
+
+            $chartDataArray[$xAxis] = $labels;
+            $chartDataArray[$yAxis] = $values;
+            $chartDataArray['name'] = $name;
+            $chartDataArray['type'] = 'bar';
+
+            $stackDataArray[] = $chartDataArray;
+        }
+
+        //echo "<pre>";
+        //print_r($stackDataArray);
+        //echo "</pre>";
+
+        $chartsArray = array(
+            'layout' => $layoutArray,
+            'data' => $stackDataArray
+        );
+
+        return $chartsArray;
+    }
 
 
 
@@ -694,6 +767,11 @@ class DashboardUtil
             'projectSpecialtyObjects' => $projectSpecialtyObjects,
             'showLimited' => $showLimited,
             'funded' => null
+        );
+
+        $layoutArray = array(
+            'height' => $this->height,
+            'width' => $this->width,
         );
 
         //echo "startDate=".$startDate."<br>";
@@ -887,8 +965,6 @@ class DashboardUtil
             $chartsArray = $this->getChartByMultiArray( $piUnFundedProjectCountTopArr, $filterArr, "4. Total number of Non-Funded Projects per PI (Top 10)","pie",null," : ");
         }
         ///////////////// EOF 4. Total number of Non-Funded Projects per PI (Top 10) /////////////////
-
-
 
 
         //Work request statistics
@@ -1130,31 +1206,293 @@ class DashboardUtil
 
         //11a. TRP Service Productivity by Products/Services
         if( $chartType == "service-productivity-by-service-compare-funded-vs-nonfunded-projects" ) {
+            $fundedQuantityCountByCategoryArr = array();
+            $unFundedQuantityCountByCategoryArr = array();
+
+            $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+            foreach($requests as $transRequest) {
+                foreach($transRequest->getProducts() as $product) {
+                    $category = $product->getCategory();
+                    if( $category ) {
+                        $categoryIndex = $category->getProductIdAndName();
+                        $productQuantity = $product->getQuantity();
+                        if( $transRequest->getFundedAccountNumber() ) {
+                            //10. TRP Service Productivity for Funded Projects (Top 10)
+                            if (isset($fundedQuantityCountByCategoryArr[$categoryIndex])) {
+                                $count = $fundedQuantityCountByCategoryArr[$categoryIndex] + $productQuantity;
+                            } else {
+                                $count = $productQuantity;
+                            }
+                            $fundedQuantityCountByCategoryArr[$categoryIndex] = $count;
+                        } else {
+                            //11. TRP Service Productivity for non-Funded projects (Top 10)
+                            if (isset($unFundedQuantityCountByCategoryArr[$categoryIndex])) {
+                                $count = $unFundedQuantityCountByCategoryArr[$categoryIndex] + $productQuantity;
+                            } else {
+                                $count = $productQuantity;
+                            }
+                            $unFundedQuantityCountByCategoryArr[$categoryIndex] = $count;
+                        }
+                    }
+                }
+            }//foreach $requests
+
+            $showOther = $this->getOtherStr($showLimited,"Projects");
+            $fundedQuantityCountByCategoryTopArr = $this->getTopArray($fundedQuantityCountByCategoryArr,$showOther);
+            $unFundedQuantityCountByCategoryTopArr = $this->getTopArray($unFundedQuantityCountByCategoryArr,$showOther);
+
+            $combinedTrpData = array();
+            $combinedTrpData['Funded'] = $fundedQuantityCountByCategoryTopArr;  //$fundedQuantityCountByCategoryArr;
+            $combinedTrpData['Not-Funded'] = $unFundedQuantityCountByCategoryTopArr;    //$unFundedQuantityCountByCategoryArr;
+            $chartsArray = $this->getStackedChart($combinedTrpData, "11a. TRP Service Productivity by Products/Services", "stack");
+        }
+
+        //Productivity statistics based on work requests
+        //12. Total Fees by Work Requests
+        if( $chartType == "fees-by-requests" ) {
+            $transresRequestUtil = $this->container->get('transres_request_util');
+            $subtotalFees = 0;
+            $fundedTotalFees = 0;
+            $unFundedTotalFees = 0;
+
+            $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+            foreach($requests as $transRequest) {
+
+                $subtotalFee = intval($transresRequestUtil->getTransResRequestFeeHtml($transRequest));
+                $subtotalFees = $subtotalFees + $subtotalFee;
+
+                if( $transRequest->getFundedAccountNumber() ) {
+                    $fundedTotalFees = $fundedTotalFees + $subtotalFee;
+                } else {
+                    $unFundedTotalFees = $unFundedTotalFees + $subtotalFee;
+                }
+
+            }//foreach $requests
+
+            //12. Total Fees by Work Requests (Total $)
+            $dataArray = array();
+            $chartDataArray = array();
+            $type = 'pie';
+            $subtotalFees = $this->getNumberFormat($subtotalFees);
+
+            $layoutArray = array(
+                'height' => $this->height,
+                'width' =>  $this->width,
+                'title' => "12. Total Fees by Work Requests (Total $".$subtotalFees.")"
+            );
+
+            $fundedTotalFees = $this->getNumberFormat($fundedTotalFees);
+            $unFundedTotalFees = $this->getNumberFormat($unFundedTotalFees);
+
+            $labels = array('Funded : $'.$fundedTotalFees,'Non-Funded : $'.$unFundedTotalFees);
+            $values = array($fundedTotalFees,$unFundedTotalFees);
+
+            $chartDataArray['values'] = $values;
+            $chartDataArray['labels'] = $labels;
+            $chartDataArray['type'] = $type;
+            $chartDataArray["textinfo"] = "value+percent";
+            $chartDataArray["outsidetextfont"] = array('size'=>1,'color'=>'white');
+            $chartDataArray['direction'] = 'clockwise';
+            $dataArray[] = $chartDataArray;
+
+            $chartsArray = array(
+                'layout' => $layoutArray,
+                'data' => $dataArray
+            );
+            /////////////////////
 
         }
 
-        if( $chartType == "" ) {
+        //13. Total Fees per Funded Project (Top 10)
+        if( $chartType == "fees-by-requests-per-funded-projects" ) {
+            $transresRequestUtil = $this->container->get('transres_request_util');
+            $fundedTotalFeesByRequestArr = array();
 
+            $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+            foreach($requests as $transRequest) {
+
+                $project = $transRequest->getProject();
+                $projectIndex = $project->getOid(false);
+                $pis = $project->getPrincipalInvestigators();
+                $piInfoArr = array();
+                foreach( $pis as $pi ) {
+                    if( $pi ) {
+                        $piInfoArr[] = $pi->getUsernameOptimal();
+                    }
+                }
+                if( count($piInfoArr) > 0 ) {
+                    $projectIndex = $projectIndex . " (" . implode(", ",$piInfoArr) . ")";
+                }
+
+                $subtotalFee = intval($transresRequestUtil->getTransResRequestFeeHtml($transRequest));
+                $subtotalFees = $subtotalFees + $subtotalFee;
+
+                //13. Total Fees per Funded Project (Top 10)
+                if( $transRequest->getFundedAccountNumber() ) {
+                    //13. Total Fees per Funded Project (Top 10)
+                    if (isset($fundedTotalFeesByRequestArr[$projectIndex])) {
+                        $totalFee = $fundedTotalFeesByRequestArr[$projectIndex] + $subtotalFee;
+                    } else {
+                        $totalFee = $subtotalFee;
+                    }
+                    $totalFee = $this->getNumberFormat($totalFee);
+                    $fundedTotalFeesByRequestArr[$projectIndex] = $totalFee;
+                }
+
+            }//foreach $requests
+
+            $showOther = $this->getOtherStr($showLimited,"Projects");
+            $fundedTotalFeesByRequestTopArr = $this->getTopArray($fundedTotalFeesByRequestArr,$showOther);
+            $chartsArray = $this->getChart($fundedTotalFeesByRequestTopArr, "13. Total Fees per Funded Project (Top 10)",'pie',$layoutArray," : $");
         }
 
-        if( $chartType == "" ) {
+        //14. Total Fees per Non-Funded Project (Top 10)
+        if( $chartType == "fees-by-requests-per-nonfunded-projects" ) {
+            $transresRequestUtil = $this->container->get('transres_request_util');
+            $unFundedTotalFeesByRequestArr = array();
 
+            $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+            foreach($requests as $transRequest) {
+
+                $project = $transRequest->getProject();
+                $projectIndex = $project->getOid(false);
+                $pis = $project->getPrincipalInvestigators();
+                $piInfoArr = array();
+                foreach( $pis as $pi ) {
+                    if( $pi ) {
+                        $piInfoArr[] = $pi->getUsernameOptimal();
+                    }
+                }
+                if( count($piInfoArr) > 0 ) {
+                    $projectIndex = $projectIndex . " (" . implode(", ",$piInfoArr) . ")";
+                }
+
+                $subtotalFee = intval($transresRequestUtil->getTransResRequestFeeHtml($transRequest));
+                $subtotalFees = $subtotalFees + $subtotalFee;
+
+                if( $transRequest->getFundedAccountNumber() ) {
+                    //do nothing
+                } else {
+                    //14. Total Fees per non-funded Project (Top 10)
+                    if (isset($unFundedTotalFeesByRequestArr[$projectIndex])) {
+                        $totalFee = $unFundedTotalFeesByRequestArr[$projectIndex] + $subtotalFee;
+                    } else {
+                        $totalFee = $subtotalFee;
+                    }
+                    $totalFee = $this->getNumberFormat($totalFee);
+                    $unFundedTotalFeesByRequestArr[$projectIndex] = $totalFee;
+                }
+
+            }//foreach $requests
+
+            $showOther = $this->getOtherStr($showLimited,"Projects");
+            $unFundedTotalFeesByRequestTopArr = $this->getTopArray($unFundedTotalFeesByRequestArr,$showOther);
+            $chartsArray = $this->getChart($unFundedTotalFeesByRequestTopArr, "14. Total Fees per Non-Funded Project (Top 10)",'pie',$layoutArray," : $");
         }
 
-        if( $chartType == "" ) {
+        //15. Total Fees per Investigator (Top 10)
+        if( $chartType == "fees-by-investigators" ) {
+            $transresRequestUtil = $this->container->get('transres_request_util');
+            $totalFeesByInvestigatorArr = array();
 
+            $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+            foreach($requests as $transRequest) {
+
+                $pis = $transRequest->getPrincipalInvestigators();
+                if( count($pis) > 0 ) {
+                    $pi = $pis[0];
+                    $investigatorIndex = $pi->getUsernameOptimal();
+                }
+
+                $subtotalFee = intval($transresRequestUtil->getTransResRequestFeeHtml($transRequest));
+                $subtotalFees = $subtotalFees + $subtotalFee;
+
+                //15. Total Fees per Investigator (Top 10)
+                if (isset($totalFeesByInvestigatorArr[$investigatorIndex])) {
+                    $totalFee = $totalFeesByInvestigatorArr[$investigatorIndex] + $subtotalFee;
+                } else {
+                    $totalFee = $subtotalFee;
+                }
+                $totalFee = $this->getNumberFormat($totalFee);
+                $totalFeesByInvestigatorArr[$investigatorIndex] = $totalFee;
+                /////////////////////////////
+
+            }//foreach $requests
+
+            $showOther = $this->getOtherStr($showLimited,"Investigators");
+            $totalFeesByInvestigatorTopArr = $this->getTopArray($totalFeesByInvestigatorArr,$showOther);
+            $chartsArray = $this->getChart($totalFeesByInvestigatorTopArr, "15. Total Fees per Investigator (Top 10)",'pie',$layoutArray," : $");
         }
 
-        if( $chartType == "" ) {
+        //16. Total Fees per Investigator (Funded) (Top 10)
+        if( $chartType == "fees-by-investigators-per-funded-projects" ) {
+            $transresRequestUtil = $this->container->get('transres_request_util');
+            $fundedTotalFeesByInvestigatorArr = array();
 
+            $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+            foreach($requests as $transRequest) {
+
+                $pis = $transRequest->getPrincipalInvestigators();
+                if( count($pis) > 0 ) {
+                    $pi = $pis[0];
+                    $investigatorIndex = $pi->getUsernameOptimal();
+                }
+
+                $subtotalFee = intval($transresRequestUtil->getTransResRequestFeeHtml($transRequest));
+                $subtotalFees = $subtotalFees + $subtotalFee;
+
+                if( $transRequest->getFundedAccountNumber() ) {
+                    if (isset($fundedTotalFeesByInvestigatorArr[$investigatorIndex])) {
+                        $totalFee = $fundedTotalFeesByInvestigatorArr[$investigatorIndex] + $subtotalFee;
+                    } else {
+                        $totalFee = $subtotalFee;
+                    }
+                    $totalFee = $this->getNumberFormat($totalFee);
+                    $fundedTotalFeesByInvestigatorArr[$investigatorIndex] = $totalFee;
+                }
+
+            }//foreach $requests
+
+            $showOther = $this->getOtherStr($showLimited,"Investigators");
+            $fundedTotalFeesByInvestigatorTopArr = $this->getTopArray($fundedTotalFeesByInvestigatorArr,$showOther);
+            $chartsArray = $this->getChart($fundedTotalFeesByInvestigatorTopArr, "16. Total Fees per Investigator (Funded) (Top 10)",'pie',$layoutArray," : $");
         }
 
-        if( $chartType == "" ) {
+        //17. Total Fees per Investigator (Non-Funded) (Top 10)
+        if( $chartType == "fees-by-investigators-per-nonfunded-projects" ) {
+            $transresRequestUtil = $this->container->get('transres_request_util');
+            $unFundedTotalFeesByInvestigatorArr = array();
 
-        }
+            $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+            foreach($requests as $transRequest) {
 
-        if( $chartType == "" ) {
+                $pis = $transRequest->getPrincipalInvestigators();
+                if( count($pis) > 0 ) {
+                    $pi = $pis[0];
+                    $investigatorIndex = $pi->getUsernameOptimal();
+                }
 
+                $subtotalFee = intval($transresRequestUtil->getTransResRequestFeeHtml($transRequest));
+                $subtotalFees = $subtotalFees + $subtotalFee;
+
+                if( $transRequest->getFundedAccountNumber() ) {
+                    //do nothing
+                } else {
+                    //17. Total Fees per Investigator (non-Funded) (Top 10)
+                    if (isset($unFundedTotalFeesByInvestigatorArr[$investigatorIndex])) {
+                        $totalFee = $unFundedTotalFeesByInvestigatorArr[$investigatorIndex] + $subtotalFee;
+                    } else {
+                        $totalFee = $subtotalFee;
+                    }
+                    $totalFee = $this->getNumberFormat($totalFee);
+                    $unFundedTotalFeesByInvestigatorArr[$investigatorIndex] = $totalFee;
+                }
+
+            }//foreach $requests
+
+            $showOther = $this->getOtherStr($showLimited,"Investigators");
+            $unFundedTotalFeesByInvestigatorTopArr = $this->getTopArray($unFundedTotalFeesByInvestigatorArr,$showOther);
+            $chartsArray = $this->getChart($unFundedTotalFeesByInvestigatorTopArr, "17. Total Fees per Investigator (Non-Funded) (Top 10)",'pie',$layoutArray," : $");
         }
 
         if( $chartType == "" ) {
