@@ -1691,6 +1691,7 @@ class DashboardUtil
 
         //20. Generated Invoices by Status per PI (Top 10)
         if( $chartType == "fees-by-invoices-per-pi" ) {
+            $invoicesFeesByPiArr = array();
             $invoicePaidFeeArr = array();
             $invoiceDueFeeArr = array();
 
@@ -1698,18 +1699,6 @@ class DashboardUtil
             foreach( $invoices as $invoice ) {
 
                 $transRequest = $invoice->getTransresRequest();
-//                $project = $transRequest->getProject();
-//                $projectIndex = $project->getOid(false);
-//                $pis = $project->getPrincipalInvestigators();
-//                $piInfoArr = array();
-//                foreach( $pis as $pi ) {
-//                    if( $pi ) {
-//                        $piInfoArr[] = $pi->getUsernameOptimal();
-//                    }
-//                }
-//                if( count($piInfoArr) > 0 ) {
-//                    $projectIndex = $projectIndex . " (" . implode(", ",$piInfoArr) . ")";
-//                }
 
                 if( $invoice ) {
                     $investigator = $invoice->getPrincipalInvestigator();
@@ -1728,6 +1717,8 @@ class DashboardUtil
                 }
 
                 $totalThisInvoiceFee = intval($invoice->getTotal());
+                $paidThisInvoiceFee = intval($invoice->getPaid());
+                $dueThisInvoiceFee = intval($invoice->getDue());
 
                 //20. Generated Invoices by Status per PI (Top 10)
                 if ($transRequest->getFundedAccountNumber()) {
@@ -1742,7 +1733,6 @@ class DashboardUtil
                     $invoicesFeesByPiArr[$investigatorIndex] = $totalFee;
 
                     //paid
-                    //$invoiceTotalFee = $invoiceTotalFee + $totalThisInvoiceFee;
                     if (isset($invoicePaidFeeArr[$investigatorIndex])) {
                         $totalFee = $invoicePaidFeeArr[$investigatorIndex] + $paidThisInvoiceFee;
                     } else {
@@ -1751,16 +1741,12 @@ class DashboardUtil
                     $invoicePaidFeeArr[$investigatorIndex] = $totalFee;
 
                     //unpaid
-                    //$invoiceDueFee = $invoiceDueFee + $dueThisInvoiceFee;
                     if (isset($invoiceDueFeeArr[$investigatorIndex])) {
                         $totalFee = $invoiceDueFeeArr[$investigatorIndex] + $dueThisInvoiceFee;
                     } else {
                         $totalFee = $dueThisInvoiceFee;
                     }
                     $invoiceDueFeeArr[$investigatorIndex] = $totalFee;
-
-                    //$invoicesFeesByPiArr[$investigatorIndex] = array('total'=>$totalThisInvoiceFees,'paid'=>$totalFundedPaidFees,'due'=>$totalFundedDueFees);
-
                 }
 
             }//foreach invoices
