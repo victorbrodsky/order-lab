@@ -285,10 +285,10 @@ class DashboardUtil
         return $res;    //implode(array_slice($parts, 0, $last_part)).$postfix;
     }
 
-    public function addChart( $chartsArray, $dataArr, $title, $type='pie', $layoutArray=null, $valuePrefixLabel=null ) {
+    public function getChart( $dataArr, $title, $type='pie', $layoutArray=null, $valuePrefixLabel=null ) {
 
         if( count($dataArr) == 0 ) {
-            return $chartsArray;
+            return array();
         }
 
         $labels = array();
@@ -318,7 +318,7 @@ class DashboardUtil
         }
 
         if( count($values) == 0 ) {
-            return $chartsArray;
+            return array();
         }
 
         $xAxis = "labels";
@@ -348,12 +348,10 @@ class DashboardUtil
 //        print_r($dataArray);
 //        echo "</pre>";
 
-        $chartsArray[] = array(
+        $chartsArray = array(
             'layout' => $layoutArray,
             'data' => $dataArray
         );
-
-        $chartsArray[] = array('newline'=>true);
 
         return $chartsArray;
     }
@@ -614,6 +612,62 @@ class DashboardUtil
         return $projects;
     }
 
+    public function getRequestsByFilter($startDate, $endDate, $projectSpecialties, $addOneEndDay=true) {
+        $repository = $this->em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
+        $dql =  $repository->createQueryBuilder("request");
+        $dql->select('request');
+
+        //Exclude Work requests with status=Canceled and Draft
+        $dql->where("request.progressState != 'draft' AND request.progressState != 'canceled'");
+
+        $dqlParameters = array();
+
+        if( $startDate ) {
+            //echo "startDate=" . $startDate->format('Y-m-d H:i:s') . "<br>";
+            $dql->andWhere('request.createDate >= :startDate');
+            $dqlParameters['startDate'] = $startDate->format('Y-m-d'); //H:i:s
+        }
+        if( $endDate ) {
+            if( $addOneEndDay ) {
+                $endDate->modify('+1 day');
+            }
+            //echo "endDate=" . $endDate->format('Y-m-d H:i:s') . "<br>";
+            $dql->andWhere('request.createDate <= :endDate');
+            $dqlParameters['endDate'] = $endDate->format('Y-m-d'); //H:i:s
+        }
+
+        if( $projectSpecialties && count($projectSpecialties) > 0 ) {
+            $dql->leftJoin('request.project','project');
+            $dql->leftJoin('project.projectSpecialty','projectSpecialty');
+            $projectSpecialtyIdsArr = array();
+            $projectSpecialtyNamesArr = array();
+            foreach($projectSpecialties as $projectSpecialty) {
+                //echo "projectSpecialty=$projectSpecialty<br>";
+                $projectSpecialtyIdsArr[] = $projectSpecialty->getId();
+                $projectSpecialtyNamesArr[] = $projectSpecialty."";
+            }
+            $dql->andWhere("projectSpecialty.id IN (:projectSpecialtyIdsArr)");
+            $dqlParameters["projectSpecialtyIdsArr"] = $projectSpecialtyIdsArr;
+        }
+
+        $query = $this->em->createQuery($dql);
+
+        $query->setParameters($dqlParameters);
+        //echo "query=".$query->getSql()."<br>";
+
+        $projects = $query->getResult();
+
+        //echo implode(",",$projectSpecialtyNamesArr)." Projects=".count($projects)." (".$startDate->format('d-M-Y')." - ".$endDate->format('d-M-Y').")<br>";
+
+        return $projects;
+    }
+
+
+
+
+
+
+
     public function getDashboardChart($request) {
 
         $startDate = $request->query->get('startDate');
@@ -841,32 +895,185 @@ class DashboardUtil
         //5. Total Number of Work Requests by Funding Source
         if( $chartType == "requests-by-funding-source" ) {
 
+            $fundedRequestCount = 0;
+            $notFundedRequestCount = 0;
+
+            $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+            foreach($requests as $transRequest) {
+                if( $transRequest->getFundedAccountNumber() ) {
+                    $fundedRequestCount++;
+                } else {
+                    $notFundedRequestCount++;
+                }
+            }//foreach
+
+            $dataArray = array();
+            $chartDataArray = array();
+            $type = 'pie';
+
+            $layoutArray = array(
+                'height' => $this->height,
+                'width' =>  $this->width,
+                'title' => "5. Total Number of Work Requests by Funding Source"
+            );
+
+            $labels = array('Funded'." : ".$fundedRequestCount,'Non-Funded'." : ".$notFundedRequestCount);
+            $values = array($fundedRequestCount,$notFundedRequestCount);
+
+            $chartDataArray['values'] = $values;
+            $chartDataArray['labels'] = $labels;
+            $chartDataArray['type'] = $type;
+            $chartDataArray["textinfo"] = "value+percent";
+            $chartDataArray["outsidetextfont"] = array('size'=>1,'color'=>'white');
+            $chartDataArray['direction'] = 'clockwise';
+            $dataArray[] = $chartDataArray;
+
+            $chartsArray = array(
+                'layout' => $layoutArray,
+                'data' => $dataArray
+            );
         }
 
         //6. Total number of Requests per Project (Top 10)
         if( $chartType == "requests-per-project" ) {
+            $requestPerProjectArr = array();
 
+            $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+            foreach($requests as $transRequest) {
+                $project = $transRequest->getProject();
+                $projectIndex = $project->getOid(false);
+                $projectId = $project->getId();
+                $piIdArr = array();
+
+                if( isset($requestPerProjectArr[$projectId]) && isset($requestPerProjectArr[$projectId]['value']) ) {
+                    $count = $requestPerProjectArr[$projectId]['value'] + 1;
+                } else {
+                    $count = 1;
+                }
+                $requestPerProjectArr[$projectId]['value'] = $count;
+                $requestPerProjectArr[$projectId]['label'] = $projectIndex;
+                $requestPerProjectArr[$projectId]['objectid'] = $projectId;
+                $requestPerProjectArr[$projectId]['pi'] = $piIdArr;
+                $requestPerProjectArr[$projectId]['show-path'] = "request";
+            }//foreach
+
+            $layoutArray = array(
+                'height' => $this->height,
+                'width' => $this->width,
+            );
+            $showOther = $this->getOtherStr($showLimited,"Projects");
+            $requestPerProjectTopArr = $this->getTopMultiArray($requestPerProjectArr,$showOther);
+            $filterArr['funded'] = null;
+            $chartsArray = $this->getChartByMultiArray($requestPerProjectTopArr, $filterArr, "6. Total number of Requests per Project (Top 10)","pie",$layoutArray," : ");
         }
 
         //7. Total number of Requests per Funded Project (Top 10)
         if( $chartType == "requests-per-funded-projects" ) {
+            $fundedRequestPerProjectArr = array();
 
+            $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+            foreach($requests as $transRequest) {
+
+                if( $transRequest->getFundedAccountNumber() ) {
+                    $project = $transRequest->getProject();
+                    $projectIndex = $project->getOid(false);
+                    $projectId = $project->getId();
+                    $piIdArr = array();
+
+                    if( isset($fundedRequestPerProjectArr[$projectId]) && isset($fundedRequestPerProjectArr[$projectId]['value']) ) {
+                        $count = $fundedRequestPerProjectArr[$projectId]['value'] + 1;
+                    } else {
+                        $count = 1;
+                    }
+                    $fundedRequestPerProjectArr[$projectId]['value'] = $count;
+                    $fundedRequestPerProjectArr[$projectId]['label'] = $projectIndex;
+                    $fundedRequestPerProjectArr[$projectId]['objectid'] = $projectId;
+                    $fundedRequestPerProjectArr[$projectId]['pi'] = $piIdArr;
+                    $fundedRequestPerProjectArr[$projectId]['show-path'] = "request";
+                }
+            }
+
+            $showOther = $this->getOtherStr($showLimited,"Projects");
+            $fundedRequestPerProjectTopArr = $this->getTopMultiArray($fundedRequestPerProjectArr,$showOther);
+            $filterArr['funded'] = true;
+            $chartsArray = $this->getChartByMultiArray( $fundedRequestPerProjectTopArr, $filterArr, "7. Total number of Requests per Funded Project (Top 10)","pie",$layoutArray," : ");
         }
 
         //8. Total number of Requests per Non-Funded Project (Top 10)
         if( $chartType == "requests-per-nonfunded-projects" ) {
+            $unFundedRequestPerProjectArr = array();
 
+            $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+            foreach($requests as $transRequest) {
+                if( $transRequest->getFundedAccountNumber() ) {
+                    //do nothing
+                } else {
+                    $project = $transRequest->getProject();
+                    $projectIndex = $project->getOid(false);
+                    $projectId = $project->getId();
+                    $piIdArr = array();
+
+                    if( isset($unFundedRequestPerProjectArr[$projectId]) && isset($unFundedRequestPerProjectArr[$projectId]['value']) ) {
+                        $count = $unFundedRequestPerProjectArr[$projectId]['value'] + 1;
+                    } else {
+                        $count = 1;
+                    }
+                    $unFundedRequestPerProjectArr[$projectId]['value'] = $count;
+                    $unFundedRequestPerProjectArr[$projectId]['label'] = $projectIndex;
+                    $unFundedRequestPerProjectArr[$projectId]['objectid'] = $projectId;
+                    $unFundedRequestPerProjectArr[$projectId]['pi'] = $piIdArr;
+                    $unFundedRequestPerProjectArr[$projectId]['show-path'] = "request";
+                }
+            }
+
+            $showOther = $this->getOtherStr($showLimited,"Projects");
+            $unFundedRequestPerProjectTopArr = $this->getTopMultiArray($unFundedRequestPerProjectArr,$showOther);
+            $filterArr['funded'] = false;
+            $chartsArray = $this->getChartByMultiArray( $unFundedRequestPerProjectTopArr, $filterArr, "8. Total number of Requests per Non-Funded Project (Top 10)","pie",$layoutArray," : ");
         }
 
         //Work request statistics: Products/Services
         //9. TRP Service Productivity by Products/Services (Top 10)
         if( $chartType == "service-productivity-by-service" ) {
+            $quantityCountByCategoryArr = array();
+            $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+            foreach($requests as $transRequest) {
+                foreach($transRequest->getProducts() as $product) {
+                    $category = $product->getCategory();
+                    if( $category ) {
+                        $categoryIndex = $category->getProductIdAndName();
+                        $productQuantity = $product->getQuantity();
+                        //9. TRP Service Productivity by Category Types (Top 10)
+                        if (isset($quantityCountByCategoryArr[$categoryIndex])) {
+                            $count = $quantityCountByCategoryArr[$categoryIndex] + $productQuantity;
+                        } else {
+                            $count = $productQuantity;
+                        }
+                        $quantityCountByCategoryArr[$categoryIndex] = $count;
+                        /////////////
+                    }
+                }
+            }
+
+            $showOther = $this->getOtherStr($showLimited,"Products/Services");
+            $quantityCountByCategoryTopArr = $this->getTopArray($quantityCountByCategoryArr,$showOther);
+            $layoutArray = array(
+                'height' => $this->height,
+                'width' => $this->width,
+            );
+            $chartsArray = $this->getChart($quantityCountByCategoryTopArr, "9. TRP Service Productivity by Products/Services (Top 10)",'pie',$layoutArray," : ");
 
         }
 
         //10. TRP Service Productivity for Funded Projects (Top 10)
         if( $chartType == "service-productivity-by-service-per-funded-projects" ) {
-
+            $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+            foreach($requests as $transRequest) {
+                $project = $transRequest->getProject();
+                $projectIndex = $project->getOid(false);
+                $projectId = $project->getId();
+                $piIdArr = array();
+            }
         }
 
         //11. TRP Service Productivity for Non-Funded Projects (Top 10)
@@ -916,7 +1123,13 @@ class DashboardUtil
         }
 
         if( $chartType == "" ) {
-
+            $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+            foreach($requests as $transRequest) {
+                $project = $transRequest->getProject();
+                $projectIndex = $project->getOid(false);
+                $projectId = $project->getId();
+                $piIdArr = array();
+            }
         }
 
 
