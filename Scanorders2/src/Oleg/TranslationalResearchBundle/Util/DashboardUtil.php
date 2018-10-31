@@ -83,9 +83,10 @@ class DashboardUtil
             "16. Total Fees per Investigator (Funded) (Top 10)" =>              "fees-by-investigators-per-funded-projects",
             "17. Total Fees per Investigator (Non-Funded) (Top 10)" =>          "fees-by-investigators-per-nonfunded-projects",
             //Financial statistics based on invoices
-            "" => "",
-            "" => "",
-            "" => "",
+            "18. Generated Invoices by Status from Funded Projects" =>          "fees-by-invoices-per-funded-projects",
+            "19. Generated Invoices by Status per Funded Project (Top 10)" =>   "fees-by-invoices-per-nonfunded-projects",
+            "20. Generated Invoices by Status per PI (Top 10)" =>               "fees-by-invoices-per-pi",
+
             "" => "",
             "" => "",
             "" => "",
@@ -632,7 +633,14 @@ class DashboardUtil
         return $chartsArray;
     }
 
-
+    public function attachSecondValueToFirstLabel($firstArr,$secondArr,$prefix) {
+        $resArr = array();
+        foreach($firstArr as $index=>$value) {
+            $index = $index . " " . $prefix . $secondArr[$index];
+            $resArr[$index] = $value;
+        }
+        return $resArr;
+    }
 
     public function getProjectsByFilter($startDate, $endDate, $projectSpecialties, $addOneEndDay=true) {
 
@@ -735,7 +743,80 @@ class DashboardUtil
         return $projects;
     }
 
+    public function getInvoicesByFilter($startDate, $endDate, $projectSpecialties, $addOneEndDay=true, $compareType='last invoice generation date') {
+        $repository = $this->em->getRepository('OlegTranslationalResearchBundle:Invoice');
+        $dql =  $repository->createQueryBuilder("invoice");
+        $dql->select('invoice');
+        $dql->leftJoin('invoice.transresRequest','request');
 
+        //Exclude Work requests with status=Canceled and Draft
+        $dql->where("request.progressState != 'draft' AND request.progressState != 'canceled' AND invoice.latestVersion = TRUE AND invoice.status != 'canceled'");
+
+        $dqlParameters = array();
+
+        if( $startDate ) {
+            //$startDateCriterion = 'request.createDate >= :startDate';
+            if( $compareType == 'work request submission date' ) {
+                $startDateCriterion = 'request.createDate >= :startDate';
+            } elseif( $compareType == 'last invoice generation date' ) {
+                $startDateCriterion = 'invoice.createDate >= :startDate';
+            } elseif( $compareType == "date when status changed to paid in full" ) {
+                $startDateCriterion = 'invoice.paidDate >= :startDate';
+            } else {
+                $startDateCriterion = 'request.createDate >= :startDate';
+            }
+            //echo "startDateCriterion=$startDateCriterion <br>";
+            $dql->andWhere($startDateCriterion);
+            $dqlParameters['startDate'] = $startDate->format('Y-m-d'); //H:i:s
+        }
+        if( $endDate ) {
+            if( $addOneEndDay ) {
+                $endDate->modify('+1 day');
+            }
+            //echo "endDate=" . $endDate->format('Y-m-d H:i:s') . "<br>";
+            $dql->andWhere('request.createDate <= :endDate');
+
+            //$endDateCriterion = 'request.createDate <= :endDate';
+            if( $compareType == 'work request submission date' ) {
+                $endDateCriterion = 'request.createDate <= :endDate';
+            } elseif( $compareType == 'last invoice generation date' ) {
+                $endDateCriterion = 'invoice.createDate <= :endDate';
+            } elseif( $compareType == "date when status changed to paid in full" ) {
+                $endDateCriterion = 'invoice.paidDate <= :endDate';
+            } else {
+                $endDateCriterion = 'request.createDate <= :endDate';
+            }
+            //echo "endDateCriterion=$endDateCriterion <br>";
+            $dql->andWhere($endDateCriterion);
+
+            $dqlParameters['endDate'] = $endDate->format('Y-m-d'); //H:i:s
+        }
+
+        if( $projectSpecialties && count($projectSpecialties) > 0 ) {
+            $dql->leftJoin('request.project','project');
+            $dql->leftJoin('project.projectSpecialty','projectSpecialty');
+            $projectSpecialtyIdsArr = array();
+            $projectSpecialtyNamesArr = array();
+            foreach($projectSpecialties as $projectSpecialty) {
+                //echo "projectSpecialty=$projectSpecialty<br>";
+                $projectSpecialtyIdsArr[] = $projectSpecialty->getId();
+                $projectSpecialtyNamesArr[] = $projectSpecialty."";
+            }
+            $dql->andWhere("projectSpecialty.id IN (:projectSpecialtyIdsArr)");
+            $dqlParameters["projectSpecialtyIdsArr"] = $projectSpecialtyIdsArr;
+        }
+
+        $query = $this->em->createQuery($dql);
+
+        $query->setParameters($dqlParameters);
+        //echo "query=".$query->getSql()."<br>";
+
+        $projects = $query->getResult();
+
+        //echo implode(",",$projectSpecialtyNamesArr)." Projects=".count($projects)." (".$startDate->format('d-M-Y')." - ".$endDate->format('d-M-Y').")<br>";
+
+        return $projects;
+    }
 
 
 
@@ -1495,26 +1576,207 @@ class DashboardUtil
             $chartsArray = $this->getChart($unFundedTotalFeesByInvestigatorTopArr, "17. Total Fees per Investigator (Non-Funded) (Top 10)",'pie',$layoutArray," : $");
         }
 
-        if( $chartType == "" ) {
+        //18. Generated Invoices by Status from Funded Projects
+        if( $chartType == "fees-by-invoices-per-funded-projects" ) {
 
+            $paidInvoices = 0;
+            $totalInvoices = 0;
+            $totalFundedPaidFees = 0;
+            $totalFundedDueFees = 0;
+            $totalThisInvoiceVerificationFees = 0;
+
+            $invoices = $this->getInvoicesByFilter($startDate, $endDate, $projectSpecialtyObjects);
+            foreach( $invoices as $invoice ) {
+
+                $transRequest = $invoice->getTransresRequest();
+                $paidThisInvoiceFee = intval($invoice->getPaid());
+                $dueThisInvoiceFee = intval($invoice->getDue());
+
+                //18. Generated Invoices by Status from Funded Projects (Total invoiced $152K)
+                if ($transRequest->getFundedAccountNumber()) {
+                    if ($invoice->getStatus() == "Paid in Full") {
+                        $paidInvoices++;
+                    }
+                    $totalInvoices++;
+                    $totalFundedPaidFees = $totalFundedPaidFees + $paidThisInvoiceFee;
+                    $totalFundedDueFees = $totalFundedDueFees + $dueThisInvoiceFee;
+                    $totalThisInvoiceVerificationFees = $totalThisInvoiceVerificationFees + ($paidThisInvoiceFee + $dueThisInvoiceFee);
+                }
+                //////////////////////////////////////////////
+
+            }//foreach invoices
+
+            //18. Generated Invoices by Status from Funded Projects (Total invoiced $152K)
+            $dataArray = array();
+            $chartDataArray = array();
+            $type = 'pie';
+
+            $layoutArray = array(
+                'height' => $this->height,
+                'width' =>  $this->width,
+                'title' => "18. Generated Invoices from Funded Projects (Total invoiced $".$totalThisInvoiceVerificationFees."; Total invoices: ".$totalInvoices.", 'Paid in Full' invoices: ".$paidInvoices.")"
+            );
+
+            $labels = array('Paid'.' : $'.$totalFundedPaidFees,'Unpaid (Due)'.' : $'.$totalFundedDueFees);
+            $values = array($totalFundedPaidFees,$totalFundedDueFees);
+
+            $chartDataArray['values'] = $values;
+            $chartDataArray['labels'] = $labels;
+            $chartDataArray['type'] = $type;
+            $chartDataArray["textinfo"] = "value+percent";
+            $chartDataArray["outsidetextfont"] = array('size'=>1,'color'=>'white');
+            $chartDataArray['marker'] = array('colors' => array("rgb(44, 160, 44)", "rgb(214, 39, 40)") );
+            $chartDataArray['direction'] = 'clockwise';
+            $dataArray[] = $chartDataArray;
+
+            $chartsArray = array(
+                'layout' => $layoutArray,
+                'data' => $dataArray
+            );
+            /////////////////////////////
         }
 
-        if( $chartType == "" ) {
+        //19. Generated Invoices by Status per Funded Project (Top 10)
+        if( $chartType == "fees-by-invoices-per-nonfunded-projects" ) {
+            $invoicesByProjectArr = array();
+            $invoicesFeesByProjectArr = array();
 
-        }
+            $invoices = $this->getInvoicesByFilter($startDate, $endDate, $projectSpecialtyObjects);
+            foreach( $invoices as $invoice ) {
 
-        if( $chartType == "" ) {
-
-        }
-
-        if( $chartType == "" ) {
-            $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
-            foreach($requests as $transRequest) {
+                $transRequest = $invoice->getTransresRequest();
                 $project = $transRequest->getProject();
                 $projectIndex = $project->getOid(false);
-                $projectId = $project->getId();
-                $piIdArr = array();
-            }
+                $pis = $project->getPrincipalInvestigators();
+                $piInfoArr = array();
+                foreach( $pis as $pi ) {
+                    if( $pi ) {
+                        $piInfoArr[] = $pi->getUsernameOptimal();
+                    }
+                }
+                if( count($piInfoArr) > 0 ) {
+                    $projectIndex = $projectIndex . " (" . implode(", ",$piInfoArr) . ")";
+                }
+
+                $totalThisInvoiceFee = intval($invoice->getTotal());
+
+                //19. Generated Invoices by Status per Funded Project (Top 10)
+                if ($transRequest->getFundedAccountNumber()) {
+                    //19. Generated Invoices by Status per Funded Project (Top 10)
+                    if (isset($invoicesByProjectArr[$projectIndex])) {
+                        $count = $invoicesByProjectArr[$projectIndex] + 1;
+                    } else {
+                        $count = 1;
+                    }
+                    $invoicesByProjectArr[$projectIndex] = $count;
+                    //fees
+                    if (isset($invoicesFeesByProjectArr[$projectIndex])) {
+                        $totalFee = $invoicesFeesByProjectArr[$projectIndex] + $totalThisInvoiceFee;
+                    } else {
+                        $totalFee = $totalThisInvoiceFee;
+                    }
+                    $invoicesFeesByProjectArr[$projectIndex] = $totalFee;
+                }
+
+            }//foreach invoices
+
+            //19. Generated Invoices by Status per Funded Project (Top 10)
+            $showOther = $this->getOtherStr($showLimited,"Projects");
+            $invoicesByProjectTopArr = $this->getTopArray($invoicesByProjectArr,$showOther);
+            $invoicesFeesByProjectTopArr = $this->getTopArray($invoicesFeesByProjectArr,$showOther);
+            //merge two to attach fees to label
+            $invoicesByProjectTopArr = $this->attachSecondValueToFirstLabel($invoicesByProjectTopArr,$invoicesFeesByProjectTopArr," : $");
+            $chartsArray = $this->getChart($invoicesByProjectTopArr, "19. Generated Invoices by Status per Funded Project (Top 10)",'pie',$layoutArray);
+        }
+
+        //20. Generated Invoices by Status per PI (Top 10)
+        if( $chartType == "fees-by-invoices-per-pi" ) {
+            $invoicePaidFeeArr = array();
+            $invoiceDueFeeArr = array();
+
+            $invoices = $this->getInvoicesByFilter($startDate, $endDate, $projectSpecialtyObjects);
+            foreach( $invoices as $invoice ) {
+
+                $transRequest = $invoice->getTransresRequest();
+//                $project = $transRequest->getProject();
+//                $projectIndex = $project->getOid(false);
+//                $pis = $project->getPrincipalInvestigators();
+//                $piInfoArr = array();
+//                foreach( $pis as $pi ) {
+//                    if( $pi ) {
+//                        $piInfoArr[] = $pi->getUsernameOptimal();
+//                    }
+//                }
+//                if( count($piInfoArr) > 0 ) {
+//                    $projectIndex = $projectIndex . " (" . implode(", ",$piInfoArr) . ")";
+//                }
+
+                if( $invoice ) {
+                    $investigator = $invoice->getPrincipalInvestigator();
+                    if ($investigator) {
+                        $investigatorIndex = $investigator->getUsernameOptimal();
+                    } else {
+                        $submitter = $invoice->getSubmitter();
+                        $investigatorIndex = $submitter->getUsernameOptimal();
+                    }
+                } else {
+                    $pis = $transRequest->getPrincipalInvestigators();
+                    if( count($pis) > 0 ) {
+                        $pi = $pis[0];
+                        $investigatorIndex = $pi->getUsernameOptimal();
+                    }
+                }
+
+                $totalThisInvoiceFee = intval($invoice->getTotal());
+
+                //20. Generated Invoices by Status per PI (Top 10)
+                if ($transRequest->getFundedAccountNumber()) {
+                    //20. Generated Invoices by Status per PI (Top 10)
+
+                    //Total fees
+                    if (isset($invoicesFeesByPiArr[$investigatorIndex])) {
+                        $totalFee = $invoicesFeesByPiArr[$investigatorIndex] + $totalThisInvoiceFee;
+                    } else {
+                        $totalFee = $totalThisInvoiceFee;
+                    }
+                    $invoicesFeesByPiArr[$investigatorIndex] = $totalFee;
+
+                    //paid
+                    //$invoiceTotalFee = $invoiceTotalFee + $totalThisInvoiceFee;
+                    if (isset($invoicePaidFeeArr[$investigatorIndex])) {
+                        $totalFee = $invoicePaidFeeArr[$investigatorIndex] + $paidThisInvoiceFee;
+                    } else {
+                        $totalFee = $paidThisInvoiceFee;
+                    }
+                    $invoicePaidFeeArr[$investigatorIndex] = $totalFee;
+
+                    //unpaid
+                    //$invoiceDueFee = $invoiceDueFee + $dueThisInvoiceFee;
+                    if (isset($invoiceDueFeeArr[$investigatorIndex])) {
+                        $totalFee = $invoiceDueFeeArr[$investigatorIndex] + $dueThisInvoiceFee;
+                    } else {
+                        $totalFee = $dueThisInvoiceFee;
+                    }
+                    $invoiceDueFeeArr[$investigatorIndex] = $totalFee;
+
+                    //$invoicesFeesByPiArr[$investigatorIndex] = array('total'=>$totalThisInvoiceFees,'paid'=>$totalFundedPaidFees,'due'=>$totalFundedDueFees);
+
+                }
+
+            }//foreach invoices
+
+            //20. Generated Invoices by Status per PI (Top 10)
+            $descriptionArr = array(
+                array("paid $"," : $","limegreen",$invoicePaidFeeArr),
+                array("due $"," : $","red",$invoiceDueFeeArr)
+            );
+            $showOther = $this->getOtherStr($showLimited,"PIs");
+            $invoicesFeesByPiArrTop = $this->getTopArray($invoicesFeesByPiArr,$showOther,$descriptionArr);
+            $chartsArray = $this->getChart($invoicesFeesByPiArrTop, "20. Generated Invoices by Status per PI (Top 10)",'pie',$layoutArray);
+        }
+
+        if( $chartType == "" ) {
+            
         }
 
 

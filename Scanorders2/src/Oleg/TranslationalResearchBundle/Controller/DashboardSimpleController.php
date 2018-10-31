@@ -852,7 +852,7 @@ class DashboardSimpleController extends Controller
         $totalThisInvoiceVerificationFees = 0;
 
         $invoicesByProjectArr = array();
-        $invoicesByPiArr = array();
+        //$invoicesByPiArr = array();
         $invoicesFeesByProjectArr = array();
         $invoicesFeesByPiArr = array();
 
@@ -940,12 +940,12 @@ class DashboardSimpleController extends Controller
                 //20. Generated Invoices by Status per PI (Top 10)
 
                 /////// count - NOT USED ///////
-                if (isset($invoicesByPiArr[$investigatorIndex])) {
-                    $count = $invoicesByPiArr[$investigatorIndex] + 1;
-                } else {
-                    $count = 1;
-                }
-                $invoicesByPiArr[$investigatorIndex] = $count;
+//                if (isset($invoicesByPiArr[$investigatorIndex])) {
+//                    $count = $invoicesByPiArr[$investigatorIndex] + 1;
+//                } else {
+//                    $count = 1;
+//                }
+//                $invoicesByPiArr[$investigatorIndex] = $count;
                 /////// EOF count - NOT USED ///////
 
                 //Total fees
@@ -2229,7 +2229,7 @@ class DashboardSimpleController extends Controller
         return $projects;
     }
 
-    public function getInvoicesByFilter($startDate, $endDate, $projectSpecialties, $addOneEndDay=true, $compareType) {
+    public function getInvoicesByFilter($startDate, $endDate, $projectSpecialties, $addOneEndDay=true, $compareType='last invoice generation date') {
         $em = $this->getDoctrine()->getManager();
         //$transresUtil = $this->container->get('transres_util');
 
