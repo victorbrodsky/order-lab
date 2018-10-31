@@ -11,6 +11,8 @@ function transresAddNewLine() {
 function transresGetCharts() {
     console.log("get charts");
 
+    document.getElementById("charts").innerHTML = "";
+
     var startDate = $("#filter_startDate").val();
     console.log("startDate="+startDate);
 
@@ -67,9 +69,13 @@ function transresGetCharts() {
 
 function transresAddChart(chartIndex,chartData) {
 
-    if( chartData['newline'] && chartData['newline'] == true ) {
+    if( !chartData ) {
+        return false;
+    }
+
+    if( chartData['error'] ) {
         //console.log("newline");
-        transresAddNewLine();
+        transresAddErrorLine(chartData['error']);
     } else {
 
         var divId = 'chart-' + chartIndex;
@@ -107,4 +113,15 @@ function transresAddChart(chartIndex,chartData) {
             });
         }
     }
+}
+
+function transresAddErrorLine( error ) {
+    //console.log("newline");
+    var divEl = document.createElement("div");
+    divEl.style.float = "left";
+    divEl.style.width = "100%";
+    divEl.className = "alert alert-warning";
+    divEl.innerHTML = error;
+    //newline.setAttribute('id', divId);
+    document.getElementById("charts").appendChild(divEl);
 }

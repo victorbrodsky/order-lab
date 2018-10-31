@@ -1,141 +1,109 @@
 <?php
+/**
+ * Copyright (c) 2017 Cornell University
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 
-namespace Oleg\TranslationalResearchBundle\Controller;
+namespace Oleg\TranslationalResearchBundle\Util;
 
-use Oleg\TranslationalResearchBundle\Form\FilterDashboardType;
-use Oleg\UserdirectoryBundle\Util\LargeFileDownloader;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query;
+use Oleg\TranslationalResearchBundle\Entity\AdminReview;
+use Oleg\TranslationalResearchBundle\Entity\CommitteeReview;
+use Oleg\TranslationalResearchBundle\Entity\FinalReview;
+use Oleg\TranslationalResearchBundle\Entity\IrbReview;
+use Oleg\TranslationalResearchBundle\Entity\SpecialtyList;
+use Oleg\TranslationalResearchBundle\Entity\TransResSiteParameters;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Validator\Constraints\Date;
 
 
 /**
- * @Route("dashboard")
+ * Created by PhpStorm.
+ * User: ch3
+ * Date: 8/25/2017
+ * Time: 09:48 AM
  */
-class DashboardController extends Controller
+class DashboardUtil
 {
+
+    protected $container;
+    protected $em;
+    protected $secTokenStorage;
+    protected $secAuth;
 
     private $width = 1200;
     private $height = 600;
     private $otherId = "All other [[otherStr]] combined";
     private $otherSearchStr = "All other ";
 
-    /**
-     * @Route("/choices/", name="translationalresearch_dashboard_choices")
-     * @Template("OlegTranslationalResearchBundle:Dashboard:dashboard-choices.html.twig")
-     */
-    public function dashboardChoicesAction( Request $request )
-    {
-
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ||
-            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE')
-        ) {
-            //ok
-        } else {
-            return $this->redirect($this->generateUrl($this->container->getParameter('translationalresearch.sitename') . '-nopermission'));
-        }
-
-        $userSecUtil = $this->container->get('user_security_utility');
-        $em = $this->getDoctrine()->getManager();
-
-        $filterform = $this->getFilter();
-        $filterform->handleRequest($request);
-
-//        $showLimited = $filterform['showLimited']->getData();
-//        //echo "showLimited=".$showLimited."<br>";
-//
-//        $startDate = $filterform['startDate']->getData();
-//        $endDate = $filterform['endDate']->getData();
-//        $projectSpecialty = $filterform['projectSpecialty']->getData();
-//        if( $projectSpecialty != 0 ) {
-//            $projectSpecialtyObject = $em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->find($projectSpecialty);
-//            $projectSpecialtyObjects[] = $projectSpecialtyObject;
-//        }
-
-        return array(
-            'title' => "TRP STATISTICS",
-            'filterform' => $filterform->createView(),
-            'chartsArray' => array()
+    public function __construct( $em, $container ) {
+        $this->container = $container;
+        $this->em = $em;
+        $this->secAuth = $container->get('security.authorization_checker'); //$this->secAuth->isGranted("ROLE_USER")
+        //$this->secToken = $container->get('security.token_storage')->getToken(); //$user = $this->secToken->getUser();
+        $this->secTokenStorage = $container->get('security.token_storage'); //$user = $this->secTokenStorage->getToken()->getUser();
+    }
+    
+    public function getChartTypes() {
+        $chartTypes = array(
+            //PI/Project statistics
+            "1. Principle Investigators by Affiliation" =>                      "pi-by-affiliation",
+            "2. Total number of projects per PI (Top 10)" =>                    "projects-per-pi",
+            "3. Total number of Funded Projects per PI (Top 10)" =>             "funded-projects-per-pi",
+            "4. Total number of Non-Funded Projects per PI (Top 10)" =>         "nonfunded-projects-per-pi",
+            //Work request statistics
+            "5. Total Number of Work Requests by Funding Source" =>             "requests-by-funding-source",
+            "6. Total number of Requests per Project (Top 10)" =>               "requests-per-project",
+            "7. Total number of Requests per Funded Project (Top 10)" =>        "requests-per-funded-projects",
+            "8. Total number of Requests per Non-Funded Project (Top 10)" =>    "requests-per-nonfunded-projects",
+            //   Products/Services
+            "9. TRP Service Productivity by Products/Services (Top 10)" =>      "service-productivity-by-service",
+            "10. TRP Service Productivity for Funded Projects (Top 10)" =>      "service-productivity-by-service-per-funded-projects",
+            "11. TRP Service Productivity for Non-Funded Projects (Top 10)" =>  "service-productivity-by-service-per-nonfunded-projects",
+            "11a. TRP Service Productivity by Products/Services" =>             "service-productivity-by-service-compare-funded-vs-nonfunded-projects",
+            "" => "",
+            "" => "",
+            "" => "",
+            "" => ""
         );
+        return $chartTypes;
+    }
+    public function getChartTypeByValue($value) {
+        $this->getChartTypes();
+        $key = array_search($value, $this->getChartTypes());
+        return $key;
     }
 
-    /**
-     * @Route("/single-chart/", name="translationalresearch_single_chart", options={"expose"=true})
-     */
-    public function singleChartAction( Request $request )
-    {
-
-        if ($this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ||
-            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE')
-        ) {
-            //ok
-        } else {
-            return $this->redirect($this->generateUrl($this->container->getParameter('translationalresearch.sitename') . '-nopermission'));
+    public function isUserBelongsToInstitution($user, $parentInstitution) {
+        if( !$parentInstitution ) {
+            return false;
         }
 
-        $dashboardUtil = $this->container->get('transres_dashboard');
+        //get all user's institutions
+        $institutions = $user->getInstitutions();
 
-        $chartsArray = $dashboardUtil->getDashboardChart($request);
+        foreach($institutions as $institution) {
+            if( $this->em->getRepository('OlegUserdirectoryBundle:Institution')->isNodeUnderParentnode($parentInstitution,$institution) ) {
+                return true;
+            }
+        }
 
-        $response = new Response();
-        $response->headers->set('Content-Type', 'application/json');
-        $response->setContent(json_encode($chartsArray));
-        return $response;
+        return false;
     }
-
-
-
-    public function getFilter( $showLimited=false, $withCompareType=false ) {
-        $transresUtil = $this->container->get('transres_util');
-        $dashboardUtil = $this->container->get('transres_dashboard');
-        //////////// Filter ////////////
-        //default date range from today to 1 year back
-        $projectSpecialtiesWithAll = array('All'=>0);
-        $projectSpecialties = $transresUtil->getTransResProjectSpecialties();
-        foreach($projectSpecialties as $projectSpecialty) {
-            $projectSpecialtiesWithAll[$projectSpecialty->getName()] = $projectSpecialty->getId();
-        }
-        $params = array(
-            //'startDate' => $today,
-            //'endDate' => $today
-            "projectSpecialty" => true,
-            "projectSpecialties" => $projectSpecialtiesWithAll,
-            "compareType" => false,
-            "showLimited" => true
-        );
-
-        if( $withCompareType ) {
-            $params["compareType"] = true;
-        }
-
-        if( $showLimited ) {
-            $params["showLimited"] = $showLimited;
-        }
-
-        //chartTypes
-        $dashboardUtil->getChartTypes();
-        $params["chartType"] = true;
-        $params["chartTypes"] = $dashboardUtil->getChartTypes();
-
-
-        $filterform = $this->createForm(FilterDashboardType::class, null,array(
-            'method' => 'GET',
-            'form_custom_value'=>$params
-        ));
-        //$filterform->handleRequest($request);
-        //////////// EOF Filter ////////////
-
-        return $filterform;
-    }
-
-
-
-
 
     public function getNumberFormat($number,$digits=null) {
         return number_format($number,$digits);
@@ -294,7 +262,6 @@ class DashboardController extends Controller
 
         return $piProjectCountTopArr;
     }
-
     public function tokenTruncate($string, $your_desired_width) {
         $parts = preg_split('/([\s\n\r]+)/', $string, null, PREG_SPLIT_DELIM_CAPTURE);
         $parts_count = count($parts);
@@ -316,15 +283,6 @@ class DashboardController extends Controller
         //echo "res=[".$res."]<br>";
 
         return $res;    //implode(array_slice($parts, 0, $last_part)).$postfix;
-    }
-
-    public function attachSecondValueToFirstLabel($firstArr,$secondArr,$prefix) {
-        $resArr = array();
-        foreach($firstArr as $index=>$value) {
-            $index = $index . " " . $prefix . $secondArr[$index];
-            $resArr[$index] = $value;
-        }
-        return $resArr;
     }
 
     public function addChart( $chartsArray, $dataArr, $title, $type='pie', $layoutArray=null, $valuePrefixLabel=null ) {
@@ -399,10 +357,10 @@ class DashboardController extends Controller
 
         return $chartsArray;
     }
-    public function addChartByMultiArray( $chartsArray, $dataArr, $filterArr, $title, $type='pie', $layoutArray=null, $valuePrefixLabel=null ) {
+    public function getChartByMultiArray( $dataArr, $filterArr, $title, $type='pie', $layoutArray=null, $valuePrefixLabel=null ) {
 
         if( count($dataArr) == 0 ) {
-            return $chartsArray;
+            return array();
         }
 
         $startDate = $filterArr['startDate'];
@@ -562,7 +520,7 @@ class DashboardController extends Controller
         }
 
         if( count($values) == 0 ) {
-            return $chartsArray;
+            return array();
         }
 
         $xAxis = "labels";
@@ -593,119 +551,21 @@ class DashboardController extends Controller
 //        print_r($dataArray);
 //        echo "</pre>";
 
-        $chartsArray[] = array(
+        $chartsArray = array(
             'layout' => $layoutArray,
             'data' => $dataArray
         );
 
-        $chartsArray[] = array('newline'=>true);
-
         return $chartsArray;
     }
 
-    public function addStackedChart( $chartsArray, $combinedDataArr, $title ) {
 
-        if( count($combinedDataArr) == 0 ) {
-            return $chartsArray;
-        }
 
-        $layoutArray = array(
-            'height' => $this->height,
-            'width' => $this->width,
-            'margin' => array('b'=>200)
-//            'yaxis' => array(
-//                'automargin' => true
-//            ),
-//            'xaxis' => array(
-//                'automargin' => true,
-//            ),
-        );
-
-        $layoutArray['title'] = $title;
-        $layoutArray['barmode'] = 'stack';
-
-        $stackDataArray = array();
-        $xAxis = "x";
-        $yAxis = "y";
-
-        foreach($combinedDataArr as $name=>$dataArr) {
-            $chartDataArray = array();
-            $labels = array();
-            $values = array();
-            foreach ($dataArr as $label => $value) {
-                //if ($value) {
-                    $labels[] = $label;
-                    $values[] = $value;
-                //}
-            }
-
-            //if( count($values) == 0 ) {
-            //    continue;
-            //}
-
-            $chartDataArray[$xAxis] = $labels;
-            $chartDataArray[$yAxis] = $values;
-            $chartDataArray['name'] = $name;
-            $chartDataArray['type'] = 'bar';
-
-            $stackDataArray[] = $chartDataArray;
-        }
-
-        //echo "<pre>";
-        //print_r($stackDataArray);
-        //echo "</pre>";
-
-        $chartsArray[] = array(
-            'layout' => $layoutArray,
-            'data' => $stackDataArray
-        );
-        $chartsArray[] = array('newline'=>true);
-
-        return $chartsArray;
-    }
-
-//    /**
-//     * @Route("/funded-level/", name="translationalresearch_dashboard_fundedlevel")
-//     * @Template("OlegTranslationalResearchBundle:Dashboard:pilevel.html.twig")
-//     */
-//    public function fundedLevelAction( Request $request ) {
-//
-//        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
-//            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
-//        }
-//
-//        $title = "Dashboard for Funded Project Level";
-//        $infos = array();
-//
-//        //////////// Filter ////////////
-//        $params = array();
-//        $filterform = $this->createForm(FilterDashboardType::class, null,array(
-//            'method' => 'GET',
-//            'form_custom_value'=>$params
-//        ));
-//        $filterform->handleRequest($request);
-//        //////////// EOF Filter ////////////
-//
-//        $params = array();
-//        $filterform = $this->createForm(FilterDashboardType::class, null,array(
-//            'method' => 'GET',
-//            'form_custom_value'=>$params
-//        ));
-//
-//        $filterform->handleRequest($request);
-//
-//        return array(
-//            'infos' => $infos,
-//            'title' => $title,
-//        );
-//    }
 
 
     public function getProjectsByFilter($startDate, $endDate, $projectSpecialties, $addOneEndDay=true) {
-        $em = $this->getDoctrine()->getManager();
-        //$transresUtil = $this->container->get('transres_util');
 
-        $repository = $em->getRepository('OlegTranslationalResearchBundle:Project');
+        $repository = $this->em->getRepository('OlegTranslationalResearchBundle:Project');
         $dql =  $repository->createQueryBuilder("project");
         $dql->select('project');
 
@@ -717,6 +577,7 @@ class DashboardController extends Controller
             //echo "startDate=" . $startDate->format('Y-m-d H:i:s') . "<br>";
             $dql->andWhere('project.createDate >= :startDate');
             $dqlParameters['startDate'] = $startDate->format('Y-m-d'); //H:i:s
+            //$dqlParameters['startDate'] = $startDate;
         }
         if( $endDate ) {
             if( $addOneEndDay ) {
@@ -725,6 +586,7 @@ class DashboardController extends Controller
             //echo "endDate=" . $endDate->format('Y-m-d H:i:s') . "<br>";
             $dql->andWhere('project.createDate <= :endDate');
             $dqlParameters['endDate'] = $endDate->format('Y-m-d'); //H:i:s
+            //$dqlParameters['endDate'] = $endDate;
         }
 
         if( $projectSpecialties && count($projectSpecialties) > 0 ) {
@@ -740,7 +602,7 @@ class DashboardController extends Controller
             $dqlParameters["projectSpecialtyIdsArr"] = $projectSpecialtyIdsArr;
         }
 
-        $query = $em->createQuery($dql);
+        $query = $this->em->createQuery($dql);
 
         $query->setParameters($dqlParameters);
         //echo "query=".$query->getSql()."<br>";
@@ -752,187 +614,322 @@ class DashboardController extends Controller
         return $projects;
     }
 
-    public function getProjectRequestInvoiceChart($apcpProjects,$resStatArr,$startDateLabel) {
-        $transresRequestUtil = $this->container->get('transres_request_util');
-        //get requests, invoices
+    public function getDashboardChart($request) {
 
-       //$resStatArr['projects'];
+        $startDate = $request->query->get('startDate');
+        $endDate = $request->query->get('endDate');
+        $projectSpecialty = $request->query->get('projectSpecialty');
+        $showLimited = $request->query->get('showLimited');
+        $chartType = $request->query->get('chartType');
 
-        //$projectStatData = array();
+        if( $startDate ) {
+            $startDate = date_create_from_format('m/d/Y', $startDate); //10/31/2017 to DateTime
+        }
+        if( $endDate ) {
+            $endDate = date_create_from_format('m/d/Y', $endDate); //10/31/2017 to DateTime
+        }
 
-        $invoiceCount = 0;
-        $requestCount = 0;
-        foreach($apcpProjects as $project) {
-            foreach($project->getRequests() as $request) {
-                //$requestArr[] = $request;
-                $requestCount++;
-                $latestInvoice = $transresRequestUtil->getLatestInvoice($request);
-                if( $latestInvoice ) {
-                    $invoiceCount++;
+        if( $projectSpecialty != 0 ) {
+            $projectSpecialtyObject = $this->em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->find($projectSpecialty);
+            $projectSpecialtyObjects[] = $projectSpecialtyObject;
+        }
+
+        $filterArr = array(
+            'startDate'=>$startDate,
+            'endDate'=>$endDate,
+            'projectSpecialtyObjects' => $projectSpecialtyObjects,
+            'showLimited' => $showLimited,
+            'funded' => null
+        );
+
+        //echo "startDate=".$startDate."<br>";
+
+        $chartsArray = array();
+
+        ///////////// 1. Principle Investigators by Affiliation ///////////////////
+        if( $chartType == "pi-by-affiliation" ) {
+
+            $userSecUtil = $this->container->get('user_security_utility');
+            $piWcmPathologyCounter = 0;
+            $piWcmCounter = 0;
+            $piOtherCounter = 0;
+            $departmentAbbreviation = "Department";
+            $institutionAbbreviation = "Institution";
+            $institution = null;
+            $department = $userSecUtil->getSiteSettingParameter('transresDashboardInstitution');
+            if( $department ) {
+                $departmentAbbreviation = $department."";
+                $institution = $department->getParent();
+                if( $institution ) {
+                    $institutionAbbreviation = $institution."";
                 }
             }
+
+            $projects = $this->getProjectsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+
+            foreach($projects as $project) {
+                $pis = $project->getPrincipalInvestigators();
+                foreach ($pis as $pi) {
+                    //1. Principle Investigators by Affiliation
+                    if( $this->isUserBelongsToInstitution($pi,$department) ) {
+                        //WCM Pathology Faculty - WCM Department of Pathology and Laboratory Medicine in any Title’s department field
+                        $piWcmPathologyCounter++;
+                    } elseif ( $this->isUserBelongsToInstitution($pi,$institution) ) {
+                        //WCM Other Departmental Faculty - WCM institution
+                        $piWcmCounter++;
+                    } else {
+                        //Other Institutions
+                        $piOtherCounter++;
+                    }
+                }
+            }
+
+            $dataArray = array();
+            $chartDataArray = array();
+            $type = 'pie';
+
+            $layoutArray = array(
+                'height' => $this->height,
+                'width' =>  $this->width,
+                'title' => "1. Principle Investigators by Affiliation"
+            );
+
+            //$institutionAbbreviation = "WCM";
+            //$departmentAbbreviation = "Pathology";
+            //$piWcmPathologyCounter = 2;
+            //$piWcmCounter = 5;
+
+            $labels = array(
+                "$institutionAbbreviation $departmentAbbreviation Faculty"." ".$piWcmPathologyCounter,
+                "$institutionAbbreviation Other Departmental Faculty"." ".$piWcmCounter,
+                //'Other Institutions'." ".$piOtherCounter
+            );
+            //$values = array($piWcmPathologyCounter,$piWcmCounter,$piOtherCounter);
+            $values = array($piWcmPathologyCounter,$piWcmCounter);
+
+            $chartDataArray['values'] = $values;
+            $chartDataArray['labels'] = $labels;
+            $chartDataArray['type'] = $type;
+            $chartDataArray["textinfo"] = "value+percent";
+            $chartDataArray["outsidetextfont"] = array('size'=>1,'color'=>'white');
+            $chartDataArray['direction'] = 'clockwise';
+            $dataArray[] = $chartDataArray;
+
+            $chartsArray = array(
+                'layout' => $layoutArray,
+                'data' => $dataArray
+            );
         }
-        //echo "invoiceCount=$invoiceCount<br>";
-        //$fullStatArr = array();
+        ///////////// EOF 1. Principle Investigators by Affiliation ///////////////////
 
-        //$fullStatArr['projects'] = count($apcpProjects);
-        //$fullStatArr['requests'] = $requestCount;
-        //$fullStatArr['invoices'] = $invoiceCount;
+        //2. Total number of projects (XXX) per PI (Top 5/10) (APPROVED & CLOSED)
+        if( $chartType == "projects-per-pi" ) {
 
-        $resStatArr['projects'][$startDateLabel] = count($apcpProjects);
-        $resStatArr['requests'][$startDateLabel] = $requestCount;
-        $resStatArr['invoices'][$startDateLabel] = $invoiceCount;
+            $piProjectCountArr = array();
 
-        return $resStatArr;
+            $projects = $this->getProjectsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+
+            foreach($projects as $project) {
+                $pis = $project->getPrincipalInvestigators();
+                foreach ($pis as $pi) {
+                    $userName = $pi->getUsernameOptimal();
+                    $userId = $pi->getId();
+
+                    //2. Total number of projects (XXX) per PI (Top 5/10) (APPROVED & CLOSED)
+                    if( isset($piProjectCountArr[$userId]) && isset($piProjectCountArr[$userId]['value']) ) {
+                        $count = $piProjectCountArr[$userId]['value'] + 1;
+                    } else {
+                        $count = 1;
+                    }
+                    $piProjectCountArr[$userId]['value'] = $count;
+                    $piProjectCountArr[$userId]['label'] = $userName;
+                    $piProjectCountArr[$userId]['objectid'] = $userId;
+                    $piProjectCountArr[$userId]['pi'] = $userId;
+                    $piProjectCountArr[$userId]['show-path'] = "project";
+                }
+            }
+
+            $showOther = $this->getOtherStr($showLimited,"PIs");
+            $piProjectCountTopArr = $this->getTopMultiArray($piProjectCountArr,$showOther); // getTopMultiArray(
+            $filterArr['funded'] = null;
+            //Projects per PI
+            //                                           $dataArr,              $title,                                $type='pie', $layoutArray=null, $valuePrefixLabel=null
+            $chartsArray = $this->getChartByMultiArray( $piProjectCountTopArr, $filterArr, "2. Total number of projects per PI (Top 10)","pie",null," : "); // addChart(
+
+        }
+        ///////////////// EOF 2. Total number of projects (XXX) per PI (Top 5/10) (APPROVED & CLOSED) /////////////////
+
+        // 3. Total number of Funded Projects per PI (Top 10)
+        if( $chartType == "funded-projects-per-pi" ) {
+            $piFundedProjectCountArr = array();
+
+            $projects = $this->getProjectsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+
+            foreach($projects as $project) {
+                $fundingNumber = $project->getFunded();
+
+                $pis = $project->getPrincipalInvestigators();
+                foreach ($pis as $pi) {
+                    $userName = $pi->getUsernameOptimal();
+                    $userId = $pi->getId();
+
+                    if( $fundingNumber ) {
+                        if( isset($piFundedProjectCountArr[$userId]) && isset($piFundedProjectCountArr[$userId]['value']) ) {
+                            $count = $piFundedProjectCountArr[$userId]['value'] + 1;
+                        } else {
+                            $count = 1;
+                        }
+                        $piFundedProjectCountArr[$userId]['value'] = $count;
+                        $piFundedProjectCountArr[$userId]['label'] = $userName;
+                        $piFundedProjectCountArr[$userId]['objectid'] = $userId;
+                        $piFundedProjectCountArr[$userId]['pi'] = $userId;
+                        $piFundedProjectCountArr[$userId]['show-path'] = "project";
+                    }
+                }//foreach $pis
+            }//foreach $projects
+
+            $showOther = $this->getOtherStr($showLimited,"PIs");
+            $piFundedProjectCountTopArr = $this->getTopMultiArray($piFundedProjectCountArr,$showOther);
+            $filterArr['funded'] = true;
+            $chartsArray = $this->getChartByMultiArray( $piFundedProjectCountTopArr, $filterArr, "3. Total number of Funded Projects per PI (Top 10)","pie",null," : ");
+
+        }
+        ///////////////// EOF 3. Total number of Funded Projects per PI (Top 10) /////////////////
+
+        //4. Total number of Non-Funded Projects per PI (Top 10)
+        if( $chartType == "nonfunded-projects-per-pi" ) {
+            $piUnFundedProjectCountArr = array();
+
+            $projects = $this->getProjectsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+
+            foreach($projects as $project) {
+                $fundingNumber = $project->getFunded();
+
+                $pis = $project->getPrincipalInvestigators();
+                foreach ($pis as $pi) {
+                    $userName = $pi->getUsernameOptimal();
+                    $userId = $pi->getId();
+
+                    if( $fundingNumber ) {
+                        //do nothing
+                    } else {
+                        if( isset($piUnFundedProjectCountArr[$userId]) && isset($piUnFundedProjectCountArr[$userId]['value']) ) {
+                            $count = $piUnFundedProjectCountArr[$userId]['value'] + 1;
+                        } else {
+                            $count = 1;
+                        }
+                        $piUnFundedProjectCountArr[$userId]['value'] = $count;
+                        $piUnFundedProjectCountArr[$userId]['label'] = $userName;
+                        $piUnFundedProjectCountArr[$userId]['objectid'] = $userId;
+                        $piUnFundedProjectCountArr[$userId]['pi'] = $userId;
+                        $piUnFundedProjectCountArr[$userId]['show-path'] = "project";
+                    }
+                }//foreach $pis
+            }//foreach $projects
+
+            $showOther = $this->getOtherStr($showLimited,"PIs");
+            $piUnFundedProjectCountTopArr = $this->getTopMultiArray($piUnFundedProjectCountArr,$showOther);
+            $filterArr['funded'] = false;
+            $chartsArray = $this->getChartByMultiArray( $piUnFundedProjectCountTopArr, $filterArr, "4. Total number of Non-Funded Projects per PI (Top 10)","pie",null," : ");
+        }
+        ///////////////// EOF 4. Total number of Non-Funded Projects per PI (Top 10) /////////////////
+
+
+
+
+        //Work request statistics
+        //5. Total Number of Work Requests by Funding Source
+        if( $chartType == "requests-by-funding-source" ) {
+
+        }
+
+        //6. Total number of Requests per Project (Top 10)
+        if( $chartType == "requests-per-project" ) {
+
+        }
+
+        //7. Total number of Requests per Funded Project (Top 10)
+        if( $chartType == "requests-per-funded-projects" ) {
+
+        }
+
+        //8. Total number of Requests per Non-Funded Project (Top 10)
+        if( $chartType == "requests-per-nonfunded-projects" ) {
+
+        }
+
+        //Work request statistics: Products/Services
+        //9. TRP Service Productivity by Products/Services (Top 10)
+        if( $chartType == "service-productivity-by-service" ) {
+
+        }
+
+        //10. TRP Service Productivity for Funded Projects (Top 10)
+        if( $chartType == "service-productivity-by-service-per-funded-projects" ) {
+
+        }
+
+        //11. TRP Service Productivity for Non-Funded Projects (Top 10)
+        if( $chartType == "service-productivity-by-service-per-nonfunded-projects" ) {
+
+        }
+
+        //11a. TRP Service Productivity by Products/Services
+        if( $chartType == "service-productivity-by-service-compare-funded-vs-nonfunded-projects" ) {
+
+        }
+
+        if( $chartType == "" ) {
+
+        }
+
+        if( $chartType == "" ) {
+
+        }
+
+        if( $chartType == "" ) {
+
+        }
+
+        if( $chartType == "" ) {
+
+        }
+
+        if( $chartType == "" ) {
+
+        }
+
+        if( $chartType == "" ) {
+
+        }
+
+        if( $chartType == "" ) {
+
+        }
+
+        if( $chartType == "" ) {
+
+        }
+
+        if( $chartType == "" ) {
+
+        }
+
+        if( $chartType == "" ) {
+
+        }
+
+
+
+
+        if( count($chartsArray) == 0 ) {
+            $chartKey = $this->getChartTypeByValue($chartType);
+            $chartsArray['error'] = "Chart type '$chartKey' is not found";
+        } else {
+            $chartsArray['error'] = false;
+        }
+        
+        return $chartsArray;
     }
-
-    public function isUserBelongsToInstitution($user, $parentInstitution) {
-        if( !$parentInstitution ) {
-            return false;
-        }
-
-        $em = $this->getDoctrine()->getManager();
-
-        //get all user's institutions
-        $institutions = $user->getInstitutions();
-
-        foreach($institutions as $institution) {
-            if( $em->getRepository('OlegUserdirectoryBundle:Institution')->isNodeUnderParentnode($parentInstitution,$institution) ) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public function getRequestsByFilter($startDate, $endDate, $projectSpecialties, $addOneEndDay=true) {
-        $em = $this->getDoctrine()->getManager();
-        //$transresUtil = $this->container->get('transres_util');
-
-        $repository = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
-        $dql =  $repository->createQueryBuilder("request");
-        $dql->select('request');
-
-        //Exclude Work requests with status=Canceled and Draft
-        $dql->where("request.progressState != 'draft' AND request.progressState != 'canceled'");
-
-        $dqlParameters = array();
-
-        if( $startDate ) {
-            //echo "startDate=" . $startDate->format('Y-m-d H:i:s') . "<br>";
-            $dql->andWhere('request.createDate >= :startDate');
-            $dqlParameters['startDate'] = $startDate->format('Y-m-d'); //H:i:s
-        }
-        if( $endDate ) {
-            if( $addOneEndDay ) {
-                $endDate->modify('+1 day');
-            }
-            //echo "endDate=" . $endDate->format('Y-m-d H:i:s') . "<br>";
-            $dql->andWhere('request.createDate <= :endDate');
-            $dqlParameters['endDate'] = $endDate->format('Y-m-d'); //H:i:s
-        }
-
-        if( $projectSpecialties && count($projectSpecialties) > 0 ) {
-            $dql->leftJoin('request.project','project');
-            $dql->leftJoin('project.projectSpecialty','projectSpecialty');
-            $projectSpecialtyIdsArr = array();
-            $projectSpecialtyNamesArr = array();
-            foreach($projectSpecialties as $projectSpecialty) {
-                //echo "projectSpecialty=$projectSpecialty<br>";
-                $projectSpecialtyIdsArr[] = $projectSpecialty->getId();
-                $projectSpecialtyNamesArr[] = $projectSpecialty."";
-            }
-            $dql->andWhere("projectSpecialty.id IN (:projectSpecialtyIdsArr)");
-            $dqlParameters["projectSpecialtyIdsArr"] = $projectSpecialtyIdsArr;
-        }
-
-        $query = $em->createQuery($dql);
-
-        $query->setParameters($dqlParameters);
-        //echo "query=".$query->getSql()."<br>";
-
-        $projects = $query->getResult();
-
-        //echo implode(",",$projectSpecialtyNamesArr)." Projects=".count($projects)." (".$startDate->format('d-M-Y')." - ".$endDate->format('d-M-Y').")<br>";
-
-        return $projects;
-    }
-
-    public function getInvoicesByFilter($startDate, $endDate, $projectSpecialties, $addOneEndDay=true, $compareType) {
-        $em = $this->getDoctrine()->getManager();
-        //$transresUtil = $this->container->get('transres_util');
-
-        $repository = $em->getRepository('OlegTranslationalResearchBundle:Invoice');
-        $dql =  $repository->createQueryBuilder("invoice");
-        $dql->select('invoice');
-        $dql->leftJoin('invoice.transresRequest','request');
-
-        //Exclude Work requests with status=Canceled and Draft
-        $dql->where("request.progressState != 'draft' AND request.progressState != 'canceled' AND invoice.latestVersion = TRUE AND invoice.status != 'canceled'");
-
-        $dqlParameters = array();
-
-        if( $startDate ) {
-            //$startDateCriterion = 'request.createDate >= :startDate';
-            if( $compareType == 'work request submission date' ) {
-                $startDateCriterion = 'request.createDate >= :startDate';
-            } elseif( $compareType == 'last invoice generation date' ) {
-                $startDateCriterion = 'invoice.createDate >= :startDate';
-            } elseif( $compareType == "date when status changed to paid in full" ) {
-                $startDateCriterion = 'invoice.paidDate >= :startDate';
-            } else {
-                $startDateCriterion = 'request.createDate >= :startDate';
-            }
-            //echo "startDateCriterion=$startDateCriterion <br>";
-            $dql->andWhere($startDateCriterion);
-            $dqlParameters['startDate'] = $startDate->format('Y-m-d'); //H:i:s
-        }
-        if( $endDate ) {
-            if( $addOneEndDay ) {
-                $endDate->modify('+1 day');
-            }
-            //echo "endDate=" . $endDate->format('Y-m-d H:i:s') . "<br>";
-            $dql->andWhere('request.createDate <= :endDate');
-
-            //$endDateCriterion = 'request.createDate <= :endDate';
-            if( $compareType == 'work request submission date' ) {
-                $endDateCriterion = 'request.createDate <= :endDate';
-            } elseif( $compareType == 'last invoice generation date' ) {
-                $endDateCriterion = 'invoice.createDate <= :endDate';
-            } elseif( $compareType == "date when status changed to paid in full" ) {
-                $endDateCriterion = 'invoice.paidDate <= :endDate';
-            } else {
-                $endDateCriterion = 'request.createDate <= :endDate';
-            }
-            //echo "endDateCriterion=$endDateCriterion <br>";
-            $dql->andWhere($endDateCriterion);
-
-            $dqlParameters['endDate'] = $endDate->format('Y-m-d'); //H:i:s
-        }
-
-        if( $projectSpecialties && count($projectSpecialties) > 0 ) {
-            $dql->leftJoin('request.project','project');
-            $dql->leftJoin('project.projectSpecialty','projectSpecialty');
-            $projectSpecialtyIdsArr = array();
-            $projectSpecialtyNamesArr = array();
-            foreach($projectSpecialties as $projectSpecialty) {
-                //echo "projectSpecialty=$projectSpecialty<br>";
-                $projectSpecialtyIdsArr[] = $projectSpecialty->getId();
-                $projectSpecialtyNamesArr[] = $projectSpecialty."";
-            }
-            $dql->andWhere("projectSpecialty.id IN (:projectSpecialtyIdsArr)");
-            $dqlParameters["projectSpecialtyIdsArr"] = $projectSpecialtyIdsArr;
-        }
-
-        $query = $em->createQuery($dql);
-
-        $query->setParameters($dqlParameters);
-        //echo "query=".$query->getSql()."<br>";
-
-        $projects = $query->getResult();
-
-        //echo implode(",",$projectSpecialtyNamesArr)." Projects=".count($projects)." (".$startDate->format('d-M-Y')." - ".$endDate->format('d-M-Y').")<br>";
-
-        return $projects;
-    }
+    
 }

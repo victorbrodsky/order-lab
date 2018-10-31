@@ -55,6 +55,10 @@ services:
         class: Oleg\TranslationalResearchBundle\Util\TransResImportData
         arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
+    transres_dashboard:
+        class: Oleg\TranslationalResearchBundle\Util\DashboardUtil
+        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+
 
 framework:
     workflows:
