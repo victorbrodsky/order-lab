@@ -1036,6 +1036,7 @@ class DashboardUtil
         //9. TRP Service Productivity by Products/Services (Top 10)
         if( $chartType == "service-productivity-by-service" ) {
             $quantityCountByCategoryArr = array();
+
             $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
             foreach($requests as $transRequest) {
                 foreach($transRequest->getProducts() as $product) {
@@ -1053,7 +1054,7 @@ class DashboardUtil
                         /////////////
                     }
                 }
-            }
+            }//foreach $requests
 
             $showOther = $this->getOtherStr($showLimited,"Products/Services");
             $quantityCountByCategoryTopArr = $this->getTopArray($quantityCountByCategoryArr,$showOther);
@@ -1067,18 +1068,64 @@ class DashboardUtil
 
         //10. TRP Service Productivity for Funded Projects (Top 10)
         if( $chartType == "service-productivity-by-service-per-funded-projects" ) {
+            $fundedQuantityCountByCategoryArr = array();
+
             $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
             foreach($requests as $transRequest) {
-                $project = $transRequest->getProject();
-                $projectIndex = $project->getOid(false);
-                $projectId = $project->getId();
-                $piIdArr = array();
-            }
+                foreach($transRequest->getProducts() as $product) {
+                    $category = $product->getCategory();
+                    if( $category ) {
+                        $categoryIndex = $category->getProductIdAndName();
+                        $productQuantity = $product->getQuantity();
+                        //10. TRP Service Productivity for Funded Projects (Top 10)
+                        if( $transRequest->getFundedAccountNumber() ) {
+                            //10. TRP Service Productivity for Funded Projects (Top 10)
+                            if (isset($fundedQuantityCountByCategoryArr[$categoryIndex])) {
+                                $count = $fundedQuantityCountByCategoryArr[$categoryIndex] + $productQuantity;
+                            } else {
+                                $count = $productQuantity;
+                            }
+                            $fundedQuantityCountByCategoryArr[$categoryIndex] = $count;
+                        }
+                    }
+                }
+            }//foreach $requests
+
+            $showOther = $this->getOtherStr($showLimited,"Projects");
+            $fundedQuantityCountByCategoryTopArr = $this->getTopArray($fundedQuantityCountByCategoryArr,$showOther);
+            $chartsArray = $this->getChart($fundedQuantityCountByCategoryTopArr, "10. TRP Service Productivity for Funded Projects (Top 10)",'pie',$layoutArray," : ");
         }
 
         //11. TRP Service Productivity for Non-Funded Projects (Top 10)
         if( $chartType == "service-productivity-by-service-per-nonfunded-projects" ) {
+            $unFundedQuantityCountByCategoryArr = array();
 
+            $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+            foreach($requests as $transRequest) {
+                foreach($transRequest->getProducts() as $product) {
+                    $category = $product->getCategory();
+                    if( $category ) {
+                        $categoryIndex = $category->getProductIdAndName();
+                        $productQuantity = $product->getQuantity();
+                        //10. TRP Service Productivity for Funded Projects (Top 10)
+                        if( $transRequest->getFundedAccountNumber() ) {
+                            //do nothing
+                        } else {
+                            //11. TRP Service Productivity for non-Funded projects (Top 10)
+                            if (isset($unFundedQuantityCountByCategoryArr[$categoryIndex])) {
+                                $count = $unFundedQuantityCountByCategoryArr[$categoryIndex] + $productQuantity;
+                            } else {
+                                $count = $productQuantity;
+                            }
+                            $unFundedQuantityCountByCategoryArr[$categoryIndex] = $count;
+                        }
+                    }
+                }
+            }//foreach $requests
+
+            $showOther = $this->getOtherStr($showLimited,"Projects");
+            $unFundedQuantityCountByCategoryTopArr = $this->getTopArray($unFundedQuantityCountByCategoryArr,$showOther);
+            $chartsArray = $this->getChart($unFundedQuantityCountByCategoryTopArr, "11. TRP Service Productivity for Non-Funded Projects (Top 10)",'pie',$layoutArray," : ");
         }
 
         //11a. TRP Service Productivity by Products/Services
