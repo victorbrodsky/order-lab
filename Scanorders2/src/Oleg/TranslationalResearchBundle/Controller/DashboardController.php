@@ -26,7 +26,7 @@ class DashboardController extends Controller
     private $otherSearchStr = "All other ";
 
     /**
-     * @Route("/choices/", name="translationalresearch_dashboard_choices")
+     * @Route("/graphs/", name="translationalresearch_dashboard_choices")
      * @Template("OlegTranslationalResearchBundle:Dashboard:dashboard-choices.html.twig")
      */
     public function dashboardChoicesAction( Request $request )
@@ -62,7 +62,7 @@ class DashboardController extends Controller
 //        }
 
         return array(
-            'title' => "TRP STATISTICS",
+            'title' => "Translational Research Dashboard",
             'filterform' => $filterform->createView(),
             'chartsArray' => array(),
             'spinnerColor' => '#85c1e9'

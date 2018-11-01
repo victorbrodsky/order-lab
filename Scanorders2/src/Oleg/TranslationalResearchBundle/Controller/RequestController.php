@@ -1095,6 +1095,7 @@ class RequestController extends Controller
 
         //add "All except Drafts"
         $progressStateArr["All except Drafts"] = "All-except-Drafts";
+        $progressStateArr["All except Drafts and Canceled"] = "All-except-Drafts-and-Canceled";
 
         if ($timer) {
             $stopwatch->start('FilterRequestType');
@@ -1277,7 +1278,7 @@ class RequestController extends Controller
                 return $this->redirectToRoute(
                     'translationalresearch_request_index_filter',
                     array(
-                        'filter[progressState][0]' => "All-except-Drafts",
+                        'filter[progressState][0]' => "All-except-Drafts-and-Canceled",
                         'title' => "All Work Requests",
                     )
                 );
@@ -1311,8 +1312,8 @@ class RequestController extends Controller
                 //where I'm a project's requester
                 $filterTypeDone = true;
                 $showOnlyMyProjects = true;
-                $progressStates = array('All-except-Drafts');
-                $titleAdd = "All Except Draft ";
+                $progressStates = array("All-except-Drafts-and-Canceled");
+                $titleAdd = "All Except Draft and Canceled";
 
 //                return $this->redirectToRoute(
 //                    'translationalresearch_request_index_filter',
@@ -1349,7 +1350,7 @@ class RequestController extends Controller
                     'translationalresearch_request_index_filter',
                     array(
                         'filter[projectSpecialty][]' => $projectSpecialtyObject->getId(),
-                        'filter[progressState][0]' => "All-except-Drafts",
+                        'filter[progressState][0]' => "All-except-Drafts-and-Canceled",
                         'title' => $filterType,
                     )
                 );
@@ -1360,7 +1361,7 @@ class RequestController extends Controller
                     'translationalresearch_request_index_filter',
                     array(
                         'filter[projectSpecialty][]' => $projectSpecialtyObject->getId(),
-                        'filter[progressState][0]' => "All-except-Drafts",
+                        'filter[progressState][0]' => "All-except-Drafts-and-Canceled",
                         'title' => $filterType,
                     )
                 );
@@ -1623,6 +1624,9 @@ class RequestController extends Controller
             $allExceptDraft = "";
             if( in_array("All-except-Drafts", $progressStates )) {
                 $allExceptDraft = " OR transresRequest.progressState != 'draft' OR transresRequest.progressState IS NULL";
+            }
+            if( in_array("All-except-Drafts-and-Canceled", $progressStates )) {
+                $allExceptDraft = " OR (transresRequest.progressState != 'draft' AND transresRequest.progressState != 'canceled') OR transresRequest.progressState IS NULL";
             }
             $dql->andWhere("transresRequest.progressState IN (:progressStates)".$allExceptDraft);
             $dqlParameters["progressStates"] = $progressStates;

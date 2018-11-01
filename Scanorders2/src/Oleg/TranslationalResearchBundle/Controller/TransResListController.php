@@ -29,7 +29,7 @@ class TransResListController extends ListController
     protected $postPath = "_translationalresearch";
 
     /**
-     * @Route("/list/translational-research-request-products-and-services/", name="transresrequestcategorytypes-list_translationalresearch")
+     * @Route("/list/translational-research-work-request-products-and-services/", name="transresrequestcategorytypes-list_translationalresearch")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:index.html.twig")
@@ -73,7 +73,7 @@ class TransResListController extends ListController
 
 
     /**
-     * @Route("/list/translational-research-request-products-and-services/", name="transresrequestcategorytypes_create_translationalresearch")
+     * @Route("/list/translational-research-work-request-products-and-services/", name="transresrequestcategorytypes_create_translationalresearch")
      * @Route("/list/antibodies/", name="antibodies_create_translationalresearch")
      *
      * @Method("POST")
@@ -92,7 +92,7 @@ class TransResListController extends ListController
     }
 
     /**
-     * @Route("/list/translational-research-request-products-and-services/new", name="transresrequestcategorytypes_new_translationalresearch")
+     * @Route("/list/translational-research-work-request-products-and-services/new", name="transresrequestcategorytypes_new_translationalresearch")
      * @Route("/list/antibodies/new", name="antibodies_new_translationalresearch")
      *
      * @Method("GET")
@@ -111,7 +111,7 @@ class TransResListController extends ListController
     }
 
     /**
-     * @Route("/list/translational-research-request-products-and-services/{id}", name="transresrequestcategorytypes_show_translationalresearch")
+     * @Route("/list/translational-research-work-request-products-and-services/{id}", name="transresrequestcategorytypes_show_translationalresearch")
      * @Route("/list/antibodies/{id}", name="antibodies_show_translationalresearch")
      *
      * @Method("GET")
@@ -131,7 +131,7 @@ class TransResListController extends ListController
     }
 
     /**
-     * @Route("/list/translational-research-request-products-and-services/{id}/edit", name="transresrequestcategorytypes_edit_translationalresearch")
+     * @Route("/list/translational-research-work-request-products-and-services/{id}/edit", name="transresrequestcategorytypes_edit_translationalresearch")
      * @Route("/list/antibodies/{id}/edit", name="antibodies_edit_translationalresearch")
      *
      * @Method("GET")
@@ -150,7 +150,7 @@ class TransResListController extends ListController
     }
 
     /**
-     * @Route("/list/translational-research-request-products-and-services/{id}", name="transresrequestcategorytypes_update_translationalresearch")
+     * @Route("/list/translational-research-work-request-products-and-services/{id}", name="transresrequestcategorytypes_update_translationalresearch")
      * @Route("/list/antibodies/{id}", name="antibodies_update_translationalresearch")
      *
      * @Method("PUT")

@@ -9,7 +9,7 @@ function transresAddNewLine() {
 }
 
 function transresGetCharts() {
-    console.log("get charts");
+    //console.log("get charts");
 
     var l = Ladda.create($('#filter-btn').get(0));
     l.start();
@@ -17,18 +17,18 @@ function transresGetCharts() {
     document.getElementById("charts").innerHTML = "";
 
     var startDate = $("#filter_startDate").val();
-    console.log("startDate="+startDate);
+    //console.log("startDate="+startDate);
 
     var endDate = $("#filter_endDate").val();
-    console.log("endDate="+endDate);
+    //console.log("endDate="+endDate);
 
     var projectSpecialty = $("#filter_projectSpecialty").select2("val");
-    console.log("projectSpecialty="+projectSpecialty);
+    //console.log("projectSpecialty="+projectSpecialty);
 
     //filter_chartType
     var chartTypes = $("#filter_chartType").select2("val");
-    console.log("chartTypes:");
-    console.log(chartTypes);
+    //console.log("chartTypes:");
+    //console.log(chartTypes);
 
     //var showLimited = $("#filter_showLimited:checked").val();
     //console.log("showLimited="+showLimited);
@@ -37,7 +37,7 @@ function transresGetCharts() {
     if( $("#filter_showLimited").is(":checked") ) {
         showLimited = 1;
     }
-    console.log("showLimited="+showLimited);
+    //console.log("showLimited="+showLimited);
 
     var url = Routing.generate('translationalresearch_single_chart');
 
@@ -45,7 +45,7 @@ function transresGetCharts() {
     for (i = 0; i < chartTypes.length; i++) {
 
         var chartIndex = chartTypes[i];
-        console.log("chartType="+chartIndex);
+        //console.log("chartType="+chartIndex);
 
         $.ajax({
             url: url,
@@ -55,8 +55,8 @@ function transresGetCharts() {
             dataType: 'json',
             async: false //use synchronous => wait for response.
         }).success(function(chartData) {
-            console.log('chartData=');
-            console.log(chartData);
+            //console.log('chartData=');
+            //console.log(chartData);
 
             transresAddChart(chartIndex,chartData);
 
@@ -99,8 +99,8 @@ function transresAddChart(chartIndex,chartData) {
     var layout = chartData['layout'];
     var data = chartData['data'];
 
-    console.log("data:");
-    console.log(data);
+    //console.log("data:");
+    //console.log(data);
 
     Plotly.newPlot(divId, data, layout);
 

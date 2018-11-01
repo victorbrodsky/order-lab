@@ -66,37 +66,37 @@ class DashboardUtil
             "3. Total Number of Funded Projects per PI (Top 10)" =>             "funded-projects-per-pi",
             "4. Total Number of Non-Funded Projects per PI (Top 10)" =>         "nonfunded-projects-per-pi",
             //Pathologists Involved and number of projects
-            "2a. Total Number of Projects per Pathologist Involved (Top 10)" =>             "projects-per-pathologist-involved",
-            "3a. Total Number of Funded Projects per Pathologist Involved (Top 10)" =>      "funded-projects-per-pathologist-involved",
-            "4a. Total Number of Non-Funded Projects per Pathologist Involved (Top 10)" =>  "nonfunded-projects-per-pathologist-involved",
+            "5. Total Number of Projects per Pathologist Involved (Top 10)" =>             "projects-per-pathologist-involved",
+            "6. Total Number of Funded Projects per Pathologist Involved (Top 10)" =>      "funded-projects-per-pathologist-involved",
+            "7. Total Number of Non-Funded Projects per Pathologist Involved (Top 10)" =>  "nonfunded-projects-per-pathologist-involved",
             //Work request statistics
-            "5. Total Number of Work Requests by Funding Source" =>             "requests-by-funding-source",
-            "6. Total Number of Requests per Project (Top 10)" =>               "requests-per-project",
-            "7. Total Number of Requests per Funded Project (Top 10)" =>        "requests-per-funded-projects",
-            "8. Total Number of Requests per Non-Funded Project (Top 10)" =>    "requests-per-nonfunded-projects",
+            "8. Total Number of Work Requests by Funding Source" =>             "requests-by-funding-source",
+            "9. Total Number of Requests per Project (Top 10)" =>               "requests-per-project",
+            "10. Total Number of Requests per Funded Project (Top 10)" =>        "requests-per-funded-projects",
+            "11. Total Number of Requests per Non-Funded Project (Top 10)" =>    "requests-per-nonfunded-projects",
             //   Products/Services
-            "9. TRP Service Productivity by Products/Services (Top 10)" =>      "service-productivity-by-service",
-            "10. TRP Service Productivity for Funded Projects (Top 10)" =>      "service-productivity-by-service-per-funded-projects",
-            "11. TRP Service Productivity for Non-Funded Projects (Top 10)" =>  "service-productivity-by-service-per-nonfunded-projects",
-            "11a. TRP Service Productivity by Products/Services" =>             "service-productivity-by-service-compare-funded-vs-nonfunded-projects",
+            "12. TRP Service Productivity by Products/Services (Top 10)" =>      "service-productivity-by-service",
+            "13. TRP Service Productivity for Funded Projects (Top 10)" =>      "service-productivity-by-service-per-funded-projects",
+            "14. TRP Service Productivity for Non-Funded Projects (Top 10)" =>  "service-productivity-by-service-per-nonfunded-projects",
+            "15. TRP Service Productivity by Products/Services" =>             "service-productivity-by-service-compare-funded-vs-nonfunded-projects",
             //Productivity statistics based on work requests
-            "12. Total Fees by Work Requests" =>                                "fees-by-requests",
-            "13. Total Fees per Funded Project (Top 10)" =>                     "fees-by-requests-per-funded-projects",
-            "14. Total Fees per Non-Funded Project (Top 10)" =>                 "fees-by-requests-per-nonfunded-projects",
-            "15. Total Fees per Investigator (Top 10)" =>                       "fees-by-investigators",
-            "16. Total Fees per Investigator (Funded) (Top 10)" =>              "fees-by-investigators-per-funded-projects",
-            "17. Total Fees per Investigator (Non-Funded) (Top 10)" =>          "fees-by-investigators-per-nonfunded-projects",
+            "16. Total Fees by Work Requests" =>                                "fees-by-requests",
+            "17. Total Fees per Funded Project (Top 10)" =>                     "fees-by-requests-per-funded-projects",
+            "18. Total Fees per Non-Funded Project (Top 10)" =>                 "fees-by-requests-per-nonfunded-projects",
+            "19. Total Fees per Investigator (Top 10)" =>                       "fees-by-investigators",
+            "20. Total Fees per Investigator (Funded) (Top 10)" =>              "fees-by-investigators-per-funded-projects",
+            "21. Total Fees per Investigator (Non-Funded) (Top 10)" =>          "fees-by-investigators-per-nonfunded-projects",
             //Financial statistics based on invoices
-            "18. Generated Invoices by Status from Funded Projects" =>          "fees-by-invoices-per-funded-projects",
-            "19. Generated Invoices by Status per Funded Project (Top 10)" =>   "fees-by-invoices-per-nonfunded-projects",
-            "20. Generated Invoices by Status per PI (Top 10)" =>               "fees-by-invoices-per-pi",
+            "22. Generated Invoices by Status from Funded Projects" =>          "fees-by-invoices-per-funded-projects",
+            "23. Generated Invoices by Status per Funded Project (Top 10)" =>   "fees-by-invoices-per-nonfunded-projects",
+            "24. Generated Invoices by Status per PI (Top 10)" =>               "fees-by-invoices-per-pi",
             //Pathologists Involved and number of projects
-            "21. Total Invoiced Amounts of Projects per Pathologist Involved (Top 10)" =>             "fees-by-invoices-per-projects-per-pathologist-involved",
-            "22. Total Invoiced Amounts of Funded Projects per Pathologist Involved (Top 10)" =>      "fees-by-invoices-per-funded-projects-per-pathologist-involved",
-            "23. Total Invoiced Amounts of Non-Funded Projects per Pathologist Involved (Top 10)" =>  "fees-by-invoices-per-nonfunded-projects-per-pathologist-involved",
+            "25. Total Invoiced Amounts of Projects per Pathologist Involved (Top 10)" =>             "fees-by-invoices-per-projects-per-pathologist-involved",
+            "26. Total Invoiced Amounts of Funded Projects per Pathologist Involved (Top 10)" =>      "fees-by-invoices-per-funded-projects-per-pathologist-involved",
+            "27. Total Invoiced Amounts of Non-Funded Projects per Pathologist Involved (Top 10)" =>  "fees-by-invoices-per-nonfunded-projects-per-pathologist-involved",
 
-            "24. Total Number of Projects per Type" => "projects-per-type",
-            "25. Total Number of Requests per Business Purpose" => "requests-per-business-purpose",
+            "28. Total Number of Projects per Type" => "projects-per-type",
+            "29. Total Number of Requests per Business Purpose" => "requests-per-business-purpose",
             "" => "",
             "" => "",
             "" => "",
@@ -896,6 +896,8 @@ class DashboardUtil
 
         //echo "startDate=".$startDate."<br>";
 
+        $chartName = $this->getChartTypeByValue($chartType);
+
         $chartsArray = null;
 
         ///////////// 1. Principle Investigators by Affiliation ///////////////////
@@ -943,7 +945,7 @@ class DashboardUtil
             $layoutArray = array(
                 'height' => $this->height,
                 'width' =>  $this->width,
-                'title' => "1. Principle Investigators by Affiliation"
+                'title' => $chartName //"1. Principle Investigators by Affiliation"
             );
 
             //$institutionAbbreviation = "WCM";
@@ -1006,7 +1008,7 @@ class DashboardUtil
             $filterArr['funded'] = null;
             //Projects per PI
             //                                           $dataArr,              $title,                                $type='pie', $layoutArray=null, $valuePrefixLabel=null
-            $chartsArray = $this->getChartByMultiArray( $piProjectCountTopArr, $filterArr, "2. Total number of projects per PI (Top 10)","pie",null," : ");
+            $chartsArray = $this->getChartByMultiArray( $piProjectCountTopArr, $filterArr, $chartName,"pie",null," : ");
         }
         ///////////////// EOF 2. Total number of projects (XXX) per PI (Top 5/10) (APPROVED & CLOSED) /////////////////
 
@@ -1042,7 +1044,7 @@ class DashboardUtil
             $showOther = $this->getOtherStr($showLimited,"PIs");
             $piFundedProjectCountTopArr = $this->getTopMultiArray($piFundedProjectCountArr,$showOther);
             $filterArr['funded'] = true;
-            $chartsArray = $this->getChartByMultiArray( $piFundedProjectCountTopArr, $filterArr, "3. Total number of Funded Projects per PI (Top 10)","pie",null," : ");
+            $chartsArray = $this->getChartByMultiArray( $piFundedProjectCountTopArr, $filterArr, $chartName,"pie",null," : ");
 
         }
         ///////////////// EOF 3. Total number of Funded Projects per PI (Top 10) /////////////////
@@ -1081,7 +1083,7 @@ class DashboardUtil
             $showOther = $this->getOtherStr($showLimited,"PIs");
             $piUnFundedProjectCountTopArr = $this->getTopMultiArray($piUnFundedProjectCountArr,$showOther);
             $filterArr['funded'] = false;
-            $chartsArray = $this->getChartByMultiArray( $piUnFundedProjectCountTopArr, $filterArr, "4. Total number of Non-Funded Projects per PI (Top 10)","pie",null," : ");
+            $chartsArray = $this->getChartByMultiArray( $piUnFundedProjectCountTopArr, $filterArr, $chartName,"pie",null," : ");
         }
         ///////////////// EOF 4. Total number of Non-Funded Projects per PI (Top 10) /////////////////
 
@@ -1123,9 +1125,9 @@ class DashboardUtil
 //            $filterArr['funded'] = null;
 //            $chartsArray = $this->getChartByMultiArray( $piProjectCountMultiTopArr, $filterArr, "2a. Total number of projects per Pathologist Involved (Top 10)","pie",null," : ");
 
-            $showOther = $this->getOtherStr($showLimited,"Pathologist Involved");
+            $showOther = $this->getOtherStr($showLimited,"pathologist involved");
             $pathologistProjectCountTopArr = $this->getTopArray($pathologistProjectCountArr,$showOther);
-            $chartsArray = $this->getChart($pathologistProjectCountTopArr, "2a. Total number of projects per Pathologist Involved (Top 10)",'pie',$layoutArray," : ");
+            $chartsArray = $this->getChart($pathologistProjectCountTopArr, $chartName,'pie',$layoutArray," : ");
 
         }
         ///////////////// EOF 2a. Total number of projects per Pathologist Involved (Top 10) /////////////////
@@ -1155,7 +1157,7 @@ class DashboardUtil
             $showOther = $this->getOtherStr($showLimited,"Pathologist Involved");
             $pathologistFundedProjectCountTopArr = $this->getTopArray($pathologistFundedProjectCountArr,$showOther);
             $filterArr['funded'] = true;
-            $chartsArray = $this->getChart($pathologistFundedProjectCountTopArr, "3a. Total number of Funded Projects per Pathologist Involved (Top 10)","pie",$layoutArray," : ");
+            $chartsArray = $this->getChart($pathologistFundedProjectCountTopArr, $chartName,"pie",$layoutArray," : ");
         }
         ///////////////// EOF 3a. Total number of Funded Projects per Pathologist Involved (Top 10) /////////////////
         // 4a. Total number of Non-Funded Projects per Pathologist Involved (Top 10)
@@ -1186,7 +1188,7 @@ class DashboardUtil
             $showOther = $this->getOtherStr($showLimited,"Pathologist Involved");
             $pathologistNonFundedProjectCountTopArr = $this->getTopArray($pathologistNonFundedProjectCountArr,$showOther);
             //$filterArr['funded'] = true;
-            $chartsArray = $this->getChart($pathologistNonFundedProjectCountTopArr, "4a. Total number of Non-Funded Projects per Pathologist Involved (Top 10)","pie",$layoutArray," : ");
+            $chartsArray = $this->getChart($pathologistNonFundedProjectCountTopArr, $chartName,"pie",$layoutArray," : ");
         }
         ///////////////// EOF 4a. Total number of Non-Funded Projects per Pathologist Involved (Top 10) /////////////////
 
@@ -1214,7 +1216,7 @@ class DashboardUtil
             $layoutArray = array(
                 'height' => $this->height,
                 'width' =>  $this->width,
-                'title' => "5. Total Number of Work Requests by Funding Source"
+                'title' => $chartName //"5. Total Number of Work Requests by Funding Source"
             );
 
             $labels = array('Funded'." : ".$fundedRequestCount,'Non-Funded'." : ".$notFundedRequestCount);
@@ -1264,7 +1266,7 @@ class DashboardUtil
             $showOther = $this->getOtherStr($showLimited,"Projects");
             $requestPerProjectTopArr = $this->getTopMultiArray($requestPerProjectArr,$showOther);
             $filterArr['funded'] = null;
-            $chartsArray = $this->getChartByMultiArray($requestPerProjectTopArr, $filterArr, "6. Total number of Requests per Project (Top 10)","pie",$layoutArray," : ");
+            $chartsArray = $this->getChartByMultiArray($requestPerProjectTopArr, $filterArr, $chartName,"pie",$layoutArray," : ");
         }
 
         //7. Total number of Requests per Funded Project (Top 10)
@@ -1296,7 +1298,7 @@ class DashboardUtil
             $showOther = $this->getOtherStr($showLimited,"Projects");
             $fundedRequestPerProjectTopArr = $this->getTopMultiArray($fundedRequestPerProjectArr,$showOther);
             $filterArr['funded'] = true;
-            $chartsArray = $this->getChartByMultiArray( $fundedRequestPerProjectTopArr, $filterArr, "7. Total number of Requests per Funded Project (Top 10)","pie",$layoutArray," : ");
+            $chartsArray = $this->getChartByMultiArray( $fundedRequestPerProjectTopArr, $filterArr, $chartName,"pie",$layoutArray," : ");
         }
 
         //8. Total number of Requests per Non-Funded Project (Top 10)
@@ -1329,7 +1331,7 @@ class DashboardUtil
             $showOther = $this->getOtherStr($showLimited,"Projects");
             $unFundedRequestPerProjectTopArr = $this->getTopMultiArray($unFundedRequestPerProjectArr,$showOther);
             $filterArr['funded'] = false;
-            $chartsArray = $this->getChartByMultiArray( $unFundedRequestPerProjectTopArr, $filterArr, "8. Total number of Requests per Non-Funded Project (Top 10)","pie",$layoutArray," : ");
+            $chartsArray = $this->getChartByMultiArray( $unFundedRequestPerProjectTopArr, $filterArr, $chartName,"pie",$layoutArray," : ");
         }
 
         //Work request statistics: Products/Services
@@ -1362,7 +1364,7 @@ class DashboardUtil
                 'height' => $this->height,
                 'width' => $this->width,
             );
-            $chartsArray = $this->getChart($quantityCountByCategoryTopArr, "9. TRP Service Productivity by Products/Services (Top 10)",'pie',$layoutArray," : ");
+            $chartsArray = $this->getChart($quantityCountByCategoryTopArr, $chartName,'pie',$layoutArray," : ");
 
         }
 
@@ -1393,7 +1395,7 @@ class DashboardUtil
 
             $showOther = $this->getOtherStr($showLimited,"Projects");
             $fundedQuantityCountByCategoryTopArr = $this->getTopArray($fundedQuantityCountByCategoryArr,$showOther);
-            $chartsArray = $this->getChart($fundedQuantityCountByCategoryTopArr, "10. TRP Service Productivity for Funded Projects (Top 10)",'pie',$layoutArray," : ");
+            $chartsArray = $this->getChart($fundedQuantityCountByCategoryTopArr, $chartName,'pie',$layoutArray," : ");
         }
 
         //11. TRP Service Productivity for Non-Funded Projects (Top 10)
@@ -1425,7 +1427,7 @@ class DashboardUtil
 
             $showOther = $this->getOtherStr($showLimited,"Projects");
             $unFundedQuantityCountByCategoryTopArr = $this->getTopArray($unFundedQuantityCountByCategoryArr,$showOther);
-            $chartsArray = $this->getChart($unFundedQuantityCountByCategoryTopArr, "11. TRP Service Productivity for Non-Funded Projects (Top 10)",'pie',$layoutArray," : ");
+            $chartsArray = $this->getChart($unFundedQuantityCountByCategoryTopArr, $chartName,'pie',$layoutArray," : ");
         }
 
         //11a. TRP Service Productivity by Products/Services
@@ -1468,7 +1470,7 @@ class DashboardUtil
             $combinedTrpData = array();
             $combinedTrpData['Funded'] = $fundedQuantityCountByCategoryTopArr;  //$fundedQuantityCountByCategoryArr;
             $combinedTrpData['Not-Funded'] = $unFundedQuantityCountByCategoryTopArr;    //$unFundedQuantityCountByCategoryArr;
-            $chartsArray = $this->getStackedChart($combinedTrpData, "11a. TRP Service Productivity by Products/Services", "stack");
+            $chartsArray = $this->getStackedChart($combinedTrpData, $chartName, "stack");
         }
 
         //Productivity statistics based on work requests
@@ -1502,7 +1504,7 @@ class DashboardUtil
             $layoutArray = array(
                 'height' => $this->height,
                 'width' =>  $this->width,
-                'title' => "12. Total Fees by Work Requests (Total $".$subtotalFees.")"
+                'title' => $chartName. " (Total $".$subtotalFees.")"
             );
 
             $fundedTotalFees = $this->getNumberFormat($fundedTotalFees);
@@ -1567,7 +1569,7 @@ class DashboardUtil
 
             $showOther = $this->getOtherStr($showLimited,"Projects");
             $fundedTotalFeesByRequestTopArr = $this->getTopArray($fundedTotalFeesByRequestArr,$showOther);
-            $chartsArray = $this->getChart($fundedTotalFeesByRequestTopArr, "13. Total Fees per Funded Project (Top 10)",'pie',$layoutArray," : $");
+            $chartsArray = $this->getChart($fundedTotalFeesByRequestTopArr, $chartName,'pie',$layoutArray," : $");
         }
 
         //14. Total Fees per Non-Funded Project (Top 10)
@@ -1611,7 +1613,7 @@ class DashboardUtil
 
             $showOther = $this->getOtherStr($showLimited,"Projects");
             $unFundedTotalFeesByRequestTopArr = $this->getTopArray($unFundedTotalFeesByRequestArr,$showOther);
-            $chartsArray = $this->getChart($unFundedTotalFeesByRequestTopArr, "14. Total Fees per Non-Funded Project (Top 10)",'pie',$layoutArray," : $");
+            $chartsArray = $this->getChart($unFundedTotalFeesByRequestTopArr, $chartName,'pie',$layoutArray," : $");
         }
 
         //15. Total Fees per Investigator (Top 10)
@@ -1645,7 +1647,7 @@ class DashboardUtil
 
             $showOther = $this->getOtherStr($showLimited,"Investigators");
             $totalFeesByInvestigatorTopArr = $this->getTopArray($totalFeesByInvestigatorArr,$showOther);
-            $chartsArray = $this->getChart($totalFeesByInvestigatorTopArr, "15. Total Fees per Investigator (Top 10)",'pie',$layoutArray," : $");
+            $chartsArray = $this->getChart($totalFeesByInvestigatorTopArr, $chartName,'pie',$layoutArray," : $");
         }
 
         //16. Total Fees per Investigator (Funded) (Top 10)
@@ -1679,7 +1681,7 @@ class DashboardUtil
 
             $showOther = $this->getOtherStr($showLimited,"Investigators");
             $fundedTotalFeesByInvestigatorTopArr = $this->getTopArray($fundedTotalFeesByInvestigatorArr,$showOther);
-            $chartsArray = $this->getChart($fundedTotalFeesByInvestigatorTopArr, "16. Total Fees per Investigator (Funded) (Top 10)",'pie',$layoutArray," : $");
+            $chartsArray = $this->getChart($fundedTotalFeesByInvestigatorTopArr, $chartName,'pie',$layoutArray," : $");
         }
 
         //17. Total Fees per Investigator (Non-Funded) (Top 10)
@@ -1716,7 +1718,7 @@ class DashboardUtil
 
             $showOther = $this->getOtherStr($showLimited,"Investigators");
             $unFundedTotalFeesByInvestigatorTopArr = $this->getTopArray($unFundedTotalFeesByInvestigatorArr,$showOther);
-            $chartsArray = $this->getChart($unFundedTotalFeesByInvestigatorTopArr, "17. Total Fees per Investigator (Non-Funded) (Top 10)",'pie',$layoutArray," : $");
+            $chartsArray = $this->getChart($unFundedTotalFeesByInvestigatorTopArr, $chartName,'pie',$layoutArray," : $");
         }
 
         //18. Generated Invoices by Status from Funded Projects
@@ -1757,7 +1759,8 @@ class DashboardUtil
             $layoutArray = array(
                 'height' => $this->height,
                 'width' =>  $this->width,
-                'title' => "18. Generated Invoices from Funded Projects (Total invoiced $".$totalThisInvoiceVerificationFees."; Total invoices: ".$totalInvoices.", 'Paid in Full' invoices: ".$paidInvoices.")"
+                //'title' => "18. Generated Invoices from Funded Projects (Total invoiced $".$totalThisInvoiceVerificationFees."; Total invoices: ".$totalInvoices.", 'Paid in Full' invoices: ".$paidInvoices.")"
+                'title' => $chartName." (Total invoiced $".$totalThisInvoiceVerificationFees."; Total invoices: ".$totalInvoices.", 'Paid in Full' invoices: ".$paidInvoices.")"
             );
 
             $labels = array('Paid'.' : $'.$totalFundedPaidFees,'Unpaid (Due)'.' : $'.$totalFundedDueFees);
@@ -1829,7 +1832,7 @@ class DashboardUtil
             $invoicesFeesByProjectTopArr = $this->getTopArray($invoicesFeesByProjectArr,$showOther);
             //merge two to attach fees to label
             $invoicesByProjectTopArr = $this->attachSecondValueToFirstLabel($invoicesByProjectTopArr,$invoicesFeesByProjectTopArr," : $");
-            $chartsArray = $this->getChart($invoicesByProjectTopArr, "19. Generated Invoices by Status per Funded Project (Top 10)",'pie',$layoutArray);
+            $chartsArray = $this->getChart($invoicesByProjectTopArr, $chartName,'pie',$layoutArray);
         }
 
         //20. Generated Invoices by Status per PI (Top 10)
@@ -1901,7 +1904,7 @@ class DashboardUtil
             );
             $showOther = $this->getOtherStr($showLimited,"PIs");
             $invoicesFeesByPiArrTop = $this->getTopArray($invoicesFeesByPiArr,$showOther,$descriptionArr);
-            $chartsArray = $this->getChart($invoicesFeesByPiArrTop, "20. Generated Invoices by Status per PI (Top 10)",'pie',$layoutArray);
+            $chartsArray = $this->getChart($invoicesFeesByPiArrTop, $chartName,'pie',$layoutArray);
         }
 
         //"21. Total Invoiced Amounts of Projects per Pathologist Involved (Top 10)" =>             "fees-by-invoices-per-projects-per-pathologist-involved",
@@ -1958,7 +1961,7 @@ class DashboardUtil
             );
             $showOther = $this->getOtherStr($showLimited,"Pathologist Involved");
             $invoicesFeesByPathologistArrTop = $this->getTopArray($invoicesFeesByPathologistArr,$showOther,$descriptionArr);
-            $chartsArray = $this->getChart($invoicesFeesByPathologistArrTop, "21. Total Invoiced Amounts of Projects per Pathologist Involved (Top 10)",'pie',$layoutArray);
+            $chartsArray = $this->getChart($invoicesFeesByPathologistArrTop, $chartName,'pie',$layoutArray);
         }
 
         //"22. Total Invoiced Amounts of Funded Projects per Pathologist Involved (Top 10)" =>      "fees-by-invoices-per-funded-projects-per-pathologist-involved"
@@ -2017,7 +2020,7 @@ class DashboardUtil
             );
             $showOther = $this->getOtherStr($showLimited,"Pathologist Involved");
             $invoicesFeesByPathologistArrTop = $this->getTopArray($invoicesFeesByPathologistArr,$showOther,$descriptionArr);
-            $chartsArray = $this->getChart($invoicesFeesByPathologistArrTop, "22. Total Invoiced Amounts of Funded Projects per Pathologist Involved (Top 10)",'pie',$layoutArray);
+            $chartsArray = $this->getChart($invoicesFeesByPathologistArrTop, $chartName,'pie',$layoutArray);
         }
         ///////////////// EOF "22. Total Invoiced Amounts of Funded Projects per Pathologist Involved (Top 10)" /////////////////
 
@@ -2079,7 +2082,7 @@ class DashboardUtil
             );
             $showOther = $this->getOtherStr($showLimited,"Pathologist Involved");
             $invoicesFeesByPathologistArrTop = $this->getTopArray($invoicesFeesByPathologistArr,$showOther,$descriptionArr);
-            $chartsArray = $this->getChart($invoicesFeesByPathologistArrTop, "23. Total Invoiced Amounts of Non-Funded Projects per Pathologist Involved (Top 10)",'pie',$layoutArray);
+            $chartsArray = $this->getChart($invoicesFeesByPathologistArrTop, $chartName,'pie',$layoutArray);
         }
         ///////////// EOF "23. Total Invoiced Amounts of Non-Funded Projects per Pathologist Involved (Top 10)" /////////////
 
@@ -2112,7 +2115,7 @@ class DashboardUtil
 
             $showOther = $this->getOtherStr($showLimited,"Project Types");
             $projectTypeArrTop = $this->getTopMultiArray($projectTypeArr,$showOther);
-            $chartsArray = $this->getChartByMultiArray( $projectTypeArrTop, $filterArr, "24. Total Number of Projects per Type (Top 10)","pie",null," : ");
+            $chartsArray = $this->getChartByMultiArray( $projectTypeArrTop, $filterArr, $chartName,"pie",null," : ");
         }
 
 
@@ -2138,7 +2141,7 @@ class DashboardUtil
 
             $showOther = $this->getOtherStr($showLimited,"Business Purposes");
             $requestBusinessPurposeArrTop = $this->getTopArray($requestBusinessPurposeArr,$showOther);
-            $chartsArray = $this->getChart($requestBusinessPurposeArrTop, "25. Total Number of Requests per Business Purpose (Top 10)",'pie',$layoutArray," : ");
+            $chartsArray = $this->getChart($requestBusinessPurposeArrTop, $chartName,'pie',$layoutArray," : ");
         }
 
         if( $chartType == "" ) {

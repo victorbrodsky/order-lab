@@ -278,15 +278,15 @@
                         <ul class="dropdown-menu">
 
                             <li>
-                                <a href="{{ path(translationalresearch_sitename~'_workflow_show',{'type':'project'}) }}">Project Request Approval Status Progress</a>
+                                <a href="{{ path(translationalresearch_sitename~'_workflow_show',{'type':'project-requests'}) }}">Project Request Approval Status Progress</a>
                             </li>
 
                             <li>
-                                <a href="{{ path(translationalresearch_sitename~'_workflow_show',{'type':'request-billing'}) }}">Work Request Billing Progress</a>
+                                <a href="{{ path(translationalresearch_sitename~'_workflow_show',{'type':'work-requests-billing'}) }}">Work Request Billing Progress</a>
                             </li>
 
                             <li>
-                                <a href="{{ path(translationalresearch_sitename~'_workflow_show',{'type':'request-work-progress'}) }}">Work Request Completion Progress</a>
+                                <a href="{{ path(translationalresearch_sitename~'_workflow_show',{'type':'work-requests-work-progress'}) }}">Work Request Completion Progress</a>
                             </li>
 
                             <hr style="margin-top: 10px; margin-bottom: 10px;">
@@ -321,7 +321,7 @@
 
                                 <li>
                                     <a href="{{ path(translationalresearch_sitename~'_dashboard_choices',{'filter[startDate]':startDate,'filter[endDate]':endDate,'filter[projectSpecialty]':0}) }}"
-                                    >Statistics</a>
+                                    >All statistics</a>
                                 </li>
 
                                 {#<hr>#}

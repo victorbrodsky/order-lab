@@ -406,7 +406,7 @@
 
                             <li>
                                 <a href="{{ path('translationalresearch_download_projects_excel',{'ids':project.id}) }}">
-                                    <i class="fa fa-file-excel-o"></i> Export Project Summary to Excel</a>
+                                    <i class="fa fa-file-excel-o"></i> Export project summary to a spreadsheet</a>
                             </li>
 
                             {#{% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}#}
@@ -436,7 +436,7 @@
                                 <li class="divider"></li>
                                 <li>
                                     <a href="{{ path(translationalresearch_sitename~'_request_new', { 'id': project.id }) }}"
-                                       >New Work Request</a>
+                                       >New work request</a>
                                 </li>
                             {% endif %}
                             {#{% if isRequestCanBeCreated == -1 %}#}

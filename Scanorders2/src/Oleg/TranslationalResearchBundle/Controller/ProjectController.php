@@ -176,6 +176,7 @@ class ProjectController extends Controller
         $transresUsers = $transresUtil->getAppropriatedUsers();
         $stateChoiceArr = $transresUtil->getStateChoisesArr();
         $stateChoiceArr["All except Drafts"] = "All-except-Drafts";
+        $stateChoiceArr["All except Drafts and Canceled"] = "All-except-Drafts-and-Canceled";
         //$stateChoiceArr["Closed"] = "Closed";
         //$stateChoiceArr["Canceled"] = "Canceled";
         //$defaultStatesArr = $transresUtil->getDefaultStatesArr();
@@ -184,7 +185,7 @@ class ProjectController extends Controller
             'stateChoiceArr' => $stateChoiceArr,
             //'defaultStatesArr' => $defaultStatesArr,
             'projectSpecialtyAllowedArr' => $projectSpecialtyAllowedArr,
-            'defaultStatesArr' => array("All-except-Drafts"),
+            'defaultStatesArr' => array("All-except-Drafts-and-Canceled"),
             //'defaultStatesArr' => array("All-except-Drafts","Canceled","Closed"),
             'toImplicitExpDate' => null,
             'fromImplicitExpDate' => null
@@ -338,10 +339,13 @@ class ProjectController extends Controller
             if( in_array("All-except-Drafts", $states )) {
                 $allExceptDraft = " OR project.state != 'draft' OR project.state IS NULL";
             }
+            if( in_array("All-except-Drafts-and-Canceled", $states )) {
+                $allExceptDraft = " OR (project.state != 'draft' AND project.state != 'canceled') OR project.state IS NULL";
+            }
             $dql->andWhere("project.state IN (:states)" . $allExceptDraft);
             $dqlParameters["states"] = $states;
 
-            if( count($states) == 1 && $states[0] == "All-except-Drafts" ) {
+            if( count($states) == 1 && $states[0] == "All-except-Drafts-and-Canceled" ) {
                 //as regular filter
             } else {
                 $advancedFilter++;

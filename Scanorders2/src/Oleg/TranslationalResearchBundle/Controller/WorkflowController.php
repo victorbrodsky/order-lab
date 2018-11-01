@@ -74,17 +74,17 @@ class WorkflowController extends Controller
 
         $filename = null;
 
-        if( $type == "project" ) {
+        if( $type == "project-requests" ) {
             $title = "Project Workflow";
             $filename = "project.png";
             $this->windowsCmdRunAsync($type,$filename);
         }
-        if( $type == "request-billing" ) {
+        if( $type == "work-requests-billing" ) {
             $title = "Work Request Billing Progress Workflow";
             $filename = "request_billing.png";
             $this->windowsCmdRunAsync($type,$filename);
         }
-        if( $type == "request-work-progress" ) {
+        if( $type == "work-requests-work-progress" ) {
             $title = "Work Request Completion Progress Workflow";
             $filename = "request_progress.png";
             $this->windowsCmdRunAsync($type,$filename);
