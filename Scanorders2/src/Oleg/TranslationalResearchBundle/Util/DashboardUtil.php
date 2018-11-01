@@ -62,17 +62,18 @@ class DashboardUtil
         $chartTypes = array(
             //PI/Project statistics
             "1. Principle Investigators by Affiliation" =>                      "pi-by-affiliation",
-            "2. Total number of projects per PI (Top 10)" =>                    "projects-per-pi",
-            "3. Total number of Funded Projects per PI (Top 10)" =>             "funded-projects-per-pi",
-            "4. Total number of Non-Funded Projects per PI (Top 10)" =>         "nonfunded-projects-per-pi",
-            "2a. Total number of projects per Pathologist Involved (Top 10)" =>             "projects-per-pathologist-involved",
-            "3a. Total number of Funded Projects per Pathologist Involved (Top 10)" =>      "funded-projects-per-pathologist-involved",
-            "4a. Total number of Non-Funded Projects per Pathologist Involved (Top 10)" =>  "nonfunded-projects-per-pathologist-involved",
+            "2. Total Number of Projects per PI (Top 10)" =>                    "projects-per-pi",
+            "3. Total Number of Funded Projects per PI (Top 10)" =>             "funded-projects-per-pi",
+            "4. Total Number of Non-Funded Projects per PI (Top 10)" =>         "nonfunded-projects-per-pi",
+            //Pathologists Involved and number of projects
+            "2a. Total Number of Projects per Pathologist Involved (Top 10)" =>             "projects-per-pathologist-involved",
+            "3a. Total Number of Funded Projects per Pathologist Involved (Top 10)" =>      "funded-projects-per-pathologist-involved",
+            "4a. Total Number of Non-Funded Projects per Pathologist Involved (Top 10)" =>  "nonfunded-projects-per-pathologist-involved",
             //Work request statistics
             "5. Total Number of Work Requests by Funding Source" =>             "requests-by-funding-source",
-            "6. Total number of Requests per Project (Top 10)" =>               "requests-per-project",
-            "7. Total number of Requests per Funded Project (Top 10)" =>        "requests-per-funded-projects",
-            "8. Total number of Requests per Non-Funded Project (Top 10)" =>    "requests-per-nonfunded-projects",
+            "6. Total Number of Requests per Project (Top 10)" =>               "requests-per-project",
+            "7. Total Number of Requests per Funded Project (Top 10)" =>        "requests-per-funded-projects",
+            "8. Total Number of Requests per Non-Funded Project (Top 10)" =>    "requests-per-nonfunded-projects",
             //   Products/Services
             "9. TRP Service Productivity by Products/Services (Top 10)" =>      "service-productivity-by-service",
             "10. TRP Service Productivity for Funded Projects (Top 10)" =>      "service-productivity-by-service-per-funded-projects",
@@ -89,6 +90,10 @@ class DashboardUtil
             "18. Generated Invoices by Status from Funded Projects" =>          "fees-by-invoices-per-funded-projects",
             "19. Generated Invoices by Status per Funded Project (Top 10)" =>   "fees-by-invoices-per-nonfunded-projects",
             "20. Generated Invoices by Status per PI (Top 10)" =>               "fees-by-invoices-per-pi",
+            //Pathologists Involved and number of projects
+            "21. Total Invoiced Amounts of Projects per Pathologist Involved (Top 10)" =>             "fees-by-invoices-per-projects-per-pathologist-involved",
+            "22. Total Invoiced Amounts of Funded Projects per Pathologist Involved (Top 10)" =>      "fees-by-invoices-per-funded-projects-per-pathologist-involved",
+            "23. Total Invoiced Amounts of Non-Funded Projects per Pathologist Involved (Top 10)" =>  "fees-by-invoices-per-nonfunded-projects-per-pathologist-involved",
 
             "" => "",
             "" => "",
@@ -1868,17 +1873,189 @@ class DashboardUtil
             $chartsArray = $this->getChart($invoicesFeesByPiArrTop, "20. Generated Invoices by Status per PI (Top 10)",'pie',$layoutArray);
         }
 
-        if( $chartType == "" ) {
-            
+        //"21. Total Invoiced Amounts of Projects per Pathologist Involved (Top 10)" =>             "fees-by-invoices-per-projects-per-pathologist-involved",
+        if( $chartType == "fees-by-invoices-per-projects-per-pathologist-involved" ) {
+            $invoicesFeesByPathologistArr = array();
+            $invoicePaidFeeArr = array();
+            $invoiceDueFeeArr = array();
+
+            //get latest invoices Excluding Work requests with status=Canceled and Draft
+            $invoices = $this->getInvoicesByFilter($startDate, $endDate, $projectSpecialtyObjects);
+            foreach( $invoices as $invoice ) {
+
+                $totalThisInvoiceFee = intval($invoice->getTotal());
+                $paidThisInvoiceFee = intval($invoice->getPaid());
+                $dueThisInvoiceFee = intval($invoice->getDue());
+
+                $transRequest = $invoice->getTransresRequest();
+                $project = $transRequest->getProject();
+                $pathologists = $project->getPathologists();
+
+                foreach($pathologists as $pathologist) {
+                    $pathologistIndex = $pathologist->getUsernameOptimal();
+
+                    //Total fees
+                    if (isset($invoicesFeesByPathologistArr[$pathologistIndex])) {
+                        $totalFee = $invoicesFeesByPathologistArr[$pathologistIndex] + $totalThisInvoiceFee;
+                    } else {
+                        $totalFee = $totalThisInvoiceFee;
+                    }
+                    $invoicesFeesByPathologistArr[$pathologistIndex] = $totalFee;
+
+                    //paid
+                    if (isset($invoicePaidFeeArr[$pathologistIndex])) {
+                        $totalFee = $invoicePaidFeeArr[$pathologistIndex] + $paidThisInvoiceFee;
+                    } else {
+                        $totalFee = $paidThisInvoiceFee;
+                    }
+                    $invoicePaidFeeArr[$pathologistIndex] = $totalFee;
+
+                    //unpaid
+                    if (isset($invoiceDueFeeArr[$pathologistIndex])) {
+                        $totalFee = $invoiceDueFeeArr[$pathologistIndex] + $dueThisInvoiceFee;
+                    } else {
+                        $totalFee = $dueThisInvoiceFee;
+                    }
+                    $invoiceDueFeeArr[$pathologistIndex] = $totalFee;
+                }
+
+            }//foreach invoices
+
+            //20. Generated Invoices by Status per PI (Top 10)
+            $descriptionArr = array(
+                array("paid $"," : $","limegreen",$invoicePaidFeeArr),
+                array("due $"," : $","red",$invoiceDueFeeArr)
+            );
+            $showOther = $this->getOtherStr($showLimited,"Pathologist Involved");
+            $invoicesFeesByPathologistArrTop = $this->getTopArray($invoicesFeesByPathologistArr,$showOther,$descriptionArr);
+            $chartsArray = $this->getChart($invoicesFeesByPathologistArrTop, "21. Total Invoiced Amounts of Projects per Pathologist Involved (Top 10)",'pie',$layoutArray);
         }
 
-        if( $chartType == "" ) {
+        //"22. Total Invoiced Amounts of Funded Projects per Pathologist Involved (Top 10)" =>      "fees-by-invoices-per-funded-projects-per-pathologist-involved"
+        if( $chartType == "fees-by-invoices-per-funded-projects-per-pathologist-involved" ) {
+            $invoicesFeesByPathologistArr = array();
+            $invoicePaidFeeArr = array();
+            $invoiceDueFeeArr = array();
 
+            //get latest invoices Excluding Work requests with status=Canceled and Draft
+            $invoices = $this->getInvoicesByFilter($startDate, $endDate, $projectSpecialtyObjects);
+            foreach( $invoices as $invoice ) {
+
+                $totalThisInvoiceFee = intval($invoice->getTotal());
+                $paidThisInvoiceFee = intval($invoice->getPaid());
+                $dueThisInvoiceFee = intval($invoice->getDue());
+
+                $transRequest = $invoice->getTransresRequest();
+                $project = $transRequest->getProject();
+                $pathologists = $project->getPathologists();
+
+                foreach($pathologists as $pathologist) {
+
+                    if ($transRequest->getFundedAccountNumber()) {
+                        $pathologistIndex = $pathologist->getUsernameOptimal();
+
+                        //Total fees
+                        if (isset($invoicesFeesByPathologistArr[$pathologistIndex])) {
+                            $totalFee = $invoicesFeesByPathologistArr[$pathologistIndex] + $totalThisInvoiceFee;
+                        } else {
+                            $totalFee = $totalThisInvoiceFee;
+                        }
+                        $invoicesFeesByPathologistArr[$pathologistIndex] = $totalFee;
+
+                        //paid
+                        if (isset($invoicePaidFeeArr[$pathologistIndex])) {
+                            $totalFee = $invoicePaidFeeArr[$pathologistIndex] + $paidThisInvoiceFee;
+                        } else {
+                            $totalFee = $paidThisInvoiceFee;
+                        }
+                        $invoicePaidFeeArr[$pathologistIndex] = $totalFee;
+
+                        //unpaid
+                        if (isset($invoiceDueFeeArr[$pathologistIndex])) {
+                            $totalFee = $invoiceDueFeeArr[$pathologistIndex] + $dueThisInvoiceFee;
+                        } else {
+                            $totalFee = $dueThisInvoiceFee;
+                        }
+                        $invoiceDueFeeArr[$pathologistIndex] = $totalFee;
+                    }
+                }
+
+            }//foreach invoices
+
+            //20. Generated Invoices by Status per PI (Top 10)
+            $descriptionArr = array(
+                array("paid $"," : $","limegreen",$invoicePaidFeeArr),
+                array("due $"," : $","red",$invoiceDueFeeArr)
+            );
+            $showOther = $this->getOtherStr($showLimited,"Pathologist Involved");
+            $invoicesFeesByPathologistArrTop = $this->getTopArray($invoicesFeesByPathologistArr,$showOther,$descriptionArr);
+            $chartsArray = $this->getChart($invoicesFeesByPathologistArrTop, "22. Total Invoiced Amounts of Funded Projects per Pathologist Involved (Top 10)",'pie',$layoutArray);
         }
+        ///////////////// EOF "22. Total Invoiced Amounts of Funded Projects per Pathologist Involved (Top 10)" /////////////////
 
-        if( $chartType == "" ) {
+        //"23. Total Invoiced Amounts of Non-Funded Projects per Pathologist Involved (Top 10)" =>  "fees-by-invoices-per-nonfunded-projects-per-pathologist-involved"
+        if( $chartType == "fees-by-invoices-per-nonfunded-projects-per-pathologist-involved" ) {
+            $invoicesFeesByPathologistArr = array();
+            $invoicePaidFeeArr = array();
+            $invoiceDueFeeArr = array();
 
+            //get latest invoices Excluding Work requests with status=Canceled and Draft
+            $invoices = $this->getInvoicesByFilter($startDate, $endDate, $projectSpecialtyObjects);
+            foreach( $invoices as $invoice ) {
+
+                $totalThisInvoiceFee = intval($invoice->getTotal());
+                $paidThisInvoiceFee = intval($invoice->getPaid());
+                $dueThisInvoiceFee = intval($invoice->getDue());
+
+                $transRequest = $invoice->getTransresRequest();
+                $project = $transRequest->getProject();
+                $pathologists = $project->getPathologists();
+
+                foreach($pathologists as $pathologist) {
+
+                    if( $transRequest->getFundedAccountNumber() ) {
+                        //do nothing
+                    } else {
+                        $pathologistIndex = $pathologist->getUsernameOptimal();
+
+                        //Total fees
+                        if (isset($invoicesFeesByPathologistArr[$pathologistIndex])) {
+                            $totalFee = $invoicesFeesByPathologistArr[$pathologistIndex] + $totalThisInvoiceFee;
+                        } else {
+                            $totalFee = $totalThisInvoiceFee;
+                        }
+                        $invoicesFeesByPathologistArr[$pathologistIndex] = $totalFee;
+
+                        //paid
+                        if (isset($invoicePaidFeeArr[$pathologistIndex])) {
+                            $totalFee = $invoicePaidFeeArr[$pathologistIndex] + $paidThisInvoiceFee;
+                        } else {
+                            $totalFee = $paidThisInvoiceFee;
+                        }
+                        $invoicePaidFeeArr[$pathologistIndex] = $totalFee;
+
+                        //unpaid
+                        if (isset($invoiceDueFeeArr[$pathologistIndex])) {
+                            $totalFee = $invoiceDueFeeArr[$pathologistIndex] + $dueThisInvoiceFee;
+                        } else {
+                            $totalFee = $dueThisInvoiceFee;
+                        }
+                        $invoiceDueFeeArr[$pathologistIndex] = $totalFee;
+                    }
+                }
+
+            }//foreach invoices
+
+            //20. Generated Invoices by Status per PI (Top 10)
+            $descriptionArr = array(
+                array("paid $"," : $","limegreen",$invoicePaidFeeArr),
+                array("due $"," : $","red",$invoiceDueFeeArr)
+            );
+            $showOther = $this->getOtherStr($showLimited,"Pathologist Involved");
+            $invoicesFeesByPathologistArrTop = $this->getTopArray($invoicesFeesByPathologistArr,$showOther,$descriptionArr);
+            $chartsArray = $this->getChart($invoicesFeesByPathologistArrTop, "23. Total Invoiced Amounts of Non-Funded Projects per Pathologist Involved (Top 10)",'pie',$layoutArray);
         }
+        ///////////// EOF "23. Total Invoiced Amounts of Non-Funded Projects per Pathologist Involved (Top 10)" /////////////
 
         if( $chartType == "" ) {
 
