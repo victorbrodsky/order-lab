@@ -2075,8 +2075,8 @@ class DashboardUtil
 
         }
 
-        //$chartsArray['error'] = false;
-        //$chartsArray['warning'] = false;
+
+
         //$chartsArray = array(); //testing
         //$chartsArray = null; //testing
 

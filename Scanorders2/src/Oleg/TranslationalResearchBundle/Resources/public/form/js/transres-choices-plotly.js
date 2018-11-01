@@ -11,6 +11,9 @@ function transresAddNewLine() {
 function transresGetCharts() {
     console.log("get charts");
 
+    var l = Ladda.create($('#filter-btn').get(0));
+    l.start();
+
     document.getElementById("charts").innerHTML = "";
 
     var startDate = $("#filter_startDate").val();
@@ -65,6 +68,7 @@ function transresGetCharts() {
 
     }
 
+    l.stop();
 }
 
 function transresAddChart(chartIndex,chartData) {
@@ -84,46 +88,39 @@ function transresAddChart(chartIndex,chartData) {
         return false;
     }
 
-    if( chartData['error'] ) {
-        //console.log("newline");
-        transresAddErrorLine(chartData['error'],'error');
-    } else {
 
-        var divId = 'chart-' + chartIndex;
-        var div = document.createElement("div");
-        div.style.float = "left";
-        div.style.margin = "10px";
-        div.setAttribute('id', divId);
-        document.getElementById("charts").appendChild(div);
+    var divId = 'chart-' + chartIndex;
+    var div = document.createElement("div");
+    div.style.float = "left";
+    div.style.margin = "10px";
+    div.setAttribute('id', divId);
+    document.getElementById("charts").appendChild(div);
 
-        var layout = chartData['layout'];
-        var data = chartData['data'];
+    var layout = chartData['layout'];
+    var data = chartData['data'];
 
-        console.log("data:");
-        console.log(data);
+    console.log("data:");
+    console.log(data);
 
-        Plotly.newPlot(divId, data, layout);
+    Plotly.newPlot(divId, data, layout);
 
-        if( 1 ) {
-            var myPlot = document.getElementById(divId);
-            myPlot.on('plotly_click', function(data){
-                //console.log("data:");
-                //console.log(data);
-                var index = 0;
-                var link = null;
-                for(var i=0; i < data.points.length; i++){
-                    index = data.points[i].i;
-                    if( data.points[i].data.links ) {
-                        link = data.points[i].data.links[index];
-                    }
-                }
-                //alert('Closest point clicked:\n\n'+pts);
-                if( link ) {
-                    window.open(link);
-                }
-            });
+    var myPlot = document.getElementById(divId);
+    myPlot.on('plotly_click', function(data){
+        //console.log("data:");
+        //console.log(data);
+        var index = 0;
+        var link = null;
+        for(var i=0; i < data.points.length; i++){
+            index = data.points[i].i;
+            if( data.points[i].data.links ) {
+                link = data.points[i].data.links[index];
+            }
         }
-    }
+        //alert('Closest point clicked:\n\n'+pts);
+        if( link ) {
+            window.open(link);
+        }
+    });
 }
 
 function transresAddErrorLine( msg, type ) {

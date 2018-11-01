@@ -44,7 +44,7 @@
                 {% endif %}
             </div>
             <div class="col-xs-1">
-                <button id="filter-btn" type="button" class="btn btn-default" onclick="transresGetCharts()">Filter</button>
+                <button id="filter-btn" type="button" class="btn btn-default" onclick="transresGetCharts()" data-spinner-color="{{ spinnerColor }}">Filter</button>
             </div>
         </div>
         {{ form_end(filterform) }}

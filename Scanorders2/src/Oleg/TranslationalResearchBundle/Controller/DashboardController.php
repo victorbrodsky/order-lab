@@ -60,7 +60,8 @@ class DashboardController extends Controller
         return array(
             'title' => "TRP STATISTICS",
             'filterform' => $filterform->createView(),
-            'chartsArray' => array()
+            'chartsArray' => array(),
+            'spinnerColor' => '#85c1e9'
         );
     }
 
