@@ -65,6 +65,9 @@ class DashboardUtil
             "2. Total number of projects per PI (Top 10)" =>                    "projects-per-pi",
             "3. Total number of Funded Projects per PI (Top 10)" =>             "funded-projects-per-pi",
             "4. Total number of Non-Funded Projects per PI (Top 10)" =>         "nonfunded-projects-per-pi",
+            "2a. Total number of projects per Pathologist Involved (Top 10)" =>             "projects-per-pathologist-involved",
+            "3a. Total number of Funded Projects per Pathologist Involved (Top 10)" =>      "funded-projects-per-pathologist-involved",
+            "4a. Total number of Non-Funded Projects per Pathologist Involved (Top 10)" =>  "nonfunded-projects-per-pathologist-involved",
             //Work request statistics
             "5. Total Number of Work Requests by Funding Source" =>             "requests-by-funding-source",
             "6. Total number of Requests per Project (Top 10)" =>               "requests-per-project",
@@ -967,8 +970,7 @@ class DashboardUtil
             $filterArr['funded'] = null;
             //Projects per PI
             //                                           $dataArr,              $title,                                $type='pie', $layoutArray=null, $valuePrefixLabel=null
-            $chartsArray = $this->getChartByMultiArray( $piProjectCountTopArr, $filterArr, "2. Total number of projects per PI (Top 10)","pie",null," : "); // addChart(
-
+            $chartsArray = $this->getChartByMultiArray( $piProjectCountTopArr, $filterArr, "2. Total number of projects per PI (Top 10)","pie",null," : ");
         }
         ///////////////// EOF 2. Total number of projects (XXX) per PI (Top 5/10) (APPROVED & CLOSED) /////////////////
 
@@ -1046,6 +1048,111 @@ class DashboardUtil
             $chartsArray = $this->getChartByMultiArray( $piUnFundedProjectCountTopArr, $filterArr, "4. Total number of Non-Funded Projects per PI (Top 10)","pie",null," : ");
         }
         ///////////////// EOF 4. Total number of Non-Funded Projects per PI (Top 10) /////////////////
+
+        //2a. Total number of projects per Pathologist Involved (Top 10)
+        if( $chartType == "projects-per-pathologist-involved" ) {
+            $pathologistProjectCountArr = array();
+            //$pathologistProjectCountMultiArr = array();
+
+            $projects = $this->getProjectsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+
+            foreach($projects as $project) {
+                $pathologists = $project->getPathologists();
+                foreach ($pathologists as $pathologist) {
+                    $userName = $pathologist->getUsernameOptimal();
+//                    $userId = $pathologist->getId();
+//                    //2. Total number of projects (XXX) per PI (Top 5/10) (APPROVED & CLOSED)
+//                    if( isset($pathologistProjectCountMultiArr[$userId]) && isset($pathologistProjectCountMultiArr[$userId]['value']) ) {
+//                        $count = $pathologistProjectCountMultiArr[$userId]['value'] + 1;
+//                    } else {
+//                        $count = 1;
+//                    }
+//                    $pathologistProjectCountMultiArr[$userId]['value'] = $count;
+//                    $pathologistProjectCountMultiArr[$userId]['label'] = $userName;
+//                    $pathologistProjectCountMultiArr[$userId]['objectid'] = $userId;
+//                    $pathologistProjectCountMultiArr[$userId]['pi'] = $userId;
+//                    //$pathologistProjectCountMultiArr[$userId]['show-path'] = "project";
+
+                    if (isset($pathologistProjectCountArr[$userName])) {
+                        $count = $pathologistProjectCountArr[$userName] + 1;
+                    } else {
+                        $count = 1;
+                    }
+                    $pathologistProjectCountArr[$userName] = $count;
+                }
+            }
+
+//            $showOther = $this->getOtherStr($showLimited,"Pathologist Involved");
+//            $piProjectCountMultiTopArr = $this->getTopMultiArray($pathologistProjectCountMultiArr,$showOther); // getTopMultiArray(
+//            $filterArr['funded'] = null;
+//            $chartsArray = $this->getChartByMultiArray( $piProjectCountMultiTopArr, $filterArr, "2a. Total number of projects per Pathologist Involved (Top 10)","pie",null," : ");
+
+            $showOther = $this->getOtherStr($showLimited,"Pathologist Involved");
+            $pathologistProjectCountTopArr = $this->getTopArray($pathologistProjectCountArr,$showOther);
+            $chartsArray = $this->getChart($pathologistProjectCountTopArr, "2a. Total number of projects per Pathologist Involved (Top 10)",'pie',$layoutArray," : ");
+
+        }
+        ///////////////// EOF 2a. Total number of projects per Pathologist Involved (Top 10) /////////////////
+        // 3a. Total number of Funded Projects per Pathologist Involved (Top 10)
+        if( $chartType == "funded-projects-per-pathologist-involved" ) {
+            $pathologistFundedProjectCountArr = array();
+
+            $projects = $this->getProjectsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+
+            foreach($projects as $project) {
+                $fundingNumber = $project->getFunded();
+
+                $pathologists = $project->getPathologists();
+                foreach ($pathologists as $pathologist) {
+                    $userName = $pathologist->getUsernameOptimal();
+                    if( $fundingNumber ) {
+                        if (isset($pathologistFundedProjectCountArr[$userName])) {
+                            $count = $pathologistFundedProjectCountArr[$userName] + 1;
+                        } else {
+                            $count = 1;
+                        }
+                        $pathologistFundedProjectCountArr[$userName] = $count;
+                    }
+                }//foreach $pathologists
+            }//foreach $projects
+
+            $showOther = $this->getOtherStr($showLimited,"Pathologist Involved");
+            $pathologistFundedProjectCountTopArr = $this->getTopArray($pathologistFundedProjectCountArr,$showOther);
+            $filterArr['funded'] = true;
+            $chartsArray = $this->getChart($pathologistFundedProjectCountTopArr, "3a. Total number of Funded Projects per Pathologist Involved (Top 10)","pie",$layoutArray," : ");
+        }
+        ///////////////// EOF 3a. Total number of Funded Projects per Pathologist Involved (Top 10) /////////////////
+        // 4a. Total number of Non-Funded Projects per Pathologist Involved (Top 10)
+        if( $chartType == "nonfunded-projects-per-pathologist-involved" ) {
+            $pathologistNonFundedProjectCountArr = array();
+
+            $projects = $this->getProjectsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+
+            foreach($projects as $project) {
+                $fundingNumber = $project->getFunded();
+
+                $pathologists = $project->getPathologists();
+                foreach ($pathologists as $pathologist) {
+                    $userName = $pathologist->getUsernameOptimal();
+                    if( $fundingNumber ) {
+                        //do nothing
+                    } else {
+                        if (isset($pathologistNonFundedProjectCountArr[$userName])) {
+                            $count = $pathologistNonFundedProjectCountArr[$userName] + 1;
+                        } else {
+                            $count = 1;
+                        }
+                        $pathologistNonFundedProjectCountArr[$userName] = $count;
+                    }
+                }//foreach $pathologists
+            }//foreach $projects
+
+            $showOther = $this->getOtherStr($showLimited,"Pathologist Involved");
+            $pathologistNonFundedProjectCountTopArr = $this->getTopArray($pathologistNonFundedProjectCountArr,$showOther);
+            //$filterArr['funded'] = true;
+            $chartsArray = $this->getChart($pathologistNonFundedProjectCountTopArr, "4a. Total number of Non-Funded Projects per Pathologist Involved (Top 10)","pie",$layoutArray," : ");
+        }
+        ///////////////// EOF 4a. Total number of Non-Funded Projects per Pathologist Involved (Top 10) /////////////////
 
 
         //Work request statistics
@@ -1765,6 +1872,29 @@ class DashboardUtil
             
         }
 
+        if( $chartType == "" ) {
+
+        }
+
+        if( $chartType == "" ) {
+
+        }
+
+        if( $chartType == "" ) {
+
+        }
+
+        if( $chartType == "" ) {
+
+        }
+
+        if( $chartType == "" ) {
+
+        }
+
+        if( $chartType == "" ) {
+
+        }
 
 
 
