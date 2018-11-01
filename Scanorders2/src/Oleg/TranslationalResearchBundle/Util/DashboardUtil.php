@@ -2075,17 +2075,27 @@ class DashboardUtil
 
         }
 
-        if( $chartsArray === null ) {
+        //$chartsArray['error'] = false;
+        //$chartsArray['warning'] = false;
+        //$chartsArray = array(); //testing
+        //$chartsArray = null; //testing
+
+        if( !is_array($chartsArray) ) {
+            //echo "null <br>";
             $chartKey = $this->getChartTypeByValue($chartType);
             $chartsArray['error'] = "Chart type '$chartKey' is not valid";
-        } else {
-            if( count($chartsArray) == 0 ) {
-                $chartKey = $this->getChartTypeByValue($chartType);
-                $chartsArray['error'] = "Chart data is not found for '$chartKey'";
-            } else {
-                $chartsArray['error'] = false;
-            }
+            $chartsArray['warning'] = false;
+            return $chartsArray;
         }
+
+        if( is_array($chartsArray) && count($chartsArray) == 0 ) {
+            //echo "count is 0 <br>";
+            $chartKey = $this->getChartTypeByValue($chartType);
+            $chartsArray['warning'] = "Chart data is not found for '$chartKey'";
+            $chartsArray['error'] = false;
+            return $chartsArray;
+        }
+
         
         return $chartsArray;
     }

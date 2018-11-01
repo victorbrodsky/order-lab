@@ -75,7 +75,18 @@ function transresAddChart(chartIndex,chartData) {
 
     if( chartData['error'] ) {
         //console.log("newline");
-        transresAddErrorLine(chartData['error']);
+        transresAddErrorLine(chartData['error'],'error');
+        return false;
+    }
+    if( chartData['warning'] ) {
+        //console.log("newline");
+        transresAddErrorLine(chartData['warning'],'warning');
+        return false;
+    }
+
+    if( chartData['error'] ) {
+        //console.log("newline");
+        transresAddErrorLine(chartData['error'],'error');
     } else {
 
         var divId = 'chart-' + chartIndex;
@@ -115,13 +126,18 @@ function transresAddChart(chartIndex,chartData) {
     }
 }
 
-function transresAddErrorLine( error ) {
+function transresAddErrorLine( msg, type ) {
     //console.log("newline");
     var divEl = document.createElement("div");
     divEl.style.float = "left";
     divEl.style.width = "100%";
-    divEl.className = "alert alert-warning";
-    divEl.innerHTML = error;
+    if( type == 'error' ) {
+        divEl.className = "alert alert-danger";
+    }
+    if( type == 'warning' ) {
+        divEl.className = "alert alert-warning";
+    }
+    divEl.innerHTML = msg;
     //newline.setAttribute('id', divId);
     document.getElementById("charts").appendChild(divEl);
 }
