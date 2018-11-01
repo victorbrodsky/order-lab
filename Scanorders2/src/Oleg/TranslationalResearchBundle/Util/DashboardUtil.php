@@ -342,7 +342,8 @@ class DashboardUtil
         }
 
         if( count($values) == 0 ) {
-            return array('error'=>"No data found corresponding to this chart parameters");
+            return array();
+            //return array('error'=>"No data found corresponding to this chart parameters");
         }
 
         $xAxis = "labels";
@@ -542,8 +543,8 @@ class DashboardUtil
         }
 
         if( count($values) == 0 ) {
-            //return array();
-            return array('error'=>"No data found corresponding to this chart parameters");
+            return array();
+            //return array('error'=>"No data found corresponding to this chart parameters");
         }
 
         $xAxis = "labels";
@@ -631,7 +632,8 @@ class DashboardUtil
         }
 
         if( count($values) == 0 ) {
-            return array('error'=>"No data found corresponding to this chart parameters");
+            return array();
+            //return array('error'=>"No data found corresponding to this chart parameters");
         }
 
         //echo "<pre>";
@@ -870,7 +872,7 @@ class DashboardUtil
 
         //echo "startDate=".$startDate."<br>";
 
-        $chartsArray = array();
+        $chartsArray = null;
 
         ///////////// 1. Principle Investigators by Affiliation ///////////////////
         if( $chartType == "pi-by-affiliation" ) {
@@ -2073,13 +2075,16 @@ class DashboardUtil
 
         }
 
-
-
-        if( count($chartsArray) == 0 ) {
+        if( $chartsArray === null ) {
             $chartKey = $this->getChartTypeByValue($chartType);
-            $chartsArray['error'] = "Chart type '$chartKey' is not found";
+            $chartsArray['error'] = "Chart type '$chartKey' is not valid";
         } else {
-            $chartsArray['error'] = false;
+            if( count($chartsArray) == 0 ) {
+                $chartKey = $this->getChartTypeByValue($chartType);
+                $chartsArray['error'] = "Chart data is not found for '$chartKey'";
+            } else {
+                $chartsArray['error'] = false;
+            }
         }
         
         return $chartsArray;
