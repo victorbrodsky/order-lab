@@ -342,7 +342,7 @@ class DashboardUtil
         }
 
         if( count($values) == 0 ) {
-            return array();
+            return array('error'=>"No data found corresponding to this chart parameters");
         }
 
         $xAxis = "labels";
@@ -542,7 +542,8 @@ class DashboardUtil
         }
 
         if( count($values) == 0 ) {
-            return array();
+            //return array();
+            return array('error'=>"No data found corresponding to this chart parameters");
         }
 
         $xAxis = "labels";
@@ -627,6 +628,10 @@ class DashboardUtil
             $chartDataArray['type'] = 'bar';
 
             $stackDataArray[] = $chartDataArray;
+        }
+
+        if( count($values) == 0 ) {
+            return array('error'=>"No data found corresponding to this chart parameters");
         }
 
         //echo "<pre>";
