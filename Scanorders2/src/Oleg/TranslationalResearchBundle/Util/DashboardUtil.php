@@ -95,7 +95,7 @@ class DashboardUtil
             "22. Total Invoiced Amounts of Funded Projects per Pathologist Involved (Top 10)" =>      "fees-by-invoices-per-funded-projects-per-pathologist-involved",
             "23. Total Invoiced Amounts of Non-Funded Projects per Pathologist Involved (Top 10)" =>  "fees-by-invoices-per-nonfunded-projects-per-pathologist-involved",
 
-            "" => "",
+            "24. Total Number of Projects per Type" => "projects-per-type",
             "" => "",
             "" => "",
             "" => "",
@@ -533,6 +533,28 @@ class DashboardUtil
                     //$label = '<font color="red">'.$label.'</font>';
                     //$label = '<a target="_blank" href="'.$link.'">'.$label.'</a>';
                     //$label = $label . " " . $link;
+                }
+
+                if( $showPath == 'project-type' ) {
+                    $linkFilterArr = array(
+                        'filter[state][0]' => 'final_approved',
+                        'filter[state][1]' => 'closed',
+                        'filter[startDate]' => $startDateStr,
+                        'filter[endDate]' => $endDateStr,
+                        'filter[]' => $projectSpecialtyObjects,
+                        'filter[searchProjectType]' => $objectid
+                    );
+
+                    if( count($projectSpecialtyObjects) > 0 ) {
+                        $projectSpecialtyObject = $projectSpecialtyObjects[0];
+                        $linkFilterArr['filter[projectSpecialty]'] = $projectSpecialtyObject->getId();
+                    }
+
+                    $link = $this->container->get('router')->generate(
+                        'translationalresearch_project_index',
+                        $linkFilterArr,
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    );
                 }
 
                 $labels[] = $label;
@@ -2059,9 +2081,38 @@ class DashboardUtil
         }
         ///////////// EOF "23. Total Invoiced Amounts of Non-Funded Projects per Pathologist Involved (Top 10)" /////////////
 
-        if( $chartType == "" ) {
+        //"24. Total Number of Projects per Type" => "projects-per-type"
+        if( $chartType == "projects-per-type" ) {
+            $projectTypeArr = array();
 
+            $projects = $this->getProjectsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+            foreach($projects as $project) {
+                $projectType = $project->getProjectType();
+                if( $projectType ) {
+                    $projectId = $projectType->getId();
+                    $projectName = $projectType->getName();
+                } else {
+                    $projectId = "No Type";
+                    $projectName = "No Type";;
+                }
+
+                if( isset($projectTypeArr[$projectId]) && isset($projectTypeArr[$projectId]['value']) ) {
+                    $count = $projectTypeArr[$projectId]['value'] + 1;
+                } else {
+                    $count = 1;
+                }
+                $projectTypeArr[$projectId]['value'] = $count;
+                $projectTypeArr[$projectId]['label'] = $projectName;
+                $projectTypeArr[$projectId]['objectid'] = $projectId;
+                $projectTypeArr[$projectId]['pi'] = null;
+                $projectTypeArr[$projectId]['show-path'] = "project-type";
+            }
+
+            $showOther = $this->getOtherStr($showLimited,"Project Types");
+            $projectTypeArrTop = $this->getTopMultiArray($projectTypeArr,$showOther);
+            $chartsArray = $this->getChartByMultiArray( $projectTypeArrTop, $filterArr, "24. Total Number of Projects per Type","pie",null," : ");
         }
+
 
         if( $chartType == "" ) {
 
