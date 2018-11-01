@@ -861,6 +861,8 @@ class DashboardUtil
 
     public function getDashboardChart($request) {
 
+        ini_set('memory_limit', '-1'); //2GB
+
         $startDate = $request->query->get('startDate');
         $endDate = $request->query->get('endDate');
         $projectSpecialty = $request->query->get('projectSpecialty');
