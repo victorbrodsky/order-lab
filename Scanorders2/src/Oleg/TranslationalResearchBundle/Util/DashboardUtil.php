@@ -1921,7 +1921,6 @@ class DashboardUtil
 
             }//foreach invoices
 
-            //20. Generated Invoices by Status per PI (Top 10)
             $descriptionArr = array(
                 array("paid $"," : $","limegreen",$invoicePaidFeeArr),
                 array("due $"," : $","red",$invoiceDueFeeArr)
@@ -1949,9 +1948,8 @@ class DashboardUtil
                 $project = $transRequest->getProject();
                 $pathologists = $project->getPathologists();
 
-                foreach($pathologists as $pathologist) {
-
-                    if ($transRequest->getFundedAccountNumber()) {
+                if ($transRequest->getFundedAccountNumber()) {
+                    foreach ($pathologists as $pathologist) {
                         $pathologistIndex = $pathologist->getUsernameOptimal();
 
                         //Total fees
@@ -1982,7 +1980,6 @@ class DashboardUtil
 
             }//foreach invoices
 
-            //20. Generated Invoices by Status per PI (Top 10)
             $descriptionArr = array(
                 array("paid $"," : $","limegreen",$invoicePaidFeeArr),
                 array("due $"," : $","red",$invoiceDueFeeArr)
@@ -2011,11 +2008,10 @@ class DashboardUtil
                 $project = $transRequest->getProject();
                 $pathologists = $project->getPathologists();
 
-                foreach($pathologists as $pathologist) {
-
-                    if( $transRequest->getFundedAccountNumber() ) {
-                        //do nothing
-                    } else {
+                if( $transRequest->getFundedAccountNumber() ) {
+                    //do nothing
+                } else {
+                    foreach($pathologists as $pathologist) {
                         $pathologistIndex = $pathologist->getUsernameOptimal();
 
                         //Total fees
@@ -2046,7 +2042,6 @@ class DashboardUtil
 
             }//foreach invoices
 
-            //20. Generated Invoices by Status per PI (Top 10)
             $descriptionArr = array(
                 array("paid $"," : $","limegreen",$invoicePaidFeeArr),
                 array("due $"," : $","red",$invoiceDueFeeArr)
