@@ -43,9 +43,9 @@ class DashboardController extends Controller
         //$userSecUtil = $this->container->get('user_security_utility');
         //$em = $this->getDoctrine()->getManager();
 
-        ini_set('memory_limit', '30000M'); //2GB
-        $memory_limit = ini_get('memory_limit');
-        echo "memory_limit=".$memory_limit."<br>";
+        //ini_set('memory_limit', '30000M'); //2GB
+        //$memory_limit = ini_get('memory_limit');
+        //echo "memory_limit=".$memory_limit."<br>";
 
         $filterform = $this->getFilter();
         $filterform->handleRequest($request);
