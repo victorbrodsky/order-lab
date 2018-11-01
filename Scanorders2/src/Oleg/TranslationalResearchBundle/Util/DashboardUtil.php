@@ -96,7 +96,7 @@ class DashboardUtil
             "23. Total Invoiced Amounts of Non-Funded Projects per Pathologist Involved (Top 10)" =>  "fees-by-invoices-per-nonfunded-projects-per-pathologist-involved",
 
             "24. Total Number of Projects per Type" => "projects-per-type",
-            "" => "",
+            "25. Total Number of Requests per Business Purpose" => "requests-per-business-purpose",
             "" => "",
             "" => "",
             "" => "",
@@ -2110,12 +2110,33 @@ class DashboardUtil
 
             $showOther = $this->getOtherStr($showLimited,"Project Types");
             $projectTypeArrTop = $this->getTopMultiArray($projectTypeArr,$showOther);
-            $chartsArray = $this->getChartByMultiArray( $projectTypeArrTop, $filterArr, "24. Total Number of Projects per Type","pie",null," : ");
+            $chartsArray = $this->getChartByMultiArray( $projectTypeArrTop, $filterArr, "24. Total Number of Projects per Type (Top 10)","pie",null," : ");
         }
 
 
-        if( $chartType == "" ) {
+        //"25. Total Number of Requests per Business Purpose" => "requests-per-business-purpose"
+        if( $chartType == "requests-per-business-purpose" ) {
+            $requestBusinessPurposeArr = array();
 
+            $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+            foreach($requests as $transRequest) {
+
+                $businessPurposes = $transRequest->getBusinessPurposes();
+
+                foreach($businessPurposes as $businessPurpose) {
+                    $businessPurposeName = $businessPurpose->getName();
+                    if (isset($requestBusinessPurposeArr[$businessPurposeName])) {
+                        $count = $requestBusinessPurposeArr[$businessPurposeName] + 1;
+                    } else {
+                        $count = 1;
+                    }
+                    $requestBusinessPurposeArr[$businessPurposeName] = $count;
+                }
+            }
+
+            $showOther = $this->getOtherStr($showLimited,"Business Purposes");
+            $requestBusinessPurposeArrTop = $this->getTopArray($requestBusinessPurposeArr,$showOther);
+            $chartsArray = $this->getChart($requestBusinessPurposeArrTop, "25. Total Number of Requests per Business Purpose (Top 10)",'pie',$layoutArray," : ");
         }
 
         if( $chartType == "" ) {
