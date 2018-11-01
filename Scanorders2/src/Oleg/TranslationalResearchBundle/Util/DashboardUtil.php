@@ -861,7 +861,7 @@ class DashboardUtil
 
     public function getDashboardChart($request) {
 
-        //ini_set('memory_limit', '30000M');
+        ini_set('memory_limit', '30000M');
 
         $startDate = $request->query->get('startDate');
         $endDate = $request->query->get('endDate');
