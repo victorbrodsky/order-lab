@@ -477,7 +477,10 @@ class InvoiceController extends Controller
             //print_r($status);
 
             if( count($status) > 0 ) {
-                $dql->andWhere("invoice.status IN (:statuses)" . " AND " . $allExceptCanceled);
+                if( $allExceptCanceled ) {
+                    $allExceptCanceled = " AND " . $allExceptCanceled;
+                }
+                $dql->andWhere("invoice.status IN (:statuses)" . $allExceptCanceled);
                 $dqlParameters["statuses"] = $status;
             } else {
                 $dql->andWhere($allExceptCanceled);
