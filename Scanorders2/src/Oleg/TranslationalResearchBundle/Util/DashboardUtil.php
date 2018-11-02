@@ -84,16 +84,16 @@ class DashboardUtil
             "17. Total Fees per Funded Project (Top 10)" =>                     "fees-by-requests-per-funded-projects",
             "18. Total Fees per Non-Funded Project (Top 10)" =>                 "fees-by-requests-per-nonfunded-projects",
             "19. Total Fees per Investigator (Top 10)" =>                       "fees-by-investigators",
-            "20. Total Fees per Investigator (Funded) (Top 10)" =>              "fees-by-investigators-per-funded-projects",
-            "21. Total Fees per Investigator (Non-Funded) (Top 10)" =>          "fees-by-investigators-per-nonfunded-projects",
+            "20. Total Fees per Investigator for funded projects (Top 10)" =>   "fees-by-investigators-per-funded-projects",
+            "21. Total Fees per Investigator for non-funded projects (Top 10)"=>"fees-by-investigators-per-nonfunded-projects",
             //Financial statistics based on invoices
-            "22. Generated Invoices by Status from Funded Projects" =>          "fees-by-invoices-per-funded-projects",
+            "22. Generated Invoices by Status for Funded Projects" =>           "fees-by-invoices-per-funded-projects",
             "23. Generated Invoices by Status per Funded Project (Top 10)" =>   "fees-by-invoices-per-nonfunded-projects",
             "24. Generated Invoices by Status per PI (Top 10)" =>               "fees-by-invoices-per-pi",
             //Pathologists Involved and number of projects
-            "25. Total Invoiced Amounts of Projects per Pathologist Involved (Top 10)" =>             "fees-by-invoices-per-projects-per-pathologist-involved",
-            "26. Total Invoiced Amounts of Funded Projects per Pathologist Involved (Top 10)" =>      "fees-by-invoices-per-funded-projects-per-pathologist-involved",
-            "27. Total Invoiced Amounts of Non-Funded Projects per Pathologist Involved (Top 10)" =>  "fees-by-invoices-per-nonfunded-projects-per-pathologist-involved",
+            "25. Total Invoiced Amounts for Projects per Pathologist Involved (Top 10)" =>             "fees-by-invoices-per-projects-per-pathologist-involved",
+            "26. Total Invoiced Amounts for Funded Projects per Pathologist Involved (Top 10)" =>      "fees-by-invoices-per-funded-projects-per-pathologist-involved",
+            "27. Total Invoiced Amounts for Non-Funded Projects per Pathologist Involved (Top 10)" =>  "fees-by-invoices-per-nonfunded-projects-per-pathologist-involved",
 
             "28. Total Number of Projects per Type" => "projects-per-type",
             "29. Total Number of Work Requests per Business Purpose" => "requests-per-business-purpose",
