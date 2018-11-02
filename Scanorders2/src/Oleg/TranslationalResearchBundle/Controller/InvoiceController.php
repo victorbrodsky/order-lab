@@ -454,19 +454,28 @@ class InvoiceController extends Controller
         }
 
         if( $status && count($status) > 0 ) {
-            //$statusStr = "'".implode("','",$status)."'";
-            //$dql->andWhere("invoice.status IN (".$statusStr.")");
-
+//            print_r($status);
             $allExceptCanceled = "";
 //            if( $status == "Latest Versions of All Invoices" ) {
-//                $allExcept = " OR invoice.state != 'draft' OR invoice.state IS NULL";
+//                $allExcept = " OR invoice.status != 'draft' OR invoice.status IS NULL";
 //            }
             if( in_array("All Invoices Except Canceled",$status) ) {
-                //$allExceptCanceled = " OR invoice.state != 'Canceled' OR invoice.state IS NULL";
+                $allExceptCanceled = "invoice.status != 'Canceled'";
             }
+            foreach($status as $statusKey=>$statusName) {
+                //echo "status=".$statusName."<br>";
+                if( $statusName == "All Invoices Except Canceled" ) {
+                    unset($status[$statusKey]);
+                }
+            }
+            //print_r($status);
 
-            $dql->andWhere("invoice.status IN (:statuses)" . $allExceptCanceled);
-            $dqlParameters["statuses"] = $status;
+            if( count($status) > 0 ) {
+                $dql->andWhere("invoice.status IN (:statuses)" . " AND " . $allExceptCanceled);
+                $dqlParameters["statuses"] = $status;
+            } else {
+                $dql->andWhere($allExceptCanceled);
+            }
         }
 
         if( $idSearch ) {
