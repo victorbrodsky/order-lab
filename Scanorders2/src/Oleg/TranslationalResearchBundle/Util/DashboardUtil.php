@@ -1125,7 +1125,7 @@ class DashboardUtil
 //            $filterArr['funded'] = null;
 //            $chartsArray = $this->getChartByMultiArray( $piProjectCountMultiTopArr, $filterArr, "2a. Total number of projects per Pathologist Involved (Top 10)","pie",null," : ");
 
-            $showOther = $this->getOtherStr($showLimited,"pathologist involved");
+            $showOther = $this->getOtherStr($showLimited,"pathologists involved");
             $pathologistProjectCountTopArr = $this->getTopArray($pathologistProjectCountArr,$showOther);
             $chartsArray = $this->getChart($pathologistProjectCountTopArr, $chartName,'pie',$layoutArray," : ");
 
@@ -1154,7 +1154,7 @@ class DashboardUtil
                 }//foreach $pathologists
             }//foreach $projects
 
-            $showOther = $this->getOtherStr($showLimited,"Pathologist Involved");
+            $showOther = $this->getOtherStr($showLimited,"pathologists involved");
             $pathologistFundedProjectCountTopArr = $this->getTopArray($pathologistFundedProjectCountArr,$showOther);
             $filterArr['funded'] = true;
             $chartsArray = $this->getChart($pathologistFundedProjectCountTopArr, $chartName,"pie",$layoutArray," : ");
@@ -1185,7 +1185,7 @@ class DashboardUtil
                 }//foreach $pathologists
             }//foreach $projects
 
-            $showOther = $this->getOtherStr($showLimited,"Pathologist Involved");
+            $showOther = $this->getOtherStr($showLimited,"pathologists involved");
             $pathologistNonFundedProjectCountTopArr = $this->getTopArray($pathologistNonFundedProjectCountArr,$showOther);
             //$filterArr['funded'] = true;
             $chartsArray = $this->getChart($pathologistNonFundedProjectCountTopArr, $chartName,"pie",$layoutArray," : ");
@@ -1959,7 +1959,7 @@ class DashboardUtil
                 array("paid $"," : $","limegreen",$invoicePaidFeeArr),
                 array("due $"," : $","red",$invoiceDueFeeArr)
             );
-            $showOther = $this->getOtherStr($showLimited,"Pathologist Involved");
+            $showOther = $this->getOtherStr($showLimited,"pathologists involved");
             $invoicesFeesByPathologistArrTop = $this->getTopArray($invoicesFeesByPathologistArr,$showOther,$descriptionArr);
             $chartsArray = $this->getChart($invoicesFeesByPathologistArrTop, $chartName,'pie',$layoutArray);
         }
@@ -2018,7 +2018,7 @@ class DashboardUtil
                 array("paid $"," : $","limegreen",$invoicePaidFeeArr),
                 array("due $"," : $","red",$invoiceDueFeeArr)
             );
-            $showOther = $this->getOtherStr($showLimited,"Pathologist Involved");
+            $showOther = $this->getOtherStr($showLimited,"pathologists involved");
             $invoicesFeesByPathologistArrTop = $this->getTopArray($invoicesFeesByPathologistArr,$showOther,$descriptionArr);
             $chartsArray = $this->getChart($invoicesFeesByPathologistArrTop, $chartName,'pie',$layoutArray);
         }
@@ -2080,7 +2080,7 @@ class DashboardUtil
                 array("paid $"," : $","limegreen",$invoicePaidFeeArr),
                 array("due $"," : $","red",$invoiceDueFeeArr)
             );
-            $showOther = $this->getOtherStr($showLimited,"Pathologist Involved");
+            $showOther = $this->getOtherStr($showLimited,"pathologists involved");
             $invoicesFeesByPathologistArrTop = $this->getTopArray($invoicesFeesByPathologistArr,$showOther,$descriptionArr);
             $chartsArray = $this->getChart($invoicesFeesByPathologistArrTop, $chartName,'pie',$layoutArray);
         }

@@ -2632,7 +2632,10 @@ class TransResRequestUtil
             "Paid Partially" => "Paid Partially",
             "Refunded Fully" => "Refunded Fully",
             "Refunded Partially" => "Refunded Partially",
-            "Canceled" => "Canceled"
+            "Canceled" => "Canceled",
+            //"Latest Versions of All Invoices" => "Latest Versions of All Invoices",
+            //"Latest Versions of All Invoices Except Canceled" => "Latest Versions of All Invoices Except Canceled"
+            "All Invoices Except Canceled" => "All Invoices Except Canceled"
         );
     }
 

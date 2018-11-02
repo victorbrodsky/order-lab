@@ -453,10 +453,19 @@ class InvoiceController extends Controller
             $dqlParameters["submitterId"] = $submitter->getId();
         }
 
-        if( $status ) {
+        if( $status && count($status) > 0 ) {
             //$statusStr = "'".implode("','",$status)."'";
             //$dql->andWhere("invoice.status IN (".$statusStr.")");
-            $dql->andWhere("invoice.status IN (:statuses)");
+
+            $allExceptCanceled = "";
+//            if( $status == "Latest Versions of All Invoices" ) {
+//                $allExcept = " OR invoice.state != 'draft' OR invoice.state IS NULL";
+//            }
+            if( in_array("All Invoices Except Canceled",$status) ) {
+                //$allExceptCanceled = " OR invoice.state != 'Canceled' OR invoice.state IS NULL";
+            }
+
+            $dql->andWhere("invoice.status IN (:statuses)" . $allExceptCanceled);
             $dqlParameters["statuses"] = $status;
         }
 
