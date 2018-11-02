@@ -41,7 +41,7 @@ class DashboardController extends Controller
         }
 
         //$userSecUtil = $this->container->get('user_security_utility');
-        //$em = $this->getDoctrine()->getManager();
+        $em = $this->getDoctrine()->getManager();
 
         //ini_set('memory_limit', '30000M'); //2GB
         //$memory_limit = ini_get('memory_limit');
@@ -61,11 +61,17 @@ class DashboardController extends Controller
 //            $projectSpecialtyObjects[] = $projectSpecialtyObject;
 //        }
 
+//        $chartTypes = $filterform['chartType']->getData();
+//        foreach($chartTypes as $chartType) {
+//            echo "chartType=".$chartType."<br>";
+//        }
+
         return array(
             'title' => "Translational Research Dashboard",
             'filterform' => $filterform->createView(),
             'chartsArray' => array(),
-            'spinnerColor' => '#85c1e9'
+            'spinnerColor' => '#85c1e9',
+//            'chartTypes' => $chartTypes
         );
     }
 

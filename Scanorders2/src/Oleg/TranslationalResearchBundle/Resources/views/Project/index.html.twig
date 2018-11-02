@@ -167,7 +167,8 @@
                 {#<th>{{ knp_pagination_sortable(projects, 'IRB#', 'project.irbNumber') }}</th>#}
                 <th>{{ knp_pagination_sortable(projects, 'PI(s) for the project', 'principalInvestigatorsInfos.displayName') }}</th>
                 {#<th>IRB Number</th>#}
-                <th>{{ knp_pagination_sortable(projects, 'IRB Number', 'project.irbNumber') }}</th>
+                {#<th>{{ knp_pagination_sortable(projects, 'IRB Number', 'project.irbNumber') }}</th>#}
+                <th>IRB (IACUC) Number</th>
                 {#<th>Project Title</th>#}
                 <th>{{ knp_pagination_sortable(projects, 'Project Title', 'project.title') }}</th>
                 {#<th>Funding</th>#}
@@ -176,7 +177,8 @@
                 <th>{{ knp_pagination_sortable(projects, 'Approval Date', 'project.approvalDate') }}</th>
                 {#<th>{{ knp_pagination_sortable(projects, 'Expiration Date', 'project.expirationDate') }}</th>#}
                 {#<th>IRB Expiration Date</th>#}
-                <th>{{ knp_pagination_sortable(projects, 'IRB/IACUC Expiration Date', 'project.irbExpirationDate') }}</th>
+                {#<th>{{ knp_pagination_sortable(projects, 'IRB/IACUC Expiration Date', 'project.irbExpirationDate') }}</th>#}
+                <th>{{ knp_pagination_sortable(projects, 'IRB/IACUC Expiration Date', 'project.implicitExpirationDate') }}</th>
                 <th>Work Requests</th>
 
                 <th title="Number of the most recent issued invoices">Issued Invoices</th>
@@ -259,7 +261,9 @@
                     {#{% if irbNumber %}#}
                         {#{{ irbNumber }}#}
                     {#{% endif %}#}
-                    {{ project.getIrbNumber() }}
+                    {#{{ project.getIrbNumber() }}#}
+                    {#IRB (IACUC) Number#}
+                    {{ project.getIrbIacucNumber()|raw }}
                 </td>
 
                 {% set projectTitle = project.getTitle() %}
@@ -274,7 +278,7 @@
                     {#{% if transres_formnode_util.getProjectFormNodeFieldByName(project,"Funded") %}#}
                         Funded
                     {% else %}
-                        Not-Funded
+                        Non-funded
                     {% endif %}
                 </td>
 

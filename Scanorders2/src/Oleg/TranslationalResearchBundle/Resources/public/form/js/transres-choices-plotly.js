@@ -1,12 +1,10 @@
 
-function transresAddNewLine() {
-    //console.log("newline");
-    var newline = document.createElement("div");
-    newline.style.float = "left";
-    newline.style.width = "100%";
-    //newline.setAttribute('id', divId);
-    document.getElementById("charts").appendChild(newline);
-}
+$(document).ready(function() {
+
+    //$('#filter-btn').click();
+    document.getElementById("filter-btn").click();
+
+});
 
 function transresGetCharts() {
     //console.log("get charts");

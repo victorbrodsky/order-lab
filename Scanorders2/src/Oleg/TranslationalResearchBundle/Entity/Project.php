@@ -1759,7 +1759,7 @@ class Project {
         if( $this->getFunded() ) {
             return "Funded";
         }
-        return "Not-Funded";
+        return "Non-funded";  //"Not-Funded";
     }
 
 
@@ -1821,6 +1821,26 @@ class Project {
         //}
         //return $this->getOid() . " '$title' submitted by ".$this->getSubmitter()->getUsernameOptimal();
         return $this->getOid() . " '$title'";
+    }
+
+    public function getIrbIacucNumber($delimeter=", ") {
+        //A- If there is only an IRB number: show the IRB number as you do now
+        //B- If there is only an IACUC number: show the IACUC number in parentheses (IACUC Number)
+        //C- If there are both an IRB number and an IACUC number, show IRB Number followed by an IACUC number in parenthesis: IRB Number (IACUC Number)
+
+        if( $this->getIrbNumber() && !$this->getIacucNumber() ) {
+            return $this->getIrbNumber();
+        }
+
+        if( !$this->getIrbNumber() && $this->getIacucNumber() ) {
+            return $this->getIacucNumber() . "(IACUC)";
+        }
+
+        if( $this->getIrbNumber() && $this->getIacucNumber() ) {
+            return $this->getIrbNumber() . $delimeter . $this->getIacucNumber() . " (IACUC)";
+        }
+
+        return null;
     }
 
     //"IRB with PI FirstName LastName expires on MM/DD/YYYY."

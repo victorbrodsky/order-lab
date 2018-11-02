@@ -345,17 +345,33 @@
                                     >Comparison statistics</a>
                                 </li>
 
+                                <li>
+                                    <a href="{{ path(translationalresearch_sitename~'_dashboard_choices',
+                                        {
+                                            'filter[startDate]':startDate,
+                                            'filter[endDate]':endDate,
+                                            'filter[projectSpecialty]':0,
+                                            'filter[chartType][0]':'pi-by-affiliation',
+                                            'filter[chartType][1]':'projects-per-pi',
+                                            'filter[chartType][2]':'funded-projects-per-pi',
+                                            'filter[chartType][3]':'nonfunded-projects-per-pi',
+                                        }) }}"
+                                    >PI/Project statistics</a>
+                                </li>
+
                                 {% if allProjectIdsArr is defined %}
-                                    <hr>
+                                    {#<hr>#}
+                                    <hr style="margin-top: 10px; margin-bottom: 10px;">
                                     <li>
                                         <a href="{{ path('translationalresearch_download_projects_excel',{'ids':allProjectIdsArr|join(','),'limit':500}) }}">
-                                            <i class="fa fa-file-excel-o"></i>Export the first 500 matching project summaries to spreadsheet</a>
+                                            <i class="fa fa-file-excel-o"></i> Export the first 500 matching project summaries to spreadsheet</a>
                                         <a href="{{ path('translationalresearch_download_projects_excel',{'ids':allProjectIdsArr|join(',')}) }}">
-                                            <i class="fa fa-file-excel-o"></i>Export all matching project summaries to a spreadsheet</a>
+                                            <i class="fa fa-file-excel-o"></i> Export all matching project summaries to a spreadsheet</a>
                                     </li>
                                 {% endif %}
 
-                                <hr>
+                                {#<hr>#}
+                                <hr style="margin-top: 10px; margin-bottom: 10px;">
                                 <li>
                                     <a href="javascript:;" style="color:red">All dashboards bellow will be removed</a>
                                 </li>
