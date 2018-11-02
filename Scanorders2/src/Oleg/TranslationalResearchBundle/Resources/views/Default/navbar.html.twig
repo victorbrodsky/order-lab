@@ -358,6 +358,23 @@
                                         }) }}"
                                     >PI/Project statistics</a>
                                 </li>
+                                <li>
+                                    <a href="{{ path(translationalresearch_sitename~'_dashboard_choices',
+                                    {
+                                        'filter[startDate]':startDate,
+                                        'filter[endDate]':endDate,
+                                        'filter[projectSpecialty]':0,
+                                        'filter[chartType][1]':'requests-by-funding-source',
+                                        'filter[chartType][2]':'requests-per-project',
+                                        'filter[chartType][3]':'requests-per-funded-projects',
+                                        'filter[chartType][4]':'requests-per-nonfunded-projects',
+                                        'filter[chartType][5]':'service-productivity-by-service',
+                                        'filter[chartType][6]':'service-productivity-by-service-per-funded-projects',
+                                        'filter[chartType][7]':'service-productivity-by-service-per-nonfunded-projects',
+                                        'filter[chartType][8]':'service-productivity-by-service-compare-funded-vs-nonfunded-projects',
+                                    }) }}"
+                                    >Work request statistics</a>
+                                </li>
 
                                 {% if allProjectIdsArr is defined %}
                                     {#<hr>#}

@@ -1833,11 +1833,11 @@ class Project {
         }
 
         if( !$this->getIrbNumber() && $this->getIacucNumber() ) {
-            return $this->getIacucNumber() . "(IACUC)";
+            return "(".$this->getIacucNumber() . ")";
         }
 
         if( $this->getIrbNumber() && $this->getIacucNumber() ) {
-            return $this->getIrbNumber() . $delimeter . $this->getIacucNumber() . " (IACUC)";
+            return $this->getIrbNumber() . $delimeter . "(".$this->getIacucNumber().")";
         }
 
         return null;
