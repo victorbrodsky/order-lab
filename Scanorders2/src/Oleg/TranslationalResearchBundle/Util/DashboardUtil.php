@@ -71,9 +71,9 @@ class DashboardUtil
             "7. Total Number of Non-Funded Projects per Pathologist Involved (Top 10)" =>  "nonfunded-projects-per-pathologist-involved",
             //Work request statistics
             "8. Total Number of Work Requests by Funding Source" =>             "requests-by-funding-source",
-            "9. Total Number of Requests per Project (Top 10)" =>               "requests-per-project",
-            "10. Total Number of Requests per Funded Project (Top 10)" =>        "requests-per-funded-projects",
-            "11. Total Number of Requests per Non-Funded Project (Top 10)" =>    "requests-per-nonfunded-projects",
+            "9. Total Number of Work Requests per Project (Top 10)" =>               "requests-per-project",
+            "10. Total Number of Work Requests per Funded Project (Top 10)" =>        "requests-per-funded-projects",
+            "11. Total Number of Work Requests per Non-Funded Project (Top 10)" =>    "requests-per-nonfunded-projects",
             //   Products/Services
             "12. TRP Service Productivity by Products/Services (Top 10)" =>      "service-productivity-by-service",
             "13. TRP Service Productivity for Funded Projects (Top 10)" =>      "service-productivity-by-service-per-funded-projects",
@@ -96,7 +96,7 @@ class DashboardUtil
             "27. Total Invoiced Amounts of Non-Funded Projects per Pathologist Involved (Top 10)" =>  "fees-by-invoices-per-nonfunded-projects-per-pathologist-involved",
 
             "28. Total Number of Projects per Type" => "projects-per-type",
-            "29. Total Number of Requests per Business Purpose" => "requests-per-business-purpose",
+            "29. Total Number of Work Requests per Business Purpose" => "requests-per-business-purpose",
             "" => "",
             "" => "",
             "" => "",

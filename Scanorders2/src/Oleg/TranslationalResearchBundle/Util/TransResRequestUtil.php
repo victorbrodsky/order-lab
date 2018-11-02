@@ -3230,7 +3230,7 @@ class TransResRequestUtil
         if( count($resultArr) > 0 ) {
             $result = implode(", ", $resultArr);
         } else {
-            $result = "There are no overdue unpaid invoices corresponding to the site setting parameters.";
+            $result = "There are no unpaid overdue invoices corresponding to the site setting parameters.";
         }
 
         return $result;
@@ -3453,7 +3453,7 @@ class TransResRequestUtil
                 $userSecUtil->createUserEditEvent($this->container->getParameter('translationalresearch.sitename'), $invoiceMsg, $systemuser, $invoice, null, $eventType);
             }
         } else {
-            $logger->notice("There are no overdue unpaid invoices corresponding to the site setting parameters for ".$projectSpecialty);
+            $logger->notice("There are no unpaid overdue invoices corresponding to the site setting parameters for ".$projectSpecialty);
         }
 
         $result = implode(", ",$resultArr);
