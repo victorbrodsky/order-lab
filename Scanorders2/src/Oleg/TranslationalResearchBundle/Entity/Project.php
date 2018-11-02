@@ -1828,16 +1828,40 @@ class Project {
         //B- If there is only an IACUC number: show the IACUC number in parentheses (IACUC Number)
         //C- If there are both an IRB number and an IACUC number, show IRB Number followed by an IACUC number in parenthesis: IRB Number (IACUC Number)
 
-        if( $this->getIrbNumber() && !$this->getIacucNumber() ) {
-            return $this->getIrbNumber();
+//        if( $this->getIrbNumber() && !$this->getIacucNumber() ) {
+//            return $this->getIrbNumber();
+//        }
+//
+//        if( !$this->getIrbNumber() && $this->getIacucNumber() ) {
+//            return "(".$this->getIacucNumber() . ")";
+//        }
+//
+//        if( $this->getIrbNumber() && $this->getIacucNumber() ) {
+//            return $this->getIrbNumber() . $delimeter . "(".$this->getIacucNumber().")";
+//        }
+
+        $resultArr = array();
+
+        $irbApproval = $this->getExemptIrbApproval();
+        if( !$irbApproval || ($irbApproval && $irbApproval->getName() == "Not Exempt") ) {
+            //echo "irb true <br>";
+            $irb = true;
+        }
+        $iacucApproval = $this->getExemptIACUCApproval();
+        if( !$iacucApproval || ($iacucApproval && $iacucApproval->getName() == "Not Exempt") ) {
+            //echo "iacuc true <br>";
+            $iacuc = true;
         }
 
-        if( !$this->getIrbNumber() && $this->getIacucNumber() ) {
-            return "(".$this->getIacucNumber() . ")";
+        if( $irb && $this->getIrbNumber() ) {
+            $resultArr[] = $this->getIrbNumber();
+        }
+        if( $iacuc && $this->getIacucNumber() ) {
+            $resultArr[] = "(".$this->getIacucNumber().")";
         }
 
-        if( $this->getIrbNumber() && $this->getIacucNumber() ) {
-            return $this->getIrbNumber() . $delimeter . "(".$this->getIacucNumber().")";
+        if( count($resultArr) > 0 ) {
+            return implode($delimeter,$resultArr);
         }
 
         return null;
