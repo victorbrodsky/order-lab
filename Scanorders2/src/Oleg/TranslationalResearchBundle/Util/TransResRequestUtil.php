@@ -2276,6 +2276,7 @@ class TransResRequestUtil
 
                 '[[hr]]',
 
+                "Latest Versions of All Invoices Except Canceled",
                 "Latest Versions of All Invoices",
                 "Latest Versions of Issued (Unpaid) Invoices",
                 "Latest Versions of Pending (Unissued) Invoices",

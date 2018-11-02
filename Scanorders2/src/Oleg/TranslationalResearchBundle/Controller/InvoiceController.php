@@ -237,6 +237,16 @@ class InvoiceController extends Controller
             }
 
             //Latest
+            if( $invoicetypeLowerCase == strtolower("Latest Versions of All Invoices Except Canceled") ) {
+                return $this->redirectToRoute(
+                    'translationalresearch_invoice_index_filter',
+                    array(
+                        'filter[version]' => "Latest",
+                        'filter[status][]' => "All Invoices Except Canceled",
+                        'title' => $invoicetype,
+                    )
+                );
+            }
             if( $invoicetypeLowerCase == strtolower("Latest Versions of All Invoices") ) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
@@ -454,11 +464,7 @@ class InvoiceController extends Controller
         }
 
         if( $status && count($status) > 0 ) {
-//            print_r($status);
             $allExceptCanceled = "";
-//            if( $status == "Latest Versions of All Invoices" ) {
-//                $allExcept = " OR invoice.status != 'draft' OR invoice.status IS NULL";
-//            }
             if( in_array("All Invoices Except Canceled",$status) ) {
                 $allExceptCanceled = "invoice.status != 'Canceled'";
             }
