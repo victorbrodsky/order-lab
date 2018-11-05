@@ -244,10 +244,17 @@ class Invoice {
     private $fundedAccountNumber;
 
     /**
-     * irbNumber - pre-populated from request's $irbNumber
+     * irbNumber - pre-populated from project's $irbNumber
+     * NOT USED; project's getIrbIacucNumber() is used to show IRB(IACUC) number in the invoice's list, invoice show and PDF)
      * @ORM\Column(type="string", nullable=true)
      */
     private $irbNumber;
+
+//    /**
+//     * iacucNumber - pre-populated from project's $iacucNumber
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $iacucNumber;
 
     /**
      * @var string
@@ -755,7 +762,6 @@ class Invoice {
         }
         return $this->irbNumber;
     }
-
     /**
      * @param mixed $irbNumber
      */
@@ -763,8 +769,10 @@ class Invoice {
     {
         $this->irbNumber = $irbNumber;
     }
-    
-    
+    public function getProjectIrbIacucNumber()
+    {
+        return $this->getTransresRequest()->getProject()->getIrbIacucNumber();
+    }
 
     /**
      * @return mixed

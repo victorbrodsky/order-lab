@@ -438,6 +438,7 @@ class ListController extends Controller
 
             //AntibodyList
             if( method_exists($entityClass, 'getDatasheet') ) {
+                $searchStr = $searchStr . " OR LOWER(ent.category) LIKE LOWER(:search)";
                 $searchStr = $searchStr . " OR LOWER(ent.altname) LIKE LOWER(:search)";
                 $searchStr = $searchStr . " OR LOWER(ent.company) LIKE LOWER(:search)";
                 $searchStr = $searchStr . " OR LOWER(ent.catalog) LIKE LOWER(:search)";
@@ -1075,7 +1076,8 @@ class ListController extends Controller
             'form'   => $form->createView(),
             'displayName' => $mapper['displayName'],
             'pathbase' => $pathbase,
-            'sitename' => $this->sitename
+            'sitename' => $this->sitename,
+            'cycle' => 'new'
         );
     }
 

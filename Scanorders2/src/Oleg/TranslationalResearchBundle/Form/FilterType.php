@@ -150,7 +150,7 @@ class FilterType extends AbstractType
         $builder->add('searchIrbNumber', TextType::class, array(
             'required'=>false,
             'label' => false,
-            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'IRB Number'),
+            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'IRB (IACUC) Number'),
         ));
 
         $builder->add('fundingNumber', TextType::class, array(

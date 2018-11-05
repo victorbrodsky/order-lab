@@ -1823,7 +1823,7 @@ class Project {
         return $this->getOid() . " '$title'";
     }
 
-    public function getIrbIacucNumber($delimeter=", ") {
+    public function getIrbIacucNumber($delimeter=" ") {
         //A- If there is only an IRB number: show the IRB number as you do now
         //B- If there is only an IACUC number: show the IACUC number in parentheses (IACUC Number)
         //C- If there are both an IRB number and an IACUC number, show IRB Number followed by an IACUC number in parenthesis: IRB Number (IACUC Number)
@@ -1844,12 +1844,12 @@ class Project {
 
         $irbApproval = $this->getExemptIrbApproval();
         if( !$irbApproval || ($irbApproval && $irbApproval->getName() == "Not Exempt") ) {
-            //echo "irb true <br>";
+            //echo $this->getId().": irb true <br>";
             $irb = true;
         }
         $iacucApproval = $this->getExemptIACUCApproval();
         if( !$iacucApproval || ($iacucApproval && $iacucApproval->getName() == "Not Exempt") ) {
-            //echo "iacuc true <br>";
+            //echo $this->getId().": iacuc true <br>";
             $iacuc = true;
         }
 

@@ -576,7 +576,7 @@ class InvoiceController extends Controller
 
         if( $irbNumber ) {
             $dql->leftJoin('transresRequest.project','project');
-            $dql->andWhere("project.irbNumber LIKE :irbNumber");
+            $dql->andWhere("project.irbNumber LIKE :irbNumber OR project.iacucNumber LIKE :irbNumber");
             $dqlParameters["irbNumber"] = "%".$irbNumber."%";
             $advancedFilter++;
         }

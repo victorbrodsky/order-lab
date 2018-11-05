@@ -1995,13 +1995,13 @@ class TransResRequestUtil
             }
         }
 
-        //pre-populate fundedAccountNumber
+        //pre-populate irbNumber
         $irbNumber = $project->getIrbNumber();
         if( $irbNumber ) {
             $invoice->setIrbNumber($irbNumber);
         }
 
-        //pre-populate irbNumber
+        //pre-populate fundedAccountNumber
         $transresFundedAccountNumber = $transresRequest->getFundedAccountNumber();
         if( $transresFundedAccountNumber ) {
             $invoice->setFundedAccountNumber($transresFundedAccountNumber);
@@ -3363,21 +3363,21 @@ class TransResRequestUtil
         }
 
         foreach($invoices as $invoice) {
-            $dueDateStr = null;
-            $dueDate = $invoice->getDueDate();
-            if( $dueDate ) {
-                $dueDateStr = $dueDate->format('Y-m-d');
-            }
 
-            $lastSentDateStr = null;
-            $lastSentDate = $invoice->getInvoiceLastReminderSentDate();
-            if( $lastSentDate ) {
-                $lastSentDateStr = $lastSentDate->format('Y-m-d');
-            }
-
+//            $dueDateStr = null;
+//            $dueDate = $invoice->getDueDate();
+//            if( $dueDate ) {
+//                $dueDateStr = $dueDate->format('Y-m-d');
+//            }
+//            $lastSentDateStr = null;
+//            $lastSentDate = $invoice->getInvoiceLastReminderSentDate();
+//            if( $lastSentDate ) {
+//                $lastSentDateStr = $lastSentDate->format('Y-m-d');
+//            }
             //echo "###Reminder email (ID#".$invoice->getId()."): dueDate=".$dueDateStr.", reminderConter=".$invoice->getInvoiceReminderCount().", lastSentDate=".$lastSentDateStr."$newline";
             //$msg = "Sending reminder email for Invoice ".$invoice->getOid();
             //": dueDate=".$dueDateStr.", lastSentDate=".$lastSentDateStr.", reminderEmailConter=".$invoice->getInvoiceReminderCount();
+
             $logger->notice("Sending reminder email for Invoice ".$invoice->getOid());
             $resultArr[] = $invoice->getOid();
 
@@ -3398,51 +3398,51 @@ class TransResRequestUtil
                 $this->em->flush($invoice);
             }
 
-            //send email
-            if(1) {
-                $piEmailArr = $this->getInvoicePis($invoice);
-                if (count($piEmailArr) == 0) {
-                    //return "There are no PI and/or Billing Contact emails. Email has not been sent.";
-                    $resultArr[] = "There are no PI and/or Billing Contact emails. Email has not been sent for Invoice ".$invoice->getOid();
-                    continue;
-                }
-
-                $salesperson = $invoice->getSalesperson();
-                if ($salesperson) {
-                    $salespersonEmail = $salesperson->getSingleEmail();
-                    if ($salespersonEmail) {
-                        $ccs = $salespersonEmail;
-                    }
-                }
-                if (!$ccs) {
-                    $submitter = $invoice->getSubmitter();
-                    if ($submitter) {
-                        $submitterEmail = $submitter->getSingleEmail();
-                        if ($submitterEmail) {
-                            $ccs = $submitterEmail;
-                        }
-                    }
-                }
-
-                //Attachment: Invoice PDF
-                $attachmentPath = null;
-                $invoicePDF = $invoice->getRecentPDF();
-                if ($invoicePDF) {
-                    $attachmentPath = $invoicePDF->getAbsoluteUploadFullPath();
-                }
-
-                //replace [[...]]
-                $transresRequest = $invoice->getTransresRequest();
-                $project = $transresRequest->getProject();
-                $invoiceReminderSubject = $transresUtil->replaceTextByNamingConvention($invoiceReminderSubject,$project,$transresRequest,$invoice);
-                $invoiceReminderBody = $transresUtil->replaceTextByNamingConvention($invoiceReminderBody,$project,$transresRequest,$invoice);
-
-                //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
-                $emailUtil->sendEmail( $piEmailArr, $invoiceReminderSubject, $invoiceReminderBody, $ccs, $invoiceReminderEmail, $attachmentPath );
-
-                $sentInvoiceEmailsArr[] = "Reminder email for the unpaid Invoice ".$invoice->getOid(). " has been sent to ".implode(";",$piEmailArr) . "; ccs:".$ccs;
+            ////////////// send email //////////////
+            $piEmailArr = $this->getInvoicePis($invoice);
+            if (count($piEmailArr) == 0) {
+                //return "There are no PI and/or Billing Contact emails. Email has not been sent.";
+                $resultArr[] = "There are no PI and/or Billing Contact emails. Email has not been sent for Invoice ".$invoice->getOid();
+                continue;
             }
-        }
+
+            $salesperson = $invoice->getSalesperson();
+            if ($salesperson) {
+                $salespersonEmail = $salesperson->getSingleEmail();
+                if ($salespersonEmail) {
+                    $ccs = $salespersonEmail;
+                }
+            }
+            if (!$ccs) {
+                $submitter = $invoice->getSubmitter();
+                if ($submitter) {
+                    $submitterEmail = $submitter->getSingleEmail();
+                    if ($submitterEmail) {
+                        $ccs = $submitterEmail;
+                    }
+                }
+            }
+
+            //Attachment: Invoice PDF
+            $attachmentPath = null;
+            $invoicePDF = $invoice->getRecentPDF();
+            if ($invoicePDF) {
+                $attachmentPath = $invoicePDF->getAbsoluteUploadFullPath();
+            }
+
+            //replace [[...]]
+            $transresRequest = $invoice->getTransresRequest();
+            $project = $transresRequest->getProject();
+            $invoiceReminderSubject = $transresUtil->replaceTextByNamingConvention($invoiceReminderSubject,$project,$transresRequest,$invoice);
+            $invoiceReminderBody = $transresUtil->replaceTextByNamingConvention($invoiceReminderBody,$project,$transresRequest,$invoice);
+
+            //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
+            $emailUtil->sendEmail( $piEmailArr, $invoiceReminderSubject, $invoiceReminderBody, $ccs, $invoiceReminderEmail, $attachmentPath );
+
+            $sentInvoiceEmailsArr[] = "Reminder email for the unpaid Invoice ".$invoice->getOid(). " has been sent to ".implode(";",$piEmailArr) . "; ccs:".$ccs;
+            ////////////// EOF send email //////////////
+
+        }//foreach $invoices
 
         //EventLog
         if( count($sentInvoiceEmailsArr) > 0 ) {

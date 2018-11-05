@@ -127,10 +127,15 @@
             <p>
             <div class="row">
                 <div class="col-xs-2" align="right">
-                    <strong>IRB Number:</strong>
+                    <strong>IRB (IACUC) Number:</strong>
                 </div>
                 <div class="col-xs-6" align="left">
-                    <input id="{{ id }}" class="form-control form-control-modif not-mapped-simplefield" type="text" value="{{ invoice.getIrbNumber() }}" disabled="disabled">
+                    <input
+                        id="{{ id }}"
+                        class="form-control form-control-modif not-mapped-simplefield"
+                        type="text"
+                        value="{{ invoice.getProjectIrbIacucNumber()|raw }}"
+                        disabled="disabled">
                 </div>
                 <div class="col-xs-4" align="right">
                 </div>

@@ -431,7 +431,7 @@ class ProjectController extends Controller
             $advancedFilter++;
         }
         if( $searchIrbNumber ) {
-            $dql->andWhere("project.irbNumber LIKE :irbNumber");
+            $dql->andWhere("project.irbNumber LIKE :irbNumber OR project.iacucNumber LIKE :irbNumber");
             $dqlParameters["irbNumber"] = "%".$searchIrbNumber."%";
             $advancedFilter++;
         }

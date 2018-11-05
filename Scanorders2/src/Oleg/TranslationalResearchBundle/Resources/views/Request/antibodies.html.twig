@@ -38,6 +38,7 @@
         <thead>
             <tr>
                 <th>{{ knp_pagination_sortable(entities, 'ID', 'ent.id') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Category', 'ent.category') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Name', 'ent.name') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Alternative Name', 'ent.altname') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Company', 'ent.company') }}</th>
@@ -70,6 +71,10 @@
             <tr>
                 <td>
                     {{ ent.id }}
+                </td>
+
+                <td>
+                    {{ ent.category }}
                 </td>
 
                 <td>
@@ -156,7 +161,7 @@
                     {{ ent.type }}
                 </td>
 
-                {% if is_granted('ROLE_TRANSRES_ADMIN') %}
+                {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') %}
                     <td class="rowlink-skip">
                         <div class="btn-group">
                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -201,6 +206,14 @@
     <div class="navigation">
         {{ knp_pagination_render(entities) }}
     </div>
+
+    <p>
+        <a href="{{ path('antibodies_new_translationalresearch') }}">
+            Create a new entry
+        </a>
+    </p>
+
+
 
 {% endblock %}
 

@@ -60,6 +60,17 @@
         {% set delete_form = false %}
     {% endif %}
 
+    {% if cycle is not defined %}
+        {% set cycle = "show" %}
+    {% endif %}
+    <input type="hidden" id="formcycle" value="{{ cycle }}" />
+    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    <div id="form-prototype-data"
+         data-userurllink = "{{ usermacros.userUrlLink()|e }}"
+         data-uploadurl = "{{ oneup_uploader_endpoint('employees_gallery') }}"
+         data-userid = "{{ app.user.id }}"
+    ></div>
+
     <h3 class="text-info">{{ displayName }}: ID {{ entity.id }}</h3>
 
     <br />

@@ -42,10 +42,11 @@
             <p>
                 <b>Invoice No.: {{ invoice.oid }}</b>
             </p>
-            {% set irbNum = invoice.getIrbNumber() %}
+            {#{% set irbNum = invoice.getIrbNumber() %}#}
+            {% set irbNum = invoice.getProjectIrbIacucNumber() %}
             {% if irbNum %}
                 <p>
-                    IRB No.: {{ irbNum }}
+                    IRB (IACUC) No.: {{ irbNum|raw }}
                 </p>
             {% endif %}
             {#<p>#}
