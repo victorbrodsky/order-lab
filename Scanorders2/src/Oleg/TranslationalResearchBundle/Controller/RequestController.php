@@ -259,6 +259,9 @@ class RequestController extends Controller
                 $requestUrl = $transresRequestUtil->getRequestShowUrl($transresRequest);
                 $msg = $msg . $break.$break . "To view this work request, please visit the link below: " . $break . $requestUrl;
 
+                $msg = $msg . $break.$break .
+                    "This request is being processed and a notification will be sent out once it has been completed and the deliverables (if any) are ready for pick up.";
+
                 $subject = "New work request has been submitted (" . $transresRequest->getOid().")";
                 $emailRes = $transresRequestUtil->sendRequestNotificationEmails($transresRequest, $subject, $msg, $testing);
 
@@ -537,6 +540,10 @@ class RequestController extends Controller
 
             //update Request email
             if( $transresRequest->getProgressState() == 'active' ) {
+
+                $msg = $msg . $break.$break .
+                    "This request is being processed and a notification will be sent out once it has been completed and the deliverables (if any) are ready for pick up.";
+
                 //exit("create: ID=".$transresRequest->getOid()."; state=".$transresRequest->getProgressState());
                 $subject = "Work Request " . $transresRequest->getOid() . " has been updated and it’s status set to Active.";
                 $emailRes = $transresRequestUtil->sendRequestNotificationEmails($transresRequest, $subject, $msg, $testing);

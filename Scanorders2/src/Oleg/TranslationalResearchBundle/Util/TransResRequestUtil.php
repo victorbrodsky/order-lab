@@ -1174,6 +1174,11 @@ class TransResRequestUtil
                     $emailBody = $subject . $break.$break. "To view this work request, please visit the link below:".$break.$requestUrl;
                     //$msgInfo = $emailBody;
 
+                    //add the following sentence into the body of the email:
+                    // This request is being processed and a notification will be sent out once it has been completed and the deliverables (if any) are ready for pick up.
+                    $emailBody = $emailBody . $break.$break .
+                        "This request is being processed and a notification will be sent out once it has been completed and the deliverables (if any) are ready for pick up.";
+
                     //send confirmation email
                     $msgInfo = $this->sendRequestNotificationEmails($transresRequest,$subject,$emailBody,$testing);
                 }
