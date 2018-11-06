@@ -106,7 +106,7 @@ class EmailUtil {
         }
 
         $environment = $userSecUtil->getSiteSettingParameter('environment');
-        if( $environment != 'live' ) {
+        if( $environment && $environment != 'live' ) {
             $subject = "[".$environment."] " . $subject;
         }
 

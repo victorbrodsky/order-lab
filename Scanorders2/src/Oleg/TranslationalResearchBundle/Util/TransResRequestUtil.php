@@ -3259,7 +3259,7 @@ class TransResRequestUtil
         $sentInvoiceEmailsArr = array();
 
         $testing = false;
-        $testing = true;
+        //$testing = true;
 
         //$invoiceReminderSchedule: invoiceDueDateMax,reminderIntervalMonths,maxReminderCount (i.e. 3,3,5)
         $invoiceReminderSchedule = $transresUtil->getTransresSiteProjectParameter('invoiceReminderSchedule',null,$projectSpecialty); //6,9,12,15,18

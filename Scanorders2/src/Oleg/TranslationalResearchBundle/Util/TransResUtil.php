@@ -3131,7 +3131,8 @@ class TransResUtil
             $userSecUtil = $this->container->get('user_security_utility');
             $liveSiteRootUrl = $userSecUtil->getSiteSettingParameter('liveSiteRootUrl');    //http://c.med.cornell.edu/order/
             $liveSiteHost = parse_url($liveSiteRootUrl, PHP_URL_HOST); //c.med.cornell.edu
-            //echo "liveSiteHost=".$liveSiteHost."; ";
+            //echo "liveSiteHost=".$liveSiteHost."\n";
+            //exit('111');
 
             $connectionChannel = $userSecUtil->getSiteSettingParameter('connectionChannel');
             if( !$connectionChannel ) {
@@ -3502,9 +3503,7 @@ class TransResUtil
 
             $projectShowUrl = $this->getProjectShowUrl($project);
             if( $projectShowUrl ) {
-                //$hostname = $request->getSchemeAndHttpHost();
-                //echo "hostname=$hostname<br>";
-                echo "Project URL=".$projectShowUrl."\n";
+                //echo "Project URL=".$projectShowUrl."\n";
                 $text = str_replace("[[PROJECT SHOW URL]]", $projectShowUrl, $text);
             }
         }
