@@ -3496,7 +3496,11 @@ class TransResRequestUtil
         }
 
         //123 matching for $456
-        $result = $counter . " total for $" . $totalSum;
+        if( $counter ) {
+            $result = $counter . " total for $" . $totalSum;
+        } else {
+            $result = $counter . " total";
+        }
 
         return $result;
     }
@@ -3529,7 +3533,11 @@ class TransResRequestUtil
         }
 
         //123 matching for $456
-        $result = $counter . " matching for $" . $totalSum;
+        if( $counter ) {
+            $result = $counter . " matching for $" . $totalSum;
+        } else {
+            $result = $counter . " matching";
+        }
 
         //exit($result);
         return $result;
