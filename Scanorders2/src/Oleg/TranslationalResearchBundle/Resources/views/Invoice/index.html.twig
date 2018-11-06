@@ -112,7 +112,7 @@
 
                             {% if transres_request_util.isUserHasInvoicePermission(invoice,"view") %}
                                 <li>
-                                    <a target="_blank" href="{{ path('translationalresearch_invoice_show', {'oid': invoice.oid }) }}">Show Invoice</a>
+                                    <a target="_blank" href="{{ path('translationalresearch_invoice_show', {'oid': invoice.oid }) }}">Show invoice</a>
                                 </li>
                             {% endif %}
 
@@ -120,7 +120,7 @@
 
                                 {% if transres_request_util.isUserHasInvoicePermission(invoice,"update") %}
                                     <li>
-                                        <a target="_blank" href="{{ path('translationalresearch_invoice_edit', {'oid': invoice.oid }) }}">Edit Invoice</a>
+                                        <a target="_blank" href="{{ path('translationalresearch_invoice_edit', {'oid': invoice.oid }) }}">Edit invoice</a>
                                     </li>
                                 {% endif %}
 
@@ -138,9 +138,9 @@
 
                                 {% if transres_request_util.isUserHasInvoicePermission(invoice,"update") %}
                                     {% if invoice.documents|length > 0 %}
-                                        {% set generateLabel = "Regenerate Invoice PDF" %}
+                                        {% set generateLabel = "Regenerate invoice PDF" %}
                                     {% else %}
-                                        {% set generateLabel = "Generate Invoice PDF" %}
+                                        {% set generateLabel = "Generate invoice PDF" %}
                                     {% endif %}
                                     <li>
                                         <a
@@ -188,7 +188,7 @@
                                 {% if transres_request_util.isUserHasInvoicePermission(invoice,"change-status") %}
                                     <li>
                                         <a href="#" data-toggle="modal" data-target="#modal_update_invoice_{{ invoice.getCleanOid() }}"
-                                        >Update Invoice Status</a>
+                                        >Update invoice status</a>
                                     </li>
                                 {% endif %}
 

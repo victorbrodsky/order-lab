@@ -306,7 +306,7 @@
     {% if cycle == "show" and invoice.latestVersion %}
         <p>
             <a class="btn btn-default" href="{{ path(translationalresearch_sitename~'_invoice_edit',{'oid':invoice.oid}) }}"
-            >Edit Invoice</a>
+            >Edit invoice</a>
         </p>
 
         {#<p>#}
@@ -316,9 +316,9 @@
 
         {% if is_granted('ROLE_TRANSRES_BILLING_ADMIN') %}
             {% if invoice.documents|length > 0 %}
-                {% set generateLabel = "Regenerate Invoice PDF" %}
+                {% set generateLabel = "Regenerate invoice PDF" %}
             {% else %}
-                {% set generateLabel = "Generate Invoice PDF" %}
+                {% set generateLabel = "Generate invoice PDF" %}
             {% endif %}
             <p>
                 <a class="btn btn-primary" href="{{ path('translationalresearch_invoice_generate_pdf', {'oid': invoice.oid }) }}"

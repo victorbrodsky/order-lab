@@ -3475,6 +3475,66 @@ class TransResRequestUtil
         return $result;
     }
 
+
+    public function getTotalStrInvoice() {
+        $repository = $this->em->getRepository('OlegTranslationalResearchBundle:Invoice');
+        $dql = $repository->createQueryBuilder("invoice");
+        //$dql->select('COUNT(invoice)');
+        $dql->select('invoice.total');
+        $dql->groupBy('invoice.id');
+
+        $query = $dql->getQuery();
+
+        $results = $query->getScalarResult();
+
+        $totalSum = 0;
+        $counter = 0;
+        foreach($results as $idTotal) {
+            $total = $idTotal['total'];
+            $totalSum = $totalSum + $total;
+            $counter++;
+        }
+
+        //123 matching for $456
+        $result = $counter . " total for $" . $totalSum;
+
+        return $result;
+    }
+    public function getMatchingStrInvoiceByDqlParameters($dql,$dqlParameters) {
+        $dql->select('invoice.total');
+        $dql->groupBy('invoice.id');
+
+        $query = $dql->getQuery();
+
+        if( count($dqlParameters) > 0 ) {
+            $query->setParameters($dqlParameters);
+        }
+
+        $results = $query->getScalarResult();
+        //print_r($results);
+        //echo "<br><br>";
+
+        $totalSum = 0;
+        //$totalSum = $this->toDecimal($totalSum);
+        $counter = 0;
+        foreach($results as $idTotal) {
+            //echo "id=".$idTotal.":$total"."<br>";
+            //print_r($idTotal);
+            //$id = $idTotal['id'];
+            $total = $idTotal['total'];
+            //$total = $this->toDecimal($total);
+            //echo "id=".$id.": $$total"."<br>";
+            $totalSum = $totalSum + $total;
+            $counter++;
+        }
+
+        //123 matching for $456
+        $result = $counter . " matching for $" . $totalSum;
+
+        //exit($result);
+        return $result;
+    }
+
 }
 
 
