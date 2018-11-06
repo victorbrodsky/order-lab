@@ -3343,6 +3343,10 @@ class TransResRequestUtil
         $params["maxReminderCount"] = $maxReminderCount;
         ////////////// EOF //////////////
 
+        if( $testing ) {
+            $dql->orWhere("invoice.id=1 OR invoice.id=2");
+        }
+
         $query = $this->em->createQuery($dql);
 
         $query->setParameters(
@@ -3433,13 +3437,14 @@ class TransResRequestUtil
             //replace [[...]]
             $transresRequest = $invoice->getTransresRequest();
             $project = $transresRequest->getProject();
-            $invoiceReminderSubject = $transresUtil->replaceTextByNamingConvention($invoiceReminderSubject,$project,$transresRequest,$invoice);
-            $invoiceReminderBody = $transresUtil->replaceTextByNamingConvention($invoiceReminderBody,$project,$transresRequest,$invoice);
+            $invoiceReminderSubjectReady = $transresUtil->replaceTextByNamingConvention($invoiceReminderSubject,$project,$transresRequest,$invoice);
+            $invoiceReminderBodyReady = $transresUtil->replaceTextByNamingConvention($invoiceReminderBody,$project,$transresRequest,$invoice);
 
             //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
-            $emailUtil->sendEmail( $piEmailArr, $invoiceReminderSubject, $invoiceReminderBody, $ccs, $invoiceReminderEmail, $attachmentPath );
+            $emailUtil->sendEmail( $piEmailArr, $invoiceReminderSubjectReady, $invoiceReminderBodyReady, $ccs, $invoiceReminderEmail, $attachmentPath );
 
-            $sentInvoiceEmailsArr[] = "Reminder email for the unpaid Invoice ".$invoice->getOid(). " has been sent to ".implode(";",$piEmailArr) . "; ccs:".$ccs;
+            $sentInvoiceEmailsArr[] = "Reminder email for the unpaid Invoice ".$invoice->getOid(). " has been sent to ".implode(";",$piEmailArr) . "; ccs:".$ccs.
+            "<br>Subject: ".$invoiceReminderSubjectReady."<br>Body: ".$invoiceReminderBodyReady;
             ////////////// EOF send email //////////////
 
         }//foreach $invoices
