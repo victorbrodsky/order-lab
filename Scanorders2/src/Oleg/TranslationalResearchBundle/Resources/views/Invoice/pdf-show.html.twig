@@ -53,7 +53,7 @@
                 {#<b>Account number (if funded): {{ invoice.fundedAccountNumber }}</b>#}
             {#</p>#}
             <p>
-                Due Date: {{ invoice.dueDate|date("m/d/Y") }}
+                Due Date: {{ invoice.dueDate|date("m/d/Y",false) }}
             </p>
             <p>
                 Salesperson: {{ invoice.salesperson.getUsernameOptimal() }}

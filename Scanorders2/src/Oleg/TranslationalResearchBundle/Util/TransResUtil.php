@@ -3479,6 +3479,7 @@ class TransResUtil
 
             $projectShowUrl = $this->getProjectShowUrl($project);
             if( $projectShowUrl ) {
+                echo "Project URL=".$projectShowUrl."\n";
                 $text = str_replace("[[PROJECT SHOW URL]]", $projectShowUrl, $text);
             }
         }
