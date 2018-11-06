@@ -105,6 +105,11 @@ class EmailUtil {
             }
         }
 
+        $environment = $userSecUtil->getSiteSettingParameter('environment');
+        if( $environment != 'live' ) {
+            $subject = "[".$environment."] " . $subject;
+        }
+
         if( !$emails || $emails == "" ) {
             //$logger->error("sendEmail: emails empty=".$emails);
             $logger->error("sendEmail: Email has not been sent (emails empty): subject=".$subject."; body=".$body);
