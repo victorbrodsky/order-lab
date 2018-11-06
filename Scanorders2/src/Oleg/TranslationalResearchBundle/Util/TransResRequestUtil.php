@@ -3485,7 +3485,7 @@ class TransResRequestUtil
         $repository = $this->em->getRepository('OlegTranslationalResearchBundle:Invoice');
         $dql = $repository->createQueryBuilder("invoice");
         //$dql->select('COUNT(invoice)');
-        $dql->select('invoice.total');
+        $dql->select('invoice.id,invoice.total');
         $dql->groupBy('invoice.id');
 
         $query = $dql->getQuery();
@@ -3510,7 +3510,7 @@ class TransResRequestUtil
         return $result;
     }
     public function getMatchingStrInvoiceByDqlParameters($dql,$dqlParameters) {
-        $dql->select('invoice.total');
+        $dql->select('invoice.id,invoice.total');
         $dql->groupBy('invoice.id');
 
         $query = $dql->getQuery();
