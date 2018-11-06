@@ -1223,7 +1223,9 @@ class TransResRequestUtil
     }
 
     public function getRequestShowUrl($transresRequest,$asHref=true) {
-        $url = $this->container->get('router')->generate(
+        $transresUtil = $this->container->get('transres_util');
+        $router = $transresUtil->getRequestContextRouter();
+        $url = $router->generate(
             'translationalresearch_request_show',
             array(
                 'id' => $transresRequest->getId(),
@@ -1239,7 +1241,9 @@ class TransResRequestUtil
     }
 
     public function getInvoiceShowUrl($invoice,$asHref=true) {
-        $url = $this->container->get('router')->generate(
+        $transresUtil = $this->container->get('transres_util');
+        $router = $transresUtil->getRequestContextRouter();
+        $url = $router->generate(
             'translationalresearch_invoice_show',
             array(
                 'oid' => $invoice->getOid(),
@@ -1254,7 +1258,9 @@ class TransResRequestUtil
         return $url;
     }
     public function getInvoiceEditUrl($invoice,$asHref=true) {
-        $url = $this->container->get('router')->generate(
+        $transresUtil = $this->container->get('transres_util');
+        $router = $transresUtil->getRequestContextRouter();
+        $url = $router->generate(
             'translationalresearch_invoice_edit',
             array(
                 'oid' => $invoice->getOid(),
@@ -1270,7 +1276,9 @@ class TransResRequestUtil
     }
 
     public function getSendInvoiceByEmailUrl($invoice,$asHref=true) {
-        $url = $this->container->get('router')->generate(
+        $transresUtil = $this->container->get('transres_util');
+        $router = $transresUtil->getRequestContextRouter();
+        $url = $router->generate(
             'translationalresearch_invoice_send_pdf_email',
             array(
                 'oid' => $invoice->getOid(),

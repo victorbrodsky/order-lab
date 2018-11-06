@@ -3080,7 +3080,8 @@ class TransResUtil
 //    }
 
     public function getProjectShowUrl($project) {
-        $projectUrl = $this->container->get('router')->generate(
+        $router = $this->getRequestContextRouter();
+        $projectUrl = $router->generate(
             'translationalresearch_project_show',
             array(
                 'id' => $project->getId(),
@@ -3093,7 +3094,8 @@ class TransResUtil
         return $projectUrl;
     }
     public function getProjectEditUrl($project) {
-        $projectUrl = $this->container->get('router')->generate(
+        $router = $this->getRequestContextRouter();
+        $projectUrl = $router->generate(
             'translationalresearch_project_edit',
             array(
                 'id' => $project->getId(),
@@ -3106,7 +3108,8 @@ class TransResUtil
         return $projectUrl;
     }
     public function getProjectReviewUrl($project) {
-        $projectUrl = $this->container->get('router')->generate(
+        $router = $this->getRequestContextRouter();
+        $projectUrl = $router->generate(
             'translationalresearch_project_review',
             array(
                 'id' => $project->getId(),
@@ -3121,6 +3124,26 @@ class TransResUtil
     public function getProjectResubmitUrl($project) {
         //the same as edit, if the project in 'missinginfo' state, then resubmit button will appear on the edit page
         return $this->getProjectEditUrl($project);
+    }
+    public function getRequestContextRouter() {
+        $request = $this->container->get('request_stack')->getCurrentRequest();
+        if( !$request ) {
+            $userSecUtil = $this->container->get('user_security_utility');
+            $liveSiteRootUrl = $userSecUtil->getSiteSettingParameter('liveSiteRootUrl');    //http://c.med.cornell.edu/order/
+            $liveSiteHost = parse_url($liveSiteRootUrl, PHP_URL_HOST); //c.med.cornell.edu
+            //echo "liveSiteHost=".$liveSiteHost."; ";
+
+            $connectionChannel = $userSecUtil->getSiteSettingParameter('connectionChannel');
+            if( !$connectionChannel ) {
+                $connectionChannel = 'http';
+            }
+
+            $context = $this->container->get('router')->getContext();
+            $context->setHost($liveSiteHost);
+            $context->setScheme($connectionChannel);
+            $context->setBaseUrl('/order');
+        }
+        return $this->container->get('router');
     }
 
     //$specialtyStr: hematopathology, ap-cp
@@ -3479,6 +3502,8 @@ class TransResUtil
 
             $projectShowUrl = $this->getProjectShowUrl($project);
             if( $projectShowUrl ) {
+                //$hostname = $request->getSchemeAndHttpHost();
+                //echo "hostname=$hostname<br>";
                 echo "Project URL=".$projectShowUrl."\n";
                 $text = str_replace("[[PROJECT SHOW URL]]", $projectShowUrl, $text);
             }
