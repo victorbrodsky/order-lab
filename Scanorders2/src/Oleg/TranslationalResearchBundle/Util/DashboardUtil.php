@@ -355,6 +355,7 @@ class DashboardUtil
                     } else {
                         $label = $label . " " . $valuePrefixLabel . $value;
                     }
+                    //echo "value=$value<br>";
                 }
                 $labels[] = $label;
                 $values[] = $value;
@@ -1901,7 +1902,7 @@ class DashboardUtil
 
                 $totalThisInvoiceFee = intval($invoice->getTotal());
 
-                //19. Generated Invoices by Status per Funded Project (Top 10)
+                //Generated Invoices by Status per Funded Project (Top 10)
                 if ($transRequest->getFundedAccountNumber()) {
                     //19. Generated Invoices by Status per Funded Project (Top 10)
                     if (isset($invoicesByProjectArr[$projectIndex])) {
@@ -1916,6 +1917,7 @@ class DashboardUtil
                     } else {
                         $totalFee = $totalThisInvoiceFee;
                     }
+                    $totalFee = 123456;
                     $invoicesFeesByProjectArr[$projectIndex] = $totalFee;
 
                     $titleCount = $titleCount + $totalThisInvoiceFee;
@@ -1924,10 +1926,10 @@ class DashboardUtil
             }//foreach invoices
 
             $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($titleCount),"$");
-            //19. Generated Invoices by Status per Funded Project (Top 10)
+            //Generated Invoices by Status per Funded Project (Top 10)
             $showOther = $this->getOtherStr($showLimited,"Projects");
             $invoicesByProjectTopArr = $this->getTopArray($invoicesByProjectArr,$showOther);
-            $invoicesFeesByProjectTopArr = $this->getTopArray($invoicesFeesByProjectArr,$showOther);
+            $invoicesFeesByProjectTopArr = $this->getTopArray($invoicesFeesByProjectArr,$showOther); //public function getTopArray(
             //merge two to attach fees to label
             $invoicesByProjectTopArr = $this->attachSecondValueToFirstLabel($invoicesByProjectTopArr,$invoicesFeesByProjectTopArr," : $");
             $chartsArray = $this->getChart($invoicesByProjectTopArr, $chartName,'pie',$layoutArray);
@@ -1966,8 +1968,6 @@ class DashboardUtil
 
                 //24. Generated Invoices by Status per PI (Top 10)
                 if ($transRequest->getFundedAccountNumber()) {
-                    //20. Generated Invoices by Status per PI (Top 10)
-
                     //Total fees
                     if (isset($invoicesFeesByPiArr[$investigatorIndex])) {
                         $totalFee = $invoicesFeesByPiArr[$investigatorIndex] + $totalThisInvoiceFee;
@@ -2006,7 +2006,7 @@ class DashboardUtil
             );
             $showOther = $this->getOtherStr($showLimited,"PIs");
             $invoicesFeesByPiArrTop = $this->getTopArray($invoicesFeesByPiArr,$showOther,$descriptionArr);
-            $chartsArray = $this->getChart($invoicesFeesByPiArrTop, $chartName,'pie',$layoutArray);
+            $chartsArray = $this->getChart($invoicesFeesByPiArrTop,$chartName,'pie',$layoutArray);
         }
 
         //"25. Total Invoiced Amounts of Projects per Pathologist Involved (Top 10)" =>             "fees-by-invoices-per-projects-per-pathologist-involved",
