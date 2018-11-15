@@ -350,7 +350,11 @@ class DashboardUtil
         foreach( $dataArr as $label => $value ) {
             if( $type == "bar" || ($value && $value != 0) ) {
                 if( $valuePrefixLabel && $value ) {
-                    $label = $label . " " . $valuePrefixLabel . $value;
+                    if( strpos($valuePrefixLabel,'$') !== false ) {
+                        $label = $label . " " . $valuePrefixLabel . $this->getNumberFormat($value);
+                    } else {
+                        $label = $label . " " . $valuePrefixLabel . $value;
+                    }
                 }
                 $labels[] = $label;
                 $values[] = $value;
@@ -448,7 +452,11 @@ class DashboardUtil
             $link = null;
             if( $type == "bar" || ($value && $value != 0) ) {
                 if( $valuePrefixLabel && $value ) {
-                    $label = $label . " " . $valuePrefixLabel . $value;
+                    if( strpos($valuePrefixLabel,'$') !== false ) {
+                        $label = $label . " " . $valuePrefixLabel . $this->getNumberFormat($value);
+                    } else {
+                        $label = $label . " " . $valuePrefixLabel . $value;
+                    }
                 }
 
                 if( $showPath == 'project' ) {
