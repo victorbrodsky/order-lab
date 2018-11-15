@@ -3480,7 +3480,53 @@ class TransResRequestUtil
         return $result;
     }
 
+    public function getMatchingStrInvoiceByDqlParameters($dql,$dqlParameters) {
+        $dql->select('invoice.total,invoice.paid,invoice.due');
+        //$dql->groupBy('invoice.id');
 
+        $query = $dql->getQuery();
+
+        if( count($dqlParameters) > 0 ) {
+            $query->setParameters($dqlParameters);
+        }
+
+        $results = $query->getScalarResult();
+        //print_r($results);
+        //echo "<br><br>";
+
+        //All Invoices (188 matching for Total: $61,591.00, Paid: $30,000.00, Unpaid: $31591.00)
+
+        $totalSum = 0;
+        $paidSum = 0;
+        $dueSum = 0;
+        //$totalSum = $this->toDecimal($totalSum);
+        $counter = 0;
+        foreach($results as $idParams) {
+            //echo "id=".$idTotal.":$total"."<br>";
+            //print_r($idTotal);
+            //$id = $idTotal['id'];
+            $total = $idParams['total'];
+            $paid = $idParams['paid'];
+            $due = $idParams['due'];
+            //$total = $this->toDecimal($total);
+            //echo "id=".$id.": $$total"."<br>";
+            $totalSum = $totalSum + $total;
+            $paidSum = $paidSum + $paid;
+            $dueSum = $dueSum + $due;
+            $counter++;
+        }
+
+        //123 matching for $456
+        if( $counter ) {
+            $result = $counter . " matching for Total: $" . $totalSum . ", Paid: $" . $paidSum . ", Unpaid: $" . $dueSum;
+        } else {
+            $result = $counter . " matching";
+        }
+
+        //exit($result);
+        return $result;
+    }
+    //NOT USED
     public function getTotalStrInvoice() {
         $repository = $this->em->getRepository('OlegTranslationalResearchBundle:Invoice');
         $dql = $repository->createQueryBuilder("invoice");
@@ -3502,49 +3548,11 @@ class TransResRequestUtil
 
         //123 matching for $456
         if( $counter ) {
-            $result = $counter . " total for $" . $totalSum;
+            $result = $counter . " total for Total $" . $totalSum;
         } else {
             $result = $counter . " total";
         }
 
-        return $result;
-    }
-    public function getMatchingStrInvoiceByDqlParameters($dql,$dqlParameters) {
-        $dql->select('invoice.total');
-        //$dql->groupBy('invoice.id');
-
-        $query = $dql->getQuery();
-
-        if( count($dqlParameters) > 0 ) {
-            $query->setParameters($dqlParameters);
-        }
-
-        $results = $query->getScalarResult();
-        //print_r($results);
-        //echo "<br><br>";
-
-        $totalSum = 0;
-        //$totalSum = $this->toDecimal($totalSum);
-        $counter = 0;
-        foreach($results as $idTotal) {
-            //echo "id=".$idTotal.":$total"."<br>";
-            //print_r($idTotal);
-            //$id = $idTotal['id'];
-            $total = $idTotal['total'];
-            //$total = $this->toDecimal($total);
-            //echo "id=".$id.": $$total"."<br>";
-            $totalSum = $totalSum + $total;
-            $counter++;
-        }
-
-        //123 matching for $456
-        if( $counter ) {
-            $result = $counter . " matching for $" . $totalSum;
-        } else {
-            $result = $counter . " matching";
-        }
-
-        //exit($result);
         return $result;
     }
 

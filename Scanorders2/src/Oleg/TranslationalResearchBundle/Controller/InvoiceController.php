@@ -624,8 +624,9 @@ class InvoiceController extends Controller
         //echo "eventObjectTypeId=".$eventObjectTypeId."<br>";
 
         $matchingStrInvoice = $transresRequestUtil->getMatchingStrInvoiceByDqlParameters($dql,$dqlParameters);
-        $totalStrInvoice = $transresRequestUtil->getTotalStrInvoice();
-        $title = $title . " (" . $matchingStrInvoice . ", " . $totalStrInvoice . ")";
+        //$totalStrInvoice = $transresRequestUtil->getTotalStrInvoice();
+        //$title = $title . " (" . $matchingStrInvoice . "; " . $totalStrInvoice . ")";
+        $title = $title . " (" . $matchingStrInvoice . ")";
 
         return array(
             'invoices' => $invoices,
