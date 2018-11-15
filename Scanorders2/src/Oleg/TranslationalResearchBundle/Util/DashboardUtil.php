@@ -1837,10 +1837,11 @@ class DashboardUtil
                 'height' => $this->height,
                 'width' =>  $this->width,
                 //'title' => "18. Generated Invoices from Funded Projects (Total invoiced $".$totalThisInvoiceVerificationFees."; Total invoices: ".$totalInvoices.", 'Paid in Full' invoices: ".$paidInvoices.")"
-                'title' => $chartName." (Total invoiced $".$totalThisInvoiceVerificationFees."; Total invoices: ".$totalInvoices.", 'Paid in Full' invoices: ".$paidInvoices.")"
+                'title' => $chartName." (Total invoiced $".$this->getNumberFormat($totalThisInvoiceVerificationFees)
+                    ."; Total invoices: ".$totalInvoices.", 'Paid in Full' invoices: ".$paidInvoices.")"
             );
 
-            $labels = array('Paid'.' : $'.$totalFundedPaidFees,'Unpaid (Due)'.' : $'.$totalFundedDueFees);
+            $labels = array('Paid'.' : $'.$this->getNumberFormat($totalFundedPaidFees),'Unpaid (Due)'.' : $'.$this->getNumberFormat($totalFundedDueFees));
             $values = array($totalFundedPaidFees,$totalFundedDueFees);
 
             $chartDataArray['values'] = $values;
