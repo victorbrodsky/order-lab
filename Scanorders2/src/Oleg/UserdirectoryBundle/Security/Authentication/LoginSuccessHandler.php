@@ -129,6 +129,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
 //            $user->addRole($this->roleUnapproved);
 //        }
         $this->checkBasicRole($user,$lastRoute);
+        //echo "lastRoute=".$lastRoute."<br>";exit();
 
         if( $this->secAuth->isGranted($this->roleUnapproved) ) {
             $options['eventtype'] = 'Unapproved User Login Attempt';
@@ -162,7 +163,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         $nopermpos = strpos($lastRoute, '/no-permission');
         $nocheck = strpos($lastRoute, '/check/');
         $keepalive = strpos($lastRoute, '/keepalive');
-        $idlelogout = strpos($lastRoute, '/idlelogout');
+        $idlelogout = strpos($lastRoute, '/idle-log-out');
         $common = strpos($lastRoute, '/common/');
 
         $filedownload = strpos($lastRoute, '/file-download');
@@ -175,10 +176,8 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
             return $response;
         }
 
-
         //echo "keepalive=".$keepalive."<br>";
-        //echo "lastRoute=".$lastRoute."<br>";
-
+        //echo "lastRoute=".$lastRoute."<br>";exit();
 
         if( 
             $lastRoute && $lastRoute != '' && 

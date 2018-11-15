@@ -3679,7 +3679,7 @@ class TransResUtil
         $ews->setCellValue('E1', 'Funding');
         $ews->setCellValue('F1', 'Status');
         $ews->setCellValue('G1', 'Approval Date');
-        $ews->setCellValue('H1', 'IRB/IACUC Expiration Date');
+        $ews->setCellValue('H1', $this->getHumanAnimalName().' Expiration Date');
 
         $ews->setCellValue('I1', 'Request ID');
 
@@ -4544,5 +4544,28 @@ class TransResUtil
         }
 
         return null;
+    }
+
+    //$type: slash-"IRB/IACUC", brackets-"IRB (IACUC)"
+    public function getHumanAnimalName($type="slash") {
+        $userSecUtil = $this->container->get('user_security_utility');
+        $human = $userSecUtil->getSiteSettingParameter('transresHumanSubjectName');
+        if( !$human ) {
+            $human = "IRB";
+        }
+        $animal = $userSecUtil->getSiteSettingParameter('transresAnimalSubjectName');
+        if( !$animal ) {
+            $animal = "IACUC";
+        }
+
+        if( $type == "slash" ) {
+            return $human."/".$animal;
+        }
+
+        if( $type == "brackets" ) {
+            return $human." (".$animal.")";
+        }
+
+        return $human.",".$animal;
     }
 }

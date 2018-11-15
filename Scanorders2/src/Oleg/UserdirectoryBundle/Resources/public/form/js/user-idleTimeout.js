@@ -281,7 +281,7 @@ function logoff() {
     //return; //testing
     //console.log("logoff");
     window.onbeforeunload = null;
-    var urlRegularLogout = getCommonBaseUrl("idlelogout");
+    var urlRegularLogout = getCommonBaseUrl("idle-log-out");
     window.location = urlRegularLogout;
 }
 
@@ -289,7 +289,7 @@ function logoff() {
 function idlelogout() {
     //return; //testing
     window.onbeforeunload = null;
-    var urlIdleTimeoutLogout = getCommonBaseUrl("idlelogout");
+    var urlIdleTimeoutLogout = getCommonBaseUrl("idle-log-out");
     window.location = urlIdleTimeoutLogout;
 }
 

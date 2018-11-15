@@ -186,7 +186,7 @@ class FilterInvoiceType extends AbstractType
         $builder->add('irbNumber', TextType::class, array(
             'required'=>false,
             'label' => false,
-            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'IRB (IACUC) Number'),
+            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>$this->params['humanAnimalName'].' Number'),
         ));
 
 //        $builder->add('complexFilterList', null, array(

@@ -1094,6 +1094,21 @@ class SiteParameters {
      */
     private $transresDashboardInstitution;
 
+    /**
+     * Name of the group that approves research projects involving human subjects: [IRB]
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $transresHumanSubjectName;
+
+    /**
+     * Name of the group that approves research projects involving animal subjects: [IACUC]
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $transresAnimalSubjectName;
+
+
 
 
     function __construct( $addobjects=true )
@@ -3820,7 +3835,37 @@ class SiteParameters {
         $this->transresDashboardInstitution = $transresDashboardInstitution;
     }
 
-    
+    /**
+     * @return mixed
+     */
+    public function getTransresHumanSubjectName()
+    {
+        return $this->transresHumanSubjectName;
+    }
+
+    /**
+     * @param mixed $transresHumanSubjectName
+     */
+    public function setTransresHumanSubjectName($transresHumanSubjectName)
+    {
+        $this->transresHumanSubjectName = $transresHumanSubjectName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTransresAnimalSubjectName()
+    {
+        return $this->transresAnimalSubjectName;
+    }
+
+    /**
+     * @param mixed $transresAnimalSubjectName
+     */
+    public function setTransresAnimalSubjectName($transresAnimalSubjectName)
+    {
+        $this->transresAnimalSubjectName = $transresAnimalSubjectName;
+    }
     
 
 }

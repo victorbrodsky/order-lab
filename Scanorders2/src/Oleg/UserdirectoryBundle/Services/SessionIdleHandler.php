@@ -122,7 +122,7 @@ class SessionIdleHandler
         $fullUrl = $_SERVER['REQUEST_URI'];
 
         $routeName = $routeParams['_route'];
-        //echo "<br> kernel routeName=".$routeName."<br>";
+        //echo "<br> kernel routeName=".$routeName."<br>"; exit();
 
         if( $routeName[0] == '_' ) {
             $dontSetRedirect++;

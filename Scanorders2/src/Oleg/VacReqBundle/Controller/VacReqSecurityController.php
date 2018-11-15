@@ -74,8 +74,8 @@ class VacReqSecurityController extends SecurityController
 
 
     /**
-     * @Route("/idlelogout", name="vacreq_idlelogout")
-     * @Route("/idlelogout/{flag}", name="vacreq_idlelogout-saveorder")
+     * @Route("/idle-log-out", name="vacreq_idlelogout")
+     * @Route("/idle-log-out/{flag}", name="vacreq_idlelogout-saveorder")
      * @Template()
      */
     public function idlelogoutAction( Request $request, $flag = null )

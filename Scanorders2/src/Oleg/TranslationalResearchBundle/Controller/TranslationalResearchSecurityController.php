@@ -77,8 +77,8 @@ class TranslationalResearchSecurityController extends SecurityController
 
 
     /**
-     * @Route("/idlelogout", name="translationalresearch_idlelogout")
-     * @Route("/idlelogout/{flag}", name="translationalresearch_idlelogout-saveorder")
+     * @Route("/idle-log-out", name="translationalresearch_idlelogout")
+     * @Route("/idle-log-out/{flag}", name="translationalresearch_idlelogout-saveorder")
      * @Template()
      */
     public function idlelogoutAction( Request $request, $flag = null )

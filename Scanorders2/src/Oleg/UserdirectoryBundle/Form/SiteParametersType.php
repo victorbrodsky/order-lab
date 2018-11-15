@@ -1018,6 +1018,19 @@ class SiteParametersType extends AbstractType
             ));
         }
 
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'transresHumanSubjectName' ) {
+            $builder->add('transresHumanSubjectName', null, array(
+                'label' => 'Name of the group that approves research projects involving human subjects (IRB):',
+                'attr' => array('class' => 'form-control')
+            ));
+        }
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'transresAnimalSubjectName' ) {
+            $builder->add('transresAnimalSubjectName', null, array(
+                'label' => 'Name of the group that approves research projects involving human subjects (IACUC):',
+                'attr' => array('class' => 'form-control')
+            ));
+        }
+
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'transresDashboardInstitution' ) {
 //            $builder->add('transresDashboardInstitution', null, array(
 //                'label' => 'Pathology Department for Translational Research Dashboard:',

@@ -74,8 +74,8 @@ class CallLogSecurityController extends SecurityController
 
 
     /**
-     * @Route("/idlelogout", name="calllog_idlelogout")
-     * @Route("/idlelogout/{flag}", name="calllog_idlelogout-saveorder")
+     * @Route("/idle-log-out", name="calllog_idlelogout")
+     * @Route("/idle-log-out/{flag}", name="calllog_idlelogout-saveorder")
      * @Template()
      */
     public function idlelogoutAction( Request $request, $flag = null )

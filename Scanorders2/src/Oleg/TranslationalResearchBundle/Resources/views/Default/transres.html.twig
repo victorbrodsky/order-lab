@@ -115,7 +115,7 @@
                     {% if project.implicitExpirationDate %}
                         {% set implicitExpirationDate = project.implicitExpirationDate|date('m/d/Y',false) %}
                     {% endif %}
-                    {{ formmacros.simplefield("IRB/IACUC Expiration Date:", implicitExpirationDate, "input", "disabled") }}
+                    {{ formmacros.simplefield(transres_util.getHumanAnimalName()~" Expiration Date:", implicitExpirationDate, "input", "disabled") }}
 
                     {#Funding#}
                     {{ formmacros.simplefield("Funding:", project.isFunded(), "input", "disabled") }}

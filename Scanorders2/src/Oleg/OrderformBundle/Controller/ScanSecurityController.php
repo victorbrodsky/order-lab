@@ -46,8 +46,8 @@ class ScanSecurityController extends SecurityController
 
 
     /**
-     * @Route("/idlelogout", name="scan_idlelogout")
-     * @Route("/idlelogout/{flag}", name="scan_idlelogout-saveorder")
+     * @Route("/idle-log-out", name="scan_idlelogout")
+     * @Route("/idle-log-out/{flag}", name="scan_idlelogout-saveorder")
      * @Template()
      */
     public function idlelogoutAction( Request $request, $flag = null )

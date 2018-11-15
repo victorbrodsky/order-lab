@@ -73,8 +73,8 @@ class DeidentifierSecurityController extends SecurityController
 
 
     /**
-     * @Route("/idlelogout", name="deidentifier_idlelogout")
-     * @Route("/idlelogout/{flag}", name="deidentifier_idlelogout-saveorder")
+     * @Route("/idle-log-out", name="deidentifier_idlelogout")
+     * @Route("/idle-log-out/{flag}", name="deidentifier_idlelogout-saveorder")
      * @Template()
      */
     public function idlelogoutAction( Request $request, $flag = null )

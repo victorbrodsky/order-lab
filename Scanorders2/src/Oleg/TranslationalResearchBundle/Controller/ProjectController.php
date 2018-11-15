@@ -188,7 +188,9 @@ class ProjectController extends Controller
             'defaultStatesArr' => array("All-except-Drafts-and-Canceled"),
             //'defaultStatesArr' => array("All-except-Drafts","Canceled","Closed"),
             'toImplicitExpDate' => null,
-            'fromImplicitExpDate' => null
+            'fromImplicitExpDate' => null,
+            'humanAnimalNameBracket' => $transresUtil->getHumanAnimalName("brackets"),
+            'humanAnimalNameSlash' => $transresUtil->getHumanAnimalName("slash")
         );
 
         if( $routeName == "translationalresearch_my_request_project_draft_index" ) {

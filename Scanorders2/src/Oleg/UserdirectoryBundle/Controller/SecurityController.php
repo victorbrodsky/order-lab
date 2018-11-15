@@ -221,8 +221,8 @@ class SecurityController extends Controller
 
 
     /**
-     * @Route("/idlelogout", name="employees_idlelogout")
-     * @Route("/idlelogout/{flag}", name="employees_idlelogout-saveorder")
+     * @Route("/idle-log-out", name="employees_idlelogout")
+     * @Route("/idle-log-out/{flag}", name="employees_idlelogout-saveorder")
      *
      * @Template()
      */

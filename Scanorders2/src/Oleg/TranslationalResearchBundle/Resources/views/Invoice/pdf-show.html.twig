@@ -46,7 +46,7 @@
             {% set irbNum = invoice.getProjectIrbIacucNumber() %}
             {% if irbNum %}
                 <p>
-                    IRB (IACUC) No.: {{ irbNum|raw }}
+                    {{ transres_util.getHumanAnimalName("brackets") }} No.: {{ irbNum|raw }}
                 </p>
             {% endif %}
             {#<p>#}

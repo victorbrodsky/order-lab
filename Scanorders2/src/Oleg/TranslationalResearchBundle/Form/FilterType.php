@@ -150,7 +150,7 @@ class FilterType extends AbstractType
         $builder->add('searchIrbNumber', TextType::class, array(
             'required'=>false,
             'label' => false,
-            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'IRB (IACUC) Number'),
+            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>$this->params['humanAnimalNameBracket'].' Number'),
         ));
 
         $builder->add('fundingNumber', TextType::class, array(
@@ -254,7 +254,8 @@ class FilterType extends AbstractType
             'required' => false,
             'format' => 'MM/dd/yyyy',
             'data' => $this->params['fromImplicitExpDate'],
-            'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'From IRB/IACUC Expiration Date'),
+            //'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'From IRB/IACUC Expiration Date'),
+            'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'From '.$this->params['humanAnimalNameSlash'].' Expiration Date'),
         ));
         $builder->add('toImplicitExpDate', DateTimeType::class, array(
             'label' => false,
@@ -262,7 +263,8 @@ class FilterType extends AbstractType
             'required' => false,
             'format' => 'MM/dd/yyyy',
             'data' => $this->params['toImplicitExpDate'],
-            'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'To IRB/IACUC Expiration Date'),
+            //'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'To IRB/IACUC Expiration Date'),
+            'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'To '.$this->params['humanAnimalNameSlash'].' Expiration Date'),
         ));
 
         $builder->add('briefDescription', TextType::class, array(

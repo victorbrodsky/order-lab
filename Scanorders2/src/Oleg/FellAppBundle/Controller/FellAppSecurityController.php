@@ -74,8 +74,8 @@ class FellAppSecurityController extends SecurityController
 
 
     /**
-     * @Route("/idlelogout", name="fellapp_idlelogout")
-     * @Route("/idlelogout/{flag}", name="fellapp_idlelogout-saveorder")
+     * @Route("/idle-log-out", name="fellapp_idlelogout")
+     * @Route("/idle-log-out/{flag}", name="fellapp_idlelogout-saveorder")
      * @Template()
      */
     public function idlelogoutAction( Request $request, $flag = null )

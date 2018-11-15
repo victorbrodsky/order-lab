@@ -1114,7 +1114,7 @@ class RequestController extends Controller
             'billingStateArr' => $billingStateArr,
             'routeName' => $routeName,
             'projectSpecialtyAllowedArr' => $projectSpecialtyAllowedArr,
-            'availableProjects' => $availableProjects
+            'availableProjects' => $availableProjects,
         );
         $filterform = $this->createForm(FilterRequestType::class, null, array(
             'method' => 'GET',
@@ -2034,7 +2034,8 @@ class RequestController extends Controller
             'billingStateChoiceArr' => $billingStateChoiceArr,
             'progressStateChoiceArr' => $progressStateChoiceArr,
             'categoryListLink' => $categoryListLink,
-            'fundedNumberLabel' => $fundedNumberLabel
+            'fundedNumberLabel' => $fundedNumberLabel,
+            'humanAnimalNameSlash' => $transresUtil->getHumanAnimalName()
         );
 
         $params['admin'] = false;

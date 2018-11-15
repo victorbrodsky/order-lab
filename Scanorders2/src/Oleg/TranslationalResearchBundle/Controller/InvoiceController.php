@@ -47,6 +47,7 @@ class InvoiceController extends Controller
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $transresRequestUtil = $this->get('transres_request_util');
+        $transresUtil = $this->get('transres_util');
         $routeName = $request->get('_route');
         $advancedFilter = 0;
         $title = "List of Invoices";
@@ -86,6 +87,7 @@ class InvoiceController extends Controller
             'transresRequest'=>$transresRequest,
             'versions'=>$versions,
             'statuses' => $transresRequestUtil->getInvoiceStatuses(),
+            'humanAnimalName' => $transresUtil->getHumanAnimalName("brackets")
         );
         $filterform = $this->createForm(FilterInvoiceType::class, null,array(
             'method' => 'GET',
