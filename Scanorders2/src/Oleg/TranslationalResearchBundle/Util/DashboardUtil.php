@@ -165,6 +165,7 @@ class DashboardUtil
         $count = 1;
         $piProjectCountTopArr = array();
         foreach($piProjectCountArr as $username=>$value) {
+            //$value = $this->getNumberFormat($value);
             //echo $username.": ".$count."<br>";
             if( $count <= $limit || !$limit ) {
                 if( $value && $value != 0 ) {
@@ -211,7 +212,12 @@ class DashboardUtil
                 }
 
                 if( count($descr) > 0 ) {
-                    $index = $index . " " . $descrFirstPrefix . $value . " (" . implode(", ",$descr) . ")";
+                    if( strpos($descrFirstPrefix,'$') !== false ) {
+                        $valueLabel = $this->getNumberFormat($value);
+                    } else {
+                        $valueLabel = $value;
+                    }
+                    $index = $index . " " . $descrFirstPrefix . $valueLabel . " (" . implode(", ",$descr) . ")";
                 }
 
                 $piProjectCountTopShortArr[$index] = $value;
@@ -1904,7 +1910,7 @@ class DashboardUtil
 
                 //Generated Invoices by Status per Funded Project (Top 10)
                 if ($transRequest->getFundedAccountNumber()) {
-                    //19. Generated Invoices by Status per Funded Project (Top 10)
+                    //Generated Invoices by Status per Funded Project (Top 10)
                     if (isset($invoicesByProjectArr[$projectIndex])) {
                         $count = $invoicesByProjectArr[$projectIndex] + 1;
                     } else {
@@ -1917,7 +1923,7 @@ class DashboardUtil
                     } else {
                         $totalFee = $totalThisInvoiceFee;
                     }
-                    $totalFee = 123456;
+                    //$totalFee = 123456;
                     $invoicesFeesByProjectArr[$projectIndex] = $totalFee;
 
                     $titleCount = $titleCount + $totalThisInvoiceFee;
@@ -1974,6 +1980,7 @@ class DashboardUtil
                     } else {
                         $totalFee = $totalThisInvoiceFee;
                     }
+                    //$totalFee = 123456;
                     $invoicesFeesByPiArr[$investigatorIndex] = $totalFee;
 
                     //paid
