@@ -197,6 +197,7 @@ class DashboardUtil
                     $descrColor = $descriptionSingleArr[2];
                     $descrValueArr = $descriptionSingleArr[3];
                     $descrValue = $descrValueArr[$index];
+                    $descrValue = $this->getNumberFormat($descrValue);
                     if( $descrValue ) {
                         if( $descrColor ) {
                             $descr[] = '<span style="color:'.$descrColor.'">'.$descrPrefix . $descrValue.'</span>';
