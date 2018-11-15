@@ -3518,13 +3518,28 @@ class TransResRequestUtil
 
         //123 matching for $456
         if( $counter ) {
-            $result = $counter . " matching for Total: $" . $totalSum . ", Paid: $" . $paidSum . ", Unpaid: $" . $dueSum;
+            $result = $counter . " matching for Total: $" . $this->getNumberFormat($totalSum) . ", Paid: $" . $this->getNumberFormat($paidSum) . ", Unpaid: $" . $this->getNumberFormat($dueSum);
         } else {
             $result = $counter . " matching";
         }
 
         //exit($result);
         return $result;
+    }
+    public function getNumberFormat($number,$digits=null) {
+        return $this->toMoney($number,'');
+        //return number_format($number,$digits);
+    }
+    function toMoney($val,$symbol='$',$r=2) {
+        $n = $val;
+        $c = is_float($n) ? 1 : number_format($n,$r);
+        $d = '.';
+        $t = ',';
+        $sign = ($n < 0) ? '-' : '';
+        $i = $n=number_format(abs($n),$r);
+        $j = (($j = $i.length) > 3) ? $j % 3 : 0;
+
+        return  $symbol.$sign .($j ? substr($i,0, $j) + $t : '').preg_replace('/(\d{3})(?=\d)/',"$1" + $t,substr($i,$j)) ;
     }
     //NOT USED
     public function getTotalStrInvoice() {
@@ -3555,6 +3570,7 @@ class TransResRequestUtil
 
         return $result;
     }
+
 
 }
 
