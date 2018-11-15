@@ -195,9 +195,12 @@ class DashboardUtil
                     $descrPrefix = $descriptionSingleArr[0];
                     $descrFirstPrefix = $descriptionSingleArr[1];
                     $descrColor = $descriptionSingleArr[2];
-                    $descrValueArr = $descriptionSingleArr[3];
+                    $descrType = $descriptionSingleArr[3];
+                    $descrValueArr = $descriptionSingleArr[4];
                     $descrValue = $descrValueArr[$index];
-                    $descrValue = $this->getNumberFormat($descrValue);
+                    if( $descrType == "money" ) {
+                        $descrValue = $this->getNumberFormat($descrValue);
+                    }
                     if( $descrValue ) {
                         if( $descrColor ) {
                             $descr[] = '<span style="color:'.$descrColor.'">'.$descrPrefix . $descrValue.'</span>';
@@ -1985,8 +1988,8 @@ class DashboardUtil
 
             //24. Generated Invoices by Status per PI (Top 10)
             $descriptionArr = array(
-                array("paid $"," : $","limegreen",$invoicePaidFeeArr),
-                array("due $"," : $","red",$invoiceDueFeeArr)
+                array("paid $"," : $","limegreen","money",$invoicePaidFeeArr),
+                array("due $"," : $","red","money",$invoiceDueFeeArr)
             );
             $showOther = $this->getOtherStr($showLimited,"PIs");
             $invoicesFeesByPiArrTop = $this->getTopArray($invoicesFeesByPiArr,$showOther,$descriptionArr);
@@ -2046,8 +2049,8 @@ class DashboardUtil
             $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($titleCount),"$");
 
             $descriptionArr = array(
-                array("paid $"," : $","limegreen",$invoicePaidFeeArr),
-                array("due $"," : $","red",$invoiceDueFeeArr)
+                array("paid $"," : $","limegreen","money",$invoicePaidFeeArr),
+                array("due $"," : $","red","money",$invoiceDueFeeArr)
             );
             $showOther = $this->getOtherStr($showLimited,"pathologists involved");
             $invoicesFeesByPathologistArrTop = $this->getTopArray($invoicesFeesByPathologistArr,$showOther,$descriptionArr);
@@ -2109,8 +2112,8 @@ class DashboardUtil
             $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($titleCount),"$");
 
             $descriptionArr = array(
-                array("paid $"," : $","limegreen",$invoicePaidFeeArr),
-                array("due $"," : $","red",$invoiceDueFeeArr)
+                array("paid $"," : $","limegreen","money",$invoicePaidFeeArr),
+                array("due $"," : $","red","money",$invoiceDueFeeArr)
             );
             $showOther = $this->getOtherStr($showLimited,"pathologists involved");
             $invoicesFeesByPathologistArrTop = $this->getTopArray($invoicesFeesByPathologistArr,$showOther,$descriptionArr);
@@ -2175,8 +2178,8 @@ class DashboardUtil
             $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($titleCount),"$");
 
             $descriptionArr = array(
-                array("paid $"," : $","limegreen",$invoicePaidFeeArr),
-                array("due $"," : $","red",$invoiceDueFeeArr)
+                array("paid $"," : $","limegreen","money",$invoicePaidFeeArr),
+                array("due $"," : $","red","money",$invoiceDueFeeArr)
             );
             $showOther = $this->getOtherStr($showLimited,"pathologists involved");
             $invoicesFeesByPathologistArrTop = $this->getTopArray($invoicesFeesByPathologistArr,$showOther,$descriptionArr);
