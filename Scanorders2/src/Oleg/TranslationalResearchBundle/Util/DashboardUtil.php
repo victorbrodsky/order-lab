@@ -698,7 +698,12 @@ class DashboardUtil
     public function attachSecondValueToFirstLabel($firstArr,$secondArr,$prefix) {
         $resArr = array();
         foreach($firstArr as $index=>$value) {
-            $index = $index . " " . $prefix . $secondArr[$index];
+            //$index = $index . " " . $prefix . $secondArr[$index];
+            if( strpos($prefix,'$') !== false ) {
+                $index = $index . " " . $prefix . $this->getNumberFormat($secondArr[$index]);
+            } else {
+                $index = $index . " " . $prefix . $secondArr[$index];
+            }
             $resArr[$index] = $value;
         }
         return $resArr;
