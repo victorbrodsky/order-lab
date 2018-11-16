@@ -112,7 +112,7 @@
                 <th>{{ knp_pagination_sortable(projects, 'Submitted', 'project.createDate') }}</th>
                 {#<th>{{ knp_pagination_sortable(projects, 'IRB#', 'project.irbNumber') }}</th>#}
                 <th>{{ knp_pagination_sortable(projects, 'Principal Investigator(s)', 'principalInvestigatorsInfos.displayName') }}</th>
-                <th>IRB Number</th>
+                <th>{{ transres_util.getHumanName() }} Number</th>
                 {#<th>Project Title</th>#}
                 <th>{{ knp_pagination_sortable(projects, 'Project Title', 'project.title') }}</th>
                 <th>Funding</th>
@@ -167,7 +167,7 @@
                 </td>
 
                 <td>
-                    {% set irbNumber = transres_formnode_util.getProjectFormNodeFieldByName(project,"IRB Number") %}
+                    {% set irbNumber = transres_formnode_util.getProjectFormNodeFieldByName(project,transres_util.getHumanName()~" Number") %}
                     {% if irbNumber %}
                         {{ irbNumber }}
                     {% endif %}
@@ -210,7 +210,7 @@
 
                 <td>
                     {#{{ project.title }}#}
-                    {{ transres_formnode_util.getProjectFormNodeFieldByName(project,"IRB Expiration Date") }}
+                    {{ transres_formnode_util.getProjectFormNodeFieldByName(project,transres_util.getHumanName()~" Expiration Date") }}
                 </td>
 
                 {#Requests#}
@@ -362,7 +362,7 @@
                                 <li class="divider"></li>
                                 <li>
                                     <a href="{{ path(translationalresearch_sitename~'_project_edit', { 'id': project.id }) }}"
-                                       >Update IRB approval expiration date to submit new requests</a>
+                                       >Update {{ transres_util.getHumanName() }} approval expiration date to submit new requests</a>
                                 </li>
                             {% endif %}
                             {#{% if is_granted('ROLE_TRANSRES_REQUESTER') or transres_util.isAdminOrPrimaryReviewer() %}#}

@@ -872,7 +872,8 @@ class RequestFormNodeController extends Controller
 
             $project->setIrbExpirationDate($irbExpDate);
 
-            $receivingObject = $transresRequestUtil->setValueToFormNodeProject($project, "IRB Expiration Date", $value);
+            $userSecUtil = $this->container->get('user_security_utility');
+            $receivingObject = $transresRequestUtil->setValueToFormNodeProject($project, $userSecUtil->getSiteSettingParameter('transresHumanSubjectName')." Expiration Date", $value);
 
             //$em->flush($receivingObject);
             //$em->flush($project);
@@ -881,7 +882,7 @@ class RequestFormNodeController extends Controller
 
             //add eventlog changed IRB
             $eventType = "Project Updated";
-            $msg = "Project ID ".$project->getOid() ." has been updated: new IRB Expiration Date ".$value;
+            $msg = "Project ID ".$project->getOid() ." has been updated: new ".$userSecUtil->getSiteSettingParameter('transresHumanSubjectName')." Expiration Date ".$value;
             $transresUtil->setEventLog($project,$eventType,$msg);
         }
 

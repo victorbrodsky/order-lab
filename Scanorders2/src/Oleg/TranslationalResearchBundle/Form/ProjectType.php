@@ -125,7 +125,7 @@ class ProjectType extends AbstractType
         ));
 
         $builder->add('irbNumber',null, array(
-            'label' => 'IRB Number:',
+            'label' => $this->params['transresUtil']->getHumanName().' Number:',
             'required' => false,
             'attr' => array('class' => 'form-control'),
         ));
@@ -144,7 +144,7 @@ class ProjectType extends AbstractType
 
         $builder->add('irbExpirationDate',DateType::class,array(
             'widget' => 'single_text',
-            'label' => "IRB Expiration Date:",
+            'label' => $this->params['transresUtil']->getHumanName()." Expiration Date:",
             'format' => 'MM/dd/yyyy',
             //'view_timezone' => $user_tz,
             //'model_timezone' => $user_tz,
@@ -187,7 +187,7 @@ class ProjectType extends AbstractType
 
         $builder->add('exemptIrbApproval', EntityType::class, array(
             'class' => 'OlegTranslationalResearchBundle:IrbApprovalTypeList',
-            'label' => 'Is this project exempt from IRB approval?:',
+            'label' => 'Is this project exempt from '.$this->params['transresUtil']->getHumanName().' approval?:',
             'required' => true,
             'attr' => array('class' => 'combobox transres-project-exemptIrbApproval'),
             'query_builder' => function (EntityRepository $er) {
@@ -204,7 +204,7 @@ class ProjectType extends AbstractType
 
         $builder->add('exemptIACUCApproval', EntityType::class, array(
             'class' => 'OlegTranslationalResearchBundle:IrbApprovalTypeList',
-            'label' => 'Is this project exempt from IACUC approval?:',
+            'label' => 'Is this project exempt from '.$this->params['transresUtil']->getHumanName().' approval?:',
             'required' => true,
             'attr' => array('class' => 'combobox transres-project-exemptIACUCApproval'),
             'query_builder' => function (EntityRepository $er) {
@@ -219,14 +219,14 @@ class ProjectType extends AbstractType
         ));
 
         $builder->add('iacucNumber',null, array(
-            'label' => 'IACUC Number:',
+            'label' => $this->params['transresUtil']->getAnimalName().' Number:',
             'required' => false,
             'attr' => array('class' => 'form-control'),
         ));
 
         $builder->add('iacucExpirationDate',DateType::class,array(
             'widget' => 'single_text',
-            'label' => "IACUC Expiration Date:",
+            'label' => $this->params['transresUtil']->getAnimalName()." Expiration Date:",
             'format' => 'MM/dd/yyyy',
             //'view_timezone' => $user_tz,
             //'model_timezone' => $user_tz,
@@ -299,7 +299,7 @@ class ProjectType extends AbstractType
 
         $builder->add( 'principalIrbInvestigator', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
-            'label'=> "Principal Investigator listed on the IRB application$addUserOnFly:",
+            'label'=> "Principal Investigator listed on the ".$this->params['transresUtil']->getHumanName()." application$addUserOnFly:",
             'required'=> false,
             'multiple' => false,
             'attr' => array('class'=>'combobox combobox-width add-new-user-on-enter', 'data-otheruserparam'=>$this->params['otherUserParam']),
@@ -508,7 +508,7 @@ class ProjectType extends AbstractType
         if( $this->params['cycle'] == 'new' || $this->params['cycle'] == 'edit' ) {
             $builder->add('irbApprovalLetters', CollectionType::class, array(
                 'entry_type' => DocumentType::class,
-                'label' => 'IRB Approval Letter:',
+                'label' => $this->params['transresUtil']->getHumanName().' Approval Letter:',
                 'allow_add' => true,
                 'allow_delete' => true,
                 'required' => false,

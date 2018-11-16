@@ -227,10 +227,10 @@ class FilterType extends AbstractType
             'required' => false,
             'multiple' => false,
             'choices' => array(
-                'Exempt from IRB Approval' => 'Exempt from IRB Approval',
-                'Not Exempt from IRB Approval' => 'Not Exempt from IRB Approval'
+                'Exempt from '.$this->params['humanName'].' Approval' => 'exempt-from-irb-approval',
+                'Not Exempt from '.$this->params['humanName'].' Approval' => 'not-exempt-from-irb-approval'
             ),
-            'attr' => array('class' => 'combobox', 'placeholder'=>'IRB Approval'),
+            'attr' => array('class' => 'combobox', 'placeholder'=>$this->params['humanName'].' Approval'),
         ));
 
         $builder->add('fromExpectedCompletionDate', DateTimeType::class, array(
@@ -254,7 +254,6 @@ class FilterType extends AbstractType
             'required' => false,
             'format' => 'MM/dd/yyyy',
             'data' => $this->params['fromImplicitExpDate'],
-            //'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'From IRB/IACUC Expiration Date'),
             'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'From '.$this->params['humanAnimalNameSlash'].' Expiration Date'),
         ));
         $builder->add('toImplicitExpDate', DateTimeType::class, array(
@@ -263,7 +262,6 @@ class FilterType extends AbstractType
             'required' => false,
             'format' => 'MM/dd/yyyy',
             'data' => $this->params['toImplicitExpDate'],
-            //'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'To IRB/IACUC Expiration Date'),
             'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'To '.$this->params['humanAnimalNameSlash'].' Expiration Date'),
         ));
 

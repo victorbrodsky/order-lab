@@ -1026,7 +1026,7 @@ class SiteParametersType extends AbstractType
         }
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'transresAnimalSubjectName' ) {
             $builder->add('transresAnimalSubjectName', null, array(
-                'label' => 'Name of the group that approves research projects involving human subjects (IACUC):',
+                'label' => 'Name of the group that approves research projects involving animal subjects (IACUC):',
                 'attr' => array('class' => 'form-control')
             ));
         }

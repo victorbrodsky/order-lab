@@ -98,6 +98,7 @@ class ProjectController extends Controller
 //            'title' => "Test Performance",
 //        );
 
+        $userSecUtil = $this->container->get('user_security_utility');
         $transresUtil = $this->container->get('transres_util');
         //$transResFormNodeUtil = $this->container->get('transres_formnode_util');
         $em = $this->getDoctrine()->getManager();
@@ -166,6 +167,8 @@ class ProjectController extends Controller
         $formnode = false;
         $dqlParameters = array();
 
+        $humanName = $userSecUtil->getSiteSettingParameter('transresHumanSubjectName');
+
         //get allowed and denied projectSpecialties
         $projectSpecialtyAllowedRes = $transresUtil->getAllowedProjectSpecialty($user);
         $projectSpecialtyAllowedArr = $projectSpecialtyAllowedRes['projectSpecialtyAllowedArr'];
@@ -189,6 +192,7 @@ class ProjectController extends Controller
             //'defaultStatesArr' => array("All-except-Drafts","Canceled","Closed"),
             'toImplicitExpDate' => null,
             'fromImplicitExpDate' => null,
+            'humanName' => $userSecUtil->getSiteSettingParameter('transresHumanSubjectName'),
             'humanAnimalNameBracket' => $transresUtil->getHumanAnimalName("brackets"),
             'humanAnimalNameSlash' => $transresUtil->getHumanAnimalName("slash")
         );
@@ -204,7 +208,7 @@ class ProjectController extends Controller
                 'committee_review','final_review','final_approved'
             );
             $params['toImplicitExpDate'] =new \DateTime();
-            $title = "Active Project Requests with Expired IRB";
+            $title = "Active Project Requests with Expired $humanName";
         }
         if( $routeName == "translationalresearch_active_expired_soon_project_index" ) {
             $params['defaultStatesArr'] = array(
@@ -215,7 +219,7 @@ class ProjectController extends Controller
             $today = new \DateTime();
             $params['fromImplicitExpDate'] = new \DateTime();
             $params['toImplicitExpDate'] = $today->modify('+3 months');
-            $title = "Active Project Requests with IRB Expiring Soon";
+            $title = "Active Project Requests with $humanName Expiring Soon";
         }
 
 
@@ -388,7 +392,7 @@ class ProjectController extends Controller
                 $advancedFilter++;
             }
             if ($searchIrbNumber) {
-                $irbnumberIds = $transresUtil->getProjectIdsFormNodeByFieldName($searchIrbNumber, "IRB Number");
+                $irbnumberIds = $transresUtil->getProjectIdsFormNodeByFieldName($searchIrbNumber, "$humanName Number");
                 //$dql->andWhere("project.id IN (".implode(",",$irbnumberIds).")");
                 $dql->andWhere("project.id IN (:irbnumberIds)");
                 $dqlParameters["irbnumberIds"] = $irbnumberIds;
@@ -465,10 +469,10 @@ class ProjectController extends Controller
         }
         if( $exemptIrbApproval ) {
             //echo "fundingType=" . $exemptIrbApproval . "<br>";
-            if ($exemptIrbApproval == "Exempt from IRB Approval") {
+            if ($exemptIrbApproval == "exempt-from-irb-approval") {
                 $dql->andWhere("project.exemptIrbApproval = true OR project.exemptIrbApproval IS NULL");
             }
-            if ($exemptIrbApproval == "Not Exempt from IRB Approval") {
+            if ($exemptIrbApproval == "not-exempt-from-irb-approval") {
                 $dql->andWhere("project.exemptIrbApproval = false");
             }
             $advancedFilter++;
@@ -734,10 +738,10 @@ class ProjectController extends Controller
 
         //set title
         if( $routeName == "translationalresearch_active_expired_project_index" ) {
-            $title = "Active Projects with Expired IRB";
+            $title = "Active Projects with Expired $humanName";
         }
         if( $routeName == "translationalresearch_active_expired_soon_project_index" ) {
-            $title = "Active Projects with IRB Expiring Soon";
+            $title = "Active Projects with $humanName Expiring Soon";
         }
 
         //////////////////// EOF Start Filter ////////////////////

@@ -247,12 +247,14 @@
         {% set irbApprovalLetters = project.irbApprovalLetters %}
     {% endif %}
 
+    {% set humanName = transres_util.getHumanName() %}
+
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         <div class="panel panel-default">
             <div class="panel-heading" role="tab" id="projectIrbInfoContentHeading">
                 <h4 class="panel-title">
                     <a role="button" data-toggle="collapse" data-parent="#accordion" href="#projectIrbInfoContent" aria-expanded="true">
-                        IRB Info
+                        {{ humanName }} Info
                     </a>
                 </h4>
             </div>
@@ -271,10 +273,10 @@
                         {{ formmacros.fieldDateLabel(form.irbExpirationDate,'allow-future-date') }}
 
                         <div class="well form-element-holder user-irbApprovalLetters">
-                            <label class="col-xs-12 control-label">IRB Approval Letter</label>
+                            <label class="col-xs-12 control-label">{{ humanName }} Approval Letter</label>
                             <div class="row withpaddingtop">
                                 <div class="col-xs-12">
-                                    {{ usermacros.documentsContainer(null,irbApprovalLetters,cycle,'noprototype',8,'default','IRB Approval Letter',asFormOrEntity) }}
+                                    {{ usermacros.documentsContainer(null,irbApprovalLetters,cycle,'noprototype',8,'default',humanName~' Approval Letter',asFormOrEntity) }}
                                 </div>
                             </div>
                         </div>
@@ -298,7 +300,7 @@
             <div class="panel-heading" role="tab" id="projectIACUCInfoContentHeading">
                 <h4 class="panel-title">
                     <a role="button" data-toggle="collapse" data-parent="#accordion" href="#projectIACUCInfoContent" aria-expanded="true">
-                        IACUC Info
+                        {{ user_security_utility.getSiteSettingParameter('transresAnimalSubjectName') }} Info
                     </a>
                 </h4>
             </div>
@@ -845,7 +847,7 @@
                 {% else %}
                     {% set irbExpDateStr = null %}
                 {% endif %}
-                {{ transres.fieldDateLabel(irbExpDateStr,"Provided IRB Expiration Date (enter a new date to update it):",1) }}
+                {{ transres.fieldDateLabel(irbExpDateStr,"Provided "~transres_util.getHumanName()~" Expiration Date (enter a new date to update it):",1) }}
             {% endif %}
 
             {#show current review's reccomendations for committee review status for primary reviewer#}
@@ -1006,7 +1008,7 @@
                     <h4 class="panel-title">
                         <a role="button" data-toggle="collapse" data-parent="#accordion" href="#irbreview" aria-expanded="true" aria-controls="reviewBase">
                             {#{{ transres_util.getStateSimpleLabelByName(project.state.vars.value) }}#}
-                            IRB Review
+                            {{ transres_util.getHumanName() }} Review
                         </a>
                     </h4>
                 </div>
@@ -1030,7 +1032,7 @@
 
                             {% if cycle != "show" and cycle != "review" %}
                                 {% if showAddDeleteBtn %}
-                                    {{ usermacros.addNewObjectBtn(cycle,'transres-irbreviews','Add IRB Reviewer') }}
+                                    {{ usermacros.addNewObjectBtn(cycle,'transres-irbreviews','Add '~transres_util.getHumanName()~' Reviewer') }}
                                 {% endif %}
                             {% endif %}
                         </div>
@@ -1392,7 +1394,7 @@
             <div class="input-group input-group-reg date allow-future-date">
                 <input id="transres_irbExpirationDate"
                        class="datepicker form-control submit-on-enter-field"
-                       placeholder="IRB Expiration Date" type="text"
+                       placeholder="{{ transres_util.getHumanName() }} Expiration Date" type="text"
                        value="{{ value }}"
                 >
                 <span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>
@@ -1400,7 +1402,7 @@
         </div>
         <div class="col-xs-3" align="left">
             {% if updateButton is defined and updateButton %}
-                <div class="btn btn-primary btn-sm transres-update-irbexpirationdate">Update IRB Expiration Date</div>
+                <div class="btn btn-primary btn-sm transres-update-irbexpirationdate">Update {{ transres_util.getHumanName() }} Expiration Date</div>
             {% endif %}
         </div>
     </div>

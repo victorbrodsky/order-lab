@@ -1132,6 +1132,9 @@ class TransResUtil
 
         //$returnLabel = "<$transitionName>";
 
+        $userSecUtil = $this->container->get('user_security_utility');
+        $humanName = $userSecUtil->getSiteSettingParameter('transresHumanSubjectName');
+
         switch ($transitionName) {
             //initial stages
             case "to_draft":
@@ -1143,8 +1146,8 @@ class TransResUtil
 //                $labeled = "Completed Submission";
 //                break;
             case "to_review":
-                $label = "Submit Project Request to IRB Review";
-                $labeled = "Submitted to IRB Review";
+                $label = "Submit Project Request to $humanName Review";
+                $labeled = "Submitted to $humanName Review";
                 break;
             //final stages
             case "approved_closed":
@@ -1158,20 +1161,20 @@ class TransResUtil
 
 //            ///// Main Actions /////
             case "irb_review_approved":
-                $label = "Approve Project Request as a Result of IRB Review";
-                $labeled = "Approved Project Request as a Result of IRB Review";
+                $label = "Approve Project Request as a Result of $humanName Review";
+                $labeled = "Approved Project Request as a Result of $humanName Review";
                 break;
             case "irb_review_rejected":
-                $label = "Reject Project Request as a Result of IRB Review";
-                $labeled = "Rejected Project Request as a Result of IRB Review";
+                $label = "Reject Project Request as a Result of $humanName Review";
+                $labeled = "Rejected Project Request as a Result of $humanName Review";
                 break;
             case "irb_review_missinginfo":
-                $label = "Request additional information from submitter for IRB Review";
-                $labeled = "Requested additional information from submitter for IRB Review";
+                $label = "Request additional information from submitter for $humanName Review";
+                $labeled = "Requested additional information from submitter for $humanName Review";
                 break;
             case "irb_review_resubmit":
-                $label = "Resubmit Project Request to IRB Review";
-                $labeled = "Resubmitted Project Request to IRB Review";
+                $label = "Resubmit Project Request to $humanName Review";
+                $labeled = "Resubmitted Project Request to $humanName Review";
                 break;
 
             case "admin_review_approved":
@@ -1327,13 +1330,19 @@ class TransResUtil
 //                break;
 
             case "irb_review":
-                $state = "IRB Review";
+                $userSecUtil = $this->container->get('user_security_utility');
+                $humanName = $userSecUtil->getSiteSettingParameter('transresHumanSubjectName');
+                $state = "$humanName Review";
                 break;
             case "irb_rejected":
-                $state = "IRB Review Rejected";
+                $userSecUtil = $this->container->get('user_security_utility');
+                $humanName = $userSecUtil->getSiteSettingParameter('transresHumanSubjectName');
+                $state = "$humanName Review Rejected";
                 break;
             case "irb_missinginfo":
-                $state = "Pending additional information from submitter for IRB Review";
+                $userSecUtil = $this->container->get('user_security_utility');
+                $humanName = $userSecUtil->getSiteSettingParameter('transresHumanSubjectName');
+                $state = "Pending additional information from submitter for $humanName Review";
                 break;
 
             case "admin_review":
@@ -1397,13 +1406,17 @@ class TransResUtil
 //                break;
 
             case "irb_review":
-                $state = "IRB Review";
+                $userSecUtil = $this->container->get('user_security_utility');
+                $humanName = $userSecUtil->getSiteSettingParameter('transresHumanSubjectName');
+                $state = "$humanName Review";
                 break;
             case "irb_rejected":
-                $state = "IRB Review Rejected";
+                $userSecUtil = $this->container->get('user_security_utility');
+                $humanName = $userSecUtil->getSiteSettingParameter('transresHumanSubjectName');
+                $state = "$humanName Review Rejected";
                 break;
             case "irb_missinginfo":
-                $state = "Request additional information from submitter for IRB Review";
+                $state = "Request additional information from submitter for $humanName Review";
                 break;
 
             case "admin_review":
@@ -4567,5 +4580,21 @@ class TransResUtil
         }
 
         return $human.",".$animal;
+    }
+    public function getHumanName() {
+        $userSecUtil = $this->container->get('user_security_utility');
+        $human = $userSecUtil->getSiteSettingParameter('transresHumanSubjectName');
+        if( !$human ) {
+            $human = "IRB";
+        }
+        return $human;
+    }
+    public function getAnimalName() {
+        $userSecUtil = $this->container->get('user_security_utility');
+        $animal = $userSecUtil->getSiteSettingParameter('transresAnimalSubjectName');
+        if( !$animal ) {
+            $animal = "IACUC";
+        }
+        return $animal;
     }
 }

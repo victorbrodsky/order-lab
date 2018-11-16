@@ -139,10 +139,10 @@
 
                                 <hr style="margin-top: 10px; margin-bottom: 10px;">
                                 <li id="nav-bar-translationalresearch-my-review-projects">
-                                    <a href="{{ path(translationalresearch_sitename~'_active_expired_project_index') }}">Active Projects with Expired IRB</a>
+                                    <a href="{{ path(translationalresearch_sitename~'_active_expired_project_index') }}">Active Projects with Expired {{ transres_util.getHumanName() }}</a>
                                 </li>
                                 <li id="nav-bar-translationalresearch-my-review-projects">
-                                    <a href="{{ path(translationalresearch_sitename~'_active_expired_soon_project_index') }}">Active Projects with IRB Expiring Soon</a>
+                                    <a href="{{ path(translationalresearch_sitename~'_active_expired_soon_project_index') }}">Active Projects with {{ transres_util.getHumanName() }} Expiring Soon</a>
                                 </li>
                                 {#EOF my projects#}
 

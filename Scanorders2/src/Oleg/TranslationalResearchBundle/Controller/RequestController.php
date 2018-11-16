@@ -2296,9 +2296,11 @@ class RequestController extends Controller
             $em->flush();
 
             //add eventlog changed IRB
+            $userSecUtil = $this->container->get('user_security_utility');
             $eventType = "Project Updated";
             $res = "Project ID ".$project->getOid() ." has been updated: ".
-                "IRB Expiration Date changed form ".$originalIrbExpDateStr." to ".$value;
+                $userSecUtil->getSiteSettingParameter('transresHumanSubjectName')." Expiration Date changed form ".
+                $originalIrbExpDateStr." to ".$value;
             $transresUtil->setEventLog($project,$eventType,$res);
         }
 
