@@ -135,10 +135,10 @@ class TransResFormNodeUtil
         $titleText = $formNodeUtil->createV2FormNode($formParams);
 
         //IRB Number (string)
-        $userSecUtil = $this->container->get('user_security_utility');
+        $transresUtil = $this->container->get('transres_util');
         $formParams = array(
             'parent' => $projectSection,
-            'name' => $userSecUtil->getSiteSettingParameter('transresHumanSubjectName')." Number",
+            'name' => $transresUtil->getHumanName()." Number",
             'objectType' => $objectTypeString,
         );
         $titleText = $formNodeUtil->createV2FormNode($formParams);
@@ -154,7 +154,7 @@ class TransResFormNodeUtil
         //IRB expiration date (date)
         $formParams = array(
             'parent' => $projectSection,
-            'name' => $userSecUtil->getSiteSettingParameter('transresHumanSubjectName')." Expiration Date",
+            'name' => $transresUtil->getHumanName()." Expiration Date",
             'objectType' => $objectTypeDate,
         );
         $titleText = $formNodeUtil->createV2FormNode($formParams);

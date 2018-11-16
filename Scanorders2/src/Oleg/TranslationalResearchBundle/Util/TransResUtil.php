@@ -1133,7 +1133,7 @@ class TransResUtil
         //$returnLabel = "<$transitionName>";
 
         $userSecUtil = $this->container->get('user_security_utility');
-        $humanName = $userSecUtil->getSiteSettingParameter('transresHumanSubjectName');
+        $humanName = $this->getHumanName();
 
         switch ($transitionName) {
             //initial stages
@@ -1330,18 +1330,15 @@ class TransResUtil
 //                break;
 
             case "irb_review":
-                $userSecUtil = $this->container->get('user_security_utility');
-                $humanName = $userSecUtil->getSiteSettingParameter('transresHumanSubjectName');
+                $humanName = $this->getHumanName();
                 $state = "$humanName Review";
                 break;
             case "irb_rejected":
-                $userSecUtil = $this->container->get('user_security_utility');
-                $humanName = $userSecUtil->getSiteSettingParameter('transresHumanSubjectName');
+                $humanName = $this->getHumanName();
                 $state = "$humanName Review Rejected";
                 break;
             case "irb_missinginfo":
-                $userSecUtil = $this->container->get('user_security_utility');
-                $humanName = $userSecUtil->getSiteSettingParameter('transresHumanSubjectName');
+                $humanName = $this->getHumanName();
                 $state = "Pending additional information from submitter for $humanName Review";
                 break;
 
@@ -1406,13 +1403,11 @@ class TransResUtil
 //                break;
 
             case "irb_review":
-                $userSecUtil = $this->container->get('user_security_utility');
-                $humanName = $userSecUtil->getSiteSettingParameter('transresHumanSubjectName');
+                $humanName = $this->getHumanName();
                 $state = "$humanName Review";
                 break;
             case "irb_rejected":
-                $userSecUtil = $this->container->get('user_security_utility');
-                $humanName = $userSecUtil->getSiteSettingParameter('transresHumanSubjectName');
+                $humanName = $this->getHumanName();
                 $state = "$humanName Review Rejected";
                 break;
             case "irb_missinginfo":
@@ -3442,7 +3437,7 @@ class TransResUtil
         $transResFormNodeUtil = $this->container->get('transres_formnode_util');
 
         //update project's irbExpirationDate
-        $projectIrbExpirationDate = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"IRB Expiration Date");
+        $projectIrbExpirationDate = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,$this->getHumanName()." Expiration Date");
         if( $projectIrbExpirationDate ) {
             $expDate = date_create_from_format('m/d/Y', $projectIrbExpirationDate);
             $project->setIrbExpirationDate($expDate);
@@ -4561,15 +4556,8 @@ class TransResUtil
 
     //$type: slash-"IRB/IACUC", brackets-"IRB (IACUC)"
     public function getHumanAnimalName($type="slash") {
-        $userSecUtil = $this->container->get('user_security_utility');
-        $human = $userSecUtil->getSiteSettingParameter('transresHumanSubjectName');
-        if( !$human ) {
-            $human = "IRB";
-        }
-        $animal = $userSecUtil->getSiteSettingParameter('transresAnimalSubjectName');
-        if( !$animal ) {
-            $animal = "IACUC";
-        }
+        $human = $this->getHumanName();
+        $animal = $this->getAnimalName();
 
         if( $type == "slash" ) {
             return $human."/".$animal;

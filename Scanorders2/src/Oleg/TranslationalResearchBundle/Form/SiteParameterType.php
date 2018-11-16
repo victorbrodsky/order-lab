@@ -220,7 +220,7 @@ class SiteParameterType extends AbstractType
         ));
 
         $builder->add('specimenDetailsComment', null, array(
-            'label' => "Specimen Details Comment (The answers you provide must reflect what has been requested in the approved IRB and the approved tissue request form.):",
+            'label' => "Specimen Details Comment (The answers you provide must reflect what has been requested in the approved ".$this->params['humanName']." and the approved tissue request form.):",
             'required' => false,
             'attr' => array('class' => 'textarea form-control')
         ));

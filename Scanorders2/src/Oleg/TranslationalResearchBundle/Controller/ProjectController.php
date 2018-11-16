@@ -98,7 +98,6 @@ class ProjectController extends Controller
 //            'title' => "Test Performance",
 //        );
 
-        $userSecUtil = $this->container->get('user_security_utility');
         $transresUtil = $this->container->get('transres_util');
         //$transResFormNodeUtil = $this->container->get('transres_formnode_util');
         $em = $this->getDoctrine()->getManager();
@@ -167,7 +166,7 @@ class ProjectController extends Controller
         $formnode = false;
         $dqlParameters = array();
 
-        $humanName = $userSecUtil->getSiteSettingParameter('transresHumanSubjectName');
+        $humanName = $transresUtil->getHumanName();
 
         //get allowed and denied projectSpecialties
         $projectSpecialtyAllowedRes = $transresUtil->getAllowedProjectSpecialty($user);
@@ -192,7 +191,7 @@ class ProjectController extends Controller
             //'defaultStatesArr' => array("All-except-Drafts","Canceled","Closed"),
             'toImplicitExpDate' => null,
             'fromImplicitExpDate' => null,
-            'humanName' => $userSecUtil->getSiteSettingParameter('transresHumanSubjectName'),
+            'humanName' => $transresUtil->getHumanName(),
             'humanAnimalNameBracket' => $transresUtil->getHumanAnimalName("brackets"),
             'humanAnimalNameSlash' => $transresUtil->getHumanAnimalName("slash")
         );

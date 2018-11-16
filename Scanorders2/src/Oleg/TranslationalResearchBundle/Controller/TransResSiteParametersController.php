@@ -231,12 +231,14 @@ class TransResSiteParametersController extends Controller
     public function createSiteParameterForm( $siteParameter, $cycle ) {
 
         $em = $this->getDoctrine()->getManager();
+        $transresUtil = $this->get('transres_util');
         $user = $this->get('security.token_storage')->getToken()->getUser();
         
         $params = array(
             'cycle' => $cycle,
             'em' => $em,
             'user' => $user,
+            'humanName' => $transresUtil->getHumanName()
         );
 
         if( $cycle == "new" ) {

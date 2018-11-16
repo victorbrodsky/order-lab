@@ -179,18 +179,19 @@ class WorkflowController extends Controller
 
         // Update the currentState on the post
         if( $workflow->can($project, 'to_irb_review') ) {
+            $human = $this->getHumanName();
             try {
                 $workflow->apply($project, 'to_irb_review');
                 //change state
                 $project->setState('irb_review');
                 $this->addFlash(
                     'error',
-                    'change state to IRB Review OK.'
+                    "change state to $human Review OK."
                 );
             } catch (LogicException $e) {
                 $this->addFlash(
                     'error',
-                    'change state to IRB Review failed.'
+                    "change state to $human Review failed."
                 );
             }
         }

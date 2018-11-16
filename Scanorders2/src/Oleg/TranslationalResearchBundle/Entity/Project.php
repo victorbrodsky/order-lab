@@ -1868,11 +1868,14 @@ class Project {
     }
 
     //"IRB with PI FirstName LastName expires on MM/DD/YYYY."
-    public function getIrbInfo() {
+    public function getIrbInfo($humanName=null) {
         $info = null;
 
         if( $this->getIrbNumber() ) {
-            $info = "IRB# ".$this->getIrbNumber();
+            if( !$humanName ) {
+                $humanName = "IRB";
+            }
+            $info = $humanName."# ".$this->getIrbNumber();
         }
 
         if( $this->getPrincipalIrbInvestigator() ) {
