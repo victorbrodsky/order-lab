@@ -307,6 +307,34 @@ class DefaultController extends Controller
     }
 
     /**
+     * Update or Insert AntibodyList
+     * run: http://127.0.0.1/order/translational-research/update-insert-antibody-list
+     * @Route("/update-insert-antibody-list", name="translationalresearch_update_insert_antibody_list")
+     */
+    public function updateInsertAntibodyListAction(Request $request) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
+        }
+
+        //exit("generateAntibodyList: ".$filename);
+
+        $importUtil = $this->get('transres_import');
+
+        $filename = "IHC_antibody-11_16Nov2018.csv";
+        $res = $importUtil->updateInsertAntibodyList($filename);
+        //exit("generateAntibodyListAction: Finished with res=".$res);
+
+        //Flash
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            "Antibody list imported result ($filename): <br>".$res
+        );
+
+        //exit("res=".$res);
+        return $this->redirectToRoute('employees_siteparameters');
+    }
+
+    /**
      * http://127.0.0.1/order/translational-research/update-projects-implicit-date
      *
      * @Route("/update-projects-implicit-date", name="translationalresearch_update_projects_implicit_date")

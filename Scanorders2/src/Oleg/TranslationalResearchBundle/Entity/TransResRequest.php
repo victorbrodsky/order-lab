@@ -231,13 +231,6 @@ class TransResRequest {
      **/
     private $oldPackingSlipPdfs;
 
-
-//    /**
-//     * Reference antibody
-//     *
-//     * @ORM\ManyToOne(targetEntity="Oleg\TranslationalResearchBundle\Entity\AntibodyList")
-//     */
-//    private $antibodyReference;
     /**
      * Reference antibody
      *

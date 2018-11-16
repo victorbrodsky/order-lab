@@ -2510,92 +2510,6 @@ class TransResImportData
         return null;
     }
 
-    public function userRoleMapper() {
-//        1	Request
-//        2	Admin Review
-//        3	Committee Review
-//        4	Final Approval
-//        5	Admin Review/Final Approval
-//        6	Admin View Only
-//        9	Biostatistical Review
-//        7	IRB Review
-//        8	IRB Review/Committee Review
-    }
-
-    public function createAntibodyList($filename) {
-        $importUtil = $this->container->get('transres_import');
-        $res1 = $importUtil->generateAntibodyList($filename);
-        $res2 = $importUtil->setAntibodyListProperties();
-        //exit("generateAntibodyListAction: Finished with res=".$res);
-        return $res1 . "<br>" . $res2;
-    }
-    public function generateAntibodyList($filename) {
-
-        //AntibodyList
-        //INSERT INTO `IHC_antibody` (`id`, `category`, `name`, `altname`, `company`, `catalog`, `lot`, `igconcentration`, `clone`, `host`, `reactivity`, `control`, `protocol`, `retrieval`, `dilution`, `storage`, `comment`, `datasheet`, `pdf`) VALUES
-        //(1, 'M', 'Androgen Receptor', 'AR ', 'Abcam', 'ab74272', 'GR32463-1', '0.2 mg/ml', 'Poly', 'Rabbit ', 'Human, mouse', 'Xenograft Control/Prostate Ca.', 'Envision Rabbit R. ', 'H130', '1:200', '-20 oC', 'Project: 12743 RS#: 30323 PI: Rubin/Kyung Condition confirmed by Dr. Rubin/Kyung on 03/09/2011', 'http://www.abcam.com/Androgen-Receptor-antibody-ab74272.html', 'upload/pdf/1296507249.pdf'),
-
-        $lists = $this->em->getRepository('OlegTranslationalResearchBundle:AntibodyList')->findAll();
-        if( count($lists) > 0 ) {
-            return "AntibodyList is already exists.";
-        }
-
-        //$filename = 'ihc_antibody.sql';
-        $inputFileName = __DIR__ . "/" . $filename;
-
-        if (file_exists($inputFileName)) {
-            //echo "The file $filename exists";
-        } else {
-            return "The file $inputFileName does not exist";
-        }
-
-        echo "==================== Processing $filename =====================<br>";
-
-        $sql = file_get_contents($inputFileName);  // Read file contents
-        $this->em->getConnection()->exec($sql);  // Execute native SQL
-
-        $this->em->flush();
-
-        //exit("generateAntibodyList: Finished");
-    }
-    public function setAntibodyListProperties() {
-        $userSecUtil = $this->container->get('user_security_utility');
-        $systemuser = $userSecUtil->findSystemUser();
-
-        $lists = $this->em->getRepository('OlegTranslationalResearchBundle:AntibodyList')->findAll();
-
-        //set creator, createdate, type, orderinlist and creation time
-        $orderinlist = 1;
-        $counter = 0;
-        $batchSize = 20;
-
-        foreach($lists as $list) {
-            if( !$list->getType() || !$list->getCreatedate() ) {
-                echo "set Properties for list ID=".$list->getId()."<br>";
-                $list->setCreator($systemuser);
-                $list->setCreatedate(new \DateTime());
-                $list->setType('default');
-                $list->setOrderinlist($orderinlist);
-                $list->setVersion(1);
-                $orderinlist = $orderinlist + 10;
-
-                if( ($counter % $batchSize) === 0 ) {
-                    $this->em->flush();
-                    //$this->em->clear(); // Detaches all objects from Doctrine!
-                }
-
-                $counter++;
-            }
-        }
-
-        $this->em->flush(); //Persist objects that did not make up an entire batch
-        //$this->em->clear();
-
-        $res = "Inserted $counter anti body records to the AntibodyList object.";
-
-        return $res;
-    }
-
     //Update Request from "UpdatedReqStatus.xlsx": Price, Status, Comment
     public function updateRequests( $request, $filename ) {
 
@@ -2729,5 +2643,165 @@ class TransResImportData
 
         return "Processed $count records";
     }
+
+    public function userRoleMapper() {
+//        1	Request
+//        2	Admin Review
+//        3	Committee Review
+//        4	Final Approval
+//        5	Admin Review/Final Approval
+//        6	Admin View Only
+//        9	Biostatistical Review
+//        7	IRB Review
+//        8	IRB Review/Committee Review
+    }
+
+    public function createAntibodyList($filename) {
+        $importUtil = $this->container->get('transres_import');
+        $res1 = $importUtil->generateAntibodyList($filename);
+        $res2 = $importUtil->setAntibodyListProperties();
+        //exit("generateAntibodyListAction: Finished with res=".$res);
+        return $res1 . "<br>" . $res2;
+    }
+    public function generateAntibodyList($filename) {
+
+        //AntibodyList
+        //INSERT INTO `IHC_antibody` (`id`, `category`, `name`, `altname`, `company`, `catalog`, `lot`, `igconcentration`, `clone`, `host`, `reactivity`, `control`, `protocol`, `retrieval`, `dilution`, `storage`, `comment`, `datasheet`, `pdf`) VALUES
+        //(1, 'M', 'Androgen Receptor', 'AR ', 'Abcam', 'ab74272', 'GR32463-1', '0.2 mg/ml', 'Poly', 'Rabbit ', 'Human, mouse', 'Xenograft Control/Prostate Ca.', 'Envision Rabbit R. ', 'H130', '1:200', '-20 oC', 'Project: 12743 RS#: 30323 PI: Rubin/Kyung Condition confirmed by Dr. Rubin/Kyung on 03/09/2011', 'http://www.abcam.com/Androgen-Receptor-antibody-ab74272.html', 'upload/pdf/1296507249.pdf'),
+
+        $lists = $this->em->getRepository('OlegTranslationalResearchBundle:AntibodyList')->findAll();
+        if( count($lists) > 0 ) {
+            return "AntibodyList is already exists.";
+        }
+
+        //$filename = 'ihc_antibody.sql';
+        $inputFileName = __DIR__ . "/" . $filename;
+
+        if (file_exists($inputFileName)) {
+            //echo "The file $filename exists";
+        } else {
+            return "The file $inputFileName does not exist";
+        }
+
+        echo "==================== Processing $filename =====================<br>";
+
+        $sql = file_get_contents($inputFileName);  // Read file contents
+        $this->em->getConnection()->exec($sql);  // Execute native SQL
+
+        $this->em->flush();
+
+        //exit("generateAntibodyList: Finished");
+    }
+    public function setAntibodyListProperties() {
+        $userSecUtil = $this->container->get('user_security_utility');
+        $systemuser = $userSecUtil->findSystemUser();
+
+        $lists = $this->em->getRepository('OlegTranslationalResearchBundle:AntibodyList')->findAll();
+
+        //set creator, createdate, type, orderinlist and creation time
+        $orderinlist = 1;
+        $counter = 0;
+        $batchSize = 20;
+
+        foreach($lists as $list) {
+            if( !$list->getType() || !$list->getCreatedate() ) {
+                echo "set Properties for list ID=".$list->getId()."<br>";
+                $list->setCreator($systemuser);
+                $list->setCreatedate(new \DateTime());
+                $list->setType('default');
+                $list->setOrderinlist($orderinlist);
+                $list->setVersion(1);
+                $orderinlist = $orderinlist + 10;
+
+                if( ($counter % $batchSize) === 0 ) {
+                    $this->em->flush();
+                    //$this->em->clear(); // Detaches all objects from Doctrine!
+                }
+
+                $counter++;
+            }
+        }
+
+        $this->em->flush(); //Persist objects that did not make up an entire batch
+        //$this->em->clear();
+
+        $res = "Inserted $counter anti body records to the AntibodyList object.";
+
+        return $res;
+    }
+
+    //TODO: dilution convert
+    //3;"M";"Bcl-6 -  Rabbit Anti-mouse";NULL;"Santa Cruz";"Bcl6 (sc-858)";;"200 ug/ml";"Poly";"Rabbit";"Mouse	 human	 rat";"I08-995 A1 (#22)) Flip CD19 Promotor/";"Envision Rabbit Refine";"H230";"1 to 50";"4C";"Project: 10820 RS#:  PI: Cesarman ";"http://www.scbt.com/datasheet-858-bcl-6-n-3-antibody.html";" "
+    //3, 'M', 'Bcl-6 -  Rabbit Anti-mouse', NULL, 'Santa Cruz', 'Bcl6 (sc-858)', '', '200 ug/ml', 'Poly', 'Rabbit', 'Mouse, human, rat', 'I08-995 A1 (#22)) Flip CD19 Promotor/', 'Envision Rabbit Refine', 'H230', '1 to 50', '4C', 'Project: 10820 RS#:  PI: Cesarman ', 'http://www.scbt.com/datasheet-858-bcl-6-n-3-antibody.html', ' '),
+    //1;"M";"Androgen Receptor";"AR ";"Abcam";"ab74272";"GR32463-1";"0.2 mg/ml";"Poly";"Rabbit ";"Human	 mouse";"Xenograft Control/Prostate Ca.";"Envision Rabbit R. ";"H130";"1:200";"-20 oC";"Project: 12743 RS#: 30323 PI: Rubin/Kyung Condition confirmed by Dr. Rubin/Kyung on 03/09/2011";"http://www.abcam.com/Androgen-Receptor-antibody-ab74272.html";"upload/pdf/1296507249.pdf"
+    //1	M	Androgen Receptor	AR 	Abcam	ab74272	GR32463-1	0.2 mg/ml	Poly	Rabbit 	Human, mouse	Xenograft Control/Prostate Ca.	Envision Rabbit R. 	H130	0.180555556	-20 oC	Project: 12743 RS#: 30323 PI: Rubin/Kyung Condition confirmed by Dr. Rubin/Kyung on 03/09/2011	http://www.abcam.com/Androgen-Receptor-antibody-ab74272.html	upload/pdf/1296507249.pdf
+    public function updateInsertAntibodyList($filename) {
+        $logger = $this->container->get('logger');
+
+        $inputFileName = __DIR__ . "/" . $filename; //'/TRF_PROJECT_INFO.xlsx';
+        echo "==================== Processing $filename =====================<br>";
+
+        try {
+            $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
+            $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+            $objPHPExcel = $objReader->load($inputFileName);
+        } catch( Exception $e ) {
+            $error = 'Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage();
+            $logger->error($error);
+            die($error);
+        }
+
+        $sheet = $objPHPExcel->getSheet(0);
+        $highestRow = $sheet->getHighestRow();
+        $highestColumn = $sheet->getHighestColumn();
+
+        echo "Highest row=$highestRow <br>";
+
+        $headers = $rowData = $sheet->rangeToArray('A' . 1 . ':' . $highestColumn . 1,
+            NULL,
+            TRUE,
+            FALSE);
+
+        $batchSize = 300;
+        $count = 0;
+
+        //for each request in excel (start at row 2)
+        for( $row = 2; $row <= $highestRow; $row++ ) {
+
+            //Read a row of data into an array
+            $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
+                NULL,
+                TRUE,
+                FALSE);
+
+            //Insert row data array into the database
+            //echo $row.": ";
+            //var_dump($rowData);
+            //echo "<br>";
+
+            $antibodyId = $this->getValueByHeaderName('id', $rowData, $headers);
+            $antibodyId = trim($antibodyId);
+            echo "<br>########## antibodyId=" . $antibodyId . "#############<br>";
+
+            $antibody = $this->em->getRepository('OlegTranslationalResearchBundle:AntibodyList')->find($antibodyId);
+            if( !$antibody ) {
+                //exit("Request not found by External ID ".$exportId);
+                //create a new antibody record
+            }
+
+            $dilution = $this->getValueByHeaderName('dilution', $rowData, $headers);
+            echo "dilution=$dilution<br>";
+
+            $count++;
+        }
+
+        //$this->em->flush();
+        echo "Processed $count records <br>";
+        exit("exit");
+
+        return "Processed $count records";
+    }
+
+
 
 }
