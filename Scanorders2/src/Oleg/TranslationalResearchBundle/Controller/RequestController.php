@@ -2298,7 +2298,7 @@ class RequestController extends Controller
             //add eventlog changed IRB
             $eventType = "Project Updated";
             $res = "Project ID ".$project->getOid() ." has been updated: ".
-                $transresUtil->getHumanName()." Expiration Date changed form ".
+                $transresUtil->getHumanName()." Expiration Date changed from ".
                 $originalIrbExpDateStr." to ".$value;
             $transresUtil->setEventLog($project,$eventType,$res);
         }
