@@ -25,6 +25,7 @@
 namespace Oleg\TranslationalResearchBundle\Util;
 
 
+use Oleg\TranslationalResearchBundle\Entity\AntibodyList;
 use Oleg\TranslationalResearchBundle\Entity\CommitteeReview;
 use Oleg\TranslationalResearchBundle\Entity\Project;
 use Oleg\TranslationalResearchBundle\Entity\TransResRequest;
@@ -2737,6 +2738,7 @@ class TransResImportData
     //1	M	Androgen Receptor	AR 	Abcam	ab74272	GR32463-1	0.2 mg/ml	Poly	Rabbit 	Human, mouse	Xenograft Control/Prostate Ca.	Envision Rabbit R. 	H130	0.180555556	-20 oC	Project: 12743 RS#: 30323 PI: Rubin/Kyung Condition confirmed by Dr. Rubin/Kyung on 03/09/2011	http://www.abcam.com/Androgen-Receptor-antibody-ab74272.html	upload/pdf/1296507249.pdf
     public function updateInsertAntibodyList($filename) {
         $logger = $this->container->get('logger');
+        $userSecUtil = $this->container->get('user_security_utility');
 
         $inputFileName = __DIR__ . "/" . $filename; //'/TRF_PROJECT_INFO.xlsx';
         echo "==================== Processing $filename =====================<br>";
@@ -2762,6 +2764,8 @@ class TransResImportData
             TRUE,
             FALSE);
 
+        $systemuser = $userSecUtil->findSystemUser();
+
         $batchSize = 300;
         $count = 0;
 
@@ -2779,6 +2783,7 @@ class TransResImportData
             //var_dump($rowData);
             //echo "<br>";
 
+            //id
             $antibodyId = $this->getValueByHeaderName('id', $rowData, $headers);
             $antibodyId = trim($antibodyId);
             echo "<br>########## antibodyId=" . $antibodyId . "#############<br>";
@@ -2787,10 +2792,97 @@ class TransResImportData
             if( !$antibody ) {
                 //exit("Request not found by External ID ".$exportId);
                 //create a new antibody record
+                $antibody = new AntibodyList($systemuser);
+
+                $antibody->setType('default');
+
+                $classNamespaceShort = "OlegTranslationalResearchBundle";
+                $className = "AntibodyList";
+                $classFullName = $classNamespaceShort . ":" . $className;
+                $count = $userSecUtil->getMaxField($classFullName);
+                echo "count=$count<br>";
+
+                if( $count ) {
+                    $antibody->setOrderinlist($count);
+                }
             }
 
+            echo "orderinlist=".$antibody->getOrderinlist()."<br>";
+
+            //category
+            $category = $this->getValueByHeaderName('category', $rowData, $headers);
+            $antibody->setCategory($category);
+
+            //name
+            $name = $this->getValueByHeaderName('name', $rowData, $headers);
+            $antibody->setName($name);
+
+            //altname
+            $altname = $this->getValueByHeaderName('altname', $rowData, $headers);
+            $antibody->setAltname($altname);
+
+            //company
+            $company = $this->getValueByHeaderName('company', $rowData, $headers);
+            $antibody->setCompany($company);
+
+            //catalog
+            $catalog = $this->getValueByHeaderName('catalog', $rowData, $headers);
+            $antibody->setCatalog($catalog);
+
+            //lot
+            $lot = $this->getValueByHeaderName('lot', $rowData, $headers);
+            $antibody->setLot($lot);
+
+            //igconcentration
+            $igconcentration = $this->getValueByHeaderName('igconcentration', $rowData, $headers);
+            $antibody->setIgconcentration($igconcentration);
+
+            //clone
+            $clone = $this->getValueByHeaderName('clone', $rowData, $headers);
+            $antibody->setClone($clone);
+
+            //host
+            $host = $this->getValueByHeaderName('host', $rowData, $headers);
+            $antibody->setHost($host);
+
+            //reactivity
+            $reactivity = $this->getValueByHeaderName('reactivity', $rowData, $headers);
+            $antibody->setReactivity($reactivity);
+
+            //control
+            $control = $this->getValueByHeaderName('control', $rowData, $headers);
+            $antibody->setControl($control);
+
+            //protocol
+            $protocol = $this->getValueByHeaderName('protocol', $rowData, $headers);
+            $antibody->setProtocol($protocol);
+
+            //retrieval
+            $retrieval = $this->getValueByHeaderName('retrieval', $rowData, $headers);
+            $antibody->setRetrieval($retrieval);
+
+            //dilution
             $dilution = $this->getValueByHeaderName('dilution', $rowData, $headers);
+            $antibody->setDilution($dilution);
             echo "dilution=$dilution<br>";
+
+            //storage
+            $storage = $this->getValueByHeaderName('storage', $rowData, $headers);
+            $antibody->setStorage($storage);
+
+            //comment
+            $comment = $this->getValueByHeaderName('comment', $rowData, $headers);
+            $antibody->setComment($comment);
+
+            //datasheet
+            $datasheet = $this->getValueByHeaderName('datasheet', $rowData, $headers);
+            $antibody->setDatasheet($datasheet);
+
+            //pdf
+            $pdf = $this->getValueByHeaderName('pdf', $rowData, $headers);
+            $antibody->setPdf($pdf);
+
+            //$this->em->flush();
 
             $count++;
         }
