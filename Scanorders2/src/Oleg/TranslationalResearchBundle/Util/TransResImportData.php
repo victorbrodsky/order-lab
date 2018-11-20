@@ -2809,7 +2809,7 @@ class TransResImportData
                 $className = "AntibodyList";
                 $classFullName = $classNamespaceShort . ":" . $className;
                 $orderinlist = $userSecUtil->getMaxField($classFullName);
-                //echo "orderinlist=$orderinlist<br>";
+                echo "Create a new orderinlist=$orderinlist<br>";
 
                 if( $orderinlist ) {
                     $antibody->setOrderinlist($orderinlist);
@@ -2823,7 +2823,7 @@ class TransResImportData
             //category
             $category = $this->getValueByHeaderName('category', $rowData, $headers);
             if( $antibody->getCategory() != $category ) {
-                echo "update category=".$antibody->getCategory()."=>".$category."<br>";
+                echo "update category=[".$antibody->getCategory()."]=>[".$category."]<br>";
                 $antibody->setCategory($category);
                 $update = true;
             }
@@ -2831,7 +2831,7 @@ class TransResImportData
             //name
             $name = $this->getValueByHeaderName('name', $rowData, $headers);
             if( $antibody->getName() != $name ) {
-                echo "update name=".$antibody->getName()."=>".$name."<br>";
+                echo "update name=[".$antibody->getName()."]=>[".$name."]<br>";
                 $antibody->setName($name);
                 $update = true;
             }
