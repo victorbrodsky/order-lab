@@ -2235,7 +2235,6 @@ class TransResImportData
         return $value;
     }
     public function getValueByHeaderName($header, $row, $headers) {
-
         if( $this->headerMapArr ) {
             //faster?
             return $this->getFastValueByHeaderName($header, $row, $headers, $this->headerMapArr);
@@ -2268,6 +2267,12 @@ class TransResImportData
 
         $res = str_replace("_x000D_","\r\n",$res);
         $res = str_replace("x000D","\r\n",$res);
+
+        //echo "res=".$res."<br>";
+        if( $res == "NULL" ) {
+            //exit('exit null');
+            $res = null;
+        }
 
         //echo "res=".$res."<br>";
         return $res;
@@ -2731,6 +2736,7 @@ class TransResImportData
         return $res;
     }
 
+    //Run by: http://127.0.0.1/order/translational-research/update-insert-antibody-list
     //TODO: dilution convert
     //3;"M";"Bcl-6 -  Rabbit Anti-mouse";NULL;"Santa Cruz";"Bcl6 (sc-858)";;"200 ug/ml";"Poly";"Rabbit";"Mouse	 human	 rat";"I08-995 A1 (#22)) Flip CD19 Promotor/";"Envision Rabbit Refine";"H230";"1 to 50";"4C";"Project: 10820 RS#:  PI: Cesarman ";"http://www.scbt.com/datasheet-858-bcl-6-n-3-antibody.html";" "
     //3, 'M', 'Bcl-6 -  Rabbit Anti-mouse', NULL, 'Santa Cruz', 'Bcl6 (sc-858)', '', '200 ug/ml', 'Poly', 'Rabbit', 'Mouse, human, rat', 'I08-995 A1 (#22)) Flip CD19 Promotor/', 'Envision Rabbit Refine', 'H230', '1 to 50', '4C', 'Project: 10820 RS#:  PI: Cesarman ', 'http://www.scbt.com/datasheet-858-bcl-6-n-3-antibody.html', ' '),
@@ -2772,6 +2778,8 @@ class TransResImportData
         //for each request in excel (start at row 2)
         for( $row = 2; $row <= $highestRow; $row++ ) {
 
+            $update = false;
+
             //Read a row of data into an array
             $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
                 NULL,
@@ -2786,7 +2794,7 @@ class TransResImportData
             //id
             $antibodyId = $this->getValueByHeaderName('id', $rowData, $headers);
             $antibodyId = trim($antibodyId);
-            echo "<br>########## antibodyId=" . $antibodyId . "#############<br>";
+            //echo "<br>########## antibodyId=" . $antibodyId . "#############<br>";
 
             $antibody = $this->em->getRepository('OlegTranslationalResearchBundle:AntibodyList')->find($antibodyId);
             if( !$antibody ) {
@@ -2794,97 +2802,162 @@ class TransResImportData
                 //create a new antibody record
                 $antibody = new AntibodyList($systemuser);
 
+                $antibody->setId($antibodyId);
                 $antibody->setType('default');
 
                 $classNamespaceShort = "OlegTranslationalResearchBundle";
                 $className = "AntibodyList";
                 $classFullName = $classNamespaceShort . ":" . $className;
-                $count = $userSecUtil->getMaxField($classFullName);
-                echo "count=$count<br>";
+                $orderinlist = $userSecUtil->getMaxField($classFullName);
+                //echo "orderinlist=$orderinlist<br>";
 
-                if( $count ) {
-                    $antibody->setOrderinlist($count);
+                if( $orderinlist ) {
+                    $antibody->setOrderinlist($orderinlist);
                 }
+
+                $update = true;
             }
 
-            echo "orderinlist=".$antibody->getOrderinlist()."<br>";
+            //echo "orderinlist=".$antibody->getOrderinlist()."<br>";
 
             //category
             $category = $this->getValueByHeaderName('category', $rowData, $headers);
-            $antibody->setCategory($category);
+            if( $antibody->getCategory() != $category ) {
+                echo "update category=".$antibody->getCategory()."=>".$category."<br>";
+                $antibody->setCategory($category);
+                $update = true;
+            }
 
             //name
             $name = $this->getValueByHeaderName('name', $rowData, $headers);
-            $antibody->setName($name);
+            if( $antibody->getName() != $name ) {
+                echo "update name=".$antibody->getName()."=>".$name."<br>";
+                $antibody->setName($name);
+                $update = true;
+            }
 
             //altname
             $altname = $this->getValueByHeaderName('altname', $rowData, $headers);
-            $antibody->setAltname($altname);
+            if( $antibody->getAltname() != $altname ) {
+                echo "update altname=[".$antibody->getAltname()."]=>[".$altname."]<br>";
+                $antibody->setAltname($altname);
+                $update = true;
+            }
 
             //company
             $company = $this->getValueByHeaderName('company', $rowData, $headers);
-            $antibody->setCompany($company);
+            if( $antibody->getCompany() != $company ) {
+                $antibody->setCompany($company);
+                $update = true;
+            }
 
             //catalog
             $catalog = $this->getValueByHeaderName('catalog', $rowData, $headers);
-            $antibody->setCatalog($catalog);
+            if( $antibody->getCatalog() != $catalog ) {
+                $antibody->setCatalog($catalog);
+                $update = true;
+            }
 
             //lot
             $lot = $this->getValueByHeaderName('lot', $rowData, $headers);
-            $antibody->setLot($lot);
+            if( $antibody->getLot() != $lot ) {
+                $antibody->setLot($lot);
+                $update = true;
+            }
 
             //igconcentration
             $igconcentration = $this->getValueByHeaderName('igconcentration', $rowData, $headers);
-            $antibody->setIgconcentration($igconcentration);
+            if( $antibody->getIgconcentration() != $igconcentration ) {
+                $antibody->setIgconcentration($igconcentration);
+                $update = true;
+            }
 
             //clone
             $clone = $this->getValueByHeaderName('clone', $rowData, $headers);
-            $antibody->setClone($clone);
+            if( $antibody->getClone() != $clone ) {
+                $antibody->setClone($clone);
+                $update = true;
+            }
 
             //host
             $host = $this->getValueByHeaderName('host', $rowData, $headers);
-            $antibody->setHost($host);
+            if( $antibody->getHost() != $host ) {
+                $antibody->setHost($host);
+                $update = true;
+            }
 
             //reactivity
             $reactivity = $this->getValueByHeaderName('reactivity', $rowData, $headers);
-            $antibody->setReactivity($reactivity);
+            if( $antibody->getReactivity() != $reactivity ) {
+                $antibody->setReactivity($reactivity);
+                $update = true;
+            }
 
             //control
             $control = $this->getValueByHeaderName('control', $rowData, $headers);
-            $antibody->setControl($control);
+            if( $antibody->getControl() != $control ) {
+                $antibody->setControl($control);
+                $update = true;
+            }
 
             //protocol
             $protocol = $this->getValueByHeaderName('protocol', $rowData, $headers);
-            $antibody->setProtocol($protocol);
+            if( $antibody->getProtocol() != $protocol ) {
+                $antibody->setProtocol($protocol);
+                $update = true;
+            }
 
             //retrieval
             $retrieval = $this->getValueByHeaderName('retrieval', $rowData, $headers);
-            $antibody->setRetrieval($retrieval);
+            if( $antibody->getRetrieval() != $retrieval ) {
+                $antibody->setRetrieval($retrieval);
+                $update = true;
+            }
 
             //dilution
             $dilution = $this->getValueByHeaderName('dilution', $rowData, $headers);
-            $antibody->setDilution($dilution);
-            echo "dilution=$dilution<br>";
+            if( $antibody->getDilution() != $dilution ) {
+                $antibody->setDilution($dilution);
+                $update = true;
+                echo "dilution=$dilution<br>";
+            }
 
             //storage
             $storage = $this->getValueByHeaderName('storage', $rowData, $headers);
-            $antibody->setStorage($storage);
+            if( $antibody->getStorage() != $storage ) {
+                $antibody->setStorage($storage);
+                $update = true;
+            }
 
             //comment
             $comment = $this->getValueByHeaderName('comment', $rowData, $headers);
-            $antibody->setComment($comment);
+            if( $antibody->getComment() != $comment ) {
+                $antibody->setComment($comment);
+                $update = true;
+            }
 
             //datasheet
             $datasheet = $this->getValueByHeaderName('datasheet', $rowData, $headers);
-            $antibody->setDatasheet($datasheet);
+            if( $antibody->getDatasheet() != $datasheet ) {
+                $antibody->setDatasheet($datasheet);
+                $update = true;
+            }
 
             //pdf
             $pdf = $this->getValueByHeaderName('pdf', $rowData, $headers);
-            $antibody->setPdf($pdf);
+            if( $antibody->getPdf() != $pdf ) {
+                $antibody->setPdf($pdf);
+                $update = true;
+            }
 
-            //$this->em->flush();
-
-            $count++;
+            if( $update ) {
+                echo "<br>########## antibodyId=" . $antibodyId . "#############<br>";
+                echo "### Updated ID=".$antibody->getId()." <br>";
+                $count++;
+                $this->em->flush();
+            } else {
+                //echo "*** Not updated <br>";
+            }
         }
 
         //$this->em->flush();
