@@ -2797,12 +2797,20 @@ class TransResImportData
             //echo "<br>########## antibodyId=" . $antibodyId . "#############<br>";
 
             $antibody = $this->em->getRepository('OlegTranslationalResearchBundle:AntibodyList')->find($antibodyId);
+
+            if( !$antibody ) {
+                $antibody = $this->em->getRepository('OlegTranslationalResearchBundle:AntibodyList')->findOneByExportId($antibodyId);
+                echo "Found by exportId antibodyId=" . $antibodyId . "<br>";
+            }
+
             if( !$antibody ) {
                 //exit("Request not found by External ID ".$exportId);
                 //create a new antibody record
                 $antibody = new AntibodyList($systemuser);
 
                 $antibody->setId($antibodyId);
+                $antibody->setExportId($antibodyId);
+
                 $antibody->setType('default');
 
                 $classNamespaceShort = "OlegTranslationalResearchBundle";
