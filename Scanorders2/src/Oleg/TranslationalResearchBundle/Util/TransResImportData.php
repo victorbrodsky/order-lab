@@ -2815,6 +2815,8 @@ class TransResImportData
                     $antibody->setOrderinlist($orderinlist);
                 }
 
+                $this->em->persist($antibody);
+
                 $update = true;
             }
 
@@ -2954,7 +2956,7 @@ class TransResImportData
                 echo "<br>########## antibodyId=" . $antibodyId . "#############<br>";
                 echo "### Updated ID=".$antibody->getId()." <br>";
                 $count++;
-                $this->em->flush();
+                $this->em->flush($antibody);
             } else {
                 //echo "*** Not updated <br>";
             }
