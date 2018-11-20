@@ -195,6 +195,12 @@ class AntibodyList extends ListAbstract
      */
     private $comment2;
 
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="exportId", type="integer", nullable=true)
+     */
+    private $exportId;
 
 
     public function __construct($author=null) {
@@ -529,6 +535,23 @@ class AntibodyList extends ListAbstract
     {
         $this->comment2 = $comment2;
     }
+
+    /**
+     * @return int
+     */
+    public function getExportId()
+    {
+        return $this->exportId;
+    }
+
+    /**
+     * @param int $exportId
+     */
+    public function setExportId($exportId)
+    {
+        $this->exportId = $exportId;
+    }
+    
 
     public function __toString()
     {
