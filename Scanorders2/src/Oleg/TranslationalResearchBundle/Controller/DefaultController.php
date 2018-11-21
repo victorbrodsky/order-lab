@@ -260,7 +260,8 @@ class DefaultController extends Controller
 
     /**
      * generateAntibodyList and setAntibodyListProperties
-     * run: http://localhost/order/translational-research/generate-antibody-list/ihc_antibody_mssql.sql
+     * run: http://127.0.0.1/order/translational-research/generate-antibody-list/ihc_antibody_mssql.sql
+     * run: http://127.0.0.1/order/translational-research/generate-antibody-list/ihc_antibody_mssql_2.sql
      * @Route("/generate-antibody-list/{filename}", name="translationalresearch_generate_antibody_list")
      */
     public function generateAntibodyListAction(Request $request, $filename) {
