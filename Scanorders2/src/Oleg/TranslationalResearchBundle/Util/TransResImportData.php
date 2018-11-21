@@ -2986,6 +2986,17 @@ class TransResImportData
 
     //run: http://127.0.0.1/order/translational-research/sync-id-antibody-list
     public function syncIdAntibodyList() {
+
+        $antibody = new AntibodyList();
+        //Explicitly set Id with Doctrine when using “AUTO” strategy
+        $metadata = $this->em->getClassMetaData(get_class($antibody));
+
+        //$metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+        //$metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+
+        $metadata->setIdGenerator(new AssignedGenerator());
+        $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+
         //$antibodies = $this->em->getRepository('OlegTranslationalResearchBundle:AntibodyList')->findAll();
         $repository = $this->em->getRepository('OlegTranslationalResearchBundle:AntibodyList');
         $dql =  $repository->createQueryBuilder("antibody");
@@ -3008,13 +3019,13 @@ class TransResImportData
                 //$antibody->setId($exportId);
 
                 //Explicitly set Id with Doctrine when using “AUTO” strategy
-                $metadata = $this->em->getClassMetaData(get_class($antibody));
+                //$metadata = $this->em->getClassMetaData(get_class($antibody));
 
                 //$metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
                 //$metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
 
-                $metadata->setIdGenerator(new AssignedGenerator());
-                $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+                //$metadata->setIdGenerator(new AssignedGenerator());
+                //$metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
 
                 $this->em->persist($antibody);
 
