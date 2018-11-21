@@ -2989,7 +2989,7 @@ class TransResImportData
         $dql =  $repository->createQueryBuilder("antibody");
         $dql->select('antibody');
         $dql->where("antibody.exportId IS NOT NULL");
-        $dql->orderBy("antibody.id","ASC");
+        $dql->orderBy("antibody.id","DESC");
         $query = $dql->getQuery();
         $antibodies = $query->getResult();
         echo "antibodies count:".count($antibodies)."<br>";
