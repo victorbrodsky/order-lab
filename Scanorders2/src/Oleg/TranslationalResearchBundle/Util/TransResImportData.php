@@ -2677,7 +2677,7 @@ class TransResImportData
 
         $lists = $this->em->getRepository('OlegTranslationalResearchBundle:AntibodyList')->findAll();
         if( count($lists) > 0 ) {
-            //return "AntibodyList is already exists.";
+            return "AntibodyList is already exists.";
         }
 
         //$filename = 'ihc_antibody.sql';
@@ -2826,6 +2826,7 @@ class TransResImportData
                 $this->em->persist($antibody);
 
                 //Explicitly set Id with Doctrine when using “AUTO” strategy
+                //DOES NOT WORK ON SQL SERVER MSSQL
                 $metadata = $this->em->getClassMetaData(get_class($antibody));
                 $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
                 $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
@@ -2982,6 +2983,7 @@ class TransResImportData
         return "Processed $count records";
     }
 
+    //NOT USED: DOES NOT WORK ON SQL SERVER MSSQL
     //run: http://127.0.0.1/order/translational-research/sync-id-antibody-list
     public function syncIdAntibodyList() {
         //$antibodies = $this->em->getRepository('OlegTranslationalResearchBundle:AntibodyList')->findAll();
@@ -3006,6 +3008,7 @@ class TransResImportData
                 $antibody->setId($exportId);
 
                 //Explicitly set Id with Doctrine when using “AUTO” strategy
+                //DOES NOT WORK ON SQL SERVER MSSQL
                 //$metadata = $this->em->getClassMetaData(get_class($antibody));
                 $metadata = $this->getEntityManager()->getClassMetaData(AntibodyList::class);
 

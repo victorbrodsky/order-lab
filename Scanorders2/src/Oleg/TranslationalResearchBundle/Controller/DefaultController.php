@@ -303,6 +303,14 @@ class DefaultController extends Controller
             'Antibody set properties result: '.$res
         );
 
+        $filename = "IHC_antibody-11_16Nov2018.csv";
+        $res = $importUtil->updateInsertAntibodyList($filename);
+        //Flash
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            "Antibody list imported result ($filename): <br>".$res
+        );
+
         //exit("res=".$res);
         return $this->redirectToRoute('employees_siteparameters');
     }
@@ -344,23 +352,10 @@ class DefaultController extends Controller
             return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
         }
 
-        //exit("generateAntibodyList: ".$filename);
+        exit("syncIdAntibodyListAction");
 
         $importUtil = $this->get('transres_import');
         $res = $importUtil->syncIdAntibodyList();
-
-//        $em = $this->getDoctrine()->getManager();
-//
-//        $antibodies = $this->em->getRepository('OlegTranslationalResearchBundle:AntibodyList')->findAll();
-//        foreach( $antibodies as $antibody ) {
-//            $exportId = $antibody->getExportId();
-//            if( $exportId && $exportId != $antibody->getId() ) {
-//                //Explicitly set Id with Doctrine when using “AUTO” strategy
-//                $metadata = $this->em->getClassMetaData(get_class($antibody));
-//                $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
-//                $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
-//            }
-//        }
 
         //Flash
         $this->get('session')->getFlashBag()->add(
