@@ -2825,6 +2825,11 @@ class TransResImportData
 
                 $this->em->persist($antibody);
 
+                //Explicitly set Id with Doctrine when using “AUTO” strategy
+                $metadata = $this->em->getClassMetaData(get_class($antibody));
+                $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+                $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+
                 $update = true;
             }
 
@@ -2975,6 +2980,42 @@ class TransResImportData
         exit("exit");
 
         return "Processed $count records";
+    }
+
+    //run: http://127.0.0.1/order/translational-research/sync-id-antibody-list
+    public function syncIdAntibodyList() {
+        //$antibodies = $this->em->getRepository('OlegTranslationalResearchBundle:AntibodyList')->findAll();
+        $repository = $this->em->getRepository('OlegTranslationalResearchBundle:AntibodyList');
+        $dql =  $repository->createQueryBuilder("antibody");
+        $dql->select('antibody');
+        $dql->where("antibody.exportId IS NOT NULL");
+        $dql->orderBy("antibody.id","ASC");
+        $query = $dql->getQuery();
+        $antibodies = $query->getResult();
+        echo "antibodies count:".count($antibodies)."<br>";
+
+        $count = 0;
+        foreach( $antibodies as $antibody ) {
+            $exportId = $antibody->getExportId();
+            echo "reset ID: [".$antibody->getId()."] to [".$exportId."]<br>";
+            if( $exportId && $exportId != $antibody->getId() ) {
+
+                echo "reset ID: [".$antibody->getId()."] to [".$exportId."]<br>";
+
+                //Explicitly set Id with Doctrine when using “AUTO” strategy
+                $metadata = $this->em->getClassMetaData(get_class($antibody));
+                $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+                $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+
+                $antibody->setId($exportId);
+
+                //$this->em->flush($antibody);
+                $count++;
+            }
+        }
+
+        exit("exit count=".$count);
+        return $count;
     }
 
 

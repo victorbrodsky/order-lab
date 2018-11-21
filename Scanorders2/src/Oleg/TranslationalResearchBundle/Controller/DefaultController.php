@@ -333,6 +333,43 @@ class DefaultController extends Controller
         //exit("res=".$res);
         return $this->redirectToRoute('employees_siteparameters');
     }
+    /**
+     * Sync ID for AntibodyList
+     * run: http://127.0.0.1/order/translational-research/sync-id-antibody-list
+     * @Route("/sync-id-antibody-list", name="translationalresearch_sync_id_antibody_list")
+     */
+    public function syncIdAntibodyListAction(Request $request) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
+        }
+
+        //exit("generateAntibodyList: ".$filename);
+
+        $importUtil = $this->get('transres_import');
+        $res = $importUtil->syncIdAntibodyList();
+
+//        $em = $this->getDoctrine()->getManager();
+//
+//        $antibodies = $this->em->getRepository('OlegTranslationalResearchBundle:AntibodyList')->findAll();
+//        foreach( $antibodies as $antibody ) {
+//            $exportId = $antibody->getExportId();
+//            if( $exportId && $exportId != $antibody->getId() ) {
+//                //Explicitly set Id with Doctrine when using “AUTO” strategy
+//                $metadata = $this->em->getClassMetaData(get_class($antibody));
+//                $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+//                $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+//            }
+//        }
+
+        //Flash
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            "Antibody sync id result: <br>".$res
+        );
+
+        //exit("res=".$res);
+        return $this->redirectToRoute('employees_siteparameters');
+    }
 
     /**
      * http://127.0.0.1/order/translational-research/update-projects-implicit-date
