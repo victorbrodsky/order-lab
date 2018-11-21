@@ -2997,7 +2997,7 @@ class TransResImportData
         $count = 0;
         foreach( $antibodies as $antibody ) {
             $exportId = $antibody->getExportId();
-            echo "reset ID: [".$antibody->getId()."] to [".$exportId."]<br>";
+            //echo "reset ID: [".$antibody->getId()."] to [".$exportId."]<br>";
             if( $exportId && $exportId != $antibody->getId() ) {
 
                 echo "reset ID: [".$antibody->getId()."] to [".$exportId."]<br>";
