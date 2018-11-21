@@ -3012,7 +3012,7 @@ class TransResImportData
 
                 $antibody->setId($exportId);
 
-                //$this->em->flush($antibody);
+                $this->em->flush($antibody);
                 $count++;
             }
         }
