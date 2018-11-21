@@ -25,8 +25,6 @@
 namespace Oleg\TranslationalResearchBundle\Util;
 
 
-use Doctrine\ORM\Id\AssignedGenerator;
-use Doctrine\ORM\Mapping\ClassMetadata;
 use Oleg\TranslationalResearchBundle\Entity\AntibodyList;
 use Oleg\TranslationalResearchBundle\Entity\CommitteeReview;
 use Oleg\TranslationalResearchBundle\Entity\Project;
@@ -2986,17 +2984,6 @@ class TransResImportData
 
     //run: http://127.0.0.1/order/translational-research/sync-id-antibody-list
     public function syncIdAntibodyList() {
-
-        $antibody = new AntibodyList();
-        //Explicitly set Id with Doctrine when using “AUTO” strategy
-        $metadata = $this->em->getClassMetaData(get_class($antibody));
-
-        //$metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
-        //$metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
-
-        $metadata->setIdGenerator(new AssignedGenerator());
-        $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
-
         //$antibodies = $this->em->getRepository('OlegTranslationalResearchBundle:AntibodyList')->findAll();
         $repository = $this->em->getRepository('OlegTranslationalResearchBundle:AntibodyList');
         $dql =  $repository->createQueryBuilder("antibody");
@@ -3016,20 +3003,17 @@ class TransResImportData
                 echo "reset ID: [".$antibody->getId()."] to [".$exportId."]<br>";
 
                 //$this->em->persist($antibody);
-                //$antibody->setId($exportId);
+                $antibody->setId($exportId);
 
                 //Explicitly set Id with Doctrine when using “AUTO” strategy
-                //$metadata = $this->em->getClassMetaData(get_class($antibody));
+                $metadata = $this->em->getClassMetaData(get_class($antibody));
 
-                //$metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
-                //$metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
-
-                //$metadata->setIdGenerator(new AssignedGenerator());
-                //$metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+                $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+                $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
 
                 $this->em->persist($antibody);
 
-                $antibody->setId($exportId);
+                //$antibody->setId($exportId);
 
                 $this->em->flush($antibody);
                 $count++;
