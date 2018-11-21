@@ -3002,12 +3002,14 @@ class TransResImportData
 
                 echo "reset ID: [".$antibody->getId()."] to [".$exportId."]<br>";
 
+                $antibody->setId($exportId);
+
                 //Explicitly set Id with Doctrine when using “AUTO” strategy
                 $metadata = $this->em->getClassMetaData(get_class($antibody));
                 $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
                 $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
 
-                $antibody->setId($exportId);
+                //$antibody->setId($exportId);
 
                 $this->em->flush($antibody);
                 $count++;
