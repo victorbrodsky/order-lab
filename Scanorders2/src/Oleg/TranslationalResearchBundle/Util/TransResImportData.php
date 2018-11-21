@@ -2677,7 +2677,7 @@ class TransResImportData
 
         $lists = $this->em->getRepository('OlegTranslationalResearchBundle:AntibodyList')->findAll();
         if( count($lists) > 0 ) {
-            return "AntibodyList is already exists.";
+            //return "AntibodyList is already exists.";
         }
 
         //$filename = 'ihc_antibody.sql';
@@ -2798,13 +2798,13 @@ class TransResImportData
 
             $antibody = $this->em->getRepository('OlegTranslationalResearchBundle:AntibodyList')->find($antibodyId);
 
-            if( !$antibody ) {
-                $antibody = $this->em->getRepository('OlegTranslationalResearchBundle:AntibodyList')->findOneByExportId($antibodyId);
-                echo "Found by exportId antibodyId=" . $antibodyId . "<br>";
-            }
+//            if( !$antibody ) {
+//                $antibody = $this->em->getRepository('OlegTranslationalResearchBundle:AntibodyList')->findOneByExportId($antibodyId);
+//                echo "Found by exportId antibodyId=" . $antibodyId . "<br>";
+//            }
 
             if( !$antibody ) {
-                //exit("Request not found by External ID ".$exportId);
+                exit("Request not found by External ID ".$antibodyId);
                 //create a new antibody record
                 $antibody = new AntibodyList($systemuser);
 
