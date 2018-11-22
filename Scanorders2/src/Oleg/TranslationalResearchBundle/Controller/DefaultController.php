@@ -281,6 +281,15 @@ class DefaultController extends Controller
             "Antibody list imported result ($filename): <br>".$res
         );
 
+//        //update antibody list
+//        $filename = "IHC_antibody-11_16Nov2018.csv";
+//        $res = $importUtil->updateInsertAntibodyList($filename);
+//        //Flash
+//        $this->get('session')->getFlashBag()->add(
+//            'notice',
+//            "Antibody list imported result ($filename): <br>".$res
+//        );
+
         //exit("res=".$res);
         return $this->redirectToRoute('employees_siteparameters');
     }
@@ -303,13 +312,13 @@ class DefaultController extends Controller
             'Antibody set properties result: '.$res
         );
 
-        $filename = "IHC_antibody-11_16Nov2018.csv";
-        $res = $importUtil->updateInsertAntibodyList($filename);
-        //Flash
-        $this->get('session')->getFlashBag()->add(
-            'notice',
-            "Antibody list imported result ($filename): <br>".$res
-        );
+//        $filename = "IHC_antibody-11_16Nov2018.csv";
+//        $res = $importUtil->updateInsertAntibodyList($filename);
+//        //Flash
+//        $this->get('session')->getFlashBag()->add(
+//            'notice',
+//            "Antibody list imported result ($filename): <br>".$res
+//        );
 
         //exit("res=".$res);
         return $this->redirectToRoute('employees_siteparameters');

@@ -29,15 +29,6 @@ use Oleg\UserdirectoryBundle\Entity\ListAbstract;
  */
 class AntibodyList extends ListAbstract
 {
-
-//    /**
-//     * @var integer
-//     *
-//     * @ORM\Column(name="id", type="integer")
-//     * @ORM\Id
-//     */
-//    protected $id;
-
     /**
      * @ORM\OneToMany(targetEntity="AntibodyList", mappedBy="original", cascade={"persist"})
      **/
