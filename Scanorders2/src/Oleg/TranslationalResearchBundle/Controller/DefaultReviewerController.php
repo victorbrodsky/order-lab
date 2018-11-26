@@ -413,21 +413,25 @@ class DefaultReviewerController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $projectSpecialties = $form->get('projectSpecialty')->getData();
-            echo "projectSpecialties=".count($projectSpecialties)."<br>";
+//            $projectSpecialties = $form->get('projectSpecialty')->getData();
+//            $substituteUser = $form->get('substituteUser')->getData();
+//            $replaceUser = $form->get('replaceUser')->getData();
+//            echo "projectSpecialties=".count($projectSpecialties)."<br>";
+//            echo "substituteUser=".$substituteUser."<br>";
+//            echo "replaceUser=".$replaceUser."<br>";
+//
+//            $excludedProjectCompleted = $form->get('excludedProjectCompleted')->getData();
+//            $excludedProjectCanceled = $form->get('excludedProjectCanceled')->getData();
+//            $excludedProjectDraft = $form->get('excludedProjectDraft')->getData();
+//            echo "excludedProjectCompleted=".$excludedProjectCompleted."<br>";
+//            echo "excludedProjectCanceled=".$excludedProjectCanceled."<br>";
 
-            $substituteUser = $form->get('substituteUser')->getData();
-            echo "substituteUser=".$substituteUser."<br>";
+            $projects = $this->getFilteredProjects($form);
 
-            $replaceUser = $form->get('replaceUser')->getData();
-            echo "replaceUser=".$replaceUser."<br>";
 
-            $excludedProjectCompleted = $form->get('excludedProjectCompleted')->getData();
-            echo "excludedProjectCompleted=".$excludedProjectCompleted."<br>";
-            $excludedProjectCanceled = $form->get('excludedProjectCanceled')->getData();
-            echo "excludedProjectCanceled=".$excludedProjectCanceled."<br>";
+            //exit('submit');
 
-            exit('submit');
+            //get projects
 
             //$transresUtil->processDefaultReviewersRole($defaultReviewer,$originalReviewer,$originalReviewerDelegate);
 
@@ -439,6 +443,7 @@ class DefaultReviewerController extends Controller
             //$specialtyStr = $defaultReviewer->getProjectSpecialty();
             //$transresUtil->setEventLog($defaultReviewer,$eventType,$msg);
 
+            exit('substituted: projects count='.count($projects));
             return $this->redirectToRoute('translationalresearch_default-reviewer_show', array('id' => $defaultReviewer->getId()));
         }
 
@@ -446,6 +451,282 @@ class DefaultReviewerController extends Controller
             'form' => $form->createView(),
             'title' => "Batch User Substitution",
         );
+    }
+    public function getFilteredProjects($form) {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $projectSpecialties = $form->get('projectSpecialty')->getData();
+        $substituteUser = $form->get('substituteUser')->getData();
+        $replaceUser = $form->get('replaceUser')->getData();
+        echo "projectSpecialties=".count($projectSpecialties)."<br>";
+        echo "substituteUser=".$substituteUser."<br>";
+        echo "replaceUser=".$replaceUser."<br>";
+
+        if( $projectSpecialties && count($projectSpecialties) > 0 ) {
+            //ok
+        } else {
+            return array();
+        }
+        if( !$substituteUser ) {
+            return array();
+        }
+        if( !$replaceUser ) {
+            return array();
+        }
+
+        $excludedProjectCompleted = $form->get('excludedProjectCompleted')->getData();
+        $excludedProjectCanceled = $form->get('excludedProjectCanceled')->getData();
+        $excludedProjectDraft = $form->get('excludedProjectDraft')->getData();
+        //echo "excludedProjectCompleted=".$excludedProjectCompleted."<br>";
+        //echo "excludedProjectCanceled=".$excludedProjectCanceled."<br>";
+
+        //project's requester
+        $projectPis = $form->get('projectPis')->getData();
+        $projectPisIrb = $form->get('projectPisIrb')->getData();
+        $projectPathologists = $form->get('projectPathologists')->getData();
+        $projectCoInvestigators = $form->get('projectCoInvestigators')->getData();
+        $projectContacts = $form->get('projectContacts')->getData();
+        $projectBillingContact = $form->get('projectBillingContact')->getData();
+
+        //IRB Reviewers
+        $projectReviewerIrb = $form->get('projectReviewerIrb')->getData();
+        $projectReviewerIrbDelegate = $form->get('projectReviewerIrbDelegate')->getData();
+        //Admin Reviewer
+        $projectReviewerAdmin = $form->get('projectReviewerAdmin')->getData();
+        $projectReviewerAdminDelegate = $form->get('projectReviewerAdminDelegate')->getData();
+        //Committee Reviewer
+        $projectReviewerCommittee = $form->get('projectReviewerCommittee')->getData();
+        $projectReviewerCommitteeDelegate = $form->get('projectReviewerCommitteeDelegate')->getData();
+        //Primary Committee Reviewer
+        $projectReviewerPrimaryCommittee = $form->get('projectReviewerPrimaryCommittee')->getData();
+        $projectReviewerPrimaryCommitteeDelegate = $form->get('projectReviewerPrimaryCommitteeDelegate')->getData();
+        //Final Reviewer
+        $projectReviewerFinal = $form->get('projectReviewerFinal')->getData();
+        $projectReviewerFinalDelegate = $form->get('projectReviewerFinalDelegate')->getData();
+
+
+        ///////////// Filter Projects //////////////////
+        $repository = $em->getRepository('OlegTranslationalResearchBundle:Project');
+        $dql =  $repository->createQueryBuilder("project");
+        $dql->select('project');
+
+        $dql->leftJoin('project.submitter','submitter');
+
+        $dql->leftJoin('project.principalInvestigators','principalInvestigators');
+        $dql->leftJoin('principalInvestigators.infos','principalInvestigatorsInfos');
+
+        $dql->leftJoin('project.principalIrbInvestigator','principalIrbInvestigator');
+
+        $dql->leftJoin('project.irbReviews','irbReviews');
+        $dql->leftJoin('irbReviews.reviewer','irbReviewer');
+        $dql->leftJoin('irbReviews.reviewerDelegate','irbReviewerDelegate');
+
+        $dql->leftJoin('project.adminReviews','adminReviews');
+        $dql->leftJoin('adminReviews.reviewer','adminReviewer');
+        $dql->leftJoin('adminReviews.reviewerDelegate','adminReviewerDelegate');
+
+        $dql->leftJoin('project.committeeReviews','committeeReviews');
+        $dql->leftJoin('committeeReviews.reviewer','committeeReviewer');
+        $dql->leftJoin('committeeReviews.reviewerDelegate','committeeReviewerDelegate');
+
+        $dql->leftJoin('project.finalReviews','finalReviews');
+        $dql->leftJoin('finalReviews.reviewer','finalReviewer');
+        $dql->leftJoin('finalReviews.reviewerDelegate','finalReviewerDelegate');
+
+        $dql->leftJoin('project.coInvestigators','coInvestigators');
+        $dql->leftJoin('project.pathologists','pathologists');
+        $dql->leftJoin('project.billingContact','billingContact');
+        $dql->leftJoin('project.contacts','contacts');
+
+        $dql->orderBy("project.id","DESC");
+
+        $dqlParameters = array();
+
+        if( $projectSpecialties && count($projectSpecialties) > 0 ) {
+            $dql->leftJoin('project.projectSpecialty','projectSpecialty');
+            $projectSpecialtyIdsArr = array();
+            foreach($projectSpecialties as $projectSpecialty) {
+                $projectSpecialtyIdsArr[] = $projectSpecialty->getId();
+            }
+            $dql->andWhere("projectSpecialty.id IN (:projectSpecialtyIdsArr)");
+            $dqlParameters["projectSpecialtyIdsArr"] = $projectSpecialtyIdsArr;
+        } else {
+            return array();
+        }
+
+        if( $excludedProjectCompleted ) {
+            $dql->andWhere("project.state != 'closed'");
+        }
+        if( $excludedProjectCanceled ) {
+            $dql->andWhere("project.state != 'canceled'");
+        }
+        if( $excludedProjectDraft ) {
+            $dql->andWhere("project.state != 'draft'");
+        }
+
+        $projectProcessed = false;
+
+        if( $substituteUser && $substituteUser->getId() ) {
+
+            $projectUsers = array();
+
+            if( $projectPis ) {
+                $projectUsers[] = "principalInvestigators.id = :userId";
+            }
+            if( $projectPisIrb ) {
+                $projectUsers[] = "principalIrbInvestigator.id = :userId";
+            }
+            if( $projectPathologists ) {
+                $projectUsers[] = "pathologists.id = :userId";
+                //$dql->andWhere("pathologists.id = :userId");
+                //$dqlParameters["userId"] = $substituteUser->getId();
+                //$projectProcessed = true;
+            }
+            if( $projectCoInvestigators ) {
+                $projectUsers[] = "coInvestigators.id = :userId";
+                //$dql->andWhere("coInvestigators.id = :userId");
+                //$dqlParameters["userId"] = $substituteUser->getId();
+                //$projectProcessed = true;
+            }
+            if( $projectContacts ) {
+                $projectUsers[] = "contacts.id = :userId";
+                //$dql->andWhere("contacts.id = :userId");
+                //$dqlParameters["userId"] = $substituteUser->getId();
+                //$projectProcessed = true;
+            }
+            if( $projectBillingContact ) {
+                $projectUsers[] = "billingContact.id = :userId";
+                //$dql->andWhere("billingContact.id = :userId");
+                //$dqlParameters["userId"] = $substituteUser->getId();
+                //$projectProcessed = true;
+            }
+
+            //IRB Reviewers
+            if( $projectReviewerIrb ) {
+                $projectUsers[] = "irbReviewer.id = :userId";
+            }
+            if( $projectReviewerIrbDelegate ) {
+                $projectUsers[] = "irbReviewerDelegate.id = :userId";
+            }
+
+            //Admin Reviewer
+            if( $projectReviewerAdmin ) {
+                $projectUsers[] = "adminReviewer.id = :userId";
+            }
+            if( $projectReviewerAdminDelegate ) {
+                $projectUsers[] = "adminReviewerDelegate.id = :userId";
+            }
+
+            //Committee Reviewer
+            if( $projectReviewerCommittee ) {
+                $projectUsers[] = "committeeReviewer.id = :userId";
+            }
+            if( $projectReviewerCommitteeDelegate ) {
+                $projectUsers[] = "committeeReviewerDelegate.id = :userId";
+            }
+
+            //Primary Committee Reviewer
+            if( $projectReviewerPrimaryCommittee ) {
+                $projectUsers[] = "(committeeReviewer.id = :userId AND committeeReviews.primaryReview = TRUE)";
+            }
+            if( $projectReviewerPrimaryCommitteeDelegate ) {
+                $projectUsers[] = "(committeeReviewerDelegate.id = :userId AND committeeReviews.primaryReview = TRUE)";
+            }
+
+            //Final Reviewer
+            if( $projectReviewerFinal ) {
+                $projectUsers[] = "finalReviewer.id = :userId";
+            }
+            if( $projectReviewerFinalDelegate ) {
+                $projectUsers[] = "finalReviewerDelegate.id = :userId";
+            }
+
+
+            if( count($projectUsers) > 0 ) {
+                $projectUsersStr = implode(" OR ",$projectUsers);
+                $dql->andWhere($projectUsersStr);
+                $dqlParameters["userId"] = $substituteUser->getId();
+                $projectProcessed = true;
+            }
+
+
+
+
+        } else {
+            return array();
+        }
+
+        if( !$projectProcessed ) {
+            return array();
+        }
+
+
+
+        $query = $dql->getQuery();
+
+        //echo "projectId=".$project->getId()."<br>";
+        //echo "reviewId=".$reviewId."<br>";
+        //echo "query=".$query->getSql()."<br>";
+
+        if( count($dqlParameters) > 0 ) {
+            $query->setParameters($dqlParameters);
+        }
+
+        $projects = $query->getResult();
+        ///////////// EOF Filter Projects //////////////////
+
+        echo "<br>";
+        foreach($projects as $project) {
+            echo "-----" . $project->getId() . "-----<br>";
+            if( $project->getPrincipalInvestigators()->contains($substituteUser) ) {
+                echo "### User is PI <br>";
+            }
+            if( $project->getPrincipalIrbInvestigators()->contains($substituteUser) ) {
+                echo "### User is IRB PI <br>";
+            }
+            if( $project->getCoInvestigators()->contains($substituteUser) ) {
+                echo "### User is CoInvestigator <br>";
+            }
+            if( $project->getPathologists()->contains($substituteUser) ) {
+                echo "### User is Pathologist <br>";
+            }
+            if( $project->getContacts()->contains($substituteUser) ) {
+                echo "### User is Contact <br>";
+            }
+            if( $project->getBillingContacts()->contains($substituteUser) ) {
+                echo "### User is Billing Contact <br>";
+            }
+
+            foreach( $project->getCommitteeReviews() as $review) {
+                if( $review->getReviewer() && $review->getReviewer()->getId() == $substituteUser->getId() ) {
+                    $primary = "";
+                    if( $review->getPrimaryReview() ) {
+                        $primary = "(primary)";
+                    }
+                    echo "*** User is Committee Reviewer ".$primary." <br>";
+                }
+                if( $review->getReviewerDelegate() && $review->getReviewerDelegate()->getId() == $substituteUser->getId() ) {
+                    $primary = "";
+                    if( $review->getPrimaryReview() ) {
+                        $primary = "(primary)";
+                    }
+                    echo "*** User is Committee Reviewer Delegate ".$primary."<br>";
+                }
+            }
+            foreach( $project->getFinalReviews() as $review) {
+                if( $review->getReviewer() && $review->getReviewer()->getId() == $substituteUser->getId() ) {
+                    echo "*** User is Final Reviewer <br>";
+                }
+                if( $review->getReviewerDelegate() && $review->getReviewerDelegate()->getId() == $substituteUser->getId() ) {
+                    echo "*** User is Final Reviewer Delegate <br>";
+                }
+            }
+
+            echo "<br>";
+        }//foreach project
+
+        return $projects;
     }
 
 }
