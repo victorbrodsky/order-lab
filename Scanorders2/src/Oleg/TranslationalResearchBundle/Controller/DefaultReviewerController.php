@@ -377,4 +377,75 @@ class DefaultReviewerController extends Controller
 
         return $form;
     }
+
+
+
+    /**
+     * Substitute user
+     *
+     * @Route("/substitute-user/", name="translationalresearch_substitute_user")
+     * @Template("OlegTranslationalResearchBundle:DefaultReviewer:substitute-user.html.twig")
+     * @Method({"GET", "POST"})
+     */
+    public function substituteUserAction(Request $request)
+    {
+        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN')) {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
+        $transresUtil = $this->container->get('transres_util');
+
+        //$specialtyStr = $defaultReviewer->getProjectSpecialty();
+        //$stateStr = $defaultReviewer->getState();
+        //get state string: irb_review=>IRB Review
+        //$stateLabel = $transresUtil->getStateSimpleLabelByName($stateStr);
+
+        //$form = $this->createDefaultReviewForm($cycle,$defaultReviewer);
+        $params = array(
+            'showPrimaryReview'=>false,
+            'transresUtil' => $transresUtil
+        );
+        $form = $this->createForm('Oleg\TranslationalResearchBundle\Form\SubstituteUserType', null, array(
+            'form_custom_value' => $params
+        ));
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $projectSpecialties = $form->get('projectSpecialty')->getData();
+            echo "projectSpecialties=".count($projectSpecialties)."<br>";
+
+            $substituteUser = $form->get('substituteUser')->getData();
+            echo "substituteUser=".$substituteUser."<br>";
+
+            $replaceUser = $form->get('replaceUser')->getData();
+            echo "replaceUser=".$replaceUser."<br>";
+
+            $excludedProjectCompleted = $form->get('excludedProjectCompleted')->getData();
+            echo "excludedProjectCompleted=".$excludedProjectCompleted."<br>";
+            $excludedProjectCanceled = $form->get('excludedProjectCanceled')->getData();
+            echo "excludedProjectCanceled=".$excludedProjectCanceled."<br>";
+
+            exit('submit');
+
+            //$transresUtil->processDefaultReviewersRole($defaultReviewer,$originalReviewer,$originalReviewerDelegate);
+
+            //$this->getDoctrine()->getManager()->flush();
+
+            //Event Log
+            //$eventType = "TRP User Substitution";
+            //$stateLabel = $transresUtil->getStateSimpleLabelByName($stateStr);
+            //$specialtyStr = $defaultReviewer->getProjectSpecialty();
+            //$transresUtil->setEventLog($defaultReviewer,$eventType,$msg);
+
+            return $this->redirectToRoute('translationalresearch_default-reviewer_show', array('id' => $defaultReviewer->getId()));
+        }
+
+        return array(
+            'form' => $form->createView(),
+            'title' => "Batch User Substitution",
+        );
+    }
+
 }
