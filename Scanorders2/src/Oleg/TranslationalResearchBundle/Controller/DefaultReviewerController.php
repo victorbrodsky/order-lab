@@ -579,27 +579,15 @@ class DefaultReviewerController extends Controller
             }
             if( $projectPathologists ) {
                 $projectUsers[] = "pathologists.id = :userId";
-                //$dql->andWhere("pathologists.id = :userId");
-                //$dqlParameters["userId"] = $substituteUser->getId();
-                //$projectProcessed = true;
             }
             if( $projectCoInvestigators ) {
                 $projectUsers[] = "coInvestigators.id = :userId";
-                //$dql->andWhere("coInvestigators.id = :userId");
-                //$dqlParameters["userId"] = $substituteUser->getId();
-                //$projectProcessed = true;
             }
             if( $projectContacts ) {
                 $projectUsers[] = "contacts.id = :userId";
-                //$dql->andWhere("contacts.id = :userId");
-                //$dqlParameters["userId"] = $substituteUser->getId();
-                //$projectProcessed = true;
             }
             if( $projectBillingContact ) {
                 $projectUsers[] = "billingContact.id = :userId";
-                //$dql->andWhere("billingContact.id = :userId");
-                //$dqlParameters["userId"] = $substituteUser->getId();
-                //$projectProcessed = true;
             }
 
             //IRB Reviewers
@@ -678,24 +666,62 @@ class DefaultReviewerController extends Controller
 
         echo "<br>";
         foreach($projects as $project) {
+
+            $toFlush = false;
+            $msgArr = array();
+
             echo "-----" . $project->getId() . "-----<br>";
             if( $project->getPrincipalInvestigators()->contains($substituteUser) ) {
                 echo "### User is PI <br>";
+                if( $projectPis ) {
+                    $project->removePrincipalInvestigator($substituteUser);
+                    $project->addPrincipalInvestigator($replaceUser);
+                    $toFlush = true;
+                    $msgArr[] = "PI substituted from " . $substituteUser . " to " . $replaceUser;
+                }
             }
             if( $project->getPrincipalIrbInvestigators()->contains($substituteUser) ) {
                 echo "### User is IRB PI <br>";
-            }
-            if( $project->getCoInvestigators()->contains($substituteUser) ) {
-                echo "### User is CoInvestigator <br>";
+                if( $projectPisIrb ) {
+                    $project->setPrincipalIrbInvestigator($replaceUser);
+                    $toFlush = true;
+                    $msgArr[] = "PI listed on IRB substituted from " . $substituteUser . " to " . $replaceUser;
+                }
             }
             if( $project->getPathologists()->contains($substituteUser) ) {
                 echo "### User is Pathologist <br>";
+                if( $projectPathologists ) {
+                    $project->removePathologist($substituteUser);
+                    $project->addPathologist($replaceUser);
+                    $toFlush = true;
+                    $msgArr[] = "Pathologist substituted from " . $substituteUser . " to " . $replaceUser;
+                }
+            }
+            if( $project->getCoInvestigators()->contains($substituteUser) ) {
+                echo "### User is CoInvestigator <br>";
+                if( $projectCoInvestigators ) {
+                    $project->removeCoInvestigator($substituteUser);
+                    $project->addCoInvestigator($replaceUser);
+                    $toFlush = true;
+                    $msgArr[] = "CoInvestigator substituted from " . $substituteUser . " to " . $replaceUser;
+                }
             }
             if( $project->getContacts()->contains($substituteUser) ) {
                 echo "### User is Contact <br>";
+                if( $projectContacts ) {
+                    $project->removeContact($substituteUser);
+                    $project->addContact($replaceUser);
+                    $toFlush = true;
+                    $msgArr[] = "Contact substituted from " . $substituteUser . " to " . $replaceUser;
+                }
             }
             if( $project->getBillingContacts()->contains($substituteUser) ) {
                 echo "### User is Billing Contact <br>";
+                if( $projectBillingContact ) {
+                    $project->setBillingContact($replaceUser);
+                    $toFlush = true;
+                    $msgArr[] = "Billing Contact substituted from " . $substituteUser . " to " . $replaceUser;
+                }
             }
 
             foreach( $project->getCommitteeReviews() as $review) {
