@@ -414,10 +414,15 @@ class DefaultReviewerController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
 
             $projectsMsg = $this->getFilteredProjects($form);
-
             $this->container->get('session')->getFlashBag()->add(
                 'notice',
                 $projectsMsg
+            );
+
+            $requestsMsg = $this->getFilteredRequests($form);
+            $this->container->get('session')->getFlashBag()->add(
+                'notice',
+                $requestsMsg
             );
 
             //exit('substituted: projects count='.count($projects));
@@ -450,10 +455,10 @@ class DefaultReviewerController extends Controller
             return "No projects to update: Project specialty is not specified";
         }
         if( !$substituteUser ) {
-            return "No projects to update: Substitute user is not specified";
+            return "No project requests to update: User to replace with is not specified";
         }
         if( !$replaceUser ) {
-            return "No projects to update: Replace user is not specified";
+            return "No project requests to update: User to be replaced is not specified";
         }
 
         $substituteUserId = $substituteUser->getId();
@@ -622,7 +627,7 @@ class DefaultReviewerController extends Controller
             }
 
         } else {
-            return "No projects to update: Substitute user is not specified";
+            return "No project requests to update: User to replace with is not specified";
         }
 
         if( !$projectProcessed ) {
@@ -660,7 +665,7 @@ class DefaultReviewerController extends Controller
                     $project->removePrincipalInvestigator($substituteUser);
                     $project->addPrincipalInvestigator($replaceUser);
                     $toFlush = true;
-                    $msgArr[] = "PI substituted from " . $substituteUser . " to " . $replaceUser;
+                    $msgArr[] = $this->getMsg("PI",$substituteUser,$replaceUser); //"PI substituted from " . $substituteUser . " to " . $replaceUser;
                 }
             }
             if( $project->getPrincipalIrbInvestigators()->contains($substituteUser) ) {
@@ -670,7 +675,7 @@ class DefaultReviewerController extends Controller
                     if( $currentUser && $currentUser->getId() == $substituteUserId ) {
                         $project->setPrincipalIrbInvestigator($replaceUser);
                         $toFlush = true;
-                        $msgArr[] = "PI listed on IRB substituted from " . $substituteUser . " to " . $replaceUser;
+                        $msgArr[] = $this->getMsg("PI listed on IRB",$substituteUser,$replaceUser); //"PI listed on IRB substituted from " . $substituteUser . " to " . $replaceUser;
                     }
                 }
             }
@@ -680,7 +685,7 @@ class DefaultReviewerController extends Controller
                     $project->removePathologist($substituteUser);
                     $project->addPathologist($replaceUser);
                     $toFlush = true;
-                    $msgArr[] = "Pathologist substituted from " . $substituteUser . " to " . $replaceUser;
+                    $msgArr[] = $this->getMsg("Pathologist",$substituteUser,$replaceUser);//"Pathologist substituted from " . $substituteUser . " to " . $replaceUser;
                 }
             }
             if( $project->getCoInvestigators()->contains($substituteUser) ) {
@@ -689,7 +694,7 @@ class DefaultReviewerController extends Controller
                     $project->removeCoInvestigator($substituteUser);
                     $project->addCoInvestigator($replaceUser);
                     $toFlush = true;
-                    $msgArr[] = "CoInvestigator substituted from " . $substituteUser . " to " . $replaceUser;
+                    $msgArr[] = $this->getMsg("CoInvestigator",$substituteUser,$replaceUser); //"CoInvestigator substituted from " . $substituteUser . " to " . $replaceUser;
                 }
             }
             if( $project->getContacts()->contains($substituteUser) ) {
@@ -698,7 +703,7 @@ class DefaultReviewerController extends Controller
                     $project->removeContact($substituteUser);
                     $project->addContact($replaceUser);
                     $toFlush = true;
-                    $msgArr[] = "Contact substituted from " . $substituteUser . " to " . $replaceUser;
+                    $msgArr[] = $this->getMsg("Contact",$substituteUser,$replaceUser); //"Contact substituted from " . $substituteUser . " to " . $replaceUser;
                 }
             }
             if( $project->getBillingContacts()->contains($substituteUser) ) {
@@ -708,7 +713,7 @@ class DefaultReviewerController extends Controller
                     if( $currentUser && $currentUser->getId() == $substituteUserId ) {
                         $project->setBillingContact($replaceUser);
                         $toFlush = true;
-                        $msgArr[] = "Billing Contact substituted from " . $substituteUser . " to " . $replaceUser;
+                        $msgArr[] = $this->getMsg("Billing Contact",$substituteUser,$replaceUser); //"Billing Contact substituted from " . $substituteUser . " to " . $replaceUser;
                     }
                 }
             }
@@ -721,7 +726,7 @@ class DefaultReviewerController extends Controller
                     if( $projectReviewerIrb ) {
                         $review->setReviewer($replaceUser);
                         $this->flushObject($review,$testing);
-                        $msgArr[] = "IRB Reviewer substituted from " . $substituteUser . " to " . $replaceUser;
+                        $msgArr[] = $this->getMsg("IRB Reviewer",$substituteUser,$replaceUser); //"IRB Reviewer substituted from " . $substituteUser . " to " . $replaceUser;
                     }
                 }
                 if( $review->getReviewerDelegate() && $review->getReviewerDelegate()->getId() == $substituteUserId ) {
@@ -729,7 +734,7 @@ class DefaultReviewerController extends Controller
                     if( $projectReviewerIrbDelegate ) {
                         $review->setReviewerDelegate($replaceUser);
                         $this->flushObject($review,$testing);
-                        $msgArr[] = "IRB Reviewer Delegate substituted from " . $substituteUser . " to " . $replaceUser;
+                        $msgArr[] = $this->getMsg("IRB Reviewer Delegate",$substituteUser,$replaceUser); //"IRB Reviewer Delegate substituted from " . $substituteUser . " to " . $replaceUser;
                     }
                 }
             }
@@ -740,7 +745,7 @@ class DefaultReviewerController extends Controller
                         echo "*** User is Admin Reviewer <br>";
                         $review->setReviewer($replaceUser);
                         $this->flushObject($review,$testing);
-                        $msgArr[] = "Admin Reviewer substituted from " . $substituteUser . " to " . $replaceUser;
+                        $msgArr[] = $this->getMsg("Admin Reviewer",$substituteUser,$replaceUser); //"Admin Reviewer substituted from " . $substituteUser . " to " . $replaceUser;
                     }
                 }
                 if( $review->getReviewerDelegate() && $review->getReviewerDelegate()->getId() == $substituteUserId ) {
@@ -748,7 +753,7 @@ class DefaultReviewerController extends Controller
                         echo "*** User is Admin Reviewer Delegate <br>";
                         $review->setReviewerDelegate($replaceUser);
                         $this->flushObject($review,$testing);
-                        $msgArr[] = "Admin Reviewer Delegate substituted from " . $substituteUser . " to " . $replaceUser;
+                        $msgArr[] = $this->getMsg("Admin Reviewer Delegate",$substituteUser,$replaceUser); //"Admin Reviewer Delegate substituted from " . $substituteUser . " to " . $replaceUser;
                     }
                 }
             }
@@ -761,14 +766,14 @@ class DefaultReviewerController extends Controller
                             echo "*** User is Committee Reviewer (primary) <br>";
                             $review->setReviewer($replaceUser);
                             $this->flushObject($review,$testing);
-                            $msgArr[] = "Primary Committee Reviewer substituted from " . $substituteUser . " to " . $replaceUser;
+                            $msgArr[] = $this->getMsg("Primary Committee Reviewer",$substituteUser,$replaceUser); //"Primary Committee Reviewer substituted from " . $substituteUser . " to " . $replaceUser;
                         }
                     } else {
                         if( $projectReviewerCommittee ) {
                             echo "*** User is Committee Reviewer <br>";
                             $review->setReviewer($replaceUser);
                             $this->flushObject($review,$testing);
-                            $msgArr[] = "Committee Reviewer substituted from " . $substituteUser . " to " . $replaceUser;
+                            $msgArr[] = $this->getMsg("Committee Reviewer",$substituteUser,$replaceUser); //"Committee Reviewer substituted from " . $substituteUser . " to " . $replaceUser;
                         }
                     }
                 }
@@ -779,14 +784,14 @@ class DefaultReviewerController extends Controller
                             echo "*** User is Committee Reviewer Delegate (primary) <br>";
                             $review->setReviewerDelegate($replaceUser);
                             $this->flushObject($review,$testing);
-                            $msgArr[] = "Primary Committee Reviewer Delegate substituted from " . $substituteUser . " to " . $replaceUser;
+                            $msgArr[] = $this->getMsg("Primary Committee Reviewer Delegate",$substituteUser,$replaceUser); //"Primary Committee Reviewer Delegate substituted from " . $substituteUser . " to " . $replaceUser;
                         }
                     } else {
                         if( $projectReviewerCommitteeDelegate ) {
                             echo "*** User is Committee Reviewer Delegate <br>";
                             $review->setReviewerDelegate($replaceUser);
                             $this->flushObject($review,$testing);
-                            $msgArr[] = "Committee Reviewer Delegate substituted from " . $substituteUser . " to " . $replaceUser;
+                            $msgArr[] = $this->getMsg("Committee Reviewer Delegate",$substituteUser,$replaceUser); //"Committee Reviewer Delegate substituted from " . $substituteUser . " to " . $replaceUser;
                         }
                     }
                 }
@@ -798,7 +803,7 @@ class DefaultReviewerController extends Controller
                         echo "*** User is Final Reviewer <br>";
                         $review->setReviewer($replaceUser);
                         $this->flushObject($review,$testing);
-                        $msgArr[] = "Final Reviewer substituted from " . $substituteUser . " to " . $replaceUser;
+                        $msgArr[] = $this->getMsg("Final Reviewer",$substituteUser,$replaceUser); //"Final Reviewer substituted from " . $substituteUser . " to " . $replaceUser;
                     }
                 }
                 if( $review->getReviewerDelegate() && $review->getReviewerDelegate()->getId() == $substituteUserId ) {
@@ -807,7 +812,7 @@ class DefaultReviewerController extends Controller
                         $review->setReviewerDelegate($replaceUser);
                         //$toFlushReviewer = true;
                         $this->flushObject($review,$testing);
-                        $msgArr[] = "Final Reviewer Delegate substituted from " . $substituteUser . " to " . $replaceUser;
+                        $msgArr[] = $this->getMsg("Final Reviewer Delegate",$substituteUser,$replaceUser); //"Final Reviewer Delegate substituted from " . $substituteUser . " to " . $replaceUser;
                     }
                 }
             }
@@ -832,11 +837,166 @@ class DefaultReviewerController extends Controller
         if( count($msgProjects) > 0 ) {
             $msgProjectsStr = implode("<br>", $msgProjects);
         } else {
-            $msgProjectsStr = "No projects to update to match specified criteria.";
+            $msgProjectsStr = "No project requests to update based on the specified criteria.";
         }
 
         return $msgProjectsStr;
     }
+
+    public function getFilteredRequests($form) {
+        $em = $this->getDoctrine()->getManager();
+        $transresUtil = $this->container->get('transres_util');
+
+        $testing = false;
+        //$testing = true;
+
+        $projectSpecialties = $form->get('projectSpecialty')->getData();
+        $substituteUser = $form->get('substituteUser')->getData();
+        $replaceUser = $form->get('replaceUser')->getData();
+        echo "projectSpecialties=" . count($projectSpecialties) . "<br>";
+        echo "substituteUser=" . $substituteUser . "<br>";
+        echo "replaceUser=" . $replaceUser . "<br>";
+
+        if ($projectSpecialties && count($projectSpecialties) > 0) {
+            //ok
+        } else {
+            return "No requests to update: Project specialty is not specified";
+        }
+        if (!$substituteUser) {
+            return "No requests to update: Substitute user is not specified";
+        }
+        if (!$replaceUser) {
+            return "No requests to update: Replace user is not specified";
+        }
+
+        $substituteUserId = $substituteUser->getId();
+        $replaceUserId = $replaceUser->getId();
+
+        $excludedRequestCompleted = $form->get('excludedRequestCompleted')->getData();
+        $excludedRequestCanceled = $form->get('excludedRequestCanceled')->getData();
+
+        $requestPis = $form->get('requestPis')->getData();
+        $requestBillingContact = $form->get('requestBillingContact')->getData();
+
+        ///////////// Filter Requests //////////////////
+        $repository = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
+        $dql = $repository->createQueryBuilder("request");
+        $dql->select('request');
+
+        $dql->leftJoin('request.project', 'project');
+        $dql->leftJoin('request.principalInvestigators', 'principalInvestigators');
+        $dql->leftJoin('request.contact', 'contact');
+
+        $dql->orderBy("request.id", "DESC");
+
+        $dqlParameters = array();
+
+        if ($projectSpecialties && count($projectSpecialties) > 0) {
+            $dql->leftJoin('project.projectSpecialty', 'projectSpecialty');
+            $projectSpecialtyIdsArr = array();
+            foreach ($projectSpecialties as $projectSpecialty) {
+                $projectSpecialtyIdsArr[] = $projectSpecialty->getId();
+            }
+            $dql->andWhere("projectSpecialty.id IN (:projectSpecialtyIdsArr)");
+            $dqlParameters["projectSpecialtyIdsArr"] = $projectSpecialtyIdsArr;
+        } else {
+            return "No requests to update: project specialty is not specified";
+        }
+
+        if ($excludedRequestCompleted) {
+            $dql->andWhere("request.progressState != 'completed'");
+        }
+        if ($excludedRequestCanceled) {
+            $dql->andWhere("request.progressState != 'canceled'");
+        }
+
+        $requestProcessed = false;
+
+        if ($substituteUser && $substituteUserId) {
+
+            $requestUsers = array();
+
+            if ($requestPis) {
+                $requestUsers[] = "principalInvestigators.id = :userId";
+            }
+            if ($requestBillingContact) {
+                $requestUsers[] = "contact.id = :userId";
+            }
+
+            if (count($requestUsers) > 0) {
+                $requestUsersStr = implode(" OR ", $requestUsers);
+                $dql->andWhere($requestUsersStr);
+                $dqlParameters["userId"] = $substituteUserId;
+                $requestProcessed = true;
+            }
+
+        } else {
+            return "No requests to update: Substitute user is not specified";
+        }
+
+        if (!$requestProcessed) {
+            return "No requests to update";
+        }
+
+
+        $query = $dql->getQuery();
+
+        //echo "requestId=".$request->getId()."<br>";
+        //echo "reviewId=".$reviewId."<br>";
+        //echo "query=".$query->getSql()."<br>";
+
+        if (count($dqlParameters) > 0) {
+            $query->setParameters($dqlParameters);
+        }
+
+        $requests = $query->getResult();
+        ///////////// EOF Filter Requests //////////////////
+
+        echo "<br>";
+        foreach($requests as $request) {
+
+            $toFlush = false;
+            //$toFlushReviewer = false;
+            $msgArr = array();
+
+            echo "-----" . $request->getId() . "-----<br>";
+            if( $request->getPrincipalInvestigators()->contains($substituteUser) ) {
+                echo "### User is PI <br>";
+                if( $requestPis ) {
+                    $request->removePrincipalInvestigator($substituteUser);
+                    $request->addPrincipalInvestigator($replaceUser);
+                    $toFlush = true;
+                    $msgArr[] = $this->getMsg("PI",$substituteUser,$replaceUser); //"PI substituted from " . $substituteUser . " to " . $replaceUser;
+                }
+            }
+            if( $request->getContact() && $request->getContact()->getId() == $substituteUser->getId() ) {
+                echo "### User is Billing Contact <br>";
+                if( $requestBillingContact ) {
+                    $request->setContact($substituteUser);
+                    $toFlush = true;
+                    $msgArr[] = $this->getMsg("Billing Contact",$substituteUser,$replaceUser); //"PI substituted from " . $substituteUser . " to " . $replaceUser;
+                }
+            }
+
+            //eventlog
+            if( count($msgArr) > 0 ) {
+                $eventType = "Request Updated";
+                $msg = implode("<br>", $msgArr);
+                $msgRequests[] = "----- Request ".$request->getOid()." -----<br>".$msg;
+                $transresUtil->setEventLog($request, $eventType, $msg, $testing);
+            }
+        }
+
+        if( count($msgRequests) > 0 ) {
+            $msgRequestsStr = implode("<br>", $msgRequests);
+        } else {
+            $msgRequestsStr = "No work requests to update to match specified criteria.";
+        }
+
+        return $msgRequestsStr;
+    }
+
+
     public function flushObject($entity,$testing) {
         if( $entity && !$testing ) {
             //exit('exit on flush review');
@@ -844,6 +1004,10 @@ class DefaultReviewerController extends Controller
             $em->flush($entity);
             echo "updated reviewer <br>";
         }
+    }
+
+    public function getMsg($name,$substituteUser,$replaceUser) {
+        return $name . " " . $substituteUser . "  substituted with " . $replaceUser;
     }
 
 }
