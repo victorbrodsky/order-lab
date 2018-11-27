@@ -413,38 +413,15 @@ class DefaultReviewerController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-//            $projectSpecialties = $form->get('projectSpecialty')->getData();
-//            $substituteUser = $form->get('substituteUser')->getData();
-//            $replaceUser = $form->get('replaceUser')->getData();
-//            echo "projectSpecialties=".count($projectSpecialties)."<br>";
-//            echo "substituteUser=".$substituteUser."<br>";
-//            echo "replaceUser=".$replaceUser."<br>";
-//
-//            $excludedProjectCompleted = $form->get('excludedProjectCompleted')->getData();
-//            $excludedProjectCanceled = $form->get('excludedProjectCanceled')->getData();
-//            $excludedProjectDraft = $form->get('excludedProjectDraft')->getData();
-//            echo "excludedProjectCompleted=".$excludedProjectCompleted."<br>";
-//            echo "excludedProjectCanceled=".$excludedProjectCanceled."<br>";
+            $projectsMsg = $this->getFilteredProjects($form);
 
-            $projects = $this->getFilteredProjects($form);
+            $this->container->get('session')->getFlashBag()->add(
+                'notice',
+                $projectsMsg
+            );
 
-
-            //exit('submit');
-
-            //get projects
-
-            //$transresUtil->processDefaultReviewersRole($defaultReviewer,$originalReviewer,$originalReviewerDelegate);
-
-            //$this->getDoctrine()->getManager()->flush();
-
-            //Event Log
-            //$eventType = "TRP User Substitution";
-            //$stateLabel = $transresUtil->getStateSimpleLabelByName($stateStr);
-            //$specialtyStr = $defaultReviewer->getProjectSpecialty();
-            //$transresUtil->setEventLog($defaultReviewer,$eventType,$msg);
-
-            exit('substituted: projects count='.count($projects));
-            return $this->redirectToRoute('translationalresearch_default-reviewer_show', array('id' => $defaultReviewer->getId()));
+            //exit('substituted: projects count='.count($projects));
+            return $this->redirectToRoute('translationalresearch_substitute_user');
         }
 
         return array(
@@ -455,6 +432,10 @@ class DefaultReviewerController extends Controller
     public function getFilteredProjects($form) {
 
         $em = $this->getDoctrine()->getManager();
+        $transresUtil = $this->container->get('transres_util');
+
+        $testing = false;
+        //$testing = true;
 
         $projectSpecialties = $form->get('projectSpecialty')->getData();
         $substituteUser = $form->get('substituteUser')->getData();
@@ -466,14 +447,17 @@ class DefaultReviewerController extends Controller
         if( $projectSpecialties && count($projectSpecialties) > 0 ) {
             //ok
         } else {
-            return array();
+            return "No projects to update: Project specialty is not specified";
         }
         if( !$substituteUser ) {
-            return array();
+            return "No projects to update: Substitute user is not specified";
         }
         if( !$replaceUser ) {
-            return array();
+            return "No projects to update: Replace user is not specified";
         }
+
+        $substituteUserId = $substituteUser->getId();
+        $replaceUserId = $replaceUser->getId();
 
         $excludedProjectCompleted = $form->get('excludedProjectCompleted')->getData();
         $excludedProjectCanceled = $form->get('excludedProjectCanceled')->getData();
@@ -552,7 +536,7 @@ class DefaultReviewerController extends Controller
             $dql->andWhere("projectSpecialty.id IN (:projectSpecialtyIdsArr)");
             $dqlParameters["projectSpecialtyIdsArr"] = $projectSpecialtyIdsArr;
         } else {
-            return array();
+            return "No projects to update: project specialty is not specified";
         }
 
         if( $excludedProjectCompleted ) {
@@ -567,7 +551,7 @@ class DefaultReviewerController extends Controller
 
         $projectProcessed = false;
 
-        if( $substituteUser && $substituteUser->getId() ) {
+        if( $substituteUser && $substituteUserId ) {
 
             $projectUsers = array();
 
@@ -630,23 +614,19 @@ class DefaultReviewerController extends Controller
                 $projectUsers[] = "finalReviewerDelegate.id = :userId";
             }
 
-
             if( count($projectUsers) > 0 ) {
                 $projectUsersStr = implode(" OR ",$projectUsers);
                 $dql->andWhere($projectUsersStr);
-                $dqlParameters["userId"] = $substituteUser->getId();
+                $dqlParameters["userId"] = $substituteUserId;
                 $projectProcessed = true;
             }
 
-
-
-
         } else {
-            return array();
+            return "No projects to update: Substitute user is not specified";
         }
 
         if( !$projectProcessed ) {
-            return array();
+            return "No projects to update";
         }
 
 
@@ -664,10 +644,13 @@ class DefaultReviewerController extends Controller
         $projects = $query->getResult();
         ///////////// EOF Filter Projects //////////////////
 
+        $msgProjects = array();
+
         echo "<br>";
         foreach($projects as $project) {
 
             $toFlush = false;
+            //$toFlushReviewer = false;
             $msgArr = array();
 
             echo "-----" . $project->getId() . "-----<br>";
@@ -683,9 +666,12 @@ class DefaultReviewerController extends Controller
             if( $project->getPrincipalIrbInvestigators()->contains($substituteUser) ) {
                 echo "### User is IRB PI <br>";
                 if( $projectPisIrb ) {
-                    $project->setPrincipalIrbInvestigator($replaceUser);
-                    $toFlush = true;
-                    $msgArr[] = "PI listed on IRB substituted from " . $substituteUser . " to " . $replaceUser;
+                    $currentUser = $project->getPrincipalIrbInvestigator();
+                    if( $currentUser && $currentUser->getId() == $substituteUserId ) {
+                        $project->setPrincipalIrbInvestigator($replaceUser);
+                        $toFlush = true;
+                        $msgArr[] = "PI listed on IRB substituted from " . $substituteUser . " to " . $replaceUser;
+                    }
                 }
             }
             if( $project->getPathologists()->contains($substituteUser) ) {
@@ -718,41 +704,146 @@ class DefaultReviewerController extends Controller
             if( $project->getBillingContacts()->contains($substituteUser) ) {
                 echo "### User is Billing Contact <br>";
                 if( $projectBillingContact ) {
-                    $project->setBillingContact($replaceUser);
-                    $toFlush = true;
-                    $msgArr[] = "Billing Contact substituted from " . $substituteUser . " to " . $replaceUser;
+                    $currentUser = $project->getBillingContact();
+                    if( $currentUser && $currentUser->getId() == $substituteUserId ) {
+                        $project->setBillingContact($replaceUser);
+                        $toFlush = true;
+                        $msgArr[] = "Billing Contact substituted from " . $substituteUser . " to " . $replaceUser;
+                    }
                 }
             }
 
-            foreach( $project->getCommitteeReviews() as $review) {
-                if( $review->getReviewer() && $review->getReviewer()->getId() == $substituteUser->getId() ) {
-                    $primary = "";
-                    if( $review->getPrimaryReview() ) {
-                        $primary = "(primary)";
+
+            //IRB Reviewer
+            foreach( $project->getIrbReviews() as $review) {
+                if( $review->getReviewer() && $review->getReviewer()->getId() == $substituteUserId ) {
+                    echo "*** User is IRB Reviewer <br>";
+                    if( $projectReviewerIrb ) {
+                        $review->setReviewer($replaceUser);
+                        $this->flushObject($review,$testing);
+                        $msgArr[] = "IRB Reviewer substituted from " . $substituteUser . " to " . $replaceUser;
                     }
-                    echo "*** User is Committee Reviewer ".$primary." <br>";
                 }
-                if( $review->getReviewerDelegate() && $review->getReviewerDelegate()->getId() == $substituteUser->getId() ) {
-                    $primary = "";
-                    if( $review->getPrimaryReview() ) {
-                        $primary = "(primary)";
+                if( $review->getReviewerDelegate() && $review->getReviewerDelegate()->getId() == $substituteUserId ) {
+                    echo "*** User is IRB Reviewer Delegate <br>";
+                    if( $projectReviewerIrbDelegate ) {
+                        $review->setReviewerDelegate($replaceUser);
+                        $this->flushObject($review,$testing);
+                        $msgArr[] = "IRB Reviewer Delegate substituted from " . $substituteUser . " to " . $replaceUser;
                     }
-                    echo "*** User is Committee Reviewer Delegate ".$primary."<br>";
                 }
             }
-            foreach( $project->getFinalReviews() as $review) {
-                if( $review->getReviewer() && $review->getReviewer()->getId() == $substituteUser->getId() ) {
-                    echo "*** User is Final Reviewer <br>";
+            //Admin Reviewer
+            foreach( $project->getAdminReviews() as $review) {
+                if( $review->getReviewer() && $review->getReviewer()->getId() == $substituteUserId ) {
+                    if( $projectReviewerAdmin ) {
+                        echo "*** User is Admin Reviewer <br>";
+                        $review->setReviewer($replaceUser);
+                        $this->flushObject($review,$testing);
+                        $msgArr[] = "Admin Reviewer substituted from " . $substituteUser . " to " . $replaceUser;
+                    }
                 }
-                if( $review->getReviewerDelegate() && $review->getReviewerDelegate()->getId() == $substituteUser->getId() ) {
-                    echo "*** User is Final Reviewer Delegate <br>";
+                if( $review->getReviewerDelegate() && $review->getReviewerDelegate()->getId() == $substituteUserId ) {
+                    if( $projectReviewerAdminDelegate ) {
+                        echo "*** User is Admin Reviewer Delegate <br>";
+                        $review->setReviewerDelegate($replaceUser);
+                        $this->flushObject($review,$testing);
+                        $msgArr[] = "Admin Reviewer Delegate substituted from " . $substituteUser . " to " . $replaceUser;
+                    }
+                }
+            }
+            //Committee Reviewer
+            foreach( $project->getCommitteeReviews() as $review) {
+                //Reviewer
+                if( $review->getReviewer() && $review->getReviewer()->getId() == $substituteUserId ) {
+                    if( $review->getPrimaryReview() ) {
+                        if( $projectReviewerPrimaryCommittee ) {
+                            echo "*** User is Committee Reviewer (primary) <br>";
+                            $review->setReviewer($replaceUser);
+                            $this->flushObject($review,$testing);
+                            $msgArr[] = "Primary Committee Reviewer substituted from " . $substituteUser . " to " . $replaceUser;
+                        }
+                    } else {
+                        if( $projectReviewerCommittee ) {
+                            echo "*** User is Committee Reviewer <br>";
+                            $review->setReviewer($replaceUser);
+                            $this->flushObject($review,$testing);
+                            $msgArr[] = "Committee Reviewer substituted from " . $substituteUser . " to " . $replaceUser;
+                        }
+                    }
+                }
+                //Delegate
+                if( $review->getReviewerDelegate() && $review->getReviewerDelegate()->getId() == $substituteUserId ) {
+                    if( $review->getPrimaryReview() ) {
+                        if( $projectReviewerPrimaryCommitteeDelegate ) {
+                            echo "*** User is Committee Reviewer Delegate (primary) <br>";
+                            $review->setReviewerDelegate($replaceUser);
+                            $this->flushObject($review,$testing);
+                            $msgArr[] = "Primary Committee Reviewer Delegate substituted from " . $substituteUser . " to " . $replaceUser;
+                        }
+                    } else {
+                        if( $projectReviewerCommitteeDelegate ) {
+                            echo "*** User is Committee Reviewer Delegate <br>";
+                            $review->setReviewerDelegate($replaceUser);
+                            $this->flushObject($review,$testing);
+                            $msgArr[] = "Committee Reviewer Delegate substituted from " . $substituteUser . " to " . $replaceUser;
+                        }
+                    }
+                }
+            }
+            //Final Reviewer
+            foreach( $project->getFinalReviews() as $review) {
+                if( $review->getReviewer() && $review->getReviewer()->getId() == $substituteUserId ) {
+                    if( $projectReviewerFinal ) {
+                        echo "*** User is Final Reviewer <br>";
+                        $review->setReviewer($replaceUser);
+                        $this->flushObject($review,$testing);
+                        $msgArr[] = "Final Reviewer substituted from " . $substituteUser . " to " . $replaceUser;
+                    }
+                }
+                if( $review->getReviewerDelegate() && $review->getReviewerDelegate()->getId() == $substituteUserId ) {
+                    if( $projectReviewerFinalDelegate ) {
+                        echo "*** User is Final Reviewer Delegate <br>";
+                        $review->setReviewerDelegate($replaceUser);
+                        //$toFlushReviewer = true;
+                        $this->flushObject($review,$testing);
+                        $msgArr[] = "Final Reviewer Delegate substituted from " . $substituteUser . " to " . $replaceUser;
+                    }
                 }
             }
 
             echo "<br>";
+
+            if( $toFlush && !$testing ) {
+                $em->flush($project);
+                echo "updated project <br>";
+            }
+
+            //eventlog
+            if( count($msgArr) > 0 ) {
+                $eventType = "Project Updated";
+                $msg = implode("<br>", $msgArr);
+                $msgProjects[] = "----- Project ".$project->getOid()." -----<br>".$msg;
+                $transresUtil->setEventLog($project, $eventType, $msg, $testing);
+            }
+
         }//foreach project
 
-        return $projects;
+        if( count($msgProjects) > 0 ) {
+            $msgProjectsStr = implode("<br>", $msgProjects);
+        } else {
+            $msgProjectsStr = "No projects to update to match specified criteria.";
+        }
+
+        return $msgProjectsStr;
+    }
+    public function flushObject($entity,$testing) {
+        if( $entity && !$testing ) {
+            //exit('exit on flush review');
+            $em = $this->getDoctrine()->getManager();
+            $em->flush($entity);
+            echo "updated reviewer <br>";
+        }
     }
 
 }
