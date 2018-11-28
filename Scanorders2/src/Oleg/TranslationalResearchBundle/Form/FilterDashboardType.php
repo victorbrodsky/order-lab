@@ -125,6 +125,26 @@ class FilterDashboardType extends AbstractType
             ));
         }
 
+        if( isset($this->params['category']) && $this->params['category'] ) {
+            $builder->add('category', EntityType::class, array(
+                'class' => 'OlegTranslationalResearchBundle:RequestCategoryTypeList',
+                'label' => false,
+                'choice_label' => "getOptimalAbbreviationName",
+                'required' => false,
+                'multiple' => false,
+                'attr' => array('class' => 'combobox combobox-width', 'placeholder'=>'Products/Services'),
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.orderinlist", "ASC")
+                        ->setParameters(array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
+            ));
+        }
+
 //        $builder->add('searchId', TextType::class, array(
 //            'required'=>false,
 //            'label' => false,

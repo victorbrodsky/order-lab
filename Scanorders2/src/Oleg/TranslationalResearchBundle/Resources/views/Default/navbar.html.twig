@@ -412,6 +412,16 @@
                                     }) }}"
                                     >Financial statistics based on invoices</a>
                                 </li>
+                                <li>
+                                    <a href="{{ path(translationalresearch_sitename~'_dashboard_turn_around_stat',
+                                    {
+                                        'filter[startDate]':startDate,
+                                        'filter[endDate]':endDate,
+                                        'filter[projectSpecialty]':0,
+                                        'filter[category]':0
+                                    }) }}"
+                                    >Turn-around Statistics</a>
+                                </li>
 
                                 {% if allProjectIdsArr is defined %}
                                     {#<hr>#}

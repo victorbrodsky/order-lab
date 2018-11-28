@@ -97,7 +97,8 @@ class DashboardUtil
 
             "28. Total Number of Projects per Type" => "projects-per-type",
             "29. Total Number of Work Requests per Business Purpose" => "requests-per-business-purpose",
-            "" => "",
+
+            //"30. Turn-around Statistics" => "turn-around-statistics",
             "" => "",
             "" => "",
             "" => "",

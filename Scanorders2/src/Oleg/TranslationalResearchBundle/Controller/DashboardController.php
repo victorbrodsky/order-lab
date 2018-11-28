@@ -41,7 +41,7 @@ class DashboardController extends Controller
         }
 
         //$userSecUtil = $this->container->get('user_security_utility');
-        $em = $this->getDoctrine()->getManager();
+        //$em = $this->getDoctrine()->getManager();
 
         //ini_set('memory_limit', '30000M'); //2GB
         //$memory_limit = ini_get('memory_limit');
@@ -98,8 +98,6 @@ class DashboardController extends Controller
         $response->setContent(json_encode($chartsArray));
         return $response;
     }
-
-
 
     public function getFilter( $showLimited=false, $withCompareType=false ) {
         $transresUtil = $this->container->get('transres_util');
