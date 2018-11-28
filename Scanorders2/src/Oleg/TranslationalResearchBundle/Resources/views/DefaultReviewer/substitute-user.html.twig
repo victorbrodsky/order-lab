@@ -31,15 +31,10 @@
             {{ formmacros.field(form.replaceUser) }}
         {% endif %}
 
-        {#<div class="well">#}
-            {#<p>#}
-                {#Exclude:#}
-            {#</p>#}
-            {#{{ formmacros.checkbox(form.excludedProjectCompleted) }}#}
-        {#</div>#}
+
         <div class="panel panel-primary">
             <div class="panel-heading">
-                Exclude:
+                Exclude
             </div>
             <div class="panel-body">
                 <div class="well">
@@ -62,7 +57,7 @@
 
         <div class="panel panel-success">
             <div class="panel-heading">
-                Perform substitution in the following project request fields:
+                Perform substitution in the following project request fields
             </div>
             <div class="panel-body">
                 {{ formmacros.checkbox(form.projectPis) }}
@@ -97,7 +92,7 @@
 
         <div class="panel panel-success">
             <div class="panel-heading">
-                Perform substitution in the following work request fields:
+                Perform substitution in the following work request fields
             </div>
             <div class="panel-body">
                 {{ formmacros.checkbox(form.requestPis) }}
@@ -107,10 +102,12 @@
 
         <div class="panel panel-success">
             <div class="panel-heading">
-                Perform substitution in the following invoice fields:
+                Perform substitution in the following invoice fields
             </div>
             <div class="panel-body">
-                {{ formmacros.checkbox(form.invoicePi) }}
+                {% if form.invoicePi is defined %}
+                    {{ formmacros.checkbox(form.invoicePi) }}
+                {% endif %}
                 {{ formmacros.checkbox(form.invoiceBillingContact) }}
                 {{ formmacros.checkbox(form.invoiceSalesperson) }}
             </div>

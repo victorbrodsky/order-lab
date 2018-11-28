@@ -2,6 +2,7 @@
 
 namespace Oleg\TranslationalResearchBundle\Controller;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Oleg\TranslationalResearchBundle\Entity\Invoice;
 use Oleg\TranslationalResearchBundle\Entity\TransResRequest;
 use Oleg\TranslationalResearchBundle\Form\FilterInvoiceType;
@@ -684,7 +685,7 @@ class InvoiceController extends Controller
 
         $originalInvoiceStatus = $invoice->getStatus();
 
-        $form = $this->createInvoiceForm($invoice,$cycle,$transresRequest);
+        $form = $this->createInvoiceForm($invoice,$cycle,$transresRequest); //new
 
         $form->handleRequest($request);
 
@@ -769,7 +770,7 @@ class InvoiceController extends Controller
         $cycle = "show";
         //$routeName = $request->get('_route');
 
-        $form = $this->createInvoiceForm($invoice,$cycle);
+        $form = $this->createInvoiceForm($invoice,$cycle); //show
 
         $deleteForm = $this->createDeleteForm($invoice);
 
@@ -862,7 +863,7 @@ class InvoiceController extends Controller
         //$deleteForm = $this->createDeleteForm($invoice);
 
         //$editForm = $this->createForm('Oleg\TranslationalResearchBundle\Form\InvoiceType', $invoice);
-        $editForm = $this->createInvoiceForm($invoice,$cycle);
+        $editForm = $this->createInvoiceForm($invoice,$cycle); //edit
 
         $editForm->handleRequest($request);
 
@@ -1254,6 +1255,13 @@ class InvoiceController extends Controller
         //PIs of the request's pis
         if( $transresRequest ) {
             $principalInvestigators = $transresRequest->getPrincipalInvestigators();
+        } else {
+//            $pi = $invoice->getPrincipalInvestigator();
+//            if( $pi ) {
+//                $principalInvestigators = new ArrayCollection();
+//                $principalInvestigators->add($pi);
+//            }
+            $principalInvestigators = null;
         }
         //echo "pi count=".count($principalInvestigators)."<br>";
         

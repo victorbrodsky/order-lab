@@ -420,9 +420,17 @@ class DefaultReviewerController extends Controller
             );
 
             $requestsMsg = $this->getFilteredRequests($form);
+            //exit("Update Request Exit: $requestsMsg");
             $this->container->get('session')->getFlashBag()->add(
                 'notice',
                 $requestsMsg
+            );
+
+            $invoicesMsg = $this->getFilteredInvoices($form);
+            //exit("Update Invoice Exit: $invoicesMsg");
+            $this->container->get('session')->getFlashBag()->add(
+                'notice',
+                $invoicesMsg
             );
 
             //exit('substituted: projects count='.count($projects));
@@ -460,9 +468,12 @@ class DefaultReviewerController extends Controller
         if( !$replaceUser ) {
             return "No project requests to update: User to be replaced is not specified";
         }
+        if($replaceUser->getId() == $substituteUser->getId()) {
+            return "No requests to update: substitute and replace users are the same";
+        }
 
         $substituteUserId = $substituteUser->getId();
-        $replaceUserId = $replaceUser->getId();
+        //$replaceUserId = $replaceUser->getId();
 
         $excludedProjectCompleted = $form->get('excludedProjectCompleted')->getData();
         $excludedProjectCanceled = $form->get('excludedProjectCanceled')->getData();
@@ -868,9 +879,12 @@ class DefaultReviewerController extends Controller
         if (!$replaceUser) {
             return "No requests to update: Replace user is not specified";
         }
+        if($replaceUser->getId() == $substituteUser->getId()) {
+            return "No requests to update: substitute and replace users are the same";
+        }
 
         $substituteUserId = $substituteUser->getId();
-        $replaceUserId = $replaceUser->getId();
+        //$replaceUserId = $replaceUser->getId();
 
         $excludedRequestCompleted = $form->get('excludedRequestCompleted')->getData();
         $excludedRequestCanceled = $form->get('excludedRequestCanceled')->getData();
@@ -950,7 +964,10 @@ class DefaultReviewerController extends Controller
         }
 
         $requests = $query->getResult();
+        echo "Requests count=".count($requests)."<br>";
         ///////////// EOF Filter Requests //////////////////
+
+        $msgRequests = array();
 
         echo "<br>";
         foreach($requests as $request) {
@@ -961,21 +978,26 @@ class DefaultReviewerController extends Controller
 
             echo "-----" . $request->getId() . "-----<br>";
             if( $request->getPrincipalInvestigators()->contains($substituteUser) ) {
-                echo "### User is PI <br>";
                 if( $requestPis ) {
+                    echo "### User is PI <br>";
                     $request->removePrincipalInvestigator($substituteUser);
                     $request->addPrincipalInvestigator($replaceUser);
                     $toFlush = true;
                     $msgArr[] = $this->getMsg("PI",$substituteUser,$replaceUser); //"PI substituted from " . $substituteUser . " to " . $replaceUser;
                 }
             }
-            if( $request->getContact() && $request->getContact()->getId() == $substituteUser->getId() ) {
-                echo "### User is Billing Contact <br>";
+            if( $request->getContact() && $request->getContact()->getId() == $substituteUserId ) {
                 if( $requestBillingContact ) {
-                    $request->setContact($substituteUser);
+                    echo "### User is Billing Contact <br>";
+                    $request->setContact($replaceUser);
                     $toFlush = true;
                     $msgArr[] = $this->getMsg("Billing Contact",$substituteUser,$replaceUser); //"PI substituted from " . $substituteUser . " to " . $replaceUser;
                 }
+            }
+
+            if( $toFlush && !$testing ) {
+                $em->flush($request);
+                echo "updated request <br>";
             }
 
             //eventlog
@@ -990,12 +1012,197 @@ class DefaultReviewerController extends Controller
         if( count($msgRequests) > 0 ) {
             $msgRequestsStr = implode("<br>", $msgRequests);
         } else {
-            $msgRequestsStr = "No work requests to update to match specified criteria.";
+            $msgRequestsStr = "No work requests to update based on the specified criteria.";
         }
 
         return $msgRequestsStr;
     }
 
+    public function getFilteredInvoices($form) {
+        $em = $this->getDoctrine()->getManager();
+        $transresUtil = $this->container->get('transres_util');
+
+        $testing = false;
+        //$testing = true;
+
+        $projectSpecialties = $form->get('projectSpecialty')->getData();
+        $substituteUser = $form->get('substituteUser')->getData();
+        $replaceUser = $form->get('replaceUser')->getData();
+        echo "projectSpecialties=" . count($projectSpecialties) . "<br>";
+        echo "substituteUser=" . $substituteUser . "<br>";
+        echo "replaceUser=" . $replaceUser . "<br>";
+
+        if ($projectSpecialties && count($projectSpecialties) > 0) {
+            //ok
+        } else {
+            return "No invoices to update: Project specialty is not specified";
+        }
+        if (!$substituteUser) {
+            return "No invoices to update: Substitute user is not specified";
+        }
+        if (!$replaceUser) {
+            return "No invoices to update: Replace user is not specified";
+        }
+        if($replaceUser->getId() == $substituteUser->getId()) {
+            return "No invoices to update: substitute and replace users are the same";
+        }
+
+        $substituteUserId = $substituteUser->getId();
+        //$replaceUserId = $replaceUser->getId();
+
+        $excludedInvoicePaid = $form->get('excludedInvoicePaid')->getData();
+        $excludedInvoicePartiallyPaid = $form->get('excludedInvoicePartiallyPaid')->getData();
+        $excludedInvoiceCanceled = $form->get('excludedInvoiceCanceled')->getData();
+
+        if( 0 ) {
+            $invoicePi = $form->get('invoicePi')->getData();
+        } else {
+            $invoicePi = null;
+        }
+        $invoiceBillingContact = $form->get('invoiceBillingContact')->getData();
+        $invoiceSalesperson = $form->get('invoiceSalesperson')->getData();
+
+        ///////////// Filter Invoices //////////////////
+        $repository = $em->getRepository('OlegTranslationalResearchBundle:Invoice');
+        $dql = $repository->createQueryBuilder("invoice");
+        $dql->select('invoice');
+
+        $dql->leftJoin('invoice.transresRequest', 'transresRequest');
+        $dql->leftJoin('transresRequest.project', 'project');
+
+        $dql->leftJoin('invoice.principalInvestigator', 'principalInvestigator');
+        $dql->leftJoin('invoice.salesperson', 'salesperson');
+        $dql->leftJoin('invoice.billingContact', 'billingContact');
+
+        $dql->orderBy("invoice.id", "DESC");
+
+        $dqlParameters = array();
+
+        if ($projectSpecialties && count($projectSpecialties) > 0) {
+            $dql->leftJoin('project.projectSpecialty', 'projectSpecialty');
+            $projectSpecialtyIdsArr = array();
+            foreach ($projectSpecialties as $projectSpecialty) {
+                $projectSpecialtyIdsArr[] = $projectSpecialty->getId();
+            }
+            $dql->andWhere("projectSpecialty.id IN (:projectSpecialtyIdsArr)");
+            $dqlParameters["projectSpecialtyIdsArr"] = $projectSpecialtyIdsArr;
+        } else {
+            return "No invoices to update: project specialty is not specified";
+        }
+
+        if ($excludedInvoicePaid) {
+            $dql->andWhere("invoice.status != 'Paid in Full'");
+        }
+        if ($excludedInvoicePartiallyPaid) {
+            $dql->andWhere("invoice.status != 'Paid Partially'");
+        }
+        if ($excludedInvoiceCanceled) {
+            $dql->andWhere("invoice.status != 'Canceled'");
+        }
+
+        $invoiceProcessed = false;
+
+        if ($substituteUser && $substituteUserId) {
+
+            $invoiceUsers = array();
+
+            if ($invoicePi) {
+                $invoiceUsers[] = "principalInvestigator.id = :userId";
+            }
+            if ($invoiceBillingContact) {
+                $invoiceUsers[] = "billingContact.id = :userId";
+            }
+            if ($invoiceSalesperson) {
+                $invoiceUsers[] = "salesperson.id = :userId";
+            }
+
+            if (count($invoiceUsers) > 0) {
+                $invoiceUsersStr = implode(" OR ", $invoiceUsers);
+                $dql->andWhere($invoiceUsersStr);
+                $dqlParameters["userId"] = $substituteUserId;
+                $invoiceProcessed = true;
+            }
+
+        } else {
+            return "No invoices to update: Substitute user is not specified";
+        }
+
+        if (!$invoiceProcessed) {
+            return "No invoices to update";
+        }
+
+
+        $query = $dql->getQuery();
+
+        //echo "invoiceId=".$invoice->getId()."<br>";
+        //echo "reviewId=".$reviewId."<br>";
+        //echo "query=".$query->getSql()."<br>";
+
+        if (count($dqlParameters) > 0) {
+            $query->setParameters($dqlParameters);
+        }
+
+        $invoices = $query->getResult();
+        echo "Invoices count=".count($invoices)."<br>";
+        ///////////// EOF Filter Invoices //////////////////
+
+        $msgInvoices = array();
+
+        echo "<br>";
+        foreach($invoices as $invoice) {
+
+            $toFlush = false;
+            //$toFlushReviewer = false;
+            $msgArr = array();
+
+            echo "-----" . $invoice->getId() . "-----<br>";
+            if( $invoice->getPrincipalInvestigator() && $invoice->getPrincipalInvestigator()->getId() == $substituteUserId ) {
+                if( $invoicePi ) {
+                    echo "### User is PI <br>";
+                    $invoice->setPrincipalInvestigator($replaceUser);
+                    $toFlush = true;
+                    $msgArr[] = $this->getMsg("PI",$substituteUser,$replaceUser);
+                }
+            }
+            if( $invoice->getBillingContact() && $invoice->getBillingContact()->getId() == $substituteUserId ) {
+                if( $invoiceBillingContact ) {
+                    echo "### User is Billing Contact <br>";
+                    $invoice->setBillingContact($replaceUser);
+                    $toFlush = true;
+                    $msgArr[] = $this->getMsg("Billing Contact",$substituteUser,$replaceUser);
+                }
+            }
+            if( $invoice->getSalesperson() && $invoice->getSalesperson()->getId() == $substituteUserId ) {
+                if( $invoiceSalesperson ) {
+                    echo "### User is Billing Contact <br>";
+                    $invoice->setSalesperson($replaceUser);
+                    $toFlush = true;
+                    $msgArr[] = $this->getMsg("Salesperson",$substituteUser,$replaceUser);
+                }
+            }
+
+            if( $toFlush && !$testing ) {
+                $em->flush($invoice);
+                echo "updated invoice <br>";
+            }
+
+            //eventlog
+            if( count($msgArr) > 0 ) {
+                $eventType = "Invoice Updated";
+                $msg = implode("<br>", $msgArr);
+                $msgInvoices[] = "----- Invoice ".$invoice->getOid()." -----<br>".$msg;
+                $transresUtil->setEventLog($invoice, $eventType, $msg, $testing);
+            }
+        }//foreach invoice
+
+        if( count($msgInvoices) > 0 ) {
+            $msgInvoicesStr = implode("<br>", $msgInvoices);
+        } else {
+            $msgInvoicesStr = "No invoices to update based on the specified criteria.";
+        }
+
+        return $msgInvoicesStr;
+    }
 
     public function flushObject($entity,$testing) {
         if( $entity && !$testing ) {

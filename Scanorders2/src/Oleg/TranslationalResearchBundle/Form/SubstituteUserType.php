@@ -224,11 +224,11 @@ class SubstituteUserType extends AbstractType
         ));
 
         //Perform substitution in the following invoice fields:
-        $builder->add('invoicePi', CheckboxType::class, array(
-            'label' => 'Principal Investigator for the project:',
-            'required' => false,
-            'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
-        ));
+//        $builder->add('invoicePi', CheckboxType::class, array(
+//            'label' => 'Principal Investigator for the project:',
+//            'required' => false,
+//            'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
+//        ));
         $builder->add('invoiceBillingContact', CheckboxType::class, array(
             'label' => "PI's Billing Contact:",
             'required' => false,

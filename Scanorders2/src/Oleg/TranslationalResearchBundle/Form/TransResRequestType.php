@@ -253,9 +253,14 @@ class TransResRequestType extends AbstractType
         if( $this->params['availableProjects'] === null ) {
             $attrArr['readonly'] = true;
         }
-        if( $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_ADMIN') === false ) {
+        if( $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_ADMIN') ) {
+            if( isset($attrArr['readonly']) ) {
+                unset($attrArr['readonly']);
+            }
+        } else {
             $attrArr['readonly'] = true;
         }
+        //print_r($attrArr);
 
         $builder->add('principalInvestigators', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',

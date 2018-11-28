@@ -1545,6 +1545,7 @@ class RequestController extends Controller
         $dql->select('transresRequest');
 
         $dql->leftJoin('transresRequest.submitter','submitter');
+        $dql->leftJoin('transresRequest.contact','contact');
         $dql->leftJoin('transresRequest.project','project');
         $dql->leftJoin('submitter.infos','submitterInfos');
         $dql->leftJoin('transresRequest.principalInvestigators','principalInvestigators');
@@ -1568,7 +1569,6 @@ class RequestController extends Controller
 
             $submitter = null;
 
-            $dql->leftJoin('transresRequest.contact','contact');
             $dql->leftJoin('project.principalInvestigators','projectPrincipalInvestigators');
             $dql->leftJoin('project.principalIrbInvestigator','projectPrincipalIrbInvestigator');
             $dql->leftJoin('project.coInvestigators','projectCoInvestigators');

@@ -69,17 +69,36 @@ class InvoiceType extends AbstractType
 ////                    ->orderBy("infos.displayName","ASC");
 ////            },
 //        ));
-        $builder->add('principalInvestigator', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:User',
-            'label'=> "Principal Investigator for the project:",
-            'required'=> true,
-            'multiple' => false,
-            'attr' => array('class'=>'combobox transres-invoice-principalInvestigator'),
-            'choices' => $this->params['principalInvestigators'],
-            //'by_reference' => true
-            //'em' => $this->params['em'],
-            //'data' => $this->params['principalInvestigators']
-        ));
+        //Request's PI
+        if( $this->params['principalInvestigators'] && count($this->params['principalInvestigators']) > 0 ) {
+            //show only request's the first PI user
+            $builder->add('principalInvestigator', EntityType::class, array(
+                'class' => 'OlegUserdirectoryBundle:User',
+                'label' => "Principal Investigator for the project:",
+                'required' => true,
+                'multiple' => false,
+                'attr' => array('class' => 'combobox transres-invoice-principalInvestigator'), //, 'readonly'=>'readonly'
+                'choices' => $this->params['principalInvestigators'],
+            ));
+        } else {
+            //show all users with set invoice's PI
+            $builder->add('principalInvestigator', EntityType::class, array(
+                'class' => 'OlegUserdirectoryBundle:User',
+                'label' => "Principal Investigator for the project:",
+                'required' => true,
+                'multiple' => false,
+                'attr' => array('class' => 'combobox transres-invoice-principalInvestigator'),
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->leftJoin("list.employmentStatus", "employmentStatus")
+                        ->leftJoin("employmentStatus.employmentType", "employmentType")
+                        ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+                        //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
+                        ->leftJoin("list.infos", "infos")
+                        ->orderBy("infos.displayName", "ASC");
+                },
+            ));
+        }
 
         $builder->add('billingContact', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
