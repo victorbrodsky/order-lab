@@ -1025,7 +1025,7 @@ class DashboardUtil
         $dDiff = $createDate->diff($updateDate);
         //echo $dDiff->format('%R'); // use for point out relation: smaller/greater
         $days = $dDiff->days;
-        //echo "days=".$days."<br>";
+        //echo $state.": days=".$days."<br>";
         $days = intval($days);
         return $days;
     }
@@ -2519,7 +2519,7 @@ class DashboardUtil
         }
 
         //"31. Turn-around Statistics: Average number of days each phase of the project review took" => "turn-around-statistics-days-project-state"
-        if( $chartType == "turn-around-statistics-days-project-state" ) {
+        if( $chartType == "111_turn-around-statistics-days-project-state" ) {
             $transresUtil = $this->container->get('transres_util');
             $averageDays = array();
 
@@ -2536,6 +2536,7 @@ class DashboardUtil
                 $stateLabel = $transresUtil->getStateLabelByName($state);
 
                 $projects = $this->getProjectsByFilter($startDate, $endDate, $projectSpecialtyObjects, $reviewStateArr);
+                echo "### $state projects count=".count($projects)."<br>";
 
                 $daysTotal = 0;
                 $count = 0;
@@ -2563,6 +2564,71 @@ class DashboardUtil
             }//foreach states
 
             $chartsArray = $this->getChart($averageDays, $chartName,'bar',$layoutArray);
+        }
+        if( $chartType == "turn-around-statistics-days-project-state" ) {
+            $transresUtil = $this->container->get('transres_util');
+            $averageDays = array();
+
+//            $reviewStates = array(
+//                array("irb_review","irb_missinginfo"),
+//                array("admin_review","admin_missinginfo"),
+//                array("committee_review"),
+//                array("final_review"),
+//            );
+
+            $reviewStates = array(
+               "irb_review",
+                "admin_review",
+                "committee_review",
+                "final_review"
+            );
+
+            //$state = $reviewStateArr[0];
+            //$stateLabel = $transresUtil->getStateLabelByName($state);
+
+            $projects = $this->getProjectsByFilter($startDate, $endDate, $projectSpecialtyObjects, $reviewStateArr);
+            //echo "### $state projects count=".count($projects)."<br>";
+
+            $averageDays = array();
+            $countArr = array();
+            //$count = 0;
+
+            foreach ($projects as $project) {
+
+                foreach($reviewStates as $state) {
+
+                    $stateLabel = $transresUtil->getStateLabelByName($state);
+                    //$daysTotal = 0;
+                    //$count = 0;
+
+                    $days = $this->getDiffDaysByProjectState($project, $state);
+                    if ($days > 0) {
+                        if( isset($averageDays[$stateLabel]) ) {
+                            $averageDays[$stateLabel] = $averageDays[$stateLabel] + $days;
+                        } else {
+                            $averageDays[$stateLabel] = $days;
+                        }
+
+                        if( isset($countArr[$stateLabel]) ) {
+                            $countArr[$stateLabel] = $countArr[$stateLabel] + 1;
+                        } else {
+                            $countArr[$stateLabel] = $days;
+                        }
+                    }
+
+                }//foreach state
+
+            }//foreach project
+
+            $averageDaysNew = array();
+            foreach($averageDays as $stateLabel=>$days) {
+                $count = $countArr[$stateLabel];
+                $avgDaysInt = round($days/$count);
+                $averageDaysNew[$stateLabel] = $avgDaysInt;
+            }
+
+
+            $chartsArray = $this->getChart($averageDaysNew, $chartName,'bar',$layoutArray);
         }
 
         if( $chartType == "" ) {
