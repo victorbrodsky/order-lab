@@ -99,7 +99,7 @@ class DashboardUtil
             "29. Total Number of Work Requests per Business Purpose" => "requests-per-business-purpose",
 
             "30. Turn-around Statistics: Average number of days to complete a Work Request" => "turn-around-statistics-days-complete-request",
-            "31. Turn-around Statistics: Average number of days for each Project phase" => "turn-around-statistics-days-project-state",
+            "31. Turn-around Statistics: Average number of days for each project request approval phase" => "turn-around-statistics-days-project-state",
             "" => "",
             "" => "",
             "" => "",
@@ -2518,63 +2518,55 @@ class DashboardUtil
             $chartsArray = $this->getChart($averageDays, $chartName,'bar',$layoutArray);
         }
 
-        //"31. Turn-around Statistics: Average number of days each phase of the project review took" => "turn-around-statistics-days-project-state"
-        if( $chartType == "111_turn-around-statistics-days-project-state" ) {
-            $transresUtil = $this->container->get('transres_util');
-            $averageDays = array();
-
-            $reviewStates = array(
-                array("irb_review","irb_missinginfo"),
-                array("admin_review","admin_missinginfo"),
-                array("committee_review"),
-                array("final_review"),
-            );
-
-            foreach($reviewStates as $reviewStateArr) {
-
-                $state = $reviewStateArr[0];
-                $stateLabel = $transresUtil->getStateLabelByName($state);
-
-                $projects = $this->getProjectsByFilter($startDate, $endDate, $projectSpecialtyObjects, $reviewStateArr);
-                echo "### $state projects count=".count($projects)."<br>";
-
-                $daysTotal = 0;
-                $count = 0;
-
-                foreach ($projects as $project) {
-
-                    $days = $this->getDiffDaysByProjectState($project,$state);
-                    if( $days > 0 ) {
-                        $daysTotal = $daysTotal + $days;
-                        $count++;
-                    }
-
-                }//foreach project
-
-                if( $count > 0 ) {
-                    $avgDaysInt = round($daysTotal/$count);
-                    //echo "daysTotal=".$daysTotal."; count=".$count."<br>";
-                    //echo "average days=".round($daysTotal / $count)."<br>";
-                    //$averageDays[$startDateLabel] = $daysTotal;
-                    $averageDays[$stateLabel] = $avgDaysInt;
-                } else {
-                    $averageDays[$stateLabel] = null;
-                }
-
-            }//foreach states
-
-            $chartsArray = $this->getChart($averageDays, $chartName,'bar',$layoutArray);
-        }
-        if( $chartType == "turn-around-statistics-days-project-state" ) {
-            $transresUtil = $this->container->get('transres_util');
-            $averageDays = array();
-
+        //"31. Turn-around Statistics: Average number of days for each project request approval phase" => "turn-around-statistics-days-project-state"
+//        if( $chartType == "111_turn-around-statistics-days-project-state" ) {
+//            $transresUtil = $this->container->get('transres_util');
+//            $averageDays = array();
+//
 //            $reviewStates = array(
 //                array("irb_review","irb_missinginfo"),
 //                array("admin_review","admin_missinginfo"),
 //                array("committee_review"),
 //                array("final_review"),
 //            );
+//
+//            foreach($reviewStates as $reviewStateArr) {
+//
+//                $state = $reviewStateArr[0];
+//                $stateLabel = $transresUtil->getStateLabelByName($state);
+//
+//                $projects = $this->getProjectsByFilter($startDate, $endDate, $projectSpecialtyObjects, $reviewStateArr);
+//                echo "### $state projects count=".count($projects)."<br>";
+//
+//                $daysTotal = 0;
+//                $count = 0;
+//
+//                foreach ($projects as $project) {
+//
+//                    $days = $this->getDiffDaysByProjectState($project,$state);
+//                    if( $days > 0 ) {
+//                        $daysTotal = $daysTotal + $days;
+//                        $count++;
+//                    }
+//
+//                }//foreach project
+//
+//                if( $count > 0 ) {
+//                    $avgDaysInt = round($daysTotal/$count);
+//                    //echo "daysTotal=".$daysTotal."; count=".$count."<br>";
+//                    //echo "average days=".round($daysTotal / $count)."<br>";
+//                    //$averageDays[$startDateLabel] = $daysTotal;
+//                    $averageDays[$stateLabel] = $avgDaysInt;
+//                } else {
+//                    $averageDays[$stateLabel] = null;
+//                }
+//
+//            }//foreach states
+//
+//            $chartsArray = $this->getChart($averageDays, $chartName,'bar',$layoutArray);
+//        }
+        if( $chartType == "turn-around-statistics-days-project-state" ) {
+            $transresUtil = $this->container->get('transres_util');
 
             $reviewStates = array(
                "irb_review",
@@ -2591,15 +2583,12 @@ class DashboardUtil
 
             $averageDays = array();
             $countArr = array();
-            //$count = 0;
 
             foreach ($projects as $project) {
 
                 foreach($reviewStates as $state) {
 
                     $stateLabel = $transresUtil->getStateLabelByName($state);
-                    //$daysTotal = 0;
-                    //$count = 0;
 
                     $days = $this->getDiffDaysByProjectState($project, $state);
                     if ($days > 0) {
@@ -2626,7 +2615,6 @@ class DashboardUtil
                 $avgDaysInt = round($days/$count);
                 $averageDaysNew[$stateLabel] = $avgDaysInt;
             }
-
 
             $chartsArray = $this->getChart($averageDaysNew, $chartName,'bar',$layoutArray);
         }
