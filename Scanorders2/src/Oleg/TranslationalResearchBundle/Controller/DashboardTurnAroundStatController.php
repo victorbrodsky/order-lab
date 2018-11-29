@@ -72,6 +72,7 @@ class DashboardTurnAroundStatController extends DashboardController
 
         $chartsArray = array();
 
+        $averageDays = array();
 
         //get startDate and add 1 month until the date is less than endDate
         $startDate = $filterform['startDate']->getData();
@@ -81,18 +82,17 @@ class DashboardTurnAroundStatController extends DashboardController
             $startDateLabel = $startDate->format('M-Y');
             $thisEndDate = clone $startDate;
             $thisEndDate->modify( 'first day of next month' );
-            //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
-            $transRequests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects,$category,"completed");
+            echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y").": ";
+            $transRequests = $this->getRequestsByFilter($startDate,$thisEndDate,$projectSpecialtyObjects,$category,"completed");
             $startDate->modify( 'first day of next month' );
 
             //echo "<br>";
-            //echo "hemaProjects=".count($hemaProjects)." (".$startDateLabel.")<br>";
+            echo "transRequests=".count($transRequests)." (".$startDateLabel.")<br>";
 
             //$apcpResultStatArr = $this->getProjectRequestInvoiceChart($transRequests,$apcpResultStatArr,$startDateLabel);
 
             $daysTotal = 0;
             $count = 0;
-            $requestDays = array();
 
             foreach($transRequests as $transRequest) {
 
@@ -109,7 +109,8 @@ class DashboardTurnAroundStatController extends DashboardController
             }
 
             if( $count > 0 ) {
-                $averageDays[$startDateLabel] = $daysTotal / $count;
+                //echo "average days=".round($daysTotal / $count)."<br>";
+                $averageDays[$startDateLabel] = round($daysTotal / $count);
             } else {
                 $averageDays[$startDateLabel] = null;
             }
@@ -117,42 +118,6 @@ class DashboardTurnAroundStatController extends DashboardController
 
         } while( $startDate < $endDate );
 
-
-        //$transRequests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects,$category,"completed");
-        //echo "found request count=".count($transRequests)."<br>";
-
-//        $daysTotal = 0;
-//        $count = 0;
-//
-//        $requestDays = array();
-//
-//        foreach($transRequests as $transRequest) {
-//
-//            //Number of days to go from Submitted to Completed
-//            $submitted = $transRequest->getCreateDate();
-//            $updated = $transRequest->getUpdateDate();
-//            $dDiff = $submitted->diff($updated);
-//            //echo $dDiff->format('%R'); // use for point out relation: smaller/greater
-//            $days = $dDiff->days;
-//            echo "days=".$days."<br>";
-//
-//            $daysTotal = $daysTotal + intval($days);
-//
-//            $requestDays[] = $daysTotal;
-//
-//            $count++;
-//        }
-//
-//        if( $count > 0 ) {
-//            $averageDays = $daysTotal / $count;
-//        } else {
-//            $averageDays = null;
-//        }
-
-//        $requestDaysData = array();
-//        foreach($requestDays as $date=>$value ) {
-//            $requestDaysData[$date] = $value;
-//        }
 
         $chartsArray = $this->addChart( $chartsArray, $averageDays, "Average number of days for work request to go from Submitted to Completed", "bar");
 
