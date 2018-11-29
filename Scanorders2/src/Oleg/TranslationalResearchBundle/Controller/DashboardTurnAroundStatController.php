@@ -112,10 +112,11 @@ class DashboardTurnAroundStatController extends DashboardController
             }
 
             if( $count > 0 ) {
+                $avgDaysInt = round($daysTotal/$count);
                 //echo "daysTotal=".$daysTotal."; count=".$count."<br>";
                 //echo "average days=".round($daysTotal / $count)."<br>";
-                $averageDays[$startDateLabel] = $daysTotal;
-                //$averageDays[$startDateLabel] = round($daysTotal/$count);
+                //$averageDays[$startDateLabel] = $daysTotal;
+                $averageDays[$startDateLabel] = $avgDaysInt;
             } else {
                 $averageDays[$startDateLabel] = null;
             }
