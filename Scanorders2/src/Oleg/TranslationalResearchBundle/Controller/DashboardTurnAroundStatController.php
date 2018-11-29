@@ -40,7 +40,7 @@ class DashboardTurnAroundStatController extends DashboardController
             return $this->redirect($this->generateUrl($this->container->getParameter('translationalresearch.sitename') . '-nopermission'));
         }
 
-        exit("Under construction");
+        //exit("Under construction");
 
         //$userSecUtil = $this->container->get('user_security_utility');
         $em = $this->getDoctrine()->getManager();
@@ -70,40 +70,92 @@ class DashboardTurnAroundStatController extends DashboardController
 //            echo "chartType=".$chartType."<br>";
 //        }
 
-        $transRequests = $this->getRequestsByFilter($startDate, $endDate, $projectSpecialtyObjects, $category);
+        $chartsArray = array();
 
-        //12. Total Fees by Work Requests (Total $400K)
-        $dataArray = array();
-        $chartDataArray = array();
-        $type = 'pie';
-        $subtotalFees = $this->getNumberFormat(50);
 
-        $layoutArray = array(
-            'height' => $this->height,
-            'width' =>  $this->width,
-            'title' => "12. Total Fees by Work Requests (Total $".$subtotalFees.")"
-        );
+        //get startDate and add 1 month until the date is less than endDate
+        $startDate = $filterform['startDate']->getData();
+        $endDate = $filterform['endDate']->getData();
+        $startDate->modify( 'first day of last month' );
+        do {
+            $startDateLabel = $startDate->format('M-Y');
+            $thisEndDate = clone $startDate;
+            $thisEndDate->modify( 'first day of next month' );
+            //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
+            $transRequests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects,$category,"completed");
+            $startDate->modify( 'first day of next month' );
 
-        $fundedTotalFees = $this->getNumberFormat(30);
-        $unFundedTotalFees = $this->getNumberFormat(20);
+            //echo "<br>";
+            //echo "hemaProjects=".count($hemaProjects)." (".$startDateLabel.")<br>";
 
-        $labels = array('Funded : $'.$fundedTotalFees,'Non-Funded : $'.$unFundedTotalFees);
-        $values = array($fundedTotalFees,$unFundedTotalFees);
+            //$apcpResultStatArr = $this->getProjectRequestInvoiceChart($transRequests,$apcpResultStatArr,$startDateLabel);
 
-        $chartDataArray['values'] = $values;
-        $chartDataArray['labels'] = $labels;
-        $chartDataArray['type'] = $type;
-        $chartDataArray["textinfo"] = "value+percent";
-        $chartDataArray["outsidetextfont"] = array('size'=>1,'color'=>'white');
-        $chartDataArray['direction'] = 'clockwise';
-        $dataArray[] = $chartDataArray;
+            $daysTotal = 0;
+            $count = 0;
+            $requestDays = array();
 
-        $chartsArray[] = array(
-            'layout' => $layoutArray,
-            'data' => $dataArray
-        );
-        $chartsArray[] = array('newline'=>true);
-        /////////////////////
+            foreach($transRequests as $transRequest) {
+
+                //Number of days to go from Submitted to Completed
+                $submitted = $transRequest->getCreateDate();
+                $updated = $transRequest->getUpdateDate();
+                $dDiff = $submitted->diff($updated);
+                //echo $dDiff->format('%R'); // use for point out relation: smaller/greater
+                $days = $dDiff->days;
+                //echo "days=".$days."<br>";
+
+                $daysTotal = $daysTotal + intval($days);
+                $count++;
+            }
+
+            if( $count > 0 ) {
+                $averageDays[$startDateLabel] = $daysTotal / $count;
+            } else {
+                $averageDays[$startDateLabel] = null;
+            }
+
+
+        } while( $startDate < $endDate );
+
+
+        //$transRequests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects,$category,"completed");
+        //echo "found request count=".count($transRequests)."<br>";
+
+//        $daysTotal = 0;
+//        $count = 0;
+//
+//        $requestDays = array();
+//
+//        foreach($transRequests as $transRequest) {
+//
+//            //Number of days to go from Submitted to Completed
+//            $submitted = $transRequest->getCreateDate();
+//            $updated = $transRequest->getUpdateDate();
+//            $dDiff = $submitted->diff($updated);
+//            //echo $dDiff->format('%R'); // use for point out relation: smaller/greater
+//            $days = $dDiff->days;
+//            echo "days=".$days."<br>";
+//
+//            $daysTotal = $daysTotal + intval($days);
+//
+//            $requestDays[] = $daysTotal;
+//
+//            $count++;
+//        }
+//
+//        if( $count > 0 ) {
+//            $averageDays = $daysTotal / $count;
+//        } else {
+//            $averageDays = null;
+//        }
+
+//        $requestDaysData = array();
+//        foreach($requestDays as $date=>$value ) {
+//            $requestDaysData[$date] = $value;
+//        }
+
+        $chartsArray = $this->addChart( $chartsArray, $averageDays, "Average number of days for work request to go from Submitted to Completed", "bar");
+
 
         return array(
             'title' => "Turn-around Statistics",
@@ -168,7 +220,7 @@ class DashboardTurnAroundStatController extends DashboardController
         return $filterform;
     }
 
-    public function getRequestsByFilter($startDate, $endDate, $projectSpecialties, $category, $addOneEndDay=true) {
+    public function getRequestsByFilter($startDate, $endDate, $projectSpecialties, $category, $state=null, $addOneEndDay=true) {
         $em = $this->getDoctrine()->getManager();
         //$transresUtil = $this->container->get('transres_util');
 
@@ -177,7 +229,11 @@ class DashboardTurnAroundStatController extends DashboardController
         $dql->select('request');
 
         //Exclude Work requests with status=Canceled and Draft
-        $dql->where("request.progressState != 'draft' AND request.progressState != 'canceled'");
+        if( !$state ) {
+            $dql->where("request.progressState != 'draft' AND request.progressState != 'canceled'");
+        } else {
+            $dql->where("request.progressState = '".$state."'");
+        }
 
         $dqlParameters = array();
 
