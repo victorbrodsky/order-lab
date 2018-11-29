@@ -98,8 +98,8 @@ class DashboardUtil
             "28. Total Number of Projects per Type" => "projects-per-type",
             "29. Total Number of Work Requests per Business Purpose" => "requests-per-business-purpose",
 
-            //"30. Turn-around Statistics" => "turn-around-statistics",
-            "" => "",
+            "30. Turn-around Statistics: Average number of days to complete a Work Request" => "turn-around-statistics-days-complete-request",
+            "31. Turn-around Statistics: Average number of days for each Project phase" => "turn-around-statistics-days-project-state",
             "" => "",
             "" => "",
             "" => "",
@@ -717,13 +717,23 @@ class DashboardUtil
         return $resArr;
     }
 
-    public function getProjectsByFilter($startDate, $endDate, $projectSpecialties, $addOneEndDay=true) {
+    public function getProjectsByFilter($startDate, $endDate, $projectSpecialties, $states=null, $addOneEndDay=true) {
 
         $repository = $this->em->getRepository('OlegTranslationalResearchBundle:Project');
         $dql =  $repository->createQueryBuilder("project");
         $dql->select('project');
 
-        $dql->where("project.state = 'final_approved' OR project.state = 'closed'");
+        if( !$states ) {
+            $dql->where("project.state = 'final_approved' OR project.state = 'closed'");
+        } else {
+            //$dql->where("request.progressState = '".$state."'");
+            foreach($states as $state) {
+                $stateArr[] = "project.state = '".$state."'";
+            }
+            if( count($stateArr) > 0 ) {
+                $dql->where("(".implode(" OR ",$stateArr).")");
+            }
+        }
 
         $dqlParameters = array();
 
@@ -817,6 +827,75 @@ class DashboardUtil
 
         return $projects;
     }
+    public function getRequestsByAdvanceFilter($startDate, $endDate, $projectSpecialties, $category, $states=null, $addOneEndDay=true) {
+        $em = $this->em;
+        //$transresUtil = $this->container->get('transres_util');
+
+        $repository = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
+        $dql =  $repository->createQueryBuilder("request");
+        $dql->select('request');
+
+        //Exclude Work requests with status=Canceled and Draft
+        if( !$states ) {
+            $dql->where("request.progressState != 'draft' AND request.progressState != 'canceled'");
+        } else {
+            //$dql->where("request.progressState = '".$state."'");
+            foreach($states as $state) {
+                $stateArr[] = "request.progressState = '".$state."'";
+            }
+            if( count($stateArr) > 0 ) {
+                $dql->where("(".implode(" OR ",$stateArr).")");
+            }
+        }
+
+        $dqlParameters = array();
+
+        if( $startDate ) {
+            //echo "startDate=" . $startDate->format('Y-m-d H:i:s') . "<br>";
+            $dql->andWhere('request.createDate >= :startDate');
+            $dqlParameters['startDate'] = $startDate->format('Y-m-d'); //H:i:s
+        }
+        if( $endDate ) {
+            if( $addOneEndDay ) {
+                $endDate->modify('+1 day');
+            }
+            //echo "endDate=" . $endDate->format('Y-m-d H:i:s') . "<br>";
+            $dql->andWhere('request.createDate <= :endDate');
+            $dqlParameters['endDate'] = $endDate->format('Y-m-d'); //H:i:s
+        }
+
+        if( $projectSpecialties && count($projectSpecialties) > 0 ) {
+            $dql->leftJoin('request.project','project');
+            $dql->leftJoin('project.projectSpecialty','projectSpecialty');
+            $projectSpecialtyIdsArr = array();
+            $projectSpecialtyNamesArr = array();
+            foreach($projectSpecialties as $projectSpecialty) {
+                //echo "projectSpecialty=$projectSpecialty<br>";
+                $projectSpecialtyIdsArr[] = $projectSpecialty->getId();
+                $projectSpecialtyNamesArr[] = $projectSpecialty."";
+            }
+            $dql->andWhere("projectSpecialty.id IN (:projectSpecialtyIdsArr)");
+            $dqlParameters["projectSpecialtyIdsArr"] = $projectSpecialtyIdsArr;
+        }
+
+        if( $category ) {
+            $dql->leftJoin('request.products','products');
+            $dql->leftJoin('products.category','category');
+            $dql->andWhere("category.id = :categoryId");
+            $dqlParameters["categoryId"] = $category->getId();
+        }
+
+        $query = $em->createQuery($dql);
+
+        $query->setParameters($dqlParameters);
+        //echo "query=".$query->getSql()."<br>";
+
+        $projects = $query->getResult();
+
+        //echo implode(",",$projectSpecialtyNamesArr)." Projects=".count($projects)." (".$startDate->format('d-M-Y')." - ".$endDate->format('d-M-Y').")<br>";
+
+        return $projects;
+    }
 
     public function getInvoicesByFilter($startDate, $endDate, $projectSpecialties, $addOneEndDay=true, $compareType='last invoice generation date') {
         $repository = $this->em->getRepository('OlegTranslationalResearchBundle:Invoice');
@@ -897,6 +976,109 @@ class DashboardUtil
         return $chartName . " - " . $prefix . $total . " total";
     }
 
+    public function getDiffDaysByProjectState($project,$state) {
+        $transresUtil = $this->container->get('transres_util');
+        $reviews = $transresUtil->getReviewsByProjectAndState($project,$state);
+
+        //get earliest create date and latest update date
+        $createDate = null; //get enter state date
+        $updateDate = null; //get exit state date
+        foreach($reviews as $review) {
+            //phase enter date
+            $enterDate = $this->getPreviousStateEnterDate($project,$state);
+            if( !$enterDate ) {
+                $enterDate = $review->getCreatedate();
+            }
+            if( $createDate ) {
+                if( $enterDate < $createDate ) {
+                    $createDate = $enterDate;
+                }
+            } else {
+                $createDate = $enterDate;
+            }
+            //phase exit date
+            if( $updateDate ) {
+                if( $review->getUpdatedate() > $updateDate ) {
+                    $updateDate = $review->getUpdatedate();
+                }
+            } else {
+                $updateDate = $review->getUpdatedate();
+            }
+        }
+
+        if( !$createDate ) {
+            $createDate = $project->getCreateDate();
+        }
+
+        if( !$updateDate && $state == "final_approved" ) {
+            //echo "final state=".$state."<br>";
+            $updateDate = $project->getApprovalDate();
+        }
+        if( !$updateDate ) {
+            //echo "***state=".$state."<br>";
+            $updateDate = $project->getUpdatedate();
+        } else {
+            //echo "###<br>";
+        }
+
+        //Number of days to go from review's createdate to review's updatedate
+        $dDiff = $createDate->diff($updateDate);
+        //echo $dDiff->format('%R'); // use for point out relation: smaller/greater
+        $days = $dDiff->days;
+        //echo "days=".$days."<br>";
+        $days = intval($days);
+        return $days;
+    }
+    public function getStateExitDate($project,$state) {
+        $transresUtil = $this->container->get('transres_util');
+        $reviews = $transresUtil->getReviewsByProjectAndState($project,$state);
+
+        //get earliest create date and latest update date
+        $exitDate = null; //get exit state date
+        foreach($reviews as $review) {
+            if( $exitDate ) {
+                if( $review->getUpdatedate() > $exitDate ) {
+                    $exitDate = $review->getUpdatedate();
+                }
+            } else {
+                $exitDate = $review->getUpdatedate();
+            }
+        }
+        return $exitDate;
+    }
+    public function getReviewExitDate($project,$state) {
+        $transresUtil = $this->container->get('transres_util');
+        $reviews = $transresUtil->getReviewsByProjectAndState($project,$state);
+
+        //get earliest create date and latest update date
+        $exitDate = null; //get exit state date
+        foreach($reviews as $review) {
+            if( $exitDate ) {
+                if( $review->getUpdatedate() > $exitDate ) {
+                    $exitDate = $review->getUpdatedate();
+                }
+            } else {
+                $exitDate = $review->getUpdatedate();
+            }
+        }
+        return $exitDate;
+    }
+    public function getPreviousStateEnterDate($project,$state) {
+        if( $state == "irb_review" ) {
+            $date = $project->getCreateDate();
+            //$date = $this->getStateEnterDate($project,"irb_review");
+        }
+        if( $state == "admin_review" ) {
+            $date = $this->getStateExitDate($project,"irb_review");
+        }
+        if( $state == "committee_review" ) {
+            $date = $this->getStateExitDate($project,"admin_review");
+        }
+        if( $state == "final_review" ) {
+            $date = $this->getStateExitDate($project,"committee_review");
+        }
+        return $date;
+    }
 
 
 
@@ -2270,6 +2452,133 @@ class DashboardUtil
             $showOther = $this->getOtherStr($showLimited,"Business Purposes");
             $requestBusinessPurposeArrTop = $this->getTopArray($requestBusinessPurposeArr,$showOther);
             $chartsArray = $this->getChart($requestBusinessPurposeArrTop, $chartName,'pie',$layoutArray," : ");
+        }
+
+        //"30. Turn-around Statistics: Average number of days to complete a Work Request" => "turn-around-statistics-days-complete-request"
+        if( $chartType == "turn-around-statistics-days-complete-request" ) {
+            $averageDays = array();
+
+            $startDate->modify( 'first day of last month' );
+            do {
+                $startDateLabel = $startDate->format('M-Y');
+                $thisEndDate = clone $startDate;
+                $thisEndDate->modify( 'first day of next month' );
+                //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y").": ";
+                $category = null;
+                $transRequests = $this->getRequestsByAdvanceFilter($startDate,$thisEndDate,$projectSpecialtyObjects,$category,array("completed","completedNotified"));
+                //$transRequests = $this->getRequestsByAdvanceFilter($startDate,$thisEndDate,$projectSpecialtyObjects,$category);
+                $startDate->modify( 'first day of next month' );
+
+                //echo "<br>";
+                //echo "transRequests=".count($transRequests)." (".$startDateLabel.")<br>";
+
+                //$apcpResultStatArr = $this->getProjectRequestInvoiceChart($transRequests,$apcpResultStatArr,$startDateLabel);
+
+                $daysTotal = 0;
+                $count = 0;
+
+                foreach($transRequests as $transRequest) {
+
+                    //Number of days to go from Submitted to Completed
+                    $submitted = $transRequest->getCreateDate();
+                    $updated = $transRequest->getUpdateDate();
+                    $dDiff = $submitted->diff($updated);
+                    //echo $dDiff->format('%R'); // use for point out relation: smaller/greater
+                    $days = $dDiff->days;
+                    //echo "days=".$days."<br>";
+                    $days = intval($days);
+                    if( $days > 0 ) {
+                        $daysTotal = $daysTotal + intval($days);
+                        $count++;
+                    }
+                }
+
+                if( $count > 0 ) {
+                    $avgDaysInt = round($daysTotal/$count);
+                    //echo "daysTotal=".$daysTotal."; count=".$count."<br>";
+                    //echo "average days=".round($daysTotal / $count)."<br>";
+                    //$averageDays[$startDateLabel] = $daysTotal;
+                    $averageDays[$startDateLabel] = $avgDaysInt;
+                } else {
+                    $averageDays[$startDateLabel] = null;
+                }
+
+
+            } while( $startDate < $endDate );
+
+//            if( $category ) {
+//                //$categoryName = $this->tokenTruncate($category->getProductIdAndName(),50);
+//                $categoryName = $category->getProductId();
+//                $categoryStr = " (".$categoryName.")";
+//            } else {
+//                $categoryStr = null;
+//            }
+//            $chartName = $chartName.$categoryStr;
+
+            $chartsArray = $this->getChart($averageDays, $chartName,'bar',$layoutArray);
+        }
+
+        //"31. Turn-around Statistics: Average number of days each phase of the project review took" => "turn-around-statistics-days-project-state"
+        if( $chartType == "turn-around-statistics-days-project-state" ) {
+            $transresUtil = $this->container->get('transres_util');
+            $averageDays = array();
+
+            $reviewStates = array(
+                array("irb_review","irb_missinginfo"),
+                array("admin_review","admin_missinginfo"),
+                array("committee_review"),
+                array("final_review"),
+            );
+
+            foreach($reviewStates as $reviewStateArr) {
+
+                $state = $reviewStateArr[0];
+                $stateLabel = $transresUtil->getStateLabelByName($state);
+
+                $projects = $this->getProjectsByFilter($startDate, $endDate, $projectSpecialtyObjects, $reviewStateArr);
+
+                $daysTotal = 0;
+                $count = 0;
+
+                foreach ($projects as $project) {
+
+                    $days = $this->getDiffDaysByProjectState($project,$state);
+                    if( $days > 0 ) {
+                        $daysTotal = $daysTotal + $days;
+                        $count++;
+                    }
+
+                }//foreach project
+
+                if( $count > 0 ) {
+                    $avgDaysInt = round($daysTotal/$count);
+                    //echo "daysTotal=".$daysTotal."; count=".$count."<br>";
+                    //echo "average days=".round($daysTotal / $count)."<br>";
+                    //$averageDays[$startDateLabel] = $daysTotal;
+                    $averageDays[$stateLabel] = $avgDaysInt;
+                } else {
+                    $averageDays[$stateLabel] = null;
+                }
+
+            }//foreach states
+
+            $chartsArray = $this->getChart($averageDays, $chartName,'bar',$layoutArray);
+        }
+
+        if( $chartType == "" ) {
+
+        }
+
+        if( $chartType == "" ) {
+
+        }
+
+        if( $chartType == "" ) {
+
+        }
+
+        if( $chartType == "" ) {
+
         }
 
         if( $chartType == "" ) {

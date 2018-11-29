@@ -1411,6 +1411,7 @@ class TransResUtil
                 $state = "$humanName Review Rejected";
                 break;
             case "irb_missinginfo":
+                $humanName = $this->getHumanName();
                 $state = "Request additional information from submitter for $humanName Review";
                 break;
 

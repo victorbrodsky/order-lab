@@ -42,7 +42,7 @@ class DashboardTurnAroundStatController extends DashboardController
 
         //exit("Under construction");
 
-        //$userSecUtil = $this->container->get('user_security_utility');
+        $dashboardUtil = $this->container->get('transres_dashboard');
         $em = $this->getDoctrine()->getManager();
 
         //ini_set('memory_limit', '30000M'); //2GB
@@ -83,8 +83,8 @@ class DashboardTurnAroundStatController extends DashboardController
             $thisEndDate = clone $startDate;
             $thisEndDate->modify( 'first day of next month' );
             //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y").": ";
-            $transRequests = $this->getRequestsByFilter($startDate,$thisEndDate,$projectSpecialtyObjects,$category,array("completed","completedNotified"));
-            //$transRequests = $this->getRequestsByFilter($startDate,$thisEndDate,$projectSpecialtyObjects,$category);
+            $transRequests = $dashboardUtil->getRequestsByAdvanceFilter($startDate,$thisEndDate,$projectSpecialtyObjects,$category,array("completed","completedNotified"));
+            //$transRequests = $dashboardUtil->getRequestsByAdvanceFilter($startDate,$thisEndDate,$projectSpecialtyObjects,$category);
             $startDate->modify( 'first day of next month' );
 
             //echo "<br>";
@@ -132,7 +132,7 @@ class DashboardTurnAroundStatController extends DashboardController
             $categoryStr = null;
         }
 
-        $chartsArray = $this->addChart( $chartsArray, $averageDays, "Average number of days to complete a work request".$categoryStr, "bar");
+        $chartsArray = $this->addChart( $chartsArray, $averageDays, "30. Turn-around Statistics: Average number of days to complete a Work Request".$categoryStr, "bar");
 
 
         return array(
@@ -198,74 +198,74 @@ class DashboardTurnAroundStatController extends DashboardController
         return $filterform;
     }
 
-    public function getRequestsByFilter($startDate, $endDate, $projectSpecialties, $category, $states=null, $addOneEndDay=true) {
-        $em = $this->getDoctrine()->getManager();
-        //$transresUtil = $this->container->get('transres_util');
-
-        $repository = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
-        $dql =  $repository->createQueryBuilder("request");
-        $dql->select('request');
-
-        //Exclude Work requests with status=Canceled and Draft
-        if( !$states ) {
-            $dql->where("request.progressState != 'draft' AND request.progressState != 'canceled'");
-        } else {
-            //$dql->where("request.progressState = '".$state."'");
-            foreach($states as $state) {
-                $stateArr[] = "request.progressState = '".$state."'";
-            }
-            if( count($stateArr) > 0 ) {
-                $dql->where("(".implode(" OR ",$stateArr).")");
-            }
-        }
-
-        $dqlParameters = array();
-
-        if( $startDate ) {
-            //echo "startDate=" . $startDate->format('Y-m-d H:i:s') . "<br>";
-            $dql->andWhere('request.createDate >= :startDate');
-            $dqlParameters['startDate'] = $startDate->format('Y-m-d'); //H:i:s
-        }
-        if( $endDate ) {
-            if( $addOneEndDay ) {
-                $endDate->modify('+1 day');
-            }
-            //echo "endDate=" . $endDate->format('Y-m-d H:i:s') . "<br>";
-            $dql->andWhere('request.createDate <= :endDate');
-            $dqlParameters['endDate'] = $endDate->format('Y-m-d'); //H:i:s
-        }
-
-        if( $projectSpecialties && count($projectSpecialties) > 0 ) {
-            $dql->leftJoin('request.project','project');
-            $dql->leftJoin('project.projectSpecialty','projectSpecialty');
-            $projectSpecialtyIdsArr = array();
-            $projectSpecialtyNamesArr = array();
-            foreach($projectSpecialties as $projectSpecialty) {
-                //echo "projectSpecialty=$projectSpecialty<br>";
-                $projectSpecialtyIdsArr[] = $projectSpecialty->getId();
-                $projectSpecialtyNamesArr[] = $projectSpecialty."";
-            }
-            $dql->andWhere("projectSpecialty.id IN (:projectSpecialtyIdsArr)");
-            $dqlParameters["projectSpecialtyIdsArr"] = $projectSpecialtyIdsArr;
-        }
-
-        if( $category ) {
-            $dql->leftJoin('request.products','products');
-            $dql->leftJoin('products.category','category');
-            $dql->andWhere("category.id = :categoryId");
-            $dqlParameters["categoryId"] = $category->getId();
-        }
-
-        $query = $em->createQuery($dql);
-
-        $query->setParameters($dqlParameters);
-        //echo "query=".$query->getSql()."<br>";
-
-        $projects = $query->getResult();
-
-        //echo implode(",",$projectSpecialtyNamesArr)." Projects=".count($projects)." (".$startDate->format('d-M-Y')." - ".$endDate->format('d-M-Y').")<br>";
-
-        return $projects;
-    }
+//    public function getRequestsByAdvanceFilter($startDate, $endDate, $projectSpecialties, $category, $states=null, $addOneEndDay=true) {
+//        $em = $this->getDoctrine()->getManager();
+//        //$transresUtil = $this->container->get('transres_util');
+//
+//        $repository = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
+//        $dql =  $repository->createQueryBuilder("request");
+//        $dql->select('request');
+//
+//        //Exclude Work requests with status=Canceled and Draft
+//        if( !$states ) {
+//            $dql->where("request.progressState != 'draft' AND request.progressState != 'canceled'");
+//        } else {
+//            //$dql->where("request.progressState = '".$state."'");
+//            foreach($states as $state) {
+//                $stateArr[] = "request.progressState = '".$state."'";
+//            }
+//            if( count($stateArr) > 0 ) {
+//                $dql->where("(".implode(" OR ",$stateArr).")");
+//            }
+//        }
+//
+//        $dqlParameters = array();
+//
+//        if( $startDate ) {
+//            //echo "startDate=" . $startDate->format('Y-m-d H:i:s') . "<br>";
+//            $dql->andWhere('request.createDate >= :startDate');
+//            $dqlParameters['startDate'] = $startDate->format('Y-m-d'); //H:i:s
+//        }
+//        if( $endDate ) {
+//            if( $addOneEndDay ) {
+//                $endDate->modify('+1 day');
+//            }
+//            //echo "endDate=" . $endDate->format('Y-m-d H:i:s') . "<br>";
+//            $dql->andWhere('request.createDate <= :endDate');
+//            $dqlParameters['endDate'] = $endDate->format('Y-m-d'); //H:i:s
+//        }
+//
+//        if( $projectSpecialties && count($projectSpecialties) > 0 ) {
+//            $dql->leftJoin('request.project','project');
+//            $dql->leftJoin('project.projectSpecialty','projectSpecialty');
+//            $projectSpecialtyIdsArr = array();
+//            $projectSpecialtyNamesArr = array();
+//            foreach($projectSpecialties as $projectSpecialty) {
+//                //echo "projectSpecialty=$projectSpecialty<br>";
+//                $projectSpecialtyIdsArr[] = $projectSpecialty->getId();
+//                $projectSpecialtyNamesArr[] = $projectSpecialty."";
+//            }
+//            $dql->andWhere("projectSpecialty.id IN (:projectSpecialtyIdsArr)");
+//            $dqlParameters["projectSpecialtyIdsArr"] = $projectSpecialtyIdsArr;
+//        }
+//
+//        if( $category ) {
+//            $dql->leftJoin('request.products','products');
+//            $dql->leftJoin('products.category','category');
+//            $dql->andWhere("category.id = :categoryId");
+//            $dqlParameters["categoryId"] = $category->getId();
+//        }
+//
+//        $query = $em->createQuery($dql);
+//
+//        $query->setParameters($dqlParameters);
+//        //echo "query=".$query->getSql()."<br>";
+//
+//        $projects = $query->getResult();
+//
+//        //echo implode(",",$projectSpecialtyNamesArr)." Projects=".count($projects)." (".$startDate->format('d-M-Y')." - ".$endDate->format('d-M-Y').")<br>";
+//
+//        return $projects;
+//    }
 
 }
