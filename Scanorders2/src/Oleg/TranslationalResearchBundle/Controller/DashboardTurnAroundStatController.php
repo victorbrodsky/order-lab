@@ -75,20 +75,20 @@ class DashboardTurnAroundStatController extends DashboardController
         $averageDays = array();
 
         //get startDate and add 1 month until the date is less than endDate
-        $startDate = $filterform['startDate']->getData();
-        $endDate = $filterform['endDate']->getData();
+        //$startDate = $filterform['startDate']->getData();
+        //$endDate = $filterform['endDate']->getData();
         $startDate->modify( 'first day of last month' );
         do {
             $startDateLabel = $startDate->format('M-Y');
             $thisEndDate = clone $startDate;
             $thisEndDate->modify( 'first day of next month' );
-            echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y").": ";
+            //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y").": ";
             $transRequests = $this->getRequestsByFilter($startDate,$thisEndDate,$projectSpecialtyObjects,$category,array("completed","completedNotified"));
             //$transRequests = $this->getRequestsByFilter($startDate,$thisEndDate,$projectSpecialtyObjects,$category);
             $startDate->modify( 'first day of next month' );
 
             //echo "<br>";
-            echo "transRequests=".count($transRequests)." (".$startDateLabel.")<br>";
+            //echo "transRequests=".count($transRequests)." (".$startDateLabel.")<br>";
 
             //$apcpResultStatArr = $this->getProjectRequestInvoiceChart($transRequests,$apcpResultStatArr,$startDateLabel);
 
@@ -124,8 +124,15 @@ class DashboardTurnAroundStatController extends DashboardController
 
         } while( $startDate < $endDate );
 
+        if( $category ) {
+            //$categoryName = $this->tokenTruncate($category->getProductIdAndName(),50);
+            $categoryName = $category->getProductId();
+            $categoryStr = " (".$categoryName.")";
+        } else {
+            $categoryStr = null;
+        }
 
-        $chartsArray = $this->addChart( $chartsArray, $averageDays, "Average number of days for work request to go from Submitted to Completed", "bar");
+        $chartsArray = $this->addChart( $chartsArray, $averageDays, "Average number of days to complete a work request".$categoryStr, "bar");
 
 
         return array(
@@ -240,6 +247,13 @@ class DashboardTurnAroundStatController extends DashboardController
             }
             $dql->andWhere("projectSpecialty.id IN (:projectSpecialtyIdsArr)");
             $dqlParameters["projectSpecialtyIdsArr"] = $projectSpecialtyIdsArr;
+        }
+
+        if( $category ) {
+            $dql->leftJoin('request.products','products');
+            $dql->leftJoin('products.category','category');
+            $dql->andWhere("category.id = :categoryId");
+            $dqlParameters["categoryId"] = $category->getId();
         }
 
         $query = $em->createQuery($dql);
