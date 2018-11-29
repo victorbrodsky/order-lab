@@ -2522,12 +2522,7 @@ class DashboardUtil
         if( $chartType == "turn-around-statistics-days-project-state" ) {
             $transresUtil = $this->container->get('transres_util');
 
-            $reviewStates = array(
-               "irb_review",
-                "admin_review",
-                "committee_review",
-                "final_review"
-            );
+            $reviewStates = array("irb_review","admin_review","committee_review","final_review");
 
             $projects = $this->getProjectsByFilter($startDate, $endDate, $projectSpecialtyObjects);
             //echo "### $state projects count=".count($projects)."<br>";
