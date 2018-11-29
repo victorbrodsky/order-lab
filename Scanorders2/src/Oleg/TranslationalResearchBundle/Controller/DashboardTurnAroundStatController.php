@@ -83,7 +83,8 @@ class DashboardTurnAroundStatController extends DashboardController
             $thisEndDate = clone $startDate;
             $thisEndDate->modify( 'first day of next month' );
             echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y").": ";
-            $transRequests = $this->getRequestsByFilter($startDate,$thisEndDate,$projectSpecialtyObjects,$category,"completed");
+            $transRequests = $this->getRequestsByFilter($startDate,$thisEndDate,$projectSpecialtyObjects,$category,array("completed","completedNotified"));
+            //$transRequests = $this->getRequestsByFilter($startDate,$thisEndDate,$projectSpecialtyObjects,$category);
             $startDate->modify( 'first day of next month' );
 
             //echo "<br>";
@@ -103,14 +104,18 @@ class DashboardTurnAroundStatController extends DashboardController
                 //echo $dDiff->format('%R'); // use for point out relation: smaller/greater
                 $days = $dDiff->days;
                 //echo "days=".$days."<br>";
-
-                $daysTotal = $daysTotal + intval($days);
-                $count++;
+                $days = intval($days);
+                if( $days > 0 ) {
+                    $daysTotal = $daysTotal + intval($days);
+                    $count++;
+                }
             }
 
             if( $count > 0 ) {
+                //echo "daysTotal=".$daysTotal."; count=".$count."<br>";
                 //echo "average days=".round($daysTotal / $count)."<br>";
-                $averageDays[$startDateLabel] = round($daysTotal / $count);
+                $averageDays[$startDateLabel] = $daysTotal;
+                //$averageDays[$startDateLabel] = round($daysTotal/$count);
             } else {
                 $averageDays[$startDateLabel] = null;
             }
@@ -185,7 +190,7 @@ class DashboardTurnAroundStatController extends DashboardController
         return $filterform;
     }
 
-    public function getRequestsByFilter($startDate, $endDate, $projectSpecialties, $category, $state=null, $addOneEndDay=true) {
+    public function getRequestsByFilter($startDate, $endDate, $projectSpecialties, $category, $states=null, $addOneEndDay=true) {
         $em = $this->getDoctrine()->getManager();
         //$transresUtil = $this->container->get('transres_util');
 
@@ -194,10 +199,16 @@ class DashboardTurnAroundStatController extends DashboardController
         $dql->select('request');
 
         //Exclude Work requests with status=Canceled and Draft
-        if( !$state ) {
+        if( !$states ) {
             $dql->where("request.progressState != 'draft' AND request.progressState != 'canceled'");
         } else {
-            $dql->where("request.progressState = '".$state."'");
+            //$dql->where("request.progressState = '".$state."'");
+            foreach($states as $state) {
+                $stateArr[] = "request.progressState = '".$state."'";
+            }
+            if( count($stateArr) > 0 ) {
+                $dql->where("(".implode(" OR ",$stateArr).")");
+            }
         }
 
         $dqlParameters = array();
