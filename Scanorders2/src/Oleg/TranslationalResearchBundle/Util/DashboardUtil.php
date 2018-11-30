@@ -1039,6 +1039,11 @@ class DashboardUtil
         $days = $dDiff->days;
         //echo $state.": days=".$days."<br>";
         $days = intval($days);
+
+        if( !$days ) {
+            $days = 1;
+        }
+
         return $days;
     }
     public function getStateExitDate($project,$state) {
