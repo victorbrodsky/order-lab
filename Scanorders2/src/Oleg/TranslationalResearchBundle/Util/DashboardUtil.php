@@ -2532,7 +2532,7 @@ class DashboardUtil
             }
 
             $projects = $this->getProjectsByFilter($startDate, $endDate, $projectSpecialtyObjects);
-            echo "### $state projects count=".count($projects)."<br>";
+            //echo "### $state projects count=".count($projects)."<br>";
 
             $countArr = array();
 
@@ -2569,6 +2569,8 @@ class DashboardUtil
                     $averageDaysNew[$stateLabel] = $avgDaysInt;
                 }
             }
+
+            $chartName = $chartName . " (based on " . count($projects) . " approved or closed projects)";
 
             $chartsArray = $this->getChart($averageDaysNew, $chartName,'bar',$layoutArray);
         }
