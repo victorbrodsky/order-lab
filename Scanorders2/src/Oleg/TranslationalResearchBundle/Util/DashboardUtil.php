@@ -997,12 +997,24 @@ class DashboardUtil
                 $createDate = $enterDate;
             }
             //phase exit date
-            if( $updateDate ) {
-                if( $review->getUpdatedate() > $updateDate ) {
-                    $updateDate = $review->getUpdatedate();
+            if( $state == "committee_review" ) {
+                if( $review->getPrimaryReview() ) {
+                    if ($updateDate) {
+                        if ($review->getUpdatedate() > $updateDate) {
+                            $updateDate = $review->getUpdatedate();
+                        }
+                    } else {
+                        $updateDate = $review->getUpdatedate();
+                    }
                 }
             } else {
-                $updateDate = $review->getUpdatedate();
+                if ($updateDate) {
+                    if ($review->getUpdatedate() > $updateDate) {
+                        $updateDate = $review->getUpdatedate();
+                    }
+                } else {
+                    $updateDate = $review->getUpdatedate();
+                }
             }
         }
 
