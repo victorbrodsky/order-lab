@@ -551,6 +551,7 @@ class AntibodyList extends ListAbstract
         $this->exportId = $exportId;
     }
     
+    //[Antibody ID]/[Category]: [Antibody Name] [Vendor]/[Category] ([Protocol]/[Antigen retrieval]/[Dilution])
 
     public function __toString()
     {

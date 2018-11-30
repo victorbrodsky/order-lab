@@ -433,6 +433,8 @@ class DefaultReviewerController extends Controller
                 $invoicesMsg
             );
 
+            //TODO: test substituted user's roles?
+
             //exit('substituted: projects count='.count($projects));
             return $this->redirectToRoute('translationalresearch_substitute_user');
         }
@@ -837,7 +839,7 @@ class DefaultReviewerController extends Controller
 
             //eventlog
             if( count($msgArr) > 0 ) {
-                $eventType = "Project Updated";
+                $eventType = "Project User Substituted";
                 $msg = implode("<br>", $msgArr);
                 $msgProjects[] = "----- Project ".$project->getOid()." -----<br>".$msg;
                 $transresUtil->setEventLog($project, $eventType, $msg, $testing);
@@ -1002,7 +1004,7 @@ class DefaultReviewerController extends Controller
 
             //eventlog
             if( count($msgArr) > 0 ) {
-                $eventType = "Request Updated";
+                $eventType = "Request User Substituted";
                 $msg = implode("<br>", $msgArr);
                 $msgRequests[] = "----- Request ".$request->getOid()." -----<br>".$msg;
                 $transresUtil->setEventLog($request, $eventType, $msg, $testing);
@@ -1188,7 +1190,7 @@ class DefaultReviewerController extends Controller
 
             //eventlog
             if( count($msgArr) > 0 ) {
-                $eventType = "Invoice Updated";
+                $eventType = "Invoice User Substituted";
                 $msg = implode("<br>", $msgArr);
                 $msgInvoices[] = "----- Invoice ".$invoice->getOid()." -----<br>".$msg;
                 $transresUtil->setEventLog($invoice, $eventType, $msg, $testing);
