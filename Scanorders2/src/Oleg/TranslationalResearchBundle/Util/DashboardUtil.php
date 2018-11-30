@@ -2532,7 +2532,7 @@ class DashboardUtil
             }
 
             $projects = $this->getProjectsByFilter($startDate, $endDate, $projectSpecialtyObjects);
-            //echo "### $state projects count=".count($projects)."<br>";
+            echo "### $state projects count=".count($projects)."<br>";
 
             $countArr = array();
 
