@@ -266,6 +266,12 @@ class Invoice {
      * @var \DateTime
      * @ORM\Column(type="datetime", nullable=true)
      */
+    private $issuedDate;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(type="datetime", nullable=true)
+     */
     private $paidDate;
 
     /**
@@ -547,6 +553,10 @@ class Invoice {
     public function setStatus($status)
     {
         $this->status = $status;
+
+        if($status == "Unpaid/Issued") {
+            $this->setIssuedDate(new \DateTime());
+        }
     }
 
     /**
@@ -821,6 +831,22 @@ class Invoice {
     public function setComment($comment)
     {
         $this->comment = $comment;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getIssuedDate()
+    {
+        return $this->issuedDate;
+    }
+
+    /**
+     * @param \DateTime $issuedDate
+     */
+    public function setIssuedDate($issuedDate)
+    {
+        $this->issuedDate = $issuedDate;
     }
 
     /**

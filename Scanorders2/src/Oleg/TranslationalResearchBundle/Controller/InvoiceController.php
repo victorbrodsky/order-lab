@@ -1540,7 +1540,7 @@ class InvoiceController extends Controller
         $em = $this->getDoctrine()->getManager();
         $res = "NotOK";
 
-        $oid = trim( $request->get('invoiceOid') );
+        $invoiceId = trim( $request->get('invoiceId') );
         $paid = trim( $request->get('paid') );
         $total = trim( $request->get('total') );
         $discountNumeric = trim( $request->get('discountNumeric') );
@@ -1549,9 +1549,9 @@ class InvoiceController extends Controller
         $comment = trim( $request->get('comment') );
         $status = trim( $request->get('status') );
 
-        $invoice = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findOneByOid($oid);
+        $invoice = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->find($invoiceId);
         if( !$invoice ) {
-            throw new \Exception("Invoice is not found by invoice number (oid) '" . $oid . "'");
+            throw new \Exception("Invoice is not found by invoice id '" . $invoiceId . "'");
         }
 
 //        if( false === $transresRequestUtil->isInvoiceBillingContact($invoice,$user) ) {

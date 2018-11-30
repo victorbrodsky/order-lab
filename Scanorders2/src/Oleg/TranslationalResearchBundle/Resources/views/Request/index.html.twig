@@ -390,7 +390,7 @@
 
                                     {% if transres_request_util.isUserHasInvoicePermission(latestInvoice,"change-status") %}
                                         <li>
-                                            <a href="#" data-toggle="modal" data-target="#modal_update_invoice_{{ latestInvoice.getCleanOid() }}"
+                                            <a href="#" data-toggle="modal" data-target="#modal_update_invoice_{{ latestInvoice.id }}"
                                             >Update status of the most recent invoice</a>
                                         </li>
                                     {% endif %}

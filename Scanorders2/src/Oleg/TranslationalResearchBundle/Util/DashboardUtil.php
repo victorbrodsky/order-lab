@@ -101,7 +101,7 @@ class DashboardUtil
             "30. Turn-around Statistics: Average number of days to complete a Work Request" =>              "turn-around-statistics-days-complete-request",
             "31. Turn-around Statistics: Average number of days for each project request approval phase" => "turn-around-statistics-days-project-state",
             "32. Turn-around Statistics: Number of days for each project request approval phase" =>         "turn-around-statistics-days-per-project-state",
-            "" => "",
+            "33. Turn-around Statistics: Average number of days for invoices to be paid" =>                 "turn-around-statistics-days-paid-invoice",
             "" => "",
             "" => ""
         );
@@ -897,14 +897,25 @@ class DashboardUtil
         return $projects;
     }
 
-    public function getInvoicesByFilter($startDate, $endDate, $projectSpecialties, $addOneEndDay=true, $compareType='last invoice generation date') {
+    public function getInvoicesByFilter($startDate, $endDate, $projectSpecialties, $states=null, $addOneEndDay=true, $compareType='last invoice generation date') {
         $repository = $this->em->getRepository('OlegTranslationalResearchBundle:Invoice');
         $dql =  $repository->createQueryBuilder("invoice");
         $dql->select('invoice');
         $dql->leftJoin('invoice.transresRequest','request');
 
         //Exclude Work requests with status=Canceled and Draft
-        $dql->where("request.progressState != 'draft' AND request.progressState != 'canceled' AND invoice.latestVersion = TRUE AND invoice.status != 'canceled'");
+        //$dql->where("request.progressState != 'draft' AND request.progressState != 'canceled' AND invoice.latestVersion = TRUE AND invoice.status != 'canceled'");
+        if( !$states ) {
+            //Exclude Work requests with status=Canceled and Draft
+            $dql->where("request.progressState != 'draft' AND request.progressState != 'canceled' AND invoice.latestVersion = TRUE AND invoice.status != 'canceled'");
+        } else {
+            foreach($states as $state) {
+                $stateArr[] = "invoice.status = '".$state."'";
+            }
+            if( count($stateArr) > 0 ) {
+                $dql->where("request.progressState != 'draft' AND request.progressState != 'canceled' AND invoice.latestVersion = TRUE AND (".implode(" OR ",$stateArr).")");
+            }
+        }
 
         $dqlParameters = array();
 
@@ -1040,10 +1051,10 @@ class DashboardUtil
         //echo $state.": days=".$days."<br>";
         $days = intval($days);
 
-        //show minimum 1 day
-        //if( !$days ) {
-        //    $days = 1;
-        //}
+        //show minimum 0.5 or 1 day
+//        if( !$days ) {
+//            $days = 0.5;
+//        }
 
         return $days;
     }
@@ -2666,8 +2677,68 @@ class DashboardUtil
             $chartsArray = $this->getStackedChart($combinedTrpData, $chartName, "stack");
         }
 
-        if( $chartType == "" ) {
+        //third bar graph showing how many days on average it took for Invoices to go from “Issued” to “Paid”
+        //"33. Turn-around Statistics: Average number of days for invoices to be paid" =>                 "turn-around-statistics-days-paid-invoice"
+        if( $chartType == "turn-around-statistics-days-paid-invoice" ) {
+            $averageDays = array();
 
+            $invoiceStates = array("Paid in Full","Paid Partially");
+
+            $startDate->modify( 'first day of last month' );
+            do {
+                $startDateLabel = $startDate->format('M-Y');
+                $thisEndDate = clone $startDate;
+                $thisEndDate->modify( 'first day of next month' );
+                //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y").": ";
+                $invoices = $this->getInvoicesByFilter($startDate, $endDate, $projectSpecialtyObjects, $invoiceStates);
+                //$transRequests = $this->getRequestsByAdvanceFilter($startDate,$thisEndDate,$projectSpecialtyObjects,$category);
+                $startDate->modify( 'first day of next month' );
+
+                //echo "<br>";
+                //echo "invoices=".count($invoices)." (".$startDateLabel.")<br>";
+
+                //$apcpResultStatArr = $this->getProjectRequestInvoiceChart($transRequests,$apcpResultStatArr,$startDateLabel);
+
+                $daysTotal = 0;
+                $count = 0;
+
+                foreach($invoices as $invoice) {
+                    //echo "invoice=".$invoice->getOid()."<br>";
+                    //Number of days to go from Submitted to Completed
+                    $issued = $invoice->getIssuedDate(); //“Issued”
+                    if( !$issued ) {
+                        $issued = $invoice->getCreateDate();
+                        //use dueDate - 30 days => issued Date?
+                    }
+                    $paid = $invoice->getPaidDate(); //“Paid”
+                    if( !$paid ) {
+                        $paid = $invoice->getUpdateDate(); //“Paid”
+                    }
+                    $dDiff = $issued->diff($paid);
+                    //echo $dDiff->format('%R'); // use for point out relation: smaller/greater
+                    $days = $dDiff->days;
+                    //echo "days=".$days."<br>";
+                    $days = intval($days);
+                    if( $days > 0 ) {
+                        $daysTotal = $daysTotal + intval($days);
+                        $count++;
+                    }
+                }
+
+                if( $count > 0 ) {
+                    $avgDaysInt = round($daysTotal/$count);
+                    //echo "daysTotal=".$daysTotal."; count=".$count."<br>";
+                    //echo "average days=".round($daysTotal / $count)."<br>";
+                    //$averageDays[$startDateLabel] = $daysTotal;
+                    $averageDays[$startDateLabel] = $avgDaysInt;
+                } else {
+                    $averageDays[$startDateLabel] = null;
+                }
+
+
+            } while( $startDate < $endDate );
+
+            $chartsArray = $this->getChart($averageDays, $chartName,'bar',$layoutArray);
         }
 
         if( $chartType == "" ) {

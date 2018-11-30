@@ -40,31 +40,31 @@
 //
 // }
 
-function transresUpdateInvoiceStatus(invoiceOid,status) {
-    //console.log("transresUpdateInvoice: invoiceOid="+invoiceOid);
+function transresUpdateInvoiceStatus(invoiceId,status) {
+    //console.log("transresUpdateInvoice: invoiceId="+invoiceId);
 
-    $("#modal-invoice-error-"+invoiceOid).hide();
-    $("#modal-invoice-error-"+invoiceOid).html(null);
+    $("#modal-invoice-error-"+invoiceId).hide();
+    $("#modal-invoice-error-"+invoiceId).html(null);
 
     //remove all buttons
     //$(".updateInvoiceBtn").hide();
     //insert new text to the updateInvoiceBtnHolder
-    //$("#updateInvoiceBtnHolder-"+invoiceOid).html("Please wait ...");
-    $("#updateInvoiceBtnHolder-"+invoiceOid).hide();
+    //$("#updateInvoiceBtnHolder-"+invoiceId).html("Please wait ...");
+    $("#updateInvoiceBtnHolder-"+invoiceId).hide();
 
-    //var form = $("#change_invoice_form_"+invoiceOid);
+    //var form = $("#change_invoice_form_"+invoiceId);
     //var paid = form.find("#invoice-paid").val();
 
-    var paid = $("#invoice-paid-"+invoiceOid).val();
+    var paid = $("#invoice-paid-"+invoiceId).val();
     //console.log("paid="+paid);
 
-    var comment = $("#invoice-comment-"+invoiceOid).val();
+    var comment = $("#invoice-comment-"+invoiceId).val();
     //console.log("comment="+comment);
 
-    var discountNumeric = $("#invoice-discountNumeric-"+invoiceOid).val();
-    var discountPercent = $("#invoice-discountPercent-"+invoiceOid).val();
-    var total = $("#invoice-total-"+invoiceOid).val();
-    var due = $("#invoice-due-"+invoiceOid).val();
+    var discountNumeric = $("#invoice-discountNumeric-"+invoiceId).val();
+    var discountPercent = $("#invoice-discountPercent-"+invoiceId).val();
+    var total = $("#invoice-total-"+invoiceId).val();
+    var due = $("#invoice-due-"+invoiceId).val();
 
     //console.log("status="+status);
 
@@ -74,9 +74,9 @@ function transresUpdateInvoiceStatus(invoiceOid,status) {
         // a red error well should be displayed stating “Please enter the partial amount into the “paid” field.”
         if( !paid ) {
             var error = "Please enter the partial amount into the 'Paid' field.";
-            $("#modal-invoice-error-"+invoiceOid).show();
-            $("#modal-invoice-error-"+invoiceOid).html(error);
-            $("#updateInvoiceBtnHolder-"+invoiceOid).show();
+            $("#modal-invoice-error-"+invoiceId).show();
+            $("#modal-invoice-error-"+invoiceId).html(error);
+            $("#updateInvoiceBtnHolder-"+invoiceId).show();
             return false;
         }
 
@@ -96,9 +96,9 @@ function transresUpdateInvoiceStatus(invoiceOid,status) {
             var error = "The amount entered into the 'Paid' field is equal to the amount due in the 'Total' field."+
                 " If the invoice has been paid in full, please press the 'Paid in Full' button."+
                 " If the invoice has been paid partially, please enter the partial amount paid and press the 'Paid Partially' button.";
-            $("#modal-invoice-error-"+invoiceOid).show();
-            $("#modal-invoice-error-"+invoiceOid).html(error);
-            $("#updateInvoiceBtnHolder-"+invoiceOid).show();
+            $("#modal-invoice-error-"+invoiceId).show();
+            $("#modal-invoice-error-"+invoiceId).html(error);
+            $("#updateInvoiceBtnHolder-"+invoiceId).show();
             return false;
         }
     }
@@ -127,15 +127,15 @@ function transresUpdateInvoiceStatus(invoiceOid,status) {
                 " and press the 'Paid in Full' button. If the invoice has been paid partially,"+
                 " please enter the amount paid and press the 'Paid Partially' button.";
             //console.log("error="+error);
-            $("#modal-invoice-error-"+invoiceOid).show();
-            $("#modal-invoice-error-"+invoiceOid).html(error);
-            $("#updateInvoiceBtnHolder-"+invoiceOid).show();
+            $("#modal-invoice-error-"+invoiceId).show();
+            $("#modal-invoice-error-"+invoiceId).html(error);
+            $("#updateInvoiceBtnHolder-"+invoiceId).show();
             return false;
         }
     }
 
-    $("#updateInvoiceBtnHolder-"+invoiceOid).show();
-    $("#updateInvoiceBtnHolder-"+invoiceOid).html("Please wait ...");
+    $("#updateInvoiceBtnHolder-"+invoiceId).show();
+    $("#updateInvoiceBtnHolder-"+invoiceId).html("Please wait ...");
     //return false; //testing
 
     var url = Routing.generate('translationalresearch_invoice_update_ajax');
@@ -145,7 +145,7 @@ function transresUpdateInvoiceStatus(invoiceOid,status) {
         timeout: _ajaxTimeout,
         type: "POST",
         data: {
-            invoiceOid: invoiceOid,
+            invoiceId: invoiceId,
             discountNumeric: discountNumeric,
             discountPercent: discountPercent,
             paid: paid,
