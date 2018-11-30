@@ -98,9 +98,9 @@ class DashboardUtil
             "28. Total Number of Projects per Type" => "projects-per-type",
             "29. Total Number of Work Requests per Business Purpose" => "requests-per-business-purpose",
 
-            "30. Turn-around Statistics: Average number of days to complete a Work Request" => "turn-around-statistics-days-complete-request",
+            "30. Turn-around Statistics: Average number of days to complete a Work Request" =>              "turn-around-statistics-days-complete-request",
             "31. Turn-around Statistics: Average number of days for each project request approval phase" => "turn-around-statistics-days-project-state",
-            "" => "",
+            "32. Turn-around Statistics: Number of days for each project request approval phase" =>         "turn-around-statistics-days-per-project-state",
             "" => "",
             "" => "",
             "" => ""
@@ -1079,6 +1079,17 @@ class DashboardUtil
         }
         return $date;
     }
+    public function getStateTitleWithAverageDays($irbTitle,$projectPhaseArr) {
+        $irbCount = count($projectPhaseArr);
+        if( $irbCount > 0 ) {
+            $irbDays = 0;
+            foreach ($projectPhaseArr as $index => $days) {
+                $irbDays = $irbDays + $days;
+            }
+            $irbTitle = $irbTitle . " (Average " . round($irbDays/$irbCount) . " days)";
+        }
+        return $irbTitle;
+    }
 
 
 
@@ -1694,7 +1705,7 @@ class DashboardUtil
             $chartsArray = $this->getChart($unFundedQuantityCountByCategoryTopArr, $chartName,'pie',$layoutArray," : ");
         }
 
-        //11a. TRP Service Productivity by Products/Services
+        //"15. TRP Service Productivity by Products/Services" => "service-productivity-by-service-compare-funded-vs-nonfunded-projects"
         if( $chartType == "service-productivity-by-service-compare-funded-vs-nonfunded-projects" ) {
             $fundedQuantityCountByCategoryArr = array();
             $unFundedQuantityCountByCategoryArr = array();
@@ -2575,8 +2586,60 @@ class DashboardUtil
             $chartsArray = $this->getChart($averageDaysNew, $chartName,'bar',$layoutArray);
         }
 
-        if( $chartType == "" ) {
+        //"32. Turn-around Statistics: Number of days for each project request approval phase" => "turn-around-statistics-days-per-project-state"
+        if( $chartType == "turn-around-statistics-days-per-project-state" ) {
 
+            $projectIrbPhaseArr = array();
+            $projectAdminPhaseArr = array();
+            $projectCommitteePhaseArr = array();
+            $projectFinalPhaseArr = array();
+
+            $reviewStates = array("irb_review","admin_review","committee_review","final_review");
+
+            $projects = $this->getProjectsByFilter($startDate, $endDate, $projectSpecialtyObjects);
+            //echo "### $state projects count=".count($projects)."<br>";
+
+            foreach ($projects as $project) {
+
+                $index = $project->getOid();
+
+                foreach($reviewStates as $state) {
+
+                    $days = $this->getDiffDaysByProjectState($project, $state);
+
+                    if ($days > 0) {
+                        if ($state == "irb_review") {
+                            $projectIrbPhaseArr[$index] = $days;
+                        }
+                        if ($state == "admin_review") {
+                            $projectAdminPhaseArr[$index] = $days;
+                        }
+                        if ($state == "committee_review") {
+                            $projectCommitteePhaseArr[$index] = $days;
+                        }
+                        if ($state == "final_review") {
+                            $projectFinalPhaseArr[$index] = $days;
+                        }
+                    }
+
+                }//foreach state
+
+            }//foreach project
+
+            $chartName = $chartName . " (based on " . count($projects) . " approved or closed projects)";
+
+            $irbTitle = $this->getStateTitleWithAverageDays('IRB Review',$projectIrbPhaseArr);
+            $adminTitle = $this->getStateTitleWithAverageDays('Admin Review',$projectAdminPhaseArr);
+            $committeeTitle = $this->getStateTitleWithAverageDays('Committee Review',$projectCommitteePhaseArr);
+            $finalTitle = $this->getStateTitleWithAverageDays('Final Review',$projectFinalPhaseArr);
+
+            $combinedTrpData = array();
+            $combinedTrpData[$irbTitle] = $projectIrbPhaseArr;
+            $combinedTrpData[$adminTitle] = $projectAdminPhaseArr;
+            $combinedTrpData[$committeeTitle] = $projectCommitteePhaseArr;
+            $combinedTrpData[$finalTitle] = $projectFinalPhaseArr;
+
+            $chartsArray = $this->getStackedChart($combinedTrpData, $chartName, "stack");
         }
 
         if( $chartType == "" ) {
