@@ -1040,9 +1040,10 @@ class DashboardUtil
         //echo $state.": days=".$days."<br>";
         $days = intval($days);
 
-        if( !$days ) {
-            $days = 1;
-        }
+        //show minimum 1 day
+        //if( !$days ) {
+        //    $days = 1;
+        //}
 
         return $days;
     }
@@ -2552,6 +2553,9 @@ class DashboardUtil
 
             $reviewStates = array("irb_review","admin_review","committee_review","final_review");
 
+            $projectStates = null;
+            //$projectStates = array('final_approved','closed','final_rejected');
+
             //init array
             $averageDays = array();
             foreach($reviewStates as $state) {
@@ -2559,7 +2563,7 @@ class DashboardUtil
                 $averageDays[$stateLabel] = 0;
             }
 
-            $projects = $this->getProjectsByFilter($startDate, $endDate, $projectSpecialtyObjects);
+            $projects = $this->getProjectsByFilter($startDate, $endDate, $projectSpecialtyObjects, $projectStates);
             //echo "### $state projects count=".count($projects)."<br>";
 
             $countArr = array();
@@ -2613,7 +2617,10 @@ class DashboardUtil
 
             $reviewStates = array("irb_review","admin_review","committee_review","final_review");
 
-            $projects = $this->getProjectsByFilter($startDate, $endDate, $projectSpecialtyObjects);
+            //'final_approved' OR project.state = 'closed OR 'final_rejected'
+            $projectStates = null;
+            //$projectStates = array('final_approved','closed','final_rejected');
+            $projects = $this->getProjectsByFilter($startDate, $endDate, $projectSpecialtyObjects, $projectStates);
             //echo "### $state projects count=".count($projects)."<br>";
 
             foreach ($projects as $project) {
