@@ -2706,7 +2706,7 @@ class DashboardUtil
                     //echo "invoice=".$invoice->getOid()."<br>";
                     //Number of days to go from Submitted to Completed
                     $issued = $invoice->getIssuedDate(); //“Issued”
-                    if( !$issued ) {
+                    if( 0 && !$issued ) {
                         //continue;
                         //$issued = $invoice->getCreateDate();
                         //get the date from event log
@@ -2741,7 +2741,7 @@ class DashboardUtil
                     }
                     if( !$issued ) {
                         //exit('no issue date');
-                        continue;
+                        //continue;
                         $issued = $invoice->getCreateDate();
                     }
                     $paid = $invoice->getPaidDate(); //“Paid”
