@@ -2707,11 +2707,46 @@ class DashboardUtil
                     //Number of days to go from Submitted to Completed
                     $issued = $invoice->getIssuedDate(); //“Issued”
                     if( !$issued ) {
+                        //continue;
+                        //$issued = $invoice->getCreateDate();
+                        //get the date from event log
+                        $repository = $this->em->getRepository('OlegUserdirectoryBundle:Logger');
+                        $dql = $repository->createQueryBuilder("logger");
+                        //$dql->innerJoin('logger.eventType', 'eventType');
+                        //$dql->leftJoin('logger.objectType', 'objectType');
+                        //$dql->leftJoin('logger.site', 'site');
+
+                        //$dql->where("logger.siteName = 'translationalresearch' AND logger.entityName = 'Invoice' AND logger.entityId = ".$invoice->getId());
+                        $dql->where("logger.entityName = 'Invoice' AND logger.entityId = ".$invoice->getId());
+
+                        //$dql->andWhere("logger.event LIKE '%"."status changed to '/Unpaid/Issued"."%'"); //status changed to 'Unpaid/Issued'
+                        $dql->andWhere("logger.event LIKE :eventStr");
+
+                        $dql->orderBy("logger.id","ASC");
+                        $query = $this->em->createQuery($dql);
+
+                        $search = "status changed to 'Unpaid/Issued'";
+                        //$search = "Unpaid/Issued";
+                        $query->setParameters(
+                            array(
+                                'eventStr' => '%'.$search.'%'
+                            )
+                        );
+
+                        $loggers = $query->getResult();
+                        if( count($loggers) > 0 ) {
+                            $logger = $loggers[0];
+                            $issued = $logger->getCreationdate();
+                        }
+                    }
+                    if( !$issued ) {
+                        //exit('no issue date');
+                        continue;
                         $issued = $invoice->getCreateDate();
-                        //use dueDate - 30 days => issued Date?
                     }
                     $paid = $invoice->getPaidDate(); //“Paid”
                     if( !$paid ) {
+                        //continue;
                         $paid = $invoice->getUpdateDate(); //“Paid”
                     }
                     $dDiff = $issued->diff($paid);
