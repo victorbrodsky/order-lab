@@ -2524,10 +2524,16 @@ class DashboardUtil
 
             $reviewStates = array("irb_review","admin_review","committee_review","final_review");
 
+            //init array
+            $averageDays = array();
+            foreach($reviewStates as $state) {
+                $stateLabel = $transresUtil->getStateLabelByName($state);
+                $averageDays[$stateLabel] = 0;
+            }
+
             $projects = $this->getProjectsByFilter($startDate, $endDate, $projectSpecialtyObjects);
             //echo "### $state projects count=".count($projects)."<br>";
 
-            $averageDays = array();
             $countArr = array();
 
             foreach ($projects as $project) {
