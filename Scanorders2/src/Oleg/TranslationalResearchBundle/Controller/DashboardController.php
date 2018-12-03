@@ -41,15 +41,15 @@ class DashboardController extends Controller
         }
 
         //testing
-        $dashboardUtil = $this->container->get('transres_dashboard');
-        $em = $this->getDoctrine()->getManager();
-        $invoices = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findAll();
-        foreach($invoices as $invoice) {
-            $issuedDate = $dashboardUtil->getInvoiceIssuedDate($invoice);
-            if( $issuedDate ) {
-                echo "issuedDate=" . $issuedDate->format('Y-m-d H:i:s') . "<br>";
-            }
-        }
+//        $dashboardUtil = $this->container->get('transres_dashboard');
+//        $em = $this->getDoctrine()->getManager();
+//        $invoices = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findAll();
+//        foreach($invoices as $invoice) {
+//            $issuedDate = $dashboardUtil->getInvoiceIssuedDate($invoice);
+//            if( $issuedDate ) {
+//                echo "issuedDate=" . $issuedDate->format('Y-m-d H:i:s') . "<br>";
+//            }
+//        }
 
         //$userSecUtil = $this->container->get('user_security_utility');
         //$em = $this->getDoctrine()->getManager();
@@ -959,6 +959,8 @@ class DashboardController extends Controller
 
 
     /**
+     * http://127.0.0.1/order/translational-research/dashboard/graphs/populate-dates
+     *
      * @Route("/graphs/populate-dates", name="translationalresearch_dashboard_populate_dates")
      */
     public function dashboardPopulateDatesAction( Request $request )
@@ -1005,5 +1007,5 @@ class DashboardController extends Controller
 
         exit("Exit populating dates");
     }
-    
+
 }
