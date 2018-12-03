@@ -1122,6 +1122,9 @@ class DashboardUtil
     public function getInvoiceIssuedDate($invoice) {
         //continue;
         //$issued = $invoice->getCreateDate();
+
+        $request = $invoice->getTransresRequest();
+
         //get the date from event log
         $repository = $this->em->getRepository('OlegUserdirectoryBundle:Logger');
         $dql = $repository->createQueryBuilder("logger");
@@ -1130,7 +1133,10 @@ class DashboardUtil
         //$dql->leftJoin('logger.site', 'site');
 
         //$dql->where("logger.siteName = 'translationalresearch' AND logger.entityName = 'Invoice' AND logger.entityId = ".$invoice->getId());
-        $dql->where("logger.entityName = 'Invoice' AND logger.entityId = ".$invoice->getId());
+        //$dql->where("logger.entityName = 'Invoice' AND logger.entityId = ".$invoice->getId());
+
+        //Work Request ID APCP843-REQ16216 billing state has been changed to Invoiced, triggered by invoice status change to Unpaid/Issued
+        $dql->where("logger.entityName = 'TransResRequest' AND logger.entityId = ".$request->getId());
 
         //$dql->andWhere("logger.event LIKE '%"."status changed to '/Unpaid/Issued"."%'"); //status changed to 'Unpaid/Issued'
         //$dql->andWhere("logger.event LIKE :eventStr OR logger.event LIKE :eventStr2");
