@@ -987,12 +987,15 @@ class DashboardController extends Controller
         //Exclude Work requests with status=Canceled and Draft
         //$dql->where("request.progressState != 'draft' AND request.progressState != 'canceled' AND invoice.latestVersion = TRUE AND invoice.status != 'canceled'");
 
+        $dql->where("request.progressState != 'draft' AND request.progressState != 'canceled' AND invoice.latestVersion = TRUE AND invoice.issuedDate IS NULL");
+
         foreach($invoiceStates as $state) {
             $stateArr[] = "invoice.status = '".$state."'";
         }
         if( count($stateArr) > 0 ) {
-            $dql->where("request.progressState != 'draft' AND request.progressState != 'canceled' AND invoice.latestVersion = TRUE AND (".implode(" OR ",$stateArr).")");
+            //$dql->andWhere("request.progressState != 'draft' AND request.progressState != 'canceled' AND invoice.latestVersion = TRUE AND (".implode(" OR ",$stateArr).")");
             //$dql->where("(".implode(" OR ",$stateArr).")");
+            $dql->andWhere("(".implode(" OR ",$stateArr).")");
         }
 
         $query = $em->createQuery($dql);
