@@ -269,6 +269,15 @@ function setTranslationalResearchNavBar() {
     if( full.indexOf("/translational-research/workflow") !== -1 ) {
         id = 'translationalresearch-project-workflow';
     }
+    if( full.indexOf("/translational-research/list/translational-research-work-request-products-and-services") !== -1 ) {
+        id = 'translationalresearch-project-workflow';
+    }
+    if( full.indexOf("/translational-research/list/antibodies") !== -1 ) {
+        id = 'translationalresearch-project-workflow';
+    }
+    if( full.indexOf("/translational-research/request/fee-schedule") !== -1 ) {
+        id = 'translationalresearch-project-workflow';
+    }
 
     if( full.indexOf("/translational-research/default-reviewers/") !== -1 ) {
         id = 'translationalresearch-default-reviewers';

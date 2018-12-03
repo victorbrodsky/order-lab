@@ -550,16 +550,56 @@ class AntibodyList extends ListAbstract
     {
         $this->exportId = $exportId;
     }
-    
-    //[Antibody ID]/[Category]: [Antibody Name] [Vendor]/[Category] ([Protocol]/[Antigen retrieval]/[Dilution])
 
+//    public function __toString()
+//    {
+//        $company = $this->getCompany();
+//        if( $company ) {
+//            $company = " (".$this->getCompany().")";
+//        }
+//        return $this->getName().$company;
+//    }
+    //[Antibody ID]/[Category]: [Antibody Name] [Vendor]/[Category] ([Protocol]/[Antigen retrieval]/[Dilution])
     public function __toString()
     {
-        $company = $this->getCompany();
-        if( $company ) {
-            $company = " (".$this->getCompany().")";
+        $res = $this->getId();
+
+        $category = $this->getCategory();
+        if( $category ) {
+            $res = $res . "/" . $category;
         }
-        return $this->getName().$company;
+
+        $res = $res . ":";
+
+        //Antibody Name
+        $name = $this->getName();
+        if( $name ) {
+            $res = $res . " " . $name;
+        }
+
+        //Vendor/Category
+        $vendor = $this->getCompany();
+        if( $vendor ) {
+            $res = $res . " " . $vendor;
+        }
+
+        //Protocol
+        $protocol = $this->getProtocol();
+        if( $protocol ) {
+            $res = $res . " " . $protocol;
+        }
+        //Antigen retrieval
+        $retrieval = $this->getRetrieval();
+        if( $retrieval ) {
+            $res = $res . "/" . $retrieval;
+        }
+        //Dilution
+        $dilution = $this->getDilution();
+        if( $dilution ) {
+            $res = $res . "/" . $dilution;
+        }
+
+        return $res;
     }
 
 }

@@ -54,8 +54,8 @@
                 <th>{{ knp_pagination_sortable(entities, 'Dilution', 'ent.dilution') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Storage', 'ent.storage') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Comment', 'ent.comment') }}</th>
-                <th>{{ knp_pagination_sortable(entities, 'Datasheet', 'ent.datasheet') }}</th>
-                <th>Documents</th>
+                <th>{{ knp_pagination_sortable(entities, 'Data sheet', 'ent.datasheet') }}</th>
+                <th>Docs</th>
                 <th>{{ knp_pagination_sortable(entities, 'Type', 'ent.type') }}</th>
 
                 {% if is_granted('ROLE_TRANSRES_ADMIN') %}
@@ -148,7 +148,7 @@
                 <td>
                     {#{{ ent.datasheet }}#}
                     {% if ent.datasheet %}
-                        <a target="_blank" href="{{ ent.datasheet }}">{{ ent.datasheet }}</a>
+                        <a target="_blank" href="{{ ent.datasheet }}"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
                     {% endif %}
                 </td>
 
