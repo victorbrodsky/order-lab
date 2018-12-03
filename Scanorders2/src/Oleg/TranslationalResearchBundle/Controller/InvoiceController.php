@@ -1639,7 +1639,7 @@ class InvoiceController extends Controller
         $em->flush();
 
         $eventType = "Invoice Updated";
-        $msg = "Invoice's (ID ".$invoice->getOid().") Paid ($) value has been updated to '" . $paid . "'"
+        $msg = "Invoice's (ID ".$invoice->getOid().") Paid ($) value has been updated to '" . $invoice->getPaid() . "'"
             . " and status changed to '$status'";
 
         //changes
