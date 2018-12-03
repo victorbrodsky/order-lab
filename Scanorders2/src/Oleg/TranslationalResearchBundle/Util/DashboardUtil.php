@@ -1133,17 +1133,21 @@ class DashboardUtil
         $dql->where("logger.entityName = 'Invoice' AND logger.entityId = ".$invoice->getId());
 
         //$dql->andWhere("logger.event LIKE '%"."status changed to '/Unpaid/Issued"."%'"); //status changed to 'Unpaid/Issued'
+        //$dql->andWhere("logger.event LIKE :eventStr OR logger.event LIKE :eventStr2");
         $dql->andWhere("logger.event LIKE :eventStr");
 
         $dql->orderBy("logger.id","ASC");
         $query = $this->em->createQuery($dql);
 
-        $search = "status changed to 'Unpaid/Issued'";
+        //$search = "status changed to 'Unpaid/Issued'";
+        $search = "invoice status change to Unpaid/Issued";
         //$search = "Unpaid/Issued";
         //$search = "status changed to ";
+        //$search2 = "status changed to 'Unpaid/Issued'";
         $query->setParameters(
             array(
-                'eventStr' => '%'.$search.'%'
+                'eventStr' => '%'.$search.'%',
+                //'eventStr2' => '%'.$search2.'%'
             )
         );
 
