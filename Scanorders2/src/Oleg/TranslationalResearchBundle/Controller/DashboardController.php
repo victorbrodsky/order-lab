@@ -40,6 +40,17 @@ class DashboardController extends Controller
             return $this->redirect($this->generateUrl($this->container->getParameter('translationalresearch.sitename') . '-nopermission'));
         }
 
+        //testing
+        $dashboardUtil = $this->container->get('transres_dashboard');
+        $em = $this->getDoctrine()->getManager();
+        $invoices = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findAll();
+        foreach($invoices as $invoice) {
+            $issuedDate = $dashboardUtil->getInvoiceIssuedDate($invoice);
+            if( $issuedDate ) {
+                echo "issuedDate=" . $issuedDate->format('Y-m-d H:i:s') . "<br>";
+            }
+        }
+
         //$userSecUtil = $this->container->get('user_security_utility');
         //$em = $this->getDoctrine()->getManager();
 
@@ -944,4 +955,55 @@ class DashboardController extends Controller
 
         return $projects;
     }
+
+
+
+    /**
+     * @Route("/graphs/populate-dates", name="translationalresearch_dashboard_populate_dates")
+     */
+    public function dashboardPopulateDatesAction( Request $request )
+    {
+
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ||
+            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE')
+        ) {
+            //ok
+        } else {
+            return $this->redirect($this->generateUrl($this->container->getParameter('translationalresearch.sitename') . '-nopermission'));
+        }
+
+        //testing
+        $dashboardUtil = $this->container->get('transres_dashboard');
+        $em = $this->getDoctrine()->getManager();
+
+        //$invoices = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findAll();
+        $invoiceStates = array("Paid in Full","Paid Partially");
+        $repository = $em->getRepository('OlegTranslationalResearchBundle:Invoice');
+        $dql =  $repository->createQueryBuilder("invoice");
+        $dql->select('invoice');
+        $dql->leftJoin('invoice.transresRequest','request');
+        //Exclude Work requests with status=Canceled and Draft
+        //$dql->where("request.progressState != 'draft' AND request.progressState != 'canceled' AND invoice.latestVersion = TRUE AND invoice.status != 'canceled'");
+
+        foreach($invoiceStates as $state) {
+            $stateArr[] = "invoice.status = '".$state."'";
+        }
+        if( count($stateArr) > 0 ) {
+            $dql->where("request.progressState != 'draft' AND request.progressState != 'canceled' AND invoice.latestVersion = TRUE AND (".implode(" OR ",$stateArr).")");
+            //$dql->where("(".implode(" OR ",$stateArr).")");
+        }
+
+        $query = $em->createQuery($dql);
+        $invoices = $query->getResult();
+
+        foreach($invoices as $invoice) {
+            $issuedDate = $dashboardUtil->getInvoiceIssuedDate($invoice);
+            if( $issuedDate ) {
+                echo "### issuedDate=" . $issuedDate->format('Y-m-d H:i:s') . "<br>";
+            }
+        }
+
+        exit("Exit populating dates");
+    }
+    
 }

@@ -1119,6 +1119,50 @@ class DashboardUtil
         }
         return $irbTitle;
     }
+    public function getInvoiceIssuedDate($invoice) {
+        //continue;
+        //$issued = $invoice->getCreateDate();
+        //get the date from event log
+        $repository = $this->em->getRepository('OlegUserdirectoryBundle:Logger');
+        $dql = $repository->createQueryBuilder("logger");
+        //$dql->innerJoin('logger.eventType', 'eventType');
+        //$dql->leftJoin('logger.objectType', 'objectType');
+        //$dql->leftJoin('logger.site', 'site');
+
+        //$dql->where("logger.siteName = 'translationalresearch' AND logger.entityName = 'Invoice' AND logger.entityId = ".$invoice->getId());
+        $dql->where("logger.entityName = 'Invoice' AND logger.entityId = ".$invoice->getId());
+
+        //$dql->andWhere("logger.event LIKE '%"."status changed to '/Unpaid/Issued"."%'"); //status changed to 'Unpaid/Issued'
+        $dql->andWhere("logger.event LIKE :eventStr");
+
+        $dql->orderBy("logger.id","ASC");
+        $query = $this->em->createQuery($dql);
+
+        $search = "status changed to 'Unpaid/Issued'";
+        //$search = "Unpaid/Issued";
+        //$search = "status changed to ";
+        $query->setParameters(
+            array(
+                'eventStr' => '%'.$search.'%'
+            )
+        );
+
+        $loggers = $query->getResult();
+
+        //echo $invoice->getOid().": loggers count=".count($loggers)."<br>";
+        //foreach($loggers as $logger) {
+        //    echo "logger.event=".$logger->getEvent()."<br>";
+        //}
+
+        if( count($loggers) > 0 ) {
+            $logger = $loggers[0];
+            $issued = $logger->getCreationdate();
+        } else {
+            $issued = null;
+        }
+
+        return $issued;
+    }
 
 
 
@@ -2707,37 +2751,38 @@ class DashboardUtil
                     //Number of days to go from Submitted to Completed
                     $issued = $invoice->getIssuedDate(); //“Issued”
                     if( 0 && !$issued ) {
-                        //continue;
-                        //$issued = $invoice->getCreateDate();
-                        //get the date from event log
-                        $repository = $this->em->getRepository('OlegUserdirectoryBundle:Logger');
-                        $dql = $repository->createQueryBuilder("logger");
-                        //$dql->innerJoin('logger.eventType', 'eventType');
-                        //$dql->leftJoin('logger.objectType', 'objectType');
-                        //$dql->leftJoin('logger.site', 'site');
-
-                        //$dql->where("logger.siteName = 'translationalresearch' AND logger.entityName = 'Invoice' AND logger.entityId = ".$invoice->getId());
-                        $dql->where("logger.entityName = 'Invoice' AND logger.entityId = ".$invoice->getId());
-
-                        //$dql->andWhere("logger.event LIKE '%"."status changed to '/Unpaid/Issued"."%'"); //status changed to 'Unpaid/Issued'
-                        $dql->andWhere("logger.event LIKE :eventStr");
-
-                        $dql->orderBy("logger.id","ASC");
-                        $query = $this->em->createQuery($dql);
-
-                        $search = "status changed to 'Unpaid/Issued'";
-                        //$search = "Unpaid/Issued";
-                        $query->setParameters(
-                            array(
-                                'eventStr' => '%'.$search.'%'
-                            )
-                        );
-
-                        $loggers = $query->getResult();
-                        if( count($loggers) > 0 ) {
-                            $logger = $loggers[0];
-                            $issued = $logger->getCreationdate();
-                        }
+//                        //continue;
+//                        //$issued = $invoice->getCreateDate();
+//                        //get the date from event log
+//                        $repository = $this->em->getRepository('OlegUserdirectoryBundle:Logger');
+//                        $dql = $repository->createQueryBuilder("logger");
+//                        //$dql->innerJoin('logger.eventType', 'eventType');
+//                        //$dql->leftJoin('logger.objectType', 'objectType');
+//                        //$dql->leftJoin('logger.site', 'site');
+//
+//                        //$dql->where("logger.siteName = 'translationalresearch' AND logger.entityName = 'Invoice' AND logger.entityId = ".$invoice->getId());
+//                        $dql->where("logger.entityName = 'Invoice' AND logger.entityId = ".$invoice->getId());
+//
+//                        //$dql->andWhere("logger.event LIKE '%"."status changed to '/Unpaid/Issued"."%'"); //status changed to 'Unpaid/Issued'
+//                        $dql->andWhere("logger.event LIKE :eventStr");
+//
+//                        $dql->orderBy("logger.id","ASC");
+//                        $query = $this->em->createQuery($dql);
+//
+//                        $search = "status changed to 'Unpaid/Issued'";
+//                        //$search = "Unpaid/Issued";
+//                        $query->setParameters(
+//                            array(
+//                                'eventStr' => '%'.$search.'%'
+//                            )
+//                        );
+//
+//                        $loggers = $query->getResult();
+//                        if( count($loggers) > 0 ) {
+//                            $logger = $loggers[0];
+//                            $issued = $logger->getCreationdate();
+//                        }
+                        $issued = $this->getInvoiceIssuedDate($invoice);
                     }
                     if( !$issued ) {
                         //exit('no issue date');
