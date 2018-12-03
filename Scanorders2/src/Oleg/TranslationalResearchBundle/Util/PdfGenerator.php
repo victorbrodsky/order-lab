@@ -89,7 +89,7 @@ class PdfGenerator
             $documentPdfId = null;
         }
 
-        $event = "PDF for Invoice with ID".$invoice->getOid()." has been successfully created " . $fileFullReportUniqueName . " (PDF document ID".$documentPdfId.")";
+        $event = "PDF for Invoice with ID ".$invoice->getOid()." has been successfully created " . $fileFullReportUniqueName . " (PDF document ID".$documentPdfId.")";
         //echo $event."<br>";
         //$logger->notice($event);
 
@@ -346,7 +346,7 @@ class PdfGenerator
             $documentPdfId = null;
         }
 
-        $event = "Packing Slip PDF for Work Request with ID".$transresRequest->getOid()." has been successfully created " . $fileFullReportUniqueName . " (PDF document ID".$documentPdfId.")";
+        $event = "Packing Slip PDF for Work Request with ID ".$transresRequest->getOid()." has been successfully created " . $fileFullReportUniqueName . " (PDF document ID".$documentPdfId.")";
         //echo $event."<br>";
         //$logger->notice($event);
 

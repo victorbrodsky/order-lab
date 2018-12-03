@@ -1001,9 +1001,9 @@ class DashboardController extends Controller
         foreach($invoices as $invoice) {
             $issuedDate = $dashboardUtil->getInvoiceIssuedDate($invoice);
             if( $issuedDate ) {
-                echo $invoice->getOid().": issuedDate=" . $issuedDate->format('Y-m-d H:i:s') . "<br>";
+                echo $invoice->getOid()."(".$invoice->getCreateDate()->format('Y-m-d H:i:s')."): issuedDate=" . $issuedDate->format('Y-m-d H:i:s') . "<br>";
             } else {
-                echo $invoice->getOid().": no issuedDate" . "<br>";
+                echo $invoice->getOid()."(".$invoice->getCreateDate()->format('Y-m-d H:i:s')."): no issuedDate" . "<br>";
             }
         }
 
