@@ -1142,12 +1142,14 @@ class DashboardUtil
         //$dql->andWhere("logger.event LIKE :eventStr OR logger.event LIKE :eventStr2");
         $dql->andWhere("logger.event LIKE :eventStr");
 
-        $dql->orderBy("logger.id","ASC");
+        $dql->orderBy("logger.id","DESC");
         $query = $this->em->createQuery($dql);
 
         //$search = "status changed to 'Unpaid/Issued'";
         $search = "invoice status change to Unpaid/Issued";
+
         //$search = "Unpaid/Issued";
+        //$search = "";
         //$search = "status changed to ";
         //$search2 = "status changed to 'Unpaid/Issued'";
         $query->setParameters(
@@ -1161,11 +1163,12 @@ class DashboardUtil
 
         //echo $invoice->getOid().": loggers count=".count($loggers)."<br>";
         //foreach($loggers as $logger) {
-        //    echo "logger.event=".$logger->getEvent()."<br>";
+        //    echo "logger.id=".$logger->getId()."; TransResRequest id=".$request->getId()."<br>";
         //}
 
         if( count($loggers) > 0 ) {
             $logger = $loggers[0];
+            //echo "@@@ logger.id=".$logger->getId()."; TransResRequest id=".$request->getId()."<br>";
             $issued = $logger->getCreationdate();
         } else {
             $issued = null;
