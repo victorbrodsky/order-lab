@@ -1134,8 +1134,8 @@ class DashboardController extends Controller
 
             //Your request APCP668-REQ14079) for the project: (APCP668 (14541)) is completed. Please coordinate with Translational Research Program lab for material transportation.
             $requestOid = $request->getId();
-            $requestOid = str_replace("APC","",$requestOid);
-            $requestOid = str_replace("H","",$requestOid);
+            //$requestOid = str_replace("APC","",$requestOid);
+            //$requestOid = str_replace("H","",$requestOid);
             $search1 = "The work for your request ".$requestOid;
             //$search1 = $requestOid . " submitted on ";
             $search2 = " has been completed.";
