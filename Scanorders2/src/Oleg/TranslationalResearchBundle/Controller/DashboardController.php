@@ -1136,8 +1136,8 @@ class DashboardController extends Controller
             $requestOid = $request->getId();
             $requestOid = str_replace("APC","",$requestOid);
             $requestOid = str_replace("H","",$requestOid);
-            //$search1 = "The work for your request ".$requestOid;
-            $search1 = $requestOid . " submitted on ";
+            $search1 = "The work for your request ".$requestOid;
+            //$search1 = $requestOid . " submitted on ";
             $search2 = " has been completed.";
             $query3->setParameters(
                 array(
