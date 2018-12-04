@@ -2870,6 +2870,12 @@ class DashboardUtil
 
             //$chartName = $chartName . " (based on " . count($projects) . " approved or closed projects)";
 
+            $layoutArray = array(
+                'height' => $this->height * 1.5,
+                'width' =>  $this->width,
+                'title' => $chartName
+            );
+
             $chartsArray = $this->getChart($countArr, $chartName,'bar',$layoutArray);
         }
 
