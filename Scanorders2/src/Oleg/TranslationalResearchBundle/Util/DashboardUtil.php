@@ -1174,11 +1174,10 @@ class DashboardUtil
             $query2->setParameters(
                 array(
                     'eventStr' => '%'.$search2.'%',
-                    //'eventStr2' => '%'.$search2.'%'
                 )
             );
 
-            $loggers = $query->getResult();
+            $loggers = $query2->getResult();
         }
 
         //echo $invoice->getOid().": loggers count=".count($loggers)."<br>";
