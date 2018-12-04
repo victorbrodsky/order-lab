@@ -101,7 +101,7 @@ class DashboardUtil
             "30. Turn-around Statistics: Average number of days to complete a Work Request" =>              "turn-around-statistics-days-complete-request",
             "31. Turn-around Statistics: Average number of days for each project request approval phase" => "turn-around-statistics-days-project-state",
             "32. Turn-around Statistics: Number of days for each project request approval phase" =>         "turn-around-statistics-days-per-project-state",
-            "33. Turn-around Statistics: Average number of days for invoices to be paid" =>                 "turn-around-statistics-days-paid-invoice",
+            "33. Turn-around Statistics: Average number of days for invoices to be paid (based on fully and partially paid invoices)" =>                 "turn-around-statistics-days-paid-invoice",
             "" => "",
             "" => ""
         );
@@ -2609,10 +2609,11 @@ class DashboardUtil
                     }
                 }
 
-                $transRequestsCount = count($transRequests);
+                //$transRequestsCount = count($transRequests);
                 //if( $transRequestsCount ) {
-                    $startDateLabel = $startDateLabel . " (" . $transRequestsCount . " requests)";
+                    //$startDateLabel = $startDateLabel . " (" . $transRequestsCount . " requests)";
                 //}
+                $startDateLabel = $startDateLabel . " (" . count($transRequests) . " requests)";
 
                 if( $count > 0 ) {
                     $avgDaysInt = round($daysTotal/$count);
@@ -2812,6 +2813,8 @@ class DashboardUtil
                         $count++;
                     }
                 }
+
+                $startDateLabel = $startDateLabel . " (" . count($invoices) . " invoices)";
 
                 if( $count > 0 ) {
                     $avgDaysInt = round($daysTotal/$count);
