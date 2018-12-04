@@ -1193,26 +1193,6 @@ class DashboardUtil
             $issued = null;
         }
 
-        //try to use "Invoice PDF Issued" event "Invoice APCP668-REQ14079-V1 PDF has been sent by email ..."
-        if( !$issued ) {
-            $dql2 = $repository->createQueryBuilder("logger");
-            $dql2->where("logger.entityName = 'Invoice' AND logger.entityId = ".$invoice->getId());
-            $dql2->andWhere("logger.event LIKE :eventStr");
-
-            $dql2->orderBy("logger.id","DESC");
-            $query2 = $this->em->createQuery($dql2);
-
-            $search2 = "Invoice ".$invoice->getOid()." PDF has been sent by email";
-            $query2->setParameters(
-                array(
-                    'eventStr' => '%'.$search2.'%',
-                    //'eventStr2' => '%'.$search2.'%'
-                )
-            );
-
-            $loggers = $query->getResult();
-        }
-
         return $issued;
     }
 
