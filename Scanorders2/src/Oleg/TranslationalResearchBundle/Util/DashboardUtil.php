@@ -98,9 +98,9 @@ class DashboardUtil
             "28. Total Number of Projects per Type" => "projects-per-type",
             "29. Total Number of Work Requests per Business Purpose" => "requests-per-business-purpose",
 
-            "30. Turn-around Statistics: Average number of days to complete a Work Request" =>              "turn-around-statistics-days-complete-request",
+            "30. Turn-around Statistics: Average number of days to complete a Work Request (based on 'Completed and Notified' requests)" => "turn-around-statistics-days-complete-request",
             "31. Turn-around Statistics: Average number of days for each project request approval phase" => "turn-around-statistics-days-project-state",
-            "32. Turn-around Statistics: Number of days for each project request approval phase" =>         "turn-around-statistics-days-per-project-state",
+            "32. Turn-around Statistics: Number of days for each project request approval phase" => "turn-around-statistics-days-per-project-state",
             "33. Turn-around Statistics: Average number of days for invoices to be paid (based on fully and partially paid invoices)" => "turn-around-statistics-days-paid-invoice",
             "34. Turn-around Statistics: Number of days for each invoice to be paid (based on fully and partially paid invoices)" => "turn-around-statistics-days-per-paid-invoice",
             "" => "",
@@ -2571,9 +2571,12 @@ class DashboardUtil
             $chartsArray = $this->getChart($requestBusinessPurposeArrTop, $chartName,'pie',$layoutArray," : ");
         }
 
-        //"30. Turn-around Statistics: Average number of days to complete a Work Request" => "turn-around-statistics-days-complete-request"
+        //"30. Turn-around Statistics: Average number of days to complete a Work Request (based on Completed and Notified requests)" => "turn-around-statistics-days-complete-request"
         if( $chartType == "turn-around-statistics-days-complete-request" ) {
             $averageDays = array();
+
+            //$statuses = array("completed","completedNotified");
+            $statuses = array("completedNotified");
 
             $startDate->modify( 'first day of last month' );
             do {
@@ -2582,7 +2585,7 @@ class DashboardUtil
                 $thisEndDate->modify( 'first day of next month' );
                 //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y").": ";
                 $category = null;
-                $transRequests = $this->getRequestsByAdvanceFilter($startDate,$thisEndDate,$projectSpecialtyObjects,$category,array("completed","completedNotified"));
+                $transRequests = $this->getRequestsByAdvanceFilter($startDate,$thisEndDate,$projectSpecialtyObjects,$category,$statuses);
                 //$transRequests = $this->getRequestsByAdvanceFilter($startDate,$thisEndDate,$projectSpecialtyObjects,$category);
                 $startDate->modify( 'first day of next month' );
 
@@ -2598,7 +2601,7 @@ class DashboardUtil
 
                     //Number of days to go from Submitted to Completed
                     $submitted = $transRequest->getCreateDate();
-                    $updated = $transRequest->getUpdateDate();
+                    $updated = $transRequest->getUpdateDate(); //assumption: the update date for completed requests is the same as $completedDate
                     $dDiff = $submitted->diff($updated);
                     //echo $dDiff->format('%R'); // use for point out relation: smaller/greater
                     $days = $dDiff->days;

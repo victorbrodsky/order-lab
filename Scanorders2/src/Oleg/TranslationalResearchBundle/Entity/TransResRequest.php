@@ -74,6 +74,12 @@ class TransResRequest {
     private $updateDate;
 
     /**
+     * @var \DateTime
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $completedDate;
+
+    /**
      * Institutional PHI Scope: users with the same Institutional PHI Scope can view the data of this order
      *
      * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
@@ -370,6 +376,7 @@ class TransResRequest {
     {
         $this->updateDate = new \DateTime();
     }
+
 //    public function setUpdateDate( $date=null )
 //    {
 //        if( $date ) {
@@ -378,6 +385,22 @@ class TransResRequest {
 //            $this->updateDate = new \DateTime();
 //        }
 //    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCompletedDate()
+    {
+        return $this->completedDate;
+    }
+
+    /**
+     * @param \DateTime $completedDate
+     */
+    public function setCompletedDate($completedDate)
+    {
+        $this->completedDate = $completedDate;
+    }
 
     /**
      * @return mixed
@@ -468,6 +491,13 @@ class TransResRequest {
     public function setProgressState($progressState)
     {
         $this->progressState = $progressState;
+
+        if( $progressState == "completedNotified" ) {
+            $this->setCompletedDate(new \DateTime());
+        }
+//        if( $progressState == "completed" || $progressState == "completedNotified" ) {
+//            $this->setCompletedDate(new \DateTime());
+//        }
     }
 
     /**

@@ -1017,4 +1017,60 @@ class DashboardController extends Controller
         exit("Exit populating dates: count=".$count);
     }
 
+    /**
+     * http://127.0.0.1/order/translational-research/dashboard/graphs/populate-dates_requests
+     *
+     * @Route("/graphs/populate-dates-requests", name="translationalresearch_dashboard_populate_dates_requests")
+     */
+    public function dashboardPopulateRequestDatesAction( Request $request )
+    {
+
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            //ok
+        } else {
+            return $this->redirect($this->generateUrl($this->container->getParameter('translationalresearch.sitename') . '-nopermission'));
+        }
+
+        //testing
+        $dashboardUtil = $this->container->get('transres_dashboard');
+        $em = $this->getDoctrine()->getManager();
+
+        //$invoices = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findAll();
+        $invoiceStates = array("Paid in Full","Paid Partially");
+        $repository = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
+        $dql =  $repository->createQueryBuilder("request");
+        $dql->select('request');
+
+        //$dql->where("request.progressState != 'draft' AND request.progressState != 'canceled' AND invoice.latestVersion = TRUE");
+        $dql->where("request.progressState = 'completedNotified' AND request.progressState != 'canceled' AND invoice.latestVersion = TRUE AND invoice.issuedDate IS NULL");
+
+        foreach($invoiceStates as $state) {
+            $stateArr[] = "invoice.status = '".$state."'";
+        }
+        if( count($stateArr) > 0 ) {
+            //$dql->andWhere("request.progressState != 'draft' AND request.progressState != 'canceled' AND invoice.latestVersion = TRUE AND (".implode(" OR ",$stateArr).")");
+            //$dql->where("(".implode(" OR ",$stateArr).")");
+            $dql->andWhere("(".implode(" OR ",$stateArr).")");
+        }
+
+        $query = $em->createQuery($dql);
+        $invoices = $query->getResult();
+        echo "Invoices count=".count($invoices)."<br>";
+
+        $count = 0;
+        foreach($invoices as $invoice) {
+            $issuedDate = $dashboardUtil->getInvoiceIssuedDate($invoice);
+            if( $issuedDate ) {
+                echo $invoice->getOid()."(".$invoice->getCreateDate()->format('Y-m-d H:i:s')."): issuedDate=" . $issuedDate->format('Y-m-d H:i:s') . "<br>";
+                $invoice->setIssuedDate($issuedDate);
+                $em->flush($invoice);
+                $count++;
+            } else {
+                echo $invoice->getOid()."(".$invoice->getCreateDate()->format('Y-m-d H:i:s')."): no issuedDate" . "<br>";
+            }
+        }
+
+        exit("Exit populating dates: count=".$count);
+    }
+
 }
