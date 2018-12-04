@@ -2755,7 +2755,7 @@ class DashboardUtil
 
         //third bar graph showing how many days on average it took for Invoices to go from “Issued” to “Paid”
         //"33. Turn-around Statistics: Average number of days for invoices to be paid" =>                 "turn-around-statistics-days-paid-invoice"
-        if( $chartType == "111turn-around-statistics-days-paid-invoice" ) {
+        if( $chartType == "turn-around-statistics-days-paid-invoice" ) {
             $averageDays = array();
 
             $invoiceStates = array("Paid in Full","Paid Partially");
