@@ -101,7 +101,8 @@ class DashboardUtil
             "30. Turn-around Statistics: Average number of days to complete a Work Request" =>              "turn-around-statistics-days-complete-request",
             "31. Turn-around Statistics: Average number of days for each project request approval phase" => "turn-around-statistics-days-project-state",
             "32. Turn-around Statistics: Number of days for each project request approval phase" =>         "turn-around-statistics-days-per-project-state",
-            "33. Turn-around Statistics: Average number of days for invoices to be paid (based on fully and partially paid invoices)" =>                 "turn-around-statistics-days-paid-invoice",
+            "33. Turn-around Statistics: Average number of days for invoices to be paid (based on fully and partially paid invoices)" => "turn-around-statistics-days-paid-invoice",
+            "34. Turn-around Statistics: Number of days for each invoice to be paid (based on fully and partially paid invoices)" => "turn-around-statistics-days-per-paid-invoice",
             "" => "",
             "" => ""
         );
@@ -2832,8 +2833,44 @@ class DashboardUtil
             $chartsArray = $this->getChart($averageDays, $chartName,'bar',$layoutArray);
         }
 
-        if( $chartType == "" ) {
+        //"34. Turn-around Statistics: Number of days for each invoice to be paid (based on fully and partially paid invoices)" => "turn-around-statistics-days-per-paid-invoice",
+        if( $chartType == "turn-around-statistics-days-per-paid-invoice" ) {
+            $transresUtil = $this->container->get('transres_util');
 
+            $invoiceStates = array("Paid in Full","Paid Partially");
+
+            $invoices = $this->getInvoicesByFilter($startDate, $endDate, $projectSpecialtyObjects, $invoiceStates);
+            //echo "### $state invoices count=".count($invoices)."<br>";
+
+            $countArr = array();
+
+            foreach($invoices as $invoice) {
+                //echo "invoice=".$invoice->getOid()."<br>";
+                //Number of days to go from Submitted to Completed
+                $issued = $invoice->getIssuedDate(); //“Issued”
+                if( !$issued ) {
+                    //exit('no issue date');
+                    continue;
+                    //$issued = $invoice->getCreateDate();
+                }
+                $paid = $invoice->getPaidDate(); //“Paid”
+                if( !$paid ) {
+                    //continue;
+                    $paid = $invoice->getUpdateDate(); //“Paid”
+                }
+                $dDiff = $issued->diff($paid);
+                //echo $dDiff->format('%R'); // use for point out relation: smaller/greater
+                $days = $dDiff->days;
+                //echo "days=".$days."<br>";
+                $days = intval($days);
+                if( $days > 0 ) {
+                    $countArr[$invoice->getOid()] = $days;
+                }
+            }
+
+            //$chartName = $chartName . " (based on " . count($projects) . " approved or closed projects)";
+
+            $chartsArray = $this->getChart($countArr, $chartName,'bar',$layoutArray);
         }
 
         if( $chartType == "" ) {
