@@ -1124,6 +1124,27 @@ class DashboardController extends Controller
             $loggers = $query2->getResult();
         }
 
+        if( count($loggers) == 0 ) {
+            $dql3 = $repository->createQueryBuilder("logger");
+            $dql3->where("logger.entityName = 'TransResRequest' AND logger.entityId = ".$request->getId());
+            $dql3->andWhere("logger.event LIKE :eventStr AND logger.event LIKE :eventStr2");
+
+            $dql3->orderBy("logger.id","DESC");
+            $query3 = $em->createQuery($dql3);
+
+            //Your request APCP668-REQ14079) for the project: (APCP668 (14541)) is completed. Please coordinate with Translational Research Program lab for material transportation.
+            $search1 = "The work for your request ".$request->getOid();
+            $search2 = " has been completed.";
+            $query3->setParameters(
+                array(
+                    'eventStr' => '%'.$search1.'%',
+                    'eventStr2' => '%'.$search2.'%'
+                )
+            );
+
+            $loggers = $query3->getResult();
+        }
+
         //echo $invoice->getOid().": loggers count=".count($loggers)."<br>";
         //foreach($loggers as $logger) {
         //    echo "logger.id=".$logger->getId()."; TransResRequest id=".$request->getId()."<br>";
