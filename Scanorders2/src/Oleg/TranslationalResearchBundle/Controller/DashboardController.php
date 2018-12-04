@@ -1103,23 +1103,26 @@ class DashboardController extends Controller
         $loggers = $query->getResult();
 
         //try to use "Invoice PDF Issued" event "Invoice APCP668-REQ14079-V1 PDF has been sent by email ..."
-//        if( count($loggers) == 0 ) {
-//            $dql2 = $repository->createQueryBuilder("logger");
-//            $dql2->where("logger.entityName = 'Invoice' AND logger.entityId = ".$invoice->getId());
-//            $dql2->andWhere("logger.event LIKE :eventStr");
-//
-//            $dql2->orderBy("logger.id","DESC");
-//            $query2 = $em->createQuery($dql2);
-//
-//            $search2 = "Invoice ".$invoice->getOid()." PDF has been sent by email";
-//            $query2->setParameters(
-//                array(
-//                    'eventStr' => '%'.$search2.'%',
-//                )
-//            );
-//
-//            $loggers = $query2->getResult();
-//        }
+        if( count($loggers) == 0 ) {
+            $dql2 = $repository->createQueryBuilder("logger");
+            $dql2->where("logger.entityName = 'TransResRequest' AND logger.entityId = ".$request->getId());
+            $dql2->andWhere("logger.event LIKE :eventStr AND logger.event LIKE :eventStr2");
+
+            $dql2->orderBy("logger.id","DESC");
+            $query2 = $em->createQuery($dql2);
+
+            //Your request APCP668-REQ14079) for the project: (APCP668 (14541)) is completed. Please coordinate with Translational Research Program lab for material transportation.
+            $search1 = "Your request ".$request->getOid();
+            $search2 = "  is completed.";
+            $query2->setParameters(
+                array(
+                    'eventStr' => '%'.$search1.'%',
+                    'eventStr2' => '%'.$search2.'%'
+                )
+            );
+
+            $loggers = $query2->getResult();
+        }
 
         //echo $invoice->getOid().": loggers count=".count($loggers)."<br>";
         //foreach($loggers as $logger) {
