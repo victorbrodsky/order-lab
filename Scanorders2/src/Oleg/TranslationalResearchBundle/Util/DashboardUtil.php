@@ -2609,6 +2609,11 @@ class DashboardUtil
                     }
                 }
 
+                $transRequestsCount = count($transRequests);
+                //if( $transRequestsCount ) {
+                    $startDateLabel = $startDateLabel . " (" . $transRequestsCount . " requests)";
+                //}
+
                 if( $count > 0 ) {
                     $avgDaysInt = round($daysTotal/$count);
                     //echo "daysTotal=".$daysTotal."; count=".$count."<br>";
