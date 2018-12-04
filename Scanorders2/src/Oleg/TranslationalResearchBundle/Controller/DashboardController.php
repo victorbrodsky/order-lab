@@ -1113,7 +1113,7 @@ class DashboardController extends Controller
 
             //Your request APCP668-REQ14079) for the project: (APCP668 (14541)) is completed. Please coordinate with Translational Research Program lab for material transportation.
             $search1 = "Your request ".$request->getOid();
-            $search2 = "  is completed.";
+            $search2 = " is completed.";
             $query2->setParameters(
                 array(
                     'eventStr' => '%'.$search1.'%',
