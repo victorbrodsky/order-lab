@@ -966,6 +966,8 @@ class DashboardController extends Controller
     public function dashboardPopulateDatesAction( Request $request )
     {
 
+        exit("Disabled");
+
         if( $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             //ok
         } else {
@@ -1018,7 +1020,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * http://127.0.0.1/order/translational-research/dashboard/graphs/populate-dates_requests
+     * http://127.0.0.1/order/translational-research/dashboard/graphs/populate-dates-requests
      *
      * @Route("/graphs/populate-dates-requests", name="translationalresearch_dashboard_populate_dates_requests")
      */
@@ -1032,45 +1034,107 @@ class DashboardController extends Controller
         }
 
         //testing
-        $dashboardUtil = $this->container->get('transres_dashboard');
+        //$dashboardUtil = $this->container->get('transres_dashboard');
         $em = $this->getDoctrine()->getManager();
 
-        //$invoices = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findAll();
-        $invoiceStates = array("Paid in Full","Paid Partially");
         $repository = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
         $dql =  $repository->createQueryBuilder("request");
         $dql->select('request');
 
         //$dql->where("request.progressState != 'draft' AND request.progressState != 'canceled' AND invoice.latestVersion = TRUE");
-        $dql->where("request.progressState = 'completedNotified' AND request.progressState != 'canceled' AND invoice.latestVersion = TRUE AND invoice.issuedDate IS NULL");
-
-        foreach($invoiceStates as $state) {
-            $stateArr[] = "invoice.status = '".$state."'";
-        }
-        if( count($stateArr) > 0 ) {
-            //$dql->andWhere("request.progressState != 'draft' AND request.progressState != 'canceled' AND invoice.latestVersion = TRUE AND (".implode(" OR ",$stateArr).")");
-            //$dql->where("(".implode(" OR ",$stateArr).")");
-            $dql->andWhere("(".implode(" OR ",$stateArr).")");
-        }
+        $dql->where("request.progressState = 'completedNotified' AND request.completedDate IS NULL");
 
         $query = $em->createQuery($dql);
-        $invoices = $query->getResult();
-        echo "Invoices count=".count($invoices)."<br>";
+        $requests = $query->getResult();
+        echo "Request count=".count($requests)."<br>";
 
         $count = 0;
-        foreach($invoices as $invoice) {
-            $issuedDate = $dashboardUtil->getInvoiceIssuedDate($invoice);
-            if( $issuedDate ) {
-                echo $invoice->getOid()."(".$invoice->getCreateDate()->format('Y-m-d H:i:s')."): issuedDate=" . $issuedDate->format('Y-m-d H:i:s') . "<br>";
-                $invoice->setIssuedDate($issuedDate);
-                $em->flush($invoice);
+        foreach($requests as $thisRequest) {
+            $completedDate = $this->getRequestCompletedDate($thisRequest);
+            if( $completedDate ) {
+                echo $thisRequest->getOid()."(".$thisRequest->getCreateDate()->format('Y-m-d H:i:s')."): issuedDate=" . $completedDate->format('Y-m-d H:i:s') . "<br>";
+                //$thisRequest->setCompletedDate($completedDate);
+                //$em->flush($thisRequest);
                 $count++;
             } else {
-                echo $invoice->getOid()."(".$invoice->getCreateDate()->format('Y-m-d H:i:s')."): no issuedDate" . "<br>";
+                echo $thisRequest->getOid()."(".$thisRequest->getCreateDate()->format('Y-m-d H:i:s')."): no completedDate" . "<br>";
             }
         }
 
         exit("Exit populating dates: count=".$count);
+    }
+    public function getRequestCompletedDate($request) {
+        $em = $this->getDoctrine()->getManager();
+        //get the date from event log
+        $repository = $em->getRepository('OlegUserdirectoryBundle:Logger');
+        $dql = $repository->createQueryBuilder("logger");
+        //$dql->innerJoin('logger.eventType', 'eventType');
+        //$dql->leftJoin('logger.objectType', 'objectType');
+        //$dql->leftJoin('logger.site', 'site');
+
+        //$dql->where("logger.siteName = 'translationalresearch' AND logger.entityName = 'Invoice' AND logger.entityId = ".$invoice->getId());
+        //$dql->where("logger.entityName = 'Invoice' AND logger.entityId = ".$invoice->getId());
+
+        //Work Request ID APCP843-REQ16216 billing state has been changed to Invoiced, triggered by invoice status change to Unpaid/Issued
+        $dql->where("logger.entityName = 'TransResRequest' AND logger.entityId = ".$request->getId());
+
+        //$dql->andWhere("logger.event LIKE '%"."status changed to '/Unpaid/Issued"."%'"); //status changed to 'Unpaid/Issued'
+        //$dql->andWhere("logger.event LIKE :eventStr OR logger.event LIKE :eventStr2");
+        $dql->andWhere("logger.event LIKE :eventStr AND logger.event LIKE :eventStr2");
+
+        $dql->orderBy("logger.id","DESC");
+        $query = $em->createQuery($dql);
+
+        //The status of the work request APCP668-REQ16553 has been changed from 'Pending Histology' to 'Completed and Notified' by Susanna Mirabelli - sum2029 (WCM CWID)
+        $search = "The status of the work request ".$request->getOid()." has been changed from";
+        $search2 = " to 'Completed and Notified' by ";
+
+        //$search = "Unpaid/Issued";
+        //$search = "";
+        //$search = "status changed to ";
+        //$search2 = "status changed to 'Unpaid/Issued'";
+        $query->setParameters(
+            array(
+                'eventStr' => '%'.$search.'%',
+                'eventStr2' => '%'.$search2.'%'
+            )
+        );
+
+        $loggers = $query->getResult();
+
+        //try to use "Invoice PDF Issued" event "Invoice APCP668-REQ14079-V1 PDF has been sent by email ..."
+//        if( count($loggers) == 0 ) {
+//            $dql2 = $repository->createQueryBuilder("logger");
+//            $dql2->where("logger.entityName = 'Invoice' AND logger.entityId = ".$invoice->getId());
+//            $dql2->andWhere("logger.event LIKE :eventStr");
+//
+//            $dql2->orderBy("logger.id","DESC");
+//            $query2 = $em->createQuery($dql2);
+//
+//            $search2 = "Invoice ".$invoice->getOid()." PDF has been sent by email";
+//            $query2->setParameters(
+//                array(
+//                    'eventStr' => '%'.$search2.'%',
+//                )
+//            );
+//
+//            $loggers = $query2->getResult();
+//        }
+
+        //echo $invoice->getOid().": loggers count=".count($loggers)."<br>";
+        //foreach($loggers as $logger) {
+        //    echo "logger.id=".$logger->getId()."; TransResRequest id=".$request->getId()."<br>";
+        //}
+
+        if( count($loggers) > 0 ) {
+            $logger = $loggers[0];
+            //echo "@@@ logger.id=".$logger->getId()."; TransResRequest id=".$request->getId()."<br>";
+            $date = $logger->getCreationdate();
+        } else {
+            $date = null;
+        }
+
+        return $date;
     }
 
 }

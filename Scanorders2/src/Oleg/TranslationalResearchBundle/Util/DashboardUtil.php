@@ -2601,8 +2601,14 @@ class DashboardUtil
 
                     //Number of days to go from Submitted to Completed
                     $submitted = $transRequest->getCreateDate();
-                    $updated = $transRequest->getUpdateDate(); //assumption: the update date for completed requests is the same as $completedDate
-                    $dDiff = $submitted->diff($updated);
+
+                    //$updated = $transRequest->getUpdateDate(); //assumption: the update date for completed requests is the same as $completedDate
+                    $completed = $transRequest->getCompletedDate();
+                    if( !$completed ) {
+                        continue;
+                    }
+
+                    $dDiff = $submitted->diff($completed);
                     //echo $dDiff->format('%R'); // use for point out relation: smaller/greater
                     $days = $dDiff->days;
                     //echo "days=".$days."<br>";
