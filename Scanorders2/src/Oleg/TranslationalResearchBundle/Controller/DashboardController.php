@@ -966,9 +966,7 @@ class DashboardController extends Controller
     public function dashboardPopulateDatesAction( Request $request )
     {
 
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ||
-            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE')
-        ) {
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             //ok
         } else {
             return $this->redirect($this->generateUrl($this->container->getParameter('translationalresearch.sitename') . '-nopermission'));
@@ -1003,16 +1001,20 @@ class DashboardController extends Controller
         $invoices = $query->getResult();
         echo "Invoices count=".count($invoices)."<br>";
 
+        $count = 0;
         foreach($invoices as $invoice) {
             $issuedDate = $dashboardUtil->getInvoiceIssuedDate($invoice);
             if( $issuedDate ) {
                 echo $invoice->getOid()."(".$invoice->getCreateDate()->format('Y-m-d H:i:s')."): issuedDate=" . $issuedDate->format('Y-m-d H:i:s') . "<br>";
+                //$invoice->setIssuedDate($issuedDate);
+                //$em->flush($invoice);
+                $count++;
             } else {
                 echo $invoice->getOid()."(".$invoice->getCreateDate()->format('Y-m-d H:i:s')."): no issuedDate" . "<br>";
             }
         }
 
-        exit("Exit populating dates");
+        exit("Exit populating dates: count=".$count);
     }
 
 }
