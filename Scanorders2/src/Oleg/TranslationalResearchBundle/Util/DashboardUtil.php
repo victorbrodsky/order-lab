@@ -1013,6 +1013,7 @@ class DashboardUtil
             if( $project->getApprovalDate() && $state == "final_approved" ) {
                 $endDate = $project->getApprovalDate();
                 if( $endDate ) {
+                    echo "$state: ".$endDate->format("Y-m-d")."<br>";
                     continue;
                 }
             }
