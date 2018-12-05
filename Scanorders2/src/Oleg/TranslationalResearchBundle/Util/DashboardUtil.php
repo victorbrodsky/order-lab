@@ -1034,10 +1034,14 @@ class DashboardUtil
             $startDate = $project->getCreateDate();
         }
 
-        if( !$endDate && $state == "final_approved" ) {
-            //echo "final state=".$state."<br>";
+//        if( !$endDate && $state == "final_approved" ) {
+//            //echo "final state=".$state."<br>";
+//            $endDate = $project->getApprovalDate();
+//        }
+        if( $project->getApprovalDate() && $state == "final_approved" ) {
             $endDate = $project->getApprovalDate();
         }
+
         if( !$endDate ) {
             //echo "***state=".$state."<br>";
             $endDate = $project->getUpdatedate();
