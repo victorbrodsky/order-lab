@@ -1129,23 +1129,26 @@ class DashboardController extends Controller
         if( count($loggers) == 0 ) {
             $dql3 = $repository->createQueryBuilder("logger");
             $dql3->where("logger.entityName = 'TransResRequest' AND logger.entityId = ".$request->getId());
-            $dql3->andWhere("logger.event LIKE :eventStr AND logger.event LIKE :eventStr2");
+            $dql3->andWhere("logger.event LIKE :eventStr AND logger.event LIKE :eventStr2 AND logger.event LIKE :eventStr3");
 
             $dql3->orderBy("logger.id","DESC");
             $query3 = $em->createQuery($dql3);
 
-            //Your request APCP668-REQ14079) for the project: (APCP668 (14541)) is completed. Please coordinate with Translational Research Program lab for material transportation.
+            //The work for your request APCP845-REQ14084 ... has been completed.
             $requestOid = $request->getOid();
-            //$requestOid = str_replace("APC","",$requestOid);
-            //$requestOid = str_replace("H","",$requestOid);
-            $search1 = "The work for your request ".$requestOid;
+            $requestOid = str_replace("APCP","",$requestOid);
+            $requestOid = str_replace("HP","",$requestOid);
+            $requestOid = "P".$requestOid;
+            $search1 = "The work for your request ";
+            $search2 = $requestOid;
             //$search1 = $requestOid . " submitted on ";
-            $search2 = " has been completed.";
+            $search3 = " has been completed.";
             echo "try 3: [$search1] AND [$search2] <br>";
             $query3->setParameters(
                 array(
                     'eventStr' => '%'.$search1.'%',
-                    'eventStr2' => '%'.$search2.'%'
+                    'eventStr2' => '%'.$search2.'%',
+                    'eventStr3' => '%'.$search3.'%'
                 )
             );
 
