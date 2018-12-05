@@ -993,60 +993,62 @@ class DashboardUtil
         $reviews = $transresUtil->getReviewsByProjectAndState($project,$state);
 
         //get earliest create date and latest update date
-        $createDate = null; //get enter state date
-        $updateDate = null; //get exit state date
+        $startDate = null; //get enter state date
+        $endDate = null; //get exit state date
         foreach($reviews as $review) {
-            //phase enter date
+            //phase start (enter) date
             $enterDate = $this->getPreviousStateEnterDate($project,$state);
             if( !$enterDate ) {
                 $enterDate = $review->getCreatedate();
             }
-            if( $createDate ) {
-                if( $enterDate < $createDate ) {
-                    $createDate = $enterDate;
+            if( $startDate ) {
+                if( $enterDate < $startDate ) {
+                    $startDate = $enterDate;
                 }
             } else {
-                $createDate = $enterDate;
+                $startDate = $enterDate;
             }
-            //phase exit date
+            //phase end (exit) date
             if( $state == "committee_review" ) {
                 if( $review->getPrimaryReview() ) {
-                    if ($updateDate) {
-                        if ($review->getUpdatedate() > $updateDate) {
-                            $updateDate = $review->getUpdatedate();
+                    if ($endDate) {
+                        if ($review->getUpdatedate() > $endDate) {
+                            $endDate = $review->getUpdatedate();
                         }
                     } else {
-                        $updateDate = $review->getUpdatedate();
+                        $endDate = $review->getUpdatedate();
                     }
                 }
             } else {
-                if ($updateDate) {
-                    if ($review->getUpdatedate() > $updateDate) {
-                        $updateDate = $review->getUpdatedate();
+                if ($endDate) {
+                    if ($review->getUpdatedate() > $endDate) {
+                        $endDate = $review->getUpdatedate();
                     }
                 } else {
-                    $updateDate = $review->getUpdatedate();
+                    $endDate = $review->getUpdatedate();
                 }
             }
         }
 
-        if( !$createDate ) {
-            $createDate = $project->getCreateDate();
+        if( !$startDate ) {
+            $startDate = $project->getCreateDate();
         }
 
-        if( !$updateDate && $state == "final_approved" ) {
+        if( !$endDate && $state == "final_approved" ) {
             //echo "final state=".$state."<br>";
-            $updateDate = $project->getApprovalDate();
+            $endDate = $project->getApprovalDate();
         }
-        if( !$updateDate ) {
+        if( !$endDate ) {
             //echo "***state=".$state."<br>";
-            $updateDate = $project->getUpdatedate();
+            $endDate = $project->getUpdatedate();
         } else {
             //echo "###<br>";
         }
 
+        echo $startDate->format("Y-m-d")." => ".$endDate->format("Y-m-d")." (".$state.")<br>";
+
         //Number of days to go from review's createdate to review's updatedate
-        $dDiff = $createDate->diff($updateDate);
+        $dDiff = $startDate->diff($endDate);
         //echo $dDiff->format('%R'); // use for point out relation: smaller/greater
         $days = $dDiff->days;
         //echo $state.": days=".$days."<br>";
@@ -2675,6 +2677,7 @@ class DashboardUtil
             $countArr = array();
 
             foreach ($projects as $project) {
+                echo "<br>############ ".$project->getOid()." ############ <br>";
 
                 foreach($reviewStates as $state) {
 
