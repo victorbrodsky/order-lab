@@ -1095,8 +1095,11 @@ class DashboardUtil
 //    }
     public function getPreviousStateEnterDate($project,$state) {
         if( $state == "irb_review" ) {
-            $date = $project->getCreateDate();
-            //$date = $this->getStateEnterDate($project,"irb_review");
+            $date = $project->getStartReviewDate();
+            if( !$date ) {
+                $date = $project->getCreateDate();
+                //$date = $this->getStateEnterDate($project,"irb_review");
+            }
         }
         if( $state == "admin_review" ) {
             $date = $this->getStateExitDate($project,"irb_review");
