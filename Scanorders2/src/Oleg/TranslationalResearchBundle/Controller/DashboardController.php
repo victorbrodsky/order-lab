@@ -1295,6 +1295,8 @@ class DashboardController extends Controller
             return $this->redirect($this->generateUrl($this->container->getParameter('translationalresearch.sitename') . '-nopermission'));
         }
 
+        ini_set('max_execution_time', 600); //600 sec => 10 min
+
         //testing
         //$dashboardUtil = $this->container->get('transres_dashboard');
         $em = $this->getDoctrine()->getManager();
