@@ -1008,7 +1008,15 @@ class DashboardUtil
             } else {
                 $startDate = $enterDate;
             }
+
             //phase end (exit) date
+            if( $project->getApprovalDate() && $state == "final_approved" ) {
+                $endDate = $project->getApprovalDate();
+                if( $endDate ) {
+                    continue;
+                }
+            }
+
             if( $state == "committee_review" ) {
                 if( $review->getPrimaryReview() ) {
                     if ($endDate) {
@@ -1028,7 +1036,7 @@ class DashboardUtil
                     $endDate = $review->getUpdatedate();
                 }
             }
-        }
+        }//foreach review
 
         if( !$startDate ) {
             $startDate = $project->getCreateDate();
@@ -1038,9 +1046,9 @@ class DashboardUtil
 //            //echo "final state=".$state."<br>";
 //            $endDate = $project->getApprovalDate();
 //        }
-        if( $project->getApprovalDate() && $state == "final_approved" ) {
-            $endDate = $project->getApprovalDate();
-        }
+//        if( $project->getApprovalDate() && $state == "final_approved" ) {
+//            $endDate = $project->getApprovalDate();
+//        }
 
         if( !$endDate ) {
             //echo "***state=".$state."<br>";
