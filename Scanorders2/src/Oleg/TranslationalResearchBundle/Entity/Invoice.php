@@ -554,7 +554,7 @@ class Invoice {
     {
         $this->status = $status;
 
-        if($status == "Unpaid/Issued") {
+        if( $status == "Unpaid/Issued" ) {
             $this->setIssuedDate(new \DateTime());
         }
     }

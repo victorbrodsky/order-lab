@@ -188,6 +188,13 @@ class Project {
      */
     private $approvalDate;
 
+    /**
+     * Date when a Project is submitted to Review
+     *
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $startReviewDate;
+
     //IrbReviews (one-to-many, but only one review is valid)
     /**
      * @ORM\OneToMany(targetEntity="IrbReview", mappedBy="project", cascade={"persist","remove"})
@@ -688,6 +695,10 @@ class Project {
     public function setState($state)
     {
         $this->state = $state;
+
+        if( $state == "irb_review" && !$this->getStartReviewDate() ) {
+            $this->setStartReviewDate(new \DateTime());
+        }
     }
 
     /**
@@ -959,6 +970,22 @@ class Project {
     public function setApprovalDate($approvalDate)
     {
         $this->approvalDate = $approvalDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStartReviewDate()
+    {
+        return $this->startReviewDate;
+    }
+
+    /**
+     * @param mixed $startReviewDate
+     */
+    public function setStartReviewDate($startReviewDate)
+    {
+        $this->startReviewDate = $startReviewDate;
     }
 
     /**

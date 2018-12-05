@@ -1280,4 +1280,52 @@ class DashboardController extends Controller
         return $date;
     }
 
+    /**
+     * http://127.0.0.1/order/translational-research/dashboard/graphs/populate-dates-projects
+     *
+     * @Route("/graphs/populate-dates-projects", name="translationalresearch_dashboard_populate_dates_projects")
+     */
+    public function dashboardPopulateProjectDatesAction( Request $request )
+    {
+        exit("Disabled Project's startReviewDate");
+
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            //ok
+        } else {
+            return $this->redirect($this->generateUrl($this->container->getParameter('translationalresearch.sitename') . '-nopermission'));
+        }
+
+        //testing
+        //$dashboardUtil = $this->container->get('transres_dashboard');
+        $em = $this->getDoctrine()->getManager();
+
+        $repository = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
+        $dql =  $repository->createQueryBuilder("request");
+        $dql->select('request');
+
+        //$dql->where("request.progressState != 'draft' AND request.progressState != 'canceled' AND invoice.latestVersion = TRUE");
+        $dql->where("request.progressState = 'completedNotified' AND request.completedDate IS NULL");
+
+        $query = $em->createQuery($dql);
+        $requests = $query->getResult();
+        echo "Request count=".count($requests)."<br>";
+
+        $count = 0;
+        foreach($requests as $thisRequest) {
+            $completedDate = $this->getRequestCompletedDate($thisRequest);
+            if( $completedDate ) {
+                echo $thisRequest->getOid()."(".$thisRequest->getCreateDate()->format('Y-m-d H:i:s')."): issuedDate=" . $completedDate->format('Y-m-d H:i:s') . "<br>";
+                //$thisRequest->setCompletedDate($completedDate);
+                //$thisRequest->setCompletedDateSet(true);
+                //$em->flush($thisRequest);
+                $count++;
+            } else {
+                echo $thisRequest->getOid()."(".$thisRequest->getCreateDate()->format('Y-m-d H:i:s')."): no completedDate" . "<br>";
+                //exit("exit: no date found");
+            }
+        }
+
+        exit("Exit populating dates: count=".$count);
+    }
+
 }

@@ -1063,7 +1063,7 @@ class DashboardUtil
         $transresUtil = $this->container->get('transres_util');
         $reviews = $transresUtil->getReviewsByProjectAndState($project,$state);
 
-        //get earliest create date and latest update date
+        //get latest update date
         $exitDate = null; //get exit state date
         foreach($reviews as $review) {
             if( $exitDate ) {
@@ -1076,23 +1076,23 @@ class DashboardUtil
         }
         return $exitDate;
     }
-    public function getReviewExitDate($project,$state) {
-        $transresUtil = $this->container->get('transres_util');
-        $reviews = $transresUtil->getReviewsByProjectAndState($project,$state);
-
-        //get earliest create date and latest update date
-        $exitDate = null; //get exit state date
-        foreach($reviews as $review) {
-            if( $exitDate ) {
-                if( $review->getUpdatedate() > $exitDate ) {
-                    $exitDate = $review->getUpdatedate();
-                }
-            } else {
-                $exitDate = $review->getUpdatedate();
-            }
-        }
-        return $exitDate;
-    }
+//    public function getReviewExitDate($project,$state) {
+//        $transresUtil = $this->container->get('transres_util');
+//        $reviews = $transresUtil->getReviewsByProjectAndState($project,$state);
+//
+//        //get earliest create date and latest update date
+//        $exitDate = null; //get exit state date
+//        foreach($reviews as $review) {
+//            if( $exitDate ) {
+//                if( $review->getUpdatedate() > $exitDate ) {
+//                    $exitDate = $review->getUpdatedate();
+//                }
+//            } else {
+//                $exitDate = $review->getUpdatedate();
+//            }
+//        }
+//        return $exitDate;
+//    }
     public function getPreviousStateEnterDate($project,$state) {
         if( $state == "irb_review" ) {
             $date = $project->getCreateDate();

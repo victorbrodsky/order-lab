@@ -515,7 +515,7 @@ class TransResRequest {
     {
         $this->progressState = $progressState;
 
-        if( $progressState == "completedNotified" ) {
+        if( $progressState == "completedNotified" && !$this->getCompletedDate() ) {
             $this->setCompletedDate(new \DateTime());
         }
 //        if( $progressState == "completed" || $progressState == "completedNotified" ) {
