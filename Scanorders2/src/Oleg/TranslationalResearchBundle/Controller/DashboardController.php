@@ -1386,7 +1386,7 @@ class DashboardController extends Controller
             $requestOid = "P".$requestOid;
             $search1 = "Thank you for your submission! Your project request has been received and assigned the following ID of ";
             $search2 = $requestOid;
-            echo "try 2: [$search1] AND [$search2] <br>";
+            //echo "try 2: [$search1] AND [$search2] <br>";
             $query->setParameters(
                 array(
                     'eventStr' => '%'.$search1.'%',
@@ -1412,7 +1412,7 @@ class DashboardController extends Controller
             $requestOid = "P".$requestOid;
             $search1 = "Thank you for your submission! Your project request has been assigned an ID of ";
             $search2 = $requestOid;
-            echo "try 3: [$search1] AND [$search2] <br>";
+            //echo "try 3: [$search1] AND [$search2] <br>";
             $query->setParameters(
                 array(
                     'eventStr' => '%'.$search1.'%',
