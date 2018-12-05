@@ -2701,7 +2701,7 @@ class DashboardUtil
             $countArr = array();
 
             foreach ($projects as $project) {
-                echo "<br>############ ".$project->getOid()." ############ <br>";
+                //echo "<br>############ ".$project->getOid()." ############ <br>";
 
                 foreach($reviewStates as $state) {
 
