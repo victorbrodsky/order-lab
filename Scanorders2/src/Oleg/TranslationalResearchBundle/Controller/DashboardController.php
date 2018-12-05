@@ -1182,6 +1182,33 @@ class DashboardController extends Controller
             $loggers = $query4->getResult();
         }
 
+        //5) Request APCP936-REQ14092 has been sent to Completed
+        if( count($loggers) == 0 ) {
+            $dql4 = $repository->createQueryBuilder("logger");
+            $dql4->where("logger.entityName = 'TransResRequest' AND logger.entityId = ".$request->getId());
+            $dql4->andWhere("logger.event LIKE :eventStr AND logger.event LIKE :eventStr2");
+
+            $dql4->orderBy("logger.id","DESC");
+            $query4 = $em->createQuery($dql4);
+
+            //Your request APCP874-REQ14095) for the project: (APCP874 (15019)) is completed.
+            $requestOid = $request->getOid();
+            $requestOid = str_replace("APCP","",$requestOid);
+            $requestOid = str_replace("HP","",$requestOid);
+            $requestOid = "P".$requestOid;
+            $search1 = $requestOid;
+            $search2 = " is completed.";
+            echo "try 5: [$search1] AND [$search2] <br>";
+            $query4->setParameters(
+                array(
+                    'eventStr' => '%'.$search1.'%',
+                    'eventStr2' => '%'.$search2.'%',
+                )
+            );
+
+            $loggers = $query4->getResult();
+        }
+
         //echo $invoice->getOid().": loggers count=".count($loggers)."<br>";
         //foreach($loggers as $logger) {
         //    echo "logger.id=".$logger->getId()."; TransResRequest id=".$request->getId()."<br>";
