@@ -1010,11 +1010,11 @@ class DashboardUtil
             }
 
             //phase end (exit) date
-            if( $project->getApprovalDate() && $state == "final_approved" ) {
+            if( $project->getApprovalDate() && $state == "final_review" ) {
                 $endDate = $project->getApprovalDate();
-                echo "1 $state: ".$endDate->format("Y-m-d")."<br>";
+                //echo "1 $state: ".$endDate->format("Y-m-d")."<br>";
                 if( $endDate ) {
-                    echo "2 $state: ".$endDate->format("Y-m-d")."<br>";
+                    echo "$state: ".$endDate->format("Y-m-d")."<br>";
                     continue;
                 }
             }
@@ -1044,11 +1044,11 @@ class DashboardUtil
             $startDate = $project->getCreateDate();
         }
 
-//        if( !$endDate && $state == "final_approved" ) {
+//        if( !$endDate && $state == "final_review" ) {
 //            //echo "final state=".$state."<br>";
 //            $endDate = $project->getApprovalDate();
 //        }
-//        if( $project->getApprovalDate() && $state == "final_approved" ) {
+//        if( $project->getApprovalDate() && $state == "final_review" ) {
 //            $endDate = $project->getApprovalDate();
 //        }
 
