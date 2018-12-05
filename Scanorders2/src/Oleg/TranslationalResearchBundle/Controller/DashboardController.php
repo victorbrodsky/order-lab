@@ -1366,6 +1366,34 @@ class DashboardController extends Controller
 
         $loggers = $query->getResult();
 
+
+        //2) Thank you for your submission! Your project request has been received and assigned the following ID of APCP2202.
+        if( count($loggers) == 0 ) {
+            $dql = $repository->createQueryBuilder("logger");
+            $dql->where("logger.entityName = 'TransResRequest' AND logger.entityId = ".$project->getId());
+            $dql->andWhere("logger.event LIKE :eventStr AND logger.event LIKE :eventStr2");
+
+            $dql->orderBy("logger.id","DESC");
+            $query = $em->createQuery($dql);
+
+            $requestOid = $project->getOid();
+            $requestOid = str_replace("APCP","",$requestOid);
+            $requestOid = str_replace("HP","",$requestOid);
+            $requestOid = "P".$requestOid;
+            $search1 = "Thank you for your submission! Your project request has been received and assigned the following ID of";
+            $search2 = $requestOid;
+            echo "try 2: [$search1] AND [$search2] <br>";
+            $query->setParameters(
+                array(
+                    'eventStr' => '%'.$search1.'%',
+                    'eventStr2' => '%'.$search2.'%',
+                )
+            );
+
+            $loggers = $query->getResult();
+        }
+
+
         if( count($loggers) > 0 ) {
             $logger = $loggers[0];
             //echo "@@@ logger.id=".$logger->getId()."; TransResRequest id=".$request->getId()."<br>";
