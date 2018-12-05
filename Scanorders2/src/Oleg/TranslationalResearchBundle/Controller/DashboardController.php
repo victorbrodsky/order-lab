@@ -1144,7 +1144,7 @@ class DashboardController extends Controller
             $search2 = $requestOid;
             //$search1 = $requestOid . " submitted on ";
             $search3 = " has been completed.";
-            echo "try 3: [$search1] AND [$search2] <br>";
+            //echo "try 3: [$search1] AND [$search2] <br>";
             $query3->setParameters(
                 array(
                     'eventStr' => '%'.$search1.'%',
@@ -1172,7 +1172,7 @@ class DashboardController extends Controller
             $requestOid = "P".$requestOid;
             $search1 = $requestOid;
             $search2 = " has been sent to Completed.";
-            echo "try 4: [$search1] AND [$search2] <br>";
+            //echo "try 4: [$search1] AND [$search2] <br>";
             $query4->setParameters(
                 array(
                     'eventStr' => '%'.$search1.'%',
@@ -1199,7 +1199,7 @@ class DashboardController extends Controller
             $requestOid = "P".$requestOid;
             $search1 = $requestOid;
             $search2 = " is completed.";
-            echo "try 5: [$search1] AND [$search2] <br>";
+            //echo "try 5: [$search1] AND [$search2] <br>";
             $query4->setParameters(
                 array(
                     'eventStr' => '%'.$search1.'%',
@@ -1226,7 +1226,34 @@ class DashboardController extends Controller
             $requestOid = "P".$requestOid;
             $search1 = $requestOid . " has been updated.";
             $search2 = "The request's current status is 'Completed'.";
-            echo "try 6: [$search1] AND [$search2] <br>";
+            //echo "try 6: [$search1] AND [$search2] <br>";
+            $query4->setParameters(
+                array(
+                    'eventStr' => '%'.$search1.'%',
+                    'eventStr2' => '%'.$search2.'%',
+                )
+            );
+
+            $loggers = $query4->getResult();
+        }
+
+        //7) Work Request APCP1080-REQ16124 has been updated. The request's current status is 'Completed'.
+        if( count($loggers) == 0 ) {
+            $dql4 = $repository->createQueryBuilder("logger");
+            $dql4->where("logger.entityName = 'TransResRequest' AND logger.entityId = ".$request->getId());
+            $dql4->andWhere("logger.event LIKE :eventStr AND logger.event LIKE :eventStr2");
+
+            $dql4->orderBy("logger.id","DESC");
+            $query4 = $em->createQuery($dql4);
+
+            //Your request APCP874-REQ14095) for the project: (APCP874 (15019)) is completed.
+            $requestOid = $request->getOid();
+            $requestOid = str_replace("APCP","",$requestOid);
+            $requestOid = str_replace("HP","",$requestOid);
+            $requestOid = "P".$requestOid;
+            $search1 = $requestOid . " has been updated.";
+            $search2 = "The request's current status is 'Completed and Notified'.";
+            echo "try 7: [$search1] AND [$search2] <br>";
             $query4->setParameters(
                 array(
                     'eventStr' => '%'.$search1.'%',
