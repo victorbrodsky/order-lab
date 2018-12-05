@@ -1045,6 +1045,12 @@ class DashboardUtil
             //echo "###<br>";
         }
 
+        if( $startDate && $endDate ) {
+            //ok
+        } else {
+            return null;
+        }
+
         echo $startDate->format("Y-m-d")." => ".$endDate->format("Y-m-d")." (".$state.")<br>";
 
         //Number of days to go from review's createdate to review's updatedate
