@@ -2726,7 +2726,7 @@ class DashboardUtil
 
             }//foreach project
 
-            exit("exit: $chartName");
+            //exit("exit: $chartName");
 
             $averageDaysNew = array();
             foreach($averageDays as $stateLabel=>$days) {
