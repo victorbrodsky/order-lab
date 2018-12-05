@@ -2708,6 +2708,8 @@ class DashboardUtil
 
             }//foreach project
 
+            exit("exit: $chartName");
+
             $averageDaysNew = array();
             foreach($averageDays as $stateLabel=>$days) {
                 $count = $countArr[$stateLabel];
