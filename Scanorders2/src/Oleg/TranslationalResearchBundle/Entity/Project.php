@@ -696,7 +696,7 @@ class Project {
     {
         $this->state = $state;
 
-        if( $state == "irb_review" && !$this->getStartReviewDate() ) {
+        if( $state == "irb_review" ) { //&& !$this->getStartReviewDate()
             $this->setStartReviewDate(new \DateTime());
         }
     }

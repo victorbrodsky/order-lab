@@ -1395,6 +1395,31 @@ class DashboardController extends Controller
             $loggers = $query->getResult();
         }
 
+        //3) Thank you for your submission! Your project request has been assigned an ID of APCP2182 and will be reviewed.
+        if( count($loggers) == 0 ) {
+            $dql = $repository->createQueryBuilder("logger");
+            $dql->where("logger.entityName = 'Project' AND logger.entityId = ".$project->getId());
+            $dql->andWhere("logger.event LIKE :eventStr AND logger.event LIKE :eventStr2");
+
+            $dql->orderBy("logger.id","DESC");
+            $query = $em->createQuery($dql);
+
+            $requestOid = $project->getOid();
+            $requestOid = str_replace("APCP","",$requestOid);
+            $requestOid = str_replace("HP","",$requestOid);
+            $requestOid = "P".$requestOid;
+            $search1 = "Thank you for your submission! Your project request has been assigned an ID of ";
+            $search2 = $requestOid;
+            echo "try 3: [$search1] AND [$search2] <br>";
+            $query->setParameters(
+                array(
+                    'eventStr' => '%'.$search1.'%',
+                    'eventStr2' => '%'.$search2.'%',
+                )
+            );
+
+            $loggers = $query->getResult();
+        }
 
         if( count($loggers) > 0 ) {
             $logger = $loggers[0];
