@@ -1014,7 +1014,7 @@ class DashboardUtil
                 $endDate = $project->getApprovalDate();
                 //echo "1 $state: ".$endDate->format("Y-m-d")."<br>";
                 if( $endDate ) {
-                    echo "$state: ".$endDate->format("Y-m-d")."<br>";
+                    //echo "$state: ".$endDate->format("Y-m-d")."<br>";
                     continue;
                 }
             }
@@ -1069,7 +1069,7 @@ class DashboardUtil
             return null;
         }
 
-        echo $startDate->format("Y-m-d")." => ".$endDate->format("Y-m-d")." (".$state.")<br>";
+        //echo $startDate->format("Y-m-d")." => ".$endDate->format("Y-m-d")." (".$state.")<br>";
 
         //Number of days to go from review's createdate to review's updatedate
         $dDiff = $startDate->diff($endDate);
