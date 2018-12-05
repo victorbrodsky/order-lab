@@ -1320,8 +1320,8 @@ class DashboardController extends Controller
             $startReviewDate = $this->getProjectStartReviewDate($project);
             if( $startReviewDate ) {
                 echo $project->getOid()."(".$project->getCreateDate()->format('Y-m-d H:i:s')."): startReviewDate=" . $startReviewDate->format('Y-m-d H:i:s') . "<br>";
-                //$project->setStartReviewDate($startReviewDate);
-                //$em->flush($project);
+                $project->setStartReviewDate($startReviewDate);
+                $em->flush($project);
                 $count++;
             } else {
                 echo $project->getOid()."(".$project->getCreateDate()->format('Y-m-d H:i:s')."): no startReviewDate" . "<br>";
