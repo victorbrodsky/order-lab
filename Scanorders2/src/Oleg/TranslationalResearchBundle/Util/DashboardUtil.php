@@ -1012,8 +1012,9 @@ class DashboardUtil
             //phase end (exit) date
             if( $project->getApprovalDate() && $state == "final_approved" ) {
                 $endDate = $project->getApprovalDate();
+                echo "1 $state: ".$endDate->format("Y-m-d")."<br>";
                 if( $endDate ) {
-                    echo "$state: ".$endDate->format("Y-m-d")."<br>";
+                    echo "2 $state: ".$endDate->format("Y-m-d")."<br>";
                     continue;
                 }
             }
