@@ -1287,7 +1287,7 @@ class DashboardController extends Controller
      */
     public function dashboardPopulateProjectDatesAction( Request $request )
     {
-        exit("Disabled Project's startReviewDate");
+        //exit("Disabled Project's startReviewDate");
 
         if( $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             //ok
@@ -1299,33 +1299,82 @@ class DashboardController extends Controller
         //$dashboardUtil = $this->container->get('transres_dashboard');
         $em = $this->getDoctrine()->getManager();
 
-        $repository = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
-        $dql =  $repository->createQueryBuilder("request");
-        $dql->select('request');
+        $repository = $em->getRepository('OlegTranslationalResearchBundle:Project');
+        $dql =  $repository->createQueryBuilder("project");
+        $dql->select('project');
 
         //$dql->where("request.progressState != 'draft' AND request.progressState != 'canceled' AND invoice.latestVersion = TRUE");
-        $dql->where("request.progressState = 'completedNotified' AND request.completedDate IS NULL");
+        //"project.state = 'final_approved' OR project.state = 'closed'"
+        $dql->where("(project.state = 'final_approved' OR project.state = 'closed') AND project.startReviewDate IS NULL");
 
         $query = $em->createQuery($dql);
-        $requests = $query->getResult();
-        echo "Request count=".count($requests)."<br>";
+        $projects = $query->getResult();
+        echo "Project count=".count($projects)."<br>";
 
         $count = 0;
-        foreach($requests as $thisRequest) {
-            $completedDate = $this->getRequestCompletedDate($thisRequest);
-            if( $completedDate ) {
-                echo $thisRequest->getOid()."(".$thisRequest->getCreateDate()->format('Y-m-d H:i:s')."): issuedDate=" . $completedDate->format('Y-m-d H:i:s') . "<br>";
-                //$thisRequest->setCompletedDate($completedDate);
-                //$thisRequest->setCompletedDateSet(true);
-                //$em->flush($thisRequest);
+        foreach($projects as $project) {
+            $startReviewDate = $this->getProjectStartReviewDate($project);
+            if( $startReviewDate ) {
+                echo $project->getOid()."(".$project->getCreateDate()->format('Y-m-d H:i:s')."): startReviewDate=" . $startReviewDate->format('Y-m-d H:i:s') . "<br>";
+                //$project->setStartReviewDate($startReviewDate);
+                //$em->flush($project);
                 $count++;
             } else {
-                echo $thisRequest->getOid()."(".$thisRequest->getCreateDate()->format('Y-m-d H:i:s')."): no completedDate" . "<br>";
+                echo $project->getOid()."(".$project->getCreateDate()->format('Y-m-d H:i:s')."): no startReviewDate" . "<br>";
                 //exit("exit: no date found");
             }
         }
 
         exit("Exit populating dates: count=".$count);
+    }
+    public function getProjectStartReviewDate($project) {
+        $em = $this->getDoctrine()->getManager();
+        //get the date from event log
+        $repository = $em->getRepository('OlegUserdirectoryBundle:Logger');
+        $dql = $repository->createQueryBuilder("logger");
+        //$dql->innerJoin('logger.eventType', 'eventType');
+        //$dql->leftJoin('logger.objectType', 'objectType');
+        //$dql->leftJoin('logger.site', 'site');
+
+        //$dql->where("logger.siteName = 'translationalresearch' AND logger.entityName = 'Invoice' AND logger.entityId = ".$invoice->getId());
+        //$dql->where("logger.entityName = 'Invoice' AND logger.entityId = ".$invoice->getId());
+
+        //Work Request ID APCP843-REQ16216 billing state has been changed to Invoiced, triggered by invoice status change to Unpaid/Issued
+        $dql->where("logger.entityName = 'Project' AND logger.entityId = ".$project->getId());
+
+        //$dql->andWhere("logger.event LIKE '%"."status changed to '/Unpaid/Issued"."%'"); //status changed to 'Unpaid/Issued'
+        //$dql->andWhere("logger.event LIKE :eventStr OR logger.event LIKE :eventStr2");
+        $dql->andWhere("logger.event LIKE :eventStr");
+
+        $dql->orderBy("logger.id","DESC");
+        $query = $em->createQuery($dql);
+
+        //Project ID APCP3368 has been successfully updated and the status has been changed from 'Draft' to 'IRB Review'
+        $projectOid = $project->getOid();
+        $projectOid = str_replace("APCP","",$projectOid);
+        $projectOid = str_replace("HP","",$projectOid);
+        $projectOid = "P".$projectOid;
+        $search = $projectOid." has been successfully updated and the status has been changed from 'Draft' to 'IRB Review'";
+        //$search2 = " to 'Completed and Notified' by ";
+
+        $query->setParameters(
+            array(
+                'eventStr' => '%'.$search.'%',
+                //'eventStr2' => '%'.$search2.'%'
+            )
+        );
+
+        $loggers = $query->getResult();
+
+        if( count($loggers) > 0 ) {
+            $logger = $loggers[0];
+            //echo "@@@ logger.id=".$logger->getId()."; TransResRequest id=".$request->getId()."<br>";
+            $date = $logger->getCreationdate();
+        } else {
+            $date = null;
+        }
+
+        return $date;
     }
 
 }
