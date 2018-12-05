@@ -80,6 +80,13 @@ class TransResRequest {
     private $completedDate;
 
     /**
+     * completedDate is set by script
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $completedDateSet;
+
+    /**
      * Institutional PHI Scope: users with the same Institutional PHI Scope can view the data of this order
      *
      * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
@@ -400,6 +407,22 @@ class TransResRequest {
     public function setCompletedDate($completedDate)
     {
         $this->completedDate = $completedDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCompletedDateSet()
+    {
+        return $this->completedDateSet;
+    }
+
+    /**
+     * @param mixed $completedDateSet
+     */
+    public function setCompletedDateSet($completedDateSet)
+    {
+        $this->completedDateSet = $completedDateSet;
     }
 
     /**

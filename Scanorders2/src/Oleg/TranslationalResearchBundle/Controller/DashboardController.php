@@ -1053,7 +1053,8 @@ class DashboardController extends Controller
             $completedDate = $this->getRequestCompletedDate($thisRequest);
             if( $completedDate ) {
                 echo $thisRequest->getOid()."(".$thisRequest->getCreateDate()->format('Y-m-d H:i:s')."): issuedDate=" . $completedDate->format('Y-m-d H:i:s') . "<br>";
-                //$thisRequest->setCompletedDate($completedDate);
+                $thisRequest->setCompletedDate($completedDate);
+                $thisRequest->setCompletedDateSet(true);
                 //$em->flush($thisRequest);
                 $count++;
             } else {
