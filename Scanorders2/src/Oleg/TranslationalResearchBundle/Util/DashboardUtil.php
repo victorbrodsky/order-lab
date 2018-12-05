@@ -1045,6 +1045,10 @@ class DashboardUtil
             //echo "###<br>";
         }
 
+        if( $endDate < $startDate ) {
+            $endDate = $startDate;
+        }
+
         if( $startDate && $endDate ) {
             //ok
         } else {
