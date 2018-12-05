@@ -1058,7 +1058,7 @@ class DashboardController extends Controller
                 $count++;
             } else {
                 echo $thisRequest->getOid()."(".$thisRequest->getCreateDate()->format('Y-m-d H:i:s')."): no completedDate" . "<br>";
-                exit("exit: no date found");
+                //exit("exit: no date found");
             }
         }
 
