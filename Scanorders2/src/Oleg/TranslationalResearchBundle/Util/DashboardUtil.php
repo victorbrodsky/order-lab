@@ -2688,7 +2688,7 @@ class DashboardUtil
                         if( isset($countArr[$stateLabel]) ) {
                             $countArr[$stateLabel] = $countArr[$stateLabel] + 1;
                         } else {
-                            $countArr[$stateLabel] = $days;
+                            $countArr[$stateLabel] = 1;
                         }
                     }
 
@@ -2700,7 +2700,7 @@ class DashboardUtil
             foreach($averageDays as $stateLabel=>$days) {
                 $count = $countArr[$stateLabel];
                 if( $count > 0 ) {
-                    $stateLabel = $stateLabel . " (" . $count . " projects)"; 
+                    $stateLabel = $stateLabel . " (" . $count . " projects)";
                     $avgDaysInt = round($days / $count);
                     $averageDaysNew[$stateLabel] = $avgDaysInt;
                 }
