@@ -1309,6 +1309,8 @@ class DashboardController extends Controller
         //"project.state = 'final_approved' OR project.state = 'closed'"
         $dql->where("(project.state = 'final_approved' OR project.state = 'closed') AND project.startReviewDate IS NULL");
 
+        $dql->andWhere("project.approvalDate > '2018-07-01'");
+
         $query = $em->createQuery($dql);
         $projects = $query->getResult();
         echo "Project count=".count($projects)."<br>";
