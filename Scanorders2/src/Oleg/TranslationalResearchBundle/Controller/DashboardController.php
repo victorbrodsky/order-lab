@@ -1103,7 +1103,7 @@ class DashboardController extends Controller
 
         $loggers = $query->getResult();
 
-        //try to use "Invoice PDF Issued" event "Invoice APCP668-REQ14079-V1 PDF has been sent by email ..."
+        //2) try to use "Invoice PDF Issued" event "Invoice APCP668-REQ14079-V1 PDF has been sent by email ..."
         if( count($loggers) == 0 ) {
             $dql2 = $repository->createQueryBuilder("logger");
             $dql2->where("logger.entityName = 'TransResRequest' AND logger.entityId = ".$request->getId());
@@ -1125,6 +1125,7 @@ class DashboardController extends Controller
             $loggers = $query2->getResult();
         }
 
+        //3)
         if( count($loggers) == 0 ) {
             $dql3 = $repository->createQueryBuilder("logger");
             $dql3->where("logger.entityName = 'TransResRequest' AND logger.entityId = ".$request->getId());
@@ -1140,6 +1141,7 @@ class DashboardController extends Controller
             $search1 = "The work for your request ".$requestOid;
             //$search1 = $requestOid . " submitted on ";
             $search2 = " has been completed.";
+            echo "try 3: [$search1] AND [$search2] <br>";
             $query3->setParameters(
                 array(
                     'eventStr' => '%'.$search1.'%',
