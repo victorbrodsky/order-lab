@@ -965,8 +965,7 @@ class DashboardController extends Controller
      */
     public function dashboardPopulateDatesAction( Request $request )
     {
-
-        exit("Disabled");
+        //exit("Disabled");
 
         if( $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             //ok
@@ -1008,8 +1007,8 @@ class DashboardController extends Controller
             $issuedDate = $dashboardUtil->getInvoiceIssuedDate($invoice);
             if( $issuedDate ) {
                 echo $invoice->getOid()."(".$invoice->getCreateDate()->format('Y-m-d H:i:s')."): issuedDate=" . $issuedDate->format('Y-m-d H:i:s') . "<br>";
-                $invoice->setIssuedDate($issuedDate);
-                $em->flush($invoice);
+                //$invoice->setIssuedDate($issuedDate);
+                //$em->flush($invoice);
                 $count++;
             } else {
                 echo $invoice->getOid()."(".$invoice->getCreateDate()->format('Y-m-d H:i:s')."): no issuedDate" . "<br>";
@@ -1053,9 +1052,9 @@ class DashboardController extends Controller
             $completedDate = $this->getRequestCompletedDate($thisRequest);
             if( $completedDate ) {
                 echo $thisRequest->getOid()."(".$thisRequest->getCreateDate()->format('Y-m-d H:i:s')."): issuedDate=" . $completedDate->format('Y-m-d H:i:s') . "<br>";
-                $thisRequest->setCompletedDate($completedDate);
-                $thisRequest->setCompletedDateSet(true);
-                $em->flush($thisRequest);
+                //$thisRequest->setCompletedDate($completedDate);
+                //$thisRequest->setCompletedDateSet(true);
+                //$em->flush($thisRequest);
                 $count++;
             } else {
                 echo $thisRequest->getOid()."(".$thisRequest->getCreateDate()->format('Y-m-d H:i:s')."): no completedDate" . "<br>";
