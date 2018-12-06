@@ -2927,12 +2927,14 @@ class DashboardUtil
 
         //"35. Turn-around Statistics: Top 10 PIs with most delayed unpaid invoices" => "turn-around-statistics-pis-with-delayed-unpaid-invoices",
         if( $chartType == "turn-around-statistics-pis-with-delayed-unpaid-invoices" ) {
+            $transresRequestUtil = $this->container->get('transres_request_util');
 
             $pisUnpaidInvoicesArr = array();
 
             //get unpaid and delayd invoices
-            $invoiceStates = array("Unpaid/Issued");
-            $invoices = $this->getInvoicesByFilter($startDate, $endDate, $projectSpecialtyObjects, $invoiceStates);
+            //$invoiceStates = array("Unpaid/Issued");
+            //$invoices = $this->getInvoicesByFilter($startDate, $endDate, $projectSpecialtyObjects, $invoiceStates);
+            $invoices = $transresRequestUtil->getOverdueInvoices();
 
             foreach($invoices as $invoice) {
                 $pi = $invoice->getPrincipalInvestigator();

@@ -3480,6 +3480,43 @@ class TransResRequestUtil
         return $result;
     }
 
+    public function getOverdueInvoices($projectSpecialty=null) {
+        $repository = $this->em->getRepository('OlegTranslationalResearchBundle:Invoice');
+        $dql =  $repository->createQueryBuilder("invoice");
+        $dql->select('invoice');
+
+        $dql->leftJoin('invoice.transresRequest','transresRequest');
+        $dql->leftJoin('transresRequest.project','project');
+        $dql->leftJoin('project.projectSpecialty','projectSpecialty');
+
+        $dql->where("invoice.status = :unpaid AND invoice.latestVersion = TRUE"); //Unpaid/Issued
+        $params["unpaid"] = "Unpaid/Issued";
+
+        if( $projectSpecialty ) {
+            $dql->andWhere("projectSpecialty.id = :specialtyId");
+            $params["specialtyId"] = $projectSpecialty->getId();
+        }
+
+        /////////1. (dueDate < currentDate - invoiceDueDateMax) //////////////
+        //overDueDate = currentDate - invoiceDueDateMax;
+        $overDueDate = new \DateTime();
+        //echo "overDueDate=".$overDueDate->format('Y-m-d H:i:s').$newline;
+        $dql->andWhere("invoice.dueDate IS NOT NULL AND invoice.dueDate < :overDueDate");
+        $params["overDueDate"] = $overDueDate->format('Y-m-d H:i:s');
+        ////////////// EOF //////////////
+
+        $query = $this->em->createQuery($dql);
+
+        $query->setParameters(
+            $params
+        );
+
+        $invoices = $query->getResult();
+        //echo "$projectSpecialty count invoices=".count($invoices)."$newline";
+
+        return $invoices;
+    }
+
     public function getMatchingStrInvoiceByDqlParameters($dql,$dqlParameters) {
         $dql->select('invoice.total,invoice.paid,invoice.due');
         //$dql->groupBy('invoice.id');
