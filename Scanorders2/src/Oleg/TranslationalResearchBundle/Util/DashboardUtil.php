@@ -2971,7 +2971,10 @@ class DashboardUtil
             $transresRequestUtil = $this->container->get('transres_request_util');
 
             $pisUnpaidInvoicesTotalArr = array();
+            $totalUnpaid = 0;
+
             $invoices = $transresRequestUtil->getOverdueInvoices();
+
 
             foreach($invoices as $invoice) {
                 $pi = $invoice->getPrincipalInvestigator();
@@ -2985,13 +2988,16 @@ class DashboardUtil
                     }
                     $pisUnpaidInvoicesTotalArr[$piIndex] = $total;
 
+                    $totalUnpaid = $totalUnpaid + intval($total);
                     $titleCount++;
                 }
             }//foreach
 
             //$titleCount = $titleCount . " (invoices ".count($invoices).")";
 
-            $chartName = $this->getTitleWithTotal($chartName,$titleCount);
+            //$chartName = $this->getTitleWithTotal($chartName,$titleCount);
+            $chartName = $chartName . " (" . $titleCount . " invoices for $" . $this->getNumberFormat($titleCount) . ")";
+
             $showOther = $this->getOtherStr($showLimited,"Invoices");
             $pisUnpaidInvoicesTotalArrTop = $this->getTopArray($pisUnpaidInvoicesTotalArr,$showOther);
             $chartsArray = $this->getChart($pisUnpaidInvoicesTotalArrTop, $chartName,'pie',$layoutArray," : $");
