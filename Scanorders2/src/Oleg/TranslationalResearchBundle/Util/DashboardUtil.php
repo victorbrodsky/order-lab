@@ -104,7 +104,7 @@ class DashboardUtil
             "33. Turn-around Statistics: Average number of days for invoices to be paid (based on fully and partially paid invoices)" => "turn-around-statistics-days-paid-invoice",
             "34. Turn-around Statistics: Number of days for each invoice to be paid (based on fully and partially paid invoices)" => "turn-around-statistics-days-per-paid-invoice",
             "35. Turn-around Statistics: Top 10 PIs with most delayed unpaid invoices" => "turn-around-statistics-pis-with-delayed-unpaid-invoices",
-            "36. Turn-around Statistics: Top 10 PIs with highest total unpaid invoices" => "turn-around-statistics-pis-with-highest-total-unpaid-invoices",
+            "36. Turn-around Statistics: Top 10 PIs with highest total unpaid, overdue invoices" => "turn-around-statistics-pis-with-highest-total-unpaid-invoices",
             "" => "",
             "" => "",
             "" => "",
@@ -2966,7 +2966,7 @@ class DashboardUtil
             $chartsArray = $this->getChart($pisUnpaidInvoicesArrTop, $chartName,'pie',$layoutArray," : ");
         }
 
-        //"36. Turn-around Statistics: Top 10 PIs with highest total unpaid invoices" => "turn-around-statistics-pis-with-highest-total-unpaid-invoices",
+        //"36. Turn-around Statistics: Top 10 PIs with highest total unpaid, overdue invoices" => "turn-around-statistics-pis-with-highest-total-unpaid-invoices",
         if( $chartType == "turn-around-statistics-pis-with-highest-total-unpaid-invoices" ) {
             $transresRequestUtil = $this->container->get('transres_request_util');
 
@@ -2982,13 +2982,14 @@ class DashboardUtil
                     $piIndex = $pi->getUsernameOptimal(); // . " (".$invoice->getOid().")";
                     //$pisUnpaidInvoicesTotalArr[$piIndex] = $invoice->getTotal();
                     $total = $invoice->getTotal();
+                    $totalUnpaid = $totalUnpaid + intval($total);
+                    
                     if (isset($pisUnpaidInvoicesTotalArr[$piIndex])) {
                         //$count = $pisUnpaidInvoicesArr[$piIndex] + 1;
                         $total = $pisUnpaidInvoicesTotalArr[$piIndex] + $total;
                     }
                     $pisUnpaidInvoicesTotalArr[$piIndex] = $total;
 
-                    $totalUnpaid = $totalUnpaid + intval($total);
                     $titleCount++;
                 }
             }//foreach
