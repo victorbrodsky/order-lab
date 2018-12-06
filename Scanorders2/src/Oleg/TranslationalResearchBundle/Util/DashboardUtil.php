@@ -105,7 +105,7 @@ class DashboardUtil
             "34. Turn-around Statistics: Number of days for each invoice to be paid (based on fully and partially paid invoices)" => "turn-around-statistics-days-per-paid-invoice",
             "35. Turn-around Statistics: Top 10 PIs with most delayed unpaid invoices" => "turn-around-statistics-pis-with-delayed-unpaid-invoices",
             "36. Turn-around Statistics: Top 10 PIs with highest total unpaid, overdue invoices" => "turn-around-statistics-pis-with-highest-total-unpaid-invoices",
-            "37. Turn-around Statistics: Top 10 PIs combining amounts and delay duration for unpaid, overdue invoices" => "turn-around-statistics-pis-combining-total-delayed-unpaid-invoices",
+            "37. Turn-around Statistics: Top 10 PIs combining index (delay in months * total) for unpaid, overdue invoices" => "turn-around-statistics-pis-combining-total-delayed-unpaid-invoices",
             "" => "",
             "" => "",
             "" => "",
@@ -3051,7 +3051,7 @@ class DashboardUtil
             //$titleCount = $titleCount . " (invoices ".count($invoices).")";
 
             //$chartName = $this->getTitleWithTotal($chartName,$titleCount);
-            $chartName = $chartName . " (" . $titleCount . " invoices for total combined $" . $this->getNumberFormat($totalCombined) . ")";
+            $chartName = $chartName . " (" . $titleCount . " invoices for total combined index $" . $this->getNumberFormat($totalCombined) . ")";
 
             $showOther = $this->getOtherStr($showLimited,"Invoices");
             $pisCombinedArrTop = $this->getTopArray($pisCombinedArr,$showOther);
