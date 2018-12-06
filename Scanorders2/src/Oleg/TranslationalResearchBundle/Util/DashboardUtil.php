@@ -3053,6 +3053,8 @@ class DashboardUtil
             //$chartName = $this->getTitleWithTotal($chartName,$titleCount);
             $chartName = $chartName . " (" . $titleCount . " invoices for total combined index $" . $this->getNumberFormat($totalCombined) . ")";
 
+            $layoutArray['width'] = $layoutArray['width'] * 1.2; //1400;
+
             $showOther = $this->getOtherStr($showLimited,"Invoices");
             $pisCombinedArrTop = $this->getTopArray($pisCombinedArr,$showOther);
             $chartsArray = $this->getChart($pisCombinedArrTop, $chartName,'pie',$layoutArray," : $");
