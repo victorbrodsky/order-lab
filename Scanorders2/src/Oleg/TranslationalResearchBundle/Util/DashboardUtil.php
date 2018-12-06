@@ -105,6 +105,7 @@ class DashboardUtil
             "34. Turn-around Statistics: Number of days for each invoice to be paid (based on fully and partially paid invoices)" => "turn-around-statistics-days-per-paid-invoice",
             "35. Turn-around Statistics: Top 10 PIs with most delayed unpaid invoices" => "turn-around-statistics-pis-with-delayed-unpaid-invoices",
             "36. Turn-around Statistics: Top 10 PIs with highest total unpaid, overdue invoices" => "turn-around-statistics-pis-with-highest-total-unpaid-invoices",
+            "37. Turn-around Statistics: Top 10 PIs combining amounts and delay duration for unpaid, overdue invoices" => "turn-around-statistics-pis-combining-total-delayed-unpaid-invoices",
             "" => "",
             "" => "",
             "" => "",
@@ -2975,7 +2976,6 @@ class DashboardUtil
 
             $invoices = $transresRequestUtil->getOverdueInvoices();
 
-
             foreach($invoices as $invoice) {
                 $pi = $invoice->getPrincipalInvestigator();
                 if( $pi ) {
@@ -2983,7 +2983,7 @@ class DashboardUtil
                     //$pisUnpaidInvoicesTotalArr[$piIndex] = $invoice->getTotal();
                     $total = $invoice->getTotal();
                     $totalUnpaid = $totalUnpaid + intval($total);
-                    
+
                     if (isset($pisUnpaidInvoicesTotalArr[$piIndex])) {
                         //$count = $pisUnpaidInvoicesArr[$piIndex] + 1;
                         $total = $pisUnpaidInvoicesTotalArr[$piIndex] + $total;
@@ -2997,11 +2997,66 @@ class DashboardUtil
             //$titleCount = $titleCount . " (invoices ".count($invoices).")";
 
             //$chartName = $this->getTitleWithTotal($chartName,$titleCount);
-            $chartName = $chartName . " (" . $titleCount . " invoices for $" . $this->getNumberFormat($totalUnpaid) . ")";
+            $chartName = $chartName . " (" . $titleCount . " invoices for total $" . $this->getNumberFormat($totalUnpaid) . ")";
 
             $showOther = $this->getOtherStr($showLimited,"Invoices");
             $pisUnpaidInvoicesTotalArrTop = $this->getTopArray($pisUnpaidInvoicesTotalArr,$showOther);
             $chartsArray = $this->getChart($pisUnpaidInvoicesTotalArrTop, $chartName,'pie',$layoutArray," : $");
+        }
+
+        //"37. Turn-around Statistics: Top 10 PIs combining amounts and delay duration for unpaid, overdue invoices" => "turn-around-statistics-pis-combining-total-delayed-unpaid-invoices",
+        if( $chartType == "turn-around-statistics-pis-combining-total-delayed-unpaid-invoices" ) {
+            $transresRequestUtil = $this->container->get('transres_request_util');
+
+            $pisCombinedArr = array();
+            $totalUnpaid = 0;
+            $totalCombined = 0;
+
+            $invoices = $transresRequestUtil->getOverdueInvoices();
+
+            foreach($invoices as $invoice) {
+                $pi = $invoice->getPrincipalInvestigator();
+                if( $pi ) {
+                    $piIndex = $pi->getUsernameOptimal(); // . " (".$invoice->getOid().")";
+                    //$pisUnpaidInvoicesTotalArr[$piIndex] = $invoice->getTotal();
+                    $total = $invoice->getTotal();
+                    $totalUnpaid = $totalUnpaid + intval($total);
+
+                    //get number of due months
+                    $nowDate = new \DateTime();
+                    $dueDate = $invoice->getDueDate();
+                    if( !$dueDate ) {
+                        continue; //ignore invoices without duedate
+                    }
+                    $numberOfMonths = $nowDate->diff($dueDate);
+
+                    //multiply invoice amount by the number of associated months it has remained unpaid
+                    //for example - $100 unpaid invoice from 5 months ago => 5 x $100 + $600 invoice x 3 months ago = $2300 for this PI
+                    $combined = $total * $numberOfMonths;
+                    $totalCombined = $totalCombined + $combined;
+
+                    if (isset($pisCombinedArr[$piIndex])) {
+                        //$count = $pisUnpaidInvoicesArr[$piIndex] + 1;
+                        $combined = $pisCombinedArr[$piIndex] + $combined;
+                    }
+                    $pisCombinedArr[$piIndex] = $combined;
+
+                    $titleCount++;
+                }
+            }//foreach
+
+            //$titleCount = $titleCount . " (invoices ".count($invoices).")";
+
+            //$chartName = $this->getTitleWithTotal($chartName,$titleCount);
+            $chartName = $chartName . " (" . $titleCount . " invoices for total combined $" . $this->getNumberFormat($totalCombined) . ")";
+
+            $showOther = $this->getOtherStr($showLimited,"Invoices");
+            $pisCombinedArrTop = $this->getTopArray($pisCombinedArr,$showOther);
+            $chartsArray = $this->getChart($pisCombinedArrTop, $chartName,'pie',$layoutArray," : $");
+        }
+
+        if( $chartType == "" ) {
+
         }
 
         if( $chartType == "" ) {
