@@ -3009,7 +3009,7 @@ class DashboardUtil
             $transresRequestUtil = $this->container->get('transres_request_util');
 
             $pisCombinedArr = array();
-            $totalUnpaid = 0;
+            //$totalUnpaid = 0;
             $totalCombined = 0;
 
             $invoices = $transresRequestUtil->getOverdueInvoices();
@@ -3020,19 +3020,22 @@ class DashboardUtil
                     $piIndex = $pi->getUsernameOptimal(); // . " (".$invoice->getOid().")";
                     //$pisUnpaidInvoicesTotalArr[$piIndex] = $invoice->getTotal();
                     $total = $invoice->getTotal();
-                    $totalUnpaid = $totalUnpaid + intval($total);
+                    //$totalUnpaid = $totalUnpaid + intval($total);
 
-                    //get number of due months
+                    //get number of due days (months)
                     $nowDate = new \DateTime();
                     $dueDate = $invoice->getDueDate();
                     if( !$dueDate ) {
                         continue; //ignore invoices without duedate
                     }
-                    $numberOfMonths = $nowDate->diff($dueDate);
+                    $diff = $nowDate->diff($dueDate);
+                    $months = (($diff->format('%y') * 12) + $diff->format('%m'));  //full months difference;
+                    //echo "days=".$days."<br>";
+                    $dueTimeNumber = intval($months);
 
                     //multiply invoice amount by the number of associated months it has remained unpaid
                     //for example - $100 unpaid invoice from 5 months ago => 5 x $100 + $600 invoice x 3 months ago = $2300 for this PI
-                    $combined = $total * $numberOfMonths;
+                    $combined = $total * $dueTimeNumber;
                     $totalCombined = $totalCombined + $combined;
 
                     if (isset($pisCombinedArr[$piIndex])) {
