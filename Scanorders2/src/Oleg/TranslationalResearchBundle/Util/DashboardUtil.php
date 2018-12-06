@@ -3032,6 +3032,9 @@ class DashboardUtil
                     $months = (($diff->format('%y') * 12) + $diff->format('%m'));  //full months difference;
                     //echo "days=".$days."<br>";
                     $dueTimeNumber = intval($months);
+                    if( !$dueTimeNumber || $dueTimeNumber <= 0 ) {
+                        $dueTimeNumber = 1;
+                    }
 
                     //multiply invoice amount by the number of associated months it has remained unpaid
                     //for example - $100 unpaid invoice from 5 months ago => 5 x $100 + $600 invoice x 3 months ago = $2300 for this PI
