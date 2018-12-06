@@ -2977,6 +2977,7 @@ class DashboardUtil
                 $pi = $invoice->getPrincipalInvestigator();
                 if( $pi ) {
                     $piIndex = $pi->getUsernameOptimal() . " (".$invoice->getOid().")";
+                    //$invoiceTotal = $this->getNumberFormat($invoice->getTotal());
                     $pisUnpaidInvoicesTotalArr[$piIndex] = $invoice->getTotal();
 
                     $titleCount++;
@@ -2988,7 +2989,7 @@ class DashboardUtil
             $chartName = $this->getTitleWithTotal($chartName,$titleCount);
             $showOther = $this->getOtherStr($showLimited,"Invoices");
             $pisUnpaidInvoicesTotalArrTop = $this->getTopArray($pisUnpaidInvoicesTotalArr,$showOther);
-            $chartsArray = $this->getChart($pisUnpaidInvoicesTotalArrTop, $chartName,'pie',$layoutArray," : ");
+            $chartsArray = $this->getChart($pisUnpaidInvoicesTotalArrTop, $chartName,'pie',$layoutArray," : $");
         }
 
         if( $chartType == "" ) {
