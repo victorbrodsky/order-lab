@@ -103,8 +103,14 @@ class DashboardUtil
             "32. Turn-around Statistics: Number of days for each project request approval phase" => "turn-around-statistics-days-per-project-state",
             "33. Turn-around Statistics: Average number of days for invoices to be paid (based on fully and partially paid invoices)" => "turn-around-statistics-days-paid-invoice",
             "34. Turn-around Statistics: Number of days for each invoice to be paid (based on fully and partially paid invoices)" => "turn-around-statistics-days-per-paid-invoice",
+            "35. Turn-around Statistics: Top 10 PIs with most delayed unpaid invoices" => "turn-around-statistics-pis-with-delayed-unpaid-invoices",
             "" => "",
-            "" => ""
+            "" => "",
+            "" => "",
+            "" => "",
+            "" => "",
+            "" => "",
+            "" => "",
         );
         return $chartTypes;
     }
@@ -2877,10 +2883,7 @@ class DashboardUtil
 
         //"34. Turn-around Statistics: Number of days for each invoice to be paid (based on fully and partially paid invoices)" => "turn-around-statistics-days-per-paid-invoice",
         if( $chartType == "turn-around-statistics-days-per-paid-invoice" ) {
-            $transresUtil = $this->container->get('transres_util');
-
             $invoiceStates = array("Paid in Full","Paid Partially");
-
             $invoices = $this->getInvoicesByFilter($startDate, $endDate, $projectSpecialtyObjects, $invoiceStates);
             //echo "### $state invoices count=".count($invoices)."<br>";
 
@@ -2922,8 +2925,31 @@ class DashboardUtil
             $chartsArray = $this->getChart($countArr, $chartName,'bar',$layoutArray);
         }
 
-        if( $chartType == "" ) {
+        //"35. Turn-around Statistics: Top 10 PIs with most delayed unpaid invoices" => "turn-around-statistics-pis-with-delayed-unpaid-invoices",
+        if( $chartType == "turn-around-statistics-pis-with-delayed-unpaid-invoices" ) {
 
+            $pisUnpaidInvoicesArr = array();
+
+            //get unpaid and delayd invoices
+            $invoiceStates = array("Unpaid/Issued");
+            $invoices = $this->getInvoicesByFilter($startDate, $endDate, $projectSpecialtyObjects, $invoiceStates);
+
+            foreach($invoices as $invoice) {
+                $pi = $invoice->getPrincipalInvestigator();
+                if( $pi ) {
+                    $invoiceIndex = $pi->getUsernameOptimal();
+                    if( isset($pisUnpaidInvoicesArr[$invoiceIndex]) ) {
+                        $pisUnpaidInvoicesArr[$invoiceIndex] = $pisUnpaidInvoicesArr[$invoiceIndex] + 1;
+                    } else {
+                        $pisUnpaidInvoicesArr[$invoiceIndex] = 1;
+                    }
+                }
+            }
+
+            $chartName = $this->getTitleWithTotal($chartName,$titleCount);
+            $showOther = $this->getOtherStr($showLimited,"PIs");
+            $pisUnpaidInvoicesArrTop = $this->getTopArray($pisUnpaidInvoicesArr,$showOther);
+            $chartsArray = $this->getChart($pisUnpaidInvoicesArrTop, $chartName,'pie',$layoutArray," : ");
         }
 
         if( $chartType == "" ) {
