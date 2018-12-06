@@ -2951,10 +2951,11 @@ class DashboardUtil
                     }
                     $pisUnpaidInvoicesArr[$invoiceIndex] = $count;
 
-                    //$titleCount++;
+                    $titleCount++;
                 }
-                $titleCount++;
             }//foreach
+
+            $titleCount = $titleTotal . " (invoices ".count($invoices).")";
 
             $chartName = $this->getTitleWithTotal($chartName,$titleCount);
             $showOther = $this->getOtherStr($showLimited,"PIs");
