@@ -2937,19 +2937,19 @@ class DashboardUtil
             foreach($invoices as $invoice) {
                 $pi = $invoice->getPrincipalInvestigator();
                 if( $pi ) {
-                    $invoiceIndex = $pi->getUsernameOptimal();
-                    if( isset($pisUnpaidInvoicesArr[$invoiceIndex]) ) {
-                        $pisUnpaidInvoicesArr[$invoiceIndex] = $pisUnpaidInvoicesArr[$invoiceIndex] + 1;
+                    $piIndex = $pi->getUsernameOptimal();
+                    if( isset($pisUnpaidInvoicesArr[$piIndex]) ) {
+                        $pisUnpaidInvoicesArr[$piIndex] = $pisUnpaidInvoicesArr[$piIndex] + 1;
                     } else {
-                        $pisUnpaidInvoicesArr[$invoiceIndex] = 1;
+                        $pisUnpaidInvoicesArr[$piIndex] = 1;
                     }
 
-                    if (isset($pisUnpaidInvoicesArr[$invoiceIndex])) {
-                        $count = $pisUnpaidInvoicesArr[$invoiceIndex] + 1;
+                    if (isset($pisUnpaidInvoicesArr[$piIndex])) {
+                        $count = $pisUnpaidInvoicesArr[$piIndex] + 1;
                     } else {
                         $count = 1;
                     }
-                    $pisUnpaidInvoicesArr[$invoiceIndex] = $count;
+                    $pisUnpaidInvoicesArr[$piIndex] = $count;
 
                     $titleCount++;
                 }
