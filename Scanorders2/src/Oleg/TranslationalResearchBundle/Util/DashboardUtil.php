@@ -2955,7 +2955,7 @@ class DashboardUtil
                 }
             }//foreach
 
-            $titleCount = $titleTotal . " (invoices ".count($invoices).")";
+            $titleCount = $titleCount . " (invoices ".count($invoices).")";
 
             $chartName = $this->getTitleWithTotal($chartName,$titleCount);
             $showOther = $this->getOtherStr($showLimited,"PIs");
