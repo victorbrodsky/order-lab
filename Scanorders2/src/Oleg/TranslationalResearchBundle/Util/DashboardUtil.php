@@ -2943,6 +2943,15 @@ class DashboardUtil
                     } else {
                         $pisUnpaidInvoicesArr[$invoiceIndex] = 1;
                     }
+
+                    if (isset($pisUnpaidInvoicesArr[$invoiceIndex])) {
+                        $count = $pisUnpaidInvoicesArr[$invoiceIndex] + 1;
+                    } else {
+                        $count = 1;
+                    }
+                    $pisUnpaidInvoicesArr[$invoiceIndex] = $count;
+
+                    $titleCount++;
                 }
             }
 
