@@ -2976,9 +2976,14 @@ class DashboardUtil
             foreach($invoices as $invoice) {
                 $pi = $invoice->getPrincipalInvestigator();
                 if( $pi ) {
-                    $piIndex = $pi->getUsernameOptimal() . " (".$invoice->getOid().")";
-                    //$invoiceTotal = $this->getNumberFormat($invoice->getTotal());
-                    $pisUnpaidInvoicesTotalArr[$piIndex] = $invoice->getTotal();
+                    $piIndex = $pi->getUsernameOptimal(); // . " (".$invoice->getOid().")";
+                    //$pisUnpaidInvoicesTotalArr[$piIndex] = $invoice->getTotal();
+                    $total = $invoice->getTotal();
+                    if (isset($pisUnpaidInvoicesTotalArr[$piIndex])) {
+                        //$count = $pisUnpaidInvoicesArr[$piIndex] + 1;
+                        $total = $pisUnpaidInvoicesTotalArr[$piIndex] + $total;
+                    }
+                    $pisUnpaidInvoicesTotalArr[$piIndex] = $total;
 
                     $titleCount++;
                 }
