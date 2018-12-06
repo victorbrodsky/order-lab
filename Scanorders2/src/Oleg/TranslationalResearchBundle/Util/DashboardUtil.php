@@ -2996,7 +2996,7 @@ class DashboardUtil
             //$titleCount = $titleCount . " (invoices ".count($invoices).")";
 
             //$chartName = $this->getTitleWithTotal($chartName,$titleCount);
-            $chartName = $chartName . " (" . $titleCount . " invoices for $" . $this->getNumberFormat($titleCount) . ")";
+            $chartName = $chartName . " (" . $titleCount . " invoices for $" . $this->getNumberFormat($totalUnpaid) . ")";
 
             $showOther = $this->getOtherStr($showLimited,"Invoices");
             $pisUnpaidInvoicesTotalArrTop = $this->getTopArray($pisUnpaidInvoicesTotalArr,$showOther);
