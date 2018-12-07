@@ -3083,14 +3083,20 @@ class DashboardUtil
             //in the legend titles list PI name : total owed : median number of days invoice has been unpaid
             $pisCombinedArrNew = array();
             foreach($pisCombinedArr as $index => $combined) {
+                //total
                 $total = $pisTotalUnpaidArr[$index];
+                $total = $this->getNumberFormat($total);
+
+                //days
                 $days = $pisDaysArr[$index];
                 $count = $pisCountArr[$index];
                 if( $count ) {
-                    $days = $days / $count;
+                    $days = round($days / $count);
                 } else {
                     $days = "unknown";
                 }
+
+                //new index (legend)
                 $newIndex = $index . " ($" . $total . " total owed, " . $days . " average number of days invoice has been unpaid)";
                 $pisCombinedArrNew[$newIndex] = $combined;
             }
@@ -3098,7 +3104,7 @@ class DashboardUtil
             //$chartName = $this->getTitleWithTotal($chartName,$titleCount);
             $chartName = $chartName . " (" . $titleCount . " invoices for total combined index $" . $this->getNumberFormat($totalCombined) . ")";
 
-            $layoutArray['width'] = $layoutArray['width'] * 1.2; //1400;
+            $layoutArray['width'] = $layoutArray['width'] * 1.3; //1400;
 
             $showOther = $this->getOtherStr($showLimited,"Invoices");
             //getTopArray($piProjectCountArr, $showOthers=false, $descriptionArr=array(), $maxLen=50)
