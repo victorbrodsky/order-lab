@@ -1090,10 +1090,10 @@ class DashboardUtil
         //echo $state.": days=".$days."<br>";
         $days = intval($days);
 
-        //show minimum 0.5 or 1 day
-//        if( !$days ) {
-//            $days = 0.5;
-//        }
+        //show minimum 1 day
+        if( !$days ) {
+            $days = 1;
+        }
 
         return $days;
     }
@@ -2483,7 +2483,7 @@ class DashboardUtil
         }
         ///////////////// EOF "26. Total Invoiced Amounts of Funded Projects per Pathologist Involved (Top 10)" /////////////////
 
-        //"27a. Total Invoiced Amounts of Non-Funded Projects per Pathologist Involved (Top 10)" =>  "fees-by-invoices-per-nonfunded-projects-per-pathologist-involved"
+        //"27. Total Invoiced Amounts of Non-Funded Projects per Pathologist Involved (Top 10)" =>  "fees-by-invoices-per-nonfunded-projects-per-pathologist-involved"
         if( $chartType == "fees-by-invoices-per-nonfunded-projects-per-pathologist-involved" ) {
             $invoicesFeesByPathologistArr = array();
             $invoicePaidFeeArr = array();
@@ -2552,7 +2552,7 @@ class DashboardUtil
             }
         }
 
-        //"27b. Total Fees per Involved Pathologist for Non-Funded Projects (Top 10)" =>  "fees-per-nonfunded-projects-per-pathologist-involved",
+        //"28. Total Fees per Involved Pathologist for Non-Funded Projects (Top 10)" =>  "fees-per-nonfunded-projects-per-pathologist-involved",
         if( $chartType == "fees-per-nonfunded-projects-per-pathologist-involved" ) {
             $transresRequestUtil = $this->container->get('transres_request_util');
             $invoicesFeesByPathologistArr = array();
@@ -2594,7 +2594,7 @@ class DashboardUtil
         }
         ///////////// EOF "23. Total Invoiced Amounts of Non-Funded Projects per Pathologist Involved (Top 10)" /////////////
 
-        //"28. Total Number of Projects per Type" => "projects-per-type"
+        //"29. Total Number of Projects per Type" => "projects-per-type"
         if( $chartType == "projects-per-type" ) {
             $projectTypeArr = array();
 
@@ -2630,7 +2630,7 @@ class DashboardUtil
         }
 
 
-        //"29. Total Number of Requests per Business Purpose" => "requests-per-business-purpose"
+        //"30. Total Number of Requests per Business Purpose" => "requests-per-business-purpose"
         if( $chartType == "requests-per-business-purpose" ) {
             $requestBusinessPurposeArr = array();
 
@@ -2658,7 +2658,7 @@ class DashboardUtil
             $chartsArray = $this->getChart($requestBusinessPurposeArrTop, $chartName,'pie',$layoutArray," : ");
         }
 
-        //"30a. Turn-around Statistics: Average number of days to complete a Work Request (based on Completed and Notified requests)" => "turn-around-statistics-days-complete-request"
+        //"31. Turn-around Statistics: Average number of days to complete a Work Request (based on Completed and Notified requests)" => "turn-around-statistics-days-complete-request"
         if( $chartType == "turn-around-statistics-days-complete-request" ) {
             $averageDays = array();
 
@@ -2737,7 +2737,7 @@ class DashboardUtil
             $chartsArray = $this->getChart($averageDays, $chartName,'bar',$layoutArray);
         }
 
-        //"30b. Turn-around Statistics: Number of days to complete each Work Request (based on 'Completed and Notified' requests)" => "turn-around-statistics-days-complete-per-request",
+        //"32. Turn-around Statistics: Number of days to complete each Work Request (based on 'Completed and Notified' requests)" => "turn-around-statistics-days-complete-per-request",
         if( $chartType == "turn-around-statistics-days-complete-per-request" ) {
             $averageDays = array();
 
@@ -2787,7 +2787,7 @@ class DashboardUtil
             $chartsArray = $this->getChart($averageDays, $chartName,'bar',$layoutArray);
         }
 
-        //"30c. Turn-around Statistics: Number of days to complete each Work Request with products/services (based on 'Completed and Notified' requests)" => "turn-around-statistics-days-complete-per-request-with-product",
+        //"33. Turn-around Statistics: Number of days to complete each Work Request with products/services (based on 'Completed and Notified' requests)" => "turn-around-statistics-days-complete-per-request-with-product",
         if( $chartType == "turn-around-statistics-days-complete-per-request-with-product" ) {
             $averageDays = array();
 
@@ -2795,7 +2795,11 @@ class DashboardUtil
             $transRequests = $this->getRequestsByAdvanceFilter($startDate, $thisEndDate, $projectSpecialtyObjects, $category, $statuses);
 
             $daysTotal = 0;
+            $quantityArr = array();
+            $quantityCountArr = array();
+
             $stackData = array();
+            $stackDataArr = array();
 
             foreach ($transRequests as $transRequest) {
 
@@ -2823,22 +2827,71 @@ class DashboardUtil
                 }
                 $averageDays[$index] = $days;
 
+                $products = $transRequest->getProducts();
+                $totalQuantity = 0;
+                $quantityCountArr[$index] = count($products);
+
                 //per product/services
                 foreach ($transRequest->getProducts() as $product) {
+
                     $category = $product->getCategory();
                     if ($category) {
                         $categoryIndex = $category->getShortInfo();
                         $quantity = $product->getQuantity();
+                        $totalQuantity = $totalQuantity + intval($quantity);
+
                         if( $index && $categoryIndex && $quantity ) {
+
                             $stackData[$index] = array($categoryIndex => $quantity);
+
+                            if( isset($stackDataArr[$categoryIndex]) ) {
+                                $combinedArr = $stackDataArr[$categoryIndex];
+                                $combinedArr[$index] = $combinedArr[$index] + $quantity;
+                                $stackDataArr[$categoryIndex] = $combinedArr;
+                            } else {
+                                $stackDataArr[$categoryIndex] = array($index=>$quantity);
+                            }
+
                         }
                         //$averageDays[$index] = $days;
-                    }
-                }
+
+                    }//if product/category
+                }//foreach product
+
+                $quantityArr[$index] = $totalQuantity;
 
             }//foreach
 
-            //$projectCommitteePhaseArr[$index] = $days;
+            $combinedTrpData = array();
+            $reqArr = array();
+
+            foreach( $stackData as $index=>$stackDataArr ) {
+
+                //weight = total quantity / product count
+                $weight = $quantityArr[$index] / $quantityCountArr[$index];
+
+                $reqArr[$index] = 0;
+
+                foreach($stackDataArr as $categoryIndex => $quantity) {
+
+                    //$reqArr[$index] = $reqArr[$index] + ($days / $quantity);
+                    //$reqArr[$index] = $reqArr[$index] + $quantity * $weight;
+                    //$reqArr[$index] = $reqArr[$index] + $quantity;
+
+                    $days = $averageDays[$index];
+                    $reqArr[$index] = $reqArr[$index] + round($days * $weight);
+
+                    $combinedTrpData[$categoryIndex] = $reqArr;
+
+                }
+
+            }
+
+            //$projectIrbPhaseArr[$index] = $days;
+            //$combinedTrpData = array();
+            //$combinedTrpData['IRB Review'] = $projectIrbPhaseArr;
+            //$chartsArray = $this->getStackedChart($combinedTrpData, $chartName, "stack");
+
             /////
 //            $chartDataArray[$xAxis] = $labels;
 //            $chartDataArray[$yAxis] = $values;
@@ -2858,46 +2911,11 @@ class DashboardUtil
                 'margin' => array('b' => 200)
             );
 
-            //$irbTitle = $this->getStateTitleWithAverageDays('IRB Review',$projectIrbPhaseArr);
-            //$adminTitle = $this->getStateTitleWithAverageDays('Admin Review',$projectAdminPhaseArr);
-            //$committeeTitle = $this->getStateTitleWithAverageDays('Committee Review',$projectCommitteePhaseArr);
-            //$finalTitle = $this->getStateTitleWithAverageDays('Final Review',$projectFinalPhaseArr);
-
-            $combinedTrpData = array();
-            //$combinedTrpData[$irbTitle] = $projectIrbPhaseArr;
-            //$combinedTrpData[$adminTitle] = $projectAdminPhaseArr;
-            //$combinedTrpData[$committeeTitle] = $projectCommitteePhaseArr;
-            //$combinedTrpData[$finalTitle] = $projectFinalPhaseArr;
-
-            foreach( $averageDays as $index => $days ) {
-                $stackDataArr = $stackData[$index];
-                //echo "<br>stackDataArr $index:<br>"; print_r($stackDataArr);
-
-                if( !$stackDataArr ) {
-                    continue;
-                }
-
-                foreach( $stackDataArr as $categoryIndex=>$quantity ) {
-                    //echo "categoryIndex=$categoryIndex; quantity=$quantity <br>";
-                    $reqArr = array();
-                    $reqArr[$index] = $days / $quantity;
-                    $combinedTrpData[$categoryIndex] = $reqArr;
-                }
-
-//                foreach( $stackDataArr as $thisStackData ) {
-//                    //echo "<br>thisStackData:<br>"; print_r($thisStackData);
-//                    //$stackData[$categoryIndex][$index] = $product->getQuantity();
-//                    $reqArr = array();
-//                    $reqArr[$index] = $days * $quantity;
-//                    $combinedTrpData[$categoryIndex] = $reqArr;
-//                }
-            }
-
             //exit("Exit");
             $chartsArray = $this->getStackedChart($combinedTrpData, $chartName, "stack");
         }
 
-        //"31. Turn-around Statistics: Average number of days for each project request approval phase" => "turn-around-statistics-days-project-state"
+        //"34. Turn-around Statistics: Average number of days for each project request approval phase" => "turn-around-statistics-days-project-state"
         if( $chartType == "turn-around-statistics-days-project-state" ) {
             $transresUtil = $this->container->get('transres_util');
 
@@ -2961,7 +2979,7 @@ class DashboardUtil
             $chartsArray = $this->getChart($averageDaysNew, $chartName,'bar',$layoutArray);
         }
 
-        //"32. Turn-around Statistics: Number of days for each project request approval phase" => "turn-around-statistics-days-per-project-state"
+        //"35. Turn-around Statistics: Number of days for each project request approval phase" => "turn-around-statistics-days-per-project-state"
         if( $chartType == "turn-around-statistics-days-per-project-state" ) {
 
             $projectIrbPhaseArr = array();
@@ -3021,7 +3039,7 @@ class DashboardUtil
         }
 
         //third bar graph showing how many days on average it took for Invoices to go from “Issued” to “Paid”
-        //"33. Turn-around Statistics: Average number of days for invoices to be paid" =>                 "turn-around-statistics-days-paid-invoice"
+        //"36. Turn-around Statistics: Average number of days for invoices to be paid" =>                 "turn-around-statistics-days-paid-invoice"
         if( $chartType == "turn-around-statistics-days-paid-invoice" ) {
             $averageDays = array();
 
@@ -3093,7 +3111,7 @@ class DashboardUtil
             $chartsArray = $this->getChart($averageDays, $chartName,'bar',$layoutArray);
         }
 
-        //"34. Turn-around Statistics: Number of days for each invoice to be paid (based on fully and partially paid invoices)" => "turn-around-statistics-days-per-paid-invoice",
+        //"37. Turn-around Statistics: Number of days for each invoice to be paid (based on fully and partially paid invoices)" => "turn-around-statistics-days-per-paid-invoice",
         if( $chartType == "turn-around-statistics-days-per-paid-invoice" ) {
             $invoiceStates = array("Paid in Full","Paid Partially");
             $invoices = $this->getInvoicesByFilter($startDate, $endDate, $projectSpecialtyObjects, $invoiceStates);
@@ -3137,7 +3155,7 @@ class DashboardUtil
             $chartsArray = $this->getChart($countArr, $chartName,'bar',$layoutArray);
         }
 
-        //"35. Turn-around Statistics: Top 10 PIs with most delayed unpaid invoices" => "turn-around-statistics-pis-with-delayed-unpaid-invoices",
+        //"38. Turn-around Statistics: Top 10 PIs with most delayed unpaid invoices" => "turn-around-statistics-pis-with-delayed-unpaid-invoices",
         if( $chartType == "turn-around-statistics-pis-with-delayed-unpaid-invoices" ) {
             $transresRequestUtil = $this->container->get('transres_request_util');
 
@@ -3177,7 +3195,7 @@ class DashboardUtil
             $chartsArray = $this->getChart($pisUnpaidInvoicesArrTop, $chartName,'pie',$layoutArray," : ");
         }
 
-        //"36. Turn-around Statistics: Top 10 PIs with highest total unpaid, overdue invoices" => "turn-around-statistics-pis-with-highest-total-unpaid-invoices",
+        //"39. Turn-around Statistics: Top 10 PIs with highest total unpaid, overdue invoices" => "turn-around-statistics-pis-with-highest-total-unpaid-invoices",
         if( $chartType == "turn-around-statistics-pis-with-highest-total-unpaid-invoices" ) {
             $transresRequestUtil = $this->container->get('transres_request_util');
 
@@ -3214,7 +3232,7 @@ class DashboardUtil
             $chartsArray = $this->getChart($pisUnpaidInvoicesTotalArrTop, $chartName,'pie',$layoutArray," : $");
         }
 
-        //"37. Turn-around Statistics: Top 10 PIs combining amounts and delay duration for unpaid, overdue invoices" => "turn-around-statistics-pis-combining-total-delayed-unpaid-invoices",
+        //"40. Turn-around Statistics: Top 10 PIs combining amounts and delay duration for unpaid, overdue invoices" => "turn-around-statistics-pis-combining-total-delayed-unpaid-invoices",
         if( $chartType == "turn-around-statistics-pis-combining-total-delayed-unpaid-invoices" ) {
             $transresRequestUtil = $this->container->get('transres_request_util');
 
