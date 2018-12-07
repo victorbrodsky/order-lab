@@ -2541,6 +2541,14 @@ class DashboardUtil
             $showOther = $this->getOtherStr($showLimited,"pathologists involved");
             $invoicesFeesByPathologistArrTop = $this->getTopArray($invoicesFeesByPathologistArr,$showOther,$descriptionArr);
             $chartsArray = $this->getChart($invoicesFeesByPathologistArrTop, $chartName,'pie',$layoutArray);
+
+            if( is_array($chartsArray) && count($chartsArray) == 0 ) {
+                //echo "count is 0 <br>";
+                //$chartKey = $this->getChartTypeByValue($chartType);
+                $chartsArray['warning'] = "There are no invoices associated with un-funded project requests that specify an involved pathologist during the selected time frame.";//"Chart data is not found for '$chartKey'";
+                $chartsArray['error'] = false;
+                return $chartsArray;
+            }
         }
         ///////////// EOF "23. Total Invoiced Amounts of Non-Funded Projects per Pathologist Involved (Top 10)" /////////////
 
