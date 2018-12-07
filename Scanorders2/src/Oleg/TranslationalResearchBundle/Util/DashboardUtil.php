@@ -99,7 +99,8 @@ class DashboardUtil
             "28. Total Number of Projects per Type" => "projects-per-type",
             "29. Total Number of Work Requests per Business Purpose" => "requests-per-business-purpose",
 
-            "30. Turn-around Statistics: Average number of days to complete a Work Request (based on 'Completed and Notified' requests)" => "turn-around-statistics-days-complete-request",
+            "30a. Turn-around Statistics: Average number of days to complete a Work Request (based on 'Completed and Notified' requests)" => "turn-around-statistics-days-complete-request",
+            "30b. Turn-around Statistics: Number of days to complete each Work Request (based on 'Completed and Notified' requests)" => "turn-around-statistics-days-complete-per-request",
             "31. Turn-around Statistics: Average number of days for each project request approval phase" => "turn-around-statistics-days-project-state",
             "32. Turn-around Statistics: Number of days for each project request approval phase" => "turn-around-statistics-days-per-project-state",
             "33. Turn-around Statistics: Average number of days for invoices to be paid (based on fully and partially paid invoices)" => "turn-around-statistics-days-paid-invoice",
@@ -107,6 +108,7 @@ class DashboardUtil
             "35. Turn-around Statistics: Top 10 PIs with most delayed unpaid invoices" => "turn-around-statistics-pis-with-delayed-unpaid-invoices",
             "36. Turn-around Statistics: Top 10 PIs with highest total unpaid, overdue invoices" => "turn-around-statistics-pis-with-highest-total-unpaid-invoices",
             "37. Turn-around Statistics: Top 10 PIs combining index (delay in months * total) for unpaid, overdue invoices" => "turn-around-statistics-pis-combining-total-delayed-unpaid-invoices",
+
             "" => "",
             "" => "",
             "" => "",
@@ -2655,7 +2657,7 @@ class DashboardUtil
             $chartsArray = $this->getChart($requestBusinessPurposeArrTop, $chartName,'pie',$layoutArray," : ");
         }
 
-        //"30. Turn-around Statistics: Average number of days to complete a Work Request (based on Completed and Notified requests)" => "turn-around-statistics-days-complete-request"
+        //"30a. Turn-around Statistics: Average number of days to complete a Work Request (based on Completed and Notified requests)" => "turn-around-statistics-days-complete-request"
         if( $chartType == "turn-around-statistics-days-complete-request" ) {
             $averageDays = array();
 
@@ -2730,6 +2732,51 @@ class DashboardUtil
 //                $categoryStr = null;
 //            }
 //            $chartName = $chartName.$categoryStr;
+
+            $chartsArray = $this->getChart($averageDays, $chartName,'bar',$layoutArray);
+        }
+
+        //"30b. Turn-around Statistics: Number of days to complete each Work Request (based on 'Completed and Notified' requests)" => "turn-around-statistics-days-complete-per-request",
+        if( $chartType == "turn-around-statistics-days-complete-per-request" ) {
+            $averageDays = array();
+
+            //$statuses = array("completed","completedNotified");
+            $statuses = array("completedNotified");
+            $transRequests = $this->getRequestsByAdvanceFilter($startDate,$thisEndDate,$projectSpecialtyObjects,$category,$statuses);
+
+            $daysTotal = 0;
+            //$count = 0;
+
+            foreach($transRequests as $transRequest) {
+
+                //Number of days to go from Submitted to Completed
+                $submitted = $transRequest->getCreateDate();
+
+                $completed = $transRequest->getCompletedDate();
+                if( !$completed ) {
+                    continue;
+                }
+
+                $dDiff = $submitted->diff($completed);
+                //echo $dDiff->format('%R'); // use for point out relation: smaller/greater
+                $days = $dDiff->days;
+                //echo "days=".$days."<br>";
+                $days = intval($days);
+                if( $days > 0 ) {
+                    $daysTotal = $daysTotal + intval($days);
+                    //$count++;
+                }
+
+                $index = $transRequest->getOid();
+
+                if( isset($averageDays[$index]) ) {
+                    $averageDays[$index] = $averageDays[$index] + $days;
+                }
+                $averageDays[$index] = $days;
+
+            }//foreach
+
+            //$startDateLabel = $startDateLabel . " (" . count($transRequests) . " requests)";
 
             $chartsArray = $this->getChart($averageDays, $chartName,'bar',$layoutArray);
         }
