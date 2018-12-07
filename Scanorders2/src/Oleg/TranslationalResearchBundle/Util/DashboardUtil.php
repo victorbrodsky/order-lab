@@ -2880,7 +2880,7 @@ class DashboardUtil
                 foreach( $stackDataArr as $categoryIndex=>$quantity ) {
                     //echo "categoryIndex=$categoryIndex; quantity=$quantity <br>";
                     $reqArr = array();
-                    $reqArr[$index] = $days * $quantity;
+                    $reqArr[$index] = $days / $quantity;
                     $combinedTrpData[$categoryIndex] = $reqArr;
                 }
 
