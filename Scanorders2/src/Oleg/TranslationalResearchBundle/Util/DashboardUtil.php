@@ -3009,7 +3009,11 @@ class DashboardUtil
             $transresRequestUtil = $this->container->get('transres_request_util');
 
             $pisCombinedArr = array();
-            //$totalUnpaid = 0;
+            $pisTotalUnpaidArr = array();
+            $pisDaysArr = array();
+            $pisCountArr = array();
+
+            $totalUnpaid = 0;
             $totalCombined = 0;
 
             $invoices = $transresRequestUtil->getOverdueInvoices();
@@ -3017,10 +3021,10 @@ class DashboardUtil
             foreach($invoices as $invoice) {
                 $pi = $invoice->getPrincipalInvestigator();
                 if( $pi ) {
-                    $piIndex = $pi->getUsernameOptimal(); // . " (".$invoice->getOid().")";
-                    //$pisUnpaidInvoicesTotalArr[$piIndex] = $invoice->getTotal();
+                    $piIndex = $pi->getUsernameOptimal();
                     $total = $invoice->getTotal();
-                    //$totalUnpaid = $totalUnpaid + intval($total);
+                    $total = intval($total);
+                    $totalUnpaid = $totalUnpaid + $total;
 
                     //get number of due days (months)
                     $nowDate = new \DateTime();
@@ -3030,22 +3034,45 @@ class DashboardUtil
                     }
                     $diff = $nowDate->diff($dueDate);
                     $months = (($diff->format('%y') * 12) + $diff->format('%m'));  //full months difference;
+                    $days = $diff->days;
                     //echo "days=".$days."<br>";
                     $dueTimeNumber = intval($months);
-                    if( !$dueTimeNumber || $dueTimeNumber <= 0 ) {
-                        $dueTimeNumber = 1;
-                    }
+                    //if months is less than 1, use 1
+                    //if( !$dueTimeNumber || $dueTimeNumber <= 0 ) {
+                    //    $dueTimeNumber = 1;
+                    //}
 
                     //multiply invoice amount by the number of associated months it has remained unpaid
                     //for example - $100 unpaid invoice from 5 months ago => 5 x $100 + $600 invoice x 3 months ago = $2300 for this PI
                     $combined = $total * $dueTimeNumber;
                     $totalCombined = $totalCombined + $combined;
 
+                    //combined index
                     if (isset($pisCombinedArr[$piIndex])) {
                         //$count = $pisUnpaidInvoicesArr[$piIndex] + 1;
                         $combined = $pisCombinedArr[$piIndex] + $combined;
                     }
                     $pisCombinedArr[$piIndex] = $combined;
+
+                    //total owed
+                    if (isset($pisTotalUnpaidArr[$piIndex])) {
+                        $total = $pisTotalUnpaidArr[$piIndex] + $total;
+                    }
+                    $pisTotalUnpaidArr[$piIndex] = $total;
+
+                    //median number of days invoice has been unpaid
+                    if (isset($pisDaysArr[$piIndex])) {
+                        $days = $pisDaysArr[$piIndex] + $days;
+                    }
+                    $pisDaysArr[$piIndex] = $days;
+
+                    //count for this PI
+                    if (isset($pisCountArr[$piIndex])) {
+                        $count = $pisCountArr[$piIndex] + 1;
+                    } else {
+                        $count = 1;
+                    }
+                    $pisCountArr[$piIndex] = $count;
 
                     $titleCount++;
                 }
@@ -3053,13 +3080,29 @@ class DashboardUtil
 
             //$titleCount = $titleCount . " (invoices ".count($invoices).")";
 
+            //in the legend titles list PI name : total owed : median number of days invoice has been unpaid
+            $pisCombinedArrNew = array();
+            foreach($pisCombinedArr as $index => $combined) {
+                $total = $pisTotalUnpaidArr[$index];
+                $days = $pisDaysArr[$index];
+                $count = $pisCountArr[$index];
+                if( $count ) {
+                    $days = $days / $count;
+                } else {
+                    $days = "unknown";
+                }
+                $newIndex = $index . " ($" . $total . " total owed, " . $days . " average number of days invoice has been unpaid)";
+                $pisCombinedArrNew[$newIndex] = $combined;
+            }
+
             //$chartName = $this->getTitleWithTotal($chartName,$titleCount);
             $chartName = $chartName . " (" . $titleCount . " invoices for total combined index $" . $this->getNumberFormat($totalCombined) . ")";
 
             $layoutArray['width'] = $layoutArray['width'] * 1.2; //1400;
 
             $showOther = $this->getOtherStr($showLimited,"Invoices");
-            $pisCombinedArrTop = $this->getTopArray($pisCombinedArr,$showOther);
+            //getTopArray($piProjectCountArr, $showOthers=false, $descriptionArr=array(), $maxLen=50)
+            $pisCombinedArrTop = $this->getTopArray($pisCombinedArrNew,$showOther,array(),150);
             $chartsArray = $this->getChart($pisCombinedArrTop, $chartName,'pie',$layoutArray," : $");
         }
 

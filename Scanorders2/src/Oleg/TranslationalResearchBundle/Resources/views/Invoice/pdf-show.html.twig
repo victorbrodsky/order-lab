@@ -155,7 +155,7 @@
             <tr>
                 <td COLSPAN=3 ALIGN=CENTER></td>
                 <td>Discount (%)</td>
-                <td>{{ invoice.discountPercent }}</td>
+                <td>{{ invoice.discountPercent|number_format(0,'','') }}</td>
             </tr>
             {% endif %}
 
