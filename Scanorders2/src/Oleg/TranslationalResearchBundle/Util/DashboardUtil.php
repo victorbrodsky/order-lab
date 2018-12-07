@@ -2776,7 +2776,12 @@ class DashboardUtil
 
             }//foreach
 
-            //$startDateLabel = $startDateLabel . " (" . count($transRequests) . " requests)";
+            $layoutArray = array(
+                'height' => $this->height,
+                'width' =>  $this->width,
+                'title' => $chartName,
+                'margin' => array('b'=>200)
+            );
 
             $chartsArray = $this->getChart($averageDays, $chartName,'bar',$layoutArray);
         }
