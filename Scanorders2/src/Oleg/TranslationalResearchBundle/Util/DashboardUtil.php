@@ -1277,6 +1277,7 @@ class DashboardUtil
         $chartName = $this->getChartTypeByValue($chartType);
 
         $chartsArray = null;
+        $warningNoData = null;
 
         ///////////// 1. Principle Investigators by Affiliation ///////////////////
         if( $chartType == "pi-by-affiliation" ) {
@@ -2545,9 +2546,10 @@ class DashboardUtil
             if( is_array($chartsArray) && count($chartsArray) == 0 ) {
                 //echo "count is 0 <br>";
                 //$chartKey = $this->getChartTypeByValue($chartType);
-                $chartsArray['warning'] = "There are no invoices associated with un-funded project requests that specify an involved pathologist during the selected time frame.";//"Chart data is not found for '$chartKey'";
-                $chartsArray['error'] = false;
-                return $chartsArray;
+                $warningNoData = "There are no invoices associated with un-funded project requests that specify an involved pathologist during the selected time frame.";
+                //$chartsArray['warning'] = "There are no invoices associated with un-funded project requests that specify an involved pathologist during the selected time frame.";//"Chart data is not found for '$chartKey'";
+                //$chartsArray['error'] = false;
+                //return $chartsArray;
             }
         }
         ///////////// EOF "23. Total Invoiced Amounts of Non-Funded Projects per Pathologist Involved (Top 10)" /////////////
@@ -3143,8 +3145,11 @@ class DashboardUtil
 
         if( is_array($chartsArray) && count($chartsArray) == 0 ) {
             //echo "count is 0 <br>";
-            $chartKey = $this->getChartTypeByValue($chartType);
-            $chartsArray['warning'] = "Chart data is not found for '$chartKey'";
+            if( !$warningNoData ) {
+                $chartKey = $this->getChartTypeByValue($chartType);
+                $warningNoData = "Chart data is not found for '$chartKey'";
+            }
+            $chartsArray['warning'] = $warningNoData;   //"Chart data is not found for '$chartKey'";
             $chartsArray['error'] = false;
             return $chartsArray;
         }
