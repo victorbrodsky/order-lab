@@ -2793,13 +2793,9 @@ class DashboardUtil
 
             $statuses = array("completedNotified");
             $transRequests = $this->getRequestsByAdvanceFilter($startDate, $thisEndDate, $projectSpecialtyObjects, $category, $statuses);
-
-            $daysTotal = 0;
-            $quantityArr = array();
-            $quantityCountArr = array();
-
-            $stackData = array();
-            $stackDataArr = array();
+            
+            $requestDaysArr = array();
+            $requestCategoryWeightQuantityArr = array();
 
             foreach ($transRequests as $transRequest) {
 
@@ -2816,76 +2812,49 @@ class DashboardUtil
                 $days = $dDiff->days;
                 //echo "days=".$days."<br>";
                 $days = intval($days);
-                if ($days > 0) {
-                    $daysTotal = $daysTotal + intval($days);
-                }
 
                 $index = $transRequest->getOid();
 
-                if (isset($averageDays[$index])) {
-                    $averageDays[$index] = $averageDays[$index] + $days;
+                if (isset($requestDaysArr[$index])) {
+                    $requestDaysArr[$index] = $requestDaysArr[$index] + $days;
                 }
-                $averageDays[$index] = $days;
+                $requestDaysArr[$index] = $days;
 
-                $products = $transRequest->getProducts();
+                //1) calculate weight
                 $totalQuantity = 0;
-                $quantityCountArr[$index] = count($products);
-
-                //per product/services
                 foreach ($transRequest->getProducts() as $product) {
+                    $quantity = $product->getQuantity();
+                    $totalQuantity = $totalQuantity + intval($quantity);
+                }
+                if( $totalQuantity ) {
+                    $weight = $days / $totalQuantity;
+                } else {
+                    $weight = 1;
+                }
 
+                //2) calculate category quantity
+                $totalQuantity = 0;
+                foreach ($transRequest->getProducts() as $product) {
+                    $quantity = $product->getQuantity();
                     $category = $product->getCategory();
-                    if ($category) {
+                    if( $category ) {
                         $categoryIndex = $category->getShortInfo();
-                        $quantity = $product->getQuantity();
-                        $totalQuantity = $totalQuantity + intval($quantity);
-
-                        if( $index && $categoryIndex && $quantity ) {
-
-                            $stackData[$index] = array($categoryIndex => $quantity);
-
-                            if( isset($stackDataArr[$categoryIndex]) ) {
-                                $combinedArr = $stackDataArr[$categoryIndex];
-                                $combinedArr[$index] = $combinedArr[$index] + $quantity;
-                                $stackDataArr[$categoryIndex] = $combinedArr;
-                            } else {
-                                $stackDataArr[$categoryIndex] = array($index=>$quantity);
-                            }
-
-                        }
-                        //$averageDays[$index] = $days;
-
-                    }//if product/category
-                }//foreach product
-
-                $quantityArr[$index] = $totalQuantity;
+                        $requestCategoryWeightQuantityArr[$categoryIndex][$index] = $weight * $quantity;
+                    }
+                }
 
             }//foreach
 
+
+            //$wdaysCategoryArr = array();
             $combinedTrpData = array();
-            $reqArr = array();
 
-            foreach( $stackData as $index=>$stackDataArr ) {
-
-                //weight = total quantity / product count
-                $weight = $quantityArr[$index] / $quantityCountArr[$index];
-
-                $reqArr[$index] = 0;
-
-                foreach($stackDataArr as $categoryIndex => $quantity) {
-
-                    //$reqArr[$index] = $reqArr[$index] + ($days / $quantity);
-                    //$reqArr[$index] = $reqArr[$index] + $quantity * $weight;
-                    //$reqArr[$index] = $reqArr[$index] + $quantity;
-
-                    $days = $averageDays[$index];
-                    $reqArr[$index] = $reqArr[$index] + round($days * $weight);
-
-                    $combinedTrpData[$categoryIndex] = $reqArr;
-
-                }
-
+            foreach($requestCategoryWeightQuantityArr as $categoryIndex=>$arr) {
+                $combinedTrpData[$categoryIndex] = $arr;
             }
+
+            //exit("<br>Exit requestCategoryWeightQuantityArr count=".count($requestCategoryWeightQuantityArr));
+
 
             //$projectIrbPhaseArr[$index] = $days;
             //$combinedTrpData = array();
