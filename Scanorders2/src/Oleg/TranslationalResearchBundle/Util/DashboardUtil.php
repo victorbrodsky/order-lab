@@ -2194,6 +2194,7 @@ class DashboardUtil
         if( $chartType == "fees-by-invoices-per-funded-projects" ) {
 
             $paidInvoices = 0;
+            $unpaidInvoices = 0;
             $totalInvoices = 0;
             $totalFundedPaidFees = 0;
             $totalFundedDueFees = 0;
@@ -2208,8 +2209,11 @@ class DashboardUtil
 
                 //18. Generated Invoices by Status from Funded Projects (Total invoiced $152K)
                 if ($transRequest->getFundedAccountNumber()) {
-                    if ($invoice->getStatus() == "Paid in Full") {
+                    if( $invoice->getStatus() == "Paid in Full" || $invoice->getStatus() == "Paid Partially" ) {
                         $paidInvoices++;
+                    }
+                    if( $invoice->getStatus() == "Unpaid/Issued" ) {
+                        $unpaidInvoices++;
                     }
                     $totalInvoices++;
                     $totalFundedPaidFees = $totalFundedPaidFees + $paidThisInvoiceFee;
@@ -2234,7 +2238,10 @@ class DashboardUtil
                     ."; Total invoices: ".$totalInvoices.", 'Paid in Full' invoices: ".$paidInvoices.")"
             );
 
-            $labels = array('Paid'.' : $'.$this->getNumberFormat($totalFundedPaidFees),'Unpaid (Due)'.' : $'.$this->getNumberFormat($totalFundedDueFees));
+            $labels = array(
+                $paidInvoices.' Paid Invoices'.' : $'.$this->getNumberFormat($totalFundedPaidFees),                 //78 Paid Invoices: $xx
+                $unpaidInvoices.' Unpaid (Due) Invoices'.' : $'.$this->getNumberFormat($totalFundedDueFees)  //154 Unpaid (Due) Invoices: $xx
+            );
             $values = array($totalFundedPaidFees,$totalFundedDueFees);
 
             $chartDataArray['values'] = $values;
