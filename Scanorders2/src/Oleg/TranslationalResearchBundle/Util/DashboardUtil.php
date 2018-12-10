@@ -2576,7 +2576,7 @@ class DashboardUtil
 
             if( is_array($chartsArray) && count($chartsArray) == 0 ) {
                 $warningNoData = "There are no invoices associated with un-funded project requests that specify an involved pathologist during the selected time frame.".
-                "<br>Chart '$chartName' is not generated.";
+                "<br>Chart '$chartName' has not been generated.";
             }
         }
 
