@@ -241,7 +241,7 @@ class DashboardUtil
 
         return $piProjectCountTopArr;
     }
-    public function  getTopMultiArray($piProjectCountArr, $showOthers=false, $descriptionArr=array(), $maxLen=50) {
+    public function getTopMultiArray($piProjectCountArr, $showOthers=false, $descriptionArr=array(), $maxLen=50) {
         //arsort($piProjectCountArr);
         usort($piProjectCountArr, function($a, $b) {
             return $b['value'] - $a['value'];
@@ -354,6 +354,7 @@ class DashboardUtil
 
         $labels = array();
         $values = array();
+        $links = array();
         //$text = array();
 
         if( !$layoutArray ) {
@@ -367,10 +368,18 @@ class DashboardUtil
             $layoutArray['title'] = $title;
         }
 
-        foreach( $dataArr as $label => $value ) {
-            if( $type == "bar" || ($value && $value != 0) ) {
-                if( $valuePrefixLabel && $value ) {
-                    if( strpos($valuePrefixLabel,'$') !== false ) {
+        foreach( $dataArr as $label => $valueData ) {
+            if( is_array($valueData) ) {
+                $value = $valueData["value"];
+                $link = $valueData["link"];
+            } else {
+                $value = $valueData;
+                $link = null;
+            }
+            //value
+            if ($type == "bar" || ($value && $value != 0)) {
+                if ($valuePrefixLabel && $value) {
+                    if (strpos($valuePrefixLabel, '$') !== false) {
                         $label = $label . " " . $valuePrefixLabel . $this->getNumberFormat($value);
                     } else {
                         $label = $label . " " . $valuePrefixLabel . $value;
@@ -380,6 +389,9 @@ class DashboardUtil
                 $labels[] = $label;
                 $values[] = $value;
                 //$text[] = $value;
+                if( $link ) {
+                    $links[] = $link;
+                }
             }
         }
 
@@ -399,6 +411,7 @@ class DashboardUtil
         $chartDataArray[$xAxis] = $labels;
         $chartDataArray[$yAxis] = $values;
         $chartDataArray['type'] = $type;
+        $chartDataArray["links"] = $links;
 
         //$chartDataArray["text"] = "111";
         $chartDataArray["textinfo"] = "value+percent";
@@ -2717,9 +2730,16 @@ class DashboardUtil
                     //echo "daysTotal=".$daysTotal."; count=".$count."<br>";
                     //echo "average days=".round($daysTotal / $count)."<br>";
                     //$averageDays[$startDateLabel] = $daysTotal;
+                    //$link = "www.yahoo.com";
+                    $link = $this->container->get('router')->generate(
+                        'translationalresearch_request_show',
+                        array("id"=>$transRequest->getId()),
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    );
+                    //$averageDays[$startDateLabel] = array("value"=>$avgDaysInt,"link"=>$link);
                     $averageDays[$startDateLabel] = $avgDaysInt;
                 } else {
-                    $averageDays[$startDateLabel] = null;
+                    $averageDays[$startDateLabel] = null;//array("value"=>1,"link"=>1);
                 }
 
 
@@ -2734,7 +2754,7 @@ class DashboardUtil
 //            }
 //            $chartName = $chartName.$categoryStr;
 
-            $chartsArray = $this->getChart($averageDays, $chartName,'bar',$layoutArray);
+            $chartsArray = $this->getChart($averageDays,$chartName,'bar',$layoutArray);
         }
 
         //"32. Turn-around Statistics: Number of days to complete each Work Request (based on 'Completed and Notified' requests)" => "turn-around-statistics-days-complete-per-request",
@@ -2770,10 +2790,25 @@ class DashboardUtil
 
                 $index = $transRequest->getOid();
 
+                $link = $this->container->get('router')->generate(
+                    'translationalresearch_request_show',
+                    array("id"=>$transRequest->getId()),
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+
                 if( isset($averageDays[$index]) ) {
-                    $averageDays[$index] = $averageDays[$index] + $days;
+                    //$averageDays[$index] = $averageDays[$index] + $days;
+                    //$existingArr = $averageDays[$index];
+                    //$existingDays = $existingArr["value"];
+                    $existingDays = $averageDays[$index]["value"];
+                    $days = $days + $existingDays;
+                    $averageDays[$index] = array("value"=>$days,"link"=>$link);
                 }
-                $averageDays[$index] = $days;
+                //$averageDays[$index] = $days;
+                $averageDays[$index] = array("value"=>$days,"link"=>$link);
+
+                //$averageDays[$startDateLabel] = array("value"=>$avgDaysInt,"link"=>$link);
+                //$averageDays[$startDateLabel] = $avgDaysInt;
 
             }//foreach
 
@@ -2793,8 +2828,7 @@ class DashboardUtil
 
             $statuses = array("completedNotified");
             $transRequests = $this->getRequestsByAdvanceFilter($startDate, $thisEndDate, $projectSpecialtyObjects, $category, $statuses);
-            
-            $requestDaysArr = array();
+
             $requestCategoryWeightQuantityArr = array();
 
             foreach ($transRequests as $transRequest) {
@@ -2807,6 +2841,7 @@ class DashboardUtil
                     continue;
                 }
 
+                //1) calculate days
                 $dDiff = $submitted->diff($completed);
                 //echo $dDiff->format('%R'); // use for point out relation: smaller/greater
                 $days = $dDiff->days;
@@ -2815,12 +2850,7 @@ class DashboardUtil
 
                 $index = $transRequest->getOid();
 
-                if (isset($requestDaysArr[$index])) {
-                    $requestDaysArr[$index] = $requestDaysArr[$index] + $days;
-                }
-                $requestDaysArr[$index] = $days;
-
-                //1) calculate weight
+                //2) calculate weight
                 $totalQuantity = 0;
                 foreach ($transRequest->getProducts() as $product) {
                     $quantity = $product->getQuantity();
@@ -2832,8 +2862,7 @@ class DashboardUtil
                     $weight = 1;
                 }
 
-                //2) calculate category quantity
-                $totalQuantity = 0;
+                //3) convert quantity as weighted days
                 foreach ($transRequest->getProducts() as $product) {
                     $quantity = $product->getQuantity();
                     $category = $product->getCategory();
@@ -2845,33 +2874,15 @@ class DashboardUtil
 
             }//foreach
 
-
-            //$wdaysCategoryArr = array();
             $combinedTrpData = array();
-
             foreach($requestCategoryWeightQuantityArr as $categoryIndex=>$arr) {
                 $combinedTrpData[$categoryIndex] = $arr;
             }
-
-            //exit("<br>Exit requestCategoryWeightQuantityArr count=".count($requestCategoryWeightQuantityArr));
-
 
             //$projectIrbPhaseArr[$index] = $days;
             //$combinedTrpData = array();
             //$combinedTrpData['IRB Review'] = $projectIrbPhaseArr;
             //$chartsArray = $this->getStackedChart($combinedTrpData, $chartName, "stack");
-
-            /////
-//            $chartDataArray[$xAxis] = $labels;
-//            $chartDataArray[$yAxis] = $values;
-//            $chartDataArray['name'] = $name;
-//            $chartDataArray['type'] = 'bar';
-//            $stackDataArray[] = $chartDataArray;
-//            $chartsArray = array(
-//                'layout' => $layoutArray,
-//                'data' => $stackDataArray
-//            );
-            ////
 
             $layoutArray = array(
                 'height' => $this->height,
