@@ -2575,7 +2575,8 @@ class DashboardUtil
             $chartsArray = $this->getChart($invoicesFeesByPathologistArrTop, $chartName,'pie',$layoutArray);
 
             if( is_array($chartsArray) && count($chartsArray) == 0 ) {
-                $warningNoData = "There are no invoices associated with un-funded project requests that specify an involved pathologist during the selected time frame.";
+                $warningNoData = "There are no invoices associated with un-funded project requests that specify an involved pathologist during the selected time frame.".
+                " Chart $chartName is not generated.";
             }
         }
 
@@ -2741,14 +2742,9 @@ class DashboardUtil
 
                 if( $count > 0 ) {
                     $avgDaysInt = round($daysTotal/$count);
-                    //echo "daysTotal=".$daysTotal."; count=".$count."<br>";
-                    //echo "average days=".round($daysTotal / $count)."<br>";
-                    //$averageDays[$startDateLabel] = $daysTotal;
-                    //$link = "www.yahoo.com";
-                    //$averageDays[$startDateLabel] = array("value"=>$avgDaysInt,"link"=>$link);
                     $averageDays[$startDateLabel] = $avgDaysInt;
                 } else {
-                    $averageDays[$startDateLabel] = null;//array("value"=>1,"link"=>1);
+                    $averageDays[$startDateLabel] = null;
                 }
 
 
@@ -3105,19 +3101,8 @@ class DashboardUtil
                 if( $count > 0 ) {
                     $avgDaysInt = round($daysTotal/$count);
                     $averageDays[$startDateLabel] = $avgDaysInt;
-
-//                    $link = $this->container->get('router')->generate(
-//                        'translationalresearch_invoice_show',
-//                        array("oid"=>$invoice->getId()),
-//                        UrlGeneratorInterface::ABSOLUTE_URL
-//                    );
-
-//                    $existingDays = $averageDays[$startDateLabel]["value"];
-//                    $avgDaysInt = $avgDaysInt + $existingDays;
-//                    $averageDays[$startDateLabel] = array("value"=>$avgDaysInt,"link"=>$link);
                 } else {
                     $averageDays[$startDateLabel] = null;
-//                    $averageDays[$startDateLabel] = array("value"=>0,"link"=>1);
                 }
 
             } while( $startDate < $endDate );
