@@ -104,8 +104,8 @@ function transresAddChart(chartIndex,chartData) {
 
     var myPlot = document.getElementById(divId);
     myPlot.on('plotly_click', function(data){
-        console.log("data:");
-        console.log(data);
+        //console.log("data:");
+        //console.log(data);
         var index = 0;
         var link = null;
         for(var i=0; i < data.points.length; i++){
@@ -114,7 +114,7 @@ function transresAddChart(chartIndex,chartData) {
                 index = data.points[i].pointIndex;
             }
             //index = 2;
-            console.log("index="+index);
+            //console.log("index="+index);
             if( data.points[i].data.links ) {
                 link = data.points[i].data.links[index];
                 //console.log("get link="+link);
@@ -122,7 +122,7 @@ function transresAddChart(chartIndex,chartData) {
         }
         //alert('Closest point clicked:\n\n'+pts);
         if( link ) {
-            console.log("open link="+link);
+            //console.log("open link="+link);
             window.open(link);
         }
     });

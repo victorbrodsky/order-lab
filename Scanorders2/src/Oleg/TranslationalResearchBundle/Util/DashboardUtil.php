@@ -693,11 +693,19 @@ class DashboardUtil
             $chartDataArray = array();
             $labels = array();
             $values = array();
-            foreach ($dataArr as $label => $value) {
-                //if ($value) {
+            foreach ($dataArr as $label => $valueData) {
+
+                if( is_array($valueData) ) {
+                    $value = $valueData["value"];
+                    $link = $valueData["link"];
+                } else {
+                    $value = $valueData;
+                    $link = null;
+                }
+
                 $labels[] = $label;
                 $values[] = $value;
-                //}
+                $links[] = $link;
             }
 
             //if( count($values) == 0 ) {
@@ -708,6 +716,7 @@ class DashboardUtil
             $chartDataArray[$yAxis] = $values;
             $chartDataArray['name'] = $name;
             $chartDataArray['type'] = 'bar';
+            $chartDataArray['links'] = $links;
 
             $stackDataArray[] = $chartDataArray;
         }
@@ -1167,7 +1176,12 @@ class DashboardUtil
         $irbCount = count($projectPhaseArr);
         if( $irbCount > 0 ) {
             $irbDays = 0;
-            foreach ($projectPhaseArr as $index => $days) {
+            foreach ($projectPhaseArr as $index => $valueData) {
+                if( is_array($valueData) ) {
+                    $days = $valueData['value'];
+                } else {
+                    $days = $valueData;
+                }
                 $irbDays = $irbDays + $days;
             }
             $irbTitle = $irbTitle . " (Average " . round($irbDays/$irbCount) . " days)";
@@ -2731,11 +2745,6 @@ class DashboardUtil
                     //echo "average days=".round($daysTotal / $count)."<br>";
                     //$averageDays[$startDateLabel] = $daysTotal;
                     //$link = "www.yahoo.com";
-                    $link = $this->container->get('router')->generate(
-                        'translationalresearch_request_show',
-                        array("id"=>$transRequest->getId()),
-                        UrlGeneratorInterface::ABSOLUTE_URL
-                    );
                     //$averageDays[$startDateLabel] = array("value"=>$avgDaysInt,"link"=>$link);
                     $averageDays[$startDateLabel] = $avgDaysInt;
                 } else {
@@ -2862,13 +2871,21 @@ class DashboardUtil
                     $weight = 1;
                 }
 
+//                $link = $this->container->get('router')->generate(
+//                    'translationalresearch_request_show',
+//                    array("id"=>$transRequest->getId()),
+//                    UrlGeneratorInterface::ABSOLUTE_URL
+//                );
+
                 //3) convert quantity as weighted days
                 foreach ($transRequest->getProducts() as $product) {
                     $quantity = $product->getQuantity();
                     $category = $product->getCategory();
                     if( $category ) {
                         $categoryIndex = $category->getShortInfo();
-                        $requestCategoryWeightQuantityArr[$categoryIndex][$index] = $weight * $quantity;
+                        $weightedQuantity = $weight * $quantity;
+                        $requestCategoryWeightQuantityArr[$categoryIndex][$index] = $weightedQuantity;
+                        //$requestCategoryWeightQuantityArr[$categoryIndex][$index] = array("value"=>$weightedQuantity,"link"=>$link);
                     }
                 }
 
@@ -2979,22 +2996,32 @@ class DashboardUtil
 
                 $index = $project->getOid();
 
+                $link = $this->container->get('router')->generate(
+                    'translationalresearch_project_show',
+                    array("id"=>$project->getId()),
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+
                 foreach($reviewStates as $state) {
 
                     $days = $this->getDiffDaysByProjectState($project, $state);
 
                     if ($days > 0) {
                         if ($state == "irb_review") {
-                            $projectIrbPhaseArr[$index] = $days;
+                            //$projectIrbPhaseArr[$index] = $days;
+                            $projectIrbPhaseArr[$index] = array("value"=>$days,"link"=>$link);
                         }
                         if ($state == "admin_review") {
-                            $projectAdminPhaseArr[$index] = $days;
+                            //$projectAdminPhaseArr[$index] = $days;
+                            $projectAdminPhaseArr[$index] = array("value"=>$days,"link"=>$link);
                         }
                         if ($state == "committee_review") {
-                            $projectCommitteePhaseArr[$index] = $days;
+                            //$projectCommitteePhaseArr[$index] = $days;
+                            $projectCommitteePhaseArr[$index] = array("value"=>$days,"link"=>$link);
                         }
                         if ($state == "final_review") {
-                            $projectFinalPhaseArr[$index] = $days;
+                            //$projectFinalPhaseArr[$index] = $days;
+                            $projectFinalPhaseArr[$index] = array("value"=>$days,"link"=>$link);
                         }
                     }
 
@@ -3077,14 +3104,21 @@ class DashboardUtil
 
                 if( $count > 0 ) {
                     $avgDaysInt = round($daysTotal/$count);
-                    //echo "daysTotal=".$daysTotal."; count=".$count."<br>";
-                    //echo "average days=".round($daysTotal / $count)."<br>";
-                    //$averageDays[$startDateLabel] = $daysTotal;
                     $averageDays[$startDateLabel] = $avgDaysInt;
+
+//                    $link = $this->container->get('router')->generate(
+//                        'translationalresearch_invoice_show',
+//                        array("oid"=>$invoice->getId()),
+//                        UrlGeneratorInterface::ABSOLUTE_URL
+//                    );
+
+//                    $existingDays = $averageDays[$startDateLabel]["value"];
+//                    $avgDaysInt = $avgDaysInt + $existingDays;
+//                    $averageDays[$startDateLabel] = array("value"=>$avgDaysInt,"link"=>$link);
                 } else {
                     $averageDays[$startDateLabel] = null;
+//                    $averageDays[$startDateLabel] = array("value"=>0,"link"=>1);
                 }
-
 
             } while( $startDate < $endDate );
 
@@ -3119,7 +3153,16 @@ class DashboardUtil
                 //echo "days=".$days."<br>";
                 $days = intval($days);
                 if( $days > 0 ) {
-                    $countArr[$invoice->getOid()] = $days;
+                    $invoiceIndex = $invoice->getOid();
+                    //$countArr[$invoiceIndex] = $days;
+
+                    $link = $this->container->get('router')->generate(
+                        'translationalresearch_invoice_show',
+                        array("oid"=>$invoice->getId()),
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    );
+
+                    $countArr[$invoiceIndex] = array("value"=>$days,"link"=>$link);
                 }
             }
 
