@@ -6867,7 +6867,7 @@ class AdminController extends Controller
     {
 
         if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
-            return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename') . '-order-nopermission'));
+            return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename') . '-nopermission'));
         }
 
         $userSecUtil = $this->container->get('user_security_utility');
@@ -6910,7 +6910,7 @@ class AdminController extends Controller
     {
 
         if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
-            return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename') . '-order-nopermission'));
+            return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename') . '-nopermission'));
         }
 
         $userSecUtil = $this->container->get('user_security_utility');
@@ -7000,7 +7000,7 @@ class AdminController extends Controller
     public function convertLoggerSitenameToSiteObectAction() {
 
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
+            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-nopermission') );
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -7321,7 +7321,7 @@ class AdminController extends Controller
     public function institutionTreeAction(Request $request)
     {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_OBSERVER') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
+            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-nopermission') );
         }
 
         return $this->compositeTree($request,$this->container->getParameter('employees.sitename'));
@@ -7547,7 +7547,7 @@ class AdminController extends Controller
     public function generateFormNodeAction(Request $request)
     {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
+            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-nopermission') );
         }
 
         $formNodeUtil = $this->get('user_formnode_utility');
@@ -7569,7 +7569,7 @@ class AdminController extends Controller
     public function generateTestFormNodeAction(Request $request)
     {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
+            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-nopermission') );
         }
 
         $formNodeUtil = $this->get('user_formnode_utility');
@@ -8679,7 +8679,7 @@ class AdminController extends Controller
     public function addMDUsersToPathologyResultSignatoriesList(Request $request)
     {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
+            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-nopermission') );
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -8824,7 +8824,7 @@ class AdminController extends Controller
      */
     public function generatePatientMetaphoneNameKeyAction() {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
+            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-nopermission') );
         }
 
         $userServiceUtil = $this->get('user_service_utility');
@@ -8889,7 +8889,7 @@ class AdminController extends Controller
     public function opcacheResetAction()
     {
         if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
-            return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename') . '-order-nopermission'));
+            return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename') . '-nopermission'));
         }
 
         $opcache_reset = opcache_reset();
@@ -8904,7 +8904,7 @@ class AdminController extends Controller
     public function updateUserRolesAction()
     {
         if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
-            return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename') . '-order-nopermission'));
+            return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename') . '-nopermission'));
         }
 
         //testing
@@ -9011,7 +9011,7 @@ class AdminController extends Controller
     public function updateUserPostfixAction()
     {
         if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
-            return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename') . '-order-nopermission'));
+            return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename') . '-nopermission'));
         }
 
         exit("not permitted. It has been used only for changing user's postfix once.");

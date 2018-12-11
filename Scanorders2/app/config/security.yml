@@ -363,6 +363,7 @@ security:
        - { path: ^/directory/users/generate, role: ROLE_USERDIRECTORY_EDITOR }
        - { path: ^/directory/event-log, role: ROLE_USERDIRECTORY_EDITOR }
        - { path: ^/directory/admin/populate-all-lists-with-default-values, role: ROLE_USERDIRECTORY_ADMIN }
+       - { path: ^/directory/admin/change-list-element-type/, role: [ROLE_PLATFORM_DEPUTY_ADMIN,ROLE_TRANSRES_ADMIN,ROLE_TRANSRES_TECHNICIAN] }
        - { path: ^/directory/admin/, role: ROLE_USERDIRECTORY_ADMIN }
        - { path: ^/directory/settings/, role: ROLE_PLATFORM_DEPUTY_ADMIN }
 

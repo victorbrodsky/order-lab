@@ -266,7 +266,7 @@ class DefaultController extends Controller
      */
     public function generateAntibodyListAction(Request $request, $filename) {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
+            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-nopermission') );
         }
 
         //exit("generateAntibodyList: ".$filename);
@@ -300,7 +300,7 @@ class DefaultController extends Controller
      */
     public function setPropertiesAntibodyListAction() {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
+            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-nopermission') );
         }
 
         $importUtil = $this->get('transres_import');
@@ -331,7 +331,7 @@ class DefaultController extends Controller
      */
     public function updateInsertAntibodyListAction(Request $request) {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
+            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-nopermission') );
         }
 
         //exit("generateAntibodyList: ".$filename);
@@ -358,7 +358,7 @@ class DefaultController extends Controller
      */
     public function syncIdAntibodyListAction(Request $request) {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
+            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-nopermission') );
         }
 
         exit("syncIdAntibodyListAction");
@@ -383,7 +383,7 @@ class DefaultController extends Controller
      */
     public function updateProjectsImplicitDateAction( Request $request ) {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
+            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-nopermission') );
         }
 
         exit("updateProjectsImplicitDateAction: Not allowed");
@@ -430,7 +430,7 @@ class DefaultController extends Controller
 //     */
     public function updateInvoicePaidDue( Request $request ) {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
+            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-nopermission') );
         }
 
         exit("updateInvoicePaidDue: Not allowed");
@@ -460,7 +460,7 @@ class DefaultController extends Controller
 
     public function updateCommentObject(Request $request) {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
+            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-nopermission') );
         }
 
         $em = $this->getDoctrine()->getManager();
