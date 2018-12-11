@@ -2005,7 +2005,6 @@ class DashboardUtil
                 }
 
                 $subtotalFee = intval($transresRequestUtil->getTransResRequestFeeHtml($transRequest));
-                $subtotalFee = intval($subtotalFee);
                 //$subtotalFees = $subtotalFees + $subtotalFee;
 
                 //17. Total Fees per Funded Project (Top 10)
@@ -2015,7 +2014,7 @@ class DashboardUtil
                     } else {
                         $totalFee = $subtotalFee;
                     }
-                    $totalFee = $this->getNumberFormat($totalFee);
+                    //$totalFee = $this->getNumberFormat($totalFee);
                     $fundedTotalFeesByRequestArr[$projectIndex] = $totalFee;
 
                     $titleCount = $titleCount + $subtotalFee;
