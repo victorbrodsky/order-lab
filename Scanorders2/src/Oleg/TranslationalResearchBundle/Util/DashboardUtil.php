@@ -2061,7 +2061,7 @@ class DashboardUtil
                     } else {
                         $totalFee = $subtotalFee;
                     }
-                    $totalFee = $this->getNumberFormat($totalFee);
+                    //$totalFee = $this->getNumberFormat($totalFee);
                     $unFundedTotalFeesByRequestArr[$projectIndex] = $totalFee;
 
                     $titleCount = $titleCount + $subtotalFee;
@@ -2098,7 +2098,7 @@ class DashboardUtil
                 } else {
                     $totalFee = $subtotalFee;
                 }
-                $totalFee = $this->getNumberFormat($totalFee);
+                //$totalFee = $this->getNumberFormat($totalFee);
                 $totalFeesByInvestigatorArr[$investigatorIndex] = $totalFee;
                 /////////////////////////////
 
@@ -2135,7 +2135,7 @@ class DashboardUtil
                     } else {
                         $totalFee = $subtotalFee;
                     }
-                    $totalFee = $this->getNumberFormat($totalFee);
+                    //$totalFee = $this->getNumberFormat($totalFee);
                     $fundedTotalFeesByInvestigatorArr[$investigatorIndex] = $totalFee;
 
                     $titleCount = $titleCount + $subtotalFee;
@@ -2175,7 +2175,7 @@ class DashboardUtil
                     } else {
                         $totalFee = $subtotalFee;
                     }
-                    $totalFee = $this->getNumberFormat($totalFee);
+                    //$totalFee = $this->getNumberFormat($totalFee);
                     $unFundedTotalFeesByInvestigatorArr[$investigatorIndex] = $totalFee;
 
                     $titleCount = $titleCount + $subtotalFee;
@@ -3348,7 +3348,7 @@ class DashboardUtil
             foreach($pisCombinedArr as $index => $combined) {
                 //total
                 $total = $pisTotalUnpaidArr[$index];
-                $total = $this->getNumberFormat($total);
+                //$total = $this->getNumberFormat($total);
 
                 //days
                 $days = $pisDaysArr[$index];
@@ -3360,7 +3360,7 @@ class DashboardUtil
                 }
 
                 //new index (legend)
-                $newIndex = $index . " ($" . $total . " total owed, " . $days . " average number of days invoice has been unpaid)";
+                $newIndex = $index . " ($" . $this->getNumberFormat($total) . " total owed, " . $days . " average number of days invoice has been unpaid)";
                 $pisCombinedArrNew[$newIndex] = $combined;
             }
 
