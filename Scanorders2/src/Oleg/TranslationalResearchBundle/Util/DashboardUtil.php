@@ -1340,6 +1340,7 @@ class DashboardUtil
                 $count1 = false;
                 $count2 = false;
                 $count3 = false;
+
                 foreach ($pis as $pi) {
                     //1. Principle Investigators by Affiliation
                     if( $this->isUserBelongsToInstitution($pi,$department) ) {
@@ -1356,12 +1357,8 @@ class DashboardUtil
                         $piOtherCounter++;
                         $count3 = true;
                     }
-//                    else {
-//                        //Other Institutions
-//                        $piOtherCounter++;
-//                        $count2 = true;
-//                    }
-                }
+                }//foreach pi
+
                 if( $count1 ) {
                     $projectsCount1++;
                 }
