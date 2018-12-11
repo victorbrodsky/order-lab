@@ -87,9 +87,9 @@ class DashboardUtil
             "20. Total Fees per Investigator for Funded Projects (Top 10)" =>   "fees-by-investigators-per-funded-projects",
             "21. Total Fees per Investigator for Non-Funded Projects (Top 10)"=>"fees-by-investigators-per-nonfunded-projects",
             //Financial statistics based on invoices
-            "22. Generated Invoices by Status for Funded Projects" =>               "fees-by-invoices-per-funded-projects",
-            "23. Generated Invoices by Status for Non-Funded Projects (Top 10)" =>  "fees-by-invoices-per-nonfunded-projects",
-            "24. Generated Invoices by Status per PI (Top 10)" =>                   "fees-by-invoices-per-pi",
+            "22. Generated Invoices for Funded Projects" =>               "fees-by-invoices-per-funded-projects",
+            "23. Generated Invoices for Non-Funded Projects (Top 10)" =>  "fees-by-invoices-per-nonfunded-projects",
+            "24. Generated Invoices per PI (Top 10)" =>                   "fees-by-invoices-per-pi",
             //Pathologists Involved and number of projects
             "25. Total Invoiced Amounts for Projects per Pathologist Involved (Top 10)" =>             "fees-by-invoices-per-projects-per-pathologist-involved",
             "26. Total Invoiced Amounts for Funded Projects per Pathologist Involved (Top 10)" =>      "fees-by-invoices-per-funded-projects-per-pathologist-involved",
@@ -1961,8 +1961,8 @@ class DashboardUtil
                 'title' => $chartName
             );
 
-            $fundedTotalFees = $this->getNumberFormat($fundedTotalFees);
-            $unFundedTotalFees = $this->getNumberFormat($unFundedTotalFees);
+            //$fundedTotalFees = $this->getNumberFormat($fundedTotalFees);
+            //$unFundedTotalFees = $this->getNumberFormat($unFundedTotalFees);
 
             $labels = array('Funded : $'.$fundedTotalFees,'Non-Funded : $'.$unFundedTotalFees);
             $values = array($fundedTotalFees,$unFundedTotalFees);
@@ -1983,7 +1983,6 @@ class DashboardUtil
 
         }
 
-        //13. Total Fees per Funded Project (Top 10)
         //17. Total Fees per Funded Project (Top 10)
         if( $chartType == "fees-by-requests-per-funded-projects" ) {
             $transresRequestUtil = $this->container->get('transres_request_util');
