@@ -1694,16 +1694,25 @@ class DashboardUtil
             );
         }
 
-        //6. Total number of Requests per Project (Top 10)
+        //9. Total Number of Work Requests per Project (Top 10)
         if( $chartType == "requests-per-project" ) {
             $requestPerProjectArr = array();
 
             $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
             foreach($requests as $transRequest) {
                 $project = $transRequest->getProject();
-                $projectIndex = $project->getOid(false);
                 $projectId = $project->getId();
                 $piIdArr = array();
+
+                //in the legend after the project ID show the name of the PI: projectID by username: XXXX
+                $projectIndex = $project->getOid(false);
+                $piArr = array();
+                foreach($transRequest->getPrincipalInvestigators() as $pi) {
+                    $piArr[] = $pi->getUsernameOptimal();
+                }
+                if( count($piArr) > 0 ) {
+                    $projectIndex = $projectIndex . " by " . implode(", ",$piArr);
+                }
 
                 if( isset($requestPerProjectArr[$projectId]) && isset($requestPerProjectArr[$projectId]['value']) ) {
                     $count = $requestPerProjectArr[$projectId]['value'] + 1;
@@ -1740,9 +1749,18 @@ class DashboardUtil
 
                 if( $transRequest->getFundedAccountNumber() ) {
                     $project = $transRequest->getProject();
-                    $projectIndex = $project->getOid(false);
                     $projectId = $project->getId();
                     $piIdArr = array();
+
+                    //in the legend after the project ID show the name of the PI: projectID by username: XXXX
+                    $projectIndex = $project->getOid(false);
+                    $piArr = array();
+                    foreach($transRequest->getPrincipalInvestigators() as $pi) {
+                        $piArr[] = $pi->getUsernameOptimal();
+                    }
+                    if( count($piArr) > 0 ) {
+                        $projectIndex = $projectIndex . " by " . implode(", ",$piArr);
+                    }
 
                     if( isset($fundedRequestPerProjectArr[$projectId]) && isset($fundedRequestPerProjectArr[$projectId]['value']) ) {
                         $count = $fundedRequestPerProjectArr[$projectId]['value'] + 1;
@@ -1775,9 +1793,18 @@ class DashboardUtil
                     //do nothing
                 } else {
                     $project = $transRequest->getProject();
-                    $projectIndex = $project->getOid(false);
                     $projectId = $project->getId();
                     $piIdArr = array();
+
+                    //in the legend after the project ID show the name of the PI: projectID by username: XXXX
+                    $projectIndex = $project->getOid(false);
+                    $piArr = array();
+                    foreach($transRequest->getPrincipalInvestigators() as $pi) {
+                        $piArr[] = $pi->getUsernameOptimal();
+                    }
+                    if( count($piArr) > 0 ) {
+                        $projectIndex = $projectIndex . " by " . implode(", ",$piArr);
+                    }
 
                     if( isset($unFundedRequestPerProjectArr[$projectId]) && isset($unFundedRequestPerProjectArr[$projectId]['value']) ) {
                         $count = $unFundedRequestPerProjectArr[$projectId]['value'] + 1;
