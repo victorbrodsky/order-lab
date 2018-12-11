@@ -1961,10 +1961,10 @@ class DashboardUtil
                 'title' => $chartName
             );
 
-            //$fundedTotalFees = $this->getNumberFormat($fundedTotalFees);
-            //$unFundedTotalFees = $this->getNumberFormat($unFundedTotalFees);
+            $fundedTotalFeesLabel = $this->getNumberFormat($fundedTotalFees);
+            $unFundedTotalFeesLabel = $this->getNumberFormat($unFundedTotalFees);
 
-            $labels = array('Funded : $'.$fundedTotalFees,'Non-Funded : $'.$unFundedTotalFees);
+            $labels = array('Funded : $'.$fundedTotalFeesLabel,'Non-Funded : $'.$unFundedTotalFeesLabel);
             $values = array($fundedTotalFees,$unFundedTotalFees);
 
             $chartDataArray['values'] = $values;
