@@ -3481,6 +3481,7 @@ class ListController extends Controller
 
         $additionalSitename = null;
 
+        exit("pathbase=".$pathbase);
         if( $pathbase == "translationalresearchfeesschedule" || $pathbase == "antibodies" ) {
             $additionalSitename = $this->container->getParameter('translationalresearch.sitename');
             if(
