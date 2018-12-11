@@ -2356,7 +2356,7 @@ class DashboardUtil
                 $dueThisInvoiceFee = intval($invoice->getDue());
 
                 //24. Generated Invoices by Status per PI (Top 10)
-                if( $transRequest->getFundedAccountNumber() ) { //TODO: why funded?
+                //if( $transRequest->getFundedAccountNumber() ) { //TODO: why funded?
                     //Total fees
                     if (isset($invoicesFeesByPiArr[$investigatorIndex])) {
                         $totalFee = $invoicesFeesByPiArr[$investigatorIndex] + $totalThisInvoiceFee;
@@ -2383,7 +2383,7 @@ class DashboardUtil
                     $invoiceDueFeeArr[$investigatorIndex] = $totalFee;
 
                     $titleCount = $titleCount + $totalThisInvoiceFee;
-                }
+                //}
 
             }//foreach invoices
 
