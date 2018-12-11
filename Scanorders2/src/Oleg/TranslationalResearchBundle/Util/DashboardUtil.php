@@ -1725,13 +1725,13 @@ class DashboardUtil
             );
 
             $chartName = $this->getTitleWithTotal($chartName,$titleCount);
-            $showOther = $this->getOtherStr($showLimited,"Projects");
+            $showOther = $this->getOtherStr($showLimited,"projects");
             $requestPerProjectTopArr = $this->getTopMultiArray($requestPerProjectArr,$showOther);
             $filterArr['funded'] = null;
             $chartsArray = $this->getChartByMultiArray($requestPerProjectTopArr, $filterArr, $chartName,"pie",$layoutArray," : ");
         }
 
-        //7. Total number of Requests per Funded Project (Top 10)
+        //10. Total Number of Work Requests per Funded Project (Top 10)
         if( $chartType == "requests-per-funded-projects" ) {
             $fundedRequestPerProjectArr = array();
 
@@ -1759,7 +1759,7 @@ class DashboardUtil
             }
 
             $chartName = $this->getTitleWithTotal($chartName,$titleCount);
-            $showOther = $this->getOtherStr($showLimited,"Projects");
+            $showOther = $this->getOtherStr($showLimited,"projects");
             $fundedRequestPerProjectTopArr = $this->getTopMultiArray($fundedRequestPerProjectArr,$showOther);
             $filterArr['funded'] = true;
             $chartsArray = $this->getChartByMultiArray( $fundedRequestPerProjectTopArr, $filterArr, $chartName,"pie",$layoutArray," : ");
@@ -1794,14 +1794,14 @@ class DashboardUtil
             }
 
             $chartName = $this->getTitleWithTotal($chartName,$titleCount);
-            $showOther = $this->getOtherStr($showLimited,"Projects");
+            $showOther = $this->getOtherStr($showLimited,"projects");
             $unFundedRequestPerProjectTopArr = $this->getTopMultiArray($unFundedRequestPerProjectArr,$showOther);
             $filterArr['funded'] = false;
             $chartsArray = $this->getChartByMultiArray( $unFundedRequestPerProjectTopArr, $filterArr, $chartName,"pie",$layoutArray," : ");
         }
 
         //Work request statistics: Products/Services
-        //9. TRP Service Productivity by Products/Services (Top 10)
+        //12. TRP Service Productivity by Products/Services (Top 10)
         if( $chartType == "service-productivity-by-service" ) {
             $quantityCountByCategoryArr = array();
 
@@ -1826,7 +1826,7 @@ class DashboardUtil
             }//foreach $requests
 
             $chartName = $this->getTitleWithTotal($chartName,$titleCount);
-            $showOther = $this->getOtherStr($showLimited,"Products/Services");
+            $showOther = $this->getOtherStr($showLimited,"products/services");
             $quantityCountByCategoryTopArr = $this->getTopArray($quantityCountByCategoryArr,$showOther);
             $layoutArray = array(
                 'height' => $this->height,
@@ -1836,7 +1836,7 @@ class DashboardUtil
 
         }
 
-        //10. TRP Service Productivity for Funded Projects (Top 10)
+        //13. TRP Service Productivity for Funded Projects (Top 10)
         if( $chartType == "service-productivity-by-service-per-funded-projects" ) {
             $fundedQuantityCountByCategoryArr = array();
 
@@ -1863,12 +1863,12 @@ class DashboardUtil
             }//foreach $requests
 
             $chartName = $this->getTitleWithTotal($chartName,$titleCount);
-            $showOther = $this->getOtherStr($showLimited,"Projects");
+            $showOther = $this->getOtherStr($showLimited,"projects");
             $fundedQuantityCountByCategoryTopArr = $this->getTopArray($fundedQuantityCountByCategoryArr,$showOther);
             $chartsArray = $this->getChart($fundedQuantityCountByCategoryTopArr, $chartName,'pie',$layoutArray," : ");
         }
 
-        //11. TRP Service Productivity for Non-Funded Projects (Top 10)
+        //14. TRP Service Productivity for Non-Funded Projects (Top 10)
         if( $chartType == "service-productivity-by-service-per-nonfunded-projects" ) {
             $unFundedQuantityCountByCategoryArr = array();
 
@@ -1897,7 +1897,7 @@ class DashboardUtil
             }//foreach $requests
 
             $chartName = $this->getTitleWithTotal($chartName,$titleCount);
-            $showOther = $this->getOtherStr($showLimited,"Projects");
+            $showOther = $this->getOtherStr($showLimited,"projects");
             $unFundedQuantityCountByCategoryTopArr = $this->getTopArray($unFundedQuantityCountByCategoryArr,$showOther);
             $chartsArray = $this->getChart($unFundedQuantityCountByCategoryTopArr, $chartName,'pie',$layoutArray," : ");
         }
@@ -1937,7 +1937,7 @@ class DashboardUtil
             }//foreach $requests
 
             $chartName = $this->getTitleWithTotal($chartName,$titleCount);
-            $showOther = $this->getOtherStr($showLimited,"Projects");
+            $showOther = $this->getOtherStr($showLimited,"projects");
             $fundedQuantityCountByCategoryTopArr = $this->getTopArray($fundedQuantityCountByCategoryArr,$showOther);
             $unFundedQuantityCountByCategoryTopArr = $this->getTopArray($unFundedQuantityCountByCategoryArr,$showOther);
 
@@ -2045,7 +2045,7 @@ class DashboardUtil
             }//foreach $requests
 
             $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($titleCount),"$");
-            $showOther = $this->getOtherStr($showLimited,"Projects");
+            $showOther = $this->getOtherStr($showLimited,"projects");
             $fundedTotalFeesByRequestTopArr = $this->getTopArray($fundedTotalFeesByRequestArr,$showOther);
             $chartsArray = $this->getChart($fundedTotalFeesByRequestTopArr, $chartName,'pie',$layoutArray," : $");
         }
@@ -2092,7 +2092,7 @@ class DashboardUtil
             }//foreach $requests
 
             $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($titleCount),"$");
-            $showOther = $this->getOtherStr($showLimited,"Projects");
+            $showOther = $this->getOtherStr($showLimited,"projects");
             $unFundedTotalFeesByRequestTopArr = $this->getTopArray($unFundedTotalFeesByRequestArr,$showOther);
             $chartsArray = $this->getChart($unFundedTotalFeesByRequestTopArr, $chartName,'pie',$layoutArray," : $");
         }
@@ -2334,7 +2334,7 @@ class DashboardUtil
 
             $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($titleCount),"$");
             //Generated Invoices by Status per Funded Project (Top 10)
-            $showOther = $this->getOtherStr($showLimited,"Projects");
+            $showOther = $this->getOtherStr($showLimited,"projects");
             $invoicesByProjectTopArr = $this->getTopArray($invoicesByProjectArr,$showOther);
             $invoicesFeesByProjectTopArr = $this->getTopArray($invoicesFeesByProjectArr,$showOther); //public function getTopArray(
             //merge two to attach fees to label
