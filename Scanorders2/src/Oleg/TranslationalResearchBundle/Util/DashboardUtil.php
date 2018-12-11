@@ -1628,18 +1628,25 @@ class DashboardUtil
 
 
         //Work request statistics
-        //5. Total Number of Work Requests by Funding Source
+        //8. Total Number of Work Requests by Funding Source
         if( $chartType == "requests-by-funding-source" ) {
 
             $fundedRequestCount = 0;
             $notFundedRequestCount = 0;
 
+            $fundedProjectArr = array();
+            $unfundedProjectArr = array();
+
             $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
             foreach($requests as $transRequest) {
+                $project = $transRequest->getProject();
+                $projectId = $project->getId();
                 if( $transRequest->getFundedAccountNumber() ) {
                     $fundedRequestCount++;
+                    $fundedProjectArr[$projectId]++;
                 } else {
                     $notFundedRequestCount++;
+                    $unfundedProjectArr[$projectId]++;
                 }
             }//foreach
 
@@ -1655,7 +1662,22 @@ class DashboardUtil
                 'title' => $chartName //"5. Total Number of Work Requests by Funding Source"
             );
 
-            $labels = array('Funded'." : ".$fundedRequestCount,'Non-Funded'." : ".$notFundedRequestCount);
+            $fundedProjectCount = 0;
+            foreach($fundedProjectArr as $projectCount) {
+                $fundedProjectCount = $fundedProjectCount + $projectCount;
+            }
+
+            $unfundedProjectCount = 0;
+            foreach($unfundedProjectArr as $projectCount) {
+                $unfundedProjectCount = $unfundedProjectCount + $projectCount;
+            }
+
+            //Work Requests for 154 Funded Projects: 1298
+            $fundedLabel = "Work Requests for $fundedProjectCount Funded Projects"." : ".$fundedRequestCount;
+            //Work Requests for 12 Non-Funded Projects: 445
+            $unfundedLabel = "Work Requests for $unfundedProjectCount Non-Funded Projects"." : ".$notFundedRequestCount;
+
+            $labels = array($fundedLabel,$unfundedLabel);
             $values = array($fundedRequestCount,$notFundedRequestCount);
 
             $chartDataArray['values'] = $values;
@@ -1743,7 +1765,7 @@ class DashboardUtil
             $chartsArray = $this->getChartByMultiArray( $fundedRequestPerProjectTopArr, $filterArr, $chartName,"pie",$layoutArray," : ");
         }
 
-        //8. Total number of Requests per Non-Funded Project (Top 10)
+        //11. Total Number of Work Requests per Non-Funded Project (Top 10)
         if( $chartType == "requests-per-nonfunded-projects" ) {
             $unFundedRequestPerProjectArr = array();
 
