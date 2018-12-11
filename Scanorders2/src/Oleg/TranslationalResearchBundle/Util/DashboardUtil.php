@@ -2260,7 +2260,7 @@ class DashboardUtil
             /////////////////////////////
         }
 
-        //23. Generated Invoices by Status per Funded Project (Top 10)
+        //"23. Generated Invoices by Status for Non-Funded Projects (Top 10)" =>  "fees-by-invoices-per-nonfunded-projects"
         if( $chartType == "fees-by-invoices-per-nonfunded-projects" ) {
             $invoicesByProjectArr = array();
             $invoicesFeesByProjectArr = array();
@@ -2284,8 +2284,10 @@ class DashboardUtil
 
                 $totalThisInvoiceFee = intval($invoice->getTotal());
 
-                //Generated Invoices by Status per Funded Project (Top 10)
-                if ($transRequest->getFundedAccountNumber()) {
+                //Generated Invoices by Status for Non-Funded Projects
+                if( $transRequest->getFundedAccountNumber() ) {
+                    //do nothing
+                } else {
                     //Generated Invoices by Status per Funded Project (Top 10)
                     if (isset($invoicesByProjectArr[$projectIndex])) {
                         $count = $invoicesByProjectArr[$projectIndex] + 1;
@@ -2314,7 +2316,7 @@ class DashboardUtil
             $invoicesFeesByProjectTopArr = $this->getTopArray($invoicesFeesByProjectArr,$showOther); //public function getTopArray(
             //merge two to attach fees to label
             $invoicesByProjectTopArr = $this->attachSecondValueToFirstLabel($invoicesByProjectTopArr,$invoicesFeesByProjectTopArr," : $");
-            $chartsArray = $this->getChart($invoicesByProjectTopArr, $chartName,'pie',$layoutArray);
+            $chartsArray = $this->getChart($invoicesByProjectTopArr,$chartName,'pie',$layoutArray);
         }
 
         //24. Generated Invoices by Status per PI (Top 10)
@@ -2349,7 +2351,7 @@ class DashboardUtil
                 $dueThisInvoiceFee = intval($invoice->getDue());
 
                 //24. Generated Invoices by Status per PI (Top 10)
-                if ($transRequest->getFundedAccountNumber()) {
+                if( $transRequest->getFundedAccountNumber() ) { //TODO: why funded?
                     //Total fees
                     if (isset($invoicesFeesByPiArr[$investigatorIndex])) {
                         $totalFee = $invoicesFeesByPiArr[$investigatorIndex] + $totalThisInvoiceFee;
