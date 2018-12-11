@@ -2264,6 +2264,7 @@ class DashboardUtil
         if( $chartType == "fees-by-invoices-per-nonfunded-projects" ) {
             $invoicesByProjectArr = array();
             $invoicesFeesByProjectArr = array();
+            $totalInvoices = 0;
 
             $invoices = $this->getInvoicesByFilter($startDate, $endDate, $projectSpecialtyObjects);
             foreach( $invoices as $invoice ) {
@@ -2305,6 +2306,7 @@ class DashboardUtil
                     $invoicesFeesByProjectArr[$projectIndex] = $totalFee;
 
                     $titleCount = $titleCount + $totalThisInvoiceFee;
+                    $totalInvoices++;
                 }
 
             }//foreach invoices
@@ -2316,7 +2318,7 @@ class DashboardUtil
             $invoicesFeesByProjectTopArr = $this->getTopArray($invoicesFeesByProjectArr,$showOther); //public function getTopArray(
             //merge two to attach fees to label
             $invoicesByProjectTopArr = $this->attachSecondValueToFirstLabel($invoicesByProjectTopArr,$invoicesFeesByProjectTopArr," : $");
-            $chartsArray = $this->getChart($invoicesByProjectTopArr,$chartName,'pie',$layoutArray);
+            $chartsArray = $this->getChart($invoicesByProjectTopArr,$chartName." (".$totalInvoices." invoices)",'pie',$layoutArray);
 
             if( is_array($chartsArray) && count($chartsArray) == 0 ) {
                 $warningNoData = "There are no invoices associated with un-funded project requests during the selected time frame.".
@@ -2329,6 +2331,7 @@ class DashboardUtil
             $invoicesFeesByPiArr = array();
             $invoicePaidFeeArr = array();
             $invoiceDueFeeArr = array();
+            $totalInvoices = 0;
 
             $invoices = $this->getInvoicesByFilter($startDate, $endDate, $projectSpecialtyObjects);
             foreach( $invoices as $invoice ) {
@@ -2383,11 +2386,13 @@ class DashboardUtil
                     $invoiceDueFeeArr[$investigatorIndex] = $totalFee;
 
                     $titleCount = $titleCount + $totalThisInvoiceFee;
+                    $totalInvoices++;
                 //}
 
             }//foreach invoices
 
             $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($titleCount),"$");
+            $chartName = $chartName." (".$totalInvoices." invoices)";
 
             //24. Generated Invoices by Status per PI (Top 10)
             $descriptionArr = array(
@@ -2404,6 +2409,7 @@ class DashboardUtil
             $invoicesFeesByPathologistArr = array();
             $invoicePaidFeeArr = array();
             $invoiceDueFeeArr = array();
+            $totalInvoices = 0;
 
             //get latest invoices Excluding Work requests with status=Canceled and Draft
             $invoices = $this->getInvoicesByFilter($startDate, $endDate, $projectSpecialtyObjects);
@@ -2447,9 +2453,12 @@ class DashboardUtil
                     $titleCount = $titleCount + $totalThisInvoiceFee;
                 }
 
+                $totalInvoices++;
+
             }//foreach invoices
 
             $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($titleCount),"$");
+            $chartName = $chartName." (".$totalInvoices." invoices)";
 
             $descriptionArr = array(
                 array("paid $"," : $","limegreen","money",$invoicePaidFeeArr),
@@ -2465,6 +2474,7 @@ class DashboardUtil
             $invoicesFeesByPathologistArr = array();
             $invoicePaidFeeArr = array();
             $invoiceDueFeeArr = array();
+            $totalInvoices = 0;
 
             //get latest invoices Excluding Work requests with status=Canceled and Draft
             $invoices = $this->getInvoicesByFilter($startDate, $endDate, $projectSpecialtyObjects);
@@ -2508,11 +2518,13 @@ class DashboardUtil
 
                         $titleCount = $titleCount + $totalThisInvoiceFee;
                     }
+                    $totalInvoices++;
                 }
 
             }//foreach invoices
 
             $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($titleCount),"$");
+            $chartName = $chartName." (".$totalInvoices." invoices)";
 
             $descriptionArr = array(
                 array("paid $"," : $","limegreen","money",$invoicePaidFeeArr),
@@ -2529,6 +2541,7 @@ class DashboardUtil
             $invoicesFeesByPathologistArr = array();
             $invoicePaidFeeArr = array();
             $invoiceDueFeeArr = array();
+            $totalInvoices = 0;
 
             //get latest invoices Excluding Work requests with status=Canceled and Draft
             $invoices = $this->getInvoicesByFilter($startDate, $endDate, $projectSpecialtyObjects);
@@ -2574,6 +2587,7 @@ class DashboardUtil
 
                         $titleCount = $titleCount + $totalThisInvoiceFee;
                     }
+                    $totalInvoices++;
                 }
 
             }//foreach invoices
@@ -2586,7 +2600,7 @@ class DashboardUtil
             );
             $showOther = $this->getOtherStr($showLimited,"pathologists involved");
             $invoicesFeesByPathologistArrTop = $this->getTopArray($invoicesFeesByPathologistArr,$showOther,$descriptionArr);
-            $chartsArray = $this->getChart($invoicesFeesByPathologistArrTop, $chartName,'pie',$layoutArray);
+            $chartsArray = $this->getChart($invoicesFeesByPathologistArrTop, $chartName." (".$totalInvoices." invoices)",'pie',$layoutArray);
 
             if( is_array($chartsArray) && count($chartsArray) == 0 ) {
                 $warningNoData = "There are no invoices associated with un-funded project requests that specify an involved pathologist during the selected time frame.".
