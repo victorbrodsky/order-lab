@@ -1310,7 +1310,7 @@ class DashboardUtil
         $chartsArray = null;
         $warningNoData = null;
 
-        ///////////// 1. Principle Investigators by Affiliation ///////////////////
+        //1. Principle Investigators by Affiliation
         if( $chartType == "pi-by-affiliation" ) {
 
             $userSecUtil = $this->container->get('user_security_utility');
@@ -1329,22 +1329,47 @@ class DashboardUtil
                 }
             }
 
+            $projectsCount1 = 0;
+            $projectsCount2 = 0;
+            $projectsCount3 = 0;
+
             $projects = $this->getProjectsByFilter($startDate,$endDate,$projectSpecialtyObjects);
 
             foreach($projects as $project) {
                 $pis = $project->getPrincipalInvestigators();
+                $count1 = false;
+                $count2 = false;
+                $count3 = false;
                 foreach ($pis as $pi) {
                     //1. Principle Investigators by Affiliation
                     if( $this->isUserBelongsToInstitution($pi,$department) ) {
                         //WCM Pathology Faculty - WCM Department of Pathology and Laboratory Medicine in any Title’s department field
                         $piWcmPathologyCounter++;
-                    } elseif ( $this->isUserBelongsToInstitution($pi,$institution) ) {
+                        $count1 = true;
+                    }
+                    elseif ( $this->isUserBelongsToInstitution($pi,$institution) ) {
                         //WCM Other Departmental Faculty - WCM institution
                         $piWcmCounter++;
+                        $count2 = true;
                     } else {
                         //Other Institutions
                         $piOtherCounter++;
+                        $count3 = true;
                     }
+//                    else {
+//                        //Other Institutions
+//                        $piOtherCounter++;
+//                        $count2 = true;
+//                    }
+                }
+                if( $count1 ) {
+                    $projectsCount1++;
+                }
+                if( $count2 ) {
+                    $projectsCount2++;
+                }
+                if( $count3 ) {
+                    $projectsCount3++;
                 }
             }
 
@@ -1352,7 +1377,7 @@ class DashboardUtil
             $chartDataArray = array();
             $type = 'pie';
 
-            $titleTotal = $piWcmPathologyCounter + $piWcmCounter;
+            $titleTotal = $piWcmPathologyCounter + $piWcmCounter + $piOtherCounter;
             $chartName = $this->getTitleWithTotal($chartName,$titleTotal);
 
             $layoutArray = array(
@@ -1366,13 +1391,19 @@ class DashboardUtil
             //$piWcmPathologyCounter = 2;
             //$piWcmCounter = 5;
 
+            $instName = $institutionAbbreviation . " " . $departmentAbbreviation;
+
+            //WCMC pathology faculty PIs with 134 projects: 26
+            //Non-WCMC pathology faculty PIs with 211 projects: 37
             $labels = array(
-                "$institutionAbbreviation $departmentAbbreviation Faculty"." ".$piWcmPathologyCounter,
-                "$institutionAbbreviation Other Departmental Faculty"." ".$piWcmCounter,
-                //'Other Institutions'." ".$piOtherCounter
+                "$instName faculty PIs with ".$projectsCount1." projects: ".$piWcmPathologyCounter,
+                //"$institutionAbbreviation Other Departmental faculty PIs with ".$projectsCount2." projects: ".$piWcmCounter,
+                "Non-".$instName." faculty PIs with ".$projectsCount2." projects: ".$piWcmCounter,
+                "Other Institutions faculty PIs with ".$projectsCount3." projects: ".$piOtherCounter
             );
-            //$values = array($piWcmPathologyCounter,$piWcmCounter,$piOtherCounter);
-            $values = array($piWcmPathologyCounter,$piWcmCounter);
+
+            $values = array($piWcmPathologyCounter,$piWcmCounter,$piOtherCounter);
+            //$values = array($piWcmPathologyCounter,$piWcmCounter);
 
             $chartDataArray['values'] = $values;
             $chartDataArray['labels'] = $labels;
@@ -1387,7 +1418,6 @@ class DashboardUtil
                 'data' => $dataArray
             );
         }
-        ///////////// EOF 1. Principle Investigators by Affiliation ///////////////////
 
         //2. Total number of projects (XXX) per PI (Top 5/10) (APPROVED & CLOSED)
         if( $chartType == "projects-per-pi" ) {

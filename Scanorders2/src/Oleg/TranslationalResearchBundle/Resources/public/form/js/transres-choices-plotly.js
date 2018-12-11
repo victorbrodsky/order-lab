@@ -55,13 +55,12 @@ function transresGetCharts() {
         }).success(function(chartData) {
             //console.log('chartData=');
             //console.log(chartData);
-
             transresAddChart(chartIndex,chartData);
-
         }).done(function() {
             //
         }).error(function(jqXHR, textStatus, errorThrown) {
             console.log('Error : ' + errorThrown);
+            transresAddErrorLine("Unexpected Error. Please make sure that your session is not timed out and you are still logged in.",'error');
         });
 
     }
