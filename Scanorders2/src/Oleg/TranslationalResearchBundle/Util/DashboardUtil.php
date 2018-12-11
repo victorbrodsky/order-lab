@@ -2317,6 +2317,11 @@ class DashboardUtil
             //merge two to attach fees to label
             $invoicesByProjectTopArr = $this->attachSecondValueToFirstLabel($invoicesByProjectTopArr,$invoicesFeesByProjectTopArr," : $");
             $chartsArray = $this->getChart($invoicesByProjectTopArr,$chartName,'pie',$layoutArray);
+
+            if( is_array($chartsArray) && count($chartsArray) == 0 ) {
+                $warningNoData = "There are no invoices associated with un-funded project requests during the selected time frame.".
+                    "<br>Chart '$chartName' has not been generated.";
+            }
         }
 
         //24. Generated Invoices by Status per PI (Top 10)
