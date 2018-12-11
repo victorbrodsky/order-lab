@@ -1643,10 +1643,10 @@ class DashboardUtil
                 $projectId = $project->getId();
                 if( $transRequest->getFundedAccountNumber() ) {
                     $fundedRequestCount++;
-                    $fundedProjectArr[$projectId]++;
+                    $fundedProjectArr[$projectId] = 1;
                 } else {
                     $notFundedRequestCount++;
-                    $unfundedProjectArr[$projectId]++;
+                    $unfundedProjectArr[$projectId] = 1;
                 }
             }//foreach
 
