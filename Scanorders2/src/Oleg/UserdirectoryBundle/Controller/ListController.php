@@ -3481,7 +3481,7 @@ class ListController extends Controller
 
         $additionalSitename = null;
 
-        if( $pathbase == "translationalresearchfeesschedule" ) {
+        if( $pathbase == "translationalresearchfeesschedule" || $pathbase == "antibodies" ) {
             $additionalSitename = $this->container->getParameter('translationalresearch.sitename');
             if(
                 false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') &&
