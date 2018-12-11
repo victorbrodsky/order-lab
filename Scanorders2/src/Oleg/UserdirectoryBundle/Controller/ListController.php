@@ -3483,7 +3483,10 @@ class ListController extends Controller
 
         if( $pathbase == "translationalresearchfeesschedule" ) {
             $additionalSitename = $this->container->getParameter('translationalresearch.sitename');
-            if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ) {
+            if(
+                false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') &&
+                false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN')
+            ) {
                 return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
             }
         } else {
