@@ -1937,13 +1937,13 @@ class DashboardUtil
             }//foreach $requests
 
             $chartName = $this->getTitleWithTotal($chartName,$titleCount);
-            $showOther = $this->getOtherStr($showLimited,"projects");
-            $fundedQuantityCountByCategoryTopArr = $this->getTopArray($fundedQuantityCountByCategoryArr,$showOther);
-            $unFundedQuantityCountByCategoryTopArr = $this->getTopArray($unFundedQuantityCountByCategoryArr,$showOther);
+            //$showOther = $this->getOtherStr($showLimited,"projects");
+            //$fundedQuantityCountByCategoryTopArr = $this->getTopArray($fundedQuantityCountByCategoryArr,$showOther);
+            //$unFundedQuantityCountByCategoryTopArr = $this->getTopArray($unFundedQuantityCountByCategoryArr,$showOther);
 
             $combinedTrpData = array();
-            $combinedTrpData['Funded'] = $fundedQuantityCountByCategoryTopArr;  //$fundedQuantityCountByCategoryArr;
-            $combinedTrpData['Not-Funded'] = $unFundedQuantityCountByCategoryTopArr;    //$unFundedQuantityCountByCategoryArr;
+            $combinedTrpData['Funded'] = $fundedQuantityCountByCategoryArr; //$fundedQuantityCountByCategoryTopArr;  //$fundedQuantityCountByCategoryArr;
+            $combinedTrpData['Not-Funded'] = $unFundedQuantityCountByCategoryArr; //$unFundedQuantityCountByCategoryTopArr;    //$unFundedQuantityCountByCategoryArr;
             $chartsArray = $this->getStackedChart($combinedTrpData, $chartName, "stack");
         }
 
