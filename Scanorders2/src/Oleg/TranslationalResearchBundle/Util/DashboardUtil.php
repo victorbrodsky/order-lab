@@ -1440,9 +1440,9 @@ class DashboardUtil
                     $piProjectCountArr[$userId]['objectid'] = $userId;
                     $piProjectCountArr[$userId]['pi'] = $userId;
                     $piProjectCountArr[$userId]['show-path'] = "project";
-
-                    $titleCount++;
                 }
+
+                $titleCount++;
             }
 
             //$chartName = $chartName . " - " . $totalCount . " total";
@@ -1466,13 +1466,14 @@ class DashboardUtil
             foreach($projects as $project) {
                 $fundingNumber = $project->getFunded();
 
-                $pis = $project->getPrincipalInvestigators();
-                foreach ($pis as $pi) {
-                    $userName = $pi->getUsernameOptimal();
-                    $userId = $pi->getId();
+                if( $fundingNumber ) {
 
-                    if( $fundingNumber ) {
-                        if( isset($piFundedProjectCountArr[$userId]) && isset($piFundedProjectCountArr[$userId]['value']) ) {
+                    $pis = $project->getPrincipalInvestigators();
+                    foreach ($pis as $pi) {
+                        $userName = $pi->getUsernameOptimal();
+                        $userId = $pi->getId();
+
+                        if (isset($piFundedProjectCountArr[$userId]) && isset($piFundedProjectCountArr[$userId]['value'])) {
                             $count = $piFundedProjectCountArr[$userId]['value'] + 1;
                         } else {
                             $count = 1;
@@ -1483,9 +1484,11 @@ class DashboardUtil
                         $piFundedProjectCountArr[$userId]['pi'] = $userId;
                         $piFundedProjectCountArr[$userId]['show-path'] = "project";
 
-                        $titleCount++;
-                    }
-                }//foreach $pis
+                    }//foreach $pis
+
+                    $titleCount++;
+                }//if
+
             }//foreach $projects
 
             $chartName = $this->getTitleWithTotal($chartName,$titleCount);
@@ -1507,15 +1510,16 @@ class DashboardUtil
             foreach($projects as $project) {
                 $fundingNumber = $project->getFunded();
 
-                $pis = $project->getPrincipalInvestigators();
-                foreach ($pis as $pi) {
-                    $userName = $pi->getUsernameOptimal();
-                    $userId = $pi->getId();
+                if( $fundingNumber ) {
+                    //do nothing
+                } else {
 
-                    if( $fundingNumber ) {
-                        //do nothing
-                    } else {
-                        if( isset($piUnFundedProjectCountArr[$userId]) && isset($piUnFundedProjectCountArr[$userId]['value']) ) {
+                    $pis = $project->getPrincipalInvestigators();
+                    foreach ($pis as $pi) {
+                        $userName = $pi->getUsernameOptimal();
+                        $userId = $pi->getId();
+
+                        if (isset($piUnFundedProjectCountArr[$userId]) && isset($piUnFundedProjectCountArr[$userId]['value'])) {
                             $count = $piUnFundedProjectCountArr[$userId]['value'] + 1;
                         } else {
                             $count = 1;
@@ -1526,9 +1530,11 @@ class DashboardUtil
                         $piUnFundedProjectCountArr[$userId]['pi'] = $userId;
                         $piUnFundedProjectCountArr[$userId]['show-path'] = "project";
 
-                        $titleCount++;
-                    }
-                }//foreach $pis
+
+                    }//foreach $pis
+
+                    $titleCount++;
+                }
             }//foreach $projects
 
             $chartName = $this->getTitleWithTotal($chartName,$titleCount);
@@ -1540,7 +1546,7 @@ class DashboardUtil
         }
         ///////////////// EOF 4. Total number of Non-Funded Projects per PI (Top 10) /////////////////
 
-        //2a. Total number of projects per Pathologist Involved (Top 10)
+        //5. Total Number of Projects per Pathologist Involved (Top 10)
         if( $chartType == "projects-per-pathologist-involved" ) {
             $pathologistProjectCountArr = array();
             //$pathologistProjectCountMultiArr = array();
@@ -1570,9 +1576,9 @@ class DashboardUtil
                         $count = 1;
                     }
                     $pathologistProjectCountArr[$userName] = $count;
-
-                    $titleCount++;
                 }
+
+                $titleCount++;
             }
 
 //            $showOther = $this->getOtherStr($showLimited,"Pathologist Involved");
@@ -1587,7 +1593,7 @@ class DashboardUtil
 
         }
         ///////////////// EOF 2a. Total number of projects per Pathologist Involved (Top 10) /////////////////
-        // 3a. Total number of Funded Projects per Pathologist Involved (Top 10)
+        // 6. Total number of Funded Projects per Pathologist Involved (Top 10)
         if( $chartType == "funded-projects-per-pathologist-involved" ) {
             $pathologistFundedProjectCountArr = array();
 
@@ -1595,20 +1601,21 @@ class DashboardUtil
 
             foreach($projects as $project) {
                 $fundingNumber = $project->getFunded();
+                if( $fundingNumber ) {
 
-                $pathologists = $project->getPathologists();
-                foreach ($pathologists as $pathologist) {
-                    $userName = $pathologist->getUsernameOptimal();
-                    if( $fundingNumber ) {
-                        if (isset($pathologistFundedProjectCountArr[$userName])) {
-                            $count = $pathologistFundedProjectCountArr[$userName] + 1;
-                        } else {
-                            $count = 1;
-                        }
-                        $pathologistFundedProjectCountArr[$userName] = $count;
-                        $titleCount++;
-                    }
-                }//foreach $pathologists
+                    $pathologists = $project->getPathologists();
+                    foreach ($pathologists as $pathologist) {
+                        $userName = $pathologist->getUsernameOptimal();
+                            if (isset($pathologistFundedProjectCountArr[$userName])) {
+                                $count = $pathologistFundedProjectCountArr[$userName] + 1;
+                            } else {
+                                $count = 1;
+                            }
+                            $pathologistFundedProjectCountArr[$userName] = $count;
+                    }//foreach $pathologists
+
+                    $titleCount++;
+                }
             }//foreach $projects
 
             $chartName = $this->getTitleWithTotal($chartName,$titleCount);
@@ -1626,22 +1633,25 @@ class DashboardUtil
 
             foreach($projects as $project) {
                 $fundingNumber = $project->getFunded();
+                if( $fundingNumber ) {
+                    //do nothing
+                } else {
 
-                $pathologists = $project->getPathologists();
-                foreach ($pathologists as $pathologist) {
-                    $userName = $pathologist->getUsernameOptimal();
-                    if( $fundingNumber ) {
-                        //do nothing
-                    } else {
-                        if (isset($pathologistNonFundedProjectCountArr[$userName])) {
-                            $count = $pathologistNonFundedProjectCountArr[$userName] + 1;
-                        } else {
-                            $count = 1;
-                        }
-                        $pathologistNonFundedProjectCountArr[$userName] = $count;
-                        $titleCount++;
-                    }
-                }//foreach $pathologists
+                    $pathologists = $project->getPathologists();
+                    foreach ($pathologists as $pathologist) {
+                        $userName = $pathologist->getUsernameOptimal();
+
+                            if (isset($pathologistNonFundedProjectCountArr[$userName])) {
+                                $count = $pathologistNonFundedProjectCountArr[$userName] + 1;
+                            } else {
+                                $count = 1;
+                            }
+                            $pathologistNonFundedProjectCountArr[$userName] = $count;
+
+                    }//foreach $pathologists
+
+                    $titleCount++;
+                }
             }//foreach $projects
 
             $chartName = $this->getTitleWithTotal($chartName,$titleCount);
