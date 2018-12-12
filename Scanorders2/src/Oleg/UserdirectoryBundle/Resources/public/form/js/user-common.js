@@ -1590,7 +1590,7 @@ function populateUserFromLdap(searchBtn,inputType) {
         dataType: 'json',
         async: asyncflag
     }).success(function(response) {
-        console.log(response);
+        //console.log(response);
 
         if( response ) {
             //var company = response.company;
@@ -1601,13 +1601,13 @@ function populateUserFromLdap(searchBtn,inputType) {
             //var displayName = response.displayName;
 
             var givenName = response.givenName;
-            console.log("givenName="+givenName);
+            //console.log("givenName="+givenName);
             //if( givenName ) {
                 formholder.find("#oleg_userdirectorybundle_user_infos_0_firstName").val(givenName);
             //}
 
             var lastName = response.lastName;
-            console.log("lastName="+lastName);
+            //console.log("lastName="+lastName);
             //if( lastName ) {
                 formholder.find("#oleg_userdirectorybundle_user_infos_0_lastName").val(lastName);
             //}
@@ -1625,7 +1625,7 @@ function populateUserFromLdap(searchBtn,inputType) {
             //}
 
             var title = response.title;
-            console.log("title="+title);
+            //console.log("title="+title);
             //if( title ) {
                 formholder.find("#oleg_userdirectorybundle_user_administrativeTitles_0_name").select2('val',title);
             //}
@@ -1637,7 +1637,7 @@ function populateUserFromLdap(searchBtn,inputType) {
                 //}
             }
         } else {
-            console.log("no response");
+            //console.log("no response");
         }
 
     }).done(function() {

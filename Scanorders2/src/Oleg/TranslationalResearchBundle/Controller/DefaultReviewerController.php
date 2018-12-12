@@ -442,6 +442,7 @@ class DefaultReviewerController extends Controller
         return array(
             'form' => $form->createView(),
             'title' => "Batch User Substitution",
+            'cycle' => 'new'
         );
     }
     public function getFilteredProjects($form) {

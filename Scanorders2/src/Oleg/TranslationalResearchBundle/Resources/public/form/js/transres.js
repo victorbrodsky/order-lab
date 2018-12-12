@@ -21,7 +21,7 @@ $(document).ready(function() {
 
     var cycle = $("#formcycle").val();
 
-    //console.log('transres form ready');
+    //console.log('transres form ready, cycle='+cycle);
     transresIrbApprovalLetterListener();
     transresRequireTissueProcessingListener();
     transresRequireArchivalProcessingListener();
