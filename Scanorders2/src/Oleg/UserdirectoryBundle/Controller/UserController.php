@@ -1726,6 +1726,81 @@ class UserController extends Controller
 
     }
     /**
+     * @Route("/search-user-ldap-ajax/", name="employees_search_user_ldap_ajax", options={"expose"=true})
+     * @Method("GET")
+     */
+    public function searchUserLdapAjaxAction(Request $request)
+    {
+        if (false === $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        
+        $resArr = array();
+        $primaryPublicUserId = null;
+
+        $searchvalue = $request->get('searchvalue');
+        $inputType = $request->get('type');
+        echo "searchvalue=$searchvalue <br>";
+        echo "inputType=$inputType <br>";
+
+        if( $inputType == "primaryPublicUserId" ) {
+            $primaryPublicUserId = $searchvalue;
+        }
+
+        if( $inputType == "email" ) {
+            $emailParts = explode("@",$searchvalue);
+            if( count($emailParts) == 2 ) {
+                $firstEmailPart = $emailParts[0];
+                $secondEmailPart = $emailParts[1];
+                $publicUserId = $firstEmailPart;
+            }
+            $primaryPublicUserId = $firstEmailPart;
+        }
+
+        if( !$primaryPublicUserId ) {
+            exit('exit user search no primaryPublicUserId');
+            $json = json_encode($resArr);
+            $response = new Response($json);
+            $response->headers->set('Content-Type', 'application/json');
+            return $response;
+        }
+
+        $authUtil = new AuthUtil($this->container,$em);
+        $searchRes = $authUtil->searchLdap($primaryPublicUserId);
+        if( $searchRes == NULL || count($searchRes) == 0 ) {
+            $msg = "LdapAuthentication: can not find user by publicUserId=".$publicUserId;
+            echo "msg=$msg <br>";
+            //create local user: oli2002c_@_local-user
+            $username = $primaryPublicUserId . "_@_" . "local-user";
+        } else {
+            //create WCMC LDAP user: oli2002c_@_ldap-user
+            echo "<pre>";
+            print_r($searchRes);
+            echo "</pre>";
+            echo "LDAP user found<br>";
+//            $username = $primaryPublicUserId . "_@_" . "ldap-user"; //"ldap-user" default username postfix
+            //TODO: compare email domain for ldap-user or ldap2-user and use ldap according to the domain
+//            $emailMapperPostfix1 = $userSecUtil->getSiteSettingParameter("ldapMapperEmail");
+//            if( $emailMapperPostfix1 && $secondEmailPart == $emailMapperPostfix1 ) {
+//                $username = $publicUserId . "_@_" . "ldap-user";
+//            } else {
+//                $emailMapperPostfix2 = $userSecUtil->getSiteSettingParameter("ldapMapperEmail2");
+//                if( $emailMapperPostfix2 && $secondEmailPart == $emailMapperPostfix2 ) {
+//                    $username = $publicUserId . "_@_" . "ldap2-user";
+//                }
+//            }
+
+        }
+
+        exit('exit user search');
+        $json = json_encode($resArr);
+        $response = new Response($json);
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+    }
+    /**
      * @Route("/add-new-user-ajax/", name="employees_add_new_user_ajax", options={"expose"=true})
      * @Method("POST")
      */

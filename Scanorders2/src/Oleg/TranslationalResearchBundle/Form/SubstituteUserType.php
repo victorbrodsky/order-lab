@@ -66,9 +66,14 @@ class SubstituteUserType extends AbstractType
             'query_builder' => $this->params['transresUtil']->userQueryBuilder()
         ));
 
+        //Preloaded
+        //$sitename = "'translationalresearch'";
+        //$otherUserParam = "'".$this->params['otherUserParam']."'";
+        //$addUserOnFly = ' (<a href="javascript:void(0)" onclick="constructNewUserModal(this,' . $sitename . ','.$otherUserParam.');">Add New</a>)';
         $builder->add( 'replaceUser', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
             'label'=> "Replace with the following user name (Add New):",
+            //'label'=> "Replace with the following user name$addUserOnFly:",
             'required'=> false,
             'multiple' => false,
             'attr' => array('class'=>'combobox combobox-width'),

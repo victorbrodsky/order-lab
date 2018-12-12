@@ -737,7 +737,8 @@ class AuthUtil {
             //ok
         } else {
             //no search
-            return array('givenName'=>$username,'lastName'=>$username,'displayName'=>$username);
+            return NULL;
+            //return array('givenName'=>$username,'lastName'=>$username,'displayName'=>$username);
         }
 
         //$LDAPHost = $this->container->getParameter('ldaphost');

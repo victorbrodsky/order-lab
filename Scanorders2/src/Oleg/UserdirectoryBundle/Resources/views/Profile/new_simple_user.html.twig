@@ -23,7 +23,20 @@
 
 {{ form_start(form) }}
 
-    {{ formmacros.field(form.primaryPublicUserId) }}
+    {#{{ formmacros.field(form.primaryPublicUserId) }}#}
+    <p>
+    <div class="row">
+        <div class="col-xs-6" align="right">
+            {{ form_label(form.primaryPublicUserId) }}
+        </div>
+        <div class="col-xs-6" align="left" class="form_body_toggle_btn">
+            <div class="input-group input-group-reg">
+                {{ form_widget(form.primaryPublicUserId) }}
+                <span class="input-group-addon"><i class="glyphicon glyphicon-search" onclick="populateUserFromLdap(this,'primaryPublicUserId')"></i></span>
+            </div>
+        </div>
+    </div>
+    </p>
 
     {% if form.username is defined %}
         {{ formmacros.field(form.username) }}
@@ -32,7 +45,23 @@
     {% for info in form.infos %}
         {{ formmacros.field(info.firstName) }}
         {{ formmacros.field(info.lastName) }}
-        {{ usermacros.emailPhoneField(info.email,cycle,'email',"") }}
+
+        {#{{ usermacros.emailPhoneField(info.email,cycle,'email',"") }}#}
+        <p>
+        <div class="row">
+            <div class="col-xs-6" align="right">
+                {{ form_label(info.email) }}
+            </div>
+            <div class="col-xs-6" align="left" class="form_body_toggle_btn">
+                <div class="input-group input-group-reg">
+                    {#<input class="form-control form-control-modif not-mapped-simplefield" type="text" value="{{ value }}" placeholder="{{ placeholder }}">#}
+                    {{ form_widget(info.email) }}
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-search" onclick="populateUserFromLdap(this,'email')"></i></span>
+                </div>
+            </div>
+        </div>
+        </p>
+
         {{ usermacros.emailPhoneField(info.preferredPhone,cycle,'phone',"") }}
     {% endfor %}
 

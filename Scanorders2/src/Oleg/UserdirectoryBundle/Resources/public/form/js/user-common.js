@@ -1563,6 +1563,50 @@ function constructAddNewUserModalByForm(newUserFormHtml,fieldId,sitename,otherUs
 
     $(appendHolder).append(modalHtml);
 }
+function populateUserFromLdap(searchBtn,inputType) {
+    //var btn =
+    var lbtn = Ladda.create( searchBtn );
+    lbtn.start();
+
+    var holder = $(searchBtn).closest(".input-group");
+    var searchvalue = holder.find("input").val();
+    //var email = holder.find("#oleg_userdirectorybundle_user_infos_0_email").val();
+
+    if( !searchvalue ) {
+        lbtn.stop();
+        return false;
+    }
+
+    var url = Routing.generate('employees_search_user_ldap_ajax');
+    $.ajax({
+        url: url,
+        timeout: _ajaxTimeout,
+        type: "GET",
+        data: {
+            searchvalue: searchvalue,
+            type: inputType
+        },
+        dataType: 'json',
+        async: asyncflag
+    }).success(function(response) {
+        console.log(response);
+
+        // if( response.flag == "NOTOK" ) {
+        //     console.log('NOTOK');
+        //
+        // } else {
+        //     console.log('OK');
+        // }
+
+    }).done(function() {
+        lbtn.stop();
+    }).error(function(jqXHR, textStatus, errorThrown) {
+        console.log('Error : ' + errorThrown);
+        lbtn.stop();
+    });
+
+    return false;
+}
 
 function addNewUserAction( addUserBtn, fieldId, sitename, otherUserParam ) {
 
