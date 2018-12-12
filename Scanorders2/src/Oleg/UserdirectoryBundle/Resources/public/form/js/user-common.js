@@ -1568,6 +1568,7 @@ function populateUserFromLdap(searchBtn,inputType) {
     var lbtn = Ladda.create( searchBtn );
     lbtn.start();
 
+    var formholder = $(searchBtn).closest(".modal");
     var holder = $(searchBtn).closest(".input-group");
     var searchvalue = holder.find("input").val();
     //var email = holder.find("#oleg_userdirectorybundle_user_infos_0_email").val();
@@ -1591,14 +1592,58 @@ function populateUserFromLdap(searchBtn,inputType) {
     }).success(function(response) {
         console.log(response);
 
-        if( response && response.length > 0 ) {
-            console.log('NOTOK');
+        if( response ) {
+            //var company = response.company;
+            //if( company ) {
+            //    formholder.find("#oleg_userdirectorybundle_user_administrativeTitles_0_institution").select2('val',company);
+            //}
+
+            //var displayName = response.displayName;
+
+            var givenName = response.givenName;
+            console.log("givenName="+givenName);
+            if( givenName ) {
+                formholder.find("#oleg_userdirectorybundle_user_infos_0_firstName").val(givenName);
+            }
+
+            var lastName = response.lastName;
+            console.log("lastName="+lastName);
+            if( lastName ) {
+                formholder.find("#oleg_userdirectorybundle_user_infos_0_lastName").val(lastName);
+            }
+
+            if(inputType != "email") {
+                var mail = response.mail;
+                if( mail ) {
+                    formholder.find("#oleg_userdirectorybundle_user_infos_0_email").val(mail);
+                }
+            }
+
+            var telephoneNumber = response.telephoneNumber;
+            if( telephoneNumber ) {
+                formholder.find("#oleg_userdirectorybundle_user_infos_0_preferredPhone").val(telephoneNumber);
+            }
+
+            var title = response.title;
+            console.log("title="+title);
+            if( title ) {
+                formholder.find("#oleg_userdirectorybundle_user_administrativeTitles_0_name").select2('val',title);
+            }
+
+            if(inputType != "primaryPublicUserId") {
+                var primaryPublicUserId = response.primaryPublicUserId;
+                if( primaryPublicUserId ) {
+                    formholder.find("#oleg_userdirectorybundle_user_primaryPublicUserId").val(primaryPublicUserId);
+                }
+            }
+        } else {
+            console.log("no response");
         }
-        
+
     }).done(function() {
         lbtn.stop();
     }).error(function(jqXHR, textStatus, errorThrown) {
-        console.log('Error : ' + errorThrown);
+        //console.log('Error : ' + errorThrown);
         lbtn.stop();
     });
 

@@ -25,6 +25,7 @@ use Oleg\UserdirectoryBundle\Entity\Publication;
 //use Symfony\Component\Translation\Translator;
 //use Symfony\Component\Translation\Loader\ArrayLoader;
 use Oleg\UserdirectoryBundle\Entity\UserInfo;
+use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericSelectTransformer;
 use Oleg\UserdirectoryBundle\Form\LabelType;
 use Oleg\UserdirectoryBundle\Form\UserSimpleType;
 use Oleg\UserdirectoryBundle\Security\Authentication\AuthUtil;
@@ -1737,7 +1738,7 @@ class UserController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         
-        $resArr = array();
+        $resArr = null;
         $primaryPublicUserId = null;
 
         $searchvalue = $request->get('searchvalue');
@@ -1776,11 +1777,39 @@ class UserController extends Controller
             //$username = $primaryPublicUserId . "_@_" . "local-user";
         } else {
             //create WCMC LDAP user: oli2002c_@_ldap-user
-            //echo "<pre>";
-            //print_r($searchRes);
-            //echo "</pre>";
+            echo "<pre>";
+            print_r($searchRes);
+            echo "</pre>";
             //echo "LDAP user found<br>";
             $resArr = $searchRes;
+            $resArr["primaryPublicUserId"] = $primaryPublicUserId;
+
+            //convert AdministrativeTitle string to id
+            //$administrativetitleObject = $userSecUtil->getObjectByNameTransformer($creator, $administrativetitle, "UserdirectoryBundle", "AdminTitleList");
+            //echo "administrativetitleObject=".$administrativetitleObject->getId()."<br>";
+            $title = $resArr['title'];
+            $title = "Software Engineer";
+            if( $title ) {
+                $transformer = new GenericSelectTransformer($em, null, "AdminTitleList", "UserdirectoryBundle");
+                $title = trim($title);
+                $titleObject = $transformer->reverseTransform($title);
+                echo "titleObject=".$titleObject."<br>";
+                if( $titleObject ) {
+                    $resArr['title'] = $titleObject->getId();
+                } else {
+                    $resArr['title'] = null;
+                }
+            }
+        }
+
+        //testing
+        if( 1 ) {
+            $resArr["primaryPublicUserId"] = $primaryPublicUserId;
+            $resArr["givenName"] = "test givenName";
+            $resArr["lastName"] = "test lastName";
+            $resArr["mail"] = "mail@email.com";
+            $resArr["telephoneNumber"] = "123 123-4567";
+            //$resArr["title"] = 2;//"Software Engineer";
         }
 
         //exit('exit user search');
