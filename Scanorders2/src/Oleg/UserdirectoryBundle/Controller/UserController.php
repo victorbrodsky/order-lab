@@ -1777,9 +1777,9 @@ class UserController extends Controller
             //$username = $primaryPublicUserId . "_@_" . "local-user";
         } else {
             //create WCMC LDAP user: oli2002c_@_ldap-user
-            echo "<pre>";
-            print_r($searchRes);
-            echo "</pre>";
+            //echo "<pre>";
+            //print_r($searchRes);
+            //echo "</pre>";
             //echo "LDAP user found<br>";
             $resArr = $searchRes;
             $resArr["primaryPublicUserId"] = $primaryPublicUserId;
@@ -1793,7 +1793,7 @@ class UserController extends Controller
                 $transformer = new GenericSelectTransformer($em, null, "AdminTitleList", "UserdirectoryBundle");
                 $title = trim($title);
                 $titleObject = $transformer->reverseTransform($title);
-                echo "titleObject=".$titleObject."<br>";
+                //echo "titleObject=".$titleObject."<br>";
                 if( $titleObject ) {
                     $resArr['title'] = $titleObject->getId();
                 } else {
@@ -1803,7 +1803,7 @@ class UserController extends Controller
         }
 
         //testing
-        if( 1 ) {
+        if( 0 ) {
             $resArr["primaryPublicUserId"] = $primaryPublicUserId;
             $resArr["givenName"] = "test givenName";
             $resArr["lastName"] = "test lastName";
