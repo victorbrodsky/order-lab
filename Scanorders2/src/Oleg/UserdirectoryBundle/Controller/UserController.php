@@ -1788,7 +1788,7 @@ class UserController extends Controller
             //$administrativetitleObject = $userSecUtil->getObjectByNameTransformer($creator, $administrativetitle, "UserdirectoryBundle", "AdminTitleList");
             //echo "administrativetitleObject=".$administrativetitleObject->getId()."<br>";
             $title = $resArr['title'];
-            $title = "Software Engineer";
+            //$title = "Software Engineer";
             if( $title ) {
                 $transformer = new GenericSelectTransformer($em, null, "AdminTitleList", "UserdirectoryBundle");
                 $title = trim($title);
