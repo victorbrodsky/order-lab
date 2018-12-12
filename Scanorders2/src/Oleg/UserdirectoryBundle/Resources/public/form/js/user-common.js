@@ -1591,13 +1591,10 @@ function populateUserFromLdap(searchBtn,inputType) {
     }).success(function(response) {
         console.log(response);
 
-        // if( response.flag == "NOTOK" ) {
-        //     console.log('NOTOK');
-        //
-        // } else {
-        //     console.log('OK');
-        // }
-
+        if( response && response.length > 0 ) {
+            console.log('NOTOK');
+        }
+        
     }).done(function() {
         lbtn.stop();
     }).error(function(jqXHR, textStatus, errorThrown) {
