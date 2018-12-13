@@ -1133,6 +1133,13 @@ class AuthUtil {
 
                 $infoArr[] = $info;
 
+                foreach($info as $infoThis) {
+                    $displayname = $infoThis["displayname"];
+                    echo "displayname=" . $displayname . "<br>";
+                    $displayNameArr[] = $displayname;
+                }
+
+                if(0)
                 for ($x = 0; $x < $info["count"]; $x++) {
                     //echo "<br><br>############info:<pre>";
                     //print_r($info[$x]);
