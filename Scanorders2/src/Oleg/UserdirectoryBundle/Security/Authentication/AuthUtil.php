@@ -1144,6 +1144,10 @@ class AuthUtil {
                     $displayname = $info[$x]["displayname"][0];
                     $displayNameArr[] = $displayname;
                     echo "displayname=" . $displayname . "<br>";
+
+                    echo "*******:<pre>";
+                    print_r($info[$x]["displayname"]);
+                    echo "</pre>#############<br>";
                 }
             }
 
