@@ -1104,8 +1104,11 @@ class AuthUtil {
             echo "</pre>#############<br><br>";
             $cn = $info[$x]['cn'][0];
             echo "cn=".$cn."<br>";
+            $sn = $info[$x]['sn'][0];
+            echo "sn=".$sn."<br>";
         }
-        exit('111');
+
+        exit('info='.$info);
 
         $infoArr = array();
         $sr = null;
