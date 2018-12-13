@@ -1021,7 +1021,7 @@ class AuthUtil {
         print_r($userDataArr1);
         echo "</pre><br>";
 
-        $userDataArr2 = $this->searchMultipleUserBranchLdap($searchvalue,"lastName",2);
+        $userDataArr2 = $this->searchMultipleUserBranchLdap($searchvalue,"lastName",1);
         echo "userDataArr2:<pre>";
         print_r($userDataArr2);
         echo "</pre><br>";
