@@ -1101,7 +1101,7 @@ class AuthUtil {
         echo "ldapBindDN=[".$ldapBindDN."]<br>";
 
         $LDAPFieldsToFind = array("cn", "mail", "title", "sn", "givenName", "displayName", "telephoneNumber", "company"); //sn - lastName
-        $LDAPFieldsToFind = array("cn", "sn", "displayName"); //sn - lastName
+        //$LDAPFieldsToFind = array("cn", "sn", "displayName"); //sn - lastName
 
         $displayNameArr = array();
         $infoArr = array();
@@ -1115,13 +1115,13 @@ class AuthUtil {
             //$filter = "(uid=*)";
             //$sr = ldap_search($cnx, $ldapBindDN, $filter);
 
-            if(0) {
-                $entry = ldap_first_entry($cnx, $sr);
-                do {
-                    $dn = ldap_get_dn($cnx, $entry);
-                    echo "DN=[" . $dn . "]<br>";
-                } while ($entry = ldap_next_entry($cnx, $entry));
-            }
+//            if(0) {
+//                $entry = ldap_first_entry($cnx, $sr);
+//                do {
+//                    $dn = ldap_get_dn($cnx, $entry);
+//                    echo "DN=[" . $dn . "]<br>";
+//                } while ($entry = ldap_next_entry($cnx, $entry));
+//            }
 
             if(1) {
                 $info = ldap_get_entries($cnx, $sr);
@@ -1133,13 +1133,12 @@ class AuthUtil {
 
                 $infoArr[] = $info;
 
-                foreach($info as $infoThis) {
-                    $displayname = $infoThis["displayname"];
-                    echo "displayname=" . $displayname . "<br>";
-                    $displayNameArr[] = $displayname;
-                }
+//                foreach($info as $infoThis) {
+//                    $displayname = $infoThis["displayname"];
+//                    echo "displayname=" . $displayname . "<br>";
+//                    $displayNameArr[] = $displayname;
+//                }
 
-                if(0)
                 for ($x = 0; $x < $info["count"]; $x++) {
                     //echo "<br><br>############info:<pre>";
                     //print_r($info[$x]);
@@ -1148,11 +1147,16 @@ class AuthUtil {
                     //echo "cn=".$cn."<br>";
                     //$sn = $info[$x]['sn'][0];
                     //echo "sn=".$sn."<br>";
-                    //$displayname = $info[$x]["displayname"][0];
-                    foreach($info[$x]["displayname"] as $displayname) {
-                        $displayNameArr[] = $displayname;
-                        echo "displayname=" . $displayname . "<br>";
-                    }
+                    echo "############info[x]:<pre>";
+                    print_r($info[$x]);
+                    echo "</pre>#############<br>";
+                    $displayname = $info[$x]["displayname"][0];
+                    $displayNameArr[] = $displayname;
+
+                    //foreach($info[$x]["displayname"] as $displayname) {
+                    //    $displayNameArr[] = $displayname;
+                    //    echo "displayname=" . $displayname . "<br>";
+                    //}
 
                     //echo "*******:<pre>";
                     //print_r($info[$x]["displayname"]);
@@ -1160,7 +1164,7 @@ class AuthUtil {
                 }
             }
 
-        }
+        }//foreach $ldapBindDN
 
         //$info = ldap_get_entries($cnx, $sr);
 
