@@ -1112,13 +1112,18 @@ class AuthUtil {
             $sr = ldap_search($cnx, $ldapBindDN, $filter, $LDAPFieldsToFind);
 
             $info = ldap_get_entries($cnx, $sr);
+            echo "<br><br>############info:<pre>";
+            print_r($info);
+            echo "</pre>#############<br><br>";
+
             $infoArr[] = $info;
             echo "info count=".$info["count"]."<br>";
 
+
             for ($x = 0; $x < $info["count"]; $x++) {
-                echo "<br><br>############info:<pre>";
-                print_r($info[$x]);
-                echo "</pre>#############<br><br>";
+                //echo "<br><br>############info:<pre>";
+                //print_r($info[$x]);
+                //echo "</pre>#############<br><br>";
                 //$cn = $info[$x]['cn'][0];
                 //echo "cn=".$cn."<br>";
                 //$sn = $info[$x]['sn'][0];
@@ -1130,7 +1135,7 @@ class AuthUtil {
 
         //$info = ldap_get_entries($cnx, $sr);
 
-        echo "<br><br>############info:<pre>";
+        echo "<br><br>############infoArr:<pre>";
         print_r($infoArr);
         echo "</pre>#############<br><br>";
         exit('infoArr count='.count($infoArr));
