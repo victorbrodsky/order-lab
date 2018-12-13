@@ -1100,8 +1100,8 @@ class AuthUtil {
 
         echo "ldapBindDN=[".$ldapBindDN."]<br>";
 
-        //$LDAPFieldsToFind = array("cn", "mail", "title", "sn", "givenName", "displayName", "telephoneNumber", "company"); //sn - lastName
-        $LDAPFieldsToFind = array("cn", "sn", "displayName"); //sn - lastName
+        $LDAPFieldsToFind = array("cn", "mail", "title", "sn", "givenName", "displayName", "telephoneNumber", "company"); //sn - lastName
+        //$LDAPFieldsToFind = array("cn", "sn", "displayName"); //sn - lastName
 
         $displayNameArr = array();
         $infoArr = array();
