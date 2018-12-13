@@ -66,7 +66,7 @@ class SubstituteUserType extends AbstractType
             'query_builder' => $this->params['transresUtil']->userQueryBuilder()
         ));
 
-        //Preloaded
+        //Preloaded (must test a user generation with roles according to the selected project specialty)
         //$sitename = "'translationalresearch'";
         //$otherUserParam = "''";
         //$addUserOnFly = ' (<a href="javascript:void(0)" onclick="constructNewUserModal(this,' . $sitename . ','.$otherUserParam.');">Add New</a>)';

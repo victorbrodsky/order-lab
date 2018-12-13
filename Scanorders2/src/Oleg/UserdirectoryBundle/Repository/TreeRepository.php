@@ -438,9 +438,13 @@ class TreeRepository extends NestedTreeRepository {
     //$parent - tree node object
     public function findByChildnameAndParent($childName,$parent,$mapper) { //,$types=array()
 
-        if( !$childName || !$parent ) {
+        if( !$parent ) {
             //exit('Logical Error: category and/or parent is null');
-            throw new \Exception('Logical Error: child name and/or parent is null');
+            //throw new \Exception('Logical Error: parent is null');
+        }
+        if( !$childName ) {
+            //exit('Logical Error: category and/or parent is null');
+            throw new \Exception('Logical Error: child name is null');
         }
 
         $foundChildEntity = null;
@@ -456,10 +460,17 @@ class TreeRepository extends NestedTreeRepository {
         $dql =  $treeRepository->createQueryBuilder("list");
         $dql->select('list');
         $dql->leftJoin("list.parent","parent");
-        $dql->where('parent.id = :parentid AND list.name = :childname');
-        //$dql->where("parent.id = ".$parent->getId()." AND list.name = '".$childName."'");
 
-        $params = array('parentid' => $parent->getId(), 'childname' => $childName);
+        $criterion = "list.name = :childname";
+        $params = array('childname' => $childName);
+
+        if( $parent ) {
+            $criterion = $criterion . " AND " . "parent.id = :parentid";
+            $params['parentid'] = $parent->getId();
+        }
+
+        //$dql->where('parent.id = :parentid AND list.name = :childname');
+        $dql->where($criterion);
 
 //        if( $types ) {
 //            $dql->andWhere("list.type = :typedef OR list.type = :typeadd");

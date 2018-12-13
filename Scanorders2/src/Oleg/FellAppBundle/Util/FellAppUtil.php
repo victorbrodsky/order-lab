@@ -207,6 +207,7 @@ class FellAppUtil {
         );
 
         $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+        //exit("wcm=".$wcmc);
         $pathology = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
             "Pathology and Laboratory Medicine",
             $wcmc,
