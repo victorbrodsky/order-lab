@@ -1036,6 +1036,13 @@ class AuthUtil {
         //Port: 389
         //Bind DN: cn=read-only-admin,dc=example,dc=com
         //Bind Password: password
+        //All user passwords are password.
+        //ou=mathematicians,dc=example,dc=com
+        //riemann
+        //gauss
+        //euler
+        //euclid
+
 
         $userSecUtil = $this->container->get('user_security_utility');
 
