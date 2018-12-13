@@ -1016,6 +1016,12 @@ class AuthUtil {
         }
 
         ///////////////// Search Ldap ///////////////////
+        $resArr = $this->searchMultipleUserBranchLdap($searchvalue,"lastName",1);
+        echo "resArr:<pre>";
+        print_r($resArr);
+        echo "</pre><br>";
+        exit('exit');
+
         $userCwidDataArr1 = $this->searchMultipleUserBranchLdap($searchvalue,"primaryPublicUserId",1);
         $userCwidDataArr2 = $this->searchMultipleUserBranchLdap($searchvalue,"primaryPublicUserId",2);
         echo "userCwidDataArr1:<pre>";
