@@ -1092,6 +1092,8 @@ class AuthUtil {
             //exit("OK simple LDAP: user=".$LDAPUserAdmin."<br>");
         }
 
+        echo "ldapBindDN=".$ldapBindDN."<br>";
+
         $LDAPFieldsToFind = array("cn", "mail", "title", "sn", "givenName", "displayName", "telephoneNumber", "company"); //sn - lastName
 
         $sr = ldap_search($cnx, $ldapBindDN, $filter, $LDAPFieldsToFind);
