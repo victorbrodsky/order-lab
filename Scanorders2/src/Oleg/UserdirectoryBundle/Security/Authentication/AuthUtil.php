@@ -1093,6 +1093,7 @@ class AuthUtil {
         }
 
         $LDAPFieldsToFind = array("cn", "mail", "title", "sn", "givenName", "displayName", "telephoneNumber", "company"); //sn - lastName
+        $infoArr = array();
 
         $sr = null;
         $ldapBindDNArr = explode(";",$ldapBindDN);
@@ -1106,12 +1107,13 @@ class AuthUtil {
             if( $sr ) {
                 $this->logger->notice("search Ldap: ldap_search OK with filter=" . $filter . "; bindDn=".$ldapBindDN);
                 $info = ldap_get_entries($cnx, $sr);
-                echo "<br><br>############Data:<pre>";
-                print_r($info);
-                echo "</pre>#############<br><br>";
+//                echo "<br><br>############Data:<pre>";
+//                print_r($info);
+//                echo "</pre>#############<br><br>";
                 if( $info["count"] > 0 ) {
                     $this->logger->notice("search Ldap: info: displayName=".$info[0]['displayname'][0]);
                     //break;
+                    $infoArr[] = $info;
                 } else {
                     $this->logger->error("search Ldap: ldap_search NOTOK = info null");
                 }
@@ -1129,65 +1131,71 @@ class AuthUtil {
             return NULL;
         }
 
-        $info = ldap_get_entries($cnx, $sr);
+        //$info = ldap_get_entries($cnx, $sr);
 
         echo "<br><br>############info:<pre>";
-        print_r($info);
+        print_r($infoArr);
         echo "</pre>#############<br><br>";
 
-        $searchRes = array();
+        $searchResArr = array();
 
-        for ($x=0; $x<$info["count"]; $x++) {
+        foreach($infoArr as $info) {
+            $searchRes = array();
 
-            if( array_key_exists('ou', $info[$x]) ) {
-                $searchRes['ou'] = $info[$x]['ou'][0];
-            }
-            if( array_key_exists('uid', $info[$x]) ) {
-                $searchRes['uid'] = $info[$x]['uid'][0];
+            for ($x = 0; $x < $info["count"]; $x++) {
+
+                if (array_key_exists('ou', $info[$x])) {
+                    $searchRes['ou'] = $info[$x]['ou'][0];
+                }
+                if (array_key_exists('uid', $info[$x])) {
+                    $searchRes['uid'] = $info[$x]['uid'][0];
+                }
+
+                if (array_key_exists('cn', $info[$x])) {
+                    $searchRes['cn'] = $info[$x]['cn'][0];
+                }
+                if (array_key_exists('mail', $info[$x])) {
+                    $searchRes['mail'] = $info[$x]['mail'][0];
+                }
+                if (array_key_exists('title', $info[$x])) {
+                    $searchRes['title'] = $info[$x]['title'][0];
+                }
+                if (array_key_exists('givenname', $info[$x])) {
+                    $searchRes['givenName'] = $info[$x]['givenname'][0];
+                }
+                if (array_key_exists('sn', $info[$x])) {
+                    $searchRes['lastName'] = $info[$x]['sn'][0];
+                }
+                if (array_key_exists('displayname', $info[$x])) {
+                    $searchRes['displayName'] = $info[$x]['displayname'][0];
+                }
+                if (array_key_exists('telephonenumber', $info[$x])) {
+                    $searchRes['telephoneNumber'] = $info[$x]['telephonenumber'][0];
+                }
+                if (array_key_exists('company', $info[$x])) {
+                    $searchRes['company'] = $info[$x]['company'][0];    //not used currently
+                }
+
+                if (array_key_exists('givenName', $searchRes) && !$searchRes['givenName']) {
+                    $searchRes['givenName'] = "";   //$username;
+                }
+
+                if (array_key_exists('lastName', $searchRes) && !$searchRes['lastName']) {
+                    $searchRes['lastName'] = "";    //$username;
+                }
+
+                //print "\nActive Directory says that:<br />";
+                //print "givenName is: ".$searchRes['givenName']."<br>";
+                //print "familyName is: ".$searchRes['lastName']."<br>";
+                //print_r($info[$x]);
+
+                //$this->logger->notice("search Ldap: mail=" . $searchRes['mail'] . "; lastName=".$searchRes['lastName']);
+
+                //we have only one result
+                //break;
             }
 
-            if( array_key_exists('cn', $info[$x]) ) {
-                $searchRes['cn'] = $info[$x]['cn'][0];
-            }
-            if( array_key_exists('mail', $info[$x]) ) {
-                $searchRes['mail'] = $info[$x]['mail'][0];
-            }
-            if( array_key_exists('title', $info[$x]) ) {
-                $searchRes['title'] = $info[$x]['title'][0];
-            }
-            if( array_key_exists('givenname', $info[$x]) ) {
-                $searchRes['givenName'] = $info[$x]['givenname'][0];
-            }
-            if( array_key_exists('sn', $info[$x]) ) {
-                $searchRes['lastName'] = $info[$x]['sn'][0];
-            }
-            if( array_key_exists('displayname', $info[$x]) ) {
-                $searchRes['displayName'] = $info[$x]['displayname'][0];
-            }
-            if( array_key_exists('telephonenumber', $info[$x]) ) {
-                $searchRes['telephoneNumber'] = $info[$x]['telephonenumber'][0];
-            }
-            if( array_key_exists('company', $info[$x]) ) {
-                $searchRes['company'] = $info[$x]['company'][0];    //not used currently
-            }
-
-            if( array_key_exists('givenName',$searchRes) && !$searchRes['givenName'] ) {
-                $searchRes['givenName'] = "";   //$username;
-            }
-
-            if( array_key_exists('lastName',$searchRes) && !$searchRes['lastName'] ) {
-                $searchRes['lastName'] = "";    //$username;
-            }
-
-            //print "\nActive Directory says that:<br />";
-            //print "givenName is: ".$searchRes['givenName']."<br>";
-            //print "familyName is: ".$searchRes['lastName']."<br>";
-            //print_r($info[$x]);
-
-            //$this->logger->notice("search Ldap: mail=" . $searchRes['mail'] . "; lastName=".$searchRes['lastName']);
-
-            //we have only one result
-            //break;
+            $searchResArr[] = $searchRes;
         }
 
 //        if( count($searchRes) == 0 ) {
@@ -1196,7 +1204,7 @@ class AuthUtil {
         //print_r($searchRes);
         //exit('Search OK');
 
-        return $searchRes;
+        return $searchResArr;
 
     }
 
