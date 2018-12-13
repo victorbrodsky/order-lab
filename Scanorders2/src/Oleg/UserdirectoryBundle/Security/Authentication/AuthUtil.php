@@ -1080,7 +1080,7 @@ class AuthUtil {
             $filter = "(cn=" . $searchvalue . ")";
         }
         elseif( $seacrhType == "lastName" ) {
-            $filter = "sn=*" . $searchvalue . "*";
+            $filter = "sn=(" . $searchvalue . ")";
         }
 
         $res = @ldap_bind($cnx, $LDAPUserAdmin, $LDAPUserPasswordAdmin);
@@ -1113,22 +1113,23 @@ class AuthUtil {
             //$sr = ldap_search($cnx, $ldapBindDN, $filter, $LDAPFieldsToFind);
             $sr = ldap_search($cnx, $ldapBindDN, $filter);
 
-            $entry = ldap_first_entry($cnx, $sr);
-            do {
-                $dn = ldap_get_dn($cnx, $entry);
-                echo "DN=[".$dn."]<br>";
-            } while ($entry = ldap_next_entry($cnx, $entry));
-
             if(0) {
+                $entry = ldap_first_entry($cnx, $sr);
+                do {
+                    $dn = ldap_get_dn($cnx, $entry);
+                    echo "DN=[" . $dn . "]<br>";
+                } while ($entry = ldap_next_entry($cnx, $entry));
+            }
+
+            if(1) {
                 $info = ldap_get_entries($cnx, $sr);
+                echo "info count=" . $info["count"] . "<br>";
                 //$info = $this->getLdapEntries($cnx, $sr);
                 echo "<br><br>############info:<pre>";
                 print_r($info);
                 echo "</pre>#############<br><br>";
 
                 $infoArr[] = $info;
-                echo "info count=" . $info["count"] . "<br>";
-
 
                 for ($x = 0; $x < $info["count"]; $x++) {
                     //echo "<br><br>############info:<pre>";
