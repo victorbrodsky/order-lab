@@ -1770,13 +1770,17 @@ class UserController extends Controller
             return $response;
         }
 
-        //$authUtil = new AuthUtil($this->container,$em);
         $authUtil = $this->get('authenticator_utility');
-        $searchRes = $authUtil->searchMultipleUserLdap($searchvalue,$inputType);
-        echo "<pre>";
-        print_r($searchRes);
-        echo "</pre>";
-        exit("<br>exit");
+        if(0) {
+            $searchRes = $authUtil->searchMultipleUserLdap($searchvalue, $inputType);
+            echo "<pre>";
+            print_r($searchRes);
+            echo "</pre>";
+            exit("<br>exit");
+        } else {
+            //$authUtil = new AuthUtil($this->container,$em);
+            $searchRes = $authUtil->searchLdap($primaryPublicUserId);
+        }
 
         //$searchRes = $authUtil->searchLdap($primaryPublicUserId);
         if( $searchRes == NULL || count($searchRes) == 0 ) {
