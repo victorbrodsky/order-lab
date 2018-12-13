@@ -1074,7 +1074,7 @@ class AuthUtil {
             $filter = "(cn=" . $searchvalue . ")";
         }
         elseif( $seacrhType == "lastName" ) {
-            $filter = "(sn=" . $searchvalue . ")";
+            $filter = "sn=" . $searchvalue . "*";
         }
 
         $res = @ldap_bind($cnx, $LDAPUserAdmin, $LDAPUserPasswordAdmin);
@@ -1106,6 +1106,7 @@ class AuthUtil {
             echo "cn=".$cn."<br>";
             $sn = $info[$x]['sn'][0];
             echo "sn=".$sn."<br>";
+            echo "displayname=".$info[$x]["displayname"][0]."<br>";
         }
 
         exit('info='.$info);
