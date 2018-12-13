@@ -1112,27 +1112,35 @@ class AuthUtil {
             echo "filter=".$filter."; ldapBindDN=".$ldapBindDN."<br>";
             $sr = ldap_search($cnx, $ldapBindDN, $filter, $LDAPFieldsToFind);
 
-            $info = ldap_get_entries($cnx,$sr);
-            //$info = $this->getLdapEntries($cnx, $sr);
-            echo "<br><br>############info:<pre>";
-            print_r($info);
-            echo "</pre>#############<br><br>";
+            $entry = ldap_first_entry($cnx, $sr);
+            do {
+                $dn = ldap_get_dn($cnx, $entry);
+                echo "DN is $dn\n";
+            } while ($entry = ldap_next_entry($cnx, $entry));
 
-            $infoArr[] = $info;
-            echo "info count=".$info["count"]."<br>";
+            if(0) {
+                $info = ldap_get_entries($cnx, $sr);
+                //$info = $this->getLdapEntries($cnx, $sr);
+                echo "<br><br>############info:<pre>";
+                print_r($info);
+                echo "</pre>#############<br><br>";
+
+                $infoArr[] = $info;
+                echo "info count=" . $info["count"] . "<br>";
 
 
-            for ($x = 0; $x < $info["count"]; $x++) {
-                //echo "<br><br>############info:<pre>";
-                //print_r($info[$x]);
-                //echo "</pre>#############<br><br>";
-                //$cn = $info[$x]['cn'][0];
-                //echo "cn=".$cn."<br>";
-                //$sn = $info[$x]['sn'][0];
-                //echo "sn=".$sn."<br>";
-                $displayname = $info[$x]["displayname"][0];
-                $displayNameArr[] = $displayname;
-                echo "displayname=".$displayname."<br>";
+                for ($x = 0; $x < $info["count"]; $x++) {
+                    //echo "<br><br>############info:<pre>";
+                    //print_r($info[$x]);
+                    //echo "</pre>#############<br><br>";
+                    //$cn = $info[$x]['cn'][0];
+                    //echo "cn=".$cn."<br>";
+                    //$sn = $info[$x]['sn'][0];
+                    //echo "sn=".$sn."<br>";
+                    $displayname = $info[$x]["displayname"][0];
+                    $displayNameArr[] = $displayname;
+                    echo "displayname=" . $displayname . "<br>";
+                }
             }
 
         }
