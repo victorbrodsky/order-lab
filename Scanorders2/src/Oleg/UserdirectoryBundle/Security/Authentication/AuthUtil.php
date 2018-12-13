@@ -1102,6 +1102,7 @@ class AuthUtil {
 
         $LDAPFieldsToFind = array("cn", "mail", "title", "sn", "givenName", "displayName", "telephoneNumber", "company"); //sn - lastName
 
+        $displayNameArr = array();
         $infoArr = array();
         $sr = null;
         $ldapBindDNArr = explode(";",$ldapBindDN);
@@ -1128,17 +1129,19 @@ class AuthUtil {
                 //echo "cn=".$cn."<br>";
                 //$sn = $info[$x]['sn'][0];
                 //echo "sn=".$sn."<br>";
-                echo "displayname=".$info[$x]["displayname"][0]."<br>";
+                $displayname = $info[$x]["displayname"][0];
+                $displayNameArr[] = $displayname;
+                echo "displayname=".$displayname."<br>";
             }
 
         }
 
         //$info = ldap_get_entries($cnx, $sr);
 
-        echo "<br><br>############infoArr:<pre>";
-        print_r($infoArr);
+        echo "<br><br>############displayNameArr:<pre>";
+        print_r($displayNameArr);
         echo "</pre>#############<br><br>";
-        exit('infoArr count='.count($infoArr));
+        exit('infoArr count='.count($displayNameArr));
 
         $searchResArr = array();
 
