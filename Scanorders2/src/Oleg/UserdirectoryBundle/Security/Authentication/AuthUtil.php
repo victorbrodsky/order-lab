@@ -1093,8 +1093,16 @@ class AuthUtil {
         }
 
         $LDAPFieldsToFind = array("cn", "mail", "title", "sn", "givenName", "displayName", "telephoneNumber", "company"); //sn - lastName
-        $infoArr = array();
 
+        $sr = ldap_search($cnx, $ldapBindDN, $filter, $LDAPFieldsToFind);
+
+        $info = ldap_get_entries($cnx, $sr);
+        echo "<br><br>############info:<pre>";
+        print_r($info);
+        echo "</pre>#############<br><br>";
+        exit('111');
+
+        $infoArr = array();
         $sr = null;
         $ldapBindDNArr = explode(";",$ldapBindDN);
         //echo "count=".count($ldapBindDNArr)."<br>";
@@ -1105,28 +1113,6 @@ class AuthUtil {
             $info = ldap_get_entries($cnx, $sr);
             $infoArr[] = $info;
             echo "info count=".$info["count"]."<br>";
-
-//            echo "<br><br>############sr:<pre>";
-//            print_r($sr);
-//            echo "</pre>#############<br><br>";
-//            if( $sr ) {
-//                //$this->logger->notice("search Ldap: ldap_search OK with filter=" . $filter . "; bindDn=".$ldapBindDN);
-//                //$info = ldap_get_entries($cnx, $sr);
-//                //$infoArr[] = $info;
-//                //echo "info count=".$info["count"]."<br>";
-////                echo "<br><br>############Data:<pre>";
-////                print_r($info);
-////                echo "</pre>#############<br><br>";
-//                if( $info["count"] > 0 ) {
-//                    //$this->logger->notice("search Ldap: info: displayName=".$info[0]['displayname'][0]);
-//                    //break;
-//                    //$infoArr[] = $info;
-//                } else {
-//                    //$this->logger->error("search Ldap: ldap_search NOTOK = info null");
-//                }
-//            } else {
-//                $this->logger->error("search Ldap: ldap_search NOTOK with filter=" . $filter . "; bindDn=".$ldapBindDN);
-//            }
         }
 
         //$info = ldap_get_entries($cnx, $sr);
@@ -1134,6 +1120,7 @@ class AuthUtil {
         echo "<br><br>############info:<pre>";
         print_r($infoArr);
         echo "</pre>#############<br><br>";
+        exit('111');
 
         $searchResArr = array();
 
