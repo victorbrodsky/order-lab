@@ -1097,9 +1097,12 @@ class AuthUtil {
         $sr = ldap_search($cnx, $ldapBindDN, $filter, $LDAPFieldsToFind);
 
         $info = ldap_get_entries($cnx, $sr);
-        echo "<br><br>############info:<pre>";
-        print_r($info);
-        echo "</pre>#############<br><br>";
+
+        for ($x = 0; $x < $info["count"]; $x++) {
+            echo "<br><br>############info:<pre>";
+            print_r($info[$x]);
+            echo "</pre>#############<br><br>";
+        }
         exit('111');
 
         $infoArr = array();
