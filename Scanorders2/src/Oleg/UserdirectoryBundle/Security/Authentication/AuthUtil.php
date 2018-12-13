@@ -1074,7 +1074,7 @@ class AuthUtil {
             $filter = "(cn=" . $searchvalue . ")";
         }
         elseif( $seacrhType == "lastName" ) {
-            $filter = "sn=" . $searchvalue . "*";
+            $filter = "(sn=" . $searchvalue . "*)";
         }
 
         $res = @ldap_bind($cnx, $LDAPUserAdmin, $LDAPUserPasswordAdmin);
@@ -1096,14 +1096,13 @@ class AuthUtil {
 
         $LDAPFieldsToFind = array("cn", "mail", "title", "sn", "givenName", "displayName", "telephoneNumber", "company"); //sn - lastName
 
-        $sr = ldap_search($cnx, $ldapBindDN, $filter, $LDAPFieldsToFind);
-
         $infoArr = array();
         $sr = null;
         $ldapBindDNArr = explode(";",$ldapBindDN);
         //echo "count=".count($ldapBindDNArr)."<br>";
         foreach( $ldapBindDNArr as $ldapBindDN) {
-            $this->logger->notice("search Ldap: ldapBindDN=".$ldapBindDN);
+            //$this->logger->notice("search Ldap: ldapBindDN=".$ldapBindDN);
+            echo "filter=".$filter."; ldapBindDN=".$ldapBindDN."<br>";
             $sr = ldap_search($cnx, $ldapBindDN, $filter, $LDAPFieldsToFind);
 
             $info = ldap_get_entries($cnx, $sr);
