@@ -1127,9 +1127,9 @@ class AuthUtil {
                 $info = ldap_get_entries($cnx, $sr);
                 echo "info count=" . $info["count"] . "<br>";
                 //$info = $this->getLdapEntries($cnx, $sr);
-                echo "<br><br>############info:<pre>";
-                print_r($info);
-                echo "</pre>#############<br><br>";
+                //echo "<br><br>############info:<pre>";
+                //print_r($info);
+                //echo "</pre>#############<br><br>";
 
                 $infoArr[] = $info;
 
