@@ -1016,14 +1016,16 @@ class AuthUtil {
         }
 
         ///////////////// Search Ldap ///////////////////
-        $userDataArr1 = $this->searchMultipleUserBranchLdap($searchvalue,"primaryPublicUserId",1);
-        echo "userDataArr1:<pre>";
-        print_r($userDataArr1);
+        $userCwidDataArr1 = $this->searchMultipleUserBranchLdap($searchvalue,"primaryPublicUserId",1);
+        $userCwidDataArr2 = $this->searchMultipleUserBranchLdap($searchvalue,"primaryPublicUserId",2);
+        echo "userCwidDataArr1:<pre>";
+        print_r($userCwidDataArr1);
         echo "</pre><br>";
 
-        $userDataArr2 = $this->searchMultipleUserBranchLdap($searchvalue,"lastName",1);
-        echo "userDataArr2:<pre>";
-        print_r($userDataArr2);
+        $userLastnameDataArr1 = $this->searchMultipleUserBranchLdap($searchvalue,"lastName",1);
+        $userLastnameDataArr2 = $this->searchMultipleUserBranchLdap($searchvalue,"lastName",2);
+        echo "userLastnameDataArr1:<pre>";
+        print_r($userLastnameDataArr1);
         echo "</pre><br>";
         ///////////////// EOF Search Ldap ///////////////////
         exit('exit');
@@ -1122,6 +1124,10 @@ class AuthUtil {
         }
 
         $info = ldap_get_entries($cnx, $sr);
+
+        echo "<br><br>############info:<pre>";
+        print_r($info);
+        echo "</pre>#############<br><br>";
 
         $searchRes = array();
 
