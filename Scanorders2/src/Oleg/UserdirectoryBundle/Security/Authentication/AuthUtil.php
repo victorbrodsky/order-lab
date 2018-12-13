@@ -1111,7 +1111,7 @@ class AuthUtil {
             //$this->logger->notice("search Ldap: ldapBindDN=".$ldapBindDN);
             echo "filter=".$filter."; ldapBindDN=".$ldapBindDN."<br>";
             //$sr = ldap_search($cnx, $ldapBindDN, $filter, $LDAPFieldsToFind);
-            $filter = "(uid=*)";
+            //$filter = "(uid=*)";
             $sr = ldap_search($cnx, $ldapBindDN, $filter);
 
             if(0) {
