@@ -1092,7 +1092,7 @@ class AuthUtil {
             //exit("OK simple LDAP: user=".$LDAPUserAdmin."<br>");
         }
 
-        $LDAPFieldsToFind = array("mail", "title", "sn", "givenName", "displayName", "telephoneNumber", "company"); //sn - lastName
+        $LDAPFieldsToFind = array("cn", "mail", "title", "sn", "givenName", "displayName", "telephoneNumber", "company"); //sn - lastName
 
         $sr = null;
         $ldapBindDNArr = explode(";",$ldapBindDN);
@@ -1143,6 +1143,9 @@ class AuthUtil {
                 $searchRes['uid'] = $info[$x]['uid'][0];
             }
 
+            if( array_key_exists('cn', $info[$x]) ) {
+                $searchRes['cn'] = $info[$x]['cn'][0];
+            }
             if( array_key_exists('mail', $info[$x]) ) {
                 $searchRes['mail'] = $info[$x]['mail'][0];
             }

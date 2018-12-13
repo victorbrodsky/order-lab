@@ -37,7 +37,7 @@
         <form class="navbar-form user-typeahead-search-form" role="search" id="user-typeahead-search-form" action="{{ path(employees_sitename~'_home') }}" method="get">
             <div class="form-group">
                 <div id="multiple-datasets-typeahead-search" class="multiple-datasets-typeahead-search">
-                    <input type="checkbox" name="all" value="all" {{ checked }}> All &nbsp;&nbsp;
+                    {#<input type="checkbox" name="all" value="all" {{ checked }}> Include all employees and fellowship applicants &nbsp;&nbsp;#}
                     <input
                             style="width: 460px;"
                             type="text"
@@ -48,6 +48,7 @@
                 </div>
             </div>
             <button type="submit" class="btn btn-success btn-lg" style="height: 50px">Search</button>
+            <p><input type="checkbox" name="all" value="all" {{ checked }}> Include all employees and fellowship applicants</p>
         </form>
 
         <br>
