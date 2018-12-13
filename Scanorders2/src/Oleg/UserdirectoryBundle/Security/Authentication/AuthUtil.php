@@ -1080,7 +1080,7 @@ class AuthUtil {
             $filter = "(cn=" . $searchvalue . ")";
         }
         elseif( $seacrhType == "lastName" ) {
-            $filter = "sn=" . $searchvalue . "*";
+            $filter = "sn=*" . $searchvalue . "*";
         }
 
         $res = @ldap_bind($cnx, $LDAPUserAdmin, $LDAPUserPasswordAdmin);
