@@ -70,6 +70,10 @@ services:
         class:     Oleg\UserdirectoryBundle\Security\Authentication\CustomAuthenticator
         arguments: ["@security.password_encoder","@service_container","@doctrine.orm.entity_manager"]
 
+    authenticator_utility:
+            class:     Oleg\UserdirectoryBundle\Security\Authentication\AuthUtil
+            arguments: ["@service_container","@doctrine.orm.entity_manager"]
+
     oleg.listener.maintenance:
         class: Oleg\UserdirectoryBundle\Services\MaintenanceListener
         arguments: ["@service_container","@doctrine.orm.entity_manager"]

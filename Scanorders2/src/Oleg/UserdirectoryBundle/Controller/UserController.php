@@ -1727,6 +1727,8 @@ class UserController extends Controller
 
     }
     /**
+     * Test: http://127.0.0.1/order/directory/search-user-ldap-ajax/?searchvalue=oli2002&type=primaryPublicUserId
+     *
      * @Route("/search-user-ldap-ajax/", name="employees_search_user_ldap_ajax", options={"expose"=true})
      * @Method("GET")
      */
@@ -1768,8 +1770,15 @@ class UserController extends Controller
             return $response;
         }
 
-        $authUtil = new AuthUtil($this->container,$em);
-        $searchRes = $authUtil->searchLdap($primaryPublicUserId);
+        //$authUtil = new AuthUtil($this->container,$em);
+        $authUtil = $this->get('authenticator_utility');
+        $searchRes = $authUtil->searchMultipleUserLdap($searchvalue,$inputType);
+        echo "<pre>";
+        print_r($searchRes);
+        echo "</pre>";
+        exit("<br>exit");
+
+        //$searchRes = $authUtil->searchLdap($primaryPublicUserId);
         if( $searchRes == NULL || count($searchRes) == 0 ) {
             //$msg = "LdapAuthentication: can not find user by publicUserId=".$publicUserId;
             //echo "msg=$msg <br>";

@@ -992,4 +992,190 @@ class AuthUtil {
         }//if $permittedFailedLoginAttempt
     }
 
+
+
+
+    //serach by cwid, email, last name
+    public function searchMultipleUserLdap($searchvalue, $inputType) {
+
+        $userDataArr = null;
+        $primaryPublicUserId = null;
+
+        if( $inputType == "primaryPublicUserId" ) {
+            $primaryPublicUserId = $searchvalue;
+        }
+
+        if( $inputType == "email" ) {
+            $emailParts = explode("@",$searchvalue);
+            if( count($emailParts) == 2 ) {
+                $firstEmailPart = $emailParts[0];
+                $secondEmailPart = $emailParts[1];
+                $publicUserId = $firstEmailPart;
+            }
+            $primaryPublicUserId = $firstEmailPart;
+        }
+
+        ///////////////// Search Ldap ///////////////////
+        $userDataArr1 = $this->searchMultipleUserBranchLdap($searchvalue,"primaryPublicUserId",1);
+        echo "<pre>";
+        print_r($userDataArr1);
+        echo "</pre><br>";
+
+        $userDataArr2 = $this->searchMultipleUserBranchLdap($searchvalue,"lastName",2);
+        echo "<pre>";
+        print_r($userDataArr2);
+        echo "</pre><br>";
+        ///////////////// EOF Search Ldap ///////////////////
+        exit('exit');
+
+        return $userDataArr;
+    }
+    public function searchMultipleUserBranchLdap( $searchvalue, $seacrhType, $ldapType ) {
+
+        //Server: ldap.forumsys.com
+        //Port: 389
+        //Bind DN: cn=read-only-admin,dc=example,dc=com
+        //Bind Password: password
+
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        $postfix = $this->getPostfix($ldapType);
+
+        $ldapBindDN = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu'.$postfix); //old: a.wcmc-ad.net, new: cn=Users,dc=a,dc=wcmc-ad,dc=net
+
+        //$LDAPUserAdmin = $this->container->getParameter('ldapusername');
+        $LDAPUserAdmin = $userSecUtil->getSiteSettingParameter('aDLDAPServerAccountUserName'.$postfix); //cn=read-only-admin,dc=example,dc=com
+        //$LDAPUserPasswordAdmin = $this->container->getParameter('ldappassword');
+        $LDAPUserPasswordAdmin = $userSecUtil->getSiteSettingParameter('aDLDAPServerAccountPassword'.$postfix);
+
+        if( $LDAPUserAdmin && $LDAPUserPasswordAdmin ) {
+            //ok
+        } else {
+            //no search
+            return NULL;
+            //return array('givenName'=>$username,'lastName'=>$username,'displayName'=>$username);
+        }
+
+        //$LDAPHost = $this->container->getParameter('ldaphost');
+        $LDAPHost = $userSecUtil->getSiteSettingParameter('aDLDAPServerAddress'.$postfix);
+        //echo "LDAPHost=".$LDAPHost."<br>";
+        $cnx = $this->connectToLdap($LDAPHost);
+
+        if( $seacrhType == "primaryPublicUserId" ) {
+            $filter = "(cn=" . $searchvalue . ")";
+        }
+        elseif( $seacrhType == "lastName" ) {
+            $filter = "(cn=" . $searchvalue . ")";
+        }
+
+        $res = @ldap_bind($cnx, $LDAPUserAdmin, $LDAPUserPasswordAdmin);
+        //$res = $this->ldapBind($LDAPUserAdmin,$LDAPUserPasswordAdmin);
+        if( !$res ) {
+            $this->logger->error("search Ldap: ldap_bind failed with admin authentication username=" . $LDAPUserAdmin);
+            //echo "Could not bind to LDAP: user=".$LDAPUserAdmin."<br>";
+            ldap_error($cnx);
+            ldap_unbind($cnx);
+            //exit("error ldap_bind");
+            return NULL;
+        } else {
+            //$this->logger->notice("search Ldap: ldap_bind OK with admin authentication username=" . $LDAPUserAdmin);
+            //echo "OK simple LDAP: user=".$LDAPUserAdmin."<br>";
+            //exit("OK simple LDAP: user=".$LDAPUserAdmin."<br>");
+        }
+
+        $LDAPFieldsToFind = array("mail", "title", "sn", "givenName", "displayName", "telephoneNumber", "company"); //sn - lastName
+
+        $sr = null;
+        $ldapBindDNArr = explode(";",$ldapBindDN);
+        //echo "count=".count($ldapBindDNArr)."<br>";
+        foreach( $ldapBindDNArr as $ldapBindDN) {
+            $this->logger->notice("search Ldap: ldapBindDN=".$ldapBindDN);
+            $sr = ldap_search($cnx, $ldapBindDN, $filter, $LDAPFieldsToFind);
+            if( $sr ) {
+                $this->logger->notice("search Ldap: ldap_search OK with filter=" . $filter . "; bindDn=".$ldapBindDN);
+                $info = ldap_get_entries($cnx, $sr);
+                if( $info["count"] > 0 ) {
+                    $this->logger->notice("search Ldap: info: displayName=".$info[0]['displayname'][0]);
+                    break;
+                } else {
+                    $this->logger->error("search Ldap: ldap_search NOTOK = info null");
+                }
+            } else {
+                $this->logger->error("search Ldap: ldap_search NOTOK with filter=" . $filter . "; bindDn=".$ldapBindDN);
+            }
+        }
+
+        if( !$sr ) {
+            //echo 'Search failed <br>';
+            //exit('Search failed');
+            $this->logger->error("search Ldap: ldap_search failed with filter=" . $filter);
+            ldap_error($cnx);
+            ldap_unbind($cnx);
+            return NULL;
+        }
+
+        $info = ldap_get_entries($cnx, $sr);
+
+        $searchRes = array();
+
+        for ($x=0; $x<$info["count"]; $x++) {
+
+            if( array_key_exists('ou', $info[$x]) ) {
+                $searchRes['ou'] = $info[$x]['ou'][0];
+            }
+            if( array_key_exists('uid', $info[$x]) ) {
+                $searchRes['uid'] = $info[$x]['uid'][0];
+            }
+
+            if( array_key_exists('mail', $info[$x]) ) {
+                $searchRes['mail'] = $info[$x]['mail'][0];
+            }
+            if( array_key_exists('title', $info[$x]) ) {
+                $searchRes['title'] = $info[$x]['title'][0];
+            }
+            if( array_key_exists('givenname', $info[$x]) ) {
+                $searchRes['givenName'] = $info[$x]['givenname'][0];
+            }
+            if( array_key_exists('sn', $info[$x]) ) {
+                $searchRes['lastName'] = $info[$x]['sn'][0];
+            }
+            if( array_key_exists('displayname', $info[$x]) ) {
+                $searchRes['displayName'] = $info[$x]['displayname'][0];
+            }
+            if( array_key_exists('telephonenumber', $info[$x]) ) {
+                $searchRes['telephoneNumber'] = $info[$x]['telephonenumber'][0];
+            }
+            if( array_key_exists('company', $info[$x]) ) {
+                $searchRes['company'] = $info[$x]['company'][0];    //not used currently
+            }
+
+            if( array_key_exists('givenName',$searchRes) && !$searchRes['givenName'] ) {
+                $searchRes['givenName'] = "";   //$username;
+            }
+
+            if( array_key_exists('lastName',$searchRes) && !$searchRes['lastName'] ) {
+                $searchRes['lastName'] = "";    //$username;
+            }
+
+            //print "\nActive Directory says that:<br />";
+            //print "givenName is: ".$searchRes['givenName']."<br>";
+            //print "familyName is: ".$searchRes['lastName']."<br>";
+            //print_r($info[$x]);
+
+            //$this->logger->notice("search Ldap: mail=" . $searchRes['mail'] . "; lastName=".$searchRes['lastName']);
+
+            //we have only one result
+            break;
+        }
+
+//        if( count($searchRes) == 0 ) {
+//            //echo "no search results <br>";
+//        }
+        //print_r($searchRes);
+        //exit('Search OK');
+
+        return $searchRes;
+
+    }
+
 } 

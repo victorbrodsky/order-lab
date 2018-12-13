@@ -2121,4 +2121,6 @@ class UserSecurityUtil {
         }
         return $platformLogoPath;
     }
+    
+
 }
