@@ -1017,12 +1017,12 @@ class AuthUtil {
 
         ///////////////// Search Ldap ///////////////////
         $userDataArr1 = $this->searchMultipleUserBranchLdap($searchvalue,"primaryPublicUserId",1);
-        echo "<pre>";
+        echo "userDataArr1:<pre>";
         print_r($userDataArr1);
         echo "</pre><br>";
 
         $userDataArr2 = $this->searchMultipleUserBranchLdap($searchvalue,"lastName",2);
-        echo "<pre>";
+        echo "userDataArr2:<pre>";
         print_r($userDataArr2);
         echo "</pre><br>";
         ///////////////// EOF Search Ldap ///////////////////
@@ -1072,21 +1072,21 @@ class AuthUtil {
             $filter = "(cn=" . $searchvalue . ")";
         }
         elseif( $seacrhType == "lastName" ) {
-            $filter = "(cn=" . $searchvalue . ")";
+            $filter = "(sn=" . $searchvalue . ")";
         }
 
         $res = @ldap_bind($cnx, $LDAPUserAdmin, $LDAPUserPasswordAdmin);
         //$res = $this->ldapBind($LDAPUserAdmin,$LDAPUserPasswordAdmin);
         if( !$res ) {
             $this->logger->error("search Ldap: ldap_bind failed with admin authentication username=" . $LDAPUserAdmin);
-            //echo "Could not bind to LDAP: user=".$LDAPUserAdmin."<br>";
+            echo "Could not bind to LDAP: user=".$LDAPUserAdmin."<br>";
             ldap_error($cnx);
             ldap_unbind($cnx);
             //exit("error ldap_bind");
             return NULL;
         } else {
             //$this->logger->notice("search Ldap: ldap_bind OK with admin authentication username=" . $LDAPUserAdmin);
-            //echo "OK simple LDAP: user=".$LDAPUserAdmin."<br>";
+            echo "OK simple LDAP: user=".$LDAPUserAdmin."<br>";
             //exit("OK simple LDAP: user=".$LDAPUserAdmin."<br>");
         }
 
