@@ -1094,6 +1094,7 @@ class AuthUtil {
 
         $LDAPFieldsToFind = array("cn", "mail", "title", "sn", "givenName", "displayName", "telephoneNumber", "company"); //sn - lastName
         $infoArr = array();
+        $srArr = array();
 
         $sr = null;
         $ldapBindDNArr = explode(";",$ldapBindDN);
@@ -1107,13 +1108,14 @@ class AuthUtil {
             if( $sr ) {
                 $this->logger->notice("search Ldap: ldap_search OK with filter=" . $filter . "; bindDn=".$ldapBindDN);
                 $info = ldap_get_entries($cnx, $sr);
+                $infoArr[] = $info;
 //                echo "<br><br>############Data:<pre>";
 //                print_r($info);
 //                echo "</pre>#############<br><br>";
                 if( $info["count"] > 0 ) {
                     $this->logger->notice("search Ldap: info: displayName=".$info[0]['displayname'][0]);
                     //break;
-                    $infoArr[] = $info;
+                    //$infoArr[] = $info;
                 } else {
                     $this->logger->error("search Ldap: ldap_search NOTOK = info null");
                 }
