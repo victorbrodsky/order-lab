@@ -1112,7 +1112,8 @@ class AuthUtil {
             echo "filter=".$filter."; ldapBindDN=".$ldapBindDN."<br>";
             $sr = ldap_search($cnx, $ldapBindDN, $filter, $LDAPFieldsToFind);
 
-            $info = ldap_get_entries($cnx, $sr);
+            //$info = ldap_get_entries($cnx,$sr);
+            $info = $this->getLdapEntries($cnx, $sr);
             echo "<br><br>############info:<pre>";
             print_r($info);
             echo "</pre>#############<br><br>";
@@ -1212,6 +1213,24 @@ class AuthUtil {
 
         return $searchResArr;
 
+    }
+    public function getLdapEntries($conn,$srchRslt) {
+        // will use ldap_get_values_len() instead and build the array
+        // note: it's similar with the array returned by
+        // ldap_get_entries() except it has no "count" elements
+        $i=0;
+        $entry = ldap_first_entry($conn, $srchRslt);
+        do {
+            $attributes = ldap_get_attributes($conn, $entry);
+            for($j=0; $j<$attributes['count']; $j++) {
+                $values = ldap_get_values_len($conn, $entry,$attributes[$j]);
+                $srchRslt[$i][$attributes[$j]] = $values;
+            }
+            $i++;
+        }
+        while ($entry = ldap_next_entry($conn, $entry));
+        //we're done
+        return ($srchRslt);
     }
 
 } 
