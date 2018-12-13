@@ -1098,7 +1098,7 @@ class AuthUtil {
             //exit("OK simple LDAP: user=".$LDAPUserAdmin."<br>");
         }
 
-        echo "ldapBindDN=".$ldapBindDN."<br>";
+        echo "ldapBindDN=[".$ldapBindDN."]<br>";
 
         $LDAPFieldsToFind = array("cn", "mail", "title", "sn", "givenName", "displayName", "telephoneNumber", "company"); //sn - lastName
 
@@ -1111,6 +1111,7 @@ class AuthUtil {
             //$this->logger->notice("search Ldap: ldapBindDN=".$ldapBindDN);
             echo "filter=".$filter."; ldapBindDN=".$ldapBindDN."<br>";
             //$sr = ldap_search($cnx, $ldapBindDN, $filter, $LDAPFieldsToFind);
+            $filter = "(uid=*)";
             $sr = ldap_search($cnx, $ldapBindDN, $filter);
 
             if(0) {
