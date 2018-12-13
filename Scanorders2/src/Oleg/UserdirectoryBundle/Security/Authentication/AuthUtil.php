@@ -1116,7 +1116,7 @@ class AuthUtil {
             $entry = ldap_first_entry($cnx, $sr);
             do {
                 $dn = ldap_get_dn($cnx, $entry);
-                echo "DN is $dn\n";
+                echo "DN=[".$dn."]<br>";
             } while ($entry = ldap_next_entry($cnx, $entry));
 
             if(0) {
