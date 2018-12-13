@@ -1141,13 +1141,15 @@ class AuthUtil {
                     //echo "cn=".$cn."<br>";
                     //$sn = $info[$x]['sn'][0];
                     //echo "sn=".$sn."<br>";
-                    $displayname = $info[$x]["displayname"][0];
-                    $displayNameArr[] = $displayname;
-                    echo "displayname=" . $displayname . "<br>";
+                    //$displayname = $info[$x]["displayname"][0];
+                    foreach($info[$x]["displayname"] as $displayname) {
+                        $displayNameArr[] = $displayname;
+                        echo "displayname=" . $displayname . "<br>";
+                    }
 
-                    echo "*******:<pre>";
-                    print_r($info[$x]["displayname"]);
-                    echo "</pre>#############<br>";
+                    //echo "*******:<pre>";
+                    //print_r($info[$x]["displayname"]);
+                    //echo "</pre>#############<br>";
                 }
             }
 
