@@ -1098,21 +1098,6 @@ class AuthUtil {
 
         $sr = ldap_search($cnx, $ldapBindDN, $filter, $LDAPFieldsToFind);
 
-        $info = ldap_get_entries($cnx, $sr);
-
-        for ($x = 0; $x < $info["count"]; $x++) {
-            echo "<br><br>############info:<pre>";
-            print_r($info[$x]);
-            echo "</pre>#############<br><br>";
-            $cn = $info[$x]['cn'][0];
-            echo "cn=".$cn."<br>";
-            $sn = $info[$x]['sn'][0];
-            echo "sn=".$sn."<br>";
-            echo "displayname=".$info[$x]["displayname"][0]."<br>";
-        }
-
-        exit('info='.$info);
-
         $infoArr = array();
         $sr = null;
         $ldapBindDNArr = explode(";",$ldapBindDN);
@@ -1124,6 +1109,18 @@ class AuthUtil {
             $info = ldap_get_entries($cnx, $sr);
             $infoArr[] = $info;
             echo "info count=".$info["count"]."<br>";
+
+            for ($x = 0; $x < $info["count"]; $x++) {
+                echo "<br><br>############info:<pre>";
+                print_r($info[$x]);
+                echo "</pre>#############<br><br>";
+                //$cn = $info[$x]['cn'][0];
+                //echo "cn=".$cn."<br>";
+                //$sn = $info[$x]['sn'][0];
+                //echo "sn=".$sn."<br>";
+                echo "displayname=".$info[$x]["displayname"][0]."<br>";
+            }
+
         }
 
         //$info = ldap_get_entries($cnx, $sr);
@@ -1131,7 +1128,7 @@ class AuthUtil {
         echo "<br><br>############info:<pre>";
         print_r($infoArr);
         echo "</pre>#############<br><br>";
-        exit('111');
+        exit('infoArr count='.count($infoArr));
 
         $searchResArr = array();
 
