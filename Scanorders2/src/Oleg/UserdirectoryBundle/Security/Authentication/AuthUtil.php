@@ -1184,7 +1184,7 @@ class AuthUtil {
             //$this->logger->notice("search Ldap: mail=" . $searchRes['mail'] . "; lastName=".$searchRes['lastName']);
 
             //we have only one result
-            break;
+            //break;
         }
 
 //        if( count($searchRes) == 0 ) {
