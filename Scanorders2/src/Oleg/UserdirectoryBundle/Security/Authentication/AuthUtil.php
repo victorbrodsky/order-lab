@@ -1112,8 +1112,8 @@ class AuthUtil {
             echo "filter=".$filter."; ldapBindDN=".$ldapBindDN."<br>";
             $sr = ldap_search($cnx, $ldapBindDN, $filter, $LDAPFieldsToFind);
 
-            //$info = ldap_get_entries($cnx,$sr);
-            $info = $this->getLdapEntries($cnx, $sr);
+            $info = ldap_get_entries($cnx,$sr);
+            //$info = $this->getLdapEntries($cnx, $sr);
             echo "<br><br>############info:<pre>";
             print_r($info);
             echo "</pre>#############<br><br>";
