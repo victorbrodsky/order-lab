@@ -174,7 +174,7 @@ class PdfGenerator
         if( !$connectionChannel ) {
             $connectionChannel = 'http';
         }
-        exit("connectionChannel=".$connectionChannel);
+        //exit("connectionChannel=".$connectionChannel);
         //$connectionChannel = 'http';
 
         $router = $this->container->get('router');
