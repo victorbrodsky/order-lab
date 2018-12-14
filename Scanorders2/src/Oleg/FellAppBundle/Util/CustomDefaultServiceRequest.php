@@ -53,6 +53,7 @@ class CustomDefaultServiceRequest extends DefaultServiceRequest
         if(substr($url, 0, 4) !== 'http') {
             $url = $this->serviceUrl . $url;
         }
+        exit("url=".$url);
 
         $ch = curl_init();
         curl_setopt_array($ch, $curlParams);
