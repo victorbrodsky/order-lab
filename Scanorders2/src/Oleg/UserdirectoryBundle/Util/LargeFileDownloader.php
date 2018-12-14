@@ -102,7 +102,15 @@ class LargeFileDownloader {
         ///// EOF remove dots except extension /////
 
         //testing
-        readfile($filenameClean); //use for files less than 10MB => 10000000 bytes
+        //readfile($filenameClean); //use for files less than 10MB => 10000000 bytes
+        $arrContextOptions=array(
+            "ssl"=>array(
+                "verify_peer"=>false,
+                "verify_peer_name"=>false,
+            ),
+        );
+        $response = file_get_contents($filenameClean, false, stream_context_create($arrContextOptions));
+        echo $response;
         exit;
 
         $mimeType = $this->getMimeType($filename);
