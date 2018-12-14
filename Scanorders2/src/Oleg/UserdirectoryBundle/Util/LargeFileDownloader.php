@@ -90,7 +90,7 @@ class LargeFileDownloader {
         }
         //echo "filepath=".$filepath."<br>";
         //echo "filename=".$filename."<br>";
-        echo "filenameClean=".$filenameClean."<br>";
+        //echo "filenameClean=".$filenameClean."<br>";
         //echo "size=".$size."<br>";
         //var_dump(stream_get_wrappers());
 //        if( is_readable($filepath) ) {
@@ -98,7 +98,7 @@ class LargeFileDownloader {
 //        } else {
 //            echo "file is not readable <br>";
 //        }
-        exit('111');
+        //exit('111');
         ///// EOF remove dots except extension /////
 
         $mimeType = $this->getMimeType($filename);
