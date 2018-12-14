@@ -468,7 +468,7 @@ class Document {
         else {
             $scheme = 'http';
         }
-        $scheme = 'http';
+        //$scheme = 'http';
         //exit("scheme=".$scheme);
 
 //        $scheme = "http";
