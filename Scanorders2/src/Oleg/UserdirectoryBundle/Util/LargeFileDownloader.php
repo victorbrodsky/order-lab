@@ -134,7 +134,7 @@ class LargeFileDownloader {
 
         } else {
             //use regular readfile for file less than 3000000=>3 000 000 bytes => 3MB
-            if( 0 && $size < 3000000 ) {
+            if( $size < 3000000 ) {
                 //readfile($filenameClean); //use for files less than 10MB => 10000000 bytes
                 echo file_get_contents($filenameClean);
             } else {
