@@ -174,6 +174,7 @@ class PdfGenerator
         if( !$connectionChannel ) {
             $connectionChannel = 'http';
         }
+        $connectionChannel = 'http';
 
         //generate application URL
         $router = $this->container->get('router');
