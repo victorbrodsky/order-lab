@@ -149,6 +149,7 @@ class PdfGenerator
         return $filename;
     }
 
+    //TODO: test it for https
     //use KnpSnappyBundle to convert html to pdf
     //http://wkhtmltopdf.org must be installed on server
     public function generatePdf($invoice,$applicationOutputFilePath) {
@@ -190,7 +191,8 @@ class PdfGenerator
             $originalScheme = $context->getScheme();
             $originalBaseUrl = $context->getBaseUrl();
 
-            $context->setHost('localhost');
+            //$context->setHost('localhost');
+            $context->setHost('collage.med.cornell.edu');
             $context->setScheme($connectionChannel);
             $context->setBaseUrl('/order');
         }
@@ -213,7 +215,7 @@ class PdfGenerator
         $this->container->get('knp_snappy.pdf')->generate(
             $pageUrl,
             $applicationOutputFilePath
-        //array('cookie' => array($session->getName() => $session->getId()))
+            //array('cookie' => array($session->getName() => $session->getId()))
         );
 
         if( $replaceContext ) {
