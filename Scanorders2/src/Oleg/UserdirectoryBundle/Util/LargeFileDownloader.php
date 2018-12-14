@@ -101,18 +101,6 @@ class LargeFileDownloader {
         //exit('111');
         ///// EOF remove dots except extension /////
 
-        //testing
-        //readfile($filenameClean); //use for files less than 10MB => 10000000 bytes
-//        $arrContextOptions=array(
-//            "ssl"=>array(
-//                "verify_peer"=>false,
-//                "verify_peer_name"=>false,
-//            ),
-//        );
-//        $response = file_get_contents($filenameClean, false, stream_context_create($arrContextOptions));
-//        echo $response;
-        //exit;
-
         $mimeType = $this->getMimeType($filename);
         //echo "readfile filename=".$filename."; mimeType=".$mimeType."<br>";
         //exit("111");
@@ -141,8 +129,9 @@ class LargeFileDownloader {
             $resizedImg = $this->resizeImage($filenameClean, 10, 10);
             //$resizedImg = $filenameClean; //testing
 
-            readfile($resizedImg);
+            //readfile($resizedImg);
             //echo file_get_contents($resizedImg);
+            echo $this->getFileContent($filenameClean);
 
         } else {
             //use regular readfile for file less than 3000000=>3 000 000 bytes => 3MB
@@ -151,14 +140,17 @@ class LargeFileDownloader {
                 //echo "filenameClean=".$filenameClean."<br>";
                 //echo file_get_contents($filenameClean);
 
-                $arrContextOptions=array(
-                    "ssl"=>array(
-                        "verify_peer"=>false,
-                        "verify_peer_name"=>false,
-                    ),
-                );
-                $response = file_get_contents($filenameClean, false, stream_context_create($arrContextOptions));
-                echo $response;
+//                $arrContextOptions=array(
+//                    "ssl"=>array(
+//                        "verify_peer"=>false,
+//                        "verify_peer_name"=>false,
+//                    ),
+//                );
+//                $response = file_get_contents($filenameClean, false, stream_context_create($arrContextOptions));
+//                echo $response;
+
+                echo $this->getFileContent($filenameClean);
+
             } else {
                 $this->readfile_chunked($filenameClean);
             }
@@ -166,6 +158,17 @@ class LargeFileDownloader {
 
         exit;
         return;
+    }
+
+    public function getFileContent($filenameClean) {
+        $arrContextOptions=array(
+            "ssl"=>array(
+                "verify_peer"=>false,
+                "verify_peer_name"=>false,
+            ),
+        );
+        $response = file_get_contents($filenameClean, false, stream_context_create($arrContextOptions));
+        return $response;
     }
 
     //form: http://php.net/manual/en/function.readfile.php
@@ -381,7 +384,8 @@ class LargeFileDownloader {
                 {
                   ob_clean();
                   flush();
-                  readfile($filePath);
+                  //readfile($filePath);
+                  echo $this->getFileContent($filePath);
                 }
              }
              else

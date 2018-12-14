@@ -54,6 +54,17 @@ class DefaultController extends Controller
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
+        //testing
+        $userSecUtil = $this->get('user_security_utility');
+        $pkey = $userSecUtil->getSiteSettingParameter('p12KeyPathFellApp');
+        if( !$pkey ) {
+            //$logger->warning('p12KeyPathFellApp is not defined in Site Parameters. p12KeyPathFellApp='.$pkey);
+        }
+        //echo "pkey=".$pkey."<br>";
+        $private_key = file_get_contents($pkey); //notasecret
+        echo "private_key=".$private_key."<br>";
+        exit('111');
+
         $logDir = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . "var" . DIRECTORY_SEPARATOR . "logs";
 
         $systemLogFile = $logDir . DIRECTORY_SEPARATOR . "prod.log";
