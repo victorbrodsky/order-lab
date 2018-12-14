@@ -191,8 +191,8 @@ class PdfGenerator
             $originalScheme = $context->getScheme();
             $originalBaseUrl = $context->getBaseUrl();
 
-            //$context->setHost('localhost');
-            $context->setHost('collage.med.cornell.edu');
+            $context->setHost('localhost');
+            //$context->setHost('collage.med.cornell.edu');
             $context->setScheme($connectionChannel);
             $context->setBaseUrl('/order');
         }
