@@ -103,15 +103,15 @@ class LargeFileDownloader {
 
         //testing
         //readfile($filenameClean); //use for files less than 10MB => 10000000 bytes
-        $arrContextOptions=array(
-            "ssl"=>array(
-                "verify_peer"=>false,
-                "verify_peer_name"=>false,
-            ),
-        );
-        $response = file_get_contents($filenameClean, false, stream_context_create($arrContextOptions));
-        echo $response;
-        exit;
+//        $arrContextOptions=array(
+//            "ssl"=>array(
+//                "verify_peer"=>false,
+//                "verify_peer_name"=>false,
+//            ),
+//        );
+//        $response = file_get_contents($filenameClean, false, stream_context_create($arrContextOptions));
+//        echo $response;
+        //exit;
 
         $mimeType = $this->getMimeType($filename);
         //echo "readfile filename=".$filename."; mimeType=".$mimeType."<br>";
@@ -147,9 +147,18 @@ class LargeFileDownloader {
         } else {
             //use regular readfile for file less than 3000000=>3 000 000 bytes => 3MB
             if( $size < 3000000 ) {
-                readfile($filenameClean); //use for files less than 10MB => 10000000 bytes
+                //readfile($filenameClean); //use for files less than 10MB => 10000000 bytes
                 //echo "filenameClean=".$filenameClean."<br>";
                 //echo file_get_contents($filenameClean);
+
+                $arrContextOptions=array(
+                    "ssl"=>array(
+                        "verify_peer"=>false,
+                        "verify_peer_name"=>false,
+                    ),
+                );
+                $response = file_get_contents($filenameClean, false, stream_context_create($arrContextOptions));
+                echo $response;
             } else {
                 $this->readfile_chunked($filenameClean);
             }
