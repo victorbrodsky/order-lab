@@ -483,7 +483,7 @@ class Document {
 
         $path = $scheme."://" . $serverName . "/order/" . $this->getUploadDirectory().'/'.$this->getUniquename();
 
-        exit("path=".$path);
+        //exit("path=".$path);
 
         return $path;
         //return $scheme."://" . $serverName . "/order/" . $this->getUploadDirectory().'/'.$this->getUniquename();
