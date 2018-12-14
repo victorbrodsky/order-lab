@@ -462,24 +462,20 @@ class Document {
 
     public function getAbsoluteUploadFullPath()
     {
-        if (isset($_SERVER['HTTPS']) &&
-            ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1) ||
-            isset($_SERVER['HTTP_X_FORWARDED_PROTO']) &&
-            $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') {
-            $protocol = 'https://';
+        if( isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1) ) {
+            $scheme = 'https';
         }
         else {
-            $protocol = 'http://';
+            $scheme = 'http';
         }
-        exit("$protocol=".$protocol);
-
-
-        $scheme = "http";
-        if( isset($_SERVER['SERVER_PROTOCOL']) && stripos($_SERVER['SERVER_PROTOCOL'],'https') === true ) {
-            $scheme = "https";
-        }
-        echo "SERVER_PROTOCOL=".$_SERVER['SERVER_PROTOCOL']."<br>";
         exit("scheme=".$scheme);
+        
+//        $scheme = "http";
+//        if( isset($_SERVER['SERVER_PROTOCOL']) && stripos($_SERVER['SERVER_PROTOCOL'],'https') === true ) {
+//            $scheme = "https";
+//        }
+//        echo "SERVER_PROTOCOL=".$_SERVER['SERVER_PROTOCOL']."<br>";
+//        exit("scheme=".$scheme);
 
         if( isset($_SERVER['SERVER_NAME']) ) {
             $serverName = $_SERVER['SERVER_NAME'];
