@@ -481,7 +481,12 @@ class Document {
             $serverName = "127.0.0.1";
         }
 
-        return $scheme."://" . $serverName . "/order/" . $this->getUploadDirectory().'/'.$this->getUniquename();
+        $path = $scheme."://" . $serverName . "/order/" . $this->getUploadDirectory().'/'.$this->getUniquename();
+
+        exit("path=".$path);
+
+        return $path;
+        //return $scheme."://" . $serverName . "/order/" . $this->getUploadDirectory().'/'.$this->getUniquename();
 
         //return $this->getUploadDirectory().'/'.$this->getUniquename();
         //return "http://collage.med.cornell.edu/".$this->getRelativeUploadFullPath();
