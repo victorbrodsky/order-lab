@@ -174,20 +174,24 @@ class PdfGenerator
         if( !$connectionChannel ) {
             $connectionChannel = 'http';
         }
-        $connectionChannel = 'http';
+        //$connectionChannel = 'http';
 
-        //generate application URL
         $router = $this->container->get('router');
-        $context = $router->getContext();
 
-        //http://192.168.37.128/order/app_dev.php/translational-research/download-invoice-pdf/49
-        $originalHost = $context->getHost();
-        $originalScheme = $context->getScheme();
-        $originalBaseUrl = $context->getBaseUrl();
+        $replaceContext = false;
+        if( $replaceContext ) {
+            //generate application URL
+            $context = $router->getContext();
 
-        $context->setHost('localhost');
-        $context->setScheme($connectionChannel);
-        $context->setBaseUrl('/order');
+            //http://192.168.37.128/order/app_dev.php/translational-research/download-invoice-pdf/49
+            $originalHost = $context->getHost();
+            $originalScheme = $context->getScheme();
+            $originalBaseUrl = $context->getBaseUrl();
+
+            $context->setHost('localhost');
+            $context->setScheme($connectionChannel);
+            $context->setBaseUrl('/order');
+        }
 
         //exit("oid=".$invoice->getOid());
 
@@ -210,10 +214,12 @@ class PdfGenerator
         //array('cookie' => array($session->getName() => $session->getId()))
         );
 
-        //set back to original context
-        $context->setHost($originalHost);
-        $context->setScheme($originalScheme);
-        $context->setBaseUrl($originalBaseUrl);
+        if( $replaceContext ) {
+            //set back to original context
+            $context->setHost($originalHost);
+            $context->setScheme($originalScheme);
+            $context->setBaseUrl($originalBaseUrl);
+        }
 
         //echo "generated ok! <br>";
     }
