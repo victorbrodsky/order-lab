@@ -101,6 +101,10 @@ class LargeFileDownloader {
         //exit('111');
         ///// EOF remove dots except extension /////
 
+        //testing
+        readfile($filenameClean); //use for files less than 10MB => 10000000 bytes
+        exit;
+
         $mimeType = $this->getMimeType($filename);
         //echo "readfile filename=".$filename."; mimeType=".$mimeType."<br>";
         //exit("111");
@@ -129,15 +133,15 @@ class LargeFileDownloader {
             $resizedImg = $this->resizeImage($filenameClean, 10, 10);
             //$resizedImg = $filenameClean; //testing
 
-            //readfile($resizedImg);
-            echo file_get_contents($resizedImg);
+            readfile($resizedImg);
+            //echo file_get_contents($resizedImg);
 
         } else {
             //use regular readfile for file less than 3000000=>3 000 000 bytes => 3MB
             if( $size < 3000000 ) {
-                //readfile($filenameClean); //use for files less than 10MB => 10000000 bytes
-                echo "filenameClean=".$filenameClean."<br>";
-                echo file_get_contents($filenameClean);
+                readfile($filenameClean); //use for files less than 10MB => 10000000 bytes
+                //echo "filenameClean=".$filenameClean."<br>";
+                //echo file_get_contents($filenameClean);
             } else {
                 $this->readfile_chunked($filenameClean);
             }
