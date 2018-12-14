@@ -472,6 +472,7 @@ class Document {
         } else {
             $serverName = "127.0.0.1";
         }
+        exit("scheme=".$scheme);
 
         return $scheme."://" . $serverName . "/order/" . $this->getUploadDirectory().'/'.$this->getUniquename();
 
