@@ -44,8 +44,8 @@ class PdfGenerator
             $authorUser = $userSecUtil->findSystemUser();
         }
 
-        //generate file name
-        $fileFullReportUniqueName = $this->constructUniqueFileName($invoice,"Invoice-PDF");
+        //generate file name. use PI in the pdf file name as per Ning, Jeff request.
+        $fileFullReportUniqueName = $this->constructUniqueFileName($invoice,"Invoice",$invoice->getPrincipalInvestigator());
         $logger->notice("Start to generate PDF invoice ID=".$invoice->getOid()."; filename=".$fileFullReportUniqueName);
 
         //check and create Report and temp folders
@@ -109,7 +109,7 @@ class PdfGenerator
         return $res;
     }
 
-    protected function constructUniqueFileName($entity,$filenameStr) {
+    protected function constructUniqueFileName($entity,$filenameStr,$subjectUser=null) {
 
         $logger = $this->container->get('logger');
         $user = $this->secTokenStorage->getToken()->getUser();
@@ -119,8 +119,16 @@ class PdfGenerator
         //$userServiceUtil = $this->container->get('user_service_utility');
         //$currentDate = $userServiceUtil->convertToUserTimezone($currentDate,$user);
 
-        $subjectUser = $entity->getSubmitter();
-        $submitterName = $subjectUser->getUsernameShortest();
+        if( !$subjectUser ) {
+            $subjectUser = $entity->getSubmitter();
+        }
+
+        //use only last name as per Bing, Jeff request
+        $submitterName = $subjectUser->getLastName();
+        if( !$submitterName ) {
+            $submitterName = $subjectUser->getUsernameShortest();
+        }
+
         $submitterName = str_replace(" ","-",$submitterName);
         $submitterName = str_replace(".","-",$submitterName);
         $submitterName = str_replace("(","-",$submitterName);
@@ -129,7 +137,7 @@ class PdfGenerator
             $submitterName = "-" . $submitterName;
         }
 
-        $serverTimezone = date_default_timezone_get(); //server timezone
+        //$serverTimezone = date_default_timezone_get(); //server timezone
 
         //h-i-s-a
         $filename =
@@ -138,7 +146,8 @@ class PdfGenerator
             //"-".$subjectUser->getLastNameUppercase().
             //"-".$subjectUser->getFirstNameUppercase().
             $submitterName.
-            "-generated-on-".$currentDate->format('m-d-Y').'-at-'.$currentDate->format('H-i-s').'_'.$serverTimezone.
+            //"-generated-on-".$currentDate->format('m-d-Y').'-at-'.$currentDate->format('H-i-s').'_'.$serverTimezone.
+            "-".$currentDate->format('m-d-Y'). //use only date without time
             ".pdf";
 
         //replace all white spaces to _
@@ -212,6 +221,12 @@ class PdfGenerator
         //exit();
 
         //$application =
+        //TODO: test it for https. Possible replace by:
+        //$output = $this->get('knp_snappy.pdf')->getOutputFromHtml($html, array(
+        //'cookie' => array(
+        //    'PHPSESSID' => $PHPSESSID
+        //)));
+
         $this->container->get('knp_snappy.pdf')->generate(
             $pageUrl,
             $applicationOutputFilePath
