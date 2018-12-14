@@ -174,11 +174,13 @@ class PdfGenerator
         if( !$connectionChannel ) {
             $connectionChannel = 'http';
         }
+        exit("connectionChannel=".$connectionChannel);
         //$connectionChannel = 'http';
 
         $router = $this->container->get('router');
 
-        $replaceContext = false;
+        //$replaceContext = false;
+        $replaceContext = true;
         if( $replaceContext ) {
             //generate application URL
             $context = $router->getContext();
