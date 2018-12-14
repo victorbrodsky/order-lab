@@ -88,10 +88,10 @@ class LargeFileDownloader {
                 $filename = $filename . "." . $ext;
             }
         }
-        echo "filename=".$filename."<br>";
-        echo "filenameClean=".$filenameClean."<br>";
-        echo "size=".$size."<br>";
-        exit('111');
+        //echo "filename=".$filename."<br>";
+        //echo "filenameClean=".$filenameClean."<br>";
+        //echo "size=".$size."<br>";
+        //exit('111');
         ///// EOF remove dots except extension /////
 
         $mimeType = $this->getMimeType($filename);
