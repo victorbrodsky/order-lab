@@ -43,7 +43,7 @@ oleg_translationalresearch:
     resource: "@OlegTranslationalResearchBundle/Controller/"
     type:     annotation
     prefix:   /translational-research
-#    schemes:  ['%connection_channel%']
+    schemes:  ['%connection_channel%']
 
 oleg_userdirectory:
     resource: "@OlegUserdirectoryBundle/Controller/"
