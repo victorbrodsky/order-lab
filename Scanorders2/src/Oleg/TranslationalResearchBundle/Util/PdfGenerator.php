@@ -79,12 +79,12 @@ class PdfGenerator
         //$applicationFilePath = $outdir . "application_ID" . $invoice->getOid() . ".pdf";
         $applicationFilePath = $outdir . $fileFullReportUniqueName;
 
-        //$this->generatePdf($invoice,$applicationFilePath); //this does not work with https
+        $this->generatePdf($invoice,$applicationFilePath); //this does not work with https
         //$logger->notice("Successfully Generated Application PDF from HTML for ID=".$id."; file=".$applicationFilePath);
 
-        $pdfPath = "translationalresearch_invoice_download";
-        $pdfPathParametersArr = array('id' => $invoice->getId());
-        $this->generatePdfPhantomjs($pdfPath,$pdfPathParametersArr,$applicationFilePath,$request);
+        //$pdfPath = "translationalresearch_invoice_download";
+        //$pdfPathParametersArr = array('id' => $invoice->getId());
+        //$this->generatePdfPhantomjs($pdfPath,$pdfPathParametersArr,$applicationFilePath,$request);
 
         //$filenamePdf = $reportPath . '/' . $fileFullReportUniqueName;
 
