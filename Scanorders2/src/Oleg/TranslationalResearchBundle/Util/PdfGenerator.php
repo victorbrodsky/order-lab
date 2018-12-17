@@ -353,7 +353,7 @@ class PdfGenerator
         $applicationFilePath = $outdir . $fileFullReportUniqueName;
 
         //$this->generatePdfPackingSlip($transresRequest,$fileFullReportUniqueName,$applicationFilePath);
-        $this->generatePdfPhantomjsPackingSlip($transresRequest,$fileFullReportUniqueName,$applicationFilePath,$request);
+        $this->generatePdfPhantomjsPackingSlip($transresRequest,$applicationFilePath,$request);
 
         $filesize = filesize($applicationFilePath);
         echo "filesize=".$filesize."<br>";
@@ -460,7 +460,7 @@ class PdfGenerator
     //use KnpSnappyBundle to convert html to pdf
     //http://wkhtmltopdf.org must be installed on server
     //use --ignore-ssl-errors=true for https
-    public function generatePdfPhantomjsPackingSlip($transresRequest,$fileFullReportUniqueName,$applicationOutputFilePath,$request) {
+    public function generatePdfPhantomjsPackingSlip($transresRequest,$applicationOutputFilePath,$request) {
         $logger = $this->container->get('logger');
         $userServiceUtil = $this->container->get('user_service_utility');
         $userSecUtil = $this->container->get('user_security_utility');
@@ -489,7 +489,7 @@ class PdfGenerator
         $router = $this->container->get('router');
         $context = null;
 
-        $replaceContext = false;
+        $replaceContext = true;
         $schemeAndHttpHost = $request->getSchemeAndHttpHost();
         //exit("schemeAndHttpHost=$schemeAndHttpHost");
         if( $replaceContext && strpos($schemeAndHttpHost,"localhost") === false && strpos($schemeAndHttpHost,"127.0.0.1") === false ) {
