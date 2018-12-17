@@ -60,7 +60,7 @@ class PackingSlipController extends Controller
     {
         $transresUtil = $this->container->get('transres_util');
         $transresPdfUtil = $this->get('transres_pdf_generator');
-        $transresRequestUtil = $this->container->get('transres_request_util');
+        //$transresRequestUtil = $this->container->get('transres_request_util');
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
 

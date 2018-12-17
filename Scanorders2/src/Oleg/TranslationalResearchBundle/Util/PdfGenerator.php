@@ -459,6 +459,7 @@ class PdfGenerator
 
     //use KnpSnappyBundle to convert html to pdf
     //http://wkhtmltopdf.org must be installed on server
+    //use --ignore-ssl-errors=true for https
     public function generatePdfPhantomjsPackingSlip($transresRequest,$fileFullReportUniqueName,$applicationOutputFilePath,$request) {
         $logger = $this->container->get('logger');
         $userServiceUtil = $this->container->get('user_service_utility');
@@ -559,7 +560,12 @@ class PdfGenerator
         $rasterize = '"'.$rasterize.'"';
         $applicationOutputFilePath = '"'.$applicationOutputFilePath.'"';
 
-        $cmd = $phantomjs . ' --disk-cache=true ' . $rasterize . ' ' . $pageUrl . ' ' . $applicationOutputFilePath . ' "A4"';
+        $parameters = "--disk-cache=true";
+        if( $connectionChannel == 'https' ) {
+            $parameters = $parameters . " --ignore-ssl-errors=true";
+        }
+
+        $cmd = $phantomjs . ' ' . $parameters . ' ' . $rasterize . ' ' . $pageUrl . ' ' . $applicationOutputFilePath . ' "A4"';
         //$cmd = $phantomjs . ' ' . $rasterize . ' ' . $pageUrl . ' ' . $applicationOutputFilePath . ' "A4"';
         //$logger->notice("cmd=".$cmd);
         echo "phantomjs cmd=".$cmd."<br>";
