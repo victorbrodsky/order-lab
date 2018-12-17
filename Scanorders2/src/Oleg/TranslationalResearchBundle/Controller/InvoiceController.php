@@ -1031,7 +1031,7 @@ class InvoiceController extends Controller
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
-        $res = $transresPdfUtil->generateInvoicePdf($invoice,$user);
+        $res = $transresPdfUtil->generateInvoicePdf($invoice,$user,$request);
         
         //$filename = $res['filename'];
         //$pdf = $res['pdf'];
@@ -1654,7 +1654,7 @@ class InvoiceController extends Controller
         $transresUtil->setEventLog($invoice,$eventType,$msg);
 
         //generate Invoice PDF
-        $transresPdfUtil->generateInvoicePdf($invoice,$user);
+        $transresPdfUtil->generateInvoicePdf($invoice,$user,$request);
 
         $res = "OK";
 

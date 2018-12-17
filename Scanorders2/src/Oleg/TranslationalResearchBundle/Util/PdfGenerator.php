@@ -33,12 +33,16 @@ class PdfGenerator
     }
 
 
-    public function generateInvoicePdf( $invoice, $authorUser ) {
+    public function generateInvoicePdf( $invoice, $authorUser, $request=null ) {
 
         ini_set('max_execution_time', 300); //300 seconds = 5 minutes
         $logger = $this->container->get('logger');
 
         $userSecUtil = $this->container->get('user_security_utility');
+
+        if( !$request ) {
+            $request = $this->container->get('request_stack')->getCurrentRequest();
+        }
 
         if( !$authorUser ) {
             $authorUser = $userSecUtil->findSystemUser();
@@ -75,8 +79,12 @@ class PdfGenerator
         //$applicationFilePath = $outdir . "application_ID" . $invoice->getOid() . ".pdf";
         $applicationFilePath = $outdir . $fileFullReportUniqueName;
 
-        $this->generatePdf($invoice,$applicationFilePath);
+        //$this->generatePdf($invoice,$applicationFilePath); //this does not work with https
         //$logger->notice("Successfully Generated Application PDF from HTML for ID=".$id."; file=".$applicationFilePath);
+
+        $pdfPath = "translationalresearch_invoice_download";
+        $pdfPathParametersArr = array('id' => $invoice->getId());
+        $this->generatePdfPhantomjs($pdfPath,$pdfPathParametersArr,$applicationFilePath,$request);
 
         //$filenamePdf = $reportPath . '/' . $fileFullReportUniqueName;
 

@@ -1261,7 +1261,7 @@ class ProjectController extends Controller
                         //regenarate latest invoice PDF
                         if( $invoice->getLatestVersion() ) {
                             //echo "regenaret Invoice PDF for " . $invoice->getOid()."<br>";
-                            $transresPdfUtil->generateInvoicePdf($invoice,$user);
+                            $transresPdfUtil->generateInvoicePdf($invoice,$user,$request);
                         }
                     }
                 }
