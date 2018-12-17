@@ -145,7 +145,7 @@
                                     <li>
                                         <a
                                             general-data-confirm="Are you sure you want to {{ generateLabel|lower }} for this invoice {{ invoice.oid }}?"
-                                            href="{{ path('translationalresearch_invoice_generate_pdf', {'oid': invoice.oid }) }}"
+                                            href="{{ path('translationalresearch_invoice_generate_pdf', {'id': invoice.id }) }}"
                                         >{{ generateLabel }}</a>
                                     </li>
                                 {% endif %}

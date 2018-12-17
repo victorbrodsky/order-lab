@@ -994,20 +994,21 @@ class InvoiceController extends Controller
     /**
      * Generate Invoice PDF
      *
-     * @Route("/generate-invoice-pdf/{oid}", name="translationalresearch_invoice_generate_pdf")
+     * @Route("/generate-invoice-pdf/{id}", name="translationalresearch_invoice_generate_pdf")
      * @Method("GET")
      */
-    public function generateInvoicePdfAction(Request $request, $oid) {
+    public function generateInvoicePdfAction(Request $request, $id) {
 
         $em = $this->getDoctrine()->getManager();
         $transresPdfUtil = $this->get('transres_pdf_generator');
         $transresRequestUtil = $this->get('transres_request_util');
-        $transresPermissionUtil = $this->get('transres_permission_util');
+        //$transresPermissionUtil = $this->get('transres_permission_util');
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
-        $invoice = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findOneByOid($oid);
+        //$invoice = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findOneByOid($oid);
+        $invoice = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->find($id);
         if( !$invoice ) {
-            throw new \Exception("Invoice is not found by invoice number (oid) '" . $oid . "'");
+            throw new \Exception("Invoice is not found by invoice number (id) '" . $id . "'");
         }
 
 //        if( false === $transresPermissionUtil->isInvoiceBillingContact($invoice,$user) ) {

@@ -321,7 +321,7 @@
                 {% set generateLabel = "Generate invoice PDF" %}
             {% endif %}
             <p>
-                <a class="btn btn-primary" href="{{ path('translationalresearch_invoice_generate_pdf', {'oid': invoice.oid }) }}"
+                <a class="btn btn-primary" href="{{ path('translationalresearch_invoice_generate_pdf', {'id': invoice.id }) }}"
                 >{{ generateLabel }}</a>
             </p>
         {% endif %}

@@ -350,7 +350,7 @@
                                         <li>
                                             <a
                                                 general-data-confirm="Are you sure you want to {{ generateLabel|lower }} for this invoice {{ latestInvoice.oid }}?"
-                                                href="{{ path('translationalresearch_invoice_generate_pdf', {'oid': latestInvoice.oid }) }}"
+                                                href="{{ path('translationalresearch_invoice_generate_pdf', {'id': latestInvoice.id }) }}"
                                             >{{ generateLabel }}</a>
                                         </li>
                                     {% endif %}
