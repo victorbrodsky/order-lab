@@ -353,7 +353,11 @@ class PdfGenerator
         $applicationFilePath = $outdir . $fileFullReportUniqueName;
 
         //$this->generatePdfPackingSlip($transresRequest,$fileFullReportUniqueName,$applicationFilePath);
-        $this->generatePdfPhantomjsPackingSlip($transresRequest,$applicationFilePath,$request);
+        //$this->generatePdfPhantomjsPackingSlip($transresRequest,$applicationFilePath,$request);
+        //packing slip url
+        $pdfPath = "translationalresearch_packing_slip_download";
+        $pdfPathParametersArr = array('id' => $transresRequest->getId());
+        $this->generatePdfPhantomjs($pdfPath,$pdfPathParametersArr,$applicationFilePath,$request);
 
         $filesize = filesize($applicationFilePath);
         echo "filesize=".$filesize."<br>";
@@ -460,7 +464,7 @@ class PdfGenerator
     //use KnpSnappyBundle to convert html to pdf
     //http://wkhtmltopdf.org must be installed on server
     //use --ignore-ssl-errors=true for https
-    public function generatePdfPhantomjsPackingSlip($transresRequest,$applicationOutputFilePath,$request) {
+    public function generatePdfPhantomjs($pdfPath,$pdfPathParametersArr,$applicationOutputFilePath,$request) {
         $logger = $this->container->get('logger');
         $userServiceUtil = $this->container->get('user_service_utility');
         $userSecUtil = $this->container->get('user_security_utility');
@@ -506,11 +510,15 @@ class PdfGenerator
             $context->setBaseUrl('/order');
         }
 
-        //invoice download
-        $pageUrl = $router->generate('translationalresearch_packing_slip_download',
-            array(
-                'id' => $transresRequest->getId()
-            ),
+        //packing slip url
+//        $pageUrl = $router->generate('translationalresearch_packing_slip_download',
+//            array(
+//                'id' => $transresRequest->getId()
+//            ),
+//            UrlGeneratorInterface::ABSOLUTE_URL
+//        ); //this does not work from console: 'order' is missing
+        $pageUrl = $router->generate($pdfPath,
+            $pdfPathParametersArr,
             UrlGeneratorInterface::ABSOLUTE_URL
         ); //this does not work from console: 'order' is missing
 
