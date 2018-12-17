@@ -561,6 +561,7 @@ class PdfGenerator
         $cmd = $phantomjs . ' --disk-cache=true ' . $rasterize . ' ' . $pageUrl . ' ' . $applicationOutputFilePath . ' "A4"';
         //$cmd = $phantomjs . ' ' . $rasterize . ' ' . $pageUrl . ' ' . $applicationOutputFilePath . ' "A4"';
         //$logger->notice("cmd=".$cmd);
+        echo "phantomjs cmd=".$cmd."<br>";
 
         //$shellout = shell_exec( $cmd );
         $shellout = exec( $cmd );
