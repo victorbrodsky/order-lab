@@ -488,9 +488,10 @@ class PdfGenerator
         $router = $this->container->get('router');
         $context = null;
 
+        $replaceContext = false;
         $schemeAndHttpHost = $request->getSchemeAndHttpHost();
         //exit("schemeAndHttpHost=$schemeAndHttpHost");
-        if( strpos($schemeAndHttpHost,"localhost") === false && strpos($schemeAndHttpHost,"127.0.0.1") === false ) {
+        if( $replaceContext && strpos($schemeAndHttpHost,"localhost") === false && strpos($schemeAndHttpHost,"127.0.0.1") === false ) {
             //exit('use localhost');
             $context = $router->getContext();
 
