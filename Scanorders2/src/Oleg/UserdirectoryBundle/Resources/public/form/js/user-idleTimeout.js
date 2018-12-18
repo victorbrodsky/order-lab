@@ -40,6 +40,7 @@ $(document).ready(function() {
 
     console.log('cycle=('+cycle+')');
     if( cycle !== 'download' ) {
+        console.log('init idleTimeout');
         var idleTimeout = new idleTimeoutClass();
 
         idleTimeout.init();
