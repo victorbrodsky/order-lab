@@ -198,7 +198,7 @@ class PdfGenerator
         $router = $this->container->get('router');
 
         $replaceContext = false;
-        //$replaceContext = true;
+        $replaceContext = true;
         if( $replaceContext ) {
             //generate application URL
             $context = $router->getContext();
