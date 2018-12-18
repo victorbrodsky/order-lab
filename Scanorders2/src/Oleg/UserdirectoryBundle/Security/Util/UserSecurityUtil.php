@@ -742,7 +742,7 @@ class UserSecurityUtil {
         }
 
         if( !$userkeytype ) {
-            throw new \Exception('User keytype is empty for prefix '.$usernamePrefix);
+            throw new \Exception('User keytype is empty for prefix '.$usernamePrefix." and username=".$username);
         }
         //////////////////////////////// EOF get usertype ////////////////////////////////
 
