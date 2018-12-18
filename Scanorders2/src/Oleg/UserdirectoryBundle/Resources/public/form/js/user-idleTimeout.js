@@ -38,6 +38,7 @@ $(document).ready(function() {
         Dropzone.autoDiscover = false;
     }
 
+    console.log('cycle=('+cycle+')');
     if( cycle !== 'download' ) {
         var idleTimeout = new idleTimeoutClass();
 
