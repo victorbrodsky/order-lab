@@ -723,10 +723,21 @@ class ReportGenerator {
         //echo "seesion name=".$session->getName().", id=".$session->getId()."<br>";
         //$logger->notice("before knp_snappy generate: pageUrl=".$pageUrl);
 
+        //take care of authentication
+        $session = $this->container->get('session');
+        $session->save();
+        session_write_close();
+        $PHPSESSID = $session->getId();
+
         //$application =
         $this->container->get('knp_snappy.pdf')->generate(
             $pageUrl,
-            $applicationOutputFilePath
+            $applicationOutputFilePath,
+            array(
+                'cookie' => array(
+                    'PHPSESSID' => $PHPSESSID
+                )
+            )
             //array('cookie' => array($session->getName() => $session->getId()))
         );
 

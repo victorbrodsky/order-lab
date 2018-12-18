@@ -197,7 +197,7 @@ class PdfGenerator
 
         $router = $this->container->get('router');
 
-        $replaceContext = false;
+        //$replaceContext = false;
         $replaceContext = true;
         if( $replaceContext ) {
             //generate application URL
@@ -466,9 +466,20 @@ class PdfGenerator
         //echo "pageurl=". $pageUrl . "<br>";
         //exit();
 
+        //take care of authentication
+        $session = $this->container->get('session');
+        $session->save();
+        session_write_close();
+        $PHPSESSID = $session->getId();
+
         $this->container->get('knp_snappy.pdf')->generate(
             $pageUrl,
-            $applicationOutputFilePath
+            $applicationOutputFilePath,
+            array(
+                'cookie' => array(
+                    'PHPSESSID' => $PHPSESSID
+                )
+            )
         );
 
 //        $this->container->get('knp_snappy.image')->generate(
