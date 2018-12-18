@@ -295,6 +295,7 @@ knp_snappy:
         options:
             javascript-delay: 7000    #Wait some milliseconds for javascript finish (default 200)
             load-error-handling: ignore
+            load-media-error-handling: ignore
 #            enable-forms: true       #Turn HTML form fields into pdf form fields
 #            enable-javascript: true
 #            debug-javascript: true
