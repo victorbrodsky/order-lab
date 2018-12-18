@@ -19,6 +19,15 @@
 
     $(document).ready(function() {
 
+        console.log("cycle="+cycle);
+        if( cycle == 'download' ) {
+            console.log("cycle is download");
+            //idleTimeoutClass.prototype.setMaxIdletime = null;
+            idleTimeoutClass.prototype.checkIdleTimeout = null;
+            //idleTimeoutClass.prototype.isServerActive = null;
+            //idleTimeoutClass.prototype.setActive = null;
+        }
+
         showHideWell('.fellapp-ecfmgcertificate-field');
         showHideWell('.fellapp-reprimand-field');
         showHideWell('.fellapp-lawsuit-field');
@@ -46,12 +55,6 @@
         
         setUploadItineraryAndListener();
 
-        if( cycle == 'download' ) {
-            //idleTimeoutClass.prototype.setMaxIdletime = null;
-            idleTimeoutClass.prototype.checkIdleTimeout = null;
-            //idleTimeoutClass.prototype.isServerActive = null;
-            //idleTimeoutClass.prototype.setActive = null;
-        }
 
     });
 
