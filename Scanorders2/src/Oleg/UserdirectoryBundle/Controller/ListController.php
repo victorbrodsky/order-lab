@@ -378,8 +378,11 @@ class ListController extends Controller
 //        }
 
         $dqlParameters = array();
+
+        $params = array("className" => $mapper['className']);
         $filterform = $this->createForm(ListFilterType::class, null, array(
             //'action' => $this->generateUrl($routeName),
+            'form_custom_value'=>$params,
             'method' => 'GET',
         ));
         //$filterform->submit($request);
@@ -389,6 +392,11 @@ class ListController extends Controller
         //$search = $request->request->get('filter')['search'];
         //$search = $request->query->get('search');
         //echo "2search=".$search."<br>";
+
+        $filterTypes = null;
+        if( isset($filterform['type']) ) {
+            $filterTypes = $filterform['type']->getData();
+        }
 
         if( $search ) {
             $searchStr = "";
@@ -460,6 +468,11 @@ class ListController extends Controller
 
             $dql->andWhere($searchStr);
             $dqlParameters['search'] = '%'.$search.'%';
+        }
+
+        if( $filterTypes && count($filterTypes) > 0 ) {
+            $dql->andWhere("ent.type IN (:filterTypes)");
+            $dqlParameters['filterTypes'] = $filterTypes;
         }
 
         //echo "dql=".$dql."<br>";

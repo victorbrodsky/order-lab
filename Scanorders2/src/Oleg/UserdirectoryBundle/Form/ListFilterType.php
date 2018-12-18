@@ -20,6 +20,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 use Doctrine\ORM\EntityRepository;
 use Oleg\UserdirectoryBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -27,10 +28,18 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class ListFilterType extends AbstractType
 {
 
+    protected $params;
+
+    public function formConstructor( $params=null )
+    {
+        $this->params = $params;
+    }
+
     //Start Date, Start Time, End Date, End Time, User [Select2 dropdown), Event Type [Entity Updated], [Free Text Search value for Event column] [Filter Button]
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
+        $this->formConstructor($options['form_custom_value']);
 
         $builder->add('search', TextType::class, array(
             //'placeholder' => 'Search',
@@ -40,11 +49,30 @@ class ListFilterType extends AbstractType
             'attr' => array('class' => 'form-control form-control-modif limit-font-size submit-on-enter-field'),
         ));
 
+        if( $this->params['className'] == "AntibodyList" ) {
+            $types = array(
+                "default" => "default",
+                "user-added" => "user-added",
+                "disabled" => "disabled",
+                "draft" => "draft",
+                "hidden" => "hidden"
+            );
+            $builder->add('type', ChoiceType::class, array(
+                'label' => 'Type:',
+                'choices' => $types,
+                'data' => array('default','user-added'),
+                'choices_as_values' => true,
+                'multiple' => true,
+                'attr' => array('class' => 'combobox combobox-width select2-list-type')
+            ));
+        }
+
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
+            'form_custom_value' => null,
             'csrf_protection' => false,
         ));
     }

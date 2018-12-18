@@ -390,6 +390,7 @@ class UserServiceUtil {
     }
 
     public function browserCheck( $asString=false ) {
+        //echo "start browserCheck<br>";
         //https://github.com/sinergi/php-browser-detector with MIT license
         $browser = new Browser();
         $name = $browser->getName();
