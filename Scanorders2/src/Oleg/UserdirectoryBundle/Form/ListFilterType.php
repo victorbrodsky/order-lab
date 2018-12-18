@@ -58,12 +58,13 @@ class ListFilterType extends AbstractType
                 "hidden" => "hidden"
             );
             $builder->add('type', ChoiceType::class, array(
-                'label' => 'Type:',
+                //'label' => 'Type:',
                 'choices' => $types,
                 'data' => array('default','user-added'),
                 'choices_as_values' => true,
                 'multiple' => true,
-                'attr' => array('class' => 'combobox combobox-width select2-list-type')
+                'required' => false,
+                'attr' => array('class' => 'combobox combobox-width select2-list-type', 'placeholder'=>"Type")
             ));
         }
 

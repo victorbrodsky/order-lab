@@ -26,9 +26,11 @@
                         {{ form_widget(filterform.search) }}
                     </div>
 
-                    <div class="col-xs-3">
-                        {{ form_widget(filterform.type) }}
-                    </div>
+                    {% if filterform.type is defined %}
+                        <div class="col-xs-3">
+                            {{ form_widget(filterform.type) }}
+                        </div>
+                    {% endif %}
 
                     <div class="col-xs-1">
                         <button type="submit" class="btn btn-sm btn-default">Filter</button>
