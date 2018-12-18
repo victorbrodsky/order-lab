@@ -58,7 +58,6 @@ class ListFilterType extends AbstractType
                 "hidden" => "hidden"
             );
             $builder->add('type', ChoiceType::class, array(
-                //'label' => 'Type:',
                 'choices' => $types,
                 'data' => array('default','user-added'),
                 'choices_as_values' => true,

@@ -41,6 +41,9 @@ class FilterRequestType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
+        //$userChoiceLabel = "getId";
+        $userChoiceLabel = "getUserNameStr";
+
         //if( $this->params['routeName'] != "translationalresearch_my_requests" ) {
             $builder->add('submitter', EntityType::class, array(
                 'class' => 'OlegUserdirectoryBundle:User',
@@ -48,6 +51,7 @@ class FilterRequestType extends AbstractType
                 'required' => false,
                 'multiple' => false,
                 'choices' => $this->params['transresUsers'],
+                'choice_label' => $userChoiceLabel,
                 'attr' => array('class' => 'combobox combobox-width'),
 //                'query_builder' => function (EntityRepository $er) {
 //                    return $er->createQueryBuilder('list')
@@ -126,12 +130,15 @@ class FilterRequestType extends AbstractType
 //            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'Search by IRB number'),
 //        ));
 
+
+
         $builder->add('billingContact', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
             'label' => false,
             'required' => false,
             'multiple' => false,
             'choices' => $this->params['transresUsers'],
+            'choice_label' => $userChoiceLabel,
             'attr' => array('class' => 'combobox combobox-width'),
 //            'query_builder' => function (EntityRepository $er) {
 //                return $er->createQueryBuilder('list')
@@ -150,6 +157,7 @@ class FilterRequestType extends AbstractType
             'required' => false,
             'multiple' => true,
             'choices' => $this->params['transresUsers'],
+            'choice_label' => $userChoiceLabel,
             'attr' => array('class' => 'combobox combobox-width'),
 //            'query_builder' => function (EntityRepository $er) {
 //                return $er->createQueryBuilder('list')
@@ -239,13 +247,15 @@ class FilterRequestType extends AbstractType
 //            'attr' => array('class' => 'combobox'),
 //        ));
 
+        $projectChoiceLabel = "getProjectInfoNameWithPIsChoice";
+        //$projectChoiceLabel = "getId";
         if(1) {
             if ($this->params['routeName'] == "translationalresearch_request_index") {
                 //echo "Use data projects <br>";
                 $builder->add('project', EntityType::class, array(
                     'class' => 'OlegTranslationalResearchBundle:Project',
                     //'choice_label' => "getProjectInfoNameChoice",          //Without PIs
-                    'choice_label' => "getProjectInfoNameWithPIsChoice",     //With PIs
+                    'choice_label' => $projectChoiceLabel, //"getProjectInfoNameWithPIsChoice",     //With PIs
                     'required' => false,
                     'label' => false,
                     'data' => $this->params['project'],
@@ -263,7 +273,7 @@ class FilterRequestType extends AbstractType
                 $builder->add('project', EntityType::class, array(
                     'class' => 'OlegTranslationalResearchBundle:Project',
                     //'choice_label' => "getProjectInfoNameChoice",        //Without PIs
-                    'choice_label' => "getProjectInfoNameWithPIsChoice",   //With PIs - this option causes ~135 additional DB queries (~number of existing projects)
+                    'choice_label' => $projectChoiceLabel, //"getProjectInfoNameWithPIsChoice",   //With PIs - this option causes ~135 additional DB queries (~number of existing projects)
                     'choices' => $this->params['availableProjects'],
                     //'disabled' => ($this->params['admin'] ? false : true),
                     //'disabled' => true,
