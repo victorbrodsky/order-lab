@@ -38,11 +38,13 @@ $(document).ready(function() {
         Dropzone.autoDiscover = false;
     }
 
-    var idleTimeout = new idleTimeoutClass();
+    if( cycle !== 'download' ) {
+        var idleTimeout = new idleTimeoutClass();
 
-    idleTimeout.init();
-    //idleTimeout.setMaxIdletime();
-    idleTimeout.checkIdleTimeout();
+        idleTimeout.init();
+        //idleTimeout.setMaxIdletime();
+        idleTimeout.checkIdleTimeout();
+    }
 
 });
 
