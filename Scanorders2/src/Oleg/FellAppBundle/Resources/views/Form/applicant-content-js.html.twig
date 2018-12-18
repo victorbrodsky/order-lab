@@ -46,6 +46,13 @@
         
         setUploadItineraryAndListener();
 
+        if( cycle == 'download' ) {
+            //idleTimeoutClass.prototype.setMaxIdletime = null;
+            idleTimeoutClass.prototype.checkIdleTimeout = null;
+            //idleTimeoutClass.prototype.isServerActive = null;
+            //idleTimeoutClass.prototype.setActive = null;
+        }
+
     });
 
 
