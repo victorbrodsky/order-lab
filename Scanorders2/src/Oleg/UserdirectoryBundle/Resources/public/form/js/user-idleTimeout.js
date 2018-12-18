@@ -38,9 +38,9 @@ $(document).ready(function() {
         Dropzone.autoDiscover = false;
     }
 
-    console.log('cycle=('+cycle+')');
+    //console.log('cycle=('+cycle+')');
     if( cycle !== 'download' ) {
-        console.log('init idleTimeout');
+        //console.log('init idleTimeout');
         var idleTimeout = new idleTimeoutClass();
 
         idleTimeout.init();
