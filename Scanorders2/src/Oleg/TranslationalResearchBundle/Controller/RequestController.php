@@ -1094,14 +1094,14 @@ class RequestController extends Controller
         if( $withfilter ) {
 
         $transresUsers = $transresUtil->getAppropriatedUsers();
-        //$transresUsers = array(); //testing users
+        //$transresUsers = array(); //testing users //reduces loading time from 20sec to 3 sec
 
         //$transresUsers = $em->getRepository('OlegUserdirectoryBundle:User')->findNotFellowshipUsers();
         //TESTING
         //return $this->testingReturn($request,$stopwatch);
 
-        //$availableProjects = $transresUtil->getAvailableRequesterOrReviewerProjects();
-        $availableProjects = array(); //testing projects //reduces loading time from 20sec to 3 sec
+        $availableProjects = $transresUtil->getAvailableRequesterOrReviewerProjects();
+        //$availableProjects = array(); //testing projects //reduces loading time from 20sec to 3 sec
 
         $progressStateArr = $transresRequestUtil->getProgressStateArr();
         $billingStateArr = $transresRequestUtil->getBillingStateArr();
