@@ -1097,8 +1097,8 @@ class RequestController extends Controller
             //total loading time 25 sec
             //loading time without users and projects filter reduces to 3 sec
 
-        //$transresUsers = $transresUtil->getAppropriatedUsers();
-        $transresUsers = array(); //testing users (removing users from the filter) //TODO: reduces loading time from 25 sec to 20 sec
+        $transresUsers = $transresUtil->getAppropriatedUsers();
+        //$transresUsers = array(); //testing users (removing users from the filter) //TODO: reduces loading time from 25 sec to 20 sec
 
         //$transresUsers = $em->getRepository('OlegUserdirectoryBundle:User')->findNotFellowshipUsers();
         //TESTING
