@@ -41,8 +41,14 @@ class FilterRequestType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
-        //$userChoiceLabel = "getId";
         $userChoiceLabel = "getUserNameStr";
+        //$userChoiceLabel = "getId";
+
+        $projectChoiceLabel = "getProjectInfoNameWithPIsChoice";
+        $projectChoiceLabel = "getId";
+
+        $categoriesChoiceLabel = "getOptimalAbbreviationName";
+        //$categoriesChoiceLabel = "getId";
 
         //if( $this->params['routeName'] != "translationalresearch_my_requests" ) {
             $builder->add('submitter', EntityType::class, array(
@@ -75,7 +81,7 @@ class FilterRequestType extends AbstractType
             $builder->add('categories', EntityType::class, array(
                 'class' => 'OlegTranslationalResearchBundle:RequestCategoryTypeList',
                 'label' => false,
-                'choice_label' => "getOptimalAbbreviationName",
+                'choice_label' => $categoriesChoiceLabel, //"getOptimalAbbreviationName",
                 'required' => false,
                 'multiple' => true,
                 'attr' => array('class' => 'combobox combobox-width'),
@@ -247,8 +253,6 @@ class FilterRequestType extends AbstractType
 //            'attr' => array('class' => 'combobox'),
 //        ));
 
-        $projectChoiceLabel = "getProjectInfoNameWithPIsChoice";
-        //$projectChoiceLabel = "getId";
         if(1) {
             if ($this->params['routeName'] == "translationalresearch_request_index") {
                 //echo "Use data projects <br>";
