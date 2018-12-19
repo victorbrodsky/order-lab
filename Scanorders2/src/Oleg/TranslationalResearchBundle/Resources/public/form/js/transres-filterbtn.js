@@ -72,7 +72,7 @@ function initTypeaheadTransresProjectSearch() {
 
     //console.log('typeahead search');
 
-    var suggestions_limit = 5;
+    var suggestions_limit = 10;
     var rateLimitBy = 'debounce'; //Can be either debounce or throttle. Defaults to debounce
     var rateLimitWait = 30; //The time interval in milliseconds that will be used by rateLimitBy. Defaults to 300
     var prefetchmin = "prefetchmin";
