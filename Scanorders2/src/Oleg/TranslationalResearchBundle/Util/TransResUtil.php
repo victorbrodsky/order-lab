@@ -3425,7 +3425,7 @@ class TransResUtil
 
         if( $search && $search != "prefetchmin" ) {
             if ($type == "oid") {
-                $dql->andWhere("project.oid LIKE :oid");
+                $dql->andWhere("project.oid LIKE :oid OR project.id LIKE :oid");
                 $dqlParameters["oid"] =  "%".$search."%";
             }
             if ($type == "title") {

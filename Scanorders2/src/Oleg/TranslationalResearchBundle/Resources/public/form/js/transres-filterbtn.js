@@ -105,12 +105,13 @@ function initTypeaheadTransresProjectSearch() {
     if( complex ) {
         var oidDB = new Bloodhound({
             //datumTokenizer: Bloodhound.tokenizers.obj.whitespace('oid') + Bloodhound.tokenizers.obj.whitespace('title'), //Bloodhound.tokenizers.obj.whitespace('oid'),
-            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('oid'),
+            //datumTokenizer: Bloodhound.tokenizers.obj.whitespace('oid'),
+            datumTokenizer: Bloodhound.tokenizers.whitespace,
             queryTokenizer: Bloodhound.tokenizers.whitespace,
             //prefetch: oidDBprefetch,   //getCommonBaseUrl("util/common/user-data-search/user/"+suggestions_limit+"/prefetchmin","employees"),
             //remote: getCommonBaseUrl("util/common/user-data-search/user/" + suggestions_limit + "/%QUERY", "employees"),
             remote: searchProject + "/oid/" + suggestions_limit + "/%QUERY",
-            dupDetector: duplicationDetector,
+            //dupDetector: duplicationDetector,
             limit: suggestions_limit,
             rateLimitBy: rateLimitBy,
             rateLimitWait: rateLimitWait
@@ -118,12 +119,13 @@ function initTypeaheadTransresProjectSearch() {
 
         var titleDB = new Bloodhound({
             //datumTokenizer: Bloodhound.tokenizers.obj.whitespace('oid') + Bloodhound.tokenizers.obj.whitespace('title'),
-            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('oid'),
+            //datumTokenizer: Bloodhound.tokenizers.obj.whitespace('oid'),
+            datumTokenizer: Bloodhound.tokenizers.whitespace,
             queryTokenizer: Bloodhound.tokenizers.whitespace,
             //prefetch: titleDBprefetch,   //getCommonBaseUrl("util/common/user-data-search/institution/prefetchmin","employees"),
             //remote: getCommonBaseUrl("util/common/user-data-search/institution/" + suggestions_limit + "/%QUERY", "employees"),
             remote: searchProject + "/title/" + suggestions_limit + "/%QUERY",
-            dupDetector: duplicationDetector,
+            //dupDetector: duplicationDetector,
             limit: suggestions_limit,
             rateLimitBy: rateLimitBy,
             rateLimitWait: rateLimitWait
@@ -131,12 +133,12 @@ function initTypeaheadTransresProjectSearch() {
 
         var pisDB = new Bloodhound({
             //datumTokenizer: Bloodhound.tokenizers.obj.whitespace('oid') + Bloodhound.tokenizers.obj.whitespace('title'), //Bloodhound.tokenizers.obj.whitespace('displayname'),
-            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('oid'),
+            datumTokenizer: Bloodhound.tokenizers.whitespace,//Bloodhound.tokenizers.obj.whitespace('oid'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
             //prefetch: pisDBprefetch,   //getCommonBaseUrl("util/common/user-data-search/institution/prefetchmin","employees"),
             //remote: getCommonBaseUrl("util/common/user-data-search/institution/" + suggestions_limit + "/%QUERY", "employees"),
             remote: searchProject + "/pis/" + suggestions_limit + "/%QUERY",
-            dupDetector: duplicationDetector,
+            //dupDetector: duplicationDetector,
             limit: suggestions_limit,
             rateLimitBy: rateLimitBy,
             rateLimitWait: rateLimitWait
@@ -154,7 +156,7 @@ function initTypeaheadTransresProjectSearch() {
             prefetch: oidDBprefetch, //getCommonBaseUrl("util/common/user-data-search/single/"+suggestions_limit+"/prefetchmin","employees"),
             //remote: getCommonBaseUrl("util/common/user-data-search/single/" + suggestions_limit + "/%QUERY", "employees"),
             remote: searchProject + "/oid/" + suggestions_limit + "/%QUERY",
-            dupDetector: duplicationDetector,
+            //dupDetector: duplicationDetector,
             limit: suggestions_limit,
             rateLimitBy: rateLimitBy,
             rateLimitWait: rateLimitWait
