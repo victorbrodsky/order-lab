@@ -1094,16 +1094,17 @@ class RequestController extends Controller
         if( $withfilter ) {
 
             //total loading time 25 sec
+            //loading time without users and projects filter reduces to 3 sec
 
         $transresUsers = $transresUtil->getAppropriatedUsers();
-        //$transresUsers = array(); //testing users //reduces loading time from 25 sec to 20 sec
+        //$transresUsers = array(); //testing users (removing users from the filter) //TODO: reduces loading time from 25 sec to 20 sec
 
         //$transresUsers = $em->getRepository('OlegUserdirectoryBundle:User')->findNotFellowshipUsers();
         //TESTING
         //return $this->testingReturn($request,$stopwatch);
 
         //$availableProjects = $transresUtil->getAvailableRequesterOrReviewerProjects();
-        $availableProjects = array(); //testing projects //reduces loading time from 20sec to 3 sec
+        $availableProjects = array(); //testing projects (removing project from the filter) //TODO: reduces loading time from 25 sec to 8 sec !!!
 
         $progressStateArr = $transresRequestUtil->getProgressStateArr();
         $billingStateArr = $transresRequestUtil->getBillingStateArr();
@@ -2473,6 +2474,35 @@ class RequestController extends Controller
 
         $em->remove($transresRequest);
         $em->flush();
+    }
+
+
+    /**
+     * http://127.0.0.1/order/translational-research/project-typeahead-search/oid/100/APCP33
+     *
+     * Used by typeahead js
+     * @Route("/project-typeahead-search/{type}/{limit}/{search}", name="translationalresearch_project_typeahead_search", options={"expose"=true})
+     * @Method("GET")
+     */
+    public function getUserDataSearchAction(Request $request) {
+
+        $transresUtil = $this->get('transres_util');
+
+        $type = trim( $request->get('type') );
+        $search = trim( $request->get('search') );
+        $limit = trim( $request->get('limit') );
+
+        //echo "type=".$type."<br>";
+        //echo "search=".$search."<br>";
+        //echo "limit=".$limit."<br>";
+        //exit();
+
+        $availableProjects = $transresUtil->getAvailableRequesterOrReviewerProjects($type,$limit,$search);
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($availableProjects));
+        return $response;
     }
 
 }

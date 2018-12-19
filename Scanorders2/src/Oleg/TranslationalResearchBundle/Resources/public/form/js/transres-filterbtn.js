@@ -20,6 +20,8 @@ $(document).ready(function() {
     console.log('transres-filterbtn.js');
     changeFilterColorButton();
 
+    initTypeaheadTransresProjectSearch();
+
 });
 
 function changeFilterColorButton() {
@@ -60,3 +62,148 @@ function changeFilterColorButton() {
     }
 
 }
+
+//serach by project oid and pis
+function initTypeaheadTransresProjectSearch() {
+
+    if( $('.multiple-datasets-typeahead-search-project').length == 0 ) {
+        return;
+    }
+
+    //console.log('typeahead search');
+
+    var suggestions_limit = 5;
+    var rateLimitBy = 'debounce'; //Can be either debounce or throttle. Defaults to debounce
+    var rateLimitWait = 30; //The time interval in milliseconds that will be used by rateLimitBy. Defaults to 300
+    var prefetchmin = "prefetchmin";
+
+    //Bloodhound: Prefetched data is fetched and processed on initialization.
+    //If the browser supports local storage, the processed data will be cached there to prevent additional network requests on subsequent page loads.
+    //Don't use prefetch because the results will be stored in the browser cache and will not be updated on the user search
+
+    var oidDBprefetch = null;
+    var titleDBprefetch = null;
+    var pisDBprefetch = null;
+
+    var searchLimit = 100;
+
+    //oidDBprefetch = getCommonBaseUrl("util/common/user-data-search/user/"+searchLimit+"/prefetchmin","employees");
+    //titleDBprefetch = getCommonBaseUrl("util/common/user-data-search/institution/"+searchLimit+"/prefetchmin","employees");
+
+    var searchProject = Routing.generate('translationalresearch_project_typeahead_search');
+    oidDBprefetch = searchProject + "/" + "oid" + "/" + searchLimit + "/" + prefetchmin;
+    console.log("oidDBprefetch="+oidDBprefetch);
+
+    //var searchTitle = Routing.generate('translationalresearch_project_typeahead_search');
+    titleDBprefetch = searchProject + "/" + "title" + "/" + searchLimit + "/" + prefetchmin;
+
+    //var searchPis = Routing.generate('translationalresearch_project_typeahead_search');
+    pisDBprefetch = searchProject + "/" + "pis" + "/" + searchLimit + "/" + prefetchmin;
+
+    var complex = true; //false;
+
+    if( complex ) {
+        var oidDB = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('oid'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            prefetch: oidDBprefetch,   //getCommonBaseUrl("util/common/user-data-search/user/"+suggestions_limit+"/prefetchmin","employees"),
+            //remote: getCommonBaseUrl("util/common/user-data-search/user/" + suggestions_limit + "/%QUERY", "employees"),
+            remote: searchProject + "/oid/" + suggestions_limit + "/%QUERY",
+            dupDetector: duplicationDetector,
+            limit: suggestions_limit,
+            rateLimitBy: rateLimitBy,
+            rateLimitWait: rateLimitWait
+        });
+
+        var titleDB = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('title'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            prefetch: titleDBprefetch,   //getCommonBaseUrl("util/common/user-data-search/institution/prefetchmin","employees"),
+            //remote: getCommonBaseUrl("util/common/user-data-search/institution/" + suggestions_limit + "/%QUERY", "employees"),
+            remote: searchProject + "/title/" + suggestions_limit + "/%QUERY",
+            dupDetector: duplicationDetector,
+            limit: suggestions_limit,
+            rateLimitBy: rateLimitBy,
+            rateLimitWait: rateLimitWait
+        });
+
+        var pisDB = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('displayname'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            prefetch: pisDBprefetch,   //getCommonBaseUrl("util/common/user-data-search/institution/prefetchmin","employees"),
+            //remote: getCommonBaseUrl("util/common/user-data-search/institution/" + suggestions_limit + "/%QUERY", "employees"),
+            remote: searchProject + "/pis/" + suggestions_limit + "/%QUERY",
+            dupDetector: duplicationDetector,
+            limit: suggestions_limit,
+            rateLimitBy: rateLimitBy,
+            rateLimitWait: rateLimitWait
+        });
+
+        oidDB.initialize();
+        titleDB.initialize();
+        pisDB.initialize();
+
+    } else {
+
+        var singleDb = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('title'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            prefetch: oidDBprefetch, //getCommonBaseUrl("util/common/user-data-search/single/"+suggestions_limit+"/prefetchmin","employees"),
+            //remote: getCommonBaseUrl("util/common/user-data-search/single/" + suggestions_limit + "/%QUERY", "employees"),
+            remote: searchProject + "/oid/" + suggestions_limit + "/%QUERY",
+            dupDetector: duplicationDetector,
+            limit: suggestions_limit,
+            rateLimitBy: rateLimitBy,
+            rateLimitWait: rateLimitWait
+        });
+
+        singleDb.initialize();
+    }
+
+
+    if( complex ) {
+        var myTypeahead = $('.multiple-datasets-typeahead-search-project .typeahead').typeahead({
+                highlight: true
+            },
+            {
+                name: 'oid',
+                displayKey: 'oid',
+                source: oidDB.ttAdapter(),
+                templates: {
+                    header: '<h3 class="search-name">Project ID</h3>'
+                }
+            },
+            {
+                name: 'title',
+                displayKey: 'title',
+                source: titleDB.ttAdapter(),
+                templates: {
+                    header: '<h3 class="search-name">Project Title</h3>'
+                }
+            },
+            {
+                name: 'pis',
+                displayKey: 'displayname',
+                source: pisDB.ttAdapter(),
+                templates: {
+                header: '<h3 class="search-name">Project PIs</h3>'
+            }
+        }
+        );
+    } else {
+        var myTypeahead = $('.multiple-datasets-typeahead-search-project .typeahead').typeahead({
+                highlight: true
+            },
+            {
+                name: 'single',
+                displayKey: 'title',
+                source: singleDb.ttAdapter(),
+                templates: {
+                    header: '<h3 class="search-name">User</h3>'
+                }
+            }
+        );
+    }
+
+}
+

@@ -3323,11 +3323,13 @@ class TransResUtil
 //        return $finalProjects;
     }
     //logged in user requester or reviewer or submitter
-    public function getAvailableRequesterOrReviewerProjects() {
+    public function getAvailableRequesterOrReviewerProjects( $type=null, $limit=null, $search=null ) {
         $user = $this->secTokenStorage->getToken()->getUser();
         $repository = $this->em->getRepository('OlegTranslationalResearchBundle:Project');
         $dql =  $repository->createQueryBuilder("project");
-        $dql->select('project');
+
+        //$dql->select('project');
+        $dql->select("project.oid as oid, principalInvestigatorsInfos.displayName as displayname, project.title as title");
 
         $dql->leftJoin('project.submitter','submitter');
 
@@ -3417,7 +3419,30 @@ class TransResUtil
             }
         } //if admin
 
-        $query = $dql->getQuery();
+        if( $search && $search != "prefetchmin" ) {
+            if ($type == "oid") {
+                $dql->andWhere("project.oid LIKE :oid");
+                $dqlParameters["oid"] =  "%".$search."%";
+            }
+            if ($type == "title") {
+                $dql->andWhere("project.title LIKE :title");
+                $dqlParameters["title"] = "%".$search."%";
+            }
+            if ($type == "pis") {
+                $dql->andWhere("principalInvestigatorsInfos.displayName = :pis");
+                $dqlParameters["pis"] = "%".$search."%";
+            }
+        }
+
+        //if( $limit ) {
+        //    $query = $this->em->createQuery($dql)->setMaxResults($limit);
+        //} else {
+            $query = $dql->getQuery();
+        //}
+
+        if( $limit ) {
+            $query->setMaxResults($limit);
+        }
 
         //echo "projectId=".$project->getId()."<br>";
         //echo "reviewId=".$reviewId."<br>";
@@ -3430,6 +3455,7 @@ class TransResUtil
         //$query->setMaxResults(5);
 
         $projects = $query->getResult();
+        //exit("projects count=".count($projects));
 
         return $projects;
     }
