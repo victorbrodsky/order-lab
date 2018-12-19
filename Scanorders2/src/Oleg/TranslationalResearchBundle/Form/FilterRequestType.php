@@ -255,7 +255,7 @@ class FilterRequestType extends AbstractType
 //            'attr' => array('class' => 'combobox'),
 //        ));
 
-        if(1) {
+        if( count($this->params['availableProjects']) > 0 ) {
             if ($this->params['routeName'] == "translationalresearch_request_index") {
                 //echo "Use data projects <br>";
                 $builder->add('project', EntityType::class, array(

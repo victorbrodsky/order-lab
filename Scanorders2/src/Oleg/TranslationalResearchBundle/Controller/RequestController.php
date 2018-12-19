@@ -1100,7 +1100,9 @@ class RequestController extends Controller
         //TESTING
         //return $this->testingReturn($request,$stopwatch);
 
-        $availableProjects = $transresUtil->getAvailableRequesterOrReviewerProjects();
+        //$availableProjects = $transresUtil->getAvailableRequesterOrReviewerProjects();
+        $availableProjects = array(); //testing projects
+
         $progressStateArr = $transresRequestUtil->getProgressStateArr();
         $billingStateArr = $transresRequestUtil->getBillingStateArr();
 
