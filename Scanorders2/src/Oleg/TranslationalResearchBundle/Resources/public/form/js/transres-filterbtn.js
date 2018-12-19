@@ -109,7 +109,7 @@ function initTypeaheadTransresProjectSearch() {
             //prefetch: oidDBprefetch,   //getCommonBaseUrl("util/common/user-data-search/user/"+suggestions_limit+"/prefetchmin","employees"),
             //remote: getCommonBaseUrl("util/common/user-data-search/user/" + suggestions_limit + "/%QUERY", "employees"),
             remote: searchProject + "/oid/" + suggestions_limit + "/%QUERY",
-            //dupDetector: duplicationDetector,
+            dupDetector: duplicationDetector,
             limit: suggestions_limit,
             rateLimitBy: rateLimitBy,
             rateLimitWait: rateLimitWait
@@ -121,7 +121,7 @@ function initTypeaheadTransresProjectSearch() {
             //prefetch: titleDBprefetch,   //getCommonBaseUrl("util/common/user-data-search/institution/prefetchmin","employees"),
             //remote: getCommonBaseUrl("util/common/user-data-search/institution/" + suggestions_limit + "/%QUERY", "employees"),
             remote: searchProject + "/title/" + suggestions_limit + "/%QUERY",
-            //dupDetector: duplicationDetector,
+            dupDetector: duplicationDetector,
             limit: suggestions_limit,
             rateLimitBy: rateLimitBy,
             rateLimitWait: rateLimitWait
@@ -133,7 +133,7 @@ function initTypeaheadTransresProjectSearch() {
             //prefetch: pisDBprefetch,   //getCommonBaseUrl("util/common/user-data-search/institution/prefetchmin","employees"),
             //remote: getCommonBaseUrl("util/common/user-data-search/institution/" + suggestions_limit + "/%QUERY", "employees"),
             remote: searchProject + "/pis/" + suggestions_limit + "/%QUERY",
-            //dupDetector: duplicationDetector,
+            dupDetector: duplicationDetector,
             limit: suggestions_limit,
             rateLimitBy: rateLimitBy,
             rateLimitWait: rateLimitWait
@@ -151,7 +151,7 @@ function initTypeaheadTransresProjectSearch() {
             prefetch: oidDBprefetch, //getCommonBaseUrl("util/common/user-data-search/single/"+suggestions_limit+"/prefetchmin","employees"),
             //remote: getCommonBaseUrl("util/common/user-data-search/single/" + suggestions_limit + "/%QUERY", "employees"),
             remote: searchProject + "/oid/" + suggestions_limit + "/%QUERY",
-            //dupDetector: duplicationDetector,
+            dupDetector: duplicationDetector,
             limit: suggestions_limit,
             rateLimitBy: rateLimitBy,
             rateLimitWait: rateLimitWait
@@ -253,3 +253,10 @@ function initTypeaheadTransresProjectSearch() {
 
 }
 
+function duplicationDetector(remoteMatch, localMatch) {
+    //console.log('dup check');
+    if( remoteMatch.id === localMatch.id ) {
+        return true;
+    }
+    return false;
+}

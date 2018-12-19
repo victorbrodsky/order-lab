@@ -1113,6 +1113,9 @@ class RequestController extends Controller
         //return $this->testingReturn($request,$stopwatch);
 
         //$availableProjects = $transresUtil->getAvailableRequesterOrReviewerProjects();
+        //array() will disable whole project list loading and will enable typeahead. Other changes:
+            //1) name="translationalresearch_request_index") => enable return with line 'filter[projectSearch]' => $project->getOid(false),
+            //2) enable line: 'filter[projectSearch]' => $objectid
         $availableProjects = array(); //testing projects (removing project from the filter) //TODO: reduces loading time from 25 sec to 8 sec !!!
 
         $progressStateArr = $transresRequestUtil->getProgressStateArr();
