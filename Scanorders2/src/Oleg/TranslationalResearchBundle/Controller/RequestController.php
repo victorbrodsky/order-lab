@@ -1074,6 +1074,7 @@ class RequestController extends Controller
         $categories = null;
         $projectSpecialties = null;
         $projectFilter = null;
+        $projectSearch = null;
         $searchStr = null;
         $startDate = null;
         $endDate = null;
@@ -1103,8 +1104,8 @@ class RequestController extends Controller
         //TESTING
         //return $this->testingReturn($request,$stopwatch);
 
-        //$availableProjects = $transresUtil->getAvailableRequesterOrReviewerProjects();
-        $availableProjects = array(); //testing projects (removing project from the filter) //TODO: reduces loading time from 25 sec to 8 sec !!!
+        $availableProjects = $transresUtil->getAvailableRequesterOrReviewerProjects();
+        //$availableProjects = array(); //testing projects (removing project from the filter) //TODO: reduces loading time from 25 sec to 8 sec !!!
 
         $progressStateArr = $transresRequestUtil->getProgressStateArr();
         $billingStateArr = $transresRequestUtil->getBillingStateArr();
@@ -1196,8 +1197,11 @@ class RequestController extends Controller
             $filterType = str_replace("-", " ", $filterType);
             $filterTypeLowerCase = strtolower($filterType);
 
-            if (isset($filterform['project'])) {
+            if( isset($filterform['project']) ) {
                 $projectFilter = $filterform['project']->getData();
+            }
+            if(isset($filterform['projectSearch']) ) {
+                $projectSearch = $filterform['projectSearch']->getData();
             }
         }
 
@@ -1635,9 +1639,16 @@ class RequestController extends Controller
             $dqlParameters["projectSpecialtyIdsArr"] = $projectSpecialtyIdsArr;
         }
 
+
         if( $projectFilter ) {
             $dql->andWhere("project.id = :projectId");
             $dqlParameters["projectId"] = $projectFilter->getId();
+        }
+        //echo "projectSearch=[".$projectSearch."] <br>";
+        if( $projectSearch ) {
+            $dql->andWhere("project.id = :projectId");
+            $dqlParameters["projectId"] = $projectSearch;
+            //$dql->andWhere("project.id = $projectSearch");
         }
 
         if( $submitter ) {

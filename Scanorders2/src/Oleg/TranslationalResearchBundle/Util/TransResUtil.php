@@ -3329,7 +3329,11 @@ class TransResUtil
         $dql =  $repository->createQueryBuilder("project");
 
         //$dql->select('project');
-        $dql->select("project.oid as oid, principalInvestigatorsInfos.displayName as displayname, project.title as title");
+        if( $search ) {
+            $dql->select("project.oid as oid, principalInvestigatorsInfos.displayName as pis, project.title as title");
+        } else {
+            $dql->select('project');
+        }
 
         $dql->leftJoin('project.submitter','submitter');
 
@@ -3429,7 +3433,7 @@ class TransResUtil
                 $dqlParameters["title"] = "%".$search."%";
             }
             if ($type == "pis") {
-                $dql->andWhere("principalInvestigatorsInfos.displayName = :pis");
+                $dql->andWhere("principalInvestigatorsInfos.displayName LIKE :pis");
                 $dqlParameters["pis"] = "%".$search."%";
             }
         }

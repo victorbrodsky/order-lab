@@ -288,6 +288,16 @@ class FilterRequestType extends AbstractType
                     'attr' => array('class' => 'combobox combobox-width', 'placeholder' => "Project")
                 ));
             }
+        } else {
+            $builder->add('projectSearch', TextType::class, array(
+                //'class' => 'OlegTranslationalResearchBundle:Project',
+                //'choice_label' => "getProjectInfoNameChoice",          //Without PIs
+                //'choice_label' => $projectChoiceLabel, //"getProjectInfoNameWithPIsChoice",     //With PIs
+                'required' => false,
+                //'label' => false,
+                //'data' => $this->params['project'],
+                'attr' => array('class' => 'form-control typeahead', 'placeholder' => "Project"),
+            ));
         }
     }
 

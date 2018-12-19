@@ -452,19 +452,24 @@
                 <div class="col-xs-3">
                     {% if filterform.project is defined %}
                         {{ form_widget(filterform.project) }}
-                    {% else %}
+                    {% endif %}
+                    {% if filterform.projectSearch is defined %}
                         <div id="multiple-datasets-typeahead-search-project" class="multiple-datasets-typeahead-search-project">
-                            {#<input type="checkbox" name="all" value="all" {{ checked }}> Include all employees and fellowship applicants &nbsp;&nbsp;#}
-                            <input
-                                    {#style="width: 460px;"#}
-                                    type="text"
-                                    {#class="typeahead submit-on-enter-field"#}
-                                    class="typeahead"
-                                    name="search" value="{{ search }}"
-                                    placeholder="Project"
-                            >
+                            {{ form_widget(filterform.projectSearch) }}
                         </div>
                     {% endif %}
+                    {#<div id="multiple-datasets-typeahead-search-project" class="multiple-datasets-typeahead-search-project">#}
+                        {#<input type="checkbox" name="all" value="all" {{ checked }}> Include all employees and fellowship applicants &nbsp;&nbsp;#}
+                        {#<input#}
+                                {#style="width: 460px;"#}
+                                {#type="text"#}
+                                {#class="typeahead submit-on-enter-field"#}
+                                {#class="typeahead"#}
+                                {#name="projectSearch" value="{{ projectSearch }}"#}
+                                {#placeholder="Project"#}
+                        {#>#}
+                    {#</div>#}
+
                 </div>
                 <div class="col-xs-1">
                     <button id="filter-btn" type="submit" class="btn btn-default">Filter</button>

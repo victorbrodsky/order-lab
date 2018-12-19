@@ -104,7 +104,7 @@ function initTypeaheadTransresProjectSearch() {
 
     if( complex ) {
         var oidDB = new Bloodhound({
-            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('oid'),
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('oid') + Bloodhound.tokenizers.obj.whitespace('title'), //Bloodhound.tokenizers.obj.whitespace('oid'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
             prefetch: oidDBprefetch,   //getCommonBaseUrl("util/common/user-data-search/user/"+suggestions_limit+"/prefetchmin","employees"),
             //remote: getCommonBaseUrl("util/common/user-data-search/user/" + suggestions_limit + "/%QUERY", "employees"),
@@ -116,7 +116,7 @@ function initTypeaheadTransresProjectSearch() {
         });
 
         var titleDB = new Bloodhound({
-            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('title'),
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('oid') + Bloodhound.tokenizers.obj.whitespace('title'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
             prefetch: titleDBprefetch,   //getCommonBaseUrl("util/common/user-data-search/institution/prefetchmin","employees"),
             //remote: getCommonBaseUrl("util/common/user-data-search/institution/" + suggestions_limit + "/%QUERY", "employees"),
@@ -128,7 +128,7 @@ function initTypeaheadTransresProjectSearch() {
         });
 
         var pisDB = new Bloodhound({
-            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('displayname'),
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('oid') + Bloodhound.tokenizers.obj.whitespace('title'), //Bloodhound.tokenizers.obj.whitespace('displayname'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
             prefetch: pisDBprefetch,   //getCommonBaseUrl("util/common/user-data-search/institution/prefetchmin","employees"),
             //remote: getCommonBaseUrl("util/common/user-data-search/institution/" + suggestions_limit + "/%QUERY", "employees"),
@@ -162,12 +162,20 @@ function initTypeaheadTransresProjectSearch() {
 
 
     if( complex ) {
+        //limit project title by limit = 20;
         var myTypeahead = $('.multiple-datasets-typeahead-search-project .typeahead').typeahead({
                 highlight: true
             },
             {
                 name: 'oid',
-                displayKey: 'oid',
+                //displayKey: 'title',
+                display: function(item){
+                    var title = item.title;
+                    if( title.length > 20 ) {
+                        title = title.substring(0,20);
+                    }
+                    return item.oid+', '+title+', PI '+item.pis;
+                },
                 source: oidDB.ttAdapter(),
                 templates: {
                     header: '<h3 class="search-name">Project ID</h3>'
@@ -175,7 +183,14 @@ function initTypeaheadTransresProjectSearch() {
             },
             {
                 name: 'title',
-                displayKey: 'title',
+                //displayKey: 'title',
+                display: function(item){
+                    var title = item.title;
+                    if( title.length > 20 ) {
+                        title = title.substring(0,20);
+                    }
+                    return item.oid+', '+title+', PI '+item.pis;
+                },
                 source: titleDB.ttAdapter(),
                 templates: {
                     header: '<h3 class="search-name">Project Title</h3>'
@@ -183,12 +198,19 @@ function initTypeaheadTransresProjectSearch() {
             },
             {
                 name: 'pis',
-                displayKey: 'displayname',
+                //displayKey: 'title',
+                display: function(item){
+                    var title = item.title;
+                    if( title.length > 20 ) {
+                        title = title.substring(0,20);
+                    }
+                    return item.oid+', '+title+', PI '+item.pis;
+                },
                 source: pisDB.ttAdapter(),
                 templates: {
-                header: '<h3 class="search-name">Project PIs</h3>'
+                    header: '<h3 class="search-name">Project PIs</h3>'
+                }
             }
-        }
         );
     } else {
         var myTypeahead = $('.multiple-datasets-typeahead-search-project .typeahead').typeahead({
