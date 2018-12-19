@@ -539,8 +539,8 @@ class DashboardUtil
                 if( $showPath == 'request' ) {
 
                     $linkFilterArr = array(
-                        'filter[project]' => $objectid,
-                        //'filter[projectSearch]' => $objectid,
+                        //'filter[project]' => $objectid,
+                        'filter[projectSearch]' => $objectid, //TODO: optimization search
                         'filter[progressState][0]' => 'active',
                         'filter[progressState][1]' => 'completed',
                         'filter[progressState][2]' => 'completedNotified',

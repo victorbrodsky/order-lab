@@ -978,20 +978,20 @@ class RequestController extends Controller
         }
 
         //Redirect according project ID
-        return $this->redirectToRoute(
-            'translationalresearch_request_index_filter',
-            array(
-                'filter[project]' => $project->getId(),
-            )
-        );
-
-        //Redirect according project ID by projectSearch
 //        return $this->redirectToRoute(
 //            'translationalresearch_request_index_filter',
 //            array(
-//                'filter[projectSearch]' => $project->getOid(false), //$project->getProjectInfoNameWithPIsChoice(),
+//                'filter[project]' => $project->getId(),
 //            )
 //        );
+
+        //Redirect according project ID by projectSearch //TODO: optimization search
+        return $this->redirectToRoute(
+            'translationalresearch_request_index_filter',
+            array(
+                'filter[projectSearch]' => $project->getOid(false), //$project->getProjectInfoNameWithPIsChoice(),
+            )
+        );
     }
 
     //OPTIMIZATION:

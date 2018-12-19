@@ -92,7 +92,7 @@ function initTypeaheadTransresProjectSearch() {
 
     var searchProject = Routing.generate('translationalresearch_project_typeahead_search');
     oidDBprefetch = searchProject + "/" + "oid" + "/" + searchLimit + "/" + prefetchmin;
-    console.log("oidDBprefetch="+oidDBprefetch);
+    //console.log("oidDBprefetch="+oidDBprefetch);
 
     //var searchTitle = Routing.generate('translationalresearch_project_typeahead_search');
     titleDBprefetch = searchProject + "/" + "title" + "/" + searchLimit + "/" + prefetchmin;
