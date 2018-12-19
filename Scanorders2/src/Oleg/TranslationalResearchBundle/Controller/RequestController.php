@@ -1112,8 +1112,8 @@ class RequestController extends Controller
         //TESTING
         //return $this->testingReturn($request,$stopwatch);
 
-        $availableProjects = $transresUtil->getAvailableRequesterOrReviewerProjects();
-        //$availableProjects = array(); //testing projects (removing project from the filter) //TODO: reduces loading time from 25 sec to 8 sec !!!
+        //$availableProjects = $transresUtil->getAvailableRequesterOrReviewerProjects();
+        $availableProjects = array(); //testing projects (removing project from the filter) //TODO: reduces loading time from 25 sec to 8 sec !!!
 
         $progressStateArr = $transresRequestUtil->getProgressStateArr();
         $billingStateArr = $transresRequestUtil->getBillingStateArr();
