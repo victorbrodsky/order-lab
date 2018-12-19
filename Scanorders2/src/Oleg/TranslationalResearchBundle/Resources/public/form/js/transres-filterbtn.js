@@ -104,9 +104,7 @@ function initTypeaheadTransresProjectSearch() {
 
     if( complex ) {
         var oidDB = new Bloodhound({
-            //datumTokenizer: Bloodhound.tokenizers.obj.whitespace('oid') + Bloodhound.tokenizers.obj.whitespace('title'), //Bloodhound.tokenizers.obj.whitespace('oid'),
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('oid'),
-            //datumTokenizer: Bloodhound.tokenizers.whitespace,
             queryTokenizer: Bloodhound.tokenizers.whitespace,
             //prefetch: oidDBprefetch,   //getCommonBaseUrl("util/common/user-data-search/user/"+suggestions_limit+"/prefetchmin","employees"),
             //remote: getCommonBaseUrl("util/common/user-data-search/user/" + suggestions_limit + "/%QUERY", "employees"),
@@ -118,9 +116,7 @@ function initTypeaheadTransresProjectSearch() {
         });
 
         var titleDB = new Bloodhound({
-            //datumTokenizer: Bloodhound.tokenizers.obj.whitespace('oid') + Bloodhound.tokenizers.obj.whitespace('title'),
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('title'),
-            //datumTokenizer: Bloodhound.tokenizers.whitespace,
             queryTokenizer: Bloodhound.tokenizers.whitespace,
             //prefetch: titleDBprefetch,   //getCommonBaseUrl("util/common/user-data-search/institution/prefetchmin","employees"),
             //remote: getCommonBaseUrl("util/common/user-data-search/institution/" + suggestions_limit + "/%QUERY", "employees"),
@@ -132,8 +128,7 @@ function initTypeaheadTransresProjectSearch() {
         });
 
         var pisDB = new Bloodhound({
-            //datumTokenizer: Bloodhound.tokenizers.obj.whitespace('oid') + Bloodhound.tokenizers.obj.whitespace('title'), //Bloodhound.tokenizers.obj.whitespace('displayname'),
-            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('displayname'),
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('pis'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
             //prefetch: pisDBprefetch,   //getCommonBaseUrl("util/common/user-data-search/institution/prefetchmin","employees"),
             //remote: getCommonBaseUrl("util/common/user-data-search/institution/" + suggestions_limit + "/%QUERY", "employees"),
@@ -174,7 +169,6 @@ function initTypeaheadTransresProjectSearch() {
             {
                 name: 'oid',
                 //displayKey: 'title',
-                //displayKey: 'oid',
                 display: function(item){
                     var title = item.title;
                     if( title.length > 20 ) {
@@ -198,7 +192,6 @@ function initTypeaheadTransresProjectSearch() {
             {
                 name: 'title',
                 //displayKey: 'title',
-                //displayKey: 'id',
                 display: function(item){
                     var title = item.title;
                     if( title.length > 20 ) {
@@ -222,7 +215,6 @@ function initTypeaheadTransresProjectSearch() {
             {
                 name: 'pis',
                 //displayKey: 'title',
-                //displayKey: 'id',
                 display: function(item){
                     var title = item.title;
                     if( title.length > 20 ) {
