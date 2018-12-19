@@ -1005,10 +1005,10 @@ class RequestController extends Controller
         //with matching and with filter (no project): 15 sec (60 MB)
 
         $withfilter = true;
-        $withfilter = false; //testing!!!
+        //$withfilter = false; //testing!!!
 
         $withMatching = true;
-        $withMatching = false; //testing!!!
+        //$withMatching = false; //testing!!!
 
         $timer = false;
         //$timer = true; //testing!!!
