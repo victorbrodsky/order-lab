@@ -1670,7 +1670,8 @@ class RequestController extends Controller
                     $projectId = (int) filter_var($projectOid, FILTER_SANITIZE_NUMBER_INT);
                 }
             } else {
-                $projectId = $projectSearch;
+                //get id (remove APCP or HP)
+                $projectId = (int) filter_var($projectSearch, FILTER_SANITIZE_NUMBER_INT);
             }
 
             if( $projectId ) {
