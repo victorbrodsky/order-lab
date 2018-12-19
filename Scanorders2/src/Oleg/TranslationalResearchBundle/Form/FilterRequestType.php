@@ -42,7 +42,7 @@ class FilterRequestType extends AbstractType
         $this->formConstructor($options['form_custom_value']);
 
         $userChoiceLabel = "getUserNameStr";
-        //$userChoiceLabel = "getId";
+        $userChoiceLabel = "getId";
 
         $projectChoiceLabel = "getProjectInfoNameWithPIsChoice";
         $projectChoiceLabel = "getId";
