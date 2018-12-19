@@ -467,7 +467,9 @@
                     {{ form_widget(filterform.billingState, {'attr': {'placeholder': 'Billing Progress Status'}}) }}
                 </div>
                 <div class="col-xs-4">
-                    {{ form_widget(filterform.submitter, {'attr': {'placeholder': 'Submitter'}}) }}
+                    {% if filterform.submitter is defined %}
+                        {{ form_widget(filterform.submitter, {'attr': {'placeholder': 'Submitter'}}) }}
+                    {% endif %}
                 </div>
             </div>
             <br>
@@ -492,7 +494,9 @@
 
                     <div class="row">
                         <div class="col-xs-4">
-                            {{ form_widget(filterform.principalInvestigators,{'attr': {'placeholder': 'Principal Investigators for the project'}}) }}
+                            {% if filterform.principalInvestigators is defined %}
+                                {{ form_widget(filterform.principalInvestigators,{'attr': {'placeholder': 'Principal Investigators for the project'}}) }}
+                            {% endif %}
                         </div>
                         <div class="col-xs-4">
                             {{ formmacros.fielddate(filterform.startDate,'allow-future-date') }}
@@ -506,7 +510,9 @@
 
                     <div class="row">
                         <div class="col-xs-4">
-                            {{ form_widget(filterform.billingContact, {'attr': {'placeholder': 'Billing Contact'}}) }}
+                            {% if filterform.billingContact is defined %}
+                                {{ form_widget(filterform.billingContact, {'attr': {'placeholder': 'Billing Contact'}}) }}
+                            {% endif %}
                         </div>
                         <div class="col-xs-4">
                             {{ form_widget(filterform.fundingNumber) }}
@@ -564,7 +570,9 @@
                     {{ form_widget(filterform.idSearch) }}
                 </div>
                 <div class="col-xs-4">
-                    {{ form_widget(filterform.submitter) }}
+                    {% if filterform.submitter is defined %}
+                        {{ form_widget(filterform.submitter) }}
+                    {% endif %}
                 </div>
                 <div class="col-xs-1">
                     <button id="filter-btn" type="submit" class="btn btn-default">Filter</button>

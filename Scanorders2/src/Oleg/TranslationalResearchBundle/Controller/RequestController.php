@@ -1089,9 +1089,13 @@ class RequestController extends Controller
         $ids = array();
         $showOnlyMyProjects = false;
 
+
+
         if( $withfilter ) {
-        $transresUsers = $transresUtil->getAppropriatedUsers();
-        //$transresUsers = array();
+
+        //$transresUsers = $transresUtil->getAppropriatedUsers();
+        $transresUsers = array(); //testing users
+
         //$transresUsers = $em->getRepository('OlegUserdirectoryBundle:User')->findNotFellowshipUsers();
         //TESTING
         //return $this->testingReturn($request,$stopwatch);
@@ -1150,9 +1154,23 @@ class RequestController extends Controller
                 $categories = $filterform['categories']->getData();
             }
 
+            if( isset($filterform['submitter']) ) {
+                $submitter = $filterform['submitter']->getData();
+            }
+
+            $principalInvestigators = null;
+            if( isset($filterform['principalInvestigators']) ) {
+                $principalInvestigators = $filterform['principalInvestigators']->getData();
+            }
+
+            $billingContact = null;
+            if( isset($filterform['billingContact']) ) {
+                $billingContact = $filterform['billingContact']->getData();
+            }
+
             $requestId = $filterform['requestId']->getData();
             $externalId = $filterform['externalId']->getData();
-            $submitter = $filterform['submitter']->getData();
+            //$submitter = $filterform['submitter']->getData();
             $progressStates = $filterform['progressState']->getData();
             $billingStates = $filterform['billingState']->getData();
             //$categories = $filterform['categories']->getData();
@@ -1161,9 +1179,9 @@ class RequestController extends Controller
             $sampleName = $filterform['sampleName']->getData();
             $startDate = $filterform['startDate']->getData();
             $endDate = $filterform['endDate']->getData();
-            $principalInvestigators = $filterform['principalInvestigators']->getData();
+            //$principalInvestigators = $filterform['principalInvestigators']->getData();
             //$accountNumber = $filterform['accountNumber']->getData();
-            $billingContact = $filterform['billingContact']->getData();
+            //$billingContact = $filterform['billingContact']->getData();
             $fundingNumber = $filterform['fundingNumber']->getData();
             $fundingType = $filterform['fundingType']->getData();
             $filterType = trim($request->get('type'));
