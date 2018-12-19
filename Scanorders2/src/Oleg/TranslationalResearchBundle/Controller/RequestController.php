@@ -1093,8 +1093,10 @@ class RequestController extends Controller
 
         if( $withfilter ) {
 
-        $transresUsers = $transresUtil->getAppropriatedUsers();
-        //$transresUsers = array(); //testing users //reduces loading time from 20sec to 3 sec
+            //total loading time 25 sec
+
+        //$transresUsers = $transresUtil->getAppropriatedUsers();
+        $transresUsers = array(); //testing users //reduces loading time from 20sec to 3 sec
 
         //$transresUsers = $em->getRepository('OlegUserdirectoryBundle:User')->findNotFellowshipUsers();
         //TESTING
