@@ -296,7 +296,7 @@ class FilterRequestType extends AbstractType
                 'required' => false,
                 //'label' => false,
                 //'data' => $this->params['project'],
-                'attr' => array('class' => 'form-control typeahead', 'placeholder' => "Project"),
+                'attr' => array('class' => 'form-control typeahead', 'placeholder' => "Project", 'style' => 'font-size: 14px; width: 380px;' ),
             ));
         }
     }

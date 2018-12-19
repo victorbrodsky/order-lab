@@ -169,6 +169,7 @@ function initTypeaheadTransresProjectSearch() {
             {
                 name: 'oid',
                 //displayKey: 'title',
+                //displayKey: 'oid',
                 display: function(item){
                     var title = item.title;
                     if( title.length > 20 ) {
@@ -178,12 +179,21 @@ function initTypeaheadTransresProjectSearch() {
                 },
                 source: oidDB.ttAdapter(),
                 templates: {
-                    header: '<h3 class="search-name">Project ID</h3>'
+                    header: '<h3 class="search-name">Project ID</h3>',
+                    // suggestion: function(item) {
+                    //     var title = item.title;
+                    //     if( title.length > 20 ) {
+                    //         title = title.substring(0,20);
+                    //     }
+                    //     var res = item.oid+', '+title+', PI '+item.pis;
+                    //     return '<div>' + res + '</div>'
+                    // }
                 }
             },
             {
                 name: 'title',
                 //displayKey: 'title',
+                //displayKey: 'id',
                 display: function(item){
                     var title = item.title;
                     if( title.length > 20 ) {
@@ -193,12 +203,21 @@ function initTypeaheadTransresProjectSearch() {
                 },
                 source: titleDB.ttAdapter(),
                 templates: {
-                    header: '<h3 class="search-name">Project Title</h3>'
+                    header: '<h3 class="search-name">Project Title</h3>',
+                    // suggestion: function(item) {
+                    //     var title = item.title;
+                    //     if( title.length > 20 ) {
+                    //         title = title.substring(0,20);
+                    //     }
+                    //     var res = item.oid+', '+title+', PI '+item.pis;
+                    //     return '<div>' + res + '</div>'
+                    // }
                 }
             },
             {
                 name: 'pis',
                 //displayKey: 'title',
+                //displayKey: 'id',
                 display: function(item){
                     var title = item.title;
                     if( title.length > 20 ) {
@@ -208,7 +227,15 @@ function initTypeaheadTransresProjectSearch() {
                 },
                 source: pisDB.ttAdapter(),
                 templates: {
-                    header: '<h3 class="search-name">Project PIs</h3>'
+                    header: '<h3 class="search-name">Project PIs</h3>',
+                    // suggestion: function(item) {
+                    //     var title = item.title;
+                    //     if( title.length > 20 ) {
+                    //         title = title.substring(0,20);
+                    //     }
+                    //     var res = item.oid+', '+title+', PI '+item.pis;
+                    //     return '<div>' + res + '</div>'
+                    // }
                 }
             }
         );

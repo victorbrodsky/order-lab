@@ -978,10 +978,18 @@ class RequestController extends Controller
         }
 
         //Redirect according project ID
+//        return $this->redirectToRoute(
+//            'translationalresearch_request_index_filter',
+//            array(
+//                'filter[project]' => $project->getId(),
+//            )
+//        );
+
+        //Redirect according project ID
         return $this->redirectToRoute(
             'translationalresearch_request_index_filter',
             array(
-                'filter[project]' => $project->getId(),
+                'filter[projectSearch]' => $project->getOid(false), //$project->getProjectInfoNameWithPIsChoice(),
             )
         );
     }
@@ -1644,11 +1652,33 @@ class RequestController extends Controller
             $dql->andWhere("project.id = :projectId");
             $dqlParameters["projectId"] = $projectFilter->getId();
         }
+
         //echo "projectSearch=[".$projectSearch."] <br>";
         if( $projectSearch ) {
-            $dql->andWhere("project.id = :projectId");
-            $dqlParameters["projectId"] = $projectSearch;
-            //$dql->andWhere("project.id = $projectSearch");
+            $projectId = null;
+            if (strpos($projectSearch, ', ') !== false) {
+                //get id
+                $projectSearchArr = explode(", ",$projectSearch);
+                if( count($projectSearchArr) > 1 ) {
+                    $projectOid = $projectSearchArr[0];
+                    //get id (remove APCP or HP)
+                    $projectId = (int) filter_var($projectOid, FILTER_SANITIZE_NUMBER_INT);
+                }
+                if( !$projectId ) {
+                    $projectOid = $projectSearch;
+                    //get id (remove APCP or HP)
+                    $projectId = (int) filter_var($projectOid, FILTER_SANITIZE_NUMBER_INT);
+                }
+            } else {
+                $projectId = $projectSearch;
+            }
+
+            if( $projectId ) {
+                //echo "projectId=[".$projectId."] <br>";
+                $dql->andWhere("project.id = :projectId");
+                $dqlParameters["projectId"] = $projectId;
+                //$dql->andWhere("project.id = $projectSearch");
+            }
         }
 
         if( $submitter ) {

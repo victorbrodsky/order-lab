@@ -3330,7 +3330,7 @@ class TransResUtil
 
         //$dql->select('project');
         if( $search ) {
-            $dql->select("project.oid as oid, principalInvestigatorsInfos.displayName as pis, project.title as title");
+            $dql->select("project.id as id, project.oid as oid, principalInvestigatorsInfos.displayName as pis, project.title as title");
         } else {
             $dql->select('project');
         }
