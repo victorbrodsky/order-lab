@@ -358,7 +358,7 @@ Note: If you choose to use MySQL database on Linux instead of Postgres, you will
     * [PHPExcel](https://github.com/PHPOffice/PHPExcel) for importing and exporting Excel files
     * [PHPSpreadsheet](https://github.com/PHPOffice/PhpSpreadsheet)
 
-7. To enable HTTPS (SSL/TLS), first either purchase the certificate from your preferred vendor and add it to the server, or install either the [ACMESharp](https://github.com/ebekker/ACMESharp), [Certes](https://github.com/fszlin/certes), or [WinACME](https://github.com/PKISharp/win-acme) with a [Let's Encrypt](https://letsencrypt.org/) certificate (you can also use a [symfony bundle](https://packagist.org/packages/cert/letsencrypt-bundle)). For certificates from Let's Encrypt, verify that the scheduled task to automatically update them is set up since they expire in 90 days. Once that is done, uncomment (remove "#" from the beginning of) the line 289 in /order-lab/Scanorders2/app/config/security.yml file.
+7. To enable HTTPS (SSL/TLS), first either purchase the certificate from your preferred vendor and add it to the server, or install either the [ACMESharp](https://github.com/ebekker/ACMESharp), [Certes](https://github.com/fszlin/certes), or [WinACME](https://github.com/PKISharp/win-acme) with a [Let's Encrypt](https://letsencrypt.org/) certificate (you can also use a [symfony bundle](https://packagist.org/packages/cert/letsencrypt-bundle)). For certificates from Let's Encrypt, verify that the scheduled task to automatically update them is set up since they expire in 90 days. Once that is done, follow these steps:
 
         1) Copy the obtained certificate file (named your-certificate.cer) to path yourpath/conf/ssl.crt/
         2) Copy the obtained private key file (named your-key.key) to path yourpath/conf/ssl.key/
@@ -374,7 +374,7 @@ Note: If you choose to use MySQL database on Linux instead of Postgres, you will
 				SSLCertificateKeyFile "yourpath/conf/ssl.key/your-key.key"
 			</VirtualHost>   
 		4) Restart the web server (Apache)
-        6) In Site Settings change the variable named “XXXXX” (connection channel?) to “https”
+        6) In Site Settings change the variable named "Connection Channel" to “https”
         5) Run deploy_prod.sh
 
 8. To enable submission of applications for the Fellowship application site via Google services, use the files in the /order-lab/Scanorders2/src/Oleg/FellAppBundle/Util/GoogleForm folder with the [Google Apps Script](https://developers.google.com/apps-script/). Make sure to add the Google Apps Script API key on the Site Settings page http://IPADDRESS/order/directory/settings/.
