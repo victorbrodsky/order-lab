@@ -1846,7 +1846,7 @@ class UserController extends Controller
     public function addNewUserAjax($request) {
 
         $testing = false;
-        //$testing = true;
+        $testing = true;
 
         $resArr = array(
             "flag" => "NOTOK",
@@ -2096,8 +2096,8 @@ class UserController extends Controller
         $resArr['userName'] = $user."";
 
         if( $testing ) {
-            $resArr['userId'] = 111; //testing user id
-            $resArr['userName'] = "New User $publicUserId"; //dummy username
+            //$resArr['userId'] = 111; //testing user id
+            //$resArr['userName'] = "New User $publicUserId"; //dummy username
         }
 
         $json = json_encode($resArr);
