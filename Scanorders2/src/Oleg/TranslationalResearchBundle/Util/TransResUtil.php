@@ -3330,7 +3330,13 @@ class TransResUtil
 
         //$dql->select('project');
         if( $search ) {
-            $dql->select("project.id as id, project.oid as oid, principalInvestigatorsInfos.displayName as pis, project.title as title");
+            $dql->select(
+                "project.id as id,".
+                " project.oid as oid,".
+                //"principalInvestigatorsInfos.displayName as pis,".
+                " GROUP_CONCAT(DISTINCT principalInvestigatorsInfos.displayName) as pis,".
+                " project.title as title"
+                );
         } else {
             $dql->select('project');
         }
@@ -3435,6 +3441,10 @@ class TransResUtil
             if ($type == "pis") {
                 $dql->andWhere("principalInvestigatorsInfos.displayName LIKE :pis");
                 $dqlParameters["pis"] = "%".$search."%";
+            }
+            if ($type == "all") {
+                $dql->andWhere("project.oid LIKE :search OR project.id LIKE :search OR project.title LIKE :search OR principalInvestigatorsInfos.displayName LIKE :search");
+                $dqlParameters["search"] =  "%".$search."%";
             }
         }
 

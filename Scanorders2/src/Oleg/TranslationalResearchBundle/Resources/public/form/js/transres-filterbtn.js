@@ -74,7 +74,7 @@ function initTypeaheadTransresProjectSearch() {
 
     var suggestions_limit = 10;
     var rateLimitBy = 'debounce'; //Can be either debounce or throttle. Defaults to debounce
-    var rateLimitWait = 30; //The time interval in milliseconds that will be used by rateLimitBy. Defaults to 300
+    var rateLimitWait = 300; //The time interval in milliseconds that will be used by rateLimitBy. Defaults to 300
     var prefetchmin = "prefetchmin";
 
     //Bloodhound: Prefetched data is fetched and processed on initialization.
@@ -91,16 +91,17 @@ function initTypeaheadTransresProjectSearch() {
     //titleDBprefetch = getCommonBaseUrl("util/common/user-data-search/institution/"+searchLimit+"/prefetchmin","employees");
 
     var searchProject = Routing.generate('translationalresearch_project_typeahead_search');
-    oidDBprefetch = searchProject + "/" + "oid" + "/" + searchLimit + "/" + prefetchmin;
+    //oidDBprefetch = searchProject + "/" + "oid" + "/" + searchLimit + "/" + prefetchmin;
     //console.log("oidDBprefetch="+oidDBprefetch);
 
     //var searchTitle = Routing.generate('translationalresearch_project_typeahead_search');
-    titleDBprefetch = searchProject + "/" + "title" + "/" + searchLimit + "/" + prefetchmin;
+    //titleDBprefetch = searchProject + "/" + "title" + "/" + searchLimit + "/" + prefetchmin;
 
     //var searchPis = Routing.generate('translationalresearch_project_typeahead_search');
-    pisDBprefetch = searchProject + "/" + "pis" + "/" + searchLimit + "/" + prefetchmin;
+    //pisDBprefetch = searchProject + "/" + "pis" + "/" + searchLimit + "/" + prefetchmin;
 
     var complex = true; //false;
+    var complex = false;
 
     if( complex ) {
         var oidDB = new Bloodhound({
@@ -146,11 +147,11 @@ function initTypeaheadTransresProjectSearch() {
     } else {
 
         var singleDb = new Bloodhound({
-            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('title'),
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('oid'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
-            prefetch: oidDBprefetch, //getCommonBaseUrl("util/common/user-data-search/single/"+suggestions_limit+"/prefetchmin","employees"),
+            //prefetch: oidDBprefetch, //getCommonBaseUrl("util/common/user-data-search/single/"+suggestions_limit+"/prefetchmin","employees"),
             //remote: getCommonBaseUrl("util/common/user-data-search/single/" + suggestions_limit + "/%QUERY", "employees"),
-            remote: searchProject + "/oid/" + suggestions_limit + "/%QUERY",
+            remote: searchProject + "/all/" + suggestions_limit + "/%QUERY",
             dupDetector: duplicationDetector,
             limit: suggestions_limit,
             rateLimitBy: rateLimitBy,
@@ -242,11 +243,18 @@ function initTypeaheadTransresProjectSearch() {
             },
             {
                 name: 'single',
-                displayKey: 'title',
+                //displayKey: 'title',
+                display: function(item){
+                    var title = item.title;
+                    if( title.length > 20 ) {
+                        title = title.substring(0,20);
+                    }
+                    return item.oid+', '+title+', PI '+item.pis;
+                },
                 source: singleDb.ttAdapter(),
-                templates: {
-                    header: '<h3 class="search-name">User</h3>'
-                }
+                // templates: {
+                //     header: '<h3 class="search-name">Project</h3>'
+                // }
             }
         );
     }
