@@ -360,6 +360,23 @@ Note: If you choose to use MySQL database on Linux instead of Postgres, you will
 
 7. To enable HTTPS (SSL/TLS), first either purchase the certificate from your preferred vendor and add it to the server, or install either the [ACMESharp](https://github.com/ebekker/ACMESharp), [Certes](https://github.com/fszlin/certes), or [WinACME](https://github.com/PKISharp/win-acme) with a [Let's Encrypt](https://letsencrypt.org/) certificate (you can also use a [symfony bundle](https://packagist.org/packages/cert/letsencrypt-bundle)). For certificates from Let's Encrypt, verify that the scheduled task to automatically update them is set up since they expire in 90 days. Once that is done, uncomment (remove "#" from the beginning of) the line 289 in /order-lab/Scanorders2/app/config/security.yml file.
 
+        1) Copy the obtained certificate file (named your-certificate.cer) to path yourpath/conf/ssl.crt/
+        2) Copy the obtained private key file (named your-key.key) to path yourpath/conf/ssl.key/
+        3) In the config file httpd.conf enable “virtual host” by adding the following lines
+			LoadModule ssl_module modules/mod_ssl.so
+			<VirtualHost *:443>
+				DocumentRoot "yourpath/htdocs/"
+				ServerName yourservername:443
+				SSLEngine on
+
+				SSLCipherSuite ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv2:+EXP:+eNULL
+				SSLCertificateFile "yourpath/conf/ssl.crt/your-certificate.cer"
+				SSLCertificateKeyFile "yourpath/conf/ssl.key/your-key.key"
+			</VirtualHost>   
+		4) Restart the web server (Apache)
+        6) In Site Settings change the variable named “XXXXX” (connection channel?) to “https”
+        5) Run deploy_prod.sh
+
 8. To enable submission of applications for the Fellowship application site via Google services, use the files in the /order-lab/Scanorders2/src/Oleg/FellAppBundle/Util/GoogleForm folder with the [Google Apps Script](https://developers.google.com/apps-script/). Make sure to add the Google Apps Script API key on the Site Settings page http://IPADDRESS/order/directory/settings/.
 
 9. If bulk import of the initial set of users is desired, download the [ImportUsersTemplate.xlsx](https://github.com/victorbrodsky/order-lab/tree/master/importLists) file from the /importLists folder, fill it out with the user details, and upload it back via the the Navigation bar's "Admin > Import Users" (http://IPADDRESS/order/directory/import-users/spreadsheet) function on the Employee Directory site.
