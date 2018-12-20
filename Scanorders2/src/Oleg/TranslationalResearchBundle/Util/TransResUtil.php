@@ -3333,8 +3333,9 @@ class TransResUtil
             $dql->select(
                 "project.id as id,".
                 " project.oid as oid,".
-                //"principalInvestigatorsInfos.displayName as pis,".
-                " GROUP_CONCAT(DISTINCT principalInvestigatorsInfos.displayName) as pis,".
+                "principalInvestigatorsInfos.displayName as pis,".
+                //" GROUP_CONCAT(DISTINCT principalInvestigatorsInfos.displayName) as pis,".
+                //" (SELECT infos.displayName FROM OlegUserdirectoryBundle:UserInfo as infos LEFT JOIN infos.user userinfos WHERE userinfos.id = principalInvestigators.id) as pis,".
                 " project.title as title"
                 );
         } else {
