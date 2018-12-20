@@ -1833,7 +1833,7 @@ class UserController extends Controller
     }
     /**
      * @Route("/add-new-user-ajax/", name="employees_add_new_user_ajax", options={"expose"=true})
-     * @Method("POST")
+     * @Method({"GET", "POST"})
      */
     public function addNewUserAjaxAction(Request $request)
     {
@@ -1982,6 +1982,10 @@ class UserController extends Controller
 
         }
 
+        //TODO: test email conflict nyp.org
+        //https://directory.weill.cornell.edu/person/profile/dis9070
+        //https://directory.weill.cornell.edu/person/profile/jnl9004
+        //if email is changed to nyp.org for wcmc user => error "User keytype is empty for prefix " line 745
         $user = $userSecUtil->constractNewUser($username); //publicUserId_@_ldap-user
 
         //add site specific creation string
