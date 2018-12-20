@@ -119,7 +119,7 @@ class FilterRequestType extends AbstractType
             'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'Comment Text'),
         ));
 
-        if(1) {
+        if(0) {
             $builder->add('categories', EntityType::class, array(
                 'class' => 'OlegTranslationalResearchBundle:RequestCategoryTypeList',
                 'label' => false,

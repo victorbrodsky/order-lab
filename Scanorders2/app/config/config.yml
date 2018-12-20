@@ -172,7 +172,7 @@ doctrine:
                 dql:
                      string_functions:
                         CAST: Oleg\UserdirectoryBundle\Query\CastFunction
-                        GROUP_CONCAT: Oleg\UserdirectoryBundle\Query\GroupConcat
+                        #GROUP_CONCAT: Oleg\UserdirectoryBundle\Query\GroupConcat
             external:
                 connection: external
 #                mappings:
