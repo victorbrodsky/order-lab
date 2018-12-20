@@ -76,7 +76,7 @@ class TranslationalResearchUserController extends UserController
 
     /**
      * @Route("/add-new-user-ajax/", name="translationalresearch_add_new_user_ajax", options={"expose"=true})
-     * @Method({"GET", "POST"})
+     * @Method("POST")
      */
     public function addNewUserAjaxAction(Request $request)
     {

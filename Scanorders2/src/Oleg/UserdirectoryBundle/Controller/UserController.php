@@ -1832,8 +1832,10 @@ class UserController extends Controller
         return $response;
     }
     /**
+     * {"GET", "POST"}
+     *
      * @Route("/add-new-user-ajax/", name="employees_add_new_user_ajax", options={"expose"=true})
-     * @Method({"GET", "POST"})
+     * @Method("POST")
      */
     public function addNewUserAjaxAction(Request $request)
     {
