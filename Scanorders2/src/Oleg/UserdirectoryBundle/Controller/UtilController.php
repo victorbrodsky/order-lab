@@ -385,36 +385,30 @@ class UtilController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        $query = $em->createQueryBuilder()
-            ->from('OlegUserdirectoryBundle:User', 'list')
-            ->select("list")
-            //->select("list.id as id, infos.displayName as text")
-            ->leftJoin("list.infos", "infos")
-            ->leftJoin("list.employmentStatus", "employmentStatus")
-            ->leftJoin("employmentStatus.employmentType", "employmentType")
-            //->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
-            ->orderBy("infos.displayName","ASC");
+        $repository = $em->getRepository('OlegUserdirectoryBundle:User');
+        $dql = $repository->createQueryBuilder("list");
+        $dql->select('list.id as id, infos.displayName as text');
+        $dql->leftJoin("list.infos", "infos");
+        $dql->where("list.createdby != 'googleapi' AND infos.displayName IS NOT NULL"); //googleapi is used only by fellowship application population
+        $dql->orderBy("infos.displayName","ASC");
 
-        $locationusers = $query->getQuery()->getResult();
+        $query = $dql->getQuery();
 
-        $output = array();
+        $users = $query->getResult();
 
-        //$output[] = array('id'=>null,'text'=>'None');
-        //$output[] = array('id'=>null,'text'=>'Multiple');
+        //$output = array();
 
-        //$output = array_merge($output, $locationusers);
-
-        foreach( $locationusers as $locationuser ) {
-            $element = array(
-                'id'        => $locationuser->getId(),
-                'text'      => $locationuser.""
-            );
-            $output[] = $element;
-        }
+//        foreach( $users as $user ) {
+//            $element = array(
+//                'id'        => $user->getId(),
+//                'text'      => $user.""
+//            );
+//            $output[] = $element;
+//        }
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
-        $response->setContent(json_encode($output));
+        $response->setContent(json_encode($users));
         return $response;
     }
 
