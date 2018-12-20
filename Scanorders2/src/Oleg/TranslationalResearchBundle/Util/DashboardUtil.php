@@ -50,6 +50,8 @@ class DashboardUtil
     private $otherId = "All other [[otherStr]] combined";
     private $otherSearchStr = "All other ";
 
+    private $lightFilter = true;
+
     public function __construct( $em, $container ) {
         $this->container = $container;
         $this->em = $em;

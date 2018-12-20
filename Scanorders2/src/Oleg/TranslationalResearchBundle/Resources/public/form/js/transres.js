@@ -64,7 +64,11 @@ $(document).ready(function() {
     // });
 
     transresIrbExemptListener('transres-project-exemptIrbApproval');
-    transresIrbExemptListener('transres-project-exemptIACUCApproval');
+
+    // console.log("load users");
+    // transresIrbExemptListener('transres-project-submitter');
+    // transresIrbExemptListener('transres-project-billingcontact');
+    // transresIrbExemptListener('transres-project-pis');
 
     //fieldInputMask();
     

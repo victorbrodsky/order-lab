@@ -15,12 +15,20 @@
  *  limitations under the License.
  */
 
+_genericusers = [];
+
 $(document).ready(function() {
 
     console.log('transres-filterbtn.js');
     changeFilterColorButton();
 
     initTypeaheadTransresProjectSearch();
+
+    console.log("load users");
+    //getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,sitename,force,placeholder)
+    getComboboxGeneric(null,'submitter',_genericusers,false,'genericusers/');
+    getComboboxGeneric(null,'billingcontact',_genericusers,false,'genericusers/');
+    getComboboxGeneric(null,'pis',_genericusers,true,'genericusers/');
 
 });
 

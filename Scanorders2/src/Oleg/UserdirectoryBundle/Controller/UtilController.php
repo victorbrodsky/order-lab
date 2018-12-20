@@ -375,6 +375,48 @@ class UtilController extends Controller {
         return $response;
     }
 
+    /**
+     * get all users except fellowship
+     *
+     * @Route("/common/genericusers/{usertype}", name="employees_get_genericusers")
+     * @Method("GET")
+     */
+    public function getGenericUsersAction(Request $request, $usertype=null) {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $query = $em->createQueryBuilder()
+            ->from('OlegUserdirectoryBundle:User', 'list')
+            ->select("list")
+            //->select("list.id as id, infos.displayName as text")
+            ->leftJoin("list.infos", "infos")
+            ->leftJoin("list.employmentStatus", "employmentStatus")
+            ->leftJoin("employmentStatus.employmentType", "employmentType")
+            //->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+            ->orderBy("infos.displayName","ASC");
+
+        $locationusers = $query->getQuery()->getResult();
+
+        $output = array();
+
+        //$output[] = array('id'=>null,'text'=>'None');
+        //$output[] = array('id'=>null,'text'=>'Multiple');
+
+        //$output = array_merge($output, $locationusers);
+
+        foreach( $locationusers as $locationuser ) {
+            $element = array(
+                'id'        => $locationuser->getId(),
+                'text'      => $locationuser.""
+            );
+            $output[] = $element;
+        }
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+    }
 
     /**
      * @Route("/common/building", name="employees_get_building")

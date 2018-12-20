@@ -18,6 +18,7 @@
 namespace Oleg\TranslationalResearchBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
+use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -50,7 +51,6 @@ class FilterRequestType extends AbstractType
         $categoriesChoiceLabel = "getOptimalAbbreviationName";
         //$categoriesChoiceLabel = "getId";
 
-        //if( $this->params['routeName'] != "translationalresearch_my_requests" ) {
         if (count($this->params['transresUsers']) > 0) {
 
             $builder->add('submitter', EntityType::class, array(
@@ -61,15 +61,6 @@ class FilterRequestType extends AbstractType
                 'choices' => $this->params['transresUsers'],
                 'choice_label' => $userChoiceLabel,
                 'attr' => array('class' => 'combobox combobox-width'),
-    //                'query_builder' => function (EntityRepository $er) {
-    //                    return $er->createQueryBuilder('list')
-    //                        ->leftJoin("list.employmentStatus", "employmentStatus")
-    //                        ->leftJoin("employmentStatus.employmentType", "employmentType")
-    //                        ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
-    //                        //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
-    //                        ->leftJoin("list.infos", "infos")
-    //                        ->orderBy("infos.displayName", "ASC");
-    //                },
             ));
 
             $builder->add('billingContact', EntityType::class, array(
@@ -80,15 +71,6 @@ class FilterRequestType extends AbstractType
                 'choices' => $this->params['transresUsers'],
                 'choice_label' => $userChoiceLabel,
                 'attr' => array('class' => 'combobox combobox-width'),
-//            'query_builder' => function (EntityRepository $er) {
-//                return $er->createQueryBuilder('list')
-//                    ->leftJoin("list.employmentStatus", "employmentStatus")
-//                    ->leftJoin("employmentStatus.employmentType", "employmentType")
-//                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
-//                    //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
-//                    ->leftJoin("list.infos", "infos")
-//                    ->orderBy("infos.displayName", "ASC");
-//            },
             ));
 
             $builder->add('principalInvestigators', EntityType::class, array(
@@ -110,8 +92,29 @@ class FilterRequestType extends AbstractType
 //            },
             ));
 
+        } else {
+
+            $builder->add('submitter', CustomSelectorType::class, array(
+                //'label' => 'Building:',
+                'attr' => array('class' => 'combobox ajax-combobox-submitter', 'type' => 'hidden'),
+                'required' => false,
+                'classtype' => 'genericusers'
+            ));
+
+            $builder->add('billingContact', CustomSelectorType::class, array(
+                //'label' => 'Building:',
+                'attr' => array('class' => 'combobox ajax-combobox-billingcontact', 'type' => 'hidden'),
+                'required' => false,
+                'classtype' => 'genericusers'
+            ));
+
+            $builder->add('principalInvestigators', CustomSelectorType::class, array(
+                //'label' => 'Building:',
+                'attr' => array('class' => 'combobox ajax-combobox-pis', 'type' => 'hidden'),
+                'required' => false,
+                'classtype' => 'genericusers'
+            ));
         }
-        //}
 
         $builder->add('comment', TextType::class, array(
             'required'=>false,
