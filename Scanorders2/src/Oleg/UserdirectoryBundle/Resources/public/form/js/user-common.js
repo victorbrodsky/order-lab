@@ -1414,6 +1414,7 @@ function constructNewUserModal(btnDom, sitename, otherUserParam, comboboxValue) 
 
     getComboboxGeneric($('#user-add-new-user-instance'),'administrativetitletype',_addmintitles,false);
     getComboboxCompositetree($('#user-add-new-user-instance'));
+    regularCombobox($('#user-add-new-user-instance'));
 
     $('#user-add-new-user-instance').modal(
         {
@@ -1507,10 +1508,12 @@ function getAddNewUserModalByForm(btnDom,sitename,otherUserParam,newUserFormHtml
 
     constructAddNewUserModalByForm(newUserFormHtml,fieldId,sitename,otherUserParam,'body');
 
-    getComboboxGeneric($('#user-add-new-user'),'administrativetitletype',_addmintitles,false);
-    getComboboxCompositetree($('#user-add-new-user'));
+    var newUserEl = $('#user-add-new-user');
+    getComboboxGeneric(newUserEl,'administrativetitletype',_addmintitles,false);
+    getComboboxCompositetree(newUserEl);
+    regularCombobox(newUserEl);
 
-    $('#user-add-new-user').modal(
+    newUserEl.modal(
         {
             show:true,
             keyboard: false,
@@ -1522,7 +1525,8 @@ function getAddNewUserModalByForm(btnDom,sitename,otherUserParam,newUserFormHtml
     //     $('#oleg_userdirectorybundle_user_primaryPublicUserId').focus();
     // });
 
-    $("#user-add-new-user").on('hidden.bs.modal', function () {
+    //$('#user-add-new-user')
+    newUserEl.on('hidden.bs.modal', function () {
         //console.log("hidden.bs.modal");
         $( '.modal' ).modal( 'hide' ).data( 'bs.modal', null );
 

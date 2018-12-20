@@ -63,7 +63,11 @@ class UserSimpleType extends AbstractType
 
         //form start
 
+        //show it on the "Add New" user modal
         if( !isset($this->params['hidePrimaryPublicUserId']) ) {
+
+            //$this->addKeytype($builder);
+
             $this->userNamePreferredContactInfo($builder);
         }
 
@@ -159,6 +163,37 @@ class UserSimpleType extends AbstractType
             'prototype_name' => '__administrativetitles__',
         ));
 
+        return $builder;
+    }
+
+
+    public function addKeytype($builder,$label='Authentication (to enable log in):',$class='combobox user-keytype-field',$defaultPrimaryPublicUserIdType=null) {
+        $attr = array('class'=>$class);
+
+        $paramArr = array(
+            'class' => 'OlegUserdirectoryBundle:UsernameType',
+            'choice_label' => 'name',
+            'label' => $label,
+            'required' => false,
+            'multiple' => false,
+            'attr' => $attr,    //array('class'=>'combobox combobox-width user-keytype-field','readonly'=>$readonlyAttr ),
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->where("list.type = :typedef OR list.type = :typeadd")
+                    ->orderBy("list.orderinlist","ASC")
+                    ->setParameters( array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                    ));
+            },
+        );
+
+        if( $defaultPrimaryPublicUserIdType ) {
+            $paramArr['data'] = $defaultPrimaryPublicUserIdType;
+        }
+        //echo "data=".$paramArr['data']."<br>";
+
+        $builder->add('keytype', EntityType::class, $paramArr);
         return $builder;
     }
 

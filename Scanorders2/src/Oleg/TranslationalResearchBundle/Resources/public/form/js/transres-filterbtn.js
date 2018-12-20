@@ -24,7 +24,8 @@ $(document).ready(function() {
 
     initTypeaheadTransresProjectSearch();
 
-    console.log("load users");
+    //console.log("load users");
+    //TODO: make one ajax query
     //getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,sitename,force,placeholder)
     getComboboxGeneric(null,'submitter',_genericusers,false,'genericusers/');
     getComboboxGeneric(null,'billingcontact',_genericusers,false,'genericusers/');
