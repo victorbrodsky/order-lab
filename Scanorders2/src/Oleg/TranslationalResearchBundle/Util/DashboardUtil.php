@@ -688,7 +688,11 @@ class DashboardUtil
         $layoutArray['title'] = $title;
         $layoutArray['barmode'] = 'stack';
 
+        //$layoutArray['categoryorder'] = 'array';
+        //$layoutArray['categoryarray'] = array('TRP-1003 Unstained slides from paraffin-embedded or frozen tissue','TRP-1002 Embedding frozen tissue in OCT block');
+
         $stackDataArray = array();
+        $stackDataSumArray = array();
         $xAxis = "x";
         $yAxis = "y";
 
@@ -709,6 +713,13 @@ class DashboardUtil
                 $labels[] = $label;
                 $values[] = $value;
                 $links[] = $link;
+
+                if( isset($stackDataSumArray[$label]) ) {
+                    $sumValue = $stackDataSumArray[$label] + $value;
+                } else {
+                    $sumValue = $value;
+                }
+                $stackDataSumArray[$label] = $sumValue;
             }
 
             //if( count($values) == 0 ) {
@@ -729,9 +740,37 @@ class DashboardUtil
             //return array('error'=>"No data found corresponding to this chart parameters");
         }
 
-        //echo "<pre>";
-        //print_r($stackDataArray);
-        //echo "</pre>";
+        $testing = false;
+        //$testing = true;
+        if($testing) {
+            //sort $stackDataArray by value
+
+            echo "<pre>";
+            print_r($stackDataArray);
+            echo "</pre>";
+
+//          echo "<pre>";
+//          print_r($stackDataSumArray);
+//          echo "</pre>";
+            arsort($stackDataSumArray);
+            echo "<pre>";
+            print_r($stackDataSumArray);
+            echo "</pre>";
+
+            foreach ($stackDataSumArray as $label => $value) {
+
+                foreach ($stackDataArray as $stackData) {
+                    foreach ($stackData as $key => $data) {
+                        if ($key == $xAxis) {
+
+                        }
+                    }
+
+                }
+
+            }
+            exit('111');
+        }
 
         $chartsArray = array(
             'layout' => $layoutArray,
