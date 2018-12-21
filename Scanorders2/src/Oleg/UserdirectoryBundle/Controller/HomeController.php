@@ -91,6 +91,7 @@ class HomeController extends Controller {
         //testing
         $userSecUtil = $this->get('user_security_utility');
         $username = "dis9070_@_ldap2-user";
+        echo "username=".$username."<br>";
         $user = $userSecUtil->constractNewUser($username);
         exit("user=".$user);
 

@@ -1880,7 +1880,7 @@ class UserController extends Controller
         $emailParts = explode("@",$email);
         if( count($emailParts) == 2 ) {
             $firstEmailPart = $emailParts[0];
-            $secondEmailPart = $emailParts[1];
+            $secondEmailPart = $emailParts[1]; //nyp.org or med.cornell.edu
             $publicUserId = $firstEmailPart;
         }
 
@@ -1968,9 +1968,11 @@ class UserController extends Controller
             //create local user: oli2002c_@_local-user
             $username = $publicUserId . "_@_" . "local-user";
         } else {
+
             //create WCMC LDAP user: oli2002c_@_ldap-user
             //echo "create WCMC LDAP user<br>";
             $username = $publicUserId . "_@_" . "ldap-user"; //"ldap-user" default username postfix
+
             //TODO: compare email domain for ldap-user or ldap2-user and use ldap according to the domain
             $emailMapperPostfix1 = $userSecUtil->getSiteSettingParameter("ldapMapperEmail");
             if( $emailMapperPostfix1 && $secondEmailPart == $emailMapperPostfix1 ) {

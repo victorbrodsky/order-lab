@@ -363,9 +363,10 @@ class UserSecurityUtil {
             //print_r($userkeytypes);
             if( $userkeytypes && count($userkeytypes) > 0 ) {
                 $userkeytype = $userkeytypes[0];
+                return $userkeytype;
             }
-            return $userkeytypes;
         }
+        return null;
     }
 
     public function createCleanUsername($username) {
@@ -732,7 +733,7 @@ class UserSecurityUtil {
 
         //////////////////////////////// get usertype ////////////////////////////////
         $userkeytype = $userSecUtil->getUsernameType($usernamePrefix);
-        echo "keytype=".$userkeytype.", id=".$userkeytype->getId()."<br>";
+        //echo "keytype=".$userkeytype.", id=".$userkeytype->getId()."<br>";
 
         //first time login when DB is clean
         if( !$userkeytype ) {
