@@ -1848,7 +1848,7 @@ class UserController extends Controller
     public function addNewUserAjax($request) {
 
         $testing = false;
-        $testing = true;
+        //$testing = true;
 
         $resArr = array(
             "flag" => "NOTOK",
@@ -1973,7 +1973,7 @@ class UserController extends Controller
             //echo "create WCMC LDAP user<br>";
             $username = $publicUserId . "_@_" . "ldap-user"; //"ldap-user" default username postfix
 
-            //TODO: compare email domain for ldap-user or ldap2-user and use ldap according to the domain
+            //compare email domain for ldap-user or ldap2-user and use ldap according to the domain
             $emailMapperPostfix1 = $userSecUtil->getSiteSettingParameter("ldapMapperEmail");
             if( $emailMapperPostfix1 && $secondEmailPart == $emailMapperPostfix1 ) {
                 $username = $publicUserId . "_@_" . "ldap-user";
@@ -1986,7 +1986,7 @@ class UserController extends Controller
 
         }
 
-        //TODO: test email conflict nyp.org
+        //ldap-user and ldap2-user must be created in the user type (Primary Public User ID Types)
         //https://directory.weill.cornell.edu/person/profile/dis9070
         //https://directory.weill.cornell.edu/person/profile/jnl9004
         //if email is changed to nyp.org for wcmc user => error "User keytype is empty for prefix " line 745

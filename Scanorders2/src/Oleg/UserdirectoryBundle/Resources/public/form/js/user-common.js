@@ -1768,7 +1768,10 @@ function addNewUserAction( addUserBtn, fieldId, sitename, otherUserParam ) {
         holder.find("#user-add-btn-dismiss").show();
         holder.find("#user-add-btn-cancel").show();
     }).error(function(jqXHR, textStatus, errorThrown) {
-        console.log('Error : ' + errorThrown);
+        //console.log('jqXHR:');
+        //console.log(jqXHR);
+        console.log('Error: ' + errorThrown);
+        //console.log('errorThrown: ' + errorThrown);
         lbtn.stop();
         holder.find("#user-add-btn-dismiss").show();
         holder.find("#user-add-btn-cancel").show();
