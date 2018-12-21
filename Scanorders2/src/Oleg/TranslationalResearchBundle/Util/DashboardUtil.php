@@ -692,7 +692,7 @@ class DashboardUtil
         //$layoutArray['categoryarray'] = array('TRP-1003 Unstained slides from paraffin-embedded or frozen tissue','TRP-1002 Embedding frozen tissue in OCT block');
 
         $stackDataArray = array();
-        $stackDataSumArray = array();
+        //$stackDataSumArray = array();
         $xAxis = "x";
         $yAxis = "y";
 
@@ -714,12 +714,12 @@ class DashboardUtil
                 $values[] = $value;
                 $links[] = $link;
 
-                if( isset($stackDataSumArray[$label]) ) {
-                    $sumValue = $stackDataSumArray[$label] + $value;
-                } else {
-                    $sumValue = $value;
-                }
-                $stackDataSumArray[$label] = $sumValue;
+//                if( isset($stackDataSumArray[$label]) ) {
+//                    $sumValue = $stackDataSumArray[$label] + $value;
+//                } else {
+//                    $sumValue = $value;
+//                }
+//                $stackDataSumArray[$label] = $sumValue;
             }
 
             //if( count($values) == 0 ) {
@@ -759,14 +759,15 @@ class DashboardUtil
 
             foreach ($stackDataSumArray as $label => $value) {
 
-                foreach ($stackDataArray as $stackData) {
+                //foreach ($stackDataArray as $stackData) {
+                    $stackData = $stackDataArray[0];
                     foreach ($stackData as $key => $data) {
                         if ($key == $xAxis) {
-
+                            //echo "key=$key=>".$data."<br>";
                         }
                     }
 
-                }
+                //}
 
             }
             exit('111');
@@ -2012,6 +2013,7 @@ class DashboardUtil
         if( $chartType == "service-productivity-by-service-compare-funded-vs-nonfunded-projects" ) {
             $fundedQuantityCountByCategoryArr = array();
             $unFundedQuantityCountByCategoryArr = array();
+            $stackDataSumArray = array();
 
             $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
             foreach($requests as $transRequest) {
@@ -2038,9 +2040,22 @@ class DashboardUtil
                             $unFundedQuantityCountByCategoryArr[$categoryIndex] = $count;
                         }
                         $titleCount = $titleCount + $productQuantity;
+
+                        if( isset($stackDataSumArray[$categoryIndex]) ) {
+                            $sum = $stackDataSumArray[$categoryIndex] + $productQuantity;
+                        } else {
+                            $sum = $productQuantity;
+                        }
+                        $stackDataSumArray[$categoryIndex] = $sum;
                     }
                 }
             }//foreach $requests
+
+            //sort by value in key=>value
+            //foreach($stackDataSumArray as $categoryIndex=>$count) {
+            //    echo $categoryIndex."=".$count."<br>";
+            //}
+            //exit('111');
 
             $chartName = $this->getTitleWithTotal($chartName,$titleCount);
             //$showOther = $this->getOtherStr($showLimited,"projects");
