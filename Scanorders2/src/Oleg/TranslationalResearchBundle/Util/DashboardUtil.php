@@ -2052,10 +2052,14 @@ class DashboardUtil
             }//foreach $requests
 
             //sort by value in key=>value
-            //foreach($stackDataSumArray as $categoryIndex=>$count) {
-            //    echo $categoryIndex."=".$count."<br>";
-            //}
-            //exit('111');
+//            arsort($stackDataSumArray);
+//            echo "<pre>";
+//            print_r($fundedQuantityCountByCategoryArr);
+//            echo "</pre>";
+//            foreach($stackDataSumArray as $categoryIndex=>$count) {
+//                echo $categoryIndex."=".$count."<br>";
+//            }
+//            exit('111');
 
             $chartName = $this->getTitleWithTotal($chartName,$titleCount);
             //$showOther = $this->getOtherStr($showLimited,"projects");
