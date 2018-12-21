@@ -87,6 +87,13 @@ class HomeController extends Controller {
      * @Route("/under-construction", name="under_construction")
      */
     public function underConstructionAction() {
+
+        //testing
+        $userSecUtil = $this->get('user_security_utility');
+        $username = "dis9070_@_ldap2-user";
+        $user = $userSecUtil->constractNewUser($username);
+        exit("user=".$user);
+
         return $this->render('OlegUserdirectoryBundle:Default:under_construction.html.twig');
     }
 

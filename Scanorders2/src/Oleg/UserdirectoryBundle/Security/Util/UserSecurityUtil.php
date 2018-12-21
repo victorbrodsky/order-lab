@@ -732,7 +732,7 @@ class UserSecurityUtil {
 
         //////////////////////////////// get usertype ////////////////////////////////
         $userkeytype = $userSecUtil->getUsernameType($usernamePrefix);
-        //echo "keytype=".$userkeytype."<br>";
+        echo "keytype=".$userkeytype.", id=".$userkeytype->getId()."<br>";
 
         //first time login when DB is clean
         if( !$userkeytype ) {
