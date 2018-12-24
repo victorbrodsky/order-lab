@@ -1778,13 +1778,14 @@ class RequestController extends Controller
         }
 
         if( $principalInvestigators && count($principalInvestigators)>0 ) {
-            $dql->andWhere("principalInvestigators.id IN (:principalInvestigators)");
             $principalInvestigatorsIdsArr = array();
             foreach($principalInvestigators as $principalInvestigator) {
                 //echo "PI=".$principalInvestigator."; id=".$principalInvestigator->getId()."<br>";
                 $principalInvestigatorsIdsArr[] = $principalInvestigator->getId();
             }
+            $dql->andWhere("principalInvestigators.id IN (:principalInvestigators)");
             $dqlParameters["principalInvestigators"] = $principalInvestigatorsIdsArr;   //implode(",",$principalInvestigatorsIdsArr);
+            //$dql->andWhere("principalInvestigators.id = 221"); //379
             $advancedFilter++;
         }
 
