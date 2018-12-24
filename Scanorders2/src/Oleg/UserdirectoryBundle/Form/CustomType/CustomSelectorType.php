@@ -26,6 +26,7 @@
 namespace Oleg\UserdirectoryBundle\Form\CustomType;
 
 
+use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericUserTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -173,7 +174,10 @@ class CustomSelectorType extends AbstractType {
                 $transformer = new GenericTreeTransformer($this->om, $username, 'User');
                 break;
             case "genericusers":
-                $transformer = new GenericTreeTransformer($this->om, $username, 'User');
+                $transformer = new GenericUserTransformer($this->om, $username, 'User', 'UserdirectoryBundle', array('multiple'=>true));
+                break;
+            case "genericuser":
+                $transformer = new GenericUserTransformer($this->om, $username, 'User', 'UserdirectoryBundle', array('multiple'=>false));
                 break;
             case "jobTitle":
                 $transformer = new GenericTreeTransformer($this->om, $username, 'JobTitleList');

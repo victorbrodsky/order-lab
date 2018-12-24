@@ -185,19 +185,23 @@ function getElementTargetByHolder(holder,target) {
 }
 
 //Generic ajax combobox
-function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,sitename,force,placeholder) {
+function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,sitename,force,placeholder,thisAsyncflag) {
 
     //console.log('get Combobox Generic: name='+name);
 
     var targetid = ".ajax-combobox-"+name;
     targetid = getElementTargetByHolder(holder,targetid);
 
-    if( typeof placeholder === 'undefined' ) {
+    if( typeof placeholder === 'undefined' || placeholder == null ) {
         placeholder = "Select an option or type in a new value";
     }
 
-    if( typeof force === 'undefined' ) {
+    if( typeof force === 'undefined' || force == null ) {
         force = false;
+    }
+
+    if( typeof thisAsyncflag === 'undefined' || thisAsyncflag == null ) {
+        thisAsyncflag = asyncflag;
     }
 
     if( !force && $(targetid).length == 0 ) {
@@ -229,7 +233,7 @@ function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,s
         $.ajax({
             url: url,
             timeout: _ajaxTimeout,
-            async: asyncflag
+            async: thisAsyncflag
         }).success(function(data) {
             $.each(data, function(key, val) {
                 //console.log("val="+val);

@@ -1174,11 +1174,13 @@ class RequestController extends Controller
             if( isset($filterform['submitter']) ) {
                 $submitter = $filterform['submitter']->getData();
             }
+            //echo "submitter=".$submitter."<br>";
 
             $principalInvestigators = null;
             if( isset($filterform['principalInvestigators']) ) {
                 $principalInvestigators = $filterform['principalInvestigators']->getData();
             }
+            //echo "PIs=".$principalInvestigators."<br>";
 
             $billingContact = null;
             if( isset($filterform['billingContact']) ) {
@@ -1779,6 +1781,7 @@ class RequestController extends Controller
             $dql->andWhere("principalInvestigators.id IN (:principalInvestigators)");
             $principalInvestigatorsIdsArr = array();
             foreach($principalInvestigators as $principalInvestigator) {
+                echo "PI=".$principalInvestigator."<br>";
                 $principalInvestigatorsIdsArr[] = $principalInvestigator->getId();
             }
             $dqlParameters["principalInvestigators"] = $principalInvestigatorsIdsArr;   //implode(",",$principalInvestigatorsIdsArr);

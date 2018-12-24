@@ -60,7 +60,7 @@ class FilterRequestType extends AbstractType
                 'multiple' => false,
                 'choices' => $this->params['transresUsers'],
                 'choice_label' => $userChoiceLabel,
-                'attr' => array('class' => 'combobox combobox-width'),
+                'attr' => array('class' => 'combobox combobox-width',),
             ));
 
             $builder->add('billingContact', EntityType::class, array(
@@ -96,22 +96,23 @@ class FilterRequestType extends AbstractType
 
             $builder->add('submitter', CustomSelectorType::class, array(
                 //'label' => 'Building:',
-                'attr' => array('class' => 'combobox ajax-combobox-submitter', 'type' => 'hidden'),
+                'attr' => array('class' => 'combobox combobox-without-add ajax-combobox-submitter', 'type' => 'hidden'),
                 'required' => false,
-                'classtype' => 'genericusers'
+                'classtype' => 'genericuser'
             ));
 
             $builder->add('billingContact', CustomSelectorType::class, array(
                 //'label' => 'Building:',
-                'attr' => array('class' => 'combobox ajax-combobox-billingcontact', 'type' => 'hidden'),
+                'attr' => array('class' => 'combobox combobox-without-add ajax-combobox-billingcontact', 'type' => 'hidden'),
                 'required' => false,
-                'classtype' => 'genericusers'
+                'classtype' => 'genericuser'
             ));
 
             $builder->add('principalInvestigators', CustomSelectorType::class, array(
                 //'label' => 'Building:',
-                'attr' => array('class' => 'combobox ajax-combobox-pis', 'type' => 'hidden'),
+                'attr' => array('class' => 'combobox combobox-without-add ajax-combobox-pis', 'type' => 'hidden'),
                 'required' => false,
+                //'multiple' => true,
                 'classtype' => 'genericusers'
             ));
         }

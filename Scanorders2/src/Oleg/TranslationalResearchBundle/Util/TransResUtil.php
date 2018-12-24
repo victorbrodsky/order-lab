@@ -4629,6 +4629,9 @@ class TransResUtil
     }
 
     public function tokenTruncate($string, $your_desired_width) {
+        if( !$string ) {
+            return "";
+        }
         $parts = preg_split('/([\s\n\r]+)/', $string, null, PREG_SPLIT_DELIM_CAPTURE);
         $parts_count = count($parts);
 

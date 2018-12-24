@@ -386,11 +386,12 @@ class UtilController extends Controller {
         $em = $this->getDoctrine()->getManager();
 
         $repository = $em->getRepository('OlegUserdirectoryBundle:User');
-        $dql = $repository->createQueryBuilder("list");
-        $dql->select('list.id as id, infos.displayName as text');
-        $dql->leftJoin("list.infos", "infos");
-        $dql->where("list.createdby != 'googleapi' AND infos.displayName IS NOT NULL"); //googleapi is used only by fellowship application population
+        $dql = $repository->createQueryBuilder("user");
+        $dql->select('user.id as id, infos.displayName as text');
+        $dql->leftJoin("user.infos", "infos");
+        $dql->where("user.createdby != 'googleapi' AND infos.displayName IS NOT NULL"); //googleapi is used only by fellowship application population
         $dql->orderBy("infos.displayName","ASC");
+        //$dql->groupBy('user');
 
         $query = $dql->getQuery();
 

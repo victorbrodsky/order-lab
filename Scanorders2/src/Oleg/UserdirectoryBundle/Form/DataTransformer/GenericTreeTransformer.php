@@ -186,11 +186,16 @@ class GenericTreeTransformer implements DataTransformerInterface
 
         //check if it is already exists in db
         //echo "className=".$this->className."<br>";
-        $entity = $this->em->getRepository('Oleg'.$this->bundleName.':'.$this->className)->findOneByName($name."");
-
-        if( null === $entity ) {
-            $entity = $this->em->getRepository('Oleg'.$this->bundleName.':'.$this->className)->findOneByAbbreviation($name."");
-        }
+//        if( $this->bundleName == "UserdirectoryBundle" && $this->className == "User" ) {
+//            //User does not have field "name"
+//            $entity = null;
+//        } else {
+//            $entity = $this->em->getRepository('Oleg'.$this->bundleName.':'.$this->className)->findOneByName($name."");
+//        }
+//        if( null === $entity ) {
+//            $entity = $this->em->getRepository('Oleg'.$this->bundleName.':'.$this->className)->findOneByAbbreviation($name."");
+//        }
+        $entity = $this->findEntityByString($name."");
         
         if( null === $entity ) {
 
@@ -342,7 +347,12 @@ class GenericTreeTransformer implements DataTransformerInterface
 
 
     public function findEntityByString($string) {
-        $entity = $this->em->getRepository('Oleg'.$this->bundleName.':'.$this->className)->findOneByName($string."");
+        if( $this->bundleName == "UserdirectoryBundle" && $this->className == "User" ) {
+            //User does not have field "name"
+            $entity = null;
+        } else {
+            $entity = $this->em->getRepository('Oleg'.$this->bundleName.':'.$this->className)->findOneByName($string."");
+        }
 
         if( null === $entity ) {
             $entity = $this->em->getRepository('Oleg'.$this->bundleName.':'.$this->className)->findOneByAbbreviation($string."");

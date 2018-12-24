@@ -433,7 +433,7 @@
 {% macro transresRequestsFilter( filterform, advancedFilter ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
-    <div class="well form-search">
+    <div id="transres-filter-request" class="well form-search">
         {{ form_start(filterform) }}
 
             {#"Category", "Project Specialty" [AP/CP or Hematopathology], "Project", "Work Progress Status", "Billing Progress Status", and "Submitter"#}

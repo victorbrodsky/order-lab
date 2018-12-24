@@ -142,15 +142,15 @@
                     {{ ent.storage }}
                 </td>
 
-                <td>
-                    {{ ent.comment }}
+                <td data-toggle="tooltip" title="{{ ent.getAllComments()|raw }}">
+                    {{ transres_util.tokenTruncate(ent.comment,50) }}
                     {% if ent.comment1 %}
                         <br>
-                        {{ ent.comment1 }}
+                        {{ transres_util.tokenTruncate(ent.comment1,50) }}
                     {% endif %}
                     {% if ent.comment2 %}
                         <br>
-                        {{ ent.comment2 }}
+                        {{ transres_util.tokenTruncate(ent.comment2,50) }}
                     {% endif %}
                 </td>
 

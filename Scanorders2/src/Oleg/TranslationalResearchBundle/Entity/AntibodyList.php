@@ -550,6 +550,23 @@ class AntibodyList extends ListAbstract
     {
         $this->exportId = $exportId;
     }
+    
+    public function getAllComments($separator="\r\n") {
+        $res = "";
+        $comment = $this->getComment();
+        $comment1 = $this->getComment1();
+        $comment2 = $this->getComment2();
+        if( $comment ) {
+            $res = $comment;
+        }
+        if( $comment1 ) {
+            $res = $res . $separator . "Additional Comment 1: " . $comment1;
+        }
+        if( $comment2 ) {
+            $res = $res . $separator . "Additional Comment 2: " . $comment2;
+        }
+        return $res;
+    }
 
 //    public function __toString()
 //    {
