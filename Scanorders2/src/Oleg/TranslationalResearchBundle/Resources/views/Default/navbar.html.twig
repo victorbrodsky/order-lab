@@ -362,6 +362,7 @@
                                             'filter[chartType][4]':'projects-per-pathologist-involved',
                                             'filter[chartType][5]':'funded-projects-per-pathologist-involved',
                                             'filter[chartType][6]':'nonfunded-projects-per-pathologist-involved'
+                                            'filter[chartType][7]':'projects-per-type'
                                         }) }}"
                                     >PI/Project statistics</a>
                                 </li>
@@ -378,7 +379,8 @@
                                         'filter[chartType][5]':'service-productivity-by-service',
                                         'filter[chartType][6]':'service-productivity-by-service-per-funded-projects',
                                         'filter[chartType][7]':'service-productivity-by-service-per-nonfunded-projects',
-                                        'filter[chartType][8]':'service-productivity-by-service-compare-funded-vs-nonfunded-projects'
+                                        'filter[chartType][8]':'service-productivity-by-service-compare-funded-vs-nonfunded-projects',
+                                        'filter[chartType][9]':'requests-per-business-purpose'
                                     }) }}"
                                     >Work request statistics</a>
                                 </li>
@@ -393,7 +395,8 @@
                                         'filter[chartType][3]':'fees-by-requests-per-nonfunded-projects',
                                         'filter[chartType][4]':'fees-by-investigators',
                                         'filter[chartType][5]':'fees-by-investigators-per-funded-projects',
-                                        'filter[chartType][6]':'fees-by-investigators-per-nonfunded-projects'
+                                        'filter[chartType][6]':'fees-by-investigators-per-nonfunded-projects',
+                                        'filter[chartType][7]':'fees-per-nonfunded-projects-per-pathologist-involved'
                                     }) }}"
                                     >Productivity statistics based on work requests</a>
                                 </li>
@@ -411,6 +414,21 @@
                                         'filter[chartType][6]':'fees-by-invoices-per-nonfunded-projects-per-pathologist-involved',
                                     }) }}"
                                     >Financial statistics based on invoices</a>
+                                </li>
+                                <li>
+                                    <a href="{{ path(translationalresearch_sitename~'_dashboard_choices',
+                                    {
+                                        'filter[startDate]':startDate,
+                                        'filter[endDate]':endDate,
+                                        'filter[projectSpecialty]':0,
+                                        'filter[chartType][1]':'turn-around-statistics-days-complete-request',
+                                        'filter[chartType][2]':'turn-around-statistics-days-complete-per-request',
+                                        'filter[chartType][3]':'fees-by-invoices-per-pi',
+                                        'filter[chartType][4]':'fees-by-invoices-per-projects-per-pathologist-involved',
+                                        'filter[chartType][5]':'fees-by-invoices-per-funded-projects-per-pathologist-involved',
+                                        'filter[chartType][6]':'fees-by-invoices-per-nonfunded-projects-per-pathologist-involved',
+                                    }) }}"
+                                    >Turn-around statistics</a>
                                 </li>
                                 <li>
                                     <a href="{{ path(translationalresearch_sitename~'_dashboard_turn_around_stat',

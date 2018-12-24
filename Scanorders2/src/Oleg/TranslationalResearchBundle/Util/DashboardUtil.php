@@ -77,9 +77,9 @@ class DashboardUtil
             "10. Total Number of Work Requests per Funded Project (Top 10)" =>      "requests-per-funded-projects",
             "11. Total Number of Work Requests per Non-Funded Project (Top 10)" =>  "requests-per-nonfunded-projects",
             //   Products/Services
-            "12. TRP Service Productivity by Products/Services (Top 10)" =>     "service-productivity-by-service",
-            "13. TRP Service Productivity for Funded Projects (Top 10)" =>      "service-productivity-by-service-per-funded-projects",
-            "14. TRP Service Productivity for Non-Funded Projects (Top 10)" =>  "service-productivity-by-service-per-nonfunded-projects",
+            "12. TRP Service Productivity by Products/Services (Top 25)" =>     "service-productivity-by-service",
+            "13. TRP Service Productivity for Funded Projects (Top 25)" =>      "service-productivity-by-service-per-funded-projects",
+            "14. TRP Service Productivity for Non-Funded Projects (Top 25)" =>  "service-productivity-by-service-per-nonfunded-projects",
             "15. TRP Service Productivity by Products/Services" =>              "service-productivity-by-service-compare-funded-vs-nonfunded-projects",
             //Productivity statistics based on work requests
             "16. Total Fees by Work Requests" =>                                "fees-by-requests",
@@ -96,7 +96,7 @@ class DashboardUtil
             "25. Total Invoiced Amounts for Projects per Pathologist Involved (Top 10)" =>             "fees-by-invoices-per-projects-per-pathologist-involved",
             "26. Total Invoiced Amounts for Funded Projects per Pathologist Involved (Top 10)" =>      "fees-by-invoices-per-funded-projects-per-pathologist-involved",
             "27. Total Invoiced Amounts for Non-Funded Projects per Pathologist Involved (Top 10)" =>  "fees-by-invoices-per-nonfunded-projects-per-pathologist-involved",
-            "28. Total Fees per Involved Pathologist for Non-Funded Projects (Top 10)" =>  "fees-per-nonfunded-projects-per-pathologist-involved",
+            "28. Total Fees per Involved Pathologist for Non-Funded Projects (Top 10)" =>              "fees-per-nonfunded-projects-per-pathologist-involved",
 
             "29. Total Number of Projects per Type" => "projects-per-type",
             "30. Total Number of Work Requests per Business Purpose" => "requests-per-business-purpose",
@@ -170,9 +170,9 @@ class DashboardUtil
     }
 
     //select top 10, BUT make sure the other PIs are still shown as "Other"
-    public function getTopArray($piProjectCountArr, $showOthers=false, $descriptionArr=array(), $maxLen=50) {
+    public function getTopArray($piProjectCountArr, $showOthers=false, $descriptionArr=array(), $maxLen=50, $limit=10) {
         arsort($piProjectCountArr);
-        $limit = 10;
+        //$limit = 10;
         //$limit = 3;
         //$showOthers = true;
         //$otherId = "All other $showOthers combined";
@@ -1026,7 +1026,7 @@ class DashboardUtil
     }
 
     public function getTitleWithTotal($chartName,$total,$prefix=null) {
-        return $chartName . " - " . $prefix . $total . " total";
+        return $chartName . " - " . $prefix . $total . " total quantity";
     }
 
     public function getDiffDaysByProjectState($project,$state) {
@@ -1898,7 +1898,14 @@ class DashboardUtil
 
             $chartName = $this->getTitleWithTotal($chartName,$titleCount);
             $showOther = $this->getOtherStr($showLimited,"products/services");
-            $quantityCountByCategoryTopArr = $this->getTopArray($quantityCountByCategoryArr,$showOther);
+            //                                              $piProjectCountArr, $showOthers=false, $descriptionArr=array(), $maxLen=50, $limit=10
+            $quantityCountByCategoryTopArr = $this->getTopArray(
+                $quantityCountByCategoryArr,    //$dataCountArr
+                $showOther,                     //$showOthers
+                array(),                        //$descriptionArr=array()
+                50,                             //$maxLen=50
+                25                              //$limit
+            );
             $layoutArray = array(
                 'height' => $this->height,
                 'width' => $this->width,
@@ -2017,12 +2024,6 @@ class DashboardUtil
 
             //sort by value in key=>value
             arsort($stackDataSumArray);
-            //echo "<pre>";
-            //print_r($fundedQuantityCountByCategoryArr);
-            //echo "</pre>";
-            //echo "<pre>";
-            //print_r($stackDataSumArray);
-            //echo "</pre>";
             $fundedSortedArr = array();
             $unfundedSortedArr = array();
             foreach($stackDataSumArray as $categoryIndex=>$count) {
@@ -2030,7 +2031,6 @@ class DashboardUtil
                 $fundedSortedArr[$categoryIndex] = $fundedQuantityCountByCategoryArr[$categoryIndex];
                 $unfundedSortedArr[$categoryIndex] = $unFundedQuantityCountByCategoryArr[$categoryIndex];
             }
-            //exit('111');
 
             $chartName = $this->getTitleWithTotal($chartName,$titleCount);
             //$showOther = $this->getOtherStr($showLimited,"projects");
