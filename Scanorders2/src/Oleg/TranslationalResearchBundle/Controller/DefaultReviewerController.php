@@ -842,7 +842,8 @@ class DefaultReviewerController extends Controller
             if( count($msgArr) > 0 ) {
                 $eventType = "Project User Substituted";
                 $msg = implode("<br>", $msgArr);
-                $msgProjects[] = "----- Project ".$project->getOid()." -----<br>".$msg;
+                //$msgProjects[] = "----- Project ".$project->getOid()." -----<br>".$msg;
+                $msgProjects[] = "----- Project ".$transresUtil->getProjectShowUrl($project,$project->getOid(),true)." -----<br>".$msg;
                 $transresUtil->setEventLog($project, $eventType, $msg, $testing);
             }
 
@@ -860,6 +861,7 @@ class DefaultReviewerController extends Controller
     public function getFilteredRequests($form) {
         $em = $this->getDoctrine()->getManager();
         $transresUtil = $this->container->get('transres_util');
+        $transresRequestUtil = $this->container->get('transres_request_util');
 
         $testing = false;
         //$testing = true;
@@ -1007,7 +1009,8 @@ class DefaultReviewerController extends Controller
             if( count($msgArr) > 0 ) {
                 $eventType = "Request User Substituted";
                 $msg = implode("<br>", $msgArr);
-                $msgRequests[] = "----- Request ".$request->getOid()." -----<br>".$msg;
+                //$msgRequests[] = "----- Request ".$request->getOid()." -----<br>".$msg;
+                $msgRequests[] = "----- Request ".$transresRequestUtil->getRequestShowUrl($request,true,$request->getOid(),true)." -----<br>".$msg;
                 $transresUtil->setEventLog($request, $eventType, $msg, $testing);
             }
         }
@@ -1024,6 +1027,7 @@ class DefaultReviewerController extends Controller
     public function getFilteredInvoices($form) {
         $em = $this->getDoctrine()->getManager();
         $transresUtil = $this->container->get('transres_util');
+        $transresRequestUtil = $this->container->get('transres_request_util');
 
         $testing = false;
         //$testing = true;
@@ -1193,7 +1197,8 @@ class DefaultReviewerController extends Controller
             if( count($msgArr) > 0 ) {
                 $eventType = "Invoice User Substituted";
                 $msg = implode("<br>", $msgArr);
-                $msgInvoices[] = "----- Invoice ".$invoice->getOid()." -----<br>".$msg;
+                //$msgInvoices[] = "----- Invoice ".$invoice->getOid()." -----<br>".$msg;
+                $msgInvoices[] = "----- Invoice ".$transresRequestUtil->getInvoiceShowUrl($invoice,true,$invoice->getOid(),true)." -----<br>".$msg;
                 $transresUtil->setEventLog($invoice, $eventType, $msg, $testing);
             }
         }//foreach invoice

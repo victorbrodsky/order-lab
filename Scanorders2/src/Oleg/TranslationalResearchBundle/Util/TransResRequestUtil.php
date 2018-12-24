@@ -1227,7 +1227,7 @@ class TransResRequestUtil
         return null;
     }
 
-    public function getRequestShowUrl($transresRequest,$asHref=true) {
+    public function getRequestShowUrl($transresRequest,$asHref=true,$title=null,$newPage=false) {
         $transresUtil = $this->container->get('transres_util');
         $router = $transresUtil->getRequestContextRouter();
         $url = $router->generate(
@@ -1238,14 +1238,22 @@ class TransResRequestUtil
             UrlGeneratorInterface::ABSOLUTE_URL
         );
 
+        if( !$title ) {
+            $title = $url;
+        }
+
         if( $asHref ) {
-            $url = '<a href="'.$url.'">'.$url.'</a>';
+            if( $newPage ) {
+                $url = '<a target="_blank" href="'.$url.'">'.$title.'</a>';
+            } else {
+                $url = '<a href="'.$url.'">'.$title.'</a>';
+            }
         }
         
         return $url;
     }
 
-    public function getInvoiceShowUrl($invoice,$asHref=true) {
+    public function getInvoiceShowUrl($invoice,$asHref=true,$title=null,$newPage=false) {
         $transresUtil = $this->container->get('transres_util');
         $router = $transresUtil->getRequestContextRouter();
         $url = $router->generate(
@@ -1256,8 +1264,16 @@ class TransResRequestUtil
             UrlGeneratorInterface::ABSOLUTE_URL
         );
 
+        if( !$title ) {
+            $title = $url;
+        }
+
         if( $asHref ) {
-            $url = '<a href="'.$url.'">'.$url.'</a>';
+            if( $newPage ) {
+                $url = '<a target="_blank" href="'.$url.'">'.$title.'</a>';
+            } else {
+                $url = '<a href="'.$url.'">'.$title.'</a>';
+            }
         }
 
         return $url;

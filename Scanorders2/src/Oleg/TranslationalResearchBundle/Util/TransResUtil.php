@@ -3088,7 +3088,7 @@ class TransResUtil
 //        return null;
 //    }
 
-    public function getProjectShowUrl($project) {
+    public function getProjectShowUrl( $project, $title=null, $newPage=false ) {
         $router = $this->getRequestContextRouter();
         $projectUrl = $router->generate(
             'translationalresearch_project_show',
@@ -3098,7 +3098,15 @@ class TransResUtil
             UrlGeneratorInterface::ABSOLUTE_URL
         );
 
-        $projectUrl = '<a href="'.$projectUrl.'">'.$projectUrl.'</a>';
+        if( !$title ) {
+            $title = $projectUrl;
+        }
+
+        if( $newPage ) {
+            $projectUrl = '<a target="_blank" href="'.$projectUrl.'">'.$title.'</a>';
+        } else {
+            $projectUrl = '<a href="'.$projectUrl.'">'.$title.'</a>';
+        }
 
         return $projectUrl;
     }
