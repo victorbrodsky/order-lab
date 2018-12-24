@@ -1781,7 +1781,7 @@ class RequestController extends Controller
             $dql->andWhere("principalInvestigators.id IN (:principalInvestigators)");
             $principalInvestigatorsIdsArr = array();
             foreach($principalInvestigators as $principalInvestigator) {
-                echo "PI=".$principalInvestigator."<br>";
+                //echo "PI=".$principalInvestigator."; id=".$principalInvestigator->getId()."<br>";
                 $principalInvestigatorsIdsArr[] = $principalInvestigator->getId();
             }
             $dqlParameters["principalInvestigators"] = $principalInvestigatorsIdsArr;   //implode(",",$principalInvestigatorsIdsArr);
