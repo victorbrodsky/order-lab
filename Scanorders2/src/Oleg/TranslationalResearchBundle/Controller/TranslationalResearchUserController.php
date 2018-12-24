@@ -95,6 +95,10 @@ class TranslationalResearchUserController extends UserController
             //$user->addRole("ROLE_TRANSRES_APCP");
             $user->addRole("ROLE_TRANSRES_REQUESTER_APCP");
         }
+        if( $otherUserParam == "hematopathology_ap-cp" ) {
+            $user->addRole("ROLE_TRANSRES_REQUESTER_HEMATOPATHOLOGY");
+            $user->addRole("ROLE_TRANSRES_REQUESTER_APCP");
+        }
 
         //$user->addRole("ROLE_TRANSRES_REQUESTER");
 
@@ -103,6 +107,8 @@ class TranslationalResearchUserController extends UserController
         if( $environment != 'live' ) {
             $user->addRole('ROLE_TESTER');
         }
+
+        $user->addRole('ROLE_USERDIRECTORY_OBSERVER');
 
         return true;
     }

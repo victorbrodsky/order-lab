@@ -67,17 +67,18 @@ class SubstituteUserType extends AbstractType
         ));
 
         //Preloaded (must test a user generation with roles according to the selected project specialty)
-        //$sitename = "'translationalresearch'";
-        //$otherUserParam = "''";
-        //$addUserOnFly = ' (<a href="javascript:void(0)" onclick="constructNewUserModal(this,' . $sitename . ','.$otherUserParam.');">Add New</a>)';
+        $sitename = "'translationalresearch'";
+        $otherUserParam = "'hematopathology_ap-cp'";
+        $addUserOnFly = ' (<a href="javascript:void(0)" onclick="constructNewUserModal(this,' . $sitename . ','.$otherUserParam.');">Add New</a>)';
         $builder->add( 'replaceUser', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
             //'label'=> "Replace with the following user name (Add New):",
-            //'label'=> "Replace with the following user name$addUserOnFly:",
-            'label'=> "Replace with the following user name:",
+            'label'=> "Replace with the following user name$addUserOnFly:",
+            //'label'=> "Replace with the following user name:",
             'required'=> false,
             'multiple' => false,
-            'attr' => array('class'=>'combobox combobox-width'),
+            //'attr' => array('class'=>'combobox combobox-width'),
+            'attr' => array('class'=>'combobox combobox-width add-new-user-on-enter', 'data-otheruserparam'=>$otherUserParam),
             'query_builder' => $this->params['transresUtil']->userQueryBuilder()
         ));
 

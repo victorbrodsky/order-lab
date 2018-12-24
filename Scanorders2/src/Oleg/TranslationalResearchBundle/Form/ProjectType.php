@@ -280,7 +280,7 @@ class ProjectType extends AbstractType
             //$addUserOnFly = ' (<a href="javascript:void(0)" onclick="addNewUserOnFly(this,' . $sitename . ','.$otherUserParam.');">Add New</a>)';
 
             //Original modal with "Loading..."
-            $addUserOnFly = ' (<a href="javascript:void(0)" data-toggle="modal" data-target="#new-user-temp-modal" onclick="addNewUserOnFly(this,' . $sitename . ','.$otherUserParam.');">Add New</a>)';
+            //$addUserOnFly = ' (<a href="javascript:void(0)" data-toggle="modal" data-target="#new-user-temp-modal" onclick="addNewUserOnFly(this,' . $sitename . ','.$otherUserParam.');">Add New</a>)';
 
             //$addUserOnFly = ' (<a href="javascript:void(0)" data-toggle="modal" data-target="#user-add-new-user">Add New</a>)';
 

@@ -2114,7 +2114,16 @@ class UserController extends Controller
         return $response;
     }
     public function processOtherUserParam($user,$otherUserParam) {
-        return false;
+
+        $userSecUtil = $this->container->get('user_security_utility');
+        $environment = $userSecUtil->getSiteSettingParameter('environment');
+        if( $environment != 'live' ) {
+            $user->addRole('ROLE_TESTER');
+        }
+
+        $user->addRole('ROLE_USERDIRECTORY_OBSERVER');
+        
+        return true;
     }
 
 
