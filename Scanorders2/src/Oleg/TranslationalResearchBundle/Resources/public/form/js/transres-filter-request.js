@@ -24,7 +24,7 @@ $(document).ready(function() {
     initTypeaheadTransresProjectSearch();
 
     //console.log("load users");
-    //TODO: make one ajax query
+    //make only one ajax query
     //getComboboxGeneric(
     // holder,
     // name,
@@ -47,15 +47,12 @@ $(document).ready(function() {
         "employees",        //sitename
         null,               //force
         null,               //placeholder
-        false               //thisAsyncflag
+        false               //thisAsyncflag. Async - get array of users (_genericusers) asynchronous.
     );
-
-    //getComboboxGeneric(holder,'billingcontact',_genericusers,false,'genericusers/');
-    //getComboboxGeneric(holder,'pis',_genericusers,true,'genericusers/');
-
+    //Now use _genericusers to populate other user select boxes
     //populateSelectCombobox( targetid, globalDataArray, placeholder, multipleFlag );
-    populateSelectCombobox( $('.ajax-combobox-billingcontact'), _genericusers, null, false );
-    populateSelectCombobox( $('.ajax-combobox-pis'), _genericusers, null, true );
+    populateSelectCombobox( $('.ajax-combobox-billingcontact'), _genericusers, true, false );
+    populateSelectCombobox( $('.ajax-combobox-pis'), _genericusers, true, true );
 });
 
 

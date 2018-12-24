@@ -1785,7 +1785,7 @@ class RequestController extends Controller
             }
             $dql->andWhere("principalInvestigators.id IN (:principalInvestigators)");
             $dqlParameters["principalInvestigators"] = $principalInvestigatorsIdsArr;   //implode(",",$principalInvestigatorsIdsArr);
-            //$dql->andWhere("principalInvestigators.id = 221"); //379
+            //$dql->andWhere("principalInvestigators.id = 379"); //signupUser9 379
             $advancedFilter++;
         }
 
