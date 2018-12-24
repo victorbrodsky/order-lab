@@ -688,9 +688,6 @@ class DashboardUtil
         $layoutArray['title'] = $title;
         $layoutArray['barmode'] = 'stack';
 
-        //$layoutArray['categoryorder'] = 'array';
-        //$layoutArray['categoryarray'] = array('TRP-1003 Unstained slides from paraffin-embedded or frozen tissue','TRP-1002 Embedding frozen tissue in OCT block');
-
         $stackDataArray = array();
         //$stackDataSumArray = array();
         $xAxis = "x";
@@ -738,39 +735,6 @@ class DashboardUtil
         if( count($values) == 0 ) {
             return array();
             //return array('error'=>"No data found corresponding to this chart parameters");
-        }
-
-        $testing = false;
-        //$testing = true;
-        if($testing) {
-            //sort $stackDataArray by value
-
-            echo "<pre>";
-            print_r($stackDataArray);
-            echo "</pre>";
-
-//          echo "<pre>";
-//          print_r($stackDataSumArray);
-//          echo "</pre>";
-            arsort($stackDataSumArray);
-            echo "<pre>";
-            print_r($stackDataSumArray);
-            echo "</pre>";
-
-            foreach ($stackDataSumArray as $label => $value) {
-
-                //foreach ($stackDataArray as $stackData) {
-                    $stackData = $stackDataArray[0];
-                    foreach ($stackData as $key => $data) {
-                        if ($key == $xAxis) {
-                            //echo "key=$key=>".$data."<br>";
-                        }
-                    }
-
-                //}
-
-            }
-            exit('111');
         }
 
         $chartsArray = array(
@@ -2052,14 +2016,21 @@ class DashboardUtil
             }//foreach $requests
 
             //sort by value in key=>value
-//            arsort($stackDataSumArray);
-//            echo "<pre>";
-//            print_r($fundedQuantityCountByCategoryArr);
-//            echo "</pre>";
-//            foreach($stackDataSumArray as $categoryIndex=>$count) {
-//                echo $categoryIndex."=".$count."<br>";
-//            }
-//            exit('111');
+            arsort($stackDataSumArray);
+            //echo "<pre>";
+            //print_r($fundedQuantityCountByCategoryArr);
+            //echo "</pre>";
+            //echo "<pre>";
+            //print_r($stackDataSumArray);
+            //echo "</pre>";
+            $fundedSortedArr = array();
+            $unfundedSortedArr = array();
+            foreach($stackDataSumArray as $categoryIndex=>$count) {
+                //echo $categoryIndex."=".$count."<br>";
+                $fundedSortedArr[$categoryIndex] = $fundedQuantityCountByCategoryArr[$categoryIndex];
+                $unfundedSortedArr[$categoryIndex] = $unFundedQuantityCountByCategoryArr[$categoryIndex];
+            }
+            //exit('111');
 
             $chartName = $this->getTitleWithTotal($chartName,$titleCount);
             //$showOther = $this->getOtherStr($showLimited,"projects");
@@ -2067,8 +2038,8 @@ class DashboardUtil
             //$unFundedQuantityCountByCategoryTopArr = $this->getTopArray($unFundedQuantityCountByCategoryArr,$showOther);
 
             $combinedTrpData = array();
-            $combinedTrpData['Funded'] = $fundedQuantityCountByCategoryArr; //$fundedQuantityCountByCategoryTopArr;  //$fundedQuantityCountByCategoryArr;
-            $combinedTrpData['Not-Funded'] = $unFundedQuantityCountByCategoryArr; //$unFundedQuantityCountByCategoryTopArr;    //$unFundedQuantityCountByCategoryArr;
+            $combinedTrpData['Funded'] = $fundedSortedArr; //$fundedQuantityCountByCategoryArr;
+            $combinedTrpData['Not-Funded'] = $unfundedSortedArr; //$unFundedQuantityCountByCategoryArr;
             $chartsArray = $this->getStackedChart($combinedTrpData, $chartName, "stack");
         }
 
