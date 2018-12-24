@@ -839,7 +839,7 @@
                         <div id="modal-invoice-error-{{ invoice.id }}" class="alert alert-danger" style="display: none;"></div>
                     </p>
 
-                    {% set statuses = transres_request_util.getInvoiceStatuses() %}
+                    {% set statuses = transres_request_util.getInvoiceStatuses(false) %}
                     <div id="updateInvoiceBtnHolder-{{ invoice.id }}" class="center-block updateInvoiceBtnHolder">
                     {% for status in statuses %}
                         {% set btnType = "primary" %}

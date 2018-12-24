@@ -2638,8 +2638,8 @@ class TransResRequestUtil
         return null;
     }
 
-    public function getInvoiceStatuses() {
-        return array(
+    public function getInvoiceStatuses($withNotRealStatus=true) {
+        $statuses = array(
             "Pending" => "Pending",
             "Unpaid/Issued" => "Unpaid/Issued",
             "Paid in Full" => "Paid in Full",
@@ -2649,8 +2649,13 @@ class TransResRequestUtil
             "Canceled" => "Canceled",
             //"Latest Versions of All Invoices" => "Latest Versions of All Invoices",
             //"Latest Versions of All Invoices Except Canceled" => "Latest Versions of All Invoices Except Canceled"
-            "All Invoices Except Canceled" => "All Invoices Except Canceled"
+            //"All Invoices Except Canceled" => "All Invoices Except Canceled"
         );
+
+        if( $withNotRealStatus ) {
+            $statuses["All Invoices Except Canceled"] = "All Invoices Except Canceled";
+        }
+        return $statuses;
     }
 
     //get Issued Invoices
