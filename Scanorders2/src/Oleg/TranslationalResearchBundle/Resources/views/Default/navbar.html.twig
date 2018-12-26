@@ -344,8 +344,23 @@
                                     {#>Invoice statistics</a>#}
                                 {#</li>#}
 
+                                {#<li>#}
+                                    {#<a href="{{ path(translationalresearch_sitename~'_dashboard_compare',{'filter[startDate]':startDate,'filter[endDate]':endDate}) }}"#}
+                                    {#>Comparison statistics</a>#}
+                                {#</li>#}
+
                                 <li>
-                                    <a href="{{ path(translationalresearch_sitename~'_dashboard_compare',{'filter[startDate]':startDate,'filter[endDate]':endDate}) }}"
+                                    <a href="{{ path(translationalresearch_sitename~'_dashboard_choices',
+                                    {
+                                        'filter[startDate]':startDate,
+                                        'filter[endDate]':endDate,
+                                        'filter[projectSpecialty]':0,
+                                        'filter[chartType][0]':'compare-projectspecialty-pis',
+                                        'filter[chartType][1]':'compare-projectspecialty-projects',
+                                        'filter[chartType][2]':'compare-projectspecialty-projects-stack',
+                                        'filter[chartType][3]':'compare-projectspecialty-requests',
+                                        'filter[chartType][4]':'compare-projectspecialty-invoices',
+                                    }) }}"
                                     >Comparison statistics</a>
                                 </li>
 

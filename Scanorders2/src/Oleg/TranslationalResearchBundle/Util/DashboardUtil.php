@@ -112,6 +112,12 @@ class DashboardUtil
             "39. Turn-around Statistics: Top 10 PIs with highest total unpaid, overdue invoices" => "turn-around-statistics-pis-with-highest-total-unpaid-invoices",
             "40. Turn-around Statistics: Top 10 PIs combining index (delay in months * total) for unpaid, overdue invoices" => "turn-around-statistics-pis-combining-total-delayed-unpaid-invoices",
 
+            "41. Number of PIs in AP/CP vs Hematopathology" => "compare-projectspecialty-pis",
+            "42. Number of AP/CP vs Hematopathology Project Requests" => "compare-projectspecialty-projects",
+            "43. Number of AP/CP vs Hematopathology Project Requests" => "compare-projectspecialty-projects-stack",
+            "44. Number of AP/CP vs Hematopathology Work Requests" => "compare-projectspecialty-requests",
+            "45. Number of AP/CP vs Hematopathology Invoices" => "compare-projectspecialty-invoices",
+
             "" => "",
             "" => "",
             "" => "",
@@ -1259,6 +1265,33 @@ class DashboardUtil
 
         return $issued;
     }
+
+    public function getProjectRequestInvoiceChart($apcpProjects,$resStatArr,$startDateLabel) {
+        $transresRequestUtil = $this->container->get('transres_request_util');
+        //get requests, invoices
+
+        $invoiceCount = 0;
+        $requestCount = 0;
+        foreach($apcpProjects as $project) {
+            foreach($project->getRequests() as $request) {
+                //$requestArr[] = $request;
+                $requestCount++;
+                $latestInvoice = $transresRequestUtil->getLatestInvoice($request);
+                if( $latestInvoice ) {
+                    $invoiceCount++;
+                }
+            }
+        }
+        //echo "invoiceCount=$invoiceCount<br>";
+
+        $resStatArr['projects'][$startDateLabel] = count($apcpProjects);
+        $resStatArr['requests'][$startDateLabel] = $requestCount;
+        $resStatArr['invoices'][$startDateLabel] = $invoiceCount;
+
+        return $resStatArr;
+    }
+
+
 
 
 
@@ -2840,8 +2873,6 @@ class DashboardUtil
                 //echo "<br>";
                 //echo "transRequests=".count($transRequests)." (".$startDateLabel.")<br>";
 
-                //$apcpResultStatArr = $this->getProjectRequestInvoiceChart($transRequests,$apcpResultStatArr,$startDateLabel);
-
                 $daysTotal = 0;
                 $count = 0;
 
@@ -3201,8 +3232,6 @@ class DashboardUtil
                 //echo "<br>";
                 //echo "invoices=".count($invoices)." (".$startDateLabel.")<br>";
 
-                //$apcpResultStatArr = $this->getProjectRequestInvoiceChart($transRequests,$apcpResultStatArr,$startDateLabel);
-
                 $daysTotal = 0;
                 $count = 0;
 
@@ -3488,10 +3517,222 @@ class DashboardUtil
             $chartsArray = $this->getChart($pisCombinedArrTop, $chartName,'pie',$layoutArray," : $");
         }
 
+        //"41. Number of PIs in AP/CP vs Hematopathology" => "compare-projectspecialty-pis",
+        if( $chartType == "compare-projectspecialty-pis" ) {
+            $transresUtil = $this->container->get('transres_util');
+            $specialtyApcpObject = $transresUtil->getSpecialtyObject("ap-cp");
+            $specialtyHemaObject = $transresUtil->getSpecialtyObject("hematopathology");
+
+            //$startDate,$endDate,$projectSpecialties,$states
+            $apcpProjects = $this->getProjectsByFilter($startDate,$endDate,array($specialtyApcpObject));
+            $hemaProjects = $this->getProjectsByFilter($startDate,$endDate,array($specialtyHemaObject));
+
+            $apcpPisArr = array();
+            $hemaPisArr = array();
+            foreach($apcpProjects as $project) {
+                foreach($project->getPrincipalInvestigators() as $pi) {
+                    $apcpPisArr[] = $pi->getId();
+                }
+            }
+            foreach($hemaProjects as $project) {
+                foreach($project->getPrincipalInvestigators() as $pi) {
+                    $hemaPisArr[] = $pi->getId();
+                }
+            }
+
+            $apcpPisArr = array_unique($apcpPisArr);
+            $hemaPisArr = array_unique($hemaPisArr);
+
+            $pisDataArr = array();
+            $pisDataArr['AP/CP PIs'] = count($apcpPisArr);
+            $pisDataArr['Hematopathology PIs'] = count($hemaPisArr);
+
+            $chartsArray = $this->getChart($pisDataArr, $chartName,'pie',$layoutArray);
+        }
+
+        //"42. Number of AP/CP vs Hematopathology Project Requests" => "compare-projectspecialty-projects",
+        if( $chartType == "compare-projectspecialty-projects" ) {
+            $transresUtil = $this->container->get('transres_util');
+            $specialtyApcpObject = $transresUtil->getSpecialtyObject("ap-cp");
+            $specialtyHemaObject = $transresUtil->getSpecialtyObject("hematopathology");
+
+            //$startDate,$endDate,$projectSpecialties,$states
+            $apcpProjects = $this->getProjectsByFilter($startDate,$endDate,array($specialtyApcpObject));
+            $hemaProjects = $this->getProjectsByFilter($startDate,$endDate,array($specialtyHemaObject));
+
+            $apcpPisArr = array();
+            $hemaPisArr = array();
+            foreach($apcpProjects as $project) {
+                foreach($project->getPrincipalInvestigators() as $pi) {
+                    $apcpPisArr[] = $pi->getId();
+                }
+            }
+            foreach($hemaProjects as $project) {
+                foreach($project->getPrincipalInvestigators() as $pi) {
+                    $hemaPisArr[] = $pi->getId();
+                }
+            }
+
+            $projectsDataArr = array();
+            $projectsDataArr['AP/CP Project Requests'] = count($apcpProjects);
+            $projectsDataArr['Hematopathology Project Requests'] = count($hemaProjects);
+
+            $chartsArray = $this->getChart($projectsDataArr, $chartName,'pie',$layoutArray);
+        }
+
+        //"43. Number of AP/CP vs Hematopathology Project Requests" => "compare-projectspecialty-projects-stack",
+        if( $chartType == "compare-projectspecialty-projects-stack" ) {
+            $transresUtil = $this->container->get('transres_util');
+            $specialtyApcpObject = $transresUtil->getSpecialtyObject("ap-cp");
+            $specialtyHemaObject = $transresUtil->getSpecialtyObject("hematopathology");
+
+            $apcpResultStatArr = array();
+            $hemaResultStatArr = array();
+
+            //get startDate and add 1 month until the date is less than endDate
+            $startDate->modify( 'first day of last month' );
+            do {
+                $startDateLabel = $startDate->format('M-Y');
+                $thisEndDate = clone $startDate;
+                $thisEndDate->modify( 'first day of next month' );
+                //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
+                //$startDate,$endDate,$projectSpecialties,$states,$addOneEndDay
+                $apcpProjects = $this->getProjectsByFilter($startDate,$thisEndDate,array($specialtyApcpObject),null,false);
+                $hemaProjects = $this->getProjectsByFilter($startDate,$thisEndDate,array($specialtyHemaObject),null,false);
+                $startDate->modify( 'first day of next month' );
+
+                $apcpResultStatArr = $this->getProjectRequestInvoiceChart($apcpProjects,$apcpResultStatArr,$startDateLabel);
+                $hemaResultStatArr = $this->getProjectRequestInvoiceChart($hemaProjects,$hemaResultStatArr,$startDateLabel);
+
+            } while( $startDate < $endDate );
+
+            //AP/CP
+            $apcpProjectsData = array();
+            foreach($apcpResultStatArr['projects'] as $date=>$value ) {
+                $apcpProjectsData[$date] = $value;
+            }
+
+            //Hema
+            $hemaProjectsData = array();
+            foreach($hemaResultStatArr['projects'] as $date=>$value ) {
+                $hemaProjectsData[$date] = $value;
+            }
+
+            //Projects
+            $combinedProjectsData = array();
+            $combinedProjectsData['AP/CP'] = $apcpProjectsData;
+            $combinedProjectsData['Hematopathology'] = $hemaProjectsData;
+            $chartsArray = $this->getStackedChart($combinedProjectsData, $chartName, "stack");
+        }
+
+        //"44. Number of AP/CP vs Hematopathology Work Requests" => "compare-projectspecialty-requests",
+        if( $chartType == "compare-projectspecialty-requests" ) {
+            $transresUtil = $this->container->get('transres_util');
+            $specialtyApcpObject = $transresUtil->getSpecialtyObject("ap-cp");
+            $specialtyHemaObject = $transresUtil->getSpecialtyObject("hematopathology");
+
+            $apcpResultStatArr = array();
+            $hemaResultStatArr = array();
+
+            //get startDate and add 1 month until the date is less than endDate
+            $startDate->modify( 'first day of last month' );
+            do {
+                $startDateLabel = $startDate->format('M-Y');
+                $thisEndDate = clone $startDate;
+                $thisEndDate->modify( 'first day of next month' );
+                //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
+                //$startDate,$endDate,$projectSpecialties,$states,$addOneEndDay
+                $apcpProjects = $this->getProjectsByFilter($startDate,$thisEndDate,array($specialtyApcpObject),null,false);
+                $hemaProjects = $this->getProjectsByFilter($startDate,$thisEndDate,array($specialtyHemaObject),null,false);
+                $startDate->modify( 'first day of next month' );
+
+                $apcpResultStatArr = $this->getProjectRequestInvoiceChart($apcpProjects,$apcpResultStatArr,$startDateLabel);
+                $hemaResultStatArr = $this->getProjectRequestInvoiceChart($hemaProjects,$hemaResultStatArr,$startDateLabel);
+
+            } while( $startDate < $endDate );
+
+            //AP/CP
+            $apcpRequestsData = array();
+            foreach($apcpResultStatArr['requests'] as $date=>$value ) {
+                $apcpRequestsData[$date] = $value;
+            }
+
+            //Hema
+            $hemaRequestsData = array();
+            foreach($hemaResultStatArr['requests'] as $date=>$value ) {
+                $hemaRequestsData[$date] = $value;
+            }
+
+            //Requests
+            $combinedRequestsData = array();
+            $combinedRequestsData['AP/CP'] = $apcpRequestsData;
+            $combinedRequestsData['Hematopathology'] = $hemaRequestsData;
+            $chartsArray = $this->getStackedChart($combinedRequestsData, $chartName, "stack");
+        }
+
+        //"45. Number of AP/CP vs Hematopathology Invoices" => "compare-projectspecialty-invoices",
+        if( $chartType == "compare-projectspecialty-invoices" ) {
+            $transresUtil = $this->container->get('transres_util');
+            $specialtyApcpObject = $transresUtil->getSpecialtyObject("ap-cp");
+            $specialtyHemaObject = $transresUtil->getSpecialtyObject("hematopathology");
+
+            $apcpResultStatArr = array();
+            $hemaResultStatArr = array();
+
+            //get startDate and add 1 month until the date is less than endDate
+            $startDate->modify( 'first day of last month' );
+            do {
+                $startDateLabel = $startDate->format('M-Y');
+                $thisEndDate = clone $startDate;
+                $thisEndDate->modify( 'first day of next month' );
+                //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
+                //$startDate,$endDate,$projectSpecialties,$states,$addOneEndDay
+                $apcpProjects = $this->getProjectsByFilter($startDate,$thisEndDate,array($specialtyApcpObject),null,false);
+                $hemaProjects = $this->getProjectsByFilter($startDate,$thisEndDate,array($specialtyHemaObject),null,false);
+                $startDate->modify( 'first day of next month' );
+
+                $apcpResultStatArr = $this->getProjectRequestInvoiceChart($apcpProjects,$apcpResultStatArr,$startDateLabel);
+                $hemaResultStatArr = $this->getProjectRequestInvoiceChart($hemaProjects,$hemaResultStatArr,$startDateLabel);
+
+            } while( $startDate < $endDate );
+
+            //AP/CP
+            $apcpInvoicesData = array();
+            foreach($apcpResultStatArr['invoices'] as $date=>$value ) {
+                $apcpInvoicesData[$date] = $value;
+            }
+
+            //Hema
+            $hemaInvoicesData = array();
+            foreach($hemaResultStatArr['invoices'] as $date=>$value ) {
+                $hemaInvoicesData[$date] = $value;
+            }
+
+            //Invoices
+            $combinedInvoicesData = array();
+            $combinedInvoicesData['AP/CP'] = $apcpInvoicesData;
+            $combinedInvoicesData['Hematopathology'] = $hemaInvoicesData;
+            $chartsArray = $this->getStackedChart($combinedInvoicesData, $chartName, "stack");
+        }
+
+
         if( $chartType == "" ) {
 
         }
+        if( $chartType == "" ) {
 
+        }
+        if( $chartType == "" ) {
+
+        }
+        if( $chartType == "" ) {
+
+        }if( $chartType == "" ) {
+
+        }
+        if( $chartType == "" ) {
+
+        }
         if( $chartType == "" ) {
 
         }
