@@ -3679,6 +3679,7 @@ class DashboardUtil
 
             $apcpResultStatArr = array();
             $hemaResultStatArr = array();
+            $datesArr = array();
 
             //get startDate and add 1 month until the date is less than endDate
             $startDate->modify( 'first day of last month' );
@@ -3686,6 +3687,7 @@ class DashboardUtil
                 $startDateLabel = $startDate->format('M-Y');
                 $thisEndDate = clone $startDate;
                 $thisEndDate->modify( 'first day of next month' );
+                $datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
                 //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
                 //$startDate,$endDate,$projectSpecialties,$states,$addOneEndDay
                 $apcpProjects = $this->getProjectsByFilter($startDate,$thisEndDate,array($specialtyApcpObject),null,false);
@@ -3694,25 +3696,57 @@ class DashboardUtil
 
                 $apcpResultStatArr = $this->getProjectRequestInvoiceChart($apcpProjects,$apcpResultStatArr,$startDateLabel);
                 $hemaResultStatArr = $this->getProjectRequestInvoiceChart($hemaProjects,$hemaResultStatArr,$startDateLabel);
-
             } while( $startDate < $endDate );
 
             //AP/CP
             $apcpProjectsData = array();
             foreach($apcpResultStatArr['projects'] as $date=>$value ) {
-                $apcpProjectsData[$date] = $value;
+                //$apcpProjectsData[$date] = $value;
+                $dates = $datesArr[$date];
+                $linkFilterArr = array(
+                    'filter[state][0]' => 'final_approved',
+                    'filter[state][1]' => 'closed',
+                    'filter[startDate]' => $dates['startDate'],
+                    'filter[endDate]' => $dates['endDate'],
+                    'filter[searchProjectType]' => null,
+                    //'filter[projectSpecialty][]' => $specialtyHemaObject->getId(),
+                );
+                $link = $this->container->get('router')->generate(
+                    'translationalresearch_project_index',
+                    $linkFilterArr,
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+                $apcpProjectsData[$date] = array('value'=>$value,'link'=>$link);
             }
 
             //Hema
             $hemaProjectsData = array();
             foreach($hemaResultStatArr['projects'] as $date=>$value ) {
-                $hemaProjectsData[$date] = $value;
+                //$hemaProjectsData[$date] = $value;
+                $dates = $datesArr[$date];
+                $linkFilterArr = array(
+                    'filter[state][0]' => 'final_approved',
+                    'filter[state][1]' => 'closed',
+                    'filter[startDate]' => $dates['startDate'],
+                    'filter[endDate]' => $dates['endDate'],
+                    'filter[searchProjectType]' => null,
+                    //'filter[projectSpecialty][]' => $specialtyHemaObject->getId(),
+                );
+                $link = $this->container->get('router')->generate(
+                    'translationalresearch_project_index',
+                    $linkFilterArr,
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+                $hemaProjectsData[$date] = array('value'=>$value,'link'=>$link);
             }
 
             //Projects
             $combinedProjectsData = array();
+
             $combinedProjectsData['AP/CP'] = $apcpProjectsData;
+
             $combinedProjectsData['Hematopathology'] = $hemaProjectsData;
+
             $chartsArray = $this->getStackedChart($combinedProjectsData, $chartName, "stack");
         }
 
