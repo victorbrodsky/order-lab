@@ -147,19 +147,7 @@ class DashboardUtil
 
     public function getNumberFormat($number,$digits=null) {
         //$number = 123456789;
-        //return $this->toMoney($number,'');
         return number_format($number,$digits);
-    }
-    function toMoney($val,$symbol='$',$r=2) {
-        $n = $val;
-        $c = is_float($n) ? 1 : number_format($n,$r);
-        $d = '.';
-        $t = ',';
-        $sign = ($n < 0) ? '-' : '';
-        $i = $n=number_format(abs($n),$r);
-        $j = (($j = $i.length) > 3) ? $j % 3 : 0;
-
-        return  $symbol.$sign .($j ? substr($i,0, $j) + $t : '').preg_replace('/(\d{3})(?=\d)/',"$1" + $t,substr($i,$j)) ;
     }
 
     public function getOtherStr( $showLimited, $otherPrefix ) {
@@ -2952,7 +2940,11 @@ class DashboardUtil
                     //$existingDays = $existingArr["value"];
                     $existingDays = $averageDays[$index]["value"];
                     $days = $days + $existingDays;
-                    $averageDays[$index] = array("value"=>$days,"link"=>$link);
+                    //$averageDays[$index] = array("value"=>$days,"link"=>$link);
+                }
+                //minimum 1 day
+                if( !$days || $days == 0 ) {
+                    $days = 1;
                 }
                 //$averageDays[$index] = $days;
                 $averageDays[$index] = array("value"=>$days,"link"=>$link);
@@ -3025,6 +3017,10 @@ class DashboardUtil
                     if( $category ) {
                         $categoryIndex = $category->getShortInfo();
                         $weightedQuantity = $weight * $quantity;
+                        //minimum 1 day
+                        if( !$weightedQuantity || $weightedQuantity == 0 ) {
+                            $weightedQuantity = 1;
+                        }
                         $requestCategoryWeightQuantityArr[$categoryIndex][$index] = $weightedQuantity;
                         //$requestCategoryWeightQuantityArr[$categoryIndex][$index] = array("value"=>$weightedQuantity,"link"=>$link);
                     }
