@@ -23,10 +23,12 @@ function transresGetCharts() {
     var projectSpecialty = $("#filter_projectSpecialty").select2("val");
     //console.log("projectSpecialty="+projectSpecialty);
 
-    //filter_chartType
     var chartTypes = $("#filter_chartType").select2("val");
-    //console.log("chartTypes:");
-    //console.log(chartTypes);
+
+    //filter_chartType
+    var productservice = $("#filter_category").select2("val");
+    //console.log("productservice:");
+    //console.log(productservice);
 
     //var showLimited = $("#filter_showLimited:checked").val();
     //console.log("showLimited="+showLimited);
@@ -49,7 +51,7 @@ function transresGetCharts() {
             url: url,
             timeout: _ajaxTimeout,
             type: "GET",
-            data: {startDate:startDate, endDate:endDate, projectSpecialty:projectSpecialty, showLimited:showLimited, chartType:chartIndex },
+            data: {startDate:startDate, endDate:endDate, projectSpecialty:projectSpecialty, showLimited:showLimited, chartType:chartIndex, productservice:productservice },
             dataType: 'json',
             async: false //use synchronous => wait for response.
         }).success(function(chartData) {

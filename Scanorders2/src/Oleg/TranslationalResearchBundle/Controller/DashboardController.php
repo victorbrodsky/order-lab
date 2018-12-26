@@ -126,7 +126,8 @@ class DashboardController extends Controller
             "projectSpecialty" => true,
             "projectSpecialties" => $projectSpecialtiesWithAll,
             "compareType" => false,
-            "showLimited" => true
+            "showLimited" => true,
+            "category" => true
         );
 
         if( $withCompareType ) {

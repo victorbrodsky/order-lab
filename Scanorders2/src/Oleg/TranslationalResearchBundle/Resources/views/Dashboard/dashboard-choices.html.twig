@@ -47,6 +47,14 @@
                 <button id="filter-btn" type="button" class="btn btn-default" onclick="transresGetCharts()" data-spinner-color="{{ spinnerColor }}">Filter</button>
             </div>
         </div>
+        <br>
+        <div class="row">
+            <div class="col-xs-10">
+                {% if filterform.category is defined %}
+                    {{ form_widget(filterform.category) }}
+                {% endif %}
+            </div>
+        </div>
         {{ form_end(filterform) }}
     </div>
 

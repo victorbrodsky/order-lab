@@ -132,7 +132,7 @@ class DashboardTurnAroundStatController extends DashboardController
             $categoryStr = null;
         }
 
-        $chartsArray = $this->addChart( $chartsArray, $averageDays, "30. Turn-around Statistics: Average number of days to complete a Work Request".$categoryStr, "bar");
+        $chartsArray = $this->addChart( $chartsArray, $averageDays, "31. Turn-around Statistics: Average number of days to complete a Work Request".$categoryStr, "bar");
 
 
         return array(

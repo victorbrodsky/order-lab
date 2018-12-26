@@ -126,6 +126,7 @@ class FilterDashboardType extends AbstractType
         }
 
         if( isset($this->params['category']) && $this->params['category'] ) {
+            //productservice
             $builder->add('category', EntityType::class, array(
                 'class' => 'OlegTranslationalResearchBundle:RequestCategoryTypeList',
                 'label' => false,

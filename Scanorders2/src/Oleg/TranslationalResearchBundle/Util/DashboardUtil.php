@@ -857,7 +857,7 @@ class DashboardUtil
 
         return $projects;
     }
-    public function getRequestsByAdvanceFilter($startDate, $endDate, $projectSpecialties, $category, $states=null, $addOneEndDay=true) {
+    public function getRequestsByAdvanceFilter($startDate, $endDate, $projectSpecialties, $productservice, $states=null, $addOneEndDay=true) {
         $em = $this->em;
         //$transresUtil = $this->container->get('transres_util');
 
@@ -908,11 +908,11 @@ class DashboardUtil
             $dqlParameters["projectSpecialtyIdsArr"] = $projectSpecialtyIdsArr;
         }
 
-        if( $category ) {
+        if( $productservice ) {
             $dql->leftJoin('request.products','products');
             $dql->leftJoin('products.category','category');
             $dql->andWhere("category.id = :categoryId");
-            $dqlParameters["categoryId"] = $category->getId();
+            $dqlParameters["categoryId"] = $productservice; //->getId();
         }
 
         $query = $em->createQuery($dql);
@@ -1271,6 +1271,8 @@ class DashboardUtil
         $projectSpecialty = $request->query->get('projectSpecialty');
         $showLimited = $request->query->get('showLimited');
         $chartType = $request->query->get('chartType');
+        $productservice = $request->query->get('productservice');
+        //echo "0productservice=".$productservice."<br>";
 
         if( $startDate ) {
             $startDate = date_create_from_format('m/d/Y', $startDate); //10/31/2017 to DateTime
@@ -2832,9 +2834,7 @@ class DashboardUtil
                 $thisEndDate = clone $startDate;
                 $thisEndDate->modify( 'first day of next month' );
                 //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y").": ";
-                $category = null;
-                $transRequests = $this->getRequestsByAdvanceFilter($startDate,$thisEndDate,$projectSpecialtyObjects,$category,$statuses);
-                //$transRequests = $this->getRequestsByAdvanceFilter($startDate,$thisEndDate,$projectSpecialtyObjects,$category);
+                $transRequests = $this->getRequestsByAdvanceFilter($startDate,$thisEndDate,$projectSpecialtyObjects,$productservice,$statuses);
                 $startDate->modify( 'first day of next month' );
 
                 //echo "<br>";
@@ -2901,7 +2901,7 @@ class DashboardUtil
 
             //$statuses = array("completed","completedNotified");
             $statuses = array("completedNotified");
-            $transRequests = $this->getRequestsByAdvanceFilter($startDate,$thisEndDate,$projectSpecialtyObjects,$category,$statuses);
+            $transRequests = $this->getRequestsByAdvanceFilter($startDate,$thisEndDate,$projectSpecialtyObjects,$productservice,$statuses);
 
             $daysTotal = 0;
             //$count = 0;
@@ -2969,7 +2969,7 @@ class DashboardUtil
             $averageDays = array();
 
             $statuses = array("completedNotified");
-            $transRequests = $this->getRequestsByAdvanceFilter($startDate, $thisEndDate, $projectSpecialtyObjects, $category, $statuses);
+            $transRequests = $this->getRequestsByAdvanceFilter($startDate, $thisEndDate, $projectSpecialtyObjects, $productservice, $statuses);
 
             $requestCategoryWeightQuantityArr = array();
 
@@ -3196,7 +3196,6 @@ class DashboardUtil
                 $thisEndDate->modify( 'first day of next month' );
                 //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y").": ";
                 $invoices = $this->getInvoicesByFilter($startDate, $endDate, $projectSpecialtyObjects, $invoiceStates);
-                //$transRequests = $this->getRequestsByAdvanceFilter($startDate,$thisEndDate,$projectSpecialtyObjects,$category);
                 $startDate->modify( 'first day of next month' );
 
                 //echo "<br>";
