@@ -434,19 +434,8 @@
                                     }) }}"
                                     >Turn-around statistics</a>
                                 </li>
-                                <li>
-                                    <a href="{{ path(translationalresearch_sitename~'_dashboard_turn_around_stat',
-                                    {
-                                        'filter[startDate]':startDate,
-                                        'filter[endDate]':endDate,
-                                        'filter[projectSpecialty]':0,
-                                        'filter[category]':0
-                                    }) }}"
-                                    >30. Turn-around Statistics: Average number of days to complete a Work Request with product/service filter</a>
-                                </li>
 
                                 {% if allProjectIdsArr is defined %}
-                                    {#<hr>#}
                                     <hr style="margin-top: 10px; margin-bottom: 10px;">
                                     <li>
                                         <a href="{{ path('translationalresearch_download_projects_excel',{'ids':allProjectIdsArr|join(','),'limit':500}) }}">
