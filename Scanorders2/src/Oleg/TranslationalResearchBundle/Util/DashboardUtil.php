@@ -508,7 +508,7 @@ class DashboardUtil
 
                     if( count($projectSpecialtyObjects) > 0 ) {
                         $projectSpecialtyObject = $projectSpecialtyObjects[0];
-                        $linkFilterArr['filter[projectSpecialty]'] = $projectSpecialtyObject->getId();
+                        $linkFilterArr['filter[projectSpecialty][]'] = $projectSpecialtyObject->getId();
                     }
 
                     if( strpos($id, $this->otherSearchStr) !== false && is_array($objectid) ) {
@@ -560,7 +560,7 @@ class DashboardUtil
 
                     if( count($projectSpecialtyObjects) > 0 ) {
                         $projectSpecialtyObject = $projectSpecialtyObjects[0];
-                        $linkFilterArr['filter[projectSpecialty]'] = $projectSpecialtyObject->getId();
+                        $linkFilterArr['filter[projectSpecialty][]'] = $projectSpecialtyObject->getId();
                     }
 
                     if( strpos($id, $this->otherSearchStr) !== false ) {
@@ -603,7 +603,7 @@ class DashboardUtil
 
                     if( count($projectSpecialtyObjects) > 0 ) {
                         $projectSpecialtyObject = $projectSpecialtyObjects[0];
-                        $linkFilterArr['filter[projectSpecialty]'] = $projectSpecialtyObject->getId();
+                        $linkFilterArr['filter[projectSpecialty][]'] = $projectSpecialtyObject->getId();
                     }
 
                     $link = $this->container->get('router')->generate(
@@ -1305,7 +1305,9 @@ class DashboardUtil
         $showLimited = $request->query->get('showLimited');
         $chartType = $request->query->get('chartType');
         $productservice = $request->query->get('productservice');
-        //echo "0productservice=".$productservice."<br>";
+
+        //echo "start=".$startDate."<br>";
+        //echo "end=".$endDate."<br>";
 
         if( $startDate ) {
             $startDate = date_create_from_format('m/d/Y', $startDate); //10/31/2017 to DateTime
@@ -1313,6 +1315,15 @@ class DashboardUtil
         if( $endDate ) {
             $endDate = date_create_from_format('m/d/Y', $endDate); //10/31/2017 to DateTime
         }
+
+        if( $startDate ) {
+            $startDateStr = $startDate->format('m/d/Y');
+        }
+        if( $endDate ) {
+            $endDateStr = $endDate->format('m/d/Y');
+        }
+        //echo "start=".$startDate->format('m/d/Y')."<br>";
+        //echo "end=".$endDate->format('m/d/Y')."<br>";
 
         if( $projectSpecialty != 0 ) {
             $projectSpecialtyObject = $this->em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->find($projectSpecialty);
@@ -3544,10 +3555,58 @@ class DashboardUtil
             $hemaPisArr = array_unique($hemaPisArr);
 
             $pisDataArr = array();
-            $pisDataArr['AP/CP PIs'] = count($apcpPisArr);
-            $pisDataArr['Hematopathology PIs'] = count($hemaPisArr);
 
-            $chartsArray = $this->getChart($pisDataArr, $chartName,'pie',$layoutArray);
+            //array(value,link)
+            $linkFilterArr = array(
+                'filter[state][0]' => 'final_approved',
+                'filter[state][1]' => 'closed',
+                'filter[startDate]' => $startDateStr,
+                'filter[endDate]' => $endDateStr,
+                //'filter[]' => $projectSpecialtyObjects,
+                'filter[searchProjectType]' => null,
+                'filter[projectSpecialty][]' => $specialtyApcpObject->getId(),
+                //'filter[principalInvestigators][]' => implode(",",$apcpPisArr)
+            );
+            $index = 0;
+            foreach($apcpPisArr as $piId) {
+                $filterIndex = "filter[principalInvestigators][".$index."]";
+                //echo "filterIndex=".$filterIndex."<br>";
+                $linkFilterArr[$filterIndex] = $piId;
+                $index++;
+            }
+            $link = $this->container->get('router')->generate(
+                'translationalresearch_project_index',
+                $linkFilterArr,
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            //$pisDataArr['AP/CP PIs'] = count($apcpPisArr);
+            $pisDataArr['AP/CP PIs'] = array('value'=>count($apcpPisArr),'link'=>$link);
+
+
+            $linkFilterArr = array(
+                'filter[state][0]' => 'final_approved',
+                'filter[state][1]' => 'closed',
+                'filter[startDate]' => $startDateStr,
+                'filter[endDate]' => $endDateStr,
+                //'filter[]' => $projectSpecialtyObjects,
+                'filter[searchProjectType]' => null,
+                'filter[projectSpecialty][]' => $specialtyHemaObject->getId()
+            );
+            $index = 0;
+            foreach($hemaPisArr as $piId) {
+                $filterIndex = "filter[principalInvestigators][".$index."]";
+                $linkFilterArr[$filterIndex] = $piId;
+                $index++;
+            }
+            $link = $this->container->get('router')->generate(
+                'translationalresearch_project_index',
+                $linkFilterArr,
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            //$pisDataArr['Hematopathology PIs'] = count($hemaPisArr);
+            $pisDataArr['Hematopathology PIs'] = array('value'=>count($hemaPisArr),'link'=>$link);
+
+            $chartsArray = $this->getChart($pisDataArr, $chartName,'pie',$layoutArray);// getChart(
         }
 
         //"42. Number of AP/CP vs Hematopathology Project Requests" => "compare-projectspecialty-projects",
@@ -3560,22 +3619,54 @@ class DashboardUtil
             $apcpProjects = $this->getProjectsByFilter($startDate,$endDate,array($specialtyApcpObject));
             $hemaProjects = $this->getProjectsByFilter($startDate,$endDate,array($specialtyHemaObject));
 
-            $apcpPisArr = array();
-            $hemaPisArr = array();
-            foreach($apcpProjects as $project) {
-                foreach($project->getPrincipalInvestigators() as $pi) {
-                    $apcpPisArr[] = $pi->getId();
-                }
-            }
-            foreach($hemaProjects as $project) {
-                foreach($project->getPrincipalInvestigators() as $pi) {
-                    $hemaPisArr[] = $pi->getId();
-                }
-            }
+//            $apcpPisArr = array();
+//            $hemaPisArr = array();
+//            foreach($apcpProjects as $project) {
+//                foreach($project->getPrincipalInvestigators() as $pi) {
+//                    $apcpPisArr[] = $pi->getId();
+//                }
+//            }
+//            foreach($hemaProjects as $project) {
+//                foreach($project->getPrincipalInvestigators() as $pi) {
+//                    $hemaPisArr[] = $pi->getId();
+//                }
+//            }
 
             $projectsDataArr = array();
-            $projectsDataArr['AP/CP Project Requests'] = count($apcpProjects);
-            $projectsDataArr['Hematopathology Project Requests'] = count($hemaProjects);
+
+            //array(value,link)
+            $linkFilterArr = array(
+                'filter[state][0]' => 'final_approved',
+                'filter[state][1]' => 'closed',
+                'filter[startDate]' => $startDateStr,
+                'filter[endDate]' => $endDateStr,
+                'filter[searchProjectType]' => null,
+                'filter[projectSpecialty][]' => $specialtyApcpObject->getId(),
+            );
+            $link = $this->container->get('router')->generate(
+                'translationalresearch_project_index',
+                $linkFilterArr,
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            //$projectsDataArr['AP/CP Project Requests'] = count($apcpProjects);
+            $projectsDataArr['AP/CP Project Requests'] = array('value'=>count($apcpProjects),'link'=>$link);
+
+            //array(value,link)
+            $linkFilterArr = array(
+                'filter[state][0]' => 'final_approved',
+                'filter[state][1]' => 'closed',
+                'filter[startDate]' => $startDateStr,
+                'filter[endDate]' => $endDateStr,
+                'filter[searchProjectType]' => null,
+                'filter[projectSpecialty][]' => $specialtyHemaObject->getId(),
+            );
+            $link = $this->container->get('router')->generate(
+                'translationalresearch_project_index',
+                $linkFilterArr,
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            //$projectsDataArr['Hematopathology Project Requests'] = count($hemaProjects);
+            $projectsDataArr['Hematopathology Project Requests'] = array('value'=>count($hemaProjects),'link'=>$link);
 
             $chartsArray = $this->getChart($projectsDataArr, $chartName,'pie',$layoutArray);
         }

@@ -493,7 +493,7 @@ class DashboardController extends Controller
 
                     if( count($projectSpecialtyObjects) > 0 ) {
                         $projectSpecialtyObject = $projectSpecialtyObjects[0];
-                        $linkFilterArr['filter[projectSpecialty]'] = $projectSpecialtyObject->getId();
+                        $linkFilterArr['filter[projectSpecialty][]'] = $projectSpecialtyObject->getId();
                     }
 
                     if( strpos($id, $this->otherSearchStr) !== false && is_array($objectid) ) {
@@ -544,7 +544,7 @@ class DashboardController extends Controller
 
                     if( count($projectSpecialtyObjects) > 0 ) {
                         $projectSpecialtyObject = $projectSpecialtyObjects[0];
-                        $linkFilterArr['filter[projectSpecialty]'] = $projectSpecialtyObject->getId();
+                        $linkFilterArr['filter[projectSpecialty][]'] = $projectSpecialtyObject->getId();
                     }
 
                     if( strpos($id, $this->otherSearchStr) !== false ) {

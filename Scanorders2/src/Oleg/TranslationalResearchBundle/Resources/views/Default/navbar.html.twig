@@ -324,7 +324,7 @@
                             <ul class="dropdown-menu">
 
                                 <li>
-                                    <a href="{{ path(translationalresearch_sitename~'_dashboard_choices',{'filter[startDate]':startDate,'filter[endDate]':endDate,'filter[projectSpecialty]':0}) }}"
+                                    <a href="{{ path(translationalresearch_sitename~'_dashboard_choices',{'filter[startDate]':startDate,'filter[endDate]':endDate,'filter[projectSpecialty][]':0}) }}"
                                     >All statistics</a>
                                 </li>
 
@@ -354,7 +354,7 @@
                                     {
                                         'filter[startDate]':startDate,
                                         'filter[endDate]':endDate,
-                                        'filter[projectSpecialty]':0,
+                                        'filter[projectSpecialty][]':0,
                                         'filter[chartType][0]':'compare-projectspecialty-pis',
                                         'filter[chartType][1]':'compare-projectspecialty-projects',
                                         'filter[chartType][2]':'compare-projectspecialty-projects-stack',
@@ -369,7 +369,7 @@
                                         {
                                             'filter[startDate]':startDate,
                                             'filter[endDate]':endDate,
-                                            'filter[projectSpecialty]':0,
+                                            'filter[projectSpecialty][]':0,
                                             'filter[chartType][0]':'pi-by-affiliation',
                                             'filter[chartType][1]':'projects-per-pi',
                                             'filter[chartType][2]':'funded-projects-per-pi',
@@ -386,7 +386,7 @@
                                     {
                                         'filter[startDate]':startDate,
                                         'filter[endDate]':endDate,
-                                        'filter[projectSpecialty]':0,
+                                        'filter[projectSpecialty][]':0,
                                         'filter[chartType][1]':'requests-by-funding-source',
                                         'filter[chartType][2]':'requests-per-project',
                                         'filter[chartType][3]':'requests-per-funded-projects',
@@ -404,7 +404,7 @@
                                     {
                                         'filter[startDate]':startDate,
                                         'filter[endDate]':endDate,
-                                        'filter[projectSpecialty]':0,
+                                        'filter[projectSpecialty][]':0,
                                         'filter[chartType][1]':'fees-by-requests',
                                         'filter[chartType][2]':'fees-by-requests-per-funded-projects',
                                         'filter[chartType][3]':'fees-by-requests-per-nonfunded-projects',
@@ -420,7 +420,7 @@
                                     {
                                         'filter[startDate]':startDate,
                                         'filter[endDate]':endDate,
-                                        'filter[projectSpecialty]':0,
+                                        'filter[projectSpecialty][]':0,
                                         'filter[chartType][1]':'fees-by-invoices-per-funded-projects',
                                         'filter[chartType][2]':'fees-by-invoices-per-nonfunded-projects',
                                         'filter[chartType][3]':'fees-by-invoices-per-pi',
@@ -435,7 +435,7 @@
                                     {
                                         'filter[startDate]':startDate,
                                         'filter[endDate]':endDate,
-                                        'filter[projectSpecialty]':0,
+                                        'filter[projectSpecialty][]':0,
                                         'filter[chartType][1]':'turn-around-statistics-days-complete-request',
                                         'filter[chartType][2]':'turn-around-statistics-days-complete-per-request',
                                         'filter[chartType][3]':'turn-around-statistics-days-complete-per-request-with-product',
@@ -467,22 +467,22 @@
                                 {#</li>#}
 
                                 {#<li>#}
-                                    {#<a href="{{ path(translationalresearch_sitename~'_dashboard_project',{'filter[startDate]':startDate,'filter[endDate]':endDate,'filter[projectSpecialty]':0}) }}"#}
+                                    {#<a href="{{ path(translationalresearch_sitename~'_dashboard_project',{'filter[startDate]':startDate,'filter[endDate]':endDate,'filter[projectSpecialty][]':0}) }}"#}
                                     {#>PI/Project statistics</a>#}
                                 {#</li>#}
 
                                 {#<li>#}
-                                    {#<a href="{{ path(translationalresearch_sitename~'_dashboard_request',{'filter[startDate]':startDate,'filter[endDate]':endDate,'filter[projectSpecialty]':0}) }}"#}
+                                    {#<a href="{{ path(translationalresearch_sitename~'_dashboard_request',{'filter[startDate]':startDate,'filter[endDate]':endDate,'filter[projectSpecialty][]':0}) }}"#}
                                     {#>Work request statistics</a>#}
                                 {#</li>#}
 
                                 {#<li>#}
-                                    {#<a href="{{ path(translationalresearch_sitename~'_dashboard_financial_request',{'filter[startDate]':startDate,'filter[endDate]':endDate,'filter[projectSpecialty]':0, 'filter[compareType]':'work request submission date'}) }}"#}
+                                    {#<a href="{{ path(translationalresearch_sitename~'_dashboard_financial_request',{'filter[startDate]':startDate,'filter[endDate]':endDate,'filter[projectSpecialty][]':0, 'filter[compareType]':'work request submission date'}) }}"#}
                                     {#>Productivity statistics based on work requests</a>#}
                                 {#</li>#}
 
                                 {#<li>#}
-                                    {#<a href="{{ path(translationalresearch_sitename~'_dashboard_financial_invoice',{'filter[startDate]':startDate,'filter[endDate]':endDate,'filter[projectSpecialty]':0, 'filter[compareType]':'work request submission date'}) }}"#}
+                                    {#<a href="{{ path(translationalresearch_sitename~'_dashboard_financial_invoice',{'filter[startDate]':startDate,'filter[endDate]':endDate,'filter[projectSpecialty][]':0, 'filter[compareType]':'work request submission date'}) }}"#}
                                     {#>Financial statistics based on invoices</a>#}
                                 {#</li>#}
 
