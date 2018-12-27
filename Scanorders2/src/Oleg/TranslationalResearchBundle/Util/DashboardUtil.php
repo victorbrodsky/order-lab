@@ -4091,10 +4091,10 @@ class DashboardUtil
             }//foreach
 
             $layoutArray = array(
-                'height' => $this->height,
+                'height' => $this->height*1.5,
                 'width' => $this->width,
                 'title' => $chartName,
-                'margin' => array('b' => 300)
+                'margin' => array('b' => 400)
             );
 
             //exit("Exit");
