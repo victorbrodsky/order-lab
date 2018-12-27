@@ -117,8 +117,11 @@ class DashboardUtil
             "43. Number of AP/CP vs Hematopathology Project Requests" => "compare-projectspecialty-projects-stack",
             "44. Number of AP/CP vs Hematopathology Work Requests" => "compare-projectspecialty-requests",
             "45. Number of AP/CP vs Hematopathology Invoices" => "compare-projectspecialty-invoices",
+
             "46. Total Fees per Project Request Type (Top 10)" => "projects-fess-per-type",
             "47. Total Fees per Work Requests Business Purpose (Top 10)" => "requests-fees-per-business-purpose",
+            "48. Turn-around Statistics: Number of days to complete each Work Request with person (based on 'Completed and Notified' requests)" => "turn-around-statistics-days-complete-per-request-with-user",
+
 
             "" => "",
             "" => "",
@@ -343,7 +346,7 @@ class DashboardUtil
         return $res;    //implode(array_slice($parts, 0, $last_part)).$postfix;
     }
 
-    public function getChart( $dataArr, $title, $type='pie', $layoutArray=null, $valuePrefixLabel=null ) {
+    public function getChart( $dataArr, $title, $type='pie', $layoutArray=null, $valuePrefixLabel=null, $valuePostfixLabel=null ) {
 
         if( count($dataArr) == 0 ) {
             return array();
@@ -375,11 +378,11 @@ class DashboardUtil
             }
             //value
             if ($type == "bar" || ($value && $value != 0)) {
-                if ($valuePrefixLabel && $value) {
+                if( ($valuePrefixLabel || $valuePostfixLabel) && $value ) {
                     if (strpos($valuePrefixLabel, '$') !== false) {
-                        $label = $label . " " . $valuePrefixLabel . $this->getNumberFormat($value);
+                        $label = $label . " " . $valuePrefixLabel . $this->getNumberFormat($value) . $valuePostfixLabel;
                     } else {
-                        $label = $label . " " . $valuePrefixLabel . $value;
+                        $label = $label . " " . $valuePrefixLabel . $value . $valuePostfixLabel;
                     }
                     //echo "value=$value<br>";
                 }
@@ -1111,17 +1114,19 @@ class DashboardUtil
 
         //echo $startDate->format("Y-m-d")." => ".$endDate->format("Y-m-d")." (".$state.")<br>";
 
-        //Number of days to go from review's createdate to review's updatedate
-        $dDiff = $startDate->diff($endDate);
-        //echo $dDiff->format('%R'); // use for point out relation: smaller/greater
-        $days = $dDiff->days;
-        //echo $state.": days=".$days."<br>";
-        $days = intval($days);
+//        //Number of days to go from review's createdate to review's updatedate
+//        $dDiff = $startDate->diff($endDate);
+//        //echo $dDiff->format('%R'); // use for point out relation: smaller/greater
+//        $days = $dDiff->days;
+//        //echo $state.": days=".$days."<br>";
+//        $days = intval($days);
+//
+//        //show minimum 1 day
+//        if( !$days || $days == 0 ) {
+//            $days = 1;
+//        }
 
-        //show minimum 1 day
-        if( !$days ) {
-            $days = 1;
-        }
+        $days = $this->calculateDays($startDate,$endDate);
 
         return $days;
     }
@@ -1296,7 +1301,20 @@ class DashboardUtil
         return $resStatArr;
     }
 
+    public function calculateDays($startDate,$endDate) {
+        //1) calculate days
+        $dDiff = $startDate->diff($endDate);
+        //echo $dDiff->format('%R'); // use for point out relation: smaller/greater
+        $days = $dDiff->days;
+        //echo "days=".$days."<br>";
+        $days = intval($days);
 
+        if( !$days || $days == 0 ) {
+            $days = 1;
+        }
+
+        return $days;
+    }
 
 
 
@@ -2903,11 +2921,14 @@ class DashboardUtil
                         continue;
                     }
 
-                    $dDiff = $submitted->diff($completed);
-                    //echo $dDiff->format('%R'); // use for point out relation: smaller/greater
-                    $days = $dDiff->days;
-                    //echo "days=".$days."<br>";
-                    $days = intval($days);
+//                    $dDiff = $submitted->diff($completed);
+//                    //echo $dDiff->format('%R'); // use for point out relation: smaller/greater
+//                    $days = $dDiff->days;
+//                    //echo "days=".$days."<br>";
+//                    $days = intval($days);
+
+                    $days = $this->calculateDays($submitted,$completed);
+
                     if( $days > 0 ) {
                         $daysTotal = $daysTotal + intval($days);
                         $count++;
@@ -2963,11 +2984,13 @@ class DashboardUtil
                     continue;
                 }
 
-                $dDiff = $submitted->diff($completed);
-                //echo $dDiff->format('%R'); // use for point out relation: smaller/greater
-                $days = $dDiff->days;
-                //echo "days=".$days."<br>";
-                $days = intval($days);
+//                $dDiff = $submitted->diff($completed);
+//                //echo $dDiff->format('%R'); // use for point out relation: smaller/greater
+//                $days = $dDiff->days;
+//                //echo "days=".$days."<br>";
+//                $days = intval($days);
+                $days = $this->calculateDays($submitted,$completed);
+
                 if( $days > 0 ) {
                     $daysTotal = $daysTotal + intval($days);
                     //$count++;
@@ -3031,11 +3054,12 @@ class DashboardUtil
                 }
 
                 //1) calculate days
-                $dDiff = $submitted->diff($completed);
-                //echo $dDiff->format('%R'); // use for point out relation: smaller/greater
-                $days = $dDiff->days;
-                //echo "days=".$days."<br>";
-                $days = intval($days);
+//                $dDiff = $submitted->diff($completed);
+//                //echo $dDiff->format('%R'); // use for point out relation: smaller/greater
+//                $days = $dDiff->days;
+//                //echo "days=".$days."<br>";
+//                $days = intval($days);
+                $days = $this->calculateDays($submitted,$completed);
 
                 $index = $transRequest->getOid();
 
@@ -3270,11 +3294,14 @@ class DashboardUtil
                         //continue;
                         $paid = $invoice->getUpdateDate(); //“Paid”
                     }
-                    $dDiff = $issued->diff($paid);
-                    //echo $dDiff->format('%R'); // use for point out relation: smaller/greater
-                    $days = $dDiff->days;
-                    //echo "days=".$days."<br>";
-                    $days = intval($days);
+
+//                    $dDiff = $issued->diff($paid);
+//                    //echo $dDiff->format('%R'); // use for point out relation: smaller/greater
+//                    $days = $dDiff->days;
+//                    //echo "days=".$days."<br>";
+//                    $days = intval($days);
+                    $days = $this->calculateDays($issued,$paid);
+
                     if( $days > 0 ) {
                         $daysTotal = $daysTotal + intval($days);
                         $count++;
@@ -3317,11 +3344,14 @@ class DashboardUtil
                     //continue;
                     $paid = $invoice->getUpdateDate(); //“Paid”
                 }
-                $dDiff = $issued->diff($paid);
-                //echo $dDiff->format('%R'); // use for point out relation: smaller/greater
-                $days = $dDiff->days;
-                //echo "days=".$days."<br>";
-                $days = intval($days);
+
+//                $dDiff = $issued->diff($paid);
+//                //echo $dDiff->format('%R'); // use for point out relation: smaller/greater
+//                $days = $dDiff->days;
+//                //echo "days=".$days."<br>";
+//                $days = intval($days);
+                $days = $this->calculateDays($issued,$paid);
+
                 if( $days > 0 ) {
                     $invoiceIndex = $invoice->getOid();
                     //$countArr[$invoiceIndex] = $days;
@@ -3611,7 +3641,7 @@ class DashboardUtil
             //$pisDataArr['Hematopathology PIs'] = count($hemaPisArr);
             $pisDataArr['Hematopathology PIs'] = array('value'=>count($hemaPisArr),'link'=>$link);
 
-            $chartsArray = $this->getChart($pisDataArr, $chartName,'pie',$layoutArray);// getChart(
+            $chartsArray = $this->getChart($pisDataArr, $chartName,'pie',$layoutArray);
         }
 
         //"42. Number of AP/CP vs Hematopathology Project Requests" => "compare-projectspecialty-projects",
@@ -4013,6 +4043,62 @@ class DashboardUtil
             $showOther = $this->getOtherStr($showLimited,"Business Purposes");
             $requestBusinessPurposeArrTop = $this->getTopArray($requestBusinessPurposeArr,$showOther);
             $chartsArray = $this->getChart($requestBusinessPurposeArrTop, $chartName,'pie',$layoutArray," : $");
+        }
+
+        //"48. Turn-around Statistics: Number of days to complete each Work Request with person (based on 'Completed and Notified' requests)" => "turn-around-statistics-days-complete-per-request-with-product-by-user",
+        if( $chartType == "turn-around-statistics-days-complete-per-request-with-user" ) {
+            $averageDays = array();
+
+            $statuses = array("completedNotified");
+            $transRequests = $this->getRequestsByAdvanceFilter($startDate, $thisEndDate, $projectSpecialtyObjects, $productservice, $statuses);
+
+            foreach ($transRequests as $transRequest) {
+
+                //Number of days to go from Submitted to Completed
+                $submitted = $transRequest->getCreateDate();
+
+                $completed = $transRequest->getCompletedDate();
+                if (!$completed) {
+                    continue;
+                }
+
+//                //1) calculate days
+//                $dDiff = $submitted->diff($completed);
+//                //echo $dDiff->format('%R'); // use for point out relation: smaller/greater
+//                $days = $dDiff->days;
+//                //echo "days=".$days."<br>";
+//                $days = intval($days);
+                $days = $this->calculateDays($submitted,$completed);
+
+                if( !$days || $days == 0 ) {
+                    $days = 1;
+                }
+
+                $index = $transRequest->getOid();
+                $updatedUser = $transRequest->getUpdateUser();
+                if( $updatedUser ) {
+                    $index = $index . ", " . $updatedUser->getUsernameOptimal();
+                }
+
+                if( isset($averageDays[$index]) ) {
+                    $days = $averageDays[$index] + $days;
+                }
+                $averageDays[$index] = $days;
+
+            }//foreach
+
+            $layoutArray = array(
+                'height' => $this->height,
+                'width' => $this->width,
+                'title' => $chartName,
+                'margin' => array('b' => 300)
+            );
+
+            //exit("Exit");
+
+            $valuePrefixLabel = "(";
+            $valuePostfixLabel = " days on average)";
+            $chartsArray = $this->getChart($averageDays, $chartName,'bar',$layoutArray,$valuePrefixLabel,$valuePostfixLabel); // getChart(
         }
 
         
