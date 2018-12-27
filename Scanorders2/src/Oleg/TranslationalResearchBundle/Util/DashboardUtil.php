@@ -3694,13 +3694,13 @@ class DashboardUtil
                 $hemaProjects = $this->getProjectsByFilter($startDate,$thisEndDate,array($specialtyHemaObject),null,false);
                 $startDate->modify( 'first day of next month' );
 
-                $apcpResultStatArr = $this->getProjectRequestInvoiceChart($apcpProjects,$apcpResultStatArr,$startDateLabel);
-                $hemaResultStatArr = $this->getProjectRequestInvoiceChart($hemaProjects,$hemaResultStatArr,$startDateLabel);
+                $apcpResultStatArr[$startDateLabel] = count($apcpProjects);
+                $hemaResultStatArr[$startDateLabel] = count($hemaProjects);
             } while( $startDate < $endDate );
 
             //AP/CP
             $apcpProjectsData = array();
-            foreach($apcpResultStatArr['projects'] as $date=>$value ) {
+            foreach($apcpResultStatArr as $date=>$value ) {
                 //$apcpProjectsData[$date] = $value;
                 $dates = $datesArr[$date];
                 $linkFilterArr = array(
@@ -3721,7 +3721,7 @@ class DashboardUtil
 
             //Hema
             $hemaProjectsData = array();
-            foreach($hemaResultStatArr['projects'] as $date=>$value ) {
+            foreach($hemaResultStatArr as $date=>$value ) {
                 //$hemaProjectsData[$date] = $value;
                 $dates = $datesArr[$date];
                 $linkFilterArr = array(
@@ -3767,19 +3767,20 @@ class DashboardUtil
                 $datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
                 //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
                 //$startDate,$endDate,$projectSpecialties,$states,$addOneEndDay
-                $apcpProjects = $this->getProjectsByFilter($startDate,$thisEndDate,array($specialtyApcpObject),null,false);
-                $hemaProjects = $this->getProjectsByFilter($startDate,$thisEndDate,array($specialtyHemaObject),null,false);
+
+                $apcpRequests = $this->getRequestsByFilter($startDate,$thisEndDate,array($specialtyApcpObject));
+                $hemaRequests = $this->getRequestsByFilter($startDate,$thisEndDate,array($specialtyHemaObject));
+
                 $startDate->modify( 'first day of next month' );
 
-                $apcpResultStatArr = $this->getProjectRequestInvoiceChart($apcpProjects,$apcpResultStatArr,$startDateLabel);
-                $hemaResultStatArr = $this->getProjectRequestInvoiceChart($hemaProjects,$hemaResultStatArr,$startDateLabel);
+                $apcpResultStatArr[$startDateLabel] = count($apcpRequests);
+                $hemaResultStatArr[$startDateLabel] = count($hemaRequests);
 
             } while( $startDate < $endDate );
 
             //AP/CP
             $apcpRequestsData = array();
-            foreach($apcpResultStatArr['requests'] as $date=>$value ) {
-                //$apcpRequestsData[$date] = $value;
+            foreach($apcpResultStatArr as $date=>$value ) {
                 $dates = $datesArr[$date];
                 $linkFilterArr = array(
                     'filter[progressState][0]' => 'active',
@@ -3806,8 +3807,29 @@ class DashboardUtil
 
             //Hema
             $hemaRequestsData = array();
-            foreach($hemaResultStatArr['requests'] as $date=>$value ) {
-                $hemaRequestsData[$date] = $value;
+            foreach($hemaResultStatArr as $date=>$value ) {
+                $dates = $datesArr[$date];
+                $linkFilterArr = array(
+                    'filter[progressState][0]' => 'active',
+                    'filter[progressState][1]' => 'completed',
+                    'filter[progressState][2]' => 'completedNotified',
+                    'filter[progressState][3]' => 'pendingInvestigatorInput',
+                    'filter[progressState][4]' => 'pendingHistology',
+                    'filter[progressState][5]' => 'pendingImmunohistochemistry',
+                    'filter[progressState][6]' => 'pendingMolecular',
+                    'filter[progressState][7]' => 'pendingCaseRetrieval',
+                    'filter[progressState][8]' => 'pendingTissueMicroArray',
+                    'filter[progressState][9]' => 'pendingSlideScanning',
+                    'filter[startDate]' => $dates['startDate'],
+                    'filter[endDate]' => $dates['endDate'],
+                    'filter[searchProjectType]' => null,
+                );
+                $link = $this->container->get('router')->generate(
+                    'translationalresearch_request_index_filter',
+                    $linkFilterArr,
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+                $hemaRequestsData[$date] = array('value'=>$value,'link'=>$link);
             }
 
             //Requests
