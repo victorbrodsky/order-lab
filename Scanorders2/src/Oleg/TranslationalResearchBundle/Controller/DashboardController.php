@@ -1288,7 +1288,7 @@ class DashboardController extends Controller
      */
     public function dashboardPopulateRequestCompletedbyAction( Request $request )
     {
-        //exit("Disabled Request's CompletedDate");
+        exit("Disabled Request's CompletedBy");
 
         if( $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             //ok
