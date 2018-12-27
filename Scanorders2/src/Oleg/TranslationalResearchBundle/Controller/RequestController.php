@@ -491,6 +491,10 @@ class RequestController extends Controller
                 }
             }
 
+            if( $transresRequest->getProgressState() == "completedNotified" ) {
+                $transresRequest->setCompletedBy($user);
+            }
+
             if( !$testing ) {
                 $em->persist($transresRequest);
                 $em->flush();

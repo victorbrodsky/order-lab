@@ -46,6 +46,13 @@
 
                     {{ transres.updateInfo(form,cycle) }}
 
+                    {% if transresRequest.completedDate %}
+                        {{ formmacros.simplefield("Completion Date:", transresRequest.completedDate|date("m/d/Y",false), "input", "disabled") }}
+                    {% endif %}
+                    {% if transresRequest.completedBy %}
+                        {{ formmacros.simplefield("Completed By:", transresRequest.completedBy, "input", "disabled") }}
+                    {% endif %}
+
                 </div>
             </div>
         </div>

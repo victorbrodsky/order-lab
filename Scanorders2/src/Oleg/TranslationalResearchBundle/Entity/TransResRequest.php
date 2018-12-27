@@ -80,6 +80,12 @@ class TransResRequest {
     private $completedDate;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
+     */
+    private $completedBy;
+
+    /**
      * completedDate is set by script
      *
      * @ORM\Column(type="boolean", nullable=true)
@@ -407,6 +413,22 @@ class TransResRequest {
     public function setCompletedDate($completedDate)
     {
         $this->completedDate = $completedDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCompletedBy()
+    {
+        return $this->completedBy;
+    }
+
+    /**
+     * @param mixed $completedBy
+     */
+    public function setCompletedBy($completedBy)
+    {
+        $this->completedBy = $completedBy;
     }
 
     /**

@@ -1110,6 +1110,7 @@ class TransResRequestUtil
                 // change the Work Request Billing Status to "Approved/Ready for Invoicing".
                 if( $to == "completedNotified" ) {
                     $transresRequest->setBillingState('approvedInvoicing');
+                    $transresRequest->setCompletedBy($user);
                 }
 
                 //write to DB

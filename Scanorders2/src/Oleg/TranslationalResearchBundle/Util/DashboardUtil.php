@@ -4075,9 +4075,12 @@ class DashboardUtil
                 }
 
                 $index = $transRequest->getOid();
-                $updatedUser = $transRequest->getUpdateUser();
-                if( $updatedUser ) {
-                    $index = $index . ", " . $updatedUser->getUsernameOptimal();
+                $completedUser = $transRequest->getCompletedBy();
+                if( !$completedUser ) {
+                    $completedUser = $transRequest->getUpdateUser();
+                }
+                if( $completedUser ) {
+                    $index = $index . ", " . $completedUser->getUsernameOptimal();
                 }
 
                 if( isset($averageDays[$index]) ) {
