@@ -117,8 +117,8 @@ class DashboardUtil
             "43. Number of AP/CP vs Hematopathology Project Requests" => "compare-projectspecialty-projects-stack",
             "44. Number of AP/CP vs Hematopathology Work Requests" => "compare-projectspecialty-requests",
             "45. Number of AP/CP vs Hematopathology Invoices" => "compare-projectspecialty-invoices",
+            "46. Total Fees per Project Request Type" => "projects-fess-per-type",
 
-            "" => "",
             "" => "",
             "" => "",
             "" => "",
@@ -3934,10 +3934,51 @@ class DashboardUtil
             $chartsArray = $this->getStackedChart($combinedInvoicesData, $chartName, "stack");
         }
 
+        //"46. Total Fees per Project Request Type" => "projects-fess-per-type",
+        if( $chartType == "projects-fess-per-type" ) {
+            $transresUtil = $this->container->get('transres_util');
+            $projectTypeArr = array();
 
-        if( $chartType == "" ) {
+            $projects = $this->getProjectsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+            foreach($projects as $project) {
+                $projectType = $project->getProjectType();
+                if( $projectType ) {
+                    $projectTypeId = $projectType->getId();
+                    $projectTypeName = $projectType->getName();
+                } else {
+                    $projectTypeId = "No Type";
+                    $projectTypeName = "No Type";;
+                }
 
+                $invoicesInfos = $transresUtil->getInvoicesInfosByProject($project);
+                $totalFee = $invoicesInfos['total'];
+
+                if( isset($projectTypeArr[$projectTypeId]) && isset($projectTypeArr[$projectTypeId]['value']) ) {
+                    $totalFee = $projectTypeArr[$projectTypeId]['value'] + $totalFee;
+                }
+                $projectTypeArr[$projectTypeId]['value'] = $totalFee;
+                $projectTypeArr[$projectTypeId]['label'] = $projectTypeName;
+                $projectTypeArr[$projectTypeId]['objectid'] = $projectTypeId;
+                $projectTypeArr[$projectTypeId]['pi'] = null;
+                $projectTypeArr[$projectTypeId]['show-path'] = "project-type";
+
+//                if( isset($projectTypeArr[$projectTypeName]) ) {
+//                    $totalFee = $projectTypeArr[$projectTypeName] + $totalFee;
+//                }
+//                $projectTypeArr[$projectTypeName] = $totalFee;
+
+                $titleCount++;
+            }
+
+            $chartName = $this->getTitleWithTotal($chartName,$titleCount);
+            $showOther = $this->getOtherStr($showLimited,"Project Types");
+            $projectTypeArrTop = $this->getTopMultiArray($projectTypeArr,$showOther);
+
+            $chartsArray = $this->getChartByMultiArray( $projectTypeArrTop, $filterArr, $chartName,"pie",null," : $");
+            //$chartsArray = $this->getChart($projectTypeArrTop, $chartName,'pie',$layoutArray," : $");
         }
+
+
         if( $chartType == "" ) {
 
         }

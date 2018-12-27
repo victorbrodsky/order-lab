@@ -164,14 +164,14 @@ class FilterInvoiceType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
-            'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'From Creation Date'),
+            'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'From Generated Date'),
         ));
         $builder->add('endCreateDate', DateTimeType::class, array(
             'label' => false,
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
-            'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'To Creation Date'),
+            'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'To Generated Date'),
         ));
 
         $builder->add('version', ChoiceType::class, array(
