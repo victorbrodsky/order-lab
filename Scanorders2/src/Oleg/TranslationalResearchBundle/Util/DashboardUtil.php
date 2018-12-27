@@ -117,7 +117,8 @@ class DashboardUtil
             "43. Number of AP/CP vs Hematopathology Project Requests" => "compare-projectspecialty-projects-stack",
             "44. Number of AP/CP vs Hematopathology Work Requests" => "compare-projectspecialty-requests",
             "45. Number of AP/CP vs Hematopathology Invoices" => "compare-projectspecialty-invoices",
-            "46. Total Fees per Project Request Type" => "projects-fess-per-type",
+            "46. Total Fees per Project Request Type (Top 10)" => "projects-fess-per-type",
+            "47. Total Fees per Work Requests Business Purpose (Top 10)" => "requests-fees-per-business-purpose",
 
             "" => "",
             "" => "",
@@ -1020,7 +1021,11 @@ class DashboardUtil
     }
 
     public function getTitleWithTotal($chartName,$total,$prefix=null) {
-        return $chartName . " - " . $prefix . $total . " total quantity";
+        $postfix = "total quantity";
+        if( $prefix ) {
+            $postfix = "total";
+        }
+        return $chartName . " - " . $prefix . $total . " " . $postfix;
     }
 
     public function getDiffDaysByProjectState($project,$state) {
@@ -3938,6 +3943,7 @@ class DashboardUtil
         if( $chartType == "projects-fess-per-type" ) {
             $transresUtil = $this->container->get('transres_util');
             $projectTypeArr = array();
+            $totalFees = 0;
 
             $projects = $this->getProjectsByFilter($startDate,$endDate,$projectSpecialtyObjects);
             foreach($projects as $project) {
@@ -3952,6 +3958,7 @@ class DashboardUtil
 
                 $invoicesInfos = $transresUtil->getInvoicesInfosByProject($project);
                 $totalFee = $invoicesInfos['total'];
+                $totalFees = $totalFees + $totalFee;
 
                 if( isset($projectTypeArr[$projectTypeId]) && isset($projectTypeArr[$projectTypeId]['value']) ) {
                     $totalFee = $projectTypeArr[$projectTypeId]['value'] + $totalFee;
@@ -3967,10 +3974,10 @@ class DashboardUtil
 //                }
 //                $projectTypeArr[$projectTypeName] = $totalFee;
 
-                $titleCount++;
+                //$titleCount++;
             }
 
-            $chartName = $this->getTitleWithTotal($chartName,$titleCount);
+            $chartName = $this->getTitleWithTotal($chartName,$totalFees,"$");
             $showOther = $this->getOtherStr($showLimited,"Project Types");
             $projectTypeArrTop = $this->getTopMultiArray($projectTypeArr,$showOther);
 
@@ -3978,10 +3985,37 @@ class DashboardUtil
             //$chartsArray = $this->getChart($projectTypeArrTop, $chartName,'pie',$layoutArray," : $");
         }
 
+        //"47. Total Fees per Work Requests Business Purpose" => "requests-fees-per-business-purpose",
+        if( $chartType == "requests-fees-per-business-purpose" ) {
+            $transresRequestUtil = $this->container->get('transres_request_util');
+            $requestBusinessPurposeArr = array();
+            $totalFees = 0;
 
-        if( $chartType == "" ) {
+            $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+            foreach($requests as $transRequest) {
 
+                $fee = $transresRequestUtil->getTransResRequestFeeHtml($transRequest);
+                $totalFees = $totalFees + $fee;
+
+                $businessPurposes = $transRequest->getBusinessPurposes();
+
+                foreach($businessPurposes as $businessPurpose) {
+                    $businessPurposeName = $businessPurpose->getName();
+
+                    if( isset($requestBusinessPurposeArr[$businessPurposeName]) ) {
+                        $fee = $requestBusinessPurposeArr[$businessPurposeName] + $fee;
+                    }
+                    $requestBusinessPurposeArr[$businessPurposeName] = $fee;
+                }
+            }
+
+            $chartName = $this->getTitleWithTotal($chartName,$totalFees,"$");
+            $showOther = $this->getOtherStr($showLimited,"Business Purposes");
+            $requestBusinessPurposeArrTop = $this->getTopArray($requestBusinessPurposeArr,$showOther);
+            $chartsArray = $this->getChart($requestBusinessPurposeArrTop, $chartName,'pie',$layoutArray," : $");
         }
+
+        
         if( $chartType == "" ) {
 
         }
