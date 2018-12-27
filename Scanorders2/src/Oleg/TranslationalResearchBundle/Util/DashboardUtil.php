@@ -3847,6 +3847,7 @@ class DashboardUtil
 
             $apcpResultStatArr = array();
             $hemaResultStatArr = array();
+            $datesArr = array();
 
             //get startDate and add 1 month until the date is less than endDate
             $startDate->modify( 'first day of last month' );
@@ -3854,27 +3855,76 @@ class DashboardUtil
                 $startDateLabel = $startDate->format('M-Y');
                 $thisEndDate = clone $startDate;
                 $thisEndDate->modify( 'first day of next month' );
+                $datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
                 //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
                 //$startDate,$endDate,$projectSpecialties,$states,$addOneEndDay
-                $apcpProjects = $this->getProjectsByFilter($startDate,$thisEndDate,array($specialtyApcpObject),null,false);
-                $hemaProjects = $this->getProjectsByFilter($startDate,$thisEndDate,array($specialtyHemaObject),null,false);
+
+                //$apcpProjects = $this->getProjectsByFilter($startDate,$thisEndDate,array($specialtyApcpObject),null,false);
+                //$hemaProjects = $this->getProjectsByFilter($startDate,$thisEndDate,array($specialtyHemaObject),null,false);
+                $apcpInvoices = $this->getInvoicesByFilter($startDate,$thisEndDate, array($specialtyApcpObject));
+                $hemaInvoices = $this->getInvoicesByFilter($startDate,$thisEndDate, array($specialtyHemaObject));
+
+//                echo "<br>### $startDateLabel ###<br>";
+//                foreach($apcpInvoices as $inv){
+//                    echo "apcp inv id=".$inv->getOid()."<br>";
+//                }
+//                foreach($hemaInvoices as $inv){
+//                    echo "hema inv id=".$inv->getOid()."<br>";
+//                }
+
                 $startDate->modify( 'first day of next month' );
 
-                $apcpResultStatArr = $this->getProjectRequestInvoiceChart($apcpProjects,$apcpResultStatArr,$startDateLabel);
-                $hemaResultStatArr = $this->getProjectRequestInvoiceChart($hemaProjects,$hemaResultStatArr,$startDateLabel);
+                //$apcpResultStatArr = $this->getProjectRequestInvoiceChart($apcpProjects,$apcpResultStatArr,$startDateLabel);
+                //$hemaResultStatArr = $this->getProjectRequestInvoiceChart($hemaProjects,$hemaResultStatArr,$startDateLabel);
+                $apcpResultStatArr[$startDateLabel] = count($apcpInvoices);
+                $hemaResultStatArr[$startDateLabel] = count($hemaInvoices);
 
             } while( $startDate < $endDate );
 
             //AP/CP
             $apcpInvoicesData = array();
-            foreach($apcpResultStatArr['invoices'] as $date=>$value ) {
-                $apcpInvoicesData[$date] = $value;
+            foreach($apcpResultStatArr as $date=>$value ) {
+                //$apcpInvoicesData[$date] = $value;
+                $dates = $datesArr[$date];
+                $linkFilterArr = array(
+                    'filter[status][0]' => "Unpaid/Issued",
+                    'filter[status][1]' => "Paid in Full",
+                    'filter[status][2]' => "Paid Partially",
+                    'filter[status][3]' => 'Refunded Fully',
+                    'filter[status][4]' => 'Refunded Partially',
+                    'filter[startCreateDate]' => $dates['startDate'], //dueDate, therefore we can not filter invoices list
+                    'filter[endCreateDate]' => $dates['endDate'],
+                    'filter[version]' => "Latest"
+                );
+                $link = $this->container->get('router')->generate(
+                    'translationalresearch_invoice_index_filter',
+                    $linkFilterArr,
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+                $apcpInvoicesData[$date] = array('value'=>$value,'link'=>$link);
             }
 
             //Hema
             $hemaInvoicesData = array();
-            foreach($hemaResultStatArr['invoices'] as $date=>$value ) {
-                $hemaInvoicesData[$date] = $value;
+            foreach($hemaResultStatArr as $date=>$value ) {
+                //$hemaInvoicesData[$date] = $value;
+                $dates = $datesArr[$date];
+                $linkFilterArr = array(
+                    'filter[status][0]' => "Unpaid/Issued",
+                    'filter[status][1]' => "Paid in Full",
+                    'filter[status][2]' => "Paid Partially",
+                    'filter[status][3]' => 'Refunded Fully',
+                    'filter[status][4]' => 'Refunded Partially',
+                    'filter[startCreateDate]' => $dates['startDate'],
+                    'filter[endCreateDate]' => $dates['endDate'],
+                    'filter[version]' => "Latest"
+                );
+                $link = $this->container->get('router')->generate(
+                    'translationalresearch_invoice_index_filter',
+                    $linkFilterArr,
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+                $hemaInvoicesData[$date] = array('value'=>$value,'link'=>$link);
             }
 
             //Invoices

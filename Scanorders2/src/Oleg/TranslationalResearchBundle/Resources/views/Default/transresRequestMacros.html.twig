@@ -643,6 +643,16 @@
                     <br>
 
                     <div class="row">
+                        <div class="col-xs-6">
+                            {{ formmacros.fielddate(filterform.startCreateDate,'allow-future-date') }}
+                        </div>
+                        <div class="col-xs-6">
+                            {{ formmacros.fielddate(filterform.endCreateDate,'allow-future-date') }}
+                        </div>
+                    </div>
+                    <br>
+
+                    <div class="row">
                         <div class="col-xs-4">
                             {{ form_widget(filterform.principalInvestigator) }}
                         </div>

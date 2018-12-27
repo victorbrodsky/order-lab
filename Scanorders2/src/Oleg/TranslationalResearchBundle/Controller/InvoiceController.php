@@ -408,6 +408,8 @@ class InvoiceController extends Controller
             $fundingNumber = $filterform['fundingNumber']->getData();
             $fundingType = $filterform['fundingType']->getData();
             $irbNumber = $filterform['irbNumber']->getData();
+            $startCreateDate = $filterform['startCreateDate']->getData();
+            $endCreateDate = $filterform['endCreateDate']->getData();
             //echo "totalMin=".$totalMin."<br>";
         }
         ////// EOF create filter //////////
@@ -520,6 +522,18 @@ class InvoiceController extends Controller
             $endDate->modify('+1 day');
             $dql->andWhere('invoice.dueDate <= :endDate');
             $dqlParameters['endDate'] = $endDate->format('Y-m-d H:i:s');
+            $advancedFilter++;
+        }
+
+        if( $startCreateDate ) {
+            $dql->andWhere('invoice.createDate >= :startCreateDate');
+            $dqlParameters['startCreateDate'] = $startCreateDate->format('Y-m-d H:i:s');
+            $advancedFilter++;
+        }
+        if( $endCreateDate ) {
+            $endCreateDate->modify('+1 day');
+            $dql->andWhere('invoice.createDate <= :endCreateDate');
+            $dqlParameters['endCreateDate'] = $endCreateDate->format('Y-m-d H:i:s');
             $advancedFilter++;
         }
 

@@ -159,6 +159,21 @@ class FilterInvoiceType extends AbstractType
             'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'To Due Date'), //'title'=>'End Year', 'data-toggle'=>'tooltip',
         ));
 
+        $builder->add('startCreateDate', DateTimeType::class, array(
+            'label' => false,
+            'widget' => 'single_text',
+            'required' => false,
+            'format' => 'MM/dd/yyyy',
+            'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'From Creation Date'),
+        ));
+        $builder->add('endCreateDate', DateTimeType::class, array(
+            'label' => false,
+            'widget' => 'single_text',
+            'required' => false,
+            'format' => 'MM/dd/yyyy',
+            'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'To Creation Date'),
+        ));
+
         $builder->add('version', ChoiceType::class, array(
             'label' => false,
             'choices' => $this->params['versions'],
