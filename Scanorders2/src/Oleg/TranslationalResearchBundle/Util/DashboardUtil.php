@@ -3742,9 +3742,7 @@ class DashboardUtil
 
             //Projects
             $combinedProjectsData = array();
-
             $combinedProjectsData['AP/CP'] = $apcpProjectsData;
-
             $combinedProjectsData['Hematopathology'] = $hemaProjectsData;
 
             $chartsArray = $this->getStackedChart($combinedProjectsData, $chartName, "stack");
@@ -3758,6 +3756,7 @@ class DashboardUtil
 
             $apcpResultStatArr = array();
             $hemaResultStatArr = array();
+            $datesArr = array();
 
             //get startDate and add 1 month until the date is less than endDate
             $startDate->modify( 'first day of last month' );
@@ -3765,6 +3764,7 @@ class DashboardUtil
                 $startDateLabel = $startDate->format('M-Y');
                 $thisEndDate = clone $startDate;
                 $thisEndDate->modify( 'first day of next month' );
+                $datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
                 //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
                 //$startDate,$endDate,$projectSpecialties,$states,$addOneEndDay
                 $apcpProjects = $this->getProjectsByFilter($startDate,$thisEndDate,array($specialtyApcpObject),null,false);
@@ -3779,7 +3779,29 @@ class DashboardUtil
             //AP/CP
             $apcpRequestsData = array();
             foreach($apcpResultStatArr['requests'] as $date=>$value ) {
-                $apcpRequestsData[$date] = $value;
+                //$apcpRequestsData[$date] = $value;
+                $dates = $datesArr[$date];
+                $linkFilterArr = array(
+                    'filter[progressState][0]' => 'active',
+                    'filter[progressState][1]' => 'completed',
+                    'filter[progressState][2]' => 'completedNotified',
+                    'filter[progressState][3]' => 'pendingInvestigatorInput',
+                    'filter[progressState][4]' => 'pendingHistology',
+                    'filter[progressState][5]' => 'pendingImmunohistochemistry',
+                    'filter[progressState][6]' => 'pendingMolecular',
+                    'filter[progressState][7]' => 'pendingCaseRetrieval',
+                    'filter[progressState][8]' => 'pendingTissueMicroArray',
+                    'filter[progressState][9]' => 'pendingSlideScanning',
+                    'filter[startDate]' => $dates['startDate'],
+                    'filter[endDate]' => $dates['endDate'],
+                    'filter[searchProjectType]' => null,
+                );
+                $link = $this->container->get('router')->generate(
+                    'translationalresearch_request_index_filter',
+                    $linkFilterArr,
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+                $apcpRequestsData[$date] = array('value'=>$value,'link'=>$link);
             }
 
             //Hema
