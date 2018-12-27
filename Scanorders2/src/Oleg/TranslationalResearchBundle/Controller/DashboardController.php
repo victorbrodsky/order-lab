@@ -1282,6 +1282,269 @@ class DashboardController extends Controller
     }
 
     /**
+     * http://127.0.0.1/order/translational-research/dashboard/graphs/populate-completedby-requests
+     *
+     * @Route("/graphs/populate-completedby-requests", name="translationalresearch_dashboard_populate_completedby_requests")
+     */
+    public function dashboardPopulateRequestCompletedbyAction( Request $request )
+    {
+        //exit("Disabled Request's CompletedDate");
+
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            //ok
+        } else {
+            return $this->redirect($this->generateUrl($this->container->getParameter('translationalresearch.sitename') . '-nopermission'));
+        }
+
+        //testing
+        //$dashboardUtil = $this->container->get('transres_dashboard');
+        $em = $this->getDoctrine()->getManager();
+
+        $repository = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
+        $dql =  $repository->createQueryBuilder("request");
+        $dql->select('request');
+
+        //$dql->where("request.progressState != 'draft' AND request.progressState != 'canceled' AND invoice.latestVersion = TRUE");
+        $dql->where("request.progressState = 'completedNotified' AND request.completedBy IS NULL");
+
+        $query = $em->createQuery($dql);
+        $requests = $query->getResult();
+        echo "Request count=".count($requests)."<br>";
+
+        $count = 0;
+        foreach($requests as $thisRequest) {
+            $completedUser = $this->getRequestCompletedUser($thisRequest);
+            if( $completedUser ) {
+                echo $thisRequest->getOid()."(".$thisRequest->getCompletedBy()."): completedUser=" . $completedUser . "<br>";
+                $thisRequest->setCompletedBy($completedUser);
+                $thisRequest->setCompletedDateSet(true);
+                //$em->flush($thisRequest);
+                $count++;
+            } else {
+                echo $thisRequest->getOid()."(".$thisRequest->getCompletedBy()."): no completedUser <br>";
+                //exit("exit: no date found");
+            }
+        }
+
+        exit("Exit populating completed user: count=".$count);
+    }
+    public function getRequestCompletedUser($request) {
+        $em = $this->getDoctrine()->getManager();
+        //get the date from event log
+        $repository = $em->getRepository('OlegUserdirectoryBundle:Logger');
+        $dql = $repository->createQueryBuilder("logger");
+        //$dql->innerJoin('logger.eventType', 'eventType');
+        //$dql->leftJoin('logger.objectType', 'objectType');
+        //$dql->leftJoin('logger.site', 'site');
+
+        //$dql->where("logger.siteName = 'translationalresearch' AND logger.entityName = 'Invoice' AND logger.entityId = ".$invoice->getId());
+        //$dql->where("logger.entityName = 'Invoice' AND logger.entityId = ".$invoice->getId());
+
+        //Work Request ID APCP843-REQ16216 billing state has been changed to Invoiced, triggered by invoice status change to Unpaid/Issued
+        $dql->where("logger.entityName = 'TransResRequest' AND logger.entityId = ".$request->getId());
+
+        //$dql->andWhere("logger.event LIKE '%"."status changed to '/Unpaid/Issued"."%'"); //status changed to 'Unpaid/Issued'
+        //$dql->andWhere("logger.event LIKE :eventStr OR logger.event LIKE :eventStr2");
+        $dql->andWhere("logger.event LIKE :eventStr AND logger.event LIKE :eventStr2");
+
+        $dql->orderBy("logger.id","DESC");
+        $query = $em->createQuery($dql);
+
+        //The status of the work request APCP668-REQ16553 has been changed from 'Pending Histology' to 'Completed and Notified' by Susanna Mirabelli - sum2029 (WCM CWID)
+        $search = "The status of the work request ".$request->getOid()." has been changed from";
+        $search2 = " to 'Completed and Notified' by ";
+
+        //$search = "Unpaid/Issued";
+        //$search = "";
+        //$search = "status changed to ";
+        //$search2 = "status changed to 'Unpaid/Issued'";
+        $query->setParameters(
+            array(
+                'eventStr' => '%'.$search.'%',
+                'eventStr2' => '%'.$search2.'%'
+            )
+        );
+
+        $loggers = $query->getResult();
+
+        //2) try to use "Invoice PDF Issued" event "Invoice APCP668-REQ14079-V1 PDF has been sent by email ..."
+        if( count($loggers) == 0 ) {
+            $dql2 = $repository->createQueryBuilder("logger");
+            $dql2->where("logger.entityName = 'TransResRequest' AND logger.entityId = ".$request->getId());
+            $dql2->andWhere("logger.event LIKE :eventStr AND logger.event LIKE :eventStr2");
+
+            $dql2->orderBy("logger.id","DESC");
+            $query2 = $em->createQuery($dql2);
+
+            //Your request APCP668-REQ14079) for the project: (APCP668 (14541)) is completed. Please coordinate with Translational Research Program lab for material transportation.
+            $search1 = "Your request ".$request->getOid();
+            $search2 = " is completed.";
+            $query2->setParameters(
+                array(
+                    'eventStr' => '%'.$search1.'%',
+                    'eventStr2' => '%'.$search2.'%'
+                )
+            );
+
+            $loggers = $query2->getResult();
+        }
+
+        //3)
+        if( count($loggers) == 0 ) {
+            $dql3 = $repository->createQueryBuilder("logger");
+            $dql3->where("logger.entityName = 'TransResRequest' AND logger.entityId = ".$request->getId());
+            $dql3->andWhere("logger.event LIKE :eventStr AND logger.event LIKE :eventStr2 AND logger.event LIKE :eventStr3");
+
+            $dql3->orderBy("logger.id","DESC");
+            $query3 = $em->createQuery($dql3);
+
+            //The work for your request APCP845-REQ14084 ... has been completed.
+            $requestOid = $request->getOid();
+            $requestOid = str_replace("APCP","",$requestOid);
+            $requestOid = str_replace("HP","",$requestOid);
+            $requestOid = "P".$requestOid;
+            $search1 = "The work for your request ";
+            $search2 = $requestOid;
+            //$search1 = $requestOid . " submitted on ";
+            $search3 = " has been completed.";
+            //echo "try 3: [$search1] AND [$search2] <br>";
+            $query3->setParameters(
+                array(
+                    'eventStr' => '%'.$search1.'%',
+                    'eventStr2' => '%'.$search2.'%',
+                    'eventStr3' => '%'.$search3.'%'
+                )
+            );
+
+            $loggers = $query3->getResult();
+        }
+
+        //4) Request APCP936-REQ14092 has been sent to Completed
+        if( count($loggers) == 0 ) {
+            $dql4 = $repository->createQueryBuilder("logger");
+            $dql4->where("logger.entityName = 'TransResRequest' AND logger.entityId = ".$request->getId());
+            $dql4->andWhere("logger.event LIKE :eventStr AND logger.event LIKE :eventStr2");
+
+            $dql4->orderBy("logger.id","DESC");
+            $query4 = $em->createQuery($dql4);
+
+            //The work for your request APCP845-REQ14084 ... has been completed.
+            $requestOid = $request->getOid();
+            $requestOid = str_replace("APCP","",$requestOid);
+            $requestOid = str_replace("HP","",$requestOid);
+            $requestOid = "P".$requestOid;
+            $search1 = $requestOid;
+            $search2 = " has been sent to Completed.";
+            //echo "try 4: [$search1] AND [$search2] <br>";
+            $query4->setParameters(
+                array(
+                    'eventStr' => '%'.$search1.'%',
+                    'eventStr2' => '%'.$search2.'%',
+                )
+            );
+
+            $loggers = $query4->getResult();
+        }
+
+        //5) Request APCP936-REQ14092 has been sent to Completed
+        if( count($loggers) == 0 ) {
+            $dql4 = $repository->createQueryBuilder("logger");
+            $dql4->where("logger.entityName = 'TransResRequest' AND logger.entityId = ".$request->getId());
+            $dql4->andWhere("logger.event LIKE :eventStr AND logger.event LIKE :eventStr2");
+
+            $dql4->orderBy("logger.id","DESC");
+            $query4 = $em->createQuery($dql4);
+
+            //Your request APCP874-REQ14095) for the project: (APCP874 (15019)) is completed.
+            $requestOid = $request->getOid();
+            $requestOid = str_replace("APCP","",$requestOid);
+            $requestOid = str_replace("HP","",$requestOid);
+            $requestOid = "P".$requestOid;
+            $search1 = $requestOid;
+            $search2 = " is completed.";
+            //echo "try 5: [$search1] AND [$search2] <br>";
+            $query4->setParameters(
+                array(
+                    'eventStr' => '%'.$search1.'%',
+                    'eventStr2' => '%'.$search2.'%',
+                )
+            );
+
+            $loggers = $query4->getResult();
+        }
+
+        //6) Work Request APCP1080-REQ16124 has been updated. The request's current status is 'Completed'.
+        if( count($loggers) == 0 ) {
+            $dql4 = $repository->createQueryBuilder("logger");
+            $dql4->where("logger.entityName = 'TransResRequest' AND logger.entityId = ".$request->getId());
+            $dql4->andWhere("logger.event LIKE :eventStr AND logger.event LIKE :eventStr2");
+
+            $dql4->orderBy("logger.id","DESC");
+            $query4 = $em->createQuery($dql4);
+
+            //Your request APCP874-REQ14095) for the project: (APCP874 (15019)) is completed.
+            $requestOid = $request->getOid();
+            $requestOid = str_replace("APCP","",$requestOid);
+            $requestOid = str_replace("HP","",$requestOid);
+            $requestOid = "P".$requestOid;
+            $search1 = $requestOid . " has been updated.";
+            $search2 = "The request's current status is 'Completed'.";
+            //echo "try 6: [$search1] AND [$search2] <br>";
+            $query4->setParameters(
+                array(
+                    'eventStr' => '%'.$search1.'%',
+                    'eventStr2' => '%'.$search2.'%',
+                )
+            );
+
+            $loggers = $query4->getResult();
+        }
+
+        //7) Work Request APCP1080-REQ16124 has been updated. The request's current status is 'Completed'.
+        if( count($loggers) == 0 ) {
+            $dql4 = $repository->createQueryBuilder("logger");
+            $dql4->where("logger.entityName = 'TransResRequest' AND logger.entityId = ".$request->getId());
+            $dql4->andWhere("logger.event LIKE :eventStr AND logger.event LIKE :eventStr2");
+
+            $dql4->orderBy("logger.id","DESC");
+            $query4 = $em->createQuery($dql4);
+
+            //Your request APCP874-REQ14095) for the project: (APCP874 (15019)) is completed.
+            $requestOid = $request->getOid();
+            $requestOid = str_replace("APCP","",$requestOid);
+            $requestOid = str_replace("HP","",$requestOid);
+            $requestOid = "P".$requestOid;
+            $search1 = $requestOid . " has been updated.";
+            $search2 = "The request's current status is 'Completed and Notified'.";
+            echo "try 7: [$search1] AND [$search2] <br>";
+            $query4->setParameters(
+                array(
+                    'eventStr' => '%'.$search1.'%',
+                    'eventStr2' => '%'.$search2.'%',
+                )
+            );
+
+            $loggers = $query4->getResult();
+        }
+
+        //echo $invoice->getOid().": loggers count=".count($loggers)."<br>";
+        //foreach($loggers as $logger) {
+        //    echo "logger.id=".$logger->getId()."; TransResRequest id=".$request->getId()."<br>";
+        //}
+
+        if( count($loggers) > 0 ) {
+            $logger = $loggers[0];
+            //echo "@@@ logger.id=".$logger->getId()."; TransResRequest id=".$request->getId()."<br>";
+            $user = $logger->getUser();
+        } else {
+            $user = null;
+        }
+
+        return $user;
+    }
+
+
+    /**
      * http://127.0.0.1/order/translational-research/dashboard/graphs/populate-dates-projects
      *
      * @Route("/graphs/populate-dates-projects", name="translationalresearch_dashboard_populate_dates_projects")
