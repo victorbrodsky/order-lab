@@ -1318,7 +1318,7 @@ class DashboardController extends Controller
                 echo $thisRequest->getOid()."(".$thisRequest->getCompletedBy()."): completedUser=" . $completedUser . "<br>";
                 $thisRequest->setCompletedBy($completedUser);
                 $thisRequest->setCompletedDateSet(true);
-                //$em->flush($thisRequest);
+                $em->flush($thisRequest);
                 $count++;
             } else {
                 echo $thisRequest->getOid()."(".$thisRequest->getCompletedBy()."): no completedUser <br>";
