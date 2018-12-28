@@ -4266,6 +4266,13 @@ class DashboardUtil
 
             //$titleCount = $titleCount . " (invoices ".count($invoices).")";
 
+            $layoutArray = array(
+                'height' => $this->height*1.5,
+                'width' => $this->width,
+                'title' => $chartName,
+                'margin' => array('b' => 400)
+            );
+
             $descriptionArr = array(
                 array(
                     'descrPrefix'   => "due $",
