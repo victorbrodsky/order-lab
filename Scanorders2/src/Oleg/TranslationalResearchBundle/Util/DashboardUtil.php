@@ -4288,6 +4288,8 @@ class DashboardUtil
             $chartName = $this->getTitleWithTotal($chartName,count($invoices));
             $showOther = $this->getOtherStr($showLimited,"Invoices");
             $invoiceDueDaysArrTop = $this->getTopArray($invoiceDueDaysArr,$showOther,$descriptionArr,$maxLen=50, $limit=50);
+            //print_r($invoiceDueDaysArrTop);
+            arsort($invoiceDueDaysArrTop);
             $chartsArray = $this->getChart($invoiceDueDaysArrTop, $chartName,'bar',$layoutArray);
         }
 
