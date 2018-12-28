@@ -121,7 +121,7 @@ class DashboardUtil
             "46. Total Fees per Project Request Type (Top 10) (linked)" => "projects-fess-per-type",
             "47. Total Fees per Work Requests Business Purpose (Top 10)" => "requests-fees-per-business-purpose",
             "48. Turn-around Statistics: Number of days to complete each Work Request with person (based on 'Completed and Notified' requests)" => "turn-around-statistics-days-complete-per-request-with-user",
-
+            "49. Turn-around Statistics: Top 50 most delinquent invoices" => "turn-around-statistics-delayed-unpaid-invoices-by-days",
 
             "" => "",
             "" => "",
@@ -3497,7 +3497,6 @@ class DashboardUtil
 
             $pisUnpaidInvoicesArr = array();
             $invoiceDueArr = array();
-            $emptyArr = array();
 
             //get unpaid and delayd invoices
             //$invoiceStates = array("Unpaid/Issued");
@@ -3526,8 +3525,6 @@ class DashboardUtil
                         $due = $invoiceDueArr[$piIndex] + $due;
                     }
                     $invoiceDueArr[$piIndex] = $due;
-
-                    $emptyArr[$piIndex] = 0;
 
                     $titleCount++;
                 }
@@ -4239,10 +4236,55 @@ class DashboardUtil
             $chartsArray = $this->getChart($averageDays, $chartName,'bar',$layoutArray,$valuePrefixLabel,$valuePostfixLabel); // getChart(
         }
 
-        
-        if( $chartType == "" ) {
+        //"49. Turn-around Statistics: Top 50 most delinquent invoices" => "turn-around-statistics-delayed-unpaid-invoices-by-days",
+        if( $chartType == "turn-around-statistics-delayed-unpaid-invoices-by-days" ) {
+            $transresRequestUtil = $this->container->get('transres_request_util');
 
+            $invoiceDueDaysArr = array();
+            $invoiceDueArr = array();
+
+            //get unpaid and delayd invoices
+            $invoices = $transresRequestUtil->getOverdueInvoices();
+
+            foreach($invoices as $invoice) {
+
+                $nowDate = new \DateTime();
+                $dueDate = $invoice->getDueDate();
+                if( !$dueDate ) {
+                    continue; //ignore invoices without duedate
+                }
+
+                $index = $invoice->getOid();
+
+                $days = $this->calculateDays($dueDate,$nowDate);
+
+                $invoiceDueDaysArr[$index] = $days;
+
+                $invoiceDueArr[$index] = $invoice->getDue();
+
+            }//foreach
+
+            //$titleCount = $titleCount . " (invoices ".count($invoices).")";
+
+            $descriptionArr = array(
+                array(
+                    'descrPrefix'   => "due $",
+                    'descrPostfix'  => null,
+                    'valuePrefix'   => ": (",
+                    'valuePostfix'  => " days)",
+                    'descrColor'    => "red",
+                    'descrType'     => "money",
+                    'descrValueArr' => $invoiceDueArr
+                ),
+            );
+
+            $chartName = $this->getTitleWithTotal($chartName,count($invoices));
+            $showOther = $this->getOtherStr($showLimited,"Invoices");
+            $invoiceDueDaysArrTop = $this->getTopArray($invoiceDueDaysArr,$showOther,$descriptionArr,$maxLen=50, $limit=50);
+            $chartsArray = $this->getChart($invoiceDueDaysArrTop, $chartName,'pie',$layoutArray);
         }
+
+
         if( $chartType == "" ) {
 
         }if( $chartType == "" ) {
