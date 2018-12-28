@@ -64,18 +64,18 @@ class DashboardUtil
         $chartTypes = array(
             //PI/Project statistics
             "1. Principle Investigators by Affiliation" =>                      "pi-by-affiliation",
-            "2. Total Number of Projects per PI (Top 10)" =>                    "projects-per-pi",
-            "3. Total Number of Funded Projects per PI (Top 10)" =>             "funded-projects-per-pi",
-            "4. Total Number of Non-Funded Projects per PI (Top 10)" =>         "nonfunded-projects-per-pi",
+            "2. Total Number of Projects per PI (Top 10) (linked)" =>                    "projects-per-pi",
+            "3. Total Number of Funded Projects per PI (Top 10) (linked)" =>             "funded-projects-per-pi",
+            "4. Total Number of Non-Funded Projects per PI (Top 10) (linked)" =>         "nonfunded-projects-per-pi",
             //Pathologists Involved and number of projects
             "5. Total Number of Projects per Pathologist Involved (Top 10)" =>             "projects-per-pathologist-involved",
             "6. Total Number of Funded Projects per Pathologist Involved (Top 10)" =>      "funded-projects-per-pathologist-involved",
             "7. Total Number of Non-Funded Projects per Pathologist Involved (Top 10)" =>  "nonfunded-projects-per-pathologist-involved",
             //Work request statistics
             "8. Total Number of Work Requests by Funding Source" =>                 "requests-by-funding-source",
-            "9. Total Number of Work Requests per Project (Top 10)" =>              "requests-per-project",
-            "10. Total Number of Work Requests per Funded Project (Top 10)" =>      "requests-per-funded-projects",
-            "11. Total Number of Work Requests per Non-Funded Project (Top 10)" =>  "requests-per-nonfunded-projects",
+            "9. Total Number of Work Requests per Project (Top 10) (linked)" =>              "requests-per-project",
+            "10. Total Number of Work Requests per Funded Project (Top 10) (linked)" =>      "requests-per-funded-projects",
+            "11. Total Number of Work Requests per Non-Funded Project (Top 10) (linked)" =>  "requests-per-nonfunded-projects",
             //   Products/Services
             "12. TRP Service Productivity by Products/Services (Top 25)" =>     "service-productivity-by-service",
             "13. TRP Service Productivity for Funded Projects (Top 25)" =>      "service-productivity-by-service-per-funded-projects",
@@ -98,27 +98,27 @@ class DashboardUtil
             "27. Total Invoiced Amounts for Non-Funded Projects per Pathologist Involved (Top 10)" =>  "fees-by-invoices-per-nonfunded-projects-per-pathologist-involved",
             "28. Total Fees per Involved Pathologist for Non-Funded Projects (Top 10)" =>              "fees-per-nonfunded-projects-per-pathologist-involved",
 
-            "29. Total Number of Projects per Type" => "projects-per-type",
+            "29. Total Number of Projects per Type (linked)" => "projects-per-type",
             "30. Total Number of Work Requests per Business Purpose" => "requests-per-business-purpose",
 
             "31. Turn-around Statistics: Average number of days to complete a Work Request (based on 'Completed and Notified' requests)" => "turn-around-statistics-days-complete-request",
-            "32. Turn-around Statistics: Number of days to complete each Work Request (based on 'Completed and Notified' requests)" => "turn-around-statistics-days-complete-per-request",
+            "32. Turn-around Statistics: Number of days to complete each Work Request (based on 'Completed and Notified' requests) (linked)" => "turn-around-statistics-days-complete-per-request",
             "33. Turn-around Statistics: Number of days to complete each Work Request with products/services (based on 'Completed and Notified' requests)" => "turn-around-statistics-days-complete-per-request-with-product",
             "34. Turn-around Statistics: Average number of days for each project request approval phase" => "turn-around-statistics-days-project-state",
-            "35. Turn-around Statistics: Number of days for each project request approval phase" => "turn-around-statistics-days-per-project-state",
+            "35. Turn-around Statistics: Number of days for each project request approval phase (linked)" => "turn-around-statistics-days-per-project-state",
             "36. Turn-around Statistics: Average number of days for invoices to be paid (based on fully and partially paid invoices)" => "turn-around-statistics-days-paid-invoice",
-            "37. Turn-around Statistics: Number of days for each invoice to be paid (based on fully and partially paid invoices)" => "turn-around-statistics-days-per-paid-invoice",
+            "37. Turn-around Statistics: Number of days for each invoice to be paid (based on fully and partially paid invoices) (linked)" => "turn-around-statistics-days-per-paid-invoice",
             "38. Turn-around Statistics: Top 10 PIs with most delayed unpaid invoices" => "turn-around-statistics-pis-with-delayed-unpaid-invoices",
             "39. Turn-around Statistics: Top 10 PIs with highest total unpaid, overdue invoices" => "turn-around-statistics-pis-with-highest-total-unpaid-invoices",
             "40. Turn-around Statistics: Top 10 PIs by index (delay in months * invoiced amount, aggregate) for unpaid, overdue invoices" => "turn-around-statistics-pis-combining-total-delayed-unpaid-invoices",
 
-            "41. Number of PIs in AP/CP vs Hematopathology" => "compare-projectspecialty-pis",
-            "42. Number of AP/CP vs Hematopathology Project Requests" => "compare-projectspecialty-projects",
-            "43. Number of AP/CP vs Hematopathology Project Requests" => "compare-projectspecialty-projects-stack",
-            "44. Number of AP/CP vs Hematopathology Work Requests" => "compare-projectspecialty-requests",
-            "45. Number of AP/CP vs Hematopathology Invoices" => "compare-projectspecialty-invoices",
+            "41. Number of PIs in AP/CP vs Hematopathology (linked)" => "compare-projectspecialty-pis",
+            "42. Number of AP/CP vs Hematopathology Project Requests (linked)" => "compare-projectspecialty-projects",
+            "43. Number of AP/CP vs Hematopathology Project Requests (linked)" => "compare-projectspecialty-projects-stack",
+            "44. Number of AP/CP vs Hematopathology Work Requests (linked)" => "compare-projectspecialty-requests",
+            "45. Number of AP/CP vs Hematopathology Invoices (linked)" => "compare-projectspecialty-invoices",
 
-            "46. Total Fees per Project Request Type (Top 10)" => "projects-fess-per-type",
+            "46. Total Fees per Project Request Type (Top 10) (linked)" => "projects-fess-per-type",
             "47. Total Fees per Work Requests Business Purpose (Top 10)" => "requests-fees-per-business-purpose",
             "48. Turn-around Statistics: Number of days to complete each Work Request with person (based on 'Completed and Notified' requests)" => "turn-around-statistics-days-complete-per-request-with-user",
 
@@ -436,6 +436,7 @@ class DashboardUtil
         $chartDataArray['type'] = $type;
         $chartDataArray["links"] = $links;
 
+        //color array for bars
 //        if( $type == "bar" || $type == "stack" ) {
 //            //$chartDataArray['marker']['color'] = array('rgb(142,124,195)','red','green');
 //            $colors = array();
