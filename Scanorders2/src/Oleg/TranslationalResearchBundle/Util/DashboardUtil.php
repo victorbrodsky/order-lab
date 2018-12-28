@@ -110,7 +110,7 @@ class DashboardUtil
             "37. Turn-around Statistics: Number of days for each invoice to be paid (based on fully and partially paid invoices)" => "turn-around-statistics-days-per-paid-invoice",
             "38. Turn-around Statistics: Top 10 PIs with most delayed unpaid invoices" => "turn-around-statistics-pis-with-delayed-unpaid-invoices",
             "39. Turn-around Statistics: Top 10 PIs with highest total unpaid, overdue invoices" => "turn-around-statistics-pis-with-highest-total-unpaid-invoices",
-            "40. Turn-around Statistics: Top 10 PIs combining index (delay in months * total) for unpaid, overdue invoices" => "turn-around-statistics-pis-combining-total-delayed-unpaid-invoices",
+            "40. Turn-around Statistics: Top 10 PIs by index (delay in months * invoiced amount, aggregate) for unpaid, overdue invoices" => "turn-around-statistics-pis-combining-total-delayed-unpaid-invoices",
 
             "41. Number of PIs in AP/CP vs Hematopathology" => "compare-projectspecialty-pis",
             "42. Number of AP/CP vs Hematopathology Project Requests" => "compare-projectspecialty-projects",
@@ -346,6 +346,29 @@ class DashboardUtil
         return $res;    //implode(array_slice($parts, 0, $last_part)).$postfix;
     }
 
+    public function adjustBrightness($hex, $steps) {
+        // Steps should be between -255 and 255. Negative = darker, positive = lighter
+        $steps = max(-255, min(255, $steps));
+
+        // Normalize into a six character long hex string
+        $hex = str_replace('#', '', $hex);
+        if (strlen($hex) == 3) {
+            $hex = str_repeat(substr($hex,0,1), 2).str_repeat(substr($hex,1,1), 2).str_repeat(substr($hex,2,1), 2);
+        }
+
+        // Split into three parts: R, G and B
+        $color_parts = str_split($hex, 2);
+        $return = '#';
+
+        foreach ($color_parts as $color) {
+            $color   = hexdec($color); // Convert to decimal
+            $color   = max(0,min(255,$color + $steps)); // Adjust color
+            $return .= str_pad(dechex($color), 2, '0', STR_PAD_LEFT); // Make two char hex code
+        }
+
+        return $return;
+    }
+
     public function getChart( $dataArr, $title, $type='pie', $layoutArray=null, $valuePrefixLabel=null, $valuePostfixLabel=null ) {
 
         if( count($dataArr) == 0 ) {
@@ -412,6 +435,24 @@ class DashboardUtil
         $chartDataArray[$yAxis] = $values;
         $chartDataArray['type'] = $type;
         $chartDataArray["links"] = $links;
+
+//        if( $type == "bar" || $type == "stack" ) {
+//            //$chartDataArray['marker']['color'] = array('rgb(142,124,195)','red','green');
+//            $colors = array();
+//            $initColor = "#3366CC";
+//            $step = 100/count($values);
+//            $count = 0;
+//            foreach($values as $value) {
+//                if($value) {
+//                    $colors[] = $this->adjustBrightness($initColor,$count);
+//                    $count = $count + 10;;
+//                } else {
+//                    $colors[] = 'white';
+//                }
+//            }
+//
+//            $chartDataArray['marker'] = array('color'=>$colors);    //['color'] = array('rgb(142,124,195)','red','green');
+//        }
 
         //$chartDataArray["text"] = "111";
         $chartDataArray["textinfo"] = "value+percent";
