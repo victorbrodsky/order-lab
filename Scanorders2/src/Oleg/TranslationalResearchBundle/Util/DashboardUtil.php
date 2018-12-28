@@ -207,18 +207,20 @@ class DashboardUtil
 
                 $descr = array();
                 foreach($descriptionArr as $descriptionSingleArr) {
-                    $descrPrefix = $descriptionSingleArr[0];
-                    $descrFirstPrefix = $descriptionSingleArr[1];
-                    $descrColor = $descriptionSingleArr[2];
-                    $descrType = $descriptionSingleArr[3];
-                    $descrValueArr = $descriptionSingleArr[4];
+                    $descrPrefix = $descriptionSingleArr['descrPrefix'];
+                    $descrPostfix = $descriptionSingleArr['descrPostfix'];
+                    $valuePrefix = $descriptionSingleArr['valuePrefix'];
+                    $valuePostfix = $descriptionSingleArr['valuePostfix'];
+                    $descrColor = $descriptionSingleArr['descrColor'];
+                    $descrType = $descriptionSingleArr['descrType'];
+                    $descrValueArr = $descriptionSingleArr['descrValueArr'];
                     $descrValue = $descrValueArr[$index];
                     if( $descrType == "money" ) {
                         $descrValue = $this->getNumberFormat($descrValue);
                     }
                     if( $descrValue ) {
                         if( $descrColor ) {
-                            $descr[] = '<span style="color:'.$descrColor.'">'.$descrPrefix . $descrValue.'</span>';
+                            $descr[] = '<span style="color:'.$descrColor.'">' . $descrPrefix . $descrValue . $descrPostfix . '</span>';
                         } else {
                             $descr[] = $descrPrefix . $descrValue;
                         }
@@ -226,12 +228,12 @@ class DashboardUtil
                 }//foreach
 
                 if( count($descr) > 0 ) {
-                    if( strpos($descrFirstPrefix,'$') !== false ) {
+                    if( strpos($valuePrefix,'$') !== false ) {
                         $valueLabel = $this->getNumberFormat($value);
                     } else {
                         $valueLabel = $value;
                     }
-                    $index = $index . " " . $descrFirstPrefix . $valueLabel . " (" . implode(", ",$descr) . ")";
+                    $index = $index . " " . $valuePrefix . $valueLabel . $valuePostfix . " (" . implode(", ",$descr) . ")";
                 }
 
                 $piProjectCountTopShortArr[$index] = $value;
@@ -2613,9 +2615,26 @@ class DashboardUtil
 
             //24. Generated Invoices by Status per PI (Top 10)
             $descriptionArr = array(
-                array("paid $"," : $","limegreen","money",$invoicePaidFeeArr),
-                array("due $"," : $","red","money",$invoiceDueFeeArr)
+                array(
+                    'descrPrefix'   => "paid $",
+                    'descrPostfix'  => null,
+                    'valuePrefix'   => " : $",
+                    'valuePostfix'  => null,
+                    'descrColor'    => "limegreen",
+                    'descrType'     => "money",
+                    'descrValueArr' => $invoicePaidFeeArr
+                ),
+                array(
+                    'descrPrefix'   => "due $",
+                    'descrPostfix'  => null,
+                    'valuePrefix'   => " : $",
+                    'valuePostfix'  => null,
+                    'descrColor'    => "red",
+                    'descrType'     => "money",
+                    'descrValueArr' => $invoiceDueFeeArr
+                ),
             );
+
             $showOther = $this->getOtherStr($showLimited,"PIs");
             $invoicesFeesByPiArrTop = $this->getTopArray($invoicesFeesByPiArr,$showOther,$descriptionArr);
             $chartsArray = $this->getChart($invoicesFeesByPiArrTop,$chartName,'pie',$layoutArray);
@@ -2678,9 +2697,26 @@ class DashboardUtil
             $chartName = $chartName." (".$totalInvoices." invoices)";
 
             $descriptionArr = array(
-                array("paid $"," : $","limegreen","money",$invoicePaidFeeArr),
-                array("due $"," : $","red","money",$invoiceDueFeeArr)
+                array(
+                    'descrPrefix'   => "paid $",
+                    'descrPostfix'  => null,
+                    'valuePrefix'   => " : $",
+                    'valuePostfix'  => null,
+                    'descrColor'    => "limegreen",
+                    'descrType'     => "money",
+                    'descrValueArr' => $invoicePaidFeeArr
+                ),
+                array(
+                    'descrPrefix'   => "due $",
+                    'descrPostfix'  => null,
+                    'valuePrefix'   => " : $",
+                    'valuePostfix'  => null,
+                    'descrColor'    => "red",
+                    'descrType'     => "money",
+                    'descrValueArr' => $invoiceDueFeeArr
+                ),
             );
+
             $showOther = $this->getOtherStr($showLimited,"pathologists involved");
             $invoicesFeesByPathologistArrTop = $this->getTopArray($invoicesFeesByPathologistArr,$showOther,$descriptionArr);
             $chartsArray = $this->getChart($invoicesFeesByPathologistArrTop, $chartName,'pie',$layoutArray);
@@ -2744,9 +2780,26 @@ class DashboardUtil
             $chartName = $chartName." (".$totalInvoices." invoices)";
 
             $descriptionArr = array(
-                array("paid $"," : $","limegreen","money",$invoicePaidFeeArr),
-                array("due $"," : $","red","money",$invoiceDueFeeArr)
+                array(
+                    'descrPrefix'   => "paid $",
+                    'descrPostfix'  => null,
+                    'valuePrefix'   => " : $",
+                    'valuePostfix'  => null,
+                    'descrColor'    => "limegreen",
+                    'descrType'     => "money",
+                    'descrValueArr' => $invoicePaidFeeArr
+                ),
+                array(
+                    'descrPrefix'   => "due $",
+                    'descrPostfix'  => null,
+                    'valuePrefix'   => " : $",
+                    'valuePostfix'  => null,
+                    'descrColor'    => "red",
+                    'descrType'     => "money",
+                    'descrValueArr' => $invoiceDueFeeArr
+                ),
             );
+
             $showOther = $this->getOtherStr($showLimited,"pathologists involved");
             $invoicesFeesByPathologistArrTop = $this->getTopArray($invoicesFeesByPathologistArr,$showOther,$descriptionArr);
             $chartsArray = $this->getChart($invoicesFeesByPathologistArrTop, $chartName,'pie',$layoutArray);
@@ -2812,9 +2865,26 @@ class DashboardUtil
             $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($titleCount),"$");
 
             $descriptionArr = array(
-                array("paid $"," : $","limegreen","money",$invoicePaidFeeArr),
-                array("due $"," : $","red","money",$invoiceDueFeeArr)
+                array(
+                    'descrPrefix'   => "paid $",
+                    'descrPostfix'  => null,
+                    'valuePrefix'   => " : $",
+                    'valuePostfix'  => null,
+                    'descrColor'    => "limegreen",
+                    'descrType'     => "money",
+                    'descrValueArr' => $invoicePaidFeeArr
+                ),
+                array(
+                    'descrPrefix'   => "due $",
+                    'descrPostfix'  => null,
+                    'valuePrefix'   => " : $",
+                    'valuePostfix'  => null,
+                    'descrColor'    => "red",
+                    'descrType'     => "money",
+                    'descrValueArr' => $invoiceDueFeeArr
+                ),
             );
+
             $showOther = $this->getOtherStr($showLimited,"pathologists involved");
             $invoicesFeesByPathologistArrTop = $this->getTopArray($invoicesFeesByPathologistArr,$showOther,$descriptionArr);
             $chartsArray = $this->getChart($invoicesFeesByPathologistArrTop, $chartName." (".$totalInvoices." invoices)",'pie',$layoutArray);
@@ -3466,12 +3536,20 @@ class DashboardUtil
             //$titleCount = $titleCount . " (invoices ".count($invoices).")";
 
             $descriptionArr = array(
-                array("due $",": ","red","money",$invoiceDueArr),
+                array(
+                    'descrPrefix'   => "due $",
+                    'descrPostfix'  => null,
+                    'valuePrefix'   => ": (",
+                    'valuePostfix'  => " invoices)",
+                    'descrColor'    => "red",
+                    'descrType'     => "money",
+                    'descrValueArr' => $invoiceDueArr
+                ),
             );
 
             $chartName = $this->getTitleWithTotal($chartName,$titleCount);
             $showOther = $this->getOtherStr($showLimited,"PIs");
-            $pisUnpaidInvoicesArrTop = $this->getTopArray($pisUnpaidInvoicesArr,$showOther,$descriptionArr); // getTopArray(
+            $pisUnpaidInvoicesArrTop = $this->getTopArray($pisUnpaidInvoicesArr,$showOther,$descriptionArr);
             $chartsArray = $this->getChart($pisUnpaidInvoicesArrTop, $chartName,'pie',$layoutArray);
         }
 
