@@ -223,7 +223,7 @@ class DashboardUtil
                             $descr[] = $descrPrefix . $descrValue;
                         }
                     }
-                }
+                }//foreach
 
                 if( count($descr) > 0 ) {
                     if( strpos($descrFirstPrefix,'$') !== false ) {
@@ -235,9 +235,10 @@ class DashboardUtil
                 }
 
                 $piProjectCountTopShortArr[$index] = $value;
-            }
+            }//foreach
+
             return $piProjectCountTopShortArr;
-        }
+        }//if
 
         return $piProjectCountTopArr;
     }
@@ -2531,7 +2532,7 @@ class DashboardUtil
             //Generated Invoices by Status per Funded Project (Top 10)
             $showOther = $this->getOtherStr($showLimited,"projects");
             $invoicesByProjectTopArr = $this->getTopArray($invoicesByProjectArr,$showOther);
-            $invoicesFeesByProjectTopArr = $this->getTopArray($invoicesFeesByProjectArr,$showOther); //public function getTopArray(
+            $invoicesFeesByProjectTopArr = $this->getTopArray($invoicesFeesByProjectArr,$showOther);
             //merge two to attach fees to label
             $invoicesByProjectTopArr = $this->attachSecondValueToFirstLabel($invoicesByProjectTopArr,$invoicesFeesByProjectTopArr," : $");
             $chartsArray = $this->getChart($invoicesByProjectTopArr,$chartName." (".$totalInvoices." invoices)",'pie',$layoutArray);
@@ -3425,6 +3426,8 @@ class DashboardUtil
             $transresRequestUtil = $this->container->get('transres_request_util');
 
             $pisUnpaidInvoicesArr = array();
+            $invoiceDueArr = array();
+            $emptyArr = array();
 
             //get unpaid and delayd invoices
             //$invoiceStates = array("Unpaid/Issued");
@@ -3448,16 +3451,28 @@ class DashboardUtil
                     }
                     $pisUnpaidInvoicesArr[$piIndex] = $count;
 
+                    $due = intval($invoice->getDue());
+                    if( isset($invoiceDueArr[$piIndex]) ) {
+                        $due = $invoiceDueArr[$piIndex] + $due;
+                    }
+                    $invoiceDueArr[$piIndex] = $due;
+
+                    $emptyArr[$piIndex] = 0;
+
                     $titleCount++;
                 }
             }//foreach
 
             //$titleCount = $titleCount . " (invoices ".count($invoices).")";
 
+            $descriptionArr = array(
+                array("due $",": ","red","money",$invoiceDueArr),
+            );
+
             $chartName = $this->getTitleWithTotal($chartName,$titleCount);
             $showOther = $this->getOtherStr($showLimited,"PIs");
-            $pisUnpaidInvoicesArrTop = $this->getTopArray($pisUnpaidInvoicesArr,$showOther);
-            $chartsArray = $this->getChart($pisUnpaidInvoicesArrTop, $chartName,'pie',$layoutArray," : ");
+            $pisUnpaidInvoicesArrTop = $this->getTopArray($pisUnpaidInvoicesArr,$showOther,$descriptionArr); // getTopArray(
+            $chartsArray = $this->getChart($pisUnpaidInvoicesArrTop, $chartName,'pie',$layoutArray);
         }
 
         //"39. Turn-around Statistics: Top 10 PIs with highest total unpaid, overdue invoices" => "turn-around-statistics-pis-with-highest-total-unpaid-invoices",
