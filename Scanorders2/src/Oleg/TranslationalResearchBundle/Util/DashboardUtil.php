@@ -4271,6 +4271,8 @@ class DashboardUtil
                 $issuedDate = $invoice->getIssuedDate();
                 if( $issuedDate ) {
                     $index = $index . " on " . $issuedDate->format("m/d/Y");
+                } else {
+                    $index = $index . " due on " . $dueDate->format("m/d/Y");
                 }
                 $due = $invoice->getDue();
                 if( $due ) {
@@ -4295,7 +4297,7 @@ class DashboardUtil
                 'height' => $this->height*1.5,
                 'width' => $this->width,
                 'title' => $chartName,
-                'margin' => array('b' => 400)
+                'margin' => array('b' => 500)
             );
 
 //            $descriptionArr = array(
