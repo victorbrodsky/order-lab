@@ -966,7 +966,7 @@ class DashboardController extends Controller
      */
     public function dashboardPopulateDatesAction( Request $request )
     {
-        //exit("Disabled Invoice's IssuedDate");
+        exit("Disabled Invoice's IssuedDate");
 
         if( $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             //ok
