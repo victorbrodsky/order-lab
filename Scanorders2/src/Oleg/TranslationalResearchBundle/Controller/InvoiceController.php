@@ -706,6 +706,10 @@ class InvoiceController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             //exit('new');
 
+            if ($invoice->getStatus() == "Unpaid/Issued") {
+                $invoice->setIssuedDate(new \DateTime());
+            }
+
             $msg = $transresRequestUtil->createSubmitNewInvoice($transresRequest,$invoice);
 
             $msg2 = $this->processInvoiceAfterSave($invoice,$form,$user);
@@ -917,6 +921,9 @@ class InvoiceController extends Controller
 //                        //echo "update Due<br>";
 //                        $invoice->setDue(NULL);
 //                    }
+                }
+                if ($invoice->getStatus() == "Unpaid/Issued") {
+                    $invoice->setIssuedDate(new \DateTime());
                 }
             }
             //exit("status=".$invoice->getStatus());
