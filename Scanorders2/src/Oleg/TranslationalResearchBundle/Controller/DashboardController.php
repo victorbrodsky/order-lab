@@ -979,7 +979,7 @@ class DashboardController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         //$invoices = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findAll();
-        $invoiceStates = array("Paid in Full","Paid Partially");
+        $invoiceStates = array("Paid in Full","Paid Partially","Unpaid/Issued");
         $repository = $em->getRepository('OlegTranslationalResearchBundle:Invoice');
         $dql =  $repository->createQueryBuilder("invoice");
         $dql->select('invoice');
