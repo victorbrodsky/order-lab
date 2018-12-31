@@ -228,10 +228,15 @@ class DashboardUtil
                 }//foreach
 
                 if( count($descr) > 0 ) {
-                    if( strpos($valuePrefix,'$') !== false ) {
-                        $valueLabel = $this->getNumberFormat($value);
+                    if( is_array($value) ) {
+                        $valueLabel = $value['value'];
                     } else {
                         $valueLabel = $value;
+                    }
+                    if( strpos($valuePrefix,'$') !== false ) {
+                        $valueLabel = $this->getNumberFormat($valueLabel);
+                    } else {
+                        $valueLabel = $valueLabel;
                     }
                     $index = $index . " " . $valuePrefix . $valueLabel . $valuePostfix . " (" . implode(", ",$descr) . ")";
                 }
@@ -4254,7 +4259,9 @@ class DashboardUtil
                     continue; //ignore invoices without duedate
                 }
 
+                //APCP843-REQ16111-V1 to PIFirstName PILastName X days ago on MM/DD/YY for $XXX.XX - (123) 444-5555
                 $index = $invoice->getOid();
+
 
                 $days = $this->calculateDays($dueDate,$nowDate);
 
@@ -4287,9 +4294,12 @@ class DashboardUtil
                 ),
             );
 
-            $chartName = $this->getTitleWithTotal($chartName,count($invoices));
-            $showOther = $this->getOtherStr($showLimited,"Invoices");
-            $invoiceDueDaysArrTop = $this->getTopArray($invoiceDueDaysArr,$showOther,$descriptionArr,$maxLen=50, $limit=50);
+            //$chartName = $this->getTitleWithTotal($chartName,count($invoices));
+            //109 unpaid invoices in total
+            $chartName = $chartName . " - " . count($invoices) . " unpaid invoices in total";
+
+           //$showOther = $this->getOtherStr($showLimited,"Invoices");
+            $invoiceDueDaysArrTop = $this->getTopArray($invoiceDueDaysArr,false,$descriptionArr,$maxLen=50, $limit=50);
             arsort($invoiceDueDaysArrTop);
             $chartsArray = $this->getChart($invoiceDueDaysArrTop, $chartName,'bar',$layoutArray);
         }
