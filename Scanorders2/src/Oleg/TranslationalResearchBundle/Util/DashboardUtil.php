@@ -4259,17 +4259,33 @@ class DashboardUtil
                     continue; //ignore invoices without duedate
                 }
 
+                $days = $this->calculateDays($dueDate,$nowDate);
+
                 //APCP843-REQ16111-V1 to PIFirstName PILastName X days ago on MM/DD/YY for $XXX.XX - (123) 444-5555
                 $index = $invoice->getOid();
-
-
-                $days = $this->calculateDays($dueDate,$nowDate);
+                $pi = $invoice->getPrincipalInvestigator();
+                if( $pi ) {
+                    $index = $index . " to " . $pi->getUsernameOptimal();
+                }
+                $index = $index . " " . $days . " ago ";
+                $issuedDate = $invoice->getIssuedDate();
+                if( $issuedDate ) {
+                    $index = $index . " on " . $issuedDate->format("m/d/Y");
+                }
+                $due = $invoice->getDue();
+                if( $due ) {
+                    $index = $index . " for $" . $this->getNumberFormat($due);
+                }
+                $phone = $pi->getSinglePhone();
+                if( $phone ) {
+                    $index = $index . " - " . $phone;
+                }
 
                 //$invoiceDueDaysArr[$index] = $days;
                 $invoiceShowUrl = $transresRequestUtil->getInvoiceShowUrl($invoice,false,$invoice->getOid(),true);
                 $invoiceDueDaysArr[$index] = array('value'=>$days,'link'=>$invoiceShowUrl);
 
-                $invoiceDueArr[$index] = $invoice->getDue();
+                //$invoiceDueArr[$index] = $invoice->getDue();
 
             }//foreach
 
@@ -4282,24 +4298,25 @@ class DashboardUtil
                 'margin' => array('b' => 400)
             );
 
-            $descriptionArr = array(
-                array(
-                    'descrPrefix'   => "due $",
-                    'descrPostfix'  => null,
-                    'valuePrefix'   => ": (",
-                    'valuePostfix'  => " overdue days)",
-                    'descrColor'    => "red",
-                    'descrType'     => "money",
-                    'descrValueArr' => $invoiceDueArr
-                ),
-            );
+//            $descriptionArr = array(
+//                array(
+//                    'descrPrefix'   => "due $",
+//                    'descrPostfix'  => null,
+//                    'valuePrefix'   => ": (",
+//                    'valuePostfix'  => " overdue days)",
+//                    'descrColor'    => "red",
+//                    'descrType'     => "money",
+//                    'descrValueArr' => $invoiceDueArr
+//                ),
+//            );
+            $descriptionArr = array();
 
             //$chartName = $this->getTitleWithTotal($chartName,count($invoices));
             //109 unpaid invoices in total
             $chartName = $chartName . " - " . count($invoices) . " unpaid invoices in total";
 
            //$showOther = $this->getOtherStr($showLimited,"Invoices");
-            $invoiceDueDaysArrTop = $this->getTopArray($invoiceDueDaysArr,false,$descriptionArr,$maxLen=50, $limit=50);
+            $invoiceDueDaysArrTop = $this->getTopArray($invoiceDueDaysArr,false,$descriptionArr,$maxLen=100, $limit=50);
             arsort($invoiceDueDaysArrTop);
             $chartsArray = $this->getChart($invoiceDueDaysArrTop, $chartName,'bar',$layoutArray);
         }
