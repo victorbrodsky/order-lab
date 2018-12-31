@@ -121,7 +121,7 @@ class DashboardUtil
             "46. Total Fees per Project Request Type (Top 10) (linked)" => "projects-fess-per-type",
             "47. Total Fees per Work Requests Business Purpose (Top 10)" => "requests-fees-per-business-purpose",
             "48. Turn-around Statistics: Number of days to complete each Work Request with person (based on 'Completed and Notified' requests)" => "turn-around-statistics-days-complete-per-request-with-user",
-            "49. Turn-around Statistics: Top 50 most delinquent invoices" => "turn-around-statistics-delayed-unpaid-invoices-by-days",
+            "49. Turn-around Statistics: Top 50 most delinquent invoices (linked)" => "turn-around-statistics-delayed-unpaid-invoices-by-days",
 
             "" => "",
             "" => "",
@@ -4258,7 +4258,9 @@ class DashboardUtil
 
                 $days = $this->calculateDays($dueDate,$nowDate);
 
-                $invoiceDueDaysArr[$index] = $days;
+                //$invoiceDueDaysArr[$index] = $days;
+                $invoiceShowUrl = $transresRequestUtil->getInvoiceShowUrl($invoice,false,$invoice->getOid(),true);
+                $invoiceDueDaysArr[$index] = array('value'=>$days,'link'=>$invoiceShowUrl);
 
                 $invoiceDueArr[$index] = $invoice->getDue();
 
@@ -4278,7 +4280,7 @@ class DashboardUtil
                     'descrPrefix'   => "due $",
                     'descrPostfix'  => null,
                     'valuePrefix'   => ": (",
-                    'valuePostfix'  => " days)",
+                    'valuePostfix'  => " overdue days)",
                     'descrColor'    => "red",
                     'descrType'     => "money",
                     'descrValueArr' => $invoiceDueArr
