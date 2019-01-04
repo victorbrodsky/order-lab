@@ -2437,7 +2437,7 @@ class DashboardUtil
                 $thisEndDate->modify( 'first day of next month' );
                 //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y").": ";
 
-                $invoices = $this->getInvoicesByFilter($startDate, $endDate, $projectSpecialtyObjects,$invoiceStates,false,true,$compareType);
+                $invoices = $this->getInvoicesByFilter($startDate,$thisEndDate,$projectSpecialtyObjects,$invoiceStates,false,true,$compareType);
                 //get invoices by paidDate
 
                 $startDate->modify( 'first day of next month' );
@@ -2447,7 +2447,7 @@ class DashboardUtil
                     $paidThisInvoiceFee = intval($invoice->getPaid());
 
                     if( isset($paidArr[$startDateLabel]) ) {
-                        $paidThisInvoiceFee = $paidThisInvoiceFee + $paidArr[$startDateLabel];
+                        $paidThisInvoiceFee = $paidArr[$startDateLabel] + $paidThisInvoiceFee;
                     }
 
                     $paidArr[$startDateLabel] = $paidThisInvoiceFee;
