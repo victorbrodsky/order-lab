@@ -1063,8 +1063,8 @@ class DashboardUtil
 
         if( $overdue ) {
             $todayDate = new \DateTime();
-            $todayDate->modify('-3 day'); //make sure it's overdue (not considering hours and time zone difference)
-            $dql->andWhere("invoice.dueDate IS NOT NULL AND invoice.dueDate > :todayDate");
+            //$todayDate->modify('+1 day'); //make sure it's overdue (not considering hours and time zone difference)
+            $dql->andWhere("invoice.dueDate IS NOT NULL AND :todayDate > invoice.dueDate");
             $dqlParameters["todayDate"] = $todayDate->format('Y-m-d');
         }
 
@@ -4281,12 +4281,15 @@ class DashboardUtil
                     $index = $index . " to " . $pi->getUsernameOptimal();
                 }
                 $index = $index . " " . $days . " days ago";
-                $issuedDate = $invoice->getIssuedDate();
-                if( $issuedDate ) {
-                    $index = $index . " on " . $issuedDate->format("m/d/Y");
-                } else {
-                    $index = $index . " due on " . $dueDate->format("m/d/Y");
-                }
+
+//                $issuedDate = $invoice->getIssuedDate();
+//                if( $issuedDate ) {
+//                    $index = $index . " on " . $issuedDate->format("m/d/Y");
+//                } else {
+//                    $index = $index . " due on " . $dueDate->format("m/d/Y");
+//                }
+                $index = $index . " due on " . $dueDate->format("m/d/Y");
+
                 $due = $invoice->getDue();
                 if( $due ) {
                     $index = $index . " for $" . $this->getNumberFormat($due);

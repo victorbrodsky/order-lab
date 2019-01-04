@@ -1000,9 +1000,9 @@ class Invoice {
             $diff = $now->diff($dueDate);
             $days = $diff->format("%a");
             if ($days) {
-                return $dueDate->format('Y-m-d') . " (" . $days . " days ago" . ")";
+                return $dueDate->format('m/d/Y') . " (" . $days . " days ago" . ")";
             } else {
-                return $dueDate->format('Y-m-d') . " (" . "just now" . ")";;
+                return $dueDate->format('m/d/Y') . " (" . "just now" . ")";;
             }
         } else {
             return null;
