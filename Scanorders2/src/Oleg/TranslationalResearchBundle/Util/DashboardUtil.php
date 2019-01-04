@@ -3519,8 +3519,8 @@ class DashboardUtil
                 $pi = $invoice->getPrincipalInvestigator();
                 if( $pi ) {
                     $piIndex = $pi->getUsernameOptimal();
-                    if (isset($pisUnpaidInvoicesArr[$piIndex])) {
-                        $count = $pisUnpaidInvoicesArr[$piIndex] + 1;
+                    if( isset($pisUnpaidInvoicesArr[$piIndex]) ) {
+                        $count = $pisUnpaidInvoicesArr[$piIndex]['value'] + 1;
                     } else {
                         $count = 1;
                     }
