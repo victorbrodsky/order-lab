@@ -3519,18 +3519,27 @@ class DashboardUtil
                 $pi = $invoice->getPrincipalInvestigator();
                 if( $pi ) {
                     $piIndex = $pi->getUsernameOptimal();
-//                    if( isset($pisUnpaidInvoicesArr[$piIndex]) ) {
-//                        $pisUnpaidInvoicesArr[$piIndex] = $pisUnpaidInvoicesArr[$piIndex] + 1;
-//                    } else {
-//                        $pisUnpaidInvoicesArr[$piIndex] = 1;
-//                    }
-
                     if (isset($pisUnpaidInvoicesArr[$piIndex])) {
                         $count = $pisUnpaidInvoicesArr[$piIndex] + 1;
                     } else {
                         $count = 1;
                     }
-                    $pisUnpaidInvoicesArr[$piIndex] = $count;
+                    //$pisUnpaidInvoicesArr[$piIndex] = $count;
+                    $todayDate = new \DateTime();
+                    $linkFilterArr = array(
+                        'filter[status][0]' => "Unpaid/Issued",
+                        'filter[startCreateDate]' => $startDateStr,
+                        'filter[endCreateDate]' => $endDateStr,
+                        'filter[endDate]' => $todayDate->format('m/d/Y'),
+                        'filter[version]' => "Latest",
+                        'filter[principalInvestigator]' => $pi->getId()
+                    );
+                    $link = $this->container->get('router')->generate(
+                        'translationalresearch_invoice_index_filter',
+                        $linkFilterArr,
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    );
+                    $pisUnpaidInvoicesArr[$piIndex] = array('value'=>$count,'link'=>$link);
 
                     $due = intval($invoice->getDue());
                     if( isset($invoiceDueArr[$piIndex]) ) {
@@ -3585,7 +3594,22 @@ class DashboardUtil
                         //$count = $pisUnpaidInvoicesArr[$piIndex] + 1;
                         $total = $pisUnpaidInvoicesTotalArr[$piIndex] + $total;
                     }
-                    $pisUnpaidInvoicesTotalArr[$piIndex] = $total;
+                    //$pisUnpaidInvoicesTotalArr[$piIndex] = $total;
+                    $todayDate = new \DateTime();
+                    $linkFilterArr = array(
+                        'filter[status][0]' => "Unpaid/Issued",
+                        'filter[startCreateDate]' => $startDateStr,
+                        'filter[endCreateDate]' => $endDateStr,
+                        'filter[endDate]' => $todayDate->format('m/d/Y'),
+                        'filter[version]' => "Latest",
+                        'filter[principalInvestigator]' => $pi->getId()
+                    );
+                    $link = $this->container->get('router')->generate(
+                        'translationalresearch_invoice_index_filter',
+                        $linkFilterArr,
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    );
+                    $pisUnpaidInvoicesTotalArr[$piIndex] = array('value'=>$total,'link'=>$link);
 
                     $titleCount++;
                 }
@@ -3609,6 +3633,7 @@ class DashboardUtil
             $pisTotalUnpaidArr = array();
             $pisDaysArr = array();
             $pisCountArr = array();
+            $pisIdArr = array();
 
             $totalUnpaid = 0;
             $totalCombined = 0;
@@ -3673,6 +3698,8 @@ class DashboardUtil
                     }
                     $pisCountArr[$piIndex] = $count;
 
+                    $pisIdArr[$piIndex] = $pi->getId();
+
                     $titleCount++;
                 }
             }//foreach
@@ -3697,7 +3724,23 @@ class DashboardUtil
 
                 //new index (legend)
                 $newIndex = $index . " ($" . $this->getNumberFormat($total) . " total owed, " . $days . " average number of days invoice has been unpaid)";
-                $pisCombinedArrNew[$newIndex] = $combined;
+
+                //$pisCombinedArrNew[$newIndex] = $combined;
+                $todayDate = new \DateTime();
+                $linkFilterArr = array(
+                    'filter[status][0]' => "Unpaid/Issued",
+                    'filter[startCreateDate]' => $startDateStr,
+                    'filter[endCreateDate]' => $endDateStr,
+                    'filter[endDate]' => $todayDate->format('m/d/Y'),
+                    'filter[version]' => "Latest",
+                    'filter[principalInvestigator]' => $pisIdArr[$index]
+                );
+                $link = $this->container->get('router')->generate(
+                    'translationalresearch_invoice_index_filter',
+                    $linkFilterArr,
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+                $pisCombinedArrNew[$newIndex] = array('value'=>$combined,'link'=>$link);
             }
 
             //$chartName = $this->getTitleWithTotal($chartName,$titleCount);
