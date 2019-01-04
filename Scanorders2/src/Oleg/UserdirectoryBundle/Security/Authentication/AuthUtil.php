@@ -793,7 +793,7 @@ class AuthUtil {
                     $this->logger->notice("search Ldap: info: displayName=".$info[0]['displayname'][0]);
                     break;
                 } else {
-                    $this->logger->error("search Ldap: ldap_search NOTOK = info null");
+                    $this->logger->notice("search Ldap: ldap_search NOTOK = info null");
                 }
             } else {
                 $this->logger->error("search Ldap: ldap_search NOTOK with filter=" . $filter . "; bindDn=".$ldapBindDN);
