@@ -2422,14 +2422,13 @@ class DashboardUtil
             $chartsArray = $this->getChart($unFundedTotalFeesByInvestigatorTopArr, $chartName,'pie',$layoutArray," : $");
         }
 
-        //TODO:
-        //Will have number 22 and the following chart will have number 23
-        //"22a. Paid Invoices by Month" =>                              "fees-by-invoices-paid-per-month",
+        //"22. Paid Invoices by Month" =>                              "fees-by-invoices-paid-per-month",
         if( $chartType == "fees-by-invoices-paid-per-month" ) {
 
             $paidArr = array();
 
             $invoiceStates = array("Paid in Full","Paid Partially");
+            $compareType = "date when status changed to paid in full";
 
             $startDate->modify( 'first day of last month' );
             do {
@@ -2438,7 +2437,8 @@ class DashboardUtil
                 $thisEndDate->modify( 'first day of next month' );
                 //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y").": ";
 
-                $invoices = $this->getInvoicesByFilter($startDate, $endDate, $projectSpecialtyObjects,$invoiceStates);
+                $invoices = $this->getInvoicesByFilter($startDate, $endDate, $projectSpecialtyObjects,$invoiceStates,false,true,$compareType);
+                //get invoices by paidDate
 
                 $startDate->modify( 'first day of next month' );
 
@@ -2459,7 +2459,7 @@ class DashboardUtil
             $chartsArray = $this->getChart($paidArr,$chartName,'bar',$layoutArray,"$");
         }
 
-        //22. Generated Invoices by Status for Funded Projects
+        //23. Generated Invoices by Status for Funded Projects
         if( $chartType == "fees-by-invoices-per-funded-projects" ) {
 
             $paidInvoices = 0;
