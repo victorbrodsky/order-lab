@@ -987,7 +987,7 @@ class DashboardUtil
         return $projects;
     }
 
-    public function getInvoicesByFilter($startDate, $endDate, $projectSpecialties, $states=null, $addOneEndDay=true, $compareType='last invoice generation date') {
+    public function getInvoicesByFilter($startDate, $endDate, $projectSpecialties, $states=null, $overdue=false, $addOneEndDay=true, $compareType='last invoice generation date') {
         $repository = $this->em->getRepository('OlegTranslationalResearchBundle:Invoice');
         $dql =  $repository->createQueryBuilder("invoice");
         $dql->select('invoice');
@@ -1059,6 +1059,16 @@ class DashboardUtil
             }
             $dql->andWhere("projectSpecialty.id IN (:projectSpecialtyIdsArr)");
             $dqlParameters["projectSpecialtyIdsArr"] = $projectSpecialtyIdsArr;
+        }
+
+        if( $overdue ) {
+            /////////1. (dueDate < currentDate - invoiceDueDateMax) //////////////
+            //overDueDate = currentDate - invoiceDueDateMax;
+            $overDueDate = new \DateTime();
+            //echo "overDueDate=".$overDueDate->format('Y-m-d H:i:s').$newline;
+            $dql->andWhere("invoice.dueDate IS NOT NULL AND invoice.dueDate < :overDueDate");
+            $dqlParameters["overDueDate"] = $overDueDate->format('Y-m-d H:i:s');
+            ////////////// EOF //////////////
         }
 
         $query = $this->em->createQuery($dql);
@@ -3504,9 +3514,9 @@ class DashboardUtil
             $invoiceDueArr = array();
 
             //get unpaid and delayd invoices
-            //$invoiceStates = array("Unpaid/Issued");
-            //$invoices = $this->getInvoicesByFilter($startDate, $endDate, $projectSpecialtyObjects, $invoiceStates);
-            $invoices = $transresRequestUtil->getOverdueInvoices();
+            $invoiceStates = array("Unpaid/Issued");
+            $invoices = $this->getInvoicesByFilter($startDate,$endDate,$projectSpecialtyObjects,$invoiceStates,true);
+            //$invoices = $transresRequestUtil->getOverdueInvoices();
 
             foreach($invoices as $invoice) {
                 $pi = $invoice->getPrincipalInvestigator();
@@ -3562,7 +3572,9 @@ class DashboardUtil
             $pisUnpaidInvoicesTotalArr = array();
             $totalUnpaid = 0;
 
-            $invoices = $transresRequestUtil->getOverdueInvoices();
+            //$invoices = $transresRequestUtil->getOverdueInvoices();
+            $invoiceStates = array("Unpaid/Issued");
+            $invoices = $this->getInvoicesByFilter($startDate,$endDate,$projectSpecialtyObjects,$invoiceStates,true);
 
             foreach($invoices as $invoice) {
                 $pi = $invoice->getPrincipalInvestigator();
@@ -3604,7 +3616,9 @@ class DashboardUtil
             $totalUnpaid = 0;
             $totalCombined = 0;
 
-            $invoices = $transresRequestUtil->getOverdueInvoices();
+            //$invoices = $transresRequestUtil->getOverdueInvoices();
+            $invoiceStates = array("Unpaid/Issued");
+            $invoices = $this->getInvoicesByFilter($startDate,$endDate,$projectSpecialtyObjects,$invoiceStates,true);
 
             foreach($invoices as $invoice) {
                 $pi = $invoice->getPrincipalInvestigator();
@@ -4246,10 +4260,12 @@ class DashboardUtil
             $transresRequestUtil = $this->container->get('transres_request_util');
 
             $invoiceDueDaysArr = array();
-            $invoiceDueArr = array();
+            //$invoiceDueArr = array();
 
             //get unpaid and delayd invoices
-            $invoices = $transresRequestUtil->getOverdueInvoices();
+            //$invoices = $transresRequestUtil->getOverdueInvoices();
+            $invoiceStates = array("Unpaid/Issued");
+            $invoices = $this->getInvoicesByFilter($startDate,$endDate,$projectSpecialtyObjects,$invoiceStates,true);
 
             foreach($invoices as $invoice) {
 

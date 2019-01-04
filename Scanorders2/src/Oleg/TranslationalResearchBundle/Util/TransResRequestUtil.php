@@ -3502,6 +3502,7 @@ class TransResRequestUtil
         return $result;
     }
 
+    //Not Used. Where used in DashboardUtil
     public function getOverdueInvoices($projectSpecialty=null) {
         $repository = $this->em->getRepository('OlegTranslationalResearchBundle:Invoice');
         $dql =  $repository->createQueryBuilder("invoice");
