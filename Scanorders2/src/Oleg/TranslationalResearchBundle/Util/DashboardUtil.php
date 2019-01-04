@@ -89,39 +89,40 @@ class DashboardUtil
             "20. Total Fees per Investigator for Funded Projects (Top 10)" =>   "fees-by-investigators-per-funded-projects",
             "21. Total Fees per Investigator for Non-Funded Projects (Top 10)"=>"fees-by-investigators-per-nonfunded-projects",
             //Financial statistics based on invoices
-            "22. Generated Invoices for Funded Projects" =>               "fees-by-invoices-per-funded-projects",
-            "23. Generated Invoices for Non-Funded Projects (Top 10)" =>  "fees-by-invoices-per-nonfunded-projects",
-            "24. Generated Invoices per PI (Top 10)" =>                   "fees-by-invoices-per-pi",
+            "22. Paid Invoices by Month" =>                              "fees-by-invoices-paid-per-month",
+            "23. Generated Invoices for Funded Projects" =>              "fees-by-invoices-per-funded-projects",
+            "24. Generated Invoices for Non-Funded Projects (Top 10)" =>  "fees-by-invoices-per-nonfunded-projects",
+            "25. Generated Invoices per PI (Top 10)" =>                   "fees-by-invoices-per-pi",
             //Pathologists Involved and number of projects
-            "25. Total Invoiced Amounts for Projects per Pathologist Involved (Top 10)" =>             "fees-by-invoices-per-projects-per-pathologist-involved",
-            "26. Total Invoiced Amounts for Funded Projects per Pathologist Involved (Top 10)" =>      "fees-by-invoices-per-funded-projects-per-pathologist-involved",
-            "27. Total Invoiced Amounts for Non-Funded Projects per Pathologist Involved (Top 10)" =>  "fees-by-invoices-per-nonfunded-projects-per-pathologist-involved",
-            "28. Total Fees per Involved Pathologist for Non-Funded Projects (Top 10)" =>              "fees-per-nonfunded-projects-per-pathologist-involved",
+            "26. Total Invoiced Amounts for Projects per Pathologist Involved (Top 10)" =>             "fees-by-invoices-per-projects-per-pathologist-involved",
+            "27. Total Invoiced Amounts for Funded Projects per Pathologist Involved (Top 10)" =>      "fees-by-invoices-per-funded-projects-per-pathologist-involved",
+            "28. Total Invoiced Amounts for Non-Funded Projects per Pathologist Involved (Top 10)" =>  "fees-by-invoices-per-nonfunded-projects-per-pathologist-involved",
+            "29. Total Fees per Involved Pathologist for Non-Funded Projects (Top 10)" =>              "fees-per-nonfunded-projects-per-pathologist-involved",
 
-            "29. Total Number of Projects per Type (linked)" => "projects-per-type",
-            "30. Total Number of Work Requests per Business Purpose" => "requests-per-business-purpose",
+            "30. Total Number of Projects per Type (linked)" => "projects-per-type",
+            "31. Total Number of Work Requests per Business Purpose" => "requests-per-business-purpose",
 
-            "31. Turn-around Statistics: Average number of days to complete a Work Request (based on 'Completed and Notified' requests)" => "turn-around-statistics-days-complete-request",
-            "32. Turn-around Statistics: Number of days to complete each Work Request (based on 'Completed and Notified' requests) (linked)" => "turn-around-statistics-days-complete-per-request",
-            "33. Turn-around Statistics: Number of days to complete each Work Request with products/services (based on 'Completed and Notified' requests)" => "turn-around-statistics-days-complete-per-request-with-product",
-            "34. Turn-around Statistics: Average number of days for each project request approval phase" => "turn-around-statistics-days-project-state",
-            "35. Turn-around Statistics: Number of days for each project request approval phase (linked)" => "turn-around-statistics-days-per-project-state",
-            "36. Turn-around Statistics: Average number of days for invoices to be paid (based on fully and partially paid invoices)" => "turn-around-statistics-days-paid-invoice",
-            "37. Turn-around Statistics: Number of days for each invoice to be paid (based on fully and partially paid invoices) (linked)" => "turn-around-statistics-days-per-paid-invoice",
-            "38. Turn-around Statistics: Top 10 PIs with most delayed unpaid invoices" => "turn-around-statistics-pis-with-delayed-unpaid-invoices",
-            "39. Turn-around Statistics: Top 10 PIs with highest total unpaid, overdue invoices" => "turn-around-statistics-pis-with-highest-total-unpaid-invoices",
-            "40. Turn-around Statistics: Top 10 PIs by index (delay in months * invoiced amount, aggregate) for unpaid, overdue invoices" => "turn-around-statistics-pis-combining-total-delayed-unpaid-invoices",
+            "32. Turn-around Statistics: Average number of days to complete a Work Request (based on 'Completed and Notified' requests)" => "turn-around-statistics-days-complete-request",
+            "33. Turn-around Statistics: Number of days to complete each Work Request (based on 'Completed and Notified' requests) (linked)" => "turn-around-statistics-days-complete-per-request",
+            "34. Turn-around Statistics: Number of days to complete each Work Request with products/services (based on 'Completed and Notified' requests)" => "turn-around-statistics-days-complete-per-request-with-product",
+            "35. Turn-around Statistics: Average number of days for each project request approval phase" => "turn-around-statistics-days-project-state",
+            "36. Turn-around Statistics: Number of days for each project request approval phase (linked)" => "turn-around-statistics-days-per-project-state",
+            "37. Turn-around Statistics: Average number of days for invoices to be paid (based on fully and partially paid invoices)" => "turn-around-statistics-days-paid-invoice",
+            "38. Turn-around Statistics: Number of days for each invoice to be paid (based on fully and partially paid invoices) (linked)" => "turn-around-statistics-days-per-paid-invoice",
+            "39. Turn-around Statistics: Top 10 PIs with most delayed unpaid invoices" => "turn-around-statistics-pis-with-delayed-unpaid-invoices",
+            "40. Turn-around Statistics: Top 10 PIs with highest total unpaid, overdue invoices" => "turn-around-statistics-pis-with-highest-total-unpaid-invoices",
+            "41. Turn-around Statistics: Top 10 PIs by index (delay in months * invoiced amount, aggregate) for unpaid, overdue invoices" => "turn-around-statistics-pis-combining-total-delayed-unpaid-invoices",
 
-            "41. Number of PIs in AP/CP vs Hematopathology (linked)" => "compare-projectspecialty-pis",
-            "42. Number of AP/CP vs Hematopathology Project Requests (linked)" => "compare-projectspecialty-projects",
-            "43. Number of AP/CP vs Hematopathology Project Requests (linked)" => "compare-projectspecialty-projects-stack",
-            "44. Number of AP/CP vs Hematopathology Work Requests (linked)" => "compare-projectspecialty-requests",
-            "45. Number of AP/CP vs Hematopathology Invoices (linked)" => "compare-projectspecialty-invoices",
+            "42. Number of PIs in AP/CP vs Hematopathology (linked)" => "compare-projectspecialty-pis",
+            "43. Number of AP/CP vs Hematopathology Project Requests (linked)" => "compare-projectspecialty-projects",
+            "44. Number of AP/CP vs Hematopathology Project Requests (linked)" => "compare-projectspecialty-projects-stack",
+            "45. Number of AP/CP vs Hematopathology Work Requests (linked)" => "compare-projectspecialty-requests",
+            "46. Number of AP/CP vs Hematopathology Invoices (linked)" => "compare-projectspecialty-invoices",
 
-            "46. Total Fees per Project Request Type (Top 10) (linked)" => "projects-fess-per-type",
-            "47. Total Fees per Work Requests Business Purpose (Top 10)" => "requests-fees-per-business-purpose",
-            "48. Turn-around Statistics: Number of days to complete each Work Request with person (based on 'Completed and Notified' requests)" => "turn-around-statistics-days-complete-per-request-with-user",
-            "49. Turn-around Statistics: Top 50 most delinquent invoices (linked)" => "turn-around-statistics-delayed-unpaid-invoices-by-days",
+            "47. Total Fees per Project Request Type (Top 10) (linked)" => "projects-fess-per-type",
+            "48. Total Fees per Work Requests Business Purpose (Top 10)" => "requests-fees-per-business-purpose",
+            "49. Turn-around Statistics: Number of days to complete each Work Request with person (based on 'Completed and Notified' requests)" => "turn-around-statistics-days-complete-per-request-with-user",
+            "50. Turn-around Statistics: Top 50 most delinquent invoices (linked)" => "turn-around-statistics-delayed-unpaid-invoices-by-days",
 
             "" => "",
             "" => "",
@@ -2419,6 +2420,43 @@ class DashboardUtil
             $showOther = $this->getOtherStr($showLimited,"Investigators");
             $unFundedTotalFeesByInvestigatorTopArr = $this->getTopArray($unFundedTotalFeesByInvestigatorArr,$showOther);
             $chartsArray = $this->getChart($unFundedTotalFeesByInvestigatorTopArr, $chartName,'pie',$layoutArray," : $");
+        }
+
+        //TODO:
+        //Will have number 22 and the following chart will have number 23
+        //"22a. Paid Invoices by Month" =>                              "fees-by-invoices-paid-per-month",
+        if( $chartType == "fees-by-invoices-paid-per-month" ) {
+
+            $paidArr = array();
+
+            $invoiceStates = array("Paid in Full","Paid Partially");
+
+            $startDate->modify( 'first day of last month' );
+            do {
+                $startDateLabel = $startDate->format('M-Y');
+                $thisEndDate = clone $startDate;
+                $thisEndDate->modify( 'first day of next month' );
+                //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y").": ";
+
+                $invoices = $this->getInvoicesByFilter($startDate, $endDate, $projectSpecialtyObjects,$invoiceStates);
+
+                $startDate->modify( 'first day of next month' );
+
+                foreach( $invoices as $invoice ) {
+
+                    $paidThisInvoiceFee = intval($invoice->getPaid());
+
+                    if( isset($paidArr[$startDateLabel]) ) {
+                        $paidThisInvoiceFee = $paidThisInvoiceFee + $paidArr[$startDateLabel];
+                    }
+
+                    $paidArr[$startDateLabel] = $paidThisInvoiceFee;
+
+                }
+
+            } while( $startDate < $endDate );
+
+            $chartsArray = $this->getChart($paidArr,$chartName,'bar',$layoutArray,"$");
         }
 
         //22. Generated Invoices by Status for Funded Projects
