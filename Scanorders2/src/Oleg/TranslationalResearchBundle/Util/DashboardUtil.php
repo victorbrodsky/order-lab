@@ -3592,7 +3592,7 @@ class DashboardUtil
 
                     if (isset($pisUnpaidInvoicesTotalArr[$piIndex])) {
                         //$count = $pisUnpaidInvoicesArr[$piIndex] + 1;
-                        $total = $pisUnpaidInvoicesTotalArr[$piIndex] + $total;
+                        $total = $pisUnpaidInvoicesTotalArr[$piIndex]['value'] + $total;
                     }
                     //$pisUnpaidInvoicesTotalArr[$piIndex] = $total;
                     $todayDate = new \DateTime();
