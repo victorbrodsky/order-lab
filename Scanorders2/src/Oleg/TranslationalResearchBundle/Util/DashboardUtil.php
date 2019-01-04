@@ -4267,7 +4267,7 @@ class DashboardUtil
                 if( $pi ) {
                     $index = $index . " to " . $pi->getUsernameOptimal();
                 }
-                $index = $index . " " . $days . " ago";
+                $index = $index . " " . $days . " days ago";
                 $issuedDate = $invoice->getIssuedDate();
                 if( $issuedDate ) {
                     $index = $index . " on " . $issuedDate->format("m/d/Y");
