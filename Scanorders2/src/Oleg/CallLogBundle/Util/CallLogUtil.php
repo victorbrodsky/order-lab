@@ -1652,7 +1652,7 @@ class CallLogUtil
         $em = $this->em;
 
         $output = array();
-        return $output;
+        //return $output;
 
         ///////////// 1) get all real users /////////////
         $query = $em->createQueryBuilder()
