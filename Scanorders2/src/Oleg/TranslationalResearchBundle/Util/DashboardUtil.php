@@ -1063,7 +1063,7 @@ class DashboardUtil
 
         if( $overdue ) {
             $todayDate = new \DateTime();
-            $todayDate->modify('-2 day'); //make sure it's overdue (not considering hours)
+            $todayDate->modify('-3 day'); //make sure it's overdue (not considering hours and time zone difference)
             $dql->andWhere("invoice.dueDate IS NOT NULL AND invoice.dueDate > :todayDate");
             $dqlParameters["todayDate"] = $todayDate->format('Y-m-d');
         }
