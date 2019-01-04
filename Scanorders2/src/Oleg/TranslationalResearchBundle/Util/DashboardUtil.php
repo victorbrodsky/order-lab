@@ -1062,13 +1062,10 @@ class DashboardUtil
         }
 
         if( $overdue ) {
-            /////////1. (dueDate < currentDate - invoiceDueDateMax) //////////////
-            //overDueDate = currentDate - invoiceDueDateMax;
-            $overDueDate = new \DateTime();
-            //echo "overDueDate=".$overDueDate->format('Y-m-d H:i:s').$newline;
-            $dql->andWhere("invoice.dueDate IS NOT NULL AND invoice.dueDate < :overDueDate");
-            $dqlParameters["overDueDate"] = $overDueDate->format('Y-m-d H:i:s');
-            ////////////// EOF //////////////
+            $todayDate = new \DateTime();
+            $todayDate->modify('-1 day'); //make sure it's overdue (not considering hours)
+            $dql->andWhere("invoice.dueDate IS NOT NULL AND invoice.dueDate > :todayDate");
+            $dqlParameters["todayDate"] = $todayDate->format('Y-m-d');
         }
 
         $query = $this->em->createQuery($dql);
