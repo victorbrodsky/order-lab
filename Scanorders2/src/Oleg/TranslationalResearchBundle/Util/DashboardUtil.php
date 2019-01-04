@@ -4297,7 +4297,7 @@ class DashboardUtil
                 'height' => $this->height*1.5,
                 'width' => $this->width,
                 'title' => $chartName,
-                'margin' => array('b' => 500)
+                'margin' => array('b' => 600)
             );
 
 //            $descriptionArr = array(
