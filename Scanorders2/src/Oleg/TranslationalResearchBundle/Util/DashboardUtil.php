@@ -109,9 +109,9 @@ class DashboardUtil
             "36. Turn-around Statistics: Number of days for each project request approval phase (linked)" => "turn-around-statistics-days-per-project-state",
             "37. Turn-around Statistics: Average number of days for invoices to be paid (based on fully and partially paid invoices)" => "turn-around-statistics-days-paid-invoice",
             "38. Turn-around Statistics: Number of days for each invoice to be paid (based on fully and partially paid invoices) (linked)" => "turn-around-statistics-days-per-paid-invoice",
-            "39. Turn-around Statistics: Top 10 PIs with most delayed unpaid invoices" => "turn-around-statistics-pis-with-delayed-unpaid-invoices",
-            "40. Turn-around Statistics: Top 10 PIs with highest total unpaid, overdue invoices" => "turn-around-statistics-pis-with-highest-total-unpaid-invoices",
-            "41. Turn-around Statistics: Top 10 PIs by index (delay in months * invoiced amount, aggregate) for unpaid, overdue invoices" => "turn-around-statistics-pis-combining-total-delayed-unpaid-invoices",
+            "39. Turn-around Statistics: Top 10 PIs with most delayed unpaid invoices (linked)" => "turn-around-statistics-pis-with-delayed-unpaid-invoices",
+            "40. Turn-around Statistics: Top 10 PIs with highest total unpaid, overdue invoices (linked)" => "turn-around-statistics-pis-with-highest-total-unpaid-invoices",
+            "41. Turn-around Statistics: Top 10 PIs by index (delay in months * invoiced amount, aggregate) for unpaid, overdue invoices (linked)" => "turn-around-statistics-pis-combining-total-delayed-unpaid-invoices",
 
             "42. Number of PIs in AP/CP vs Hematopathology (linked)" => "compare-projectspecialty-pis",
             "43. Number of AP/CP vs Hematopathology Project Requests (linked)" => "compare-projectspecialty-projects",
@@ -378,7 +378,7 @@ class DashboardUtil
         return $return;
     }
 
-    public function getChart( $dataArr, $title, $type='pie', $layoutArray=null, $valuePrefixLabel=null, $valuePostfixLabel=null ) {
+    public function getChart( $dataArr, $title, $type='pie', $layoutArray=null, $valuePrefixLabel=null, $valuePostfixLabel=null, $descriptionArr=null ) {
 
         if( count($dataArr) == 0 ) {
             return array();
@@ -401,6 +401,7 @@ class DashboardUtil
         }
 
         foreach( $dataArr as $label => $valueData ) {
+            $origLabel = $label;
             if( is_array($valueData) ) {
                 $value = $valueData["value"];
                 $link = $valueData["link"];
@@ -418,6 +419,13 @@ class DashboardUtil
                     }
                     //echo "value=$value<br>";
                 }
+
+                if( $descriptionArr ) {
+                    if( isset($descriptionArr[$origLabel]) ) {
+                        $label = $label . $descriptionArr[$origLabel];
+                    }
+                }
+
                 $labels[] = $label;
                 $values[] = $value;
                 //$text[] = $value;
@@ -2426,6 +2434,7 @@ class DashboardUtil
         if( $chartType == "fees-by-invoices-paid-per-month" ) {
 
             $paidArr = array();
+            $descriptionArr = array();
 
             $invoiceStates = array("Paid in Full","Paid Partially");
             $compareType = "date when status changed to paid in full";
@@ -2451,12 +2460,14 @@ class DashboardUtil
                     }
 
                     $paidArr[$startDateLabel] = $paidThisInvoiceFee;
-
                 }
+
+                $descriptionArr[$startDateLabel] = " (" . count($invoices) . " invoices)";
 
             } while( $startDate < $endDate );
 
-            $chartsArray = $this->getChart($paidArr,$chartName,'bar',$layoutArray,"$");
+            //$dataArr, $title, $type='pie', $layoutArray=null, $valuePrefixLabel=null, $valuePostfixLabel=null, $descriptionArr=array()
+            $chartsArray = $this->getChart($paidArr,$chartName,'bar',$layoutArray,"$",null,$descriptionArr); // getChart(
         }
 
         //23. Generated Invoices by Status for Funded Projects
