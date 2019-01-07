@@ -119,10 +119,16 @@ class DashboardUtil
             "45. Number of AP/CP vs Hematopathology Work Requests (linked)" => "compare-projectspecialty-requests",
             "46. Number of AP/CP vs Hematopathology Invoices (linked)" => "compare-projectspecialty-invoices",
 
-            "47. Total Fees per Project Request Type (Top 10) (linked)" => "projects-fess-per-type",
-            "48. Total Fees per Work Requests Business Purpose (Top 10)" => "requests-fees-per-business-purpose",
-            "49. Turn-around Statistics: Number of days to complete each Work Request with person (based on 'Completed and Notified' requests)" => "turn-around-statistics-days-complete-per-request-with-user",
-            "50. Turn-around Statistics: Top 50 most delinquent invoices (linked)" => "turn-around-statistics-delayed-unpaid-invoices-by-days",
+            "47. Total Fees per Project Request Type (Top 10) (linked)" => "projects-fees-per-type",
+            "48. Total Fees per Funded Project Request Type (Top 10) (linked)" => "projects-funded-fees-per-type",
+            "49. Total Fees per Non-Funded Project Request Type (Top 10) (linked)" => "projects-unfunded-fees-per-type",
+
+            "50. Total Fees per Work Requests Business Purpose (Top 10)" => "requests-fees-per-business-purpose",
+            "51. Total Fees per Funded Work Requests Business Purpose (Top 10)" => "requests-funded-fees-per-business-purpose",
+            "52. Total Fees per Non-Funded Work Requests Business Purpose (Top 10)" => "requests-unfunded-fees-per-business-purpose",
+
+            "53. Turn-around Statistics: Number of days to complete each Work Request with person (based on 'Completed and Notified' requests)" => "turn-around-statistics-days-complete-per-request-with-user",
+            "54. Turn-around Statistics: Top 50 most delinquent invoices (linked)" => "turn-around-statistics-delayed-unpaid-invoices-by-days",
 
             "" => "",
             "" => "",
@@ -4209,8 +4215,8 @@ class DashboardUtil
             $chartsArray = $this->getStackedChart($combinedInvoicesData, $chartName, "stack");
         }
 
-        //"46. Total Fees per Project Request Type" => "projects-fess-per-type",
-        if( $chartType == "projects-fess-per-type" ) {
+        //"47. Total Fees per Project Request Type" => "projects-fees-per-type",
+        if( $chartType == "projects-fees-per-type" ) {
             $transresUtil = $this->container->get('transres_util');
             $projectTypeArr = array();
             $totalFees = 0;
@@ -4255,7 +4261,101 @@ class DashboardUtil
             //$chartsArray = $this->getChart($projectTypeArrTop, $chartName,'pie',$layoutArray," : $");
         }
 
-        //"47. Total Fees per Work Requests Business Purpose" => "requests-fees-per-business-purpose",
+        //"48. Total Fees per Funded Project Request Type (Top 10) (linked)" => "projects-funded-fees-per-type",
+        if( $chartType == "projects-funded-fees-per-type" ) {
+            $transresUtil = $this->container->get('transres_util');
+            $projectTypeArr = array();
+            $totalFees = 0;
+
+            $projects = $this->getProjectsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+            foreach($projects as $project) {
+
+                if( !$project->getFunded() ) {
+                    continue;
+                }
+
+                $projectType = $project->getProjectType();
+                if( $projectType ) {
+                    $projectTypeId = $projectType->getId();
+                    $projectTypeName = $projectType->getName();
+                } else {
+                    $projectTypeId = "No Type";
+                    $projectTypeName = "No Type";;
+                }
+
+                $invoicesInfos = $transresUtil->getInvoicesInfosByProject($project);
+                $totalFee = $invoicesInfos['total'];
+                $totalFees = $totalFees + $totalFee;
+
+                if( isset($projectTypeArr[$projectTypeId]) && isset($projectTypeArr[$projectTypeId]['value']) ) {
+                    $totalFee = $projectTypeArr[$projectTypeId]['value'] + $totalFee;
+                }
+                $projectTypeArr[$projectTypeId]['value'] = $totalFee;
+                $projectTypeArr[$projectTypeId]['label'] = $projectTypeName;
+                $projectTypeArr[$projectTypeId]['objectid'] = $projectTypeId;
+                $projectTypeArr[$projectTypeId]['pi'] = null;
+                $projectTypeArr[$projectTypeId]['show-path'] = "project-type";
+                
+            }
+
+            $chartName = $this->getTitleWithTotal($chartName,$totalFees,"$");
+            $showOther = $this->getOtherStr($showLimited,"Project Types");
+            $projectTypeArrTop = $this->getTopMultiArray($projectTypeArr,$showOther);
+
+            $chartsArray = $this->getChartByMultiArray( $projectTypeArrTop, $filterArr, $chartName,"pie",null," : $");
+        }
+
+        //"49. Total Fees per Non-Funded Project Request Type (Top 10) (linked)" => "projects-unfunded-fees-per-type",
+        if( $chartType == "projects-funded-fees-per-type" ) {
+            $transresUtil = $this->container->get('transres_util');
+            $projectTypeArr = array();
+            $totalFees = 0;
+
+            $projects = $this->getProjectsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+            foreach($projects as $project) {
+
+                if( $project->getFunded() ) {
+                    continue;
+                }
+
+                $projectType = $project->getProjectType();
+                if( $projectType ) {
+                    $projectTypeId = $projectType->getId();
+                    $projectTypeName = $projectType->getName();
+                } else {
+                    $projectTypeId = "No Type";
+                    $projectTypeName = "No Type";;
+                }
+
+                $invoicesInfos = $transresUtil->getInvoicesInfosByProject($project);
+                $totalFee = $invoicesInfos['total'];
+                $totalFees = $totalFees + $totalFee;
+
+                if( isset($projectTypeArr[$projectTypeId]) && isset($projectTypeArr[$projectTypeId]['value']) ) {
+                    $totalFee = $projectTypeArr[$projectTypeId]['value'] + $totalFee;
+                }
+                $projectTypeArr[$projectTypeId]['value'] = $totalFee;
+                $projectTypeArr[$projectTypeId]['label'] = $projectTypeName;
+                $projectTypeArr[$projectTypeId]['objectid'] = $projectTypeId;
+                $projectTypeArr[$projectTypeId]['pi'] = null;
+                $projectTypeArr[$projectTypeId]['show-path'] = "project-type";
+
+//                if( isset($projectTypeArr[$projectTypeName]) ) {
+//                    $totalFee = $projectTypeArr[$projectTypeName] + $totalFee;
+//                }
+//                $projectTypeArr[$projectTypeName] = $totalFee;
+
+                //$titleCount++;
+            }
+
+            $chartName = $this->getTitleWithTotal($chartName,$totalFees,"$");
+            $showOther = $this->getOtherStr($showLimited,"Project Types");
+            $projectTypeArrTop = $this->getTopMultiArray($projectTypeArr,$showOther);
+
+            $chartsArray = $this->getChartByMultiArray( $projectTypeArrTop, $filterArr, $chartName,"pie",null," : $");
+        }
+
+        //"50. Total Fees per Work Requests Business Purpose" => "requests-fees-per-business-purpose",
         if( $chartType == "requests-fees-per-business-purpose" ) {
             $transresRequestUtil = $this->container->get('transres_request_util');
             $requestBusinessPurposeArr = array();
@@ -4285,7 +4385,75 @@ class DashboardUtil
             $chartsArray = $this->getChart($requestBusinessPurposeArrTop, $chartName,'pie',$layoutArray," : $");
         }
 
-        //"48. Turn-around Statistics: Number of days to complete each Work Request with person (based on 'Completed and Notified' requests)" => "turn-around-statistics-days-complete-per-request-with-product-by-user",
+        //"51. Total Fees per Funded Work Requests Business Purpose (Top 10)" => "requests-funded-fees-per-business-purpose",
+        if( $chartType == "requests-funded-fees-per-business-purpose" ) {
+            $transresRequestUtil = $this->container->get('transres_request_util');
+            $requestBusinessPurposeArr = array();
+            $totalFees = 0;
+
+            $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+            foreach($requests as $transRequest) {
+
+                if( !$transRequest->getFunded() ) {
+                    continue;
+                }
+
+                $fee = $transresRequestUtil->getTransResRequestFeeHtml($transRequest);
+                $totalFees = $totalFees + $fee;
+
+                $businessPurposes = $transRequest->getBusinessPurposes();
+
+                foreach($businessPurposes as $businessPurpose) {
+                    $businessPurposeName = $businessPurpose->getName();
+
+                    if( isset($requestBusinessPurposeArr[$businessPurposeName]) ) {
+                        $fee = $requestBusinessPurposeArr[$businessPurposeName] + $fee;
+                    }
+                    $requestBusinessPurposeArr[$businessPurposeName] = $fee;
+                }
+            }
+
+            $chartName = $this->getTitleWithTotal($chartName,$totalFees,"$");
+            $showOther = $this->getOtherStr($showLimited,"Business Purposes");
+            $requestBusinessPurposeArrTop = $this->getTopArray($requestBusinessPurposeArr,$showOther);
+            $chartsArray = $this->getChart($requestBusinessPurposeArrTop, $chartName,'pie',$layoutArray," : $");
+        }
+
+        //"52. Total Fees per Non-Funded Work Requests Business Purpose (Top 10)" => "requests-unfunded-fees-per-business-purpose",
+        if( $chartType == "requests-unfunded-fees-per-business-purpose" ) {
+            $transresRequestUtil = $this->container->get('transres_request_util');
+            $requestBusinessPurposeArr = array();
+            $totalFees = 0;
+
+            $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+            foreach($requests as $transRequest) {
+
+                if( $transRequest->getFunded() ) {
+                    continue;
+                }
+
+                $fee = $transresRequestUtil->getTransResRequestFeeHtml($transRequest);
+                $totalFees = $totalFees + $fee;
+
+                $businessPurposes = $transRequest->getBusinessPurposes();
+
+                foreach($businessPurposes as $businessPurpose) {
+                    $businessPurposeName = $businessPurpose->getName();
+
+                    if( isset($requestBusinessPurposeArr[$businessPurposeName]) ) {
+                        $fee = $requestBusinessPurposeArr[$businessPurposeName] + $fee;
+                    }
+                    $requestBusinessPurposeArr[$businessPurposeName] = $fee;
+                }
+            }
+
+            $chartName = $this->getTitleWithTotal($chartName,$totalFees,"$");
+            $showOther = $this->getOtherStr($showLimited,"Business Purposes");
+            $requestBusinessPurposeArrTop = $this->getTopArray($requestBusinessPurposeArr,$showOther);
+            $chartsArray = $this->getChart($requestBusinessPurposeArrTop, $chartName,'pie',$layoutArray," : $");
+        }
+
+        //"53. Turn-around Statistics: Number of days to complete each Work Request with person (based on 'Completed and Notified' requests)" => "turn-around-statistics-days-complete-per-request-with-product-by-user",
         if( $chartType == "turn-around-statistics-days-complete-per-request-with-user" ) {
             $averageDays = array();
 
@@ -4344,7 +4512,7 @@ class DashboardUtil
             $chartsArray = $this->getChart($averageDays, $chartName,'bar',$layoutArray,$valuePrefixLabel,$valuePostfixLabel); // getChart(
         }
 
-        //"49. Turn-around Statistics: Top 50 most delinquent invoices" => "turn-around-statistics-delayed-unpaid-invoices-by-days",
+        //"54. Turn-around Statistics: Top 50 most delinquent invoices" => "turn-around-statistics-delayed-unpaid-invoices-by-days",
         if( $chartType == "turn-around-statistics-delayed-unpaid-invoices-by-days" ) {
             $transresRequestUtil = $this->container->get('transres_request_util');
 
