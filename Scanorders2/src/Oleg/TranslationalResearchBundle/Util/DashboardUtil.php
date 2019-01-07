@@ -4451,9 +4451,18 @@ class DashboardUtil
                 }
 
                 $totalFees = $totalFees + $fee;
+
                 //echo "thisTransRequest=".$thisTransRequest->getOid()."; fee=".$fee."<br>";
 
                 $businessPurposes = $thisTransRequest->getBusinessPurposes();
+
+                if( count($businessPurposes) == 0 ) {
+                    //$totalFees = $totalFees + $fee;
+                    if( isset($requestBusinessPurposeArr["No Business Purpose"]) ) {
+                        $fee = $requestBusinessPurposeArr["No Business Purpose"] + $fee;
+                    }
+                    $requestBusinessPurposeArr["No Business Purpose"] = $fee;
+                }
 
                 foreach($businessPurposes as $businessPurpose) {
                     $businessPurposeName = $businessPurpose->getName();
@@ -4462,10 +4471,12 @@ class DashboardUtil
                         $fee = $requestBusinessPurposeArr[$businessPurposeName] + $fee;
                     }
                     $requestBusinessPurposeArr[$businessPurposeName] = $fee;
+                    //$totalFees = $totalFees + $fee;
                 }
             }
 
-            $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($totalFees),"$");
+            $totalFees = $this->getNumberFormat($totalFees);
+            $chartName = $this->getTitleWithTotal($chartName,$totalFees,"$");
             $showOther = $this->getOtherStr($showLimited,"Business Purposes");
             $requestBusinessPurposeArrTop = $this->getTopArray($requestBusinessPurposeArr,$showOther);
             $chartsArray = $this->getChart($requestBusinessPurposeArrTop, $chartName,'pie',$layoutArray," : $");
