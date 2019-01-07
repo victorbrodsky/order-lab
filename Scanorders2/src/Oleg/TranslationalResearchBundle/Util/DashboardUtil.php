@@ -4441,6 +4441,8 @@ class DashboardUtil
             $transresRequestUtil = $this->container->get('transres_request_util');
             $requestBusinessPurposeArr = array();
             $totalFees = 0;
+            //$testing = true;
+            $testing = false;
 
             $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
             foreach($requests as $thisTransRequest) {
@@ -4452,7 +4454,9 @@ class DashboardUtil
 
                 $totalFees = $totalFees + $fee;
 
-                //echo "thisTransRequest=".$thisTransRequest->getOid()."; fee=".$fee."<br>";
+                if($testing) {
+                    echo "<br>thisTransRequest=" . $thisTransRequest->getOid() . "; fee=" . $fee . "<br>";
+                }
 
                 $businessPurposes = $thisTransRequest->getBusinessPurposes();
 
@@ -4466,12 +4470,14 @@ class DashboardUtil
 
                 foreach($businessPurposes as $businessPurpose) {
                     $businessPurposeName = $businessPurpose->getName();
-
+                    $thisFee = $fee;
                     if( isset($requestBusinessPurposeArr[$businessPurposeName]) ) {
-                        $fee = $requestBusinessPurposeArr[$businessPurposeName] + $fee;
+                        $thisFee = $requestBusinessPurposeArr[$businessPurposeName] + $thisFee;
                     }
-                    $requestBusinessPurposeArr[$businessPurposeName] = $fee;
-                    //$totalFees = $totalFees + $fee;
+                    $requestBusinessPurposeArr[$businessPurposeName] = $thisFee;
+                    if($testing) {
+                        echo "businessPurposeName=".$businessPurposeName."; fee=".$thisFee."<br>";
+                    }
                 }
             }
 
@@ -4481,9 +4487,12 @@ class DashboardUtil
             $requestBusinessPurposeArrTop = $this->getTopArray($requestBusinessPurposeArr,$showOther);
             $chartsArray = $this->getChart($requestBusinessPurposeArrTop, $chartName,'pie',$layoutArray," : $");
 
-            //print_r($requestBusinessPurposeArr);
-            //echo "totalFees=".$totalFees."<br>";
-            //exit();
+            if($testing) {
+                echo "<br>";
+                print_r($requestBusinessPurposeArr);
+                echo "<br>totalFees=".$totalFees."<br>";
+                exit();
+            }
         }
 
         //"51. Total Fees per Funded Work Requests Business Purpose (Top 10)" => "requests-funded-fees-per-business-purpose",
