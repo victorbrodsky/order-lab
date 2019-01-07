@@ -281,8 +281,17 @@ class DashboardUtil
             $value = $arr['value'];
             $label = $arr['label'];
             $objectid = $arr['objectid'];
-            $showPath = $arr['show-path'];
             $pi = $arr['pi'];
+
+            $showPath = null;
+            $link = null;
+            if( isset($arr['show-path']) ) {
+                $showPath = $arr['show-path'];
+            }
+            if( isset($arr['link']) ) {
+                $link = $arr['link'];
+            }
+
             //echo "value=".$value."<br>";
             //echo $username.": ".$count."<br>";
             if( $value && $value != 0 ) {
@@ -290,6 +299,7 @@ class DashboardUtil
                     $piProjectCountTopArr[$id]['value'] = $value;
                     $piProjectCountTopArr[$id]['label'] = $label;
                     $piProjectCountTopArr[$id]['show-path'] = $showPath;
+                    $piProjectCountTopArr[$id]['link'] = $link;
                     $piProjectCountTopArr[$id]['objectid'] = $objectid;
                     $piProjectCountTopArr[$id]['pi'] = $pi;
                 } else {
@@ -304,6 +314,7 @@ class DashboardUtil
                         $piProjectCountTopArr[$otherId]['value'] = $thisValue;
                         $piProjectCountTopArr[$otherId]['label'] = $otherId;
                         $piProjectCountTopArr[$otherId]['show-path'] = $showPath;
+                        $piProjectCountTopArr[$otherId]['link'] = $link;
                         $piProjectCountTopArr[$otherId]['objectid'] = null;
                         $piProjectCountTopArr[$otherId]['pi'] = $pi;
                         $otherObjectids[] = $objectid;
@@ -323,6 +334,7 @@ class DashboardUtil
                 $value = $arr['value'];
                 $label = $arr['label'];
                 $showPath = $arr['show-path'];
+                $link = $arr['link'];
                 $pi = $arr['pi'];
                 $objectid = $arr['objectid'];
                 //echo "objectid=".$objectid."<br>";
@@ -330,6 +342,7 @@ class DashboardUtil
                 $piProjectCountTopShortArr[$id]['value'] = $value;
                 $piProjectCountTopShortArr[$id]['label'] = $label;
                 $piProjectCountTopShortArr[$id]['show-path'] = $showPath;
+                $piProjectCountTopShortArr[$id]['link'] = $link;
                 $piProjectCountTopShortArr[$id]['objectid'] = $objectid;
                 $piProjectCountTopShortArr[$id]['pi'] = $pi;
             }
@@ -545,10 +558,18 @@ class DashboardUtil
         foreach( $dataArr as $id=>$arr ) {
             $value = $arr['value'];
             $label = $arr['label'];
-            $showPath = $arr['show-path'];
             $objectid = $arr['objectid'];
             $pi = $arr['pi'];
+
+            $showPath = null;
             $link = null;
+            if( isset($arr['show-path']) ) {
+                $showPath = $arr['show-path'];
+            }
+            if( isset($arr['link']) ) {
+                $link = $arr['link'];
+            }
+
             if( $type == "bar" || ($value && $value != 0) ) {
                 if( $valuePrefixLabel && $value ) {
                     if( strpos($valuePrefixLabel,'$') !== false ) {
@@ -565,7 +586,7 @@ class DashboardUtil
                         'filter[state][1]' => 'closed',
                         'filter[startDate]' => $startDateStr,
                         'filter[endDate]' => $endDateStr,
-                        'filter[]' => $projectSpecialtyObjects
+                        //'filter[]' => $projectSpecialtyObjects
                     );
 
                     if( $funded === true ) {
@@ -666,7 +687,7 @@ class DashboardUtil
                         'filter[state][1]' => 'closed',
                         'filter[startDate]' => $startDateStr,
                         'filter[endDate]' => $endDateStr,
-                        'filter[]' => $projectSpecialtyObjects,
+                        //'filter[]' => $projectSpecialtyObjects,
                         'filter[searchProjectType]' => $objectid
                     );
 
@@ -686,8 +707,9 @@ class DashboardUtil
                 $values[] = $value;
                 $links[] = $link;
                 //$text[] = $value;
-            }
-        }
+            }//if bar or value
+
+        }//foreach
 
         if( count($values) == 0 ) {
             return array();
@@ -1420,6 +1442,7 @@ class DashboardUtil
         //echo "start=".$startDate->format('m/d/Y')."<br>";
         //echo "end=".$endDate->format('m/d/Y')."<br>";
 
+        $projectSpecialtyObjects = array();
         if( $projectSpecialty != 0 ) {
             $projectSpecialtyObject = $this->em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->find($projectSpecialty);
             $projectSpecialtyObjects[] = $projectSpecialtyObject;
@@ -3809,7 +3832,7 @@ class DashboardUtil
             $chartsArray = $this->getChart($pisCombinedArrTop, $chartName,'pie',$layoutArray," : $");
         }
 
-        //"41. Number of PIs in AP/CP vs Hematopathology" => "compare-projectspecialty-pis",
+        //"42. Number of PIs in AP/CP vs Hematopathology" => "compare-projectspecialty-pis",
         if( $chartType == "compare-projectspecialty-pis" ) {
             $transresUtil = $this->container->get('transres_util');
             $specialtyApcpObject = $transresUtil->getSpecialtyObject("ap-cp");
@@ -4243,14 +4266,28 @@ class DashboardUtil
                 $projectTypeArr[$projectTypeId]['label'] = $projectTypeName;
                 $projectTypeArr[$projectTypeId]['objectid'] = $projectTypeId;
                 $projectTypeArr[$projectTypeId]['pi'] = null;
-                $projectTypeArr[$projectTypeId]['show-path'] = "project-type";
+                //$projectTypeArr[$projectTypeId]['show-path'] = null; //"project-type";
 
-//                if( isset($projectTypeArr[$projectTypeName]) ) {
-//                    $totalFee = $projectTypeArr[$projectTypeName] + $totalFee;
-//                }
-//                $projectTypeArr[$projectTypeName] = $totalFee;
-
-                //$titleCount++;
+                //link
+                $linkFilterArr = array(
+                    'filter[state][0]' => 'final_approved',
+                    'filter[state][1]' => 'closed',
+                    'filter[startDate]' => $startDateStr,
+                    'filter[endDate]' => $endDateStr,
+                    'filter[searchProjectType]' => $projectTypeId
+                    //'filter[searchProjectType]' => $project->getId()
+                );
+                $count = 0;
+                foreach($projectSpecialtyObjects as $projectSpecialtyObject) {
+                    $linkFilterArr["filter[searchProjectType][".$count."]"] = $projectSpecialtyObject->getId();
+                    $count++;
+                }
+                $link = $this->container->get('router')->generate(
+                    'translationalresearch_project_index',
+                    $linkFilterArr,
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+                $projectTypeArr[$projectTypeId]['link'] = $link;
             }
 
             $chartName = $this->getTitleWithTotal($chartName,$totalFees,"$");
@@ -4294,8 +4331,27 @@ class DashboardUtil
                 $projectTypeArr[$projectTypeId]['label'] = $projectTypeName;
                 $projectTypeArr[$projectTypeId]['objectid'] = $projectTypeId;
                 $projectTypeArr[$projectTypeId]['pi'] = null;
-                $projectTypeArr[$projectTypeId]['show-path'] = "project-type";
-                
+                //$projectTypeArr[$projectTypeId]['show-path'] = "project-type";
+
+                //link
+                $linkFilterArr = array(
+                    'filter[state][0]' => 'final_approved',
+                    'filter[state][1]' => 'closed',
+                    'filter[startDate]' => $startDateStr,
+                    'filter[endDate]' => $endDateStr,
+                    'filter[searchProjectType]' => $projectTypeId
+                );
+                $count = 0;
+                foreach($projectSpecialtyObjects as $projectSpecialtyObject) {
+                    $linkFilterArr["filter[searchProjectType][".$count."]"] = $projectSpecialtyObject->getId();
+                    $count++;
+                }
+                $link = $this->container->get('router')->generate(
+                    'translationalresearch_project_index',
+                    $linkFilterArr,
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+                $projectTypeArr[$projectTypeId]['link'] = $link;
             }
 
             $chartName = $this->getTitleWithTotal($chartName,$totalFees,"$");
@@ -4306,7 +4362,7 @@ class DashboardUtil
         }
 
         //"49. Total Fees per Non-Funded Project Request Type (Top 10) (linked)" => "projects-unfunded-fees-per-type",
-        if( $chartType == "projects-funded-fees-per-type" ) {
+        if( $chartType == "projects-unfunded-fees-per-type" ) {
             $transresUtil = $this->container->get('transres_util');
             $projectTypeArr = array();
             $totalFees = 0;
@@ -4338,14 +4394,27 @@ class DashboardUtil
                 $projectTypeArr[$projectTypeId]['label'] = $projectTypeName;
                 $projectTypeArr[$projectTypeId]['objectid'] = $projectTypeId;
                 $projectTypeArr[$projectTypeId]['pi'] = null;
-                $projectTypeArr[$projectTypeId]['show-path'] = "project-type";
+                //$projectTypeArr[$projectTypeId]['show-path'] = "project-type";
 
-//                if( isset($projectTypeArr[$projectTypeName]) ) {
-//                    $totalFee = $projectTypeArr[$projectTypeName] + $totalFee;
-//                }
-//                $projectTypeArr[$projectTypeName] = $totalFee;
-
-                //$titleCount++;
+                //link
+                $linkFilterArr = array(
+                    'filter[state][0]' => 'final_approved',
+                    'filter[state][1]' => 'closed',
+                    'filter[startDate]' => $startDateStr,
+                    'filter[endDate]' => $endDateStr,
+                    'filter[searchProjectType]' => $projectTypeId
+                );
+                $count = 0;
+                foreach($projectSpecialtyObjects as $projectSpecialtyObject) {
+                    $linkFilterArr["filter[searchProjectType][".$count."]"] = $projectSpecialtyObject->getId();
+                    $count++;
+                }
+                $link = $this->container->get('router')->generate(
+                    'translationalresearch_project_index',
+                    $linkFilterArr,
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+                $projectTypeArr[$projectTypeId]['link'] = $link;
             }
 
             $chartName = $this->getTitleWithTotal($chartName,$totalFees,"$");
@@ -4362,12 +4431,18 @@ class DashboardUtil
             $totalFees = 0;
 
             $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
-            foreach($requests as $transRequest) {
+            foreach($requests as $thisTransRequest) {
 
-                $fee = $transresRequestUtil->getTransResRequestFeeHtml($transRequest);
+                $fee = $transresRequestUtil->getTransResRequestFeeHtml($thisTransRequest);
+
+                if( !$fee || $fee == 0 ) {
+                    continue;
+                }
+
                 $totalFees = $totalFees + $fee;
+                //echo "thisTransRequest=".$thisTransRequest->getOid()."; fee=".$fee."<br>";
 
-                $businessPurposes = $transRequest->getBusinessPurposes();
+                $businessPurposes = $thisTransRequest->getBusinessPurposes();
 
                 foreach($businessPurposes as $businessPurpose) {
                     $businessPurposeName = $businessPurpose->getName();
@@ -4383,6 +4458,10 @@ class DashboardUtil
             $showOther = $this->getOtherStr($showLimited,"Business Purposes");
             $requestBusinessPurposeArrTop = $this->getTopArray($requestBusinessPurposeArr,$showOther);
             $chartsArray = $this->getChart($requestBusinessPurposeArrTop, $chartName,'pie',$layoutArray," : $");
+
+            //print_r($requestBusinessPurposeArr);
+            //echo "totalFees=".$totalFees."<br>";
+            //exit();
         }
 
         //"51. Total Fees per Funded Work Requests Business Purpose (Top 10)" => "requests-funded-fees-per-business-purpose",
@@ -4394,7 +4473,7 @@ class DashboardUtil
             $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
             foreach($requests as $transRequest) {
 
-                if( !$transRequest->getFunded() ) {
+                if( !$transRequest->getProject()->getFunded() ) {
                     continue;
                 }
 
@@ -4428,7 +4507,7 @@ class DashboardUtil
             $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
             foreach($requests as $transRequest) {
 
-                if( $transRequest->getFunded() ) {
+                if( $transRequest->getProject()->getFunded() ) {
                     continue;
                 }
 
