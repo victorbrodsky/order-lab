@@ -4294,7 +4294,7 @@ class DashboardUtil
                 $projectTypeArr[$projectTypeId]['link'] = $link;
             }
 
-            $chartName = $this->getTitleWithTotal($chartName,$totalFees,"$");
+            $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($totalFees),"$");
             $showOther = $this->getOtherStr($showLimited,"Project Types");
             $projectTypeArrTop = $this->getTopMultiArray($projectTypeArr,$showOther);
 
@@ -4362,7 +4362,7 @@ class DashboardUtil
                 $projectTypeArr[$projectTypeId]['link'] = $link;
             }
 
-            $chartName = $this->getTitleWithTotal($chartName,$totalFees,"$");
+            $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($totalFees),"$");
             $showOther = $this->getOtherStr($showLimited,"Project Types");
             $projectTypeArrTop = $this->getTopMultiArray($projectTypeArr,$showOther);
 
@@ -4429,7 +4429,7 @@ class DashboardUtil
                 $projectTypeArr[$projectTypeId]['link'] = $link;
             }
 
-            $chartName = $this->getTitleWithTotal($chartName,$totalFees,"$");
+            $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($totalFees),"$");
             $showOther = $this->getOtherStr($showLimited,"Project Types");
             $projectTypeArrTop = $this->getTopMultiArray($projectTypeArr,$showOther);
 
@@ -4465,7 +4465,7 @@ class DashboardUtil
                 }
             }
 
-            $chartName = $this->getTitleWithTotal($chartName,$totalFees,"$");
+            $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($totalFees),"$");
             $showOther = $this->getOtherStr($showLimited,"Business Purposes");
             $requestBusinessPurposeArrTop = $this->getTopArray($requestBusinessPurposeArr,$showOther);
             $chartsArray = $this->getChart($requestBusinessPurposeArrTop, $chartName,'pie',$layoutArray," : $");
@@ -4507,7 +4507,7 @@ class DashboardUtil
                 }
             }
 
-            $chartName = $this->getTitleWithTotal($chartName,$totalFees,"$");
+            $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($totalFees),"$");
             $showOther = $this->getOtherStr($showLimited,"Business Purposes");
             $requestBusinessPurposeArrTop = $this->getTopArray($requestBusinessPurposeArr,$showOther);
             $chartsArray = $this->getChart($requestBusinessPurposeArrTop, $chartName,'pie',$layoutArray," : $");
@@ -4545,7 +4545,7 @@ class DashboardUtil
                 }
             }
 
-            $chartName = $this->getTitleWithTotal($chartName,$totalFees,"$");
+            $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($totalFees),"$");
             $showOther = $this->getOtherStr($showLimited,"Business Purposes");
             $requestBusinessPurposeArrTop = $this->getTopArray($requestBusinessPurposeArr,$showOther);
             $chartsArray = $this->getChart($requestBusinessPurposeArrTop, $chartName,'pie',$layoutArray," : $");
