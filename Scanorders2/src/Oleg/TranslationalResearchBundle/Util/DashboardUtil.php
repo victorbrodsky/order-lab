@@ -4508,6 +4508,13 @@ class DashboardUtil
 
                 $businessPurposes = $transRequest->getBusinessPurposes();
 
+                if( count($businessPurposes) == 0 ) {
+                    if( isset($requestBusinessPurposeArr["No Business Purpose"]) ) {
+                        $fee = $requestBusinessPurposeArr["No Business Purpose"] + $fee;
+                    }
+                    $requestBusinessPurposeArr["No Business Purpose"] = $fee;
+                }
+
                 foreach($businessPurposes as $businessPurpose) {
                     $businessPurposeName = $businessPurpose->getName();
 
@@ -4545,6 +4552,13 @@ class DashboardUtil
                 $totalFees = $totalFees + $fee;
 
                 $businessPurposes = $transRequest->getBusinessPurposes();
+
+                if( count($businessPurposes) == 0 ) {
+                    if( isset($requestBusinessPurposeArr["No Business Purpose"]) ) {
+                        $fee = $requestBusinessPurposeArr["No Business Purpose"] + $fee;
+                    }
+                    $requestBusinessPurposeArr["No Business Purpose"] = $fee;
+                }
 
                 foreach($businessPurposes as $businessPurpose) {
                     $businessPurposeName = $businessPurpose->getName();
