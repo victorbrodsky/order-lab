@@ -78,7 +78,7 @@ class FilterInvoiceType extends AbstractType
             'label'=> false,
             'required'=> false,
             'multiple' => false,
-            'attr' => array('class'=>'combobox combobox-width', 'placeholder' => "Principal Investigator(s) for the project"),
+            'attr' => array('class'=>'combobox combobox-width', 'placeholder' => "Principal Investigator for the project"),
             'query_builder' => function(EntityRepository $er) {
                 return $er->createQueryBuilder('list')
                     ->leftJoin("list.employmentStatus", "employmentStatus")

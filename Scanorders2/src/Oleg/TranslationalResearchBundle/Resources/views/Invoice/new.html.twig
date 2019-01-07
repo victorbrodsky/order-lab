@@ -35,6 +35,15 @@
         </p>
     {% endif %}
 
+    {% set pi = invoice.getPrincipalInvestigator() %}
+    {% if pi is defined %}
+        <p>
+            <a href="{{ path('translationalresearch_invoice_index_filter', {'filter[version]':"Latest", 'filter[status][0]':"Unpaid/Issued",'filter[principalInvestigator]':pi.getId()}) }}" target="_blank">
+                Show all unpaid invoices issued to {{ pi.getUsernameOptimal() }}
+            </a>
+        </p>
+    {% endif %}
+
     <br>
 
     {% set sitename = translationalresearch_sitename %}
