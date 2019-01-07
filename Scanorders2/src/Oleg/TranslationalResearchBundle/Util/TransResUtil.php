@@ -4661,4 +4661,63 @@ class TransResUtil
 
         return $res;    //implode(array_slice($parts, 0, $last_part)).$postfix;
     }
+
+    public function getUnpaidInvoiceRemindersCount( $startDate, $endDate, $projectSpecialtyObjects ) {
+
+        $projectSpecialtyObjectStr = null;
+        if( count($projectSpecialtyObjects) > 0 ) {
+            $projectSpecialtyObjectStr = $projectSpecialtyObjects[0]->getUppercaseShortName();
+            //echo "projectSpecialtyObjectStr=".$projectSpecialtyObjectStr."<br>";
+//            $specialtyApcpObject = $this->getSpecialtyObject("ap-cp");
+//            if( $specialtyApcpObject ) {
+//                $projectSpecialtyObjectStr = $specialtyApcpObject->getName();
+//            }
+        }
+
+        $dqlParameters = array();
+
+        //get the date from event log
+        $repository = $this->em->getRepository('OlegUserdirectoryBundle:Logger');
+        $dql = $repository->createQueryBuilder("logger");
+        $dql->innerJoin('logger.eventType', 'eventType');
+        //$dql->leftJoin('logger.objectType', 'objectType');
+        //$dql->leftJoin('logger.site', 'site');
+
+        //$dql->where("logger.siteName = 'translationalresearch' AND logger.entityName = 'Invoice' AND logger.entityId = ".$invoice->getId());
+        //$dql->where("logger.entityName = 'Invoice' AND logger.entityId = ".$invoice->getId());
+
+        //Work Request ID APCP843-REQ16216 billing state has been changed to Invoiced, triggered by invoice status change to Unpaid/Issued
+        $dql->where("logger.entityNamespace = 'Oleg\TranslationalResearchBundle\Entity' AND logger.entityName = 'Invoice'");
+        //$dql->where("logger.entityName = 'Invoice'");
+
+        $dql->andWhere("eventType.name = :eventTypeName");
+        $dqlParameters['eventTypeName'] = "Unpaid Invoice Reminder Email";
+
+        //$dql->andWhere("logger.creationdate > :startDate AND logger.creationdate < :endDate");
+        $dql->andWhere('logger.creationdate >= :startDate');
+        $dqlParameters['startDate'] = $startDate->format('Y-m-d H:i:s');
+
+        $dql->andWhere('logger.creationdate <= :endDate');
+        $endDate->modify('+1 day');
+        $dqlParameters['endDate'] = $endDate->format('Y-m-d H:i:s');
+
+        if( $projectSpecialtyObjectStr ) {
+            $dql->andWhere("logger.event LIKE :specialtyName");
+            $eventStr = "Reminder email for the unpaid Invoice " . $projectSpecialtyObjectStr;
+            //echo "eventStr=".$eventStr."<br>";
+            $dqlParameters['specialtyName'] = "%" . $eventStr . "%";
+        }
+
+        $dql->orderBy("logger.id","DESC");
+        $query = $this->em->createQuery($dql);
+
+        $query->setParameters($dqlParameters);
+
+        $loggers = $query->getResult();
+
+        //echo "loggers=".count($loggers)."<br>";
+        //exit();
+
+        return count($loggers);
+    }
 }

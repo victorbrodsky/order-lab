@@ -130,7 +130,8 @@ class DashboardUtil
             "53. Turn-around Statistics: Number of days to complete each Work Request with person (based on 'Completed and Notified' requests)" => "turn-around-statistics-days-complete-per-request-with-user",
             "54. Turn-around Statistics: Top 50 most delinquent invoices (linked)" => "turn-around-statistics-delayed-unpaid-invoices-by-days",
 
-            "" => "",
+            "55. Number of reminder emails sent per month" => "reminder-emails-per-month",
+
             "" => "",
             "" => "",
             "" => "",
@@ -4731,10 +4732,44 @@ class DashboardUtil
             $chartsArray = $this->getChart($invoiceDueDaysArrTop, $chartName,'bar',$layoutArray);
         }
 
+        //"55. Number of reminder emails sent per month" => "reminder-emails-per-month",
+        if( $chartType == "reminder-emails-per-month" ) {
+            $transresUtil = $this->container->get('transres_util');
+
+            $unpaidInvoicesArr = array();
+            //$datesArr = array();
+
+            //get startDate and add 1 month until the date is less than endDate
+            $startDate->modify( 'first day of last month' );
+            do {
+                $startDateLabel = $startDate->format('M-Y');
+                $thisEndDate = clone $startDate;
+                $thisEndDate->modify( 'first day of next month' );
+                //$datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
+                //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
+
+                //$apcpInvoices = $this->getInvoicesByFilter($startDate,$thisEndDate, array($specialtyApcpObject));
+                $unpaidInvoicesRemindersCount = $transresUtil->getUnpaidInvoiceRemindersCount($startDate,$thisEndDate,$projectSpecialtyObjects);
+
+                $startDate->modify( 'first day of next month' );
+
+                $unpaidInvoicesArr[$startDateLabel] = $unpaidInvoicesRemindersCount;
+
+            } while( $startDate < $endDate );
+
+
+            //Reminders
+            $combinedData = array();
+            $combinedData['Unpaid Invoices'] = $unpaidInvoicesArr;
+            //$combinedInvoicesData['Hematopathology'] = $hemaInvoicesData;
+
+            $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack");
+        }
 
         if( $chartType == "" ) {
 
-        }if( $chartType == "" ) {
+        }
+        if( $chartType == "" ) {
 
         }
         if( $chartType == "" ) {
