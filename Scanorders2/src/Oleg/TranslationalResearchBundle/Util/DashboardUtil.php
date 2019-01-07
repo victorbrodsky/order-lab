@@ -4640,7 +4640,7 @@ class DashboardUtil
             //exit("Exit");
 
             $valuePrefixLabel = "(";
-            $valuePostfixLabel = " days on average)";
+            $valuePostfixLabel = " days)";
             $chartsArray = $this->getChart($averageDays, $chartName,'bar',$layoutArray,$valuePrefixLabel,$valuePostfixLabel); // getChart(
         }
 

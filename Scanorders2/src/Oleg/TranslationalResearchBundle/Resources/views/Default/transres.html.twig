@@ -724,21 +724,36 @@
     {% endif %}
 {% endmacro %}
 
-{% macro userInfo( userForm, userEntity, cycle ) %}
+{% macro userInfo( userForm, userEntity, cycle, fieldType ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
     {% if cycle == "show" or cycle == "review" %}
-        {#<div class="well well-sm">#}
-            <div style="text-align: center;">
-                <p>
-                    <strong>{{ userForm.vars.label }}</strong>
-                </p>
+        <div class="row">
+            <div class="col-xs-2" align="right">
+                {#<div style="text-align: center;">#}
+                    {#<p>#}
+                        <strong>{{ userForm.vars.label }}</strong>
+                    {#</p>#}
+                {#</div>#}
             </div>
-            {{ usermacros.personInfo(userEntity, cycle, 'translationalresearch') }}
-        {#</div>#}
-        {% do userForm.setRendered %}
+            <div class="col-xs-6" align="left">
+                {#<div style="text-align: center;">#}
+                    {#<p>#}
+                        {#<strong>{{ userForm.vars.label }}</strong>#}
+                    {#</p>#}
+                {#</div>#}
+                {{ usermacros.personInfo(userEntity, cycle, 'translationalresearch') }}
+                {% do userForm.setRendered %}
+            </div>
+            <div class="col-xs-4" align="right">
+            </div>
+        </div>
     {% else %}
-        {{ formmacros.field(userForm) }}
+        {% if fieldType is defined and fieldType == 'left' %}
+            {{ formmacros.field_left(userForm) }}
+        {% else %}
+            {{ formmacros.field(userForm) }}
+        {% endif %}
     {% endif %}
 {% endmacro %}
 

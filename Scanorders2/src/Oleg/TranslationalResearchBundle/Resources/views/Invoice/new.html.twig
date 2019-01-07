@@ -100,14 +100,18 @@
         {% endif %}
 
         {% if form.principalInvestigator is defined %}
-            {{ formmacros.field_left(form.principalInvestigator) }}
+            {#{{ formmacros.field_left(form.principalInvestigator) }}#}
+            {{ transres.userInfo(form.principalInvestigator,form.vars.value.principalInvestigator,cycle,'left') }}
         {% endif %}
+
         {% if form.billingContact is defined %}
-            {{ formmacros.field_left(form.billingContact) }}
+            {#{{ formmacros.field_left(form.billingContact) }}#}
+            {{ transres.userInfo(form.billingContact,form.vars.value.billingContact,cycle,'left') }}
         {% endif %}
 
         {% if form.salesperson is defined %}
-            {{ formmacros.field_left(form.salesperson) }}
+            {#{{ formmacros.field_left(form.salesperson) }}#}
+            {{ transres.userInfo(form.salesperson,form.vars.value.salesperson,cycle,'left') }}
         {% endif %}
 
         <hr />
