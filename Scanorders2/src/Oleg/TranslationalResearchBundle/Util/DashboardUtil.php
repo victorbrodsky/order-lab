@@ -4257,6 +4257,10 @@ class DashboardUtil
 
                 $invoicesInfos = $transresUtil->getInvoicesInfosByProject($project);
                 $totalFee = $invoicesInfos['total'];
+                if( !$totalFee || $totalFee == 0 ) {
+                    continue;
+                }
+
                 $totalFees = $totalFees + $totalFee;
 
                 if( isset($projectTypeArr[$projectTypeId]) && isset($projectTypeArr[$projectTypeId]['value']) ) {
@@ -4322,6 +4326,10 @@ class DashboardUtil
 
                 $invoicesInfos = $transresUtil->getInvoicesInfosByProject($project);
                 $totalFee = $invoicesInfos['total'];
+                if( !$totalFee || $totalFee == 0 ) {
+                    continue;
+                }
+
                 $totalFees = $totalFees + $totalFee;
 
                 if( isset($projectTypeArr[$projectTypeId]) && isset($projectTypeArr[$projectTypeId]['value']) ) {
@@ -4385,6 +4393,10 @@ class DashboardUtil
 
                 $invoicesInfos = $transresUtil->getInvoicesInfosByProject($project);
                 $totalFee = $invoicesInfos['total'];
+                if( !$totalFee || $totalFee == 0 ) {
+                    continue;
+                }
+
                 $totalFees = $totalFees + $totalFee;
 
                 if( isset($projectTypeArr[$projectTypeId]) && isset($projectTypeArr[$projectTypeId]['value']) ) {
@@ -4434,7 +4446,6 @@ class DashboardUtil
             foreach($requests as $thisTransRequest) {
 
                 $fee = $transresRequestUtil->getTransResRequestFeeHtml($thisTransRequest);
-
                 if( !$fee || $fee == 0 ) {
                     continue;
                 }
@@ -4478,6 +4489,10 @@ class DashboardUtil
                 }
 
                 $fee = $transresRequestUtil->getTransResRequestFeeHtml($transRequest);
+                if( !$fee || $fee == 0 ) {
+                    continue;
+                }
+
                 $totalFees = $totalFees + $fee;
 
                 $businessPurposes = $transRequest->getBusinessPurposes();
@@ -4512,6 +4527,10 @@ class DashboardUtil
                 }
 
                 $fee = $transresRequestUtil->getTransResRequestFeeHtml($transRequest);
+                if( !$fee || $fee == 0 ) {
+                    continue;
+                }
+
                 $totalFees = $totalFees + $fee;
 
                 $businessPurposes = $transRequest->getBusinessPurposes();
