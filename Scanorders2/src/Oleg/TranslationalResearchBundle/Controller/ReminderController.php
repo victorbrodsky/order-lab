@@ -54,7 +54,7 @@ class ReminderController extends Controller
                 $invoiceCounter = $invoiceCounter + count($result);
             }
 
-            return $this->render("OlegTranslationalResearchBundle:Invoice:unpaid-invoice-index.html.twig",
+            return $this->render("OlegTranslationalResearchBundle:Reminder:unpaid-invoice-index.html.twig",
                 array(
                     'title' => $invoiceCounter." Unpaid Invoices",
                     'invoiceGroups' => $results,
@@ -73,6 +73,8 @@ class ReminderController extends Controller
 
 
     /**
+     * http://127.0.0.1/order/translational-research/reminder/project-reminder/show-summary
+     *
      * @Route("/project-reminder/show-summary", name="translationalresearch_project_reminder_show")
      * @Route("/project-reminder/send-emails", name="translationalresearch_project_reminder_send")
      * @Method({"GET"})
@@ -88,24 +90,24 @@ class ReminderController extends Controller
         $routeName = $request->get('_route');
         $showSummary = false;
 
-        if( $routeName == "translationalresearch_unpaid_invoice_reminder_show" ) {
+        if( $routeName == "translationalresearch_project_reminder_show" ) {
             $showSummary = true;
         }
 
         $results = $transresReminderUtil->sendReminderReviewProjects($showSummary);
 
         if( $showSummary === true ) {
-            $invoiceCounter = 0;
+            $projectCounter = 0;
 
             foreach($results as $result) {
-                $invoiceCounter = $invoiceCounter + count($result);
+                $projectCounter = $projectCounter + count($result);
             }
 
-            return $this->render("OlegTranslationalResearchBundle:Invoice:unpaid-invoice-index.html.twig",
+            return $this->render("OlegTranslationalResearchBundle:Reminder:project-reminder-index.html.twig",
                 array(
-                    'title' => $invoiceCounter." Unpaid Invoices",
-                    'invoiceGroups' => $results,
-                    'invoiceCounter' => $invoiceCounter
+                    'title' => $projectCounter." Projects",
+                    'projectGroups' => $results,
+                    'projectCounter' => $projectCounter
                 )
             );
         }

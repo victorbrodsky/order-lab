@@ -314,10 +314,10 @@ class ReminderUtil
 
         $projectSpecialties = $transresUtil->getTransResProjectSpecialties(false);
         foreach($projectSpecialties as $projectSpecialty) {
-            $results = $this->sendReminderReviewProjectsBySpecialty($reviewState,$projectSpecialty,$showSummary);
-            if( $results ) {
-                $resultArr[] = $results;
-            }
+            //$results = $this->sendReminderReviewProjectsBySpecialty($reviewState,$projectSpecialty,$showSummary);
+            //if( $results ) {
+            //    $resultArr[] = $results;
+            //}
         }
 
         if( $showSummary ) {
@@ -344,6 +344,7 @@ class ReminderUtil
         $reminderInterval = null;
         $maxReminderCount = null;
         //$newline = "\n";
+        $newline = "\r\n";
         //$newline = "<br>";
         $resultArr = array();
         $sentInvoiceEmailsArr = array();
@@ -351,26 +352,40 @@ class ReminderUtil
         $testing = false;
         $testing = true;
 
-        //TODO: projectReminderDelay (getTransresSiteProjectParameter) by $reviewState
+        //review or missinginfo
+        if( strpos($reviewState,'review') !== false ) {
+            $reviewShortState = "review";
+        } else {
+            $reviewShortState = "missinginfo";
+        }
 
         //Pending project request reminder email delay (in days)
-        $projectReminderDelay = $transresUtil->getTransresSiteProjectParameter('projectReminderDelay',null,$projectSpecialty); //6,9,12,15,18
+        $projectReminderDelayField = 'projectReminderDelay_'.$reviewState;
+        $projectReminderDelay = $transresUtil->getTransresSiteProjectParameter($projectReminderDelayField,null,$projectSpecialty); //6,9,12,15,18
         if( !$projectReminderDelay ) {
-            return "projectReminderDelay is not set. Invoice reminder emails are not sent.";
+            $projectReminderDelay = 14; //default 14 days
+            //return "$projectReminderDelayField is not set. Project reminder emails are not sent.";
         }
 
         $projectReminderDelay = trim($projectReminderDelay);
 
         $params = array();
 
-        $projectReminderSubject = $transresUtil->getTransresSiteProjectParameter('projectReminderSubject',null,$projectSpecialty);
+        $projectReminderSubjectField = 'projectReminderSubject_'.$reviewShortState; //review or missinginfo
+        $projectReminderSubject = $transresUtil->getTransresSiteProjectParameter($projectReminderSubjectField,null,$projectSpecialty);
         if( !$projectReminderSubject ) {
-            $projectReminderSubject = "[TRP] Translational Research Project Reminder: [[PROJECT ID]]";
+            //[TRP] Project Request APCP123 is awaiting your review (“First 15 characters of the Project Title...” from PIFirstName PILastName)
+            $projectReminderSubject = "[TRP] Project Request: [[PROJECT ID]] is awaiting your review ([[PROJECT TITLE SHORT]] from [[PROJECT PIS]])";
+
         }
 
-        $projectReminderBody = $transresUtil->getTransresSiteProjectParameter('projectReminderBody',null,$projectSpecialty);
+        $projectReminderBodyField = 'projectReminderBody_'.$reviewShortState; //review or missinginfo
+        $projectReminderBody = $transresUtil->getTransresSiteProjectParameter($projectReminderBodyField,null,$projectSpecialty);
         if( !$projectReminderBody ) {
-            $projectReminderBody = "Our records show that we have not received the $[[INVOICE AMOUNT DUE]] payment for the attached invoice  [[PROJECT ID]] issued on [[PROJECT DUE DATE AND DAYS AGO]].";
+            //PROJECT ID TITLE
+            //Project request APCP123 submitted on 01/01/2018 titled “Full Project Title” (PI: FirstName LastName) is in the “IRB Review” stage and is awaiting your review.
+            $projectReminderBody = "Project request [[PROJECT ID]] submitted on [[PROJECT SUBMITTING DATE]] titled [[PROJECT TITLE]] (PI: [[PROJECT PIS]]) is in the “[[PROJECT STATUS]]” stage and is awaiting your review.";
+            $projectReminderBody = $projectReminderBody . $newline.$newline . "Please visit the link below to submit your opinion:".$newline."[[PROJECT SHOW URL]]";
         }
 
         $reminderEmail = $transresUtil->getTransresSiteProjectParameter('invoiceReminderEmail',null,$projectSpecialty);

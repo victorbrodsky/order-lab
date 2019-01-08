@@ -292,6 +292,61 @@ class TransResSiteParameters {
     private $emailNoteConcern;
 
 
+    ////////// Project reminder ////////////
+    //4 delay fields for review + 2 delay fields for missinginfo + 2 subject, body for review + 2 subject, body for missinginfo
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $projectReminderDelay_irb_review;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $projectReminderDelay_admin_review;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $projectReminderDelay_committee_review;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $projectReminderDelay_final_review;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $projectReminderDelay_irb_missinginfo;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $projectReminderDelay_admin_missinginfo;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $projectReminderSubject_review;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $projectReminderBody_review;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $projectReminderSubject_missinginfo;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $projectReminderBody_missinginfo;
+    ////////// EOF Invoice reminder email ////////////
+
+
+
     public function __construct($user=null) {
         $this->setCreator($user);
         $this->setCreateDate(new \DateTime());
@@ -886,7 +941,170 @@ class TransResSiteParameters {
         $this->invoiceReminderEmail = $invoiceReminderEmail;
     }
 
-    
+    /**
+     * @return mixed
+     */
+    public function getProjectReminderDelayIrbReview()
+    {
+        return $this->projectReminderDelay_irb_review;
+    }
+
+    /**
+     * @param mixed $projectReminderDelay_irb_review
+     */
+    public function setProjectReminderDelayIrbReview($projectReminderDelay_irb_review)
+    {
+        $this->projectReminderDelay_irb_review = $projectReminderDelay_irb_review;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProjectReminderDelayAdminReview()
+    {
+        return $this->projectReminderDelay_admin_review;
+    }
+
+    /**
+     * @param mixed $projectReminderDelay_admin_review
+     */
+    public function setProjectReminderDelayAdminReview($projectReminderDelay_admin_review)
+    {
+        $this->projectReminderDelay_admin_review = $projectReminderDelay_admin_review;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProjectReminderDelayCommitteeReview()
+    {
+        return $this->projectReminderDelay_committee_review;
+    }
+
+    /**
+     * @param mixed $projectReminderDelay_committee_review
+     */
+    public function setProjectReminderDelayCommitteeReview($projectReminderDelay_committee_review)
+    {
+        $this->projectReminderDelay_committee_review = $projectReminderDelay_committee_review;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProjectReminderDelayFinalReview()
+    {
+        return $this->projectReminderDelay_final_review;
+    }
+
+    /**
+     * @param mixed $projectReminderDelay_final_review
+     */
+    public function setProjectReminderDelayFinalReview($projectReminderDelay_final_review)
+    {
+        $this->projectReminderDelay_final_review = $projectReminderDelay_final_review;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProjectReminderDelayIrbMissinginfo()
+    {
+        return $this->projectReminderDelay_irb_missinginfo;
+    }
+
+    /**
+     * @param mixed $projectReminderDelay_irb_missinginfo
+     */
+    public function setProjectReminderDelayIrbMissinginfo($projectReminderDelay_irb_missinginfo)
+    {
+        $this->projectReminderDelay_irb_missinginfo = $projectReminderDelay_irb_missinginfo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProjectReminderDelayAdminMissinginfo()
+    {
+        return $this->projectReminderDelay_admin_missinginfo;
+    }
+
+    /**
+     * @param mixed $projectReminderDelay_admin_missinginfo
+     */
+    public function setProjectReminderDelayAdminMissinginfo($projectReminderDelay_admin_missinginfo)
+    {
+        $this->projectReminderDelay_admin_missinginfo = $projectReminderDelay_admin_missinginfo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProjectReminderSubjectReview()
+    {
+        return $this->projectReminderSubject_review;
+    }
+
+    /**
+     * @param mixed $projectReminderSubject_review
+     */
+    public function setProjectReminderSubjectReview($projectReminderSubject_review)
+    {
+        $this->projectReminderSubject_review = $projectReminderSubject_review;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProjectReminderBodyReview()
+    {
+        return $this->projectReminderBody_review;
+    }
+
+    /**
+     * @param mixed $projectReminderBody_review
+     */
+    public function setProjectReminderBodyReview($projectReminderBody_review)
+    {
+        $this->projectReminderBody_review = $projectReminderBody_review;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProjectReminderSubjectMissinginfo()
+    {
+        return $this->projectReminderSubject_missinginfo;
+    }
+
+    /**
+     * @param mixed $projectReminderSubject_missinginfo
+     */
+    public function setProjectReminderSubjectMissinginfo($projectReminderSubject_missinginfo)
+    {
+        $this->projectReminderSubject_missinginfo = $projectReminderSubject_missinginfo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProjectReminderBodyMissinginfo()
+    {
+        return $this->projectReminderBody_missinginfo;
+    }
+
+    /**
+     * @param mixed $projectReminderBody_missinginfo
+     */
+    public function setProjectReminderBodyMissinginfo($projectReminderBody_missinginfo)
+    {
+        $this->projectReminderBody_missinginfo = $projectReminderBody_missinginfo;
+    }
+
+
+
+
+
 
 
     public function __toString(){

@@ -260,6 +260,64 @@ class SiteParameterType extends AbstractType
             ));
         }
 
+
+
+        ////////// Project reminder email ////////////
+        $builder->add('projectReminderDelay_irb_review', null, array(
+            'label' => "Pending project request reminder email delay for IRB review (in days):",
+            'required' => false,
+            'attr' => array('class' => 'form-control')
+        ));
+        $builder->add('projectReminderDelay_admin_review', null, array(
+            'label' => "Pending project request reminder email delay for Admin review (in days):",
+            'required' => false,
+            'attr' => array('class' => 'form-control')
+        ));
+        $builder->add('projectReminderDelay_committee_review', null, array(
+            'label' => "Pending project request reminder email delay for Committee review (in days):",
+            'required' => false,
+            'attr' => array('class' => 'form-control')
+        ));
+        $builder->add('projectReminderDelay_final_review', null, array(
+            'label' => "Pending project request reminder email delay for Final review (in days):",
+            'required' => false,
+            'attr' => array('class' => 'form-control')
+        ));
+        $builder->add('projectReminderDelay_irb_missinginfo', null, array(
+            'label' => "Pending project request reminder email delay for IRB Missing Info (in days):",
+            'required' => false,
+            'attr' => array('class' => 'form-control')
+        ));
+        $builder->add('projectReminderDelay_admin_missinginfo', null, array(
+            'label' => "Pending project request reminder email delay for Admin Missing Info (in days):",
+            'required' => false,
+            'attr' => array('class' => 'form-control')
+        ));
+
+        $builder->add('projectReminderSubject_review', null, array(
+            'label' => "Translational Research project request review reminder email subject:",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+        $builder->add('projectReminderBody_review', null, array(
+            'label' => "Translational Research project request review reminder email body:",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+
+        $builder->add('projectReminderSubject_missinginfo', null, array(
+            'label' => "Translational Research project request reminder missing info email subject:",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+        $builder->add('projectReminderBody_missinginfo', null, array(
+            'label' => "Translational Research project request reminder missing info email body:",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+        ////////// EOF Project reminder email ////////////
+
+
     }
     
     /**
