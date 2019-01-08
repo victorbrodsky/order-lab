@@ -59,6 +59,10 @@ services:
         class: Oleg\TranslationalResearchBundle\Util\DashboardUtil
         arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
+    transres_reminder_util:
+        class: Oleg\TranslationalResearchBundle\Util\ReminderUtil
+        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+
 
 framework:
     workflows:

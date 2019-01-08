@@ -3324,7 +3324,7 @@ class DashboardUtil
             $chartsArray = $this->getStackedChart($combinedTrpData, $chartName, "stack");
         }
 
-        //"34. Turn-around Statistics: Average number of days for each project request approval phase" => "turn-around-statistics-days-project-state"
+        //"35. Turn-around Statistics: Average number of days for each project request approval phase" => "turn-around-statistics-days-project-state"
         if( $chartType == "turn-around-statistics-days-project-state" ) {
             $transresUtil = $this->container->get('transres_util');
 
@@ -3388,7 +3388,7 @@ class DashboardUtil
             $chartsArray = $this->getChart($averageDaysNew, $chartName,'bar',$layoutArray);
         }
 
-        //"35. Turn-around Statistics: Number of days for each project request approval phase" => "turn-around-statistics-days-per-project-state"
+        //"36. Turn-around Statistics: Number of days for each project request approval phase" => "turn-around-statistics-days-per-project-state"
         if( $chartType == "turn-around-statistics-days-per-project-state" ) {
 
             $projectIrbPhaseArr = array();

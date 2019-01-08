@@ -1685,49 +1685,49 @@ class InvoiceController extends Controller
     }
 
 
-    /**
-     * @Route("/unpaid-invoice-reminder/show-summary", name="translationalresearch_unpaid_invoice_reminder_show")
-     * @Route("/unpaid-invoice-reminder/send-emails", name="translationalresearch_unpaid_invoice_reminder_send")
-     * @Method({"GET"})
-     */
-    public function unpaidInvoiceReminderAction( Request $request )
-    {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ) {
-            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
-        }
-
-        $transresRequestUtil = $this->get('transres_request_util');
-
-        $routeName = $request->get('_route');
-        $showSummary = false;
-
-        if( $routeName == "translationalresearch_unpaid_invoice_reminder_show" ) {
-            $showSummary = true;
-        }
-
-        $results = $transresRequestUtil->sendReminderUnpaidInvoices($showSummary);
-
-        if( $showSummary === true ) {
-            $invoiceCounter = 0;
-
-            foreach($results as $result) {
-                $invoiceCounter = $invoiceCounter + count($result);
-            }
-
-            return $this->render("OlegTranslationalResearchBundle:Invoice:unpaid-invoice-index.html.twig",
-                array(
-                    'title' => $invoiceCounter." Unpaid Invoices",
-                    'invoiceGroups' => $results,
-                    'invoiceCounter' => $invoiceCounter
-                )
-            );
-        }
-
-        $this->get('session')->getFlashBag()->add(
-            'notice',
-            "Sending reminder emails for unpaid invoices: ".$results
-        );
-
-        return $this->redirectToRoute('translationalresearch_invoice_index_filter');
-    }
+//    /**
+//     * @Route("/unpaid-invoice-reminder/show-summary", name="translationalresearch_unpaid_invoice_reminder_show")
+//     * @Route("/unpaid-invoice-reminder/send-emails", name="translationalresearch_unpaid_invoice_reminder_send")
+//     * @Method({"GET"})
+//     */
+//    public function unpaidInvoiceReminderAction( Request $request )
+//    {
+//        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ) {
+//            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+//        }
+//
+//        $transresRequestUtil = $this->get('transres_request_util');
+//
+//        $routeName = $request->get('_route');
+//        $showSummary = false;
+//
+//        if( $routeName == "translationalresearch_unpaid_invoice_reminder_show" ) {
+//            $showSummary = true;
+//        }
+//
+//        $results = $transresRequestUtil->sendReminderUnpaidInvoices($showSummary);
+//
+//        if( $showSummary === true ) {
+//            $invoiceCounter = 0;
+//
+//            foreach($results as $result) {
+//                $invoiceCounter = $invoiceCounter + count($result);
+//            }
+//
+//            return $this->render("OlegTranslationalResearchBundle:Invoice:unpaid-invoice-index.html.twig",
+//                array(
+//                    'title' => $invoiceCounter." Unpaid Invoices",
+//                    'invoiceGroups' => $results,
+//                    'invoiceCounter' => $invoiceCounter
+//                )
+//            );
+//        }
+//
+//        $this->get('session')->getFlashBag()->add(
+//            'notice',
+//            "Sending reminder emails for unpaid invoices: ".$results
+//        );
+//
+//        return $this->redirectToRoute('translationalresearch_invoice_index_filter');
+//    }
 }

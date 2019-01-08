@@ -42,9 +42,9 @@ class CronCommand extends ContainerAwareCommand {
         //$logger->notice("Cron job processing FellApp from Google Drive finished with result=".$result);
         //$output->writeln($result);
 
-        $transresRequestUtil = $this->getContainer()->get('transres_request_util');
+        $transresReminderUtil = $this->getContainer()->get('transres_reminder_util');
 
-        $result = $transresRequestUtil->sendReminderUnpaidInvoices();
+        $result = $transresReminderUtil->sendReminderUnpaidInvoices();
 
         $output->writeln($result);
 
