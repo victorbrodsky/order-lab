@@ -521,6 +521,18 @@ class Project {
      */
     private $stateComment;
 
+    //reminder email: identifier(state), reminderEmailDate
+    // for each identifier $state - irb_review, admin_review, committee_review, final_review, irb_missinginfo, admin_missinginfo
+//    /**
+//     * @ORM\ManyToMany(targetEntity="ReminderEmail", cascade={"persist","remove"})
+//     * @ORM\JoinTable(name="transres_project_reminderEmail",
+//     *      joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="id", onDelete="CASCADE")},
+//     *      inverseJoinColumns={@ORM\JoinColumn(name="reminderEmail_id", referencedColumnName="id", onDelete="CASCADE")}
+//     *      )
+//     * @ORM\OrderBy({"createdate" = "ASC"})
+//     **/
+//    private $reminderEmails;
+
 
     public function __construct($user=null) {
 
@@ -544,6 +556,8 @@ class Project {
 
         $this->tissueProcessingServices = new ArrayCollection();
         $this->restrictedServices = new ArrayCollection();
+
+        //$this->reminderEmails = new ArrayCollection();
 
         //$this->formVersions = new ArrayCollection();
 
@@ -1778,6 +1792,23 @@ class Project {
     {
         $this->stateComment = $stateComment;
     }
+
+
+//    public function getReminderEmails()
+//    {
+//        return $this->reminderEmails;
+//    }
+//    public function addReminderEmail($item)
+//    {
+//        if( $item && !$this->reminderEmails->contains($item) ) {
+//            $this->reminderEmails->add($item);
+//        }
+//        return $this;
+//    }
+//    public function removeReminderEmail($item)
+//    {
+//        $this->reminderEmails->removeElement($item);
+//    }
 
 
 

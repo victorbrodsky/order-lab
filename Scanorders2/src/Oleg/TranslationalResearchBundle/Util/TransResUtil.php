@@ -3558,6 +3558,33 @@ class TransResUtil
         if( $project ) {
             $text = str_replace("[[PROJECT ID]]", $project->getOid(), $text);
             $text = str_replace("[[PROJECT ID TITLE]]", $project->getProjectIdTitle(), $text);
+            $text = str_replace("[[PROJECT TITLE]]", $project->getTitle(), $text);
+
+            if( strpos($text, '[[PROJECT TITLE SHORT]]') !== false ) {
+                $title = $this->tokenTruncate($project->getTitle(), 15);
+                $text = str_replace("[[PROJECT TITLE SHORT]]", $title, $text);
+            }
+
+            if( strpos($text, '[[PROJECT PIS]]') !== false ) {
+                $pisArr = array();
+                $pis = $project->getPrincipalInvestigators();
+                foreach($pis as $pi) {
+                    $pisArr[] = $pi->getUsernameShortest();
+                }
+                $text = str_replace("[[PROJECT PIS]]", implode(", ",$pisArr), $text);
+            }
+
+            $createDateStr = null;
+            $createDate = $project->getCreateDate();
+            if( $createDate ) {
+                $createDateStr = $createDate->format('m/d/Y');
+                $text = str_replace("[[PROJECT SUBMITTING DATE]]", $createDateStr, $text);
+            }
+
+            if( strpos($text, '[[PROJECT STATUS]]') !== false ) {
+                $state = $this->getStateLabelByProject($project);
+                $text = str_replace("[[PROJECT STATUS]]", $state, $text);
+            }
 
             $projectShowUrl = $this->getProjectShowUrl($project);
             if( $projectShowUrl ) {
@@ -4706,6 +4733,7 @@ class TransResUtil
             $eventStr = "Reminder email for the unpaid Invoice " . $projectSpecialtyObjectStr;
             //echo "eventStr=".$eventStr."<br>";
             $dqlParameters['specialtyName'] = "%" . $eventStr . "%";
+            //or use $eventType = "Unpaid Invoice Reminder Email"
         }
 
         $dql->orderBy("logger.id","DESC");
