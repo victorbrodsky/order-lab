@@ -94,7 +94,7 @@ class ReminderController extends Controller
             $showSummary = true;
         }
 
-        $results = $transresReminderUtil->sendReminderReviewProjects($showSummary);
+        $results = $transresReminderUtil->sendReminderReviewProjects("irb_review",$showSummary);
 
         if( $showSummary === true ) {
             $projectCounter = 0;

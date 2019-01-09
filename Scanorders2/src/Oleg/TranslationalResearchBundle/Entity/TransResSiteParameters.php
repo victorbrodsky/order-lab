@@ -941,6 +941,7 @@ class TransResSiteParameters {
         $this->invoiceReminderEmail = $invoiceReminderEmail;
     }
 
+    
     /**
      * @return mixed
      */

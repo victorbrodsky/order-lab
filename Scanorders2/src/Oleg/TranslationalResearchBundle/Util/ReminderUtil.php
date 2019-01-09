@@ -307,17 +307,18 @@ class ReminderUtil
 
 
     //Projects
-    public function sendReminderReviewProjects($reviewState,$showSummary=false) {
+    //$state - irb_review, admin_review ..., irb_missinginfo, admin_missinginfo
+    public function sendReminderReviewProjects($state,$showSummary=false) {
         $transresUtil = $this->container->get('transres_util');
 
         $resultArr = array();
 
         $projectSpecialties = $transresUtil->getTransResProjectSpecialties(false);
         foreach($projectSpecialties as $projectSpecialty) {
-            //$results = $this->sendReminderReviewProjectsBySpecialty($reviewState,$projectSpecialty,$showSummary);
-            //if( $results ) {
-            //    $resultArr[] = $results;
-            //}
+            $results = $this->sendReminderReviewProjectsBySpecialty($state,$projectSpecialty,$showSummary);
+            if( $results ) {
+                $resultArr[] = $results;
+            }
         }
 
         if( $showSummary ) {
@@ -332,7 +333,7 @@ class ReminderUtil
 
         return $result;
     }
-    public function sendReminderReviewProjectsBySpecialty( $reviewState, $projectSpecialty, $showSummary=false ) {
+    public function sendReminderReviewProjectsBySpecialty( $state, $projectSpecialty, $showSummary=false ) {
         $transresUtil = $this->container->get('transres_util');
         $transresRequestUtil = $this->container->get('transres_request_util');
         $userSecUtil = $this->container->get('user_security_utility');
@@ -353,14 +354,21 @@ class ReminderUtil
         $testing = true;
 
         //review or missinginfo
-        if( strpos($reviewState,'review') !== false ) {
-            $reviewShortState = "review";
+        if( strpos($state,'review') !== false ) {
+            $reviewShortState = "Review";
         } else {
-            $reviewShortState = "missinginfo";
+            $reviewShortState = "Missinginfo";
         }
 
+        //convert irb_review to IrbReview
+        $modifiedState = str_replace("_"," ",$state);
+        $modifiedState = ucwords($modifiedState);
+        //echo "modifiedState=$modifiedState <br>";
+        $modifiedState = str_replace(" ","",$modifiedState);
+        //echo "modifiedState=$modifiedState <br>";
+
         //Pending project request reminder email delay (in days)
-        $projectReminderDelayField = 'projectReminderDelay_'.$reviewState;
+        $projectReminderDelayField = 'projectReminderDelay'.$modifiedState;
         $projectReminderDelay = $transresUtil->getTransresSiteProjectParameter($projectReminderDelayField,null,$projectSpecialty); //6,9,12,15,18
         if( !$projectReminderDelay ) {
             $projectReminderDelay = 14; //default 14 days
@@ -371,7 +379,7 @@ class ReminderUtil
 
         $params = array();
 
-        $projectReminderSubjectField = 'projectReminderSubject_'.$reviewShortState; //review or missinginfo
+        $projectReminderSubjectField = 'projectReminderSubject'.$reviewShortState; //review or missinginfo
         $projectReminderSubject = $transresUtil->getTransresSiteProjectParameter($projectReminderSubjectField,null,$projectSpecialty);
         if( !$projectReminderSubject ) {
             //[TRP] Project Request APCP123 is awaiting your review (“First 15 characters of the Project Title...” from PIFirstName PILastName)
@@ -379,7 +387,7 @@ class ReminderUtil
 
         }
 
-        $projectReminderBodyField = 'projectReminderBody_'.$reviewShortState; //review or missinginfo
+        $projectReminderBodyField = 'projectReminderBody'.$reviewShortState; //review or missinginfo
         $projectReminderBody = $transresUtil->getTransresSiteProjectParameter($projectReminderBodyField,null,$projectSpecialty);
         if( !$projectReminderBody ) {
             //PROJECT ID TITLE
@@ -399,26 +407,21 @@ class ReminderUtil
         $dql->where("projectSpecialty.id = :specialtyId");
         $params["specialtyId"] = $projectSpecialty->getId();
 
-        $dql->andWhere("project.status = :status"); //Unpaid/Issued
-        //$params["status"] = "Unpaid/Issued";
+        //$dql->andWhere("project.state = :status"); //Unpaid/Issued
+        //$params["status"] = $state;   //"Unpaid/Issued";
+        $dql->andWhere("project.state = 'irb_review'"); //Unpaid/Issued
 
         /////////1. (dueDate < currentDate - invoiceDueDateMax) //////////////
         //overDueDate = currentDate - invoiceDueDateMax;
-        $overDueDate = new \DateTime("-".$invoiceDueDateMax." months");
+        $overDueDate = new \DateTime("-".$projectReminderDelay." days");
         //echo "overDueDate=".$overDueDate->format('Y-m-d H:i:s').$newline;
-        $dql->andWhere("project.dueDate IS NOT NULL AND project.dueDate < :overDueDate");
+        $dql->andWhere("project.updateDate IS NOT NULL AND project.updateDate < :overDueDate");
         $params["overDueDate"] = $overDueDate->format('Y-m-d H:i:s');
-        ////////////// EOF //////////////
-
-        /////////.2 (invoiceLastReminderSentDate IS NULL OR invoiceLastReminderSentDate < currentDate - reminderInterval) ///////////
-        $overDueReminderDate = new \DateTime("-".$reminderInterval." months");
-        $dql->andWhere("invoice.invoiceLastReminderSentDate IS NULL OR invoice.invoiceLastReminderSentDate < :overDueReminderDate");
-        $params["overDueReminderDate"] = $overDueReminderDate->format('Y-m-d H:i:s');
         ////////////// EOF //////////////
 
 
         if( $testing ) {
-            $dql->orWhere("project.id=1 OR project.id=2");
+            //$dql->orWhere("project.id=1 OR project.id=2");
             //$dql->orWhere("invoice.id=1");
         }
 
@@ -429,7 +432,7 @@ class ReminderUtil
         );
 
         $projects = $query->getResult();
-        //echo "$projectSpecialty count invoices=".count($invoices)."$newline";
+        echo "$projectSpecialty count projects=".count($projects)."$newline";
 
         if( $showSummary ) {
             return $projects;
