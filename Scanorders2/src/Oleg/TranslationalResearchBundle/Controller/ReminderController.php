@@ -114,10 +114,10 @@ class ReminderController extends Controller
 
         $this->get('session')->getFlashBag()->add(
             'notice',
-            "Sending reminder emails for unpaid invoices: ".$results
+            "Sending reminder emails for delayed projects: ".$results
         );
 
-        return $this->redirectToRoute('translationalresearch_invoice_index_filter');
+        return $this->redirectToRoute('translationalresearch_project_index');
     }
     
 }

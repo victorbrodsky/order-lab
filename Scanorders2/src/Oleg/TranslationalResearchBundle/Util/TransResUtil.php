@@ -308,6 +308,53 @@ class TransResUtil
         return $links;
     }
 
+    public function getProjectReviewers( $project, $state=null, $asEmails=false ) {
+        //get project reviews for appropriate state (i.e. irb_review)
+        $reviewers = array();
+
+        if( !$state ) {
+            $state = $project->getState();
+        }
+
+        $reviews = array();
+
+        if( $state == "irb_review" ) {
+            $reviews = $project->getIrbReviews();
+        }
+        if( $state == "admin_review" ) {
+            $reviews = $project->getAdminReviews();
+        }
+        if( $state == "committee_review" ) {
+            $reviews = $project->getCommitteeReviews();
+        }
+        if( $state == "final_review" ) {
+            $reviews = $project->getFinalReviews();
+        }
+
+        foreach($reviews as $review) {
+            $reviewer = $review->getReviewer();
+            if( $reviewer ) {
+                if( $asEmails ) {
+                    $reviewers[] = $reviewer->getSingleEmail();
+                } else {
+                    $reviewers[] = $reviewer;
+                }
+            }
+
+            $reviewerDelegate = $review->getReviewerDelegate();
+            if( $reviewerDelegate ) {
+                if( $asEmails ) {
+                    $reviewers[] = $reviewerDelegate->getSingleEmail();
+                } else {
+                    $reviewers[] = $reviewerDelegate;
+                }
+            }
+
+        }
+
+        return $reviewers;
+    }
+
     public function isProjectEditableByRequester( $project, $checkProjectSpecialty=true ) {
         if( $checkProjectSpecialty ) {
             if ($project && $this->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false) {
@@ -2696,6 +2743,45 @@ class TransResUtil
         }
 
         //2 contacts
+        $contacts = $project->getContacts();
+        foreach( $contacts as $contact ) {
+            if( $contact ) {
+                if( $asEmail ) {
+                    $resArr[] = $contact->getSingleEmail();
+                } else {
+                    $resArr[] = $contact;
+                }
+            }
+        }
+
+        return $resArr;
+    }
+    //project's Requester (principalInvestigators, submitter, contacts)
+    public function getRequesterPisContactsSubmitterEmails($project, $asEmail=true) {
+        $resArr = array();
+
+        //1 principalInvestigators
+        $pis = $project->getPrincipalInvestigators();
+        foreach( $pis as $pi ) {
+            if( $pi ) {
+                if( $asEmail ) {
+                    $resArr[] = $pi->getSingleEmail();
+                } else {
+                    $resArr[] = $pi;
+                }
+            }
+        }
+
+        //2 submitter
+        if( $project->getSubmitter() ) {
+            if( $asEmail ) {
+                $resArr[] = $project->getSubmitter()->getSingleEmail();
+            } else {
+                $resArr[] = $project->getSubmitter();
+            }
+        }
+
+        //3 contacts
         $contacts = $project->getContacts();
         foreach( $contacts as $contact ) {
             if( $contact ) {

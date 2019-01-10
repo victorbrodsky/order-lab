@@ -329,7 +329,7 @@ class ReminderUtil
         if( count($resultArr) > 0 ) {
             $result = implode(", ", $resultArr);
         } else {
-            $result = "There are no unpaid overdue invoices corresponding to the site setting parameters.";
+            $result = "There are no delayed projects corresponding to the site setting parameters.";
         }
 
         return $result;
@@ -387,7 +387,7 @@ class ReminderUtil
         $projectReminderSubject = $transresUtil->getTransresSiteProjectParameter($projectReminderSubjectField,null,$projectSpecialty);
         if( !$projectReminderSubject ) {
             //[TRP] Project Request APCP123 is awaiting your review (“First 15 characters of the Project Title...” from PIFirstName PILastName)
-            $projectReminderSubject = "[TRP] Project Request: [[PROJECT ID]] is awaiting your review ([[PROJECT TITLE SHORT]] from [[PROJECT PIS]])";
+            $projectReminderSubject = "[TRP] Project Request: [[PROJECT ID]] is awaiting your review ('[[PROJECT TITLE SHORT]]' from [[PROJECT PIS]])";
 
         }
 
@@ -396,7 +396,7 @@ class ReminderUtil
         if( !$projectReminderBody ) {
             //PROJECT ID TITLE
             //Project request APCP123 submitted on 01/01/2018 titled “Full Project Title” (PI: FirstName LastName) is in the “IRB Review” stage and is awaiting your review.
-            $projectReminderBody = "Project request [[PROJECT ID]] submitted on [[PROJECT SUBMITTING DATE]] titled [[PROJECT TITLE]] (PI: [[PROJECT PIS]]) is in the '[[PROJECT STATUS]]' stage and is awaiting your review.";
+            $projectReminderBody = "Project request [[PROJECT ID]] submitted on [[PROJECT SUBMITTING DATE]] titled '[[PROJECT TITLE]]' (PI: [[PROJECT PIS]]) is in the '[[PROJECT STATUS]]' stage and is awaiting your review.";
             $projectReminderBody = $projectReminderBody . $newline.$newline . "Please visit the link below to submit your opinion:".$newline."[[PROJECT SHOW URL]]";
         }
 
@@ -480,8 +480,22 @@ class ReminderUtil
 //            }
 
             ////////////// send email //////////////
-            $emailArr = $transresRequestUtil->getInvoicePis($project);
-            if (count($emailArr) == 0) {
+            //Case 1) to Reviewers (irb_review, admin_review, committee_review, final_review)
+            //Only send the reminder to Primary committee reviewer for project requests in Committee review.
+            $emailArr = array();
+            if( $state == "irb_review" || $state == "admin_review" || $state == "final_review" ) {
+                $emailArr = $transresUtil->getProjectReviewers($project,$state,true);
+            }
+            if( $state == "committee_review" ) {
+                $emailArr = $transresUtil->getCommiteePrimaryReviewerEmails($project);
+            }
+            //Case 2) to Submitter, Contact, AND PI (irb_missinginfo, admin_missinginfo)
+            //$emailArr = $transresRequestUtil->getInvoicePis($project);
+            if( $state == "irb_missinginfo" || $state == "admin_missinginfo" ) {
+                $emailArr = $transresUtil->getRequesterPisContactsSubmitterEmails($project);
+            }
+
+            if( count($emailArr) == 0 ) {
                 //return "There are no PI and/or Billing Contact emails. Email has not been sent.";
                 $resultArr[] = "There are no email recipients. Email has not been sent for Project ".$project->getOid();
                 continue;
@@ -504,13 +518,15 @@ class ReminderUtil
         }//foreach $projects
 
         //EventLog
-        if( count($sentProjectEmailsArr) > 0 ) {
-            $eventType = "Project Reminder Email";
-            foreach($sentProjectEmailsArr as $projectMsg) {
-                $userSecUtil->createUserEditEvent($this->container->getParameter('translationalresearch.sitename'), $projectMsg, $systemuser, $project, null, $eventType);
+        if( !$testing ) {
+            if (count($sentProjectEmailsArr) > 0) {
+                $eventType = "Project Reminder Email";
+                foreach ($sentProjectEmailsArr as $projectMsg) {
+                    $userSecUtil->createUserEditEvent($this->container->getParameter('translationalresearch.sitename'), $projectMsg, $systemuser, $project, null, $eventType);
+                }
+            } else {
+                $logger->notice("There are no unpaid overdue invoices corresponding to the site setting parameters for " . $projectSpecialty);
             }
-        } else {
-            $logger->notice("There are no unpaid overdue invoices corresponding to the site setting parameters for ".$projectSpecialty);
         }
 
         $result = implode(", ",$resultArr);
