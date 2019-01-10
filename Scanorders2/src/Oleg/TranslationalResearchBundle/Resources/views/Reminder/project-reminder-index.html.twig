@@ -24,14 +24,18 @@
     </p>
     <br>
 
-    {% for projectGroup in projectGroups %}
+    {% for state, projectGroups in finalResults %}
 
-        {% for project in projectGroup %}
+        <h3>{{ transres_util.getStateLabelByName(state) }}</h3>
 
-            <p>
-                <a href="{{ path('translationalresearch_project_show', {'id': project.id}) }}">{{ project.oid }}</a>
-            </p>
+        {% for projectGroup in projectGroups %}
+                {% for project in projectGroup %}
 
+                    <p>
+                        <a href="{{ path('translationalresearch_project_show', {'id': project.id}) }}">{{ project.oid }}</a>
+                    </p>
+
+                {% endfor %}
         {% endfor %}
 
     {% endfor %}

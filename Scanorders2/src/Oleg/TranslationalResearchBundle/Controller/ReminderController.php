@@ -94,28 +94,41 @@ class ReminderController extends Controller
             $showSummary = true;
         }
 
-        $results = $transresReminderUtil->sendReminderReviewProjects("irb_review",$showSummary);
+        $states = array("irb_review", "admin_review", "committee_review", "final_review", "irb_missinginfo", "admin_missinginfo");
+        //$states = array("irb_review");
+        $finalResults = array();
+
+        foreach($states as $state) {
+            $results = $transresReminderUtil->sendReminderReviewProjects($state,$showSummary);
+            echo "results count=".count($results)."<br>";
+            //print_r($results);
+            $finalResults[$state] = $results;
+        }
 
         if( $showSummary === true ) {
             $projectCounter = 0;
 
-            foreach($results as $result) {
-                $projectCounter = $projectCounter + count($result);
+            foreach($finalResults as $state=>$results) {
+                foreach($results as $result) {
+                    $projectCounter = $projectCounter + count($result);
+                }
             }
 
             return $this->render("OlegTranslationalResearchBundle:Reminder:project-reminder-index.html.twig",
                 array(
                     'title' => $projectCounter." Projects",
-                    'projectGroups' => $results,
+                    'finalResults' => $finalResults,
                     'projectCounter' => $projectCounter
                 )
             );
         }
 
-        $this->get('session')->getFlashBag()->add(
-            'notice',
-            "Sending reminder emails for delayed projects: ".$results
-        );
+        foreach($finalResults as $state=>$results) {
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                "Sending reminder emails for delayed projects ($state): " . $results
+            );
+        }
 
         return $this->redirectToRoute('translationalresearch_project_index');
     }

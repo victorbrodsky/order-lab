@@ -334,6 +334,7 @@ class ReminderUtil
 
         return $result;
     }
+    //TODO: fix filter by state
     public function sendReminderReviewProjectsBySpecialty( $state, $projectSpecialty, $showSummary=false ) {
         $transresUtil = $this->container->get('transres_util');
         $transresRequestUtil = $this->container->get('transres_request_util');
