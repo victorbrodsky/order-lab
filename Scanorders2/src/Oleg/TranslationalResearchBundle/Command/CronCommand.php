@@ -44,9 +44,27 @@ class CronCommand extends ContainerAwareCommand {
 
         $transresReminderUtil = $this->getContainer()->get('transres_reminder_util');
 
-        $result = $transresReminderUtil->sendReminderUnpaidInvoices();
+        ////////////// unpaid invoices //////////////
+        $results = $transresReminderUtil->sendReminderUnpaidInvoices();
+        ////////////// EOF unpaid invoices //////////////
 
-        $output->writeln($result);
+        ////////////// delayed projects //////////////
+        $states = array("irb_review", "admin_review", "committee_review", "final_review", "irb_missinginfo", "admin_missinginfo");
+        $finalResults = array();
+
+        foreach($states as $state) {
+            $projectResults = $transresReminderUtil->sendReminderReviewProjects($state);
+            $finalResults[$state] = $projectResults;
+        }
+
+        $projectResultsArr = array();
+        foreach($finalResults as $state=>$projectResults) {
+            $projectResultsArr[] = $state.": ".$projectResults;
+        }
+        $results = $results . "; " . implode(", ",$projectResultsArr);
+        ////////////// EOF delayed projects //////////////
+
+        $output->writeln($results);
 
     }
 

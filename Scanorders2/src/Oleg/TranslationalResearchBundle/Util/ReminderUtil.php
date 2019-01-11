@@ -87,7 +87,9 @@ class ReminderUtil
         //$newline = "\n";
         //$newline = "<br>";
         $resultArr = array();
-        $sentInvoiceEmailsArr = array();
+        //$sentInvoiceEmailsArr = array();
+        $eventType = "Unpaid Invoice Reminder Email";
+        $sentInvoices = 0;
 
         $testing = false;
         //$testing = true;
@@ -223,7 +225,6 @@ class ReminderUtil
             //": dueDate=".$dueDateStr.", lastSentDate=".$lastSentDateStr.", reminderEmailConter=".$invoice->getInvoiceReminderCount();
 
             $logger->notice("Sending reminder email for Invoice ".$invoice->getOid());
-            $resultArr[] = $invoice->getOid();
 
             //set last reminder date
             $invoice->setInvoiceLastReminderSentDate(new \DateTime());
@@ -283,21 +284,19 @@ class ReminderUtil
             //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
             $emailUtil->sendEmail( $piEmailArr, $invoiceReminderSubjectReady, $invoiceReminderBodyReady, $ccs, $invoiceReminderEmail, $attachmentPath );
 
-            $sentInvoiceEmailsArr[] = "Reminder email for the unpaid Invoice ".$invoice->getOid(). " has been sent to ".implode(";",$piEmailArr) . "; ccs:".$ccs.
+            $invoiceMsg = "Reminder email for the unpaid Invoice ".$invoice->getOid(). " has been sent to ".implode(";",$piEmailArr) . "; ccs:".$ccs.
             "<br>Subject: ".$invoiceReminderSubjectReady."<br>Body: ".$invoiceReminderBodyReady;
             ////////////// EOF send email //////////////
 
+            //EventLog
+            $userSecUtil->createUserEditEvent($this->container->getParameter('translationalresearch.sitename'), $invoiceMsg, $systemuser, $invoice, null, $eventType);
+
+            $resultArr[] = $invoice->getOid();
+            $sentInvoices++;
+
         }//foreach $invoices
 
-        //EventLog
-        if( count($sentInvoiceEmailsArr) > 0 ) {
-            $eventType = "Unpaid Invoice Reminder Email";
-            //$userSecUtil->createUserEditEvent($this->container->getParameter('translationalresearch.sitename'), $result, $systemuser, $invoices, null, $eventType);
-            foreach($sentInvoiceEmailsArr as $invoiceMsg) {
-                //$msg = "Reminder email for the unpaid Invoice ".$invoice->getOid(). " has been sent.";
-                $userSecUtil->createUserEditEvent($this->container->getParameter('translationalresearch.sitename'), $invoiceMsg, $systemuser, $invoice, null, $eventType);
-            }
-        } else {
+        if( $sentInvoices == 0 ) {
             $logger->notice("There are no unpaid overdue invoices corresponding to the site setting parameters for ".$projectSpecialty);
         }
 
@@ -334,14 +333,12 @@ class ReminderUtil
 
         return $result;
     }
-    //TODO: fix filter by state
     public function sendReminderReviewProjectsBySpecialty( $state, $projectSpecialty, $showSummary=false ) {
         $transresUtil = $this->container->get('transres_util');
-        $transresRequestUtil = $this->container->get('transres_request_util');
         $userSecUtil = $this->container->get('user_security_utility');
         $emailUtil = $this->container->get('user_mailer_utility');
         $logger = $this->container->get('logger');
-        $user = $this->secTokenStorage->getToken()->getUser();
+        //$user = $this->secTokenStorage->getToken()->getUser();
 
         $systemuser = $userSecUtil->findSystemUser();
 
@@ -353,10 +350,12 @@ class ReminderUtil
         $newline = "\r\n";
         //$newline = "<br>";
         $resultArr = array();
-        $sentProjectEmailsArr = array();
+        //$sentProjectEmailsArr = array();
+        $eventType = "Project Reminder Email";
+        $sentProjects = 0;
 
         $testing = false;
-        $testing = true;
+        //$testing = true;
 
         //review or missinginfo
         if( strpos($state,'review') !== false ) {
@@ -424,10 +423,10 @@ class ReminderUtil
         ////////////// EOF //////////////
 
 
-        if( $testing ) {
+        //if( $testing ) {
             //$dql->orWhere("project.id=1 OR project.id=2");
             //$dql->orWhere("invoice.id=1");
-        }
+        //}
 
         $query = $this->em->createQuery($dql);
 
@@ -436,7 +435,7 @@ class ReminderUtil
         );
 
         $projects = $query->getResult();
-        echo "$projectSpecialty count projects=".count($projects)."$newline";
+        //echo "$projectSpecialty count projects=".count($projects)."$newline";
 
         //filter project by the last reminder email from event log
         $today = new \DateTime();
@@ -447,7 +446,10 @@ class ReminderUtil
                 $lastLogger = $loggers[0];
                 $sentDate = $lastLogger->getCreationdate();
                 $dDiff = $sentDate->diff($today);
-                if( $dDiff > 7 ) {
+                $days = $dDiff->days; //sent $days ago
+                //$days = intval($days);
+                //echo "days=".$days."<br>";
+                if( $days > 7 ) {
                     $lateProjects[] = $project;
                 }
             } else {
@@ -455,21 +457,20 @@ class ReminderUtil
             }
         }
 
-        foreach($projects as $project) {
-            echo "project ".$project->getOid()."<br>";
-        }
+//        foreach($projects as $project) {
+//            echo "project ".$project->getOid()."<br>";
+//        }
         //exit('exit projects reminder');
 
         if( $showSummary ) {
-            return $projects;
+            return $lateProjects;
         }
 
         //exit('exit projects reminder');
 
         foreach($lateProjects as $project) {
 
-            $logger->notice("Sending reminder email for Project ".$project->getOid());
-            $resultArr[] = $project->getOid();
+            $logger->notice("Sending reminder email for Project ".$project->getOid() . "(" . $state . ")");
 
             //set the latest update reminder datetime for this particular review
             //$reminderEmail = new ReminderEmail($user,$state);
@@ -491,7 +492,6 @@ class ReminderUtil
                 $emailArr = $transresUtil->getCommiteePrimaryReviewerEmails($project);
             }
             //Case 2) to Submitter, Contact, AND PI (irb_missinginfo, admin_missinginfo)
-            //$emailArr = $transresRequestUtil->getInvoicePis($project);
             if( $state == "irb_missinginfo" || $state == "admin_missinginfo" ) {
                 $emailArr = $transresUtil->getRequesterPisContactsSubmitterEmails($project);
             }
@@ -512,22 +512,24 @@ class ReminderUtil
             //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
             $emailUtil->sendEmail( $emailArr, $projectReminderSubjectReady, $projectReminderBodyReady, $ccs, $reminderEmail );
 
-            $sentProjectEmailsArr[] = "Reminder email for the Project ".$project->getOid(). " in state " . $state . "; ccs:".$ccs.
+            $stateStr = $transresUtil->getStateLabelByName($state);
+            $projectMsg = "Reminder email for the Project " . $project->getOid() . " in the status '" . $stateStr . "'".
+                "; ccs:".$ccs.
                 "<br>Subject: ".$projectReminderSubjectReady."<br>Body: ".$projectReminderBodyReady;
             ////////////// EOF send email //////////////
 
+            //EventLog
+            if( !$testing ) {
+                $userSecUtil->createUserEditEvent($this->container->getParameter('translationalresearch.sitename'), $projectMsg, $systemuser, $project, null, $eventType);
+            }
+
+            $resultArr[] = $project->getOid();
+            $sentProjects++;
+
         }//foreach $projects
 
-        //EventLog
-        if( !$testing ) {
-            if (count($sentProjectEmailsArr) > 0) {
-                $eventType = "Project Reminder Email";
-                foreach ($sentProjectEmailsArr as $projectMsg) {
-                    $userSecUtil->createUserEditEvent($this->container->getParameter('translationalresearch.sitename'), $projectMsg, $systemuser, $project, null, $eventType);
-                }
-            } else {
-                $logger->notice("There are no unpaid overdue invoices corresponding to the site setting parameters for " . $projectSpecialty);
-            }
+        if( $sentProjects == 0 ) {
+            $logger->notice("There are no delayed projects corresponding to the site setting parameters for " . $projectSpecialty);
         }
 
         $result = implode(", ",$resultArr);
@@ -535,6 +537,9 @@ class ReminderUtil
         return $result;
     }
     public function getProjectReminderEmails( $project, $state ) {
+
+        $transresUtil = $this->container->get('transres_util');
+        $stateStr = $transresUtil->getStateLabelByName($state);
 
         $dqlParameters = array();
 
@@ -546,18 +551,14 @@ class ReminderUtil
         //$dql->leftJoin('logger.site', 'site');
 
         //$dql->where("logger.siteName = 'translationalresearch' AND logger.entityName = 'Invoice' AND logger.entityId = ".$invoice->getId());
-        //$dql->where("logger.entityName = 'Invoice' AND logger.entityId = ".$invoice->getId());
-
-        //Work Request ID APCP843-REQ16216 billing state has been changed to Invoiced, triggered by invoice status change to Unpaid/Issued
         $dql->where("logger.entityNamespace = 'Oleg\TranslationalResearchBundle\Entity' AND logger.entityName = 'Project' AND logger.entityId = ".$project->getId());
-        //$dql->where("logger.entityName = 'Invoice'");
 
         $dql->andWhere("eventType.name = :eventTypeName");
         $dqlParameters['eventTypeName'] = "Project Reminder Email";
 
-        $dql->andWhere("logger.event LIKE :specialtyName");
-        $eventStr = "Reminder email for the Project ".$project->getOid(). " in state " . $state;
-        $dqlParameters['specialtyName'] = "%" . $eventStr . "%";
+        $dql->andWhere("logger.event LIKE :eventStr");
+        $eventStr = "Reminder email for the Project " . $project->getOid() . " in the status '" . $stateStr . "'";
+        $dqlParameters['eventStr'] = "%" . $eventStr . "%";
 
         $dql->orderBy("logger.id","DESC");
         $query = $this->em->createQuery($dql);
@@ -566,7 +567,7 @@ class ReminderUtil
 
         $loggers = $query->getResult();
 
-        //echo "loggers=".count($loggers)."<br>";
+        //echo $project->getOid().": loggers=".count($loggers)."<br>";
         //exit();
 
         return $loggers;

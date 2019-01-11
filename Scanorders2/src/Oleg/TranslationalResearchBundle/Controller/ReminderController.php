@@ -85,6 +85,7 @@ class ReminderController extends Controller
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
+        $transresUtil = $this->container->get('transres_util');
         $transresReminderUtil = $this->get('transres_reminder_util');
 
         $routeName = $request->get('_route');
@@ -100,7 +101,7 @@ class ReminderController extends Controller
 
         foreach($states as $state) {
             $results = $transresReminderUtil->sendReminderReviewProjects($state,$showSummary);
-            echo "results count=".count($results)."<br>";
+            //echo "results count=".count($results)."<br>";
             //print_r($results);
             $finalResults[$state] = $results;
         }
@@ -124,9 +125,10 @@ class ReminderController extends Controller
         }
 
         foreach($finalResults as $state=>$results) {
+            $stateStr = $transresUtil->getStateLabelByName($state);
             $this->get('session')->getFlashBag()->add(
                 'notice',
-                "Sending reminder emails for delayed projects ($state): " . $results
+                "Sending reminder emails for delayed projects ($stateStr): " . $results
             );
         }
 
