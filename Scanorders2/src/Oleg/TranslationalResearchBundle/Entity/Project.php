@@ -521,6 +521,7 @@ class Project {
      */
     private $stateComment;
 
+    //NOT USED
     //reminder email: identifier(state), reminderEmailDate
     // for each identifier $state - irb_review, admin_review, committee_review, final_review, irb_missinginfo, admin_missinginfo
 //    /**

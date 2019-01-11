@@ -20,7 +20,7 @@ namespace Oleg\TranslationalResearchBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-
+//NOT USED
 ///**
 // * @ORM\Entity
 // * @ORM\Table(name="transres_reminderEmail")
