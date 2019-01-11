@@ -412,9 +412,9 @@ class ReminderUtil
         $dql->where("projectSpecialty.id = :specialtyId");
         $params["specialtyId"] = $projectSpecialty->getId();
 
-        //$dql->andWhere("project.state = :status"); //Unpaid/Issued
-        //$params["status"] = $state;   //"Unpaid/Issued";
-        $dql->andWhere("project.state = 'irb_review'"); //Unpaid/Issued
+        $dql->andWhere("project.state = :status"); //Unpaid/Issued
+        $params["status"] = $state;   //"Unpaid/Issued";
+        //$dql->andWhere("project.state = 'irb_review'"); //Unpaid/Issued
 
         ///////// use updateDate //////////////
         $overDueDate = new \DateTime("-".$projectReminderDelay." days");
