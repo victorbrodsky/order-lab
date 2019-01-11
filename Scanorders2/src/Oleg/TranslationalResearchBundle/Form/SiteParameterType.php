@@ -317,6 +317,23 @@ class SiteParameterType extends AbstractType
         ));
         ////////// EOF Project reminder email ////////////
 
+        ////////// Pending work request reminder email ////////////
+        $builder->add('pendingRequestReminderDelay', null, array(
+            'label' => "Pending work request reminder email delay (in days):",
+            'required' => false,
+            'attr' => array('class' => 'form-control')
+        ));
+        $builder->add('pendingRequestReminderSubject', null, array(
+            'label' => "Pending work request reminder email subject:",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+        $builder->add('pendingRequestReminderBody', null, array(
+            'label' => "Pending work request reminder email body:",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+        ////////// EOF Pending work request reminder email ////////////
 
     }
     

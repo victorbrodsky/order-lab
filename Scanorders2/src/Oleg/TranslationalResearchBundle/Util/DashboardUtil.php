@@ -4737,6 +4737,7 @@ class DashboardUtil
             $transresUtil = $this->container->get('transres_util');
 
             $unpaidInvoicesArr = array();
+            $delayedProjectsArr = array();
             //$datesArr = array();
 
             //get startDate and add 1 month until the date is less than endDate
@@ -4750,10 +4751,12 @@ class DashboardUtil
 
                 //$apcpInvoices = $this->getInvoicesByFilter($startDate,$thisEndDate, array($specialtyApcpObject));
                 $unpaidInvoicesRemindersCount = $transresUtil->getUnpaidInvoiceRemindersCount($startDate,$thisEndDate,$projectSpecialtyObjects);
+                $delayedProjectRemindersCount = $transresUtil->getDelayedProjectRemindersCount($startDate,$thisEndDate,$projectSpecialtyObjects);;
 
                 $startDate->modify( 'first day of next month' );
 
                 $unpaidInvoicesArr[$startDateLabel] = $unpaidInvoicesRemindersCount;
+                $delayedProjectsArr[$startDateLabel] = $delayedProjectRemindersCount;
 
             } while( $startDate < $endDate );
 
@@ -4761,7 +4764,7 @@ class DashboardUtil
             //Reminders
             $combinedData = array();
             $combinedData['Unpaid Invoices'] = $unpaidInvoicesArr;
-            //$combinedInvoicesData['Hematopathology'] = $hemaInvoicesData;
+            $combinedData['Delayed Projects'] = $delayedProjectsArr;
 
             $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack");
         }

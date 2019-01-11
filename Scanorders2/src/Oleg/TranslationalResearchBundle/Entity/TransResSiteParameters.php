@@ -343,7 +343,25 @@ class TransResSiteParameters {
      * @ORM\Column(type="text", nullable=true)
      */
     private $projectReminderBody_missinginfo;
-    ////////// EOF Invoice reminder email ////////////
+    ////////// EOF Project reminder email ////////////
+
+
+    ////////////// Pending Work Requests reminder email //////////////
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $pendingRequestReminderDelay;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $pendingRequestReminderSubject;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $pendingRequestReminderBody;
+    ////////////// EOF Pending Work Requests reminder email //////////////
 
 
 
@@ -1100,6 +1118,54 @@ class TransResSiteParameters {
     public function setProjectReminderBodyMissinginfo($projectReminderBody_missinginfo)
     {
         $this->projectReminderBody_missinginfo = $projectReminderBody_missinginfo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPendingRequestReminderDelay()
+    {
+        return $this->pendingRequestReminderDelay;
+    }
+
+    /**
+     * @param mixed $pendingRequestReminderDelay
+     */
+    public function setPendingRequestReminderDelay($pendingRequestReminderDelay)
+    {
+        $this->pendingRequestReminderDelay = $pendingRequestReminderDelay;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPendingRequestReminderSubject()
+    {
+        return $this->pendingRequestReminderSubject;
+    }
+
+    /**
+     * @param mixed $pendingRequestReminderSubject
+     */
+    public function setPendingRequestReminderSubject($pendingRequestReminderSubject)
+    {
+        $this->pendingRequestReminderSubject = $pendingRequestReminderSubject;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPendingRequestReminderBody()
+    {
+        return $this->pendingRequestReminderBody;
+    }
+
+    /**
+     * @param mixed $pendingRequestReminderBody
+     */
+    public function setPendingRequestReminderBody($pendingRequestReminderBody)
+    {
+        $this->pendingRequestReminderBody = $pendingRequestReminderBody;
     }
 
 

@@ -1628,19 +1628,25 @@
                     <br>[[PROJECT STATUS COMMENTS]] - comments for the current project's stage,
                     <br>[[PROJECT SHOW URL]] - project request show url,
                     <br>[[PROJECT EDIT URL]] - project request edit url,
+
                     <br>[[REQUEST ID]] - work request ID,
+                    <br>[[REQUEST SUBMITTING DATE]] - work request submitting date,
+                    <br>[[REQUEST STATUS]] - work request status,
                     <br>[[REQUEST SHOW URL]] - work request show url,
+
                     <br>[[INVOICE ID]] - invoice ID,
                     <br>[[INVOICE SHOW URL]] - invoice url,
                     <br>[[INVOICE AMOUNT DUE]] - invoice amount due,
                     <br>[[INVOICE DUE DATE AND DAYS AGO]] - invoice due date
                 </p>
+
                 <h5>Invoice Reminder Email</h5>
                 {{ formmacros.field(form.invoiceReminderEmail) }}
                 {{ formmacros.field(form.invoiceReminderSchedule) }}
                 {{ formmacros.field(form.invoiceReminderSubject) }}
                 {{ formmacros.field(form.invoiceReminderBody) }}
-                <h5>Project Reminder Email</h5>
+
+                <h5>Delayed Project Request Reminder Email</h5>
                 {{ formmacros.field(form.projectReminderDelay_irb_review) }}
                 {{ formmacros.field(form.projectReminderDelay_admin_review) }}
                 {{ formmacros.field(form.projectReminderDelay_committee_review) }}
@@ -1651,6 +1657,11 @@
                 {{ formmacros.field(form.projectReminderBody_review) }}
                 {{ formmacros.field(form.projectReminderSubject_missinginfo) }}
                 {{ formmacros.field(form.projectReminderBody_missinginfo) }}
+
+                <h5>Pending Work Request Reminder Email</h5>
+                {{ formmacros.field(form.pendingRequestReminderDelay) }}
+                {{ formmacros.field(form.pendingRequestReminderSubject) }}
+                {{ formmacros.field(form.pendingRequestReminderBody) }}
 
             </div>
         </div>

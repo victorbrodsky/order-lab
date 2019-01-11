@@ -17,11 +17,7 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 use Oleg\UserdirectoryBundle\Entity\User;
 
-/**
- * Reminder email controller.
- *
- * @Route("reminder")
- */
+
 class ReminderController extends Controller
 {
     
@@ -73,10 +69,10 @@ class ReminderController extends Controller
 
 
     /**
-     * http://127.0.0.1/order/translational-research/reminder/project-reminder/show-summary
+     * http://127.0.0.1/order/translational-research/project-request-review-reminder/show-summary
      *
-     * @Route("/project-reminder/show-summary", name="translationalresearch_project_reminder_show")
-     * @Route("/project-reminder/send-emails", name="translationalresearch_project_reminder_send")
+     * @Route("/project-request-review-reminder/show-summary", name="translationalresearch_project_reminder_show")
+     * @Route("/project-request-review-reminder/send-emails", name="translationalresearch_project_reminder_send")
      * @Method({"GET"})
      */
     public function projectReminderAction( Request $request )
@@ -117,7 +113,7 @@ class ReminderController extends Controller
 
             return $this->render("OlegTranslationalResearchBundle:Reminder:project-reminder-index.html.twig",
                 array(
-                    'title' => $projectCounter." Projects",
+                    'title' => $projectCounter." Project Requests",
                     'finalResults' => $finalResults,
                     'projectCounter' => $projectCounter
                 )
@@ -128,11 +124,71 @@ class ReminderController extends Controller
             $stateStr = $transresUtil->getStateLabelByName($state);
             $this->get('session')->getFlashBag()->add(
                 'notice',
-                "Sending reminder emails for delayed projects ($stateStr): " . $results
+                "Sending reminder emails for delayed project requests ($stateStr): " . $results
             );
         }
 
         return $this->redirectToRoute('translationalresearch_project_index');
+    }
+
+
+    /**
+     * http://127.0.0.1/order/translational-research/work-request-pending-reminder/show-summary
+     *
+     * @Route("/work-request-pending-reminder/show-summary", name="translationalresearch_request_reminder_show")
+     * @Route("/work-request-pending-reminder/send-emails", name="translationalresearch_request_reminder_send")
+     * @Method({"GET"})
+     */
+    public function pendingRequestReminderAction( Request $request )
+    {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ) {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
+        $transresUtil = $this->container->get('transres_util');
+        $transresReminderUtil = $this->get('transres_reminder_util');
+
+        $routeName = $request->get('_route');
+        $showSummary = false;
+
+        if( $routeName == "translationalresearch_request_reminder_show" ) {
+            $showSummary = true;
+        }
+
+        $finalResults = array();
+        $state = "Pending";
+
+        $results = $transresReminderUtil->sendReminderPendingRequests($state,$showSummary);
+        //echo "results count=".count($results)."<br>";
+        //print_r($results);
+        $finalResults[$state] = $results;
+
+        if( $showSummary === true ) {
+            $projectCounter = 0;
+
+            foreach($finalResults as $state=>$results) {
+                foreach($results as $result) {
+                    $projectCounter = $projectCounter + count($result);
+                }
+            }
+
+            return $this->render("OlegTranslationalResearchBundle:Reminder:project-reminder-index.html.twig",
+                array(
+                    'title' => $projectCounter." Work Requests",
+                    'finalResults' => $finalResults,
+                    'projectCounter' => $projectCounter
+                )
+            );
+        }
+
+        foreach($finalResults as $state=>$results) {
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                "Sending reminder emails for delayed pending work requests ($state): " . $results
+            );
+        }
+
+        return $this->redirectToRoute('translationalresearch_request_index_filter');
     }
     
 }

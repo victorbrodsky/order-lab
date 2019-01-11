@@ -342,17 +342,11 @@ class ReminderUtil
 
         $systemuser = $userSecUtil->findSystemUser();
 
-
-        $invoiceDueDateMax = null;
-        $reminderInterval = null;
-        $maxReminderCount = null;
-        //$newline = "\n";
         $newline = "\r\n";
-        //$newline = "<br>";
         $resultArr = array();
-        //$sentProjectEmailsArr = array();
         $eventType = "Project Reminder Email";
         $sentProjects = 0;
+        $daysAgo = 7;
 
         $testing = false;
         //$testing = true;
@@ -466,7 +460,6 @@ class ReminderUtil
         //echo "$projectSpecialty count projects=".count($projects)."$newline";
 
         //filter project by the last reminder email from event log
-        $daysAgo = 7;
         $today = new \DateTime();
         $lateProjects = array();
         foreach($projects as $project) {
@@ -556,7 +549,8 @@ class ReminderUtil
 
             $stateStr = $transresUtil->getStateLabelByName($state);
             $projectMsg = "Reminder email for the Project " . $project->getOid() . " in the status '" . $stateStr . "'".
-                "; ccs:".$ccs.
+                " has been sent to ".implode(", ",$emailArr).
+                "; ccs:".implode(", ",$ccs).
                 "<br>Subject: ".$projectReminderSubjectReady."<br>Body: ".$projectReminderBodyReady;
             ////////////// EOF send email //////////////
 
@@ -613,6 +607,123 @@ class ReminderUtil
         //exit();
 
         return $loggers;
+    }
+
+
+    public function sendReminderPendingRequests( $state, $showSummary=false ) {
+        $transresUtil = $this->container->get('transres_util');
+
+        $resultArr = array();
+
+        $projectSpecialties = $transresUtil->getTransResProjectSpecialties(false);
+        foreach($projectSpecialties as $projectSpecialty) {
+            $results = $this->sendReminderPendingRequestsBySpecialty($state,$projectSpecialty,$showSummary);
+            if( $results ) {
+                $resultArr[] = $results;
+            }
+        }
+
+        if( $showSummary ) {
+            return $resultArr;
+        }
+
+        if( count($resultArr) > 0 ) {
+            $result = implode(", ", $resultArr);
+        } else {
+            $result = "There are no delayed pending work requests corresponding to the site setting parameters.";
+        }
+
+        return $result;
+    }
+    public function sendReminderPendingRequestsBySpecialty( $state, $projectSpecialty, $showSummary=false ) {
+        $result = "No delayed pending requests";
+
+        $transresUtil = $this->container->get('transres_util');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $emailUtil = $this->container->get('user_mailer_utility');
+        $logger = $this->container->get('logger');
+        //$user = $this->secTokenStorage->getToken()->getUser();
+
+        $systemuser = $userSecUtil->findSystemUser();
+
+        $newline = "\r\n";
+        $resultArr = array();
+        $eventType = "Project Reminder Email";
+        $sentProjects = 0;
+        $daysAgo = 7;
+
+        $testing = false;
+        //$testing = true;
+
+        //Pending project request reminder email delay (in days)
+        $pendingRequestReminderDelayField = 'pendingRequestReminderDelay';
+        $pendingRequestReminderDelay = $transresUtil->getTransresSiteProjectParameter($pendingRequestReminderDelayField,null,$projectSpecialty); //6,9,12,15,18
+        if( !$pendingRequestReminderDelay ) {
+            $pendingRequestReminderDelay = 28; //default 28 days
+        }
+        $pendingRequestReminderDelay = trim($pendingRequestReminderDelay);
+
+        $pendingRequestReminderSubjectField = 'pendingRequestReminderSubject';
+        $pendingRequestReminderSubject = $transresUtil->getTransresSiteProjectParameter($pendingRequestReminderSubjectField,null,$projectSpecialty);
+        if( !$pendingRequestReminderSubject ) {
+            //Work Request APCP123-REQ456 is awaiting completion since [Submission Date]
+            $pendingRequestReminderSubject = "Work Request [[REQUEST ID]] is awaiting completion since [[REQUEST SUBMITTING DATE]]";
+        }
+
+        $pendingRequestReminderBodyField = 'pendingRequestReminderBody';
+        $pendingRequestReminderBody = $transresUtil->getTransresSiteProjectParameter($pendingRequestReminderBodyField,null,$projectSpecialty);
+        if( !$pendingRequestReminderBody ) {
+            //To review the details of the work request APCP123-Req456 with the current status of “Current Status”, please visit the following link:
+            $pendingRequestReminderBody = "To review the details of the work request [[REQUEST ID]] with the current status of '[[REQUEST STATUS]]', please visit the following link:".
+                $newline."[[REQUEST SHOW URL]]";
+        }
+
+        $reminderEmail = $transresUtil->getTransresSiteProjectParameter('invoiceReminderEmail',null,$projectSpecialty);
+
+        $states = array(
+            'active',
+            'pendingInvestigatorInput',
+            'pendingHistology',
+            'pendingImmunohistochemistry',
+            'pendingMolecular',
+            'pendingCaseRetrieval',
+            'pendingTissueMicroArray',
+            'pendingSlideScanning'
+        );
+        $params = array();
+
+        $repository = $this->em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
+        $dql =  $repository->createQueryBuilder("request");
+        $dql->select('request');
+
+        $dql->leftJoin('request.project','project');
+        $dql->leftJoin('project.projectSpecialty','projectSpecialty');
+
+        $dql->where("projectSpecialty.id = :specialtyId");
+        $params["specialtyId"] = $projectSpecialty->getId();
+
+        //any status except "Completed", “Completed and Notified”, “Draft”, or “Canceled”
+        $dql->andWhere("request.progressState IN (:states)"); //Unpaid/Issued
+        $params["states"] = implode(",",$states);
+
+        ///////// use updateDate //////////////
+        $overDueDate = new \DateTime("-".$pendingRequestReminderDelay." days");
+        //echo "overDueDate=".$overDueDate->format('Y-m-d H:i:s').$newline;
+        $dql->andWhere("request.updateDate IS NOT NULL AND request.updateDate < :overDueDate");
+        $params["overDueDate"] = $overDueDate->format('Y-m-d H:i:s');
+        ////////////// EOF //////////////
+
+        $query = $this->em->createQuery($dql);
+
+        $query->setParameters(
+            $params
+        );
+
+        $requests = $query->getResult();
+        echo "$projectSpecialty count requests=".count($requests)."$newline";
+
+
+        return $result;
     }
 
 }
