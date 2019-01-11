@@ -2914,11 +2914,15 @@ class TransResUtil
     }
 
     //Get all comments with dates for the current project state
-    public function getReviewComments($project,$newline="<br>") {
+    public function getReviewComments($project,$newline="<br>",$state=null) {
         $comments = null;
 
-        $reviewState = $this->getReviewClassNameByState($project->getState(),false);
-        $reviewStateLabel = $this->getStateLabelByName($reviewState);
+        if( !$state ) {
+            $state = $project->getState();
+        }
+
+        $reviewState = $this->getReviewClassNameByState($state,false);
+        //$reviewStateLabel = $this->getStateLabelByName($reviewState);
 
         //{{ render(controller('OlegTranslationalResearchBundle:Project:threadCommentsShow', { 'id': threadId })) }}
         $threadId = "transres-" . $project->getEntityName() . "-" . $project->getId() . "-" . $reviewState;
@@ -3672,10 +3676,29 @@ class TransResUtil
                 $text = str_replace("[[PROJECT STATUS]]", $state, $text);
             }
 
-            $projectShowUrl = $this->getProjectShowUrl($project);
-            if( $projectShowUrl ) {
-                //echo "Project URL=".$projectShowUrl."\n";
-                $text = str_replace("[[PROJECT SHOW URL]]", $projectShowUrl, $text);
+            if( strpos($text, '[[PROJECT STATUS COMMENTS]]') !== false ) {
+                $reviewComments = $this->getReviewComments($project,"<hr>");
+                if( $reviewComments ) {
+                    $reviewComments = "<hr>" . $reviewComments;
+                } else {
+                    $reviewComments = "No comments";
+                }
+                $text = str_replace("[[PROJECT STATUS COMMENTS]]", $reviewComments, $text);
+            }
+
+            if( strpos($text, '[[PROJECT SHOW URL]]') !== false ) {
+                $projectShowUrl = $this->getProjectShowUrl($project);
+                if ($projectShowUrl) {
+                    //echo "Project URL=".$projectShowUrl."\n";
+                    $text = str_replace("[[PROJECT SHOW URL]]", $projectShowUrl, $text);
+                }
+            }
+
+            if( strpos($text, '[[PROJECT EDIT URL]]') !== false ) {
+                $projectEditUrl = $this->getProjectEditUrl($project);
+                if ($projectEditUrl) {
+                    $text = str_replace("[[PROJECT EDIT URL]]", $projectEditUrl, $text);
+                }
             }
         }
 

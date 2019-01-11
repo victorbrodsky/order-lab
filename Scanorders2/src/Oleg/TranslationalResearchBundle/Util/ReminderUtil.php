@@ -386,18 +386,46 @@ class ReminderUtil
         $projectReminderSubjectField = 'projectReminderSubject'.$reviewShortState; //review or missinginfo
         $projectReminderSubject = $transresUtil->getTransresSiteProjectParameter($projectReminderSubjectField,null,$projectSpecialty);
         if( !$projectReminderSubject ) {
-            //[TRP] Project Request APCP123 is awaiting your review (“First 15 characters of the Project Title...” from PIFirstName PILastName)
-            $projectReminderSubject = "[TRP] Project Request: [[PROJECT ID]] is awaiting your review ('[[PROJECT TITLE SHORT]]' from [[PROJECT PIS]])";
+            if( $reviewShortState == "Review" ) {
+                //[TRP] Project Request APCP123 is awaiting your review (“First 15 characters of the Project Title...” from PIFirstName PILastName)
+                $projectReminderSubject = "[TRP] Project Request: [[PROJECT ID]] is awaiting your review ('[[PROJECT TITLE SHORT]]' from [[PROJECT PIS]])";
+            }
+            if( $reviewShortState == "Missinginfo" ) {
+                //[TRP] Project Request APCP123 is awaiting your review (“First 15 characters of the Project Title...” from PIFirstName PILastName)
+                $projectReminderSubject = "[TRP] Project Request: [[PROJECT ID]] is awaiting your review ('[[PROJECT TITLE SHORT]]' from [[PROJECT PIS]])";
+            }
 
+        }
+        if( !$projectReminderSubject ) {
+            $projectReminderSubject = "[TRP] Project Request: [[PROJECT ID]] ('[[PROJECT TITLE SHORT]]' from [[PROJECT PIS]]) is delayed";
         }
 
         $projectReminderBodyField = 'projectReminderBody'.$reviewShortState; //review or missinginfo
         $projectReminderBody = $transresUtil->getTransresSiteProjectParameter($projectReminderBodyField,null,$projectSpecialty);
         if( !$projectReminderBody ) {
-            //PROJECT ID TITLE
-            //Project request APCP123 submitted on 01/01/2018 titled “Full Project Title” (PI: FirstName LastName) is in the “IRB Review” stage and is awaiting your review.
-            $projectReminderBody = "Project request [[PROJECT ID]] submitted on [[PROJECT SUBMITTING DATE]] titled '[[PROJECT TITLE]]' (PI: [[PROJECT PIS]]) is in the '[[PROJECT STATUS]]' stage and is awaiting your review.";
-            $projectReminderBody = $projectReminderBody . $newline.$newline . "Please visit the link below to submit your opinion:".$newline."[[PROJECT SHOW URL]]";
+            if( $reviewShortState == "Review" ) {
+                //Project request APCP123 submitted on 01/01/2018 titled “Full Project Title” (PI: FirstName LastName) is in the “IRB Review” stage and is awaiting your review.
+                $projectReminderBody = "Project request [[PROJECT ID]] submitted on [[PROJECT SUBMITTING DATE]] titled '[[PROJECT TITLE]]' (PI: [[PROJECT PIS]]) is in the '[[PROJECT STATUS]]' stage and is awaiting your review.";
+                $projectReminderBody = $projectReminderBody . $newline.$newline . "Please visit the link below to submit your opinion:".$newline."[[PROJECT SHOW URL]]";
+            }
+            if( $reviewShortState == "Missinginfo" ) {
+                //Body: Please provide the requested additional information to enable us to review your project request APCP123 (“Full project title”).
+                //[If comment field is not empty, show this paragraph] The reviewer has specified the following feedback:
+                //[Body of the comment that was associated with switching the status of this project request ti “Pending Additional Information...”]
+                //To provide the requested information, please visit the following link:
+                //[Link to project request where the additional information can be typed in]
+                //To cancel this project request, please visit the following link:
+                //[Link to a page that allows canceling or actually cancels the project request, but first must show the “Are you sure you would like to cancel this project request?”]
+                $projectReminderBody = "Please provide the requested additional information to enable us to review your project request [[PROJECT ID]] ('[[PROJECT TITLE]]').".
+                    $newline.$newline."Associated comments for [[PROJECT STATUS]] stage:".$newline."[[PROJECT STATUS COMMENTS]]".
+                    $newline.$newline."To provide the requested information, please visit the following link:".$newline."[[PROJECT EDIT URL]]".
+                    //$newline.$newline."To cancel this project request, please visit the following link:".$newline."[[PROJECT CANCEL URL]]". //not possible to show "Are you sure?" in email body
+                    "";
+            }
+        }
+        if( !$projectReminderBody ) {
+            $projectReminderBody = "Project request [[PROJECT ID]] submitted on [[PROJECT SUBMITTING DATE]] titled '[[PROJECT TITLE]]' (PI: [[PROJECT PIS]]) is in the '[[PROJECT STATUS]]' stage.";
+            $projectReminderBody = $projectReminderBody . $newline.$newline . "Please visit the link below to view this project:".$newline."[[PROJECT SHOW URL]]";
         }
 
         $reminderEmail = $transresUtil->getTransresSiteProjectParameter('invoiceReminderEmail',null,$projectSpecialty);
@@ -438,6 +466,7 @@ class ReminderUtil
         //echo "$projectSpecialty count projects=".count($projects)."$newline";
 
         //filter project by the last reminder email from event log
+        $daysAgo = 7;
         $today = new \DateTime();
         $lateProjects = array();
         foreach($projects as $project) {
@@ -449,7 +478,7 @@ class ReminderUtil
                 $days = $dDiff->days; //sent $days ago
                 //$days = intval($days);
                 //echo "days=".$days."<br>";
-                if( $days > 7 ) {
+                if( $days > $daysAgo ) {
                     $lateProjects[] = $project;
                 }
             } else {
@@ -505,9 +534,22 @@ class ReminderUtil
             //admins as $ccs
             $ccs = $transresUtil->getTransResAdminEmails($project->getProjectSpecialty(),true,true);
 
+            //replace comments
+            if( strpos($projectReminderBody, '[[PROJECT STATUS COMMENTS]]') !== false ) {
+                $reviewComments = $transresUtil->getReviewComments($project,"<hr>",$state);
+                if( $reviewComments ) {
+                    $reviewComments = "<hr>" . $reviewComments;
+                } else {
+                    $reviewComments = "No comments";
+                }
+                $projectReminderBodyReady = str_replace("[[PROJECT STATUS COMMENTS]]", $reviewComments, $projectReminderBody);
+            } else {
+                $projectReminderBodyReady = $projectReminderBody;
+            }
+
             //replace [[...]]
             $projectReminderSubjectReady = $transresUtil->replaceTextByNamingConvention($projectReminderSubject,$project,null,null);
-            $projectReminderBodyReady = $transresUtil->replaceTextByNamingConvention($projectReminderBody,$project,null,null);
+            $projectReminderBodyReady = $transresUtil->replaceTextByNamingConvention($projectReminderBodyReady,$project,null,null);
 
             //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
             $emailUtil->sendEmail( $emailArr, $projectReminderSubjectReady, $projectReminderBodyReady, $ccs, $reminderEmail );
