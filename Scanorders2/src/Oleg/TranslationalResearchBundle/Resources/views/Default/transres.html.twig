@@ -1661,10 +1661,15 @@
                 {{ formmacros.field(form.projectReminderSubject_missinginfo) }}
                 {{ formmacros.field(form.projectReminderBody_missinginfo) }}
 
-                <h5>Pending Work Request Reminder Email</h5>
+                <h5>Delayed Pending Work Request Reminder Email</h5>
                 {{ formmacros.field(form.pendingRequestReminderDelay) }}
                 {{ formmacros.field(form.pendingRequestReminderSubject) }}
                 {{ formmacros.field(form.pendingRequestReminderBody) }}
+
+                <h5>Delayed Completed Work Request Reminder Email</h5>
+                {{ formmacros.field(form.completedRequestReminderDelay) }}
+                {{ formmacros.field(form.completedRequestReminderSubject) }}
+                {{ formmacros.field(form.completedRequestReminderBody) }}
 
             </div>
         </div>
