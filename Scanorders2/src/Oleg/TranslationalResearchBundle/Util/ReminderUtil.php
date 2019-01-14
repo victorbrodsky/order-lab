@@ -663,7 +663,7 @@ class ReminderUtil
         $reminderBody = null;
 
         $testing = false;
-        //$testing = true;
+        $testing = true;
 
         if( $state == "completed" ) {
 
@@ -774,7 +774,11 @@ class ReminderUtil
         );
 
         $requests = $query->getResult();
-        //echo "$projectSpecialty count requests=".count($requests)."$newline";
+        echo "$projectSpecialty count requests($stateStr)=".count($requests)."$newline";
+
+        if($testing) {
+            exit("testing");
+        }
 
         //filter project by the last reminder email from event log
         $today = new \DateTime();
