@@ -663,9 +663,10 @@ class ReminderUtil
         $reminderBody = null;
 
         $testing = false;
-        $testing = true;
+        //$testing = true;
 
         if( $state == "completed" ) {
+            //TODO: for "completed" do something with old imported thousands of work requests (~12000 request).
 
             $reminderDelay = $transresUtil->getTransresSiteProjectParameter("completedRequestReminderDelay", null, $projectSpecialty);
             if (!$reminderDelay) {
@@ -776,7 +777,7 @@ class ReminderUtil
         $requests = $query->getResult();
         echo "$projectSpecialty count requests($stateStr)=".count($requests)."$newline";
 
-        if($testing) {
+        if($state == "completed" || $state == "completedNotified") {
             exit("testing");
         }
 
