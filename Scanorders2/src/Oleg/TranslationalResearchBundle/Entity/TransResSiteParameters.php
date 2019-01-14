@@ -363,6 +363,22 @@ class TransResSiteParameters {
     private $pendingRequestReminderBody;
     ////////////// EOF Pending Work Requests reminder email //////////////
 
+    ////////////// Completed Work Requests reminder email //////////////
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $completedRequestReminderDelay;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $completedRequestReminderSubject;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $completedRequestReminderBody;
+    ////////////// EOF Completed Work Requests reminder email //////////////
 
 
     public function __construct($user=null) {
@@ -1168,6 +1184,53 @@ class TransResSiteParameters {
         $this->pendingRequestReminderBody = $pendingRequestReminderBody;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getCompletedRequestReminderDelay()
+    {
+        return $this->completedRequestReminderDelay;
+    }
+
+    /**
+     * @param mixed $completedRequestReminderDelay
+     */
+    public function setCompletedRequestReminderDelay($completedRequestReminderDelay)
+    {
+        $this->completedRequestReminderDelay = $completedRequestReminderDelay;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCompletedRequestReminderSubject()
+    {
+        return $this->completedRequestReminderSubject;
+    }
+
+    /**
+     * @param mixed $completedRequestReminderSubject
+     */
+    public function setCompletedRequestReminderSubject($completedRequestReminderSubject)
+    {
+        $this->completedRequestReminderSubject = $completedRequestReminderSubject;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCompletedRequestReminderBody()
+    {
+        return $this->completedRequestReminderBody;
+    }
+
+    /**
+     * @param mixed $completedRequestReminderBody
+     */
+    public function setCompletedRequestReminderBody($completedRequestReminderBody)
+    {
+        $this->completedRequestReminderBody = $completedRequestReminderBody;
+    }
 
 
 

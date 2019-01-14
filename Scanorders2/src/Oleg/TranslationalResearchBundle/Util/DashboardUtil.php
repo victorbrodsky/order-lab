@@ -4767,7 +4767,7 @@ class DashboardUtil
             $combinedData = array();
             $combinedData['Unpaid Invoices'] = $unpaidInvoicesArr;
             $combinedData['Delayed Project Requests'] = $delayedProjectsArr;
-            $combinedData['Delayed Work Request'] = $delayedRequestsArr;
+            $combinedData['Delayed Pending Work Request'] = $delayedRequestsArr;
 
             $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack");
         }

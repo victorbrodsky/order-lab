@@ -558,12 +558,17 @@
                                 <li><a
                                         target="_blank"
                                         href="{{ path(translationalresearch_sitename~'_project_reminder_show') }}"
-                                    >Send project request review reminders now</a>
+                                    >Send delayed project request review reminders now</a>
                                 </li>
                                 <li><a
                                         target="_blank"
                                         href="{{ path(translationalresearch_sitename~'_request_reminder_show') }}"
-                                    >Send work request pending reminders now</a>
+                                    >Send delayed pending work request reminders now</a>
+                                </li>
+                                <li><a
+                                        target="_blank"
+                                        href="{{ path(translationalresearch_sitename~'_request_completed_reminder_show') }}"
+                                    >Send delayed completed work request reminders now</a>
                                 </li>
                             {% endif %}
 
