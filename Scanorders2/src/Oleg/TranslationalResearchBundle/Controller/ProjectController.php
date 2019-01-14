@@ -106,7 +106,7 @@ class ProjectController extends Controller
         $title = "Project Requests";
 
         if( $routeName == "translationalresearch_project_index" ) {
-            if( $transresUtil->isAdminOrPrimaryReviewer() === false ) {
+            if( $transresUtil->isAdminOrPrimaryReviewer() === false && $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN') === false ) {
                 if ($this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER')) {
                     return $this->redirectToRoute('translationalresearch_my_project_index');
                 }

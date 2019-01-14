@@ -13,28 +13,29 @@
     <br>
 
     <p>
-        {% if projectCounter and projectCounter > 0 %}
+        {% if entityCounter and entityCounter > 0 %}
             <a
                 class="btn btn-primary"
-                href="{{ path('translationalresearch_project_reminder_send') }}"
+                href="{{ path(sendemailpath) }}"
             >Send Reminder Emails</a>
         {% else %}
-            There are no delayed projects corresponding to the site setting parameters
+            {#There are no delayed projects corresponding to the site setting parameters#}
+            {{ empty-message }}
         {% endif %}
     </p>
     <br>
 
-    {% for state, projectGroups in finalResults %}
+    {% for state, entityGroups in finalResults %}
 
-        {% if projectGroups|length > 0 %}
+        {% if entityGroups|length > 0 %}
 
-            <h3>{{ transres_util.getStateLabelByName(state) }}</h3>
+            <h3>{{ state }}</h3>
 
-            {% for projectGroup in projectGroups %}
-                    {% for project in projectGroup %}
+            {% for entityGroup in entityGroups %}
+                    {% for entity in entityGroup %}
 
                         <p>
-                            <a href="{{ path('translationalresearch_project_show', {'id': project.id}) }}">{{ project.oid }}</a>
+                            <a href="{{ path(show-path, {'id': entity.id}) }}">{{ entity.oid }}</a>
                         </p>
 
                     {% endfor %}

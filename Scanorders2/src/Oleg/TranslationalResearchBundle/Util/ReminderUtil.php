@@ -636,7 +636,7 @@ class ReminderUtil
         return $result;
     }
     public function sendReminderPendingRequestsBySpecialty( $state, $projectSpecialty, $showSummary=false ) {
-        $result = "No delayed pending requests";
+        //$result = "No delayed pending requests";
 
         $transresUtil = $this->container->get('transres_util');
         $userSecUtil = $this->container->get('user_security_utility');
@@ -648,12 +648,12 @@ class ReminderUtil
 
         $newline = "\r\n";
         $resultArr = array();
-        $eventType = "Project Reminder Email";
+        $eventType = "Work Request Reminder Email";
         $sentProjects = 0;
         $daysAgo = 7;
 
         $testing = false;
-        //$testing = true;
+        $testing = true;
 
         //Pending project request reminder email delay (in days)
         $pendingRequestReminderDelayField = 'pendingRequestReminderDelay';
@@ -680,16 +680,16 @@ class ReminderUtil
 
         $reminderEmail = $transresUtil->getTransresSiteProjectParameter('invoiceReminderEmail',null,$projectSpecialty);
 
-        $states = array(
-            'active',
-            'pendingInvestigatorInput',
-            'pendingHistology',
-            'pendingImmunohistochemistry',
-            'pendingMolecular',
-            'pendingCaseRetrieval',
-            'pendingTissueMicroArray',
-            'pendingSlideScanning'
-        );
+//        $states = array(
+//            'active',
+//            'pendingInvestigatorInput',
+//            'pendingHistology',
+//            'pendingImmunohistochemistry',
+//            'pendingMolecular',
+//            'pendingCaseRetrieval',
+//            'pendingTissueMicroArray',
+//            'pendingSlideScanning'
+//        );
         $params = array();
 
         $repository = $this->em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
@@ -703,8 +703,10 @@ class ReminderUtil
         $params["specialtyId"] = $projectSpecialty->getId();
 
         //any status except "Completed", “Completed and Notified”, “Draft”, or “Canceled”
-        $dql->andWhere("request.progressState IN (:states)"); //Unpaid/Issued
-        $params["states"] = implode(",",$states);
+        //$dql->andWhere("request.progressState IN (:states)"); //Unpaid/Issued
+        //$params["states"] = implode(",",$states);
+        $dql->andWhere("request.progressState = :state"); //Unpaid/Issued
+        $params["state"] = $state;
 
         ///////// use updateDate //////////////
         $overDueDate = new \DateTime("-".$pendingRequestReminderDelay." days");
@@ -722,8 +724,123 @@ class ReminderUtil
         $requests = $query->getResult();
         echo "$projectSpecialty count requests=".count($requests)."$newline";
 
+        //filter project by the last reminder email from event log
+        $today = new \DateTime();
+        $lateRequests = array();
+        foreach($requests as $request) {
+            $loggers = $this->getRequestReminderEmails($request,$state);
+            if( count($loggers) > 0 ) {
+                $lastLogger = $loggers[0];
+                $sentDate = $lastLogger->getCreationdate();
+                $dDiff = $sentDate->diff($today);
+                $days = $dDiff->days; //sent $days ago
+                //$days = intval($days);
+                //echo "days=".$days."<br>";
+                if( $days > $daysAgo ) {
+                    $lateRequests[] = $request;
+                }
+            } else {
+                $lateRequests[] = $request;
+            }
+        }
+
+//        foreach($projects as $project) {
+//            echo "project ".$project->getOid()."<br>";
+//        }
+        //exit('exit projects reminder');
+
+        if( $showSummary ) {
+            return $lateRequests;
+        }
+
+        foreach($lateRequests as $request) {
+
+            $logger->notice("Sending reminder email for Work Request ".$request->getOid() . "(" . $state . ")");
+
+            $project = $request->getProject();
+
+            ////////////// send email //////////////
+            //to Technicians
+            $emailArr = array();
+
+
+            if( count($emailArr) == 0 ) {
+                //return "There are no PI and/or Billing Contact emails. Email has not been sent.";
+                $resultArr[] = "There are no email recipients. Email has not been sent for Work Request ".$request->getOid();
+                continue;
+            }
+
+            //admins as $ccs
+            $ccs = $transresUtil->getTransResAdminEmails($project->getProjectSpecialty(),true,true);
+
+
+            //replace [[...]]
+            $pendingRequestReminderSubject = $transresUtil->replaceTextByNamingConvention($pendingRequestReminderSubject,$project,$request,null);
+            $pendingRequestReminderBody = $transresUtil->replaceTextByNamingConvention($pendingRequestReminderBody,$project,$request,null);
+
+            //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
+            $emailUtil->sendEmail( $emailArr, $pendingRequestReminderSubject, $pendingRequestReminderBody, $ccs, $reminderEmail );
+
+            $stateStr = $transresUtil->getStateLabelByName($state);
+            $requestMsg = "Reminder email for the Work Request " . $request->getOid() . " in the status '" . $stateStr . "'".
+                " has been sent to ".implode(", ",$emailArr).
+                "; ccs:".implode(", ",$ccs).
+                "<br>Subject: ".$pendingRequestReminderSubject."<br>Body: ".$pendingRequestReminderBody;
+            ////////////// EOF send email //////////////
+
+            //EventLog
+            if( !$testing ) {
+                $userSecUtil->createUserEditEvent($this->container->getParameter('translationalresearch.sitename'), $requestMsg, $systemuser, $request, null, $eventType);
+            }
+
+            $resultArr[] = $request->getOid();
+            $sentProjects++;
+
+        }//foreach $requests
+
+        if( $sentProjects == 0 ) {
+            $logger->notice("There are no delayed pending work requests corresponding to the site setting parameters for " . $projectSpecialty);
+        }
+
+        $result = implode(", ",$resultArr);
 
         return $result;
+    }
+    public function getRequestReminderEmails( $request, $state ) {
+
+        $transresUtil = $this->container->get('transres_util');
+        $stateStr = $transresUtil->getStateLabelByName($state);
+
+        $dqlParameters = array();
+
+        //get the date from event log
+        $repository = $this->em->getRepository('OlegUserdirectoryBundle:Logger');
+        $dql = $repository->createQueryBuilder("logger");
+        $dql->innerJoin('logger.eventType', 'eventType');
+        //$dql->leftJoin('logger.objectType', 'objectType');
+        //$dql->leftJoin('logger.site', 'site');
+
+        //$dql->where("logger.siteName = 'translationalresearch' AND logger.entityName = 'Invoice' AND logger.entityId = ".$invoice->getId());
+        $dql->where("logger.entityNamespace = 'Oleg\TranslationalResearchBundle\Entity' AND logger.entityName = 'TransResRequest' AND logger.entityId = ".$request->getId());
+
+        $dql->andWhere("eventType.name = :eventTypeName");
+        $dqlParameters['eventTypeName'] = "Work Request Reminder Email";
+
+        $dql->andWhere("logger.event LIKE :eventStr");
+        $eventStr = "Reminder email for the Work Request " . $request->getOid() . " in the status '" . $stateStr . "'";
+        $dqlParameters['eventStr'] = "%" . $eventStr . "%";
+
+        $dql->orderBy("logger.id","DESC");
+        $query = $this->em->createQuery($dql);
+
+        $query->setParameters($dqlParameters);
+
+        $loggers = $query->getResult();
+
+        //echo $project->getOid().": loggers=".count($loggers)."<br>";
+        //exit();
+
+        return $loggers;
     }
 
 }

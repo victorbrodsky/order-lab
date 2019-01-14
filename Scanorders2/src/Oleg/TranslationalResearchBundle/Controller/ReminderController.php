@@ -99,6 +99,7 @@ class ReminderController extends Controller
             $results = $transresReminderUtil->sendReminderReviewProjects($state,$showSummary);
             //echo "results count=".count($results)."<br>";
             //print_r($results);
+            $state = $transresUtil->getStateLabelByName($state);
             $finalResults[$state] = $results;
         }
 
@@ -113,18 +114,21 @@ class ReminderController extends Controller
 
             return $this->render("OlegTranslationalResearchBundle:Reminder:project-reminder-index.html.twig",
                 array(
-                    'title' => $projectCounter." Project Requests",
+                    'title' => $projectCounter." Delayed Project Requests",
                     'finalResults' => $finalResults,
-                    'projectCounter' => $projectCounter
+                    'entityCounter' => $projectCounter,
+                    'sendemailpath' => 'translationalresearch_project_reminder_send',
+                    'show-path' => 'translationalresearch_project_show',
+                    'empty-message' => 'There are no delayed project requests corresponding to the site setting parameters'
                 )
             );
         }
 
         foreach($finalResults as $state=>$results) {
-            $stateStr = $transresUtil->getStateLabelByName($state);
+            //$stateStr = $transresUtil->getStateLabelByName($state);
             $this->get('session')->getFlashBag()->add(
                 'notice',
-                "Sending reminder emails for delayed project requests ($stateStr): " . $results
+                "Sending reminder emails for delayed project requests ($state): " . $results
             );
         }
 
@@ -145,7 +149,7 @@ class ReminderController extends Controller
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
-        $transresUtil = $this->container->get('transres_util');
+        $transresRequestUtil = $this->container->get('transres_request_util');
         $transresReminderUtil = $this->get('transres_reminder_util');
 
         $routeName = $request->get('_route');
@@ -155,28 +159,50 @@ class ReminderController extends Controller
             $showSummary = true;
         }
 
-        $finalResults = array();
-        $state = "Pending";
+        $states = array(
+            'active',
+            'pendingInvestigatorInput',
+            'pendingHistology',
+            'pendingImmunohistochemistry',
+            'pendingMolecular',
+            'pendingCaseRetrieval',
+            'pendingTissueMicroArray',
+            'pendingSlideScanning'
+        );
 
-        $results = $transresReminderUtil->sendReminderPendingRequests($state,$showSummary);
+        $finalResults = array();
+        //$state = "Pending";
+
+        //$results = $transresReminderUtil->sendReminderPendingRequests($state,$showSummary);
         //echo "results count=".count($results)."<br>";
         //print_r($results);
-        $finalResults[$state] = $results;
+        //$finalResults[$state] = $results;
+
+        foreach($states as $state) {
+            $results = $transresReminderUtil->sendReminderPendingRequests($state,$showSummary);
+            //echo "results count=".count($results)."<br>";
+            //print_r($results);
+            $state = $transresRequestUtil->getProgressStateLabelByName($state);
+            $finalResults[$state] = $results;
+        }
 
         if( $showSummary === true ) {
-            $projectCounter = 0;
+            $counter = 0;
 
             foreach($finalResults as $state=>$results) {
                 foreach($results as $result) {
-                    $projectCounter = $projectCounter + count($result);
+                    $counter = $counter + count($result);
                 }
             }
 
             return $this->render("OlegTranslationalResearchBundle:Reminder:project-reminder-index.html.twig",
                 array(
-                    'title' => $projectCounter." Work Requests",
+                    'title' => $counter." Delayed Pending Work Requests",
                     'finalResults' => $finalResults,
-                    'projectCounter' => $projectCounter
+                    'entityCounter' => $counter,
+                    'sendemailpath' => 'translationalresearch_request_reminder_send',
+                    'show-path' => 'translationalresearch_request_show',
+                    'empty-message' => 'There are no delayed pending work requests corresponding to the site setting parameters'
                 )
             );
         }
