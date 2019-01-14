@@ -3726,11 +3726,10 @@ class TransResUtil
             }
 
             if( strpos($text, '[[REQUEST CHANGE PROGRESS STATUS URL]]') !== false ) {
-                //href="{{ path(translationalresearch_sitename~'_request_review_progress_state', { 'id': transresRequest.id }) }} "
                 $transresRequestUtil = $this->container->get('transres_request_util');
-                $requestShowUrl = $transresRequestUtil->getRequestShowUrl($transresRequest);
+                $requestChangeProgressStatusUrl = $transresRequestUtil->getRequestChangeProgressStateUrl($transresRequest);
                 if ($requestShowUrl) {
-                    $text = str_replace("[[REQUEST CHANGE PROGRESS STATUS URL]]", $requestShowUrl, $text);
+                    $text = str_replace("[[REQUEST CHANGE PROGRESS STATUS URL]]", $requestChangeProgressStatusUrl, $text);
                 }
             }
         }

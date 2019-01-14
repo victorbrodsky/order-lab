@@ -658,58 +658,82 @@ class ReminderUtil
         $sentProjects = 0;
         $daysAgo = 7;
 
+        $reminderDelay = null;
+        $reminderSubject = null;
+        $reminderBody = null;
+
         $testing = false;
         //$testing = true;
 
         if( $state == "completed" ) {
-            $pendingRequestReminderDelay = $transresUtil->getTransresSiteProjectParameter("completedRequestReminderDelay", null, $projectSpecialty);
-            if (!$pendingRequestReminderDelay) {
-                $pendingRequestReminderDelay = 4; //default 4 days
-            }
-            $pendingRequestReminderDelay = trim($pendingRequestReminderDelay);
 
-            $pendingRequestReminderSubjectField = 'completedRequestReminderSubject';
-            $pendingRequestReminderSubject = $transresUtil->getTransresSiteProjectParameter($pendingRequestReminderSubjectField, null, $projectSpecialty);
-            if (!$pendingRequestReminderSubject) {
+            $reminderDelay = $transresUtil->getTransresSiteProjectParameter("completedRequestReminderDelay", null, $projectSpecialty);
+            if (!$reminderDelay) {
+                $reminderDelay = 4; //default 4 days
+            }
+            $reminderDelay = trim($reminderDelay);
+
+            $reminderSubject = $transresUtil->getTransresSiteProjectParameter("completedRequestReminderSubject", null, $projectSpecialty);
+            if (!$reminderSubject) {
                 //Work Request APCP123-REQ456 is completed and the submitter is waiting to be notified
-                $pendingRequestReminderSubject = "Work Request [[REQUEST ID]] is completed and the submitter is waiting to be notified";
+                $reminderSubject = "Work Request [[REQUEST ID]] is completed and the submitter is waiting to be notified";
             }
 
-            $pendingRequestReminderBodyField = 'completedRequestReminderBody';
-            $pendingRequestReminderBody = $transresUtil->getTransresSiteProjectParameter($pendingRequestReminderBodyField, null, $projectSpecialty);
-            if (!$pendingRequestReminderBody) {
+            $reminderBody = $transresUtil->getTransresSiteProjectParameter("completedRequestReminderBody", null, $projectSpecialty);
+            if (!$reminderBody) {
                 //To review the details of the completed work request APCP123-REQ456 and to set its status to “Completed and Notified”
                 // in order to automatically notify the submitter via email, please visit the following link:
-                $pendingRequestReminderBody = "To review the details of the completed work request [[REQUEST ID]]".
+                $reminderBody = "To review the details of the completed work request [[REQUEST ID]]".
                 " and to set its status to 'Completed and Notified', in order to".
                 " automatically notify the submitter via email, please visit the following link:".
                 $newline . "[[REQUEST CHANGE PROGRESS STATUS URL]]";
             }
+            
         } elseif( $state == "completedNotified" ) {
+
+//            if (!$reminderDelay) {
+//                $reminderDelay = 7; //default 7 days
+//            }
+//            $reminderDelay = trim($reminderDelay);
+
+            //Subject: [TRP] Please issue the invoice for work request APCP123-REQ456
+
+            //Body: Work request has had the status of “Completed and Notified” since 01/02/2018.
+            //To issue the invoice for this work request, please visit the following link:
+            //[URL where the invoice can be issued for this work request]
 
         } else {
             //Pending project request reminder email delay (in days)
-            $pendingRequestReminderDelayField = 'pendingRequestReminderDelay';
-            $pendingRequestReminderDelay = $transresUtil->getTransresSiteProjectParameter($pendingRequestReminderDelayField, null, $projectSpecialty);
-            if (!$pendingRequestReminderDelay) {
-                $pendingRequestReminderDelay = 28; //default 28 days
+            $reminderDelay = $transresUtil->getTransresSiteProjectParameter("pendingRequestReminderDelay", null, $projectSpecialty);
+            if (!$reminderDelay) {
+                $reminderDelay = 28; //default 28 days
             }
-            $pendingRequestReminderDelay = trim($pendingRequestReminderDelay);
+            $reminderDelay = trim($reminderDelay);
 
-            $pendingRequestReminderSubjectField = 'pendingRequestReminderSubject';
-            $pendingRequestReminderSubject = $transresUtil->getTransresSiteProjectParameter($pendingRequestReminderSubjectField, null, $projectSpecialty);
-            if (!$pendingRequestReminderSubject) {
+            $reminderSubject = $transresUtil->getTransresSiteProjectParameter("pendingRequestReminderSubject", null, $projectSpecialty);
+            if (!$reminderSubject) {
                 //Work Request APCP123-REQ456 is awaiting completion since [Submission Date]
-                $pendingRequestReminderSubject = "Work Request [[REQUEST ID]] is awaiting completion since [[REQUEST SUBMISSION DATE]]";
+                $reminderSubject = "Work Request [[REQUEST ID]] is awaiting completion since [[REQUEST SUBMISSION DATE]]";
             }
 
-            $pendingRequestReminderBodyField = 'pendingRequestReminderBody';
-            $pendingRequestReminderBody = $transresUtil->getTransresSiteProjectParameter($pendingRequestReminderBodyField, null, $projectSpecialty);
-            if (!$pendingRequestReminderBody) {
+            $reminderBody = $transresUtil->getTransresSiteProjectParameter("pendingRequestReminderBody", null, $projectSpecialty);
+            if (!$reminderBody) {
                 //To review the details of the work request APCP123-Req456 with the current status of “Current Status”, please visit the following link:
-                $pendingRequestReminderBody = "To review the details of the work request [[REQUEST ID]] with the current status of '[[REQUEST PROGRESS STATUS]]', please visit the following link:" .
+                $reminderBody = "To review the details of the work request [[REQUEST ID]] with the current status of '[[REQUEST PROGRESS STATUS]]', please visit the following link:" .
                     $newline . "[[REQUEST SHOW URL]]";
             }
+        }//if state
+
+        if( !$reminderDelay ) {
+            //exit("Delay days parameter is not specified.");
+            return "Delay days parameter is not specified.";
+        }
+        if( !$reminderSubject ) {
+            //exit("Delay days parameter is not specified.");
+            return "Email subject parameter is not specified.";
+        }
+        if( !$reminderBody ) {
+            return "Email body parameter is not specified.";
         }
 
         $reminderEmail = $transresUtil->getTransresSiteProjectParameter('invoiceReminderEmail',null,$projectSpecialty);
@@ -730,11 +754,18 @@ class ReminderUtil
         $params["state"] = $state;
 
         ///////// use updateDate //////////////
-        $overDueDate = new \DateTime("-".$pendingRequestReminderDelay." days");
+        $overDueDate = new \DateTime("-".$reminderDelay." days");
         //echo "overDueDate=".$overDueDate->format('Y-m-d H:i:s').$newline;
         $dql->andWhere("request.updateDate IS NOT NULL AND request.updateDate < :overDueDate");
         $params["overDueDate"] = $overDueDate->format('Y-m-d H:i:s');
         ////////////// EOF //////////////
+
+        if( $state == "completedNotified" ) {
+            //no issued invoice
+            $dql->leftJoin('request.invoices','invoices');
+            $dql->andWhere("(invoices IS NOT NULL AND invoices.status = :invoiceStatus)");
+            $dqlParameters["invoiceStatus"] = "Unpaid/Issued";
+        }
 
         $query = $this->em->createQuery($dql);
 
@@ -795,16 +826,16 @@ class ReminderUtil
             $ccs = $transresUtil->getTransResAdminEmails($project->getProjectSpecialty(),true,true);
 
             //replace [[...]]
-            $pendingRequestReminderSubject = $transresUtil->replaceTextByNamingConvention($pendingRequestReminderSubject,$project,$request,null);
-            $pendingRequestReminderBody = $transresUtil->replaceTextByNamingConvention($pendingRequestReminderBody,$project,$request,null);
+            $reminderSubject = $transresUtil->replaceTextByNamingConvention($reminderSubject,$project,$request,null);
+            $reminderBody = $transresUtil->replaceTextByNamingConvention($reminderBody,$project,$request,null);
 
             //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
-            $emailUtil->sendEmail( $emailArr, $pendingRequestReminderSubject, $pendingRequestReminderBody, $ccs, $reminderEmail );
+            $emailUtil->sendEmail( $emailArr, $reminderSubject, $reminderBody, $ccs, $reminderEmail );
 
             $requestMsg = "Reminder email for the Work Request " . $request->getOid() . " in the status '" . $stateStr . "'".
                 " has been sent to ".implode(", ",$emailArr).
                 "; ccs:".implode(", ",$ccs).
-                "<br>Subject: ".$pendingRequestReminderSubject."<br>Body: ".$pendingRequestReminderBody;
+                "<br>Subject: ".$reminderSubject."<br>Body: ".$reminderBody;
             ////////////// EOF send email //////////////
 
             //EventLog

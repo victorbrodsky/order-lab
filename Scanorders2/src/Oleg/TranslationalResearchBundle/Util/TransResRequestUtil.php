@@ -1253,6 +1253,31 @@ class TransResRequestUtil
         
         return $url;
     }
+    public function getRequestChangeProgressStateUrl($transresRequest,$asHref=true,$title=null,$newPage=false) {
+        $transresUtil = $this->container->get('transres_util');
+        $router = $transresUtil->getRequestContextRouter();
+        $url = $router->generate(
+            'translationalresearch_request_review_progress_state',
+            array(
+                'id' => $transresRequest->getId(),
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+
+        if( !$title ) {
+            $title = $url;
+        }
+
+        if( $asHref ) {
+            if( $newPage ) {
+                $url = '<a target="_blank" href="'.$url.'">'.$title.'</a>';
+            } else {
+                $url = '<a href="'.$url.'">'.$title.'</a>';
+            }
+        }
+
+        return $url;
+    }
 
     public function getInvoiceShowUrl($invoice,$asHref=true,$title=null,$newPage=false) {
         $transresUtil = $this->container->get('transres_util');
