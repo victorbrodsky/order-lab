@@ -683,7 +683,7 @@ class ReminderUtil
                 $pendingRequestReminderBody = "To review the details of the completed work request [[REQUEST ID]]".
                 " and to set its status to 'Completed and Notified', in order to".
                 " automatically notify the submitter via email, please visit the following link:".
-                $newline . "[[REQUEST SHOW URL]]";
+                $newline . "[[REQUEST CHANGE PROGRESS STATUS URL]]";
             }
         } elseif( $state == "completedNotified" ) {
 
