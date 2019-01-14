@@ -1643,9 +1643,37 @@ class TransResRequestUtil
         foreach( $technicians as $technician ) {
             if( $technician ) {
                 if( $asEmail ) {
-                    $users[] = $technician->getSingleEmail();
+                    $emails[] = $technician->getSingleEmail();
                 } else {
-                    $users[] = $technician;
+                    $emails[] = $technician;
+                }
+            }
+        }
+
+        $emails = array_unique($emails);
+
+        return $emails;
+    }
+    public function getTechnicianEmails($projectSpecialty=null,$asEmail=true) {
+        $transresUtil = $this->container->get('transres_util');
+
+        $emails = array();
+
+        if( $projectSpecialty ) {
+            $specialtyPostfix = $projectSpecialty->getUppercaseName();
+            $specialtyPostfix = "_" . $specialtyPostfix;
+        } else {
+            $specialtyPostfix = null;
+        }
+
+        //Technicians
+        $technicians = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUsersByRoles(array("ROLE_TRANSRES_TECHNICIAN".$specialtyPostfix));
+        foreach( $technicians as $technician ) {
+            if( $technician ) {
+                if( $asEmail ) {
+                    $emails[] = $technician->getSingleEmail();
+                } else {
+                    $emails[] = $technician;
                 }
             }
         }

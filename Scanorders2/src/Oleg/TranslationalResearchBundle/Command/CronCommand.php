@@ -64,6 +64,31 @@ class CronCommand extends ContainerAwareCommand {
         $results = $results . "; " . implode(", ",$projectResultsArr);
         ////////////// EOF delayed projects //////////////
 
+        ////////////// delayed requests //////////////
+        $states = array(
+            'active',
+            'pendingInvestigatorInput',
+            'pendingHistology',
+            'pendingImmunohistochemistry',
+            'pendingMolecular',
+            'pendingCaseRetrieval',
+            'pendingTissueMicroArray',
+            'pendingSlideScanning'
+        );
+        $finalResults = array();
+
+        foreach($states as $state) {
+            $requestResults = $transresReminderUtil->sendReminderPendingRequests($state);
+            $finalResults[$state] = $requestResults;
+        }
+
+        $requestResultsArr = array();
+        foreach($finalResults as $state=>$requestResults) {
+            $requestResultsArr[] = $state.": ".$requestResults;
+        }
+        $results = $results . "; " . implode(", ",$requestResultsArr);
+        ////////////// EOF delayed requests //////////////
+
         $output->writeln($results);
 
     }

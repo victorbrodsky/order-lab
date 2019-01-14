@@ -19,8 +19,8 @@
                 href="{{ path(sendemailpath) }}"
             >Send Reminder Emails</a>
         {% else %}
-            {#There are no delayed projects corresponding to the site setting parameters#}
-            {{ empty-message }}
+            {#There are no delayed objects corresponding to the site setting parameters#}
+            {{ emptyMessage }}
         {% endif %}
     </p>
     <br>
@@ -35,7 +35,7 @@
                     {% for entity in entityGroup %}
 
                         <p>
-                            <a href="{{ path(show-path, {'id': entity.id}) }}">{{ entity.oid }}</a>
+                            <a href="{{ path(showPath, {'id': entity.id}) }}">{{ entity.oid }}</a>
                         </p>
 
                     {% endfor %}

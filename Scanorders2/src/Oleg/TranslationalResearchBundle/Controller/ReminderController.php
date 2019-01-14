@@ -118,8 +118,8 @@ class ReminderController extends Controller
                     'finalResults' => $finalResults,
                     'entityCounter' => $projectCounter,
                     'sendemailpath' => 'translationalresearch_project_reminder_send',
-                    'show-path' => 'translationalresearch_project_show',
-                    'empty-message' => 'There are no delayed project requests corresponding to the site setting parameters'
+                    'showPath' => 'translationalresearch_project_show',
+                    'emptyMessage' => 'There are no delayed project requests corresponding to the site setting parameters'
                 )
             );
         }
@@ -201,8 +201,8 @@ class ReminderController extends Controller
                     'finalResults' => $finalResults,
                     'entityCounter' => $counter,
                     'sendemailpath' => 'translationalresearch_request_reminder_send',
-                    'show-path' => 'translationalresearch_request_show',
-                    'empty-message' => 'There are no delayed pending work requests corresponding to the site setting parameters'
+                    'showPath' => 'translationalresearch_request_show',
+                    'emptyMessage' => 'There are no delayed pending work requests corresponding to the site setting parameters'
                 )
             );
         }

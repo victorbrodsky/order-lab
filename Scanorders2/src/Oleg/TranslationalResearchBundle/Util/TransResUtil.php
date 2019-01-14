@@ -3668,7 +3668,7 @@ class TransResUtil
             $createDate = $project->getCreateDate();
             if( $createDate ) {
                 $createDateStr = $createDate->format('m/d/Y');
-                $text = str_replace("[[PROJECT SUBMITTING DATE]]", $createDateStr, $text);
+                $text = str_replace("[[PROJECT SUBMISSION DATE]]", $createDateStr, $text);
             }
 
             if( strpos($text, '[[PROJECT STATUS]]') !== false ) {
@@ -3710,10 +3710,19 @@ class TransResUtil
                 $text = str_replace("[[REQUEST SUBMISSION DATE]]", $creationDate->format("m/d/Y"), $text);
             }
 
-            $transresRequestUtil = $this->container->get('transres_request_util');
-            $requestShowUrl = $transresRequestUtil->getRequestShowUrl($transresRequest);
-            if( $requestShowUrl ) {
-                $text = str_replace("[[REQUEST SHOW URL]]", $requestShowUrl, $text);
+            if( strpos($text, '[[REQUEST PROGRESS STATUS]]') !== false ) {
+                $transresRequestUtil = $this->container->get('transres_request_util');
+                $state = $transresRequest->getProgressState();
+                $state = $transresRequestUtil->getProgressStateLabelByName($state);
+                $text = str_replace("[[REQUEST PROGRESS STATUS]]", $state, $text);
+            }
+
+            if( strpos($text, '[[REQUEST SHOW URL]]') !== false ) {
+                $transresRequestUtil = $this->container->get('transres_request_util');
+                $requestShowUrl = $transresRequestUtil->getRequestShowUrl($transresRequest);
+                if ($requestShowUrl) {
+                    $text = str_replace("[[REQUEST SHOW URL]]", $requestShowUrl, $text);
+                }
             }
         }
 
@@ -4893,6 +4902,58 @@ class TransResUtil
         if( $projectSpecialtyObjectStr ) {
             $dql->andWhere("logger.event LIKE :specialtyName");
             $eventStr = "Reminder email for the Project " . $projectSpecialtyObjectStr;
+            //echo "eventStr=".$eventStr."<br>";
+            $dqlParameters['specialtyName'] = "%" . $eventStr . "%";
+            //or use $eventType = "Unpaid Invoice Reminder Email"
+        }
+
+        $dql->orderBy("logger.id","DESC");
+        $query = $this->em->createQuery($dql);
+
+        $query->setParameters($dqlParameters);
+
+        $loggers = $query->getResult();
+
+        //echo "loggers=".count($loggers)."<br>";
+        //exit();
+
+        return count($loggers);
+    }
+    public function getDelayedRequestRemindersCount( $startDate, $endDate, $projectSpecialtyObjects ) {
+
+        $projectSpecialtyObjectStr = null;
+        if( count($projectSpecialtyObjects) > 0 ) {
+            $projectSpecialtyObjectStr = $projectSpecialtyObjects[0]->getUppercaseShortName();
+        }
+
+        $dqlParameters = array();
+
+        //get the date from event log
+        $repository = $this->em->getRepository('OlegUserdirectoryBundle:Logger');
+        $dql = $repository->createQueryBuilder("logger");
+        $dql->innerJoin('logger.eventType', 'eventType');
+
+        //$dql->where("logger.siteName = 'translationalresearch' AND logger.entityName = 'Invoice' AND logger.entityId = ".$invoice->getId());
+        //$dql->where("logger.entityName = 'Invoice' AND logger.entityId = ".$invoice->getId());
+
+        //Work Request ID APCP843-REQ16216 billing state has been changed to Invoiced, triggered by invoice status change to Unpaid/Issued
+        $dql->where("logger.entityNamespace = 'Oleg\TranslationalResearchBundle\Entity' AND logger.entityName = 'TransResRequest'");
+        //$dql->where("logger.entityName = 'Invoice'");
+
+        $dql->andWhere("eventType.name = :eventTypeName");
+        $dqlParameters['eventTypeName'] = "Work Request Reminder Email";
+
+        //$dql->andWhere("logger.creationdate > :startDate AND logger.creationdate < :endDate");
+        $dql->andWhere('logger.creationdate >= :startDate');
+        $dqlParameters['startDate'] = $startDate->format('Y-m-d H:i:s');
+
+        $dql->andWhere('logger.creationdate <= :endDate');
+        $endDate->modify('+1 day');
+        $dqlParameters['endDate'] = $endDate->format('Y-m-d H:i:s');
+
+        if( $projectSpecialtyObjectStr ) {
+            $dql->andWhere("logger.event LIKE :specialtyName");
+            $eventStr = "Reminder email for the Work Request " . $projectSpecialtyObjectStr;
             //echo "eventStr=".$eventStr."<br>";
             $dqlParameters['specialtyName'] = "%" . $eventStr . "%";
             //or use $eventType = "Unpaid Invoice Reminder Email"

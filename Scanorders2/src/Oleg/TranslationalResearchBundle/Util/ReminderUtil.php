@@ -399,7 +399,7 @@ class ReminderUtil
         if( !$projectReminderBody ) {
             if( $reviewShortState == "Review" ) {
                 //Project request APCP123 submitted on 01/01/2018 titled “Full Project Title” (PI: FirstName LastName) is in the “IRB Review” stage and is awaiting your review.
-                $projectReminderBody = "Project request [[PROJECT ID]] submitted on [[PROJECT SUBMITTING DATE]] titled '[[PROJECT TITLE]]' (PI: [[PROJECT PIS]]) is in the '[[PROJECT STATUS]]' stage and is awaiting your review.";
+                $projectReminderBody = "Project request [[PROJECT ID]] submitted on [[PROJECT SUBMISSION DATE]] titled '[[PROJECT TITLE]]' (PI: [[PROJECT PIS]]) is in the '[[PROJECT STATUS]]' stage and is awaiting your review.";
                 $projectReminderBody = $projectReminderBody . $newline.$newline . "Please visit the link below to submit your opinion:".$newline."[[PROJECT SHOW URL]]";
             }
             if( $reviewShortState == "Missinginfo" ) {
@@ -418,7 +418,7 @@ class ReminderUtil
             }
         }
         if( !$projectReminderBody ) {
-            $projectReminderBody = "Project request [[PROJECT ID]] submitted on [[PROJECT SUBMITTING DATE]] titled '[[PROJECT TITLE]]' (PI: [[PROJECT PIS]]) is in the '[[PROJECT STATUS]]' stage.";
+            $projectReminderBody = "Project request [[PROJECT ID]] submitted on [[PROJECT SUBMISSION DATE]] titled '[[PROJECT TITLE]]' (PI: [[PROJECT PIS]]) is in the '[[PROJECT STATUS]]' stage.";
             $projectReminderBody = $projectReminderBody . $newline.$newline . "Please visit the link below to view this project:".$newline."[[PROJECT SHOW URL]]";
         }
 
@@ -639,6 +639,7 @@ class ReminderUtil
         //$result = "No delayed pending requests";
 
         $transresUtil = $this->container->get('transres_util');
+        $transresRequestUtil = $this->container->get('transres_request_util');
         $userSecUtil = $this->container->get('user_security_utility');
         $emailUtil = $this->container->get('user_mailer_utility');
         $logger = $this->container->get('logger');
@@ -653,7 +654,7 @@ class ReminderUtil
         $daysAgo = 7;
 
         $testing = false;
-        $testing = true;
+        //$testing = true;
 
         //Pending project request reminder email delay (in days)
         $pendingRequestReminderDelayField = 'pendingRequestReminderDelay';
@@ -667,29 +668,19 @@ class ReminderUtil
         $pendingRequestReminderSubject = $transresUtil->getTransresSiteProjectParameter($pendingRequestReminderSubjectField,null,$projectSpecialty);
         if( !$pendingRequestReminderSubject ) {
             //Work Request APCP123-REQ456 is awaiting completion since [Submission Date]
-            $pendingRequestReminderSubject = "Work Request [[REQUEST ID]] is awaiting completion since [[REQUEST SUBMITTING DATE]]";
+            $pendingRequestReminderSubject = "Work Request [[REQUEST ID]] is awaiting completion since [[REQUEST SUBMISSION DATE]]";
         }
 
         $pendingRequestReminderBodyField = 'pendingRequestReminderBody';
         $pendingRequestReminderBody = $transresUtil->getTransresSiteProjectParameter($pendingRequestReminderBodyField,null,$projectSpecialty);
         if( !$pendingRequestReminderBody ) {
             //To review the details of the work request APCP123-Req456 with the current status of “Current Status”, please visit the following link:
-            $pendingRequestReminderBody = "To review the details of the work request [[REQUEST ID]] with the current status of '[[REQUEST STATUS]]', please visit the following link:".
+            $pendingRequestReminderBody = "To review the details of the work request [[REQUEST ID]] with the current status of '[[REQUEST PROGRESS STATUS]]', please visit the following link:".
                 $newline."[[REQUEST SHOW URL]]";
         }
 
         $reminderEmail = $transresUtil->getTransresSiteProjectParameter('invoiceReminderEmail',null,$projectSpecialty);
 
-//        $states = array(
-//            'active',
-//            'pendingInvestigatorInput',
-//            'pendingHistology',
-//            'pendingImmunohistochemistry',
-//            'pendingMolecular',
-//            'pendingCaseRetrieval',
-//            'pendingTissueMicroArray',
-//            'pendingSlideScanning'
-//        );
         $params = array();
 
         $repository = $this->em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
@@ -702,10 +693,7 @@ class ReminderUtil
         $dql->where("projectSpecialty.id = :specialtyId");
         $params["specialtyId"] = $projectSpecialty->getId();
 
-        //any status except "Completed", “Completed and Notified”, “Draft”, or “Canceled”
-        //$dql->andWhere("request.progressState IN (:states)"); //Unpaid/Issued
-        //$params["states"] = implode(",",$states);
-        $dql->andWhere("request.progressState = :state"); //Unpaid/Issued
+        $dql->andWhere("request.progressState = :state");
         $params["state"] = $state;
 
         ///////// use updateDate //////////////
@@ -722,7 +710,7 @@ class ReminderUtil
         );
 
         $requests = $query->getResult();
-        echo "$projectSpecialty count requests=".count($requests)."$newline";
+        //echo "$projectSpecialty count requests=".count($requests)."$newline";
 
         //filter project by the last reminder email from event log
         $today = new \DateTime();
@@ -753,6 +741,9 @@ class ReminderUtil
             return $lateRequests;
         }
 
+        //Technicians emails
+        $emailArr = $transresRequestUtil->getTechnicianEmails($projectSpecialty);
+
         foreach($lateRequests as $request) {
 
             $logger->notice("Sending reminder email for Work Request ".$request->getOid() . "(" . $state . ")");
@@ -760,9 +751,6 @@ class ReminderUtil
             $project = $request->getProject();
 
             ////////////// send email //////////////
-            //to Technicians
-            $emailArr = array();
-
 
             if( count($emailArr) == 0 ) {
                 //return "There are no PI and/or Billing Contact emails. Email has not been sent.";
@@ -772,7 +760,6 @@ class ReminderUtil
 
             //admins as $ccs
             $ccs = $transresUtil->getTransResAdminEmails($project->getProjectSpecialty(),true,true);
-
 
             //replace [[...]]
             $pendingRequestReminderSubject = $transresUtil->replaceTextByNamingConvention($pendingRequestReminderSubject,$project,$request,null);
