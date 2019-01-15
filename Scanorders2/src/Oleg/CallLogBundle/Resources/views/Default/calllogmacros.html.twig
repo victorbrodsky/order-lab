@@ -743,7 +743,8 @@
 
                         <li><a href="{{ path('calllog_patient_view_by_mrn', { 'mrn': mrnNumber, 'mrntype': mrnTypeId, 'show-tree-depth': 2}) }}" target="_blank">View Patient Record</a></li>
 
-                        <li><a href="{{ path('calllog_patient_edit_by_mrn', { 'mrn': mrnNumber, 'mrntype': mrnTypeId, 'show-tree-depth': 2}) }}" target="_blank">Edit Patient Record</a></li>
+                        {#Not used because, this link gives 500 error. Use 'Edit Patient Demographics' instead.#}
+                        {#<li><a href="{{ path('calllog_patient_edit_by_mrn', { 'mrn': mrnNumber, 'mrntype': mrnTypeId, 'show-tree-depth': 2}) }}" target="_blank">Edit Patient Record</a></li>#}
 
                         <li><a href="{{ path('calllog_single_patient_edit', { 'id': patient.id}) }}" target="_blank">Edit Patient Demographics</a></li>
 
