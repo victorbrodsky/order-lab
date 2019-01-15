@@ -4739,6 +4739,25 @@ class DashboardUtil
             $unpaidInvoicesArr = array();
             $delayedProjectsArr = array();
             $delayedRequestsArr = array();
+            $delayedCompletedRequestsArr = array();
+            $delayedCompletedNoInvoiceRequestsArr = array();
+
+            $pendingStates = array(
+                'active',
+                //'pendingInvestigatorInput',
+                'pendingHistology',
+                'pendingImmunohistochemistry',
+                'pendingMolecular',
+                'pendingCaseRetrieval',
+                'pendingTissueMicroArray',
+                'pendingSlideScanning'
+            );
+            $completedStates = array(
+                'completed'
+            );
+            $completedNoInvoiceStates = array(
+                'completedNotified'
+            );
 
             //get startDate and add 1 month until the date is less than endDate
             $startDate->modify( 'first day of last month' );
@@ -4752,13 +4771,19 @@ class DashboardUtil
                 //$apcpInvoices = $this->getInvoicesByFilter($startDate,$thisEndDate, array($specialtyApcpObject));
                 $unpaidInvoicesRemindersCount = $transresUtil->getUnpaidInvoiceRemindersCount($startDate,$thisEndDate,$projectSpecialtyObjects);
                 $delayedProjectRemindersCount = $transresUtil->getDelayedProjectRemindersCount($startDate,$thisEndDate,$projectSpecialtyObjects);
-                $delayedRequestRemindersCount = $transresUtil->getDelayedRequestRemindersCount($startDate,$thisEndDate,$projectSpecialtyObjects);
+                $delayedRequestRemindersCount = $transresUtil->getDelayedRequestRemindersCount($startDate,$thisEndDate,$projectSpecialtyObjects,$pendingStates);
+
+                $delayedCompletedRequestRemindersCount = $transresUtil->getDelayedRequestRemindersCount($startDate,$thisEndDate,$projectSpecialtyObjects,$completedStates);
+                $delayedCompletedNoInvoiceRequestRemindersCount = $transresUtil->getDelayedRequestRemindersCount($startDate,$thisEndDate,$projectSpecialtyObjects,$completedNoInvoiceStates);
 
                 $startDate->modify( 'first day of next month' );
 
                 $unpaidInvoicesArr[$startDateLabel] = $unpaidInvoicesRemindersCount;
                 $delayedProjectsArr[$startDateLabel] = $delayedProjectRemindersCount;
                 $delayedRequestsArr[$startDateLabel] = $delayedRequestRemindersCount;
+
+                $delayedCompletedRequestsArr[$startDateLabel] = $delayedCompletedRequestRemindersCount;
+                $delayedCompletedNoInvoiceRequestsArr[$startDateLabel] = $delayedCompletedNoInvoiceRequestRemindersCount;
 
             } while( $startDate < $endDate );
 
@@ -4768,6 +4793,8 @@ class DashboardUtil
             $combinedData['Unpaid Invoices'] = $unpaidInvoicesArr;
             $combinedData['Delayed Project Requests'] = $delayedProjectsArr;
             $combinedData['Delayed Pending Work Request'] = $delayedRequestsArr;
+            $combinedData['Delayed Completed Work Request'] = $delayedCompletedRequestsArr;
+            $combinedData['Delayed Completed and Notified Work Request without Invoices'] = $delayedCompletedNoInvoiceRequestsArr;
 
             $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack");
         }

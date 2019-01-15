@@ -3735,7 +3735,7 @@ class TransResUtil
             if( strpos($text, '[[REQUEST CHANGE PROGRESS STATUS URL]]') !== false ) {
                 $transresRequestUtil = $this->container->get('transres_request_util');
                 $requestChangeProgressStatusUrl = $transresRequestUtil->getRequestChangeProgressStateUrl($transresRequest);
-                if ($requestShowUrl) {
+                if ($requestChangeProgressStatusUrl) {
                     $text = str_replace("[[REQUEST CHANGE PROGRESS STATUS URL]]", $requestChangeProgressStatusUrl, $text);
                 }
             }
@@ -3743,7 +3743,7 @@ class TransResUtil
             if( strpos($text, '[[REQUEST NEW INVOICE URL]]') !== false ) {
                 $transresRequestUtil = $this->container->get('transres_request_util');
                 $requestNewInvoiceUrl = $transresRequestUtil->getRequestNewInvoiceUrl($transresRequest);
-                if ($requestShowUrl) {
+                if ($requestNewInvoiceUrl) {
                     $text = str_replace("[[REQUEST NEW INVOICE URL]]", $requestNewInvoiceUrl, $text);
                 }
             }
@@ -4942,7 +4942,9 @@ class TransResUtil
 
         return count($loggers);
     }
-    public function getDelayedRequestRemindersCount( $startDate, $endDate, $projectSpecialtyObjects ) {
+    public function getDelayedRequestRemindersCount( $startDate, $endDate, $projectSpecialtyObjects, $states=null ) {
+
+        $transresRequestUtil = $this->container->get('transres_request_util');
 
         $projectSpecialtyObjectStr = null;
         if( count($projectSpecialtyObjects) > 0 ) {
@@ -4980,6 +4982,22 @@ class TransResUtil
             //echo "eventStr=".$eventStr."<br>";
             $dqlParameters['specialtyName'] = "%" . $eventStr . "%";
             //or use $eventType = "Unpaid Invoice Reminder Email"
+        }
+
+        if( $states && count($states) > 0 ) {
+            $statesArr = array();
+            foreach($states as $state) {
+                //$state = $transresRequestUtil->getProgressStateLabelByName($state);
+                //$stateStr = "'".$state."'";
+                //$statesArr[] = "logger.event LIKE '% in the status $stateStr has been sent to %'";
+                $statesArr[] = "logger.event LIKE '%$state%'";
+            }
+            if( count($statesArr) > 0 ) {
+                $stateStr = implode(" OR ", $statesArr);
+                $stateStr = "(" . $stateStr . ")";
+                //echo "stateStr=".$stateStr."<br>";
+                $dql->andWhere($stateStr);
+            }
         }
 
         $dql->orderBy("logger.id","DESC");

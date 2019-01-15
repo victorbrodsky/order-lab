@@ -192,7 +192,7 @@ class ReminderController extends Controller
         }
 
         if( strpos($routeName, "translationalresearch_request_completed_no_invoice_issued_reminder") !== false ) {
-            $title = "Completed Work Requests without Issued Invoice";
+            $title = "Completed and Notified Work Requests without Issued Invoice";
             $sendEmailPath = "translationalresearch_request_completed_no_invoice_issued_reminder_send";
             $states = array(
                 'completedNotified'
@@ -247,83 +247,6 @@ class ReminderController extends Controller
 
         return $this->redirectToRoute('translationalresearch_request_index_filter');
     }
-
-//    /**
-//     * reminder email for work requests with a status of “Completed” for longer than 4 days
-//     * http://127.0.0.1/order/translational-research/work-request-pending-reminder/show-summary
-//     *
-//     * @Route("/work-request-completed-not-notified-reminder/show-summary", name="translationalresearch_request_completed_reminder_show")
-//     * @Route("/work-request-completed-not-notified-reminder/send-emails", name="translationalresearch_request_completed_reminder_send")
-//     *
-//     *
-//     *
-//     * @Method({"GET"})
-//     */
-//    public function pendingRequestCompletedReminderAction( Request $request )
-//    {
-//        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ) {
-//            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
-//        }
-//
-//        $transresRequestUtil = $this->container->get('transres_request_util');
-//        $transresReminderUtil = $this->get('transres_reminder_util');
-//
-//        $routeName = $request->get('_route');
-//        $showSummary = true;
-//
-//        if( $routeName == "translationalresearch_request_completed_reminder_send" ) {
-//            $showSummary = false;
-//        }
-//
-//        $states = array(
-//            'completed'
-//        );
-//
-//        $finalResults = array();
-//        //$state = "Pending";
-//
-//        //$results = $transresReminderUtil->sendReminderPendingRequests($state,$showSummary);
-//        //echo "results count=".count($results)."<br>";
-//        //print_r($results);
-//        //$finalResults[$state] = $results;
-//
-//        foreach($states as $state) {
-//            $results = $transresReminderUtil->sendReminderPendingRequests($state,$showSummary);
-//            //echo "results count=".count($results)."<br>";
-//            //print_r($results);
-//            $state = $transresRequestUtil->getProgressStateLabelByName($state);
-//            $finalResults[$state] = $results;
-//        }
-//
-//        if( $showSummary === true ) {
-//            $counter = 0;
-//
-//            foreach($finalResults as $state=>$results) {
-//                foreach($results as $result) {
-//                    $counter = $counter + count($result);
-//                }
-//            }
-//
-//            return $this->render("OlegTranslationalResearchBundle:Reminder:project-reminder-index.html.twig",
-//                array(
-//                    'title' => $counter." Delayed Completed Work Requests",
-//                    'finalResults' => $finalResults,
-//                    'entityCounter' => $counter,
-//                    'sendemailpath' => 'translationalresearch_request_completed_reminder_send',
-//                    'showPath' => 'translationalresearch_request_show',
-//                    'emptyMessage' => 'There are no delayed completed work requests corresponding to the site setting parameters'
-//                )
-//            );
-//        }
-//
-//        foreach($finalResults as $state=>$results) {
-//            $this->get('session')->getFlashBag()->add(
-//                'notice',
-//                "Sending reminder emails for delayed pending work requests ($state): " . $results
-//            );
-//        }
-//
-//        return $this->redirectToRoute('translationalresearch_request_index_filter');
-//    }
+    
 
 }

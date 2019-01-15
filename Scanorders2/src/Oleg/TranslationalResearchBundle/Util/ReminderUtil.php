@@ -709,7 +709,7 @@ class ReminderUtil
                 //To issue the invoice for this work request, please visit the following link:
                 //[URL where the invoice can be issued for this work request]
                 $reminderBody = "Work request has had the status of '[[REQUEST PROGRESS STATUS]]' since [[REQUEST UPDATE DATE]].".
-                    $newline.
+                    $newline.$newline.
                     "To issue the invoice for this work request, please visit the following link:".
                     $newline . "[[REQUEST NEW INVOICE URL]]";
             }
@@ -807,7 +807,7 @@ class ReminderUtil
         $today = new \DateTime();
         $lateRequests = array();
         foreach($requests as $request) {
-            $loggers = $this->getRequestReminderEmails($request,$state,$stateStr);
+            $loggers = $this->getRequestReminderEmails($request,$state);
             if( count($loggers) > 0 ) {
                 $lastLogger = $loggers[0];
                 $sentDate = $lastLogger->getCreationdate();
@@ -853,16 +853,16 @@ class ReminderUtil
             $ccs = $transresUtil->getTransResAdminEmails($project->getProjectSpecialty(),true,true);
 
             //replace [[...]]
-            $reminderSubject = $transresUtil->replaceTextByNamingConvention($reminderSubject,$project,$request,null);
-            $reminderBody = $transresUtil->replaceTextByNamingConvention($reminderBody,$project,$request,null);
+            $reminderSubjectReady = $transresUtil->replaceTextByNamingConvention($reminderSubject,$project,$request,null);
+            $reminderBodyReady = $transresUtil->replaceTextByNamingConvention($reminderBody,$project,$request,null);
 
             //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
-            $emailUtil->sendEmail( $emailArr, $reminderSubject, $reminderBody, $ccs, $reminderEmail );
+            $emailUtil->sendEmail( $emailArr, $reminderSubjectReady, $reminderBodyReady, $ccs, $reminderEmail );
 
-            $requestMsg = "Reminder email for the Work Request " . $request->getOid() . " in the status '" . $stateStr . "'".
+            $requestMsg = "Reminder email for the Work Request " . $request->getOid() . " in the status '" . $state . "'" . " (" . $stateStr . ")".
                 " has been sent to ".implode(", ",$emailArr).
                 "; ccs:".implode(", ",$ccs).
-                "<br>Subject: ".$reminderSubject."<br>Body: ".$reminderBody;
+                "<br>Subject: ".$reminderSubjectReady."<br>Body: ".$reminderBodyReady;
             ////////////// EOF send email //////////////
 
             //EventLog
@@ -883,12 +883,7 @@ class ReminderUtil
 
         return $result;
     }
-    public function getRequestReminderEmails( $request, $state, $stateStr=null ) {
-        if( !$stateStr ) {
-            $transresRequestUtil = $this->container->get('transres_request_util');
-            $stateStr = $transresRequestUtil->getProgressStateLabelByName($state);
-        }
-
+    public function getRequestReminderEmails( $request, $state ) {
         $dqlParameters = array();
 
         //get the date from event log
@@ -905,7 +900,7 @@ class ReminderUtil
         $dqlParameters['eventTypeName'] = "Work Request Reminder Email";
 
         $dql->andWhere("logger.event LIKE :eventStr");
-        $eventStr = "Reminder email for the Work Request " . $request->getOid() . " in the status '" . $stateStr . "'";
+        $eventStr = "Reminder email for the Work Request " . $request->getOid() . " in the status '" . $state . "'";
         $dqlParameters['eventStr'] = "%" . $eventStr . "%";
 
         $dql->orderBy("logger.id","DESC");

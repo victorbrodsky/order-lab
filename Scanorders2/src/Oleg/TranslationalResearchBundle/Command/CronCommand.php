@@ -73,7 +73,9 @@ class CronCommand extends ContainerAwareCommand {
             'pendingMolecular',
             'pendingCaseRetrieval',
             'pendingTissueMicroArray',
-            'pendingSlideScanning'
+            'pendingSlideScanning',
+            'completed',
+            'completedNotified'
         );
         $finalResults = array();
 
