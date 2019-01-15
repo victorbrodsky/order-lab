@@ -4987,9 +4987,6 @@ class TransResUtil
         if( $states && count($states) > 0 ) {
             $statesArr = array();
             foreach($states as $state) {
-                //$state = $transresRequestUtil->getProgressStateLabelByName($state);
-                //$stateStr = "'".$state."'";
-                //$statesArr[] = "logger.event LIKE '% in the status $stateStr has been sent to %'";
                 $statesArr[] = "logger.event LIKE '%$state%'";
             }
             if( count($statesArr) > 0 ) {
