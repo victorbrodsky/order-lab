@@ -307,10 +307,8 @@ class CallLogPatientController extends PatientController {
      */
     public function updateAction( Request $request, $id )
     {
-        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_SUBMITTER') &&
-            false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_ORDERING_PROVIDER')
-        ) {
-            return $this->redirect($this->generateUrl('scan-nopermission'));
+        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_CALLLOG_USER') ){
+            return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
         $params = array(
@@ -333,10 +331,8 @@ class CallLogPatientController extends PatientController {
      */
     public function patientSingleViewAction(Request $request, Patient $patient)
     {
-        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_SUBMITTER') &&
-            false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_ORDERING_PROVIDER')
-        ) {
-            return $this->redirect($this->generateUrl('scan-nopermission'));
+        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_CALLLOG_USER') ){
+            return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
         $cycle = "show";
@@ -365,10 +361,8 @@ class CallLogPatientController extends PatientController {
      */
     public function patientSingleEditAction(Request $request, Patient $patient)
     {
-        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_SUBMITTER') &&
-            false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_ORDERING_PROVIDER')
-        ) {
-            return $this->redirect($this->generateUrl('scan-nopermission'));
+        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_CALLLOG_USER') ){
+            return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
         $em = $this->getDoctrine()->getManager();
