@@ -1278,6 +1278,31 @@ class TransResRequestUtil
 
         return $url;
     }
+    public function getRequestNewInvoiceUrl($transresRequest,$asHref=true,$title=null,$newPage=false) {
+        $transresUtil = $this->container->get('transres_util');
+        $router = $transresUtil->getRequestContextRouter();
+        $url = $router->generate(
+            'translationalresearch_invoice_new',
+            array(
+                'id' => $transresRequest->getId(),
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+
+        if( !$title ) {
+            $title = $url;
+        }
+
+        if( $asHref ) {
+            if( $newPage ) {
+                $url = '<a target="_blank" href="'.$url.'">'.$title.'</a>';
+            } else {
+                $url = '<a href="'.$url.'">'.$title.'</a>';
+            }
+        }
+
+        return $url;
+    }
 
     public function getInvoiceShowUrl($invoice,$asHref=true,$title=null,$newPage=false) {
         $transresUtil = $this->container->get('transres_util');

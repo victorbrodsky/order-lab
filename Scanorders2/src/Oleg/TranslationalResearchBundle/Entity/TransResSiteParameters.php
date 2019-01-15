@@ -380,6 +380,24 @@ class TransResSiteParameters {
     private $completedRequestReminderBody;
     ////////////// EOF Completed Work Requests reminder email //////////////
 
+    ////////////// Completed and Notified Work Requests without issued invoice reminder email //////////////
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $completedNoInvoiceRequestReminderDelay;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $completedNoInvoiceRequestReminderSubject;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $completedNoInvoiceRequestReminderBody;
+    ////////////// EOF Completed Work Requests reminder email //////////////
+
+
 
     public function __construct($user=null) {
         $this->setCreator($user);
@@ -1230,6 +1248,54 @@ class TransResSiteParameters {
     public function setCompletedRequestReminderBody($completedRequestReminderBody)
     {
         $this->completedRequestReminderBody = $completedRequestReminderBody;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCompletedNoInvoiceRequestReminderDelay()
+    {
+        return $this->completedNoInvoiceRequestReminderDelay;
+    }
+
+    /**
+     * @param mixed $completedNoInvoiceRequestReminderDelay
+     */
+    public function setCompletedNoInvoiceRequestReminderDelay($completedNoInvoiceRequestReminderDelay)
+    {
+        $this->completedNoInvoiceRequestReminderDelay = $completedNoInvoiceRequestReminderDelay;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCompletedNoInvoiceRequestReminderSubject()
+    {
+        return $this->completedNoInvoiceRequestReminderSubject;
+    }
+
+    /**
+     * @param mixed $completedNoInvoiceRequestReminderSubject
+     */
+    public function setCompletedNoInvoiceRequestReminderSubject($completedNoInvoiceRequestReminderSubject)
+    {
+        $this->completedNoInvoiceRequestReminderSubject = $completedNoInvoiceRequestReminderSubject;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCompletedNoInvoiceRequestReminderBody()
+    {
+        return $this->completedNoInvoiceRequestReminderBody;
+    }
+
+    /**
+     * @param mixed $completedNoInvoiceRequestReminderBody
+     */
+    public function setCompletedNoInvoiceRequestReminderBody($completedNoInvoiceRequestReminderBody)
+    {
+        $this->completedNoInvoiceRequestReminderBody = $completedNoInvoiceRequestReminderBody;
     }
 
 

@@ -3710,6 +3710,13 @@ class TransResUtil
                 $text = str_replace("[[REQUEST SUBMISSION DATE]]", $creationDate->format("m/d/Y"), $text);
             }
 
+            if( strpos($text, '[[REQUEST UPDATE DATE]]') !== false ) {
+                $updateDate = $transresRequest->getUpdateDate();
+                if ($updateDate) {
+                    $text = str_replace("[[REQUEST UPDATE DATE]]", $updateDate->format("m/d/Y"), $text);
+                }
+            }
+
             if( strpos($text, '[[REQUEST PROGRESS STATUS]]') !== false ) {
                 $transresRequestUtil = $this->container->get('transres_request_util');
                 $state = $transresRequest->getProgressState();
@@ -3730,6 +3737,14 @@ class TransResUtil
                 $requestChangeProgressStatusUrl = $transresRequestUtil->getRequestChangeProgressStateUrl($transresRequest);
                 if ($requestShowUrl) {
                     $text = str_replace("[[REQUEST CHANGE PROGRESS STATUS URL]]", $requestChangeProgressStatusUrl, $text);
+                }
+            }
+
+            if( strpos($text, '[[REQUEST NEW INVOICE URL]]') !== false ) {
+                $transresRequestUtil = $this->container->get('transres_request_util');
+                $requestNewInvoiceUrl = $transresRequestUtil->getRequestNewInvoiceUrl($transresRequest);
+                if ($requestShowUrl) {
+                    $text = str_replace("[[REQUEST NEW INVOICE URL]]", $requestNewInvoiceUrl, $text);
                 }
             }
         }

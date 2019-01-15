@@ -666,7 +666,6 @@ class ReminderUtil
         //$testing = true;
 
         if( $state == "completed" ) {
-            //TODO: for "completed" do something with old imported thousands of work requests (~12000 request).
 
             $reminderDelay = $transresUtil->getTransresSiteProjectParameter("completedRequestReminderDelay", null, $projectSpecialty);
             if (!$reminderDelay) {
@@ -692,18 +691,31 @@ class ReminderUtil
             
         } elseif( $state == "completedNotified" ) {
 
-//            if (!$reminderDelay) {
-//                $reminderDelay = 7; //default 7 days
-//            }
-//            $reminderDelay = trim($reminderDelay);
+            $reminderDelay = $transresUtil->getTransresSiteProjectParameter("completedNoInvoiceRequestReminderDelay", null, $projectSpecialty);
+            if (!$reminderDelay) {
+                $reminderDelay = 7; //default 7 days
+            }
+            $reminderDelay = trim($reminderDelay);
 
-            //Subject: [TRP] Please issue the invoice for work request APCP123-REQ456
+            $reminderSubject = $transresUtil->getTransresSiteProjectParameter("completedNoInvoiceRequestReminderSubject", null, $projectSpecialty);
+            if (!$reminderSubject) {
+                //Subject: [TRP] Please issue the invoice for work request APCP123-REQ456
+                $reminderSubject = "Please issue the invoice for work request [[REQUEST ID]]";
+            }
 
-            //Body: Work request has had the status of “Completed and Notified” since 01/02/2018.
-            //To issue the invoice for this work request, please visit the following link:
-            //[URL where the invoice can be issued for this work request]
+            $reminderBody = $transresUtil->getTransresSiteProjectParameter("completedNoInvoiceRequestReminderBody", null, $projectSpecialty);
+            if (!$reminderBody) {
+                //Body: Work request has had the status of “Completed and Notified” since 01/02/2018.
+                //To issue the invoice for this work request, please visit the following link:
+                //[URL where the invoice can be issued for this work request]
+                $reminderBody = "Work request has had the status of '[[REQUEST PROGRESS STATUS]]' since [[REQUEST UPDATE DATE]].".
+                    $newline.
+                    "To issue the invoice for this work request, please visit the following link:".
+                    $newline . "[[REQUEST NEW INVOICE URL]]";
+            }
 
         } else {
+
             //Pending project request reminder email delay (in days)
             $reminderDelay = $transresUtil->getTransresSiteProjectParameter("pendingRequestReminderDelay", null, $projectSpecialty);
             if (!$reminderDelay) {
@@ -723,6 +735,7 @@ class ReminderUtil
                 $reminderBody = "To review the details of the work request [[REQUEST ID]] with the current status of '[[REQUEST PROGRESS STATUS]]', please visit the following link:" .
                     $newline . "[[REQUEST SHOW URL]]";
             }
+
         }//if state
 
         if( !$reminderDelay ) {
@@ -754,6 +767,10 @@ class ReminderUtil
         $dql->andWhere("request.progressState = :state");
         $params["state"] = $state;
 
+        //ignore all exported requests because they didn't have completedNotified state and invoices
+        //this is for "completed", imported thousands of work requests (~12000 request).
+        $dql->andWhere("request.exportId IS NULL");
+
         ///////// use updateDate //////////////
         $overDueDate = new \DateTime("-".$reminderDelay." days");
         //echo "overDueDate=".$overDueDate->format('Y-m-d H:i:s').$newline;
@@ -764,8 +781,10 @@ class ReminderUtil
         if( $state == "completedNotified" ) {
             //no issued invoice
             $dql->leftJoin('request.invoices','invoices');
-            $dql->andWhere("(invoices IS NOT NULL AND invoices.status = :invoiceStatus)");
-            $dqlParameters["invoiceStatus"] = "Unpaid/Issued";
+            $dql->andWhere("invoices.id IS NULL");
+            //$dql->andWhere("request.fundedAccountNumber IS NOT NULL");
+            //$dql->andWhere("invoices.id IS NULL OR (invoices.id IS NOT NULL AND invoices.status != :invoiceStatus)");
+            //$params["invoiceStatus"] = "Unpaid/Issued";
         }
 
         $query = $this->em->createQuery($dql);
@@ -775,11 +794,14 @@ class ReminderUtil
         );
 
         $requests = $query->getResult();
-        echo "$projectSpecialty count requests($stateStr)=".count($requests)."$newline";
+//        echo "$projectSpecialty count requests($stateStr)=".count($requests)."$newline"."<br>";
+//        foreach($requests as $request) {
+//            echo "Request ".$request->getOid()."; invoices=".count($request->getInvoices())."<br>";
+//        }
 
-        if($state == "completed" || $state == "completedNotified") {
-            exit("testing");
-        }
+//        if($state == "completed" || $state == "completedNotified") {
+//            exit("<br>exit testing");
+//        }
 
         //filter project by the last reminder email from event log
         $today = new \DateTime();
@@ -804,7 +826,7 @@ class ReminderUtil
 //        foreach($projects as $project) {
 //            echo "project ".$project->getOid()."<br>";
 //        }
-        //exit('exit projects reminder');
+        //exit('exit reminder');
 
         if( $showSummary ) {
             return $lateRequests;

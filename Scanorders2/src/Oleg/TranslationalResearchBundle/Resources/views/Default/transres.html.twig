@@ -1633,10 +1633,12 @@
 
                     <br>[[REQUEST ID]] - work request ID,
                     <br>[[REQUEST SUBMISSION DATE]] - work request submission date,
+                    <br>[[REQUEST UPDATE DATE]] - work request update date,
                     <br>[[REQUEST PROGRESS STATUS]] - work request progress status,
                     <br>[[REQUEST STATUS]] - work request status,
                     <br>[[REQUEST SHOW URL]] - work request show url,
                     <br>[[REQUEST CHANGE PROGRESS STATUS URL]] - work request change progress state url,
+                    <br>[[REQUEST NEW INVOICE URL]] - create a new invoice url for this work request,
 
                     <br>[[INVOICE ID]] - invoice ID,
                     <br>[[INVOICE SHOW URL]] - invoice url,
@@ -1671,6 +1673,11 @@
                 {{ formmacros.field(form.completedRequestReminderDelay) }}
                 {{ formmacros.field(form.completedRequestReminderSubject) }}
                 {{ formmacros.field(form.completedRequestReminderBody) }}
+
+                <h5>Delayed Work Request (Completed and Notified, without issued invoice) Reminder Email</h5>
+                {{ formmacros.field(form.completedNoInvoiceRequestReminderDelay) }}
+                {{ formmacros.field(form.completedNoInvoiceRequestReminderSubject) }}
+                {{ formmacros.field(form.completedNoInvoiceRequestReminderBody) }}
 
             </div>
         </div>

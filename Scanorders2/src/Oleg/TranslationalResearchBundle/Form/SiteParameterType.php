@@ -353,6 +353,24 @@ class SiteParameterType extends AbstractType
         ));
         ////////// EOF Completed work request reminder email ////////////
 
+        ////////// Completed and Notified, without issued invoice work request reminder email ////////////
+        $builder->add('completedNoInvoiceRequestReminderDelay', null, array(
+            'label' => "Delayed completed and notified, without issued invoices work request reminder email delay (in days):",
+            'required' => false,
+            'attr' => array('class' => 'form-control')
+        ));
+        $builder->add('completedNoInvoiceRequestReminderSubject', null, array(
+            'label' => "Delayed completed and notified, without issued invoices work request reminder email subject:",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+        $builder->add('completedNoInvoiceRequestReminderBody', null, array(
+            'label' => "Delayed completed and notified, without issued invoices work request reminder email body:",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+        ////////// EOF Completed and Notified, without issued invoice work request reminder email ////////////
+
     }
     
     /**
