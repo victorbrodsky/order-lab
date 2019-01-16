@@ -782,9 +782,6 @@ class ReminderUtil
             //no issued invoice
             $dql->leftJoin('request.invoices','invoices');
             $dql->andWhere("invoices.id IS NULL");
-            //$dql->andWhere("request.fundedAccountNumber IS NOT NULL");
-            //$dql->andWhere("invoices.id IS NULL OR (invoices.id IS NOT NULL AND invoices.status != :invoiceStatus)");
-            //$params["invoiceStatus"] = "Unpaid/Issued";
         }
 
         $query = $this->em->createQuery($dql);
@@ -797,10 +794,6 @@ class ReminderUtil
 //        echo "$projectSpecialty count requests($stateStr)=".count($requests)."$newline"."<br>";
 //        foreach($requests as $request) {
 //            echo "Request ".$request->getOid()."; invoices=".count($request->getInvoices())."<br>";
-//        }
-
-//        if($state == "completed" || $state == "completedNotified") {
-//            exit("<br>exit testing");
 //        }
 
         //filter project by the last reminder email from event log
@@ -822,11 +815,6 @@ class ReminderUtil
                 $lateRequests[] = $request;
             }
         }
-
-//        foreach($projects as $project) {
-//            echo "project ".$project->getOid()."<br>";
-//        }
-        //exit('exit reminder');
 
         if( $showSummary ) {
             return $lateRequests;
@@ -890,8 +878,6 @@ class ReminderUtil
         $repository = $this->em->getRepository('OlegUserdirectoryBundle:Logger');
         $dql = $repository->createQueryBuilder("logger");
         $dql->innerJoin('logger.eventType', 'eventType');
-        //$dql->leftJoin('logger.objectType', 'objectType');
-        //$dql->leftJoin('logger.site', 'site');
 
         //$dql->where("logger.siteName = 'translationalresearch' AND logger.entityName = 'Invoice' AND logger.entityId = ".$invoice->getId());
         $dql->where("logger.entityNamespace = 'Oleg\TranslationalResearchBundle\Entity' AND logger.entityName = 'TransResRequest' AND logger.entityId = ".$request->getId());

@@ -4959,7 +4959,6 @@ class TransResUtil
         $dql->innerJoin('logger.eventType', 'eventType');
 
         //$dql->where("logger.siteName = 'translationalresearch' AND logger.entityName = 'Invoice' AND logger.entityId = ".$invoice->getId());
-        //$dql->where("logger.entityName = 'Invoice' AND logger.entityId = ".$invoice->getId());
 
         //Work Request ID APCP843-REQ16216 billing state has been changed to Invoiced, triggered by invoice status change to Unpaid/Issued
         $dql->where("logger.entityNamespace = 'Oleg\TranslationalResearchBundle\Entity' AND logger.entityName = 'TransResRequest'");

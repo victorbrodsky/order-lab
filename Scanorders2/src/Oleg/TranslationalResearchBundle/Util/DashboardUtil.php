@@ -4744,7 +4744,7 @@ class DashboardUtil
 
             $pendingStates = array(
                 'active',
-                //'pendingInvestigatorInput',
+                'pendingInvestigatorInput',
                 'pendingHistology',
                 'pendingImmunohistochemistry',
                 'pendingMolecular',
@@ -4768,11 +4768,9 @@ class DashboardUtil
                 //$datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
                 //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
 
-                //$apcpInvoices = $this->getInvoicesByFilter($startDate,$thisEndDate, array($specialtyApcpObject));
                 $unpaidInvoicesRemindersCount = $transresUtil->getUnpaidInvoiceRemindersCount($startDate,$thisEndDate,$projectSpecialtyObjects);
                 $delayedProjectRemindersCount = $transresUtil->getDelayedProjectRemindersCount($startDate,$thisEndDate,$projectSpecialtyObjects);
                 $delayedRequestRemindersCount = $transresUtil->getDelayedRequestRemindersCount($startDate,$thisEndDate,$projectSpecialtyObjects,$pendingStates);
-
                 $delayedCompletedRequestRemindersCount = $transresUtil->getDelayedRequestRemindersCount($startDate,$thisEndDate,$projectSpecialtyObjects,$completedStates);
                 $delayedCompletedNoInvoiceRequestRemindersCount = $transresUtil->getDelayedRequestRemindersCount($startDate,$thisEndDate,$projectSpecialtyObjects,$completedNoInvoiceStates);
 
