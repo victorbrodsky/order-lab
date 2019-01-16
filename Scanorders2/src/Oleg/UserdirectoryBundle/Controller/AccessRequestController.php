@@ -1537,14 +1537,15 @@ class AccessRequestController extends Controller
         $dql =  $repository->createQueryBuilder("user");
         $dql->select('user');
         $dql->leftJoin('user.infos','infos');
+        $dql->leftJoin('user.author','author');
         $dql->leftJoin('user.keytype','keytype');
         $dql->where("user.createdby = '" . $createdby . "'" );
 
         //$request = $this->get('request');
-        $postData = $request->query->all();
-        if( !isset($postData['sort']) ) {
-            $dql->orderBy("user.createDate","DESC");
-        }
+//        $postData = $request->query->all();
+//        if( !isset($postData['sort']) ) {
+//            $dql->orderBy("user.createDate","DESC");
+//        }
 
         //pass sorting parameters directly to query; Somehow, knp_paginator stoped correctly create pagination according to sorting parameters
 //		if( isset($postData['sort']) ) {

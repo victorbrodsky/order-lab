@@ -81,6 +81,8 @@
             <th>{{ knp_pagination_sortable(users, 'Role(s)', 'user.roles') }}</th>
             {#<th>{{ knp_pagination_sortable(users, 'Last Login', 'user.lastLogin') }}</th>#}
             <th>{{ knp_pagination_sortable(users, 'Locked/Unlocked', 'user.enabled') }}</th>
+            <th>{{ knp_pagination_sortable(users, 'Added by', 'author.primaryPublicUserId') }}</th>
+            <th>{{ knp_pagination_sortable(users, 'Added on', 'user.createDate') }}</th>
             <th>Actions</th>
         </tr>
         </thead>
@@ -118,6 +120,8 @@
                 {% endif %}
             </td>
 
+            <td>{{ user.author }}</td>
+            <td>{{ user.createDate|date('m/d/Y') }}</td>
 
             <td class="rowlink-skip">
 
