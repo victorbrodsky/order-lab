@@ -1517,6 +1517,8 @@ function getAddNewUserModalByForm(btnDom,sitename,otherUserParam,newUserFormHtml
     getComboboxCompositetree(newUserEl);
     regularCombobox(newUserEl);
 
+    //setKeytypeByEmailListener(newUserEl);
+
     newUserEl.modal(
         {
             show:true,
@@ -1656,6 +1658,15 @@ function populateUserFromLdap(searchBtn,inputType) {
     });
 
     return false;
+}
+function setKeytypeByEmailListener(newUserEl) {
+    console.log("setKeytypeByEmailListener");
+    var holder = $('#user-add-new-user-instance');
+    var emailField = $('#oleg_userdirectorybundle_user_infos_0_email');
+    emailField.on("change", function(e) {
+        console.log("email changed");
+        $('#oleg_userdirectorybundle_user_keytype').select2('val',1);
+    });
 }
 
 function addNewUserAction( addUserBtn, fieldId, sitename, otherUserParam ) {
