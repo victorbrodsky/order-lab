@@ -577,6 +577,7 @@ class AntibodyList extends ListAbstract
 //        return $this->getName().$company;
 //    }
     //[Antibody ID]/[Category]: [Antibody Name] [Vendor]/[Category] ([Protocol]/[Antigen retrieval]/[Dilution])
+    //[Antibody ID]/[Category]: [Antibody Name] [Vendor]/[Catalog]/[Clone] ([Protocol]/[Antigen retrieval]/[Dilution])
     public function __toString()
     {
         $res = $this->getId();
@@ -598,6 +599,18 @@ class AntibodyList extends ListAbstract
         $vendor = $this->getCompany();
         if( $vendor ) {
             $res = $res . " " . $vendor;
+        }
+
+        //[Vendor]/[Catalog]/[Clone]
+        $catalog = $this->getCatalog();
+        if( $catalog ) {
+            $res = $res . "/" . $catalog;
+        }
+
+        //[Vendor]/[Catalog]/[Clone]
+        $clone = $this->getClone();
+        if( $clone ) {
+            $res = $res . "/" . $clone;
         }
 
         //Protocol
