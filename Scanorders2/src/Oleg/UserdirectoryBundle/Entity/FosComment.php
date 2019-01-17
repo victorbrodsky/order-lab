@@ -274,11 +274,40 @@ class FosComment extends FosBaseComment implements SignedCommentInterface
         $this->setEntityId(NULL);
     }
 
+    //Old: Reviewer on 11/27/2018 16:11:
+    //New: Reviewer (on 11/27/2018 at 4:11pm PST):
     public function getCommentShort() {
-        $createdStr = $this->getCreatedAt()->format("m/d/Y H:i");
+        //$createdStr = $this->getCreatedAt()->format("m/d/Y H:i");
+        $createdDate = $this->getCreatedAt();
+        $author = $this->getAuthor();
+        if( $author ) {
+            $createdDate = $this->convertFromUtcToUserTimezone($createdDate,$author);
+        }
+        $createdStr = $createdDate->format('m/d/Y') . " at " . $createdDate->format('h:ia T');
         //$info = "Submitted by a ".$this->getAuthorTypeDescription()." on ".$createdStr.": '".$this->getBody()."'";
-        $info = $this->getAuthorTypeDescription()." on ".$createdStr.": <b>".$this->getBody()."</b>";
+        $info = $this->getAuthorTypeDescription()." (on ".$createdStr."): <b>".$this->getBody()."</b>";
         return $info;
+    }
+    public function convertFromUtcToUserTimezone($datetime,$user)
+    {
+
+        //$user_tz = 'America/New_York';
+        $user_tz = null;
+        $preferences = $user->getPreferences();
+        if( $preferences ) {
+            $user_tz = $preferences->getTimezone();
+        }
+        if( !$user_tz ) {
+            return $datetime;
+        }
+
+        //echo "input datetime=".$datetime->format('Y-m-d H:i')."<br>";
+        $datetimeUTC = new \DateTime($datetime->format('Y-m-d H:i'), new \DateTimeZone('UTC') );
+        $datetimeTz = $datetimeUTC->setTimeZone(new \DateTimeZone($user_tz));
+
+        //echo "output datetime=".$datetimeUTC->format('Y-m-d H:i')."<br>";
+
+        return $datetimeTz;
     }
 
 

@@ -3677,6 +3677,7 @@ class TransResUtil
             }
 
             if( strpos($text, '[[PROJECT STATUS COMMENTS]]') !== false ) {
+                //$project,$newline="<br>",$state=null,$user=null
                 $reviewComments = $this->getReviewComments($project,"<hr>");
                 if( $reviewComments ) {
                     $reviewComments = "<hr>" . $reviewComments;

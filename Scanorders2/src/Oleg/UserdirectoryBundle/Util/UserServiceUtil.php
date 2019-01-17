@@ -71,7 +71,15 @@ class UserServiceUtil {
     public function convertFromUtcToUserTimezone($datetime,$user) {
 
         //$user_tz = 'America/New_York';
-        $user_tz = $user->getPreferences()->getTimezone();
+        //$user_tz = $user->getPreferences()->getTimezone();
+        $user_tz = null;
+        $preferences = $user->getPreferences();
+        if( $preferences ) {
+            $user_tz = $preferences->getTimezone();
+        }
+        if( !$user_tz ) {
+            return $datetime;
+        }
 
         //echo "input datetime=".$datetime->format('Y-m-d H:i')."<br>";
         $datetimeUTC = new \DateTime($datetime->format('Y-m-d H:i'), new \DateTimeZone('UTC') );
