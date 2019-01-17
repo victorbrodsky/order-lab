@@ -1712,8 +1712,7 @@ function addNewUserAction( addUserBtn, fieldId, sitename, otherUserParam ) {
     if( !email ) {
         errorMsg = "Please enter a new user's email address";
     } else {
-        var emailArr = email.split("@");
-        if( emailArr.length != 2 ) {
+        if( !validateEmail(email) ) {
             errorMsg = "Please enter a valid user's email address";
         }
     }
@@ -1795,6 +1794,13 @@ function addNewUserAction( addUserBtn, fieldId, sitename, otherUserParam ) {
         holder.find('#add-user-danger-box').show(transTime);
     });
 
+}
+
+//simple validation in the form of: anystring@anystring.anystring
+function validateEmail(email)
+{
+    var re = /\S+@\S+\.\S+/;
+    return re.test(email);
 }
 
 function updateUserComboboxes(response,fieldId) {
