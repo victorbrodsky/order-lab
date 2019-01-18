@@ -593,12 +593,14 @@ class AntibodyList extends ListAbstract
         //Antibody Name
         $name = $this->getName();
         if( $name ) {
+            //$name = trim($name);
             $res = $res . " " . $name;
         }
 
         //Antibody Name
         $altName = $this->getAltname();
         if( $altName ) {
+            //$altName = trim($altName);
             $res = $res . " (" . $altName . ")";
         }
 
