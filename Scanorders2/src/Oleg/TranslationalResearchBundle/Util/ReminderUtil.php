@@ -787,7 +787,7 @@ class ReminderUtil
             $dql->leftJoin('request.invoices','invoices');
             $dql->andWhere("invoices.id IS NULL");
 
-            //TODO: add funded only
+            //funded only
             $dql->andWhere("request.fundedAccountNumber IS NOT NULL");
         }
 

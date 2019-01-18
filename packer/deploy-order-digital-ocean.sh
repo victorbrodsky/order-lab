@@ -1,10 +1,27 @@
 #!/bin/bash
 # A sample Bash script, by Ryan
 
+#bash deploy-order-digital-ocean.sh 
+#$1 API-TOKEN-FROM-STEP-1 
+#$2 parameters.yml 
+#$3 dbuser - optional
+#$4 dbpass - optional
+#$5 https - optional
+#$6 domain_name.tld - optional
+#$7 ssl_certificate.crt - optional
+#$8 intermediate_certificate.ca-crt 
+#$9 ssl.key - optional
+
 apitoken=$1
 parameters=$2
 dbuser=$3
 dbpass=$4
+
+https=$5
+domainname=$6
+sslcertificate=$7
+sslprivatekey=$8
+
 
 if [ -z "$dbuser" ]
   then 	
@@ -23,6 +40,11 @@ echo "api_token=$apitoken"
 echo "parameters=$parameters" 
 echo "dbuser=$dbuser"
 echo "dbpass=$dbpass"
+
+echo "https=$https"
+echo "domainname=$domainname"
+echo "sslcertificate=$sslcertificate"
+echo "sslprivatekey=$sslprivatekey"
 
 echo "*** Verifying files presence ***"
 if [ -z "$apitoken" ]
@@ -49,6 +71,11 @@ sed -i -e "s/parameters_bash_file/$parameters/g" order-packer.json
 sed -i -e "s/bash_dbuser/$dbuser/g" order-packer.json
 sed -i -e "s/bash_dbpass/$dbpass/g" order-packer.json
 
+#modify http.config file to insert virtual host for https
+sed -i -e "s/bash_https/$https/g" order-packer.json
+sed -i -e "s/bash_domainname/$domainname/g" order-packer.json
+sed -i -e "s/bash_sslcertificate/$sslcertificate/g" order-packer.json
+sed -i -e "s/bash_sslprivatekey/$sslprivatekey/g" order-packer.json
 
 
 echo "*** Building VM image ... ***"
