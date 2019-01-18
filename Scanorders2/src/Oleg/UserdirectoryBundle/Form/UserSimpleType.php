@@ -67,7 +67,7 @@ class UserSimpleType extends AbstractType
         if( !isset($this->params['hidePrimaryPublicUserId']) ) {
 
             //add user primaryPublicId (keytype) to the add new modal
-            $this->addKeytype($builder);
+            //$this->addKeytype($builder);
 
             $this->userNamePreferredContactInfo($builder);
         }

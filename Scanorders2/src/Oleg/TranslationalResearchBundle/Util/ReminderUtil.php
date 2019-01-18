@@ -789,6 +789,8 @@ class ReminderUtil
 
             //funded only
             $dql->andWhere("request.fundedAccountNumber IS NOT NULL");
+
+            //TODO: add billing status? Paid or not?
         }
 
         $query = $this->em->createQuery($dql);
