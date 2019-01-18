@@ -413,10 +413,9 @@ class ReminderUtil
                 //[Link to a page that allows canceling or actually cancels the project request, but first must show the “Are you sure you would like to cancel this project request?”]
                 $projectReminderBody = "Please provide the requested additional information to enable us to review your project request [[PROJECT ID]] ('[[PROJECT TITLE]]').".
 
-                    //$newline.$newline."Associated comments for [[PROJECT STATUS]] stage:".$newline."[[PROJECT STATUS COMMENTS]]".
-                    //Comments associated with the “Pending additional information from submitter” status of the project request in the IRB Review stage:
+                    //Comments associated with the “Pending additional information from submitter for IRB Review” status of the project request:
                     //use existing state string: $state = "Pending additional information from submitter for Admin Review";
-                    $newline.$newline."Comments associated with the '[[PROJECT STATUS]]' stage:". $newline."[[PROJECT STATUS COMMENTS]]".
+                    $newline.$newline."Comments associated with the '[[PROJECT STATUS]]' status of the project request:". $newline."[[PROJECT STATUS COMMENTS]]".
 
                     $newline.$newline."To provide the requested information, please visit the following link:".$newline."[[PROJECT EDIT URL]]".
                     //$newline.$newline."To cancel this project request, please visit the following link:".$newline."[[PROJECT CANCEL URL]]". //not possible to show "Are you sure?" in email body
