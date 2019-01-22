@@ -72,6 +72,7 @@ sed -i -e "s/bash_dbuser/$dbuser/g" order-packer.json
 sed -i -e "s/bash_dbpass/$dbpass/g" order-packer.json
 
 #modify http.config file to insert virtual host for https
+#https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-apache-in-ubuntu-16-04
 sed -i -e "s/bash_https/$https/g" order-packer.json
 sed -i -e "s/bash_domainname/$domainname/g" order-packer.json
 sed -i -e "s/bash_sslcertificate/$sslcertificate/g" order-packer.json
