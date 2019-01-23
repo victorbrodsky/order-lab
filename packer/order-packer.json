@@ -98,8 +98,7 @@
            "sudo service apache2 restart",
            "sudo mkdir /etc/apache2/ssl",
            "cp bash_sslcertificate /etc/apache2/ssl/",
-           "cp bash_sslprivatekey /etc/apache2/ssl/",
-                      
+           "cp bash_sslprivatekey /etc/apache2/ssl/"           
          ]    
       },
 	  
