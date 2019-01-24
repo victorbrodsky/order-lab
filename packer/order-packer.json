@@ -102,7 +102,8 @@
            "cp bash_sslprivatekey /etc/apache2/ssl/apache2.key",  
 		   "sudo a2enmod ssl",
 		   "sudo a2enmod headers",	
-           "sudo a2ensite default-ssl"		   
+           "sudo a2ensite default-ssl",
+		   "sudo service apache2 restart"		   
          ]    
       },
 	  
