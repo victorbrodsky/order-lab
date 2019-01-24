@@ -90,15 +90,23 @@
          ]    
       },
 	  
+	  {
+          "type": "file",
+          "source": "bash_sslcertificate",
+          "destination": "/etc/apache2/ssl/apache2.crt"         
+       },
+	   
+	   {
+          "type": "file",
+          "source": "bash_sslprivatekey",
+          "destination": "/etc/apache2/ssl/apache2.key"         
+       },
 	  
 	  {
         "type": "shell",
         "inline": [  
 		   "cp /usr/local/bin/order-lab/packer/default-ssl.conf /etc/apache2/sites-available/",
-           "sudo a2enmod ssl",
-           "sudo mkdir /etc/apache2/ssl",
-           "cp bash_sslcertificate /etc/apache2/ssl/apache2.crt",
-           "cp bash_sslprivatekey /etc/apache2/ssl/apache2.key",  
+           "sudo a2enmod ssl",          
 		   "sudo a2enmod ssl",
 		   "sudo a2enmod headers",	
            "sudo a2ensite default-ssl",
