@@ -114,14 +114,12 @@
         "inline": [  
 		   "cp /usr/local/bin/order-lab/packer/default-ssl.conf /etc/apache2/sites-available/",
            "sudo a2enmod ssl",          
-		   "sudo a2enmod ssl",
 		   "sudo a2enmod headers",	
            "sudo a2ensite default-ssl",
 		   "sudo systemctl restart apache2"		   
          ]    
       },
 	  
-
       {
         "type": "shell",
         "inline": [             
