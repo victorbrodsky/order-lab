@@ -124,7 +124,7 @@
         "type": "shell",
         "inline": [             
            "cd /usr/local/bin/order-lab/Scanorders2",
-           "composer install",
+           "composer update",
 		   "git pull",
            "git rev-parse HEAD",		   
 	       "sudo chmod +x /usr/local/bin/order-lab/Scanorders2/deploy_prod.sh",
