@@ -93,20 +93,20 @@
 	  {
         "type": "shell",
         "inline": [  
-		   "sudo mkdir /etc/apache2/ssl"
+		   "sudo mkdir /usr/local/bin/order-lab/ssl"
          ]    
       },
 	  
 	  {
           "type": "file",
           "source": "bash_sslcertificate",
-          "destination": "/etc/apache2/ssl/apache2.crt"         
+          "destination": "/usr/local/bin/order-lab/ssl/apache2.crt"         
        },
 	   
 	   {
           "type": "file",
           "source": "bash_sslprivatekey",
-          "destination": "/etc/apache2/ssl/apache2.key"         
+          "destination": "/usr/local/bin/order-lab/ssl/apache2.key"         
        },
 	  
 	  {
