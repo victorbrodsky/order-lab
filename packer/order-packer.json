@@ -78,6 +78,17 @@
           "source": "parameters_bash_file",
           "destination": "/usr/local/bin/order-lab/Scanorders2/app/config/parameters_bash_file"         
        },
+	   
+	   {
+        "type": "shell",
+        "inline": [   
+		   "sudo apt-get update",
+		   "sudo apt-get install -y xvfb libfontconfig wkhtmltopdf",	
+		   "sudo apt-get install -y libreoffice",		
+           "sudo apt-get install -y ghostscript",
+		   "sudo apt-get install -y pdftk"      
+         ]    
+      },
 	  
 	  {
         "type": "shell",
