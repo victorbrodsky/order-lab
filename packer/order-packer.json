@@ -91,6 +91,13 @@
       },
 	  
 	  {
+        "type": "shell",
+        "inline": [  
+		   "sudo mkdir /etc/apache2/ssl"
+         ]    
+      },
+	  
+	  {
           "type": "file",
           "source": "bash_sslcertificate",
           "destination": "/etc/apache2/ssl/apache2.crt"         
