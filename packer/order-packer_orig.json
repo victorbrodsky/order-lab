@@ -78,6 +78,17 @@
           "source": "parameters_bash_file",
           "destination": "/usr/local/bin/order-lab/Scanorders2/app/config/parameters_bash_file"         
        },
+	   
+	   {
+        "type": "shell",
+        "inline": [   
+		   "sudo apt-get update",
+		   "sudo apt-get install -y xvfb libfontconfig wkhtmltopdf",	
+		   "sudo apt-get install -y libreoffice",		
+           "sudo apt-get install -y ghostscript",
+		   "sudo apt-get install -y pdftk"      
+         ]    
+      },
 	  
 	  {
         "type": "shell",
@@ -96,7 +107,34 @@
           "type": "file",
           "source": "bash_sslprivatekey",
           "destination": "/usr/local/bin/order-lab/ssl/apache2.key"         
-       }    
+       },
+	  
+	  {
+        "type": "shell",
+        "inline": [  
+		   "cp /usr/local/bin/order-lab/packer/default-ssl.conf /etc/apache2/sites-available/",
+           "sudo a2enmod ssl",          
+		   "sudo a2enmod ssl",
+		   "sudo a2enmod headers",	
+           "sudo a2ensite default-ssl",
+		   "sudo systemctl restart apache2"		   
+         ]    
+      },
+	  
+
+      {
+        "type": "shell",
+        "inline": [             
+           "cd /usr/local/bin/order-lab/Scanorders2",
+           "composer install",
+		   "git pull",
+           "git rev-parse HEAD",		   
+	       "sudo chmod +x /usr/local/bin/order-lab/Scanorders2/deploy_prod.sh",
+	       "bash /usr/local/bin/order-lab/Scanorders2/deploy_prod.sh",
+	       "sudo chown -R www-data:www-data /usr/local/bin/order-lab",		           
+           "sudo chown -R www-data:www-data /usr/local/bin/order-lab/.git/"			   
+         ]    
+      }      
       
    ]
 
