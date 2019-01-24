@@ -43,7 +43,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Stopwatch\Stopwatch;
+//use Symfony\Component\Stopwatch\Stopwatch;
 
 
 /**
@@ -1025,12 +1025,12 @@ class RequestController extends Controller
         $timer = false;
         //$timer = true; //testing!!!
 
-        if( $timer ) {
-            $stopwatch = new Stopwatch();
-            //$time_pre = microtime(true);
-            $stopwatch->start('myRequestsAction');
-            $stopwatch->start('Paginator');
-        }
+//        if( $timer ) {
+//            $stopwatch = new Stopwatch();
+//            //$time_pre = microtime(true);
+//            $stopwatch->start('myRequestsAction');
+//            $stopwatch->start('Paginator');
+//        }
 
 //        if(
 //            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER') &&
@@ -1129,9 +1129,9 @@ class RequestController extends Controller
         $progressStateArr["All except Drafts"] = "All-except-Drafts";
         $progressStateArr["All except Drafts and Canceled"] = "All-except-Drafts-and-Canceled";
 
-        if ($timer) {
-            $stopwatch->start('FilterRequestType');
-        }
+//        if ($timer) {
+//            $stopwatch->start('FilterRequestType');
+//        }
 
         $params = array(
             'transresUsers' => $transresUsers,
@@ -1146,29 +1146,29 @@ class RequestController extends Controller
             'form_custom_value' => $params
         ));
 
-        if ($timer) {
-            $event = $stopwatch->stop('FilterRequestType');
-            echo "FilterRequestType duration: " . ($event->getDuration() / 1000) . " sec<br>";
-
-            $stopwatch->start('handleRequest');
-        }
+//        if ($timer) {
+//            $event = $stopwatch->stop('FilterRequestType');
+//            echo "FilterRequestType duration: " . ($event->getDuration() / 1000) . " sec<br>";
+//
+//            $stopwatch->start('handleRequest');
+//        }
 
         $filterform->handleRequest($request);
 
         //TESTING
         //return $this->testingReturn($request,$stopwatch);
 
-        if ($timer) {
-            $event = $stopwatch->stop('handleRequest');
-            echo "handleRequest duration: " . ($event->getDuration() / 1000) . " sec<br>";
-        }
+//        if ($timer) {
+//            $event = $stopwatch->stop('handleRequest');
+//            echo "handleRequest duration: " . ($event->getDuration() / 1000) . " sec<br>";
+//        }
 
         $submitter = null;
         $project = null;
 
-        if ($timer) {
-            $stopwatch->start('getFilterData');
-        }
+//        if ($timer) {
+//            $stopwatch->start('getFilterData');
+//        }
 
         if(1) {
             if (isset($filterform['categories'])) {
@@ -1238,10 +1238,10 @@ class RequestController extends Controller
 //            $projectSpecialties = $projectSpecialtyAllowedArr;
 //        }
 
-        if ($timer) {
-            $event = $stopwatch->stop('getFilterData');
-            echo "getFilterData duration: " . ($event->getDuration() / 1000) . " sec<br>";
-        }
+//        if ($timer) {
+//            $event = $stopwatch->stop('getFilterData');
+//            echo "getFilterData duration: " . ($event->getDuration() / 1000) . " sec<br>";
+//        }
         //////// EOF create filter //////////
 
         //echo "project=".$project."<br>";
@@ -1579,10 +1579,10 @@ class RequestController extends Controller
     }
         //exit("Start filtering...");
 
-        if( $timer ) {
-            //$time_pre2 = microtime(true);
-            $stopwatch->start('createQueryBuilder');
-        }
+//        if( $timer ) {
+//            //$time_pre2 = microtime(true);
+//            $stopwatch->start('createQueryBuilder');
+//        }
 
         $repository = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
         $dql =  $repository->createQueryBuilder("transresRequest");
@@ -1873,13 +1873,13 @@ class RequestController extends Controller
             'wrap-queries' => true
         );
 
-        if( $timer ) {
-            $event = $stopwatch->stop('createQueryBuilder');
-            echo "createQueryBuilder duration: ".($event->getDuration()/1000)." sec<br>";
-
-            //$time_pre2 = microtime(true);
-            $stopwatch->start('PaginatorResult');
-        }
+//        if( $timer ) {
+//            $event = $stopwatch->stop('createQueryBuilder');
+//            echo "createQueryBuilder duration: ".($event->getDuration()/1000)." sec<br>";
+//
+//            //$time_pre2 = microtime(true);
+//            $stopwatch->start('PaginatorResult');
+//        }
 
         //TESTING
         //$query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
@@ -1896,17 +1896,17 @@ class RequestController extends Controller
         //TESTING
         //return $this->testingReturn($request,$stopwatch);
 
-        if( $timer ) {
-//            $time_post2 = microtime(true); //microseconds
-//            $exec_time2 = round(($time_post2 - $time_pre2), 1);
-//            echo "Paginator exec_time=$exec_time2<br>";
-
-            $event = $stopwatch->stop('PaginatorResult');
-            echo "PaginatorResult duration: ".($event->getDuration()/1000)." sec<br>";
-
-            $event = $stopwatch->stop('Paginator');
-            echo "Paginator duration: ".($event->getDuration()/1000)." sec<br>";
-        }
+//        if( $timer ) {
+////            $time_post2 = microtime(true); //microseconds
+////            $exec_time2 = round(($time_post2 - $time_pre2), 1);
+////            echo "Paginator exec_time=$exec_time2<br>";
+//
+//            $event = $stopwatch->stop('PaginatorResult');
+//            echo "PaginatorResult duration: ".($event->getDuration()/1000)." sec<br>";
+//
+//            $event = $stopwatch->stop('Paginator');
+//            echo "Paginator duration: ".($event->getDuration()/1000)." sec<br>";
+//        }
 
         if( $filterTitle ) {
             $title = $filterTitle;
@@ -1933,9 +1933,9 @@ class RequestController extends Controller
                 }
             }
 
-            if( $timer ) {
-                $stopwatch->start('GetTitle');
-            }
+//            if( $timer ) {
+//                $stopwatch->start('GetTitle');
+//            }
 
             //$allFilteredTransresRequests = $query2->getResult();
             //echo "allFilteredTransresRequests=".count($allFilteredTransresRequests)."<br>";
@@ -1945,17 +1945,17 @@ class RequestController extends Controller
             $allGlobalRequests = $transresUtil->getTotalRequestCount();
             $title = $title . " (Matching " . $allTransresRequests . ", Total " . $allGlobalRequests . $requestTotalFeeHtml . ")";
 
-            if( $timer ) {
-                $event = $stopwatch->stop('GetTitle');
-                echo "GetTitle duration: " . ($event->getDuration() / 1000) . " sec<br>";
-            }
+//            if( $timer ) {
+//                $event = $stopwatch->stop('GetTitle');
+//                echo "GetTitle duration: " . ($event->getDuration() / 1000) . " sec<br>";
+//            }
         }
 
-        if( $timer ) {
-            $event = $stopwatch->stop('myRequestsAction');
-            echo "myRequestsAction duration: ".($event->getDuration()/1000)." sec<br>";
-            echo "myRequestsAction memory: ".($event->getMemory()/1000000)." MB<br>";
-        }
+//        if( $timer ) {
+//            $event = $stopwatch->stop('myRequestsAction');
+//            echo "myRequestsAction duration: ".($event->getDuration()/1000)." sec<br>";
+//            echo "myRequestsAction memory: ".($event->getMemory()/1000000)." MB<br>";
+//        }
 
         $filterformView = null;
         //$filterDisable = true;
@@ -1983,45 +1983,45 @@ class RequestController extends Controller
 
         return $formArray;
     }
-    public function testingReturn($request,$stopwatch=null) {
-        //TESTING
-        $em = $this->getDoctrine()->getManager();
-        $title = "Work Requests";
-        $repository = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
-        $dql =  $repository->createQueryBuilder("transresRequest");
-        $dql->select('transresRequest');
-        $dql->where("transresRequest.id=2");
-        $query = $em->createQuery($dql);
-        $paginationParams = array(
-            'defaultSortFieldName' => 'transresRequest.id',
-            'defaultSortDirection' => 'DESC',
-            'wrap-queries' => true
-        );
-        $paginator  = $this->get('knp_paginator');
-        $transresRequests = $paginator->paginate(
-            $query,
-            $request->query->get('page', 1),   /*page number*/
-            10,                                         /*limit per page*/
-            $paginationParams
-        );
-        $event = $stopwatch->stop('myRequestsAction');
-        echo "myRequestsAction duration: ".($event->getDuration()/1000)." sec<br>";
-        echo "myRequestsAction memory: ".($event->getMemory()/1000000)." MB<br>";
-        return array(
-            'filterDisable' => true, //testing
-            'transresRequests' => $transresRequests,
-            //'allTransresRequests' => $allTransresRequests,
-            //'project' => null,
-            //'filterform' => $filterform->createView(),
-            'title' => $title,
-            'requestTotalFeeHtml' => null, //$requestTotalFeeHtml
-            //'advancedFilter' => $advancedFilter,
-            'project' => null,
-            'hideaction' => true,
-            'hiderows' => true,
-
-        );
-    }
+//    public function testingReturn($request,$stopwatch=null) {
+//        //TESTING
+//        $em = $this->getDoctrine()->getManager();
+//        $title = "Work Requests";
+//        $repository = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
+//        $dql =  $repository->createQueryBuilder("transresRequest");
+//        $dql->select('transresRequest');
+//        $dql->where("transresRequest.id=2");
+//        $query = $em->createQuery($dql);
+//        $paginationParams = array(
+//            'defaultSortFieldName' => 'transresRequest.id',
+//            'defaultSortDirection' => 'DESC',
+//            'wrap-queries' => true
+//        );
+//        $paginator  = $this->get('knp_paginator');
+//        $transresRequests = $paginator->paginate(
+//            $query,
+//            $request->query->get('page', 1),   /*page number*/
+//            10,                                         /*limit per page*/
+//            $paginationParams
+//        );
+//        $event = $stopwatch->stop('myRequestsAction');
+//        echo "myRequestsAction duration: ".($event->getDuration()/1000)." sec<br>";
+//        echo "myRequestsAction memory: ".($event->getMemory()/1000000)." MB<br>";
+//        return array(
+//            'filterDisable' => true, //testing
+//            'transresRequests' => $transresRequests,
+//            //'allTransresRequests' => $allTransresRequests,
+//            //'project' => null,
+//            //'filterform' => $filterform->createView(),
+//            'title' => $title,
+//            'requestTotalFeeHtml' => null, //$requestTotalFeeHtml
+//            //'advancedFilter' => $advancedFilter,
+//            'project' => null,
+//            'hideaction' => true,
+//            'hiderows' => true,
+//
+//        );
+//    }
 
 
 
