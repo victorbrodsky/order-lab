@@ -155,7 +155,7 @@ $this->headers[$key] = $values;
 $this->headers[$key] = array_merge($this->headers[$key], $values);
 }
 if ('cache-control'=== $key) {
-$this->cacheControl = $this->parseCacheControl(implode(', ', $this->headers[$key]));
+$this->cacheControl = $this->parseCacheControl($values[0]);
 }
 }
 public function has($key)
@@ -282,9 +282,6 @@ $file = new UploadedFile($file['tmp_name'], $file['name'], $file['type'], $file[
 }
 } else {
 $file = array_map(array($this,'convertFileInformation'), $file);
-if (array_keys($keys) === $keys) {
-$file = array_filter($file);
-}
 }
 }
 return $file;
@@ -340,7 +337,7 @@ $authorizationHeader = $this->parameters['REDIRECT_HTTP_AUTHORIZATION'];
 if (null !== $authorizationHeader) {
 if (0 === stripos($authorizationHeader,'basic ')) {
 $exploded = explode(':', base64_decode(substr($authorizationHeader, 6)), 2);
-if (2 == count($exploded)) {
+if (count($exploded) == 2) {
 list($headers['PHP_AUTH_USER'], $headers['PHP_AUTH_PW']) = $exploded;
 }
 } elseif (empty($this->parameters['PHP_AUTH_DIGEST']) && (0 === stripos($authorizationHeader,'digest '))) {
@@ -424,6 +421,7 @@ protected $defaultLocale ='en';
 protected static $formats;
 protected static $requestFactory;
 private $isHostValid = true;
+private $isClientIpsValid = true;
 private $isForwardedValid = true;
 private static $trustedHeaderSet = -1;
 private static $trustedHeaderNames = array(
@@ -557,22 +555,22 @@ self::$requestFactory = $callable;
 public function duplicate(array $query = null, array $request = null, array $attributes = null, array $cookies = null, array $files = null, array $server = null)
 {
 $dup = clone $this;
-if (null !== $query) {
+if ($query !== null) {
 $dup->query = new ParameterBag($query);
 }
-if (null !== $request) {
+if ($request !== null) {
 $dup->request = new ParameterBag($request);
 }
-if (null !== $attributes) {
+if ($attributes !== null) {
 $dup->attributes = new ParameterBag($attributes);
 }
-if (null !== $cookies) {
+if ($cookies !== null) {
 $dup->cookies = new ParameterBag($cookies);
 }
-if (null !== $files) {
+if ($files !== null) {
 $dup->files = new FileBag($files);
 }
-if (null !== $server) {
+if ($server !== null) {
 $dup->server = new ServerBag($server);
 $dup->headers = new HeaderBag($dup->server->getHeaders());
 }
@@ -611,18 +609,9 @@ $content = $this->getContent();
 } catch (\LogicException $e) {
 return trigger_error($e, E_USER_ERROR);
 }
-$cookieHeader ='';
-$cookies = array();
-foreach ($this->cookies as $k => $v) {
-$cookies[] = $k.'='.$v;
-}
-if (!empty($cookies)) {
-$cookieHeader ='Cookie: '.implode('; ', $cookies)."\r\n";
-}
 return
 sprintf('%s %s %s', $this->getMethod(), $this->getRequestUri(), $this->server->get('SERVER_PROTOCOL'))."\r\n".
-$this->headers.
-$cookieHeader."\r\n".
+$this->headers."\r\n".
 $content;
 }
 public function overrideGlobals()
@@ -652,7 +641,7 @@ public static function setTrustedProxies(array $proxies)
 {
 self::$trustedProxies = $proxies;
 if (2 > func_num_args()) {
-@trigger_error(sprintf('The %s() method expects a bit field of Request::HEADER_* as second argument since Symfony 3.3. Defining it will be required in 4.0. ', __METHOD__), E_USER_DEPRECATED);
+@trigger_error(sprintf('The %s() method expects a bit field of Request::HEADER_* as second argument since version 3.3. Defining it will be required in 4.0. ', __METHOD__), E_USER_DEPRECATED);
 return;
 }
 $trustedHeaderSet = (int) func_get_arg(1);
@@ -682,7 +671,7 @@ return self::$trustedHostPatterns;
 }
 public static function setTrustedHeaderName($key, $value)
 {
-@trigger_error(sprintf('The "%s()" method is deprecated since Symfony 3.3 and will be removed in 4.0. Use the $trustedHeaderSet argument of the Request::setTrustedProxies() method instead.', __METHOD__), E_USER_DEPRECATED);
+@trigger_error(sprintf('The "%s()" method is deprecated since version 3.3 and will be removed in 4.0. Use the $trustedHeaderSet argument of the Request::setTrustedProxies() method instead.', __METHOD__), E_USER_DEPRECATED);
 if ('forwarded'=== $key) {
 $key = self::HEADER_FORWARDED;
 } elseif ('client_ip'=== $key) {
@@ -707,7 +696,7 @@ self::$trustedHeaderSet &= ~$key;
 public static function getTrustedHeaderName($key)
 {
 if (2 > func_num_args() || func_get_arg(1)) {
-@trigger_error(sprintf('The "%s()" method is deprecated since Symfony 3.3 and will be removed in 4.0. Use the Request::getTrustedHeaderSet() method instead.', __METHOD__), E_USER_DEPRECATED);
+@trigger_error(sprintf('The "%s()" method is deprecated since version 3.3 and will be removed in 4.0. Use the Request::getTrustedHeaderSet() method instead.', __METHOD__), E_USER_DEPRECATED);
 }
 if (!array_key_exists($key, self::$trustedHeaders)) {
 throw new \InvalidArgumentException(sprintf('Unable to get the trusted header name for key "%s".', $key));
@@ -822,7 +811,7 @@ $host = $host[0];
 } elseif (!$host = $this->headers->get('HOST')) {
 return $this->server->get('SERVER_PORT');
 }
-if ('['=== $host[0]) {
+if ($host[0] ==='[') {
 $pos = strpos($host,':', strrpos($host,']'));
 } else {
 $pos = strrpos($host,':');
@@ -853,7 +842,7 @@ public function getHttpHost()
 {
 $scheme = $this->getScheme();
 $port = $this->getPort();
-if (('http'== $scheme && 80 == $port) || ('https'== $scheme && 443 == $port)) {
+if (('http'== $scheme && $port == 80) || ('https'== $scheme && $port == 443)) {
 return $this->getHost();
 }
 return $this->getHost().':'.$port;
@@ -1056,7 +1045,7 @@ return $this->getMethod() === strtoupper($method);
 public function isMethodSafe()
 {
 if (!func_num_args() || func_get_arg(0)) {
-@trigger_error('Checking only for cacheable HTTP methods with Symfony\Component\HttpFoundation\Request::isMethodSafe() is deprecated since Symfony 3.2 and will throw an exception in 4.0. Disable checking only for cacheable methods by calling the method with `false` as first argument or use the Request::isMethodCacheable() instead.', E_USER_DEPRECATED);
+@trigger_error('Checking only for cacheable HTTP methods with Symfony\Component\HttpFoundation\Request::isMethodSafe() is deprecated since version 3.2 and will throw an exception in 4.0. Disable checking only for cacheable methods by calling the method with `false` as first argument or use the Request::isMethodCacheable() instead.', E_USER_DEPRECATED);
 return in_array($this->getMethod(), array('GET','HEAD'));
 }
 return in_array($this->getMethod(), array('GET','HEAD','OPTIONS','TRACE'));
@@ -1144,7 +1133,7 @@ $lang = $codes[1];
 }
 } else {
 for ($i = 0, $max = count($codes); $i < $max; ++$i) {
-if (0 === $i) {
+if ($i === 0) {
 $lang = strtolower($codes[0]);
 } else {
 $lang .='_'.strtoupper($codes[$i]);
@@ -1184,14 +1173,23 @@ return'XMLHttpRequest'== $this->headers->get('X-Requested-With');
 protected function prepareRequestUri()
 {
 $requestUri ='';
-if ('1'== $this->server->get('IIS_WasUrlRewritten') &&''!= $this->server->get('UNENCODED_URL')) {
+if ($this->headers->has('X_ORIGINAL_URL')) {
+$requestUri = $this->headers->get('X_ORIGINAL_URL');
+$this->headers->remove('X_ORIGINAL_URL');
+$this->server->remove('HTTP_X_ORIGINAL_URL');
+$this->server->remove('UNENCODED_URL');
+$this->server->remove('IIS_WasUrlRewritten');
+} elseif ($this->headers->has('X_REWRITE_URL')) {
+$requestUri = $this->headers->get('X_REWRITE_URL');
+$this->headers->remove('X_REWRITE_URL');
+} elseif ($this->server->get('IIS_WasUrlRewritten') =='1'&& $this->server->get('UNENCODED_URL') !='') {
 $requestUri = $this->server->get('UNENCODED_URL');
 $this->server->remove('UNENCODED_URL');
 $this->server->remove('IIS_WasUrlRewritten');
 } elseif ($this->server->has('REQUEST_URI')) {
 $requestUri = $this->server->get('REQUEST_URI');
 $schemeAndHttpHost = $this->getSchemeAndHttpHost();
-if (0 === strpos($requestUri, $schemeAndHttpHost)) {
+if (strpos($requestUri, $schemeAndHttpHost) === 0) {
 $requestUri = substr($requestUri, strlen($schemeAndHttpHost));
 }
 } elseif ($this->server->has('ORIG_PATH_INFO')) {
@@ -1227,9 +1225,6 @@ $baseUrl ='/'.$seg.$baseUrl;
 } while ($last > $index && (false !== $pos = strpos($path, $baseUrl)) && 0 != $pos);
 }
 $requestUri = $this->getRequestUri();
-if (''!== $requestUri &&'/'!== $requestUri[0]) {
-$requestUri ='/'.$requestUri;
-}
 if ($baseUrl && false !== $prefix = $this->getUrlencodedPrefix($requestUri, $baseUrl)) {
 return $prefix;
 }
@@ -1244,7 +1239,7 @@ $basename = basename($baseUrl);
 if (empty($basename) || !strpos(rawurldecode($truncatedRequestUri), $basename)) {
 return'';
 }
-if (strlen($requestUri) >= strlen($baseUrl) && (false !== $pos = strpos($requestUri, $baseUrl)) && 0 !== $pos) {
+if (strlen($requestUri) >= strlen($baseUrl) && (false !== $pos = strpos($requestUri, $baseUrl)) && $pos !== 0) {
 $baseUrl = substr($requestUri, 0, $pos + strlen($baseUrl));
 }
 return rtrim($baseUrl,'/'.DIRECTORY_SEPARATOR);
@@ -1272,11 +1267,8 @@ $baseUrl = $this->getBaseUrl();
 if (null === ($requestUri = $this->getRequestUri())) {
 return'/';
 }
-if (false !== $pos = strpos($requestUri,'?')) {
+if ($pos = strpos($requestUri,'?')) {
 $requestUri = substr($requestUri, 0, $pos);
-}
-if (''!== $requestUri &&'/'!== $requestUri[0]) {
-$requestUri ='/'.$requestUri;
 }
 $pathInfo = substr($requestUri, strlen($baseUrl));
 if (null !== $baseUrl && (false === $pathInfo ||''=== $pathInfo)) {
@@ -1288,7 +1280,7 @@ return (string) $pathInfo;
 }
 protected static function initializeFormats()
 {
-static::$formats = array('html'=> array('text/html','application/xhtml+xml'),'txt'=> array('text/plain'),'js'=> array('application/javascript','application/x-javascript','text/javascript'),'css'=> array('text/css'),'json'=> array('application/json','application/x-json'),'jsonld'=> array('application/ld+json'),'xml'=> array('text/xml','application/xml','application/x-xml'),'rdf'=> array('application/rdf+xml'),'atom'=> array('application/atom+xml'),'rss'=> array('application/rss+xml'),'form'=> array('application/x-www-form-urlencoded'),
+static::$formats = array('html'=> array('text/html','application/xhtml+xml'),'txt'=> array('text/plain'),'js'=> array('application/javascript','application/x-javascript','text/javascript'),'css'=> array('text/css'),'json'=> array('application/json','application/x-json'),'xml'=> array('text/xml','application/xml','application/x-xml'),'rdf'=> array('application/rdf+xml'),'atom'=> array('application/atom+xml'),'rss'=> array('application/rss+xml'),'form'=> array('application/x-www-form-urlencoded'),
 );
 }
 private function setPhpDefaultLocale($locale)
@@ -1338,11 +1330,6 @@ $clientValues[] = (self::HEADER_CLIENT_PORT === $type ?'0.0.0.0:':'').trim($v);
 if (self::$trustedHeaders[self::HEADER_FORWARDED] && $this->headers->has(self::$trustedHeaders[self::HEADER_FORWARDED])) {
 $forwardedValues = $this->headers->get(self::$trustedHeaders[self::HEADER_FORWARDED]);
 $forwardedValues = preg_match_all(sprintf('{(?:%s)=(?:"?\[?)([a-zA-Z0-9\.:_\-/]*+)}', self::$forwardedParams[$type]), $forwardedValues, $matches) ? $matches[1] : array();
-if (self::HEADER_CLIENT_PORT === $type) {
-foreach ($forwardedValues as $k => $v) {
-$forwardedValues[$k] = substr_replace($v,'0.0.0.0', 0, strrpos($v,':'));
-}
-}
 }
 if (null !== $ip) {
 $clientValues = $this->normalizeAndFilterClientIps($clientValues, $ip);

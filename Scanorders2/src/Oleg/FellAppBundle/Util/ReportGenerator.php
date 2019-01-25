@@ -25,7 +25,7 @@
 namespace Oleg\FellAppBundle\Util;
 
 
-use Clegginabox\PDFMerger\PDFMerger;
+//use Clegginabox\PDFMerger\PDFMerger;
 use Doctrine\ORM\EntityNotFoundException;
 use Oleg\FellAppBundle\Controller\FellAppController;
 use Oleg\FellAppBundle\Form\FellowshipApplicationType;
@@ -586,7 +586,7 @@ class ReportGenerator {
         //$fileUniqueName = $filename;    //$uniqueid . ".pdf";
         //$filenameMerged = $reportPath . '/' . $fileFullReportUniqueName;
         $filenameMerged = $reportPath . DIRECTORY_SEPARATOR . $fileFullReportUniqueName;
-        $this->mergeByPDFMerger($fileNamesArr,$filenameMerged,$entity);
+        $this->mergePDFs($fileNamesArr,$filenameMerged,$entity);
         //$logger->notice("Successfully generated Application report pdf ok; path=" . $filenameMerged );
 
         if( count($entity->getReports()) > 0 ) {
@@ -1025,7 +1025,7 @@ class ReportGenerator {
 //        $pdf->merge('file', $filenameMerged);
 //    }
 
-    protected function mergeByPDFMerger( $filesArr, $filenameMerged, $fellapp ) {
+    protected function mergePDFs( $filesArr, $filenameMerged, $fellapp ) {
 
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
