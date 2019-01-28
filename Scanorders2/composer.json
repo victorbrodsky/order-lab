@@ -30,6 +30,7 @@
 
         "friendsofsymfony/user-bundle": "v2.0.1",
         "friendsofsymfony/jsrouting-bundle": "@stable",
+        "friendsofsymfony/comment-bundle": "v2.0.12",
 
         "knplabs/knp-components": "~1.3",
         "knplabs/knp-paginator-bundle": "~2.5",
@@ -37,18 +38,18 @@
         "phpoffice/phpexcel": "v1.8.0",
         "oneup/uploader-bundle": "~1.3",
 
-        "google/apiclient": "1.1.4",
-        "asimlqt/php-google-spreadsheet-client": "2.3.7",
-        "ensepar/html2pdf-bundle": "v2.0.0",
-        "spraed/pdf-generator-bundle": "v1.6",
-        "knplabs/knp-snappy-bundle": "v1.5.2",
-        "itbz/fpdi": "1.6.1",
-        "bmatzner/fontawesome-bundle": "4.4.0",
-        "yzalis/crontab": "1.0.x-dev",
-        "sinergi/browser-detector": "6.1.2",
-
+        "google/apiclient": "1.0.*@beta",
+        "asimlqt/php-google-spreadsheet-client": "2.3.*",
+        "ensepar/html2pdf-bundle": "~2.0",
+        "spraed/pdf-generator-bundle": "v1.0",
+        "knplabs/knp-snappy-bundle": "v1.4",
+        "itbz/fpdi": "dev-master",
+        "clegginabox/pdf-merger": "dev-master",
+        "bmatzner/fontawesome-bundle": "~4.4",
         "adesigns/calendar-bundle": "^1.1",
-        "friendsofsymfony/comment-bundle": "v2.0.12"
+        "yzalis/crontab": "1.0.x-dev",
+
+        "sinergi/browser-detector": "6.1.2"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",
