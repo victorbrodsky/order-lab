@@ -42,6 +42,7 @@ $connectionParams = array(
     'password' => $password,
     'host' => $host,
     'driver' => $driver,
+    //'port' => 3306
 );
  
 //upload paths can't be NULL
@@ -62,7 +63,9 @@ $container->setParameter('vacreq.uploadpath',$vacrequploadpath);
 $transresuploadpath = "transres";
 $container->setParameter('transres.uploadpath',$transresuploadpath);
 
+//exit("1");
 $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
+//exit("2");
 
 //testing
 //$connected = $conn->connect();
@@ -72,6 +75,7 @@ $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
 $table = 'user_siteParameters';
 
 $schemaManager = $conn->getSchemaManager();
+//exit("3");
 
 if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
 
@@ -84,7 +88,8 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
     //var_dump($params);
     //echo "count=".count($params)."<br>";
 
-    if( $params && is_array($params) && count($params) >= 1 ) {
+    //if( $params && is_array($params) && count($params) >= 1 ) {
+    if( $params && count($params) >= 1 ) {
 
 //        $aDLDAPServerAddress = null;
 //        $aDLDAPServerPort = null;
