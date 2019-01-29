@@ -107,7 +107,7 @@ sed -i -e "s/$sslprivatekey/bash_sslprivatekey/g" order-packer.json
 
 
 echo "*** Creating droplet ... ***"
-DROPLET=$(doctl compute droplet create $IMAGENAME --size 4gb --image $IMAGEID --region nyc3 --wait | tail -1)
+DROPLET=$(doctl compute droplet create $IMAGENAME --size 2gb --image $IMAGEID --region nyc3 --wait | tail -1)
 
 
 echo "*** Starting firefox browser and creating admin user ***"
