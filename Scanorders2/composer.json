@@ -27,6 +27,7 @@
         "twig/twig": "^1.28 || ^2.0",
         "twig/extensions": "^1.5",
         "symfony/workflow": "v3.3.6",
+        "symfony/stopwatch": "v3.3.6",
 
         "friendsofsymfony/user-bundle": "v2.0.1",
         "friendsofsymfony/jsrouting-bundle": "@stable",
