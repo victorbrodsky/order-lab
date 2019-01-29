@@ -16,7 +16,7 @@
         "doctrine/doctrine-fixtures-bundle" : "^2.2",
         "stof/doctrine-extensions-bundle": "~1.1@dev",
 
-        "symfony/symfony": "3.3.*",
+        "symfony/symfony": "v3.3.6",
         "symfony/swiftmailer-bundle": "v2.6.7",
         "symfony/monolog-bundle": "~2.4",
         "symfony/security-bundle": "3.3.*",
@@ -26,8 +26,8 @@
         "symfony/assetic-bundle": "^2.8",
         "twig/twig": "^1.28 || ^2.0",
         "twig/extensions": "^1.5",
-        "symfony/workflow": "3.3.*",
-        "symfony/stopwatch": "3.3.*",
+        "symfony/workflow": "v3.3.6",
+        "symfony/stopwatch": "v3.3.6",
 
         "friendsofsymfony/user-bundle": "v2.0.1",
         "friendsofsymfony/jsrouting-bundle": "@stable",
