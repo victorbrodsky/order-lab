@@ -52,6 +52,13 @@ class InitialConfigurationType extends AbstractType
             'attr' => array('class'=>'form-control')
         ));
 
+        $builder->add('connectionChannel',ChoiceType::class,array( //flipped
+            'label'=>'Connection Channel (http or https; Clearing Cache is required):',
+            'choices' => array("http"=>"http", "https"=>"https"),
+            'choices_as_values' => true,
+            'attr' => array('class'=>'form-control')
+        ));
+
         //Name of Parent Organization (if applicable): [ ]
         $builder->add('institutionurl',null,array(
             'label'=>'Institution URL (Copyright Link in Footer):',
