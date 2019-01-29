@@ -131,7 +131,7 @@
 		   "/sbin/mkswap /var/swap.1",
 		   "/sbin/swapon /var/swap.1",
 		   "composer self-update",
-           "php -dmemory_limit=-1 /usr/local/bin/composer update",
+           "php -dmemory_limit=-1 /usr/local/bin/composer install",
 		   "git pull",
            "git rev-parse HEAD",		   
 	       "sudo chmod +x /usr/local/bin/order-lab/Scanorders2/deploy_prod.sh",
