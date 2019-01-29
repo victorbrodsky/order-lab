@@ -100,9 +100,14 @@ sed -i -e "s/$parameters/parameters_bash_file/g" order-packer.json
 sed -i -e "s/$dbuser/bash_dbuser/g" order-packer.json
 sed -i -e "s/$dbpass/bash_dbpass/g" order-packer.json
 
+sed -i -e "s/$https/bash_https/g" order-packer.json
+sed -i -e "s/$domainname/bash_domainname/g" order-packer.json
+sed -i -e "s/$sslcertificate/bash_sslcertificate/g" order-packer.json
+sed -i -e "s/$sslprivatekey/bash_sslprivatekey/g" order-packer.json
+
 
 echo "*** Creating droplet ... ***"
-DROPLET=$(doctl compute droplet create $IMAGENAME --size 1gb --image $IMAGEID --region nyc3 --wait | tail -1)
+DROPLET=$(doctl compute droplet create $IMAGENAME --size 4gb --image $IMAGEID --region nyc3 --wait | tail -1)
 
 
 echo "*** Starting firefox browser and creating admin user ***"
