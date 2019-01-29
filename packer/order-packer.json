@@ -92,7 +92,8 @@
 	  
 	  {
         "type": "shell",
-        "inline": [  
+        "inline": [ 
+           "echo ### create ssl folder /usr/local/bin/order-lab/ssl ###",		
 		   "sudo mkdir /usr/local/bin/order-lab/ssl"
          ]    
       },
@@ -111,7 +112,8 @@
 
 	   {
 		   "type": "shell",
-           "inline": [  
+           "inline": [ 
+		   "echo ### enable ssl ###",		   
 		   "cp /usr/local/bin/order-lab/packer/default-ssl.conf /etc/apache2/sites-available/",
            "sudo a2enmod ssl",          
 		   "sudo a2enmod headers",	
@@ -122,8 +124,10 @@
 	  
 	  {
         "type": "shell",
-        "inline": [             
+        "inline": [ 
+		   "echo ### composer and deploy ###",
            "cd /usr/local/bin/order-lab/Scanorders2",
+		   "composer self-update",
            "composer update",
 		   "git pull",
            "git rev-parse HEAD",		   
