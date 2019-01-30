@@ -4698,7 +4698,23 @@ class TransResUtil
         }
 
         if( !$projectSpecialty ) {
-            $projectSpecialty = $project->getProjectSpecialty();
+            if( $project ) {
+                $projectSpecialty = $project->getProjectSpecialty();
+            } else {
+                //use the first project specialty as default
+                $specialties = $this->em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->findBy(
+                    array(
+                        'type' => array("default","user-added")
+                    ),
+                    array('orderinlist' => 'ASC')
+                );
+                if( count($specialties) > 0 ) {
+                    $projectSpecialty = $specialties[0];
+                    //exit("projectSpecialty=$projectSpecialty ");
+                } else {
+                    throw new \Exception("SpecialtyList is empty (no items with type 'default' or 'user-added')");
+                }
+            }
         }
 
         $projectSpecialtyAbbreviation = $projectSpecialty->getAbbreviation();
@@ -4945,7 +4961,7 @@ class TransResUtil
     }
     public function getDelayedRequestRemindersCount( $startDate, $endDate, $projectSpecialtyObjects, $states=null ) {
 
-        $transresRequestUtil = $this->container->get('transres_request_util');
+        //$transresRequestUtil = $this->container->get('transres_request_util');
 
         $projectSpecialtyObjectStr = null;
         if( count($projectSpecialtyObjects) > 0 ) {
