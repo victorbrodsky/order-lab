@@ -105,7 +105,7 @@ echo "*** Creating droplet ... ***"
 #DROPLET=$(doctl compute droplet create $IMAGENAME --size 2gb --image $IMAGEID --region nyc3 --wait | tail -1)
 
 
-DROPLETIP="165.227.65.42"
+DROPLETIP=165.227.65.42
 
 if [ -z "$https" ]
   then 	
