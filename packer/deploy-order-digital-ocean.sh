@@ -12,6 +12,14 @@
 #$8 intermediate_certificate.ca-crt 
 #$9 ssl.key - optional
 
+#http: 
+#1) bash deploy-order-digital-ocean.sh API-TOKEN-FROM-STEP-1 parameters.yml dbusername dbpassword
+
+#https: 
+#1) copy sslcertificate sslprivatekey files to the packer folder
+#2) bash deploy-order-digital-ocean.sh API-TOKEN-FROM-STEP-1 parameters.yml dbusername dbpassword http domainname sslcertificate sslprivatekey
+#3) select 'https' connection channel on the domainname/order/directory/admin/first-time-login-generation-init/ page 
+
 apitoken=$1
 parameters=$2
 dbuser=$3

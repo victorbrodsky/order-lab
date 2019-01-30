@@ -4807,6 +4807,21 @@ class DashboardUtil
                 $reminderDelay = 14; //default 14 days
             }
             $combinedData["Project requests taking longer than $reminderDelay days to review"] = $delayedProjectsArr;
+            //testing.
+            //It's not possible:
+            //1) we don't have an appropriate filter on the project/request lists
+            //2) each bar (in our case each bar is a mix of the projects, requests, invoices count) can lead only to one link
+//            $delayedProjectsData = array();
+//            foreach($delayedProjectsArr as $date=>$value ) {
+//                $linkFilterArr = array();
+//                $link = $this->container->get('router')->generate(
+//                    'translationalresearch_project_reminder_show',
+//                    $linkFilterArr,
+//                    UrlGeneratorInterface::ABSOLUTE_URL
+//                );
+//                $delayedProjectsData[$date] = array('value'=>$value,'link'=>$link);
+//            }
+//            $combinedData["Project requests taking longer than $reminderDelay days to review"] = $delayedProjectsData;
 
             //$combinedData['Delayed Pending Work Request'] = $delayedRequestsArr;
             $reminderDelay = $transresUtil->getTransresSiteProjectParameter("pendingRequestReminderDelay", null, $projectSpecialtyObject);
