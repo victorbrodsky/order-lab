@@ -217,6 +217,24 @@ class AdminController extends Controller
             $adminRes = $this->generateAdministratorAction(true);
             //exit($adminRes);
 
+            //TODO: $channel
+            if( $channel && $channel == "https" ) {
+                //set channel in SiteParameters to https
+                $entities = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+                if (count($entities) != 1) {
+                    $userServiceUtil = $this->get('user_service_utility');
+                    $userServiceUtil->generateSiteParameters();
+                    $entities = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+                }
+                if (count($entities) != 1) {
+                    exit('Must have only one parameter object. Found ' . count($entities) . ' object(s)');
+                    //throw new \Exception( 'Must have only one parameter object. Found '.count($entities).' object(s)' );
+                }
+                $entity = $entities[0];
+                $entity->setConnectionChannel("https");
+                $em->flush($entity);
+            }
+
             $updateres = $this->updateApplication();
 
             $adminRes = $adminRes . " <br> " .$updateres;
