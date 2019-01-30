@@ -12,8 +12,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Defaultreviewer controller.
- *
- * @Route("default-reviewers")
  */
 class DefaultReviewerController extends Controller
 {
@@ -21,7 +19,7 @@ class DefaultReviewerController extends Controller
     /**
      * Lists defaultReviewer states: irb_review, committee_review, final_review
      *
-     * @Route("/{specialtyStr}", name="translationalresearch_default-reviewer_index")
+     * @Route("/default-reviewers/{specialtyStr}", name="translationalresearch_default-reviewer_index")
      * @Template("OlegTranslationalResearchBundle:DefaultReviewer:index.html.twig")
      * @Method("GET")
      */
@@ -63,7 +61,7 @@ class DefaultReviewerController extends Controller
     /**
      * Lists all defaultReviewer entities for a particular state.
      *
-     * @Route("/stage/{stateStr}/{specialtyStr}", name="translationalresearch_state-default-reviewer_index")
+     * @Route("/default-reviewers/stage/{stateStr}/{specialtyStr}", name="translationalresearch_state-default-reviewer_index")
      * @Template("OlegTranslationalResearchBundle:DefaultReviewer:state-default-reviewer-index.html.twig")
      * @Method("GET")
      */
@@ -130,7 +128,7 @@ class DefaultReviewerController extends Controller
     /**
      * Creates a new defaultReviewer entity.
      *
-     * @Route("/new/{stateStr}/{specialtyStr}", name="translationalresearch_default-reviewer_new")
+     * @Route("/default-reviewers/new/{stateStr}/{specialtyStr}", name="translationalresearch_default-reviewer_new")
      * @Template("OlegTranslationalResearchBundle:DefaultReviewer:new.html.twig")
      * @Method({"GET", "POST"})
      */
@@ -189,7 +187,7 @@ class DefaultReviewerController extends Controller
     /**
      * Finds and displays a defaultReviewer entity.
      *
-     * @Route("/show/{id}", name="translationalresearch_default-reviewer_show")
+     * @Route("/default-reviewers/show/{id}", name="translationalresearch_default-reviewer_show")
      * @Template("OlegTranslationalResearchBundle:DefaultReviewer:new.html.twig")
      * @Method("GET")
      */
@@ -222,7 +220,7 @@ class DefaultReviewerController extends Controller
     /**
      * Displays a form to edit an existing defaultReviewer entity.
      *
-     * @Route("/edit/{id}", name="translationalresearch_default-reviewer_edit")
+     * @Route("/default-reviewers/edit/{id}", name="translationalresearch_default-reviewer_edit")
      * @Template("OlegTranslationalResearchBundle:DefaultReviewer:new.html.twig")
      * @Method({"GET", "POST"})
      */
@@ -284,7 +282,7 @@ class DefaultReviewerController extends Controller
     /**
      * Deletes a defaultReviewer entity.
      *
-     * @Route("/delete/{id}", name="translationalresearch_default-reviewer_delete")
+     * @Route("/default-reviewers/delete/{id}", name="translationalresearch_default-reviewer_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, DefaultReviewer $defaultReviewer)
