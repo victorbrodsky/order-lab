@@ -107,7 +107,7 @@ echo "*** Creating droplet ... ***"
 
 DROPLETIP=165.227.65.42
 
-if [ -z "$https" ]
+if [ -z "$https" ] && [ "$https" = "https" ]
   then 	
     DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/"
   else

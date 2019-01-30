@@ -158,9 +158,9 @@ class AdminController extends Controller
 
     /**
      * run: http://localhost/order/directory/admin/first-time-login-generation-init/
-     * @Route("/first-time-login-generation-init/", name="first-time-login-generation-init")
+     * @Route("/first-time-login-generation-init/{channel}", name="first-time-login-generation-init")
      */
-    public function firstTimeLoginGenerationAction()
+    public function firstTimeLoginGenerationAction(Request $request, $channel=null)
     {
         $em = $this->getDoctrine()->getManager();
         $users = $roles = $em->getRepository('OlegUserdirectoryBundle:User')->findAll();
