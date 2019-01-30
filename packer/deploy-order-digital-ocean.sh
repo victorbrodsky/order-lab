@@ -125,7 +125,19 @@ echo "droplet IP=$DROPLETIP"
 
 sleep 30
 
-DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/"
+#DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/"
+
+if [ -z "$https" ]
+  then 	
+    DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/"
+  else
+    DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/https"
+	
+	#doctl compute domain create domain_name --ip-address droplet_ip_address
+	#doctl compute domain records create $domainname --record-type A --record-name www --record data $DROPLETIP -v
+	DOMAIN=$(doctl compute domain records create $domainname --record-type A --record-name www --record data $DROPLETIP -v)
+	echo "DOMAIN=$DOMAIN"
+fi
 
 echo "Trying to open a web browser... You can try to open a web browser manually and go to $DROPLETIPWEB"
 
