@@ -16,7 +16,7 @@
         "doctrine/doctrine-fixtures-bundle" : "^2.2",
         "stof/doctrine-extensions-bundle": "~1.1@dev",
 
-        "symfony/symfony": "v3.3.6",
+        "symfony/symfony": "3.3.*",
         "symfony/swiftmailer-bundle": "v2.6.7",
         "symfony/monolog-bundle": "~2.4",
         "symfony/security-bundle": "3.3.*",
