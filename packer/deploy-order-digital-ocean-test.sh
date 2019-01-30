@@ -107,16 +107,16 @@ echo "*** Creating droplet ... ***"
 
 DROPLETIP=165.227.65.42
 
-if [ -z "$https" ] && [ "$https" = "https" ]
+if [ ! -z "$https" ] && [ "$https" = "https" ]
   then 	
-    DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/"
-  else
-    DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/https"
+	DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/https"
 	
 	#doctl compute domain create domain_name --ip-address droplet_ip_address
 	#doctl compute domain records create $domainname --record-type A --record-name www --record data $DROPLETIP -v
 	DOMAIN=$(doctl compute domain records create $domainname --record-type A --record-name www --record-data $DROPLETIP -v)
 	echo "DOMAIN=$DOMAIN"
+  else
+    DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/"
 fi
 echo "DROPLETIPWEB=$DROPLETIPWEB"
 
