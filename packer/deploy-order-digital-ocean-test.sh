@@ -109,13 +109,13 @@ DROPLETIP="165.227.65.42"
 
 if [ -z "$https" ]
   then 	
+    DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/"
+  else
     DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/https"
 	
 	#doctl compute domain create domain_name --ip-address droplet_ip_address
 	DOMAIN=$(doctl compute domain create $domainname --ip-address $DROPLETIP)
 	echo "DOMAIN=$DOMAIN"
-  else
-    DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/"
 fi
 echo "DROPLETIPWEB=$DROPLETIPWEB"
 
