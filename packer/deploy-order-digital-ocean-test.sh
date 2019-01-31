@@ -113,10 +113,10 @@ if [ ! -z "$https" ] && [ "$https" = "https" ]
 	#1) doctl compute domain records list $domainname
 	LIST=$(doctl compute domain records list $domainname | grep www | awk '{print $1}')
 	echo "LIST=$LIST"
-	#listinfo=( $LIST )
+	#listarr=( $LIST )
 	#RECORDID="${listinfo[0]}"
 	
-	for i in $(LIST); do
+	for i in $LIST; do
 		echo "RECORDID=$i"
 	done
   
