@@ -129,12 +129,11 @@ sleep 30
 
 if [ ! -z "$https" ] && [ "$https" = "https" ]
   then 	
-	DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/https"
-	
 	#doctl compute domain create domain_name --ip-address droplet_ip_address
 	#doctl compute domain records create $domainname --record-type A --record-name www --record data $DROPLETIP -v
 	DOMAIN=$(doctl compute domain records create $domainname --record-type A --record-name www --record-data $DROPLETIP -v)
 	echo "DOMAIN=$DOMAIN"
+	DROPLETIPWEB="http://www.$domainname/order/directory/admin/first-time-login-generation-init/https"
   else
     DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/"
 fi
