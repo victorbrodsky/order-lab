@@ -2125,6 +2125,10 @@ class User extends BaseUser {
             $res = implode("; ",$resArr);
         }
 
+        if( $this->isLocked() ) {
+            $res = $res . "Account is locked";
+        }
+
         return $res;
     }
 

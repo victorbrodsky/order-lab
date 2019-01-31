@@ -109,12 +109,21 @@ DROPLETIP=165.227.65.42
 
 if [ ! -z "$https" ] && [ "$https" = "https" ]
   then 	
-	DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/https"
+	#check and delete existing domain DNS records www
+	#1) doctl compute domain records list $domainname
+	LIST=$(doctl compute domain records list $domainname | grep www | awk '{print $1}')
+	#listinfo=( $LIST )
+	#RECORDID="${listinfo[0]}"
 	
+	for i in $(LIST); do
+		echo "$i"
+	done
+  
 	#doctl compute domain create domain_name --ip-address droplet_ip_address
 	#doctl compute domain records create $domainname --record-type A --record-name www --record data $DROPLETIP -v
 	DOMAIN=$(doctl compute domain records create $domainname --record-type A --record-name www --record-data $DROPLETIP -v)
 	echo "DOMAIN=$DOMAIN"
+	DROPLETIPWEB="http://www.$domainname/order/directory/admin/first-time-login-generation-init/https"
   else
     DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/"
 fi

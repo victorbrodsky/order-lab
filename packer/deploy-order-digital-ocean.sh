@@ -129,6 +129,16 @@ sleep 120
 
 if [ ! -z "$https" ] && [ "$https" = "https" ]
   then 	
+	#check and delete existing domain DNS records www
+	#1) doctl compute domain records list $domainname
+	LIST=$(doctl compute domain records list $domainname | grep www | awk '{print $1}')
+	#listinfo=( $LIST )
+	#RECORDID="${listinfo[0]}"
+	
+	for i in $(LIST); do
+		echo "$i"
+	done
+  
 	#doctl compute domain create domain_name --ip-address droplet_ip_address
 	#doctl compute domain records create $domainname --record-type A --record-name www --record data $DROPLETIP -v
 	DOMAIN=$(doctl compute domain records create $domainname --record-type A --record-name www --record-data $DROPLETIP -v)
