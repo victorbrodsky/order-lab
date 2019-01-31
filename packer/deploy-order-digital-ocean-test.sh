@@ -112,6 +112,7 @@ if [ ! -z "$https" ] && [ "$https" = "https" ]
 	#check and delete existing domain DNS records www
 	#1) doctl compute domain records list $domainname
 	LIST=$(doctl compute domain records list $domainname | grep www | awk '{print $1}')
+	echo "LIST=$LIST"
 	#listinfo=( $LIST )
 	#RECORDID="${listinfo[0]}"
 	
