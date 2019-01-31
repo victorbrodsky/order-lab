@@ -137,9 +137,9 @@ if [ ! -z "$https" ] && [ "$https" = "https" ]
 	
 	#2) doctl compute domain records delete $domainname record_id
 	for recordid in $LIST; do
-		echo "Delete RECORDID=$recordid"
+		echo "Delete old DNS record ID=$recordid"
 		DELETERES=$(doctl compute domain records delete $domainname $recordid -v)
-		echo "DELETERES=$DELETERES"
+		#echo "DELETERES=$DELETERES"
 	done
   
 	#doctl compute domain create domain_name --ip-address droplet_ip_address
