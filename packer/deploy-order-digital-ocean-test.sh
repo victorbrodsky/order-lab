@@ -116,14 +116,16 @@ if [ ! -z "$https" ] && [ "$https" = "https" ]
 	#listarr=( $LIST )
 	#RECORDID="${listinfo[0]}"
 	
-	for i in $LIST; do
-		echo "RECORDID=$i"
+	#2) doctl compute domain records delete $domainname record_id
+	for recordid in $LIST; do
+		echo "Delete RECORDID=$recordid"
+		DELETERES=$(doctl compute domain records delete $domainname $recordid -v)
+		echo "DELETERES=$DELETERES"
 	done
   
-	#doctl compute domain create domain_name --ip-address droplet_ip_address
 	#doctl compute domain records create $domainname --record-type A --record-name www --record data $DROPLETIP -v
-	DOMAIN=$(doctl compute domain records create $domainname --record-type A --record-name www --record-data $DROPLETIP -v)
-	echo "DOMAIN=$DOMAIN"
+	#DOMAIN=$(doctl compute domain records create $domainname --record-type A --record-name www --record-data $DROPLETIP -v)
+	#echo "DOMAIN=$DOMAIN"
 	DROPLETIPWEB="http://www.$domainname/order/directory/admin/first-time-login-generation-init/https"
   else
     DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/"
