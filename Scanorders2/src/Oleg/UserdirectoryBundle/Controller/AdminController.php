@@ -158,9 +158,11 @@ class AdminController extends Controller
 
     /**
      * run: http://localhost/order/directory/admin/first-time-login-generation-init/
-     * @Route("/first-time-login-generation-init/{channel}", name="first-time-login-generation-init")
+     * run: http://localhost/order/directory/admin/first-time-login-generation-init/https
+     * @Route("/first-time-login-generation-init/", name="first-time-login-generation-init")
+     * @Route("/first-time-login-generation-init/https", name="first-time-login-generation-init-https")
      */
-    public function firstTimeLoginGenerationAction(Request $request, $channel=null)
+    public function firstTimeLoginGenerationAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
         $users = $roles = $em->getRepository('OlegUserdirectoryBundle:User')->findAll();
@@ -218,7 +220,8 @@ class AdminController extends Controller
             //exit($adminRes);
 
             //TODO: $channel
-            if( $channel && $channel == "https" ) {
+            //if( $channel && $channel == "https" ) {
+            if( $request->get('_route') == "first-time-login-generation-init-https" ) {
                 //set channel in SiteParameters to https
                 $entities = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
                 if (count($entities) != 1) {

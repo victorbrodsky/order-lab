@@ -124,7 +124,9 @@ class MaintenanceListener {
             return;
         }
 
-        if( $event->getRequest()->get('_route') == "first-time-login-generation-init" ) {
+        if( $event->getRequest()->get('_route') == "first-time-login-generation-init" ||
+            $event->getRequest()->get('_route') == "first-time-login-generation-init-https"
+        ) {
             return;
         }
 
