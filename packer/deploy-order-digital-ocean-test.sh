@@ -117,7 +117,7 @@ if [ ! -z "$https" ] && [ "$https" = "https" ]
 	#RECORDID="${listinfo[0]}"
 	
 	for i in $(LIST); do
-		echo "$i"
+		echo "RECORDID=$i"
 	done
   
 	#doctl compute domain create domain_name --ip-address droplet_ip_address
