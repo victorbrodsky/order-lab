@@ -2325,7 +2325,8 @@ class ProjectController extends Controller
             exit("No Projects to Export to Excel");
         }
 
-        ini_set('memory_limit', '3072M');
+        //ini_set('memory_limit', '4096M');
+        //ini_set('memory_limit', '128M');
 
         //$em = $this->getDoctrine()->getManager();
         $transresUtil = $this->container->get('transres_util');
@@ -2339,7 +2340,13 @@ class ProjectController extends Controller
 
         $projectIdsArr = explode(',', $ids);
 
+        //TODO:
+        //https://phpspreadsheet.readthedocs.io/en/develop/topics/memory_saving/
+        // $cache = new MyCustomPsr16Implementation();
+        // \PhpOffice\PhpSpreadsheet\Settings::setCache($cache);
+
         $excelBlob = $transresUtil->createProjectListExcel($projectIdsArr,$limit);
+        exit("got excel blob");
 
         //$writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($excelBlob, 'Excel2007');
         $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($excelBlob, 'Xlsx');
