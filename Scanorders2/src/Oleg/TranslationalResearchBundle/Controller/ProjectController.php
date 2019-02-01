@@ -2343,10 +2343,14 @@ class ProjectController extends Controller
         //TODO:
         //https://phpspreadsheet.readthedocs.io/en/develop/topics/memory_saving/
         // $cache = new MyCustomPsr16Implementation();
+        //
+        // composer require symfony/cache
+        // use Symfony\Component\Cache\Simple\FilesystemCache;
+        // $cache = new FilesystemCache();
         // \PhpOffice\PhpSpreadsheet\Settings::setCache($cache);
 
         $excelBlob = $transresUtil->createProjectListExcel($projectIdsArr,$limit);
-        exit("got excel blob");
+        //exit("got excel blob");
 
         //$writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($excelBlob, 'Excel2007');
         $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($excelBlob, 'Xlsx');
