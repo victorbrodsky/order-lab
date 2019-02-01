@@ -5,13 +5,7 @@
     "description": "Order system",
     "autoload": {
         "psr-4": {
-            "Oleg\\CallLogBundle\\": "src/Oleg/CallLogBundle",
-            "Oleg\\DeidentifierBundle\\": "src/Oleg/DeidentifierBundle",
-            "Oleg\\FellAppBundle\\": "src/Oleg/FellAppBundle",
-            "Oleg\\OrderformBundle\\": "src/Oleg/OrderformBundle",
-            "Oleg\\TranslationalResearchBundle\\": "src/Oleg/TranslationalResearchBundle",
-            "Oleg\\UserdirectoryBundle\\": "src/Oleg/UserdirectoryBundle",
-            "Oleg\\VacReqBundle\\": "src/Oleg/VacReqBundle"
+            "": "src/"
         },
         "classmap": [
             "app/AppKernel.php",
@@ -30,15 +24,12 @@
         "symfony/symfony": "3.3.*",
         "symfony/swiftmailer-bundle": "v2.6.7",
         "symfony/monolog-bundle": "~2.4",
-        "symfony/security-bundle": "3.3.*",
         "sensio/distribution-bundle": "^5.0",
         "sensio/framework-extra-bundle": "^3.0",
         "incenteev/composer-parameter-handler": "~2.0",
         "symfony/assetic-bundle": "^2.8",
         "twig/twig": "^1.28 || ^2.0",
         "twig/extensions": "^1.5",
-        "symfony/workflow": "v3.3.6",
-        "symfony/stopwatch": "v3.3.6",
 
         "friendsofsymfony/user-bundle": "v2.0.1",
         "friendsofsymfony/jsrouting-bundle": "@stable",
