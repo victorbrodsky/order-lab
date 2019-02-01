@@ -2365,6 +2365,9 @@ class ProjectController extends Controller
         // Write file to the browser
         $writer->save('php://output');
 
+        $excelBlob->disconnectWorksheets();
+        unset($excelBlob);
+
         exit();
     }
 

@@ -4148,16 +4148,20 @@ class TransResUtil
 
         // Auto size columns for each worksheet
         //\PHPExcel_Shared_Font::setAutoSizeMethod(\PHPExcel_Shared_Font::AUTOSIZE_METHOD_EXACT);
-        foreach ($ea->getWorksheetIterator() as $worksheet) {
+        $autosize = true;
+        $autosize = false;
+        if( $autosize ) {
+            foreach ($ea->getWorksheetIterator() as $worksheet) {
 
-            $ea->setActiveSheetIndex($ea->getIndex($worksheet));
+                $ea->setActiveSheetIndex($ea->getIndex($worksheet));
 
-            $sheet = $ea->getActiveSheet();
-            $cellIterator = $sheet->getRowIterator()->current()->getCellIterator();
-            $cellIterator->setIterateOnlyExistingCells(true);
-            /** @var PHPExcel_Cell $cell */
-            foreach ($cellIterator as $cell) {
-                $sheet->getColumnDimension($cell->getColumn())->setAutoSize(true);
+                $sheet = $ea->getActiveSheet();
+                $cellIterator = $sheet->getRowIterator()->current()->getCellIterator();
+                $cellIterator->setIterateOnlyExistingCells(true);
+                /** @var PHPExcel_Cell $cell */
+                foreach ($cellIterator as $cell) {
+                    $sheet->getColumnDimension($cell->getColumn())->setAutoSize(true);
+                }
             }
         }
 
@@ -4171,7 +4175,7 @@ class TransResUtil
         return null;
     }
     public function fillOutProjectCells($ews, $row, $project) {
-        $transResFormNodeUtil = $this->container->get('transres_formnode_util');
+        //$transResFormNodeUtil = $this->container->get('transres_formnode_util');
 
         $ews->setCellValue('A'.$row, $project->getOid());
         $ews->setCellValue('B'.$row, $this->convertDateToStr($project->getCreateDate()) );
