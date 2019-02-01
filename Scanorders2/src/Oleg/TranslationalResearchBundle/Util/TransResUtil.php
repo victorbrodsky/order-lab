@@ -3853,7 +3853,7 @@ class TransResUtil
             ->setKeywords('excel php office phpexcel lakers')
             ->setCategory('programming');
 
-        $chunkSize = 500;
+        $chunkSize = 100;
         if( count($projectIdsArr) > $chunkSize ) {
             $projectIdsChunkArr = array_chunk($projectIdsArr,$chunkSize);
             $counter = 0;
