@@ -5,6 +5,7 @@
     "description": "Order system",
     "autoload": {
         "psr-4": {
+            "AppBundle\\": "src/AppBundle",
             "Oleg\\CallLogBundle\\": "src/Oleg/CallLogBundle",
             "Oleg\\DeidentifierBundle\\": "src/Oleg/DeidentifierBundle",
             "Oleg\\FellAppBundle\\": "src/Oleg/FellAppBundle",
