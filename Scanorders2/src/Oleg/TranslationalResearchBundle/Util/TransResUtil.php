@@ -3852,10 +3852,11 @@ class TransResUtil
 //            ],
 //        ]);
 
-        $cache = new ApcuCache();
+        //$cache = new ApcuCache();
 
-        //$pool = new \Cache\Adapter\Apcu\ApcuCachePool();
-        //$cache = new \Cache\Bridge\SimpleCache\SimpleCacheBridge($pool);
+        //composer require cache/simple-cache-bridge cache/apcu-adapter
+        $pool = new \Cache\Adapter\Apcu\ApcuCachePool();
+        $cache = new \Cache\Bridge\SimpleCache\SimpleCacheBridge($pool);
 
         \PhpOffice\PhpSpreadsheet\Settings::setCache($cache);
 
@@ -4105,6 +4106,7 @@ class TransResUtil
 
             // clear *all* cache keys
             //$cache->clear();
+
         }//projects
 
         //Total
