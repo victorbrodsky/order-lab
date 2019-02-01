@@ -28,6 +28,7 @@ use Oleg\TranslationalResearchBundle\Entity\IrbReview;
 use Oleg\TranslationalResearchBundle\Entity\SpecialtyList;
 use Oleg\TranslationalResearchBundle\Entity\TransResSiteParameters;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use Symfony\Component\Cache\Simple\FilesystemCache;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
@@ -3835,12 +3836,10 @@ class TransResUtil
         //https://phpspreadsheet.readthedocs.io/en/develop/topics/memory_saving/
         // $cache = new MyCustomPsr16Implementation();
         //
-        // composer require symfony/cache
         // use Symfony\Component\Cache\Simple\FilesystemCache;
         // $cache = new FilesystemCache();
-        // \PhpOffice\PhpSpreadsheet\Settings::setCache($cache);
-        //$cache = new FilesystemCache();
-        // \PhpOffice\PhpSpreadsheet\Settings::setCache($cache);
+        $cache = new FilesystemCache();
+        \PhpOffice\PhpSpreadsheet\Settings::setCache($cache);
 
         $ea = new Spreadsheet(); // ea is short for Excel Application
 
