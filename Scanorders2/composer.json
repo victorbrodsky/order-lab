@@ -4,8 +4,19 @@
     "type": "project",
     "description": "Order system",
     "autoload": {
-        "psr-4": { "": "src/" },
-        "classmap": [ "app/AppKernel.php", "app/AppCache.php" ]
+        "psr-4": {
+            "Oleg\\CallLogBundle\\": "src/Oleg/CallLogBundle",
+            "Oleg\\DeidentifierBundle\\": "src/Oleg/DeidentifierBundle",
+            "Oleg\\FellAppBundle\\": "src/Oleg/FellAppBundle",
+            "Oleg\\OrderformBundle\\": "src/Oleg/OrderformBundle",
+            "Oleg\\TranslationalResearchBundle\\": "src/Oleg/TranslationalResearchBundle",
+            "Oleg\\UserdirectoryBundle\\": "src/Oleg/UserdirectoryBundle",
+            "Oleg\\VacReqBundle\\": "src/Oleg/VacReqBundle"
+        },
+        "classmap": [
+            "app/AppKernel.php",
+            "app/AppCache.php"
+        ]
     },
     "require": {
         "php": ">=5.5.9",
