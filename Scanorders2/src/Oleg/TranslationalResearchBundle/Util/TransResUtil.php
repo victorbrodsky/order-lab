@@ -3855,10 +3855,10 @@ class TransResUtil
         //$cache = new ApcuCache();
 
         //composer require cache/simple-cache-bridge cache/apcu-adapter
-        $pool = new \Cache\Adapter\Apcu\ApcuCachePool();
-        $cache = new \Cache\Bridge\SimpleCache\SimpleCacheBridge($pool);
+        //$pool = new \Cache\Adapter\Apcu\ApcuCachePool();
+        //$cache = new \Cache\Bridge\SimpleCache\SimpleCacheBridge($pool);
 
-        \PhpOffice\PhpSpreadsheet\Settings::setCache($cache);
+        //\PhpOffice\PhpSpreadsheet\Settings::setCache($cache);
 
         $ea = new Spreadsheet(); // ea is short for Excel Application
 
@@ -4103,9 +4103,6 @@ class TransResUtil
             $ews->getStyle('A'.$row.':'.'P'.$row)->applyFromArray($styleLastRow);
 
             $row = $row + 1;
-
-            // clear *all* cache keys
-            //$cache->clear();
 
         }//projects
 
