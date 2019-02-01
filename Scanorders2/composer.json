@@ -5,7 +5,6 @@
     "description": "Order system",
     "autoload": {
         "psr-4": {
-            "AppBundle\\": "src/AppBundle",
             "Oleg\\CallLogBundle\\": "src/Oleg/CallLogBundle",
             "Oleg\\DeidentifierBundle\\": "src/Oleg/DeidentifierBundle",
             "Oleg\\FellAppBundle\\": "src/Oleg/FellAppBundle",
@@ -28,7 +27,7 @@
         "doctrine/doctrine-fixtures-bundle" : "^2.2",
         "stof/doctrine-extensions-bundle": "~1.1@dev",
 
-        "symfony/symfony": "3.3.6",
+        "symfony/symfony": "3.3.*",
         "symfony/swiftmailer-bundle": "v2.6.7",
         "symfony/monolog-bundle": "~2.4",
         "symfony/security-bundle": "3.3.*",
@@ -93,6 +92,7 @@
     "extra": {
         "symfony-app-dir": "app",
         "symfony-bin-dir": "bin",
+        "symfony-var-dir": "var",
         "symfony-web-dir": "web",
         "symfony-tests-dir": "tests",
         "symfony-assets-install": "relative",
