@@ -52,7 +52,11 @@
         "adesigns/calendar-bundle": "^1.1",
         "yzalis/crontab": "1.0.x-dev",
 
-        "sinergi/browser-detector": "6.1.2"
+        "sinergi/browser-detector": "6.1.2",
+        
+        "zendframework/zend-cache": "^2.8",
+        "cache/simple-cache-bridge": "^1.0",
+        "cache/apcu-adapter": "^1.0"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",

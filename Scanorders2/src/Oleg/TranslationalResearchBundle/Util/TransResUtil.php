@@ -28,8 +28,10 @@ use Oleg\TranslationalResearchBundle\Entity\IrbReview;
 use Oleg\TranslationalResearchBundle\Entity\SpecialtyList;
 use Oleg\TranslationalResearchBundle\Entity\TransResSiteParameters;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use Symfony\Component\Cache\Simple\ApcuCache;
 use Symfony\Component\Cache\Simple\FilesystemCache;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Zend\Cache\StorageFactory;
 
 
 /**
@@ -3838,7 +3840,23 @@ class TransResUtil
         //
         // use Symfony\Component\Cache\Simple\FilesystemCache;
         // $cache = new FilesystemCache();
-        $cache = new FilesystemCache();
+        //$cache = new FilesystemCache();
+        // Via factory:
+//        $cache = StorageFactory::factory([
+//            'adapter' => [
+//                'name'    => 'apc',
+//                'options' => ['ttl' => 3600],
+//            ],
+//            'plugins' => [
+//                'exception_handler' => ['throw_exceptions' => false],
+//            ],
+//        ]);
+
+        $cache = new ApcuCache();
+
+        //$pool = new \Cache\Adapter\Apcu\ApcuCachePool();
+        //$cache = new \Cache\Bridge\SimpleCache\SimpleCacheBridge($pool);
+
         \PhpOffice\PhpSpreadsheet\Settings::setCache($cache);
 
         $ea = new Spreadsheet(); // ea is short for Excel Application
@@ -4084,7 +4102,10 @@ class TransResUtil
             $ews->getStyle('A'.$row.':'.'P'.$row)->applyFromArray($styleLastRow);
 
             $row = $row + 1;
-        }//project
+
+            // clear *all* cache keys
+            //$cache->clear();
+        }//projects
 
         //Total
         //$row++;
