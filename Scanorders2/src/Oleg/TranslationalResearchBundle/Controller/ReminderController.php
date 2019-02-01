@@ -32,6 +32,7 @@ class ReminderController extends Controller
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
+        $transresUtil = $this->container->get('transres_util');
         $transresReminderUtil = $this->get('transres_reminder_util');
 
         $routeName = $request->get('_route');
@@ -50,9 +51,29 @@ class ReminderController extends Controller
                 $invoiceCounter = $invoiceCounter + count($result);
             }
 
+            //send reminder emails after 6 months overdue every 3 months for 5 times
+            $criterions = null;
+            $criterionsArr = array();
+            $projectSpecialties = $transresUtil->getTransResProjectSpecialties(false);
+            foreach($projectSpecialties as $projectSpecialty) {
+                $invoiceReminderSchedule = $transresUtil->getTransresSiteProjectParameter('invoiceReminderSchedule',null,$projectSpecialty); //6,9,12,15,18
+                if( $invoiceReminderSchedule ) {
+                    $invoiceReminderScheduleArr = explode(",",$invoiceReminderSchedule);
+                    if( count($invoiceReminderScheduleArr) == 3 ) {
+                        $invoiceDueDateMax = $invoiceReminderScheduleArr[0];    //over due in months (integer) - 6
+                        $reminderInterval = $invoiceReminderScheduleArr[1];     //reminder interval in months (integer) - 3
+                        $maxReminderCount = $invoiceReminderScheduleArr[2];     //max reminder count (integer) - 5
+                        $criterionsArr[] = $projectSpecialty->getName().": send reminder emails after $invoiceDueDateMax months overdue every $reminderInterval months for $maxReminderCount times";
+                    }
+                }
+            }
+            if( count($criterionsArr) > 0 ) {
+                $criterions = ": <br>" . implode("<br>",$criterionsArr);
+            }
+
             return $this->render("OlegTranslationalResearchBundle:Reminder:unpaid-invoice-index.html.twig",
                 array(
-                    'title' => $invoiceCounter." Unpaid Invoices",
+                    'title' => $invoiceCounter." Unpaid Invoices corresponding to the reminder schedule"."".$criterions,
                     'invoiceGroups' => $results,
                     'invoiceCounter' => $invoiceCounter
                 )

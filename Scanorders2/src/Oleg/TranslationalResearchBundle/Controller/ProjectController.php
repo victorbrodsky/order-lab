@@ -2332,13 +2332,17 @@ class ProjectController extends Controller
         $transresUtil = $this->container->get('transres_util');
 
         //[YEAR] [WCMC (top level of actual institution)] [FELLOWSHIP-TYPE] Fellowship Candidate Data generated on [DATE] at [TIME] EST.xls
-        $fileName = "Projects ".date('m/d/Y H:i').".xlsx";
+        //$fileName = "Projects ".date('m/d/Y H:i').".xlsx";
+        $fileName = "Projects ".date('m/d/Y H:i').".csv";
         $fileName = str_replace("  ", " ", $fileName);
         $fileName = str_replace(" ", "-", $fileName);
 
         //$projects = $em->getRepository('OlegTranslationalResearchBundle:Project')->findAll();
 
         $projectIdsArr = explode(',', $ids);
+
+        //$transresUtil->createProjectExcelSpout($projectIdsArr,$fileName,$limit);
+        //exit();
 
         //TODO:
         //https://phpspreadsheet.readthedocs.io/en/develop/topics/memory_saving/

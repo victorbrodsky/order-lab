@@ -18,6 +18,8 @@
 namespace Oleg\TranslationalResearchBundle\Util;
 
 
+use Box\Spout\Common\Type;
+use Box\Spout\Writer\WriterFactory;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
@@ -3825,8 +3827,166 @@ class TransResUtil
         return $invoicesInfos;
     }
 
+    //http://opensource.box.com/spout/getting-started/
+    //https://hotexamples.com/examples/box.spout.writer/WriterFactory/-/php-writerfactory-class-examples.html
+    public function createProjectExcelSpout($projectIdsArr,$fileName,$limit=null) {
+        $writer = WriterFactory::create(Type::CSV);
+        $writer->openToBrowser($fileName);
+
+
+        $writer->addRow([
+            'Project ID',
+            'Submission Date',
+            'Principal Investigator(s)',
+            'Project Title',
+            'Funding',
+            'Status',
+            'Approval Date',
+            $this->getHumanAnimalName().' Expiration Date',
+            'Request ID',
+            'Fund Number',
+            'Completion Status',
+            'Invoice(s) Issued',
+            'Most Recent Invoice Total($)',
+            'Most Recent Invoice Paid($)',
+            'Most Recent Invoice Due($)',
+            'Most Recent Invoice Comment'
+        ]);
+
+//        foreach( $projectIdsArr as $projectId ) {
+//            $data[0] = 1;
+//            $data[1] = 2;
+//            $data[2] = 3;
+//            $writer->addRow($data);
+//        }
+
+        $count = 0;
+
+        foreach( $projectIdsArr as $projectId ) {
+
+            if( $limit && ($count++ > $limit) ) {
+                break;
+            }
+
+            $project = $this->em->getRepository('OlegTranslationalResearchBundle:Project')->find($projectId);
+            if( !$project ) {
+                continue;
+            }
+
+            if( $this->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
+                continue;
+            }
+
+            $data = array();
+
+            $ews = $this->fillOutProjectCellsSpout($writer,$data,$project);
+
+            $projectRequests = 0;
+            $projectTotalInvoices = 0;
+            $projectTotalTotal = 0;
+            $projectTotalPaid = 0;
+            $projectTotalDue = 0;
+
+            foreach($project->getRequests() as $request) {
+
+                $ews = $this->fillOutProjectCells($ews,$row,$project);
+
+                //Request ID
+                $ews->setCellValue('I'.$row, $request->getOid());
+
+                //Funding Number
+                $ews->setCellValue('J'.$row, $request->getFundedAccountNumber());
+
+                //Completion Status
+                $ews->setCellValue('K'.$row, $transresRequestUtil->getProgressStateLabelByName($request->getProgressState()));
+
+                //Invoice(s) Issued (Latest)
+                $latestInvoice = $transresRequestUtil->getLatestInvoice($request);
+                //$latestInvoicesCount = count($request->getInvoices());
+                $latestInvoicesCount = 0;
+                if( $latestInvoice ) {
+                    $latestInvoicesCount = 1;
+                    $totalInvoices++;
+                    $projectTotalInvoices++;
+                }
+                $ews->setCellValue('L'.$row, $latestInvoicesCount);
+
+                if( $latestInvoice ) {
+                    //# Total($)
+                    $total = $latestInvoice->getTotal();
+                    $totalTotal = $totalTotal + $total;
+                    $projectTotalTotal = $projectTotalTotal + $total;
+                    if ($total) {
+                        $ews->setCellValue('M' . $row, $total);
+                    }
+
+                    //# Paid($)
+                    $paid = $latestInvoice->getPaid();
+                    $paidTotal = $paidTotal + $paid;
+                    $projectTotalPaid = $projectTotalPaid + $paid;
+                    if ($paid) {
+                        $ews->setCellValue('N' . $row, $paid);
+
+                    }
+
+                    //# Due($)
+                    $due = $latestInvoice->getDue();
+                    $dueTotal = $dueTotal + $due;
+                    $projectTotalDue = $projectTotalDue + $due;
+                    if ($due) {
+                        $ews->setCellValue('O' . $row, $due);
+                    }
+
+                    //Comment
+                    $comment = $latestInvoice->getComment();
+                    if( $comment ) {
+                        $ews->setCellValue('P' . $row, $comment);
+                        $ews->getStyle('P' . $row)
+                            ->getAlignment()->setWrapText(true);
+                    }
+                }
+
+                $projectRequests = $projectRequests + 1;
+
+                $row = $row + 1;
+            }
+
+            $totalRequests = $totalRequests + $projectRequests;
+
+            $ews = $this->fillOutProjectCells($ews,$row,$project);
+
+            //Request Total
+            $ews->setCellValue('I'.$row, "Project Totals");
+            $ews->getStyle('I'.$row)->applyFromArray($styleBoldArray);
+
+            //This Project Total Invoices
+            $ews->setCellValue('L'.$row, $projectTotalInvoices);
+            $ews->getStyle('L'.$row)->applyFromArray($styleBoldArray);
+
+            //This Project Total Total
+            $ews->setCellValue('M'.$row, $projectTotalTotal);
+            $ews->getStyle('M'.$row)->applyFromArray($styleBoldArray);
+
+            //This Project Total Paid
+            $ews->setCellValue('N'.$row, $projectTotalPaid);
+            $ews->getStyle('N'.$row)->applyFromArray($styleBoldArray);
+
+            //This Project Total Due
+            $ews->setCellValue('O'.$row, $projectTotalDue);
+            $ews->getStyle('O'.$row)->applyFromArray($styleBoldArray);
+
+            //set color light green to the last Total row
+            $ews->getStyle('A'.$row.':'.'P'.$row)->applyFromArray($styleLastRow);
+
+            $row = $row + 1;
+
+
+        }//projects
+
+        $writer->close();
+    }
     //use https://phpspreadsheet.readthedocs.io/en/develop/topics/recipes/
-    public function createProjectListExcel($projectIdsArr,$limit=null)
+    public function createProjectListExcelSheets($projectIdsArr,$limit=null)
     {
 
         $transresRequestUtil = $this->container->get('transres_request_util');
@@ -4102,17 +4262,11 @@ class TransResUtil
         $autosize = true;
         $autosize = false;
         if( $autosize ) {
-            foreach ($ea->getWorksheetIterator() as $worksheet) {
-
-                $ea->setActiveSheetIndex($ea->getIndex($worksheet));
-
-                $sheet = $ea->getActiveSheet();
-                $cellIterator = $sheet->getRowIterator()->current()->getCellIterator();
-                $cellIterator->setIterateOnlyExistingCells(true);
-                /** @var PHPExcel_Cell $cell */
-                foreach ($cellIterator as $cell) {
-                    $sheet->getColumnDimension($cell->getColumn())->setAutoSize(true);
-                }
+            $cellIterator = $ews->getRowIterator()->current()->getCellIterator();
+            $cellIterator->setIterateOnlyExistingCells(true);
+            /** @var PHPExcel_Cell $cell */
+            foreach ($cellIterator as $cell) {
+                $ews->getColumnDimension($cell->getColumn())->setAutoSize(true);
             }
         }
 
@@ -4120,7 +4274,7 @@ class TransResUtil
         return $ews;
     }
     //use https://phpspreadsheet.readthedocs.io/en/develop/topics/recipes/
-    public function createProjectListExcel_ORIG($projectIdsArr,$limit=null) {
+    public function createProjectListExcel($projectIdsArr,$limit=null) {
 
         $transresRequestUtil = $this->container->get('transres_request_util');
         //$transResFormNodeUtil = $this->container->get('transres_formnode_util');
@@ -4481,6 +4635,46 @@ class TransResUtil
         $ews->setCellValue('H'.$row, $expDateStr);
 
         return $ews;
+    }
+    public function fillOutProjectCellsSpout($writer,$project) {
+        $ews->setCellValue('A'.$row, $project->getOid());
+        $ews->setCellValue('B'.$row, $this->convertDateToStr($project->getCreateDate()) );
+
+        $piArr = array();
+        foreach( $project->getPrincipalInvestigators() as $pi) {
+            $piArr[] = $pi->getUsernameOptimal();
+        }
+        $ews->setCellValue('C'.$row, implode("\n",$piArr));
+        $ews->getStyle('C'.$row)->getAlignment()->setWrapText(true);
+
+        $projectTitle = $project->getTitle();
+        if( !$projectTitle ) {
+            //$projectTitle = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"Title");
+            $projectTitle = $project->getTitle();
+        }
+        $ews->setCellValue('D'.$row, $projectTitle);
+
+        //Funding
+        //if( $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"Funded") ) {
+        if( $project->getFunded() ) {
+            $funded = "Funded";
+        } else {
+            $funded = "Not Funded";
+        }
+        $ews->setCellValue('E'.$row, $funded);
+
+        //Status
+        $ews->setCellValue('F'.$row, $this->getStateLabelByName($project->getState()));
+
+        //Approval Date
+        $ews->setCellValue('G'.$row, $this->convertDateToStr($project->getApprovalDate()) );
+
+        //IRB Expiration Date
+        $expDateStr = null;
+        if( $project->getImplicitExpirationDate() ) {
+            $expDateStr = $project->getImplicitExpirationDate()->format('m/d/Y');
+        }
+        $ews->setCellValue('H'.$row, $expDateStr);
     }
 
     public function getProjectsIdsStr($projects) {
