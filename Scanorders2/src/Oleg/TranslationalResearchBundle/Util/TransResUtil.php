@@ -3928,8 +3928,8 @@ class TransResUtil
             $projectTotalPaid = 0;
             $projectTotalDue = 0;
 
-            //$workRequests = $project->getRequests();
-            $workRequests = array();
+            $workRequests = $project->getRequests();
+            //$workRequests = array();
             foreach($workRequests as $request) {
 
                 //$data = array();
@@ -3957,7 +3957,8 @@ class TransResUtil
                 $data[10] = $transresRequestUtil->getProgressStateLabelByName($request->getProgressState());
 
                 //Invoice(s) Issued (Latest)
-                $latestInvoice = $transresRequestUtil->getLatestInvoice($request);
+                //$latestInvoice = $transresRequestUtil->getLatestInvoice($request);
+                $latestInvoice = null;
                 //$latestInvoicesCount = count($request->getInvoices());
                 $latestInvoicesCount = 0;
                 if( $latestInvoice ) {
