@@ -2318,7 +2318,7 @@ class ProjectController extends Controller
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
-        //$limit = 100; //testing
+        //$limit = 2; //testing
         //exit("ids=".$ids);
         //exit("limit=".$limit);
 
@@ -2333,8 +2333,8 @@ class ProjectController extends Controller
         $transresUtil = $this->container->get('transres_util');
 
         //[YEAR] [WCMC (top level of actual institution)] [FELLOWSHIP-TYPE] Fellowship Candidate Data generated on [DATE] at [TIME] EST.xls
-        //$fileName = "Projects ".date('m/d/Y H:i').".xlsx";
-        $fileName = "Projects ".date('m/d/Y H:i').".csv";
+        $fileName = "Projects ".date('m/d/Y H:i').".xlsx";
+        //$fileName = "Projects ".date('m/d/Y H:i').".csv";
         $fileName = str_replace("  ", " ", $fileName);
         $fileName = str_replace(" ", "-", $fileName);
 
@@ -2343,8 +2343,12 @@ class ProjectController extends Controller
         $projectIdsArr = explode(',', $ids);
 
         //testing
-        //$transresUtil->createProjectExcelSpout($projectIdsArr,$fileName,$limit);
-        //exit();
+        $transresUtil->createProjectExcelSpout($projectIdsArr,$fileName,$limit);
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="'.$fileName.'"');
+
+        exit();
 
         //TODO:
         //https://phpspreadsheet.readthedocs.io/en/develop/topics/memory_saving/
