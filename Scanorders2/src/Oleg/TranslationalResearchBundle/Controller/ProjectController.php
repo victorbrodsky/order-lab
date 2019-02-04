@@ -2318,6 +2318,7 @@ class ProjectController extends Controller
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
+        $limit = 100; //testing
         //exit("ids=".$ids);
         //exit("limit=".$limit);
 
@@ -2341,6 +2342,7 @@ class ProjectController extends Controller
 
         $projectIdsArr = explode(',', $ids);
 
+        //testing
         //$transresUtil->createProjectExcelSpout($projectIdsArr,$fileName,$limit);
         //exit();
 

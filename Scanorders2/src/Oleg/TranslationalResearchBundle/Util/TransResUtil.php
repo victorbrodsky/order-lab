@@ -3827,6 +3827,7 @@ class TransResUtil
         return $invoicesInfos;
     }
 
+    //TODO: create spreadsheet by Spout
     //http://opensource.box.com/spout/getting-started/
     //https://hotexamples.com/examples/box.spout.writer/WriterFactory/-/php-writerfactory-class-examples.html
     public function createProjectExcelSpout($projectIdsArr,$fileName,$limit=null) {
@@ -3889,7 +3890,7 @@ class TransResUtil
 
             foreach($project->getRequests() as $request) {
 
-                $ews = $this->fillOutProjectCells($ews,$row,$project);
+                //$ews = $this->fillOutProjectCellsSpout($writer,$data,$project);
 
                 //Request ID
                 $ews->setCellValue('I'.$row, $request->getOid());
@@ -3953,7 +3954,7 @@ class TransResUtil
 
             $totalRequests = $totalRequests + $projectRequests;
 
-            $ews = $this->fillOutProjectCells($ews,$row,$project);
+            //$ews = $this->fillOutProjectCells($ews,$row,$project);
 
             //Request Total
             $ews->setCellValue('I'.$row, "Project Totals");
@@ -4114,7 +4115,7 @@ class TransResUtil
                 continue;
             }
 
-            $ews = $this->fillOutProjectCells($ews,$row,$project);
+            //$ews = $this->fillOutProjectCells($ews,$row,$project);
 
             $projectRequests = 0;
             $projectTotalInvoices = 0;
@@ -4124,7 +4125,7 @@ class TransResUtil
 
             foreach($project->getRequests() as $request) {
 
-                $ews = $this->fillOutProjectCells($ews,$row,$project);
+                //$ews = $this->fillOutProjectCells($ews,$row,$project);
 
                 //Request ID
                 $ews->setCellValue('I'.$row, $request->getOid());
@@ -4421,7 +4422,7 @@ class TransResUtil
                 continue;
             }
 
-            $ews = $this->fillOutProjectCells($ews,$row,$project);
+            //$ews = $this->fillOutProjectCells($ews,$row,$project); //A,B,C,D,E,F,G,H
 
             $projectRequests = 0;
             $projectTotalInvoices = 0;
@@ -4431,7 +4432,7 @@ class TransResUtil
 
             foreach($project->getRequests() as $request) {
 
-                $ews = $this->fillOutProjectCells($ews,$row,$project);
+                //$ews = $this->fillOutProjectCells($ews,$row,$project); //A,B,C,D,E,F,G,H
 
                 //Request ID
                 $ews->setCellValue('I'.$row, $request->getOid());
@@ -4495,7 +4496,7 @@ class TransResUtil
 
             $totalRequests = $totalRequests + $projectRequests;
 
-            $ews = $this->fillOutProjectCells($ews,$row,$project);
+            $ews = $this->fillOutProjectCells($ews,$row,$project); //A,B,C,D,E,F,G,H
 
             //Request Total
             $ews->setCellValue('I'.$row, "Project Totals");

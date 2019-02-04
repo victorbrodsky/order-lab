@@ -1050,13 +1050,15 @@ class TransResRequestUtil
             //Get Transition and $to
             $transition = $this->getTransitionByName($transresRequest,$transitionName,$statMachineType);
             if( !$transition ) {
-                throw new \Exception($statMachineType.' transition not found by name '.$transitionName);
+                throw new \Exception("Work Request ID ".$transresRequest->getOid()."(FROM Original State '".$originalStateStr."'): '".$statMachineType."' (TO) transition not found by name ".$transitionName);
             }
             $tos = $transition->getTos();
             if (count($tos) != 1) {
                 throw new \Exception('Available to state is not a single state; count=' . $tos . ": " . implode(",", $tos));
             }
             $to = $tos[0];
+            //exit("Work Request ID ".$transresRequest->getOid()."(FROM Original State '".$originalStateStr."'): '".$statMachineType."' (TO) transition found by name ".$transitionName."; TO=".$to);
+
         }
         //echo "to=".$to."<br>";
 
