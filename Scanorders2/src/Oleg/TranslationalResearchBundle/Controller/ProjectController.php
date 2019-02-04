@@ -2334,7 +2334,7 @@ class ProjectController extends Controller
 
         //[YEAR] [WCMC (top level of actual institution)] [FELLOWSHIP-TYPE] Fellowship Candidate Data generated on [DATE] at [TIME] EST.xls
         $fileName = "Projects ".date('m/d/Y H:i').".xlsx";
-        //$fileName = "Projects ".date('m/d/Y H:i').".csv";
+        $fileName = "Projects ".date('m/d/Y H:i').".csv";
         $fileName = str_replace("  ", " ", $fileName);
         $fileName = str_replace(" ", "-", $fileName);
 

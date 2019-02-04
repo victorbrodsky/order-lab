@@ -3837,8 +3837,8 @@ class TransResUtil
     public function createProjectExcelSpout($projectIdsArr,$fileName,$limit=null) {
         $transresRequestUtil = $this->container->get('transres_request_util');
 
-        //$writer = WriterFactory::create(Type::CSV);
-        $writer = WriterFactory::create(Type::XLSX);
+        $writer = WriterFactory::create(Type::CSV);
+        //$writer = WriterFactory::create(Type::XLSX);
         $writer->openToBrowser($fileName);
 
         $headerStyle = (new StyleBuilder())
