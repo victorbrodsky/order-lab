@@ -3928,7 +3928,9 @@ class TransResUtil
             $projectTotalPaid = 0;
             $projectTotalDue = 0;
 
-            foreach($project->getRequests() as $request) {
+            //$workRequests = $project->getRequests();
+            $workRequests = array();
+            foreach($workRequests as $request) {
 
                 //$data = array();
 
