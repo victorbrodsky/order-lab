@@ -2318,7 +2318,7 @@ class ProjectController extends Controller
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
-        $limit = 100; //testing
+        //$limit = 100; //testing
         //exit("ids=".$ids);
         //exit("limit=".$limit);
 
