@@ -641,6 +641,13 @@ class TransResRequest {
     {
         $this->invoices->removeElement($item);
     }
+    public function getLatestInvoice() {
+        $invoices = $this->getInvoices();
+        if( count($invoices) > 0 ) {
+            return $invoices[0];
+        }
+        return null;
+    }
 
 
     public function getPrincipalInvestigators()

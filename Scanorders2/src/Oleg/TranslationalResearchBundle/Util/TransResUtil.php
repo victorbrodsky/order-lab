@@ -3958,7 +3958,8 @@ class TransResUtil
 
                 //Invoice(s) Issued (Latest)
                 //$latestInvoice = $transresRequestUtil->getLatestInvoice($request);
-                $latestInvoice = null;
+                $latestInvoice = $request->getLatestInvoice();
+                //$latestInvoice = null;
                 //$latestInvoicesCount = count($request->getInvoices());
                 $latestInvoicesCount = 0;
                 if( $latestInvoice ) {
