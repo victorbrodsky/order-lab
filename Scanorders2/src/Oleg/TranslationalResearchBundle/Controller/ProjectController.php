@@ -2373,8 +2373,8 @@ class ProjectController extends Controller
         //ob_end_clean();
         //$writer->setIncludeCharts(true);
 
-        //header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        //header('Content-Disposition: attachment;filename="'.$fileName.'"');
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="'.$fileName.'"');
         //header('Content-Disposition: attachment;filename="fileres.xlsx"');
 
         // Write file to the browser
