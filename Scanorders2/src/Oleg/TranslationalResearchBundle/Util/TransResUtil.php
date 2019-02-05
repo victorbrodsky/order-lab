@@ -3831,7 +3831,7 @@ class TransResUtil
         return $invoicesInfos;
     }
 
-    //TODO: create spreadsheet by Spout
+    //Create spreadsheet by Spout
     //http://opensource.box.com/spout/getting-started/
     //https://hotexamples.com/examples/box.spout.writer/WriterFactory/-/php-writerfactory-class-examples.html
     public function createProjectExcelSpout($projectIdsArr,$fileName,$limit=null) {

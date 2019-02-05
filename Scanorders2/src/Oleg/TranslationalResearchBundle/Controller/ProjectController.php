@@ -2333,10 +2333,13 @@ class ProjectController extends Controller
         $transresUtil = $this->container->get('transres_util');
 
         //[YEAR] [WCMC (top level of actual institution)] [FELLOWSHIP-TYPE] Fellowship Candidate Data generated on [DATE] at [TIME] EST.xls
-        $fileName = "Projects ".date('m/d/Y H:i').".xlsx";
-        //$fileName = "Projects ".date('m/d/Y H:i').".csv";
-        $fileName = str_replace("  ", " ", $fileName);
-        $fileName = str_replace(" ", "-", $fileName);
+        //$fileName = "Projects ".date('m/d/Y H:i').".xlsx";
+        $fileName = "Projects-".date('m-d-Y').".xlsx";
+        //$fileName = "Projects-".date('m-d-Y').".csv";
+        //$fileName = str_replace("  ", " ", $fileName);
+        //$fileName = str_replace(" ", "-", $fileName);
+        //$fileName = "Projects";
+        //exit("filename=".$fileName);
 
         //$projects = $em->getRepository('OlegTranslationalResearchBundle:Project')->findAll();
 
@@ -2354,6 +2357,7 @@ class ProjectController extends Controller
 
         //Spout uses less memory
         $transresUtil->createProjectExcelSpout($projectIdsArr,$fileName,$limit);
+        //header('Content-Disposition: attachment;filename="'.$fileName.'"');
         exit();
 
         //PhpOffice
