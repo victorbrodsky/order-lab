@@ -3078,6 +3078,23 @@ class CallEntryController extends Controller
             ));
         }
 
+        //Testing Spout
+        $entryIds = array();
+        foreach($entries as $thisEntry) {
+            $entryIds[] = $thisEntry->getId();
+        }
+        $excelBlob = $this->createCalllogListExcelSpout($entryIds,$user);
+        $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($excelBlob, 'Xlsx');
+        //ob_end_clean();
+        //$writer->setIncludeCharts(true);
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="'.$fileName.'"');
+
+        // Write file to the browser
+        $writer->save('php://output');
+        exit();
+
         $excelBlob = $this->createCalllogListExcel($entries,$user);
 
         $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($excelBlob, 'Xlsx');
@@ -3313,6 +3330,254 @@ class CallEntryController extends Controller
 
         }//foreach
 
+
+
+        // Auto size columns for each worksheet
+        //\PHPExcel_Shared_Font::setAutoSizeMethod(\PHPExcel_Shared_Font::AUTOSIZE_METHOD_EXACT);
+        foreach ($ea->getWorksheetIterator() as $worksheet) {
+
+            $ea->setActiveSheetIndex($ea->getIndex($worksheet));
+
+            $sheet = $ea->getActiveSheet();
+            $cellIterator = $sheet->getRowIterator()->current()->getCellIterator();
+            $cellIterator->setIterateOnlyExistingCells(true);
+            /** @var PHPExcel_Cell $cell */
+            foreach ($cellIterator as $cell) {
+                $sheet->getColumnDimension($cell->getColumn())->setAutoSize(true);
+            }
+            //$sheet->getDefaultRowDimension()->setRowHeight(-1);
+            //$sheet->getStyle('A')->getAlignment()->setWrapText(true);
+        }
+
+
+        return $ea;
+    }
+
+    public function createCalllogListExcelSpout($entryIds,$author) {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $formNodeUtil = $this->get('user_formnode_utility');
+
+        $ea = new Spreadsheet(); // ea is short for Excel Application
+
+        $ea->getProperties()
+            ->setCreator($author."")
+            ->setTitle('Call Log Book data')
+            ->setLastModifiedBy($author."")
+            ->setDescription('Call Log Book data list in Excel format')
+            ->setSubject('PHP Excel manipulation')
+            ->setKeywords('excel php office phpexcel')
+            ->setCategory('programming')
+        ;
+
+        $title = 'Call Log Book data';
+        $ews = $ea->getSheet(0);
+        $ews->setTitle($title);
+
+        //align all cells to left
+//        $style = array(
+//            'alignment' => array(
+//                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT,
+//            )
+//        );
+        $style = array(
+            'alignment' => array(
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT,
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_TOP,
+                'wrap' => true
+            ),
+            'font'  => array(
+                'size'  => 10,
+                'name'  => 'Calibri'
+            )
+        );
+        //$ews->getDefaultStyle()->applyFromArray($style);
+        $ews->getParent()->getDefaultStyle()->applyFromArray($style);
+
+//        //set width (from original excel file to make printable)
+//        $ews->getColumnDimension('A')->setWidth(22.18);
+//        $ews->getColumnDimension('B')->setWidth(24.36);   //20.36
+//        $ews->getColumnDimension('C')->setWidth(24.36);   //18.36
+//        $ews->getColumnDimension('D')->setWidth(14.18);   //8.18
+//        $ews->getColumnDimension('E')->setWidth(24.64);   //21.64
+//        $ews->getColumnDimension('F')->setWidth(24.64);   //21.64
+//        $ews->getColumnDimension('G')->setWidth(24.64);   //21.64
+//        $ews->getColumnDimension('H')->setWidth(24.64);   //21.64
+
+//        //marging
+//        $ews->getPageMargins()->setTop(1);
+//        $ews->getPageMargins()->setRight(0.25); //0.75
+//        $ews->getPageMargins()->setLeft(0);
+//        $ews->getPageMargins()->setBottom(1);
+
+        //set title
+        $ews->getHeaderFooter()->setOddHeader('&C&H'.$title);
+
+//        //set footer (The code for "left" is &L)
+//        $ews->getHeaderFooter()->setOddFooter('&L'.$footer);
+//        $ews->getHeaderFooter()->setEvenFooter('&L'.$footer);
+
+        $ews->setCellValue('A1', 'ID'); // Sets cell 'a1' to value 'ID
+        $ews->setCellValue('B1', 'Last Modified');
+        $ews->setCellValue('C1', 'Patient Name');
+        $ews->setCellValue('D1', 'MRN');
+        $ews->setCellValue('E1', 'Location');
+        $ews->setCellValue('F1', 'Referring Provider');
+        $ews->setCellValue('G1', 'Call Issue');
+        $ews->setCellValue('H1', 'Author');
+
+        //set bold
+        $ews->getStyle("A1:H1")->getFont()->setBold(true);
+
+        $row = 2;
+        foreach( $entryIds as $entryId ) {
+
+            $message = $em->getRepository('OlegOrderformBundle:Message')->find($entryId);
+
+                //ID
+            $ews->setCellValue('A'.$row, $message->getMessageOidVersion());
+
+            //Last Modified
+            $lastModified = null;
+            if( $message->getVersion() > 1 ) {
+                if (count($message->getEditorInfos()) > 0) {
+                    $modifiedOnDate = $message->getEditorInfos()[0]->getModifiedOn();
+                    $lastModified = $modifiedOnDate->format('m/d/Y') . " at " . $modifiedOnDate->format('H:i:s');
+                } else {
+                    $modifiedOnDate = $message->getOrderdate();
+                    $lastModified = $modifiedOnDate->format('m/d/Y') . " at " . $modifiedOnDate->format('H:i:s');
+                }
+            } else {
+                $modifiedOnDate = $message->getOrderdate();
+                $lastModified = $modifiedOnDate->format('m/d/Y') . " at " . $modifiedOnDate->format('H:i:s');
+            }
+            $ews->setCellValue('B'.$row, $lastModified);
+
+            //Patient
+            $patientNames = array();
+            $mrns = array();
+            foreach( $message->getPatient() as $patient ) {
+                $patientNames[] = $patient->getFullPatientName(false);
+                $mrns[] = $patient->obtainFullValidKeyName();
+            }
+
+            //Patient Name
+            $patientNameStr = implode("\n",$patientNames);
+            $ews->setCellValue('C'.$row, $patientNameStr);
+
+            //MRN
+            $mrnsStr = implode("\n",$mrns);
+            $ews->setCellValue('D'.$row, $mrnsStr);
+
+
+            //Location and Referring Provider
+            $locationArr = array();
+            $refProviderArr = array();
+            foreach( $message->getEncounter() as $encounter ) {
+                $locationArr[] = $encounter->obtainLocationInfo();
+                foreach( $encounter->getReferringProviders() as $refProvider ) {
+                    if( $refProvider->getField() ) {
+                        $refProviderArr[] = $refProvider->getField()->getFullName();
+                    }
+                }
+            }
+
+            //Location
+            $locationStr = implode("\n",$locationArr);
+            $ews->setCellValue('E'.$row, $locationStr);
+
+            //Referring Provider
+            $refProviderStr = implode("\n",$refProviderArr);
+            $ews->setCellValue('F'.$row, $refProviderStr);
+
+            //Call Issue
+            $callIssue = $message->getMessageCategory()->getNodeNameWithParents();
+            $ews->setCellValue('G'.$row, $callIssue);
+
+            //Author
+            $author = null;
+            if( $message->getMessageStatus() && $message->getMessageStatus()->getName() == "Draft" ) {
+                $provider = $message->getProvider();
+                if( $provider ) {
+                    $author = $provider->getUsernameOptimal();
+                }
+            } else {
+                $signeeInfo = $message->getSigneeInfo();
+                if( $signeeInfo && $signeeInfo->getModifiedBy() ) {
+                    $author = $signeeInfo->getModifiedBy()->getUsernameOptimal();
+                }
+            }
+            $ews->setCellValue('H'.$row, $author);
+
+            //////// subsection with message snapshot info ////////
+            $row = $row + 1;
+            $trclassname = "";
+            $snapshotArr = $formNodeUtil->getFormNodeHolderShortInfo($message,$message->getMessageCategory(),false,$trclassname);
+
+            //divide results by chunks of 21 rows in order to fit them in the excel row max height
+//            echo "snapshotArr count=".count($snapshotArr)."<br>";
+//            print "<pre>";
+//            print_r($snapshotArr);
+//            print "</pre><br>";
+            $snapshotArrChunks = array_chunk($snapshotArr, 21);
+//            echo "snapshotArrChunks count=".count($snapshotArrChunks)."<br>";
+
+            $originalRow = $row;
+            $numItems = count($snapshotArrChunks);
+            $i = 0;
+            foreach( $snapshotArrChunks as $snapshotArrChunk ) {
+
+                //$snapshot = implode("\n",$snapshotArrChunk);
+                //$objRichText = new \PHPExcel_RichText();
+                $objRichText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
+                foreach( $snapshotArrChunk as $snapshotRow ) {
+//                    $snapshotRow = "snapshotRow=$snapshotRow<br>";
+                    if( strpos($snapshotRow, "[###excel_section_flag###]") === false ) {
+                        $objRichText->createText($snapshotRow."\n");
+                    } else {
+                        $snapshotRow = str_replace("[###excel_section_flag###]","",$snapshotRow);
+                        $objItalic = $objRichText->createTextRun($snapshotRow."\n");
+                        $objItalic->getFont()->setItalic(true);
+                    }
+                }
+                //exit('$snapshot='.$snapshotArr);
+                $aRow = 'A' . $row;
+                //$ews->setCellValue($aRow, "".$snapshot);
+                $ews->setCellValue($aRow, $objRichText);
+
+//                if( strpos($snapshot, '[Form Section]') !== false ) {
+//                    $ews->getStyle($aRow)->getFont()->setItalic(true);
+//                }
+
+                if( ++$i < $numItems ) {
+                    $row = $row + 1;
+                }
+            }
+            //$aRowMerged = 'A' . $originalRow . ':' . 'A' . $row; //merge is not working
+            //$ews->mergeCells($aRowMerged);
+//            exit('1');
+
+//            $snapshot = implode("\n",$snapshotArr);
+//            //exit('$snapshot='.$snapshotArr);
+//            $aRow = 'A' . $row;
+//
+//            //$aRowMerged = 'A' . $row . ':' . 'B' . $row;
+//            $nrow = $row + 1;
+//            $aRowMerged = 'A' . $row . ':' . 'A' . $nrow;
+//            $row = $row + 1;
+//            $ews->mergeCells($aRowMerged);
+//
+//            $ews->setCellValue($aRow, "".$snapshot."\n");
+            //$ews->getStyle($aRow)->getAlignment()->setWrapText(true);
+            //////// EOF subsection with message snapshot info ////////
+
+            //increment row index
+            $row = $row + 1;
+
+            $em->clear();
+
+        }//foreach
 
 
         // Auto size columns for each worksheet
