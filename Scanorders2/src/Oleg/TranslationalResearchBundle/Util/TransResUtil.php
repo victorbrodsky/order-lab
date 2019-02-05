@@ -4535,22 +4535,32 @@ class TransResUtil
             $projectTotalPaid = 0;
             $projectTotalDue = 0;
 
-            foreach($project->getRequests() as $request) {
+            //$workRequests = $project->getRequests();
+            $workRequests = $transresRequestUtil->getProjectMiniRequests($projectId);
+            foreach($workRequests as $request) {
+
+                //$oid = $request->getOid();
+                $oid = $request['id'];
+                //$fundedAccountNumber = $request->getFundedAccountNumber();
+                $fundedAccountNumber = $request['fundedAccountNumber'];
+                //$progressState = $request->getProgressState();
+                $progressState = $request['progressState'];
 
                 //$ews = $this->fillOutProjectCells($ews,$row,$project); //A,B,C,D,E,F,G,H
                 $ews->setCellValue('A'.$row, $project->getOid()); //set just project ID
 
                 //Request ID
-                $ews->setCellValue('I'.$row, $request->getOid());
+                $ews->setCellValue('I'.$row, $oid);
 
                 //Funding Number
-                $ews->setCellValue('J'.$row, $request->getFundedAccountNumber());
+                $ews->setCellValue('J'.$row, $fundedAccountNumber);
 
                 //Completion Status
-                $ews->setCellValue('K'.$row, $transresRequestUtil->getProgressStateLabelByName($request->getProgressState()));
+                $ews->setCellValue('K'.$row, $transresRequestUtil->getProgressStateLabelByName($progressState));
 
                 //Invoice(s) Issued (Latest)
-                $latestInvoice = $transresRequestUtil->getLatestInvoice($request);
+                //$latestInvoice = $transresRequestUtil->getLatestInvoice($request);
+                $latestInvoice = $transresRequestUtil->getLatestInvoice(null,$request['id']);
                 //$latestInvoicesCount = count($request->getInvoices());
                 $latestInvoicesCount = 0;
                 if( $latestInvoice ) {
