@@ -2352,13 +2352,9 @@ class ProjectController extends Controller
 //        }
 //        exit('111');
 
-        //testing
-        $transresUtil->createProjectExcelSpout($projectIdsArr,$fileName,$limit);
-
-        //header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        //header('Content-Disposition: attachment;filename="'.$fileName.'"');
-
-        exit();
+        //Spout
+        //$transresUtil->createProjectExcelSpout($projectIdsArr,$fileName,$limit);
+        //exit();
 
         //TODO:
         //https://phpspreadsheet.readthedocs.io/en/develop/topics/memory_saving/
@@ -2377,9 +2373,8 @@ class ProjectController extends Controller
         //ob_end_clean();
         //$writer->setIncludeCharts(true);
 
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-
-        header('Content-Disposition: attachment;filename="'.$fileName.'"');
+        //header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        //header('Content-Disposition: attachment;filename="'.$fileName.'"');
         //header('Content-Disposition: attachment;filename="fileres.xlsx"');
 
         // Write file to the browser

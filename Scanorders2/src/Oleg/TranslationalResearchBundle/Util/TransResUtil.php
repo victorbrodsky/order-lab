@@ -3930,7 +3930,6 @@ class TransResUtil
 
             //$workRequests = $project->getRequests();
             $workRequests = $transresRequestUtil->getProjectMiniRequests($projectId);
-            //$workRequests = array();
             foreach($workRequests as $request) {
 
                 //print_r($request);
@@ -4321,6 +4320,7 @@ class TransResUtil
 
             $row = $row + 1;
 
+            $this->em->clear();
         }//projects
 
         //Total
@@ -4628,6 +4628,8 @@ class TransResUtil
             $ews->getStyle('A'.$row.':'.'P'.$row)->applyFromArray($styleLastRow);
 
             $row = $row + 1;
+
+            $this->em->clear();
 
         }//projects
 
