@@ -3928,10 +3928,14 @@ class TransResUtil
             $projectTotalPaid = 0;
             $projectTotalDue = 0;
 
-            $workRequests = $project->getRequests();
+            //$workRequests = $project->getRequests();
+            $workRequests = $transresRequestUtil->getProjectMiniRequests($projectId);
             //$workRequests = array();
             foreach($workRequests as $request) {
 
+                //print_r($request);
+                //exit('111');
+                //$oid = $request['oid'];
                 //$data = array();
 
                 //$data = $this->fillOutProjectCellsSpout($writer,$project); //0-7
@@ -3946,20 +3950,23 @@ class TransResUtil
 
                 //Request ID
                 //$ews->setCellValue('I'.$row, $request->getOid());
-                $data[8] = $request->getOid();
+                //$data[8] = $request->getOid();
+                $data[8] = $request['oid'];
 
                 //Funding Number
                 //$ews->setCellValue('J'.$row, $request->getFundedAccountNumber());
-                $data[9] = $request->getFundedAccountNumber();
+                //$data[9] = $request->getFundedAccountNumber();
+                $data[9] = $request['fundedAccountNumber'];
 
                 //Completion Status
                 //$ews->setCellValue('K'.$row, $transresRequestUtil->getProgressStateLabelByName($request->getProgressState()));
-                $data[10] = $transresRequestUtil->getProgressStateLabelByName($request->getProgressState());
+                //$data[10] = $transresRequestUtil->getProgressStateLabelByName($request->getProgressState());
+                $data[10] = $transresRequestUtil->getProgressStateLabelByName($request['progressState']);
 
                 //Invoice(s) Issued (Latest)
-                $latestInvoice = $transresRequestUtil->getLatestInvoice($request);
+                //$latestInvoice = $transresRequestUtil->getLatestInvoice($request);
                 //$latestInvoice = $request->getLatestInvoice();
-                //$latestInvoice = null;
+                $latestInvoice = null;
                 //$latestInvoicesCount = count($request->getInvoices());
                 $latestInvoicesCount = 0;
                 if( $latestInvoice ) {

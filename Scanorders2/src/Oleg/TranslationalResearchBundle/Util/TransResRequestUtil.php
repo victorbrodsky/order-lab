@@ -3711,6 +3711,31 @@ class TransResRequestUtil
         return $result;
     }
 
+    public function getProjectMiniRequests($projectId) {
+        $repository = $this->em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
+        $dql =  $repository->createQueryBuilder("transresRequest");
+        $dql->select('transresRequest.oid,transresRequest.fundedAccountNumber,transresRequest.progressState');
+
+        //$dql->leftJoin('transresRequest.submitter','submitter');
+        $dql->leftJoin('transresRequest.project','project');
+        //$dql->leftJoin('submitter.infos','submitterInfos');
+
+        $dqlParameters = array();
+
+        $dql->andWhere("project.id = :projectId");
+
+        $dqlParameters["projectId"] = $projectId;
+
+        $query = $this->em->createQuery($dql);
+
+        if( count($dqlParameters) > 0 ) {
+            $query->setParameters($dqlParameters);
+        }
+
+        $requests = $query->getResult();
+
+        return $requests;
+    }
 
 }
 

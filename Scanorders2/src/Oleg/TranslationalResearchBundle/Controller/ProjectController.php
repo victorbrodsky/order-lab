@@ -2343,10 +2343,20 @@ class ProjectController extends Controller
         $projectIdsArr = explode(',', $ids);
 
         //testing
+//        $transresRequestUtil = $this->container->get('transres_request_util');
+//        $workRequests = $transresRequestUtil->getProjectMiniRequests(3370);
+//        foreach($workRequests as $request) {
+//            print_r($request);
+//            $oid = $request['oid'];
+//            exit('oid='.$oid);
+//        }
+//        exit('111');
+
+        //testing
         $transresUtil->createProjectExcelSpout($projectIdsArr,$fileName,$limit);
 
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="'.$fileName.'"');
+        //header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        //header('Content-Disposition: attachment;filename="'.$fileName.'"');
 
         exit();
 
