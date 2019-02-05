@@ -3964,9 +3964,9 @@ class TransResUtil
                 $data[10] = $transresRequestUtil->getProgressStateLabelByName($request['progressState']);
 
                 //Invoice(s) Issued (Latest)
-                //$latestInvoice = $transresRequestUtil->getLatestInvoice($request);
+                $latestInvoice = $transresRequestUtil->getLatestInvoice($request);
                 //$latestInvoice = $request->getLatestInvoice();
-                $latestInvoice = null;
+                //$latestInvoice = null;
                 //$latestInvoicesCount = count($request->getInvoices());
                 $latestInvoicesCount = 0;
                 if( $latestInvoice ) {
