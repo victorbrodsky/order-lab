@@ -4085,6 +4085,7 @@ class TransResUtil
 
             $writer->addRowWithStyle($data,$footerStyle);
 
+            $this->em->clear();
         }//projects
 
         $writer->close();
