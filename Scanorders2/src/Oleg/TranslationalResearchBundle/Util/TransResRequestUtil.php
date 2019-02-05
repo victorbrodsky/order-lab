@@ -3022,7 +3022,7 @@ class TransResRequestUtil
         return $transresPermissionUtil->isUserHasInvoicePermission($invoice,$action);
     }
 
-    public function getLatestInvoice( $transresRequest ) {
+    public function getLatestInvoice( $transresRequest, $transresRequestId=null ) {
         $repository = $this->em->getRepository('OlegTranslationalResearchBundle:Invoice');
         $dql =  $repository->createQueryBuilder("invoice");
         $dql->select('invoice');
@@ -3034,8 +3034,12 @@ class TransResRequestUtil
 
         $query = $this->em->createQuery($dql);
 
+        if( $transresRequest ) {
+            $transresRequestId = $transresRequest->getId();
+        }
+
         $query->setParameters(array(
-            "transresRequestId" => $transresRequest->getId()
+            "transresRequestId" => $transresRequestId
         ));
 
         $invoices = $query->getResult();
@@ -3714,7 +3718,7 @@ class TransResRequestUtil
     public function getProjectMiniRequests($projectId) {
         $repository = $this->em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
         $dql =  $repository->createQueryBuilder("transresRequest");
-        $dql->select('transresRequest.oid,transresRequest.fundedAccountNumber,transresRequest.progressState');
+        $dql->select('transresRequest.id,transresRequest.oid,transresRequest.fundedAccountNumber,transresRequest.progressState');
 
         //$dql->leftJoin('transresRequest.submitter','submitter');
         $dql->leftJoin('transresRequest.project','project');
