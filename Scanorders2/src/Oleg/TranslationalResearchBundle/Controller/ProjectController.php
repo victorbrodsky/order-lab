@@ -2352,9 +2352,9 @@ class ProjectController extends Controller
 //        }
 //        exit('111');
 
-        //Spout
-        //$transresUtil->createProjectExcelSpout($projectIdsArr,$fileName,$limit);
-        //exit();
+        //Spout uses less memory
+        $transresUtil->createProjectExcelSpout($projectIdsArr,$fileName,$limit);
+        exit();
 
         //PhpOffice
         //TODO:
