@@ -3027,7 +3027,7 @@ class CallEntryController extends Controller
         if( $routename == "calllog_export_csv" ) {
             $limit = 500;
         } else {
-            set_time_limit(420); //7 min
+            set_time_limit(360); //6 min
             //ini_set('memory_limit', '30720M'); //30GB
             //ini_set('memory_limit', '-1');
             $limit = null;
