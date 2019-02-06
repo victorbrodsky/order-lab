@@ -3381,21 +3381,21 @@ class CallEntryController extends Controller
             ->setBackgroundColor(Color::toARGB("E0E0E0"))
             ->build();
 
-        $requestStyle = (new StyleBuilder())
-            ->setFontSize(10)
-            //->setShouldWrapText()
-            ->build();
+//        $rowStyle = (new StyleBuilder())
+//            ->setFontSize(10)
+//            ->setShouldWrapText()
+//            ->build();
 
         $border = (new BorderBuilder())
             ->setBorderBottom(Color::GREEN, Border::WIDTH_THIN, Border::STYLE_DASHED)
             ->build();
-        $footerStyle = (new StyleBuilder())
-            ->setFontBold()
+        $rowStyle = (new StyleBuilder())
+            //->setFontBold()
             //->setFontItalic()
-            ->setFontSize(12)
-            ->setFontColor(Color::BLACK)
+            //->setFontSize(12)
+            //->setFontColor(Color::BLACK)
             ->setShouldWrapText()
-            ->setBackgroundColor(Color::toARGB("EBF1DE"))
+            //->setBackgroundColor(Color::toARGB("EBF1DE"))
             ->setBorder($border)
             ->build();
 
@@ -3432,6 +3432,8 @@ class CallEntryController extends Controller
 
         $row = 2;
         foreach( $entryIds as $entryId ) {
+
+            $data = array();
 
             $message = $em->getRepository('OlegOrderformBundle:Message')->find($entryId);
 
@@ -3518,6 +3520,8 @@ class CallEntryController extends Controller
             //$ews->setCellValue('H'.$row, $author);
             $data[7] = $author;
 
+            $writer->addRowWithStyle($data,$rowStyle);
+
             //////// subsection with message snapshot info ////////
             $row = $row + 1;
             $trclassname = "";
@@ -3531,19 +3535,21 @@ class CallEntryController extends Controller
             $i = 0;
             foreach( $snapshotArrChunks as $snapshotArrChunk ) {
 
-                $objRichText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
+                //$objRichText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
                 foreach( $snapshotArrChunk as $snapshotRow ) {
                     if( strpos($snapshotRow, "[###excel_section_flag###]") === false ) {
-                        $objRichText->createText($snapshotRow."\n");
+                        //$objRichText->createText($snapshotRow."\n");
                     } else {
                         $snapshotRow = str_replace("[###excel_section_flag###]","",$snapshotRow);
-                        $objItalic = $objRichText->createTextRun($snapshotRow."\n");
-                        $objItalic->getFont()->setItalic(true);
+                        //$objItalic = $objRichText->createTextRun($snapshotRow."\n");
+                        //$objItalic->getFont()->setItalic(true);
                     }
                 }
-                $aRow = 'A' . $row;
+                //$aRow = 'A' . $row;
                 //$ews->setCellValue($aRow, $objRichText);
-                //$data[0] = $author;
+                $data = array();
+                $data[0] = $snapshotRow;
+                $writer->addRowWithStyle($data,$rowStyle);
 
 //                if( strpos($snapshot, '[Form Section]') !== false ) {
 //                    $ews->getStyle($aRow)->getFont()->setItalic(true);
@@ -3581,6 +3587,6 @@ class CallEntryController extends Controller
 //        }
 
 
-        return $ea;
+        $writer->close();
     }
 }
