@@ -3090,16 +3090,9 @@ class CallEntryController extends Controller
             foreach ($entries as $thisEntry) {
                 $entryIds[] = $thisEntry->getId();
             }
-            $excelBlob = $this->createCalllogListExcelSpout($entryIds, $fileName, $user);
-            //$writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($excelBlob, 'Xlsx');
-            //ob_end_clean();
-            //$writer->setIncludeCharts(true);
-
+            $this->createCalllogListExcelSpout($entryIds, $fileName, $user);
             //header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
             //header('Content-Disposition: attachment;filename="'.$fileName.'"');
-
-            // Write file to the browser
-            //$writer->save('php://output');
             exit();
         }
 
