@@ -1053,8 +1053,8 @@ class ApproverController extends Controller
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
-        set_time_limit(0);
-        ini_set('memory_limit', '3072M');
+        set_time_limit(600);
+        ini_set('memory_limit', '2048M');
 
         //$em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();

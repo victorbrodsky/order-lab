@@ -3027,7 +3027,7 @@ class CallEntryController extends Controller
         if( $routename == "calllog_export_csv" ) {
             $limit = 500;
         } else {
-            set_time_limit(3600); //1 hour
+            set_time_limit(420); //7 min
             //ini_set('memory_limit', '30720M'); //30GB
             //ini_set('memory_limit', '-1');
             $limit = null;
@@ -3559,26 +3559,10 @@ class CallEntryController extends Controller
 
             $em->clear();
 
-        }//foreach
+        }//foreach $entryId
 
 
         // Auto size columns for each worksheet
-        //\PHPExcel_Shared_Font::setAutoSizeMethod(\PHPExcel_Shared_Font::AUTOSIZE_METHOD_EXACT);
-//        foreach ($ea->getWorksheetIterator() as $worksheet) {
-//
-//            $ea->setActiveSheetIndex($ea->getIndex($worksheet));
-//
-//            $sheet = $ea->getActiveSheet();
-//            $cellIterator = $sheet->getRowIterator()->current()->getCellIterator();
-//            $cellIterator->setIterateOnlyExistingCells(true);
-//            /** @var PHPExcel_Cell $cell */
-//            foreach ($cellIterator as $cell) {
-//                $sheet->getColumnDimension($cell->getColumn())->setAutoSize(true);
-//            }
-//            //$sheet->getDefaultRowDimension()->setRowHeight(-1);
-//            //$sheet->getStyle('A')->getAlignment()->setWrapText(true);
-//        }
-
 
         $writer->close();
     }

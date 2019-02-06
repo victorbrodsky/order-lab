@@ -1042,7 +1042,7 @@ class RequestController extends Controller
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
-        set_time_limit(1800); //1800 seconds => 30 min
+        set_time_limit(600); //600 seconds => 10 min
         ini_set('memory_limit', '3072M');
 
         $transresUtil = $this->container->get('transres_util');
@@ -2481,7 +2481,7 @@ class RequestController extends Controller
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
-        set_time_limit(1800); //1800 seconds => 30 min
+        set_time_limit(600); //600 seconds => 10 min
         ini_set('memory_limit', '2048M');
 
         $em = $this->getDoctrine()->getManager();
