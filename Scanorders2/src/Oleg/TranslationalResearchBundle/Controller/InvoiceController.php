@@ -466,6 +466,7 @@ class InvoiceController extends Controller
             //echo "Submitter=$submitter<br>";
             $dql->andWhere("submitter.id = :submitterId");
             $dqlParameters["submitterId"] = $submitter->getId();
+            $advancedFilter++;
         }
 
         if( $status && count($status) > 0 ) {
@@ -510,7 +511,7 @@ class InvoiceController extends Controller
             //echo "PI=$principalInvestigator <br>";
             $dql->andWhere("principalInvestigator.id = :principalInvestigatorId");
             $dqlParameters["principalInvestigatorId"] = $principalInvestigator->getId();
-            $advancedFilter++;
+            //$advancedFilter++;
         }
 
         if( $startDate ) {

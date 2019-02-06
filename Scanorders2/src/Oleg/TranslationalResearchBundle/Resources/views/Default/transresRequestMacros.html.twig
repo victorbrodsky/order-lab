@@ -594,9 +594,10 @@
                     {{ form_widget(filterform.idSearch) }}
                 </div>
                 <div class="col-xs-4">
-                    {% if filterform.submitter is defined %}
-                        {{ form_widget(filterform.submitter) }}
-                    {% endif %}
+                    {#{% if filterform.submitter is defined %}#}
+                        {#{{ form_widget(filterform.submitter) }}#}
+                    {#{% endif %}#}
+                    {{ form_widget(filterform.principalInvestigator) }}
                 </div>
                 <div class="col-xs-1">
                     <button id="filter-btn" type="submit" class="btn btn-default">Filter</button>
@@ -661,7 +662,10 @@
 
                     <div class="row">
                         <div class="col-xs-4">
-                            {{ form_widget(filterform.principalInvestigator) }}
+                            {#{{ form_widget(filterform.principalInvestigator) }}#}
+                            {% if filterform.submitter is defined %}
+                                {{ form_widget(filterform.submitter) }}
+                            {% endif %}
                         </div>
                         <div class="col-xs-4">
                             {{ form_widget(filterform.salesperson) }}
