@@ -3357,7 +3357,7 @@ class CallEntryController extends Controller
 
     public function createCalllogListExcelSpout($entryIds,$fileName,$author) {
 
-        set_time_limit(360); //6 min
+        //set_time_limit(360); //6 min
 
         $em = $this->getDoctrine()->getManager();
 
@@ -3438,7 +3438,7 @@ class CallEntryController extends Controller
             //$ews->setCellValue('B'.$row, $lastModified);
             $data[1] = $lastModified;
 
-            if(0) {//testing
+            if(1) {//testing
 
                 //Patient
                 $patientNames = array();
@@ -3506,7 +3506,7 @@ class CallEntryController extends Controller
 
             $writer->addRowWithStyle($data,$rowStyle);
 
-            if(1) {
+            if(0) {
                 //////// subsection with message snapshot info ////////
                 $row = $row + 1;
                 $trclassname = "";
