@@ -3357,6 +3357,8 @@ class CallEntryController extends Controller
 
     public function createCalllogListExcelSpout($entryIds,$fileName,$author) {
 
+        set_time_limit(360); //6 min
+
         $em = $this->getDoctrine()->getManager();
 
         $formNodeUtil = $this->get('user_formnode_utility');
