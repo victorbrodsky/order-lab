@@ -3093,7 +3093,7 @@ class CallEntryController extends Controller
 //                $entryIds[] = $thisEntry->getId();
 //            }
 //            $this->createCalllogListExcelSpout($entryIds, $fileName, $user);
-            $this->createCalllogListExcelSpout($entries, $fileName, $user,$ext);
+            $this->createCalllogListExcelSpout($entries,$fileName,$user,$ext);
             //header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
             //header('Content-Disposition: attachment;filename="'.$fileName.'"');
             exit();
@@ -3444,7 +3444,7 @@ class CallEntryController extends Controller
             //$ews->setCellValue('B'.$row, $lastModified);
             $data[1] = $lastModified;
 
-            if(1) {//testing
+            if(0) {//testing
 
                 //Patient
                 $patientNames = array();
