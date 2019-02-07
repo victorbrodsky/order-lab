@@ -3444,7 +3444,7 @@ class CallEntryController extends Controller
             //$ews->setCellValue('B'.$row, $lastModified);
             $data[1] = $lastModified;
 
-            if(0) {//testing
+            if(1) {//testing
 
                 //Patient
                 $patientNames = array();
