@@ -742,6 +742,9 @@ class CallLogEditController extends CallEntryController
 
             }//if $newEncounter
 
+            //TODO: save call log entry short info to setShortInfo($shortInfo)
+            $calllogUtil->updateMessageShortInfo($message);
+
             if( $testing ) {
                 echo "<br><br>message ID=" . $message->getId() . "; OID=". $message->getOid() . "<br>";
                 foreach ($message->getPatient() as $patient) {

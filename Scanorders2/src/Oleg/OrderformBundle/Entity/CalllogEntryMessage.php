@@ -138,6 +138,12 @@ class CalllogEntryMessage extends OrderBase {
      */
     private $encounterDateBackup;
 
+    /**
+     * Call Log entry snapshot info)
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $shortInfo;
+
     //All Message related fields are already exists in Message objects
 //    /**
 //     * Message Type Backup
@@ -374,7 +380,21 @@ class CalllogEntryMessage extends OrderBase {
         $this->timeSpentMinutes = $timeSpentMinutes;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getShortInfo()
+    {
+        return $this->shortInfo;
+    }
 
+    /**
+     * @param mixed $shortInfo
+     */
+    public function setShortInfo($shortInfo)
+    {
+        $this->shortInfo = $shortInfo;
+    }
 
 
 

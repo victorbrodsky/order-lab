@@ -1493,6 +1493,9 @@ class CallEntryController extends Controller
 
             }//if $newEncounter
 
+            //TODO: save call log entry short info to setShortInfo($shortInfo)
+            $calllogUtil->updateMessageShortInfo($message);
+
             if( $testing ) {
                 echo "<br><br>message id=" . $message->getId() . "<br>";
                 foreach ($message->getPatient() as $patient) {
@@ -3026,6 +3029,7 @@ class CallEntryController extends Controller
 
         if( $routename == "calllog_export_csv" ) {
             $limit = 500;
+            //$limit = 1;
         } else {
             set_time_limit(600); //6 min
             //ini_set('memory_limit', '30720M'); //30GB
@@ -3033,20 +3037,36 @@ class CallEntryController extends Controller
             $limit = null;
         }
 
-        $res = $this->getCalllogEntryFilter($request,$limit);
+        if(1) {
+            $res = $this->getCalllogEntryFilter($request, $limit);
 
-        if( $res['redirect'] ) {
-            //exit('redirect to home page');
-            return $res['redirect'];
+            if ($res['redirect']) {
+                //exit('redirect to home page');
+                return $res['redirect'];
+            }
+
+            $query = $res['query'];
+
+            $entries = $query->getResult();
+            //echo "number of entries=".count($entries)."<br>";
+            //exit('111');
+            //$logger->notice("exportCsvAction: number of entries=".count($entries));
         }
 
-        $query = $res['query'];
-        //$filterform = $res['filterform'];
-        //$advancedFilter = $res['advancedFilter'];
-
-        $entries = $query->getResult();
-        //echo "number of entries=".count($entries)."<br>";
-        //$logger->notice("exportCsvAction: number of entries=".count($entries));
+        //testing
+//        $em = $this->getDoctrine()->getManager();
+//        $repository = $em->getRepository('OlegOrderformBundle:Message');
+//        $dql = $repository->createQueryBuilder("message");
+//        //$dql->select('message.id');
+//        $dql->select('message');
+//        $query = $em->createQuery($dql);
+//        $query->setMaxResults(1);
+//        $entries = $query->getResult();
+        //foreach($entries as $message) {
+            //echo "encounters=".count($message->getEncounter())."<br>";
+        //}
+//        echo "query=".$query->getSql()."<br>";
+        //return array('filename'=>'111','title'=>'222');
 
         if( count($entries) == 0 ) {
             $this->get('session')->getFlashBag()->add(
@@ -3366,8 +3386,10 @@ class CallEntryController extends Controller
         $formNodeUtil = $this->get('user_formnode_utility');
 
         if( $ext == "XLSX" ) {
+            $fileName = $fileName . ".xlsx";
             $writer = WriterFactory::create(Type::XLSX);
         } else {
+            $fileName = $fileName . ".csv";
             $writer = WriterFactory::create(Type::CSV);
         }
         $writer->openToBrowser($fileName);
@@ -3415,6 +3437,7 @@ class CallEntryController extends Controller
             $headerStyle
         );
 
+        //$entryIds = array();
         $row = 2;
         foreach( $entryIds as $message ) {
         //foreach( $entryIds as $entryId ) {
@@ -3430,8 +3453,9 @@ class CallEntryController extends Controller
             //Last Modified
             $lastModified = null;
             if( $message->getVersion() > 1 ) {
-                if (count($message->getEditorInfos()) > 0) {
-                    $modifiedOnDate = $message->getEditorInfos()[0]->getModifiedOn();
+                $editorInfos = $message->getEditorInfos();
+                if (count($editorInfos) > 0) {
+                    $modifiedOnDate = $editorInfos[0]->getModifiedOn();
                     $lastModified = $modifiedOnDate->format('m/d/Y') . " at " . $modifiedOnDate->format('H:i:s');
                 } else {
                     $modifiedOnDate = $message->getOrderdate();
@@ -3488,7 +3512,7 @@ class CallEntryController extends Controller
                 $data[5] = $refProviderStr;
 
                 //Call Issue
-                $callIssue = $message->getMessageCategory()->getNodeNameWithParents();
+                $callIssue = $message->getMessageCategory()->getNodeNameWithParents(); //another object
                 //$ews->setCellValue('G'.$row, $callIssue);
                 $data[6] = $callIssue;
 
@@ -3552,8 +3576,10 @@ class CallEntryController extends Controller
                 }
                 //////// EOF subsection with message snapshot info ////////
             } else {
-                //test entry info
-                $snapshotRow = $message->getCalllogEntryMessage()->getPatientLastNameBackup();
+                //TODO: entry info saved
+                //used in list:
+                //getFormNodeHolderShortInfo(message,message.messageCategory,1,trclassname)
+                $snapshotRow = $message->getCalllogEntryMessage()->getShortInfo();
                 $data = array();
                 $data[0] = $snapshotRow;
                 $writer->addRowWithStyle($data, $rowStyle);

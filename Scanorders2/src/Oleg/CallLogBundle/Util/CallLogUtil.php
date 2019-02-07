@@ -2458,4 +2458,55 @@ class CallLogUtil
         return $encounter;
     }
 
+    //TODO: save call log entry short info to setShortInfo($shortInfo)
+    //as table:{{ user_formnode_utility.getFormNodeHolderShortInfo(message,message.messageCategory,1,trclassname)|raw }}
+    public function updateMessageShortInfo($message) {
+
+        return null; //testing
+
+        $formNodeUtil = $this->container->get('user_formnode_utility');
+        $shortInfo = $formNodeUtil->getFormNodeHolderShortInfo($message,$message->getMessageCategory(),false,"");
+        //$shortInfo = $formNodeUtil->getFormNodeHolderShortInfo($message,$message->getMessageCategory(),1,"");
+        //exit("shortInfo=$shortInfo");
+
+        if( $shortInfo ) {
+            $calllogEntryMessage = $message->getCalllogEntryMessage();
+            if( $calllogEntryMessage ) {
+
+                //divide results by chunks of 21 rows in order to fit them in the excel row max height
+                $snapshotArrChunks = array_chunk($shortInfo, 21);
+
+//                foreach ($snapshotArrChunks as $snapshotArrChunk) {
+//                    //$objRichText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
+//                    foreach ($snapshotArrChunk as $snapshotRow) {
+//                        if (strpos($snapshotRow, "[###excel_section_flag###]") === false) {
+//                            //$objRichText->createText($snapshotRow."\n");
+//                        } else {
+//                            $snapshotRow = str_replace("[###excel_section_flag###]", "", $snapshotRow);
+//                            //$objItalic = $objRichText->createTextRun($snapshotRow."\n");
+//                            //$objItalic->getFont()->setItalic(true);
+//                        }
+//                    }
+//                }
+
+                $snapshotRowArr = array();
+                foreach ($snapshotArrChunks as $snapshotArrChunk) {
+                    foreach ($snapshotArrChunk as $snapshotRow) {
+                        if (strpos($snapshotRow, "[###excel_section_flag###]") === false) {
+                            //
+                        } else {
+                            $snapshotRow = str_replace("[###excel_section_flag###]", "", $snapshotRow);
+                            $snapshotRowArr[] = $snapshotRow;
+                        }
+                    }
+                }
+
+                $snapshotArrChunksText = implode("\n\r",$snapshotRowArr);
+                //exit("snapshotArrChunksText=$snapshotArrChunksText");
+
+                $calllogEntryMessage->setShortInfo($snapshotArrChunksText);
+                $this->em->flush($message);
+            }
+        }
+    }
 }
