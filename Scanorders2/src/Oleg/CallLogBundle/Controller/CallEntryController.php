@@ -3451,51 +3451,55 @@ class CallEntryController extends Controller
             //$ews->setCellValue('B'.$row, $lastModified);
             $data[1] = $lastModified;
 
-            //Patient
-            $patientNames = array();
-            $mrns = array();
-            foreach( $message->getPatient() as $patient ) {
-                $patientNames[] = $patient->getFullPatientName(false);
-                $mrns[] = $patient->obtainFullValidKeyName();
-            }
+            if(0) {//testing
 
-            //Patient Name
-            $patientNameStr = implode("\n",$patientNames);
-            //$ews->setCellValue('C'.$row, $patientNameStr);
-            $data[2] = $patientNameStr;
+                //Patient
+                $patientNames = array();
+                $mrns = array();
+                foreach ($message->getPatient() as $patient) {
+                    $patientNames[] = $patient->getFullPatientName(false);
+                    $mrns[] = $patient->obtainFullValidKeyName();
+                }
 
-            //MRN
-            $mrnsStr = implode("\n",$mrns);
-            //$ews->setCellValue('D'.$row, $mrnsStr);
-            $data[3] = $mrnsStr;
+                //Patient Name
+                $patientNameStr = implode("\n", $patientNames);
+                //$ews->setCellValue('C'.$row, $patientNameStr);
+                $data[2] = $patientNameStr;
+
+                //MRN
+                $mrnsStr = implode("\n", $mrns);
+                //$ews->setCellValue('D'.$row, $mrnsStr);
+                $data[3] = $mrnsStr;
 
 
-            //Location and Referring Provider
-            $locationArr = array();
-            $refProviderArr = array();
-            foreach( $message->getEncounter() as $encounter ) {
-                $locationArr[] = $encounter->obtainLocationInfo();
-                foreach( $encounter->getReferringProviders() as $refProvider ) {
-                    if( $refProvider->getField() ) {
-                        $refProviderArr[] = $refProvider->getField()->getFullName();
+                //Location and Referring Provider
+                $locationArr = array();
+                $refProviderArr = array();
+                foreach ($message->getEncounter() as $encounter) {
+                    $locationArr[] = $encounter->obtainLocationInfo();
+                    foreach ($encounter->getReferringProviders() as $refProvider) {
+                        if ($refProvider->getField()) {
+                            $refProviderArr[] = $refProvider->getField()->getFullName();
+                        }
                     }
                 }
-            }
 
-            //Location
-            $locationStr = implode("\n",$locationArr);
-            //$ews->setCellValue('E'.$row, $locationStr);
-            $data[4] = $locationStr;
+                //Location
+                $locationStr = implode("\n", $locationArr);
+                //$ews->setCellValue('E'.$row, $locationStr);
+                $data[4] = $locationStr;
 
-            //Referring Provider
-            $refProviderStr = implode("\n",$refProviderArr);
-            //$ews->setCellValue('F'.$row, $refProviderStr);
-            $data[5] = $refProviderStr;
+                //Referring Provider
+                $refProviderStr = implode("\n", $refProviderArr);
+                //$ews->setCellValue('F'.$row, $refProviderStr);
+                $data[5] = $refProviderStr;
 
-            //Call Issue
-            $callIssue = $message->getMessageCategory()->getNodeNameWithParents();
-            //$ews->setCellValue('G'.$row, $callIssue);
-            $data[6] = $callIssue;
+                //Call Issue
+                $callIssue = $message->getMessageCategory()->getNodeNameWithParents();
+                //$ews->setCellValue('G'.$row, $callIssue);
+                $data[6] = $callIssue;
+
+            }//testing
 
             //Author
             $author = null;
