@@ -3512,7 +3512,7 @@ class CallEntryController extends Controller
 
             $writer->addRowWithStyle($data,$rowStyle);
 
-            if(0) {
+            if(1) {
                 //////// subsection with message snapshot info ////////
                 $row = $row + 1;
                 $trclassname = "";
