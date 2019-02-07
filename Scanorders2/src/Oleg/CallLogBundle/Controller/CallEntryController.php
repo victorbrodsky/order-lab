@@ -3553,7 +3553,7 @@ class CallEntryController extends Controller
                 //////// EOF subsection with message snapshot info ////////
             } else {
                 //test entry info
-                $snapshotRow = $message->getPatientLastNameBackup();
+                $snapshotRow = $message->getCalllogEntryMessage()->getPatientLastNameBackup();
                 $data = array();
                 $data[0] = $snapshotRow;
                 $writer->addRowWithStyle($data, $rowStyle);
