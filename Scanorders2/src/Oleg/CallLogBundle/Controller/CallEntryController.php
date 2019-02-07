@@ -3436,7 +3436,7 @@ class CallEntryController extends Controller
             //$ews->setCellValue('B'.$row, $lastModified);
             $data[1] = $lastModified;
 
-            if(1) {//testing
+            if(0) {//testing
 
                 //Patient
                 $patientNames = array();
@@ -3504,7 +3504,7 @@ class CallEntryController extends Controller
 
             $writer->addRowWithStyle($data,$rowStyle);
 
-            if(0) {
+            if(1) {
                 //////// subsection with message snapshot info ////////
                 $row = $row + 1;
                 $trclassname = "";
