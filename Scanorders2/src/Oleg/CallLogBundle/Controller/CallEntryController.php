@@ -3087,7 +3087,7 @@ class CallEntryController extends Controller
         //Testing Spout
         if(1) {
             $ext = "XLSX";
-            //$ext = "CSV";
+            $ext = "CSV";
 //            $entryIds = array();
 //            foreach ($entries as $thisEntry) {
 //                $entryIds[] = $thisEntry->getId();
