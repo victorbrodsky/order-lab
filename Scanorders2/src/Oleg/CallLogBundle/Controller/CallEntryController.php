@@ -3068,7 +3068,7 @@ class CallEntryController extends Controller
         //exit("userName=".$userName);
 
         $fileName = "Call-Log-Book-Entries-exported-on-".date('m/d/Y')."-".date('H:i')."-by-".$userName;//.".csv";//".xlsx";
-        $fileName = $fileName . ".xlsx";
+        //$fileName = $fileName . ".xlsx";
         $fileName = str_replace("  ", " ", $fileName);
         $fileName = str_replace(" ", "-", $fileName);
         $fileName = str_replace("--", "-", $fileName);
@@ -3086,12 +3086,14 @@ class CallEntryController extends Controller
 
         //Testing Spout
         if(1) {
+            $ext = "XLSX";
+            $ext = "CSV";
 //            $entryIds = array();
 //            foreach ($entries as $thisEntry) {
 //                $entryIds[] = $thisEntry->getId();
 //            }
 //            $this->createCalllogListExcelSpout($entryIds, $fileName, $user);
-            $this->createCalllogListExcelSpout($entries, $fileName, $user);
+            $this->createCalllogListExcelSpout($entries, $fileName, $user,$ext);
             //header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
             //header('Content-Disposition: attachment;filename="'.$fileName.'"');
             exit();
@@ -3355,7 +3357,7 @@ class CallEntryController extends Controller
         return $ea;
     }
 
-    public function createCalllogListExcelSpout($entryIds,$fileName,$author) {
+    public function createCalllogListExcelSpout($entryIds,$fileName,$author,$ext="XLSX") {
 
         //set_time_limit(360); //6 min
 
@@ -3363,7 +3365,11 @@ class CallEntryController extends Controller
 
         $formNodeUtil = $this->get('user_formnode_utility');
 
-        $writer = WriterFactory::create(Type::XLSX);
+        if( $ext == "XLSX" ) {
+            $writer = WriterFactory::create(Type::XLSX);
+        } else {
+            $writer = WriterFactory::create(Type::CSV);
+        }
         $writer->openToBrowser($fileName);
 
         //$title = 'Call Log Book data';
