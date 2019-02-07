@@ -3086,11 +3086,12 @@ class CallEntryController extends Controller
 
         //Testing Spout
         if(1) {
-            $entryIds = array();
-            foreach ($entries as $thisEntry) {
-                $entryIds[] = $thisEntry->getId();
-            }
-            $this->createCalllogListExcelSpout($entryIds, $fileName, $user);
+//            $entryIds = array();
+//            foreach ($entries as $thisEntry) {
+//                $entryIds[] = $thisEntry->getId();
+//            }
+//            $this->createCalllogListExcelSpout($entryIds, $fileName, $user);
+            $this->createCalllogListExcelSpout($entries, $fileName, $user);
             //header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
             //header('Content-Disposition: attachment;filename="'.$fileName.'"');
             exit();
@@ -3363,7 +3364,7 @@ class CallEntryController extends Controller
         $writer = WriterFactory::create(Type::XLSX);
         $writer->openToBrowser($fileName);
 
-        $title = 'Call Log Book data';
+        //$title = 'Call Log Book data';
 
         $headerStyle = (new StyleBuilder())
             ->setFontBold()
@@ -3392,20 +3393,6 @@ class CallEntryController extends Controller
             ->setBorder($border)
             ->build();
 
-        //align all cells to left
-
-        //set title
-        //$ews->getHeaderFooter()->setOddHeader('&C&H'.$title);
-
-//        $ews->setCellValue('A1', 'ID'); // Sets cell 'a1' to value 'ID
-//        $ews->setCellValue('B1', 'Last Modified');
-//        $ews->setCellValue('C1', 'Patient Name');
-//        $ews->setCellValue('D1', 'MRN');
-//        $ews->setCellValue('E1', 'Location');
-//        $ews->setCellValue('F1', 'Referring Provider');
-//        $ews->setCellValue('G1', 'Call Issue');
-//        $ews->setCellValue('H1', 'Author');
-
         $writer->addRowWithStyle(
             [
                 'ID',                   //0 - A
@@ -3420,15 +3407,13 @@ class CallEntryController extends Controller
             $headerStyle
         );
 
-        //set bold
-        //$ews->getStyle("A1:H1")->getFont()->setBold(true);
-
         $row = 2;
-        foreach( $entryIds as $entryId ) {
+        foreach( $entryIds as $message ) {
+        //foreach( $entryIds as $entryId ) {
 
             $data = array();
 
-            $message = $em->getRepository('OlegOrderformBundle:Message')->find($entryId);
+            //$message = $em->getRepository('OlegOrderformBundle:Message')->find($entryId);
 
             //ID
             //$ews->setCellValue('A'.$row, $message->getMessageOidVersion());
