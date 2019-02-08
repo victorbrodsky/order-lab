@@ -345,11 +345,12 @@ class LoggerController extends Controller
 //        }
 
         $eventlogTitle = $this->container->getParameter('eventlog_title');
-        if( $filtered ) {
-            $eventlogTitle = $eventlogTitle . " showing " . count($pagination) . " matching event(s)";
-        }
-        $eventlogTitle = $eventlogTitle . " (total matching " . $pagination->getTotalItemCount() . ")";
-
+//        if( $filtered ) {
+//            $eventlogTitle = $eventlogTitle . " showing " . count($pagination) . " matching event(s)";
+//        }
+//        $eventlogTitle = $eventlogTitle . " (total matching " . $pagination->getTotalItemCount() . ")";
+        //showing 3 of 5 matching event(s)
+        $eventlogTitle = $eventlogTitle . " showing " . count($pagination) . " of " . $pagination->getTotalItemCount() . " matching event(s)";
 
         $route = $request->get('_route');
         //echo "route=".$route."<br>";

@@ -4763,18 +4763,18 @@ class DashboardUtil
             }
             
             $linkFilterArr = array(
-                'filter[startdate]' => $startDateStr,
-                'filter[enddate]' => $endDateStr,
+                //'filter[startdate]' => $startDateStr,
+                //'filter[enddate]' => $endDateStr,
                 'filter[eventType][0]' => $ProjectReminderEventTypeId,
                 'filter[eventType][1]' => $RequestReminderEventTypeId,
                 'filter[eventType][2]' => $InvoiceReminderEventTypeId
             );
 
-            $link = $this->container->get('router')->generate(
-                'translationalresearch_logger',
-                $linkFilterArr,
-                UrlGeneratorInterface::ABSOLUTE_URL
-            );
+//            $link = $this->container->get('router')->generate(
+//                'translationalresearch_logger',
+//                $linkFilterArr,
+//                UrlGeneratorInterface::ABSOLUTE_URL
+//            );
             //////// EOF Construct link ////////
 
             $unpaidInvoicesArr = array();
@@ -4782,6 +4782,7 @@ class DashboardUtil
             $delayedRequestsArr = array();
             $delayedCompletedRequestsArr = array();
             $delayedCompletedNoInvoiceRequestsArr = array();
+            $datesArr = array();
 
             $pendingStates = array(
                 'active',
@@ -4806,7 +4807,7 @@ class DashboardUtil
                 $startDateLabel = $startDate->format('M-Y');
                 $thisEndDate = clone $startDate;
                 $thisEndDate->modify( 'first day of next month' );
-                //$datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
+                $datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
                 //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
 
                 $unpaidInvoicesRemindersCount = $transresUtil->getUnpaidInvoiceRemindersCount($startDate,$thisEndDate,$projectSpecialtyObjects);
@@ -4832,6 +4833,16 @@ class DashboardUtil
             //$combinedData['Unpaid Invoices'] = $unpaidInvoicesArr;
             $delayedInvoicesData = array();
             foreach($unpaidInvoicesArr as $date=>$value ) {
+
+                $dates = $datesArr[$date];
+                $linkFilterArr['filter[startdate]'] = $dates['startDate'];
+                $linkFilterArr['filter[enddate]'] = $dates['endDate'];
+                $link = $this->container->get('router')->generate(
+                    'translationalresearch_logger',
+                    $linkFilterArr,
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+
                 $delayedInvoicesData[$date] = array('value'=>$value,'link'=>$link);
             }
             $combinedData["Unpaid Invoices"] = $delayedInvoicesData;
@@ -4848,6 +4859,16 @@ class DashboardUtil
             //show event log
             $delayedProjectsData = array();
             foreach($delayedProjectsArr as $date=>$value ) {
+
+                $dates = $datesArr[$date];
+                $linkFilterArr['filter[startdate]'] = $dates['startDate'];
+                $linkFilterArr['filter[enddate]'] = $dates['endDate'];
+                $link = $this->container->get('router')->generate(
+                    'translationalresearch_logger',
+                    $linkFilterArr,
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+
                 $delayedProjectsData[$date] = array('value'=>$value,'link'=>$link);
             }
             $combinedData["Project requests taking longer than $reminderDelay days to review"] = $delayedProjectsData;
@@ -4860,6 +4881,16 @@ class DashboardUtil
             //$combinedData["Work requests taking longer than $reminderDelay days to complete"] = $delayedRequestsArr;
             $delayedRequestsData = array();
             foreach($delayedRequestsArr as $date=>$value ) {
+
+                $dates = $datesArr[$date];
+                $linkFilterArr['filter[startdate]'] = $dates['startDate'];
+                $linkFilterArr['filter[enddate]'] = $dates['endDate'];
+                $link = $this->container->get('router')->generate(
+                    'translationalresearch_logger',
+                    $linkFilterArr,
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+
                 $delayedRequestsData[$date] = array('value'=>$value,'link'=>$link);
             }
             $combinedData["Work requests taking longer than $reminderDelay days to complete"] = $delayedRequestsData;
@@ -4872,6 +4903,16 @@ class DashboardUtil
             //$combinedData["Work requests completed for over $reminderDelay days in need of submitter notifications"] = $delayedCompletedRequestsArr;
             $delayedCompletedRequestsData = array();
             foreach($delayedCompletedRequestsArr as $date=>$value ) {
+
+                $dates = $datesArr[$date];
+                $linkFilterArr['filter[startdate]'] = $dates['startDate'];
+                $linkFilterArr['filter[enddate]'] = $dates['endDate'];
+                $link = $this->container->get('router')->generate(
+                    'translationalresearch_logger',
+                    $linkFilterArr,
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+
                 $delayedCompletedRequestsData[$date] = array('value'=>$value,'link'=>$link);
             }
             $combinedData["Work requests completed for over $reminderDelay days in need of submitter notifications"] = $delayedCompletedRequestsData;
@@ -4884,6 +4925,16 @@ class DashboardUtil
             //$combinedData["Work requests completed for over $reminderDelay days without invoices"] = $delayedCompletedNoInvoiceRequestsArr;
             $delayedCompletedNoInvoiceRequestsData = array();
             foreach($delayedCompletedNoInvoiceRequestsArr as $date=>$value ) {
+
+                $dates = $datesArr[$date];
+                $linkFilterArr['filter[startdate]'] = $dates['startDate'];
+                $linkFilterArr['filter[enddate]'] = $dates['endDate'];
+                $link = $this->container->get('router')->generate(
+                    'translationalresearch_logger',
+                    $linkFilterArr,
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+
                 $delayedCompletedNoInvoiceRequestsData[$date] = array('value'=>$value,'link'=>$link);
             }
             $combinedData["Work requests completed for over $reminderDelay days without invoices"] = $delayedCompletedNoInvoiceRequestsData;
