@@ -132,7 +132,8 @@ class DashboardUtil
 
             "55. Number of reminder emails sent per month (linked)" => "reminder-emails-per-month",
 
-            "56. Number of successful logins" => "successful-logins",
+            "56. Number of successful logins for the TRP site per month" => "successful-logins-trp",
+            "57. Number of successful logins" => "successful-logins",
 
             "" => "",
             "" => "",
@@ -4963,8 +4964,8 @@ class DashboardUtil
             $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack"); //" getStackedChart("
         }
 
-        //"56. Number of successful logins" => "successful-logins",
-        if( $chartType == "successful-logins" ) {
+        //"56. Number of successful log ins for the TRP site per month" => "successful-logins-trp",
+        if( $chartType == "successful-logins-trp" ) {
             $transresUtil = $this->container->get('transres_util');
 
             $loginsArr = array();
@@ -4978,7 +4979,7 @@ class DashboardUtil
                 $datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
                 //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
 
-                $loginCount = $transresUtil->getLoginCount($startDate,$thisEndDate);
+                $loginCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'translationalresearch');
                 $totalLoginCount += $loginCount;
 
                 $startDate->modify( 'first day of next month' );
@@ -4992,9 +4993,71 @@ class DashboardUtil
 
             $chartName = $chartName . " (" . $totalLoginCount . " Total)";
 
-            $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack"); //" getStackedChart("
+            $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack");
         }
 
+        //"57. Number of successful logins" => "successful-logins"
+        if( $chartType == "successful-logins" ) {
+            $transresUtil = $this->container->get('transres_util');
+
+            $loginsEmployeesArr = array();
+            $loginsTranslationalresearchArr = array();
+            $loginsFellappArr = array();
+            $loginsVacreqArr = array();
+            $loginsCalllogArr = array();
+            $loginsScanArr = array();
+
+            $totalLoginCount = 0;
+
+            $startDate->modify( 'first day of last month' );
+            do {
+                $startDateLabel = $startDate->format('M-Y');
+                $thisEndDate = clone $startDate;
+                $thisEndDate->modify( 'first day of next month' );
+                $datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
+                //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
+
+                $loginEmployeesCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'employees');
+                $loginsEmployeesArr[$startDateLabel] = $loginEmployeesCount;
+                $totalLoginCount += $loginCount;
+
+                $loginTranslationalresearchCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'translationalresearch');
+                $loginsTranslationalresearchArr[$startDateLabel] = $loginTranslationalresearchCount;
+                $totalLoginCount += $loginTranslationalresearchCount;
+
+                $loginFellappCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'fellapp');
+                $loginsFellappArr[$startDateLabel] = $loginFellappCount;
+                $totalLoginCount += $loginFellappCount;
+
+                $loginVacreqCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'vacreq');
+                $loginsVacreqArr[$startDateLabel] = $loginVacreqCount;
+                $totalLoginCount += $loginVacreqCount;
+
+                $loginCalllogCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'calllog');
+                $loginsCalllogArr[$startDateLabel] = $loginCalllogCount;
+                $totalLoginCount += $loginCalllogCount;
+
+                //$loginScanCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'scan');
+                //$loginsScanArr[$startDateLabel] = $loginScanCount;
+                //$totalLoginCount += $loginScanCount;
+
+                $startDate->modify( 'first day of next month' );
+
+
+                
+            } while( $startDate < $endDate );
+
+            $combinedData["Translational Research Logins"] = $loginsTranslationalresearchArr;
+            $combinedData["Employee Directory Logins"] = $loginsEmployeesArr;
+            $combinedData["Fellowship Applications Logins"] = $loginsFellappArr;
+            $combinedData["Vacation Request Logins"] = $loginsVacreqArr;
+            $combinedData["Call Log Book Logins"] = $loginsCalllogArr;
+            //$combinedData["Glass Slide Scan Orders Logins"] = $loginsScanArr;
+
+            $chartName = $chartName . " (" . $totalLoginCount . " Total)";
+
+            $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack");
+        }
 
         if( $chartType == "" ) {
 

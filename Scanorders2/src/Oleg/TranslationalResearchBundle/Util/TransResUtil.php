@@ -5680,10 +5680,6 @@ class TransResUtil
         $endDate->modify('+1 day');
         $dqlParameters['endDate'] = $endDate->format('Y-m-d H:i:s');
 
-//        if( $site ) {
-//
-//        }
-
         $dql->orderBy("logger.id","DESC");
         $query = $this->em->createQuery($dql);
 
