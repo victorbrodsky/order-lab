@@ -5615,7 +5615,7 @@ class TransResUtil
 
         //$dql->andWhere("logger.creationdate > :startDate AND logger.creationdate < :endDate");
         $dql->andWhere('logger.creationdate >= :startDate');
-        $startDate->modify('-1 day');
+        //$startDate->modify('-1 day');
         $dqlParameters['startDate'] = $startDate->format('Y-m-d H:i:s');
 
         $dql->andWhere('logger.creationdate <= :endDate');
