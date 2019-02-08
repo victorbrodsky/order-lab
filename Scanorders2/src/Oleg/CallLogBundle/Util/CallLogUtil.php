@@ -2465,11 +2465,12 @@ class CallLogUtil
         return null; //testing
 
         $formNodeUtil = $this->container->get('user_formnode_utility');
-        $shortInfo = $formNodeUtil->getFormNodeHolderShortInfo($message,$message->getMessageCategory(),false,"");
-        //$shortInfo = $formNodeUtil->getFormNodeHolderShortInfo($message,$message->getMessageCategory(),1,"");
+        //$shortInfo = $formNodeUtil->getFormNodeHolderShortInfo($message,$message->getMessageCategory(),false,"");
+        $shortInfo = $formNodeUtil->getFormNodeHolderShortInfo($message,$message->getMessageCategory(),1,"");
         //exit("shortInfo=$shortInfo");
+        echo "shortInfo=$shortInfo <br>";
 
-        if( $shortInfo ) {
+        if( 0 && $shortInfo ) {
             $calllogEntryMessage = $message->getCalllogEntryMessage();
             if( $calllogEntryMessage ) {
 
@@ -2502,10 +2503,10 @@ class CallLogUtil
                 }
 
                 $snapshotArrChunksText = implode("\n\r",$snapshotRowArr);
-                //exit("snapshotArrChunksText=$snapshotArrChunksText");
+                echo "snapshotArrChunksText=$snapshotArrChunksText <br>";
 
-                $calllogEntryMessage->setShortInfo($snapshotArrChunksText);
-                $this->em->flush($message);
+                //$calllogEntryMessage->setShortInfo($snapshotArrChunksText);
+                //$this->em->flush($message);
             }
         }
     }

@@ -2823,6 +2823,10 @@ class CallEntryController extends Controller
             throw new \Exception( "Message is not found by oid ".$messageOid." and version ".$messageVersion );
         }
 
+        //testing
+        $this->get('calllog_util')->updateMessageShortInfo($message);
+        //exit('pre-update entry');
+
         //testing dob: dob before 1901 causes php error
 //        $testPatient = $message->getPatient()[0];
 //        echo "patientName=".implode(",",$testPatient->patientName("valid"))."<br>";
@@ -3105,7 +3109,7 @@ class CallEntryController extends Controller
         }
 
         //Testing Spout
-        if(1) {
+        if(0) {
             $ext = "XLSX";
             $ext = "CSV";
 //            $entryIds = array();
@@ -3125,6 +3129,7 @@ class CallEntryController extends Controller
         //ob_end_clean();
         //$writer->setIncludeCharts(true);
 
+        $fileName = $fileName . ".xlsx";
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="'.$fileName.'"');
 
