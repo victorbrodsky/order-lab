@@ -138,16 +138,16 @@ class LoggerFilterType extends AbstractType
             'label' => false, //'Start Date/Time:',
             'required' => false,
             'widget' => 'single_text',
-            'format' => 'MM/dd/yyyy H:m',
-            'attr' => array('class' => 'form-control datetimepicker', 'placeholder' => 'Start Date/Time')
+            'format' => 'MM/dd/yyyy',
+            'attr' => array('class' => 'datepicker form-control', 'placeholder' => 'Start Date/Time')
         ));
 
         $builder->add('enddate', DateTimeType::class, array(
             'label' => false, //'End Date/Time:',
             'required' => false,
             'widget' => 'single_text',
-            'format' => 'MM/dd/yyyy H:m',
-            'attr' => array('class' => 'form-control datetimepicker', 'placeholder' => 'End Date/Time')
+            'format' => 'MM/dd/yyyy',
+            'attr' => array('class' => 'datepicker form-control', 'placeholder' => 'End Date/Time')
         ));
 
         $builder->add('ip', TextType::class, array(

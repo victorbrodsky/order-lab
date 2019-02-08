@@ -130,7 +130,7 @@ class DashboardUtil
             "53. Turn-around Statistics: Number of days to complete each Work Request with person (based on 'Completed and Notified' requests)" => "turn-around-statistics-days-complete-per-request-with-user",
             "54. Turn-around Statistics: Top 50 most delinquent invoices (linked)" => "turn-around-statistics-delayed-unpaid-invoices-by-days",
 
-            "55. Number of reminder emails sent per month" => "reminder-emails-per-month",
+            "55. Number of reminder emails sent per month (linked)" => "reminder-emails-per-month",
 
             "" => "",
             "" => "",
@@ -4239,7 +4239,7 @@ class DashboardUtil
             $combinedInvoicesData = array();
             $combinedInvoicesData['AP/CP'] = $apcpInvoicesData;
             $combinedInvoicesData['Hematopathology'] = $hemaInvoicesData;
-            $chartsArray = $this->getStackedChart($combinedInvoicesData, $chartName, "stack");
+            $chartsArray = $this->getStackedChart($combinedInvoicesData, $chartName, "stack"); //" getStackedChart("
         }
 
         //"47. Total Fees per Project Request Type" => "projects-fees-per-type",
@@ -4735,7 +4735,7 @@ class DashboardUtil
             $chartsArray = $this->getChart($invoiceDueDaysArrTop, $chartName,'bar',$layoutArray);
         }
 
-        //"55. Number of reminder emails sent per month" => "reminder-emails-per-month",
+        //"55. Number of reminder emails sent per month (linked)" => "reminder-emails-per-month",
         if( $chartType == "reminder-emails-per-month" ) {
             $transresUtil = $this->container->get('transres_util');
 
@@ -4744,6 +4744,38 @@ class DashboardUtil
             } else {
                 $projectSpecialtyObject = null;
             }
+
+            //////// Construct link ////////
+            $ProjectReminderEventTypeId = null;
+            $RequestReminderEventTypeId = null;
+            $InvoiceReminderEventTypeId = null;
+            $ProjectReminderEventType = $this->em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findOneByName("Project Reminder Email");
+            if( $ProjectReminderEventType ) {
+                $ProjectReminderEventTypeId = $ProjectReminderEventType->getId();
+            }
+            $RequestReminderEventType = $this->em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findOneByName("Work Request Reminder Email");
+            if( $RequestReminderEventType ) {
+                $RequestReminderEventTypeId = $RequestReminderEventType->getId();
+            }
+            $InvoiceReminderEventType = $this->em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findOneByName("Unpaid Invoice Reminder Email");
+            if( $InvoiceReminderEventType ) {
+                $InvoiceReminderEventTypeId = $InvoiceReminderEventType->getId();
+            }
+            
+            $linkFilterArr = array(
+                'filter[startdate]' => $startDateStr,
+                'filter[enddate]' => $endDateStr,
+                'filter[eventType][0]' => $ProjectReminderEventTypeId,
+                'filter[eventType][1]' => $RequestReminderEventTypeId,
+                'filter[eventType][2]' => $InvoiceReminderEventTypeId
+            );
+
+            $link = $this->container->get('router')->generate(
+                'translationalresearch_logger',
+                $linkFilterArr,
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            //////// EOF Construct link ////////
 
             $unpaidInvoicesArr = array();
             $delayedProjectsArr = array();
@@ -4797,7 +4829,12 @@ class DashboardUtil
 
             //Reminders
             $combinedData = array();
-            $combinedData['Unpaid Invoices'] = $unpaidInvoicesArr;
+            //$combinedData['Unpaid Invoices'] = $unpaidInvoicesArr;
+            $delayedInvoicesData = array();
+            foreach($unpaidInvoicesArr as $date=>$value ) {
+                $delayedInvoicesData[$date] = array('value'=>$value,'link'=>$link);
+            }
+            $combinedData["Unpaid Invoices"] = $delayedInvoicesData;
 
             //$combinedData['Delayed Project Requests'] = $delayedProjectsArr;
             $modifiedState = "irbreview";
@@ -4806,45 +4843,52 @@ class DashboardUtil
             if (!$reminderDelay) {
                 $reminderDelay = 14; //default 14 days
             }
-            $combinedData["Project requests taking longer than $reminderDelay days to review"] = $delayedProjectsArr;
+            //$combinedData["Project requests taking longer than $reminderDelay days to review"] = $delayedProjectsArr;
             //testing.
-            //It's not possible:
-            //1) we don't have an appropriate filter on the project/request lists
-            //2) each bar (in our case each bar is a mix of the projects, requests, invoices count) can lead only to one link
-//            $delayedProjectsData = array();
-//            foreach($delayedProjectsArr as $date=>$value ) {
-//                $linkFilterArr = array();
-//                $link = $this->container->get('router')->generate(
-//                    'translationalresearch_project_reminder_show',
-//                    $linkFilterArr,
-//                    UrlGeneratorInterface::ABSOLUTE_URL
-//                );
-//                $delayedProjectsData[$date] = array('value'=>$value,'link'=>$link);
-//            }
-//            $combinedData["Project requests taking longer than $reminderDelay days to review"] = $delayedProjectsData;
+            //show event log
+            $delayedProjectsData = array();
+            foreach($delayedProjectsArr as $date=>$value ) {
+                $delayedProjectsData[$date] = array('value'=>$value,'link'=>$link);
+            }
+            $combinedData["Project requests taking longer than $reminderDelay days to review"] = $delayedProjectsData;
 
             //$combinedData['Delayed Pending Work Request'] = $delayedRequestsArr;
             $reminderDelay = $transresUtil->getTransresSiteProjectParameter("pendingRequestReminderDelay", null, $projectSpecialtyObject);
             if (!$reminderDelay) {
                 $reminderDelay = 28; //default 28 days
             }
-            $combinedData["Work requests taking longer than $reminderDelay days to complete"] = $delayedRequestsArr;
+            //$combinedData["Work requests taking longer than $reminderDelay days to complete"] = $delayedRequestsArr;
+            $delayedRequestsData = array();
+            foreach($delayedRequestsArr as $date=>$value ) {
+                $delayedRequestsData[$date] = array('value'=>$value,'link'=>$link);
+            }
+            $combinedData["Work requests taking longer than $reminderDelay days to complete"] = $delayedRequestsData;
 
             //$combinedData['Delayed Completed Work Request'] = $delayedCompletedRequestsArr;
             $reminderDelay = $transresUtil->getTransresSiteProjectParameter("completedRequestReminderDelay", null, $projectSpecialtyObject);
             if (!$reminderDelay) {
                 $reminderDelay = 4; //default 4 days
             }
-            $combinedData["Work requests completed for over $reminderDelay days in need of submitter notifications"] = $delayedCompletedRequestsArr;
+            //$combinedData["Work requests completed for over $reminderDelay days in need of submitter notifications"] = $delayedCompletedRequestsArr;
+            $delayedCompletedRequestsData = array();
+            foreach($delayedCompletedRequestsArr as $date=>$value ) {
+                $delayedCompletedRequestsData[$date] = array('value'=>$value,'link'=>$link);
+            }
+            $combinedData["Work requests completed for over $reminderDelay days in need of submitter notifications"] = $delayedCompletedRequestsData;
 
             //$combinedData['Delayed Completed and Notified Work Request without Invoices'] = $delayedCompletedNoInvoiceRequestsArr;
             $reminderDelay = $transresUtil->getTransresSiteProjectParameter("completedNoInvoiceRequestReminderDelay", null, $projectSpecialtyObject);
             if (!$reminderDelay) {
                 $reminderDelay = 7; //default 7 days
             }
-            $combinedData["Work requests completed for over $reminderDelay days without invoices"] = $delayedCompletedNoInvoiceRequestsArr;
+            //$combinedData["Work requests completed for over $reminderDelay days without invoices"] = $delayedCompletedNoInvoiceRequestsArr;
+            $delayedCompletedNoInvoiceRequestsData = array();
+            foreach($delayedCompletedNoInvoiceRequestsArr as $date=>$value ) {
+                $delayedCompletedNoInvoiceRequestsData[$date] = array('value'=>$value,'link'=>$link);
+            }
+            $combinedData["Work requests completed for over $reminderDelay days without invoices"] = $delayedCompletedNoInvoiceRequestsData;
 
-            $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack");
+            $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack"); //" getStackedChart("
         }
 
         if( $chartType == "" ) {
