@@ -4784,6 +4784,12 @@ class DashboardUtil
             $delayedCompletedNoInvoiceRequestsArr = array();
             $datesArr = array();
 
+            $delayedProjectsCount = 0;
+            $delayedRequestsCount = 0;
+            $delayedCompletedRequestsCount = 0;
+            $delayedCompletedNoInvoiceRequestsCount = 0;
+            $unpaidInvoicesCount = 0;
+
             $pendingStates = array(
                 'active',
                 'pendingInvestigatorInput',
@@ -4819,11 +4825,19 @@ class DashboardUtil
                 $startDate->modify( 'first day of next month' );
 
                 $unpaidInvoicesArr[$startDateLabel] = $unpaidInvoicesRemindersCount;
+                $unpaidInvoicesCount += $unpaidInvoicesRemindersCount;
+
                 $delayedProjectsArr[$startDateLabel] = $delayedProjectRemindersCount;
+                $delayedProjectsCount += $delayedProjectRemindersCount;
                 
                 $delayedRequestsArr[$startDateLabel] = $delayedRequestRemindersCount;
+                $delayedRequestsCount += $delayedRequestRemindersCount;
+
                 $delayedCompletedRequestsArr[$startDateLabel] = $delayedCompletedRequestRemindersCount;
+                $delayedCompletedRequestsCount += $delayedCompletedRequestRemindersCount;
+
                 $delayedCompletedNoInvoiceRequestsArr[$startDateLabel] = $delayedCompletedNoInvoiceRequestRemindersCount;
+                $delayedCompletedNoInvoiceRequestsCount += $delayedCompletedNoInvoiceRequestRemindersCount;
 
             } while( $startDate < $endDate );
 
@@ -4845,7 +4859,7 @@ class DashboardUtil
 
                 $delayedInvoicesData[$date] = array('value'=>$value,'link'=>$link);
             }
-            $combinedData["Unpaid Invoices"] = $delayedInvoicesData;
+            $combinedData["$unpaidInvoicesCount Unpaid Invoices"] = $delayedInvoicesData;
 
             //$combinedData['Delayed Project Requests'] = $delayedProjectsArr;
             $modifiedState = "irbreview";
@@ -4870,7 +4884,7 @@ class DashboardUtil
 
                 $delayedProjectsData[$date] = array('value'=>$value,'link'=>$link);
             }
-            $combinedData["Project requests taking longer than $reminderDelay days to review"] = $delayedProjectsData;
+            $combinedData["$delayedProjectsCount Project requests taking longer than $reminderDelay days to review"] = $delayedProjectsData;
 
             //$combinedData['Delayed Pending Work Request'] = $delayedRequestsArr;
             $reminderDelay = $transresUtil->getTransresSiteProjectParameter("pendingRequestReminderDelay", null, $projectSpecialtyObject);
@@ -4892,7 +4906,7 @@ class DashboardUtil
 
                 $delayedRequestsData[$date] = array('value'=>$value,'link'=>$link);
             }
-            $combinedData["Work requests taking longer than $reminderDelay days to complete"] = $delayedRequestsData;
+            $combinedData["$delayedRequestsCount Work requests taking longer than $reminderDelay days to complete"] = $delayedRequestsData;
 
             //$combinedData['Delayed Completed Work Request'] = $delayedCompletedRequestsArr;
             $reminderDelay = $transresUtil->getTransresSiteProjectParameter("completedRequestReminderDelay", null, $projectSpecialtyObject);
@@ -4914,7 +4928,7 @@ class DashboardUtil
 
                 $delayedCompletedRequestsData[$date] = array('value'=>$value,'link'=>$link);
             }
-            $combinedData["Work requests completed for over $reminderDelay days in need of submitter notifications"] = $delayedCompletedRequestsData;
+            $combinedData["$delayedCompletedRequestsCount Work requests completed for over $reminderDelay days in need of submitter notifications"] = $delayedCompletedRequestsData;
 
             //$combinedData['Delayed Completed and Notified Work Request without Invoices'] = $delayedCompletedNoInvoiceRequestsArr;
             $reminderDelay = $transresUtil->getTransresSiteProjectParameter("completedNoInvoiceRequestReminderDelay", null, $projectSpecialtyObject);
@@ -4936,7 +4950,7 @@ class DashboardUtil
 
                 $delayedCompletedNoInvoiceRequestsData[$date] = array('value'=>$value,'link'=>$link);
             }
-            $combinedData["Work requests completed for over $reminderDelay days without invoices"] = $delayedCompletedNoInvoiceRequestsData;
+            $combinedData["$delayedCompletedNoInvoiceRequestsCount Work requests completed for over $reminderDelay days without invoices"] = $delayedCompletedNoInvoiceRequestsData;
 
             $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack"); //" getStackedChart("
         }
