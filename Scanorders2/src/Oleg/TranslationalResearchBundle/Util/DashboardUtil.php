@@ -4820,8 +4820,8 @@ class DashboardUtil
 
                 $unpaidInvoicesArr[$startDateLabel] = $unpaidInvoicesRemindersCount;
                 $delayedProjectsArr[$startDateLabel] = $delayedProjectRemindersCount;
+                
                 $delayedRequestsArr[$startDateLabel] = $delayedRequestRemindersCount;
-
                 $delayedCompletedRequestsArr[$startDateLabel] = $delayedCompletedRequestRemindersCount;
                 $delayedCompletedNoInvoiceRequestsArr[$startDateLabel] = $delayedCompletedNoInvoiceRequestRemindersCount;
 
@@ -4855,7 +4855,6 @@ class DashboardUtil
                 $reminderDelay = 14; //default 14 days
             }
             //$combinedData["Project requests taking longer than $reminderDelay days to review"] = $delayedProjectsArr;
-            //testing.
             //show event log
             $delayedProjectsData = array();
             foreach($delayedProjectsArr as $date=>$value ) {
