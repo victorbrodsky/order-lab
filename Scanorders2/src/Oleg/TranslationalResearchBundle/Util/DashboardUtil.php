@@ -4952,6 +4952,12 @@ class DashboardUtil
             }
             $combinedData["$delayedCompletedNoInvoiceRequestsCount Work requests completed for over $reminderDelay days without invoices"] = $delayedCompletedNoInvoiceRequestsData;
 
+            //Total emails
+            $totalEmails = $delayedProjectsCount + $delayedRequestsCount + $delayedCompletedRequestsCount + $delayedCompletedNoInvoiceRequestsCount + $unpaidInvoicesCount;
+            if( $totalEmails ) {
+                $chartName = $chartName . " ($totalEmails total)";
+            }
+
             $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack"); //" getStackedChart("
         }
 
