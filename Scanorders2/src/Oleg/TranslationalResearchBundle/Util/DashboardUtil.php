@@ -132,6 +132,8 @@ class DashboardUtil
 
             "55. Number of reminder emails sent per month (linked)" => "reminder-emails-per-month",
 
+            "56. Number of successful logins" => "successful-logins",
+
             "" => "",
             "" => "",
             "" => "",
@@ -4960,6 +4962,39 @@ class DashboardUtil
 
             $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack"); //" getStackedChart("
         }
+
+        //"56. Number of successful logins" => "successful-logins",
+        if( $chartType == "successful-logins" ) {
+            $transresUtil = $this->container->get('transres_util');
+
+            $loginsArr = array();
+            $totalLoginCount = 0;
+
+            $startDate->modify( 'first day of last month' );
+            do {
+                $startDateLabel = $startDate->format('M-Y');
+                $thisEndDate = clone $startDate;
+                $thisEndDate->modify( 'first day of next month' );
+                $datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
+                //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
+
+                $loginCount = $transresUtil->getLoginCount($startDate,$thisEndDate);
+                $totalLoginCount += $loginCount;
+
+                $startDate->modify( 'first day of next month' );
+
+                $loginsArr[$startDateLabel] = $loginCount;
+
+
+            } while( $startDate < $endDate );
+
+            $combinedData["TRP Login"] = $loginsArr;
+
+            $chartName = $chartName . " (" . $totalLoginCount . " Total)";
+
+            $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack"); //" getStackedChart("
+        }
+
 
         if( $chartType == "" ) {
 

@@ -5655,4 +5655,45 @@ class TransResUtil
 
         return count($loggers);
     }
+
+    public function getLoginCount( $startDate, $endDate, $site='translationalresearch' ) {
+
+        $dqlParameters = array();
+
+        //get the date from event log
+        $repository = $this->em->getRepository('OlegUserdirectoryBundle:Logger');
+        $dql = $repository->createQueryBuilder("logger");
+        $dql->innerJoin('logger.eventType', 'eventType');
+
+        //$dql->where("logger.siteName = 'translationalresearch'");
+        $dql->where("logger.siteName = '".$site."'");
+
+        $dql->andWhere("eventType.name = :eventTypeName");
+        $dqlParameters['eventTypeName'] = "Successful Login";
+
+        //$dql->andWhere("logger.creationdate > :startDate AND logger.creationdate < :endDate");
+        $dql->andWhere('logger.creationdate >= :startDate');
+        //$startDate->modify('-1 day');
+        $dqlParameters['startDate'] = $startDate->format('Y-m-d H:i:s');
+
+        $dql->andWhere('logger.creationdate <= :endDate');
+        $endDate->modify('+1 day');
+        $dqlParameters['endDate'] = $endDate->format('Y-m-d H:i:s');
+
+//        if( $site ) {
+//
+//        }
+
+        $dql->orderBy("logger.id","DESC");
+        $query = $this->em->createQuery($dql);
+
+        $query->setParameters($dqlParameters);
+
+        $loggers = $query->getResult();
+
+        //echo "loggers=".count($loggers)."<br>";
+        //exit();
+
+        return count($loggers);
+    }
 }
