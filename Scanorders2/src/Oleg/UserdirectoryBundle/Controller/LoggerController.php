@@ -348,6 +348,8 @@ class LoggerController extends Controller
         if( $filtered ) {
             $eventlogTitle = $eventlogTitle . " showing " . count($pagination) . " matching event(s)";
         }
+        $eventlogTitle = $eventlogTitle . " (Total matching " . $pagination->getTotalItemCount() . ")";
+
 
         $route = $request->get('_route');
         //echo "route=".$route."<br>";
