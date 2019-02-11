@@ -5708,7 +5708,7 @@ class TransResUtil
         $dql->innerJoin('logger.user', 'user');
         $dql->innerJoin('logger.eventType', 'eventType');
 
-        $dql->where("logger.user IS NOT NULL");
+        $dql->where("user.id IS NOT NULL");
 
         if( $site ) {
             //$dql->where("logger.siteName = 'translationalresearch'");
