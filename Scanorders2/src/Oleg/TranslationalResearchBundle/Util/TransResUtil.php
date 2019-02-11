@@ -5735,10 +5735,10 @@ class TransResUtil
 
         $loggers = $query->getResult();
 
-        echo "loggers=".count($loggers)."<br>";
+        //echo "loggers=".count($loggers)."<br>";
         //$logger = $loggers[0];
-        print_r($loggers);
-        exit();
+        //print_r($loggers);
+        //exit();
 
         return $loggers;
     }
