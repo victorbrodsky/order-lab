@@ -5704,8 +5704,8 @@ class TransResUtil
         //$dql->select("logger.user as user");
         $dql->select("user.id");
         //$dql->select('identity(logger.user)');
-        //$dql->distinct();
-        $dql->groupBy("user.id");
+        $dql->distinct();
+        //$dql->groupBy("user.id");
         $dql->innerJoin('logger.user', 'user');
         $dql->innerJoin('logger.eventType', 'eventType');
 
@@ -5735,10 +5735,10 @@ class TransResUtil
 
         $loggers = $query->getResult();
 
-        //echo "loggers=".count($loggers)."<br>";
+        echo "loggers=".count($loggers)."<br>";
         //$logger = $loggers[0];
-        //print_r($loggers);
-        //exit();
+        print_r($loggers);
+        exit();
 
         return $loggers;
     }
