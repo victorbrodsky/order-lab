@@ -5145,7 +5145,6 @@ class DashboardUtil
                 $thisEndDate->add(new \DateInterval('P6D'));
 
                 $startDateLabel = $startDate->format('d-M-Y');
-                //echo $count++." week=".$startDate->format('Y-m-d')." - ".$thisEndDate->format('Y-m-d')."<br>";
 
                 $datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
                 //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
@@ -5171,9 +5170,6 @@ class DashboardUtil
                 $totalLoginCount += $loginCalllogCount;
 
             }
-            //echo "<pre>";
-            //print_r($weeks);
-            //exit('111');
 
             $combinedData["Translational Research Logins"] = $loginsTranslationalresearchArr;
             $combinedData["Employee Directory Logins"] = $loginsEmployeesArr;
