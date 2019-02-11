@@ -5693,7 +5693,7 @@ class TransResUtil
         return count($loggers);
     }
 
-    public function getLoginsUniqueUser( $startDate, $endDate, $site=null ) {
+    public function getLoginsUniqueUser( $startDate, $endDate, $unique=true, $site=null ) {
 
         $dqlParameters = array();
 
@@ -5704,7 +5704,9 @@ class TransResUtil
         //$dql->select("logger.user as user");
         $dql->select("user.id");
         //$dql->select('identity(logger.user)');
-        $dql->distinct();
+        if( $unique ) {
+            $dql->distinct();
+        }
         //$dql->groupBy("user.id");
         $dql->innerJoin('logger.user', 'user');
         $dql->innerJoin('logger.eventType', 'eventType');

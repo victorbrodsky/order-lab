@@ -5064,6 +5064,9 @@ class DashboardUtil
         if( $chartType == "successful-logins-user" ) {
             $transresUtil = $this->container->get('transres_util');
 
+            $unique = true;
+            $unique = false;
+
             //$loginsArr = array();
             $loginsUserArr = array();
             $userArr = array();
@@ -5078,7 +5081,7 @@ class DashboardUtil
                 $datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
                 //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
 
-                $loginsArr = $transresUtil->getLoginsUniqueUser($startDate,$thisEndDate);
+                $loginsArr = $transresUtil->getLoginsUniqueUser($startDate,$thisEndDate,$unique);
 
                 foreach($loginsArr as $loginUser) {
                     $loginUserId = $loginUser['id'];
