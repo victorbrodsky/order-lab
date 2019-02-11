@@ -5700,11 +5700,12 @@ class TransResUtil
         //get the date from event log
         $repository = $this->em->getRepository('OlegUserdirectoryBundle:Logger');
         $dql = $repository->createQueryBuilder("logger");
-        $dql->select("logger");
-        //$dql->select("logger.user");
+        //$dql->select("logger");
+        //$dql->select("logger.user as user");
+        $dql->select("user.id");
         //$dql->select('identity(logger.user)');
         //$dql->distinct();
-        $dql->groupBy("user");
+        $dql->groupBy("user.id");
         $dql->innerJoin('logger.user', 'user');
         $dql->innerJoin('logger.eventType', 'eventType');
 

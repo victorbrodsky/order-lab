@@ -5066,6 +5066,7 @@ class DashboardUtil
 
             $loginsArr = array();
             $loginsUserArr = array();
+            $userArr = array();
 
             $totalLoginCount = 0;
 
@@ -5079,10 +5080,18 @@ class DashboardUtil
 
                 $loginsArr = $transresUtil->getLoginsUniqueUser($startDate,$thisEndDate);
 
-                foreach($loginsArr as $login) {
+                foreach($loginsArr as $loginUser) {
+                    $loginUserId = $loginUser['id'];
+                    if( count($userArr) > 0 && isset($userArr[$loginUserId]) ) {
+                        $userTitle = $userArr[$loginUserId];
+                    } else {
+                        $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->find($loginUserId);
+                        $userTitle = $user->getUsernameOptimal();
+                        $userArr[$loginUserId] = $userTitle;
+                    }
                     //$user = $loginUser['user'];
                     //echo "user=".$user."<br>";
-                    $loginsUserArr[$login->getUser()->getUsernameOptimal()][$startDateLabel]++;
+                    $loginsUserArr[$userTitle][$startDateLabel]++;
                     //$loginsUserArr[$startDateLabel][$login->getUser()->getUsernameOptimal()]++;
 
                     $totalLoginCount++;
