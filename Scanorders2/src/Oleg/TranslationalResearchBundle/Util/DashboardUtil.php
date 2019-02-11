@@ -5065,7 +5065,7 @@ class DashboardUtil
             $transresUtil = $this->container->get('transres_util');
 
             $unique = true;
-            $unique = false;
+            //$unique = false;
 
             //$loginsArr = array();
             $loginsUserArr = array();
