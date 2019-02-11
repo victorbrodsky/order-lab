@@ -5693,7 +5693,7 @@ class TransResUtil
 //        return count($loggers);
 //    }
     public function getLoginCount( $startDate, $endDate, $site='translationalresearch', $unique=false ) {
-
+        $unique=false;
         $dqlParameters = array();
 
         //get the date from event log
