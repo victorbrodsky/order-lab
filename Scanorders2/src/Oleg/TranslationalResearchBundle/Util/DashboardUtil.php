@@ -5071,7 +5071,7 @@ class DashboardUtil
             $loginsUserArr = array();
             $userArr = array();
 
-            $totalLoginCount = 0;
+            //$totalLoginCount = 0;
 
             $startDate->modify( 'first day of last month' );
             do {
@@ -5097,7 +5097,7 @@ class DashboardUtil
                     $loginsUserArr[$userTitle][$startDateLabel]++;
                     //$loginsUserArr[$startDateLabel][$login->getUser()->getUsernameOptimal()]++;
 
-                    $totalLoginCount++;
+                    //$totalLoginCount++;
                 }
 
                 //$loginsUserArr[$user->getUsernameOptimal()]++;
@@ -5112,7 +5112,7 @@ class DashboardUtil
 
             //$combinedData["Translational Research Logins"] = $loginsTranslationalresearchArr;
 
-            $chartName = $chartName . " (" . $totalLoginCount . " Total)";
+            //$chartName = $chartName . " (" . $totalLoginCount . " Total)";
 
             $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack");
         }
