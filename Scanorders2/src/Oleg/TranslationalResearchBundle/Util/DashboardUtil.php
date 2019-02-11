@@ -133,7 +133,8 @@ class DashboardUtil
             "55. Number of reminder emails sent per month (linked)" => "reminder-emails-per-month",
 
             "56. Number of successful logins for the TRP site per month" => "successful-logins-trp",
-            "57. Number of successful logins" => "successful-logins",
+            "57. Number of successful logins per site" => "successful-logins-site",
+            "58. Number of successful logins per user" => "successful-logins-user",
 
             "" => "",
             "" => "",
@@ -4996,8 +4997,8 @@ class DashboardUtil
             $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack");
         }
 
-        //"57. Number of successful logins" => "successful-logins"
-        if( $chartType == "successful-logins" ) {
+        //"57. Number of successful logins per site" => "successful-logins-site"
+        if( $chartType == "successful-logins-site" ) {
             $transresUtil = $this->container->get('transres_util');
 
             $loginsEmployeesArr = array();
@@ -5005,7 +5006,7 @@ class DashboardUtil
             $loginsFellappArr = array();
             $loginsVacreqArr = array();
             $loginsCalllogArr = array();
-            $loginsScanArr = array();
+            //$loginsScanArr = array();
 
             $totalLoginCount = 0;
 
@@ -5053,6 +5054,51 @@ class DashboardUtil
             $combinedData["Vacation Request Logins"] = $loginsVacreqArr;
             $combinedData["Call Log Book Logins"] = $loginsCalllogArr;
             //$combinedData["Glass Slide Scan Orders Logins"] = $loginsScanArr;
+
+            $chartName = $chartName . " (" . $totalLoginCount . " Total)";
+
+            $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack");
+        }
+
+        //"58. Number of successful logins per user" => "successful-logins-user"
+        if( $chartType == "successful-logins-user" ) {
+            $transresUtil = $this->container->get('transres_util');
+
+            $loginsArr = array();
+            $loginsUserArr = array();
+
+            $totalLoginCount = 0;
+
+            $startDate->modify( 'first day of last month' );
+            do {
+                $startDateLabel = $startDate->format('M-Y');
+                $thisEndDate = clone $startDate;
+                $thisEndDate->modify( 'first day of next month' );
+                $datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
+                //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
+
+                $loginsArr = $transresUtil->getLoginsUniqueUser($startDate,$thisEndDate);
+
+                foreach($loginsArr as $login) {
+                    //$user = $loginUser['user'];
+                    //echo "user=".$user."<br>";
+                    $loginsUserArr[$login->getUser()->getUsernameOptimal()][$startDateLabel]++;
+                    //$loginsUserArr[$startDateLabel][$login->getUser()->getUsernameOptimal()]++;
+
+                    $totalLoginCount++;
+                }
+
+                //$loginsUserArr[$user->getUsernameOptimal()]++;
+
+                $startDate->modify( 'first day of next month' );
+
+            } while( $startDate < $endDate );
+
+            foreach($loginsUserArr as $startDateLabel=>$userDataArr) {
+                $combinedData[$startDateLabel] = $userDataArr;
+            }
+
+            //$combinedData["Translational Research Logins"] = $loginsTranslationalresearchArr;
 
             $chartName = $chartName . " (" . $totalLoginCount . " Total)";
 

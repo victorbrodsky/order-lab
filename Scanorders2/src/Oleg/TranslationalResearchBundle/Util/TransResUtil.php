@@ -5692,4 +5692,53 @@ class TransResUtil
 
         return count($loggers);
     }
+
+    public function getLoginsUniqueUser( $startDate, $endDate, $site=null ) {
+
+        $dqlParameters = array();
+
+        //get the date from event log
+        $repository = $this->em->getRepository('OlegUserdirectoryBundle:Logger');
+        $dql = $repository->createQueryBuilder("logger");
+        $dql->select("logger");
+        //$dql->select("logger.user");
+        //$dql->select('identity(logger.user)');
+        //$dql->distinct();
+        //$dql->groupBy("logger.user");
+        $dql->innerJoin('logger.user', 'user');
+        $dql->innerJoin('logger.eventType', 'eventType');
+
+        $dql->where("logger.user IS NOT NULL");
+
+        if( $site ) {
+            //$dql->where("logger.siteName = 'translationalresearch'");
+            $dql->andWhere("logger.siteName = '" . $site . "'");
+        }
+
+        $dql->andWhere("eventType.name = :eventTypeName");
+        $dqlParameters['eventTypeName'] = "Successful Login";
+
+        //$dql->andWhere("logger.creationdate > :startDate AND logger.creationdate < :endDate");
+        $dql->andWhere('logger.creationdate >= :startDate');
+        //$startDate->modify('-1 day');
+        $dqlParameters['startDate'] = $startDate->format('Y-m-d H:i:s');
+
+        $dql->andWhere('logger.creationdate <= :endDate');
+        $endDate->modify('+1 day');
+        $dqlParameters['endDate'] = $endDate->format('Y-m-d H:i:s');
+
+        $dql->orderBy("logger.id","DESC");
+        $query = $this->em->createQuery($dql);
+
+        $query->setParameters($dqlParameters);
+
+        $loggers = $query->getResult();
+
+        //echo "loggers=".count($loggers)."<br>";
+        //$logger = $loggers[0];
+        //print_r($loggers);
+        //exit();
+
+        return $loggers;
+    }
 }
