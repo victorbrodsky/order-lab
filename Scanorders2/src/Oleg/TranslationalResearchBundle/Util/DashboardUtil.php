@@ -5064,7 +5064,7 @@ class DashboardUtil
         if( $chartType == "successful-logins-user" ) {
             $transresUtil = $this->container->get('transres_util');
 
-            $loginsArr = array();
+            //$loginsArr = array();
             $loginsUserArr = array();
             $userArr = array();
 
@@ -5082,7 +5082,7 @@ class DashboardUtil
 
                 foreach($loginsArr as $loginUser) {
                     $loginUserId = $loginUser['id'];
-                    if( count($userArr) > 0 && isset($userArr[$loginUserId]) ) {
+                    if( isset($userArr[$loginUserId]) ) {
                         $userTitle = $userArr[$loginUserId];
                     } else {
                         $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->find($loginUserId);
