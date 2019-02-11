@@ -5704,7 +5704,7 @@ class TransResUtil
         //$dql->select("logger.user");
         //$dql->select('identity(logger.user)');
         //$dql->distinct();
-        $dql->groupBy("user");
+        $dql->groupBy("user.id");
         $dql->innerJoin('logger.user', 'user');
         $dql->innerJoin('logger.eventType', 'eventType');
 
