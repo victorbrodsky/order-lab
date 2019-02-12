@@ -1179,11 +1179,24 @@ class FormNodeUtil
     public function updateFieldsCache($message) {
         //return null; //testing
 
-        $formNodeUtil = $this->container->get('user_formnode_utility');
+        //$formNodeUtil = $this->container->get('user_formnode_utility');
         //$shortInfo = $formNodeUtil->getFormNodeHolderShortInfo($message,$message->getMessageCategory(),false,"");
-        $shortInfo = $formNodeUtil->getFormNodeHolderShortInfo($message,$message->getMessageCategory(),1,"");
+        //$holderEntity, $formNodeHolderEntity, $table=true, $trclassname, $withValue=true, $colspan=9
+
+        //$shortInfo = $this->getFormNodeHolderShortInfo($message,$message->getMessageCategory(),1,"");
+
+        $shortInfo = $this->getFormNodeHolderShortInfo($message,$message->getMessageCategory(),false,"");
+        echo "<pre>";
+        print_r($shortInfo);
         //exit("shortInfo=$shortInfo");
-        echo "shortInfo=$shortInfo <br>";
+
+        //echo '<textarea rows="8" cols="50" >';
+        //echo "shortInfo=$shortInfo <br>";
+        //echo '</textarea>';
+
+        //echo "shortInfo=$shortInfo <br>";
+        echo "</pre>";
+        exit('111');
 
         if( 0 && $shortInfo ) {
 

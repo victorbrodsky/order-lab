@@ -3585,7 +3585,8 @@ class CallEntryController extends Controller
                 //TODO: entry info saved
                 //used in list:
                 //getFormNodeHolderShortInfo(message,message.messageCategory,1,trclassname)
-                $snapshotRow = $message->getCalllogEntryMessage()->getShortInfo();
+                //$snapshotRow = $message->getCalllogEntryMessage()->getShortInfo();
+                $snapshotRow = $message->getFormnodesCache();
                 $data = array();
                 $data[0] = $snapshotRow;
                 $writer->addRowWithStyle($data, $rowStyle);
