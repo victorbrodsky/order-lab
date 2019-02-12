@@ -1494,7 +1494,7 @@ class CallEntryController extends Controller
             }//if $newEncounter
 
             //TODO: save call log entry short info to setShortInfo($shortInfo)
-            $calllogUtil->updateMessageShortInfo($message);
+            //$calllogUtil->updateMessageShortInfo($message);
 
             if( $testing ) {
                 echo "<br><br>message id=" . $message->getId() . "<br>";
@@ -2824,7 +2824,8 @@ class CallEntryController extends Controller
         }
 
         //testing
-        $this->get('calllog_util')->updateMessageShortInfo($message);
+        //$this->get('calllog_util')->updateMessageShortInfo($message);
+        $this->get('user_formnode_utility')->updateFieldsCache($message);
         //exit('pre-update entry');
 
         //testing dob: dob before 1901 causes php error

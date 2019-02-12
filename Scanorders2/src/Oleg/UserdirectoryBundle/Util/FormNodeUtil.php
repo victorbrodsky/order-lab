@@ -42,7 +42,13 @@ class FormNodeUtil
         $this->secTokenStorage = $secTokenStorage;
         $this->container = $container;
     }
-
+    
+    
+    //$formNodeUtil->processFormNodes($request,$message->getMessageCategory(),$message,$testing);
+    //$request - Symfony\Component\HttpFoundation\Request
+    //$formNodeHolder - entity holding the formnodes
+    //$holderEntity - holder entity (parent entity)
+    //$testing - testing flag
     public function processFormNodes($request, $formNodeHolder, $holderEntity, $testing=false)
     {
         if( !$formNodeHolder ) {
@@ -59,6 +65,23 @@ class FormNodeUtil
             return;
         }
 
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        /////// create a new EventLog attempt with id $eventLogId (to make the actions atomic) ///////
+        //create logger which must be deleted on successefull creation of application
+        $user = $this->secTokenStorage->getToken()->getUser();
+        $eventAttempt = "Attempt of processing form nodes for holderEntity:<br>" . $holderEntity . "<br><br>formNodeHolder:<br>".$formNodeHolder;
+        //$sitename,$event,$user,$subjectEntities,$request,$action='Unknown Event'
+        $eventLogAttempt = $userSecUtil->createUserEditEvent(
+            $this->container->getParameter('employees.sitename'),   //$sitename
+            $eventAttempt,                                          //$event (Event description)
+            $user,                                                  //$user
+            $holderEntity,                                          //$subjectEntities
+            $request,                                               //$request
+            'FormNode Processing Failed'                            //$action (Event Type)
+        );
+        /////// EOF create a new EventLog attempt with id $eventLogId (to make the actions atomic) ///////
+
         $data = $request->request->all();
 
 //        print "<pre>";
@@ -70,6 +93,15 @@ class FormNodeUtil
 
         //process by data partial key name" "formnode-4" => "formnode-"
         $this->processFormNodesFromDataKeys($data,$holderEntity,$testing);
+
+        //TODO: save fields as cache in the field $formnodesCache ($holderEntity->setFormnodesCache($text))
+        $res = $this->updateFieldsCache($holderEntity);
+
+        if( $res ) {
+            //everything looks fine => remove creation attempt log
+            $this->em->remove($eventLogAttempt);
+            $this->em->flush();
+        }
     }
 
     //process by data partial key name" "formnode-4" => "formnode-"
@@ -1143,6 +1175,53 @@ class FormNodeUtil
         return $index;
     }
 
+    //TODO: create a cache for the formnode fields
+    public function updateFieldsCache($message) {
+        //return null; //testing
+
+        $formNodeUtil = $this->container->get('user_formnode_utility');
+        //$shortInfo = $formNodeUtil->getFormNodeHolderShortInfo($message,$message->getMessageCategory(),false,"");
+        $shortInfo = $formNodeUtil->getFormNodeHolderShortInfo($message,$message->getMessageCategory(),1,"");
+        //exit("shortInfo=$shortInfo");
+        echo "shortInfo=$shortInfo <br>";
+
+        if( 0 && $shortInfo ) {
+
+            //divide results by chunks of 21 rows in order to fit them in the excel row max height
+            $snapshotArrChunks = array_chunk($shortInfo, 21);
+
+//                foreach ($snapshotArrChunks as $snapshotArrChunk) {
+//                    //$objRichText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
+//                    foreach ($snapshotArrChunk as $snapshotRow) {
+//                        if (strpos($snapshotRow, "[###excel_section_flag###]") === false) {
+//                            //$objRichText->createText($snapshotRow."\n");
+//                        } else {
+//                            $snapshotRow = str_replace("[###excel_section_flag###]", "", $snapshotRow);
+//                            //$objItalic = $objRichText->createTextRun($snapshotRow."\n");
+//                            //$objItalic->getFont()->setItalic(true);
+//                        }
+//                    }
+//                }
+
+            $snapshotRowArr = array();
+            foreach ($snapshotArrChunks as $snapshotArrChunk) {
+                foreach ($snapshotArrChunk as $snapshotRow) {
+                    if (strpos($snapshotRow, "[###excel_section_flag###]") === false) {
+                        //
+                    } else {
+                        $snapshotRow = str_replace("[###excel_section_flag###]", "", $snapshotRow);
+                        $snapshotRowArr[] = $snapshotRow;
+                    }
+                }
+            }
+
+            $snapshotArrChunksText = implode("\n\r",$snapshotRowArr);
+            echo "snapshotArrChunksText=$snapshotArrChunksText <br>";
+
+            //$message->setFormnodesCache($snapshotArrChunksText);
+            //$this->em->flush($message);
+        }
+    }
 
     //Get all formnode from bottom to top. Split the row into two columns so that the values all begin at the same point.
     //$holderEntity - message; $formNodeHolderEntity - message category

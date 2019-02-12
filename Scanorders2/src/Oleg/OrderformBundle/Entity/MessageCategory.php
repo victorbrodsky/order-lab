@@ -91,6 +91,7 @@ class MessageCategory extends BaseCompositeNode {
      *      )
      **/
     private $formNodes;
+    
 
 
     public function __construct($author=null) {

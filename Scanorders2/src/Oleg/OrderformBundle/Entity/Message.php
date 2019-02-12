@@ -124,6 +124,12 @@ class Message {
     private $messageCategory;
 
     /**
+     * Form nodes fields cache (snapshot)
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $formnodesCache;
+
+    /**
      * Name of the form: Message Type name at the time of message submission
      * @ORM\Column(type="string", nullable=true)
      */
@@ -966,6 +972,22 @@ class Message {
     public function getMessageCategory()
     {
         return $this->messageCategory;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFormnodesCache()
+    {
+        return $this->formnodesCache;
+    }
+
+    /**
+     * @param mixed $formnodesCache
+     */
+    public function setFormnodesCache($formnodesCache)
+    {
+        $this->formnodesCache = $formnodesCache;
     }
 
     /**
