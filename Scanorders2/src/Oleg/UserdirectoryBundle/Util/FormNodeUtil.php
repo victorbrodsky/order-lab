@@ -1276,8 +1276,8 @@ class FormNodeUtil
 
             //$nameIsArray = is_array($name) || $this->isAssoc($name);
             //if( $this->is_assoc($name) ) {
-            if ( (array) $name === $name ) {
-                exit($name." - array");
+            if ( is_array($name) ) {
+                //exit($name." - array");
 
                 foreach($name as $key=>$thisName) {
 
