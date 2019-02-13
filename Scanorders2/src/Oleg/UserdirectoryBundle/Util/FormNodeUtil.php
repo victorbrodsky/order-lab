@@ -1183,19 +1183,31 @@ class FormNodeUtil
         //$shortInfo = $formNodeUtil->getFormNodeHolderShortInfo($message,$message->getMessageCategory(),false,"");
         //$holderEntity, $formNodeHolderEntity, $table=true, $trclassname, $withValue=true, $colspan=9
 
-        //$shortInfo = $this->getFormNodeHolderShortInfo($message,$message->getMessageCategory(),1,"");
+        //list and view used table view
+        if(1) {
+            $shortInfo = $this->getFormNodeHolderShortInfo($message, $message->getMessageCategory(),true,"");
+            echo "Text shortInfo=$shortInfo <br>";
+            echo '<textarea rows="20" cols="150" >';
+            echo $shortInfo;
+            echo '</textarea>';
+        }
 
-        $shortInfo = $this->getFormNodeHolderShortInfo($message,$message->getMessageCategory(),false,"");
-        echo "<pre>";
-        print_r($shortInfo);
-        //exit("shortInfo=$shortInfo");
+//        $shortInfo = $this->getFormNodeHolderShortInfoForView($message,$message->getMessageCategory());
+//        echo '<textarea rows="20" cols="150" >';
+//        echo $shortInfo;
+//        echo '</textarea>';
 
-        //echo '<textarea rows="8" cols="50" >';
-        //echo "shortInfo=$shortInfo <br>";
-        //echo '</textarea>';
+        //xml format
+        $shortInfoXml = $this->getFormNodeHolderShortInfo($message,$message->getMessageCategory(),false,"");
+//        echo "<br>Array:<pre>";
+//        print_r($shortInfo);
+//        echo "</pre>";
+        echo 'XML:<textarea rows="20" cols="150" >';
+        echo $shortInfoXml;
+        echo '</textarea>';
 
-        //echo "shortInfo=$shortInfo <br>";
-        echo "</pre>";
+        $shortInfo = $this->xmlToTable($shortInfoXml,false);
+        echo "<br>XML Table:<br> $shortInfo <br>";
         exit('111');
 
         if( 0 && $shortInfo ) {
@@ -1235,6 +1247,139 @@ class FormNodeUtil
             //$this->em->flush($message);
         }
     }
+    public function xmlToTable( $xmlData, $withName=true, $colspan=9 ) {
+        $xml = simplexml_load_string($xmlData);
+        echo "<br>XML:<pre>";
+        print_r($xml);
+        echo "</pre>";
+
+        $table = array();
+        $tableStr = "";
+
+        foreach($xml->section as $section)
+        {
+            //echo (string)$section->name;
+            //echo (string)$section->value;
+
+            //section
+            $sectionName = (string)$section->sectionName;
+            $tableStr = $tableStr . '<tr class="">';
+            $tableStr = $tableStr . '<td colspan=9 class="rowlink-skip"><i>' . $sectionName . '</i></td>';
+            $tableStr = $tableStr . '</tr>';
+
+            //field: value
+
+
+            $name = (string)$section->name;
+            $value = (string)$section->value;
+            echo $sectionName." = $name : $value <br>";
+
+            //$nameIsArray = is_array($name) || $this->isAssoc($name);
+            //if( $this->is_assoc($name) ) {
+            if ( (array) $name === $name ) {
+                exit($name." - array");
+
+                foreach($name as $key=>$thisName) {
+
+                    echo "Array: $key : $thisName <br>";
+
+                    $tableStr = $tableStr . '<tr class="">';
+
+                    $tableStr = $tableStr . '<td colspan=3 class="rowlink-skip" style="width:20%">' . $name[$key] . '</td>';
+
+                    $tableStr = $tableStr . '<td colspan=6 class="rowlink-skip" style="width:80%">' . $value[$key] . '</td>';
+
+                    $tableStr = $tableStr . '</tr>';
+
+                }
+
+            } else {
+
+                //exit($name." - single");
+                echo "Single: $name : $value <br>";
+
+                $tableStr = $tableStr . '<tr class="">';
+
+                $tableStr = $tableStr . '<td colspan=3 class="rowlink-skip" style="width:20%">' . $name . '</td>';
+
+                $tableStr = $tableStr . '<td colspan=6 class="rowlink-skip" style="width:80%">' . $value . '</td>';
+
+                $tableStr = $tableStr . '</tr>';
+            }
+
+
+            //$table[] = $tr;
+        }
+
+
+//        foreach( $finalResultsArr as $sectionName => $nameValueArrs ) {
+//
+//            if( $sectionName ) {
+//                $result = $result .
+//                    '<tr style="border:none;">' .
+//                    '<td style="border:none;">' . $sectionName . '</td>' .
+//                    '<td style="border:none;"></td>' .
+//                    '</tr style="border:none;">';
+//
+//            }
+//            foreach( $nameValueArrs as $nameValueMultipleArr ) {
+//
+//                foreach( $nameValueMultipleArr as $nameValueArr ) {
+//                    if( $nameValueArr['showLabel'] ) {
+//                        $formNodeName = $space . $space . $space . $nameValueArr['name'];
+//                    } else {
+//                        $formNodeName = null;
+//                    }
+//                    $result = $result .
+//                        '<tr style="border:none;">' .
+//                        '<td style="width:20%; border:none;">' . $formNodeName . '</td>' .
+//                        '<td style="width:80%; border:none;">' . $nameValueArr['value'] . '</td>' .
+//                        '</tr style="border:none;">';
+//                }
+//            }
+//
+//        }
+
+
+        $result = '<td colspan='.$colspan.'><table class = "table table-hover table-condensed">' . $tableStr . '</table></td>';
+        return $result;
+
+        //$sectionName = $xml->{"sectionName"};
+
+        $space = "&nbsp;";
+
+        $xml = $xmlData;
+
+        //<tr class=""><td colspan=9 class="rowlink-skip"><i>History/Findings</i></td></tr>
+        $xml = str_replace("<sectionName>",'<tr class=""><td colspan=9 class="rowlink-skip"><i>',$xml);
+        $xml = str_replace("</sectionName>",'</i></td></tr>',$xml);
+
+        $trStart = '<tr class="">';
+        $trEnd = '</tr>';
+
+        //
+        $xml = str_replace("<name>",$trStart.'<td colspan=3 class="rowlink-skip" style="width:20%">',$xml);
+        $xml = str_replace("</name>",'</td>'.$trEnd,$xml);
+
+        //
+        $xml = str_replace("<value>",'<td colspan=6 class="rowlink-skip" style="width:80%">'.$space.$space.$space.$space.$space.$space,$xml);
+        $xml = str_replace("</value>",'</td>',$xml);
+
+        $result = '<td colspan='.$colspan.'><table class = "table table-hover table-condensed">' . $xml . '</table></td>';
+
+        return $result;
+    }
+    public function is_assoc1($arr)
+    {
+        if( is_string($arr) ) {
+            return false;
+        }
+        return array_keys($arr) !== range(0, count($arr) - 1);
+    }
+    public function is_assoc($var)
+    {
+        return is_array($var) && array_diff_key($var,array_keys(array_keys($var)));
+    }
 
     //Get all formnode from bottom to top. Split the row into two columns so that the values all begin at the same point.
     //$holderEntity - message; $formNodeHolderEntity - message category
@@ -1251,20 +1396,6 @@ class FormNodeUtil
 
         //$separator="<br>";
         $testing = false;
-
-        ////// testing variables (comment out them for production) /////
-        //$testing = true;
-        //$table = false; //testing
-        //$withValue = false;
-        ////// EOF testing variables /////
-
-//        if( $table ) {
-//            $result = "";   //'<td colspan=9><table class = "table table-hover table-bordered table-condensed">';
-//        } else {
-//            $result = array();
-//        }
-
-        //$result = array();
 
         $formNodes = $formNodeHolderEntity->getEntityBreadcrumbs(); //message category hierarchy
         //echo "formNode count=".count($formNodes)."<br>";
@@ -1301,6 +1432,7 @@ class FormNodeUtil
     //version getting form node holder (messageCategory) form nodes info (i.e. "Impression/Outcome: This is an example of an impression and outcome.")
     //$holderEntity is the holder of the $formNodeHolderEntity, for example, Message entity
     //$formNodeHolderEntity is a form node holder, for example, MessageCategory entity
+    //$table is used only to define 1) $space = "&nbsp;"; 2) section in italic font
     public function getSingleFormNodeHolderShortInfo( $holderEntity, $formNodeHolderEntity, $table, $withValue=true ) {
 
         if( !$holderEntity ) {
@@ -1375,15 +1507,8 @@ class FormNodeUtil
                     $formNodeValueArr = array();
                     foreach( $formNodeValue as $valArr ) {
 
-//                        print "valArr:<pre>";
-//                        print_r($valArr);
-//                        print "</pre><br>";
-                        //echo "valArr=$valArr <br>";
-//                        echo "valArr['formNodeValue']=".$valArr['formNodeValue']." <br>";
-
                         $thisValArr = $valArr['formNodeValue'];
 
-                        //$thisFormNodeValue = $this->getValueStrFromValueId($formNode, $receivingEntity, $valArr['formNodeValue']);
                         $thisFormNodeValue = $this->getValueStrFromValueId($formNode, $receivingEntity, $thisValArr);
                         //echo "thisFormNodeValue=$thisFormNodeValue <br>";
 
@@ -1400,9 +1525,6 @@ class FormNodeUtil
                     //echo "array: keyCount=".$keyCount."<br>";
 
                     for( $i=0; $i < $keyCount; ++$i ) {
-                        //echo $keys[$i] . ' ' . $formNodeValueArr[$keys[$i]] . "\n";
-                        //echo "$i ";
-                        //$elementName = $formNode->getName() . " (section $i)";
                         $elementName = $formNode->getName();
                         $elementValue = $formNodeValueArr[$i];
 
@@ -1437,9 +1559,10 @@ class FormNodeUtil
                                     //html
                                     $parentFormNodeName = "<i>" . $parentFormNode->getName() . " [section $i]" . "</i>";
                                 } else {
-                                    //excel
-                                    //$parentFormNodeName = $parentFormNode->getName() . " [" . $parentFormNodeObjectType . " ". $i . "]";
-                                    $parentFormNodeName = $parentFormNode->getName() . " [section $i]" . "[###excel_section_flag###]";
+                                    //excel (xml)
+                                    //$parentFormNodeName = $parentFormNode->getName() . " [section $i]" . "[###excel_section_flag###]";
+                                    $parentFormNodeName = $parentFormNode->getName() . " [section $i]";
+                                    //$parentFormNodeName = "<section>".$parentFormNodeName."</section>";
                                 }
 
                             } else {
@@ -1497,7 +1620,8 @@ class FormNodeUtil
                                 $parentFormNodeName = "<i>" . $parentFormNodeName . "</i>";
                             } else {
                                 //$parentFormNodeName = $parentFormNodeName . " [" . $parentFormNodeObjectType . "]" . "[###excel_section_flag###]";
-                                $parentFormNodeName = $parentFormNodeName . "[###excel_section_flag###]";
+                                //$parentFormNodeName = $parentFormNodeName . "[###excel_section_flag###]";
+                                //$parentFormNodeName = "<section>".$parentFormNodeName."</section>";
                             }
                         }
                     } else {
@@ -1530,8 +1654,18 @@ class FormNodeUtil
             //echo "show is an array for excel <br>";
             $space = "";
             $result = array();
-            $spacePrefix = "   ";
+            //$spacePrefix = "   ";  //3 spaces
+            $spacePrefix = "    "; //tab
+            $sectionStartXml = "<section>";
+            $sectionEndXml = "</section>";
+            $sectionNameStartXml = "<sectionName>";
+            $sectionNameEndXml = "</sectionName>";
+            $nameStartXml = "<name>";
+            $nameEndXml = "</name>";
+            $valueStartXml = "<value>";
+            $valueEndXml = "</value>";
         }
+        //exit('111');
 
         if( $testing ) {
             print "#########<pre>";
@@ -1549,32 +1683,11 @@ class FormNodeUtil
             if( count($thisResult) == 0 ) {
                 continue;
             }
-//            print "*** section start ***<pre>";
-//            print_r($thisResult);
-//            print "</pre>*** section finish ***<br>";
-//            $sectionName = $thisResult[0];
-//            $nameValueArrs = $thisResult[1];
 
             foreach( $thisResult as $sectionName => $nameValueArrs ) {
-
-                //echo "sectionName=$sectionName<br>";
-                //print "*** value start ***<pre>";
-                //print_r($nameValueArrs);
-                //print "</pre>*** value finish ***<br>";
-
-//                if (array_key_exists($sectionName, $finalResultsArr)) {
-//                    $finalResultsArr[$sectionName] = $finalResultsArr[$sectionName] . $nameValueArrs;
-//                } else {
-//                    $finalResultsArr[$sectionName] = $nameValueArrs;
-//                }
-
                 $finalResultsArr[$sectionName][] = $nameValueArrs;
             }
         }
-
-//        print "######### final ######### <pre>";
-//        print_r($finalResultsArr);
-//        print "</pre>######### EOF final #########<br>";
 
         $withFrame = true;
         if( $withFrame ) {
@@ -1585,10 +1698,9 @@ class FormNodeUtil
 
         foreach( $finalResultsArr as $sectionName => $nameValueArrs ) {
 
-            //echo "sectionName=$sectionName:<br>";
-            //print "*** value start ***<pre>";
-            //print_r($nameValueArrs);
-            //print "</pre>*** value finish ***<br>";
+            if( !$table ) {
+                $result[] = $sectionStartXml;
+            }
 
             if( $sectionName ) {
                 if( $table ) {
@@ -1600,13 +1712,11 @@ class FormNodeUtil
                         '</tr>';
                 } else {
                     //excel array
+                    $sectionName = $sectionNameStartXml.$sectionName.$sectionNameEndXml;
                     $result[] = $sectionName;
                 }
             }
             foreach( $nameValueArrs as $nameValueMultipleArr ) {
-                //print "*** value start ***<pre>";
-                //print_r($nameValueMultipleArr);
-                //print "</pre>*** value finish ***<br>";
 
                 foreach( $nameValueMultipleArr as $nameValueArr ) {
 
@@ -1625,25 +1735,45 @@ class FormNodeUtil
                             '</tr>';
                     } else {
                         //excel array
-                        $thisInfo = $spacePrefix . $nameValueArr['name'] . ": " . $nameValueArr['value'];
-                        $result[] = $thisInfo;
+                        //$thisInfo = $spacePrefix . $nameValueArr['name'] . ": " . $nameValueArr['value'];
+                        //$result[] = $thisInfo;
+
+                        //XML
+                        $result[] = $nameStartXml.$nameValueArr['name'].$nameEndXml;
+                        $result[] = $valueStartXml.$nameValueArr['value'].$valueEndXml;
+
                     }
                 }
+            }//foreach nameValue
+
+            if( !$table ) {
+                $result[] = $sectionEndXml;
             }
 
-        }
+        }//foreach section
 
 //        print "<br><pre>";
 //        print_r($result);
 //        print "</pre><br>";
 
+        if( !$table ) {
+            $result = implode("",$result);
+            $result = "<formnode>".$result."</formnode>";
+        }
+
         return $result;
     }
 
-    //This is used by call entry View page. Similar to getFormNodeHolderShortInfo
+    //This is used by call entry View page. Similar to getFormNodeHolderShortInfo as table
     //Get all formnodes from bottom to top. Split the row into two columns so that the values all begin at the same point.
     //$holderEntity - message; $formNodeHolderEntity - message category
     public function getFormNodeHolderShortInfoForView( $holderEntity, $formNodeHolderEntity, $withValue=true ) {
+
+        //Can be replaced by the table view used by list
+        //$holderEntity, $formNodeHolderEntity, $table=true, $trclassname, $withValue=true, $colspan=9
+        return $this->getFormNodeHolderShortInfo($holderEntity,$formNodeHolderEntity,true,"",false); //testing
+        ############################################
+
         if( !$holderEntity ) {
             //echo "holderEntity is NULL !!! <br>";
             return null;

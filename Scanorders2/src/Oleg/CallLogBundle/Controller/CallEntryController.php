@@ -2824,7 +2824,6 @@ class CallEntryController extends Controller
         }
 
         //testing
-        //$this->get('calllog_util')->updateMessageShortInfo($message);
         $this->get('user_formnode_utility')->updateFieldsCache($message);
         //exit('pre-update entry');
 
@@ -3297,6 +3296,7 @@ class CallEntryController extends Controller
             $row = $row + 1;
             $trclassname = "";
             $snapshotArr = $formNodeUtil->getFormNodeHolderShortInfo($message,$message->getMessageCategory(),false,$trclassname);
+            //$snapshotArr = $formNodeUtil->getFormNodeHolderShortInfo($message,$message->getMessageCategory(),true,$trclassname);
 
             //divide results by chunks of 21 rows in order to fit them in the excel row max height
 //            echo "snapshotArr count=".count($snapshotArr)."<br>";
@@ -3542,42 +3542,50 @@ class CallEntryController extends Controller
 
             $writer->addRowWithStyle($data,$rowStyle);
 
-            if(0) {
+            if(1) {
                 //////// subsection with message snapshot info ////////
                 $row = $row + 1;
                 $trclassname = "";
-                $snapshotArr = $formNodeUtil->getFormNodeHolderShortInfo($message, $message->getMessageCategory(), false, $trclassname);
 
-                //divide results by chunks of 21 rows in order to fit them in the excel row max height
-                $snapshotArrChunks = array_chunk($snapshotArr, 21);
-
-                $originalRow = $row;
-                $numItems = count($snapshotArrChunks);
-                $i = 0;
-                foreach ($snapshotArrChunks as $snapshotArrChunk) {
-
-                    //$objRichText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
-                    foreach ($snapshotArrChunk as $snapshotRow) {
-                        if (strpos($snapshotRow, "[###excel_section_flag###]") === false) {
-                            //$objRichText->createText($snapshotRow."\n");
-                        } else {
-                            $snapshotRow = str_replace("[###excel_section_flag###]", "", $snapshotRow);
-                            //$objItalic = $objRichText->createTextRun($snapshotRow."\n");
-                            //$objItalic->getFont()->setItalic(true);
-                        }
-                    }
-                    //$aRow = 'A' . $row;
-                    //$ews->setCellValue($aRow, $objRichText);
+                if( $table=true ) {
+                    $snapshotRow = $formNodeUtil->getFormNodeHolderShortInfo($message, $message->getMessageCategory(), true, $trclassname);
                     $data = array();
                     $data[0] = $snapshotRow;
                     $writer->addRowWithStyle($data, $rowStyle);
+                } else {
+                    $snapshotArr = $formNodeUtil->getFormNodeHolderShortInfo($message, $message->getMessageCategory(), false, $trclassname);
+
+                    //divide results by chunks of 21 rows in order to fit them in the excel row max height
+                    $snapshotArrChunks = array_chunk($snapshotArr, 21);
+
+                    $originalRow = $row;
+                    $numItems = count($snapshotArrChunks);
+                    $i = 0;
+                    foreach ($snapshotArrChunks as $snapshotArrChunk) {
+
+                        //$objRichText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
+                        foreach ($snapshotArrChunk as $snapshotRow) {
+                            if (strpos($snapshotRow, "[###excel_section_flag###]") === false) {
+                                //$objRichText->createText($snapshotRow."\n");
+                            } else {
+                                $snapshotRow = str_replace("[###excel_section_flag###]", "", $snapshotRow);
+                                //$objItalic = $objRichText->createTextRun($snapshotRow."\n");
+                                //$objItalic->getFont()->setItalic(true);
+                            }
+                        }
+                        //$aRow = 'A' . $row;
+                        //$ews->setCellValue($aRow, $objRichText);
+                        $data = array();
+                        $data[0] = $snapshotRow;
+                        $writer->addRowWithStyle($data, $rowStyle);
 
 //                if( strpos($snapshot, '[Form Section]') !== false ) {
 //                    $ews->getStyle($aRow)->getFont()->setItalic(true);
 //                }
 
-                    if (++$i < $numItems) {
-                        $row = $row + 1;
+                        if (++$i < $numItems) {
+                            $row = $row + 1;
+                        }
                     }
                 }
                 //////// EOF subsection with message snapshot info ////////

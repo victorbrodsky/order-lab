@@ -124,10 +124,16 @@ class Message {
     private $messageCategory;
 
     /**
-     * Form nodes fields cache (snapshot)
+     * Form nodes fields cache (snapshot) used in spreadsheet
      * @ORM\Column(type="text", nullable=true)
      */
     private $formnodesCache;
+
+//    /**
+//     * Form nodes fields cache (snapshot) used in list and view as table
+//     * @ORM\Column(type="text", nullable=true)
+//     */
+//    private $formnodesCacheTable;
 
     /**
      * Name of the form: Message Type name at the time of message submission
@@ -988,6 +994,22 @@ class Message {
     public function setFormnodesCache($formnodesCache)
     {
         $this->formnodesCache = $formnodesCache;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFormnodesCacheTable()
+    {
+        return $this->formnodesCacheTable;
+    }
+
+    /**
+     * @param mixed $formnodesCacheTable
+     */
+    public function setFormnodesCacheTable($formnodesCacheTable)
+    {
+        $this->formnodesCacheTable = $formnodesCacheTable;
     }
 
     /**
