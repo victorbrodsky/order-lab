@@ -3161,7 +3161,7 @@ class CallEntryController extends Controller
         }
 
         //Testing Spout
-        if(1) {
+        if(0) {
             $ext = "XLSX";
             $ext = "CSV";
 //            $entryIds = array();
