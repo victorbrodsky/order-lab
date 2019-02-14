@@ -1206,7 +1206,7 @@ class FormNodeUtil
             echo '</textarea>';
 
             $table = TRUE;
-            //$table = FALSE;
+            $table = FALSE;
             $shortInfo = $this->xmlToTable($shortInfoXml, $table, TRUE);
             echo "<br>XML Table:<br> $shortInfo <br>";
 
@@ -1223,6 +1223,8 @@ class FormNodeUtil
         }
     }
     public function xmlToTable( $xmlData, $table=TRUE, $showLabelForce=FALSE, $colspan=9 ) {
+
+        $xmlData = strip_tags($xmlData); //remove html tags
 
         $xml = simplexml_load_string($xmlData);
 
