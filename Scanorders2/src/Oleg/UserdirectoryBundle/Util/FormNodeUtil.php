@@ -1177,7 +1177,7 @@ class FormNodeUtil
 
     //TODO: create a cache for the formnode fields
     public function updateFieldsCache($message) {
-        //return null; //testing
+        return null; //testing
 
         //list and view used table view
         if(0) {
