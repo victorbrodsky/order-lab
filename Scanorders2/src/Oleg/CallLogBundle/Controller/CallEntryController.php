@@ -2824,7 +2824,7 @@ class CallEntryController extends Controller
         }
 
         //testing
-        //$this->get('user_formnode_utility')->updateFieldsCache($message);
+        $this->get('user_formnode_utility')->updateFieldsCache($message);
         //exit('pre-update entry');
 
         //testing dob: dob before 1901 causes php error

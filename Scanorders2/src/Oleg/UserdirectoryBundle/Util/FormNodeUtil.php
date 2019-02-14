@@ -1249,10 +1249,11 @@ class FormNodeUtil
     }
     public function xmlToTable( $xmlData, $withName=true, $colspan=9 ) {
         $xml = simplexml_load_string($xmlData);
-        echo "<br>XML:<pre>";
+        echo "<br><br>XML:<pre>";
         print_r($xml);
         echo "</pre>";
 
+        $space = "&nbsp;";
         $table = array();
         $tableStr = "";
 
@@ -1270,75 +1271,44 @@ class FormNodeUtil
             //field: value
 
 
-            $name = (string)$section->name;
-            $value = (string)$section->value;
+            $name = $section->name;
+            $value = $section->value;
             echo $sectionName." = $name : $value <br>";
+            echo "count name=".$name->count()."<br>";
 
-            //$nameIsArray = is_array($name) || $this->isAssoc($name);
-            //if( $this->is_assoc($name) ) {
-            if ( is_array($name) ) {
+            if( $name->count() ) {
+
                 //exit($name." - array");
-
-                foreach($name as $key=>$thisName) {
-
-                    echo "Array: $key : $thisName <br>";
+                for ($i = 0; $i < $name->count(); $i++) {
+                    echo "Array: $i : ".$name[$i]."<br>";
 
                     $tableStr = $tableStr . '<tr class="">';
 
-                    $tableStr = $tableStr . '<td colspan=3 class="rowlink-skip" style="width:20%">' . $name[$key] . '</td>';
+                    $tableStr = $tableStr . '<td colspan=3 class="rowlink-skip" style="width:20%; padding-left:10px">' . $name[$i] . '</td>';
 
-                    $tableStr = $tableStr . '<td colspan=6 class="rowlink-skip" style="width:80%">' . $value[$key] . '</td>';
+                    $tableStr = $tableStr . '<td colspan=6 class="rowlink-skip" style="width:80%">' . $value[$i] . '</td>';
 
                     $tableStr = $tableStr . '</tr>';
-
                 }
 
-            } else {
-
-                //exit($name." - single");
-                echo "Single: $name : $value <br>";
-
-                $tableStr = $tableStr . '<tr class="">';
-
-                $tableStr = $tableStr . '<td colspan=3 class="rowlink-skip" style="width:20%">' . $name . '</td>';
-
-                $tableStr = $tableStr . '<td colspan=6 class="rowlink-skip" style="width:80%">' . $value . '</td>';
-
-                $tableStr = $tableStr . '</tr>';
             }
+//            else {
+
+//                exit($name." - single");
+//                echo "Single: $name : $value <br>";
+//
+//                $tableStr = $tableStr . '<tr class="">';
+//
+//                $tableStr = $tableStr . '<td colspan=3 class="rowlink-skip" style="width:20%; padding-left:10px">' . $name . '</td>';
+//
+//                $tableStr = $tableStr . '<td colspan=6 class="rowlink-skip" style="width:80%">' . $value . '</td>';
+//
+//                $tableStr = $tableStr . '</tr>';
+//            }
 
 
             //$table[] = $tr;
         }
-
-
-//        foreach( $finalResultsArr as $sectionName => $nameValueArrs ) {
-//
-//            if( $sectionName ) {
-//                $result = $result .
-//                    '<tr style="border:none;">' .
-//                    '<td style="border:none;">' . $sectionName . '</td>' .
-//                    '<td style="border:none;"></td>' .
-//                    '</tr style="border:none;">';
-//
-//            }
-//            foreach( $nameValueArrs as $nameValueMultipleArr ) {
-//
-//                foreach( $nameValueMultipleArr as $nameValueArr ) {
-//                    if( $nameValueArr['showLabel'] ) {
-//                        $formNodeName = $space . $space . $space . $nameValueArr['name'];
-//                    } else {
-//                        $formNodeName = null;
-//                    }
-//                    $result = $result .
-//                        '<tr style="border:none;">' .
-//                        '<td style="width:20%; border:none;">' . $formNodeName . '</td>' .
-//                        '<td style="width:80%; border:none;">' . $nameValueArr['value'] . '</td>' .
-//                        '</tr style="border:none;">';
-//                }
-//            }
-//
-//        }
 
 
         $result = '<td colspan='.$colspan.'><table class = "table table-hover table-condensed">' . $tableStr . '</table></td>';
@@ -1368,17 +1338,6 @@ class FormNodeUtil
         $result = '<td colspan='.$colspan.'><table class = "table table-hover table-condensed">' . $xml . '</table></td>';
 
         return $result;
-    }
-    public function is_assoc1($arr)
-    {
-        if( is_string($arr) ) {
-            return false;
-        }
-        return array_keys($arr) !== range(0, count($arr) - 1);
-    }
-    public function is_assoc($var)
-    {
-        return is_array($var) && array_diff_key($var,array_keys(array_keys($var)));
     }
 
     //Get all formnode from bottom to top. Split the row into two columns so that the values all begin at the same point.
