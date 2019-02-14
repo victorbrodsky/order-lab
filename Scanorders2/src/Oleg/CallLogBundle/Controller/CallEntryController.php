@@ -3652,7 +3652,9 @@ class CallEntryController extends Controller
                     $formnodesCache = $formNodeUtil->getFormNodeHolderShortInfo($message,$message->getMessageCategory(),$table,$trclassname);
                 }
 
-                $formnodesCacheStr = $formNodeUtil->xmlToTable($formnodesCache,FALSE);
+                $table = FALSE;
+                $showLabelForce = TRUE;
+                $formnodesCacheStr = $formNodeUtil->xmlToTable($formnodesCache,$table,$showLabelForce);
 
                 //$useChunks = TRUE;
                 $useChunks = FALSE;
