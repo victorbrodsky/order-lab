@@ -1205,7 +1205,9 @@ class FormNodeUtil
             echo $shortInfoXml;
             echo '</textarea>';
 
-            $shortInfo = $this->xmlToTable($shortInfoXml, FALSE);
+            $table = TRUE;
+            //$table = FALSE;
+            $shortInfo = $this->xmlToTable($shortInfoXml, $table);
             echo "<br>XML Table:<br> $shortInfo <br>";
 
             echo 'shortInfo Table:<textarea rows="20" cols="150" >';
