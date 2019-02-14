@@ -1187,10 +1187,14 @@ class UtilController extends Controller {
         
         //search this user if exists in ldap directory
         //$searchRes might be -1 => can not bind to LDAP server, meaning running on testing localhost outside cornell.edu network => user is ok
-        $searchRes = $authUtil->searchLdap($userId);
-        if( $searchRes == NULL || count($searchRes) == 0 ) {
-            $output = "notok";
-        }       
+        //One user has "cn" as displayName rather than cwid. This causes the error that this user does not exists in LDAP
+        $useLdapSearch = FALSE;
+        if( $useLdapSearch ) {
+            $searchRes = $authUtil->searchLdap($userId);
+            if ($searchRes == NULL || count($searchRes) == 0) {
+                $output = "notok";
+            }
+        }
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');

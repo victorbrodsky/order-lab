@@ -747,7 +747,9 @@ class AuthUtil {
         $cnx = $this->connectToLdap($LDAPHost);
 
         //$filter="(ObjectClass=Person)";
-        $filter="(cn=".$username.")";
+        //$filter="(cn=".$username.")";
+        //$filter = "(sAMAccountName=".$username.")";
+        $filter = "(|(cn=$username)(sAMAccountName=$username))";
 
         //test
         //$LDAPUserAdmin = "cn=ro_admin,ou=sysadmins,dc=zflexsoftware,dc=com";
@@ -790,9 +792,9 @@ class AuthUtil {
                 $this->logger->notice("search Ldap: ldap_search OK with filter=" . $filter . "; bindDn=".$ldapBindDN);
                 $info = ldap_get_entries($cnx, $sr);
 
-                echo "<pre>";
-                print_r($info);
-                echo "</pre>";
+//                echo "<pre>";
+//                print_r($info);
+//                echo "</pre>";
 
                 if( $info["count"] > 0 ) {
                     $this->logger->notice("search Ldap: info: displayName=".$info[0]['displayname'][0]);
