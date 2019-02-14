@@ -1179,12 +1179,8 @@ class FormNodeUtil
     public function updateFieldsCache($message) {
         //return null; //testing
 
-        //$formNodeUtil = $this->container->get('user_formnode_utility');
-        //$shortInfo = $formNodeUtil->getFormNodeHolderShortInfo($message,$message->getMessageCategory(),false,"");
-        //$holderEntity, $formNodeHolderEntity, $table=true, $trclassname, $withValue=true, $colspan=9
-
         //list and view used table view
-        if(1) {
+        if(0) {
             $shortInfo = $this->getFormNodeHolderShortInfo($message, $message->getMessageCategory(),true,"");
             echo "Text shortInfo=$shortInfo <br>";
             echo '<textarea rows="20" cols="150" >';
@@ -1199,62 +1195,41 @@ class FormNodeUtil
 
         //xml format
         $shortInfoXml = $this->getFormNodeHolderShortInfo($message,$message->getMessageCategory(),false,"");
+
+        if(1) {
 //        echo "<br>Array:<pre>";
 //        print_r($shortInfo);
 //        echo "</pre>";
-        echo 'XML:<textarea rows="20" cols="150" >';
-        echo $shortInfoXml;
-        echo '</textarea>';
+            echo 'XML:<textarea rows="20" cols="150" >';
+            echo $shortInfoXml;
+            echo '</textarea>';
 
-        $shortInfo = $this->xmlToTable($shortInfoXml,false);
-        echo "<br>XML Table:<br> $shortInfo <br>";
-        exit('111');
+            $shortInfo = $this->xmlToTable($shortInfoXml, FALSE);
+            echo "<br>XML Table:<br> $shortInfo <br>";
 
-        if( 0 && $shortInfo ) {
+            echo 'shortInfo Table:<textarea rows="20" cols="150" >';
+            echo $shortInfo;
+            echo '</textarea>';
 
-            //divide results by chunks of 21 rows in order to fit them in the excel row max height
-            $snapshotArrChunks = array_chunk($shortInfo, 21);
+            exit('111');
+        }
 
-//                foreach ($snapshotArrChunks as $snapshotArrChunk) {
-//                    //$objRichText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
-//                    foreach ($snapshotArrChunk as $snapshotRow) {
-//                        if (strpos($snapshotRow, "[###excel_section_flag###]") === false) {
-//                            //$objRichText->createText($snapshotRow."\n");
-//                        } else {
-//                            $snapshotRow = str_replace("[###excel_section_flag###]", "", $snapshotRow);
-//                            //$objItalic = $objRichText->createTextRun($snapshotRow."\n");
-//                            //$objItalic->getFont()->setItalic(true);
-//                        }
-//                    }
-//                }
-
-            $snapshotRowArr = array();
-            foreach ($snapshotArrChunks as $snapshotArrChunk) {
-                foreach ($snapshotArrChunk as $snapshotRow) {
-                    if (strpos($snapshotRow, "[###excel_section_flag###]") === false) {
-                        //
-                    } else {
-                        $snapshotRow = str_replace("[###excel_section_flag###]", "", $snapshotRow);
-                        $snapshotRowArr[] = $snapshotRow;
-                    }
-                }
-            }
-
-            $snapshotArrChunksText = implode("\n\r",$snapshotRowArr);
-            echo "snapshotArrChunksText=$snapshotArrChunksText <br>";
-
+        if( $shortInfoXml ) {
             //$message->setFormnodesCache($snapshotArrChunksText);
             //$this->em->flush($message);
         }
     }
-    public function xmlToTable( $xmlData, $withName=true, $colspan=9 ) {
-        $xml = simplexml_load_string($xmlData);
-        echo "<br><br>XML:<pre>";
-        print_r($xml);
-        echo "</pre>";
+    public function xmlToTable( $xmlData, $table=TRUE, $showLabelForce=FALSE, $colspan=9 ) {
 
-        $space = "&nbsp;";
-        $table = array();
+        $xml = simplexml_load_string($xmlData);
+
+//        echo "<br><br>XML:<pre>";
+//        print_r($xml);
+//        echo "</pre>";
+
+        $newLine = "\n";
+        $space = "  ";
+
         $tableStr = "";
 
         foreach($xml->section as $section)
@@ -1264,84 +1239,59 @@ class FormNodeUtil
 
             //section
             $sectionName = (string)$section->sectionName;
-            $tableStr = $tableStr . '<tr class="">';
-            $tableStr = $tableStr . '<td colspan=9 class="rowlink-skip"><i>' . $sectionName . '</i></td>';
-            $tableStr = $tableStr . '</tr>';
+
+            if( $table ) {
+                $tableStr = $tableStr . '<tr class="">';
+                $tableStr = $tableStr . '<td colspan=9 class="rowlink-skip"><i>' . $sectionName . '</i></td>';
+                $tableStr = $tableStr . '</tr>';
+            } else {
+                $tableStr = $tableStr . $sectionName . $newLine;
+            }
 
             //field: value
 
-
             $name = $section->name;
+            $showLabel = $section->showLabel;
             $value = $section->value;
-            echo $sectionName." = $name : $value <br>";
-            echo "count name=".$name->count()."<br>";
+            //echo $sectionName." = $name : $value <br>";
+            //echo "count name=".$name->count()."<br>";
 
-            if( $name->count() ) {
+            for ($i = 0; $i < $name->count(); $i++) {
+                //echo "Array: $i : ".$name[$i]."<br>";
 
-                //exit($name." - array");
-                for ($i = 0; $i < $name->count(); $i++) {
-                    echo "Array: $i : ".$name[$i]."<br>";
+                if( $showLabel[$i] || $showLabelForce ) {
+                    $fieldName = $name[$i];
+                } else {
+                    $fieldName = null;
+                }
 
+                if( $table ) {
                     $tableStr = $tableStr . '<tr class="">';
 
-                    $tableStr = $tableStr . '<td colspan=3 class="rowlink-skip" style="width:20%; padding-left:10px">' . $name[$i] . '</td>';
+                    $tableStr = $tableStr . '<td colspan=3 class="rowlink-skip" style="width:20%; padding-left:3em">' . $fieldName . '</td>';
 
                     $tableStr = $tableStr . '<td colspan=6 class="rowlink-skip" style="width:80%">' . $value[$i] . '</td>';
 
                     $tableStr = $tableStr . '</tr>';
+                } else {
+                    $tableStr = $tableStr . $space . $fieldName . "  " . $value[$i] . $newLine;
                 }
-
             }
-//            else {
 
-//                exit($name." - single");
-//                echo "Single: $name : $value <br>";
-//
-//                $tableStr = $tableStr . '<tr class="">';
-//
-//                $tableStr = $tableStr . '<td colspan=3 class="rowlink-skip" style="width:20%; padding-left:10px">' . $name . '</td>';
-//
-//                $tableStr = $tableStr . '<td colspan=6 class="rowlink-skip" style="width:80%">' . $value . '</td>';
-//
-//                $tableStr = $tableStr . '</tr>';
-//            }
-
-
-            //$table[] = $tr;
         }
 
-
-        $result = '<td colspan='.$colspan.'><table class = "table table-hover table-condensed">' . $tableStr . '</table></td>';
-        return $result;
-
-        //$sectionName = $xml->{"sectionName"};
-
-        $space = "&nbsp;";
-
-        $xml = $xmlData;
-
-        //<tr class=""><td colspan=9 class="rowlink-skip"><i>History/Findings</i></td></tr>
-        $xml = str_replace("<sectionName>",'<tr class=""><td colspan=9 class="rowlink-skip"><i>',$xml);
-        $xml = str_replace("</sectionName>",'</i></td></tr>',$xml);
-
-        $trStart = '<tr class="">';
-        $trEnd = '</tr>';
-
-        //
-        $xml = str_replace("<name>",$trStart.'<td colspan=3 class="rowlink-skip" style="width:20%">',$xml);
-        $xml = str_replace("</name>",'</td>'.$trEnd,$xml);
-
-        //
-        $xml = str_replace("<value>",'<td colspan=6 class="rowlink-skip" style="width:80%">'.$space.$space.$space.$space.$space.$space,$xml);
-        $xml = str_replace("</value>",'</td>',$xml);
-
-        $result = '<td colspan='.$colspan.'><table class = "table table-hover table-condensed">' . $xml . '</table></td>';
+        if( $table ) {
+            $result = '<td colspan=' . $colspan . '><table class = "table table-hover table-condensed">' . $tableStr . '</table></td>';
+        } else {
+            $result = $tableStr;
+        }
 
         return $result;
     }
 
     //Get all formnode from bottom to top. Split the row into two columns so that the values all begin at the same point.
     //$holderEntity - message; $formNodeHolderEntity - message category
+    //$table = false will generate xml string
     public function getFormNodeHolderShortInfo( $holderEntity, $formNodeHolderEntity, $table=true, $trclassname, $withValue=true, $colspan=9 ) {
         if( !$holderEntity ) {
             return null;
@@ -1621,6 +1571,8 @@ class FormNodeUtil
             $sectionNameEndXml = "</sectionName>";
             $nameStartXml = "<name>";
             $nameEndXml = "</name>";
+            $showlabelStartXml = "<showLabel>";
+            $showlabelEndXml = "</showLabel>";
             $valueStartXml = "<value>";
             $valueEndXml = "</value>";
         }
@@ -1698,8 +1650,9 @@ class FormNodeUtil
                         //$result[] = $thisInfo;
 
                         //XML
-                        $result[] = $nameStartXml.$nameValueArr['name'].$nameEndXml;
-                        $result[] = $valueStartXml.$nameValueArr['value'].$valueEndXml;
+                        $result[] = $nameStartXml . $nameValueArr['name'] . $nameEndXml;
+                        $result[] = $showlabelStartXml . $nameValueArr['showLabel'] . $showlabelEndXml;
+                        $result[] = $valueStartXml . $nameValueArr['value'] . $valueEndXml;
 
                     }
                 }

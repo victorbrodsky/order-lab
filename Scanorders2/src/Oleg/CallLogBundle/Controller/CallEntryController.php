@@ -3542,7 +3542,7 @@ class CallEntryController extends Controller
 
             $writer->addRowWithStyle($data,$rowStyle);
 
-            if(1) {
+            if(0) {
                 //////// subsection with message snapshot info ////////
                 $row = $row + 1;
                 $trclassname = "";
@@ -3592,12 +3592,33 @@ class CallEntryController extends Controller
             } else {
                 //TODO: entry info saved
                 //used in list:
-                //getFormNodeHolderShortInfo(message,message.messageCategory,1,trclassname)
-                //$snapshotRow = $message->getCalllogEntryMessage()->getShortInfo();
-                $snapshotRow = $message->getFormnodesCache();
-                $data = array();
-                $data[0] = $snapshotRow;
-                $writer->addRowWithStyle($data, $rowStyle);
+                $formnodesCache = $message->getFormnodesCache();
+
+                if( !$formnodesCache ) {
+                    $trclassname = "";
+                    $table = FALSE;
+                    $formnodesCache = $formNodeUtil->getFormNodeHolderShortInfo($message,$message->getMessageCategory(),$table,$trclassname);
+                }
+
+                $formnodesCacheStr = $formNodeUtil->xmlToTable($formnodesCache,FALSE);
+
+                //$useChunks = TRUE;
+                $useChunks = FALSE;
+
+                if( $useChunks ) {
+                    //divide results by chunks of 21 rows in order to fit them in the excel row max height
+                    $snapshotArrChunks = array_chunk($formnodesCacheStr, 21);
+
+                    foreach( $snapshotArrChunks as $snapshotChunkRow ) {
+                        $data = array();
+                        $data[0] = $snapshotChunkRow;
+                        $writer->addRowWithStyle($data, $rowStyle);
+                    }
+                } else {
+                    $data = array();
+                    $data[0] = $formnodesCacheStr;
+                    $writer->addRowWithStyle($data, $rowStyle);
+                }
             }
 
             //increment row index
