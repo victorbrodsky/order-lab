@@ -1194,12 +1194,13 @@ class FormNodeUtil
 //        echo '</textarea>';
 
         //xml format
-        $shortInfoXml = $this->getFormNodeHolderShortInfo($message,$message->getMessageCategory(),false,"");
+        $shortInfoXml = $this->getFormNodeHolderShortInfo($message,$message->getMessageCategory(),$table=false,"");
 
         if(1) {
-//        echo "<br>Array:<pre>";
-//        print_r($shortInfo);
-//        echo "</pre>";
+//            echo "<br>Array:<pre>";
+//            print_r($shortInfoXml);
+//            echo "</pre>";
+
             echo 'XML:<textarea rows="20" cols="150" >';
             echo $shortInfoXml;
             echo '</textarea>';
@@ -1223,9 +1224,9 @@ class FormNodeUtil
 
         $xml = simplexml_load_string($xmlData);
 
-//        echo "<br><br>XML:<pre>";
-//        print_r($xml);
-//        echo "</pre>";
+        echo "<br><br>XML:<pre>";
+        print_r($xml);
+        echo "</pre>";
 
         $newLine = "\n";
         $space = "  ";
