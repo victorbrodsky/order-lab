@@ -1177,7 +1177,7 @@ class FormNodeUtil
 
     //TODO: create a cache for the formnode fields
     public function updateFieldsCache($message) {
-        //return null; //testing
+        return null; //testing
 
         //list and view used table view
         if(0) {
@@ -1205,9 +1205,11 @@ class FormNodeUtil
             echo $shortInfoXml;
             echo '</textarea>';
 
+            $showLabelForce = TRUE;
+            $showLabelForce = FALSE;
             $table = TRUE;
             $table = FALSE;
-            $shortInfo = $this->xmlToTable($shortInfoXml, $table, TRUE);
+            $shortInfo = $this->xmlToTable($shortInfoXml, $table, $showLabelForce);
             echo "<br>XML Table:<br> $shortInfo <br>";
 
             echo 'shortInfo Table:<textarea rows="20" cols="150" >';
@@ -1224,7 +1226,7 @@ class FormNodeUtil
     }
     public function xmlToTable( $xmlData, $table=TRUE, $showLabelForce=FALSE, $colspan=9 ) {
 
-        $xmlData = strip_tags($xmlData); //remove html tags
+        //$xmlData = strip_tags($xmlData); //remove html tags
 
         $xml = simplexml_load_string($xmlData);
 
