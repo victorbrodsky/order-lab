@@ -3008,6 +3008,58 @@ class CallEntryController extends Controller
         }
     }
 
+    /**
+     * @Route("/single-export-csv/{messageOid}/{messageVersion}", name="calllog_single_export_csv")
+     * @Template("OlegCallLogBundle:Export:call-entry-export-csv.html.twig")
+     */
+    public function exportSingleCsvAction(Request $request, $messageOid, $messageVersion=nulls)
+    {
+        if (false == $this->get('security.authorization_checker')->isGranted("ROLE_CALLLOG_ADMIN")) {
+            return $this->redirect($this->generateUrl('calllog-nopermission'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+        if( !is_numeric($messageVersion) || !$messageVersion ) {
+            $messageLatest = $em->getRepository('OlegOrderformBundle:Message')->findByOidAndVersion($messageOid);
+
+            if( !$messageLatest && !$messageVersion ) {
+                //handle case with th real DB id: http://localhost/order/call-log-book/entry/view/267
+                $messageLatest = $em->getRepository('OlegOrderformBundle:Message')->find($messageOid);
+            }
+
+            if( $messageLatest ) {
+                return $this->redirect($this->generateUrl('calllog_callentry_view', array(
+                    'messageOid' => $messageLatest->getOid(),
+                    'messageVersion' => $messageLatest->getVersion()
+                )));
+            }
+
+            throw new \Exception( "Latest Message is not found by oid ".$messageOid );
+        }
+
+        $message = $em->getRepository('OlegOrderformBundle:Message')->findByOidAndVersion($messageOid,$messageVersion);
+        if( !$message ) {
+            throw new \Exception( "Message is not found by oid ".$messageOid." and version ".$messageVersion );
+        }
+
+        //testing
+        $this->get('user_formnode_utility')->updateFieldsCache($message);
+
+        $fileName = "Call-Log-Entry-ID" . $message->getOid();
+
+        $fileName = str_replace(".","-",$fileName);
+
+        $ext = "XLSX";
+        $ext = "CSV";
+
+        $this->createCalllogListExcelSpout(array($message),$fileName,$user,$ext);
+
+        exit();
+        //exit('single-export-csv');
+    }
+
 
     /**
      * @Route("/export_csv/", name="calllog_export_csv")
