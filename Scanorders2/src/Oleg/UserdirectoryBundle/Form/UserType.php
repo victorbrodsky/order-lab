@@ -128,6 +128,8 @@ class UserType extends AbstractType
 
         $this->addUserInfos($builder);
 
+        $this->addNotificationEmailUser($builder);
+
         //Global User Preferences
         $this->globalUserPreferences($builder);
 
@@ -291,6 +293,13 @@ class UserType extends AbstractType
         return $builder;
     }
 
+    public function addNotificationEmailUser($builder) {
+        $builder->add('notificationEmailUser', null, array(
+            'label' => 'Send email notifications to:',
+            'multiple' => false,
+            'attr' => array('class'=>'combobox')
+        ));
+    }
 
 
     public function addKeytype($builder,$label='Primary Public User ID Type:',$class='combobox combobox-width user-keytype-field',$defaultPrimaryPublicUserIdType=null) {

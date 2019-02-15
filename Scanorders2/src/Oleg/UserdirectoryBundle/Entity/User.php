@@ -290,6 +290,14 @@ class User extends BaseUser {
 //     */
 //    private $lastFailedAttemptDate;
 
+    /**
+     *  Send email notifications to
+     * 
+     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
+     */
+    private $notificationEmailUser;
+
 
     function __construct( $addobjects=true )
     {
@@ -999,6 +1007,23 @@ class User extends BaseUser {
             //$this->setLastFailedAttemptDate(null);
         }
     }
+
+    /**
+     * @return mixed
+     */
+    public function getNotificationEmailUser()
+    {
+        return $this->notificationEmailUser;
+    }
+
+    /**
+     * @param mixed $notificationEmailUser
+     */
+    public function setNotificationEmailUser($notificationEmailUser)
+    {
+        $this->notificationEmailUser = $notificationEmailUser;
+    }
+    
 
 //    /**
 //     * @return \DateTime
@@ -2066,7 +2091,8 @@ class User extends BaseUser {
         return $emailArr;
     }
 
-    public function getSingleEmail() {
+    //TODO: if not critical, use "Send email notification to" field in the user profile
+    public function getSingleEmail( $critical=true ) {
         if( $this->getEmail() ) {
             return $this->getEmail();
         }

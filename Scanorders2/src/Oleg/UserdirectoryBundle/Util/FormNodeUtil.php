@@ -1321,7 +1321,7 @@ class FormNodeUtil
 
                         $tableStr = $tableStr . '</tr>';
                     } else {
-                        $tableStr = $tableStr . $space . $fieldName . "  " . $value[$i] . $newLine;
+                        $tableStr = $tableStr . $space . $fieldName . ":  " . $value[$i] . $newLine;
                     }
                 }
 
@@ -1745,12 +1745,14 @@ class FormNodeUtil
 
         $shortInfo = NULL;
 
-        $formnodesCache = $holderEntity->getFormnodesCache();
-        if( $useCache && $formnodesCache ) {
-            $showLabelForce = TRUE;
-            $table = TRUE;
-            $shortInfo = $this->xmlToTable($formnodesCache, $table, $showLabelForce, $withValue);
-            //exit('111');
+        if( method_exists($holderEntity,'getFormnodesCache') ) {
+            $formnodesCache = $holderEntity->getFormnodesCache();
+            if ($useCache && $formnodesCache) {
+                $showLabelForce = TRUE;
+                $table = TRUE;
+                $shortInfo = $this->xmlToTable($formnodesCache, $table, $showLabelForce, $withValue);
+                //exit('111');
+            }
         }
 
         if( !$shortInfo ) {
