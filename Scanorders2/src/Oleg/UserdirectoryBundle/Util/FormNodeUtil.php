@@ -1248,7 +1248,7 @@ class FormNodeUtil
         }
 
         if( count($populated) == 1 ) {
-            //$this->em->flush($message);
+            $this->em->flush($message);
             return true;
         }
 
