@@ -3536,6 +3536,7 @@ class CallEntryController extends Controller
                 foreach ($message->getPatient() as $patient) {
                     $patientNames[] = $patient->getFullPatientName(false);
                     $mrns[] = $patient->obtainFullValidKeyName();
+                    $patient = NULL;
                 }
 
                 //Patient Name
@@ -3547,6 +3548,12 @@ class CallEntryController extends Controller
                 $mrnsStr = implode("\n", $mrns);
                 //$ews->setCellValue('D'.$row, $mrnsStr);
                 $data[3] = $mrnsStr;
+
+                $patientNames = NULL;
+                $patientNameStr = NULL;
+                $mrnsStr = NULL;
+                $mrns = NULL;
+                gc_collect_cycles();
             }
             if(0) {//testing encounter
 
