@@ -740,13 +740,13 @@
             {% endif %}
 
             {#Test cache as XML#}
-            {% if is_granted('ROLE_CALLLOG_ADMIN') %}
+            {#{% if is_granted('ROLE_CALLLOG_ADMIN') %}#}
                 <li>
                     <a href="{{ path('calllog_single_export_csv', {'messageOid': message.oid, 'messageVersion':message.version}) }}" target="_blank">
                         Export this entry to CSV
                     </a>
                 </li>
-            {% endif %}
+            {#{% endif %}#}
 
             {#TODO: Add Entry (Same Encounter) and Add Entry (Same Encounter & Type)#}
             {#Same Encounter#}
