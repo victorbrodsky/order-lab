@@ -3506,7 +3506,8 @@ class CallEntryController extends Controller
 
             //ID
             //$ews->setCellValue('A'.$row, $message->getMessageOidVersion());
-            $data[0] = $message->getMessageOidVersion();
+            $messageOid = $message->getMessageOidVersion();
+            $data[0] = $messageOid;
 
             //Last Modified
             if(1) {//testing Last Modified
@@ -3527,7 +3528,7 @@ class CallEntryController extends Controller
                 //$ews->setCellValue('B'.$row, $lastModified);
                 $data[1] = $lastModified;
 
-                $this->print_mem("Last Modified");
+                $this->print_mem("$messageOid Last Modified");
 
                 $editorInfos = NULL;
                 $modifiedOnDate = NULL;
@@ -3557,7 +3558,7 @@ class CallEntryController extends Controller
                 //$ews->setCellValue('D'.$row, $mrnsStr);
                 $data[3] = $mrnsStr;
 
-                $this->print_mem("Patient");
+                $this->print_mem("$messageOid Patient");
 
                 $patientNames = NULL;
                 $patientNameStr = NULL;
@@ -3730,7 +3731,10 @@ class CallEntryController extends Controller
         /* Peak memory usage */
         $mem_peak = memory_get_peak_usage();
 
-        echo $description.': <strong>' . round($mem_usage / (1024*1000)) . 'MB</strong> of memory.<br>';
-        echo 'Peak usage: <strong>' . round($mem_peak / (1024*1000)) . 'MB</strong> of memory.<br><br>';
+        $msg = $description.': <strong>' . round($mem_usage / (1024*1000)) . 'MB</strong> of memory.<br>';
+        $msg = $msg . 'Peak usage: <strong>' . round($mem_peak / (1024*1000)) . 'MB</strong> of memory.<br><br>';
+
+        $logger = $this->container->get('logger');
+        $logger->notice($msg);
     }
 }
