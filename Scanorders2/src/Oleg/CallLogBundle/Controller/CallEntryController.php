@@ -3572,7 +3572,7 @@ class CallEntryController extends Controller
 //                gc_collect_cycles();
             }
 
-            if(1) {//testing encounter
+            if(0) {//testing encounter
 
                 //Location and Referring Provider
                 $locationArr = array();
