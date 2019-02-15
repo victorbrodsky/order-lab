@@ -1732,7 +1732,7 @@ class FormNodeUtil
     public function getFormNodeHolderShortInfoForView( $holderEntity, $formNodeHolderEntity, $withValue=true, $trclassname="" ) {
 
         $useCache = FALSE;
-        $useCache = TRUE;
+        //$useCache = TRUE;
 
         $shortInfo = NULL;
 
