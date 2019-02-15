@@ -3496,9 +3496,12 @@ class CallEntryController extends Controller
         );
 
         //$entryIds = array();
+        $count = 0;
         $row = 2;
         foreach( $entryIds as $message ) {
         //foreach( $entryIds as $entryId ) {
+
+            $count++;
 
             $data = array();
 
@@ -3528,7 +3531,7 @@ class CallEntryController extends Controller
                 //$ews->setCellValue('B'.$row, $lastModified);
                 $data[1] = $lastModified;
 
-                $this->print_mem("$messageOid Last Modified");
+                $this->print_mem("$count : $messageOid Last Modified");
 
                 $editorInfos = NULL;
                 $modifiedOnDate = NULL;
@@ -3558,7 +3561,7 @@ class CallEntryController extends Controller
                 //$ews->setCellValue('D'.$row, $mrnsStr);
                 $data[3] = $mrnsStr;
 
-                $this->print_mem("$messageOid Patient");
+                $this->print_mem("$count : $messageOid Patient");
 
                 $patientNames = NULL;
                 $patientNameStr = NULL;
