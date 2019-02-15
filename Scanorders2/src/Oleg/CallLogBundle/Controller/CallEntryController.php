@@ -3045,7 +3045,7 @@ class CallEntryController extends Controller
         }
 
         //testing
-        $this->get('user_formnode_utility')->updateFieldsCache($message);
+        //$this->get('user_formnode_utility')->updateFieldsCache($message);
 
         $fileName = "Call-Log-Entry-ID" . $message->getOid();
 
@@ -3161,7 +3161,7 @@ class CallEntryController extends Controller
         }
 
         //Testing Spout
-        if(0) {
+        if(1) {
             $ext = "XLSX";
             $ext = "CSV";
 //            $entryIds = array();

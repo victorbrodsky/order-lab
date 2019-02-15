@@ -1177,7 +1177,7 @@ class FormNodeUtil
 
     //TODO: create a cache for the formnode fields
     public function updateFieldsCache($message) {
-        return null; //testing
+        //return null; //testing
 
         //list and view used table view
         if(0) {
@@ -1196,7 +1196,7 @@ class FormNodeUtil
         //xml format
         $shortInfoXml = $this->getFormNodeHolderShortInfo($message,$message->getMessageCategory(),$table=false,"");
 
-        if(1) {
+        if(0) {
 //            echo "<br>Array:<pre>";
 //            print_r($shortInfoXml);
 //            echo "</pre>";
@@ -1205,9 +1205,9 @@ class FormNodeUtil
             echo $shortInfoXml;
             echo '</textarea>';
 
-            $showLabelForce = TRUE;
+            //$showLabelForce = TRUE;
             $showLabelForce = FALSE;
-            $table = TRUE;
+            //$table = TRUE;
             $table = FALSE;
             $shortInfo = $this->xmlToTable($shortInfoXml, $table, $showLabelForce);
             echo "<br>XML Table:<br> $shortInfo <br>";
@@ -1229,12 +1229,13 @@ class FormNodeUtil
         //XML failes when there is "<" or ">" characters
         //$xmlData = strip_tags($xmlData); //remove html tags
         //$xmlData = mb_convert_encoding( $xmlData, 'HTML-ENTITIES',  'UTF-8') ;
+        //$xmlData = htmlspecialchars($xmlData,ENT_XML1,'UTF-8');
 
         $xml = simplexml_load_string($xmlData);
 
-        echo "<br><br>XML:<pre>";
-        print_r($xml);
-        echo "</pre>";
+//        echo "<br><br>XML:<pre>";
+//        print_r($xml);
+//        echo "</pre>";
 
         $newLine = "\n";
         $space = "  ";
@@ -1659,9 +1660,13 @@ class FormNodeUtil
                         //$result[] = $thisInfo;
 
                         //XML
-                        $result[] = $nameStartXml . $nameValueArr['name'] . $nameEndXml;
-                        $result[] = $showlabelStartXml . $nameValueArr['showLabel'] . $showlabelEndXml;
-                        $result[] = $valueStartXml . $nameValueArr['value'] . $valueEndXml;
+                        $fieldName = $this->makeXmlSafe($nameValueArr['name']);
+                        $fieldValue = $this->makeXmlSafe($nameValueArr['value']);
+                        $showLabelValue = $this->makeXmlSafe($nameValueArr['showLabel']);
+
+                        $result[] = $nameStartXml . $fieldName . $nameEndXml;
+                        $result[] = $showlabelStartXml . $showLabelValue . $showlabelEndXml;
+                        $result[] = $valueStartXml . $fieldValue . $valueEndXml;
 
                     }
                 }
@@ -1683,6 +1688,9 @@ class FormNodeUtil
         }
 
         return $result;
+    }
+    public function makeXmlSafe($string) {
+        return htmlspecialchars($string,ENT_XML1,'UTF-8');
     }
 
     //This is used by call entry View page. Similar to getFormNodeHolderShortInfo as table

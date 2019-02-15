@@ -996,21 +996,21 @@ class Message {
         $this->formnodesCache = $formnodesCache;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getFormnodesCacheTable()
-    {
-        return $this->formnodesCacheTable;
-    }
-
-    /**
-     * @param mixed $formnodesCacheTable
-     */
-    public function setFormnodesCacheTable($formnodesCacheTable)
-    {
-        $this->formnodesCacheTable = $formnodesCacheTable;
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getFormnodesCacheTable()
+//    {
+//        return $this->formnodesCacheTable;
+//    }
+//
+//    /**
+//     * @param mixed $formnodesCacheTable
+//     */
+//    public function setFormnodesCacheTable($formnodesCacheTable)
+//    {
+//        $this->formnodesCacheTable = $formnodesCacheTable;
+//    }
 
     /**
      * @return mixed
