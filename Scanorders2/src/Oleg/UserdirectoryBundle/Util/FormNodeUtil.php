@@ -1219,8 +1219,35 @@ class FormNodeUtil
             exit('111');
         }
 
+        //Populate 1) entry info and optional patient info (entry might be without patient)
+        $populated = 0;
+
+        //////////// Patient Info //////////////////
+        //TODO: make sure update this info when patient info is updated via "Edit Patient Demographics"
+        $patientNames = array();
+        $mrns = array();
+        foreach ($message->getPatient() as $patient) {
+            $patientNames[] = $patient->getFullPatientName(false);
+            $mrns[] = $patient->obtainFullValidKeyName();
+        }
+        //Patient Name
+        $patientNameStr = implode("\n", $patientNames);
+        if( $patientNameStr ) {
+            $message->setPatientNameCache($patientNameStr);
+        }
+        //MRN
+        $mrnsStr = implode("\n", $mrns);
+        if( $mrnsStr ) {
+            $message->setPatientMrnCache($mrnsStr);
+        }
+        //////////// EOF Patient Info //////////////////
+
         if( $shortInfoXml ) {
-            //$message->setFormnodesCache($snapshotArrChunksText);
+            $message->setFormnodesCache($shortInfoXml);
+            $populated++;
+        }
+
+        if( count($populated) == 1 ) {
             //$this->em->flush($message);
             return true;
         }

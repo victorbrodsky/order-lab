@@ -3542,32 +3542,34 @@ class CallEntryController extends Controller
             if(1) {//testing patient
 
                 //Patient
-                $patientNames = array();
-                $mrns = array();
-                foreach ($message->getPatient() as $patient) {
-                    $patientNames[] = $patient->getFullPatientName(false);
-                    $mrns[] = $patient->obtainFullValidKeyName();
-                    $patient = NULL;
-                    gc_collect_cycles();
+                $patientNameStr = $message->getPatientNameCache();
+                $mrnsStr = $message->getPatientMrnCache();
+
+                if( !$patientNameStr || !$mrnsStr ) {
+                    $patientNames = array();
+                    $mrns = array();
+                    foreach ($message->getPatient() as $patient) {
+                        $patientNames[] = $patient->getFullPatientName(false);
+                        $mrns[] = $patient->obtainFullValidKeyName();
+                        //$patient = NULL;
+                        //gc_collect_cycles();
+                    }
+                    //Patient Name
+                    $patientNameStr = implode("\n", $patientNames);
+                    //MRN
+                    $mrnsStr = implode("\n", $mrns);
                 }
 
-                //Patient Name
-                $patientNameStr = implode("\n", $patientNames);
-                //$ews->setCellValue('C'.$row, $patientNameStr);
                 $data[2] = $patientNameStr;
-
-                //MRN
-                $mrnsStr = implode("\n", $mrns);
-                //$ews->setCellValue('D'.$row, $mrnsStr);
                 $data[3] = $mrnsStr;
 
                 $this->print_mem("$count : $messageOid Patient");
 
-                $patientNames = NULL;
-                $patientNameStr = NULL;
-                $mrnsStr = NULL;
-                $mrns = NULL;
-                gc_collect_cycles();
+//                $patientNames = NULL;
+//                $patientNameStr = NULL;
+//                $mrnsStr = NULL;
+//                $mrns = NULL;
+//                gc_collect_cycles();
             }
 
             if(0) {//testing encounter
@@ -3742,8 +3744,9 @@ class CallEntryController extends Controller
         $writer->close();
     }
 
-    function print_mem($description='The script is now using')
-    {
+    function print_mem($description='The script is now using') {
+        return null;
+
         /* Currently used memory */
         $mem_usage = memory_get_usage();
 

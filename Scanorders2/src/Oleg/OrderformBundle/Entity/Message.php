@@ -129,6 +129,18 @@ class Message {
      */
     private $formnodesCache;
 
+    /**
+     * Patient's name cache
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $patientNameCache;
+
+    /**
+     * Patient's mrn cache
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $patientMrnCache;
+
 //    /**
 //     * Form nodes fields cache (snapshot) used in list and view as table
 //     * @ORM\Column(type="text", nullable=true)
@@ -996,21 +1008,37 @@ class Message {
         $this->formnodesCache = $formnodesCache;
     }
 
-//    /**
-//     * @return mixed
-//     */
-//    public function getFormnodesCacheTable()
-//    {
-//        return $this->formnodesCacheTable;
-//    }
-//
-//    /**
-//     * @param mixed $formnodesCacheTable
-//     */
-//    public function setFormnodesCacheTable($formnodesCacheTable)
-//    {
-//        $this->formnodesCacheTable = $formnodesCacheTable;
-//    }
+    /**
+     * @return mixed
+     */
+    public function getPatientNameCache()
+    {
+        return $this->patientNameCache;
+    }
+
+    /**
+     * @param mixed $patientNameCache
+     */
+    public function setPatientNameCache($patientNameCache)
+    {
+        $this->patientNameCache = $patientNameCache;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPatientMrnCache()
+    {
+        return $this->patientMrnCache;
+    }
+
+    /**
+     * @param mixed $patientMrnCache
+     */
+    public function setPatientMrnCache($patientMrnCache)
+    {
+        $this->patientMrnCache = $patientMrnCache;
+    }
 
     /**
      * @return mixed
