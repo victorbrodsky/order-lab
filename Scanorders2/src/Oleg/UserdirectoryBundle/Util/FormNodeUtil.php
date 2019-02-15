@@ -1254,7 +1254,7 @@ class FormNodeUtil
 
         return false;
     }
-    public function xmlToTable( $xmlData, $table=TRUE, $showLabelForce=FALSE, $colspan=9 ) {
+    public function xmlToTable( $xmlData, $table=TRUE, $showLabelForce=FALSE, $withValue=FALSE, $colspan=9 ) {
 
         //XML failes when there is "<" or ">" characters
         //$xmlData = strip_tags($xmlData); //remove html tags
@@ -1305,17 +1305,26 @@ class FormNodeUtil
                     $fieldName = null;
                 }
 
-                if( $table ) {
-                    $tableStr = $tableStr . '<tr class="">';
+                $fieldValue = $value[$i];
 
-                    $tableStr = $tableStr . '<td colspan=3 class="rowlink-skip" style="width:20%; padding-left:3em">' . $fieldName . '</td>';
-
-                    $tableStr = $tableStr . '<td colspan=6 class="rowlink-skip" style="width:80%">' . $value[$i] . '</td>';
-
-                    $tableStr = $tableStr . '</tr>';
+                //show it if except $withValue and !$fieldValue
+                //do not show if $withValue and !$fieldValue
+                if( $withValue && !$fieldValue ) {
+                    //do not show if $withValue and !$fieldValue
                 } else {
-                    $tableStr = $tableStr . $space . $fieldName . "  " . $value[$i] . $newLine;
+                    if( $table ) {
+                        $tableStr = $tableStr . '<tr class="">';
+
+                        $tableStr = $tableStr . '<td colspan=3 class="rowlink-skip" style="width:20%; padding-left:3em">' . $fieldName . '</td>';
+
+                        $tableStr = $tableStr . '<td colspan=6 class="rowlink-skip" style="width:80%">' . $value[$i] . '</td>';
+
+                        $tableStr = $tableStr . '</tr>';
+                    } else {
+                        $tableStr = $tableStr . $space . $fieldName . "  " . $value[$i] . $newLine;
+                    }
                 }
+
             }
 
         }
@@ -1740,7 +1749,7 @@ class FormNodeUtil
         if( $useCache && $formnodesCache ) {
             $showLabelForce = TRUE;
             $table = TRUE;
-            $shortInfo = $this->xmlToTable($formnodesCache, $table, $showLabelForce);
+            $shortInfo = $this->xmlToTable($formnodesCache, $table, $showLabelForce, $withValue);
             //exit('111');
         }
 

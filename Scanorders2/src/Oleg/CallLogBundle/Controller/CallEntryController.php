@@ -3707,7 +3707,8 @@ class CallEntryController extends Controller
                 //convert XML to text
                 $table = FALSE;
                 $showLabelForce = TRUE;
-                $formnodesCacheStr = $formNodeUtil->xmlToTable($formnodesCache,$table,$showLabelForce);
+                $withValue = TRUE;
+                $formnodesCacheStr = $formNodeUtil->xmlToTable($formnodesCache,$table,$showLabelForce,$withValue);
 
                 if( !$formnodesCacheStr ) {
                     $formnodesCacheStr = "Error converting entry information XML to text!";
