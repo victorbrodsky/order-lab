@@ -278,8 +278,8 @@ class DefaultController extends Controller
         $dql->select('message');
         $dql->where("message.formnodesCache IS NULL");
 
-        $dql->setMaxResults(500);
-        
+        //$dql->setMaxResults(500);
+
         $query = $em->createQuery($dql);
 
         $messages = $query->getResult();
