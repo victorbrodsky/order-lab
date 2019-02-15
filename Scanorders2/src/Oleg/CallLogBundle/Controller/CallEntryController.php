@@ -3526,7 +3526,7 @@ class CallEntryController extends Controller
             //$ews->setCellValue('B'.$row, $lastModified);
             $data[1] = $lastModified;
 
-            if(1) {//testing
+            if(1) {//testing patient
 
                 //Patient
                 $patientNames = array();
@@ -3545,7 +3545,8 @@ class CallEntryController extends Controller
                 $mrnsStr = implode("\n", $mrns);
                 //$ews->setCellValue('D'.$row, $mrnsStr);
                 $data[3] = $mrnsStr;
-
+            }
+            if(0) {//testing encounter
 
                 //Location and Referring Provider
                 $locationArr = array();
@@ -3594,8 +3595,8 @@ class CallEntryController extends Controller
 
             $writer->addRowWithStyle($data,$rowStyle);
 
+            //////// subsection with message snapshot info ////////
             if(0) {
-                //////// subsection with message snapshot info ////////
                 $row = $row + 1;
                 $trclassname = "";
 
@@ -3640,12 +3641,11 @@ class CallEntryController extends Controller
                         }
                     }
                 }
-                //////// EOF subsection with message snapshot info ////////
             } else {
                 //TODO: entry info saved
                 //used in list:
                 $formnodesCache = $message->getFormnodesCache();
-                $formnodesCache = "<formnode>"."<section>"."</section>"."</formnode>";
+                $formnodesCache = "<formnode>"."<section>"."</section>"."</formnode>"; //testing
 
                 if( !$formnodesCache ) {
                     $trclassname = "";
@@ -3683,6 +3683,7 @@ class CallEntryController extends Controller
                     $writer->addRowWithStyle($data, $rowStyle);
                 }
             }
+            //////// EOF subsection with message snapshot info ////////
 
             //increment row index
             $row = $row + 1;

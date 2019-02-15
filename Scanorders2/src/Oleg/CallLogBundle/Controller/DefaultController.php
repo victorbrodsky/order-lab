@@ -257,4 +257,41 @@ class DefaultController extends Controller
         return $user;
     }
 
+
+    /**
+     * http://localhost/order/call-log-book/populate-entry-cache/
+     * This is one time run method to populate call log entry cache in XML format
+     * @Route("/populate-entry-cache/", name="calllog_populate_entry_cache")
+     */
+    public function populateEntryCacheAction(Request $request)
+    {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
+        }
+
+        $formNodeUtil = $this->get('user_formnode_utility');
+        $em = $this->getDoctrine()->getManager();
+
+        $repository = $em->getRepository('OlegOrderformBundle:Message');
+
+        $dql =  $repository->createQueryBuilder("message");
+        $dql->select('message');
+        $dql->where("message.formnodesCache IS NULL");
+
+        $query = $em->createQuery($dql);
+
+        $messages = $query->getResult();
+        echo "Messages count=".count($messages)."<br>";
+
+        foreach( $messages as $message ) {
+            $res = $formNodeUtil->updateFieldsCache($message);
+
+            if( !$res) {
+                exit("Error updating cache");
+            }
+        }
+
+        exit("End of updating cache");
+    }
+
 }
