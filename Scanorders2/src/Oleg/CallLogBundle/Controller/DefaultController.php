@@ -290,8 +290,8 @@ class DefaultController extends Controller
                 exit("Error updating cache");
             }
 
-            $message = NULL;
-            $em->clear($message);
+            //$message = NULL;
+            //$em->clear($message);
         }
 
         exit("End of updating cache");
