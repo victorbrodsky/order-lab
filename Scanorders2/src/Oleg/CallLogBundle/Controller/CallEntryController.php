@@ -3526,6 +3526,11 @@ class CallEntryController extends Controller
                 }
                 //$ews->setCellValue('B'.$row, $lastModified);
                 $data[1] = $lastModified;
+
+                $editorInfos = NULL;
+                $modifiedOnDate = NULL;
+                $lastModified = NULL;
+                gc_collect_cycles();
             }
 
             if(1) {//testing patient
