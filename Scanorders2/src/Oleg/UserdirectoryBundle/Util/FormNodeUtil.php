@@ -1729,11 +1729,29 @@ class FormNodeUtil
     //This is used by call entry View page. Similar to getFormNodeHolderShortInfo as table
     //Get all formnodes from bottom to top. Split the row into two columns so that the values all begin at the same point.
     //$holderEntity - message; $formNodeHolderEntity - message category
-    public function getFormNodeHolderShortInfoForView( $holderEntity, $formNodeHolderEntity, $withValue=true ) {
+    public function getFormNodeHolderShortInfoForView( $holderEntity, $formNodeHolderEntity, $withValue=true, $trclassname="" ) {
 
-        //Can be replaced by the table view used by list
-        //$holderEntity, $formNodeHolderEntity, $table=true, $trclassname, $withValue=true, $colspan=9
-        return $this->getFormNodeHolderShortInfo($holderEntity,$formNodeHolderEntity,true,"",false); //testing
+        $useCache = FALSE;
+        //$useCache = TRUE;
+
+        $shortInfo = NULL;
+
+        $formnodesCache = $holderEntity->getFormnodesCache();
+        if( $useCache && $formnodesCache ) {
+            $showLabelForce = FALSE;
+            $table = TRUE;
+            $shortInfo = $this->xmlToTable($formnodesCache, $table, $showLabelForce);
+            //exit('111');
+        }
+
+        if( !$shortInfo ) {
+            //Can be replaced by the table view used by list
+            //$holderEntity, $formNodeHolderEntity, $table=true, $trclassname, $withValue=true, $colspan=9
+            $shortInfo = $this->getFormNodeHolderShortInfo($holderEntity,$formNodeHolderEntity,true,$trclassname,$withValue); //testing
+        }
+
+        return $shortInfo;
+
         ############################################
 
         if( !$holderEntity ) {

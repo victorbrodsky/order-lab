@@ -1098,7 +1098,9 @@
                     <a href="{{ path(calllog_sitename~'_callentry_view', { 'messageOid': message.oid, 'messageVersion':message.version }) }}" target="_blank">{{ message.getMessageOidVersion }}</a>
                 </td>
 
-                {{ user_formnode_utility.getFormNodeHolderShortInfo(message,message.messageCategory,1,trclassname)|raw }}
+                {#{{ user_formnode_utility.getFormNodeHolderShortInfo(message,message.messageCategory,1,trclassname)|raw }}#}
+                {{ user_formnode_utility.getFormNodeHolderShortInfoForView(message,message.messageCategory,false,trclassname)|raw }}
+
                 {#http://jsfiddle.net/dqq5B/524/#}
                 {#<td colspan=9>#}
                     {#<table class = "table table-hover table-condensed">#}
