@@ -530,6 +530,58 @@ class CallLogPatientController extends PatientController {
 
             $em->flush();
 
+            //////////////// TODO: update all associated messages patient info for CSV export ////////////////
+            //$formNodeUtil = $this->get('user_formnode_utility');
+            $em = $this->getDoctrine()->getManager();
+
+            $repository = $em->getRepository('OlegOrderformBundle:Message');
+
+            $dql =  $repository->createQueryBuilder("message");
+            $dql->select('message');
+            $dql->leftJoin("message.patient","patient");
+
+            $dql->where("patient.id = ".$patient->getId());
+
+            $query = $em->createQuery($dql);
+
+            $messages = $query->getResult();
+            //echo "Messages count=".count($messages)."<br>";
+
+            foreach( $messages as $message ) {
+                //$res = $formNodeUtil->updateFieldsCache($message);
+                //if( !$res) {
+                //    exit("Error updating patient cache");
+                //}
+
+                //////////// Patient Info //////////////////
+                //make sure update this info when patient info is updated via "Edit Patient Demographics"
+                $populated = false;
+                $patientNames = array();
+                $mrns = array();
+                foreach ($message->getPatient() as $patient) {
+                    $patientNames[] = $patient->getFullPatientName(false);
+                    $mrns[] = $patient->obtainFullValidKeyName();
+                }
+                //Patient Name
+                $patientNameStr = implode("\n", $patientNames);
+                if( $patientNameStr ) {
+                    $message->setPatientNameCache($patientNameStr);
+                    $populated = true;
+                }
+                //MRN
+                $mrnsStr = implode("\n", $mrns);
+                if( $mrnsStr ) {
+                    $message->setPatientMrnCache($mrnsStr);
+                    $populated = true;
+                }
+                //////////// EOF Patient Info //////////////////
+
+                if( $populated ) {
+                    $em->flush($message);
+                }
+            }
+            //////////////// EOF update all associated messages patient info for CSV export ////////////////
+
             ///////// Event Log /////////////////
             $eventType = 'Patient Demographics Updated';
             $event = "Patient with ID " . $patient->getId() . " has been updated by " . $user;
