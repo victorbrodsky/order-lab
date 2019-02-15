@@ -1690,7 +1690,10 @@ class FormNodeUtil
         return $result;
     }
     public function makeXmlSafe($string) {
-        return htmlspecialchars($string,ENT_XML1,'UTF-8');
+        $string = htmlspecialchars($string,ENT_XML1,'UTF-8');
+        //$string = htmlspecialchars($string,ENT_XML1 | ENT_COMPAT,'UTF-8');
+        //$string = htmlspecialchars($string,ENT_XML1 | ENT_QUOTES,'UTF-8');
+        return $string;
     }
 
     //This is used by call entry View page. Similar to getFormNodeHolderShortInfo as table
