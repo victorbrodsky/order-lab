@@ -3544,6 +3544,7 @@ class CallEntryController extends Controller
                     $patientNames[] = $patient->getFullPatientName(false);
                     $mrns[] = $patient->obtainFullValidKeyName();
                     $patient = NULL;
+                    gc_collect_cycles();
                 }
 
                 //Patient Name
@@ -3564,6 +3565,7 @@ class CallEntryController extends Controller
                 $mrns = NULL;
                 gc_collect_cycles();
             }
+
             if(0) {//testing encounter
 
                 //Location and Referring Provider
