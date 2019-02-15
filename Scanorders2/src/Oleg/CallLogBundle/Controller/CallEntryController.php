@@ -3509,7 +3509,7 @@ class CallEntryController extends Controller
             $data[0] = $message->getMessageOidVersion();
 
             //Last Modified
-            if(0) {//testing Last Modified
+            if(1) {//testing Last Modified
                 $lastModified = null;
                 if ($message->getVersion() > 1) {
                     $editorInfos = $message->getEditorInfos();
