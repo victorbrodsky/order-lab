@@ -3539,7 +3539,7 @@ class CallEntryController extends Controller
                 gc_collect_cycles();
             }
 
-            if(1) {//testing patient
+            if(0) {//testing patient
 
                 //Patient
                 $patientNames = array();
@@ -3570,7 +3570,7 @@ class CallEntryController extends Controller
                 gc_collect_cycles();
             }
 
-            if(0) {//testing encounter
+            if(1) {//testing encounter
 
                 //Location and Referring Provider
                 $locationArr = array();
@@ -3581,7 +3581,9 @@ class CallEntryController extends Controller
                         if ($refProvider->getField()) {
                             $refProviderArr[] = $refProvider->getField()->getFullName();
                         }
+                        $refProvider = NULL;
                     }
+                    $encounter = NULL;
                 }
 
                 //Location
@@ -3598,6 +3600,11 @@ class CallEntryController extends Controller
                 $callIssue = $message->getMessageCategory()->getNodeNameWithParents(); //another object
                 //$ews->setCellValue('G'.$row, $callIssue);
                 $data[6] = $callIssue;
+
+                $this->print_mem("$count : $messageOid Encounter");
+
+                $callIssue = NULL;
+                gc_collect_cycles();
 
             }//testing
 
