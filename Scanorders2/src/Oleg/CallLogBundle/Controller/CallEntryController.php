@@ -3609,19 +3609,28 @@ class CallEntryController extends Controller
             }//testing
 
             //Author
-            if(0) { //testing author
+            if(1) { //testing author
                 $author = null;
-                if ($message->getMessageStatus() && $message->getMessageStatus()->getName() == "Draft") {
-                    $provider = $message->getProvider();
-                    if ($provider) {
-                        $author = $provider->getUsernameOptimal();
-                    }
+
+//                if ($message->getMessageStatus() && $message->getMessageStatus()->getName() == "Draft") {
+//                    $provider = $message->getProvider();
+//                    if ($provider) {
+//                        $author = $provider->getUsernameOptimal();
+//                    }
+//                } else {
+//                    $signeeInfo = $message->getSigneeInfo();
+//                    if ($signeeInfo && $signeeInfo->getModifiedBy()) {
+//                        $author = $signeeInfo->getModifiedBy()->getUsernameOptimal();
+//                    }
+//                }
+
+                $provider = $message->getProvider();
+                if( $provider ) {
+                    $author = $provider->getUsernameOptimal();
                 } else {
-                    $signeeInfo = $message->getSigneeInfo();
-                    if ($signeeInfo && $signeeInfo->getModifiedBy()) {
-                        $author = $signeeInfo->getModifiedBy()->getUsernameOptimal();
-                    }
+                    $author = "Unknown Author";
                 }
+
                 //$ews->setCellValue('H'.$row, $author);
                 $data[7] = $author;
             }
