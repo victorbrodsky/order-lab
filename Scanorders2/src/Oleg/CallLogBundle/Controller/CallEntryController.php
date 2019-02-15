@@ -3609,7 +3609,7 @@ class CallEntryController extends Controller
             }//testing
 
             //Author
-            if(1) { //testing author
+            if(0) { //testing author
                 $author = null;
                 if ($message->getMessageStatus() && $message->getMessageStatus()->getName() == "Draft") {
                     $provider = $message->getProvider();
