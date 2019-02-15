@@ -94,7 +94,7 @@ class FormNodeUtil
         //process by data partial key name" "formnode-4" => "formnode-"
         $this->processFormNodesFromDataKeys($data,$holderEntity,$testing);
 
-        //TODO: save fields as cache in the field $formnodesCache ($holderEntity->setFormnodesCache($text))
+        //Save fields as cache in the field $formnodesCache ($holderEntity->setFormnodesCache($text))
         $res = $this->updateFieldsCache($holderEntity);
 
         if( $res ) {
@@ -1222,7 +1222,10 @@ class FormNodeUtil
         if( $shortInfoXml ) {
             //$message->setFormnodesCache($snapshotArrChunksText);
             //$this->em->flush($message);
+            return true;
         }
+
+        return false;
     }
     public function xmlToTable( $xmlData, $table=TRUE, $showLabelForce=FALSE, $colspan=9 ) {
 

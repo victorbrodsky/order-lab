@@ -3652,9 +3652,17 @@ class CallEntryController extends Controller
                     $formnodesCache = $formNodeUtil->getFormNodeHolderShortInfo($message,$message->getMessageCategory(),$table,$trclassname);
                 }
 
+                if( !$formnodesCache ) {
+                    $formnodesCache = "Error getting entry information in XML format!";
+                }
+
                 $table = FALSE;
                 $showLabelForce = TRUE;
                 $formnodesCacheStr = $formNodeUtil->xmlToTable($formnodesCache,$table,$showLabelForce);
+
+                if( !$formnodesCacheStr ) {
+                    $formnodesCacheStr = "Error converting entry information XML to text!";
+                }
 
                 //$useChunks = TRUE;
                 $useChunks = FALSE;
