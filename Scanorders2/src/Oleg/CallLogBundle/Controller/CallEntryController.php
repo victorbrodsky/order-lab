@@ -3598,17 +3598,16 @@ class CallEntryController extends Controller
                 //$ews->setCellValue('F'.$row, $refProviderStr);
                 $data[5] = $refProviderStr;
 
-                //Call Issue
-                $callIssue = $message->getMessageCategory()->getNodeNameWithParents(); //another object
-                //$ews->setCellValue('G'.$row, $callIssue);
-                $data[6] = $callIssue;
-
                 $this->print_mem("$count : $messageOid Encounter");
-
-                $callIssue = NULL;
-                gc_collect_cycles();
-
+            } else {
+                $data[4] = NULL;
+                $data[5] = NULL;
             }//testing
+
+            //Call Issue
+            $callIssue = $message->getMessageCategory()->getNodeNameWithParents(); //another object
+            //$ews->setCellValue('G'.$row, $callIssue);
+            $data[6] = $callIssue;
 
             //Author
             if(1) { //testing author

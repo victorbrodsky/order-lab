@@ -269,6 +269,8 @@ class DefaultController extends Controller
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
+        exit("This is a one time run method");
+
         $formNodeUtil = $this->get('user_formnode_utility');
         $em = $this->getDoctrine()->getManager();
 
