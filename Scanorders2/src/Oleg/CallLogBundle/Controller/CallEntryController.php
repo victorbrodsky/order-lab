@@ -3509,22 +3509,24 @@ class CallEntryController extends Controller
             $data[0] = $message->getMessageOidVersion();
 
             //Last Modified
-            $lastModified = null;
-            if( $message->getVersion() > 1 ) {
-                $editorInfos = $message->getEditorInfos();
-                if (count($editorInfos) > 0) {
-                    $modifiedOnDate = $editorInfos[0]->getModifiedOn();
-                    $lastModified = $modifiedOnDate->format('m/d/Y') . " at " . $modifiedOnDate->format('H:i:s');
+            if(0) {//testing Last Modified
+                $lastModified = null;
+                if ($message->getVersion() > 1) {
+                    $editorInfos = $message->getEditorInfos();
+                    if (count($editorInfos) > 0) {
+                        $modifiedOnDate = $editorInfos[0]->getModifiedOn();
+                        $lastModified = $modifiedOnDate->format('m/d/Y') . " at " . $modifiedOnDate->format('H:i:s');
+                    } else {
+                        $modifiedOnDate = $message->getOrderdate();
+                        $lastModified = $modifiedOnDate->format('m/d/Y') . " at " . $modifiedOnDate->format('H:i:s');
+                    }
                 } else {
                     $modifiedOnDate = $message->getOrderdate();
                     $lastModified = $modifiedOnDate->format('m/d/Y') . " at " . $modifiedOnDate->format('H:i:s');
                 }
-            } else {
-                $modifiedOnDate = $message->getOrderdate();
-                $lastModified = $modifiedOnDate->format('m/d/Y') . " at " . $modifiedOnDate->format('H:i:s');
+                //$ews->setCellValue('B'.$row, $lastModified);
+                $data[1] = $lastModified;
             }
-            //$ews->setCellValue('B'.$row, $lastModified);
-            $data[1] = $lastModified;
 
             if(0) {//testing patient
 
@@ -3578,20 +3580,22 @@ class CallEntryController extends Controller
             }//testing
 
             //Author
-            $author = null;
-            if( $message->getMessageStatus() && $message->getMessageStatus()->getName() == "Draft" ) {
-                $provider = $message->getProvider();
-                if( $provider ) {
-                    $author = $provider->getUsernameOptimal();
+            if(0) { //testing author
+                $author = null;
+                if ($message->getMessageStatus() && $message->getMessageStatus()->getName() == "Draft") {
+                    $provider = $message->getProvider();
+                    if ($provider) {
+                        $author = $provider->getUsernameOptimal();
+                    }
+                } else {
+                    $signeeInfo = $message->getSigneeInfo();
+                    if ($signeeInfo && $signeeInfo->getModifiedBy()) {
+                        $author = $signeeInfo->getModifiedBy()->getUsernameOptimal();
+                    }
                 }
-            } else {
-                $signeeInfo = $message->getSigneeInfo();
-                if( $signeeInfo && $signeeInfo->getModifiedBy() ) {
-                    $author = $signeeInfo->getModifiedBy()->getUsernameOptimal();
-                }
+                //$ews->setCellValue('H'.$row, $author);
+                $data[7] = $author;
             }
-            //$ews->setCellValue('H'.$row, $author);
-            $data[7] = $author;
 
             $writer->addRowWithStyle($data,$rowStyle);
 
@@ -3688,7 +3692,9 @@ class CallEntryController extends Controller
             //increment row index
             $row = $row + 1;
 
+            $message = null;
             $em->clear();
+            gc_collect_cycles();
 
         }//foreach $entryId
 
