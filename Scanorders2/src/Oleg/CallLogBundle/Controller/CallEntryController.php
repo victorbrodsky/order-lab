@@ -3527,6 +3527,8 @@ class CallEntryController extends Controller
                 //$ews->setCellValue('B'.$row, $lastModified);
                 $data[1] = $lastModified;
 
+                $this->print_mem("Last Modified");
+
                 $editorInfos = NULL;
                 $modifiedOnDate = NULL;
                 $lastModified = NULL;
@@ -3553,6 +3555,8 @@ class CallEntryController extends Controller
                 $mrnsStr = implode("\n", $mrns);
                 //$ews->setCellValue('D'.$row, $mrnsStr);
                 $data[3] = $mrnsStr;
+
+                $this->print_mem("Patient");
 
                 $patientNames = NULL;
                 $patientNameStr = NULL;
@@ -3714,5 +3718,17 @@ class CallEntryController extends Controller
         // Auto size columns for each worksheet
 
         $writer->close();
+    }
+
+    function print_mem($description='The script is now using')
+    {
+        /* Currently used memory */
+        $mem_usage = memory_get_usage();
+
+        /* Peak memory usage */
+        $mem_peak = memory_get_peak_usage();
+
+        echo $description.': <strong>' . round($mem_usage / (1024*1000)) . 'MB</strong> of memory.<br>';
+        echo 'Peak usage: <strong>' . round($mem_peak / (1024*1000)) . 'MB</strong> of memory.<br><br>';
     }
 }
