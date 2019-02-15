@@ -3513,7 +3513,7 @@ class CallEntryController extends Controller
             $data[0] = $messageOid;
 
             //Last Modified
-            if(0) {//testing Last Modified
+            if(1) {//testing Last Modified
                 $lastModified = null;
                 if ($message->getVersion() > 1) {
                     $editorInfos = $message->getEditorInfos();
@@ -3570,7 +3570,7 @@ class CallEntryController extends Controller
                 gc_collect_cycles();
             }
 
-            if(1) {//testing encounter
+            if(0) {//testing encounter
 
                 //Location and Referring Provider
                 $locationArr = array();
@@ -3609,7 +3609,7 @@ class CallEntryController extends Controller
             }//testing
 
             //Author
-            if(0) { //testing author
+            if(1) { //testing author
                 $author = null;
                 if ($message->getMessageStatus() && $message->getMessageStatus()->getName() == "Draft") {
                     $provider = $message->getProvider();
