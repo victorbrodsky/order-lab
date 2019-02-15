@@ -3645,6 +3645,7 @@ class CallEntryController extends Controller
                 //TODO: entry info saved
                 //used in list:
                 $formnodesCache = $message->getFormnodesCache();
+                $formnodesCache = "<formnode>"."<section>"."</section>"."</formnode>";
 
                 if( !$formnodesCache ) {
                     $trclassname = "";
