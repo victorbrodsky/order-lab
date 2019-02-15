@@ -3539,7 +3539,7 @@ class CallEntryController extends Controller
                 gc_collect_cycles();
             }
 
-            if(0) {//testing patient
+            if(1) {//testing patient
 
                 //Patient
                 $patientNames = array();
