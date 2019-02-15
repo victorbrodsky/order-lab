@@ -1738,7 +1738,7 @@ class FormNodeUtil
 
         $formnodesCache = $holderEntity->getFormnodesCache();
         if( $useCache && $formnodesCache ) {
-            $showLabelForce = FALSE;
+            $showLabelForce = TRUE;
             $table = TRUE;
             $shortInfo = $this->xmlToTable($formnodesCache, $table, $showLabelForce);
             //exit('111');
