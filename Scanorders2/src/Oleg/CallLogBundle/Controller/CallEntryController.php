@@ -3528,7 +3528,7 @@ class CallEntryController extends Controller
                 $data[1] = $lastModified;
             }
 
-            if(0) {//testing patient
+            if(1) {//testing patient
 
                 //Patient
                 $patientNames = array();
