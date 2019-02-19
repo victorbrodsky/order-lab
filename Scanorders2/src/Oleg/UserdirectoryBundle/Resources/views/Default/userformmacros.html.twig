@@ -877,6 +877,18 @@
                                         </td>
                                     </tr>
                                 {% endif %}
+
+                                {% set criticalEmail = user.getSingleEmail() %}
+                                {% set notificationEmail = user.getSingleEmail(false) %}
+                                {% if notificationEmail != criticalEmail %}
+                                    <tr class="row-withspace">
+                                        <td class="left-column">notification email:</td>
+                                        <td>
+                                            <a href="mailto:{{ notificationEmail }}" target="_top">{{ notificationEmail }}</a>
+                                        </td>
+                                    </tr>
+                                {% endif %}
+
                                 {% if user.getPreferredPhone %}
                                     <tr>
                                         <td class="left-column">ph:</td>

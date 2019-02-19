@@ -2091,8 +2091,16 @@ class User extends BaseUser {
         return $emailArr;
     }
 
-    //TODO: if not critical, use "Send email notification to" field in the user profile
+    //if not critical, use "Send email notification to" field in the user profile
     public function getSingleEmail( $critical=true ) {
+        if( !$critical ) {
+            $notificationEmailUser = $this->getNotificationEmailUser();
+            if( $notificationEmailUser ) {
+                $notificationEmailUserSingleEmail = $notificationEmailUser->getSingleEmail();
+                return $notificationEmailUserSingleEmail;
+            }
+        }
+
         if( $this->getEmail() ) {
             return $this->getEmail();
         }

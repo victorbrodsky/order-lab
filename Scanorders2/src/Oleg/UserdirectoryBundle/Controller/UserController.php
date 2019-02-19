@@ -2289,6 +2289,9 @@ class UserController extends Controller
      */
     public function showUserOptimizedAction( Request $request, $id )
     {
+//        $user = $this->get('security.token_storage')->getToken()->getUser();
+//        echo "single email=".$user->getSingleEmail()."<br>";
+//        exit('111');
 
         return $this->showUserOptimized( $request, $id, $this->container->getParameter('employees.sitename') );
 
