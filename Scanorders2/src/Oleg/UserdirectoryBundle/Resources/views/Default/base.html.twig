@@ -145,9 +145,11 @@
 
         {{ usermacros.nonLiveSiteWarning() }}
 
-        {% if cycle is not defined or cycle != "download" %}
-            {{ usermacros.browserCheck() }}
-        {% endif %}
+        {% block browsercheck %}
+            {% if cycle is not defined or cycle != "download" %}
+                {{ usermacros.browserCheck() }}
+            {% endif %}
+        {% endblock %}
 
         <div class="col-xs-12">
 
