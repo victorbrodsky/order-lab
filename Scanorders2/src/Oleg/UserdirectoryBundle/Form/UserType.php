@@ -297,6 +297,7 @@ class UserType extends AbstractType
         $builder->add('notificationEmailUser', null, array(
             'label' => 'Send email notifications to:',
             'multiple' => false,
+            'required' => false,
             'attr' => array('class'=>'combobox')
         ));
     }

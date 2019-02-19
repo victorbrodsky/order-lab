@@ -1637,7 +1637,7 @@ class TransResRequestUtil
         // 2) a) submitter, b) principalInvestigators, c) contact
         //a) submitter
         if( $transresRequest->getSubmitter() ) {
-            $submitterEmail = $transresRequest->getSubmitter()->getSingleEmail();
+            $submitterEmail = $transresRequest->getSubmitter()->getSingleEmail(false);
             if( $submitterEmail ) {
                 $emails = array_merge($emails,array($submitterEmail));
             }
@@ -1651,14 +1651,14 @@ class TransResRequestUtil
             $pis = $transresRequest->getPrincipalInvestigators();
             foreach ($pis as $pi) {
                 if ($pi) {
-                    $piEmailArr[] = $pi->getSingleEmail();
+                    $piEmailArr[] = $pi->getSingleEmail(false);
                 }
             }
             $emails = array_merge($emails, $piEmailArr);
 
             //c) contact
             if ($transresRequest->getContact()) {
-                $contactEmail = $transresRequest->getContact()->getSingleEmail();
+                $contactEmail = $transresRequest->getContact()->getSingleEmail(false);
                 if ($submitterEmail) {
                     $emails = array_merge($emails, array($contactEmail));
                 }
@@ -1695,7 +1695,7 @@ class TransResRequestUtil
         foreach( $technicians as $technician ) {
             if( $technician ) {
                 if( $asEmail ) {
-                    $emails[] = $technician->getSingleEmail();
+                    $emails[] = $technician->getSingleEmail(false);
                 } else {
                     $emails[] = $technician;
                 }
@@ -1723,7 +1723,7 @@ class TransResRequestUtil
         foreach( $technicians as $technician ) {
             if( $technician ) {
                 if( $asEmail ) {
-                    $emails[] = $technician->getSingleEmail();
+                    $emails[] = $technician->getSingleEmail(false);
                 } else {
                     $emails[] = $technician;
                 }
@@ -1795,7 +1795,7 @@ class TransResRequestUtil
 //        $adminUsers = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole("ROLE_TRANSRES_ADMIN".$specialtyPostfix);
 //        foreach( $adminUsers as $user ) {
 //            if( $user ) {
-//                $emails[] = $user->getSingleEmail();
+//                $emails[] = $user->getSingleEmail(false);
 //            }
 //        }
 
@@ -1806,14 +1806,14 @@ class TransResRequestUtil
         $billingUsers = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole("ROLE_TRANSRES_BILLING_ADMIN".$specialtyPostfix);
         foreach( $billingUsers as $user ) {
             if( $user ) {
-                $emails[] = $user->getSingleEmail();
+                $emails[] = $user->getSingleEmail(false);
             }
         }
 
 //        //2) Request's billing contact (PI side)
 //        $billingContact = $transresRequest->getContact();
 //        if( $billingContact ) {
-//            $billingContactEmail = $billingContact->getSingleEmail();
+//            $billingContactEmail = $billingContact->getSingleEmail(false);
 //            if( $billingContactEmail ) {
 //                $emails[] = $billingContactEmail;
 //            }
@@ -1858,7 +1858,7 @@ class TransResRequestUtil
         }
 
         $piEmailArr = array();
-        $piEmail = $pi->getSingleEmail();
+        $piEmail = $pi->getSingleEmail(false);
         if( $piEmail ) {
             $piEmailArr[] = $piEmail;
         } else {
@@ -1868,7 +1868,7 @@ class TransResRequestUtil
         //Invoice's Billing Contact
         $invoiceBillingContact = $invoice->getBillingContact();
         if( $invoiceBillingContact ) {
-            $invoiceBillingContactEmail = $invoiceBillingContact->getSingleEmail();
+            $invoiceBillingContactEmail = $invoiceBillingContact->getSingleEmail(false);
             if( $invoiceBillingContactEmail) {
                 $piEmailArr[] = $invoiceBillingContactEmail;
             }
@@ -1934,7 +1934,7 @@ class TransResRequestUtil
         $adminUsers = $this->getRequestAdminTechEmails($transresRequest,false); //admins, technicians
         foreach( $adminUsers as $user ) {
             if( $user ) {
-                $emails[] = $user->getSingleEmail();
+                $emails[] = $user->getSingleEmail(false);
             }
         }
 
@@ -2011,14 +2011,14 @@ class TransResRequestUtil
         $pis = $transresRequest->getPrincipalInvestigators();
         foreach( $pis as $pi ) {
             if( $pi ) {
-                $emails[] = $pi->getSingleEmail();
+                $emails[] = $pi->getSingleEmail(false);
             }
         }
 
         //get submitter
         $submitter = $transresRequest->getSubmitter();
         if( $submitter ) {
-            $emails[] = $submitter->getSingleEmail();
+            $emails[] = $submitter->getSingleEmail(false);
         }
 
         $emails = array_unique($emails);
@@ -2141,7 +2141,7 @@ class TransResRequestUtil
                 $sellerStr = $sellerStr . " Fax: " . $fax;
             }
 
-            $email = $invoice->getSalesperson()->getSingleEmail();
+            $email = $invoice->getSalesperson()->getSingleEmail(false);
             if( $email ) {
                 $from = $from . $newline . "Email: " . $email;
                 $sellerStr = $sellerStr . " Email: " . $email;
@@ -2537,7 +2537,7 @@ class TransResRequestUtil
 
         $salesperson = $invoice->getSalesperson();
         if( $salesperson ) {
-            $salespersonEmail = $salesperson->getSingleEmail();
+            $salespersonEmail = $salesperson->getSingleEmail(false);
             if( $salespersonEmail ) {
                 $ccs = $salespersonEmail;
             }
@@ -2546,7 +2546,7 @@ class TransResRequestUtil
         if( !$ccs ) {
             $submitter = $invoice->getSubmitter();
             if( $submitter ) {
-                $submitterEmail = $submitter->getSingleEmail();
+                $submitterEmail = $submitter->getSingleEmail(false);
                 if( $submitterEmail ) {
                     $ccs = $submitterEmail;
                 }
@@ -2635,7 +2635,7 @@ class TransResRequestUtil
 
         $salesperson = $invoice->getSalesperson();
         if( $salesperson ) {
-            $salespersonEmail = $salesperson->getSingleEmail();
+            $salespersonEmail = $salesperson->getSingleEmail(false);
         } else {
             return "There is no sales person. Email has not been sent.";
         }
@@ -2668,7 +2668,7 @@ class TransResRequestUtil
         $billingUsers = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole("ROLE_TRANSRES_BILLING_ADMIN".$specialtyPostfix);
         foreach( $billingUsers as $billingUser ) {
             if( $billingUser ) {
-                $ccs[] = $billingUser->getSingleEmail();
+                $ccs[] = $billingUser->getSingleEmail(false);
             }
         }
 
@@ -2693,7 +2693,7 @@ class TransResRequestUtil
         }
 
         if( $asEmail ) {
-            $piEmail = $pi->getSingleEmail();
+            $piEmail = $pi->getSingleEmail(false);
             if( $piEmail ) {
                 $piEmailArr[] = $piEmail;
             }
@@ -2705,7 +2705,7 @@ class TransResRequestUtil
         $invoiceBillingContact = $invoice->getBillingContact();
         if( $invoiceBillingContact ) {
             if( $asEmail ) {
-                $invoiceBillingContactEmail = $invoiceBillingContact->getSingleEmail();
+                $invoiceBillingContactEmail = $invoiceBillingContact->getSingleEmail(false);
                 if ($invoiceBillingContactEmail) {
                     $piEmailArr[] = $invoiceBillingContactEmail;
                 }
@@ -3104,7 +3104,7 @@ class TransResRequestUtil
         }
 
         //$user = $this->secTokenStorage->getToken()->getUser();
-        //$senderEmail = $user->getSingleEmail();
+        //$senderEmail = $user->getSingleEmail(false);
 
         $project = $transresRequest->getProject();
 
@@ -3115,7 +3115,7 @@ class TransResRequestUtil
         //$admins = $transresUtil->getTransResAdminEmails($project->getProjectSpecialty(),$asEmail,$onlyAdmin);
         $admins = $this->getRequestAdminTechEmails($transresRequest,$asEmail); //admins, technicians
         foreach($admins as $admin) {
-            $adminSingleEmail = $admin->getSingleEmail();
+            $adminSingleEmail = $admin->getSingleEmail(false);
             $adminEmailInfos[] = $admin->getUsernameOptimal()." (".$adminSingleEmail.")";
             $adminEmails[] = $adminSingleEmail;
         }
@@ -3532,7 +3532,7 @@ class TransResRequestUtil
 //
 //            $salesperson = $invoice->getSalesperson();
 //            if ($salesperson) {
-//                $salespersonEmail = $salesperson->getSingleEmail();
+//                $salespersonEmail = $salesperson->getSingleEmail(false);
 //                if ($salespersonEmail) {
 //                    $ccs = $salespersonEmail;
 //                }
@@ -3540,7 +3540,7 @@ class TransResRequestUtil
 //            if (!$ccs) {
 //                $submitter = $invoice->getSubmitter();
 //                if ($submitter) {
-//                    $submitterEmail = $submitter->getSingleEmail();
+//                    $submitterEmail = $submitter->getSingleEmail(false);
 //                    if ($submitterEmail) {
 //                        $ccs = $submitterEmail;
 //                    }

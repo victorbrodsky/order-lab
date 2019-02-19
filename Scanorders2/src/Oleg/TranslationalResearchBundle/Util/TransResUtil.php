@@ -344,7 +344,7 @@ class TransResUtil
             $reviewer = $review->getReviewer();
             if( $reviewer ) {
                 if( $asEmails ) {
-                    $reviewers[] = $reviewer->getSingleEmail();
+                    $reviewers[] = $reviewer->getSingleEmail(false);
                 } else {
                     $reviewers[] = $reviewer;
                 }
@@ -353,7 +353,7 @@ class TransResUtil
             $reviewerDelegate = $review->getReviewerDelegate();
             if( $reviewerDelegate ) {
                 if( $asEmails ) {
-                    $reviewers[] = $reviewerDelegate->getSingleEmail();
+                    $reviewers[] = $reviewerDelegate->getSingleEmail(false);
                 } else {
                     $reviewers[] = $reviewerDelegate;
                 }
@@ -2326,7 +2326,7 @@ class TransResUtil
         $emails = array_merge($emails,$admins);
 
         //project's submitter only
-        $submitter = $project->getSubmitter()->getSingleEmail();
+        $submitter = $project->getSubmitter()->getSingleEmail(false);
         $emails = array_merge($emails, array($submitter));
 
         // 2) project's Requester (submitter, principalInvestigators, coInvestigators, pathologists)
@@ -2480,7 +2480,7 @@ class TransResUtil
             $admins = $this->getTransResAdminEmails($project->getProjectSpecialty(),false,true);
             $adminInfos = array();
             foreach( $admins as $admin ) {
-                $adminInfos[] = $admin->getUsernameOptimal() . " " . $admin->getSingleEmail();
+                $adminInfos[] = $admin->getUsernameOptimal() . " " . $admin->getSingleEmail(false);
             }
             if( count($adminInfos) > 0 ) {
                 $body = $body . " " . implode(", ",$adminInfos);
@@ -2627,7 +2627,7 @@ class TransResUtil
         foreach( $admins as $user ) {
             if( $user ) {
                 if( $asEmail ) {
-                    $users[] = $user->getSingleEmail();
+                    $users[] = $user->getSingleEmail(false);
                 } else {
                     $users[] = $user;
                 }
@@ -2642,7 +2642,7 @@ class TransResUtil
         foreach( $primarys as $user ) {
             if( $user ) {
                 if( $asEmail ) {
-                    $users[] = $user->getSingleEmail();
+                    $users[] = $user->getSingleEmail(false);
                 } else {
                     $users[] = $user;
                 }
@@ -2658,7 +2658,7 @@ class TransResUtil
         //1 submitter
         if( $project->getSubmitter() ) {
             if( $asEmail ) {
-                $resArr[] = $project->getSubmitter()->getSingleEmail();
+                $resArr[] = $project->getSubmitter()->getSingleEmail(false);
             } else {
                 $resArr[] = $project->getSubmitter();
             }
@@ -2669,7 +2669,7 @@ class TransResUtil
         foreach( $pis as $pi ) {
             if( $pi ) {
                 if( $asEmail ) {
-                    $resArr[] = $pi->getSingleEmail();
+                    $resArr[] = $pi->getSingleEmail(false);
                 } else {
                     $resArr[] = $pi;
                 }
@@ -2681,7 +2681,7 @@ class TransResUtil
         foreach( $principalIrbInvestigators as $principalIrbInvestigator ) {
             if( $principalIrbInvestigator ) {
                 if( $asEmail ) {
-                    $resArr[] = $principalIrbInvestigator->getSingleEmail();
+                    $resArr[] = $principalIrbInvestigator->getSingleEmail(false);
                 } else {
                     $resArr[] = $principalIrbInvestigator;
                 }
@@ -2693,7 +2693,7 @@ class TransResUtil
         foreach( $cois as $coi ) {
             if( $coi ) {
                 if( $asEmail ) {
-                    $resArr[] = $coi->getSingleEmail();
+                    $resArr[] = $coi->getSingleEmail(false);
                 } else {
                     $resArr[] = $coi;
                 }
@@ -2705,7 +2705,7 @@ class TransResUtil
         foreach( $pathologists as $pathologist ) {
             if( $pathologist ) {
                 if( $asEmail ) {
-                    $resArr[] = $pathologist->getSingleEmail();
+                    $resArr[] = $pathologist->getSingleEmail(false);
                 } else {
                     $resArr[] = $pathologist;
                 }
@@ -2717,7 +2717,7 @@ class TransResUtil
         foreach( $contacts as $contact ) {
             if( $contact ) {
                 if( $asEmail ) {
-                    $resArr[] = $contact->getSingleEmail();
+                    $resArr[] = $contact->getSingleEmail(false);
                 } else {
                     $resArr[] = $contact;
                 }
@@ -2729,7 +2729,7 @@ class TransResUtil
         foreach( $billingContacts as $billingContact ) {
             if( $billingContact ) {
                 if( $asEmail ) {
-                    $resArr[] = $billingContact->getSingleEmail();
+                    $resArr[] = $billingContact->getSingleEmail(false);
                 } else {
                     $resArr[] = $billingContact;
                 }
@@ -2745,7 +2745,7 @@ class TransResUtil
         //1 submitter
         if( $project->getSubmitter() ) {
             if( $asEmail ) {
-                $resArr[] = $project->getSubmitter()->getSingleEmail();
+                $resArr[] = $project->getSubmitter()->getSingleEmail(false);
             } else {
                 $resArr[] = $project->getSubmitter();
             }
@@ -2756,7 +2756,7 @@ class TransResUtil
         foreach( $contacts as $contact ) {
             if( $contact ) {
                 if( $asEmail ) {
-                    $resArr[] = $contact->getSingleEmail();
+                    $resArr[] = $contact->getSingleEmail(false);
                 } else {
                     $resArr[] = $contact;
                 }
@@ -2774,7 +2774,7 @@ class TransResUtil
         foreach( $pis as $pi ) {
             if( $pi ) {
                 if( $asEmail ) {
-                    $resArr[] = $pi->getSingleEmail();
+                    $resArr[] = $pi->getSingleEmail(false);
                 } else {
                     $resArr[] = $pi;
                 }
@@ -2784,7 +2784,7 @@ class TransResUtil
         //2 submitter
         if( $project->getSubmitter() ) {
             if( $asEmail ) {
-                $resArr[] = $project->getSubmitter()->getSingleEmail();
+                $resArr[] = $project->getSubmitter()->getSingleEmail(false);
             } else {
                 $resArr[] = $project->getSubmitter();
             }
@@ -2795,7 +2795,7 @@ class TransResUtil
         foreach( $contacts as $contact ) {
             if( $contact ) {
                 if( $asEmail ) {
-                    $resArr[] = $contact->getSingleEmail();
+                    $resArr[] = $contact->getSingleEmail(false);
                 } else {
                     $resArr[] = $contact;
                 }
@@ -2812,7 +2812,7 @@ class TransResUtil
         $reviewer = $review->getReviewer();
         if( $reviewer ) {
             if( $asEmail ) {
-                $resArr[] = $reviewer->getSingleEmail();
+                $resArr[] = $reviewer->getSingleEmail(false);
             } else {
                 $resArr['reviewer'] = $reviewer;//->getUsernameOptimal();
             }
@@ -2821,7 +2821,7 @@ class TransResUtil
         $reviewerDelegate = $review->getReviewerDelegate();
         if( $reviewerDelegate ) {
             if( $asEmail ) {
-                $resArr[] = $reviewerDelegate->getSingleEmail();
+                $resArr[] = $reviewerDelegate->getSingleEmail(false);
             } else {
                 $resArr['reviewerDelegate'] = $reviewerDelegate;//->getUsernameOptimal();
             }

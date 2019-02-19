@@ -253,7 +253,7 @@ class ReminderUtil
 
             $salesperson = $invoice->getSalesperson();
             if ($salesperson) {
-                $salespersonEmail = $salesperson->getSingleEmail();
+                $salespersonEmail = $salesperson->getSingleEmail(false);
                 if ($salespersonEmail) {
                     $ccs = $salespersonEmail;
                 }
@@ -261,7 +261,7 @@ class ReminderUtil
             if (!$ccs) {
                 $submitter = $invoice->getSubmitter();
                 if ($submitter) {
-                    $submitterEmail = $submitter->getSingleEmail();
+                    $submitterEmail = $submitter->getSingleEmail(false);
                     if ($submitterEmail) {
                         $ccs = $submitterEmail;
                     }

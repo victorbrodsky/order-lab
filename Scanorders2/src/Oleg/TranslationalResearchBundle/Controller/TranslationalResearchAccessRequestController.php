@@ -261,7 +261,7 @@ class TranslationalResearchAccessRequestController extends AccessRequestControll
 
         if( $form->isSubmitted() && $form->isValid() ) {
 
-            //echo $user->getId().": Display Name=".$user->getEmail()."<br>";
+            //echo $user->getId().": Display Name=".$user->getSingleEmail(false)."<br>";
             //exit('accountConfirmationAction submit');
 
             $em->flush();
