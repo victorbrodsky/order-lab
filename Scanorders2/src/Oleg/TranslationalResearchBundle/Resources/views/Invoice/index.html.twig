@@ -194,6 +194,27 @@
 
                                 {#<hr>#}
 
+                            {% else %}
+
+                                {#Add “Show latest version of this invoice” and “Edit latest version of this invoice” links in the Action button for all non-latest invoices#}
+                                {% set latestInvoice = transres_request_util.getLatestInvoice(invoice.getTransresRequest()) %}
+
+                                {% if transres_request_util.isUserHasInvoicePermission(latestInvoice,"view") %}
+                                    <li>
+                                        <a target="_blank" href="{{ path('translationalresearch_invoice_show', {'oid': latestInvoice.oid }) }}">
+                                            Show latest version of this invoice
+                                        </a>
+                                    </li>
+                                {% endif %}
+
+                                {% if transres_request_util.isUserHasInvoicePermission(latestInvoice,"update") %}
+                                    <li>
+                                        <a target="_blank" href="{{ path('translationalresearch_invoice_edit', {'oid': latestInvoice.oid }) }}">
+                                            Edit latest version of this invoice
+                                        </a>
+                                    </li>
+                                {% endif %}
+
                             {% endif %}
 
                             {% if invoice.documents|length > 0 %}
