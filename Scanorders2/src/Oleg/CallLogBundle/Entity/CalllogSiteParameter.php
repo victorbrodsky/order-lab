@@ -107,6 +107,12 @@ class CalllogSiteParameter
 //     */
 //    private $bodySearch2;
 
+    /**
+     * Use cached values to display entry content preview in lists
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $useCache;
 
 
     public function __construct() {
@@ -289,6 +295,22 @@ class CalllogSiteParameter
     public function setPatientList($patientList)
     {
         $this->patientList = $patientList;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUseCache()
+    {
+        return $this->useCache;
+    }
+
+    /**
+     * @param mixed $useCache
+     */
+    public function setUseCache($useCache)
+    {
+        $this->useCache = $useCache;
     }
 
 

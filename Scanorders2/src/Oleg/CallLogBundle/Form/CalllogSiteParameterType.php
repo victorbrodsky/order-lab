@@ -22,6 +22,7 @@ use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Oleg\UserdirectoryBundle\Util\TimeZoneUtil;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -153,6 +154,19 @@ class CalllogSiteParameterType extends AbstractType
                         'typeadd' => 'user-added',
                     ));
             },
+        ));
+
+        //TODO:
+//        $builder->add('useCache',null,array(
+//            'label'=>'Use cached values to display entry content preview in lists:',
+//            'attr' => array('class'=>'form-control')
+//        ));
+        $builder->add('useCache',CheckboxType::class, array(
+            'label' => 'Use cached values to display entry content preview in lists:',
+            //'mapped' => false,
+            'required' => false,
+            //'data' => true,
+            'attr' => array('class' => 'form-control'),
         ));
 
         $builder->add('county', null, array(
