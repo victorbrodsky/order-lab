@@ -1740,8 +1740,15 @@ class FormNodeUtil
     //$holderEntity - message; $formNodeHolderEntity - message category
     public function getFormNodeHolderShortInfoForView( $holderEntity, $formNodeHolderEntity, $withValue=true, $trclassname="" ) {
 
-        $useCache = FALSE;
+        //$useCache = FALSE;
         //$useCache = TRUE;
+
+        $sitename = $this->container->getParameter('calllog.sitename');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $useCache = $userSecUtil->getSiteSettingParameter('useCache',$sitename);
+        if( !$useCache ) {
+            $useCache = FALSE; //default
+        }
 
         $shortInfo = NULL;
 
@@ -1751,7 +1758,9 @@ class FormNodeUtil
                 $showLabelForce = TRUE;
                 $table = TRUE;
                 $shortInfo = $this->xmlToTable($formnodesCache, $table, $showLabelForce, $withValue);
-                //exit('111');
+                //exit('use Cache');
+            } else {
+                //exit('use direct values');
             }
         }
 

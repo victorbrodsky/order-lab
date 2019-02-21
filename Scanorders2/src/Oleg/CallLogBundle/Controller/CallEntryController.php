@@ -3439,9 +3439,16 @@ class CallEntryController extends Controller
 
         set_time_limit(600); //6 min
 
+        $formNodeUtil = $this->get('user_formnode_utility');
         $em = $this->getDoctrine()->getManager();
 
-        $formNodeUtil = $this->get('user_formnode_utility');
+        $useCache = TRUE; //default. Always use cache for export
+//        $userSecUtil = $this->container->get('user_security_utility');
+//        $sitename = $this->container->getParameter('calllog.sitename');
+//        $useCache = $userSecUtil->getSiteSettingParameter('useCache',$sitename);
+//        if( !$useCache ) {
+//            $useCache = TRUE; //default
+//        }
 
         if( $ext == "XLSX" ) {
             $fileName = $fileName . ".xlsx";
@@ -3542,8 +3549,13 @@ class CallEntryController extends Controller
             if(1) {//testing patient
 
                 //Patient
-                $patientNameStr = $message->getPatientNameCache();
-                $mrnsStr = $message->getPatientMrnCache();
+                if( $useCache ) {
+                    $patientNameStr = $message->getPatientNameCache();
+                    $mrnsStr = $message->getPatientMrnCache();
+                } else {
+                    $patientNameStr = null;
+                    $mrnsStr = null;
+                }
 
                 if( !$patientNameStr || !$mrnsStr ) {
                     $patientNames = array();
@@ -3691,7 +3703,10 @@ class CallEntryController extends Controller
             } else {
                 //TODO: entry info saved
                 //used in list:
-                $formnodesCache = $message->getFormnodesCache();
+
+                if( $useCache ) {
+                    $formnodesCache = $message->getFormnodesCache();
+                }
                 //$formnodesCache = "<formnode>"."<section>"."</section>"."</formnode>"; //testing
 
                 if( !$formnodesCache ) {
