@@ -3701,8 +3701,6 @@ class CallEntryController extends Controller
                     }
                 }
             } else {
-                //TODO: entry info saved
-                //used in list:
 
                 if( $useCache ) {
                     $formnodesCache = $message->getFormnodesCache();
@@ -3744,6 +3742,10 @@ class CallEntryController extends Controller
                 } else {
                     $data = array();
                     $data[0] = $formnodesCacheStr;
+
+                    //Entry in XML
+                    $data[1] = $formnodesCache;
+
                     $writer->addRowWithStyle($data, $rowStyle);
                 }
             }
