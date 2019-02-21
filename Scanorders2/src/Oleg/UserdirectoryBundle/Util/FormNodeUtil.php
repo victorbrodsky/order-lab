@@ -1175,8 +1175,8 @@ class FormNodeUtil
         return $index;
     }
 
-    //TODO: create a cache for the formnode fields
-    public function updateFieldsCache($message) {
+    //Create a cache for the formnode fields
+    public function updateFieldsCache( $message, $testing=true ) {
         //return null; //testing
 
         //list and view used table view
@@ -1248,7 +1248,9 @@ class FormNodeUtil
         }
 
         if( count($populated) == 1 ) {
-            $this->em->flush($message);
+            if( !$testing ) {
+                $this->em->flush($message);
+            }
             return true;
         }
 

@@ -259,9 +259,9 @@ class DefaultController extends Controller
 
 
     /**
-     * http://localhost/order/call-log-book/populate-entry-cache/
+     * http://localhost/order/call-log-book/update-cache-values-now
      * This is one time run method to populate call log entry cache in XML format
-     * @Route("/populate-entry-cache/", name="calllog_populate_entry_cache")
+     * @Route("/populate-entry-cache/", name="calllog_update_cache_values_now")
      */
     public function populateEntryCacheAction(Request $request)
     {
@@ -269,10 +269,13 @@ class DefaultController extends Controller
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
-        exit("This is a one time run method");
+        //exit("This is a one time run method");
 
         $formNodeUtil = $this->get('user_formnode_utility');
         $em = $this->getDoctrine()->getManager();
+
+        $testing = false;
+        $testing = true;
 
         $repository = $em->getRepository('OlegOrderformBundle:Message');
 
@@ -285,20 +288,25 @@ class DefaultController extends Controller
         $query = $em->createQuery($dql);
 
         $messages = $query->getResult();
-        echo "Messages count=".count($messages)."<br>";
+        echo "Messages to update count=".count($messages)."<br>";
 
         foreach( $messages as $message ) {
-            $res = $formNodeUtil->updateFieldsCache($message);
+            $res = $formNodeUtil->updateFieldsCache($message,$testing);
 
             if( !$res) {
                 exit("Error updating cache");
             }
-
-            //$message = NULL;
-            //$em->clear($message);
         }
 
-        exit("End of updating cache");
+        $msg = "End of updating cache for " . count($messages) . " Call Log Entries";
+
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            $msg
+        );
+
+        return $this->redirect( $this->generateUrl('calllog_home') );
+        exit($msg);
     }
 
 }
