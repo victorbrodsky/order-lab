@@ -95,9 +95,8 @@ class FormNodeUtil
         $this->processFormNodesFromDataKeys($data,$holderEntity,$testing);
 
         //Save fields as cache in the field $formnodesCache ($holderEntity->setFormnodesCache($text))
-        $forceUpdate = false;
         $testing = false;
-        $res = $this->updateFieldsCache($holderEntity,$forceUpdate,$testing);
+        $res = $this->updateFieldsCache($holderEntity,$testing);
 
         if( $res ) {
             //everything looks fine => remove creation attempt log
@@ -1178,7 +1177,7 @@ class FormNodeUtil
     }
 
     //Create a cache for the formnode fields
-    public function updateFieldsCache( $message, $forceUpdate=false, $testing=true ) {
+    public function updateFieldsCache( $message, $testing=true ) {
         //return null; //testing
 
         //list and view used table view

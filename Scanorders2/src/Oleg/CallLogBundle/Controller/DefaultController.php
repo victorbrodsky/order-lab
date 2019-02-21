@@ -292,7 +292,11 @@ class DefaultController extends Controller
         echo "Messages to update count=".count($messages)."<br>";
 
         foreach( $messages as $message ) {
-            $res = $formNodeUtil->updateFieldsCache($message,$forceUpdate,$testing);
+
+            //TODO: forceUpdate
+            if( $forceUpdate ) {
+                $res = $formNodeUtil->updateFieldsCache($message, $testing);
+            }
 
             if( !$res) {
                 exit("Error updating cache");
