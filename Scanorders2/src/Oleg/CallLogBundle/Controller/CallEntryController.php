@@ -3711,7 +3711,7 @@ class CallEntryController extends Controller
                     $trclassname = "";
                     $table = FALSE;
                     $formnodesCache = $formNodeUtil->getFormNodeHolderShortInfo($message,$message->getMessageCategory(),$table,$trclassname);
-                    exit("use direct value");
+                    //exit("use direct value");
                 }
 
                 if( !$formnodesCache ) {
