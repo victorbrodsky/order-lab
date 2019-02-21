@@ -276,6 +276,7 @@ class DefaultController extends Controller
 
         $testing = false;
         $testing = true;
+        $forceUpdate = true;
 
         $repository = $em->getRepository('OlegOrderformBundle:Message');
 
@@ -291,7 +292,7 @@ class DefaultController extends Controller
         echo "Messages to update count=".count($messages)."<br>";
 
         foreach( $messages as $message ) {
-            $res = $formNodeUtil->updateFieldsCache($message,$testing);
+            $res = $formNodeUtil->updateFieldsCache($message,$forceUpdate,$testing);
 
             if( !$res) {
                 exit("Error updating cache");
@@ -301,7 +302,7 @@ class DefaultController extends Controller
         $msg = "End of updating cache for " . count($messages) . " Call Log Entries";
 
         $this->get('session')->getFlashBag()->add(
-            'notice',
+            'pnotify',
             $msg
         );
 
