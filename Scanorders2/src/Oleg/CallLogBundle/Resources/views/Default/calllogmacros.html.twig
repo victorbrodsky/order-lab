@@ -1177,7 +1177,7 @@
 {% endmacro %}
 
 {% macro calllogEntryCache( message, cycle ) %}
-    show cache!<br>
+    {#show cache!<br>#}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {{ formmacros.simplefield("Cached entry content in XML:", message.getFormnodesCache, "textarea", "disabled") }}
     {{ formmacros.simplefield("Cached patient mrn content:", message.getPatientMrnCache, "", "disabled") }}

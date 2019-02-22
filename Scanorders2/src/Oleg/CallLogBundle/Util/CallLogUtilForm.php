@@ -69,6 +69,17 @@ class CallLogUtilForm
 
         return $html;
     }
+    public function getTrFieldText( $label, $value ) {
+        $space = "&nbsp;";
+        $tabspace = $space . $space . $space;
+        $html =
+            '<tr style="border:none;">' .
+            '<td style="width:20%; border:none;">' . $tabspace.$label . '</td>' .
+            '<td style="width:80%; border:none;">' . '<textarea>' . $value . '</textarea>' . '</td>' .
+            '</tr style="border:none;">';
+
+        return $html;
+    }
 
     public function getEncounterPatientInfoHtml( $encounter, $status )
     {
@@ -275,7 +286,14 @@ class CallLogUtilForm
             return null;
         }
 
-        $html = $this->getTrSection("Search aides and time tracking");
+        $html = "";
+
+        //$html = $this->getTrSection("Cache (shown only to Administrator)");
+        //$html .= $this->getTrFieldText("Cached entry content in XML", $message->getFormnodesCache());
+        //$html .= $this->getTrField("Cached patient mrn content", $message->getPatientMrnCache());
+        //$html .= $this->getTrField("Cached patient name content", $message->getPatientNameCache());
+
+        $html .= $this->getTrSection("Search aides and time tracking");
 
         $entryTags = $calllogEntryMessage->getEntryTags();
         $entryTagsArr = array();

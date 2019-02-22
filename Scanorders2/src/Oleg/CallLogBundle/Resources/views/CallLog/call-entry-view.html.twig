@@ -303,12 +303,6 @@
                             {#</table>#}
                             {#</div>#}
 
-                            {#Cached entry content in XML#}
-                            {#{{ formmacros.simplefield("Cached entry content in XML:", message.getFormnodesCache, "textarea", "disabled") }}#}
-                            {#{{ formmacros.simplefield("Cached patient mrn content:", message.getPatientMrnCache, "", "disabled") }}#}
-                            {#{{ formmacros.simplefield("Cached patient name content:", message.getPatientNameCache, "", "disabled") }}#}
-                            {{ calllogmacros.calllogEntryCache(message,cycle) }}
-
                             {% if message.calllogEntryMessage and message.calllogEntryMessage.entryTags %}
                                 {{ calllogmacros.calllogEntryTags(form,cycle) }}
                             {% endif %}
@@ -358,6 +352,9 @@
             {{ calllog_util_form.getCalllogAuthorsHtml(message,sitename)|raw }}
 
             </div>
+
+            {#Cached entry content in XML#}
+            {{ calllogmacros.calllogEntryCache(message,cycle) }}
 
         {% endif %}
 
