@@ -1179,7 +1179,24 @@
 {% macro calllogEntryCache( message, cycle ) %}
     {#show cache!<br>#}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-    {{ formmacros.simplefield("Cached entry content in XML:", message.getFormnodesCache, "textarea", "disabled") }}
-    {{ formmacros.simplefield("Cached patient mrn content:", message.getPatientMrnCache, "", "disabled") }}
-    {{ formmacros.simplefield("Cached patient name content:", message.getPatientNameCache, "", "disabled") }}
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a class="calllog-patient-panel-title" data-toggle="collapse" href="#calllog-cache">
+                    Cache
+                </a>
+            </h4>
+        </div>
+        <div id="calllog-cache" class="calllog-cache-panel panel-collapse collapse">
+            <div class="panel-body">
+
+                {{ formmacros.simplefield("Cached entry content in XML:", message.getFormnodesCache, "textarea", "disabled") }}
+                {{ formmacros.simplefield("Cached patient mrn content:", message.getPatientMrnCache, "", "disabled") }}
+                {{ formmacros.simplefield("Cached patient name content:", message.getPatientNameCache, "", "disabled") }}
+
+            </div> <!-- panel-body -->
+        </div> <!-- panel-collapse -->
+    </div> <!-- panel panel-info -->
+
 {% endmacro %}
