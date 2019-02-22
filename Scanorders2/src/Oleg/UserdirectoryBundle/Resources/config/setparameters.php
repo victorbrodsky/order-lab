@@ -346,7 +346,7 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
             $database_password_pacsvendor = getDBParameter($row,$database_password_pacsvendor,'pacsvendorSlideManagerDBPassword');
 
             $connection_channel = getDBParameter($row,$connection_channel,'connectionChannel');
-            echo "connection_channel=[".$connection_channel."]\n";
+            //echo "connection_channel=[".$connection_channel."]\n";
         }
 
         $container->setParameter('connection_channel',$connection_channel);

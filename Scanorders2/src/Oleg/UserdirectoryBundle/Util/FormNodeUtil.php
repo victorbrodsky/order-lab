@@ -1224,7 +1224,7 @@ class FormNodeUtil
         $populated = 0;
 
         //////////// Patient Info //////////////////
-        //TODO: make sure update this info when patient info is updated via "Edit Patient Demographics"
+        //update patient info when patient info is updated via "Edit Patient Demographics"
         $patientNames = array();
         $mrns = array();
         foreach ($message->getPatient() as $patient) {
@@ -1243,10 +1243,12 @@ class FormNodeUtil
         }
         //////////// EOF Patient Info //////////////////
 
+        //////////////// Update XML cache ////////////////
         if( $shortInfoXml ) {
             $message->setFormnodesCache($shortInfoXml);
             $populated++;
         }
+        //////////////// EOF Update XML cache ////////////////
 
         if( count($populated) == 1 ) {
             if( !$testing ) {

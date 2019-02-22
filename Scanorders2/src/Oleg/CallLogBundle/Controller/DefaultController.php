@@ -261,7 +261,7 @@ class DefaultController extends Controller
     /**
      * http://localhost/order/call-log-book/update-cache-values-now
      * This is one time run method to populate call log entry cache in XML format
-     * @Route("/populate-entry-cache/", name="calllog_update_cache_values_now")
+     * @Route("/update-cache-values-now/", name="calllog_update_cache_values_now")
      */
     public function populateEntryCacheAction(Request $request)
     {
@@ -293,8 +293,8 @@ class DefaultController extends Controller
 
         foreach( $messages as $message ) {
 
-            //TODO: forceUpdate
-            if( $forceUpdate ) {
+            //forceUpdate or message does not have formNodeCache
+            if( $forceUpdate || !$message->getFormnodesCache() ) {
                 $res = $formNodeUtil->updateFieldsCache($message, $testing);
             }
 
@@ -311,7 +311,7 @@ class DefaultController extends Controller
         );
 
         return $this->redirect( $this->generateUrl('calllog_home') );
-        exit($msg);
+        //exit($msg);
     }
 
 }
