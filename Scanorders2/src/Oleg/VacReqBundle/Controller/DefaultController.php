@@ -60,16 +60,21 @@ class DefaultController extends Controller
 
 
     /**
-     * @Route("/download-excel/{ids}", name="vacreq_download_excel")
+     * @Route("/download-excel/", name="vacreq_download_excel")
+     * @Route("/download-excel-with-ids/{ids}", name="vacreq_download_excel_get_ids")
+     * @Method({"POST"})
      */
-    public function downloadExcelAction( Request $request, $ids ) {
+    public function downloadExcelAction( Request $request ) {
         if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_USER') ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
         $vacreqUtil = $this->get('vacreq_util');
 
+
+        $ids = $request->request->get('ids');
         //echo "ids=".$ids."<br>";
+        //exit('111');
 
         $excelBlob = $vacreqUtil->createtListExcel($ids);
 

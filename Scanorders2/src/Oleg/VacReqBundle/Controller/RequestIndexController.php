@@ -244,19 +244,36 @@ class RequestIndexController extends Controller
             //echo "matchingIdsArr count=".count($matchingIdsArr)."<br>";
             //print_r($matchingIdsArr);
             $limitMatching = 1000;
-            if( count($matchingIds) > $limitMatching ) {
+            $limitMatching = null;
+            if( $limitMatching && count($matchingIds) > $limitMatching ) {
                 $pageTitle = $indexTitle . "<br>Unable to export this quantity of items. Please use filters (such as dates) to decrease the number of matching items below $limitMatching.";
             } else {
                 if ($matchingIds) {
+
+                    if(0) {
+                        $downloadUrl = $this->container->get('router')->generate(
+                            'vacreq_download_excel_get_ids',
+                            array(
+                                'ids' => implode("-", $matchingIds),
+                            ),
+                            UrlGeneratorInterface::ABSOLUTE_URL
+                        );
+                        $downloadLink = '<a href="' . $downloadUrl . '" target="_blank"><i class="fa fa-file-excel-o"></i>download in Excel</a>';
+                        $pageTitle = $indexTitle . " (" . $downloadLink . ")";
+                    }
+
                     $downloadUrl = $this->container->get('router')->generate(
                         'vacreq_download_excel',
-                        array(
-                            'ids' => implode("-", $matchingIds),
-                        ),
+                        array(),
                         UrlGeneratorInterface::ABSOLUTE_URL
                     );
-                    $downloadLink = '<a href="' . $downloadUrl . '" target="_blank"><i class="fa fa-file-excel-o"></i>download in Excel</a>';
-                    $pageTitle = $indexTitle . " (" . $downloadLink . ")";
+                    $downloadLink =
+                        '<form action="'.$downloadUrl.'" method="post"> 
+                        <input type="hidden" name="ids" value="'.implode("-", $matchingIds).'">
+                        <input class="btn" type="submit" value="download in Excel">
+                        </form>';
+
+                    $pageTitle = $indexTitle . " <p>" . $downloadLink . "</p>";
                 }
             }
         }
