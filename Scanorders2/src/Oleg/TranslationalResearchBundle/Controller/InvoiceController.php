@@ -1281,7 +1281,6 @@ class InvoiceController extends Controller
             'invoice' => $invoice,
             'statuses' => $transresRequestUtil->getInvoiceStatuses(),
             'principalInvestigators' => $principalInvestigators,
-            //'piEm' => $piEm,
             'SecurityAuthChecker' => $this->get('security.authorization_checker'),
             'transres_request_util' => $transresRequestUtil
         );
