@@ -243,7 +243,7 @@ class RequestIndexController extends Controller
             $matchingIds = $vacreqUtil->getVacReqIdsArrByDqlParameters($dql, $dqlParameters);
             //echo "matchingIdsArr count=".count($matchingIdsArr)."<br>";
             //print_r($matchingIdsArr);
-            $limitMatching = 1000;
+            //$limitMatching = 1000;
             $limitMatching = null;
             if( $limitMatching && count($matchingIds) > $limitMatching ) {
                 $pageTitle = $indexTitle . "<br>Unable to export this quantity of items. Please use filters (such as dates) to decrease the number of matching items below $limitMatching.";

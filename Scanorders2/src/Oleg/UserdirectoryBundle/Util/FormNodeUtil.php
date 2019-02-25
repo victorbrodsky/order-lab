@@ -68,9 +68,9 @@ class FormNodeUtil
         $userSecUtil = $this->container->get('user_security_utility');
 
         /////// create a new EventLog attempt with id $eventLogId (to make the actions atomic) ///////
-        //create logger which must be deleted on successefull creation of application
+        //create logger which must be deleted on successfully update cache
         $user = $this->secTokenStorage->getToken()->getUser();
-        $eventAttempt = "Attempt of processing form nodes for holderEntity:<br>" . $holderEntity . "<br><br>formNodeHolder:<br>".$formNodeHolder;
+        $eventAttempt = "Attempt of cache for form nodes for holderEntity:<br>" . $holderEntity . "<br><br>formNodeHolder:<br>".$formNodeHolder;
         //$sitename,$event,$user,$subjectEntities,$request,$action='Unknown Event'
         $eventLogAttempt = $userSecUtil->createUserEditEvent(
             $this->container->getParameter('employees.sitename'),   //$sitename
@@ -78,7 +78,7 @@ class FormNodeUtil
             $user,                                                  //$user
             $holderEntity,                                          //$subjectEntities
             $request,                                               //$request
-            'FormNode Processing Failed'                            //$action (Event Type)
+            'FormNode Cache Failed'                                 //$action (Event Type)
         );
         /////// EOF create a new EventLog attempt with id $eventLogId (to make the actions atomic) ///////
 
@@ -1254,7 +1254,7 @@ class FormNodeUtil
             if( !$testing ) {
                 $this->em->flush($message);
             }
-            return true;
+            return $message->getId();
         }
 
         return false;

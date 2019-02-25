@@ -748,6 +748,14 @@
                 </li>
             {#{% endif %}#}
 
+            {% if is_granted('ROLE_CALLLOG_ADMIN') %}
+            <li>
+                <a href="{{ path('calllog_update_cache_manually', {'id': message.id}) }}" target="_blank">
+                    Manually update cache
+                </a>
+            </li>
+            {% endif %}
+
             {#TODO: Add Entry (Same Encounter) and Add Entry (Same Encounter & Type)#}
             {#Same Encounter#}
             {#{% if message.patient|length > 0 %}#}

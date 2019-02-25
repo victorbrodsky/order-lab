@@ -17,6 +17,8 @@
 
 namespace Oleg\CallLogBundle\Controller;
 
+use Oleg\CallLogBundle\Form\CalllogMessageCacheType;
+use Oleg\OrderformBundle\Entity\Message;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -260,7 +262,7 @@ class DefaultController extends Controller
 
     /**
      * http://localhost/order/call-log-book/update-cache-values-now
-     * This is one time run method to populate call log entry cache in XML format
+     * method to populate/update all call log entry cache in XML format
      * @Route("/update-cache-values-now/", name="calllog_update_cache_values_now")
      */
     public function populateEntryCacheAction(Request $request)
@@ -272,24 +274,33 @@ class DefaultController extends Controller
         //exit("This is a one time run method");
 
         $formNodeUtil = $this->get('user_formnode_utility');
+        $userSecUtil = $this->get('user_security_utility');
+
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
+        $messageIds = array();
+
         $testing = false;
-        $testing = true;
+        //$testing = true;
         $forceUpdate = true;
+        //$forceUpdate = false;
 
         $repository = $em->getRepository('OlegOrderformBundle:Message');
 
         $dql =  $repository->createQueryBuilder("message");
         $dql->select('message');
-        $dql->where("message.formnodesCache IS NULL");
+
+        if( !$forceUpdate ) {
+            $dql->where("message.formnodesCache IS NULL");
+        }
 
         //$dql->setMaxResults(100);
 
         $query = $em->createQuery($dql);
 
         $messages = $query->getResult();
-        echo "Messages to update count=".count($messages)."<br>";
+        //echo "Messages to update count=".count($messages)."<br>";
 
         foreach( $messages as $message ) {
 
@@ -301,9 +312,18 @@ class DefaultController extends Controller
             if( !$res) {
                 exit("Error updating cache");
             }
+
+            $messageIds[] = $res;
         }
 
-        $msg = "End of updating cache for " . count($messages) . " Call Log Entries";
+        $msg = "Call Log cache has been updated for " . count($messages) . " Call Log Entries";
+
+        //Event Log
+        if( count($messages) ) {
+            $eventType = "Call Log Cache Updated";
+            $msgLog = $msg . ":<br>" . implode(", ",$messageIds);
+            $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $msgLog, $user, null, $request, $eventType);
+        }
 
         $this->get('session')->getFlashBag()->add(
             'pnotify',
@@ -313,5 +333,63 @@ class DefaultController extends Controller
         return $this->redirect( $this->generateUrl('calllog_home') );
         //exit($msg);
     }
+
+
+    /**
+     * @Route("/update-cache-manually/{id}", name="calllog_update_cache_manually")
+     * @Template("OlegCallLogBundle:CallLog:update-cache-manually.html.twig")
+     */
+    public function updateCacheManuallyAction(Request $request, Message $message)
+    {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_CALLLOG_ADMIN') ) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
+        }
+
+        $userSecUtil = $this->get('user_security_utility');
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+        $params = array();
+
+        $form = $this->createForm(
+            CalllogMessageCacheType::class,
+            $message,
+            array(
+                'form_custom_value' => $params,
+                'form_custom_value_entity' => $message
+            )
+        );
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            // $entityManager->persist($task);
+            $em->flush($message);
+
+            $msg = "Call Log cache has been manually updated for " . $message->getOid();
+
+            $this->get('session')->getFlashBag()->add(
+                'pnotify',
+                $msg
+            );
+
+            //Event Log
+            $eventType = "Call Log Cache Updated Manually";
+            $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $msg, $user, $message, $request, $eventType);
+
+            return $this->redirect($this->generateUrl('calllog_callentry_view', array(
+                'messageOid' => $message->getOid(),
+                'messageVersion' => $message->getVersion()
+            )));
+        }
+
+        return array(
+            'form' => $form->createView(),
+            'message' => $message,
+            'title' => "Update Cache Manually for Call Log Entry ID " . $message->getOid()
+        );
+    }
+
 
 }
