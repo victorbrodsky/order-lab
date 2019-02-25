@@ -51,24 +51,7 @@ class InvoiceType extends AbstractType
             'required' => true,
             'attr' => array('class' => 'combobox')
         ));
-
-//        $builder->add('principalInvestigators', EntityType::class, array(
-//            'class' => 'OlegUserdirectoryBundle:User',
-//            'label'=> "Principal Investigator(s):",
-//            'required'=> false,
-//            'multiple' => false,
-//            'attr' => array('class'=>'combobox combobox-width transres-invoice-principalInvestigator'),
-//            'choices' => $this->params['principalInvestigators']
-////            'query_builder' => function(EntityRepository $er) {
-////                return $er->createQueryBuilder('list')
-////                    ->leftJoin("list.employmentStatus", "employmentStatus")
-////                    ->leftJoin("employmentStatus.employmentType", "employmentType")
-////                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
-////                    ->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
-////                    ->leftJoin("list.infos", "infos")
-////                    ->orderBy("infos.displayName","ASC");
-////            },
-//        ));
+        
         //Request's PI
         if( $this->params['principalInvestigators'] && count($this->params['principalInvestigators']) > 0 ) {
             //show only request's the first PI user

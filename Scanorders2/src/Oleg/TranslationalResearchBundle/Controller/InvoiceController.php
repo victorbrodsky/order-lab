@@ -1264,26 +1264,12 @@ class InvoiceController extends Controller
             $transresRequest = $invoice->getTransresRequest();
         }
 
-//        $principalInvestigators = $invoice->getPrincipalInvestigators();
-//        $pisArr = array();
-//        foreach($principalInvestigators as $principalInvestigator) {
-//            //$em->persist($principalInvestigator);
-//            $pi = $em->getRepository('OlegUserdirectoryBundle:User')->find($principalInvestigator->getId());
-//            $pisArr[] = $pi;
-//        }
-        //$piEm = $this->getDoctrine()->getManager('OlegTranslationalResearchBundle:Invoice');
-        //$piEm = $invoice->getEntityManagerName();
-        //$piEm = $this->getDoctrine()->getManager('default');
-
         //PIs of the request's pis
         if( $transresRequest ) {
-            $principalInvestigators = $transresRequest->getPrincipalInvestigators();
+            //$principalInvestigators = $transresRequest->getPrincipalInvestigators();
+            //show ALL users of the site
+            $principalInvestigators = null;
         } else {
-//            $pi = $invoice->getPrincipalInvestigator();
-//            if( $pi ) {
-//                $principalInvestigators = new ArrayCollection();
-//                $principalInvestigators->add($pi);
-//            }
             $principalInvestigators = null;
         }
         //echo "pi count=".count($principalInvestigators)."<br>";
