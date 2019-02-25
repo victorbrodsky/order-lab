@@ -110,6 +110,8 @@
                 {{ value|raw }}
             {% elseif type == "textarea" %}
                 <textarea class="form-control textarea" {{ disabled }}>{{ value }}</textarea>
+            {% elseif type == "xml" %}
+                <pre lang="xml" >{{value}}</pre>
             {% else %}
                 {#<div class="well well-sm" style="margin-bottom:0; min-height:40px">#}
                     {#{{ value|raw }}#}

@@ -1192,6 +1192,8 @@
             <div class="panel-body">
 
                 {{ formmacros.simplefield("Cached entry content in XML:", message.getFormnodesCache, "textarea", "disabled") }}
+                {#<pre lang="xml" >{{message.getFormnodesCache}}</pre>#}
+
                 {{ formmacros.simplefield("Cached patient mrn content:", message.getPatientMrnCache, "", "disabled") }}
                 {{ formmacros.simplefield("Cached patient name content:", message.getPatientNameCache, "", "disabled") }}
 
