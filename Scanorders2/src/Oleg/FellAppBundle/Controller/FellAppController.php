@@ -2385,7 +2385,7 @@ class FellAppController extends Controller {
         
         $fellappUtil = $this->container->get('fellapp_util');
 
-        if(0) {
+        if(1) {
             $excelBlob = $fellappUtil->createApplicantListExcel($fellappIds);
 
             $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($excelBlob, 'Xlsx');
@@ -2399,11 +2399,13 @@ class FellAppController extends Controller {
 
             // Write file to the browser
             $writer->save('php://output');
+            exit();
         }
 
         //Spout
         if(1) {
             $fellappUtil->createApplicantListExcelSpout($fellappIds,$fileName);
+            exit();
         }
 
         exit();      
