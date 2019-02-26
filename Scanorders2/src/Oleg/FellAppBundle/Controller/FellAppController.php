@@ -2384,19 +2384,27 @@ class FellAppController extends Controller {
         $fileName = str_replace(" ", "-", $fileName);
         
         $fellappUtil = $this->container->get('fellapp_util');
-        $excelBlob = $fellappUtil->createApplicantListExcel($fellappIds);
-        
-        $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($excelBlob, 'Xlsx');
-        //ob_end_clean();
-        //$writer->setIncludeCharts(true);
-        
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        
-        header('Content-Disposition: attachment;filename="'.$fileName.'"');
-        //header('Content-Disposition: attachment;filename="fileres.xlsx"');
 
-        // Write file to the browser
-        $writer->save('php://output');
+        if(0) {
+            $excelBlob = $fellappUtil->createApplicantListExcel($fellappIds);
+
+            $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($excelBlob, 'Xlsx');
+            //ob_end_clean();
+            //$writer->setIncludeCharts(true);
+
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+
+            header('Content-Disposition: attachment;filename="' . $fileName . '"');
+            //header('Content-Disposition: attachment;filename="fileres.xlsx"');
+
+            // Write file to the browser
+            $writer->save('php://output');
+        }
+
+        //Spout
+        if(1) {
+            $fellappUtil->createApplicantListExcelSpout($fellappIds,$fileName);
+        }
 
         exit();      
     }

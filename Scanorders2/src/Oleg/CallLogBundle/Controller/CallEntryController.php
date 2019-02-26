@@ -3175,22 +3175,25 @@ class CallEntryController extends Controller
             exit();
         }
 
-        $excelBlob = $this->createCalllogListExcel($entries,$user);
+        if(0) {
+            $excelBlob = $this->createCalllogListExcel($entries, $user);
 
-        $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($excelBlob, 'Xlsx');
-        //ob_end_clean();
-        //$writer->setIncludeCharts(true);
+            $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($excelBlob, 'Xlsx');
+            //ob_end_clean();
+            //$writer->setIncludeCharts(true);
 
-        $fileName = $fileName . ".xlsx";
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="'.$fileName.'"');
+            $fileName = $fileName . ".xlsx";
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header('Content-Disposition: attachment;filename="' . $fileName . '"');
 
-        // Write file to the browser
-        $writer->save('php://output');
+            // Write file to the browser
+            $writer->save('php://output');
 
-        exit();
+            exit();
+        }
     }
 
+    //Not used. Use Spout instead.
     public function createCalllogListExcel($entries,$author) {
 
         $formNodeUtil = $this->get('user_formnode_utility');

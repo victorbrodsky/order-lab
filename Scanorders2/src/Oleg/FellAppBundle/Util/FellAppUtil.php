@@ -25,6 +25,12 @@
 namespace Oleg\FellAppBundle\Util;
 
 
+use Box\Spout\Common\Type;
+use Box\Spout\Writer\Style\Border;
+use Box\Spout\Writer\Style\BorderBuilder;
+use Box\Spout\Writer\Style\Color;
+use Box\Spout\Writer\Style\StyleBuilder;
+use Box\Spout\Writer\WriterFactory;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityNotFoundException;
 use Oleg\FellAppBundle\Entity\DataFile;
@@ -945,6 +951,231 @@ class FellAppUtil {
                
         
         return $ea;
+    }
+    public function createApplicantListExcelSpout( $fellappids, $fileName ) {
+
+        $author = $this->container->get('security.token_storage')->getToken()->getUser();
+        $transformer = new DateTimeToStringTransformer(null,null,'d/m/Y');
+
+        $writer = WriterFactory::create(Type::XLSX);
+        $writer->openToBrowser($fileName);
+
+        $headerStyle = (new StyleBuilder())
+            ->setFontBold()
+            //->setFontItalic()
+            ->setFontSize(12)
+            ->setFontColor(Color::BLACK)
+            ->setShouldWrapText()
+            ->setBackgroundColor(Color::toARGB("E0E0E0"))
+            ->build();
+
+        $requestStyle = (new StyleBuilder())
+            ->setFontSize(10)
+            //->setShouldWrapText()
+            ->build();
+
+        $border = (new BorderBuilder())
+            ->setBorderBottom(Color::GREEN, Border::WIDTH_THIN, Border::STYLE_DASHED)
+            ->build();
+        $footerStyle = (new StyleBuilder())
+            ->setFontBold()
+            //->setFontItalic()
+            ->setFontSize(12)
+            ->setFontColor(Color::BLACK)
+            ->setShouldWrapText()
+            ->setBackgroundColor(Color::toARGB("EBF1DE"))
+            ->setBorder($border)
+            ->build();
+
+//        $ews->setCellValue('A1', 'ID'); // Sets cell 'a1' to value 'ID
+//        $ews->setCellValue('B1', 'First Name');
+//        $ews->setCellValue('C1', 'Last Name');
+//        $ews->setCellValue('D1', 'Medical Degree');
+//        $ews->setCellValue('E1', 'Medical School');
+//        $ews->setCellValue('F1', 'Residency Institution');
+//        $ews->setCellValue('G1', 'References');
+//        $ews->setCellValue('H1', 'Interview Score');
+//        $ews->setCellValue('I1', 'Interview Date');
+//
+//        $ews->setCellValue('J1', 'Interviewer');
+//        $ews->setCellValue('K1', 'Date');
+//        $ews->setCellValue('L1', 'Academic Rank');
+//        $ews->setCellValue('M1', 'Personality Rank');
+//        $ews->setCellValue('N1', 'Potential Rank');
+//        $ews->setCellValue('O1', 'Total Rank');
+//        $ews->setCellValue('P1', 'Language Proficiency');
+//        $ews->setCellValue('Q1', 'Comments');
+        $writer->addRowWithStyle(
+            [
+                'ID',                           //0 - A
+                'First Name',                   //1 - B
+                'Last Name',                    //2 - C
+                'Medical Degree',               //3 - D
+                'Medical School',               //4 - E
+                'Residency Institution',        //5 - F
+                'References',                   //6 - G
+                'Interview Score',              //7 - H
+                'Interview Date',               //8 - I
+                'Interviewer',                  //9 - J
+                'Date',                         //10 - K
+                'Academic Rank',                //11 - L
+                'Personality Rank',             //12 - M
+                'Potential Rank',               //13 - N
+                'Total Rank',                   //14 - O
+                'Language Proficiency',         //15 - P
+                'Comments'                      //16 - Q
+            ],
+            $headerStyle
+        );
+
+        $row = 2;
+
+        foreach( explode("-",$fellappids) as $fellappId ) {
+
+            $fellapp = $this->em->getRepository('OlegFellAppBundle:FellowshipApplication')->find($fellappId);
+            if( !$fellapp ) {
+                continue;
+            }
+
+            //check if author can have access to view this applicant
+            //user who has the same fell type can view or edit
+            if( $this->hasFellappPermission($author,$fellapp) == false ) {
+                continue; //skip this applicant because the current user does not permission to view this applicant
+            }
+
+            $data = array();
+
+            //$ews->setCellValue('A'.$row, $fellapp->getId());
+            $data[0] = $fellapp->getId();
+
+            //$ews->setCellValue('B'.$row, $fellapp->getUser()->getFirstNameUppercase());
+            $data[1] = $fellapp->getUser()->getFirstNameUppercase();
+
+            //$ews->setCellValue('C'.$row, $fellapp->getUser()->getLastNameUppercase());
+            $data[2] = $fellapp->getUser()->getLastNameUppercase();
+
+            //Medical Degree
+            //$ews->setCellValue('D'.$row, $fellapp->getDegreeByTrainingTypeName('Medical'));
+            $data[3] = $fellapp->getDegreeByTrainingTypeName('Medical');
+
+            //Medical School
+            //$ews->setCellValue('E'.$row, $fellapp->getSchoolByTrainingTypeName('Medical'));
+            $data[4] = $fellapp->getSchoolByTrainingTypeName('Medical');
+
+            //Residency Institution
+            //$ews->setCellValue('F'.$row, $fellapp->getSchoolByTrainingTypeName('Residency'));
+            $data[5] = $fellapp->getSchoolByTrainingTypeName('Residency');
+
+            //References
+            //$ews->setCellValue('G'.$row, $fellapp->getAllReferences());
+            $data[6] = $fellapp->getAllReferences();
+
+                //Interview Score
+            $totalScore = "";
+            if( $fellapp->getInterviewScore() ) {
+                $totalScore = $fellapp->getInterviewScore();
+            }
+            //$ews->setCellValue('H'.$row, $totalScore );
+            $data[7] = $totalScore;
+
+            //Interview Date
+            //$ews->setCellValue('I'.$row, $transformer->transform($fellapp->getInterviewDate()));
+            $data[8] = $transformer->transform($fellapp->getInterviewDate());
+
+            $writer->addRowWithStyle($data,$requestStyle);
+
+            $allTotalRanks = 0;
+
+            foreach( $fellapp->getInterviews() as $interview ) {
+
+                $data = array();
+
+                //Interviewer
+                if( $interview->getInterviewer() ) {
+                    //$ews->setCellValue('J'.$row, $interview->getInterviewer()->getUsernameOptimal());
+                    $data[9] = $interview->getInterviewer()->getUsernameOptimal();
+                } else {
+                    $data[9] = null;
+                }
+
+                //Date
+                //$ews->setCellValue('K'.$row, $transformer->transform($interview->getInterviewDate()));
+                $data[10] = $transformer->transform($interview->getInterviewDate());
+
+                //Academic Rank
+                if( $interview->getAcademicRank() ) {
+                    //$ews->setCellValue('L'.$row, $interview->getAcademicRank()->getValue());
+                    $data[11] = $interview->getAcademicRank()->getValue();
+                } else {
+                    $data[11] = null;
+                }
+
+                //Personality Rank
+                if( $interview->getPersonalityRank() ) {
+                    //$ews->setCellValue('M'.$row, $interview->getPersonalityRank()->getValue());
+                    $data[12] = $interview->getPersonalityRank()->getValue();
+                } else {
+                    $data[12] = null;
+                }
+
+                //Potential Rank
+                if( $interview->getPotentialRank() ) {
+                    //$ews->setCellValue('N'.$row, $interview->getPotentialRank()->getValue());
+                    $data[13] = $interview->getPotentialRank()->getValue();
+                } else {
+                    $data[13] = null;
+                }
+
+                //Total Rank
+                //$ews->setCellValue('O'.$row, $interview->getTotalRank());
+                $data[14] = $interview->getTotalRank();
+                $allTotalRanks = $allTotalRanks + $interview->getTotalRank();
+
+                //Language Proficiency
+                if( $interview->getLanguageProficiency() ) {
+                    //$ews->setCellValue('P'.$row, $interview->getLanguageProficiency()->getName());
+                    $data[15] = $interview->getLanguageProficiency()->getName();
+                } else {
+                    $data[15] = null;
+                }
+
+                //Comments
+                //$ews->setCellValue('Q'.$row, $interview->getComment());
+                $data[16] = $interview->getComment();
+
+                $writer->addRowWithStyle($data,$requestStyle);
+
+            } //for each interview
+
+            //space in case if there is no interviewers
+            if( count($fellapp->getInterviews()) == 0 ) {
+                $row++;
+            }
+
+            $data = array();
+
+            //All Total Ranks:
+            //$ews->setCellValue('A'.$row, "All Total Ranks:");
+            $data[0] = "All Total Ranks:";
+
+            //$ews->setCellValue('B'.$row, $allTotalRanks);
+            $data[1] = $allTotalRanks;
+
+            $writer->addRowWithStyle($data,$footerStyle);
+
+            //Avg Rank:
+            $data = array();
+            $row++;
+            //$ews->setCellValue('A'.$row, "Avg Rank:");
+            $data[0] = "Avg Rank:";
+            //$ews->setCellValue('B'.$row, $totalScore);
+            $data[1] = $totalScore;
+            $writer->addRowWithStyle($data,$footerStyle);
+
+            $row = $row + 2;
+        }
+
+        $writer->close();
     }
 
 
