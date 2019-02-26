@@ -1162,27 +1162,31 @@ class FellAppUtil {
                 //$row++;
             }
 
-            if( count($interviewers) > 0 ) {
-                $data = array();
-
-                //All Total Ranks:
-                //$ews->setCellValue('A'.$row, "All Total Ranks:");
-                $data[0] = "All Total Ranks:";
-
-                //$ews->setCellValue('B'.$row, $allTotalRanks);
-                $data[1] = $allTotalRanks;
-
-                $writer->addRowWithStyle($data, $footerStyle);
-
-                //Avg Rank:
-                $data = array();
-                //$row++;
-                //$ews->setCellValue('A'.$row, "Avg Rank:");
-                $data[0] = "Avg Rank:";
-                //$ews->setCellValue('B'.$row, $totalScore);
-                $data[1] = $totalScore;
-                $writer->addRowWithStyle($data, $footerStyle);
+            if( count($interviewers) == 0 ) {
+                $allTotalRanks = "N/A";
+                $totalScore = "N/A";
             }
+
+            $data = array();
+
+            //All Total Ranks:
+            //$ews->setCellValue('A'.$row, "All Total Ranks:");
+            $data[0] = "All Total Ranks:";
+
+            //$ews->setCellValue('B'.$row, $allTotalRanks);
+            $data[1] = $allTotalRanks;
+
+            $writer->addRowWithStyle($data, $footerStyle);
+
+            //Avg Rank:
+            $data = array();
+            //$row++;
+            //$ews->setCellValue('A'.$row, "Avg Rank:");
+            $data[0] = "Avg Rank:";
+            //$ews->setCellValue('B'.$row, $totalScore);
+            $data[1] = $totalScore;
+            $writer->addRowWithStyle($data, $footerStyle);
+
 
             //$row = $row + 2;
         }
