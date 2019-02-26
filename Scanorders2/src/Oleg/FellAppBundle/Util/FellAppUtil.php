@@ -1028,7 +1028,7 @@ class FellAppUtil {
             $headerStyle
         );
 
-        $row = 2;
+        //$row = 2;
 
         foreach( explode("-",$fellappids) as $fellappId ) {
 
@@ -1085,8 +1085,9 @@ class FellAppUtil {
             $writer->addRowWithStyle($data,$requestStyle);
 
             $allTotalRanks = 0;
+            $interviewers = $fellapp->getInterviews();
 
-            foreach( $fellapp->getInterviews() as $interview ) {
+            foreach( $interviewers as $interview ) {
 
                 $data = array();
                 $data[0] = null;
@@ -1158,30 +1159,32 @@ class FellAppUtil {
 
             //space in case if there is no interviewers
             if( count($fellapp->getInterviews()) == 0 ) {
-                $row++;
+                //$row++;
             }
 
-            $data = array();
+            if( count($interviewers) > 0 ) {
+                $data = array();
 
-            //All Total Ranks:
-            //$ews->setCellValue('A'.$row, "All Total Ranks:");
-            $data[0] = "All Total Ranks:";
+                //All Total Ranks:
+                //$ews->setCellValue('A'.$row, "All Total Ranks:");
+                $data[0] = "All Total Ranks:";
 
-            //$ews->setCellValue('B'.$row, $allTotalRanks);
-            $data[1] = $allTotalRanks;
+                //$ews->setCellValue('B'.$row, $allTotalRanks);
+                $data[1] = $allTotalRanks;
 
-            $writer->addRowWithStyle($data,$footerStyle);
+                $writer->addRowWithStyle($data, $footerStyle);
 
-            //Avg Rank:
-            $data = array();
-            $row++;
-            //$ews->setCellValue('A'.$row, "Avg Rank:");
-            $data[0] = "Avg Rank:";
-            //$ews->setCellValue('B'.$row, $totalScore);
-            $data[1] = $totalScore;
-            $writer->addRowWithStyle($data,$footerStyle);
+                //Avg Rank:
+                $data = array();
+                //$row++;
+                //$ews->setCellValue('A'.$row, "Avg Rank:");
+                $data[0] = "Avg Rank:";
+                //$ews->setCellValue('B'.$row, $totalScore);
+                $data[1] = $totalScore;
+                $writer->addRowWithStyle($data, $footerStyle);
+            }
 
-            $row = $row + 2;
+            //$row = $row + 2;
         }
 
         $writer->close();
