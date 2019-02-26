@@ -16,6 +16,7 @@
  */
 
 namespace Oleg\VacReqBundle\Util;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
@@ -27,6 +28,13 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\Constraints\Date;
+
+use Box\Spout\Common\Type;
+use Box\Spout\Writer\Style\Border;
+use Box\Spout\Writer\Style\BorderBuilder;
+use Box\Spout\Writer\Style\Color;
+use Box\Spout\Writer\Style\StyleBuilder;
+use Box\Spout\Writer\WriterFactory;
 
 /**
  * Created by PhpStorm.
@@ -4247,4 +4255,216 @@ class VacReqUtil
 
         return 0;
     }
+
+    public function createtListExcelSpout( $ids, $fileName ) {
+
+        $author = $this->container->get('security.token_storage')->getToken()->getUser();
+        //$transformer = new DateTimeToStringTransformer(null,null,'d/m/Y');
+
+        $writer = WriterFactory::create(Type::XLSX);
+        $writer->openToBrowser($fileName);
+
+        $headerStyle = (new StyleBuilder())
+            ->setFontBold()
+            //->setFontItalic()
+            ->setFontSize(12)
+            ->setFontColor(Color::BLACK)
+            ->setShouldWrapText()
+            ->setBackgroundColor(Color::toARGB("E0E0E0"))
+            ->build();
+
+        $requestStyle = (new StyleBuilder())
+            ->setFontSize(10)
+            //->setShouldWrapText()
+            ->build();
+
+        $border = (new BorderBuilder())
+            ->setBorderBottom(Color::GREEN, Border::WIDTH_THIN, Border::STYLE_DASHED)
+            ->build();
+        $footerStyle = (new StyleBuilder())
+            ->setFontBold()
+            //->setFontItalic()
+            ->setFontSize(12)
+            ->setFontColor(Color::BLACK)
+            ->setShouldWrapText()
+            ->setBackgroundColor(Color::toARGB("EBF1DE"))
+            ->setBorder($border)
+            ->build();
+
+        //setTitle('Business/Vacation Requests')
+        //$ews = $ea->getSheet(0);
+        //$ews->setTitle('Business and Vacation Requests');
+
+
+//        $ews->setCellValue('A1', 'ID');
+//        $ews->setCellValue('B1', 'Person');
+//        $ews->setCellValue('C1', 'Academic Year');
+//        $ews->setCellValue('D1', 'Group');
+//
+//        $ews->setCellValue('E1', 'Business Days');
+//        $ews->setCellValue('F1', 'Start Date');
+//        $ews->setCellValue('G1', 'End Date');
+//        $ews->setCellValue('H1', 'Status');
+//
+//        $ews->setCellValue('I1', 'Vacation Days');
+//        $ews->setCellValue('J1', 'Start Date');
+//        $ews->setCellValue('K1', 'End Date');
+//        $ews->setCellValue('L1', 'Status');
+
+        $writer->addRowWithStyle(
+            [
+                'ID',                  //0 - A
+                'Person',              //1 - B
+                'Academic Year',       //2 - C
+                'Group',               //3 - D
+
+                'Business Days',       //4 - E
+                'Start Date',          //5 - F
+                'End Date',            //6 - G
+                'Status',              //7 - H
+
+                'Vacation Days',       //8 - I
+                'Start Date',          //9 - J
+                'End Date',            //10 - K
+                'Status',              //11 - L
+
+            ],
+            $headerStyle
+        );
+
+
+        $totalNumberBusinessDays = 0;
+        $totalNumberVacationDays = 0;
+
+        $row = 2;
+        foreach( explode("-",$ids) as $vacreqId ) {
+
+            $vacreq = $this->em->getRepository('OlegVacReqBundle:VacReqRequest')->find($vacreqId);
+            if( !$vacreq ) {
+                continue;
+            }
+
+            //check if author can have access to view this request
+            if( false == $this->container->get('security.authorization_checker')->isGranted("read", $vacreq) ) {
+                continue; //skip this applicant because the current user does not permission to view this applicant
+            }
+
+            $data = array();
+
+            //$ews->setCellValue('A'.$row, $vacreq->getId());
+            $data[0] = $vacreq->getId();
+
+            $academicYearArr = $this->getRequestAcademicYears($vacreq);
+            if( count($academicYearArr) > 0 ) {
+                $academicYear = $academicYearArr[0];
+            } else {
+                $academicYear = null;
+            }
+
+            //$ews->setCellValue('B'.$row, $vacreq->getUser());
+            $data[1] = $vacreq->getUser()."";
+            //$ews->setCellValue('C'.$row, $academicYear);
+            $data[2] = $vacreq->$academicYear();
+
+            //Group
+            //$ews->setCellValue('D'.$row, $vacreq->getInstitution()."");
+            $data[3] = $vacreq->getInstitution()."";
+
+            $businessRequest = $vacreq->getRequestBusiness();
+            if( $businessRequest ) {
+                //$numberBusinessDays = $this->specificRequestExcelSpoutInfo($writer,$vacreq,$businessRequest,array('E','F','G','H'));
+                $numberBusinessDays = $this->specificRequestExcelSpoutInfo($data,$vacreq,$businessRequest,array(4,5,6,7));
+                if( $numberBusinessDays ) {
+                    $totalNumberBusinessDays = $totalNumberBusinessDays + intval($numberBusinessDays);
+                }
+            }
+
+            $vacationRequest = $vacreq->getRequestVacation();
+            if( $vacationRequest ) {
+                //$numberVacationDays = $this->specificRequestExcelSpoutInfo($writer,$vacreq,$vacationRequest,array('I','J','K','L'));
+                $numberVacationDays = $this->specificRequestExcelSpoutInfo($data,$vacreq,$vacationRequest,array(8,9,10,11));
+                if( $numberVacationDays ) {
+                    $totalNumberVacationDays = $totalNumberVacationDays + intval($numberVacationDays);
+                }
+            }
+
+            $writer->addRowWithStyle($data,$requestStyle);
+            //$row = $row + 1;
+        }//foreach
+
+        $data = array();
+        $data[0] = NULL;
+        $data[2] = NULL;
+        $data[3] = NULL;
+        $data[5] = NULL;
+        $data[6] = NULL;
+        $data[7] = NULL;
+
+        //$ews->setCellValue('B'.$row, "Total"); //1
+        $data[1] = "Total";
+        //$ews->setCellValue('E'.$row, $totalNumberBusinessDays); //4
+        $data[4] = $totalNumberBusinessDays;
+        //$ews->setCellValue('I'.$row, $totalNumberVacationDays); //8
+        $data[8] = $totalNumberVacationDays;
+        $writer->addRowWithStyle($data,$footerStyle);
+
+        //set color light green to the last Total row
+        //$ews->getStyle('A'.$row.':'.'L'.$row)->applyFromArray($styleLastRow);
+
+        //exit("ids=".$fellappids);
+
+        //return $ea;
+    }
+    public function specificRequestExcelSpoutInfo( $data, $vacreq, $request, $columnArr ) {
+        if( $request ) {
+            $numberDays = $request->getNumberOfDays();
+            //Business Days
+            //$ews->setCellValue($columnArr[0].$row, $numberDays."");
+            $data[$columnArr[0]] = $numberDays."";
+
+            //Start Date
+            $startDate = $request->getStartDate();
+            if( $startDate ) {
+                $startDate->setTimezone(new \DateTimeZone("UTC"));
+                //$ews->setCellValue($columnArr[1].$row, $startDate->format('m/d/Y'));
+                $data[$columnArr[1]] = $startDate->format('m/d/Y');
+            } else {
+                $data[$columnArr[1]] = NULL;
+            }
+
+            //End Date
+            $endDate = $request->getEndDate();
+            if( $endDate ) {
+                $endDate->setTimezone(new \DateTimeZone("UTC"));
+                //$ews->setCellValue($columnArr[2].$row, $endDate->format('m/d/Y'));
+                $data[$columnArr[2]] = $endDate->format('m/d/Y');
+            } else {
+                $data[$columnArr[2]] = NULL;
+            }
+
+            //Status
+            $status = null;
+            if( $request && $request->getStatus() ) {
+                if( $vacreq->getExtraStatus() ) {
+                    $extraStatus = $vacreq->getExtraStatus();
+                    $extraStatus = str_replace('(Approved)','',$extraStatus);
+                    $extraStatus = str_replace('(Canceled)','',$extraStatus);
+                    $status = $request->getStatus()." (".$extraStatus.")";
+                } else {
+                    $status = $request->getStatus();
+                }
+            }
+            if( $status ) {
+                //$ews->setCellValue($columnArr[3].$row, ucfirst($status));
+                $data[$columnArr[3]] = ucfirst($status);
+            } else {
+                $data[$columnArr[3]] = NULL;
+            }
+
+            return $numberDays;
+        }
+
+        return 0;
+    }
+
 }

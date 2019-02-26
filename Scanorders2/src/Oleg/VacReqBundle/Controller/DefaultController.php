@@ -77,21 +77,26 @@ class DefaultController extends Controller
         //echo "ids=".$ids."<br>";
         //exit('111');
 
-        $excelBlob = $vacreqUtil->createtListExcel($ids);
-
         $fileName = "Stats".".xlsx";
 
-        $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($excelBlob, 'Xlsx');
-        //ob_end_clean();
-        //$writer->setIncludeCharts(true);
+        if(0) {
+            $excelBlob = $vacreqUtil->createtListExcel($ids);
 
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($excelBlob, 'Xlsx');
+            //ob_end_clean();
+            //$writer->setIncludeCharts(true);
 
-        header('Content-Disposition: attachment;filename="'.$fileName.'"');
-        //header('Content-Disposition: attachment;filename="fileres.xlsx"');
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 
-        // Write file to the browser
-        $writer->save('php://output');
+            header('Content-Disposition: attachment;filename="' . $fileName . '"');
+            //header('Content-Disposition: attachment;filename="fileres.xlsx"');
+
+            // Write file to the browser
+            $writer->save('php://output');
+        } else {
+            //Spout
+            $vacreqUtil->createtListExcelSpout( $ids, $fileName );
+        }
 
         exit();
     }
