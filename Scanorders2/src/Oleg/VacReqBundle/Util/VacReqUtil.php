@@ -4364,7 +4364,7 @@ class VacReqUtil
             //$ews->setCellValue('B'.$row, $vacreq->getUser());
             $data[1] = $vacreq->getUser()."";
             //$ews->setCellValue('C'.$row, $academicYear);
-            $data[2] = $vacreq->$academicYear();
+            $data[2] = $academicYear;
 
             //Group
             //$ews->setCellValue('D'.$row, $vacreq->getInstitution()."");
