@@ -252,7 +252,7 @@ class RequestIndexController extends Controller
 
                     if(0) {
                         $downloadUrl = $this->container->get('router')->generate(
-                            'vacreq_download_excel_get_ids',
+                            'vacreq_download_spreadsheet_get_ids',
                             array(
                                 'ids' => implode("-", $matchingIds),
                             ),
@@ -263,7 +263,7 @@ class RequestIndexController extends Controller
                     }
 
                     $downloadUrl = $this->container->get('router')->generate(
-                        'vacreq_download_excel',
+                        'vacreq_download_spreadsheet',
                         array(),
                         UrlGeneratorInterface::ABSOLUTE_URL
                     );

@@ -60,9 +60,9 @@ class DefaultController extends Controller
 
 
     /**
-     * //@Route("/download-excel-with-ids/{ids}", name="vacreq_download_excel_get_ids")
+     * //@Route("/download-spreadsheet-with-ids/{ids}", name="vacreq_download_spreadsheet_get_ids")
      *
-     * @Route("/download-excel/", name="vacreq_download_excel")
+     * @Route("/download-spreadsheet/", name="vacreq_download_spreadsheet")
      * @Method({"POST"})
      */
     public function downloadExcelAction( Request $request ) {

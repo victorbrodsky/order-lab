@@ -4492,7 +4492,7 @@ class UserController extends Controller
 
 
     /**
-     * @Route("/download/printable-lab-directory", name="employees_userlist_download_excel")
+     * @Route("/download/printable-lab-directory", name="employees_userlist_download_spreadsheet")
      */
     public function downloadAction( Request $request )
     {
