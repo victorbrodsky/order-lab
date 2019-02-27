@@ -4377,7 +4377,13 @@ class VacReqUtil
                 if( $numberBusinessDays ) {
                     $totalNumberBusinessDays = $totalNumberBusinessDays + intval($numberBusinessDays);
                 }
+            } else {
+                $data[4] = NULL;
+                $data[5] = NULL;
+                $data[6] = NULL;
+                $data[7] = NULL;
             }
+            //print_r($data);
 
             $vacationRequest = $vacreq->getRequestVacation();
             if( $vacationRequest ) {
@@ -4386,7 +4392,15 @@ class VacReqUtil
                 if( $numberVacationDays ) {
                     $totalNumberVacationDays = $totalNumberVacationDays + intval($numberVacationDays);
                 }
+            } else {
+                $data[8] = NULL;
+                $data[9] = NULL;
+                $data[10] = NULL;
+                $data[11] = NULL;
             }
+
+            //print_r($data);
+            //exit('111');
 
             $writer->addRowWithStyle($data,$requestStyle);
             //$row = $row + 1;
@@ -4413,9 +4427,9 @@ class VacReqUtil
 
         //exit("ids=".$fellappids);
 
-        //return $ea;
+        $writer->close();
     }
-    public function specificRequestExcelSpoutInfo( $data, $vacreq, $request, $columnArr ) {
+    public function specificRequestExcelSpoutInfo( &$data, $vacreq, $request, $columnArr ) {
         if( $request ) {
             $numberDays = $request->getNumberOfDays();
             //Business Days
