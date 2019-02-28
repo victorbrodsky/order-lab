@@ -93,17 +93,17 @@ then
 fi
 
 echo "*** Pre processing json file ***"
-sed -i -e "s/api_token_bash_value/$apitoken/g" order-packer.json
-sed -i -e "s/parameters_bash_file/$parameters/g" order-packer.json
-sed -i -e "s/bash_dbuser/$dbuser/g" order-packer.json
-sed -i -e "s/bash_dbpass/$dbpass/g" order-packer.json
+sed -i -e "s/api_token_bash_value/$apitoken/g" order-packer_test.json
+sed -i -e "s/parameters_bash_file/$parameters/g" order-packer_test.json
+sed -i -e "s/bash_dbuser/$dbuser/g" order-packer_test.json
+sed -i -e "s/bash_dbpass/$dbpass/g" order-packer_test.json
 
 #modify http.config file to insert virtual host for https
 #https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-apache-in-ubuntu-16-04
-sed -i -e "s/bash_https/$https/g" order-packer.json
-sed -i -e "s/bash_domainname/$domainname/g" order-packer.json
-sed -i -e "s/bash_sslcertificate/$sslcertificate/g" order-packer.json
-sed -i -e "s/bash_sslprivatekey/$sslprivatekey/g" order-packer.json
+sed -i -e "s/bash_https/$https/g" order-packer_test.json
+sed -i -e "s/bash_domainname/$domainname/g" order-packer_test.json
+sed -i -e "s/bash_sslcertificate/$sslcertificate/g" order-packer_test.json
+sed -i -e "s/bash_sslprivatekey/$sslprivatekey/g" order-packer_test.json
 
 
 echo "*** Building VM image ... ***"
