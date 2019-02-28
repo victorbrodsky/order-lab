@@ -41,6 +41,25 @@ if [ -z "$dbpass" ]
     dbpass='symfony'
 fi
 
+if [ -z "$https" ]
+  then 	
+    https='http'
+fi
+
+if [ -z "$domainname" ]
+  then 	
+    domainname='domainname'
+fi
+
+if [ -z "$sslcertificate" ]
+  then 	
+    sslcertificate='cert.crt'
+fi
+
+if [ -z "$sslprivatekey" ]
+  then 	
+    sslprivatekey='cert.key'
+fi
 
 echo "*** Deploy order to Digital Ocean ***"
 
