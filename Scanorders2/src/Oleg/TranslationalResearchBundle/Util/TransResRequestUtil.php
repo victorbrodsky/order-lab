@@ -3625,7 +3625,7 @@ class TransResRequestUtil
     }
 
     public function getMatchingStrInvoiceByDqlParameters($dql,$dqlParameters) {
-        $dql->select('invoice.total,invoice.paid,invoice.due');
+        $dql->select('invoice.id,invoice.total,invoice.paid,invoice.due');
         //$dql->groupBy('invoice.id');
 
         $query = $dql->getQuery();
@@ -3640,6 +3640,7 @@ class TransResRequestUtil
 
         //All Invoices (188 matching for Total: $61,591.00, Paid: $30,000.00, Unpaid: $31591.00)
 
+        $invoiceIds = array();
         $totalSum = 0;
         $paidSum = 0;
         $dueSum = 0;
@@ -3657,6 +3658,9 @@ class TransResRequestUtil
             $totalSum = $totalSum + $total;
             $paidSum = $paidSum + $paid;
             $dueSum = $dueSum + $due;
+
+            $invoiceIds[] = $idParams['id'];
+
             $counter++;
         }
 
@@ -3668,7 +3672,13 @@ class TransResRequestUtil
         }
 
         //exit($result);
-        return $result;
+
+        $resultArr = array(
+            'resultStr' => $result,
+            'ids' => $invoiceIds
+        );
+
+        return $resultArr;
     }
     public function getNumberFormat($number,$digits=null) {
         return $this->toMoney($number,'');
@@ -3739,6 +3749,100 @@ class TransResRequestUtil
         $requests = $query->getResult();
 
         return $requests;
+    }
+
+    public function createtInvoicesCsvSpout( $ids, $fileName, $limit=null ) {
+        $writer = WriterFactory::create(Type::XLSX);
+        $writer->openToBrowser($fileName);
+
+        $headerStyle = (new StyleBuilder())
+            ->setFontBold()
+            //->setFontItalic()
+            ->setFontSize(12)
+            ->setFontColor(Color::BLACK)
+            ->setShouldWrapText()
+            ->setBackgroundColor(Color::toARGB("E0E0E0"))
+            ->build();
+
+        $requestStyle = (new StyleBuilder())
+            ->setFontSize(10)
+            //->setShouldWrapText()
+            ->build();
+
+        $border = (new BorderBuilder())
+            ->setBorderBottom(Color::GREEN, Border::WIDTH_THIN, Border::STYLE_DASHED)
+            ->build();
+        $footerStyle = (new StyleBuilder())
+            ->setFontBold()
+            //->setFontItalic()
+            ->setFontSize(12)
+            ->setFontColor(Color::BLACK)
+            ->setShouldWrapText()
+            ->setBackgroundColor(Color::toARGB("EBF1DE"))
+            ->setBorder($border)
+            ->build();
+
+        $writer->addRowWithStyle(
+            [
+                'Invoice Number',               //0 - A
+                'Fund Number',                  //1 - B
+                'IRB (IACUC) Number',           //2 - C
+                'Salesperson',                  //3 - D
+                'Generated',                    //4 - E
+                'Updated',                      //5 - F
+                'Version',                      //6 - G
+                'Due Date',                     //7 - H
+                'Status',                       //8 - I
+                'Bill To',                      //9 - J
+                'Total',                        //10 - K
+                'Paid',                         //11 - L
+                'Due',                          //12 - M
+            ],
+            $headerStyle
+        );
+
+        $row = 2;
+        $count = 0;
+        $totalInvoices = 0;
+        $totalTotal = 0;
+        $paidTotal = 0;
+        $dueTotal = 0;
+
+        foreach( $ids as $invoiceId ) {
+
+            if( $limit && ($count++ > $limit) ) {
+                break;
+            }
+
+            $invoice = $this->em->getRepository('OlegTranslationalResearchBundle:Invoice')->find($invoiceId);
+            if( !$invoice ) {
+                continue;
+            }
+
+//            if( $this->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
+//                continue;
+//            }
+
+            //$ews = $this->fillOutProjectCellsSpout($writer,$data,$project); //0-7
+
+//            $invoiceTotalTotal = 0;
+//            $invoiceTotalPaid = 0;
+//            $invoiceTotalDue = 0;
+
+            $data[0] = $invoice->getOid();
+            $data[1] = null;
+            $data[2] = null;
+            $data[3] = null;
+            $data[4] = null;
+            $data[5] = null;
+            $data[6] = null;
+            $data[7] = null;
+
+            $writer->addRowWithStyle($data,$footerStyle);
+
+        }//invoices
+
+        $writer->close();
     }
     
 }

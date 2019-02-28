@@ -10,6 +10,12 @@
     <h4 class="text-info" align="center">
         {{ title|raw }}
     </h4>
+
+    <form action="" method="post">
+        <input type="hidden" name="ids" value="{{ matchingStrInvoiceIds }}">
+        <input class="btn" type="submit" value="download in CSV">
+    </form>
+
     <br>
 
     {% if transresRequest and is_granted('ROLE_TRANSRES_BILLING_ADMIN') %}

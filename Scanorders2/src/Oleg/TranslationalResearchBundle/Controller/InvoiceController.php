@@ -642,12 +642,17 @@ class InvoiceController extends Controller
         //echo "eventObjectTypeId=".$eventObjectTypeId."<br>";
 
         $matchingStrInvoice = $transresRequestUtil->getMatchingStrInvoiceByDqlParameters($dql,$dqlParameters);
+        $matchingStrInvoiceStr = $matchingStrInvoice['resultStr'];
+        $matchingStrInvoiceIds = $matchingStrInvoice['ids'];
         //$totalStrInvoice = $transresRequestUtil->getTotalStrInvoice();
-        //$title = $title . " (" . $matchingStrInvoice . "; " . $totalStrInvoice . ")";
-        $title = $title . " (" . $matchingStrInvoice . ")";
+        //$title = $title . " (" . $matchingStrInvoiceStr . "; " . $totalStrInvoice . ")";
+        $title = $title . " (" . $matchingStrInvoiceStr . ")";
+
+        $matchingStrInvoiceIds = implode("-",$matchingStrInvoiceIds);
 
         return array(
             'invoices' => $invoices,
+            'matchingStrInvoiceIds' => $matchingStrInvoiceIds,
             'transresRequest' => $transresRequest,
             'title' => $title,
             'metaTitle' => $metaTitle,
@@ -1670,6 +1675,30 @@ class InvoiceController extends Controller
         return $response;
     }
 
+
+    /**
+     * //@Route("/download-spreadsheet-with-ids/{ids}", name="vacreq_download_spreadsheet_get_ids")
+     *
+     * @Route("/download-spreadsheet/", name="vacreq_download_spreadsheet")
+     * @Method({"POST"})
+     */
+    public function downloadInvoicesCsvAction( Request $request ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
+        $transresRequestUtil = $this->get('transres_request_util');
+
+        $ids = $request->request->get('ids');
+        //echo "ids=".$ids."<br>";
+        //exit('111');
+
+        $fileName = "Invoices".".xlsx";
+
+        $transresRequestUtil->createtInvoicesCsvSpout( $ids, $fileName );
+
+        exit();
+    }
 
 //    /**
 //     * @Route("/unpaid-invoice-reminder/show-summary", name="translationalresearch_unpaid_invoice_reminder_show")
