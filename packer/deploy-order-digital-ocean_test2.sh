@@ -53,12 +53,12 @@ fi
 
 if [ -z "$sslcertificate" ]
   then 	
-    sslcertificate='./ssl/apache2.crt'
+    sslcertificate='ssl/apache2.crt'
 fi
 
 if [ -z "$sslprivatekey" ]
   then 	
-    sslprivatekey='./ssl/apache2.key'
+    sslprivatekey='ssl/apache2.key'
 fi
 
 echo "*** Deploy order to Digital Ocean ***"
@@ -86,9 +86,9 @@ if [ -z "$parameters" ]
     exit 0
 fi
 
-if [ -z order-packer.json ]
+if [ -z order-packer_test.json ]
 then
-    echo "order-packer.json not found."
+    echo "order-packer_test.json not found."
 	exit 0
 fi
 
