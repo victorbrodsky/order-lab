@@ -119,6 +119,6 @@ sed -i -e "s/bash_sslprivatekey/$sslprivatekey/g" order-packer_test.json
 
 
 echo "*** Building VM image ... ***"
-#packer build order-packer_test.json
+packer build order-packer_test.json
 
 
