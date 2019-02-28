@@ -1692,6 +1692,7 @@ class InvoiceController extends Controller
         //exit('111');
 
         $idsArr = explode('-', $ids);
+        $idsArr = array_reverse($idsArr);
 
         $fileName = "Invoices".".xlsx";
 
