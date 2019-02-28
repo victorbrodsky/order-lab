@@ -53,12 +53,12 @@ fi
 
 if [ -z "$sslcertificate" ]
   then 	
-    sslcertificate='ssl/apache2.crt'
+    sslcertificate='apache2.crt'
 fi
 
 if [ -z "$sslprivatekey" ]
   then 	
-    sslprivatekey='ssl/apache2.key'
+    sslprivatekey='apache2.key'
 fi
 
 echo "*** Deploy order to Digital Ocean ***"
@@ -92,6 +92,18 @@ then
 	exit 0
 fi
 
+if [ -z "$sslcertificate" ]
+  then 	
+    echo "Error: no ssl certificate file is provided"
+    exit 0
+fi
+
+if [ -z "$sslprivatekey" ]
+  then 	
+    echo "Error: no ssl key file is provided"
+    exit 0
+fi
+
 echo "*** Pre processing json file ***"
 sed -i -e "s/api_token_bash_value/$apitoken/g" order-packer_test.json
 sed -i -e "s/parameters_bash_file/$parameters/g" order-packer_test.json
@@ -107,6 +119,6 @@ sed -i -e "s/bash_sslprivatekey/$sslprivatekey/g" order-packer_test.json
 
 
 echo "*** Building VM image ... ***"
-packer build order-packer_test.json
+#packer build order-packer_test.json
 
 
