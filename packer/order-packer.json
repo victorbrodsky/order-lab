@@ -8,7 +8,7 @@
     "type": "digitalocean",
     "api_token": "api_token_bash_value",
     "region": "nyc3",
-    "size": "2gb",
+    "size": "512mb",
     "image": "ubuntu-16-04-x64",
     "ssh_username": "{{user `ssh_name`}}"  
   }],
@@ -92,8 +92,7 @@
 	  
 	  {
         "type": "shell",
-        "inline": [ 
-           "echo @### create ssl folder /usr/local/bin/order-lab/ssl ###",		
+        "inline": [  
 		   "sudo mkdir /usr/local/bin/order-lab/ssl"
          ]    
       },
@@ -109,11 +108,10 @@
           "source": "bash_sslprivatekey",
           "destination": "/usr/local/bin/order-lab/ssl/apache2.key"         
        },
-
-	   {
-		   "type": "shell",
-           "inline": [ 
-		   "echo @### enable ssl ###",		   
+	  
+	  {
+        "type": "shell",
+        "inline": [  
 		   "cp /usr/local/bin/order-lab/packer/default-ssl.conf /etc/apache2/sites-available/",
            "sudo a2enmod ssl",          
 		   "sudo a2enmod headers",	
@@ -122,16 +120,11 @@
          ]    
       },
 	  
-	  {
+      {
         "type": "shell",
-        "inline": [ 
-		   "echo @### composer and deploy ###",
+        "inline": [             
            "cd /usr/local/bin/order-lab/Scanorders2",
-		   "/bin/dd if=/dev/zero of=/var/swap.1 bs=1M count=1024",
-		   "/sbin/mkswap /var/swap.1",
-		   "/sbin/swapon /var/swap.1",
-		   "composer self-update",
-           "php -dmemory_limit=-1 /usr/local/bin/composer install",
+           "composer install",
 		   "git pull",
            "git rev-parse HEAD",		   
 	       "sudo chmod +x /usr/local/bin/order-lab/Scanorders2/deploy_prod.sh",
@@ -139,8 +132,7 @@
 	       "sudo chown -R www-data:www-data /usr/local/bin/order-lab",		           
            "sudo chown -R www-data:www-data /usr/local/bin/order-lab/.git/"			   
          ]    
-      }  
-	  
+      }      
       
    ]
 
