@@ -53,12 +53,12 @@ fi
 
 if [ -z "$sslcertificate" ]
   then 	
-    sslcertificate='apache2.crt'
+    sslcertificate='apache_dummy.crt'
 fi
 
 if [ -z "$sslprivatekey" ]
   then 	
-    sslprivatekey='apache2.key'
+    sslprivatekey='apache_dummy.key'
 fi
 
 echo "*** Deploy order to Digital Ocean ***"
