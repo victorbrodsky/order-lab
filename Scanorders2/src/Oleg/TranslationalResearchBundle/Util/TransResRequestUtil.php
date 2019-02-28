@@ -3801,9 +3801,9 @@ class TransResRequestUtil
                 'Due Date',                     //7 - H
                 'Status',                       //8 - I
                 'Bill To',                      //9 - J
-                'Total',                        //10 - K
-                'Paid',                         //11 - L
-                'Due',                          //12 - M
+                'Total $',                        //10 - K
+                'Paid $',                         //11 - L
+                'Due $',                          //12 - M
             ],
             $headerStyle
         );
