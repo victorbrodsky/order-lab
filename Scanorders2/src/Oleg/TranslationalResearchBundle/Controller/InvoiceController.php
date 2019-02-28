@@ -1677,9 +1677,7 @@ class InvoiceController extends Controller
 
 
     /**
-     * //@Route("/download-spreadsheet-with-ids/{ids}", name="vacreq_download_spreadsheet_get_ids")
-     *
-     * @Route("/download-spreadsheet/", name="vacreq_download_spreadsheet")
+     * @Route("/download-spreadsheet/", name="translationalresearch_download_spreadsheet")
      * @Method({"POST"})
      */
     public function downloadInvoicesCsvAction( Request $request ) {
@@ -1693,9 +1691,11 @@ class InvoiceController extends Controller
         //echo "ids=".$ids."<br>";
         //exit('111');
 
+        $idsArr = explode('-', $ids);
+
         $fileName = "Invoices".".xlsx";
 
-        $transresRequestUtil->createtInvoicesCsvSpout( $ids, $fileName );
+        $transresRequestUtil->createtInvoicesCsvSpout( $idsArr, $fileName );
 
         exit();
     }

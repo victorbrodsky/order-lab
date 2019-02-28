@@ -24,6 +24,13 @@ use Oleg\TranslationalResearchBundle\Entity\InvoiceItem;
 use Oleg\TranslationalResearchBundle\Entity\TransResSiteParameters;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
+use Box\Spout\Common\Type;
+use Box\Spout\Writer\Style\Border;
+use Box\Spout\Writer\Style\BorderBuilder;
+use Box\Spout\Writer\Style\Color;
+use Box\Spout\Writer\Style\StyleBuilder;
+use Box\Spout\Writer\WriterFactory;
+
 
 /**
  * Created by PhpStorm.
@@ -3764,7 +3771,7 @@ class TransResRequestUtil
             ->setBackgroundColor(Color::toARGB("E0E0E0"))
             ->build();
 
-        $requestStyle = (new StyleBuilder())
+        $regularStyle = (new StyleBuilder())
             ->setFontSize(10)
             //->setShouldWrapText()
             ->build();
@@ -3801,7 +3808,6 @@ class TransResRequestUtil
             $headerStyle
         );
 
-        $row = 2;
         $count = 0;
         $totalInvoices = 0;
         $totalTotal = 0;
@@ -3823,24 +3829,81 @@ class TransResRequestUtil
 //                continue;
 //            }
 
-            //$ews = $this->fillOutProjectCellsSpout($writer,$data,$project); //0-7
+            $totalInvoices++;
 
-//            $invoiceTotalTotal = 0;
-//            $invoiceTotalPaid = 0;
-//            $invoiceTotalDue = 0;
+            $data = array();
 
             $data[0] = $invoice->getOid();
-            $data[1] = null;
-            $data[2] = null;
-            $data[3] = null;
-            $data[4] = null;
-            $data[5] = null;
-            $data[6] = null;
-            $data[7] = null;
 
-            $writer->addRowWithStyle($data,$footerStyle);
+            $data[1] = $invoice->getFundedAccountNumber();
+
+            $data[2] = $invoice->getProjectIrbIacucNumber();
+
+            $data[3] = $invoice->getSalesperson()."";
+
+            $createDateStr = null;
+            $createDate = $invoice->getCreateDate();
+            if( $createDate ) {
+                $createDateStr = $createDate->format("m/d/Y");
+            }
+            $data[4] = $createDateStr;
+
+            $updateDateStr = null;
+            $updateDate = $invoice->getUpdateDate();
+            if( $updateDate ) {
+                $updateDateStr = $updateDate->format("m/d/Y");
+            }
+            $data[5] = $updateDateStr;
+
+            $version = $invoice->getVersion();
+            if( $invoice->getLatestVersion() ) {
+                $version = $version . " (Latest)";
+            }
+            $data[6] = $version;
+
+            $dueDateStr = null;
+            $dueDate = $invoice->getDueDate();
+            if( $dueDate ) {
+                $dueDateStr = $dueDate->format("m/d/Y");
+            }
+            $data[7] = $dueDateStr;
+
+            $data[8] = $invoice->getStatus();
+
+            //{{ invoice.invoiceTo|length > 25 ? invoice.invoiceTo|slice(0, 25) ~ '...' : invoice.invoiceTo  }}
+            $data[9] = $invoice->getInvoiceTo();
+
+            $total = $invoice->getTotal();
+            $totalTotal = $totalTotal + $total;
+            $data[10] = $total;
+
+            $paid = $invoice->getPaid();
+            $paidTotal = $paidTotal + $paid;
+            $data[11] = $paid;
+
+            $due = $invoice->getDue();
+            $dueTotal = $dueTotal + $due;
+            $data[12] = $due;
+
+            $writer->addRowWithStyle($data,$regularStyle);
 
         }//invoices
+
+        $data = array();
+        $data[0] = "Total Number Invoices";
+        $data[1] = $totalInvoices;
+        $data[2] = null;
+        $data[3] = null;
+        $data[4] = null;
+        $data[5] = null;
+        $data[6] = null;
+        $data[7] = null;
+        $data[8] = null;
+        $data[9] = null;
+        $data[10] = $totalTotal;
+        $data[11] = $paidTotal;
+        $data[12] = $dueTotal;
+        $writer->addRowWithStyle($data,$footerStyle);
 
         $writer->close();
     }

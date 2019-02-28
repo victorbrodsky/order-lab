@@ -233,14 +233,6 @@
                             <ul class="dropdown-menu">
                                 {% set filterTypes = transres_request_util.getInvoiceFilterPresetType() %}
                                 {{ _self.createFilterType(filterTypes) }}
-
-                                {#exporting all invoices page to CSV#}
-                                {#<hr>#}
-                                {#<li>#}
-                                    {#<a href="{{ path(translationalresearch_sitename~'_default-reviewer_index',{'specialtyStr':specialty.getAbbreviation()}) }}"#}
-                                    {#>Exporting all invoices to CSV</a>#}
-                                {#</li>#}
-
                             </ul>
                         </li>
                     {#{% endif %}#}

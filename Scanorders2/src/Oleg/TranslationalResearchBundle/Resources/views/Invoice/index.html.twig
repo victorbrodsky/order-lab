@@ -11,7 +11,7 @@
         {{ title|raw }}
     </h4>
 
-    <form action="" method="post">
+    <form action="{{ path('translationalresearch_download_spreadsheet') }}" method="post">
         <input type="hidden" name="ids" value="{{ matchingStrInvoiceIds }}">
         <input class="btn" type="submit" value="download in CSV">
     </form>
