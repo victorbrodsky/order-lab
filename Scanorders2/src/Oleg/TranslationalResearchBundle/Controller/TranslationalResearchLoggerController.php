@@ -113,7 +113,7 @@ class TranslationalResearchLoggerController extends LoggerController
      *
      * @Route("/event-log-per-object/", name="translationalresearch_event-log-per-object_log")
      * @Method("GET")
-     * @Template("OlegCallLogBundle:Logger:index.html.twig")
+     * @Template("OlegTranslationalResearchBundle:Logger:index.html.twig")
      */
     public function transresEventLogPerObjectAction(Request $request)
     {

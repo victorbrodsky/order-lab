@@ -5260,7 +5260,8 @@ class TransResUtil
         //$dql->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL");
         $dql->where("list.createdby != 'googleapi'"); //googleapi is used only by fellowship application population
 
-        $dql->orderBy("infos.displayName","ASC");
+        //$dql->orderBy("infos.displayName","ASC");
+        $dql->orderBy("infos.lastName","ASC");
 
         $query = $dql->getQuery();
 
