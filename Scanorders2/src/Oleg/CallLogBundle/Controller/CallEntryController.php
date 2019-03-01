@@ -3012,7 +3012,7 @@ class CallEntryController extends Controller
      * @Route("/single-export-csv/{messageOid}/{messageVersion}", name="calllog_single_export_csv")
      * @Template("OlegCallLogBundle:Export:call-entry-export-csv.html.twig")
      */
-    public function exportSingleCsvAction(Request $request, $messageOid, $messageVersion=nulls)
+    public function exportSingleCsvAction(Request $request, $messageOid, $messageVersion=null)
     {
         if (false == $this->get('security.authorization_checker')->isGranted("ROLE_CALLLOG_ADMIN")) {
             return $this->redirect($this->generateUrl('calllog-nopermission'));

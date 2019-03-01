@@ -1330,6 +1330,7 @@ class ListController extends Controller
         $pathbase = $pieces[0];
         //echo "pathbase=".$pathbase."<br>";
         //exit('show');
+        //exit("showEditBtn=".$showEditBtn);
 
         $em = $this->getDoctrine()->getManager();
 

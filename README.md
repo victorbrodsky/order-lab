@@ -95,7 +95,13 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 5. Run /packer/deploy-order-digital-ocean.sh via (make sure to supply your API token):
 
 	 	cd order-lab/packer
-        bash deploy-order-digital-ocean.sh API-TOKEN-FROM-STEP-1 parameters.yml
+        bash deploy-order-digital-ocean.sh API-TOKEN-FROM-STEP-1 parameters.yml dbusername dbpassword https domainname sslcertificate sslprivatekey
+		
+		Note for deploy-order-digital-ocean.sh: 
+		The last 6 parameters are optional: "dbusername dbpassword https domainname sslcertificate sslprivatekey". 
+		If dbusername dbpassword are not provide, the default values are used "symfony symfony".
+		For http: bash deploy-order-digital-ocean.sh API-TOKEN-FROM-STEP-1 parameters.yml dbusername dbpassword
+		For https, copy sslcertificate sslprivatekey files to the packer folder and then run: bash deploy-order-digital-ocean.sh API-TOKEN-FROM-STEP-1 parameters.yml dbusername dbpassword https domainname sslcertificate sslprivatekey
 
 6. If the browser window with this URL does not open automatically at the end of the previous step, visit http://IPADDRESS/order/directory/admin/first-time-login-generation-init/ to generate the initial Administrator account, where IPADDRESS is the IP address of the server. Wait until the site redirects to the log in screen (it might take a while.)
 
@@ -161,7 +167,14 @@ Note: If you choose to use MySQL database on Linux instead of Postgres, you will
 
 	b) Run the deployment script with the following command, replacing 'API-TOKEN-FROM-STEP-1' with your unique API token from step 1 above. The script will take several minutes to run.
 
-		bash deploy-order-digital-ocean.sh API-TOKEN-FROM-STEP-1 parameters.yml
+        bash deploy-order-digital-ocean.sh API-TOKEN-FROM-STEP-1 parameters.yml dbusername dbpassword https domainname sslcertificate sslprivatekey
+		
+		Note for deploy-order-digital-ocean.sh: 
+		The last 6 parameters are optional: "dbusername dbpassword https domainname sslcertificate sslprivatekey". 
+		If dbusername dbpassword are not provide, the default values are used "symfony symfony".
+		For http: bash deploy-order-digital-ocean.sh API-TOKEN-FROM-STEP-1 parameters.yml dbusername dbpassword
+		For https, copy sslcertificate sslprivatekey files to the packer folder and then run: bash deploy-order-digital-ocean.sh API-TOKEN-FROM-STEP-1 parameters.yml dbusername dbpassword https domainname sslcertificate sslprivatekey
+	
 
 
 7. If the browser window with this URL does not open automatically at the end of the previous step, visit http://IPADDRESS/order/directory/admin/first-time-login-generation-init/ to generate the initial Administrator account, where IPADDRESS is the IP address of the server. Wait until the site redirects to the log in screen (it might take a while.)

@@ -1185,9 +1185,9 @@ class TransResRequestUtil
                     //$msgInfo = $emailBody;
 
                     //add the following sentence into the body of the email:
-                    // This request is being processed and a notification will be sent out once it has been completed and the deliverables (if any) are ready for pick up.
+                    // This request is being processed and a notification will be sent out once it has been completed and the deliverables (if any) are ready for pick up. There are no materials ready for pick up yet.
                     $emailBody = $emailBody . $break.$break .
-                        "This request is being processed and a notification will be sent out once it has been completed and the deliverables (if any) are ready for pick up.";
+                        "This request is being processed and a notification will be sent out once it has been completed and the deliverables (if any) are ready for pick up. There are no materials ready for pick up yet.";
 
                     //send confirmation email
                     $msgInfo = $this->sendRequestNotificationEmails($transresRequest,$subject,$emailBody,$testing);
