@@ -137,6 +137,8 @@ class DashboardUtil
             "58. Number of unique successful logins per site per month" => "successful-unique-logins-site-month",
             "59. Number of unique successful logins per site per week" => "successful-unique-logins-site-week",
 
+            //"60. PIs with most projects" => "pis-with-most-projects",
+            //"61. PIs with highest expenditures" => "pis-with-highest-expenditures",
 
             "" => "",
             "" => "",
@@ -5246,7 +5248,17 @@ class DashboardUtil
             $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack");
         }
 
+        //"60. PIs with most projects" => "pis-with-most-projects"
+        //for 60 total their project requests in any status except Draft or Canceled
+        if( $chartType == "pis-with-most-projects" ) {
 
+        }
+
+        //"61. PIs with highest expenditures" => "pis-with-highest-expenditures"
+        //for 61 total their paid invoices with status "Paid" for the time period in the filter well
+        if( $chartType == "pis-with-highest-expenditures" ) {
+
+        }
 
         if( $chartType == "" ) {
 
