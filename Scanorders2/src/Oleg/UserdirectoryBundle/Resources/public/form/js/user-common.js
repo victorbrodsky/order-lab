@@ -169,6 +169,8 @@ function specificRegularCombobox( comboboxEl ) {
 //            //comboboxEl.tooltip();
 //        }
 
+    //Disabling Chrome Autofill (autocomplete="new-password" should work as well)
+    $('input.select2-input').attr('autocomplete', "xxxxxxxxxxx");
 }
 
 
