@@ -191,6 +191,8 @@ class UserSimpleType extends AbstractType
 
         if( $defaultPrimaryPublicUserIdType ) {
             $paramArr['data'] = $defaultPrimaryPublicUserIdType;
+        } else {
+            $paramArr['data'] = null;
         }
         //echo "data=".$paramArr['data']."<br>";
 
