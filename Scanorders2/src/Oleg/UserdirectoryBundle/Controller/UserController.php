@@ -1855,6 +1855,7 @@ class UserController extends Controller
             "error" => "Unknown Error"
         );
 
+        $keytype = $request->get('keytype');
         $fieldId = $request->get('fieldId');
         $sitename = $request->get('sitename');
         $otherUserParam = $request->get('otherUserParam');
@@ -1906,7 +1907,6 @@ class UserController extends Controller
             $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($publicUserId);
             if (!$user) {
                 $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByEmailCanonical($email);
-
             }
             if (!$user) {
                 $users = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByUserInfoEmail($email);
@@ -1985,6 +1985,12 @@ class UserController extends Controller
             }
 
         }
+
+        //TODO:
+        //check if the user email extension corresponds to the keytype (Authentication field)
+        //check only for two ldap settings (ldapMapperEmail and ldapMapperEmail2)
+        exit("keytype=".$keytype);
+
 
         //ldap-user and ldap2-user must be created in the user type (Primary Public User ID Types)
         //https://directory.weill.cornell.edu/person/profile/dis9070

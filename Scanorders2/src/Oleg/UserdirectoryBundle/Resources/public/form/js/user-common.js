@@ -1689,6 +1689,8 @@ function addNewUserAction( addUserBtn, fieldId, sitename, otherUserParam ) {
 
     //console.log("add New UserAction: Add New User Ajax");
 
+    var keytype = holder.find('#oleg_userdirectorybundle_user_keytype').select2('val');
+
     var cwid = holder.find("#oleg_userdirectorybundle_user_primaryPublicUserId").val();
     //console.log("cwid="+cwid);
     //var userid = $("#add-new-user-userid").val();
@@ -1756,7 +1758,8 @@ function addNewUserAction( addUserBtn, fieldId, sitename, otherUserParam ) {
             lastname: lastname,
             phone: phone,
             administrativetitle: administrativetitle,
-            institution: institution
+            institution: institution,
+            keytype: keytype
         },
         dataType: 'json',
         async: asyncflag
