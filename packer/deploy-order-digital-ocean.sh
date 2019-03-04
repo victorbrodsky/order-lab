@@ -146,7 +146,7 @@ sleep 120
 
 #DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/"
 
-if [ ! -z "$https" ] && [ "$https" = "https" ]
+if [ ! -z "$domainname" ]
   then 	
 	#check and delete existing domain DNS records www
 	#1) doctl compute domain records list $domainname
@@ -165,6 +165,10 @@ if [ ! -z "$https" ] && [ "$https" = "https" ]
 	#doctl compute domain records create $domainname --record-type A --record-name www --record data $DROPLETIP -v
 	DOMAIN=$(doctl compute domain records create $domainname --record-type A --record-name www --record-data $DROPLETIP -v)
 	echo "DOMAIN=$DOMAIN"
+fi
+
+if [ ! -z "$https" ] && [ "$https" = "https" ]
+  then 	
 	DROPLETIPWEB="http://www.$domainname/order/directory/admin/first-time-login-generation-init/https"
   else
     DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/"
