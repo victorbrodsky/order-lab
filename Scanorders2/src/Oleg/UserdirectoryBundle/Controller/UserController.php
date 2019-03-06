@@ -1965,6 +1965,8 @@ class UserController extends Controller
         } else {
             $authUtil = new AuthUtil($this->container,$em);
             $searchRes = $authUtil->searchLdap($publicUserId);
+            echo "$searchRes <br>";
+            print_r($searchRes);
         }
 
         $identifierKeytype = null;
