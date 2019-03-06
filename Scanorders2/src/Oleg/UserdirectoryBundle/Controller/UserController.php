@@ -1762,7 +1762,7 @@ class UserController extends Controller
             $primaryPublicUserId = $firstEmailPart;
         }
 
-        if( !$primaryPublicUserId ) {
+        if( !$primaryPublicUserId && $inputType != "lastName" ) {
             //exit('exit user search no primaryPublicUserId');
             $json = json_encode($resArr);
             $response = new Response($json);
@@ -1771,7 +1771,7 @@ class UserController extends Controller
         }
 
         $authUtil = $this->get('authenticator_utility');
-        if(0) {
+        if( $inputType == "lastName" ) {
             //TODO: test multiple search results
             $searchRes = $authUtil->searchMultipleUserLdap($searchvalue, $inputType);
             echo "<pre>";
