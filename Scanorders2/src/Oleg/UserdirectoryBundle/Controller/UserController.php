@@ -2035,7 +2035,7 @@ class UserController extends Controller
         //$emailMapperPostfix2 = $userSecUtil->getSiteSettingParameter("ldapMapperEmail2");
         //echo "ldapMapperPrimaryPublicUserIdType1=$ldapMapperPrimaryPublicUserIdType1; ldapMapperPrimaryPublicUserIdType2=$ldapMapperPrimaryPublicUserIdType2 <br>";
         //exit("keytype=$keytype; keytypeEntity=$keytypeEntity; emailMapperPostfix1=$emailMapperPostfix1; emailMapperPostfix2=$emailMapperPostfix2");
-        exit("username=$username");
+        //exit("username=$username");
 
         //ldap-user and ldap2-user must be created in the user type (Primary Public User ID Types)
         //https://directory.weill.cornell.edu/person/profile/dis9070
