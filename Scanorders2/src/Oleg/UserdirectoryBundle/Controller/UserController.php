@@ -1772,6 +1772,7 @@ class UserController extends Controller
 
         $authUtil = $this->get('authenticator_utility');
         if(0) {
+            //TODO: test multiple search results
             $searchRes = $authUtil->searchMultipleUserLdap($searchvalue, $inputType);
             echo "<pre>";
             print_r($searchRes);
@@ -1965,8 +1966,6 @@ class UserController extends Controller
         } else {
             $authUtil = new AuthUtil($this->container,$em);
             $searchRes = $authUtil->searchLdap($publicUserId);
-            //echo "$searchRes <br>";
-            //print_r($searchRes);
         }
 
         $identifierKeytype = null;
