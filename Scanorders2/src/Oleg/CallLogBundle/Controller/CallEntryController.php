@@ -157,7 +157,7 @@ class CallEntryController extends Controller
         }
 
         if( $messages && count($messages)>0 ) {
-            $title = $title . " (".$messages->getTotalItemCount()." matching entires)";
+            $title = $title . " (".$messages->getTotalItemCount()." matching entries)";
         }
         
         return array(
