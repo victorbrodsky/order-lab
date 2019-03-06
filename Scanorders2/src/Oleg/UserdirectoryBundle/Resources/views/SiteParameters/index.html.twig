@@ -351,15 +351,13 @@
             </tr>
 
 
-            {#AD/LDAP#}
             <tr>
                 <td class="rowlink-skip" colspan="3" align="center">
-                    <h3>AD/LDAP:</h3>
+                    <h3>General AD/LDAP Settings:</h3>
                 </td>
             </tr>
             <tr>
                 <td>Send request to both authentication Active Directory/LDAP servers when the first is selected for a single log in attempt</td>
-                {#<td>{{ entity.ldapAll }}</td>#}
                 {% set ldapAll = 'No' %}
                 {% if entity.ldapAll == true %}
                     {% set ldapAll = 'Yes' %}
@@ -372,6 +370,28 @@
                 <td>{{ entity.defaultPrimaryPublicUserIdType }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'defaultPrimaryPublicUserIdType'}) }}">Edit</a></td>
             </tr>
+
+            {#AD/LDAP#}
+            <tr>
+                <td class="rowlink-skip" colspan="3" align="center">
+                    <h3>AD/LDAP:</h3>
+                </td>
+            </tr>
+            {#<tr>#}
+                {#<td>Send request to both authentication Active Directory/LDAP servers when the first is selected for a single log in attempt</td>#}
+                {#<td>{{ entity.ldapAll }}</td>#}
+                {#{% set ldapAll = 'No' %}#}
+                {#{% if entity.ldapAll == true %}#}
+                    {#{% set ldapAll = 'Yes' %}#}
+                {#{% endif %}#}
+                {#<td>{{ ldapAll }}</td>#}
+                {#<td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'ldapAll'}) }}">Edit</a></td>#}
+            {#</tr>#}
+            {#<tr>#}
+                {#<td>Default Primary Public User ID Type:</td>#}
+                {#<td>{{ entity.defaultPrimaryPublicUserIdType }}</td>#}
+                {#<td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'defaultPrimaryPublicUserIdType'}) }}">Edit</a></td>#}
+            {#</tr>#}
 
             <tr>
                 <td>AD/LDAP Server Address</td>
@@ -412,6 +432,11 @@
                 <td>LDAP/AD Mapper Email Postfix (med.cornell.edu):</td>
                 <td>{{ entity.ldapMapperEmail }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'ldapMapperEmail'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>LDAP/AD Mapper Primary Public User ID Type:</td>
+                <td>{{ entity.ldapMapperPrimaryPublicUserIdType }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'ldapMapperPrimaryPublicUserIdType'}) }}">Edit</a></td>
             </tr>
 
             {#LDAP Server 2#}
@@ -460,6 +485,11 @@
                 <td>LDAP/AD Mapper Email Postfix (nyp.org):</td>
                 <td>{{ entity.ldapMapperEmail2 }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'ldapMapperEmail2'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>LDAP/AD Mapper Primary Public User ID Type:</td>
+                <td>{{ entity.ldapMapperPrimaryPublicUserIdType2 }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'ldapMapperPrimaryPublicUserIdType2'}) }}">Edit</a></td>
             </tr>
             {#<tr>#}
                 {#<td>Default Primary Public User ID Type:</td>#}

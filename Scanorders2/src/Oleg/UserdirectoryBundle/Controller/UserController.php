@@ -1848,7 +1848,7 @@ class UserController extends Controller
     public function addNewUserAjax($request) {
 
         $testing = false;
-        //$testing = true;
+        $testing = true;
 
         $resArr = array(
             "flag" => "NOTOK",
@@ -1960,13 +1960,20 @@ class UserController extends Controller
         }//if user
 
         //first search this user if exists in ldap directory
-        $authUtil = new AuthUtil($this->container,$em);
-        $searchRes = $authUtil->searchLdap($publicUserId);
+        if( $testing ) {
+            $searchRes = array('dummy'); //testing
+        } else {
+            $authUtil = new AuthUtil($this->container,$em);
+            $searchRes = $authUtil->searchLdap($publicUserId);
+        }
+
+        $identifierKeytype = null;
         if( $searchRes == NULL || count($searchRes) == 0 ) {
             //$msg = "LdapAuthentication: can not find user by publicUserId=".$publicUserId;
             //echo "msg=$msg <br>";
             //create local user: oli2002c_@_local-user
             $username = $publicUserId . "_@_" . "local-user";
+            $identifierKeytype = "local-user";
         } else {
 
             //create WCMC LDAP user: oli2002c_@_ldap-user
@@ -1977,19 +1984,57 @@ class UserController extends Controller
             $emailMapperPostfix1 = $userSecUtil->getSiteSettingParameter("ldapMapperEmail");
             if( $emailMapperPostfix1 && $secondEmailPart == $emailMapperPostfix1 ) {
                 $username = $publicUserId . "_@_" . "ldap-user";
+                $identifierKeytype = "ldap-user";
             } else {
                 $emailMapperPostfix2 = $userSecUtil->getSiteSettingParameter("ldapMapperEmail2");
                 if( $emailMapperPostfix2 && $secondEmailPart == $emailMapperPostfix2 ) {
                     $username = $publicUserId . "_@_" . "ldap2-user";
+                    $identifierKeytype = "ldap2-user";
                 }
             }
 
         }
 
-        //TODO:
-        //check if the user email extension corresponds to the keytype (Authentication field)
+        //Additional check if the user email extension corresponds to the keytype (Authentication field)
         //check only for two ldap settings (ldapMapperEmail and ldapMapperEmail2)
-        exit("keytype=".$keytype);
+        if( $keytype ) {
+            $keytypeEntity = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->find($keytype);
+            if( $keytypeEntity ) {
+                $authError = null;
+                //ldapMapperPrimaryPublicUserIdType and ldapMapperPrimaryPublicUserIdType2
+                $ldapMapperPrimaryPublicUserIdType1 = $userSecUtil->getSiteSettingParameter("ldapMapperPrimaryPublicUserIdType");
+                //echo "ldapMapperPrimaryPublicUserIdType1=".$ldapMapperPrimaryPublicUserIdType1->getId()."<br>";
+                if( $ldapMapperPrimaryPublicUserIdType1 && $keytypeEntity->getId() == $ldapMapperPrimaryPublicUserIdType1->getId() ) {
+                    //echo "$identifierKeytype != ldap-user <br>";
+                    //ldap-user
+                    if( $identifierKeytype != "ldap-user" ) {
+                        $authError = "Authentication $keytypeEntity does not match the email extension $secondEmailPart";
+                    }
+                } else {
+                    $ldapMapperPrimaryPublicUserIdType2 = $userSecUtil->getSiteSettingParameter("ldapMapperPrimaryPublicUserIdType2");
+                    if($ldapMapperPrimaryPublicUserIdType2 && $keytypeEntity->getId() == $ldapMapperPrimaryPublicUserIdType2->getId() ) {
+                        //echo "$identifierKeytype != ldap2-user <br>";
+                        //ldap2-user
+                        if( $identifierKeytype != "ldap2-user" ) {
+                            $authError = "Authentication $keytypeEntity does not match the email extension $secondEmailPart";
+                        }
+                    }
+                }
+
+                if( $authError ) {
+                    $resArr["error"] = $authError;
+
+                    $json = json_encode($resArr);
+                    $response = new Response($json);
+                    $response->headers->set('Content-Type', 'application/json');
+                    return $response;
+                }
+            }
+        }
+        //$emailMapperPostfix1 = $userSecUtil->getSiteSettingParameter("ldapMapperEmail");
+        //$emailMapperPostfix2 = $userSecUtil->getSiteSettingParameter("ldapMapperEmail2");
+        //echo "ldapMapperPrimaryPublicUserIdType1=$ldapMapperPrimaryPublicUserIdType1; ldapMapperPrimaryPublicUserIdType2=$ldapMapperPrimaryPublicUserIdType2 <br>";
+        //exit("keytype=$keytype; keytypeEntity=$keytypeEntity; emailMapperPostfix1=$emailMapperPostfix1; emailMapperPostfix2=$emailMapperPostfix2");
 
 
         //ldap-user and ldap2-user must be created in the user type (Primary Public User ID Types)

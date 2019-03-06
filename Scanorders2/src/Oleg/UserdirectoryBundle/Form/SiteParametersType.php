@@ -246,6 +246,11 @@ class SiteParametersType extends AbstractType
                 'label'=>'LDAP/AD Mapper Email Postfix (med.cornell.edu):',
                 'attr' => array('class'=>'form-control')
             ));
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'ldapMapperPrimaryPublicUserIdType' )
+            $builder->add('ldapMapperPrimaryPublicUserIdType',null,array(
+                'label'=>'LDAP/AD Mapper Primary Public User ID Type:',
+                'attr' => array('class'=>'combobox')
+            ));
         //////////////// EOF LDAP 1 ////////////////////
 
 
@@ -297,6 +302,11 @@ class SiteParametersType extends AbstractType
             $builder->add('ldapMapperEmail2',null,array(
                 'label'=>'LDAP/AD Mapper Email Postfix (nyp.org):',
                 'attr' => array('class'=>'form-control')
+            ));
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'ldapMapperPrimaryPublicUserIdType2' )
+            $builder->add('ldapMapperPrimaryPublicUserIdType2',null,array(
+                'label'=>'LDAP/AD Mapper Primary Public User ID Type:',
+                'attr' => array('class'=>'combobox')
             ));
 
 //        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'defaultPrimaryPublicUserIdType2' )
