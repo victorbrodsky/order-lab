@@ -1848,7 +1848,7 @@ class UserController extends Controller
     public function addNewUserAjax($request) {
 
         $testing = false;
-        $testing = true;
+        //$testing = true;
 
         $resArr = array(
             "flag" => "NOTOK",
@@ -2006,7 +2006,6 @@ class UserController extends Controller
                 //echo "ldapMapperPrimaryPublicUserIdType1=".$ldapMapperPrimaryPublicUserIdType1->getId()."<br>";
                 if( $ldapMapperPrimaryPublicUserIdType1 && $keytypeEntity->getId() == $ldapMapperPrimaryPublicUserIdType1->getId() ) {
                     //echo "$identifierKeytype != ldap-user <br>";
-                    //ldap-user
                     if( $identifierKeytype != "ldap-user" ) {
                         $authError = "Authentication $keytypeEntity does not match the email extension $secondEmailPart";
                     }
@@ -2014,7 +2013,6 @@ class UserController extends Controller
                     $ldapMapperPrimaryPublicUserIdType2 = $userSecUtil->getSiteSettingParameter("ldapMapperPrimaryPublicUserIdType2");
                     if($ldapMapperPrimaryPublicUserIdType2 && $keytypeEntity->getId() == $ldapMapperPrimaryPublicUserIdType2->getId() ) {
                         //echo "$identifierKeytype != ldap2-user <br>";
-                        //ldap2-user
                         if( $identifierKeytype != "ldap2-user" ) {
                             $authError = "Authentication $keytypeEntity does not match the email extension $secondEmailPart";
                         }
