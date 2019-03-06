@@ -49,21 +49,24 @@
     {% for info in form.infos %}
         {{ formmacros.field(info.firstName) }}
 
-        {#{{ formmacros.field(info.lastName) }}#}
-        {#TODO: test multiple last name result#}
-        <p>
-        <div class="row">
-            <div class="col-xs-6" align="right">
-                {{ form_label(info.lastName) }}
-            </div>
-            <div class="col-xs-6" align="left" class="form_body_toggle_btn">
-                <div class="input-group input-group-reg">
-                    {{ form_widget(info.lastName) }}
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-search" onclick="populateUserFromLdap(this,'lastName')"></i></span>
+        {% if ldapSearchByLastName is defined and ldapSearchByLastName == true %}
+            {#TODO: test multiple last name result#}
+            <p>
+            <div class="row">
+                <div class="col-xs-6" align="right">
+                    {{ form_label(info.lastName) }}
+                </div>
+                <div class="col-xs-6" align="left" class="form_body_toggle_btn">
+                    <div class="input-group input-group-reg">
+                        {{ form_widget(info.lastName) }}
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-search" onclick="populateUserFromLdap(this,'lastName')"></i></span>
+                    </div>
                 </div>
             </div>
-        </div>
-        </p>
+            </p>
+        {% else %}
+            {{ formmacros.field(info.lastName) }}
+        {% endif %}
 
         {#{{ usermacros.emailPhoneField(info.email,cycle,'email',"") }}#}
         <p>

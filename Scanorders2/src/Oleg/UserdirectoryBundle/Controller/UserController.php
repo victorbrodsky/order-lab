@@ -1698,7 +1698,8 @@ class UserController extends Controller
             'roles' => $rolesArr,
             'container' => $this->container,
             'em' => $em,
-            'primaryPublicUserIdLabel' => $primaryPublicUserIdLabel
+            'primaryPublicUserIdLabel' => $primaryPublicUserIdLabel,
+            'ldapSearchByLastName' => true
         );
 
 //        $form = $this->createForm(new UserType($params), $user, array(

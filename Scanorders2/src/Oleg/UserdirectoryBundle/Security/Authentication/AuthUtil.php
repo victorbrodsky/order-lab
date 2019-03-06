@@ -1117,7 +1117,7 @@ class AuthUtil {
         //echo "count=".count($ldapBindDNArr)."<br>";
         foreach( $ldapBindDNArr as $ldapBindDN) {
             //$this->logger->notice("search Ldap: ldapBindDN=".$ldapBindDN);
-            echo "filter=".$filter."; ldapBindDN=".$ldapBindDN."<br>";
+            echo "filter=".$filter."; ldapBindDN=[".$ldapBindDN."]<br>";
             $sr = ldap_search($cnx, $ldapBindDN, $filter, $LDAPFieldsToFind);
             //$filter = "(uid=*)";
             //$sr = ldap_search($cnx, $ldapBindDN, $filter);
@@ -1134,9 +1134,13 @@ class AuthUtil {
                 $info = ldap_get_entries($cnx, $sr);
                 echo "info count=" . $info["count"] . "<br>";
                 //$info = $this->getLdapEntries($cnx, $sr);
-                //echo "<br><br>############info:<pre>";
-                //print_r($info);
-                //echo "</pre>#############<br><br>";
+                echo "<br><br>############info:<pre>";
+                print_r($info);
+                echo "</pre>#############<br><br>";
+
+                foreach($info as $infoThis) {
+                    echo "sn=".$infoThis['sn'][0];
+                }
 
                 $infoArr[] = $info;
 
