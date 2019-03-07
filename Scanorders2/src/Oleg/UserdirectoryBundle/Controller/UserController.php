@@ -1698,8 +1698,7 @@ class UserController extends Controller
             'roles' => $rolesArr,
             'container' => $this->container,
             'em' => $em,
-            'primaryPublicUserIdLabel' => $primaryPublicUserIdLabel,
-            'ldapSearchByLastName' => true
+            'primaryPublicUserIdLabel' => $primaryPublicUserIdLabel
         );
 
 //        $form = $this->createForm(new UserType($params), $user, array(
@@ -1723,6 +1722,7 @@ class UserController extends Controller
             'sitename' => $this->container->getParameter('employees.sitename'),
             'userclone' => $subjectUser,
             'postData' => $request->query->all(),
+            'ldapSearchByLastName' => false
             //'title' => 'Create New User'
         );
 
