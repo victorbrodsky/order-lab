@@ -307,7 +307,7 @@
                                 {% if eventObjectTypeId is defined and eventObjectTypeId %}
                                     <li>
                                     <a href="{{ path('translationalresearch_event-log-per-object_log', { 'filter[objectType][]': eventObjectTypeId, 'filter[objectId]': project.id}) }}"
-                                        >View Event Log</a>
+                                        >Associated Events</a>
                                     {#<a href="{{ path('translationalresearch_event-log-per-object_log', { 'objectType': eventObjectTypeId, 'objectId': project.id}) }}"#}
                                     {#>View Event Log</a>#}
                                     </li>
@@ -369,7 +369,7 @@
                                 {% if project.getRequests()|length > 0 %}
                                     <li>
                                         <a href="{{ path(translationalresearch_sitename~'_request_index', { 'id': project.id }) }}"
-                                           >Show Associated Requests</a>
+                                           >Associated Work Requests</a>
                                     </li>
                                 {% endif %}
                             {#{% endif %}#}

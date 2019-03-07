@@ -42,7 +42,7 @@ class DefaultController extends Controller
 
 
     /**
-     * @Route("/download/humanTissueForm", name="translationalresearch_download_humanTissueForm")
+     * @Route("/download/human-tissue-form", name="translationalresearch_download_humanTissueForm")
      */
     public function downloadHumanTissueFormAction( Request $request ) {
 

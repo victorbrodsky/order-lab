@@ -30,7 +30,7 @@
         {% if project.getRequests()|length > 0 %}
             <a class="btn btn-primary"
                href="{{ path(translationalresearch_sitename~'_request_index', { 'id': project.id }) }}"
-               target="_blank">Show associated requests</a>
+               target="_blank">Associated Work Requests</a>
         {% endif %}
 
         {#See event log#}
@@ -38,7 +38,7 @@
             {% if eventObjectTypeId is defined and eventObjectTypeId %}
                 <a class="btn btn-primary"
                    href="{{ path('translationalresearch_event-log-per-object_log', { 'filter[objectType][]': eventObjectTypeId, 'filter[objectId]': project.id}) }}"
-                   target="_blank">View Event Log</a>
+                   target="_blank">Associated Events</a>
                 {#<a class="btn btn-primary"#}
                    {#href="{{ path('translationalresearch_event-log-per-object_log', { 'objectType': eventObjectTypeId, 'objectId': project.id}) }}"#}
                    {#target="_blank">View Event Log</a>#}

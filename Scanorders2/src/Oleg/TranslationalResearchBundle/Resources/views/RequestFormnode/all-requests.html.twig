@@ -180,7 +180,7 @@
                             {% if transresRequest.project.getRequests()|length > 0 %}
                                 <li>
                                     <a href="{{ path(translationalresearch_sitename~'_request_formnode_index', { 'id': transresRequest.project.id }) }}"
-                                       target="_blank">Show associated requests for this Project {{ transresRequest.project.getOid() }} </a>
+                                       target="_blank">Associated Work Requests for this Project {{ transresRequest.project.getOid() }} </a>
                                 </li>
                             {% endif %}
 

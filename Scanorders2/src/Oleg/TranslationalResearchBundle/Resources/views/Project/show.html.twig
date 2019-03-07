@@ -18,15 +18,6 @@
     </h4>
     <br>
 
-    {#{% if is_granted('ROLE_TRANSRES_ADMIN') or transres_util.isProjectEditableByRequester(project) %}#}
-    {% if transres_permission_util.hasProjectPermission('update',project) %}
-        <p>
-            <a class="btn btn-warning" href="{{ path(translationalresearch_sitename~'_project_edit', { 'id': project.id }) }}">Edit Project Request</a>
-        </p>
-        <br>
-    {% endif %}
-
-
     {% if project.state == "final_approved" %}
         {#Submit a New Request#}
         {% if transres_request_util.isRequestCanBeCreated(project) == 1 %}
@@ -39,7 +30,7 @@
         {% if project.getRequests()|length > 0 %}
             <a class="btn btn-primary"
                href="{{ path(translationalresearch_sitename~'_request_index', { 'id': project.id }) }}"
-               target="_blank">Show associated requests</a>
+               target="_blank">Associated Work Requests</a>
         {% endif %}
 
         {#See event log#}
@@ -48,14 +39,30 @@
             {% if eventObjectTypeId is defined and eventObjectTypeId %}
                 <a class="btn btn-primary"
                    href="{{ path('translationalresearch_event-log-per-object_log', { 'filter[objectType][]': eventObjectTypeId, 'filter[objectId]': project.id}) }}"
-                   target="_blank">View Event Log</a>
+                   target="_blank">Associated Events</a>
                 {#<a class="btn btn-primary"#}
                    {#href="{{ path('translationalresearch_event-log-per-object_log', { 'objectType': eventObjectTypeId, 'objectId': project.id}) }}"#}
                    {#target="_blank">View Event Log</a>#}
             {% endif %}
         {% endif %}
-        <br><br>
     {% endif %}
+
+    {#{% if is_granted('ROLE_TRANSRES_ADMIN') or transres_util.isProjectEditableByRequester(project) %}#}
+    {% if transres_permission_util.hasProjectPermission('update',project) %}
+        {#<p>#}
+        <a class="btn btn-warning" href="{{ path(translationalresearch_sitename~'_project_edit', { 'id': project.id }) }}">Edit Project Request</a>
+        {#</p>#}
+        {#<br>#}
+    {% endif %}
+
+    {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
+        <a class="btn btn-danger"
+           general-data-confirm="Are you sure you want to delete project {{ project.oid }}?"
+           href="{{ path(translationalresearch_sitename~'_project_delete_get', { 'id': project.id }) }}"
+           target="_blank">Delete Project Request (Visible to Platform Admin Only)</a>
+    {% endif %}
+
+    <br><br>
 
     {% set sitename = translationalresearch_sitename %}
 
@@ -97,14 +104,15 @@
             <a href="{{ path(translationalresearch_sitename~'_project_index') }}">Back to the list</a>
         </p>
 
-        {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
+        {#{% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}#}
             {#{{ form_start(delete_form) }}#}
                 {#<input class="btn btn-danger" type="submit" value="Delete Project (Visible to Platform Admin only)">#}
             {#{{ form_end(delete_form) }}#}
-            <a general-data-confirm="Are you sure you want to delete project {{ project.oid }}?"
-               href="{{ path(translationalresearch_sitename~'_project_delete_get', { 'id': project.id }) }}"
-               target="_blank">Delete Project Request (Visible to Platform Admin Only)</a>
-        {% endif %}
+            {#<a class="btn btn-danger"#}
+               {#general-data-confirm="Are you sure you want to delete project {{ project.oid }}?"#}
+               {#href="{{ path(translationalresearch_sitename~'_project_delete_get', { 'id': project.id }) }}"#}
+               {#target="_blank">Delete Project Request (Visible to Platform Admin Only)</a>#}
+        {#{% endif %}#}
 
     </div>
 
