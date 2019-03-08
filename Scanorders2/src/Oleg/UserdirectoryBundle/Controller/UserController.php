@@ -1691,6 +1691,9 @@ class UserController extends Controller
 
         $primaryPublicUserIdLabel = $userSecUtil->getSiteSettingParameter('noticeLdapName');
 
+        //set default to local user OlegUserdirectoryBundle:UsernameType
+        $defaultPrimaryPublicUserIdType = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findOneByAbbreviation("local-user");
+
         $params = array(
             'cycle' => 'create',
             'user' => $user,
@@ -1698,7 +1701,8 @@ class UserController extends Controller
             'roles' => $rolesArr,
             'container' => $this->container,
             'em' => $em,
-            'primaryPublicUserIdLabel' => $primaryPublicUserIdLabel
+            'primaryPublicUserIdLabel' => $primaryPublicUserIdLabel,
+            'defaultPrimaryPublicUserIdType' => $defaultPrimaryPublicUserIdType
         );
 
 //        $form = $this->createForm(new UserType($params), $user, array(

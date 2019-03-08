@@ -23,10 +23,6 @@
 
 {{ form_start(form) }}
 
-    {% if form.keytype is defined %}
-        {{ formmacros.field(form.keytype) }}
-    {% endif %}
-
     {#{{ formmacros.field(form.primaryPublicUserId) }}#}
     <p>
     <div class="row">
@@ -83,6 +79,10 @@
             </div>
         </div>
         </p>
+
+        {% if form.keytype is defined %}
+            {{ formmacros.field(form.keytype) }}
+        {% endif %}
 
         {{ usermacros.emailPhoneField(info.preferredPhone,cycle,'phone',"") }}
     {% endfor %}

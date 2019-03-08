@@ -604,11 +604,14 @@
                     {{ form_widget(filterform.principalInvestigator) }}
                 </div>
                 <div class="col-xs-1">
-                    <a data-toggle="collapse" href="#transres-AdvancedSearch">
+                    <div class="btn-group btn-group-sm">
+                    {#<a data-toggle="collapse" href="#transres-AdvancedSearch" data-toggle="button" aria-pressed="false" autocomplete="off">#}
                         {#Advanced Search#}
-                        <span class="glyphicon glyphicon-wrench"></span>
-                    </a>
-                    <button id="filter-btn" type="submit" class="btn btn-default">Filter</button>
+                        {#<span class="glyphicon glyphicon-wrench"></span>#}
+                    {#</a>#}
+                    <button data-toggle="collapse" href="#transres-AdvancedSearch" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-wrench"></span></button>
+                    <button id="filter-btn" type="submit" class="btn btn-default btn-sm">Filter</button>
+                    </div>
                 </div>
             </div>
             {#<br>#}
