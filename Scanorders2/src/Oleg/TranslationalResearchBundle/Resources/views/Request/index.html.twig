@@ -270,12 +270,16 @@
 
                             {#{% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') %}#}
                             {% if transres_permission_util.hasRequestPermission("packing-slip",transresRequest) %}
+                                {% set generatePackingSlipTitle = "Generate and view packing slip PDF" %}
+                                {% if transresRequest.packingSlipPdfs|length > 0 %}
+                                    {% set generatePackingSlipTitle = "Generate and view an updated packing slip PDF" %}
+                                {% endif %}
                                 <li class="divider"></li>
                                 <li>
                                     <a general-data-confirm="Are you sure you want to generate and view packing slip PDF?"
                                        target="_blank"
                                        href="{{ path(translationalresearch_sitename~'_generate_packing_slip', { 'id': transresRequest.id }) }}"
-                                    >Generate and view packing slip PDF</a>
+                                    >{{ generatePackingSlipTitle }}</a>
                                 </li>
                                 {% if transresRequest.packingSlipPdfs|length > 0 %}
                                     <li>

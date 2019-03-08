@@ -8,12 +8,21 @@
 
 {% block content %}
     <h4 class="text-info" align="center">
-        {{ title|raw }}
+        {{ title|raw }} <label for="download-spreadsheet-form" tabindex="0" data-toggle="tooltip" title="Download the spreadsheet with matching invoices"><span class="fa fa-file-excel-o" aria-hidden="true"></label>
     </h4>
 
     <form action="{{ path('translationalresearch_download_spreadsheet') }}" method="post">
         <input type="hidden" name="ids" value="{{ matchingStrInvoiceIds }}">
-        <input class="btn" type="submit" value="download matching invoices in CSV">
+        {#<input class="btn" type="submit" value="download matching invoices in CSV">#}
+        <button type="submit"
+                id="download-spreadsheet-form"
+                class="btn hidden"
+                aria-label="Left Align"
+                data-toggle="tooltip"
+                title="Download the spreadsheet with matching invoices"
+        >
+            {{ title|raw }} <span class="fa fa-file-excel-o" aria-hidden="true"></span>
+        </button>
     </form>
 
     <br>
@@ -327,7 +336,13 @@
         $(document).ready(function() {
             //console.log("cycle="+cycle);
             transresInvoiceItemListeneres();
+
+            $('[data-toggle="tooltip"]').tooltip();
         });
     </script>
 
+{% endblock %}
+
+{% block additionalcss %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/bmatznerfontawesome/css/font-awesome.min.css') }}" />
 {% endblock %}

@@ -3673,7 +3673,7 @@ class TransResRequestUtil
 
         //123 matching for $456
         if( $counter ) {
-            $result = $counter . " matching for Total: $" . $this->getNumberFormat($totalSum) . ", Paid: $" . $this->getNumberFormat($paidSum) . ", Unpaid: $" . $this->getNumberFormat($dueSum);
+            $result = $counter . " matching; Total: $" . $this->getNumberFormat($totalSum) . ", Paid: $" . $this->getNumberFormat($paidSum) . ", Unpaid: $" . $this->getNumberFormat($dueSum);
         } else {
             $result = $counter . " matching";
         }

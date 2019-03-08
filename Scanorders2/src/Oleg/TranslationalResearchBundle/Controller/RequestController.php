@@ -2208,7 +2208,7 @@ class RequestController extends Controller
     /**
      * Finds and displays a progress review form for this request entity.
      *
-     * @Route("/request/progress/review/{id}", name="translationalresearch_request_review_progress_state")
+     * @Route("/work-request/progress/review/{id}", name="translationalresearch_request_review_progress_state")
      * @Template("OlegTranslationalResearchBundle:Request:review.html.twig")
      * @Method("GET")
      */
@@ -2260,7 +2260,7 @@ class RequestController extends Controller
     /**
      * Finds and displays a billing review form for this request entity.
      *
-     * @Route("/request/billing/review/{id}", name="translationalresearch_request_review_billing_state")
+     * @Route("/work-request/billing/review/{id}", name="translationalresearch_request_review_billing_state")
      * @Template("OlegTranslationalResearchBundle:Request:review.html.twig")
      * @Method("GET")
      */
