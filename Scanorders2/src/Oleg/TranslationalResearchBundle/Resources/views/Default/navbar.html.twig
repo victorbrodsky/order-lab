@@ -553,28 +553,27 @@
                                 <li><a
                                         target="_blank"
                                         href="{{ path(translationalresearch_sitename~'_unpaid_invoice_reminder_show') }}"
-                                    >Send e-mail reminders for unpaid invoices now</a>
-                                    {#Send e-mail reminders now for invoices unpaid for over {{  }} days#}
+                                    >Send e-mail reminders for unpaid invoices</a>
                                 </li>
                                 <li><a
                                         target="_blank"
                                         href="{{ path(translationalresearch_sitename~'_project_reminder_show') }}"
-                                    >Send delayed project request review reminders now</a>
+                                    >Send e-mail reminders for project requests pending review</a>
                                 </li>
                                 <li><a
                                         target="_blank"
                                         href="{{ path(translationalresearch_sitename~'_request_pending_reminder_show') }}"
-                                    >Send delayed pending work request reminders now</a>
+                                    >Send e-mail reminders for work requests pending completion</a>
                                 </li>
                                 <li><a
                                         target="_blank"
                                         href="{{ path(translationalresearch_sitename~'_request_completed_reminder_show') }}"
-                                    >Send delayed completed work request reminders now</a>
+                                    >Send e-mail reminders for completed work requests without submitter notification</a>
                                 </li>
                                 <li><a
                                         target="_blank"
                                         href="{{ path(translationalresearch_sitename~'_request_completed_no_invoice_issued_reminder_show') }}"
-                                    >Send completed work request without issued invoice reminders now</a>
+                                    >Send e-mail reminders for completed work requests without invoices</a>
                                 </li>
                             {% endif %}
 
