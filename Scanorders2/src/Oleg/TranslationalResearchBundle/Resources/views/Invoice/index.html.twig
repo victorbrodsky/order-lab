@@ -8,7 +8,13 @@
 
 {% block content %}
     <h4 class="text-info" align="center">
-        {{ title|raw }} <label for="download-spreadsheet-form" tabindex="0" data-toggle="tooltip" title="Download the spreadsheet with matching invoices"><span class="fa fa-file-excel-o" aria-hidden="true"></label>
+        {{ title|raw }}
+        <label
+            for="download-spreadsheet-form" tabindex="0"
+            data-toggle="tooltip"
+            title="Download the spreadsheet with matching invoices">
+            <span class="fa fa-file-excel-o" aria-hidden="true"></span>
+        </label>
     </h4>
 
     <form action="{{ path('translationalresearch_download_spreadsheet') }}" method="post">
@@ -17,12 +23,10 @@
         <button type="submit"
                 id="download-spreadsheet-form"
                 class="btn hidden"
-                aria-label="Left Align"
-                data-toggle="tooltip"
-                title="Download the spreadsheet with matching invoices"
-        >
-            {{ title|raw }} <span class="fa fa-file-excel-o" aria-hidden="true"></span>
-        </button>
+                {#aria-label="Left Align"#}
+                {#data-toggle="tooltip"#}
+                {#title="Download the spreadsheet with matching invoices"#}
+        >Download the spreadsheet with matching invoices</button>
     </form>
 
     <br>
