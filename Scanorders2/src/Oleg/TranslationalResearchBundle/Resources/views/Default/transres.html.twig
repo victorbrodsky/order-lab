@@ -1244,7 +1244,8 @@
             {% endif %}
             <p>
                 {#Reviewed by {{ transres.userHtml(formreview.vars.value.reviewedBy) }} on {{ updatedate|date("m/d/Y H:i") }}#}
-                Reviewed{{ reviewedBy|raw }} on {{ formreview.vars.value.updatedate|date("m/d/Y",false) }} at {{ formreview.vars.value.updatedate|date("H:i",false) }}
+                {#Reviewed{{ reviewedBy|raw }} on {{ formreview.vars.value.updatedate|date("m/d/Y \\a\\t h:i A T",false) }} }}#}
+                Reviewed{{ reviewedBy|raw }} on {{ formreview.vars.value.updatedate|date("m/d/Y \\a\\t h:i A T") }}
             </p>
         {% endif %}
 

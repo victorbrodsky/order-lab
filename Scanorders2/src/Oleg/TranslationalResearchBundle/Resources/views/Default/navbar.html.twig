@@ -119,7 +119,7 @@
 
                                 {#{% if transres_util.hasReviewerRoles() %}#}
                                 <li id="nav-bar-translationalresearch-my-review-projects">
-                                    <a href="{{ path(translationalresearch_sitename~'_my_reviewed_project_index') }}">Projects I have reviewed (History)</a>
+                                    <a href="{{ path(translationalresearch_sitename~'_my_reviewed_project_index') }}">Projects I Have Reviewed (History)</a>
                                 </li>
 
                                 {#<li id="nav-bar-translationalresearch-my-review-projects">#}
@@ -290,7 +290,7 @@
                             </li>
 
                             <li>
-                                <a href="{{ path(translationalresearch_sitename~'_workflow_show',{'type':'work-requests-work-progress'}) }}">Work Request Completion Progress</a>
+                                <a href="{{ path(translationalresearch_sitename~'_workflow_show',{'type':'work-requests-completion-progress'}) }}">Work Request Completion Progress</a>
                             </li>
 
                             <hr style="margin-top: 10px; margin-bottom: 10px;">
@@ -554,6 +554,7 @@
                                         target="_blank"
                                         href="{{ path(translationalresearch_sitename~'_unpaid_invoice_reminder_show') }}"
                                     >Send e-mail reminders for unpaid invoices now</a>
+                                    {#Send e-mail reminders now for invoices unpaid for over {{  }} days#}
                                 </li>
                                 <li><a
                                         target="_blank"

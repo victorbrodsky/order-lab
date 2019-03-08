@@ -675,7 +675,7 @@ class ProjectController extends Controller
             $dql->andWhere($myReviewedProjectsCriterion);
 
             $dqlParameters["userId"] = $user->getId();
-            $title = "Projects I have reviewed (History)";
+            $title = "Projects I Have Reviewed (History)";
         }
 
         if( $routeName == "translationalresearch_my_pending_review_project_index" ) {
