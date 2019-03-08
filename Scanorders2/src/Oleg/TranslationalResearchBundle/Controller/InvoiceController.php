@@ -1694,7 +1694,8 @@ class InvoiceController extends Controller
         $idsArr = explode('-', $ids);
         $idsArr = array_reverse($idsArr);
 
-        $fileName = "Invoices".".xlsx";
+        //$fileName = "Invoices".".xlsx"; //cell type can not be set in xlsx
+        $fileName = "Invoices".".csv";
 
         $transresRequestUtil->createtInvoicesCsvSpout( $idsArr, $fileName );
 

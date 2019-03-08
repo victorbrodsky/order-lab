@@ -3759,7 +3759,8 @@ class TransResRequestUtil
     }
 
     public function createtInvoicesCsvSpout( $ids, $fileName, $limit=null ) {
-        $writer = WriterFactory::create(Type::XLSX);
+        //$writer = WriterFactory::create(Type::XLSX); //cell type can not be set in xlsx
+        $writer = WriterFactory::create(Type::CSV);
         $writer->openToBrowser($fileName);
 
         $headerStyle = (new StyleBuilder())
