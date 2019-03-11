@@ -747,9 +747,9 @@ class AuthUtil {
         $cnx = $this->connectToLdap($LDAPHost);
 
         //$filter="(ObjectClass=Person)";
-        $filter="(cn=".$username.")";
+        //$filter="(cn=".$username.")";
         //$filter = "(sAMAccountName=".$username.")";
-        //$filter = "(|(cn=$username)(sAMAccountName=$username))"; //use cn or sAMAccountName to search by username (cwid)
+        $filter = "(|(cn=$username)(sAMAccountName=$username))"; //use cn or sAMAccountName to search by username (cwid)
 
         //test
         //$LDAPUserAdmin = "cn=ro_admin,ou=sysadmins,dc=zflexsoftware,dc=com";
