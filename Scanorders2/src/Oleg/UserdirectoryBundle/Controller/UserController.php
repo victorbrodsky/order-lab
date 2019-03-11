@@ -1820,8 +1820,10 @@ class UserController extends Controller
         } else {
             //$authUtil = new AuthUtil($this->container,$em);
             $searchRes = $authUtil->searchLdap($primaryPublicUserId,1);
+            echo "1 searchRes=".$searchRes."<br>";
             if( $searchRes == NULL || count($searchRes) == 0 ) {
                 $searchRes = $authUtil->searchLdap($primaryPublicUserId,2);
+                echo "2 searchRes=".$searchRes."<br>";
             }
         }
 
