@@ -20,6 +20,8 @@ $(document).ready(function() {
     //console.log('transres-filterbtn.js');
     changeFilterColorButton();
 
+    toggleBtnListener();
+
 });
 
 function changeFilterColorButton() {
@@ -59,5 +61,23 @@ function changeFilterColorButton() {
         filterBtn.addClass('btn-success');
     }
 
+}
+
+function toggleBtnListener() {
+    $('.toggle-btn-state').click(function(e) {
+        //e.preventDefault();
+        //$(this).addClass('active');
+        //$(this).css("background-color","grey");
+
+        //$('.Button').not(this).removeClass('active');
+        $(this).toggleClass('toggle-btn-state-active');
+        e.preventDefault();
+    });
+
+
+    //if #transres-AdvancedSearch is "collapse in" => grey
+    if( $("#transres-AdvancedSearch").hasClass("in") ) {
+        $('.toggle-btn-state').toggleClass('toggle-btn-state-active');
+    }
 }
 
