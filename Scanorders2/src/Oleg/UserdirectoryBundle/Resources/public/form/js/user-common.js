@@ -1443,7 +1443,6 @@ function constructNewUserModal(btnDom, sitename, otherUserParam, comboboxValue) 
 
 
     //console.log("before setKeytypeByEmailListener");
-    //alert("before setKeytypeByEmailListener");
     setKeytypeByEmailListener($('#user-add-new-user-instance'));
 
 }
@@ -1669,7 +1668,7 @@ function populateUserFromLdap(searchBtn,inputType) {
 //TODO: get corresponding keytype (PrimaryPublicUserIdType) from email extension
 var emailUsernametypeMap = [];
 function setKeytypeByEmailListener(modalHtml) {
-    console.log("setKeytypeByEmailListener");
+    //console.log("setKeytypeByEmailListener");
 
     //1) set map array "email extension" - "keytype id" (OlegUserdirectoryBundle:UsernameType)
     if( emailUsernametypeMap.length == 0 ) {
@@ -1704,21 +1703,37 @@ function setKeytypeByEmailListener(modalHtml) {
     emailField.on("input", function(e) {
         //console.log("2 email changed");
         var email = $(this).val();
-        if( email ) {
-            var sEmails=email.split("@");
-            if( sEmails.length == 2 ) {
-                //var use=sEmails[0];
-                var domain = sEmails[1];
-                var keytype = emailUsernametypeMap[domain];
-                //console.log("domain=" + domain + "; keytype=" + keytype);
-                modalHtml.find('#oleg_userdirectorybundle_user_keytype').select2('val', keytype);
-            }
-        }
+        setKeytypeByEmail(modalHtml,email);
+        // if( email ) {
+        //     var sEmails=email.split("@");
+        //     if( sEmails.length == 2 ) {
+        //         //var use=sEmails[0];
+        //         var domain = sEmails[1];
+        //         var keytype = emailUsernametypeMap[domain];
+        //         //console.log("domain=" + domain + "; keytype=" + keytype);
+        //         modalHtml.find('#oleg_userdirectorybundle_user_keytype').select2('val', keytype);
+        //     }
+        // }
     });
-    // emailField.on("change", function(e) {
-    //     console.log("3 email changed");
-    //     $('#oleg_userdirectorybundle_user_keytype').select2('val',1);
-    // });
+    emailField.on("change", function(e) {
+        console.log("3 email changed");
+        var email = $(this).val();
+        setKeytypeByEmail(modalHtml,email);
+    });
+}
+function setKeytypeByEmail(modalHtml,email) {
+    //console.log("2 email changed");
+    //var email = $(this).val();
+    if( email ) {
+        var sEmails=email.split("@");
+        if( sEmails.length == 2 ) {
+            //var use=sEmails[0];
+            var domain = sEmails[1];
+            var keytype = emailUsernametypeMap[domain];
+            //console.log("domain=" + domain + "; keytype=" + keytype);
+            modalHtml.find('#oleg_userdirectorybundle_user_keytype').select2('val', keytype);
+        }
+    }
 }
 
 function addNewUserAction( addUserBtn, fieldId, sitename, otherUserParam ) {
