@@ -1652,6 +1652,9 @@ function populateUserFromLdap(searchBtn,inputType) {
                     formholder.find("#oleg_userdirectorybundle_user_primaryPublicUserId").val(primaryPublicUserId);
                 //}
             }
+
+            setKeytypeByEmail(formholder,response.mail);
+
         } else {
             //console.log("no response");
         }
@@ -1704,28 +1707,18 @@ function setKeytypeByEmailListener(modalHtml) {
         //console.log("2 email changed");
         var email = $(this).val();
         setKeytypeByEmail(modalHtml,email);
-        // if( email ) {
-        //     var sEmails=email.split("@");
-        //     if( sEmails.length == 2 ) {
-        //         //var use=sEmails[0];
-        //         var domain = sEmails[1];
-        //         var keytype = emailUsernametypeMap[domain];
-        //         //console.log("domain=" + domain + "; keytype=" + keytype);
-        //         modalHtml.find('#oleg_userdirectorybundle_user_keytype').select2('val', keytype);
-        //     }
-        // }
     });
-    emailField.on("change", function(e) {
-        console.log("3 email changed");
-        var email = $(this).val();
-        setKeytypeByEmail(modalHtml,email);
-    });
+    // emailField.on("change", function(e) {
+    //     console.log("3 email changed");
+    //     var email = $(this).val();
+    //     setKeytypeByEmail(modalHtml,email);
+    // });
 }
 function setKeytypeByEmail(modalHtml,email) {
     //console.log("2 email changed");
     //var email = $(this).val();
     if( email ) {
-        var sEmails=email.split("@");
+        var sEmails = email.split("@");
         if( sEmails.length == 2 ) {
             //var use=sEmails[0];
             var domain = sEmails[1];
