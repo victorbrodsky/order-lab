@@ -1819,7 +1819,10 @@ class UserController extends Controller
             exit("<br>exit");
         } else {
             //$authUtil = new AuthUtil($this->container,$em);
-            $searchRes = $authUtil->searchLdap($primaryPublicUserId);
+            $searchRes = $authUtil->searchLdap($primaryPublicUserId,1);
+            if( $searchRes == NULL || count($searchRes) == 0 ) {
+                $searchRes = $authUtil->searchLdap($primaryPublicUserId,2);
+            }
         }
 
         //$searchRes = $authUtil->searchLdap($primaryPublicUserId);
