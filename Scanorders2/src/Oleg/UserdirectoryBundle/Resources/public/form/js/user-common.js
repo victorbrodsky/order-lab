@@ -1375,6 +1375,7 @@ function waitfor(test, expectedValue, msec, count, source, callback) {
 }
 
 
+//click on "Add New" button
 function constructNewUserModal(btnDom, sitename, otherUserParam, comboboxValue) {
     //1) get html form from add-new-user-modal-prototype
     //var modalHtml = $("#add-new-user-modal-prototype").text();
@@ -1439,6 +1440,12 @@ function constructNewUserModal(btnDom, sitename, otherUserParam, comboboxValue) 
         $('#user-add-new-user-instance').remove();
         $('body').removeClass( "modal-open" );
     });
+
+
+    //console.log("before setKeytypeByEmailListener");
+    //alert("before setKeytypeByEmailListener");
+    setKeytypeByEmailListener($('#user-add-new-user-instance'));
+
 }
 
 //btnDom - is the 'this' button attached to the field where a new user is to be created
@@ -1504,7 +1511,7 @@ function constructAddNewUserModalByAjax(btnDom,sitename,otherUserParam,selectEle
 }
 //employees_new_simple_user
 function getAddNewUserModalByForm(btnDom,sitename,otherUserParam,newUserFormHtml) {
-    //console.log("construct modal");
+    console.log("construct modal");
 
     //get field id (assume select box)
     var comboboxEl = $(btnDom).closest('.row').find('select.combobox');
@@ -1540,9 +1547,6 @@ function getAddNewUserModalByForm(btnDom,sitename,otherUserParam,newUserFormHtml
         $( '.modal-backdrop' ).remove();
         $( 'body' ).removeClass( "modal-open" );
     });
-
-    //console.log("before setKeytypeByEmailListener");
-    //setKeytypeByEmailListener(newUserEl);
 
     return false;
 }
@@ -1663,14 +1667,58 @@ function populateUserFromLdap(searchBtn,inputType) {
     return false;
 }
 //TODO: get corresponding keytype (PrimaryPublicUserIdType) from email extension
-function setKeytypeByEmailListener(newUserEl) {
+var emailUsernametypeMap = [];
+function setKeytypeByEmailListener(modalHtml) {
     console.log("setKeytypeByEmailListener");
-    //var holder = $('#user-add-new-user-instance');
-    var emailField = $('#oleg_userdirectorybundle_user_infos_0_email');
+
+    //1) set map array "email extension" - "keytype id" (OlegUserdirectoryBundle:UsernameType)
+    if( emailUsernametypeMap.length == 0 ) {
+        var url = Routing.generate('employees_get_map_email_usernametype');
+        $.ajax({
+            url: url,
+            timeout: _ajaxTimeout,
+            type: "GET",
+            //type: "POST",
+            async: asyncflag
+        }).success(function (response) {
+            //console.log(response);
+            emailUsernametypeMap = response;
+            //console.log("emailUsernametypeMap:");
+            //console.log(emailUsernametypeMap);
+        }).done(function () {
+            //
+        }).error(function (jqXHR, textStatus, errorThrown) {
+            console.log('Error : ' + errorThrown);
+        });
+    }
+
+    // //var holder = $('#user-add-new-user-instance');
+    // var emailField = $('#oleg_userdirectorybundle_user_infos_0_email');
+    // emailField.on("input", function(e) {
+    //     console.log("1 email changed");
+    //     $('#oleg_userdirectorybundle_user_keytype').select2('val',1);
+    // });
+
+    //2) set listener
+    var emailField = modalHtml.find(".user-email");
     emailField.on("input", function(e) {
-        console.log("email changed");
-        $('#oleg_userdirectorybundle_user_keytype').select2('val',1);
+        //console.log("2 email changed");
+        var email = $(this).val();
+        if( email ) {
+            var sEmails=email.split("@");
+            if( sEmails.length == 2 ) {
+                //var use=sEmails[0];
+                var domain = sEmails[1];
+                var keytype = emailUsernametypeMap[domain];
+                //console.log("domain=" + domain + "; keytype=" + keytype);
+                modalHtml.find('#oleg_userdirectorybundle_user_keytype').select2('val', keytype);
+            }
+        }
     });
+    // emailField.on("change", function(e) {
+    //     console.log("3 email changed");
+    //     $('#oleg_userdirectorybundle_user_keytype').select2('val',1);
+    // });
 }
 
 function addNewUserAction( addUserBtn, fieldId, sitename, otherUserParam ) {

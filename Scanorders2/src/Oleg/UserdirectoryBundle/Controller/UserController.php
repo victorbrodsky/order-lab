@@ -1732,6 +1732,40 @@ class UserController extends Controller
 
     }
     /**
+     * Test: http://127.0.0.1/order/directory/get-map-email-usernametype-ajax
+     *
+     * @Route("/get-map-email-usernametype-ajax/", name="employees_get_map_email_usernametype", options={"expose"=true})
+     * @Method("GET")
+     */
+    public function getMapEmailUsernameTypeAction(Request $request)
+    {
+        if (false === $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
+        }
+
+        //$em = $this->getDoctrine()->getManager();
+        $userSecUtil = $this->get('user_security_utility');
+
+        $resArr = null;
+
+        $emailMapperPostfix1 = $userSecUtil->getSiteSettingParameter("ldapMapperEmail");
+        if( $emailMapperPostfix1 ) {
+            $ldapMapperPrimaryPublicUserIdType1 = $userSecUtil->getSiteSettingParameter("ldapMapperPrimaryPublicUserIdType");
+            $resArr[$emailMapperPostfix1] = $ldapMapperPrimaryPublicUserIdType1->getId();
+        }
+
+        $emailMapperPostfix2 = $userSecUtil->getSiteSettingParameter("ldapMapperEmail2");
+        if( $emailMapperPostfix2 ) {
+            $ldapMapperPrimaryPublicUserIdType2 = $userSecUtil->getSiteSettingParameter("ldapMapperPrimaryPublicUserIdType2");
+            $resArr[$emailMapperPostfix2] = $ldapMapperPrimaryPublicUserIdType2->getId();
+        }
+
+        $json = json_encode($resArr);
+        $response = new Response($json);
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+    }
+    /**
      * Test: http://127.0.0.1/order/directory/search-user-ldap-ajax/?searchvalue=oli2002&type=primaryPublicUserId
      *
      * @Route("/search-user-ldap-ajax/", name="employees_search_user_ldap_ajax", options={"expose"=true})
