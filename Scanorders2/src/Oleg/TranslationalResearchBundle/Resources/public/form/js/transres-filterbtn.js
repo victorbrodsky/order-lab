@@ -65,17 +65,11 @@ function changeFilterColorButton() {
 
 function toggleBtnListener() {
     $('.toggle-btn-state').click(function(e) {
-        //e.preventDefault();
-        //$(this).addClass('active');
-        //$(this).css("background-color","grey");
-
-        //$('.Button').not(this).removeClass('active');
         $(this).toggleClass('toggle-btn-state-active');
         e.preventDefault();
     });
 
-
-    //if #transres-AdvancedSearch is "collapse in" => grey
+    //Default: if #transres-AdvancedSearch has "collapse in" => grey
     if( $("#transres-AdvancedSearch").hasClass("in") ) {
         $('.toggle-btn-state').toggleClass('toggle-btn-state-active');
     }

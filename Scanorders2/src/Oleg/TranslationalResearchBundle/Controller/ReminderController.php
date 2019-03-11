@@ -133,9 +133,11 @@ class ReminderController extends Controller
                 }
             }
 
+            $title = $projectCounter." Delayed Project Requests";
+
             return $this->render("OlegTranslationalResearchBundle:Reminder:project-request-reminder-index.html.twig",
                 array(
-                    'title' => $projectCounter." Delayed Project Requests",
+                    'title' => $title,
                     'finalResults' => $finalResults,
                     'entityCounter' => $projectCounter,
                     'sendEmailPath' => 'translationalresearch_project_reminder_send',

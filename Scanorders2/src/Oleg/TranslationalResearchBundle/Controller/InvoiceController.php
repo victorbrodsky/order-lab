@@ -98,6 +98,7 @@ class InvoiceController extends Controller
         $filterform->handleRequest($request);
 
         $filterTitle = trim( $request->get('title') );
+        $filterwell = trim( $request->get('filterwell') );
 
         //$filterType = trim( $request->get('type') );
         $invoicetype = str_replace("-"," ",$invoicetype);
@@ -125,6 +126,7 @@ class InvoiceController extends Controller
                         'filter[status][3]' => 'Refunded Fully',
                         'filter[status][4]' => 'Refunded Partially',
                         'title' => $invoicetype,
+                        'filter[well]' => 'closed'
                     )
                 );
             }
@@ -134,6 +136,7 @@ class InvoiceController extends Controller
                     array(
                         'filter[status][]' => "Pending",
                         'title' => $invoicetype,
+                        'filter[well]' => 'closed'
                     )
                 );
             }
@@ -192,6 +195,7 @@ class InvoiceController extends Controller
                         //'filter[status][4]' => 'Refunded Partially',
 
                         'title' => $invoicetype,
+                        'filter[well]' => 'closed'
                     )
                 );
             }
@@ -206,6 +210,7 @@ class InvoiceController extends Controller
                         'filter[status][3]' => 'Refunded Fully',
                         'filter[status][4]' => 'Refunded Partially',
                         'title' => $invoicetype,
+                        'filter[well]' => 'closed'
                     )
                 );
             }
@@ -215,6 +220,7 @@ class InvoiceController extends Controller
                     array(
                         'filter[salesperson]' => $user->getId(),
                         'title' => $invoicetype,
+                        'filter[well]' => 'closed'
                     )
                 );
             }
@@ -224,6 +230,7 @@ class InvoiceController extends Controller
                     array(
                         'filter[principalInvestigator]' => $user->getId(),
                         'title' => $invoicetype,
+                        'filter[well]' => 'closed'
                     )
                 );
             }
@@ -247,6 +254,7 @@ class InvoiceController extends Controller
                         'filter[version]' => "Latest",
                         'filter[status][]' => "All Invoices Except Canceled",
                         'title' => $invoicetype,
+                        'filterwell' => 'closed'
                     )
                 );
             }
@@ -296,6 +304,7 @@ class InvoiceController extends Controller
                         'filter[version]' => "Latest",
                         'filter[status][0]' => "Paid Partially",
                         'title' => $invoicetype,
+                        'filter[well]' => 'closed'
                     )
                 );
             }
@@ -307,6 +316,7 @@ class InvoiceController extends Controller
                         'filter[status][0]' => "Paid in Full",
                         'filter[status][1]' => "Paid Partially",
                         'title' => $invoicetype,
+                        'filter[well]' => 'closed'
                     )
                 );
             }
@@ -317,6 +327,7 @@ class InvoiceController extends Controller
                         'filter[version]' => "Latest",
                         'filter[status][0]' => "Canceled",
                         'title' => $invoicetype,
+                        'filter[well]' => 'closed'
                     )
                 );
             }
@@ -328,6 +339,7 @@ class InvoiceController extends Controller
                     array(
                         'filter[version]' => "Old",
                         'title' => $invoicetype,
+                        'filter[well]' => 'closed'
                     )
                 );
             }
@@ -338,6 +350,7 @@ class InvoiceController extends Controller
                         'filter[version]' => "Old",
                         'filter[status][0]' => "Unpaid/Issued",
                         'title' => $invoicetype,
+                        'filter[well]' => 'closed'
                     )
                 );
             }
@@ -348,6 +361,7 @@ class InvoiceController extends Controller
                         'filter[version]' => "Old",
                         'filter[status][0]' => "Pending",
                         'title' => $invoicetype,
+                        'filter[well]' => 'closed'
                     )
                 );
             }
@@ -358,6 +372,7 @@ class InvoiceController extends Controller
                         'filter[version]' => "Old",
                         'filter[status][0]' => "Paid in Full",
                         'title' => $invoicetype,
+                        'filter[well]' => 'closed'
                     )
                 );
             }
@@ -368,6 +383,7 @@ class InvoiceController extends Controller
                         'filter[version]' => "Old",
                         'filter[status][0]' => "Paid Partially",
                         'title' => $invoicetype,
+                        'filter[well]' => 'closed'
                     )
                 );
             }
@@ -379,6 +395,7 @@ class InvoiceController extends Controller
                         'filter[status][0]' => "Paid in Full",
                         'filter[status][1]' => "Paid Partially",
                         'title' => $invoicetype,
+                        'filter[well]' => 'closed'
                     )
                 );
             }
@@ -389,6 +406,7 @@ class InvoiceController extends Controller
                         'filter[version]' => "Old",
                         'filter[status][0]' => "Canceled",
                         'title' => $invoicetype,
+                        'filter[well]' => 'closed'
                     )
                 );
             }
@@ -411,6 +429,7 @@ class InvoiceController extends Controller
             $startCreateDate = $filterform['startCreateDate']->getData();
             $endCreateDate = $filterform['endCreateDate']->getData();
             //echo "totalMin=".$totalMin."<br>";
+            //$advancedWell = $filterform['well']->getData();
         }
         ////// EOF create filter //////////
 
@@ -649,6 +668,18 @@ class InvoiceController extends Controller
         $title = $title . " (" . $matchingStrInvoiceStr . ")";
 
         $matchingStrInvoiceIds = implode("-",$matchingStrInvoiceIds);
+
+        //echo "advancedWell=$advancedWell <br>";
+        if( $advancedWell == 'closed' ) {
+            //$advancedFilter = 0;
+        }
+        //translationalresearch_invoice_index_type
+        if( $routeName == "translationalresearch_invoice_index_type" ) {
+            //$advancedFilter = 0;
+        }
+        if( $filterwell && $filterwell == 'closed' ) {
+            $advancedFilter = 0;
+        }
 
         return array(
             'invoices' => $invoices,
