@@ -63,7 +63,7 @@ class ReminderController extends Controller
                         $invoiceDueDateMax = $invoiceReminderScheduleArr[0];    //over due in months (integer) - 6
                         $reminderInterval = $invoiceReminderScheduleArr[1];     //reminder interval in months (integer) - 3
                         $maxReminderCount = $invoiceReminderScheduleArr[2];     //max reminder count (integer) - 5
-                        $criterionsArr[] = $projectSpecialty->getName().": send reminder emails after $invoiceDueDateMax months overdue every $reminderInterval months for $maxReminderCount times";
+                        $criterionsArr[] = $projectSpecialty->getName()." - for over $invoiceDueDateMax months (reminder email will send every $reminderInterval months for $maxReminderCount times)";
                     }
                 }
             }
@@ -71,9 +71,12 @@ class ReminderController extends Controller
                 $criterions = ": <br>" . implode("<br>",$criterionsArr);
             }
 
+            //The following invoices have remained unpaid for over X days:
+            $title = "The following $invoiceCounter invoices have remained unpaid".$criterions;
+
             return $this->render("OlegTranslationalResearchBundle:Reminder:unpaid-invoice-index.html.twig",
                 array(
-                    'title' => $invoiceCounter." Unpaid Invoices corresponding to the reminder schedule"."".$criterions,
+                    'title' => $title, //$invoiceCounter." Unpaid Invoices corresponding to the reminder schedule"."".$criterions,
                     'invoiceGroups' => $results,
                     'invoiceCounter' => $invoiceCounter
                 )
@@ -120,8 +123,23 @@ class ReminderController extends Controller
             $results = $transresReminderUtil->sendReminderReviewProjects($state,$showSummary);
             //echo "results count=".count($results)."<br>";
             //print_r($results);
+
+            //overdue date
+            $modifiedState = str_replace("_","",$state);
+            $projectReminderDelayField = 'projectReminderDelay'.$modifiedState;
+            $reminderDelayArr = array();
+            $projectSpecialties = $transresUtil->getTransResProjectSpecialties(false);
+            foreach($projectSpecialties as $projectSpecialtyObject) {
+                $reminderDelay = $transresUtil->getTransresSiteProjectParameter($projectReminderDelayField, null, $projectSpecialtyObject);
+                if (!$reminderDelay) {
+                    $reminderDelay = 14; //default 14 days
+                }
+                $reminderDelayArr[] = $reminderDelay . " days for " . $projectSpecialtyObject;
+            }
+            $reminderDelayStr = implode(", ",$reminderDelayArr);
+
             $state = $transresUtil->getStateLabelByName($state);
-            $finalResults[$state] = $results;
+            $finalResults[$state . " (over " . $reminderDelayStr . ")"] = $results;
         }
 
         if( $showSummary === true ) {
@@ -133,7 +151,9 @@ class ReminderController extends Controller
                 }
             }
 
-            $title = $projectCounter." Delayed Project Requests";
+            //The following project requests are pending review for over X days:
+            //$title = $projectCounter." Delayed Project Requests";
+            $title = "The following project requests ($projectCounter) are pending review.";
 
             return $this->render("OlegTranslationalResearchBundle:Reminder:project-request-reminder-index.html.twig",
                 array(
@@ -179,14 +199,31 @@ class ReminderController extends Controller
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
+        $transresUtil = $this->container->get('transres_util');
         $transresRequestUtil = $this->container->get('transres_request_util');
         $transresReminderUtil = $this->get('transres_reminder_util');
 
         $routeName = $request->get('_route');
         $showSummary = true;
 
+        $reminderDelayStr = "";
+        $reminderDelayArr = array();
+        $projectSpecialties = $transresUtil->getTransResProjectSpecialties(false);
+
         if( strpos($routeName, "translationalresearch_request_pending_reminder") !== false ) {
-            $title = "Delayed Pending Work Requests";
+            //$title = "Delayed Pending Work Requests";
+
+            //The following work requests are pending completion for over X days:
+            $title = "The following work requests [[REQUEST_COUNTER]] are pending completion.";
+            foreach($projectSpecialties as $projectSpecialtyObject) {
+                $reminderDelay = $transresUtil->getTransresSiteProjectParameter("pendingRequestReminderDelay", null, $projectSpecialtyObject);
+                if (!$reminderDelay) {
+                    $reminderDelay = 14; //default 14 days
+                }
+                $reminderDelayArr[] = $reminderDelay . " days for " . $projectSpecialtyObject;
+            }
+            $reminderDelayStr = implode(", ",$reminderDelayArr);
+
             $sendEmailPath = "translationalresearch_request_pending_reminder_send";
             $states = array(
                 'active',
@@ -204,7 +241,18 @@ class ReminderController extends Controller
         }
 
         if( strpos($routeName, "translationalresearch_request_completed_reminder") !== false ) {
-            $title = "Delayed Completed Work Requests";
+            //$title = "Delayed Completed Work Requests";
+            //The following work requests have been completed for over X days, but the request submitter has not been notified:
+            $title = "The following work requests [[REQUEST_COUNTER]] have been completed, but the request submitter has not been notified.";
+            foreach($projectSpecialties as $projectSpecialtyObject) {
+                $reminderDelay = $transresUtil->getTransresSiteProjectParameter("completedRequestReminderDelay", null, $projectSpecialtyObject);
+                if (!$reminderDelay) {
+                    $reminderDelay = 14; //default 14 days
+                }
+                $reminderDelayArr[] = $reminderDelay . " days for " . $projectSpecialtyObject;
+            }
+            $reminderDelayStr = implode(", ",$reminderDelayArr);
+
             $sendEmailPath = "translationalresearch_request_completed_reminder_send";
             $states = array(
                 'completed'
@@ -215,7 +263,18 @@ class ReminderController extends Controller
         }
 
         if( strpos($routeName, "translationalresearch_request_completed_no_invoice_issued_reminder") !== false ) {
-            $title = "Completed and Notified Work Requests without Issued Invoice";
+            //$title = "Completed and Notified Work Requests without Issued Invoice";
+            //The following work requests have been completed for over X days without any invoices:
+            $title = "The following work requests [[REQUEST_COUNTER]] have been completed without any invoices";
+            foreach($projectSpecialties as $projectSpecialtyObject) {
+                $reminderDelay = $transresUtil->getTransresSiteProjectParameter("completedNoInvoiceRequestReminderDelay", null, $projectSpecialtyObject);
+                if (!$reminderDelay) {
+                    $reminderDelay = 14; //default 14 days
+                }
+                $reminderDelayArr[] = $reminderDelay . " days for " . $projectSpecialtyObject;
+            }
+            $reminderDelayStr = implode(", ",$reminderDelayArr);
+
             $sendEmailPath = "translationalresearch_request_completed_no_invoice_issued_reminder_send";
             $states = array(
                 'completedNotified'
@@ -237,7 +296,7 @@ class ReminderController extends Controller
             //echo "results count=".count($results)."<br>";
             //print_r($results);
             $state = $transresRequestUtil->getProgressStateLabelByName($state);
-            $finalResults[$state] = $results;
+            $finalResults[$state . " (" . $reminderDelayStr . ")"] = $results;
         }
 
         if( $showSummary === true ) {
@@ -249,9 +308,11 @@ class ReminderController extends Controller
                 }
             }
 
+            $title = str_replace("[[REQUEST_COUNTER]]",$counter,$title);
+
             return $this->render("OlegTranslationalResearchBundle:Reminder:project-request-reminder-index.html.twig",
                 array(
-                    'title' => $counter." ".$title,
+                    'title' => $title,
                     'finalResults' => $finalResults,
                     'entityCounter' => $counter,
                     'sendEmailPath' => $sendEmailPath,

@@ -4870,6 +4870,7 @@ class DashboardUtil
             $combinedData["$unpaidInvoicesCount Unpaid Invoices"] = $delayedInvoicesData;
 
             //$combinedData['Delayed Project Requests'] = $delayedProjectsArr;
+            //Use IRB review delayed days for all states
             $modifiedState = "irbreview";
             $projectReminderDelayField = 'projectReminderDelay'.$modifiedState;
             $reminderDelay = $transresUtil->getTransresSiteProjectParameter($projectReminderDelayField, null, $projectSpecialtyObject);
