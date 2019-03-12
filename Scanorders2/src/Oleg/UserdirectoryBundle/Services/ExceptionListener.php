@@ -128,7 +128,7 @@ class ExceptionListener {
             $minutes = 10;
             $minutes = 100; //testing
             $eventType="Critical Error Email Sent";
-            $errorCounter = $this->getErrorNumbers($eventType,$minutes);
+            $errorCounter = $this->getErrorCount($eventType,$minutes);
             //exit("errorCounter=".$errorCounter);
 
             if( $errorCounter > $maxErrorCounter ) {
@@ -177,9 +177,7 @@ class ExceptionListener {
         return null;
     }
 
-    public function getErrorNumbers( $eventType="Critical Error Email Sent", $minutes=10 ) {
-        //$count = 0;
-        //$count = 5;
+    public function getErrorCount( $eventType="Critical Error Email Sent", $minutes=10 ) {
 
         $endDate = new \DateTime();
         $startDate = new \DateTime();
