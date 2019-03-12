@@ -139,6 +139,29 @@
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'connectionChannel'}) }}">Edit</a></td>
             </tr>
 
+            <tr>
+                <td>E-Mail Platform Administrator in case of critical errors</td>
+                <td>
+                    {% set emailCriticalErrorStr = 'No' %}
+                    {% if entity.emailCriticalError == true %}
+                        {% set emailCriticalErrorStr = 'Yes' %}
+                    {% endif %}
+                    {{ emailCriticalErrorStr }}
+                </td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'emailCriticalError'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>Restart Apache in case of critical this many errors over the course of 10 minutes</td>
+                <td>
+                    {% set restartServerErrorCounterStr = 'No' %}
+                    {% if entity.restartServerErrorCounter == true %}
+                        {% set restartServerErrorCounterStr = 'Yes' %}
+                    {% endif %}
+                    {{ restartServerErrorCounterStr }}
+                </td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'restartServerErrorCounter'}) }}">Edit</a></td>
+            </tr>
+
             {#Maintenance#}
             <tr>
                 <td class="rowlink-skip" colspan="3" align="center">

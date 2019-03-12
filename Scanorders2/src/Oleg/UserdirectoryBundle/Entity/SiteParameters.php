@@ -1118,7 +1118,20 @@ class SiteParameters {
      */
     private $transresAnimalSubjectName;
 
+    /**
+     * E-Mail Platform Administrator in case of critical errors
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $emailCriticalError;
 
+    /**
+     * Restart Apache in case of critical this many errors over the course of 10 minutes:
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $restartServerErrorCounter;
+    
 
 
     function __construct( $addobjects=true )
@@ -3908,6 +3921,40 @@ class SiteParameters {
     {
         $this->transresAnimalSubjectName = $transresAnimalSubjectName;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getEmailCriticalError()
+    {
+        return $this->emailCriticalError;
+    }
+
+    /**
+     * @param mixed $emailCriticalError
+     */
+    public function setEmailCriticalError($emailCriticalError)
+    {
+        $this->emailCriticalError = $emailCriticalError;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRestartServerErrorCounter()
+    {
+        return $this->restartServerErrorCounter;
+    }
+
+    /**
+     * @param mixed $restartServerErrorCounter
+     */
+    public function setRestartServerErrorCounter($restartServerErrorCounter)
+    {
+        $this->restartServerErrorCounter = $restartServerErrorCounter;
+    }
+    
+    
     
 
 }

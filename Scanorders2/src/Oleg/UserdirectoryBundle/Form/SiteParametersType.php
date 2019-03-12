@@ -1073,6 +1073,19 @@ class SiteParametersType extends AbstractType
                 ));
             });
         }
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'emailCriticalError' ) {
+            $builder->add('emailCriticalError', null, array(
+                'label' => 'E-Mail Platform Administrator in case of critical errors:',
+                'attr' => array('class' => 'form-control')
+            ));
+        }
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'restartServerErrorCounter' ) {
+            $builder->add('restartServerErrorCounter', null, array(
+                'label' => 'Restart Apache in case of critical this many errors over the course of 10 minutes:',
+                'attr' => array('class' => 'form-control')
+            ));
+        }
     }
     
     /**

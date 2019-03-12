@@ -53,9 +53,6 @@ class ProjectController extends Controller
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
-        //test
-        $test = new DummyClass();
-
         $transresUtil = $this->container->get('transres_util');
         if(
             $transresUtil->isAdminOrPrimaryReviewer() === false &&

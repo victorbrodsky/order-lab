@@ -17,6 +17,11 @@ class DefaultController extends Controller
      * @Template("OlegUserdirectoryBundle:Default:about.html.twig")
      */
     public function aboutAction( Request $request ) {
+
+        //test
+        //$test = 1/0;
+        $test = new DummyClass();
+
         return array('sitename'=>$this->container->getParameter('translationalresearch.sitename'));
     }
 
