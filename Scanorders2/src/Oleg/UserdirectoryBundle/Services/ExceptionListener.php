@@ -111,7 +111,7 @@ class ExceptionListener {
             //On MM/DD/YYYY, at HH:MM:SS the following error has been logged on the [server domain name/C.MED.CORNELL.EDU vs Collage, or IP address etc]: [text of error]
             $msg = "On $dateStr the following error has been logged on the $domain";
             $msg = $msg . ": <br>" . $message;
-            $emailUtil->sendEmail( $emails, "Access request confirmation for site: ".$sitenameFull, $emailBody );
+            $emailUtil->sendEmail($emails,$subject,$msg);
 
             //EventLog
             $userSecUtil->createUserEditEvent($sitename,$msg,$user,null,$request,"Critical Error Email Sent");
