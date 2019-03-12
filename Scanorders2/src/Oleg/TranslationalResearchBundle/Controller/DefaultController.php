@@ -19,7 +19,7 @@ class DefaultController extends Controller
     public function aboutAction( Request $request ) {
 
         //test
-        //$test = 1/0;
+        $test = $this->getDummyClass();
         $test = new DummyClass();
 
         return array('sitename'=>$this->container->getParameter('translationalresearch.sitename'));

@@ -1128,7 +1128,7 @@ class SiteParameters {
     /**
      * Restart Apache in case of critical this many errors over the course of 10 minutes:
      *
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $restartServerErrorCounter;
     
@@ -3953,7 +3953,9 @@ class SiteParameters {
     {
         $this->restartServerErrorCounter = $restartServerErrorCounter;
     }
+
     
+
     
     
 

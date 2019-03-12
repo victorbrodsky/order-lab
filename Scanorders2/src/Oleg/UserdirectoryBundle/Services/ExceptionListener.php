@@ -59,6 +59,7 @@ class ExceptionListener {
     public function onKernelException(GetResponseForExceptionEvent $event) {
 
         $userSecUtil = $this->container->get('user_security_utility');
+        $emailUtil = $this->container->get('user_mailer_utility');
         $user = $this->secTokenStorage->getToken()->getUser();
 
         $request = $event->getRequest();
@@ -99,7 +100,7 @@ class ExceptionListener {
                 $sitename = "employees";
             }
 
-            //$emails = $userSecUtil->getUserEmailsByRole($sitename,"Platform Administrator");
+            $emails = $userSecUtil->getUserEmailsByRole($sitename,"Platform Administrator");
             //echo "emails: <br>";
             //print_r($emails);
 
@@ -110,6 +111,7 @@ class ExceptionListener {
             //On MM/DD/YYYY, at HH:MM:SS the following error has been logged on the [server domain name/C.MED.CORNELL.EDU vs Collage, or IP address etc]: [text of error]
             $msg = "On $dateStr the following error has been logged on the $domain";
             $msg = $msg . ": <br>" . $message;
+            $emailUtil->sendEmail( $emails, "Access request confirmation for site: ".$sitenameFull, $emailBody );
 
             //EventLog
             $userSecUtil->createUserEditEvent($sitename,$msg,$user,null,$request,"Critical Error Email Sent");
@@ -119,43 +121,34 @@ class ExceptionListener {
             //exit('NO emailCriticalError');
         }
 
-        if( $userSecUtil->getSiteSettingParameter('restartServerErrorCounter') === true ) {
-            $msg = $domain . " has been restarted";
-            //EventLog
-            $userSecUtil->createUserEditEvent($sitename,$msg,$user,null,$request,"Restart Server");
-        }
+        $maxErrorCounter = $userSecUtil->getSiteSettingParameter('restartServerErrorCounter');
+        if( $maxErrorCounter ) {
 
-//        // You get the exception object from the received event
-//        $exception = $event->getException();
-//        $message = sprintf(
-//            'My Error says: %s with code: %s',
-//            $exception->getMessage(),
-//            $exception->getCode()
-//        );
-//
-//        //echo "<br><br>";
-//        //var_dump($exception);
-//        echo "<br><br>";
-//        echo "file=".$exception->getFile()."<br>";
-//        echo "line=".$exception->getLine()."<br>";
-//        //echo "getStatusCode=".$exception->getStatusCode()."<br>";
-//        //echo "getHeaders=".$exception->getHeaders()."<br>";
-//
-//        // Customize your response object to display the exception details
-//        $response = new Response();
-//        $response->setContent($message);
-//
-//        // HttpExceptionInterface is a special type of exception that
-//        // holds status code and header details
-////        if( $exception instanceof HttpExceptionInterface ) {
-////            $response->setStatusCode($exception->getStatusCode());
-////            $response->headers->replace($exception->getHeaders());
-////        } else {
-////            $response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
-////        }
-//
-//        // sends the modified response object to the event
-//        $event->setResponse($response);
+            //get number of critical errors in the last 10 minutes
+            $minutes = 10;
+            $minutes = 100; //testing
+            $eventType="Critical Error Email Sent";
+            $errorCounter = $this->getErrorNumbers($eventType,$minutes);
+            //exit("errorCounter=".$errorCounter);
+
+            if( $errorCounter > $maxErrorCounter ) {
+                //EventLog
+                $msg = $domain . " has been restarted after $errorCounter errors in $minutes minutes";
+                $userSecUtil->createUserEditEvent($sitename,$msg,$user,null,$request,"Restart Server");
+
+                //Restart Server
+                //C:\Program Files (x86)\Ampps\apache\bin
+                //E:\Program Files (x86)\Aperio\WebServer\bin
+                //httpd -k restart
+                //"E:/Program Files (x86)/Aperio/WebServer/bin/httpd" -k restart;
+                $command = "E:/Program Files (x86)/Aperio/WebServer/bin/httpd"." -k restart";
+                echo exec($command);
+            }
+
+            //exit('Yes restartServerErrorCounter');
+        } else {
+            //exit('NO restartServerErrorCounter');
+        }
     }
 
     public function getSiteName($controller) {
@@ -182,6 +175,47 @@ class ExceptionListener {
         }
 
         return null;
+    }
+
+    public function getErrorNumbers( $eventType="Critical Error Email Sent", $minutes=10 ) {
+        //$count = 0;
+        //$count = 5;
+
+        $endDate = new \DateTime();
+        $startDate = new \DateTime();
+        $startDate = $startDate->modify("-$minutes minutes");
+        //echo "startDate=".$startDate->format('Y-m-d H:i:s')."; endDate=".$endDate->format('Y-m-d H:i:s')."<br>";
+
+        $dqlParameters = array();
+
+        //get the date from event log
+        $repository = $this->em->getRepository('OlegUserdirectoryBundle:Logger');
+        $dql = $repository->createQueryBuilder("logger");
+        $dql->innerJoin('logger.eventType', 'eventType');
+
+        //$dql->where("logger.siteName = 'translationalresearch' AND logger.entityName = 'Invoice' AND logger.entityId = ".$invoice->getId());
+        //$dql->where("logger.entityNamespace = 'Oleg\TranslationalResearchBundle\Entity' AND logger.entityName = 'TransResRequest' AND logger.entityId = ".$request->getId());
+
+        $dql->where("eventType.name = :eventTypeName");
+        $dqlParameters['eventTypeName'] = $eventType;
+
+        //$dql->andWhere("logger.creationdate > :startDate AND logger.creationdate < :endDate");
+        $dql->andWhere('logger.creationdate >= :startDate');
+        $dqlParameters['startDate'] = $startDate->format('Y-m-d H:i:s');
+
+        $dql->andWhere('logger.creationdate <= :endDate');
+        $dqlParameters['endDate'] = $endDate->format('Y-m-d H:i:s');
+
+        $dql->orderBy("logger.id","DESC");
+        $query = $this->em->createQuery($dql);
+
+        $query->setParameters($dqlParameters);
+
+        $loggers = $query->getResult();
+
+        $count = count($loggers);
+
+        return $count;
     }
 
 } 
