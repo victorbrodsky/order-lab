@@ -3720,6 +3720,11 @@ class TransResUtil
                 $text = str_replace("[[REQUEST SUBMISSION DATE]]", $creationDate->format("m/d/Y"), $text);
             }
 
+            $submitter = $transresRequest->getSubmitter();
+            if( $submitter ) {
+                $text = str_replace("[[REQUEST SUBMITTER]]", $submitter->getUsernameShortest(), $text);
+            }
+
             if( strpos($text, '[[REQUEST UPDATE DATE]]') !== false ) {
                 $updateDate = $transresRequest->getUpdateDate();
                 if ($updateDate) {
