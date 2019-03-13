@@ -176,6 +176,7 @@ class ExceptionListener {
                 //$command = "E:/Program Files (x86)/Aperio/WebServer/bin/httpd"." -k stop";
                 //C:\Program Files (x86)\Ampps\apache\bin
                 $command = $path." -k restart";
+                $command = $path." -k stop";
                 //$command = $path."httpd"." -k stop";
                 //$output = shell_exec($command);
                 //$logger->notice("Command=" . $command . ": " . $output);
