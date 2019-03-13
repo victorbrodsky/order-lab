@@ -100,9 +100,10 @@ class ExceptionListener {
                 $sitename = "employees";
             }
 
-            $emails = $userSecUtil->getUserEmailsByRole($sitename,"ROLE_PLATFORM_ADMIN");
-            echo "emails: <br>";
-            print_r($emails);
+            $emails = $userSecUtil->getUserEmailsByRole($sitename,null,array("ROLE_PLATFORM_ADMIN"));
+            //echo "emails: <br>";
+            //print_r($emails);
+            //exit('111');
 
             //2- If the checkbox is checked, Send an email to all users with System Administrator role saying:
             $subject = "Server Critical Error";
@@ -126,7 +127,7 @@ class ExceptionListener {
 
             //get number of critical errors in the last 10 minutes
             $minutes = 10;
-            $minutes = 100; //testing
+            //$minutes = 100; //testing
             $eventType="Critical Error Email Sent";
             $errorCounter = $this->getErrorCount($eventType,$minutes);
             //exit("errorCounter=".$errorCounter);
@@ -138,7 +139,7 @@ class ExceptionListener {
 
                 //Restart Server
                 $path = "E:/Program Files (x86)/Aperio/WebServer/bin/";
-                $path = "C:/Program Files (x86)/Ampps/apache/bin/";
+                //$path = "C:/Program Files (x86)/Ampps/apache/bin/";
 
                 //C:\Program Files (x86)\Ampps\apache\bin
                 //E:\Program Files (x86)\Aperio\WebServer\bin
@@ -152,7 +153,7 @@ class ExceptionListener {
                 //$command = "E:/Program Files (x86)/Aperio/WebServer/bin/httpd"." -k stop";
                 //C:\Program Files (x86)\Ampps\apache\bin
                 $command = $path."httpd"." -k restart";
-                $command = $path."httpd"." -k stop";
+                //$command = $path."httpd"." -k stop";
                 echo exec($command);
             }
 
