@@ -240,7 +240,7 @@ class AdminController extends Controller
 
             $updateres = $this->updateApplication();
 
-            $adminRes = $adminRes . " <br> " .$updateres;
+            $adminRes = $adminRes . " <br> " .$updateres; 
 
         } else {
             //$adminRes = 'Admin user already exists';
