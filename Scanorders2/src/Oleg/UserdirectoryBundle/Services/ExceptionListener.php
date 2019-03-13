@@ -58,6 +58,7 @@ class ExceptionListener {
 
     public function onKernelException(GetResponseForExceptionEvent $event) {
 
+        $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
         $emailUtil = $this->container->get('user_mailer_utility');
         $user = $this->secTokenStorage->getToken()->getUser();
@@ -155,23 +156,31 @@ class ExceptionListener {
                 $userSecUtil->createUserEditEvent($sitename,$msg,$user,null,$request,"Restart Server");
 
                 //Restart Server
-                $path = "E:/Program Files (x86)/Aperio/WebServer/bin/";
+                $path = 'E:/Program Files (x86)/Aperio/WebServer/bin/';
                 //$path = "C:/Program Files (x86)/Ampps/apache/bin/";
+
+                $path = '"'.$path.'httpd'.'"';
 
                 //C:\Program Files (x86)\Ampps\apache\bin
                 //E:\Program Files (x86)\Aperio\WebServer\bin
                 //httpd -k restart
                 //"E:/Program Files (x86)/Aperio/WebServer/bin/httpd" -k restart;
                 //$command = "E:/Program Files (x86)/Aperio/WebServer/bin/httpd"." -k install";
-                $command = $path."httpd"." -k install";
-                echo exec($command);
+                $command = $path." -k install";
+                //$output = shell_exec($command);
+                //$logger->notice("Command=" . $command . ": " . $output);
+                exec( $command, $output, $return_var );
+                $logger->notice("Command=" . $command . "; output=" . var_dump($output) . "; return=".var_dump($return_var));
 
                 //$command = "E:/Program Files (x86)/Aperio/WebServer/bin/httpd"." -k restart";
                 //$command = "E:/Program Files (x86)/Aperio/WebServer/bin/httpd"." -k stop";
                 //C:\Program Files (x86)\Ampps\apache\bin
-                $command = $path."httpd"." -k restart";
+                $command = $path." -k restart";
                 //$command = $path."httpd"." -k stop";
-                echo exec($command);
+                //$output = shell_exec($command);
+                //$logger->notice("Command=" . $command . ": " . $output);
+                exec( $command, $output, $return_var );
+                $logger->notice("Command=" . $command . "; output=" . var_dump($output) . "; return=".var_dump($return_var));
             }
 
             //exit('Yes restartServerErrorCounter');

@@ -20,7 +20,7 @@ class DefaultController extends Controller
 
         //test
         $test = $this->getDummyClass();
-        $test = new DummyClass();
+        //$test = new DummyClass();
 
         return array('sitename'=>$this->container->getParameter('translationalresearch.sitename'));
     }
