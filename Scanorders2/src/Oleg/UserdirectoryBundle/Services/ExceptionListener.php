@@ -131,6 +131,7 @@ class ExceptionListener {
             $emailUtil->sendEmail($emails,$subject,$msg);
 
             //EventLog
+            $msg = "Email notification has been sent to " . implode(", ",$emails) . "<br>" . "Subject: " . $subject . "<br>Body: " . $msg;
             $userSecUtil->createUserEditEvent($sitename,$msg,$user,null,$request,"Critical Error Email Sent");
 
             //exit('Yes emailCriticalError');
