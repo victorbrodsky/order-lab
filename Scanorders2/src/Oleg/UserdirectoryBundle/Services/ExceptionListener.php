@@ -100,9 +100,9 @@ class ExceptionListener {
                 $sitename = "employees";
             }
 
-            $emails = $userSecUtil->getUserEmailsByRole($sitename,"Platform Administrator");
-            //echo "emails: <br>";
-            //print_r($emails);
+            $emails = $userSecUtil->getUserEmailsByRole($sitename,"ROLE_PLATFORM_ADMIN");
+            echo "emails: <br>";
+            print_r($emails);
 
             //2- If the checkbox is checked, Send an email to all users with System Administrator role saying:
             $subject = "Server Critical Error";
@@ -137,11 +137,22 @@ class ExceptionListener {
                 $userSecUtil->createUserEditEvent($sitename,$msg,$user,null,$request,"Restart Server");
 
                 //Restart Server
+                $path = "E:/Program Files (x86)/Aperio/WebServer/bin/";
+                $path = "C:/Program Files (x86)/Ampps/apache/bin/";
+
                 //C:\Program Files (x86)\Ampps\apache\bin
                 //E:\Program Files (x86)\Aperio\WebServer\bin
                 //httpd -k restart
                 //"E:/Program Files (x86)/Aperio/WebServer/bin/httpd" -k restart;
-                $command = "E:/Program Files (x86)/Aperio/WebServer/bin/httpd"." -k restart";
+                //$command = "E:/Program Files (x86)/Aperio/WebServer/bin/httpd"." -k install";
+                $command = $path."httpd"." -k install";
+                echo exec($command);
+
+                //$command = "E:/Program Files (x86)/Aperio/WebServer/bin/httpd"." -k restart";
+                //$command = "E:/Program Files (x86)/Aperio/WebServer/bin/httpd"." -k stop";
+                //C:\Program Files (x86)\Ampps\apache\bin
+                $command = $path."httpd"." -k restart";
+                $command = $path."httpd"." -k stop";
                 echo exec($command);
             }
 
