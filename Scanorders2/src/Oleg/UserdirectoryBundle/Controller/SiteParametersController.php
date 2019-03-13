@@ -18,6 +18,7 @@
 namespace Oleg\UserdirectoryBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\PersistentCollection;
 use Oleg\UserdirectoryBundle\Entity\OrganizationalGroupDefault;
 use Oleg\UserdirectoryBundle\Form\InitialConfigurationType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -321,6 +322,22 @@ class SiteParametersController extends Controller
             if( $param == 'mailerSpool' || $param == 'mailerFlushQueueFrequency' ) {
                 $emailUtil = $this->get('user_mailer_utility');
                 $emailUtil->createEmailCronJob();
+            }
+
+            //convert possible array to string
+            if( is_array($originalParam) || $originalParam instanceof PersistentCollection ) {
+                $originalParamArr = array();
+                foreach($originalParam as $singleOriginalParam) {
+                    $originalParamArr[] = $singleOriginalParam."";
+                }
+                $originalParam = implode("; ",$originalParamArr);
+            }
+            if( is_array($updatedParam) || $updatedParam instanceof PersistentCollection ) {
+                $updatedParamArr = array();
+                foreach($updatedParam as $singleOriginalParam) {
+                    $updatedParamArr[] = $singleOriginalParam."";
+                }
+                $updatedParam = implode("; ",$updatedParamArr);
             }
 
             //add a new eventlog record for an updated parameter

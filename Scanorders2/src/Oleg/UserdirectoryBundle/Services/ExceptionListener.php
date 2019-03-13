@@ -100,7 +100,23 @@ class ExceptionListener {
                 $sitename = "employees";
             }
 
-            $emails = $userSecUtil->getUserEmailsByRole($sitename,null,array("ROLE_PLATFORM_ADMIN"));
+            //$emails = $userSecUtil->getUserEmailsByRole($sitename,null,array("ROLE_PLATFORM_ADMIN","ROLE_PLATFORM_DEPUTY_ADMIN"));
+            $emails = $userSecUtil->getUserEmailsByRole($sitename,"Platform Administrator");
+            //echo "emails: <br>";
+            //print_r($emails);
+            //exit('111');
+
+            //except these users
+            $exceptionUsers = $userSecUtil->getSiteSettingParameter('emailCriticalErrorExceptionUsers');
+            $exceptionUsersEmails = array();
+            foreach($exceptionUsers as $exceptionUser) {
+               // echo "exceptionUser=".$exceptionUser."<br>";
+                $exceptionUsersEmails[] = $exceptionUser->getSingleEmail();
+            }
+
+            if( count($exceptionUsersEmails) > 0 ) {
+                $emails = array_diff($emails, $exceptionUsersEmails);
+            }
             //echo "emails: <br>";
             //print_r($emails);
             //exit('111');

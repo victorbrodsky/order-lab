@@ -1086,6 +1086,27 @@ class SiteParametersType extends AbstractType
                 'attr' => array('class' => 'form-control')
             ));
         }
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'emailCriticalErrorExceptionUsers' ) {
+//            $builder->add('emailCriticalErrorExceptionUsers', null, array(
+//                'label' => 'Do not send critical error notifications to the following users:',
+//                'attr' => array('class' => 'combobox')
+//            ));
+
+            $builder->add( 'emailCriticalErrorExceptionUsers', EntityType::class, array(
+                'class' => 'OlegUserdirectoryBundle:User',
+                'label'=>'Do not send critical error notifications to the following users:',
+                'required'=> false,
+                'multiple' => true,
+                'attr' => array('class'=>'combobox combobox-width'),
+                'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('user')
+                        ->where("user.roles LIKE '%ROLE_PLATFORM_ADMIN%' OR user.roles LIKE '%ROLE_PLATFORM_DEPUTY_ADMIN%'")
+                        ->orderBy("user.primaryPublicUserId","ASC");
+                },
+            ));
+
+        }
+
     }
     
     /**

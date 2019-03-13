@@ -1126,6 +1126,15 @@ class SiteParameters {
     private $emailCriticalError;
 
     /**
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\JoinTable(name="user_siteparameter_emailcriticalerrorexceptionuser",
+     *      joinColumns={@ORM\JoinColumn(name="siteparameter_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="exceptionuser_id", referencedColumnName="id")}
+     * )
+     **/
+    private $emailCriticalErrorExceptionUsers;
+
+    /**
      * Restart Apache in case of critical this many errors over the course of 10 minutes:
      *
      * @ORM\Column(type="integer", nullable=true)
@@ -3954,7 +3963,21 @@ class SiteParameters {
         $this->restartServerErrorCounter = $restartServerErrorCounter;
     }
 
-    
+    public function getEmailCriticalErrorExceptionUsers()
+    {
+        return $this->emailCriticalErrorExceptionUsers;
+    }
+    public function addEmailCriticalErrorExceptionUser($item)
+    {
+        if( $item && !$this->emailCriticalErrorExceptionUsers->contains($item) ) {
+            $this->emailCriticalErrorExceptionUsers->add($item);
+        }
+        return $this;
+    }
+    public function removeEmailCriticalErrorExceptionUser($item)
+    {
+        $this->emailCriticalErrorExceptionUsers->removeElement($item);
+    }
 
     
     

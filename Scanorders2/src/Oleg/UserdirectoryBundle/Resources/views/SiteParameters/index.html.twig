@@ -151,6 +151,16 @@
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'emailCriticalError'}) }}">Edit</a></td>
             </tr>
             <tr>
+                <td>Do not send critical error notifications to the following users</td>
+                <td>
+                    {#{{ entity.emailCriticalErrorExceptionUsers }}#}
+                    {% for exceptionUser in entity.emailCriticalErrorExceptionUsers %}
+                        {{ exceptionUser }}<br>
+                    {% endfor %}
+                </td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'emailCriticalErrorExceptionUsers'}) }}">Edit</a></td>
+            </tr>
+            <tr>
                 <td>Restart Apache in case of critical this many errors over the course of 10 minutes</td>
                 <td>{{ entity.restartServerErrorCounter }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'restartServerErrorCounter'}) }}">Edit</a></td>
