@@ -61,7 +61,12 @@ class ExceptionListener {
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
         $emailUtil = $this->container->get('user_mailer_utility');
-        $user = $this->secTokenStorage->getToken()->getUser();
+
+        if( $this->secTokenStorage->getToken() ) {
+            $user = $this->secTokenStorage->getToken()->getUser();
+        } else {
+            $user = null;
+        }
 
         $request = $event->getRequest();
 
@@ -141,6 +146,7 @@ class ExceptionListener {
         }
 
         $maxErrorCounter = $userSecUtil->getSiteSettingParameter('restartServerErrorCounter');
+        $maxErrorCounter = null; //testing: httpd might cause unable to start the server normally after rebooting the server
         if( $maxErrorCounter ) {
 
             //get number of critical errors in the last 10 minutes

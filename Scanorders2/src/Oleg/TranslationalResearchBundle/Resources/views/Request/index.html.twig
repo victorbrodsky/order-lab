@@ -411,6 +411,15 @@
 
                             {% endif %}
 
+                            {% if transres_util.isAdminOrPrimaryReviewer() %}
+                                {% if eventObjectTypeId is defined and eventObjectTypeId %}
+                                    <hr>
+                                    <li>
+                                        <a href="{{ path('translationalresearch_event-log-per-object_log', { 'filter[objectType][]': eventObjectTypeId, 'filter[objectId]': transresRequest.id}) }}"
+                                        >View associated events</a>
+                                    </li>
+                                {% endif %}
+                            {% endif %}
 
                         </ul>
 

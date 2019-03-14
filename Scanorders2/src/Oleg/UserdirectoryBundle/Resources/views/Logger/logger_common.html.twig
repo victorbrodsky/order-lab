@@ -277,9 +277,8 @@
                     <td>{{ entity.objectType }}</td>
                 {% endif %}
 
+                {% set fullUrl = user_security_utility.getAbsoluetFullLoggerUrl(entity,app.request) %}
                 {% if hideObjectId is not defined or hideObjectId == false %}
-                    {#url='user' => 'directory/user/'#}
-                    {% set fullUrl = user_security_utility.getAbsoluetFullLoggerUrl(entity,app.request) %}
                     {% if entity.objectType and fullUrl %}
                         <td>
                             <a class="logger-row-mainlink" href="{{ fullUrl }}" target="_blank">{{ entity.entityId }}</a>
@@ -287,6 +286,12 @@
                     {% else %}
                         <td>
                             {{ entity.entityId }}
+                        </td>
+                    {% endif %}
+                {% else %}
+                    {% if entity.objectType and fullUrl %}
+                        <td style="display: none;">
+                            <a class="logger-row-mainlink" href="{{ fullUrl }}" target="_blank">{{ entity.entityId }}</a>
                         </td>
                     {% endif %}
                 {% endif %}

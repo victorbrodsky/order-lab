@@ -1957,6 +1957,13 @@ class RequestController extends Controller
 //            echo "myRequestsAction memory: ".($event->getMemory()/1000000)." MB<br>";
 //        }
 
+        $eventObjectType = $em->getRepository('OlegUserdirectoryBundle:EventObjectTypeList')->findOneByName("TransResRequest");
+        if( $eventObjectType ) {
+            $eventObjectTypeId = $eventObjectType->getId();
+        } else {
+            $eventObjectTypeId = null;
+        }
+
         $filterformView = null;
         //$filterDisable = true;
         if( $withfilter ) {
@@ -1972,6 +1979,7 @@ class RequestController extends Controller
             'requestTotalFeeHtml' => null, //$requestTotalFeeHtml
             'advancedFilter' => $advancedFilter,
             'project' => $project,
+            'eventObjectTypeId' => $eventObjectTypeId
             //'filterDisable' => $filterDisable, //testing
             //'hideaction' => true,    //testing
             //'hiderows' => true,      //testing
