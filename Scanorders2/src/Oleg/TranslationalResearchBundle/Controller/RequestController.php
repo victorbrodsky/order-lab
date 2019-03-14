@@ -588,7 +588,7 @@ class RequestController extends Controller
         $defaultAntibodyType = null;
 
         $eventType = "Request Viewed";
-        $msg = "Request ".$transresRequest->getOid() ." has been viewed on the edit page.";
+        $msg = "Work Request ".$transresRequest->getOid() ." has been viewed on the edit page.";
         $transresUtil->setEventLog($transresRequest,$eventType,$msg);
 
         return array(
@@ -931,7 +931,7 @@ class RequestController extends Controller
         }
 
         $eventType = "Request Viewed";
-        $msg = "Request ".$transresRequest->getOid() ." has been viewed on the show review page.";
+        $msg = "Work Request ".$transresRequest->getOid() ." has been viewed on the show review page.";
         $transresUtil->setEventLog($transresRequest,$eventType,$msg);
 
         $showPackingSlip = false;
@@ -944,7 +944,7 @@ class RequestController extends Controller
             'project' => $project,
             'form' => $form->createView(),
             'cycle' => $cycle,
-            'title' => "Request ".$transresRequest->getOid() . $feeHtml,
+            'title' => "Work Request ".$transresRequest->getOid() . $feeHtml,
             'routeName' => $request->get('_route'),
             //'handsometableData' => json_encode($jsonData)
             'handsometableData' => $jsonData,
@@ -2260,7 +2260,7 @@ class RequestController extends Controller
             'form' => $form->createView(),
             'cycle' => $cycle,
             'statMachineType' => 'progress',
-            'title' => "Progress Review Request ".$transresRequest->getOid(),
+            'title' => "Completion Progress Status Update for Work Request ".$transresRequest->getOid(),
             'handsometableData' => $jsonData
         );
     }
@@ -2307,7 +2307,7 @@ class RequestController extends Controller
             'form' => $form->createView(),
             'cycle' => $cycle,
             'statMachineType' => 'billing',
-            'title' => "Billing Review Request ".$transresRequest->getOid(),
+            'title' => "Billing Progress Status Update for Work Request ".$transresRequest->getOid(),
         );
     }
 

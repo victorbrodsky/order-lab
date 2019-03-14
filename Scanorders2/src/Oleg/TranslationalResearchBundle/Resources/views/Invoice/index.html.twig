@@ -88,9 +88,14 @@
                     {% endif %}
                 </td>
                 <td>{{ invoice.status }}</td>
-                <td>
-                    {#{{ invoice.invoiceTo }}#}
-                    {{ invoice.invoiceTo|length > 25 ? invoice.invoiceTo|slice(0, 25) ~ '...' : invoice.invoiceTo  }}
+                <td class="rowlink-skip">
+                    {% if invoice.invoiceTo %}
+                        {{ invoice.invoiceTo|length > 25 ? invoice.invoiceTo|slice(0, 25) ~ '...' : invoice.invoiceTo  }}
+                        {#{% set invoiceToStr = invoice.invoiceTo|length > 25 ? invoice.invoiceTo|slice(0, 25) ~ '...' : invoice.invoiceTo %}#}
+                        {#{% set personurl = path(translationalresearch_sitename~'_showuser',{'id':invoice.invoiceTo.id}) %}#}
+                        {#{% set personlink = '<a href="'~personurl~'" target="_blank">'~invoiceToStr~'</a>'  %}#}
+                        {#{{ personlink|raw }}#}
+                    {% endif %}
                 </td>
                 <td>
                     {% if invoice.total %}

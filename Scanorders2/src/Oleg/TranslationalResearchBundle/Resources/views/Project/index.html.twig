@@ -502,6 +502,14 @@
                                 </li>
                             {% endif %}
 
+                            {% if transres_permission_util.hasProjectPermission("close",project) and project.state != 'closed' %}
+                                <li>
+                                    <a general-data-confirm="Are you sure you want to close project {{ project.oid }}?"
+                                       href="{{ path(translationalresearch_sitename~'_project_close', { 'id': project.id }) }}"
+                                    >Close project request</a>
+                                </li>
+                            {% endif %}
+
                             {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
                                 <li>
                                     <a general-data-confirm="Are you sure you want to delete project {{ project.oid }}?"

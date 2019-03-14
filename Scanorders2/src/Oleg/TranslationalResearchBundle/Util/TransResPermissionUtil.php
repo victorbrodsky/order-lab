@@ -449,6 +449,13 @@ class TransResPermissionUtil
             }
         }
 
+        if( $action == "close" ) {
+            $done = true;
+            if( $this->secAuth->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ) {
+                return true;
+            }
+        }
+
         if( $action == "delete" ) {
             $done = true;
             if( $this->secAuth->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ) {
