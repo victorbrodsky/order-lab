@@ -65,7 +65,7 @@ class ExceptionListener {
         if( $this->secTokenStorage->getToken() ) {
             $user = $this->secTokenStorage->getToken()->getUser();
         } else {
-            $user = null;
+            $user = $userSecUtil->findSystemUser();
         }
 
         $request = $event->getRequest();
