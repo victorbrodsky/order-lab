@@ -66,12 +66,13 @@ class ReminderController extends Controller
 
                         //AP/CP invoices due over 1 month(s) ago currently result in 5 automatic reminder emails every 1 month(s).
                         //Hematopathology invoices due over 1 month(s) ago currently result in 5 automatic reminder emails every 1 month(s).
-                        $criterionsArr[] = $projectSpecialty->getName()." - for over $invoiceDueDateMax months (reminder email will send every $reminderInterval months for $maxReminderCount times)";
+                        //$criterionsArr[] = $projectSpecialty->getName()." - for over $invoiceDueDateMax months (reminder email will send every $reminderInterval months for $maxReminderCount times)";
+                        $criterionsArr[] = $projectSpecialty->getName()." invoices due over $invoiceDueDateMax month(s) ago currently result in $maxReminderCount automatic reminder emails every $reminderInterval month(s).";
                     }
                 }
             }
             if( count($criterionsArr) > 0 ) {
-                $criterions = ": <br>" . implode("<br>",$criterionsArr);
+                $criterions = "<br>" . implode("<br>",$criterionsArr);
             }
 
             //The following invoices have remained unpaid for over X days:
