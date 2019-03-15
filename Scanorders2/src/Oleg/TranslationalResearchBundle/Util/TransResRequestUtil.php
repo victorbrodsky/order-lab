@@ -3690,11 +3690,20 @@ class TransResRequestUtil
                 echo $id.": createDateStr=$createDateStr<br>";
                 $createDate = \DateTime::createFromFormat('Y-m-d H:i:s', $createDateStr);
 
-                if (!$minDate || $createDate < $minDate) {
+                if( !$minDate ) {
                     $minDate = $createDate;
                 }
-                if (!$maxDate || $createDate > $maxDate) {
+                if( !$maxDate ) {
                     $maxDate = $createDate;
+                }
+
+                if( $createDate && $minDate ) {
+                    if( $createDate < $minDate ) {
+                        $minDate = $createDate;
+                    }
+                    if( $createDate > $maxDate ) {
+                        $maxDate = $createDate;
+                    }
                 }
             }
 
