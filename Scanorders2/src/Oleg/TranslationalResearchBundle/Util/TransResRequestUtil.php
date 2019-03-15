@@ -3686,6 +3686,7 @@ class TransResRequestUtil
 
             //min and max dates
             $createDateStr = $idParams['createDate']; //2018-01-30 17:24:39
+            echo "createDateStr=$createDateStr<br>";
             $createDate = \DateTime::createFromFormat('Y-m-d H:i:s', $createDateStr);
             if( !$minDate || $createDate < $minDate ) {
                 $minDate = $createDate;
