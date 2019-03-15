@@ -3686,9 +3686,10 @@ class TransResRequestUtil
 
             //min and max dates
             $createDateStr = $idParams['createDate']; //2018-01-30 17:24:39
-            echo $id.": createDateStr=$createDateStr<br>";
-            $createDate = \DateTime::createFromFormat('Y-m-d H:i:s', $createDateStr);
-            if( $createDate ) {
+            if( $createDateStr ) {
+                echo $id.": createDateStr=$createDateStr<br>";
+                $createDate = \DateTime::createFromFormat('Y-m-d H:i:s', $createDateStr);
+
                 if (!$minDate || $createDate < $minDate) {
                     $minDate = $createDate;
                 }
@@ -3697,10 +3698,10 @@ class TransResRequestUtil
                 }
             }
 
-            $invoiceIds[] = $idParams['id'];
+            $invoiceIds[] = $id;
 
             $counter++;
-        }
+        }//foreach
 
         if( !$minDate ) {
             echo "no min date<br>";
@@ -3713,7 +3714,7 @@ class TransResRequestUtil
         if( $minDate && $maxDate ) {
             $minDateStr = $minDate->format("m/d/Y");
             $maxDateStr = $maxDate->format("m/d/Y");
-            //echo "minDate=$minDateStr; maxDate=$maxDateStr <br>";
+            echo "minDate=$minDateStr; maxDate=$maxDateStr <br>";
             //$minDateStr = $minDate;
             //$maxDateStr = $maxDate;
             //over X months [MM/DD/YYYY]-[MM/DD/YYYY]
