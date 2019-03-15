@@ -3688,11 +3688,13 @@ class TransResRequestUtil
             $createDateStr = $idParams['createDate']; //2018-01-30 17:24:39
             echo $id.": createDateStr=$createDateStr<br>";
             $createDate = \DateTime::createFromFormat('Y-m-d H:i:s', $createDateStr);
-            if( !$minDate || $createDate < $minDate ) {
-                $minDate = $createDate;
-            }
-            if( !$maxDate || $createDate > $maxDate ) {
-                $maxDate = $createDate;
+            if( $createDate ) {
+                if (!$minDate || $createDate < $minDate) {
+                    $minDate = $createDate;
+                }
+                if (!$maxDate || $createDate > $maxDate) {
+                    $maxDate = $createDate;
+                }
             }
 
             $invoiceIds[] = $idParams['id'];
