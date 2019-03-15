@@ -3687,11 +3687,11 @@ class TransResRequestUtil
             //min and max dates
             $createDateStr = $idParams['createDate']; //2018-01-30 17:24:39
             if( $createDateStr ) {
-                echo $id.": createDateStr=$createDateStr<br>";
+                //echo $id.": createDateStr=$createDateStr<br>";
                 //$createDate = \DateTime::createFromFormat('Y-m-d H:i:s', $createDateStr);
                 //$createDate = strtotime($createDateStr);
                 $createDate = new \DateTime($createDateStr);
-                echo $id."origDate=$createDateStr; newDate=".$createDate->format("m/d/Y")."<br>";
+                //echo $id."origDate=$createDateStr; newDate=".$createDate->format("m/d/Y")."<br>";
 
                 if( !$minDate ) {
                     $minDate = $createDate;
@@ -3701,17 +3701,17 @@ class TransResRequestUtil
                 }
 
                 if( $createDate && $minDate ) {
-                    echo $id.": start comparing dates:<br>";
+                    //echo $id.": start comparing dates:<br>";
                     if( $createDate < $minDate ) {
-                        echo $id.": assign mindate<br>";
+                        //echo $id.": assign mindate<br>";
                         $minDate = $createDate;
                     }
                     if( $createDate > $maxDate ) {
-                        echo $id.": assign maxdate<br>";
+                        //echo $id.": assign maxdate<br>";
                         $maxDate = $createDate;
                     }
                 } else {
-                    echo $id.": NO comparing dates:<br>";
+                    //echo $id.": NO comparing dates:<br>";
                 }
             }
 
@@ -3720,18 +3720,18 @@ class TransResRequestUtil
             $counter++;
         }//foreach
 
-        if( !$minDate ) {
-            echo "no min date<br>";
-        }
-        if( !$maxDate ) {
-            echo "no max date<br>";
-        }
+//        if( !$minDate ) {
+//            echo "no min date<br>";
+//        }
+//        if( !$maxDate ) {
+//            echo "no max date<br>";
+//        }
 
         $dateStr = "";
         if( $minDate && $maxDate ) {
             $minDateStr = $minDate->format("m/d/Y");
             $maxDateStr = $maxDate->format("m/d/Y");
-            echo "minDate=$minDateStr; maxDate=$maxDateStr <br>";
+            //echo "minDate=$minDateStr; maxDate=$maxDateStr <br>";
             //$minDateStr = $minDate;
             //$maxDateStr = $maxDate;
             //over X months [MM/DD/YYYY]-[MM/DD/YYYY]
@@ -3748,7 +3748,7 @@ class TransResRequestUtil
             }
             $dateStr = " " . $diffMonthStr . $minDateStr . "-" . $maxDateStr;
         } else {
-            echo "no min/max date<br>";
+            //echo "no min/max date<br>";
         }
 
         //123 matching for $456
