@@ -196,12 +196,11 @@
     {% if threadId and actionReviewLinks|length > 0 %}
 
         {% if transres_request_util.isRequestStateReviewer(transresRequest,statMachineType) %}
-            <p><strong>
-                {#This request is in {{ transres_request_util.getRequestLabelByStateMachineType(transresRequest,statMachineType) }} stage.#}
-                {#Please review this request, enter a comment (if any),#}
-                {#and press the button to enter your opinion:#}
-                {{ transres_request_util.getRequestReviewStrByStateMachineType(transresRequest,statMachineType) }}
-            </strong></p>
+            <p>
+                <strong>
+                    {{ transres_request_util.getRequestReviewStrByStateMachineType(transresRequest,statMachineType) }}
+                </strong>
+            </p>
         {% endif %}
 
         <div class="well transres-review-holder text-center col-xs-12">

@@ -3645,7 +3645,7 @@ class TransResRequestUtil
     }
 
     public function getMatchingStrInvoiceByDqlParameters($dql,$dqlParameters) {
-        $dql->select('invoice.id,invoice.total,invoice.paid,invoice.due');
+        $dql->select('invoice.id,invoice.total,invoice.paid,invoice.due,invoice.createDate');
         //$dql->groupBy('invoice.id');
 
         $query = $dql->getQuery();
@@ -3665,6 +3665,11 @@ class TransResRequestUtil
         $paidSum = 0;
         $dueSum = 0;
         //$totalSum = $this->toDecimal($totalSum);
+
+        //use createDate to get min and max dates
+        $minDate = null;
+        $maxDate = null;
+
         $counter = 0;
         foreach($results as $idParams) {
             //echo "id=".$idTotal.":$total"."<br>";
@@ -3679,14 +3684,36 @@ class TransResRequestUtil
             $paidSum = $paidSum + $paid;
             $dueSum = $dueSum + $due;
 
+            //min and max dates
+            $createDateStr = $idParams['createDate']; //2018-01-30 17:24:39
+            $createDate = \DateTime::createFromFormat('Y-m-d H:i:s', $createDateStr);
+            if( !$minDate || $createDate < $minDate ) {
+                $minDate = $createDate;
+            }
+            if( !$maxDate || $createDate > $maxDate ) {
+                $maxDate = $createDate;
+            }
+
             $invoiceIds[] = $idParams['id'];
 
             $counter++;
         }
 
+        $dateStr = "";
+        if( $minDate && $maxDate ) {
+            $minDateStr = $minDate->format("m/d/Y");
+            $maxDateStr = $maxDate->format("m/d/Y");
+            //echo "minDate=$minDateStr; maxDate=$maxDateStr <br>";
+            //$minDateStr = $minDate;
+            //$maxDateStr = $maxDate;
+            //over X months [MM/DD/YYYY]-[MM/DD/YYYY]
+            $dateStr = " over X months " . $minDateStr . "-" . $maxDateStr;
+        }
+
         //123 matching for $456
         if( $counter ) {
-            $result = $counter . " matching; Total: $" . $this->getNumberFormat($totalSum) . ", Paid: $" . $this->getNumberFormat($paidSum) . ", Unpaid: $" . $this->getNumberFormat($dueSum);
+            //544 matching over X months [MM/DD/YYYY]-[MM/DD/YYYY]
+            $result = $counter . " matching$dateStr; Total: $" . $this->getNumberFormat($totalSum) . ", Paid: $" . $this->getNumberFormat($paidSum) . ", Unpaid: $" . $this->getNumberFormat($dueSum);
         } else {
             $result = $counter . " matching";
         }
