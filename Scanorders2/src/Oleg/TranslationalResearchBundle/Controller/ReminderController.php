@@ -247,7 +247,7 @@ class ReminderController extends Controller
             //$title = "Delayed Pending Work Requests";
 
             //The following work requests are pending completion for over X days:
-            $title = "[[REQUEST_COUNTER]] following work requests are pending completion.";
+            $title = "[[REQUEST_COUNTER]] following work requests are pending completion";
             foreach($projectSpecialties as $projectSpecialtyObject) {
                 $reminderDelay = $transresUtil->getTransresSiteProjectParameter("pendingRequestReminderDelay", null, $projectSpecialtyObject);
                 if (!$reminderDelay) {
@@ -277,7 +277,7 @@ class ReminderController extends Controller
         if( strpos($routeName, "translationalresearch_request_completed_reminder") !== false ) {
             //$title = "Delayed Completed Work Requests";
             //The following work requests have been completed for over X days, but the request submitter has not been notified:
-            $title = "[[REQUEST_COUNTER]] following work requests have been completed, but the request submitter has not been notified.";
+            $title = "[[REQUEST_COUNTER]] following work requests have been completed, but the request submitter has not been notified";
             foreach($projectSpecialties as $projectSpecialtyObject) {
                 $reminderDelay = $transresUtil->getTransresSiteProjectParameter("completedRequestReminderDelay", null, $projectSpecialtyObject);
                 if (!$reminderDelay) {
