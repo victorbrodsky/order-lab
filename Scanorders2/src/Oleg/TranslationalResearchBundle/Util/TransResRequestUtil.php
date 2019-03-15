@@ -3674,7 +3674,7 @@ class TransResRequestUtil
         foreach($results as $idParams) {
             //echo "id=".$idTotal.":$total"."<br>";
             //print_r($idTotal);
-            //$id = $idTotal['id'];
+            $id = $idParams['id'];
             $total = $idParams['total'];
             $paid = $idParams['paid'];
             $due = $idParams['due'];
@@ -3686,7 +3686,7 @@ class TransResRequestUtil
 
             //min and max dates
             $createDateStr = $idParams['createDate']; //2018-01-30 17:24:39
-            echo "createDateStr=$createDateStr<br>";
+            echo $id.": createDateStr=$createDateStr<br>";
             $createDate = \DateTime::createFromFormat('Y-m-d H:i:s', $createDateStr);
             if( !$minDate || $createDate < $minDate ) {
                 $minDate = $createDate;
