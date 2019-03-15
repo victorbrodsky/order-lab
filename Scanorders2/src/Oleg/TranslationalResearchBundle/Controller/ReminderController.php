@@ -125,6 +125,8 @@ class ReminderController extends Controller
         //$states = array("irb_review");
         $finalResults = array();
 
+        $reminderDelayByStateProjectSpecialtyArr = array();
+
         foreach($states as $state) {
             $results = $transresReminderUtil->sendReminderReviewProjects($state,$showSummary);
             //echo "results count=".count($results)."<br>";
@@ -141,11 +143,19 @@ class ReminderController extends Controller
                     $reminderDelay = 14; //default 14 days
                 }
                 $reminderDelayArr[] = $reminderDelay . " days for " . $projectSpecialtyObject;
+                $reminderDelayByStateProjectSpecialtyArr[$projectSpecialtyObject.""] = $reminderDelay;
             }
             $reminderDelayStr = implode(", ",$reminderDelayArr);
 
             $state = $transresUtil->getStateLabelByName($state);
             $finalResults[$state . " (over " . $reminderDelayStr . ")"] = $results;
+
+            //The following periods are used to identify AP/CP project requests due for a reminder:
+            // IRB Review stage - 14 days,
+            // Awaiting Additional Review from Submitter: 14 days,
+            // Administrative Review stage: 14 days,
+            // Committee Review: 14 days,
+            // Final Review: 14 days.
         }
 
         if( $showSummary === true ) {
@@ -159,7 +169,8 @@ class ReminderController extends Controller
 
             //The following project requests are pending review for over X days:
             //$title = $projectCounter." Delayed Project Requests";
-            $title = "$projectCounter following project requests are pending review.";
+            //0 project requests are pending review.
+            $title = "$projectCounter project requests are pending review.";
 
             return $this->render("OlegTranslationalResearchBundle:Reminder:project-request-reminder-index.html.twig",
                 array(
