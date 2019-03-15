@@ -238,7 +238,7 @@ class ReminderController extends Controller
         $routeName = $request->get('_route');
         $showSummary = true;
 
-        $reminderDelayStr = "";
+        //$reminderDelayStr = "";
         $reminderDelayArr = array();
         $reminderDelayByStateProjectSpecialtyArr = array();
         $projectSpecialties = $transresUtil->getTransResProjectSpecialties(false);
@@ -253,10 +253,10 @@ class ReminderController extends Controller
                 if (!$reminderDelay) {
                     $reminderDelay = 14; //default 14 days
                 }
-                $reminderDelayArr[] = $reminderDelay . " days for " . $projectSpecialtyObject;
+                //$reminderDelayArr[] = $reminderDelay . " days for " . $projectSpecialtyObject;
                 $reminderDelayByStateProjectSpecialtyArr[$projectSpecialtyObject.""] = $reminderDelay;
             }
-            $reminderDelayStr = implode(", ",$reminderDelayArr);
+            //$reminderDelayStr = implode(", ",$reminderDelayArr);
 
             $sendEmailPath = "translationalresearch_request_pending_reminder_send";
             $states = array(
@@ -283,10 +283,10 @@ class ReminderController extends Controller
                 if (!$reminderDelay) {
                     $reminderDelay = 14; //default 14 days
                 }
-                $reminderDelayArr[] = $reminderDelay . " days for " . $projectSpecialtyObject;
+                //$reminderDelayArr[] = $reminderDelay . " days for " . $projectSpecialtyObject;
                 $reminderDelayByStateProjectSpecialtyArr[$projectSpecialtyObject.""] = $reminderDelay;
             }
-            $reminderDelayStr = implode(", ",$reminderDelayArr);
+            //$reminderDelayStr = implode(", ",$reminderDelayArr);
 
             $sendEmailPath = "translationalresearch_request_completed_reminder_send";
             $states = array(
@@ -306,10 +306,10 @@ class ReminderController extends Controller
                 if (!$reminderDelay) {
                     $reminderDelay = 14; //default 14 days
                 }
-                $reminderDelayArr[] = $reminderDelay . " days for " . $projectSpecialtyObject;
+                //$reminderDelayArr[] = $reminderDelay . " days for " . $projectSpecialtyObject;
                 $reminderDelayByStateProjectSpecialtyArr[$projectSpecialtyObject.""] = $reminderDelay;
             }
-            $reminderDelayStr = implode(", ",$reminderDelayArr);
+            //$reminderDelayStr = implode(", ",$reminderDelayArr);
 
             $sendEmailPath = "translationalresearch_request_completed_no_invoice_issued_reminder_send";
             $states = array(
