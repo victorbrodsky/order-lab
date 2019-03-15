@@ -133,30 +133,47 @@ class ReminderController extends Controller
             //print_r($results);
 
             //overdue date
+            $stateLabel = $transresUtil->getStateLabelByName($state);
             $modifiedState = str_replace("_","",$state);
             $projectReminderDelayField = 'projectReminderDelay'.$modifiedState;
-            $reminderDelayArr = array();
+            //$reminderDelayArr = array();
             $projectSpecialties = $transresUtil->getTransResProjectSpecialties(false);
             foreach($projectSpecialties as $projectSpecialtyObject) {
                 $reminderDelay = $transresUtil->getTransresSiteProjectParameter($projectReminderDelayField, null, $projectSpecialtyObject);
                 if (!$reminderDelay) {
                     $reminderDelay = 14; //default 14 days
                 }
-                $reminderDelayArr[] = $reminderDelay . " days for " . $projectSpecialtyObject;
-                $reminderDelayByStateProjectSpecialtyArr[$projectSpecialtyObject.""] = $reminderDelay;
+                //$reminderDelayArr[] = $reminderDelay . " days for " . $projectSpecialtyObject;
+                $reminderDelayByStateProjectSpecialtyArr[$projectSpecialtyObject.""][$stateLabel] = $reminderDelay;
             }
-            $reminderDelayStr = implode(", ",$reminderDelayArr);
+            //$reminderDelayStr = implode(", ",$reminderDelayArr);
 
-            $state = $transresUtil->getStateLabelByName($state);
-            $finalResults[$state . " (over " . $reminderDelayStr . ")"] = $results;
 
-            //The following periods are used to identify AP/CP project requests due for a reminder:
-            // IRB Review stage - 14 days,
-            // Awaiting Additional Review from Submitter: 14 days,
-            // Administrative Review stage: 14 days,
-            // Committee Review: 14 days,
-            // Final Review: 14 days.
+            //$finalResults[$stateLabel . " (over " . $reminderDelayStr . ")"] = $results;
+            $finalResults[$stateLabel] = $results;
         }
+
+        //echo "<pre>";
+        //print_r($reminderDelayByStateProjectSpecialtyArr);
+        //echo "</pre>";
+
+        //The following periods are used to identify AP/CP project requests due for a reminder:
+        // IRB Review stage - 14 days,
+        // Awaiting Additional Review from Submitter: 14 days,
+        // Administrative Review stage: 14 days,
+        // Committee Review: 14 days,
+        // Final Review: 14 days.
+//        $projectSpecialties = $transresUtil->getTransResProjectSpecialties(false);
+//        foreach($projectSpecialties as $projectSpecialtyObject) {
+//            foreach($states as $state) {
+//                $reminderDelay = $transresUtil->getTransresSiteProjectParameter($projectReminderDelayField, null, $projectSpecialtyObject);
+//                if (!$reminderDelay) {
+//                    $reminderDelay = 14; //default 14 days
+//                }
+//                $reminderDelayByStateProjectSpecialtyArr[$projectSpecialtyObject.""] = $reminderDelay;
+//            }
+//        }
+
 
         if( $showSummary === true ) {
             $projectCounter = 0;
@@ -167,10 +184,26 @@ class ReminderController extends Controller
                 }
             }
 
+            //The following periods are used to identify AP/CP project requests due for a reminder:
+            // IRB Review stage - 14 days,
+            // Awaiting Additional Review from Submitter: 14 days,
+            // Administrative Review stage: 14 days,
+            // Committee Review: 14 days,
+            // Final Review: 14 days.
+            $titleInfoArr = array();
+            foreach($reminderDelayByStateProjectSpecialtyArr as $reminderDelayByStateProjectSpecialty) {
+                $reminderArr = array();
+                foreach($reminderDelayByStateProjectSpecialty as $stateLabel=>$reminderDelay) {
+                    $reminderArr[] = $stateLabel." - ".$reminderDelay;
+                }
+                $titleInfoArr[] = "<br>The following periods are used to identify AP/CP project requests due for a reminder:<br>".implode(", ",$reminderArr);
+            }
+
             //The following project requests are pending review for over X days:
             //$title = $projectCounter." Delayed Project Requests";
             //0 project requests are pending review.
-            $title = "$projectCounter project requests are pending review.";
+            $title = "$projectCounter project requests are pending review.<br>" . implode("<br>",$titleInfoArr);
+
 
             return $this->render("OlegTranslationalResearchBundle:Reminder:project-request-reminder-index.html.twig",
                 array(
