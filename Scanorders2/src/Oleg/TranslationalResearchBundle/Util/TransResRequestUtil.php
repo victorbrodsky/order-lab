@@ -570,6 +570,19 @@ class TransResRequestUtil
         return "<Unknown State for ".$transresRequest.">";
     }
 
+    public function getRequestReviewStrByStateMachineType( $transresRequest, $statMachineType) {
+        $stateLabel = $this->getRequestLabelByStateMachineType($transresRequest,$statMachineType);
+        if( $statMachineType == 'progress' ) {
+            $str = 'The completion progress status of this work request is "'.$stateLabel.'".'.
+                " Please review this work request, enter a comment (if any), and press the button to change the completion progress status";
+        }
+        if( $statMachineType == 'billing' ) {
+            $str = 'The billing progress status of this work request is "'.$stateLabel.'".'.
+            " Please review this work request, enter a comment (if any), and press the button to change the billing progress status";
+        }
+        return $str;
+    }
+    
     public function getHtmlClassTransition( $transitionName ) {
         //echo "transitionName=$transitionName<br>"; //canceled_active
         //return "btn btn-success transres-review-submit";
