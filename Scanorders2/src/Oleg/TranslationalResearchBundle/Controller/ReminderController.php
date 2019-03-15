@@ -356,9 +356,9 @@ class ReminderController extends Controller
                 $titleInfoArr[] = "$reminderDelayByStateProjectSpecialty days period are used to identify $projectSpecialtyStr project requests due for a reminder";
             }
 
-            $title = str_replace("[[REQUEST_COUNTER]]",$counter,$title);
+            $titleStr = str_replace("[[REQUEST_COUNTER]]",$counter,$title);
 
-            $title = $title . "<br>" . implode("<br>",$titleInfoArr);
+            $title = $titleStr . "<br>" . implode("<br>",$titleInfoArr);
 
             return $this->render("OlegTranslationalResearchBundle:Reminder:project-request-reminder-index.html.twig",
                 array(
@@ -367,7 +367,7 @@ class ReminderController extends Controller
                     'entityCounter' => $counter,
                     'sendEmailPath' => $sendEmailPath,
                     'showPath' => 'translationalresearch_request_show',
-                    'emptyMessage' => "There are no $title corresponding to the site setting parameters"
+                    'emptyMessage' => "There are no $titleStr corresponding to the site setting parameters"
                 )
             );
         }
