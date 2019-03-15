@@ -3688,7 +3688,9 @@ class TransResRequestUtil
             $createDateStr = $idParams['createDate']; //2018-01-30 17:24:39
             if( $createDateStr ) {
                 echo $id.": createDateStr=$createDateStr<br>";
-                $createDate = \DateTime::createFromFormat('Y-m-d', $createDateStr);
+                //$createDate = \DateTime::createFromFormat('Y-m-d H:i:s', $createDateStr);
+                //$createDate = strtotime($createDateStr);
+                $createDate = new \DateTime($createDateStr);
                 echo $id."origDate=$createDateStr; newDate=".$createDate->format("m/d/Y")."<br>";
 
                 if( !$minDate ) {
