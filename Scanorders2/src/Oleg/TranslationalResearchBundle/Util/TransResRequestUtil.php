@@ -3698,12 +3698,17 @@ class TransResRequestUtil
                 }
 
                 if( $createDate && $minDate ) {
+                    echo $id.": start comparing dates:<br>";
                     if( $createDate < $minDate ) {
+                        echo $id.": assign mindate<br>";
                         $minDate = $createDate;
                     }
                     if( $createDate > $maxDate ) {
+                        echo $id.": assign maxdate<br>";
                         $maxDate = $createDate;
                     }
+                } else {
+                    echo $id.": NO comparing dates:<br>";
                 }
             }
 
