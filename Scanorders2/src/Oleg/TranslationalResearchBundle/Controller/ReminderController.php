@@ -63,6 +63,9 @@ class ReminderController extends Controller
                         $invoiceDueDateMax = $invoiceReminderScheduleArr[0];    //over due in months (integer) - 6
                         $reminderInterval = $invoiceReminderScheduleArr[1];     //reminder interval in months (integer) - 3
                         $maxReminderCount = $invoiceReminderScheduleArr[2];     //max reminder count (integer) - 5
+
+                        //AP/CP invoices due over 1 month(s) ago currently result in 5 automatic reminder emails every 1 month(s).
+                        //Hematopathology invoices due over 1 month(s) ago currently result in 5 automatic reminder emails every 1 month(s).
                         $criterionsArr[] = $projectSpecialty->getName()." - for over $invoiceDueDateMax months (reminder email will send every $reminderInterval months for $maxReminderCount times)";
                     }
                 }
@@ -72,7 +75,9 @@ class ReminderController extends Controller
             }
 
             //The following invoices have remained unpaid for over X days:
-            $title = "The following $invoiceCounter invoices have remained unpaid".$criterions;
+            $title = "The following $invoiceCounter invoices have remained unpaid.".$criterions;
+            //21 invoices have remained unpaid.
+            $title = "$invoiceCounter invoices have remained unpaid. ".$criterions;
 
             return $this->render("OlegTranslationalResearchBundle:Reminder:unpaid-invoice-index.html.twig",
                 array(

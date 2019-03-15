@@ -3707,7 +3707,11 @@ class TransResRequestUtil
             //$minDateStr = $minDate;
             //$maxDateStr = $maxDate;
             //over X months [MM/DD/YYYY]-[MM/DD/YYYY]
-            $dateStr = " over X months " . $minDateStr . "-" . $maxDateStr;
+            $diff = $maxDate->diff($minDate);
+            if( $diff ) {
+                $diffMonth = ($diff->format('%y') * 12) + $diff->format('%m');
+            }
+            $dateStr = " over $diffMonth months " . $minDateStr . "-" . $maxDateStr;
         }
 
         //123 matching for $456
