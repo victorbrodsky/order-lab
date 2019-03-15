@@ -3700,6 +3700,13 @@ class TransResRequestUtil
             $counter++;
         }
 
+        if( !$minDate ) {
+            echo "no min date<br>";
+        }
+        if( !$maxDate ) {
+            echo "no max date<br>";
+        }
+
         $dateStr = "";
         if( $minDate && $maxDate ) {
             $minDateStr = $minDate->format("m/d/Y");
@@ -3721,7 +3728,7 @@ class TransResRequestUtil
             }
             $dateStr = " " . $diffMonthStr . $minDateStr . "-" . $maxDateStr;
         } else {
-            //echo "no min/max date<br>";
+            echo "no min/max date<br>";
         }
 
         //123 matching for $456
