@@ -153,28 +153,6 @@ class ReminderController extends Controller
             $finalResults[$stateLabel] = $results;
         }
 
-        //echo "<pre>";
-        //print_r($reminderDelayByStateProjectSpecialtyArr);
-        //echo "</pre>";
-
-        //The following periods are used to identify AP/CP project requests due for a reminder:
-        // IRB Review stage - 14 days,
-        // Awaiting Additional Review from Submitter: 14 days,
-        // Administrative Review stage: 14 days,
-        // Committee Review: 14 days,
-        // Final Review: 14 days.
-//        $projectSpecialties = $transresUtil->getTransResProjectSpecialties(false);
-//        foreach($projectSpecialties as $projectSpecialtyObject) {
-//            foreach($states as $state) {
-//                $reminderDelay = $transresUtil->getTransresSiteProjectParameter($projectReminderDelayField, null, $projectSpecialtyObject);
-//                if (!$reminderDelay) {
-//                    $reminderDelay = 14; //default 14 days
-//                }
-//                $reminderDelayByStateProjectSpecialtyArr[$projectSpecialtyObject.""] = $reminderDelay;
-//            }
-//        }
-
-
         if( $showSummary === true ) {
             $projectCounter = 0;
 
@@ -184,6 +162,10 @@ class ReminderController extends Controller
                 }
             }
 
+//            echo "<pre>";
+//            print_r($reminderDelayByStateProjectSpecialtyArr);
+//            echo "</pre>";
+
             //The following periods are used to identify AP/CP project requests due for a reminder:
             // IRB Review stage - 14 days,
             // Awaiting Additional Review from Submitter: 14 days,
@@ -191,12 +173,12 @@ class ReminderController extends Controller
             // Committee Review: 14 days,
             // Final Review: 14 days.
             $titleInfoArr = array();
-            foreach($reminderDelayByStateProjectSpecialtyArr as $reminderDelayByStateProjectSpecialty) {
+            foreach($reminderDelayByStateProjectSpecialtyArr as $projectSpecialtyStr => $reminderDelayByStateProjectSpecialty) {
                 $reminderArr = array();
                 foreach($reminderDelayByStateProjectSpecialty as $stateLabel=>$reminderDelay) {
                     $reminderArr[] = $stateLabel." - ".$reminderDelay;
                 }
-                $titleInfoArr[] = "<br>The following periods are used to identify AP/CP project requests due for a reminder:<br>".implode(", ",$reminderArr);
+                $titleInfoArr[] = "<br>The following periods are used to identify $projectSpecialtyStr project requests due for a reminder:<br>".implode(", ",$reminderArr);
             }
 
             //The following project requests are pending review for over X days:
@@ -258,6 +240,7 @@ class ReminderController extends Controller
 
         $reminderDelayStr = "";
         $reminderDelayArr = array();
+        $reminderDelayByStateProjectSpecialtyArr = array();
         $projectSpecialties = $transresUtil->getTransResProjectSpecialties(false);
 
         if( strpos($routeName, "translationalresearch_request_pending_reminder") !== false ) {
@@ -271,6 +254,7 @@ class ReminderController extends Controller
                     $reminderDelay = 14; //default 14 days
                 }
                 $reminderDelayArr[] = $reminderDelay . " days for " . $projectSpecialtyObject;
+                $reminderDelayByStateProjectSpecialtyArr[$projectSpecialtyObject.""] = $reminderDelay;
             }
             $reminderDelayStr = implode(", ",$reminderDelayArr);
 
@@ -300,6 +284,7 @@ class ReminderController extends Controller
                     $reminderDelay = 14; //default 14 days
                 }
                 $reminderDelayArr[] = $reminderDelay . " days for " . $projectSpecialtyObject;
+                $reminderDelayByStateProjectSpecialtyArr[$projectSpecialtyObject.""] = $reminderDelay;
             }
             $reminderDelayStr = implode(", ",$reminderDelayArr);
 
@@ -322,6 +307,7 @@ class ReminderController extends Controller
                     $reminderDelay = 14; //default 14 days
                 }
                 $reminderDelayArr[] = $reminderDelay . " days for " . $projectSpecialtyObject;
+                $reminderDelayByStateProjectSpecialtyArr[$projectSpecialtyObject.""] = $reminderDelay;
             }
             $reminderDelayStr = implode(", ",$reminderDelayArr);
 
@@ -346,7 +332,8 @@ class ReminderController extends Controller
             //echo "results count=".count($results)."<br>";
             //print_r($results);
             $state = $transresRequestUtil->getProgressStateLabelByName($state);
-            $finalResults[$state . " (" . $reminderDelayStr . ")"] = $results;
+            //$finalResults[$state . " (" . $reminderDelayStr . ")"] = $results;
+            $finalResults[$state] = $results;
         }
 
         if( $showSummary === true ) {
@@ -358,7 +345,20 @@ class ReminderController extends Controller
                 }
             }
 
+            //The following periods are used to identify AP/CP project requests due for a reminder:
+            // IRB Review stage - 14 days,
+            // Awaiting Additional Review from Submitter: 14 days,
+            // Administrative Review stage: 14 days,
+            // Committee Review: 14 days,
+            // Final Review: 14 days.
+            $titleInfoArr = array();
+            foreach($reminderDelayByStateProjectSpecialtyArr as $projectSpecialtyStr => $reminderDelayByStateProjectSpecialty) {
+                $titleInfoArr[] = "$reminderDelayByStateProjectSpecialty days period are used to identify $projectSpecialtyStr project requests due for a reminder";
+            }
+
             $title = str_replace("[[REQUEST_COUNTER]]",$counter,$title);
+
+            $title = $title . "<br>" . implode("<br>",$titleInfoArr);
 
             return $this->render("OlegTranslationalResearchBundle:Reminder:project-request-reminder-index.html.twig",
                 array(
