@@ -3719,6 +3719,8 @@ class TransResRequestUtil
                 $diffMonthStr = "over less than a month ";
             }
             $dateStr = " " . $diffMonthStr . $minDateStr . "-" . $maxDateStr;
+        } else {
+            echo "no min/max date<br>";
         }
 
         //123 matching for $456
