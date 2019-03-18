@@ -3737,15 +3737,39 @@ class TransResRequestUtil
             //over X months [MM/DD/YYYY]-[MM/DD/YYYY]
             $diff = $maxDate->diff($minDate);
             if( $diff ) {
-                $diffMonth = ($diff->format('%y') * 12) + $diff->format('%m');
+                $diffMonth = (($diff->format('%y') * 12) + $diff->format('%m')); //full months difference;
+                $diffDays = $diff->days;
+                //$diffDays = intval($diffDays);
             }
-            if( $diffMonth == 1 ) {
-                $diffMonthStr = "over " . $diffMonth . " month ";
-            } elseif( $diffMonth > 1 ) {
-                $diffMonthStr = "over " . $diffMonth . " months ";
-            } else {
+            //echo "days=".$diffDays."<br>";
+            //echo "months=".$diffMonth."<br>";
+
+//            if( $diffMonth == 1 ) {
+//                $diffMonthStr = "over " . $diffMonth . " month ";
+//            } elseif( $diffMonth > 1 ) {
+//                $diffMonthStr = "over " . $diffMonth . " months ";
+//            } else {
+//                $diffMonthStr = "over less than a month ";
+//            }
+
+            $diffMonthStr = "";
+
+            //Case 1) date1-date2 <=28 days then you could just say “over less than a month”
+            if( $diffDays <= 28 ) {
                 $diffMonthStr = "over less than a month ";
             }
+
+            //Case 2) if the difference is >= 29 days but <2 months, then show “over about X weeks”
+            if( $diffDays >= 29 && $diffMonth < 2 ) {
+                $weeks = round($diffDays/7);
+                $diffMonthStr = "over about $weeks weeks ";
+            }
+
+            //Case 3) anything 2 months and more is “over X months”
+            if( $diffMonth >= 2 ) {
+                $diffMonthStr = "over $diffMonth months ";
+            }
+
             $dateStr = " " . $diffMonthStr . $minDateStr . "-" . $maxDateStr;
         } else {
             //echo "no min/max date<br>";
