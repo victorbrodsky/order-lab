@@ -391,8 +391,25 @@ class ReminderController extends Controller
                 $titleInfoArr[] = "$reminderDelayByStateProjectSpecialty days period are used to identify $projectSpecialtyStr project requests due for a reminder";
             }
 
-            $titleStr = str_replace("[[REQUEST_COUNTER]]",$counter,$title);
+            //$titleStr = str_replace("[[REQUEST_COUNTER]]",$counter,$title);
             //$title = $titleStr . "<br>" . implode("<br>",$titleInfoArr);
+
+            //$titleStr = str_replace("[[REQUEST_COUNTER]]",$counter,$title);
+            $titleStr = $title;
+            if( count($finalResults) == 0 ) {
+//                $titleStr = str_replace("[[REQUEST_COUNTER]]", 0, $title);
+//                $titleStr = str_replace("[[PROJECT_SPECIALTY]]", $projectSpecialtyShortName, $titleStr);
+//                $titleStr = str_replace("[[REMINDER_DELAY]]", $reminderDays, $titleStr);
+                //count project specialty reminders
+                $titleStrArr = array();
+                foreach($reminderDelayArr as $projectSpecialtyShortName=>$reminderDays) {
+                    $titleModified = str_replace("[[REQUEST_COUNTER]]", 0, $title);
+                    $titleModified = str_replace("[[PROJECT_SPECIALTY]]", $projectSpecialtyShortName, $titleModified);
+                    $titleModified = str_replace("[[REMINDER_DELAY]]", $reminderDays, $titleModified);
+                    $titleStrArr[] = $titleModified;
+                }
+                $titleStr = implode("<br>",$titleStrArr);
+            }
 
             $titleNew = implode("<br>",$titleInfo);
 
@@ -404,7 +421,8 @@ class ReminderController extends Controller
                     'entityCounter' => $counter,
                     'sendEmailPath' => $sendEmailPath,
                     'showPath' => 'translationalresearch_request_show',
-                    'emptyMessage' => "There are no $titleStr corresponding to the site setting parameters"
+                    //'emptyMessage' => "There are no $titleStr corresponding to the site setting parameters",
+                    'emptyMessage' => $titleStr
                 )
             );
         }

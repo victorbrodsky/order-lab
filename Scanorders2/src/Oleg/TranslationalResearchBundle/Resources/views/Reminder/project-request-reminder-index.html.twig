@@ -20,7 +20,7 @@
             >Send Reminder Emails</a>
         {% else %}
             {#There are no delayed objects corresponding to the site setting parameters#}
-            {{ emptyMessage }}
+            {{ emptyMessage|raw }}
         {% endif %}
     </p>
     <br>
