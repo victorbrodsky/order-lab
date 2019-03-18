@@ -396,10 +396,7 @@ class ReminderController extends Controller
 
             //$titleStr = str_replace("[[REQUEST_COUNTER]]",$counter,$title);
             $titleStr = $title;
-            if( count($finalResults) == 0 ) {
-//                $titleStr = str_replace("[[REQUEST_COUNTER]]", 0, $title);
-//                $titleStr = str_replace("[[PROJECT_SPECIALTY]]", $projectSpecialtyShortName, $titleStr);
-//                $titleStr = str_replace("[[REMINDER_DELAY]]", $reminderDays, $titleStr);
+            if( count($titleInfo) == 0 ) {
                 //count project specialty reminders
                 $titleStrArr = array();
                 foreach($reminderDelayArr as $projectSpecialtyShortName=>$reminderDays) {
