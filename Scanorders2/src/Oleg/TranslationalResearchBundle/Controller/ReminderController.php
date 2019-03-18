@@ -252,6 +252,7 @@ class ReminderController extends Controller
             $title = "[[REQUEST_COUNTER]] following work requests are pending completion";
             //x AP/CP work requests are pending completion for over 28 days.
             //y Hematopathology work requests are pending completion for over 28 days.
+            $title = "[[REQUEST_COUNTER]] [[PROJECT_SPECIALTY]] work requests are pending completion for over [[REMINDER_DELAY]] days.";
             foreach($projectSpecialties as $projectSpecialtyObject) {
                 $reminderDelay = $transresUtil->getTransresSiteProjectParameter("pendingRequestReminderDelay", null, $projectSpecialtyObject);
                 if (!$reminderDelay) {
@@ -290,6 +291,7 @@ class ReminderController extends Controller
                     $reminderDelay = 14; //default 14 days
                 }
                 //$reminderDelayArr[] = $reminderDelay . " days for " . $projectSpecialtyObject;
+                $reminderDelayArr[$projectSpecialtyObject->getUppercaseShortName()] = $reminderDelay;
                 $reminderDelayByStateProjectSpecialtyArr[$projectSpecialtyObject.""] = $reminderDelay;
             }
             //$reminderDelayStr = implode(", ",$reminderDelayArr);
@@ -313,6 +315,7 @@ class ReminderController extends Controller
                     $reminderDelay = 14; //default 14 days
                 }
                 //$reminderDelayArr[] = $reminderDelay . " days for " . $projectSpecialtyObject;
+                $reminderDelayArr[$projectSpecialtyObject->getUppercaseShortName()] = $reminderDelay;
                 $reminderDelayByStateProjectSpecialtyArr[$projectSpecialtyObject.""] = $reminderDelay;
             }
             //$reminderDelayStr = implode(", ",$reminderDelayArr);
@@ -402,13 +405,14 @@ class ReminderController extends Controller
             }
 
             $titleStr = str_replace("[[REQUEST_COUNTER]]",$counter,$title);
-            $title = $titleStr . "<br>" . implode("<br>",$titleInfoArr);
+            //$title = $titleStr . "<br>" . implode("<br>",$titleInfoArr);
 
             $titleNew = implode("<br>",$titleInfo);
 
             return $this->render("OlegTranslationalResearchBundle:Reminder:project-request-reminder-index.html.twig",
                 array(
-                    'title' => $title . "<br><br><br>" . $titleNew,
+                    //'title' => $title . "<br><br><br>" . $titleNew,
+                    'title' => $titleNew,
                     'finalResults' => $finalResults,
                     'entityCounter' => $counter,
                     'sendEmailPath' => $sendEmailPath,
