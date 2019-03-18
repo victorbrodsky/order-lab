@@ -284,7 +284,9 @@ class ReminderController extends Controller
         if( strpos($routeName, "translationalresearch_request_completed_reminder") !== false ) {
             //$title = "Delayed Completed Work Requests";
             //The following work requests have been completed for over X days, but the request submitter has not been notified:
-            $title = "[[REQUEST_COUNTER]] following work requests have been completed, but the request submitter has not been notified";
+            //$title = "[[REQUEST_COUNTER]] following work requests have been completed, but the request submitter has not been notified";
+            //0 AP/CP work requests have been completed for over 4 days without the submitter being notified.
+            $title = "[[REQUEST_COUNTER]] [[PROJECT_SPECIALTY]] work requests have been completed for over [[REMINDER_DELAY]] days without the submitter being notified.";
             foreach($projectSpecialties as $projectSpecialtyObject) {
                 $reminderDelay = $transresUtil->getTransresSiteProjectParameter("completedRequestReminderDelay", null, $projectSpecialtyObject);
                 if (!$reminderDelay) {
@@ -308,7 +310,9 @@ class ReminderController extends Controller
         if( strpos($routeName, "translationalresearch_request_completed_no_invoice_issued_reminder") !== false ) {
             //$title = "Completed and Notified Work Requests without Issued Invoice";
             //The following work requests have been completed for over X days without any invoices:
-            $title = "[[REQUEST_COUNTER]] following work requests have been completed without any invoices";
+            //$title = "[[REQUEST_COUNTER]] following work requests have been completed without any invoices";
+            //0 AP/CP work requests have been completed for over 7 days without any invoices.
+            $title = "[[REQUEST_COUNTER]] [[PROJECT_SPECIALTY]] following work requests have been completed for over [[REMINDER_DELAY]] days without any invoices.";
             foreach($projectSpecialties as $projectSpecialtyObject) {
                 $reminderDelay = $transresUtil->getTransresSiteProjectParameter("completedNoInvoiceRequestReminderDelay", null, $projectSpecialtyObject);
                 if (!$reminderDelay) {
@@ -347,25 +351,6 @@ class ReminderController extends Controller
         if( $showSummary === true ) {
             $counter = 0;
             $titleInfo = array();
-            //$finalResultsTemp = array();
-
-//            foreach ($reminderDelayArr as $projectSpecialtyId => $reminderDelayDays) {
-//                $projectSpecialty = $em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->find($projectSpecialtyId);
-//                $countEmails = 0;
-//                foreach ($states as $state) {
-//                    $results = $transresReminderUtil->sendReminderPendingRequests($state,$showSummary,$projectSpecialty);
-//                    $state = $transresRequestUtil->getProgressStateLabelByName($state);
-//                    //$finalResults[$state] = $results;
-//                    $countEmails = $countEmails + count($results);
-//                    $finalResultsTemp[$state][] = $results;
-//                }
-//                //x AP/CP work requests are pending completion for over 28 days.
-//                $titleInfo[] = "$countEmails $projectSpecialty work requests are pending completion for over $reminderDelayDays days.";
-//            }
-//
-//            foreach($finalResultsTemp as $state=>$results) {
-//                $finalResults[$state] = $results;
-//            }
 
             $projectSpecialtyCounter = array();
 
@@ -375,10 +360,7 @@ class ReminderController extends Controller
 
                     //count project specialty reminders
                     foreach($reminderDelayArr as $projectSpecialtyShortName=>$reminderDays) {
-                        //print_r($result);
-                        //exit('111');
                         foreach($transResRequests as $transResRequest) {
-                            //echo $transResRequest->getOid()."<br>";
                             if (strpos($transResRequest->getOid(), $projectSpecialtyShortName) !== false) {
                                 $projectSpecialtyCounter[$projectSpecialtyShortName]++;
                             }
@@ -390,7 +372,12 @@ class ReminderController extends Controller
             foreach($projectSpecialtyCounter as $projectSpecialtyShortName=>$counterDays) {
                 $reminderDays = $reminderDelayArr[$projectSpecialtyShortName];
                 //0 AP/CP work requests are pending completion for over 28 days.
-                $titleInfo[] = "$counterDays $projectSpecialtyShortName work requests are pending completion for over $reminderDays days.";
+                //$titleInfo[] = "$counterDays $projectSpecialtyShortName work requests are pending completion for over $reminderDays days.";
+                //$title = "[[REQUEST_COUNTER]] [[PROJECT_SPECIALTY]] work requests are pending completion for over [[REMINDER_DELAY]] days.";
+                $titleModified = str_replace("[[REQUEST_COUNTER]]",$counterDays,$title);
+                $titleModified = str_replace("[[PROJECT_SPECIALTY]]",$projectSpecialtyShortName,$titleModified);
+                $titleModified = str_replace("[[REMINDER_DELAY]]",$reminderDays,$titleModified);
+                $titleInfo[] = $titleModified;
             }
 
             //The following periods are used to identify AP/CP project requests due for a reminder:
