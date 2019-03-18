@@ -23,6 +23,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Oleg\UserdirectoryBundle\Entity\ListAbstract;
 
 /**
+ * Project Specialty List
+ *
  * @ORM\Entity
  * @ORM\Table(name="transres_specialtyList")
  */

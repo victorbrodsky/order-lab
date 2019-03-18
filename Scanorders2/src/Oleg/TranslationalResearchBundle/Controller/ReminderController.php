@@ -231,7 +231,7 @@ class ReminderController extends Controller
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
-        $em = $this->getDoctrine()->getManager();
+        //$em = $this->getDoctrine()->getManager();
         $transresUtil = $this->container->get('transres_util');
         $transresRequestUtil = $this->container->get('transres_request_util');
         $transresReminderUtil = $this->get('transres_reminder_util');
@@ -258,7 +258,7 @@ class ReminderController extends Controller
                     $reminderDelay = 14; //default 14 days
                 }
                 //$reminderDelayArr[] = $reminderDelay . " days for " . $projectSpecialtyObject;
-                $reminderDelayArr[$projectSpecialtyObject->getId()] = $reminderDelay;
+                $reminderDelayArr[$projectSpecialtyObject->getUppercaseShortName()] = $reminderDelay;
                 //x AP/CP work requests are pending completion for over 28 days.
                 $reminderDelayByStateProjectSpecialtyArr[$projectSpecialtyObject.""] = $reminderDelay;
             }
@@ -328,6 +328,13 @@ class ReminderController extends Controller
 
         $finalResults = array();
 
+        //send email
+        foreach($states as $state) {
+            $results = $transresReminderUtil->sendReminderPendingRequests($state,$showSummary);
+            $state = $transresRequestUtil->getProgressStateLabelByName($state);
+            $finalResults[$state] = $results;
+        }
+
         //$results = $transresReminderUtil->sendReminderPendingRequests($state,$showSummary);
         //echo "results count=".count($results)."<br>";
         //print_r($results);
@@ -337,30 +344,50 @@ class ReminderController extends Controller
         if( $showSummary === true ) {
             $counter = 0;
             $titleInfo = array();
-            $finalResultsTemp = array();
+            //$finalResultsTemp = array();
 
-            foreach ($reminderDelayArr as $projectSpecialtyId => $reminderDelayDays) {
-                $projectSpecialty = $em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->find($projectSpecialtyId);
-                $countEmails = 0;
-                foreach ($states as $state) {
-                    $results = $transresReminderUtil->sendReminderPendingRequests($state,$showSummary,$projectSpecialty);
-                    $state = $transresRequestUtil->getProgressStateLabelByName($state);
-                    //$finalResults[$state] = $results;
-                    $countEmails = $countEmails + count($results);
-                    $finalResultsTemp[$state][] = $results;
-                }
-                //x AP/CP work requests are pending completion for over 28 days.
-                $titleInfo[] = "$countEmails $projectSpecialty work requests are pending completion for over $reminderDelayDays days.";
-            }
+//            foreach ($reminderDelayArr as $projectSpecialtyId => $reminderDelayDays) {
+//                $projectSpecialty = $em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->find($projectSpecialtyId);
+//                $countEmails = 0;
+//                foreach ($states as $state) {
+//                    $results = $transresReminderUtil->sendReminderPendingRequests($state,$showSummary,$projectSpecialty);
+//                    $state = $transresRequestUtil->getProgressStateLabelByName($state);
+//                    //$finalResults[$state] = $results;
+//                    $countEmails = $countEmails + count($results);
+//                    $finalResultsTemp[$state][] = $results;
+//                }
+//                //x AP/CP work requests are pending completion for over 28 days.
+//                $titleInfo[] = "$countEmails $projectSpecialty work requests are pending completion for over $reminderDelayDays days.";
+//            }
+//
+//            foreach($finalResultsTemp as $state=>$results) {
+//                $finalResults[$state] = $results;
+//            }
 
-            foreach($finalResultsTemp as $state=>$results) {
-                $finalResults[$state] = $results;
-            }
+            $projectSpecialtyCounter = array();
 
             foreach($finalResults as $state=>$results) {
-                foreach($results as $result) {
-                    $counter = $counter + count($result);
+                foreach($results as $transResRequests) {
+                    $counter = $counter + count($transResRequests);
+
+                    //count project specialty reminders
+                    foreach($reminderDelayArr as $projectSpecialtyShortName=>$reminderDays) {
+                        //print_r($result);
+                        //exit('111');
+                        foreach($transResRequests as $transResRequest) {
+                            //echo $transResRequest->getOid()."<br>";
+                            if (strpos($transResRequest->getOid(), $projectSpecialtyShortName) !== false) {
+                                $projectSpecialtyCounter[$projectSpecialtyShortName]++;
+                            }
+                        }
+                    }
                 }
+            }
+
+            foreach($projectSpecialtyCounter as $projectSpecialtyShortName=>$counterDays) {
+                $reminderDays = $reminderDelayArr[$projectSpecialtyShortName];
+                //0 AP/CP work requests are pending completion for over 28 days.
+                $titleInfo[] = "$counterDays $projectSpecialtyShortName work requests are pending completion for over $reminderDays days.";
             }
 
             //The following periods are used to identify AP/CP project requests due for a reminder:
@@ -375,12 +402,13 @@ class ReminderController extends Controller
             }
 
             $titleStr = str_replace("[[REQUEST_COUNTER]]",$counter,$title);
-
             $title = $titleStr . "<br>" . implode("<br>",$titleInfoArr);
+
+            $titleNew = implode("<br>",$titleInfo);
 
             return $this->render("OlegTranslationalResearchBundle:Reminder:project-request-reminder-index.html.twig",
                 array(
-                    'title' => $title,
+                    'title' => $title . "<br><br><br>" . $titleNew,
                     'finalResults' => $finalResults,
                     'entityCounter' => $counter,
                     'sendEmailPath' => $sendEmailPath,
@@ -390,12 +418,12 @@ class ReminderController extends Controller
             );
         }
 
-        //send email
-        foreach($states as $state) {
-            $results = $transresReminderUtil->sendReminderPendingRequests($state,$showSummary);
-            $state = $transresRequestUtil->getProgressStateLabelByName($state);
-            $finalResults[$state] = $results;
-        }
+//        //send email
+//        foreach($states as $state) {
+//            $results = $transresReminderUtil->sendReminderPendingRequests($state,$showSummary);
+//            $state = $transresRequestUtil->getProgressStateLabelByName($state);
+//            $finalResults[$state] = $results;
+//        }
 
         foreach($finalResults as $state=>$results) {
             $this->get('session')->getFlashBag()->add(

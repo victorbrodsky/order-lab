@@ -650,6 +650,7 @@ class ReminderUtil
 
         return $result;
     }
+    //return array of transResRequests
     public function sendReminderPendingRequestsBySpecialty( $state, $projectSpecialty, $showSummary=false ) {
         //$result = "No delayed pending requests";
 
