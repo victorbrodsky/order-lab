@@ -231,7 +231,6 @@ class ReminderController extends Controller
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
-        //$em = $this->getDoctrine()->getManager();
         $transresUtil = $this->container->get('transres_util');
         $transresRequestUtil = $this->container->get('transres_request_util');
         $transresReminderUtil = $this->get('transres_reminder_util');
@@ -239,8 +238,6 @@ class ReminderController extends Controller
         $routeName = $request->get('_route');
         $showSummary = true;
 
-        //$reminderDelayStr = "";
-        //$reminderDelay = null;
         $reminderDelayArr = array();
         $reminderDelayByStateProjectSpecialtyArr = array();
         $projectSpecialties = $transresUtil->getTransResProjectSpecialties(false);
@@ -249,8 +246,6 @@ class ReminderController extends Controller
             //$title = "Delayed Pending Work Requests";
 
             //The following work requests are pending completion for over X days:
-            $title = "[[REQUEST_COUNTER]] following work requests are pending completion";
-            //x AP/CP work requests are pending completion for over 28 days.
             //y Hematopathology work requests are pending completion for over 28 days.
             $title = "[[REQUEST_COUNTER]] [[PROJECT_SPECIALTY]] work requests are pending completion for over [[REMINDER_DELAY]] days.";
             foreach($projectSpecialties as $projectSpecialtyObject) {
@@ -258,9 +253,7 @@ class ReminderController extends Controller
                 if (!$reminderDelay) {
                     $reminderDelay = 14; //default 14 days
                 }
-                //$reminderDelayArr[] = $reminderDelay . " days for " . $projectSpecialtyObject;
                 $reminderDelayArr[$projectSpecialtyObject->getUppercaseShortName()] = $reminderDelay;
-                //x AP/CP work requests are pending completion for over 28 days.
                 $reminderDelayByStateProjectSpecialtyArr[$projectSpecialtyObject.""] = $reminderDelay;
             }
             //$reminderDelayStr = implode(", ",$reminderDelayArr);
@@ -282,9 +275,6 @@ class ReminderController extends Controller
         }
 
         if( strpos($routeName, "translationalresearch_request_completed_reminder") !== false ) {
-            //$title = "Delayed Completed Work Requests";
-            //The following work requests have been completed for over X days, but the request submitter has not been notified:
-            //$title = "[[REQUEST_COUNTER]] following work requests have been completed, but the request submitter has not been notified";
             //0 AP/CP work requests have been completed for over 4 days without the submitter being notified.
             $title = "[[REQUEST_COUNTER]] [[PROJECT_SPECIALTY]] work requests have been completed for over [[REMINDER_DELAY]] days without the submitter being notified.";
             foreach($projectSpecialties as $projectSpecialtyObject) {
@@ -296,7 +286,6 @@ class ReminderController extends Controller
                 $reminderDelayArr[$projectSpecialtyObject->getUppercaseShortName()] = $reminderDelay;
                 $reminderDelayByStateProjectSpecialtyArr[$projectSpecialtyObject.""] = $reminderDelay;
             }
-            //$reminderDelayStr = implode(", ",$reminderDelayArr);
 
             $sendEmailPath = "translationalresearch_request_completed_reminder_send";
             $states = array(
@@ -308,9 +297,6 @@ class ReminderController extends Controller
         }
 
         if( strpos($routeName, "translationalresearch_request_completed_no_invoice_issued_reminder") !== false ) {
-            //$title = "Completed and Notified Work Requests without Issued Invoice";
-            //The following work requests have been completed for over X days without any invoices:
-            //$title = "[[REQUEST_COUNTER]] following work requests have been completed without any invoices";
             //0 AP/CP work requests have been completed for over 7 days without any invoices.
             $title = "[[REQUEST_COUNTER]] [[PROJECT_SPECIALTY]] following work requests have been completed for over [[REMINDER_DELAY]] days without any invoices.";
             foreach($projectSpecialties as $projectSpecialtyObject) {
@@ -318,7 +304,6 @@ class ReminderController extends Controller
                 if (!$reminderDelay) {
                     $reminderDelay = 14; //default 14 days
                 }
-                //$reminderDelayArr[] = $reminderDelay . " days for " . $projectSpecialtyObject;
                 $reminderDelayArr[$projectSpecialtyObject->getUppercaseShortName()] = $reminderDelay;
                 $reminderDelayByStateProjectSpecialtyArr[$projectSpecialtyObject.""] = $reminderDelay;
             }
@@ -341,11 +326,6 @@ class ReminderController extends Controller
             $state = $transresRequestUtil->getProgressStateLabelByName($state);
             $finalResults[$state] = $results;
         }
-
-        //$results = $transresReminderUtil->sendReminderPendingRequests($state,$showSummary);
-        //echo "results count=".count($results)."<br>";
-        //print_r($results);
-        //$finalResults[$state] = $results;
 
         //sho summary
         if( $showSummary === true ) {
@@ -372,8 +352,6 @@ class ReminderController extends Controller
             foreach($projectSpecialtyCounter as $projectSpecialtyShortName=>$counterDays) {
                 $reminderDays = $reminderDelayArr[$projectSpecialtyShortName];
                 //0 AP/CP work requests are pending completion for over 28 days.
-                //$titleInfo[] = "$counterDays $projectSpecialtyShortName work requests are pending completion for over $reminderDays days.";
-                //$title = "[[REQUEST_COUNTER]] [[PROJECT_SPECIALTY]] work requests are pending completion for over [[REMINDER_DELAY]] days.";
                 $titleModified = str_replace("[[REQUEST_COUNTER]]",$counterDays,$title);
                 $titleModified = str_replace("[[PROJECT_SPECIALTY]]",$projectSpecialtyShortName,$titleModified);
                 $titleModified = str_replace("[[REMINDER_DELAY]]",$reminderDays,$titleModified);
@@ -391,10 +369,7 @@ class ReminderController extends Controller
                 $titleInfoArr[] = "$reminderDelayByStateProjectSpecialty days period are used to identify $projectSpecialtyStr project requests due for a reminder";
             }
 
-            //$titleStr = str_replace("[[REQUEST_COUNTER]]",$counter,$title);
-            //$title = $titleStr . "<br>" . implode("<br>",$titleInfoArr);
 
-            //$titleStr = str_replace("[[REQUEST_COUNTER]]",$counter,$title);
             $titleStr = $title;
             if( count($titleInfo) == 0 ) {
                 //count project specialty reminders
@@ -412,29 +387,20 @@ class ReminderController extends Controller
 
             return $this->render("OlegTranslationalResearchBundle:Reminder:project-request-reminder-index.html.twig",
                 array(
-                    //'title' => $title . "<br><br><br>" . $titleNew,
                     'title' => $titleNew,
                     'finalResults' => $finalResults,
                     'entityCounter' => $counter,
                     'sendEmailPath' => $sendEmailPath,
                     'showPath' => 'translationalresearch_request_show',
-                    //'emptyMessage' => "There are no $titleStr corresponding to the site setting parameters",
                     'emptyMessage' => $titleStr
                 )
             );
         }
 
-//        //send email
-//        foreach($states as $state) {
-//            $results = $transresReminderUtil->sendReminderPendingRequests($state,$showSummary);
-//            $state = $transresRequestUtil->getProgressStateLabelByName($state);
-//            $finalResults[$state] = $results;
-//        }
-
         foreach($finalResults as $state=>$results) {
             $this->get('session')->getFlashBag()->add(
                 'notice',
-                "Sending reminder emails for $title ($state): " . $results
+                "Sending reminder emails for ($state): " . $results
             );
         }
 
