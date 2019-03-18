@@ -616,17 +616,24 @@ class ReminderUtil
     }
 
 
-    public function sendReminderPendingRequests( $state, $showSummary=false ) {
+    public function sendReminderPendingRequests( $state, $showSummary=false, $projectSpecialty=null ) {
         $transresUtil = $this->container->get('transres_util');
         $transresRequestUtil = $this->container->get('transres_request_util');
 
         $resultArr = array();
 
-        $projectSpecialties = $transresUtil->getTransResProjectSpecialties(false);
-        foreach($projectSpecialties as $projectSpecialty) {
-            $results = $this->sendReminderPendingRequestsBySpecialty($state,$projectSpecialty,$showSummary);
-            if( $results ) {
+        if( $projectSpecialty ) {
+            $results = $this->sendReminderPendingRequestsBySpecialty($state, $projectSpecialty, $showSummary);
+            if ($results) {
                 $resultArr[] = $results;
+            }
+        } else {
+            $projectSpecialties = $transresUtil->getTransResProjectSpecialties(false);
+            foreach ($projectSpecialties as $projectSpecialty) {
+                $results = $this->sendReminderPendingRequestsBySpecialty($state, $projectSpecialty, $showSummary);
+                if ($results) {
+                    $resultArr[] = $results;
+                }
             }
         }
 
