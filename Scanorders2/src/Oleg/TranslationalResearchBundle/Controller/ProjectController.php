@@ -1844,6 +1844,61 @@ class ProjectController extends Controller
     }
 
     /**
+     * Approve project
+     *
+     * @Route("/approve-project/{id}", name="translationalresearch_project_approve")
+     * @Method("GET")
+     */
+    public function approveAction(Request $request, Project $project)
+    {
+        $transresPermissionUtil = $this->container->get('transres_permission_util');
+
+        if( false === $transresPermissionUtil->hasProjectPermission("approve",$project) ) {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $transresUtil = $this->container->get('transres_util');
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+        $project->setState("final_approved");
+
+        $em->flush($project);
+
+        //email
+        $break = "<br>";
+        $emailUtil = $this->container->get('user_mailer_utility');
+        $emailSubject = "Your project request ".$project->getOid()." has been approved";
+
+        $projectUrl = $this->container->get('router')->generate(
+            'translationalresearch_project_show',
+            array(
+                'id' => $project->getId(),
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+        $projectUrl = '<a href="'.$projectUrl.'">'.$projectUrl.'</a>';
+
+        $emailBody = "Your project request ".$project->getOid()." has been approved by " . $user->getUsernameOptimal();
+
+        //comment
+        //$emailBody = $emailBody . $break.$break. "Status Comment:" . $break . $project->getStateComment();
+
+        $requesterEmails = $transresUtil->getRequesterMiniEmails($project);
+        $adminsCcs = $transresUtil->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //only admin
+        $senderEmail = $transresUtil->getTransresSiteProjectParameter('fromEmail',$project);
+
+        $emailBody = $emailBody . $break.$break. "To view this project request, please visit the link below:".$break.$projectUrl;
+        $emailUtil->sendEmail($requesterEmails,$emailSubject,$emailBody,$adminsCcs,$senderEmail);
+
+        //eventlog
+        $eventType = "Project Approved";
+        $transresUtil->setEventLog($project,$eventType,$emailBody);
+
+        return $this->redirectToRoute('translationalresearch_project_index');
+    }
+
+    /**
      * Deletes a project entity.
      *
      * @Route("/project-delete/{id}", name="translationalresearch_project_delete")

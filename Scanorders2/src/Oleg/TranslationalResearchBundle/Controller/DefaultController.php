@@ -22,6 +22,20 @@ class DefaultController extends Controller
         //$test = $this->getDummyClass();
         //$test = new DummyClass();
 
+        //Work Request ID APCP756-REQ17009(FROM Original State 'completedNotified'): 'progress' (TO) transition not found by name pendingHistology_completedNotified with code0
+        $transresRequestUtil = $this->get('transres_request_util');
+        $transitionName = "pendingHistology_completedNotified";
+        $statMachineType = "progress";
+        $em = $this->getDoctrine()->getManager();
+        $transresRequest = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest')->find(756);
+        echo "current state=".$transresRequest->getProgressState()."<br>";
+        $transition = $transresRequestUtil->getTransitionByName($transresRequest,$transitionName,$statMachineType);
+        if( !$transition ) {
+            exit($statMachineType.": Not found by transitionName=".$transitionName);
+        } else {
+            exit($statMachineType.": Found by transitionName=".$transitionName);
+        }
+
         return array('sitename'=>$this->container->getParameter('translationalresearch.sitename'));
     }
 
