@@ -575,6 +575,20 @@
                         </div>
                     </div>
 
+                    <br>
+
+                    <div class="row">
+                        <div class="col-xs-4">
+                            {% if filterform.completedBy is defined %}
+                                {{ form_widget(filterform.completedBy, {'attr': {'placeholder': 'Completed by'}}) }}
+                            {% endif %}
+                        </div>
+                        <div class="col-xs-4">
+                        </div>
+                        <div class="col-xs-4">
+                        </div>
+                    </div>
+
                     {#<div class="row">#}
                         {#<div class="col-xs-4">#}
                         {#</div>#}

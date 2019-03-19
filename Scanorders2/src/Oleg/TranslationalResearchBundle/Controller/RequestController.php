@@ -1103,6 +1103,7 @@ class RequestController extends Controller
         $endDate = null;
         $principalInvestigators = null;
         $billingContact = null;
+        $completedBy = null;
         $fundingNumber = null;
         $fundingType = null;
         $filterType = null;
@@ -1144,6 +1145,12 @@ class RequestController extends Controller
 //            $stopwatch->start('FilterRequestType');
 //        }
 
+        //shown only to users with Site Administrator, Technologist, Platform Administrator, and Deputy Platform Administrator" roles
+        $showCompletedByUser = false;
+        if( $transresUtil->isAdminOrPrimaryReviewerOrExecutive() || $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN') ) {
+            $showCompletedByUser = true;
+        }
+
         $params = array(
             'transresUsers' => $transresUsers,
             'progressStateArr' => $progressStateArr,
@@ -1151,6 +1158,7 @@ class RequestController extends Controller
             'routeName' => $routeName,
             'projectSpecialtyAllowedArr' => $projectSpecialtyAllowedArr,
             'availableProjects' => $availableProjects,
+            'showCompletedByUser' => $showCompletedByUser
         );
         $filterform = $this->createForm(FilterRequestType::class, null, array(
             'method' => 'GET',
@@ -1200,6 +1208,11 @@ class RequestController extends Controller
             $billingContact = null;
             if( isset($filterform['billingContact']) ) {
                 $billingContact = $filterform['billingContact']->getData();
+            }
+
+            $completedBy = null;
+            if( isset($filterform['completedBy']) ) {
+                $completedBy = $filterform['completedBy']->getData();
             }
 
             $requestId = $filterform['requestId']->getData();
@@ -1746,6 +1759,13 @@ class RequestController extends Controller
         if( $billingContact ) {
             $dql->andWhere("contact.id = :billingContactId");
             $dqlParameters["billingContactId"] = $billingContact->getId();
+            $advancedFilter++;
+        }
+
+        if( $completedBy ) {
+            $dql->leftJoin('transresRequest.completedBy','completedBy');
+            $dql->andWhere("completedBy.id = :completedById");
+            $dqlParameters["completedById"] = $completedBy->getId();
             $advancedFilter++;
         }
 

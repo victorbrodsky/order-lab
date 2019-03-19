@@ -53,6 +53,7 @@ $(document).ready(function() {
     //populateSelectCombobox( targetid, globalDataArray, placeholder, multipleFlag );
     populateSelectCombobox( $('.ajax-combobox-billingcontact'), _genericusers, true, false );
     populateSelectCombobox( $('.ajax-combobox-pis'), _genericusers, true, true );
+    populateSelectCombobox( $('.ajax-combobox-completedby'), _genericusers, true, false );
 });
 
 

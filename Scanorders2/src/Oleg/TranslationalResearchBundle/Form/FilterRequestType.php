@@ -115,6 +115,15 @@ class FilterRequestType extends AbstractType
                 //'multiple' => true,
                 'classtype' => 'genericusers'
             ));
+
+            //shown only to users with Site Administrator, Technologist, Platform Administrator, and Deputy Platform Administrator" roles
+            if( $this->params['showCompletedByUser'] ) {
+                $builder->add('completedBy', CustomSelectorType::class, array(
+                    'attr' => array('class' => 'combobox combobox-without-add ajax-combobox-completedby', 'type' => 'hidden'),
+                    'required' => false,
+                    'classtype' => 'genericuser'
+                ));
+            }
         }
 
         $builder->add('comment', TextType::class, array(
