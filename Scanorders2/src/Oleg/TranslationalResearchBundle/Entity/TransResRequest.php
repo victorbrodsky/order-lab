@@ -62,6 +62,8 @@ class TransResRequest {
     private $updateUser;
 
     /**
+     * serve as submitted date when button "Complete Submission" ('saveAsComplete') clicked
+     *
      * @var \DateTime
      * @ORM\Column(type="datetime", nullable=true)
      */
@@ -72,6 +74,14 @@ class TransResRequest {
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $updateDate;
+
+    /**
+     * "Saved as Draft on" timestamp field
+     *
+     * @var \DateTime
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $savedAsDraftDate;
 
     /**
      * @var \DateTime
@@ -278,7 +288,11 @@ class TransResRequest {
     public function __construct($user=null) {
         $this->setSubmitter($user);
         //$this->setState('draft');
-        $this->setCreateDate(new \DateTime());
+
+        //Every time a new work request is saved as draft for the first time, save the timestamp in both “Submitted on” field AND “Saved as Draft on” field
+        $nowDate = new \DateTime();
+        $this->setCreateDate($nowDate);
+        $this->setSavedAsDraftDate($nowDate);
 
         $this->invoices = new ArrayCollection();
         $this->products = new ArrayCollection();
@@ -388,6 +402,22 @@ class TransResRequest {
     public function setUpdateDate()
     {
         $this->updateDate = new \DateTime();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSavedAsDraftDate()
+    {
+        return $this->savedAsDraftDate;
+    }
+
+    /**
+     * @param mixed $savedAsDraftDate
+     */
+    public function setSavedAsDraftDate($savedAsDraftDate)
+    {
+        $this->savedAsDraftDate = $savedAsDraftDate;
     }
 
 //    public function setUpdateDate( $date=null )

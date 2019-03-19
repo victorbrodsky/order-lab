@@ -211,6 +211,11 @@ class RequestController extends Controller
                 //Save Project as Draft => state='draft'
                 $transresRequest->setProgressState('draft');
                 $transresRequest->setBillingState('draft');
+
+                //Every time a new work request is saved as draft for the first time, save the timestamp in both “Submitted on” field AND “Saved as Draft on” field
+                $nowDate = new \DateTime();
+                $transresRequest->setSavedAsDraftDate($nowDate);
+                $transresRequest->setCreateDate($nowDate);
             }
 
             //new
@@ -218,6 +223,9 @@ class RequestController extends Controller
                 //Complete Submission => state='submit'
                 $transresRequest->setProgressState('active');
                 $transresRequest->setBillingState('active');
+                
+                $transresRequest->setCreateDate(new \DateTime()); //serve as submitted date
+                $transresRequest->setSubmitter($user);
             }
 
             if( !$testing ) {
@@ -488,6 +496,9 @@ class RequestController extends Controller
                 if( $transresRequest->getProgressState() == 'draft' ) {
                     $transresRequest->setProgressState('active');
                     $transresRequest->setBillingState('active');
+
+                    $transresRequest->setCreateDate(new \DateTime()); //serve as submitted date
+                    $transresRequest->setSubmitter($user);
                 }
             }
 

@@ -33,6 +33,10 @@
                         {{ formmacros.field(form.approvalDate) }}
                     {% endif %}
 
+                    {% if form.savedAsDraftDate is defined %}
+                        {{ formmacros.field(form.savedAsDraftDate) }}
+                    {% endif %}
+
                     {% if form.createDate is defined or form.submitter is defined %}
                         {#<div class="well well-sm">#}
                         {% if form.createDate is defined %}

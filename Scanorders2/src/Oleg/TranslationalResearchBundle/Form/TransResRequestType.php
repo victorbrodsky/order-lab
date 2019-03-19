@@ -98,6 +98,17 @@ class TransResRequestType extends AbstractType
             ));
         }
 
+        if( $this->params['cycle'] != 'new' ) {
+            $builder->add('savedAsDraftDate', DateType::class, array(
+                'widget' => 'single_text',
+                'label' => "Save as Draft Date:",
+                'disabled' => true,
+                'format' => 'MM/dd/yyyy',
+                'attr' => array('class' => 'datepicker form-control', 'readonly' => true),
+                'required' => false,
+            ));
+        }
+
         if(
             $this->params['cycle'] != 'new' &&
             $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_ADMIN') &&
