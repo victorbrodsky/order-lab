@@ -1233,6 +1233,7 @@ class TransResRequestUtil
         $workflow = $this->getWorkflowByStateMachineType($statMachineType);
         $transitions = $workflow->getEnabledTransitions($transresRequest);
         foreach( $transitions as $transition ) {
+            echo "compare [".$transition->getName()."] ?= [".$transitionName."<br>";
             if( $transition->getName() == $transitionName ) {
                 return $transition;
             }
