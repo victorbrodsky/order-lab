@@ -1070,7 +1070,15 @@ class TransResRequestUtil
             //Get Transition and $to
             $transition = $this->getTransitionByName($transresRequest,$transitionName,$statMachineType);
             if( !$transition ) {
-                throw new \Exception("Work Request ID ".$transresRequest->getOid()."(FROM Original State '".$originalStateStr."'): '".$statMachineType."' (TO) transition not found by name ".$transitionName);
+                //throw new \Exception("Work Request ID ".$transresRequest->getOid()."(FROM Original State '".$originalStateStr."'): '".$statMachineType."' (TO) transition not found by name ".$transitionName);
+                //second click on the "old" transition
+                $stateLabel = $this->getRequestLabelByStateMachineType($transresRequest,$statMachineType);
+                $this->container->get('session')->getFlashBag()->add(
+                    'warning',
+                    "It is not possible anymore to change the $statMachineType status for this work request " .
+                    $transresRequest->getOid(). " with the current status '" . $stateLabel . "'"
+                );
+                return false;
             }
             $tos = $transition->getTos();
             if (count($tos) != 1) {

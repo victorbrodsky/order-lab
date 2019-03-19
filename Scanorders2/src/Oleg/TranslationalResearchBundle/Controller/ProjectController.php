@@ -1863,6 +1863,8 @@ class ProjectController extends Controller
 
         $project->setState("final_approved");
 
+        $project->setApprovalDate(new \DateTime());
+
         $em->flush($project);
 
         //email
