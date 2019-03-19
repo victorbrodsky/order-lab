@@ -116,7 +116,7 @@ class TransResRequestType extends AbstractType
         ) {
             $builder->add('createDate', DateType::class, array(
                 'widget' => 'single_text',
-                'label' => "Create Date:",
+                'label' => "Creation ('Submission') Date:",
                 'disabled' => true,
                 'format' => 'MM/dd/yyyy',
                 'attr' => array('class' => 'datepicker form-control', 'readonly' => true),
