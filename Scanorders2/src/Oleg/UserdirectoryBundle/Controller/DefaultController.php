@@ -138,5 +138,79 @@ class DefaultController extends Controller
 //    }
 
 
+    /**
+     * @Route("/fix-author-generated-users/", name="employees_fix-author-generated-users")
+     */
+    public function fixAuthorGeneratedUsersAction()
+    {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        //get generated users by createdby
+        //$createdBy = "manual-".$sitename;
+        $repository = $em->getRepository('OlegUserdirectoryBundle:User');
+        $dql = $repository->createQueryBuilder("user");
+        $dql->where("user.createdby LIKE '%manual-%'");
+        $query = $this->em->createQuery($dql);
+        $users = $query->getResult();
+        echo "Generated users count=".count($users)."<br>";
+
+        foreach($users as $user) {
+            echo "user=".$user.": ";
+
+            $author = $this->getAuthorFromLogger($user);
+            if( $author ) {
+                $user->setAuthor($author);
+                //$em->flush();
+                echo "Update author=".$author."<br>";
+            } else {
+                echo "Author is not found in logger<br>";
+            }
+        }
+
+        exit("EOF generated users");
+    }
+    public function getAuthorFromLogger($user) {
+        $em = $this->getDoctrine()->getManager();
+
+        //get the date from event log
+        $repository = $em->getRepository('OlegUserdirectoryBundle:Logger');
+        $dql = $repository->createQueryBuilder("logger");
+
+
+        $dql->where("logger.entityName = 'User' AND logger.entityId = ".$user->getId());
+
+        //$dql->andWhere("logger.event LIKE '%"."status changed to '/Unpaid/Issued"."%'"); //status changed to 'Unpaid/Issued'
+        //$dql->andWhere("logger.event LIKE :eventStr OR logger.event LIKE :eventStr2");
+        $dql->andWhere("logger.event LIKE :eventStr OR logger.event LIKE :eventStr2");
+
+        $dql->orderBy("logger.id","DESC");
+        $query = $em->createQuery($dql);
+
+        $search = "User account for ";
+        $search2 = "has been created by";
+
+        $query->setParameters(
+            array(
+                'eventStr' => '%'.$search.'%',
+                'eventStr2' => '%'.$search2.'%'
+            )
+        );
+
+        $loggers = $query->getResult();
+
+        if( count($loggers) > 0 ) {
+            $logger = $loggers[0];
+
+            $author = $logger->getUser();
+            return $author;
+        }
+
+        return NULL;
+    }
+
 
 }

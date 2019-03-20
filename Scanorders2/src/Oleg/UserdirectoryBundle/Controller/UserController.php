@@ -2092,6 +2092,9 @@ class UserController extends Controller
         $createdBy = "manual-".$sitename;
         $user->setCreatedby($createdBy);
 
+        //overwrite author ($creator)
+        $user->setAuthor($creator);
+
         $user->setOtherUserParam($otherUserParam);
 
         $user->setLocked(true);
