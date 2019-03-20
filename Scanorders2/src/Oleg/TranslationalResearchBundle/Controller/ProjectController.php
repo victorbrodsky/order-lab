@@ -1804,41 +1804,59 @@ class ProjectController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $transresUtil = $this->container->get('transres_util');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->get('security.token_storage')->getToken()->getUser();
 
-        $project->setState("closed");
+        $testing = false;
+        $originalStateStr = $project->getState();
+        $to = "closed";
+
+        $project->setState($to);
 
         $em->flush($project);
 
-        //email
-        $break = "<br>";
-        $emailUtil = $this->container->get('user_mailer_utility');
-        $emailSubject = "Your project request ".$project->getOid()." has been closed";
+        /////////////////////// email and logger ////////////////////////
+//        $break = "<br>";
+//        $emailUtil = $this->container->get('user_mailer_utility');
+//        $emailSubject = "Your project request ".$project->getOid()." has been closed";
+//
+//        $projectUrl = $this->container->get('router')->generate(
+//            'translationalresearch_project_show',
+//            array(
+//                'id' => $project->getId(),
+//            ),
+//            UrlGeneratorInterface::ABSOLUTE_URL
+//        );
+//        $projectUrl = '<a href="'.$projectUrl.'">'.$projectUrl.'</a>';
+//
+//        $emailBody = "Your project request ".$project->getOid()." has been closed by " . $user->getUsernameOptimal();
+//
+//        //comment
+//        //$emailBody = $emailBody . $break.$break. "Status Comment:" . $break . $project->getStateComment();
+//
+//        $requesterEmails = $transresUtil->getRequesterMiniEmails($project);
+//        $adminsCcs = $transresUtil->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //only admin
+//        $senderEmail = $transresUtil->getTransresSiteProjectParameter('fromEmail',$project);
+//
+//        $emailBody = $emailBody . $break.$break. "To view this project request, please visit the link below:".$break.$projectUrl;
+//        $emailUtil->sendEmail($requesterEmails,$emailSubject,$emailBody,$adminsCcs,$senderEmail);
+//
+//        //eventlog
+//        $eventType = "Project Closed";
+//        $transresUtil->setEventLog($project,$eventType,$emailBody);
+        /////////////////////// EOF email and logger ////////////////////////
 
-        $projectUrl = $this->container->get('router')->generate(
-            'translationalresearch_project_show',
-            array(
-                'id' => $project->getId(),
-            ),
-            UrlGeneratorInterface::ABSOLUTE_URL
+
+        //Send transition emails
+        $resultMsg = $transresUtil->sendTransitionEmail($project,$originalStateStr,$testing);
+
+        //event log
+        $eventType = "Review Submitted";
+        $transresUtil->setEventLog($project,$eventType,$resultMsg,$testing);
+
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            $transresUtil->getNotificationMsgByStates($originalStateStr,$to,$project)
         );
-        $projectUrl = '<a href="'.$projectUrl.'">'.$projectUrl.'</a>';
-
-        $emailBody = "Your project request ".$project->getOid()." has been closed by " . $user->getUsernameOptimal();
-
-        //comment
-        //$emailBody = $emailBody . $break.$break. "Status Comment:" . $break . $project->getStateComment();
-
-        $requesterEmails = $transresUtil->getRequesterMiniEmails($project);
-        $adminsCcs = $transresUtil->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //only admin
-        $senderEmail = $transresUtil->getTransresSiteProjectParameter('fromEmail',$project);
-
-        $emailBody = $emailBody . $break.$break. "To view this project request, please visit the link below:".$break.$projectUrl;
-        $emailUtil->sendEmail($requesterEmails,$emailSubject,$emailBody,$adminsCcs,$senderEmail);
-
-        //eventlog
-        $eventType = "Project Closed";
-        $transresUtil->setEventLog($project,$eventType,$emailBody);
 
         return $this->redirectToRoute('translationalresearch_project_index');
     }
@@ -1859,43 +1877,60 @@ class ProjectController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $transresUtil = $this->container->get('transres_util');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->get('security.token_storage')->getToken()->getUser();
 
-        $project->setState("final_approved");
+        $testing = false;
+        $originalStateStr = $project->getState();
+        $to = "final_approved";
+
+        $project->setState($to);
 
         $project->setApprovalDate(new \DateTime());
 
         $em->flush($project);
 
-        //email
-        $break = "<br>";
-        $emailUtil = $this->container->get('user_mailer_utility');
-        $emailSubject = "Your project request ".$project->getOid()." has been approved";
+        //////////////////// email and eventlog /////////////////////////
+//        $break = "<br>";
+//        $emailUtil = $this->container->get('user_mailer_utility');
+//        $emailSubject = "Your project request ".$project->getOid()." has been approved";
+//
+//        $projectUrl = $this->container->get('router')->generate(
+//            'translationalresearch_project_show',
+//            array(
+//                'id' => $project->getId(),
+//            ),
+//            UrlGeneratorInterface::ABSOLUTE_URL
+//        );
+//        $projectUrl = '<a href="'.$projectUrl.'">'.$projectUrl.'</a>';
+//
+//        $emailBody = "Your project request ".$project->getOid()." has been approved by " . $user->getUsernameOptimal();
+//
+//        //comment
+//        //$emailBody = $emailBody . $break.$break. "Status Comment:" . $break . $project->getStateComment();
+//
+//        $requesterEmails = $transresUtil->getRequesterMiniEmails($project);
+//        $adminsCcs = $transresUtil->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //only admin
+//        $senderEmail = $transresUtil->getTransresSiteProjectParameter('fromEmail',$project);
+//
+//        $emailBody = $emailBody . $break.$break. "To view this project request, please visit the link below:".$break.$projectUrl;
+//        $emailUtil->sendEmail($requesterEmails,$emailSubject,$emailBody,$adminsCcs,$senderEmail);
+//
+//        //eventlog
+//        $eventType = "Project Approved";
+//        $transresUtil->setEventLog($project,$eventType,$emailBody);
+        //////////////////// EOF email and eventlog /////////////////////////
 
-        $projectUrl = $this->container->get('router')->generate(
-            'translationalresearch_project_show',
-            array(
-                'id' => $project->getId(),
-            ),
-            UrlGeneratorInterface::ABSOLUTE_URL
+        //Send transition emails
+        $resultMsg = $transresUtil->sendTransitionEmail($project,$originalStateStr,$testing);
+
+        //event log
+        $eventType = "Review Submitted";
+        $transresUtil->setEventLog($project,$eventType,$resultMsg,$testing);
+
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            $transresUtil->getNotificationMsgByStates($originalStateStr,$to,$project)
         );
-        $projectUrl = '<a href="'.$projectUrl.'">'.$projectUrl.'</a>';
-
-        $emailBody = "Your project request ".$project->getOid()." has been approved by " . $user->getUsernameOptimal();
-
-        //comment
-        //$emailBody = $emailBody . $break.$break. "Status Comment:" . $break . $project->getStateComment();
-
-        $requesterEmails = $transresUtil->getRequesterMiniEmails($project);
-        $adminsCcs = $transresUtil->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //only admin
-        $senderEmail = $transresUtil->getTransresSiteProjectParameter('fromEmail',$project);
-
-        $emailBody = $emailBody . $break.$break. "To view this project request, please visit the link below:".$break.$projectUrl;
-        $emailUtil->sendEmail($requesterEmails,$emailSubject,$emailBody,$adminsCcs,$senderEmail);
-
-        //eventlog
-        $eventType = "Project Approved";
-        $transresUtil->setEventLog($project,$eventType,$emailBody);
 
         return $this->redirectToRoute('translationalresearch_project_index');
     }

@@ -120,7 +120,12 @@
                 {% endif %}
             </td>
 
-            <td>{{ user.author }}</td>
+            <td class="rowlink-skip">
+                {#{{ user.author }}#}
+                {#make the user in the “Added By” column clickable, leading to the profile#}
+                <a href="{{ path(sitenameshowuser~'_showuser', { 'id': user.author.id }) }}" target="_blank">{{ user.author }}</a>
+            </td>
+
             <td>{{ user.createDate|date('m/d/Y') }}</td>
 
             <td class="rowlink-skip">
