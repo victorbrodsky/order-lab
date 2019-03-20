@@ -166,7 +166,7 @@ class DefaultController extends Controller
             $author = $this->getAuthorFromLogger($user);
             if( $author ) {
                 $user->setAuthor($author);
-                //$em->flush();
+                $em->flush();
                 echo "Update author=".$author."<br>";
             } else {
                 echo "Author is not found in logger<br>";
