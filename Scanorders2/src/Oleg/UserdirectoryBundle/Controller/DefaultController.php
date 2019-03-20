@@ -139,6 +139,8 @@ class DefaultController extends Controller
 
 
     /**
+     * https://collage.med.cornell.edu/order/directory/fix-author-generated-users/
+     *
      * @Route("/fix-author-generated-users/", name="employees_fix-author-generated-users")
      */
     public function fixAuthorGeneratedUsersAction()
@@ -154,7 +156,7 @@ class DefaultController extends Controller
         $repository = $em->getRepository('OlegUserdirectoryBundle:User');
         $dql = $repository->createQueryBuilder("user");
         $dql->where("user.createdby LIKE '%manual-%'");
-        $query = $this->em->createQuery($dql);
+        $query = $em->createQuery($dql);
         $users = $query->getResult();
         echo "Generated users count=".count($users)."<br>";
 
