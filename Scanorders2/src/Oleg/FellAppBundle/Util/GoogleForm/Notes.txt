@@ -15,6 +15,10 @@ https://drive.google.com/uc?0B2FwyaXvFk1ec2x3cjVMUE1BNEU
 All above is not working anymore. Use external links: https://cdnjs.com/libraries/bootstrap-datepicker
 
 
+Setup GAS environemnet (https://www.quora.com/What-is-a-great-IDE-to-use-for-Google-Sheets-AppDev-I-know-of-20-general-JS-IDEs-but-specifically-for-Google-Sheets):
+1) AppsScript Color
+2) Google Apps Script GitHub Assistant
+3) Command Line Interface using clasp
 
 
 Access projects:
