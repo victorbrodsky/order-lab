@@ -2486,9 +2486,15 @@ class TransResRequestUtil
             "My Draft Requests",
             'Submitted Requests for My Projects',
             'Draft Requests for My Projects',
-            'Requests I Completed',
-            '[[hr]]'
+            //'Requests I Completed',
+            //'[[hr]]'
         );
+
+        if( $this->secAuth->isGranted('ROLE_TRANSRES_TECHNICIAN') || $transresUtil->isAdminOrPrimaryReviewer() ) {
+            $filterTypes[] = 'Requests I Completed';
+        }
+
+        $filterTypes[] = '[[hr]]';
 
         if( $transresUtil->isAdminOrPrimaryReviewerOrExecutive() === false && $this->secAuth->isGranted('ROLE_TRANSRES_TECHNICIAN') === false ) {
             return $filterTypes;

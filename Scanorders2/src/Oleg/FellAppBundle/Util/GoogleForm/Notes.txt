@@ -27,3 +27,4 @@ New Year Submission
 3) Rename copied folder with previos year postfix "FellowshipApplicationUploads_2018" and "Spreadsheets_2018" to avoid name conflicts
 4) Create a new folder "Spreadsheets" and "FellowshipApplicationUploads" under "Responses" 
 5) In the site settings update "Application Google Drive Folder ID" by newly created "Spreadsheets" folder from step 4
+6) Update _destinationFolder in Code.gs by the "Spreadsheets" folder ID from step 4
