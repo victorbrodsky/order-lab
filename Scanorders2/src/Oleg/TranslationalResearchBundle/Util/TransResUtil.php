@@ -2439,7 +2439,7 @@ class TransResUtil
             //The following comment has been provided by the reviewer: [most recent value of comment field added by reviewer]
             $reviewComments = $this->getReviewComments($project,"<hr>");
 
-            $body = $body . $break.$break. "The following comment(s) provided:".$break."<hr>".$reviewComments;
+            $body = $body . $break.$break. "The following comment was provided:".$break."<hr>".$reviewComments;
 
             $body = $body . $break.$break. "The review process will resume once the requested information is added.";
 

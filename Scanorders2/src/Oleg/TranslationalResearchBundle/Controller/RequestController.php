@@ -1418,6 +1418,16 @@ class RequestController extends Controller
                     )
                 );
             }
+            if ($filterTypeLowerCase == strtolower("Requests I Completed") ) {
+                return $this->redirectToRoute(
+                    'translationalresearch_request_index_filter',
+                    array(
+                        'filter[completedBy]' => $user->getId(),
+                        'filter[progressState][0]' => "completed",
+                        'title' => $filterType,
+                    )
+                );
+            }
 
             if ($filterTypeLowerCase == strtolower("All AP/CP Requests") ) {
                 $projectSpecialtyObject = $transresUtil->getSpecialtyObject("ap-cp");
