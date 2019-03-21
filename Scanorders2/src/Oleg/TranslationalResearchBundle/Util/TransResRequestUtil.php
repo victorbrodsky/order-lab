@@ -1142,6 +1142,10 @@ class TransResRequestUtil
                     $transresRequest->setBillingState('approvedInvoicing');
                     $transresRequest->setCompletedBy($user);
                 }
+                if( $to == "completed" ) {
+                    //$transresRequest->setBillingState('approvedInvoicing');
+                    $transresRequest->setCompletedBy($user);
+                }
 
                 //write to DB
                 if( !$testing ) {

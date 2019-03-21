@@ -502,6 +502,9 @@ class RequestController extends Controller
                 }
             }
 
+            if( $transresRequest->getProgressState() == "completed" ) {
+                $transresRequest->setCompletedBy($user);
+            }
             if( $transresRequest->getProgressState() == "completedNotified" ) {
                 $transresRequest->setCompletedBy($user);
             }
@@ -1424,6 +1427,7 @@ class RequestController extends Controller
                     array(
                         'filter[completedBy]' => $user->getId(),
                         'filter[progressState][0]' => "completed",
+                        'filter[progressState][1]' => "completedNotified",
                         'title' => $filterType,
                     )
                 );
