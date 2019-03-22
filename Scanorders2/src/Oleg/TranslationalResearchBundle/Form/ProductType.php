@@ -9,6 +9,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -54,15 +56,20 @@ class ProductType extends AbstractType
             },
         ));
 
+//        $builder->add('requested', IntegerType::class, array(
+//            'label' => "Requested Quantity:",
+//            'required' => false,
+//            //'attr' => array('class' => 'form-control')
+//        ));
 //        $builder->add('requested', null, array(
 //            'label' => "Requested Quantity:",
 //            'required' => false,
-//            'attr' => array('class' => 'form-control')
+//            'attr' => array('class' => 'product-requested-quantity')
 //        ));
         $builder->add('requested',TextType::class,array(
             'label' => "Requested Quantity:",
             'required' => true,
-            'attr' => array('class'=>'form-control digit-mask mask-text-align-left')
+            'attr' => array('class'=>'form-control digit-mask mask-text-align-left product-requested-quantity')
         ));
 
         if( $this->params["cycle"] != "new" ) {

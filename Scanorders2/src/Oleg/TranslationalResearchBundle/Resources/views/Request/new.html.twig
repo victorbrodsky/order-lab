@@ -442,6 +442,27 @@
                 }
             }
 
+            var requiredQunatities = $(".product-requested-quantity");
+            $.each(requiredQunatities, function( index, valueField ) {
+                //console.log("valueField:");
+                //console.log(valueField);
+                //transresShowBtn();
+                //return false;
+                var value = valueField.value;
+                //alert( index + ": " + value );
+                //console.log("requiredQunatity="+value);
+                if( Math.floor(value) == value && $.isNumeric(value) ) {
+                    //integer ok
+                } else {
+                    var msg = "Please enter an integer (a number) into the 'Requested Quantity' field before submitting.";
+                    $("#projectError").show();
+                    $("#projectError").html(msg);
+
+                    transresShowBtn();
+                    return false;
+                }
+            });
+
             //console.log("transresValidateRequest: finished");
 
             transresValidateHandsonTable();
