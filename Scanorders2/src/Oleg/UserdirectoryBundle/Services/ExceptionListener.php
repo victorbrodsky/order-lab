@@ -87,7 +87,7 @@ class ExceptionListener {
             "<br>File: ".$exception->getFile() .
             "<br>Line: ".$exception->getLine()
             //. "<br>Code:".$exception->getCode()
-            . "<br>Code:". $exception->getTraceAsString()
+            . "<br>Trace: ". $exception->getTraceAsString()
         ;
 
         if( $request ) {
