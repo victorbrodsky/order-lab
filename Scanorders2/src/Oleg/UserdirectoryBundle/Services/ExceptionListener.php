@@ -79,10 +79,15 @@ class ExceptionListener {
 //            $exception->getCode()
 //
 //        );
+//        echo $exception->getCode();
+        //echo "Trace: ".$exception->getTraceAsString()."<br>";
+        //var_dump($exception->getTraceAsString());
 
         $message = "Error: " . $exception->getMessage() . " with code" . $exception->getCode() .
             "<br>File: ".$exception->getFile() .
             "<br>Line: ".$exception->getLine()
+            //. "<br>Code:".$exception->getCode()
+            . "<br>Code:". $exception->getTraceAsString()
         ;
 
         if( $request ) {
