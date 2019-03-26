@@ -1,47 +1,79 @@
-var _templateSSKey = 'key';
-var _backupSSKey = 'key';
+//https://sites.google.com/a/pathologysystems.org/wcmc/fellowship-application
+//http://wcmc.pathologysystems.org/fellowship-application
+
+var _templateSSKey = '1ITacytsUV2yChbfOSVjuBoW4aObSr_xBfpt6m_vab48';
+var _backupSSKey = '19KlO1oCC88M436JzCa89xGO08MJ1txQNgLeJI0BpNGo';
 //Destination forlder: ID of the folder where a newly created copy of template spreadsheet will be placed (Spreadsheets).
-var _destinationFolder = 'key';
+var _destinationFolder = '163MoMsFodHxPj98dM-C_cLTVU5bkGHz1'; //'0B2FwyaXvFk1ecEJVeWc3VW1wS2c';
 //Unique folder name where uploaded files will be placed.
 var _dropbox = "FellowshipApplicantUploads"; 
+var _configFolderId = "0B2FwyaXvFk1efmlPOEl6WWItcnBveVlDWWh6RTJxYzYyMlY2MjRSalRvUjdjdzMycmo5U3M";
 
 var _colIndexNameMapArray = {};
 var _uniqueId = null;
 
 var _formCreationTimeStamp = CacheService.getPrivateCache().get('_formCreationTimeStamp');
 
-var _adminemail = ''; //send confirmation email
-var _useremail = ''; //send confirmation email
+var _adminemail = 'oli2002@med.cornell.edu';
+var _useremail = 'eah2006@med.cornell.edu';
+//var _useremail = 'cinava@yahoo.com';
 
-var _maintanance = false;
+var _AcceptingSubmissions = true;
 var _fullValidation = true;
 
 //Maintenance flag (uncomment for maintenance)
-//var _maintanance = true; 
+var _AcceptingSubmissions = false; 
 //var _fullValidation = false; //will validate only fellapp type, names, email, signature
-//var _useremail = '';
+var _useremail = 'cinava@yahoo.com';
 //EOF Maintenance flag
 
 //var _fileUrl;
 
+//default fellowship types
+var _Status = false;
 
-function doGet(request) {    
+var _FellowshipTypes_Orig = [
+      {
+        "id": "s1",
+        "text": "s1"
+      },
+      {
+        "id": "s2",
+        "text": "s2"
+      }
+    ];
+ var _FellowshipTypes = [];   
+
+
+function doGet(request) {   
+
+  //Logger.log("reading config data");
+  _AcceptingSubmissions = getConfigParameters("acceptingSubmissions");
+  //var status = getConfigParameter(configFile);
+  //Logger.log('status='+configFile);
+  Logger.log("_AcceptingSubmissions="+_AcceptingSubmissions);
+  //Logger.log("_FellowshipTypes:");
+  //Logger.log(_FellowshipTypes);
+  //dssrrs.gsgs;
+
+  PropertiesService.getScriptProperties().setProperty('_jstest', 'jstest!!!');
+
   //PropertiesService.getScriptProperties().setProperty('_formCreationTimeStamp', getCurrentTimestamp());
   CacheService.getPrivateCache().put('_formCreationTimeStamp', getCurrentTimestamp(),10800); //expirationInSeconds 10800 sec => 3 hours
     
   var curUser = Session.getActiveUser().getEmail();
   Logger.log('curUser='+curUser);
     
-  if( _maintanance ) {
-    if( curUser == "aaa@aaa.org" ) {
-        _maintanance = false;
+  if( !_AcceptingSubmissions ) {
+    if( curUser == "olegivanov@pathologysystems.org" ) {
+        _AcceptingSubmissions = true;
     }  
   } 
       
-  if( _maintanance ) {    
-     var template = HtmlService.createTemplateFromFile('Maintanance'); 
-  } else {
+  if( _AcceptingSubmissions ) {    
      var template = HtmlService.createTemplateFromFile('Form.html');
+  } else {
+     var template = HtmlService.createTemplateFromFile('Maintanance.html');      
   }    
   
   //template.action = ScriptApp.getService().getUrl();  
@@ -343,6 +375,16 @@ function sortByKey(array, key) {
 }
 
 
+function getJsData() {
+  
+  var fellowshipTypes = getConfigParameters("fellowshipTypes");
+  
+  if( !fellowshipTypes ) {
+    return _FellowshipTypes;
+  }
+  
+    return fellowshipTypes;
+}
 
 function onFormSuccess_TODEL() {
   //Logger.log('on Form Success');
@@ -737,5 +779,74 @@ function Trim(string) {
   }
   return string.replace(/\s/g, ""); 
 }
+
+function getConfigParameters(parameterKey) {
+  //var sheetname = "test";
+  //var aUrl = "http://pipes.yahoo.com/pipes/pipe.run?_id=286bbb1d8d30f65b54173b3b752fa4d9&_render=json";
+  //var aUrl = "https://drive.google.com/drive/u/0/folders/0B2FwyaXvFk1efmlPOEl6WWItcnBveVlDWWh6RTJxYzYyMlY2MjRSalRvUjdjdzMycmo5U3M";
+  
+  //Get a reference to the folder    
+  fldr = DriveApp.getFolderById(_configFolderId);
+
+  //Get all files by that name. Put return into a variable
+  allFilesInFolder = fldr.getFilesByName("config.json");
+  Logger.log('allFilesInFolder: ' + allFilesInFolder);
+  
+  if (allFilesInFolder.hasNext() === false) {
+    //If no file is found, the user gave a non-existent file name
+    return false;
+  };
+  
+  var configFile = null;
+  //cntFiles = 0;
+  //Even if it's only one file, must iterate a while loop in order to access the file.
+  //Google drive will allow multiple files of the same name.
+  while (allFilesInFolder.hasNext()) {
+    //thisFile = allFilesInFolder.next();
+    //cntFiles = cntFiles + 1;
+    //Logger.log('File Count: ' + cntFiles);
+
+    //docContent = thisFile.getAs('application/json');
+    //Logger.log('docContent : ' + docContent );
+    
+    
+    // define a File object variable and set the Media Tyep
+    var file = allFilesInFolder.next();
+    configFile = file.getAs('application/json')
+    
+    // log the contents of the file
+    Logger.log("configFile:");
+    Logger.log(configFile.getDataAsString());
+    
+    //return configFile;
+  };
+  
+  //return NULL;
+  
+  var configObject = JSON.parse(configFile.getDataAsString());
+  
+  var parameter = configObject[parameterKey];
+  Logger.log("parameter:");
+  Logger.log(parameter);
+  
+  return parameter;
+  
+  _Status = configObject.status;
+  _FellowshipTypes = configObject.fellowshiptypes;
+  fellowshiptypeId = _FellowshipTypes[0].id;
+  fellowshiptypeName = _FellowshipTypes[0].text;
+  Logger.log("_Status="+_Status);
+  Logger.log("fellowshiptypeId="+fellowshiptypeId);
+  Logger.log("fellowshiptypeName="+fellowshiptypeName); 
+  //Logger.log("fellowshipTypes:");
+  //Logger.log(fellowshipTypes);
+  
+  //_FellowshipTypes = fellowshipTypes;
+  
+  
+  
+  return configFile;
+}
+
 
 

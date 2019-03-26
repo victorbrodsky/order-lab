@@ -19,11 +19,15 @@
   
   <br>    
   <p>
-  NYPH-CORNELL ONLY ACCEPTS/SPONSORS J1 VISAS.<br>
+  <font color="red">NYPH-CORNELL ONLY ACCEPTS/SPONSORS J-1 VISAS.</font><br>
   This application does not allow you to save a partially completed form and proceed filling it out later. 
-  Please gather all relevant information before filling out this form in order to be able to submit it immediately after entering all of the data.
+  Please gather all relevant information before filling out this form in order to be able to submit it immediately after entering all of the data. 
   </p>
   
+  <p>
+    Use of <font color="red">Firefox or Google Chrome browser</font> is recommended. If you encounter any technical issues with this web form, please email oli2002@med.cornell.edu
+  </p>
+   
   <br>
   <!-- Notes -->
   <?!= include('Notes'); ?>
@@ -98,6 +102,10 @@
   <input id="submit-form-button" type="button" class="btn btn-primary" value="Submit" 
   onclick="google.script.run.withFailureHandler(onFormFailure).withSuccessHandler(onFormSuccess).processForm(document.getElementById('applicantForm'))" 
   /> 
+    
+  <!--
+  <input id="submit-form-button" type="button" class="btn btn-primary" value="Submit" onclick="google.script.run.processForm(document.getElementById('applicantForm'))"/> 
+  -->
 
 <!--
   <input type="button" class="btn btn-primary" value="Submit" 

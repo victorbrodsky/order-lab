@@ -13,17 +13,21 @@
         <div class="row">    
           <div class="col-xs-12">
             <label class="control-label required">Required field</label>
-            <select id="fellowshipType" class="select combobox fellowshipTypeCombobox" name="fellowshipType">
-              <option value=""></option>
+            
+            
+              <!--
+              <select id="fellowshipType" class="select combobox fellowshipTypeCombobox" name="fellowshipType">
+                <option value=""></option>
+              -->  
               
               
-              <option value="Breast pathology">Breast Pathology</option>
-              <option value="Cytopathology">Cytopathology</option>             
-              <option value="Gynecologic pathology">Gynecologic Pathology</option>
-              <option value="Gastrointestinal pathology">Gastrointestinal Pathology</option>                           
-              <option value="Genitourinary pathology">Genitourinary Pathology</option>                           
-              <option value="Hematopathology">Hematopathology</option>                                       
-              <option value="Molecular genetic pathology">Molecular Genetic Pathology</option>
+              <!--<option value="Breast pathology">Breast Pathology</option>
+              <!--<option value="Cytopathology">Cytopathology</option>-->             
+              <!--<option value="Gynecologic pathology">Gynecologic Pathology</option>-->
+              <!--<option value="Gastrointestinal pathology">Gastrointestinal Pathology</option>-->                           
+              <!--<option value="Genitourinary pathology">Genitourinary Pathology</option>-->                           
+              <!--<option value="Hematopathology">Hematopathology</option>-->                                       
+              <!--<option value="Molecular genetic pathology">Molecular Genetic Pathology</option>-->
              
               
               <!--
@@ -51,9 +55,16 @@
               -->
               
               <!--<option value="Other">Other</option>-->         
-            </select>
+            <!--</select>--> 
+            
+            <br>
+            <input type="hidden" class="select combobox fellowshipTypeCombobox" id="fellowshipType" name="fellowshipType" placeholder="Fellowship Type">
+            <!--<input type="hidden" class="combobox usstates" id="permanentAddressState" name="permanentAddressState" placeholder="State">-->
+            
           </div> 
+                             
           <br>
+          
           <div class="col-xs-12">
             <input style="display:none;" type="text" class="form-control" id="otherFellowshipType" name="otherFellowshipType" placeholder="Please specify other fellowship type">
           </div>                           

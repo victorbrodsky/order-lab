@@ -1,0 +1,8 @@
+{
+  "acceptingSubmissions": false,
+  "fellowshipTypes":[
+    {"id":"ID_F1", "text":"NAME_F1"},
+    {"id":"ID_F2", "text":"NAME_F2"},
+    {"id":"ID_F3", "text":"NAME_F3"}
+  ]
+}

@@ -31,6 +31,8 @@ script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></scr
     var _reprimandExplanationLink = "";
     var _legalExplanationLink = "";
     var _USMLEScoresLink = "";
+    
+    //var _FellowshipTypes = [];
    
     $(document).ready(function() {
                   
@@ -100,8 +102,10 @@ script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></scr
        
        //onFormSuccess('testID');
        
-    });   //document ready
     
+       google.script.run.withSuccessHandler(setFellowshipTypes).getJsData();
+       
+    });   //document ready
     
     
         
@@ -355,6 +359,24 @@ script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></scr
       });
     
                   
+    } //InitSelect
+    
+    
+    function setFellowshipTypes(fellowshipTypes) {
+      var combobox_width = '100%'; //'element'
+      $(".fellowshipTypeCombobox").select2({        
+        allowClear: true,
+        width: combobox_width,
+        dropdownAutoWidth: true,
+        selectOnBlur: false,
+        dataType: 'json',
+        quietMillis: 100,
+        multiple: false,
+        data: fellowshipTypes,
+        createSearchChoice:function(term,data) {           
+            return {id:term, text:term};
+        }
+      });
     }
     
     

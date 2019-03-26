@@ -18,10 +18,17 @@
           </p>
           -->
           
-          <p>
-          <label for="email" class="control-label required">E-mail</label>
-          <input type="text" class="form-control" id="email" name="email" placeholder="E-mail">
-          </p>
+          <div class="row">
+            <div class="col-xs-6">             
+                <label for="email" class="control-label required">E-mail</label>
+                <input type="text" class="form-control" id="email" name="email" placeholder="E-mail">            
+            </div>
+            <div class="col-xs-6">              
+                <label for="dateOfBirth" class="control-label">Date of Birth</label>              
+                <input type="text" class="datepicker form-control allow-future-date" id="dateOfBirth" name="dateOfBirth" placeholder="Date of Birth">              
+            </div>
+          </div>
+          <br>
           
           
             <div class="well">
@@ -129,14 +136,21 @@
             <div class="well">
               <label class="col-xs-12 control-label">Citizenship:</label>  
               <div class="row withpaddingtop"> 
-                <div class="col-xs-6">
+                <div class="col-xs-12">
+                  <font size="1" color="red">NYPH-CORNELL ONLY ACCEPTS/SPONSORS J-1 VISAS</font><br>
                   <label for="citizenshipCountry" class="control-label">Country of citizenship</label> 
                   <input type="text" class="form-control" id="citizenshipCountry" name="citizenshipCountry" placeholder="Country of citizenship">
                 </div>
+                <!--
                 <div class="col-xs-6">
-                  <label for="visaStatus" class="control-label">Visa status</label>
+                  <label for="visaStatus" class="control-label">Visa status (<font size="1" color="red">NYPH-CORNELL ONLY ACCEPTS/SPONSORS J-1 VISAS</font>)</label>
                   <input type="text" class="form-control" id="visaStatus" name="visaStatus" placeholder="Visa status">
-                </div>                            
+                  <select id="visaStatus" class="select combobox" name="visaStatus">
+                    <option value="Not Required">Not Required</option>
+                    <option value="J-1">J-1</option>
+                  </select>
+                </div>   
+                -->
               </div>
             </div>
           
