@@ -86,6 +86,12 @@ class ExceptionListener {
         $message = "Error: " . $exception->getMessage() . " with code" . $exception->getCode() .
             "<br>File: ".$exception->getFile() .
             "<br>Line: ".$exception->getLine()
+            . "<br>Controller: ".$event->getRequest()->attributes->get('_controller')
+            . "<br>Router: ".$event->getRequest()->attributes->get('_route')
+            . "<br>Router Parameters: ".json_encode($event->getRequest()->attributes->get('_route_params'))
+            . "<br>Full URI: ".$event->getRequest()->getUri()
+            //. "<br>URI Path Info: ".$event->getRequest()->server->get('PATH_INFO')
+            //. "<br>URI Query String: ".$event->getRequest()->getQueryString()
             //. "<br>Code:".$exception->getCode()
             . "<br>Trace: ". $exception->getTraceAsString()
         ;
