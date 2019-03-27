@@ -185,16 +185,15 @@ class GoogleFormConfigController extends Controller
         //echo "service ok <br>";
 
         //https://drive.google.com/file/d/1EEZ85D4sNeffSLb35_72qi8TdjD9nLyJ/view?usp=sharing
-        $fileId = "1EEZ85D4sNeffSLb35_72qi8TdjD9nLyJ"; //config.json
-        //$fileId = "0B2FwyaXvFk1efmlPOEl6WWItcnBveVlDWWh6RTJxYzYyMlY2MjRSalRvUjdjdzMycmo5U3M"; //FellowshipApplication
-        $file = null;
-        try {
-            $file = $service->files->get($fileId);
-            //exit("fileId=".$file->getId()."; title=".$file->getTitle());
-        } catch (Exception $e) {
-            throw new IOException('Google API: Unable to get file by file id='.$fileId.". An error occurred: " . $e->getMessage());
-        }
-
+//        $fileId = "1EEZ85D4sNeffSLb35_72qi8TdjD9nLyJ"; //config.json
+//        //$fileId = "0B2FwyaXvFk1efmlPOEl6WWItcnBveVlDWWh6RTJxYzYyMlY2MjRSalRvUjdjdzMycmo5U3M"; //FellowshipApplication
+//        $file = null;
+//        try {
+//            $file = $service->files->get($fileId);
+//            exit("fileId=".$file->getId()."; title=".$file->getTitle());
+//        } catch (Exception $e) {
+//            throw new IOException('Google API: Unable to get file by file id='.$fileId.". An error occurred: " . $e->getMessage());
+//        }
 
         $folderIdFellApp = $userSecUtil->getSiteSettingParameter('folderIdFellApp');
         if( !$folderIdFellApp ) {
@@ -203,8 +202,9 @@ class GoogleFormConfigController extends Controller
         $folderIdFellApp = "0B2FwyaXvFk1efmlPOEl6WWItcnBveVlDWWh6RTJxYzYyMlY2MjRSalRvUjdjdzMycmo5U3M";
         echo "folder ID=".$folderIdFellApp."<br>";
 
-        //$this->printFilesInFolder($service,$folderIdFellApp);
-        //exit('111');
+
+        $this->findConfigFileInFolder($service,$folderIdFellApp,"config.json");
+        exit('111');
 
         //get all files in google folder
         //ID=0B2FwyaXvFk1efmlPOEl6WWItcnBveVlDWWh6RTJxYzYyMlY2MjRSalRvUjdjdzMycmo5U3M
@@ -228,25 +228,27 @@ class GoogleFormConfigController extends Controller
      * @param Google_Service_Drive $service Drive API service instance.
      * @param String $folderId ID of the folder to print files from.
      */
-    function findConfigFileInFolder($service, $folderId) {
+    function findConfigFileInFolder($service, $folderId, $fileName) {
         $pageToken = NULL;
 
         do {
             try {
-                //$parameters = array();
-                $parameters = array('q' => "trashed=false and title='config.json'");
+
                 if ($pageToken) {
                     $parameters['pageToken'] = $pageToken;
                 }
+
+                //$parameters = array();
+                //$parameters = array('q' => "trashed=false and title='config.json'");
                 //$children = $service->children->listChildren($folderId, $parameters);
-                $parameters = array('q' => "'".$folderIdFellApp."' in parents and trashed=false and title='config.json'");
+                $parameters = array('q' => "'".$folderId."' in parents and trashed=false and title='".$fileName."'");
                 $files = $service->files->listFiles($parameters);
 
-                foreach ($children->getItems() as $child) {
-                    print "File ID=" . $child->getId()."<br>";
-                    print "File Title=" . $child->getTitle()."<br>";
+                foreach ($files->getItems() as $child) {
+                    echo "File ID=" . $child->getId()."<br>";
+                    echo "File Title=" . $child->getTitle()."<br>";
                 }
-                $pageToken = $children->getNextPageToken();
+                $pageToken = $files->getNextPageToken();
             } catch (Exception $e) {
                 print "An error occurred: " . $e->getMessage();
                 $pageToken = NULL;
