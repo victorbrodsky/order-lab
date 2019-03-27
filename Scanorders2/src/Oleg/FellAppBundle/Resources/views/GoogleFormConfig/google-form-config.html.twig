@@ -64,6 +64,13 @@
 
     {{ form_end(form) }}
 
+    {% if configFileContent is defined %}
+        <br>
+        <h3>Current Configuration File</h3>
+        <pre>
+            {{ configFileContent }}
+        </pre>
+    {% endif %}
 
 {% endblock %}
 
