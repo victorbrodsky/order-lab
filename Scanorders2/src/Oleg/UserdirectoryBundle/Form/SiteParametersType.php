@@ -599,9 +599,16 @@ class SiteParametersType extends AbstractType
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'folderIdFellApp' )
             $builder->add('folderIdFellApp',null,array(
-                'label'=>'Application Google Drive Folder ID (0B2FwyaXvFk1efmc2VGVHUm5yYjJRWGFYYTF0Z2N6am9iUFVzcTc1OXdoWEl1Vmc0LWdZc0E):',
+                'label'=>'Application Google Drive Folder ID (where the response spreadsheets are saved):',
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'configFileFolderIdFellApp' ) {
+            $builder->add('configFileFolderIdFellApp', null, array(
+                'label' => 'Google Drive Folder ID where config file is located:',
+                'attr' => array('class' => 'form-control form-control-modif', 'style' => 'margin:0')
+            ));
+        }
 
 //        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'backupUpdateDatetimeFellApp' )
 //            $builder->add('backupUpdateDatetimeFellApp',null,array(

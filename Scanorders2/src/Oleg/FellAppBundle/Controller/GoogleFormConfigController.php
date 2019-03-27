@@ -195,27 +195,28 @@ class GoogleFormConfigController extends Controller
 //            throw new IOException('Google API: Unable to get file by file id='.$fileId.". An error occurred: " . $e->getMessage());
 //        }
 
-        $folderIdFellApp = $userSecUtil->getSiteSettingParameter('folderIdFellApp');
-        if( !$folderIdFellApp ) {
-            $logger->warning('Google Drive Folder ID is not defined in Site Parameters. sourceFolderIdFellApp='.$folderIdFellApp);
+        $configFileFolderIdFellApp = $userSecUtil->getSiteSettingParameter('configFileFolderIdFellApp');
+        if( !$configFileFolderIdFellApp ) {
+            $logger->warning('Google Drive Folder ID with config file is not defined in Site Parameters. configFileFolderIdFellApp='.$configFileFolderIdFellApp);
         }
-        $folderIdFellApp = "0B2FwyaXvFk1efmlPOEl6WWItcnBveVlDWWh6RTJxYzYyMlY2MjRSalRvUjdjdzMycmo5U3M";
-        echo "folder ID=".$folderIdFellApp."<br>";
+        //$folderIdFellApp = "0B2FwyaXvFk1efmlPOEl6WWItcnBveVlDWWh6RTJxYzYyMlY2MjRSalRvUjdjdzMycmo5U3M";
+        echo "folder ID=".$configFileFolderIdFellApp."<br>";
 
+        if( 1 ) {
+            $this->findConfigFileInFolder($service, $configFileFolderIdFellApp, "config.json");
+            exit('111');
+        } else {
+            //get all files in google folder
+            //ID=0B2FwyaXvFk1efmlPOEl6WWItcnBveVlDWWh6RTJxYzYyMlY2MjRSalRvUjdjdzMycmo5U3M
+            //$parameters = array('q' => "'".$configFileFolderIdFellApp."' in parents and trashed=false and name contains 'config.json'");
+            //$parameters = array('q' => "'".$configFileFolderIdFellApp."' in parents and trashed=false");
+            $parameters = array('q' => "'" . $configFileFolderIdFellApp . "' in parents and trashed=false and title='config.json'");
+            $files = $service->files->listFiles($parameters);
 
-        $this->findConfigFileInFolder($service,$folderIdFellApp,"config.json");
-        exit('111');
-
-        //get all files in google folder
-        //ID=0B2FwyaXvFk1efmlPOEl6WWItcnBveVlDWWh6RTJxYzYyMlY2MjRSalRvUjdjdzMycmo5U3M
-        //$parameters = array('q' => "'".$folderIdFellApp."' in parents and trashed=false and name contains 'config.json'");
-        //$parameters = array('q' => "'".$folderIdFellApp."' in parents and trashed=false");
-        $parameters = array('q' => "'".$folderIdFellApp."' in parents and trashed=false and title='config.json'");
-        $files = $service->files->listFiles($parameters);
-
-        foreach($files->getItems() as $file) {
-            echo "file=".$file->getId()."<br>";
-            echo "File Title=" . $file->getTitle()."<br>";
+            foreach ($files->getItems() as $file) {
+                echo "file=" . $file->getId() . "<br>";
+                echo "File Title=" . $file->getTitle() . "<br>";
+            }
         }
 
 
@@ -223,10 +224,9 @@ class GoogleFormConfigController extends Controller
     }
 
     /**
-     * Print files belonging to a folder.
-     *
      * @param Google_Service_Drive $service Drive API service instance.
      * @param String $folderId ID of the folder to print files from.
+     * @param String $fileName Name (Title) of the config file to find.
      */
     function findConfigFileInFolder($service, $folderId, $fileName) {
         $pageToken = NULL;

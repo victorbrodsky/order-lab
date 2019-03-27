@@ -524,10 +524,18 @@ class SiteParameters {
 
     /**
      * Application Google Drive Folder ID (0B2FwyaXvFk1efmc2VGVHUm5yYjJRWGFYYTF0Z2N6am9iUFVzcTc1OXdoWEl1Vmc0LWdZc0E)
+     * where the response spreadsheets (response forms) are saved
      *
      * @ORM\Column(type="text", nullable=true)
      */
     private $folderIdFellApp;
+
+    /**
+     * Config.json file folder ID
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $configFileFolderIdFellApp;
 
     /**
      * Backup Sheet Last Modified Date
@@ -2948,6 +2956,22 @@ class SiteParameters {
     public function setFolderIdFellApp($folderIdFellApp)
     {
         $this->folderIdFellApp = $folderIdFellApp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getConfigFileFolderIdFellApp()
+    {
+        return $this->configFileFolderIdFellApp;
+    }
+
+    /**
+     * @param mixed $configFileFolderIdFellApp
+     */
+    public function setConfigFileFolderIdFellApp($configFileFolderIdFellApp)
+    {
+        $this->configFileFolderIdFellApp = $configFileFolderIdFellApp;
     }
 
     /**
