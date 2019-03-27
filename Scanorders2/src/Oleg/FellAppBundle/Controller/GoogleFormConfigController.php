@@ -166,7 +166,8 @@ class GoogleFormConfigController extends Controller
     public function getConfigOnGoogleDrive() {
 
         if( $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_ADMIN') === false ) {
-            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+            //return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+            return NULL;
         }
 
         $logger = $this->container->get('logger');
@@ -198,12 +199,14 @@ class GoogleFormConfigController extends Controller
         $configFileFolderIdFellApp = $userSecUtil->getSiteSettingParameter('configFileFolderIdFellApp');
         if( !$configFileFolderIdFellApp ) {
             $logger->warning('Google Drive Folder ID with config file is not defined in Site Parameters. configFileFolderIdFellApp='.$configFileFolderIdFellApp);
+            return NULL;
         }
         //$folderIdFellApp = "0B2FwyaXvFk1efmlPOEl6WWItcnBveVlDWWh6RTJxYzYyMlY2MjRSalRvUjdjdzMycmo5U3M";
         echo "folder ID=".$configFileFolderIdFellApp."<br>";
 
         if( 1 ) {
-            $this->findConfigFileInFolder($service, $configFileFolderIdFellApp, "config.json");
+            $configFile = $this->findConfigFileInFolder($service, $configFileFolderIdFellApp, "config.json");
+            return $configFile;
             exit('111');
         } else {
             //get all files in google folder
@@ -217,10 +220,12 @@ class GoogleFormConfigController extends Controller
                 echo "file=" . $file->getId() . "<br>";
                 echo "File Title=" . $file->getTitle() . "<br>";
             }
+
+            return $file;
         }
 
 
-        return $file;
+        return NULL;
     }
 
     /**
@@ -244,9 +249,11 @@ class GoogleFormConfigController extends Controller
                 $parameters = array('q' => "'".$folderId."' in parents and trashed=false and title='".$fileName."'");
                 $files = $service->files->listFiles($parameters);
 
-                foreach ($files->getItems() as $child) {
-                    echo "File ID=" . $child->getId()."<br>";
-                    echo "File Title=" . $child->getTitle()."<br>";
+                foreach ($files->getItems() as $file) {
+                    echo "File ID=" . $file->getId()."<br>";
+                    echo "File Title=" . $file->getTitle()."<br>";
+
+                    return $file;
                 }
                 $pageToken = $files->getNextPageToken();
             } catch (Exception $e) {
@@ -254,6 +261,8 @@ class GoogleFormConfigController extends Controller
                 $pageToken = NULL;
             }
         } while ($pageToken);
+
+        return NULL;
     }
 
 

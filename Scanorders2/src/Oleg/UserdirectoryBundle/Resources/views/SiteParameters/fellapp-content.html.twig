@@ -44,18 +44,20 @@
                     <tr>
                         <td class="rowlink-skip">
                             Path to the remote published copy of the fellowship application form's Code.gs file
-                            <p>
-                                <a href="{{ path('fellapp_google_form_config_show') }}">Google Form Configuration</a>
-                            </p>
                         </td>
                         <td>{{ entity.codeGoogleFormFellApp }}</td>
                         <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'codeGoogleFormFellApp'}) }}">Edit</a></td>
                     </tr>
 
                     <tr>
-                        <td>Google Drive Folder ID where config file is located</td>
+                        <td class="rowlink-skip">
+                            Google Drive Folder ID where config file is located
+                            <p class="rowlink-skip">
+                                <a href="{{ path('fellapp_google_form_config_show') }}">Google Form Configuration</a>
+                            </p>
+                        </td>
                         <td>{{ entity.configFileFolderIdFellApp }}</td>
-                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'configFileFolderIdFellApp'}) }}">Edit</a></td>
+                        <td class="rowlink-skip"><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'configFileFolderIdFellApp'}) }}">Edit</a></td>
                     </tr>
 
                     <tr>
