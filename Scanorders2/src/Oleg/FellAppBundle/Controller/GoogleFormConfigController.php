@@ -255,12 +255,14 @@ class GoogleFormConfigController extends Controller
             $file->setMimeType($newMimeType);
 
             // File's new content.
+            //$newFileName = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\scanorder\\Scanorders2\\src\Oleg\\FellAppBundle\\Util\\GoogleForm\\"."config.json";
             //$data = file_get_contents($newFileName);
-            //$data = $newFileName;
+            //print_r($data);
+            $data = $configJson;
 
             $additionalParams = array(
                 'newRevision' => $newRevision,
-                'data' => $configJson,
+                'data' => $data,
                 'mimeType' => $newMimeType
             );
 
