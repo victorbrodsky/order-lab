@@ -190,7 +190,7 @@ class GoogleFormConfigController extends Controller
         $file = null;
         try {
             $file = $service->files->get($fileId);
-            exit("fileId=".$file->getId()."; title=".$file->getTitle());
+            //exit("fileId=".$file->getId()."; title=".$file->getTitle());
         } catch (Exception $e) {
             throw new IOException('Google API: Unable to get file by file id='.$fileId.". An error occurred: " . $e->getMessage());
         }
@@ -200,19 +200,58 @@ class GoogleFormConfigController extends Controller
         if( !$folderIdFellApp ) {
             $logger->warning('Google Drive Folder ID is not defined in Site Parameters. sourceFolderIdFellApp='.$folderIdFellApp);
         }
+        $folderIdFellApp = "0B2FwyaXvFk1efmlPOEl6WWItcnBveVlDWWh6RTJxYzYyMlY2MjRSalRvUjdjdzMycmo5U3M";
+        echo "folder ID=".$folderIdFellApp."<br>";
+
+        //$this->printFilesInFolder($service,$folderIdFellApp);
+        //exit('111');
 
         //get all files in google folder
         //ID=0B2FwyaXvFk1efmlPOEl6WWItcnBveVlDWWh6RTJxYzYyMlY2MjRSalRvUjdjdzMycmo5U3M
         //$parameters = array('q' => "'".$folderIdFellApp."' in parents and trashed=false and name contains 'config.json'");
-        $parameters = array('q' => "'".$folderIdFellApp."' in parents and trashed=false");
+        //$parameters = array('q' => "'".$folderIdFellApp."' in parents and trashed=false");
+        $parameters = array('q' => "'".$folderIdFellApp."' in parents and trashed=false and title='config.json'");
         $files = $service->files->listFiles($parameters);
 
         foreach($files->getItems() as $file) {
             echo "file=".$file->getId()."<br>";
+            echo "File Title=" . $file->getTitle()."<br>";
         }
 
 
         return $file;
+    }
+
+    /**
+     * Print files belonging to a folder.
+     *
+     * @param Google_Service_Drive $service Drive API service instance.
+     * @param String $folderId ID of the folder to print files from.
+     */
+    function findConfigFileInFolder($service, $folderId) {
+        $pageToken = NULL;
+
+        do {
+            try {
+                //$parameters = array();
+                $parameters = array('q' => "trashed=false and title='config.json'");
+                if ($pageToken) {
+                    $parameters['pageToken'] = $pageToken;
+                }
+                //$children = $service->children->listChildren($folderId, $parameters);
+                $parameters = array('q' => "'".$folderIdFellApp."' in parents and trashed=false and title='config.json'");
+                $files = $service->files->listFiles($parameters);
+
+                foreach ($children->getItems() as $child) {
+                    print "File ID=" . $child->getId()."<br>";
+                    print "File Title=" . $child->getTitle()."<br>";
+                }
+                $pageToken = $children->getNextPageToken();
+            } catch (Exception $e) {
+                print "An error occurred: " . $e->getMessage();
+                $pageToken = NULL;
+            }
+        } while ($pageToken);
     }
 
 
