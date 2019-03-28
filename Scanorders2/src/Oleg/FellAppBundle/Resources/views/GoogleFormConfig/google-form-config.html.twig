@@ -54,10 +54,10 @@
     <p>
         {% if cycle == "show" %}
             <a class="btn btn-primary" href="{{ path('fellapp_google_form_config_edit') }}">Edit</a>
-            <a class="btn btn-primary" href="{{ path('fellapp_google_form_config_update_drive') }}">Update Google Form</a>
+            <a class="btn btn-danger" href="{{ path('fellapp_google_form_config_update_drive') }}">Update Fellowship Application Form on Google</a>
         {% endif %}
         {% if cycle == "edit" %}
-            <input class="btn btn-warning" type="submit" value="Update" />
+            <input class="btn btn-warning" type="submit" value="Update Config File Locally" />
             <a class="btn btn-default" href="{{ path('fellapp_google_form_config_show') }}">Cancel</a>
         {% endif %}
     </p>
