@@ -64,13 +64,39 @@
 
     {{ form_end(form) }}
 
+
     {% if configFileContent is defined %}
         <br>
-        <h3>Current Configuration File</h3>
-        <pre>
-            {{ configFileContent }}
-        </pre>
+        <h3>Current Configuration File on Google Drive</h3>
+        <div >
+            <pre>
+                <code>
+                    {{ configFileContent|raw }}
+                </code>
+            </pre>
+            {#<textarea cols="30" rows="10">#}
+                {#{{ configFileContent|raw }}#}
+            {#</textarea>#}
+            {#<textarea>#}
+                {#{{ configFileContent|raw }}#}
+            {#</textarea>#}
+        </div>
     {% endif %}
 
 {% endblock %}
+
+
+{#{% block contentleft %}#}
+    {#{% if configFileContent is defined %}#}
+        {#<br>#}
+        {#<h3>Current Configuration File on Google Drive</h3>#}
+        {#<div >#}
+            {#<pre>#}
+                {#<code>#}
+                    {#{{ configFileContent|raw }}#}
+                {#</code>#}
+            {#</pre>#}
+        {#</div>#}
+    {#{% endif %}#}
+{#{% endblock %}#}
 

@@ -353,6 +353,7 @@ class GoogleFormConfigController extends Controller
             $configFile = $this->findConfigFileInFolder($service, $configFileFolderIdFellApp, "config.json");
             $contentConfigFile = $this->downloadFile($service, $configFile);
 
+            //$contentConfigFile = str_replace(",",", ",$contentConfigFile);
 //            //echo $content;
 //            echo "<pre>";
 //            print_r($contentConfigFile);
