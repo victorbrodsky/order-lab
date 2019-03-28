@@ -159,11 +159,11 @@ class GoogleFormConfigController extends Controller
             $fellowshipTypes[] = array('id'=>$name,'text'=>$name);
         }
         $configJson['fellowshipTypes'] = $fellowshipTypes;
-        //$configJson = json_encode($configJson);
+        $configJson = json_encode($configJson);
 
-        echo "<pre>";
-        print_r($configJson);
-        echo "</pre>";
+        //echo "<pre>";
+        //print_r($configJson);
+        //echo "</pre>";
 
         //get Google service
         $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
@@ -193,20 +193,34 @@ class GoogleFormConfigController extends Controller
         //$newFileName = "config.json";
         $newRevision = null;
 
-        $updatedFile = $this->updateFile($service, $configFile->getId(), $newTitle, $newDescription, $newMimeType, $configJson, $newRevision);
+        $updatedFile = $this->updateFileContent($service, $configFile->getId(), $newTitle, $newDescription, $newMimeType, $configJson, $newRevision);
         if( $updatedFile ) {
-            echo "Config file has been updated <br>";
+            //echo "Config file has been updated <br>";
+            $eventMsg = "Fellowship Form Configuration file has been updated on the Google Drive by " . $user;
+            $eventType = 'Fellowship Application Config Updated On Google Drive';
+
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                $eventMsg
+            );
         } else {
-            echo "Config file update failed <br>";
+            $eventMsg = "Fellowship Form Configuration file update to Google Drive failed";
+            $eventType = 'Fellowship Application Config Updated On Google Drive Failed';
+            //throw new \Exception( $msg );
+
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                $eventMsg
+            );
         }
 
         //$this->updateConfigOnGoogleDrive($configJson);
 
-        exit("update drive");
+        //exit("update drive");
+
+        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$eventMsg,$user,$entity,$request,$eventType);
 
 
-        $event = "Fellowship Form Configuration has been updated on the Google by " . $user;
-        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$entity,$request,'Google Form Config Drive Updated');
 
         return $this->redirect($this->generateUrl('fellapp_google_form_config_show'));
 
@@ -239,12 +253,12 @@ class GoogleFormConfigController extends Controller
      * @param string $newTitle New title for the file.
      * @param string $newDescription New description for the file.
      * @param string $newMimeType New MIME type for the file.
-     * @param string $newFilename Filename of the new content to upload.
+     * @param string $content New content to upload.
      * @param bool $newRevision Whether or not to create a new revision for this file.
      * @return Google_Servie_Drive_DriveFile The updated file. NULL is returned if
      *     an API error occurred.
      */
-    function updateFile($service, $fileId, $newTitle, $newDescription, $newMimeType, $configJson, $newRevision) {
+    function updateFileContent($service, $fileId, $newTitle, $newDescription, $newMimeType, $content, $newRevision) {
         try {
             // First retrieve the file from the API.
             $file = $service->files->get($fileId);
@@ -258,12 +272,17 @@ class GoogleFormConfigController extends Controller
             //$newFileName = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\scanorder\\Scanorders2\\src\Oleg\\FellAppBundle\\Util\\GoogleForm\\"."config.json";
             //$data = file_get_contents($newFileName);
             //print_r($data);
-            $data = $configJson;
+            //$data = $content;
+
+            //https://developers.google.com/drive/api/v2/reference/files/update
+            //https://github.com/googleapis/google-api-php-client/issues/468
+            //add 'uploadType' => 'multipart'
 
             $additionalParams = array(
                 'newRevision' => $newRevision,
-                'data' => $data,
-                'mimeType' => $newMimeType
+                'data' => $content,
+                'mimeType' => $newMimeType,
+                'uploadType' => 'media'
             );
 
             // Send the request to the API.
@@ -273,6 +292,18 @@ class GoogleFormConfigController extends Controller
             print "An error occurred: " . $e->getMessage();
         }
     }
+//    function updateFile_SimpleUpload($driveService, $fileId, $newTitle, $newDescription, $newMimeType, $configJson, $newRevision) {
+//        $fileMetadata = new \Google_Service_Drive_DriveFile(array(
+//            'title' => 'config.json'));
+//        //$content = file_get_contents('files/photo.jpg');
+//        $file = $driveService->files->insert($fileMetadata, array(
+//            'data' => $configJson,
+//            'mimeType' => 'image/jpeg',
+//            'uploadType' => 'multipart',
+//            'fields' => 'id'));
+//        printf("File ID: %s\n", $file->id);
+//
+//    }
 
     //1)  Import sheets from Google Drive
     //1a)   import all sheets from Google Drive folder
