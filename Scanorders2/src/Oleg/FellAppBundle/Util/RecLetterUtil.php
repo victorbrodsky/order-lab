@@ -35,15 +35,45 @@ class RecLetterUtil {
 
         //Generate "Recommendation Letter Salted Scrypt Hash ID":
         // Live Server URL from Site Settings +
-        // Organizational Group of the received application +
-        // Fellowship Type of the Application +
-        // Application ID +
-        // Application Timestamp +
-        // Reference ID +
-        // Reference Email +
-        // "Recommendation Letter Salt"
-
         $url = $request->getSchemeAndHttpHost();
+
+        // Organizational Group of the received application +
+        $institution = $fellapp->getInstitution();
+        if( $institution ) {
+            $institutionId = $institution->getId();
+        } else {
+            $institutionId = NULL;
+        }
+
+        // Fellowship Type of the Application +
+        $type = $fellapp->getFellowshipSubspecialty();
+        if( $type ) {
+            $typeId = $type->getId();
+        } else {
+            $typeId = NULL;
+        }
+
+        // Application ID +
+        $fellappId = $fellapp->getId();
+
+        // Application Timestamp +
+        $timestamp = $fellapp->getTimestamp();
+        if( $timestamp ) {
+            $timestampStr = $timestamp->format("m-d-Y H:i:s");
+        } else {
+            $timestampStr = NULL;
+        }
+
+        // Reference ID +
+        $referenceId = $reference->getId();
+
+        // Reference Email +
+        $referenceEmail = $reference->getEmail();
+
+        // "Recommendation Letter Salt"
+        //$salt
+
+        $str = $url . $institutionId . $typeId . $fellappId . $timestampStr . $referenceId . $referenceEmail . $salt;
 
         //use if (hash_equals($knownString, $userInput)) to compare two hash (or php password_verify)
         //$hash = md5($str);
