@@ -84,7 +84,7 @@ class DefaultController extends Controller
      * @Route("/generate-rec-letter-id", name="fellapp_rec_letter_id")
      */
     public function generateRecLetterIdAction( Request $request ) {
-        //exit("not allowed");
+        exit("not allowed");
 
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->container->getParameter('fellapp.sitename').'-nopermission') );
