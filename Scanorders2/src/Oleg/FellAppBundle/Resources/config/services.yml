@@ -31,6 +31,10 @@ services:
         class: Oleg\FellAppBundle\Util\GoogleSheetManagement
         arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
+    fellapp_rec_letter_util:
+        class: Oleg\FellAppBundle\Util\RecLetterUtil
+        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+
 
     fellapp_role_voter:
         class: Oleg\FellAppBundle\Security\Voter\FellAppRoleVoter

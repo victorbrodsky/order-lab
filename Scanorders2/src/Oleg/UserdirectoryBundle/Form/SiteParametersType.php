@@ -531,6 +531,13 @@ class SiteParametersType extends AbstractType
             ));
 
         //Fellowship Application parameters
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'recLetterSaltFellApp' ) {
+            $builder->add('recLetterSaltFellApp', null, array(
+                'label' => 'Recommendation Letter Salt:',
+                'attr' => array('class' => 'form-control')
+            ));
+        }
+
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'codeGoogleFormFellApp' )
             $builder->add('codeGoogleFormFellApp',null,array(
                 'label'=>'Path to the local copy of the fellowship application form Code.gs file (https://script.google.com/a/macros/pathologysystems.org/d/14jgVkEBCAFrwuW5Zqiq8jsw37rc4JieHkKrkYz1jyBp_DFFyTjRGKgHj/edit):',

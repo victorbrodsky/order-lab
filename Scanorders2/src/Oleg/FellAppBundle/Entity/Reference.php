@@ -107,6 +107,10 @@ class Reference
      */
     private $phone;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $recLetterHashId;
 
 
     public function __construct($author=null) {
@@ -327,6 +331,22 @@ class Reference
     public function setPhone($phone)
     {
         $this->phone = $phone;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRecLetterHashId()
+    {
+        return $this->recLetterHashId;
+    }
+
+    /**
+     * @param mixed $recLetterHashId
+     */
+    public function setRecLetterHashId($recLetterHashId)
+    {
+        $this->recLetterHashId = $recLetterHashId;
     }
 
 

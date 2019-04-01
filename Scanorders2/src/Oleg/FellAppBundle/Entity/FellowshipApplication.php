@@ -337,7 +337,7 @@ class FellowshipApplication extends BaseUserAttributes {
     private $boardCertifications;
 
     /////////// EOF user objects /////////////
-
+    
 
     public function __construct($author=null) {
         parent::__construct($author);

@@ -78,4 +78,46 @@ class DefaultController extends Controller
 
         exit("end of fellapp test");
     }
+
+    //generateRecLetterId
+    /**
+     * @Route("/generate-rec-letter-id", name="fellapp_rec_letter_id")
+     */
+    public function generateRecLetterIdAction( Request $request ) {
+        //exit("not allowed");
+
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('fellapp.sitename').'-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
+
+        $repository = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication');
+        $dql =  $repository->createQueryBuilder("fellapp");
+        $dql->select('fellapp');
+        $dql->leftJoin("fellapp.references", "references");
+        $dql->where("references.recLetterHashId IS NULL");
+        $dql->orderBy("fellapp.id","DESC");
+        $query = $em->createQuery($dql);
+        $fellapps = $query->getResult();
+        echo "fellapps count=".count($fellapps)."<br>";
+
+        foreach($fellapps as $fellapp) {
+            $references = $fellapp->getReferences($fellapp);
+
+            foreach($references as $reference) {
+                $hash = $fellappRecLetterUtil->generateRecLetterId($fellapp,$reference,$request);
+                if( $hash ) {
+                    $reference->setRecLetterHashId($hash);
+                    //$em->flush($reference);
+                    echo $fellapp->getId()." (".$reference->getId()."): added hash=".$hash."<br>";
+                }
+            }
+
+        }
+
+        exit("end of generateRecLetterIdAction");
+    }
+
 }
