@@ -81,7 +81,7 @@ class RecLetterUtil {
         $hash = hash("sha1",$str); //sha1
         //$hash = password_hash($str,PASSWORD_DEFAULT);
 
-        echo "Hash=".$hash."<br>";
+        //echo "Hash=".$hash."<br>";
 
         return $hash;
     }

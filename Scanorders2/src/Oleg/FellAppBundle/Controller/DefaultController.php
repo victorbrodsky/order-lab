@@ -110,7 +110,7 @@ class DefaultController extends Controller
                 $hash = $fellappRecLetterUtil->generateRecLetterId($fellapp,$reference,$request);
                 if( $hash ) {
                     $reference->setRecLetterHashId($hash);
-                    //$em->flush($reference);
+                    $em->flush($reference);
                     echo $fellapp->getId()." (".$reference->getId()."): added hash=".$hash."<br>";
                 }
             }
