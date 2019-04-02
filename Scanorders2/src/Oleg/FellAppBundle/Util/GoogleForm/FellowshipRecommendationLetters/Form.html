@@ -1,0 +1,58 @@
+<script>
+    var _serverData = <?!= JSON.stringify(dataFromServerTemplate) ?>; //Stores the data directly in the javascript code
+</script>
+
+<?!= include('Stylesheet'); ?>
+
+<div id="overlay">
+   <!-- <span>Please wait for the form to load...</span> -->
+</div>
+
+<div id="headerHandle" class="headerHandle"></div>
+
+<div class="container" style="width:100%; text-align: center;">
+  
+  
+  
+  <br>
+  <p>
+      <button id="collapseAll" type="button" class="btn btn-default btn-sm" onClick="collapseAll()" >Collapse All Application Sections</button>
+      <button id="expandAll" type="button" class="btn btn-default btn-sm btn-pressed-default" onClick="expandAll()" >Expand All Application Sections</button>
+  </p>
+  <br>
+  
+
+  <form id="applicantForm">
+
+  <?!= include('Uploads'); ?>
+
+  <h3>
+    The following information has been provided by the applicant:
+  </h3>
+
+  <?!= include('ReferenceLetterAuthor'); ?>
+  
+  <?!= include('ApplicantInformation'); ?>
+
+
+  <br>
+  
+  <div id="formError"></div>
+  
+  <br>
+
+  <input id="submit-form-button" type="button" class="btn btn-primary" value="Submit" 
+  onclick="google.script.run.withFailureHandler(onFormFailure).withSuccessHandler(onFormSuccess).processForm(document.getElementById('applicantForm'))" 
+  /> 
+ 
+  </form>
+  
+  <br>
+  <br>
+  <br>
+  
+
+</div> <!-- container -->
+
+<?!= include('USStates'); ?>
+<?!= include('JavaScript'); ?>
