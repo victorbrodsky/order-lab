@@ -64,6 +64,11 @@ class DefaultController extends Controller
      * @Route("/test_google_file", name="fellapp_test_google_file")
      */
     public function testGoogleFileAction( Request $request ) {
+
+        $fellappRecLetterUtil = $this->get('fellapp_rec_letter_util');
+        $result2 = $fellappRecLetterUtil->processFellRecLetterFromGoogleDrive();
+        echo $result2."<br>";
+
         exit("not allowed");
 
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {

@@ -368,6 +368,86 @@ class GoogleSheetManagement {
     }
 
 
+    /**
+     * Search for folder by the parent folder ID and folder Name.
+     */
+    function findFolderByFolderNameAndParentFolder_OLD($service,$parentFolderId,$folderName) {
+        $result = array();
+        $pageToken = NULL;
+
+        do {
+            try {
+
+                $parameters = array('q' => "'" . $parentFolderId . "' in parents and trashed=false and title='config.json'");
+                $files = $service->files->listFiles($parameters);
+
+                foreach ($files->getItems() as $file) {
+                    echo "file=" . $file->getId() . "<br>";
+                    echo "File Title=" . $file->getTitle() . "<br>";
+                }
+
+                return $file;
+
+
+                //files.list?q=mimetype=application/vnd.google-apps.folder and trashed=false&fields=parents,name
+                $parameters = array('q' => "mimetype=application/vnd.google-apps.folder and '".$parentFolderId."' in parents and trashed=false and title='".$folderName."'");
+                $parameters = array('q' => "'" . $parentFolderId . "' in parents and trashed=false and title='config.json'");
+                if ($pageToken) {
+                    $parameters['pageToken'] = $pageToken;
+                }
+                $folders = $service->files->listFiles($parameters);
+                foreach ($folders->getItems() as $folder) {
+                    echo "file=" . $folder->getId() . "<br>";
+                    echo "File Title=" . $folder->getTitle() . "<br>";
+                    $result = $folder;
+                }
+
+                //$result = array_merge($result, $folders->getItems());
+
+                $pageToken = $folders->getNextPageToken();
+            } catch (Exception $e) {
+                //print "An error occurred: " . $e->getMessage();
+                $pageToken = NULL;
+            }
+        } while ($pageToken);
+        return $result;
+    }
+    /**
+     * @param Google_Service_Drive $service Drive API service instance.
+     * @param String $folderId ID of the folder to print files from.
+     * @param String $fileName Name (Title) of the config file to find.
+     */
+    function findFolderByFolderNameAndParentFolder($service, $folderId, $fileName) {
+        $pageToken = NULL;
+
+        do {
+            try {
+
+                if ($pageToken) {
+                    $parameters['pageToken'] = $pageToken;
+                }
+
+                //$parameters = array();
+                //$parameters = array('q' => "trashed=false and title='config.json'");
+                //$children = $service->children->listChildren($folderId, $parameters);
+                $parameters = array('q' => "'".$folderId."' in parents and trashed=false and title='".$fileName."'");
+                $files = $service->files->listFiles($parameters);
+
+                foreach ($files->getItems() as $file) {
+                    echo "File ID=" . $file->getId()."<br>";
+                    echo "File Title=" . $file->getTitle()."<br>";
+
+                    return $file;
+                }
+                $pageToken = $files->getNextPageToken();
+            } catch (Exception $e) {
+                print "An error occurred: " . $e->getMessage();
+                $pageToken = NULL;
+            }
+        } while ($pageToken);
+
+        return NULL;
+    }
 
 
 //    /**
