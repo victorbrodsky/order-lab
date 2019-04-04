@@ -128,7 +128,8 @@ class RecLetterUtil {
     public function importSheetsFromGoogleDriveFolder() {
 
         if( !$this->checkIfFellappAllowed("Import from Google Drive") ) {
-            return null;
+            //exit("can't import");
+            //return null;
         }
 
         $logger = $this->container->get('logger');
@@ -155,14 +156,17 @@ class RecLetterUtil {
         }
 
         //find folder by name
+        $folderName = "Responses";
+        $folder = $googlesheetmanagement->findOneFolderByFolderNameAndParentFolder($service,$folderIdFellAppId,$folderName);
+        echo "Folder=".$folder->getTitle()."; ID=".$folder->getId()."<br>";
+
         $folderName = "RecommendationLetters";
-        $folderName = "config.json";
-        $folder = $googlesheetmanagement->findFolderByFolderNameAndParentFolder($service,$folderIdFellAppId,$folderName);
+        $folder = $googlesheetmanagement->findOneRecLetterUploadFolder($service,$folderIdFellAppId,$folderName);
 
         //foreach($folders as $folder) {
             echo "Folder=".$folder->getTitle()."; ID=".$folder->getId()."<br>";
         //}
-        exit();
+        exit("exit importSheetsFromGoogleDriveFolder");
 
         //get all files in google folder
         //$filesGoogleDrive = $this->processFilesInFolder($folderIdFellApp,$service);
@@ -203,5 +207,6 @@ class RecLetterUtil {
 
         return true;
     }
+    
 
 }

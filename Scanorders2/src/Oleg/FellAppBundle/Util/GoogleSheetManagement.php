@@ -417,7 +417,7 @@ class GoogleSheetManagement {
      * @param String $folderId ID of the folder to print files from.
      * @param String $fileName Name (Title) of the config file to find.
      */
-    function findFolderByFolderNameAndParentFolder($service, $folderId, $fileName) {
+    function findOneFolderByFolderNameAndParentFolder($service, $folderId, $fileName) {
         $pageToken = NULL;
 
         do {
@@ -430,7 +430,8 @@ class GoogleSheetManagement {
                 //$parameters = array();
                 //$parameters = array('q' => "trashed=false and title='config.json'");
                 //$children = $service->children->listChildren($folderId, $parameters);
-                $parameters = array('q' => "'".$folderId."' in parents and trashed=false and title='".$fileName."'");
+                $parameters = array('q' => "mimeType='application/vnd.google-apps.folder' and '".$folderId."' in parents and trashed=false and title='".$fileName."'");
+                $parameters = array('q' => "mimeType='application/vnd.google-apps.folder' and trashed=false and title='".$fileName."'");
                 $files = $service->files->listFiles($parameters);
 
                 foreach ($files->getItems() as $file) {
@@ -447,6 +448,18 @@ class GoogleSheetManagement {
         } while ($pageToken);
 
         return NULL;
+    }
+
+    //Google drive does not search by ancestors
+    //FellowshipApplication -> Responses -> RecommendationLetters -> (RecommendationLetterUploads, Spreadsheets, Template)
+    function findOneRecLetterUploadFolder($service, $folderId, $fileName) {
+        //1) use folderId to find folder "Responses"
+
+        //2 use folder "Response" to find folder "RecommendationLetters"
+
+        //3) use folder "RecommendationLetters" to find folder "RecommendationLetterUploads"
+
+         
     }
 
 
