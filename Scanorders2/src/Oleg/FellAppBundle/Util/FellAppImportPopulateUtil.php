@@ -159,7 +159,7 @@ class FellAppImportPopulateUtil {
         }
 
         //get all files in google folder
-        $filesGoogleDrive = $this->processFilesInFolder($folderIdFellApp,$service);
+        $filesGoogleDrive = $this->processFilesInFolder($folderIdFellApp,$service,"Fellowship Application Spreadsheet");
 
         $logger->notice("Processed " . count($filesGoogleDrive) . " files with applicant data from Google Drive");
 
@@ -388,7 +388,7 @@ class FellAppImportPopulateUtil {
      * @param Google_Service_Drive $service Drive API service instance.
      * @param String $folderId ID of the folder to print files from.
      */
-    public function processFilesInFolder( $folderId, $service ) {
+    public function processFilesInFolder( $folderId, $service, $documentType="Fellowship Application Spreadsheet" ) {
 
         $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
         $files = $googlesheetmanagement->retrieveFilesByFolderId($folderId,$service);
@@ -396,7 +396,7 @@ class FellAppImportPopulateUtil {
 
         foreach( $files as $file ) {
             //echo 'File Id: ' . $file->getId() . "<br>";
-            $this->processSingleFile( $file->getId(), $service, 'Fellowship Application Spreadsheet' );
+            $this->processSingleFile( $file->getId(), $service, $documentType );
         }
 
         return $files; //google drive files

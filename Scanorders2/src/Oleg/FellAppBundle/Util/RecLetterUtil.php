@@ -9,6 +9,8 @@
 namespace Oleg\FellAppBundle\Util;
 
 
+use Symfony\Component\Filesystem\Exception\IOException;
+
 class RecLetterUtil {
 
     protected $em;
@@ -127,7 +129,9 @@ class RecLetterUtil {
     //1b)   add successefull downloaded sheets to DataFile DB object with status "active"
     public function importSheetsFromGoogleDriveFolder() {
 
-        if( !$this->checkIfFellappAllowed("Import from Google Drive") ) {
+        $fellappImportPopulateUtil = $this->container->get('fellapp_importpopulate_util');
+
+        if( !$fellappImportPopulateUtil->checkIfFellappAllowed("Import from Google Drive") ) {
             //exit("can't import");
             //return null;
         }
@@ -156,21 +160,120 @@ class RecLetterUtil {
         }
 
         //find folder by name
-        $folderName = "Responses";
-        $folder = $googlesheetmanagement->findOneFolderByFolderNameAndParentFolder($service,$folderIdFellAppId,$folderName);
-        echo "Folder=".$folder->getTitle()."; ID=".$folder->getId()."<br>";
-
-        $folder = $googlesheetmanagement->findOneRecLetterUploadFolder($service,$folderIdFellAppId);
-        echo "Folder=".$folder->getTitle()."; ID=".$folder->getId()."<br>";
+        $letterSpreadsheetFolder = $googlesheetmanagement->findOneRecLetterSpreadsheetFolder($service,$folderIdFellAppId);
+        echo "letterSpreadsheetFolder: Title=".$letterSpreadsheetFolder->getTitle()."; ID=".$letterSpreadsheetFolder->getId()."<br>";
         
-        exit("exit importSheetsFromGoogleDriveFolder");
+        //exit("exit importSheetsFromGoogleDriveFolder");
 
         //get all files in google folder
-        //$filesGoogleDrive = $this->processFilesInFolder($folderIdFellApp,$service);
+        $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
+        $files = $googlesheetmanagement->retrieveFilesByFolderId($letterSpreadsheetFolder->getId(),$service);
+        echo "files count=".count($files)."<br>";
+
+        //Download files to the server
+        $path = 'Uploaded'.'/'.'fellapp/RecommendationLetters/Spreadsheets';
+        foreach( $files as $file ) {
+            echo 'File Id: ' . $file->getId() . "; title=" . $file->getTitle() . "<br>";
+            //Download file from Google Drive to the server without creating document entity
+            //$this->processSingleFile( $file->getId(), $service, $documentType );
+            $this->downloadFileToServer($service,$file,$path);
+        }
+
+        return $files; //google drive files
 
         //$logger->notice("Processed " . count($filesGoogleDrive) . " files with applicant data from Google Drive");
 
         //return $filesGoogleDrive;
+    }
+    public function downloadFileToServer($service, $file, $path) {
+        //$file = null;
+        try {
+            $file = $service->files->get($file->getId());
+        } catch (Exception $e) {
+            throw new IOException('Google API: Unable to get file by file id='.$file->getId().". An error occurred: " . $e->getMessage());
+        }
+
+        if( $file ) {
+
+            $downloadUrl = $file->getDownloadUrl();
+            echo "downloadUrl=".$downloadUrl."<br>";
+
+            //TODO: check if file already exists by file path
+
+            $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
+            $response = $googlesheetmanagement->downloadFile($service,$file);
+            //echo "response=".$response."<br>";
+            if( !$response ) {
+                throw new IOException('Error file response is empty: file id='.$file->getId());
+            }
+
+            //create unique file name
+            $currentDatetime = new \DateTime();
+            $currentDatetimeTimestamp = $currentDatetime->getTimestamp();
+
+            //$fileTitle = trim($file->getTitle());
+            //$fileTitle = str_replace(" ","",$fileTitle);
+            //$fileTitle = str_replace("-","_",$fileTitle);
+            //$fileTitle = 'testfile.jpg';
+            $fileExt = pathinfo($file->getTitle(), PATHINFO_EXTENSION);
+            $fileExtStr = "";
+            if( $fileExt ) {
+                $fileExtStr = ".".$fileExt;
+            }
+
+            $fileUniqueName = $currentDatetimeTimestamp.'ID'.$file->getId().$fileExtStr;  //.'_title='.$fileTitle;
+            //echo "fileUniqueName=".$fileUniqueName."<br>";
+
+            $filesize = $file->getFileSize();
+            if( !$filesize ) {
+                $filesize = mb_strlen($response) / 1024; //KBs,
+            }
+
+
+//            $object = new Document($author);
+//            $object->setUniqueid($file->getId());
+//            $object->setUniquename($fileUniqueName);
+//            $object->setUploadDirectory($path);
+//            $object->setSize($filesize);
+//
+//            //clean originalname
+//            $object->setCleanOriginalname($file->getTitle());
+
+
+//            if( $type && $type == 'excel' ) {
+//                $fellappSpreadsheetType = $this->em->getRepository('OlegUserdirectoryBundle:DocumentTypeList')->findOneByName('Fellowship Application Spreadsheet');
+//            } else {
+//                $fellappSpreadsheetType = $this->em->getRepository('OlegUserdirectoryBundle:DocumentTypeList')->findOneByName('Fellowship Application Document');
+//            }
+//            $transformer = new GenericTreeTransformer($this->em, $author, "DocumentTypeList", "UserdirectoryBundle");
+//            $documentType = trim($documentType);
+//            $documentTypeObject = $transformer->reverseTransform($documentType);
+//            if( $documentTypeObject ) {
+//                $object->setType($documentTypeObject);
+//            }
+
+//            $this->em->persist($object);
+
+            $root = $this->container->get('kernel')->getRootDir();
+            //echo "root=".$root."<br>";
+            //$fullpath = $this->get('kernel')->getRootDir() . '/../web/'.$path;
+            $fullpath = $root . '/../web/'.$path;
+            $target_file = $fullpath . "/" . $fileUniqueName;
+
+            //$target_file = $fullpath . 'uploadtestfile.jpg';
+            //echo "target_file=".$target_file."<br>";
+            if( !file_exists($fullpath) ) {
+                // 0600 - Read/write/execute for owner, nothing for everybody else
+                mkdir($fullpath, 0700, true);
+                chmod($fullpath, 0700);
+            }
+
+            file_put_contents($target_file, $response);
+
+            return $target_file;
+        }
+
+        return null;
     }
 
     public function populateApplicationsFromDataFile() {
@@ -185,25 +288,6 @@ class RecLetterUtil {
         return array();
     }
 
-    public function checkIfFellappAllowed( $action="Action" ) {
-
-        $logger = $this->container->get('logger');
-        $userSecUtil = $this->container->get('user_security_utility');
-
-        $allowPopulateFellApp = $userSecUtil->getSiteSettingParameter('AllowPopulateFellApp');
-        if( !$allowPopulateFellApp ) {
-            $logger->warning($action." is not proceed because the AllowPopulateFellApp parameter is set to false.");
-            return false;
-        }
-
-        $maintenance = $userSecUtil->getSiteSettingParameter('maintenance');
-        if( $maintenance ) {
-            $logger->warning($action." is not proceed because the server is on the  maintenance.");
-            return false;
-        }
-
-        return true;
-    }
     
 
 }
