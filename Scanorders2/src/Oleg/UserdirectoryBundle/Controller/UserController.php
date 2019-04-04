@@ -1920,18 +1920,57 @@ class UserController extends Controller
         $userSecUtil = $this->get('user_security_utility');
         $userServiceUtil = $this->get('user_service_utility');
         $username = null;
+        $user = null;
         $firstEmailPart = null;
         $secondEmailPart = null;
+
+        if( !$email ) {
+            $resArr["error"] = "Email is not provided";
+            $json = json_encode($resArr);
+            $response = new Response($json);
+            $response->headers->set('Content-Type', 'application/json');
+            return $response;
+        }
+
+        if( !$firstname ) {
+            $resArr["error"] = "First name is not provided";
+            $json = json_encode($resArr);
+            $response = new Response($json);
+            $response->headers->set('Content-Type', 'application/json');
+            return $response;
+        }
+
+        if( !$lastname ) {
+            $resArr["error"] = "Last name is not provided";
+            $json = json_encode($resArr);
+            $response = new Response($json);
+            $response->headers->set('Content-Type', 'application/json');
+            return $response;
+        }
 
         $emailParts = explode("@",$email);
         if( count($emailParts) == 2 ) {
             $firstEmailPart = $emailParts[0];
             $secondEmailPart = $emailParts[1]; //nyp.org or med.cornell.edu
             $publicUserId = $firstEmailPart;
+        } else {
+            $resArr["error"] = "Email is not valid";
+            $json = json_encode($resArr);
+            $response = new Response($json);
+            $response->headers->set('Content-Type', 'application/json');
+            return $response;
         }
 
         if( !$publicUserId ) {
             $publicUserId = $firstEmailPart;
+        }
+
+        if( !$publicUserId ) {
+            $resArr["error"] = "System error: undefined new user";
+            $json = json_encode($resArr);
+            $response = new Response($json);
+            $response->headers->set('Content-Type', 'application/json');
+            return $response;
         }
 
         if( !$displayname ) {

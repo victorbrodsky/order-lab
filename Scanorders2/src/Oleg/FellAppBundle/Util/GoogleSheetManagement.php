@@ -430,8 +430,8 @@ class GoogleSheetManagement {
                 //$parameters = array();
                 //$parameters = array('q' => "trashed=false and title='config.json'");
                 //$children = $service->children->listChildren($folderId, $parameters);
-                $parameters = array('q' => "mimeType='application/vnd.google-apps.folder' and '".$folderId."' in parents and trashed=false and title='".$fileName."'");
-                $parameters = array('q' => "mimeType='application/vnd.google-apps.folder' and trashed=false and title='".$fileName."'");
+                $parameters = array('q' => "mimeType='application/vnd.google-apps.folder' and trashed=false and '".$folderId."' in parents and title='".$fileName."'");
+                //$parameters = array('q' => "mimeType='application/vnd.google-apps.folder' and trashed=false and title='".$fileName."'");
                 $files = $service->files->listFiles($parameters);
 
                 foreach ($files->getItems() as $file) {
@@ -450,16 +450,52 @@ class GoogleSheetManagement {
         return NULL;
     }
 
-    //Google drive does not search by ancestors
+    //Google drive does not search by ancestors. Therefore find in steps.
     //FellowshipApplication -> Responses -> RecommendationLetters -> (RecommendationLetterUploads, Spreadsheets, Template)
-    function findOneRecLetterUploadFolder($service, $folderId, $fileName) {
+    function findOneRecLetterUploadFolder($service, $folderId) {
         //1) use folderId to find folder "Responses"
+        $folder = $this->findOneFolderByFolderNameAndParentFolder($service,$folderId,"Responses");
+        if( !$folder ) {
+            return NULL;
+        }
 
         //2 use folder "Response" to find folder "RecommendationLetters"
+        $folder = $this->findOneFolderByFolderNameAndParentFolder($service,$folder->getId(),"RecommendationLetters");
+        if( !$folder ) {
+            return NULL;
+        }
 
         //3) use folder "RecommendationLetters" to find folder "RecommendationLetterUploads"
+        $folder = $this->findOneFolderByFolderNameAndParentFolder($service,$folder->getId(),"RecommendationLetterUploads");
+        if( !$folder ) {
+            return NULL;
+        }
 
-         
+        return $folder;
+    }
+
+    //Google drive does not search by ancestors
+    //FellowshipApplication -> Responses -> RecommendationLetters -> (RecommendationLetterUploads, Spreadsheets, Template)
+    function findOneRecLetterSpreadsheetFolder($service, $folderId) {
+        //1) use folderId to find folder "Responses"
+        $folder = $this->findOneFolderByFolderNameAndParentFolder($service,$folderId,"Responses");
+        if( !$folder ) {
+            return NULL;
+        }
+
+        //2 use folder "Response" to find folder "RecommendationLetters"
+        $folder = $this->findOneFolderByFolderNameAndParentFolder($service,$folder->getId(),"RecommendationLetters");
+        if( !$folder ) {
+            return NULL;
+        }
+
+        //3) use folder "RecommendationLetters" to find folder "Spreadsheets"
+        $folder = $this->findOneFolderByFolderNameAndParentFolder($service,$folder->getId(),"Spreadsheets");
+        if( !$folder ) {
+            return NULL;
+        }
+
+        return $folder;
     }
 
 

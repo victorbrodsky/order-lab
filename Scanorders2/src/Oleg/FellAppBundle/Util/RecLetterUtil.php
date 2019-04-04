@@ -160,12 +160,9 @@ class RecLetterUtil {
         $folder = $googlesheetmanagement->findOneFolderByFolderNameAndParentFolder($service,$folderIdFellAppId,$folderName);
         echo "Folder=".$folder->getTitle()."; ID=".$folder->getId()."<br>";
 
-        $folderName = "RecommendationLetters";
-        $folder = $googlesheetmanagement->findOneRecLetterUploadFolder($service,$folderIdFellAppId,$folderName);
-
-        //foreach($folders as $folder) {
-            echo "Folder=".$folder->getTitle()."; ID=".$folder->getId()."<br>";
-        //}
+        $folder = $googlesheetmanagement->findOneRecLetterUploadFolder($service,$folderIdFellAppId);
+        echo "Folder=".$folder->getTitle()."; ID=".$folder->getId()."<br>";
+        
         exit("exit importSheetsFromGoogleDriveFolder");
 
         //get all files in google folder
