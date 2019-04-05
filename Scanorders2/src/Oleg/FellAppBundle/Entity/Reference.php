@@ -349,6 +349,18 @@ class Reference
         $this->recLetterHashId = $recLetterHashId;
     }
 
+    public function getFullName() {
+        $nameArr = array();
+        $firstName = $this->getFirstName();
+        if( $firstName ) {
+            $nameArr[] = $firstName;
+        }
+        $lastName = $this->getName();
+        if( $lastName ) {
+            $nameArr[] = $lastName;
+        }
 
+        return implode(" ",$nameArr);
+    }
 
 }

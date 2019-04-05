@@ -24,11 +24,11 @@ class RecLetterUtil {
     }
 
     //Recommendation Letter Salted Script Hash ID
-    public function generateRecLetterId( $fellapp, $reference, $request ) {
+    public function generateRecLetterId( $fellapp, $reference, $request, $count=0 ) {
 
         $userSecUtil = $this->container->get('user_security_utility');
 
-        $str = "pepperstr";
+        //$str = "pepperstr";
 
         $salt = $userSecUtil->getSiteSettingParameter('recLetterSaltFellApp');
         if( !$salt ) {
@@ -75,15 +75,23 @@ class RecLetterUtil {
         // "Recommendation Letter Salt"
         //$salt
 
-        $str = $url . $institutionId . $typeId . $fellappId . $timestampStr . $referenceId . $referenceEmail . $salt;
+        $str = $url . $institutionId . $typeId . $fellappId . $timestampStr . $referenceId . $referenceEmail . $salt . $count;
 
         //use if (hash_equals($knownString, $userInput)) to compare two hash (or php password_verify)
         //$hash = md5($str);
         //$hash = sha1($str);
         $hash = hash("sha1",$str); //sha1
         //$hash = password_hash($str,PASSWORD_DEFAULT);
-
         //echo "Hash=".$hash."<br>";
+
+        //check for uniqueness
+        if( $hash ) {
+            $references = $this->em->getRepository('OlegFellAppBundle:Reference')->findByRecLetterHashId($hash);
+            if( count($references) > 0 ) {
+                $count = $count + 1;
+                $hash = $this->generateRecLetterId( $fellapp, $reference, $request, $count );
+            }
+        }
 
         return $hash;
     }
@@ -179,7 +187,6 @@ class RecLetterUtil {
         foreach( $files as $file ) {
             echo 'File Id: ' . $file->getId() . "; title=" . $file->getTitle() . "<br>";
             //Download file from Google Drive to the server without creating document entity
-            //$this->processSingleFile( $file->getId(), $service, $documentType );
             //$googlesheetmanagement->printFile($service, $file->getId());
             $this->downloadSpeadsheetFileToServer($service,$file,$documentType,$path);
         }
@@ -275,15 +282,150 @@ class RecLetterUtil {
         echo "files count=".count($files)."<br>";
 
         //Download files to the server
-        $documentType = "Fellowship Recommendation Letter Spreadsheet";
-        $path = 'Uploaded'.'/'.'fellapp/RecommendationLetters/Uploads';
+        $documentType = "Fellowship Recommendation Letter";
+        $path = 'Uploaded'.'/'.'fellapp/RecommendationLetters/RecommendationLetterUploads';
         foreach( $files as $file ) {
             echo 'File Id: ' . $file->getId() . "; title=" . $file->getTitle() . "<br>";
             //Download file from Google Drive to the server without creating document entity
-            //$this->processSingleFile( $file->getId(), $service, $documentType );
-            //$googlesheetmanagement->printFile($service, $file->getId());
-            //$this->downloadSpeadsheetFileToServer($service,$file,$documentType,$path);
+            $googlesheetmanagement->printFile($service, $file->getId());
+
+            $documentDb = $this->processSingleLetter($service,$file,$documentType,$path);
         }
+    }
+    public function processSingleLetter( $service, $file, $documentType, $path ) {
+        $logger = $this->container->get('logger');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
+        $emailUtil = $this->container->get('user_mailer_utility');
+        $systemUser = $userSecUtil->findSystemUser();
+
+//        //test
+//        $subject = "More than one recommendation letter received from "."RefName"." in support of
+//                "."ApplicantName"."'s application ID#"."FellappId"." for the "."FellType"." StartDate fellowship";
+//
+//        //TODO: get CreatedTime. Not in file's metadata.
+//        //$latestLetterTime = $file->getCreatedTime();
+//        //$latestLetterTime = $file->get('createdTime');
+//        $latestLetterTime = new \DateTime();
+//        if( $latestLetterTime ) {
+//            $latestLetterTimeStr = $latestLetterTime->format("m/d/Y H:i");
+//        }
+//        $body = $subject . " The latest document was received on ".$latestLetterTimeStr;
+//
+//        //$userSecUtil->sendEmailToSystemEmail($subject,$body);
+//        $emails = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'),"Administrator");
+//        $ccs = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'),"Platform Administrator");
+//        if( !$emails ) {
+//            $emails = $ccs;
+//            $ccs = null;
+//        }
+//        $emailUtil->sendEmail( $emails, $subject, $body, $ccs );
+//        //test
+
+        //check if file already exists by file id
+        $documentDb = $this->em->getRepository('OlegUserdirectoryBundle:Document')->findOneByUniqueid($file->getId());
+        if( $documentDb && $documentType != 'Fellowship Application Backup Spreadsheet' ) {
+            echo "letter already exists with document ID=".$documentDb->getId()."<br>";
+            //$logger = $this->container->get('logger');
+            //$event = "Document already exists with uniqueid=".$file->getId();
+            //$logger->warning($event);
+            return $documentDb;
+        }
+
+        //download file to the server and create Document object in DB
+        $uploadedLetterDb = $googlesheetmanagement->downloadFileToServer($systemUser,$service,$file->getId(),$documentType,$path);
+        if( !$uploadedLetterDb ) {
+            throw new IOException('Unable to download file to server: fileID='.$uploadedLetterDb->getId());
+        }
+        //$fellowshipApplication->addReprimandDocument($uploadedLegalExplanationUrlDb);
+
+        //ID_datetime_name.ext: 0000000110c8357966576df46f3b802ca897deb7ad18b12f1c24ecff6386ebd9_2019-04-03-13-13-17_Cat-Wa.jpg
+        $letterArr = explode("_",$file->getTitle());
+        echo "letterArr count=".count($letterArr)."<br>";
+        if( count($letterArr) == 3 ) {
+            $refId = $letterArr[0];
+            $datetime = $letterArr[1];
+            $name = $letterArr[2];
+        } else {
+            return NULL;
+        }
+
+        //find application and reference by reference ID
+        echo "search by ref ID=".$refId."<br>";
+        $references = $this->em->getRepository('OlegFellAppBundle:Reference')->findByRecLetterHashId($refId);
+        echo "references count=".count($references)."<br>";
+
+        //not found
+        if( count($references) == 0 ) {
+            //send email
+            $msg = "No fellowship references found by letter ID=".$refId;
+            $userSecUtil->sendEmailToSystemEmail($msg,$msg);
+            //eventlog
+            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$msg,$systemUser,null,null,"No Recommendation Letters");
+            return NULL;
+        }
+
+        //can't be more than 1
+        if( count($references) > 1 ) {
+            //send email
+            $msg = "Multiple " . count($references) . " fellowship references found by letter ID=".$refId;
+            $userSecUtil->sendEmailToSystemEmail($msg,$msg);
+            //eventlog
+            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$msg,$systemUser,null,null,"Multiple Recommendation Letters");
+            return NULL;
+        }
+
+        //Good
+        if( count($references) == 1 ) {
+            $reference = $references[0];
+            $fellapp = $reference->getFellapp(); 
+            $applicant = $fellapp->getUser();
+            $applicantName = "Unknown Applicant";
+            if( $applicant ) {
+                $applicantName = $applicant->getUsernameOptimal();
+            }
+            $startDate = $fellapp->getStartDate();
+            $startDateStr = null;
+            if( $startDate ) {
+                $startDateStr = $startDate->format('m/d/Y');
+            }
+
+            //check if this reference already has a letter
+            $letters = $reference->getDocuments();
+            if( count($letters) > 0 ) {
+                $subject = "More than one recommendation letter received from ".$reference->getFullName()." in support of 
+                ".$applicantName."'s application ID#".$fellapp->getId()." for the ".$fellapp->getFellowshipSubspecialty()." $startDateStr fellowship";
+
+                //TODO: get CreatedTime. Not in file's metadata.
+                //$latestLetterTime = $file->getCreatedTime();
+                $latestLetterTime = new \DateTime();
+                if( $latestLetterTime ) {
+                    $latestLetterTimeStr = $latestLetterTime->format("m/d/Y H:i");
+                }
+                $body = $subject . " The latest document was received on ".$latestLetterTimeStr;
+                $body = $body . "<br><br>" . "Please review these letters of recommendation and delete any duplicates or erroneously added documents.";
+
+                //TODO:
+                //You can review the letter 1 here: LINKtoLETTER1. You can review the letter 2 here: LINKtoLETTER2. You can review the letter 3 here: LINKtoLETTER3.
+                //
+                //You can review the entire application here: LINKtoAPPLICATION.
+
+                //$userSecUtil->sendEmailToSystemEmail($subject,$body);
+                $emails = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'),"Administrator");
+                $ccs = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'),"Platform Administrator");
+                if( !$emails ) {
+                    $emails = $ccs;
+                    $ccs = null;
+                }
+                $emailUtil->sendEmail( $emails, $subject, $body, $ccs );
+            }
+
+            //add this letter to this reference
+
+        }
+
+
+        return NULL;
     }
 
     public function populateApplicationsFromDataFile() {
