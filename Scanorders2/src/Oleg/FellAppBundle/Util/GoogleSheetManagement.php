@@ -762,7 +762,7 @@ class GoogleSheetManagement {
      * @return String The file's content if successful, null otherwise.
      */
     function downloadFile($service, $file, $type=null) {
-        if( $type && ($type == 'Fellowship Application Spreadsheet' || $type == 'Fellowship Application Backup Spreadsheet') ) {
+        if( $type && ($type == 'Fellowship Application Spreadsheet' || $type == 'Fellowship Application Backup Spreadsheet' || $type == 'Fellowship Recommendation Letter Spreadsheet') ) {
             $downloadUrl = $file->getExportLinks()['text/csv'];
         } else {
             $downloadUrl = $file->getDownloadUrl();
@@ -783,6 +783,25 @@ class GoogleSheetManagement {
             return null;
         }
     }
+    /**
+     * Print a file's metadata.
+     *
+     * @param Google_Service_Drive $service Drive API service instance.
+     * @param string $fileId ID of the file to print metadata for.
+     */
+    function printFile($service, $fileId) {
+        try {
+            $file = $service->files->get($fileId);
+
+            print "Title: " . $file->getTitle();
+            print "; Description: " . $file->getDescription();
+            print "; MIME type: " . $file->getMimeType();
+            print "<br>";
+        } catch (Exception $e) {
+            print "An error occurred: " . $e->getMessage();
+        }
+    }
+
 
 
 

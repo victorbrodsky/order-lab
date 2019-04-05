@@ -92,6 +92,9 @@ class RecLetterUtil {
         //1) Import sheets from Google Drive Folder
         $filesGoogleDrive = $this->importSheetsFromGoogleDriveFolder();
 
+        //2) Import recommendation letter from Google Drive Folder
+        $filesGoogleDrive = $this->importLetterFromGoogleDriveFolder();
+
         //2) Populate applications from DataFile DB object
         $populatedCount = $this->populateApplicationsFromDataFile();
 
@@ -171,12 +174,14 @@ class RecLetterUtil {
         echo "files count=".count($files)."<br>";
 
         //Download files to the server
+        $documentType = "Fellowship Recommendation Letter Spreadsheet";
         $path = 'Uploaded'.'/'.'fellapp/RecommendationLetters/Spreadsheets';
         foreach( $files as $file ) {
             echo 'File Id: ' . $file->getId() . "; title=" . $file->getTitle() . "<br>";
             //Download file from Google Drive to the server without creating document entity
             //$this->processSingleFile( $file->getId(), $service, $documentType );
-            $this->downloadFileToServer($service,$file,$path);
+            //$googlesheetmanagement->printFile($service, $file->getId());
+            $this->downloadSpeadsheetFileToServer($service,$file,$documentType,$path);
         }
 
         return $files; //google drive files
@@ -185,95 +190,100 @@ class RecLetterUtil {
 
         //return $filesGoogleDrive;
     }
-    public function downloadFileToServer($service, $file, $path) {
-        //$file = null;
-        try {
-            $file = $service->files->get($file->getId());
-        } catch (Exception $e) {
-            throw new IOException('Google API: Unable to get file by file id='.$file->getId().". An error occurred: " . $e->getMessage());
+    //copy spreadsheet to the server. Keep the original file name (title).
+    public function downloadSpeadsheetFileToServer($service, $file, $documentType, $path) {
+        if( !$file ) {
+            return NULL;
         }
 
-        if( $file ) {
-
-            $downloadUrl = $file->getDownloadUrl();
-            echo "downloadUrl=".$downloadUrl."<br>";
-
-            //TODO: check if file already exists by file path
-
-            $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
-            $response = $googlesheetmanagement->downloadFile($service,$file);
-            //echo "response=".$response."<br>";
-            if( !$response ) {
-                throw new IOException('Error file response is empty: file id='.$file->getId());
+        $fileExt = pathinfo($file->getTitle(), PATHINFO_EXTENSION);
+        if( !$fileExt ) {
+            if( $file->getMimeType() == "application/vnd.google-apps.spreadsheet" ) {
+                $fileExt = "csv";
             }
-
-            //create unique file name
-            $currentDatetime = new \DateTime();
-            $currentDatetimeTimestamp = $currentDatetime->getTimestamp();
-
-            //$fileTitle = trim($file->getTitle());
-            //$fileTitle = str_replace(" ","",$fileTitle);
-            //$fileTitle = str_replace("-","_",$fileTitle);
-            //$fileTitle = 'testfile.jpg';
-            $fileExt = pathinfo($file->getTitle(), PATHINFO_EXTENSION);
-            $fileExtStr = "";
-            if( $fileExt ) {
-                $fileExtStr = ".".$fileExt;
-            }
-
-            $fileUniqueName = $currentDatetimeTimestamp.'ID'.$file->getId().$fileExtStr;  //.'_title='.$fileTitle;
-            //echo "fileUniqueName=".$fileUniqueName."<br>";
-
-            $filesize = $file->getFileSize();
-            if( !$filesize ) {
-                $filesize = mb_strlen($response) / 1024; //KBs,
-            }
-
-
-//            $object = new Document($author);
-//            $object->setUniqueid($file->getId());
-//            $object->setUniquename($fileUniqueName);
-//            $object->setUploadDirectory($path);
-//            $object->setSize($filesize);
-//
-//            //clean originalname
-//            $object->setCleanOriginalname($file->getTitle());
-
-
-//            if( $type && $type == 'excel' ) {
-//                $fellappSpreadsheetType = $this->em->getRepository('OlegUserdirectoryBundle:DocumentTypeList')->findOneByName('Fellowship Application Spreadsheet');
-//            } else {
-//                $fellappSpreadsheetType = $this->em->getRepository('OlegUserdirectoryBundle:DocumentTypeList')->findOneByName('Fellowship Application Document');
-//            }
-//            $transformer = new GenericTreeTransformer($this->em, $author, "DocumentTypeList", "UserdirectoryBundle");
-//            $documentType = trim($documentType);
-//            $documentTypeObject = $transformer->reverseTransform($documentType);
-//            if( $documentTypeObject ) {
-//                $object->setType($documentTypeObject);
-//            }
-
-//            $this->em->persist($object);
-
-            $root = $this->container->get('kernel')->getRootDir();
-            //echo "root=".$root."<br>";
-            //$fullpath = $this->get('kernel')->getRootDir() . '/../web/'.$path;
-            $fullpath = $root . '/../web/'.$path;
-            $target_file = $fullpath . "/" . $fileUniqueName;
-
-            //$target_file = $fullpath . 'uploadtestfile.jpg';
-            //echo "target_file=".$target_file."<br>";
-            if( !file_exists($fullpath) ) {
-                // 0600 - Read/write/execute for owner, nothing for everybody else
-                mkdir($fullpath, 0700, true);
-                chmod($fullpath, 0700);
-            }
-
-            file_put_contents($target_file, $response);
-
-            return $target_file;
+        }
+        $fileExtStr = "";
+        if( $fileExt ) {
+            $fileExtStr = ".".$fileExt;
         }
 
-        return null;
+        $root = $this->container->get('kernel')->getRootDir();
+        $fullpath = $root . '/../web/'.$path;
+        $target_file = $fullpath . "/" . $file->getTitle() . $fileExtStr;
+
+        //check if file already exists by file path
+        if( file_exists($target_file) ) {
+            echo "File already exists <br>";
+            return NULL;
+        }
+
+        $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
+        $response = $googlesheetmanagement->downloadFile($service,$file,$documentType);
+        if( !$response ) {
+            throw new IOException('Error file response is empty: file id='.$file->getId());
+        }
+
+        if( !file_exists($fullpath) ) {
+            // 0600 - Read/write/execute for owner, nothing for everybody else
+            mkdir($fullpath, 0700, true);
+            chmod($fullpath, 0700);
+        }
+
+        file_put_contents($target_file, $response);
+
+        return $target_file;
+    }
+
+    public function importLetterFromGoogleDriveFolder() {
+        $fellappImportPopulateUtil = $this->container->get('fellapp_importpopulate_util');
+
+        if( !$fellappImportPopulateUtil->checkIfFellappAllowed("Import from Google Drive") ) {
+            //exit("can't import");
+            //return null;
+        }
+
+        $logger = $this->container->get('logger');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $systemUser = $userSecUtil->findSystemUser();
+
+        //get Google service
+        $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
+        $service = $googlesheetmanagement->getGoogleService();
+
+        if( !$service ) {
+            $event = "Google API service failed!";
+            $logger->warning($event);
+            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Error');
+            $this->sendEmailToSystemEmail($event, $event);
+            return null;
+        }
+
+        //echo "service ok <br>";
+
+        $folderIdFellAppId = $userSecUtil->getSiteSettingParameter('configFileFolderIdFellApp');
+        if( !$folderIdFellAppId ) {
+            $logger->warning('Google Drive Folder ID is not defined in Site Parameters. configFileFolderIdFellApp='.$folderIdFellAppId);
+        }
+
+        //find folder by name
+        $letterFolder = $googlesheetmanagement->findOneRecLetterUploadFolder($service,$folderIdFellAppId);
+        echo "letterFolder: Title=".$letterFolder->getTitle()."; ID=".$letterFolder->getId()."<br>";
+
+        //get all files in google folder
+        $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
+        $files = $googlesheetmanagement->retrieveFilesByFolderId($letterFolder->getId(),$service);
+        echo "files count=".count($files)."<br>";
+
+        //Download files to the server
+        $documentType = "Fellowship Recommendation Letter Spreadsheet";
+        $path = 'Uploaded'.'/'.'fellapp/RecommendationLetters/Uploads';
+        foreach( $files as $file ) {
+            echo 'File Id: ' . $file->getId() . "; title=" . $file->getTitle() . "<br>";
+            //Download file from Google Drive to the server without creating document entity
+            //$this->processSingleFile( $file->getId(), $service, $documentType );
+            //$googlesheetmanagement->printFile($service, $file->getId());
+            //$this->downloadSpeadsheetFileToServer($service,$file,$documentType,$path);
+        }
     }
 
     public function populateApplicationsFromDataFile() {
