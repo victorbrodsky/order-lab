@@ -87,6 +87,7 @@ class UserWrapperTransformer implements DataTransformerInterface
         //echo "transform: entities=".$entities."<br>";
         //echo $this->className.": transform: count=".count($entities)."<br>";
         //var_dump($entities);
+        //exit('transform');
 
         $array = new \Doctrine\Common\Collections\ArrayCollection();
 
@@ -144,6 +145,7 @@ class UserWrapperTransformer implements DataTransformerInterface
         //var_dump($text);
         //echo "<br>transformer: count=".count($text)."<br>";
         //echo "data transformer text=".$text."<br>";
+        //exit('reverse');
 
         $newListArr = new \Doctrine\Common\Collections\ArrayCollection();
 

@@ -25,6 +25,7 @@
 
 namespace Oleg\UserdirectoryBundle\Form\DataTransformer;
 
+use Oleg\UserdirectoryBundle\Entity\User;
 use Oleg\UserdirectoryBundle\Entity\UserWrapper;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
@@ -47,7 +48,7 @@ class SingleUserWrapperTransformer extends UserWrapperTransformer//implements Da
     {
         //echo "transform: entity=".$entity."<br>";
         //if( $entity ) {
-        //    echo "transform: entity=".$entity->getId()."<br>";
+            //echo "transform: entity=".$entity->getId()."<br>";
         //}
 
         if( !$entity ) {
@@ -58,7 +59,14 @@ class SingleUserWrapperTransformer extends UserWrapperTransformer//implements Da
         //echo "return ".$entities->first()->getId()."<br>";
 
         //return User entity (if exists in UserWrapper), UserWrapper id (if id exists) or user string (UserWrapper->getFullName)
-        return $entity->getEntity();
+        $wrapperUser = $entity->getEntity();
+
+        if( $wrapperUser instanceof User ) {
+            //display user usning userInfos.displayName to match with the optimising version getProxyusersAction using userInfos.displayName
+            return $wrapperUser->getDisplayName();
+        }
+
+        return $wrapperUser;
     }
 
     /**
