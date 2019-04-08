@@ -94,6 +94,7 @@ class ExceptionListener {
             //. "<br>URI Query String: ".$event->getRequest()->getQueryString()
             //. "<br>Code:".$exception->getCode()
             . "<br>Trace: ". $exception->getTraceAsString()
+            ."<br>User: ".$user
         ;
 
         if( $request ) {

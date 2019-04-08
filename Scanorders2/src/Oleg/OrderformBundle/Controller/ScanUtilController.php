@@ -871,6 +871,8 @@ class ScanUtilController extends UtilController {
 
 
     /**
+     * TODO: optimize this function. Error: Out of memory: https://c.med.cornell.edu/order/scan/util/common/encounterReferringProvider?cycle=new&sitename=call-log-book
+     *
      * Get all users and user wrappers combined
      * @Route("/common/proxyuser", name="scan_get_proxyuser")
      * @Method("GET")
@@ -885,7 +887,7 @@ class ScanUtilController extends UtilController {
         $output = array();
 
         ///////////// 1) get all real users /////////////
-        if(1) {
+        if(0) {
             $query = $em->createQueryBuilder()
                 ->from('OlegUserdirectoryBundle:User', 'list')
                 ->select("list")
@@ -910,6 +912,38 @@ class ScanUtilController extends UtilController {
                 //}
             }
         }
+        if(1) {
+            $query = $em->createQueryBuilder()
+                ->from('OlegUserdirectoryBundle:User', 'list')
+                ->select("infos.displayName as id, infos.displayName as text")
+                //->groupBy('list.id')
+                ->leftJoin("list.infos", "infos")
+                ->leftJoin("list.employmentStatus", "employmentStatus")
+                ->leftJoin("employmentStatus.employmentType", "employmentType")
+                ->where("(employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
+                ->andWhere("(list.testingAccount = false OR list.testingAccount IS NULL)")
+                ->andWhere("(list.keytype IS NOT NULL AND list.primaryPublicUserId != 'system')")
+                ->andWhere("infos.displayName IS NOT NULL")
+                ->groupBy("list")
+                ->orderBy("infos.displayName", "ASC")
+            ;
+
+            $output = $query->getQuery()->getResult();
+            //echo "users count=".count($output)."<br>";
+//            foreach ($outputs as $user) {
+//                //echo "user=".$user."<br>";
+//                //print_r($user);
+//                $element = array('id' => $user['id'], 'text' => $user['text']);
+//                //$element = array('id' => $user->getUsername()."", 'text' => $user . "");
+//                //$element = array('id' => $user->getId(), 'text' => $user . "");
+//                //if( !$this->in_complex_array($user."",$output,'text') ) {
+//                $output[] = $element;
+//                //}
+//            }
+            //exit('111');
+        }
+        //print_r($output);
+        //exit('111');
         ///////////// EOF 1) get all real users /////////////
 
 
