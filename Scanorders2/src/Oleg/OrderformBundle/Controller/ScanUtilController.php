@@ -913,6 +913,8 @@ class ScanUtilController extends UtilController {
             }
         }
         if(1) {
+            //Optimising (lighter) version without loop.
+            // Using infos.displayName - "displayName" instead of user's toString (getUserNameStr) - "displayName - cwid (keytype)"
             $query = $em->createQueryBuilder()
                 ->from('OlegUserdirectoryBundle:User', 'list')
                 ->select("infos.displayName as id, infos.displayName as text")
@@ -930,20 +932,7 @@ class ScanUtilController extends UtilController {
 
             $output = $query->getQuery()->getResult();
             //echo "users count=".count($output)."<br>";
-//            foreach ($outputs as $user) {
-//                //echo "user=".$user."<br>";
-//                //print_r($user);
-//                $element = array('id' => $user['id'], 'text' => $user['text']);
-//                //$element = array('id' => $user->getUsername()."", 'text' => $user . "");
-//                //$element = array('id' => $user->getId(), 'text' => $user . "");
-//                //if( !$this->in_complex_array($user."",$output,'text') ) {
-//                $output[] = $element;
-//                //}
-//            }
-            //exit('111');
         }
-        //print_r($output);
-        //exit('111');
         ///////////// EOF 1) get all real users /////////////
 
 
