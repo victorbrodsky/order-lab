@@ -10,6 +10,7 @@ namespace Oleg\FellAppBundle\Util;
 
 
 use Symfony\Component\Filesystem\Exception\IOException;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class RecLetterUtil {
 
@@ -117,7 +118,7 @@ class RecLetterUtil {
 
         //exit('eof processFellAppFromGoogleDrive');
 
-        $result = "Finish processing Fellowship Application on Google Drive and on server.<br>".
+        $result = "Finish processing Fellowship Recommendation Letters on Google Drive and on server.<br>".
             "filesGoogleDrive=".count($filesGoogleDrive).", populatedCount=".$populatedCount.
             ", deletedSheetCount=".$deletedSheetCount.", populatedBackupApplications=".count($populatedBackupApplications)
             //.", First generated report in queue=".$generatedReport
@@ -129,7 +130,7 @@ class RecLetterUtil {
         //Event Logger with event type "Import of Fellowship Applications Spreadsheet". It will be used to get lastImportTimestamps
         $userSecUtil = $this->container->get('user_security_utility');
         $systemUser = $userSecUtil->findSystemUser();
-        $eventTypeStr = "Import of Fellowship Recommendation Letters Spreadsheet";
+        $eventTypeStr = "Import of Fellowship Recommendation Letters";
         $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$result,$systemUser,null,null,$eventTypeStr);
 
         return $result;
@@ -282,6 +283,7 @@ class RecLetterUtil {
         echo "files count=".count($files)."<br>";
 
         //Download files to the server
+        $importedLetters = array();
         $documentType = "Fellowship Recommendation Letter";
         $path = 'Uploaded'.'/'.'fellapp/RecommendationLetters/RecommendationLetterUploads';
         foreach( $files as $file ) {
@@ -290,7 +292,14 @@ class RecLetterUtil {
             $googlesheetmanagement->printFile($service, $file->getId());
 
             $documentDb = $this->processSingleLetter($service,$file,$documentType,$path);
+            if( $documentDb ) {
+                $importedLetters[] = $documentDb;
+            }
         }
+
+        exit("Exit importLetterFromGoogleDriveFolder");
+
+        return $importedLetters;
     }
     public function processSingleLetter( $service, $file, $documentType, $path ) {
         $logger = $this->container->get('logger');
@@ -298,6 +307,8 @@ class RecLetterUtil {
         $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
         $emailUtil = $this->container->get('user_mailer_utility');
         $systemUser = $userSecUtil->findSystemUser();
+
+        $testing = true;
 
 //        //test
 //        $subject = "More than one recommendation letter received from "."RefName"." in support of
@@ -329,7 +340,10 @@ class RecLetterUtil {
             //$logger = $this->container->get('logger');
             //$event = "Document already exists with uniqueid=".$file->getId();
             //$logger->warning($event);
-            return $documentDb;
+            if( !$testing ) {
+                return $documentDb;
+            }
+            //return $documentDb;
         }
 
         //download file to the server and create Document object in DB
@@ -350,6 +364,12 @@ class RecLetterUtil {
             return NULL;
         }
 
+        if( $testing ) {
+            $refId = "340d08a7c8037b62e5e0e36b1119486f2dd00540";
+            $datetime = "2019-04-03-13-13-17";
+            $name = "filenameee";
+        }
+
         //find application and reference by reference ID
         echo "search by ref ID=".$refId."<br>";
         $references = $this->em->getRepository('OlegFellAppBundle:Reference')->findByRecLetterHashId($refId);
@@ -368,14 +388,14 @@ class RecLetterUtil {
         //can't be more than 1
         if( count($references) > 1 ) {
             //send email
-            $msg = "Multiple " . count($references) . " fellowship references found by letter ID=".$refId;
+            $msg = "Error: Multiple " . count($references) . " fellowship references found by letter ID=".$refId;
             $userSecUtil->sendEmailToSystemEmail($msg,$msg);
             //eventlog
             $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$msg,$systemUser,null,null,"Multiple Recommendation Letters");
             return NULL;
         }
 
-        //Good
+        //Good: only one reference corresponds to the hash Id
         if( count($references) == 1 ) {
             $reference = $references[0];
             $fellapp = $reference->getFellapp(); 
@@ -392,23 +412,53 @@ class RecLetterUtil {
 
             //check if this reference already has a letter
             $letters = $reference->getDocuments();
+            echo "letters count=".count($letters)."<br>";
             if( count($letters) > 0 ) {
                 $subject = "More than one recommendation letter received from ".$reference->getFullName()." in support of 
                 ".$applicantName."'s application ID#".$fellapp->getId()." for the ".$fellapp->getFellowshipSubspecialty()." $startDateStr fellowship";
 
                 //TODO: get CreatedTime. Not in file's metadata.
                 //$latestLetterTime = $file->getCreatedTime();
-                $latestLetterTime = new \DateTime();
-                if( $latestLetterTime ) {
+                //use $datetime from the filename
+                $latestLetterTimeStr = NULL;
+                if( $datetime ) {
+                    //2019-04-03-13-13-17
+                    $timeArr = explode("-",$datetime);
+                    if( count($timeArr) == 6 ) {
+                        //m/d/Y H:i
+                        $latestLetterTimeStr = $timeArr[1]."/".$timeArr[2]."/".$timeArr[0]. " at " . $timeArr[3].":".$timeArr[4];
+                    }
+                }
+                if( !$latestLetterTimeStr ) {
+                    $latestLetterTime = new \DateTime();
                     $latestLetterTimeStr = $latestLetterTime->format("m/d/Y H:i");
                 }
                 $body = $subject . " The latest document was received on ".$latestLetterTimeStr;
                 $body = $body . "<br><br>" . "Please review these letters of recommendation and delete any duplicates or erroneously added documents.";
 
-                //TODO:
                 //You can review the letter 1 here: LINKtoLETTER1. You can review the letter 2 here: LINKtoLETTER2. You can review the letter 3 here: LINKtoLETTER3.
-                //
+                $reviewLetterArr = array();
+                $counter = 1;
+                foreach($letters as $letter) {
+                    $letterLink = $this->container->get('router')->generate(
+                        'fellapp_file_download',
+                        array('id' => $letter->getId()),
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    );
+                    $letterLink = '<a href="'.$letterLink.'">'.$letterLink.'</a>';
+                    $reviewLetterArr[] = "You can review the letter $counter here: " . $letterLink;
+                    $counter++;
+                }
+                $body = $body . "<br><br>" . implode("<br>",$reviewLetterArr);
+
                 //You can review the entire application here: LINKtoAPPLICATION.
+                $fellappLink = $this->container->get('router')->generate(
+                    'fellapp_show',
+                    array('id' => $fellapp->getId()),
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+                $fellappLink = '<a href="'.$fellappLink.'">'.$fellappLink.'</a>';
+                $body = $body . "<br><br>" . "You can review the entire application here: ".$fellappLink;
 
                 //$userSecUtil->sendEmailToSystemEmail($subject,$body);
                 $emails = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'),"Administrator");
@@ -418,11 +468,19 @@ class RecLetterUtil {
                     $ccs = null;
                 }
                 $emailUtil->sendEmail( $emails, $subject, $body, $ccs );
-            }
+            } //if count($letters) > 0
 
             //add this letter to this reference
 
-        }
+            $reference->addDocument($uploadedLetterDb);
+            $this->em->flush($reference);
+
+            //TODO: update application PDF: synch or async
+            $fellappRepGen = $this->container->get('fellapp_reportgenerator');
+            $fellappRepGen->addFellAppReportToQueue( $fellapp->getId(), 'overwrite' );
+
+            return $uploadedLetterDb;
+        } //if count($references) == 1
 
 
         return NULL;

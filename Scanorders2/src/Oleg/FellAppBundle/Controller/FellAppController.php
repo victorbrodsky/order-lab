@@ -2026,6 +2026,29 @@ class FellAppController extends Controller {
     }
 
     /**
+     * Manually import and populate recommendation letters from Google
+     *
+     * @Route("/populate-import-letters", name="fellapp_import_populate_letters")
+     */
+    public function importAndPopulateLettersAction(Request $request) {
+
+        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_ADMIN') ){
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+
+        $fellappRecLetterUtil = $this->get('fellapp_rec_letter_util');
+
+        $result = $fellappRecLetterUtil->processFellRecLetterFromGoogleDrive();
+
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            $result
+        );
+
+        return $this->redirect( $this->generateUrl('fellapp_home') );
+    }
+
+    /**
      * Show home page
      *
      * @Route("/populate", name="fellapp_populate")
