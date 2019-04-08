@@ -926,7 +926,6 @@ class ScanUtilController extends UtilController {
                 ->andWhere("(list.testingAccount = false OR list.testingAccount IS NULL)")
                 ->andWhere("(list.keytype IS NOT NULL AND list.primaryPublicUserId != 'system')")
                 ->andWhere("infos.displayName IS NOT NULL")
-                //->groupBy("list")
                 ->orderBy("infos.displayName", "ASC")
             ;
 
