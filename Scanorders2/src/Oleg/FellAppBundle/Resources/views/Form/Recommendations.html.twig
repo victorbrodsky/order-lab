@@ -46,7 +46,7 @@
     <label class="control-label">Reference #{{ refcount }}</label>
 
     {% if is_granted('ROLE_FELLAPP_ADMIN') or is_granted('ROLE_FELLAPP_COORDINATOR') %}
-        <p>Hash ID (visdible to admin): {{ reference.recLetterHashId }}</p>
+        <p>Hash ID (visdible to admin): {{ reference.vars.value.recLetterHashId }}</p>
     {% endif %}
 
     {% set refcount = refcount + 1 %}
