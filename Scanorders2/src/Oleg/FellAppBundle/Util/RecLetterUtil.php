@@ -475,9 +475,14 @@ class RecLetterUtil {
             $reference->addDocument($uploadedLetterDb);
             $this->em->flush($reference);
 
-            //TODO: update application PDF: synch or async
+            //TODO: update application PDF:
             $fellappRepGen = $this->container->get('fellapp_reportgenerator');
-            $fellappRepGen->addFellAppReportToQueue( $fellapp->getId(), 'overwrite' );
+            //async generation
+            //$fellappRepGen->addFellAppReportToQueue( $fellapp->getId(), 'overwrite' );
+            //sync generation
+            $res = $fellappRepGen->generateFellAppReport( $fellapp->getId() );
+
+            echo "filename=".$res['filename']."<br>";
 
             return $uploadedLetterDb;
         } //if count($references) == 1

@@ -47,15 +47,15 @@ class LargeFileDownloader {
 
         $filenameClean = str_replace("\\", "/", $filepath);
 
-        if (empty($filenameClean)) {
+        if( empty($filenameClean) ) {
             exit;
         }
 
-        if (!$filename) {
+        if( !$filename ) {
             $filename = basename($filenameClean);
         }
 
-        if (!$size) {
+        if( !$size ) {
             $size = filesize($filenameClean); //Returns the size of the file in bytes, or FALSE (and generates an error of level E_WARNING) in case of an error.
         }
 
