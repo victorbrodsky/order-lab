@@ -1090,7 +1090,7 @@ class FellAppImportPopulateUtil {
                 $signatureDate = $this->transformDatestrToDate($this->getValueByHeaderName('signatureDate',$rowData,$headers));
                 $fellowshipApplication->setSignatureDate($signatureDate);
 
-                //update reference hash ID
+                //create reference hash ID
                 $fellappRecLetterUtil->generateFellappRecLetterId($fellowshipApplication);
 
                 //getFellowshipSubspecialty

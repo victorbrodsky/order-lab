@@ -932,7 +932,7 @@ class FellAppController extends Controller {
         $id = $entity->getId();
 
         $userSecUtil = $this->container->get('user_security_utility');
-        $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
+        //$fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $routeName = $request->get('_route');
 
@@ -990,8 +990,8 @@ class FellAppController extends Controller {
 
             $this->assignFellAppAccessRoles($entity);
 
-            //update reference hash ID
-            $fellappRecLetterUtil->generateFellappRecLetterId($entity);
+            //DO NOT update reference hash ID, once it's generated. This hash ID will be used to auto attach recommendation letter to the reference's application.
+            //$fellappRecLetterUtil->generateFellappRecLetterId($entity);
 
             //set update author application
             $em = $this->getDoctrine()->getManager();
@@ -1354,7 +1354,7 @@ class FellAppController extends Controller {
 
             $this->assignFellAppAccessRoles($fellowshipApplication);
 
-            //update reference hash ID
+            //create reference hash ID
             $fellappRecLetterUtil->generateFellappRecLetterId($fellowshipApplication);
 
             //set update author application

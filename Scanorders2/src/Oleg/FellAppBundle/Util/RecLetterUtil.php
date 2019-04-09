@@ -24,6 +24,8 @@ class RecLetterUtil {
         $this->uploadDir = 'Uploaded';
     }
 
+    //Generate hash ID only once when application is created.
+    //This hash ID will be used to auto attach recommendation letter to the reference's application.
     public function generateFellappRecLetterId( $fellapp ) {
         $references = $fellapp->getReferences($fellapp);
 
