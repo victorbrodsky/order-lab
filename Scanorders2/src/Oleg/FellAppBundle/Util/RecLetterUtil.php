@@ -325,7 +325,8 @@ class RecLetterUtil {
         $emailUtil = $this->container->get('user_mailer_utility');
         $systemUser = $userSecUtil->findSystemUser();
 
-        $testing = true;
+        $testing = false;
+        //$testing = true;
 
 //        //test
 //        $subject = "More than one recommendation letter received from "."RefName"." in support of
