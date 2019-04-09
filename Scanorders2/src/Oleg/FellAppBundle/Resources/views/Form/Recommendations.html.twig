@@ -45,8 +45,10 @@
   
     <label class="control-label">Reference #{{ refcount }}</label>
 
-    {% if is_granted('ROLE_FELLAPP_ADMIN') or is_granted('ROLE_FELLAPP_COORDINATOR') %}
-        <p>Hash ID (visdible to admin): {{ reference.vars.value.recLetterHashId }}</p>
+    {% if cycle != "download" %}
+        {% if is_granted('ROLE_FELLAPP_ADMIN') or is_granted('ROLE_FELLAPP_COORDINATOR') %}
+            <p>Hash ID (visdible to admin): {{ reference.vars.value.recLetterHashId }}</p>
+        {% endif %}
     {% endif %}
 
     {% set refcount = refcount + 1 %}
