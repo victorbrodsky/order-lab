@@ -932,6 +932,7 @@ class FellAppController extends Controller {
         $id = $entity->getId();
 
         $userSecUtil = $this->container->get('user_security_utility');
+        $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $routeName = $request->get('_route');
 
@@ -988,6 +989,9 @@ class FellAppController extends Controller {
             $this->processDocuments($entity);
 
             $this->assignFellAppAccessRoles($entity);
+
+            //update reference hash ID
+            $fellappRecLetterUtil->generateFellappRecLetterId($entity);
 
             //set update author application
             $em = $this->getDoctrine()->getManager();
@@ -1253,6 +1257,7 @@ class FellAppController extends Controller {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
+        $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
@@ -1349,6 +1354,8 @@ class FellAppController extends Controller {
 
             $this->assignFellAppAccessRoles($fellowshipApplication);
 
+            //update reference hash ID
+            $fellappRecLetterUtil->generateFellappRecLetterId($fellowshipApplication);
 
             //set update author application
 //            $em = $this->getDoctrine()->getManager();

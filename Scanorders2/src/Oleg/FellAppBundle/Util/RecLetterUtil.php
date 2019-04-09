@@ -24,8 +24,20 @@ class RecLetterUtil {
         $this->uploadDir = 'Uploaded';
     }
 
+    public function generateFellappRecLetterId( $fellapp ) {
+        $references = $fellapp->getReferences($fellapp);
+
+        foreach($references as $reference) {
+            $hash = $this->generateRecLetterId($fellapp,$reference);
+            if( $hash ) {
+                $reference->setRecLetterHashId($hash);
+                //echo $fellapp->getId()." (".$reference->getId()."): added hash=".$hash."<br>";
+            }
+        }
+    }
+
     //Recommendation Letter Salted Script Hash ID
-    public function generateRecLetterId( $fellapp, $reference, $request, $count=0 ) {
+    public function generateRecLetterId( $fellapp, $reference, $request=null, $count=0 ) {
 
         $userSecUtil = $this->container->get('user_security_utility');
 
@@ -38,6 +50,9 @@ class RecLetterUtil {
 
         //Generate "Recommendation Letter Salted Scrypt Hash ID":
         // Live Server URL from Site Settings +
+        if( !$request ) {
+            $request = $this->container->get('request_stack')->getCurrentRequest();
+        }
         $url = $request->getSchemeAndHttpHost();
 
         // Organizational Group of the received application +

@@ -550,6 +550,7 @@ class FellAppImportPopulateUtil {
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
         $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
+        $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
 
         ini_set('max_execution_time', 3000); //30000 seconds = 50 minutes
         //ini_set('memory_limit', '512M');
@@ -1088,6 +1089,9 @@ class FellAppImportPopulateUtil {
                 //signatureDate
                 $signatureDate = $this->transformDatestrToDate($this->getValueByHeaderName('signatureDate',$rowData,$headers));
                 $fellowshipApplication->setSignatureDate($signatureDate);
+
+                //update reference hash ID
+                $fellappRecLetterUtil->generateFellappRecLetterId($fellowshipApplication);
 
                 //getFellowshipSubspecialty
                 if( !$fellowshipApplication->getFellowshipSubspecialty() ) { //getSignatureName() - not reliable - some applicants managed to submit the form without signature
