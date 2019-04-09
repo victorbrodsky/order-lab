@@ -513,7 +513,11 @@ class UserSecurityUtil {
         //}
 
         if( $user ) {
-            $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId());
+            if( $user instanceof User ) {
+                $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId());
+            } else {
+                $user = $this->findSystemUser();
+            }
         }
 
         $eventLog = $this->constructEventLog($sitename,$user,$request);
