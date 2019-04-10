@@ -117,6 +117,11 @@ class Reference
      */
     private $recLetterReceived;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $invitationSentEmailCounter;
+
 
     public function __construct($author=null) {
 
@@ -372,7 +377,23 @@ class Reference
     {
         $this->recLetterReceived = $recLetterReceived;
     }
-    
+
+    /**
+     * @return mixed
+     */
+    public function getInvitationSentEmailCounter()
+    {
+        return $this->invitationSentEmailCounter;
+    }
+
+    /**
+     * @param mixed $invitationSentEmailCounter
+     */
+    public function setInvitationSentEmailCounter($invitationSentEmailCounter)
+    {
+        $this->invitationSentEmailCounter = $invitationSentEmailCounter;
+    }
+
     public function autoSetRecLetterReceived()
     {
         if( count($this->getDocuments()) > 0 ) {

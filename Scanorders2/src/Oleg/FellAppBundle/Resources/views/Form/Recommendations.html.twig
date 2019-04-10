@@ -138,11 +138,12 @@
     {% if cycle != "download" %}
 
         <div class="row withpaddingtop">
-            <div class="col-xs-4">
+            <div class="col-xs-6">
                 {#{{ form_row(reference.recLetterReceived) }}#}
                 {{ formmacros.checkbox(reference.recLetterReceived) }}
             </div>
-            <div class="col-xs-8">
+            <div class="col-xs-6">
+                {{ formmacros.simplefield( "Number of sent invitation email(s):", reference.vars.value.invitationSentEmailCounter, "", "disabled" ) }}
             </div>
         </div>
 

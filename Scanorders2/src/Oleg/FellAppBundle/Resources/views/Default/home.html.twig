@@ -732,6 +732,8 @@
                                             </a>
                                         </li>
 
+                                        <hr>
+
                                         {% if entity.appStatus.name != 'active' %}
                                             <li>
                                                 <a
@@ -817,6 +819,8 @@
                                             </li>
                                         {% endif %}
 
+                                        <hr>
+
                                         {#invite references#}
                                         <li>
                                             <a
@@ -826,13 +830,14 @@
                                                 Invite all remaining references to submit letters
                                             </a>
                                             {% for reference in entity.getReferences() %}
-                                                {% set referenceName = reference.getFullName() %}
-                                                <a
-                                                    general-data-confirm="Are you sure you want to invite Invite {{ referenceName }} to submit a reference letter?"
-                                                    general-data-callback="refreshpage"
-                                                    href="{{ path('fellapp_invite_reference_submit_letter', { 'id': entity.id, 'referenceid': reference.id }, true) }}">
-                                                    Invite {{ referenceName }} to submit a reference letter
-                                                </a>
+                                                {% if reference.getDocuments()|length == 0 %}
+                                                    {% set referenceName = reference.getFullName() %}
+                                                    <a target="_blank"
+                                                        general-data-confirm="Are you sure you want to invite Invite {{ referenceName }} to submit a reference letter?"
+                                                        href="{{ path('fellapp_invite_reference_submit_letter', { 'id': entity.id, 'referenceid': reference.id }, true) }}">
+                                                        Invite {{ referenceName }} to submit a reference letter
+                                                    </a>
+                                                {% endif %}
                                             {% endfor %}
                                         </li>
 
@@ -840,9 +845,8 @@
                                             {#Invite Interviewers to Rate#}
                                             {% if entity.interviews|length > 0 and entity.itinerarys|length > 0 %}
                                                 <li>
-                                                    <a
+                                                    <a target="_blank"
                                                         general-data-confirm="Are you sure you want to Invite Interviewers to Rate this Applicant? Email will be sent to the interviewers who still have not submitted their scores."
-                                                        general-data-callback="refreshpage"
                                                         href="{{ path('fellapp_inviteinterviewerstorate', { 'id': entity.id}, true) }}">Invite Interviewers to Rate
                                                     </a>
                                                 </li>
@@ -859,6 +863,8 @@
                                                 </li>
                                             {% endif %}
                                         {% endif %}
+
+                                        <hr>
 
                                         <li>
                                             <a

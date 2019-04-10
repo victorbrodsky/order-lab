@@ -1419,9 +1419,17 @@ class FellowshipApplication extends BaseUserAttributes {
         return $info;
     }
 
+    public function getApplicantFullName() {
+        $subjectUser = $this->getUser();
+        if( $subjectUser ) {
+            return $subjectUser->getFirstNameUppercase() . " " . $subjectUser->getLastNameUppercase();
+        }
+        return "Unknown Applicant (Application ID " . $this->getId() . ")";
+    }
+
     public function autoSetRecLetterReceived()
     {
-        foreach($this->getReferenceLetters() as $reference) {
+        foreach($this->getReferences() as $reference) {
             $reference->autoSetRecLetterReceived();
         }
     }

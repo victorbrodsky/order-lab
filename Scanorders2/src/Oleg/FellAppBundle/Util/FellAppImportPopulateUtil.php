@@ -1093,6 +1093,17 @@ class FellAppImportPopulateUtil {
                 //create reference hash ID
                 $fellappRecLetterUtil->generateFellappRecLetterId($fellowshipApplication);
 
+                //send invitation email to references to submit letters
+                foreach($fellowshipApplication->getReferences() as $reference) {
+                    if( count($reference->getDocuments()) == 0 ) {
+                        //send invitation email
+                        $resInviteRefEmail = $fellappRecLetterUtil->inviteSingleReferenceToSubmitLetter($reference,$fellowshipApplication);
+//                        if( $resInviteRefEmail['res'] == true ) {
+//                            $em->flush($reference);
+//                        }
+                    }
+                }
+
                 //getFellowshipSubspecialty
                 if( !$fellowshipApplication->getFellowshipSubspecialty() ) { //getSignatureName() - not reliable - some applicants managed to submit the form without signature
                     $event = "Error: Fellowship Type is null after populating Fellowship Applicant " . $displayName . " with Google Applicant ID=".$googleFormId."; Application ID " . $fellowshipApplication->getId();
@@ -1310,6 +1321,9 @@ class FellAppImportPopulateUtil {
         if( $geoLocation ) {
             $reference->setGeoLocation($geoLocation);
         }
+
+//        //generate hash ID
+//        $this->generateRecLetterId($reference);
 
         return $reference;
     }

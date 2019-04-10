@@ -21,6 +21,7 @@ use Oleg\FellAppBundle\Entity\FellowshipApplication;
 use Oleg\FellAppBundle\Entity\GoogleFormConfig;
 use Oleg\FellAppBundle\Entity\Reference;
 use Oleg\FellAppBundle\Form\GoogleFormConfigType;
+use Oleg\UserdirectoryBundle\Entity\GeoLocation;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -44,6 +45,7 @@ class ReferenceController extends Controller
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
+        $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
         //$userSecUtil = $this->container->get('user_security_utility');
         //$em = $this->getDoctrine()->getManager();
         //$user = $this->get('security.token_storage')->getToken()->getUser();
@@ -51,16 +53,32 @@ class ReferenceController extends Controller
         $referenceNames = array();
         foreach($fellapp->getReferences() as $reference) {
             if( count($reference->getDocuments()) == 0 ) {
-                //send invitation
-                $this->inviteSingleReferenceToSubmitLetter($reference);
-                $referenceNames[] = $reference->getFullName();
+                //send invitation email
+                $res = $fellappRecLetterUtil->inviteSingleReferenceToSubmitLetter($reference,$fellapp);
+                if( $res['res'] == true ) {
+                    $this->get('session')->getFlashBag()->add(
+                        'notice',
+                        $res['msg']
+                    );
+                } else {
+                    $this->get('session')->getFlashBag()->add(
+                        'warning',
+                        $res['msg']
+                    );
+                }
             }
         }
 
-        $this->get('session')->getFlashBag()->add(
-            'notice',
-            'All remaining references '.implode(", ",$referenceNames).' have been invited to submit letters.'
-        );
+//        if( count($referenceNames) > 0 ) {
+//            $msg = 'All remaining references '.implode(", ",$referenceNames).' have been invited to submit letters.';
+//        } else {
+//            $msg = "No invitations have been sent.";
+//        }
+//
+//        $this->get('session')->getFlashBag()->add(
+//            'notice',
+//            $msg
+//        );
 
         return $this->redirect($this->generateUrl('fellapp_show',array('id' => $fellapp->getId())));
     }
@@ -70,7 +88,7 @@ class ReferenceController extends Controller
      * @Route("/invite-reference-submit-letter/{id}/{referenceid}", name="fellapp_invite_reference_submit_letter")
      * @Method({"GET"})
      */
-    public function InviteReferenceToSubmitLetterAction(Request $request, FellowshipApplication $fellapp, Reference $reference) {
+    public function InviteReferenceToSubmitLetterAction(Request $request, FellowshipApplication $fellapp, $referenceid) {
 
         if(
             $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_COORDINATOR') === false &&
@@ -79,26 +97,34 @@ class ReferenceController extends Controller
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
+        $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
         //$userSecUtil = $this->container->get('user_security_utility');
         //$em = $this->getDoctrine()->getManager();
         //$user = $this->get('security.token_storage')->getToken()->getUser();
 
+        $reference = $this->getDoctrine()->getRepository('OlegFellAppBundle:Reference')->find($referenceid);
+        if( !$reference ) {
+            throw new \Exception("No reference found by ID ".$referenceid);
+        }
+
         //send invitation
-        $this->inviteSingleReferenceToSubmitLetter($reference);
+        $res = $fellappRecLetterUtil->inviteSingleReferenceToSubmitLetter($reference,$fellapp);
 
-        $referenceName = $reference->getFullName();
-
-        $this->get('session')->getFlashBag()->add(
-            'notice',
-            'Reference '.$referenceName.' has been invited to submit letters.'
-        );
+        if( $res['res'] == true ) {
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                $res['msg']
+            );
+        } else {
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                $res['msg']
+            );
+        }
 
         return $this->redirect($this->generateUrl('fellapp_show',array('id' => $fellapp->getId())));
     }
 
-    public function inviteSingleReferenceToSubmitLetter($reference) {
-
-        return true;
-    }
+    
 
 }

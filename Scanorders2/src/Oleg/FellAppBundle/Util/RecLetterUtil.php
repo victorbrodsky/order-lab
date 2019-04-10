@@ -9,6 +9,7 @@
 namespace Oleg\FellAppBundle\Util;
 
 
+use Oleg\UserdirectoryBundle\Entity\User;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -112,6 +113,236 @@ class RecLetterUtil {
         }
 
         return $hash;
+    }
+
+    public function inviteSingleReferenceToSubmitLetter( $reference, $fellapp=null, $flush=true ) {
+
+//        $res = array(
+//            "res" => false,
+//            "msg" => NULL
+//        );
+
+        //do not invite if letter already received
+        if( count($reference->getDocuments()) > 0 ) {
+//            $this->container->get('session')->getFlashBag()->add(
+//                'warning',
+//                "Recommendation letter has already been received for reference ".$reference->getFullName()
+//            );
+            $res = array(
+                "res" => false,
+                "msg" => "Recommendation letter has already been received from reference ".$reference->getFullName()
+            );
+            return $res;
+        }
+
+        if( !$reference->getRecLetterHashId() ) {
+            $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
+            $hash = $fellappRecLetterUtil->generateRecLetterId($fellapp,$reference);
+            if( $hash ) {
+                $reference->setRecLetterHashId($hash);
+                $this->em->flush($reference);
+                //echo $fellapp->getId()." (".$reference->getId()."): added hash=".$hash."<br>";
+
+                $this->container->get('session')->getFlashBag()->add(
+                    'warning',
+                    "Reference Letter Hash ID has been generated for ".$reference->getFullName()
+                );
+            }
+        }
+        if( !$reference->getRecLetterHashId() ) {
+            $res = array(
+                "res" => false,
+                "msg" => "Error sending invitation email: Reference Letter Hash ID has not been generated for ".$reference->getFullName()
+            );
+            return $res;
+        }
+
+        $email = $reference->getEmail();
+        if( !$email ) {
+//            $this->container->get('session')->getFlashBag()->add(
+//                'warning',
+//                "Email is not specified for reference ".$reference->getFullName()
+//            );
+//            return false;
+            $res = array(
+                "res" => false,
+                "msg" => "Email is not specified for reference ".$reference->getFullName()
+            );
+            return $res;
+        }
+
+        $emailUtil = $this->container->get('user_mailer_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        if( !$fellapp ) {
+            $fellapp = $reference->getFellapp();
+        }
+
+        $fellappType = $fellapp->getFellowshipSubspecialty();
+        if( $fellappType ) {
+            $fellappTypeStr = $fellappType->getName();
+        } else {
+            $fellappTypeStr = null;
+        }
+
+        $startDate = $fellapp->getStartDate();
+        if( $startDate ) {
+            $startDateStr = $startDate->format('Y');
+        } else {
+            $startDateStr = NULL;
+        }
+
+        $geoLocation = $reference->getGeoLocation();
+
+        $referenceFullName = $reference->getFullName();
+        $applicantFullName = $fellapp->getApplicantFullName();
+        $applicant = $fellapp->getUser();
+
+        $senderEmail = $userSecUtil->getSiteSettingParameter('confirmationEmailFellApp');;
+
+        //$localInstitutionFellApp = $userSecUtil->getSiteSettingParameter('localInstitutionFellApp'); //Pathology Fellowship Programs (WCMC)
+        $localInstitutionFellApp = "Weill Cornell Medical College / New York Presbyterian Hospital";
+
+        //testing
+        //$fellapp = new FellowshipApplication();
+        //$reference = new Reference();
+        //$geoLocation = new GeoLocation();
+
+        //get upload form link with parameters
+        //http://wcmc.pathologysystems.org/fellowship-application-reference-letter-upload
+        //?
+        //Reference-Letter-ID=0000000110c8357966576df46f3b802ca897deb7ad18b12f1c24ecff6386ebd9
+        //&Applicant-First-Name=John
+        //&Applicant-Last-Name=Smith
+        //&Applicant-E-Mail=john@smith.com
+        //&Fellowship-Type=Cytopathology
+        //&Fellowship-Start-Date=07-01-2018
+        //&Fellowship-End-Date=07-01-2019
+        //&Reference-First-Name=Joe
+        //&Reference-Last-Name=Doe
+        //&Reference-Degree=Doctor
+        //&Reference-Title=Professor
+        //&Reference-Institution=McGill
+        //&Reference-Phone=123-345-6789
+        //&Reference-EMail=refemail@email.com
+        //&Reference-Street1=5th%20Avenue
+        //&Reference-Street2=App%20B
+        //&Reference-City=NYC
+        //&Reference-State=New%20York
+        //&Reference-Zip=12345
+        //&Reference-Country=USA
+        $uploadFormLink = "http://wcmc.pathologysystems.org/fellowship-application-reference-letter-upload/?";
+        $uploadFormLink = $uploadFormLink . "Reference-Letter-ID=" . $reference->getRecLetterHashId();
+        $uploadFormLink = $uploadFormLink . "&Applicant-First-Name=" . $applicant->getFirstName();
+        $uploadFormLink = $uploadFormLink . "&Applicant-Last-Name=" . $applicant->getLastName();
+        $uploadFormLink = $uploadFormLink . "&Applicant-E-Mail=" . $applicant->getSingleEmail();
+        $uploadFormLink = $uploadFormLink . "&Fellowship-Type=" . $fellapp->getFellowshipSubspecialty()->getName();
+        $uploadFormLink = $uploadFormLink . "&Fellowship-Start-Date=" . $fellapp->getStartDate()->format("m/d/Y");
+        $uploadFormLink = $uploadFormLink . "&Fellowship-End-Date=" . $fellapp->getEndDate()->format("m/d/Y");
+        $uploadFormLink = $uploadFormLink . "&Reference-First-Name=" . $reference->getFirstName();
+        $uploadFormLink = $uploadFormLink . "&Reference-Last-Name=" . $reference->getName();
+        $uploadFormLink = $uploadFormLink . "&Reference-Degree=" . $reference->getDegree();
+        $uploadFormLink = $uploadFormLink . "&Reference-Title=" . $reference->getTitle();
+        $uploadFormLink = $uploadFormLink . "&Reference-Institution=" . $reference->getInstitution()->getName();
+        $uploadFormLink = $uploadFormLink . "&Reference-Phone=" . $reference->getPhone();
+        $uploadFormLink = $uploadFormLink . "&Reference-EMail=" . $reference->getEmail();
+        if( $geoLocation ) {
+            $uploadFormLink = $uploadFormLink . "&Reference-Street1=" . $geoLocation->getStreet1();
+            $uploadFormLink = $uploadFormLink . "&Reference-Street2=" . $geoLocation->getStreet2();
+            $uploadFormLink = $uploadFormLink . "&Reference-City=" . $geoLocation->getCity();
+            $uploadFormLink = $uploadFormLink . "&Reference-State=" . $geoLocation->getState()->getName();
+            $uploadFormLink = $uploadFormLink . "&Reference-Zip=" . $geoLocation->getZip();
+            $uploadFormLink = $uploadFormLink . "&Reference-Country=" . $geoLocation->getCountry();
+        }
+
+        $uploadFormLink = '<a href="'.$uploadFormLink.'">'.$uploadFormLink.'</a>';
+
+        //ApplicantFirstName ApplicantLastName has listed you ReferenceFirstName ReferenceLastName
+        // as a reference in their FellowshipType fellowship application.
+        // Please submit your recommendation letter to Weill Cornell Medical College / New York Presbyterian Hospital.
+        $subject = $applicantFullName . " has listed you " . $referenceFullName
+            . " as a reference in their ".$fellappTypeStr." fellowship application."
+            . " Please submit your recommendation letter to $localInstitutionFellApp."
+        ;
+
+        $body =
+            "Dear $referenceFullName,"
+            . "<br><br>"
+            . "$applicantFullName has applied to the $fellappTypeStr fellowship at $localInstitutionFellApp"
+            . " for the year $startDateStr and listed you as a reference."
+            . "<br>"
+            . "We review complete applications as they are received and your timely submission of your recommendation letter will increase"
+            . " " . $applicantFullName . "'s chances of being accepted."
+            . "<br>" . "Please use the link below to submit your recommendation letter as soon as possible:"
+            . "<br><br>" . $uploadFormLink
+            . "<br><br>" . "If you have any issues with submitting your letter, please contact"
+            . " Elizabeth Hammerschmidt (our fellowship program coordinator) at eah2006@med.cornell.edu for alternative methods of submitting your recommendation letter."
+            . "<br><br>" . "If you believe you have received this email in error please let Elizabeth Hammerschmidt know."
+            . "<br><br><br>" . "Sincerely,"
+            . "<br><br>" . "Elizabeth Hammerschmidt"
+            . "<br>" . "Fellowship Program Coordinator"
+            . "<br>" . "Weill Cornell Medicine Pathology and Laboratory Medicine"
+            . "<br>" . "1300 York Avenue, Room C-302"
+            . "<br>" . "New York, NY 10065  "
+            . "<br>" . "T 212.746.7365"
+            . "<br>" . "F 212.746.8192"
+        ;
+
+        $emailUtil->sendEmail(
+            $email,
+            $subject,
+            $body,
+            NULL, //$cc
+            $senderEmail
+        );
+
+        //increment counter
+        $counter = $reference->getInvitationSentEmailCounter();
+        if( !$counter ) {
+            $counter = 0;
+        }
+        $counter = $counter + 1;
+        $reference->setInvitationSentEmailCounter($counter);
+        if( $flush ) {
+            $this->em->flush($reference);
+        }
+
+//        $this->container->get('session')->getFlashBag()->add(
+//            'notice',
+//            "Invitation email has been sent to ".$reference->getFullName()
+//        );
+
+        $msg = "Invitation email to submit a letter of recommendation has been sent to ".$reference->getFullName() . " (".$email.")";
+
+        //eventlog
+        $user = NULL;
+        if( $this->container->get('security.token_storage')->getToken() ) {
+            $user = $this->container->get('security.token_storage')->getToken()->getUser();
+        }
+        if( $user instanceof User) {
+            //User OK - do nothing
+        } else {
+            $user = $userSecUtil->findSystemUser();
+        }
+        if( !$user ) {
+            $user = $userSecUtil->findSystemUser();
+        }
+        $eventMsg = $msg . "<br><br> Subject:<br>". $subject . "<br><br>Body:<br>" . $body;
+        $userSecUtil->createUserEditEvent(
+            $this->container->getParameter('fellapp.sitename'), //$sitename
+            $eventMsg,                                          //$event message
+            $user,                                              //user
+            $fellapp,                                           //$subjectEntities
+            null,                                               //$request
+            "Reference Invitation Email"                        //$action
+        );
+
+        $res = array(
+            "res" => true,
+            "msg" => $msg
+        );
+
+        return $res;
     }
 
     public function processFellRecLetterFromGoogleDrive() {
@@ -489,7 +720,6 @@ class RecLetterUtil {
             } //if count($letters) > 0
 
             //add this letter to this reference
-
             $reference->addDocument($uploadedLetterDb);
             $this->em->flush($reference);
 
@@ -521,6 +751,6 @@ class RecLetterUtil {
         return array();
     }
 
-    
+
 
 }
