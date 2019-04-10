@@ -817,6 +817,25 @@
                                             </li>
                                         {% endif %}
 
+                                        {#invite references#}
+                                        <li>
+                                            <a
+                                                general-data-confirm="Are you sure you want to invite all remaining references to submit letters?"
+                                                general-data-callback="refreshpage"
+                                                href="{{ path('fellapp_invite_references_submit_letters', { 'id': entity.id }, true) }}">
+                                                Invite all remaining references to submit letters
+                                            </a>
+                                            {% for reference in entity.getReferences() %}
+                                                {% set referenceName = reference.getFullName() %}
+                                                <a
+                                                    general-data-confirm="Are you sure you want to invite Invite {{ referenceName }} to submit a reference letter?"
+                                                    general-data-callback="refreshpage"
+                                                    href="{{ path('fellapp_invite_reference_submit_letter', { 'id': entity.id, 'referenceid': reference.id }, true) }}">
+                                                    Invite {{ referenceName }} to submit a reference letter
+                                                </a>
+                                            {% endfor %}
+                                        </li>
+
                                         {% if entity.getRecentReport() %}
                                             {#Invite Interviewers to Rate#}
                                             {% if entity.interviews|length > 0 and entity.itinerarys|length > 0 %}

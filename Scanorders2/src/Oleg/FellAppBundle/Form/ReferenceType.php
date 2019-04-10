@@ -22,6 +22,7 @@ use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Oleg\UserdirectoryBundle\Form\DocumentType;
 use Oleg\UserdirectoryBundle\Form\GeoLocationType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -99,6 +100,11 @@ class ReferenceType extends AbstractType
         $builder->add('degree', null, array(
             'label' => 'Degree(s):',
             'attr' => array('class'=>'form-control')
+        ));
+
+        $builder->add('recLetterReceived', CheckboxType::class, array(
+            'label' => 'Recommendation Letter Received:',
+            'attr' => array('class'=>'checkbox')
         ));
 
     }

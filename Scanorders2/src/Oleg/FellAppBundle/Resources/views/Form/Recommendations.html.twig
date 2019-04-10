@@ -47,7 +47,7 @@
 
     {% if cycle != "download" %}
         {% if is_granted('ROLE_FELLAPP_ADMIN') or is_granted('ROLE_FELLAPP_COORDINATOR') %}
-            <p>Hash ID (visdible to admin): {{ reference.vars.value.recLetterHashId }}</p>
+            <p>Hash ID (visible to admin): {{ reference.vars.value.recLetterHashId }}</p>
         {% endif %}
     {% endif %}
 
@@ -136,6 +136,16 @@
     {#</p>#}
 
     {% if cycle != "download" %}
+
+        <div class="row withpaddingtop">
+            <div class="col-xs-4">
+                {#{{ form_row(reference.recLetterReceived) }}#}
+                {{ formmacros.checkbox(reference.recLetterReceived) }}
+            </div>
+            <div class="col-xs-8">
+            </div>
+        </div>
+
         <p>
         <div class="well form-element-holder user-Reference">
             <label class="col-xs-12 control-label">Reference Letters (All documents will be added to the Complete Application PDF)</label>

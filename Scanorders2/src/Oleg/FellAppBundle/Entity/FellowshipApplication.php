@@ -1419,6 +1419,13 @@ class FellowshipApplication extends BaseUserAttributes {
         return $info;
     }
 
+    public function autoSetRecLetterReceived()
+    {
+        foreach($this->getReferenceLetters() as $reference) {
+            $reference->autoSetRecLetterReceived();
+        }
+    }
+
     public function __toString() {
         return "FellowshipApplication";
     }

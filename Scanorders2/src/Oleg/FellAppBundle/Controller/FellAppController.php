@@ -993,6 +993,8 @@ class FellAppController extends Controller {
             //DO NOT update reference hash ID, once it's generated. This hash ID will be used to auto attach recommendation letter to the reference's application.
             //$fellappRecLetterUtil->generateFellappRecLetterId($entity);
 
+            $entity->autoSetRecLetterReceived();
+
             //set update author application
             $em = $this->getDoctrine()->getManager();
             $userUtil = new UserUtil();
@@ -1356,6 +1358,8 @@ class FellAppController extends Controller {
 
             //create reference hash ID
             $fellappRecLetterUtil->generateFellappRecLetterId($fellowshipApplication);
+
+            $fellowshipApplication->autoSetRecLetterReceived();
 
             //set update author application
 //            $em = $this->getDoctrine()->getManager();

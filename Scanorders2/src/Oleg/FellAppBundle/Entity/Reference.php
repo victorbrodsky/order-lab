@@ -112,6 +112,11 @@ class Reference
      */
     private $recLetterHashId;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $recLetterReceived;
+
 
     public function __construct($author=null) {
 
@@ -288,6 +293,9 @@ class Reference
         if( $item && !$this->documents->contains($item) ) {
             $this->documents->add($item);
             $item->createUseObject($this);
+
+            //set recLetterReceived true
+            $this->setRecLetterReceived(true);
         }
         return $this;
     }
@@ -348,6 +356,30 @@ class Reference
     {
         $this->recLetterHashId = $recLetterHashId;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getRecLetterReceived()
+    {
+        return $this->recLetterReceived;
+    }
+
+    /**
+     * @param mixed $recLetterReceived
+     */
+    public function setRecLetterReceived($recLetterReceived)
+    {
+        $this->recLetterReceived = $recLetterReceived;
+    }
+    
+    public function autoSetRecLetterReceived()
+    {
+        if( count($this->getDocuments()) > 0 ) {
+            $this->setRecLetterReceived(true);
+        }
+    }
+
 
     public function getFullName() {
         $nameArr = array();
