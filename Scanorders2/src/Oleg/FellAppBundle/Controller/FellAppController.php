@@ -75,7 +75,7 @@ class FellAppController extends Controller {
         //$memory_limit = ini_get('memory_limit');
         //echo "before memory_limit=$memory_limit <br>";
 
-        ini_set('memory_limit', '7168M');
+        //ini_set('memory_limit', '7168M');
 
         //testing
         //$memory_limit = ini_get('memory_limit');
@@ -463,7 +463,7 @@ class FellAppController extends Controller {
 //            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
 //        }
 
-        ini_set('memory_limit', '7168M');
+        //ini_set('memory_limit', '7168M');
 
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -951,7 +951,7 @@ class FellAppController extends Controller {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
-        ini_set('memory_limit', '7168M');
+        //ini_set('memory_limit', '7168M');
 
         ////// PRE Update INFO //////
         // Create an ArrayCollection of the current interviews
