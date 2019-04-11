@@ -1090,22 +1090,9 @@ class FellAppImportPopulateUtil {
                 $signatureDate = $this->transformDatestrToDate($this->getValueByHeaderName('signatureDate',$rowData,$headers));
                 $fellowshipApplication->setSignatureDate($signatureDate);
 
+                //TODO: check why hash is the same for all references
                 //create reference hash ID
                 $fellappRecLetterUtil->generateFellappRecLetterId($fellowshipApplication);
-
-                $environment = $userSecUtil->getSiteSettingParameter('environment');
-                if( $environment == "live" ) {
-                    $sendEmailUploadLetterFellApp = $userSecUtil->getSiteSettingParameter('sendEmailUploadLetterFellApp');
-                    if ($sendEmailUploadLetterFellApp) {
-                        //send invitation email to references to submit letters
-                        foreach ($fellowshipApplication->getReferences() as $reference) {
-                            if( count($reference->getDocuments()) == 0 ) {
-                                //send invitation email
-                                $fellappRecLetterUtil->inviteSingleReferenceToSubmitLetter($reference,$fellowshipApplication,false);
-                            }
-                        }
-                    }
-                }
 
                 //getFellowshipSubspecialty
                 if( !$fellowshipApplication->getFellowshipSubspecialty() ) { //getSignatureName() - not reliable - some applicants managed to submit the form without signature
@@ -1146,7 +1133,6 @@ class FellAppImportPopulateUtil {
                 //send confirmation email to this applicant for prod server
                 $environment = $userSecUtil->getSiteSettingParameter('environment');
                 if( $environment == "live" ) {
-
                     //send confirmation email to this applicant
                     $confirmationEmailFellApp = $userSecUtil->getSiteSettingParameter('confirmationEmailFellApp');
                     $confirmationSubjectFellApp = $userSecUtil->getSiteSettingParameter('confirmationSubjectFellApp');
@@ -1155,6 +1141,18 @@ class FellAppImportPopulateUtil {
                     if ($email && $confirmationEmailFellApp && $confirmationSubjectFellApp && $confirmationBodyFellApp) {
                         $logger->notice("Send confirmation email (fellowship application " . $fellowshipApplication->getId() . " populated in DB) to the applicant email " . $email . " from " . $confirmationEmailFellApp);
                         $emailUtil->sendEmail($email, $confirmationSubjectFellApp, $confirmationBodyFellApp, null, $confirmationEmailFellApp);
+                    }
+
+                    //send invitation email to upload recommendation letter to references
+                    $sendEmailUploadLetterFellApp = $userSecUtil->getSiteSettingParameter('sendEmailUploadLetterFellApp');
+                    if ($sendEmailUploadLetterFellApp) {
+                        //send invitation email to references to submit letters
+                        foreach ($fellowshipApplication->getReferences() as $reference) {
+                            if( count($reference->getDocuments()) == 0 ) {
+                                //send invitation email
+                                $fellappRecLetterUtil->inviteSingleReferenceToSubmitLetter($reference,$fellowshipApplication,false);
+                            }
+                        }
                     }
                 }
 
