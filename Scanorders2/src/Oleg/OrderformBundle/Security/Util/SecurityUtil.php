@@ -369,7 +369,7 @@ class SecurityUtil extends UserSecurityUtil {
 //    }
 
     public function addInstitutionalPhiScopeWCMC($user,$creator) {
-        $inst = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName('Weill Cornell Medical College');
+        $inst = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation('WCM');
         $persitesettings = $this->getUserPerSiteSettings($user);
         if( !$persitesettings ) {
             //set institution to per site settings

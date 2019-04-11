@@ -228,6 +228,13 @@ class RecLetterUtil {
         //$reference = new Reference();
         //$geoLocation = new GeoLocation();
 
+        $refInst = $reference->getInstitution();
+        if( $refInst ) {
+            $refInstStr = $refInst->getName();
+        } else {
+            $refInstStr = NULL;
+        }
+
         //get upload form link with parameters
         //http://wcmc.pathologysystems.org/fellowship-application-reference-letter-upload
         //?
@@ -263,14 +270,22 @@ class RecLetterUtil {
         $uploadFormLink = $uploadFormLink . "&Reference-Last-Name=" . $reference->getName();
         $uploadFormLink = $uploadFormLink . "&Reference-Degree=" . $reference->getDegree();
         $uploadFormLink = $uploadFormLink . "&Reference-Title=" . $reference->getTitle();
-        $uploadFormLink = $uploadFormLink . "&Reference-Institution=" . $reference->getInstitution()->getName();
+        $uploadFormLink = $uploadFormLink . "&Reference-Institution=" . $refInstStr;
         $uploadFormLink = $uploadFormLink . "&Reference-Phone=" . $reference->getPhone();
         $uploadFormLink = $uploadFormLink . "&Reference-EMail=" . $reference->getEmail();
         if( $geoLocation ) {
+
+            $state = $geoLocation->getState();
+            if( $state ) {
+                $stateStr = $state->getName();
+            } else {
+                $stateStr = NULL;
+            }
+
             $uploadFormLink = $uploadFormLink . "&Reference-Street1=" . $geoLocation->getStreet1();
             $uploadFormLink = $uploadFormLink . "&Reference-Street2=" . $geoLocation->getStreet2();
             $uploadFormLink = $uploadFormLink . "&Reference-City=" . $geoLocation->getCity();
-            $uploadFormLink = $uploadFormLink . "&Reference-State=" . $geoLocation->getState()->getName();
+            $uploadFormLink = $uploadFormLink . "&Reference-State=" . $stateStr;
             $uploadFormLink = $uploadFormLink . "&Reference-Zip=" . $geoLocation->getZip();
             $uploadFormLink = $uploadFormLink . "&Reference-Country=" . $geoLocation->getCountry();
         }

@@ -772,7 +772,7 @@ class UserServiceUtil {
             "templateIdFellApp" => "",
             "backupFileIdFellApp" => "",
             "folderIdFellApp" => "",
-            "localInstitutionFellApp" => "Pathology Fellowship Programs (WCMC)",
+            "localInstitutionFellApp" => "Pathology Fellowship Programs (WCM)",
             "deleteImportedAplicationsFellApp" => false,
             "deleteOldAplicationsFellApp" => false,
             "yearsOldAplicationsFellApp" => 2,

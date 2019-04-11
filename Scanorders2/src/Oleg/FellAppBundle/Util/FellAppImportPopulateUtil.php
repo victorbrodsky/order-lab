@@ -1099,9 +1099,9 @@ class FellAppImportPopulateUtil {
                     if ($sendEmailUploadLetterFellApp) {
                         //send invitation email to references to submit letters
                         foreach ($fellowshipApplication->getReferences() as $reference) {
-                            if (count($reference->getDocuments()) == 0) {
+                            if( count($reference->getDocuments()) == 0 ) {
                                 //send invitation email
-                                $fellappRecLetterUtil->inviteSingleReferenceToSubmitLetter($reference, $fellowshipApplication);
+                                $fellappRecLetterUtil->inviteSingleReferenceToSubmitLetter($reference,$fellowshipApplication,false);
                             }
                         }
                     }

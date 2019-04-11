@@ -632,7 +632,7 @@ class SiteParametersType extends AbstractType
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'localInstitutionFellApp' )
             $builder->add('localInstitutionFellApp',null,array(
-                'label'=>'Local Organizational Group for imported fellowship applications (Pathology Fellowship Programs (WCMC)):',
+                'label'=>'Local Organizational Group for imported fellowship applications (Pathology Fellowship Programs (WCM)):',
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
 
