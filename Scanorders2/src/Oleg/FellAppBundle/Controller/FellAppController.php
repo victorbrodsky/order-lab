@@ -508,9 +508,9 @@ class FellAppController extends Controller {
         }
 
         //testing
-        $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
-        $fellappRecLetterUtil->generateFellappRecLetterId($entity);
-        exit('testing');
+        //$fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
+        //$fellappRecLetterUtil->generateFellappRecLetterId($entity);
+        //exit('testing');
         
         //user who has the same fell type can view or edit
         //can use hasFellappPermission or isGranted("read",$entity). isGranted("read",$entity) fellapp voter contains hasFellappPermission
