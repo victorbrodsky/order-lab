@@ -1090,10 +1090,6 @@ class FellAppImportPopulateUtil {
                 $signatureDate = $this->transformDatestrToDate($this->getValueByHeaderName('signatureDate',$rowData,$headers));
                 $fellowshipApplication->setSignatureDate($signatureDate);
 
-                //TODO: check why hash is the same for all references
-                //create reference hash ID
-                $fellappRecLetterUtil->generateFellappRecLetterId($fellowshipApplication);
-
                 //getFellowshipSubspecialty
                 if( !$fellowshipApplication->getFellowshipSubspecialty() ) { //getSignatureName() - not reliable - some applicants managed to submit the form without signature
                     $event = "Error: Fellowship Type is null after populating Fellowship Applicant " . $displayName . " with Google Applicant ID=".$googleFormId."; Application ID " . $fellowshipApplication->getId();
@@ -1129,6 +1125,9 @@ class FellAppImportPopulateUtil {
                 $fellappRepGen->addFellAppReportToQueue( $fellowshipApplication->getId() );
 
                 $logger->notice($event);
+
+                //create reference hash ID. Must run after fellowship is in DB and has IDs
+                $fellappRecLetterUtil->generateFellappRecLetterId($fellowshipApplication,true);
 
                 //send confirmation email to this applicant for prod server
                 $environment = $userSecUtil->getSiteSettingParameter('environment');
