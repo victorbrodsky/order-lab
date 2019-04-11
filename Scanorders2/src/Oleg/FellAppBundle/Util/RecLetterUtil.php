@@ -117,10 +117,7 @@ class RecLetterUtil {
 
     public function inviteSingleReferenceToSubmitLetter( $reference, $fellapp=null, $flush=true ) {
 
-//        $res = array(
-//            "res" => false,
-//            "msg" => NULL
-//        );
+        $logger = $this->container->get('logger');
 
         //do not invite if letter already received
         if( count($reference->getDocuments()) > 0 ) {
@@ -150,9 +147,11 @@ class RecLetterUtil {
             }
         }
         if( !$reference->getRecLetterHashId() ) {
+            $msg = "Error sending invitation email: Reference Letter Hash ID has not been generated for ".$reference->getFullName();
+            $logger->error($msg);
             $res = array(
                 "res" => false,
-                "msg" => "Error sending invitation email: Reference Letter Hash ID has not been generated for ".$reference->getFullName()
+                "msg" => $msg
             );
             return $res;
         }
@@ -174,6 +173,11 @@ class RecLetterUtil {
         $emailUtil = $this->container->get('user_mailer_utility');
         $userSecUtil = $this->container->get('user_security_utility');
 
+        $referenceFullName = $reference->getFullName();
+
+
+        $logger->notice("Invite reference $referenceFullName to send invitation letter");
+
         if( !$fellapp ) {
             $fellapp = $reference->getFellapp();
         }
@@ -193,12 +197,11 @@ class RecLetterUtil {
         }
 
         $geoLocation = $reference->getGeoLocation();
-
-        $referenceFullName = $reference->getFullName();
         $applicantFullName = $fellapp->getApplicantFullName();
+
         $applicant = $fellapp->getUser();
 
-        $senderEmail = $userSecUtil->getSiteSettingParameter('confirmationEmailFellApp');;
+        $senderEmail = $userSecUtil->getSiteSettingParameter('confirmationEmailFellApp');
 
         //$localInstitutionFellApp = $userSecUtil->getSiteSettingParameter('localInstitutionFellApp'); //Pathology Fellowship Programs (WCMC)
         $localInstitutionFellApp = "Weill Cornell Medical College / New York Presbyterian Hospital";
@@ -390,6 +393,8 @@ class RecLetterUtil {
     public function importSheetsFromGoogleDriveFolder() {
 
         $fellappImportPopulateUtil = $this->container->get('fellapp_importpopulate_util');
+        $logger = $this->container->get('logger');
+        $logger->notice("Start importing spreadsheet with reference letter info from Google Drive");
 
         if( !$fellappImportPopulateUtil->checkIfFellappAllowed("Import from Google Drive") ) {
             //exit("can't import");
@@ -492,6 +497,8 @@ class RecLetterUtil {
 
     public function importLetterFromGoogleDriveFolder() {
         $fellappImportPopulateUtil = $this->container->get('fellapp_importpopulate_util');
+        $logger = $this->container->get('logger');
+        $logger->notice("Start importing reference letter info from Google Drive");
 
         if( !$fellappImportPopulateUtil->checkIfFellappAllowed("Import from Google Drive") ) {
             //exit("can't import");

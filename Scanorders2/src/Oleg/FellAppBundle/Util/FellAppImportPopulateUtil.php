@@ -1093,14 +1093,14 @@ class FellAppImportPopulateUtil {
                 //create reference hash ID
                 $fellappRecLetterUtil->generateFellappRecLetterId($fellowshipApplication);
 
-                //send invitation email to references to submit letters
-                foreach($fellowshipApplication->getReferences() as $reference) {
-                    if( count($reference->getDocuments()) == 0 ) {
-                        //send invitation email
-                        $resInviteRefEmail = $fellappRecLetterUtil->inviteSingleReferenceToSubmitLetter($reference,$fellowshipApplication);
-//                        if( $resInviteRefEmail['res'] == true ) {
-//                            $em->flush($reference);
-//                        }
+                $sendEmailUploadLetterFellApp = $userSecUtil->getSiteSettingParameter('sendEmailUploadLetterFellApp');
+                if( $sendEmailUploadLetterFellApp ) {
+                    //send invitation email to references to submit letters
+                    foreach ($fellowshipApplication->getReferences() as $reference) {
+                        if (count($reference->getDocuments()) == 0) {
+                            //send invitation email
+                            $fellappRecLetterUtil->inviteSingleReferenceToSubmitLetter($reference, $fellowshipApplication);
+                        }
                     }
                 }
 
