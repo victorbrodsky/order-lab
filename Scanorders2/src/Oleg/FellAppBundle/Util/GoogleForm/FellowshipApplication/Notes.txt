@@ -27,9 +27,9 @@ https://script.google.com
 
 New Year Submission
 1) Create new folder  for previous year "2018" in "FellowshipApplication/Backup"
-2) Move folders conatining the previos year applications "Responses/FellowshipApplicationUploads" and "Responses/Spreadsheets" to "FellowshipApplication/Backup/2018"
-3) Rename copied folder with previos year postfix "FellowshipApplicationUploads_2018" and "Spreadsheets_2018" to avoid name conflicts
-4) Create a new folder "Spreadsheets" and "FellowshipApplicationUploads" under "Responses" 
+2) Move folders containing the previous year applications "Responses/FellowshipApplicantUploads" and "Responses/Spreadsheets" to "FellowshipApplication/Backup/2018"
+3) Rename copied folder with previos year postfix "FellowshipApplicantUploads_2018" and "Spreadsheets_2018" to avoid name conflicts
+4) Create a new folder "Spreadsheets" and "FellowshipApplicantUploads" under "Responses"
 5) In the site settings update "Application Google Drive Folder ID" by newly created "Spreadsheets" folder from step 4
 6) Update _destinationFolder in Code.gs by the "Spreadsheets" folder ID from step 4
 

@@ -117,7 +117,27 @@ class RecLetterUtil {
 
     public function inviteSingleReferenceToSubmitLetter( $reference, $fellapp=null, $flush=true ) {
 
+        $emailUtil = $this->container->get('user_mailer_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         $logger = $this->container->get('logger');
+
+        $environment = $userSecUtil->getSiteSettingParameter('environment');
+        if( $environment != "live" ) {
+            $res = array(
+                "res" => false,
+                "msg" => "Server is not live: invitation email will not be send to reference ".$reference->getFullName()
+            );
+            return $res;
+        }
+
+        $sendEmailUploadLetterFellApp = $userSecUtil->getSiteSettingParameter('sendEmailUploadLetterFellApp');
+        if( !$sendEmailUploadLetterFellApp ) {
+            $res = array(
+                "res" => false,
+                "msg" => "Automatically send invitation emails to upload recommendation letters is set to NO: invitation email will not be send to reference ".$reference->getFullName()
+            );
+            return $res;
+        }
 
         //do not invite if letter already received
         if( count($reference->getDocuments()) > 0 ) {
@@ -169,9 +189,6 @@ class RecLetterUtil {
             );
             return $res;
         }
-
-        $emailUtil = $this->container->get('user_mailer_utility');
-        $userSecUtil = $this->container->get('user_security_utility');
 
         $referenceFullName = $reference->getFullName();
 
