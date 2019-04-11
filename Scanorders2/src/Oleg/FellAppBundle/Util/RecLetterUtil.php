@@ -28,11 +28,13 @@ class RecLetterUtil {
     //Generate hash ID only once when application is created.
     //This hash ID will be used to auto attach recommendation letter to the reference's application.
     public function generateFellappRecLetterId( $fellapp ) {
+        $logger = $this->container->get('logger');
         foreach($fellapp->getReferences() as $reference) {
             $hash = $this->generateRecLetterId($fellapp,$reference);
             if( $hash ) {
                 $reference->setRecLetterHashId($hash);
-                echo $fellapp->getId()." (".$reference->getId()."): added hash=".$hash."<br>";
+                //echo $fellapp->getId()." (".$reference->getId()."): added hash=".$hash."<br>";
+                $logger->notice($fellapp->getId()." (".$reference->getId()."): added hash=".$hash);
             }
             $hash = NULL;
         }
