@@ -28,14 +28,13 @@ class RecLetterUtil {
     //Generate hash ID only once when application is created.
     //This hash ID will be used to auto attach recommendation letter to the reference's application.
     public function generateFellappRecLetterId( $fellapp ) {
-        $references = $fellapp->getReferences($fellapp);
-
-        foreach($references as $reference) {
+        foreach($fellapp->getReferences() as $reference) {
             $hash = $this->generateRecLetterId($fellapp,$reference);
             if( $hash ) {
                 $reference->setRecLetterHashId($hash);
-                //echo $fellapp->getId()." (".$reference->getId()."): added hash=".$hash."<br>";
+                echo $fellapp->getId()." (".$reference->getId()."): added hash=".$hash."<br>";
             }
+            $hash = NULL;
         }
     }
 
@@ -152,18 +151,20 @@ class RecLetterUtil {
             return $res;
         }
 
-        if( !$reference->getRecLetterHashId() ) {
-            $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
-            $hash = $fellappRecLetterUtil->generateRecLetterId($fellapp,$reference);
-            if( $hash ) {
-                $reference->setRecLetterHashId($hash);
-                $this->em->flush($reference);
-                //echo $fellapp->getId()." (".$reference->getId()."): added hash=".$hash."<br>";
-
-                $this->container->get('session')->getFlashBag()->add(
-                    'warning',
-                    "Reference Letter Hash ID has been generated for ".$reference->getFullName()
-                );
+        if(0) { //don't generate hash ID here. It must be pre-generated before.
+            if (!$reference->getRecLetterHashId()) {
+                $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
+                $hash = $fellappRecLetterUtil->generateRecLetterId($fellapp, $reference);
+                if ($hash) {
+                    $reference->setRecLetterHashId($hash);
+                    $this->em->flush($reference);
+                    //echo $fellapp->getId()." (".$reference->getId()."): added hash=".$hash."<br>";
+                    $this->container->get('session')->getFlashBag()->add(
+                        'warning',
+                        "Reference Letter Hash ID has been generated for " . $reference->getFullName()
+                    );
+                }
+                $hash = NULL;
             }
         }
         if( !$reference->getRecLetterHashId() ) {
