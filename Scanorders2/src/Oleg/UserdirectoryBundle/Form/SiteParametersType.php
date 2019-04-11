@@ -546,10 +546,17 @@ class SiteParametersType extends AbstractType
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'allowPopulateFellApp' )
             $builder->add('allowPopulateFellApp',null,array(
-                'label'=>'Periodically import fellowship applications submitted via the Google form:',
+                'label'=>'Automatically send invitation emails to upload recommendation letters:',
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
-        
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'sendEmailUploadLetterFellApp' ) {
+            $builder->add('sendEmailUploadLetterFellApp', null, array(
+                'label' => 'Periodically import fellowship applications submitted via the Google form:',
+                'attr' => array('class' => 'form-control form-control-modif', 'style' => 'margin:0')
+            ));
+        }
+
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'confirmationSubjectFellApp' )
             $builder->add('confirmationSubjectFellApp',null,array(
                 'label'=>'Email subject for confirmation of application submission:',

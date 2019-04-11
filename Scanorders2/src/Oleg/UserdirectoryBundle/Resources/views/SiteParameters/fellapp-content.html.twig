@@ -77,6 +77,20 @@
                     </tr>
 
                     <tr>
+                        <td class="rowlink-skip">
+                            Automatically send invitation emails to upload recommendation letters
+                        </td>
+                        <td class="rowlink-skip">
+                            {% set sendEmailUploadLetterFellAppStr = 'No' %}
+                            {% if entity.sendEmailUploadLetterFellApp == true %}
+                                {% set sendEmailUploadLetterFellAppStr = 'Yes' %}
+                            {% endif %}
+                            {{ sendEmailUploadLetterFellAppStr }}
+                        </td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'sendEmailUploadLetterFellApp'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
                         <td>Email address for confirmation of application submission</td>
                         <td>{{ entity.confirmationEmailFellApp }}</td>
                         <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'confirmationEmailFellApp'}) }}">Edit</a></td>

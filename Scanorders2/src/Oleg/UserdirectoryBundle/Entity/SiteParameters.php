@@ -465,6 +465,13 @@ class SiteParameters {
     private $allowPopulateFellApp;
 
     /**
+     * Automatically send invitation emails to upload recommendation letters
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $sendEmailUploadLetterFellApp;
+
+    /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $confirmationSubjectFellApp;
@@ -2459,6 +2466,23 @@ class SiteParameters {
     {
         return $this->allowPopulateFellApp;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getSendEmailUploadLetterFellApp()
+    {
+        return $this->sendEmailUploadLetterFellApp;
+    }
+
+    /**
+     * @param mixed $sendEmailUploadLetterFellApp
+     */
+    public function setSendEmailUploadLetterFellApp($sendEmailUploadLetterFellApp)
+    {
+        $this->sendEmailUploadLetterFellApp = $sendEmailUploadLetterFellApp;
+    }
+
 
     public function getConfirmationSubjectFellApp() {
         return $this->confirmationSubjectFellApp;
