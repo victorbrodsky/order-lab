@@ -68,12 +68,20 @@ class ReferenceType extends AbstractType
             'required' => false
         ));
 
-        $builder->add('institution', CustomSelectorType::class, array(
-            'label' => 'Institution:',
-            'attr' => array('class' => 'ajax-combobox-traininginstitution', 'type' => 'hidden'),
-            'required' => false,
-            'classtype' => 'traininginstitution'
-        ));
+        if( $this->params['cycle'] != "download" && $this->params['cycle'] != "show" ) {
+            $builder->add('institution', CustomSelectorType::class, array(
+                'label' => 'Institution:',
+                'attr' => array('class' => 'ajax-combobox-traininginstitution', 'type' => 'hidden'),
+                'required' => false,
+                'classtype' => 'traininginstitution'
+            ));
+        } else {
+            $builder->add('institution', null, array(
+                'label' => 'Institution:',
+                'attr' => array('class' => 'combobox'),
+                'required' => false
+            ));
+        }
 
 
         //Reference Letters
