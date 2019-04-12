@@ -60,8 +60,8 @@ class FellAppGeoLocationType extends AbstractType
             'attr' => array('class'=>'form-control geo-field-street2')
         ));
 
-        if( $this->params['cycle'] != "download" ) {
-            
+        if( $this->params['cycle'] != "download" && $this->params['cycle'] != "show" ) {
+
             $builder->add('city', CustomSelectorType::class, array(
                 'label' => 'City:',
                 'required' => false,

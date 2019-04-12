@@ -63,7 +63,7 @@ class FellAppTrainingType extends AbstractType
             'attr' => array('class' => 'datepicker form-control'),
         ));
 
-        if( $this->params['cycle'] != "download" ) {
+        if( $this->params['cycle'] != "download" && $this->params['cycle'] != "show" ) {
 
             $builder->add('degree', null, array(
                 'label' => 'Degree:',
