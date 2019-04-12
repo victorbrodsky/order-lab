@@ -207,6 +207,14 @@
                 <div class="row withpaddingtop">
                     <div class="col-xs-6">
                         {{ form_row(training.jobTitle,{'label':'Job or Experience Title:'}) }}
+                        {#{% if cycle == "download" and training.jobTitle.vars.value %}#}
+                            {#<label>Job or Experience Title:</label>#}
+                            {#<div contentEditable="true" style="display:inline-block; border: solid 1px lightgray;" disabled="disabled">#}
+                                {#{{ training.jobTitle.vars.value }}#}
+                            {#</div>#}
+                        {#{% else %}#}
+                            {#{{ form_row(training.jobTitle,{'label':'Job or Experience Title:'}) }}#}
+                        {#{% endif %}#}
                     </div>
                     <div class="col-xs-6">
                         {% if cycle == "download" and training.description.vars.value %}

@@ -21,6 +21,7 @@ namespace Oleg\FellAppBundle\Form;
 use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Oleg\FellAppBundle\Form\FellAppGeoLocationType;
 use Oleg\UserdirectoryBundle\Form\GeoLocationType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -106,7 +107,10 @@ class FellAppTrainingType extends AbstractType
 
             $builder->add('majors', null, array(
                 'label' => 'Major:',
-                'attr' => array('class' => 'form-control'),
+                //'attr' => array('class' => 'form-control'),
+                'required' => false,
+                'multiple' => true,
+                'attr' => array('class' => 'combobox'),
             ));
 
             $builder->add('institution', null, array(
@@ -121,10 +125,36 @@ class FellAppTrainingType extends AbstractType
             ));
 
             //jobTitle
-            $builder->add('jobTitle', null, array(
+//            $builder->add('jobTitle', null, array(
+//                'label' => 'Job or Experience Title:',
+//                'required' => false,
+//                'attr' => array('class' => 'form-control'),
+//            ));
+            //jobTitle
+            $builder->add('jobTitle', CustomSelectorType::class, array(
                 'label' => 'Job or Experience Title:',
-                'attr' => array('class' => 'form-control'),
+                'attr' => array('class' => 'ajax-combobox-jobtitle', 'type' => 'hidden'),
+                'required' => false,
+                'classtype' => 'jobTitle'
             ));
+
+//            $builder->add( 'jobTitle', EntityType::class, array(
+//                'class' => 'OlegUserdirectoryBundle:JobTitleList',
+//                'label'=> "Job or Experience Title:",
+//                'required'=> false,
+//                //'multiple' => true,
+//                'attr' => array('class'=>'combobox combobox-width'),
+//                'query_builder' => function(EntityRepository $er) {
+//                    return $er->createQueryBuilder('list')
+//                        ->where("list.type = :typedef OR list.type = :typeadd")
+//                        ->orderBy("list.orderinlist","ASC")
+//                        ->setParameters( array(
+//                            'typedef' => 'default',
+//                            'typeadd' => 'user-added',
+//                        ));
+//                },
+//            ));
+
         }
 
         $builder->add( 'description', TextareaType::class, array(
