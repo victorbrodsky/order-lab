@@ -461,7 +461,7 @@ class ReportGenerator {
         $applicationFilePath = $outdir . "application_ID" . $id . ".pdf";
         //$logger->notice("applicationFilePath=".$applicationFilePath);
         $this->generateApplicationPdf($id,$applicationFilePath);
-        //$logger->notice("Successfully Generated Application PDF from HTML for ID=".$id."; file=".$applicationFilePath);
+        $logger->notice("Successfully Generated Application PDF from HTML for ID=".$id."; file=".$applicationFilePath);
 
         //1) get all upload documents
         $filePathsArr = array();
@@ -548,6 +548,8 @@ class ReportGenerator {
             }
         }
 
+        $logger->notice("Added all documents to array for processing. filePathsArr count=".count($filePathsArr));
+
         //Send a single warning email to admin
         if( count($fileErrors) > 0 ) {
             //fellapp admin
@@ -579,7 +581,7 @@ class ReportGenerator {
 
         //2) convert all uploads to pdf using LibreOffice
         $fileNamesArr = $this->convertToPdf( $filePathsArr, $outdir, $entity );
-        //$logger->notice("Successfully converted all uploads to PDF for ID=".$id."; files count=".count($fileNamesArr));
+        $logger->notice("Successfully converted all uploads to PDF for ID=".$id."; files count=".count($fileNamesArr));
 
         //3) merge all pdfs
         //$uniqueid = $filename;  //"report_ID" . $id;
@@ -587,7 +589,7 @@ class ReportGenerator {
         //$filenameMerged = $reportPath . '/' . $fileFullReportUniqueName;
         $filenameMerged = $reportPath . DIRECTORY_SEPARATOR . $fileFullReportUniqueName;
         $this->mergePDFs($fileNamesArr,$filenameMerged,$entity);
-        //$logger->notice("Successfully generated Application report pdf ok; path=" . $filenameMerged );
+        $logger->notice("mergePDFs: Successfully generated Application report pdf ok; path=" . $filenameMerged );
 
         if( count($entity->getReports()) > 0 ) {
             $createFlag = false;
@@ -602,6 +604,7 @@ class ReportGenerator {
         } else {
             $documentPdfId = null;
         }
+        $logger->notice("createFellAppReportDB result: documentPdf=" . $documentPdf );
 
         //keep application form pdf for "Application PDF without attached documents"
         $fileUniqueName = $this->constructUniqueFileName($entity,"Fellowship-Application-Without-Attachments");
@@ -1042,7 +1045,7 @@ class ReportGenerator {
         //echo "filenameMerged=".$filenameMerged."<br>";
 
         if( $userServiceUtil->isWinOs() ) {
-            //$logger->notice('pdftk Windows');
+            $logger->notice('pdftk Windows');
             //C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder\pdftk.exe
             //$pdftkLocation = '"C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder\pdftk" ';
             $userUtil = new UserUtil();
@@ -1079,6 +1082,12 @@ class ReportGenerator {
             }
         }
 
+        if( file_exists($pdftkPathFellApp) ) {
+            $logger->notice("pdftk folder found in location: ".$pdftkPathFellApp);
+        } else {
+            $logger->error("pdftk folder not found in location: ".$pdftkPathFellApp);
+        }
+
         //$pdftkLocation = '"' . $pdftkPathFellApp . '\\' . $pdftkFilenameFellApp . '"';
         $pdftkLocation = '"' . $pdftkPathFellApp . DIRECTORY_SEPARATOR . $pdftkFilenameFellApp . '"';
 
@@ -1097,6 +1106,7 @@ class ReportGenerator {
 
         $cmd = $pdftkLocation . ' ' . $pdftkArgumentsFellApp;
 
+        $logger->notice("pdftk cmd: " . $cmd);
         //echo "cmd=".$cmd."<br>";
 
         $output = null;
@@ -1183,9 +1193,11 @@ class ReportGenerator {
 
 //        if( file_exists($filenameMerged) ) {
 //            echo "filenameMerged exists \n<br>";
+//            $logger->error("pdftk merge ok: filenameMerged exist=".$filenameMerged);
 //        } else {
 //            echo "filenameMerged does not exist\n<br>";
 //            //exit('my error');
+//            $logger->error("pdftk merge error: filenameMerged does not exist");
 //        }
 
     }
