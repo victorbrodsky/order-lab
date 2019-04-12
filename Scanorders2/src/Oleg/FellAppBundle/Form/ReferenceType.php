@@ -20,6 +20,7 @@ namespace Oleg\FellAppBundle\Form;
 use Oleg\UserdirectoryBundle\Entity\Identifier;
 use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Oleg\UserdirectoryBundle\Form\DocumentType;
+use Oleg\FellAppBundle\Form\FellAppGeoLocationType;
 use Oleg\UserdirectoryBundle\Form\GeoLocationType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -60,7 +61,7 @@ class ReferenceType extends AbstractType
             'attr' => array('class'=>'form-control')
         ));
 
-        $builder->add('geoLocation', GeoLocationType::class, array(
+        $builder->add('geoLocation', FellAppGeoLocationType::class, array(
             'form_custom_value' => $this->params,
             'data_class' => 'Oleg\UserdirectoryBundle\Entity\GeoLocation',
             'label' => false,

@@ -296,7 +296,7 @@ knp_snappy:
         enabled:    true
         binary:     '%wkhtmltopdfpath%' #/usr/bin/xvfb-run /usr/bin/wkhtmltopdf #'%wkhtmltopdfpath%'   #"\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\""
         options:
-            javascript-delay: 9000    #Wait some milliseconds for javascript finish (default 200)
+            javascript-delay: 18000    #Wait some milliseconds for javascript finish (default 200)
             load-error-handling: ignore
             #load-media-error-handling: ignore
 #            enable-forms: true       #Turn HTML form fields into pdf form fields

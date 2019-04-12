@@ -20,6 +20,7 @@ namespace Oleg\FellAppBundle\Form;
 
 
 use Oleg\UserdirectoryBundle\Entity\User;
+use Oleg\FellAppBundle\Form\FellAppGeoLocationType;
 use Oleg\UserdirectoryBundle\Form\GeoLocationType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -63,7 +64,7 @@ class FellAppLocationType extends AbstractType
 
 
         //GeoLocationType($this->params)
-        $builder->add('geoLocation', GeoLocationType::class, array(
+        $builder->add('geoLocation', FellAppGeoLocationType::class, array(
             'form_custom_value' => $this->params,
             'data_class' => 'Oleg\UserdirectoryBundle\Entity\GeoLocation',
             'label' => false,
