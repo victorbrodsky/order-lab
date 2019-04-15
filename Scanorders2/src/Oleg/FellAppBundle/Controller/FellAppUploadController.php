@@ -78,7 +78,7 @@ class FellAppUploadController extends UploadController {
      * @Route("/file-view/{id}/{viewType}/{eventtype}", name="fellapp_file_view", requirements={"id" = "\d+"})
      * @Method("GET")
      */
-    public function viewFileAction(Request $request,$id,$eventtype=null, $viewType=null) {
+    public function viewFileAction(Request $request,$id,$eventtype=null,$viewType=null) {
 
         if( false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_USER') ){
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );

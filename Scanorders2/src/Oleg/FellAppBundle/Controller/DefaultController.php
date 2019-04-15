@@ -89,6 +89,12 @@ class DefaultController extends Controller
      * @Route("/generate-rec-letter-id", name="fellapp_rec_letter_id")
      */
     public function generateRecLetterIdAction( Request $request ) {
+
+        //testing checkAndSendCompleteEmail
+        //$fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
+        //$fellapp = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find(8);
+        //$fellappRecLetterUtil->checkAndSendCompleteEmail($fellapp);
+
         exit("not allowed. one time run method.");
 
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {

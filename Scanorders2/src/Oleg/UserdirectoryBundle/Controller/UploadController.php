@@ -306,7 +306,7 @@ class UploadController extends Controller {
 
             $downloader = new LargeFileDownloader();
             ////$filepath, $filename=null, $size=null, $retbytes=true, $action="download", $viewType=null
-            $viewType = null; //viewType allow to resize file, but it does not work properly, so disable it by setting to null
+            //$viewType = null; //viewType allow to resize file, but it does not work properly, so disable it by setting to null
             $downloader->downloadLargeFile($abspath, $originalname, $size, true, "view", $viewType);
 
             exit;

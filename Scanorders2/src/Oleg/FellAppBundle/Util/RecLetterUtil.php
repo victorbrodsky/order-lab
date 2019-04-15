@@ -771,7 +771,95 @@ class RecLetterUtil {
 
             //add this letter to this reference
             $reference->addDocument($uploadedLetterDb);
+
             $this->em->flush($reference);
+
+//            //16- Add a check to the letter import mechanism at the end:
+//            // if the application now has all 3 of 3 letters uploaded as a
+//            // result of the import that just occurred, set the status of the application
+//            // to "Complete" and send an email to both the corresponding
+//            // (FellowshipType) Program Coordinator(s) and Program Director(s) saying
+//            $allHasLetter = true;
+//            $refCounter = 0;
+//            $reviewLetterLinkArr = array();
+//            foreach( $fellapp->getReferences() as $thisReference ) {
+//                $existingLetters = $thisReference->getDocuments();
+//                if( count($existingLetters) > 0 ) {
+//                    $refCounter++;
+//                    //YLINKtoLETTER1.
+//                    $existingLetter = $existingLetters[0];
+//                    $letterLink = $this->container->get('router')->generate(
+//                        'fellapp_file_download',
+//                        array('id' => $existingLetter->getId()),
+//                        UrlGeneratorInterface::ABSOLUTE_URL
+//                    );
+//                    $letterLink = '<a href="'.$letterLink.'">'.$letterLink.'</a>';
+//                    $reviewLetterLinkArr[] = $letterLink;
+//                } else {
+//                    $allHasLetter = false;
+//                }
+//            }
+//
+//            ///////// send an email to both the corresponding (FellowshipType) Program Coordinator(s) and Program Director(s) ///////////
+//            if( $allHasLetter ) {
+//
+//                //if status is not "Complete"
+//                $originalStatus = $fellapp->getAppStatus();
+//                $originalStatusStr = NULL;
+//                if( $originalStatus ) {
+//                    $originalStatusStr = $originalStatus->getAction();
+//                }
+//                if( $originalStatusStr && $originalStatusStr != "Complete" ) {
+//                    $statusStr = 'The application status has been changed from "'.$originalStatusStr.'" to "Complete".';
+//                } else {
+//                    $statusStr = 'The application status has been changed to "Complete".';
+//                }
+//
+//                //set Status to "Complete"
+//                if( $originalStatusStr != "Complete" ) {
+//                    $completeStatus = $this->em->getRepository('OlegFellAppBundle:FellAppStatus')->findOneByName("complete");
+//                    if (!$completeStatus) {
+//                        throw new EntityNotFoundException('Unable to find FellAppStatus by name=' . "complete");
+//                    }
+//                    $fellapp->setAppStatus($completeStatus);
+//                    $this->em->flush($fellapp);
+//                }
+//
+//                //Subject: ApplicantFirstName ApplicantLastName's FellowshipType FellowshipYear fellowship application is now complete!
+//                $subject = $applicantName . "'s " . $fellapp->getFellowshipSubspecialty() . " " . $startDateStr . " fellowship application is now complete!";
+//
+//                //Body: We have received all X reference letters in support of
+//                // ApplicantFirstName ApplicantLastName's FellowshipType FellowshipYear fellowship application.
+//                // The application status has been changed from "OLDSTATUS" to "Complete".
+//                // You can review the recommendation letters here:
+//                // LINKtoLETTER 1, LINKtoLETTER 2, LINKtoLETTER 3.
+//                // You can review the entire application here: LINKtoAPPLICATION.
+//
+//                $fellappLink = $this->container->get('router')->generate(
+//                    'fellapp_show',
+//                    array('id' => $fellapp->getId()),
+//                    UrlGeneratorInterface::ABSOLUTE_URL
+//                );
+//                $fellappLink = '<a href="'.$fellappLink.'">'.$fellappLink.'</a>';
+//
+//                $body = "We have received all $refCounter reference letters in support of " . $applicantName . "'s "
+//                    . $fellapp->getFellowshipSubspecialty() . " " . $startDateStr . " fellowship application."
+//                    . "<br>".$statusStr
+//                    . "<br><br>"."You can review the recommendation letters here:"
+//                    . "<br>".implode("<br>",$reviewLetterLinkArr)
+//                    . "<br><br>"."You can review the entire application here:"
+//                    . "<br>".$fellappLink
+//                ;
+//
+//                $fellappUtil = $this->container->get('fellapp_util');
+//                $ccs = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'),"Administrator");
+//                $coordinatorEmails = $fellappUtil->getCoordinatorsOfFellAppEmails();
+//                $directorEmails = $fellappUtil->getCoordinatorsOfFellAppEmails();
+//                $coordinatorDirectorEmails = array_unique (array_merge ($coordinatorEmails, $directorEmails));
+//                $emailUtil->sendEmail($coordinatorDirectorEmails,$subject,$body,$ccs);
+//            }
+//            ///////// EOF send an email to both the corresponding (FellowshipType) Program Coordinator(s) and Program Director(s) ///////////
+            $this->checkAndSendCompleteEmail($fellapp);
 
             //TODO: update application PDF:
             $fellappRepGen = $this->container->get('fellapp_reportgenerator');
@@ -801,6 +889,117 @@ class RecLetterUtil {
         return array();
     }
 
+    public function checkAndSendCompleteEmail($fellapp) {
+        $userSecUtil = $this->container->get('user_security_utility');
+        $emailUtil = $this->container->get('user_mailer_utility');
 
+        $applicant = $fellapp->getUser();
+        $applicantName = "Unknown Applicant";
+        if( $applicant ) {
+            $applicantName = $applicant->getUsernameOptimal();
+        } else {
+            return false;
+        }
+
+        $startDate = $fellapp->getStartDate();
+        $startDateStr = null;
+        if( $startDate ) {
+            $startDateStr = $startDate->format('m/d/Y');
+        } else {
+            return false;
+        }
+
+        //16- Add a check to the letter import mechanism at the end:
+        // if the application now has all 3 of 3 letters uploaded as a
+        // result of the import that just occurred, set the status of the application
+        // to "Complete" and send an email to both the corresponding
+        // (FellowshipType) Program Coordinator(s) and Program Director(s) saying
+        $allHasLetter = true;
+        $refCounter = 0;
+        $reviewLetterLinkArr = array();
+        foreach( $fellapp->getReferences() as $thisReference ) {
+            $existingLetters = $thisReference->getDocuments();
+            if( count($existingLetters) > 0 ) {
+                $refCounter++;
+                //YLINKtoLETTER1.
+                $existingLetter = $existingLetters->last(); //$existingLetters[0];
+                $letterLink = $this->container->get('router')->generate(
+                    'fellapp_file_download',
+                    array('id' => $existingLetter->getId()),
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+                $letterLink = '<a href="'.$letterLink.'">'.$letterLink.'</a>';
+                $reviewLetterLinkArr[] = $letterLink;
+            } else {
+                $allHasLetter = false;
+            }
+        }
+
+        ///////// send an email to both the corresponding (FellowshipType) Program Coordinator(s) and Program Director(s) ///////////
+        if( $allHasLetter ) {
+
+            //if status is not "Complete"
+            $originalStatus = $fellapp->getAppStatus();
+            $originalStatusStr = NULL;
+            if( $originalStatus ) {
+                $originalStatusStr = $originalStatus->getAction();
+            }
+            if( $originalStatusStr && $originalStatusStr != "Complete" ) {
+                $statusStr = 'The application status has been changed from "'.$originalStatusStr.'" to "Complete".';
+            } else {
+                $statusStr = 'The application status has been changed to "Complete".';
+            }
+
+            //set Status to "Complete"
+            if( $originalStatusStr != "Complete" ) {
+                $completeStatus = $this->em->getRepository('OlegFellAppBundle:FellAppStatus')->findOneByName("complete");
+                if (!$completeStatus) {
+                    throw new EntityNotFoundException('Unable to find FellAppStatus by name=' . "complete");
+                }
+                $fellapp->setAppStatus($completeStatus);
+                $this->em->flush($fellapp);
+            }
+
+            //Subject: ApplicantFirstName ApplicantLastName's FellowshipType FellowshipYear fellowship application is now complete!
+            $subject = $applicantName . "'s " . $fellapp->getFellowshipSubspecialty() . " " . $startDateStr . " fellowship application is now complete!";
+
+            //Body: We have received all X reference letters in support of
+            // ApplicantFirstName ApplicantLastName's FellowshipType FellowshipYear fellowship application.
+            // The application status has been changed from "OLDSTATUS" to "Complete".
+            // You can review the recommendation letters here:
+            // LINKtoLETTER 1, LINKtoLETTER 2, LINKtoLETTER 3.
+            // You can review the entire application here: LINKtoAPPLICATION.
+
+            $fellappLink = $this->container->get('router')->generate(
+                'fellapp_show',
+                array('id' => $fellapp->getId()),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $fellappLink = '<a href="'.$fellappLink.'">'.$fellappLink.'</a>';
+
+            $body = "We have received all $refCounter reference letters in support of " . $applicantName . "'s "
+                . $fellapp->getFellowshipSubspecialty() . " " . $startDateStr . " fellowship application."
+                . "<br>".$statusStr
+                . "<br><br>"."You can review the recommendation letters here:"
+                . "<br>".implode("<br>",$reviewLetterLinkArr)
+                . "<br><br>"."You can review the entire application here:"
+                . "<br>".$fellappLink
+            ;
+
+            echo "send email: <br>subject=".$subject."<br><br>body=".$body."<br>";
+
+            $fellappUtil = $this->container->get('fellapp_util');
+            $ccs = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'),"Administrator");
+            $coordinatorEmails = $fellappUtil->getCoordinatorsOfFellAppEmails($fellapp);
+            $directorEmails = $fellappUtil->getCoordinatorsOfFellAppEmails($fellapp);
+            $coordinatorDirectorEmails = array_unique (array_merge ($coordinatorEmails, $directorEmails));
+            $emailUtil->sendEmail($coordinatorDirectorEmails,$subject,$body,$ccs);
+        } else {
+            echo "No allHasLetter. refCounter=$refCounter <br>";
+        }
+        ///////// EOF send an email to both the corresponding (FellowshipType) Program Coordinator(s) and Program Director(s) ///////////
+
+        return true;
+    }
 
 }
