@@ -130,6 +130,7 @@ class LargeFileDownloader {
             } else {
                 $resize = null;
             }
+            $resize = null; //disable resize for now
 
             if( !$resize ) {
                 echo $this->getFileContent($filenameClean);
