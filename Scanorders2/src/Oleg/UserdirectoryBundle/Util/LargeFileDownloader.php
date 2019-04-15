@@ -124,13 +124,15 @@ class LargeFileDownloader {
         if( $viewType == 'snapshot' ) {
             //TODO: fix image resize
 
-            if(1) {
+            if(0) {
                 echo $this->getFileContent($filenameClean);
             } else {
                 //exit('111');
+                $width = 70;
+                $height = 70;
                 //$resizedImg = $this->Img_Resize($filenameClean,2);
-                //$resizedImg = $this->resizeImage($filenameClean, 10, 10);
-                $resizedImg = $this->croppedThumbnail($filenameClean, 10, 10);
+                $resizedImg = $this->resizeImage($filenameClean, $width, $height);
+                //$resizedImg = $this->croppedThumbnail($filenameClean, $width, $height);
                 //$resizedImg = $filenameClean; //testing
                 //echo file_get_contents($resizedImg);
                 //readfile($resizedImg);
@@ -285,8 +287,8 @@ class LargeFileDownloader {
      * @param integer $max_height
      * @return image
      */
-    function resizeImage($filename, $max_width, $max_height)
-    {
+    function resizeImage($filename, $max_width, $max_height) {
+        // Get new dimensions
         list($orig_width, $orig_height) = getimagesize($filename);
 
         $width = $orig_width;
@@ -304,6 +306,7 @@ class LargeFileDownloader {
             $width = $max_width;
         }
 
+        // Resample
         $image_p = imagecreatetruecolor($width, $height);
 
         $image = imagecreatefromjpeg($filename);
@@ -311,7 +314,8 @@ class LargeFileDownloader {
         imagecopyresampled($image_p, $image, 0, 0, 0, 0,
             $width, $height, $orig_width, $orig_height);
 
-        return $image_p;
+        // Output
+        return imagejpeg($image_p, null, 100);
     }
     function croppedThumbnail($imgSrc,$thumbnail_width,$thumbnail_height) { //$imgSrc is a FILE - Returns an image resource.
         //getting the image dimensions
@@ -338,7 +342,9 @@ class LargeFileDownloader {
 
         imagedestroy($process);
         imagedestroy($myImage);
-        return $thumb;
+        //return $thumb;
+
+        return imagejpeg($thumb, null, 100);
     }
 
 
