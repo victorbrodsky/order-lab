@@ -1363,7 +1363,8 @@ class ReportGenerator {
 
     protected static function deleteDir($dirPath) {
         if (! is_dir($dirPath)) {
-            throw new \InvalidArgumentException("$dirPath must be a directory");
+            //throw new \InvalidArgumentException("$dirPath must be a directory");
+            return false;
         }
         //if (substr($dirPath, strlen($dirPath) - 1, 1) != '/') {
         //    $dirPath .= '/';

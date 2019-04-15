@@ -28,18 +28,18 @@ class RecLetterUtil {
     //Generate hash ID only once when application is created.
     //This hash ID will be used to auto attach recommendation letter to the reference's application.
     public function generateFellappRecLetterId( $fellapp, $flush=false ) {
-        //$logger = $this->container->get('logger');
+        $logger = $this->container->get('logger');
         foreach($fellapp->getReferences() as $reference) {
             $hash = $this->generateRecLetterId($fellapp,$reference);
             if( $hash ) {
                 $reference->setRecLetterHashId($hash);
+                $logger->notice($fellapp->getId()." (".$reference->getId()."): added hash=".$hash);
                 if( $flush ) {
                     $this->em->flush($reference);
+                    $logger->notice($fellapp->getId()." (".$reference->getId()."): flushed with an added hash=".$hash);
                 }
                 //echo $fellapp->getId()." (".$reference->getId()."): added hash=".$hash."<br>";
-                //$logger->notice($fellapp->getId()." (".$reference->getId()."): added hash=".$hash);
             }
-            $hash = NULL;
         }
     }
 
@@ -162,18 +162,18 @@ class RecLetterUtil {
             return $res;
         }
 
-        if(0) { //don't generate hash ID here. It must be pre-generated before.
-            if (!$reference->getRecLetterHashId()) {
+        if(1) { //Generate hash ID here if empty. (It must be pre-generated before?)
+            if( !$reference->getRecLetterHashId() ) {
                 $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
                 $hash = $fellappRecLetterUtil->generateRecLetterId($fellapp, $reference);
                 if ($hash) {
                     $reference->setRecLetterHashId($hash);
                     $this->em->flush($reference);
                     //echo $fellapp->getId()." (".$reference->getId()."): added hash=".$hash."<br>";
-                    $this->container->get('session')->getFlashBag()->add(
-                        'warning',
-                        "Reference Letter Hash ID has been generated for " . $reference->getFullName()
-                    );
+//                    $this->container->get('session')->getFlashBag()->add(
+//                        'warning',
+//                        "Reference Letter Hash ID has been re-generated for " . $reference->getFullName()
+//                    );
                 }
                 $hash = NULL;
             }
@@ -470,20 +470,20 @@ class RecLetterUtil {
 
         //find folder by name
         $letterSpreadsheetFolder = $googlesheetmanagement->findOneRecLetterSpreadsheetFolder($service,$folderIdFellAppId);
-        echo "letterSpreadsheetFolder: Title=".$letterSpreadsheetFolder->getTitle()."; ID=".$letterSpreadsheetFolder->getId()."<br>";
+        //echo "letterSpreadsheetFolder: Title=".$letterSpreadsheetFolder->getTitle()."; ID=".$letterSpreadsheetFolder->getId()."<br>";
         
         //exit("exit importSheetsFromGoogleDriveFolder");
 
         //get all files in google folder
         $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
         $files = $googlesheetmanagement->retrieveFilesByFolderId($letterSpreadsheetFolder->getId(),$service);
-        echo "files count=".count($files)."<br>";
+        //echo "files count=".count($files)."<br>";
 
         //Download files to the server
         $documentType = "Fellowship Recommendation Letter Spreadsheet";
         $path = 'Uploaded'.'/'.'fellapp/RecommendationLetters/Spreadsheets';
         foreach( $files as $file ) {
-            echo 'File Id: ' . $file->getId() . "; title=" . $file->getTitle() . "<br>";
+            //echo 'File Id: ' . $file->getId() . "; title=" . $file->getTitle() . "<br>";
             //Download file from Google Drive to the server without creating document entity
             //$googlesheetmanagement->printFile($service, $file->getId());
             $this->downloadSpeadsheetFileToServer($service,$file,$documentType,$path);
@@ -518,7 +518,7 @@ class RecLetterUtil {
 
         //check if file already exists by file path
         if( file_exists($target_file) ) {
-            echo "File already exists <br>";
+            //echo "File already exists <br>";
             return NULL;
         }
 
@@ -574,29 +574,28 @@ class RecLetterUtil {
 
         //find folder by name
         $letterFolder = $googlesheetmanagement->findOneRecLetterUploadFolder($service,$folderIdFellAppId);
-        echo "letterFolder: Title=".$letterFolder->getTitle()."; ID=".$letterFolder->getId()."<br>";
+        //echo "letterFolder: Title=".$letterFolder->getTitle()."; ID=".$letterFolder->getId()."<br>";
 
         //get all files in google folder
         $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
         $files = $googlesheetmanagement->retrieveFilesByFolderId($letterFolder->getId(),$service);
-        echo "files count=".count($files)."<br>";
+        //echo "files count=".count($files)."<br>";
 
         //Download files to the server
         $importedLetters = array();
         $documentType = "Fellowship Recommendation Letter";
         $path = 'Uploaded'.'/'.'fellapp/RecommendationLetters/RecommendationLetterUploads';
         foreach( $files as $file ) {
-            echo 'File Id: ' . $file->getId() . "; title=" . $file->getTitle() . "<br>";
+            //echo 'File Id: ' . $file->getId() . "; title=" . $file->getTitle() . "<br>";
             //Download file from Google Drive to the server without creating document entity
-            $googlesheetmanagement->printFile($service, $file->getId());
-
+            //$googlesheetmanagement->printFile($service, $file->getId());
             $documentDb = $this->processSingleLetter($service,$file,$documentType,$path);
             if( $documentDb ) {
                 $importedLetters[] = $documentDb;
             }
         }
 
-        exit("Exit importLetterFromGoogleDriveFolder");
+        //exit("Exit importLetterFromGoogleDriveFolder");
 
         return $importedLetters;
     }
@@ -636,7 +635,7 @@ class RecLetterUtil {
         //check if file already exists by file id
         $documentDb = $this->em->getRepository('OlegUserdirectoryBundle:Document')->findOneByUniqueid($file->getId());
         if( $documentDb && $documentType != 'Fellowship Application Backup Spreadsheet' ) {
-            echo "letter already exists with document ID=".$documentDb->getId()."<br>";
+            //echo "letter already exists with document ID=".$documentDb->getId()."<br>";
             //$logger = $this->container->get('logger');
             //$event = "Document already exists with uniqueid=".$file->getId();
             //$logger->warning($event);
@@ -655,7 +654,7 @@ class RecLetterUtil {
 
         //ID_datetime_name.ext: 0000000110c8357966576df46f3b802ca897deb7ad18b12f1c24ecff6386ebd9_2019-04-03-13-13-17_Cat-Wa.jpg
         $letterArr = explode("_",$file->getTitle());
-        echo "letterArr count=".count($letterArr)."<br>";
+        //echo "letterArr count=".count($letterArr)."<br>";
         if( count($letterArr) == 3 ) {
             $refId = $letterArr[0];
             $datetime = $letterArr[1];
@@ -671,9 +670,9 @@ class RecLetterUtil {
         }
 
         //find application and reference by reference ID
-        echo "search by ref ID=".$refId."<br>";
+        //echo "search by ref ID=".$refId."<br>";
         $references = $this->em->getRepository('OlegFellAppBundle:Reference')->findByRecLetterHashId($refId);
-        echo "references count=".count($references)."<br>";
+        //echo "references count=".count($references)."<br>";
 
         //not found
         if( count($references) == 0 ) {
@@ -712,7 +711,7 @@ class RecLetterUtil {
 
             //check if this reference already has a letter
             $letters = $reference->getDocuments();
-            echo "letters count=".count($letters)."<br>";
+            //echo "letters count=".count($letters)."<br>";
             if( count($letters) > 0 ) {
                 $subject = "More than one recommendation letter received from ".$reference->getFullName()." in support of 
                 ".$applicantName."'s application ID#".$fellapp->getId()." for the ".$fellapp->getFellowshipSubspecialty()." $startDateStr fellowship";
@@ -777,11 +776,11 @@ class RecLetterUtil {
             //TODO: update application PDF:
             $fellappRepGen = $this->container->get('fellapp_reportgenerator');
             //async generation
-            //$fellappRepGen->addFellAppReportToQueue( $fellapp->getId(), 'overwrite' );
+            $fellappRepGen->addFellAppReportToQueue( $fellapp->getId(), 'overwrite' );
             //sync generation
-            $res = $fellappRepGen->generateFellAppReport( $fellapp->getId() );
+            //$res = $fellappRepGen->generateFellAppReport( $fellapp->getId() );
 
-            echo "filename=".$res['filename']."<br>";
+            //echo "filename=".$res['filename']."<br>";
 
             return $uploadedLetterDb;
         } //if count($references) == 1
