@@ -2249,7 +2249,7 @@
 {% endmacro %}
 
 
-{% macro showDocumentAsImage( documentEntity, alt, atr, objectClass, sitename ) %}
+{% macro showDocumentAsImage( documentEntity, alt, atr, objectClass, sitename, viewType ) %}
 
     {% if not objectClass or objectClass is not defined %}
         {#Note: objectMaxFull causes avatar not visible on pdf converted file#}
@@ -2288,8 +2288,12 @@
         {#EOF get sitename#}
     {% endif %}
 
+    {% if viewType is not defined or not viewType %}
+        {% set viewType = 'snapshot' %}
+    {% endif %}
+
     {% set docAbsPath = documentEntity.getAbsoluteUploadFullPath() %}
-    {% set docSnapshotPath = path(sitename~'_file_view', { 'id': documentEntity.id, 'viewType':'snapshot'}) %}
+    {% set docSnapshotPath = path(sitename~'_file_view', { 'id': documentEntity.id, 'viewType':viewType}) %}
     {#docAbsPath={{ docAbsPath }}<br>#}
 
     <a href="{{ path(sitename~'_file_view', { 'id': documentEntity.id}) }}" target="_blank">

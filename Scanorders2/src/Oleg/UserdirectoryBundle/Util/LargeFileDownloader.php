@@ -121,16 +121,23 @@ class LargeFileDownloader {
             header('Content-Disposition: attachment; filename='.$filename);
         }
 
-        if( $viewType == 'snapshot' ) {
+        //if( $viewType == 'snapshot' ) {
+        if( strpos($viewType, 'snapshot') !== false ) {
             //TODO: fix image resize
+            $viewTypeArr = explode("-",$viewType);
+            if( count($viewTypeArr) > 1 ) {
+                $resize = $viewTypeArr[1];
+            } else {
+                $resize = null;
+            }
 
-            if(1) {
+            if( !$resize ) {
                 echo $this->getFileContent($filenameClean);
             } else {
                 //snapshot is used in diff pages (use snapshot small, medium, large?).
                 //exit('111');
-                $width = 70;
-                $height = 70;
+                $width = $resize;
+                $height = $resize;
                 //$resizedImg = $this->Img_Resize($filenameClean,2);
                 $resizedImg = $this->resizeImage($filenameClean, $width, $height);
                 //$resizedImg = $this->croppedThumbnail($filenameClean, $width, $height);

@@ -294,7 +294,8 @@ class UploadController extends Controller {
         if( $document ) {
 
             //event log
-            if( $viewType != 'snapshot' ) {
+            //if( $viewType != 'snapshot' ) {
+            if( strpos($viewType, 'snapshot') === false ) {
                 $user = $this->get('security.token_storage')->getToken()->getUser();
                 $eventDescription = "Document has been viewed by " . $user;
                 $this->setDownloadEventLog($request, $document, $user, $sitename, $eventtype, $eventDescription);
