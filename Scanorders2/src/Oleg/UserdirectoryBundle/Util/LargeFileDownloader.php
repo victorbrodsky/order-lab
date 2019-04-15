@@ -124,9 +124,10 @@ class LargeFileDownloader {
         if( $viewType == 'snapshot' ) {
             //TODO: fix image resize
 
-            if(0) {
+            if(1) {
                 echo $this->getFileContent($filenameClean);
             } else {
+                //snapshot is used in diff pages (use snapshot small, medium, large?).
                 //exit('111');
                 $width = 70;
                 $height = 70;
