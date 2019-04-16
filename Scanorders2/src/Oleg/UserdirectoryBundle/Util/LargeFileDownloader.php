@@ -43,7 +43,7 @@ class LargeFileDownloader {
     //download large files
     //tested on 8GB file http://c.med.cornell.edu/order/scan/image-viewer/pacsvendor%20eSlide%20Manager%20on%20C.MED.CORNELL.EDU/Download/Slide/53748
     public function downloadLargeFile( $filepath, $filename=null, $size=null, $retbytes=true, $action="download", $viewType=null ) {
-exit; //testing
+
         $filenameClean = str_replace("\\", "/", $filepath);
 
         if( empty($filenameClean) ) {
@@ -127,11 +127,14 @@ exit; //testing
             //we will need at least two thumbnails for each avatar -
             // one big image for the application view/edit page and
             // one smaller for list of the applications or vacation requests. 
-            $viewTypeArr = explode("-",$viewType);
-            if( count($viewTypeArr) > 1 ) {
-                $resize = $viewTypeArr[1];
-            } else {
-                $resize = null;
+            //Not big difference is speed. For example, for fellapp list 30 sec with images vs 28 sec without images
+            if(0) {
+                $viewTypeArr = explode("-", $viewType);
+                if (count($viewTypeArr) > 1) {
+                    $resize = $viewTypeArr[1];
+                } else {
+                    $resize = null;
+                }
             }
             $resize = null; //disable resize for now
 
