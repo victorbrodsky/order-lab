@@ -68,7 +68,10 @@ script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></scr
     });   //document ready
 
 
-    function prePopulateForm() {            
+    function prePopulateForm() {   
+      if( typeof _serverData === 'undefined' ) {
+        return false;
+      }
       //Reference fields (13)
       $('#firstName').val(_serverData.ReferenceFirstName);
       $('#lastName').val(_serverData.ReferenceLastName);
@@ -80,7 +83,8 @@ script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></scr
       $('#street1').val(_serverData.ReferenceStreet1);
       $('#street2').val(_serverData.ReferenceStreet2);
       $('#city').val(_serverData.ReferenceCity);
-      $('#state').val(_serverData.ReferenceState);
+      //$('#state').val(_serverData.ReferenceState);
+      $('#state').select2("val",_serverData.ReferenceState);
       $('#zipcode').val(_serverData.ReferenceZip);
       $('#country').val(_serverData.ReferenceCountry);
       
@@ -96,6 +100,16 @@ script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></scr
       
     }
 
+    function onFormFailure(error) {   
+       //alert("Form failed!");
+       $('#formError').html('');
+       var errorElement = '<div class="alert alert-danger" role="alert">'+error+'</div>';      
+       $('#formError').html(errorElement); 
+       
+       //enable button
+       $("#submit-form-button").val('Submit');
+       $("#submit-form-button").removeAttr('disabled');       
+    }
 
      function onUploadFailure(error) {    
        //console.log(error);
@@ -107,10 +121,37 @@ script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></scr
        
        return false;
     }
+    
+    function onFormSuccess(uniqueId) {        
+        //window.location.href = "http://google.com";
+        //console.log("Submited Form! uniqueId="+uniqueId);
+        //alert("Submited Form! uniqueId="+uniqueId);
+        //alert("Submited Form!");
+        
+        $('#submit-form-button').remove();
+                
+        var textHtml = "<p>Thank you for submitting the recommendation letter!</p>";
+        
+        //textHtml = textHtml + "<br>Now you can close this page.";
+        //textHtml = textHtml + "<br><button class='btn btn-primary' onclick='closePage();'>Close</button>"
+        
+        //var text = '<p>Your application has been successfully submitted!</p><p>You will receive a confirmation email shortly.<p>You can print this page for your reference.</p>';   
+        //var containerEl = $('.container');    
+        
+        $('input').attr("disabled", true);
+        $('textarea').attr("disabled", true);
+        $('.datepicker').attr('disabled', true);
+        
+        var succElement = '<br><br><div id="succSubmition" class="alert alert-success" role="alert">'+textHtml+'</div>';
+        
+        $('#formError').html(succElement);              
+    }
 
     function fileUploadedLetter(url) {
         console.log('fileUploadedLetter');
         _letterLink = fileUploaded(url,"uploadLetterBtn","uploadedLetterStatus","uploadedLetterUrl");
+        
+        onFormSuccess();
     }
     function fileUploaded(url,uploadBtnID,uploadedStatusID,uploadedUrlID) {       
         

@@ -12,7 +12,14 @@
 
 <div class="container" style="width:100%; text-align: center;">
   
-  
+  <p>
+    Use of <font color="red">Google Chrome or Firefox browsers</font> is recommended. If you encounter any technical issues with this web form, please email to oli2002@med.cornell.edu
+  </p>
+  <!--
+  <p>
+    You can still submit your letter of recommendation via email to eah2006@med.cornell.edu.
+  </p>
+  -->
   
   <br>
   <p>
@@ -25,6 +32,16 @@
   <form id="applicantForm">
 
   <?!= include('Uploads'); ?>
+  
+  <div id="formError"></div>
+
+<!--
+  <input id="submit-form-button" type="button" class="btn btn-primary" value="Submit" 
+  onclick="google.script.run.withFailureHandler(onFormFailure).withSuccessHandler(onFormSuccess).processForm(document.getElementById('applicantForm'))" 
+  /> 
+-->
+
+  <br><br>
 
   <h3>
     The following information has been provided by the applicant:
@@ -34,16 +51,6 @@
   
   <?!= include('ApplicantInformation'); ?>
 
-
-  <br>
-  
-  <div id="formError"></div>
-  
-  <br>
-
-  <input id="submit-form-button" type="button" class="btn btn-primary" value="Submit" 
-  onclick="google.script.run.withFailureHandler(onFormFailure).withSuccessHandler(onFormSuccess).processForm(document.getElementById('applicantForm'))" 
-  /> 
  
   </form>
   

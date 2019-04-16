@@ -43,7 +43,7 @@ class LargeFileDownloader {
     //download large files
     //tested on 8GB file http://c.med.cornell.edu/order/scan/image-viewer/pacsvendor%20eSlide%20Manager%20on%20C.MED.CORNELL.EDU/Download/Slide/53748
     public function downloadLargeFile( $filepath, $filename=null, $size=null, $retbytes=true, $action="download", $viewType=null ) {
-
+exit; //testing
         $filenameClean = str_replace("\\", "/", $filepath);
 
         if( empty($filenameClean) ) {
@@ -124,6 +124,9 @@ class LargeFileDownloader {
         //if( $viewType == 'snapshot' ) {
         if( strpos($viewType, 'snapshot') !== false ) {
             //TODO: fix image resize
+            //we will need at least two thumbnails for each avatar -
+            // one big image for the application view/edit page and
+            // one smaller for list of the applications or vacation requests. 
             $viewTypeArr = explode("-",$viewType);
             if( count($viewTypeArr) > 1 ) {
                 $resize = $viewTypeArr[1];

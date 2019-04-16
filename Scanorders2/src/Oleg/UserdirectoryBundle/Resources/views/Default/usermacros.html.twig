@@ -2248,7 +2248,10 @@
     <a href="{{ path(employees_sitename~'_showuser_notstrict', { 'id': 'user_replacement_id' }) }}" target="_blank">{{ 'user_replacement_username' }}</a><br>
 {% endmacro %}
 
-
+{#viewType:
+    "snapshot" for avatar and general snapshot (viewing eventlog will not be generated).
+    "snapshot-sm" - for small snapshots used in the list.
+#}
 {% macro showDocumentAsImage( documentEntity, alt, atr, objectClass, sitename, viewType ) %}
 
     {% if not objectClass or objectClass is not defined %}
