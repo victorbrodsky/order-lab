@@ -960,8 +960,87 @@ class RecLetterUtil {
             }
 
             //2) check for duplicates (same FellowshipType, same FellowshipYear, with the same ApplicantEmail )
+            $applicant = $fellapp->getUser();
+            if( $applicant ) {
+                $applicantEmail = $applicant->getSingleEmail();
+            } else {
+                $applicantEmail = null;
+                $errorMsg = "Logical Error: Applicantion ID#".$fellapp->getId()." does not have applicant email";
+                $this->sendEmailToSystemEmail($errorMsg, $errorMsg);
+                return false;
+            }
+
             $duplicates = false;
-            
+            $repository = $this->em->getRepository('OlegFellAppBundle:FellAppStatus');
+            $dql = $repository->createQueryBuilder("fellapp");
+            $dql->leftJoin("fellapp.fellowshipSubspecialty", "fellowshipSubspecialty");
+            $dql->leftJoin("fellapp.user", "user");
+            $dql->select('fellapp');
+            $dql->where("fellowshipSubspecialty.id = :fellowshipSubspecialtyId");
+            $dql->andWhere("user.email = :applicantEmail");
+            $dql->andWhere("fellapp.id != :fellappId");
+
+            //startDate
+            $startDate = $fellapp->getStartDate();
+            $startDateStr = $startDate->format('Y');
+            $bottomDate = $startDateStr."-01-01";
+            $topDate = $startDateStr."-12-31";
+            $dql->andWhere("fellapp.startDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'" );
+
+            $query = $this->em->createQuery($dql);
+
+            $query->setParameters(array(
+                "fellowshipSubspecialtyId" => $fellapp->getFellowshipSubspecialty()->getId(),
+                "applicantEmail" => $applicantEmail,
+                "fellappId" => $fellapp->getId()
+            ));
+
+            $duplicateFellapps = $query->getResult();
+            if( count($duplicateFellapps) > 0 ) {
+                $duplicates = true;
+            }
+
+            if( $duplicates || $missingEmail ) {
+                //email to the Program Coordinator
+                $fellappId = $fellapp->getId();
+                $fellappUtil = $this->container->get('fellapp_util');
+                $ccs = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'),"Administrator");
+                $coordinatorEmails = $fellappUtil->getCoordinatorsOfFellAppEmails($fellapp);
+                $directorEmails = $fellappUtil->getCoordinatorsOfFellAppEmails($fellapp);
+                $coordinatorDirectorEmails = array_unique (array_merge ($coordinatorEmails, $directorEmails));
+
+                if ($missingEmail) {
+                    //No reference letter upload invitations sent automatically for fellowship application
+                    // ID XXX since it does not have 3 reference letter author emails.
+                    // Please invite reference letter authors manually for this application
+                    // using the Action button if desired.
+                    $subject = "No reference letter upload invitations sent automatically for fellowship application ID $fellappId";
+                    $body = $subject
+                        ." since it does not have ".count($fellapp->getReferences())." reference letter author emails."
+                        ." Please invite reference letter authors manually for this application using the Action button if desired.";
+
+                    $emailUtil->sendEmail($coordinatorDirectorEmails,$subject,$body,$ccs);
+                    return false;
+                }
+
+                if ($duplicates) {
+                    $duplicatesInfos = array();
+                    foreach($duplicateFellapps as $duplicateFellapp) {
+                        $duplicatesInfos[] = $duplicateFellapp->getId();
+                    }
+                    //No reference letter upload invitations sent automatically for fellowship application
+                    // ID XXX since it appears to be a duplicate of application ID YYY.
+                    // Please invite reference letter authors manually for this application
+                    // using the Action button if desired.
+                    $subject = "No reference letter upload invitations sent automatically for fellowship application ID $fellappId";
+                    $body = $subject
+                        ." since it appears to be a duplicate of application(s) ".implode(", ",$duplicatesInfos)."."
+                        ." Please invite reference letter authors manually for this application using the Action button if desired.";
+
+                    $emailUtil->sendEmail($coordinatorDirectorEmails,$subject,$body,$ccs);
+                    return false;
+                }
+            }
 
             //send invitation email to references to submit letters
             foreach ($fellapp->getReferences() as $reference) {
