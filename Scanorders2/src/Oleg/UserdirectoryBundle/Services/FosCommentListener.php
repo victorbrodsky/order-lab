@@ -192,7 +192,7 @@ class FosCommentListener implements EventSubscriberInterface {
         $projectUrl = $transresUtil->getProjectShowUrl($project);
         //$body = $body . $break . $break . "Please click on the URL below to view this ".$project->getEntityName().":" . $break . $projectUrl;
         //To view this project request, please visit the link below
-        $body = $body . $break . $break . "To view this project request, please visit the link below:" . $break . $projectUrl;
+        $body = $body . $break . $break . "To reply to the comment or to view this project request, please visit the link below:" . $break . $projectUrl;
 
         $emailUtil = $this->container->get('user_mailer_utility');
         //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
@@ -271,7 +271,7 @@ class FosCommentListener implements EventSubscriberInterface {
         //get entity url
         $transresRequestUrl = $transresRequestUtil->getRequestShowUrl($transresRequest);
         //$body = $body . $break . $break . "Please click on the URL below to view this ".$transresRequest->getEntityName().":" . $break . $transresRequestUrl;
-        $body = $body . $break . $break . "To view this work request, please visit the link below:" . $break . $transresRequestUrl;
+        $body = $body . $break . $break . "To reply to the comment or to view this work request, please visit the link below:" . $break . $transresRequestUrl;
 
         $emailUtil = $this->container->get('user_mailer_utility');
         $emailUtil->sendEmail( $emails, $subject, $body, $adminEmails, $senderEmail );
@@ -281,9 +281,9 @@ class FosCommentListener implements EventSubscriberInterface {
         //$break = "\r\n";
         $break = "<br>";
         if( $stateLabel ) {
-            $stateLabel = " for the stage '".$stateLabel."'";
+            $stateLabel = " in '".$stateLabel."' stage";
         }
-        $subject = "New Comment for ".$entity->getDisplayName()." ".$entity->getOid()." has been added".$stateLabel;
+        $subject = "New comment for ".$entity->getDisplayName()." ".$entity->getOid()." has been added".$stateLabel;
         $body = $subject . ":" . $break . "<hr>" . "<b>" . $comment->getBody() . "</b>" . "<hr>";
 
         return array('subject'=>$subject, 'body'=>$body);

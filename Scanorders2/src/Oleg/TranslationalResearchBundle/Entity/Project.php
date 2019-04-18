@@ -2011,7 +2011,7 @@ class Project {
     }
 
     public function getDisplayName() {
-        return "Project request";
+        return "project request";
     }
 
     public function __toString() {

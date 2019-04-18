@@ -638,7 +638,7 @@ class SiteParametersType extends AbstractType
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'identificationUploadLetterFellApp' ) {
             $builder->add('identificationUploadLetterFellApp', null, array(
-                'label' => 'Fellowship identification string to upload recommendation letters (55555):',
+                'label' => 'Fellowship identification string to download recommendation letters (55555):',
                 'attr' => array('class' => 'form-control form-control-modif', 'style' => 'margin:0')
             ));
         }
