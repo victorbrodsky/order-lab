@@ -5618,6 +5618,10 @@ class AdminController extends Controller
             //'hide'=>'Hidden',
             'priority'=>'Priority',
             'archive'=>'Archived',
+            'accepted'=>'Accepted',
+            'acceptedandnotified'=>'Accepted and Notified',
+            'rejectedandnotified'=>'Rejected and Notified'
+
         );
 
         $username = $this->get('security.token_storage')->getToken()->getUser();

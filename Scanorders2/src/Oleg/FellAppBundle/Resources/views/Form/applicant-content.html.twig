@@ -49,6 +49,15 @@
         {% if entity.appStatus.name == 'priority' %}
             {% set trclassname = "alert alert-success" %}
         {% endif %}
+        {% if entity.appStatus.name == 'accepted' %}
+            {% set trclassname = "alert alert-success" %}
+        {% endif %}
+        {% if entity.appStatus.name == 'acceptedandnotified' %}
+            {% set trclassname = "alert alert-success" %}
+        {% endif %}
+        {% if entity.appStatus.name == 'rejectedandnotified' %}
+            {% set trclassname = "order-reject-status" %}
+        {% endif %}
     {% endif %}
 {% endif %}
 
