@@ -177,6 +177,12 @@
                     </tr>
 
                     <tr>
+                        <td>Fellowship identification string to upload recommendation letters (55555)</td>
+                        <td>{{ entity.identificationUploadLetterFellApp }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'identificationUploadLetterFellApp'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
                         <td>Delete successfully imported applications from Google Drive</td>
                         <td>
                             {#{{ entity.deleteImportedAplicationsFellApp }}#}

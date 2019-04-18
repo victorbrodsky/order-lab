@@ -50,22 +50,43 @@ class ReferenceController extends Controller
         //$em = $this->getDoctrine()->getManager();
         //$user = $this->get('security.token_storage')->getToken()->getUser();
 
-        $referenceNames = array();
-        foreach($fellapp->getReferences() as $reference) {
-            if( count($reference->getDocuments()) == 0 ) {
-                //send invitation email
-                $res = $fellappRecLetterUtil->inviteSingleReferenceToSubmitLetter($reference,$fellapp);
-                if( $res['res'] == true ) {
-                    $this->get('session')->getFlashBag()->add(
-                        'notice',
-                        $res['msg']
-                    );
-                } else {
-                    $this->get('session')->getFlashBag()->add(
-                        'warning',
-                        $res['msg']
-                    );
-                }
+        //testing
+        //$res = $fellappRecLetterUtil->sendInvitationEmailsToReferences($fellapp,true);
+        //echo "res:<br>";
+        //print_r($res);
+        //exit();
+
+//        $referenceNames = array();
+//        foreach($fellapp->getReferences() as $reference) {
+//            if( count($reference->getDocuments()) == 0 ) {
+//                //send invitation email
+//                $res = $fellappRecLetterUtil->inviteSingleReferenceToSubmitLetter($reference,$fellapp);
+//                if( $res['res'] == true ) {
+//                    $this->get('session')->getFlashBag()->add(
+//                        'notice',
+//                        $res['msg']
+//                    );
+//                } else {
+//                    $this->get('session')->getFlashBag()->add(
+//                        'warning',
+//                        $res['msg']
+//                    );
+//                }
+//            }
+//        }
+
+        $resArr = $fellappRecLetterUtil->sendInvitationEmailsToReferences($fellapp,true);
+        foreach($resArr as $res) {
+            if( $res['res'] == true ) {
+                $this->get('session')->getFlashBag()->add(
+                    'notice',
+                    $res['msg']
+                );
+            } else {
+                $this->get('session')->getFlashBag()->add(
+                    'warning',
+                    $res['msg']
+                );
             }
         }
 

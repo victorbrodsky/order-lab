@@ -1143,23 +1143,25 @@ class FellAppImportPopulateUtil {
                     }
 
                     /////// send invitation email to upload recommendation letter to references ///////
-                    $sendEmailUploadLetterFellApp = $userSecUtil->getSiteSettingParameter('sendEmailUploadLetterFellApp');
-                    if ($sendEmailUploadLetterFellApp) {
-
-                        //check for duplicates or if one of the reference email is missing
-                        //$missingEmail = true;
-                        //foreach($fellowshipApplication->getReferences() as $reference) {
-                        //}
-
-                        //send invitation email to references to submit letters
-                        foreach ($fellowshipApplication->getReferences() as $reference) {
-                            if( count($reference->getDocuments()) == 0 ) {
-                                //send invitation email
-                                $fellappRecLetterUtil->inviteSingleReferenceToSubmitLetter($reference,$fellowshipApplication,false);
-                            }
-                        }
-                    }//if sendEmailUploadLetterFellApp
-                    /////// EOF send invitation email to upload recommendation letter to references ///////
+//                    $sendEmailUploadLetterFellApp = $userSecUtil->getSiteSettingParameter('sendEmailUploadLetterFellApp');
+//                    if ($sendEmailUploadLetterFellApp) {
+//
+//                        //check for duplicates or if one of the reference email is missing
+//                        //$missingEmail = true;
+//                        //foreach($fellowshipApplication->getReferences() as $reference) {
+//                        //}
+//
+//                        //send invitation email to references to submit letters
+//                        foreach ($fellowshipApplication->getReferences() as $reference) {
+//                            if( count($reference->getDocuments()) == 0 ) {
+//                                //send invitation email
+//                                $fellappRecLetterUtil->inviteSingleReferenceToSubmitLetter($reference,$fellowshipApplication,false);
+//                            }
+//                        }
+//                    }//if sendEmailUploadLetterFellApp
+//                    /////// EOF send invitation email to upload recommendation letter to references ///////
+                    // send invitation email to upload recommendation letter to references
+                    $fellappRecLetterUtil->sendInvitationEmailsToReferences($fellowshipApplication,true);
                 }//if live
 
                 //if( $environment == "live" ) {

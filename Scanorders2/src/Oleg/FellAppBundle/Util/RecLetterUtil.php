@@ -133,18 +133,22 @@ class RecLetterUtil {
 
         $environment = $userSecUtil->getSiteSettingParameter('environment');
         if( $environment != "live" ) {
+            $msg = "Server is not live: invitation email will not be send to reference ".$reference->getFullName();
+            $this->sendLetterEventLog($msg,"No Reference Invitation Email",$fellapp);
             $res = array(
                 "res" => false,
-                "msg" => "Server is not live: invitation email will not be send to reference ".$reference->getFullName()
+                "msg" => $msg
             );
             return $res;
         }
 
         $sendEmailUploadLetterFellApp = $userSecUtil->getSiteSettingParameter('sendEmailUploadLetterFellApp');
         if( !$sendEmailUploadLetterFellApp ) {
+            $msg = "Automatically send invitation emails to upload recommendation letters is set to NO: invitation email will not be send to reference ".$reference->getFullName();
+            $this->sendLetterEventLog($msg,"No Reference Invitation Email",$fellapp);
             $res = array(
                 "res" => false,
-                "msg" => "Automatically send invitation emails to upload recommendation letters is set to NO: invitation email will not be send to reference ".$reference->getFullName()
+                "msg" => $msg
             );
             return $res;
         }
@@ -155,9 +159,11 @@ class RecLetterUtil {
 //                'warning',
 //                "Recommendation letter has already been received for reference ".$reference->getFullName()
 //            );
+            $msg = "Recommendation letter has already been received from reference ".$reference->getFullName();
+            $this->sendLetterEventLog($msg,"No Reference Invitation Email",$fellapp);
             $res = array(
                 "res" => false,
-                "msg" => "Recommendation letter has already been received from reference ".$reference->getFullName()
+                "msg" => $msg
             );
             return $res;
         }
@@ -181,6 +187,7 @@ class RecLetterUtil {
         if( !$reference->getRecLetterHashId() ) {
             $msg = "Error sending invitation email: Reference Letter Hash ID has not been generated for ".$reference->getFullName();
             $logger->error($msg);
+            $this->sendLetterEventLog($msg,"No Reference Invitation Email",$fellapp);
             $res = array(
                 "res" => false,
                 "msg" => $msg
@@ -195,9 +202,11 @@ class RecLetterUtil {
 //                "Email is not specified for reference ".$reference->getFullName()
 //            );
 //            return false;
+            $msg = "Email is not specified for reference ".$reference->getFullName();
+            $this->sendLetterEventLog($msg,"No Reference Invitation Email",$fellapp);
             $res = array(
                 "res" => false,
-                "msg" => "Email is not specified for reference ".$reference->getFullName()
+                "msg" => $msg
             );
             return $res;
         }
@@ -234,6 +243,11 @@ class RecLetterUtil {
 
         //$localInstitutionFellApp = $userSecUtil->getSiteSettingParameter('localInstitutionFellApp'); //Pathology Fellowship Programs (WCMC)
         $localInstitutionFellApp = "Weill Cornell Medical College / New York Presbyterian Hospital";
+
+        $identificationUploadLetterFellApp = $userSecUtil->getSiteSettingParameter('identificationUploadLetterFellApp'); //55555
+        if( !$identificationUploadLetterFellApp ) {
+            $identificationUploadLetterFellApp = "55555";
+        }
 
         //testing
         //$fellapp = new FellowshipApplication();
@@ -272,6 +286,7 @@ class RecLetterUtil {
         //&Reference-Country=USA
         $uploadFormLink = "http://wcmc.pathologysystems.org/fellowship-application-reference-letter-upload/?";
         $uploadFormLink = $uploadFormLink . "Reference-Letter-ID=" . $reference->getRecLetterHashId();
+        $uploadFormLink = $uploadFormLink . "&Identification=" . $identificationUploadLetterFellApp;
         $uploadFormLink = $uploadFormLink . "&Applicant-First-Name=" . $applicant->getFirstName();
         $uploadFormLink = $uploadFormLink . "&Applicant-Last-Name=" . $applicant->getLastName();
         $uploadFormLink = $uploadFormLink . "&Applicant-E-Mail=" . $applicant->getSingleEmail();
@@ -362,27 +377,28 @@ class RecLetterUtil {
         $msg = "Invitation email to submit a letter of recommendation has been sent to ".$reference->getFullName() . " (".$email.")";
 
         //eventlog
-        $user = NULL;
-        if( $this->container->get('security.token_storage')->getToken() ) {
-            $user = $this->container->get('security.token_storage')->getToken()->getUser();
-        }
-        if( $user instanceof User) {
-            //User OK - do nothing
-        } else {
-            $user = $userSecUtil->findSystemUser();
-        }
-        if( !$user ) {
-            $user = $userSecUtil->findSystemUser();
-        }
         $eventMsg = $msg . "<br><br> Subject:<br>". $subject . "<br><br>Body:<br>" . $body;
-        $userSecUtil->createUserEditEvent(
-            $this->container->getParameter('fellapp.sitename'), //$sitename
-            $eventMsg,                                          //$event message
-            $user,                                              //user
-            $fellapp,                                           //$subjectEntities
-            null,                                               //$request
-            "Reference Invitation Email"                        //$action
-        );
+//        $user = NULL;
+//        if( $this->container->get('security.token_storage')->getToken() ) {
+//            $user = $this->container->get('security.token_storage')->getToken()->getUser();
+//        }
+//        if( $user instanceof User) {
+//            //User OK - do nothing
+//        } else {
+//            $user = $userSecUtil->findSystemUser();
+//        }
+//        if( !$user ) {
+//            $user = $userSecUtil->findSystemUser();
+//        }
+//        $userSecUtil->createUserEditEvent(
+//            $this->container->getParameter('fellapp.sitename'), //$sitename
+//            $eventMsg,                                          //$event message
+//            $user,                                              //user
+//            $fellapp,                                           //$subjectEntities
+//            null,                                               //$request
+//            "Reference Invitation Email"                        //$action
+//        );
+        $this->sendLetterEventLog($eventMsg,"Reference Invitation Email",$fellapp);
 
         $res = array(
             "res" => true,
@@ -652,21 +668,35 @@ class RecLetterUtil {
         }
         //$fellowshipApplication->addReprimandDocument($uploadedLegalExplanationUrlDb);
 
-        //ID_datetime_name.ext: 0000000110c8357966576df46f3b802ca897deb7ad18b12f1c24ecff6386ebd9_2019-04-03-13-13-17_Cat-Wa.jpg
+        //ID_datetime_name.ext: 55555_0000000110c8357966576df46f3b802ca897deb7ad18b12f1c24ecff6386ebd9_2019-04-03-13-13-17_Cat-Wa.jpg
         $letterArr = explode("_",$file->getTitle());
         //echo "letterArr count=".count($letterArr)."<br>";
-        if( count($letterArr) == 3 ) {
-            $refId = $letterArr[0];
-            $datetime = $letterArr[1];
-            $name = $letterArr[2];
+        if( count($letterArr) == 4 ) {
+            $instituteIdentification = $letterArr[0];
+            $refId = $letterArr[1];
+            $datetime = $letterArr[2];
+            $name = $letterArr[3];
         } else {
             return NULL;
         }
 
         if( $testing ) {
+            $instituteIdentification = "55555";
             $refId = "340d08a7c8037b62e5e0e36b1119486f2dd00540";
             $datetime = "2019-04-03-13-13-17";
             $name = "filenameee";
+        }
+
+        //10d: compare instituteIdentification with site settings instituteIdentification
+        $identificationUploadLetterFellApp = $userSecUtil->getSiteSettingParameter('identificationUploadLetterFellApp'); //i.e. 55555
+        $logger->notice("compare: $identificationUploadLetterFellApp ?= $instituteIdentification");
+        if( $identificationUploadLetterFellApp != $instituteIdentification ) {
+            //send email
+            $msg = "Fellowship identification string in the letter file name ($instituteIdentification) does not match with the site settings ($identificationUploadLetterFellApp)";
+            $userSecUtil->sendEmailToSystemEmail($msg,$msg);
+            //eventlog
+            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$msg,$systemUser,null,null,"No Recommendation Letters");
+            return NULL;
         }
 
         //find application and reference by reference ID
@@ -926,7 +956,7 @@ class RecLetterUtil {
                 . "<br>".$fellappLink
             ;
 
-            echo "send email: <br>subject=".$subject."<br><br>body=".$body."<br>";
+            //echo "send email: <br>subject=".$subject."<br><br>body=".$body."<br>";
 
             $fellappUtil = $this->container->get('fellapp_util');
             $ccs = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'),"Administrator");
@@ -935,7 +965,7 @@ class RecLetterUtil {
             $coordinatorDirectorEmails = array_unique (array_merge ($coordinatorEmails, $directorEmails));
             $emailUtil->sendEmail($coordinatorDirectorEmails,$subject,$body,$ccs);
         } else {
-            echo "No allHasLetter. refCounter=$refCounter <br>";
+            //echo "No allHasLetter. refCounter=$refCounter <br>";
         }
         ///////// EOF send an email to both the corresponding (FellowshipType) Program Coordinator(s) and Program Director(s) ///////////
 
@@ -943,12 +973,12 @@ class RecLetterUtil {
     }
 
     //send invitation email to upload recommendation letter to references
-    public function sendInvitationEmailsToReferences( $fellapp ) {
+    public function sendInvitationEmailsToReferences( $fellapp, $flush=false ) {
         $userSecUtil = $this->container->get('user_security_utility');
         $emailUtil = $this->container->get('user_mailer_utility');
 
         $sendEmailUploadLetterFellApp = $userSecUtil->getSiteSettingParameter('sendEmailUploadLetterFellApp');
-        if ($sendEmailUploadLetterFellApp) {
+        if( $sendEmailUploadLetterFellApp ) {
 
             //check for duplicates or if one of the reference email is missing
             //1) check for missing email
@@ -971,11 +1001,11 @@ class RecLetterUtil {
             }
 
             $duplicates = false;
-            $repository = $this->em->getRepository('OlegFellAppBundle:FellAppStatus');
+            $repository = $this->em->getRepository('OlegFellAppBundle:FellowshipApplication');
             $dql = $repository->createQueryBuilder("fellapp");
+            $dql->select('fellapp');
             $dql->leftJoin("fellapp.fellowshipSubspecialty", "fellowshipSubspecialty");
             $dql->leftJoin("fellapp.user", "user");
-            $dql->select('fellapp');
             $dql->where("fellowshipSubspecialty.id = :fellowshipSubspecialtyId");
             $dql->andWhere("user.email = :applicantEmail");
             $dql->andWhere("fellapp.id != :fellappId");
@@ -1020,6 +1050,9 @@ class RecLetterUtil {
                         ." Please invite reference letter authors manually for this application using the Action button if desired.";
 
                     $emailUtil->sendEmail($coordinatorDirectorEmails,$subject,$body,$ccs);
+
+                    $this->sendLetterEventLog($body,"No Reference Invitation Email",$fellapp);
+
                     return false;
                 }
 
@@ -1038,18 +1071,53 @@ class RecLetterUtil {
                         ." Please invite reference letter authors manually for this application using the Action button if desired.";
 
                     $emailUtil->sendEmail($coordinatorDirectorEmails,$subject,$body,$ccs);
+
+                    $this->sendLetterEventLog($body,"No Reference Invitation Email",$fellapp);
+
                     return false;
                 }
-            }
+            } //if( $duplicates || $missingEmail )
 
             //send invitation email to references to submit letters
+            $resArr = array();
             foreach ($fellapp->getReferences() as $reference) {
                 if( count($reference->getDocuments()) == 0 ) {
                     //send invitation email
-                    $this->inviteSingleReferenceToSubmitLetter($reference,$fellapp,false);
+                    //echo $fellapp->getId().": send invitation email for reference ID=".$reference->getId()."<br>";
+                    $resArr[] = $this->inviteSingleReferenceToSubmitLetter($reference,$fellapp,$flush);
                 }
             }
+
+            return $resArr;
         }//if sendEmailUploadLetterFellApp
+
+        return false;
+    }
+
+    public function sendLetterEventLog($msg,$eventType,$fellapp) {
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        $user = NULL;
+        if( $this->container->get('security.token_storage')->getToken() ) {
+            $user = $this->container->get('security.token_storage')->getToken()->getUser();
+        }
+        if( $user instanceof User) {
+            //User OK - do nothing
+        } else {
+            $user = $userSecUtil->findSystemUser();
+        }
+        if( !$user ) {
+            $user = $userSecUtil->findSystemUser();
+        }
+
+        $userSecUtil->createUserEditEvent(
+            $this->container->getParameter('fellapp.sitename'), //$sitename
+            $msg,                                               //$event message
+            $user,                                              //user
+            $fellapp,                                           //$subjectEntities
+            null,                                               //$request
+            $eventType                                          //$action
+        );
     }
 
 }
