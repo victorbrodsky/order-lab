@@ -287,6 +287,52 @@
                     </span>
                     {{ fellappmacros.addLegend('archived') }}
                     </div>
+                    &nbsp;&nbsp;
+
+                    <div style="white-space: nowrap; display: inline;">
+                        {{ form_widget(fellappfilter.accepted) }}   {{ form_label(fellappfilter.accepted) }}
+                        <span class="badge" data-toggle="tooltip" title="for {{ currentYear }}">
+                    <a style="color: white;" href="{{ path('fellapp_home',{'filter[accepted]':1,'filter[filter]':filter,'filter[startDate]':currentYear}) }}">
+                        {{ accepted }}
+                    </a>
+                    </span>
+                        {{ fellappmacros.addSlush() }}
+                        <span class="badge" data-toggle="tooltip" title="Total">
+                    <a style="color: white;" href="{{ path('fellapp_home',{'filter[accepted]':1,'filter[filter]':filter}) }}">{{ acceptedTotal }}</a>
+                    </span>
+                        {{ fellappmacros.addLegend('accepted') }}
+                    </div>
+                    &nbsp;&nbsp;
+
+                    <div style="white-space: nowrap; display: inline;">
+                        {{ form_widget(fellappfilter.acceptedandnotified) }}   {{ form_label(fellappfilter.acceptedandnotified) }}
+                        <span class="badge" data-toggle="tooltip" title="for {{ currentYear }}">
+                    <a style="color: white;" href="{{ path('fellapp_home',{'filter[acceptedandnotified]':1,'filter[filter]':filter,'filter[startDate]':currentYear}) }}">
+                        {{ acceptedandnotified }}
+                    </a>
+                    </span>
+                        {{ fellappmacros.addSlush() }}
+                        <span class="badge" data-toggle="tooltip" title="Total">
+                    <a style="color: white;" href="{{ path('fellapp_home',{'filter[acceptedandnotified]':1,'filter[filter]':filter}) }}">{{ acceptedandnotifiedTotal }}</a>
+                    </span>
+                        {{ fellappmacros.addLegend('acceptedandnotified') }}
+                    </div>
+                    &nbsp;&nbsp;
+
+                    <div style="white-space: nowrap; display: inline;">
+                        {{ form_widget(fellappfilter.rejectedandnotified) }}   {{ form_label(fellappfilter.rejectedandnotified) }}
+                        <span class="badge" data-toggle="tooltip" title="for {{ currentYear }}">
+                    <a style="color: white;" href="{{ path('fellapp_home',{'filter[rejectedandnotified]':1,'filter[filter]':filter,'filter[startDate]':currentYear}) }}">
+                        {{ rejectedandnotified }}
+                    </a>
+                    </span>
+                        {{ fellappmacros.addSlush() }}
+                        <span class="badge" data-toggle="tooltip" title="Total">
+                    <a style="color: white;" href="{{ path('fellapp_home',{'filter[rejectedandnotified]':1,'filter[filter]':filter}) }}">{{ rejectedandnotifiedTotal }}</a>
+                    </span>
+                        {{ fellappmacros.addLegend('rejectedandnotified') }}
+                    </div>
+                    &nbsp;&nbsp;
 
                 </div>
             </div>

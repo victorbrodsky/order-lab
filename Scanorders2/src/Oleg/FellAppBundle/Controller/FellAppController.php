@@ -372,6 +372,15 @@ class FellAppController extends Controller {
         $priority = $fellappUtil->getFellAppByStatusAndYear('priority',$fellSubspecId,$startYearStr);
         $priorityTotal = $fellappUtil->getFellAppByStatusAndYear('priority',$fellSubspecId);
 
+        $accepted = $fellappUtil->getFellAppByStatusAndYear('accepted',$fellSubspecId,$startYearStr);
+        $acceptedTotal = $fellappUtil->getFellAppByStatusAndYear('accepted',$fellSubspecId);
+
+        $acceptedandnotified = $fellappUtil->getFellAppByStatusAndYear('acceptedandnotified',$fellSubspecId,$startYearStr);
+        $acceptedandnotifiedTotal = $fellappUtil->getFellAppByStatusAndYear('acceptedandnotified',$fellSubspecId);
+
+        $rejectedandnotified = $fellappUtil->getFellAppByStatusAndYear('rejectedandnotified',$fellSubspecId,$startYearStr);
+        $rejectedandnotifiedTotal = $fellappUtil->getFellAppByStatusAndYear('rejectedandnotified',$fellSubspecId);
+
         $idsArr = array();
         foreach( $fellApps as $fellApp ) {
             $idsArr[] = $fellApp->getId();
@@ -424,6 +433,14 @@ class FellAppController extends Controller {
             'completeTotal' => count($completeTotal),
             'interviewee' => count($interviewee),
             'intervieweeTotal' => count($intervieweeTotal),
+
+            'accepted' => count($accepted),
+            'acceptedTotal' => count($acceptedTotal),
+            'acceptedandnotified' => count($acceptedandnotified),
+            'acceptedandnotifiedTotal' => count($acceptedandnotifiedTotal),
+            'rejectedandnotified' => count($rejectedandnotified),
+            'rejectedandnotifiedTotal' => count($rejectedandnotifiedTotal),
+
             'awaitedInterviews' => $awaitedInterviews,
             'receivedInterviews' => $receivedInterviews,
             'searchFlag' => $searchFlag,
