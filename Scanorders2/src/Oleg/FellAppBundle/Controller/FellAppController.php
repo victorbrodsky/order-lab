@@ -765,6 +765,7 @@ class FellAppController extends Controller {
 
         //ini_set('memory_limit', '3072M'); //3072M
 
+        $userSecUtil = $this->get('user_security_utility');
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $entity = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
@@ -893,7 +894,7 @@ class FellAppController extends Controller {
                 $event = $event . "<br>" . implode("<br>", $removedCollections);
                 $event = $event . $reportsDiffInfoStr;
                 //echo "Diff event=".$event."<br>";
-                $userSecUtil = $this->get('user_security_utility');
+                //$userSecUtil = $this->get('user_security_utility');
                 $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$entity,$request,'Fellowship Application Updated');
             }
 
@@ -921,8 +922,8 @@ class FellAppController extends Controller {
             //set logger for update
             //$logger = $this->container->get('logger');
             //$logger->notice("update: timezone=".date_default_timezone_get());
-            $userSecUtil = $this->container->get('user_security_utility');
-            $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId()); //fetch user from DB otherwise keytype is null
+            //$userSecUtil = $this->container->get('user_security_utility');
+            //$user = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId()); //fetch user from DB otherwise keytype is null
             $event = "Fellowship Application with ID " . $id . " has been updated by " . $user;
             $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$entity,$request,'Fellowship Application Updated');
             //exit('event='.$event);
@@ -936,7 +937,7 @@ class FellAppController extends Controller {
             //echo "</pre>";
 
             $msg = 'Fellowship Form has an error (ID# '.$entity->getId().'): '.$form->getErrors(true);
-            $userSecUtil = $this->container->get('user_security_utility');
+            //$userSecUtil = $this->container->get('user_security_utility');
             //$userSecUtil->sendEmailToSystemEmail("Fellowship Form has an error (ID# ".$entity->getId().")", $msg);
             exit($msg."<br>Notification email has been sent to the system administrator.");
             //throw new \Exception($msg);
@@ -1083,7 +1084,7 @@ class FellAppController extends Controller {
             //exit('report regen');
 
             //set logger for update
-            $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId()); //fetch user from DB otherwise keytype is null
+            //$user = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId()); //fetch user from DB otherwise keytype is null
             $event = "Fellowship Application with ID " . $id . " has been updated by " . $user;
             $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$entity,$request,'Fellowship Application Updated');
             //exit('event='.$event);
@@ -1110,7 +1111,7 @@ class FellAppController extends Controller {
             $em = $this->getDoctrine()->getManager();
             $actionStr = "viewed on edit page";
             $eventType = 'Fellowship Application Page Viewed';
-            $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId()); //fetch user from DB otherwise keytype is null
+            //$user = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId()); //fetch user from DB otherwise keytype is null
             $event = "Fellowship Application with ID".$id." has been ".$actionStr." by ".$user;
 
             $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$entity,$request,$eventType);
