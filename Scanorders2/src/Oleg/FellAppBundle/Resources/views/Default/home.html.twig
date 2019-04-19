@@ -355,6 +355,7 @@
                 {#<th>{{ knp_pagination_sortable(entities, 'Created', 'fellapp.timestamp') }}</th>#}
 
                 <th>{{ knp_pagination_sortable(entities, 'Fellowship Type', 'fellowshipSubspecialty.name') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Status', 'appStatus.action') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Start Date', 'fellapp.startDate') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'ID', 'fellapp.id') }}</th>
                 <th>Photo</th>
@@ -436,6 +437,16 @@
                 {% if entity.appStatus.name == 'priority' %}
                     {% set trclassname = "order-onhold-status" %}
                 {% endif %}
+
+                {% if entity.appStatus.name == 'accepted' %}
+                    {% set trclassname = "fell-app-status-legend-accepted" %}
+                {% endif %}
+                {% if entity.appStatus.name == 'acceptedandnotified' %}
+                    {% set trclassname = "fell-app-status-legend-acceptedandnotified" %}
+                {% endif %}
+                {% if entity.appStatus.name == 'rejectedandnotified' %}
+                    {% set trclassname = "fell-app-status-legend-rejectedandnotified" %}
+                {% endif %}
                 {#EOF Set row color#}
 
                 {#Set examination score#}
@@ -495,6 +506,10 @@
                         {% if entity.fellowshipSubspecialty %}
                             {{  entity.fellowshipSubspecialty.name }}
                         {% endif %}
+                    </td>
+
+                    <td>
+                        {{ entity.appStatus.getAction() }}
                     </td>
 
                     <td>
@@ -862,6 +877,34 @@
                                                     general-data-confirm="Are you sure you want to change status of this Application to 'Archived'?"
                                                     general-data-callback="refreshpage"
                                                     href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'archive' }, true) }}">Archive
+                                                </a>
+                                            </li>
+                                        {% endif %}
+
+                                        {% if entity.appStatus.name != 'accepted' %}
+                                            <li>
+                                                <a
+                                                        general-data-confirm="Are you sure you want to change status of this Application to 'Accepted'?"
+                                                        general-data-callback="refreshpage"
+                                                        href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'accepted' }, true) }}">Mark as Accepted
+                                                </a>
+                                            </li>
+                                        {% endif %}
+                                        {% if entity.appStatus.name != 'acceptedandnotified' %}
+                                            <li>
+                                                <a
+                                                        general-data-confirm="Are you sure you want to change status of this Application to 'Accepted and Notified'?"
+                                                        general-data-callback="refreshpage"
+                                                        href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'acceptedandnotified' }, true) }}">Mark as Accepted and Notify
+                                                </a>
+                                            </li>
+                                        {% endif %}
+                                        {% if entity.appStatus.name != 'rejectedandnotified' %}
+                                            <li>
+                                                <a
+                                                        general-data-confirm="Are you sure you want to change status of this Application to 'Rejected and Notified'?"
+                                                        general-data-callback="refreshpage"
+                                                        href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'rejectedandnotified' }, true) }}">Mark as Rejected and Notify
                                                 </a>
                                             </li>
                                         {% endif %}

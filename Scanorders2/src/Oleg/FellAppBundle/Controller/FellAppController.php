@@ -164,6 +164,11 @@ class FellAppController extends Controller {
         $reject = $filterform['reject']->getData();
         //$onhold = $filterform['onhold']->getData();
         $priority = $filterform['priority']->getData();
+
+        $accepted = $filterform['accepted']->getData();
+        $acceptedandnotified = $filterform['acceptedandnotified']->getData();
+        $rejectedandnotified = $filterform['rejectedandnotified']->getData();
+
         //$page = $request->get('page');
         //echo "active=".$active."<br>";
         //echo "filter=".$filter."<br>";
@@ -291,6 +296,19 @@ class FellAppController extends Controller {
 
         if( $priority ) {
             $orWhere[] = "appStatus.name = 'priority'";
+            $searchFlag = true;
+        }
+
+        if( $accepted ) {
+            $orWhere[] = "appStatus.name = 'accepted'";
+            $searchFlag = true;
+        }
+        if( $acceptedandnotified ) {
+            $orWhere[] = "appStatus.name = 'acceptedandnotified'";
+            $searchFlag = true;
+        }
+        if( $rejectedandnotified ) {
+            $orWhere[] = "appStatus.name = 'rejectedandnotified'";
             $searchFlag = true;
         }
 
@@ -1616,6 +1634,14 @@ class FellAppController extends Controller {
             $emailBody .= $linkToGeneratedApplicantPDF;
             $emailUtil = $this->container->get('user_mailer_utility');
             $emailUtil->sendEmail( $responsibleEmails, $emailSubject, $emailBody );
+        }
+
+        if( $status == 'acceptedandnotified' ) {
+            //TODO: email
+        }
+
+        if( $status == 'rejectedandnotified' ) {
+            //TODO: email
         }
 
         $eventType = 'Fellowship Application Status changed to ' . $statusObj->getAction();

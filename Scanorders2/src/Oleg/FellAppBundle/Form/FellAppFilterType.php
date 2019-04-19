@@ -128,6 +128,19 @@ class FellAppFilterType extends AbstractType
             'required'=>false,
             'label' => 'Priority',
         ));
+
+        $builder->add('accepted', CheckboxType::class, array(
+            'required'=>false,
+            'label' => 'Accepted',
+        ));
+        $builder->add('acceptedandnotified', CheckboxType::class, array(
+            'required'=>false,
+            'label' => 'Accepted and Notified',
+        ));
+        $builder->add('rejectedandnotified', CheckboxType::class, array(
+            'required'=>false,
+            'label' => 'Rejected and Notified',
+        ));
         
     }
 

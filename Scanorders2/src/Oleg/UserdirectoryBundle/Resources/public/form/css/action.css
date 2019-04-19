@@ -103,6 +103,16 @@
     background: #ffffe6;
 }
 
+.fell-app-status-legend-accepted {
+    background: lightgreen;
+}
+.fell-app-status-legend-acceptedandnotified {
+    background: darkseagreen;
+}
+.fell-app-status-legend-rejectedandnotified {
+    background: #ff6600;
+}
+
 .table-row-separator-white {
     background: linear-gradient(to bottom,#FFFFFF 0,#FFFFFF 100%);
 }
