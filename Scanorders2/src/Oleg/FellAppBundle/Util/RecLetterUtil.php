@@ -327,8 +327,22 @@ class RecLetterUtil {
             . " Please submit your recommendation letter to $localInstitutionFellApp."
         ;
 
+        //check the degree of the recommendation letter author; if it equals "MD", "md", "PhD", "m.d.", "Ph.D", "Ph.D.", or "MD/PhD", insert "Dr. "
+        $degreeStr = "";
+        $degreeReference = $reference->getDegree();
+        if(
+            strpos($degreeReference, 'MD') !== false
+            || strpos($degreeReference, 'md') !== false
+            || strpos($degreeReference, 'PhD') !== false
+            || strpos($degreeReference, 'm.d.') !== false
+            || strpos($degreeReference, 'Ph.D') !== false
+            || strpos($degreeReference, 'Dr.') !== false
+        ) {
+            $degreeStr = "Dr. ";
+        }
+
         $body =
-            "Dear $referenceFullName,"
+            "Dear ".$degreeStr."$referenceFullName,"
             . "<br><br>"
             . "$applicantFullName has applied to the $fellappTypeStr fellowship at $localInstitutionFellApp"
             . " for the year $startDateStr and listed you as a reference."

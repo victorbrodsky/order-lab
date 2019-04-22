@@ -117,11 +117,14 @@ class FellAppImportPopulateUtil {
         $logger = $this->container->get('logger');
         $logger->notice($result);
 
-        //Event Logger with event type "Import of Fellowship Applications Spreadsheet". It will be used to get lastImportTimestamps
-        $userSecUtil = $this->container->get('user_security_utility');
-        $systemUser = $userSecUtil->findSystemUser();
-        $eventTypeStr = "Import of Fellowship Applications Spreadsheet";
-        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$result,$systemUser,null,null,$eventTypeStr);
+        //don't create eventlog for this cron job event
+        if(0) {
+            //Event Logger with event type "Import of Fellowship Applications Spreadsheet". It will be used to get lastImportTimestamps
+            $userSecUtil = $this->container->get('user_security_utility');
+            $systemUser = $userSecUtil->findSystemUser();
+            $eventTypeStr = "Import of Fellowship Applications Spreadsheet";
+            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'), $result, $systemUser, null, null, $eventTypeStr);
+        }
 
         return $result;
     }
@@ -1140,26 +1143,11 @@ class FellAppImportPopulateUtil {
                     if ($email && $confirmationEmailFellApp && $confirmationSubjectFellApp && $confirmationBodyFellApp) {
                         $logger->notice("Send confirmation email (fellowship application " . $fellowshipApplication->getId() . " populated in DB) to the applicant email " . $email . " from " . $confirmationEmailFellApp);
                         $emailUtil->sendEmail($email, $confirmationSubjectFellApp, $confirmationBodyFellApp, null, $confirmationEmailFellApp);
+                    } else {
+                        $logger->error("ERROR: confirmation email has not been sent (fellowship application " . $fellowshipApplication->getId() . " populated in DB) to the applicant email " . $email . " from " . $confirmationEmailFellApp);
+
                     }
 
-                    /////// send invitation email to upload recommendation letter to references ///////
-//                    $sendEmailUploadLetterFellApp = $userSecUtil->getSiteSettingParameter('sendEmailUploadLetterFellApp');
-//                    if ($sendEmailUploadLetterFellApp) {
-//
-//                        //check for duplicates or if one of the reference email is missing
-//                        //$missingEmail = true;
-//                        //foreach($fellowshipApplication->getReferences() as $reference) {
-//                        //}
-//
-//                        //send invitation email to references to submit letters
-//                        foreach ($fellowshipApplication->getReferences() as $reference) {
-//                            if( count($reference->getDocuments()) == 0 ) {
-//                                //send invitation email
-//                                $fellappRecLetterUtil->inviteSingleReferenceToSubmitLetter($reference,$fellowshipApplication,false);
-//                            }
-//                        }
-//                    }//if sendEmailUploadLetterFellApp
-//                    /////// EOF send invitation email to upload recommendation letter to references ///////
                     // send invitation email to upload recommendation letter to references
                     $fellappRecLetterUtil->sendInvitationEmailsToReferences($fellowshipApplication,true);
                 }//if live
