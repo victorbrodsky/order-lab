@@ -405,29 +405,33 @@
                 {% if entity.appStatus.name == 'archive' %}
                     {#No attention required - plain complete order#}
                     {#{% set trclassname = "action-cancel-status" %}#}
-                    {% set trclassname = "info" %}
+                    {#{% set trclassname = "info" %}#}
+                    {% set trclassname = "fell-app-status-legend-archived" %}
                 {% endif %}
 
                 {% if entity.appStatus.name == 'hide' %}
                     {#urgent attention required#}
                     {#{% set trclassname = "order-urgent-status" %}#}
-                    {% set trclassname = "danger" %}
+                    {#{% set trclassname = "danger" %}#}
+                    {% set trclassname = "fell-app-status-legend-hidden" %}
                 {% endif %}
 
                 {% if entity.appStatus.name == 'complete' %}
                     {#urgent attention required#}
                     {#{% set trclassname = "order-neutral-status" %}#}
-                    {% set trclassname = "order-complete-status" %}
+                    {#{% set trclassname = "order-complete-status" %}#}
+                    {% set trclassname = "fell-app-status-legend-complete" %}
                 {% endif %}
 
                 {% if entity.appStatus.name == 'interviewee' %}
                     {#urgent attention required#}
-                    {% set trclassname = "order-interviewee-status" %}
-                    {#{% set trclassname = "success" %}#}
+                    {#{% set trclassname = "order-interviewee-status" %}#}
+                    {% set trclassname = "fell-app-status-legend-interviewee" %}
                 {% endif %}
 
                 {% if entity.appStatus.name == 'reject' %}
-                    {% set trclassname = "order-reject-status" %}
+                    {#{% set trclassname = "order-reject-status" %}#}
+                    {% set trclassname = "fell-app-status-legend-reject" %}
                 {% endif %}
 
                 {#{% if entity.appStatus.name == 'onhold' %}#}
@@ -435,7 +439,8 @@
                 {#{% endif %}#}
 
                 {% if entity.appStatus.name == 'priority' %}
-                    {% set trclassname = "order-onhold-status" %}
+                    {#{% set trclassname = "order-onhold-status" %}#}
+                    {% set trclassname = "fell-app-status-legend-priority" %}
                 {% endif %}
 
                 {% if entity.appStatus.name == 'accepted' %}

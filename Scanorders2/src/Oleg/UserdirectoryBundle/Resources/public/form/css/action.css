@@ -75,14 +75,6 @@
     background: white;
 }
 
-.fell-app-status-legend-complete {
-    background: rgb(247, 247, 247);
-}
-
-.fell-app-status-legend-interviewee {
-    background: rgba(217, 247, 218, 0.38);
-}
-
 .fell-app-status-legend-reject {
     background: #D0D0D0;
 }
@@ -96,18 +88,28 @@
 }
 
 .fell-app-status-legend-archived {
-    background: #c4e3f3;
+    background: #BEBEBE;
+    /*background: #c4e3f3;*/
+}
+
+.fell-app-status-legend-interviewee {
+    background: rgba(217, 247, 218, 0.38);
+}
+
+.fell-app-status-legend-complete {
+    /*background: rgb(247, 247, 247);*/
+    background: #e6f2ff;
 }
 
 .fell-app-status-legend-priority {
-    background: #ffffe6;
+    background: #c0e3fa;
 }
 
 .fell-app-status-legend-accepted {
-    background: dodgerblue;
+    background: #3c89bd;
 }
 .fell-app-status-legend-acceptedandnotified {
-    background: darkblue;
+    background: #1971ad;
 }
 .fell-app-status-legend-rejectedandnotified {
     background: #7C7C7C;

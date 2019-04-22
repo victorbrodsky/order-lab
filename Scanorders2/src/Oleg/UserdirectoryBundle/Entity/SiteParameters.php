@@ -399,6 +399,22 @@ class SiteParameters {
     private $avataruploadpath;
 
     /**
+     * @return mixed
+     */
+    public function getFellappSiteParameter()
+    {
+        return $this->fellappSiteParameter;
+    }
+
+    /**
+     * @param mixed $fellappSiteParameter
+     */
+    public function setFellappSiteParameter($fellappSiteParameter)
+    {
+        $this->fellappSiteParameter = $fellappSiteParameter;
+    }
+
+    /**
      * @ORM\Column(type="string", nullable=true)
      */
     private $fellappuploadpath;
@@ -451,6 +467,12 @@ class SiteParameters {
     private $underLoginMsgScan;
 
     ///////////////////// FELLAPP /////////////////////
+    /**
+     * Defaults for an Organizational Group
+     * @ORM\OneToOne(targetEntity="Oleg\FellAppBundle\Entity\FellappSiteParameter", cascade={"persist","remove"})
+     */
+    private $fellappSiteParameter;
+
     /**
      * Path to the local copy of the fellowship application form
      * https://script.google.com/a/macros/pathologysystems.org/d/14jgVkEBCAFrwuW5Zqiq8jsw37rc4JieHkKrkYz1jyBp_DFFyTjRGKgHj/edit

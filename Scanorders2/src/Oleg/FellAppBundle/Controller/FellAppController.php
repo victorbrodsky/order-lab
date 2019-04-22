@@ -193,6 +193,8 @@ class FellAppController extends Controller {
                     'filter[interviewee]' => 1,
                     //'filter[onhold]' => 1,
                     'filter[priority]' => 1,
+                    'filter[accepted]' => 1,
+                    'filter[acceptedandnotified]' => 1,
                     'filter[filter]' => $fellowshipTypeId,
                 )
             ) );
