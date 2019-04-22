@@ -57,10 +57,16 @@ class RecLetterUtil {
 
         //Generate "Recommendation Letter Salted Scrypt Hash ID":
         // Live Server URL from Site Settings +
+        $url = NULL;
         if( !$request ) {
             $request = $this->container->get('request_stack')->getCurrentRequest();
         }
-        $url = $request->getSchemeAndHttpHost();
+        if( $request ) {
+            $url = $request->getSchemeAndHttpHost();
+        }
+        if( !$url ) {
+            $url = $userSecUtil->getSiteSettingParameter('environment');
+        }
 
         // Organizational Group of the received application +
         $institution = $fellapp->getInstitution();
@@ -112,7 +118,7 @@ class RecLetterUtil {
         $hash = hash("sha1",$str); //sha1
         //$hash = password_hash($str,PASSWORD_DEFAULT);
         //echo "Hash=".$hash."<br>";
-        $logger->notice($fellappId."(".$referenceId."): Generated hash=".$hash);
+        $logger->notice($fellappId."(".$referenceId.", count=".$count."): Generated hash=".$hash);
 
         //check for uniqueness
         if( $hash ) {
