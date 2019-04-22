@@ -45,7 +45,7 @@ class RecLetterUtil {
 
     //Recommendation Letter Salted Script Hash ID
     public function generateRecLetterId( $fellapp, $reference, $request=null, $count=0 ) {
-
+        $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
 
         //$str = "pepperstr";
@@ -112,6 +112,7 @@ class RecLetterUtil {
         $hash = hash("sha1",$str); //sha1
         //$hash = password_hash($str,PASSWORD_DEFAULT);
         //echo "Hash=".$hash."<br>";
+        $logger->notice($fellappId."(".$referenceId."): Generated hash=".$hash);
 
         //check for uniqueness
         if( $hash ) {

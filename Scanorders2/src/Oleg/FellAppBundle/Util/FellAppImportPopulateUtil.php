@@ -1129,9 +1129,6 @@ class FellAppImportPopulateUtil {
 
                 $logger->notice($event);
 
-                //create reference hash ID. Must run after fellowship is in DB and has IDs
-                $fellappRecLetterUtil->generateFellappRecLetterId($fellowshipApplication,true);
-
                 //send confirmation email to this applicant for prod server
                 $environment = $userSecUtil->getSiteSettingParameter('environment');
                 if( $environment == "live" ) {
@@ -1147,17 +1144,22 @@ class FellAppImportPopulateUtil {
                         $logger->error("ERROR: confirmation email has not been sent (fellowship application " . $fellowshipApplication->getId() . " populated in DB) to the applicant email " . $email . " from " . $confirmationEmailFellApp);
 
                     }
-
-                    // send invitation email to upload recommendation letter to references
-                    $fellappRecLetterUtil->sendInvitationEmailsToReferences($fellowshipApplication,true);
+                    
                 }//if live
 
-                //if( $environment == "live" ) {
+                if( $environment == "live" ) {
                     //send confirmation email to the corresponding Fellowship director and coordinator
                     $fellappUtil = $this->container->get('fellapp_util');
                     $fellappUtil->sendConfirmationEmailsOnApplicationPopulation( $fellowshipApplication, $user );
-                //}
+                }
 
+                //create reference hash ID. Must run after fellowship is in DB and has IDs
+                $fellappRecLetterUtil->generateFellappRecLetterId($fellowshipApplication,true);
+                if( $environment == "live" ) {
+                    // send invitation email to upload recommendation letter to references
+                    $fellappRecLetterUtil->sendInvitationEmailsToReferences($fellowshipApplication,true);
+                }
+                
                 //delete: imported rows from the sheet on Google Drive and associated uploaded files from the Google Drive.
                 if( $deleteSourceRow ) {
 
