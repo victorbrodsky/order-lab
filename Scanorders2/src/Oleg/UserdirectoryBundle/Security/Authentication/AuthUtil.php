@@ -157,7 +157,7 @@ class AuthUtil {
 
         $searchRes = null;
         $withNewUserPrePopulation = true;
-        //$withNewUserPrePopulation = false; //testing
+        $withNewUserPrePopulation = false; //testing
         if( $withNewUserPrePopulation ) {
             //////////////// first search this user if exists in ldap directory ////////////////
             $searchRes = $this->searchLdap($usernameClean,$ldapType);
@@ -747,10 +747,10 @@ class AuthUtil {
         $cnx = $this->connectToLdap($LDAPHost);
 
         //$filter="(ObjectClass=Person)";
-        $filter="(CN=".$username.")";
+        //$filter="(CN=".$username.")";
         //$filter = "(sAMAccountName=".$username.")";
 
-        //$filter = "(|(CN=$username)(sAMAccountName=$username))"; //use cn or sAMAccountName to search by username (cwid)
+        $filter = "(|(CN=$username)(sAMAccountName=$username))"; //use cn or sAMAccountName to search by username (cwid)
 
         //test
         //$LDAPUserAdmin = "cn=ro_admin,ou=sysadmins,dc=zflexsoftware,dc=com";
