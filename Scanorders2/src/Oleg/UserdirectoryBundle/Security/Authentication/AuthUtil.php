@@ -747,9 +747,10 @@ class AuthUtil {
         $cnx = $this->connectToLdap($LDAPHost);
 
         //$filter="(ObjectClass=Person)";
-        //$filter="(cn=".$username.")";
+        $filter="(CN=".$username.")";
         //$filter = "(sAMAccountName=".$username.")";
-        $filter = "(|(cn=$username)(sAMAccountName=$username))"; //use cn or sAMAccountName to search by username (cwid)
+
+        //$filter = "(|(CN=$username)(sAMAccountName=$username))"; //use cn or sAMAccountName to search by username (cwid)
 
         //test
         //$LDAPUserAdmin = "cn=ro_admin,ou=sysadmins,dc=zflexsoftware,dc=com";
@@ -762,9 +763,9 @@ class AuthUtil {
             $this->logger->error("search Ldap: ldap_bind failed with admin authentication username=" . $LDAPUserAdmin);
             //echo "Could not bind to LDAP: user=".$LDAPUserAdmin."<br>";
             //testing: allow to login without LDAP admin bind
-            $withLdapAdmin = true;
-            $withLdapAdmin = false;
-            if( $withLdapAdmin ) {
+            $withLdapAdminBind = true;
+            //$withLdapAdminBind = false;
+            if( $withLdapAdminBind ) {
                 ldap_error($cnx);
                 ldap_unbind($cnx);
                 //exit("error ldap_bind");
