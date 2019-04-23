@@ -157,9 +157,9 @@ class AuthUtil {
 
         $searchRes = null;
         $withNewUserPrePopulation = true;
-        $withNewUserPrePopulation = false; //testing
+        //$withNewUserPrePopulation = false; //testing
         $withUserSearch = true;
-        $withUserSearch = false; //testing LDAP search stoped working on 23 April 2019 ~1:30 pm
+        //$withUserSearch = false; //testing LDAP search stoped working on 23 April 2019 ~1:30 pm
         if( $withNewUserPrePopulation ) {
             //////////////// first search this user if exists in ldap directory ////////////////
             $searchRes = $this->searchLdap($usernameClean,$ldapType);
@@ -798,7 +798,7 @@ class AuthUtil {
         foreach( $ldapBindDNArr as $ldapBindDN) {
             $this->logger->notice("search Ldap: ldapBindDN=".$ldapBindDN);
             $sr = ldap_search($cnx, $ldapBindDN, $filter, $LDAPFieldsToFind);
-            if( 1 || $sr ) {
+            if( $sr ) {
                 $this->logger->notice("search Ldap: ldap_search OK with filter=" . $filter . "; bindDn=".$ldapBindDN);
                 $info = ldap_get_entries($cnx, $sr);
 
