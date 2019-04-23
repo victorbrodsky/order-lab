@@ -67,7 +67,7 @@ class FellAppSiteParameterType extends AbstractType
 
         if( $this->params['cycle'] != 'show' ) {
             $builder->add('save', SubmitType::class, array(
-                'label' => 'Submit',
+                'label' => 'Save',
                 'attr' => array('class' => 'btn btn-primary')
             ));
         }

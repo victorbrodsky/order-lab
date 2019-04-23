@@ -764,8 +764,9 @@ class AuthUtil {
             ldap_error($cnx);
             ldap_unbind($cnx);
             //exit("error ldap_bind");
-            return NULL;
-            //return -1;  //"Could not bind to LDAP server";
+
+            //testing: allow to login without LDAP admin bind
+            //return NULL;
         } else {
             //$this->logger->notice("search Ldap: ldap_bind OK with admin authentication username=" . $LDAPUserAdmin);
             //echo "OK simple LDAP: user=".$LDAPUserAdmin."<br>";
