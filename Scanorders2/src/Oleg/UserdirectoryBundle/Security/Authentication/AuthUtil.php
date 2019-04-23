@@ -158,6 +158,8 @@ class AuthUtil {
         $searchRes = null;
         $withNewUserPrePopulation = true;
         $withNewUserPrePopulation = false; //testing
+        $withUserSearch = true;
+        $withUserSearch = false; //testing LDAP search stoped working on 23 April 2019 ~1:30 pm
         if( $withNewUserPrePopulation ) {
             //////////////// first search this user if exists in ldap directory ////////////////
             $searchRes = $this->searchLdap($usernameClean,$ldapType);
@@ -166,7 +168,10 @@ class AuthUtil {
                 $this->logger->error("LdapAuthentication: can not find user by usernameClean=" . $usernameClean);
                 //$this->logger->error("LdapAuthentication: can not find user by usernameClean=[" . $usernameClean . "]; token=[" . $token->getCredentials() . "]");
                 //$this->logger->error(print_r($searchRes));
-                return NULL;
+
+                if($withUserSearch) {
+                    return NULL;
+                }
             } else {
                 $this->logger->notice("LdapAuthentication: user found by  usernameClean=" . $usernameClean);
                 /////// EOF testing ///////
@@ -764,7 +769,7 @@ class AuthUtil {
             //echo "Could not bind to LDAP: user=".$LDAPUserAdmin."<br>";
             //testing: allow to login without LDAP admin bind
             $withLdapAdminBind = true;
-            $withLdapAdminBind = false;
+            //$withLdapAdminBind = false;
             if( $withLdapAdminBind ) {
                 ldap_error($cnx);
                 ldap_unbind($cnx);
