@@ -761,12 +761,15 @@ class AuthUtil {
         if( !$res ) {
             $this->logger->error("search Ldap: ldap_bind failed with admin authentication username=" . $LDAPUserAdmin);
             //echo "Could not bind to LDAP: user=".$LDAPUserAdmin."<br>";
-            ldap_error($cnx);
-            ldap_unbind($cnx);
-            //exit("error ldap_bind");
-
             //testing: allow to login without LDAP admin bind
-            //return NULL;
+            $withLdapAdmin = true;
+            $withLdapAdmin = false;
+            if( $withLdapAdmin ) {
+                ldap_error($cnx);
+                ldap_unbind($cnx);
+                //exit("error ldap_bind");
+                return NULL;
+            }
         } else {
             //$this->logger->notice("search Ldap: ldap_bind OK with admin authentication username=" . $LDAPUserAdmin);
             //echo "OK simple LDAP: user=".$LDAPUserAdmin."<br>";
