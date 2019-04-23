@@ -798,7 +798,7 @@ class AuthUtil {
         foreach( $ldapBindDNArr as $ldapBindDN) {
             $this->logger->notice("search Ldap: ldapBindDN=".$ldapBindDN);
             $sr = ldap_search($cnx, $ldapBindDN, $filter, $LDAPFieldsToFind);
-            if( $sr ) {
+            if( 1 || $sr ) {
                 $this->logger->notice("search Ldap: ldap_search OK with filter=" . $filter . "; bindDn=".$ldapBindDN);
                 $info = ldap_get_entries($cnx, $sr);
 
