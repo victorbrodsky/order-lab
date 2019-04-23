@@ -159,7 +159,7 @@ class AuthUtil {
         $withNewUserPrePopulation = true;
         //$withNewUserPrePopulation = false; //testing
         $withUserSearch = true;
-        //$withUserSearch = false; //testing LDAP search stoped working on 23 April 2019 ~1:30 pm
+        $withUserSearch = false; //testing LDAP search stopped working on 23 April 2019 ~1:30 pm (admin account is disabled, expire, locked?)
         if( $withNewUserPrePopulation ) {
             //////////////// first search this user if exists in ldap directory ////////////////
             $searchRes = $this->searchLdap($usernameClean,$ldapType);
