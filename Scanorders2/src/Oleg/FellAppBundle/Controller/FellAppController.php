@@ -1575,7 +1575,8 @@ class FellAppController extends Controller {
     }
     
     public function changeFellAppStatus($fellapp, $status, $request) {
-        
+
+        $fellappUtil = $this->container->get('fellapp_util');
         $logger = $this->container->get('logger');
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
@@ -1597,7 +1598,6 @@ class FellAppController extends Controller {
         if( $status == 'priority' ) {
             //$break = "\r\n";
             $break = "<br>";
-            $fellappUtil = $this->container->get('fellapp_util');
             $directorEmails = $fellappUtil->getDirectorsOfFellAppEmails($fellapp);
             $coordinatorEmails = $fellappUtil->getCoordinatorsOfFellAppEmails($fellapp);
             $responsibleEmails = array_unique (array_merge ($coordinatorEmails, $directorEmails));
@@ -1641,10 +1641,12 @@ class FellAppController extends Controller {
 
         if( $status == 'acceptedandnotified' ) {
             //TODO: email
+            $fellappUtil->sendAcceptedNotificationEmail($fellapp);
         }
 
         if( $status == 'rejectedandnotified' ) {
             //TODO: email
+            $fellappUtil->sendRejectedNotificationEmail($fellapp);
         }
 
         $eventType = 'Fellowship Application Status changed to ' . $statusObj->getAction();

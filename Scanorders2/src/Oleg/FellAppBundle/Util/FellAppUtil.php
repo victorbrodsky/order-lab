@@ -1451,4 +1451,181 @@ class FellAppUtil {
         }
         return $interviews;
     }
+
+    public function sendAcceptedNotificationEmail($fellapp) {
+        $userSecUtil = $this->container->get('user_security_utility');
+        $emailUtil = $this->container->get('user_mailer_utility');
+
+        $user = NULL;
+        if( $this->container->get('security.token_storage')->getToken() ) {
+            $user = $this->container->get('security.token_storage')->getToken()->getUser();
+        }
+        if( $user instanceof User) {
+            //User OK - do nothing
+        } else {
+            $user = $userSecUtil->findSystemUser();
+        }
+        if( !$user ) {
+            $user = $userSecUtil->findSystemUser();
+        }
+
+        $applicant = $fellapp->getUser();
+        if( $applicant ) {
+            $applicantEmail = $applicant->getSingleEmail();
+        } else {
+            return false;
+        }
+
+        $applicantFullName = $fellapp->getApplicantFullName();
+        $fellappType = $fellapp->getFellowshipSubspecialty()."";
+        $startDate = $fellapp->getStartDate();
+        if( $startDate ) {
+            $startDateStr = $fellapp->getStartDate()->format('Y');
+        } else {
+            $startDateStr = NULL;
+        }
+
+        $acceptedEmailSubject = $userSecUtil->getSiteSettingParameter('acceptedEmailSubject',$this->container->getParameter('fellapp.sitename'));
+        if( !$acceptedEmailSubject ) {
+            //Congratulations on your acceptance to the [Subspecialty] [Year] fellowship at [Institution].
+            //Institution should be a variable pre-set to "Weill Cornell Medicine" - if it does not exist, add this field to its Settings.
+            $inst = $fellapp->getInstitution()."";
+            $acceptedEmailSubject = "Congratulations on your acceptance to the "
+                .$fellappType
+                ." ".$startDateStr
+                ." fellowship at ".$inst
+            ;
+        } else {
+            $acceptedEmailSubject = $this->siteSettingsConstantReplace($acceptedEmailSubject,$fellapp);
+        }
+
+        $acceptedEmailBody = $userSecUtil->getSiteSettingParameter('acceptedEmailBody',$this->container->getParameter('fellapp.sitename'));
+        if( !$acceptedEmailBody ) {
+            //Dear FirstName LastName,
+            //We are looking forward to having you join us as a [specialty] fellow in [year]!
+            //Weill Cornell Medicine
+            $acceptedEmailBody = "Dear $applicantFullName,"
+                ."<br><br>"."We are looking forward to having you join us as a $fellappType fellow in $startDateStr!"
+                ."<br><br>".$inst
+            ;
+        } else {
+            $acceptedEmailBody = $this->siteSettingsConstantReplace($acceptedEmailBody,$fellapp);
+        }
+
+        $emailUtil->sendEmail( $applicantEmail, $acceptedEmailSubject, $acceptedEmailBody );
+
+        $msg = "Accepted notification email has been sent to " . $applicantFullName . " (".$applicantEmail.")";
+        $eventMsg = $msg . "<br><br> Subject:<br>". $acceptedEmailSubject . "<br><br>Body:<br>" . $acceptedEmailBody;
+
+        $userSecUtil->createUserEditEvent(
+            $this->container->getParameter('fellapp.sitename'), //$sitename
+            $eventMsg,                                          //$event message
+            $user,                                              //user
+            $fellapp,                                           //$subjectEntities
+            null,                                               //$request
+            "FellApp Accepted Notification Email Sent"          //$action
+        );
+
+        return true;
+    }
+
+    public function sendRejectedNotificationEmail($fellapp) {
+        $userSecUtil = $this->container->get('user_security_utility');
+        $emailUtil = $this->container->get('user_mailer_utility');
+
+        $user = NULL;
+        if( $this->container->get('security.token_storage')->getToken() ) {
+            $user = $this->container->get('security.token_storage')->getToken()->getUser();
+        }
+        if( $user instanceof User) {
+            //User OK - do nothing
+        } else {
+            $user = $userSecUtil->findSystemUser();
+        }
+        if( !$user ) {
+            $user = $userSecUtil->findSystemUser();
+        }
+
+        $applicant = $fellapp->getUser();
+        if( $applicant ) {
+            $applicantEmail = $applicant->getSingleEmail();
+        } else {
+            return false;
+        }
+
+        $applicantFullName = $fellapp->getApplicantFullName();
+        $fellappType = $fellapp->getFellowshipSubspecialty()."";
+        $startDate = $fellapp->getStartDate();
+        if( $startDate ) {
+            $startDateStr = $fellapp->getStartDate()->format('Y');
+        } else {
+            $startDateStr = NULL;
+        }
+
+        $rejectedEmailSubject = $userSecUtil->getSiteSettingParameter('rejectedEmailSubject',$this->container->getParameter('fellapp.sitename'));
+        if( !$rejectedEmailSubject ) {
+            //Thank you for applying to the [Subspecialty] [Year] fellowship at [Institution]
+            $inst = $fellapp->getInstitution()."";
+            $rejectedEmailSubject = "Thank you for applying to the "
+                .$fellappType
+                ." ".$startDateStr
+                ." fellowship at ".$inst
+            ;
+        } else {
+            $rejectedEmailSubject = $this->siteSettingsConstantReplace($rejectedEmailSubject,$fellapp);
+        }
+
+        $rejectedEmailBody = $userSecUtil->getSiteSettingParameter('rejectedEmailBody',$this->container->getParameter('fellapp.sitename'));
+        if( !$rejectedEmailBody ) {
+            //Dear FirstName LastName,
+            //We have reviewed your application to the [specialty] fellowship for [year],
+            // and we regret to inform you that we are unable to offer you a position at this time.
+            // Please contact us if you have any questions.
+            //Weill Cornell Medicine
+            $rejectedEmailBody = "Dear $applicantFullName,"
+                ."<br><br>"."We have reviewed your application to the $fellappType fellow for $startDateStr"
+                ." and we regret to inform you that we are unable to offer you a position at this time."
+                ."<br>Please contact us if you have any questions."
+                ."<br><br>".$inst
+            ;
+        } else {
+            $rejectedEmailBody = $this->siteSettingsConstantReplace($rejectedEmailBody,$fellapp);
+        }
+
+        $emailUtil->sendEmail( $applicantEmail, $rejectedEmailSubject, $rejectedEmailBody );
+
+        $msg = "Rejected notification email has been sent to " . $applicantFullName . " (".$applicantEmail.")";
+        $eventMsg = $msg . "<br><br> Subject:<br>". $rejectedEmailSubject . "<br><br>Body:<br>" . $rejectedEmailBody;
+
+        $userSecUtil->createUserEditEvent(
+            $this->container->getParameter('fellapp.sitename'), //$sitename
+            $eventMsg,                                          //$event message
+            $user,                                              //user
+            $fellapp,                                           //$subjectEntities
+            null,                                               //$request
+            "FellApp Rejected Notification Email Sent"          //$action
+        );
+
+        return true;
+    }
+
+    public function siteSettingsConstantReplace($str,$fellapp) {
+
+        $applicantFullName = $fellapp->getApplicantFullName();
+        $fellappType = $fellapp->getFellowshipSubspecialty()."";
+        $inst = $fellapp->getInstitution()."";
+        $startDate = $fellapp->getStartDate();
+        if( $startDate ) {
+            $startDateStr = $fellapp->getStartDate()->format('Y');
+        } else {
+            $startDateStr = NULL;
+        }
+
+        $str = str_replace("[[APPLICANT NAME]]",$applicantFullName,$str);
+        $str = str_replace("[[START YEAR]]",$startDateStr,$str);
+        $str = str_replace("[[FELLOWSHIP TYPE]]",$fellappType,$str);
+        $str = str_replace("[[INSTITUTION]]",$inst,$str);
+
+        return $str;
+    }
 } 

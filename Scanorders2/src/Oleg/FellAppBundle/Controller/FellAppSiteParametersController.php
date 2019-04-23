@@ -17,6 +17,8 @@
 
 namespace Oleg\FellAppBundle\Controller;
 
+use Oleg\FellAppBundle\Form\FellAppSiteParameterType;
+use Oleg\FellAppBundle\Entity\FellAppSiteParameter;
 use Oleg\UserdirectoryBundle\Controller\SiteParametersController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -46,7 +48,7 @@ class FellAppSiteParametersController extends SiteParametersController
      */
     public function indexSiteSettingsAction(Request $request)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_ADMIN') ) {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
         return $this->indexParameters($request);
@@ -61,7 +63,7 @@ class FellAppSiteParametersController extends SiteParametersController
      */
     public function indexAction(Request $request)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_ADMIN') ) {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
         return $this->indexParameters($request);
@@ -91,5 +93,117 @@ class FellAppSiteParametersController extends SiteParametersController
         return $this->updateParameters($request, $id);
     }
 
+
+    /**
+     * FellAppSiteParameter
+     *
+     * @Route("/specific-site-parameters/edit/", name="fellapp_siteparameters_edit_specific_site_parameters")
+     * @Method({"GET", "POST"})
+     * @Template("OlegFellAppBundle:SiteParameter:edit.html.twig")
+     */
+    public function fellappSiteParameterEditAction( Request $request ) {
+
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_ADMIN') ) {
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+
+        $cycle = "edit";
+
+        $fellappSiteParameter = $this->getOrCreateNewFellAppParameters();
+
+        $form = $this->createFellAppSiteParameterForm($fellappSiteParameter,$cycle);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+
+            //exit('submit');
+            $em->persist($fellappSiteParameter);
+            $em->flush();
+
+            return $this->redirect($this->generateUrl('fellapp_siteparameters'));
+        }
+
+        return array(
+            'entity' => $fellappSiteParameter,
+            'form'   => $form->createView(),
+            'cycle' => $cycle,
+            'title' => "Update Fellowship Specific Site Parameters"
+        );
+    }
+
+    /**
+     * FellAppSiteParameter Show
+     *
+     * @Route("/specific-site-parameters/show/", name="fellapp_siteparameters_show_specific_site_parameters")
+     * @Method("GET")
+     * @Template("OlegFellAppBundle:SiteParameter:edit-content.html.twig")
+     */
+    public function fellappSiteParameterShowAction( Request $request ) {
+
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_ADMIN') ) {
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+
+        $cycle = "show";
+
+        $fellappSiteParameter = $this->getOrCreateNewFellAppParameters();
+        //echo "fellappSiteParameter=".$fellappSiteParameter->getId()."<br>";
+
+        $form = $this->createFellAppSiteParameterForm($fellappSiteParameter,$cycle);
+
+        return array(
+            'entity' => $fellappSiteParameter,
+            'form'   => $form->createView(),
+            'cycle' => $cycle,
+            'title' => "Fellowship Specific Site Parameters"
+        );
+    }
+
+    public function createFellAppSiteParameterForm($entity, $cycle) {
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $disabled = false;
+        if( $cycle == "show" ) {
+            $disabled = true;
+        }
+
+        $params = array(
+            'cycle' => $cycle,
+            'user' => $user,
+            'em' => $em,
+            'container' => $this->container,
+        );
+
+        $form = $this->createForm(FellAppSiteParameterType::class, $entity, array(
+            'form_custom_value' => $params,
+            'disabled' => $disabled
+        ));
+
+        return $form;
+    }
+
+    //Get or Create a new FellAppSiteParameter
+    public function getOrCreateNewFellAppParameters() {
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+        if( count($entities) != 1 ) {
+            throw new \Exception( 'Must have only one parameter object. Found '.count($entities).'object(s)' );
+        }
+        $siteParameters = $entities[0];
+
+        $fellappSiteParameter = $siteParameters->getFellAppSiteParameter();
+
+        //create one FellAppSiteParameter
+        if( !$fellappSiteParameter ) {
+            //echo "FellAppSiteParameter null <br>";
+            $fellappSiteParameter = new FellAppSiteParameter();
+            $siteParameters->setFellAppSiteParameter($fellappSiteParameter);
+            $em->flush();
+        }
+
+        return $fellappSiteParameter;
+    }
 
 }
