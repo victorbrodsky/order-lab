@@ -336,14 +336,13 @@ class RecLetterUtil {
 
         //check the degree of the recommendation letter author; if it equals "MD", "md", "PhD", "m.d.", "Ph.D", "Ph.D.", or "MD/PhD", insert "Dr. "
         $degreeStr = "";
-        $degreeReference = $reference->getDegree();
+        $degreeReference = strtolower($reference->getDegree());
         if(
-            strpos($degreeReference, 'MD') !== false
-            || strpos($degreeReference, 'md') !== false
-            || strpos($degreeReference, 'PhD') !== false
+            strpos($degreeReference, 'md') !== false
             || strpos($degreeReference, 'm.d.') !== false
-            || strpos($degreeReference, 'Ph.D') !== false
-            || strpos($degreeReference, 'Dr.') !== false
+            || strpos($degreeReference, 'phd') !== false
+            || strpos($degreeReference, 'ph.d') !== false
+            || strpos($degreeReference, 'dr.') !== false
         ) {
             $degreeStr = "Dr. ";
         }
