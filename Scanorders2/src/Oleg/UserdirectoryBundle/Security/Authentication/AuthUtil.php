@@ -764,7 +764,7 @@ class AuthUtil {
             //echo "Could not bind to LDAP: user=".$LDAPUserAdmin."<br>";
             //testing: allow to login without LDAP admin bind
             $withLdapAdminBind = true;
-            //$withLdapAdminBind = false;
+            $withLdapAdminBind = false;
             if( $withLdapAdminBind ) {
                 ldap_error($cnx);
                 ldap_unbind($cnx);
