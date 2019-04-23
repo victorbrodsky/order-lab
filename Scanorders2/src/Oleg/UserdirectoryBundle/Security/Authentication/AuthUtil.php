@@ -777,7 +777,7 @@ class AuthUtil {
                 return NULL;
             }
         } else {
-            //$this->logger->notice("search Ldap: ldap_bind OK with admin authentication username=" . $LDAPUserAdmin);
+            $this->logger->notice("search Ldap: ldap_bind OK with admin authentication username=" . $LDAPUserAdmin);
             //echo "OK simple LDAP: user=".$LDAPUserAdmin."<br>";
             //exit("OK simple LDAP: user=".$LDAPUserAdmin."<br>");
         }
