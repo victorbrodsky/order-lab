@@ -563,11 +563,12 @@ class FellAppController extends Controller {
             if( false == $this->get('security.authorization_checker')->isGranted("update",$entity) ) {
                 return $this->redirect( $this->generateUrl('fellapp-nopermission') );
             }
-        } else {
-            if( false == $this->get('security.authorization_checker')->isGranted("read",$entity) ) {
-                return $this->redirect( $this->generateUrl('fellapp-nopermission') );
-            }
         }
+//        else {
+//            if( false == $this->get('security.authorization_checker')->isGranted("read",$entity) ) {
+//                return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+//            }
+//        }
 
         $args = $this->getShowParameters($routeName,$id);
 
@@ -575,14 +576,9 @@ class FellAppController extends Controller {
             return $this->render('OlegFellAppBundle:Form:download.html.twig', $args);
         }
 
-
         //event log
-        //$logger = $this->container->get('logger');
-        //$logger->notice("view: timezone=".date_default_timezone_get());
-        //$user = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId()); //fetch user from DB otherwise keytype is null
-        $event = "Fellowship Application with ID".$id." has been ".$actionStr." by ".$user;
-
-        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$entity,$request,$eventType);
+        //$event = "Fellowship Application with ID".$id." has been ".$actionStr." by ".$user;
+        //$userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$entity,$request,$eventType);
         
         return $this->render('OlegFellAppBundle:Form:new.html.twig', $args);
     }
