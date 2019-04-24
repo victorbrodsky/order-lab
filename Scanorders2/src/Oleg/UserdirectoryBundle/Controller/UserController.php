@@ -90,6 +90,15 @@ class UserController extends Controller
         //print_r($ver);
         //exit('1');
 
+        //testing
+        $authUtil = $this->get('authenticator_utility');
+        $username = 'oli2002';
+        $searchRes = $authUtil->searchLdap($username,$ldapType=1);
+        echo "<pre>";
+        print_r($searchRes);
+        echo "</pre>";
+        exit('1');
+
         return array('sitename'=>$this->container->getParameter('employees.sitename'));
     }
 
