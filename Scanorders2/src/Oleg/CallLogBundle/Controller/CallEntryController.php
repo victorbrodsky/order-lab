@@ -271,7 +271,14 @@ class CallEntryController extends Controller
 
         //get mrntypes ($mrntypeChoices)
         $mrntypeChoices = array();
-        $mrntypeChoicesArr = $em->getRepository('OlegOrderformBundle:MrnType')->findBy(array('type'=>array('default','user-added')));
+        $mrntypeChoicesArr = $em->getRepository('OlegOrderformBundle:MrnType')->findBy(
+            array(
+                'type'=>array('default','user-added')
+            ),
+            array(
+                'orderinlist' => 'ASC'
+            )
+        );
         foreach( $mrntypeChoicesArr as $thisMrnType ) {
             $mrntypeChoices[$thisMrnType->getName()] = $thisMrnType->getId();
         }
@@ -378,7 +385,7 @@ class CallEntryController extends Controller
                     array(
                         'filter[messageStatus]' => "All except deleted",
                         'filter[messageCategory]' => $messageCategorieDefaultIdStr,    //$messageCategoriePathCall->getName()."_".$messageCategoriePathCall->getId()
-                        'filter[mrntype]' => $defaultMrnTypeId,
+                        //'filter[mrntype]' => $defaultMrnTypeId,
                         //'filter[metaphone]'=>false
                     )
                 ));
@@ -537,6 +544,11 @@ class CallEntryController extends Controller
                     $queryParameters['keytype'] = $mrntypeFilter;
                 }
             }
+        }//if searchFilter
+
+        if( $mrntypeFilter ) {
+            $dql->andWhere("mrn.keytype = :keytype");
+            $queryParameters['keytype'] = $mrntypeFilter;
         }
 
         //This single filter should work in the "OR" mode for these three fields: Submitter, Signee, Editor
