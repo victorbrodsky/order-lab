@@ -94,7 +94,7 @@ class UserController extends Controller
         $authUtil = $this->get('authenticator_utility');
         $username = 'oli2002';
         $searchRes = $authUtil->searchLdap($username,$ldapType=1);
-        echo "<pre>";
+        echo "searchRes=<br><pre>";
         print_r($searchRes);
         echo "</pre>";
         exit('1');
