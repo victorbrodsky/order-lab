@@ -133,27 +133,30 @@ class SiteParametersController extends Controller
 
         $disabled = true;
 
-        $passw = "*******";
-        if( $entity->getPacsvendorSlideManagerDBPassword() != '' )
-            $entity->setPacsvendorSlideManagerDBPassword($passw);
+        //Hide password
+        if(0) {
+            $passw = "*******";
+            if ($entity->getPacsvendorSlideManagerDBPassword() != '')
+                $entity->setPacsvendorSlideManagerDBPassword($passw);
 
-        if( $entity->getLisDBAccountPassword() != '' )
-            $entity->setLisDBAccountPassword($passw);
+            if ($entity->getLisDBAccountPassword() != '')
+                $entity->setLisDBAccountPassword($passw);
 
-        if( $entity->getADLDAPServerAccountPassword() != '' )
-            $entity->setADLDAPServerAccountPassword($passw);
+            if ($entity->getADLDAPServerAccountPassword() != '')
+                $entity->setADLDAPServerAccountPassword($passw);
 
-        if( $entity->getDbServerAccountPassword() != '' )
-            $entity->setDbServerAccountPassword($passw);
+            if ($entity->getDbServerAccountPassword() != '')
+                $entity->setDbServerAccountPassword($passw);
 
-        if( $entity->getMailerPassword() != '' )
-            $entity->setMailerPassword($passw);
+            if ($entity->getMailerPassword() != '')
+                $entity->setMailerPassword($passw);
 
-        if( $entity->getCaptchaSiteKey() != '' )
-            $entity->setCaptchaSiteKey($passw);
+            if ($entity->getCaptchaSiteKey() != '')
+                $entity->setCaptchaSiteKey($passw);
 
-        if( $entity->getCaptchaSecretKey() != '' )
-            $entity->setCaptchaSecretKey($passw);
+            if ($entity->getCaptchaSecretKey() != '')
+                $entity->setCaptchaSecretKey($passw);
+        }
 
         //testing
         //$organizationalGroupDefault = new OrganizationalGroupDefault();

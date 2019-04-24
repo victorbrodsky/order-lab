@@ -158,8 +158,8 @@ class AuthUtil {
         $searchRes = null;
         $withNewUserPrePopulation = true;
         //$withNewUserPrePopulation = false; //testing
-        $withUserSearch = true;
-        $withUserSearch = false; //testing LDAP search stopped working on 23 April 2019 ~1:30 pm (admin account is disabled, expire, locked?)
+        //$userSearchRequired = true;
+        $userSearchRequired = false; //auth without required user search is more flexible if admin bind failed
         if( $withNewUserPrePopulation ) {
             //////////////// first search this user if exists in ldap directory ////////////////
             $searchRes = $this->searchLdap($usernameClean,$ldapType);
@@ -169,7 +169,7 @@ class AuthUtil {
                 //$this->logger->error("LdapAuthentication: can not find user by usernameClean=[" . $usernameClean . "]; token=[" . $token->getCredentials() . "]");
                 //$this->logger->error(print_r($searchRes));
 
-                if($withUserSearch) {
+                if($userSearchRequired) {
                     return NULL;
                 }
             } else {
