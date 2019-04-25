@@ -458,11 +458,13 @@ class RecLetterUtil {
         $logger = $this->container->get('logger');
         $logger->notice($result);
 
-        //Event Logger with event type "Import of Fellowship Applications Spreadsheet". It will be used to get lastImportTimestamps
-        $userSecUtil = $this->container->get('user_security_utility');
-        $systemUser = $userSecUtil->findSystemUser();
-        $eventTypeStr = "Import of Fellowship Recommendation Letters";
-        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$result,$systemUser,null,null,$eventTypeStr);
+        if(0) { //do not create event log every time on import attempt
+            //Event Logger with event type "Import of Fellowship Applications Spreadsheet". It will be used to get lastImportTimestamps
+            $userSecUtil = $this->container->get('user_security_utility');
+            $systemUser = $userSecUtil->findSystemUser();
+            $eventTypeStr = "Import of Fellowship Recommendation Letters";
+            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'), $result, $systemUser, null, null, $eventTypeStr);
+        }
 
         return $result;
     }

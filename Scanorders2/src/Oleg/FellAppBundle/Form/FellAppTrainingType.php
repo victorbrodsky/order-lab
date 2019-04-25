@@ -131,12 +131,12 @@ class FellAppTrainingType extends AbstractType
 //                'attr' => array('class' => 'form-control'),
 //            ));
             //jobTitle
-            $builder->add('jobTitle', CustomSelectorType::class, array(
-                'label' => 'Job or Experience Title:',
-                'attr' => array('class' => 'ajax-combobox-jobtitle', 'type' => 'hidden'),
-                'required' => false,
-                'classtype' => 'jobTitle'
-            ));
+//            $builder->add('jobTitle', CustomSelectorType::class, array(
+//                'label' => 'Job or Experience Title:',
+//                'attr' => array('class' => 'ajax-combobox-jobtitle', 'type' => 'hidden'),
+//                'required' => false,
+//                'classtype' => 'jobTitle'
+//            ));
 
 //            $builder->add( 'jobTitle', EntityType::class, array(
 //                'class' => 'OlegUserdirectoryBundle:JobTitleList',

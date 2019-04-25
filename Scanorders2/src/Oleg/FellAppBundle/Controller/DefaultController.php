@@ -17,6 +17,7 @@
 
 namespace Oleg\FellAppBundle\Controller;
 
+use Oleg\FellAppBundle\Entity\FellowshipApplication;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -131,4 +132,14 @@ class DefaultController extends Controller
         exit("end of generateRecLetterIdAction");
     }
 
+    /**
+     * @Route("/confirmation/{id}", name="fellapp_simple_confirmation")
+     * @Template("OlegFellAppBundle:Default:simple-confirmation.html.twig")
+     */
+    public function confirmationAction( Request $request, FellowshipApplication $fellapp ) {
+
+        return array(
+            'entity' => $fellapp
+        );
+    }
 }

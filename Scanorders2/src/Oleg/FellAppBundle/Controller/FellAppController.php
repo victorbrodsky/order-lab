@@ -1087,8 +1087,14 @@ class FellAppController extends Controller {
             $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$entity,$request,'Fellowship Application Updated');
             //exit('event='.$event);
 
-            return $this->redirect($this->generateUrl('fellapp_show',array('id' => $entity->getId())));
+            //return $this->redirect($this->generateUrl('fellapp_show',array('id' => $entity->getId())));
 
+            //redirect to a simple confirmation page
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                'Fellowship Application with ID '.$id.' has been updated.'
+            );
+            return $this->redirect($this->generateUrl('fellapp_simple_confirmation',array('id' => $id)));
 
         } else {
 //            if( !$form->isSubmitted() ){

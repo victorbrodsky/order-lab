@@ -754,10 +754,16 @@ class RequestController extends Controller
 
         //if not pending and vacreq_status_email_change => redirect to incoming request page
         if( $entity->getStatus() != "pending" && $routeName == 'vacreq_status_email_change' ) {
+            $modificationDate = "";
+            $updateDate = $entity->getUpdateDate();
+            if( $updateDate ) {
+                $modificationDate = " on ".$updateDate->format('m/d/Y H:i:s');
+            }
             //Flash
             $this->get('session')->getFlashBag()->add(
                 'notice',
-                "This ".$entity->getRequestName()." ID #" . $entity->getId()." has already been completed by ".$entity->getApprover()
+                //"This ".$entity->getRequestName()." ID #" . $entity->getId()." has already been completed by ".$entity->getApprover()
+                "This ".$entity->getRequestName()." ID #" . $entity->getId()." is not pending anymore and has been modified by ".$entity->getUpdateUser().$modificationDate
             );
             return $this->redirectToRoute('vacreq_incomingrequests',array('filter[requestType]'=>$entity->getRequestType()->getId()));
         }
