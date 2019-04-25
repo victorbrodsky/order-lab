@@ -29,7 +29,7 @@ use Oleg\OrderformBundle\Form\EncounterReferringProviderType;
 use Oleg\OrderformBundle\Form\GenericFieldType;
 
 use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
-use Oleg\UserdirectoryBundle\Form\TrackerType;
+//use Oleg\UserdirectoryBundle\Form\TrackerType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -378,7 +378,7 @@ class CalllogEncounterType extends AbstractType
         }
 
         //TrackerType($this->params)
-        $builder->add('tracker', TrackerType::class, array(
+        $builder->add('tracker', CalllogTrackerType::class, array(
             'form_custom_value' => $this->params,
             'data_class' => 'Oleg\UserdirectoryBundle\Entity\Tracker',
             //'disabled' => $this->params['readonlyEncounter'],

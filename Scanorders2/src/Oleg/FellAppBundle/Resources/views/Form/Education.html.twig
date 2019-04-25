@@ -207,22 +207,6 @@
                 <div class="row withpaddingtop">
                     <div class="col-xs-6">
                         {#{{ form_row(training.jobTitle,{'label':'Job or Experience Title:'}) }}#}
-                        {#{% if cycle == "download" %}#}
-                            {#{% if training.vars.value.jobTitle %}#}
-                                {#{% set jobTitleStr = training.vars.value.jobTitle.getName() %}#}
-                            {#{% else %}#}
-                                {#{% set jobTitleStr = "" %}#}
-                            {#{% endif %}#}
-                            {#<label>Job or Experience Title:</label>#}
-                            {#<div contentEditable="true" style="display:inline-block; border: solid 1px lightgray;" disabled="disabled">#}
-                                {#{{ jobTitleStr }}#}
-                            {#</div>#}
-                            {#<div class="form-control not-mapped-simplefield" style="min-height:34px; height:auto;" disabled="disabled">#}
-                                {#{{ jobTitleStr }}#}
-                            {#</div>#}
-                        {#{% else %}#}
-                            {#{{ form_row(training.jobTitle,{'label':'Job or Experience Title:'}) }}#}
-                        {#{% endif %}#}
                         {% if training.jobTitle is defined %}
                             {{ form_row(training.jobTitle,{'label':'Job or Experience Title:'}) }}
                         {% else %}
@@ -232,9 +216,6 @@
                                 {% set jobTitleStr = "" %}
                             {% endif %}
                             <label>Job or Experience Title:</label>
-                            {#<div contentEditable="true" style="display:inline-block; border: solid 1px lightgray;" disabled="disabled">#}
-                            {#{{ jobTitleStr }}#}
-                            {#</div>#}
                             <div class="form-control not-mapped-simplefield" style="min-height:34px; height:auto;" disabled="disabled">
                                 {{ jobTitleStr }}
                             </div>

@@ -65,12 +65,13 @@ class SpotType extends AbstractType
             'cycle' => $cycle,
             'em' => $em,
             'institution' => false,
+            //'institution' => $this->params['institution'],
             'complexLocation' => $complexLocation,
             'readonlyLocationType' => $this->params['readonlyLocationType']
         );
 
         //LocationType($params)
-        //echo "cycle=".$params['cycle']."<br>";
+        //echo "SpotType cycle=".$params['cycle']."<br>";
         //exit();
         $builder->add('currentLocation', LocationType::class, array(
             'form_custom_value' => $params,

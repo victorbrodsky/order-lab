@@ -2002,7 +2002,7 @@ function locationNamePopulateLocationFields( holder, data ) {
         _encounterLocationTypeIds = holder.find('.user-location-locationTypes').select2('val');
     }
 
-    var fieldNames = ['locationTypes','phone','room','suite','floor','floorSide','building','comment','street1','street2','city','state','zip','country','county'];
+    var fieldNames = ['locationTypes','phone','room','suite','floor','floorSide','building','comment','street1','street2','city','state','zip','country','county','institution'];
 
     for( var i = 0; i < fieldNames.length; i++ ) {
         //text += fieldNames[i] + "<br>";
@@ -2047,6 +2047,10 @@ function locationNamePopulateLocationFields( holder, data ) {
             }
 
             if( fieldEl.hasClass('combobox') ) {
+                console.log("select2 set fieldVal=" + fieldVal);
+                fieldEl.select2('val', fieldVal);
+            } else if( fieldEl.hasClass('ajax-combobox-compositetree') ) {
+                console.log("select2 set compositetree fieldVal=" + fieldVal);
                 fieldEl.select2('val', fieldVal);
             } else {
                 fieldEl.val(fieldVal);

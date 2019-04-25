@@ -385,7 +385,7 @@ class CallEntryController extends Controller
                     array(
                         'filter[messageStatus]' => "All except deleted",
                         'filter[messageCategory]' => $messageCategorieDefaultIdStr,    //$messageCategoriePathCall->getName()."_".$messageCategoriePathCall->getId()
-                        //'filter[mrntype]' => $defaultMrnTypeId,
+                        'filter[mrntype]' => $defaultMrnTypeId,
                         //'filter[metaphone]'=>false
                     )
                 ));
@@ -1605,6 +1605,7 @@ class CallEntryController extends Controller
             'formtype' => 'call-entry',
             'complexLocation' => false,
             'alias' => true,
+            'institution' => true,
             'timezoneDefault' => $userTimeZone,
             'readonlyEncounter' => $readonlyEncounter,
             'attendingPhysicians-readonly' => false,

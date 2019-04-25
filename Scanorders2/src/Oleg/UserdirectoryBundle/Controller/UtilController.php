@@ -624,6 +624,8 @@ class UtilController extends Controller {
             $output['building'] = $buildingId;
             $output['comment'] = $location->getComment();
 
+            $output['institution'] = ($location->getInstitution()) ? $location->getInstitution()->getId() : null; //$location->getInstitution();
+
             $geoLocation = $location->getGeoLocation();
 
             //priority is on location's geo object

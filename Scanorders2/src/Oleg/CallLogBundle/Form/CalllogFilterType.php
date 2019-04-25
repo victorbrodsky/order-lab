@@ -104,7 +104,7 @@ class CalllogFilterType extends AbstractType
             'required' => false,
             'choices' => $this->params['mrntypeChoices'],
             'choices_as_values' => true,
-            //'data' => $this->params['mrntypeDefault'],
+            'data' => $this->params['mrntypeDefault'],
             //'data' => 'Epic Ambulatory Enterprise ID Number',
             //'empty_data' => $this->params['mrntypeDefault'],
             //'empty_data' => 'Epic Ambulatory Enterprise ID Number',
