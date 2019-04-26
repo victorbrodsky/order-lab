@@ -570,7 +570,8 @@ class FellAppController extends Controller {
 //            }
 //        }
 
-        $args = $this->getShowParameters($routeName,$id);
+        //$args = $this->getShowParameters($routeName,$id);
+        $args = $this->getShowParameters($routeName,$entity);
 
         if( $routeName == 'fellapp_download' ) {
             return $this->render('OlegFellAppBundle:Form:download.html.twig', $args);
@@ -613,13 +614,14 @@ class FellAppController extends Controller {
         $applicant->addFellowshipApplication($fellowshipApplication);
 
         $routeName = $request->get('_route');
-        $args = $this->getShowParameters($routeName,null,$fellowshipApplication);
+        //$args = $this->getShowParameters($routeName,null,$fellowshipApplication);
+        $args = $this->getShowParameters($routeName,$fellowshipApplication);
 
         return $this->render('OlegFellAppBundle:Form:new.html.twig', $args);
     }
 
 
-    public function getShowParameters($routeName, $id=null, $entity=null) {
+    public function getShowParameters($routeName, $entity) {
              
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
@@ -632,18 +634,18 @@ class FellAppController extends Controller {
         
         $em = $this->getDoctrine()->getManager();
 
-        if( $id ) {
-            //$fellApps = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->findAll();
-            $entity = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
-
-            if( !$entity ) {
-                throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
-            }
-        } else {
-            if( !$entity ) {
-                throw $this->createNotFoundException('Fellowship Application entity was not provided: id='.$id.", entity=".$entity);
-            }
-        }
+//        if( $id ) {
+//            //$fellApps = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->findAll();
+//            $entity = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
+//
+//            if( !$entity ) {
+//                throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
+//            }
+//        } else {
+//            if( !$entity ) {
+//                throw $this->createNotFoundException('Fellowship Application entity was not provided: id='.$id.", entity=".$entity);
+//            }
+//        }
 
         //add empty fields if they are not exist
         $fellappUtil = $this->container->get('fellapp_util');
