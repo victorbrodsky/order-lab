@@ -46,6 +46,19 @@ class CalllogSiteParameterType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
+        $builder->add('institution', EntityType::class, array(
+            'class' => 'OlegUserdirectoryBundle:Institution',
+            'label' => "Institution or Collaboration:",
+            'required' => false,
+            'attr' => array('class' => 'combobox'),
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('u')
+                    //->leftJoin("u.locationTypes", "locationTypes")
+                    ->where("u.level=0")
+                    ->orderBy("u.orderinlist", "ASC");
+            },
+        ));
+
         //keytypemrn
         $builder->add('keytypemrn', EntityType::class, array(
             'class' => 'OlegOrderformBundle:MrnType',

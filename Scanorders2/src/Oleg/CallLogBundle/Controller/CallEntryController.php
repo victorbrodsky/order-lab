@@ -352,6 +352,7 @@ class CallEntryController extends Controller
         $authorFilter = $filterform['author']->getData();
         $referringProviderFilter = $filterform['referringProvider']->getData();
         $encounterLocationFilter = $filterform['encounterLocation']->getData();
+        $institutionFilter = $filterform['institution']->getData();
         $specialtyFilter = $filterform['referringProviderSpecialty']->getData();
         $patientListTitleFilter = $filterform['patientListTitle']->getData();
         $attendingFilter = $filterform['attending']->getData();
@@ -621,6 +622,16 @@ class CallEntryController extends Controller
             $queryParameters['encounterLocation'] = $encounterLocationFilter;
             $advancedFilter++;
         }
+
+        if( $institutionFilter ) {
+            //echo "inst id=".$institutionFilter->getId()."<br>";
+            $dql->leftJoin("currentLocation.institution","currentLocationInstitution");
+            //$dql->andWhere("currentLocationInstitution.id=".$institutionFilter->getId());
+            $dql->andWhere("currentLocationInstitution.id=:currentLocationInstitutionId");
+            $queryParameters['currentLocationInstitutionId'] = $institutionFilter->getId();
+            $advancedFilter++;
+        }
+
         //messageStatus
         //$messageStatusFilter = $filterform['messageStatus']->getData();
 //        if( !$messageStatusFilter ) {
@@ -1594,6 +1605,8 @@ class CallEntryController extends Controller
         //$userTimeZone = $user->getPreferences()->getTimezone();
         $userTimeZone = $userSecUtil->getSiteSettingParameter('timezone',$sitename);
 
+        $defaultInstitution = $userSecUtil->getSiteSettingParameter('institution',$sitename);
+
         $params = array(
             'cycle' => $cycle,  //'new',
             'user' => $user,
@@ -1602,6 +1615,7 @@ class CallEntryController extends Controller
             'type' => null,
             'mrntype' => intval($mrntype),
             'mrn' => $mrn,
+            'defaultInstitution' => $defaultInstitution,
             'formtype' => 'call-entry',
             'complexLocation' => false,
             'alias' => true,

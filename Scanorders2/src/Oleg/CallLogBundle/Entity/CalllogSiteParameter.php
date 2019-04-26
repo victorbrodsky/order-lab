@@ -114,6 +114,12 @@ class CalllogSiteParameter
      */
     private $useCache;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
+     */
+    private $institution;
+
+
 
     public function __construct() {
 
@@ -311,6 +317,22 @@ class CalllogSiteParameter
     public function setUseCache($useCache)
     {
         $this->useCache = $useCache;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInstitution()
+    {
+        return $this->institution;
+    }
+
+    /**
+     * @param mixed $institution
+     */
+    public function setInstitution($institution)
+    {
+        $this->institution = $institution;
     }
 
 

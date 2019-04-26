@@ -199,6 +199,20 @@ class CalllogFilterType extends AbstractType
             },
         ));
 
+        //Institution or Collaboration
+        $builder->add('institution', EntityType::class, array(
+            'class' => 'OlegUserdirectoryBundle:Institution',
+            'label' => false,
+            'required' => false,
+            'attr' => array('class' => 'combobox', 'placeholder' => "Institution or Collaboration"),
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('u')
+                    //->leftJoin("u.locationTypes", "locationTypes")
+                    ->where("u.level=0")
+                    ->orderBy("u.orderinlist","ASC");
+            },
+        ));
+
         $builder->add('messageStatus', ChoiceType::class, array(
             'label' => false,
             'required' => false,

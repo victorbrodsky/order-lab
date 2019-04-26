@@ -141,39 +141,71 @@ class CalllogLocationType extends AbstractType
             'required' => false
         ));
 
-        ///////////////////////// tree node /////////////////////////
-        //echo "LocationType institution=".$this->params['institution']."<br>";
-        if( $this->params['institution'] ) {
-            $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-                $title = $event->getData();
-                $form = $event->getForm();
+        if(0) {
+            ///////////////////////// tree node /////////////////////////
+            //echo "LocationType institution=".$this->params['institution']."<br>";
+            if ($this->params['institution']) {
+                $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+                    $title = $event->getData();
+                    $form = $event->getForm();
 
-                $label = null;
-                if( $title ) {
-                    $institution = $title->getInstitution();
-                    if( $institution ) {
-                        $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
+                    $label = null;
+                    if ($title) {
+                        $institution = $title->getInstitution();
+                        if ($institution) {
+                            $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
+                        }
                     }
-                }
-				if( !$label ) {
-					$label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
-				}
+                    if (!$label) {
+                        $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
+                    }
 
-                $form->add('institution', CustomSelectorType::class, array(
-                    'label' => $label,
-                    'required' => false,
-                    'attr' => array(
-                        'class' => 'ajax-combobox-compositetree',
-                        'type' => 'hidden',
-                        'data-compositetree-bundlename' => 'UserdirectoryBundle',
-                        'data-compositetree-classname' => 'Institution',
-                        'data-read-only-exclusion-after-level' => '1'
-                    ),
-                    'classtype' => 'institution'
-                ));
-            });
+                    $form->add('institution', CustomSelectorType::class, array(
+                        'label' => $label,
+                        'required' => false,
+                        'attr' => array(
+                            'class' => 'ajax-combobox-compositetree combobox-without-add',
+                            'type' => 'hidden',
+                            'data-compositetree-bundlename' => 'UserdirectoryBundle',
+                            'data-compositetree-classname' => 'Institution',
+                            'data-readonly-parent-level' => '1'
+                        ),
+                        'classtype' => 'institution'
+                    ));
+                });
+            }
+            ///////////////////////// EOF tree node /////////////////////////
         }
-        ///////////////////////// EOF tree node /////////////////////////
+
+        //Institution or Collaboration
+        if( $this->params['defaultInstitution'] ) {
+            $builder->add('institution', EntityType::class, array(
+                'class' => 'OlegUserdirectoryBundle:Institution',
+                'label' => "Institution or Collaboration:",
+                'required' => false,
+                'data' => $this->params['defaultInstitution'],
+                'attr' => array('class' => 'combobox'),
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('u')
+                        //->leftJoin("u.locationTypes", "locationTypes")
+                        ->where("u.level=0")
+                        ->orderBy("u.orderinlist","ASC");
+                },
+            ));
+        } else {
+            $builder->add('institution', EntityType::class, array(
+                'class' => 'OlegUserdirectoryBundle:Institution',
+                'label' => "Institution or Collaboration:",
+                'required' => false,
+                'attr' => array('class' => 'combobox'),
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('u')
+                        //->leftJoin("u.locationTypes", "locationTypes")
+                        ->where("u.level=0")
+                        ->orderBy("u.orderinlist", "ASC");
+                },
+            ));
+        }
 
     }
 
