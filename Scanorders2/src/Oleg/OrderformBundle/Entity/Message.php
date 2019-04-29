@@ -1874,6 +1874,14 @@ class Message {
         return $date;
     }
 
+    public function getEncounterLocationInfos() {
+        $infoArr = array();
+        foreach($this->getEncounter() as $encounter) {
+            $infoArr[] = $encounter->obtainLocationInfo();
+        }
+        return implode("; ",$infoArr);
+    }
+
     public function getFormVersionsInfo() {
         $infoArr = array();
         foreach( $this->getFormVersions() as $formVersion ) {

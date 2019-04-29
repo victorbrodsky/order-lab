@@ -262,6 +262,13 @@ class CallLogEditController extends CallEntryController
             //LastName, FirstName, MiddleName | MRN Type: MRN | DOB: MM/DD/YY |
             // Entry ID XXX submitted on MM/DD/YYYY at HH:MM by SubmitterFirstName SubmitterLastName, MD | Call Log Book
             $title = $message->getPatient()->first()->obtainPatientInfoTitle('valid',null,false);
+
+            //edit: get message's encounter location
+            $messageEncounters = $message->getEncounterLocationInfos();
+            if( $messageEncounters ) {
+                $title = $title . " | " . $messageEncounters;
+            }
+
             $title = $title . " | ".$messageInfo;
 
         } else {
