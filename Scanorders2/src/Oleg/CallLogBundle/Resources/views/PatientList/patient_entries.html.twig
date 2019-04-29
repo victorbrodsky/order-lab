@@ -82,6 +82,7 @@
                     <th>{{ knp_pagination_sortable(messages, 'ID', 'message.id') }}</th>
                     <th>{{ knp_pagination_sortable(messages, 'Encounter Date', 'encounter.creationdate') }}</th>
                     <th>{{ knp_pagination_sortable(messages, 'Last Modified', 'editorInfos.modifiedOn') }}</th>
+                    <th>{{ knp_pagination_sortable(messages, 'Location', 'encounter.location') }}</th>
                     <th>{{ knp_pagination_sortable(messages, 'Message Type', 'messageCategory.name') }}</th>
                     <th>{{ knp_pagination_sortable(messages, 'Referring Provider', 'referringProviderWrapper.name') }}</th>
                     <th>{{ knp_pagination_sortable(messages, 'Attending', 'attendingPhysicianWrapper.name') }}</th>
@@ -92,6 +93,7 @@
                     <th>ID</th>
                     <th>Encounter Date</th>
                     <th>Last Modified</th>
+                    <th>Location</th>
                     <th>Message Type</th>
                     <th>Referring Provider</th>
                     <th>Attending</th>
@@ -146,6 +148,11 @@
                             {#{{ message.orderdate|date('m/d/Y H:i') }}#}
                             {{ calllog_util.getOrderSimpleDateStr(message,"") }}
                         {% endif %}
+                    </td>
+
+                    {#Location#}
+                    <td>
+                        {{  message.getEncounterLocationInfos() }}
                     </td>
 
                     <td>
