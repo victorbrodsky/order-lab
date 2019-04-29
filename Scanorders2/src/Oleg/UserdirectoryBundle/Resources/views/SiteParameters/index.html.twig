@@ -442,7 +442,10 @@
             </tr>
             <tr>
                 <td>AD/LDAP Server Account Password (for ldap search)</td>
-                <td>{{ entity.aDLDAPServerAccountPassword }}</td>
+                <td>
+                    {#{{ entity.aDLDAPServerAccountPassword }}#}
+                    *******
+                </td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'aDLDAPServerAccountPassword'}) }}">Edit</a></td>
             </tr>
             <tr>
@@ -495,7 +498,10 @@
             </tr>
             <tr>
                 <td>AD/LDAP Server Account Password (for ldap search)</td>
-                <td>{{ entity.aDLDAPServerAccountPassword2 }}</td>
+                <td>
+                    {#{{ entity.aDLDAPServerAccountPassword2 }}#}
+                    *******
+                </td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'aDLDAPServerAccountPassword2'}) }}">Edit</a></td>
             </tr>
             <tr>
