@@ -1504,6 +1504,10 @@ function calllogSetPatientAccordionTitle( patient, holderId ) {
         if( patient.age )
             patientInfoArr.push(patient.age); //5 y.o.
 
+        // if( patient.locationInfo ) {
+        //     patientInfoArr.push(patient.locationInfo);
+        // }
+
         //console.log("push mrn="+patient.mrntypestr + ": "+patient.mrn);
 
         patientInfoArr.push(patient.mrntypestr + ": "+patient.mrn); //MRN Type: MRN

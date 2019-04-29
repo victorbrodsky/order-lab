@@ -942,7 +942,7 @@ class Encounter extends ObjectAbstract
         }
         return $number;
     }
-
+    
     //[EncounterLocation'sName] / [EncounterLocation'sPhoneNumber]
     public function obtainLocationInfo() {
         $infoArr = array();

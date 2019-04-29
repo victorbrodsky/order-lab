@@ -383,6 +383,10 @@ class CallLogUtil
             }
         }
 
+        //get most recent location's institution
+        //$locationInstitution = NULL;
+
+
         $patientInfo = array(
             'id' => $patient->getId(),
             'mrntype' => $mrntypeId,        //$mrnRes->getKeytype()->getId(),

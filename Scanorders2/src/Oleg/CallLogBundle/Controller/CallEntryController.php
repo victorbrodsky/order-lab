@@ -2908,6 +2908,12 @@ class CallEntryController extends Controller
             // Entry ID XXX submitted on MM/DD/YYYY at HH:MM by SubmitterFirstName SubmitterLastName, MD | Call Log Book
             $title = $patient->obtainPatientInfoTitle('valid',null,false);
 
+            //view: get message's encounter location
+            $encounterLocationInfo = $message->obtainPatientLatestEncounterLocation();
+            if( $encounterLocationInfo ) {
+                $title = $title . " | " . $encounterLocationInfo;
+            }
+
             //The beginning potion of the title ("LastName, FirstName | DOB: 09/22/1955 | 71 y.o. | NYH MRN: 12345678")
             //should be a link to the homepage with the filters set to this patient's MRN
             $linkUrl = $this->generateUrl(

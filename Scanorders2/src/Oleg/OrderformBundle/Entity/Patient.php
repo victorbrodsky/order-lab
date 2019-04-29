@@ -1705,4 +1705,24 @@ class Patient extends ObjectAbstract
         return $patientInfo;
     }
 
+
+    public function obtainPatientLatestEncounterLocation() {
+
+        $locationArr = array();
+
+        $encounters = $this->getEncounter();
+        if( count($encounters) > 0 ) {
+            $encounter = $encounters->last();
+            return $encounter->obtainLocationInfo();
+        }
+
+        return null;
+
+        foreach( $this->getEncounter() as $encounter ) {
+            $locationInfo = $encounter->obtainLocationInfo();
+            $locationArr[] = $locationInfo;
+        }
+
+        return implode(", ",$locationArr);
+    }
 }
