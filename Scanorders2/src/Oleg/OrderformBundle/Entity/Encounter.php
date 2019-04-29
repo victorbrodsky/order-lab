@@ -956,6 +956,13 @@ class Encounter extends ObjectAbstract
                 if( $spot->getCurrentLocation()->getPhone() ) {
                     $info = $info . " / " . $spot->getCurrentLocation()->getPhone();
                 }
+                if( $spot->getCurrentLocation()->getInstitution() ) {
+                    $instName = $spot->getCurrentLocation()->getInstitution()->getAbbreviation();
+                    if( !$instName ) {
+                        $instName = $spot->getCurrentLocation()->getInstitution()->getName();
+                    }
+                    $info = $info . " / " . $instName;
+                }
                 $infoArr[] = $info;
             }
         }

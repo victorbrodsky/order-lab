@@ -483,6 +483,11 @@ class Location extends ListAbstract
     public function setInstitution($institution)
     {
         $this->institution = $institution;
+
+        //set name if empty
+        if( $institution && !$this->getName() ) {
+            $this->setName($institution->getName()." Location");
+        }
     }
 
     /**
@@ -971,6 +976,10 @@ class Location extends ListAbstract
             return false;
         } else {
             //return true;
+            $institution = $this->getInstitution();
+            if( $institution ) {
+                $this->setName($institution->getName()." Location");
+            }
         }
 
         //be strict: location name must be set. If not then it's empty
@@ -982,6 +991,10 @@ class Location extends ListAbstract
             if( $this->getLocationTypes() ) {
                 return false;
             }
+        }
+
+        if( $this->getInstitution() ) {
+            return false;
         }
 
         if( $this->getPhone() ) {

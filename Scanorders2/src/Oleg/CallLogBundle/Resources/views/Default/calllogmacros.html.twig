@@ -364,9 +364,17 @@
                             {#onclick="calllogToggleSingleEncounterPanel(this,'#form_body_entitycontactinfo_{{ uniqueId }}');">#}
                     {#</button>#}
 
-                    {% set panelTitle = spot.currentLocation.vars.value.name %}
-                    {% if not panelTitle %}
-                        {% set panelTitle = "Encounter's Location" %}
+                    {#{% set panelTitle = spot.currentLocation.vars.value.name %}#}
+                    {#{% if not panelTitle %}#}
+                        {#{% set panelTitle = "Encounter's Location" %}#}
+                    {#{% endif %}#}
+
+                    {% set panelTitle = "Encounter's Location" %}
+                    {% if cycle == "show" %}
+                        {% set currentPanelTitle = spot.currentLocation.vars.value.name %}
+                        {% if currentPanelTitle %}
+                            {% set panelTitle = currentPanelTitle %}
+                        {% endif %}
                     {% endif %}
 
                     <h4 class="panel-title">

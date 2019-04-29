@@ -2396,6 +2396,11 @@ class CallLogUtil
             $location->addLocationType($locationType);
         }
 
+//        $defaultInstitution = $userSecUtil->getSiteSettingParameter('institution',$sitename);
+//        if( $defaultInstitution ) {
+//            $locationName = $defaultInstitution->getName() . " Location";
+//        }
+
         $location->setName($locationName);
         $location->setStatus(1);
         $location->setRemovable($removable);

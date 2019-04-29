@@ -91,7 +91,7 @@ class Tracker {
     public function removeEmptySpots() {
         foreach( $this->getSpots() as $spot ) {
             if( $spot->isEmpty() ) {
-                //echo "remove spot!!!!! <br>";
+                echo "remove spot!!!!! <br>";
                 $this->removeSpot($spot);
             }
         }
