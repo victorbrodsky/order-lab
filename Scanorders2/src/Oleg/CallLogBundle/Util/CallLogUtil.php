@@ -1180,6 +1180,7 @@ class CallLogUtil
     }
 
     //if the location id is provided, then find this location in DB by id and replace it.
+    //TODO: if the location name is already exist in DB replace it?
     public function processTrackerLocation($encounter) {
         //[tracker][spots][0][currentLocation][name]
         if( !$encounter->getTracker() ) {
