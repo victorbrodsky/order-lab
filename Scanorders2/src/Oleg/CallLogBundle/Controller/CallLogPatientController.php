@@ -670,7 +670,12 @@ class CallLogPatientController extends PatientController {
 
         //get mrntypes
         $mrntypeChoices = array();
-        $mrntypeChoicesArr = $em->getRepository('OlegOrderformBundle:MrnType')->findBy(array('type'=>array('default','user-added')));
+        $mrntypeChoicesArr = $em->getRepository('OlegOrderformBundle:MrnType')->findBy(
+            array(
+                'type'=>array('default','user-added')
+            ),
+            array('orderinlist' => 'ASC')
+        );
         foreach( $mrntypeChoicesArr as $thisMrnType ) {
             $mrntypeChoices[$thisMrnType->getName()] = $thisMrnType->getId();
         }
