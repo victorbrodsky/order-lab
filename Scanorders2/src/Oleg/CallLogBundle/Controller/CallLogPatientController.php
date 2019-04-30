@@ -420,7 +420,11 @@ class CallLogPatientController extends PatientController {
                 $mrnEntity = $patient->obtainValidField('mrn');
                 if( $mrnEntity ) {
                     $mrnNumber = $mrnEntity->getField();
-                    $mrnTypeId = $mrnEntity->getKeytype()->getId();
+                    if( $mrnEntity->getKeytype() ) {
+                        $mrnTypeId = $mrnEntity->getKeytype()->getId();
+                    } else {
+                        $mrnTypeId = null;
+                    }
                 } else {
                     $mrnNumber = null;
                     $mrnTypeId = null;

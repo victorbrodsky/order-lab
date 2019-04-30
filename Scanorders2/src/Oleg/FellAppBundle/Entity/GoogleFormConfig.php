@@ -61,6 +61,27 @@ class GoogleFormConfig {
      **/
     private $fellowshipSubspecialties;
 
+    /**
+     * text in the wells at the top of the application
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $applicationFormNote;
+
+    /**
+     * system admin email
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $systemEmail;
+
+    /**
+     * fellowship admin's email
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $adminEmail;
+
     
     public function __construct() {
         $this->fellowshipSubspecialties = new ArrayCollection();
@@ -134,6 +155,55 @@ class GoogleFormConfig {
     {
         $this->acceptingSubmission = $acceptingSubmission;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getApplicationFormNote()
+    {
+        return $this->applicationFormNote;
+    }
+
+    /**
+     * @param mixed $applicationFormNote
+     */
+    public function setApplicationFormNote($applicationFormNote)
+    {
+        $this->applicationFormNote = $applicationFormNote;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSystemEmail()
+    {
+        return $this->systemEmail;
+    }
+
+    /**
+     * @param mixed $systemEmail
+     */
+    public function setSystemEmail($systemEmail)
+    {
+        $this->systemEmail = $systemEmail;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAdminEmail()
+    {
+        return $this->adminEmail;
+    }
+
+    /**
+     * @param mixed $adminEmail
+     */
+    public function setAdminEmail($adminEmail)
+    {
+        $this->adminEmail = $adminEmail;
+    }
+
 
 
 
