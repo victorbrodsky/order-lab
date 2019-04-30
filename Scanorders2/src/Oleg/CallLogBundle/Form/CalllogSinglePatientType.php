@@ -79,6 +79,7 @@ class CalllogSinglePatientType extends AbstractType
             'choices' => $this->params['keytypes'],
             'label' => "MRN Type:",
             'required' => true,
+            //'required' => false,
             'attr' => array('class' => 'combobox'),
         ));
 

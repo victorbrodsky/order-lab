@@ -38,6 +38,7 @@ use Oleg\OrderformBundle\Entity\PatientMiddleName;
 use Oleg\OrderformBundle\Entity\PatientMrn;
 use Oleg\OrderformBundle\Entity\PatientSex;
 use Oleg\OrderformBundle\Entity\PatientSuffix;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -382,6 +383,16 @@ class CallLogPatientController extends PatientController {
 
         $editForm->handleRequest($request);
 
+        if( $editForm->isSubmitted() ) {
+            //make sure mrn and mnr type are not empty
+            if( !$singlePatient->getKeytype() ) {
+                $editForm['keytype']->addError(new FormError("MRN Type can not be empty"));
+            }
+            if( !$singlePatient->getMrn() ) {
+                $editForm['mrn']->addError(new FormError("MRN can not be empty"));
+            }
+        }
+
         if ($editForm->isSubmitted() && $editForm->isValid()) {
 
             $newMrntype = $singlePatient->getKeytype();
@@ -402,6 +413,7 @@ class CallLogPatientController extends PatientController {
 //            echo "new Lastname=".$newLastname."<br>";
 //            echo "new Firstname=".$newFirstname."<br>";
 //            echo "new dob=".$newDob->format('Y-m-d')."<br>";
+//            exit('1');
 
             ///////////////// Create new object if a new value exists and is not equal to the original /////////////////////
             if( $newMrntype || $newMrnNumber ) {
