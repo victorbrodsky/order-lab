@@ -709,8 +709,6 @@
                         {#Not used because, this link gives 500 error. Use 'Edit Patient Demographics' instead.#}
                         {#<li><a href="{{ path('calllog_patient_edit_by_mrn', { 'mrn': mrnNumber, 'mrntype': mrnTypeId, 'show-tree-depth': 2}) }}" target="_blank">Edit Patient Record</a></li>#}
 
-                        <li><a href="{{ path('calllog_single_patient_edit', { 'id': patient.id}) }}" target="_blank">Edit Patient Demographics</a></li>
-
                         <li><a href="{{ path('calllog_merge_patient_records', { 'mrn': mrnNumber, 'mrntype': mrnTypeId}) }}" target="_blank">Merge Patient Record</a></li>
 
                         {% if patient.obtainMergeMrnArr('valid')|length > 0 %}
@@ -718,6 +716,8 @@
                         {% endif %}
                     {% endif %}
                 {% endif %}
+
+                <li><a href="{{ path('calllog_single_patient_edit', { 'id': patient.id}) }}" target="_blank">Edit Patient Demographics</a></li>
 
                 <li><a data-confirm="Are you sure you want to add this patient to Complex List?"
                        href="{{ path('calllog_add_patient_to_list', { 'patientListId': patientListId, 'patientId': patient.id}) }}"
