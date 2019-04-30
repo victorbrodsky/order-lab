@@ -1474,7 +1474,7 @@ class Patient extends ObjectAbstract
                     $compare = false;
                 }
             }
-            if( $compare && $mrn->getKeytype()->getName() == "Merge ID" ) {
+            if( $compare && $mrn->getKeytype() && $mrn->getKeytype()->getName() == "Merge ID" ) {
                 $mergeMrnArr[] = $mrn;
             }
         }
