@@ -620,9 +620,11 @@ class CallLogPatientController extends PatientController {
         $mrn = $patient->obtainValidField('mrn');
         if( $mrn ) {
             $keytype = $mrn->getKeytype(); //MrnType entity
-            //echo "keytype=".$keytype->getId().": ".$keytype->getName()."<br>";
             if( $keytype ) {
+                echo "keytype=".$keytype->getId().": ".$keytype->getName()."<br>";
                 $singlePatient->setKeytype($keytype->getId());
+            } else {
+                echo "empty keytype <br>";
             }
             $mrnNumber = $mrn->getField();
             //echo "mrnNumber=$mrnNumber<br>";
