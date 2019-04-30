@@ -643,6 +643,7 @@ class RecLetterUtil {
         $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
         $emailUtil = $this->container->get('user_mailer_utility');
         $systemUser = $userSecUtil->findSystemUser();
+        //$environment = $userSecUtil->getSiteSettingParameter('environment');
 
         $testing = false;
         //$testing = true;

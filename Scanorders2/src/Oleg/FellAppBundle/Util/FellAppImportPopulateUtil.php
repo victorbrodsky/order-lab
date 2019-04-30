@@ -117,8 +117,8 @@ class FellAppImportPopulateUtil {
         $logger = $this->container->get('logger');
         $logger->notice($result);
 
-        //don't create eventlog for this cron job event
-        if(0) {
+        //create eventlog for this cron job event. It will be used later on to display in "Last successful import:
+        if(1) {
             //Event Logger with event type "Import of Fellowship Applications Spreadsheet". It will be used to get lastImportTimestamps
             $userSecUtil = $this->container->get('user_security_utility');
             $systemUser = $userSecUtil->findSystemUser();

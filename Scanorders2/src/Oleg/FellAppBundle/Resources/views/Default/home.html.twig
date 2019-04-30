@@ -43,17 +43,15 @@
         {% endif %}
     {% endif %}
 
-
-
-    <p>
-        <i>Last successful import: {{ lastImportTimestamp|date('m/d/Y h:i A') }} {{ serverTimeZone }} ({{ lastImportTimestamp|time_diff }})</i>
-    </p>
-
     {% if allowPopulateFellApp is defined and allowPopulateFellApp == false %}
         <div class="alert alert-danger">
             Automatic import of fellowship applications submitted via the Google form is turned off.
         </div>
     {% endif %}
+
+    <p>
+        <i>Last successful import: {{ lastImportTimestamp|date('m/d/Y h:i A') }} {{ serverTimeZone }} ({{ lastImportTimestamp|time_diff }}) - {{ acceptingApplication }}</i>
+    </p>
 
     {% set fellappTypeId = -1 %}
     {% if filter %}

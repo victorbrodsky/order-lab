@@ -76,7 +76,8 @@ class GoogleFormConfigController extends Controller
             return $this->redirect($this->generateUrl('fellapp_google_form_config_show'));
         }
 
-        $configFileContent = $this->getConfigOnGoogleDrive();
+        $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
+        $configFileContent = $googlesheetmanagement->getConfigOnGoogleDrive();
 
         return array(
             'form' => $form->createView(),
@@ -180,7 +181,7 @@ class GoogleFormConfigController extends Controller
             return NULL;
         }
 
-        $configFile = $this->findConfigFileInFolder($service, $configFileFolderIdFellApp, "config.json");
+        $configFile = $googlesheetmanagement->findConfigFileInFolder($service, $configFileFolderIdFellApp, "config.json");
         if( $configFile ) {
             $configFile->getId();
         } else {
@@ -293,151 +294,151 @@ class GoogleFormConfigController extends Controller
         }
     }
 
-    //1)  Import sheets from Google Drive
-    //1a)   import all sheets from Google Drive folder
-    //1b)   add successefull downloaded sheets to DataFile DB object with status "active"
-    public function getConfigOnGoogleDrive() {
-
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_ADMIN') === false ) {
-            //return $this->redirect( $this->generateUrl('fellapp-nopermission') );
-            return NULL;
-        }
-
-        $logger = $this->container->get('logger');
-        $userSecUtil = $this->container->get('user_security_utility');
-        $systemUser = $userSecUtil->findSystemUser();
-
-        //get Google service
-        $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
-        $service = $googlesheetmanagement->getGoogleService();
-
-        if( !$service ) {
-            $event = "Google API service failed!";
-            exit($event);
-        }
-
-        //echo "service ok <br>";
-
-        //https://drive.google.com/file/d/1EEZ85D4sNeffSLb35_72qi8TdjD9nLyJ/view?usp=sharing
-//        $fileId = "1EEZ85D4sNeffSLb35_72qi8TdjD9nLyJ"; //config.json
-//        //$fileId = "0B2FwyaXvFk1efmlPOEl6WWItcnBveVlDWWh6RTJxYzYyMlY2MjRSalRvUjdjdzMycmo5U3M"; //FellowshipApplication
-//        $file = null;
-//        try {
-//            $file = $service->files->get($fileId);
-//            exit("fileId=".$file->getId()."; title=".$file->getTitle());
-//        } catch (Exception $e) {
-//            throw new IOException('Google API: Unable to get file by file id='.$fileId.". An error occurred: " . $e->getMessage());
+//    //1)  Import sheets from Google Drive
+//    //1a)   import all sheets from Google Drive folder
+//    //1b)   add successefull downloaded sheets to DataFile DB object with status "active"
+//    public function getConfigOnGoogleDrive() {
+//
+//        if( $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_ADMIN') === false ) {
+//            //return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+//            return NULL;
 //        }
-
-        $configFileFolderIdFellApp = $userSecUtil->getSiteSettingParameter('configFileFolderIdFellApp');
-        if( !$configFileFolderIdFellApp ) {
-            $logger->warning('Google Drive Folder ID with config file is not defined in Site Parameters. configFileFolderIdFellApp='.$configFileFolderIdFellApp);
-            return NULL;
-        }
-        //$folderIdFellApp = "0B2FwyaXvFk1efmlPOEl6WWItcnBveVlDWWh6RTJxYzYyMlY2MjRSalRvUjdjdzMycmo5U3M";
-        //echo "folder ID=".$configFileFolderIdFellApp."<br>";
-
-        if( 1 ) {
-            $configFile = $this->findConfigFileInFolder($service, $configFileFolderIdFellApp, "config.json");
-            $contentConfigFile = $this->downloadFile($service, $configFile);
-
-            //$contentConfigFile = str_replace(",",", ",$contentConfigFile);
-//            //echo $content;
-//            echo "<pre>";
-//            print_r($contentConfigFile);
-//            echo "</pre>";
-
-            return $contentConfigFile;
-
-//            $response = new Response();
-//            $response->headers->set('Content-Type', 'application/json');
-//            $response->setContent(json_encode($content));
-            //echo $response;
-
-            //exit();
-
-            //return $configFile;
-            //exit('111');
-        } else {
-            //get all files in google folder
-            //ID=0B2FwyaXvFk1efmlPOEl6WWItcnBveVlDWWh6RTJxYzYyMlY2MjRSalRvUjdjdzMycmo5U3M
-            //$parameters = array('q' => "'".$configFileFolderIdFellApp."' in parents and trashed=false and name contains 'config.json'");
-            //$parameters = array('q' => "'".$configFileFolderIdFellApp."' in parents and trashed=false");
-            $parameters = array('q' => "'" . $configFileFolderIdFellApp . "' in parents and trashed=false and title='config.json'");
-            $files = $service->files->listFiles($parameters);
-
-            foreach ($files->getItems() as $file) {
-                echo "file=" . $file->getId() . "<br>";
-                echo "File Title=" . $file->getTitle() . "<br>";
-            }
-
-            return $file;
-        }
-
-
-        return NULL;
-    }
-
-    /**
-     * @param Google_Service_Drive $service Drive API service instance.
-     * @param String $folderId ID of the folder to print files from.
-     * @param String $fileName Name (Title) of the config file to find.
-     */
-    function findConfigFileInFolder($service, $folderId, $fileName) {
-        $pageToken = NULL;
-
-        do {
-            try {
-
-                if ($pageToken) {
-                    $parameters['pageToken'] = $pageToken;
-                }
-
-                //$parameters = array();
-                //$parameters = array('q' => "trashed=false and title='config.json'");
-                //$children = $service->children->listChildren($folderId, $parameters);
-                $parameters = array('q' => "'".$folderId."' in parents and trashed=false and title='".$fileName."'");
-                $files = $service->files->listFiles($parameters);
-
-                foreach ($files->getItems() as $file) {
-                    //echo "File ID=" . $file->getId()."<br>";
-                    //echo "File Title=" . $file->getTitle()."<br>";
-
-                    return $file;
-                }
-                $pageToken = $files->getNextPageToken();
-            } catch (Exception $e) {
-                print "An error occurred: " . $e->getMessage();
-                $pageToken = NULL;
-            }
-        } while ($pageToken);
-
-        return NULL;
-    }
-
-    /**
-     * Download a file's content.
-     *
-     * @param Google_Service_Drive $service Drive API service instance.
-     * @param File $file Drive File instance.
-     * @return String The file's content if successful, null otherwise.
-     */
-    function downloadFile($service, $file) {
-        $downloadUrl = $file->getDownloadUrl();
-        if ($downloadUrl) {
-            $request = new \Google_Http_Request($downloadUrl, 'GET', null, null);
-            $httpRequest = $service->getClient()->getAuth()->authenticatedRequest($request);
-            if ($httpRequest->getResponseHttpCode() == 200) {
-                return $httpRequest->getResponseBody();
-            } else {
-                // An error occurred.
-                return null;
-            }
-        } else {
-            // The file doesn't have any content stored on Drive.
-            return null;
-        }
-    }
+//
+//        $logger = $this->container->get('logger');
+//        $userSecUtil = $this->container->get('user_security_utility');
+//        //$systemUser = $userSecUtil->findSystemUser();
+//
+//        //get Google service
+//        $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
+//        $service = $googlesheetmanagement->getGoogleService();
+//
+//        if( !$service ) {
+//            $event = "Google API service failed!";
+//            exit($event);
+//        }
+//
+//        //echo "service ok <br>";
+//
+//        //https://drive.google.com/file/d/1EEZ85D4sNeffSLb35_72qi8TdjD9nLyJ/view?usp=sharing
+////        $fileId = "1EEZ85D4sNeffSLb35_72qi8TdjD9nLyJ"; //config.json
+////        //$fileId = "0B2FwyaXvFk1efmlPOEl6WWItcnBveVlDWWh6RTJxYzYyMlY2MjRSalRvUjdjdzMycmo5U3M"; //FellowshipApplication
+////        $file = null;
+////        try {
+////            $file = $service->files->get($fileId);
+////            exit("fileId=".$file->getId()."; title=".$file->getTitle());
+////        } catch (Exception $e) {
+////            throw new IOException('Google API: Unable to get file by file id='.$fileId.". An error occurred: " . $e->getMessage());
+////        }
+//
+//        $configFileFolderIdFellApp = $userSecUtil->getSiteSettingParameter('configFileFolderIdFellApp');
+//        if( !$configFileFolderIdFellApp ) {
+//            $logger->warning('Google Drive Folder ID with config file is not defined in Site Parameters. configFileFolderIdFellApp='.$configFileFolderIdFellApp);
+//            return NULL;
+//        }
+//        //$folderIdFellApp = "0B2FwyaXvFk1efmlPOEl6WWItcnBveVlDWWh6RTJxYzYyMlY2MjRSalRvUjdjdzMycmo5U3M";
+//        //echo "folder ID=".$configFileFolderIdFellApp."<br>";
+//
+//        if( 1 ) {
+//            $configFile = $this->findConfigFileInFolder($service, $configFileFolderIdFellApp, "config.json");
+//            $contentConfigFile = $this->downloadFile($service, $configFile);
+//
+//            //$contentConfigFile = str_replace(",",", ",$contentConfigFile);
+////            //echo $content;
+////            echo "<pre>";
+////            print_r($contentConfigFile);
+////            echo "</pre>";
+//
+//            return $contentConfigFile;
+//
+////            $response = new Response();
+////            $response->headers->set('Content-Type', 'application/json');
+////            $response->setContent(json_encode($content));
+//            //echo $response;
+//
+//            //exit();
+//
+//            //return $configFile;
+//            //exit('111');
+//        } else {
+//            //get all files in google folder
+//            //ID=0B2FwyaXvFk1efmlPOEl6WWItcnBveVlDWWh6RTJxYzYyMlY2MjRSalRvUjdjdzMycmo5U3M
+//            //$parameters = array('q' => "'".$configFileFolderIdFellApp."' in parents and trashed=false and name contains 'config.json'");
+//            //$parameters = array('q' => "'".$configFileFolderIdFellApp."' in parents and trashed=false");
+//            $parameters = array('q' => "'" . $configFileFolderIdFellApp . "' in parents and trashed=false and title='config.json'");
+//            $files = $service->files->listFiles($parameters);
+//
+//            foreach ($files->getItems() as $file) {
+//                echo "file=" . $file->getId() . "<br>";
+//                echo "File Title=" . $file->getTitle() . "<br>";
+//            }
+//
+//            return $file;
+//        }
+//
+//
+//        return NULL;
+//    }
+//
+//    /**
+//     * @param Google_Service_Drive $service Drive API service instance.
+//     * @param String $folderId ID of the folder to print files from.
+//     * @param String $fileName Name (Title) of the config file to find.
+//     */
+//    function findConfigFileInFolder($service, $folderId, $fileName) {
+//        $pageToken = NULL;
+//
+//        do {
+//            try {
+//
+//                if ($pageToken) {
+//                    $parameters['pageToken'] = $pageToken;
+//                }
+//
+//                //$parameters = array();
+//                //$parameters = array('q' => "trashed=false and title='config.json'");
+//                //$children = $service->children->listChildren($folderId, $parameters);
+//                $parameters = array('q' => "'".$folderId."' in parents and trashed=false and title='".$fileName."'");
+//                $files = $service->files->listFiles($parameters);
+//
+//                foreach ($files->getItems() as $file) {
+//                    //echo "File ID=" . $file->getId()."<br>";
+//                    //echo "File Title=" . $file->getTitle()."<br>";
+//
+//                    return $file;
+//                }
+//                $pageToken = $files->getNextPageToken();
+//            } catch (Exception $e) {
+//                print "An error occurred: " . $e->getMessage();
+//                $pageToken = NULL;
+//            }
+//        } while ($pageToken);
+//
+//        return NULL;
+//    }
+//
+//    /**
+//     * Download a file's content.
+//     *
+//     * @param Google_Service_Drive $service Drive API service instance.
+//     * @param File $file Drive File instance.
+//     * @return String The file's content if successful, null otherwise.
+//     */
+//    function downloadFile($service, $file) {
+//        $downloadUrl = $file->getDownloadUrl();
+//        if ($downloadUrl) {
+//            $request = new \Google_Http_Request($downloadUrl, 'GET', null, null);
+//            $httpRequest = $service->getClient()->getAuth()->authenticatedRequest($request);
+//            if ($httpRequest->getResponseHttpCode() == 200) {
+//                return $httpRequest->getResponseBody();
+//            } else {
+//                // An error occurred.
+//                return null;
+//            }
+//        } else {
+//            // The file doesn't have any content stored on Drive.
+//            return null;
+//        }
+//    }
 
 
 }

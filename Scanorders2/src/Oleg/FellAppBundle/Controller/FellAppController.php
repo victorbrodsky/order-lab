@@ -426,12 +426,29 @@ class FellAppController extends Controller {
         //allowPopulateFellApp
         $userUtil = new UserUtil();
         $allowPopulateFellApp = $userUtil->getSiteSetting($em,'AllowPopulateFellApp');
+
+        //At the top of the homepage, show either "Now accepting applications" if the
+        // "accepting applications" status from json is enabled, or show "Not accepting applications now."
+        $acceptingApplication = "Not accepting applications now";
+        $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
+        $configFileContent = $googlesheetmanagement->getConfigOnGoogleDrive();
+        if( $configFileContent ) {
+            $configFileContent = json_decode($configFileContent, true);
+            $acceptingSubmissions = $configFileContent['acceptingSubmissions'];
+            if( $acceptingSubmissions || $acceptingSubmissions == 'true' ) {
+                $acceptingApplication = "Now accepting applications";
+            }
+            //echo "<pre>";
+            //print_r($configFileContent);
+            //echo "</pre>";
+        }
         
         return array(
             'entities' => $fellApps,
             'pathbase' => 'fellapp',
             'lastImportTimestamp' => $lastImportTimestamp,
             'allowPopulateFellApp' => $allowPopulateFellApp,
+            'acceptingApplication' => $acceptingApplication,
             'fellappfilter' => $filterform->createView(),
             'startDate' => $startDate,
             'filter' => $fellSubspecId,
