@@ -256,7 +256,12 @@ class CallLogEditController extends CallEntryController
         //exit('1');
         if (count($message->getPatient()) > 0 ) {
             $mrnRes = $message->getPatient()->first()->obtainStatusField('mrn', "valid");
-            $mrntype = $mrnRes->getKeytype()->getId();
+            //$mrntype = $mrnRes->getKeytype()->getId();
+            if( $mrnRes->getKeytype() ) {
+                $mrntype = $mrnRes->getKeytype()->getId();
+            } else {
+                $mrntype = NULL;
+            }
             $mrn = $mrnRes->getField();
 
             //LastName, FirstName, MiddleName | MRN Type: MRN | DOB: MM/DD/YY |
