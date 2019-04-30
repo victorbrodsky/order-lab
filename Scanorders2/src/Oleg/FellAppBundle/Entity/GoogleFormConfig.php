@@ -69,24 +69,45 @@ class GoogleFormConfig {
     private $applicationFormNote;
 
     /**
-     * system admin email
-     *
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $systemEmail;
-
-    /**
-     * fellowship admin's email
+     * admin email (_adminemail)
      *
      * @ORM\Column(type="string", nullable=true)
      */
     private $adminEmail;
 
-    
+    /**
+     * fellowship admin's email (_useremail)
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $fellappAdminEmail;
+
+    /**
+     * "exception" account that the application is still shown to for testing purposes even when turned off (i.e. olegivanov@pathologysystems.org)
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $exceptionAccount;
+
+    /**
+     * text shown when the application is submitted
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $submissionConfirmation;
+
+
+
+
     public function __construct() {
         $this->fellowshipSubspecialties = new ArrayCollection();
     }
-    
+
+
+
+
+
+
     
     public function getId() {
         return $this->id;
@@ -175,22 +196,6 @@ class GoogleFormConfig {
     /**
      * @return mixed
      */
-    public function getSystemEmail()
-    {
-        return $this->systemEmail;
-    }
-
-    /**
-     * @param mixed $systemEmail
-     */
-    public function setSystemEmail($systemEmail)
-    {
-        $this->systemEmail = $systemEmail;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getAdminEmail()
     {
         return $this->adminEmail;
@@ -202,6 +207,54 @@ class GoogleFormConfig {
     public function setAdminEmail($adminEmail)
     {
         $this->adminEmail = $adminEmail;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFellappAdminEmail()
+    {
+        return $this->fellappAdminEmail;
+    }
+
+    /**
+     * @param mixed $fellappAdminEmail
+     */
+    public function setFellappAdminEmail($fellappAdminEmail)
+    {
+        $this->fellappAdminEmail = $fellappAdminEmail;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getExceptionAccount()
+    {
+        return $this->exceptionAccount;
+    }
+
+    /**
+     * @param mixed $exceptionAccount
+     */
+    public function setExceptionAccount($exceptionAccount)
+    {
+        $this->exceptionAccount = $exceptionAccount;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSubmissionConfirmation()
+    {
+        return $this->submissionConfirmation;
+    }
+
+    /**
+     * @param mixed $submissionConfirmation
+     */
+    public function setSubmissionConfirmation($submissionConfirmation)
+    {
+        $this->submissionConfirmation = $submissionConfirmation;
     }
 
 
