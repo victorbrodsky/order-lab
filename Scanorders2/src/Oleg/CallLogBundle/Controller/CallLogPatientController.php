@@ -625,6 +625,7 @@ class CallLogPatientController extends PatientController {
                 $singlePatient->setKeytype($keytype->getId());
             } else {
                 echo "empty keytype <br>";
+                $singlePatient->setKeytype(NULL);
             }
             $mrnNumber = $mrn->getField();
             //echo "mrnNumber=$mrnNumber<br>";
