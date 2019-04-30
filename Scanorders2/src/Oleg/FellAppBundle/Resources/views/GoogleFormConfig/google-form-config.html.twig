@@ -67,7 +67,6 @@
     {#add a link "Add new fellowship type"#}
     {#add a link "To delete a fellowship type if it no longer exists, visit this page, select it, and click "Remove Fellowship Application Type"#}
 
-
     {% if configFileContent is defined %}
         <br>
         <h3>Current Configuration File on Google Drive</h3>
@@ -82,6 +81,13 @@
             {#</textarea>#}
         </div>
     {% endif %}
+
+    <br>
+    <p>
+        {% set applicationPageLinkFellApp = user_security_utility.getSiteSettingParameter('applicationPageLinkFellApp') %}
+        <a href="{{ applicationPageLinkFellApp }}" target="_blank">Link to the Application Page</a>
+    </p>
+
 
 {% endblock %}
 
