@@ -2900,7 +2900,11 @@ class CallEntryController extends Controller
         if (count($message->getPatient()) > 0 ) {
             $patient = $message->getPatient()->first();
             $mrnRes = $patient->obtainStatusField('mrn', "valid");
-            $mrntype = $mrnRes->getKeytype()->getId();
+            if( $mrnRes->getKeytype() ) {
+                $mrntype = $mrnRes->getKeytype()->getId();
+            } else {
+                $mrntype = NULL;
+            }
             $mrn = $mrnRes->getField();
             $patientId = $patient->getId();
 
