@@ -97,6 +97,27 @@ class GoogleFormConfig {
     private $submissionConfirmation;
 
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $letterAcceptingSubmission;
+
+    /**
+     * text shown when the application is submitted
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $letterError;
+
+    /**
+     * "exception" account that the letter submission is still shown to for testing purposes even when turned off (i.e. olegivanov@pathologysystems.org)
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $letterExceptionAccount;
+
+
+
 
 
     public function __construct() {
@@ -257,6 +278,55 @@ class GoogleFormConfig {
         $this->submissionConfirmation = $submissionConfirmation;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getLetterAcceptingSubmission()
+    {
+        return $this->letterAcceptingSubmission;
+    }
+
+    /**
+     * @param mixed $letterAcceptingSubmission
+     */
+    public function setLetterAcceptingSubmission($letterAcceptingSubmission)
+    {
+        $this->letterAcceptingSubmission = $letterAcceptingSubmission;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLetterError()
+    {
+        return $this->letterError;
+    }
+
+    /**
+     * @param mixed $letterError
+     */
+    public function setLetterError($letterError)
+    {
+        $this->letterError = $letterError;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLetterExceptionAccount()
+    {
+        return $this->letterExceptionAccount;
+    }
+
+    /**
+     * @param mixed $letterExceptionAccount
+     */
+    public function setLetterExceptionAccount($letterExceptionAccount)
+    {
+        $this->letterExceptionAccount = $letterExceptionAccount;
+    }
+
+    
 
 
 

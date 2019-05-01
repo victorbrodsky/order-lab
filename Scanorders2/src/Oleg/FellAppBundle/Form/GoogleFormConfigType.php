@@ -80,6 +80,57 @@ class GoogleFormConfigType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width fellapp-fellowshipSubspecialty'),
         ));
 
+        $builder->add('applicationFormNote', null, array(
+            'label' => "Application Notes:",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+
+        $builder->add('adminEmail', null, array(
+            'label' => "Admin Email:",
+            'required' => false,
+            'attr' => array('class' => 'form-control')
+        ));
+
+        $builder->add('fellappAdminEmail', null, array(
+            'label' => "Fellowship Admin Email:",
+            'required' => false,
+            'attr' => array('class' => 'form-control')
+        ));
+
+        $builder->add('exceptionAccount', null, array(
+            'label' => "Exception Account for the Fellowship Application (the application is still shown to for testing purposes):",
+            'required' => false,
+            'attr' => array('class' => 'form-control')
+        ));
+
+        $builder->add('submissionConfirmation', null, array(
+            'label' => "Fellowship Application Submission Confirmation Message:",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+
+
+
+        $builder->add('letterAcceptingSubmission', CheckboxType::class, array(
+            'label' => "Accepting Submission of the Recommendation Letters:",
+            'required' => false,
+            'attr' => array('class' => 'form-control checkbox')
+        ));
+
+        $builder->add('letterError', null, array(
+            'label' => "Error note on the recommendation letter form:",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+
+        $builder->add('letterExceptionAccount', null, array(
+            'label' => "Exception Account for the recommendation letter form (the form is still shown to for testing purposes):",
+            'required' => false,
+            'attr' => array('class' => 'form-control')
+        ));
+
+
     }
 
     public function configureOptions(OptionsResolver $resolver)

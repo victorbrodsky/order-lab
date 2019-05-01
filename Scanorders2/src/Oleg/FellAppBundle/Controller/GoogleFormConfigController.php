@@ -162,6 +162,31 @@ class GoogleFormConfigController extends Controller
         $configJson['fellowshipTypes'] = $fellowshipTypes;
         $configJson = json_encode($configJson);
 
+        //applicationFormNote
+        $configJson['applicationFormNote'] = $entity->getApplicationFormNote();
+
+        //adminEmail
+        $configJson['adminEmail'] = $entity->getAdminEmail();
+
+        //fellappAdminEmail
+        $configJson['fellappAdminEmail'] = $entity->getFellappAdminEmail();
+
+        //exceptionAccount
+        $configJson['exceptionAccount'] = $entity->getExceptionAccount();
+
+        //submissionConfirmation
+        $configJson['submissionConfirmation'] = $entity->getSubmissionConfirmation();
+
+        //letterAcceptingSubmission
+        $configJson['letterAcceptingSubmission'] = $entity->getLetterAcceptingSubmission();
+
+        //letterError
+        $configJson['letterError'] = $entity->getLetterError();
+
+        //letterExceptionAccount
+        $configJson['letterExceptionAccount'] = $entity->getLetterExceptionAccount();
+
+
         //echo "<pre>";
         //print_r($configJson);
         //echo "</pre>";

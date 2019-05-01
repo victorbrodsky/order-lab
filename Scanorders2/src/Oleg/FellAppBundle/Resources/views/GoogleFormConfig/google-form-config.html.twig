@@ -50,6 +50,42 @@
         {{ formmacros.field(form.fellowshipSubspecialties) }}
     {% endif %}
 
+
+    {% if form.applicationFormNote is defined %}
+        {{ formmacros.field(form.applicationFormNote) }}
+    {% endif %}
+
+    {% if form.adminEmail is defined %}
+        {{ formmacros.field(form.adminEmail) }}
+    {% endif %}
+
+    {% if form.fellappAdminEmail is defined %}
+        {{ formmacros.field(form.fellappAdminEmail) }}
+    {% endif %}
+
+    {% if form.exceptionAccount is defined %}
+        {{ formmacros.field(form.exceptionAccount) }}
+    {% endif %}
+
+    {% if form.submissionConfirmation is defined %}
+        {{ formmacros.field(form.submissionConfirmation) }}
+    {% endif %}
+
+    {% if form.letterAcceptingSubmission is defined %}
+        {{ formmacros.checkbox(form.letterAcceptingSubmission) }}
+    {% endif %}
+
+    {% if form.letterError is defined %}
+        {{ formmacros.field(form.letterError) }}
+    {% endif %}
+
+    {% if form.letterExceptionAccount is defined %}
+        {{ formmacros.field(form.letterExceptionAccount) }}
+    {% endif %}
+
+
+
+
     <br>
     <p>
         {% if cycle == "show" %}
