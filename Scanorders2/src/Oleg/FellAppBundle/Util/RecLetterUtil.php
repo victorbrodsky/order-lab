@@ -897,7 +897,7 @@ class RecLetterUtil {
         //check if this reference already has a letter
         $letters = $reference->getDocuments();
 
-        echo "letters count=".count($letters)."<br>";
+        //echo "letters count=".count($letters)."<br>";
         if( count($letters) > 0 ) {
             $subject = "More than one recommendation letter received from ".$reference->getFullName()." in support of 
                 ".$applicantName."'s application ".$fellapp->getId()." for the ".$fellapp->getFellowshipSubspecialty()." $startDateStr fellowship";
@@ -982,7 +982,7 @@ class RecLetterUtil {
             }
             $emailUtil->sendEmail( $emails, $subject, $body, $ccs );
 
-            echo "Email sent: $subject <br><br><br> $body <br>";
+            //echo "Email sent: $subject <br><br><br> $body <br>";
 
         } //if count($letters) > 0
 
