@@ -160,7 +160,6 @@ class GoogleFormConfigController extends Controller
             $fellowshipTypes[] = array('id'=>$name,'text'=>$name);
         }
         $configJson['fellowshipTypes'] = $fellowshipTypes;
-        $configJson = json_encode($configJson);
 
         //applicationFormNote
         $configJson['applicationFormNote'] = $entity->getApplicationFormNote();
@@ -186,6 +185,7 @@ class GoogleFormConfigController extends Controller
         //letterExceptionAccount
         $configJson['letterExceptionAccount'] = $entity->getLetterExceptionAccount();
 
+        $configJson = json_encode($configJson);
 
         //echo "<pre>";
         //print_r($configJson);
