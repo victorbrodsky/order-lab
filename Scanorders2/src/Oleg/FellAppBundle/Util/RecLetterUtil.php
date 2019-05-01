@@ -641,7 +641,7 @@ class RecLetterUtil {
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
         $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
-        $emailUtil = $this->container->get('user_mailer_utility');
+        //$emailUtil = $this->container->get('user_mailer_utility');
         $systemUser = $userSecUtil->findSystemUser();
         //$environment = $userSecUtil->getSiteSettingParameter('environment');
 
@@ -697,7 +697,7 @@ class RecLetterUtil {
         if( count($letterArr) == 4 ) {
             $instituteIdentification = $letterArr[0];
             $refId = $letterArr[1];
-            $datetime = $letterArr[2];
+            $latestLetterDatetime = $letterArr[2];
             $name = $letterArr[3];
         } else {
             return NULL;
@@ -706,7 +706,7 @@ class RecLetterUtil {
         if( $testing ) {
             $instituteIdentification = "55555";
             $refId = "340d08a7c8037b62e5e0e36b1119486f2dd00540";
-            $datetime = "2019-04-03-13-13-17";
+            $latestLetterDatetime = "2019-04-03-13-13-17";
             $name = "filenameee";
         }
 
@@ -750,77 +750,106 @@ class RecLetterUtil {
         //Good: only one reference corresponds to the hash Id
         if( count($references) == 1 ) {
             $reference = $references[0];
-            $fellapp = $reference->getFellapp(); 
-            $applicant = $fellapp->getUser();
-            $applicantName = "Unknown Applicant";
-            if( $applicant ) {
-                $applicantName = $applicant->getUsernameOptimal();
-            }
-            $startDate = $fellapp->getStartDate();
-            $startDateStr = null;
-            if( $startDate ) {
-                $startDateStr = $startDate->format('m/d/Y');
-            }
+            $fellapp = $reference->getFellapp();
 
+            $this->checkReferenceAlreadyHasLetter($fellapp,$reference,$latestLetterDatetime);
+
+//            $applicant = $fellapp->getUser();
+//            $applicantName = "Unknown Applicant";
+//            if( $applicant ) {
+//                $applicantName = $applicant->getUsernameOptimal();
+//            }
+//            $startDate = $fellapp->getStartDate();
+//            $startDateStr = null;
+//            if( $startDate ) {
+//                $startDateStr = $startDate->format('Y');
+//            }
             //check if this reference already has a letter
-            $letters = $reference->getDocuments();
-            //echo "letters count=".count($letters)."<br>";
-            if( count($letters) > 0 ) {
-                $subject = "More than one recommendation letter received from ".$reference->getFullName()." in support of 
-                ".$applicantName."'s application ID#".$fellapp->getId()." for the ".$fellapp->getFellowshipSubspecialty()." $startDateStr fellowship";
-
-                //TODO: get CreatedTime. Not in file's metadata.
-                //$latestLetterTime = $file->getCreatedTime();
-                //use $datetime from the filename
-                $latestLetterTimeStr = NULL;
-                if( $datetime ) {
-                    //2019-04-03-13-13-17
-                    $timeArr = explode("-",$datetime);
-                    if( count($timeArr) == 6 ) {
-                        //m/d/Y H:i
-                        $latestLetterTimeStr = $timeArr[1]."/".$timeArr[2]."/".$timeArr[0]. " at " . $timeArr[3].":".$timeArr[4];
-                    }
-                }
-                if( !$latestLetterTimeStr ) {
-                    $latestLetterTime = new \DateTime();
-                    $latestLetterTimeStr = $latestLetterTime->format("m/d/Y H:i");
-                }
-                $body = $subject . " The latest document was received on ".$latestLetterTimeStr;
-                $body = $body . "<br><br>" . "Please review these letters of recommendation and delete any duplicates or erroneously added documents.";
-
-                //You can review the letter 1 here: LINKtoLETTER1. You can review the letter 2 here: LINKtoLETTER2. You can review the letter 3 here: LINKtoLETTER3.
-                $reviewLetterArr = array();
-                $counter = 1;
-                foreach($letters as $letter) {
-                    $letterLink = $this->container->get('router')->generate(
-                        'fellapp_file_download',
-                        array('id' => $letter->getId()),
-                        UrlGeneratorInterface::ABSOLUTE_URL
-                    );
-                    $letterLink = '<a href="'.$letterLink.'">'.$letterLink.'</a>';
-                    $reviewLetterArr[] = "You can review the letter $counter here: " . $letterLink;
-                    $counter++;
-                }
-                $body = $body . "<br><br>" . implode("<br>",$reviewLetterArr);
-
-                //You can review the entire application here: LINKtoAPPLICATION.
-                $fellappLink = $this->container->get('router')->generate(
-                    'fellapp_show',
-                    array('id' => $fellapp->getId()),
-                    UrlGeneratorInterface::ABSOLUTE_URL
-                );
-                $fellappLink = '<a href="'.$fellappLink.'">'.$fellappLink.'</a>';
-                $body = $body . "<br><br>" . "You can review the entire application here: ".$fellappLink;
-
-                //$userSecUtil->sendEmailToSystemEmail($subject,$body);
-                $emails = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'),"Administrator");
-                $ccs = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'),"Platform Administrator");
-                if( !$emails ) {
-                    $emails = $ccs;
-                    $ccs = null;
-                }
-                $emailUtil->sendEmail( $emails, $subject, $body, $ccs );
-            } //if count($letters) > 0
+            //$letters = $reference->getDocuments();
+//            //echo "letters count=".count($letters)."<br>";
+//            if( count($letters) > 0 ) {
+//                $subject = "More than one recommendation letter received from ".$reference->getFullName()." in support of
+//                ".$applicantName."'s application ".$fellapp->getId()." for the ".$fellapp->getFellowshipSubspecialty()." $startDateStr fellowship";
+//
+//                //TODO: get CreatedTime. Not in file's metadata.
+//                //$latestLetterTime = $file->getCreatedTime();
+//                //use $datetime from the filename
+//                $latestLetterTimeStr = NULL;
+//                if( $datetime ) {
+//                    //2019-04-03-13-13-17
+//                    $timeArr = explode("-",$datetime);
+//                    if( count($timeArr) == 6 ) {
+//                        //m/d/Y H:i
+//                        $latestLetterTimeStr = $timeArr[1]."/".$timeArr[2]."/".$timeArr[0]. " at " . $timeArr[3].":".$timeArr[4];
+//                    }
+//                }
+//                if( !$latestLetterTimeStr ) {
+//                    $latestLetterTime = new \DateTime();
+//                    $latestLetterTimeStr = $latestLetterTime->format("m/d/Y H:i");
+//                }
+//                $body = "More than one recommendation letter has been received from ".$reference->getFullName()." in support of
+//                ".$applicantName."'s application ".$fellapp->getId()." for the ".$fellapp->getFellowshipSubspecialty()." $startDateStr fellowship";
+//                $body = $body . " The latest document was received on ".$latestLetterTimeStr.".";
+//                $body = $body . "<br><br>" . "Please review these letters of recommendation and delete any duplicates or erroneously added documents.";
+//
+//                //You can review the letter 1 here: LINKtoLETTER1. You can review the letter 2 here: LINKtoLETTER2. You can review the letter 3 here: LINKtoLETTER3.
+//                $reviewLetterArr = array();
+//
+//                //You can review the latest letter submitted on MM/DD/YYYY at HH/MM here: https://localhost/fellowship-applications/file-download/XXXXX
+//                $latestLetter = $letters->last();
+//                if( $latestLetter ) {
+//                    $latestLetterCreatedDate = $latestLetter->getCreatedate();
+//                    if ($latestLetterCreatedDate) {
+//                        $latestLetterCreatedDateStr = "submitted on " . $latestLetterCreatedDate->format('m/d/Y \a\t H:i');
+//                    } else {
+//                        $latestLetterCreatedDateStr = "";
+//                    }
+//                    $latestLetterLink = $this->container->get('router')->generate(
+//                        'fellapp_file_download',
+//                        array('id' => $latestLetter->getId()),
+//                        UrlGeneratorInterface::ABSOLUTE_URL
+//                    );
+//                    $reviewLetterArr[] = "You can review the latest letter submitted on " . $latestLetterCreatedDateStr . " here: " . $latestLetterLink;
+//                }
+//
+//                $counter = 1;
+//                foreach($letters as $letter) {
+//                    $letterLink = $this->container->get('router')->generate(
+//                        'fellapp_file_download',
+//                        array('id' => $letter->getId()),
+//                        UrlGeneratorInterface::ABSOLUTE_URL
+//                    );
+//                    $letterLink = '<a href="'.$letterLink.'">'.$letterLink.'</a>';
+//                    $letterCreatedDate = $letter->getCreatedate();
+//                    if( $letterCreatedDate ) {
+//                        $letterCreatedDateStr = "submitted on ".$letterCreatedDate->format('m/d/Y \a\t H:i');
+//                    } else {
+//                        $letterCreatedDateStr = $counter;
+//                    }
+//                    $reviewLetterArr[] = "You can review the letter ".$letterCreatedDateStr." here: " . $letterLink;
+//                    $counter++;
+//                }
+//
+//                $body = $body . "<br><br>" . implode("<br>",$reviewLetterArr);
+//
+//                //You can review the entire application here: LINKtoAPPLICATION.
+//                $fellappLink = $this->container->get('router')->generate(
+//                    'fellapp_show',
+//                    array('id' => $fellapp->getId()),
+//                    UrlGeneratorInterface::ABSOLUTE_URL
+//                );
+//                $fellappLink = '<a href="'.$fellappLink.'">'.$fellappLink.'</a>';
+//                $body = $body . "<br><br>" . "You can review the entire application here: ".$fellappLink;
+//
+//                //$userSecUtil->sendEmailToSystemEmail($subject,$body);
+//                $emails = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'),"Administrator");
+//                $ccs = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'),"Platform Administrator");
+//                if( !$emails ) {
+//                    $emails = $ccs;
+//                    $ccs = null;
+//                }
+//                $emailUtil->sendEmail( $emails, $subject, $body, $ccs );
+//            } //if count($letters) > 0
 
             //add this letter to this reference
             $reference->addDocument($uploadedLetterDb);
@@ -843,6 +872,113 @@ class RecLetterUtil {
 
 
         return NULL;
+    }
+
+    //check if this reference already has a letter
+    public function checkReferenceAlreadyHasLetter($fellapp,$reference,$latestLetterDatetime) {
+
+        $userSecUtil = $this->container->get('user_security_utility');
+        $emailUtil = $this->container->get('user_mailer_utility');
+
+        //$fellapp = $reference->getFellapp();
+        $applicant = $fellapp->getUser();
+        $applicantName = "Unknown Applicant";
+        if( $applicant ) {
+            $applicantName = $applicant->getUsernameOptimal();
+        }
+        $startDate = $fellapp->getStartDate();
+        $startDateStr = null;
+        if( $startDate ) {
+            $startDateStr = $startDate->format('Y');
+        }
+
+        //check if this reference already has a letter
+        $letters = $reference->getDocuments();
+
+        echo "letters count=".count($letters)."<br>";
+        if( count($letters) > 0 ) {
+            $subject = "More than one recommendation letter received from ".$reference->getFullName()." in support of 
+                ".$applicantName."'s application ".$fellapp->getId()." for the ".$fellapp->getFellowshipSubspecialty()." $startDateStr fellowship";
+
+            //TODO: get CreatedTime. Not in file's metadata.
+            //$latestLetterTime = $file->getCreatedTime();
+            //use $datetime from the filename
+            $latestLetterTimeStr = NULL;
+            if( $latestLetterDatetime ) {
+                //2019-04-03-13-13-17
+                $timeArr = explode("-",$latestLetterDatetime);
+                if( count($timeArr) == 6 ) {
+                    //m/d/Y H:i
+                    $latestLetterTimeStr = $timeArr[1]."/".$timeArr[2]."/".$timeArr[0]. " at " . $timeArr[3].":".$timeArr[4];
+                }
+            }
+            if( !$latestLetterTimeStr ) {
+                $latestLetterTime = new \DateTime();
+                $latestLetterTimeStr = $latestLetterTime->format("m/d/Y H:i");
+            }
+            $body = "More than one recommendation letter has been received from ".$reference->getFullName()." in support of 
+                ".$applicantName."'s application ".$fellapp->getId()." for the ".$fellapp->getFellowshipSubspecialty()." $startDateStr fellowship";
+            $body = $body . " The latest document was received on ".$latestLetterTimeStr.".";
+            $body = $body . "<br><br>" . "Please review these letters of recommendation and delete any duplicates or erroneously added documents.";
+
+            //You can review the letter 1 here: LINKtoLETTER1. You can review the letter 2 here: LINKtoLETTER2. You can review the letter 3 here: LINKtoLETTER3.
+            $reviewLetterArr = array();
+
+            //You can review the latest letter submitted on MM/DD/YYYY at HH/MM here: https://localhost/fellowship-applications/file-download/XXXXX
+            $latestLetter = $letters->last();
+            if( $latestLetter ) {
+                $latestLetterCreatedDate = $latestLetter->getCreatedate();
+                if ($latestLetterCreatedDate) {
+                    $latestLetterCreatedDateStr = "submitted on " . $latestLetterCreatedDate->format('m/d/Y \a\t H:i');
+                } else {
+                    $latestLetterCreatedDateStr = "";
+                }
+                $latestLetterLink = $this->container->get('router')->generate(
+                    'fellapp_file_download',
+                    array('id' => $latestLetter->getId()),
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+                $reviewLetterArr[] = "You can review the latest letter submitted on " . $latestLetterCreatedDateStr . " here: " . $latestLetterLink;
+            }
+
+            $counter = 1;
+            foreach($letters as $letter) {
+                $letterLink = $this->container->get('router')->generate(
+                    'fellapp_file_download',
+                    array('id' => $letter->getId()),
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+                $letterLink = '<a href="'.$letterLink.'">'.$letterLink.'</a>';
+                $letterCreatedDate = $letter->getCreatedate();
+                if( $letterCreatedDate ) {
+                    $letterCreatedDateStr = "submitted on ".$letterCreatedDate->format('m/d/Y \a\t H:i');
+                } else {
+                    $letterCreatedDateStr = $counter;
+                }
+                $reviewLetterArr[] = "You can review the letter ".$letterCreatedDateStr." here: " . $letterLink;
+                $counter++;
+            }
+
+            $body = $body . "<br><br>" . implode("<br>",$reviewLetterArr);
+
+            //You can review the entire application here: LINKtoAPPLICATION.
+            $fellappLink = $this->container->get('router')->generate(
+                'fellapp_show',
+                array('id' => $fellapp->getId()),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $fellappLink = '<a href="'.$fellappLink.'">'.$fellappLink.'</a>';
+            $body = $body . "<br><br>" . "You can review the entire application here: ".$fellappLink;
+
+            //$userSecUtil->sendEmailToSystemEmail($subject,$body);
+            $emails = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'),"Administrator");
+            $ccs = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'),"Platform Administrator");
+            if( !$emails ) {
+                $emails = $ccs;
+                $ccs = null;
+            }
+            $emailUtil->sendEmail( $emails, $subject, $body, $ccs );
+        } //if count($letters) > 0
     }
 
     public function populateApplicationsFromDataFile() {
