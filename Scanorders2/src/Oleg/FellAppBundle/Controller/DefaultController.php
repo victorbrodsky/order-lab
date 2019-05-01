@@ -93,9 +93,10 @@ class DefaultController extends Controller
 
         //testing checkAndSendCompleteEmail
         $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
-        $fellapp = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find(8);
+        //$fellapp = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find(8);
         //$fellappRecLetterUtil->checkAndSendCompleteEmail($fellapp);
 
+        $fellapp = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find(1414);
         $reference = $fellapp->getReferences()->first();
         $latestLetterDatetime = "2019-04-03-13-13-17";
         $fellappRecLetterUtil->checkReferenceAlreadyHasLetter($fellapp,$reference,$latestLetterDatetime);
