@@ -752,7 +752,7 @@ class RecLetterUtil {
             $reference = $references[0];
             $fellapp = $reference->getFellapp();
 
-            $this->checkReferenceAlreadyHasLetter($fellapp,$reference,$latestLetterDatetime);
+            //$this->checkReferenceAlreadyHasLetter($fellapp,$reference,$latestLetterDatetime);
 
 //            $applicant = $fellapp->getUser();
 //            $applicantName = "Unknown Applicant";
@@ -856,6 +856,8 @@ class RecLetterUtil {
 
             $this->em->flush($reference);
 
+            $this->checkReferenceAlreadyHasLetter($fellapp,$reference,$latestLetterDatetime);
+
             $this->checkAndSendCompleteEmail($fellapp);
 
             //TODO: update application PDF:
@@ -917,7 +919,7 @@ class RecLetterUtil {
                 $latestLetterTimeStr = $latestLetterTime->format("m/d/Y H:i");
             }
             $body = "More than one recommendation letter has been received from ".$reference->getFullName()." in support of 
-                ".$applicantName."'s application ".$fellapp->getId()." for the ".$fellapp->getFellowshipSubspecialty()." $startDateStr fellowship";
+                ".$applicantName."'s application ".$fellapp->getId()." for the ".$fellapp->getFellowshipSubspecialty()." $startDateStr fellowship.";
             $body = $body . " The latest document was received on ".$latestLetterTimeStr.".";
             $body = $body . "<br><br>" . "Please review these letters of recommendation and delete any duplicates or erroneously added documents.";
 
@@ -938,7 +940,8 @@ class RecLetterUtil {
                     array('id' => $latestLetter->getId()),
                     UrlGeneratorInterface::ABSOLUTE_URL
                 );
-                $reviewLetterArr[] = "You can review the latest letter submitted on " . $latestLetterCreatedDateStr . " here: " . $latestLetterLink;
+                $latestLetterLink = '<a href="'.$latestLetterLink.'">'.$latestLetterLink.'</a>';
+                $reviewLetterArr[] = "You can review the latest letter submitted on " . $latestLetterCreatedDateStr . " here: " . $latestLetterLink . "<br>";
             }
 
             $counter = 1;
@@ -978,7 +981,12 @@ class RecLetterUtil {
                 $ccs = null;
             }
             $emailUtil->sendEmail( $emails, $subject, $body, $ccs );
+
+            echo "Email sent: $subject <br><br><br> $body <br>";
+
         } //if count($letters) > 0
+
+        return count($letters);
     }
 
     public function populateApplicationsFromDataFile() {
