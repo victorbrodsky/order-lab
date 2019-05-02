@@ -1311,11 +1311,11 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         echo "fieldIndex=".$fieldIndex."<br>";
 
-        $fieldIndex = ltrim($fieldIndex,'0')*1 + 1;
-        //$fieldIndex = ltrim($fieldIndex,'0')*1 + 1;
-        //$fieldIndex = $fieldIndex + 1;
+        //$fieldIndex = ltrim($fieldIndex,'0') + 1;
+        $fieldIndex = ltrim($fieldIndex,'0');
+        $fieldIndex = (int)$fieldIndex + 1;
         $paddedfield = str_pad($fieldIndex,13,'0',STR_PAD_LEFT);
-        //echo "paddedfield=".$paddedfield."<br>";
+        echo "paddedfield=".$paddedfield."<br>";
         //exit();
         return $prefixname.'-'.$paddedfield;
     }
