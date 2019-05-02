@@ -1318,7 +1318,7 @@ class RequestController extends Controller
                 //admin user
                 $groupPageUrl = $this->generateUrl(
                     "vacreq_approvers",
-                    null,
+                    array(),
                     UrlGeneratorInterface::ABSOLUTE_URL
                 );
                 $warningMsg = "You don't have any group and/or assigned Submitter roles for the Business/Vacation Request site.".
