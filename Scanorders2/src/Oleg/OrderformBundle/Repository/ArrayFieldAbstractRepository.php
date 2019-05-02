@@ -1306,6 +1306,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             $fieldIndex = str_replace($prefixname."-","",$lastFieldStr);
         } else {
             $fieldIndex = 0;
+            echo "fieldIndex assigned 0<br>";
         }
 
         echo "fieldIndex=".$fieldIndex."<br>";
