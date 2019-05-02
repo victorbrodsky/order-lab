@@ -1308,7 +1308,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             $fieldIndex = 0;
         }
 
-        //echo "fieldIndex=".$fieldIndex."<br>";
+        echo "fieldIndex=".$fieldIndex."<br>";
 
         $fieldIndex = ltrim($fieldIndex,'0') + 1;
         $paddedfield = str_pad($fieldIndex,13,'0',STR_PAD_LEFT);
