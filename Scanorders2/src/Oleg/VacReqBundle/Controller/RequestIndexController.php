@@ -397,7 +397,7 @@ class RequestIndexController extends Controller
             if( $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') ) {
                 $groupPageUrl = $this->generateUrl(
                     "vacreq_approvers",
-                    null,
+                    array(),
                     UrlGeneratorInterface::ABSOLUTE_URL
                 );
                 $warningMsg = "No submitter/approver groups have been set up. Such groups can be set up " .
