@@ -16,7 +16,7 @@
         <thead>
             <tr>
                 <th>{{ knp_pagination_sortable(defaultReviewers, 'Reviewer', 'reviewerInfos.displayName') }}</th>
-                <th>{{ knp_pagination_sortable(defaultReviewers, 'reviewer Delegate', 'reviewerDelegateInfos.displayName') }}</th>
+                <th>{{ knp_pagination_sortable(defaultReviewers, 'Reviewer Delegate', 'reviewerDelegateInfos.displayName') }}</th>
                 <th>{{ knp_pagination_sortable(defaultReviewers, 'Created', 'defaultReviewer.createDate') }}</th>
                 {% if stateStr == "committee_review" %}
                     <th>{{ knp_pagination_sortable(defaultReviewers, 'Primary Review', 'defaultReviewer.primaryReview') }}</th>
