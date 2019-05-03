@@ -1606,7 +1606,8 @@ class CallEntryController extends Controller
         //$userTimeZone = $user->getPreferences()->getTimezone();
         $userTimeZone = $userSecUtil->getSiteSettingParameter('timezone',$sitename);
 
-        $defaultInstitution = $userSecUtil->getSiteSettingParameter('institution',$sitename);
+        $defaultInstitution = NULL;
+        //$defaultInstitution = $userSecUtil->getSiteSettingParameter('institution',$sitename);
 
         $params = array(
             'cycle' => $cycle,  //'new',

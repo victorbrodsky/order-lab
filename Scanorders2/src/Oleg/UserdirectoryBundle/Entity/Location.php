@@ -485,9 +485,9 @@ class Location extends ListAbstract
         $this->institution = $institution;
 
         //set name if empty
-        if( $institution && !$this->getName() ) {
-            $this->setName($institution->getName()." Location");
-        }
+        //if( $institution && !$this->getName() ) {
+        //    $this->setName($institution->getName()." Location");
+        //}
     }
 
     /**
@@ -976,10 +976,10 @@ class Location extends ListAbstract
             return false;
         } else {
             //return true;
-            $institution = $this->getInstitution();
-            if( $institution ) {
-                $this->setName($institution->getName()." Location");
-            }
+//            $institution = $this->getInstitution();
+//            if( $institution ) {
+//                $this->setName($institution->getName()." Location");
+//            }
         }
 
         //be strict: location name must be set. If not then it's empty

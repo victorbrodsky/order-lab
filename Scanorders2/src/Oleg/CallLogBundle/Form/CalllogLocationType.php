@@ -178,7 +178,7 @@ class CalllogLocationType extends AbstractType
         }
 
         //Institution or Collaboration
-        if( $this->params['defaultInstitution'] ) {
+        if( 0 && $this->params['defaultInstitution'] ) {
             $builder->add('institution', EntityType::class, array(
                 'class' => 'OlegUserdirectoryBundle:Institution',
                 'label' => "Institution or Collaboration:",

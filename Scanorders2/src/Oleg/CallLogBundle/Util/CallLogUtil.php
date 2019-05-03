@@ -1202,6 +1202,23 @@ class CallLogUtil
                     }
                 } else  {
 
+                    ///////// re-set name by current institution if institution name is default (location name has not been changed) /////////
+                    $userSecUtil = $this->container->get('user_security_utility');
+                    $sitename = $this->container->getParameter('calllog.sitename');
+                    $defaultInstitution = $userSecUtil->getSiteSettingParameter('institution',$sitename);
+                    if( $defaultInstitution ) {
+                        $defaultLocationName = $defaultInstitution->getName()." Location";
+                    }
+                    if( $defaultLocationName && $location->getInstitution() ) {
+                        //echo "compare location name:[".$location->getName()."]==[".$defaultLocationName."] <br>";
+                        if( $location->getName() == $defaultLocationName ) {
+                            $newLocationName = $location->getInstitution()->getName()." Location";
+                            $location->setName($newLocationName);
+                        }
+                    }
+                    //echo "locationName=".$location->getName()."<br>";
+                    ///////// EOF re-set name by current institution if institution name is default (location name has not been changed) /////////
+
                     //$location = new Location(); //testing
                     $search = false;
                     $parameters = array();
@@ -1210,7 +1227,14 @@ class CallLogUtil
                     $repository = $this->em->getRepository('OlegUserdirectoryBundle:Location');
                     $dql = $repository->createQueryBuilder("list");
 
+                    if( $location->getName() ) {
+                        $dql->andWhere("list.name = :locationName");
+                        $parameters['locationName'] = $location->getName();
+                        $search = true;
+                    }
+
                     if( $location->getInstitution() ) {
+                        //echo "location Institution =".$location->getInstitution()."<br>";
                         $dql->andWhere("list.institution = :institutionId");
                         $parameters['institutionId'] = $location->getInstitution()->getId();
                         $search = true;
@@ -1311,7 +1335,7 @@ class CallLogUtil
                         $dql->andWhere("locationTypes.name = :locationTypesName");
                         $parameters['locationTypesName'] = "Encounter Location";
 
-                        $dql->orderBy("list.id","DESC");
+                        $dql->orderBy("list.id","DESC"); //last entered showed first
 
                         //$dql->andWhere("(list.type = :typedef OR list.type = :typeadd)");
                         //$parameters['typedef'] = 'default';
@@ -1320,15 +1344,16 @@ class CallLogUtil
                         $query = $this->em->createQuery($dql);
 
                         if( count($parameters) > 0 ) {
-                            print_r($parameters);
+                            //print_r($parameters);
                             $query->setParameters($parameters);
                         }
 
                         $locations = $query->getResult();
+                        //print_r($parameters);
                         //echo "locations count=".count($locations)."<br>";
 
                         if( count($locations) > 0 ) {
-                            $locationDb = $locations[0];
+                            $locationDb = $locations[0]; //use the last created location
                             $spot->setCurrentLocation($locationDb);
                             return $locationDb;
                         }
@@ -2546,6 +2571,12 @@ class CallLogUtil
         $location->setName($locationName);
         $location->setStatus(1);
         $location->setRemovable($removable);
+
+        $defaultInstitution = $userSecUtil->getSiteSettingParameter('institution',$sitename);
+        if( $defaultInstitution ) {
+            $location->setInstitution($defaultInstitution);
+            $location->setName($defaultInstitution->getName()." Location");
+        }
 
         $geoLocation = new GeoLocation();
         $location->setGeoLocation($geoLocation);
