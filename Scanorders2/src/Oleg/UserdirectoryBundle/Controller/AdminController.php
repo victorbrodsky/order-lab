@@ -2873,7 +2873,7 @@ class AdminController extends Controller
 
         $institutions = array(
             "Weill Cornell Medical College"=>$wcmc,
-            "New York-Presbyterian Hospital"=>$nyh,
+            "New York Presbyterian Hospital"=>$nyh,
             "Weill Cornell Medical College Qatar"=>$wcmcq,
             "Memorial Sloan Kettering Cancer Center"=>$msk,
             "Hospital for Special Surgery"=>$hss

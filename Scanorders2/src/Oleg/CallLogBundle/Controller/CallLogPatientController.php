@@ -236,7 +236,7 @@ class CallLogPatientController extends PatientController {
 
         //$institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName("All Institutions");
         //$institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName("Weill Cornell Medical College");
-        //$institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName("New York-Presbyterian Hospital");
+        //$institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName("New York Presbyterian Hospital");
         $institution = $userSecUtil->getCurrentUserInstitution($user);
         $institutions = array();
         $institutions[] = $institution->getId();
