@@ -1333,6 +1333,7 @@ class CallEntryController extends Controller
 
                 //prevent creating a new location every time: if location id is provided => find location in DB and replace it with tracker->spot->location
                 $calllogUtil->processTrackerLocation($newEncounter);
+                //exit("eof processTrackerLocation");
 
                 //process EncounterReferringProvider: set Specialty, Phone and Email for a new userWrapper (getReferringProviders)
                 $calllogUtil->processReferringProviders($newEncounter,$system);

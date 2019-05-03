@@ -1190,17 +1190,154 @@ class CallLogUtil
         foreach( $encounter->getTracker()->getSpots() as $spot ) {
             $location = $spot->getCurrentLocation();
             //echo "location=".$location."<br>";
-            if( $location && $location->getId() ) {
-                //echo "find location by ID=".$location->getId()."<br>";
-                $locationDb = $this->em->getRepository('OlegUserdirectoryBundle:Location')->find($location->getId());
-                if( $locationDb ) {
-                    //echo "set found location by ID=".$location->getId()."<br>";
-                    $spot->setCurrentLocation($locationDb);
-                } else {
-                    //echo "use and create a current location =".$location->getName()."<br>";
-                }
-            }
-        }
+            if( $location ) {
+                if( $location->getId() ) {
+                    //echo "find location by ID=".$location->getId()."<br>";
+                    $locationDb = $this->em->getRepository('OlegUserdirectoryBundle:Location')->find($location->getId());
+                    if ($locationDb) {
+                        //echo "set found location by ID=".$location->getId()."<br>";
+                        $spot->setCurrentLocation($locationDb);
+                    } else {
+                        //echo "use and create a current location =".$location->getName()."<br>";
+                    }
+                } else  {
+
+                    //$location = new Location(); //testing
+                    $search = false;
+                    $parameters = array();
+
+                    //if id is not provided, then find location by the fields (except prefilled locationTypes="Encounter Location" and name="New York Hospital Location")
+                    $repository = $this->em->getRepository('OlegUserdirectoryBundle:Location');
+                    $dql = $repository->createQueryBuilder("list");
+
+                    if( $location->getInstitution() ) {
+                        $dql->andWhere("list.institution = :institutionId");
+                        $parameters['institutionId'] = $location->getInstitution()->getId();
+                        $search = true;
+                    }
+
+                    if( $location->getPhone() ) {
+                        $dql->andWhere("list.phone = :phone");
+                        $parameters['phone'] = $location->getPhone();
+                        $search = true;
+                    }
+
+                    if( $location->getRoom() ) {
+                        $dql->andWhere("list.room = :room");
+                        $parameters['room'] = $location->getRoom()->getId();
+                        $search = true;
+                    }
+
+                    if( $location->getSuite() ) {
+                        $dql->andWhere("list.suite = :suite");
+                        $parameters['suite'] = $location->getSuite()->getId();
+                        $search = true;
+                    }
+
+                    if( $location->getFloor() ) {
+                        $dql->andWhere("list.floor = :floor");
+                        $parameters['floor'] = $location->getFloor()->getId();
+                        $search = true;
+                    }
+
+                    if( $location->getFloorSide() ) {
+                        $dql->andWhere("list.floorSide = :floorSide");
+                        $parameters['floorSide'] = $location->getFloorSide();
+                        $search = true;
+                    }
+
+                    if( $location->getBuilding() ) {
+                        $dql->andWhere("list.building = :building");
+                        $parameters['building'] = $location->getBuilding()->getId();
+                        $search = true;
+                    }
+
+                    if( $location->getComment() ) {
+                        $dql->andWhere("list.comment = :comment");
+                        $parameters['comment'] = $location->getComment();
+                        $search = true;
+                    }
+
+                    $geoLocation = $location->getGeoLocation();
+                    if( $geoLocation ) {
+                        $dql->leftJoin('list.geoLocation', 'geoLocation');
+                        //$geoLocation = new GeoLocation(); //testing
+                        if( $geoLocation->getStreet1() ) {
+                            $dql->andWhere("geoLocation.street1 = :street1");
+                            $parameters['street1'] = $geoLocation->getStreet1();
+                            $search = true;
+                        }
+
+                        if( $geoLocation->getStreet2() ) {
+                            $dql->andWhere("geoLocation.street2 = :street2");
+                            $parameters['street2'] = $geoLocation->getStreet2();
+                            $search = true;
+                        }
+
+                        if( $geoLocation->getCity() ) {
+                            $dql->andWhere("geoLocation.city = :city");
+                            $parameters['city'] = $geoLocation->getCity()->getId();
+                            $search = true;
+                        }
+
+                        if( $geoLocation->getState() ) {
+                            $dql->andWhere("geoLocation.state = :state");
+                            $parameters['state'] = $geoLocation->getState()->getId();
+                            $search = true;
+                        }
+
+                        if( $geoLocation->getZip() ) {
+                            $dql->andWhere("geoLocation.zip = :zip");
+                            $parameters['zip'] = $geoLocation->getZip();
+                            $search = true;
+                        }
+
+                        if( $geoLocation->getCounty() ) {
+                            $dql->andWhere("geoLocation.county = :county");
+                            $parameters['county'] = $geoLocation->getCounty();
+                            $search = true;
+                        }
+
+                        if( $geoLocation->getCountry() ) {
+                            $dql->andWhere("geoLocation.country = :country");
+                            $parameters['country'] = $geoLocation->getCountry()->getId();
+                            $search = true;
+                        }
+                    } //if geoLocation
+
+                    if( $search ) {
+                        //EncounterType by alone is not enough to make search
+                        $dql->leftJoin('list.locationTypes', 'locationTypes');
+                        $dql->andWhere("locationTypes.name = :locationTypesName");
+                        $parameters['locationTypesName'] = "Encounter Location";
+
+                        $dql->orderBy("list.id","DESC");
+
+                        //$dql->andWhere("(list.type = :typedef OR list.type = :typeadd)");
+                        //$parameters['typedef'] = 'default';
+                        //$parameters['typeadd'] = 'user-added';
+
+                        $query = $this->em->createQuery($dql);
+
+                        if( count($parameters) > 0 ) {
+                            print_r($parameters);
+                            $query->setParameters($parameters);
+                        }
+
+                        $locations = $query->getResult();
+                        //echo "locations count=".count($locations)."<br>";
+
+                        if( count($locations) > 0 ) {
+                            $locationDb = $locations[0];
+                            $spot->setCurrentLocation($locationDb);
+                            return $locationDb;
+                        }
+                    }
+                } //if( $location->getId() )  else
+            }//$location
+        }//foreach spots
+
+        return NULL;
     }
 
     //set Specialty, Phone and Email for a new userWrapper

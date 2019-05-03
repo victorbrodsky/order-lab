@@ -972,7 +972,7 @@ class Location extends ListAbstract
             //return true;
         }
 
-        if ($this->getName()) {
+        if( $this->getName() ) {
             return false;
         } else {
             //return true;
