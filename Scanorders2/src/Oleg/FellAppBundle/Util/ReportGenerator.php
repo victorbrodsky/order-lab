@@ -539,6 +539,12 @@ class ReportGenerator {
                 $filePathsArr[] = $userSecUtil->getAbsoluteServerFilePath($reference);
             }
         }
+//        $reference = $entity->getRecentReferenceLetter();
+//        if( $reference ) {
+//            if( $this->isValidFile($reference,$fileErrors,"Reference Letter") ) {
+//                $filePathsArr[] = $userSecUtil->getAbsoluteServerFilePath($reference);
+//            }
+//        }
 
         //other documents
         $otherDocuments = $entity->getDocuments();

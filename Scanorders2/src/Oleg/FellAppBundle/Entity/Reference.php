@@ -401,6 +401,14 @@ class Reference
         }
     }
 
+    public function getRecentReferenceLetter() {
+        if( count($this->getDocuments()) > 0 ) {
+            return $this->getDocuments()->last();
+        } else {
+            return null;
+        }
+    }
+
 
     public function getFullName() {
         $nameArr = array();
