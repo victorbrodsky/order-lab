@@ -1207,12 +1207,12 @@ class CallLogUtil
                     $sitename = $this->container->getParameter('calllog.sitename');
                     $defaultInstitution = $userSecUtil->getSiteSettingParameter('institution',$sitename);
                     if( $defaultInstitution ) {
-                        $defaultLocationName = $defaultInstitution->getName()." Location";
+                        $defaultLocationName = $defaultInstitution->getName();//." Location";
                     }
                     if( $defaultLocationName && $location->getInstitution() ) {
                         //echo "compare location name:[".$location->getName()."]==[".$defaultLocationName."] <br>";
                         if( $location->getName() == $defaultLocationName ) {
-                            $newLocationName = $location->getInstitution()->getName()." Location";
+                            $newLocationName = $location->getInstitution()->getName();//." Location";
                             $location->setName($newLocationName);
                         }
                     }
@@ -2575,7 +2575,7 @@ class CallLogUtil
         $defaultInstitution = $userSecUtil->getSiteSettingParameter('institution',$sitename);
         if( $defaultInstitution ) {
             $location->setInstitution($defaultInstitution);
-            $location->setName($defaultInstitution->getName()." Location");
+            $location->setName($defaultInstitution->getName());//." Location");
         }
 
         $geoLocation = new GeoLocation();
