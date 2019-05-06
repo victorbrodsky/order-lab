@@ -635,9 +635,6 @@ class FellAppController extends Controller {
         $args = $this->getShowParameters($routeName,$fellowshipApplication);
 
         if( count($args) == 0 ) {
-            //$warningMsg = "No fellowship types (subspecialties) are found for WCMC Pathology and Laboratory Medicine department.";
-            //$warningMsg = $warningMsg." ".'<a href="'.$linkUrl.'" target="_blank">Please associate the department with the appropriate fellowship subspecialties.</a>';
-            //$warningMsg = $warningMsg."<br>"."For example, choose an appropriate subspecialty and set the institution to 'Weill Cornell Medical College => Pathology and Laboratory Medicine'";
             $linkUrl = $this->generateUrl(
                 "fellapp_fellowshiptype_settings",
                 array(),
@@ -648,8 +645,6 @@ class FellAppController extends Controller {
 
             $this->get('session')->getFlashBag()->add(
                 'warning',
-                //'No Fellowship Types (Subspecialties) are found for WCMC Pathology and Laboratory Medicine department.
-                // Please assign the WCMC department to the appropriate Fellowship Subspecialties'
                 $warningMsg
             );
             //return $this->redirect( $this->generateUrl('fellapp-nopermission') );
