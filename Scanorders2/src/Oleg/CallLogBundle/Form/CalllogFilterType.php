@@ -207,10 +207,12 @@ class CalllogFilterType extends AbstractType
             'choice_label' => 'getNameShortName',
             'attr' => array('class' => 'combobox', 'placeholder' => "Institution or Collaboration"),
             'query_builder' => function (EntityRepository $er) {
-                return $er->createQueryBuilder('u')
-                    //->leftJoin("u.locationTypes", "locationTypes")
-                    ->where("u.level=0")
-                    ->orderBy("u.orderinlist","ASC");
+                return $er->createQueryBuilder('list')
+                    //->leftJoin("list.locationTypes", "locationTypes")
+                    ->where("list.level=0")
+                    ->andWhere('list.type = :default')
+                    ->setParameters( array('default'=>'default'))
+                    ->orderBy("list.orderinlist","ASC");
             },
         ));
 
