@@ -533,8 +533,8 @@ class ReportGenerator {
         }
 
         //references
-        //$references = $entity->getReferenceLetters();
-        $references = $entity->getRecentReferenceLetters(); //get only recent reference letter for each reference
+        $references = $entity->getReferenceLetters();
+        //$references = $entity->getRecentReferenceLetters(); //get only recent reference letter for each reference
         foreach( $references as $reference ) {
             if( $this->isValidFile($reference,$fileErrors,"Reference Letter") ) {
                 $filePathsArr[] = $userSecUtil->getAbsoluteServerFilePath($reference);

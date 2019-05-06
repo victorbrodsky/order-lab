@@ -899,6 +899,9 @@ class RecLetterUtil {
 
         //echo "letters count=".count($letters)."<br>";
         if( count($letters) > 0 ) {
+
+            $router = $userSecUtil->getRequestContextRouter();
+
             $subject = "More than one recommendation letter received from ".$reference->getFullName()." in support of 
                 ".$applicantName."'s application ".$fellapp->getId()." for the ".$fellapp->getFellowshipSubspecialty()." $startDateStr fellowship";
 
@@ -935,7 +938,7 @@ class RecLetterUtil {
                 } else {
                     $latestLetterCreatedDateStr = "";
                 }
-                $latestLetterLink = $this->container->get('router')->generate(
+                $latestLetterLink = $router->generate(
                     'fellapp_file_download',
                     array('id' => $latestLetter->getId()),
                     UrlGeneratorInterface::ABSOLUTE_URL
@@ -946,7 +949,7 @@ class RecLetterUtil {
 
             $counter = 1;
             foreach($letters as $letter) {
-                $letterLink = $this->container->get('router')->generate(
+                $letterLink = $router->generate(
                     'fellapp_file_download',
                     array('id' => $letter->getId()),
                     UrlGeneratorInterface::ABSOLUTE_URL
@@ -965,7 +968,7 @@ class RecLetterUtil {
             $body = $body . "<br><br>" . implode("<br>",$reviewLetterArr);
 
             //You can review the entire application here: LINKtoAPPLICATION.
-            $fellappLink = $this->container->get('router')->generate(
+            $fellappLink = $router->generate(
                 'fellapp_show',
                 array('id' => $fellapp->getId()),
                 UrlGeneratorInterface::ABSOLUTE_URL
@@ -1021,6 +1024,8 @@ class RecLetterUtil {
             return false;
         }
 
+        $router = $userSecUtil->getRequestContextRouter();
+
         //16- Add a check to the letter import mechanism at the end:
         // if the application now has all 3 of 3 letters uploaded as a
         // result of the import that just occurred, set the status of the application
@@ -1043,7 +1048,7 @@ class RecLetterUtil {
                 $refCounter++;
                 //YLINKtoLETTER1.
                 $existingLetter = $existingLetters->last(); //$existingLetters[0];
-                $letterLink = $this->container->get('router')->generate(
+                $letterLink = $router->generate(
                     'fellapp_file_download',
                     array('id' => $existingLetter->getId()),
                     UrlGeneratorInterface::ABSOLUTE_URL
@@ -1097,7 +1102,7 @@ class RecLetterUtil {
             // LINKtoLETTER 1, LINKtoLETTER 2, LINKtoLETTER 3.
             // You can review the entire application here: LINKtoAPPLICATION.
 
-            $fellappLink = $this->container->get('router')->generate(
+            $fellappLink = $router->generate(
                 'fellapp_show',
                 array('id' => $fellapp->getId()),
                 UrlGeneratorInterface::ABSOLUTE_URL

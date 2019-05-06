@@ -2126,6 +2126,27 @@ class UserSecurityUtil {
         }
         return $platformLogoPath;
     }
-    
 
+    public function getRequestContextRouter() {
+        $request = $this->container->get('request_stack')->getCurrentRequest();
+        if( !$request ) {
+            $userSecUtil = $this->container->get('user_security_utility');
+            $liveSiteRootUrl = $userSecUtil->getSiteSettingParameter('liveSiteRootUrl');    //http://c.med.cornell.edu/order/
+            $liveSiteHost = parse_url($liveSiteRootUrl, PHP_URL_HOST); //c.med.cornell.edu
+            //echo "liveSiteHost=".$liveSiteHost."\n";
+            //exit('111');
+
+            $connectionChannel = $userSecUtil->getSiteSettingParameter('connectionChannel');
+            if( !$connectionChannel ) {
+                $connectionChannel = 'http';
+            }
+
+            $context = $this->container->get('router')->getContext();
+            $context->setHost($liveSiteHost);
+            $context->setScheme($connectionChannel);
+            $context->setBaseUrl('/order');
+        }
+        return $this->container->get('router');
+    }
+    
 }
