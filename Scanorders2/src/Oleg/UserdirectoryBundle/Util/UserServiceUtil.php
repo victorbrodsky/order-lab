@@ -1099,9 +1099,9 @@ class UserServiceUtil {
 //            } else {
 //                $params->setAutoAssignInstitution($institution);
 //            }
-            $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+            $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
             if( $wcmc ) {
-                //exit('generateSiteParameters: No Institution: "WCMC"');
+                //exit('generateSiteParameters: No Institution: "WCM"');
                 $mapper = array(
                     'prefix' => 'Oleg',
                     'bundleName' => 'UserdirectoryBundle',

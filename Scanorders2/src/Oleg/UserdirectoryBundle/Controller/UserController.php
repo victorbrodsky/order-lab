@@ -1533,7 +1533,7 @@ class UserController extends Controller
         }
 
         //Only show this profile to members of the following institution(s): default preset choices WCMC, NYP
-        $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+        $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
         $nyp = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("NYP");
         //echo "add inst:".$wcmc."; ".$nyp."<br>";
         $user->getPreferences()->addShowToInstitution($wcmc);
@@ -1669,7 +1669,7 @@ class UserController extends Controller
         }
 
         //Only show this profile to members of the following institution(s): default preset choices WCMC, NYP
-        $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+        $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
         $nyp = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("NYP");
         //echo "add inst:".$wcmc."; ".$nyp."<br>";
         $user->getPreferences()->addShowToInstitution($wcmc);
@@ -2891,10 +2891,10 @@ class UserController extends Controller
 
         $pathology = $userSecUtil->getAutoAssignInstitution();
         if( !$pathology ) {
-            $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+            $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
             if( !$wcmc ) {
                 //exit('No Institution: "WCMC"');
-                throw $this->createNotFoundException('No Institution: "WCMC"');
+                throw $this->createNotFoundException('No Institution: "WCM"');
             }
             $mapper = array(
                 'prefix' => 'Oleg',

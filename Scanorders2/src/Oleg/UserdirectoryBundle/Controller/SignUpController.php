@@ -847,10 +847,10 @@ class SignUpController extends Controller
 
         $pathology = $userSecUtil->getAutoAssignInstitution();
         if( !$pathology ) {
-            $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+            $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
             if (!$wcmc) {
                 //exit('No Institution: "WCMC"');
-                throw $this->createNotFoundException('No Institution: "WCMC"');
+                throw $this->createNotFoundException('No Institution: "WCM"');
             }
             $mapper = array(
                 'prefix' => 'Oleg',

@@ -159,7 +159,7 @@ class FellAppManagement extends Controller {
                 'className' => 'Institution'
             );
 
-            $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+            $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
             $pathology = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
                 "Pathology and Laboratory Medicine",
                 $wcmc,

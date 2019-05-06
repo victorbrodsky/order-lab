@@ -1817,7 +1817,7 @@ class AdminController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+        $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
         $entity->setInstitution($wcmc);
 
         if( strpos($role,'BREASTPATHOLOGY') !== false ) {
@@ -1868,7 +1868,7 @@ class AdminController extends Controller
         }
 
         $em = $this->getDoctrine()->getManager();
-        $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+        $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
 
         //should be 8:
 
@@ -2361,9 +2361,9 @@ class AdminController extends Controller
         $autoAssignInstitution = $userSecUtil->getAutoAssignInstitution();
 
         if( !$autoAssignInstitution ) {
-            $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+            $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
             if( !$wcmc ) {
-                exit('generateDefaultOrgGroupSiteParameters: No Institution: "WCMC"');
+                exit('generateDefaultOrgGroupSiteParameters: No Institution: "WCM"');
             }
 
             $mapper = array(
@@ -3032,7 +3032,7 @@ class AdminController extends Controller
 
             $wcmcnypCollaborationInst->addType($collaborationType);
 
-            $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+            $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
             $wcmcnypCollaborationInst->addCollaborationInstitution($wcmc);
 
             $nyp = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("NYP");
@@ -4276,9 +4276,9 @@ class AdminController extends Controller
         $pathology = $userSecUtil->getAutoAssignInstitution();
 
         if( !$pathology ) {
-            $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+            $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
             if( !$wcmc ) {
-                exit('generateResLabs: No Institution: "WCMC"');
+                exit('generateResLabs: No Institution: "WCM"');
             }
             $pathology = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
                 "Pathology and Laboratory Medicine",
@@ -4416,14 +4416,14 @@ class AdminController extends Controller
         }
 
         $buildings = array(
-            array('name'=>"Weill Cornell Medical College", 'street1'=>'1300 York Ave','abbr'=>'C','inst'=>'WCMC'),
-            array('name'=>"Belfer Research Building", 'street1'=>'413 East 69th Street','abbr'=>null,'inst'=>'WCMC'),
-            array('name'=>"Helmsley Medical Tower", 'street1'=>'1320 York Ave','abbr'=>null,'inst'=>'WCMC'),
-            array('name'=>"Weill Greenberg Center",'street1'=>'1305 York Ave','abbr'=>null,'inst'=>'WCMC'),
-            array('name'=>"Olin Hall",'street1'=>'445 East 69th Street','abbr'=>null,'inst'=>'WCMC'),
-            array('name'=>"",'street1'=>'575 Lexington Ave','abbr'=>null,'inst'=>'WCMC'),                        //WCMC - 575 Lexington Ave
-            array('name'=>"",'street1'=>'402 East 67th Street','abbr'=>null,'inst'=>'WCMC'),                     //WCMC - 402 East 67th Street
-            array('name'=>"",'street1'=>'425 East 61st Street','abbr'=>null,'inst'=>'WCMC'),                     //WCMC - 425 East 61st Street
+            array('name'=>"Weill Cornell Medical College", 'street1'=>'1300 York Ave','abbr'=>'C','inst'=>'WCM'),
+            array('name'=>"Belfer Research Building", 'street1'=>'413 East 69th Street','abbr'=>null,'inst'=>'WCM'),
+            array('name'=>"Helmsley Medical Tower", 'street1'=>'1320 York Ave','abbr'=>null,'inst'=>'WCM'),
+            array('name'=>"Weill Greenberg Center",'street1'=>'1305 York Ave','abbr'=>null,'inst'=>'WCM'),
+            array('name'=>"Olin Hall",'street1'=>'445 East 69th Street','abbr'=>null,'inst'=>'WCM'),
+            array('name'=>"",'street1'=>'575 Lexington Ave','abbr'=>null,'inst'=>'WCM'),                        //WCM - 575 Lexington Ave
+            array('name'=>"",'street1'=>'402 East 67th Street','abbr'=>null,'inst'=>'WCM'),                     //WCM - 402 East 67th Street
+            array('name'=>"",'street1'=>'425 East 61st Street','abbr'=>null,'inst'=>'WCM'),                     //WCM - 425 East 61st Street
             array('name'=>"Starr Pavilion",'street1'=>'520 East 70th Street','abbr'=>'ST','inst'=>'NYP'),
             array('name'=>"J Corridor",'street1'=>'525 East 68th Street','abbr'=>'J','inst'=>'NYP'),
             array('name'=>"L Corridor",'street1'=>'525 East 68th Street','abbr'=>'L','inst'=>'NYP'),
@@ -6900,9 +6900,9 @@ class AdminController extends Controller
 
         $pathology = $userSecUtil->getAutoAssignInstitution();
         if( !$pathology ) {
-            $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+            $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
             if( !$wcmc ) {
-                exit('setInstitutionEmploymentPeriodAction: No Institution: "WCMC"');
+                exit('setInstitutionEmploymentPeriodAction: No Institution: "WCM"');
             }
             $mapper = array(
                 'prefix' => 'Oleg',
@@ -6943,9 +6943,9 @@ class AdminController extends Controller
 
         $pathology = $userSecUtil->getAutoAssignInstitution();
         if( !$pathology ) {
-            $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+            $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
             if (!$wcmc) {
-                exit('setDefaultOrgGroupAction: No Institution: "WCMC"');
+                exit('setDefaultOrgGroupAction: No Institution: "WCM"');
             }
             $mapper = array(
                 'prefix' => 'Oleg',

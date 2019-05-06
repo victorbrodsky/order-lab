@@ -1467,7 +1467,7 @@ class UserGenerator {
                 if( !$researchLab->getInstitution() ) {
                     //$params = array('type'=>'Medical','organizationalGroupType'=>'Research Lab');
                     //$researchLabInstitutionObj = $this->getObjectByNameTransformer('Institution',$researchLabTitleStr,$systemuser,$params);
-                    $researchWcmc = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+                    $researchWcmc = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
                     $researchMapper = array(
                         'prefix' => 'Oleg',
                         'bundleName' => 'UserdirectoryBundle',

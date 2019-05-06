@@ -1525,7 +1525,7 @@ class UserSecurityUtil {
             }
         }
         if (!$institution) {
-            $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+            $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
         }
 
         return $institution;

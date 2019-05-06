@@ -163,7 +163,7 @@ class BaseTitleType extends AbstractType
                 $userSecUtil = $this->params['container']->get('user_security_utility');
                 $newInstitution = $userSecUtil->getAutoAssignInstitution();
                 if( !$newInstitution ) {
-                    $wcmc = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+                    $wcmc = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
                     if( $wcmc ) {
                         $mapper = array(
                             'prefix' => "Oleg",
