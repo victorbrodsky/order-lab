@@ -374,7 +374,7 @@ class RecLetterUtil {
             $email,
             $subject,
             $body,
-            NULL, //$cc
+            $senderEmail, //$cc
             $senderEmail
         );
 
