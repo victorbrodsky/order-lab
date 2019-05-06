@@ -634,6 +634,28 @@ class FellAppController extends Controller {
         //$args = $this->getShowParameters($routeName,null,$fellowshipApplication);
         $args = $this->getShowParameters($routeName,$fellowshipApplication);
 
+        if( count($args) == 0 ) {
+            //$warningMsg = "No fellowship types (subspecialties) are found for WCMC Pathology and Laboratory Medicine department.";
+            //$warningMsg = $warningMsg." ".'<a href="'.$linkUrl.'" target="_blank">Please associate the department with the appropriate fellowship subspecialties.</a>';
+            //$warningMsg = $warningMsg."<br>"."For example, choose an appropriate subspecialty and set the institution to 'Weill Cornell Medical College => Pathology and Laboratory Medicine'";
+            $linkUrl = $this->generateUrl(
+                "fellapp_fellowshiptype_settings",
+                array(),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $warningMsg = "No fellowship types (subspecialties) are found.";
+            $warningMsg = $warningMsg."<br>".'<a href="'.$linkUrl.'" target="_blank">Please add a new fellowship application type.</a>';
+
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                //'No Fellowship Types (Subspecialties) are found for WCMC Pathology and Laboratory Medicine department.
+                // Please assign the WCMC department to the appropriate Fellowship Subspecialties'
+                $warningMsg
+            );
+            //return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+            return $this->redirect( $this->generateUrl('fellapp-nopermission',array('empty'=>true)) );
+        }
+
         return $this->render('OlegFellAppBundle:Form:new.html.twig', $args);
     }
 
@@ -666,6 +688,12 @@ class FellAppController extends Controller {
 
         //add empty fields if they are not exist
         $fellappUtil = $this->container->get('fellapp_util');
+
+        $fellTypes = $fellappUtil->getFellowshipTypesByInstitution(true);
+        if( count($fellTypes) == 0 ) {
+            return array();
+        }
+        
         $fellappUtil->addEmptyFellAppFields($entity);
 
         if( $routeName == "fellapp_show" ) {
@@ -717,13 +745,15 @@ class FellAppController extends Controller {
         }
 
 
+
         $params = array(
             'cycle' => $cycle,
             'em' => $em,
             'user' => $entity->getUser(),
             'cloneuser' => null,
             'roles' => $user->getRoles(),
-            'container' => $this->container
+            'container' => $this->container,
+            'fellappTypes' => $fellTypes
         );
 
 //        $form = $this->createForm(
