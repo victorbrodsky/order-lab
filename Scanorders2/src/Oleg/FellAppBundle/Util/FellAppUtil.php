@@ -454,6 +454,7 @@ class FellAppUtil {
 
         /////////////// Configuring the Request Context per Command ///////////////
         // http://symfony.com/doc/current/cookbook/console/request_context.html
+        //replace by $router = $userSecUtil->getRequestContextRouter();
         $userSecUtil = $this->container->get('user_security_utility');
         $liveSiteRootUrl = $userSecUtil->getSiteSettingParameter('liveSiteRootUrl');    //http://c.med.cornell.edu/order/
         $liveSiteHost = parse_url($liveSiteRootUrl, PHP_URL_HOST); //c.med.cornell.edu

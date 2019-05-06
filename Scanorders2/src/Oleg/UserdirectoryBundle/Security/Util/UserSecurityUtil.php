@@ -2127,6 +2127,8 @@ class UserSecurityUtil {
         return $platformLogoPath;
     }
 
+    //Configuring the Request Context per Command . Set it to liveSiteRootUrl instead of localhost
+    // http://symfony.com/doc/current/cookbook/console/request_context.html
     public function getRequestContextRouter() {
         $environment = $this->getSiteSettingParameter('environment');
         if( $environment != 'live' ) {
