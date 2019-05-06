@@ -879,6 +879,7 @@ class RecLetterUtil {
     //check if this reference already has a letter
     public function checkReferenceAlreadyHasLetter($fellapp,$reference,$latestLetterDatetime) {
 
+        $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
         $emailUtil = $this->container->get('user_mailer_utility');
 
@@ -973,6 +974,7 @@ class RecLetterUtil {
                 array('id' => $fellapp->getId()),
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
+            $logger->notice("fellappLink=".$fellappLink);
             $fellappLink = '<a href="'.$fellappLink.'">'.$fellappLink.'</a>';
             $body = $body . "<br><br>" . "You can review the entire application here: ".$fellappLink;
 

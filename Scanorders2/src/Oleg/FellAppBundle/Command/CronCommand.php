@@ -49,10 +49,17 @@ class CronCommand extends ContainerAwareCommand {
 
         //testing
 //        $fellappUtil = $this->getContainer()->get('fellapp_util');
-//        $em = $this->getContainer()->get('doctrine')->getEntityManager();
+        $em = $this->getContainer()->get('doctrine')->getEntityManager();
 //        $fellowshipApplication = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->find(162); //162
 //        $fellappUtil->sendConfirmationEmailsOnApplicationPopulation($fellowshipApplication,$fellowshipApplication->getUser());
 //        exit('email test');
+        //testing checkAndSendCompleteEmail
+        $fellappRecLetterUtil = $this->getContainer()->get('fellapp_rec_letter_util');
+        $fellapp = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->find(8); //8-test,1414-collage
+        $reference = $fellapp->getReferences()->first();
+        $latestLetterDatetime = "2019-04-03-13-13-17";
+        $fellappRecLetterUtil->checkReferenceAlreadyHasLetter($fellapp,$reference,$latestLetterDatetime);
+        exit('eof test');
         //EOF testing
 
         $fellappImportPopulateUtil = $this->getContainer()->get('fellapp_importpopulate_util');
