@@ -2130,7 +2130,7 @@ class UserSecurityUtil {
     public function getRequestContextRouter() {
         $environment = $this->getSiteSettingParameter('environment');
         if( $environment != 'live' ) {
-            //return $this->container->get('router');
+            return $this->container->get('router');
         }
         $request = $this->container->get('request_stack')->getCurrentRequest();
         if( !$request ) {
