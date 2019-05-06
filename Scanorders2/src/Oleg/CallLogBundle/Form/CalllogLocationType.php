@@ -197,6 +197,7 @@ class CalllogLocationType extends AbstractType
                 'class' => 'OlegUserdirectoryBundle:Institution',
                 'label' => "Institution or Collaboration:",
                 'required' => false,
+                'choice_label' => 'getNameShortName',
                 'attr' => array('class' => 'combobox'),
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('u')

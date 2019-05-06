@@ -204,6 +204,7 @@ class CalllogFilterType extends AbstractType
             'class' => 'OlegUserdirectoryBundle:Institution',
             'label' => false,
             'required' => false,
+            'choice_label' => 'getNameShortName',
             'attr' => array('class' => 'combobox', 'placeholder' => "Institution or Collaboration"),
             'query_builder' => function (EntityRepository $er) {
                 return $er->createQueryBuilder('u')

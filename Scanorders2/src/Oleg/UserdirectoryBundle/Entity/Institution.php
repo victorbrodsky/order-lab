@@ -351,6 +351,14 @@ class Institution extends BaseCompositeNode {
 //    }
 
 
+    public function getNameShortName() {
+        $name = $this->getName();
+        $shortName = $this->getShortname();
+        if( $shortName ) {
+            $name = $name . " (" . $shortName . ")";
+        }
+        return $name;
+    }
 
 
     public function __toString()

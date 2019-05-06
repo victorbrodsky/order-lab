@@ -1103,11 +1103,17 @@ class FellowshipApplication extends BaseUserAttributes {
     public function getReferenceLetters() {
         $refletters = new ArrayCollection();
         foreach( $this->getReferences() as $reference ) {
-//            foreach( $reference->getDocuments() as $refletter ) {
-//                if( $refletter && !$refletters->contains($refletter) ) {
-//                    $refletters->add($refletter);
-//                }
-//            }
+            foreach( $reference->getDocuments() as $refletter ) {
+                if( $refletter && !$refletters->contains($refletter) ) {
+                    $refletters->add($refletter);
+                }
+            }
+        }
+        return $refletters;
+    }
+    public function getRecentReferenceLetters() {
+        $refletters = new ArrayCollection();
+        foreach( $this->getReferences() as $reference ) {
             $refletter = $reference->getRecentReferenceLetter();
             if( $refletter && !$refletters->contains($refletter) ) {
                 $refletters->add($refletter);
