@@ -899,6 +899,7 @@ class RecLetterUtil {
         $letters = $reference->getDocuments();
 
         //echo "letters count=".count($letters)."<br>";
+        //This check is done after the letter has been added, therefore check if number of letters more than 1
         if( count($letters) > 1 ) {
 
             $router = $userSecUtil->getRequestContextRouter();
