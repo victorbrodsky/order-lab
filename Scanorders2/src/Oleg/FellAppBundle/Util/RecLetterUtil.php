@@ -899,7 +899,7 @@ class RecLetterUtil {
         $letters = $reference->getDocuments();
 
         //echo "letters count=".count($letters)."<br>";
-        if( count($letters) > 0 ) {
+        if( count($letters) > 1 ) {
 
             $router = $userSecUtil->getRequestContextRouter();
 
