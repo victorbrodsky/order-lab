@@ -904,25 +904,39 @@ class RecLetterUtil {
 
             $router = $userSecUtil->getRequestContextRouter();
 
-            $subject = "More than one recommendation letter received from ".$reference->getFullName()." in support of 
-                ".$applicantName."'s application ".$fellapp->getId()." for the ".$fellapp->getFellowshipSubspecialty()." $startDateStr fellowship";
+            $subject = "More than one recommendation letter received from ".$reference->getFullName()." in support of "
+                .$applicantName."'s application ".$fellapp->getId()." for the ".$fellapp->getFellowshipSubspecialty()." $startDateStr fellowship";
 
             //TODO: get CreatedTime. Not in file's metadata.
             //$latestLetterTime = $file->getCreatedTime();
             //use $datetime from the filename
-            $latestLetterTimeStr = NULL;
-            if( $latestLetterDatetime ) {
-                //2019-04-03-13-13-17
-                $timeArr = explode("-",$latestLetterDatetime);
-                if( count($timeArr) == 6 ) {
-                    //m/d/Y H:i
-                    $latestLetterTimeStr = $timeArr[1]."/".$timeArr[2]."/".$timeArr[0]. " at " . $timeArr[3].":".$timeArr[4];
+//            $latestLetterTimeStr = NULL;
+//            if( $latestLetterDatetime ) {
+//                //2019-04-03-13-13-17
+//                $timeArr = explode("-",$latestLetterDatetime);
+//                if( count($timeArr) == 6 ) {
+//                    //m/d/Y H:i
+//                    $latestLetterTimeStr = $timeArr[1]."/".$timeArr[2]."/".$timeArr[0]. " at " . $timeArr[3].":".$timeArr[4];
+//                }
+//            }
+//            if( !$latestLetterTimeStr ) {
+//                $latestLetterTime = new \DateTime();
+//                $latestLetterTimeStr = $latestLetterTime->format("m/d/Y H:i");
+//            }
+
+            $latestLetter = $letters->last();
+            if( $latestLetter ) {
+                $latestLetterCreatedDate = $latestLetter->getCreatedate();
+                if ($latestLetterCreatedDate) {
+                    //$latestLetterCreatedDateStr = "submitted on " . $latestLetterCreatedDate->format('m/d/Y \a\t H:i');
+                    $latestLetterTimeStr = $latestLetterCreatedDate->format('m/d/Y \a\t H:i');
+                } else {
+                    //$latestLetterCreatedDateStr = "";
+                    $nowDateTime = new \DateTime();
+                    $latestLetterTimeStr = $nowDateTime->format("m/d/Y H:i");
                 }
             }
-            if( !$latestLetterTimeStr ) {
-                $latestLetterTime = new \DateTime();
-                $latestLetterTimeStr = $latestLetterTime->format("m/d/Y H:i");
-            }
+
             $body = "More than one recommendation letter has been received from ".$reference->getFullName()." in support of 
                 ".$applicantName."'s application ".$fellapp->getId()." for the ".$fellapp->getFellowshipSubspecialty()." $startDateStr fellowship.";
             $body = $body . " The latest document was received on ".$latestLetterTimeStr.".";
@@ -932,11 +946,11 @@ class RecLetterUtil {
             $reviewLetterArr = array();
 
             //You can review the latest letter submitted on MM/DD/YYYY at HH/MM here: https://localhost/fellowship-applications/file-download/XXXXX
-            $latestLetter = $letters->last();
+            //$latestLetter = $letters->last();
             if( $latestLetter ) {
                 $latestLetterCreatedDate = $latestLetter->getCreatedate();
-                if ($latestLetterCreatedDate) {
-                    $latestLetterCreatedDateStr = "submitted on " . $latestLetterCreatedDate->format('m/d/Y \a\t H:i');
+                if( $latestLetterCreatedDate ) {
+                    $latestLetterCreatedDateStr = "submitted on " . $latestLetterTimeStr;   //$latestLetterCreatedDate->format('m/d/Y \a\t H:i');
                 } else {
                     $latestLetterCreatedDateStr = "";
                 }
@@ -946,7 +960,7 @@ class RecLetterUtil {
                     UrlGeneratorInterface::ABSOLUTE_URL
                 );
                 $latestLetterLink = '<a href="'.$latestLetterLink.'">'.$latestLetterLink.'</a>';
-                $reviewLetterArr[] = "You can review the latest letter submitted on " . $latestLetterCreatedDateStr . " here: " . $latestLetterLink . "<br>";
+                $reviewLetterArr[] = "You can review the latest letter " . $latestLetterCreatedDateStr . " here: " . $latestLetterLink . "<br>";
             }
 
             $counter = 1;

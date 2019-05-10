@@ -92,14 +92,15 @@ class DefaultController extends Controller
     public function generateRecLetterIdAction( Request $request ) {
 
         //testing checkAndSendCompleteEmail
-        //$fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
+        $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
         //$fellapp = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find(8);
         //$fellappRecLetterUtil->checkAndSendCompleteEmail($fellapp);
 
-//        $fellapp = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find(8); //8-test,1414-collage
-//        $reference = $fellapp->getReferences()->first();
+        $fellapp = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find(8); //8-test,1414-collage
+        $reference = $fellapp->getReferences()->first();
 //        $latestLetterDatetime = "2019-04-03-13-13-17";
-//        $fellappRecLetterUtil->checkReferenceAlreadyHasLetter($fellapp,$reference,$latestLetterDatetime);
+        $latestLetterDatetime = null;
+        $fellappRecLetterUtil->checkReferenceAlreadyHasLetter($fellapp,$reference,$latestLetterDatetime);
 
         exit("not allowed. one time run method.");
 
