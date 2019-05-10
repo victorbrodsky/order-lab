@@ -729,9 +729,12 @@ class RecLetterUtil {
 
         //not found
         if( count($references) == 0 ) {
-            //send email
-            $msg = "No fellowship references found by letter ID=".$refId;
-            $userSecUtil->sendEmailToSystemEmail($msg,$msg);
+            //send email (on live server only)
+            $msg = "No fellowship references found by letter ID=" . $refId;
+            $environment = $userSecUtil->getSiteSettingParameter('environment');
+            if( $environment == "live" ) { //send email (on live server only)
+                $userSecUtil->sendEmailToSystemEmail($msg, $msg);
+            }
             //eventlog
             $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$msg,$systemUser,null,null,"No Recommendation Letters");
             return NULL;
