@@ -781,7 +781,7 @@ class RecLetterUtil {
     }
 
     //check if this reference already has a letter
-    public function checkReferenceAlreadyHasLetter($fellapp,$reference,$latestLetterDatetime=null) {
+    public function checkReferenceAlreadyHasLetter($fellapp,$reference) {
 
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
@@ -811,23 +811,7 @@ class RecLetterUtil {
             $subject = "More than one recommendation letter received from ".$reference->getFullName()." in support of "
                 .$applicantName."'s application ".$fellapp->getId()." for the ".$fellapp->getFellowshipSubspecialty()." $startDateStr fellowship";
 
-            //TODO: get CreatedTime. Not in file's metadata.
-            //$latestLetterTime = $file->getCreatedTime();
-            //use $datetime from the filename
-//            $latestLetterTimeStr = NULL;
-//            if( $latestLetterDatetime ) {
-//                //2019-04-03-13-13-17
-//                $timeArr = explode("-",$latestLetterDatetime);
-//                if( count($timeArr) == 6 ) {
-//                    //m/d/Y H:i
-//                    $latestLetterTimeStr = $timeArr[1]."/".$timeArr[2]."/".$timeArr[0]. " at " . $timeArr[3].":".$timeArr[4];
-//                }
-//            }
-//            if( !$latestLetterTimeStr ) {
-//                $latestLetterTime = new \DateTime();
-//                $latestLetterTimeStr = $latestLetterTime->format("m/d/Y H:i");
-//            }
-
+            //use download datetime as letter datetime
             $latestLetter = $letters->last();
             if( $latestLetter ) {
                 $latestLetterCreatedDate = $latestLetter->getCreatedate();
@@ -850,14 +834,7 @@ class RecLetterUtil {
             $reviewLetterArr = array();
 
             //You can review the latest letter submitted on MM/DD/YYYY at HH/MM here: https://localhost/fellowship-applications/file-download/XXXXX
-            //$latestLetter = $letters->last();
             if( $latestLetter ) {
-                //$latestLetterCreatedDate = $latestLetter->getCreatedate();
-                //if( $latestLetterCreatedDate ) {
-                //    $latestLetterCreatedDateStr = "submitted on " . $latestLetterTimeStr;   //$latestLetterCreatedDate->format('m/d/Y \a\t H:i');
-                //} else {
-                //    $latestLetterCreatedDateStr = "";
-                //}
                 $latestLetterCreatedDateStr = "submitted on " . $latestLetterTimeStr;
 
                 $latestLetterLink = $router->generate(

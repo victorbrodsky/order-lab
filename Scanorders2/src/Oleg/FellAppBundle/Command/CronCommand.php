@@ -57,8 +57,7 @@ class CronCommand extends ContainerAwareCommand {
 //        $fellappRecLetterUtil = $this->getContainer()->get('fellapp_rec_letter_util');
 //        $fellapp = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->find(1414); //8-test,1414-collage
 //        $reference = $fellapp->getReferences()->first();
-//        $latestLetterDatetime = "2019-04-03-13-13-17";
-//        $fellappRecLetterUtil->checkReferenceAlreadyHasLetter($fellapp,$reference,$latestLetterDatetime);
+//        $fellappRecLetterUtil->checkReferenceAlreadyHasLetter($fellapp,$reference);
 //        exit('eof test');
         //EOF testing
 

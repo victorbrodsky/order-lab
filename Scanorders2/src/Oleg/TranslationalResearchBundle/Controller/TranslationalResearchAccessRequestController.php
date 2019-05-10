@@ -250,6 +250,7 @@ class TranslationalResearchAccessRequestController extends AccessRequestControll
         $params = array(
             'cycle' => $cycle,
             'em' => $em,
+            'container' => $this->container,
             'user' => $user,
         );
         $form = $this->createForm(AccountConfirmationType::class, $user, array(
