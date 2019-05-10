@@ -96,9 +96,11 @@ class DefaultController extends Controller
         //$fellapp = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find(8);
         //$fellappRecLetterUtil->checkAndSendCompleteEmail($fellapp);
 
-        //$fellapp = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find(1414); //8-test,1414-collage
-        //$reference = $fellapp->getReferences()->first();
-        //$fellappRecLetterUtil->checkReferenceAlreadyHasLetter($fellapp,$reference);
+        //testing checkReferenceAlreadyHasLetter
+        $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
+        $fellapp = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find(1414); //8-test,1414-collage
+        $reference = $fellapp->getReferences()->first();
+        $fellappRecLetterUtil->checkReferenceAlreadyHasLetter($fellapp,$reference);
 
         exit("not allowed. one time run method.");
 

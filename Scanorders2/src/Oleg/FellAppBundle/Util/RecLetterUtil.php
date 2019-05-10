@@ -697,8 +697,8 @@ class RecLetterUtil {
         if( count($letterArr) == 4 ) {
             $instituteIdentification = $letterArr[0];
             $refId = $letterArr[1];
-            $latestLetterDatetime = $letterArr[2];
-            $name = $letterArr[3];
+            //$latestLetterDatetime = $letterArr[2];
+            //$name = $letterArr[3];
         } else {
             return NULL;
         }
@@ -706,8 +706,8 @@ class RecLetterUtil {
         if( $testing ) {
             $instituteIdentification = "55555";
             $refId = "340d08a7c8037b62e5e0e36b1119486f2dd00540";
-            $latestLetterDatetime = "2019-04-03-13-13-17";
-            $name = "filenameee";
+            //$latestLetterDatetime = "2019-04-03-13-13-17";
+            //$name = "filenameee";
         }
 
         //10d: compare instituteIdentification with site settings instituteIdentification
@@ -757,7 +757,7 @@ class RecLetterUtil {
 
             $this->em->flush($reference);
 
-            $this->checkReferenceAlreadyHasLetter($fellapp,$reference,$latestLetterDatetime);
+            $this->checkReferenceAlreadyHasLetter($fellapp,$reference);
 
             $this->checkAndSendCompleteEmail($fellapp);
 
