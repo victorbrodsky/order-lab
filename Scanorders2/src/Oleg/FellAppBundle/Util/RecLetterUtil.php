@@ -849,12 +849,14 @@ class RecLetterUtil {
             //You can review the latest letter submitted on MM/DD/YYYY at HH/MM here: https://localhost/fellowship-applications/file-download/XXXXX
             //$latestLetter = $letters->last();
             if( $latestLetter ) {
-                $latestLetterCreatedDate = $latestLetter->getCreatedate();
-                if( $latestLetterCreatedDate ) {
-                    $latestLetterCreatedDateStr = "submitted on " . $latestLetterTimeStr;   //$latestLetterCreatedDate->format('m/d/Y \a\t H:i');
-                } else {
-                    $latestLetterCreatedDateStr = "";
-                }
+                //$latestLetterCreatedDate = $latestLetter->getCreatedate();
+                //if( $latestLetterCreatedDate ) {
+                //    $latestLetterCreatedDateStr = "submitted on " . $latestLetterTimeStr;   //$latestLetterCreatedDate->format('m/d/Y \a\t H:i');
+                //} else {
+                //    $latestLetterCreatedDateStr = "";
+                //}
+                $latestLetterCreatedDateStr = "submitted on " . $latestLetterTimeStr;
+
                 $latestLetterLink = $router->generate(
                     'fellapp_file_download',
                     array('id' => $latestLetter->getId()),
