@@ -751,7 +751,7 @@ class RecLetterUtil {
         if( count($references) == 1 ) {
             $reference = $references[0];
             $fellapp = $reference->getFellapp();
-            
+
             //add this letter to this reference
             $reference->addDocument($uploadedLetterDb);
 
@@ -789,7 +789,6 @@ class RecLetterUtil {
         $applicantName = "Unknown Applicant";
         if( $applicant ) {
             $applicantName = $applicant->getUsernameOptimal();
-            $applicantName = trim($applicantName);
         }
         $startDate = $fellapp->getStartDate();
         $startDateStr = null;
