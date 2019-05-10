@@ -96,7 +96,7 @@ class DefaultController extends Controller
         //$fellapp = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find(8);
         //$fellappRecLetterUtil->checkAndSendCompleteEmail($fellapp);
 
-        $fellapp = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find(8); //8-test,1414-collage
+        $fellapp = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find(1414); //8-test,1414-collage
         $reference = $fellapp->getReferences()->first();
 //        $latestLetterDatetime = "2019-04-03-13-13-17";
         $latestLetterDatetime = null;

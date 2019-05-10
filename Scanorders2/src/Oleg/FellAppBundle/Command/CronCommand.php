@@ -64,7 +64,7 @@ class CronCommand extends ContainerAwareCommand {
 
         $fellappImportPopulateUtil = $this->getContainer()->get('fellapp_importpopulate_util');
         $result = $fellappImportPopulateUtil->processFellAppFromGoogleDrive();
-        $logger->notice("Cron job processing FellApp from Google Drive finished with result=".$result1);
+        $logger->notice("Cron job processing FellApp from Google Drive finished with result=".$result);
 
         if(1) {
             $fellappRecLetterUtil = $this->getContainer()->get('fellapp_rec_letter_util');
