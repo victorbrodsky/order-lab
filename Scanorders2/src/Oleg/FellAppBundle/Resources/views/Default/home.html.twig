@@ -840,19 +840,6 @@
                                             </li>
                                         {% endif %}
 
-
-
-                                        {% if entity.appStatus.name != 'reject' %}
-                                            <li>
-                                                <a
-                                                    general-data-confirm="Are you sure you want to change status of this Application to 'Rejected'?"
-                                                    general-data-callback="refreshpage"
-                                                    href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'reject' }, true) }}">Mark as Rejected
-                                                </a>
-                                            </li>
-                                        {% endif %}
-
-
                                         {#{% if entity.appStatus.name != 'onhold' %}#}
                                             {#<li>#}
                                                 {#<a#}
@@ -899,6 +886,16 @@
                                                         general-data-confirm="Are you sure you want to change status of this Application to 'Accepted and Notified'?"
                                                         general-data-callback="refreshpage"
                                                         href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'acceptedandnotified' }, true) }}">Mark as Accepted and Notify
+                                                </a>
+                                            </li>
+                                        {% endif %}
+
+                                        {% if entity.appStatus.name != 'reject' %}
+                                            <li>
+                                                <a
+                                                        general-data-confirm="Are you sure you want to change status of this Application to 'Rejected'?"
+                                                        general-data-callback="refreshpage"
+                                                        href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'reject' }, true) }}">Mark as Rejected
                                                 </a>
                                             </li>
                                         {% endif %}
