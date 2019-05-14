@@ -163,12 +163,16 @@
                     <th>{{ knp_pagination_sortable(pagination, 'User Agent', 'logger.useragent') }}</th>
                 {% endif %}
 
-                {% if hideWidth is not defined or hideWidth == false %}
-                    <th>{{ knp_pagination_sortable(pagination, 'Width', 'logger.width') }}</th>
-                {% endif %}
+                {#{% if hideWidth is not defined or hideWidth == false %}#}
+                    {#<th>{{ knp_pagination_sortable(pagination, 'Width', 'logger.width') }}</th>#}
+                {#{% endif %}#}
 
-                {% if hideHeight is not defined or hideHeight == false %}
-                    <th>{{ knp_pagination_sortable(pagination, 'Height', 'logger.height') }}</th>
+                {#{% if hideHeight is not defined or hideHeight == false %}#}
+                    {#<th>{{ knp_pagination_sortable(pagination, 'Height', 'logger.height') }}</th>#}
+                {#{% endif %}#}
+
+                {% if hideSitename is not defined or hideSitename == false %}
+                    <th>{{ knp_pagination_sortable(pagination, 'Site', 'logger.siteName') }}</th>
                 {% endif %}
 
                 {% if hideUser is not defined or hideUser == false %}
@@ -225,13 +229,17 @@
                     </td>
                 {% endif %}
 
-                {% if hideWidth is not defined or hideWidth == false %}
-                    <td>{{ entity.width }}</td>
-                {% endif %}
+                {#{% if hideWidth is not defined or hideWidth == false %}#}
+                    {#<td>{{ entity.width }}</td>#}
+                {#{% endif %}#}
 
-                {% if hideHeight is not defined or hideHeight == false %}
-                    <td>{{ entity.height }}</td>
-                {% endif %}
+                {#{% if hideHeight is not defined or hideHeight == false %}#}
+                    {#<td>{{ entity.height }}</td>#}
+                {#{% endif %}#}
+
+                {% if hideSitename is not defined or hideSitename == false %}
+                    <td>{{ entity.siteName }}</td>
+                {%  endif %}
 
                 {% if hideUser is not defined or hideUser == false %}
                     {% if entity.username == 'anon.' %}
