@@ -446,6 +446,9 @@ class User extends BaseUser {
      */
     public function setPrimaryPublicUserId($primaryPublicUserId)
     {
+        if( $primaryPublicUserId ) {
+            $primaryPublicUserId = strtolower($primaryPublicUserId);
+        }
         $this->primaryPublicUserId = $primaryPublicUserId;
     }
 
@@ -1052,6 +1055,9 @@ class User extends BaseUser {
 
     public function setUsernameForce($username)
     {
+        if( $username ) {
+            $username = strtolower($username);
+        }
         $this->username = $username;
         $this->setUsernameCanonicalForce($username);
         return $this;
@@ -1064,6 +1070,10 @@ class User extends BaseUser {
             return;
             //exit('Can not change username when user is in DB: username='.$username.', existing username='.$this->getUsername().', id='.$this->getId());
             //throw new \Exception( 'Can not change username when user is in DB: username='.$username.', existing username='.$this->getUsername().', id='.$this->getId() );
+        }
+
+        if( $username ) {
+            $username = strtolower($username);
         }
 
         $this->username = $username;
@@ -1098,16 +1108,26 @@ class User extends BaseUser {
     }
 
     public function createUniqueUsername() {
-        return $this->createUniqueUsernameByKeyKeytype($this->getKeytype(),$this->getPrimaryPublicUserId());
+        $uniqueUsername = $this->createUniqueUsernameByKeyKeytype($this->getKeytype(),$this->getPrimaryPublicUserId());
+        if( $uniqueUsername ) {
+            $uniqueUsername = strtolower($uniqueUsername);
+        }
+        return $uniqueUsername;
     }
 
     public function createUniqueUsernameByKeyKeytype($keytype,$key) {
+        if( $key ) {
+            $key = strtolower($key);
+        }
         $username = $key."_@_".$keytype->getAbbreviation();
         $usernamestr = preg_replace('/\s+/', '-', $username);   //replace all whitespaces by '-'
         return $usernamestr;
     }
 
     public function createCleanUsername($username) {
+        if( $username ) {
+            $username = strtolower($username);
+        }
         $usernameArr = explode("_@_",$username);
         return $usernameArr[0];
     }
@@ -1116,6 +1136,11 @@ class User extends BaseUser {
         if( !$username ) {
             $username = $this->getUsername();
         }
+
+        if( $username ) {
+            $username = strtolower($username);
+        }
+
         $usernameArr = explode("_@_",$username);
         if( array_key_exists(1, $usernameArr) ) {
             $prefix = $usernameArr[1];

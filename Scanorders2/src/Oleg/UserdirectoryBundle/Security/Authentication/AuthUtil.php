@@ -471,6 +471,9 @@ class AuthUtil {
     public function findUserByUsername($username) {
 
         $userManager = $this->container->get('fos_user.user_manager');
+
+        $username = strtolower($username);
+        
         $user = $userManager->findUserByUsername($username);
 
         return $user;
