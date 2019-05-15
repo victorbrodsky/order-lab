@@ -442,7 +442,14 @@ class FellAppController extends Controller {
             //print_r($configFileContent);
             //echo "</pre>";
         }
-        
+
+        //emailAcceptSubject emailAcceptBody
+        $userSecUtil = $this->get('user_security_utility');
+        $acceptedEmailSubject = $userSecUtil->getSiteSettingParameter('acceptedEmailSubject',$this->container->getParameter('fellapp.sitename'));
+        $acceptedEmailBody = $userSecUtil->getSiteSettingParameter('acceptedEmailBody',$this->container->getParameter('fellapp.sitename'));
+        $rejectedEmailSubject = $userSecUtil->getSiteSettingParameter('rejectedEmailSubject',$this->container->getParameter('fellapp.sitename'));
+        $rejectedEmailBody = $userSecUtil->getSiteSettingParameter('rejectedEmailBody',$this->container->getParameter('fellapp.sitename'));
+
         return array(
             'entities' => $fellApps,
             'pathbase' => 'fellapp',
@@ -477,6 +484,11 @@ class FellAppController extends Controller {
             'acceptedandnotifiedTotal' => count($acceptedandnotifiedTotal),
             'rejectedandnotified' => count($rejectedandnotified),
             'rejectedandnotifiedTotal' => count($rejectedandnotifiedTotal),
+
+            'acceptedEmailSubject' => $acceptedEmailSubject,
+            'acceptedEmailBody' => $acceptedEmailBody,
+            'rejectedEmailSubject' => $rejectedEmailSubject,
+            'rejectedEmailBody' => $rejectedEmailBody,
 
             'awaitedInterviews' => $awaitedInterviews,
             'receivedInterviews' => $receivedInterviews,
@@ -1602,6 +1614,10 @@ class FellAppController extends Controller {
         if( false == $this->get('security.authorization_checker')->isGranted("update","FellowshipApplication") ) {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
+
+        echo "id=$id <br>";
+        echo "status=$status <br>";
+        exit('eof status changed');
 
         $event = $this->changeFellAppStatus($entity, $status, $request);
 

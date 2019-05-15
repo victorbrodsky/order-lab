@@ -397,6 +397,10 @@
 
             {% for entity in entities %}
 
+                {#$rejectedEmailSubject = $this->siteSettingsConstantReplace($rejectedEmailSubject,$fellapp);#}
+                {% set acceptedEmailSubjectModified = fellapp_util.siteSettingsConstantReplace(acceptedEmailSubject,entity) %}
+                {% set acceptedEmailBodyModified = fellapp_util.siteSettingsConstantReplace(acceptedEmailBody,entity) %}
+
                 {#Set row color#}
                 {% set trclassname = "" %}
 
@@ -874,9 +878,12 @@
                                         {% if entity.appStatus.name != 'accepted' %}
                                             <li>
                                                 <a
-                                                        general-data-confirm="Are you sure you want to change status of this Application to 'Accepted'?"
-                                                        general-data-callback="refreshpage"
-                                                        href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'accepted' }, true) }}">Mark as Accepted
+                                                        fellapp-data-confirm="Would you like to send the following notification e-mail to the accepted applicant?"
+                                                        fellapp-data-href1="{{ path('fellapp_status', { 'id': entity.id, 'status': 'acceptedandnotified' }, true) }}"
+                                                        fellapp-data-href2="{{ path('fellapp_status', { 'id': entity.id, 'status': 'accepted' }, true) }}"
+                                                        fellapp-data-email-subject="{{ acceptedEmailSubjectModified }}"
+                                                        fellapp-data-email-body="{{ acceptedEmailBodyModified }}"
+                                                        href="#">Mark as Accepted
                                                 </a>
                                             </li>
                                         {% endif %}
@@ -1048,6 +1055,7 @@
     {% javascripts
         '@OlegFellAppBundle/Resources/public/form/js/interview-modal.js'
         '@OlegFellAppBundle/Resources/public/form/js/rank-modal.js'
+        '@OlegFellAppBundle/Resources/public/form/js/status-notification-modal.js'
     %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
@@ -1074,6 +1082,8 @@
             initRankModal();
 
             changeFilterColorButton();
+
+            callLogStatusNotificationConfirmAction();
 
             //onInterviewModalShow();
 
