@@ -9,7 +9,7 @@ function callLogStatusNotificationConfirmAction() {
     $('a[fellapp-data-confirm]').click(function(ev) {
 
         var href = $(this).attr('href');
-        console.log("href="+href);
+        //console.log("href="+href);
 
         if( !$('#fellappDataConfirmModal').length ) {
             var modalHtml =
@@ -57,38 +57,29 @@ function callLogStatusNotificationConfirmAction() {
         //     $('#dataConfirmOK').attr('href', href);
         // }
 
-        ////////// assign correct confirmation text and button's text //////////
-        // var okText = $(this).attr('data-ok');
-        // var cancelText = $(this).attr('data-cancel');
-        // if( typeof okText === 'undefined' ){
-        //     okText = 'OK';
-        // }
-        // if( typeof cancelText === 'undefined' ){
-        //     cancelText = 'Cancel';
-        // }
-        // $('#fellappDataConfirmModal').find('.fellapp-data-confirm-cancel').text( cancelText );
-        //
-        // //console.log('okText='+okText);
-        // if( okText != 'hideOkButton' ) {
-        //     $('#fellappDataConfirmModal').find('.fellapp-data-confirm-ok').text( okText );
-        //     $('.fellapp-data-confirm-ok').show();
-        // } else {
-        //     $('.fellapp-data-confirm-ok').hide();
-        // }
-        ////////// EOF of assigning text //////////
 
         $('#fellappDataConfirmModal').modal({show:true});
 
+        var callbackfn = $(this).attr('fellapp-data-callback');
         var href1 = $(this).attr('fellapp-data-href1');
         var href2 = $(this).attr('fellapp-data-href2');
-        console.log("href1="+href1);
-        console.log("href2="+href2);
+        //console.log("href1="+href1);
+        //console.log("href2="+href2);
 
-        $('.fellapp-data-confirm-ok').on('click', function(event){
+        if( callbackfn ) {
+            var onclickStr1 = callbackfn+'("'+href1+'"'+',this'+')';
+            //console.log("onclickStr1="+onclickStr1);
+            $('#dataConfirmStatusNotify').attr('onclick',onclickStr1);
 
+            var onclickStr2 = callbackfn+'("'+href2+'"'+',this'+')';
+            //console.log("onclickStr2="+onclickStr2);
+            $('#dataConfirmStatusWithoutNotify').attr('onclick',onclickStr2);
+        } else {
             $('#dataConfirmStatusNotify').attr('href', href1);
             $('#dataConfirmStatusWithoutNotify').attr('href', href2);
+        }
 
+        $('.fellapp-data-confirm-ok').on('click', function(event){
             //alert("on modal js: dataConfirmOK clicked");
             var footer = $(this).closest('.modal-footer');
             footer.html('Please wait ...');
@@ -105,3 +96,34 @@ function callLogStatusNotificationConfirmAction() {
     }); //fellapp-data-confirm click
 
 }
+
+
+// function refreshpage2(href,btnEl) {
+//     console.log('refreshpage2 href='+href);
+//
+//     if( !href ) {
+//         return;
+//     }
+//
+//     //add listnere to ok button to "Please wait ..." and disable button on click
+//     var footer = $(btnEl).closest('.modal-footer');
+//     footer.html('Please wait ...');
+//
+//     var url = getCommonBaseUrl(href,"fellowship-applications");
+//     console.log('url='+url);
+//
+//
+//     $.ajax({
+//         type: "GET",
+//         url: url,
+//         async: false,
+//         success: function(data) {
+//             //console.log('result='+data);
+//         }
+//     });
+//
+//     //alert("before reload");
+//
+//     location.reload();
+// }
+

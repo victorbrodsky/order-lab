@@ -1615,9 +1615,9 @@ class FellAppController extends Controller {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
-        echo "id=$id <br>";
-        echo "status=$status <br>";
-        exit('eof status changed');
+        //echo "id=$id <br>";
+        //echo "status=$status <br>";
+        //exit('eof status changed');
 
         $event = $this->changeFellAppStatus($entity, $status, $request);
 

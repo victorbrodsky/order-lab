@@ -400,6 +400,8 @@
                 {#$rejectedEmailSubject = $this->siteSettingsConstantReplace($rejectedEmailSubject,$fellapp);#}
                 {% set acceptedEmailSubjectModified = fellapp_util.siteSettingsConstantReplace(acceptedEmailSubject,entity) %}
                 {% set acceptedEmailBodyModified = fellapp_util.siteSettingsConstantReplace(acceptedEmailBody,entity) %}
+                {% set rejectedEmailSubjectModified = fellapp_util.siteSettingsConstantReplace(rejectedEmailSubject,entity) %}
+                {% set rejectedEmailBodyModified = fellapp_util.siteSettingsConstantReplace(rejectedEmailBody,entity) %}
 
                 {#Set row color#}
                 {% set trclassname = "" %}
@@ -878,40 +880,68 @@
                                         {% if entity.appStatus.name != 'accepted' %}
                                             <li>
                                                 <a
-                                                        fellapp-data-confirm="Would you like to send the following notification e-mail to the accepted applicant?"
-                                                        fellapp-data-href1="{{ path('fellapp_status', { 'id': entity.id, 'status': 'acceptedandnotified' }, true) }}"
-                                                        fellapp-data-href2="{{ path('fellapp_status', { 'id': entity.id, 'status': 'accepted' }, true) }}"
-                                                        fellapp-data-email-subject="{{ acceptedEmailSubjectModified }}"
-                                                        fellapp-data-email-body="{{ acceptedEmailBodyModified }}"
-                                                        href="#">Mark as Accepted
+                                                    fellapp-data-confirm="Would you like to send the following notification e-mail to the accepted applicant?"
+                                                    fellapp-data-href1="{{ path('fellapp_status', { 'id': entity.id, 'status': 'acceptedandnotified' }, true) }}"
+                                                    fellapp-data-href2="{{ path('fellapp_status', { 'id': entity.id, 'status': 'accepted' }, true) }}"
+                                                    fellapp-data-email-subject="{{ acceptedEmailSubjectModified }}"
+                                                    fellapp-data-email-body="{{ acceptedEmailBodyModified }}"
+                                                    fellapp-data-callback="refreshpage"
+                                                    href="#">Mark as Accepted
                                                 </a>
                                             </li>
                                         {% endif %}
                                         {% if entity.appStatus.name != 'acceptedandnotified' %}
                                             <li>
+                                                {#<a#}
+                                                        {#general-data-confirm="Are you sure you want to change status of this Application to 'Accepted and Notified'?"#}
+                                                        {#general-data-callback="refreshpage"#}
+                                                        {#href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'acceptedandnotified' }, true) }}">Mark as Accepted and Notify#}
+                                                {#</a>#}
                                                 <a
-                                                        general-data-confirm="Are you sure you want to change status of this Application to 'Accepted and Notified'?"
-                                                        general-data-callback="refreshpage"
-                                                        href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'acceptedandnotified' }, true) }}">Mark as Accepted and Notify
+                                                    fellapp-data-confirm="Would you like to send the following notification e-mail to the accepted applicant?"
+                                                    fellapp-data-href1="{{ path('fellapp_status', { 'id': entity.id, 'status': 'acceptedandnotified' }, true) }}"
+                                                    fellapp-data-href2="{{ path('fellapp_status', { 'id': entity.id, 'status': 'accepted' }, true) }}"
+                                                    fellapp-data-email-subject="{{ acceptedEmailSubjectModified }}"
+                                                    fellapp-data-email-body="{{ acceptedEmailBodyModified }}"
+                                                    fellapp-data-callback="refreshpage"
+                                                    href="#">Mark as Accepted and Notify
                                                 </a>
                                             </li>
                                         {% endif %}
 
                                         {% if entity.appStatus.name != 'reject' %}
                                             <li>
+                                                {#<a#}
+                                                        {#general-data-confirm="Are you sure you want to change status of this Application to 'Rejected'?"#}
+                                                        {#general-data-callback="refreshpage"#}
+                                                        {#href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'reject' }, true) }}">Mark as Rejected#}
+                                                {#</a>#}
                                                 <a
-                                                        general-data-confirm="Are you sure you want to change status of this Application to 'Rejected'?"
-                                                        general-data-callback="refreshpage"
-                                                        href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'reject' }, true) }}">Mark as Rejected
+                                                    fellapp-data-confirm="Would you like to send the following rejection notification e-mail to the accepted applicant?"
+                                                    fellapp-data-href1="{{ path('fellapp_status', { 'id': entity.id, 'status': 'rejectedandnotified' }, true) }}"
+                                                    fellapp-data-href2="{{ path('fellapp_status', { 'id': entity.id, 'status': 'reject' }, true) }}"
+                                                    fellapp-data-email-subject="{{ rejectedEmailSubjectModified }}"
+                                                    fellapp-data-email-body="{{ rejectedEmailBodyModified }}"
+                                                    fellapp-data-callback="refreshpage"
+                                                    href="#">Mark as Rejected
                                                 </a>
                                             </li>
                                         {% endif %}
                                         {% if entity.appStatus.name != 'rejectedandnotified' %}
                                             <li>
+                                                {#<a#}
+                                                        {#general-data-confirm="Are you sure you want to change status of this Application to 'Rejected and Notified'?"#}
+                                                        {#general-data-callback="refreshpage"#}
+                                                        {#href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'rejectedandnotified' }, true) }}">Mark as Rejected and Notify#}
+                                                {#</a>#}
                                                 <a
-                                                        general-data-confirm="Are you sure you want to change status of this Application to 'Rejected and Notified'?"
-                                                        general-data-callback="refreshpage"
-                                                        href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'rejectedandnotified' }, true) }}">Mark as Rejected and Notify
+                                                    fellapp-data-confirm="Would you like to send the following rejection notification e-mail to the accepted applicant?"
+                                                    fellapp-data-href1="{{ path('fellapp_status', { 'id': entity.id, 'status': 'rejectedandnotified' }, true) }}"
+                                                    fellapp-data-href2="{{ path('fellapp_status', { 'id': entity.id, 'status': 'reject' }, true) }}"
+                                                    fellapp-data-email-subject="{{ rejectedEmailSubjectModified }}"
+                                                    fellapp-data-email-body="{{ rejectedEmailBodyModified }}"
+                                                    fellapp-data-callback="refreshpage"
+                                                    href="#">Mark as Rejected and Notify
                                                 </a>
                                             </li>
                                         {% endif %}
@@ -1147,7 +1177,7 @@
 
 
         function refreshpage(href,btnEl) {
-            //console.log('refreshpage href='+href);
+            console.log('refreshpage href='+href);
 
             if( !href ) {
                 return;
@@ -1158,7 +1188,7 @@
             footer.html('Please wait ...');
 
             var url = getCommonBaseUrl(href,"fellowship-applications");
-            //console.log('url='+url);
+            console.log('url='+url);
             
 
             $.ajax({
