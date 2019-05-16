@@ -352,6 +352,10 @@
                 {#<th>{{ knp_pagination_sortable(entities, 'Status', 'fellapp.appStatus.name') }}</th>#}
                 {#<th>{{ knp_pagination_sortable(entities, 'Created', 'fellapp.timestamp') }}</th>#}
 
+                {% if route_path == "fellapp_send_rejection_emails" %}
+                    <th>Send Email</th>
+                {% endif %}
+
                 <th>{{ knp_pagination_sortable(entities, 'Fellowship Type', 'fellowshipSubspecialty.name') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Status', 'appStatus.action') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Start Date', 'fellapp.startDate') }}</th>
@@ -511,10 +515,11 @@
 
                 <tr class="{{ trclassname }}">
 
+                    {% if route_path == "fellapp_send_rejection_emails" %}
                     <td>
-                        {#checkbox#}
                         <input type="checkbox" name="notificationemail" value="{{ entity.id }}">
                     </td>
+                    {% endif %}
 
                     <td>
                         {% if entity.fellowshipSubspecialty %}
