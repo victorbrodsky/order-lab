@@ -190,6 +190,30 @@ class FellAppController extends Controller {
 
         $filterParams = $request->query->all();
 
+        if( $route == "fellapp_send_rejection_emails" && count($filterParams) == 0 ) {
+            $fellowshipTypeId = null;
+            if( count($fellowshipTypes) == 1 ) {
+                $firstFellType = reset($fellowshipTypes);
+                //echo "firstFellType id=".key($fellowshipTypes)."";
+                //exit();
+                $fellowshipTypeId = key($fellowshipTypes);
+            }
+            //Show only "Active", "Priority", "Complete", "Interviewee", "Rejected"
+            //filter[startDate]=2021&
+            //filter[active]=1&filter[priority]=1&filter[complete]=1&filter[interviewee]=1&filter[reject]=1
+            return $this->redirect( $this->generateUrl($route,
+                array(
+                    'filter[startDate]' => $currentYear,
+                    'filter[active]' => 1,
+                    'filter[complete]' => 1,
+                    'filter[interviewee]' => 1,
+                    'filter[priority]' => 1,
+                    'filter[reject]' => 1,
+                    'filter[filter]' => $fellowshipTypeId,
+                )
+            ) );
+        }
+
         if( count($filterParams) == 0 ) {
             $fellowshipTypeId = null;
             if( count($fellowshipTypes) == 1 ) {
@@ -2603,6 +2627,7 @@ class FellAppController extends Controller {
                 $logger->notice("Rejection email id=".$id);
                 //set status to Rejected and Notified
                 //send rejection email
+                //record to eventlog
                 $status = "rejectedandnotified";
                 $event = $this->changeFellAppStatus($fellapp, $status, $request);
 

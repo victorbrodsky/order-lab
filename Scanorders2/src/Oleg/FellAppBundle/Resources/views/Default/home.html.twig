@@ -1089,15 +1089,13 @@
 
         {% if route_path == "fellapp_send_rejection_emails" %}
             {#send email button#}
-
-            {#<form action="/action_page.php">#}
-                {#First name:<br>#}
-                {#<input type="text" name="firstname" value="Mickey">#}
-                {#<input type="submit" value="Submit">#}
-            {#</form>#}
-
             <p>
-                <button id="send-rejection-emails" type="button" class="btn btn-primary btn-sm" onClick="fellappSendRejectionEmails()" >Send Rejection Emails for Selected Applications</button>
+                <button
+                    id="send-rejection-emails"
+                    type="button"
+                    class="btn btn-primary btn-sm"
+                    onClick="fellappSendRejectionEmails()"
+                >Send Rejection Emails for Selected Applications</button>
             </p>
 
         {% endif %}

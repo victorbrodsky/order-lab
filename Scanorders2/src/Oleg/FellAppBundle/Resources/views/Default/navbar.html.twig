@@ -79,8 +79,10 @@
 
                     {% if is_granted('ROLE_FELLAPP_COORDINATOR') or is_granted('ROLE_FELLAPP_DIRECTOR') %}
                         <li id="nav-bar-fellapprejectionemails" class="divider-vertical">
+                            {#Show all except "Hidden", "Archived", "Rejected and Notified", "Accepted", "Accepted and Notified"#}
+                            {#Show only "Active", "Priority", "Complete", "Interviewee", "Rejected"#}
                             <a href="{{ path('fellapp_send_rejection_emails') }}">
-                                Send rejection emails
+                                Send Rejection Emails
                             </a>
                         </li>
                     {% endif %}

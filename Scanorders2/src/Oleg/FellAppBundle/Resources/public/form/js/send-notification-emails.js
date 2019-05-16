@@ -6,6 +6,10 @@
 function fellappSendRejectionEmails() {
     console.log("fellappSendRejectionEmails");
 
+    var btnEl = $("#send-rejection-emails").get(0);
+    var lbtn = Ladda.create( btnEl );
+    lbtn.start();
+
     var checkboxes = document.getElementsByName('notificationemail');
     //var checkboxes = document.querySelector('.notificationemail').checked;
     //var ids = "";
@@ -38,6 +42,7 @@ function fellappSendRejectionEmails() {
         //data: {ids: ids, idsArr:idsArr},
         data: {ids:ids},
     }).success(function(data) {
+        lbtn.stop();
         console.log("output="+data);
         if( data != "ERROR" ) {
             console.log("send rejection emails");
@@ -46,8 +51,10 @@ function fellappSendRejectionEmails() {
             console.log("Error sending rejection emails");
         }
     }).error(function(jqXHR, textStatus, errorThrown) {
+        lbtn.stop();
         console.log('Error : ' + errorThrown);
     }).done(function() {
+        lbtn.stop();
         //console.log("send rejection emails");
     });
 }
