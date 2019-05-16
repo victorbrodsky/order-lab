@@ -2573,23 +2573,23 @@ class FellAppController extends Controller {
         exit();      
     }
 
-    /**
-     * @Route("/send-rejection-emails/", name="fellapp_send_rejection_emails")
-     *
-     * @Template("OlegFellAppBundle:Form:send-notification-emails.html.twig")
-     */
-    public function sendRejectionEmailsAction(Request $request) {
-
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_ADMIN') ){
-            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
-        }
-
-        $em = $this->getDoctrine()->getManager();
-
-        //show applications for current year (show the same list as home page)
-
-        return $this->redirect( $this->generateUrl('main_common_home') );
-    }
+//    /**
+//     * @Route("/send-rejection-emails/", name="fellapp_send_rejection_emails")
+//     *
+//     * @Template("OlegFellAppBundle:Form:send-notification-emails.html.twig")
+//     */
+//    public function sendRejectionEmailsAction(Request $request) {
+//
+//        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_ADMIN') ){
+//            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+//        }
+//
+//        $em = $this->getDoctrine()->getManager();
+//
+//        //show applications for current year (show the same list as home page)
+//
+//        return $this->redirect( $this->generateUrl('main_common_home') );
+//    }
 
 
 
