@@ -814,8 +814,10 @@ class RecLetterUtil {
                 .$applicantName."'s application ".$fellapp->getId()." for the ".$fellapp->getFellowshipSubspecialty()." $startDateStr fellowship";
 
             //use download datetime as letter datetime
+            $latestLetterId = null;
             $latestLetter = $letters->last();
             if( $latestLetter ) {
+                $latestLetterId = $latestLetter->getId();
                 $latestLetterCreatedDate = $latestLetter->getCreatedate();
                 if ($latestLetterCreatedDate) {
                     //$latestLetterCreatedDateStr = "submitted on " . $latestLetterCreatedDate->format('m/d/Y \a\t H:i');
@@ -850,20 +852,22 @@ class RecLetterUtil {
 
             $counter = 1;
             foreach($letters as $letter) {
-                $letterLink = $router->generate(
-                    'fellapp_file_download',
-                    array('id' => $letter->getId()),
-                    UrlGeneratorInterface::ABSOLUTE_URL
-                );
-                $letterLink = '<a href="'.$letterLink.'">'.$letterLink.'</a>';
-                $letterCreatedDate = $letter->getCreatedate();
-                if( $letterCreatedDate ) {
-                    $letterCreatedDateStr = "submitted on ".$letterCreatedDate->format('m/d/Y \a\t H:i');
-                } else {
-                    $letterCreatedDateStr = $counter;
+                if( $latestLetterId != $letter->getId() ) {
+                    $letterLink = $router->generate(
+                        'fellapp_file_download',
+                        array('id' => $letter->getId()),
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    );
+                    $letterLink = '<a href="' . $letterLink . '">' . $letterLink . '</a>';
+                    $letterCreatedDate = $letter->getCreatedate();
+                    if ($letterCreatedDate) {
+                        $letterCreatedDateStr = "submitted on " . $letterCreatedDate->format('m/d/Y \a\t H:i');
+                    } else {
+                        $letterCreatedDateStr = $counter;
+                    }
+                    $reviewLetterArr[] = "You can review the letter " . $letterCreatedDateStr . " here: " . $letterLink;
+                    $counter++;
                 }
-                $reviewLetterArr[] = "You can review the letter ".$letterCreatedDateStr." here: " . $letterLink;
-                $counter++;
             }
 
             $body = $body . "<br><br>" . implode("<br>",$reviewLetterArr);

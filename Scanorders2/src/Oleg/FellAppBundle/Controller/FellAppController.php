@@ -2573,23 +2573,58 @@ class FellAppController extends Controller {
         exit();      
     }
 
-//    /**
-//     * @Route("/send-rejection-emails/", name="fellapp_send_rejection_emails")
-//     *
-//     * @Template("OlegFellAppBundle:Form:send-notification-emails.html.twig")
-//     */
-//    public function sendRejectionEmailsAction(Request $request) {
-//
-//        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_ADMIN') ){
-//            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
-//        }
-//
-//        $em = $this->getDoctrine()->getManager();
-//
-//        //show applications for current year (show the same list as home page)
-//
-//        return $this->redirect( $this->generateUrl('main_common_home') );
-//    }
+    /**
+     * @Route("/send-rejection-emails-action/", name="fellapp_send_rejection_emails_action", options={"expose"=true})
+     * @Method("POST")
+     * @Template("OlegFellAppBundle:Form:send-notification-emails.html.twig")
+     */
+    public function sendRejectionEmailsAction(Request $request) {
+
+        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_ADMIN') ){
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+
+        $logger = $this->container->get('logger');
+        $em = $this->getDoctrine()->getManager();
+
+        //show applications for current year (show the same list as home page)
+        //$ids = $request->get('ids');
+        //echo "ids=".$ids."<br>";
+        //$logger->notice("Rejection ids=".$ids);
+
+        //$idsArr = explode(",",$ids);
+
+        $ids = $request->get('ids');
+
+        foreach($ids as $id) {
+            //$logger->notice("Rejection id=".$id);
+            $fellapp = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
+            if( $fellapp ) {
+                $logger->notice("Rejection email id=".$id);
+                //set status to Rejected and Notified
+                //send rejection email
+                $status = "rejectedandnotified";
+                $event = $this->changeFellAppStatus($fellapp, $status, $request);
+
+                $this->get('session')->getFlashBag()->add(
+                    'notice',
+                    $event
+                );
+
+//                $this->get('session')->getFlashBag()->add(
+//                    'notice',
+//                    'Rejection notification email has been sent to '.$id
+//                );
+            }
+        }
+
+        //exit('111');
+        //exit();
+
+        //$url = $this->generateUrl('main_common_home');
+        $url = $this->generateUrl('fellapp_home');
+        return new Response($url);
+    }
 
 
 

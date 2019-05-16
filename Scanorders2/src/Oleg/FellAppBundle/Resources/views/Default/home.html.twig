@@ -516,9 +516,9 @@
                 <tr class="{{ trclassname }}">
 
                     {% if route_path == "fellapp_send_rejection_emails" %}
-                    <td>
-                        <input type="checkbox" name="notificationemail" value="{{ entity.id }}">
-                    </td>
+                        <td class="rowlink-skip">
+                            <input type="checkbox" class="notificationemail" name="notificationemail" value="{{ entity.id }}">
+                        </td>
                     {% endif %}
 
                     <td>
@@ -1086,6 +1086,22 @@
             {{ knp_pagination_render(entities) }}
         </div>
 
+
+        {% if route_path == "fellapp_send_rejection_emails" %}
+            {#send email button#}
+
+            {#<form action="/action_page.php">#}
+                {#First name:<br>#}
+                {#<input type="text" name="firstname" value="Mickey">#}
+                {#<input type="submit" value="Submit">#}
+            {#</form>#}
+
+            <p>
+                <button id="send-rejection-emails" type="button" class="btn btn-primary btn-sm" onClick="fellappSendRejectionEmails()" >Send Rejection Emails for Selected Applications</button>
+            </p>
+
+        {% endif %}
+
 {% endblock %}
 
 
@@ -1096,6 +1112,7 @@
         '@OlegFellAppBundle/Resources/public/form/js/interview-modal.js'
         '@OlegFellAppBundle/Resources/public/form/js/rank-modal.js'
         '@OlegFellAppBundle/Resources/public/form/js/status-notification-modal.js'
+        '@OlegFellAppBundle/Resources/public/form/js/send-notification-emails.js'
     %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
