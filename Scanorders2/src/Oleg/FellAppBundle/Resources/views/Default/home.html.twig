@@ -512,6 +512,11 @@
                 <tr class="{{ trclassname }}">
 
                     <td>
+                        {#checkbox#}
+                        <input type="checkbox" name="notificationemail" value="{{ entity.id }}">
+                    </td>
+
+                    <td>
                         {% if entity.fellowshipSubspecialty %}
                             {{  entity.fellowshipSubspecialty.name }}
                         {% endif %}

@@ -51,6 +51,7 @@ class FellAppController extends Controller {
      *
      * @Route("/", name="fellapp_home")
      * @Route("/my-interviewees/", name="fellapp_myinterviewees")
+     * @Route("/send-rejection-emails/", name="fellapp_send_rejection_emails")
      *
      * @Template("OlegFellAppBundle:Default:home.html.twig")
      */
@@ -96,6 +97,18 @@ class FellAppController extends Controller {
                 false == $this->get('security.authorization_checker')->isGranted("read","FellowshipApplication") &&
                 false == $this->get('security.authorization_checker')->isGranted("create","Interview")
             ){
+                return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+            }
+        }
+
+        if( $route == "fellapp_send_rejection_emails" ) {
+            if(
+                false == $this->get('security.authorization_checker')->isGranted("ROLE_FELLAPP_COORDINATOR") &&
+                false == $this->get('security.authorization_checker')->isGranted("ROLE_FELLAPP_DIRECTOR")
+            ) {
+                return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+            }
+            if( false == $this->get('security.authorization_checker')->isGranted("read","FellowshipApplication") ){
                 return $this->redirect( $this->generateUrl('fellapp-nopermission') );
             }
         }
@@ -2559,6 +2572,25 @@ class FellAppController extends Controller {
 
         exit();      
     }
+
+    /**
+     * @Route("/send-rejection-emails/", name="fellapp_send_rejection_emails")
+     *
+     * @Template("OlegFellAppBundle:Form:send-notification-emails.html.twig")
+     */
+    public function sendRejectionEmailsAction(Request $request) {
+
+        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_ADMIN') ){
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        //show applications for current year (show the same list as home page)
+
+        return $this->redirect( $this->generateUrl('main_common_home') );
+    }
+
 
 
 

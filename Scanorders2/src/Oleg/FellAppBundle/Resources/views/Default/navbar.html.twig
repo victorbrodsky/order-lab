@@ -77,6 +77,14 @@
                         </li>
                     {% endif %}
 
+                    {% if is_granted('ROLE_FELLAPP_COORDINATOR') or is_granted('ROLE_FELLAPP_DIRECTOR') %}
+                        <li id="nav-bar-fellapprejectionemails" class="divider-vertical">
+                            <a href="{{ path('fellapp_send_rejection_emails') }}">
+                                Send rejection emails
+                            </a>
+                        </li>
+                    {% endif %}
+
                     {#Downloads menu#}
                     {% set fellappTypeId = -1 %}
                     {% if filter is defined and filter %}

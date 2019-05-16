@@ -452,6 +452,10 @@ function setFellappNavBar() {
         id = 'myinterviewees';
     }
 
+    if( full.indexOf("/fellowship-applications/send-rejection-emails") !== -1 ) {
+        id = 'fellapprejectionemails';
+    }
+
     id = commonNavBar(full,id)
 
 
