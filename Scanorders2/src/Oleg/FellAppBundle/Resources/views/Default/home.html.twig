@@ -389,11 +389,11 @@
                     </div>
                 </th>
 
-                {#{% if is_granted('ROLE_FELLAPP_COORDINATOR') %}#}
-                <th>
-                    Actions
-                </th>
-                {#{% endif %}#}
+                {% if route_path == "fellapp_home" or route_path == "fellapp_myinterviewees" %}
+                    <th>
+                        Actions
+                    </th>
+                {% endif %}
 
             </tr>
             </thead>
@@ -910,7 +910,7 @@
                                                 <a
                                                     fellapp-data-confirm="Would you like to send the following notification e-mail to the accepted applicant?"
                                                     fellapp-data-href1="{{ path('fellapp_status', { 'id': entity.id, 'status': 'acceptedandnotified' }, true) }}"
-                                                    fellapp-data-href2="{{ path('fellapp_status', { 'id': entity.id, 'status': 'accepted' }, true) }}"
+                                                    fellapp-data-href2="{{ path('fellapp_status', { 'id': entity.id, 'status': 'acceptedandnotified-noemail' }, true) }}"
                                                     fellapp-data-email-subject="{{ acceptedEmailSubjectModified }}"
                                                     fellapp-data-email-body="{{ acceptedEmailBodyModified }}"
                                                     fellapp-data-callback="refreshpage"
@@ -947,7 +947,7 @@
                                                 <a
                                                     fellapp-data-confirm="Would you like to send the following rejection notification e-mail to the accepted applicant?"
                                                     fellapp-data-href1="{{ path('fellapp_status', { 'id': entity.id, 'status': 'rejectedandnotified' }, true) }}"
-                                                    fellapp-data-href2="{{ path('fellapp_status', { 'id': entity.id, 'status': 'reject' }, true) }}"
+                                                    fellapp-data-href2="{{ path('fellapp_status', { 'id': entity.id, 'status': 'rejectedandnotified-noemail' }, true) }}"
                                                     fellapp-data-email-subject="{{ rejectedEmailSubjectModified }}"
                                                     fellapp-data-email-body="{{ rejectedEmailBodyModified }}"
                                                     fellapp-data-callback="refreshpage"
@@ -1095,8 +1095,29 @@
                     type="button"
                     class="btn btn-primary btn-sm"
                     onClick="fellappSendRejectionEmails()"
-                >Send Rejection Emails for Selected Applications</button>
+                >Send Rejection Emails to Selected Applicants</button>
+                {#&nbsp;&nbsp;&nbsp;#}
+                {#<a></a>#}
             </p>
+
+            <br>
+
+            <div class="well well-sm" align='center'>
+                <h5>Email's Subject and Body ([[value]] will be replaced by the corresponding value from the fellowship application)</h5>
+                {#<p>#}
+                    {#<b>Subject:</b>#}
+                    {#{{ rejectedEmailSubject|raw }}#}
+                    {#<textarea disabled="disabled" class="textarea form-control">{{ rejectedEmailSubject|raw }}</textarea>#}
+                {#</p>#}
+                {{ formmacros.simplefield("Subject:", rejectedEmailSubject, "textarea", "disabled") }}
+
+                {#<p>#}
+                    {#<b>Body:</b>#}
+                    {#{{ rejectedEmailBody|raw }}#}
+                    {#<textarea disabled="disabled" class="textarea form-control">{{ rejectedEmailBody|raw }}</textarea>#}
+                {#</p>#}
+                {{ formmacros.simplefield("Body:", rejectedEmailBody, "textarea", "disabled") }}
+            </div>
 
         {% endif %}
 

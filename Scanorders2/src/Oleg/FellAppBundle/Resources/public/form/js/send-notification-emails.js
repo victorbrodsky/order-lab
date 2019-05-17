@@ -6,8 +6,18 @@
 function fellappSendRejectionEmails() {
     console.log("fellappSendRejectionEmails");
 
+    var year = $('#filter_startDate').val();
+    var confirmText = "Would you like to send the following rejection notification e-mail to the following other "+year+" applicants?";
+    if( confirm(confirmText) ) {
+        //txt = "You pressed OK!";
+    } else {
+        //txt = "You pressed Cancel!";
+        return false;
+    }
+
     var btnEl = $("#send-rejection-emails").get(0);
     var lbtn = Ladda.create( btnEl );
+    btnEl.disabled = true;
     lbtn.start();
 
     var checkboxes = document.getElementsByName('notificationemail');
@@ -42,19 +52,24 @@ function fellappSendRejectionEmails() {
         //data: {ids: ids, idsArr:idsArr},
         data: {ids:ids},
     }).success(function(data) {
-        lbtn.stop();
+        //lbtn.stop();
+        //btnEl.disabled = false;
         console.log("output="+data);
         if( data != "ERROR" ) {
             console.log("send rejection emails");
             window.location = data;
         } else {
             console.log("Error sending rejection emails");
+            lbtn.stop();
+            btnEl.disabled = false;
         }
     }).error(function(jqXHR, textStatus, errorThrown) {
         lbtn.stop();
+        btnEl.disabled = false;
         console.log('Error : ' + errorThrown);
     }).done(function() {
-        lbtn.stop();
+        //lbtn.stop();
+        //btnEl.disabled = false;
         //console.log("send rejection emails");
     });
 }

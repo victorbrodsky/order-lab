@@ -1679,7 +1679,14 @@ class FellAppController extends Controller {
         $logger = $this->container->get('logger');
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
-        
+
+        //$status might have "-noemail". In this case remove "-noemail" and do not send a notification email.
+        $sendEmail = true;
+        if( strpos($status, "-noemail") !== false ) {
+            $sendEmail = false;
+            $status = str_replace("-noemail","",$status);
+        }
+
         //get status object
         $statusObj = $em->getRepository('OlegFellAppBundle:FellAppStatus')->findOneByName($status);
         if( !$statusObj ) {
@@ -1738,13 +1745,11 @@ class FellAppController extends Controller {
             $emailUtil->sendEmail( $responsibleEmails, $emailSubject, $emailBody );
         }
 
-        if( $status == 'acceptedandnotified' ) {
-            //TODO: email
+        if( $sendEmail && $status == 'acceptedandnotified' ) {
             $fellappUtil->sendAcceptedNotificationEmail($fellapp);
         }
 
-        if( $status == 'rejectedandnotified' ) {
-            //TODO: email
+        if( $sendEmail && $status == 'rejectedandnotified' ) {
             $fellappUtil->sendRejectedNotificationEmail($fellapp);
         }
 
