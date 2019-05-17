@@ -70,9 +70,9 @@
                     {% endif %}
 
                     {% if is_granted('ROLE_FELLAPP_COORDINATOR') or is_granted('ROLE_FELLAPP_DIRECTOR') %}
-                        <li id="nav-bar-fellappsettings" class="divider-vertical">
-                            <a href="{{ path('fellapp_fellowshiptype_settings') }}">
-                                Fellowship Settings
+                        <li id="nav-bar-fellappaccepted" class="divider-vertical">
+                            <a href="{{ path('fellapp_accepted_fellows') }}">
+                                Accepted Fellows
                             </a>
                         </li>
                     {% endif %}
@@ -83,6 +83,14 @@
                             {#Show only "Active", "Priority", "Complete", "Interviewee", "Rejected"#}
                             <a href="{{ path('fellapp_send_rejection_emails') }}">
                                 Send Rejection Emails
+                            </a>
+                        </li>
+                    {% endif %}
+
+                    {% if is_granted('ROLE_FELLAPP_COORDINATOR') or is_granted('ROLE_FELLAPP_DIRECTOR') %}
+                        <li id="nav-bar-fellappsettings" class="divider-vertical">
+                            <a href="{{ path('fellapp_fellowshiptype_settings') }}">
+                                Fellowship Settings
                             </a>
                         </li>
                     {% endif %}

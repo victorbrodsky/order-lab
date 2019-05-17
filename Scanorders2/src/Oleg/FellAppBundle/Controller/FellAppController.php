@@ -51,7 +51,8 @@ class FellAppController extends Controller {
      *
      * @Route("/", name="fellapp_home")
      * @Route("/my-interviewees/", name="fellapp_myinterviewees")
-     * @Route("/send-rejection-emails/", name="fellapp_send_rejection_emails")
+     * @Route("/send-rejection-emails", name="fellapp_send_rejection_emails")
+     * @Route("/accepted-fellows", name="fellapp_accepted_fellows")
      *
      * @Template("OlegFellAppBundle:Default:home.html.twig")
      */
@@ -113,6 +114,12 @@ class FellAppController extends Controller {
             }
         }
 
+        if( $route == "fellapp_accepted_fellows" ) {
+            if( false == $this->get('security.authorization_checker')->isGranted("read","FellowshipApplication") ){
+                return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+            }
+        }
+
         $em = $this->getDoctrine()->getManager();
 
         //echo "fellapp user ok <br>";
@@ -123,6 +130,7 @@ class FellAppController extends Controller {
 
         $searchFlag = false;
         $currentYear = date("Y")+2;
+        $defaultStartDates = null;
 
         $fellowshipTypes = $fellappUtil->getFellowshipTypesByUser($user);
         //echo "fellowshipTypes count=".count($fellowshipTypes)."<br>";
@@ -154,9 +162,18 @@ class FellAppController extends Controller {
             return $this->redirect( $this->generateUrl('fellapp-nopermission',array('empty'=>true)) );
         }
 
+        if( $route == "fellapp_accepted_fellows" ) {
+            //pre-set startDate:
+            // Years: [Select2] allowing multiselect, dynamically listing years from 1900 to [current year + 4], with 12 years [current year - 10] through [current year + 2] pre-selected by default
+            //https://bootstrap-datepicker.readthedocs.io/en/latest/options.html#multidate
+            //https://bootstrap-datepicker.readthedocs.io/en/latest/markup.html#daterange
+            $defaultStartDates = array();
+        }
+
         //create fellapp filter
         $params = array(
             'fellTypes' => $userServiceUtil->flipArrayLabelValue($fellowshipTypes), //flipped
+            'defaultStartDates' => $defaultStartDates
         );
         $filterform = $this->createForm(FellAppFilterType::class, null,array(
             'method' => 'GET',
@@ -211,7 +228,7 @@ class FellAppController extends Controller {
                     'filter[reject]' => 1,
                     'filter[filter]' => $fellowshipTypeId,
                 )
-            ) );
+            ));
         }
 
         if( count($filterParams) == 0 ) {
@@ -787,8 +804,6 @@ class FellAppController extends Controller {
             $method = "GET";
             $action = null; //$this->generateUrl('fellapp_update', array('id' => $entity->getId()));
         }
-
-
 
         $params = array(
             'cycle' => $cycle,

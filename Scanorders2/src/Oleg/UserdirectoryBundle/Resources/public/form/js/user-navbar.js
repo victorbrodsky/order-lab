@@ -456,6 +456,10 @@ function setFellappNavBar() {
         id = 'fellapprejectionemails';
     }
 
+    if( full.indexOf("/fellowship-applications/accepted-fellows") !== -1 ) {
+        id = 'fellappaccepted';
+    }
+
     id = commonNavBar(full,id)
 
 

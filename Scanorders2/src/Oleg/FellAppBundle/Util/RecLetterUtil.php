@@ -756,24 +756,50 @@ class RecLetterUtil {
         if( count($references) == 1 ) {
             $reference = $references[0];
             $fellapp = $reference->getFellapp();
+            $newLetter = true;
 
             //add this letter to this reference
-            $reference->addDocument($uploadedLetterDb);
+            //TODO: if letter already exists, use identical($fileOne, $fileTwo) to see if the letters are identical.
+            if(0) {
+                $letters = $reference->getDocuments();
+                if (count($letters) > 0) {
+                    $uploadedLetterDbPath = $uploadedLetterDb->getServerPath();
+                    //loop over all existing letter and compare
+                    foreach ($letters as $thisLetter) {
+                        $thisLetterPath = $thisLetter->getServerPath();
+                        $identical = $this->identical($thisLetterPath, $uploadedLetterDbPath);
+                        if ($identical) {
+                            $newLetter = false;
+                            break;
+                        }
+                    }
+                }
+            }
 
-            $this->em->flush($reference);
+            if( $newLetter ) {
+                $reference->addDocument($uploadedLetterDb);
+                $this->em->flush($reference);
 
-            $this->checkReferenceAlreadyHasLetter($fellapp,$reference);
+                $this->checkReferenceAlreadyHasLetter($fellapp,$reference);
 
-            $this->checkAndSendCompleteEmail($fellapp);
+                $this->checkAndSendCompleteEmail($fellapp);
 
-            //TODO: update application PDF:
-            $fellappRepGen = $this->container->get('fellapp_reportgenerator');
-            //async generation
-            $fellappRepGen->addFellAppReportToQueue( $fellapp->getId(), 'overwrite' );
-            //sync generation
-            //$res = $fellappRepGen->generateFellAppReport( $fellapp->getId() );
-
-            //echo "filename=".$res['filename']."<br>";
+                //update application PDF:
+                $fellappRepGen = $this->container->get('fellapp_reportgenerator');
+                //async generation
+                $fellappRepGen->addFellAppReportToQueue( $fellapp->getId(), 'overwrite' );
+                //sync generation
+                //$res = $fellappRepGen->generateFellAppReport( $fellapp->getId() );
+                //echo "filename=".$res['filename']."<br>";
+                return $uploadedLetterDb;
+            } else {
+                $msg = "New letter ".$file->getTitle()." is identical to already existed letters for the application ID ".$fellapp->getId();
+                $logger->notice($msg);
+                $userSecUtil->sendEmailToSystemEmail($msg,$msg);
+                //eventlog
+                $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$msg,$systemUser,null,null,"Multiple Recommendation Letters");
+                return NULL;
+            }
 
             return $uploadedLetterDb;
         } //if count($references) == 1
@@ -975,11 +1001,12 @@ class RecLetterUtil {
             if( $originalStatus ) {
                 $originalStatusStr = $originalStatus->getAction();
             }
-            if( $originalStatusStr && $originalStatusStr != "Complete" ) {
-                $statusStr = 'The application status has been changed from "'.$originalStatusStr.'" to "Complete".';
-            } else {
-                $statusStr = 'The application status has been changed to "Complete".';
-            }
+
+//            if( $originalStatusStr && $originalStatusStr != "Complete" ) {
+//                $statusStr = 'The application status has been changed from "'.$originalStatusStr.'" to "Complete".';
+//            } else {
+//                $statusStr = 'The application status has been changed to "Complete".';
+//            }
 
             //set Status to "Complete"
             if( $originalStatusStr != "Complete" ) {
@@ -1196,6 +1223,53 @@ class RecLetterUtil {
             null,                                               //$request
             $eventType                                          //$action
         );
+    }
+
+    //TODO: check files in case of multiple letters and do not send "More than one " email if the letters are identical
+    /**
+     * Check if two files are identical.
+     *
+     * If you just need to find out if two files are identical, comparing file
+     * hashes can be inefficient, especially on large files.  There's no
+     * reason to read two whole files and do all the math if the
+     * second byte of each file is different.  If you don't need to
+     * store the hash value for later use, there may not be a need to
+     * calculate the hash value just to compare files.This can be much faster.
+     *
+     * @link http://www.php.net/manual/en/function.md5-file.php#94494
+     *
+     * @param string $fileOne
+     * @param string $fileTwo
+     * @return boolean
+     */
+    public function identical($fileOne, $fileTwo)
+    {
+        if (filetype($fileOne) !== filetype($fileTwo)) return false;
+        if (filesize($fileOne) !== filesize($fileTwo)) return false;
+
+        if (! $fp1 = fopen($fileOne, 'rb')) return false;
+
+        if (! $fp2 = fopen($fileTwo, 'rb'))
+        {
+            fclose($fp1);
+            return false;
+        }
+
+        $same = true;
+
+        while (! feof($fp1) and ! feof($fp2))
+            if (fread($fp1, 4096) !== fread($fp2, 4096))
+            {
+                $same = false;
+                break;
+            }
+
+        if (feof($fp1) !== feof($fp2)) $same = false;
+
+        fclose($fp1);
+        fclose($fp2);
+
+        return $same;
     }
 
 }

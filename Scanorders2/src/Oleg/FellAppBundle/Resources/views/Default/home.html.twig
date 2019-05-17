@@ -389,7 +389,7 @@
                     </div>
                 </th>
 
-                {% if route_path == "fellapp_home" or route_path == "fellapp_myinterviewees" %}
+                {% if route_path == "fellapp_home" or route_path == "fellapp_myinterviewees" or route_path == "fellapp_accepted_fellows" %}
                     <th>
                         Actions
                     </th>
@@ -769,7 +769,7 @@
 
                     <td class="rowlink-skip">
 
-                        {% if route_path == "fellapp_home" %}
+                        {% if route_path == "fellapp_home" or route_path == "fellapp_accepted_fellows" %}
 
                             <div class="btn-group">
                                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -1148,7 +1148,8 @@
                 format: " yyyy",
                 viewMode: "years",
                 minViewMode: "years",
-                orientation: 'auto' //'auto top'
+                orientation: 'auto', //'auto top'
+                multidate: true
             });
 
             attachTitleToScores();

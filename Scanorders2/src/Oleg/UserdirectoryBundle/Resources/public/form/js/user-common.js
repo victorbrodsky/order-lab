@@ -658,6 +658,7 @@ function initSingleDatepicker( datepickerElement ) {
         //var datepickerStartView = "month";
         var datepickerMinViewMode = "days";
         var datepickerViewMode = null;  //"days";
+        var datepickerMultidate = false;
         if( datepickerElement.hasClass('datepicker-only-month-year') ) {
             datepickertodayBtn = false;
             datepickerFormat = "mm/yyyy";
@@ -674,6 +675,10 @@ function initSingleDatepicker( datepickerElement ) {
             datepickerViewMode = "years";
         }
 
+        if( datepickerElement.hasClass('datepicker-multidate') ) {
+            datepickerMultidate = true;
+        }
+
         //to prevent datepicker clear on Enter key, use the version from https://github.com/eternicode/bootstrap-datepicker/issues/775
         datepickerElement.datepicker({
             autoclose: true,
@@ -685,7 +690,8 @@ function initSingleDatepicker( datepickerElement ) {
             ////minDate: new Date(1902, 1, 1)   //null
             format: datepickerFormat,
             minViewMode: datepickerMinViewMode,
-            viewMode: datepickerViewMode
+            viewMode: datepickerViewMode,
+            multidate: datepickerMultidate
         });
 
         calendarIconBtn.prop('disabled', false);
