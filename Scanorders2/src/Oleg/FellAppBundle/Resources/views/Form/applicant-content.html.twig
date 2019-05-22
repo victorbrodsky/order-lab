@@ -131,10 +131,14 @@
 <div class="fellapp-application-holder">
 
 <!-- Fellowship Type, Training period, Applicant Name -->
-{% include 'OlegFellAppBundle:Form:FellowshipType.html.twig' %}
+{#{% include 'OlegFellAppBundle:Form:FellowshipType.html.twig' %}#}
 
 <!-- Personal Data -->
-{% include 'OlegFellAppBundle:Form:PersonalData.html.twig' %}
+{#{% include 'OlegFellAppBundle:Form:PersonalData.html.twig' %}#}
+
+<!-- Fellowship Type, Training period, Applicant Name, Email, Address, Telephone, Citizenship -->
+{% include 'OlegFellAppBundle:Form:ApplicantData.html.twig' %}
+
 
 <!-- Education -->
 {% include 'OlegFellAppBundle:Form:Education.html.twig' %}
@@ -150,6 +154,9 @@
 
 <!-- Recommendations -->
 {% include 'OlegFellAppBundle:Form:Recommendations.html.twig' %}
+
+{#testing#}
+{#{% set cycle = "download" %}#}
 
 <!-- Uploads -->
 {% if cycle != "download" %}

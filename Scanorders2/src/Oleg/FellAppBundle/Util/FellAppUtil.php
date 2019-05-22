@@ -87,6 +87,7 @@ class FellAppUtil {
         return $accessreqs;
     }
 
+    //TODO: make $year to be accept multiple dates "2019,2020,2021..."
     //$fellSubspecArg: single fellowshipSubspecialty id or array of fellowshipSubspecialty ids
     public function getFellAppByStatusAndYear($status,$fellSubspecArg,$year=null,$interviewer=null) {
 
@@ -121,9 +122,23 @@ class FellAppUtil {
         }
 
         if( $year ) {
-            $bottomDate = $year."-01-01";
-            $topDate = $year."-12-31";
-            $dql->andWhere("fellapp.startDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'" );
+            if( strpos( $year, "," ) !== false) {
+                //multiple years
+                $yearArr = explode(",",$year);
+                $criterions = array();
+                foreach($yearArr as $singleYear) {
+                    $bottomDate = $year."-01-01";
+                    $topDate = $year."-12-31";
+                    $criterions[] = "("."fellapp.startDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'".")";
+                }
+                $criterionStr = implode(" OR ",$criterions);
+                $dql->andWhere($criterionStr);
+            } else {
+                //seingle year
+                $bottomDate = $year."-01-01";
+                $topDate = $year."-12-31";
+                $dql->andWhere("fellapp.startDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'");
+            }
         }
 
         if( $interviewer ) {

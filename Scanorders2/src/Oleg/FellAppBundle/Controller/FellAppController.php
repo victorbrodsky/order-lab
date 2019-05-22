@@ -417,6 +417,7 @@ class FellAppController extends Controller {
                 //date as string
                 $startDateCriterions = array();
                 $startDatesArr = explode(",",$startDates);
+                $startYearStr = $startDates;    //$startDatesArr[0];
                 foreach ($startDatesArr as $startDate) {
                     //$startDatesArr = explode("-", $startDate); //2009-01-01 00:00:00.000000
                     //$startYearStr = $startDatesArr[0];
@@ -569,7 +570,7 @@ class FellAppController extends Controller {
             'startDate' => $startDate,
             'filter' => $fellSubspecId,
             'accessreqs' => count($accessreqs),
-            'currentYear' => $startYearStr, //$currentYear,
+            'currentYear' => $startYearStr, //$currentYear, //TODO: adopt the currentYear to currentYears in controller and html
             'hiddenTotal' => count($hiddenTotal),
             'archivedTotal' => count($archivedTotal),
             'hidden' => count($hidden),
@@ -639,6 +640,8 @@ class FellAppController extends Controller {
 //        }
 
         //ini_set('memory_limit', '7168M');
+
+        //error_reporting(E_ERROR | E_PARSE);
 
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();

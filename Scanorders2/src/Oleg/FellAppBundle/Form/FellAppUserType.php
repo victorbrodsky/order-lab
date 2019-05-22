@@ -46,7 +46,7 @@ class FellAppUserType extends UserType
         $this->formConstructor($options['form_custom_value']);
 
         //Name and Preferred Contact Info
-        $this->addUserInfos($builder);
+        $this->addUserInfos($builder); //testing disabled
 
         //DOB
         $builder->add('credentials', FellAppCredentialsType::class, array(
