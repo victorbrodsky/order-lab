@@ -674,7 +674,6 @@ function initSingleDatepicker( datepickerElement ) {
             datepickerMinViewMode = "years";
             datepickerViewMode = "years";
         }
-
         if( datepickerElement.hasClass('datepicker-multidate') ) {
             datepickerMultidate = true;
         }

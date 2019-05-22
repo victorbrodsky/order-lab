@@ -40,17 +40,26 @@ class FellAppFilterType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
-        $builder->add('startDates', DateTimeType::class, array(
+        //date as DateTime object
+//        $builder->add('startDates', DateTimeType::class, array(
+//            'label' => false, //'Start Date',
+//            'widget' => 'single_text',
+//            //'placeholder' => 'Start Date',
+//            'required' => false,
+//            //'format' => 'MM/dd/yyyy',
+//            'format' => 'yyyy',
+//            //'attr' => array('class' => 'datepicker-only-year form-control'),
+//            'attr' => array('class'=>'datepicker-only-year datepicker-multidate form-control', 'title'=>'Start Year', 'data-toggle'=>'tooltip'),
+//            //'attr' => array('class'=>'datepicker datepicker-multidate form-control', 'title'=>'Start Year', 'data-toggle'=>'tooltip'),
+//        ));
+
+        //date as string
+        $builder->add('startDates', TextType::class, array(
             'label' => false, //'Start Date',
-            'widget' => 'single_text',
             //'placeholder' => 'Start Date',
             'required' => false,
-            //'format' => 'MM/dd/yyyy',
-            'format' => 'yyyy',
-            //'attr' => array('class' => 'datepicker form-control'),
-            //'attr' => array('class' => 'datepicker-only-year form-control'),
+            //'data' => $startDates, //$this->params['defaultStartDates'],
             'attr' => array('class'=>'datepicker-only-year datepicker-multidate form-control', 'title'=>'Start Year', 'data-toggle'=>'tooltip'),
-            //'attr' => array('class'=>'datepicker datepicker-multidate form-control', 'title'=>'Start Year', 'data-toggle'=>'tooltip'),
         ));
 
 //        $builder->add('filter', 'entity', array(
