@@ -927,7 +927,7 @@
                                                         {#href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'reject' }, true) }}">Mark as Rejected#}
                                                 {#</a>#}
                                                 <a
-                                                    fellapp-data-confirm="Would you like to send the following rejection notification e-mail to the accepted applicant?"
+                                                    fellapp-data-confirm="Would you like to send the following rejection notification e-mail to the rejected applicant?"
                                                     fellapp-data-href1="{{ path('fellapp_status', { 'id': entity.id, 'status': 'rejectedandnotified' }, true) }}"
                                                     fellapp-data-href2="{{ path('fellapp_status', { 'id': entity.id, 'status': 'reject' }, true) }}"
                                                     fellapp-data-email-subject="{{ rejectedEmailSubjectModified }}"
@@ -945,7 +945,7 @@
                                                         {#href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'rejectedandnotified' }, true) }}">Mark as Rejected and Notify#}
                                                 {#</a>#}
                                                 <a
-                                                    fellapp-data-confirm="Would you like to send the following rejection notification e-mail to the accepted applicant?"
+                                                    fellapp-data-confirm="Would you like to send the following rejection notification e-mail to the rejected applicant?"
                                                     fellapp-data-href1="{{ path('fellapp_status', { 'id': entity.id, 'status': 'rejectedandnotified' }, true) }}"
                                                     fellapp-data-href2="{{ path('fellapp_status', { 'id': entity.id, 'status': 'rejectedandnotified-noemail' }, true) }}"
                                                     fellapp-data-email-subject="{{ rejectedEmailSubjectModified }}"
@@ -955,6 +955,32 @@
                                                 </a>
                                             </li>
                                         {% endif %}
+
+                                        <hr>
+
+                                        {#Send e-mail notification#}
+                                        <li>
+                                            <a
+                                                fellapp-data-confirm="Would you like to send the following notification e-mail to the accepted applicant?"
+                                                fellapp-data-href1="{{ path('fellapp_status', { 'id': entity.id, 'status': 'acceptedandnotified' }, true) }}"
+                                                fellapp-data-href2="{{ path('fellapp_status', { 'id': entity.id, 'status': 'accepted' }, true) }}"
+                                                fellapp-data-email-subject="{{ acceptedEmailSubjectModified }}"
+                                                fellapp-data-email-body="{{ acceptedEmailBodyModified }}"
+                                                fellapp-data-callback="refreshpage"
+                                                href="#">Send e-mail notification of acceptance
+                                            </a>
+                                        <li>
+                                            <a
+                                                fellapp-data-confirm="Would you like to send the following rejection notification e-mail to the rejected applicant?"
+                                                fellapp-data-href1="{{ path('fellapp_status', { 'id': entity.id, 'status': 'rejectedandnotified' }, true) }}"
+                                                fellapp-data-href2="{{ path('fellapp_status', { 'id': entity.id, 'status': 'reject' }, true) }}"
+                                                fellapp-data-email-subject="{{ rejectedEmailSubjectModified }}"
+                                                fellapp-data-email-body="{{ rejectedEmailBodyModified }}"
+                                                fellapp-data-callback="refreshpage"
+                                                href="#">Send e-mail notification of rejection
+                                            </a>
+                                        </li>
+
 
                                         <hr>
 
