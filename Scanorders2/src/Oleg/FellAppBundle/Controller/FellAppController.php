@@ -227,6 +227,24 @@ class FellAppController extends Controller {
 
         $filterParams = $request->query->all();
 
+        if( $route == "fellapp_accepted_fellows" && count($filterParams) == 0 ) {
+            $fellowshipTypeId = null;
+            if( count($fellowshipTypes) == 1 ) {
+                $firstFellType = reset($fellowshipTypes);
+                //echo "firstFellType id=".key($fellowshipTypes)."";
+                //exit();
+                $fellowshipTypeId = key($fellowshipTypes);
+            }
+            return $this->redirect( $this->generateUrl($route,
+                array(
+                    'filter[startDates]' => $defaultStartDates, //$currentYear,
+                    'filter[accepted]' => 1,
+                    'filter[acceptedandnotified]' => 1,
+                    'filter[filter]' => $fellowshipTypeId,
+                )
+            ));
+        }
+
         if( $route == "fellapp_send_rejection_emails" && count($filterParams) == 0 ) {
             $fellowshipTypeId = null;
             if( count($fellowshipTypes) == 1 ) {
