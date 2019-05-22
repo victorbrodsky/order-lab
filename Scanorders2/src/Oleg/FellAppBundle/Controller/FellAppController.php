@@ -168,6 +168,7 @@ class FellAppController extends Controller {
             //https://bootstrap-datepicker.readthedocs.io/en/latest/options.html#multidate
             //https://bootstrap-datepicker.readthedocs.io/en/latest/markup.html#daterange
             $defaultStartDates = array();
+            $defaultStartDates = array('2012','2013','2014');
         }
 
         //create fellapp filter
@@ -185,7 +186,7 @@ class FellAppController extends Controller {
 
         $filter = $filterform['filter']->getData();
         $search = $filterform['search']->getData();
-        $startDate = $filterform['startDate']->getData();
+        $startDates = $filterform['startDates']->getData();
         $hidden = $filterform['hidden']->getData();
         $archived = $filterform['archived']->getData();
         $complete = $filterform['complete']->getData();
@@ -220,7 +221,7 @@ class FellAppController extends Controller {
             //filter[active]=1&filter[priority]=1&filter[complete]=1&filter[interviewee]=1&filter[reject]=1
             return $this->redirect( $this->generateUrl($route,
                 array(
-                    'filter[startDate]' => $currentYear,
+                    'filter[startDates]' => $defaultStartDates, //$currentYear,
                     'filter[active]' => 1,
                     'filter[complete]' => 1,
                     'filter[interviewee]' => 1,
@@ -241,7 +242,7 @@ class FellAppController extends Controller {
             }
             return $this->redirect( $this->generateUrl($route, //'fellapp_home',
                 array(
-                    'filter[startDate]' => $currentYear,
+                    'filter[startDates]' => $defaultStartDates, //$currentYear,
                     'filter[active]' => 1,
                     'filter[complete]' => 1,
                     'filter[interviewee]' => 1,
@@ -373,15 +374,32 @@ class FellAppController extends Controller {
             $dql->andWhere("(".$orWhereStr.")");
         }
 
-        if( $startDate ) {
-            //$transformer = new DateTimeToStringTransformer(null,null,'Y-m-d');
-            //$dateStr = $transformer->transform($startDate);
-            //$dql->andWhere("fellapp.startDate >= '".$startDate."'");
-            //$dql->andWhere("year(fellapp.startDate) = '".$startDate->format('Y')."'");
-            $startYearStr = $startDate->format('Y');
-            $bottomDate = $startYearStr."-01-01";
-            $topDate = $startYearStr."-12-31";
-            $dql->andWhere("fellapp.startDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'" );
+        if( $startDates ) {
+            //$startDatesArr = explode(",",$startDates);
+            foreach($startDates as $startDate) {
+                echo "startDate=$startDate <br>";
+                //$transformer = new DateTimeToStringTransformer(null,null,'Y-m-d');
+                //$dateStr = $transformer->transform($startDate);
+                //$dql->andWhere("fellapp.startDate >= '".$startDate."'");
+                //$dql->andWhere("year(fellapp.startDate) = '".$startDate->format('Y')."'");
+
+                //$startYearStr = $startDate->format('Y');
+                $startDatesArr = explode("-",$startDate); //2009-01-01 00:00:00.000000
+                $startYearStr = $startDatesArr[0];
+                $bottomDate = $startYearStr."-01-01";
+                echo "bottomDate=$bottomDate <br>";
+                $topDate = $startYearStr."-12-31";
+                $dql->andWhere("fellapp.startDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'" );
+
+                if( $startYearStr != $currentYear ) {
+                    $searchFlag = true;
+                }
+            }
+
+//            $startYearStr = $startDate->format('Y');
+//            $bottomDate = $startYearStr."-01-01";
+//            $topDate = $startYearStr."-12-31";
+//            $dql->andWhere("fellapp.startDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'" );
 
             if( $startYearStr != $currentYear ) {
                 $searchFlag = true;

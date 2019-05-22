@@ -40,7 +40,7 @@ class FellAppFilterType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
-        $builder->add('startDate', DateTimeType::class, array(
+        $builder->add('startDates', DateTimeType::class, array(
             'label' => false, //'Start Date',
             'widget' => 'single_text',
             //'placeholder' => 'Start Date',
