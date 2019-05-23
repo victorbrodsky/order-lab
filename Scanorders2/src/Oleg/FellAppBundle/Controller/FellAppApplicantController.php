@@ -584,6 +584,7 @@ class FellAppApplicantController extends Controller {
         $fileName = $currentYear." ".$institutionNameFellappName."Interview Evaluations generated on ".date('m/d/Y H:i').".pdf";
         $fileName = str_replace("  ", " ", $fileName);
         $fileName = str_replace(" ", "-", $fileName);
+        $fileName = str_replace(",", "-", $fileName);
 
         //take care of authentication
         $session = $this->get('session');
@@ -673,6 +674,7 @@ class FellAppApplicantController extends Controller {
         $fileName = $currentYear." ".$institutionNameFellappName."Interview Evaluations generated on ".date('m/d/Y H:i').".doc";
         $fileName = str_replace("  ", " ", $fileName);
         $fileName = str_replace(" ", "-", $fileName);
+        $fileName = str_replace(",", "-", $fileName);
 
         //get filtered fell applications
         $fellappUtil = $this->container->get('fellapp_util');

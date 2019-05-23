@@ -87,8 +87,9 @@ class FellAppUtil {
         return $accessreqs;
     }
 
-    //TODO: make $year to be accept multiple dates "2019,2020,2021..."
+
     //$fellSubspecArg: single fellowshipSubspecialty id or array of fellowshipSubspecialty ids
+    //$year can be multiple dates "2019,2020,2021..."
     public function getFellAppByStatusAndYear($status,$fellSubspecArg,$year=null,$interviewer=null) {
 
         //echo "year=$year<br>";
@@ -985,6 +986,7 @@ class FellAppUtil {
 
         $author = $this->container->get('security.token_storage')->getToken()->getUser();
         $transformer = new DateTimeToStringTransformer(null,null,'d/m/Y');
+        //exit("fileName=$fileName");
 
         $writer = WriterFactory::create(Type::XLSX);
         $writer->openToBrowser($fileName);
@@ -1039,20 +1041,21 @@ class FellAppUtil {
                 'ID',                           //0 - A
                 'First Name',                   //1 - B
                 'Last Name',                    //2 - C
-                'Medical Degree',               //3 - D
-                'Medical School',               //4 - E
-                'Residency Institution',        //5 - F
-                'References',                   //6 - G
-                'Interview Score',              //7 - H
-                'Interview Date',               //8 - I
-                'Interviewer',                  //9 - J
-                'Date',                         //10 - K
-                'Academic Rank',                //11 - L
-                'Personality Rank',             //12 - M
-                'Potential Rank',               //13 - N
-                'Total Rank',                   //14 - O
-                'Language Proficiency',         //15 - P
-                'Comments'                      //16 - Q
+                'Start Year',                   //3 - D
+                'Medical Degree',               //4 - E
+                'Medical School',               //5 - F
+                'Residency Institution',        //6 - G
+                'References',                   //7 - H
+                'Interview Score',              //8 - I
+                'Interview Date',               //9 - J
+                'Interviewer',                  //10 - K
+                'Date',                         //11 - L
+                'Academic Rank',                //12 - M
+                'Personality Rank',             //13 - N
+                'Potential Rank',               //14 - O
+                'Total Rank',                   //15 - P
+                'Language Proficiency',         //16 - Q
+                'Comments',                     //17 - R
             ],
             $headerStyle
         );
@@ -1083,21 +1086,26 @@ class FellAppUtil {
             //$ews->setCellValue('C'.$row, $fellapp->getUser()->getLastNameUppercase());
             $data[2] = $fellapp->getUser()->getLastNameUppercase();
 
+            $startDate = $fellapp->getStartDate();
+            if( $startDate ) {
+                $data[3] = $startDate->format('Y');
+            }
+
             //Medical Degree
             //$ews->setCellValue('D'.$row, $fellapp->getDegreeByTrainingTypeName('Medical'));
-            $data[3] = $fellapp->getDegreeByTrainingTypeName('Medical');
+            $data[4] = $fellapp->getDegreeByTrainingTypeName('Medical');
 
             //Medical School
             //$ews->setCellValue('E'.$row, $fellapp->getSchoolByTrainingTypeName('Medical'));
-            $data[4] = $fellapp->getSchoolByTrainingTypeName('Medical');
+            $data[5] = $fellapp->getSchoolByTrainingTypeName('Medical');
 
             //Residency Institution
             //$ews->setCellValue('F'.$row, $fellapp->getSchoolByTrainingTypeName('Residency'));
-            $data[5] = $fellapp->getSchoolByTrainingTypeName('Residency');
+            $data[6] = $fellapp->getSchoolByTrainingTypeName('Residency');
 
             //References
             //$ews->setCellValue('G'.$row, $fellapp->getAllReferences());
-            $data[6] = $fellapp->getAllReferences();
+            $data[7] = $fellapp->getAllReferences();
 
                 //Interview Score
             $totalScore = "";
@@ -1105,11 +1113,11 @@ class FellAppUtil {
                 $totalScore = $fellapp->getInterviewScore();
             }
             //$ews->setCellValue('H'.$row, $totalScore );
-            $data[7] = $totalScore;
+            $data[8] = $totalScore;
 
             //Interview Date
             //$ews->setCellValue('I'.$row, $transformer->transform($fellapp->getInterviewDate()));
-            $data[8] = $transformer->transform($fellapp->getInterviewDate());
+            $data[9] = $transformer->transform($fellapp->getInterviewDate());
 
             $writer->addRowWithStyle($data,$requestStyle);
 
@@ -1128,59 +1136,60 @@ class FellAppUtil {
                 $data[6] = null;
                 $data[7] = null;
                 $data[8] = null;
+                $data[9] = null;
 
                 //Interviewer
                 if( $interview->getInterviewer() ) {
                     //$ews->setCellValue('J'.$row, $interview->getInterviewer()->getUsernameOptimal());
-                    $data[9] = $interview->getInterviewer()->getUsernameOptimal();
+                    $data[10] = $interview->getInterviewer()->getUsernameOptimal();
                 } else {
-                    $data[9] = null;
+                    $data[10] = null;
                 }
 
                 //Date
                 //$ews->setCellValue('K'.$row, $transformer->transform($interview->getInterviewDate()));
-                $data[10] = $transformer->transform($interview->getInterviewDate());
+                $data[11] = $transformer->transform($interview->getInterviewDate());
 
                 //Academic Rank
                 if( $interview->getAcademicRank() ) {
                     //$ews->setCellValue('L'.$row, $interview->getAcademicRank()->getValue());
-                    $data[11] = $interview->getAcademicRank()->getValue();
+                    $data[12] = $interview->getAcademicRank()->getValue();
                 } else {
-                    $data[11] = null;
+                    $data[12] = null;
                 }
 
                 //Personality Rank
                 if( $interview->getPersonalityRank() ) {
                     //$ews->setCellValue('M'.$row, $interview->getPersonalityRank()->getValue());
-                    $data[12] = $interview->getPersonalityRank()->getValue();
+                    $data[13] = $interview->getPersonalityRank()->getValue();
                 } else {
-                    $data[12] = null;
+                    $data[13] = null;
                 }
 
                 //Potential Rank
                 if( $interview->getPotentialRank() ) {
                     //$ews->setCellValue('N'.$row, $interview->getPotentialRank()->getValue());
-                    $data[13] = $interview->getPotentialRank()->getValue();
+                    $data[14] = $interview->getPotentialRank()->getValue();
                 } else {
-                    $data[13] = null;
+                    $data[14] = null;
                 }
 
                 //Total Rank
                 //$ews->setCellValue('O'.$row, $interview->getTotalRank());
-                $data[14] = $interview->getTotalRank();
+                $data[15] = $interview->getTotalRank();
                 $allTotalRanks = $allTotalRanks + $interview->getTotalRank();
 
                 //Language Proficiency
                 if( $interview->getLanguageProficiency() ) {
                     //$ews->setCellValue('P'.$row, $interview->getLanguageProficiency()->getName());
-                    $data[15] = $interview->getLanguageProficiency()->getName();
+                    $data[16] = $interview->getLanguageProficiency()->getName();
                 } else {
-                    $data[15] = null;
+                    $data[16] = null;
                 }
 
                 //Comments
                 //$ews->setCellValue('Q'.$row, $interview->getComment());
-                $data[16] = $interview->getComment();
+                $data[17] = $interview->getComment();
 
                 $writer->addRowWithStyle($data,$requestStyle);
 

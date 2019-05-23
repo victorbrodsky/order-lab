@@ -2643,14 +2643,14 @@ class FellAppController extends Controller {
             $institutionNameFellappName = $institution." ".$fellowshipSubspecialty." ";
         }
         
-        //[YEAR] [WCMC (top level of actual institution)] [FELLOWSHIP-TYPE] Fellowship Candidate Data generated on [DATE] at [TIME] EST.xls
-        $fileName = $currentYear." ".$institutionNameFellappName."Fellowship Candidate Data generated on ".date('m/d/Y H:i').".xlsx";
-        $fileName = str_replace("  ", " ", $fileName);
-        $fileName = str_replace(" ", "-", $fileName);
-        
         $fellappUtil = $this->container->get('fellapp_util');
 
         if(0) {
+            //[YEAR] [WCMC (top level of actual institution)] [FELLOWSHIP-TYPE] Fellowship Candidate Data generated on [DATE] at [TIME] EST.xls
+            $fileName = $currentYear." ".$institutionNameFellappName."Fellowship Candidate Data generated on ".date('m/d/Y H:i').".xlsx";
+            $fileName = str_replace("  ", " ", $fileName);
+            $fileName = str_replace(" ", "-", $fileName);
+
             $excelBlob = $fellappUtil->createApplicantListExcel($fellappIds);
 
             $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($excelBlob, 'Xlsx');
@@ -2669,6 +2669,13 @@ class FellAppController extends Controller {
 
         //Spout
         if(1) {
+
+            //[YEAR] [WCMC (top level of actual institution)] [FELLOWSHIP-TYPE] Fellowship Candidate Data generated on [DATE] at [TIME] EST.xls
+            $fileName = $currentYear." ".$institutionNameFellappName."Fellowship Candidate Data generated on ".date('m-d-Y').".xlsx";
+            $fileName = str_replace("  ", " ", $fileName);
+            $fileName = str_replace(" ", "-", $fileName);
+            $fileName = str_replace(",", "-", $fileName);
+
             $fellappUtil->createApplicantListExcelSpout($fellappIds,$fileName);
             exit();
         }
