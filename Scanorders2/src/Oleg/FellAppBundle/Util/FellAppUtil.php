@@ -986,7 +986,6 @@ class FellAppUtil {
 
         $author = $this->container->get('security.token_storage')->getToken()->getUser();
         $transformer = new DateTimeToStringTransformer(null,null,'d/m/Y');
-        //exit("fileName=$fileName");
 
         $writer = WriterFactory::create(Type::XLSX);
         $writer->openToBrowser($fileName);
