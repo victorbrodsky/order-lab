@@ -30,6 +30,7 @@
 
     </div>
 
+    {% if form.signatureName is defined %}
     <div class="row withpaddingtop withpaddingleft">
         <div class="col-xs-6">
             {#<label for="signatureName" class="control-label required">Signature</label>#}
@@ -45,5 +46,6 @@
         </div>
 
     </div>
+    {% endif %}
 
 </div>

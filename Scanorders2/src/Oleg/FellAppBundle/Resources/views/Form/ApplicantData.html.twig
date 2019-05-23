@@ -91,6 +91,8 @@
             </div> {#well#}
 
 
+            {% if form.locations is defined %}
+
             {% for location in form.locations %}
 
                 {#location.name.vars.value=({{ location.vars.value.name }})<br>#}
@@ -286,6 +288,9 @@
                 </div>
             </div>
 
+            {% endif %}
+
+            {% if form.citizenships is defined %}
             {% for citizenship in form.citizenships %}
                 <div class="well">
                     <label class="col-xs-12 control-label">Citizenship:</label>
@@ -303,6 +308,7 @@
                     </div>
                 </div>
             {% endfor %}
+            {% endif %}
 
 
         </div> <!-- panel-body -->

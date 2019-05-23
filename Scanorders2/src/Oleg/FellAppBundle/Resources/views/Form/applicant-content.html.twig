@@ -97,6 +97,10 @@
 
 {{ form_errors(form) }}
 
+{#{% set testing = true %}#}
+{% set testing = false %}
+
+{% if not testing %}
 
 <div id="form-prototype-data"
      data-prototype-fellapp-interviews = "{{ fellappmacros.interviewForm(form.interviews,cycle,'fellapp-interviews','prototype', sitename,1)|e }}"
@@ -104,6 +108,8 @@
      data-uploadurl = "{{ oneup_uploader_endpoint('fellapp_gallery') }}"
      data-userid = "{{ entity.user.id }}"
 ></div>
+
+{% endif %}
 
 
     <input type="hidden" id="fellapp_id" value="{{ entity.id }}" />
@@ -139,6 +145,7 @@
 <!-- Fellowship Type, Training period, Applicant Name, Email, Address, Telephone, Citizenship -->
 {% include 'OlegFellAppBundle:Form:ApplicantData.html.twig' %}
 
+{% if not testing %}
 
 <!-- Education -->
 {% include 'OlegFellAppBundle:Form:Education.html.twig' %}
@@ -182,6 +189,8 @@
     {% if is_granted('ROLE_FELLAPP_COORDINATOR') or is_granted('ROLE_FELLAPP_DIRECTOR') or is_granted('ROLE_FELLAPP_INTERVIEWER') %}
         {% include 'OlegFellAppBundle:Form:Interviews.html.twig' %}
     {% endif %}
+{% endif %}
+
 {% endif %}
 
 <!-- Signature -->

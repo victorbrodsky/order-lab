@@ -814,7 +814,7 @@ class FellAppController extends Controller {
             return array();
         }
         
-        $fellappUtil->addEmptyFellAppFields($entity);
+        $fellappUtil->addEmptyFellAppFields($entity); //testing
 
         if( $routeName == "fellapp_show" ) {
             $cycle = 'show';

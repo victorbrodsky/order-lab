@@ -133,6 +133,7 @@ class FellowshipApplicationType extends AbstractType
             'required' => false,
         ));
 
+        //return false;
 
         $builder->add('coverLetters', CollectionType::class, array(
             //'type' => new DocumentType($this->params),
