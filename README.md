@@ -232,23 +232,23 @@ Note: If you choose to use MySQL database on Linux instead of Postgres, you will
 
 	For 64 bit Windows (x64) install both these 64 bit versions and the 32 bit versions below:
 
-	[VC9 2008 SP1 Package (x64)](https://www.microsoft.com/en-us/download/details.aspx?id=2092)
-	[VC 2008 SP1 ATL Package (x64)](https://www.microsoft.com/en-us/download/details.aspx?id=11895)
-	[VC 2008 SP1 MFC Package (x64)](https://www.microsoft.com/en-us/download/details.aspx?id=26368)
-	[VC10 2010 SP1 Package (x64)](http://www.microsoft.com/en-us/download/details.aspx?id=13523)
-	[VC11 2012 Update 4 (x64)](http://www.microsoft.com/en-us/download/details.aspx?id=30679)
-	[VC13 2013 Update 5 (x64)](https://support.microsoft.com/en-us/help/4032938/)
-	[VC16 2015-2019 (VC16 x64) 14.20.27508](https://aka.ms/vs/16/release/VC_redist.x64.exe)
+    * [VC9 2008 SP1 Package (x64)](https://www.microsoft.com/en-us/download/details.aspx?id=2092)
+    * [VC 2008 SP1 ATL Package (x64)](https://www.microsoft.com/en-us/download/details.aspx?id=11895)
+    * [VC 2008 SP1 MFC Package (x64)](https://www.microsoft.com/en-us/download/details.aspx?id=26368)
+    * [VC10 2010 SP1 Package (x64)](http://www.microsoft.com/en-us/download/details.aspx?id=13523)
+    * [VC11 2012 Update 4 (x64)](http://www.microsoft.com/en-us/download/details.aspx?id=30679)
+    * [VC13 2013 Update 5 (x64)](https://support.microsoft.com/en-us/help/4032938/)
+    * [VC16 2015-2019 (VC16 x64) 14.20.27508](https://aka.ms/vs/16/release/VC_redist.x64.exe)
 
 	For 32 bit Windows (x86):
 
-	[VC9 2008 SP1 Package (x86)](http://www.microsoft.com/en-us/download/details.aspx?id=5582)
-	[VC 2008 SP1 ATL Package (x86)](https://www.microsoft.com/en-us/download/details.aspx?id=11895)
-	[VC 2008 SP1 MFC Package (x86)](https://www.microsoft.com/en-us/download/details.aspx?id=26368)
-	[VC10 2010 SP1 Package (x86)](http://www.microsoft.com/en-us/download/details.aspx?id=8328)
-	[VC11 2012 Update 4 (x86)](http://www.microsoft.com/en-us/download/details.aspx?id=30679)
-	[VC13 2013 Update 5 (x86)](https://support.microsoft.com/en-us/help/4032938/)
-	[VC16 2015-2019 (VC16 x86) 14.20.27508](https://aka.ms/vs/16/release/VC_redist.x86.exe)
+    * [VC9 2008 SP1 Package (x86)](http://www.microsoft.com/en-us/download/details.aspx?id=5582)
+    * [VC 2008 SP1 ATL Package (x86)](https://www.microsoft.com/en-us/download/details.aspx?id=11895)
+    * [VC 2008 SP1 MFC Package (x86)](https://www.microsoft.com/en-us/download/details.aspx?id=26368)
+    * [VC10 2010 SP1 Package (x86)](http://www.microsoft.com/en-us/download/details.aspx?id=8328)
+    * [VC11 2012 Update 4 (x86)](http://www.microsoft.com/en-us/download/details.aspx?id=30679)
+    * [VC13 2013 Update 5 (x86)](https://support.microsoft.com/en-us/help/4032938/)
+    * [VC16 2015-2019 (VC16 x86) 14.20.27508](https://aka.ms/vs/16/release/VC_redist.x86.exe)
 
 	c) Install an Apache-PHP-MySQL stack of your choice (for example: [AMPPS](http://www.ampps.com/downloads), [WAMP](http://www.wampserver.com/en/), or [XAMPP](https://www.apachefriends.org/index.html). PHP version 5.6.7 was initially tested and is preferred, but PHP version 7.1 appears to work as well and avoids the "PHP Fatal error: Allowed memory size of X bytes exhausted..." after running "composer update" in the later installation steps. MSSQL Server has been tested as well. The following instructions will assume AMPPS with PHP 5.6.7 were chosen.
 
