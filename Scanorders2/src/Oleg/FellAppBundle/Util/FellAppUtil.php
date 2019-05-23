@@ -91,7 +91,7 @@ class FellAppUtil {
     //$fellSubspecArg: single fellowshipSubspecialty id or array of fellowshipSubspecialty ids
     public function getFellAppByStatusAndYear($status,$fellSubspecArg,$year=null,$interviewer=null) {
 
-        echo "year=$year<br>";
+        //echo "year=$year<br>";
         $repository = $this->em->getRepository('OlegFellAppBundle:FellowshipApplication');
         $dql =  $repository->createQueryBuilder("fellapp");
         $dql->select('fellapp');
@@ -130,7 +130,7 @@ class FellAppUtil {
                 foreach($yearArr as $singleYear) {
                     $bottomDate = $singleYear."-01-01";
                     $topDate = $singleYear."-12-31";
-                    echo "bottomDate=$bottomDate, topDate=$topDate <br>";
+                    //echo "bottomDate=$bottomDate, topDate=$topDate <br>";
                     $criterions[] = "("."fellapp.startDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'".")";
                 }
                 $criterionStr = implode(" OR ",$criterions);
@@ -149,11 +149,21 @@ class FellAppUtil {
             $dql->andWhere("interviewer.id=".$interviewer->getId());
         }
 
-        echo "dql=".$dql."<br>";
+        //echo "dql=".$dql."<br>";
 
         $query = $this->em->createQuery($dql);
         $applicants = $query->getResult();
-        echo "applicants=".count($applicants)."<br>";
+        
+//        echo "applicants=".count($applicants)."<br>";
+//        if( $status == 'active' ) {
+//            foreach ($applicants as $fellapp) {
+//                echo "ID " . $fellapp->getId() .
+//                    "; startDate=" . $fellapp->getStartDate()->format('Y-m-d') .
+//                    "; status=" . $fellapp->getAppStatus()->getName() .
+//                    "; type=" . $fellapp->getFellowshipSubspecialty()->getName() .
+//                    "<br>";
+//            }
+//        }
 
         return $applicants;
     }

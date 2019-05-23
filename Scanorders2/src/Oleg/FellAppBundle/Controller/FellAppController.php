@@ -560,6 +560,7 @@ class FellAppController extends Controller {
         $rejectedEmailSubject = $userSecUtil->getSiteSettingParameter('rejectedEmailSubject',$this->container->getParameter('fellapp.sitename'));
         $rejectedEmailBody = $userSecUtil->getSiteSettingParameter('rejectedEmailBody',$this->container->getParameter('fellapp.sitename'));
 
+
         return array(
             'entities' => $fellApps,
             'pathbase' => 'fellapp',
