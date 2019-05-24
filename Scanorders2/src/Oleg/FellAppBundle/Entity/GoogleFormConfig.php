@@ -103,7 +103,7 @@ class GoogleFormConfig {
     private $letterAcceptingSubmission;
 
     /**
-     * text shown when the application is submitted
+     * message shown on Error.html for reference letter page when parameters are not specified
      *
      * @ORM\Column(type="text", nullable=true)
      */

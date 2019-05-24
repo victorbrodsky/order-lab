@@ -173,16 +173,16 @@ class GoogleFormConfigController extends Controller
         //exceptionAccount: done
         $configJson['exceptionAccount'] = $entity->getExceptionAccount();
 
-        //submissionConfirmation
+        //submissionConfirmation: done
         $configJson['submissionConfirmation'] = $entity->getSubmissionConfirmation();
 
-        //letterAcceptingSubmission
+        //letterAcceptingSubmission: done
         $configJson['letterAcceptingSubmission'] = $entity->getLetterAcceptingSubmission();
 
-        //letterError
+        //letterError: done
         $configJson['letterError'] = $entity->getLetterError();
 
-        //letterExceptionAccount
+        //letterExceptionAccount: done
         $configJson['letterExceptionAccount'] = $entity->getLetterExceptionAccount();
 
         $configJson = json_encode($configJson);
