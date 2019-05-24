@@ -161,16 +161,16 @@ class GoogleFormConfigController extends Controller
         }
         $configJson['fellowshipTypes'] = $fellowshipTypes;
 
-        //applicationFormNote
+        //applicationFormNote: done
         $configJson['applicationFormNote'] = $entity->getApplicationFormNote();
 
-        //adminEmail
+        //adminEmail: done
         $configJson['adminEmail'] = $entity->getAdminEmail();
 
-        //fellappAdminEmail
+        //fellappAdminEmail: done
         $configJson['fellappAdminEmail'] = $entity->getFellappAdminEmail();
 
-        //exceptionAccount
+        //exceptionAccount: done
         $configJson['exceptionAccount'] = $entity->getExceptionAccount();
 
         //submissionConfirmation
