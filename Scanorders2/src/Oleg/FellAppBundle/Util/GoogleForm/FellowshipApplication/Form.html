@@ -1,4 +1,7 @@
-   
+<script>
+    var _serverData = <?!= JSON.stringify(dataFromServerTemplate) ?>; //Stores the data directly in the javascript code
+</script>
+
 <?!= include('Stylesheet'); ?>
 
 <div id="overlay">
@@ -17,6 +20,7 @@
   </div>
   -->
   
+  <!--
   <br>    
   <p>
   <font color="red">NYPH-CORNELL ONLY ACCEPTS/SPONSORS J-1 VISAS.</font><br>
@@ -25,16 +29,17 @@
   </p>
   
   <p>
-    Use of <font color="red">Firefox or Google Chrome browser</font> is recommended. If you encounter any technical issues with this web form, please email oli2002@med.cornell.edu
+    Use of <font color="red">Google Chrome or Firefox browser</font> is recommended. If you encounter any technical issues with this web form, please email oli2002@med.cornell.edu
   </p>
    
   <br>
+  -->
+  
   <!-- Notes -->
   <?!= include('Notes'); ?>
   
   <br>
   
-  <br>
   <p>
       <button id="collapseAll" type="button" class="btn btn-default btn-sm" onClick="collapseAll()" >Collapse All Application Sections</button>
       <button id="expandAll" type="button" class="btn btn-default btn-sm btn-pressed-default" onClick="expandAll()" >Expand All Application Sections</button>
@@ -54,6 +59,8 @@
   <!-- Personal Data -->
   <?!= include('PersonalData'); ?>
 
+<!-- Uploads -->
+  <?!= include('Uploads'); ?>
     
    <!-- Education -->
   <?!= include('Education'); ?>
@@ -77,11 +84,6 @@
 
   <!-- Recommendations -->
   <?!= include('Recommendations'); ?>
-  
-  
-  <!-- Uploads -->
-  <?!= include('Uploads'); ?>
-  
   
   <!-- Recommendations -->
   <?!= include('Texts'); ?>

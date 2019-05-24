@@ -64,12 +64,27 @@ script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></scr
       
       prePopulateForm();
     
+      $("#uploadLetterBtn").click(
+         function() {
+            $(this).attr('disabled','disabled');
+            //$(this).val('Please wait...');             
+            
+            //$('#formError').html('');
+            //var msg = "Your application is validating and submitting...<br><b>Please wait and do not close this page!</b><br>"+
+            //"It might take couple minutes to submit your application and receive the confirmation email.<br>"+
+            //"If your application is successfully submitted, you will receive an automated e-mail confirming submission of your application.<br>"+
+            //"You can close this page, once you receive the confirmation email.";
+            //var errorElement = '<div class="alert alert-info" role="alert">'+msg+'</div>';      
+            //$('#formError').html(errorElement); 
+         }
+      );
+    
 
     });   //document ready
 
 
-    function prePopulateForm() {   
-      if( typeof _serverData === 'undefined' ) {
+    function prePopulateForm() {         
+      if( typeof _serverData === 'undefined' ) {        
         return false;
       }
       //Reference fields (13)
@@ -88,8 +103,9 @@ script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></scr
       $('#zipcode').val(_serverData.ReferenceZip);
       $('#country').val(_serverData.ReferenceCountry);
       
-      //Applicant fields (7)
+      //Applicant fields (8)
       $('#recommendationLetterID').val(_serverData.ReferenceLeterId);
+      $('#instituteIdentification').val(_serverData.InstituteIdentification);
       $('#applicantFirstName').val(_serverData.ApplicantFirstName);
       $('#applicantLastName').val(_serverData.ApplicantLastName);
       $('#applicantEMail').val(_serverData.ApplicantEMail);
@@ -97,6 +113,9 @@ script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></scr
       $('#trainingPeriodEnd').val(_serverData.FellowshipEndDate);
       //$('#fellowshipType').select2("val",_serverData.FellowshipType);
       $('#fellowshipType').val(_serverData.FellowshipType);
+      
+      //others      
+      $('#errorPageNote').html(_serverData.letterError);
       
     }
 
@@ -107,8 +126,8 @@ script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></scr
        $('#formError').html(errorElement); 
        
        //enable button
-       $("#submit-form-button").val('Submit');
-       $("#submit-form-button").removeAttr('disabled');       
+       $("#uploadLetterBtn").val('Submit');
+       $("#uploadLetterBtn").removeAttr('disabled');       
     }
 
      function onUploadFailure(error) {    
@@ -116,8 +135,8 @@ script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></scr
        alert(error);
        
        //enable button
-       $("#submit-form-button").val('Submit');
-       $("#submit-form-button").removeAttr('disabled');
+       $("#uploadLetterBtn").val('Submit');
+       $("#uploadLetterBtn").removeAttr('disabled');
        
        return false;
     }
@@ -128,7 +147,7 @@ script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></scr
         //alert("Submited Form! uniqueId="+uniqueId);
         //alert("Submited Form!");
         
-        $('#submit-form-button').remove();
+        $('#uploadLetterBtn').remove();
                 
         var textHtml = "<p>Thank you for submitting the recommendation letter!</p>";
         

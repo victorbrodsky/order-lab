@@ -4,22 +4,26 @@
 var _templateSSKey = '1ITacytsUV2yChbfOSVjuBoW4aObSr_xBfpt6m_vab48';
 var _backupSSKey = '19KlO1oCC88M436JzCa89xGO08MJ1txQNgLeJI0BpNGo';
 //Destination forlder: ID of the folder where a newly created copy of template spreadsheet will be placed (Spreadsheets).
-var _destinationFolder = '163MoMsFodHxPj98dM-C_cLTVU5bkGHz1'; //'0B2FwyaXvFk1ecEJVeWc3VW1wS2c';
+var _destinationFolder = '1jHjrjBDXKmHXKWfGjkTCjDDPQU3l-Luz'; //folder where the response spreadsheets (forms) are saved;
 //Unique folder name where uploaded files will be placed.
-var _dropbox = "FellowshipApplicantUploads"; 
+var _dropbox = "FellowshipApplicantUploads"; //name of the upload folder
 var _configFolderId = "0B2FwyaXvFk1efmlPOEl6WWItcnBveVlDWWh6RTJxYzYyMlY2MjRSalRvUjdjdzMycmo5U3M";
 
-var _colIndexNameMapArray = {};
+var _colIndexNameMapArray = {}; 
 var _uniqueId = null;
 
 var _formCreationTimeStamp = CacheService.getPrivateCache().get('_formCreationTimeStamp');
 
-var _adminemail = 'oli2002@med.cornell.edu';
-var _useremail = 'eah2006@med.cornell.edu';
+var _adminemail = 'oli2002@med.cornell.edu'; //adminEmail
+var _useremail = 'eah2006@med.cornell.edu'; //fellappAdminEmail
 //var _useremail = 'cinava@yahoo.com';
+
+var _exceptionAccount = "olegivanov@pathologysystems.org";
 
 var _AcceptingSubmissions = true;
 var _fullValidation = true;
+
+var _applicationFormNote = null;
 
 //Maintenance flag (uncomment for maintenance)
 var _AcceptingSubmissions = false; 
@@ -32,31 +36,26 @@ var _useremail = 'cinava@yahoo.com';
 //default fellowship types
 var _Status = false;
 
-var _FellowshipTypes_Orig = [
-      {
-        "id": "s1",
-        "text": "s1"
-      },
-      {
-        "id": "s2",
-        "text": "s2"
-      }
-    ];
- var _FellowshipTypes = [];   
+var _FellowshipTypes = [];   
 
 
 function doGet(request) {   
 
   //Logger.log("reading config data");
   _AcceptingSubmissions = getConfigParameters("acceptingSubmissions");
+  //_AcceptingSubmissions = false; //testing
   //var status = getConfigParameter(configFile);
   //Logger.log('status='+configFile);
-  Logger.log("_AcceptingSubmissions="+_AcceptingSubmissions);
+  //Logger.log("_AcceptingSubmissions="+_AcceptingSubmissions);
   //Logger.log("_FellowshipTypes:");
   //Logger.log(_FellowshipTypes);
   //dssrrs.gsgs;
 
-  PropertiesService.getScriptProperties().setProperty('_jstest', 'jstest!!!');
+  _adminemail = getConfigParameters("adminEmail");
+  _useremail = getConfigParameters("fellappAdminEmail");
+  _exceptionAccount = getConfigParameters("exceptionAccount");
+
+  //PropertiesService.getScriptProperties().setProperty('_jstest', 'jstest!!!');
 
   //PropertiesService.getScriptProperties().setProperty('_formCreationTimeStamp', getCurrentTimestamp());
   CacheService.getPrivateCache().put('_formCreationTimeStamp', getCurrentTimestamp(),10800); //expirationInSeconds 10800 sec => 3 hours
@@ -65,15 +64,30 @@ function doGet(request) {
   Logger.log('curUser='+curUser);
     
   if( !_AcceptingSubmissions ) {
-    if( curUser == "olegivanov@pathologysystems.org" ) {
+    if( curUser == _exceptionAccount ) { //"olegivanov@pathologysystems.org"
         _AcceptingSubmissions = true;
     }  
   } 
       
   if( _AcceptingSubmissions ) {    
      var template = HtmlService.createTemplateFromFile('Form.html');
+     
+     _applicationFormNote = getConfigParameters("applicationFormNote");
+     //_applicationFormNote = "testnote";
+     //Logger.log('_applicationFormNote='+_applicationFormNote);
+     //template.testNote = _applicationFormNote;
+     
+     
+     template.dataFromServerTemplate = { 
+      //Reference fields (13)
+      applicationFormNote: _applicationFormNote,
+      adminEmail: getConfigParameters("adminEmail"),
+      submissionConfirmation: getConfigParameters("submissionConfirmation"), //text shown when the application is submitted
+    };
+     
+     
   } else {
-     var template = HtmlService.createTemplateFromFile('Maintanance.html');      
+     var template = HtmlService.createTemplateFromFile('Maintenance.html');      
   }    
   
   //template.action = ScriptApp.getService().getUrl();  
@@ -466,7 +480,14 @@ function validateFormFields(formObject) {
   
   if( Trim(formObject.email) == "" ) {         
      throw new Error("Empty E-mail field");
-  }   
+  } 
+
+  if( Trim(formObject.citizenshipCountry) == "" ) {         
+     throw new Error("Empty Citizenship Country field");
+  } 
+  if( Trim(formObject.visaStatus) == "" ) {         
+     throw new Error("Empty Visa Status field");
+  } 
   
   //validate email for @ and .
   validateEmailFormat(formObject.email,"Applicant");
@@ -644,13 +665,14 @@ function uploadFilesUSMLEScores(form) {
 
 function uploadFile(form,blob) {
     
-  //Logger.log('blob='+blob);
+  Logger.log('upload blob='+blob);
   //validateFormBeforeUpload(form);  
     
   try {
           
     var folder, folders = DriveApp.getFoldersByName(_dropbox);
     
+    //TODO: check if the parent is the correct (now the parent is "Responses"). Otherwise the name should be unique.
     if (folders.hasNext()) {
       folder = folders.next();
     } else {
@@ -790,7 +812,7 @@ function getConfigParameters(parameterKey) {
 
   //Get all files by that name. Put return into a variable
   allFilesInFolder = fldr.getFilesByName("config.json");
-  Logger.log('allFilesInFolder: ' + allFilesInFolder);
+  //Logger.log('allFilesInFolder: ' + allFilesInFolder);
   
   if (allFilesInFolder.hasNext() === false) {
     //If no file is found, the user gave a non-existent file name
@@ -815,8 +837,8 @@ function getConfigParameters(parameterKey) {
     configFile = file.getAs('application/json')
     
     // log the contents of the file
-    Logger.log("configFile:");
-    Logger.log(configFile.getDataAsString());
+    //Logger.log("configFile:");
+    //Logger.log(configFile.getDataAsString());
     
     //return configFile;
   };
@@ -826,8 +848,8 @@ function getConfigParameters(parameterKey) {
   var configObject = JSON.parse(configFile.getDataAsString());
   
   var parameter = configObject[parameterKey];
-  Logger.log("parameter:");
-  Logger.log(parameter);
+  //Logger.log("parameter:");
+  //Logger.log(parameter);
   
   return parameter;
   
@@ -835,9 +857,9 @@ function getConfigParameters(parameterKey) {
   _FellowshipTypes = configObject.fellowshiptypes;
   fellowshiptypeId = _FellowshipTypes[0].id;
   fellowshiptypeName = _FellowshipTypes[0].text;
-  Logger.log("_Status="+_Status);
-  Logger.log("fellowshiptypeId="+fellowshiptypeId);
-  Logger.log("fellowshiptypeName="+fellowshiptypeName); 
+  //Logger.log("_Status="+_Status);
+  //Logger.log("fellowshiptypeId="+fellowshiptypeId);
+  //Logger.log("fellowshiptypeName="+fellowshiptypeName); 
   //Logger.log("fellowshipTypes:");
   //Logger.log(fellowshipTypes);
   

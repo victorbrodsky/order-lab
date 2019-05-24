@@ -6,11 +6,12 @@ var _formCreationTimeStamp = CacheService.getPrivateCache().get('_formCreationTi
 var _destinationFolderSSKey = "1jK4XJf_Jqn_UvjTvbgiu4jV9Kvp5G3nY"; //folder where the response spreadsheets (forms) are saved;
 var _templateSSKey = '1SwKJ04BFSGByTkROYuNAdKo-dEs2rhVFKf36g3DhKhE';
 var _backupSSKey = '1nmBdCIatjBOXffoMsD-lSh6exSwczdMyJgtNmQBOhBs';
-
 var _dropbox = "RecommendationLetterUploads"; //folder name where the recommendation letter will be uploaded
+var _configFolderId = "0B2FwyaXvFk1efmlPOEl6WWItcnBveVlDWWh6RTJxYzYyMlY2MjRSalRvUjdjdzMycmo5U3M";
 
 var _adminemail = 'oli2002@med.cornell.edu';
 var _useremail = 'eah2006@med.cornell.edu';
+var _exceptionAccount = "olegivanov@pathologysystems.org";
 
 var _AcceptingSubmissions = true;
 
@@ -19,7 +20,7 @@ var _AcceptingSubmissions = true;
 //var _AcceptingSubmissions = false; 
 //var _fullValidation = false; //will validate only fellapp type, names, email, signature
 var _fullValidation = true;
-var _useremail = 'cinava@yahoo.com';
+//var _useremail = 'cinava@yahoo.com';
 
 //Request parameters
 //http://wcmc.pathologysystems.org/fellowship-application-reference-letter-upload?
@@ -55,6 +56,10 @@ var _useremail = 'cinava@yahoo.com';
 
 function doGet(request) {   
 
+  _AcceptingSubmissions = getConfigParameters("letterAcceptingSubmission");
+  _adminemail = getConfigParameters("adminEmail");
+  _useremail = getConfigParameters("fellappAdminEmail");
+  _exceptionAccount = getConfigParameters("letterExceptionAccount");
 
   PropertiesService.getScriptProperties().setProperty('_jstest', 'jstest!!!');
 
@@ -65,7 +70,7 @@ function doGet(request) {
   //Logger.log('curUser='+curUser);
     
   if( !_AcceptingSubmissions ) {
-    if( curUser == "olegivanov@pathologysystems.org" ) {
+    if( curUser == _exceptionAccount ) {
         _AcceptingSubmissions = true;
     }  
   } 
@@ -74,7 +79,7 @@ function doGet(request) {
      var template = HtmlService.createTemplateFromFile('Form.html');
      //var template = HtmlService.createTemplate('<b>The time is &lt;?= new Date() ?&gt;</b>');
   } else {
-     var template = HtmlService.createTemplateFromFile('Maintanance.html');      
+     var template = HtmlService.createTemplateFromFile('Maintenance.html');      
   }    
   
   //get request's parameters
@@ -89,7 +94,7 @@ function doGet(request) {
     //Logger.log('_ReferenceLeterId='+_ReferenceLeterId);
     
     if( typeof _ReferenceLeterId === 'undefined' ) {
-      var template = HtmlService.createTemplateFromFile('Error.html'); 
+      template = HtmlService.createTemplateFromFile('Error.html'); 
     }       
      
     template.dataFromServerTemplate = { 
@@ -109,15 +114,19 @@ function doGet(request) {
       ReferenceCountry: request.parameter['Reference-Country'],  //Reference-Country
       //Applicant fields (7)
       ReferenceLeterId: _ReferenceLeterId, 
+      InstituteIdentification: request.parameter['Identification'],
       ApplicantFirstName: request.parameter['Applicant-First-Name'], 
       ApplicantLastName: request.parameter['Applicant-Last-Name'], 
       ApplicantEMail: request.parameter['Applicant-E-Mail'], 
       FellowshipType: request.parameter['Fellowship-Type'], 
       FellowshipStartDate: request.parameter['Fellowship-Start-Date'],  
-      FellowshipEndDate: request.parameter['Fellowship-End-Date'] 
+      FellowshipEndDate: request.parameter['Fellowship-End-Date'],
+      letterError: getConfigParameters("letterError")
     };
   } else {
-    template.dataFromServerTemplate = {};
+    template.dataFromServerTemplate = {
+      letterError: getConfigParameters("letterError")
+    };
   } //if typeof request !== 'undefined'
   
   //template.action = ScriptApp.getService().getUrl();  
@@ -208,6 +217,7 @@ function setNewBlobName(formObject,blob,fileType) {
 }
 
 //RecLetterHash_TimeStamp
+//instituteIdentification-RecLetterHash_TimeStamp
 function createUniqueId(formObject) {
 
   if( _uniqueId ) {
@@ -218,6 +228,8 @@ function createUniqueId(formObject) {
   //validateFormBeforeUpload(formObject);
   var recommendationLetterID = Trim(formObject.recommendationLetterID);
   
+  var instituteIdentification = Trim(formObject.instituteIdentification);
+  
   if( !_formCreationTimeStamp || _formCreationTimeStamp == null || _formCreationTimeStamp == "" ) {
      Logger.log('_formCreationTimeStamp is invalid, _formCreationTimeStamp='+_formCreationTimeStamp);
      _formCreationTimeStamp = getCurrentTimestamp();
@@ -227,7 +239,7 @@ function createUniqueId(formObject) {
   timestamp = timestamp.replace(" ", "-");
   timestamp = timestamp.replace(":", "-");
   
-  var uniqueId = recommendationLetterID+"_"+timestamp;
+  var uniqueId = instituteIdentification+"_"+recommendationLetterID+"_"+timestamp;
   if( uniqueId == null || uniqueId == "" ) {
      Logger.log('uniqueId is invalid, uniqueId='+uniqueId);
   }
@@ -504,4 +516,72 @@ function sortByKey(array, key) {
         var x = a[key]; var y = b[key];
         return ((x < y) ? -1 : ((x > y) ? 1 : 0));
     });
+}
+
+function getConfigParameters(parameterKey) {
+  //var sheetname = "test";
+  //var aUrl = "http://pipes.yahoo.com/pipes/pipe.run?_id=286bbb1d8d30f65b54173b3b752fa4d9&_render=json";
+  //var aUrl = "https://drive.google.com/drive/u/0/folders/0B2FwyaXvFk1efmlPOEl6WWItcnBveVlDWWh6RTJxYzYyMlY2MjRSalRvUjdjdzMycmo5U3M";
+  
+  //Get a reference to the folder    
+  fldr = DriveApp.getFolderById(_configFolderId);
+
+  //Get all files by that name. Put return into a variable
+  allFilesInFolder = fldr.getFilesByName("config.json");
+  //Logger.log('allFilesInFolder: ' + allFilesInFolder);
+  
+  if (allFilesInFolder.hasNext() === false) {
+    //If no file is found, the user gave a non-existent file name
+    return false;
+  };
+  
+  var configFile = null;
+  //cntFiles = 0;
+  //Even if it's only one file, must iterate a while loop in order to access the file.
+  //Google drive will allow multiple files of the same name.
+  while (allFilesInFolder.hasNext()) {
+    //thisFile = allFilesInFolder.next();
+    //cntFiles = cntFiles + 1;
+    //Logger.log('File Count: ' + cntFiles);
+
+    //docContent = thisFile.getAs('application/json');
+    //Logger.log('docContent : ' + docContent );
+    
+    
+    // define a File object variable and set the Media Tyep
+    var file = allFilesInFolder.next();
+    configFile = file.getAs('application/json')
+    
+    // log the contents of the file
+    //Logger.log("configFile:");
+    //Logger.log(configFile.getDataAsString());
+    
+    //return configFile;
+  };
+  
+  //return NULL;
+  
+  var configObject = JSON.parse(configFile.getDataAsString());
+  
+  var parameter = configObject[parameterKey];
+  //Logger.log("parameter:");
+  //Logger.log(parameter);
+  
+  return parameter;
+  
+  _Status = configObject.status;
+  _FellowshipTypes = configObject.fellowshiptypes;
+  fellowshiptypeId = _FellowshipTypes[0].id;
+  fellowshiptypeName = _FellowshipTypes[0].text;
+  //Logger.log("_Status="+_Status);
+  //Logger.log("fellowshiptypeId="+fellowshiptypeId);
+  //Logger.log("fellowshiptypeName="+fellowshiptypeName); 
+  //Logger.log("fellowshipTypes:");
+  //Logger.log(fellowshipTypes);
+  
+  //_FellowshipTypes = fellowshipTypes;
+  
+  
+  
+  return configFile;
 }

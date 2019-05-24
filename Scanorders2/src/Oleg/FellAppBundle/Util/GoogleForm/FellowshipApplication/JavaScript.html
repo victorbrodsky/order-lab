@@ -32,6 +32,8 @@ script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></scr
     var _legalExplanationLink = "";
     var _USMLEScoresLink = "";
     
+    var _submissionConfirmation = "<p>Thank you for submitting the fellowship application!</p> <br>Now you can close this page.";
+    
     //var _FellowshipTypes = [];
    
     $(document).ready(function() {
@@ -58,13 +60,19 @@ script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></scr
       
       autofillPermanentAddress();
       
+      prePopulateForm();
+      
       //sigh date today
       $("#signatureDate").datepicker().datepicker("setDate", new Date());
       
       //Training period for which applying
       var now = new Date();
       $("#trainingPeriodStart").datepicker().datepicker("setDate", new Date(now.getFullYear()+2,6,1));    
-      $("#trainingPeriodEnd").datepicker().datepicker("setDate", new Date(now.getFullYear()+3,5,30 ));           
+      //$("#trainingPeriodStart").datepicker().attr('readonly','readonly');        
+      $("#trainingPeriodStart").datepicker("remove");
+      
+      $("#trainingPeriodEnd").datepicker().datepicker("setDate", new Date(now.getFullYear()+3,5,30 ));  
+      $("#trainingPeriodEnd").datepicker("remove");
        
       //set the default value of the "Country" field to "United States"
       $('.container').find('input[id*="Country"]').each(function() {
@@ -108,6 +116,22 @@ script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></scr
     });   //document ready
     
     
+    function prePopulateForm() {   
+      if( typeof _serverData === 'undefined' ) {
+        return false;
+      }
+    
+      _submissionConfirmation = _serverData.submissionConfirmation;
+      //alert(_submissionConfirmation);
+    
+      //alert(_serverData.applicationFormNote);
+      //if( _serverData.applicationFormNote ) {
+        $('#applicationNotes').html(_serverData.applicationFormNote);
+      //}
+      
+    
+      
+    }
         
     function onFormFailure(error) {   
        //alert("Form failed!");
@@ -159,11 +183,14 @@ script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></scr
         
         $('#submit-form-button').remove();
                 
-        var textHtml = "<p>Thank you for submitting the fellowship application!</p> <p>Your unique ID is " + 
-        uniqueId + 
-        ".</p><p>You will receive a confirmation email shortly with a copy of your application and all uploaded documents.<p>You can print this page for your reference.</p>";
+        //var textHtml = "<p>Thank you for submitting the fellowship application!</p> <p>Your unique ID is " + 
+        //uniqueId + 
+        //".</p><p>You will receive a confirmation email shortly with a copy of your application and all uploaded documents.<p>You can print this page for your reference.</p>";
         
-        textHtml = textHtml + "<br>Now you can close this page.";
+        //_submissionConfirmation
+        var textHtml = _submissionConfirmation + "<p>Your unique ID is " + uniqueId + "</p>";
+        
+        //textHtml = textHtml + "<br>Now you can close this page.";
         //textHtml = textHtml + "<br><button class='btn btn-primary' onclick='closePage();'>Close</button>"
         
         //var text = '<p>Your application has been successfully submitted!</p><p>You will receive a confirmation email shortly.<p>You can print this page for your reference.</p>';   

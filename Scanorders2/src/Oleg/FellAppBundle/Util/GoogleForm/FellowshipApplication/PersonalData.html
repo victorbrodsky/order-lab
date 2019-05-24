@@ -134,23 +134,32 @@
             </div>
                                                   
             <div class="well">
-              <label class="col-xs-12 control-label">Citizenship:</label>  
+              <label class="col-xs-12 control-label">Citizenship/Visa:<br><font size="1" color="red">NYPH-CORNELL ONLY ACCEPTS/SPONSORS J-1 VISAS</font><br></label>  
               <div class="row withpaddingtop"> 
-                <div class="col-xs-12">
-                  <font size="1" color="red">NYPH-CORNELL ONLY ACCEPTS/SPONSORS J-1 VISAS</font><br>
-                  <label for="citizenshipCountry" class="control-label">Country of citizenship</label> 
+                <div class="col-xs-6">
+                  <!--<font size="1" color="red">NYPH-CORNELL ONLY ACCEPTS/SPONSORS J-1 VISAS</font><br>-->
+                  <label for="citizenshipCountry" class="control-label required">Country of citizenship</label> 
                   <input type="text" class="form-control" id="citizenshipCountry" name="citizenshipCountry" placeholder="Country of citizenship">
                 </div>
-                <!--
+                
+                
                 <div class="col-xs-6">
+                  <!--
                   <label for="visaStatus" class="control-label">Visa status (<font size="1" color="red">NYPH-CORNELL ONLY ACCEPTS/SPONSORS J-1 VISAS</font>)</label>
                   <input type="text" class="form-control" id="visaStatus" name="visaStatus" placeholder="Visa status">
+                  -->
+                  <label for="visaStatus" class="control-label required">Visa Status</label> 
                   <select id="visaStatus" class="select combobox" name="visaStatus">
-                    <option value="Not Required">Not Required</option>
+                    <option value=""></option>
+                    <option value="N/A (US Citizenship)">N/A (US Citizenship)</option>
                     <option value="J-1">J-1</option>
+                    <option value="Green card/Permanent Residency">Green card/Permanent Residency</option>
+                    <option value="EAD">EAD</option>
+                    <option value="Other-please contact Elizabeth (eah2006@med.cornell.edu)">Other-please contact Elizabeth (eah2006@med.cornell.edu)</option>
                   </select>
-                </div>   
-                -->
+                </div>  
+               
+                
               </div>
             </div>
           
