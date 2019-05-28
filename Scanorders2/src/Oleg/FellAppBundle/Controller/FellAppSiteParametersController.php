@@ -17,8 +17,8 @@
 
 namespace Oleg\FellAppBundle\Controller;
 
-use Oleg\FellAppBundle\Form\FellAppSiteParameterType;
 use Oleg\FellAppBundle\Entity\FellAppSiteParameter;
+use Oleg\FellAppBundle\Form\FellAppSiteParameterType;
 use Oleg\UserdirectoryBundle\Controller\SiteParametersController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
