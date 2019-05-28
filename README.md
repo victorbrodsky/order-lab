@@ -104,13 +104,21 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 
         bash deploy-order-digital-ocean.sh API-TOKEN-FROM-STEP-1 parameters.yml dbusername dbpassword
 		
-	(b) Obtain a domain name from a registrar (for example from [Google Domains](https://domains.google/#/)) if you don't have one already and follow these [instructions to add the nameservers of your Digital Ocean webhost](https://www.digitalocean.com/community/tutorials/how-to-point-to-digitalocean-nameservers-from-common-domain-registrars). It may take up to 48 hours for the domain name to start working. Get an SSL certificate from a Certificate Authority such as [Let's Encrypt](https://letsencrypt.org/), [Comodo](https://comodosslstore.com/positivessl.aspx) directly or using the [Certificate Signing Request (CSR)](https://developers.google.com/web/fundamentals/security/encrypt-in-transit/enable-https). You can also [generate a local certificate](https://letsencrypt.org/docs/certificates-for-localhost/) for testing purposes. Copy the SSL Certificate (sslcertificate) and SSL Private Key (sslprivatekey) files to the /packer folder. Run the following command in the terminal (make sure to substitute your API token, database user name, the database password, your domain name (such as "example.com"), and the SSL certificate and private key file names below. If "dbusername" and "dbpassword" are not provided, the default "symfony"/"symfony" values are used.):
-
-        bash deploy-order-digital-ocean.sh API-TOKEN-FROM-STEP-1 parameters.yml dbusername dbpassword https domainname sslcertificate sslprivatekey
+	(b) Obtain a domain name from a registrar (for example from [Google Domains](https://domains.google/#/)) if you don't have one already and follow these [instructions to add the nameservers of your Digital Ocean webhost](https://www.digitalocean.com/community/tutorials/how-to-point-to-digitalocean-nameservers-from-common-domain-registrars). It may take up to 48 hours for the domain name to start working. Get an SSL certificate from a Certificate Authority such as [Let's Encrypt](https://letsencrypt.org/) or [Comodo](https://comodosslstore.com/positivessl.aspx) using the [Certificate Signing Request (CSR)](https://developers.google.com/web/fundamentals/security/encrypt-in-transit/enable-https). You can also [generate a local certificate](https://letsencrypt.org/docs/certificates-for-localhost/) for testing purposes. Copy the SSL Certificate file (www.example.com.crt) and SSL Private Key file (www.example.com.key) to the /packer folder. The SSL Private Key file (www.example.com.key) is the one that was generated when preparing the Certificate Signing Request (CSR), likely via a command similar to this one:
+	
+		openssl genrsa -out www.example.com.key 2048
 		
-	(c) Obtain a domain name from a registrar (for example from [Google Domains](https://domains.google/#/)) if you don't have one already and follow these [instructions to add the nameservers of your Digital Ocean webhost](https://www.digitalocean.com/community/tutorials/how-to-point-to-digitalocean-nameservers-from-common-domain-registrars). It may take up to 48 hours for the domain name to start working. Run the following command in the terminal (make sure to substitute your API token, database user name, the database password, and your domain name (such as "example.com") instead of "domainname" below. If "dbusername" and "dbpassword" are not provided, the default "symfony"/"symfony" values are used.):
+	which was then followed by:
+	
+		openssl req -new -sha256 -key www.example.com.key -out www.example.com.csr
+	
+	to generate the [Certificate Signing Request (CSR)](https://developers.google.com/web/fundamentals/security/encrypt-in-transit/enable-https)file, later used to obtain the SSL certificate file (www.example.com.crt) from your Certificate Authority. Once both the www.example.com.crt and the www.example.com.key files are in the /packer folder, run the following command in the terminal (make sure to substitute your API token (from step 1 above), database user name (such as "symfony"), the database password (such as "symfony"), your domain name (such as "example.com"), and the SSL certificate and private key file names below.):
 
-        bash deploy-order-digital-ocean.sh API-TOKEN-FROM-STEP-1 parameters.yml dbusername dbpassword http domainname
+        bash deploy-order-digital-ocean.sh API-TOKEN-FROM-STEP-1 parameters.yml dbusername dbpassword https example.com www.example.com.crt www.example.com.key
+		
+	(c) Obtain a domain name from a registrar (for example from [Google Domains](https://domains.google/#/)) if you don't have one already and follow these [instructions to add the nameservers of your Digital Ocean webhost](https://www.digitalocean.com/community/tutorials/how-to-point-to-digitalocean-nameservers-from-common-domain-registrars). It may take up to 48 hours for the domain name to start working. Run the following command in the terminal (make sure to substitute your API token, database user name, the database password, and your domain name (such as "example.com") instead of "example.com" below. If "dbusername" and "dbpassword" are not provided, the default "symfony"/"symfony" values are used.):
+
+        bash deploy-order-digital-ocean.sh API-TOKEN-FROM-STEP-1 parameters.yml dbusername dbpassword http example.com
 
 	Note: If you get your SSL certificate from [Let's Encrypt](https://letsencrypt.org/), make sure to follow their recommendation to ensure the certificate gets updated in a timely fashion and to avoid expiration. [certbot](https://certbot.eff.org/lets-encrypt/ubuntuxenial-apache) and a [symfony bundle](https://packagist.org/packages/cert/letsencrypt-bundle) are available.  In the past, uncommenting (removing "#" from the beginning of) the line 289 in /order-lab/Scanorders2/app/config/security.yml file was necessary to enable SSL, but everything should be done automatically now and is controlled via the "Connection Channel" variable in Site Settings being set to either “https” or "http".
 
@@ -127,11 +135,13 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
     5) Pre-generate form node tree fields for Call Log Book (http://IPADDRESS/order/directory/admin/list/generate-form-node-tree/)
     6) Pre-generate empty custom lists (http://IPADDRESS/order/directory/admin/list/generate-empty-lists/)
 
-9. To enable submission of applications for the Fellowship application site via Google services, use the files in the /order-lab/Scanorders2/src/Oleg/FellAppBundle/Util/GoogleForm folder with the [Google Apps Script](https://developers.google.com/apps-script/). Make sure to add your Google Apps Script API key on the Site Settings page http://IPADDRESS/order/directory/settings/.
+9. Select the sites you would like to be accessible on the homepage besides the "Employee Directory" by visiting https://IPADDRESS/order/directory/admin/list-manager/id/2 , clicking the "Action" button to the right of the desired site name, and clicking "Edit", then putting a checkmark in the "Show Link On Home Page" and "Show Link in Navbar" fields, followed by clicking the "Update" button.
 
-10. If bulk import of the initial set of users is desired, download the [ImportUsersTemplate.xlsx](https://github.com/victorbrodsky/order-lab/tree/master/importLists) file from the /importLists folder, fill it out with the user details, and upload it back via the the Navigation bar's "Admin > Import Users" (http://IPADDRESS/order/directory/import-users/spreadsheet) function on the Employee Directory site.
+10. To enable submission of applications for the Fellowship application site via Google services, use the files in the /order-lab/Scanorders2/src/Oleg/FellAppBundle/Util/GoogleForm folder with the [Google Apps Script](https://developers.google.com/apps-script/). Make sure to add your Google Apps Script API key on the Site Settings page http://IPADDRESS/order/directory/settings/.
 
-11. In order to later update to the latest version, connect to your server via:
+11. If bulk import of the initial set of users is desired, download the [ImportUsersTemplate.xlsx](https://github.com/victorbrodsky/order-lab/tree/master/importLists) file from the /importLists folder, fill it out with the user details, and upload it back via the the Navigation bar's "Admin > Import Users" (http://IPADDRESS/order/directory/import-users/spreadsheet) function on the Employee Directory site.
+
+12. In order to later update to the latest version, connect to your server via:
 
         ssh root@YOUR-IP-OR-DOMAIN-NAME
 
@@ -180,15 +190,23 @@ Note: If you choose to use MySQL database on Linux instead of Postgres, you will
 
         bash deploy-order-digital-ocean.sh API-TOKEN-FROM-STEP-1 parameters.yml dbusername dbpassword
 		
-	(b) Obtain a domain name from a registrar (for example from [Google Domains](https://domains.google/#/)) if you don't have one already and follow these [instructions to add the nameservers of your Digital Ocean webhost](https://www.digitalocean.com/community/tutorials/how-to-point-to-digitalocean-nameservers-from-common-domain-registrars). It may take up to 48 hours for the domain name to start working. Get an SSL certificate from a Certificate Authority such as [Let's Encrypt](https://letsencrypt.org/), [Comodo](https://comodosslstore.com/positivessl.aspx) directly or using the [Certificate Signing Request (CSR)](https://developers.google.com/web/fundamentals/security/encrypt-in-transit/enable-https). You can also [generate a local certificate](https://letsencrypt.org/docs/certificates-for-localhost/) for testing purposes. Copy the SSL Certificate (sslcertificate) and SSL Private Key (sslprivatekey) files to the /packer folder. Run the following command in the terminal (make sure to substitute your API token, database user name, the database password, your domain name (such as "example.com"), and the SSL certificate and private key file names below. If "dbusername" and "dbpassword" are not provided, the default "symfony"/"symfony" values are used.):
-
-        bash deploy-order-digital-ocean.sh API-TOKEN-FROM-STEP-1 parameters.yml dbusername dbpassword https domainname sslcertificate sslprivatekey
+	(b) Obtain a domain name from a registrar (for example from [Google Domains](https://domains.google/#/)) if you don't have one already and follow these [instructions to add the nameservers of your Digital Ocean webhost](https://www.digitalocean.com/community/tutorials/how-to-point-to-digitalocean-nameservers-from-common-domain-registrars). It may take up to 48 hours for the domain name to start working. Get an SSL certificate from a Certificate Authority such as [Let's Encrypt](https://letsencrypt.org/) or [Comodo](https://comodosslstore.com/positivessl.aspx) using the [Certificate Signing Request (CSR)](https://developers.google.com/web/fundamentals/security/encrypt-in-transit/enable-https). You can also [generate a local certificate](https://letsencrypt.org/docs/certificates-for-localhost/) for testing purposes. Copy the SSL Certificate file (www.example.com.crt) and SSL Private Key file (www.example.com.key) to the /packer folder. The SSL Private Key file (www.example.com.key) is the one that was generated when preparing the Certificate Signing Request (CSR), likely via a command similar to this one:
+	
+		openssl genrsa -out www.example.com.key 2048
 		
-	(c) Obtain a domain name from a registrar (for example from [Google Domains](https://domains.google/#/)) if you don't have one already and follow these [instructions to add the nameservers of your Digital Ocean webhost](https://www.digitalocean.com/community/tutorials/how-to-point-to-digitalocean-nameservers-from-common-domain-registrars). It may take up to 48 hours for the domain name to start working. Run the following command in the terminal (make sure to substitute your API token, database user name, the database password, and your domain name (such as "example.com") instead of "domainname" below. If "dbusername" and "dbpassword" are not provided, the default "symfony"/"symfony" values are used.):
+	which was then followed by:
+	
+		openssl req -new -sha256 -key www.example.com.key -out www.example.com.csr
+	
+	to generate the [Certificate Signing Request (CSR)](https://developers.google.com/web/fundamentals/security/encrypt-in-transit/enable-https)file, later used to obtain the SSL certificate file (www.example.com.crt) from your Certificate Authority. Once both the www.example.com.crt and the www.example.com.key files are in the /packer folder, run the following command in the terminal (make sure to substitute your API token (from step 1 above), database user name (such as "symfony"), the database password (such as "symfony"), your domain name (such as "example.com"), and the SSL certificate and private key file names below.):
 
-        bash deploy-order-digital-ocean.sh API-TOKEN-FROM-STEP-1 parameters.yml dbusername dbpassword http domainname
+        bash deploy-order-digital-ocean.sh API-TOKEN-FROM-STEP-1 parameters.yml dbusername dbpassword https example.com www.example.com.crt www.example.com.key
+		
+	(c) Obtain a domain name from a registrar (for example from [Google Domains](https://domains.google/#/)) if you don't have one already and follow these [instructions to add the nameservers of your Digital Ocean webhost](https://www.digitalocean.com/community/tutorials/how-to-point-to-digitalocean-nameservers-from-common-domain-registrars). It may take up to 48 hours for the domain name to start working. Run the following command in the terminal (make sure to substitute your API token, database user name, the database password, and your domain name (such as "example.com") instead of "example.com" below. If "dbusername" and "dbpassword" are not provided, the default "symfony"/"symfony" values are used.):
 
-	Note: If you get your SSL certificate from [Let's Encrypt](https://letsencrypt.org/), make sure to follow their recommendation to ensure the certificate gets updated in a timely fashion and to avoid expiration. [certbot](https://certbot.eff.org/lets-encrypt/ubuntuxenial-apache) and a [symfony bundle](https://packagist.org/packages/cert/letsencrypt-bundle) are available. In the past, uncommenting (removing "#" from the beginning of) the line 289 in /order-lab/Scanorders2/app/config/security.yml file was necessary to enable SSL, but everything should be done automatically now and is controlled via the "Connection Channel" variable in Site Settings being set to either “https” or "http".
+        bash deploy-order-digital-ocean.sh API-TOKEN-FROM-STEP-1 parameters.yml dbusername dbpassword http example.com
+
+	Note: If you get your SSL certificate from [Let's Encrypt](https://letsencrypt.org/), make sure to follow their recommendation to ensure the certificate gets updated in a timely fashion and to avoid expiration. [certbot](https://certbot.eff.org/lets-encrypt/ubuntuxenial-apache) and a [symfony bundle](https://packagist.org/packages/cert/letsencrypt-bundle) are available.  In the past, uncommenting (removing "#" from the beginning of) the line 289 in /order-lab/Scanorders2/app/config/security.yml file was necessary to enable SSL, but everything should be done automatically now and is controlled via the "Connection Channel" variable in Site Settings being set to either “https” or "http".
 
 7. If the browser window with this URL does not open automatically at the end of the previous step, visit http://IPADDRESS/order/directory/admin/first-time-login-generation-init/ (or either http://example.com/order/directory/admin/first-time-login-generation-init/ or https://example.com/order/directory/admin/first-time-login-generation-init/ depending whether you used the domain name and the ssl certificate in the command above) to generate the initial Administrator account, where IPADDRESS is the IP address of the server. Wait until the site redirects to the log in screen (it might take a while.)
 
@@ -203,11 +221,13 @@ Note: If you choose to use MySQL database on Linux instead of Postgres, you will
     5) Pre-generate form node tree fields for Call Log Book (http://IPADDRESS/order/directory/admin/list/generate-form-node-tree/)
     6) Pre-generate empty custom lists (http://IPADDRESS/order/directory/admin/list/generate-empty-lists/)
 
-10. To enable submission of applications for the Fellowship application site via Google services, use the files in the /order-lab/Scanorders2/src/Oleg/FellAppBundle/Util/GoogleForm folder with the [Google Apps Script](https://developers.google.com/apps-script/). Make sure to add your Google Apps Script API key on the Site Settings page http://IPADDRESS/order/directory/settings/.
+10. Select the sites you would like to be accessible on the homepage besides the "Employee Directory" by visiting https://IPADDRESS/order/directory/admin/list-manager/id/2 , clicking the "Action" button to the right of the desired site name, and clicking "Edit", then putting a checkmark in the "Show Link On Home Page" and "Show Link in Navbar" fields, followed by clicking the "Update" button.
 
-11. If bulk import of the initial set of users is desired, download the [ImportUsersTemplate.xlsx](https://github.com/victorbrodsky/order-lab/tree/master/importLists) file from the /importLists folder, fill it out with the user details, and upload it back via the the Navigation bar's "Admin > Import Users" (http://IPADDRESS/order/directory/import-users/spreadsheet) function on the Employee Directory site.
+11. To enable submission of applications for the Fellowship application site via Google services, use the files in the /order-lab/Scanorders2/src/Oleg/FellAppBundle/Util/GoogleForm folder with the [Google Apps Script](https://developers.google.com/apps-script/). Make sure to add your Google Apps Script API key on the Site Settings page http://IPADDRESS/order/directory/settings/.
 
-12. In order to later update to the latest version, connect to your server via:
+12. If bulk import of the initial set of users is desired, download the [ImportUsersTemplate.xlsx](https://github.com/victorbrodsky/order-lab/tree/master/importLists) file from the /importLists folder, fill it out with the user details, and upload it back via the the Navigation bar's "Admin > Import Users" (http://IPADDRESS/order/directory/import-users/spreadsheet) function on the Employee Directory site.
+
+13. In order to later update to the latest version, connect to your server via:
 
         ssh root@YOUR-IP-OR-DOMAIN-NAME
 
@@ -446,11 +466,13 @@ Note: If you choose to use MySQL database on Linux instead of Postgres, you will
         E) In Site Settings change the variable named "Connection Channel" to “https”
         F) Run deploy_prod.sh
 
-8. To enable submission of applications for the Fellowship application site via Google services, use the files in the /order-lab/Scanorders2/src/Oleg/FellAppBundle/Util/GoogleForm folder with the [Google Apps Script](https://developers.google.com/apps-script/). Make sure to add your Google Apps Script API key on the Site Settings page http://IPADDRESS/order/directory/settings/.
+8. Select the sites you would like to be accessible on the homepage besides the "Employee Directory" by visiting https://IPADDRESS/order/directory/admin/list-manager/id/2 , clicking the "Action" button to the right of the desired site name, and clicking "Edit", then putting a checkmark in the "Show Link On Home Page" and "Show Link in Navbar" fields, followed by clicking the "Update" button.
 
-9. If bulk import of the initial set of users is desired, download the [ImportUsersTemplate.xlsx](https://github.com/victorbrodsky/order-lab/tree/master/importLists) file from the /importLists folder, fill it out with the user details, and upload it back via the the Navigation bar's "Admin > Import Users" (http://IPADDRESS/order/directory/import-users/spreadsheet) function on the Employee Directory site.
+9. To enable submission of applications for the Fellowship application site via Google services, use the files in the /order-lab/Scanorders2/src/Oleg/FellAppBundle/Util/GoogleForm folder with the [Google Apps Script](https://developers.google.com/apps-script/). Make sure to add your Google Apps Script API key on the Site Settings page http://IPADDRESS/order/directory/settings/.
 
-10. In order to later update to the latest version, connect to your server via:
+10. If bulk import of the initial set of users is desired, download the [ImportUsersTemplate.xlsx](https://github.com/victorbrodsky/order-lab/tree/master/importLists) file from the /importLists folder, fill it out with the user details, and upload it back via the the Navigation bar's "Admin > Import Users" (http://IPADDRESS/order/directory/import-users/spreadsheet) function on the Employee Directory site.
+
+11. In order to later update to the latest version, connect to your server via:
 
         ssh root@YOUR-IP-OR-DOMAIN-NAME
 
