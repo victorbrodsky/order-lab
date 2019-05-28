@@ -240,7 +240,7 @@ class UserRepository extends EntityRepository {
             ->from('OlegUserdirectoryBundle:User', 'u')
             ->where( implode(' OR ',$whereArr) );
 
-        //echo "query=".$qb."<br>";
+        echo "query=".$qb."<br>";
 
         return $qb->getQuery()->getResult();
     }

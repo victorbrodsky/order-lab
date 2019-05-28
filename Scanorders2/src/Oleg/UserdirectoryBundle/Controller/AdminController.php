@@ -475,9 +475,6 @@ class AdminController extends Controller
 //
 //        $cachePath = ''.$appPath. $dirSep .'cache';
 //
-//        //$cachePath = "C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\scanorder\Scanorders2\app\cache";
-//        echo "cachePath=".$cachePath."<br>";
-//
 //        if( is_dir($cachePath) ) {
 //            echo "dir! <br>";
 //        } else {
@@ -505,9 +502,6 @@ class AdminController extends Controller
 //        $dirSep = DIRECTORY_SEPARATOR;
 //
 //        $cachePath = ''.$appPath. $dirSep .'cache';
-//
-//        //$cachePath = "C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\scanorder\Scanorders2\app\cache";
-//        echo "cachePath=".$cachePath."<br>";
 //
 //        if( is_dir($cachePath) ) {
 //            echo "dir! <br>";
@@ -1246,37 +1240,37 @@ class AdminController extends Controller
 //                50
 //            ),
             "ROLE_FELLAPP_DIRECTOR_WCM_BREASTPATHOLOGY" => array(
-                "Fellowship Program Director WCMC Breast Pathology",
+                "Fellowship Program Director WCM Breast Pathology",
                 "Access to specific Fellowship Application type as Director",
                 50
             ),
             "ROLE_FELLAPP_DIRECTOR_WCM_CYTOPATHOLOGY" => array(
-                "Fellowship Program Director WCMC Cytopathology",
+                "Fellowship Program Director WCM Cytopathology",
                 "Access to specific Fellowship Application type as Director",
                 50
             ),
             "ROLE_FELLAPP_DIRECTOR_WCM_GYNECOLOGICPATHOLOGY" => array(
-                "Fellowship Program Director WCMC Gynecologic Pathology",
+                "Fellowship Program Director WCM Gynecologic Pathology",
                 "Access to specific Fellowship Application type as Director",
                 50
             ),
             "ROLE_FELLAPP_DIRECTOR_WCM_GASTROINTESTINALPATHOLOGY" => array(
-                "Fellowship Program Director WCMC Gastrointestinal Pathology",
+                "Fellowship Program Director WCM Gastrointestinal Pathology",
                 "Access to specific Fellowship Application type as Director",
                 50
             ),
             "ROLE_FELLAPP_DIRECTOR_WCM_GENITOURINARYPATHOLOGY" => array(
-                "Fellowship Program Director WCMC Genitourinary Pathology",
+                "Fellowship Program Director WCM Genitourinary Pathology",
                 "Access to specific Fellowship Application type as Director",
                 50
             ),
             "ROLE_FELLAPP_DIRECTOR_WCM_HEMATOPATHOLOGY" => array(
-                "Fellowship Program Director WCMC Hematopathology",
+                "Fellowship Program Director WCM Hematopathology",
                 "Access to specific Fellowship Application type as Director",
                 50
             ),
             "ROLE_FELLAPP_DIRECTOR_WCM_MOLECULARGENETICPATHOLOGY" => array(
-                "Fellowship Program Director WCMC Molecular Genetic Pathology",
+                "Fellowship Program Director WCM Molecular Genetic Pathology",
                 "Access to specific Fellowship Application type as Director",
                 50
             ),
@@ -1287,37 +1281,37 @@ class AdminController extends Controller
 //                40
 //            ),
             "ROLE_FELLAPP_COORDINATOR_WCM_BREASTPATHOLOGY" => array(
-                "Fellowship Program Coordinator WCMC Breast Pathology",
+                "Fellowship Program Coordinator WCM Breast Pathology",
                 "Access to specific Fellowship Application type as Coordinator",
                 40
             ),
             "ROLE_FELLAPP_COORDINATOR_WCM_CYTOPATHOLOGY" => array(
-                "Fellowship Program Coordinator WCMC Cytopathology",
+                "Fellowship Program Coordinator WCM Cytopathology",
                 "Access to specific Fellowship Application type as Coordinator",
                 40
             ),
             "ROLE_FELLAPP_COORDINATOR_WCM_GYNECOLOGICPATHOLOGY" => array(
-                "Fellowship Program Coordinator WCMC Gynecologic Pathology",
+                "Fellowship Program Coordinator WCM Gynecologic Pathology",
                 "Access to specific Fellowship Application type as Coordinator",
                 40
             ),
             "ROLE_FELLAPP_COORDINATOR_WCM_GASTROINTESTINALPATHOLOGY" => array(
-                "Fellowship Program Coordinator WCMC Gastrointestinal Pathology",
+                "Fellowship Program Coordinator WCM Gastrointestinal Pathology",
                 "Access to specific Fellowship Application type as Coordinator",
                 40
             ),
             "ROLE_FELLAPP_COORDINATOR_WCM_GENITOURINARYPATHOLOGY" => array(
-                "Fellowship Program Coordinator WCMC Genitourinary Pathology",
+                "Fellowship Program Coordinator WCM Genitourinary Pathology",
                 "Access to specific Fellowship Application type as Coordinator",
                 40
             ),
             "ROLE_FELLAPP_COORDINATOR_WCM_HEMATOPATHOLOGY" => array(
-                "Fellowship Program Coordinator WCMC Hematopathology",
+                "Fellowship Program Coordinator WCM Hematopathology",
                 "Access to specific Fellowship Application type as Coordinator",
                 40
             ),
             "ROLE_FELLAPP_COORDINATOR_WCM_MOLECULARGENETICPATHOLOGY" => array(
-                "Fellowship Program Coordinator WCMC Molecular Genetic Pathology",
+                "Fellowship Program Coordinator WCM Molecular Genetic Pathology",
                 "Access to specific Fellowship Application type as Coordinator",
                 40
             ),
@@ -1328,37 +1322,37 @@ class AdminController extends Controller
 //                30
 //            ),
             "ROLE_FELLAPP_INTERVIEWER_WCM_BREASTPATHOLOGY" => array(
-                "Fellowship Program Interviewer WCMC Breast Pathology",
+                "Fellowship Program Interviewer WCM Breast Pathology",
                 "Access to specific Fellowship Application type as Interviewer",
                 30
             ),
             "ROLE_FELLAPP_INTERVIEWER_WCM_CYTOPATHOLOGY" => array(
-                "Fellowship Program Interviewer WCMC Cytopathology",
+                "Fellowship Program Interviewer WCM Cytopathology",
                 "Access to specific Fellowship Application type as Interviewer",
                 30
             ),
             "ROLE_FELLAPP_INTERVIEWER_WCM_GYNECOLOGICPATHOLOGY" => array(
-                "Fellowship Program Interviewer WCMC Gynecologic Pathology",
+                "Fellowship Program Interviewer WCM Gynecologic Pathology",
                 "Access to specific Fellowship Application type as Interviewer",
                 30
             ),
             "ROLE_FELLAPP_INTERVIEWER_WCM_GASTROINTESTINALPATHOLOGY" => array(
-                "Fellowship Program Interviewer WCMC Gastrointestinal Pathology",
+                "Fellowship Program Interviewer WCM Gastrointestinal Pathology",
                 "Access to specific Fellowship Application type as Interviewer",
                 30
             ),
             "ROLE_FELLAPP_INTERVIEWER_WCM_GENITOURINARYPATHOLOGY" => array(
-                "Fellowship Program Interviewer WCMC Genitourinary Pathology",
+                "Fellowship Program Interviewer WCM Genitourinary Pathology",
                 "Access to specific Fellowship Application type as Interviewer",
                 30
             ),
             "ROLE_FELLAPP_INTERVIEWER_WCM_HEMATOPATHOLOGY" => array(
-                "Fellowship Program Interviewer WCMC Hematopathology",
+                "Fellowship Program Interviewer WCM Hematopathology",
                 "Access to specific Fellowship Application type as Interviewer",
                 30
             ),
             "ROLE_FELLAPP_INTERVIEWER_WCM_MOLECULARGENETICPATHOLOGY" => array(
-                "Fellowship Program Interviewer WCMC Molecular Genetic Pathology",
+                "Fellowship Program Interviewer WCM Molecular Genetic Pathology",
                 "Access to specific Fellowship Application type as Interviewer",
                 30
             ),
@@ -1475,13 +1469,13 @@ class AdminController extends Controller
             ),
 
             "ROLE_VACREQ_SUPERVISOR_WCM_PATHOLOGY" => array(
-                "Vacation Request Supervisor - WCMC Pathology Department",
-                "Can search and approve carry over requests for Department of Pathology and Laboratory Medicine(WCMC)",
+                "Vacation Request Supervisor - WCM Pathology Department",
+                "Can search and approve carry over requests for Department of Pathology and Laboratory Medicine(WCM)",
                 40
             ),
 
             "ROLE_VACREQ_OBSERVER_WCM_PATHOLOGY" => array(
-                "Vacation Request Observer for WCMC Department of Pathology and Laboratory Medicine",
+                "Vacation Request Observer for WCM Department of Pathology and Laboratory Medicine",
                 "This role should allow the user to log into the Vacation Request site and,
                 if this is the only role the user has on the Vacation Request Site,
                 be instantly redirected to the Away Calendar page.
@@ -1879,13 +1873,13 @@ class AdminController extends Controller
         //CLINICALPATHOLOGY: Laboratory Medicine
         $this->vacreqRoleSetSingleUserInstitution($entity,"CLINICALPATHOLOGY",$wcmc,"Laboratory Medicine","cwid");
 
-        //EXPERIMENTALPATHOLOGY (Barry Sleckman): Experimental Pathology (create new under WCMC => Pathology and Laboratory Medicine)
+        //EXPERIMENTALPATHOLOGY (Barry Sleckman): Experimental Pathology (create new under WCM => Pathology and Laboratory Medicine)
         //bas2022@med.cornell.edu
         // +1 212 746 4842
-        //Pathology and Laboratory Medicine (WCMC)
+        //Pathology and Laboratory Medicine (WCM)
         $this->vacreqRoleSetSingleUserInstitution($entity,"EXPERIMENTALPATHOLOGY",$wcmc,"Experimental Pathology","cwid");
 
-        //VASCULARBIOLOGY : "Vascular Biology" (in NYP onlys. Create a new under WCMC => Pathology and Laboratory Medicine => Research)
+        //VASCULARBIOLOGY : "Vascular Biology" (in NYP onlys. Create a new under WCM => Pathology and Laboratory Medicine => Research)
         $this->vacreqRoleSetSingleUserInstitution($entity,"VASCULARBIOLOGY",$wcmc,"Vascular Biology","cwid");
 
         //HEMATOPATHOLOGY : "Hematopathology" - use division, not service

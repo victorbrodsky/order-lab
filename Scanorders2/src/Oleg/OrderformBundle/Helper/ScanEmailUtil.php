@@ -52,7 +52,7 @@ class ScanEmailUtil extends EmailUtil {
                 . "If you have any additional questions, please don't hesitate to email ".$adminemail." <br><br>"
                 . "Thank You! <br><br>"
                 . "Sincerely, <br>"
-                . "The WCMC Slide Scanning Service.";
+                . "The WCM Slide Scanning Service.";
                 //. "Confirmation Email was sent to " . $email . "<br>";
             $message = $thanks_txt;
         }

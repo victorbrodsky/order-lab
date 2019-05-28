@@ -722,4 +722,95 @@ class FellAppManagement extends Controller {
         $em->flush();
     }
 
+
+    /**
+     * @Route("/update-inst-user-role", name="fellapp_update_inst_user_role")
+     * @Method("GET")
+     */
+    public function updateUserInstRoleAction(Request $request)
+    {
+
+        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_ADMIN')) {
+            return $this->redirect($this->generateUrl('fellapp-nopermission'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $fellappUtil = $this->container->get('fellapp_util');
+
+
+        //1) Change roles
+        if(1) {
+            $repository = $em->getRepository('OlegUserdirectoryBundle:Roles');
+            $dql = $repository->createQueryBuilder("list");
+            $dql->select('list');
+            $dql->where("list.name LIKE :name");
+
+            $parameters = array(
+                "name" => '%' . 'WCMC' . '%'
+            );
+
+            $query = $dql->getQuery();
+            $query->setParameters($parameters);
+
+            $roles = $query->getResult();
+
+            echo "roles=" . count($roles) . "<br>";
+
+            foreach ($roles as $role) {
+                $name = $role->getName();
+                $alias = $role->getAlias();
+                echo "role=" . $name . "; alias=" . $alias . "<br>";
+                $name = str_replace("_WCMC_", "_WCM_", $name);
+                $alias = str_replace("WCMC", "WCM", $alias);
+                $role->setName($name);
+                $role->setAlias($alias);
+                //$em->flush($role);
+            }
+
+            //exit("Exit Roles");
+        }
+
+        if(1) {
+            //$roleArr = array('WCMC');
+            //$users = $em->getRepository('OlegUserdirectoryBundle:User')->findUsersByRoles($roleArr);
+
+            //$whereArr[] = 'u.roles LIKE '."'%\"" . $role . "\"%'";
+            $repository = $em->getRepository('OlegUserdirectoryBundle:User');
+            $dql = $repository->createQueryBuilder("user");
+            $dql->select('user');
+            $dql->where("user.roles LIKE :name");
+
+            $parameters = array(
+                "name" => '%' . 'WCMC' . '%'
+            );
+
+            $query = $dql->getQuery();
+            $query->setParameters($parameters);
+
+            $users = $query->getResult();
+
+            echo "users=" . count($users) . "<br>";
+
+            foreach ($users as $user) {
+
+                foreach ($user->getRoles() as $role) {
+                    if (strpos($role, '_WCMC_') !== false) {
+                        echo $user.": role=" . $role . "<br>";
+                        $roleNew = str_replace("_WCMC_", "_WCM_", $role);
+                        echo $user.": roleNew=" . $roleNew . "<br>";
+                        $user->removeRole($role);
+                        $user->addRole($roleNew);
+                        $em->flush($user);
+                    }
+                }
+
+            }
+
+            //exit("users=" . count($users));
+        }
+
+        exit("EOF updateUserInstRoleAction");
+    }
+
 }

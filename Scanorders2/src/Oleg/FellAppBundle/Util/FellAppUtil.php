@@ -1297,7 +1297,7 @@ class FellAppUtil {
 
             $role = new Roles();
             $role = $userSecUtil->setDefaultList($role, null, $user, $roleName);
-            $role->setAlias('Fellowship Program '.$roleTypeStr.' WCMC ' . $subspecialtyType->getName());
+            $role->setAlias('Fellowship Program '.$roleTypeStr.' WCM ' . $subspecialtyType->getName());
             $role->setDescription('Access to specific Fellowship Application type as '.$roleTypeStr);
             $role->addSite($site);
             $role->setInstitution($institution);

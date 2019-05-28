@@ -760,7 +760,7 @@ class UserServiceUtil {
             ///////////////////// FELLAPP /////////////////////
             "codeGoogleFormFellApp" => "",
             "confirmationEmailFellApp" => "",
-            "confirmationSubjectFellApp" => "Your WCMC/NYP fellowship application has been succesfully received",
+            "confirmationSubjectFellApp" => "Your WCM/NYP fellowship application has been succesfully received",
             "confirmationBodyFellApp" => "Thank You for submitting the fellowship application to Weill Cornell Medical College/NewYork Presbyterian Hospital. ".
                 "Once we receive the associated recommendation letters, your application will be reviewed and considered. ".
                 "If You have any questions, please do not hesitate to contact me by phone or via email. ".
