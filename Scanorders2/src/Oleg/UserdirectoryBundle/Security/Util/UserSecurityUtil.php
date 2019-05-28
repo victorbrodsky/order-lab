@@ -1041,7 +1041,7 @@ class UserSecurityUtil {
         $dql->where("sites.name LIKE :sitename");
         //$dql->where("sites IS NULL");
         //$dql->where("sites.id=4");
-        //$dql->where("roles.name = 'ROLE_DEIDENTIFICATOR_WCMC_NYP_ENQUIRER'");
+        //$dql->where("roles.name = 'ROLE_DEIDENTIFICATOR_WCM_NYP_ENQUIRER'");
 
         //echo "dql=".$dql."<br>";
 

@@ -47,7 +47,7 @@ class EncounterInpatientinfoType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width'),
             'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('list')
-                        //->where("list.name = 'WCMC Epic Ambulatory EMR' OR list.name = 'Written or oral referral'")
+                        //->where("list.name = 'WCM Epic Ambulatory EMR' OR list.name = 'Written or oral referral'")
                         ->orderBy("list.orderinlist","ASC");
 
                 },

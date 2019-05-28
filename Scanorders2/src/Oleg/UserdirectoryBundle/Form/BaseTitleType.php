@@ -182,7 +182,7 @@ class BaseTitleType extends AbstractType
 //                //preset default institution for AdministrativeTitle - Weill Cornell or New York Presbyterian Hospital
 //                if ($this->params['fullClassName'] == "Oleg\UserdirectoryBundle\Entity\AdministrativeTitle") {
 //                    //echo "AdministrativeTitle<br>"; //$treeParams = "entityIds=1,106";
-//                    $wcmc = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+//                    $wcmc = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
 //                    if( $wcmc ) {
 //                        $newInstitution = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
 //                            "Pathology and Laboratory Medicine",
@@ -194,7 +194,7 @@ class BaseTitleType extends AbstractType
 //                //preset default institution for AppointmentTitle (Academic Title) - Weill Cornell
 //                if ($this->params['fullClassName'] == "Oleg\UserdirectoryBundle\Entity\AppointmentTitle") {
 //                    //echo "AppointmentTitle<br>"; //$treeParams = "entityIds=1";
-//                    $wcmc = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+//                    $wcmc = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
 //                    if( $wcmc ) {
 //                        $newInstitution = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
 //                            "Pathology and Laboratory Medicine",

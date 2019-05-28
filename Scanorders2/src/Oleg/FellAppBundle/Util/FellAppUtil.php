@@ -1265,7 +1265,7 @@ class FellAppUtil {
 
 
     //$roleType: string (INTERVIEWER, COORDINATOR, DIRECTOR)
-    //name: ROLE_FELLAPP_DIRECTOR_WCMC_BREASTPATHOLOGY
+    //name: ROLE_FELLAPP_DIRECTOR_WCM_BREASTPATHOLOGY
     //alias: Fellowship Program Interviewer WCMC Breast Pathology
     //Description: Access to specific Fellowship Application type as Interviewer
     //site: fellapp
@@ -1280,14 +1280,14 @@ class FellAppUtil {
 
         $count = 0;
 
-        //1) name: ROLE_FELLAPP_DIRECTOR_WCMC_BREASTPATHOLOGY
+        //1) name: ROLE_FELLAPP_DIRECTOR_WCM_BREASTPATHOLOGY
         //get ROLE NAME: Pathology Informatics => PATHOLOGYINFORMATCS
         $roleNameBase = str_replace(" ","",$subspecialtyType->getName());
         $roleNameBase = strtoupper($roleNameBase);
         //echo "roleNameBase=$roleNameBase<br>";
 
         //create Director role
-        $roleName = "ROLE_FELLAPP_".$roleType."_WCMC_".$roleNameBase;
+        $roleName = "ROLE_FELLAPP_".$roleType."_WCM_".$roleNameBase;
         //echo "roleName=$roleName<br>";
         $role = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName($roleName);
 
@@ -1350,14 +1350,14 @@ class FellAppUtil {
         //echo "sync FellowshipSubspecialty count=".count($fellowshipTypes)."<br>";
         //iterate over all FellowshipSubspecialty objects
         foreach( $fellowshipTypes as $fellowshipSubspecialty ) {
-            //$fellowshipType - Pain Medicine => ROLE_FELLAPP_DIRECTOR_WCMC_PAINMEDICINE
+            //$fellowshipType - Pain Medicine => ROLE_FELLAPP_DIRECTOR_WCM_PAINMEDICINE
             $this->synchroniseSingleFellowshipSubspecialtyAndProfileRoles($fellowshipSubspecialty,"_COORDINATOR_");
             $this->synchroniseSingleFellowshipSubspecialtyAndProfileRoles($fellowshipSubspecialty,"_DIRECTOR_");
             $this->synchroniseSingleFellowshipSubspecialtyAndProfileRoles($fellowshipSubspecialty,"_INTERVIEWER_");
         }
     }
     public function synchroniseSingleFellowshipSubspecialtyAndProfileRoles( $fellowshipSubspecialty, $roleName ) {
-        //1) get all users with role ROLE_FELLAPP_DIRECTOR_WCMC_PAINMEDICINE
+        //1) get all users with role ROLE_FELLAPP_DIRECTOR_WCM_PAINMEDICINE
         $users = $this->getUsersOfFellowshipSubspecialtyByRole($fellowshipSubspecialty,$roleName); //"_COORDINATOR_"
 
         //2) for each $coordinators in the FellowshipSubspecialty - check if this user exists in the coordinators, add if not.

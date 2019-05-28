@@ -257,7 +257,7 @@ class EncounterType extends AbstractType
                 'prototype_name' => '__encounterlocation__',
             ));
 
-//            $sources = array('WCMC Epic Ambulatory EMR','Written or oral referral');
+//            $sources = array('WCM Epic Ambulatory EMR','Written or oral referral');
 //            $params = array('name'=>'Encounter','dataClass'=>'Oleg\OrderformBundle\Entity\EncounterOrder','typename'=>'encounterorder','sources'=>$sources);
 //            $builder->add('order', CollectionType::class, array(
 //                'type' => new GeneralOrderType($params, null),

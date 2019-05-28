@@ -827,7 +827,7 @@ class FellAppImportPopulateUtil {
                         }
                     }
                 } else {
-                    //Case 2: get string from SiteParameters - "WCMC" or "Weill Cornell Medical College"
+                    //Case 2: get string from SiteParameters - "WCM" or "Weill Cornell Medical College"
                     $instPathologyFellowshipProgram = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation($localInstitutionFellApp);
                     if( !$instPathologyFellowshipProgram ) {
                         $instPathologyFellowshipProgram = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName($localInstitutionFellApp);

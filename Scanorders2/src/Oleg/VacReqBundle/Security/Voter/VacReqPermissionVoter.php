@@ -169,7 +169,7 @@ class VacReqPermissionVoter extends BasePermissionVoter //BasePermissionVoter   
         //exit("canChangeCarryoverStatus: ...");
         if( $this->canChangeStatus($subject, $token) ) {
             $user = $token->getUser();
-            //ROLE_VACREQ_SUPERVISOR_WCMC_PATHOLOGY
+            //ROLE_VACREQ_SUPERVISOR_WCM_PATHOLOGY
             $roleName = "ROLE_VACREQ_SUPERVISOR";
             $hasSupervisorRole = $this->em->getRepository('OlegUserdirectoryBundle:User')->
                 isUserHasSiteAndPartialRoleName($user, $this->getSitename(), $roleName);

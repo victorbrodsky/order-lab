@@ -521,7 +521,7 @@ class UserUtil {
                 $criteriastr .= " AND ";
                 $criteriastr .= "institution.name LIKE '%Pathology%'";
                 break;
-            case "WCMC & NYP Pathology Common Locations":
+            case "WCM & NYP Pathology Common Locations":
                 //filter by Institution=Weill Cornell Medical College & NYP and Department=Pathology
                 //$dql->leftJoin("location.department", "department");
                 //$dql->leftJoin("location.institution", "institution");
@@ -534,7 +534,7 @@ class UserUtil {
                 $criteriastr .= ")";
 
                 break;
-            case "WCMC Pathology Common Locations":
+            case "WCM Pathology Common Locations":
                 //filter by Institution=Weill Cornell Medical College and Department=Pathology and Laboratory Medicine
                 //$dql->leftJoin("location.department", "department");
                 //$dql->leftJoin("location.institution", "institution");

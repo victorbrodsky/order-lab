@@ -1788,7 +1788,7 @@ class User extends BaseUser {
             $instName = $institution->getName()."";
             //echo "instName=".$instName."<br>";
 
-            //default uniqueName = "WCMC"
+            //default uniqueName = "WCM"
             $uniqueName = $institution->getRootName($institution)."";
 
             $rootId = null;

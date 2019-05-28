@@ -2467,7 +2467,7 @@ class VacReqUtil
                 //echo "1 role count=".count($roles)."<br>"; //testing this role count is 1 for wcmc pathology
 
                 if( count($roles)==0 ) {
-                    //echo "another try 5 for view-away-calendar action for role ROLE_VACREQ_OBSERVER_WCMC_PATHOLOGY<br>";
+                    //echo "another try 5 for view-away-calendar action for role ROLE_VACREQ_OBSERVER_WCM_PATHOLOGY<br>";
                     $childActionStr = "view-away-calendar";
                     $roles = $this->em->getRepository('OlegUserdirectoryBundle:User')->
                     findUserParentRolesBySitePermissionObjectAction($user,'vacreq',$objectStr,$actionStr,$childObjectStr,$childActionStr);

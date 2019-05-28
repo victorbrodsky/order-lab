@@ -593,7 +593,7 @@ class RequestIndexController extends Controller
                 $where .= " OR ";
             }
             if( $groups ) {
-                //add institution hierarchy: "Pathology and Laboratory Medicine" institution is under "WCMC-NYP Collaboration" institution.
+                //add institution hierarchy: "Pathology and Laboratory Medicine" institution is under "WCM-NYP Collaboration" institution.
                 //$where .= "institution=".$groups->getId();
                 //$where .= $em->getRepository('OlegUserdirectoryBundle:Institution')->selectNodesUnderParentNode($groups,"institution",false);
                 $where .= $em->getRepository('OlegUserdirectoryBundle:Institution')->getCriterionStrForCollaborationsByNode(

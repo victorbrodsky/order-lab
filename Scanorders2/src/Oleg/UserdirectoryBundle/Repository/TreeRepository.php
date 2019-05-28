@@ -258,7 +258,7 @@ class TreeRepository extends NestedTreeRepository {
         $collaborations = $query->getResult();
 
         //TODO: add collaboration institutions if node is collaboration type and has collaboration institutions
-        //i.e. "WCMC_NYP Collaboration" node has "Collaboration" type and has two collaboration institutions - WCMC and NYP
+        //i.e. "WCM_NYP Collaboration" node has "Collaboration" type and has two collaboration institutions - WCM and NYP
         //collaborations
         foreach( $node->getCollaborationInstitutions() as $collaborationNode ) {
             if( !in_array($collaborationNode, $collaborations) ) {
@@ -291,8 +291,8 @@ class TreeRepository extends NestedTreeRepository {
         $addedNodes[] = $node->getId();
 
         //1) collaborations: find nodes where this node is indicated as collaboration
-        // WCMC-NYP Collaboration => will find WCMC, NYP, NYP Lower Manhattan Hospital
-        // Pathology and Laboratory Medicine => fill find WCMC-NYP Collaboration
+        // WCM-NYP Collaboration => will find WCM, NYP, NYP Lower Manhattan Hospital
+        // Pathology and Laboratory Medicine => fill find WCM-NYP Collaboration
         $collaborations = $this->findCollaborationsByNode( $node, $collaborationTypesStrArr );
         //echo "collaborations count=".count($collaborations)."<br>";
 

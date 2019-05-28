@@ -1239,7 +1239,7 @@ class OrderUtil {
     }
 
     //The same as getPermittedScopeCollaborationInstitutions
-    //get collaborations in the Institutional tree (i.e. "WCMC-NYP Collaboration")
+    //get collaborations in the Institutional tree (i.e. "WCM-NYP Collaboration")
 //    public function getPermittedScopeCollaborations( $originalPermittedInstitutions, $collaborationTypesStrArr, $withOriginal=true ) {
 //        $permittedInstitutions = new ArrayCollection();
 //
@@ -1294,7 +1294,7 @@ class OrderUtil {
 
                 if( $collaborationInstitution && !$permittedInstitutions->contains($collaborationInstitution) ) {
                     //echo "add collaboration inst=".$collaborationInstitution->getId().":".$collaborationInstitution->getName()."<br>";
-                    //add collaboration institution at the first position, so ->first() will auto-set to "WCMC-NYP Collaboration" by default
+                    //add collaboration institution at the first position, so ->first() will auto-set to "WCM-NYP Collaboration" by default
                     $firstInst = $permittedInstitutions->first();               //1) save the first element
                     $permittedInstitutions->set(0,$collaborationInstitution);   //2) set to the first position
                     $permittedInstitutions->add($firstInst);                    //3) add back the previous first element
@@ -1325,7 +1325,7 @@ class OrderUtil {
 //            'bundleName' => 'UserdirectoryBundle',
 //            'className' => 'Institution'
 //        );
-//        $wcmc = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+//        $wcmc = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
 //        $pathology = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
 //            "Pathology and Laboratory Medicine",
 //            $wcmc,

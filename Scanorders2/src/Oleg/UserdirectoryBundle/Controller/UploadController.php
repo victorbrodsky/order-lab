@@ -419,7 +419,7 @@ class UploadController extends Controller {
 
         //C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/scanorder/importLists/ImportUsersTemplate.xlsx
 //        $templateLink = "file:///C:".DIRECTORY_SEPARATOR."Users".DIRECTORY_SEPARATOR."ch3".DIRECTORY_SEPARATOR."Documents".
-//            DIRECTORY_SEPARATOR."MyDocs".DIRECTORY_SEPARATOR."WCMC".DIRECTORY_SEPARATOR."ORDER".
+//            DIRECTORY_SEPARATOR."MyDocs".DIRECTORY_SEPARATOR."WCM".DIRECTORY_SEPARATOR."ORDER".
 //            DIRECTORY_SEPARATOR."scanorder".DIRECTORY_SEPARATOR."importLists".DIRECTORY_SEPARATOR."ImportUsersTemplate.xlsx";
 
         $templateLink = "file:///".$rootDir.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR.

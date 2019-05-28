@@ -128,8 +128,8 @@ class ScanPermissionVoter extends BasePermissionVoter {
     // Possible Solution:
     // 1) Create permission objects for each patient underlying objects with corresponding object and action:
     //    "View Patient", "View Encounter", "View Procedure", "View Accession", "View Part", "View Block", "View Slide", "View Scan" ...
-    // 2) Create a role ROLE_SCANORDER_WCMC_ALL_UDERLYING_PATIENT_DATA_VIEW - View all underlying Patient objects
-    // 3) Assign permission objects from (1) to the role ROLE_SCANORDER_WCMC_ALL_UDERLYING_PATIENT_DATA_VIEW
+    // 2) Create a role ROLE_SCANORDER_WCM_ALL_UDERLYING_PATIENT_DATA_VIEW - View all underlying Patient objects
+    // 3) Assign permission objects from (1) to the role ROLE_SCANORDER_WCM_ALL_UDERLYING_PATIENT_DATA_VIEW
 
 
 

@@ -744,7 +744,7 @@ class UserController extends Controller
         );
 
         //$wcmcpathology
-        //$wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+        //$wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
         //navbarFilterInstitution1
         $wcmc = $userSecUtil->getSiteSettingParameter('navbarFilterInstitution1');
         if( $wcmc ) {
@@ -858,7 +858,7 @@ class UserController extends Controller
             $criteriastr .= "(appointmentTitlesPositions.name = 'Clinical Faculty')";
         }
 
-        //list all people with MD, MBBS, and DO degrees (using all current synonym links) and only with Administrative or Academic title in institution "WCMC" and department of "Pathology"
+        //list all people with MD, MBBS, and DO degrees (using all current synonym links) and only with Administrative or Academic title in institution "WCM" and department of "Pathology"
         if( $filter && $inst1 && $filter == $inst1." Pathology Physicians" ) {
             $dql->leftJoin("user.trainings", "trainings");
             $dql->leftJoin("trainings.degree", "degree");
@@ -1532,7 +1532,7 @@ class UserController extends Controller
             $user->setPrimaryPublicUserId($userName);
         }
 
-        //Only show this profile to members of the following institution(s): default preset choices WCMC, NYP
+        //Only show this profile to members of the following institution(s): default preset choices WCM, NYP
         $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
         $nyp = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("NYP");
         //echo "add inst:".$wcmc."; ".$nyp."<br>";
@@ -1668,7 +1668,7 @@ class UserController extends Controller
             $user->setPrimaryPublicUserId($userName);
         }
 
-        //Only show this profile to members of the following institution(s): default preset choices WCMC, NYP
+        //Only show this profile to members of the following institution(s): default preset choices WCM, NYP
         $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
         $nyp = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("NYP");
         //echo "add inst:".$wcmc."; ".$nyp."<br>";
@@ -1843,7 +1843,7 @@ class UserController extends Controller
             //create local user: oli2002c_@_local-user
             //$username = $primaryPublicUserId . "_@_" . "local-user";
         } else {
-            //create WCMC LDAP user: oli2002c_@_ldap-user
+            //create WCM LDAP user: oli2002c_@_ldap-user
             //echo "<pre>";
             //print_r($searchRes);
             //echo "</pre>";
@@ -2069,8 +2069,8 @@ class UserController extends Controller
             $identifierKeytype = "local-user";
         } else {
 
-            //create WCMC LDAP user: oli2002c_@_ldap-user
-            //echo "create WCMC LDAP user<br>";
+            //create WCM LDAP user: oli2002c_@_ldap-user
+            //echo "create WCM LDAP user<br>";
             $username = $publicUserId . "_@_" . "ldap-user"; //"ldap-user" default username postfix
 
             //compare email domain for ldap-user or ldap2-user and use ldap according to the domain
@@ -2893,7 +2893,7 @@ class UserController extends Controller
         if( !$pathology ) {
             $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
             if( !$wcmc ) {
-                //exit('No Institution: "WCMC"');
+                //exit('No Institution: "WCM"');
                 throw $this->createNotFoundException('No Institution: "WCM"');
             }
             $mapper = array(
@@ -4566,10 +4566,10 @@ class UserController extends Controller
 //            $employmentStatus->createAttachmentDocument();
 //            //echo "employ inst=".$employmentStatus->getInstitution()."<br>";
 //            if( !$employmentStatus->getInstitution() ) {
-//                $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+//                $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
 //                if( !$wcmc ) {
-//                    //exit('No Institution: "WCMC"');
-//                    throw $this->createNotFoundException('No Institution: "WCMC"');
+//                    //exit('No Institution: "WCM"');
+//                    throw $this->createNotFoundException('No Institution: "WCM"');
 //                }
 //                $mapper = array(
 //                    'prefix' => 'Oleg',
@@ -4689,7 +4689,7 @@ class UserController extends Controller
         );
 
         //$wcmcpathology
-        //$wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+        //$wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
         //navbarFilterInstitution1
         $wcmc = $userSecUtil->getSiteSettingParameter('navbarFilterInstitution1');
         if( $wcmc ) {
@@ -4971,7 +4971,7 @@ class UserController extends Controller
         );
 
         //$wcmcpathology
-        //$wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+        //$wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
         //navbarFilterInstitution1
         $wcmc = $userSecUtil->getSiteSettingParameter('navbarFilterInstitution1');
         if( $wcmc ) {

@@ -1757,59 +1757,59 @@ class UserGenerator {
             if( $user->getUsername() == "cwid_@_ldap-user" ) {
                 $user->addRole('ROLE_USERDIRECTORY_EDITOR');
                 //$user->addRole('ROLE_FELLAPP_COORDINATOR');
-                $user->addRole('ROLE_FELLAPP_COORDINATOR_WCMC_BREASTPATHOLOGY');
-                $user->addRole('ROLE_FELLAPP_COORDINATOR_WCMC_CYTOPATHOLOGY');
-                $user->addRole('ROLE_FELLAPP_COORDINATOR_WCMC_GYNECOLOGICPATHOLOGY');
-                $user->addRole('ROLE_FELLAPP_COORDINATOR_WCMC_GASTROINTESTINALPATHOLOGY');
-                $user->addRole('ROLE_FELLAPP_COORDINATOR_WCMC_GENITOURINARYPATHOLOGY');
-                $user->addRole('ROLE_FELLAPP_COORDINATOR_WCMC_HEMATOPATHOLOGY');
-                $user->addRole('ROLE_FELLAPP_COORDINATOR_WCMC_MOLECULARGENETICPATHOLOGY');
+                $user->addRole('ROLE_FELLAPP_COORDINATOR_WCM_BREASTPATHOLOGY');
+                $user->addRole('ROLE_FELLAPP_COORDINATOR_WCM_CYTOPATHOLOGY');
+                $user->addRole('ROLE_FELLAPP_COORDINATOR_WCM_GYNECOLOGICPATHOLOGY');
+                $user->addRole('ROLE_FELLAPP_COORDINATOR_WCM_GASTROINTESTINALPATHOLOGY');
+                $user->addRole('ROLE_FELLAPP_COORDINATOR_WCM_GENITOURINARYPATHOLOGY');
+                $user->addRole('ROLE_FELLAPP_COORDINATOR_WCM_HEMATOPATHOLOGY');
+                $user->addRole('ROLE_FELLAPP_COORDINATOR_WCM_MOLECULARGENETICPATHOLOGY');
             }
 
 
             if( $user->getUsername() == "cwid_@_ldap-user" ) {
                 //$user->addRole('ROLE_FELLAPP_DIRECTOR');
-                $user->addRole('ROLE_FELLAPP_DIRECTOR_WCMC_GASTROINTESTINALPATHOLOGY');
+                $user->addRole('ROLE_FELLAPP_DIRECTOR_WCM_GASTROINTESTINALPATHOLOGY');
             }
 
             if( $user->getUsername() == "cwid_@_ldap-user" ) {
                 //$user->addRole('ROLE_FELLAPP_DIRECTOR');
-                $user->addRole('ROLE_FELLAPP_DIRECTOR_WCMC_CYTOPATHOLOGY');
+                $user->addRole('ROLE_FELLAPP_DIRECTOR_WCM_CYTOPATHOLOGY');
             }
 
             if( $user->getUsername() == "cwid_@_ldap-user" ) {
                 //$user->addRole('ROLE_FELLAPP_DIRECTOR');
-                $user->addRole('ROLE_FELLAPP_DIRECTOR_WCMC_HEMATOPATHOLOGY');
+                $user->addRole('ROLE_FELLAPP_DIRECTOR_WCM_HEMATOPATHOLOGY');
             }
 
             if( $user->getUsername() == "cwid_@_ldap-user" ) {
                 //$user->addRole('ROLE_FELLAPP_DIRECTOR');
-                $user->addRole('ROLE_FELLAPP_DIRECTOR_WCMC_HEMATOPATHOLOGY');
+                $user->addRole('ROLE_FELLAPP_DIRECTOR_WCM_HEMATOPATHOLOGY');
             }
 
             if( $user->getUsername() == "cwid_@_ldap-user" ) {
                 //$user->addRole('ROLE_FELLAPP_DIRECTOR');
-                $user->addRole('ROLE_FELLAPP_DIRECTOR_WCMC_MOLECULARGENETICPATHOLOGY');
+                $user->addRole('ROLE_FELLAPP_DIRECTOR_WCM_MOLECULARGENETICPATHOLOGY');
             }
 
             if( $user->getUsername() == "cwid_@_ldap-user" ) {
                 //$user->addRole('ROLE_FELLAPP_DIRECTOR');
-                $user->addRole('ROLE_FELLAPP_DIRECTOR_WCMC_GYNECOLOGICPATHOLOGY');
+                $user->addRole('ROLE_FELLAPP_DIRECTOR_WCM_GYNECOLOGICPATHOLOGY');
             }
 
             if( $user->getUsername() == "cwid_@_ldap-user" ) {
                 //$user->addRole('ROLE_FELLAPP_DIRECTOR');
-                $user->addRole('ROLE_FELLAPP_DIRECTOR_WCMC_BREASTPATHOLOGY');
+                $user->addRole('ROLE_FELLAPP_DIRECTOR_WCM_BREASTPATHOLOGY');
             }
 
             if( $user->getUsername() == "cwid_@_ldap-user" ) {
                 //$user->addRole('ROLE_FELLAPP_DIRECTOR');
-                $user->addRole('ROLE_FELLAPP_DIRECTOR_WCMC_BREASTPATHOLOGY');
+                $user->addRole('ROLE_FELLAPP_DIRECTOR_WCM_BREASTPATHOLOGY');
             }
 
             if( $user->getUsername() == "cwid_@_ldap-user" ) {
                 //$user->addRole('ROLE_FELLAPP_DIRECTOR');
-                $user->addRole('ROLE_FELLAPP_DIRECTOR_WCMC_BREASTPATHOLOGY');
+                $user->addRole('ROLE_FELLAPP_DIRECTOR_WCM_BREASTPATHOLOGY');
             }
 
             //************** get pacsvendor group roles and ROLE_SCANORDER_ORDERING_PROVIDER for this user **************//

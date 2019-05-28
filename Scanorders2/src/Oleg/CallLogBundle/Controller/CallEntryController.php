@@ -2449,7 +2449,7 @@ class CallEntryController extends Controller
 //            //echo "2 inst=".$institution."<br>";
 //        }
 //        if (!$institution) {
-//            $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+//            $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
 //        }
         $institution = $userSecUtil->getCurrentUserInstitution($user);
         //echo "3 inst=".$institution."<br>";
@@ -2742,7 +2742,7 @@ class CallEntryController extends Controller
 //        //echo "2 inst=".$institution."<br>";
 //        }
 //        if (!$institution) {
-//            $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+//            $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
 //        }
 //
 //        return $institution;

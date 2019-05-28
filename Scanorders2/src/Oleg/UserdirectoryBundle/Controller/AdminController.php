@@ -558,9 +558,6 @@ class AdminController extends Controller
 //
 //            //echo shell_exec("chmod -R 777 ".$webPath)."<br>";
 //
-//            //$cachePath = "C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\scanorder\Scanorders2\app\cache";
-//            //echo "cachePath=".$cachePath."<br>";
-//
 //            //$path = ''.$appPath.'\\..\\'.'deploy_prod';
 //            $path = ''.$appPath."$dirSep..$dirSep".'deploy_prod';
 //
@@ -1248,37 +1245,37 @@ class AdminController extends Controller
 //                "Access to Fellowship Application type as Director (edit application,upload new documents)",
 //                50
 //            ),
-            "ROLE_FELLAPP_DIRECTOR_WCMC_BREASTPATHOLOGY" => array(
+            "ROLE_FELLAPP_DIRECTOR_WCM_BREASTPATHOLOGY" => array(
                 "Fellowship Program Director WCMC Breast Pathology",
                 "Access to specific Fellowship Application type as Director",
                 50
             ),
-            "ROLE_FELLAPP_DIRECTOR_WCMC_CYTOPATHOLOGY" => array(
+            "ROLE_FELLAPP_DIRECTOR_WCM_CYTOPATHOLOGY" => array(
                 "Fellowship Program Director WCMC Cytopathology",
                 "Access to specific Fellowship Application type as Director",
                 50
             ),
-            "ROLE_FELLAPP_DIRECTOR_WCMC_GYNECOLOGICPATHOLOGY" => array(
+            "ROLE_FELLAPP_DIRECTOR_WCM_GYNECOLOGICPATHOLOGY" => array(
                 "Fellowship Program Director WCMC Gynecologic Pathology",
                 "Access to specific Fellowship Application type as Director",
                 50
             ),
-            "ROLE_FELLAPP_DIRECTOR_WCMC_GASTROINTESTINALPATHOLOGY" => array(
+            "ROLE_FELLAPP_DIRECTOR_WCM_GASTROINTESTINALPATHOLOGY" => array(
                 "Fellowship Program Director WCMC Gastrointestinal Pathology",
                 "Access to specific Fellowship Application type as Director",
                 50
             ),
-            "ROLE_FELLAPP_DIRECTOR_WCMC_GENITOURINARYPATHOLOGY" => array(
+            "ROLE_FELLAPP_DIRECTOR_WCM_GENITOURINARYPATHOLOGY" => array(
                 "Fellowship Program Director WCMC Genitourinary Pathology",
                 "Access to specific Fellowship Application type as Director",
                 50
             ),
-            "ROLE_FELLAPP_DIRECTOR_WCMC_HEMATOPATHOLOGY" => array(
+            "ROLE_FELLAPP_DIRECTOR_WCM_HEMATOPATHOLOGY" => array(
                 "Fellowship Program Director WCMC Hematopathology",
                 "Access to specific Fellowship Application type as Director",
                 50
             ),
-            "ROLE_FELLAPP_DIRECTOR_WCMC_MOLECULARGENETICPATHOLOGY" => array(
+            "ROLE_FELLAPP_DIRECTOR_WCM_MOLECULARGENETICPATHOLOGY" => array(
                 "Fellowship Program Director WCMC Molecular Genetic Pathology",
                 "Access to specific Fellowship Application type as Director",
                 50
@@ -1289,37 +1286,37 @@ class AdminController extends Controller
 //                "Access to Fellowship Application type as Coordinator (edit application,upload new documents)",
 //                40
 //            ),
-            "ROLE_FELLAPP_COORDINATOR_WCMC_BREASTPATHOLOGY" => array(
+            "ROLE_FELLAPP_COORDINATOR_WCM_BREASTPATHOLOGY" => array(
                 "Fellowship Program Coordinator WCMC Breast Pathology",
                 "Access to specific Fellowship Application type as Coordinator",
                 40
             ),
-            "ROLE_FELLAPP_COORDINATOR_WCMC_CYTOPATHOLOGY" => array(
+            "ROLE_FELLAPP_COORDINATOR_WCM_CYTOPATHOLOGY" => array(
                 "Fellowship Program Coordinator WCMC Cytopathology",
                 "Access to specific Fellowship Application type as Coordinator",
                 40
             ),
-            "ROLE_FELLAPP_COORDINATOR_WCMC_GYNECOLOGICPATHOLOGY" => array(
+            "ROLE_FELLAPP_COORDINATOR_WCM_GYNECOLOGICPATHOLOGY" => array(
                 "Fellowship Program Coordinator WCMC Gynecologic Pathology",
                 "Access to specific Fellowship Application type as Coordinator",
                 40
             ),
-            "ROLE_FELLAPP_COORDINATOR_WCMC_GASTROINTESTINALPATHOLOGY" => array(
+            "ROLE_FELLAPP_COORDINATOR_WCM_GASTROINTESTINALPATHOLOGY" => array(
                 "Fellowship Program Coordinator WCMC Gastrointestinal Pathology",
                 "Access to specific Fellowship Application type as Coordinator",
                 40
             ),
-            "ROLE_FELLAPP_COORDINATOR_WCMC_GENITOURINARYPATHOLOGY" => array(
+            "ROLE_FELLAPP_COORDINATOR_WCM_GENITOURINARYPATHOLOGY" => array(
                 "Fellowship Program Coordinator WCMC Genitourinary Pathology",
                 "Access to specific Fellowship Application type as Coordinator",
                 40
             ),
-            "ROLE_FELLAPP_COORDINATOR_WCMC_HEMATOPATHOLOGY" => array(
+            "ROLE_FELLAPP_COORDINATOR_WCM_HEMATOPATHOLOGY" => array(
                 "Fellowship Program Coordinator WCMC Hematopathology",
                 "Access to specific Fellowship Application type as Coordinator",
                 40
             ),
-            "ROLE_FELLAPP_COORDINATOR_WCMC_MOLECULARGENETICPATHOLOGY" => array(
+            "ROLE_FELLAPP_COORDINATOR_WCM_MOLECULARGENETICPATHOLOGY" => array(
                 "Fellowship Program Coordinator WCMC Molecular Genetic Pathology",
                 "Access to specific Fellowship Application type as Coordinator",
                 40
@@ -1330,37 +1327,37 @@ class AdminController extends Controller
 //                "Access to Fellowship Application type as Interviewer (able to view, create and update the interview form)",
 //                30
 //            ),
-            "ROLE_FELLAPP_INTERVIEWER_WCMC_BREASTPATHOLOGY" => array(
+            "ROLE_FELLAPP_INTERVIEWER_WCM_BREASTPATHOLOGY" => array(
                 "Fellowship Program Interviewer WCMC Breast Pathology",
                 "Access to specific Fellowship Application type as Interviewer",
                 30
             ),
-            "ROLE_FELLAPP_INTERVIEWER_WCMC_CYTOPATHOLOGY" => array(
+            "ROLE_FELLAPP_INTERVIEWER_WCM_CYTOPATHOLOGY" => array(
                 "Fellowship Program Interviewer WCMC Cytopathology",
                 "Access to specific Fellowship Application type as Interviewer",
                 30
             ),
-            "ROLE_FELLAPP_INTERVIEWER_WCMC_GYNECOLOGICPATHOLOGY" => array(
+            "ROLE_FELLAPP_INTERVIEWER_WCM_GYNECOLOGICPATHOLOGY" => array(
                 "Fellowship Program Interviewer WCMC Gynecologic Pathology",
                 "Access to specific Fellowship Application type as Interviewer",
                 30
             ),
-            "ROLE_FELLAPP_INTERVIEWER_WCMC_GASTROINTESTINALPATHOLOGY" => array(
+            "ROLE_FELLAPP_INTERVIEWER_WCM_GASTROINTESTINALPATHOLOGY" => array(
                 "Fellowship Program Interviewer WCMC Gastrointestinal Pathology",
                 "Access to specific Fellowship Application type as Interviewer",
                 30
             ),
-            "ROLE_FELLAPP_INTERVIEWER_WCMC_GENITOURINARYPATHOLOGY" => array(
+            "ROLE_FELLAPP_INTERVIEWER_WCM_GENITOURINARYPATHOLOGY" => array(
                 "Fellowship Program Interviewer WCMC Genitourinary Pathology",
                 "Access to specific Fellowship Application type as Interviewer",
                 30
             ),
-            "ROLE_FELLAPP_INTERVIEWER_WCMC_HEMATOPATHOLOGY" => array(
+            "ROLE_FELLAPP_INTERVIEWER_WCM_HEMATOPATHOLOGY" => array(
                 "Fellowship Program Interviewer WCMC Hematopathology",
                 "Access to specific Fellowship Application type as Interviewer",
                 30
             ),
-            "ROLE_FELLAPP_INTERVIEWER_WCMC_MOLECULARGENETICPATHOLOGY" => array(
+            "ROLE_FELLAPP_INTERVIEWER_WCM_MOLECULARGENETICPATHOLOGY" => array(
                 "Fellowship Program Interviewer WCMC Molecular Genetic Pathology",
                 "Access to specific Fellowship Application type as Interviewer",
                 30
@@ -1396,18 +1393,18 @@ class AdminController extends Controller
                 90
             ),
 
-            "ROLE_DEIDENTIFICATOR_WCMC_NYP_HONEST_BROKER" => array(
-                "WCMC-NYP Deidentifier Honest Broker",
+            "ROLE_DEIDENTIFICATOR_WCM_NYP_HONEST_BROKER" => array(
+                "WCM-NYP Deidentifier Honest Broker",
                 "Can search and generate",
                 50
             ),
-            "ROLE_DEIDENTIFICATOR_WCMC_NYP_ENQUIRER" => array(
-                "WCMC-NYP Deidentifier Enquirer",
+            "ROLE_DEIDENTIFICATOR_WCM_NYP_ENQUIRER" => array(
+                "WCM-NYP Deidentifier Enquirer",
                 "Can search, but not generate",
                 40
             ),
-            "ROLE_DEIDENTIFICATOR_WCMC_NYP_GENERATOR" => array(
-                "WCMC-NYP Deidentifier Generator",
+            "ROLE_DEIDENTIFICATOR_WCM_NYP_GENERATOR" => array(
+                "WCM-NYP Deidentifier Generator",
                 "Can generate, but not search",
                 10
             ),
@@ -1477,13 +1474,13 @@ class AdminController extends Controller
                 50
             ),
 
-            "ROLE_VACREQ_SUPERVISOR_WCMC_PATHOLOGY" => array(
+            "ROLE_VACREQ_SUPERVISOR_WCM_PATHOLOGY" => array(
                 "Vacation Request Supervisor - WCMC Pathology Department",
                 "Can search and approve carry over requests for Department of Pathology and Laboratory Medicine(WCMC)",
                 40
             ),
 
-            "ROLE_VACREQ_OBSERVER_WCMC_PATHOLOGY" => array(
+            "ROLE_VACREQ_OBSERVER_WCM_PATHOLOGY" => array(
                 "Vacation Request Observer for WCMC Department of Pathology and Laboratory Medicine",
                 "This role should allow the user to log into the Vacation Request site and,
                 if this is the only role the user has on the Vacation Request Site,
@@ -1557,7 +1554,7 @@ class AdminController extends Controller
             ),
 
             "ROLE_CALLLOG_DATA_QUALITY" => array(
-                "Data Quality Manager for WCMC-NYP",
+                "Data Quality Manager for WCM-NYP",
                 "Merge or un-merge patient records",
                 60
             ),
@@ -1584,7 +1581,7 @@ class AdminController extends Controller
                 30
             ),
 
-            //TRANSRES - similar to ROLE_FELLAPP_INTERVIEWER_WCMC_HEMATOPATHOLOGY - _WCMC_HEMEPATH and _WCMC_APCP
+            //TRANSRES - similar to ROLE_FELLAPP_INTERVIEWER_WCM_HEMATOPATHOLOGY - _WCM_HEMEPATH and _WCM_APCP
             "ROLE_TRANSRES_ADMIN_APCP" => array(
                 "Translational Research AP/CP Admin",
                 "Full Access for Translational Research AP/CP site",
@@ -1811,7 +1808,7 @@ class AdminController extends Controller
     //role - role string
     public function setInstitutionFellowship($entity,$role) {
 
-        if( strpos($role,'_WCMC_') === false ) {
+        if( strpos($role,'_WCM_') === false ) {
             return;
         }
 
@@ -2021,7 +2018,7 @@ class AdminController extends Controller
 //            ///////////////////// FELLAPP /////////////////////
 //            "codeGoogleFormFellApp" => "",
 //            "confirmationEmailFellApp" => "",
-//            "confirmationSubjectFellApp" => "Your WCMC/NYP fellowship application has been succesfully received",
+//            "confirmationSubjectFellApp" => "Your WCM/NYP fellowship application has been succesfully received",
 //            "confirmationBodyFellApp" => "Thank You for submitting the fellowship application to Weill Cornell Medical College/NewYork Presbyterian Hospital. ".
 //                                         "Once we receive the associated recommendation letters, your application will be reviewed and considered. ".
 //                                         "If You have any questions, please do not hesitate to contact me by phone or via email. ".
@@ -2033,7 +2030,7 @@ class AdminController extends Controller
 //            "templateIdFellApp" => "",
 //            "backupFileIdFellApp" => "",
 //            "folderIdFellApp" => "",
-//            "localInstitutionFellApp" => "Pathology Fellowship Programs (WCMC)",
+//            "localInstitutionFellApp" => "Pathology Fellowship Programs (WCM)",
 //            "deleteImportedAplicationsFellApp" => false,
 //            "deleteOldAplicationsFellApp" => false,
 //            "yearsOldAplicationsFellApp" => 2,
@@ -2431,10 +2428,10 @@ class AdminController extends Controller
             exit('No Role: "ROLE_USERDIRECTORY_OBSERVER"');
         }
         $pathDefaultGroup->addRole($role);
-        //ROLE_VACREQ_OBSERVER_WCMC_PATHOLOGY
-        $role = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName("ROLE_VACREQ_OBSERVER_WCMC_PATHOLOGY");
+        //ROLE_VACREQ_OBSERVER_WCM_PATHOLOGY
+        $role = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName("ROLE_VACREQ_OBSERVER_WCM_PATHOLOGY");
         if( !$role ) {
-            exit('No Role: "ROLE_VACREQ_OBSERVER_WCMC_PATHOLOGY"');
+            exit('No Role: "ROLE_VACREQ_OBSERVER_WCM_PATHOLOGY"');
         }
         $pathDefaultGroup->addRole($role);
 
@@ -2445,14 +2442,14 @@ class AdminController extends Controller
         //tooltipe
         $pathDefaultGroup->setTooltip(true);
 
-        //showToInstitutions: WCMC, NYP
+        //showToInstitutions: WCM, NYP
         $pathDefaultGroup->addShowToInstitution($autoAssignInstitution);
         $pathDefaultGroup->addShowToInstitution($nyp);
 
         //defaultInstitution
         $pathDefaultGroup->setDefaultInstitution($autoAssignInstitution);
 
-        //permittedInstitutionalPHIScope: WCMC
+        //permittedInstitutionalPHIScope: WCM
         $pathDefaultGroup->addPermittedInstitutionalPHIScope($autoAssignInstitution);
 
         //employmentType
@@ -2802,7 +2799,7 @@ class AdminController extends Controller
 
         );
         $wcmc = array(
-            'abbreviation'=>'WCMC',
+            'abbreviation'=>'WCM',
             'departments'=>$wcmcDep
         );
 
@@ -2845,7 +2842,7 @@ class AdminController extends Controller
 
 
         $wcmcq = array(
-            'abbreviation'=>'WCMCQ',
+            'abbreviation'=>'WCMQ',
             'departments'
         );
 
@@ -3023,12 +3020,12 @@ class AdminController extends Controller
             $count++;
         }
 
-        //add 'WCMC-NYP Collaboration'
-        $wcmcnypCollaborationInst = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName('WCMC-NYP Collaboration');
+        //add 'WCM-NYP Collaboration'
+        $wcmcnypCollaborationInst = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName('WCM-NYP Collaboration');
         if( !$wcmcnypCollaborationInst ) {
             $wcmcnypCollaborationInst = new Institution();
-            $this->setDefaultList($wcmcnypCollaborationInst,3,$username,"WCMC-NYP Collaboration");
-            $wcmcnypCollaborationInst->setAbbreviation("WCMC-NYP Collaboration");
+            $this->setDefaultList($wcmcnypCollaborationInst,3,$username,"WCM-NYP Collaboration");
+            $wcmcnypCollaborationInst->setAbbreviation("WCM-NYP Collaboration");
 
             $wcmcnypCollaborationInst->addType($collaborationType);
 
@@ -3049,17 +3046,17 @@ class AdminController extends Controller
             $count++;
         }
 
-//            //add WCMC-NYP collaboration object to this "WCMC-NYP" institution above
-//            $wcmcnypCollaboration = $em->getRepository('OlegUserdirectoryBundle:Collaboration')->findOneByName("WCMC-NYP");
+//            //add WCM-NYP collaboration object to this "WCM-NYP" institution above
+//            $wcmcnypCollaboration = $em->getRepository('OlegUserdirectoryBundle:Collaboration')->findOneByName("WCM-NYP");
 //            if( !$wcmcnypCollaboration ) {
 //                $wcmcnypCollaboration = new Collaboration();
-//                $this->setDefaultList($wcmcnypCollaboration,10,$username,"WCMC-NYP");
+//                $this->setDefaultList($wcmcnypCollaboration,10,$username,"WCM-NYP");
 //
 //                //add institutions
-//                //WCMC
-//                $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName("WCMC");
+//                //WCM
+//                $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName("WCM");
 //                if( !$wcmc ) {
-//                    exit('No Institution: "WCMC"');
+//                    exit('No Institution: "WCM"');
 //                }
 //                $wcmcnypCollaboration->addInstitution($wcmc);
 //                //NYP
@@ -3510,8 +3507,8 @@ class AdminController extends Controller
             'ORDER Vacation Request',
             'ORDER Translational Research',
             'ORDER Scan Order', //used as default in getDefaultSourceSystem //'Scan Order',
-            'WCMC Epic Practice Management',
-            'WCMC Epic Ambulatory EMR',
+            'WCM Epic Practice Management',
+            'WCM Epic Ambulatory EMR',
             'NYH Paper Requisition',
             'Written or oral referral',
             'PACS on C.MED.CORNELL.EDU',
@@ -4250,7 +4247,7 @@ class AdminController extends Controller
         return round($count/10);
     }
     //http://cornellpathology.com/research/laboratories
-    //add new reseacrh lab institutions with "Research Lab" OrganizationalGroupType under "WCMC-Pathology"
+    //add new reseacrh lab institutions with "Research Lab" OrganizationalGroupType under "WCM-Pathology"
     //add manually already existing lab's institutions:
     //"Skeletal Biology", "Dr. Inghirami's Lab", "Wayne Tam Lab"
     public function generateResLabs() {
@@ -4334,7 +4331,7 @@ class AdminController extends Controller
         $count = 10;
         foreach( $labs as $labName => $pageName ) {
 
-            //1) create a new Research Institution with "Research Lab" OrganizationalGroupType under "WCMC-Pathology"
+            //1) create a new Research Institution with "Research Lab" OrganizationalGroupType under "WCM-Pathology"
             $researchInstitution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
                 $labName,
                 $pathology,

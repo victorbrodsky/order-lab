@@ -151,7 +151,7 @@ class ProcedureType extends AbstractType
                     },
             ));
 
-//            $sources = array('WCMC Epic Ambulatory EMR','Written or oral referral');
+//            $sources = array('WCM Epic Ambulatory EMR','Written or oral referral');
 //            $params = array('name'=>'Procedure','dataClass'=>'Oleg\OrderformBundle\Entity\ProcedureOrder','typename'=>'procedureorder','sources'=>$sources);
 //            $builder->add('order', CollectionType::class, array(
 //                'type' => new GeneralOrderType($params, null),

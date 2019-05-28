@@ -284,7 +284,7 @@ class UserDownloadUtil {
             $row = $row + 1;
         }
 
-        //$sections = array("WCMC"=>$users,"NYP"=>$users);
+        //$sections = array("WCM"=>$users,"NYP"=>$users);
 //        foreach( $sections as $sectionName=>$sectionUsers ) {
 //            echo "<br>###### sectionName=".$sectionName."######<br>";
 //            $sectionUsersArr = array();

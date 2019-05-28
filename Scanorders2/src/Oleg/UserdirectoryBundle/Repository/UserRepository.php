@@ -476,7 +476,7 @@ class UserRepository extends EntityRepository {
 
         foreach( $roleNames as $roleName ) {
 
-            //find user role object (i.e. ROLE_VACREQ_SUPERVISOR_WCMC_PATHOLOGY)
+            //find user role object (i.e. ROLE_VACREQ_SUPERVISOR_WCM_PATHOLOGY)
             $roles = $this->findRolesByObjectActionInstitutionSite($objectStr, $actionStr, null, $sitename, $roleName);
 
             foreach( $roles as $role ) {
@@ -499,7 +499,7 @@ class UserRepository extends EntityRepository {
         return $userRoles;
     }
     //find user parent roles specified by sitename, objectStr, actionStr:
-    //ROLE_VACREQ_SUPERVISOR_WCMC_PATHOLOGY is a parent role for ROLE_VACREQ_SUBMITTER_CLINICALPATHOLOGY because CLINICALPATHOLOGY is under WCMC_PATHOLOGY
+    //ROLE_VACREQ_SUPERVISOR_WCM_PATHOLOGY is a parent role for ROLE_VACREQ_SUBMITTER_CLINICALPATHOLOGY because CLINICALPATHOLOGY is under WCMC_PATHOLOGY
     public function findUserParentRolesBySitePermissionObjectAction( $user, $sitename, $parentObjectStr, $parentActionStr, $childObjectStr, $childActionStr ) {
 
         $userParentRoles = new ArrayCollection();

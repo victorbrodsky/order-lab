@@ -193,7 +193,7 @@ class FellAppManagement extends Controller {
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             //////// 2) create a new role (if not existed) ////////
-            //name: ROLE_FELLAPP_DIRECTOR_WCMC_BREASTPATHOLOGY
+            //name: ROLE_FELLAPP_DIRECTOR_WCM_BREASTPATHOLOGY
             //alias: Fellowship Program Interviewer WCMC Breast Pathology
             //Description: Access to specific Fellowship Application type as Interviewer
             //site: fellapp
@@ -663,13 +663,13 @@ class FellAppManagement extends Controller {
 
     }
 
-    //$roleStr = ROLE_FELLAPP_INTERVIEWER_WCMC_BREASTPATHOLOGY
+    //$roleStr = ROLE_FELLAPP_INTERVIEWER_WCM_BREASTPATHOLOGY
     public function addUsersToFellowshipSubspecialty( $fellowshipSubspecialty, $users, $roleName, $bossType ) {
 
         $em = $this->getDoctrine()->getManager();
 
-        //$roleStr = ROLE_FELLAPP_INTERVIEWER_WCMC_BREASTPATHOLOGY
-        $roleStr = "ROLE_FELLAPP_".$bossType."_WCMC_".$roleName;
+        //$roleStr = ROLE_FELLAPP_INTERVIEWER_WCM_BREASTPATHOLOGY
+        $roleStr = "ROLE_FELLAPP_".$bossType."_WCM_".$roleName;
 
         $role = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName($roleStr);
         if( !$role ) {

@@ -59,7 +59,7 @@ class CalllogEncounterNumberType extends AbstractType
 //            'attr' => array('class' => 'combobox combobox-width'),
 //            'query_builder' => function(EntityRepository $er) {
 //                    return $er->createQueryBuilder('list')
-//                        ->where("list.name = 'WCMC Epic Practice Management'")
+//                        ->where("list.name = 'WCM Epic Practice Management'")
 //                        ->orderBy("list.orderinlist","ASC");
 //
 //                },

@@ -109,7 +109,7 @@ function validateUser(btnEl,origuserid) {
 
     //check if CWID exists in LDAP active directory
     var userTypeText = $('.user-keytype-field').select2('data').text;
-    //if( userTypeText == "WCMC CWID" ) {
+    //if( userTypeText == "WCM CWID" ) {
     if( userTypeText != "Local User" && userTypeText != "External Authentication" ) {
         if( isValidCWID(primaryPublicUserId,userTypeText) == false ) {
             $('#userinfo').collapse('show');
