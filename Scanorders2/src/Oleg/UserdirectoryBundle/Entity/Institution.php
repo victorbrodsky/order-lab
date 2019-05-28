@@ -237,6 +237,11 @@ class Institution extends BaseCompositeNode {
     //collaborationInstitutions
     public function getCollaborationInstitutions()
     {
+        //fix for: Expected value of type \"Doctrine\\Common\\Collections\\Collection|array\" for association
+        // field \"Oleg\\UserdirectoryBundle\\Entity\\Institution#$collaborationInstitutions\", got \"NULL\" instead.
+        if( $this->collaborationInstitutions == NULL ) {
+            $this->collaborationInstitutions = new ArrayCollection();
+        }
         return $this->collaborationInstitutions;
     }
     public function addCollaborationInstitution($item)
