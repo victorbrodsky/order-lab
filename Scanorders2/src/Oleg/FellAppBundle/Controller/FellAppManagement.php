@@ -730,6 +730,8 @@ class FellAppManagement extends Controller {
     public function updateUserInstRoleAction(Request $request)
     {
 
+        //exit("Only one time run");
+
         if (false == $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_ADMIN')) {
             return $this->redirect($this->generateUrl('fellapp-nopermission'));
         }
@@ -765,7 +767,7 @@ class FellAppManagement extends Controller {
                 $alias = str_replace("WCMC", "WCM", $alias);
                 $role->setName($name);
                 $role->setAlias($alias);
-                //$em->flush($role);
+                $em->flush($role);
             }
 
             //exit("Exit Roles");
