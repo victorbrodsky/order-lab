@@ -451,8 +451,12 @@ class SiteParameters {
     private $underLoginMsgScan;
 
     ///////////////////// FELLAPP /////////////////////
+//    /**
+//     * @ORM\OneToOne(targetEntity="Oleg\FellAppBundle\Entity\FellAppSiteParameter", cascade={"persist","remove"})
+//     */
+//    private $fellappSiteParameter;
     /**
-     * @ORM\OneToOne(targetEntity="Oleg\FellAppBundle\Entity\FellAppSiteParameter", cascade={"persist","remove"})
+     * @ORM\OneToOne(targetEntity="Oleg\FellAppBundle\Entity\FellAppSiteParameter")
      */
     private $fellappSiteParameter;
 
