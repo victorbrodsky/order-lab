@@ -451,12 +451,10 @@ class SiteParameters {
     private $underLoginMsgScan;
 
     ///////////////////// FELLAPP /////////////////////
-//    /**
-//     * Defaults for an Organizational Group
-//     *
-//     * @ORM\OneToOne(targetEntity="Oleg\FellAppBundle\Entity\FellAppSiteParameter", cascade={"persist","remove"})
-//     */
-//    private $fellappSiteParameter;
+    /**
+     * @ORM\OneToOne(targetEntity="Oleg\FellAppBundle\Entity\FellAppSiteParameter", cascade={"persist","remove"})
+     */
+    private $fellappSiteParameter;
 
     /**
      * Path to the local copy of the fellowship application form
