@@ -193,13 +193,13 @@ class FellAppSiteParametersController extends SiteParametersController
         }
         $siteParameters = $entities[0];
 
-        $fellappSiteParameter = $siteParameters->getFellAppSiteParameter();
+        $fellappSiteParameter = $siteParameters->getFellappSiteParameter();
 
         //create one FellAppSiteParameter
         if( !$fellappSiteParameter ) {
             //echo "FellAppSiteParameter null <br>";
             $fellappSiteParameter = new FellAppSiteParameter();
-            $siteParameters->setFellAppSiteParameter($fellappSiteParameter);
+            $siteParameters->setFellappSiteParameter($fellappSiteParameter);
             $em->flush();
         }
 
