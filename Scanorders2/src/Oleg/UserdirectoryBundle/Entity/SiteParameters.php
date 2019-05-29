@@ -462,8 +462,9 @@ class SiteParameters {
 
     /**
      * @ORM\OneToOne(targetEntity="Oleg\FellAppBundle\Entity\FellAppSiteParameter", cascade={"persist","remove"})
+     * @ORM\JoinColumn(name="fellappSiteParameter_id", referencedColumnName="id")
      */
-    private $fellappSiteParameter2;
+    private $fellappSiteParameter;
 
     /**
      * Path to the local copy of the fellowship application form
@@ -2105,24 +2106,6 @@ class SiteParameters {
     {
         $this->fellappSiteParameter = $fellappSiteParameter;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getFellappSiteParameter2()
-    {
-        return $this->fellappSiteParameter2;
-    }
-
-    /**
-     * @param mixed $fellappSiteParameter2
-     */
-    public function setFellappSiteParameter2($fellappSiteParameter2)
-    {
-        $this->fellappSiteParameter2 = $fellappSiteParameter2;
-    }
-
-
 
     /**
      * @param mixed $fellappuploadpath
