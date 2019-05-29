@@ -15,12 +15,6 @@
  *  limitations under the License.
  */
 
-/**
- * Created by PhpStorm.
- * User: ch3
- * Date: 11/2/2016
- * Time: 3:39 PM
- */
 
 namespace Oleg\FellAppBundle\Entity;
 
