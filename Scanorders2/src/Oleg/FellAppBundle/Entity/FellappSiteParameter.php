@@ -24,7 +24,6 @@
 
 namespace Oleg\FellAppBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -72,9 +71,9 @@ class FellAppSiteParameter
 
 
     
-    public function __construct() {
-
-    }
+//    public function __construct() {
+//
+//    }
 
 
 
@@ -157,10 +156,6 @@ class FellAppSiteParameter
     {
         $this->rejectedEmailBody = $rejectedEmailBody;
     }
-
-
-
-
-
+    
 
 }
