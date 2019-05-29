@@ -469,7 +469,7 @@ class SiteParameters {
     ///////////////////// FELLAPP /////////////////////
     /**
      * Defaults for an Organizational Group
-     * @ORM\OneToOne(targetEntity="Oleg\FellAppBundle\Entity\FellappSiteParameter", cascade={"persist","remove"})
+     * @ORM\OneToOne(targetEntity="Oleg\FellAppBundle\Entity\FellAppSiteParameter", cascade={"persist","remove"})
      */
     private $fellappSiteParameter;
 
