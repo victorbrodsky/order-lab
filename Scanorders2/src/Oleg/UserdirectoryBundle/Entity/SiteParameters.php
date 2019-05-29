@@ -399,22 +399,6 @@ class SiteParameters {
     private $avataruploadpath;
 
     /**
-     * @return mixed
-     */
-    public function getFellappSiteParameter()
-    {
-        return $this->fellappSiteParameter;
-    }
-
-    /**
-     * @param mixed $fellappSiteParameter
-     */
-    public function setFellappSiteParameter($fellappSiteParameter)
-    {
-        $this->fellappSiteParameter = $fellappSiteParameter;
-    }
-
-    /**
      * @ORM\Column(type="string", nullable=true)
      */
     private $fellappuploadpath;
@@ -469,6 +453,7 @@ class SiteParameters {
     ///////////////////// FELLAPP /////////////////////
     /**
      * Defaults for an Organizational Group
+     *
      * @ORM\OneToOne(targetEntity="Oleg\FellAppBundle\Entity\FellAppSiteParameter", cascade={"persist","remove"})
      */
     private $fellappSiteParameter;
@@ -2096,6 +2081,22 @@ class SiteParameters {
     public function getScanuploadpath()
     {
         return $this->scanuploadpath;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFellappSiteParameter()
+    {
+        return $this->fellappSiteParameter;
+    }
+
+    /**
+     * @param mixed $fellappSiteParameter
+     */
+    public function setFellappSiteParameter($fellappSiteParameter)
+    {
+        $this->fellappSiteParameter = $fellappSiteParameter;
     }
 
     /**
