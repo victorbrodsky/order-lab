@@ -32,7 +32,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 
-class FellAppSiteParameterType extends AbstractType
+class FellappSiteParameterType extends AbstractType
 {
 
     protected $params;

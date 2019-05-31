@@ -18,7 +18,7 @@
 namespace Oleg\FellAppBundle\Controller;
 
 use Oleg\FellAppBundle\Entity\FellappSiteParameter;
-use Oleg\FellAppBundle\Form\FellAppSiteParameterType;
+use Oleg\FellAppBundle\Form\FellappSiteParameterType;
 use Oleg\UserdirectoryBundle\Controller\SiteParametersController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -176,7 +176,7 @@ class FellAppSiteParametersController extends SiteParametersController
             'container' => $this->container,
         );
 
-        $form = $this->createForm(FellAppSiteParameterType::class, $entity, array(
+        $form = $this->createForm(FellappSiteParameterType::class, $entity, array(
             'form_custom_value' => $params,
             'disabled' => $disabled
         ));
