@@ -24,8 +24,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="fellapp_siteParameter")
  */
-class FellAppSiteParameter
-{
+class FellAppSiteParameter {
 
     /**
      * @ORM\Id
@@ -65,9 +64,9 @@ class FellAppSiteParameter
 
 
     
-//    public function __construct() {
-//
-//    }
+    public function __construct() {
+
+    }
 
 
 
@@ -151,6 +150,6 @@ class FellAppSiteParameter
         $this->rejectedEmailBody = $rejectedEmailBody;
     }
 
-
+    
 }
 
