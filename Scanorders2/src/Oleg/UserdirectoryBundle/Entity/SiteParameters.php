@@ -461,7 +461,6 @@ class SiteParameters {
 //    private $fellappSiteParameter;
 
     /**
-     *
      * @ORM\OneToOne(targetEntity="Oleg\FellAppBundle\Entity\FellappSiteParameter", cascade={"persist","remove"})
      */
     private $fellappSiteParameter;
