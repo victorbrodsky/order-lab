@@ -150,6 +150,6 @@ class FellAppSiteParameter {
         $this->rejectedEmailBody = $rejectedEmailBody;
     }
 
-    
+
 }
 

@@ -461,10 +461,8 @@ class SiteParameters {
 //    private $fellappSiteParameter;
 
     /**
-     * Oleg\FellAppBundle\Entity\FellAppSiteParameter
      *
-     * @ORM\OneToOne(targetEntity="Oleg\FellAppBundle\Entity\FellAppSiteParameter", cascade={"persist"})
-     * @ORM\JoinColumn(name="fellappSiteParameter_id", referencedColumnName="id")
+     * @ORM\OneToOne(targetEntity="Oleg\FellAppBundle\Entity\FellAppSiteParameter", cascade={"persist","remove"})
      */
     private $fellappSiteParameter;
 
