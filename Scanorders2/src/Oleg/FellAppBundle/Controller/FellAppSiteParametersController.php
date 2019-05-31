@@ -17,7 +17,7 @@
 
 namespace Oleg\FellAppBundle\Controller;
 
-use Oleg\FellAppBundle\Entity\FellAppSiteParameter;
+use Oleg\FellAppBundle\Entity\FellappSiteParameter;
 use Oleg\FellAppBundle\Form\FellAppSiteParameterType;
 use Oleg\UserdirectoryBundle\Controller\SiteParametersController;
 use Symfony\Component\HttpFoundation\Request;
@@ -198,7 +198,7 @@ class FellAppSiteParametersController extends SiteParametersController
         //create one FellAppSiteParameter
         if( !$fellappSiteParameter ) {
             //echo "FellAppSiteParameter null <br>";
-            $fellappSiteParameter = new FellAppSiteParameter();
+            $fellappSiteParameter = new FellappSiteParameter();
             $siteParameters->setFellappSiteParameter($fellappSiteParameter);
             $em->flush();
         }

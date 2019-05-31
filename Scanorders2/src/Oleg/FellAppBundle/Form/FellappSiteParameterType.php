@@ -78,7 +78,7 @@ class FellAppSiteParameterType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\FellAppBundle\Entity\FellAppSiteParameter',
+            'data_class' => 'Oleg\FellAppBundle\Entity\FellappSiteParameter',
             'form_custom_value' => null,
             //'csrf_protection' => false
         ));

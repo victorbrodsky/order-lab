@@ -24,7 +24,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="fellapp_siteParameter")
  */
-class FellAppSiteParameter {
+class FellappSiteParameter {
 
     /**
      * @ORM\Id
