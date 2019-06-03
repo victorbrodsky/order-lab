@@ -739,6 +739,11 @@ class AdminController extends Controller
         $logger = $this->container->get('logger');
         $logger->notice("generateAllAction");
 
+        //testing
+        $elements = Intl::getLanguageBundle()->getLanguageNames();
+        print_r($elements);
+        exit('Exit Intl');
+
         $msg = $this->generateAll();
         $em->clear();
 
