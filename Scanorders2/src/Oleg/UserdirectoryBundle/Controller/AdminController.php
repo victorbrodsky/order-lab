@@ -761,7 +761,7 @@ class AdminController extends Controller
             exit('Exit Intl');
         }
 
-        if(1) {
+        if(0) {
             $elements = Intl::getLocaleBundle()->getLocaleNames();
             print_r($elements);
             exit();
