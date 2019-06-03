@@ -3513,7 +3513,7 @@ class AdminController extends Controller
 
         //print_r($elements);
         //exit();
-        $logger->notice("Start generateLocales. after getLocaleNames. count=".countg($elements));
+        $logger->notice("Start generateLocales. after getLocaleNames. count=".count($elements));
 
         $username = $this->get('security.token_storage')->getToken()->getUser();
 
