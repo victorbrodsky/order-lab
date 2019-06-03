@@ -750,6 +750,7 @@ class AdminController extends Controller
 
     public function generateAll() {
 
+        $logger = $this->container->get('logger');
         $userutil = new UserUtil();
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
@@ -783,12 +784,14 @@ class AdminController extends Controller
         $count_roles = $this->generateRoles();
         $count_employmentTypes = $this->generateEmploymentTypes();
         $count_states = $this->generateStates();
+        $logger->notice("Finished generateStates");
 
         $count_languages = $this->generateLanguages();
         $count_locales = $this->generateLocales();
         $count_locationTypeList = $this->generateLocationTypeList();
         $count_locprivacy = $this->generateLocationPrivacy();
         $count_generateDefaultOrgGroupSiteParameters = $this->generateDefaultOrgGroupSiteParameters();
+        $logger->notice("Finished generateDefaultOrgGroupSiteParameters");
 
         $count_terminationTypes = $this->generateTerminationTypes();
         $count_eventTypeList = $this->generateEventTypeList();
@@ -796,15 +799,19 @@ class AdminController extends Controller
         $count_identifierTypeList = $this->generateIdentifierTypeList();
         $count_fellowshipTypeList = $this->generateFellowshipTypeList();
         $count_residencyTrackList = $this->generateResidencyTrackList();
+        $logger->notice("Finished generateResidencyTrackList");
 
         $count_medicalTitleList = $this->generateMedicalTitleList();
         $count_medicalSpecialties = $this->generateMedicalSpecialties();
+        $logger->notice("Finished generateMedicalSpecialties");
 
         $count_equipmentType = $this->generateEquipmentType();
         $count_equipment = $this->generateEquipment();
+        $logger->notice("Finished generateEquipment");
 
         $count_buildings = $this->generateBuildings();
         $count_locations = $this->generateLocations();
+        $logger->notice("Finished generateLocations");
 
         $count_SpotPurpose = $this->generateSpotPurpose();
 
@@ -818,6 +825,7 @@ class AdminController extends Controller
 
         $count_documenttypes = $this->generateDocumentTypes();
         $count_generateLinkTypes = $this->generateLinkTypes();
+        $logger->notice("Finished generateLinkTypes");
 
         //training
         $count_completionReasons = $this->generateCompletionReasons();
@@ -827,10 +835,12 @@ class AdminController extends Controller
         $count_HonorTrainings = $this->generateHonorTrainings();
         $count_FellowshipTitles = $this->generateFellowshipTitles();
         $count_residencySpecialties = $this->generateResidencySpecialties();
+        $logger->notice("Finished generateResidencySpecialties");
 
         $count_sourceOrganizations = $this->generatesourceOrganizations();
         $count_generateImportances = $this->generateImportances();
         $count_generateAuthorshipRoles = $this->generateAuthorshipRoles();
+        $logger->notice("Finished generateAuthorshipRoles");
 
         $count_sex = $this->generateSex();
 
@@ -840,26 +850,32 @@ class AdminController extends Controller
 
         $count_generateCertifyingBoardOrganization = $this->generateCertifyingBoardOrganization();
         $count_TrainingTypeList = $this->generateTrainingTypeList();
+        $logger->notice("Finished generateTrainingTypeList");
 
         $count_FellAppStatus = $this->generateFellAppStatus();
         $count_FellAppRank = $this->generateFellAppRank();
         $count_LanguageProficiency = $this->generateLanguageProficiency();
+        $logger->notice("Finished generateLanguageProficiency");
 
         $collaborationtypes = $this->generateCollaborationtypes();
         $count_Permissions = $this->generatePermissions();
         $count_PermissionObjects = $this->generatePermissionObjects();
         $count_PermissionActions = $this->generatePermissionActions();
+        $logger->notice("Finished generatePermissionActions");
 
         $count_ObjectTypeActions = $this->generateObjectTypeActions();
 
         $count_EventObjectTypeList = $this->generateEventObjectTypeList();
         $count_VacReqRequestTypeList = $this->generateVacReqRequestTypeList();
+        $logger->notice("Finished generateVacReqRequestTypeList");
 
         $adminRes = $this->generateAdministratorAction();
+        $logger->notice("Finished generateAdministratorAction");
 
         $count_HealthcareProviderSpecialtiesList = $this->generateHealthcareProviderSpecialtiesList();
 
         $count_setObjectTypeForAllLists = $this->setObjectTypeForAllLists();
+        $logger->notice("Finished setObjectTypeForAllLists");
 
         $count_BloodProductTransfused = $this->generateBloodProductTransfused();
         $count_TransfusionReactionType = $this->generateTransfusionReactionType();
@@ -889,11 +905,14 @@ class AdminController extends Controller
         $count_generateTissueProcessingServiceList = $this->generateTissueProcessingServiceList();
         $count_generateRestrictedServiceList = $this->generateRestrictedServiceList();
         $count_BusinessPurposesList = $this->generateBusinessPurposes();
+        $logger->notice("Finished generateBusinessPurposes");
 
         $count_generatePlatformListManagerList = $this->generatePlatformListManagerList(null,null);
+        $logger->notice("Finished generatePlatformListManagerList");
 
         $count_populateClassUrl = $this->populateClassUrl();
         //$count_createAdminAntibodyList = $this->createAdminAntibodyList();
+        $logger->notice("Finished populateClassUrl");
 
 
         $msg =
@@ -996,6 +1015,8 @@ class AdminController extends Controller
             //'createAdminAntibodyList='.$count_createAdminAntibodyList.', '.
 
             ' (Note: -1 means that this table is already exists)';
+
+        $logger->notice("Finished generateAll. msg=".$msg);
 
         return $msg;
     }
