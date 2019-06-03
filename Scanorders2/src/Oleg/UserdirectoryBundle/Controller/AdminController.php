@@ -3417,14 +3417,15 @@ class AdminController extends Controller
         //\Locale::setDefault('ru');
         //$elements = Intl::getLanguageBundle()->getLanguageNames();
 
+        $languageBundle = Intl::getLanguageBundle();
         $elements = array();
-        $language = Intl::getLanguageBundle()->getLanguageName('en');
+        $language = $languageBundle->getLanguageName('en');
         $elements['en'] = $language;
-        $language = Intl::getLanguageBundle()->getLanguageName('en_US');
+        $language = $languageBundle->getLanguageName('en_US');
         $elements['en_US'] = $language;
-        $language = Intl::getLanguageBundle()->getLanguageName('fr');
+        $language = $languageBundle->getLanguageName('fr');
         $elements['fr'] = $language;
-        $language = Intl::getLanguageBundle()->getLanguageName('de');
+        $language = $languageBundle->getLanguageName('de');
         $elements['de'] = $language;
 
         //print_r($elements);
@@ -3456,7 +3457,7 @@ class AdminController extends Controller
             }
 
             \Locale::setDefault($abbreviation);
-            $languageNativeName = Intl::getLanguageBundle()->getLanguageName($abbreviation);
+            $languageNativeName = $languageBundle->getLanguageName($abbreviation);
 
             //uppercase the first letter
             $languageNativeName = mb_convert_case(mb_strtolower($languageNativeName), MB_CASE_TITLE, "UTF-8");
@@ -3501,14 +3502,15 @@ class AdminController extends Controller
 
         //$elements = Intl::getLocaleBundle()->getLocaleNames();
 
+        $localeBundle = Intl::getLocaleBundle();
         $elements = array();
-        $language = Intl::getLocaleBundle()->getLocaleName('en');
+        $language = $localeBundle->getLocaleName('en');
         $elements['en'] = $language;
-        $language = Intl::getLocaleBundle()->getLocaleName('en_US');
+        $language = $localeBundle->getLocaleName('en_US');
         $elements['en_US'] = $language;
-        $language = Intl::getLocaleBundle()->getLocaleName('fr');
+        $language = $localeBundle->getLocaleName('fr');
         $elements['fr'] = $language;
-        $language = Intl::getLocaleBundle()->getLocaleName('de');
+        $language = $localeBundle->getLocaleName('de');
         $elements['de'] = $language;
 
         //print_r($elements);
