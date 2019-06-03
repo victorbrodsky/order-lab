@@ -742,10 +742,19 @@ class AdminController extends Controller
         //testing
         \Locale::setDefault('en');
         echo "after setDefault <br>";
+        $elements = array();
+        $language = Intl::getLanguageBundle()->getLanguageName('en');
+        $elements['en'] = $language;
+        $language = Intl::getLanguageBundle()->getLanguageName('en_US');
+        $elements['en_US'] = $language;
+        $language = Intl::getLanguageBundle()->getLanguageName('fr');
+        $elements['fr'] = $language;
         $language = Intl::getLanguageBundle()->getLanguageName('de');
+        $elements['de'] = $language;
         echo "language=$language <br>";
+        //print_r($elements);
         //exit('language='.$language);
-        $elements = Intl::getLanguageBundle()->getLanguageNames();
+        //$elements = Intl::getLanguageBundle()->getLanguageNames();
         print_r($elements);
         exit('Exit Intl');
 
@@ -3397,7 +3406,18 @@ class AdminController extends Controller
         $logger->notice("Start generateLanguages. before getLanguageNames");
 
         //\Locale::setDefault('ru');
-        $elements = Intl::getLanguageBundle()->getLanguageNames();
+        //$elements = Intl::getLanguageBundle()->getLanguageNames();
+
+        $elements = array();
+        $language = Intl::getLanguageBundle()->getLanguageName('en');
+        $elements['en'] = $language;
+        $language = Intl::getLanguageBundle()->getLanguageName('en_US');
+        $elements['en_US'] = $language;
+        $language = Intl::getLanguageBundle()->getLanguageName('fr');
+        $elements['fr'] = $language;
+        $language = Intl::getLanguageBundle()->getLanguageName('de');
+        $elements['de'] = $language;
+
         print_r($elements);
         exit();
         $logger->notice("Start generateLanguages. count=".count($entities));
