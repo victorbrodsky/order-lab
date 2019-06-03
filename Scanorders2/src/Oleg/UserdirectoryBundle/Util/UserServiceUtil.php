@@ -697,6 +697,7 @@ class UserServiceUtil {
 
     public function generateSiteParameters() {
 
+        $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
         $em = $this->em;
 
@@ -705,6 +706,8 @@ class UserServiceUtil {
         if( count($entities) > 0 ) {
             return -1;
         }
+
+        $logger->notice("Start generating SiteParameters");
 
         $defaultSystemEmail = $this->container->getParameter('default_system_email');
 
@@ -1085,12 +1088,14 @@ class UserServiceUtil {
             $method = "set".$key;
             $params->$method( $value );
             $count = $count + 10;
+            $logger->notice("setter: $method");
         }
 
         //auto assign Institution
         $autoAssignInstitution = $userSecUtil->getAutoAssignInstitution();
         if( $autoAssignInstitution ) {
             $params->setAutoAssignInstitution($autoAssignInstitution);
+            $logger->notice("Auto Assign Institution: $autoAssignInstitution");
         } else {
 //            $institutionName = 'Weill Cornell Medical College';
 //            $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName($institutionName);
@@ -1114,9 +1119,11 @@ class UserServiceUtil {
                 );
                 if( $autoAssignInstitution ) {
                     $params->setAutoAssignInstitution($autoAssignInstitution);
+                    $logger->notice("Auto Assign Generated Institution: $autoAssignInstitution");
                 }
             }
         }
+        $logger->notice("Finished with Auto Assign Institution");
 
         //set AllowPopulateFellApp to false
         $params->setAllowPopulateFellApp(false);
@@ -1126,6 +1133,7 @@ class UserServiceUtil {
 
         $emailUtil = $this->container->get('user_mailer_utility');
         $emailUtil->createEmailCronJob();
+        $logger->notice("Created email cron job. Finished generateSiteParameters");
 
         return round($count/10);
     }

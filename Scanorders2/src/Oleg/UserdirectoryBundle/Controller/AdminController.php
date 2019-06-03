@@ -159,13 +159,17 @@ class AdminController extends Controller
     /**
      * run: http://localhost/order/directory/admin/first-time-login-generation-init/
      * run: http://localhost/order/directory/admin/first-time-login-generation-init/https
+     *
      * @Route("/first-time-login-generation-init/", name="first-time-login-generation-init")
      * @Route("/first-time-login-generation-init/https", name="first-time-login-generation-init-https")
      */
     public function firstTimeLoginGenerationAction(Request $request)
     {
+        $logger = $this->container->get('logger');
         $em = $this->getDoctrine()->getManager();
         $users = $roles = $em->getRepository('OlegUserdirectoryBundle:User')->findAll();
+        $logger->notice('firstTimeLoginGenerationAction: users='.count($users));
+
         if (count($users) == 0) {
 
             //1) get systemuser
@@ -176,6 +180,7 @@ class AdminController extends Controller
 
             if (!$systemuser) {
 
+                $logger->notice('Start generate system user');
                 $default_time_zone = null;
                 $usernamePrefix = "local-user";
 
@@ -213,10 +218,12 @@ class AdminController extends Controller
                 $em->persist($systemuser);
                 $em->flush();
 
+                $logger->notice('Finished generate system user: '.$systemuser);
                 //exit("system user created");
             }
 
             $adminRes = $this->generateAdministratorAction(true);
+            $logger->notice('Finished generateAdministratorAction. adminRes='.$adminRes);
             //exit($adminRes);
 
             //TODO: $channel
@@ -238,15 +245,19 @@ class AdminController extends Controller
                 $em->flush($entity);
             }
 
+            $logger->notice('Start updateApplication');
             $updateres = $this->updateApplication();
 
-            $adminRes = $adminRes . " <br> " .$updateres; 
+            $adminRes = $adminRes . " <br> " .$updateres;
+
+            $logger->notice('Finished initialization. adminRes='.$adminRes);
 
         } else {
             //$adminRes = 'Admin user already exists';
             //$adminRes = "System has been initialized successfully.";
             $adminRes = 'Admin user has been successfully created.';
             //exit('users already exists');
+            $logger->notice('Finished initialization. users already exists');
         }
 
 
