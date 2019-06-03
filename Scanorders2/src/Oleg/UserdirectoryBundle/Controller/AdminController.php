@@ -7583,6 +7583,7 @@ class AdminController extends Controller
             }
         }
 
+        $logger = $this->container->get('logger');
         $em = $this->getDoctrine()->getManager();
 
         //$user = $this->get('security.token_storage')->getToken()->getUser();
@@ -7597,6 +7598,7 @@ class AdminController extends Controller
                 'keytype' => $localUserType->getId()
             )
         );
+        $logger->notice("generateAdministratorAction: count=".count($administrators));
 
         if( count($administrators) > 1 ) {
             throw new \Exception( "Found multiple $primaryPublicUserId . Found ".count($primaryPublicUserId)."users" );
@@ -7606,10 +7608,11 @@ class AdminController extends Controller
             $administrator = $administrators[0];
         }
 
-
         $encoder = $this->container->get('security.password_encoder');
 
         if( $administrator ) {
+
+            $logger->notice("generateAdministratorAction: Existed administrator=".$administrator);
 
             $flush = false;
             $res = "$primaryPublicUserId user already exists.";
@@ -7631,14 +7634,18 @@ class AdminController extends Controller
             }
 
             if( $flush ) {
+                $logger->notice("generateAdministratorAction: before flush administrator=".$administrator);
                 $em->persist($administrator);
                 $em->flush($administrator);
+                $logger->notice("generateAdministratorAction: after flush administrator=".$administrator);
                 //echo "flash ";
             } else {
                 //echo "no flash ";
             }
 
         } else {
+
+            $logger->notice("generateAdministratorAction: create new administrator.");
 
             $userSecUtil = $this->container->get('user_security_utility');
             $administrator = $userSecUtil->constractNewUser($primaryPublicUserId.'_@_local-user');
@@ -7660,10 +7667,13 @@ class AdminController extends Controller
 
             $res = "New $primaryPublicUserId account has been created";
 
+            $logger->notice("generateAdministratorAction: before flush new administrator=".$administrator);
             $em->persist($administrator);
             $em->flush($administrator);
+            $logger->notice("generateAdministratorAction: after flush new administrator=".$administrator);
         }
 
+        $logger->notice("Finished generateAdministratorAction: res=".$res);
         return $res;
     }
 
