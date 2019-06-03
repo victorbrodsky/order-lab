@@ -744,6 +744,7 @@ class AdminController extends Controller
         echo "after setDefault <br>";
         $elements = array();
         $language = Intl::getLanguageBundle()->getLanguageName('en');
+        exit("language=$language");
         $elements['en'] = $language;
         $language = Intl::getLanguageBundle()->getLanguageName('en_US');
         $elements['en_US'] = $language;
