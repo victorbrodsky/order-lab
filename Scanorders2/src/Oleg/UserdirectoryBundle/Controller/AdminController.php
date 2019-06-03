@@ -795,9 +795,13 @@ class AdminController extends Controller
         $logger->notice("Finished generateStates");
 
         $count_languages = $this->generateLanguages();
+        $logger->notice("Finished generateLanguages");
         $count_locales = $this->generateLocales();
+        $logger->notice("Finished generateLocales");
         $count_locationTypeList = $this->generateLocationTypeList();
+        $logger->notice("Finished generateLocationTypeList");
         $count_locprivacy = $this->generateLocationPrivacy();
+        $logger->notice("Finished generateLocationPrivacy");
         $count_generateDefaultOrgGroupSiteParameters = $this->generateDefaultOrgGroupSiteParameters();
         $logger->notice("Finished generateDefaultOrgGroupSiteParameters");
 
