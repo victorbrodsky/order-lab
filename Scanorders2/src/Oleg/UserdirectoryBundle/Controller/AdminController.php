@@ -7587,7 +7587,7 @@ class AdminController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         //$user = $this->get('security.token_storage')->getToken()->getUser();
-        $primaryPublicUserId = 'Administrator';
+        $primaryPublicUserId = 'administrator';
         //$primaryPublicUserId = 'Administrator1';
 
         $localUserType = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findOneByAbbreviation('local-user');
