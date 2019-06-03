@@ -3373,6 +3373,7 @@ class AdminController extends Controller
 
     public function generateLanguages() {
 
+        $logger = $this->container->get('logger');
         $em = $this->getDoctrine()->getManager();
 
         $entities = $em->getRepository('OlegUserdirectoryBundle:LanguageList')->findAll();
@@ -3384,6 +3385,7 @@ class AdminController extends Controller
         $elements = Intl::getLanguageBundle()->getLanguageNames();
         //print_r($elements);
         //exit();
+        $logger->notice("Start generateLanguages. count=".count($entities));
 
         $username = $this->get('security.token_storage')->getToken()->getUser();
 
@@ -3406,6 +3408,7 @@ class AdminController extends Controller
                 $this->setDefaultList($entity,$count,$username,null);
                 $entity->setName( trim($name) );
                 $entity->setAbbreviation( trim($abbreviation) );
+                $logger->notice("Created LanguageList: name=".$name.", abbreviation=".$abbreviation);
             }
 
             \Locale::setDefault($abbreviation);
@@ -3424,12 +3427,16 @@ class AdminController extends Controller
             $em->persist($entity);
             $em->flush();
 
+            $logger->notice("set languageNativeName=".$languageNativeName);
+
             $count = $count + 10;
 
         } //foreach
         //exit('1');
 
         \Locale::setDefault('en');
+
+        $logger->notice("Finished generateLanguages. count=".$count/10);
 
         return round($count/10);
     }
