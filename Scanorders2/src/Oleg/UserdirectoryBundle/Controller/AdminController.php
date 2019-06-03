@@ -750,8 +750,8 @@ class AdminController extends Controller
         $elements['en_US'] = $language;
         $language = Intl::getLanguageBundle()->getLanguageName('fr');
         $elements['fr'] = $language;
-//        $language = Intl::getLanguageBundle()->getLanguageName('de');
-//        $elements['de'] = $language;
+        $language = Intl::getLanguageBundle()->getLanguageName('de');
+        $elements['de'] = $language;
         echo "language=$language <br>";
         //print_r($elements);
         //exit('language='.$language);
