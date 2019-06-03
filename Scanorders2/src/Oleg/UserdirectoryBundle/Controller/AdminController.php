@@ -743,7 +743,8 @@ class AdminController extends Controller
         \Locale::setDefault('en');
         echo "after setDefault <br>";
         $language = Intl::getLanguageBundle()->getLanguageName('de');
-        exit('language='.$language);
+        echo "language=$language <br>";
+        //exit('language='.$language);
         $elements = Intl::getLanguageBundle()->getLanguageNames();
         print_r($elements);
         exit('Exit Intl');
