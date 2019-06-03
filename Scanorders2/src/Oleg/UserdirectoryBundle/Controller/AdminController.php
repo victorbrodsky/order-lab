@@ -3421,8 +3421,8 @@ class AdminController extends Controller
         $language = Intl::getLanguageBundle()->getLanguageName('de');
         $elements['de'] = $language;
 
-        print_r($elements);
-        exit();
+        //print_r($elements);
+        //exit();
         $logger->notice("Start generateLanguages. count=".count($entities));
 
         $username = $this->get('security.token_storage')->getToken()->getUser();
