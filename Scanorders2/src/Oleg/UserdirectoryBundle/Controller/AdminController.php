@@ -3499,7 +3499,18 @@ class AdminController extends Controller
 
         $logger->notice("Start generateLocales. before getLocaleNames");
 
-        $elements = Intl::getLocaleBundle()->getLocaleNames();
+        //$elements = Intl::getLocaleBundle()->getLocaleNames();
+
+        $elements = array();
+        $language = Intl::getLocaleBundle()->getLocaleName('en');
+        $elements['en'] = $language;
+        $language = Intl::getLocaleBundle()->getLocaleName('en_US');
+        $elements['en_US'] = $language;
+        $language = Intl::getLocaleBundle()->getLocaleName('fr');
+        $elements['fr'] = $language;
+        $language = Intl::getLocaleBundle()->getLocaleName('de');
+        $elements['de'] = $language;
+
         //print_r($elements);
         //exit();
         $logger->notice("Start generateLocales. after getLocaleNames. count=".countg($elements));
