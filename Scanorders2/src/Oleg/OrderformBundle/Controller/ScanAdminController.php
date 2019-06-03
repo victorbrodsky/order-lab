@@ -169,6 +169,10 @@ class ScanAdminController extends AdminController
     }
 
     public function generateScanorderAll() {
+
+        $logger = $this->container->get('logger');
+        $logger->notice("Start generateScanorderAll");
+
         $max_exec_time = ini_get('max_execution_time');
         ini_set('max_execution_time', 900); //900 seconds = 15 minutes
 
@@ -249,6 +253,8 @@ class ScanAdminController extends AdminController
             'CalllogEntryTagsList='.$count_generateCalllogEntryTagsList.', '.
 
             ' (Note: -1 means that this table is already exists)';
+
+        $logger->notice("Finished generateScanorderAll. msg=".$msg);
 
         return $msg;
     }

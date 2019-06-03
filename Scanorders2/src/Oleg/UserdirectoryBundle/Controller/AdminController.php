@@ -696,6 +696,9 @@ class AdminController extends Controller
      */
     public function generateAllSiteAction()
     {
+        $logger = $this->container->get('logger');
+        $logger->notice("generateAllSiteAction");
+
         $em = $this->getDoctrine()->getManager();
 
         //1)
@@ -733,6 +736,9 @@ class AdminController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
+        $logger = $this->container->get('logger');
+        $logger->notice("generateAllAction");
+
         $msg = $this->generateAll();
         $em->clear();
 
@@ -751,10 +757,12 @@ class AdminController extends Controller
     public function generateAll() {
 
         $logger = $this->container->get('logger');
+        $logger->notice("Start generateAll");
+
         $userutil = new UserUtil();
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
-        ini_set('memory_limit', '3072M');
+        //ini_set('memory_limit', '3072M');
         //$max_exec_time = ini_get('max_execution_time');
         ini_set('max_execution_time', 1800); //1800 seconds = 30 minutes; it will set back to original value after execution of this script
 
