@@ -3493,15 +3493,16 @@ class AdminController extends Controller
 
         $entities = $em->getRepository('OlegUserdirectoryBundle:LocaleList')->findAll();
         if( $entities ) {
+            $logger->notice("Exit generateLocales. LocaleList already generated. count=".count($entities));
             return -1;
         }
 
-        $logger->notice("Start generateLanguages. before getLocaleNames");
+        $logger->notice("Start generateLocales. before getLocaleNames");
 
         $elements = Intl::getLocaleBundle()->getLocaleNames();
         //print_r($elements);
         //exit();
-        $logger->notice("Start generateLanguages. after getLocaleNames. count=".countg($elements));
+        $logger->notice("Start generateLocales. after getLocaleNames. count=".countg($elements));
 
         $username = $this->get('security.token_storage')->getToken()->getUser();
 
