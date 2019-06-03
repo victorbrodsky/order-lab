@@ -1058,7 +1058,7 @@ class AdminController extends Controller
 
             ' (Note: -1 means that this table is already exists)';
 
-        $logger->notice("Finished generateAll. msg=".$msg);
+        $logger->notice("Finished generateAll");
 
         return $msg;
     }
