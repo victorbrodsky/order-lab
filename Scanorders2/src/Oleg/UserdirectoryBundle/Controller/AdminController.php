@@ -740,6 +740,10 @@ class AdminController extends Controller
         $logger->notice("generateAllAction");
 
         //testing
+        \Locale::setDefault('en');
+        echo "after setDefault <br>";
+        $language = Intl::getLanguageBundle()->getLanguageName('de');
+        exit('language='.$language);
         $elements = Intl::getLanguageBundle()->getLanguageNames();
         print_r($elements);
         exit('Exit Intl');
