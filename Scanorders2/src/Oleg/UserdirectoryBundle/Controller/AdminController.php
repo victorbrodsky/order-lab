@@ -796,8 +796,10 @@ class AdminController extends Controller
 
         $count_languages = $this->generateLanguages();
         $logger->notice("Finished generateLanguages");
+
         $count_locales = $this->generateLocales();
         $logger->notice("Finished generateLocales");
+
         $count_locationTypeList = $this->generateLocationTypeList();
         $logger->notice("Finished generateLocationTypeList");
         $count_locprivacy = $this->generateLocationPrivacy();
@@ -3381,6 +3383,8 @@ class AdminController extends Controller
             $logger->notice("Exit generateLanguages. LanguageList already generated. count=".count($entities));
             return -1;
         }
+
+        $logger->notice("Start generateLanguages. before getLanguageNames");
 
         //\Locale::setDefault('ru');
         $elements = Intl::getLanguageBundle()->getLanguageNames();
