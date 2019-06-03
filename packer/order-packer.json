@@ -126,10 +126,7 @@
         "type": "shell",
         "inline": [ 
 		   "echo @### composer and deploy ###",
-           "cd /usr/local/bin/order-lab/Scanorders2",
-		   "/bin/dd if=/dev/zero of=/var/swap.1 bs=1M count=1024",
-		   "/sbin/mkswap /var/swap.1",
-		   "/sbin/swapon /var/swap.1",
+           "cd /usr/local/bin/order-lab/Scanorders2",		  
 		   "composer self-update",
            "php -dmemory_limit=-1 /usr/local/bin/composer install",
 		   "git pull",
