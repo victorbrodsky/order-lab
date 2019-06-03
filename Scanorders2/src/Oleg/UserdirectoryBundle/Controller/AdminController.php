@@ -761,6 +761,12 @@ class AdminController extends Controller
             exit('Exit Intl');
         }
 
+        if(1) {
+            $elements = Intl::getLocaleBundle()->getLocaleNames();
+            print_r($elements);
+            exit();
+        }
+
         $msg = $this->generateAll();
         $em->clear();
 
@@ -3482,6 +3488,7 @@ class AdminController extends Controller
 
     public function generateLocales() {
 
+        $logger = $this->container->get('logger');
         $em = $this->getDoctrine()->getManager();
 
         $entities = $em->getRepository('OlegUserdirectoryBundle:LocaleList')->findAll();
@@ -3489,9 +3496,12 @@ class AdminController extends Controller
             return -1;
         }
 
+        $logger->notice("Start generateLanguages. before getLocaleNames");
+
         $elements = Intl::getLocaleBundle()->getLocaleNames();
         //print_r($elements);
         //exit();
+        $logger->notice("Start generateLanguages. after getLocaleNames. count=".countg($elements));
 
         $username = $this->get('security.token_storage')->getToken()->getUser();
 
