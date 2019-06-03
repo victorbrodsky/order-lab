@@ -704,6 +704,7 @@ class UserServiceUtil {
         $entities = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
 
         if( count($entities) > 0 ) {
+            $logger->notice("Exit generateSiteParameters: SiteParameters has been already generated.");
             return -1;
         }
 
