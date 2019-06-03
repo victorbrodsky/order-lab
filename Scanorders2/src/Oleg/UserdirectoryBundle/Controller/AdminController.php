@@ -3388,8 +3388,8 @@ class AdminController extends Controller
 
         //\Locale::setDefault('ru');
         $elements = Intl::getLanguageBundle()->getLanguageNames();
-        //print_r($elements);
-        //exit();
+        print_r($elements);
+        exit();
         $logger->notice("Start generateLanguages. count=".count($entities));
 
         $username = $this->get('security.token_storage')->getToken()->getUser();
