@@ -3378,6 +3378,7 @@ class AdminController extends Controller
 
         $entities = $em->getRepository('OlegUserdirectoryBundle:LanguageList')->findAll();
         if( $entities ) {
+            $logger->notice("Exit generateLanguages. LanguageList already generated. count=".count($entities));
             return -1;
         }
 

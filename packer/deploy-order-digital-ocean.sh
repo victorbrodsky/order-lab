@@ -20,6 +20,8 @@
 #2) bash deploy-order-digital-ocean.sh API-TOKEN-FROM-STEP-1 parameters.yml dbusername dbpassword http domainname sslcertificate sslprivatekey
 #3) select 'https' connection channel on the domainname/order/directory/admin/first-time-login-generation-init/ page 
 
+#Notes: manually solve "cannot allocate memory" without rebooting: echo 0 > /proc/sys/kernel/sysrq
+
 apitoken=$1
 parameters=$2
 dbuser=$3
