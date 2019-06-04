@@ -4,9 +4,9 @@
 #bash deploy-order-digital-ocean.sh 
 #$1 API-TOKEN-FROM-STEP-1 
 #$2 parameters.yml 
-#$3 dbuser - optional
-#$4 dbpass - optional
-#$5 https - optional
+#$3 dbuser - optional (default symfony)
+#$4 dbpass - optional (default symfony)
+#$5 protocol - optional (default http)
 #$6 domain_name.tld - optional
 #$7 ssl_certificate.crt - optional
 #$8 intermediate_certificate.ca-crt 
@@ -31,7 +31,7 @@ parameters=$2
 dbuser=$3
 dbpass=$4
 
-https=$5
+protocol=$5
 domainname=$6
 sslcertificate=$7
 sslprivatekey=$8
@@ -47,9 +47,9 @@ if [ -z "$dbpass" ]
     dbpass='symfony'
 fi
 
-if [ -z "$https" ]
+if [ -z "$protocol" ]
   then 	
-    https='http'
+    protocol='http'
 fi
 
 if [ -z "$domainname" ]
@@ -74,7 +74,7 @@ echo "parameters=$parameters"
 echo "dbuser=$dbuser"
 echo "dbpass=$dbpass"
 
-echo "https=$https"
+echo "protocol=$protocol"
 echo "domainname=$domainname"
 echo "sslcertificate=$sslcertificate"
 echo "sslprivatekey=$sslprivatekey"
@@ -104,9 +104,9 @@ sed -i -e "s/parameters_bash_file/$parameters/g" order-packer.json
 sed -i -e "s/bash_dbuser/$dbuser/g" order-packer.json
 sed -i -e "s/bash_dbpass/$dbpass/g" order-packer.json
 
-#modify http.config file to insert virtual host for https
+#modify http.config file to insert virtual host for https protocol
 #https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-apache-in-ubuntu-16-04
-sed -i -e "s/bash_https/$https/g" order-packer.json
+sed -i -e "s/bash_protocol/$protocol/g" order-packer.json
 sed -i -e "s/bash_domainname/$domainname/g" order-packer.json
 sed -i -e "s/bash_sslcertificate/$sslcertificate/g" order-packer.json
 sed -i -e "s/bash_sslprivatekey/$sslprivatekey/g" order-packer.json
@@ -133,7 +133,7 @@ sed -i -e "s/$parameters/parameters_bash_file/g" order-packer.json
 sed -i -e "s/$dbuser/bash_dbuser/g" order-packer.json
 sed -i -e "s/$dbpass/bash_dbpass/g" order-packer.json
 
-sed -i -e "s/$https/bash_https/g" order-packer.json
+sed -i -e "s/$protocol/bash_protocol/g" order-packer.json
 sed -i -e "s/$domainname/bash_domainname/g" order-packer.json
 sed -i -e "s/$sslcertificate/bash_sslcertificate/g" order-packer.json
 sed -i -e "s/$sslprivatekey/bash_sslprivatekey/g" order-packer.json
@@ -174,7 +174,7 @@ if [ ! -z "$domainname" ]
 	DROPLETIP="www.$domainname"
 fi
 
-if [ ! -z "$https" ] && [ "$https" = "https" ]
+if [ ! -z "$protocol" ] && [ "$protocol" = "https" ]
   then 	
 	DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/https"
   else
