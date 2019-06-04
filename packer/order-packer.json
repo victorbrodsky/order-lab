@@ -19,6 +19,7 @@
         "type": "shell",
         "inline": [
 		   "echo @### Install apache ###",
+		   "echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections",
            "sleep 30",
            "sudo apt-get update",
            "sudo apt-get install -y apache2"          
