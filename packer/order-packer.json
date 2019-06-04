@@ -18,6 +18,7 @@
      {
         "type": "shell",
         "inline": [
+		   "echo @### Install apache ###",
            "sleep 30",
            "sudo apt-get update",
            "sudo apt-get install -y apache2"          
@@ -27,6 +28,7 @@
      {
         "type": "shell",
         "inline": [
+		   "echo @### Install php ###",	
            "sleep 30",	
 	       "sudo apt-add-repository -y ppa:ondrej/php",
            "sudo apt-get update",
@@ -39,7 +41,8 @@
 
       {
         "type": "shell",
-        "inline": [                      
+        "inline": [  
+		   "echo @### Install postgresql and pgsql ###",		
            "sudo apt-get install -y postgresql postgresql-contrib",
            "sudo apt-get install -y php5.6-pgsql",
            "sudo service apache2 restart"         
@@ -48,7 +51,8 @@
 
       {
         "type": "shell",
-        "inline": [                               
+        "inline": [   
+		   "echo @### Create DB and create user ###",		
            "sudo -u postgres createdb scanorder",
 		   "sudo -u postgres psql -c \"CREATE USER bash_dbuser WITH PASSWORD 'bash_dbuser'\"",  
 	       "sudo -u postgres psql -c \"ALTER USER bash_dbuser WITH SUPERUSER\"",
@@ -59,6 +63,7 @@
       {
         "type": "shell",
         "inline": [  
+		   "echo @### Clone ORDER and copy config and php.ini files; Install composer ###",
            "sudo apt-get install -y git",
            "ssh-keyscan github.com >> ~/.ssh/known_hosts",
            "cd /usr/local/bin/",
@@ -82,6 +87,7 @@
 	   {
         "type": "shell",
         "inline": [   
+		   "echo @### Install wkhtmltopdf, libreoffice, ghostscript, pdftk ###",
 		   "sudo apt-get update",
 		   "sudo apt-get install -y xvfb libfontconfig wkhtmltopdf",	
 		   "sudo apt-get install -y libreoffice",		
@@ -93,7 +99,7 @@
 	  {
         "type": "shell",
         "inline": [ 
-           "echo @### create ssl folder /usr/local/bin/order-lab/ssl ###",		
+           "echo @### Create ssl folder /usr/local/bin/order-lab/ssl ###",		
 		   "sudo mkdir /usr/local/bin/order-lab/ssl"
          ]    
       },
@@ -113,7 +119,7 @@
 	   {
 		   "type": "shell",
            "inline": [ 
-		   "echo @### enable ssl ###",		   
+		   "echo @### Enable ssl ###",		   
 		   "cp /usr/local/bin/order-lab/packer/default-ssl.conf /etc/apache2/sites-available/",
            "sudo a2enmod ssl",          
 		   "sudo a2enmod headers",	
@@ -125,7 +131,7 @@
 	  {
         "type": "shell",
         "inline": [ 
-		   "echo @### composer and deploy ###",
+		   "echo @### Composer and deploy ###",
            "cd /usr/local/bin/order-lab/Scanorders2",		  
 		   "composer self-update",
            "php -dmemory_limit=-1 /usr/local/bin/composer install",

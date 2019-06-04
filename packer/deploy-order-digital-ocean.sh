@@ -21,6 +21,8 @@
 #3) select 'https' connection channel on the domainname/order/directory/admin/first-time-login-generation-init/ page 
 
 #Notes: manually solve "cannot allocate memory" without rebooting: 
+#echo 1 > /proc/sys/kernel/sysrq
+#echo f > /proc/sysrq-trigger
 #echo 0 > /proc/sys/kernel/sysrq
 #Or: free -m
 
