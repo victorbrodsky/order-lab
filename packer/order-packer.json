@@ -53,10 +53,10 @@
         "type": "shell",
         "inline": [   
 		   "echo @### Create DB and create user ###",		
-           "su - postgres createdb scanorder",
-		   "su - postgres psql -c \"CREATE USER bash_dbuser WITH PASSWORD 'bash_dbuser'\"",  
-	       "su - postgres psql -c \"ALTER USER bash_dbuser WITH SUPERUSER\"",
-           "su - postgres psql -c \"GRANT ALL PRIVILEGES ON DATABASE scanorder to bash_dbuser\""          
+           "sudo -Hiu postgres createdb scanorder",
+		   "sudo -Hiu postgres psql -c \"CREATE USER bash_dbuser WITH PASSWORD 'bash_dbuser'\"",  
+	       "sudo -Hiu postgres psql -c \"ALTER USER bash_dbuser WITH SUPERUSER\"",
+           "sudo -Hiu postgres psql -c \"GRANT ALL PRIVILEGES ON DATABASE scanorder to bash_dbuser\""          
          ]    
       },
 
