@@ -63,7 +63,7 @@
       {
         "type": "shell",
         "inline": [  
-		   "echo @### Clone ORDER and copy config and php.ini files; Install composer ###",
+		   "echo @### Clone ORDER and copy config and php.ini files, install composer ###",
            "sudo apt-get install -y git",
            "ssh-keyscan github.com >> ~/.ssh/known_hosts",
            "cd /usr/local/bin/",
