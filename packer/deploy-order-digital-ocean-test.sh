@@ -114,6 +114,9 @@ DROPLETIP=159.65.189.0
 
 if [ ! -z "$domainname" ]
   then 	
+	#check and create domain and DNS 
+	RES=$(doctl compute domain create $domainname --ip-address ns1.digitalocean.com)
+  
 	#check and delete existing domain DNS records www
 	#1) doctl compute domain records list $domainname
 	LIST=$(doctl compute domain records list $domainname | grep www | awk '{print $1}')
