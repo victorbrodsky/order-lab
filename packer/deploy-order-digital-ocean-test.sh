@@ -25,7 +25,7 @@ parameters=$2
 dbuser=$3
 dbpass=$4
 
-https=$5
+protocol=$5
 domainname=$6
 sslcertificate=$7
 sslprivatekey=$8
@@ -67,6 +67,11 @@ if [ -z "$parameters" ]
     exit 0
 fi
 
+if [ -z "$protocol" ]
+  then 	
+    protocol='http'
+fi
+
 if [ -z order-packer.json ]
 then
     echo "order-packer.json not found."
@@ -105,15 +110,14 @@ echo "*** Creating droplet ... ***"
 #DROPLET=$(doctl compute droplet create $IMAGENAME --size 2gb --image $IMAGEID --region nyc3 --wait | tail -1)
 
 
-DROPLETIP=165.227.65.42
+DROPLETIP=159.65.189.0
 
-if [ ! -z "$https" ] && [ "$https" = "https" ]
+if [ ! -z "$domainname" ]
   then 	
 	#check and delete existing domain DNS records www
 	#1) doctl compute domain records list $domainname
 	LIST=$(doctl compute domain records list $domainname | grep www | awk '{print $1}')
-	echo "LIST=$LIST"
-	#listarr=( $LIST )
+	#listinfo=( $LIST )
 	#RECORDID="${listinfo[0]}"
 	
 	#2) doctl compute domain records delete $domainname record_id
@@ -123,16 +127,19 @@ if [ ! -z "$https" ] && [ "$https" = "https" ]
 		#echo "DELETERES=$DELETERES"
 	done
   
+	#doctl compute domain create domain_name --ip-address droplet_ip_address
 	#doctl compute domain records create $domainname --record-type A --record-name www --record data $DROPLETIP -v
-	#DOMAIN=$(doctl compute domain records create $domainname --record-type A --record-name www --record-data $DROPLETIP -v)
-	#echo "DOMAIN=$DOMAIN"
-	DROPLETIPWEB="http://www.$domainname/order/directory/admin/first-time-login-generation-init/https"
+	DOMAIN=$(doctl compute domain records create $domainname --record-type A --record-name www --record-data $DROPLETIP -v)
+	echo "DOMAIN=$DOMAIN"
+	DROPLETIP="www.$domainname"
+fi
+
+if [ ! -z "$protocol" ] && [ "$protocol" = "https" ]
+  then 	
+	DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/https"
   else
     DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/"
 fi
-echo "DROPLETIPWEB=$DROPLETIPWEB"
-
-
 
 echo "Trying to open a web browser... You can try to open a web browser manually and go to $DROPLETIPWEB"
 
