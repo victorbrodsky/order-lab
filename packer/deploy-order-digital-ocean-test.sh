@@ -115,8 +115,9 @@ DROPLETIP=159.65.189.0
 if [ ! -z "$domainname" ]
   then 	
 	#check and create domain and DNS 
-	DNSRES=$(doctl compute domain create $domainname --ip-address ns1.digitalocean.com)
-	echo "Create domain DNSRES=$DNSRES"
+	echo "Create domain domainname=$domainname"
+	DOMAINRES=$(doctl compute domain create $domainname --ip-address ns1.digitalocean.com)
+	echo "Create domain DOMAINRES=$DOMAINRES"
   
 	#check and delete existing domain DNS records www
 	#1) doctl compute domain records list $domainname
