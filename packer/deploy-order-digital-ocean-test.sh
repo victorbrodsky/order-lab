@@ -145,7 +145,6 @@ if [ ! -z "$protocol" ] && [ "$protocol" = "https" ]
     DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/"
 fi
 
-echo "Trying to open a web browser... You can try to open a web browser manually and go to $DROPLETIPWEB"
-
-xdg-open "$DROPLETIPWEB"
+#echo "Trying to open a web browser... You can try to open a web browser manually and go to $DROPLETIPWEB"
+#xdg-open "$DROPLETIPWEB"
 
