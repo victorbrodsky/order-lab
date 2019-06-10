@@ -133,12 +133,54 @@ class GoogleFormConfigType extends AbstractType
         $builder->add('fellowshipVisaStatuses', EntityType::class, array(
             'class' => 'OlegFellAppBundle:VisaStatus',
             'label' => "Fellowship Visa Status:",
-            'required' => true,
+            'required' => false,
             'multiple' => true,
             'choices' => $this->params['fellVisaStatus'],
             'invalid_message' => 'fellowshipVisaStatuses invalid value',
             //'choices_as_values' => true,
             'attr' => array('class' => 'combobox combobox-width fellapp-fellowshipVisaStatuses'),
+        ));
+
+        $builder->add('visaNote', null, array(
+            'label' => "Citizenship/Visa Note (i.e. 'NYPH-CORNELL ONLY ACCEPTS/SPONSORS J-1 VISAS'):",
+            'required' => false,
+            'attr' => array('class' => 'form-control')
+        ));
+
+        $builder->add('otherExperienceNote', null, array(
+            'label' => "Other ExperienceNote Note (i.e. 'In chronological order, list other educational experiences, jobs, military service or training that is not accounted for above.'):",
+            'required' => false,
+            'attr' => array('class' => 'form-control')
+        ));
+
+        $builder->add('nationalBoardNote', null, array(
+            'label' => "National Board Note (i.e. 'Please indicate national board examination dates and results received.'):",
+            'required' => false,
+            'attr' => array('class' => 'form-control')
+        ));
+
+        $builder->add('medicalLicenseNote', null, array(
+            'label' => "Medical Licensure Note (i.e. 'Please list any states in which you hold a license to practice medicine. Please provide a license number. If an application is pending in a state, please write “pending.”'):",
+            'required' => false,
+            'attr' => array('class' => 'form-control')
+        ));
+
+        $builder->add('boardCertificationNote', null, array(
+            'label' => "Board Certification Note (i.e. 'Please indicate any areas of board certification.'):",
+            'required' => false,
+            'attr' => array('class' => 'form-control')
+        ));
+
+        $builder->add('referenceLetterNote', null, array(
+            'label' => "Reference Letter Note (i.e. 'Please list the individuals who will write your letters of recommendation. At least three are required.'):",
+            'required' => false,
+            'attr' => array('class' => 'form-control')
+        ));
+
+        $builder->add('signatureStatement', null, array(
+            'label' => "Signature Statement (i.e. 'I hereby certify that all of the information on this application is accurate...'):",
+            'required' => false,
+            'attr' => array('class' => 'form-control')
         ));
 
     }

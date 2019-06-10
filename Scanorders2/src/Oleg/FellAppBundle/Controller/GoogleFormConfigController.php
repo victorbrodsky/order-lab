@@ -30,8 +30,8 @@ class GoogleFormConfigController extends Controller
 {
 
     /**
-     * @Route("/google-form-config/edit", name="fellapp_google_form_config_edit")
-     * @Route("/google-form-config/show", name="fellapp_google_form_config_show")
+     * @Route("/form-status-and-appearance/edit", name="fellapp_google_form_config_edit")
+     * @Route("/form-status-and-appearance/show", name="fellapp_google_form_config_show")
      * @Template("OlegFellAppBundle:GoogleFormConfig:google-form-config.html.twig")
      * @Method({"GET", "PUT"})
      */
@@ -78,6 +78,8 @@ class GoogleFormConfigController extends Controller
 
         $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
         $configFileContent = $googlesheetmanagement->getConfigOnGoogleDrive();
+        //add new line before ",{"
+        //$configFileContent = str_replace("},","},<br>",$configFileContent);
 
         return array(
             'form' => $form->createView(),
@@ -187,12 +189,36 @@ class GoogleFormConfigController extends Controller
         //letterExceptionAccount: done
         $configJson['letterExceptionAccount'] = $entity->getLetterExceptionAccount();
 
+        //fellowshipVisaStatuses:
         $fellowshipVisaStatuses = array();
         foreach($entity->getFellowshipVisaStatuses() as $fellowshipVisaStatus) {
             $name = $fellowshipVisaStatus->getName();
             $fellowshipVisaStatuses[] = array('id'=>$name,'text'=>$name);
         }
         $configJson['fellowshipVisaStatuses'] = $fellowshipVisaStatuses;
+
+        //visaNote:
+        $configJson['visaNote'] = $entity->getVisaNote();
+
+        //otherExperienceNote:
+        $configJson['otherExperienceNote'] = $entity->getOtherExperienceNote();
+
+        //nationalBoardNote:
+        $configJson['nationalBoardNote'] = $entity->getNationalBoardNote();
+
+        //medicalLicenseNote:
+        $configJson['medicalLicenseNote'] = $entity->getMedicalLicenseNote();
+
+        //boardCertificationNote:
+        $configJson['boardCertificationNote'] = $entity->getBoardCertificationNote();
+
+        //referenceLetterNote:
+        $configJson['referenceLetterNote'] = $entity->getReferenceLetterNote();
+
+        //signatureStatement:
+        $configJson['signatureStatement'] = $entity->getSignatureStatement();
+
+
 
         $configJson = json_encode($configJson);
 
@@ -228,20 +254,32 @@ class GoogleFormConfigController extends Controller
         //$newFileName = "config.json";
         $newRevision = null;
 
-        $updatedFile = $this->updateFileContent($service, $configFile->getId(), $newTitle, $newDescription, $newMimeType, $configJson, $newRevision);
-        if( $updatedFile ) {
-            //echo "Config file has been updated <br>";
-            $eventMsg = "Fellowship Form Configuration file has been updated on the Google Drive by " . $user;
-            $eventType = 'Fellowship Application Config Updated On Google Drive';
+        //if live
+        $environment = $userSecUtil->getSiteSettingParameter('environment');
+        if( $environment == "live" ) { //live
+            $updatedFile = $this->updateFileContent($service, $configFile->getId(), $newTitle, $newDescription, $newMimeType, $configJson, $newRevision);
+            if( $updatedFile ) {
+                //echo "Config file has been updated <br>";
+                $eventMsg = "Fellowship Form Configuration file has been updated on the Google Drive by " . $user;
+                $eventType = 'Fellowship Application Config Updated On Google Drive';
 
-            $this->get('session')->getFlashBag()->add(
-                'notice',
-                $eventMsg
-            );
+                $this->get('session')->getFlashBag()->add(
+                    'notice',
+                    $eventMsg
+                );
+            } else {
+                $eventMsg = "Fellowship Form Configuration file update to Google Drive failed";
+                $eventType = 'Fellowship Application Config Updated On Google Drive Failed';
+                //throw new \Exception( $msg );
+
+                $this->get('session')->getFlashBag()->add(
+                    'warning',
+                    $eventMsg
+                );
+            }
         } else {
-            $eventMsg = "Fellowship Form Configuration file update to Google Drive failed";
+            $eventMsg = "Fellowship Form Configuration file has not been updated because the environment is not 'live' (environment='$environment') on the Google Drive by " . $user;
             $eventType = 'Fellowship Application Config Updated On Google Drive Failed';
-            //throw new \Exception( $msg );
 
             $this->get('session')->getFlashBag()->add(
                 'warning',
@@ -255,31 +293,28 @@ class GoogleFormConfigController extends Controller
 
         $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$eventMsg,$user,$entity,$request,$eventType);
 
-
-
         return $this->redirect($this->generateUrl('fellapp_google_form_config_show'));
-
     }
 
-    //Generate config.json file and upload the file to the Google Drive
-    public function updateConfigOnGoogleDrive($configEntity) {
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_ADMIN') === false ) {
-            //return $this->redirect( $this->generateUrl('fellapp-nopermission') );
-            return NULL;
-        }
-
-        $logger = $this->container->get('logger');
-        $userSecUtil = $this->container->get('user_security_utility');
-
-        $configFileFolderIdFellApp = $userSecUtil->getSiteSettingParameter('configFileFolderIdFellApp');
-        if( !$configFileFolderIdFellApp ) {
-            $logger->warning('Google Drive Folder ID with config file is not defined in Site Parameters. configFileFolderIdFellApp='.$configFileFolderIdFellApp);
-            return NULL;
-        }
-
-
-        return false;
-    }
+//    //Generate config.json file and upload the file to the Google Drive
+//    public function updateConfigOnGoogleDrive($configEntity) {
+//        if( $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_ADMIN') === false ) {
+//            //return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+//            return NULL;
+//        }
+//
+//        $logger = $this->container->get('logger');
+//        $userSecUtil = $this->container->get('user_security_utility');
+//
+//        $configFileFolderIdFellApp = $userSecUtil->getSiteSettingParameter('configFileFolderIdFellApp');
+//        if( !$configFileFolderIdFellApp ) {
+//            $logger->warning('Google Drive Folder ID with config file is not defined in Site Parameters. configFileFolderIdFellApp='.$configFileFolderIdFellApp);
+//            return NULL;
+//        }
+//
+//
+//        return false;
+//    }
     /**
      * Update an existing file's metadata and content.
      *

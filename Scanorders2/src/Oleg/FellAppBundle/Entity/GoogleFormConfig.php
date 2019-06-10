@@ -125,6 +125,58 @@ class GoogleFormConfig {
      **/
     private $fellowshipVisaStatuses;
 
+    /**
+     * NYPH-CORNELL ONLY ACCEPTS/SPONSORS J-1 VISAS
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $visaNote;
+
+    /**
+     * In chronological order, list other educational experiences, jobs, military service or training that is not accounted for above.
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $otherExperienceNote;
+
+    /**
+     * Please indicate national board examination dates and results received.
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $nationalBoardNote;
+
+    /**
+     * Please list any states in which you hold a license to practice medicine. Please provide a license number. If an application is pending in a state, please write “pending.”
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $medicalLicenseNote;
+
+    /**
+     * Please indicate any areas of board certification.
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $boardCertificationNote;
+
+    /**
+     * Please list the individuals who will write your letters of recommendation. At least three are required.
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $referenceLetterNote;
+
+    /**
+     * I hereby certify that all of the information on this application is accurate, complete,
+     * and current to the best of my knowledge, and that this application is being made for
+     * serious consideration of training in the Pathology Fellowship indicated.
+     * I understand that accepting more than one fellowship position constitutes a violation
+     * of professional ethics and may result in the forfeiture of all positions.
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $signatureStatement;
 
 
 
@@ -350,6 +402,112 @@ class GoogleFormConfig {
     {
         $this->letterExceptionAccount = $letterExceptionAccount;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getVisaNote()
+    {
+        return $this->visaNote;
+    }
+    /**
+     * @param mixed $visaNote
+     */
+    public function setVisaNote($visaNote)
+    {
+        $this->visaNote = $visaNote;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOtherExperienceNote()
+    {
+        return $this->otherExperienceNote;
+    }
+    /**
+     * @param mixed $otherExperienceNote
+     */
+    public function setOtherExperienceNote($otherExperienceNote)
+    {
+        $this->otherExperienceNote = $otherExperienceNote;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNationalBoardNote()
+    {
+        return $this->nationalBoardNote;
+    }
+    /**
+     * @param mixed $nationalBoardNote
+     */
+    public function setNationalBoardNote($nationalBoardNote)
+    {
+        $this->nationalBoardNote = $nationalBoardNote;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMedicalLicenseNote()
+    {
+        return $this->medicalLicenseNote;
+    }
+    /**
+     * @param mixed $medicalLicenseNote
+     */
+    public function setMedicalLicenseNote($medicalLicenseNote)
+    {
+        $this->medicalLicenseNote = $medicalLicenseNote;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBoardCertificationNote()
+    {
+        return $this->boardCertificationNote;
+    }
+    /**
+     * @param mixed $boardCertificationNote
+     */
+    public function setBoardCertificationNote($boardCertificationNote)
+    {
+        $this->boardCertificationNote = $boardCertificationNote;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReferenceLetterNote()
+    {
+        return $this->referenceLetterNote;
+    }
+    /**
+     * @param mixed $referenceLetterNote
+     */
+    public function setReferenceLetterNote($referenceLetterNote)
+    {
+        $this->referenceLetterNote = $referenceLetterNote;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSignatureStatement()
+    {
+        return $this->signatureStatement;
+    }
+    /**
+     * @param mixed $signatureStatement
+     */
+    public function setSignatureStatement($signatureStatement)
+    {
+        $this->signatureStatement = $signatureStatement;
+    }
+
 
     
 

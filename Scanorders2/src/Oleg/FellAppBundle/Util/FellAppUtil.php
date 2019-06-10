@@ -281,7 +281,15 @@ class FellAppUtil {
         $repository = $em->getRepository('OlegFellAppBundle:VisaStatus');
         $dql = $repository->createQueryBuilder('list');
 
+        $dql->where("list.type = :typedef OR list.type = :typeadd");
+        $dql->orderBy("list.orderinlist","ASC");
+
         $query = $em->createQuery($dql);
+
+        $query->setParameters( array(
+            'typedef' => 'default',
+            'typeadd' => 'user-added',
+        ));
 
         $fellTypes = $query->getResult();
         //echo "fellTypes count=".count($fellTypes)."<br>";

@@ -87,7 +87,29 @@
         {{ formmacros.field(form.fellowshipVisaStatuses) }}
     {% endif %}
 
+    {% if form.visaNote is defined %}
+        {{ formmacros.field(form.visaNote) }}
+    {% endif %}
 
+    {% if form.otherExperienceNote is defined %}
+        {{ formmacros.field(form.otherExperienceNote) }}
+    {% endif %}
+
+    {% if form.medicalLicenseNote is defined %}
+        {{ formmacros.field(form.medicalLicenseNote) }}
+    {% endif %}
+
+    {% if form.boardCertificationNote is defined %}
+        {{ formmacros.field(form.boardCertificationNote) }}
+    {% endif %}
+
+    {% if form.referenceLetterNote is defined %}
+        {{ formmacros.field(form.referenceLetterNote) }}
+    {% endif %}
+
+    {% if form.signatureStatement is defined %}
+        {{ formmacros.field(form.signatureStatement) }}
+    {% endif %}
 
     <br>
     <p>
@@ -109,15 +131,21 @@
     {% if configFileContent is defined %}
         <br>
         <h3>Current Configuration File on Google Drive</h3>
-        <div >
-            <pre>
-                <code>
-                    {{ configFileContent|raw }}
-                </code>
-            </pre>
+        <div style="color:black">
+            {#<pre>#}
+                {#<code>#}
+                    {#{{ configFileContent|raw }}#}
+                {#</code>#}
+            {#</pre>#}
             {#<textarea>#}
                 {#{{ configFileContent|raw }}#}
             {#</textarea>#}
+            {#<p>#}
+                {{ configFileContent }}
+            {#</p>#}
+            {#<p>#}
+                {#{{ configFileContent|raw }}#}
+            {#</p>#}
         </div>
     {% endif %}
 
