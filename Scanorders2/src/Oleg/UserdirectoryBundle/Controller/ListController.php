@@ -257,6 +257,7 @@ class ListController extends Controller
      * @Route("/list/custom099/", name="custom099-list")
      * @Route("/list/translational-tissue-processing-services/", name="transrestissueprocessingservices-list")
      * @Route("/list/translational-other-requested-services/", name="transresotherrequestedservices-list")
+     * @Route("/list/visastatus/", name="visastatus-list")
      *
      *
      * @Method("GET")
@@ -733,6 +734,7 @@ class ListController extends Controller
      * @Route("/list/custom099/", name="custom099_create")
      * @Route("/list/translational-tissue-processing-services/", name="transrestissueprocessingservices_create")
      * @Route("/list/translational-other-requested-services/", name="transresotherrequestedservices_create")
+     * @Route("/list/visastatus/", name="visastatus_create")
      *
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -1037,6 +1039,7 @@ class ListController extends Controller
      * @Route("/list/custom099/new", name="custom099_new")
      * @Route("/list/translational-tissue-processing-services/new", name="transrestissueprocessingservices_new")
      * @Route("/list/translational-other-requested-services/new", name="transresotherrequestedservices_new")
+     * @Route("/list/visastatus/new", name="visastatus_new")
      *
      *
      * @Method("GET")
@@ -1305,6 +1308,7 @@ class ListController extends Controller
      * @Route("/list/custom099/{id}", name="custom099_show")
      * @Route("/list/translational-tissue-processing-services/{id}", name="transrestissueprocessingservices_show")
      * @Route("/list/translational-other-requested-services/{id}", name="transresotherrequestedservices_show")
+     * @Route("/list/visastatus/{id}", name="visastatus_show")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:show.html.twig")
@@ -1568,6 +1572,7 @@ class ListController extends Controller
      * @Route("/list/custom099/{id}/edit", name="custom099_edit")
      * @Route("/list/translational-tissue-processing-services/{id}/edit", name="transrestissueprocessingservices_edit")
      * @Route("/list/translational-other-requested-services/{id}/edit", name="transresotherrequestedservices_edit")
+     * @Route("/list/visastatus/{id}/edit", name="visastatus_edit")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -1868,6 +1873,7 @@ class ListController extends Controller
      * @Route("/list/custom099/{id}", name="custom099_update")
      * @Route("/list/translational-tissue-processing-services/{id}", name="transrestissueprocessingservices_update")
      * @Route("/list/translational-other-requested-services/{id}", name="transresotherrequestedservices_update")
+     * @Route("/list/visastatus/{id}", name="visastatus_update")
      *
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -2654,11 +2660,15 @@ class ListController extends Controller
                 $displayName = "Translational Research Work Request Business Purposes";
                 $bundleName = "TranslationalResearchBundle";
                 break;
-
             case "antibodies":
                 $className = "AntibodyList";
                 $displayName = "Antibody List";
                 $bundleName = "TranslationalResearchBundle";
+                break;
+            case "visastatus":
+                $className = "VisaStatus";
+                $displayName = "Visa Status";
+                $bundleName = "FellAppBundle";
                 break;
 
             case "custom000":
@@ -3344,6 +3354,7 @@ class ListController extends Controller
      * @Route("/list/custom099/{id}", name="custom099_delete")
      * @Route("/list/translational-tissue-processing-services/{id}", name="transrestissueprocessingservices_delete")
      * @Route("/list/translational-other-requested-services/{id}", name="transresotherrequestedservices_delete")
+     * @Route("/list/visastatus/{id}", name="visastatus_delete")
      *
      *
      * @Method("DELETE")

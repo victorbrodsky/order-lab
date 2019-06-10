@@ -130,6 +130,16 @@ class GoogleFormConfigType extends AbstractType
             'attr' => array('class' => 'form-control')
         ));
 
+        $builder->add('fellowshipVisaStatuses', EntityType::class, array(
+            'class' => 'OlegFellAppBundle:VisaStatus',
+            'label' => "Fellowship Visa Status:",
+            'required' => true,
+            'multiple' => true,
+            'choices' => $this->params['fellVisaStatus'],
+            'invalid_message' => 'fellowshipVisaStatuses invalid value',
+            //'choices_as_values' => true,
+            'attr' => array('class' => 'combobox combobox-width fellapp-fellowshipVisaStatuses'),
+        ));
 
     }
 

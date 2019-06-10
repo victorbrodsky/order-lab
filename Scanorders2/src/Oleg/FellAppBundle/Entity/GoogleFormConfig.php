@@ -116,12 +116,21 @@ class GoogleFormConfig {
      */
     private $letterExceptionAccount;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="Oleg\FellAppBundle\Entity\VisaStatus", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="fellapp_googleformconfig_visastatus",
+     *      joinColumns={@ORM\JoinColumn(name="googleformconfig_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="visastatus_id", referencedColumnName="id")}
+     * )
+     **/
+    private $fellowshipVisaStatuses;
 
 
 
 
     public function __construct() {
         $this->fellowshipSubspecialties = new ArrayCollection();
+        $this->fellowshipVisaStatuses = new ArrayCollection();
     }
 
 
@@ -148,6 +157,22 @@ class GoogleFormConfig {
     public function removeFellowshipSubspecialty($item)
     {
         $this->fellowshipSubspecialties->removeElement($item);
+    }
+
+    public function getFellowshipVisaStatuses()
+    {
+        return $this->fellowshipVisaStatuses;
+    }
+    public function addFellowshipVisaStatus($item)
+    {
+        if( $item && !$this->fellowshipVisaStatuses->contains($item) ) {
+            $this->fellowshipVisaStatuses->add($item);
+        }
+
+    }
+    public function removeFellowshipVisaStatus($item)
+    {
+        $this->fellowshipVisaStatuses->removeElement($item);
     }
 
     /**

@@ -104,10 +104,12 @@ class GoogleFormConfigController extends Controller
 
         $fellappUtil = $this->get('fellapp_util');
         $fellTypes = $fellappUtil->getFellowshipTypesByInstitution(true);
+        $fellVisaStatus = $fellappUtil->getFellowshipVisaStatuses(true);
 
         $params = array(
             'cycle' => $cycle,
-            'fellTypes' => $fellTypes
+            'fellTypes' => $fellTypes,
+            'fellVisaStatus' => $fellVisaStatus
         );
 
         $form = $this->createForm(
@@ -184,6 +186,13 @@ class GoogleFormConfigController extends Controller
 
         //letterExceptionAccount: done
         $configJson['letterExceptionAccount'] = $entity->getLetterExceptionAccount();
+
+        $fellowshipVisaStatuses = array();
+        foreach($entity->getFellowshipVisaStatuses() as $fellowshipVisaStatus) {
+            $name = $fellowshipVisaStatus->getName();
+            $fellowshipVisaStatuses[] = array('id'=>$name,'text'=>$name);
+        }
+        $configJson['fellowshipVisaStatuses'] = $fellowshipVisaStatuses;
 
         $configJson = json_encode($configJson);
 

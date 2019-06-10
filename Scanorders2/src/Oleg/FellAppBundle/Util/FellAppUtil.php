@@ -274,6 +274,31 @@ class FellAppUtil {
         return $filterType;
     }
 
+    //get all fellowship visa status
+    public function getFellowshipVisaStatuses( $asEntities=false ) {
+        $em = $this->em;
+
+        $repository = $em->getRepository('OlegFellAppBundle:VisaStatus');
+        $dql = $repository->createQueryBuilder('list');
+
+        $query = $em->createQuery($dql);
+
+        $fellTypes = $query->getResult();
+        //echo "fellTypes count=".count($fellTypes)."<br>";
+
+        if( $asEntities ) {
+            return $fellTypes;
+        }
+
+        //add statuses
+        foreach( $fellTypes as $type ) {
+            //echo "type: id=".$type->getId().", name=".$type->getName()."<br>";
+            $filterType[$type->getId()] = $type->getName();
+        }
+
+        return $filterType;
+    }
+
 //    public function getFellowshipTypesWithSpecials_OLD() {
 //        $em = $this->em;
 //

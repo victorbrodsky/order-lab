@@ -21,6 +21,7 @@ namespace Oleg\UserdirectoryBundle\Controller;
 use Oleg\FellAppBundle\Entity\FellAppRank;
 use Oleg\FellAppBundle\Entity\FellAppStatus;
 use Oleg\FellAppBundle\Entity\LanguageProficiency;
+use Oleg\FellAppBundle\Entity\VisaStatus;
 use Oleg\OrderformBundle\Controller\ScanListController;
 use Oleg\TranslationalResearchBundle\Entity\BusinessPurposeList;
 use Oleg\TranslationalResearchBundle\Entity\IrbApprovalTypeList;
@@ -896,6 +897,7 @@ class AdminController extends Controller
 
         $count_FellAppStatus = $this->generateFellAppStatus();
         $count_FellAppRank = $this->generateFellAppRank();
+        $count_FellAppVisaStatus = $this->generateFellAppVisaStatus();
         $count_LanguageProficiency = $this->generateLanguageProficiency();
         $logger->notice("Finished generateLanguageProficiency");
 
@@ -1013,6 +1015,7 @@ class AdminController extends Controller
             'Training Types='.$count_TrainingTypeList.', '.
             'FellApp Statuses='.$count_FellAppStatus.', '.
             'FellApp Ranks='.$count_FellAppRank.', '.
+            'FellAppVisaStatus='.$count_FellAppVisaStatus.
             'Language Proficiency='.$count_LanguageProficiency.', '.
             'Permissions ='.$count_Permissions.', '.
             'PermissionObjects ='.$count_PermissionObjects.', '.
@@ -5790,6 +5793,43 @@ class AdminController extends Controller
 
     }
 
+    public function generateFellAppVisaStatus() {
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegFellAppBundle:VisaStatus')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $elements = array(
+            "N/A (US Citizenship)",
+            "J-1 visa",
+            "H-1B visa",
+            "Green card/Permanent Residency",
+            "EAD",
+            "Other-please contact the program coordinator"
+        );
+
+        $username = $this->get('security.token_storage')->getToken()->getUser();
+
+        $count = 10;
+        foreach( $elements as $name ) {
+
+            $entity = new VisaStatus();
+            $this->setDefaultList($entity,$count,$username,$name);
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+
+    }
+
     public function generateLanguageProficiency() {
 
         $em = $this->getDoctrine()->getManager();
@@ -6745,6 +6785,8 @@ class AdminController extends Controller
             "transrestissueprocessingservices" => array('TissueProcessingServiceList','transrestissueprocessingservices-list','Translational Research Tissue Processing Service List'),
             "transresotherrequestedservices" => array('OtherRequestedServiceList','transresotherrequestedservices-list','Translational Research Other Requested Service List'),
             "transresbusinesspurposes" => array('BusinessPurposeList','transresbusinesspurposes-list','Translational Research Work Request Business Purposes'),
+
+            "visastatus" => array('VisaStatus','visastatus-list','Visa Status'),
         );
 
         if( $withcustom ) {
