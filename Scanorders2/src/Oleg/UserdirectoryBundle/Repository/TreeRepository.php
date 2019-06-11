@@ -970,8 +970,8 @@ class TreeRepository extends NestedTreeRepository {
 
     public function getDefaultLevelLabel( $mapper, $level ) {
 
-        $levelTitle = "Level ".$level; //if enabled then it adds another child level with label="Level 5"
-        //$levelTitle = NULL;
+        //$levelTitle = "Level ".$level; //if enabled then it adds another child level with label="Level 5"
+        $levelTitle = NULL;
 
         $organizationalGroupType = $this->getDefaultLevelEntity( $mapper, $level );
 
