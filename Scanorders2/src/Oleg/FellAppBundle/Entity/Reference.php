@@ -409,6 +409,17 @@ class Reference
         }
     }
 
+    public function hasReferenceLetter()
+    {
+        if( $this->getRecLetterReceived() ) {
+           return true;
+        }
+        if( count($this->getDocuments()) > 0 ) {
+            return true;
+        }
+        return false;
+    }
+
 
     public function getFullName() {
         $nameArr = array();
