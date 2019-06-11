@@ -563,8 +563,10 @@
                         {% endif %}
                     </td>
 
-                    <td data-toggle="tooltip" title="{{ letterCountStr }}">
-                        {{ entity.appStatus.getAction() }}
+                    <td>
+                        <div data-toggle="tooltip" title="{{ letterCountStr }}">
+                            {{ entity.appStatus.getAction() }}
+                        </div>
                     </td>
 
                     <td>
