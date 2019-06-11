@@ -529,7 +529,8 @@
                         {% set totalDocCount = totalDocCount + refLetter.documents|length %}
                         {% if refLetter.name %}
                             {% set notEmptyRef = notEmptyRef + 1 %}
-                            {% if refLetter.documents|length > 0 %}
+                            {#{% if refLetter.documents|length > 0 %}#}
+                            {% if refLetter.getRecLetterReceived() %}
                                 {% set letterCount = letterCount + 1 %}
                             {% endif %}
                         {% endif %}
