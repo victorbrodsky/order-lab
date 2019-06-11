@@ -718,8 +718,8 @@
 
                     <td class="rowlink-skip">
 
-                        {% set styleStr = "" %}
-                        {% set letterCountStr = "" %}
+                        {#{% set styleStr = "" %}#}
+                        {#{% set letterCountStr = "" %}#}
                         {#X of Y reference letters received (removed by now as asked by Jessica)#}
                         {#count all reference letters and upload documents#}
                         {% set notEmptyRef = 0 %}
@@ -742,18 +742,26 @@
                             {#{% set styleStr = "" %}#}
                         {#{% endif %}#}
 
+                        {#X of Y reference letters received#}
+                        {% set docNumberStr = "docs" %}
+                        {% if totalDocCount == 1 %}
+                            {% set docNumberStr = "doc" %}
+                        {% endif %}
+                        {% set letterCountStr = letterCount~" of "~notEmptyRef~" reference letters ("~totalDocCount~" "~docNumberStr~") received" %}
+                        {% set styleStr = "" %}
+
                         {% if entity.appStatus.name == 'complete' %}
-                            {% set letterCountStr = "Complete" %}
+                            {% set letterCountStr = "Complete" ~ " (" ~ letterCountStr ~ ")" %}
                         {% elseif entity.appStatus.name == 'interviewee' %}
-                            {% set letterCountStr = "Interviewee" %}
+                            {% set letterCountStr = "Interviewee" ~ " (" ~ letterCountStr ~ ")" %}
                         {% else %}
                             {#X of Y reference letters received#}
-                            {% set docNumberStr = "docs" %}
-                            {% if totalDocCount == 1 %}
-                                {% set docNumberStr = "doc" %}
-                            {% endif %}
-                            {% set letterCountStr = letterCount~" of "~notEmptyRef~" reference letters ("~totalDocCount~" "~docNumberStr~") received" %}
-                            {% set styleStr = "" %}
+                            {#{% set docNumberStr = "docs" %}#}
+                            {#{% if totalDocCount == 1 %}#}
+                                {#{% set docNumberStr = "doc" %}#}
+                            {#{% endif %}#}
+                            {#{% set letterCountStr = letterCount~" of "~notEmptyRef~" reference letters ("~totalDocCount~" "~docNumberStr~") received" %}#}
+                            {#{% set styleStr = "" %}#}
                         {% endif %}
 
                         {#<a#}
@@ -1014,7 +1022,7 @@
                                                 <li>
                                                     <a target="_blank"
                                                         general-data-confirm="Are you sure you want to Invite Interviewers to Rate this Applicant? Email will be sent to the interviewers who still have not submitted their scores."
-                                                        href="{{ path('fellapp_inviteinterviewerstorate', { 'id': entity.id}, true) }}">Invite Interviewers to Rate
+                                                        href="{{ path('fellapp_inviteinterviewerstorate', { 'id': entity.id}, true) }}">Invite interviewers to rate
                                                     </a>
                                                 </li>
                                             {% endif %}

@@ -88,11 +88,6 @@
                     {% endif %}
 
                     {% if is_granted('ROLE_FELLAPP_COORDINATOR') or is_granted('ROLE_FELLAPP_DIRECTOR') %}
-                        {#<li id="nav-bar-fellappsettings" class="divider-vertical">#}
-                            {#<a href="{{ path('fellapp_fellowshiptype_settings') }}">#}
-                                {#Fellowship Settings#}
-                            {#</a>#}
-                        {#</li>#}
                         <li id="nav-bar-fellappsettings" class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Configuration<b class="caret"></b></a>
                             <ul class="dropdown-menu">
@@ -108,25 +103,6 @@
                                 </li>
                             </ul>
                         </li>
-
-                        {#<li id="nav-bar-translationalresearch-default-reviewers" class="dropdown">#}
-                            {#<a href="#" class="dropdown-toggle" data-toggle="dropdown">Default Reviewers<b class="caret"></b></a>#}
-                            {#<ul class="dropdown-menu">#}
-
-                                {#{% for specialty in specialties %}#}
-                                    {#<li>#}
-                                        {#<a href="{{ path(translationalresearch_sitename~'_default-reviewer_index',{'specialtyStr':specialty.getAbbreviation()}) }}"#}
-                                        {#>Default Reviewers for {{ specialty.getName() }}</a>#}
-                                    {#</li>#}
-                                {#{% endfor %}#}
-
-                                {#<li>#}
-                                    {#<a href="{{ path(translationalresearch_sitename~'_substitute_user') }}">Substitute user</a>#}
-                                {#</li>#}
-
-                            {#</ul>#}
-                        {#</li>#}
-
                     {% endif %}
 
                     {#Downloads menu#}
