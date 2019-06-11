@@ -519,6 +519,38 @@
 
                 <tr class="{{ trclassname }}">
 
+
+                    {############ X of Y reference letters received ###########}
+                    {#count all reference letters and upload documents#}
+                    {% set notEmptyRef = 0 %}
+                    {% set letterCount = 0 %}
+                    {% set totalDocCount = 0 %}
+                    {% for refLetter in entity.references %}
+                        {% set totalDocCount = totalDocCount + refLetter.documents|length %}
+                        {% if refLetter.name %}
+                            {% set notEmptyRef = notEmptyRef + 1 %}
+                            {% if refLetter.documents|length > 0 %}
+                                {% set letterCount = letterCount + 1 %}
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                    {#{% set letterCountStr = "" %}#}
+                    {% set styleStr = "color:#707070;" %}
+
+                    {#{% if letterCount > 0 %}#}
+                    {#{% set letterCountStr = letterCount ~  " reference letters received" %}#}
+                    {#{% set styleStr = "" %}#}
+                    {#{% endif %}#}
+
+                    {#X of Y reference letters received#}
+                    {% set docNumberStr = "docs" %}
+                    {% if totalDocCount == 1 %}
+                        {% set docNumberStr = "doc" %}
+                    {% endif %}
+                    {% set letterCountStr = letterCount~" of "~notEmptyRef~" reference letters ("~totalDocCount~" "~docNumberStr~") received" %}
+                    {############ EOF X of Y reference letters received ###########}
+
+
                     {% if route_path == "fellapp_send_rejection_emails" %}
                         <td class="rowlink-skip">
                             <input type="checkbox" class="notificationemail" name="notificationemail" value="{{ entity.id }}">
@@ -531,7 +563,7 @@
                         {% endif %}
                     </td>
 
-                    <td>
+                    <td data-toggle="tooltip" title="{{ letterCountStr }}">
                         {{ entity.appStatus.getAction() }}
                     </td>
 
@@ -718,24 +750,22 @@
 
                     <td class="rowlink-skip">
 
-                        {#{% set styleStr = "" %}#}
-                        {#{% set letterCountStr = "" %}#}
                         {#X of Y reference letters received (removed by now as asked by Jessica)#}
                         {#count all reference letters and upload documents#}
-                        {% set notEmptyRef = 0 %}
-                        {% set letterCount = 0 %}
-                        {% set totalDocCount = 0 %}
-                        {% for refLetter in entity.references %}
-                            {% set totalDocCount = totalDocCount + refLetter.documents|length %}
-                            {% if refLetter.name %}
-                                {% set notEmptyRef = notEmptyRef + 1 %}
-                                {% if refLetter.documents|length > 0 %}
-                                    {% set letterCount = letterCount + 1 %}
-                                {% endif %}
-                            {% endif %}
-                        {% endfor %}
-                        {% set letterCountStr = "" %}
-                        {% set styleStr = "color:#707070;" %}
+                        {#{% set notEmptyRef = 0 %}#}
+                        {#{% set letterCount = 0 %}#}
+                        {#{% set totalDocCount = 0 %}#}
+                        {#{% for refLetter in entity.references %}#}
+                            {#{% set totalDocCount = totalDocCount + refLetter.documents|length %}#}
+                            {#{% if refLetter.name %}#}
+                                {#{% set notEmptyRef = notEmptyRef + 1 %}#}
+                                {#{% if refLetter.documents|length > 0 %}#}
+                                    {#{% set letterCount = letterCount + 1 %}#}
+                                {#{% endif %}#}
+                            {#{% endif %}#}
+                        {#{% endfor %}#}
+                        {#{% set letterCountStr = "" %}#}
+                        {#{% set styleStr = "color:#707070;" %}#}
 
                         {#{% if letterCount > 0 %}#}
                             {#{% set letterCountStr = letterCount ~  " reference letters received" %}#}
@@ -743,12 +773,12 @@
                         {#{% endif %}#}
 
                         {#X of Y reference letters received#}
-                        {% set docNumberStr = "docs" %}
-                        {% if totalDocCount == 1 %}
-                            {% set docNumberStr = "doc" %}
-                        {% endif %}
-                        {% set letterCountStr = letterCount~" of "~notEmptyRef~" reference letters ("~totalDocCount~" "~docNumberStr~") received" %}
-                        {% set styleStr = "" %}
+                        {#{% set docNumberStr = "docs" %}#}
+                        {#{% if totalDocCount == 1 %}#}
+                            {#{% set docNumberStr = "doc" %}#}
+                        {#{% endif %}#}
+                        {#{% set letterCountStr = letterCount~" of "~notEmptyRef~" reference letters ("~totalDocCount~" "~docNumberStr~") received" %}#}
+                        {#{% set styleStr = "" %}#}
 
                         {% if entity.appStatus.name == 'complete' %}
                             {% set letterCountStr = "Complete" ~ " (" ~ letterCountStr ~ ")" %}
@@ -761,7 +791,7 @@
                                 {#{% set docNumberStr = "doc" %}#}
                             {#{% endif %}#}
                             {#{% set letterCountStr = letterCount~" of "~notEmptyRef~" reference letters ("~totalDocCount~" "~docNumberStr~") received" %}#}
-                            {#{% set styleStr = "" %}#}
+                            {% set styleStr = "" %}
                         {% endif %}
 
                         {#<a#}
