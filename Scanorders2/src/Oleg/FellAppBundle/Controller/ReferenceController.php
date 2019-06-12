@@ -146,6 +146,47 @@ class ReferenceController extends Controller
         return $this->redirect($this->generateUrl('fellapp_show',array('id' => $fellapp->getId())));
     }
 
+    /**
+     * @Route("/reference-letter-received/{id}", name="fellapp_reference_letter_received")
+     * @Method("GET")
+     */
+    public function ReferenceLetterReceivedAction( Request $request, Reference $reference ) {
+
+        if(
+            $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_COORDINATOR') === false &&
+            $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_DIRECTOR') === false )
+        {
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+
+        if( false == $this->get('security.authorization_checker')->isGranted("update","FellowshipApplication") ) {
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $reference->setRecLetterReceived(true);
+
+        //exit("reference set checkbox");
+
+        //$em->persist($reference);
+        $em->flush();
+
+        $msg = "Set recommendation status by ".$reference->getFullName()." to 'uploaded'";
+
+        //Event Log
+        $eventType = 'Fellowship Application Updated';
+        $userSecUtil = $this->container->get('user_security_utility');
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$msg,$user,$reference,$request,$eventType);
+
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            $msg
+        );
+
+        return $this->redirect( $this->generateUrl('fellapp_home') );
+    }
     
 
 }

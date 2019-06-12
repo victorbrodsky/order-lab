@@ -1004,12 +1004,11 @@
                                                     <li>
                                                         <a
                                                             general-data-confirm="Are you sure you want to set recommendation status by {{ referenceFullName }} to 'uploaded'?"
-                                                            general-data-callback="refreshpage"
-                                                            href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'testing' }, true) }}">
+                                                            href="{{ path('fellapp_reference_letter_received', {'id': reference.id}) }}">
                                                             Set recommendation status by {{ referenceFullName }} to 'uploaded'
                                                         </a>
                                                     </li>
-                                                {% endfor %}
+                                                {% endif %}
                                             {% endfor %}
                                         {% endif %}
 
