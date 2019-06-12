@@ -994,6 +994,25 @@
                                             </li>
                                         {% endif %}
 
+
+                                        {#Set recommendation status by RecLetterAuthorFirstName RecLetterAuthorLastName to ‘uploaded’#}
+                                        {% if entity.hasAllCheckmarks() == false %}
+                                            <hr>
+                                            {% for reference in entity.getReferences() %}
+                                                {% if reference.getRecLetterReceived() == false %}
+                                                    {% set referenceFullName = reference.getFullName() %}
+                                                    <li>
+                                                        <a
+                                                            general-data-confirm="Are you sure you want to set recommendation status by {{ referenceFullName }} to 'uploaded'?"
+                                                            general-data-callback="refreshpage"
+                                                            href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'testing' }, true) }}">
+                                                            Set recommendation status by {{ referenceFullName }} to 'uploaded'
+                                                        </a>
+                                                    </li>
+                                                {% endfor %}
+                                            {% endfor %}
+                                        {% endif %}
+
                                         <hr>
 
                                         {#Send e-mail notification#}
