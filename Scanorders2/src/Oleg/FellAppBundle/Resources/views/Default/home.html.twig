@@ -1037,28 +1037,29 @@
                                             </a>
                                         </li>
 
-
-                                        <hr>
-
                                         {#invite references#}
-                                        <li>
-                                            <a
-                                                general-data-confirm="Are you sure you want to invite all remaining references to submit letters?"
-                                                general-data-callback="refreshpage"
-                                                href="{{ path('fellapp_invite_references_submit_letters', { 'id': entity.id }, true) }}">
-                                                Invite all remaining references to submit letters
-                                            </a>
-                                            {% for reference in entity.getReferences() %}
-                                                {% if reference.getDocuments()|length == 0 %}
-                                                    {% set referenceName = reference.getFullName() %}
-                                                    <a target="_blank"
-                                                        general-data-confirm="Are you sure you want to invite Invite {{ referenceName }} to submit a reference letter?"
-                                                        href="{{ path('fellapp_invite_reference_submit_letter', { 'id': entity.id, 'referenceid': reference.id }, true) }}">
-                                                        Invite {{ referenceName }} to submit a reference letter
-                                                    </a>
-                                                {% endif %}
-                                            {% endfor %}
-                                        </li>
+                                        {% if entity.hasAllCheckmarksOrReferenceLetters() == false %}
+                                            <hr>
+                                            <li>
+                                                <a
+                                                    general-data-confirm="Are you sure you want to invite all remaining references to submit letters?"
+                                                    general-data-callback="refreshpage"
+                                                    href="{{ path('fellapp_invite_references_submit_letters', { 'id': entity.id }, true) }}">
+                                                    Invite all remaining references to submit letters
+                                                </a>
+                                                {% for reference in entity.getReferences() %}
+                                                    {#{% if reference.getDocuments()|length == 0 %}#}
+                                                    {% if reference.hasReferenceLetter() == false %}
+                                                        {% set referenceName = reference.getFullName() %}
+                                                        <a target="_blank"
+                                                            general-data-confirm="Are you sure you want to invite Invite {{ referenceName }} to submit a reference letter?"
+                                                            href="{{ path('fellapp_invite_reference_submit_letter', { 'id': entity.id, 'referenceid': reference.id }, true) }}">
+                                                            Invite {{ referenceName }} to submit a reference letter
+                                                        </a>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </li>
+                                        {% endif %}
 
                                         {% if entity.getRecentReport() %}
                                             {#Invite Interviewers to Rate#}
@@ -1066,7 +1067,8 @@
                                                 <li>
                                                     <a target="_blank"
                                                         general-data-confirm="Are you sure you want to Invite Interviewers to Rate this Applicant? Email will be sent to the interviewers who still have not submitted their scores."
-                                                        href="{{ path('fellapp_inviteinterviewerstorate', { 'id': entity.id}, true) }}">Invite interviewers to rate
+                                                        href="{{ path('fellapp_inviteinterviewerstorate', { 'id': entity.id}, true) }}">
+                                                        Invite interviewers to rate
                                                     </a>
                                                 </li>
                                             {% endif %}
@@ -1077,7 +1079,8 @@
                                                     <a
                                                         general-data-confirm="Are you sure you want to Invite Observers to view this Applicant? Email will be sent to all observers."
                                                         general-data-callback="refreshpage"
-                                                        href="{{ path('fellapp_inviteobservers', { 'id': entity.id}, true) }}">Invite Observers to View
+                                                        href="{{ path('fellapp_inviteobservers', { 'id': entity.id}, true) }}">
+                                                        Invite Observers to View
                                                     </a>
                                                 </li>
                                             {% endif %}

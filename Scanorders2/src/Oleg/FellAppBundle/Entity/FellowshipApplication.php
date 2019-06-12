@@ -1453,6 +1453,15 @@ class FellowshipApplication extends BaseUserAttributes {
         return true;
     }
 
+    public function hasAllCheckmarksOrReferenceLetters() {
+        foreach($this->getReferences() as $reference) {
+            if( !$reference->hasReferenceLetter() ) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public function __toString() {
         return "FellowshipApplication";
     }
