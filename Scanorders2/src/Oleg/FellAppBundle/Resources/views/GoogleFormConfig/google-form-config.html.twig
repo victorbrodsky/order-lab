@@ -95,6 +95,10 @@
         {{ formmacros.field(form.otherExperienceNote) }}
     {% endif %}
 
+    {% if form.nationalBoardNote is defined %}
+        {{ formmacros.field(form.nationalBoardNote) }}
+    {% endif %}
+
     {% if form.medicalLicenseNote is defined %}
         {{ formmacros.field(form.medicalLicenseNote) }}
     {% endif %}

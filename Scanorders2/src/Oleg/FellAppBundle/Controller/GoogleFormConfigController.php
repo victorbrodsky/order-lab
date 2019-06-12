@@ -189,7 +189,8 @@ class GoogleFormConfigController extends Controller
         //letterExceptionAccount: done
         $configJson['letterExceptionAccount'] = $entity->getLetterExceptionAccount();
 
-        //fellowshipVisaStatuses:
+        //2
+        //fellowshipVisaStatuses: done
         $fellowshipVisaStatuses = array();
         foreach($entity->getFellowshipVisaStatuses() as $fellowshipVisaStatus) {
             $name = $fellowshipVisaStatus->getName();
@@ -197,22 +198,22 @@ class GoogleFormConfigController extends Controller
         }
         $configJson['fellowshipVisaStatuses'] = $fellowshipVisaStatuses;
 
-        //visaNote:
+        //visaNote: done
         $configJson['visaNote'] = $entity->getVisaNote();
 
-        //otherExperienceNote:
+        //otherExperienceNote: done
         $configJson['otherExperienceNote'] = $entity->getOtherExperienceNote();
 
-        //nationalBoardNote:
+        //nationalBoardNote: done
         $configJson['nationalBoardNote'] = $entity->getNationalBoardNote();
 
         //medicalLicenseNote:
         $configJson['medicalLicenseNote'] = $entity->getMedicalLicenseNote();
 
-        //boardCertificationNote:
+        //boardCertificationNote: done
         $configJson['boardCertificationNote'] = $entity->getBoardCertificationNote();
 
-        //referenceLetterNote:
+        //referenceLetterNote: done
         $configJson['referenceLetterNote'] = $entity->getReferenceLetterNote();
 
         //signatureStatement:

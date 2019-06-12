@@ -174,7 +174,7 @@ class GoogleFormConfig {
      * I understand that accepting more than one fellowship position constitutes a violation
      * of professional ethics and may result in the forfeiture of all positions.
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $signatureStatement;
 

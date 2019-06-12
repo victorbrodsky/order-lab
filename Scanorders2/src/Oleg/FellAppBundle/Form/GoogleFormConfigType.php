@@ -180,7 +180,7 @@ class GoogleFormConfigType extends AbstractType
         $builder->add('signatureStatement', null, array(
             'label' => "Signature Statement (i.e. 'I hereby certify that all of the information on this application is accurate...'):",
             'required' => false,
-            'attr' => array('class' => 'form-control')
+            'attr' => array('class' => 'textarea form-control')
         ));
 
     }
