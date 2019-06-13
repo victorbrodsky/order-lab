@@ -1589,7 +1589,7 @@ class FellAppUtil {
 
         $emailUtil->sendEmail( $applicantEmail, $acceptedEmailSubject, $acceptedEmailBody, $ccResponsibleEmails );
 
-        $msg = "Accepted notification email has been sent to " . $applicantFullName . " (".$applicantEmail.")";
+        $msg = "Accepted notification email has been sent to " . $applicantFullName . " (".$applicantEmail.")" . "; CC: ".implode(", ",$ccResponsibleEmails);
         $eventMsg = $msg . "<br><br> Subject:<br>". $acceptedEmailSubject . "<br><br>Body:<br>" . $acceptedEmailBody;
 
         $userSecUtil->createUserEditEvent(
@@ -1674,7 +1674,7 @@ class FellAppUtil {
 
         $emailUtil->sendEmail( $applicantEmail, $rejectedEmailSubject, $rejectedEmailBody, $ccResponsibleEmails );
 
-        $msg = "Rejected notification email has been sent to " . $applicantFullName . " (".$applicantEmail.")";
+        $msg = "Rejected notification email has been sent to " . $applicantFullName . " (".$applicantEmail.")" . "; CC: ".implode(", ",$ccResponsibleEmails);
         $eventMsg = $msg . "<br><br> Subject:<br>". $rejectedEmailSubject . "<br><br>Body:<br>" . $rejectedEmailBody;
 
         $userSecUtil->createUserEditEvent(
