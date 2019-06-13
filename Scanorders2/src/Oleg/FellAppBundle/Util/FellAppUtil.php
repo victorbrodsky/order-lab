@@ -1582,7 +1582,12 @@ class FellAppUtil {
             $acceptedEmailBody = $this->siteSettingsConstantReplace($acceptedEmailBody,$fellapp);
         }
 
-        $emailUtil->sendEmail( $applicantEmail, $acceptedEmailSubject, $acceptedEmailBody );
+        //get CCs: coordinators and directors
+        $directorEmails = $this->getDirectorsOfFellAppEmails($fellapp);
+        $coordinatorEmails = $this->getCoordinatorsOfFellAppEmails($fellapp);
+        $ccResponsibleEmails = array_unique (array_merge ($coordinatorEmails, $directorEmails));
+
+        $emailUtil->sendEmail( $applicantEmail, $acceptedEmailSubject, $acceptedEmailBody, $ccResponsibleEmails );
 
         $msg = "Accepted notification email has been sent to " . $applicantFullName . " (".$applicantEmail.")";
         $eventMsg = $msg . "<br><br> Subject:<br>". $acceptedEmailSubject . "<br><br>Body:<br>" . $acceptedEmailBody;
@@ -1662,7 +1667,12 @@ class FellAppUtil {
             $rejectedEmailBody = $this->siteSettingsConstantReplace($rejectedEmailBody,$fellapp);
         }
 
-        $emailUtil->sendEmail( $applicantEmail, $rejectedEmailSubject, $rejectedEmailBody );
+        //get CCs: coordinators and directors
+        $directorEmails = $this->getDirectorsOfFellAppEmails($fellapp);
+        $coordinatorEmails = $this->getCoordinatorsOfFellAppEmails($fellapp);
+        $ccResponsibleEmails = array_unique (array_merge ($coordinatorEmails, $directorEmails));
+
+        $emailUtil->sendEmail( $applicantEmail, $rejectedEmailSubject, $rejectedEmailBody, $ccResponsibleEmails );
 
         $msg = "Rejected notification email has been sent to " . $applicantFullName . " (".$applicantEmail.")";
         $eventMsg = $msg . "<br><br> Subject:<br>". $rejectedEmailSubject . "<br><br>Body:<br>" . $rejectedEmailBody;
