@@ -1194,7 +1194,14 @@
             <br>
 
             <div class="well well-sm" align='center'>
-                <h5>Email's Subject and Body ([[value]] will be replaced by the corresponding value from the fellowship application)</h5>
+                <h5>
+                    Email's Subject and Body ([[value]] will be replaced by the corresponding value from the fellowship application)
+                </h5>
+
+                {#$fromEmail = $userSecUtil->getSiteFromEmail($sitenameAbbreviation);#}
+                {% set fromEmail = user_security_utility.getSiteFromEmail("fellapp") %}
+                {{ formmacros.simplefield("From:", fromEmail, "input", "disabled") }}
+
                 {#<p>#}
                     {#<b>Subject:</b>#}
                     {#{{ rejectedEmailSubject|raw }}#}
@@ -1208,6 +1215,13 @@
                     {#<textarea disabled="disabled" class="textarea form-control">{{ rejectedEmailBody|raw }}</textarea>#}
                 {#</p>#}
                 {{ formmacros.simplefield("Body:", rejectedEmailBody, "textarea", "disabled") }}
+
+                <p>
+                    <a class="btn btn-default"
+                       href="{{ path('fellapp_siteparameters_edit_specific_site_parameters') }}" target="_blank">Edit email template
+                    </a>
+                </p>
+
             </div>
 
         {% endif %}
