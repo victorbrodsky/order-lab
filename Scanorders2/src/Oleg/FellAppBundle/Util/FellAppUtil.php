@@ -1589,7 +1589,7 @@ class FellAppUtil {
 
         $emailUtil->sendEmail( $applicantEmail, $acceptedEmailSubject, $acceptedEmailBody, $ccResponsibleEmails );
 
-        $msg = "Accepted notification email has been sent to " . $applicantFullName . " (".$applicantEmail.")" . "; CC: ".implode(", ",$ccResponsibleEmails);
+        $msg = "Acceptance notification email has been sent to " . $applicantFullName . " (".$applicantEmail.")" . "; CC: ".implode(", ",$ccResponsibleEmails);
         $eventMsg = $msg . "<br><br> Subject:<br>". $acceptedEmailSubject . "<br><br>Body:<br>" . $acceptedEmailBody;
 
         $userSecUtil->createUserEditEvent(
@@ -1674,7 +1674,7 @@ class FellAppUtil {
 
         $emailUtil->sendEmail( $applicantEmail, $rejectedEmailSubject, $rejectedEmailBody, $ccResponsibleEmails );
 
-        $msg = "Rejected notification email has been sent to " . $applicantFullName . " (".$applicantEmail.")" . "; CC: ".implode(", ",$ccResponsibleEmails);
+        $msg = "Rejection notification email has been sent to " . $applicantFullName . " (".$applicantEmail.")" . "; CC: ".implode(", ",$ccResponsibleEmails);
         $eventMsg = $msg . "<br><br> Subject:<br>". $rejectedEmailSubject . "<br><br>Body:<br>" . $rejectedEmailBody;
 
         $userSecUtil->createUserEditEvent(
@@ -1687,6 +1687,46 @@ class FellAppUtil {
         );
 
         return true;
+    }
+
+    public function getRejectionEmailSent($fellapp) {
+        $repository = $this->em->getRepository('OlegUserdirectoryBundle:Logger');
+        $dql = $repository->createQueryBuilder("logger");
+
+        $dql->innerJoin('logger.eventType', 'eventType');
+        $dql->where("logger.entityName = 'FellowshipApplication' AND logger.entityId = ".$fellapp->getId());
+
+        //$dql->andWhere("logger.event LIKE :eventStr AND logger.event LIKE :eventStr2");
+        $dql->andWhere("eventType.name = :eventTypeStr");
+
+        $dql->orderBy("logger.id","DESC");
+        $query = $this->em->createQuery($dql);
+
+        //The status of the work request APCP668-REQ16553 has been changed from 'Pending Histology' to 'Completed and Notified' by Susanna Mirabelli - sum2029 (WCM CWID)
+
+        $query->setParameters(
+            array(
+                'eventTypeStr' => "FellApp Rejected Notification Email Sent"
+            )
+        );
+
+        $loggers = $query->getResult();
+
+        $sentDatesArr = array();
+        foreach($loggers as $logger) {
+            $creationDate = $logger->getCreationdate();
+            if( $creationDate ) {
+                $sentDatesArr[] = $creationDate->format('m/d/Y');
+            }
+        }
+
+        if( count($sentDatesArr) > 0 ) {
+            $sentDates = implode("<br>",$sentDatesArr);
+        } else {
+            $sentDates = null;
+        }
+
+        return $sentDates;
     }
 
     public function siteSettingsConstantReplace($str,$fellapp) {

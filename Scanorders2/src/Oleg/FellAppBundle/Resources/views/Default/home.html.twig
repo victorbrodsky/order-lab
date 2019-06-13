@@ -357,6 +357,7 @@
 
                 {% if route_path == "fellapp_send_rejection_emails" %}
                     <th>Send Email</th>
+                    <th>Rejection Emailed?</th>
                 {% endif %}
 
                 <th>{{ knp_pagination_sortable(entities, 'Fellowship Type', 'fellowshipSubspecialty.name') }}</th>
@@ -547,6 +548,14 @@
                     {% if route_path == "fellapp_send_rejection_emails" %}
                         <td class="rowlink-skip">
                             <input type="checkbox" class="notificationemail" name="notificationemail" value="{{ entity.id }}">
+                        </td>
+                        <td>
+                            {#{{ entity.startDate|date('m/d/Y','UTC') }}#}
+                            {% set sentRejectionEmail = fellapp_util.getRejectionEmailSent(entity) %}
+                            {% if sentRejectionEmail %}
+                                {#{{ sentRejectionEmail|date('m/d/Y') }}#}
+                                {{ sentRejectionEmail|raw }}
+                            {% endif %}
                         </td>
                     {% endif %}
 
