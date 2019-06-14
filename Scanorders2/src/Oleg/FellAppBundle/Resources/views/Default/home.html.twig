@@ -585,7 +585,7 @@
                         {% else %}
                             {% if entity.avatars|length > 0 %}
                                 {#{{ usermacros.showDocumentAsImage(entity.avatars|last,'Avatar','') }}#}
-                                {{ usermacros.showDocumentAsImage(entity.avatars|last,'Avatar',null,null,null,'snapshot-100') }}
+                                {{ usermacros.showDocumentAsImage(entity.avatars|last,'Avatar',null,null,null,'snapshot-small') }}
                             {% else %}
                                 {% set avatarImage = asset('bundles/oleguserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
                                 <img src="{{ avatarImage }}" alt="Avatar" style="max-width:100%; max-height:100%;">

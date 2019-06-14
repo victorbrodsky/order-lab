@@ -282,6 +282,8 @@ class GoogleSheetManagement {
 
         if( $file ) {
 
+            $documentType = trim($documentType);
+
             //check if file already exists by file id
             $documentDb = $this->em->getRepository('OlegUserdirectoryBundle:Document')->findOneByUniqueid($file->getId());
             if( $documentDb && $documentType != 'Fellowship Application Backup Spreadsheet' ) {
@@ -330,18 +332,21 @@ class GoogleSheetManagement {
             //clean originalname
             $object->setCleanOriginalname($file->getTitle());
 
-
 //            if( $type && $type == 'excel' ) {
 //                $fellappSpreadsheetType = $this->em->getRepository('OlegUserdirectoryBundle:DocumentTypeList')->findOneByName('Fellowship Application Spreadsheet');
 //            } else {
 //                $fellappSpreadsheetType = $this->em->getRepository('OlegUserdirectoryBundle:DocumentTypeList')->findOneByName('Fellowship Application Document');
 //            }
             $transformer = new GenericTreeTransformer($this->em, $author, "DocumentTypeList", "UserdirectoryBundle");
-            $documentType = trim($documentType);
+            //$documentType = trim($documentType);
             $documentTypeObject = $transformer->reverseTransform($documentType);
             if( $documentTypeObject ) {
                 $object->setType($documentTypeObject);
             }
+
+            //generate two thumbnails
+            $userServiceUtil = $this->get('user_service_utility');
+            $userServiceUtil->generateTwoThumbnails($object);
 
             $this->em->persist($object);
 

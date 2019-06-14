@@ -301,9 +301,37 @@ class UploadController extends Controller {
                 $this->setDownloadEventLog($request, $document, $user, $sitename, $eventtype, $eventDescription);
             }
 
-            $originalname = $document->getOriginalnameClean();
-            $abspath = $document->getAbsoluteUploadFullPath();
-            $size = $document->getSize();
+            if( strpos($viewType, 'snapshot') === false ) {
+                $originalname = $document->getOriginalnameClean();
+                $abspath = $document->getAbsoluteUploadFullPath();
+                $size = $document->getSize();
+            } else {
+
+                $viewTypeArr = explode("-", $viewType);
+                if (count($viewTypeArr) > 1) {
+                    $resize = $viewTypeArr[1];
+                } else {
+                    $resize = null;
+                }
+
+                //get small thumbnail - i.e. used for the fellowship application list
+                if( $resize == "small" ) {
+                    $originalname = $document->getOriginalnameClean();
+                    $abspath = $document->getAbsoluteUploadFullPath();
+                    $size = $document->getSize();
+                }
+                //get small thumbnail - i.e. used for the fellowship application view
+                elseif( $resize == "medium" ) {
+                    $originalname = $document->getOriginalnameClean();
+                    $abspath = $document->getAbsoluteUploadFullPath();
+                    $size = $document->getSize();
+                } else {
+                    //default
+                    $originalname = $document->getOriginalnameClean();
+                    $abspath = $document->getAbsoluteUploadFullPath();
+                    $size = $document->getSize();
+                }
+            }
 
             $downloader = new LargeFileDownloader();
             ////$filepath, $filename=null, $size=null, $retbytes=true, $action="download", $viewType=null

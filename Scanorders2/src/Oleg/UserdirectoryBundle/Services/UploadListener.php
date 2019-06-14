@@ -93,6 +93,10 @@ class UploadListener {
             }
         }
 
+        //generate two thumbnails
+        $userServiceUtil = $this->get('user_service_utility');
+        $userServiceUtil->generateTwoThumbnails($object);
+
         //$this->processHolder($object,$holdername,$holderid,$docfieldname);
 
         //exit('exit upload listener');

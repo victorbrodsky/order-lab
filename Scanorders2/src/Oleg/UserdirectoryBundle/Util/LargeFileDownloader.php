@@ -136,22 +136,25 @@ class LargeFileDownloader {
                     $resize = null;
                 }
             }
-            $resize = null; //disable resize for now
+            $resize = null; //disable resize for now. //use pre-generated thumbnail
 
             if( !$resize ) {
                 echo $this->getFileContent($filenameClean);
             } else {
-                //snapshot is used in diff pages (use snapshot small, medium, large?).
-                //exit('111');
-                $width = $resize;
-                $height = $resize;
-                //$resizedImg = $this->Img_Resize($filenameClean,2);
-                $resizedImg = $this->resizeImage($filenameClean, $width, $height);
-                //$resizedImg = $this->croppedThumbnail($filenameClean, $width, $height);
-                //$resizedImg = $filenameClean; //testing
-                //echo file_get_contents($resizedImg);
-                //readfile($resizedImg);
-                echo $this->getFileContent($resizedImg);
+                //use pre-generated thumbnail
+                if(0) {
+                    //snapshot is used in diff pages (use snapshot small, medium, large?).
+                    //exit('111');
+                    $width = $resize;
+                    $height = $resize;
+                    //$resizedImg = $this->Img_Resize($filenameClean,2);
+                    $resizedImg = $this->resizeImage($filenameClean, $width, $height);
+                    //$resizedImg = $this->croppedThumbnail($filenameClean, $width, $height);
+                    //$resizedImg = $filenameClean; //testing
+                    //echo file_get_contents($resizedImg);
+                    //readfile($resizedImg);
+                    echo $this->getFileContent($resizedImg);
+                }
             }
 
         } else {
