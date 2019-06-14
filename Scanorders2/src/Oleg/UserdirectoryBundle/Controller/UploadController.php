@@ -317,13 +317,14 @@ class UploadController extends Controller {
                 //get small thumbnail - i.e. used for the fellowship application list
                 if( $resize == "small" ) {
                     $originalname = $document->getOriginalnameClean();
-                    $abspath = $document->getAbsoluteUploadFullPath();
+                    $abspath = $document->getAbsoluteUploadFullPath($resize);
+                    //$abspath = "http://127.0.0.1/order/Uploaded/fellapp/FellowshipApplicantUploads/small-1557157978ID1J9qjngqM1Bt_PZedHfJtX1S_sALg8YS-.jpg";
                     $size = $document->getSize();
                 }
                 //get small thumbnail - i.e. used for the fellowship application view
                 elseif( $resize == "medium" ) {
                     $originalname = $document->getOriginalnameClean();
-                    $abspath = $document->getAbsoluteUploadFullPath();
+                    $abspath = $document->getAbsoluteUploadFullPath($resize);
                     $size = $document->getSize();
                 } else {
                     //default
@@ -332,6 +333,10 @@ class UploadController extends Controller {
                     $size = $document->getSize();
                 }
             }
+            //abspath=http://127.0.0.1/order/Uploaded/fellapp/FellowshipApplicantUploads/1557157978ID1J9qjngqM1Bt_PZedHfJtX1S_sALg8YS-.jpg
+            //$abspath = "http://127.0.0.1/order/Uploaded/fellapp/FellowshipApplicantUploads/small-1557157978ID1J9qjngqM1Bt_PZedHfJtX1S_sALg8YS-.jpg";
+            //echo "abspath=$abspath <br>";
+            //exit(111);
 
             $downloader = new LargeFileDownloader();
             ////$filepath, $filename=null, $size=null, $retbytes=true, $action="download", $viewType=null

@@ -1310,6 +1310,10 @@ class UserServiceUtil {
         if( $documentTypeObject) {
             if( $documentTypeObject->getName() == "Fellowship Photo" || $documentTypeObject->getName() == "Avatar Image" ) {
 
+                $src = $document->getAbsoluteUploadFullPath();
+                $dest = $document->getAbsoluteUploadFullPath();
+                $this->makeThumb($src, $dest, $desired_width);
+
             }
         }
     }

@@ -460,7 +460,7 @@ class Document {
         return $fullPath;
     }
 
-    public function getAbsoluteUploadFullPath()
+    public function getAbsoluteUploadFullPath($size=null)
     {
         if( isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1) ) {
             $scheme = 'https';
@@ -482,7 +482,13 @@ class Document {
             $serverName = "127.0.0.1";
         }
 
-        $path = $scheme."://" . $serverName . "/order/" . $this->getUploadDirectory().'/'.$this->getUniquename();
+        $uniquename = $this->getUniquename();
+
+        if( $size ) {
+            $uniquename = $size . "-" . $uniquename;
+        }
+
+        $path = $scheme."://" . $serverName . "/order/" . $this->getUploadDirectory().'/'.$uniquename;
 
         //exit("path=".$path);
 
