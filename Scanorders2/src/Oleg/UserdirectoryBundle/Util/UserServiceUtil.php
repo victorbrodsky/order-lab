@@ -1310,10 +1310,36 @@ class UserServiceUtil {
         if( $documentTypeObject) {
             if( $documentTypeObject->getName() == "Fellowship Photo" || $documentTypeObject->getName() == "Avatar Image" ) {
 
-                $src = $document->getAbsoluteUploadFullPath();
-                $dest = $document->getAbsoluteUploadFullPath();
+                //$dest = $document->getAbsoluteUploadFullPath();
+                //$dest = $document->getServerPath();
+                //$dest = $document->getFullServerPath();
+
+                $src = $document->getServerPath();
+                $uniquename = $document->getUniquename();
+
+                if (file_exists($src)) {
+                    echo "The file $src exists <br>";
+                }
+                else {
+                    echo "The file $src does not exists <br>";
+                }
+
+                //Small
+                $desired_width = 46;
+                $uniquenameSmall = "small" . "-" . $uniquename;
+                $dest = str_replace($uniquename,$uniquenameSmall,$src);
+                echo $desired_width.": dest=".$dest."<br>";
                 $this->makeThumb($src, $dest, $desired_width);
 
+                //Medium
+                $desired_width = 260;
+                $uniquename = $document->getUniquename();
+                $uniquenameSmall = "medium" . "-" . $uniquename;
+                $dest = str_replace($uniquename,$uniquenameSmall,$src);
+                echo $desired_width.": dest=".$dest."<br>";
+                $this->makeThumb($src, $dest, $desired_width);
+
+                //exit(111);
             }
         }
     }

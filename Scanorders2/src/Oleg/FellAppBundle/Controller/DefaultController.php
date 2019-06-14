@@ -148,4 +148,44 @@ class DefaultController extends Controller
             'entity' => $fellapp
         );
     }
+
+    /**
+     * http://127.0.0.1/order/fellowship-applications/generate-thumbnails
+     * 
+     * @Route("/generate-thumbnails", name="fellapp_generate_thumbnails")
+     */
+    public function generateThumbnailsAction( Request $request ) {
+
+        //exit("not allowed");
+
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('fellapp.sitename').'-nopermission') );
+        }
+
+        $userServiceUtil = $this->get('user_service_utility');
+        $em = $this->getDoctrine()->getManager();
+
+        //get spreadsheets older than X year
+        $repository = $em->getRepository('OlegUserdirectoryBundle:Document');
+        $dql =  $repository->createQueryBuilder("document");
+        $dql->select('document');
+        $dql->leftJoin('document.type','documentType');
+
+        $dql->where("documentType.name = 'Fellowship Photo'");
+
+        $query = $em->createQuery($dql);
+
+        //echo "query=".$query->getSql()."<br>";
+
+        $documents = $query->getResult();
+
+        foreach($documents as $document) {
+            $userServiceUtil->generateTwoThumbnails($document);
+            //break;
+        }
+
+        echo "doc count=".count($documents)."<br>";
+
+        exit("end of fellapp thumbnails");
+    }
 }
