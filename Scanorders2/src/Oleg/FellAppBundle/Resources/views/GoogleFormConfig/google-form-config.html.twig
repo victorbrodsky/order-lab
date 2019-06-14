@@ -47,7 +47,17 @@
     {% endif %}
 
     {% if form.fellowshipSubspecialties is defined %}
-        {{ formmacros.field(form.fellowshipSubspecialties) }}
+        {#{{ formmacros.field(form.fellowshipSubspecialties) }}#}
+        <p>
+        <div class="row">
+            <div class="col-xs-6" align="right">
+                <label>{{ form.fellowshipSubspecialties.vars.label|raw }}</label>
+            </div>
+            <div class="col-xs-6" align="left">
+                {{ form_widget(form.fellowshipSubspecialties) }}
+            </div>
+        </div>
+        </p>
     {% endif %}
 
 
@@ -84,7 +94,17 @@
     {% endif %}
 
     {% if form.fellowshipVisaStatuses is defined %}
-        {{ formmacros.field(form.fellowshipVisaStatuses) }}
+        {#{{ formmacros.field(form.fellowshipVisaStatuses) }}#}
+        <p>
+        <div class="row">
+            <div class="col-xs-6" align="right">
+                <label>{{ form.fellowshipVisaStatuses.vars.label|raw }}</label>
+            </div>
+            <div class="col-xs-6" align="left">
+                {{ form_widget(form.fellowshipVisaStatuses) }}
+            </div>
+        </div>
+        </p>
     {% endif %}
 
     {% if form.visaNote is defined %}

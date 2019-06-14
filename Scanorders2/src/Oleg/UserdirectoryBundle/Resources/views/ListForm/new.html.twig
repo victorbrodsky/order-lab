@@ -71,10 +71,13 @@
 
     <br />
 
+
+    {% set postPath = '' %}
     {% if sitename == 'translationalresearch' %}
         {% set postPath = '_translationalresearch' %}
-    {% else %}
-        {% set postPath = '' %}
+    {% endif %}
+    {% if sitename == 'fellapp' %}
+        {% set postPath = '_fellapp' %}
     {% endif %}
 
     {{ listmacros.listNew( form, pathbase, postPath ) }}

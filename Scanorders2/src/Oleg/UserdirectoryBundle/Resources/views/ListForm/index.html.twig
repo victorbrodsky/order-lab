@@ -88,10 +88,12 @@
     {{ form_end(filterform) }}
     </div>
 
+    {% set postPath = '' %}
     {% if sitename == 'translationalresearch' %}
         {% set postPath = '_translationalresearch' %}
-    {% else %}
-        {% set postPath = '' %}
+    {% endif %}
+    {% if sitename == 'fellapp' %}
+        {% set postPath = '_fellapp' %}
     {% endif %}
 
     {{ listmacros.listIndex( entities, pathbase, withCreateNewEntityLink, linkToListId, postPath ) }}

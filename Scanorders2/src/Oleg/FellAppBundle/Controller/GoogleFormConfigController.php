@@ -25,6 +25,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class GoogleFormConfigController extends Controller
 {
@@ -108,10 +109,35 @@ class GoogleFormConfigController extends Controller
         $fellTypes = $fellappUtil->getFellowshipTypesByInstitution(true);
         $fellVisaStatus = $fellappUtil->getFellowshipVisaStatuses(true);
 
+        //link to http://127.0.0.1/order/fellowship-applications/fellowship-types-settings
+        $fellappTypesListLink = NULL;
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_ADMIN') ) {
+            $fellappTypesListUrl = $this->container->get('router')->generate(
+                'fellapp_fellowshiptype_settings',
+                array(),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $fellappTypesListLink = " <a data-toggle='tooltip' title='Fellowship Settings Management' href=".$fellappTypesListUrl."><span class='glyphicon glyphicon-wrench'></span></a>";
+        }
+
+        //link to the fellappVisaStatusesLink
+        $fellappVisaStatusesListLink = NULL;
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_ADMIN') ) {
+            $fellappVisaStatusesListUrl = $this->container->get('router')->generate(
+                //'visastatus-list',
+                'visastatus-list_fellapp',
+                array(),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $fellappVisaStatusesListLink = " <a data-toggle='tooltip' title='Fellowship Visa Status Management' href=".$fellappVisaStatusesListUrl."><span class='glyphicon glyphicon-wrench'></span></a>";
+        }
+
         $params = array(
             'cycle' => $cycle,
             'fellTypes' => $fellTypes,
-            'fellVisaStatus' => $fellVisaStatus
+            'fellVisaStatus' => $fellVisaStatus,
+            'fellappTypesListLink' => $fellappTypesListLink,
+            'fellappVisaStatusesListLink' => $fellappVisaStatusesListLink
         );
 
         $form = $this->createForm(

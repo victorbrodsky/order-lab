@@ -257,7 +257,7 @@ class ListController extends Controller
      * @Route("/list/custom099/", name="custom099-list")
      * @Route("/list/translational-tissue-processing-services/", name="transrestissueprocessingservices-list")
      * @Route("/list/translational-other-requested-services/", name="transresotherrequestedservices-list")
-     * @Route("/list/visastatus/", name="visastatus-list")
+     * @Route("/list/visa-status/", name="visastatus-list")
      *
      *
      * @Method("GET")
@@ -3509,11 +3509,16 @@ class ListController extends Controller
         //exit("pathbase=".$pathbase);
         if( $pathbase == "translationalresearchfeesschedule" || $pathbase == "antibodies" || $pathbase == "transresrequestcategorytypes") {
             $additionalSitename = $this->container->getParameter('translationalresearch.sitename');
-            if(
+            if (
                 false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') &&
                 false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN')
             ) {
-                return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+                return $this->redirect($this->generateUrl($this->container->getParameter('translationalresearch.sitename') . '-nopermission'));
+            }
+        } elseif( $pathbase == "visastatus" ) {
+            $additionalSitename = $this->container->getParameter('fellapp.sitename');
+            if( false === $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_ADMIN') ) {
+                return $this->redirect($this->generateUrl($this->container->getParameter('fellapp.sitename') . '-nopermission'));
             }
         } else {
             if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {

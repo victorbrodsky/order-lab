@@ -71,7 +71,7 @@ class GoogleFormConfigType extends AbstractType
 
         $builder->add('fellowshipSubspecialties', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:FellowshipSubspecialty',
-            'label' => "Fellowship Application Types:",
+            'label' => "Fellowship Application Types".$this->params['fellappTypesListLink'].":",
             'required' => true,
             'multiple' => true,
             'choices' => $this->params['fellTypes'],
@@ -132,7 +132,7 @@ class GoogleFormConfigType extends AbstractType
 
         $builder->add('fellowshipVisaStatuses', EntityType::class, array(
             'class' => 'OlegFellAppBundle:VisaStatus',
-            'label' => "Fellowship Visa Status:",
+            'label' => "Fellowship Visa Status".$this->params['fellappVisaStatusesListLink'].":",
             'required' => false,
             'multiple' => true,
             'choices' => $this->params['fellVisaStatus'],
