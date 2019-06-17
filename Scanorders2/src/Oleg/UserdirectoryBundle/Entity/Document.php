@@ -490,6 +490,18 @@ class Document {
 
         $path = $scheme."://" . $serverName . "/order/" . $this->getUploadDirectory().'/'.$uniquename;
 
+        if( $size ) {
+            if (file_exists($path)) {
+                //echo "The file $path exists <br>";
+            } else {
+                //echo "The file $path does not exists <br>";
+                //exit("The file $path does not exists");
+                //$path = $this->getAbsoluteUploadFullPath();
+            }
+        } else {
+            //echo "Size is null <br>";
+        }
+
         //exit("path=".$path);
 
         return $path;

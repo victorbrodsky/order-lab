@@ -171,7 +171,8 @@ class DefaultController extends Controller
         $dql->select('document');
         $dql->leftJoin('document.type','documentType');
 
-        $dql->where("documentType.name = 'Fellowship Photo'");
+        //$dql->where("documentType.name = 'Fellowship Photo'");
+        $dql->where("documentType.name = 'Fellowship Photo' OR documentType.name = 'Avatar Image'");
 
         $query = $em->createQuery($dql);
 

@@ -111,13 +111,14 @@
             {#avatar form modal#}
             {% if fellapp.avatars|length > 0 and not is_granted('ROLE_PLATFORM_DEMO') %}
                 {% if cycle == "download" %}
-                    {% set avatarPath = fellapp.avatars|last.getAbsoluteUploadFullPath() %}
+                    {% set avatarPath = fellapp.avatars|last.getAbsoluteUploadFullPath("medium") %}
                     <img src="{{ avatarPath }}"
                          alt="{{ "Avatar "~fellapp.avatars|last.getOriginalnameClean }}"
                          style="max-width: 250px;"
                     >
                 {% else %}
-                    {{ usermacros.showDocumentAsImage(fellapp.avatars|last,'Avatar','') }}
+                    {#{{ usermacros.showDocumentAsImage(fellapp.avatars|last,'Avatar','') }}#}
+                    {{ usermacros.showDocumentAsImage(fellapp.avatars|last,'Avatar',null,null,null,'snapshot-medium') }}
                 {% endif %}
             {% else %}
                 {% set avatarImage = asset('bundles/oleguserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
