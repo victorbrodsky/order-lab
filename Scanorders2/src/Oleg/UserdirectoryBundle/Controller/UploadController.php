@@ -320,7 +320,6 @@ class UploadController extends Controller {
                 if( $resize == "small" ) {
                     $originalname = $document->getOriginalnameClean();
                     $size = $document->getSize();
-
                     $abspath = $document->getAbsoluteUploadFullPath($resize);
                     //$abspath = "http://127.0.0.1/order/Uploaded/fellapp/FellowshipApplicantUploads/small-1557157978ID1J9qjngqM1Bt_PZedHfJtX1S_sALg8YS-.jpg";
 
@@ -335,15 +334,7 @@ class UploadController extends Controller {
                 elseif( $resize == "medium" ) {
                     $originalname = $document->getOriginalnameClean();
                     $size = $document->getSize();
-
                     $abspath = $document->getAbsoluteUploadFullPath($resize);
-
-//                    if( file_exists($abspath) ) {
-//                        echo "The file $abspath exists";
-//                    } else {
-//                        echo "The file $abspath does not exists";
-//                        $abspath = $document->getAbsoluteUploadFullPath();
-//                    }
                 } else {
                     //default
                     $originalname = $document->getOriginalnameClean();

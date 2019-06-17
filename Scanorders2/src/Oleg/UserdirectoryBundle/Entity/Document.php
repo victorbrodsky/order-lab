@@ -496,7 +496,7 @@ class Document {
             } else {
                 //echo "The file $path does not exists <br>";
                 //exit("The file $path does not exists");
-                $path = $this->getAbsoluteUploadFullPath();
+                //$path = $this->getAbsoluteUploadFullPath();
             }
         } else {
             //echo "Size is null <br>";
