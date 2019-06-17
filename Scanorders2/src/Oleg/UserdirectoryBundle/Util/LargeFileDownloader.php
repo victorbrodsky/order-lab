@@ -136,12 +136,12 @@ class LargeFileDownloader {
                     $resize = null;
                 }
             }
-            $resize = null; //disable resize for now. //use pre-generated thumbnail
+            $resize = null; //disable resize for now. //use pre-generated thumbnail instead
 
             if( !$resize ) {
                 echo $this->getFileContent($filenameClean);
             } else {
-                //use pre-generated thumbnail
+                //don't use this. Use pre-generated thumbnail instead.
                 if(0) {
                     //snapshot is used in diff pages (use snapshot small, medium, large?).
                     //exit('111');

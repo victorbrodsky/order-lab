@@ -313,7 +313,7 @@ class UploadController extends Controller {
                 } else {
                     $resize = null;
                 }
-                //$resize = null; //testing
+                //$resize = null; //testing: disable resize images
 
                 //TODO: resize thumbnails http://127.0.0.1/order/fellowship-applications/generate-thumbnails
                 //get small thumbnail - i.e. used for the fellowship application list //small-18sec, original-25sec
