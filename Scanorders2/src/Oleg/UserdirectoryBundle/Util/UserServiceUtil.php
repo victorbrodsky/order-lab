@@ -1325,7 +1325,7 @@ class UserServiceUtil {
                 }
 
                 //Small
-                $desired_width = 46;
+                $desired_width = 65;
                 $uniquenameSmall = "small" . "-" . $uniquename;
                 $dest = str_replace($uniquename,$uniquenameSmall,$src);
                 echo $desired_width.": dest=".$dest."<br>";

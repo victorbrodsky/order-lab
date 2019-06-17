@@ -316,7 +316,8 @@
                 <div class="dz-details">
                     {#<div class="dz-filename"><span data-dz-name>{{ documentObj.uniquename }}</span></div>#}
                     <div class="dz-size" data-dz-size><strong>{{ documentObj.getSizeStr() }}</strong></div>
-                    {{ usermacros.showDocumentAsImage(documentObj,'Document','data-dz-thumbnail') }}
+                    {#{{ usermacros.showDocumentAsImage(documentObj,'Document','data-dz-thumbnail') }}#}
+                    {{ usermacros.showDocumentAsImage(documentObj,'Document','data-dz-thumbnail',null,null,'snapshot-small') }}
                 </div>
                 <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
                 <div class="dz-success-mark"><span>✔</span></div>
