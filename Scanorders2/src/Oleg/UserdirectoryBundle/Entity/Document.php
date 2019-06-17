@@ -444,10 +444,15 @@ class Document {
 //    }
 
     //get server path to delete file: /var/www/test/folder/images/image_name.jpeg
-    public function getServerPath()
+    public function getServerPath($size=null)
     {
+        $uniquename = $this->getUniquename();
+        if( $size ) {
+            $uniquename = $size . "-" . $uniquename;
+        }
+
         //echo "getcwd=".getcwd()."<br>"; //getcwd()=C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2
-        return $this->getUploadDirectory().'/'.$this->getUniquename();
+        return $this->getUploadDirectory().'/'.$uniquename;
     }
 
     //use for command console to get a full absolute server path
@@ -491,7 +496,8 @@ class Document {
         $path = $scheme."://" . $serverName . "/order/" . $this->getUploadDirectory().'/'.$uniquename;
 
         if( $size ) {
-            if (file_exists($path)) {
+            $src = $this->getServerPath($size);
+            if (file_exists($src)) {
                 //echo "The file $path exists <br>";
             } else {
                 //echo "The file $path does not exists <br>";
