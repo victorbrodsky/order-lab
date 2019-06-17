@@ -1126,11 +1126,12 @@ class DashboardUtil
         return $projects;
     }
 
-    public function getTitleWithTotal($chartName,$total,$prefix=null) {
-        $postfix = "total quantity";
-        if( $prefix ) {
-            $postfix = "total";
-        }
+    public function getTitleWithTotal($chartName,$total,$prefix=null,$postfix="total") {
+        //$postfix = "total quantity";
+        //$postfix = "total";
+        //if( $prefix ) {
+        //    $postfix = "total";
+        //}
         return $chartName . " - " . $prefix . $total . " " . $postfix;
     }
 
@@ -1500,6 +1501,7 @@ class DashboardUtil
                 }
             }
 
+            $totalProjects = 0;
             $projectsCount1 = 0;
             $projectsCount2 = 0;
             $projectsCount3 = 0;
@@ -1539,6 +1541,8 @@ class DashboardUtil
                 if( $count3 ) {
                     $projectsCount3++;
                 }
+
+                $totalProjects++;
             }
 
             $dataArray = array();
@@ -1567,7 +1571,7 @@ class DashboardUtil
                 "$instName faculty PIs with ".$projectsCount1." projects: ".$piWcmPathologyCounter,
                 //"$institutionAbbreviation Other Departmental faculty PIs with ".$projectsCount2." projects: ".$piWcmCounter,
                 "Non-".$instName." faculty PIs with ".$projectsCount2." projects: ".$piWcmCounter,
-                "Other Institutions faculty PIs with ".$projectsCount3." projects: ".$piOtherCounter
+                "Other Institutions' faculty PIs with ".$projectsCount3." projects: ".$piOtherCounter
             );
 
             $values = array($piWcmPathologyCounter,$piWcmCounter,$piOtherCounter);
