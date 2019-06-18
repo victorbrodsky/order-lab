@@ -1617,12 +1617,14 @@ class DashboardUtil
         }
 
         //2. Total number of projects (XXX) per PI (Top 5/10) (APPROVED & CLOSED)
+        //project's list might show the different matching projects, because in the filter principalInvestigators
+        // are filtered by $dql->andWhere("principalInvestigators.id IN (:principalInvestigators) OR principalIrbInvestigator.id IN (:principalInvestigators)");
         if( $chartType == "projects-per-pi" ) {
 
             $piProjectCountArr = array();
 
             $projects = $this->getProjectsByFilter($startDate,$endDate,$projectSpecialtyObjects);
-            echo "projects=".count($projects)."<br>";
+            //echo "projects=".count($projects)."<br>";
 
             foreach($projects as $project) {
                 $pis = $project->getPrincipalInvestigators();
@@ -1645,7 +1647,7 @@ class DashboardUtil
 
                 $titleCount++;
             }
-            exit('111');
+            //exit('111');
 
             //$chartName = $chartName . " - " . $totalCount . " total";
             $chartName = $this->getTitleWithTotal($chartName,$titleCount,null,"projects total");
