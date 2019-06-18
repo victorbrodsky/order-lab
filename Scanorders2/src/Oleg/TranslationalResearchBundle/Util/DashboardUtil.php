@@ -1525,7 +1525,8 @@ class DashboardUtil
                         //WCM Other Departmental Faculty - WCM institution
                         $piWcmCounter++;
                         $count2 = true;
-                        echo "PI=$pi; Project ID=".$project->getId()."<br>";
+                        $totalProjects++;
+                        echo $totalProjects.": PI=$pi; Project ID=".$project->getId()."<br>";
                     } else {
                         //Other Institutions
                         $piOtherCounter++;
@@ -1543,7 +1544,6 @@ class DashboardUtil
                     $projectsCount3++;
                 }
 
-                $totalProjects++;
             }//foreach project
             exit('111');
 
