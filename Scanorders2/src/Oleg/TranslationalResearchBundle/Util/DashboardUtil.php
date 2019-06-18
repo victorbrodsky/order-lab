@@ -1622,6 +1622,7 @@ class DashboardUtil
             $piProjectCountArr = array();
 
             $projects = $this->getProjectsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+            echo "projects=".count($projects)."<br>";
 
             foreach($projects as $project) {
                 $pis = $project->getPrincipalInvestigators();
@@ -1646,7 +1647,7 @@ class DashboardUtil
             }
 
             //$chartName = $chartName . " - " . $totalCount . " total";
-            $chartName = $this->getTitleWithTotal($chartName,$titleCount);
+            $chartName = $this->getTitleWithTotal($chartName,$titleCount,null,"projects total");
 
             $showOther = $this->getOtherStr($showLimited,"PIs");
             $piProjectCountTopArr = $this->getTopMultiArray($piProjectCountArr,$showOther); // getTopMultiArray(
