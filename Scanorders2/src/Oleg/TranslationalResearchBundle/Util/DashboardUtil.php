@@ -163,9 +163,9 @@ class DashboardUtil
         $institutions = $user->getInstitutions();
 
         foreach($institutions as $institution) {
-            echo $user.": parentNode:".$parentInstitution."(".$parentInstitution->getId().") and node:".$institution."(".$institution->getId().") are the same? <br>";
+            //echo $user.": parentNode:".$parentInstitution."(".$parentInstitution->getId().") and node:".$institution."(".$institution->getId().") are the same? <br>";
             if( $this->em->getRepository('OlegUserdirectoryBundle:Institution')->isNodeUnderParentnode($parentInstitution,$institution) ) {
-                echo $user.": isUserBelongsToInstitution Yes! <br>";
+                //echo $user.": isUserBelongsToInstitution Yes! <br>";
                 return true;
             }
         }
@@ -1557,7 +1557,7 @@ class DashboardUtil
                 }
 
             }//foreach project
-            exit('111');
+            //exit('111');
 
             $dataArray = array();
             $chartDataArray = array();
