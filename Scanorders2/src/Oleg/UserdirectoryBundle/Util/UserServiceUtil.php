@@ -1306,6 +1306,7 @@ class UserServiceUtil {
     //get small thumbnail - i.e. used for the fellowship application list
     //get small thumbnail - i.e. used for the fellowship application view
     public function generateTwoThumbnails($document) {
+        $res = NULL;
         $documentTypeObject = $document->getType();
         if( $documentTypeObject) {
             if( $documentTypeObject->getName() == "Fellowship Photo" || $documentTypeObject->getName() == "Avatar Image" ) {
@@ -1317,33 +1318,44 @@ class UserServiceUtil {
                 $src = $document->getServerPath();
                 $uniquename = $document->getUniquename();
 
-                if (file_exists($src)) {
-                    echo "The file $src exists <br>";
-                }
-                else {
-                    echo "The file $src does not exists <br>";
-                }
+//                if (file_exists($src)) {
+//                    echo "The file $src exists <br>";
+//                }
+//                else {
+//                    echo "The file $src does not exists <br>";
+//                }
 
                 //Small
                 $desired_width = 65;
                 $uniquenameSmall = "small" . "-" . $uniquename;
                 $dest = str_replace($uniquename,$uniquenameSmall,$src);
-                echo $desired_width.": dest=".$dest."<br>";
-                $this->makeThumb($src, $dest, $desired_width);
+                //echo $desired_width.": dest=".$dest."<br>";
+                $destSmall = $this->makeThumb($src, $dest, $desired_width);
 
                 //Medium
                 $desired_width = 260;
                 $uniquename = $document->getUniquename();
                 $uniquenameSmall = "medium" . "-" . $uniquename;
                 $dest = str_replace($uniquename,$uniquenameSmall,$src);
-                echo $desired_width.": dest=".$dest."<br>";
-                $this->makeThumb($src, $dest, $desired_width);
+                //echo $desired_width.": dest=".$dest."<br>";
+                $destMedium = $this->makeThumb($src, $dest, $desired_width);
 
                 //exit(111);
+                $res = $destSmall.", ".$destMedium;
             }
         }
+        return $res;
     }
     public function makeThumb($src, $dest, $desired_width) {
+
+        if (file_exists($dest)) {
+            //echo "The file $dest exists <br>";
+            return null;
+        }
+        else {
+            //echo "The file $dest does not exists <br>";
+        }
+
         /* read the source image */
         $source_image = imagecreatefromjpeg($src);
         $width = imagesx($source_image);
@@ -1360,6 +1372,8 @@ class UserServiceUtil {
 
         /* create the physical thumbnail image to its destination */
         imagejpeg($virtual_image, $dest);
+
+        return $dest;
     }
 
 

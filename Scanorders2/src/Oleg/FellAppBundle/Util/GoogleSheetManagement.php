@@ -344,10 +344,6 @@ class GoogleSheetManagement {
                 $object->setType($documentTypeObject);
             }
 
-            //generate two thumbnails
-            $userServiceUtil = $this->container->get('user_service_utility');
-            $userServiceUtil->generateTwoThumbnails($object);
-
             $this->em->persist($object);
 
             $root = $this->container->get('kernel')->getRootDir();
@@ -365,6 +361,10 @@ class GoogleSheetManagement {
             }
 
             file_put_contents($target_file, $response);
+
+            //generate two thumbnails
+            $userServiceUtil = $this->container->get('user_service_utility');
+            $userServiceUtil->generateTwoThumbnails($object);
 
             return $object;
         }

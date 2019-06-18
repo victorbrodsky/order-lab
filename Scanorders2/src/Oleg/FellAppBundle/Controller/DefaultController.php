@@ -179,14 +179,18 @@ class DefaultController extends Controller
         //echo "query=".$query->getSql()."<br>";
 
         $documents = $query->getResult();
+        echo "doc count=".count($documents)."<br>";
 
+        $counter = 0;
         foreach($documents as $document) {
-            $userServiceUtil->generateTwoThumbnails($document);
+            $dest = $userServiceUtil->generateTwoThumbnails($document);
+            if( $dest ) {
+                echo $document->getId() . ": dest=" . $dest . "<br>";
+                $counter++;
+            }
             //break;
         }
 
-        echo "doc count=".count($documents)."<br>";
-
-        exit("end of fellapp thumbnails");
+        exit("end of fellapp thumbnails, counter=$counter");
     }
 }
