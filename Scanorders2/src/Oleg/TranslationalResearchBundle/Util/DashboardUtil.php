@@ -1530,7 +1530,7 @@ class DashboardUtil
                         $totalProjects++;
                         echo $totalProjects."(WCM Pathology Faculty): PI=$pi; Project ID=".$project->getId()."<br>";
                     }
-                    elseif ( $this->isUserBelongsToInstitution($pi,$institution) ) {
+                    elseif ( 0 && $this->isUserBelongsToInstitution($pi,$institution) ) {
                         //WCM Other Departmental Faculty - WCM institution
                         //Non-WCM Pathology faculty PIs
                         //$piWcmCounter++;
