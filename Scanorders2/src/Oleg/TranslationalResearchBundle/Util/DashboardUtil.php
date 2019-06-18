@@ -1507,6 +1507,7 @@ class DashboardUtil
             $projectsCount3 = 0;
 
             $projects = $this->getProjectsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+            echo "Projects count=".count($projects)."<br>";
 
             foreach($projects as $project) {
                 $pis = $project->getPrincipalInvestigators();
@@ -1520,6 +1521,7 @@ class DashboardUtil
                         //WCM Pathology Faculty - WCM Department of Pathology and Laboratory Medicine in any Title’s department field
                         $piWcmPathologyCounter++;
                         $count1 = true;
+                        $totalProjects++;
                         echo $totalProjects.": PI=$pi; Project ID=".$project->getId()."<br>";
                     }
                     elseif ( $this->isUserBelongsToInstitution($pi,$institution) ) {
@@ -1527,7 +1529,7 @@ class DashboardUtil
                         //Non-WCM Pathology faculty PIs
                         $piWcmCounter++;
                         $count2 = true;
-                        $totalProjects++;
+                        //$totalProjects++;
                         //echo $totalProjects.": PI=$pi; Project ID=".$project->getId()."<br>";
                     } else {
                         //Other Institutions
