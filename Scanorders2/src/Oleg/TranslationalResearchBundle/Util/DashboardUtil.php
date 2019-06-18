@@ -1528,7 +1528,7 @@ class DashboardUtil
                         $count1 = true;
                         $projectsPerPi1[] = $pi->getId();
                         $totalProjects++;
-                        echo $totalProjects.": PI=$pi; Project ID=".$project->getId()."<br>";
+                        echo $totalProjects."(WCM Pathology Faculty): PI=$pi; Project ID=".$project->getId()."<br>";
                     }
                     elseif ( $this->isUserBelongsToInstitution($pi,$institution) ) {
                         //WCM Other Departmental Faculty - WCM institution
@@ -1537,7 +1537,7 @@ class DashboardUtil
                         $count2 = true;
                         $projectsPerPi2[] = $pi->getId();
                         //$totalProjects++;
-                        echo $totalProjects.": PI=$pi; Project ID=".$project->getId()."<br>";
+                        //echo $totalProjects."(Non-WCM Pathology faculty): PI=$pi; Project ID=".$project->getId()."<br>";
                     } else {
                         //Other Institutions
                         //$piOtherCounter++;
