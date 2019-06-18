@@ -1520,13 +1520,15 @@ class DashboardUtil
                         //WCM Pathology Faculty - WCM Department of Pathology and Laboratory Medicine in any Title’s department field
                         $piWcmPathologyCounter++;
                         $count1 = true;
+                        echo $totalProjects.": PI=$pi; Project ID=".$project->getId()."<br>";
                     }
                     elseif ( $this->isUserBelongsToInstitution($pi,$institution) ) {
                         //WCM Other Departmental Faculty - WCM institution
+                        //Non-WCM Pathology faculty PIs
                         $piWcmCounter++;
                         $count2 = true;
                         $totalProjects++;
-                        echo $totalProjects.": PI=$pi; Project ID=".$project->getId()."<br>";
+                        //echo $totalProjects.": PI=$pi; Project ID=".$project->getId()."<br>";
                     } else {
                         //Other Institutions
                         $piOtherCounter++;
