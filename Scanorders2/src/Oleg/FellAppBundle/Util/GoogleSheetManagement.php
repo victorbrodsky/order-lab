@@ -345,7 +345,7 @@ class GoogleSheetManagement {
             }
 
             //generate two thumbnails
-            $userServiceUtil = $this->get('user_service_utility');
+            $userServiceUtil = $this->container->get('user_service_utility');
             $userServiceUtil->generateTwoThumbnails($object);
 
             $this->em->persist($object);
