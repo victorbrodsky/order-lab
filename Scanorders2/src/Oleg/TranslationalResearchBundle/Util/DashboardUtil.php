@@ -1587,6 +1587,7 @@ class DashboardUtil
             $chartDataArray['labels'] = $labels;
             $chartDataArray['type'] = $type;
             $chartDataArray["textinfo"] = "value+percent";
+            //$chartDataArray["textinfo"] = "percent";
             $chartDataArray["outsidetextfont"] = array('size'=>1,'color'=>'white');
             $chartDataArray['direction'] = 'clockwise';
             $dataArray[] = $chartDataArray;

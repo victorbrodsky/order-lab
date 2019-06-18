@@ -363,10 +363,11 @@ class GoogleSheetManagement {
             file_put_contents($target_file, $response);
 
             //generate two thumbnails
+            $logger = $this->container->get('logger');
             $userServiceUtil = $this->container->get('user_service_utility');
+            $logger->notice("Before thumbnails generated for document ID=".$object->getId());
             $resImage = $userServiceUtil->generateTwoThumbnails($object);
             if( $resImage ) {
-                $logger = $this->container->get('logger');
                 $logger->notice("Thumbnails generated=".$resImage);
             }
 
