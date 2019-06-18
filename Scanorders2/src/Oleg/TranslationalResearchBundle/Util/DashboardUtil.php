@@ -1501,6 +1501,9 @@ class DashboardUtil
                 }
             }
 
+            $projectsPerPi1 = array();
+            $projectsPerPi2 = array();
+            $projectsPerPi3 = array();
             $totalProjects = 0;
             $projectsCount1 = 0;
             $projectsCount2 = 0;
@@ -1521,6 +1524,7 @@ class DashboardUtil
                         //WCM Pathology Faculty - WCM Department of Pathology and Laboratory Medicine in any Title’s department field
                         $piWcmPathologyCounter++;
                         $count1 = true;
+                        $projectsPerPi1[] = $pi->getId();
                         //$totalProjects++;
                         //echo $totalProjects.": PI=$pi; Project ID=".$project->getId()."<br>";
                     }
@@ -1529,12 +1533,14 @@ class DashboardUtil
                         //Non-WCM Pathology faculty PIs
                         $piWcmCounter++;
                         $count2 = true;
+                        $projectsPerPi2[] = $pi->getId();
                         //$totalProjects++;
                         //echo $totalProjects.": PI=$pi; Project ID=".$project->getId()."<br>";
                     } else {
                         //Other Institutions
                         $piOtherCounter++;
                         $count3 = true;
+                        $projectsPerPi3[] = $pi->getId();
                     }
                 }//foreach pi
 
@@ -1554,6 +1560,15 @@ class DashboardUtil
             $dataArray = array();
             $chartDataArray = array();
             $type = 'pie';
+
+            $projectsPerPi1 = array_unique($projectsPerPi1);
+            $piWcmPathologyCounter = count($projectsPerPi1);
+
+            $projectsPerPi2 = array_unique($projectsPerPi2);
+            $piWcmCounter = count($projectsPerPi2);
+
+            $projectsPerPi3 = array_unique($projectsPerPi3);
+            $piOtherCounter = count($projectsPerPi3);
 
             $titleTotal = $piWcmPathologyCounter + $piWcmCounter + $piOtherCounter;
             $chartName = $this->getTitleWithTotal($chartName,$titleTotal,null,"PIs total");
@@ -1587,7 +1602,7 @@ class DashboardUtil
             $chartDataArray['labels'] = $labels;
             $chartDataArray['type'] = $type;
             $chartDataArray["textinfo"] = "value+percent";
-            //$chartDataArray["textinfo"] = "percent";
+            //$chartDataArray["textinfo"] = "value";
             $chartDataArray["outsidetextfont"] = array('size'=>1,'color'=>'white');
             $chartDataArray['direction'] = 'clockwise';
             $dataArray[] = $chartDataArray;
