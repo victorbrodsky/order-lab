@@ -1556,7 +1556,7 @@ class DashboardUtil
             $type = 'pie';
 
             $titleTotal = $piWcmPathologyCounter + $piWcmCounter + $piOtherCounter;
-            $chartName = $this->getTitleWithTotal($chartName,$titleTotal);
+            $chartName = $this->getTitleWithTotal($chartName,$titleTotal,null,"PIs total");
 
             $layoutArray = array(
                 'height' => $this->height,
