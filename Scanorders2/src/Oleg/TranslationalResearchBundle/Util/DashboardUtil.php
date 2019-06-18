@@ -163,7 +163,9 @@ class DashboardUtil
         $institutions = $user->getInstitutions();
 
         foreach($institutions as $institution) {
+            echo $user.": parentNode:".$parentInstitution."(".$parentInstitution->getId().") and node:".$institution."(".$institution->getId().") are the same? <br>";
             if( $this->em->getRepository('OlegUserdirectoryBundle:Institution')->isNodeUnderParentnode($parentInstitution,$institution) ) {
+                echo $user.": isUserBelongsToInstitution Yes! <br>";
                 return true;
             }
         }
@@ -1486,9 +1488,9 @@ class DashboardUtil
         if( $chartType == "pi-by-affiliation" ) {
 
             $userSecUtil = $this->container->get('user_security_utility');
-            $piWcmPathologyCounter = 0;
-            $piWcmCounter = 0;
-            $piOtherCounter = 0;
+            //$piWcmPathologyCounter = 0;
+            //$piWcmCounter = 0;
+            //$piOtherCounter = 0;
             $departmentAbbreviation = "Department";
             $institutionAbbreviation = "Institution";
             $institution = null;
@@ -1504,7 +1506,7 @@ class DashboardUtil
             $projectsPerPi1 = array();
             $projectsPerPi2 = array();
             $projectsPerPi3 = array();
-            $totalProjects = 0;
+            //$totalProjects = 0;
             $projectsCount1 = 0;
             $projectsCount2 = 0;
             $projectsCount3 = 0;
@@ -1522,7 +1524,7 @@ class DashboardUtil
                     //1. Principle Investigators by Affiliation
                     if( $this->isUserBelongsToInstitution($pi,$department) ) {
                         //WCM Pathology Faculty - WCM Department of Pathology and Laboratory Medicine in any Title’s department field
-                        $piWcmPathologyCounter++;
+                        //$piWcmPathologyCounter++;
                         $count1 = true;
                         $projectsPerPi1[] = $pi->getId();
                         //$totalProjects++;
@@ -1531,14 +1533,14 @@ class DashboardUtil
                     elseif ( $this->isUserBelongsToInstitution($pi,$institution) ) {
                         //WCM Other Departmental Faculty - WCM institution
                         //Non-WCM Pathology faculty PIs
-                        $piWcmCounter++;
+                        //$piWcmCounter++;
                         $count2 = true;
                         $projectsPerPi2[] = $pi->getId();
                         //$totalProjects++;
                         //echo $totalProjects.": PI=$pi; Project ID=".$project->getId()."<br>";
                     } else {
                         //Other Institutions
-                        $piOtherCounter++;
+                        //$piOtherCounter++;
                         $count3 = true;
                         $projectsPerPi3[] = $pi->getId();
                     }
@@ -1555,7 +1557,7 @@ class DashboardUtil
                 }
 
             }//foreach project
-            //exit('111');
+            exit('111');
 
             $dataArray = array();
             $chartDataArray = array();
