@@ -1645,6 +1645,7 @@ class DashboardUtil
 
                 $titleCount++;
             }
+            exit('111');
 
             //$chartName = $chartName . " - " . $totalCount . " total";
             $chartName = $this->getTitleWithTotal($chartName,$titleCount,null,"projects total");
