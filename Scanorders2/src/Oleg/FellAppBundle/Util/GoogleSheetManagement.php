@@ -364,7 +364,11 @@ class GoogleSheetManagement {
 
             //generate two thumbnails
             $userServiceUtil = $this->container->get('user_service_utility');
-            $userServiceUtil->generateTwoThumbnails($object);
+            $resImage = $userServiceUtil->generateTwoThumbnails($object);
+            if( $resImage ) {
+                $logger = $this->container->get('logger');
+                $logger->notice("Thumbnails generated=".$resImage);
+            }
 
             return $object;
         }

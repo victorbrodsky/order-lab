@@ -320,21 +320,49 @@ class UploadController extends Controller {
                 if( $resize == "small" ) {
                     $originalname = $document->getOriginalnameClean();
                     $size = $document->getSize();
-                    $abspath = $document->getAbsoluteUploadFullPath($resize);
+                    $abspath = $document->getAbsoluteUploadFullPath($resize,true);
                     //$abspath = "http://127.0.0.1/order/Uploaded/fellapp/FellowshipApplicantUploads/small-1557157978ID1J9qjngqM1Bt_PZedHfJtX1S_sALg8YS-.jpg";
 
-//                    if( file_exists($abspath) ) {
-//                        echo "The file $abspath exists";
-//                    } else {
-//                        echo "The file $abspath does not exists";
-//                        $abspath = $document->getAbsoluteUploadFullPath();
-//                    }
+                    if( file_exists($abspath) ) {
+                        //echo "The file $abspath exists";
+                    } else {
+                        //echo "The file $abspath does not exists";
+                        //try to re-generate thumbnails for jpg and jpeg
+                        if( strpos($originalname, '.jpg') !== false || strpos($originalname, '.jpeg') !== false ) {
+                            $userServiceUtil = $this->container->get('user_service_utility');
+                            $destRes = $userServiceUtil->generateTwoThumbnails($document);
+                            if( $destRes ) {
+                                $logger = $this->container->get('logger');
+                                $logger->notice("Try to re-generate small thumbnail for $originalname. destRes=" . $destRes);
+                            }
+                        }
+
+                        $abspath = $document->getAbsoluteUploadFullPath($resize);
+                    }
                 }
                 //get small thumbnail - i.e. used for the fellowship application view
                 elseif( $resize == "medium" ) {
                     $originalname = $document->getOriginalnameClean();
                     $size = $document->getSize();
-                    $abspath = $document->getAbsoluteUploadFullPath($resize);
+                    $abspath = $document->getAbsoluteUploadFullPath($resize,true);
+
+                    if( file_exists($abspath) ) {
+                        //echo "The file $abspath exists";
+                    } else {
+                        //echo "The file $abspath does not exists";
+                        //try to re-generate thumbnails
+                        if( strpos($originalname, '.jpg') !== false || strpos($originalname, '.jpeg') !== false ) {
+                            $userServiceUtil = $this->container->get('user_service_utility');
+                            $destRes = $userServiceUtil->generateTwoThumbnails($document);
+                            if( $destRes ) {
+                                $logger = $this->container->get('logger');
+                                $logger->notice("Try to re-generate medium thumbnail for $originalname. destRes=" . $destRes);
+                            }
+                        }
+
+                        $abspath = $document->getAbsoluteUploadFullPath($resize);
+                    }
+
                 } else {
                     //default
                     $originalname = $document->getOriginalnameClean();

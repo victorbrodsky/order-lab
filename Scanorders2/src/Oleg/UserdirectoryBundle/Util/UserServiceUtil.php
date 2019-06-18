@@ -1341,7 +1341,9 @@ class UserServiceUtil {
                 $destMedium = $this->makeThumb($src, $dest, $desired_width);
 
                 //exit(111);
-                $res = $destSmall.", ".$destMedium;
+                if( $destSmall || $destMedium ) {
+                    $res = $destSmall . ", " . $destMedium;
+                }
             }
         }
         return $res;
@@ -1350,10 +1352,18 @@ class UserServiceUtil {
 
         if (file_exists($dest)) {
             //echo "The file $dest exists <br>";
+            //$logger = $this->container->get('logger');
+            //$logger->notice("$desired_width thumbnail already exists. dest=" . $dest);
             return null;
         }
         else {
             //echo "The file $dest does not exists <br>";
+        }
+
+        if( strpos($src, '.jpg') !== false || strpos($src, '.jpeg') !== false ) {
+            //ok, file is jpeg
+        } else {
+            return null;
         }
 
         /* read the source image */

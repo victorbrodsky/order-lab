@@ -465,12 +465,11 @@ class Document {
         return $fullPath;
     }
 
-    public function getAbsoluteUploadFullPath($size=null)
+    public function getAbsoluteUploadFullPath($size=null,$onlyResize=false)
     {
-        if( isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1) ) {
+        if (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1)) {
             $scheme = 'https';
-        }
-        else {
+        } else {
             $scheme = 'http';
         }
         //$scheme = 'http';
@@ -481,7 +480,7 @@ class Document {
 //            $scheme = "https";
 //        }
 
-        if( isset($_SERVER['SERVER_NAME']) ) {
+        if (isset($_SERVER['SERVER_NAME'])) {
             $serverName = $_SERVER['SERVER_NAME'];
         } else {
             $serverName = "127.0.0.1";
@@ -489,23 +488,25 @@ class Document {
 
         $uniquename = $this->getUniquename();
 
-        if( $size ) {
+        if ($size) {
             $uniquename = $size . "-" . $uniquename;
         }
 
-        $path = $scheme."://" . $serverName . "/order/" . $this->getUploadDirectory().'/'.$uniquename;
+        $path = $scheme . "://" . $serverName . "/order/" . $this->getUploadDirectory() . '/' . $uniquename;
 
-        if( $size ) {
-            $src = $this->getServerPath($size);
-            if (file_exists($src)) {
-                //echo "The file $path exists <br>";
+        if ($onlyResize == false) {
+            if ($size) {
+                $src = $this->getServerPath($size);
+                if (file_exists($src)) {
+                    //echo "The file $path exists <br>";
+                } else {
+                    //echo "The file $path does not exists <br>";
+                    //exit("The file $path does not exists");
+                    $path = $this->getAbsoluteUploadFullPath();
+                }
             } else {
-                //echo "The file $path does not exists <br>";
-                //exit("The file $path does not exists");
-                $path = $this->getAbsoluteUploadFullPath();
+                //echo "Size is null <br>";
             }
-        } else {
-            //echo "Size is null <br>";
         }
 
         //exit("path=".$path);
