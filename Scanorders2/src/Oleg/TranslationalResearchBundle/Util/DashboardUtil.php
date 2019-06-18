@@ -1544,7 +1544,8 @@ class DashboardUtil
                 }
 
                 $totalProjects++;
-            }
+            }//foreach project
+            exit('111');
 
             $dataArray = array();
             $chartDataArray = array();
