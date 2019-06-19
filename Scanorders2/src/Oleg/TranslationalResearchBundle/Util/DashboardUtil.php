@@ -1503,6 +1503,7 @@ class DashboardUtil
                 }
             }
 
+            $piProjectCountArr = array(); //for link
             $projectsPerPi1 = array();
             $projectsPerPi2 = array();
             $projectsPerPi3 = array();
@@ -1544,6 +1545,21 @@ class DashboardUtil
                         $count3 = true;
                         $projectsPerPi3[] = $pi->getId();
                     }
+
+//                    //“WCM Faculty PIs with 30 projects: 21” pie chart portion should link to the list of project requests with the 21 PI names in the PI filter well
+//                    //2. Total number of projects (XXX) per PI (Top 5/10) (APPROVED & CLOSED)
+//                    if( isset($piProjectCountArr[$userId]) && isset($piProjectCountArr[$userId]['value']) ) {
+//                        $count = $piProjectCountArr[$userId]['value'] + 1;
+//                    } else {
+//                        $count = 1;
+//                    }
+//                    $piProjectCountArr[$userId]['value'] = $count;
+//                    $piProjectCountArr[$userId]['label'] = $userName;
+//                    $piProjectCountArr[$userId]['objectid'] = $userId;
+//                    $piProjectCountArr[$userId]['pi'] = $userId;
+//                    $piProjectCountArr[$userId]['show-path'] = "project";
+
+
                 }//foreach pi
 
                 if( $count1 ) {
