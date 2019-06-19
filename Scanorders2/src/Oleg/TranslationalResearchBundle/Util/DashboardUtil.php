@@ -63,7 +63,7 @@ class DashboardUtil
     public function getChartTypes() {
         $chartTypes = array(
             //PI/Project statistics
-            "1. Principle Investigators by Affiliation" =>                      "pi-by-affiliation",
+            "1. Principle Investigators by Affiliation (linked)" =>                      "pi-by-affiliation",
             "2. Total Number of Projects per PI (Top 10) (linked)" =>                    "projects-per-pi",
             "3. Total Number of Funded Projects per PI (Top 10) (linked)" =>             "funded-projects-per-pi",
             "4. Total Number of Non-Funded Projects per PI (Top 10) (linked)" =>         "nonfunded-projects-per-pi",
@@ -1484,7 +1484,7 @@ class DashboardUtil
         $chartsArray = null;
         $warningNoData = null;
 
-        //1. Principle Investigators by Affiliation
+        //1. Principle Investigators by Affiliation (linked)
         if( $chartType == "pi-by-affiliation" ) {
 
             $userSecUtil = $this->container->get('user_security_utility');
@@ -1503,7 +1503,6 @@ class DashboardUtil
                 }
             }
 
-            $piProjectCountArr = array(); //for link
             $projectsPerPi1 = array();
             $projectsPerPi2 = array();
             $projectsPerPi3 = array();
@@ -1627,7 +1626,7 @@ class DashboardUtil
                 //'filter[]' => $projectSpecialtyObjects
             );
             $userIndex = 0;
-            foreach($projectsPerPi2 as $thisPi) {
+            foreach($projectsPerPi3 as $thisPi) {
                 $linkFilterArr['filter[principalInvestigators]['.$userIndex.']'] = $thisPi;
                 $userIndex++;
             }
