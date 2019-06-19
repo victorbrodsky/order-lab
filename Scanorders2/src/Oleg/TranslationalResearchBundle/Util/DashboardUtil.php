@@ -408,7 +408,7 @@ class DashboardUtil
         return $return;
     }
 
-    public function getChart( $dataArr, $title, $type='pie', $layoutArray=null, $valuePrefixLabel=null, $valuePostfixLabel=null, $descriptionArr=null ) {
+    public function getChart( $dataArr, $title, $type='pie', $layoutArray=null, $valuePrefixLabel=null, $valuePostfixLabel=null, $descriptionArr=null, $hoverinfo=null ) {
 
         if( count($dataArr) == 0 ) {
             return array();
@@ -507,6 +507,8 @@ class DashboardUtil
         //hoverinfo: label+text+value+percent
         $chartDataArray["outsidetextfont"] = array('size'=>1,'color'=>'white');
         $chartDataArray['direction'] = 'clockwise';
+        //$chartDataArray["hoverinfo"] = "percent+label";
+        $chartDataArray["hoverinfo"] = $hoverinfo;
 
         $dataArray[] = $chartDataArray;
 
@@ -524,7 +526,7 @@ class DashboardUtil
 
         return $chartsArray;
     }
-    public function getChartByMultiArray( $dataArr, $filterArr, $title, $type='pie', $layoutArray=null, $valuePrefixLabel=null ) {
+    public function getChartByMultiArray( $dataArr, $filterArr, $title, $type='pie', $layoutArray=null, $valuePrefixLabel=null, $hoverinfo=null ) {
 
         if( count($dataArr) == 0 ) {
             return array();
@@ -745,6 +747,8 @@ class DashboardUtil
         //hoverinfo: label+text+value+percent
         $chartDataArray["outsidetextfont"] = array('size'=>1,'color'=>'white');
         $chartDataArray['direction'] = 'clockwise';
+        //$chartDataArray["hoverinfo"] = "percent+label";
+        $chartDataArray["hoverinfo"] = $hoverinfo;
 
         $dataArray[] = $chartDataArray;
 
@@ -1672,9 +1676,9 @@ class DashboardUtil
             $chartDataArray['type'] = $type;
             $chartDataArray["textinfo"] = "value+percent";
             //$chartDataArray["textinfo"] = "value";
-            $chartDataArray["hoverinfo"] = "percent+label";
             $chartDataArray["outsidetextfont"] = array('size'=>1,'color'=>'white');
             $chartDataArray['direction'] = 'clockwise';
+            $chartDataArray["hoverinfo"] = "percent+label";
 
             //links
             $chartDataArray["links"] = $links;
@@ -1729,7 +1733,7 @@ class DashboardUtil
             $filterArr['funded'] = null;
             //Projects per PI
             //                                           $dataArr,              $title,                                $type='pie', $layoutArray=null, $valuePrefixLabel=null
-            $chartsArray = $this->getChartByMultiArray( $piProjectCountTopArr, $filterArr, $chartName,"pie",null," : ");
+            $chartsArray = $this->getChartByMultiArray( $piProjectCountTopArr, $filterArr, $chartName,"pie",null," : ","percent+label");
         }
         ///////////////// EOF 2. Total number of projects (XXX) per PI (Top 5/10) (APPROVED & CLOSED) /////////////////
 
@@ -1773,7 +1777,7 @@ class DashboardUtil
             $showOther = $this->getOtherStr($showLimited,"PIs");
             $piFundedProjectCountTopArr = $this->getTopMultiArray($piFundedProjectCountArr,$showOther);
             $filterArr['funded'] = true;
-            $chartsArray = $this->getChartByMultiArray( $piFundedProjectCountTopArr, $filterArr, $chartName,"pie",null," : ");
+            $chartsArray = $this->getChartByMultiArray( $piFundedProjectCountTopArr, $filterArr, $chartName,"pie",null," : ","percent+label");
 
         }
         ///////////////// EOF 3. Total number of Funded Projects per PI (Top 10) /////////////////
@@ -1791,7 +1795,8 @@ class DashboardUtil
                     //do nothing
                 } else {
 
-                    $pis = $project->getPrincipalInvestigators();
+                    //$pis = $project->getPrincipalInvestigators();
+                    $pis = $project->getAllPrincipalInvestigators();
                     foreach ($pis as $pi) {
                         $userName = $pi->getUsernameOptimal();
                         $userId = $pi->getId();
@@ -1819,7 +1824,7 @@ class DashboardUtil
             $showOther = $this->getOtherStr($showLimited,"PIs");
             $piUnFundedProjectCountTopArr = $this->getTopMultiArray($piUnFundedProjectCountArr,$showOther);
             $filterArr['funded'] = false;
-            $chartsArray = $this->getChartByMultiArray( $piUnFundedProjectCountTopArr, $filterArr, $chartName,"pie",null," : ");
+            $chartsArray = $this->getChartByMultiArray( $piUnFundedProjectCountTopArr, $filterArr, $chartName,"pie",null," : ","percent+label");
         }
         ///////////////// EOF 4. Total number of Non-Funded Projects per PI (Top 10) /////////////////
 
@@ -1866,7 +1871,7 @@ class DashboardUtil
             $chartName = $this->getTitleWithTotal($chartName,$titleCount);
             $showOther = $this->getOtherStr($showLimited,"pathologists involved");
             $pathologistProjectCountTopArr = $this->getTopArray($pathologistProjectCountArr,$showOther);
-            $chartsArray = $this->getChart($pathologistProjectCountTopArr, $chartName,'pie',$layoutArray," : ");
+            $chartsArray = $this->getChart($pathologistProjectCountTopArr,$chartName,'pie',$layoutArray," : ",null,null,"percent+label");
 
         }
         ///////////////// EOF 2a. Total number of projects per Pathologist Involved (Top 10) /////////////////
@@ -1899,7 +1904,7 @@ class DashboardUtil
             $showOther = $this->getOtherStr($showLimited,"pathologists involved");
             $pathologistFundedProjectCountTopArr = $this->getTopArray($pathologistFundedProjectCountArr,$showOther);
             $filterArr['funded'] = true;
-            $chartsArray = $this->getChart($pathologistFundedProjectCountTopArr, $chartName,"pie",$layoutArray," : ");
+            $chartsArray = $this->getChart($pathologistFundedProjectCountTopArr, $chartName,"pie",$layoutArray," : ",null,null,"percent+label");
         }
         ///////////////// EOF 3a. Total number of Funded Projects per Pathologist Involved (Top 10) /////////////////
         // 4a. Total number of Non-Funded Projects per Pathologist Involved (Top 10)
@@ -1936,7 +1941,7 @@ class DashboardUtil
             $showOther = $this->getOtherStr($showLimited,"pathologists involved");
             $pathologistNonFundedProjectCountTopArr = $this->getTopArray($pathologistNonFundedProjectCountArr,$showOther);
             //$filterArr['funded'] = true;
-            $chartsArray = $this->getChart($pathologistNonFundedProjectCountTopArr, $chartName,"pie",$layoutArray," : ");
+            $chartsArray = $this->getChart($pathologistNonFundedProjectCountTopArr, $chartName,"pie",$layoutArray," : ",null,null,"percent+label");
         }
         ///////////////// EOF 4a. Total number of Non-Funded Projects per Pathologist Involved (Top 10) /////////////////
 
@@ -2000,6 +2005,7 @@ class DashboardUtil
             $chartDataArray["textinfo"] = "value+percent";
             $chartDataArray["outsidetextfont"] = array('size'=>1,'color'=>'white');
             $chartDataArray['direction'] = 'clockwise';
+            $chartDataArray["hoverinfo"] = "percent+label";
             $dataArray[] = $chartDataArray;
 
             $chartsArray = array(
@@ -2051,7 +2057,7 @@ class DashboardUtil
             $showOther = $this->getOtherStr($showLimited,"projects");
             $requestPerProjectTopArr = $this->getTopMultiArray($requestPerProjectArr,$showOther);
             $filterArr['funded'] = null;
-            $chartsArray = $this->getChartByMultiArray($requestPerProjectTopArr, $filterArr, $chartName,"pie",$layoutArray," : ");
+            $chartsArray = $this->getChartByMultiArray($requestPerProjectTopArr, $filterArr, $chartName,"pie",$layoutArray," : ","percent+label");
         }
 
         //10. Total Number of Work Requests per Funded Project (Top 10)
@@ -2094,7 +2100,7 @@ class DashboardUtil
             $showOther = $this->getOtherStr($showLimited,"projects");
             $fundedRequestPerProjectTopArr = $this->getTopMultiArray($fundedRequestPerProjectArr,$showOther);
             $filterArr['funded'] = true;
-            $chartsArray = $this->getChartByMultiArray( $fundedRequestPerProjectTopArr, $filterArr, $chartName,"pie",$layoutArray," : ");
+            $chartsArray = $this->getChartByMultiArray( $fundedRequestPerProjectTopArr, $filterArr, $chartName,"pie",$layoutArray," : ","percent+label");
         }
 
         //11. Total Number of Work Requests per Non-Funded Project (Top 10)
@@ -2180,7 +2186,7 @@ class DashboardUtil
                 'height' => $this->height,
                 'width' => $this->width,
             );
-            $chartsArray = $this->getChart($quantityCountByCategoryTopArr, $chartName,'pie',$layoutArray," : ");
+            $chartsArray = $this->getChart($quantityCountByCategoryTopArr, $chartName,'pie',$layoutArray," : ",null,null,"percent+label");
 
         }
 
@@ -2213,7 +2219,7 @@ class DashboardUtil
             $chartName = $this->getTitleWithTotal($chartName,$titleCount);
             $showOther = $this->getOtherStr($showLimited,"projects");
             $fundedQuantityCountByCategoryTopArr = $this->getTopArray($fundedQuantityCountByCategoryArr,$showOther);
-            $chartsArray = $this->getChart($fundedQuantityCountByCategoryTopArr, $chartName,'pie',$layoutArray," : ");
+            $chartsArray = $this->getChart($fundedQuantityCountByCategoryTopArr, $chartName,'pie',$layoutArray," : ",null,null,"percent+label");
         }
 
         //14. TRP Service Productivity for Non-Funded Projects (Top 10)
@@ -2247,7 +2253,7 @@ class DashboardUtil
             $chartName = $this->getTitleWithTotal($chartName,$titleCount);
             $showOther = $this->getOtherStr($showLimited,"projects");
             $unFundedQuantityCountByCategoryTopArr = $this->getTopArray($unFundedQuantityCountByCategoryArr,$showOther);
-            $chartsArray = $this->getChart($unFundedQuantityCountByCategoryTopArr, $chartName,'pie',$layoutArray," : ");
+            $chartsArray = $this->getChart($unFundedQuantityCountByCategoryTopArr, $chartName,'pie',$layoutArray," : ",null,null,"percent+label");
         }
 
         //"15. TRP Service Productivity by Products/Services" => "service-productivity-by-service-compare-funded-vs-nonfunded-projects"
@@ -2361,6 +2367,7 @@ class DashboardUtil
             $chartDataArray["textinfo"] = "value+percent";
             $chartDataArray["outsidetextfont"] = array('size'=>1,'color'=>'white');
             $chartDataArray['direction'] = 'clockwise';
+            $chartDataArray["hoverinfo"] = "percent+label";
             $dataArray[] = $chartDataArray;
 
             $chartsArray = array(
@@ -2381,7 +2388,8 @@ class DashboardUtil
 
                 $project = $transRequest->getProject();
                 $projectIndex = $project->getOid(false);
-                $pis = $project->getPrincipalInvestigators();
+                //$pis = $project->getPrincipalInvestigators();
+                $pis = $project->getAllPrincipalInvestigators();
                 $piInfoArr = array();
                 foreach( $pis as $pi ) {
                     if( $pi ) {
@@ -2426,7 +2434,8 @@ class DashboardUtil
 
                 $project = $transRequest->getProject();
                 $projectIndex = $project->getOid(false);
-                $pis = $project->getPrincipalInvestigators();
+                //$pis = $project->getPrincipalInvestigators();
+                $pis = $project->getAllPrincipalInvestigators();
                 $piInfoArr = array();
                 foreach( $pis as $pi ) {
                     if( $pi ) {
@@ -2678,6 +2687,7 @@ class DashboardUtil
             $chartDataArray["outsidetextfont"] = array('size'=>1,'color'=>'white');
             $chartDataArray['marker'] = array('colors' => array("rgb(44, 160, 44)", "rgb(214, 39, 40)") );
             $chartDataArray['direction'] = 'clockwise';
+            $chartDataArray["hoverinfo"] = "percent+label";
             $dataArray[] = $chartDataArray;
 
             $chartsArray = array(
@@ -2699,7 +2709,8 @@ class DashboardUtil
                 $transRequest = $invoice->getTransresRequest();
                 $project = $transRequest->getProject();
                 $projectIndex = $project->getOid(false);
-                $pis = $project->getPrincipalInvestigators();
+                //$pis = $project->getPrincipalInvestigators();
+                $pis = $project->getAllPrincipalInvestigators();
                 $piInfoArr = array();
                 foreach( $pis as $pi ) {
                     if( $pi ) {
@@ -3145,7 +3156,7 @@ class DashboardUtil
         }
         ///////////// EOF "23. Total Invoiced Amounts of Non-Funded Projects per Pathologist Involved (Top 10)" /////////////
 
-        //"29. Total Number of Projects per Type" => "projects-per-type"
+        //"30. Total Number of Projects per Type" => "projects-per-type"
         if( $chartType == "projects-per-type" ) {
             $projectTypeArr = array();
 
@@ -3177,7 +3188,7 @@ class DashboardUtil
             $chartName = $this->getTitleWithTotal($chartName,$titleCount);
             $showOther = $this->getOtherStr($showLimited,"Project Types");
             $projectTypeArrTop = $this->getTopMultiArray($projectTypeArr,$showOther);
-            $chartsArray = $this->getChartByMultiArray( $projectTypeArrTop, $filterArr, $chartName,"pie",null," : ");
+            $chartsArray = $this->getChartByMultiArray( $projectTypeArrTop, $filterArr, $chartName,"pie",null," : ","percent+label");
         }
 
 
@@ -3206,7 +3217,7 @@ class DashboardUtil
             $chartName = $this->getTitleWithTotal($chartName,$titleCount);
             $showOther = $this->getOtherStr($showLimited,"Business Purposes");
             $requestBusinessPurposeArrTop = $this->getTopArray($requestBusinessPurposeArr,$showOther);
-            $chartsArray = $this->getChart($requestBusinessPurposeArrTop, $chartName,'pie',$layoutArray," : ");
+            $chartsArray = $this->getChart($requestBusinessPurposeArrTop, $chartName,'pie',$layoutArray," : ",null,null,"percent+label");
         }
 
         //"31. Turn-around Statistics: Average number of days to complete a Work Request (based on Completed and Notified requests)" => "turn-around-statistics-days-complete-request"
@@ -3963,12 +3974,12 @@ class DashboardUtil
             $apcpPisArr = array();
             $hemaPisArr = array();
             foreach($apcpProjects as $project) {
-                foreach($project->getPrincipalInvestigators() as $pi) {
+                foreach($project->getAllPrincipalInvestigators() as $pi) {
                     $apcpPisArr[] = $pi->getId();
                 }
             }
             foreach($hemaProjects as $project) {
-                foreach($project->getPrincipalInvestigators() as $pi) {
+                foreach($project->getAllPrincipalInvestigators() as $pi) {
                     $hemaPisArr[] = $pi->getId();
                 }
             }

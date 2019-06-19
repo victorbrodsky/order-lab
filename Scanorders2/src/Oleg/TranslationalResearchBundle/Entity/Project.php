@@ -1356,16 +1356,6 @@ class Project {
         $this->implicitExpirationDate = $implicitExpirationDate;
     }
 
-    public function getAllPrincipalInvestigators() {
-        $pis = $this->getPrincipalInvestigators();
-        $irbPi = $this->getPrincipalIrbInvestigator();
-        if( $irbPi ) {
-            $pis->add($irbPi);
-        }
-        
-        return $pis;
-    }
-
     /**
      * @param mixed $implicitExpirationDate
      */
@@ -1821,8 +1811,14 @@ class Project {
 //        $this->reminderEmails->removeElement($item);
 //    }
 
-
-
+    public function getAllPrincipalInvestigators() {
+        $pis = $this->getPrincipalInvestigators();
+        $irbPi = $this->getPrincipalIrbInvestigator();
+        if( $irbPi ) {
+            $pis->add($irbPi);
+        }
+        return $pis;
+    }
 
     public function isFunded() {
         if( $this->getFunded() ) {
@@ -1830,7 +1826,6 @@ class Project {
         }
         return "Non-funded";  //"Not-Funded";
     }
-
 
     //show the name of the form (from the form hierarchy) that was used to generate this submitted message.
     // Make sure to save this form ID of the form linked from the Message Type at the time of message submission
