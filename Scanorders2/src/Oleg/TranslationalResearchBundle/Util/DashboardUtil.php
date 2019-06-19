@@ -2144,7 +2144,7 @@ class DashboardUtil
             $showOther = $this->getOtherStr($showLimited,"projects");
             $unFundedRequestPerProjectTopArr = $this->getTopMultiArray($unFundedRequestPerProjectArr,$showOther);
             $filterArr['funded'] = false;
-            $chartsArray = $this->getChartByMultiArray( $unFundedRequestPerProjectTopArr, $filterArr, $chartName,"pie",$layoutArray," : ");
+            $chartsArray = $this->getChartByMultiArray( $unFundedRequestPerProjectTopArr, $filterArr, $chartName,"pie",$layoutArray," : ","percent+label");
         }
 
         //Work request statistics: Products/Services
