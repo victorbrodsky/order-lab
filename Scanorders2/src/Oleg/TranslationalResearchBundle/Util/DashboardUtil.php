@@ -1515,7 +1515,8 @@ class DashboardUtil
             //echo "Projects count=".count($projects)."<br>";
 
             foreach($projects as $project) {
-                $pis = $project->getPrincipalInvestigators();
+                //$pis = $project->getPrincipalInvestigators();
+                $pis = $project->getAllPrincipalInvestigators();
                 $count1 = false;
                 $count2 = false;
                 $count3 = false;
@@ -1697,7 +1698,8 @@ class DashboardUtil
             //echo "projects=".count($projects)."<br>";
 
             foreach($projects as $project) {
-                $pis = $project->getPrincipalInvestigators();
+                //$pis = $project->getPrincipalInvestigators();
+                $pis = $project->getAllPrincipalInvestigators();
                 foreach ($pis as $pi) {
                     $userName = $pi->getUsernameOptimal();
                     $userId = $pi->getId();
@@ -1742,7 +1744,8 @@ class DashboardUtil
 
                 if( $fundingNumber ) {
 
-                    $pis = $project->getPrincipalInvestigators();
+                    //$pis = $project->getPrincipalInvestigators();
+                    $pis = $project->getAllPrincipalInvestigators();
                     foreach ($pis as $pi) {
                         $userName = $pi->getUsernameOptimal();
                         $userId = $pi->getId();

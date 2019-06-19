@@ -1356,6 +1356,16 @@ class Project {
         $this->implicitExpirationDate = $implicitExpirationDate;
     }
 
+    public function getAllPrincipalInvestigators() {
+        $pis = $this->getPrincipalInvestigators();
+        $irbPi = $this->getPrincipalIrbInvestigator();
+        if( $irbPi ) {
+            $pis->add($irbPi);
+        }
+        
+        return $pis;
+    }
+
     /**
      * @param mixed $implicitExpirationDate
      */
