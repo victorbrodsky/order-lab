@@ -1546,20 +1546,6 @@ class DashboardUtil
                         $projectsPerPi3[] = $pi->getId();
                     }
 
-//                    //“WCM Faculty PIs with 30 projects: 21” pie chart portion should link to the list of project requests with the 21 PI names in the PI filter well
-//                    //2. Total number of projects (XXX) per PI (Top 5/10) (APPROVED & CLOSED)
-//                    if( isset($piProjectCountArr[$userId]) && isset($piProjectCountArr[$userId]['value']) ) {
-//                        $count = $piProjectCountArr[$userId]['value'] + 1;
-//                    } else {
-//                        $count = 1;
-//                    }
-//                    $piProjectCountArr[$userId]['value'] = $count;
-//                    $piProjectCountArr[$userId]['label'] = $userName;
-//                    $piProjectCountArr[$userId]['objectid'] = $userId;
-//                    $piProjectCountArr[$userId]['pi'] = $userId;
-//                    $piProjectCountArr[$userId]['show-path'] = "project";
-
-
                 }//foreach pi
 
                 if( $count1 ) {
@@ -1579,14 +1565,79 @@ class DashboardUtil
             $chartDataArray = array();
             $type = 'pie';
 
+            $links = array();
+
+            //////////// WCM Pathology Faculty ////////////
             $projectsPerPi1 = array_unique($projectsPerPi1);
             $piWcmPathologyCounter = count($projectsPerPi1);
 
+            $linkFilterArr = array(
+                'filter[state][0]' => 'final_approved',
+                'filter[state][1]' => 'closed',
+                'filter[startDate]' => $startDateStr,
+                'filter[endDate]' => $endDateStr,
+                //'filter[]' => $projectSpecialtyObjects
+            );
+            $userIndex = 0;
+            foreach($projectsPerPi1 as $thisPi) {
+                $linkFilterArr['filter[principalInvestigators]['.$userIndex.']'] = $thisPi;
+                $userIndex++;
+            }
+            $link = $this->container->get('router')->generate(
+                'translationalresearch_project_index',
+                $linkFilterArr,
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $links[] = $link;
+            //////////// EOF WCM Pathology Faculty ////////////
+
+            //////////// Non-WCM Pathology faculty PIs ////////////
             $projectsPerPi2 = array_unique($projectsPerPi2);
             $piWcmCounter = count($projectsPerPi2);
 
+            $linkFilterArr = array(
+                'filter[state][0]' => 'final_approved',
+                'filter[state][1]' => 'closed',
+                'filter[startDate]' => $startDateStr,
+                'filter[endDate]' => $endDateStr,
+                //'filter[]' => $projectSpecialtyObjects
+            );
+            $userIndex = 0;
+            foreach($projectsPerPi2 as $thisPi) {
+                $linkFilterArr['filter[principalInvestigators]['.$userIndex.']'] = $thisPi;
+                $userIndex++;
+            }
+            $link = $this->container->get('router')->generate(
+                'translationalresearch_project_index',
+                $linkFilterArr,
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $links[] = $link;
+            //////////// EOF Non-WCM Pathology faculty PIs ////////////
+
+            //////////// Other Institutions ////////////
             $projectsPerPi3 = array_unique($projectsPerPi3);
             $piOtherCounter = count($projectsPerPi3);
+
+            $linkFilterArr = array(
+                'filter[state][0]' => 'final_approved',
+                'filter[state][1]' => 'closed',
+                'filter[startDate]' => $startDateStr,
+                'filter[endDate]' => $endDateStr,
+                //'filter[]' => $projectSpecialtyObjects
+            );
+            $userIndex = 0;
+            foreach($projectsPerPi2 as $thisPi) {
+                $linkFilterArr['filter[principalInvestigators]['.$userIndex.']'] = $thisPi;
+                $userIndex++;
+            }
+            $link = $this->container->get('router')->generate(
+                'translationalresearch_project_index',
+                $linkFilterArr,
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $links[] = $link;
+            //////////// EOF Other Institutions ///////////////
 
             $titleTotal = $piWcmPathologyCounter + $piWcmCounter + $piOtherCounter;
             $chartName = $this->getTitleWithTotal($chartName,$titleTotal,null,"PIs total");
@@ -1624,6 +1675,10 @@ class DashboardUtil
             $chartDataArray["hoverinfo"] = "percent+label";
             $chartDataArray["outsidetextfont"] = array('size'=>1,'color'=>'white');
             $chartDataArray['direction'] = 'clockwise';
+
+            //links
+            $chartDataArray["links"] = $links;
+
             $dataArray[] = $chartDataArray;
 
             $chartsArray = array(
