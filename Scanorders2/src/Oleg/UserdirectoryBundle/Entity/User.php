@@ -447,6 +447,7 @@ class User extends BaseUser {
     public function setPrimaryPublicUserId($primaryPublicUserId)
     {
         if( $primaryPublicUserId ) {
+            $primaryPublicUserId = trim($primaryPublicUserId);
             $primaryPublicUserId = strtolower($primaryPublicUserId);
         }
         $this->primaryPublicUserId = $primaryPublicUserId;
@@ -1056,6 +1057,7 @@ class User extends BaseUser {
     public function setUsernameForce($username)
     {
         if( $username ) {
+            $username = trim($username);
             $username = strtolower($username);
         }
         $this->username = $username;
@@ -1073,6 +1075,7 @@ class User extends BaseUser {
         }
 
         if( $username ) {
+            $username = trim($username);
             $username = strtolower($username);
         }
 
@@ -1083,6 +1086,7 @@ class User extends BaseUser {
     public function setUsernameCanonicalForce($usernameCanonical)
     {
         if( $usernameCanonical ) {
+            $usernameCanonical = trim($usernameCanonical);
             $usernameCanonical = strtolower($usernameCanonical);
         }
         $this->usernameCanonical = $usernameCanonical;
@@ -1110,6 +1114,7 @@ class User extends BaseUser {
     public function createUniqueUsername() {
         $uniqueUsername = $this->createUniqueUsernameByKeyKeytype($this->getKeytype(),$this->getPrimaryPublicUserId());
         if( $uniqueUsername ) {
+            $uniqueUsername = trim($uniqueUsername);
             $uniqueUsername = strtolower($uniqueUsername);
         }
         return $uniqueUsername;
@@ -1117,6 +1122,7 @@ class User extends BaseUser {
 
     public function createUniqueUsernameByKeyKeytype($keytype,$key) {
         if( $key ) {
+            $key = trim($key);
             $key = strtolower($key);
         }
         $username = $key."_@_".$keytype->getAbbreviation();
@@ -1126,6 +1132,7 @@ class User extends BaseUser {
 
     public function createCleanUsername($username) {
         if( $username ) {
+            $username = trim($username);
             $username = strtolower($username);
         }
         $usernameArr = explode("_@_",$username);
@@ -1138,6 +1145,7 @@ class User extends BaseUser {
         }
 
         if( $username ) {
+            $username = trim($username);
             $username = strtolower($username);
         }
 
