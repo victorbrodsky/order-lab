@@ -101,7 +101,7 @@ class ProjectType extends AbstractType
                 ));
             } else {
                 $builder->add('submitter', null, array(
-                    'label' => "Submitted By:",
+                    'label' => "Submitted By:", 
                     'disabled' => true,
                     'attr' => array('class' => 'combobox combobox-width', 'readonly' => true)
                 ));
