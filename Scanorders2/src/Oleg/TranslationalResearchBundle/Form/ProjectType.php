@@ -89,11 +89,23 @@ class ProjectType extends AbstractType
                 'required' => false,
             ));
 
-            $builder->add('submitter', null, array(
-                'label' => "Submitted By:",
-                'disabled' => true,
-                'attr' => array('class' => 'combobox combobox-width', 'readonly' => true)
-            ));
+            if(
+                $this->params['cycle'] == 'edit' &&
+                $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_ADMIN')
+            ) {
+                $builder->add('submitter', null, array(
+                    'label' => "Submitted By:",
+                    //'disabled' => true,
+                    'attr' => array('class' => 'combobox combobox-width')
+                ));
+            } else {
+                $builder->add('submitter', null, array(
+                    'label' => "Submitted By:",
+                    'disabled' => true,
+                    'attr' => array('class' => 'combobox combobox-width', 'readonly' => true)
+                ));
+            }
+
 
             $builder->add('projectSpecialty', EntityType::class, array(
                 'class' => 'OlegTranslationalResearchBundle:SpecialtyList',
