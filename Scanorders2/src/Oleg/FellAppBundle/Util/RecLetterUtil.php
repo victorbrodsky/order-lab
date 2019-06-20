@@ -914,6 +914,7 @@ class RecLetterUtil {
             $coordinatorEmails = $fellappUtil->getCoordinatorsOfFellAppEmails($fellapp);
             $emails = array_unique(array_merge ($coordinatorEmails, $directorEmails));
 
+            //get CCs
             $ccAdminEmails = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'),"Administrator");
             $ccPlatformAdminEmails = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'),"Platform Administrator");
             if( $ccPlatformAdminEmails ) {
