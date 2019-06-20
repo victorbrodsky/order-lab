@@ -1772,7 +1772,7 @@ class DashboardUtil
 
             }//foreach $projects
 
-            $chartName = $this->getTitleWithTotal($chartName,$titleCount);
+            $chartName = $this->getTitleWithTotal($chartName,$titleCount,null,"projects total");
 
             $showOther = $this->getOtherStr($showLimited,"PIs");
             $piFundedProjectCountTopArr = $this->getTopMultiArray($piFundedProjectCountArr,$showOther);
@@ -1819,7 +1819,7 @@ class DashboardUtil
                 }
             }//foreach $projects
 
-            $chartName = $this->getTitleWithTotal($chartName,$titleCount);
+            $chartName = $this->getTitleWithTotal($chartName,$titleCount,null,"projects total");
 
             $showOther = $this->getOtherStr($showLimited,"PIs");
             $piUnFundedProjectCountTopArr = $this->getTopMultiArray($piUnFundedProjectCountArr,$showOther);
@@ -1868,7 +1868,7 @@ class DashboardUtil
 //            $filterArr['funded'] = null;
 //            $chartsArray = $this->getChartByMultiArray( $piProjectCountMultiTopArr, $filterArr, "2a. Total number of projects per Pathologist Involved (Top 10)","pie",null," : ");
 
-            $chartName = $this->getTitleWithTotal($chartName,$titleCount);
+            $chartName = $this->getTitleWithTotal($chartName,$titleCount,null,"projects total");
             $showOther = $this->getOtherStr($showLimited,"pathologists involved");
             $pathologistProjectCountTopArr = $this->getTopArray($pathologistProjectCountArr,$showOther);
             $chartsArray = $this->getChart($pathologistProjectCountTopArr,$chartName,'pie',$layoutArray," : ",null,null,"percent+label");
@@ -1900,7 +1900,7 @@ class DashboardUtil
                 }
             }//foreach $projects
 
-            $chartName = $this->getTitleWithTotal($chartName,$titleCount);
+            $chartName = $this->getTitleWithTotal($chartName,$titleCount,null,"projects total");
             $showOther = $this->getOtherStr($showLimited,"pathologists involved");
             $pathologistFundedProjectCountTopArr = $this->getTopArray($pathologistFundedProjectCountArr,$showOther);
             $filterArr['funded'] = true;
@@ -1936,7 +1936,7 @@ class DashboardUtil
                 }
             }//foreach $projects
 
-            $chartName = $this->getTitleWithTotal($chartName,$titleCount);
+            $chartName = $this->getTitleWithTotal($chartName,$titleCount,null,"projects total");
 
             $showOther = $this->getOtherStr($showLimited,"pathologists involved");
             $pathologistNonFundedProjectCountTopArr = $this->getTopArray($pathologistNonFundedProjectCountArr,$showOther);
@@ -1969,7 +1969,7 @@ class DashboardUtil
                 }
             }//foreach
 
-            $chartName = $this->getTitleWithTotal($chartName,$fundedRequestCount+$notFundedRequestCount);
+            $chartName = $this->getTitleWithTotal($chartName,$fundedRequestCount+$notFundedRequestCount,null,"work requests total");
 
             $dataArray = array();
             $chartDataArray = array();
@@ -2053,7 +2053,7 @@ class DashboardUtil
                 'width' => $this->width,
             );
 
-            $chartName = $this->getTitleWithTotal($chartName,$titleCount);
+            $chartName = $this->getTitleWithTotal($chartName,$titleCount,null,"work requests total");
             $showOther = $this->getOtherStr($showLimited,"projects");
             $requestPerProjectTopArr = $this->getTopMultiArray($requestPerProjectArr,$showOther);
             $filterArr['funded'] = null;
@@ -2096,7 +2096,7 @@ class DashboardUtil
                 }
             }
 
-            $chartName = $this->getTitleWithTotal($chartName,$titleCount);
+            $chartName = $this->getTitleWithTotal($chartName,$titleCount,null,"work requests total");
             $showOther = $this->getOtherStr($showLimited,"projects");
             $fundedRequestPerProjectTopArr = $this->getTopMultiArray($fundedRequestPerProjectArr,$showOther);
             $filterArr['funded'] = true;
@@ -2140,7 +2140,7 @@ class DashboardUtil
                 }
             }
 
-            $chartName = $this->getTitleWithTotal($chartName,$titleCount);
+            $chartName = $this->getTitleWithTotal($chartName,$titleCount,null,"work requests total");
             $showOther = $this->getOtherStr($showLimited,"projects");
             $unFundedRequestPerProjectTopArr = $this->getTopMultiArray($unFundedRequestPerProjectArr,$showOther);
             $filterArr['funded'] = false;
