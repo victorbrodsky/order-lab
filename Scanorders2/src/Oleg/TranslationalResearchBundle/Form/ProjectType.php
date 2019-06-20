@@ -93,6 +93,7 @@ class ProjectType extends AbstractType
                 $this->params['cycle'] == 'edit' &&
                 $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_ADMIN')
             ) {
+                //enable edit submitter for admin
                 $builder->add('submitter', null, array(
                     'label' => "Submitted By:",
                     //'disabled' => true,
