@@ -908,14 +908,25 @@ class RecLetterUtil {
             $fellappLink = '<a href="'.$fellappLink.'">'.$fellappLink.'</a>';
             $body = $body . "<br><br>" . "You can review the entire application here: ".$fellappLink;
 
-            //$userSecUtil->sendEmailToSystemEmail($subject,$body);
-            $emails = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'),"Administrator");
-            $ccs = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'),"Platform Administrator");
-            if( !$emails ) {
-                $emails = $ccs;
-                $ccs = null;
+            //get emails: coordinators and directors
+            $fellappUtil = $this->container->get('fellapp_util');
+            $directorEmails = $fellappUtil->getDirectorsOfFellAppEmails($fellapp);
+            $coordinatorEmails = $fellappUtil->getCoordinatorsOfFellAppEmails($fellapp);
+            $emails = array_unique(array_merge ($coordinatorEmails, $directorEmails));
+
+            $ccAdminEmails = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'),"Administrator");
+            $ccPlatformAdminEmails = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'),"Platform Administrator");
+            if( $ccPlatformAdminEmails ) {
+                $ccAdminEmails = array_merge($ccAdminEmails,$ccPlatformAdminEmails);
             }
-            $emailUtil->sendEmail( $emails, $subject, $body, $ccs );
+            $ccAdminEmails = array_unique($ccAdminEmails);
+
+            if( !$emails || count($emails) == 0 ) {
+                $emails = $ccAdminEmails;
+                $ccAdminEmails = null;
+            }
+
+            $emailUtil->sendEmail( $emails, $subject, $body, $ccAdminEmails );
 
             //echo "Email sent: $subject <br><br><br> $body <br>";
 
