@@ -1836,10 +1836,12 @@ class DashboardUtil
                 }
             }//foreach $projects
 
-            $chartName = $this->getTitleWithTotal($chartName,$titleCount,null,"projects total");
-
             $showOther = $this->getOtherStr($showLimited,"PIs");
             $piUnFundedProjectCountTopArr = $this->getTopMultiArray($piUnFundedProjectCountArr,$showOther);
+
+            $titleCount = $this->getTotalSegmentCount($piUnFundedProjectCountTopArr);
+            $chartName = $this->getTitleWithTotal($chartName,$titleCount,null,"projects total");
+
             $filterArr['funded'] = false;
             $chartsArray = $this->getChartByMultiArray( $piUnFundedProjectCountTopArr, $filterArr, $chartName,"pie",null," : ","percent+label");
         }
