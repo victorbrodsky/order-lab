@@ -2008,7 +2008,8 @@ class DashboardUtil
 
                 //echo $transRequest->getOid().": fundedAccountNumber=[$fundedAccountNumber] <br>";
                 $testArr[$transRequest->getOid()]++;
-                if( $fundedAccountNumber && strval($fundedAccountNumber) !== strval(intval($fundedAccountNumber)) ) {
+                //if( $fundedAccountNumber && strval($fundedAccountNumber) !== strval(intval($fundedAccountNumber)) ) {
+                if ( filter_var($fundedAccountNumber, FILTER_VALIDATE_INT) === false ) {
                     echo $transRequest->getOid().": NOT INTEGER: [$fundedAccountNumber] <br>";
                 }
 
