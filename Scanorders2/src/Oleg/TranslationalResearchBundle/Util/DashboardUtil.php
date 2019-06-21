@@ -1142,9 +1142,19 @@ class DashboardUtil
     }
 
     public function getTotalSegmentCount($arr) {
+        //print_r($arr);
         $titleCount = 0;
         foreach($arr as $id=>$thisArr) {
-            $titleCount = $titleCount + $thisArr['value'];
+            if( is_array($thisArr) ) {
+                $titleCount = $titleCount + $thisArr['value'];
+            } else {
+                if( is_integer($thisArr) ) {
+                    $titleCount = intval($thisArr);
+                } else {
+                    //???
+                    $titleCount = intval($thisArr);
+                }
+            }
         }
         return $titleCount;
     }
