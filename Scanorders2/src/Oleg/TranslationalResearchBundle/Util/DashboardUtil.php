@@ -1141,6 +1141,14 @@ class DashboardUtil
         return $chartName . " - " . $prefix . $total . " " . $postfix;
     }
 
+    public function getTotalSegmentCount($arr) {
+        $titleCount = 0;
+        foreach($arr as $id=>$thisArr) {
+            $titleCount = $titleCount + $thisArr['value'];
+        }
+        return $titleCount;
+    }
+
     public function getDiffDaysByProjectState($project,$state) {
         $transresUtil = $this->container->get('transres_util');
         $reviews = $transresUtil->getReviewsByProjectAndState($project,$state);
@@ -1732,9 +1740,10 @@ class DashboardUtil
             $filterArr['funded'] = null;
 
             //print_r($piProjectCountTopArr);
-            foreach($piProjectCountTopArr as $id=>$thisArr) {
-                $titleCount = $titleCount + $thisArr['value'];
-            }
+//            foreach($piProjectCountTopArr as $id=>$thisArr) {
+//                $titleCount = $titleCount + $thisArr['value'];
+//            }
+            $titleCount = $this->getTotalSegmentCount($piProjectCountTopArr);
 
             //$chartName = $chartName . " - " . $totalCount . " total";
             $chartName = $this->getTitleWithTotal($chartName,$titleCount,null,"projects total");
