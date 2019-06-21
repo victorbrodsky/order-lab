@@ -281,6 +281,11 @@ class DashboardUtil
         //$limit = 3;
         //$showOthers = true;
 
+        if( !$showOthers ) {
+            //“Show only the top 10” - if it is checked, show only the top ten projects, if it is not checked, show the top 100
+            $limit = 100;
+        }
+
         //$otherId = "All other $showOthers combined";
         $otherId = str_replace("[[otherStr]]",$showOthers,$this->otherId);
 
