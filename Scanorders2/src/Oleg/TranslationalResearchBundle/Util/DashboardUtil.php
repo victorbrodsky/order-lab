@@ -1719,9 +1719,11 @@ class DashboardUtil
                     $piProjectCountArr[$userId]['objectid'] = $userId;
                     $piProjectCountArr[$userId]['pi'] = $userId;
                     $piProjectCountArr[$userId]['show-path'] = "project";
+
+                    $titleCount = $titleCount + $count;
                 }
 
-                $titleCount++;
+                //$titleCount++;
             }
             //exit('111');
 
@@ -1765,9 +1767,11 @@ class DashboardUtil
                         $piFundedProjectCountArr[$userId]['pi'] = $userId;
                         $piFundedProjectCountArr[$userId]['show-path'] = "project";
 
+                        $titleCount = $titleCount + $count;
+
                     }//foreach $pis
 
-                    $titleCount++;
+                    //$titleCount++;
                 }//if
 
             }//foreach $projects
@@ -1812,10 +1816,10 @@ class DashboardUtil
                         $piUnFundedProjectCountArr[$userId]['pi'] = $userId;
                         $piUnFundedProjectCountArr[$userId]['show-path'] = "project";
 
-
+                        $titleCount = $titleCount + $count;
                     }//foreach $pis
 
-                    $titleCount++;
+                    //$titleCount++;
                 }
             }//foreach $projects
 
@@ -1858,9 +1862,11 @@ class DashboardUtil
                         $count = 1;
                     }
                     $pathologistProjectCountArr[$userName] = $count;
+
+                    $titleCount = $titleCount + $count;
                 }
 
-                $titleCount++;
+                //$titleCount++;
             }
 
 //            $showOther = $this->getOtherStr($showLimited,"Pathologist Involved");
@@ -1888,15 +1894,17 @@ class DashboardUtil
                     $pathologists = $project->getPathologists();
                     foreach ($pathologists as $pathologist) {
                         $userName = $pathologist->getUsernameOptimal();
-                            if (isset($pathologistFundedProjectCountArr[$userName])) {
-                                $count = $pathologistFundedProjectCountArr[$userName] + 1;
-                            } else {
-                                $count = 1;
-                            }
-                            $pathologistFundedProjectCountArr[$userName] = $count;
+                        if (isset($pathologistFundedProjectCountArr[$userName])) {
+                            $count = $pathologistFundedProjectCountArr[$userName] + 1;
+                        } else {
+                            $count = 1;
+                        }
+                        $pathologistFundedProjectCountArr[$userName] = $count;
+
+                        $titleCount = $titleCount + $count;
                     }//foreach $pathologists
 
-                    $titleCount++;
+                    //$titleCount++;
                 }
             }//foreach $projects
 
@@ -1907,7 +1915,7 @@ class DashboardUtil
             $chartsArray = $this->getChart($pathologistFundedProjectCountTopArr, $chartName,"pie",$layoutArray," : ",null,null,"percent+label");
         }
         ///////////////// EOF 3a. Total number of Funded Projects per Pathologist Involved (Top 10) /////////////////
-        // 4a. Total number of Non-Funded Projects per Pathologist Involved (Top 10)
+        // 7. Total number of Non-Funded Projects per Pathologist Involved (Top 10)
         if( $chartType == "nonfunded-projects-per-pathologist-involved" ) {
             $pathologistNonFundedProjectCountArr = array();
 
@@ -1923,16 +1931,17 @@ class DashboardUtil
                     foreach ($pathologists as $pathologist) {
                         $userName = $pathologist->getUsernameOptimal();
 
-                            if (isset($pathologistNonFundedProjectCountArr[$userName])) {
-                                $count = $pathologistNonFundedProjectCountArr[$userName] + 1;
-                            } else {
-                                $count = 1;
-                            }
-                            $pathologistNonFundedProjectCountArr[$userName] = $count;
+                        if (isset($pathologistNonFundedProjectCountArr[$userName])) {
+                            $count = $pathologistNonFundedProjectCountArr[$userName] + 1;
+                        } else {
+                            $count = 1;
+                        }
+                        $pathologistNonFundedProjectCountArr[$userName] = $count;
 
+                        $titleCount = $titleCount + $count;
                     }//foreach $pathologists
 
-                    $titleCount++;
+                    //$titleCount++;
                 }
             }//foreach $projects
 
@@ -2147,7 +2156,7 @@ class DashboardUtil
             $chartsArray = $this->getChartByMultiArray( $unFundedRequestPerProjectTopArr, $filterArr, $chartName,"pie",$layoutArray," : ","percent+label");
         }
 
-        //Work request statistics: Products/Services
+        //Work request statistics: Products/Services 
         //12. TRP Service Productivity by Products/Services (Top 10)
         if( $chartType == "service-productivity-by-service" ) {
             $quantityCountByCategoryArr = array();
@@ -2172,7 +2181,7 @@ class DashboardUtil
                 }
             }//foreach $requests
 
-            $chartName = $this->getTitleWithTotal($chartName,$titleCount);
+            $chartName = $this->getTitleWithTotal($chartName,$titleCount,null,"products/services total");
             $showOther = $this->getOtherStr($showLimited,"products/services");
             //                                              $piProjectCountArr, $showOthers=false, $descriptionArr=array(), $maxLen=50, $limit=10
             $quantityCountByCategoryTopArr = $this->getTopArray(
@@ -2187,7 +2196,6 @@ class DashboardUtil
                 'width' => $this->width,
             );
             $chartsArray = $this->getChart($quantityCountByCategoryTopArr, $chartName,'pie',$layoutArray," : ",null,null,"percent+label");
-
         }
 
         //13. TRP Service Productivity for Funded Projects (Top 10)
