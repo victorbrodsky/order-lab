@@ -2012,6 +2012,7 @@ class DashboardUtil
                     $unfundedProjectArr[$projectId] = 1;
                 }
             }//foreach
+            exit('111');
 
             $chartName = $this->getTitleWithTotal($chartName,$fundedRequestCount+$notFundedRequestCount,null,"work requests total");
 
