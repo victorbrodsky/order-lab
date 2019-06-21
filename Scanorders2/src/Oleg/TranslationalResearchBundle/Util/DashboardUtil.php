@@ -1997,7 +1997,9 @@ class DashboardUtil
 
             $fundedProjectArr = array();
             $unfundedProjectArr = array();
+
             $testArr = array();
+            $testing = false;
 
             $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
             foreach($requests as $transRequest) {
@@ -2006,11 +2008,13 @@ class DashboardUtil
                 $fundedAccountNumber = $transRequest->getFundedAccountNumber();
                 $fundedAccountNumber = trim($fundedAccountNumber);
 
-                //echo $transRequest->getOid().": fundedAccountNumber=[$fundedAccountNumber] <br>";
-                $testArr[$transRequest->getOid()]++;
-                //if( $fundedAccountNumber && strval($fundedAccountNumber) !== strval(intval($fundedAccountNumber)) ) {
-                if( $fundedAccountNumber && filter_var($fundedAccountNumber, FILTER_VALIDATE_INT) === false ) {
-                    echo $transRequest->getOid().": NOT INTEGER: [$fundedAccountNumber] <br>";
+                if($testing) {
+                    //echo $transRequest->getOid().": fundedAccountNumber=[$fundedAccountNumber] <br>";
+                    $testArr[$transRequest->getOid()]++;
+                    //if( $fundedAccountNumber && strval($fundedAccountNumber) !== strval(intval($fundedAccountNumber)) ) {
+                    if ($fundedAccountNumber && filter_var($fundedAccountNumber, FILTER_VALIDATE_INT) === false) {
+                        echo $transRequest->getOid() . ": NOT INTEGER: [$fundedAccountNumber] <br>";
+                    }
                 }
 
                 if( $fundedAccountNumber ) {
@@ -2022,14 +2026,16 @@ class DashboardUtil
                 }
             }//foreach
 
-            foreach ($testArr as $reqId=>$reqCount) {
-                //echo $reqId." count=".$reqCount."<br>";
-                if( $reqCount != 1 ) {
-                    echo $reqId." !!!count=".$reqCount."<br>";
+            if($testing) {
+                foreach ($testArr as $reqId => $reqCount) {
+                    //echo $reqId." count=".$reqCount."<br>";
+                    if ($reqCount != 1) {
+                        echo $reqId . " !!!count=" . $reqCount . "<br>";
+                    }
                 }
+                //print_r($testArr);
+                exit("fundedRequestCount=$fundedRequestCount; notFundedRequestCount=$notFundedRequestCount");
             }
-            //print_r($testArr);
-            exit("fundedRequestCount=$fundedRequestCount; notFundedRequestCount=$notFundedRequestCount");
 
             $chartName = $this->getTitleWithTotal($chartName,$fundedRequestCount+$notFundedRequestCount,null,"work requests total");
 
