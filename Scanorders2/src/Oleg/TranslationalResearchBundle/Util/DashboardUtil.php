@@ -73,7 +73,7 @@ class DashboardUtil
             "7. Total Number of Non-Funded Projects per Pathologist Involved (Top 10)" =>  "nonfunded-projects-per-pathologist-involved",
             //Work request statistics
             "8. Total Number of Work Requests by Funding Source (linked)" =>                 "requests-by-funding-source",
-            "9. Total Number of Work Requests per Project (Top 10) (linked)" =>              "requests-per-project",
+            "9. Projects with Most Work Requests (Top 10) (linked)" =>                       "requests-per-project",
             "10. Total Number of Work Requests per Funded Project (Top 10) (linked)" =>      "requests-per-funded-projects",
             "11. Total Number of Work Requests per Non-Funded Project (Top 10) (linked)" =>  "requests-per-nonfunded-projects",
             //   Products/Services
@@ -1751,7 +1751,7 @@ class DashboardUtil
             $totalSegmentCount = $this->getTotalSegmentCount($piProjectCountTopArr);
 
             //$chartName = $chartName . " - " . $totalCount . " total";
-            $chartName = $this->getTitleWithTotal($chartName,$totalSegmentCount,null,"projects ($titleCount unique) total");
+            $chartName = $this->getTitleWithTotal($chartName,$totalSegmentCount,null,"project requests ($titleCount unique) total");
 
             //Projects per PI
             //                                           $dataArr,              $title,                                $type='pie', $layoutArray=null, $valuePrefixLabel=null
@@ -1800,7 +1800,7 @@ class DashboardUtil
             $piFundedProjectCountTopArr = $this->getTopMultiArray($piFundedProjectCountArr,$showOther);
 
             $totalSegmentCount = $this->getTotalSegmentCount($piFundedProjectCountTopArr);
-            $chartName = $this->getTitleWithTotal($chartName,$totalSegmentCount,null,"projects ($titleCount unique) total");
+            $chartName = $this->getTitleWithTotal($chartName,$totalSegmentCount,null,"project requests ($titleCount unique) total");
 
             $filterArr['funded'] = true;
             $chartsArray = $this->getChartByMultiArray( $piFundedProjectCountTopArr, $filterArr, $chartName,"pie",null," : ","percent+label");
@@ -1849,7 +1849,7 @@ class DashboardUtil
             $piUnFundedProjectCountTopArr = $this->getTopMultiArray($piUnFundedProjectCountArr,$showOther);
 
             $totalSegmentCount = $this->getTotalSegmentCount($piUnFundedProjectCountTopArr);
-            $chartName = $this->getTitleWithTotal($chartName,$totalSegmentCount,null,"projects ($titleCount unique) total");
+            $chartName = $this->getTitleWithTotal($chartName,$totalSegmentCount,null,"project requests ($titleCount unique) total");
 
             $filterArr['funded'] = false;
             $chartsArray = $this->getChartByMultiArray( $piUnFundedProjectCountTopArr, $filterArr, $chartName,"pie",null," : ","percent+label");
@@ -1902,7 +1902,7 @@ class DashboardUtil
             $pathologistProjectCountTopArr = $this->getTopArray($pathologistProjectCountArr,$showOther);
 
             $totalSegmentCount = $this->getTotalSegmentCount($pathologistProjectCountTopArr);
-            $chartName = $this->getTitleWithTotal($chartName,$totalSegmentCount,null,"projects ($titleCount unique) total");
+            $chartName = $this->getTitleWithTotal($chartName,$totalSegmentCount,null,"project requests ($titleCount unique) total");
 
             $chartsArray = $this->getChart($pathologistProjectCountTopArr,$chartName,'pie',$layoutArray," : ",null,null,"percent+label");
 
@@ -1937,7 +1937,7 @@ class DashboardUtil
             $pathologistFundedProjectCountTopArr = $this->getTopArray($pathologistFundedProjectCountArr,$showOther);
 
             $totalSegmentCount = $this->getTotalSegmentCount($pathologistFundedProjectCountTopArr);
-            $chartName = $this->getTitleWithTotal($chartName,$totalSegmentCount,null,"projects ($titleCount unique) total");
+            $chartName = $this->getTitleWithTotal($chartName,$totalSegmentCount,null,"project requests ($titleCount unique) total");
 
             $filterArr['funded'] = true;
             $chartsArray = $this->getChart($pathologistFundedProjectCountTopArr, $chartName,"pie",$layoutArray," : ",null,null,"percent+label");
@@ -1977,7 +1977,7 @@ class DashboardUtil
             $pathologistNonFundedProjectCountTopArr = $this->getTopArray($pathologistNonFundedProjectCountArr,$showOther);
 
             $totalSegmentCount = $this->getTotalSegmentCount($pathologistNonFundedProjectCountTopArr);
-            $chartName = $this->getTitleWithTotal($chartName,$totalSegmentCount,null,"projects ($titleCount unique) total");
+            $chartName = $this->getTitleWithTotal($chartName,$totalSegmentCount,null,"project requests ($titleCount unique) total");
 
             //$filterArr['funded'] = true;
             $chartsArray = $this->getChart($pathologistNonFundedProjectCountTopArr, $chartName,"pie",$layoutArray," : ",null,null,"percent+label");
@@ -2131,7 +2131,7 @@ class DashboardUtil
             );
         }
 
-        //9. Total Number of Work Requests per Project (Top 10)
+        //9. Projects with Most Work Requests (Top 10)
         if( $chartType == "requests-per-project" ) {
             $requestPerProjectArr = array();
 
