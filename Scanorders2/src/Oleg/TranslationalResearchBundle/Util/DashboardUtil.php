@@ -2041,6 +2041,56 @@ class DashboardUtil
             $labels = array($fundedLabel,$unfundedLabel);
             $values = array($fundedRequestCount,$notFundedRequestCount);
 
+            $links = array();
+            //////////// Funded ////////////
+            $linkFilterArr = array(
+                'filter[progressState][0]' => 'active',
+                'filter[progressState][1]' => 'completed',
+                'filter[progressState][2]' => 'completedNotified',
+                'filter[progressState][3]' => 'pendingInvestigatorInput',
+                'filter[progressState][4]' => 'pendingHistology',
+                'filter[progressState][5]' => 'pendingImmunohistochemistry',
+                'filter[progressState][6]' => 'pendingMolecular',
+                'filter[progressState][7]' => 'pendingCaseRetrieval',
+                'filter[progressState][8]' => 'pendingTissueMicroArray',
+                'filter[progressState][9]' => 'pendingSlideScanning',
+                'filter[startDate]' => $startDateStr,
+                'filter[endDate]' => $endDateStr,
+                'filter[fundingType]' => 'Funded'
+            );
+
+            $link = $this->container->get('router')->generate(
+                'translationalresearch_request_index_filter',
+                $linkFilterArr,
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $links[] = $link;
+            //////////// EOF Funded ////////////
+            //////////// Non-Funded ////////////
+            $linkFilterArr = array(
+                'filter[progressState][0]' => 'active',
+                'filter[progressState][1]' => 'completed',
+                'filter[progressState][2]' => 'completedNotified',
+                'filter[progressState][3]' => 'pendingInvestigatorInput',
+                'filter[progressState][4]' => 'pendingHistology',
+                'filter[progressState][5]' => 'pendingImmunohistochemistry',
+                'filter[progressState][6]' => 'pendingMolecular',
+                'filter[progressState][7]' => 'pendingCaseRetrieval',
+                'filter[progressState][8]' => 'pendingTissueMicroArray',
+                'filter[progressState][9]' => 'pendingSlideScanning',
+                'filter[startDate]' => $startDateStr,
+                'filter[endDate]' => $endDateStr,
+                'filter[fundingType]' => 'Non-Funded'
+            );
+
+            $link = $this->container->get('router')->generate(
+                'translationalresearch_request_index_filter',
+                $linkFilterArr,
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $links[] = $link;
+            //////////// EOF Non-Funded ////////////
+
             $chartDataArray['values'] = $values;
             $chartDataArray['labels'] = $labels;
             $chartDataArray['type'] = $type;
@@ -2048,6 +2098,8 @@ class DashboardUtil
             $chartDataArray["outsidetextfont"] = array('size'=>1,'color'=>'white');
             $chartDataArray['direction'] = 'clockwise';
             $chartDataArray["hoverinfo"] = "percent+label";
+            $chartDataArray["links"] = $links;
+
             $dataArray[] = $chartDataArray;
 
             $chartsArray = array(
