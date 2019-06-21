@@ -1149,10 +1149,10 @@ class DashboardUtil
                 $titleCount = $titleCount + $thisArr['value'];
             } else {
                 if( is_integer($thisArr) ) {
-                    $titleCount = intval($thisArr);
+                    $titleCount = $titleCount + intval($thisArr);
                 } else {
                     //???
-                    $titleCount = intval($thisArr);
+                    $titleCount = $titleCount + intval($thisArr);
                 }
             }
         }
