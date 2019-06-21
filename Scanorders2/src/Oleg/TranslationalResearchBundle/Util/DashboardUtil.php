@@ -72,7 +72,7 @@ class DashboardUtil
             "6. Total Number of Funded Projects per Pathologist Involved (Top 10)" =>      "funded-projects-per-pathologist-involved",
             "7. Total Number of Non-Funded Projects per Pathologist Involved (Top 10)" =>  "nonfunded-projects-per-pathologist-involved",
             //Work request statistics
-            "8. Total Number of Work Requests by Funding Source" =>                 "requests-by-funding-source",
+            "8. Total Number of Work Requests by Funding Source (linked)" =>                 "requests-by-funding-source",
             "9. Total Number of Work Requests per Project (Top 10) (linked)" =>              "requests-per-project",
             "10. Total Number of Work Requests per Funded Project (Top 10) (linked)" =>      "requests-per-funded-projects",
             "11. Total Number of Work Requests per Non-Funded Project (Top 10) (linked)" =>  "requests-per-nonfunded-projects",
@@ -2002,7 +2002,9 @@ class DashboardUtil
             foreach($requests as $transRequest) {
                 $project = $transRequest->getProject();
                 $projectId = $project->getId();
-                if( $transRequest->getFundedAccountNumber() ) {
+                $fundedAccountNumber = $transRequest->getFundedAccountNumber();
+                echo "fundedAccountNumber=$fundedAccountNumber <br>";
+                if( $fundedAccountNumber ) {
                     $fundedRequestCount++;
                     $fundedProjectArr[$projectId] = 1;
                 } else {
