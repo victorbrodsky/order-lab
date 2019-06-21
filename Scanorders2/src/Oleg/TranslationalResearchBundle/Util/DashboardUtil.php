@@ -2018,7 +2018,12 @@ class DashboardUtil
                 }
             }//foreach
 
-            print_r($testArr);
+            foreach ($testArr as $reqId=>$reqCount) {
+                if( $reqCount > 1 ) {
+                    echo $reqId." count=".$reqCount."<br>";
+                }
+            }
+            //print_r($testArr);
             exit("fundedRequestCount=$fundedRequestCount; notFundedRequestCount=$notFundedRequestCount");
 
             $chartName = $this->getTitleWithTotal($chartName,$fundedRequestCount+$notFundedRequestCount,null,"work requests total");
