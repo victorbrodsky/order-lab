@@ -1739,10 +1739,6 @@ class DashboardUtil
             $piProjectCountTopArr = $this->getTopMultiArray($piProjectCountArr,$showOther); // getTopMultiArray(
             $filterArr['funded'] = null;
 
-            //print_r($piProjectCountTopArr);
-//            foreach($piProjectCountTopArr as $id=>$thisArr) {
-//                $titleCount = $titleCount + $thisArr['value'];
-//            }
             $titleCount = $this->getTotalSegmentCount($piProjectCountTopArr);
 
             //$chartName = $chartName . " - " . $totalCount . " total";
@@ -1782,7 +1778,7 @@ class DashboardUtil
                         $piFundedProjectCountArr[$userId]['pi'] = $userId;
                         $piFundedProjectCountArr[$userId]['show-path'] = "project";
 
-                        $titleCount = $titleCount + $count;
+                        //$titleCount = $titleCount + $count;
 
                     }//foreach $pis
 
@@ -1791,10 +1787,12 @@ class DashboardUtil
 
             }//foreach $projects
 
-            $chartName = $this->getTitleWithTotal($chartName,$titleCount,null,"projects total");
-
             $showOther = $this->getOtherStr($showLimited,"PIs");
             $piFundedProjectCountTopArr = $this->getTopMultiArray($piFundedProjectCountArr,$showOther);
+
+            $titleCount = $this->getTotalSegmentCount($piFundedProjectCountTopArr);
+            $chartName = $this->getTitleWithTotal($chartName,$titleCount,null,"projects total");
+
             $filterArr['funded'] = true;
             $chartsArray = $this->getChartByMultiArray( $piFundedProjectCountTopArr, $filterArr, $chartName,"pie",null," : ","percent+label");
 
