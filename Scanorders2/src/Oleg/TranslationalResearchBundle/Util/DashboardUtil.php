@@ -2003,7 +2003,8 @@ class DashboardUtil
                 $project = $transRequest->getProject();
                 $projectId = $project->getId();
                 $fundedAccountNumber = $transRequest->getFundedAccountNumber();
-                echo "fundedAccountNumber=$fundedAccountNumber <br>";
+                $fundedAccountNumber = trim($fundedAccountNumber);
+                echo $project->getOid().": fundedAccountNumber=[$fundedAccountNumber] <br>";
                 if( $fundedAccountNumber ) {
                     $fundedRequestCount++;
                     $fundedProjectArr[$projectId] = 1;
