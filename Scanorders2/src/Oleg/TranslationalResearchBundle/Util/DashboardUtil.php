@@ -1997,6 +1997,7 @@ class DashboardUtil
 
             $fundedProjectArr = array();
             $unfundedProjectArr = array();
+            $testArr = array();
 
             $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
             foreach($requests as $transRequest) {
@@ -2004,7 +2005,10 @@ class DashboardUtil
                 $projectId = $project->getId();
                 $fundedAccountNumber = $transRequest->getFundedAccountNumber();
                 $fundedAccountNumber = trim($fundedAccountNumber);
-                echo $project->getOid().": fundedAccountNumber=[$fundedAccountNumber] <br>";
+
+                echo $transRequest->getOid().": fundedAccountNumber=[$fundedAccountNumber] <br>";
+                $testArr[$transRequest->getOid()]++;
+
                 if( $fundedAccountNumber ) {
                     $fundedRequestCount++;
                     $fundedProjectArr[$projectId] = 1;
@@ -2013,6 +2017,8 @@ class DashboardUtil
                     $unfundedProjectArr[$projectId] = 1;
                 }
             }//foreach
+
+            print_r($testArr);
             exit("fundedRequestCount=$fundedRequestCount; notFundedRequestCount=$notFundedRequestCount");
 
             $chartName = $this->getTitleWithTotal($chartName,$fundedRequestCount+$notFundedRequestCount,null,"work requests total");
