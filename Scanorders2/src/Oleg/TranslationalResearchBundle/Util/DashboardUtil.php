@@ -1737,11 +1737,9 @@ class DashboardUtil
                     $piProjectCountArr[$userId]['objectid'] = $userId;
                     $piProjectCountArr[$userId]['pi'] = $userId;
                     $piProjectCountArr[$userId]['show-path'] = "project";
-
-                    //$titleCount = $titleCount + $count;
                 }
 
-                //$titleCount++;
+                $titleCount++;
             }
             //exit('111');
 
@@ -1749,10 +1747,11 @@ class DashboardUtil
             $piProjectCountTopArr = $this->getTopMultiArray($piProjectCountArr,$showOther); // getTopMultiArray(
             $filterArr['funded'] = null;
 
-            $titleCount = $this->getTotalSegmentCount($piProjectCountTopArr);
+            //135 project requests (129 unique) total
+            $totalSegmentCount = $this->getTotalSegmentCount($piProjectCountTopArr);
 
             //$chartName = $chartName . " - " . $totalCount . " total";
-            $chartName = $this->getTitleWithTotal($chartName,$titleCount,null,"projects total");
+            $chartName = $this->getTitleWithTotal($chartName,$totalSegmentCount,null,"projects ($titleCount unique) total");
 
             //Projects per PI
             //                                           $dataArr,              $title,                                $type='pie', $layoutArray=null, $valuePrefixLabel=null
@@ -1792,7 +1791,7 @@ class DashboardUtil
 
                     }//foreach $pis
 
-                    //$titleCount++;
+                    $titleCount++;
                 }//if
 
             }//foreach $projects
@@ -1800,8 +1799,8 @@ class DashboardUtil
             $showOther = $this->getOtherStr($showLimited,"PIs");
             $piFundedProjectCountTopArr = $this->getTopMultiArray($piFundedProjectCountArr,$showOther);
 
-            $titleCount = $this->getTotalSegmentCount($piFundedProjectCountTopArr);
-            $chartName = $this->getTitleWithTotal($chartName,$titleCount,null,"projects total");
+            $totalSegmentCount = $this->getTotalSegmentCount($piFundedProjectCountTopArr);
+            $chartName = $this->getTitleWithTotal($chartName,$totalSegmentCount,null,"projects ($titleCount unique) total");
 
             $filterArr['funded'] = true;
             $chartsArray = $this->getChartByMultiArray( $piFundedProjectCountTopArr, $filterArr, $chartName,"pie",null," : ","percent+label");
