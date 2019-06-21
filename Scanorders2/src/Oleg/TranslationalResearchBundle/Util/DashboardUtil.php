@@ -2006,10 +2006,10 @@ class DashboardUtil
                 $fundedAccountNumber = $transRequest->getFundedAccountNumber();
                 $fundedAccountNumber = trim($fundedAccountNumber);
 
-                echo $transRequest->getOid().": fundedAccountNumber=[$fundedAccountNumber] <br>";
+                //echo $transRequest->getOid().": fundedAccountNumber=[$fundedAccountNumber] <br>";
                 $testArr[$transRequest->getOid()]++;
-                if ( strval($fundedAccountNumber) !== strval(intval($fundedAccountNumber)) ) {
-                    echo "NOT INTEGER: [$fundedAccountNumber] <br>";
+                if( $fundedAccountNumber && strval($fundedAccountNumber) !== strval(intval($fundedAccountNumber)) ) {
+                    echo $transRequest->getOid().": NOT INTEGER: [$fundedAccountNumber] <br>";
                 }
 
                 if( $fundedAccountNumber ) {
