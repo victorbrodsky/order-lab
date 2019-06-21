@@ -2008,6 +2008,11 @@ class DashboardUtil
 
                 echo $transRequest->getOid().": fundedAccountNumber=[$fundedAccountNumber] <br>";
                 $testArr[$transRequest->getOid()]++;
+                if( is_integer($fundedAccountNumber) ) {
+
+                } else {
+                    echo "NOT INTEGER: [$fundedAccountNumber] <br>";
+                }
 
                 if( $fundedAccountNumber ) {
                     $fundedRequestCount++;
