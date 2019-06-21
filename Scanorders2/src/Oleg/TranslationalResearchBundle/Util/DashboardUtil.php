@@ -2020,7 +2020,7 @@ class DashboardUtil
 
             foreach ($testArr as $reqId=>$reqCount) {
                 echo $reqId." count=".$reqCount."<br>";
-                if( $reqCount > 1 ) {
+                if( $reqCount != 1 ) {
                     echo $reqId." !!!count=".$reqCount."<br>";
                 }
             }
