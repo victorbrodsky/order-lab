@@ -665,7 +665,7 @@ class FellAppImportPopulateUtil {
                 TRUE,
                 FALSE);
 
-            $logger->notice(print_r($rowData[0]));
+            //$logger->notice(print_r($rowData[0]));
             //print_r($rowData[0]);
             //echo "<pre>";
             //print_r($headers[0]);
@@ -722,6 +722,7 @@ class FellAppImportPopulateUtil {
                 $middleName = $this->getValueByHeaderName('middleName', $rowData, $headers);
 
                 $logger->notice('Start populating fell application (googleFormId=['.$googleFormId.']'.' with email='.$email.', firstName='.$firstName.', lastname='.$lastName);
+                $logger->notice($rowData[0]);
 
                 $lastNameCap = $this->capitalizeIfNotAllCapital($lastName);
                 $firstNameCap = $this->capitalizeIfNotAllCapital($firstName);
