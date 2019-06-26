@@ -355,6 +355,11 @@ class FellAppUtil {
 
         $res = false;
 
+        $userSecUtil = $this->container->get('user_security_utility');
+        if( $userSecUtil->hasGlobalUserRole( "ROLE_FELLAPP_ADMIN", $user ) ) {
+            return true;
+        }
+
         //if user is observer of this fellapp
         if( $fellapp->getObservers()->contains($user) ) {
             $res = true;
