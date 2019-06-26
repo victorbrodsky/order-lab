@@ -1101,21 +1101,53 @@ class FellAppImportPopulateUtil {
                 $signatureDate = $this->transformDatestrToDate($this->getValueByHeaderName('signatureDate',$rowData,$headers));
                 $fellowshipApplication->setSignatureDate($signatureDate);
 
-                //getFellowshipSubspecialty
+                //validate the application
+                $errorMsgArr = array();
+                if( !$fellowshipApplication->getFellowshipSubspecialty() ) {
+                    $errorMsgArr[] = "Fellowship Type is null";
+                }
+                if( count($fellowshipApplication->getReferences()) == 0 ) {
+                    $errorMsgArr[] = "References are null";
+                }
+                if( !$displayName ) {
+                    $errorMsgArr[] = "Applicant name is null";
+                }
+                if( !$fellowshipApplication->getSignatureName() ) {
+                    $errorMsgArr[] = "Signature is null";
+                }
+                if( !$fellowshipApplication->getSignatureDate() ) {
+                    $errorMsgArr[] = "Signature Date is null";
+                }
+                if( !$fellowshipApplication->getStartDate() ) {
+                    $errorMsgArr[] = "Start Date is null";
+                }
+                if( !$fellowshipApplication->getEndDate() ) {
+                    $errorMsgArr[] = "End Date is null";
+                }
+
+                    //getFellowshipSubspecialty
                 if( !$fellowshipApplication->getFellowshipSubspecialty() ) { //getSignatureName() - not reliable - some applicants managed to submit the form without signature
-                    $event = "Error: Fellowship Type is null after populating Fellowship Applicant " . $displayName . " with Google Applicant ID=".$googleFormId."; Application ID " . $fellowshipApplication->getId();
+                    $event = "Error:".
+                        " (Applicant=[" . $displayName . "], Application ID=[" . $fellowshipApplication->getId() . "])" .
+                        " Empty required fields after trying to populate the Fellowship Application with Google Applicant ID=[" . $googleFormId . "]" .
+                        ": " . implode("; ",$errorMsgArr);
+
                     $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,$fellowshipApplication,null,'Fellowship Application Creation Failed');
                     $logger->error($event);
 
                     //send email
-                    $userSecUtil = $this->container->get('user_security_utility');
-                    $emails = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'),"Administrator");
-                    $ccs = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'),"Platform Administrator");
-                    if( !$emails ) {
-                        $emails = $ccs;
-                        $ccs = null;
+                    $testing = false;
+                    $testing = true;
+                    if($testing) {
+                        $userSecUtil = $this->container->get('user_security_utility');
+                        $emails = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Administrator");
+                        $ccs = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Platform Administrator");
+                        if (!$emails) {
+                            $emails = $ccs;
+                            $ccs = null;
+                        }
+                        $emailUtil->sendEmail($emails, "Failed to create fellowship applicant with unique Google Applicant ID=" . $googleFormId, $event, $ccs);
                     }
-                    $emailUtil->sendEmail( $emails, "Failed to create fellowship applicant with unique Google Applicant ID=".$googleFormId, $event, $ccs );
                     $this->sendEmailToSystemEmail("Failed to create fellowship applicant with unique Google Applicant ID=".$googleFormId, $event);
 
                     continue; //skip this fell application, because getFellowshipSubspecialty is null => something is wrong
