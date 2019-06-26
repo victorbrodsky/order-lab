@@ -721,7 +721,7 @@ class FellAppImportPopulateUtil {
                 $firstName = $this->getValueByHeaderName('firstName', $rowData, $headers);
                 $middleName = $this->getValueByHeaderName('middleName', $rowData, $headers);
 
-                $logger->notice('Start populating fell application with email='.$email.', lastname='.$lastName.', googleFormId='.$googleFormId);
+                $logger->notice('Start populating fell application (googleFormId=['.$googleFormId.']'.' with email='.$email.', firstName='.$firstName.', lastname='.$lastName);
 
                 $lastNameCap = $this->capitalizeIfNotAllCapital($lastName);
                 $firstNameCap = $this->capitalizeIfNotAllCapital($firstName);
@@ -802,6 +802,7 @@ class FellAppImportPopulateUtil {
                 //fellowshipType
                 $fellowshipType = $this->getValueByHeaderName('fellowshipType', $rowData, $headers);
                 if ($fellowshipType) {
+                    $logger->notice("fellowshipType=[".$fellowshipType."]");
                     $fellowshipType = trim($fellowshipType);
                     $fellowshipType = $this->capitalizeIfNotAllCapital($fellowshipType);
                     $transformer = new GenericTreeTransformer($em, $systemUser, 'FellowshipSubspecialty');
