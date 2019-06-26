@@ -722,7 +722,11 @@ class FellAppImportPopulateUtil {
                 $middleName = $this->getValueByHeaderName('middleName', $rowData, $headers);
 
                 $logger->notice('Start populating fell application (googleFormId=['.$googleFormId.']'.' with email='.$email.', firstName='.$firstName.', lastname='.$lastName);
-                $logger->notice(implode("; ",$rowData[0]));
+
+                if( !$email ) {
+                    $logger->error("Error populating fellapp googleFormId=$googleFormId: email is null");
+                    $logger->error(implode("; ", $rowData[0]));
+                }
 
                 $lastNameCap = $this->capitalizeIfNotAllCapital($lastName);
                 $firstNameCap = $this->capitalizeIfNotAllCapital($firstName);
