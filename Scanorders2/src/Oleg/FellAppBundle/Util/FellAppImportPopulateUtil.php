@@ -1148,8 +1148,8 @@ class FellAppImportPopulateUtil {
                             $ccs = null;
                         }
                         $emailUtil->sendEmail($emails, "Failed to create fellowship applicant with unique Google Applicant ID=" . $googleFormId, $event, $ccs);
+                        $this->sendEmailToSystemEmail("Failed to create fellowship applicant with unique Google Applicant ID=".$googleFormId, $event);
                     }
-                    $this->sendEmailToSystemEmail("Failed to create fellowship applicant with unique Google Applicant ID=".$googleFormId, $event);
 
                     continue; //skip this fell application, because getFellowshipSubspecialty is null => something is wrong
                 }
