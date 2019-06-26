@@ -665,7 +665,7 @@ class FellAppImportPopulateUtil {
                 TRUE,
                 FALSE);
 
-            //$logger->notice(print_r($rowData[0]));
+            $logger->notice(print_r($rowData[0]));
             //print_r($rowData[0]);
             //echo "<pre>";
             //print_r($headers[0]);
