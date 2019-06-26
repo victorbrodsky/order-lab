@@ -104,7 +104,7 @@ class FellowshipApplicationType extends AbstractType
             if( $this->params['container']->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
                 $builder->add('googleFormId', null, array(
                     'required' => false,
-                    'label' => "Google Form Id (Visible only to Administrator. New application will be generated if googleFormId will be different from the one in the spreadsheet.):",
+                    'label' => "Google Form Id (Do not modify this value! New application will be generated if googleFormId will be different from the one in the spreadsheet.):",
                     'attr' => array('class' => 'form-control')
                 ));
             }

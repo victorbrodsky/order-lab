@@ -1637,7 +1637,10 @@ class FellAppController extends Controller {
             }
         }
         if( !$interviewerRoleFellType ) {
-            throw new EntityNotFoundException('Unable to find role by FellowshipSubspecialty='.$fellowshipSubspecialty);
+            //throw new EntityNotFoundException('Unable to find role by FellowshipSubspecialty='.$fellowshipSubspecialty);
+            $logger = $this->container->get('logger');
+            $logger->warning('Unable to find role by FellowshipSubspecialty='.$fellowshipSubspecialty);
+            return false;
         }
 
         foreach( $application->getInterviews() as $interview ) {
