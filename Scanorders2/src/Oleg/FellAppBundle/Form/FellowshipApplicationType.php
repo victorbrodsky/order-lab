@@ -90,7 +90,8 @@ class FellowshipApplicationType extends AbstractType
         $builder->add('fellowshipSubspecialty', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:FellowshipSubspecialty',
             'label' => "Fellowship Application Type:",
-            'required' => true,
+            //'required' => true,
+            'required' => false,
             'choices' => $this->params['fellappTypes'], //$fellTypes,
             'invalid_message' => 'fellowshipSubspecialty invalid value',
             //'choices_as_values' => true,
