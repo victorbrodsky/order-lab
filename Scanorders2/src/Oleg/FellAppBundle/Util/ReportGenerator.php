@@ -1474,9 +1474,16 @@ class ReportGenerator {
         $serverTimezone = date_default_timezone_get(); //server timezone
         $fellappType = str_replace(" ","-",$fellappType);
 
+        $startDate = $entity->getStartDate();
+        if( $startDate ) {
+            $startDateStr = $entity->getStartDate()->format('Y');
+        } else {
+            $startDateStr = NULL;
+        }
+
         $filename =
             $fellappType."-".$filenameStr.           //"-Fellowship-Application".
-            "-".$entity->getStartDate()->format('Y').
+            "-".$startDateStr.
             "-ID".$entity->getId().
             "-".$subjectUser->getLastNameUppercase().
             "-".$subjectUser->getFirstNameUppercase().

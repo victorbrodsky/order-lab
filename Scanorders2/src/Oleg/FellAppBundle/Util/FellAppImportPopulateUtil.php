@@ -710,8 +710,8 @@ class FellAppImportPopulateUtil {
 
                 //echo "row=".$row.": id=".$googleFormId."<br>";
 
-                $googleForm = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->findOneByGoogleFormId($googleFormId);
-                if( $googleForm ) {
+                $fellowshipApplication = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->findOneByGoogleFormId($googleFormId);
+                if( $fellowshipApplication ) {
                     //$logger->notice('Skip this fell application, because it already exists in DB. googleFormId='.$googleFormId);
                     continue; //skip this fell application, because it already exists in DB
                 }
@@ -784,9 +784,17 @@ class FellAppImportPopulateUtil {
 
                 //create new Fellowship Applicantion
                 $fellowshipApplication = new FellowshipApplication($systemUser);
+                //if( !$fellowshipApplication ) {
+                //    $fellowshipApplication = new FellowshipApplication($systemUser);
+                //}
+
                 $fellowshipApplication->setAppStatus($activeStatus);
                 $fellowshipApplication->setGoogleFormId($googleFormId);
+
                 $user->addFellowshipApplication($fellowshipApplication);
+                //if( $fellowshipApplication && !$user->getFellowshipApplications()->contains($fellowshipApplication) ) {
+                //    $user->addFellowshipApplication($fellowshipApplication);
+                //}
 
                 //timestamp
                 $fellowshipApplication->setTimestamp($this->transformDatestrToDate($this->getValueByHeaderName('timestamp', $rowData, $headers)));
@@ -1109,6 +1117,8 @@ class FellAppImportPopulateUtil {
                     }
                     $emailUtil->sendEmail( $emails, "Failed to create fellowship applicant with unique Google Applicant ID=".$googleFormId, $event, $ccs );
                     $this->sendEmailToSystemEmail("Failed to create fellowship applicant with unique Google Applicant ID=".$googleFormId, $event);
+
+                    continue; //skip this fell application, because getFellowshipSubspecialty is null => something is wrong
                 }
 
                 //exit('end applicant');
