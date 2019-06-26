@@ -342,6 +342,7 @@ class FellAppController extends Controller {
         }
 
         $orWhere = array();
+        $orWhere[] = "appStatus.id IS NULL";
 
         if( $hidden ) {
             $orWhere[] = "appStatus.name = 'hide'";

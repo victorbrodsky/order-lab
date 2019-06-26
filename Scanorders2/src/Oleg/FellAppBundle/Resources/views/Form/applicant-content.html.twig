@@ -136,13 +136,15 @@
 
 <div class="fellapp-application-holder">
 
+{% include 'OlegFellAppBundle:Form:AdminData.html.twig' %}
+
 <!-- Fellowship Type, Training period, Applicant Name -->
 {#{% include 'OlegFellAppBundle:Form:FellowshipType.html.twig' %}#}
 
 <!-- Personal Data -->
 {#{% include 'OlegFellAppBundle:Form:PersonalData.html.twig' %}#}
 
-<!-- Fellowship Type, Training period, Applicant Name, Email, Address, Telephone, Citizenship -->
+<!-- Fellowship Application Admin Data -->
 {% include 'OlegFellAppBundle:Form:ApplicantData.html.twig' %}
 
 {% if not testing %}

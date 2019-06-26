@@ -98,6 +98,17 @@ class FellowshipApplicationType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width fellapp-fellowshipSubspecialty'),
         ));
 
+        if ($this->params['cycle'] == "edit") {
+            //$this->secAuthChecker->isGranted('ROLE_FELLAPP_ADMIN') ||
+            //if( $this->secAuthChecker->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            if( $this->params['container']->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+                $builder->add('googleFormId', null, array(
+                    'required' => false,
+                    'label' => "Google Form Id (Visible only to Administrator. New application will be generated if googleFormId will be different from the one in the spreadsheet.):",
+                    'attr' => array('class' => 'form-control')
+                ));
+            }
+        }
 
         if ($this->params['cycle'] == "new") {
             $builder->add('timestamp', DateType::class, array(
