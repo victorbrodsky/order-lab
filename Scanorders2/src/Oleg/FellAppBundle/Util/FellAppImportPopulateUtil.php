@@ -186,7 +186,8 @@ class FellAppImportPopulateUtil {
         $repository = $this->em->getRepository('OlegFellAppBundle:DataFile');
         $dql =  $repository->createQueryBuilder("datafile");
         $dql->select('datafile');
-        $dql->where("datafile.status != :completeStatus");
+        $dql->leftJoin("datafile.fellapp", "fellapp");
+        $dql->where("datafile.status != :completeStatus OR fellapp.id IS NULL");
 
         $query = $this->em->createQuery($dql);
 
@@ -245,7 +246,8 @@ class FellAppImportPopulateUtil {
         $repository = $this->em->getRepository('OlegFellAppBundle:DataFile');
         $dql =  $repository->createQueryBuilder("datafile");
         $dql->select('datafile');
-        $dql->where("datafile.status = :completeStatus");
+        $dql->leftJoin("datafile.fellapp", "fellapp");
+        $dql->where("datafile.status = :completeStatus AND OR fellapp.id IS NOT NULL");
 
         $query = $this->em->createQuery($dql);
 
@@ -592,7 +594,7 @@ class FellAppImportPopulateUtil {
             throw new IOException($event);
         }
 
-        $logger->notice("Successfully obtained sheet with filename=".$inputFileName);
+        //$logger->notice("Successfully obtained sheet with filename=".$inputFileName);
 
         //$uploadPath = $this->uploadDir.'/FellowshipApplicantUploads';
         $applicantsUploadPathFellApp = $userSecUtil->getSiteSettingParameter('applicantsUploadPathFellApp');
