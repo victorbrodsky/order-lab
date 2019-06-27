@@ -247,7 +247,7 @@ class FellAppImportPopulateUtil {
         $dql =  $repository->createQueryBuilder("datafile");
         $dql->select('datafile');
         $dql->leftJoin("datafile.fellapp", "fellapp");
-        $dql->where("datafile.status = :completeStatus AND OR fellapp.id IS NOT NULL");
+        $dql->where("datafile.status = :completeStatus AND fellapp.id IS NOT NULL");
 
         $query = $this->em->createQuery($dql);
 
