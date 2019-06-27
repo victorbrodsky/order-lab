@@ -206,7 +206,7 @@ class FellAppImportPopulateUtil {
             if( $count > 0 ) {
                 //this method process a sheet with a single application => $populatedFellowshipApplications has only one element
                 $populatedFellowshipApplication = $populatedFellowshipApplications[0];
-                //$logger->notice("Completing population of the FellApp ID " . $populatedFellowshipApplication->getID() . " data file ID ".$datafile->getId()." on the server.");
+                $logger->notice("Completing population of the FellApp ID " . $populatedFellowshipApplication->getID() . " data file ID ".$datafile->getId()." on the server.");
 
                 $datafile->setFellapp($populatedFellowshipApplication);
                 $datafile->setStatus("completed");
@@ -516,7 +516,7 @@ class FellAppImportPopulateUtil {
 
         //2a) get spreadsheet path
         $inputFileName = $document->getServerPath();    //'Uploaded/fellapp/Spreadsheets/Pathology Fellowships Application Form (Responses).xlsx';
-        //$logger->notice("Population a single application sheet with filename=".$inputFileName);
+        $logger->notice("Population a single application sheet with filename=".$inputFileName);
 
 //        if( $path ) {
 //            $inputFileName = $path . "/" . $inputFileName;
@@ -592,7 +592,7 @@ class FellAppImportPopulateUtil {
             throw new IOException($event);
         }
 
-        //$logger->notice("Successfully obtained sheet with filename=".$inputFileName);
+        $logger->notice("Successfully obtained sheet with filename=".$inputFileName);
 
         //$uploadPath = $this->uploadDir.'/FellowshipApplicantUploads';
         $applicantsUploadPathFellApp = $userSecUtil->getSiteSettingParameter('applicantsUploadPathFellApp');
