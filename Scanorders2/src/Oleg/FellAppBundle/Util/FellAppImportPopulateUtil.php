@@ -207,15 +207,19 @@ class FellAppImportPopulateUtil {
             if( $count > 0 ) {
                 //this method process a sheet with a single application => $populatedFellowshipApplications has only one element
                 $populatedFellowshipApplication = $populatedFellowshipApplications[0];
-                $logger->notice("Completing population of the FellApp ID " . $populatedFellowshipApplication->getID() . " data file ID ".$datafile->getId()." on the server.");
+                if( $populatedFellowshipApplication ) {
+                    $logger->notice("Completing population of the FellApp ID " . $populatedFellowshipApplication->getID() . " data file ID " . $datafile->getId() . " on the server.");
 
-                $datafile->setFellapp($populatedFellowshipApplication);
-                $datafile->setStatus("completed");
-                $this->em->flush($datafile);
+                    $datafile->setFellapp($populatedFellowshipApplication);
+                    $datafile->setStatus("completed");
+                    $this->em->flush($datafile);
 
-                //$logger->notice("Status changed to 'completed' for data file ID ".$datafile->getId());
+                    //$logger->notice("Status changed to 'completed' for data file ID ".$datafile->getId());
 
-                $populatedCount = $populatedCount + $count;
+                    $populatedCount = $populatedCount + $count;
+                } else {
+                    $logger->warning("Error populating data file ID ".$datafile->getId());
+                }
             }
 
         }
