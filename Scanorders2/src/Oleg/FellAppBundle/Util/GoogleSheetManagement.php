@@ -273,6 +273,8 @@ class GoogleSheetManagement {
 
 
     public function downloadFileToServer($author, $service, $fileId, $documentType, $path) {
+        $logger = $this->container->get('logger');
+
         $file = null;
         try {
             $file = $service->files->get($fileId);
@@ -287,12 +289,12 @@ class GoogleSheetManagement {
             //check if file already exists by file id
             $documentDb = $this->em->getRepository('OlegUserdirectoryBundle:Document')->findOneByUniqueid($file->getId());
             if( $documentDb && $documentType != 'Fellowship Application Backup Spreadsheet' ) {
-                //$logger = $this->container->get('logger');
-                //$event = "Document already exists with uniqueid=".$file->getId();
-                //$logger->warning($event);
+                $event = "Document already exists with uniqueid=".$file->getId()."; fileId=".$fileId;
+                $logger->notice($event);
                 return $documentDb;
             }
 
+            $logger->notice("Download file from Google drive file id=".$fileId);
             $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
             $response = $googlesheetmanagement->downloadFile($service, $file, $documentType);
             //echo "response=".$response."<br>";
