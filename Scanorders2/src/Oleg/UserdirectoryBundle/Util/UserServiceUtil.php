@@ -68,7 +68,11 @@ class UserServiceUtil {
         return $datetimeUTC;
     }
 
-    public function convertFromUtcToUserTimezone($datetime,$user) {
+    public function convertFromUtcToUserTimezone($datetime,$user=null) {
+
+        if( !$user ) {
+            $user = $this->secTokenStorage->getToken()->getUser();
+        }
 
         //$user_tz = 'America/New_York';
         //$user_tz = $user->getPreferences()->getTimezone();

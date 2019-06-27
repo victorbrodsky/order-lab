@@ -98,7 +98,7 @@ class FellowshipApplicationType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width fellapp-fellowshipSubspecialty'),
         ));
 
-        if ($this->params['cycle'] == "edit") {
+        if( 0 && $this->params['cycle'] == "edit" ) {
             //$this->secAuthChecker->isGranted('ROLE_FELLAPP_ADMIN') ||
             //if( $this->secAuthChecker->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             if( $this->params['container']->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {

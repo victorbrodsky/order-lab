@@ -215,7 +215,13 @@
                     <td>{{ entity.id }}</td>
                 {%  endif %}
 
-                <td class="rowlink-skip">{% if entity.creationdate %}{{ entity.creationdate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td class="rowlink-skip">
+                    {% if entity.creationdate %}
+                        {{ entity.creationdate|date('Y-m-d H:i:s') }} (UTC)
+                        {#<br>#}
+                        {#{{ user_service_utility.convertFromUtcToUserTimezone(entity.creationdate)|date('Y-m-d H:i:s') }} (User's timezone)#}
+                    {% endif %}
+                </td>
 
                 {% if hideIp is not defined or hideIp == false %}
                     <td>{{ entity.ip }}</td>

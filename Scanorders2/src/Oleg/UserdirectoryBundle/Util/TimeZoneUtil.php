@@ -38,8 +38,8 @@ class TimeZoneUtil {
     public function tz_list( $asValueLabel=false ) {
         $zones_array = array();
 
-        $dateTimeZoneUTC = new \DateTimeZone("UTC");
-        $dateTimeUTC = new \DateTime("now", $dateTimeZoneUTC);
+        //$dateTimeZoneUTC = new \DateTimeZone("UTC");
+        //$dateTimeUTC = new \DateTime("now", $dateTimeZoneUTC);
 
         foreach(timezone_identifiers_list() as $key => $zone) {
             //date_default_timezone_set($zone);
@@ -80,5 +80,6 @@ class TimeZoneUtil {
         }
         return $zones_array;
     }
+    
 
 }
