@@ -368,7 +368,9 @@ class ReportGenerator {
 
     public function getQueue() {
 
-        $logger = $this->container->get('logger');
+        //$logger = $this->container->get('logger');
+        //$logger->error("Test error"); exit('test111');
+
         $queue = null;
 
         $queues = $this->em->getRepository('OlegFellAppBundle:ReportQueue')->findAll();

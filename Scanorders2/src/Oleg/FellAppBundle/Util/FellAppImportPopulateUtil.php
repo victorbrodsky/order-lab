@@ -720,7 +720,7 @@ class FellAppImportPopulateUtil {
 
                 $fellowshipApplicationDb = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->findOneByGoogleFormId($googleFormId);
                 if( $fellowshipApplicationDb ) {
-                    $logger->notice('Skip this fell application, because it already exists in DB. googleFormId='.$googleFormId);
+                    //$logger->notice('Skip this fell application, because it already exists in DB. googleFormId='.$googleFormId);
                     continue; //skip this fell application, because it already exists in DB
                 }
 
@@ -729,12 +729,11 @@ class FellAppImportPopulateUtil {
                 $firstName = $this->getValueByHeaderName('firstName', $rowData, $headers);
                 $middleName = $this->getValueByHeaderName('middleName', $rowData, $headers);
 
-                $logger->notice('Start populating fell application (googleFormId=['.$googleFormId.']'.' with email='.$email.', firstName='.$firstName.', lastname='.$lastName);
-
-                if( !$email ) {
-                    $logger->warning("Error populating fellapp googleFormId=$googleFormId: email is null");
-                    $logger->warning(implode("; ", $rowData[0]));
-                }
+//                $logger->notice('Start populating fell application (googleFormId=['.$googleFormId.']'.' with email='.$email.', firstName='.$firstName.', lastname='.$lastName);
+//                if( !$email ) {
+//                    $logger->warning("Error populating fellapp googleFormId=$googleFormId: email is null");
+//                    $logger->warning(implode("; ", $rowData[0]));
+//                }
 
                 $lastNameCap = $this->capitalizeIfNotAllCapital($lastName);
                 $firstNameCap = $this->capitalizeIfNotAllCapital($firstName);
@@ -815,7 +814,7 @@ class FellAppImportPopulateUtil {
                 //fellowshipType
                 $fellowshipType = $this->getValueByHeaderName('fellowshipType', $rowData, $headers);
                 if ($fellowshipType) {
-                    $logger->notice("fellowshipType=[".$fellowshipType."]");
+                    //$logger->notice("fellowshipType=[".$fellowshipType."]");
                     $fellowshipType = trim($fellowshipType);
                     $fellowshipType = $this->capitalizeIfNotAllCapital($fellowshipType);
                     $transformer = new GenericTreeTransformer($em, $systemUser, 'FellowshipSubspecialty');
@@ -1140,7 +1139,8 @@ class FellAppImportPopulateUtil {
                 }
 
                     //getFellowshipSubspecialty
-                if( !$fellowshipApplication->getFellowshipSubspecialty() ) { //getSignatureName() - not reliable - some applicants managed to submit the form without signature
+                //if( !$fellowshipApplication->getFellowshipSubspecialty() ) { //getSignatureName() - not reliable - some applicants managed to submit the form without signature
+                if( count($errorMsgArr) > 0 ) {
                     $event = "Error:".
                         " (Applicant=[" . $displayName . "], Application ID=[" . $fellowshipApplication->getId() . "])" .
                         " Empty required fields after trying to populate the Fellowship Application with Google Applicant ID=[" . $googleFormId . "]" .
@@ -1151,7 +1151,7 @@ class FellAppImportPopulateUtil {
 
                     //send email
                     $sendErrorEmail = true;
-                    $sendErrorEmail = false;
+                    //$sendErrorEmail = false;
                     if( $sendErrorEmail ) {
                         $userSecUtil = $this->container->get('user_security_utility');
                         $emails = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Administrator");
