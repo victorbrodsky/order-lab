@@ -2450,10 +2450,10 @@ class DashboardUtil
 
             //increase vertical
             $layoutArray = array(
-                'height' => $this->height*1.7,
+                'height' => $this->height*2,
                 'width' => $this->width,
                 'title' => $chartName,
-                'margin' => array('b' => 600)
+                'margin' => array('b' => 800)
             );
 
             $combinedTrpData = array();
