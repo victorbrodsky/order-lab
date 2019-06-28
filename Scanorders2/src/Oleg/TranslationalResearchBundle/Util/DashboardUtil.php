@@ -82,9 +82,9 @@ class DashboardUtil
             "14. Service Productivity for Non-Funded Projects (Top 25)" =>  "service-productivity-by-service-per-nonfunded-projects",
             "15. Service Productivity: Items for Funded vs Non-Funded Projects" => "service-productivity-by-service-compare-funded-vs-nonfunded-projects",
             //Productivity statistics based on work requests
-            "16. Total Fees by Work Requests" =>                                "fees-by-requests",
-            "17. Total Fees per Funded Project (Top 10)" =>                     "fees-by-requests-per-funded-projects",
-            "18. Total Fees per Non-Funded Project (Top 10)" =>                 "fees-by-requests-per-nonfunded-projects",
+            "16. Total Fees of Items Ordered for Funded vs Non-Funded Projects" => "fees-by-requests",
+            "17. Funded Projects with the Highest Total Fees (Top 10)" => "fees-by-requests-per-funded-projects",
+            "18. Non-Funded Projects with the Highest Total Fees (Top 10)" => "fees-by-requests-per-nonfunded-projects",
             "19. Total Fees per Investigator (Top 10)" =>                       "fees-by-investigators",
             "20. Total Fees per Investigator for Funded Projects (Top 10)" =>   "fees-by-investigators-per-funded-projects",
             "21. Total Fees per Investigator for Non-Funded Projects (Top 10)"=>"fees-by-investigators-per-nonfunded-projects",
@@ -2462,7 +2462,7 @@ class DashboardUtil
             $chartsArray = $this->getStackedChart($combinedTrpData, $chartName, "stack", $layoutArray);
         }
 
-        //16. Total Fees by Work Requests
+        //16. Total Fees of Items Ordered for Funded vs Non-Funded Projects
         if( $chartType == "fees-by-requests" ) {
             $transresRequestUtil = $this->container->get('transres_request_util');
             $subtotalFees = 0;
@@ -2484,7 +2484,7 @@ class DashboardUtil
                 $titleCount++;
             }//foreach $requests
 
-            //12. Total Fees by Work Requests (Total $)
+            //12. Total Fees of Items Ordered for Funded vs Non-Funded Projects (Total $)
             $dataArray = array();
             $chartDataArray = array();
             $type = 'pie';
@@ -2521,7 +2521,7 @@ class DashboardUtil
 
         }
 
-        //17. Total Fees per Funded Project (Top 10)
+        //17. Funded Projects with the Highest Total Fees (Top 10)
         if( $chartType == "fees-by-requests-per-funded-projects" ) {
             $transresRequestUtil = $this->container->get('transres_request_util');
             $fundedTotalFeesByRequestArr = array();
@@ -2546,7 +2546,7 @@ class DashboardUtil
                 $subtotalFee = intval($transresRequestUtil->getTransResRequestFeeHtml($transRequest));
                 //$subtotalFees = $subtotalFees + $subtotalFee;
 
-                //17. Total Fees per Funded Project (Top 10)
+                //17. Funded Projects with the Highest Total Fees (Top 10)
                 if( $transRequest->getFundedAccountNumber() ) {
                     if (isset($fundedTotalFeesByRequestArr[$projectIndex])) {
                         $totalFee = $fundedTotalFeesByRequestArr[$projectIndex] + $subtotalFee;
@@ -2567,7 +2567,7 @@ class DashboardUtil
             $chartsArray = $this->getChart($fundedTotalFeesByRequestTopArr, $chartName,'pie',$layoutArray," : $",null,null,"percent+label");
         }
 
-        //18. Total Fees per Non-Funded Project (Top 10)
+        //18. Non-Funded Projects with the Highest Total Fees (Top 10)
         if( $chartType == "fees-by-requests-per-nonfunded-projects" ) {
             $transresRequestUtil = $this->container->get('transres_request_util');
             $unFundedTotalFeesByRequestArr = array();
@@ -2595,7 +2595,7 @@ class DashboardUtil
                 if( $transRequest->getFundedAccountNumber() ) {
                     //do nothing
                 } else {
-                    //14. Total Fees per non-funded Project (Top 10)
+                    //14. Non-Funded Projects with the Highest Total Fees (Top 10)
                     if (isset($unFundedTotalFeesByRequestArr[$projectIndex])) {
                         $totalFee = $unFundedTotalFeesByRequestArr[$projectIndex] + $subtotalFee;
                     } else {
@@ -2735,6 +2735,8 @@ class DashboardUtil
             $paidArr = array();
             $descriptionArr = array();
 
+            $totalPaidInvoiceFee = 0;
+
             $invoiceStates = array("Paid in Full","Paid Partially");
             $compareType = "date when status changed to paid in full";
 
@@ -2759,11 +2761,15 @@ class DashboardUtil
                     }
 
                     $paidArr[$startDateLabel] = $paidThisInvoiceFee;
+
+                    $totalPaidInvoiceFee = $totalPaidInvoiceFee + $paidThisInvoiceFee;
                 }
 
                 $descriptionArr[$startDateLabel] = " (" . count($invoices) . " invoices)";
 
             } while( $startDate < $endDate );
+
+            $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($totalPaidInvoiceFee),"$","Total");
 
             //$dataArr, $title, $type='pie', $layoutArray=null, $valuePrefixLabel=null, $valuePostfixLabel=null, $descriptionArr=array()
             $chartsArray = $this->getChart($paidArr,$chartName,'bar',$layoutArray,"$",null,$descriptionArr,"percent+label"); // getChart(
