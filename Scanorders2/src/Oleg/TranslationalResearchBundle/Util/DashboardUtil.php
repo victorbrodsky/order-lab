@@ -80,7 +80,7 @@ class DashboardUtil
             "12. Service Productivity by Products/Services (Top 35)" =>     "service-productivity-by-service",
             "13. Service Productivity for Funded Projects (Top 25)" =>      "service-productivity-by-service-per-funded-projects",
             "14. Service Productivity for Non-Funded Projects (Top 25)" =>  "service-productivity-by-service-per-nonfunded-projects",
-            "15. TRP Service Productivity by Products/Services" =>              "service-productivity-by-service-compare-funded-vs-nonfunded-projects",
+            "15. Service Productivity: Items for Funded vs Non-Funded Projects" => "service-productivity-by-service-compare-funded-vs-nonfunded-projects",
             //Productivity statistics based on work requests
             "16. Total Fees by Work Requests" =>                                "fees-by-requests",
             "17. Total Fees per Funded Project (Top 10)" =>                     "fees-by-requests-per-funded-projects",
@@ -772,23 +772,25 @@ class DashboardUtil
         return $chartsArray;
     }
 
-    public function getStackedChart( $combinedDataArr, $title ) {
+    public function getStackedChart( $combinedDataArr, $title, $type="stack", $layoutArray=null ) {
 
         if( count($combinedDataArr) == 0 ) {
             return array();
         }
 
-        $layoutArray = array(
-            'height' => $this->height,
-            'width' => $this->width,
-            'margin' => array('b'=>200)
+        if( !$layoutArray ) {
+            $layoutArray = array(
+                'height' => $this->height,
+                'width' => $this->width,
+                'margin' => array('b' => 200)
 //            'yaxis' => array(
 //                'automargin' => true
 //            ),
 //            'xaxis' => array(
 //                'automargin' => true,
 //            ),
-        );
+            );
+        }
 
         $layoutArray['title'] = $title;
         $layoutArray['barmode'] = 'stack';
@@ -2389,7 +2391,7 @@ class DashboardUtil
             $chartsArray = $this->getChart($unFundedQuantityCountByCategoryTopArr, $chartName,'pie',$layoutArray," : ",null,null,"percent+label");
         }
 
-        //"15. TRP Service Productivity by Products/Services" => "service-productivity-by-service-compare-funded-vs-nonfunded-projects"
+        //"15. Service Productivity: Items for Funded vs Non-Funded Projects" => "service-productivity-by-service-compare-funded-vs-nonfunded-projects"
         if( $chartType == "service-productivity-by-service-compare-funded-vs-nonfunded-projects" ) {
             $fundedQuantityCountByCategoryArr = array();
             $unFundedQuantityCountByCategoryArr = array();
@@ -2441,15 +2443,23 @@ class DashboardUtil
                 $unfundedSortedArr[$categoryIndex] = $unFundedQuantityCountByCategoryArr[$categoryIndex];
             }
 
-            $chartName = $this->getTitleWithTotal($chartName,$titleCount);
+            $chartName = $this->getTitleWithTotal($chartName,$titleCount,null,"items total");
             //$showOther = $this->getOtherStr($showLimited,"projects");
             //$fundedQuantityCountByCategoryTopArr = $this->getTopArray($fundedQuantityCountByCategoryArr,$showOther);
             //$unFundedQuantityCountByCategoryTopArr = $this->getTopArray($unFundedQuantityCountByCategoryArr,$showOther);
 
+            //increase vertical
+            $layoutArray = array(
+                'height' => $this->height*1.7,
+                'width' => $this->width,
+                'title' => $chartName,
+                'margin' => array('b' => 600)
+            );
+
             $combinedTrpData = array();
             $combinedTrpData['Funded'] = $fundedSortedArr; //$fundedQuantityCountByCategoryArr;
             $combinedTrpData['Not-Funded'] = $unfundedSortedArr; //$unFundedQuantityCountByCategoryArr;
-            $chartsArray = $this->getStackedChart($combinedTrpData, $chartName, "stack");
+            $chartsArray = $this->getStackedChart($combinedTrpData, $chartName, "stack", $layoutArray);
         }
 
         //16. Total Fees by Work Requests
