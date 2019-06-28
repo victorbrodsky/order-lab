@@ -74,10 +74,10 @@ class DashboardUtil
             //Work request statistics
             "8. Total Number of Work Requests by Funding Source (linked)" =>                 "requests-by-funding-source",
             "9. Projects with Most Work Requests (Top 10) (linked)" =>                       "requests-per-project",
-            "10. Total Number of Work Requests per Funded Project (Top 10) (linked)" =>      "requests-per-funded-projects",
-            "11. Total Number of Work Requests per Non-Funded Project (Top 10) (linked)" =>  "requests-per-nonfunded-projects",
+            "10. Funded Projects with Most Work Requests (Top 10) (linked)" =>      "requests-per-funded-projects",
+            "11. Non-Funded Projects with Most Work Requests (Top 10) (linked)" =>  "requests-per-nonfunded-projects",
             //   Products/Services
-            "12. TRP Service Productivity by Products/Services (Top 25)" =>     "service-productivity-by-service",
+            "12. Service Productivity by Products/Services (Top 35)" =>     "service-productivity-by-service",
             "13. TRP Service Productivity for Funded Projects (Top 25)" =>      "service-productivity-by-service-per-funded-projects",
             "14. TRP Service Productivity for Non-Funded Projects (Top 25)" =>  "service-productivity-by-service-per-nonfunded-projects",
             "15. TRP Service Productivity by Products/Services" =>              "service-productivity-by-service-compare-funded-vs-nonfunded-projects",
@@ -2182,7 +2182,7 @@ class DashboardUtil
             $chartsArray = $this->getChartByMultiArray($requestPerProjectTopArr, $filterArr, $chartName,"pie",$layoutArray," : ","percent+label");
         }
 
-        //10. Total Number of Work Requests per Funded Project (Top 10)
+        //10. Funded Projects with Most Work Requests (Top 10)
         if( $chartType == "requests-per-funded-projects" ) {
             $fundedRequestPerProjectArr = array();
 
@@ -2225,7 +2225,7 @@ class DashboardUtil
             $chartsArray = $this->getChartByMultiArray( $fundedRequestPerProjectTopArr, $filterArr, $chartName,"pie",$layoutArray," : ","percent+label");
         }
 
-        //11. Total Number of Work Requests per Non-Funded Project (Top 10)
+        //11. Non-Funded Projects with Most Work Requests (Top 10)
         if( $chartType == "requests-per-nonfunded-projects" ) {
             $unFundedRequestPerProjectArr = array();
 
@@ -2270,7 +2270,7 @@ class DashboardUtil
         }
 
         //Work request statistics: Products/Services 
-        //12. TRP Service Productivity by Products/Services (Top 10)
+        //12. Service Productivity by Products/Services (Top 35)
         if( $chartType == "service-productivity-by-service" ) {
             $quantityCountByCategoryArr = array();
 
@@ -2294,15 +2294,15 @@ class DashboardUtil
                 }
             }//foreach $requests
 
-            $chartName = $this->getTitleWithTotal($chartName,$titleCount,null,"products/services total");
-            $showOther = $this->getOtherStr($showLimited,"products/services");
+            $chartName = $this->getTitleWithTotal($chartName,$titleCount,null,"items total");
+            $showOther = $this->getOtherStr($showLimited,"items");
             //                                              $piProjectCountArr, $showOthers=false, $descriptionArr=array(), $maxLen=50, $limit=10
             $quantityCountByCategoryTopArr = $this->getTopArray(
                 $quantityCountByCategoryArr,    //$dataCountArr
                 $showOther,                     //$showOthers
                 array(),                        //$descriptionArr=array()
                 50,                             //$maxLen=50
-                25                              //$limit
+                35                              //$limit
             );
             $layoutArray = array(
                 'height' => $this->height,
