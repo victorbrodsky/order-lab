@@ -78,8 +78,8 @@ class DashboardUtil
             "11. Non-Funded Projects with Most Work Requests (Top 10) (linked)" =>  "requests-per-nonfunded-projects",
             //   Products/Services
             "12. Service Productivity by Products/Services (Top 35)" =>     "service-productivity-by-service",
-            "13. TRP Service Productivity for Funded Projects (Top 25)" =>      "service-productivity-by-service-per-funded-projects",
-            "14. TRP Service Productivity for Non-Funded Projects (Top 25)" =>  "service-productivity-by-service-per-nonfunded-projects",
+            "13. Service Productivity for Funded Projects (Top 25)" =>      "service-productivity-by-service-per-funded-projects",
+            "14. Service Productivity for Non-Funded Projects (Top 25)" =>  "service-productivity-by-service-per-nonfunded-projects",
             "15. TRP Service Productivity by Products/Services" =>              "service-productivity-by-service-compare-funded-vs-nonfunded-projects",
             //Productivity statistics based on work requests
             "16. Total Fees by Work Requests" =>                                "fees-by-requests",
@@ -2311,7 +2311,7 @@ class DashboardUtil
             $chartsArray = $this->getChart($quantityCountByCategoryTopArr, $chartName,'pie',$layoutArray," : ",null,null,"percent+label");
         }
 
-        //13. TRP Service Productivity for Funded Projects (Top 10)
+        //13. Service Productivity for Funded Projects (Top 25)
         if( $chartType == "service-productivity-by-service-per-funded-projects" ) {
             $fundedQuantityCountByCategoryArr = array();
 
@@ -2322,9 +2322,9 @@ class DashboardUtil
                     if( $category ) {
                         $categoryIndex = $category->getProductIdAndName();
                         $productQuantity = $product->getQuantity();
-                        //10. TRP Service Productivity for Funded Projects (Top 10)
+                        //10. Service Productivity for Funded Projects (Top 25)
                         if( $transRequest->getFundedAccountNumber() ) {
-                            //10. TRP Service Productivity for Funded Projects (Top 10)
+                            //10. Service Productivity for Funded Projects (Top 25)
                             if (isset($fundedQuantityCountByCategoryArr[$categoryIndex])) {
                                 $count = $fundedQuantityCountByCategoryArr[$categoryIndex] + $productQuantity;
                             } else {
@@ -2337,13 +2337,19 @@ class DashboardUtil
                 }
             }//foreach $requests
 
-            $chartName = $this->getTitleWithTotal($chartName,$titleCount);
-            $showOther = $this->getOtherStr($showLimited,"projects");
-            $fundedQuantityCountByCategoryTopArr = $this->getTopArray($fundedQuantityCountByCategoryArr,$showOther);
+            $chartName = $this->getTitleWithTotal($chartName,$titleCount,null,"items total");
+            $showOther = $this->getOtherStr($showLimited,"items");
+            $fundedQuantityCountByCategoryTopArr = $this->getTopArray(
+                $fundedQuantityCountByCategoryArr,
+                $showOther,
+                array(),                        //$descriptionArr=array()
+                50,                             //$maxLen=50
+                25                              //$limit
+                );
             $chartsArray = $this->getChart($fundedQuantityCountByCategoryTopArr, $chartName,'pie',$layoutArray," : ",null,null,"percent+label");
         }
 
-        //14. TRP Service Productivity for Non-Funded Projects (Top 10)
+        //14. Service Productivity for Non-Funded Projects (Top 10)
         if( $chartType == "service-productivity-by-service-per-nonfunded-projects" ) {
             $unFundedQuantityCountByCategoryArr = array();
 
@@ -2358,7 +2364,7 @@ class DashboardUtil
                         if( $transRequest->getFundedAccountNumber() ) {
                             //do nothing
                         } else {
-                            //11. TRP Service Productivity for non-Funded projects (Top 10)
+                            //11. Service Productivity for Non-Funded Projects (Top 10)
                             if (isset($unFundedQuantityCountByCategoryArr[$categoryIndex])) {
                                 $count = $unFundedQuantityCountByCategoryArr[$categoryIndex] + $productQuantity;
                             } else {
@@ -2371,9 +2377,15 @@ class DashboardUtil
                 }
             }//foreach $requests
 
-            $chartName = $this->getTitleWithTotal($chartName,$titleCount);
-            $showOther = $this->getOtherStr($showLimited,"projects");
-            $unFundedQuantityCountByCategoryTopArr = $this->getTopArray($unFundedQuantityCountByCategoryArr,$showOther);
+            $chartName = $this->getTitleWithTotal($chartName,$titleCount,null,"items total");
+            $showOther = $this->getOtherStr($showLimited,"items");
+            $unFundedQuantityCountByCategoryTopArr = $this->getTopArray(
+                $unFundedQuantityCountByCategoryArr,
+                $showOther,
+                array(),                        //$descriptionArr=array()
+                50,                             //$maxLen=50
+                25                              //$limit
+            );
             $chartsArray = $this->getChart($unFundedQuantityCountByCategoryTopArr, $chartName,'pie',$layoutArray," : ",null,null,"percent+label");
         }
 
@@ -2399,7 +2411,7 @@ class DashboardUtil
                             }
                             $fundedQuantityCountByCategoryArr[$categoryIndex] = $count;
                         } else {
-                            //11. TRP Service Productivity for non-Funded projects (Top 10)
+                            //11. Service Productivity for Non-Funded Projects (Top 10)
                             if (isset($unFundedQuantityCountByCategoryArr[$categoryIndex])) {
                                 $count = $unFundedQuantityCountByCategoryArr[$categoryIndex] + $productQuantity;
                             } else {
