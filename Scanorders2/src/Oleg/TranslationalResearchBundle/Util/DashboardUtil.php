@@ -92,7 +92,7 @@ class DashboardUtil
             "22. Paid Invoices by Month" =>                              "fees-by-invoices-paid-per-month",
             "23. Generated Invoices for Funded Projects" =>              "fees-by-invoices-per-funded-projects",
             "24. Generated Invoices for Non-Funded Projects (Top 10)" =>  "fees-by-invoices-per-nonfunded-projects",
-            "25. Generated Invoices per PI (Top 10)" =>                   "fees-by-invoices-per-pi",
+            "25. Total Invoiced Amounts by PI (Top 10)" =>                   "fees-by-invoices-per-pi",
             //Pathologists Involved and number of projects
             "26. Total Invoiced Amounts for Projects per Pathologist Involved (Top 10)" =>             "fees-by-invoices-per-projects-per-pathologist-involved",
             "27. Total Invoiced Amounts for Funded Projects per Pathologist Involved (Top 10)" =>      "fees-by-invoices-per-funded-projects-per-pathologist-involved",
@@ -2906,6 +2906,12 @@ class DashboardUtil
 
             }//foreach invoices
 
+            //invoice vs invoices
+            $invoiceStr = "invoice";
+            if( $totalInvoices > 1 ) {
+                $invoiceStr = "invoices";
+            }
+
             $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($titleCount),"$");
             //Generated Invoices by Status per Funded Project (Top 10)
             $showOther = $this->getOtherStr($showLimited,"projects");
@@ -2913,7 +2919,7 @@ class DashboardUtil
             $invoicesFeesByProjectTopArr = $this->getTopArray($invoicesFeesByProjectArr,$showOther);
             //merge two to attach fees to label
             $invoicesByProjectTopArr = $this->attachSecondValueToFirstLabel($invoicesByProjectTopArr,$invoicesFeesByProjectTopArr," : $");
-            $chartsArray = $this->getChart($invoicesByProjectTopArr,$chartName." (".$totalInvoices." invoices)",'pie',$layoutArray,null,null,null,"percent+label");
+            $chartsArray = $this->getChart($invoicesByProjectTopArr,$chartName." (".$totalInvoices." ".$invoiceStr.")",'pie',$layoutArray,null,null,null,"percent+label");
 
             if( is_array($chartsArray) && count($chartsArray) == 0 ) {
                 $warningNoData = "There are no invoices associated with un-funded project requests during the selected time frame.".
@@ -2921,7 +2927,7 @@ class DashboardUtil
             }
         }
 
-        //24. Generated Invoices by Status per PI (Top 10)
+        //25. Total Invoiced Amounts by PI (Top 10)
         if( $chartType == "fees-by-invoices-per-pi" ) {
             $invoicesFeesByPiArr = array();
             $invoicePaidFeeArr = array();
