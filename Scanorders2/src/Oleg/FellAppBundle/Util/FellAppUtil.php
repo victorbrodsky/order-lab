@@ -350,10 +350,10 @@ class FellAppUtil {
 //    }
 
 
-    //check if the user can view this fellapp application
+    //check if the user can view this fellapp application: user is Observers/Interviewers or hasSameFellowshipTypeId
     public function hasFellappPermission( $user, $fellapp ) {
 
-        $res = false;
+        //$res = false;
 
         $userSecUtil = $this->container->get('user_security_utility');
         if( $userSecUtil->hasGlobalUserRole( "ROLE_FELLAPP_ADMIN", $user ) ) {
@@ -362,20 +362,25 @@ class FellAppUtil {
 
         //if user is observer of this fellapp
         if( $fellapp->getObservers()->contains($user) ) {
-            $res = true;
+            return true;
+        }
+
+        //if user is interviewer of this fellapp
+        if( $fellapp->getInterviews()->contains($user) ) {
+            return true;
         }
 
         //echo "res=".$res."<br>";
 
         //if user has the same fellapp type as this fellapp
         if( $fellapp->getFellowshipSubspecialty() && $this->hasSameFellowshipTypeId($user, $fellapp->getFellowshipSubspecialty()->getId()) ) {
-            $res = true;
+            return true;
         }
 
         //echo "res=".$res."<br>";
         //exit('1');
 
-        return $res;
+        return false;
     }
 
     //check fellowship types based on the user roles

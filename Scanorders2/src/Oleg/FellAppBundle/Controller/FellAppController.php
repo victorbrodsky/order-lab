@@ -691,13 +691,17 @@ class FellAppController extends Controller {
         //$fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
         //$fellappRecLetterUtil->generateFellappRecLetterId($entity);
         //exit('testing');
-        
+
+//        if( false == $this->get('security.authorization_checker')->isGranted("interview",$entity) ) {
+//            exit('fellapp interview permission not ok ID:'.$entity->getId());
+//        }
+
         //user who has the same fell type can view or edit
         //can use hasFellappPermission or isGranted("read",$entity). isGranted("read",$entity) fellapp voter contains hasFellappPermission
         //$fellappUtil = $this->container->get('fellapp_util');
         //if( $fellappUtil->hasFellappPermission($user,$entity) == false ) {
         if( false == $this->get('security.authorization_checker')->isGranted("read",$entity) ) {
-            //exit('fellapp permission not ok ID:'.$entity->getId());
+            //exit('fellapp read permission not ok ID:'.$entity->getId());
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
         //exit('fellapp permission ok ID:'.$entity->getId());

@@ -257,6 +257,7 @@ class UserRepository extends EntityRepository {
         //check if user's roles have permission
         $atLeastOne = true;
         $roles = $this->findUserRolesByObjectAction($user, $object, $action, $atLeastOne );
+        //echo "findUserRolesByObjectAction roles=".count($roles)."<br>";
 
         if( count($roles) > 0 ) {
             //echo "findUserRolesByObjectAction!!! object=".$object."<br>";
@@ -303,7 +304,7 @@ class UserRepository extends EntityRepository {
 
         //check if user has one of roles
         foreach( $roles as $role ) {
-            //echo "role=".$role."<br>";
+            //echo $action.": role=".$role."<br>";
             if( $user->hasRole($role) ) {
                 if( $role && !$userRoles->contains($role) ) {
                     $userRoles->add($role);

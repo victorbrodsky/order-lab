@@ -352,6 +352,7 @@ abstract class BasePermissionVoter extends Voter {
             //don't perform this check for dummy, empty objects
             if( $subject->getId() && $subject->getInstitution() ) {
                 if( $securityUtil->isObjectUnderUserPermittedCollaboratedInstitutions($subject, $user, array("Union")) == false ) {
+                    //echo "User is not under permitted institution or collaboration <br>";
                     return false;
                 }
             }
