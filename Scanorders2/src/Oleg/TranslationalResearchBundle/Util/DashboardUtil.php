@@ -2773,10 +2773,10 @@ class DashboardUtil
 
             //increase vertical
             $layoutArray = array(
-                'height' => $this->height*1.5,
+                'height' => $this->height*1.3,
                 'width' => $this->width,
                 'title' => $chartName,
-                'margin' => array('b' => 600)
+                'margin' => array('b' => 300)
             );
 
             //$dataArr, $title, $type='pie', $layoutArray=null, $valuePrefixLabel=null, $valuePostfixLabel=null, $descriptionArr=array()
