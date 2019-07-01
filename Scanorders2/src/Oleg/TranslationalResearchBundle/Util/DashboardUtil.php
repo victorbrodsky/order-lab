@@ -2771,6 +2771,14 @@ class DashboardUtil
 
             $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($totalPaidInvoiceFee),"$","Total");
 
+            //increase vertical
+            $layoutArray = array(
+                'height' => $this->height*1.5,
+                'width' => $this->width,
+                'title' => $chartName,
+                'margin' => array('b' => 600)
+            );
+
             //$dataArr, $title, $type='pie', $layoutArray=null, $valuePrefixLabel=null, $valuePostfixLabel=null, $descriptionArr=array()
             $chartsArray = $this->getChart($paidArr,$chartName,'bar',$layoutArray,"$",null,$descriptionArr,"percent+label"); // getChart(
         }
