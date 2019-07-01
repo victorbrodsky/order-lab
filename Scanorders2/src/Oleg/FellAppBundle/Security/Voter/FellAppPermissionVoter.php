@@ -47,14 +47,16 @@ class FellAppPermissionVoter extends BasePermissionVoter
         //exit('fellapp canView');
 
         //can view if user is an interviewer or observer
-        if( $this->fellappAdditionalCheck($subject,$token) ) {
-            return true;
+        if( is_object($subject) ) {
+            if( $this->isObserverOrInterviewer($subject, $token) ) {
+                return true;
+            }
         }
 
         if( parent::canView($subject,$token) ) {
             //exit('fellapp parent canView parent ok');
-            //return $this->fellappAdditionalCheck($subject,$token);
-            return true;
+            return $this->fellappAdditionalCheck($subject,$token);
+            //return true;
         }
         //exit('fellapp canView false');
 
@@ -85,6 +87,29 @@ class FellAppPermissionVoter extends BasePermissionVoter
         }
 
         return true;
+    }
+
+    public function isObserverOrInterviewer($subject,$token) {
+        if( is_object($subject) ) {
+            $user = $token->getUser();
+
+            //echo $subject->getId().": check if user is observer <br>";
+            //if user is observer of this fellapp
+            if( $subject->getObservers()->contains($user) ) {
+                //echo "user is observer!!! <br>";
+                return true;
+            }
+
+            //echo $subject->getId().": check if user is interviewer <br>";
+            //if user is interviewer of this fellapp
+            //if( $subject->getInterviews()->contains($user) ) {
+            if( $subject->getInterviewByUser($user) ) {
+                //echo "user is interviewer!!! <br>";
+                return true;
+            }
+        }
+
+        return false;
     }
 
 

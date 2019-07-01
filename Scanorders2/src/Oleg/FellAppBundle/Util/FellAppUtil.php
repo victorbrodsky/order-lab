@@ -366,7 +366,8 @@ class FellAppUtil {
         }
 
         //if user is interviewer of this fellapp
-        if( $fellapp->getInterviews()->contains($user) ) {
+        //if( $fellapp->getInterviews()->contains($user) ) {
+        if( $fellapp->getInterviewByUser($user) ) {
             return true;
         }
 

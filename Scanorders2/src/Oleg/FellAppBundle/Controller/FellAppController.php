@@ -1880,7 +1880,7 @@ class FellAppController extends Controller {
 
         //echo "status <br>";
 
-        if (false == $this->get('security.authorization_checker')->isGranted("create", "Interview")) {
+        if( false == $this->get('security.authorization_checker')->isGranted("create", "Interview") ) {
             return $this->redirect($this->generateUrl('fellapp-nopermission'));
         }
 
