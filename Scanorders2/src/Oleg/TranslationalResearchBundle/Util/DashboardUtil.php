@@ -2725,7 +2725,7 @@ class DashboardUtil
 
             $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($titleCount),"$");
             $showOther = $this->getOtherStr($showLimited,"Investigators");
-            $unFundedTotalFeesByInvestigatorTopArr = $this->getTopArray($unFundedTotalFeesByInvestigatorArr,$showOther);
+            $unFundedTotalFeesByInvestigatorTopArr = $this->getTopArray($unFundedTotalFeesByInvestigatorArr,$showOther); //21vs25
             $chartsArray = $this->getChart($unFundedTotalFeesByInvestigatorTopArr, $chartName,'pie',$layoutArray," : $",null,null,"percent+label");
         }
 
@@ -3017,12 +3017,12 @@ class DashboardUtil
                 ),
             );
 
-            $showOther = $this->getOtherStr($showLimited,"PIs");
+            $showOther = $this->getOtherStr($showLimited,"PIs"); //21vs25
             $invoicesFeesByPiArrTop = $this->getTopArray($invoicesFeesByPiArr,$showOther,$descriptionArr);
-            $chartsArray = $this->getChart($invoicesFeesByPiArrTop,$chartName,'pie',$layoutArray,null,null,null,"percent+label");
+            $chartsArray = $this->getChart($invoicesFeesByPiArrTop,$chartName,'pie',$layoutArray," : $",null,null,"percent+label");
         }
 
-        //"25. Total Invoiced Amounts of Projects per Pathologist Involved (Top 10)" =>             "fees-by-invoices-per-projects-per-pathologist-involved",
+        //"26. Total Invoiced Amounts of Projects per Pathologist Involved (Top 10)" =>             "fees-by-invoices-per-projects-per-pathologist-involved",
         if( $chartType == "fees-by-invoices-per-projects-per-pathologist-involved" ) {
             $invoicesFeesByPathologistArr = array();
             $invoicePaidFeeArr = array();
