@@ -3461,7 +3461,8 @@ class DashboardUtil
                 }
             }
 
-            $chartName = $this->getTitleWithTotal($chartName,$titleCount);
+            $chartName = $this->getTitleWithTotal($chartName,$titleCount,null,"work requests total");
+
             $showOther = $this->getOtherStr($showLimited,"Business Purposes");
             $requestBusinessPurposeArrTop = $this->getTopArray($requestBusinessPurposeArr,$showOther,$quantityLimit);
             $chartsArray = $this->getChart($requestBusinessPurposeArrTop, $chartName,'pie',$layoutArray," : ",null,null,"percent+label");
