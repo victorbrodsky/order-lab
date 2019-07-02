@@ -190,9 +190,7 @@ class DashboardUtil
     public function getTopArray($piProjectCountArr, $showOthers=false, $limit=10, $descriptionArr=array(), $maxLen=50) {
         arsort($piProjectCountArr);
         //$limit = 10;
-
         //$limit = $this->quantityLimit;
-
         //$limit = 3;
         //$showOthers = true;
         //$otherId = "All other $showOthers combined";
@@ -260,6 +258,9 @@ class DashboardUtil
                     } else {
                         $valueLabel = $valueLabel;
                     }
+
+                    //$valueLabel = $valueLabel . ": " . $value; //testing
+
                     $index = $index . " " . $valuePrefix . $valueLabel . $valuePostfix . " (" . implode(", ",$descr) . ")";
                 }
 
@@ -284,7 +285,6 @@ class DashboardUtil
         //$limit = 10;
         //$limit = 3;
         //$showOthers = true;
-
         //if( !$showOthers ) {
             //“Show only the top 10” - if it is checked, show only the top ten projects, if it is not checked, show the top 100
             //$limit = 20;
@@ -394,6 +394,19 @@ class DashboardUtil
         return $res;    //implode(array_slice($parts, 0, $last_part)).$postfix;
     }
 
+    public function addValueToOther($arrTop,$prefix=": $") {
+        $newArrTop = array();
+        foreach($arrTop as $label => $value) {
+            if( strpos($label, ' other ') !== false ) {
+                $label = $label . $prefix . $value;
+                $newArrTop[$label] = $value;
+            } else {
+                $newArrTop[$label] = $value;
+            }
+        }
+        return $newArrTop;
+    }
+
     public function adjustBrightness($hex, $steps) {
         // Steps should be between -255 and 255. Negative = darker, positive = lighter
         $steps = max(-255, min(255, $steps));
@@ -417,7 +430,7 @@ class DashboardUtil
         return $return;
     }
 
-    public function getChart( $dataArr, $title, $type='pie', $layoutArray=null, $valuePrefixLabel=null, $valuePostfixLabel=null, $descriptionArr=null, $hoverinfo=null ) {
+    public function getChart( $dataArr, $title, $type='pie', $layoutArray=null, $valuePrefixLabel=null, $valuePostfixLabel=null, $descriptionArr=null, $hoverinfo=null) {
 
         if( count($dataArr) == 0 ) {
             return array();
@@ -1143,6 +1156,25 @@ class DashboardUtil
         return $projects;
     }
 
+    public function getChartNameWithTop($chartName,$quantityLimit) {
+//        if( !$quantityLimit ) {
+//            $quantityLimit = 10;
+//        }
+        if (strpos($chartName, "Top 10") !== false) {
+            $chartNameModified = str_replace("Top 10","Top ".$quantityLimit,$chartName);
+        }
+        if (strpos($chartName, "Top 25") !== false) {
+            $chartNameModified = str_replace("Top 25","Top ".$quantityLimit,$chartName);
+        }
+        if (strpos($chartName, "Top 35") !== false) {
+            $chartNameModified = str_replace("Top 35","Top ".$quantityLimit,$chartName);
+        }
+        if (strpos($chartName, "Top 50") !== false) {
+            $chartNameModified = str_replace("Top 50","Top ".$quantityLimit,$chartName);
+        }
+        return $chartNameModified;
+    }
+
     public function getTitleWithTotal($chartName,$total,$prefix=null,$postfix="total") {
         //$postfix = "total quantity";
         //$postfix = "total";
@@ -1521,6 +1553,8 @@ class DashboardUtil
 
         $titleCount = 0;
         $chartName = $this->getChartTypeByValue($chartType);
+
+        $chartName = $this->getChartNameWithTop($chartName,$quantityLimit);
 
         $chartsArray = null;
         $warningNoData = null;
@@ -3035,8 +3069,13 @@ class DashboardUtil
             $showOther = $this->getOtherStr($showLimited,"PIs"); //21vs25
             $invoicesFeesByPiArrTop = $this->getTopArray($invoicesFeesByPiArr,$showOther,$quantityLimit,$descriptionArr);
 
+            //attach value to other
+            $invoicesFeesByPiArrTop = $this->addValueToOther($invoicesFeesByPiArrTop);
+
             $chartsArray = $this->getChart($invoicesFeesByPiArrTop,$chartName,'pie',$layoutArray,null,null,null,"percent+label");
-            //$chartsArray = $this->getChart($invoicesFeesByPiArrTop,$chartName,'pie',$layoutArray," : $",null,null,"percent+label");
+
+            //$dataArr, $title, $type='pie', $layoutArray=null, $valuePrefixLabel=null, $valuePostfixLabel=null, $descriptionArr=null, $hoverinfo=null
+            //$chartsArray = $this->getChart($invoicesFeesByPiArrTop,$chartName,'pie',$layoutArray," : $",null,null,"percent+label","for-other"); // getChart(
         }
 
         //"26. Total Invoiced Amounts of Projects per Pathologist Involved (Top 10)" =>             "fees-by-invoices-per-projects-per-pathologist-involved",
