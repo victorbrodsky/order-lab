@@ -318,7 +318,6 @@
 
                         {% set startDate = "now"|date_modify("-1 year")|date("m/d/Y") %}
                         {% set endDate = "now"|date("m/d/Y") %}
-                        {% set quantityLimit = 10 %}
 
                         <li id="nav-bar-translationalresearch-dashboard" class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dashboards<b class="caret"></b></a>
@@ -329,7 +328,6 @@
                                     {
                                         'filter[startDate]':startDate,
                                         'filter[endDate]':endDate,
-                                        'filter[quantityLimit]':quantityLimit,
                                         'filter[projectSpecialty][]':0
                                     }) }}"
                                     >All statistics</a>
@@ -361,7 +359,6 @@
                                     {
                                         'filter[startDate]':startDate,
                                         'filter[endDate]':endDate,
-                                        'filter[quantityLimit]':quantityLimit,
                                         'filter[projectSpecialty][]':0,
                                         'filter[chartType][0]':'compare-projectspecialty-pis',
                                         'filter[chartType][1]':'compare-projectspecialty-projects',
@@ -377,7 +374,6 @@
                                         {
                                             'filter[startDate]':startDate,
                                             'filter[endDate]':endDate,
-                                            'filter[quantityLimit]':quantityLimit,
                                             'filter[projectSpecialty][]':0,
                                             'filter[chartType][0]':'pi-by-affiliation',
                                             'filter[chartType][1]':'projects-per-pi',
@@ -395,7 +391,6 @@
                                     {
                                         'filter[startDate]':startDate,
                                         'filter[endDate]':endDate,
-                                        'filter[quantityLimit]':quantityLimit,
                                         'filter[projectSpecialty][]':0,
                                         'filter[chartType][1]':'requests-by-funding-source',
                                         'filter[chartType][2]':'requests-per-project',
@@ -414,7 +409,6 @@
                                     {
                                         'filter[startDate]':startDate,
                                         'filter[endDate]':endDate,
-                                        'filter[quantityLimit]':quantityLimit,
                                         'filter[projectSpecialty][]':0,
                                         'filter[chartType][1]':'fees-by-requests',
                                         'filter[chartType][2]':'fees-by-requests-per-funded-projects',
@@ -438,7 +432,6 @@
                                         'filter[startDate]':startDate,
                                         'filter[endDate]':endDate,
                                         'filter[projectSpecialty][]':0,
-                                        'filter[quantityLimit]':quantityLimit,
                                         'filter[chartType][0]':'fees-by-invoices-paid-per-month',
                                         'filter[chartType][1]':'fees-by-invoices-per-funded-projects',
                                         'filter[chartType][2]':'fees-by-invoices-per-nonfunded-projects',
@@ -455,7 +448,6 @@
                                         'filter[startDate]':startDate,
                                         'filter[endDate]':endDate,
                                         'filter[projectSpecialty][]':0,
-                                        'filter[quantityLimit]':quantityLimit,
                                         'filter[chartType][1]':'turn-around-statistics-days-complete-request',
                                         'filter[chartType][2]':'turn-around-statistics-days-complete-per-request',
                                         'filter[chartType][3]':'turn-around-statistics-days-complete-per-request-with-product',

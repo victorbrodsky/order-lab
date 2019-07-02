@@ -187,11 +187,11 @@ class DashboardUtil
     }
 
     //select top 10 ($limit), BUT make sure the other PIs are still shown as "Other"
-    public function getTopArray($piProjectCountArr, $showOthers=false, $descriptionArr=array(), $maxLen=50, $limit=10) {
+    public function getTopArray($piProjectCountArr, $showOthers=false, $limit=10, $descriptionArr=array(), $maxLen=50) {
         arsort($piProjectCountArr);
         //$limit = 10;
 
-        $limit = $this->quantityLimit;
+        //$limit = $this->quantityLimit;
 
         //$limit = 3;
         //$showOthers = true;
@@ -271,7 +271,7 @@ class DashboardUtil
 
         return $piProjectCountTopArr;
     }
-    public function getTopMultiArray($piProjectCountArr, $showOthers=false, $descriptionArr=array(), $maxLen=50, $limit=10) {
+    public function getTopMultiArray($piProjectCountArr, $showOthers=false, $limit=10, $descriptionArr=array(), $maxLen=50) {
         //arsort($piProjectCountArr);
         usort($piProjectCountArr, function($a, $b) {
             return $b['value'] - $a['value'];
@@ -1763,7 +1763,7 @@ class DashboardUtil
             //exit('111');
 
             $showOther = $this->getOtherStr($showLimited,"PIs");
-            $piProjectCountTopArr = $this->getTopMultiArray($piProjectCountArr,$showOther); // getTopMultiArray(
+            $piProjectCountTopArr = $this->getTopMultiArray($piProjectCountArr,$showOther,$quantityLimit); // getTopMultiArray(
             $filterArr['funded'] = null;
 
             //135 project requests (129 unique) total
@@ -1816,7 +1816,7 @@ class DashboardUtil
             }//foreach $projects
 
             $showOther = $this->getOtherStr($showLimited,"PIs");
-            $piFundedProjectCountTopArr = $this->getTopMultiArray($piFundedProjectCountArr,$showOther);
+            $piFundedProjectCountTopArr = $this->getTopMultiArray($piFundedProjectCountArr,$showOther,$quantityLimit);
 
             $totalSegmentCount = $this->getTotalSegmentCount($piFundedProjectCountTopArr);
             $chartName = $this->getTitleWithTotal($chartName,$totalSegmentCount,null,"project requests ($titleCount unique) total");
@@ -1865,7 +1865,7 @@ class DashboardUtil
             }//foreach $projects
 
             $showOther = $this->getOtherStr($showLimited,"PIs");
-            $piUnFundedProjectCountTopArr = $this->getTopMultiArray($piUnFundedProjectCountArr,$showOther);
+            $piUnFundedProjectCountTopArr = $this->getTopMultiArray($piUnFundedProjectCountArr,$showOther,$quantityLimit);
 
             $totalSegmentCount = $this->getTotalSegmentCount($piUnFundedProjectCountTopArr);
             $chartName = $this->getTitleWithTotal($chartName,$totalSegmentCount,null,"project requests ($titleCount unique) total");
@@ -1918,7 +1918,7 @@ class DashboardUtil
 //            $chartsArray = $this->getChartByMultiArray( $piProjectCountMultiTopArr, $filterArr, "2a. Total number of projects per Pathologist Involved (Top 10)","pie",null," : ");
 
             $showOther = $this->getOtherStr($showLimited,"pathologists involved");
-            $pathologistProjectCountTopArr = $this->getTopArray($pathologistProjectCountArr,$showOther);
+            $pathologistProjectCountTopArr = $this->getTopArray($pathologistProjectCountArr,$showOther,$quantityLimit);
 
             $totalSegmentCount = $this->getTotalSegmentCount($pathologistProjectCountTopArr);
             $chartName = $this->getTitleWithTotal($chartName,$totalSegmentCount,null,"project requests ($titleCount unique) total");
@@ -1953,7 +1953,7 @@ class DashboardUtil
             }//foreach $projects
 
             $showOther = $this->getOtherStr($showLimited,"pathologists involved");
-            $pathologistFundedProjectCountTopArr = $this->getTopArray($pathologistFundedProjectCountArr,$showOther);
+            $pathologistFundedProjectCountTopArr = $this->getTopArray($pathologistFundedProjectCountArr,$showOther,$quantityLimit);
 
             $totalSegmentCount = $this->getTotalSegmentCount($pathologistFundedProjectCountTopArr);
             $chartName = $this->getTitleWithTotal($chartName,$totalSegmentCount,null,"project requests ($titleCount unique) total");
@@ -1993,7 +1993,7 @@ class DashboardUtil
             }//foreach $projects
 
             $showOther = $this->getOtherStr($showLimited,"pathologists involved");
-            $pathologistNonFundedProjectCountTopArr = $this->getTopArray($pathologistNonFundedProjectCountArr,$showOther);
+            $pathologistNonFundedProjectCountTopArr = $this->getTopArray($pathologistNonFundedProjectCountArr,$showOther,$quantityLimit);
 
             $totalSegmentCount = $this->getTotalSegmentCount($pathologistNonFundedProjectCountTopArr);
             $chartName = $this->getTitleWithTotal($chartName,$totalSegmentCount,null,"project requests ($titleCount unique) total");
@@ -2191,7 +2191,7 @@ class DashboardUtil
 
             $chartName = $this->getTitleWithTotal($chartName,$titleCount,null,"work requests total");
             $showOther = $this->getOtherStr($showLimited,"projects");
-            $requestPerProjectTopArr = $this->getTopMultiArray($requestPerProjectArr,$showOther);
+            $requestPerProjectTopArr = $this->getTopMultiArray($requestPerProjectArr,$showOther,$quantityLimit);
             $filterArr['funded'] = null;
             $chartsArray = $this->getChartByMultiArray($requestPerProjectTopArr, $filterArr, $chartName,"pie",$layoutArray," : ","percent+label");
         }
@@ -2234,7 +2234,7 @@ class DashboardUtil
 
             $chartName = $this->getTitleWithTotal($chartName,$titleCount,null,"work requests total");
             $showOther = $this->getOtherStr($showLimited,"projects");
-            $fundedRequestPerProjectTopArr = $this->getTopMultiArray($fundedRequestPerProjectArr,$showOther);
+            $fundedRequestPerProjectTopArr = $this->getTopMultiArray($fundedRequestPerProjectArr,$showOther,$quantityLimit);
             $filterArr['funded'] = true;
             $chartsArray = $this->getChartByMultiArray( $fundedRequestPerProjectTopArr, $filterArr, $chartName,"pie",$layoutArray," : ","percent+label");
         }
@@ -2278,7 +2278,7 @@ class DashboardUtil
 
             $chartName = $this->getTitleWithTotal($chartName,$titleCount,null,"work requests total");
             $showOther = $this->getOtherStr($showLimited,"projects");
-            $unFundedRequestPerProjectTopArr = $this->getTopMultiArray($unFundedRequestPerProjectArr,$showOther);
+            $unFundedRequestPerProjectTopArr = $this->getTopMultiArray($unFundedRequestPerProjectArr,$showOther,$quantityLimit);
             $filterArr['funded'] = false;
             $chartsArray = $this->getChartByMultiArray( $unFundedRequestPerProjectTopArr, $filterArr, $chartName,"pie",$layoutArray," : ","percent+label");
         }
@@ -2314,9 +2314,10 @@ class DashboardUtil
             $quantityCountByCategoryTopArr = $this->getTopArray(
                 $quantityCountByCategoryArr,    //$dataCountArr
                 $showOther,                     //$showOthers
-                array(),                        //$descriptionArr=array()
-                50,                             //$maxLen=50
-                3//35                              //$limit
+                $quantityLimit
+                //array(),                        //$descriptionArr=array()
+                //50                              //$maxLen=50
+                //35                              //$limit
             );
             $layoutArray = array(
                 'height' => $this->height,
@@ -2356,9 +2357,10 @@ class DashboardUtil
             $fundedQuantityCountByCategoryTopArr = $this->getTopArray(
                 $fundedQuantityCountByCategoryArr,
                 $showOther,
-                array(),                        //$descriptionArr=array()
-                50,                             //$maxLen=50
-                25                              //$limit
+                $quantityLimit
+                //array(),                        //$descriptionArr=array()
+                //50,                             //$maxLen=50
+                //25                              //$limit
                 );
             $chartsArray = $this->getChart($fundedQuantityCountByCategoryTopArr, $chartName,'pie',$layoutArray," : ",null,null,"percent+label");
         }
@@ -2396,9 +2398,10 @@ class DashboardUtil
             $unFundedQuantityCountByCategoryTopArr = $this->getTopArray(
                 $unFundedQuantityCountByCategoryArr,
                 $showOther,
-                array(),                        //$descriptionArr=array()
-                50,                             //$maxLen=50
-                25                              //$limit
+                $quantityLimit
+                //array(),                        //$descriptionArr=array()
+                //50,                             //$maxLen=50
+                //25                              //$limit
             );
             $chartsArray = $this->getChart($unFundedQuantityCountByCategoryTopArr, $chartName,'pie',$layoutArray," : ",null,null,"percent+label");
         }
@@ -2575,7 +2578,7 @@ class DashboardUtil
 
             $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($titleCount),"$");
             $showOther = $this->getOtherStr($showLimited,"projects");
-            $fundedTotalFeesByRequestTopArr = $this->getTopArray($fundedTotalFeesByRequestArr,$showOther);
+            $fundedTotalFeesByRequestTopArr = $this->getTopArray($fundedTotalFeesByRequestArr,$showOther,$quantityLimit);
             $chartsArray = $this->getChart($fundedTotalFeesByRequestTopArr, $chartName,'pie',$layoutArray," : $",null,null,"percent+label");
         }
 
@@ -2623,7 +2626,7 @@ class DashboardUtil
 
             $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($titleCount),"$");
             $showOther = $this->getOtherStr($showLimited,"projects");
-            $unFundedTotalFeesByRequestTopArr = $this->getTopArray($unFundedTotalFeesByRequestArr,$showOther);
+            $unFundedTotalFeesByRequestTopArr = $this->getTopArray($unFundedTotalFeesByRequestArr,$showOther,$quantityLimit);
             $chartsArray = $this->getChart($unFundedTotalFeesByRequestTopArr, $chartName,'pie',$layoutArray," : $",null,null,"percent+label");
         }
 
@@ -2660,7 +2663,7 @@ class DashboardUtil
 
             $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($titleCount),"$");
             $showOther = $this->getOtherStr($showLimited,"Investigators");
-            $totalFeesByInvestigatorTopArr = $this->getTopArray($totalFeesByInvestigatorArr,$showOther);
+            $totalFeesByInvestigatorTopArr = $this->getTopArray($totalFeesByInvestigatorArr,$showOther,$quantityLimit);
             $chartsArray = $this->getChart($totalFeesByInvestigatorTopArr, $chartName,'pie',$layoutArray," : $",null,null,"percent+label");
         }
 
@@ -2697,7 +2700,7 @@ class DashboardUtil
 
             $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($titleCount),"$");
             $showOther = $this->getOtherStr($showLimited,"Investigators");
-            $fundedTotalFeesByInvestigatorTopArr = $this->getTopArray($fundedTotalFeesByInvestigatorArr,$showOther);
+            $fundedTotalFeesByInvestigatorTopArr = $this->getTopArray($fundedTotalFeesByInvestigatorArr,$showOther,$quantityLimit);
             $chartsArray = $this->getChart($fundedTotalFeesByInvestigatorTopArr, $chartName,'pie',$layoutArray," : $",null,null,"percent+label");
         }
 
@@ -2737,7 +2740,7 @@ class DashboardUtil
 
             $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($titleCount),"$");
             $showOther = $this->getOtherStr($showLimited,"Investigators");
-            $unFundedTotalFeesByInvestigatorTopArr = $this->getTopArray($unFundedTotalFeesByInvestigatorArr,$showOther); //21vs25
+            $unFundedTotalFeesByInvestigatorTopArr = $this->getTopArray($unFundedTotalFeesByInvestigatorArr,$showOther,$quantityLimit); //21vs25
             $chartsArray = $this->getChart($unFundedTotalFeesByInvestigatorTopArr, $chartName,'pie',$layoutArray," : $",null,null,"percent+label");
         }
 
@@ -2927,8 +2930,8 @@ class DashboardUtil
             $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($titleCount),"$");
             //Generated Invoices by Status per Funded Project (Top 10)
             $showOther = $this->getOtherStr($showLimited,"projects");
-            $invoicesByProjectTopArr = $this->getTopArray($invoicesByProjectArr,$showOther);
-            $invoicesFeesByProjectTopArr = $this->getTopArray($invoicesFeesByProjectArr,$showOther);
+            $invoicesByProjectTopArr = $this->getTopArray($invoicesByProjectArr,$showOther,$quantityLimit);
+            $invoicesFeesByProjectTopArr = $this->getTopArray($invoicesFeesByProjectArr,$showOther,$quantityLimit);
             //merge two to attach fees to label
             $invoicesByProjectTopArr = $this->attachSecondValueToFirstLabel($invoicesByProjectTopArr,$invoicesFeesByProjectTopArr," : $");
             $chartsArray = $this->getChart($invoicesByProjectTopArr,$chartName." (".$totalInvoices." ".$invoiceStr.")",'pie',$layoutArray,null,null,null,"percent+label");
@@ -3030,7 +3033,7 @@ class DashboardUtil
             );
 
             $showOther = $this->getOtherStr($showLimited,"PIs"); //21vs25
-            $invoicesFeesByPiArrTop = $this->getTopArray($invoicesFeesByPiArr,$showOther,$descriptionArr);
+            $invoicesFeesByPiArrTop = $this->getTopArray($invoicesFeesByPiArr,$showOther,$quantityLimit,$descriptionArr);
 
             $chartsArray = $this->getChart($invoicesFeesByPiArrTop,$chartName,'pie',$layoutArray,null,null,null,"percent+label");
             //$chartsArray = $this->getChart($invoicesFeesByPiArrTop,$chartName,'pie',$layoutArray," : $",null,null,"percent+label");
@@ -3114,7 +3117,7 @@ class DashboardUtil
             );
 
             $showOther = $this->getOtherStr($showLimited,"pathologists involved");
-            $invoicesFeesByPathologistArrTop = $this->getTopArray($invoicesFeesByPathologistArr,$showOther,$descriptionArr);
+            $invoicesFeesByPathologistArrTop = $this->getTopArray($invoicesFeesByPathologistArr,$showOther,$quantityLimit,$descriptionArr);
             $chartsArray = $this->getChart($invoicesFeesByPathologistArrTop, $chartName,'pie',$layoutArray,null,null,null,"percent+label");
         }
 
@@ -3197,7 +3200,7 @@ class DashboardUtil
             );
 
             $showOther = $this->getOtherStr($showLimited,"pathologists involved");
-            $invoicesFeesByPathologistArrTop = $this->getTopArray($invoicesFeesByPathologistArr,$showOther,$descriptionArr);
+            $invoicesFeesByPathologistArrTop = $this->getTopArray($invoicesFeesByPathologistArr,$showOther,$quantityLimit,$descriptionArr);
             $chartsArray = $this->getChart($invoicesFeesByPathologistArrTop, $chartName,'pie',$layoutArray,null,null,null,"percent+label");
         }
         ///////////////// EOF "26. Total Invoiced Amounts of Funded Projects per Pathologist Involved (Top 10)" /////////////////
@@ -3282,7 +3285,7 @@ class DashboardUtil
             );
 
             $showOther = $this->getOtherStr($showLimited,"pathologists involved");
-            $invoicesFeesByPathologistArrTop = $this->getTopArray($invoicesFeesByPathologistArr,$showOther,$descriptionArr);
+            $invoicesFeesByPathologistArrTop = $this->getTopArray($invoicesFeesByPathologistArr,$showOther,$quantityLimit,$descriptionArr);
             $chartsArray = $this->getChart($invoicesFeesByPathologistArrTop, $chartName." (".$totalInvoices." invoices)",'pie',$layoutArray,null,null,null,"percent+label");
 
             if( is_array($chartsArray) && count($chartsArray) == 0 ) {
@@ -3327,7 +3330,7 @@ class DashboardUtil
             $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($titleCount),"$");
 
             $showOther = $this->getOtherStr($showLimited,"pathologists involved combined");
-            $invoicesFeesByPathologistArrTop = $this->getTopArray($invoicesFeesByPathologistArr,$showOther);
+            $invoicesFeesByPathologistArrTop = $this->getTopArray($invoicesFeesByPathologistArr,$showOther,$quantityLimit);
             $chartsArray = $this->getChart($invoicesFeesByPathologistArrTop, $chartName,'pie',$layoutArray);
         }
         ///////////// EOF "23. Total Invoiced Amounts of Non-Funded Projects per Pathologist Involved (Top 10)" /////////////
@@ -3363,7 +3366,7 @@ class DashboardUtil
 
             $chartName = $this->getTitleWithTotal($chartName,$titleCount);
             $showOther = $this->getOtherStr($showLimited,"Project Types");
-            $projectTypeArrTop = $this->getTopMultiArray($projectTypeArr,$showOther);
+            $projectTypeArrTop = $this->getTopMultiArray($projectTypeArr,$showOther,$quantityLimit);
             $chartsArray = $this->getChartByMultiArray( $projectTypeArrTop, $filterArr, $chartName,"pie",null," : ","percent+label");
         }
 
@@ -3392,7 +3395,7 @@ class DashboardUtil
 
             $chartName = $this->getTitleWithTotal($chartName,$titleCount);
             $showOther = $this->getOtherStr($showLimited,"Business Purposes");
-            $requestBusinessPurposeArrTop = $this->getTopArray($requestBusinessPurposeArr,$showOther);
+            $requestBusinessPurposeArrTop = $this->getTopArray($requestBusinessPurposeArr,$showOther,$quantityLimit);
             $chartsArray = $this->getChart($requestBusinessPurposeArrTop, $chartName,'pie',$layoutArray," : ",null,null,"percent+label");
         }
 
@@ -3950,7 +3953,7 @@ class DashboardUtil
 
             $chartName = $this->getTitleWithTotal($chartName,$titleCount);
             $showOther = $this->getOtherStr($showLimited,"PIs");
-            $pisUnpaidInvoicesArrTop = $this->getTopArray($pisUnpaidInvoicesArr,$showOther,$descriptionArr);
+            $pisUnpaidInvoicesArrTop = $this->getTopArray($pisUnpaidInvoicesArr,$showOther,$quantityLimit,$descriptionArr);
             $chartsArray = $this->getChart($pisUnpaidInvoicesArrTop, $chartName,'pie',$layoutArray,null,null,null,"percent+label");
         }
 
@@ -4004,7 +4007,7 @@ class DashboardUtil
             $chartName = $chartName . " (" . $titleCount . " invoices for total $" . $this->getNumberFormat($totalUnpaid) . ")";
 
             $showOther = $this->getOtherStr($showLimited,"Invoices");
-            $pisUnpaidInvoicesTotalArrTop = $this->getTopArray($pisUnpaidInvoicesTotalArr,$showOther);
+            $pisUnpaidInvoicesTotalArrTop = $this->getTopArray($pisUnpaidInvoicesTotalArr,$showOther,$quantityLimit);
             $chartsArray = $this->getChart($pisUnpaidInvoicesTotalArrTop, $chartName,'pie',$layoutArray," : $",null,null,"percent+label");
         }
 
@@ -4133,7 +4136,7 @@ class DashboardUtil
 
             $showOther = $this->getOtherStr($showLimited,"Invoices");
             //getTopArray($piProjectCountArr, $showOthers=false, $descriptionArr=array(), $maxLen=50)
-            $pisCombinedArrTop = $this->getTopArray($pisCombinedArrNew,$showOther,array(),150);
+            $pisCombinedArrTop = $this->getTopArray($pisCombinedArrNew,$showOther,$quantityLimit,array(),150);
             $chartsArray = $this->getChart($pisCombinedArrTop, $chartName,'pie',$layoutArray," : $",null,null,"percent+label");
         }
 
@@ -4601,7 +4604,7 @@ class DashboardUtil
 
             $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($totalFees),"$");
             $showOther = $this->getOtherStr($showLimited,"Project Types");
-            $projectTypeArrTop = $this->getTopMultiArray($projectTypeArr,$showOther);
+            $projectTypeArrTop = $this->getTopMultiArray($projectTypeArr,$showOther,$quantityLimit);
 
             $chartsArray = $this->getChartByMultiArray( $projectTypeArrTop, $filterArr, $chartName,"pie",null," : $","percent+label");
             //$chartsArray = $this->getChart($projectTypeArrTop, $chartName,'pie',$layoutArray," : $");
@@ -4669,7 +4672,7 @@ class DashboardUtil
 
             $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($totalFees),"$");
             $showOther = $this->getOtherStr($showLimited,"Project Types");
-            $projectTypeArrTop = $this->getTopMultiArray($projectTypeArr,$showOther);
+            $projectTypeArrTop = $this->getTopMultiArray($projectTypeArr,$showOther,$quantityLimit);
 
             $chartsArray = $this->getChartByMultiArray( $projectTypeArrTop, $filterArr, $chartName,"pie",null," : $","percent+label");
         }
@@ -4736,7 +4739,7 @@ class DashboardUtil
 
             $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($totalFees),"$");
             $showOther = $this->getOtherStr($showLimited,"Project Types");
-            $projectTypeArrTop = $this->getTopMultiArray($projectTypeArr,$showOther);
+            $projectTypeArrTop = $this->getTopMultiArray($projectTypeArr,$showOther,$quantityLimit);
 
             $chartsArray = $this->getChartByMultiArray( $projectTypeArrTop, $filterArr, $chartName,"pie",null," : $","percent+label");
         }
@@ -4789,7 +4792,7 @@ class DashboardUtil
             $totalFees = $this->getNumberFormat($totalFees);
             $chartName = $this->getTitleWithTotal($chartName,$totalFees,"$");
             $showOther = $this->getOtherStr($showLimited,"Business Purposes");
-            $requestBusinessPurposeArrTop = $this->getTopArray($requestBusinessPurposeArr,$showOther);
+            $requestBusinessPurposeArrTop = $this->getTopArray($requestBusinessPurposeArr,$showOther,$quantityLimit);
             $chartsArray = $this->getChart($requestBusinessPurposeArrTop, $chartName,'pie',$layoutArray," : $",null,null,"percent+label");
 
             if($testing) {
@@ -4841,7 +4844,7 @@ class DashboardUtil
 
             $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($totalFees),"$");
             $showOther = $this->getOtherStr($showLimited,"Business Purposes");
-            $requestBusinessPurposeArrTop = $this->getTopArray($requestBusinessPurposeArr,$showOther);
+            $requestBusinessPurposeArrTop = $this->getTopArray($requestBusinessPurposeArr,$showOther,$quantityLimit);
             $chartsArray = $this->getChart($requestBusinessPurposeArrTop, $chartName,'pie',$layoutArray," : $",null,null,"percent+label");
         }
 
@@ -4886,7 +4889,7 @@ class DashboardUtil
 
             $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($totalFees),"$");
             $showOther = $this->getOtherStr($showLimited,"Business Purposes");
-            $requestBusinessPurposeArrTop = $this->getTopArray($requestBusinessPurposeArr,$showOther);
+            $requestBusinessPurposeArrTop = $this->getTopArray($requestBusinessPurposeArr,$showOther,$quantityLimit);
             $chartsArray = $this->getChart($requestBusinessPurposeArrTop, $chartName,'pie',$layoutArray," : $",null,null,"percent+label");
         }
 
@@ -5031,7 +5034,8 @@ class DashboardUtil
             $chartName = $chartName . " - " . count($invoices) . " unpaid invoices in total";
 
            //$showOther = $this->getOtherStr($showLimited,"Invoices");
-            $invoiceDueDaysArrTop = $this->getTopArray($invoiceDueDaysArr,false,$descriptionArr,$maxLen=100, $limit=50);
+            //$limit=50
+            $invoiceDueDaysArrTop = $this->getTopArray($invoiceDueDaysArr,false,$quantityLimit,$descriptionArr,$maxLen=100);
             arsort($invoiceDueDaysArrTop);
             $chartsArray = $this->getChart($invoiceDueDaysArrTop, $chartName,'bar',$layoutArray);
         }

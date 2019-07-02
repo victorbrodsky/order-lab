@@ -39,7 +39,7 @@ function transresGetCharts() {
     }
     //console.log("showLimited="+showLimited);
 
-    var quantityLimit = $("#filter_quantityLimit").select2("val");
+    var quantityLimit = $("#filter_quantityLimit").val();
 
     var url = Routing.generate('translationalresearch_single_chart');
 
