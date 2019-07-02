@@ -3468,12 +3468,15 @@ class DashboardUtil
             $chartsArray = $this->getChart($requestBusinessPurposeArrTop, $chartName,'pie',$layoutArray," : ",null,null,"percent+label");
         }
 
-        //"31. Turn-around Statistics: Average number of days to complete a Work Request (based on Completed and Notified requests)" => "turn-around-statistics-days-complete-request"
+        //"32. Turn-around Statistics: Average number of days to complete a Work Request (based on Completed and Notified requests)" => "turn-around-statistics-days-complete-request"
         if( $chartType == "turn-around-statistics-days-complete-request" ) {
             $averageDays = array();
 
             //$statuses = array("completed","completedNotified");
             $statuses = array("completedNotified");
+
+            $globalCount = 0;
+            $globalDays = 0;
 
             $startDate->modify( 'first day of last month' );
             do {
@@ -3524,6 +3527,10 @@ class DashboardUtil
                 if( $count > 0 ) {
                     $avgDaysInt = round($daysTotal/$count);
                     $averageDays[$startDateLabel] = $avgDaysInt;
+
+                    $globalCount++;
+                    $globalDays = $globalDays + $avgDaysInt;
+
                 } else {
                     $averageDays[$startDateLabel] = null;
                 }
@@ -3540,10 +3547,17 @@ class DashboardUtil
 //            }
 //            $chartName = $chartName.$categoryStr;
 
+            //average days: number of days (5.9) to complete
+            if( $globalCount ) {
+                $avgDaysInt = round($globalDays / $globalCount);
+                $avgDaysIntStr = "number of days ($avgDaysInt) to complete";
+                $chartName = str_replace("number of days to complete",$avgDaysIntStr,$chartName);
+            }
+
             $chartsArray = $this->getChart($averageDays,$chartName,'bar',$layoutArray);
         }
 
-        //"32. Turn-around Statistics: Number of days to complete each Work Request (based on 'Completed and Notified' requests)" => "turn-around-statistics-days-complete-per-request",
+        //"33. Turn-around Statistics: Number of days to complete each Work Request (based on 'Completed and Notified' requests)" => "turn-around-statistics-days-complete-per-request",
         if( $chartType == "turn-around-statistics-days-complete-per-request" ) {
             $averageDays = array();
 
