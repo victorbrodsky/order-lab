@@ -3339,7 +3339,7 @@ class DashboardUtil
                     'descrValueArr' => $invoiceDueFeeArr
                 ),
             );
-            
+
             if( $totalInvoices > 1 ) {
                 $totalInvoicesStr = "invoices";
             } else {
@@ -3391,9 +3391,9 @@ class DashboardUtil
 
             $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($titleCount),"$");
 
-            $showOther = $this->getOtherStr($showLimited,"pathologists involved combined");
+            $showOther = $this->getOtherStr($showLimited,"pathologists involved");
             $invoicesFeesByPathologistArrTop = $this->getTopArray($invoicesFeesByPathologistArr,$showOther,$quantityLimit);
-            $chartsArray = $this->getChart($invoicesFeesByPathologistArrTop, $chartName,'pie',$layoutArray);
+            $chartsArray = $this->getChart($invoicesFeesByPathologistArrTop, $chartName,'pie',$layoutArray,": $");
         }
         ///////////// EOF "23. Total Invoiced Amounts of Non-Funded Projects per Pathologist Involved (Top 10)" /////////////
 
