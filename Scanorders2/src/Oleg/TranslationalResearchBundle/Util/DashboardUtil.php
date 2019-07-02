@@ -3166,10 +3166,14 @@ class DashboardUtil
 
             $showOther = $this->getOtherStr($showLimited,"pathologists involved");
             $invoicesFeesByPathologistArrTop = $this->getTopArray($invoicesFeesByPathologistArr,$showOther,$quantityLimit,$descriptionArr);
+
+            //attach value to other
+            $invoicesFeesByPathologistArrTop = $this->addValueToOther($invoicesFeesByPathologistArrTop);
+
             $chartsArray = $this->getChart($invoicesFeesByPathologistArrTop, $chartName,'pie',$layoutArray,null,null,null,"percent+label");
         }
 
-        //"26. Total Invoiced Amounts of Funded Projects per Pathologist Involved (Top 10)" =>      "fees-by-invoices-per-funded-projects-per-pathologist-involved"
+        //"27. Total Invoiced Amounts for Funded Projects per Pathologist Involved (Top 10)" =>      "fees-by-invoices-per-funded-projects-per-pathologist-involved"
         if( $chartType == "fees-by-invoices-per-funded-projects-per-pathologist-involved" ) {
             $invoicesFeesByPathologistArr = array();
             $invoicePaidFeeArr = array();
@@ -3249,6 +3253,10 @@ class DashboardUtil
 
             $showOther = $this->getOtherStr($showLimited,"pathologists involved");
             $invoicesFeesByPathologistArrTop = $this->getTopArray($invoicesFeesByPathologistArr,$showOther,$quantityLimit,$descriptionArr);
+
+            //attach value to other
+            $invoicesFeesByPathologistArrTop = $this->addValueToOther($invoicesFeesByPathologistArrTop);
+
             $chartsArray = $this->getChart($invoicesFeesByPathologistArrTop, $chartName,'pie',$layoutArray,null,null,null,"percent+label");
         }
         ///////////////// EOF "26. Total Invoiced Amounts of Funded Projects per Pathologist Involved (Top 10)" /////////////////

@@ -116,7 +116,7 @@ class FilterDashboardType extends AbstractType
             ));
 
             $builder->add('quantityLimit', IntegerType::class, array(
-                'label' => "Quantity limit",
+                'label' => "Top quantity limit",
                 'required' => false,
                 'empty_data' => '10',
                 //'data' => 10,
