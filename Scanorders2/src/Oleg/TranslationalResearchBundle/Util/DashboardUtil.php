@@ -3261,7 +3261,7 @@ class DashboardUtil
         }
         ///////////////// EOF "26. Total Invoiced Amounts of Funded Projects per Pathologist Involved (Top 10)" /////////////////
 
-        //"27. Total Invoiced Amounts of Non-Funded Projects per Pathologist Involved (Top 10)" =>  "fees-by-invoices-per-nonfunded-projects-per-pathologist-involved"
+        //"28. Total Invoiced Amounts for Non-Funded Projects per Pathologist Involved (Top 10)" =>  "fees-by-invoices-per-nonfunded-projects-per-pathologist-involved"
         if( $chartType == "fees-by-invoices-per-nonfunded-projects-per-pathologist-involved" ) {
             $invoicesFeesByPathologistArr = array();
             $invoicePaidFeeArr = array();
@@ -3339,10 +3339,16 @@ class DashboardUtil
                     'descrValueArr' => $invoiceDueFeeArr
                 ),
             );
+            
+            if( $totalInvoices > 1 ) {
+                $totalInvoicesStr = "invoices";
+            } else {
+                $totalInvoicesStr = "invoice";
+            }
 
             $showOther = $this->getOtherStr($showLimited,"pathologists involved");
             $invoicesFeesByPathologistArrTop = $this->getTopArray($invoicesFeesByPathologistArr,$showOther,$quantityLimit,$descriptionArr);
-            $chartsArray = $this->getChart($invoicesFeesByPathologistArrTop, $chartName." (".$totalInvoices." invoices)",'pie',$layoutArray,null,null,null,"percent+label");
+            $chartsArray = $this->getChart($invoicesFeesByPathologistArrTop, $chartName." (".$totalInvoices." $totalInvoicesStr)",'pie',$layoutArray,null,null,null,"percent+label");
 
             if( is_array($chartsArray) && count($chartsArray) == 0 ) {
                 $warningNoData = "There are no invoices associated with un-funded project requests that specify an involved pathologist during the selected time frame.".
