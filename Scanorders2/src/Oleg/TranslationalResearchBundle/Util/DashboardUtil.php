@@ -65,40 +65,40 @@ class DashboardUtil
         $chartTypes = array(
             //PI/Project statistics
             "1. Principle Investigators by Affiliation (linked)" =>                      "pi-by-affiliation",
-            "2. Total Number of Projects per PI (Top 10) (linked)" =>                    "projects-per-pi",
-            "3. Total Number of Funded Projects per PI (Top 10) (linked)" =>             "funded-projects-per-pi",
-            "4. Total Number of Non-Funded Projects per PI (Top 10) (linked)" =>         "nonfunded-projects-per-pi",
+            "2. Total Number of Projects per PI (Top) (linked)" =>                    "projects-per-pi",
+            "3. Total Number of Funded Projects per PI (Top) (linked)" =>             "funded-projects-per-pi",
+            "4. Total Number of Non-Funded Projects per PI (Top) (linked)" =>         "nonfunded-projects-per-pi",
             //Pathologists Involved and number of projects
-            "5. Total Number of Projects per Pathologist Involved (Top 10)" =>             "projects-per-pathologist-involved",
-            "6. Total Number of Funded Projects per Pathologist Involved (Top 10)" =>      "funded-projects-per-pathologist-involved",
-            "7. Total Number of Non-Funded Projects per Pathologist Involved (Top 10)" =>  "nonfunded-projects-per-pathologist-involved",
+            "5. Total Number of Projects per Pathologist Involved (Top)" =>             "projects-per-pathologist-involved",
+            "6. Total Number of Funded Projects per Pathologist Involved (Top)" =>      "funded-projects-per-pathologist-involved",
+            "7. Total Number of Non-Funded Projects per Pathologist Involved (Top)" =>  "nonfunded-projects-per-pathologist-involved",
             //Work request statistics
             "8. Total Number of Work Requests by Funding Source (linked)" =>                 "requests-by-funding-source",
-            "9. Projects with Most Work Requests (Top 10) (linked)" =>                       "requests-per-project",
-            "10. Funded Projects with Most Work Requests (Top 10) (linked)" =>      "requests-per-funded-projects",
-            "11. Non-Funded Projects with Most Work Requests (Top 10) (linked)" =>  "requests-per-nonfunded-projects",
+            "9. Projects with Most Work Requests (Top) (linked)" =>                       "requests-per-project",
+            "10. Funded Projects with Most Work Requests (Top) (linked)" =>      "requests-per-funded-projects",
+            "11. Non-Funded Projects with Most Work Requests (Top) (linked)" =>  "requests-per-nonfunded-projects",
             //   Products/Services
-            "12. Service Productivity by Products/Services (Top 35)" =>     "service-productivity-by-service",
-            "13. Service Productivity for Funded Projects (Top 25)" =>      "service-productivity-by-service-per-funded-projects",
-            "14. Service Productivity for Non-Funded Projects (Top 25)" =>  "service-productivity-by-service-per-nonfunded-projects",
+            "12. Service Productivity by Products/Services (Top)" =>     "service-productivity-by-service",
+            "13. Service Productivity for Funded Projects (Top)" =>      "service-productivity-by-service-per-funded-projects",
+            "14. Service Productivity for Non-Funded Projects (Top)" =>  "service-productivity-by-service-per-nonfunded-projects",
             "15. Service Productivity: Items for Funded vs Non-Funded Projects" => "service-productivity-by-service-compare-funded-vs-nonfunded-projects",
             //Productivity statistics based on work requests
             "16. Total Fees of Items Ordered for Funded vs Non-Funded Projects" => "fees-by-requests",
-            "17. Funded Projects with the Highest Total Fees (Top 10)" => "fees-by-requests-per-funded-projects",
-            "18. Non-Funded Projects with the Highest Total Fees (Top 10)" => "fees-by-requests-per-nonfunded-projects",
-            "19. Total Fees per Investigator (Top 10)" =>                       "fees-by-investigators",
-            "20. Total Fees per Investigator for Funded Projects (Top 10)" =>   "fees-by-investigators-per-funded-projects",
-            "21. Total Fees per Investigator for Non-Funded Projects (Top 10)"=>"fees-by-investigators-per-nonfunded-projects",
+            "17. Funded Projects with the Highest Total Fees (Top)" => "fees-by-requests-per-funded-projects",
+            "18. Non-Funded Projects with the Highest Total Fees (Top)" => "fees-by-requests-per-nonfunded-projects",
+            "19. Total Fees per Investigator (Top)" =>                       "fees-by-investigators",
+            "20. Total Fees per Investigator for Funded Projects (Top)" =>   "fees-by-investigators-per-funded-projects",
+            "21. Total Fees per Investigator for Non-Funded Projects (Top)"=>"fees-by-investigators-per-nonfunded-projects",
             //Financial statistics based on invoices
             "22. Paid Invoices by Month" =>                              "fees-by-invoices-paid-per-month",
             "23. Generated Invoices for Funded Projects" =>              "fees-by-invoices-per-funded-projects",
-            "24. Generated Invoices for Non-Funded Projects (Top 10)" =>  "fees-by-invoices-per-nonfunded-projects",
-            "25. Total Invoiced Amounts by PI (Top 10)" =>                   "fees-by-invoices-per-pi",
+            "24. Generated Invoices for Non-Funded Projects (Top)" =>  "fees-by-invoices-per-nonfunded-projects",
+            "25. Total Invoiced Amounts by PI (Top)" =>                   "fees-by-invoices-per-pi",
             //Pathologists Involved and number of projects
-            "26. Total Invoiced Amounts for Projects per Pathologist Involved (Top 10)" =>             "fees-by-invoices-per-projects-per-pathologist-involved",
-            "27. Total Invoiced Amounts for Funded Projects per Pathologist Involved (Top 10)" =>      "fees-by-invoices-per-funded-projects-per-pathologist-involved",
-            "28. Total Invoiced Amounts for Non-Funded Projects per Pathologist Involved (Top 10)" =>  "fees-by-invoices-per-nonfunded-projects-per-pathologist-involved",
-            "29. Total Fees per Involved Pathologist for Non-Funded Projects (Top 10)" =>              "fees-per-nonfunded-projects-per-pathologist-involved",
+            "26. Total Invoiced Amounts for Projects per Pathologist Involved (Top)" =>             "fees-by-invoices-per-projects-per-pathologist-involved",
+            "27. Total Invoiced Amounts for Funded Projects per Pathologist Involved (Top)" =>      "fees-by-invoices-per-funded-projects-per-pathologist-involved",
+            "28. Total Invoiced Amounts for Non-Funded Projects per Pathologist Involved (Top)" =>  "fees-by-invoices-per-nonfunded-projects-per-pathologist-involved",
+            "29. Total Fees per Involved Pathologist for Non-Funded Projects (Top)" =>              "fees-per-nonfunded-projects-per-pathologist-involved",
 
             "30. Total Number of Projects per Type (linked)" => "projects-per-type",
             "31. Total Number of Work Requests per Business Purpose" => "requests-per-business-purpose",
@@ -110,9 +110,9 @@ class DashboardUtil
             "36. Turn-around Statistics: Number of days for each project request approval phase (linked)" => "turn-around-statistics-days-per-project-state",
             "37. Turn-around Statistics: Average number of days for invoices to be paid (based on fully and partially paid invoices)" => "turn-around-statistics-days-paid-invoice",
             "38. Turn-around Statistics: Number of days for each invoice to be paid (based on fully and partially paid invoices) (linked)" => "turn-around-statistics-days-per-paid-invoice",
-            "39. Turn-around Statistics: Top 10 PIs with most delayed unpaid invoices (linked)" => "turn-around-statistics-pis-with-delayed-unpaid-invoices",
-            "40. Turn-around Statistics: Top 10 PIs with highest total unpaid, overdue invoices (linked)" => "turn-around-statistics-pis-with-highest-total-unpaid-invoices",
-            "41. Turn-around Statistics: Top 10 PIs by index (delay in months * invoiced amount, aggregate) for unpaid, overdue invoices (linked)" => "turn-around-statistics-pis-combining-total-delayed-unpaid-invoices",
+            "39. Turn-around Statistics: Top PIs with most delayed unpaid invoices (linked)" => "turn-around-statistics-pis-with-delayed-unpaid-invoices",
+            "40. Turn-around Statistics: Top PIs with highest total unpaid, overdue invoices (linked)" => "turn-around-statistics-pis-with-highest-total-unpaid-invoices",
+            "41. Turn-around Statistics: Top PIs by index (delay in months * invoiced amount, aggregate) for unpaid, overdue invoices (linked)" => "turn-around-statistics-pis-combining-total-delayed-unpaid-invoices",
 
             "42. Number of PIs in AP/CP vs Hematopathology (linked)" => "compare-projectspecialty-pis",
             "43. Number of AP/CP vs Hematopathology Project Requests (linked)" => "compare-projectspecialty-projects",
@@ -120,16 +120,16 @@ class DashboardUtil
             "45. Number of AP/CP vs Hematopathology Work Requests (linked)" => "compare-projectspecialty-requests",
             "46. Number of AP/CP vs Hematopathology Invoices (linked)" => "compare-projectspecialty-invoices",
 
-            "47. Total Fees per Project Request Type (Top 10) (linked)" => "projects-fees-per-type",
-            "48. Total Fees per Funded Project Request Type (Top 10) (linked)" => "projects-funded-fees-per-type",
-            "49. Total Fees per Non-Funded Project Request Type (Top 10) (linked)" => "projects-unfunded-fees-per-type",
+            "47. Total Fees per Project Request Type (Top) (linked)" => "projects-fees-per-type",
+            "48. Total Fees per Funded Project Request Type (Top) (linked)" => "projects-funded-fees-per-type",
+            "49. Total Fees per Non-Funded Project Request Type (Top) (linked)" => "projects-unfunded-fees-per-type",
 
-            "50. Total Fees per Work Requests Business Purpose (Top 10)" => "requests-fees-per-business-purpose",
-            "51. Total Fees per Funded Work Requests Business Purpose (Top 10)" => "requests-funded-fees-per-business-purpose",
-            "52. Total Fees per Non-Funded Work Requests Business Purpose (Top 10)" => "requests-unfunded-fees-per-business-purpose",
+            "50. Total Fees per Work Requests Business Purpose (Top)" => "requests-fees-per-business-purpose",
+            "51. Total Fees per Funded Work Requests Business Purpose (Top)" => "requests-funded-fees-per-business-purpose",
+            "52. Total Fees per Non-Funded Work Requests Business Purpose (Top)" => "requests-unfunded-fees-per-business-purpose",
 
             "53. Turn-around Statistics: Number of days to complete each Work Request with person (based on 'Completed and Notified' requests)" => "turn-around-statistics-days-complete-per-request-with-user",
-            "54. Turn-around Statistics: Top 50 most delinquent invoices (linked)" => "turn-around-statistics-delayed-unpaid-invoices-by-days",
+            "54. Turn-around Statistics: Top most delinquent invoices (linked)" => "turn-around-statistics-delayed-unpaid-invoices-by-days",
 
             "55. Number of reminder emails sent per month (linked)" => "reminder-emails-per-month",
 
@@ -1160,18 +1160,27 @@ class DashboardUtil
 //        if( !$quantityLimit ) {
 //            $quantityLimit = 10;
 //        }
-        if (strpos($chartName, "Top 10") !== false) {
-            $chartNameModified = str_replace("Top 10","Top ".$quantityLimit,$chartName);
+        if(0) {
+            if (strpos($chartName, "Top 10") !== false) {
+                $chartNameModified = str_replace("Top 10", "Top " . $quantityLimit, $chartName);
+            }
+            if (strpos($chartName, "Top 25") !== false) {
+                $chartNameModified = str_replace("Top 25", "Top " . $quantityLimit, $chartName);
+            }
+            if (strpos($chartName, "Top 35") !== false) {
+                $chartNameModified = str_replace("Top 35", "Top " . $quantityLimit, $chartName);
+            }
+            if (strpos($chartName, "Top 50") !== false) {
+                $chartNameModified = str_replace("Top 50", "Top " . $quantityLimit, $chartName);
+            }
         }
-        if (strpos($chartName, "Top 25") !== false) {
-            $chartNameModified = str_replace("Top 25","Top ".$quantityLimit,$chartName);
+        if (strpos($chartName, "(Top)") !== false) {
+            $chartNameModified = str_replace("(Top)","(Top ".$quantityLimit.")",$chartName);
         }
-        if (strpos($chartName, "Top 35") !== false) {
-            $chartNameModified = str_replace("Top 35","Top ".$quantityLimit,$chartName);
+        if (strpos($chartName, "Top ") !== false) {
+            $chartNameModified = str_replace("Top ","Top ".$quantityLimit,$chartName);
         }
-        if (strpos($chartName, "Top 50") !== false) {
-            $chartNameModified = str_replace("Top 50","Top ".$quantityLimit,$chartName);
-        }
+
         return $chartNameModified;
     }
 
