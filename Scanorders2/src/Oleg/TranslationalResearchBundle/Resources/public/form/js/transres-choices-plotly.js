@@ -39,6 +39,8 @@ function transresGetCharts() {
     }
     //console.log("showLimited="+showLimited);
 
+    var quantityLimit = $("#filter_quantityLimit").select2("val");
+
     var url = Routing.generate('translationalresearch_single_chart');
 
     var i;
@@ -51,7 +53,7 @@ function transresGetCharts() {
             url: url,
             timeout: _ajaxTimeout,
             type: "GET",
-            data: {startDate:startDate, endDate:endDate, projectSpecialty:projectSpecialty, showLimited:showLimited, chartType:chartIndex, productservice:productservice },
+            data: {startDate:startDate, endDate:endDate, projectSpecialty:projectSpecialty, showLimited:showLimited, quantityLimit:quantityLimit, chartType:chartIndex, productservice:productservice },
             dataType: 'json',
             async: false //use synchronous => wait for response.
         }).success(function(chartData) {

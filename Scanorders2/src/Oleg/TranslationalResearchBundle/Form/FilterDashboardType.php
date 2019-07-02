@@ -23,6 +23,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -111,7 +112,14 @@ class FilterDashboardType extends AbstractType
             $builder->add('showLimited', CheckboxType::class, array(
                 'label' => "Show only the top ten", //"Show the full data set on each graph",  //"Show only the top ten",
                 'required' => false,
-                //'attr' => array('class' => 'form-control checkbox')
+                'attr' => array('class' => 'form-control checkbox')
+            ));
+
+            $builder->add('quantityLimit', IntegerType::class, array(
+                'label' => "Quantity limit",
+                'required' => false,
+                //'empty_data' => 10,
+                'attr' => array('class' => 'form-control')
             ));
         }
 
@@ -129,7 +137,7 @@ class FilterDashboardType extends AbstractType
             //productservice
             $builder->add('category', EntityType::class, array(
                 'class' => 'OlegTranslationalResearchBundle:RequestCategoryTypeList',
-                'label' => false,
+                'label' => "Products/Services", //false,
                 'choice_label' => "getOptimalAbbreviationName",
                 'required' => false,
                 'multiple' => false,

@@ -37,21 +37,37 @@
                     {{ form_widget(filterform.chartType, {'attr': {'placeholder': 'Chart Type'}}) }}
                 {% endif %}
             </div>
-            <div class="col-xs-1">
-                {% if filterform.showLimited is defined %}
+            {#<div class="col-xs-1">#}
+                {#{% if filterform.showLimited is defined %}#}
                     {#{{ formmacros.checkbox(filterform.showLimited) }}#}
-                    {{ form_label(filterform.showLimited) }}&nbsp;{{ form_widget(filterform.showLimited) }}
-                {% endif %}
-            </div>
+                    {#{{ form_label(filterform.showLimited) }}&nbsp;{{ form_widget(filterform.showLimited) }}#}
+                {#{% endif %}#}
+            {#</div>#}
             <div class="col-xs-1">
                 <button id="filter-btn" type="button" class="btn btn-default" onclick="transresGetCharts()" data-spinner-color="{{ spinnerColor }}">Filter</button>
             </div>
         </div>
+
         <br>
         <div class="row">
-            <div class="col-xs-10">
+
+            <div class="col-xs-2">
+                {% if filterform.showLimited is defined %}
+                    {#{{ form_label(filterform.showLimited) }}&nbsp;{{ form_widget(filterform.showLimited) }}#}
+                    {{ form_row(filterform.showLimited) }}
+                {% endif %}
+            </div>
+            <div class="col-xs-2">
+                {% if filterform.quantityLimit is defined %}
+                    {#{{ form_label(filterform.quantityLimit) }}&nbsp;{{ form_widget(filterform.quantityLimit) }}#}
+                    {{ form_row(filterform.quantityLimit) }}
+                {% endif %}
+            </div>
+
+            <div class="col-xs-8">
                 {% if filterform.category is defined %}
-                    {{ form_widget(filterform.category) }}
+                    {#{{ form_widget(filterform.category) }}#}
+                    {{ form_row(filterform.category) }}
                 {% endif %}
             </div>
         </div>

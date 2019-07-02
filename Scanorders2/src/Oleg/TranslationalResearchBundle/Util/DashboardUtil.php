@@ -49,6 +49,7 @@ class DashboardUtil
     private $height = 600;
     private $otherId = "All other [[otherStr]] combined";
     private $otherSearchStr = "All other ";
+    private $quantityLimit = 10;
 
     private $lightFilter = true;
 
@@ -185,10 +186,13 @@ class DashboardUtil
         return $otherPrefix;
     }
 
-    //select top 10, BUT make sure the other PIs are still shown as "Other"
+    //select top 10 ($limit), BUT make sure the other PIs are still shown as "Other"
     public function getTopArray($piProjectCountArr, $showOthers=false, $descriptionArr=array(), $maxLen=50, $limit=10) {
         arsort($piProjectCountArr);
         //$limit = 10;
+
+        $limit = $this->quantityLimit;
+
         //$limit = 3;
         //$showOthers = true;
         //$otherId = "All other $showOthers combined";
@@ -267,7 +271,7 @@ class DashboardUtil
 
         return $piProjectCountTopArr;
     }
-    public function getTopMultiArray($piProjectCountArr, $showOthers=false, $descriptionArr=array(), $maxLen=50) {
+    public function getTopMultiArray($piProjectCountArr, $showOthers=false, $descriptionArr=array(), $maxLen=50, $limit=10) {
         //arsort($piProjectCountArr);
         usort($piProjectCountArr, function($a, $b) {
             return $b['value'] - $a['value'];
@@ -277,7 +281,7 @@ class DashboardUtil
 //        print_r($piProjectCountArr);
 //        echo "</pre>";
 
-        $limit = 10;
+        //$limit = 10;
         //$limit = 3;
         //$showOthers = true;
 
@@ -1452,7 +1456,7 @@ class DashboardUtil
     }
 
 
-
+    //Main function to get chart data called by controller singleChartAction ("/single-chart/")
     public function getDashboardChart($request) {
 
         //ini_set('memory_limit', '30000M');
@@ -1463,6 +1467,13 @@ class DashboardUtil
         $showLimited = $request->query->get('showLimited');
         $chartType = $request->query->get('chartType');
         $productservice = $request->query->get('productservice');
+
+        $quantityLimit = $request->query->get('quantityLimit');
+        //echo "quantityLimit=$quantityLimit<br>";
+        //echo "showLimited=$showLimited<br>";
+        if( $quantityLimit ) {
+            $this->quantityLimit = $quantityLimit;
+        }
 
         //echo "start=".$startDate."<br>";
         //echo "end=".$endDate."<br>";
@@ -1497,6 +1508,7 @@ class DashboardUtil
             'endDate'=>$endDate,
             'projectSpecialtyObjects' => $projectSpecialtyObjects,
             'showLimited' => $showLimited,
+            'quantityLimit'=>$quantityLimit,
             'funded' => null
         );
 
@@ -2304,7 +2316,7 @@ class DashboardUtil
                 $showOther,                     //$showOthers
                 array(),                        //$descriptionArr=array()
                 50,                             //$maxLen=50
-                35                              //$limit
+                3//35                              //$limit
             );
             $layoutArray = array(
                 'height' => $this->height,
