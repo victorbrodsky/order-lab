@@ -1174,11 +1174,16 @@ class DashboardUtil
                 $chartNameModified = str_replace("Top 50", "Top " . $quantityLimit, $chartName);
             }
         }
+        $chartNameModified = null;
         if (strpos($chartName, "(Top)") !== false) {
             $chartNameModified = str_replace("(Top)","(Top ".$quantityLimit.")",$chartName);
         }
         if (strpos($chartName, "Top ") !== false) {
             $chartNameModified = str_replace("Top ","Top ".$quantityLimit,$chartName);
+        }
+
+        if( !$chartNameModified ) {
+            $chartNameModified = $chartName;
         }
 
         return $chartNameModified;
@@ -3426,14 +3431,15 @@ class DashboardUtil
                 $titleCount++;
             }
 
-            $chartName = $this->getTitleWithTotal($chartName,$titleCount);
+            $chartName = $this->getTitleWithTotal($chartName,$titleCount,null,"projects total");
+
             $showOther = $this->getOtherStr($showLimited,"Project Types");
             $projectTypeArrTop = $this->getTopMultiArray($projectTypeArr,$showOther,$quantityLimit);
             $chartsArray = $this->getChartByMultiArray( $projectTypeArrTop, $filterArr, $chartName,"pie",null," : ","percent+label");
         }
 
 
-        //"30. Total Number of Requests per Business Purpose" => "requests-per-business-purpose"
+        //"31. Total Number of Requests per Business Purpose" => "requests-per-business-purpose"
         if( $chartType == "requests-per-business-purpose" ) {
             $requestBusinessPurposeArr = array();
 
