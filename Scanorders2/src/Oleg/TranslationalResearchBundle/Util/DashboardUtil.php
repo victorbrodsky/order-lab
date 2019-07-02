@@ -398,7 +398,7 @@ class DashboardUtil
         $newArrTop = array();
         foreach($arrTop as $label => $value) {
             if( strpos($label, ' other ') !== false ) {
-                $label = $label . $prefix . $value;
+                $label = $label . $prefix . $this->getNumberFormat($value);
                 $newArrTop[$label] = $value;
             } else {
                 $newArrTop[$label] = $value;
