@@ -397,7 +397,7 @@ class DashboardUtil
     public function addValueToOther($arrTop,$prefix=": $") {
         $newArrTop = array();
         foreach($arrTop as $label => $value) {
-            if( strpos($label, ' other ') !== false ) {
+            if( strpos($label, $this->otherSearchStr) !== false ) {
                 $label = $label . $prefix . $this->getNumberFormat($value);
                 $newArrTop[$label] = $value;
             } else {
