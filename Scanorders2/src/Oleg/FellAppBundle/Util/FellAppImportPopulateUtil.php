@@ -1145,7 +1145,7 @@ class FellAppImportPopulateUtil {
                 if( count($errorMsgArr) > 0 ) {
 
                     //delete erroneous spreadsheet from filesystem and $document from DB
-                    if( file_exists($inputFileName) ) {
+                    if( 0 && file_exists($inputFileName) ) {
                         //$logger->error("Source sheet does not exists with filename=".$inputFileName);
                         //remove from DB
                         $em->remove($document);
