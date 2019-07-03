@@ -60,7 +60,8 @@
             <div class="col-xs-2">
                 {% if filterform.quantityLimit is defined %}
                     {#{{ form_label(filterform.quantityLimit) }}&nbsp;{{ form_widget(filterform.quantityLimit) }}#}
-                    {{ form_row(filterform.quantityLimit) }}
+                    {#{{ form_row(filterform.quantityLimit) }}#}
+                    {{ form_row(filterform.quantityLimit, {'attr': {'placeholder': 'Quantity limit'}}) }}
                 {% endif %}
             </div>
 

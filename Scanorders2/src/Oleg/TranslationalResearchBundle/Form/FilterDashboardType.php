@@ -115,12 +115,29 @@ class FilterDashboardType extends AbstractType
                 'attr' => array('class' => 'form-control checkbox')
             ));
 
-            $builder->add('quantityLimit', IntegerType::class, array(
+            //dropdown listing number from 1 to 50 and the words "Show all" as the top choice
+            $quantityLimitArr = array();
+            $quantityLimitArr["Show all"] = "Show all";
+            for($quantityLimit = 1; $quantityLimit <= 50; $quantityLimit++) {
+                //echo "The number is: $x <br>";
+                $quantityLimitArr[$quantityLimit] = $quantityLimit."";
+            }
+//            $builder->add('quantityLimit', IntegerType::class, array(
+//                'label' => "Quantity limit",
+//                'required' => false,
+//                'empty_data' => '10',
+//                //'data' => 10,
+//                'attr' => array('class' => 'form-control')
+//            ));
+            $builder->add('quantityLimit', ChoiceType::class, array(
                 'label' => "Quantity limit",
-                'required' => false,
+                'choices' => $quantityLimitArr,
+                'multiple' => false,
+                //'expanded' => true,
+                //'required' => true,
                 'empty_data' => '10',
-                //'data' => 10,
-                'attr' => array('class' => 'form-control')
+                //'data' => '10',
+                'attr' => array('class' => 'combobox', 'placeholder' => "Quantity limit")
             ));
         }
 

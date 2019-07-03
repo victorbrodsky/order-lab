@@ -49,7 +49,7 @@ class DashboardUtil
     private $height = 600;
     private $otherId = "All other [[otherStr]] combined";
     private $otherSearchStr = "All other ";
-    private $quantityLimit = 10;
+    //private $quantityLimit = 10;
 
     private $lightFilter = true;
 
@@ -189,9 +189,15 @@ class DashboardUtil
     //select top 10 ($limit), BUT make sure the other PIs are still shown as "Other"
     public function getTopArray($piProjectCountArr, $showOthers=false, $limit=10, $descriptionArr=array(), $maxLen=50) {
         arsort($piProjectCountArr);
+
         //$limit = 10;
         //$limit = $this->quantityLimit;
         //$limit = 3;
+
+        if( $limit == "Show all" ) {
+            $limit = null;
+        }
+
         //$showOthers = true;
         //$otherId = "All other $showOthers combined";
         $otherId = str_replace("[[otherStr]]",$showOthers,$this->otherId);
@@ -289,6 +295,10 @@ class DashboardUtil
             //“Show only the top 10” - if it is checked, show only the top ten projects, if it is not checked, show the top 100
             //$limit = 20;
         //}
+
+        if( $limit == "Show all" ) {
+            $limit = null;
+        }
 
         //$otherId = "All other $showOthers combined";
         $otherId = str_replace("[[otherStr]]",$showOthers,$this->otherId);
