@@ -111,7 +111,7 @@ class FellAppImportPopulateUtil {
 
         $result = "Finish processing Fellowship Application on Google Drive and on server.<br>".
             "filesGoogleDrive=".count($filesGoogleDrive).", populatedCount=".$populatedCount.
-            ", deletedSheetCount=".$deletedSheetCount.", populatedBackupApplications=".count($populatedBackupApplications).
+            ", deletedSheetCount=".$deletedSheetCount.", populatedBackupApplications=".$populatedBackupApplications.
             ", First generated report in queue=".$generatedReport;
 
         $logger = $this->container->get('logger');
@@ -343,7 +343,7 @@ class FellAppImportPopulateUtil {
         $backupFileIdFellApp = $userSecUtil->getSiteSettingParameter('backupFileIdFellApp');
         if( !$backupFileIdFellApp ) {
             $logger->error("Import is not proceed because the backupFileIdFellApp parameter is not set.");
-            return false;
+            return 0;
         }
 
         $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
@@ -352,7 +352,7 @@ class FellAppImportPopulateUtil {
             $event = "Google API service failed!";
             $logger->error($event);
             $this->sendEmailToSystemEmail($event, $event);
-            return null;
+            return 0;
         }
 
         //1) get backup file on GoogleDrive
@@ -364,7 +364,7 @@ class FellAppImportPopulateUtil {
         //get interval
         if( $modifiedDate ) {
             //echo "modifiedDate=".$modifiedDate."<br>";
-            $logger->notice("modifiedDate=".$modifiedDate);
+            //$logger->notice("modifiedDate=".$modifiedDate);
 
             $datetimeNow = new \DateTime();
             //$datetimeNow->modify('+9 day'); //testing
@@ -376,6 +376,7 @@ class FellAppImportPopulateUtil {
         //don't process backup file if interval is more than 1 day (process if interval is less then 1 day - recently modified backup)
         if( $intervalDays > 1 ) {
             //exit('dont process backup');
+            $logger->notice("Do not process backup: $modifiedDate=[$modifiedDate]; intervalDays=[$intervalDays]");
             return 0;
         }
         //exit('process backup');
@@ -386,7 +387,7 @@ class FellAppImportPopulateUtil {
 
         $populatedBackupApplications = $this->populateSingleFellApp($backupDb, true);
 
-        return $populatedBackupApplications;
+        return count($populatedBackupApplications);
     }
 
 
@@ -1138,7 +1139,7 @@ class FellAppImportPopulateUtil {
                     $errorMsgArr[] = "End Date is null";
                 }
 
-                    //getFellowshipSubspecialty
+                //getFellowshipSubspecialty
                 //if( !$fellowshipApplication->getFellowshipSubspecialty() ) { //getSignatureName() - not reliable - some applicants managed to submit the form without signature
                 if( count($errorMsgArr) > 0 ) {
                     $event = "Error:".
