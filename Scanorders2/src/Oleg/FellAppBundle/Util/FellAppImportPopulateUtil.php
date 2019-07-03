@@ -1151,7 +1151,7 @@ class FellAppImportPopulateUtil {
 
                     //send email
                     $sendErrorEmail = true;
-                    //$sendErrorEmail = false;
+                    $sendErrorEmail = false;
                     if( $sendErrorEmail ) {
                         $userSecUtil = $this->container->get('user_security_utility');
                         $emails = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Administrator");
