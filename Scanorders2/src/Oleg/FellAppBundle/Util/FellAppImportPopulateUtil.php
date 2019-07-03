@@ -1147,11 +1147,12 @@ class FellAppImportPopulateUtil {
                     //delete erroneous spreadsheet from filesystem and $document from DB
                     if( file_exists($inputFileName) ) {
                         //$logger->error("Source sheet does not exists with filename=".$inputFileName);
-                        unlink($inputFileName); // or die("Couldn't delete erroneous spreadsheet inputFileName=[".$inputFileName."]");
-                        $logger->error("Erroneous spreadsheet deleted from server: $inputFileName=".$inputFileName);
-
+                        //remove from DB
                         $em->remove($document);
                         $em->flush($document);
+                        //delete file
+                        unlink($inputFileName); // or die("Couldn't delete erroneous spreadsheet inputFileName=[".$inputFileName."]");
+                        $logger->error("Erroneous spreadsheet deleted from server: $inputFileName=".$inputFileName);
                     }
 
                     $event = "Error:".
