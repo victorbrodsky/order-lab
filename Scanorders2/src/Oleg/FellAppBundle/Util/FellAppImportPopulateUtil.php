@@ -522,15 +522,13 @@ class FellAppImportPopulateUtil {
         }
 
         //2a) get spreadsheet path
-        $inputFileName = $document->getServerPath();    //'Uploaded/fellapp/Spreadsheets/Pathology Fellowships Application Form (Responses).xlsx';
-        $logger->notice("Population a single application sheet with filename=".$inputFileName);
-
+//        $inputFileName = $document->getServerPath();    //'Uploaded/fellapp/Spreadsheets/Pathology Fellowships Application Form (Responses).xlsx';
+//        $logger->notice("Population a single application sheet with filename=".$inputFileName);
 //        if( $path ) {
 //            $inputFileName = $path . "/" . $inputFileName;
 //        }
-
         //2b) populate applicants
-        $populatedFellowshipApplications = $this->populateSpreadsheet($inputFileName,$deleteSourceRow);
+        $populatedFellowshipApplications = $this->populateSpreadsheet($document,$deleteSourceRow);
 
 //        if( $populatedCount && $populatedCount > 0 ) {
 //            //set applicantData from 'active' to 'populated'
@@ -554,7 +552,7 @@ class FellAppImportPopulateUtil {
 
 
     /////////////// populate methods /////////////////
-    public function populateSpreadsheet( $inputFileName, $deleteSourceRow=false ) {
+    public function populateSpreadsheet( $document, $deleteSourceRow=false ) {
 
         //echo "inputFileName=".$inputFileName."<br>";
         $logger = $this->container->get('logger');
@@ -572,6 +570,9 @@ class FellAppImportPopulateUtil {
             $this->sendEmailToSystemEmail($event, $event);
             return false;
         }
+
+        $inputFileName = $document->getServerPath();    //'Uploaded/fellapp/Spreadsheets/Pathology Fellowships Application Form (Responses).xlsx';
+        $logger->notice("Population a single application sheet with filename=".$inputFileName);
 
         //if ruuning from cron path must be: $path = getcwd() . "/web";
         //$inputFileName = $path . "/" . $inputFileName;
@@ -1142,6 +1143,17 @@ class FellAppImportPopulateUtil {
                 //getFellowshipSubspecialty
                 //if( !$fellowshipApplication->getFellowshipSubspecialty() ) { //getSignatureName() - not reliable - some applicants managed to submit the form without signature
                 if( count($errorMsgArr) > 0 ) {
+
+                    //delete erroneous spreadsheet from filesystem and $document from DB
+                    if( file_exists($inputFileName) ) {
+                        //$logger->error("Source sheet does not exists with filename=".$inputFileName);
+                        unlink($inputFileName); // or die("Couldn't delete erroneous spreadsheet inputFileName=[".$inputFileName."]");
+                        $logger->error("Erroneous spreadsheet deleted from server: $inputFileName=".$inputFileName);
+
+                        $em->remove($document);
+                        $em->flush($document);
+                    }
+
                     $event = "Error:".
                         " (Applicant=[" . $displayName . "], Application ID=[" . $fellowshipApplication->getId() . "])" .
                         " Empty required fields after trying to populate the Fellowship Application with Google Applicant ID=[" . $googleFormId . "]" .
