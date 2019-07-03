@@ -110,13 +110,13 @@ class FilterDashboardType extends AbstractType
 
         if( $this->params['showLimited'] ) {
             $builder->add('showLimited', CheckboxType::class, array(
-                'label' => "Show only the top ten", //"Show the full data set on each graph",  //"Show only the top ten",
+                'label' => "Show only the top N", //"Show the full data set on each graph"
                 'required' => false,
                 'attr' => array('class' => 'form-control checkbox')
             ));
 
             $builder->add('quantityLimit', IntegerType::class, array(
-                'label' => "Top quantity limit",
+                'label' => "Quantity limit",
                 'required' => false,
                 'empty_data' => '10',
                 //'data' => 10,

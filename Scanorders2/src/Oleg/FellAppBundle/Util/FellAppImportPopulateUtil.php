@@ -774,7 +774,7 @@ class FellAppImportPopulateUtil {
 
                 //send email
                 $sendErrorEmail = true;
-                $sendErrorEmail = false;
+                //$sendErrorEmail = false;
                 if( $sendErrorEmail ) {
                     $userSecUtil = $this->container->get('user_security_utility');
                     $emails = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Administrator");
@@ -1214,7 +1214,7 @@ class FellAppImportPopulateUtil {
                 $signatureDate = $this->transformDatestrToDate($this->getValueByHeaderName('signatureDate',$rowData,$headers));
                 $fellowshipApplication->setSignatureDate($signatureDate);
 
-                //validate the application
+                //////////////////// second validate the application //////////////////////
                 $errorMsgArr = array();
                 if( !$fellowshipApplication->getFellowshipSubspecialty() ) {
                     $errorMsgArr[] = "Fellowship Type is null";
@@ -1238,7 +1238,7 @@ class FellAppImportPopulateUtil {
                     $errorMsgArr[] = "End Date is null";
                 }
 
-                //getFellowshipSubspecialty
+                //This condition (count($errorMsgArr) > 0) should never happen theoretically, because the first validation should catch the erroneous spreadsheet
                 //if( !$fellowshipApplication->getFellowshipSubspecialty() ) { //getSignatureName() - not reliable - some applicants managed to submit the form without signature
                 if( count($errorMsgArr) > 0 ) {
 
@@ -1278,6 +1278,7 @@ class FellAppImportPopulateUtil {
 
                     continue; //skip this fell application, because getFellowshipSubspecialty is null => something is wrong
                 }
+                //////////////////// EOF second validate the application //////////////////////
 
                 //exit('end applicant');
 
