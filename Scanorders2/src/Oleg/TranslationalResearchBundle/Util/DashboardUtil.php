@@ -1185,11 +1185,16 @@ class DashboardUtil
             }
         }
         $chartNameModified = null;
+        if( $quantityLimit == "Show all" ) {
+            $quantityLimitStr = "".$quantityLimit."";
+        } else {
+            $quantityLimitStr = "Top ".$quantityLimit."";
+        }
         if (strpos($chartName, "(Top)") !== false) {
-            $chartNameModified = str_replace("(Top)","(Top ".$quantityLimit.")",$chartName);
+            $chartNameModified = str_replace("(Top)","(".$quantityLimitStr.")",$chartName);
         }
         if (strpos($chartName, "Top ") !== false) {
-            $chartNameModified = str_replace("Top ","Top ".$quantityLimit,$chartName);
+            $chartNameModified = str_replace("Top "," ".$quantityLimitStr,$chartName);
         }
 
         if( !$chartNameModified ) {
@@ -1527,9 +1532,9 @@ class DashboardUtil
         $quantityLimit = $request->query->get('quantityLimit');
         //echo "quantityLimit=$quantityLimit<br>";
         //echo "showLimited=$showLimited<br>";
-        if( $quantityLimit ) {
-            $this->quantityLimit = $quantityLimit;
-        }
+//        if( $quantityLimit ) {
+//            $this->quantityLimit = $quantityLimit;
+//        }
 
         //echo "start=".$startDate."<br>";
         //echo "end=".$endDate."<br>";
