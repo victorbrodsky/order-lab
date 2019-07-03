@@ -686,6 +686,10 @@ class FellAppImportPopulateUtil {
 
             //$googleFormId = $rowData[0][0];
             $googleFormId = $this->getValueByHeaderName('ID',$rowData,$headers);
+            $email = $this->getValueByHeaderName('email', $rowData, $headers);
+            $lastName = $this->getValueByHeaderName('lastName', $rowData, $headers);
+            $firstName = $this->getValueByHeaderName('firstName', $rowData, $headers);
+
             if( !$googleFormId ) {
                 //echo $row.": skip ID is null <br>";
                 //$logger->warning($row.': Skip this fell application, because googleFormId does not exists. rowData='.$rowData.'; headers='.implode(";",$headers[0]));
@@ -693,6 +697,96 @@ class FellAppImportPopulateUtil {
                 $logger->warning(implode("; ", $rowData[0]));
                 continue; //skip this fell application, because googleFormId does not exists
             }
+
+
+            ////////////////// validate spreadsheet /////////////////////////
+            $errorMsgArr = array();
+            $fellowshipType = $this->getValueByHeaderName('fellowshipType', $rowData, $headers);
+            if( !$fellowshipType ) {
+                $errorMsgArr[] = "Fellowship Type is null";
+            }
+            $ref1 = $this->createFellAppReference($em,$systemUser,'recommendation1',$rowData,$headers,true);
+            if( !$ref1 ) {
+                $errorMsgArr[] = "Reference1 is null";
+            }
+            $ref2 = $this->createFellAppReference($em,$systemUser,'recommendation2',$rowData,$headers,true);
+            if( !$ref2 ) {
+                $errorMsgArr[] = "Reference2 is null";
+            }
+            $ref3 = $this->createFellAppReference($em,$systemUser,'recommendation3',$rowData,$headers,true);
+            if( !$ref3 ) {
+                $errorMsgArr[] = "Reference3 is null";
+            }
+
+            if( !$lastName ) {
+                $errorMsgArr[] = "Applicant last name is null";
+            }
+            if( !$firstName ) {
+                $errorMsgArr[] = "Applicant first name is null";
+            }
+
+            if( !$email ) {
+                $errorMsgArr[] = "Applicant email is null";
+            }
+
+            $signatureName = $this->getValueByHeaderName('signatureName',$rowData,$headers);
+            if( !$signatureName ) {
+                $errorMsgArr[] = "Signature is null";
+            }
+            $signatureDate = $this->getValueByHeaderName('signatureDate',$rowData,$headers);
+            if( !$signatureDate ) {
+                $errorMsgArr[] = "Signature Date is null";
+            }
+            $trainingPeriodStart = $this->getValueByHeaderName('trainingPeriodStart',$rowData,$headers);
+            if( !$trainingPeriodStart ) {
+                $errorMsgArr[] = "Start Date is null";
+            }
+            $trainingPeriodEnd = $this->getValueByHeaderName('trainingPeriodEnd',$rowData,$headers);
+            if( !$trainingPeriodEnd ) {
+                $errorMsgArr[] = "End Date is null";
+            }
+
+            //getFellowshipSubspecialty
+            //if( !$fellowshipApplication->getFellowshipSubspecialty() ) { //getSignatureName() - not reliable - some applicants managed to submit the form without signature
+            if( count($errorMsgArr) > 0 ) {
+
+                //delete erroneous spreadsheet from filesystem and $document from DB
+                if( file_exists($inputFileName) ) {
+                    //$logger->error("Source sheet does not exists with filename=".$inputFileName);
+                    //remove from DB
+                    $em->remove($document);
+                    $em->flush();
+                    //delete file
+                    unlink($inputFileName); // or die("Couldn't delete erroneous spreadsheet inputFileName=[".$inputFileName."]");
+                    $logger->error("Erroneous spreadsheet deleted from server: $inputFileName=".$inputFileName);
+                }
+
+                $event = "First spreadsheet validation error:".
+                    " Empty required fields after trying to populate the Fellowship Application with Google Applicant ID=[" . $googleFormId . "]" .
+                    ": " . implode("; ",$errorMsgArr);
+
+                $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Fellowship Application Creation Failed');
+                $logger->error($event);
+
+                //send email
+                $sendErrorEmail = true;
+                $sendErrorEmail = false;
+                if( $sendErrorEmail ) {
+                    $userSecUtil = $this->container->get('user_security_utility');
+                    $emails = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Administrator");
+                    $ccs = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Platform Administrator");
+                    if (!$emails) {
+                        $emails = $ccs;
+                        $ccs = null;
+                    }
+                    $emailUtil->sendEmail($emails, "Failed to create fellowship applicant with unique Google Applicant ID=" . $googleFormId, $event, $ccs);
+                    $this->sendEmailToSystemEmail("Failed to create fellowship applicant with unique Google Applicant ID=".$googleFormId, $event);
+                }
+
+                continue; //skip this fell application, because getFellowshipSubspecialty is null => something is wrong
+            }
+            ////////////////// EOF validate spreadsheet ////////////////////////
+
 
             //exit('exit');
 
@@ -726,9 +820,9 @@ class FellAppImportPopulateUtil {
                     continue; //skip this fell application, because it already exists in DB
                 }
 
-                $email = $this->getValueByHeaderName('email', $rowData, $headers);
-                $lastName = $this->getValueByHeaderName('lastName', $rowData, $headers);
-                $firstName = $this->getValueByHeaderName('firstName', $rowData, $headers);
+                //$email = $this->getValueByHeaderName('email', $rowData, $headers);
+                //$lastName = $this->getValueByHeaderName('lastName', $rowData, $headers);
+                //$firstName = $this->getValueByHeaderName('firstName', $rowData, $headers);
                 $middleName = $this->getValueByHeaderName('middleName', $rowData, $headers);
 
 //                $logger->notice('Start populating fell application (googleFormId=['.$googleFormId.']'.' with email='.$email.', firstName='.$firstName.', lastname='.$lastName);
@@ -1155,7 +1249,7 @@ class FellAppImportPopulateUtil {
                         $logger->error("Erroneous spreadsheet deleted from server: $inputFileName=".$inputFileName);
                     }
 
-                    $event = "Error:".
+                    $event = "Second spreadsheet validation error:".
                         " (Applicant=[" . $displayName . "], Application ID=[" . $fellowshipApplication->getId() . "])" .
                         " Empty required fields after trying to populate the Fellowship Application with Google Applicant ID=[" . $googleFormId . "]" .
                         ": " . implode("; ",$errorMsgArr);
@@ -1164,7 +1258,7 @@ class FellAppImportPopulateUtil {
                     $logger->error($event);
 
                     //send email
-                    $sendErrorEmail = true;
+                    //$sendErrorEmail = true;
                     $sendErrorEmail = false;
                     if( $sendErrorEmail ) {
                         $userSecUtil = $this->container->get('user_security_utility');
@@ -1328,7 +1422,7 @@ class FellAppImportPopulateUtil {
         return $populatedFellowshipApplications;
     }
 
-    public function createFellAppReference($em,$author,$typeStr,$rowData,$headers) {
+    public function createFellAppReference($em,$author,$typeStr,$rowData,$headers,$testOnly=false) {
 
         //recommendation1Name	recommendation1Title	recommendation1Institution	recommendation1AddressStreet1
         //recommendation1AddressStreet2	recommendation1AddressCity	recommendation1AddressState	recommendation1AddressZip	recommendation1AddressCountry
@@ -1342,6 +1436,10 @@ class FellAppImportPopulateUtil {
         if( !$recommendationFirstName && !$recommendationLastName ) {
             //echo "no ref<br>";
             return null;
+        }
+
+        if( $testOnly ) {
+            return true;
         }
 
         $reference = new Reference($author);
