@@ -56,7 +56,7 @@ class DataFile {
 
 
     /**
-     * @ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
      * @ORM\JoinColumn(name="document_id", referencedColumnName="id")
      */
     private $document;
