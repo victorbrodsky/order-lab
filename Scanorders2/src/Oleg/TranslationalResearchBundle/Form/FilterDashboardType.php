@@ -134,7 +134,7 @@ class FilterDashboardType extends AbstractType
                 'choices' => $quantityLimitArr,
                 'multiple' => false,
                 //'expanded' => true,
-                //'required' => true,
+                'required' => false,
                 'empty_data' => '10',
                 //'data' => '10',
                 'attr' => array('class' => 'combobox', 'placeholder' => "Quantity limit")
