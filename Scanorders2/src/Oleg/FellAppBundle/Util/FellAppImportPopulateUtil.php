@@ -1258,7 +1258,7 @@ class FellAppImportPopulateUtil {
                         " Empty required fields after trying to populate the Fellowship Application with Google Applicant ID=[" . $googleFormId . "]" .
                         ": " . implode("; ",$errorMsgArr);
 
-                    $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,$fellowshipApplication,null,'Fellowship Application Creation Failed');
+                    $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Fellowship Application Creation Failed');
                     $logger->error($event);
 
                     //send email
