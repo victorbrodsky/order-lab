@@ -2818,11 +2818,13 @@ class DashboardUtil
             $invoiceStates = array("Paid in Full","Paid Partially");
             $compareType = "date when status changed to paid in full";
 
-            $startDate->modify( 'first day of last month' );
+            //$startDate->modify( 'first day of last month' );
+            $startDate->modify( 'first day of this month' );
             do {
                 $startDateLabel = $startDate->format('M-Y');
                 $thisEndDate = clone $startDate;
-                $thisEndDate->modify( 'first day of next month' );
+                //$thisEndDate->modify( 'first day of next month' );
+                $thisEndDate->modify('last day of this month');
                 //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y").": ";
 
                 $invoices = $this->getInvoicesByFilter($startDate,$thisEndDate,$projectSpecialtyObjects,$invoiceStates,false,true,$compareType);
@@ -3493,11 +3495,13 @@ class DashboardUtil
             $globalCount = 0;
             $globalDays = 0;
 
-            $startDate->modify( 'first day of last month' );
+            //$startDate->modify( 'first day of last month' );
+            $startDate->modify( 'first day of this month' );
             do {
                 $startDateLabel = $startDate->format('M-Y');
                 $thisEndDate = clone $startDate;
-                $thisEndDate->modify( 'first day of next month' );
+                //$thisEndDate->modify( 'first day of next month' );
+                $thisEndDate->modify('last day of this month');
                 //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y").": ";
                 $transRequests = $this->getRequestsByAdvanceFilter($startDate,$thisEndDate,$projectSpecialtyObjects,$productservice,$statuses);
                 $startDate->modify( 'first day of next month' );
@@ -4452,11 +4456,13 @@ class DashboardUtil
             $datesArr = array();
 
             //get startDate and add 1 month until the date is less than endDate
-            $startDate->modify( 'first day of last month' );
+            //$startDate->modify( 'first day of last month' );
+            $startDate->modify( 'first day of this month' );
             do {
                 $startDateLabel = $startDate->format('M-Y');
                 $thisEndDate = clone $startDate;
-                $thisEndDate->modify( 'first day of next month' );
+                //$thisEndDate->modify( 'first day of next month' );
+                $thisEndDate->modify('last day of this month');
                 $datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
                 //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
                 //$startDate,$endDate,$projectSpecialties,$states,$addOneEndDay
@@ -4529,11 +4535,13 @@ class DashboardUtil
             $datesArr = array();
 
             //get startDate and add 1 month until the date is less than endDate
-            $startDate->modify( 'first day of last month' );
+            //$startDate->modify( 'first day of last month' );
+            $startDate->modify( 'first day of this month' );
             do {
                 $startDateLabel = $startDate->format('M-Y');
                 $thisEndDate = clone $startDate;
-                $thisEndDate->modify( 'first day of next month' );
+                //$thisEndDate->modify( 'first day of next month' );
+                $thisEndDate->modify('last day of this month');
                 $datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
                 //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
                 //$startDate,$endDate,$projectSpecialties,$states,$addOneEndDay
@@ -4620,11 +4628,13 @@ class DashboardUtil
             $datesArr = array();
 
             //get startDate and add 1 month until the date is less than endDate
-            $startDate->modify( 'first day of last month' );
+            //$startDate->modify( 'first day of last month' );
+            $startDate->modify( 'first day of this month' );
             do {
                 $startDateLabel = $startDate->format('M-Y');
                 $thisEndDate = clone $startDate;
-                $thisEndDate->modify( 'first day of next month' );
+                //$thisEndDate->modify( 'first day of next month' );
+                $thisEndDate->modify('last day of this month');
                 $datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
                 //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
                 //$startDate,$endDate,$projectSpecialties,$states,$addOneEndDay
@@ -5271,11 +5281,13 @@ class DashboardUtil
             );
 
             //get startDate and add 1 month until the date is less than endDate
-            $startDate->modify( 'first day of last month' );
+            //$startDate->modify( 'first day of last month' );
+            $startDate->modify( 'first day of this month' );
             do {
                 $startDateLabel = $startDate->format('M-Y');
                 $thisEndDate = clone $startDate;
-                $thisEndDate->modify( 'first day of next month' );
+                //$thisEndDate->modify( 'first day of next month' );
+                $thisEndDate->modify('last day of this month');
                 $datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
                 //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
 
@@ -5432,11 +5444,13 @@ class DashboardUtil
             $loginsArr = array();
             $totalLoginCount = 0;
 
-            $startDate->modify( 'first day of last month' );
+            //$startDate->modify( 'first day of last month' );
+            $startDate->modify( 'first day of this month' );
             do {
                 $startDateLabel = $startDate->format('M-Y');
                 $thisEndDate = clone $startDate;
-                $thisEndDate->modify( 'first day of next month' );
+                //$thisEndDate->modify( 'first day of next month' );
+                $thisEndDate->modify('last day of this month');
                 $datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
                 //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
 
@@ -5470,11 +5484,13 @@ class DashboardUtil
 
             $totalLoginCount = 0;
 
-            $startDate->modify( 'first day of last month' );
+            //$startDate->modify( 'first day of last month' );
+            $startDate->modify( 'first day of this month' );
             do {
                 $startDateLabel = $startDate->format('M-Y');
                 $thisEndDate = clone $startDate;
-                $thisEndDate->modify( 'first day of next month' );
+                //$thisEndDate->modify( 'first day of next month' );
+                $thisEndDate->modify('last day of this month');
                 $datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
                 //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
 
@@ -5604,7 +5620,7 @@ class DashboardUtil
                 $startDateLabel = $startDate->format('d-M-Y');
 
                 $datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
-                //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
+                echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
 
                 $loginEmployeesCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'employees',true);
                 $loginsEmployeesArr[$startDateLabel] = $loginEmployeesCount;
