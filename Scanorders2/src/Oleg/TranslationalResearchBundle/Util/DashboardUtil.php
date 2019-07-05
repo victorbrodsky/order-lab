@@ -107,7 +107,7 @@ class DashboardUtil
             "33. Turn-around Statistics: Number of days to complete each Work Request (based on 'Completed and Notified' requests) (linked)" => "turn-around-statistics-days-complete-per-request",
             "34. Turn-around Statistics: Number of days to complete each Work Request by products/services (based on 'Completed and Notified' requests)" => "turn-around-statistics-days-complete-per-request-with-product",
             "35. Turn-around Statistics: Average number of days for each project request approval phase (linked)" => "turn-around-statistics-days-project-state",
-            "36. Turn-around Statistics: Number of days for each project request approval phase (linked)" => "turn-around-statistics-days-per-project-state",
+            "36. Turn-around Statistics: Number of days for each project request’s approval phase (linked)" => "turn-around-statistics-days-per-project-state",
             "37. Turn-around Statistics: Average number of days for invoices to be paid (based on fully and partially paid invoices)" => "turn-around-statistics-days-paid-invoice",
             "38. Turn-around Statistics: Number of days for each invoice to be paid (based on fully and partially paid invoices) (linked)" => "turn-around-statistics-days-per-paid-invoice",
             "39. Turn-around Statistics: Top PIs with most delayed unpaid invoices (linked)" => "turn-around-statistics-pis-with-delayed-unpaid-invoices",
@@ -3823,7 +3823,7 @@ class DashboardUtil
             $chartsArray = $this->getChart($averageDaysNew, $chartName,'bar',$layoutArray); // getChart
         }
 
-        //"36. Turn-around Statistics: Number of days for each project request approval phase" => "turn-around-statistics-days-per-project-state"
+        //"36. Turn-around Statistics: Number of days for each project request’s approval phase" => "turn-around-statistics-days-per-project-state"
         if( $chartType == "turn-around-statistics-days-per-project-state" ) {
 
             $projectIrbPhaseArr = array();
