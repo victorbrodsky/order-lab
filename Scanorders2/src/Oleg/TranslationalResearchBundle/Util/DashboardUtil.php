@@ -3920,7 +3920,7 @@ class DashboardUtil
                 $compareType = 'last invoice generation date';
                 $addOneEndDay = true;
                 //$addOneEndDay = false;
-                $filterRequest = true;
+                $filterRequest = false;
 
                 $invoices = $this->getInvoicesByFilter($startDate, $thisEndDate, $projectSpecialtyObjects, $invoiceStates,$addOneEndDay,$compareType,$filterRequest);
 
