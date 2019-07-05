@@ -5620,7 +5620,7 @@ class DashboardUtil
                 $startDateLabel = $startDate->format('d-M-Y');
 
                 $datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
-                echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
+                //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
 
                 $loginEmployeesCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'employees',true);
                 $loginsEmployeesArr[$startDateLabel] = $loginEmployeesCount;
