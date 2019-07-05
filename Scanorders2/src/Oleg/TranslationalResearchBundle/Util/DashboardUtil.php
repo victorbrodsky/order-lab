@@ -3907,9 +3907,11 @@ class DashboardUtil
                 //$thisEndDate->modify( 'first day of next month' );
                 $thisEndDate->modify('last day of this month');
                 //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y").": ";
-                $invoices = $this->getInvoicesByFilter($startDate, $thisEndDate, $projectSpecialtyObjects, $invoiceStates);
 
-                //TODO: link each bar to the filtered list of invoices for the corresponding month and with status “fully paid” or “partially paid”
+                //$startDate, $endDate, $projectSpecialties, $states=null, $overdue=false, $addOneEndDay=true, $compareType='last invoice generation date'
+                $invoices = $this->getInvoicesByFilter($startDate, $thisEndDate, $projectSpecialtyObjects, $invoiceStates,false,false);
+
+                //link each bar to the filtered list of invoices for the corresponding month and with status “fully paid” or “partially paid”
                 //$dates = $datesArr[$date];
                 $linkFilterArr = array(
                     'filter[status][0]' => "Paid in Full",
