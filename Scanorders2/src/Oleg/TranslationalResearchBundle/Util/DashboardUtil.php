@@ -3919,9 +3919,10 @@ class DashboardUtil
                 //$startDate, $endDate, $projectSpecialties, $states=null, $overdue=false, $addOneEndDay=true, $compareType='last invoice generation date',$filterRequest=true
                 $compareType = 'last invoice generation date';
                 $overdue = false;
-                $addOneEndDay = true;
-                //$addOneEndDay = false;
-                $filterRequest = false;
+                //$addOneEndDay = true;
+                $addOneEndDay = false;
+                //$filterRequest = false;
+                $filterRequest = true;
                 // getInvoicesByFilter(
                 $invoices = $this->getInvoicesByFilter($startDate,$thisEndDate,$projectSpecialtyObjects,$invoiceStates,$overdue,$addOneEndDay,$compareType,$filterRequest);
 
