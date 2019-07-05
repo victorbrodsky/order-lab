@@ -3733,7 +3733,7 @@ class DashboardUtil
         if( $chartType == "turn-around-statistics-days-project-state" ) {
             $transresUtil = $this->container->get('transres_util');
 
-            $reviewStates = array("irb_review","admin_review","committee_review","final_review");
+            $reviewStates = array("irb_review","admin_review","committee_review","final_review","irb_missinginfo");
 
             $projectStates = null;
             //$projectStates = array('final_approved','closed','final_rejected');
@@ -3748,6 +3748,8 @@ class DashboardUtil
             $projects = $this->getProjectsByFilter($startDate, $endDate, $projectSpecialtyObjects, $projectStates);
             //echo "### $state projects count=".count($projects)."<br>";
 
+            $totalDaysCount = 0;
+            $totalDays = 0;
             $countArr = array();
 
             foreach ($projects as $project) {
@@ -3770,6 +3772,9 @@ class DashboardUtil
                         } else {
                             $countArr[$stateLabel] = 1;
                         }
+
+                        $totalDays = $totalDays + $days;
+                        $totalDaysCount++;
                     }
 
                 }//foreach state
@@ -3801,6 +3806,15 @@ class DashboardUtil
                     //$averageDaysNew[$stateLabel] = $avgDaysInt;
                     $daysArr = array("value"=>$avgDaysInt, "link"=>$link);
                     $averageDaysNew[$stateLabel] = $daysArr;
+                }
+            }
+
+            //Calculate the total by adding average IRB Review days + Average Admin Review days + Average Committee Review days +
+            // Average Final Review days and show it in the title after the word days: “Average number of days (33) for each…”
+            if( $totalDaysCount > 0 ) {
+                $averageDays = round($totalDays / $totalDaysCount);
+                if( $averageDays > 0 ) {
+                    $chartName = str_replace("Average number of days","Average number of days ($averageDays)",$chartName);
                 }
             }
 
