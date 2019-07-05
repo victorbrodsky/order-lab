@@ -1194,7 +1194,7 @@ class DashboardUtil
             $chartNameModified = str_replace("(Top)","(".$quantityLimitStr.")",$chartName);
         }
         if (strpos($chartName, "Top ") !== false) {
-            $chartNameModified = str_replace("Top "," ".$quantityLimitStr,$chartName);
+            $chartNameModified = str_replace("Top ","".$quantityLimitStr." ",$chartName);
         }
 
         if( !$chartNameModified ) {
