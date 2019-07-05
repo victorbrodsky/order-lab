@@ -109,7 +109,7 @@ class DashboardUtil
             "35. Turn-around Statistics: Average number of days for each project request approval phase (linked)" => "turn-around-statistics-days-project-state",
             "36. Turn-around Statistics: Number of days for each project request’s approval phase (linked)" => "turn-around-statistics-days-per-project-state",
             "37. Turn-around Statistics: Average number of days for invoices to be paid (based on fully and partially paid invoices) (linked)" => "turn-around-statistics-days-paid-invoice",
-            "38. Turn-around Statistics: Number of days for each invoice to be paid (based on fully and partially paid invoices) (linked)" => "turn-around-statistics-days-per-paid-invoice",
+            "38. Turn-around Statistics: Number of days each paid and partially paid invoice took to get paid (linked)" => "turn-around-statistics-days-per-paid-invoice",
             "39. Turn-around Statistics: Top PIs with most delayed unpaid invoices (linked)" => "turn-around-statistics-pis-with-delayed-unpaid-invoices",
             "40. Turn-around Statistics: Top PIs with highest total unpaid, overdue invoices (linked)" => "turn-around-statistics-pis-with-highest-total-unpaid-invoices",
             "41. Turn-around Statistics: Top PIs by index (delay in months * invoiced amount, aggregate) for unpaid, overdue invoices (linked)" => "turn-around-statistics-pis-combining-total-delayed-unpaid-invoices",
@@ -3913,7 +3913,9 @@ class DashboardUtil
                 //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y").": ";
 
                 //$startDate, $endDate, $projectSpecialties, $states=null, $overdue=false, $addOneEndDay=true, $compareType='last invoice generation date'
-                $invoices = $this->getInvoicesByFilter($startDate, $thisEndDate, $projectSpecialtyObjects, $invoiceStates,false,false);
+                $addOneEndDay = true;
+                //$addOneEndDay = false;
+                $invoices = $this->getInvoicesByFilter($startDate, $thisEndDate, $projectSpecialtyObjects, $invoiceStates,$addOneEndDay,false);
 
                 //link each bar to the filtered list of invoices for the corresponding month and with status “fully paid” or “partially paid”
                 //$dates = $datesArr[$date];
@@ -3980,7 +3982,7 @@ class DashboardUtil
                     $averageDays[$startDateLabel] = array('value'=>$avgDaysInt,'link'=>$link);
                 } else {
                     //$averageDays[$startDateLabel] = null;
-                    $averageDays[$startDateLabel] = array('value'=>null,'link'=>$link);
+                    $averageDays[$startDateLabel] = array('value'=>0,'link'=>$link);
                 }
 
             } while( $startDate < $endDate );
@@ -3995,7 +3997,7 @@ class DashboardUtil
             $chartsArray = $this->getChart($averageDays, $chartName,'bar',$layoutArray);
         }
 
-        //"38. Turn-around Statistics: Number of days for each invoice to be paid (based on fully and partially paid invoices)" => "turn-around-statistics-days-per-paid-invoice",
+        //"38. Turn-around Statistics: Number of days each paid and partially paid invoice took to get paid" => "turn-around-statistics-days-per-paid-invoice",
         if( $chartType == "turn-around-statistics-days-per-paid-invoice" ) {
             $invoiceStates = array("Paid in Full","Paid Partially");
             $invoices = $this->getInvoicesByFilter($startDate, $endDate, $projectSpecialtyObjects, $invoiceStates);
