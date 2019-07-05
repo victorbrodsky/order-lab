@@ -3910,6 +3910,23 @@ class DashboardUtil
                 $invoices = $this->getInvoicesByFilter($startDate, $endDate, $projectSpecialtyObjects, $invoiceStates);
                 $startDate->modify( 'first day of next month' );
 
+                //$datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
+
+                //TODO: link each bar to the filtered list of invoices for the corresponding month and with status “fully paid” or “partially paid”
+                //$dates = $datesArr[$date];
+                $linkFilterArr = array(
+                    'filter[status][0]' => "Paid in Full",
+                    'filter[status][1]' => "Paid Partially",
+                    'filter[startCreateDate]' => $startDate->format('m/d/Y'),
+                    'filter[endCreateDate]' => $thisEndDate->format('m/d/Y'),
+                    'filter[version]' => "Latest"
+                );
+                $link = $this->container->get('router')->generate(
+                    'translationalresearch_invoice_index_filter',
+                    $linkFilterArr,
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+
                 //echo "<br>";
                 //echo "invoices=".count($invoices)." (".$startDateLabel.")<br>";
 
@@ -3953,28 +3970,11 @@ class DashboardUtil
 
                 if( $count > 0 ) {
                     $avgDaysInt = round($daysTotal/$count);
-
-                    //TODO: link each bar to the filtered list of invoices for the corresponding month and with status “fully paid” or “partially paid”
-                    $dates = $datesArr[$date];
-                    $linkFilterArr = array(
-                        'filter[status][0]' => "Unpaid/Issued",
-                        'filter[status][1]' => "Paid in Full",
-                        'filter[status][2]' => "Paid Partially",
-                        'filter[status][3]' => 'Refunded Fully',
-                        'filter[status][4]' => 'Refunded Partially',
-                        'filter[startCreateDate]' => $dates['startDate'], //dueDate, therefore we can not filter invoices list
-                        'filter[endCreateDate]' => $dates['endDate'],
-                        'filter[version]' => "Latest"
-                    );
-                    $link = $this->container->get('router')->generate(
-                        'translationalresearch_invoice_index_filter',
-                        $linkFilterArr,
-                        UrlGeneratorInterface::ABSOLUTE_URL
-                    );
-
-                    $averageDays[$startDateLabel] = $avgDaysInt;
+                    //$averageDays[$startDateLabel] = $avgDaysInt;
+                    $averageDays[$startDateLabel] = array('value'=>$avgDaysInt,'link'=>$link);
                 } else {
-                    $averageDays[$startDateLabel] = null;
+                    //$averageDays[$startDateLabel] = null;
+                    $averageDays[$startDateLabel] = array('value'=>null,'link'=>$link);
                 }
 
             } while( $startDate < $endDate );
