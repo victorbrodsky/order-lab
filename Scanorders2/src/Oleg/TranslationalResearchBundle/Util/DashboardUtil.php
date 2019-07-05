@@ -3918,11 +3918,12 @@ class DashboardUtil
 
                 //$startDate, $endDate, $projectSpecialties, $states=null, $overdue=false, $addOneEndDay=true, $compareType='last invoice generation date',$filterRequest=true
                 $compareType = 'last invoice generation date';
+                $overdue = false;
                 $addOneEndDay = true;
                 //$addOneEndDay = false;
                 $filterRequest = false;
-
-                $invoices = $this->getInvoicesByFilter($startDate, $thisEndDate, $projectSpecialtyObjects, $invoiceStates,$addOneEndDay,$compareType,$filterRequest);
+                // getInvoicesByFilter(
+                $invoices = $this->getInvoicesByFilter($startDate,$thisEndDate,$projectSpecialtyObjects,$invoiceStates,$overdue,$addOneEndDay,$compareType,$filterRequest);
 
                 //link each bar to the filtered list of invoices for the corresponding month and with status “fully paid” or “partially paid”
                 //$dates = $datesArr[$date];
