@@ -106,7 +106,7 @@ class DashboardUtil
             "32. Turn-around Statistics: Average number of days to complete a Work Request (based on 'Completed and Notified' requests)" => "turn-around-statistics-days-complete-request",
             "33. Turn-around Statistics: Number of days to complete each Work Request (based on 'Completed and Notified' requests) (linked)" => "turn-around-statistics-days-complete-per-request",
             "34. Turn-around Statistics: Number of days to complete each Work Request by products/services (based on 'Completed and Notified' requests)" => "turn-around-statistics-days-complete-per-request-with-product",
-            "35. Turn-around Statistics: Average number of days for each project request approval phase" => "turn-around-statistics-days-project-state",
+            "35. Turn-around Statistics: Average number of days for each project request approval phase (linked)" => "turn-around-statistics-days-project-state",
             "36. Turn-around Statistics: Number of days for each project request approval phase (linked)" => "turn-around-statistics-days-per-project-state",
             "37. Turn-around Statistics: Average number of days for invoices to be paid (based on fully and partially paid invoices)" => "turn-around-statistics-days-paid-invoice",
             "38. Turn-around Statistics: Number of days for each invoice to be paid (based on fully and partially paid invoices) (linked)" => "turn-around-statistics-days-per-paid-invoice",
@@ -2858,7 +2858,7 @@ class DashboardUtil
             );
 
             //$dataArr, $title, $type='pie', $layoutArray=null, $valuePrefixLabel=null, $valuePostfixLabel=null, $descriptionArr=array()
-            $chartsArray = $this->getChart($paidArr,$chartName,'bar',$layoutArray,"$",null,$descriptionArr,"percent+label"); // getChart(
+            $chartsArray = $this->getChart($paidArr,$chartName,'bar',$layoutArray,"$",null,$descriptionArr,"percent+label");
         }
 
         //23. Generated Invoices by Status for Funded Projects
@@ -3104,7 +3104,7 @@ class DashboardUtil
             $chartsArray = $this->getChart($invoicesFeesByPiArrTop,$chartName,'pie',$layoutArray,null,null,null,"percent+label");
 
             //$dataArr, $title, $type='pie', $layoutArray=null, $valuePrefixLabel=null, $valuePostfixLabel=null, $descriptionArr=null, $hoverinfo=null
-            //$chartsArray = $this->getChart($invoicesFeesByPiArrTop,$chartName,'pie',$layoutArray," : $",null,null,"percent+label","for-other"); // getChart(
+            //$chartsArray = $this->getChart($invoicesFeesByPiArrTop,$chartName,'pie',$layoutArray," : $",null,null,"percent+label","for-other");
         }
 
         //"26. Total Invoiced Amounts of Projects per Pathologist Involved (Top 10)" =>             "fees-by-invoices-per-projects-per-pathologist-involved",
@@ -3729,7 +3729,7 @@ class DashboardUtil
             $chartsArray = $this->getStackedChart($combinedTrpData, $chartName, "stack");
         }
 
-        //"35. Turn-around Statistics: Average number of days for each project request approval phase" => "turn-around-statistics-days-project-state"
+        //"35. Turn-around Statistics: Average number of days for each project request approval phase (linked)" => "turn-around-statistics-days-project-state"
         if( $chartType == "turn-around-statistics-days-project-state" ) {
             $transresUtil = $this->container->get('transres_util');
 
@@ -3778,19 +3778,35 @@ class DashboardUtil
 
             //exit("exit: $chartName");
 
+            //TODO: links the entire graph it to the single filtered list of ALL 128 project requests, filtered by current status = “Approved” or “Closed”
+            $linkFilterArr = array(
+                'filter[state][0]' => 'final_approved',
+                'filter[state][1]' => 'closed',
+                'filter[startDate]' => $startDateStr,
+                'filter[endDate]' => $endDateStr,
+            );
+            $link = $this->container->get('router')->generate(
+                'translationalresearch_project_index',
+                $linkFilterArr,
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+
+
             $averageDaysNew = array();
             foreach($averageDays as $stateLabel=>$days) {
                 $count = $countArr[$stateLabel];
                 if( $count > 0 ) {
                     //$stateLabel = $stateLabel . " (" . $count . " projects)";
                     $avgDaysInt = round($days / $count);
-                    $averageDaysNew[$stateLabel] = $avgDaysInt;
+                    //$averageDaysNew[$stateLabel] = $avgDaysInt;
+                    $daysArr = array("value"=>$avgDaysInt, "link"=>$link);
+                    $averageDaysNew[$stateLabel] = $daysArr;
                 }
             }
 
             $chartName = $chartName . " (based on " . count($projects) . " approved or closed projects)";
 
-            $chartsArray = $this->getChart($averageDaysNew, $chartName,'bar',$layoutArray);
+            $chartsArray = $this->getChart($averageDaysNew, $chartName,'bar',$layoutArray); // getChart
         }
 
         //"36. Turn-around Statistics: Number of days for each project request approval phase" => "turn-around-statistics-days-per-project-state"
