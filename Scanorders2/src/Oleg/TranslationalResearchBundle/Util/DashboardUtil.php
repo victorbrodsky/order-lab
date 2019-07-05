@@ -108,7 +108,7 @@ class DashboardUtil
             "34. Turn-around Statistics: Number of days to complete each Work Request by products/services (based on 'Completed and Notified' requests)" => "turn-around-statistics-days-complete-per-request-with-product",
             "35. Turn-around Statistics: Average number of days for each project request approval phase (linked)" => "turn-around-statistics-days-project-state",
             "36. Turn-around Statistics: Number of days for each project request’s approval phase (linked)" => "turn-around-statistics-days-per-project-state",
-            "37. Turn-around Statistics: Average number of days for invoices to be paid (based on fully and partially paid invoices)" => "turn-around-statistics-days-paid-invoice",
+            "37. Turn-around Statistics: Average number of days for invoices to be paid (based on fully and partially paid invoices) (linked)" => "turn-around-statistics-days-paid-invoice",
             "38. Turn-around Statistics: Number of days for each invoice to be paid (based on fully and partially paid invoices) (linked)" => "turn-around-statistics-days-per-paid-invoice",
             "39. Turn-around Statistics: Top PIs with most delayed unpaid invoices (linked)" => "turn-around-statistics-pis-with-delayed-unpaid-invoices",
             "40. Turn-around Statistics: Top PIs with highest total unpaid, overdue invoices (linked)" => "turn-around-statistics-pis-with-highest-total-unpaid-invoices",
@@ -3783,7 +3783,7 @@ class DashboardUtil
 
             //exit("exit: $chartName");
 
-            //TODO: links the entire graph it to the single filtered list of ALL 128 project requests, filtered by current status = “Approved” or “Closed”
+            //links the entire graph it to the single filtered list of ALL 128 project requests, filtered by current status = “Approved” or “Closed”
             $linkFilterArr = array(
                 'filter[state][0]' => 'final_approved',
                 'filter[state][1]' => 'closed',
@@ -3893,17 +3893,19 @@ class DashboardUtil
         }
 
         //third bar graph showing how many days on average it took for Invoices to go from “Issued” to “Paid”
-        //"36. Turn-around Statistics: Average number of days for invoices to be paid" =>                 "turn-around-statistics-days-paid-invoice"
+        //"37. Turn-around Statistics: Average number of days for invoices to be paid" =>                 "turn-around-statistics-days-paid-invoice"
         if( $chartType == "turn-around-statistics-days-paid-invoice" ) {
             $averageDays = array();
 
             $invoiceStates = array("Paid in Full","Paid Partially");
 
-            $startDate->modify( 'first day of last month' );
+            //$startDate->modify( 'first day of last month' );
+            $startDate->modify( 'first day of this month' );
             do {
                 $startDateLabel = $startDate->format('M-Y');
                 $thisEndDate = clone $startDate;
-                $thisEndDate->modify( 'first day of next month' );
+                //$thisEndDate->modify( 'first day of next month' );
+                $thisEndDate->modify('last day of this month');
                 //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y").": ";
                 $invoices = $this->getInvoicesByFilter($startDate, $endDate, $projectSpecialtyObjects, $invoiceStates);
                 $startDate->modify( 'first day of next month' );
@@ -3951,6 +3953,25 @@ class DashboardUtil
 
                 if( $count > 0 ) {
                     $avgDaysInt = round($daysTotal/$count);
+
+                    //TODO: link each bar to the filtered list of invoices for the corresponding month and with status “fully paid” or “partially paid”
+                    $dates = $datesArr[$date];
+                    $linkFilterArr = array(
+                        'filter[status][0]' => "Unpaid/Issued",
+                        'filter[status][1]' => "Paid in Full",
+                        'filter[status][2]' => "Paid Partially",
+                        'filter[status][3]' => 'Refunded Fully',
+                        'filter[status][4]' => 'Refunded Partially',
+                        'filter[startCreateDate]' => $dates['startDate'], //dueDate, therefore we can not filter invoices list
+                        'filter[endCreateDate]' => $dates['endDate'],
+                        'filter[version]' => "Latest"
+                    );
+                    $link = $this->container->get('router')->generate(
+                        'translationalresearch_invoice_index_filter',
+                        $linkFilterArr,
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    );
+
                     $averageDays[$startDateLabel] = $avgDaysInt;
                 } else {
                     $averageDays[$startDateLabel] = null;
@@ -3958,10 +3979,17 @@ class DashboardUtil
 
             } while( $startDate < $endDate );
 
+            $layoutArray = array(
+                'height' => $this->height*1.3,
+                'width' => $this->width,
+                'title' => $chartName,
+                'margin' => array('b' => 300)
+            );
+
             $chartsArray = $this->getChart($averageDays, $chartName,'bar',$layoutArray);
         }
 
-        //"37. Turn-around Statistics: Number of days for each invoice to be paid (based on fully and partially paid invoices)" => "turn-around-statistics-days-per-paid-invoice",
+        //"38. Turn-around Statistics: Number of days for each invoice to be paid (based on fully and partially paid invoices)" => "turn-around-statistics-days-per-paid-invoice",
         if( $chartType == "turn-around-statistics-days-per-paid-invoice" ) {
             $invoiceStates = array("Paid in Full","Paid Partially");
             $invoices = $this->getInvoicesByFilter($startDate, $endDate, $projectSpecialtyObjects, $invoiceStates);
