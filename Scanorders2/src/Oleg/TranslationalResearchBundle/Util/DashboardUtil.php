@@ -1157,7 +1157,7 @@ class DashboardUtil
         $query = $this->em->createQuery($dql);
 
         $query->setParameters($dqlParameters);
-        //echo "query=".$query->getSql()."<br>";
+        echo "query=".$query->getSql()."<br>";
 
         $projects = $query->getResult();
 
