@@ -1073,7 +1073,7 @@ class DashboardUtil
         return $projects;
     }
 
-    public function getInvoicesByFilter($startDate, $endDate, $projectSpecialties, $states=null, $overdue=false, $addOneEndDay=true, $compareType='last invoice generation date') {
+    public function getInvoicesByFilter($startDate, $endDate, $projectSpecialties, $states=null, $overdue=false, $addOneEndDay=true, $compareType='last invoice generation date',$filterRequest=true) {
         $repository = $this->em->getRepository('OlegTranslationalResearchBundle:Invoice');
         $dql =  $repository->createQueryBuilder("invoice");
         $dql->select('invoice');
@@ -1089,7 +1089,11 @@ class DashboardUtil
                 $stateArr[] = "invoice.status = '".$state."'";
             }
             if( count($stateArr) > 0 ) {
-                $dql->where("request.progressState != 'draft' AND request.progressState != 'canceled' AND invoice.latestVersion = TRUE AND (".implode(" OR ",$stateArr).")");
+                if( $filterRequest ) {
+                    $dql->where("request.progressState != 'draft' AND request.progressState != 'canceled' AND invoice.latestVersion = TRUE AND (".implode(" OR ",$stateArr).")");
+                } else {
+                    $dql->where("invoice.latestVersion = TRUE AND (".implode(" OR ",$stateArr).")");
+                }
             }
         }
 
@@ -1157,7 +1161,7 @@ class DashboardUtil
         $query = $this->em->createQuery($dql);
 
         $query->setParameters($dqlParameters);
-        echo "query=".$query->getSql()."<br>";
+        //echo "query=".$query->getSql()."<br>";
 
         $projects = $query->getResult();
 
@@ -3912,10 +3916,13 @@ class DashboardUtil
                 $thisEndDate->modify('last day of this month');
                 //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y").": ";
 
-                //$startDate, $endDate, $projectSpecialties, $states=null, $overdue=false, $addOneEndDay=true, $compareType='last invoice generation date'
+                //$startDate, $endDate, $projectSpecialties, $states=null, $overdue=false, $addOneEndDay=true, $compareType='last invoice generation date',$filterRequest=true
+                $compareType = 'last invoice generation date';
                 $addOneEndDay = true;
                 //$addOneEndDay = false;
-                $invoices = $this->getInvoicesByFilter($startDate, $thisEndDate, $projectSpecialtyObjects, $invoiceStates,$addOneEndDay,false);
+                $filterRequest = true;
+
+                $invoices = $this->getInvoicesByFilter($startDate, $thisEndDate, $projectSpecialtyObjects, $invoiceStates,$addOneEndDay,$compareType,$filterRequest);
 
                 //link each bar to the filtered list of invoices for the corresponding month and with status “fully paid” or “partially paid”
                 //$dates = $datesArr[$date];
