@@ -3922,7 +3922,7 @@ class DashboardUtil
                 //$addOneEndDay = true;
                 $addOneEndDay = false;
                 //$filterRequest = false;
-                $filterRequest = true;
+                $filterRequest = true; //this option is not set in the invoice list and the result is different after the clicking the link
                 // getInvoicesByFilter(
                 $invoices = $this->getInvoicesByFilter($startDate,$thisEndDate,$projectSpecialtyObjects,$invoiceStates,$overdue,$addOneEndDay,$compareType,$filterRequest);
 
