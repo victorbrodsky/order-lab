@@ -105,7 +105,7 @@ class DashboardUtil
 
             "32. Turn-around Statistics: Average number of days to complete a Work Request (based on 'Completed and Notified' requests)" => "turn-around-statistics-days-complete-request",
             "33. Turn-around Statistics: Number of days to complete each Work Request (based on 'Completed and Notified' requests) (linked)" => "turn-around-statistics-days-complete-per-request",
-            "34. Turn-around Statistics: Number of days to complete each Work Request with products/services (based on 'Completed and Notified' requests)" => "turn-around-statistics-days-complete-per-request-with-product",
+            "34. Turn-around Statistics: Number of days to complete each Work Request by products/services (based on 'Completed and Notified' requests)" => "turn-around-statistics-days-complete-per-request-with-product",
             "35. Turn-around Statistics: Average number of days for each project request approval phase" => "turn-around-statistics-days-project-state",
             "36. Turn-around Statistics: Number of days for each project request approval phase (linked)" => "turn-around-statistics-days-per-project-state",
             "37. Turn-around Statistics: Average number of days for invoices to be paid (based on fully and partially paid invoices)" => "turn-around-statistics-days-paid-invoice",
@@ -3643,7 +3643,7 @@ class DashboardUtil
             $chartsArray = $this->getChart($averageDays, $chartName,'bar',$layoutArray);
         }
 
-        //"33. Turn-around Statistics: Number of days to complete each Work Request with products/services (based on 'Completed and Notified' requests)" => "turn-around-statistics-days-complete-per-request-with-product",
+        //"34. Turn-around Statistics: Number of days to complete each Work Request by products/services (based on 'Completed and Notified' requests)" => "turn-around-statistics-days-complete-per-request-with-product",
         if( $chartType == "turn-around-statistics-days-complete-per-request-with-product" ) {
             $averageDays = array();
 
@@ -3720,7 +3720,7 @@ class DashboardUtil
 
             $layoutArray = array(
                 'height' => $this->height,
-                'width' => $this->width,
+                'width' => $this->width*1.2,
                 'title' => $chartName,
                 'margin' => array('b' => 200)
             );
