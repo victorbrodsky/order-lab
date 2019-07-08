@@ -412,18 +412,19 @@ class DashboardUtil
                     print_r($value);
                     //exit('111');
                     $value = $value[$arrayValueKey];
-                    echo "value(array)=$value <br>";
+                    echo "value(other array)=$value <br>";
                     $label = $label . $prefix . $this->getNumberFormat($value);
                 } else {
-                    echo "value(regular)=$value <br>";
+                    echo "value(other regular)=$value <br>";
                     $label = $label . $prefix . $this->getNumberFormat($value);
                 }
                 //$label = $label . $prefix . $value;
                 $newArrTop[$label] = $value;
             } else {
+                echo "value(regular)=$value <br>";
                 $newArrTop[$label] = $value;
             }
-        }
+        }//foreach
         exit('111');
         return $newArrTop;
     }
