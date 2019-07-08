@@ -4124,13 +4124,17 @@ class DashboardUtil
                 ),
             );
 
-            $chartName = $this->getTitleWithTotal($chartName,$titleCount);
+            $chartName = $this->getTitleWithTotal($chartName,$titleCount,null,"invoices total");
             $showOther = $this->getOtherStr($showLimited,"PIs");
             $pisUnpaidInvoicesArrTop = $this->getTopArray($pisUnpaidInvoicesArr,$showOther,$quantityLimit,$descriptionArr);
+
+            //attach value to other
+            $pisUnpaidInvoicesArrTop = $this->addValueToOther($pisUnpaidInvoicesArrTop);
+
             $chartsArray = $this->getChart($pisUnpaidInvoicesArrTop, $chartName,'pie',$layoutArray,null,null,null,"percent+label");
         }
 
-        //"39. Turn-around Statistics: Top 10 PIs with highest total unpaid, overdue invoices" => "turn-around-statistics-pis-with-highest-total-unpaid-invoices",
+        //"40. Turn-around Statistics: Top 10 PIs with highest total unpaid, overdue invoices" => "turn-around-statistics-pis-with-highest-total-unpaid-invoices",
         if( $chartType == "turn-around-statistics-pis-with-highest-total-unpaid-invoices" ) {
             $transresRequestUtil = $this->container->get('transres_request_util');
 
