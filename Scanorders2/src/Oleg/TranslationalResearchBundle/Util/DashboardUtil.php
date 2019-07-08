@@ -256,7 +256,7 @@ class DashboardUtil
                         foreach($otherIndexArr as $username=>$thisValue) {
                             //echo "thisValue=$thisValue <br>";
                             if( $thisValue && array_key_exists($username,$descrValueArr) ) {
-                                $descrValue = $descrValueArr[$username];
+                                $descrValue = $descrValue + $descrValueArr[$username];
                                 break;
                             }
                         }
