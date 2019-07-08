@@ -404,14 +404,14 @@ class DashboardUtil
         return $res;    //implode(array_slice($parts, 0, $last_part)).$postfix;
     }
 
-    public function addValueToOther($arrTop,$prefix=": $") {
+    public function addValueToOther($arrTop,$prefix=": $",$arrayValueKey='value') {
         $newArrTop = array();
         foreach($arrTop as $label => $value) {
             if( strpos($label, $this->otherSearchStr) !== false ) {
                 if( is_array($value) ) {
                     //print_r($value);
                     //exit('111');
-                    $valueNumber = $value['value'];
+                    $valueNumber = $value[$arrayValueKey];
                     $label = $label . $prefix . $this->getNumberFormat($valueNumber);
                 } else {
                     $label = $label . $prefix . $this->getNumberFormat($value);
@@ -4092,6 +4092,9 @@ class DashboardUtil
                     } else {
                         $count = 1;
                     }
+
+                    $due = intval($invoice->getDue());
+
                     //$pisUnpaidInvoicesArr[$piIndex] = $count;
                     $todayDate = new \DateTime();
                     $linkFilterArr = array(
@@ -4107,9 +4110,9 @@ class DashboardUtil
                         $linkFilterArr,
                         UrlGeneratorInterface::ABSOLUTE_URL
                     );
-                    $pisUnpaidInvoicesArr[$piIndex] = array('value'=>$count,'link'=>$link);
+                    $pisUnpaidInvoicesArr[$piIndex] = array('value'=>$count,'link'=>$link, "due"=>$due);
 
-                    $due = intval($invoice->getDue());
+                    //$due = intval($invoice->getDue());
                     if( isset($invoiceDueArr[$piIndex]) ) {
                         $due = $invoiceDueArr[$piIndex] + $due;
                     }
@@ -4138,7 +4141,7 @@ class DashboardUtil
             $pisUnpaidInvoicesArrTop = $this->getTopArray($pisUnpaidInvoicesArr,$showOther,$quantityLimit,$descriptionArr);
 
             //attach value to other
-            $pisUnpaidInvoicesArrTop = $this->addValueToOther($pisUnpaidInvoicesArrTop);
+            $pisUnpaidInvoicesArrTop = $this->addValueToOther($pisUnpaidInvoicesArrTop,": $","due");
 
             $chartsArray = $this->getChart($pisUnpaidInvoicesArrTop, $chartName,'pie',$layoutArray,null,null,null,"percent+label");
         }
