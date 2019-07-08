@@ -409,7 +409,7 @@ class DashboardUtil
         foreach($arrTop as $label => $value) {
             if( strpos($label, $this->otherSearchStr) !== false ) {
                 if( is_array($value) ) {
-                    //print_r($value);
+                    print_r($value);
                     //exit('111');
                     $value = $value[$arrayValueKey];
                     $label = $label . $prefix . $this->getNumberFormat($value);
