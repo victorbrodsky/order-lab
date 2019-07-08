@@ -202,6 +202,8 @@ class DashboardUtil
         //$otherId = "All other $showOthers combined";
         $otherId = str_replace("[[otherStr]]",$showOthers,$this->otherId);
 
+        $totalOthers = 0;
+        $otherIndexArr = array();
         $count = 1;
         $piProjectCountTopArr = array();
         foreach($piProjectCountArr as $username=>$value) {
@@ -221,6 +223,15 @@ class DashboardUtil
                         //$value = 1;
                     }
                     $piProjectCountTopArr[$otherId] = $value;
+
+                    $otherIndexArr[$username] = $piProjectCountTopArr[$otherId];
+//                    echo "value=$value <br>";
+//                    echo "<pre>";
+//                    print_r($value);
+//                    echo "</pre>";
+                    //$totalOthers = $totalOthers + $value;
+                    //add value to description array with index "other"
+                    //$descriptionArr[$otherId] = $piProjectCountTopArr[$otherId];
                 }//if show others
             }
             $count++;
@@ -241,6 +252,15 @@ class DashboardUtil
                     $descrType = $descriptionSingleArr['descrType'];
                     $descrValueArr = $descriptionSingleArr['descrValueArr'];
                     $descrValue = $descrValueArr[$index];
+                    if( $index == $otherId ) {
+                        foreach($otherIndexArr as $username=>$thisValue) {
+                            //echo "thisValue=$thisValue <br>";
+                            if( $thisValue && array_key_exists($username,$descrValueArr) ) {
+                                $descrValue = $descrValueArr[$username];
+                                break;
+                            }
+                        }
+                    }
                     if( $descrType == "money" ) {
                         $descrValue = $this->getNumberFormat($descrValue);
                     }
@@ -272,11 +292,11 @@ class DashboardUtil
 
                 $piProjectCountTopShortArr[$index] = $value;
             }//foreach
-            
-            echo "<pre>";
-            print_r($piProjectCountTopArr);
-            echo "</pre>";
-            exit('111');
+
+            //echo "<pre>";
+            //print_r($piProjectCountTopArr);
+            //echo "</pre>";
+            //exit('111');
 
             return $piProjectCountTopShortArr;
         }//if
