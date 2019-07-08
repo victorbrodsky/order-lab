@@ -408,7 +408,16 @@ class DashboardUtil
         $newArrTop = array();
         foreach($arrTop as $label => $value) {
             if( strpos($label, $this->otherSearchStr) !== false ) {
-                $label = $label . $prefix . $this->getNumberFormat($value);
+                if( is_array($value) ) {
+                    //print_r($value);
+                    //exit('111');
+                    $valueNumber = $value['value'];
+                    $label = $label . $prefix . $this->getNumberFormat($valueNumber);
+                } else {
+                    $label = $label . $prefix . $this->getNumberFormat($value);
+                }
+
+                //$label = $label . $prefix . $value;
                 $newArrTop[$label] = $value;
             } else {
                 $newArrTop[$label] = $value;
