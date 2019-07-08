@@ -213,7 +213,7 @@ class DashboardUtil
                     $piProjectCountTopArr[$username] = $value;
                 }
             } else {
-                if( $showOthers !== false ) {
+                if( $showOthers !== false ) { //show others
                     //echo "show Others <br>";
                     if (isset($piProjectCountTopArr[$otherId])) {
                         $value = $piProjectCountTopArr[$otherId] + $value;
@@ -221,7 +221,7 @@ class DashboardUtil
                         //$value = 1;
                     }
                     $piProjectCountTopArr[$otherId] = $value;
-                }
+                }//if show others
             }
             $count++;
         }
@@ -272,6 +272,11 @@ class DashboardUtil
 
                 $piProjectCountTopShortArr[$index] = $value;
             }//foreach
+            
+            echo "<pre>";
+            print_r($piProjectCountTopArr);
+            echo "</pre>";
+            exit('111');
 
             return $piProjectCountTopShortArr;
         }//if
@@ -412,20 +417,20 @@ class DashboardUtil
                     print_r($value);
                     //exit('111');
                     $value = $value[$arrayValueKey];
-                    echo "value(other array)=$value <br>";
+                    //echo "value(other array)=$value <br>";
                     $label = $label . $prefix . $this->getNumberFormat($value);
                 } else {
-                    echo "value(other regular)=$value <br>";
+                    //echo "value(other regular)=$value <br>";
                     $label = $label . $prefix . $this->getNumberFormat($value);
                 }
                 //$label = $label . $prefix . $value;
                 $newArrTop[$label] = $value;
             } else {
-                if( is_array($value) ) {
-                    echo "value(regular)=$value[$arrayValueKey] <br>";
-                } else {
-                    echo "value(regular)=$value <br>";
-                }
+//                if( is_array($value) ) {
+//                    echo "value(regular)=$value[$arrayValueKey] <br>";
+//                } else {
+//                    echo "value(regular)=$value <br>";
+//                }
                 $newArrTop[$label] = $value;
             }
         }//foreach
@@ -3118,7 +3123,7 @@ class DashboardUtil
             );
 
             $showOther = $this->getOtherStr($showLimited,"PIs"); //21vs25
-            $invoicesFeesByPiArrTop = $this->getTopArray($invoicesFeesByPiArr,$showOther,$quantityLimit,$descriptionArr);
+            $invoicesFeesByPiArrTop = $this->getTopArray($invoicesFeesByPiArr,$showOther,$quantityLimit,$descriptionArr); // getTopArray
 
             //attach value to other
             $invoicesFeesByPiArrTop = $this->addValueToOther($invoicesFeesByPiArrTop);
@@ -4147,10 +4152,10 @@ class DashboardUtil
 
             $chartName = $this->getTitleWithTotal($chartName,$titleCount,null,"invoices total");
             $showOther = $this->getOtherStr($showLimited,"PIs");
-            $pisUnpaidInvoicesArrTop = $this->getTopArray($pisUnpaidInvoicesArr,$showOther,$quantityLimit,$descriptionArr);
+            $pisUnpaidInvoicesArrTop = $this->getTopArray($pisUnpaidInvoicesArr,$showOther,$quantityLimit,$descriptionArr); //function getTopArray(
 
             //attach value to other
-            $pisUnpaidInvoicesArrTop = $this->addValueToOther($pisUnpaidInvoicesArrTop,": $","due");
+            //$pisUnpaidInvoicesArrTop = $this->addValueToOther($pisUnpaidInvoicesArrTop,": $","due");
 
             $chartsArray = $this->getChart($pisUnpaidInvoicesArrTop, $chartName,'pie',$layoutArray,null,null,null,"percent+label");
         }
