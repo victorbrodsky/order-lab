@@ -684,7 +684,8 @@ class RecLetterUtil {
             //return $documentDb;
         }
 
-        //download file to the server and create Document object in DB (TODO: use $file->getCreatedTime for creation date?)
+        //download file to the server and create Document object in DB
+        //TODO: use $file->getCreatedTime for creation date? (https://developers.google.com/drive/api/v3/reference/files#createdTime)
         $uploadedLetterDb = $googlesheetmanagement->downloadFileToServer($systemUser,$service,$file->getId(),$documentType,$path);
         if( !$uploadedLetterDb ) {
             throw new IOException('Unable to download file to server: fileID='.$uploadedLetterDb->getId());

@@ -202,7 +202,6 @@ class DashboardUtil
         //$otherId = "All other $showOthers combined";
         $otherId = str_replace("[[otherStr]]",$showOthers,$this->otherId);
 
-        $totalOthers = 0;
         $otherIndexArr = array();
         $count = 1;
         $piProjectCountTopArr = array();
@@ -224,14 +223,8 @@ class DashboardUtil
                     }
                     $piProjectCountTopArr[$otherId] = $value;
 
-                    $otherIndexArr[$username] = $piProjectCountTopArr[$otherId];
-//                    echo "value=$value <br>";
-//                    echo "<pre>";
-//                    print_r($value);
-//                    echo "</pre>";
-                    //$totalOthers = $totalOthers + $value;
                     //add value to description array with index "other"
-                    //$descriptionArr[$otherId] = $piProjectCountTopArr[$otherId];
+                    $otherIndexArr[$username] = $value;
                 }//if show others
             }
             $count++;
@@ -253,12 +246,22 @@ class DashboardUtil
                     $descrValueArr = $descriptionSingleArr['descrValueArr'];
                     $descrValue = $descrValueArr[$index];
                     if( $index == $otherId ) {
+                        $valueTotal = 0;
                         foreach($otherIndexArr as $username=>$thisValue) {
-                            //echo "thisValue=$thisValue <br>";
                             if( $thisValue && array_key_exists($username,$descrValueArr) ) {
                                 $descrValue = $descrValue + $descrValueArr[$username];
-                                break;
+
+                                if( is_array($value) ) {
+                                    $valueTotal = $valueTotal + $value['value'];
+                                } else {
+                                    $valueTotal = $valueTotal + $value;
+                                }
                             }
+                        }
+                        if( is_array($value) ) {
+                            $value['value'] = $valueTotal;
+                        } else {
+                            $value = $valueTotal;
                         }
                     }
                     if( $descrType == "money" ) {
