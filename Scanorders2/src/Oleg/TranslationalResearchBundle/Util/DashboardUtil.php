@@ -411,8 +411,8 @@ class DashboardUtil
                 if( is_array($value) ) {
                     //print_r($value);
                     //exit('111');
-                    $valueNumber = $value[$arrayValueKey];
-                    $label = $label . $prefix . $this->getNumberFormat($valueNumber);
+                    $value = $value[$arrayValueKey];
+                    $label = $label . $prefix . $this->getNumberFormat($value);
                 } else {
                     $label = $label . $prefix . $this->getNumberFormat($value);
                 }
@@ -4093,7 +4093,7 @@ class DashboardUtil
                         $count = 1;
                     }
 
-                    $due = intval($invoice->getDue());
+                    //$due = intval($invoice->getDue());
 
                     //$pisUnpaidInvoicesArr[$piIndex] = $count;
                     $todayDate = new \DateTime();
@@ -4110,13 +4110,15 @@ class DashboardUtil
                         $linkFilterArr,
                         UrlGeneratorInterface::ABSOLUTE_URL
                     );
-                    $pisUnpaidInvoicesArr[$piIndex] = array('value'=>$count,'link'=>$link, "due"=>$due);
+                    //$pisUnpaidInvoicesArr[$piIndex] = array('value'=>$count,'link'=>$link, "due"=>$due);
 
-                    //$due = intval($invoice->getDue());
+                    $due = intval($invoice->getDue());
                     if( isset($invoiceDueArr[$piIndex]) ) {
                         $due = $invoiceDueArr[$piIndex] + $due;
                     }
                     $invoiceDueArr[$piIndex] = $due;
+
+                    $pisUnpaidInvoicesArr[$piIndex] = array('value'=>$count,'link'=>$link, "due"=>$invoiceDueArr[$piIndex]);
 
                     $titleCount++;
                 }
