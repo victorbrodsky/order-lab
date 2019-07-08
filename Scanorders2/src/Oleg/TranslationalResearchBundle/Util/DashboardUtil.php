@@ -421,7 +421,11 @@ class DashboardUtil
                 //$label = $label . $prefix . $value;
                 $newArrTop[$label] = $value;
             } else {
-                echo "value(regular)=$value <br>";
+                if( is_array($value) ) {
+                    echo "value(regular)=$value[$arrayValueKey] <br>";
+                } else {
+                    echo "value(regular)=$value <br>";
+                }
                 $newArrTop[$label] = $value;
             }
         }//foreach
