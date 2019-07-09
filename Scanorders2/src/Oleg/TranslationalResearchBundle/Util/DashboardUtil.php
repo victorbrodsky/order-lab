@@ -203,7 +203,7 @@ class DashboardUtil
         $otherId = str_replace("[[otherStr]]",$showOthers,$this->otherId);
 
         $otherIndexArr = array();
-        $totalValue = 0;
+        //$totalValue = 0;
         $count = 1;
         $piProjectCountTopArr = array();
         foreach($piProjectCountArr as $username=>$value) {
@@ -256,6 +256,7 @@ class DashboardUtil
                     $descrValue = $descrValueArr[$index];
 
                     if( $index == $otherId ) {
+                        $descrValue = 0;
                         $valueTotal = 0;
                         foreach($otherIndexArr as $username=>$thisValue) {
                             if( $thisValue && array_key_exists($username,$descrValueArr) ) {
