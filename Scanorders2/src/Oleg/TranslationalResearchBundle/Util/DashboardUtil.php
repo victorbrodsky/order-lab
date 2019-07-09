@@ -226,8 +226,14 @@ class DashboardUtil
 
                     //add value to description array with index "other"
                     $otherIndexArr[$username] = $value;
-                    echo "add value=".$value."<br>";
-                    $totalValue = $totalValue + $value;
+
+                    //echo "add value=".$value."<br>";
+                    if( is_array($value) ) {
+                        $totalValue = $totalValue + $value['value'];
+                    } else {
+                        $totalValue = $totalValue + $value;
+                    }
+
                 }//if show others
             }
             $count++;
