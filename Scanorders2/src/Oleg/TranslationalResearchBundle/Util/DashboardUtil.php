@@ -217,14 +217,22 @@ class DashboardUtil
             } else {
                 if( $showOthers !== false ) { //show others
                     //echo "show Others <br>";
+                    if( is_array($value) ) {
+                        echo "1valueArr=".$value['value']."<br>";
+                        $value = intval($value['value']);
+                    } else {
+                        echo "1value=".$value."<br>";
+                        //$value = $piProjectCountTopArr[$otherId] + $value;
+                    }
                     if (isset($piProjectCountTopArr[$otherId])) {
-                        if( is_array($value) ) {
-                            echo "1valueArr=".$value['value']."<br>";
-                            $value = $piProjectCountTopArr[$otherId] + intval($value['value']);
-                        } else {
-                            echo "1value=".$value."<br>";
-                            $value = $piProjectCountTopArr[$otherId] + $value;
-                        }
+                        $value = $piProjectCountTopArr[$otherId] + $value;
+//                        if( is_array($value) ) {
+//                            echo "1valueArr=".$value['value']."<br>";
+//                            $value = intval($piProjectCountTopArr[$otherId]) + intval($value['value']);
+//                        } else {
+//                            echo "1value=".$value."<br>";
+//                            $value = $piProjectCountTopArr[$otherId] + $value;
+//                        }
                     } else {
                         //$value = 1;
                     }
