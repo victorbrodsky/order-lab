@@ -1019,6 +1019,7 @@ class RecLetterUtil {
         //$attachmentFilename = null;
         if( $uploadedLetterDb ) {
             $attachmentPath = $uploadedLetterDb->getAbsoluteUploadFullPath();
+            echo "attachmentPath=[$attachmentPath]<br>";
             //$attachmentFilename = $uploadedLetterDb->getDescriptiveFilename();
         }
 
