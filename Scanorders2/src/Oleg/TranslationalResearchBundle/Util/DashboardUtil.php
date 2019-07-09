@@ -203,6 +203,7 @@ class DashboardUtil
         $otherId = str_replace("[[otherStr]]",$showOthers,$this->otherId);
 
         $otherIndexArr = array();
+        $totalValue = 0;
         $count = 1;
         $piProjectCountTopArr = array();
         foreach($piProjectCountArr as $username=>$value) {
@@ -225,6 +226,7 @@ class DashboardUtil
 
                     //add value to description array with index "other"
                     $otherIndexArr[$username] = $value;
+                    $totalValue = $totalValue + $value;
                 }//if show others
             }
             $count++;
@@ -245,6 +247,7 @@ class DashboardUtil
                     $descrType = $descriptionSingleArr['descrType'];
                     $descrValueArr = $descriptionSingleArr['descrValueArr'];
                     $descrValue = $descrValueArr[$index];
+
                     if( $index == $otherId ) {
                         $valueTotal = 0;
                         foreach($otherIndexArr as $username=>$thisValue) {
@@ -259,11 +262,12 @@ class DashboardUtil
                             }
                         }
                         if( is_array($value) ) {
-                            $value['value'] = $valueTotal;
+                            $value['value'] = $totalValue; //$valueTotal;
                         } else {
-                            $value = $valueTotal;
+                            $value = $totalValue; //$valueTotal;
                         }
-                    }
+                    }//$index == $otherId
+
                     if( $descrType == "money" ) {
                         $descrValue = $this->getNumberFormat($descrValue);
                     }
