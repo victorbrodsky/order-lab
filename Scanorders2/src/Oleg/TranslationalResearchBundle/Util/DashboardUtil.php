@@ -228,11 +228,12 @@ class DashboardUtil
                     $otherIndexArr[$username] = $piProjectCountTopArr[$otherId];
 
                     //echo "add value=".$value."<br>";
-//                    if( is_array($value) ) {
-//                        $totalValue = $totalValue + $value['value'];
-//                    } else {
-//                        $totalValue = $totalValue + $value;
-//                    }
+                    if( is_array($value) ) {
+                        //$totalValue = $totalValue + $value['value'];
+                        "value=".$value['value']."<br>";
+                    } else {
+                        //$totalValue = $totalValue + $value;
+                    }
 
                 }//if show others
             }
