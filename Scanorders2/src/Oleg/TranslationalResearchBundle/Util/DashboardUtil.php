@@ -225,14 +225,14 @@ class DashboardUtil
                     $piProjectCountTopArr[$otherId] = $value;
 
                     //add value to description array with index "other"
-                    $otherIndexArr[$username] = $value;
+                    $otherIndexArr[$username] = $piProjectCountTopArr[$otherId];
 
                     //echo "add value=".$value."<br>";
-                    if( is_array($value) ) {
-                        $totalValue = $totalValue + $value['value'];
-                    } else {
-                        $totalValue = $totalValue + $value;
-                    }
+//                    if( is_array($value) ) {
+//                        $totalValue = $totalValue + $value['value'];
+//                    } else {
+//                        $totalValue = $totalValue + $value;
+//                    }
 
                 }//if show others
             }
@@ -269,9 +269,9 @@ class DashboardUtil
                             }
                         }
                         if( is_array($value) ) {
-                            $value['value'] = $totalValue; //$valueTotal;
+                            $value['value'] = $valueTotal;
                         } else {
-                            $value = $totalValue; //$valueTotal;
+                            $value = $valueTotal;
                         }
                     }//$index == $otherId
 
