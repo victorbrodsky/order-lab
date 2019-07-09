@@ -957,7 +957,6 @@ class RecLetterUtil {
         $fellappUtil = $this->container->get('fellapp_util');
 
         $applicant = $fellapp->getUser();
-        $applicantName = "Unknown Applicant";
         if( $applicant ) {
             $applicantName = $applicant->getUsernameOptimal();
         } else {
@@ -1005,7 +1004,16 @@ class RecLetterUtil {
         $coordinatorEmails = $fellappUtil->getCoordinatorsOfFellAppEmails($fellapp);
         $directorEmails = $fellappUtil->getCoordinatorsOfFellAppEmails($fellapp);
         $coordinatorDirectorEmails = array_unique (array_merge ($coordinatorEmails, $directorEmails));
+
+        //TODO: add ref letter as an attachment
+
         $emailUtil->sendEmail($coordinatorDirectorEmails,$subject,$body,$ccs);
+
+        $body = $body . "<br>" . "Emails: " . implode("; ",$coordinatorDirectorEmails) . "<br>" . "CCs: " . implode("; ", $ccs);
+
+        //eventlog
+        $systemUser = $userSecUtil->findSystemUser();
+        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$body,$systemUser,$fellapp,null,"Recommendation Letter Received");
 
         return true;
     }

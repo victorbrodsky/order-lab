@@ -120,13 +120,13 @@ class DashboardUtil
             "45. Number of AP/CP vs Hematopathology Work Requests (linked)" => "compare-projectspecialty-requests",
             "46. Number of AP/CP vs Hematopathology Invoices (linked)" => "compare-projectspecialty-invoices",
 
-            "47. Total Fees per Project Request Type (Top) (linked)" => "projects-fees-per-type",
-            "48. Total Fees per Funded Project Request Type (Top) (linked)" => "projects-funded-fees-per-type",
-            "49. Total Fees per Non-Funded Project Request Type (Top) (linked)" => "projects-unfunded-fees-per-type",
+            "47. Total Fees per Project Request Type (linked)" => "projects-fees-per-type",
+            "48. Total Fees per Funded Project Request Type (linked)" => "projects-funded-fees-per-type",
+            "49. Total Fees per Non-Funded Project Request Type (linked)" => "projects-unfunded-fees-per-type",
 
-            "50. Total Fees per Work Requests Business Purpose (Top)" => "requests-fees-per-business-purpose",
-            "51. Total Fees per Funded Work Requests Business Purpose (Top)" => "requests-funded-fees-per-business-purpose",
-            "52. Total Fees per Non-Funded Work Requests Business Purpose (Top)" => "requests-unfunded-fees-per-business-purpose",
+            "50. Total Fees per Work Requests Business Purpose" => "requests-fees-per-business-purpose",
+            "51. Total Fees per Funded Work Requests Business Purpose" => "requests-funded-fees-per-business-purpose",
+            "52. Total Fees per Non-Funded Work Requests Business Purpose" => "requests-unfunded-fees-per-business-purpose",
 
             "53. Turn-around Statistics: Number of days to complete each Work Request with person (based on 'Completed and Notified' requests)" => "turn-around-statistics-days-complete-per-request-with-user",
             "54. Turn-around Statistics: Top most delinquent invoices (linked)" => "turn-around-statistics-delayed-unpaid-invoices-by-days",

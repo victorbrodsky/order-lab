@@ -76,6 +76,14 @@ class DefaultController extends Controller
             return $this->redirect( $this->generateUrl($this->container->getParameter('fellapp.sitename').'-nopermission') );
         }
 
+
+        //test sendRefLetterReceivedNotificationEmail
+        $fellappRecLetterUtil = $this->getContainer()->get('fellapp_rec_letter_util');
+        $fellapp = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find(8);
+        $fellappRecLetterUtil->sendRefLetterReceivedNotificationEmail($fellapp,$uploadedLetterDb);
+
+        exit("end of sendRefLetterReceivedNotificationEmail test");
+
         $fellappImportPopulateUtil = $this->container->get('fellapp_importpopulate_util');
 
         $inputFileName = "Uploaded/fellapp/Spreadsheets/test-fellapp3";
