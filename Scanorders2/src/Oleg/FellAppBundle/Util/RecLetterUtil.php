@@ -781,6 +781,8 @@ class RecLetterUtil {
                 $reference->addDocument($uploadedLetterDb);
                 $this->em->flush($reference);
 
+                $this->sendRefLetterReceivedNotificationEmail($fellapp,$uploadedLetterDb);
+
                 $this->checkReferenceAlreadyHasLetter($fellapp,$reference);
 
                 $this->checkAndSendCompleteEmail($fellapp);
@@ -947,6 +949,65 @@ class RecLetterUtil {
 
     public function processBackupFellAppFromGoogleDrive() {
         return array();
+    }
+
+    public function sendRefLetterReceivedNotificationEmail($fellapp,$uploadedLetterDb) {
+        $userSecUtil = $this->container->get('user_security_utility');
+        $emailUtil = $this->container->get('user_mailer_utility');
+        $fellappUtil = $this->container->get('fellapp_util');
+
+        $applicant = $fellapp->getUser();
+        $applicantName = "Unknown Applicant";
+        if( $applicant ) {
+            $applicantName = $applicant->getUsernameOptimal();
+        } else {
+            return false;
+        }
+
+        $startDate = $fellapp->getStartDate();
+        $startDateStr = null;
+        if( $startDate ) {
+            $startDateStr = $startDate->format('m/d/Y');
+        } else {
+            return false;
+        }
+
+        $router = $userSecUtil->getRequestContextRouter();
+
+        $letterLink = $router->generate(
+            'fellapp_file_download',
+            array('id' => $uploadedLetterDb->getId()),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+        $letterLink = '<a href="'.$letterLink.'">'.$letterLink.'</a>';
+
+        $subject =
+            "A new recommendation letter has been received for "
+            . $applicantName . "'s application ID#" . $fellapp->getId()
+            . " for the " . $fellapp->getFellowshipSubspecialty() . " " . $startDateStr
+        ;
+
+        $fellappLink = $router->generate(
+            'fellapp_show',
+            array('id' => $fellapp->getId()),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+        $fellappLink = '<a href="'.$fellappLink.'">'.$fellappLink.'</a>';
+
+        $body = $subject . " fellowship."
+            . "<br><br>"."You can review this recommendation letter here:"
+            . "<br>".$letterLink
+            . "<br><br>"."You can review the entire application here:"
+            . "<br>".$fellappLink
+        ;
+
+        $ccs = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'),"Administrator");
+        $coordinatorEmails = $fellappUtil->getCoordinatorsOfFellAppEmails($fellapp);
+        $directorEmails = $fellappUtil->getCoordinatorsOfFellAppEmails($fellapp);
+        $coordinatorDirectorEmails = array_unique (array_merge ($coordinatorEmails, $directorEmails));
+        $emailUtil->sendEmail($coordinatorDirectorEmails,$subject,$body,$ccs);
+
+        return true;
     }
 
     public function checkAndSendCompleteEmail($fellapp) {
