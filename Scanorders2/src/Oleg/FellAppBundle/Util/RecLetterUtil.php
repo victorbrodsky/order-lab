@@ -952,9 +952,15 @@ class RecLetterUtil {
     }
 
     public function sendRefLetterReceivedNotificationEmail($fellapp,$uploadedLetterDb) {
+
+        if( !$uploadedLetterDb ) {
+            return "Reference letter is null";
+        }
+
         $userSecUtil = $this->container->get('user_security_utility');
         $emailUtil = $this->container->get('user_mailer_utility');
         $fellappUtil = $this->container->get('fellapp_util');
+        $systemUser = $userSecUtil->findSystemUser();
 
         $applicant = $fellapp->getUser();
         if( $applicant ) {
@@ -1006,16 +1012,31 @@ class RecLetterUtil {
         $coordinatorDirectorEmails = array_unique (array_merge ($coordinatorEmails, $directorEmails));
 
         //TODO: add ref letter as an attachment
+        $attachmentPath = null;
+        $attachmentFilename = null;
+        if( $uploadedLetterDb ) {
+            $attachmentPath = $uploadedLetterDb->getAbsoluteUploadFullPath();
+            $attachmentFilename = $uploadedLetterDb->getDescriptiveFilename();
+        }
 
-        $emailUtil->sendEmail($coordinatorDirectorEmails,$subject,$body,$ccs);
+        if( 0 ) {
+            $emailUtil->sendEmail(
+                $coordinatorDirectorEmails,
+                $subject,
+                $body,
+                $ccs,
+                null,
+                $attachmentPath,
+                $attachmentFilename
+            );
+        }
 
         $body = $body . "<br>" . "Emails: " . implode("; ",$coordinatorDirectorEmails) . "<br>" . "CCs: " . implode("; ", $ccs);
 
         //eventlog
-        $systemUser = $userSecUtil->findSystemUser();
         $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$body,$systemUser,$fellapp,null,"Recommendation Letter Received");
 
-        return true;
+        return $body;
     }
 
     public function checkAndSendCompleteEmail($fellapp) {

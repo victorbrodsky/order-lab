@@ -62,6 +62,8 @@ class DefaultController extends Controller
 
 
     /**
+     * 127.0.0.1/order/fellowship-applications/test_google_file
+     *
      * @Route("/test_google_file", name="fellapp_test_google_file")
      */
     public function testGoogleFileAction( Request $request ) {
@@ -70,20 +72,26 @@ class DefaultController extends Controller
         //$result2 = $fellappRecLetterUtil->processFellRecLetterFromGoogleDrive();
         //echo $result2."<br>";
 
-        exit("not allowed");
+        //exit("not allowed");
 
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->container->getParameter('fellapp.sitename').'-nopermission') );
         }
 
 
-        //test sendRefLetterReceivedNotificationEmail
-        $fellappRecLetterUtil = $this->getContainer()->get('fellapp_rec_letter_util');
+        //test 1) sendRefLetterReceivedNotificationEmail
+        $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
         $fellapp = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find(8);
-        $fellappRecLetterUtil->sendRefLetterReceivedNotificationEmail($fellapp,$uploadedLetterDb);
+        $references = $fellapp->getReferences();
+        $reference = $references->first();
+        $letters = $reference->getDocuments();
+        $uploadedLetterDb = $letters->first();
+        $res = $fellappRecLetterUtil->sendRefLetterReceivedNotificationEmail($fellapp,$uploadedLetterDb);
+        echo "res=".$res."<br>";
 
         exit("end of sendRefLetterReceivedNotificationEmail test");
 
+        //test 2)
         $fellappImportPopulateUtil = $this->container->get('fellapp_importpopulate_util');
 
         $inputFileName = "Uploaded/fellapp/Spreadsheets/test-fellapp3";
