@@ -219,8 +219,10 @@ class DashboardUtil
                     //echo "show Others <br>";
                     if (isset($piProjectCountTopArr[$otherId])) {
                         if( is_array($value) ) {
+                            echo "1valueArr=".$value['value']."<br>";
                             $value = $piProjectCountTopArr[$otherId] + $value['value'];
                         } else {
+                            echo "1value=".$value."<br>";
                             $value = $piProjectCountTopArr[$otherId] + $value;
                         }
                     } else {
@@ -234,9 +236,9 @@ class DashboardUtil
                     //echo "add value=".$value."<br>";
                     if( is_array($value) ) {
                         //$totalValue = $totalValue + $value['value'];
-                        echo "valueArr=".$value['value']."<br>";
+                        echo "2valueArr=".$value['value']."<br>";
                     } else {
-                        echo "value=".$value."<br>";
+                        echo "2value=".$value."<br>";
                     }
 
                 }//if show others
