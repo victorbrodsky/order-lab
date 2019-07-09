@@ -72,7 +72,7 @@ class DefaultController extends Controller
         //$result2 = $fellappRecLetterUtil->processFellRecLetterFromGoogleDrive();
         //echo $result2."<br>";
 
-        //exit("not allowed");
+        exit("not allowed");
 
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->container->getParameter('fellapp.sitename').'-nopermission') );
@@ -81,7 +81,7 @@ class DefaultController extends Controller
 
         //test 1) sendRefLetterReceivedNotificationEmail
         $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
-        $fellapp = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find(1439); //8-testing, 1414-collage, 1439-live
+        $fellapp = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find(8); //8-testing, 1414-collage, 1439-live
         $references = $fellapp->getReferences();
         $reference = $references->first();
         $letters = $reference->getDocuments();
@@ -93,6 +93,7 @@ class DefaultController extends Controller
 
         exit("end of sendRefLetterReceivedNotificationEmail test");
 
+        
         //test 2)
         $fellappImportPopulateUtil = $this->container->get('fellapp_importpopulate_util');
 

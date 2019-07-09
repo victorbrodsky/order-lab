@@ -781,7 +781,7 @@ class RecLetterUtil {
                 $reference->addDocument($uploadedLetterDb);
                 $this->em->flush($reference);
 
-                //$this->sendRefLetterReceivedNotificationEmail($fellapp,$uploadedLetterDb);
+                $this->sendRefLetterReceivedNotificationEmail($fellapp,$uploadedLetterDb);
 
                 $this->checkReferenceAlreadyHasLetter($fellapp,$reference);
 
@@ -987,7 +987,6 @@ class RecLetterUtil {
         $letterLink = '<a href="'.$letterLink.'">'.$letterLink.'</a>';
 
         $subject =
-            "Testing!!! ".
             "A new recommendation letter has been received for "
             . $applicantName . "'s application ID#" . $fellapp->getId()
             . " for the " . $fellapp->getFellowshipSubspecialty() . " " . $startDateStr
@@ -1001,7 +1000,7 @@ class RecLetterUtil {
         $fellappLink = '<a href="'.$fellappLink.'">'.$fellappLink.'</a>';
 
         $body = $subject . " fellowship."
-            . "<br><br>"."You can review this recommendation letter here:"
+            . "<br><br>"."You can review this recommendation letter (attached) here:"
             . "<br>".$letterLink
             . "<br><br>"."You can review the entire application here:"
             . "<br>".$fellappLink
@@ -1014,21 +1013,19 @@ class RecLetterUtil {
         //echo "directorEmails=".implode("; ",$directorEmails)."<br>";
         $coordinatorDirectorEmails = array_unique (array_merge ($coordinatorEmails, $directorEmails));
 
-        //TODO: add ref letter as an attachment
+        //add ref letter as an attachment
         $attachmentPath = null;
-        //$attachmentFilename = null;
         if( $uploadedLetterDb ) {
             $attachmentPath = $uploadedLetterDb->getAbsoluteUploadFullPath();
-            echo "attachmentPath=[$attachmentPath]<br>";
-            //$attachmentFilename = $uploadedLetterDb->getDescriptiveFilename();
+            //echo "attachmentPath=[$attachmentPath]<br>";
         }
 
         if( 1 ) {
             $emailUtil->sendEmail(
-                "oli2002@med.cornell.edu",//$coordinatorDirectorEmails,
+                $coordinatorDirectorEmails,
                 $subject,
                 $body,
-                null, //$ccs,
+                $ccs,
                 null,
                 $attachmentPath
             );
