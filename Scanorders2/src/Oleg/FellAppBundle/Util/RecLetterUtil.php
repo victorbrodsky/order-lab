@@ -1025,10 +1025,10 @@ class RecLetterUtil {
 
         if( 1 ) {
             $emailUtil->sendEmail(
-                $coordinatorDirectorEmails,
+                "oli2002@med.cornell.edu",//$coordinatorDirectorEmails,
                 $subject,
                 $body,
-                $ccs,
+                null, //$ccs,
                 null,
                 $attachmentPath
             );

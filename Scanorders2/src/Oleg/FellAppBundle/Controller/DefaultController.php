@@ -81,7 +81,7 @@ class DefaultController extends Controller
 
         //test 1) sendRefLetterReceivedNotificationEmail
         $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
-        $fellapp = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find(1414); //8-testing, 1414-collage, 1439-live
+        $fellapp = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find(1439); //8-testing, 1414-collage, 1439-live
         $references = $fellapp->getReferences();
         $reference = $references->first();
         $letters = $reference->getDocuments();
