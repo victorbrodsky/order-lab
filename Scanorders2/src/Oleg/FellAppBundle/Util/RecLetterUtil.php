@@ -1008,9 +1008,9 @@ class RecLetterUtil {
 
         $ccs = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'),"Administrator");
         $coordinatorEmails = $fellappUtil->getCoordinatorsOfFellAppEmails($fellapp);
-        echo "coordinatorEmails=".implode("; ",$coordinatorEmails)."<br>";
-        $directorEmails = $fellappUtil->getCoordinatorsOfFellAppEmails($fellapp);
-        echo "directorEmails=".implode("; ",$directorEmails)."<br>";
+        //echo "coordinatorEmails=".implode("; ",$coordinatorEmails)."<br>";
+        $directorEmails = $fellappUtil->getDirectorsOfFellAppEmails($fellapp);
+        //echo "directorEmails=".implode("; ",$directorEmails)."<br>";
         $coordinatorDirectorEmails = array_unique (array_merge ($coordinatorEmails, $directorEmails));
 
         //TODO: add ref letter as an attachment
@@ -1171,7 +1171,7 @@ class RecLetterUtil {
             $fellappUtil = $this->container->get('fellapp_util');
             $ccs = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'),"Administrator");
             $coordinatorEmails = $fellappUtil->getCoordinatorsOfFellAppEmails($fellapp);
-            $directorEmails = $fellappUtil->getCoordinatorsOfFellAppEmails($fellapp);
+            $directorEmails = $fellappUtil->getDirectorsOfFellAppEmails($fellapp);
             $coordinatorDirectorEmails = array_unique (array_merge ($coordinatorEmails, $directorEmails));
             $emailUtil->sendEmail($coordinatorDirectorEmails,$subject,$body,$ccs);
         } else {
@@ -1246,7 +1246,7 @@ class RecLetterUtil {
                 $fellappUtil = $this->container->get('fellapp_util');
                 $ccs = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'),"Administrator");
                 $coordinatorEmails = $fellappUtil->getCoordinatorsOfFellAppEmails($fellapp);
-                $directorEmails = $fellappUtil->getCoordinatorsOfFellAppEmails($fellapp);
+                $directorEmails = $fellappUtil->getDirectorsOfFellAppEmails($fellapp);
                 $coordinatorDirectorEmails = array_unique (array_merge ($coordinatorEmails, $directorEmails));
 
                 if ($missingEmail) {
