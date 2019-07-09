@@ -83,9 +83,9 @@ class DefaultController extends Controller
         $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
         $fellapp = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find(1414); //8-testing, 1414-collage, 1439-live
         $references = $fellapp->getReferences();
-        $reference = $references->first();
+        $reference = $references->last();
         $letters = $reference->getDocuments();
-        $uploadedLetterDb = $letters->first();
+        $uploadedLetterDb = $letters->last();
         $res = $fellappRecLetterUtil->sendRefLetterReceivedNotificationEmail($fellapp,$uploadedLetterDb);
 
         $fellappType = $fellapp->getFellowshipSubspecialty();
