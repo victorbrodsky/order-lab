@@ -781,7 +781,7 @@ class RecLetterUtil {
                 $reference->addDocument($uploadedLetterDb);
                 $this->em->flush($reference);
 
-                $this->sendRefLetterReceivedNotificationEmail($fellapp,$uploadedLetterDb);
+                //$this->sendRefLetterReceivedNotificationEmail($fellapp,$uploadedLetterDb);
 
                 $this->checkReferenceAlreadyHasLetter($fellapp,$reference);
 
@@ -1008,7 +1008,9 @@ class RecLetterUtil {
 
         $ccs = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'),"Administrator");
         $coordinatorEmails = $fellappUtil->getCoordinatorsOfFellAppEmails($fellapp);
+        echo "coordinatorEmails=".implode("; ",$coordinatorEmails)."<br>";
         $directorEmails = $fellappUtil->getCoordinatorsOfFellAppEmails($fellapp);
+        echo "directorEmails=".implode("; ",$directorEmails)."<br>";
         $coordinatorDirectorEmails = array_unique (array_merge ($coordinatorEmails, $directorEmails));
 
         //TODO: add ref letter as an attachment
