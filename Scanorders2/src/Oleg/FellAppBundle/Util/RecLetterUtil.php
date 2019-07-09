@@ -1016,10 +1016,10 @@ class RecLetterUtil {
 
         //TODO: add ref letter as an attachment
         $attachmentPath = null;
-        $attachmentFilename = null;
+        //$attachmentFilename = null;
         if( $uploadedLetterDb ) {
             $attachmentPath = $uploadedLetterDb->getAbsoluteUploadFullPath();
-            $attachmentFilename = $uploadedLetterDb->getDescriptiveFilename();
+            //$attachmentFilename = $uploadedLetterDb->getDescriptiveFilename();
         }
 
         if( 1 ) {
@@ -1029,8 +1029,7 @@ class RecLetterUtil {
                 $body,
                 $ccs,
                 null,
-                $attachmentPath,
-                $attachmentFilename
+                $attachmentPath
             );
         }
 
