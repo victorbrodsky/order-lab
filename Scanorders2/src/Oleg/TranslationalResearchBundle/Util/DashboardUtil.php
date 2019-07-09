@@ -230,7 +230,7 @@ class DashboardUtil
                     //echo "add value=".$value."<br>";
                     if( is_array($value) ) {
                         //$totalValue = $totalValue + $value['value'];
-                        "value=".$value['value']."<br>";
+                        echo "value=".$value['value']."<br>";
                     } else {
                         //$totalValue = $totalValue + $value;
                     }
