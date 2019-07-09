@@ -220,7 +220,7 @@ class DashboardUtil
                     if (isset($piProjectCountTopArr[$otherId])) {
                         if( is_array($value) ) {
                             echo "1valueArr=".$value['value']."<br>";
-                            $value = $piProjectCountTopArr[$otherId] + $value['value'];
+                            $value = $piProjectCountTopArr[$otherId] + intval($value['value']);
                         } else {
                             echo "1value=".$value."<br>";
                             $value = $piProjectCountTopArr[$otherId] + $value;
