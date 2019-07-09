@@ -987,6 +987,7 @@ class RecLetterUtil {
         $letterLink = '<a href="'.$letterLink.'">'.$letterLink.'</a>';
 
         $subject =
+            "Testing!!! ".
             "A new recommendation letter has been received for "
             . $applicantName . "'s application ID#" . $fellapp->getId()
             . " for the " . $fellapp->getFellowshipSubspecialty() . " " . $startDateStr
@@ -1021,7 +1022,7 @@ class RecLetterUtil {
             $attachmentFilename = $uploadedLetterDb->getDescriptiveFilename();
         }
 
-        if( 0 ) {
+        if( 1 ) {
             $emailUtil->sendEmail(
                 $coordinatorDirectorEmails,
                 $subject,
