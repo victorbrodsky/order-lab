@@ -4880,12 +4880,13 @@ class DashboardUtil
             $showOther = $this->getOtherStr($showLimited,"Project Types");
             $projectTypeArrTop = $this->getTopMultiArray($projectTypeArr,$showOther,$quantityLimit,array(),100); // function getTopMultiArray(
 
-            $layoutArray = array(
-                'height' => $this->height,
-                'width' => $this->width*1.2,
-                'title' => $chartName,
-                'margin' => array('c' => 400)
-            );
+            $layoutArray = null;
+//            $layoutArray = array(
+//                'height' => $this->height,
+//                'width' => $this->width*1.2,
+//                'title' => $chartName,
+//                'margin' => array('c' => 400)
+//            );
 
             $chartsArray = $this->getChartByMultiArray( $projectTypeArrTop, $filterArr, $chartName,"pie",$layoutArray," : $","percent+label"); //function getChartByMultiArray(
             //$chartsArray = $this->getChart($projectTypeArrTop, $chartName,'pie',$layoutArray," : $");
