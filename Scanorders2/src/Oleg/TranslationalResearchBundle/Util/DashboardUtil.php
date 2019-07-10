@@ -4842,11 +4842,11 @@ class DashboardUtil
                 if( isset($projectTypeArr[$projectTypeId]) && isset($projectTypeArr[$projectTypeId]['value']) ) {
                     $totalFee = $projectTypeArr[$projectTypeId]['value'] + $totalFee;
                 }
-                $projectTypeArr[$projectTypeId]['totalCount']++;
                 $projectTypeArr[$projectTypeId]['value'] = $totalFee;
-                $projectTypeArr[$projectTypeId]['label'] = $projectTypeName . " (".count($projectTypeArr[$projectTypeId]['totalCount'])." projects)";
                 $projectTypeArr[$projectTypeId]['objectid'] = $projectTypeId;
                 $projectTypeArr[$projectTypeId]['pi'] = null;
+                $projectTypeArr[$projectTypeId]['totalCount']++;
+                $projectTypeArr[$projectTypeId]['label'] = $projectTypeName . " (".$projectTypeArr[$projectTypeId]['totalCount']." projects)";
                 //$projectTypeArr[$projectTypeId]['show-path'] = null; //"project-type";
 
                 //link
