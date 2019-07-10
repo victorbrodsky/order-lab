@@ -112,13 +112,13 @@ class DashboardUtil
             "38. Turn-around Statistics: Number of days each paid and partially paid invoice took to get paid (linked)" => "turn-around-statistics-days-per-paid-invoice",
             "39. Turn-around Statistics: Top PIs with most delayed unpaid invoices (linked)" => "turn-around-statistics-pis-with-delayed-unpaid-invoices",
             "40. Turn-around Statistics: Top PIs with highest total amounts in unpaid, overdue invoices (linked)" => "turn-around-statistics-pis-with-highest-total-unpaid-invoices",
-            "41. Turn-around Statistics: Top PIs by index (delay in months * invoiced amount, aggregate) for unpaid, overdue invoices (linked)" => "turn-around-statistics-pis-combining-total-delayed-unpaid-invoices",
+            "41. Turn-around Statistics: Top PIs by index (delay in months * invoiced amount) for unpaid, overdue invoices (linked)" => "turn-around-statistics-pis-combining-total-delayed-unpaid-invoices",
 
-            "42. Number of PIs in AP/CP vs Hematopathology (linked)" => "compare-projectspecialty-pis",
-            "43. Number of AP/CP vs Hematopathology Project Requests (linked)" => "compare-projectspecialty-projects",
-            "44. Number of AP/CP vs Hematopathology Project Requests (linked)" => "compare-projectspecialty-projects-stack",
-            "45. Number of AP/CP vs Hematopathology Work Requests (linked)" => "compare-projectspecialty-requests",
-            "46. Number of AP/CP vs Hematopathology Invoices (linked)" => "compare-projectspecialty-invoices",
+            "42. Total Number of Individual PIs involved in AP/CP and Hematopathology Projects (linked)" => "compare-projectspecialty-pis",
+            "43. Total Number of AP/CP and Hematopathology Project Requests (linked)" => "compare-projectspecialty-projects",
+            "44. Total Number of AP/CP and Hematopathology Project Requests By Month (linked)" => "compare-projectspecialty-projects-stack",
+            "45. Total Number of AP/CP and Hematopathology Work Requests By Month (linked)" => "compare-projectspecialty-requests",
+            "46. Total Number of AP/CP and Hematopathology Invoices By Month (linked)" => "compare-projectspecialty-invoices",
 
             "47. Total Fees per Project Request Type (linked)" => "projects-fees-per-type",
             "48. Total Fees per Funded Project Request Type (linked)" => "projects-funded-fees-per-type",
@@ -4371,7 +4371,7 @@ class DashboardUtil
                 }
 
                 //new index (legend)
-                $newIndex = $index . " ($" . $this->getNumberFormat($total) . " total owed, " . $days . " average number of days invoice has been unpaid)";
+                $newIndex = $index . " ($" . $this->getNumberFormat($total) . " total owed, " . $days . " average number of days invoices have remained unpaid)";
 
                 //$pisCombinedArrNew[$newIndex] = $combined;
                 $todayDate = new \DateTime();
@@ -4392,17 +4392,17 @@ class DashboardUtil
             }
 
             //$chartName = $this->getTitleWithTotal($chartName,$titleCount);
-            $chartName = $chartName . " (" . $titleCount . " invoices for total combined index $" . $this->getNumberFormat($totalCombined) . ")";
+            $chartName = $chartName . " (" . $titleCount . " invoices with a total index of " . $this->getNumberFormat($totalCombined) . ")";
 
             $layoutArray['width'] = $layoutArray['width'] * 1.3; //1400;
 
-            $showOther = $this->getOtherStr($showLimited,"Invoices");
+            $showOther = $this->getOtherStr($showLimited,"PIs");
             //getTopArray($piProjectCountArr, $showOthers=false, $descriptionArr=array(), $maxLen=50)
             $pisCombinedArrTop = $this->getTopArray($pisCombinedArrNew,$showOther,$quantityLimit,array(),150);
             $chartsArray = $this->getChart($pisCombinedArrTop, $chartName,'pie',$layoutArray," : $",null,null,"percent+label");
         }
 
-        //"42. Number of PIs in AP/CP vs Hematopathology" => "compare-projectspecialty-pis",
+        //"42. Total Number of Individual PIs involved in AP/CP and Hematopathology Projects" => "compare-projectspecialty-pis",
         if( $chartType == "compare-projectspecialty-pis" ) {
             $transresUtil = $this->container->get('transres_util');
             $specialtyApcpObject = $transresUtil->getSpecialtyObject("ap-cp");
@@ -4483,7 +4483,7 @@ class DashboardUtil
             $chartsArray = $this->getChart($pisDataArr, $chartName,'pie',$layoutArray,null,null,null,"percent+label");
         }
 
-        //"42. Number of AP/CP vs Hematopathology Project Requests" => "compare-projectspecialty-projects",
+        //"43. Total Number of AP/CP and Hematopathology Project Requests" => "compare-projectspecialty-projects",
         if( $chartType == "compare-projectspecialty-projects" ) {
             $transresUtil = $this->container->get('transres_util');
             $specialtyApcpObject = $transresUtil->getSpecialtyObject("ap-cp");
@@ -4545,7 +4545,7 @@ class DashboardUtil
             $chartsArray = $this->getChart($projectsDataArr, $chartName,'pie',$layoutArray,null,null,null,"percent+label");
         }
 
-        //"43. Number of AP/CP vs Hematopathology Project Requests" => "compare-projectspecialty-projects-stack",
+        //"44. Total Number of AP/CP and Hematopathology Project Requests By Month" => "compare-projectspecialty-projects-stack",
         if( $chartType == "compare-projectspecialty-projects-stack" ) {
             $transresUtil = $this->container->get('transres_util');
             $specialtyApcpObject = $transresUtil->getSpecialtyObject("ap-cp");
@@ -4624,7 +4624,7 @@ class DashboardUtil
             $chartsArray = $this->getStackedChart($combinedProjectsData, $chartName, "stack");
         }
 
-        //"44. Number of AP/CP vs Hematopathology Work Requests" => "compare-projectspecialty-requests",
+        //"45. Total Number of AP/CP and Hematopathology Work Requests By Month" => "compare-projectspecialty-requests",
         if( $chartType == "compare-projectspecialty-requests" ) {
             $transresUtil = $this->container->get('transres_util');
             $specialtyApcpObject = $transresUtil->getSpecialtyObject("ap-cp");
@@ -4717,7 +4717,7 @@ class DashboardUtil
             $chartsArray = $this->getStackedChart($combinedRequestsData, $chartName, "stack");
         }
 
-        //"45. Number of AP/CP vs Hematopathology Invoices" => "compare-projectspecialty-invoices",
+        //"45. Total Number of AP/CP and Hematopathology Invoices By Month" => "compare-projectspecialty-invoices",
         if( $chartType == "compare-projectspecialty-invoices" ) {
             $transresUtil = $this->container->get('transres_util');
             $specialtyApcpObject = $transresUtil->getSpecialtyObject("ap-cp");
