@@ -4818,6 +4818,7 @@ class DashboardUtil
         if( $chartType == "projects-fees-per-type" ) {
             $transresUtil = $this->container->get('transres_util');
             $projectTypeArr = array();
+            $projectTypeCounterArr = array();
             $totalFees = 0;
             $projectCount = 0;
 
@@ -4850,11 +4851,15 @@ class DashboardUtil
                 $projectTypeArr[$projectTypeId]['pi'] = null;
 
                 if( isset($projectTypeArr[$projectTypeId]) && isset($projectTypeArr[$projectTypeId]['totalCount']) ) {
-                    $projectTypeArr[$projectTypeId]['totalCount'] = $projectTypeArr[$projectTypeId]['totalCount'] + 1;
+                    $totalCount = $projectTypeArr[$projectTypeId]['totalCount'] + 1;
                 } else {
-                    $projectTypeArr[$projectTypeId]['totalCount'] = 0;
+                    $totalCount = 1;
                 }
+                $projectTypeArr[$projectTypeId]['totalCount'] = $totalCount;
+                //$projectTypeCounterArr[$projectTypeId] = $projectTypeCounterArr[$projectTypeId] + 1;
+                //$projectTypeArr[$projectTypeId]['totalCount']++;
 
+                //$projectTypeArr[$projectTypeId]['label'] = $projectTypeName . " (".count($projectTypeCounterArr)." projects)";
                 $projectTypeArr[$projectTypeId]['label'] = $projectTypeName . " (".$projectTypeArr[$projectTypeId]['totalCount']." projects)";
                 //$projectTypeArr[$projectTypeId]['show-path'] = null; //"project-type";
 
