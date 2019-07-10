@@ -4818,7 +4818,6 @@ class DashboardUtil
         if( $chartType == "projects-fees-per-type" ) {
             $transresUtil = $this->container->get('transres_util');
             $projectTypeArr = array();
-            $projectTypeCounterArr = array();
             $totalFees = 0;
             $projectCount = 0;
 
@@ -4835,10 +4834,10 @@ class DashboardUtil
 
                 $invoicesInfos = $transresUtil->getInvoicesInfosByProject($project);
                 $totalFee = $invoicesInfos['total'];
-                //count only projects with fees
-//                if( !$totalFee || $totalFee == 0 ) {
-//                    continue;
-//                }
+                //count only projects with fees => link will give different number of projects
+                if( !$totalFee || $totalFee == 0 ) {
+                    continue;
+                }
 
                 $projectCount++;
                 $totalFees = $totalFees + $totalFee;
@@ -4850,17 +4849,15 @@ class DashboardUtil
                 $projectTypeArr[$projectTypeId]['objectid'] = $projectTypeId;
                 $projectTypeArr[$projectTypeId]['pi'] = null;
 
-                if( isset($projectTypeArr[$projectTypeId]) && isset($projectTypeArr[$projectTypeId]['totalCount']) ) {
-                    $totalCount = $projectTypeArr[$projectTypeId]['totalCount'] + 1;
+                if( isset($projectTypeArr[$projectTypeId]) && isset($projectTypeArr[$projectTypeId]['projectTypeCount']) ) {
+                    $projectTypeCount = $projectTypeArr[$projectTypeId]['projectTypeCount'] + 1;
                 } else {
-                    $totalCount = 1;
+                    $projectTypeCount = 1;
                 }
-                $projectTypeArr[$projectTypeId]['totalCount'] = $totalCount;
-                //$projectTypeCounterArr[$projectTypeId] = $projectTypeCounterArr[$projectTypeId] + 1;
-                //$projectTypeArr[$projectTypeId]['totalCount']++;
+                $projectTypeArr[$projectTypeId]['projectTypeCount'] = $projectTypeCount;
+                //echo $projectCount.": ".$projectTypeName . " [".$projectTypeId."]=".$projectTypeArr[$projectTypeId]['projectTypeCount']."<br>";
 
-                //$projectTypeArr[$projectTypeId]['label'] = $projectTypeName . " (".count($projectTypeCounterArr)." projects)";
-                $projectTypeArr[$projectTypeId]['label'] = $projectTypeName . " (".$projectTypeArr[$projectTypeId]['totalCount']." projects)";
+                $projectTypeArr[$projectTypeId]['label'] = $projectTypeName . " (".$projectTypeArr[$projectTypeId]['projectTypeCount']." projects)";
                 //$projectTypeArr[$projectTypeId]['show-path'] = null; //"project-type";
 
                 //link
@@ -4883,7 +4880,12 @@ class DashboardUtil
                     UrlGeneratorInterface::ABSOLUTE_URL
                 );
                 $projectTypeArr[$projectTypeId]['link'] = $link;
-            }
+            }//foreach
+
+//            echo "<pre>";
+//            print_r($projectTypeArr);
+//            echo "</pre>";
+//            exit('111');
 
             //do not filter by top
             $quantityLimit = "Show all";
