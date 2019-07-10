@@ -5128,8 +5128,11 @@ class DashboardUtil
             }
 
             $requestBusinessPurposeNewArr = array();
-            foreach($requestBusinessPurposeArr as $label=>$value) {
-                $newLabel = $label . " (".$projectBusinessCount[$businessPurposeName]['projectTypeCount']." work requests)";
+            foreach($requestBusinessPurposeArr as $businessPurposeName=>$value) {
+                if( !$projectBusinessCount[$businessPurposeName]['projectTypeCount'] ) {
+                    $projectBusinessCount[$businessPurposeName]['projectTypeCount'] = 1;
+                }
+                $newLabel = $businessPurposeName . " (".$projectBusinessCount[$businessPurposeName]['projectTypeCount']." work requests)";
                 $requestBusinessPurposeNewArr[$newLabel] = $value;
             }
 
