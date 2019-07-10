@@ -4142,6 +4142,7 @@ class DashboardUtil
 
             //get unpaid and delayd invoices
             $invoiceStates = array("Unpaid/Issued");
+            $invoiceStates = array("Unpaid/Issued","Pending","Paid in Full"); //testing
             $invoices = $this->getInvoicesByFilter($startDate,$endDate,$projectSpecialtyObjects,$invoiceStates,true);
             //$invoices = $transresRequestUtil->getOverdueInvoices();
 
