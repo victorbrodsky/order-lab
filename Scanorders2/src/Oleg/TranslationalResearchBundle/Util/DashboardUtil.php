@@ -3181,10 +3181,10 @@ class DashboardUtil
             );
 
             $showOther = $this->getOtherStr($showLimited,"PIs"); //21vs25
-            $invoicesFeesByPiArrTop = $this->getTopArray($invoicesFeesByPiArr,$showOther,$quantityLimit,$descriptionArr); // getTopArray
+            $invoicesFeesByPiArrTop = $this->getTopArray($invoicesFeesByPiArr,$showOther,$quantityLimit,$descriptionArr); // function getTopArray(
 
             //attach value to other
-            $invoicesFeesByPiArrTop = $this->addValueToOther($invoicesFeesByPiArrTop);
+            //$invoicesFeesByPiArrTop = $this->addValueToOther($invoicesFeesByPiArrTop);
 
             $chartsArray = $this->getChart($invoicesFeesByPiArrTop,$chartName,'pie',$layoutArray,null,null,null,"percent+label");
 
@@ -3273,7 +3273,7 @@ class DashboardUtil
             $invoicesFeesByPathologistArrTop = $this->getTopArray($invoicesFeesByPathologistArr,$showOther,$quantityLimit,$descriptionArr);
 
             //attach value to other
-            $invoicesFeesByPathologistArrTop = $this->addValueToOther($invoicesFeesByPathologistArrTop);
+            //$invoicesFeesByPathologistArrTop = $this->addValueToOther($invoicesFeesByPathologistArrTop);
 
             $chartsArray = $this->getChart($invoicesFeesByPathologistArrTop, $chartName,'pie',$layoutArray,null,null,null,"percent+label");
         }
@@ -3360,7 +3360,7 @@ class DashboardUtil
             $invoicesFeesByPathologistArrTop = $this->getTopArray($invoicesFeesByPathologistArr,$showOther,$quantityLimit,$descriptionArr);
 
             //attach value to other
-            $invoicesFeesByPathologistArrTop = $this->addValueToOther($invoicesFeesByPathologistArrTop);
+            //$invoicesFeesByPathologistArrTop = $this->addValueToOther($invoicesFeesByPathologistArrTop);
 
             $chartsArray = $this->getChart($invoicesFeesByPathologistArrTop, $chartName,'pie',$layoutArray,null,null,null,"percent+label");
         }
@@ -4214,7 +4214,7 @@ class DashboardUtil
             $pisUnpaidInvoicesArrTop = $this->getTopArray($pisUnpaidInvoicesArr,$showOther,$quantityLimit,$descriptionArr); //function getTopArray(
 
             //attach value to other
-            //$pisUnpaidInvoicesArrTop = $this->addValueToOther($pisUnpaidInvoicesArrTop,": $","due");
+            //$pisUnpaidInvoicesArrTop = $this->addValueToOther($pisUnpaidInvoicesArrTop,": $","due"); //replaced by modified getTopArray
 
             $chartsArray = $this->getChart($pisUnpaidInvoicesArrTop, $chartName,'pie',$layoutArray,null,null,null,"percent+label");
         }
