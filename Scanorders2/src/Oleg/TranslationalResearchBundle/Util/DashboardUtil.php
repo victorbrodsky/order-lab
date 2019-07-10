@@ -122,7 +122,7 @@ class DashboardUtil
 
             "47. Total Fees per Project Request Type (linked)" => "projects-fees-per-type",
             "48. Total Fees per Project Request Type of Funded Projects (linked)" => "projects-funded-fees-per-type",
-            "49. Total Fees per Non-Funded Project Request Type (linked)" => "projects-unfunded-fees-per-type",
+            "49. Total Fees per Project Request Type of Non-Funded Projects (linked)" => "projects-unfunded-fees-per-type",
 
             "50. Total Fees per Work Requests Business Purpose" => "requests-fees-per-business-purpose",
             "51. Total Fees per Funded Work Requests Business Purpose" => "requests-funded-fees-per-business-purpose",
@@ -4989,11 +4989,12 @@ class DashboardUtil
             $chartsArray = $this->getChartByMultiArray( $projectTypeArrTop, $filterArr, $chartName,"pie",null," : $","percent+label");
         }
 
-        //"49. Total Fees per Non-Funded Project Request Type (Top 10) (linked)" => "projects-unfunded-fees-per-type",
+        //"49. Total Fees per Project Request Type of Non-Funded Projects (linked)" => "projects-unfunded-fees-per-type",
         if( $chartType == "projects-unfunded-fees-per-type" ) {
             $transresUtil = $this->container->get('transres_util');
             $projectTypeArr = array();
             $totalFees = 0;
+            $projectCount = 0;
 
             $projects = $this->getProjectsByFilter($startDate,$endDate,$projectSpecialtyObjects);
             foreach($projects as $project) {
@@ -5017,16 +5018,26 @@ class DashboardUtil
                     continue;
                 }
 
+                $projectCount++;
                 $totalFees = $totalFees + $totalFee;
 
                 if( isset($projectTypeArr[$projectTypeId]) && isset($projectTypeArr[$projectTypeId]['value']) ) {
                     $totalFee = $projectTypeArr[$projectTypeId]['value'] + $totalFee;
                 }
                 $projectTypeArr[$projectTypeId]['value'] = $totalFee;
-                $projectTypeArr[$projectTypeId]['label'] = $projectTypeName;
                 $projectTypeArr[$projectTypeId]['objectid'] = $projectTypeId;
                 $projectTypeArr[$projectTypeId]['pi'] = null;
                 //$projectTypeArr[$projectTypeId]['show-path'] = "project-type";
+
+                if( isset($projectTypeArr[$projectTypeId]) && isset($projectTypeArr[$projectTypeId]['projectTypeCount']) ) {
+                    $projectTypeCount = $projectTypeArr[$projectTypeId]['projectTypeCount'] + 1;
+                } else {
+                    $projectTypeCount = 1;
+                }
+                $projectTypeArr[$projectTypeId]['projectTypeCount'] = $projectTypeCount;
+
+                //$projectTypeArr[$projectTypeId]['label'] = $projectTypeName;
+                $projectTypeArr[$projectTypeId]['label'] = $projectTypeName . " (".$projectTypeArr[$projectTypeId]['projectTypeCount']." projects)";
 
                 //link
                 $linkFilterArr = array(
@@ -5049,9 +5060,13 @@ class DashboardUtil
                 $projectTypeArr[$projectTypeId]['link'] = $link;
             }
 
-            $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($totalFees),"$");
+            //do not filter by top
+            $quantityLimit = "Show all";
+
+            $postfix = "total for ".$projectCount." projects";
+            $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($totalFees),"$",$postfix);
             $showOther = $this->getOtherStr($showLimited,"Project Types");
-            $projectTypeArrTop = $this->getTopMultiArray($projectTypeArr,$showOther,$quantityLimit);
+            $projectTypeArrTop = $this->getTopMultiArray($projectTypeArr,$showOther,$quantityLimit,array(),100);
 
             $chartsArray = $this->getChartByMultiArray( $projectTypeArrTop, $filterArr, $chartName,"pie",null," : $","percent+label");
         }
