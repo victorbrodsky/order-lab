@@ -203,7 +203,7 @@ class DashboardUtil
         $otherId = str_replace("[[otherStr]]",$showOthers,$this->otherId);
 
         $otherIndexArr = array();
-        //$totalValue = 0;
+        $totalOtherValue = 0;
         $count = 1;
         $piProjectCountTopArr = array();
         foreach($piProjectCountArr as $username=>$value) {
@@ -219,13 +219,15 @@ class DashboardUtil
                     //echo "show Others <br>";
                     if( is_array($value) ) {
                         //echo "1valueArr=".$value['value']."<br>";
-                        $value = intval($value['value']);
+                        $value = $value['value'];
                     } else {
                         //echo "1value=".$value."<br>";
                         //$value = $piProjectCountTopArr[$otherId] + $value;
                     }
+                    //echo "Original value=".$value."<br>";
+                    $totalOtherValue = $totalOtherValue + $value;
                     if (isset($piProjectCountTopArr[$otherId])) {
-                        $value = $piProjectCountTopArr[$otherId] + $value;
+                        $value = $piProjectCountTopArr[$otherId] + intval($value);
 //                        if( is_array($value) ) {
 //                            echo "1valueArr=".$value['value']."<br>";
 //                            $value = intval($piProjectCountTopArr[$otherId]) + intval($value['value']);
@@ -236,18 +238,20 @@ class DashboardUtil
                     } else {
                         //$value = 1;
                     }
+                    //echo "res value=".$value."<br>";
+
                     $piProjectCountTopArr[$otherId] = $value;
 
                     //add value to description array with index "other"
                     $otherIndexArr[$username] = $piProjectCountTopArr[$otherId];
 
                     //echo "add value=".$value."<br>";
-                    if( is_array($value) ) {
+                    //if( is_array($value) ) {
                         //$totalValue = $totalValue + $value['value'];
                         //echo "2valueArr=".$value['value']."<br>";
-                    } else {
+                    //} else {
                         //echo "2value=".$value."<br>";
-                    }
+                    //}
 
                 }//if show others
             }
@@ -272,22 +276,26 @@ class DashboardUtil
 
                     if( $index == $otherId ) {
                         $descrValue = 0;
-                        $valueTotal = 0;
+                        //$valueTotal = 0;
                         foreach($otherIndexArr as $username=>$thisValue) {
                             if( $thisValue && array_key_exists($username,$descrValueArr) ) {
                                 $descrValue = $descrValue + $descrValueArr[$username];
 
-                                if( is_array($value) ) {
-                                    $valueTotal = $valueTotal + $value['value'];
-                                } else {
-                                    $valueTotal = $valueTotal + $value;
-                                }
+//                                if( is_array($value) ) {
+//                                    $valueTotal = $valueTotal + $value['value'];
+//                                } else {
+//                                    $valueTotal = $valueTotal + $value;
+//                                }
                             }
                         }
+                        //echo "descrValue=$descrValue <br>";
+                        //echo "valueTotal=$valueTotal <br>";
+                        //echo "totalOtherValue=$totalOtherValue <br>";
+
                         if( is_array($value) ) {
-                            $value['value'] = $valueTotal;
+                            $value['value'] = $totalOtherValue; //$valueTotal;
                         } else {
-                            $value = $valueTotal;
+                            $value = $totalOtherValue; //$valueTotal;
                         }
                     }//$index == $otherId
 
@@ -323,10 +331,10 @@ class DashboardUtil
                 $piProjectCountTopShortArr[$index] = $value;
             }//foreach
 
-            //echo "<pre>";
-            //print_r($piProjectCountTopArr);
-            //echo "</pre>";
-            //exit('111');
+//            echo "<pre>";
+//            print_r($piProjectCountTopShortArr);
+//            echo "</pre>";
+//            exit('111');
 
             return $piProjectCountTopShortArr;
         }//if
@@ -4142,7 +4150,7 @@ class DashboardUtil
 
             //get unpaid and delayd invoices
             $invoiceStates = array("Unpaid/Issued");
-            $invoiceStates = array("Unpaid/Issued","Pending","Paid in Full"); //testing
+            //$invoiceStates = array("Unpaid/Issued","Pending","Paid in Full"); //testing
             $invoices = $this->getInvoicesByFilter($startDate,$endDate,$projectSpecialtyObjects,$invoiceStates,true);
             //$invoices = $transresRequestUtil->getOverdueInvoices();
 
