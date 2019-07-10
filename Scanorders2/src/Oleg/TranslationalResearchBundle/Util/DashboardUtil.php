@@ -4978,10 +4978,13 @@ class DashboardUtil
                 $projectTypeArr[$projectTypeId]['link'] = $link;
             }
 
+            //do not filter by top
+            $quantityLimit = "Show all";
+
             $postfix = "total for ".$projectCount." projects";
             $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($totalFees),"$",$postfix);
             $showOther = $this->getOtherStr($showLimited,"Project Types");
-            $projectTypeArrTop = $this->getTopMultiArray($projectTypeArr,$showOther,$quantityLimit);
+            $projectTypeArrTop = $this->getTopMultiArray($projectTypeArr,$showOther,$quantityLimit,array(),100);
 
             $chartsArray = $this->getChartByMultiArray( $projectTypeArrTop, $filterArr, $chartName,"pie",null," : $","percent+label");
         }
