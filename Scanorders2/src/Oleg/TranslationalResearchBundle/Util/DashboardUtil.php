@@ -4878,9 +4878,16 @@ class DashboardUtil
             $postfix = "total for ".count($projects)." projects";
             $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($totalFees),"$",$postfix);
             $showOther = $this->getOtherStr($showLimited,"Project Types");
-            $projectTypeArrTop = $this->getTopMultiArray($projectTypeArr,$showOther,$quantityLimit); // function getTopMultiArray(
+            $projectTypeArrTop = $this->getTopMultiArray($projectTypeArr,$showOther,$quantityLimit,array(),100); // function getTopMultiArray(
 
-            $chartsArray = $this->getChartByMultiArray( $projectTypeArrTop, $filterArr, $chartName,"pie",null," : $","percent+label");
+            $layoutArray = array(
+                'height' => $this->height,
+                'width' => $this->width*1.2,
+                'title' => $chartName,
+                'margin' => array('c' => 400)
+            );
+
+            $chartsArray = $this->getChartByMultiArray( $projectTypeArrTop, $filterArr, $chartName,"pie",$layoutArray," : $","percent+label"); //function getChartByMultiArray(
             //$chartsArray = $this->getChart($projectTypeArrTop, $chartName,'pie',$layoutArray," : $");
         }
 
