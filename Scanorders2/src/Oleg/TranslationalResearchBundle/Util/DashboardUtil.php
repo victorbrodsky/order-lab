@@ -4842,8 +4842,9 @@ class DashboardUtil
                 if( isset($projectTypeArr[$projectTypeId]) && isset($projectTypeArr[$projectTypeId]['value']) ) {
                     $totalFee = $projectTypeArr[$projectTypeId]['value'] + $totalFee;
                 }
+                $projectTypeArr[$projectTypeId]['totalCount']++;
                 $projectTypeArr[$projectTypeId]['value'] = $totalFee;
-                $projectTypeArr[$projectTypeId]['label'] = $projectTypeName;
+                $projectTypeArr[$projectTypeId]['label'] = $projectTypeName . " (".count($projectTypeArr[$projectTypeId]['totalCount'])." projects)";
                 $projectTypeArr[$projectTypeId]['objectid'] = $projectTypeId;
                 $projectTypeArr[$projectTypeId]['pi'] = null;
                 //$projectTypeArr[$projectTypeId]['show-path'] = null; //"project-type";
@@ -4870,9 +4871,14 @@ class DashboardUtil
                 $projectTypeArr[$projectTypeId]['link'] = $link;
             }
 
-            $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($totalFees),"$");
+            //do not filter by top
+            $quantityLimit = "Show all";
+
+            //$chartName,$total,$prefix=null,$postfix="total"
+            $postfix = "total for ".count($projects)." projects";
+            $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($totalFees),"$",$postfix);
             $showOther = $this->getOtherStr($showLimited,"Project Types");
-            $projectTypeArrTop = $this->getTopMultiArray($projectTypeArr,$showOther,$quantityLimit);
+            $projectTypeArrTop = $this->getTopMultiArray($projectTypeArr,$showOther,$quantityLimit); // function getTopMultiArray(
 
             $chartsArray = $this->getChartByMultiArray( $projectTypeArrTop, $filterArr, $chartName,"pie",null," : $","percent+label");
             //$chartsArray = $this->getChart($projectTypeArrTop, $chartName,'pie',$layoutArray," : $");
