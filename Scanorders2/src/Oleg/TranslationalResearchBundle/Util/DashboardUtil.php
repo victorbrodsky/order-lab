@@ -4819,6 +4819,7 @@ class DashboardUtil
             $transresUtil = $this->container->get('transres_util');
             $projectTypeArr = array();
             $totalFees = 0;
+            $projectCount = 0;
 
             $projects = $this->getProjectsByFilter($startDate,$endDate,$projectSpecialtyObjects);
             foreach($projects as $project) {
@@ -4833,10 +4834,12 @@ class DashboardUtil
 
                 $invoicesInfos = $transresUtil->getInvoicesInfosByProject($project);
                 $totalFee = $invoicesInfos['total'];
-                if( !$totalFee || $totalFee == 0 ) {
-                    continue;
-                }
+                //count only projects with fees
+//                if( !$totalFee || $totalFee == 0 ) {
+//                    continue;
+//                }
 
+                $projectCount++;
                 $totalFees = $totalFees + $totalFee;
 
                 if( isset($projectTypeArr[$projectTypeId]) && isset($projectTypeArr[$projectTypeId]['value']) ) {
@@ -4845,7 +4848,13 @@ class DashboardUtil
                 $projectTypeArr[$projectTypeId]['value'] = $totalFee;
                 $projectTypeArr[$projectTypeId]['objectid'] = $projectTypeId;
                 $projectTypeArr[$projectTypeId]['pi'] = null;
-                $projectTypeArr[$projectTypeId]['totalCount']++;
+
+                if( isset($projectTypeArr[$projectTypeId]) && isset($projectTypeArr[$projectTypeId]['totalCount']) ) {
+                    $projectTypeArr[$projectTypeId]['totalCount'] = $projectTypeArr[$projectTypeId]['totalCount'] + 1;
+                } else {
+                    $projectTypeArr[$projectTypeId]['totalCount'] = 0;
+                }
+
                 $projectTypeArr[$projectTypeId]['label'] = $projectTypeName . " (".$projectTypeArr[$projectTypeId]['totalCount']." projects)";
                 //$projectTypeArr[$projectTypeId]['show-path'] = null; //"project-type";
 
@@ -4875,12 +4884,11 @@ class DashboardUtil
             $quantityLimit = "Show all";
 
             //$chartName,$total,$prefix=null,$postfix="total"
-            $postfix = "total for ".count($projects)." projects";
+            $postfix = "total for ".$projectCount." projects";
             $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($totalFees),"$",$postfix);
             $showOther = $this->getOtherStr($showLimited,"Project Types");
             $projectTypeArrTop = $this->getTopMultiArray($projectTypeArr,$showOther,$quantityLimit,array(),100); // function getTopMultiArray(
 
-            $layoutArray = null;
 //            $layoutArray = array(
 //                'height' => $this->height,
 //                'width' => $this->width*1.2,
@@ -4888,7 +4896,7 @@ class DashboardUtil
 //                'margin' => array('c' => 400)
 //            );
 
-            $chartsArray = $this->getChartByMultiArray( $projectTypeArrTop, $filterArr, $chartName,"pie",$layoutArray," : $","percent+label"); //function getChartByMultiArray(
+            $chartsArray = $this->getChartByMultiArray( $projectTypeArrTop, $filterArr, $chartName,"pie",null," : $","percent+label"); //function getChartByMultiArray(
             //$chartsArray = $this->getChart($projectTypeArrTop, $chartName,'pie',$layoutArray," : $");
         }
 
