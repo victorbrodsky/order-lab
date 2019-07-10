@@ -111,7 +111,7 @@ class DashboardUtil
             "37. Turn-around Statistics: Average number of days for invoices to be paid (based on fully and partially paid invoices) (linked)" => "turn-around-statistics-days-paid-invoice",
             "38. Turn-around Statistics: Number of days each paid and partially paid invoice took to get paid (linked)" => "turn-around-statistics-days-per-paid-invoice",
             "39. Turn-around Statistics: Top PIs with most delayed unpaid invoices (linked)" => "turn-around-statistics-pis-with-delayed-unpaid-invoices",
-            "40. Turn-around Statistics: Top PIs with highest total unpaid, overdue invoices (linked)" => "turn-around-statistics-pis-with-highest-total-unpaid-invoices",
+            "40. Turn-around Statistics: Top PIs with highest total amounts in unpaid, overdue invoices (linked)" => "turn-around-statistics-pis-with-highest-total-unpaid-invoices",
             "41. Turn-around Statistics: Top PIs by index (delay in months * invoiced amount, aggregate) for unpaid, overdue invoices (linked)" => "turn-around-statistics-pis-combining-total-delayed-unpaid-invoices",
 
             "42. Number of PIs in AP/CP vs Hematopathology (linked)" => "compare-projectspecialty-pis",
@@ -4219,7 +4219,7 @@ class DashboardUtil
             $chartsArray = $this->getChart($pisUnpaidInvoicesArrTop, $chartName,'pie',$layoutArray,null,null,null,"percent+label");
         }
 
-        //"40. Turn-around Statistics: Top 10 PIs with highest total unpaid, overdue invoices" => "turn-around-statistics-pis-with-highest-total-unpaid-invoices",
+        //"40. Turn-around Statistics: Top PIs with highest total amounts in unpaid, overdue invoices (linked)" => "turn-around-statistics-pis-with-highest-total-unpaid-invoices",
         if( $chartType == "turn-around-statistics-pis-with-highest-total-unpaid-invoices" ) {
             $transresRequestUtil = $this->container->get('transres_request_util');
 
@@ -4266,14 +4266,14 @@ class DashboardUtil
             //$titleCount = $titleCount . " (invoices ".count($invoices).")";
 
             //$chartName = $this->getTitleWithTotal($chartName,$titleCount);
-            $chartName = $chartName . " (" . $titleCount . " invoices for total $" . $this->getNumberFormat($totalUnpaid) . ")";
+            $chartName = $chartName . " (" . $titleCount . " invoices for a total $" . $this->getNumberFormat($totalUnpaid) . ")";
 
-            $showOther = $this->getOtherStr($showLimited,"Invoices");
+            $showOther = $this->getOtherStr($showLimited,"PIs");
             $pisUnpaidInvoicesTotalArrTop = $this->getTopArray($pisUnpaidInvoicesTotalArr,$showOther,$quantityLimit);
             $chartsArray = $this->getChart($pisUnpaidInvoicesTotalArrTop, $chartName,'pie',$layoutArray," : $",null,null,"percent+label");
         }
 
-        //"40. Turn-around Statistics: Top 10 PIs combining amounts and delay duration for unpaid, overdue invoices" => "turn-around-statistics-pis-combining-total-delayed-unpaid-invoices",
+        //"41. Turn-around Statistics: Top 10 PIs combining amounts and delay duration for unpaid, overdue invoices" => "turn-around-statistics-pis-combining-total-delayed-unpaid-invoices",
         if( $chartType == "turn-around-statistics-pis-combining-total-delayed-unpaid-invoices" ) {
             $transresRequestUtil = $this->container->get('transres_request_util');
 
