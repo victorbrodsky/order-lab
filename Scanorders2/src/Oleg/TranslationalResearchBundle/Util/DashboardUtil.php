@@ -125,7 +125,7 @@ class DashboardUtil
             "49. Total Fees per Project Request Type of Non-Funded Projects (linked)" => "projects-unfunded-fees-per-type",
 
             "50. Total Fees per Work Request Business Purpose" => "requests-fees-per-business-purpose",
-            "51. Total Fees per Funded Work Requests Business Purpose" => "requests-funded-fees-per-business-purpose",
+            "51. Total Fees per Work Request Business Purpose for Funded Projects" => "requests-funded-fees-per-business-purpose",
             "52. Total Fees per Non-Funded Work Requests Business Purpose" => "requests-unfunded-fees-per-business-purpose",
 
             "53. Turn-around Statistics: Number of days to complete each Work Request with person (based on 'Completed and Notified' requests)" => "turn-around-statistics-days-complete-per-request-with-user",
@@ -5143,7 +5143,7 @@ class DashboardUtil
             $totalFees = $this->getNumberFormat($totalFees);
             $chartName = $this->getTitleWithTotal($chartName,$totalFees,"$",$postfix);
             $showOther = $this->getOtherStr($showLimited,"Business Purposes");
-            $requestBusinessPurposeArrTop = $this->getTopArray($requestBusinessPurposeNewArr,$showOther,$quantityLimit,array(),100); // function getTopArray(
+            $requestBusinessPurposeArrTop = $this->getTopArray($requestBusinessPurposeNewArr,$showOther,$quantityLimit,array(),100);
             $chartsArray = $this->getChart($requestBusinessPurposeArrTop, $chartName,'pie',$layoutArray," : $",null,null,"percent+label");
 
             if($testing) {
@@ -5154,11 +5154,13 @@ class DashboardUtil
             }
         }
 
-        //"51. Total Fees per Funded Work Requests Business Purpose (Top 10)" => "requests-funded-fees-per-business-purpose",
+        //"51. Total Fees per Work Request Business Purpose for Funded Projects" => "requests-funded-fees-per-business-purpose",
         if( $chartType == "requests-funded-fees-per-business-purpose" ) {
             $transresRequestUtil = $this->container->get('transres_request_util');
             $requestBusinessPurposeArr = array();
             $totalFees = 0;
+            $projectCount = 0;
+            $projectBusinessCount = array();
 
             $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
             foreach($requests as $transRequest) {
@@ -5172,6 +5174,7 @@ class DashboardUtil
                     continue;
                 }
 
+                $projectCount++;
                 $totalFees = $totalFees + $fee;
 
                 $businessPurposes = $transRequest->getBusinessPurposes();
@@ -5190,12 +5193,32 @@ class DashboardUtil
                         $fee = $requestBusinessPurposeArr[$businessPurposeName] + $fee;
                     }
                     $requestBusinessPurposeArr[$businessPurposeName] = $fee;
+
+                    if( isset($projectBusinessCount[$businessPurposeName]) && isset($projectBusinessCount[$businessPurposeName]['projectTypeCount']) ) {
+                        $projectTypeCount = $projectBusinessCount[$businessPurposeName]['projectTypeCount'] + 1;
+                    } else {
+                        $projectTypeCount = 1;
+                    }
+                    $projectBusinessCount[$businessPurposeName]['projectTypeCount'] = $projectTypeCount;
                 }
             }
 
-            $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($totalFees),"$");
+            $requestBusinessPurposeNewArr = array();
+            foreach($requestBusinessPurposeArr as $businessPurposeName=>$value) {
+                if( !$projectBusinessCount[$businessPurposeName]['projectTypeCount'] ) {
+                    $projectBusinessCount[$businessPurposeName]['projectTypeCount'] = 1;
+                }
+                $newLabel = $businessPurposeName . " (".$projectBusinessCount[$businessPurposeName]['projectTypeCount']." work requests)";
+                $requestBusinessPurposeNewArr[$newLabel] = $value;
+            }
+
+            //do not filter by top
+            $quantityLimit = "Show all";
+            $postfix = "total for ".$projectCount." work requests";
+
+            $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($totalFees),"$",$postfix);
             $showOther = $this->getOtherStr($showLimited,"Business Purposes");
-            $requestBusinessPurposeArrTop = $this->getTopArray($requestBusinessPurposeArr,$showOther,$quantityLimit);
+            $requestBusinessPurposeArrTop = $this->getTopArray($requestBusinessPurposeNewArr,$showOther,$quantityLimit,array(),100);
             $chartsArray = $this->getChart($requestBusinessPurposeArrTop, $chartName,'pie',$layoutArray," : $",null,null,"percent+label");
         }
 
