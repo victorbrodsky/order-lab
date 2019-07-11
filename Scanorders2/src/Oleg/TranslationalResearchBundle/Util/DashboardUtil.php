@@ -128,7 +128,7 @@ class DashboardUtil
             "51. Total Fees per Work Request Business Purpose for Funded Projects" => "requests-funded-fees-per-business-purpose",
             "52. Total Fees per Work Request Business Purpose for Non-Funded Projects" => "requests-unfunded-fees-per-business-purpose",
 
-            "53. Turn-around Statistics: Number of days to complete each Work Request with person (based on 'Completed and Notified' requests)" => "turn-around-statistics-days-complete-per-request-with-user",
+            "53. Turn-around Statistics: Number of Days each 'Completed and Notified' Work Request took with the Name of who marked it as completed" => "turn-around-statistics-days-complete-per-request-with-user",
             "54. Turn-around Statistics: Top most delinquent invoices (linked)" => "turn-around-statistics-delayed-unpaid-invoices-by-days",
 
             "55. Number of reminder emails sent per month (linked)" => "reminder-emails-per-month",
@@ -5312,7 +5312,7 @@ class DashboardUtil
             $chartsArray = $this->getChart($requestBusinessPurposeArrTop, $chartName,'pie',$layoutArray," : $",null,null,"percent+label");
         }
 
-        //"53. Turn-around Statistics: Number of days to complete each Work Request with person (based on 'Completed and Notified' requests)" => "turn-around-statistics-days-complete-per-request-with-product-by-user",
+        //"53. Turn-around Statistics: Number of Days each “Completed and Notified” Work Request took with the Name of who marked it as completed" => "turn-around-statistics-days-complete-per-request-with-product-by-user",
         if( $chartType == "turn-around-statistics-days-complete-per-request-with-user" ) {
             $averageDays = array();
 
@@ -5350,10 +5350,21 @@ class DashboardUtil
                     $index = $index . ", " . $completedUser->getUsernameOptimal();
                 }
 
-                if( isset($averageDays[$index]) ) {
-                    $days = $averageDays[$index] + $days;
+//                if( isset($averageDays[$index]) ) {
+//                    $days = $averageDays[$index] + $days;
+//                }
+//                $averageDays[$index] = $days;
+
+                $link = $this->container->get('router')->generate(
+                    'translationalresearch_request_show',
+                    array("id"=>$transRequest->getId()),
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+
+                if( isset($averageDays[$index]) && isset($averageDays[$index]['value']) ) {
+                    $days = $averageDays[$index]['value'] + $days;
                 }
-                $averageDays[$index] = $days;
+                $averageDays[$index] = array("value"=>$days,"link"=>$link);
 
             }//foreach
 
@@ -5432,7 +5443,7 @@ class DashboardUtil
                 'height' => $this->height*1.5,
                 'width' => $this->width,
                 'title' => $chartName,
-                'margin' => array('b' => 600)
+                'margin' => array('b' => 700)
             );
 
 //            $descriptionArr = array(
