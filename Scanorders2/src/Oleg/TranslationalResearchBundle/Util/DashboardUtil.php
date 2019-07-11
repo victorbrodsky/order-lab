@@ -133,10 +133,10 @@ class DashboardUtil
 
             "55. Number of reminder emails sent per month (linked)" => "reminder-emails-per-month",
 
-            "56. Number of successful logins for the TRP site per month" => "successful-logins-trp",
-            "57. Number of successful logins per site" => "successful-logins-site",
-            "58. Number of unique successful logins per site per month" => "successful-unique-logins-site-month",
-            "59. Number of unique successful logins per site per week" => "successful-unique-logins-site-week",
+            "56. Number of successful log in events for the TRP site per month" => "successful-logins-trp",
+            "57. Number of successful log in events per site per month" => "successful-logins-site",
+            "58. Number of unique successful log in events per site per month" => "successful-unique-logins-site-month",
+            "59. Number of unique successful log in events per site per week" => "successful-unique-logins-site-week",
 
             //"60. PIs with most projects" => "pis-with-most-projects",
             //"61. PIs with highest expenditures" => "pis-with-highest-expenditures",
@@ -5707,7 +5707,7 @@ class DashboardUtil
             $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack", $layoutArray); //" function getStackedChart("
         }
 
-        //"56. Number of successful log ins for the TRP site per month" => "successful-logins-trp",
+        //"56. Number of successful log in events for the TRP site per month" => "successful-logins-trp",
         if( $chartType == "successful-logins-trp" ) {
             $transresUtil = $this->container->get('transres_util');
 
@@ -5741,7 +5741,7 @@ class DashboardUtil
             $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack");
         }
 
-        //"57. Number of successful logins per site" => "successful-logins-site"
+        //"57. Number of successful log in events per site" => "successful-logins-site"
         if( $chartType == "successful-logins-site" ) {
             $transresUtil = $this->container->get('transres_util');
 
@@ -5753,6 +5753,11 @@ class DashboardUtil
             //$loginsScanArr = array();
 
             $totalLoginCount = 0;
+            $loginCountCalllog = 0;
+            $loginCountVacreq = 0;
+            $loginCountFellapp = 0;
+            $loginCountEmpl = 0;
+            $loginCountTrp = 0;
 
             //$startDate->modify( 'first day of last month' );
             $startDate->modify( 'first day of this month' );
@@ -5767,22 +5772,27 @@ class DashboardUtil
                 $loginEmployeesCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'employees');
                 $loginsEmployeesArr[$startDateLabel] = $loginEmployeesCount;
                 $totalLoginCount += $loginCount;
+                $loginCountEmpl = $loginCountEmpl + $loginCount;
 
                 $loginTranslationalresearchCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'translationalresearch');
                 $loginsTranslationalresearchArr[$startDateLabel] = $loginTranslationalresearchCount;
                 $totalLoginCount += $loginTranslationalresearchCount;
+                $loginCountTrp = $loginCountTrp + $loginTranslationalresearchCount;
 
                 $loginFellappCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'fellapp');
                 $loginsFellappArr[$startDateLabel] = $loginFellappCount;
                 $totalLoginCount += $loginFellappCount;
+                $loginCountFellapp = $loginCountFellapp + $loginFellappCount;
 
                 $loginVacreqCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'vacreq');
                 $loginsVacreqArr[$startDateLabel] = $loginVacreqCount;
                 $totalLoginCount += $loginVacreqCount;
+                $loginCountVacreq = $loginCountVacreq + $loginVacreqCount;
 
                 $loginCalllogCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'calllog');
                 $loginsCalllogArr[$startDateLabel] = $loginCalllogCount;
                 $totalLoginCount += $loginCalllogCount;
+                $loginCountCalllog = $loginCountCalllog + $loginCalllogCount;
 
                 //$loginScanCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'scan');
                 //$loginsScanArr[$startDateLabel] = $loginScanCount;
@@ -5794,11 +5804,11 @@ class DashboardUtil
                 
             } while( $startDate < $endDate );
 
-            $combinedData["Translational Research Logins"] = $loginsTranslationalresearchArr;
-            $combinedData["Employee Directory Logins"] = $loginsEmployeesArr;
-            $combinedData["Fellowship Applications Logins"] = $loginsFellappArr;
-            $combinedData["Vacation Request Logins"] = $loginsVacreqArr;
-            $combinedData["Call Log Book Logins"] = $loginsCalllogArr;
+            $combinedData["Translational Research log in events ($loginCountTrp)"] = $loginsTranslationalresearchArr;
+            $combinedData["Employee Directory log in events ($loginCountEmpl)"] = $loginsEmployeesArr;
+            $combinedData["Fellowship Applications log in events ($loginCountFellapp)"] = $loginsFellappArr;
+            $combinedData["Vacation Request log in events ($loginCountVacreq)"] = $loginsVacreqArr;
+            $combinedData["Call Log Book log in events ($loginCountCalllog)"] = $loginsCalllogArr;
             //$combinedData["Glass Slide Scan Orders Logins"] = $loginsScanArr;
 
             $chartName = $chartName . " (" . $totalLoginCount . " Total)";
@@ -5806,7 +5816,7 @@ class DashboardUtil
             $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack");
         }
 
-        //"58. Number of successful logins per user" => "successful-logins-user"
+        //"58. Number of successful log in events per user" => "successful-logins-user"
 //        if( $chartType == "successful-logins-user" ) {
 //            $transresUtil = $this->container->get('transres_util');
 //
@@ -5862,7 +5872,7 @@ class DashboardUtil
 //
 //            $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack");
 //        }
-        //"58. Number of successful logins per month" => "successful-unique-logins-site-month"
+        //"58. Number of successful log in events per month" => "successful-unique-logins-site-month"
         if( $chartType == "successful-unique-logins-site-month" ) {
             $transresUtil = $this->container->get('transres_util');
 
@@ -5926,7 +5936,7 @@ class DashboardUtil
             $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack");
         }
 
-        //"59. Number of unique successful logins per site per week" => "successful-unique-logins-site-week",
+        //"59. Number of unique successful log in events per site per week" => "successful-unique-logins-site-week",
         if( $chartType == "successful-unique-logins-site-week" ) {
             $transresUtil = $this->container->get('transres_util');
 
