@@ -5104,6 +5104,13 @@ class DashboardUtil
                         $fee = $requestBusinessPurposeArr["No Business Purpose"] + $fee;
                     }
                     $requestBusinessPurposeArr["No Business Purpose"] = $fee;
+
+                    if( isset($projectBusinessCount["No Business Purpose"]) && isset($projectBusinessCount["No Business Purpose"]['projectTypeCount']) ) {
+                        $projectTypeCount = $projectBusinessCount["No Business Purpose"]['projectTypeCount'] + 1;
+                    } else {
+                        $projectTypeCount = 1;
+                    }
+                    $projectBusinessCount["No Business Purpose"]['projectTypeCount'] = $projectTypeCount;
                 }
 
                 foreach($businessPurposes as $businessPurpose) {
@@ -5129,9 +5136,9 @@ class DashboardUtil
 
             $requestBusinessPurposeNewArr = array();
             foreach($requestBusinessPurposeArr as $businessPurposeName=>$value) {
-                if( !$projectBusinessCount[$businessPurposeName]['projectTypeCount'] ) {
-                    $projectBusinessCount[$businessPurposeName]['projectTypeCount'] = 1;
-                }
+                //if( !$projectBusinessCount[$businessPurposeName]['projectTypeCount'] ) {
+                    //$projectBusinessCount[$businessPurposeName]['projectTypeCount'] = 1;
+                //}
                 $newLabel = $businessPurposeName . " (".$projectBusinessCount[$businessPurposeName]['projectTypeCount']." work requests)";
                 $requestBusinessPurposeNewArr[$newLabel] = $value;
             }
