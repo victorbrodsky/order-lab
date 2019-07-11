@@ -123,7 +123,9 @@ function sendInviteInterviewersToRate(url,confirmMsg) {
         success: function(response){
             //console.log('response ok');
             if( response == "ok" ) {
-                alert("Invitation email(s) have been successfully sent.");
+                //alert("Invitation email(s) have been successfully sent.");
+                $(".alert-info").text("Invitation email(s) have been successfully sent.");
+                //restart page?
             }
         }
     });
