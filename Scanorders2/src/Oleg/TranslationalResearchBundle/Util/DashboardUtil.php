@@ -135,7 +135,7 @@ class DashboardUtil
 
             "56. Number of successful log in events for the TRP site per month" => "successful-logins-trp",
             "57. Number of successful log in events per site per month" => "successful-logins-site",
-            "58. Number of unique successful log in events per site per month" => "successful-unique-logins-site-month",
+            "58. Number of unique users in a given month who successful log in, per site" => "successful-unique-logins-site-month",
             "59. Number of unique successful log in events per site per week" => "successful-unique-logins-site-week",
 
             //"60. PIs with most projects" => "pis-with-most-projects",
@@ -5872,7 +5872,7 @@ class DashboardUtil
 //
 //            $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack");
 //        }
-        //"58. Number of successful log in events per month" => "successful-unique-logins-site-month"
+        //"58. Number of unique users in a given month who successful log in, per site" => "successful-unique-logins-site-month"
         if( $chartType == "successful-unique-logins-site-month" ) {
             $transresUtil = $this->container->get('transres_util');
 
@@ -5886,6 +5886,11 @@ class DashboardUtil
             //$loginsScanArr = array();
 
             $totalLoginCount = 0;
+            $loginCountCalllog = 0;
+            $loginCountVacreq = 0;
+            $loginCountFellapp = 0;
+            $loginCountEmpl = 0;
+            $loginCountTrp = 0;
 
             $startDate->modify( 'first day of last month' );
 
@@ -5904,31 +5909,36 @@ class DashboardUtil
 
                 $loginEmployeesCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'employees',true);
                 $loginsEmployeesArr[$startDateLabel] = $loginEmployeesCount;
-                $totalLoginCount += $loginCount;
+                $totalLoginCount += $loginEmployeesCount;
+                $loginCountEmpl = $loginCountEmpl + $loginEmployeesCount;
 
                 $loginTranslationalresearchCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'translationalresearch',true);
                 $loginsTranslationalresearchArr[$startDateLabel] = $loginTranslationalresearchCount;
                 $totalLoginCount += $loginTranslationalresearchCount;
+                $loginCountTrp = $loginCountTrp + $loginTranslationalresearchCount;
 
                 $loginFellappCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'fellapp',true);
                 $loginsFellappArr[$startDateLabel] = $loginFellappCount;
                 $totalLoginCount += $loginFellappCount;
+                $loginCountFellapp = $loginCountFellapp + $loginFellappCount;
 
                 $loginVacreqCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'vacreq',true);
                 $loginsVacreqArr[$startDateLabel] = $loginVacreqCount;
                 $totalLoginCount += $loginVacreqCount;
+                $loginCountVacreq = $loginCountVacreq + $loginVacreqCount;
 
                 $loginCalllogCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'calllog',true);
                 $loginsCalllogArr[$startDateLabel] = $loginCalllogCount;
                 $totalLoginCount += $loginCalllogCount;
+                $loginCountCalllog = $loginCountCalllog + $loginCalllogCount;
 
             }
 
-            $combinedData["Translational Research Logins"] = $loginsTranslationalresearchArr;
-            $combinedData["Employee Directory Logins"] = $loginsEmployeesArr;
-            $combinedData["Fellowship Applications Logins"] = $loginsFellappArr;
-            $combinedData["Vacation Request Logins"] = $loginsVacreqArr;
-            $combinedData["Call Log Book Logins"] = $loginsCalllogArr;
+            $combinedData["Translational Research Users ($loginCountTrp)"] = $loginsTranslationalresearchArr;
+            $combinedData["Employee Directory Users ($loginCountEmpl)"] = $loginsEmployeesArr;
+            $combinedData["Fellowship Applications Users ($loginCountFellapp)"] = $loginsFellappArr;
+            $combinedData["Vacation Request Users ($loginCountVacreq)"] = $loginsVacreqArr;
+            $combinedData["Call Log Book Users ($loginCountCalllog)"] = $loginsCalllogArr;
             //$combinedData["Glass Slide Scan Orders Logins"] = $loginsScanArr;
 
             $chartName = $chartName . " (" . $totalLoginCount . " Total)";
