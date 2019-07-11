@@ -222,6 +222,8 @@ class FellAppApplicantController extends Controller {
         }
 
         $this->sendConfirmationEmail($emails,$entity,$event,$request); //to admin
+        
+        //return $this->redirect( $this->generateUrl('fellapp_home') );
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
