@@ -5106,11 +5106,11 @@ class DashboardUtil
                     $requestBusinessPurposeArr["No Business Purpose"] = $fee;
 
                     if( isset($projectBusinessCount["No Business Purpose"]) && isset($projectBusinessCount["No Business Purpose"]['projectTypeCount']) ) {
-                        $projectTypeCount = $projectBusinessCount["No Business Purpose"]['projectTypeCount'] + 1;
+                        $projectTypeCount = $projectBusinessCount["No Business Purpose"]['projectTypeCount'][$thisTransRequest->getId()] + 1;
                     } else {
                         $projectTypeCount = 1;
                     }
-                    $projectBusinessCount["No Business Purpose"]['projectTypeCount'] = $projectTypeCount;
+                    $projectBusinessCount["No Business Purpose"]['projectTypeCount'][$thisTransRequest->getId()] = $projectTypeCount;
                 }
 
                 foreach($businessPurposes as $businessPurpose) {
@@ -5124,12 +5124,12 @@ class DashboardUtil
                         echo "businessPurposeName=".$businessPurposeName."; fee=".$thisFee."<br>";
                     }
 
-                    if( isset($projectBusinessCount[$businessPurposeName]) && isset($projectBusinessCount[$businessPurposeName]['projectTypeCount']) ) {
-                        $projectTypeCount = $projectBusinessCount[$businessPurposeName]['projectTypeCount'] + 1;
+                    if( isset($projectBusinessCount[$businessPurposeName]) && isset($projectBusinessCount[$businessPurposeName]['projectTypeCount'][$thisTransRequest->getId()]) ) {
+                        $projectTypeCount = $projectBusinessCount[$businessPurposeName]['projectTypeCount'][$thisTransRequest->getId()] + 1;
                     } else {
                         $projectTypeCount = 1;
                     }
-                    $projectBusinessCount[$businessPurposeName]['projectTypeCount'] = $projectTypeCount;
+                    $projectBusinessCount[$businessPurposeName]['projectTypeCount'][$thisTransRequest->getId()] = $projectTypeCount;
 
                 }
             }
@@ -5139,7 +5139,7 @@ class DashboardUtil
                 //if( !$projectBusinessCount[$businessPurposeName]['projectTypeCount'] ) {
                     //$projectBusinessCount[$businessPurposeName]['projectTypeCount'] = 1;
                 //}
-                $newLabel = $businessPurposeName . " (".$projectBusinessCount[$businessPurposeName]['projectTypeCount']." work requests)";
+                $newLabel = $businessPurposeName . " (".count($projectBusinessCount[$businessPurposeName]['projectTypeCount'])." work requests)";
                 $requestBusinessPurposeNewArr[$newLabel] = $value;
             }
 
