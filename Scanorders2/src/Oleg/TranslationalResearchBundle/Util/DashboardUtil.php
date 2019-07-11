@@ -5596,7 +5596,7 @@ class DashboardUtil
 
                 $delayedInvoicesData[$date] = array('value'=>$value,'link'=>$link);
             }
-            $combinedData["$unpaidInvoicesCount Unpaid Invoices"] = $delayedInvoicesData;
+            $combinedData["$unpaidInvoicesCount reminder emails for unpaid Invoices"] = $delayedInvoicesData;
 
             //$combinedData['Delayed Project Requests'] = $delayedProjectsArr;
             //Use IRB review delayed days for all states
@@ -5622,7 +5622,7 @@ class DashboardUtil
 
                 $delayedProjectsData[$date] = array('value'=>$value,'link'=>$link);
             }
-            $combinedData["$delayedProjectsCount Project requests taking longer than $reminderDelay days to review"] = $delayedProjectsData;
+            $combinedData["$delayedProjectsCount reminder emails for project requests taking longer than $reminderDelay days to review"] = $delayedProjectsData;
 
             //$combinedData['Delayed Pending Work Request'] = $delayedRequestsArr;
             $reminderDelay = $transresUtil->getTransresSiteProjectParameter("pendingRequestReminderDelay", null, $projectSpecialtyObject);
@@ -5644,7 +5644,7 @@ class DashboardUtil
 
                 $delayedRequestsData[$date] = array('value'=>$value,'link'=>$link);
             }
-            $combinedData["$delayedRequestsCount Work requests taking longer than $reminderDelay days to complete"] = $delayedRequestsData;
+            $combinedData["$delayedRequestsCount reminder emails for work requests taking longer than $reminderDelay days to complete"] = $delayedRequestsData;
 
             //$combinedData['Delayed Completed Work Request'] = $delayedCompletedRequestsArr;
             $reminderDelay = $transresUtil->getTransresSiteProjectParameter("completedRequestReminderDelay", null, $projectSpecialtyObject);
@@ -5666,7 +5666,7 @@ class DashboardUtil
 
                 $delayedCompletedRequestsData[$date] = array('value'=>$value,'link'=>$link);
             }
-            $combinedData["$delayedCompletedRequestsCount Work requests completed for over $reminderDelay days in need of submitter notifications"] = $delayedCompletedRequestsData;
+            $combinedData["$delayedCompletedRequestsCount reminder emails for work requests completed for over $reminderDelay days in need of submitter notifications"] = $delayedCompletedRequestsData;
 
             //$combinedData['Delayed Completed and Notified Work Request without Invoices'] = $delayedCompletedNoInvoiceRequestsArr;
             $reminderDelay = $transresUtil->getTransresSiteProjectParameter("completedNoInvoiceRequestReminderDelay", null, $projectSpecialtyObject);
@@ -5688,7 +5688,7 @@ class DashboardUtil
 
                 $delayedCompletedNoInvoiceRequestsData[$date] = array('value'=>$value,'link'=>$link);
             }
-            $combinedData["$delayedCompletedNoInvoiceRequestsCount Work requests completed for over $reminderDelay days without invoices"] = $delayedCompletedNoInvoiceRequestsData;
+            $combinedData["$delayedCompletedNoInvoiceRequestsCount reminder emails for work requests completed for over $reminderDelay days without invoices"] = $delayedCompletedNoInvoiceRequestsData;
 
             //Total emails
             $totalEmails = $delayedProjectsCount + $delayedRequestsCount + $delayedCompletedRequestsCount + $delayedCompletedNoInvoiceRequestsCount + $unpaidInvoicesCount;
@@ -5696,7 +5696,15 @@ class DashboardUtil
                 $chartName = $chartName . " ($totalEmails total)";
             }
 
-            $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack"); //" getStackedChart("
+            //TODO: increase width of the chart
+            $layoutArray = array(
+                'height' => $this->height,
+                'width' => $this->width*1.2,
+                'title' => $chartName,
+                //'margin' => array('b' => 700)
+            );
+
+            $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack", $layoutArray); //" function getStackedChart("
         }
 
         //"56. Number of successful log ins for the TRP site per month" => "successful-logins-trp",
