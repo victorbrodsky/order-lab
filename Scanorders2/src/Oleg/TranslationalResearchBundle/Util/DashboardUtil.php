@@ -5771,8 +5771,8 @@ class DashboardUtil
 
                 $loginEmployeesCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'employees');
                 $loginsEmployeesArr[$startDateLabel] = $loginEmployeesCount;
-                $totalLoginCount += $loginCount;
-                $loginCountEmpl = $loginCountEmpl + $loginCount;
+                $totalLoginCount += $loginEmployeesCount;
+                $loginCountEmpl = $loginCountEmpl + $loginEmployeesCount;
 
                 $loginTranslationalresearchCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'translationalresearch');
                 $loginsTranslationalresearchArr[$startDateLabel] = $loginTranslationalresearchCount;
