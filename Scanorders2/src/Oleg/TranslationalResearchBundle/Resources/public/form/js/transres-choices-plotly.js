@@ -64,7 +64,7 @@ function transresGetCharts() {
             //
         }).error(function(jqXHR, textStatus, errorThrown) {
             console.log('Error : ' + errorThrown);
-            transresAddErrorLine("Unexpected Error. Please make sure that your session is not timed out and you are still logged in.",'error');
+            transresAddErrorLine("Unexpected Error. Please make sure that your session is not timed out and you are still logged in or selected time period is too large for this graph. ",'error');
         });
 
     }
