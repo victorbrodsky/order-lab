@@ -464,6 +464,20 @@
                                     }) }}"
                                     >Turn-around statistics</a>
                                 </li>
+                                <li>
+                                    <a href="{{ path(translationalresearch_sitename~'_dashboard_choices',
+                                    {
+                                        'filter[startDate]':startDate,
+                                        'filter[endDate]':endDate,
+                                        'filter[projectSpecialty][]':0,
+                                        'filter[chartType][1]':'reminder-emails-per-month',
+                                        'filter[chartType][2]':'successful-logins-trp',
+                                        'filter[chartType][3]':'successful-logins-site',
+                                        'filter[chartType][4]':'successful-unique-logins-site-month',
+                                        'filter[chartType][5]':'successful-unique-logins-site-week',
+                                    }) }}"
+                                    >Site Utilization Statistics</a>
+                                </li>
 
                                 {% if allProjectIdsArr is defined %}
                                     <hr style="margin-top: 10px; margin-bottom: 10px;">
