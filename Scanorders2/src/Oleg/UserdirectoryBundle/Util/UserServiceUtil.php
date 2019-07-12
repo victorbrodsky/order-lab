@@ -1140,11 +1140,11 @@ class UserServiceUtil {
         $em->persist($params);
         $em->flush();
 
-        //$emailUtil = $this->container->get('user_mailer_utility');
-        //$emailUtil->createEmailCronJob();
-        //$logger->notice("Created email cron job");
-
-        if( $this->isWindows() === false ) {
+        if( $this->isWindows() ) {
+            $emailUtil = $this->container->get('user_mailer_utility');
+            $emailUtil->createEmailCronJob();
+            $logger->notice("Created email cron job");
+        } else {
             $this->createCronsLinux();
         }
 
@@ -1436,16 +1436,16 @@ class UserServiceUtil {
             ->setCommand($fellappCronJobCommand);
 
         //first delete existing cron job
-        $this->removeCronJob($crontab,$fellappCronJobCommand);
+        //$this->removeCronJob($crontab,$fellappCronJobCommand);
 
         if( !$this->isCronJobExists($crontab,$fellappCronJobCommand) ) {
             $crontab->addJob($job);
             //$crontab->write();
             $crontab->getCrontabFileHandler()->write($crontab);
+            $logger->notice("Created importfellapp cron job");
         }
 
         //$res = $crontab->render();
-        $logger->notice("Created importfellapp cron job");
         //////////////////// EOF ImportFellowshipApplications ////////////////////
 
 
@@ -1468,16 +1468,16 @@ class UserServiceUtil {
             ->setCommand($trpCronJobCommand);
 
         //first delete existing cron job
-        $this->removeCronJob($crontab,$trpCronJobCommand);
+        //$this->removeCronJob($crontab,$trpCronJobCommand);
 
         if( !$this->isCronJobExists($crontab,$trpCronJobCommand) ) {
             $crontab->addJob($job);
             //$crontab->write();
             $crontab->getCrontabFileHandler()->write($crontab);
+            $logger->notice("Created invoice-reminder-emails cron job");
         }
 
         //$res = $crontab->render();
-        $logger->notice("Created importfellapp cron job");
         //////////////////// EOF UnpaidInvoiceReminder ////////////////////
 
         $res = $crontab->render();
