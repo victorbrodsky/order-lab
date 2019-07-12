@@ -1063,6 +1063,15 @@ class AdminController extends Controller
 
         $logger->notice("Finished generateAll");
 
+        if( $this->isWindows() ) {
+            $emailUtil = $this->container->get('user_mailer_utility');
+            $emailUtil->createEmailCronJob();
+            $logger->notice("Created email cron job");
+        } else {
+            $userServiceUtil = $this->get('user_service_utility');
+            $userServiceUtil->createCronsLinux();
+        }
+
         return $msg;
     }
 
