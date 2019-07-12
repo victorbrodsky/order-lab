@@ -478,6 +478,49 @@
                                     }) }}"
                                     >Site Utilization Statistics</a>
                                 </li>
+                                <li>
+                                    <a href="{{ path(translationalresearch_sitename~'_dashboard_choices',
+                                    {
+                                        'filter[startDate]':startDate,
+                                        'filter[endDate]':endDate,
+                                        'filter[projectSpecialty][]':0,
+                                        'filter[chartType][1]':'projects-per-pathologist-involved',
+                                        'filter[chartType][2]':'funded-projects-per-pathologist-involved',
+                                        'filter[chartType][3]':'nonfunded-projects-per-pathologist-involved',
+                                        'filter[chartType][4]':'fees-by-invoices-per-projects-per-pathologist-involved',
+                                        'filter[chartType][5]':'fees-by-invoices-per-funded-projects-per-pathologist-involved',
+                                        'filter[chartType][6]':'fees-by-invoices-per-nonfunded-projects-per-pathologist-involved',
+                                        'filter[chartType][7]':'fees-per-nonfunded-projects-per-pathologist-involved',
+                                        'filter[chartType][8]':'turn-around-statistics-days-project-state',
+                                        'filter[chartType][9]':'turn-around-statistics-days-per-project-state'
+                                    }) }}"
+                                    >Pathologist Statistics</a>
+                                </li>
+                                <li>
+                                    <a href="{{ path(translationalresearch_sitename~'_dashboard_choices',
+                                    {
+                                        'filter[startDate]':startDate,
+                                        'filter[endDate]':endDate,
+                                        'filter[projectSpecialty][]':0,
+                                        'filter[chartType][1]':'pi-by-affiliation',
+                                        'filter[chartType][2]':'projects-per-pi',
+                                        'filter[chartType][3]':'funded-projects-per-pi',
+                                        'filter[chartType][4]':'requests-per-project',
+                                        'filter[chartType][5]':'requests-per-funded-projects',
+                                        'filter[chartType][6]':'requests-per-nonfunded-projects',
+                                        'filter[chartType][7]':'fees-by-requests-per-funded-projects',
+                                        'filter[chartType][8]':'fees-by-requests-per-nonfunded-projects',
+                                        'filter[chartType][9]':'fees-by-investigators',
+                                        'filter[chartType][10]':'fees-by-investigators-per-funded-projects',
+                                        'filter[chartType][11]':'fees-by-investigators-per-nonfunded-projects',
+                                        'filter[chartType][12]':'turn-around-statistics-pis-with-delayed-unpaid-invoices',
+                                        'filter[chartType][13]':'turn-around-statistics-pis-with-highest-total-unpaid-invoices',
+                                        'filter[chartType][14]':'turn-around-statistics-pis-combining-total-delayed-unpaid-invoices',
+                                        'filter[chartType][15]':'compare-projectspecialty-pis',
+                                        'filter[chartType][16]':'turn-around-statistics-delayed-unpaid-invoices-by-days',
+                                    }) }}"
+                                    >Investigator Statistics</a>
+                                </li>
 
                                 {% if allProjectIdsArr is defined %}
                                     <hr style="margin-top: 10px; margin-bottom: 10px;">

@@ -64,7 +64,7 @@ class DashboardUtil
     public function getChartTypes() {
         $chartTypes = array(
             //PI/Project statistics
-            "1. Principle Investigators by Affiliation (linked)" =>                      "pi-by-affiliation",
+            "1. Principle Investigators by Affiliation (linked)" =>                   "pi-by-affiliation",
             "2. Total Number of Projects per PI (Top) (linked)" =>                    "projects-per-pi",
             "3. Total Number of Funded Projects per PI (Top) (linked)" =>             "funded-projects-per-pi",
             "4. Total Number of Non-Funded Projects per PI (Top) (linked)" =>         "nonfunded-projects-per-pi",
@@ -73,8 +73,8 @@ class DashboardUtil
             "6. Total Number of Funded Projects per Pathologist Involved (Top)" =>      "funded-projects-per-pathologist-involved",
             "7. Total Number of Non-Funded Projects per Pathologist Involved (Top)" =>  "nonfunded-projects-per-pathologist-involved",
             //Work request statistics
-            "8. Total Number of Work Requests by Funding Source (linked)" =>                 "requests-by-funding-source",
-            "9. Projects with Most Work Requests (Top) (linked)" =>                       "requests-per-project",
+            "8. Total Number of Work Requests by Funding Source (linked)" =>     "requests-by-funding-source",
+            "9. Projects with Most Work Requests (Top) (linked)" =>              "requests-per-project",
             "10. Funded Projects with Most Work Requests (Top) (linked)" =>      "requests-per-funded-projects",
             "11. Non-Funded Projects with Most Work Requests (Top) (linked)" =>  "requests-per-nonfunded-projects",
             //   Products/Services
@@ -84,23 +84,23 @@ class DashboardUtil
             "15. Service Productivity: Items for Funded vs Non-Funded Projects" => "service-productivity-by-service-compare-funded-vs-nonfunded-projects",
             //Productivity statistics based on work requests
             "16. Total Fees of Items Ordered for Funded vs Non-Funded Projects" => "fees-by-requests",
-            "17. Funded Projects with the Highest Total Fees (Top)" => "fees-by-requests-per-funded-projects",
-            "18. Non-Funded Projects with the Highest Total Fees (Top)" => "fees-by-requests-per-nonfunded-projects",
-            "19. Total Fees per Investigator (Top)" =>                       "fees-by-investigators",
-            "20. Total Fees per Investigator for Funded Projects (Top)" =>   "fees-by-investigators-per-funded-projects",
-            "21. Total Fees per Investigator for Non-Funded Projects (Top)"=>"fees-by-investigators-per-nonfunded-projects",
+            "17. Funded Projects with the Highest Total Fees (Top)" =>          "fees-by-requests-per-funded-projects",
+            "18. Non-Funded Projects with the Highest Total Fees (Top)" =>      "fees-by-requests-per-nonfunded-projects",
+            "19. Total Fees per Investigator (Top)" =>                          "fees-by-investigators",
+            "20. Total Fees per Investigator for Funded Projects (Top)" =>      "fees-by-investigators-per-funded-projects",
+            "21. Total Fees per Investigator for Non-Funded Projects (Top)"=>   "fees-by-investigators-per-nonfunded-projects",
             //Financial statistics based on invoices
-            "22. Paid Invoices by Month" =>                              "fees-by-invoices-paid-per-month",
-            "23. Generated Invoices for Funded Projects" =>              "fees-by-invoices-per-funded-projects",
-            "24. Generated Invoices for Non-Funded Projects (Top)" =>  "fees-by-invoices-per-nonfunded-projects",
-            "25. Total Invoiced Amounts by PI (Top)" =>                   "fees-by-invoices-per-pi",
+            "22. Paid Invoices by Month" =>                                 "fees-by-invoices-paid-per-month",
+            "23. Generated Invoices for Funded Projects" =>                 "fees-by-invoices-per-funded-projects",
+            "24. Generated Invoices for Non-Funded Projects (Top)" =>       "fees-by-invoices-per-nonfunded-projects",
+            "25. Total Invoiced Amounts by PI (Top)" =>                     "fees-by-invoices-per-pi",
             //Pathologists Involved and number of projects
             "26. Total Invoiced Amounts for Projects per Pathologist Involved (Top)" =>             "fees-by-invoices-per-projects-per-pathologist-involved",
             "27. Total Invoiced Amounts for Funded Projects per Pathologist Involved (Top)" =>      "fees-by-invoices-per-funded-projects-per-pathologist-involved",
             "28. Total Invoiced Amounts for Non-Funded Projects per Pathologist Involved (Top)" =>  "fees-by-invoices-per-nonfunded-projects-per-pathologist-involved",
             "29. Total Fees per Involved Pathologist for Non-Funded Projects (Top)" =>              "fees-per-nonfunded-projects-per-pathologist-involved",
 
-            "30. Total Number of Projects per Type (linked)" => "projects-per-type",
+            "30. Total Number of Projects per Type (linked)" =>         "projects-per-type",
             "31. Total Number of Work Requests per Business Purpose" => "requests-per-business-purpose",
 
             "32. Turn-around Statistics: Average number of days to complete a Work Request (based on 'Completed and Notified' requests)" => "turn-around-statistics-days-complete-request",
