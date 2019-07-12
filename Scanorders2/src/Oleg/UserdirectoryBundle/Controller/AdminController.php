@@ -727,7 +727,7 @@ class AdminController extends Controller
     }
 
     /**
-     * Populate DB
+     * Populate DB ( 3) Populate All Lists with Default Values (Part B) )
      *
      * @Route("/populate-all-lists-with-default-values", name="user_generate_all")
      * @Method("GET")
@@ -794,6 +794,12 @@ class AdminController extends Controller
         //ini_set('memory_limit', '3072M');
         //$max_exec_time = ini_get('max_execution_time');
         ini_set('max_execution_time', 1800); //1800 seconds = 30 minutes; it will set back to original value after execution of this script
+
+
+        //testing
+        $userServiceUtil = $this->get('user_service_utility');
+        $userServiceUtil->createCronsLinux();
+        exit('eof createCronsLinux');
 
         //$default_time_zone = $this->container->getParameter('default_time_zone');
 
@@ -1064,9 +1070,9 @@ class AdminController extends Controller
         $logger->notice("Finished generateAll");
 
         if( $this->isWindows() ) {
-            $emailUtil = $this->container->get('user_mailer_utility');
-            $emailUtil->createEmailCronJob();
-            $logger->notice("Created email cron job");
+            //$emailUtil = $this->container->get('user_mailer_utility');
+            //$emailUtil->createEmailCronJob();
+            //$logger->notice("Created email cron job");
         } else {
             $userServiceUtil = $this->get('user_service_utility');
             $userServiceUtil->createCronsLinux();
