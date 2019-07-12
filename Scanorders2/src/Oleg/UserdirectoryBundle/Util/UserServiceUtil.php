@@ -1407,6 +1407,7 @@ class UserServiceUtil {
     public function createCronsLinux() {
 
         $logger = $this->container->get('logger');
+        $logger->notice("Creating cron jobs for Linux");
 
         //1) swiftMailer (implemented on email util (EmailUtil->createEmailCronJob))
         $emailUtil = $this->container->get('user_mailer_utility');
