@@ -1465,7 +1465,7 @@ class UserServiceUtil {
             ->setHour('06')
             ->setDayOfMonth('*')
             ->setMonth('*')
-            ->setDayOfWeek('mon') //every monday (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat
+            ->setDayOfWeek('Mon') //every monday (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat
             ->setCommand($trpCronJobCommand);
 
         //first delete existing cron job
