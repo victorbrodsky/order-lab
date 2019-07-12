@@ -1400,6 +1400,7 @@ class UserServiceUtil {
         return $dest;
     }
 
+    //can use bundle: https://github.com/j-guyon/CommandSchedulerBundle
     //Create cron jobs:
     //1) swiftMailer (implemented on email util (EmailUtil->createEmailCronJob))
     //2) importFellowshipApplications (every hour)
@@ -1482,6 +1483,7 @@ class UserServiceUtil {
         //////////////////// EOF UnpaidInvoiceReminder ////////////////////
 
         $res = $crontab->render();
+        $logger->notice("Crontab render: ".$res);
 
         return $res;
     }
