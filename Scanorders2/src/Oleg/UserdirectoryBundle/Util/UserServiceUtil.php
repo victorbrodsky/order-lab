@@ -1140,13 +1140,14 @@ class UserServiceUtil {
         $em->persist($params);
         $em->flush();
 
-        if( $this->isWindows() ) {
-            $emailUtil = $this->container->get('user_mailer_utility');
-            $emailUtil->createEmailCronJob();
-            $logger->notice("Created email cron job");
-        } else {
-            $this->createCronsLinux();
-        }
+//        if( $this->isWindows() ) {
+//            $emailUtil = $this->container->get('user_mailer_utility');
+//            $emailUtil->createEmailCronJob();
+//            $logger->notice("Created email cron job");
+//        } else {
+//            $this->createCronsLinux();
+//        }
+        $this->createCrons();
 
         $logger->notice("Finished generateSiteParameters: count=".$count/10);
 
@@ -1400,7 +1401,47 @@ class UserServiceUtil {
         return $dest;
     }
 
+    public function createCrons() {
+        if( $this->isWindows() ) {
+            //Windows
+            $this->createCronsWindows();
+        } else {
+            //Linux
+            $this->createCronsLinux();
+        }
+    }
+    public function createCronsWindows() {
+        //1) swiftMailer (implemented on email util (EmailUtil->createEmailCronJob))
+        $emailUtil = $this->container->get('user_mailer_utility');
+        $emailUtil->createEmailCronJobWindows();
+
+        $projectDir = $this->container->get('kernel')->getProjectDir();
+
+        //2) importFellowshipApplications (every hour)
+        //command:    php
+        //arguments(working): "E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\bin\console" cron:swift --env=prod
+        $cronJobName = "ImportFellowshipApplications";
+        $frequencyMinutes = 60;
+
+        $console = $projectDir.DIRECTORY_SEPARATOR."bin".DIRECTORY_SEPARATOR."console";
+        $cronJobCommand = 'php \"'.$console.'\" cron:swift --env=prod';
+        $cronJobCommand = '"'.$cronJobCommand.'"';
+
+        $command = 'SchTasks /Create /SC MINUTE /MO '.$frequencyMinutes.
+            ' /IT '.
+            //' /RU system'.
+            ' /TN '.$cronJobName.
+            ' /TR '.$cronJobCommand.''
+        ;
+        //echo "SchTasks add: ".$command."<br>";
+        //$logger->notice("SchTasks:".$command);
+        $res = exec($command);
+
+        //3) UnpaidInvoiceReminder (at 6 am every Monday)
+        
+    }
     //can use bundle: https://github.com/j-guyon/CommandSchedulerBundle
+    //verify: crontab -u www-data -l
     //Create cron jobs:
     //1) swiftMailer (implemented on email util (EmailUtil->createEmailCronJob))
     //2) importFellowshipApplications (every hour)

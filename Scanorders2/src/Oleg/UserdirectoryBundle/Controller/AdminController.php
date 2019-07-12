@@ -797,9 +797,9 @@ class AdminController extends Controller
 
 
         //testing
-        $userServiceUtil = $this->get('user_service_utility');
-        $userServiceUtil->createCronsLinux();
-        exit('eof createCronsLinux');
+        //$userServiceUtil = $this->get('user_service_utility');
+        //$userServiceUtil->createCronsLinux();
+        //exit('eof createCronsLinux');
 
         //$default_time_zone = $this->container->getParameter('default_time_zone');
 
@@ -1069,14 +1069,16 @@ class AdminController extends Controller
 
         $logger->notice("Finished generateAll");
 
-        if( $this->isWindows() ) {
-            //$emailUtil = $this->container->get('user_mailer_utility');
-            //$emailUtil->createEmailCronJob();
-            //$logger->notice("Created email cron job");
-        } else {
-            $userServiceUtil = $this->get('user_service_utility');
-            $userServiceUtil->createCronsLinux();
-        }
+//        if( $this->isWindows() ) {
+//            //$emailUtil = $this->container->get('user_mailer_utility');
+//            //$emailUtil->createEmailCronJob();
+//            //$logger->notice("Created email cron job");
+//        } else {
+//            $userServiceUtil = $this->get('user_service_utility');
+//            $userServiceUtil->createCronsLinux();
+//        }
+        $userServiceUtil = $this->get('user_service_utility');
+        $userServiceUtil->createCrons();
 
         return $msg;
     }
