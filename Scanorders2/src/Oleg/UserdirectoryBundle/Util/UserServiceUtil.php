@@ -27,6 +27,7 @@ namespace Oleg\UserdirectoryBundle\Util;
 
 
 
+
 use Oleg\UserdirectoryBundle\Entity\Permission;
 use Oleg\UserdirectoryBundle\Entity\SiteParameters;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
@@ -41,6 +42,9 @@ use Oleg\UserdirectoryBundle\Entity\Logger;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+
+use Crontab\Crontab;
+use Crontab\Job;
 
 class UserServiceUtil {
 
@@ -1136,9 +1140,15 @@ class UserServiceUtil {
         $em->persist($params);
         $em->flush();
 
-        $emailUtil = $this->container->get('user_mailer_utility');
-        $emailUtil->createEmailCronJob();
-        $logger->notice("Created email cron job. Finished generateSiteParameters");
+        //$emailUtil = $this->container->get('user_mailer_utility');
+        //$emailUtil->createEmailCronJob();
+        //$logger->notice("Created email cron job");
+
+        if( $this->isWindows() === false ) {
+            $this->createCronsLinux();
+        }
+
+        $logger->notice("Finished generateSiteParameters: count=".$count/10);
 
         return round($count/10);
     }
@@ -1389,6 +1399,145 @@ class UserServiceUtil {
 
         return $dest;
     }
+
+    //Create cron jobs:
+    //1) swiftMailer (implemented on email util (EmailUtil->createEmailCronJob))
+    //2) importFellowshipApplications (every hour)
+    //3) UnpaidInvoiceReminder (at 6 am every Monday)
+    public function createCronsLinux() {
+
+        $logger = $this->container->get('logger');
+
+        //1) swiftMailer (implemented on email util (EmailUtil->createEmailCronJob))
+        $emailUtil = $this->container->get('user_mailer_utility');
+        $createEmailCronJob = $emailUtil->createEmailCronJobLinux();
+        $logger->notice("Created email cron job: ".$createEmailCronJob);
+
+        $projectDir = $this->container->get('kernel')->getProjectDir();
+        $crontab = new Crontab();
+
+
+        //////////////////// ImportFellowshipApplications ////////////////////
+        //2) importFellowshipApplications (every hour)
+        //Description: Import and Populate Fellowship Applications from Google Form
+        //Command: php app/console cron:importfellapp --env=prod
+        //Start in: E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2
+        //$fellappCronJobName = "ImportFellowshipApplications";
+
+        $fellappCronJobCommand = "php ".$projectDir.DIRECTORY_SEPARATOR."bin/console cron:importfellapp --env=prod";
+
+        $job = new Job();
+        $job
+            ->setMinute('0') //at minute 0 => every hour
+            ->setHour('*')
+            ->setDayOfMonth('*')
+            ->setMonth('*')
+            ->setDayOfWeek('*')
+            ->setCommand($fellappCronJobCommand);
+
+        //first delete existing cron job
+        $this->removeCronJob($crontab,$fellappCronJobCommand);
+
+        if( !$this->isCronJobExists($crontab,$fellappCronJobCommand) ) {
+            $crontab->addJob($job);
+            //$crontab->write();
+            $crontab->getCrontabFileHandler()->write($crontab);
+        }
+
+        //$res = $crontab->render();
+        $logger->notice("Created importfellapp cron job");
+        //////////////////// EOF ImportFellowshipApplications ////////////////////
+
+
+        //////////////////// EOF UnpaidInvoiceReminder ////////////////////
+        //3) UnpaidInvoiceReminder (at 6 am every Monday)
+        //Description: Send reminder emails for unpaid invoices. Run every week on every Monday at 6am.
+        //Command: php app/console cron:invoice-reminder-emails --env=prod
+        //Start in: E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2
+        $fellappFrequency = 1; //hour
+
+        $trpCronJobCommand = "php ".$projectDir.DIRECTORY_SEPARATOR."bin/console cron:invoice-reminder-emails --env=prod";
+
+        $job = new Job();
+        $job
+            ->setMinute('00')
+            ->setHour('06')
+            ->setDayOfMonth('*')
+            ->setMonth('*')
+            ->setDayOfWeek('mon') //every monday (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat
+            ->setCommand($trpCronJobCommand);
+
+        //first delete existing cron job
+        $this->removeCronJob($crontab,$trpCronJobCommand);
+
+        if( !$this->isCronJobExists($crontab,$trpCronJobCommand) ) {
+            $crontab->addJob($job);
+            //$crontab->write();
+            $crontab->getCrontabFileHandler()->write($crontab);
+        }
+
+        //$res = $crontab->render();
+        $logger->notice("Created importfellapp cron job");
+        //////////////////// EOF UnpaidInvoiceReminder ////////////////////
+
+        $res = $crontab->render();
+
+        return $res;
+    }
+    public function isCronJobExists($crontab,$commandName) {
+        foreach($crontab->getJobs() as $job) {
+            //echo "job=".$job.", command=".$job->getCommand()."<br>";
+            if( $commandName == $job->getCommand() ) {
+                //echo "remove job ". $job."<br>";
+                return true;
+            }
+        }
+        return false;
+    }
+    public function removeCronJob($crontab,$commandName) {
+        $resArr = array();
+        foreach($crontab->getJobs() as $job) {
+            //echo "job=".$job.", command=".$job->getCommand()."<br>";
+            if( $commandName == $job->getCommand() ) {
+                $resArr[] = $job."";
+                $crontab->removeJob($job);
+                $crontab->getCrontabFileHandler()->write($crontab);
+            }
+        }
+        return implode("; ",$resArr);
+    }
+    public function getCronStatusLinux($crontab) {
+
+        $res = '<font color="red">Cron job status: not found.</font>';
+        //$crontab = new Crontab();
+        $crontabRender = $crontab->render();
+        if( $crontabRender ) {
+            //$res = "Cron job status: " . $crontab->render();
+            $res = '<font color="green">Cron job status: '.$crontab->render().'.</font>';
+        }
+        //exit($res);
+        return $res;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     /////////////// NOT USED ///////////////////

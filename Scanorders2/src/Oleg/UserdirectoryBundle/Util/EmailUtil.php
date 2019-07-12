@@ -478,7 +478,14 @@ class EmailUtil {
         $cronJobName = "php ".$projectDir.DIRECTORY_SEPARATOR."bin/console cron:swift --env=prod";
 
         $useSpool = $userSecUtil->getSiteSettingParameter('mailerSpool');
+        //if( !$useSpool ) {
+        //    $useSpool = true;
+        //}
+        
         $mailerFlushQueueFrequency = $userSecUtil->getSiteSettingParameter('mailerFlushQueueFrequency');
+        if( !$mailerFlushQueueFrequency ) {
+            $mailerFlushQueueFrequency = 15; //in minuts
+        }
         
         //create cron job
         if( $useSpool && $mailerFlushQueueFrequency ) {
