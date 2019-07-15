@@ -417,7 +417,7 @@ class EmailUtil {
         //$logger = $this->container->get('logger');
 
         $projectDir = $this->container->get('kernel')->getProjectDir();
-        $cronJobName = "Swiftmailer_Order";
+        $cronJobName = "swift"; //"Swiftmailer_Order";
 
         //command:   "E:\Program Files (x86)\pacsvendor\WebServer\PHP\php.exe"
         //arguments: app/console cron:swift --env=prod
@@ -566,7 +566,7 @@ class EmailUtil {
     }
 
     public function getCronStatusWindows() {
-        $cronJobName = "Swiftmailer";
+        $cronJobName = "swift"; //"Swiftmailer";
         $command = 'SchTasks | FINDSTR "'.$cronJobName.'"';
         $res = exec($command);
 

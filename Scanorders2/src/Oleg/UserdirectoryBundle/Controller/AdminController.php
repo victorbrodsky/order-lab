@@ -797,9 +797,9 @@ class AdminController extends Controller
 
 
         //testing
-        $userServiceUtil = $this->get('user_service_utility');
-        $userServiceUtil->createCronsLinux();
-        exit('eof createCronsLinux');
+        //$userServiceUtil = $this->get('user_service_utility');
+        //$userServiceUtil->createCronsLinux();
+        //exit('eof createCronsLinux');
 
         //$default_time_zone = $this->container->getParameter('default_time_zone');
 
