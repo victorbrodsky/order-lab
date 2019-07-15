@@ -1626,11 +1626,24 @@ class UserServiceUtil {
         $crontab = new Crontab();
         $crontabRender = $crontab->render();
 
+//        if( $crontabRender ) {
+//            //$res = "Cron job status: " . $crontab->render();
+//            $res = '<font color="green">Cron job status: '.$crontabRender.'.</font>';
+//        } else {
+//            $res = '<font color="red">Cron job status: not found.</font>';
+//        }
+
+        $res = '<font color="red">Cron job "'.$cronJobName.'" not found.</font>';
+
         if( $crontabRender ) {
-            //$res = "Cron job status: " . $crontab->render();
-            $res = '<font color="green">Cron job status: '.$crontabRender.'.</font>';
-        } else {
-            $res = '<font color="red">Cron job status: not found.</font>';
+            $crontabRenderArr = explode("--env=prod",$crontabRender);
+            foreach($crontabRenderArr as $crontabJob) {
+                if (strpos($crontabJob, $cronJobName) !== false) {
+                    $crontabJob = $crontabJob . " --env=prod";
+                    $res = '<font color="green">Cron job "'.$cronJobName.'" exists: '.$crontabJob.'.</font>';
+                    break;
+                }
+            }
         }
 
         //exit($res);
