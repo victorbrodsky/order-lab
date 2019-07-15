@@ -308,21 +308,21 @@
             <tr>
                 <td>Email cron</td>
                 <td>
-                    {% user_service_utility.getCronStatus("swift")|raw %}
+                    {{ user_service_utility.getCronStatus("swift")|raw }}
                 </td>
                 <td></td>
             </tr>
             <tr>
                 <td>Fellowship Applications Import cron</td>
                 <td>
-                    {% user_service_utility.getCronStatus("importfellapp")|raw %}
+                    {{ user_service_utility.getCronStatus("importfellapp")|raw }}
                 </td>
                 <td></td>
             </tr>
             <tr>
                 <td>Unpaid Invoices Reminder Email cron</td>
                 <td>
-                    {% user_service_utility.getCronStatus("invoice-reminder-emails")|raw %}
+                    {{ user_service_utility.getCronStatus("invoice-reminder-emails")|raw }}
                 </td>
                 <td></td>
             </tr>
