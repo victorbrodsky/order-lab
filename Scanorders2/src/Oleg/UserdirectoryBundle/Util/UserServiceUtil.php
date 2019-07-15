@@ -1419,7 +1419,7 @@ class UserServiceUtil {
         //$emailUtil = $this->container->get('user_mailer_utility');
         //$emailUtil->createEmailCronJobWindows();
 
-        $cronJobName = "SwiftMailer";
+        $cronJobName = "swift";
         if( $this->getCronStatusWindows($cronJobName,true) === false ) {
 
             $frequencyMinutes = 15;
@@ -1441,7 +1441,7 @@ class UserServiceUtil {
         ////////////////////// 2) importFellowshipApplications (every hour) //////////////////////
         //command:    php
         //arguments(working): "E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\bin\console" cron:importfellapp --env=prod
-        $cronJobName = "ImportFellowshipApplications";
+        $cronJobName = "importfellapp";
         if( $this->getCronStatusWindows($cronJobName,true) === false ) {
             $frequencyMinutes = 60;
 
@@ -1461,7 +1461,7 @@ class UserServiceUtil {
 
         ////////////////////// 3) UnpaidInvoiceReminder (at 6 am every Monday) //////////////////////
         //cron:invoice-reminder-emails --env=prod
-        $cronJobName = "UnpaidInvoiceReminder";
+        $cronJobName = "invoice-reminder-emails";
         if( $this->getCronStatusWindows($cronJobName,true) === false ) {
 
             $cronJobCommand = 'php \"' . $console . '\" cron:invoice-reminder-emails --env=prod';
@@ -1613,15 +1613,26 @@ class UserServiceUtil {
         }
         return implode("; ",$resArr);
     }
-    public function getCronStatusLinux($crontab) {
 
-        $res = '<font color="red">Cron job status: not found.</font>';
-        //$crontab = new Crontab();
+    public function getCronStatus($cronJobName) {
+        if( $this->isWindows() ){
+            return $this->getCronStatusWindows($cronJobName);
+        } else {
+            return $this->getCronStatusLinux($cronJobName);
+        }
+    }
+    public function getCronStatusLinux($cronJobName) {
+
+        $crontab = new Crontab();
         $crontabRender = $crontab->render();
+
         if( $crontabRender ) {
             //$res = "Cron job status: " . $crontab->render();
-            $res = '<font color="green">Cron job status: '.$crontab->render().'.</font>';
+            $res = '<font color="green">Cron job status: '.$crontabRender->render().'.</font>';
+        } else {
+            $res = '<font color="red">Cron job status: not found.</font>';
         }
+
         //exit($res);
         return $res;
     }
@@ -1648,6 +1659,8 @@ class UserServiceUtil {
         //exit($res);
         return $res;
     }
+
+
 
 
 

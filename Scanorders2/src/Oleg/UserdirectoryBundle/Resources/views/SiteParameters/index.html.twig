@@ -299,6 +299,35 @@
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'mailerDeliveryAddresses'}) }}">Edit</a></td>
             </tr>
 
+            {#Crons#}
+            <tr>
+                <td class="rowlink-skip" colspan="3" align="center">
+                    <h3>Site Accessibility:</h3>
+                </td>
+            </tr>
+            <tr>
+                <td>Email cron</td>
+                <td>
+                    {% set cronStatus = user_mailer_utility.getCronStatus("swift") %}
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Fellowship Applications Import cron</td>
+                <td>
+                    {% set cronStatus = user_mailer_utility.getCronStatus("importfellapp") %}
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Unpaid Invoices Reminder Email cron</td>
+                <td>
+                    {% set cronStatus = user_mailer_utility.getCronStatus("invoice-reminder-emails") %}
+                </td>
+                <td></td>
+            </tr>
+
+
             {#Accessibility#}
             <tr>
                 <td class="rowlink-skip" colspan="3" align="center">
