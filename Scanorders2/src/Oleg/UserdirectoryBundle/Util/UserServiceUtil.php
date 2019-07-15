@@ -1497,7 +1497,7 @@ class UserServiceUtil {
         //////////////////// 1) swiftMailer (implemented on email util (EmailUtil->createEmailCronJob)) ////////////////////
         //$emailUtil = $this->container->get('user_mailer_utility');
         //$createEmailCronJob = $emailUtil->createEmailCronJobLinux();
-        $emailCronJobCommand = "php ".$projectDir.DIRECTORY_SEPARATOR."bin/console cron:importfellapp --env=prod";
+        $emailCronJobCommand = "php ".$projectDir.DIRECTORY_SEPARATOR."bin/console cron:swift --env=prod";
         $mailerFlushQueueFrequency = 15; //in minuts
 
         $job = new Job();
