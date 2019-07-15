@@ -1628,7 +1628,7 @@ class UserServiceUtil {
 
         if( $crontabRender ) {
             //$res = "Cron job status: " . $crontab->render();
-            $res = '<font color="green">Cron job status: '.$crontabRender->render().'.</font>';
+            $res = '<font color="green">Cron job status: '.$crontabRender.'.</font>';
         } else {
             $res = '<font color="red">Cron job status: not found.</font>';
         }
