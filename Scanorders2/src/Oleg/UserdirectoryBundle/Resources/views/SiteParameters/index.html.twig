@@ -302,27 +302,27 @@
             {#Crons#}
             <tr>
                 <td class="rowlink-skip" colspan="3" align="center">
-                    <h3>Crons:</h3>
+                    <h3>Cron Jobs:</h3>
                 </td>
             </tr>
             <tr>
                 <td>Email cron</td>
                 <td>
-                    {% set cronStatus = user_service_utility.getCronStatus("swift") %}
+                    {% user_service_utility.getCronStatus("swift")|raw %}
                 </td>
                 <td></td>
             </tr>
             <tr>
                 <td>Fellowship Applications Import cron</td>
                 <td>
-                    {% set cronStatus = user_service_utility.getCronStatus("importfellapp") %}
+                    {% user_service_utility.getCronStatus("importfellapp")|raw %}
                 </td>
                 <td></td>
             </tr>
             <tr>
                 <td>Unpaid Invoices Reminder Email cron</td>
                 <td>
-                    {% set cronStatus = user_service_utility.getCronStatus("invoice-reminder-emails") %}
+                    {% user_service_utility.getCronStatus("invoice-reminder-emails")|raw %}
                 </td>
                 <td></td>
             </tr>
