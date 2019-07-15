@@ -1411,33 +1411,72 @@ class UserServiceUtil {
         }
     }
     public function createCronsWindows() {
-        //1) swiftMailer (implemented on email util (EmailUtil->createEmailCronJob))
-        $emailUtil = $this->container->get('user_mailer_utility');
-        $emailUtil->createEmailCronJobWindows();
 
         $projectDir = $this->container->get('kernel')->getProjectDir();
-
-        //2) importFellowshipApplications (every hour)
-        //command:    php
-        //arguments(working): "E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\bin\console" cron:swift --env=prod
-        $cronJobName = "ImportFellowshipApplications";
-        $frequencyMinutes = 60;
-
         $console = $projectDir.DIRECTORY_SEPARATOR."bin".DIRECTORY_SEPARATOR."console";
-        $cronJobCommand = 'php \"'.$console.'\" cron:swift --env=prod';
-        $cronJobCommand = '"'.$cronJobCommand.'"';
 
-        $command = 'SchTasks /Create /SC MINUTE /MO '.$frequencyMinutes.
-            ' /IT '.
-            //' /RU system'.
-            ' /TN '.$cronJobName.
-            ' /TR '.$cronJobCommand.''
-        ;
-        //echo "SchTasks add: ".$command."<br>";
-        //$logger->notice("SchTasks:".$command);
-        $res = exec($command);
+        ////////////////////// 1) swiftMailer (implemented on email util (EmailUtil->createEmailCronJob)) //////////////////////
+        //$emailUtil = $this->container->get('user_mailer_utility');
+        //$emailUtil->createEmailCronJobWindows();
 
-        //3) UnpaidInvoiceReminder (at 6 am every Monday)
+        $cronJobName = "SwiftMailer";
+        if( $this->getCronStatusWindows($cronJobName,true) === false ) {
+
+            $frequencyMinutes = 15;
+
+            $cronJobCommand = 'php \"' . $console . '\" cron:swift --env=prod';
+            $cronJobCommand = '"' . $cronJobCommand . '"';
+
+            $command = 'SchTasks /Create /SC MINUTE /MO ' . $frequencyMinutes .
+                ' /IT ' .
+                //' /RU system'.
+                ' /TN ' . $cronJobName .
+                ' /TR ' . $cronJobCommand . '';
+            //echo "SchTasks add: ".$command."<br>";
+            //$logger->notice("SchTasks:".$command);
+            $resEmail = exec($command);
+        }
+        ////////////////////// EOF 1) swiftMailer (implemented on email util (EmailUtil->createEmailCronJob)) //////////////////////
+
+        ////////////////////// 2) importFellowshipApplications (every hour) //////////////////////
+        //command:    php
+        //arguments(working): "E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\bin\console" cron:importfellapp --env=prod
+        $cronJobName = "ImportFellowshipApplications";
+        if( $this->getCronStatusWindows($cronJobName,true) === false ) {
+            $frequencyMinutes = 60;
+
+            $cronJobCommand = 'php \"' . $console . '\" cron:importfellapp --env=prod';
+            $cronJobCommand = '"' . $cronJobCommand . '"';
+
+            $command = 'SchTasks /Create /SC MINUTE /MO ' . $frequencyMinutes .
+                ' /IT ' .
+                //' /RU system'.
+                ' /TN ' . $cronJobName .
+                ' /TR ' . $cronJobCommand . '';
+            //echo "SchTasks add: ".$command."<br>";
+            //$logger->notice("SchTasks:".$command);
+            $resFellapp = exec($command);
+        }
+        ////////////////////// EOF 2) importFellowshipApplications (every hour) //////////////////////
+
+        ////////////////////// 3) UnpaidInvoiceReminder (at 6 am every Monday) //////////////////////
+        //cron:invoice-reminder-emails --env=prod
+        $cronJobName = "UnpaidInvoiceReminder";
+        if( $this->getCronStatusWindows($cronJobName,true) === false ) {
+
+            $cronJobCommand = 'php \"' . $console . '\" cron:invoice-reminder-emails --env=prod';
+            $cronJobCommand = '"' . $cronJobCommand . '"';
+
+            $command = 'SchTasks /Create /SC WEEKLY /D MON /MO 1 /ST 6:00' .
+                ' /IT ' .
+                //' /RU system'.
+                ' /TN ' . $cronJobName .
+                ' /TR ' . $cronJobCommand . '';
+            //echo "SchTasks add: ".$command."<br>";
+            //$logger->notice("SchTasks:".$command);
+            $resFellapp = exec($command);
+        }
+        ////////////////////// EOF 3) UnpaidInvoiceReminder (at 6 am every Monday) //////////////////////
         
     }
     //can use bundle: https://github.com/j-guyon/CommandSchedulerBundle
@@ -1451,13 +1490,37 @@ class UserServiceUtil {
         $logger = $this->container->get('logger');
         $logger->notice("Creating cron jobs for Linux");
 
-        //1) swiftMailer (implemented on email util (EmailUtil->createEmailCronJob))
-        $emailUtil = $this->container->get('user_mailer_utility');
-        $createEmailCronJob = $emailUtil->createEmailCronJobLinux();
-        $logger->notice("Created email cron job: ".$createEmailCronJob);
-
         $projectDir = $this->container->get('kernel')->getProjectDir();
         $crontab = new Crontab();
+
+
+        //////////////////// 1) swiftMailer (implemented on email util (EmailUtil->createEmailCronJob)) ////////////////////
+        //$emailUtil = $this->container->get('user_mailer_utility');
+        //$createEmailCronJob = $emailUtil->createEmailCronJobLinux();
+        $emailCronJobCommand = "php ".$projectDir.DIRECTORY_SEPARATOR."bin/console cron:importfellapp --env=prod";
+        $mailerFlushQueueFrequency = 15; //in minuts
+
+        $job = new Job();
+        $job
+            ->setMinute('*/' . $mailerFlushQueueFrequency)//every $mailerFlushQueueFrequency minutes
+            ->setHour('*')
+            ->setDayOfMonth('*')
+            ->setMonth('*')
+            ->setDayOfWeek('*')
+            ->setCommand($emailCronJobCommand);
+
+        //first delete existing cron job
+        //$this->removeCronJob($crontab,$fellappCronJobCommand);
+
+        if( !$this->isCronJobExists($crontab,$emailCronJobCommand) ) {
+            $crontab->addJob($job);
+            //$crontab->write();
+            $crontab->getCrontabFileHandler()->write($crontab);
+            $logger->notice("Created importfellapp cron job");
+        }
+
+        $logger->notice("Created email cron job: ".$emailCronJobCommand);
+        //////////////////// EOF 1) swiftMailer (implemented on email util (EmailUtil->createEmailCronJob)) ////////////////////
 
 
         //////////////////// ImportFellowshipApplications ////////////////////
@@ -1492,7 +1555,7 @@ class UserServiceUtil {
         //////////////////// EOF ImportFellowshipApplications ////////////////////
 
 
-        //////////////////// EOF UnpaidInvoiceReminder ////////////////////
+        //////////////////// 3) UnpaidInvoiceReminder (at 6 am every Monday) ////////////////////
         //3) UnpaidInvoiceReminder (at 6 am every Monday)
         //Description: Send reminder emails for unpaid invoices. Run every week on every Monday at 6am.
         //Command: php app/console cron:invoice-reminder-emails --env=prod
@@ -1521,7 +1584,7 @@ class UserServiceUtil {
         }
 
         //$res = $crontab->render();
-        //////////////////// EOF UnpaidInvoiceReminder ////////////////////
+        //////////////////// EOF 3) UnpaidInvoiceReminder (at 6 am every Monday) ////////////////////
 
         $res = $crontab->render();
         $logger->notice("Crontab render: ".$res);
@@ -1558,6 +1621,29 @@ class UserServiceUtil {
         if( $crontabRender ) {
             //$res = "Cron job status: " . $crontab->render();
             $res = '<font color="green">Cron job status: '.$crontab->render().'.</font>';
+        }
+        //exit($res);
+        return $res;
+    }
+    public function getCronStatusWindows($cronJobName, $asBoolean=false) {
+        //$cronJobName = "Swiftmailer";
+        $command = 'SchTasks | FINDSTR "'.$cronJobName.'"';
+        $res = exec($command);
+
+        if( $res ) {
+            if( $asBoolean ) {
+                $res = true;
+            } else {
+                //$res = "Cron job status: " . $crontab->render();
+                $res = '<font color="green">Cron job status: '.$res.'.</font>';
+            }
+        } else {
+            if( $asBoolean ) {
+                $res = false;
+            } else {
+                //$res = "Cron job status: " . $crontab->render();
+                $res = '<font color="red">Cron job status: not found.</font>';
+            }
         }
         //exit($res);
         return $res;

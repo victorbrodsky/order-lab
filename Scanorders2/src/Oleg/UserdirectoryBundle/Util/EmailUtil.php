@@ -443,7 +443,7 @@ class EmailUtil {
                 //' /RU system'.
                 ' /TN '.$cronJobName.
                 ' /TR '.$cronJobCommand.''
-                ;
+            ;
             //echo "SchTasks add: ".$command."<br>";
             //$logger->notice("SchTasks:".$command);
             $res = exec($command);
