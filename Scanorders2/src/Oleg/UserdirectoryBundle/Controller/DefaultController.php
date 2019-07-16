@@ -216,5 +216,29 @@ class DefaultController extends Controller
         return NULL;
     }
 
+    /**
+     * https://collage.med.cornell.edu/order/directory/fix-author-generated-users/
+     *
+     * @Route("/some-testing/", name="employees_some_testing")
+     */
+    public function someTestingAction() {
+
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
+        }
+
+        $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
+        $service = $googlesheetmanagement->getGoogleService();
+
+        $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
+
+        $fileId = "1ex5Yh8nJia8WUQ7eTkSnM1OS9Z18J2Oz"; //created 12:48 PM Jul 16
+
+        $goolgeDateTime = $fellappRecLetterUtil->getGoogleFileCreationDatetime($service, $fileId);
+
+        exit("EOF someTestingAction");
+
+    }
+
 
 }

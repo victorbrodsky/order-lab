@@ -331,6 +331,8 @@ class GoogleSheetManagement {
             $object->setUploadDirectory($path);
             $object->setSize($filesize);
 
+            //TODO: use $file->getCreatedTime for creation date? (https://developers.google.com/drive/api/v3/reference/files#createdTime)
+
             //clean originalname
             $object->setCleanOriginalname($file->getTitle());
 

@@ -811,6 +811,20 @@ class RecLetterUtil {
         return NULL;
     }
 
+    public function getGoogleFileCreationDatetime($service, $fileId) {
+        $file = null;
+        try {
+            $file = $service->files->get($fileId);
+        } catch (Exception $e) {
+            throw new IOException('Google API: Unable to get file by file id='.$fileId.". An error occurred: " . $e->getMessage());
+        }
+
+        $createdTime = $file->getCreatedTime();
+        echo "createdTime=".$createdTime."<br>";
+
+        return true;
+    }
+
     //check if this reference already has a letter
     public function checkReferenceAlreadyHasLetter($fellapp,$reference) {
 
