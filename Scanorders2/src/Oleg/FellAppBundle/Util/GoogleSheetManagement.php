@@ -332,6 +332,7 @@ class GoogleSheetManagement {
             $object->setSize($filesize);
 
             //TODO: use $file->getCreatedTime for creation date? (https://developers.google.com/drive/api/v3/reference/files#createdTime)
+            //https://developers.google.com/resources/api-libraries/documentation/drive/v3/php/latest/class-Google_Service_Drive_DriveFile.html
 
             //clean originalname
             $object->setCleanOriginalname($file->getTitle());
@@ -675,17 +676,20 @@ class GoogleSheetManagement {
 
 
     public function getGoogleToken() {
-        $res = $this->authenticationP12Key();
+        //$res = $this->authenticationP12Key();
+        $res = $this->authenticationGoogle();
         $obj_client_auth = $res['client'];
         $obj_token  = json_decode($obj_client_auth->getAccessToken() );
         return $obj_token->access_token;
     }
 
     public function getGoogleService() {
-        $res = $this->authenticationP12Key();
+        //$res = $this->authenticationP12Key();
+        $res = $this->authenticationGoogle();
         return $res['service'];
     }
 
+    //Not Used: Depreciated
     //Using OAuth 2.0 for Server to Server Applications: using PKCS12 certificate file
     //Security page: https://admin.google.com/pathologysystems.org/AdminHome?fral=1#SecuritySettings:
     //Credentials page: https://console.developers.google.com/apis/credentials?project=turnkey-delight-103315&authuser=1
@@ -693,7 +697,7 @@ class GoogleSheetManagement {
     //1) Create a service account by Google Developers Console.
     //2) Delegate domain-wide authority to the service account.
     //3) Impersonate a user account.
-    public function authenticationP12Key() {
+    public function authenticationP12Key_OldVersionBasedOnP12Key() {
 
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
@@ -704,7 +708,7 @@ class GoogleSheetManagement {
         //$pkey = __DIR__ . '/../Util/FellowshipApplication-f1d9f98353e5.p12';
         $pkey = $userSecUtil->getSiteSettingParameter('p12KeyPathFellApp');
         if( !$pkey ) {
-            $logger->warning('p12KeyPathFellApp is not defined in Site Parameters. p12KeyPathFellApp='.$pkey);
+            $logger->warning('p12KeyPathFellApp/credentials.json is not defined in Site Parameters. File='.$pkey);
         }
 
         //$user_to_impersonate = 'olegivanov@pathologysystems.org';
@@ -764,6 +768,188 @@ class GoogleSheetManagement {
         );
 
         return $res;
+    }
+    //Authentication based on "google/apiclient": "v2.2.3" and credentials.json
+    //https://developers.google.com/people/quickstart/php
+    public function authenticationGoogle() {
+
+        $logger = $this->container->get('logger');
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        //$client_email = '1040591934373-1sjcosdt66bmani0kdrr5qmc5fibmvk5@developer.gserviceaccount.com';
+        //$client_email = $userSecUtil->getSiteSettingParameter('clientEmailFellApp');
+
+        //$pkey = __DIR__ . '/../Util/FellowshipApplication-f1d9f98353e5.p12';
+        $pkey = $userSecUtil->getSiteSettingParameter('p12KeyPathFellApp');
+        if( !$pkey ) {
+            $logger->warning('p12KeyPathFellApp/credentials.json is not defined in Site Parameters. File='.$pkey);
+        }
+
+        //$user_to_impersonate = 'olegivanov@pathologysystems.org';
+//        $user_to_impersonate = $userSecUtil->getSiteSettingParameter('userImpersonateEmailFellApp');
+
+        //echo "pkey=".$pkey."<br>";
+//        $private_key = file_get_contents($pkey); //notasecret
+
+//        $googleDriveApiUrlFellApp = $userSecUtil->getSiteSettingParameter('googleDriveApiUrlFellApp');
+//        if( !$googleDriveApiUrlFellApp ) {
+//            throw new \InvalidArgumentException('googleDriveApiUrlFellApp is not defined in Site Parameters.');
+//        }
+
+        //PHP API scopes: https://developers.google.com/api-client-library/php/auth/service-accounts#creatinganaccount
+        //set scopes on developer console:
+        // https://admin.google.com/pathologysystems.org/AdminHome?chromeless=1#OGX:ManageOauthClients
+        //scopes: example: "https://spreadsheets.google.com/feeds https://docs.google.com/feeds"
+        //$scopes = array($googleDriveApiUrlFellApp); //'https://www.googleapis.com/auth/drive'
+//        $scopes = $googleDriveApiUrlFellApp;
+
+        $client = $this->getClient();
+
+        //$service = null;
+        $service = new \Google_Service_Drive($client);
+
+        //try {
+//            $client = $this->getClient();
+//            $service = new \Google_Service_Drive($client);
+//        } catch(Exception $e) {
+//            $subject = "Failed to authenticate to Google";
+//            $event = "Failed to authenticate to Google: " . $e->getMessage();
+//            $logger->error($event);
+//            //$userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Error');
+//            $userSecUtil->sendEmailToSystemEmail($subject, $event);
+//        }
+
+        $res = array(
+            'client' => $client,
+            'service' => $service
+        );
+
+        return $res;
+    }
+    //https://stackoverflow.com/questions/34130068/fatal-error-class-google-auth-assertioncredentials-not-found
+    public function getClient() {
+
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        $user_to_impersonate = $userSecUtil->getSiteSettingParameter('userImpersonateEmailFellApp');
+        if( !$user_to_impersonate ) {
+            throw new \InvalidArgumentException('userImpersonateEmailFellApp is not defined in Site Parameters.');
+        }
+
+        $client_email = $userSecUtil->getSiteSettingParameter('clientEmailFellApp');
+
+        $client = new \Google_Client();
+
+        // set the scope(s) that will be used
+        $client->setScopes(array('https://www.googleapis.com/auth/drive'));
+
+
+        // this is needed only if you need to perform
+        // domain-wide admin actions, and this must be
+        // an admin account on the domain; it is not
+        // necessary in your example but provided for others
+        $client->setSubject($user_to_impersonate);
+
+
+
+        // set the authorization configuration using the 2.0 style
+        $client->setAuthConfig(array(
+            'type' => 'service_account',
+            'client_email' => '1040591934373-1sjcosdt66bmani0kdrr5qmc5fibmvk5@developer.gserviceaccount.com', //'395545742105@developer.gserviceaccount.com',
+            'client_id'   => '1040591934373-1sjcosdt66bmani0kdrr5qmc5fibmvk5.apps.googleusercontent.com', //'395545742105.apps.googleusercontent.com',
+            'private_key' => 'b444d50c0264f39580c1c4f63fef2d8f73b5e896'
+        ));
+
+        return $client;
+    }
+    /**
+     * https://github.com/googleapis/google-api-php-client
+     * https://github.com/googleapis/google-api-php-client/blob/master/UPGRADING.md
+     *
+     * Returns an authorized API client.
+     * @return Google_Client the authorized client object
+     */
+    function getClient2() {
+
+        $logger = $this->container->get('logger');
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        //$client_email = '1040591934373-1sjcosdt66bmani0kdrr5qmc5fibmvk5@developer.gserviceaccount.com';
+        //$client_email = $userSecUtil->getSiteSettingParameter('clientEmailFellApp');
+
+        //$pkey = __DIR__ . '/../Util/FellowshipApplication-f1d9f98353e5.p12';
+        $credentialsJsonFile = $userSecUtil->getSiteSettingParameter('p12KeyPathFellApp');
+        if( !$credentialsJsonFile ) {
+            $logger->warning('$credentialsJsonFile is not defined in Site Parameters. $credentialsJsonFile='.$credentialsJsonFile);
+        }
+
+        $scopes = $userSecUtil->getSiteSettingParameter('googleDriveApiUrlFellApp');
+        if( !$scopes ) {
+            throw new \InvalidArgumentException('Google scope is not defined in Site Parameters.');
+        }
+
+        $client = new \Google_Client();
+        $client->setApplicationName('Fellowship Applications');
+        //$client->setScopes(\Google_Service_PeopleService::CONTACTS_READONLY);
+        $client->setAuthConfig($credentialsJsonFile);
+        //$client->setAccessType('offline');
+        //$client->setPrompt('select_account consent');
+
+        //$client->setDeveloperKey("AIzaSyBlJc1rS1mBLXD5sYEEOwBvSB1NhUwJ-rI");
+
+        //$client->addScope($scopes);
+        $client->addScope("https://www.googleapis.com/auth/drive");
+        //$client->addScope(\Google_Service_Drive::DRIVE_METADATA_READONLY);
+
+        $user_to_impersonate = $userSecUtil->getSiteSettingParameter('userImpersonateEmailFellApp');
+        if( !$user_to_impersonate ) {
+            throw new \InvalidArgumentException('userImpersonateEmailFellApp is not defined in Site Parameters.');
+        }
+
+        $client->setSubject($user_to_impersonate);
+
+        // Load previously authorized token from a file, if it exists.
+        // The file token.json stores the user's access and refresh tokens, and is
+        // created automatically when the authorization flow completes for the first
+        // time.
+        $tokenPath = 'token.json';
+        if (file_exists($tokenPath)) {
+            $accessToken = json_decode(file_get_contents($tokenPath), true);
+            $client->setAccessToken($accessToken);
+        }
+
+        // If there is no previous token or it's expired.
+        if(0) {
+            if ($client->isAccessTokenExpired()) {
+                // Refresh the token if possible, else fetch a new one.
+                if ($client->getRefreshToken()) {
+                    $client->fetchAccessTokenWithRefreshToken($client->getRefreshToken());
+                } else {
+                    // Request authorization from the user.
+                    $authUrl = $client->createAuthUrl();
+                    printf("Open the following link in your browser:\n%s\n", $authUrl);
+                    print 'Enter verification code: ';
+                    $authCode = trim(fgets(STDIN));
+                    $authCode = "4/iAHGyavRVejz5AyTchoSwNXMkOSVOpHIdI0f4a-wqJedC1AZNN-GYgI";
+
+                    // Exchange authorization code for an access token.
+                    $accessToken = $client->fetchAccessTokenWithAuthCode($authCode);
+                    $client->setAccessToken($accessToken);
+
+                    // Check to see if there was an error.
+                    if (array_key_exists('error', $accessToken)) {
+                        throw new Exception(join(', ', $accessToken));
+                    }
+                }
+                // Save the token to a file.
+                if (!file_exists(dirname($tokenPath))) {
+                    mkdir(dirname($tokenPath), 0700, true);
+                }
+                file_put_contents($tokenPath, json_encode($client->getAccessToken()));
+            }
+        }
+
+        return $client;
     }
 
 
