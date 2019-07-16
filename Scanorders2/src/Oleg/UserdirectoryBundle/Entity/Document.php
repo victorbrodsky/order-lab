@@ -105,6 +105,12 @@ class Document {
     private $createdate;
 
     /**
+     * @var \DateTime
+     * @ORM\Column(name="externalCreatedate", type="datetime", nullable=true)
+     */
+    private $externalCreatedate;
+
+    /**
      * Image title
      * @ORM\Column(type="string", nullable=true)
      */
@@ -268,6 +274,21 @@ class Document {
     public function getCreatedate()
     {
         return $this->createdate;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getExternalCreatedate()
+    {
+        return $this->externalCreatedate;
+    }
+    /**
+     * @param \DateTime $externalCreatedate
+     */
+    public function setExternalCreatedate($externalCreatedate)
+    {
+        $this->externalCreatedate = $externalCreatedate;
     }
 
     /**
