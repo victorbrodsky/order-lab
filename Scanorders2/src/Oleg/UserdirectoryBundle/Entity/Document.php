@@ -291,6 +291,16 @@ class Document {
         $this->externalCreatedate = $externalCreatedate;
     }
 
+    //get external createdate or if not exists DB createdate
+    public function getExternalOrDbCreatedate() {
+        $externalCreatedate = $this->getExternalCreatedate();
+        if( $externalCreatedate ) {
+            return $externalCreatedate;
+        }
+
+        return $this->getCreatedate();
+    }
+
     /**
      * @param mixed $creator
      */

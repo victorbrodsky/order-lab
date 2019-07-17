@@ -691,18 +691,16 @@ class RecLetterUtil {
             throw new IOException('Unable to download file to server: fileID='.$uploadedLetterDb->getId());
         }
 
-        //TODO: use $file->getCreatedTime for creation date? (https://developers.google.com/drive/api/v3/reference/files#createdTime)
-        //Use wcmpath_4924679d8f452cfe52d3cdfe_2019-07-17-09-37-59.pdf
-
         //$fellowshipApplication->addReprimandDocument($uploadedLegalExplanationUrlDb);
 
         //ID_datetime_name.ext: 55555_0000000110c8357966576df46f3b802ca897deb7ad18b12f1c24ecff6386ebd9_2019-04-03-13-13-17_Cat-Wa.jpg
+        $letterDatetimeStr = null;
         $letterArr = explode("_",$file->getTitle());
         //echo "letterArr count=".count($letterArr)."<br>";
-        if( count($letterArr) == 4 ) {
+        if( count($letterArr) >= 3 ) {
             $instituteIdentification = $letterArr[0];
             $refId = $letterArr[1];
-            //$latestLetterDatetime = $letterArr[2];
+            $letterDatetimeStr = $letterArr[2];
             //$name = $letterArr[3];
         } else {
             return NULL;
@@ -711,8 +709,17 @@ class RecLetterUtil {
         if( $testing ) {
             $instituteIdentification = "55555";
             $refId = "340d08a7c8037b62e5e0e36b1119486f2dd00540";
-            //$latestLetterDatetime = "2019-04-03-13-13-17";
+            $letterDatetimeStr = "2019-04-03-13-13-17";
             //$name = "filenameee";
+        }
+
+        //TODO: use $file->getCreatedTime for creation date? (https://developers.google.com/drive/api/v3/reference/files#createdTime)
+        //Use wcmpath_4924679d8f452cfe52d3cdfe_2019-07-17-09-37-59.pdf
+        //2019-07-17-09-37-59 : year-month-day-hour-minute-second
+        if( $letterDatetimeStr ) {
+            $letterDateTime = date_create_from_format('Y-m-d-H-i-s', $letterDatetimeStr);
+            $uploadedLetterDb->setExternalCreatedate($letterDateTime);
+            $this->em->flush($uploadedLetterDb);
         }
 
         //10d: compare instituteIdentification with site settings instituteIdentification
@@ -865,7 +872,7 @@ class RecLetterUtil {
             $latestLetter = $letters->last();
             if( $latestLetter ) {
                 $latestLetterId = $latestLetter->getId();
-                $latestLetterCreatedDate = $latestLetter->getCreatedate();
+                $latestLetterCreatedDate = $latestLetter->getExternalOrDbCreatedate();
                 if ($latestLetterCreatedDate) {
                     //$latestLetterCreatedDateStr = "submitted on " . $latestLetterCreatedDate->format('m/d/Y \a\t H:i');
                     $latestLetterTimeStr = $latestLetterCreatedDate->format('m/d/Y \a\t H:i');
@@ -906,7 +913,7 @@ class RecLetterUtil {
                         UrlGeneratorInterface::ABSOLUTE_URL
                     );
                     $letterLink = '<a href="' . $letterLink . '">' . $letterLink . '</a>';
-                    $letterCreatedDate = $letter->getCreatedate();
+                    $letterCreatedDate = $letter->getExternalOrDbCreatedate();
                     if ($letterCreatedDate) {
                         $letterCreatedDateStr = "submitted on " . $letterCreatedDate->format('m/d/Y \a\t H:i');
                     } else {
