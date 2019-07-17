@@ -779,7 +779,7 @@ class RecLetterUtil {
                     //loop over all existing letter and compare
                     foreach ($letters as $thisLetter) {
                         $thisLetterPath = $thisLetter->getServerPath();
-                        $identical = $this->identical($thisLetterPath, $uploadedLetterDbPath);
+                        $identical = $this->checkIfFilesIdentical($thisLetterPath, $uploadedLetterDbPath);
                         if ($identical) {
                             $newLetter = false;
                             break;
@@ -830,10 +830,45 @@ class RecLetterUtil {
             throw new IOException('Google API: Unable to get file by file id='.$fileId.". An error occurred: " . $e->getMessage());
         }
 
-        $createdTime = $file->getCreatedTime();
-        echo "createdTime=".$createdTime."<br>";
+        $fileId = $file->getId();
+        //echo "fileId=".$fileId."<br>";
 
-        return true;
+        $fileTitle = $file->getTitle();
+        echo "fileTitle=".$fileTitle.": ";
+
+        $createdTime = null;
+        //$createdTime = $file->getCreatedTime();
+
+        if( $createdTime ) {
+            echo "getCreatedTime(): createdTime=".$createdTime."<br>";
+        } else {
+
+            if(1) {
+                $letterDatetimeStr = null;
+                $letterArr = explode("_", $fileTitle);
+                //echo "letterArr count=".count($letterArr)."<br>";
+                if (count($letterArr) >= 3) {
+                    // $instituteIdentification = $letterArr[0];
+                    //$refId = $letterArr[1];
+                    $letterDatetimeStr = $letterArr[2];
+                    //$name = $letterArr[3];
+                } else {
+                    return NULL;
+                }
+            }
+
+            //$letterDatetimeStr = "2019-04-03-13-13-17";
+
+            if( $letterDatetimeStr ) {
+                $letterDateTime = date_create_from_format('Y-m-d-H-i-s', $letterDatetimeStr);
+                echo "getTitle(): createdTime=".$letterDateTime->format("Y-m-d H:i:s")."<br>";
+            } else {
+                echo "getTitle(): $letterDatetimeStr is NULL<br>";
+            }
+
+        }
+
+        return null;
     }
 
     //check if this reference already has a letter
@@ -1354,6 +1389,22 @@ class RecLetterUtil {
     }
 
     //TODO: check files in case of multiple letters and do not send "More than one " email if the letters are identical
+    public function checkIfFilesIdentical($fileOne, $fileTwo) {
+        $identical = $this->identicalFilesByBites($fileOne,$fileTwo);
+        if( $identical ) {
+            //additionally use checksum
+            $fileOneHash = hash_file('md5', $fileOne);
+            $fileTwoHash = hash_file('md5', $fileTwo);
+            if( $fileOneHash == $fileTwoHash ) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+        return false;
+    }
     /**
      * Check if two files are identical.
      *
@@ -1370,7 +1421,7 @@ class RecLetterUtil {
      * @param string $fileTwo
      * @return boolean
      */
-    public function identical($fileOne, $fileTwo)
+    public function identicalFilesByBites($fileOne, $fileTwo)
     {
         if (filetype($fileOne) !== filetype($fileTwo)) return false;
         if (filesize($fileOne) !== filesize($fileTwo)) return false;

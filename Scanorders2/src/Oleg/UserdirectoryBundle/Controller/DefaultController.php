@@ -232,9 +232,16 @@ class DefaultController extends Controller
 
         $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
 
-        $fileId = "1ex5Yh8nJia8WUQ7eTkSnM1OS9Z18J2Oz"; //created 12:48 PM Jul 16
+        $folderId = "1ex5Yh8nJia8WUQ7eTkSnM1OS9Z18J2Oz"; //created 12:48 PM Jul 16
+        $files = $googlesheetmanagement->retrieveFilesByFolderId($folderId,$service);
 
-        $goolgeDateTime = $fellappRecLetterUtil->getGoogleFileCreationDatetime($service, $fileId);
+        $count = 0;
+        foreach($files as $file) {
+            $goolgeDateTime = $fellappRecLetterUtil->getGoogleFileCreationDatetime($service, $file->getId());
+            if( $count++ > 3 ) {
+                break;
+            }
+        }
 
         exit("EOF someTestingAction");
 
