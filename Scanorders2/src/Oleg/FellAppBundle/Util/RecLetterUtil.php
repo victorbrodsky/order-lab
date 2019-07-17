@@ -690,6 +690,10 @@ class RecLetterUtil {
         if( !$uploadedLetterDb ) {
             throw new IOException('Unable to download file to server: fileID='.$uploadedLetterDb->getId());
         }
+
+        //TODO: use $file->getCreatedTime for creation date? (https://developers.google.com/drive/api/v3/reference/files#createdTime)
+        //Use wcmpath_4924679d8f452cfe52d3cdfe_2019-07-17-09-37-59.pdf
+
         //$fellowshipApplication->addReprimandDocument($uploadedLegalExplanationUrlDb);
 
         //ID_datetime_name.ext: 55555_0000000110c8357966576df46f3b802ca897deb7ad18b12f1c24ecff6386ebd9_2019-04-03-13-13-17_Cat-Wa.jpg

@@ -332,6 +332,7 @@ class GoogleSheetManagement {
             $object->setSize($filesize);
 
             //TODO: use $file->getCreatedTime for creation date? (https://developers.google.com/drive/api/v3/reference/files#createdTime)
+            //$file->getCreatedTime is available only in 2.0 google/apiclient
             //https://developers.google.com/resources/api-libraries/documentation/drive/v3/php/latest/class-Google_Service_Drive_DriveFile.html
 
             //clean originalname
@@ -689,7 +690,13 @@ class GoogleSheetManagement {
         return $res['service'];
     }
 
-    //Not Used: Depreciated
+    public function authenticationGoogle() {
+        return $this->authenticationP12Key();
+        //return $this->authenticationGoogleOAuth();
+    }
+
+    //Probably, it's better to use Server to Server authentication by using P12 key
+    //Depreciated in google/apiclient v2.0 https://github.com/googleapis/google-api-php-client/blob/master/UPGRADING.mds
     //Using OAuth 2.0 for Server to Server Applications: using PKCS12 certificate file
     //Security page: https://admin.google.com/pathologysystems.org/AdminHome?fral=1#SecuritySettings:
     //Credentials page: https://console.developers.google.com/apis/credentials?project=turnkey-delight-103315&authuser=1
@@ -697,7 +704,7 @@ class GoogleSheetManagement {
     //1) Create a service account by Google Developers Console.
     //2) Delegate domain-wide authority to the service account.
     //3) Impersonate a user account.
-    public function authenticationP12Key_OldVersionBasedOnP12Key() {
+    public function authenticationP12Key() {
 
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
@@ -771,7 +778,7 @@ class GoogleSheetManagement {
     }
     //Authentication based on "google/apiclient": "v2.2.3" and credentials.json
     //https://developers.google.com/people/quickstart/php
-    public function authenticationGoogle() {
+    public function authenticationGoogleOAuth() {
 
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
@@ -844,7 +851,15 @@ class GoogleSheetManagement {
 
         $client_email = $userSecUtil->getSiteSettingParameter('clientEmailFellApp');
 
+
         $client = new \Google_Client();
+
+        $client->setApplicationName('Fellowship Applications');
+        //$client->setScopes(\Google_Service_PeopleService::CONTACTS_READONLY);
+        //$client->setAuthConfig($credentialsJsonFile);
+        $client->setAccessType('offline');
+        //$client->setPrompt('select_account consent');
+        $client->setIncludeGrantedScopes(true);   // incremental auth
 
         // set the scope(s) that will be used
         $client->setScopes(array('https://www.googleapis.com/auth/drive'));
@@ -854,9 +869,7 @@ class GoogleSheetManagement {
         // domain-wide admin actions, and this must be
         // an admin account on the domain; it is not
         // necessary in your example but provided for others
-        $client->setSubject($user_to_impersonate);
-
-
+        //$client->setSubject($user_to_impersonate);
 
         // set the authorization configuration using the 2.0 style
 //        $client->setAuthConfig(array(

@@ -41,7 +41,7 @@
         "phpoffice/phpexcel": "v1.8.0",
         "oneup/uploader-bundle": "~1.3",
 
-        "google/apiclient": "v2.2.3",
+        "google/apiclient": "1.*",
         "asimlqt/php-google-spreadsheet-client": "2.3.*",
         "ensepar/html2pdf-bundle": "~2.0",
         "spraed/pdf-generator-bundle": "v1.0",
