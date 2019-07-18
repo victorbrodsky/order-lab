@@ -910,7 +910,7 @@ class MultiScanOrderController extends Controller {
     public function downloadAction($id) {
 
         $em = $this->getDoctrine()->getManager();
-        $file = $em->getRepository('OlegOrderformBundle:Document')->findOneById($id);
+        $file = $em->getRepository('OlegUserdirectoryBundle:Document')->findOneById($id);
 
         $html =     //"header('Content-type: application/pdf');".
                     "header('Content-Disposition: attachment; filename=".$file->getName()."');".

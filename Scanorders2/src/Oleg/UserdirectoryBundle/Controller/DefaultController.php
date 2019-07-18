@@ -229,15 +229,24 @@ class DefaultController extends Controller
 
         //Test 1
         $em = $this->getDoctrine()->getManager();
-        $letterOne = $em->getRepository('OlegOrderformBundle:Document')->findOneById($id);
-        $letterTwo = $em->getRepository('OlegOrderformBundle:Document')->findOneById($id);
+        $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
+        $letterOne = $em->getRepository('OlegUserdirectoryBundle:Document')->findOneById(877);
+        $letterOnePath = $letterOne->getServerPath();
+        $letterTwo = $em->getRepository('OlegUserdirectoryBundle:Document')->findOneById(875);
+        $letterTwoPath = $letterTwo->getServerPath();
+        $identical = $fellappRecLetterUtil->checkIfFilesIdentical($letterOnePath,$letterTwoPath,$fileTwoHash=null);
+        if( $identical ) {
+            echo "Files are identical <br>";
+        } else {
+            echo "Files are diiferent <br>";
+        }
+
+        exit("EOF Test 1");
 
         //Test 2
+        $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
         $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
         $service = $googlesheetmanagement->getGoogleService();
-
-
-        $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
 
         $folderId = "1ex5Yh8nJia8WUQ7eTkSnM1OS9Z18J2Oz"; //created 12:48 PM Jul 16
         $files = $googlesheetmanagement->retrieveFilesByFolderId($folderId,$service);
@@ -250,7 +259,7 @@ class DefaultController extends Controller
             }
         }
 
-        exit("EOF someTestingAction");
+        exit("EOF Test 2");
 
     }
 
