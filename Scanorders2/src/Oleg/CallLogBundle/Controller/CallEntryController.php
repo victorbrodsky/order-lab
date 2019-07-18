@@ -62,6 +62,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
+//TODO: implement WYSIWYG editor to textarea-reach fields
+// https://github.com/summernote/summernote
+// https://packagist.org/packages/helios-ag/fm-summernote-bundle
+//helios-ag/fm-summernote-bundle
 
 class CallEntryController extends Controller
 {

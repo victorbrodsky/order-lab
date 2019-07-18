@@ -223,6 +223,8 @@ class DefaultController extends Controller
      */
     public function someTestingAction() {
 
+        exit("disabled");
+
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
