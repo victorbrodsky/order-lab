@@ -771,16 +771,18 @@ class RecLetterUtil {
             $newLetter = true;
 
             //add this letter to this reference
-            //TODO: if letter already exists, use identical($fileOne, $fileTwo) to see if the letters are identical.
-            if(0) {
+            //if letter already exists, use identical($fileOne, $fileTwo) to see if the letters are identical.
+            //If identical don't add to the reference object
+            if(1) {
                 $letters = $reference->getDocuments();
                 if (count($letters) > 0) {
                     $uploadedLetterDbPath = $uploadedLetterDb->getServerPath();
+                    $fileTwoHash = hash_file('md5', $uploadedLetterDbPath);
                     //loop over all existing letter and compare
                     foreach ($letters as $thisLetter) {
                         $thisLetterPath = $thisLetter->getServerPath();
-                        $identical = $this->checkIfFilesIdentical($thisLetterPath, $uploadedLetterDbPath);
-                        if ($identical) {
+                        $identical = $this->checkIfFilesIdentical($thisLetterPath,$uploadedLetterDbPath,$fileTwoHash);
+                        if( $identical ) {
                             $newLetter = false;
                             break;
                         }
@@ -1388,17 +1390,19 @@ class RecLetterUtil {
         );
     }
 
-    //TODO: check files in case of multiple letters and do not send "More than one " email if the letters are identical
-    public function checkIfFilesIdentical($fileOne, $fileTwo) {
-        $identical = $this->identicalFilesByBites($fileOne,$fileTwo);
+    //check files in case of multiple letters and do not send "More than one " email if the letters are identical
+    public function checkIfFilesIdentical($fileOne, $fileTwo, $fileTwoHash=null) {
+        $identical = $this->identicalFilesByBites($fileOne,$fileTwo); //first level check by bites
         if( $identical ) {
-            //additionally use checksum
+            //additional, more precise check by using the hash
+            if( !$fileTwoHash ) {
+                $fileTwoHash = hash_file('md5', $fileTwo);
+            }
             $fileOneHash = hash_file('md5', $fileOne);
-            $fileTwoHash = hash_file('md5', $fileTwo);
             if( $fileOneHash == $fileTwoHash ) {
-                return true;
+                return true; //identical
             } else {
-                return false;
+                return false; //different
             }
         } else {
             return false;

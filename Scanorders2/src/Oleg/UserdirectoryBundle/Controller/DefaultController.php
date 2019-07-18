@@ -227,8 +227,15 @@ class DefaultController extends Controller
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
+        //Test 1
+        $em = $this->getDoctrine()->getManager();
+        $letterOne = $em->getRepository('OlegOrderformBundle:Document')->findOneById($id);
+        $letterTwo = $em->getRepository('OlegOrderformBundle:Document')->findOneById($id);
+
+        //Test 2
         $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
         $service = $googlesheetmanagement->getGoogleService();
+
 
         $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
 
