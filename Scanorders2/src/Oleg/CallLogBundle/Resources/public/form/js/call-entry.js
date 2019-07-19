@@ -45,6 +45,7 @@ function initCallLogPage() {
         calllogWindowCloseAlert();
     }
 
+    $('#summernote').summernote();
 }
 
 //prevent exit modified form
