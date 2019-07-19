@@ -3291,7 +3291,8 @@ class FormNodeUtil
 
         $objectTypeForm = $this->getObjectTypeByName('Form');
         $objectTypeSection = $this->getObjectTypeByName('Form Section');
-        $objectTypeText = $this->getObjectTypeByName('Form Field - Free Text');
+        //$objectTypeText = $this->getObjectTypeByName('Form Field - Free Text');
+        $objectTypeText = $this->getObjectTypeByName('Form Field - Free Text, HTML');
         //echo "objectTypeForm=".$objectTypeForm."<br>";
 
         //$messageCategoryName = "Pathology Call Log Entry";

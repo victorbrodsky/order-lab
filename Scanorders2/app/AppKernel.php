@@ -62,6 +62,8 @@ class AppKernel extends Kernel
 
             new Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle(),
 
+            new FM\SummernoteBundle\FMSummernoteBundle(),
+
             //password encoder
             //new Usu\ScryptPasswordEncoderBundle\UsuScryptPasswordEncoderBundle(),
 

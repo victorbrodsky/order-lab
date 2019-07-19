@@ -63,7 +63,7 @@ class ObjectTypeText extends ObjectTypeReceivingBase
 
 
     /**
-     * Reach html text (WYSIWYG)
+     * Rich html text (WYSIWYG)
      * 
      * @ORM\Column(type="text", nullable=true)
      */

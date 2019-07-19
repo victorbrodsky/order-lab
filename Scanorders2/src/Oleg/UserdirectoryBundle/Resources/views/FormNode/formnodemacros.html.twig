@@ -471,7 +471,10 @@
     {% endif %}
     {#disabled={{ disabled }}<br>#}
 
+    {% set specialTypeClass = "" %}
     {% if type == "HTML" %}
+        {#{{ summernote_init() }}#}
+        {% set specialTypeClass = "summernote" %}
         {% set fieldValue = fieldValue|raw %}
     {% endif %}
     {% if type == "RTF" %}
@@ -481,7 +484,7 @@
     <textarea
             id="oleg_userdirectorybundle_formnode_{{ formNodeId }}"
             name="{{ fieldname }}"
-            class="textarea form-control"
+            class="textarea form-control {{ specialTypeClass }}"
             {#rows="10"#}
             {{ disabled }}
     >{{fieldValue}}</textarea>
