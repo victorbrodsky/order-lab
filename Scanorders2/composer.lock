@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "62144bd34c431664a7f9c3c84dfb3ace",
+    "content-hash": "a8f484c5ba0448fc44f53ce452980f84",
     "packages": [
         {
             "name": "adesigns/calendar-bundle",
@@ -1881,6 +1881,57 @@
                 "google"
             ],
             "time": "2014-09-30T19:33:59+00:00"
+        },
+        {
+            "name": "helios-ag/fm-summernote-bundle",
+            "version": "0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/helios-ag/FMSummernoteBundle.git",
+                "reference": "f06cb324b95565a2e0d7f7697ac4ee8695ea586e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/helios-ag/FMSummernoteBundle/zipball/f06cb324b95565a2e0d7f7697ac4ee8695ea586e",
+                "reference": "f06cb324b95565a2e0d7f7697ac4ee8695ea586e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3",
+                "symfony/framework-bundle": "~2.4|~3.0",
+                "symfony/twig-bundle": "~2.4|~3.0"
+            },
+            "suggest": {
+                "helios-ag/fm-elfinder-bundle": "Elfinder bundle, file manager"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-4": {
+                    "FM\\SummernoteBundle\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Al Ganiev",
+                    "email": "helios.ag@gmail.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://github.com/helios-ag/summernote-bundle/contributors"
+                }
+            ],
+            "description": "Summernote bundle, adds Summernote WYSIWYG editor to your Symfony2 project",
+            "homepage": "https://github.com/helios-ag/summernote-bundle",
+            "keywords": [
+                "editor",
+                "summernote",
+                "wysiwyg"
+            ],
+            "time": "2016-04-16T05:47:11+00:00"
         },
         {
             "name": "incenteev/composer-parameter-handler",

@@ -52,7 +52,8 @@
         "yzalis/crontab": "1.0.x-dev",
 
         "sinergi/browser-detector": "6.1.2",
-        "box/spout": "^2.7"
+        "box/spout": "^2.7",
+        "helios-ag/fm-summernote-bundle": "^0.2.0"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",

@@ -55,13 +55,38 @@ class ObjectTypeText extends ObjectTypeReceivingBase
     protected $formNode;
 
     /**
+     * Plain text
+     * 
      * @ORM\Column(type="text", nullable=true)
      */
     protected $value;
 
 
+    /**
+     * Reach html text (WYSIWYG)
+     * 
+     * @ORM\Column(type="text", nullable=true)
+     */
+    protected $valueHtml;
 
 
+
+
+    /**
+     * @return mixed
+     */
+    public function getValueHtml()
+    {
+        return $this->valueHtml;
+    }
+
+    /**
+     * @param mixed $valueHtml
+     */
+    public function setValueHtml($valueHtml)
+    {
+        $this->valueHtml = $valueHtml;
+    }
 
 
 }
