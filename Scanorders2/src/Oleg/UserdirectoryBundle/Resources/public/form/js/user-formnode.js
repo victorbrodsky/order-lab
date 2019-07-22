@@ -393,7 +393,7 @@ function richTextInit(formNodeId) {
             ['style', ['bold', 'italic', 'underline', 'clear']],
             ['font', ['strikethrough', 'superscript', 'subscript']],
             ['fontsize', ['fontsize']],
-            ['color', ['color','forecolor','backcolor']],
+            ['color', ['color']],
             ['para', ['ul', 'ol']],
             //['height', ['height']],
             //['insert', ['link', 'picture', 'video']],
