@@ -45,8 +45,13 @@ function initCallLogPage() {
         calllogWindowCloseAlert();
     }
 
-    $('#summernote').summernote();
+    // $('.summernote').summernote();
+    //richTextInit();
 }
+
+// function richTextInit() {
+//     $('.summernote').summernote();
+// }
 
 //prevent exit modified form
 function calllogWindowCloseAlert() {

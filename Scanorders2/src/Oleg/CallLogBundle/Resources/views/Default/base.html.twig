@@ -67,6 +67,8 @@
     '@OlegUserdirectoryBundle/Resources/public/form/js/user-jstree.js'
     '@OlegUserdirectoryBundle/Resources/public/form/js/user-formnode.js'
 
+    '@OlegUserdirectoryBundle/Resources/public/summernote/summernote.min.js'
+
     '@OlegOrderformBundle/Resources/public/form/js/checkSingleForm.js'
     '@OlegOrderformBundle/Resources/public/form/js/slideColl.js'
     '@OlegOrderformBundle/Resources/public/form/js/partCheckboxes.js'
@@ -92,4 +94,12 @@
 
 {% endblock %}
 
+{% block additionalcss %}
+    {#<link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote.css" rel="stylesheet">#}
+    {% stylesheets
+        'bundles/oleguserdirectory/summernote/summernote.css' filter='cssrewrite'
+    %}
+    <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
+    {% endstylesheets %}
 
+{% endblock %}

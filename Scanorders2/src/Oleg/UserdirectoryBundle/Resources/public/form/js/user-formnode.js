@@ -260,10 +260,18 @@ function calllogAppendFormNodes( data ) {
 
         if(
             data[index]['formNodeObjectType'] == "Form Field - Free Text" ||
-            data[index]['formNodeObjectType'] == "Form Field - Free Text, RTF" ||
-            data[index]['formNodeObjectType'] == "Form Field - Free Text, HTML"
+            data[index]['formNodeObjectType'] == "Form Field - Free Text, RTF"
         ) {
             expandTextarea($('#formnode-'+formNodeId));
+        }
+
+        if(
+            data[index]['formNodeObjectType'] == "Form Field - Free Text, HTML"
+        ) {
+            // expandTextarea($('#formnode-'+formNodeId));
+            //$('.summernote').summernote();
+            //$('#oleg_userdirectorybundle_formnode_'+formNodeId).summernote();
+            richTextInit(formNodeId);
         }
 
         //https://jsfiddle.net/7vddjcwu/29/
@@ -368,6 +376,31 @@ function calllogAttachHtml(element,html,type) {
     if( type == 'prepend' ) {
         element.prepend(html);
     }
+}
+
+function richTextInit(formNodeId) {
+    //$('.summernote').summernote();
+
+    //Fontstyle: Bold, Italic, Underline, Superscript, Subscript,
+    // Color, Forecolor, Backcolor, Clear font style,
+    // Paragraph Style: ol (toggle ordered list), ul (toggle unordered list),
+    // Insert: table,
+    // Misc: Undo, Redo, Full Screen, Codeview .
+    // Do not show the other buttons.
+    $('#oleg_userdirectorybundle_formnode_'+formNodeId).summernote({
+        toolbar: [
+            // [groupName, [list of button]]
+            ['style', ['bold', 'italic', 'underline', 'clear']],
+            ['font', ['strikethrough', 'superscript', 'subscript']],
+            ['fontsize', ['fontsize']],
+            ['color', ['color','forecolor','backcolor']],
+            ['para', ['ul', 'ol']],
+            //['height', ['height']],
+            //['insert', ['link', 'picture', 'video']],
+            ['table', ['table']],
+            ['view', ['fullscreen', 'codeview', 'undo', 'redo', 'help']]
+        ]
+    });
 }
 
 ////NOT USED
