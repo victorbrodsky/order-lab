@@ -28,7 +28,8 @@ window.onerror = function( msg, url, linenumber ){
 
         var newline = "\n";
 
-        var siteEmail = $("#siteEmail").val();
+        //var siteEmail = $("#siteEmail").val();
+        var siteEmail = document.getElementById('siteEmail').value;
         if( !siteEmail && siteEmail.length == 0 ) {
             siteEmail = "system admin email";
         }

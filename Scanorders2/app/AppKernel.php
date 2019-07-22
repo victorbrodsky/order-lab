@@ -61,9 +61,7 @@ class AppKernel extends Kernel
             new Bmatzner\FontAwesomeBundle\BmatznerFontAwesomeBundle(),
 
             new Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle(),
-
-            new FM\SummernoteBundle\FMSummernoteBundle(),
-
+            
             //password encoder
             //new Usu\ScryptPasswordEncoderBundle\UsuScryptPasswordEncoderBundle(),
 

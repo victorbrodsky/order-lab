@@ -236,7 +236,7 @@ function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,s
             url: url,
             timeout: _ajaxTimeout,
             async: thisAsyncflag
-        }).success(function(data) {
+        }).done(function(data) {
             $.each(data, function(key, val) {
                 //console.log("val="+val);
                 globalDataArray.push(val);
@@ -1217,12 +1217,12 @@ function userTeamTwigMacro(myteamurl,btnTargetId,replaceTargetId) {
         //data: {id: userid },
         //dataType: 'json',
         async: asyncflag
-    }).success(function(response) {
+    }).done(function(response) {
         //console.log(response);
         //var template = response;
         $('#' + replaceTargetId).html(response); //Change the html of the div with the id = "your_div"
         $.bootstrapSortable(true);
-    }).done(function() {
+    }).always(function() {
         lbtn.stop();
     }).error(function(jqXHR, textStatus, errorThrown) {
         console.log('Error : ' + errorThrown);
@@ -1246,13 +1246,13 @@ function userWrapperAjax( userid, btnTargetId, replaceTargetId, cycle ) {
         data: {userid: userid, cycle: cycle },
         //dataType: 'json',
         async: asyncflag
-    }).success(function(response) {
+    }).done(function(response) {
         //console.log(response);
         //var template = response;
         $('#'+replaceTargetId).html(response); //Change the html of the div with the id = "your_div"
         //specificRegularCombobox(replaceTargetId);
         regularCombobox( $('#'+replaceTargetId) );
-    }).done(function() {
+    }).always(function() {
         lbtn.stop();
     }).error(function(jqXHR, textStatus, errorThrown) {
         console.log('Error : ' + errorThrown);
@@ -1500,14 +1500,14 @@ function constructAddNewUserModalByAjax(btnDom,sitename,otherUserParam,selectEle
         data: {comboboxValue: comboboxValue},
         //dataType: 'json',
         async: asyncflag
-    }).success(function(response) {
+    }).done(function(response) {
         //console.log(response);
         //Remove temp modal addNewUserOnFly
         $('.modal').modal('hide').data('bs.modal', null );
         $('.modal').remove();
         $("#new-user-temp-modal").remove();
         getAddNewUserModalByForm(btnDom,sitename,otherUserParam,response)
-    }).done(function() {
+    }).always(function() {
         //lbtn.stop();
     }).error(function(jqXHR, textStatus, errorThrown) {
         console.log('Error : ' + errorThrown);
@@ -1610,7 +1610,7 @@ function populateUserFromLdap(searchBtn,inputType) {
         },
         dataType: 'json',
         async: asyncflag
-    }).success(function(response) {
+    }).done(function(response) {
         //console.log(response);
 
         if( response ) {
@@ -1664,7 +1664,7 @@ function populateUserFromLdap(searchBtn,inputType) {
             //console.log("no response");
         }
 
-    }).done(function() {
+    }).always(function() {
         lbtn.stop();
     }).error(function(jqXHR, textStatus, errorThrown) {
         //console.log('Error : ' + errorThrown);
@@ -1687,12 +1687,12 @@ function setKeytypeByEmailListener(modalHtml) {
             type: "GET",
             //type: "POST",
             async: asyncflag
-        }).success(function (response) {
+        }).done(function (response) {
             //console.log(response);
             emailUsernametypeMap = response;
             //console.log("emailUsernametypeMap:");
             //console.log(emailUsernametypeMap);
-        }).done(function () {
+        }).always(function () {
             //
         }).error(function (jqXHR, textStatus, errorThrown) {
             console.log('Error : ' + errorThrown);
@@ -1826,7 +1826,7 @@ function addNewUserAction( addUserBtn, fieldId, sitename, otherUserParam ) {
         },
         dataType: 'json',
         async: asyncflag
-    }).success(function(response) {
+    }).done(function(response) {
         //console.log(response);
 
         if( response.flag == "NOTOK" ) {
@@ -1845,7 +1845,7 @@ function addNewUserAction( addUserBtn, fieldId, sitename, otherUserParam ) {
             holder.find("#user-add-btn-dismiss").click();
         }
 
-    }).done(function() {
+    }).always(function() {
         lbtn.stop();
         holder.find("#user-add-btn-dismiss").show();
         holder.find("#user-add-btn-cancel").show();

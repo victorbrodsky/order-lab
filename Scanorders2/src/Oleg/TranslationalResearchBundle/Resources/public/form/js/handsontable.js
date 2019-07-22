@@ -140,7 +140,7 @@ function getAntobodies(holder,force) {
             url: url,
             timeout: _ajaxTimeout,
             async: asyncflag
-        }).success(function(data) {
+        }).done(function(data) {
             _antibodies = data;
         });
     }

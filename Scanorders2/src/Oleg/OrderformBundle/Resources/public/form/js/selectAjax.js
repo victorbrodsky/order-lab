@@ -185,7 +185,7 @@ function customCombobox() {
 //        data: {id: curid, instid: instid},
 //        timeout: _ajaxTimeout,
 //        async: asyncflag
-//    }).success(function(data) {
+//    }).done(function(data) {
 //        populateSelectCombobox( targetid, data, "Select an option or type in a new value" );
 //    });
 //}
@@ -223,7 +223,7 @@ function getComboboxStain(holder,force) {
             url: url,
             async: asyncflag,
             timeout: _ajaxTimeout
-        }).success(function(data) {
+        }).done(function(data) {
             _stain = data;
             populateSelectCombobox( targetid, _stain, null );
         });
@@ -273,7 +273,7 @@ function getComboboxSpecialStain(ids, preset, setId) {
             url: url,
             timeout: _ajaxTimeout,
             async: asyncflag
-        }).success(function(data) {
+        }).done(function(data) {
                 _stain = data;
                 populateSelectCombobox( ".ajax-combobox-staintype", _stain, "Stain Type" );
             });
@@ -319,7 +319,7 @@ function getComboboxScanregion(holder,force) {
             url: url,
             timeout: _ajaxTimeout,
             async: asyncflag
-        }).success(function(data) {
+        }).done(function(data) {
             _scanregion = data;
             populateSelectCombobox( targetid, _scanregion, null );
         });
@@ -365,7 +365,7 @@ function getComboboxOrgan(holder,force) {
             url: url,
             timeout: _ajaxTimeout,
             async: asyncflag
-        }).success(function(data) {
+        }).done(function(data) {
                 _organ = data;
             populateSelectCombobox( targetid, _organ, "Source Organ" );
         });
@@ -405,7 +405,7 @@ function getComboboxProcedure(holder,force) {
             url: url,
             timeout: _ajaxTimeout,
             async: asyncflag
-        }).success(function(data) {
+        }).done(function(data) {
             _procedure = data;
             populateSelectCombobox( targetid, _procedure, "Procedure Type" );
         });
@@ -453,7 +453,7 @@ function getComboboxAccessionType(holder,force) {
             url: url,
             timeout: _ajaxTimeout,
             async: asyncflag
-        }).success(function(data) {
+        }).done(function(data) {
                 _accessiontype = data;
                 populateSelectCombobox( targetid, _accessiontype, null );
                 setAccessionMask();
@@ -509,7 +509,7 @@ function getComboboxMrnType(holder,force) {
             url: url,
             timeout: _ajaxTimeout,
             async: asyncflag
-        }).success(function(data) {
+        }).done(function(data) {
                 _mrntype = data;
                 //console.log('1 populate mrn type');
                 populateSelectCombobox( targetid, _mrntype, null ); //'Please select MRN type'
@@ -560,7 +560,7 @@ function getComboboxPartname(holder,force) {
             url: url,
             timeout: _ajaxTimeout,
             async: asyncflag
-        }).success(function(data) {
+        }).done(function(data) {
             _partname = data;
             populateSelectCombobox( targetid, _partname, "Part ID" );
             //setOnlyNewComboboxes( targetid, _partname, "Part Name" );
@@ -618,7 +618,7 @@ function getComboboxBlockname(holder,force) {
             url: url,
             timeout: _ajaxTimeout,
             async: asyncflag
-        }).success(function(data) {
+        }).done(function(data) {
                 _blockname = data;
             populateSelectCombobox( targetid, _blockname, "Block ID" );
         });
@@ -655,7 +655,7 @@ function getComboboxDelivery(holder) {
             url: url,
             timeout: _ajaxTimeout,
             async: asyncflag
-        }).success(function(data) {
+        }).done(function(data) {
                 _delivery = data;
             populateSelectCombobox( ".ajax-combobox-delivery", _delivery, null );
             // if( cycle == "new"  ) {
@@ -749,7 +749,7 @@ function getUserWrappersByNodeid( nodeid, userComboboxClass, utilUrlString ) {
         url: url,
         timeout: _ajaxTimeout,
         async: asyncflag
-    }).success(function(data) {
+    }).done(function(data) {
         if( data ) {
             populateSelectCombobox( userComboboxClass, data, "Select an option or type in a new value", true );
         }
@@ -785,7 +785,7 @@ function getComboboxAccount(holder) {
             url: url,
             timeout: _ajaxTimeout,
             async: asyncflag
-        }).success(function(data) {
+        }).done(function(data) {
             _account = data;
             populateSelectCombobox( targetid, _account, "Select an option or type in a new value" );
         });
@@ -817,7 +817,7 @@ function getComboboxReturnLocations(holder) {
             url: url,
             timeout: _ajaxTimeout,
             async: asyncflag
-        }).success(function(data) {
+        }).done(function(data) {
             _returnLocation = data;
             populateSelectCombobox( targetid, _returnLocation, "Select an option or type in a new value", false );
         });
@@ -851,7 +851,7 @@ function getUrgency() {
             url: url,
             timeout: _ajaxTimeout,
             async: asyncflag
-        }).success(function(data) {
+        }).done(function(data) {
             _urgency = data;
             populateSelectCombobox( targetid, _urgency, null );
             if( cycle == "new"  ) {
