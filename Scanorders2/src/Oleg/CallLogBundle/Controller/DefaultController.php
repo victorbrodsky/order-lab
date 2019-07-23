@@ -395,7 +395,6 @@ class DefaultController extends Controller
 
     /**
      * @Route("/update-text-html", name="calllog_update_text_html")
-     * @Template("OlegCallLogBundle:CallLog:update-cache-manually.html.twig")
      */
     public function updateTextHtmlAction(Request $request)
     {
@@ -408,33 +407,46 @@ class DefaultController extends Controller
         $userSecUtil = $this->get('user_security_utility');
         //$user = $this->get('security.token_storage')->getToken()->getUser();
 
-        $objectTypeText = $formNodeUtil->getObjectTypeByName('Form Field - Free Text, HTML');
+        //$objectTypeText = $formNodeUtil->getObjectTypeByName('Form Field - Free Text, HTML');
+
+        $historySourceFormNodeByName = $this->getSourceFormNodeByName("History/Finding");
+        if( !$historySourceFormNodeByName ) {
+            exit("Error: no source form node History/Finding");
+        }
+        $impressionSourceFormNodeByName = $this->getSourceFormNodeByName("Impression/Outcome");
+        if( !$impressionSourceFormNodeByName ) {
+            exit("Error: no source form node Impression/Outcome");
+        }
 
         $historyDestinationFormNodeByName = $this->getDestinationFormNodeByName("History/Finding HTML");
         if( !$historyDestinationFormNodeByName ) {
-            exit("Error: no form node History/Finding HTML");
+            exit("Error: no destination form node History/Finding HTML");
         }
         $impressionDestinationFormNodeByName = $this->getDestinationFormNodeByName("Impression/Outcome HTML");
         if( !$impressionDestinationFormNodeByName ) {
-            //exit("Error: no form node Impression/Outcome HTML");
+            //exit("Error: no destination form node Impression/Outcome HTML");
         }
 
         //$formNodeHtml = $em->getRepository('OlegUserdirectoryBundle:ObjectTypeText')->findAll();
 
         //$sourceTextObjects = $em->getRepository('OlegUserdirectoryBundle:FormNode')->findOneByName("History/Finding");
-        $repository = $em->getRepository('OlegUserdirectoryBundle:FormNode');
+        $repository = $em->getRepository('OlegUserdirectoryBundle:ObjectTypeText');
         $dql = $repository->createQueryBuilder("list");;
         $dql->select('list');
-        $dql->leftJoin("list.objectType", "objectType");
-        $dql->leftJoin("list.parent", "parent");
-        $dql->leftJoin("parent.parent", "grandParent");
-        $dql->where("list.level = 4 AND objectType.id = ".$objectTypeText->getId()." AND parent.level = 3 AND grandParent.name = 'Pathology Call Log Entry'");
-        $dql->andWhere("list.name = 'History/Finding' OR list.name = 'Impression/Outcome'");
-        //$dql->andWhere('list.formNode = :formNodeId');
+        $dql->leftJoin("list.formNode", "formNode");
+        //$dql->leftJoin("list.objectType", "objectType");
+        //$dql->leftJoin("list.parent", "parent");
+        //$dql->leftJoin("parent.parent", "grandParent");
+        //$dql->where("list.level = 4 AND objectType.id = ".$objectTypeText->getId()." AND parent.level = 3 AND grandParent.name = 'Pathology Call Log Entry'");
+        //$dql->andWhere("list.name = 'History/Finding' OR list.name = 'Impression/Outcome'");
+        $dql->where("formNode.id = " . $historySourceFormNodeByName->getId() . " OR formNode.id = " . $impressionSourceFormNodeByName->getId());
         //$dql->orderBy('list.arraySectionIndex','DESC');
         //$dql->addOrderBy('list.orderinlist', 'ASC');
         $query = $em->createQuery($dql);
         $sourceTextObjects = $query->getResult();
+        echo "SourceTextObjects count=".count($sourceTextObjects)."<br>";
+
+        $count = 0;
 
         foreach($sourceTextObjects as $textObject) {
 
@@ -533,12 +545,36 @@ class DefaultController extends Controller
             }
             
             echo "textHtmlObject: Namespace=" . $textHtmlObject->getEntityNamespace() . ", Name=" . $textHtmlObject->getEntityName() . ", Value=" . $textHtmlObject->getValue() . "<br>";
+            $count++;
 
             //$em->persist($textHtmlObject);
             //$em->flush($textHtmlObject); //testing
         }
 
+        exit("Processed $count text objects");
+    }
+    //$name - "History/Finding", "Impression/Outcome"
+    public function getSourceFormNodeByName($name) {
+        $em = $this->getDoctrine()->getManager();
+        $formNodeUtil = $this->get('user_formnode_utility');
 
+        $objectTypeText = $formNodeUtil->getObjectTypeByName('Form Field - Free Text');
+
+        $repository = $em->getRepository('OlegUserdirectoryBundle:FormNode');
+        $dql = $repository->createQueryBuilder("list");;
+        $dql->select('list');
+        $dql->leftJoin("list.objectType", "objectType");
+        $dql->leftJoin("list.parent", "parent");
+        $dql->where('list.level = 4 AND objectType.id = '.$objectTypeText->getId().' AND parent.level = 3');
+        $dql->andWhere("list.name = '".$name."'");
+        $query = $em->createQuery($dql);
+        $sourceTextObjects = $query->getResult();
+
+        if( count($sourceTextObjects) == 1 ) {
+            return $sourceTextObjects[0];
+        }
+
+        return NULL;
     }
     //$name - "History/Finding HTML", "Impression/Outcome HTML"
     public function getDestinationFormNodeByName($name) {
@@ -555,10 +591,10 @@ class DefaultController extends Controller
         $dql->where('list.level = 4 AND objectType.id = '.$objectTypeText->getId().' AND parent.level = 3');
         $dql->andWhere("list.name = '".$name."'");
         $query = $em->createQuery($dql);
-        $sourceTextObjects = $query->getResult();
+        $destinationTextObjects = $query->getResult();
 
-        if( count($sourceTextObjects) == 1 ) {
-            return $sourceTextObjects[0];
+        if( count($destinationTextObjects) == 1 ) {
+            return $destinationTextObjects[0];
         }
 
         return NULL;
