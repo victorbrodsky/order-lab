@@ -39,6 +39,18 @@ class DefaultController extends Controller
         return array('sitename'=>$this->container->getParameter('translationalresearch.sitename'));
     }
 
+    /**
+     * @Route("/thanks-for-downloading/{id}/{sitename}", name="translationalresearch_thankfordownloading")
+     * @Template("OlegUserdirectoryBundle:Default:thanksfordownloading.html.twig")
+     * @Method("GET")
+     */
+    public function thankfordownloadingAction(Request $request, $id, $sitename) {
+        return array(
+            'fileid' => $id,
+            'sitename' => $sitename
+        );
+    }
+
 
 //    /**
 //     * @Route("/", name="translationalresearch_home")

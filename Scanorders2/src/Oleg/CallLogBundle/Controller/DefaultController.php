@@ -406,15 +406,48 @@ class DefaultController extends Controller
         $em = $this->getDoctrine()->getManager();
         $formNodeUtil = $this->get('user_formnode_utility');
         $userSecUtil = $this->get('user_security_utility');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->get('security.token_storage')->getToken()->getUser();
 
         $objectTypeText = $formNodeUtil->getObjectTypeByName('Form Field - Free Text, HTML');
 
-        $textObjects = $em->getRepository('OlegUserdirectoryBundle:ObjectTypeText')->findAll();
+        $historyDestinationFormNodeByName = $this->getDestinationFormNodeByName("History/Finding HTML");
+        if( !$historyDestinationFormNodeByName ) {
+            exit("Error: no form node History/Finding HTML");
+        }
+        $impressionDestinationFormNodeByName = $this->getDestinationFormNodeByName("Impression/Outcome HTML");
+        if( !$impressionDestinationFormNodeByName ) {
+            //exit("Error: no form node Impression/Outcome HTML");
+        }
 
-        foreach($textObjects as $textObject) {
+        //$formNodeHtml = $em->getRepository('OlegUserdirectoryBundle:ObjectTypeText')->findAll();
+
+        //$sourceTextObjects = $em->getRepository('OlegUserdirectoryBundle:FormNode')->findOneByName("History/Finding");
+        $repository = $em->getRepository('OlegUserdirectoryBundle:FormNode');
+        $dql = $repository->createQueryBuilder("list");;
+        $dql->select('list');
+        $dql->leftJoin("list.objectType", "objectType");
+        $dql->leftJoin("list.parent", "parent");
+        $dql->leftJoin("parent.parent", "grandParent");
+        $dql->where("list.level = 4 AND objectType.id = ".$objectTypeText->getId()." AND parent.level = 3 AND grandParent.name = 'Pathology Call Log Entry'");
+        $dql->andWhere("list.name = 'History/Finding' OR list.name = 'Impression/Outcome'");
+        //$dql->andWhere('list.formNode = :formNodeId');
+        //$dql->orderBy('list.arraySectionIndex','DESC');
+        //$dql->addOrderBy('list.orderinlist', 'ASC');
+        $query = $em->createQuery($dql);
+        $sourceTextObjects = $query->getResult();
+
+        foreach($sourceTextObjects as $textObject) {
+
+            //check if parent is section (level = 3)
+            if( $textObject->getParent() && $textObject->getParent()->getLevel() == 3 ) {
+                //ok
+            } else {
+                echo "Skip this textObject: ".$textObject."<br>";
+                continue;
+            }
 
             //create a new ObjectTypeText Html
+            echo "Copy this textObject: ".$textObject."<br>";
 
             $creator = $textObject->getCreator();
             $createDate = $textObject->getCreatedate();
@@ -444,15 +477,32 @@ class DefaultController extends Controller
             $arraySectionId = $textObject->getArraySectionId();
             $arraySectionIndex = $textObject->getArraySectionIndex();
 
-
-
+            //Create new text object
             $textHtmlObject = new ObjectTypeText();
 
             $count = null;
             $userSecUtil->setDefaultList($textHtmlObject,$count,$creator,$name);
 
-            $textHtmlObject->setValue($formValue);
-            //}
+            //Set list parameters
+            $textHtmlObject->setCreatedate($createDate);
+            $textHtmlObject->setUpdatedby($updatedby);
+            $textHtmlObject->setUpdatedon($updatedon);
+            $textHtmlObject->setAbbreviation($abbreviation);
+            $textHtmlObject->setShortname($shortName);
+            $textHtmlObject->setDescription($description);
+            $textHtmlObject->setType($type);
+            $textHtmlObject->setFulltitle($fulltitle);
+
+            $textHtmlObject->setFulltitle($fulltitle);
+            $textHtmlObject->setLinkToListId($linkToListId);
+            $textHtmlObject->setVersion($version);
+            $textHtmlObject->setFulltitle($fulltitle);
+            $textHtmlObject->setFulltitle($fulltitle);
+            $textHtmlObject->setUpdateAuthorRoles($updateAuthorRoles);
+
+            //Set ObjectTypeReceivingBase parameters
+            $textHtmlObject->setArraySectionId($arraySectionId);
+            $textHtmlObject->setArraySectionIndex($arraySectionIndex);
 
             //3) set message by entityName to the created list
             //$textHtmlObject->setObject($holderEntity);
@@ -460,16 +510,58 @@ class DefaultController extends Controller
             $textHtmlObject->setEntityName($entityName);
             $textHtmlObject->setEntityId($entityId);
 
-            //4) set formnode to the list
-            $textHtmlObject->setFormNode($formNode);
+            $textHtmlObject->setValue($formValue);
 
-            //echo "newListElement list: Namespace=" . $newListElement->getEntityNamespace() . ", Name=" . $newListElement->getEntityName() . ", Value=" . $newListElement->getValue() . "<br>";
+            //4) set formnode to the list ("History/Finding" -> )
+            //$textHtmlObject->setFormNode($formNodeHtml);
 
-            $em->persist($textHtmlObject);
-            $em->flush($textHtmlObject); //testing
+            if( $formNode->getName() == 'History/Finding' ) {
+                if( $historyDestinationFormNodeByName ) {
+                    $textHtmlObject->setFormNode($historyDestinationFormNodeByName);
+                } else {
+                    echo "Skip historyDestinationFormNodeByName not found <br>";
+                    continue;
+                }
+            }
+            if( $formNode->getName() == 'Impression/Outcome' ) {
+                if( $impressionDestinationFormNodeByName ) {
+                    $textHtmlObject->setFormNode($impressionDestinationFormNodeByName);
+                } else {
+                    echo "Skip impressionDestinationFormNodeByName not found <br>";
+                    continue;
+                }
+            }
+            
+            echo "textHtmlObject: Namespace=" . $textHtmlObject->getEntityNamespace() . ", Name=" . $textHtmlObject->getEntityName() . ", Value=" . $textHtmlObject->getValue() . "<br>";
+
+            //$em->persist($textHtmlObject);
+            //$em->flush($textHtmlObject); //testing
         }
 
 
+    }
+    //$name - "History/Finding HTML", "Impression/Outcome HTML"
+    public function getDestinationFormNodeByName($name) {
+        $em = $this->getDoctrine()->getManager();
+        $formNodeUtil = $this->get('user_formnode_utility');
+
+        $objectTypeText = $formNodeUtil->getObjectTypeByName('Form Field - Free Text, HTML');
+
+        $repository = $em->getRepository('OlegUserdirectoryBundle:FormNode');
+        $dql = $repository->createQueryBuilder("list");;
+        $dql->select('list');
+        $dql->leftJoin("list.objectType", "objectType");
+        $dql->leftJoin("list.parent", "parent");
+        $dql->where('list.level = 4 AND objectType.id = '.$objectTypeText->getId().' AND parent.level = 3');
+        $dql->andWhere("list.name = '".$name."'");
+        $query = $em->createQuery($dql);
+        $sourceTextObjects = $query->getResult();
+
+        if( count($sourceTextObjects) == 1 ) {
+            return $sourceTextObjects[0];
+        }
+
+        return NULL;
     }
 
 }
