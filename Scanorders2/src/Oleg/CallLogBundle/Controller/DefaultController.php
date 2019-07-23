@@ -19,6 +19,7 @@ namespace Oleg\CallLogBundle\Controller;
 
 use Oleg\CallLogBundle\Form\CalllogMessageCacheType;
 use Oleg\OrderformBundle\Entity\Message;
+use Oleg\UserdirectoryBundle\Entity\ObjectTypeText;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -391,5 +392,84 @@ class DefaultController extends Controller
         );
     }
 
+
+    /**
+     * @Route("/update-text-html", name="calllog_update_text_html")
+     * @Template("OlegCallLogBundle:CallLog:update-cache-manually.html.twig")
+     */
+    public function updateTextHtmlAction(Request $request)
+    {
+        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $formNodeUtil = $this->get('user_formnode_utility');
+        $userSecUtil = $this->get('user_security_utility');
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+        $objectTypeText = $formNodeUtil->getObjectTypeByName('Form Field - Free Text, HTML');
+
+        $textObjects = $em->getRepository('OlegUserdirectoryBundle:ObjectTypeText')->findAll();
+
+        foreach($textObjects as $textObject) {
+
+            //create a new ObjectTypeText Html
+
+            $creator = $textObject->getCreator();
+            $createDate = $textObject->getCreatedate();
+
+            $updatedby = $textObject->getUpdatedby();
+            $updatedon = $textObject->getUpdatedon();
+
+            $name = $textObject->getName();
+            $abbreviation = $textObject->getAbbreviation();
+            $shortName = $textObject->getShortname();
+            $description = $textObject->getDescription();
+            $type = $textObject->getType();
+
+            $updateAuthorRoles = $textObject->getUpdateAuthorRoles();
+            $fulltitle = $textObject->getFulltitle();
+            $linkToListId = $textObject->getLinkToListId();
+
+            $version = $textObject->getVersion();
+
+            $formValue = $textObject->getValue();
+            $formNode = $textObject->getFormNode();
+
+            $entityNamespace = $textObject->getEntityNamespace();
+            $entityName = $textObject->getEntityName();
+            $entityId = $textObject->getEntityId();
+
+            $arraySectionId = $textObject->getArraySectionId();
+            $arraySectionIndex = $textObject->getArraySectionIndex();
+
+
+
+            $textHtmlObject = new ObjectTypeText();
+
+            $count = null;
+            $userSecUtil->setDefaultList($textHtmlObject,$count,$creator,$name);
+
+            $textHtmlObject->setValue($formValue);
+            //}
+
+            //3) set message by entityName to the created list
+            //$textHtmlObject->setObject($holderEntity);
+            $textHtmlObject->setEntityNamespace($entityNamespace);
+            $textHtmlObject->setEntityName($entityName);
+            $textHtmlObject->setEntityId($entityId);
+
+            //4) set formnode to the list
+            $textHtmlObject->setFormNode($formNode);
+
+            //echo "newListElement list: Namespace=" . $newListElement->getEntityNamespace() . ", Name=" . $newListElement->getEntityName() . ", Value=" . $newListElement->getValue() . "<br>";
+
+            $em->persist($textHtmlObject);
+            $em->flush($textHtmlObject); //testing
+        }
+
+
+    }
 
 }
