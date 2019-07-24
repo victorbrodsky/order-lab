@@ -3309,7 +3309,7 @@ class FormNodeUtil
         //History/Findings (Section)
         $formParams = array(
             'parent' => $PathologyCallLogEntryFom,
-            'name' => "History/Findings",
+            'name' => "History/Findings", //"History/Findings HTML"?
             'objectType' => $objectTypeSection,
         );
         $historySection = $this->createV2FormNode($formParams);
@@ -3317,7 +3317,7 @@ class FormNodeUtil
         //History/Findings Text
         $formParams = array(
             'parent' => $historySection,
-            'name' => "History/Findings",
+            'name' => "History/Findings", //"History/Findings HTML"?
             'objectType' => $objectTypeText,
             'showLabel' => false,
         );

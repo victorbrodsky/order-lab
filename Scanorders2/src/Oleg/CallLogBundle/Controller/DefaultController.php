@@ -409,18 +409,18 @@ class DefaultController extends Controller
 
         //$objectTypeText = $formNodeUtil->getObjectTypeByName('Form Field - Free Text, HTML');
 
-        $historySourceFormNodeByName = $this->getSourceFormNodeByName("History/Finding");
+        $historySourceFormNodeByName = $this->getSourceFormNodeByName("History/Findings");
         if( !$historySourceFormNodeByName ) {
-            exit("Error: no source form node History/Finding");
+            exit("Error: no source form node History/Findings");
         }
         $impressionSourceFormNodeByName = $this->getSourceFormNodeByName("Impression/Outcome");
         if( !$impressionSourceFormNodeByName ) {
             exit("Error: no source form node Impression/Outcome");
         }
 
-        $historyDestinationFormNodeByName = $this->getDestinationFormNodeByName("History/Finding HTML");
+        $historyDestinationFormNodeByName = $this->getDestinationFormNodeByName("History/Findings HTML");
         if( !$historyDestinationFormNodeByName ) {
-            exit("Error: no destination form node History/Finding HTML");
+            exit("Error: no destination form node History/Findings HTML");
         }
         $impressionDestinationFormNodeByName = $this->getDestinationFormNodeByName("Impression/Outcome HTML");
         if( !$impressionDestinationFormNodeByName ) {
@@ -429,7 +429,7 @@ class DefaultController extends Controller
 
         //$formNodeHtml = $em->getRepository('OlegUserdirectoryBundle:ObjectTypeText')->findAll();
 
-        //$sourceTextObjects = $em->getRepository('OlegUserdirectoryBundle:FormNode')->findOneByName("History/Finding");
+        //$sourceTextObjects = $em->getRepository('OlegUserdirectoryBundle:FormNode')->findOneByName("History/Findings");
         $repository = $em->getRepository('OlegUserdirectoryBundle:ObjectTypeText');
         $dql = $repository->createQueryBuilder("list");;
         $dql->select('list');
@@ -438,7 +438,7 @@ class DefaultController extends Controller
         //$dql->leftJoin("list.parent", "parent");
         //$dql->leftJoin("parent.parent", "grandParent");
         //$dql->where("list.level = 4 AND objectType.id = ".$objectTypeText->getId()." AND parent.level = 3 AND grandParent.name = 'Pathology Call Log Entry'");
-        //$dql->andWhere("list.name = 'History/Finding' OR list.name = 'Impression/Outcome'");
+        //$dql->andWhere("list.name = 'History/Findings' OR list.name = 'Impression/Outcome'");
         $dql->where("formNode.id = " . $historySourceFormNodeByName->getId() . " OR formNode.id = " . $impressionSourceFormNodeByName->getId());
         //$dql->orderBy('list.arraySectionIndex','DESC');
         //$dql->addOrderBy('list.orderinlist', 'ASC');
@@ -451,12 +451,12 @@ class DefaultController extends Controller
         foreach($sourceTextObjects as $textObject) {
 
             //check if parent is section (level = 3)
-            if( $textObject->getParent() && $textObject->getParent()->getLevel() == 3 ) {
-                //ok
-            } else {
-                echo "Skip this textObject: ".$textObject."<br>";
-                continue;
-            }
+//            if( $textObject->getParent() && $textObject->getParent()->getLevel() == 3 ) {
+//                //ok
+//            } else {
+//                echo "Skip this textObject: ".$textObject."<br>";
+//                continue;
+//            }
 
             //create a new ObjectTypeText Html
             echo "Copy this textObject: ".$textObject."<br>";
@@ -524,10 +524,10 @@ class DefaultController extends Controller
 
             $textHtmlObject->setValue($formValue);
 
-            //4) set formnode to the list ("History/Finding" -> )
+            //4) set formnode to the list ("History/Findings" -> )
             //$textHtmlObject->setFormNode($formNodeHtml);
 
-            if( $formNode->getName() == 'History/Finding' ) {
+            if( $formNode->getName() == 'History/Findings' ) {
                 if( $historyDestinationFormNodeByName ) {
                     $textHtmlObject->setFormNode($historyDestinationFormNodeByName);
                 } else {
@@ -553,7 +553,7 @@ class DefaultController extends Controller
 
         exit("Processed $count text objects");
     }
-    //$name - "History/Finding", "Impression/Outcome"
+    //$name - "History/Findings", "Impression/Outcome"
     public function getSourceFormNodeByName($name) {
         $em = $this->getDoctrine()->getManager();
         $formNodeUtil = $this->get('user_formnode_utility');
@@ -565,10 +565,12 @@ class DefaultController extends Controller
         $dql->select('list');
         $dql->leftJoin("list.objectType", "objectType");
         $dql->leftJoin("list.parent", "parent");
-        $dql->where('list.level = 4 AND objectType.id = '.$objectTypeText->getId().' AND parent.level = 3');
+        $dql->leftJoin("parent.parent", "grandParent");
+        $dql->where("list.level = 4 AND objectType.id = ".$objectTypeText->getId()." AND parent.level = 3 AND grandParent.name = 'Pathology Call Log Entry'");
         $dql->andWhere("list.name = '".$name."'");
         $query = $em->createQuery($dql);
         $sourceTextObjects = $query->getResult();
+        echo "sourceTextObjects count=".count($sourceTextObjects)."<br>";
 
         if( count($sourceTextObjects) == 1 ) {
             return $sourceTextObjects[0];
@@ -576,7 +578,7 @@ class DefaultController extends Controller
 
         return NULL;
     }
-    //$name - "History/Finding HTML", "Impression/Outcome HTML"
+    //$name - "History/Findings HTML", "Impression/Outcome HTML"
     public function getDestinationFormNodeByName($name) {
         $em = $this->getDoctrine()->getManager();
         $formNodeUtil = $this->get('user_formnode_utility');
@@ -588,7 +590,9 @@ class DefaultController extends Controller
         $dql->select('list');
         $dql->leftJoin("list.objectType", "objectType");
         $dql->leftJoin("list.parent", "parent");
-        $dql->where('list.level = 4 AND objectType.id = '.$objectTypeText->getId().' AND parent.level = 3');
+        $dql->leftJoin("parent.parent", "grandParent");
+        //$dql->where('list.level = 4 AND objectType.id = '.$objectTypeText->getId().' AND parent.level = 3');
+        $dql->where("list.level = 4 AND objectType.id = ".$objectTypeText->getId()." AND parent.level = 3 AND grandParent.name = 'Pathology Call Log Entry'");
         $dql->andWhere("list.name = '".$name."'");
         $query = $em->createQuery($dql);
         $destinationTextObjects = $query->getResult();
