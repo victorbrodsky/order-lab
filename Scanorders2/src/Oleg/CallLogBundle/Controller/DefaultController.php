@@ -405,7 +405,7 @@ class DefaultController extends Controller
         $em = $this->getDoctrine()->getManager();
         $formNodeUtil = $this->get('user_formnode_utility');
         $userSecUtil = $this->get('user_security_utility');
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         //$objectTypeText = $formNodeUtil->getObjectTypeByName('Form Field - Free Text, HTML');
 
@@ -449,7 +449,8 @@ class DefaultController extends Controller
         $sourceTextObjects = $query->getResult();
         echo "SourceTextObjects count=".count($sourceTextObjects)."<br>";
 
-        $count = 0;
+        $totalCounter = 0;
+        $counter = 0;
 
         foreach($sourceTextObjects as $textObject) {
 
@@ -463,6 +464,8 @@ class DefaultController extends Controller
 
             //create a new ObjectTypeText Html
             //echo "Copy this textObject: ".$textObject."<br>";
+
+            $totalCounter++;
 
             $creator = $textObject->getCreator();
             $createDate = $textObject->getCreatedate();
@@ -494,7 +497,7 @@ class DefaultController extends Controller
 
             $existingHtmlText = $this->findExistingTextHtmlByName($formNode,$formValue,$historyDestinationFormNodeId,$impressionDestinationFormNodeId,$entityNamespace,$entityName,$entityId);
             if( $existingHtmlText ) {
-                echo "Skipped: Text HTML already exists value=[$formValue], existingHtml=[$existingHtmlText]<br>";
+                echo $totalCounter.": Skipped (".$formNode->getName()."): Text HTML already exists value=[$formValue], existingHtml=[$existingHtmlText]<br>";
                 continue;
             }
 
@@ -539,30 +542,55 @@ class DefaultController extends Controller
             if( $formNode->getName() == 'History/Findings' ) {
                 if( $historyDestinationFormNode ) {
                     $textHtmlObject->setFormNode($historyDestinationFormNode);
-                    echo "Copy History/Findings html text [$formValue] to formnode [$historyDestinationFormNode] <br>";
+                    $msgLog = $counter.": ".$entityId."(".$entityName."): Copy History/Findings html text [$formValue] to formnode [$historyDestinationFormNode]";
                 } else {
-                    echo "Skip historyDestinationFormNodeByName not found <br>";
+                    echo $totalCounter.": Skip historyDestinationFormNodeByName not found <br>";
                     continue;
                 }
             }
             if( $formNode->getName() == 'Impression/Outcome' ) {
                 if( $impressionDestinationFormNode ) {
                     $textHtmlObject->setFormNode($impressionDestinationFormNode);
-                    echo "Copy Impression/Outcome html text [$formValue] to formnode [$impressionDestinationFormNode] <br>";
+                    $msgLog = $counter.": ".$entityId."(".$entityName."): Copy Impression/Outcome html text [$formValue] to formnode [$impressionDestinationFormNode]";
                 } else {
-                    echo "Skip impressionDestinationFormNodeByName not found <br>";
+                    echo $totalCounter.": Skip impressionDestinationFormNodeByName not found <br>";
                     continue;
                 }
             }
             
             //echo "textHtmlObject: Namespace=" . $textHtmlObject->getEntityNamespace() . ", Name=" . $textHtmlObject->getEntityName() . ", Value=" . $textHtmlObject->getValue() . "<br>";
-            $count++;
+            $counter++;
 
-            //$em->persist($textHtmlObject);
-            //$em->flush($textHtmlObject); //testing
-        }
+            if(1) {
 
-        exit("Processed $count text objects");
+                $message = null;
+                if( $entityId ) {
+                    $message = $em->getRepository('OlegOrderformBundle:Message')->find($entityId);
+                    if (!$message) {
+                        throw new \Exception("Message is not found by id " . $entityId);
+                    }
+                    //Save fields as cache in the field $formnodesCache ($holderEntity->setFormnodesCache($text))
+                    $testing = false;
+                    $formNodeUtil->updateFieldsCache($message, $testing);
+                }
+
+                $em->persist($textHtmlObject);
+                $em->flush(); //testing
+
+                //EventLog
+                $eventType = "Call Log Book Entry Updated";
+                $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $msgLog, $user, $message, $request, $eventType);
+            }
+
+            echo $msgLog . "<br>";
+
+            if( $totalCounter > 500 ) {
+                exit("Break processing $totalCounter text objects");
+            }
+
+        }//foreach
+
+        exit("Processed $counter text objects");
     }
     public function findExistingTextHtmlByName($formNode,$formValue,$historyDestinationFormNodeId,$impressionDestinationFormNodeId,$entityNamespace,$entityName,$entityId) {
 
