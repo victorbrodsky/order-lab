@@ -409,23 +409,26 @@ class DefaultController extends Controller
 
         //$objectTypeText = $formNodeUtil->getObjectTypeByName('Form Field - Free Text, HTML');
 
-        $historySourceFormNodeByName = $this->getSourceFormNodeByName("History/Findings");
-        if( !$historySourceFormNodeByName ) {
+        $historySourceFormNode = $this->getSourceFormNodeByName("History/Findings");
+        if( !$historySourceFormNode ) {
             exit("Error: no source form node History/Findings");
         }
-        $impressionSourceFormNodeByName = $this->getSourceFormNodeByName("Impression/Outcome");
-        if( !$impressionSourceFormNodeByName ) {
+        $impressionSourceFormNode = $this->getSourceFormNodeByName("Impression/Outcome");
+        if( !$impressionSourceFormNode ) {
             exit("Error: no source form node Impression/Outcome");
         }
 
-        $historyDestinationFormNodeByName = $this->getDestinationFormNodeByName("History/Findings HTML");
-        if( !$historyDestinationFormNodeByName ) {
+        $historyDestinationFormNode = $this->getDestinationFormNodeByName("History/Findings HTML");
+        if( !$historyDestinationFormNode ) {
             exit("Error: no destination form node History/Findings HTML");
         }
-        $impressionDestinationFormNodeByName = $this->getDestinationFormNodeByName("Impression/Outcome HTML");
-        if( !$impressionDestinationFormNodeByName ) {
-            //exit("Error: no destination form node Impression/Outcome HTML");
+        $historyDestinationFormNodeId = $historyDestinationFormNode->getId();
+
+        $impressionDestinationFormNode = $this->getDestinationFormNodeByName("Impression/Outcome HTML");
+        if( !$impressionDestinationFormNode ) {
+            exit("Error: no destination form node Impression/Outcome HTML");
         }
+        $impressionDestinationFormNodeId = $impressionDestinationFormNode->getId();
 
         //$formNodeHtml = $em->getRepository('OlegUserdirectoryBundle:ObjectTypeText')->findAll();
 
@@ -439,7 +442,7 @@ class DefaultController extends Controller
         //$dql->leftJoin("parent.parent", "grandParent");
         //$dql->where("list.level = 4 AND objectType.id = ".$objectTypeText->getId()." AND parent.level = 3 AND grandParent.name = 'Pathology Call Log Entry'");
         //$dql->andWhere("list.name = 'History/Findings' OR list.name = 'Impression/Outcome'");
-        $dql->where("formNode.id = " . $historySourceFormNodeByName->getId() . " OR formNode.id = " . $impressionSourceFormNodeByName->getId());
+        $dql->where("formNode.id = " . $historySourceFormNode->getId() . " OR formNode.id = " . $impressionSourceFormNode->getId());
         //$dql->orderBy('list.arraySectionIndex','DESC');
         //$dql->addOrderBy('list.orderinlist', 'ASC');
         $query = $em->createQuery($dql);
@@ -459,7 +462,7 @@ class DefaultController extends Controller
 //            }
 
             //create a new ObjectTypeText Html
-            echo "Copy this textObject: ".$textObject."<br>";
+            //echo "Copy this textObject: ".$textObject."<br>";
 
             $creator = $textObject->getCreator();
             $createDate = $textObject->getCreatedate();
@@ -488,6 +491,12 @@ class DefaultController extends Controller
 
             $arraySectionId = $textObject->getArraySectionId();
             $arraySectionIndex = $textObject->getArraySectionIndex();
+
+            $existingHtmlText = $this->findExistingTextHtmlByName($formNode,$formValue,$historyDestinationFormNodeId,$impressionDestinationFormNodeId,$entityNamespace,$entityName,$entityId);
+            if( $existingHtmlText ) {
+                echo "Skipped: Text HTML already exists value=[$formValue], existingHtml=[$existingHtmlText]<br>";
+                continue;
+            }
 
             //Create new text object
             $textHtmlObject = new ObjectTypeText();
@@ -528,23 +537,25 @@ class DefaultController extends Controller
             //$textHtmlObject->setFormNode($formNodeHtml);
 
             if( $formNode->getName() == 'History/Findings' ) {
-                if( $historyDestinationFormNodeByName ) {
-                    $textHtmlObject->setFormNode($historyDestinationFormNodeByName);
+                if( $historyDestinationFormNode ) {
+                    $textHtmlObject->setFormNode($historyDestinationFormNode);
+                    echo "Copy History/Findings html text [$formValue] to formnode [$historyDestinationFormNode] <br>";
                 } else {
                     echo "Skip historyDestinationFormNodeByName not found <br>";
                     continue;
                 }
             }
             if( $formNode->getName() == 'Impression/Outcome' ) {
-                if( $impressionDestinationFormNodeByName ) {
-                    $textHtmlObject->setFormNode($impressionDestinationFormNodeByName);
+                if( $impressionDestinationFormNode ) {
+                    $textHtmlObject->setFormNode($impressionDestinationFormNode);
+                    echo "Copy Impression/Outcome html text [$formValue] to formnode [$impressionDestinationFormNode] <br>";
                 } else {
                     echo "Skip impressionDestinationFormNodeByName not found <br>";
                     continue;
                 }
             }
             
-            echo "textHtmlObject: Namespace=" . $textHtmlObject->getEntityNamespace() . ", Name=" . $textHtmlObject->getEntityName() . ", Value=" . $textHtmlObject->getValue() . "<br>";
+            //echo "textHtmlObject: Namespace=" . $textHtmlObject->getEntityNamespace() . ", Name=" . $textHtmlObject->getEntityName() . ", Value=" . $textHtmlObject->getValue() . "<br>";
             $count++;
 
             //$em->persist($textHtmlObject);
@@ -552,6 +563,40 @@ class DefaultController extends Controller
         }
 
         exit("Processed $count text objects");
+    }
+    public function findExistingTextHtmlByName($formNode,$formValue,$historyDestinationFormNodeId,$impressionDestinationFormNodeId,$entityNamespace,$entityName,$entityId) {
+
+        //return false; //testing
+
+        $em = $this->getDoctrine()->getManager();
+
+        $repository = $em->getRepository('OlegUserdirectoryBundle:ObjectTypeText');
+        $dql = $repository->createQueryBuilder("list");;
+        $dql->select('list');
+        $dql->leftJoin("list.formNode", "formNode");
+
+        if( $formNode->getName() == 'History/Findings' ) {
+            $dql->where("formNode.id = " . $historyDestinationFormNodeId);
+        }
+        if( $formNode->getName() == 'Impression/Outcome' ) {
+            $dql->where("formNode.id = " . $impressionDestinationFormNodeId);
+        }
+
+        //$dql->andWhere("list.value = '$formValue'");
+
+        $dql->andWhere("list.entityNamespace = '$entityNamespace' AND list.entityName = '$entityName' AND list.entityId = '$entityId'");
+
+        $query = $em->createQuery($dql);
+        $destinationTextObjects = $query->getResult();
+        //echo "Existing destinationTextObjects count=".count($destinationTextObjects)."<br>";
+
+        //exit("eof");
+
+        if( count($destinationTextObjects) > 0 ) {
+            return $destinationTextObjects[0]->getValue();
+        }
+
+        return false;
     }
     //$name - "History/Findings", "Impression/Outcome"
     public function getSourceFormNodeByName($name) {
