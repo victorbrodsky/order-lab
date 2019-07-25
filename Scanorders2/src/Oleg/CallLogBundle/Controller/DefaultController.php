@@ -454,6 +454,9 @@ class DefaultController extends Controller
         $totalCounter = 0;
         $counter = 0;
 
+        $batchSize = 20;
+        $i = 0;
+
         foreach($sourceTextObjects as $textObject) {
 
             //check if parent is section (level = 3)
@@ -582,8 +585,15 @@ class DefaultController extends Controller
                     }
                 }
 
-                $em->persist($textHtmlObject);
-                $em->flush(); //testing
+                //$em->persist($textHtmlObject);
+                //$em->flush(); //testing
+
+                if (($i % $batchSize) === 0) {
+                    $em->persist($textHtmlObject);
+                    $em->flush(); // Executes all updates.
+                    //$em->clear(); // Detaches all objects from Doctrine!
+                }
+                ++$i;
 
                 //EventLog
                 //$eventType = "Call Log Book Entry Updated";
@@ -597,6 +607,8 @@ class DefaultController extends Controller
             }
 
         }//foreach
+
+        $em->flush();
 
         exit("Processed $counter text objects");
     }
