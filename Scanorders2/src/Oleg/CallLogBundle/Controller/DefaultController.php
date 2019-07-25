@@ -402,7 +402,7 @@ class DefaultController extends Controller
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
-        set_time_limit(900); //600 seconds => 10 mins; 900=15min; 1800=30 min
+        set_time_limit(120); //600 seconds => 10 mins; 900=15min; 1800=30 min
 
         $em = $this->getDoctrine()->getManager();
         $formNodeUtil = $this->get('user_formnode_utility');
@@ -598,7 +598,7 @@ class DefaultController extends Controller
 
                 if (($i % $batchSize) === 0) {
                     $em->flush(); // Executes all updates.
-                    //$em->clear(); // Detaches all objects from Doctrine!
+                    $em->clear(); // Detaches all objects from Doctrine!
                 }
                 ++$i;
 
