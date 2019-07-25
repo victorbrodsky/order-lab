@@ -402,6 +402,8 @@ class DefaultController extends Controller
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
+        set_time_limit(600); //600 seconds => 10 mins
+
         $em = $this->getDoctrine()->getManager();
         $formNodeUtil = $this->get('user_formnode_utility');
         $userSecUtil = $this->get('user_security_utility');
@@ -561,25 +563,31 @@ class DefaultController extends Controller
             //echo "textHtmlObject: Namespace=" . $textHtmlObject->getEntityNamespace() . ", Name=" . $textHtmlObject->getEntityName() . ", Value=" . $textHtmlObject->getValue() . "<br>";
             $counter++;
 
-            if(1) {
+            //$testing = true;
+            $testing = false;
+            if( $testing ) {
 
-                $message = null;
-                if( $entityId ) {
-                    $message = $em->getRepository('OlegOrderformBundle:Message')->find($entityId);
-                    if (!$message) {
-                        throw new \Exception("Message is not found by id " . $entityId);
+                //$updateCache = false;
+                $updateCache = true;
+                if( $updateCache ) {
+                    $message = null;
+                    if ($entityId) {
+                        $message = $em->getRepository('OlegOrderformBundle:Message')->find($entityId);
+                        if (!$message) {
+                            throw new \Exception("Message is not found by id " . $entityId);
+                        }
+                        //Save fields as cache in the field $formnodesCache ($holderEntity->setFormnodesCache($text))
+                        $testing = false;
+                        $formNodeUtil->updateFieldsCache($message, $testing);
                     }
-                    //Save fields as cache in the field $formnodesCache ($holderEntity->setFormnodesCache($text))
-                    $testing = false;
-                    $formNodeUtil->updateFieldsCache($message, $testing);
                 }
 
                 $em->persist($textHtmlObject);
                 $em->flush(); //testing
 
                 //EventLog
-                $eventType = "Call Log Book Entry Updated";
-                $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $msgLog, $user, $message, $request, $eventType);
+                //$eventType = "Call Log Book Entry Updated";
+                //$userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $msgLog, $user, $message, $request, $eventType);
             }
 
             echo $msgLog . "<br>";
