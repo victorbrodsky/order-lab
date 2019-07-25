@@ -449,11 +449,11 @@ class DefaultController extends Controller
         //$dql->addOrderBy('list.orderinlist', 'ASC');
         $query = $em->createQuery($dql);
 
-        //$sourceTextObjects = $query->getResult();
-        //echo "SourceTextObjects count=".count($sourceTextObjects)."<br>";
+        $sourceTextObjects = $query->getResult();
+        echo "SourceTextObjects count=".count($sourceTextObjects)."<br>";
 
-        $iterableResult = $query->iterate();
-        echo "iterableResult count=".count($iterableResult)."<br>";
+       //$iterableResult = $query->iterate();
+       // echo "iterableResult count=".count($iterableResult)."<br>";
 
 
         $totalCounter = 0;
@@ -462,9 +462,9 @@ class DefaultController extends Controller
         $batchSize = 20;
         $i = 0;
 
-        //foreach($sourceTextObjects as $textObject) {
-        foreach($iterableResult as $row) {
-            $textObject = $row[0];
+        foreach($sourceTextObjects as $textObject) {
+        //foreach($iterableResult as $row) {
+            //$textObject = $row[0];
 
 
             //check if parent is section (level = 3)
@@ -594,14 +594,14 @@ class DefaultController extends Controller
                 }
 
                 $em->persist($textHtmlObject);
-                $em->flush();
+                //$em->flush();
                 //$em->clear();
 
-//                if (($i % $batchSize) === 0) {
-//                    $em->flush(); // Executes all updates.
-//                    $em->clear(); // Detaches all objects from Doctrine!
-//                }
-//                ++$i;
+                if (($i % $batchSize) === 0) {
+                    $em->flush(); // Executes all updates.
+                    //$em->clear(); // Detaches all objects from Doctrine!
+                }
+                ++$i;
 
                 //EventLog
                 //$eventType = "Call Log Book Entry Updated";
