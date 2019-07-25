@@ -2562,6 +2562,7 @@ class FormNodeUtil
             return false;
         }
         //disabled: not on new, yes on view/edit
+        //TODO: do not show on new, view, edit?
         if( $formNodeType == 'disabled' ) {
             if( $cycle == "new" ) {
                 return false;
