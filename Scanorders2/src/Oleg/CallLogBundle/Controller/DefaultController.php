@@ -565,7 +565,7 @@ class DefaultController extends Controller
 
             //$testing = true;
             $testing = false;
-            if( $testing ) {
+            if( !$testing ) {
 
                 //$updateCache = false;
                 $updateCache = true;
@@ -592,8 +592,8 @@ class DefaultController extends Controller
 
             echo $msgLog . "<br>";
 
-            if( $totalCounter > 500 ) {
-                exit("Break processing $totalCounter text objects");
+            if( $totalCounter > 1000 ) {
+                //exit("Break processing $totalCounter text objects");
             }
 
         }//foreach
