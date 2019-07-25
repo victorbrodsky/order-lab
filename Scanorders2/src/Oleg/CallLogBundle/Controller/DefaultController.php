@@ -595,7 +595,7 @@ class DefaultController extends Controller
 
                 $em->persist($textHtmlObject);
                 $em->flush();
-                $em->clear();
+                //$em->clear();
 
 //                if (($i % $batchSize) === 0) {
 //                    $em->flush(); // Executes all updates.
