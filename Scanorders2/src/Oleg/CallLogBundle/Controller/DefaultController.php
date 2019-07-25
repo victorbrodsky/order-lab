@@ -602,8 +602,9 @@ class DefaultController extends Controller
 
             echo $msgLog . "<br>";
 
-            if( $totalCounter > 1000 ) {
-                //exit("Break processing $totalCounter text objects");
+            if( $counter > 10 ) {
+                $em->flush(); //testing
+                exit("Break processing $totalCounter text objects");
             }
 
         }//foreach
