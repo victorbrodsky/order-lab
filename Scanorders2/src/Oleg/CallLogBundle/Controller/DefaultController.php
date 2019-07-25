@@ -594,13 +594,14 @@ class DefaultController extends Controller
                 }
 
                 $em->persist($textHtmlObject);
-                //$em->flush(); //testing
+                $em->flush();
+                $em->clear();
 
-                if (($i % $batchSize) === 0) {
-                    $em->flush(); // Executes all updates.
-                    $em->clear(); // Detaches all objects from Doctrine!
-                }
-                ++$i;
+//                if (($i % $batchSize) === 0) {
+//                    $em->flush(); // Executes all updates.
+//                    $em->clear(); // Detaches all objects from Doctrine!
+//                }
+//                ++$i;
 
                 //EventLog
                 //$eventType = "Call Log Book Entry Updated";
