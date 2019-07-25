@@ -448,7 +448,10 @@ class DefaultController extends Controller
         //$dql->orderBy('list.arraySectionIndex','DESC');
         //$dql->addOrderBy('list.orderinlist', 'ASC');
         $query = $em->createQuery($dql);
+
         $sourceTextObjects = $query->getResult();
+        //$iterableResult = $query->iterate();
+
         echo "SourceTextObjects count=".count($sourceTextObjects)."<br>";
 
         $totalCounter = 0;
@@ -585,11 +588,10 @@ class DefaultController extends Controller
                     }
                 }
 
-                //$em->persist($textHtmlObject);
+                $em->persist($textHtmlObject);
                 //$em->flush(); //testing
 
                 if (($i % $batchSize) === 0) {
-                    $em->persist($textHtmlObject);
                     $em->flush(); // Executes all updates.
                     //$em->clear(); // Detaches all objects from Doctrine!
                 }
