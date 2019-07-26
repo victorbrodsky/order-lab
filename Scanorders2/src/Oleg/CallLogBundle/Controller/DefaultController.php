@@ -402,7 +402,7 @@ class DefaultController extends Controller
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
-        set_time_limit(1800); //600 seconds => 10 mins; 900=15min; 1800=30 min
+        set_time_limit(300); //600 seconds => 10 mins; 900=15min; 1800=30 min
 
         $em = $this->getDoctrine()->getManager();
         $formNodeUtil = $this->get('user_formnode_utility');
@@ -611,7 +611,7 @@ class DefaultController extends Controller
 
             echo $msgLog . "<br>";
 
-            if( $processedCounter > 10 ) {
+            if( $processedCounter > 100 ) {
                 $em->flush(); //testing
                 $em->clear();
                 exit("Break processing $totalCounter text objects");
