@@ -457,7 +457,7 @@ class DefaultController extends Controller
 
 
         $totalCounter = 0;
-        $counter = 0;
+        $processedCounter = 0;
 
         $batchSize = 20;
         $i = 0;
@@ -555,7 +555,7 @@ class DefaultController extends Controller
             if( $formNode->getName() == 'History/Findings' ) {
                 if( $historyDestinationFormNode ) {
                     $textHtmlObject->setFormNode($historyDestinationFormNode);
-                    $msgLog = $counter.": ".$entityId."(".$entityName."): Copy History/Findings html text [$formValue] to formnode [$historyDestinationFormNode]";
+                    $msgLog = $processedCounter.": ".$entityId."(".$entityName."): Copy History/Findings html text [$formValue] to formnode [$historyDestinationFormNode]";
                 } else {
                     echo $totalCounter.": Skip historyDestinationFormNodeByName not found <br>";
                     continue;
@@ -564,7 +564,7 @@ class DefaultController extends Controller
             if( $formNode->getName() == 'Impression/Outcome' ) {
                 if( $impressionDestinationFormNode ) {
                     $textHtmlObject->setFormNode($impressionDestinationFormNode);
-                    $msgLog = $counter.": ".$entityId."(".$entityName."): Copy Impression/Outcome html text [$formValue] to formnode [$impressionDestinationFormNode]";
+                    $msgLog = $processedCounter.": ".$entityId."(".$entityName."): Copy Impression/Outcome html text [$formValue] to formnode [$impressionDestinationFormNode]";
                 } else {
                     echo $totalCounter.": Skip impressionDestinationFormNodeByName not found <br>";
                     continue;
@@ -572,7 +572,7 @@ class DefaultController extends Controller
             }
             
             //echo "textHtmlObject: Namespace=" . $textHtmlObject->getEntityNamespace() . ", Name=" . $textHtmlObject->getEntityName() . ", Value=" . $textHtmlObject->getValue() . "<br>";
-            $counter++;
+            $processedCounter++;
 
             //$testing = true;
             $testing = false;
@@ -610,7 +610,7 @@ class DefaultController extends Controller
 
             echo $msgLog . "<br>";
 
-            if( $counter > 300 ) {
+            if( $processedCounter > 1000 ) {
                 $em->flush(); //testing
                 $em->clear();
                 exit("Break processing $totalCounter text objects");
@@ -621,7 +621,7 @@ class DefaultController extends Controller
         $em->flush();
         $em->clear();
 
-        exit("Processed $counter text objects");
+        exit("Processed $processedCounter text objects");
     }
     public function findExistingTextHtmlByName($formNode,$formValue,$historyDestinationFormNodeId,$impressionDestinationFormNodeId,$entityNamespace,$entityName,$entityId) {
 
