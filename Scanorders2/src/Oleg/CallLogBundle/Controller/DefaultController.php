@@ -394,6 +394,8 @@ class DefaultController extends Controller
 
 
     /**
+     * 127.0.0.1/order/call-log-book/update-text-html
+     *
      * @Route("/update-text-html", name="calllog_update_text_html")
      */
     public function updateTextHtmlAction(Request $request)
@@ -402,312 +404,314 @@ class DefaultController extends Controller
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
-        set_time_limit(300); //600 seconds => 10 mins; 900=15min; 1800=30 min
+        $calllogUtil = $this->get('calllog_util');
+        $res = $calllogUtil->updateTextHtml();
 
-        $em = $this->getDoctrine()->getManager();
-        $formNodeUtil = $this->get('user_formnode_utility');
-        $userSecUtil = $this->get('user_security_utility');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        exit("EOF updateTextHtmlAction. Res=".$res);
 
-        //$objectTypeText = $formNodeUtil->getObjectTypeByName('Form Field - Free Text, HTML');
-
-        $historySourceFormNode = $this->getSourceFormNodeByName("History/Findings");
-        if( !$historySourceFormNode ) {
-            exit("Error: no source form node History/Findings");
-        }
-        $impressionSourceFormNode = $this->getSourceFormNodeByName("Impression/Outcome");
-        if( !$impressionSourceFormNode ) {
-            exit("Error: no source form node Impression/Outcome");
-        }
-
-        $historyDestinationFormNode = $this->getDestinationFormNodeByName("History/Findings HTML");
-        if( !$historyDestinationFormNode ) {
-            exit("Error: no destination form node History/Findings HTML");
-        }
-        $historyDestinationFormNodeId = $historyDestinationFormNode->getId();
-
-        $impressionDestinationFormNode = $this->getDestinationFormNodeByName("Impression/Outcome HTML");
-        if( !$impressionDestinationFormNode ) {
-            exit("Error: no destination form node Impression/Outcome HTML");
-        }
-        $impressionDestinationFormNodeId = $impressionDestinationFormNode->getId();
-
-        //$formNodeHtml = $em->getRepository('OlegUserdirectoryBundle:ObjectTypeText')->findAll();
-
-        //$sourceTextObjects = $em->getRepository('OlegUserdirectoryBundle:FormNode')->findOneByName("History/Findings");
-        $repository = $em->getRepository('OlegUserdirectoryBundle:ObjectTypeText');
-        $dql = $repository->createQueryBuilder("list");;
-        $dql->select('list');
-        $dql->leftJoin("list.formNode", "formNode");
-        //$dql->leftJoin("list.objectType", "objectType");
-        //$dql->leftJoin("list.parent", "parent");
-        //$dql->leftJoin("parent.parent", "grandParent");
-        //$dql->where("list.level = 4 AND objectType.id = ".$objectTypeText->getId()." AND parent.level = 3 AND grandParent.name = 'Pathology Call Log Entry'");
-        //$dql->andWhere("list.name = 'History/Findings' OR list.name = 'Impression/Outcome'");
-        $dql->where("formNode.id = " . $historySourceFormNode->getId() . " OR formNode.id = " . $impressionSourceFormNode->getId());
-        //$dql->orderBy('list.arraySectionIndex','DESC');
-        //$dql->addOrderBy('list.orderinlist', 'ASC');
-        $query = $em->createQuery($dql);
-
-        $sourceTextObjects = $query->getResult();
-        echo "Searching text objects by formnode ID ".$historySourceFormNode->getId()." and ".$impressionSourceFormNode->getId()."<br>";
-        echo "SourceTextObjects count=".count($sourceTextObjects)."<br>";
-
-       //$iterableResult = $query->iterate();
-       // echo "iterableResult count=".count($iterableResult)."<br>";
-
-
-        $totalCounter = 0;
-        $processedCounter = 0;
-
-        $batchSize = 20;
-        $i = 0;
-
-        foreach($sourceTextObjects as $textObject) {
-        //foreach($iterableResult as $row) {
-            //$textObject = $row[0];
-
-
-            //check if parent is section (level = 3)
-//            if( $textObject->getParent() && $textObject->getParent()->getLevel() == 3 ) {
-//                //ok
-//            } else {
-//                echo "Skip this textObject: ".$textObject."<br>";
+//        //$em = $this->getDoctrine()->getManager();
+//        //$userSecUtil = $this->get('user_security_utility');
+//        //$user = $this->get('security.token_storage')->getToken()->getUser();
+//
+//        //$objectTypeText = $formNodeUtil->getObjectTypeByName('Form Field - Free Text, HTML');
+//
+//        $historySourceFormNode = $this->getSourceFormNodeByName("History/Findings");
+//        if( !$historySourceFormNode ) {
+//            exit("Error: no source form node History/Findings");
+//        }
+//        $impressionSourceFormNode = $this->getSourceFormNodeByName("Impression/Outcome");
+//        if( !$impressionSourceFormNode ) {
+//            exit("Error: no source form node Impression/Outcome");
+//        }
+//
+//        $historyDestinationFormNode = $this->getDestinationFormNodeByName("History/Findings HTML");
+//        if( !$historyDestinationFormNode ) {
+//            exit("Error: no destination form node History/Findings HTML");
+//        }
+//        $historyDestinationFormNodeId = $historyDestinationFormNode->getId();
+//
+//        $impressionDestinationFormNode = $this->getDestinationFormNodeByName("Impression/Outcome HTML");
+//        if( !$impressionDestinationFormNode ) {
+//            exit("Error: no destination form node Impression/Outcome HTML");
+//        }
+//        $impressionDestinationFormNodeId = $impressionDestinationFormNode->getId();
+//
+//        //$formNodeHtml = $em->getRepository('OlegUserdirectoryBundle:ObjectTypeText')->findAll();
+//
+//        //$sourceTextObjects = $em->getRepository('OlegUserdirectoryBundle:FormNode')->findOneByName("History/Findings");
+//        $repository = $em->getRepository('OlegUserdirectoryBundle:ObjectTypeText');
+//        $dql = $repository->createQueryBuilder("list");;
+//        $dql->select('list');
+//        $dql->leftJoin("list.formNode", "formNode");
+//        //$dql->leftJoin("list.objectType", "objectType");
+//        //$dql->leftJoin("list.parent", "parent");
+//        //$dql->leftJoin("parent.parent", "grandParent");
+//        //$dql->where("list.level = 4 AND objectType.id = ".$objectTypeText->getId()." AND parent.level = 3 AND grandParent.name = 'Pathology Call Log Entry'");
+//        //$dql->andWhere("list.name = 'History/Findings' OR list.name = 'Impression/Outcome'");
+//        $dql->where("formNode.id = " . $historySourceFormNode->getId() . " OR formNode.id = " . $impressionSourceFormNode->getId());
+//        //$dql->orderBy('list.arraySectionIndex','DESC');
+//        //$dql->addOrderBy('list.orderinlist', 'ASC');
+//        $query = $em->createQuery($dql);
+//
+//        $sourceTextObjects = $query->getResult();
+//        echo "Searching text objects by formnode ID ".$historySourceFormNode->getId()." and ".$impressionSourceFormNode->getId()."<br>";
+//        echo "SourceTextObjects count=".count($sourceTextObjects)."<br>";
+//
+//       //$iterableResult = $query->iterate();
+//       // echo "iterableResult count=".count($iterableResult)."<br>";
+//
+//
+//        $totalCounter = 0;
+//        $processedCounter = 0;
+//
+//        $batchSize = 20;
+//        $i = 0;
+//
+//        foreach($sourceTextObjects as $textObject) {
+//        //foreach($iterableResult as $row) {
+//            //$textObject = $row[0];
+//
+//
+//            //check if parent is section (level = 3)
+////            if( $textObject->getParent() && $textObject->getParent()->getLevel() == 3 ) {
+////                //ok
+////            } else {
+////                echo "Skip this textObject: ".$textObject."<br>";
+////                continue;
+////            }
+//
+//            //create a new ObjectTypeText Html
+//            //echo "Copy this textObject: ".$textObject."<br>";
+//
+//            $totalCounter++;
+//
+//            $creator = $textObject->getCreator();
+//            $createDate = $textObject->getCreatedate();
+//
+//            $updatedby = $textObject->getUpdatedby();
+//            $updatedon = $textObject->getUpdatedon();
+//
+//            $name = $textObject->getName();
+//            $abbreviation = $textObject->getAbbreviation();
+//            $shortName = $textObject->getShortname();
+//            $description = $textObject->getDescription();
+//            $type = $textObject->getType();
+//
+//            $updateAuthorRoles = $textObject->getUpdateAuthorRoles();
+//            $fulltitle = $textObject->getFulltitle();
+//            $linkToListId = $textObject->getLinkToListId();
+//
+//            $version = $textObject->getVersion();
+//
+//            $formValue = $textObject->getValue();
+//            $formNode = $textObject->getFormNode();
+//
+//            $entityNamespace = $textObject->getEntityNamespace();
+//            $entityName = $textObject->getEntityName();
+//            $entityId = $textObject->getEntityId();
+//
+//            $arraySectionId = $textObject->getArraySectionId();
+//            $arraySectionIndex = $textObject->getArraySectionIndex();
+//
+//            $existingHtmlText = $this->findExistingTextHtmlByName($formNode,$formValue,$historyDestinationFormNodeId,$impressionDestinationFormNodeId,$entityNamespace,$entityName,$entityId);
+//            if( $existingHtmlText ) {
+//                echo $totalCounter.": Skipped (".$formNode->getName()."): Text HTML already exists value=[$formValue], existingHtml=[$existingHtmlText]<br>";
 //                continue;
 //            }
-
-            //create a new ObjectTypeText Html
-            //echo "Copy this textObject: ".$textObject."<br>";
-
-            $totalCounter++;
-
-            $creator = $textObject->getCreator();
-            $createDate = $textObject->getCreatedate();
-
-            $updatedby = $textObject->getUpdatedby();
-            $updatedon = $textObject->getUpdatedon();
-
-            $name = $textObject->getName();
-            $abbreviation = $textObject->getAbbreviation();
-            $shortName = $textObject->getShortname();
-            $description = $textObject->getDescription();
-            $type = $textObject->getType();
-
-            $updateAuthorRoles = $textObject->getUpdateAuthorRoles();
-            $fulltitle = $textObject->getFulltitle();
-            $linkToListId = $textObject->getLinkToListId();
-
-            $version = $textObject->getVersion();
-
-            $formValue = $textObject->getValue();
-            $formNode = $textObject->getFormNode();
-
-            $entityNamespace = $textObject->getEntityNamespace();
-            $entityName = $textObject->getEntityName();
-            $entityId = $textObject->getEntityId();
-
-            $arraySectionId = $textObject->getArraySectionId();
-            $arraySectionIndex = $textObject->getArraySectionIndex();
-
-            $existingHtmlText = $this->findExistingTextHtmlByName($formNode,$formValue,$historyDestinationFormNodeId,$impressionDestinationFormNodeId,$entityNamespace,$entityName,$entityId);
-            if( $existingHtmlText ) {
-                echo $totalCounter.": Skipped (".$formNode->getName()."): Text HTML already exists value=[$formValue], existingHtml=[$existingHtmlText]<br>";
-                continue;
-            }
-
-            //Create new text object
-            $textHtmlObject = new ObjectTypeText();
-
-            $count = null;
-            $userSecUtil->setDefaultList($textHtmlObject,$count,$creator,$name);
-
-            //Set list parameters
-            $textHtmlObject->setCreatedate($createDate);
-            $textHtmlObject->setUpdatedby($updatedby);
-            $textHtmlObject->setUpdatedon($updatedon);
-            $textHtmlObject->setAbbreviation($abbreviation);
-            $textHtmlObject->setShortname($shortName);
-            $textHtmlObject->setDescription($description);
-            $textHtmlObject->setType($type);
-            $textHtmlObject->setFulltitle($fulltitle);
-
-            $textHtmlObject->setFulltitle($fulltitle);
-            $textHtmlObject->setLinkToListId($linkToListId);
-            $textHtmlObject->setVersion($version);
-            $textHtmlObject->setFulltitle($fulltitle);
-            $textHtmlObject->setFulltitle($fulltitle);
-            $textHtmlObject->setUpdateAuthorRoles($updateAuthorRoles);
-
-            //Set ObjectTypeReceivingBase parameters
-            $textHtmlObject->setArraySectionId($arraySectionId);
-            $textHtmlObject->setArraySectionIndex($arraySectionIndex);
-
-            //3) set message by entityName to the created list
-            //$textHtmlObject->setObject($holderEntity);
-            $textHtmlObject->setEntityNamespace($entityNamespace);
-            $textHtmlObject->setEntityName($entityName);
-            $textHtmlObject->setEntityId($entityId);
-
-            $textHtmlObject->setValue($formValue);
-
-            //4) set formnode to the list ("History/Findings" -> )
-            //$textHtmlObject->setFormNode($formNodeHtml);
-
-            if( $formNode->getName() == 'History/Findings' ) {
-                if( $historyDestinationFormNode ) {
-                    $textHtmlObject->setFormNode($historyDestinationFormNode);
-                    $msgLog = $processedCounter.": ".$entityId."(".$entityName."): Copy History/Findings html text [$formValue] to formnode [$historyDestinationFormNode]";
-                } else {
-                    echo $totalCounter.": Skip historyDestinationFormNodeByName not found <br>";
-                    continue;
-                }
-            }
-            if( $formNode->getName() == 'Impression/Outcome' ) {
-                if( $impressionDestinationFormNode ) {
-                    $textHtmlObject->setFormNode($impressionDestinationFormNode);
-                    $msgLog = $processedCounter.": ".$entityId."(".$entityName."): Copy Impression/Outcome html text [$formValue] to formnode [$impressionDestinationFormNode]";
-                } else {
-                    echo $totalCounter.": Skip impressionDestinationFormNodeByName not found <br>";
-                    continue;
-                }
-            }
-            
-            //echo "textHtmlObject: Namespace=" . $textHtmlObject->getEntityNamespace() . ", Name=" . $textHtmlObject->getEntityName() . ", Value=" . $textHtmlObject->getValue() . "<br>";
-            $processedCounter++;
-
-            //$testing = true;
-            $testing = false;
-            if( !$testing ) {
-
-                //$updateCache = false;
-                $updateCache = true;
-                if( $updateCache ) {
-                    $message = null;
-                    if ($entityId) {
-                        $message = $em->getRepository('OlegOrderformBundle:Message')->find($entityId);
-                        if (!$message) {
-                            throw new \Exception("Message is not found by id " . $entityId);
-                        }
-                        //Save fields as cache in the field $formnodesCache ($holderEntity->setFormnodesCache($text))
-                        $testing = false;
-                        $formNodeUtil->updateFieldsCache($message, $testing);
-                    }
-                }
-
-                $em->persist($textHtmlObject);
-                //$em->flush();
-                //$em->clear();
-
-                if (($i % $batchSize) === 0) {
-                    $em->flush(); // Executes all updates.
-                    //$em->clear(); // Detaches all objects from Doctrine!
-                }
-                ++$i;
-
-                //EventLog
-                //$eventType = "Call Log Book Entry Updated";
-                //$userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $msgLog, $user, $message, $request, $eventType);
-            }
-
-            echo $msgLog . "<br>";
-
-            if( $processedCounter > 100 ) {
-                $em->flush(); //testing
-                $em->clear();
-                exit("Break processing $totalCounter text objects");
-            }
-
-        }//foreach
-
-        $em->flush();
-        $em->clear();
-
-        exit("Processed $processedCounter text objects");
+//
+//            //Create new text object
+//            $textHtmlObject = new ObjectTypeText();
+//
+//            $count = null;
+//            $userSecUtil->setDefaultList($textHtmlObject,$count,$creator,$name);
+//
+//            //Set list parameters
+//            $textHtmlObject->setCreatedate($createDate);
+//            $textHtmlObject->setUpdatedby($updatedby);
+//            $textHtmlObject->setUpdatedon($updatedon);
+//            $textHtmlObject->setAbbreviation($abbreviation);
+//            $textHtmlObject->setShortname($shortName);
+//            $textHtmlObject->setDescription($description);
+//            $textHtmlObject->setType($type);
+//            $textHtmlObject->setFulltitle($fulltitle);
+//
+//            $textHtmlObject->setFulltitle($fulltitle);
+//            $textHtmlObject->setLinkToListId($linkToListId);
+//            $textHtmlObject->setVersion($version);
+//            $textHtmlObject->setFulltitle($fulltitle);
+//            $textHtmlObject->setFulltitle($fulltitle);
+//            $textHtmlObject->setUpdateAuthorRoles($updateAuthorRoles);
+//
+//            //Set ObjectTypeReceivingBase parameters
+//            $textHtmlObject->setArraySectionId($arraySectionId);
+//            $textHtmlObject->setArraySectionIndex($arraySectionIndex);
+//
+//            //3) set message by entityName to the created list
+//            //$textHtmlObject->setObject($holderEntity);
+//            $textHtmlObject->setEntityNamespace($entityNamespace);
+//            $textHtmlObject->setEntityName($entityName);
+//            $textHtmlObject->setEntityId($entityId);
+//
+//            $textHtmlObject->setValue($formValue);
+//
+//            //4) set formnode to the list ("History/Findings" -> )
+//            //$textHtmlObject->setFormNode($formNodeHtml);
+//
+//            if( $formNode->getName() == 'History/Findings' ) {
+//                if( $historyDestinationFormNode ) {
+//                    $textHtmlObject->setFormNode($historyDestinationFormNode);
+//                    $msgLog = $processedCounter.": ".$entityId."(".$entityName."): Copy History/Findings html text [$formValue] to formnode [$historyDestinationFormNode]";
+//                } else {
+//                    echo $totalCounter.": Skip historyDestinationFormNodeByName not found <br>";
+//                    continue;
+//                }
+//            }
+//            if( $formNode->getName() == 'Impression/Outcome' ) {
+//                if( $impressionDestinationFormNode ) {
+//                    $textHtmlObject->setFormNode($impressionDestinationFormNode);
+//                    $msgLog = $processedCounter.": ".$entityId."(".$entityName."): Copy Impression/Outcome html text [$formValue] to formnode [$impressionDestinationFormNode]";
+//                } else {
+//                    echo $totalCounter.": Skip impressionDestinationFormNodeByName not found <br>";
+//                    continue;
+//                }
+//            }
+//
+//            //echo "textHtmlObject: Namespace=" . $textHtmlObject->getEntityNamespace() . ", Name=" . $textHtmlObject->getEntityName() . ", Value=" . $textHtmlObject->getValue() . "<br>";
+//            $processedCounter++;
+//
+//            //$testing = true;
+//            $testing = false;
+//            if( !$testing ) {
+//
+//                //$updateCache = false;
+//                $updateCache = true;
+//                if( $updateCache ) {
+//                    $message = null;
+//                    if ($entityId) {
+//                        $message = $em->getRepository('OlegOrderformBundle:Message')->find($entityId);
+//                        if (!$message) {
+//                            throw new \Exception("Message is not found by id " . $entityId);
+//                        }
+//                        //Save fields as cache in the field $formnodesCache ($holderEntity->setFormnodesCache($text))
+//                        $testing = false;
+//                        $formNodeUtil->updateFieldsCache($message, $testing);
+//                    }
+//                }
+//
+//                $em->persist($textHtmlObject);
+//                //$em->flush();
+//                //$em->clear();
+//
+//                if (($i % $batchSize) === 0) {
+//                    $em->flush(); // Executes all updates.
+//                    //$em->clear(); // Detaches all objects from Doctrine!
+//                }
+//                ++$i;
+//
+//                //EventLog
+//                //$eventType = "Call Log Book Entry Updated";
+//                //$userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $msgLog, $user, $message, $request, $eventType);
+//            }
+//
+//            echo $msgLog . "<br>";
+//
+//            if( $processedCounter > 100 ) {
+//                $em->flush(); //testing
+//                $em->clear();
+//                exit("Break processing $totalCounter text objects");
+//            }
+//
+//        }//foreach
+//
+//        $em->flush();
+//        $em->clear();
+//
+//        exit("Processed $processedCounter text objects");
     }
-    public function findExistingTextHtmlByName($formNode,$formValue,$historyDestinationFormNodeId,$impressionDestinationFormNodeId,$entityNamespace,$entityName,$entityId) {
-
-        //return false; //testing
-
-        $em = $this->getDoctrine()->getManager();
-
-        $repository = $em->getRepository('OlegUserdirectoryBundle:ObjectTypeText');
-        $dql = $repository->createQueryBuilder("list");;
-        $dql->select('list');
-        $dql->leftJoin("list.formNode", "formNode");
-
-        if( $formNode->getName() == 'History/Findings' ) {
-            $dql->where("formNode.id = " . $historyDestinationFormNodeId);
-        }
-        if( $formNode->getName() == 'Impression/Outcome' ) {
-            $dql->where("formNode.id = " . $impressionDestinationFormNodeId);
-        }
-
-        //$dql->andWhere("list.value = '$formValue'");
-        $dql->andWhere("list.value IS NOT NULL");
-
-        $dql->andWhere("list.entityNamespace = '$entityNamespace' AND list.entityName = '$entityName' AND list.entityId = '$entityId'");
-
-        $query = $em->createQuery($dql);
-        $destinationTextObjects = $query->getResult();
-        //echo "Existing destinationTextObjects count=".count($destinationTextObjects)."<br>";
-
-        //exit("eof");
-
-        if( count($destinationTextObjects) > 0 ) {
-            return $destinationTextObjects[0]->getValue();
-        }
-
-        return false;
-    }
-    //$name - "History/Findings", "Impression/Outcome"
-    public function getSourceFormNodeByName($name) {
-        $em = $this->getDoctrine()->getManager();
-        $formNodeUtil = $this->get('user_formnode_utility');
-
-        $objectTypeText = $formNodeUtil->getObjectTypeByName('Form Field - Free Text');
-
-        $repository = $em->getRepository('OlegUserdirectoryBundle:FormNode');
-        $dql = $repository->createQueryBuilder("list");;
-        $dql->select('list');
-        $dql->leftJoin("list.objectType", "objectType");
-        $dql->leftJoin("list.parent", "parent");
-        $dql->leftJoin("parent.parent", "grandParent");
-        $dql->where("list.level = 4 AND objectType.id = ".$objectTypeText->getId()." AND parent.level = 3 AND grandParent.name = 'Pathology Call Log Entry'");
-        $dql->andWhere("list.name = '".$name."'");
-        $query = $em->createQuery($dql);
-        $sourceTextObjects = $query->getResult();
-        echo "sourceTextObjects count=".count($sourceTextObjects)."<br>";
-
-        if( count($sourceTextObjects) == 1 ) {
-            return $sourceTextObjects[0];
-        }
-
-        return NULL;
-    }
-    //$name - "History/Findings HTML", "Impression/Outcome HTML"
-    public function getDestinationFormNodeByName($name) {
-        $em = $this->getDoctrine()->getManager();
-        $formNodeUtil = $this->get('user_formnode_utility');
-
-        $objectTypeText = $formNodeUtil->getObjectTypeByName('Form Field - Free Text, HTML');
-
-        $repository = $em->getRepository('OlegUserdirectoryBundle:FormNode');
-        $dql = $repository->createQueryBuilder("list");;
-        $dql->select('list');
-        $dql->leftJoin("list.objectType", "objectType");
-        $dql->leftJoin("list.parent", "parent");
-        $dql->leftJoin("parent.parent", "grandParent");
-        //$dql->where('list.level = 4 AND objectType.id = '.$objectTypeText->getId().' AND parent.level = 3');
-        $dql->where("list.level = 4 AND objectType.id = ".$objectTypeText->getId()." AND parent.level = 3 AND grandParent.name = 'Pathology Call Log Entry'");
-        $dql->andWhere("list.name = '".$name."'");
-        $query = $em->createQuery($dql);
-        $destinationTextObjects = $query->getResult();
-
-        if( count($destinationTextObjects) == 1 ) {
-            return $destinationTextObjects[0];
-        }
-
-        return NULL;
-    }
+//    public function findExistingTextHtmlByName($formNode,$formValue,$historyDestinationFormNodeId,$impressionDestinationFormNodeId,$entityNamespace,$entityName,$entityId) {
+//
+//        //return false; //testing
+//
+//        $em = $this->getDoctrine()->getManager();
+//
+//        $repository = $em->getRepository('OlegUserdirectoryBundle:ObjectTypeText');
+//        $dql = $repository->createQueryBuilder("list");;
+//        $dql->select('list');
+//        $dql->leftJoin("list.formNode", "formNode");
+//
+//        if( $formNode->getName() == 'History/Findings' ) {
+//            $dql->where("formNode.id = " . $historyDestinationFormNodeId);
+//        }
+//        if( $formNode->getName() == 'Impression/Outcome' ) {
+//            $dql->where("formNode.id = " . $impressionDestinationFormNodeId);
+//        }
+//
+//        //$dql->andWhere("list.value = '$formValue'");
+//        $dql->andWhere("list.value IS NOT NULL");
+//
+//        $dql->andWhere("list.entityNamespace = '$entityNamespace' AND list.entityName = '$entityName' AND list.entityId = '$entityId'");
+//
+//        $query = $em->createQuery($dql);
+//        $destinationTextObjects = $query->getResult();
+//        //echo "Existing destinationTextObjects count=".count($destinationTextObjects)."<br>";
+//
+//        //exit("eof");
+//
+//        if( count($destinationTextObjects) > 0 ) {
+//            return $destinationTextObjects[0]->getValue();
+//        }
+//
+//        return false;
+//    }
+//    //$name - "History/Findings", "Impression/Outcome"
+//    public function getSourceFormNodeByName($name) {
+//        $em = $this->getDoctrine()->getManager();
+//        $formNodeUtil = $this->get('user_formnode_utility');
+//
+//        $objectTypeText = $formNodeUtil->getObjectTypeByName('Form Field - Free Text');
+//
+//        $repository = $em->getRepository('OlegUserdirectoryBundle:FormNode');
+//        $dql = $repository->createQueryBuilder("list");;
+//        $dql->select('list');
+//        $dql->leftJoin("list.objectType", "objectType");
+//        $dql->leftJoin("list.parent", "parent");
+//        $dql->leftJoin("parent.parent", "grandParent");
+//        $dql->where("list.level = 4 AND objectType.id = ".$objectTypeText->getId()." AND parent.level = 3 AND grandParent.name = 'Pathology Call Log Entry'");
+//        $dql->andWhere("list.name = '".$name."'");
+//        $query = $em->createQuery($dql);
+//        $sourceTextObjects = $query->getResult();
+//        echo "sourceTextObjects count=".count($sourceTextObjects)."<br>";
+//
+//        if( count($sourceTextObjects) == 1 ) {
+//            return $sourceTextObjects[0];
+//        }
+//
+//        return NULL;
+//    }
+//    //$name - "History/Findings HTML", "Impression/Outcome HTML"
+//    public function getDestinationFormNodeByName($name) {
+//        $em = $this->getDoctrine()->getManager();
+//        $formNodeUtil = $this->get('user_formnode_utility');
+//
+//        $objectTypeText = $formNodeUtil->getObjectTypeByName('Form Field - Free Text, HTML');
+//
+//        $repository = $em->getRepository('OlegUserdirectoryBundle:FormNode');
+//        $dql = $repository->createQueryBuilder("list");;
+//        $dql->select('list');
+//        $dql->leftJoin("list.objectType", "objectType");
+//        $dql->leftJoin("list.parent", "parent");
+//        $dql->leftJoin("parent.parent", "grandParent");
+//        //$dql->where('list.level = 4 AND objectType.id = '.$objectTypeText->getId().' AND parent.level = 3');
+//        $dql->where("list.level = 4 AND objectType.id = ".$objectTypeText->getId()." AND parent.level = 3 AND grandParent.name = 'Pathology Call Log Entry'");
+//        $dql->andWhere("list.name = '".$name."'");
+//        $query = $em->createQuery($dql);
+//        $destinationTextObjects = $query->getResult();
+//
+//        if( count($destinationTextObjects) == 1 ) {
+//            return $destinationTextObjects[0];
+//        }
+//
+//        return NULL;
+//    }
 
 }
