@@ -599,7 +599,7 @@ class DefaultController extends Controller
 
                 if (($i % $batchSize) === 0) {
                     $em->flush(); // Executes all updates.
-                    $em->clear(); // Detaches all objects from Doctrine!
+                    //$em->clear(); // Detaches all objects from Doctrine!
                 }
                 ++$i;
 
