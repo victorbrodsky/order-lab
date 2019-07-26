@@ -611,7 +611,7 @@ class DefaultController extends Controller
 
             echo $msgLog . "<br>";
 
-            if( $processedCounter > 1000 ) {
+            if( $processedCounter > 10 ) {
                 $em->flush(); //testing
                 $em->clear();
                 exit("Break processing $totalCounter text objects");
