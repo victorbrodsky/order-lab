@@ -450,6 +450,7 @@ class DefaultController extends Controller
         $query = $em->createQuery($dql);
 
         $sourceTextObjects = $query->getResult();
+        echo "Searching text objects by formnode ID ".$historySourceFormNode->getId()." and ".$impressionSourceFormNode->getId()."<br>";
         echo "SourceTextObjects count=".count($sourceTextObjects)."<br>";
 
        //$iterableResult = $query->iterate();
