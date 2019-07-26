@@ -402,7 +402,7 @@ class DefaultController extends Controller
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
-        set_time_limit(600); //600 seconds => 10 mins; 900=15min; 1800=30 min
+        set_time_limit(900); //600 seconds => 10 mins; 900=15min; 1800=30 min
 
         $em = $this->getDoctrine()->getManager();
         $formNodeUtil = $this->get('user_formnode_utility');
