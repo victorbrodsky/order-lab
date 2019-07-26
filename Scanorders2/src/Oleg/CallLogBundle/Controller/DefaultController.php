@@ -642,6 +642,7 @@ class DefaultController extends Controller
         }
 
         //$dql->andWhere("list.value = '$formValue'");
+        $dql->andWhere("list.value IS NOT NULL");
 
         $dql->andWhere("list.entityNamespace = '$entityNamespace' AND list.entityName = '$entityName' AND list.entityId = '$entityId'");
 
