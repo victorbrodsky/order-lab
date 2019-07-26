@@ -599,7 +599,7 @@ class DefaultController extends Controller
 
                 if (($i % $batchSize) === 0) {
                     $em->flush(); // Executes all updates.
-                    //$em->clear(); // Detaches all objects from Doctrine!
+                    $em->clear(); // Detaches all objects from Doctrine!
                 }
                 ++$i;
 
@@ -612,12 +612,14 @@ class DefaultController extends Controller
 
             if( $counter > 300 ) {
                 $em->flush(); //testing
+                $em->clear();
                 exit("Break processing $totalCounter text objects");
             }
 
         }//foreach
 
         $em->flush();
+        $em->clear();
 
         exit("Processed $counter text objects");
     }
