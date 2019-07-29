@@ -2928,8 +2928,8 @@ class CallLogUtil
             if( $processedCounter > 300 ) {
                 $em->flush(); //testing
                 $em->clear();
-                $logger->notice("Break processing $totalCounter text objects");
-                exit("\n\rBreak processing $totalCounter text objects");
+                $logger->notice("Break processing $totalCounter text objects after copying $processedCounter text objects");
+                exit("\n\rBreak processing $totalCounter text objects after copying $processedCounter text objects");
             }
 
         }//foreach
