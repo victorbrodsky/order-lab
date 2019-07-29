@@ -2760,8 +2760,9 @@ class CallLogUtil
         $query = $em->createQuery($dql);
 
         $sourceTextObjects = $query->getResult();
-        echo "Searching text objects by formnode ID ".$historySourceFormNode->getId()." and ".$impressionSourceFormNode->getId()."<br>";
-        echo "SourceTextObjects count=".count($sourceTextObjects)."<br>";
+        echo "\n\rSearching text objects by formnode ID ".$historySourceFormNode->getId()." and ".$impressionSourceFormNode->getId()."<br>";
+        echo "\n\rSourceTextObjects count=".count($sourceTextObjects)."<br>";
+        exit("EOF testing");
 
         //$iterableResult = $query->iterate();
         // echo "iterableResult count=".count($iterableResult)."<br>";
@@ -2821,7 +2822,7 @@ class CallLogUtil
 
             $existingHtmlText = $this->findExistingTextHtmlByName($formNode,$formValue,$historyDestinationFormNodeId,$impressionDestinationFormNodeId,$entityNamespace,$entityName,$entityId);
             if( $existingHtmlText ) {
-                echo $totalCounter.": Skipped (".$formNode->getName()."): Text HTML already exists value=[$formValue], existingHtml=[$existingHtmlText]<br>";
+                //echo $totalCounter.": Skipped (".$formNode->getName()."): Text HTML already exists value=[$formValue], existingHtml=[$existingHtmlText]<br>";
                 continue;
             }
 
@@ -2919,12 +2920,12 @@ class CallLogUtil
                 //$userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $msgLog, $user, $message, $request, $eventType);
             }
 
-            echo $msgLog . "<br>";
+            //echo $msgLog . "<br>";
 
             if( $processedCounter > 100 ) {
                 $em->flush(); //testing
                 $em->clear();
-                exit("Break processing $totalCounter text objects");
+                exit("\n\rBreak processing $totalCounter text objects");
             }
 
         }//foreach
@@ -2932,7 +2933,7 @@ class CallLogUtil
         $em->flush();
         $em->clear();
 
-        exit("Processed $processedCounter text objects");
+        exit("\n\rProcessed $processedCounter text objects");
     }
     public function findExistingTextHtmlByName($formNode,$formValue,$historyDestinationFormNodeId,$impressionDestinationFormNodeId,$entityNamespace,$entityName,$entityId) {
 

@@ -54,6 +54,7 @@ class UtilCommand extends ContainerAwareCommand {
 
         //exit("EOF updateTextHtmlAction. Res=".$res);
 
+        //$output->writeln($res);
         $output->writeln($res);
     }
     
