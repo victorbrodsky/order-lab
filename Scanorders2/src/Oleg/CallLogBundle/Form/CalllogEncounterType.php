@@ -221,6 +221,7 @@ class CalllogEncounterType extends AbstractType
             'label' => "New or Previous Encounter",
             'choices' => $this->params['previousEncounters'],
             'required' => false,
+            'mapped' => false,
             'attr' => array('class' => 'combobox', 'placeholder' => "Previous Encounters")
         ));
 

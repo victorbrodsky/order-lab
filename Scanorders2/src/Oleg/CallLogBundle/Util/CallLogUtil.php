@@ -3026,4 +3026,14 @@ class CallLogUtil
         return NULL;
     }
 
+    public function getPreviousEncounterByMessage($message) {
+        $previousEncounters = array();
+        if( $message ) {
+            //if patient exists
+        } else {
+            //if patient does not exists
+        }
+        return $previousEncounters;
+    }
+
 }

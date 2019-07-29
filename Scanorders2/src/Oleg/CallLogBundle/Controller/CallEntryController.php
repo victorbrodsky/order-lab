@@ -1621,6 +1621,7 @@ class CallEntryController extends Controller
         //$defaultInstitution = $userSecUtil->getSiteSettingParameter('institution',$sitename);
 
         //$previousEncounters
+        $previousEncounters = $calllogUtil->getPreviousEncounterByMessage($message);
         $previousEncounters = array("Encounter 1"=>"Encounter 1", "Encounter 2"=>"Encounter 2", "Encounter 3"=>"Encounter 3");
 
         $params = array(
