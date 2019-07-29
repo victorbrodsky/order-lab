@@ -2762,7 +2762,7 @@ class CallLogUtil
         $sourceTextObjects = $query->getResult();
         echo "\n\rSearching text objects by formnode ID ".$historySourceFormNode->getId()." and ".$impressionSourceFormNode->getId()."<br>";
         echo "\n\rSourceTextObjects count=".count($sourceTextObjects)."<br>";
-        exit("EOF testing");
+        //exit("EOF testing");
 
         //$iterableResult = $query->iterate();
         // echo "iterableResult count=".count($iterableResult)."<br>";
