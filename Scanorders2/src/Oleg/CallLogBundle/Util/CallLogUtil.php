@@ -2714,6 +2714,7 @@ class CallLogUtil
 
         set_time_limit(300); //600 seconds => 10 mins; 900=15min; 1800=30 min
 
+        $logger = $this->container->get('logger');
         $em = $this->em;
         $formNodeUtil = $this->container->get('user_formnode_utility');
         $userSecUtil = $this->container->get('user_security_utility');
@@ -2762,6 +2763,7 @@ class CallLogUtil
         $sourceTextObjects = $query->getResult();
         echo "\n\rSearching text objects by formnode ID ".$historySourceFormNode->getId()." and ".$impressionSourceFormNode->getId()."<br>";
         echo "\n\rSourceTextObjects count=".count($sourceTextObjects)."<br>";
+        $logger->notice("SourceTextObjects count=".count($sourceTextObjects));
         //exit("EOF testing");
 
         //$iterableResult = $query->iterate();
@@ -2921,10 +2923,12 @@ class CallLogUtil
             }
 
             //echo $msgLog . "<br>";
+            $logger->notice($msgLog);
 
             if( $processedCounter > 10 ) {
                 $em->flush(); //testing
                 $em->clear();
+                $logger->notice("Break processing $totalCounter text objects");
                 exit("\n\rBreak processing $totalCounter text objects");
             }
 
@@ -2933,6 +2937,7 @@ class CallLogUtil
         $em->flush();
         $em->clear();
 
+        $logger->notice("Processed $processedCounter text objects");
         exit("\n\rProcessed $processedCounter text objects");
     }
     public function findExistingTextHtmlByName($formNode,$formValue,$historyDestinationFormNodeId,$impressionDestinationFormNodeId,$entityNamespace,$entityName,$entityId) {
