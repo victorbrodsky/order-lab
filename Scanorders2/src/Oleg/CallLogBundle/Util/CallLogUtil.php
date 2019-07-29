@@ -2922,7 +2922,7 @@ class CallLogUtil
 
             //echo $msgLog . "<br>";
 
-            if( $processedCounter > 100 ) {
+            if( $processedCounter > 10 ) {
                 $em->flush(); //testing
                 $em->clear();
                 exit("\n\rBreak processing $totalCounter text objects");
