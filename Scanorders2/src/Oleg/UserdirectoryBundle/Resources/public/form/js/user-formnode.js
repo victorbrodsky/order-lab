@@ -391,8 +391,8 @@ function richTextInit(formNodeId) {
         toolbar: [
             // [groupName, [list of button]]
             ['style', ['bold', 'italic', 'underline', 'clear']],
-            ['font', ['strikethrough', 'superscript', 'subscript']],
-            ['fontsize', ['fontsize']],
+            ['font', ['superscript', 'subscript']], //'strikethrough', 
+            //['fontsize', ['fontsize']],
             ['color', ['color']],
             ['para', ['ul', 'ol']],
             //['height', ['height']],

@@ -32,6 +32,7 @@ use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 //use Oleg\UserdirectoryBundle\Form\TrackerType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -213,6 +214,14 @@ class CalllogEncounterType extends AbstractType
             'by_reference' => false,
             'prototype' => true,
             'prototype_name' => '__encounternumber__',
+        ));
+
+        //TODO: select box showing new and previous encounters
+        $builder->add('previousEncounters', ChoiceType::class, array(
+            'label' => "New or Previous Encounter",
+            'choices' => $this->params['previousEncounters'],
+            'required' => false,
+            'attr' => array('class' => 'combobox', 'placeholder' => "Previous Encounters")
         ));
 
 //        $builder->add('location', CollectionType::class, array(

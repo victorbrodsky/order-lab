@@ -89,7 +89,12 @@
                         {% set status = 'Submitted' %}
                         {{ form_row(encounter.id) }}
                         {{ form_row(encounter.status) }}
+
                         {{ formmacros.inputArrayField(encounter.number,"new","encounternumber","key","","","",status) }}
+
+                        {#previous encounter drop down menu#}
+                        {{ formmacros.field(encounter.previousEncounters) }}
+
                         {{ formmacros.inputArrayField(encounter.date,cycle,"encounterdate","date","","","",status) }}
 
                         {% if cycle == "new" %}
