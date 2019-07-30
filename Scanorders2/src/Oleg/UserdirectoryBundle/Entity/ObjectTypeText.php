@@ -62,31 +62,59 @@ class ObjectTypeText extends ObjectTypeReceivingBase
     protected $value;
 
 
-//    /**
-//     * Rich html text (WYSIWYG)
-//     *
-//     * @ORM\Column(type="text", nullable=true)
-//     */
-//    protected $valueHtml;
-//
-//
-//
-//
-//    /**
-//     * @return mixed
-//     */
-//    public function getValueHtml()
-//    {
-//        return $this->valueHtml;
-//    }
-//
-//    /**
-//     * @param mixed $valueHtml
-//     */
-//    public function setValueHtml($valueHtml)
-//    {
-//        $this->valueHtml = $valueHtml;
-//    }
+    /**
+     * Copy of the value. If the value is html text, this $secondaryValue can store the plain text
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    protected $secondaryValue;
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getSecondaryValue()
+    {
+        return $this->secondaryValue;
+    }
+
+    /**
+     * @param mixed $secondaryValue
+     */
+    public function setSecondaryValue($secondaryValue)
+    {
+        $this->secondaryValue = $secondaryValue;
+    }
+
+    /**
+     * @param mixed $value
+     */
+    public function setValue($value)
+    {
+        $this->value = $value;
+
+        if ($value) {
+            $formNode = $this->getFormNode();
+            if ($formNode) {
+                $objectType = $formNode->getObjectType();
+                if ($objectType && $objectType->getName() == "Form Field - Free Text, HTML" ) {
+                    $secondaryValue = $this->convertHtmlToPlainText($value);
+                    if ($secondaryValue) {
+                        $this->setSecondaryValue($secondaryValue);
+                    }
+                }
+            }
+        }
+
+    }
+
+    public function convertHtmlToPlainText($text) {
+        if( $text ) {
+            $text = strip_tags($text);
+        }
+        return $text;
+    }
 
 
 }
