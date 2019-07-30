@@ -217,12 +217,23 @@ class CalllogEncounterType extends AbstractType
         ));
 
         //TODO: select box showing new and previous encounters
-        $builder->add('previousEncounters', ChoiceType::class, array(
-            'label' => "New or Previous Encounter",
-            'choices' => $this->params['previousEncounters'],
+//        $builder->add('previousEncounters', ChoiceType::class, array(
+//            'label' => "New or Previous Encounter",
+//            'choices' => $this->params['previousEncounters'],
+//            'required' => false,
+//            'mapped' => false,
+//            'attr' => array('class' => 'combobox', 'placeholder' => "Previous Encounters")
+//        ));
+        $builder->add('previousEncounters', EntityType::class, array(
+            'class' => 'OlegOrderformBundle:Encounter',
+            'label' => 'New or Previous Encounter:',
             'required' => false,
             'mapped' => false,
-            'attr' => array('class' => 'combobox', 'placeholder' => "Previous Encounters")
+            'multiple' => false,
+            //'data' => $this->params['previousEncounters'],
+            'choices' => $this->params['previousEncounters'],
+            'choice_label' => 'obtainEncounterNumber',
+            'attr' => array('class' => 'combobox', 'placeholder' => "New or Previous Encounters"),
         ));
 
 //        $builder->add('location', CollectionType::class, array(
