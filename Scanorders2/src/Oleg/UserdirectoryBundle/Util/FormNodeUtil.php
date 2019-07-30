@@ -526,6 +526,9 @@ class FormNodeUtil
             return null;
         }
 
+        //1a) set formnode to the list
+        $newListElement->setFormNode($formNode);
+
         //2) add value to the created list
         //if( $formValue != null && $formValue != "" ) {
         //if value is null => still update this value
@@ -537,7 +540,7 @@ class FormNodeUtil
         $newListElement->setObject($holderEntity);
 
         //4) set formnode to the list
-        $newListElement->setFormNode($formNode);
+        //$newListElement->setFormNode($formNode);
 
         //set additional parameters
         if( $params ) {
