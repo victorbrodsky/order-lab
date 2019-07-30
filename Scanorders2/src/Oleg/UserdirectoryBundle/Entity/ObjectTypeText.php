@@ -95,16 +95,28 @@ class ObjectTypeText extends ObjectTypeReceivingBase
         $this->value = $value;
 
         if ($value) {
-            $formNode = $this->getFormNode();
-            if ($formNode) {
-                $objectType = $formNode->getObjectType();
-                if ($objectType && $objectType->getName() == "Form Field - Free Text, HTML" ) {
-                    $secondaryValue = $this->convertHtmlToPlainText($value);
-                    if ($secondaryValue) {
-                        $this->setSecondaryValue($secondaryValue);
+
+            if(0) { //formnode might not be set when is used directly by symfony's form
+                $formNode = $this->getFormNode();
+                echo "formNode=$formNode <br>";
+                if ($formNode) {
+                    $objectType = $formNode->getObjectType();
+                    echo "objectType=$objectType <br>";
+                    if ($objectType && $objectType->getName() == "Form Field - Free Text, HTML" ) {
+                        $secondaryValue = $this->convertHtmlToPlainText($value);
+                        if ($secondaryValue) {
+                            $this->setSecondaryValue($secondaryValue);
+                        }
                     }
                 }
+                //exit('111');
+            } else {
+                $secondaryValue = $this->convertHtmlToPlainText($value);
+                if ($secondaryValue) {
+                    $this->setSecondaryValue($secondaryValue);
+                }
             }
+
         }
 
     }
