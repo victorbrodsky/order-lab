@@ -2883,6 +2883,8 @@ class CallLogUtil
             $textHtmlObject->setEntityName($entityName);
             $textHtmlObject->setEntityId($entityId);
 
+            $formValue = "<p>test <b>test </b><u>test</u><br></p>"; //testing
+
             //last step assign value. This setValue will trigger to make a copy to the plain text in the ObjectTypeText object if the formNode is set
             $textHtmlObject->setValue($formValue);
 
