@@ -1292,7 +1292,7 @@ class CallLogPatientController extends PatientController {
 
 
     /**
-     * Get previous encounters for a given patient. Use previous entries result?
+     * Get previous encounters for a given patient. Use previous entries (listPatientPreviousEntriesAction) html result?
      *
      * @Route("/patient/get-previous-encounters", name="calllog-get-previous-encounters", options={"expose"=true})
      * @Method("GET")
@@ -1307,7 +1307,7 @@ class CallLogPatientController extends PatientController {
         $calllogUtil = $this->get('calllog_util');
 
         $patientId = trim($request->get('patientId'));
-        echo "patientId=$patientId<br>";
+        //echo "patientId=$patientId<br>";
 
         $patient = $em->getRepository('OlegOrderformBundle:Patient')->find($patientId);
         if( !$patient ) {

@@ -2335,14 +2335,49 @@ function calllogAddPreviousEncounters(patient) {
         async: true //use synchronous => wait for response.
     }).done(function(response) {
         console.log('response='+response);
-        if( response == 'OK' ) {
-            console.log('response OK!');
-        } else {
-            console.log('response not OK');
+        //TODO: add encounters to .combobox-previous-encounters select2 (implement as in updateUserComboboxes)
+
+        //var text = "";
+        var thisEncounterId;
+        for(thisEncounterId in response) {
+            var thisEncounterText = response[thisEncounterId];
+            //text += thisEncounterText;
+            var newOption = new Option(thisEncounterText, thisEncounterId, false, false);
+            $("select.combobox-previous-encounters").append(newOption).trigger('change');
         }
+        //console.log("text="+text);
+
+        calllogPopulatePreviousEncounterInfo();
+
+        // $("select.combobox-previous-encounters").each(function(){
+        //
+        //     if( $(this).find("option[value='" + userId + "']").length ) {
+        //         //$("#state").val(userId).trigger("change");
+        //     } else {
+        //
+        //         //console.log("fieldId="+fieldId+"=?="+$(this).attr('id'));
+        //         if( fieldId == $(this).attr('id') ) {
+        //             //console.log("set this user fieldId="+fieldId);
+        //             var newOption = new Option(userName, userId, true, true);
+        //         } else {
+        //             //console.log("just add this user fieldId="+fieldId);
+        //             var newOption = new Option(userName, userId, false, false);
+        //         }
+        //         $(this).append(newOption).trigger('change');
+        //     }
+        //
+        // });
+
     }).always(function() {
         //
     }).error(function(jqXHR, textStatus, errorThrown) {
         console.log('Error : ' + errorThrown);
+    });
+}
+
+function calllogPopulatePreviousEncounterInfo() {
+    //update encounter fields
+    $("select.combobox-previous-encounters").on("change", function(event) {
+        console.log("encounter changed: change");
     });
 }
