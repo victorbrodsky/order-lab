@@ -1292,7 +1292,7 @@ class CallLogPatientController extends PatientController {
 
 
     /**
-     * Get previous encounters for a given patient
+     * Get previous encounters for a given patient. Use previous entries result?
      *
      * @Route("/patient/get-previous-encounters", name="calllog-get-previous-encounters", options={"expose"=true})
      * @Method("GET")
