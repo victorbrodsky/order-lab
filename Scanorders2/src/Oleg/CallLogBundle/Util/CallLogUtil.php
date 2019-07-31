@@ -2887,6 +2887,7 @@ class CallLogUtil
             $textHtmlObject->setValue($formValue);
 
             $secondaryValue = $textHtmlObject->getSecondaryValue();
+            echo "secondaryValue=$secondaryValue <br>";
             if( !$secondaryValue && $formValue ) {
                 $secondaryValue = $textHtmlObject->convertHtmlToPlainText($formValue);
                 echo "setSecondaryValue: secondaryValue=$secondaryValue <br>";
