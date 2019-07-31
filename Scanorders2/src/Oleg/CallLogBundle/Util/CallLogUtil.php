@@ -2714,7 +2714,7 @@ class CallLogUtil
 //            return $this->redirect($this->generateUrl('employees-nopermission'));
 //        }
 
-        set_time_limit(300); //600 seconds => 10 mins; 900=15min; 1800=30 min
+        set_time_limit(900); //600 seconds => 10 mins; 900=15min; 1800=30 min
 
         $logger = $this->container->get('logger');
         $em = $this->em;
