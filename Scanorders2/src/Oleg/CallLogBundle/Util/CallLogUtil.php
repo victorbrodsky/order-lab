@@ -2836,6 +2836,26 @@ class CallLogUtil
             $count = null;
             $userSecUtil->setDefaultList($textHtmlObject,$count,$creator,$name);
 
+            //Set form node according to the source
+            if( $formNode->getName() == 'History/Findings' ) {
+                if( $historyDestinationFormNode ) {
+                    $textHtmlObject->setFormNode($historyDestinationFormNode);
+                    $msgLog = $processedCounter.": ".$entityId."(".$entityName."): Copy History/Findings html text [$formValue] to formnode [$historyDestinationFormNode]";
+                } else {
+                    echo $totalCounter.": Skip historyDestinationFormNodeByName not found <br>";
+                    continue;
+                }
+            }
+            if( $formNode->getName() == 'Impression/Outcome' ) {
+                if( $impressionDestinationFormNode ) {
+                    $textHtmlObject->setFormNode($impressionDestinationFormNode);
+                    $msgLog = $processedCounter.": ".$entityId."(".$entityName."): Copy Impression/Outcome html text [$formValue] to formnode [$impressionDestinationFormNode]";
+                } else {
+                    echo $totalCounter.": Skip impressionDestinationFormNodeByName not found <br>";
+                    continue;
+                }
+            }
+
             //Set list parameters
             $textHtmlObject->setCreatedate($createDate);
             $textHtmlObject->setUpdatedby($updatedby);
@@ -2863,29 +2883,8 @@ class CallLogUtil
             $textHtmlObject->setEntityName($entityName);
             $textHtmlObject->setEntityId($entityId);
 
+            //last step assign value. This value will have a copy of the plain text in the ObjectTypeText object
             $textHtmlObject->setValue($formValue);
-
-            //4) set formnode to the list ("History/Findings" -> )
-            //$textHtmlObject->setFormNode($formNodeHtml);
-
-            if( $formNode->getName() == 'History/Findings' ) {
-                if( $historyDestinationFormNode ) {
-                    $textHtmlObject->setFormNode($historyDestinationFormNode);
-                    $msgLog = $processedCounter.": ".$entityId."(".$entityName."): Copy History/Findings html text [$formValue] to formnode [$historyDestinationFormNode]";
-                } else {
-                    echo $totalCounter.": Skip historyDestinationFormNodeByName not found <br>";
-                    continue;
-                }
-            }
-            if( $formNode->getName() == 'Impression/Outcome' ) {
-                if( $impressionDestinationFormNode ) {
-                    $textHtmlObject->setFormNode($impressionDestinationFormNode);
-                    $msgLog = $processedCounter.": ".$entityId."(".$entityName."): Copy Impression/Outcome html text [$formValue] to formnode [$impressionDestinationFormNode]";
-                } else {
-                    echo $totalCounter.": Skip impressionDestinationFormNodeByName not found <br>";
-                    continue;
-                }
-            }
 
             //echo "textHtmlObject: Namespace=" . $textHtmlObject->getEntityNamespace() . ", Name=" . $textHtmlObject->getEntityName() . ", Value=" . $textHtmlObject->getValue() . "<br>";
             $processedCounter++;
