@@ -2883,7 +2883,7 @@ class CallLogUtil
             $textHtmlObject->setEntityName($entityName);
             $textHtmlObject->setEntityId($entityId);
 
-            //last step assign value. This value will have a copy of the plain text in the ObjectTypeText object
+            //last step assign value. This setValue will trigger to make a copy to the plain text in the ObjectTypeText object if the formNode is set
             $textHtmlObject->setValue($formValue);
 
             //echo "textHtmlObject: Namespace=" . $textHtmlObject->getEntityNamespace() . ", Name=" . $textHtmlObject->getEntityName() . ", Value=" . $textHtmlObject->getValue() . "<br>";
