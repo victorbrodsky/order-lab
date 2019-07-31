@@ -2883,22 +2883,23 @@ class CallLogUtil
             $textHtmlObject->setEntityName($entityName);
             $textHtmlObject->setEntityId($entityId);
 
-            $formValue = "<p>test <b>test </b><u>test</u><br></p>"; //testing
+            //$formValue = "<p>test <b>test </b><u>test</u><br></p>"; //testing
 
             //last step assign value. This setValue will trigger to make a copy to the plain text in the ObjectTypeText object if the formNode is set
             $textHtmlObject->setValue($formValue);
 
             if( $formValue ) {
                 $secondaryValue = $textHtmlObject->getSecondaryValue();
-                echo "formValue=$formValue; secondaryValue=$secondaryValue <br>";
+                //echo "formValue=$formValue; secondaryValue=$secondaryValue <br>";
                 if (!$secondaryValue && $formValue) {
                     $secondaryValue = $textHtmlObject->convertHtmlToPlainText($formValue);
-                    echo "setSecondaryValue: secondaryValue=$secondaryValue <br>";
+                    //echo "setSecondaryValue: secondaryValue=$secondaryValue <br>";
                     $textHtmlObject->setSecondaryValue($secondaryValue);
-                } else {
-                    echo "Skip setSecondaryValue<br>";
                 }
-                exit('111');
+                //else {
+                //    echo "Skip setSecondaryValue<br>";
+                //}
+                //exit('111');
             }
 
             //echo "textHtmlObject: Namespace=" . $textHtmlObject->getEntityNamespace() . ", Name=" . $textHtmlObject->getEntityName() . ", Value=" . $textHtmlObject->getValue() . "<br>";
