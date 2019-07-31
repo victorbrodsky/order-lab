@@ -3101,5 +3101,23 @@ class CallLogUtil
 
         return $previousEncounters;
     }
+    public function getPreviousEncounterByPatient($patient) {
+        $previousEncounters = array();
+        
+        if( $patient ) {
+            //if patient exists
+            //$encounters = "";
+            $encounters = $patient->getEncounter();
+            foreach($encounters as $thisEncounter) {
+                //$this->em->persist($thisEncounter);
+                $previousEncounters[] = $thisEncounter;
+            }
+        } else {
+            //if patient does not exists
+            //return NULL as previous encounter?
+        }
+
+        return $previousEncounters;
+    }
 
 }

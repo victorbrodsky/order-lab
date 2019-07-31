@@ -1272,6 +1272,9 @@ function populatePatientInfo( patient, showinfo, modify, holderId, singleMatch )
         $('#calllog-list-previous-entries-btn').click();
     }
 
+    //TODO: add previous encounters to the ".combobox-previous-encounters"
+    calllogAddPreviousEncounters(patient);
+
     //console.log('populate PatientInfo: finished');
 }
 
@@ -2318,4 +2321,28 @@ function calllogIsMessageVersionValid( messageId, latestNextMessageVersion, late
     });
 
     return result;
+}
+
+function calllogAddPreviousEncounters(patient) {
+    var url = Routing.generate('calllog-get-previous-encounters');
+    $.ajax({
+        url: url,
+        timeout: _ajaxTimeout,
+        type: "GET",
+        //type: "POST",
+        data: {patientId:patient.id},
+        dataType: 'json',
+        async: true //use synchronous => wait for response.
+    }).done(function(response) {
+        console.log('response='+response);
+        if( response == 'OK' ) {
+            console.log('response OK!');
+        } else {
+            console.log('response not OK');
+        }
+    }).always(function() {
+        //
+    }).error(function(jqXHR, textStatus, errorThrown) {
+        console.log('Error : ' + errorThrown);
+    });
 }

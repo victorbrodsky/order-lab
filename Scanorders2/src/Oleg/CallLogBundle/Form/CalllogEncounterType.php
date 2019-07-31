@@ -224,7 +224,7 @@ class CalllogEncounterType extends AbstractType
 //            'mapped' => false,
 //            'attr' => array('class' => 'combobox', 'placeholder' => "Previous Encounters")
 //        ));
-        if(0) {
+        if(1) {
             $builder->add('previousEncounters', EntityType::class, array(
                 'class' => 'OlegOrderformBundle:Encounter',
                 'label' => 'New or Previous Encounter:',
@@ -233,8 +233,8 @@ class CalllogEncounterType extends AbstractType
                 'multiple' => false,
                 //'data' => $this->params['previousEncounters'],
                 'choices' => $this->params['previousEncounters'],
-                'choice_label' => 'obtainEncounterNumber',
-                'attr' => array('class' => 'combobox', 'placeholder' => "New or Previous Encounters"),
+                'choice_label' => 'obtainEncounterNumber', //'obtainEncounterNumberOnlyAndDate', //'obtainEncounterNumber',
+                'attr' => array('class' => 'combobox combobox-previous-encounters', 'placeholder' => "New or Previous Encounters"),
             ));
         }
 

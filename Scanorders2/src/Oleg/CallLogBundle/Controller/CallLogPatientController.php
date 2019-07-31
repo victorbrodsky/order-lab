@@ -1289,4 +1289,43 @@ class CallLogPatientController extends PatientController {
 
         return $form;
     }
+
+
+    /**
+     * Get previous encounters for a given patient
+     *
+     * @Route("/patient/get-previous-encounters", name="calllog-get-previous-encounters", options={"expose"=true})
+     * @Method("GET")
+     */
+    public function checkMessageVersionAction(Request $request)
+    {
+        if (false == $this->get('security.authorization_checker')->isGranted("ROLE_CALLLOG_USER")) {
+            return $this->redirect($this->generateUrl('calllog-nopermission'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $calllogUtil = $this->get('calllog_util');
+
+        $patientId = trim($request->get('patientId'));
+        echo "patientId=$patientId<br>";
+
+        $patient = $em->getRepository('OlegOrderformBundle:Patient')->find($patientId);
+        if( !$patient ) {
+            $response = new Response();
+            $response->headers->set('Content-Type', 'application/json');
+            $response->setContent(json_encode(NULL));
+            return $response;
+        }
+
+        $result = array();
+        $encounters = $calllogUtil->getPreviousEncounterByPatient($patient);
+        foreach($encounters as $encounter) {
+            $result[$encounter->getId()] = $encounter->obtainEncounterNumberOnlyAndDate();
+        }
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($result));
+        return $response;
+    }
 }

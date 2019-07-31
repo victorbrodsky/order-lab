@@ -942,7 +942,18 @@ class Encounter extends ObjectAbstract
         }
         return $number;
     }
-    
+
+    public function obtainEncounterNumberOnlyAndDate() {
+        $number = null;
+        $key = $this->obtainValidField('number');
+        if( $key ) {
+            $number = $key->getField();
+            //PreviousEncounterID (MM/DD/YYYY HH:MM:SS)
+            $number = $number . " (" . $this->getCreationdate()->format("m/d/Y H:i:s") . ")";
+        }
+        return $number;
+    }
+
     //[EncounterLocation'sName] / [EncounterLocation'sPhoneNumber]
     public function obtainLocationInfo() {
         $infoArr = array();
