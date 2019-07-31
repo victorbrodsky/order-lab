@@ -2889,8 +2889,12 @@ class CallLogUtil
             $secondaryValue = $textHtmlObject->getSecondaryValue();
             if( !$secondaryValue && $formValue ) {
                 $secondaryValue = $textHtmlObject->convertHtmlToPlainText($formValue);
+                echo "setSecondaryValue: secondaryValue=$secondaryValue <br>";
                 $textHtmlObject->setSecondaryValue($secondaryValue);
+            } else {
+                echo "Skip setSecondaryValue<br>";
             }
+            exit('111');
 
             //echo "textHtmlObject: Namespace=" . $textHtmlObject->getEntityNamespace() . ", Name=" . $textHtmlObject->getEntityName() . ", Value=" . $textHtmlObject->getValue() . "<br>";
             $processedCounter++;
