@@ -2886,6 +2886,12 @@ class CallLogUtil
             //last step assign value. This setValue will trigger to make a copy to the plain text in the ObjectTypeText object if the formNode is set
             $textHtmlObject->setValue($formValue);
 
+            $secondaryValue = $textHtmlObject->getSecondaryValue();
+            if( !$secondaryValue && $formValue ) {
+                $secondaryValue = $textHtmlObject->convertHtmlToPlainText($formValue);
+                $textHtmlObject->setSecondaryValue($secondaryValue);
+            }
+
             //echo "textHtmlObject: Namespace=" . $textHtmlObject->getEntityNamespace() . ", Name=" . $textHtmlObject->getEntityName() . ", Value=" . $textHtmlObject->getValue() . "<br>";
             $processedCounter++;
 
