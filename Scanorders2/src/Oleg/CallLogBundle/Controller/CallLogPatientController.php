@@ -1297,7 +1297,7 @@ class CallLogPatientController extends PatientController {
      * @Route("/patient/get-previous-encounters", name="calllog-get-previous-encounters", options={"expose"=true})
      * @Method("GET")
      */
-    public function checkMessageVersionAction(Request $request)
+    public function getPreviousEncountersAction(Request $request)
     {
         if (false == $this->get('security.authorization_checker')->isGranted("ROLE_CALLLOG_USER")) {
             return $this->redirect($this->generateUrl('calllog-nopermission'));
@@ -1320,6 +1320,7 @@ class CallLogPatientController extends PatientController {
         $result = array();
         $encounters = $calllogUtil->getPreviousEncounterByPatient($patient);
         foreach($encounters as $encounter) {
+            //$result[] = array("id"=>$encounter->getId(), "number"=>$encounter->obtainEncounterNumberOnlyAndDate(), "snapshot"=>$snapshot);
             $result[$encounter->getId()] = $encounter->obtainEncounterNumberOnlyAndDate();
         }
 
@@ -1328,4 +1329,43 @@ class CallLogPatientController extends PatientController {
         $response->setContent(json_encode($result));
         return $response;
     }
+
+    /**
+     * Get previous encounter info by id
+     *
+     * @Route("/patient/get-encounter-by-id", name="calllog-get-encounter-by-id", options={"expose"=true})
+     * @Method("GET")
+     */
+    public function getEncounterByIdAction(Request $request)
+    {
+        if (false == $this->get('security.authorization_checker')->isGranted("ROLE_CALLLOG_USER")) {
+            return $this->redirect($this->generateUrl('calllog-nopermission'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        //$calllogUtil = $this->get('calllog_util');
+
+        $encounterId = trim($request->get('encounterId'));
+        //echo "encounterId=$encounterId<br>";
+
+        $encounter = $em->getRepository('OlegOrderformBundle:Encounter')->find($encounterId);
+        if( !$encounter ) {
+            $response = new Response();
+            $response->headers->set('Content-Type', 'application/json');
+            $response->setContent(json_encode(NULL));
+            return $response;
+        }
+
+        $result = array();
+
+        //get encounter html page and send it to the calllog page
+        $result['number'] = $encounter->obtainEncounterNumberOnlyAndDate();
+        $result['date'] = $encounter->getCreationdate()->format("m/d/Y H:i:s");
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($result));
+        return $response;
+    }
+
 }

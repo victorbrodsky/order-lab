@@ -2334,7 +2334,7 @@ function calllogAddPreviousEncounters(patient) {
         dataType: 'json',
         async: true //use synchronous => wait for response.
     }).done(function(response) {
-        console.log('response='+response);
+        //console.log('response='+response);
         //TODO: add encounters to .combobox-previous-encounters select2 (implement as in updateUserComboboxes)
 
         //var text = "";
@@ -2347,26 +2347,7 @@ function calllogAddPreviousEncounters(patient) {
         }
         //console.log("text="+text);
 
-        calllogPopulatePreviousEncounterInfo();
-
-        // $("select.combobox-previous-encounters").each(function(){
-        //
-        //     if( $(this).find("option[value='" + userId + "']").length ) {
-        //         //$("#state").val(userId).trigger("change");
-        //     } else {
-        //
-        //         //console.log("fieldId="+fieldId+"=?="+$(this).attr('id'));
-        //         if( fieldId == $(this).attr('id') ) {
-        //             //console.log("set this user fieldId="+fieldId);
-        //             var newOption = new Option(userName, userId, true, true);
-        //         } else {
-        //             //console.log("just add this user fieldId="+fieldId);
-        //             var newOption = new Option(userName, userId, false, false);
-        //         }
-        //         $(this).append(newOption).trigger('change');
-        //     }
-        //
-        // });
+        calllogEncounterListener();
 
     }).always(function() {
         //
@@ -2375,9 +2356,40 @@ function calllogAddPreviousEncounters(patient) {
     });
 }
 
-function calllogPopulatePreviousEncounterInfo() {
+function calllogEncounterListener() {
     //update encounter fields
     $("select.combobox-previous-encounters").on("change", function(event) {
-        console.log("encounter changed: change");
+        var encounterId = $(this).select2('val');
+        console.log("encounter changed: change encounterId="+encounterId);
+
+        //hide current encounter data and show snapshot of the selected encounter?
+
+        //load the previous encounter values for the selected encounter id into the existing fields of that accordion and lock them
+        var url = Routing.generate('calllog-get-encounter-by-id');
+        $.ajax({
+            url: url,
+            timeout: _ajaxTimeout,
+            type: "GET",
+            //type: "POST",
+            data: {encounterId:encounterId},
+            dataType: 'json',
+            async: true //use synchronous => wait for response.
+        }).done(function(response) {
+            console.log('response='+response);
+
+            calllogPopulatePreviousEncounterInfo(response);
+
+        }).always(function() {
+            //
+        }).error(function(jqXHR, textStatus, errorThrown) {
+            console.log('Error : ' + errorThrown);
+        });
+
     });
 }
+
+function calllogPopulatePreviousEncounterInfo(encounter) {
+    console.log('encounter');
+    console.log(encounter);
+}
+
