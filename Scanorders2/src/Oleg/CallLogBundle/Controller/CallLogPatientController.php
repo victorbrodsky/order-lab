@@ -1358,9 +1358,39 @@ class CallLogPatientController extends PatientController {
 
         $result = array();
 
-        //get encounter html page and send it to the calllog page
+
         $result['number'] = $encounter->obtainEncounterNumberOnlyAndDate();
         $result['date'] = $encounter->getCreationdate()->format("m/d/Y H:i:s");
+
+
+        //get encounter html page and send it to the calllog page
+        //////////////////
+        $params = array(
+            //'filterform' =>  ($filterform ? $filterform->createView() : null), //$filterform->createView(),
+            //'route_path' => $request->get('_route'),
+            //'messages' => $messages,
+            //'title' => $title,
+            //'limit' => $limit,
+            //'messageid' => $messageId
+            //'testing' => true
+        );
+        //$htmlPage = $this->render('OlegCallLogBundle:PatientList:patient_entries.html.twig',$params);
+
+        //testing
+        $testing = true;
+        $testing = false;
+        if( $testing ) {
+            //return $htmlPage;
+        }
+
+        $template = $result; //testing
+        //$template = $htmlPage->getContent();
+
+        $json = json_encode($template);
+        $response = new Response($json);
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+        /////////////////
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
