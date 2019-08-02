@@ -481,6 +481,8 @@ function clearCalllogPatient(holderId) {
 
     //clear previous entries
     calllogShowHideListPreviousEntriesBtn(true);
+
+    calllogRemovePreviousEncounters();
 }
 
 function findCalllogPatient(holderId,formtype,mrntype,mrn) {
@@ -1273,7 +1275,9 @@ function populatePatientInfo( patient, showinfo, modify, holderId, singleMatch )
     }
 
     //TODO: add previous encounters to the ".combobox-previous-encounters"
-    calllogAddPreviousEncounters(patient);
+    if( patient ) {
+        calllogAddPreviousEncounters(patient);
+    }
 
     //console.log('populate PatientInfo: finished');
 }
@@ -2337,14 +2341,31 @@ function calllogAddPreviousEncounters(patient) {
         //console.log('response='+response);
         //TODO: add encounters to .combobox-previous-encounters select2 (implement as in updateUserComboboxes)
 
+        //1) remove all encounters except (Auto-generated Encounter Number) with value=""
+        //$('select.combobox-previous-encounters').select2('data', null);
+        var existingOptions = $("select.combobox-previous-encounters").find("option");
+        //console.log(existingOptions);
+        existingOptions.each( function() {
+            //console.log("value="+this.value);
+            if( this.value ) {
+                //console.log("remove this value="+this.value+"; text="+this.text);
+                this.remove();
+            }
+        });
+        $("select.combobox-previous-encounters").trigger('change');
+
         //var text = "";
         var thisEncounterId;
         for(thisEncounterId in response) {
             var thisEncounterText = response[thisEncounterId];
             //text += thisEncounterText;
-            var newOption = new Option(thisEncounterText, thisEncounterId, false, false);
-            $("select.combobox-previous-encounters").append(newOption).trigger('change');
+            if( thisEncounterText ) {
+                var newOption = new Option(thisEncounterText, thisEncounterId, false, false);
+                //$("select.combobox-previous-encounters").append(newOption).trigger('change');
+                $("select.combobox-previous-encounters").append(newOption);
+            }
         }
+        $("select.combobox-previous-encounters").trigger('change');
         //console.log("text="+text);
 
         calllogEncounterListener();
@@ -2354,6 +2375,9 @@ function calllogAddPreviousEncounters(patient) {
     }).error(function(jqXHR, textStatus, errorThrown) {
         console.log('Error : ' + errorThrown);
     });
+}
+function calllogRemovePreviousEncounters() {
+
 }
 
 function calllogEncounterListener() {
