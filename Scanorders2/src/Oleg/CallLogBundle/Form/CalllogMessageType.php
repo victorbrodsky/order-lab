@@ -131,6 +131,20 @@ class CalllogMessageType extends AbstractType
             ));
         //}
 
+        if(1) {
+            $builder->add('previousEncounters', EntityType::class, array(
+                'class' => 'OlegOrderformBundle:Encounter',
+                'label' => 'New or Previous Encounter:',
+                'required' => false,
+                'mapped' => false,
+                'multiple' => false,
+                //'data' => $this->params['previousEncounters'],
+                'choices' => $this->params['previousEncounters'],
+                'choice_label' => 'obtainEncounterNumber', //'obtainEncounterNumberOnlyAndDate', //'obtainEncounterNumber',
+                'attr' => array('class' => 'combobox combobox-previous-encounters', 'placeholder' => "New or Previous Encounters"),
+            ));
+        }
+
         /////////////////////////////////////// messageCategory ///////////////////////////////////////
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $message = $event->getData();

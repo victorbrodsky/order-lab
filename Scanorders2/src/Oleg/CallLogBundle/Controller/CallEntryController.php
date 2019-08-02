@@ -1171,7 +1171,7 @@ class CallEntryController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $testing = false;
-        //$testing = true;
+        $testing = true;
 
         //check if user has at least one institution
         $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
@@ -1269,6 +1269,16 @@ class CallEntryController extends Controller
 
             //echo "message id=".$message->getId()."<br>";
             //echo "patient id=".$patient->getId()."<br>";
+
+            //$previousEncounters = $form['previousEncounters']->getData();
+            $previousEncounters = $form->get("previousEncounters")->getData();
+            //print_r($previousEncounters);
+            echo "previousEncounters=".$previousEncounters."<br>";
+            echo "previousEncounters count=".count($previousEncounters)."<br>";
+            foreach($previousEncounters as $previousEncounter) {
+                echo "previousEncounter=".$previousEncounter->obtainEncounterNumberOnlyAndDate()."<br>";
+            }
+            exit('111');
 
             $patientInfoDummyEncounter = null;
             $newEncounter = null;

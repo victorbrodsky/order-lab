@@ -111,8 +111,8 @@
                             {#[Previous ID (MM/DD/YYYY)]#}
                             {#[Older Previous ID (MM/DD/YYYY)]#}
                             {#Selecting the previous encounter should load the values for other fields in the accordion from that encounter via ajax and lock them#}
-                            {% if encounter.previousEncounters is defined %}
-                                {{ formmacros.field(encounter.previousEncounters) }}
+                            {% if form.previousEncounters is defined %}
+                                {{ formmacros.field(form.previousEncounters) }}
                             {% endif %}
 
                             {{ calllogmacros.encounterDateTimeWithTimezone(encounter.date,cycle) }}

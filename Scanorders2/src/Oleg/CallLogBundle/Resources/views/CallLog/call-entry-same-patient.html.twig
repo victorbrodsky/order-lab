@@ -93,8 +93,8 @@
                         {{ formmacros.inputArrayField(encounter.number,"new","encounternumber","key","","","",status) }}
 
                         {#previous encounter drop down menu#}
-                        {% if encounter.previousEncounters is defined %}
-                            {{ formmacros.field(encounter.previousEncounters) }}
+                        {% if form.previousEncounters is defined %}
+                            {{ formmacros.field(form.previousEncounters) }}
                         {% endif %}
 
                         {{ formmacros.inputArrayField(encounter.date,cycle,"encounterdate","date","","","",status) }}
