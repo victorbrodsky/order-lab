@@ -114,6 +114,9 @@
                             {% if form.previousEncounters is defined %}
                                 {{ formmacros.field(form.previousEncounters) }}
                             {% endif %}
+                            {% if form.previousEncounterId is defined %}
+                                {{ formmacros.field(form.previousEncounterId) }}
+                            {% endif %}
 
                             {{ calllogmacros.encounterDateTimeWithTimezone(encounter.date,cycle) }}
                             {#{{ datetime.timezone.vars.label }}#}

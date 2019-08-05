@@ -2349,6 +2349,7 @@ function calllogAddPreviousEncounters(patient) {
             //text += thisEncounterText;
             if( thisEncounterText ) {
                 var newOption = new Option(thisEncounterText, thisEncounterId, false, false);
+                //var newOption = new Option(thisEncounterId, thisEncounterText, false, false);
                 $("select.combobox-previous-encounters").append(newOption).trigger('change');
                 //$("select.combobox-previous-encounters").append(newOption);
             }
@@ -2384,6 +2385,8 @@ function calllogEncounterListener() {
     $("select.combobox-previous-encounters").on("change", function(event) {
         var encounterId = $(this).select2('val');
         console.log("encounter changed: change encounterId="+encounterId);
+
+        $(".message-previousEncounterId").val(encounterId);
 
         //hide current encounter data and show snapshot of the selected encounter?
 

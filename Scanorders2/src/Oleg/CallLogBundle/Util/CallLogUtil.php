@@ -3115,10 +3115,10 @@ class CallLogUtil
 //        return $choices;
         /// EOF testing ///
 
-        echo "previousEncounters count=".count($previousEncounters)."<br>";
-        foreach($previousEncounters as $previousEncounter) {
-            echo "previousEncounter=".$previousEncounter."<br>";
-        }
+//        echo "previousEncounters count=".count($previousEncounters)."<br>";
+//        foreach($previousEncounters as $previousEncounter) {
+//            echo "previousEncounter=".$previousEncounter."<br>";
+//        }
 
         return $previousEncounters;
     }

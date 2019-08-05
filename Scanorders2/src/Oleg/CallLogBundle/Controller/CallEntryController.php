@@ -1270,18 +1270,22 @@ class CallEntryController extends Controller
             //echo "message id=".$message->getId()."<br>";
             //echo "patient id=".$patient->getId()."<br>";
 
-            //$previousEncounters1 = $form['previousEncounters']->getData();
-            //echo "0print:<br>"; print_r($previousEncounters1);
-            //echo "previousEncounters1=".$previousEncounters1."<br>";
-            $previousEncounters = $form->get("previousEncounters")->getData();
-            //echo "1print:<br>"; print_r($previousEncounters);
-            //echo "previousEncountersId=".$previousEncounters->getId()."<br>";
-            echo "previousEncounters=".$previousEncounters."<br>";
-            echo "previousEncounters count=".count($previousEncounters)."<br>";
-            foreach($previousEncounters as $previousEncounter) {
-                echo "previousEncounter=".$previousEncounter->obtainEncounterNumberOnlyAndDate()."<br>";
+            //if $previousEncounterId set => use this encounter, $previousEncounterId is null => don't change anything and use existing message encounter
+            $previousEncounter = null;
+            $previousEncounterId = $form->get("previousEncounterId")->getData();
+            echo "previousEncounterId=".$previousEncounterId."<br>";
+            if( $previousEncounterId ) {
+                $previousEncounter = $em->getRepository('OlegOrderformBundle:Encounter')->find($previousEncounterId);
             }
-            exit('111');
+
+//            $previousEncounters = $form->get("previousEncounters")->getData();
+//            echo "previousEncounters=".$previousEncounters."<br>";
+//            echo "previousEncounters count=".count($previousEncounters)."<br>";
+//            foreach($previousEncounters as $previousEncounter) {
+//                echo "previousEncounter=".$previousEncounter->obtainEncounterNumberOnlyAndDate()."<br>";
+//            }
+
+            //exit('111');
 
             $patientInfoDummyEncounter = null;
             $newEncounter = null;
@@ -1313,55 +1317,61 @@ class CallEntryController extends Controller
                     $patient->removeEncounter($patientInfoDummyEncounter);
                 }
 
-                ////////////// processing new encounter ///////////////////
-                $newEncounter->setSource($system);
-                $newEncounter->setInstitution($institution);
-                $newEncounter->setVersion(1);
+                if( $previousEncounter ) {
+                    $newEncounter = $previousEncounter;
 
-                //assign generated encounter number ID
-                $key = $newEncounter->obtainAllKeyfield()->first();
-                //echo "key=".$key."<br>"; //TODO: test - why key count($newEncounter->obtainAllKeyfield()) == 0 after deprecated removed? because disabled!?
-                //exit('1');
-                if( !$key ) {
-                    //$newKeys = $newEncounter->createKeyField();
-                    //if( count($newKeys) > 0 ) {
-                    //    $key = $newKeys->first();
-                    //} else {
-                    //    throw new \Exception( "CallLog save new Entry Action: Encounter does not have any keys." );
-                    //}
-                    throw new \Exception( "CallLog save new Entry Action: Encounter does not have a key." );
-                }
-                $em->getRepository('OlegOrderformBundle:Encounter')->setEncounterKey($key, $newEncounter, $user);
+                } else {
+                    ////////////// processing new encounter ///////////////////
+                    $newEncounter->setSource($system);
+                    $newEncounter->setInstitution($institution);
+                    $newEncounter->setVersion(1);
 
-                //Remove tracker if spots/location is empty
-                $tracker = $newEncounter->getTracker();
-                if ($tracker) {
-                    $tracker->removeEmptySpots();
-                    if ($tracker->isEmpty()) {
-                        //echo "Tracker is empty! <br>";
-                        $newEncounter->setTracker(null);
-                    } else {
-                        //echo "Tracker is not empty! <br>";
-                        //check if location name is not empty
-                        if ($newEncounter->getTracker()) {
-                            $currentLocation = $newEncounter->getTracker()->getSpots()->first()->getCurrentLocation();
-                            if (!$currentLocation->getName()) {
-                                $currentLocation->setName('');
-                            }
-                            if (!$currentLocation->getCreator()) {
-                                $currentLocation->setCreator($user);
+                    //assign generated encounter number ID
+                    $key = $newEncounter->obtainAllKeyfield()->first();
+                    //echo "key=".$key."<br>"; //TODO: test - why key count($newEncounter->obtainAllKeyfield()) == 0 after deprecated removed? because disabled!?
+                    //exit('1');
+                    if (!$key) {
+                        //$newKeys = $newEncounter->createKeyField();
+                        //if( count($newKeys) > 0 ) {
+                        //    $key = $newKeys->first();
+                        //} else {
+                        //    throw new \Exception( "CallLog save new Entry Action: Encounter does not have any keys." );
+                        //}
+                        throw new \Exception("CallLog save new Entry Action: Encounter does not have a key.");
+                    }
+                    $em->getRepository('OlegOrderformBundle:Encounter')->setEncounterKey($key, $newEncounter, $user);
+
+                    //Remove tracker if spots/location is empty
+                    $tracker = $newEncounter->getTracker();
+                    if ($tracker) {
+                        $tracker->removeEmptySpots();
+                        if ($tracker->isEmpty()) {
+                            //echo "Tracker is empty! <br>";
+                            $newEncounter->setTracker(null);
+                        } else {
+                            //echo "Tracker is not empty! <br>";
+                            //check if location name is not empty
+                            if ($newEncounter->getTracker()) {
+                                $currentLocation = $newEncounter->getTracker()->getSpots()->first()->getCurrentLocation();
+                                if (!$currentLocation->getName()) {
+                                    $currentLocation->setName('');
+                                }
+                                if (!$currentLocation->getCreator()) {
+                                    $currentLocation->setCreator($user);
+                                }
                             }
                         }
-                    }
-                }//$tracker
+                    }//$tracker
 
-                //prevent creating a new location every time: if location id is provided => find location in DB and replace it with tracker->spot->location
-                $calllogUtil->processTrackerLocation($newEncounter);
-                //exit("eof processTrackerLocation");
+                    //prevent creating a new location every time: if location id is provided => find location in DB and replace it with tracker->spot->location
+                    $calllogUtil->processTrackerLocation($newEncounter);
+                    //exit("eof processTrackerLocation");
 
-                //process EncounterReferringProvider: set Specialty, Phone and Email for a new userWrapper (getReferringProviders)
-                $calllogUtil->processReferringProviders($newEncounter,$system);
-                ////////////// EOF processing new encounter ///////////////////
+                    //process EncounterReferringProvider: set Specialty, Phone and Email for a new userWrapper (getReferringProviders)
+                    $calllogUtil->processReferringProviders($newEncounter, $system);
+                    ////////////// EOF processing new encounter ///////////////////
+
+                }//if( !$previousEncounter )
 
                 //backup encounter to message
                 $calllogUtil->copyEncounterBackupToMessage($message,$newEncounter);
@@ -1437,15 +1447,17 @@ class CallEntryController extends Controller
                     //backup patient to message
                     $calllogUtil->copyPatientBackupToMessage($message,$patient);
 
-                    /////////// processing new encounter ///////////
-                    //reset institution from the patient
-                    $newEncounter->setInstitution($patient->getInstitution());
+                    if( !$previousEncounter ) {
+                        /////////// processing new encounter ///////////
+                        //reset institution from the patient
+                        $newEncounter->setInstitution($patient->getInstitution());
 
-                    $patient->addEncounter($newEncounter);
+                        $patient->addEncounter($newEncounter);
 
-                    //update patient's last name, first name, middle name, dob, sex, ...
-                    $calllogUtil->updatePatientInfoFromEncounter($patient, $newEncounter, $user, $system);
-                    /////////// EOF processing new encounter ///////////
+                        //update patient's last name, first name, middle name, dob, sex, ...
+                        $calllogUtil->updatePatientInfoFromEncounter($patient, $newEncounter, $user, $system);
+                        /////////// EOF processing new encounter ///////////
+                    }
 
                     if(0) { //testing
                         echo "encounter count=" . count($patient->getEncounter()) . "<br>";

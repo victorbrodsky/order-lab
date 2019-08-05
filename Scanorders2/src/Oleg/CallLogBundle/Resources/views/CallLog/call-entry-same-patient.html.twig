@@ -96,6 +96,9 @@
                         {% if form.previousEncounters is defined %}
                             {{ formmacros.field(form.previousEncounters) }}
                         {% endif %}
+                        {% if form.previousEncounterId is defined %}
+                            {{ formmacros.field(form.previousEncounterId) }}
+                        {% endif %}
 
                         {{ formmacros.inputArrayField(encounter.date,cycle,"encounterdate","date","","","",status) }}
 
