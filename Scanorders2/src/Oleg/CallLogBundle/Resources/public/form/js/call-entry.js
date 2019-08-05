@@ -2345,14 +2345,15 @@ function calllogAddPreviousEncounters(patient) {
         var thisEncounterId;
         for(thisEncounterId in response) {
             var thisEncounterText = response[thisEncounterId];
+            console.log('thisEncounterText='+thisEncounterText+", thisEncounterId="+thisEncounterId);
             //text += thisEncounterText;
             if( thisEncounterText ) {
                 var newOption = new Option(thisEncounterText, thisEncounterId, false, false);
-                //$("select.combobox-previous-encounters").append(newOption).trigger('change');
-                $("select.combobox-previous-encounters").append(newOption);
+                $("select.combobox-previous-encounters").append(newOption).trigger('change');
+                //$("select.combobox-previous-encounters").append(newOption);
             }
         }
-        $("select.combobox-previous-encounters").trigger('change');
+        //$("select.combobox-previous-encounters").trigger('change');
         //console.log("text="+text);
 
         calllogEncounterListener();

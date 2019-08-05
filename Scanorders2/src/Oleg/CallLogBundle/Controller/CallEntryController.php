@@ -1272,7 +1272,7 @@ class CallEntryController extends Controller
 
             //$previousEncounters = $form['previousEncounters']->getData();
             $previousEncounters = $form->get("previousEncounters")->getData();
-            //print_r($previousEncounters);
+            print_r($previousEncounters);
             echo "previousEncounters=".$previousEncounters."<br>";
             echo "previousEncounters count=".count($previousEncounters)."<br>";
             foreach($previousEncounters as $previousEncounter) {
