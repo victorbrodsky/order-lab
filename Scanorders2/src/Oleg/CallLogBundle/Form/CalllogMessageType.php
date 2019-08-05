@@ -25,6 +25,7 @@ use Oleg\UserdirectoryBundle\Form\InstitutionType;
 use Oleg\UserdirectoryBundle\Form\FormNode\MessageCategoryFormNodeType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -135,7 +136,20 @@ class CalllogMessageType extends AbstractType
             $builder->add('previousEncounters', EntityType::class, array(
                 'class' => 'OlegOrderformBundle:Encounter',
                 'label' => 'New or Previous Encounter:',
-                'required' => false,
+                'required' => true,
+                'mapped' => false,
+                'multiple' => false,
+                //'data' => $this->params['previousEncounters'],
+                'choices' => $this->params['previousEncounters'],
+                'choice_label' => 'obtainEncounterNumber', //'obtainEncounterNumberOnlyAndDate', //'obtainEncounterNumber',
+                'attr' => array('class' => 'combobox combobox-previous-encounters', 'placeholder' => "New or Previous Encounters"),
+            ));
+        }
+        if(0) {
+            $builder->add('previousEncounters', ChoiceType::class, array(
+                //'class' => 'OlegOrderformBundle:Encounter',
+                'label' => 'New or Previous Encounter:',
+                'required' => true,
                 'mapped' => false,
                 'multiple' => false,
                 //'data' => $this->params['previousEncounters'],

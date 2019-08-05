@@ -834,6 +834,11 @@ class Encounter extends ObjectAbstract
             $encNames = $encNames . " name=". $name. " (provider=".$name->getProvider().", status=".$name->getStatus().") ";
         }
 
+        $patientFirstName = "";
+        if( $this->getPatient() && $this->getPatient()->getFirstname() ) {
+            $patientFirstName = $this->getPatient()->getFirstname()->first();
+        }
+
         $patfirstname = "";
         foreach( $this->getpatfirstname() as $name ) {
             $patfirstname = $patfirstname . " patfirstname=". $name. " (provider=".$name->getProvider().", status=".$name->getStatus().", alias=".$name->getAlias().") ";
@@ -859,14 +864,19 @@ class Encounter extends ObjectAbstract
             $hist = $hist . " pathist=". $name. " (provider=".$name->getProvider().", status=".$name->getStatus().") ";
         }
 
-        return 'Encounter: id=' . $this->id . ", patientFirstName=".$this->getPatient()->getFirstname()->first().
+        $parentId = "";
+        if( $this->getParent() ) {
+            $parentId = $this->getParent()->getId();
+        }
+
+        return 'Encounter: id=' . $this->id . ", patientFirstName=".$patientFirstName.
             ", patfirstname=" . $patfirstname .
             ", patlastname=" . $patlastname .
             ", patage=" . $patAge . ", patsex=".$patSex.", Clinical History=".$hist.
             ", encounterNameCount=" . count($this->getName()) . " => Names=".$encNames.
             ", encounterCount=" . count($this->number) .
             ": encounter->first=" . $this->number->first() .
-            ", parentId=".$this->getParent()->getId().
+            ", parentId=".$parentId.
             "; linked procedureCount=".count($this->procedure).":".$this->procedure->first();
     }
 

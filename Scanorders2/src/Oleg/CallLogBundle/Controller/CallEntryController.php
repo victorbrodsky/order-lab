@@ -1270,11 +1270,12 @@ class CallEntryController extends Controller
             //echo "message id=".$message->getId()."<br>";
             //echo "patient id=".$patient->getId()."<br>";
 
-            $previousEncounters1 = $form['previousEncounters']->getData();
-            echo "0print:<br>"; print_r($previousEncounters1);
-            echo "previousEncounters1=".$previousEncounters1."<br>";
+            //$previousEncounters1 = $form['previousEncounters']->getData();
+            //echo "0print:<br>"; print_r($previousEncounters1);
+            //echo "previousEncounters1=".$previousEncounters1."<br>";
             $previousEncounters = $form->get("previousEncounters")->getData();
-            echo "1print:<br>"; print_r($previousEncounters);
+            //echo "1print:<br>"; print_r($previousEncounters);
+            //echo "previousEncountersId=".$previousEncounters->getId()."<br>";
             echo "previousEncounters=".$previousEncounters."<br>";
             echo "previousEncounters count=".count($previousEncounters)."<br>";
             foreach($previousEncounters as $previousEncounter) {
