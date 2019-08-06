@@ -1171,7 +1171,7 @@ class CallEntryController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $testing = false;
-        $testing = true;
+        //$testing = true;
 
         //check if user has at least one institution
         $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
@@ -1271,12 +1271,12 @@ class CallEntryController extends Controller
             //echo "patient id=".$patient->getId()."<br>";
 
             //if $previousEncounterId set => use this encounter, $previousEncounterId is null => don't change anything and use existing message encounter
-            $previousEncounter = null;
+            //$previousEncounter = null;
             $previousEncounterId = $form->get("previousEncounterId")->getData();
             echo "previousEncounterId=".$previousEncounterId."<br>";
-            if( $previousEncounterId ) {
-                $previousEncounter = $em->getRepository('OlegOrderformBundle:Encounter')->find($previousEncounterId);
-            }
+            //if( $previousEncounterId ) {
+            //    $previousEncounter = $em->getRepository('OlegOrderformBundle:Encounter')->find($previousEncounterId);
+            //}
 
 //            $previousEncounters = $form->get("previousEncounters")->getData();
 //            echo "previousEncounters=".$previousEncounters."<br>";
@@ -1317,8 +1317,10 @@ class CallEntryController extends Controller
                     $patient->removeEncounter($patientInfoDummyEncounter);
                 }
 
-                if( $previousEncounter ) {
-                    $newEncounter = $previousEncounter;
+                if( $previousEncounterId ) {
+
+                    //$newEncounter = $previousEncounter;
+                    $newEncounter = $em->getRepository('OlegOrderformBundle:Encounter')->find($previousEncounterId);
 
                 } else {
                     ////////////// processing new encounter ///////////////////
@@ -1371,7 +1373,7 @@ class CallEntryController extends Controller
                     $calllogUtil->processReferringProviders($newEncounter, $system);
                     ////////////// EOF processing new encounter ///////////////////
 
-                }//if( !$previousEncounter )
+                }//if( !$previousEncounterId )
 
                 //backup encounter to message
                 $calllogUtil->copyEncounterBackupToMessage($message,$newEncounter);
@@ -1447,8 +1449,9 @@ class CallEntryController extends Controller
                     //backup patient to message
                     $calllogUtil->copyPatientBackupToMessage($message,$patient);
 
-                    if( !$previousEncounter ) {
+                    if( !$previousEncounterId ) {
                         /////////// processing new encounter ///////////
+                        echo "processing new encounter<br>";
                         //reset institution from the patient
                         $newEncounter->setInstitution($patient->getInstitution());
 
@@ -1484,8 +1487,11 @@ class CallEntryController extends Controller
                     //exit('Exit Case 1');
                     //$em->persist($patient);
                     if( !$testing ) {
-                        //new encounter
-                        $em->persist($newEncounter);
+                        //if( !$previousEncounterId ) {
+                            //echo "persist new encounter<br>";
+                            //new encounter
+                            $em->persist($newEncounter);
+                        //}
                         $em->persist($message);
                         $em->flush();
                     }
