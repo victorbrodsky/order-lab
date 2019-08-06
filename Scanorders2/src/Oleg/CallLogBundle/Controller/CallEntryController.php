@@ -1102,7 +1102,7 @@ class CallEntryController extends Controller
         $message->addEncounter($encounter2);
         ///////////// EOF Message //////////////
 
-        $form = $this->createCalllogEntryForm($message,$mrntype,$mrn,$cycle,$readonlyEncounter); //entry/new
+        $form = $this->createCalllogEntryForm($message,$mrntype,$mrn,$cycle,$readonlyEncounter,true); //entry/new
 
         //$encounterid = $calllogUtil->getNextEncounterGeneratedId();
 
@@ -1199,7 +1199,7 @@ class CallEntryController extends Controller
 
         $message = $this->createCalllogEntryMessage($user,$permittedInstitutions,$system); //save
 
-        $form = $this->createCalllogEntryForm($message,$mrntype,$mrn,$cycle); ///entry/save
+        $form = $this->createCalllogEntryForm($message,$mrntype,$mrn,$cycle,false,true); ///entry/save
 
         $form->handleRequest($request);
 
@@ -1610,7 +1610,7 @@ class CallEntryController extends Controller
         );
     }//save
 
-    public function createCalllogEntryForm($message, $mrntype=null, $mrn=null, $cycle, $readonlyEncounter=false) {
+    public function createCalllogEntryForm($message, $mrntype=null, $mrn=null, $cycle, $readonlyEncounter=false, $showPreviousEncounters=false) {
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
         $calllogUtil = $this->get('calllog_util');
@@ -1658,9 +1658,11 @@ class CallEntryController extends Controller
         $defaultInstitution = NULL;
         //$defaultInstitution = $userSecUtil->getSiteSettingParameter('institution',$sitename);
 
-        //$previousEncounters
-        $previousEncounters = $calllogUtil->getPreviousEncounterByMessage($message);
-        //$previousEncounters = array("Encounter 1"=>"Encounter 1", "Encounter 2"=>"Encounter 2", "Encounter 3"=>"Encounter 3");
+        $previousEncounters = NULL;
+        if( $showPreviousEncounters ) {
+            $previousEncounters = $calllogUtil->getPreviousEncounterByMessage($message);
+            //$previousEncounters = array("Encounter 1"=>"Encounter 1", "Encounter 2"=>"Encounter 2", "Encounter 3"=>"Encounter 3");
+        }
 
         $params = array(
             'cycle' => $cycle,  //'new',

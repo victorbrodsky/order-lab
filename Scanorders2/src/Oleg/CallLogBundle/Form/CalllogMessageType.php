@@ -133,42 +133,50 @@ class CalllogMessageType extends AbstractType
             ));
         //}
 
-        if(1) {
-            $builder->add('previousEncounters', EntityType::class, array(
-                'class' => 'OlegOrderformBundle:Encounter',
-                'label' => 'New or Previous Encounter:',
-                'required' => true,
-                'mapped' => false,
-                'multiple' => false,
-                //'data' => $this->params['previousEncounters'],
-                'choices' => $this->params['previousEncounters'],
-                'choice_label' => 'obtainEncounterNumber', //'obtainEncounterNumberOnlyAndDate', //'obtainEncounterNumber',
-                'attr' => array('class' => 'combobox combobox-previous-encounters', 'placeholder' => "New or Previous Encounters"),
-            ));
-            $builder->add( 'previousEncounterId', HiddenType::class, array(
-                'label' => false,
-                'mapped' => false,
-                'attr'=>array('class'=>'message-previousEncounterId')
-            ));
+        if( $this->params['previousEncounters'] ) {
+            if (1) {
+                $builder->add('previousEncounters', EntityType::class, array(
+                    'class' => 'OlegOrderformBundle:Encounter',
+                    'label' => 'New or Previous Encounter:',
+                    'required' => true,
+                    'mapped' => false,
+                    'multiple' => false,
+                    //'data' => $this->params['previousEncounters'],
+                    'choices' => $this->params['previousEncounters'],
+                    'choice_label' => 'obtainEncounterNumber', //'obtainEncounterNumberOnlyAndDate', //'obtainEncounterNumber',
+                    'attr' => array('class' => 'combobox combobox-previous-encounters', 'placeholder' => "New or Previous Encounters"),
+                ));
+//                $builder->add('previousEncounterId', HiddenType::class, array(
+//                    'label' => false,
+//                    'mapped' => false,
+//                    'attr' => array('class' => 'message-previousEncounterId')
+//                ));
+            }
+            if (0) {
+                $builder->add('previousEncounters', ChoiceType::class, array(
+                    //'class' => 'OlegOrderformBundle:Encounter',
+                    'label' => 'New or Previous Encounter:',
+                    'required' => true,
+                    'mapped' => false,
+                    'multiple' => false,
+                    //'data' => $this->params['previousEncounters'],
+                    'choices' => $this->params['previousEncounters'],
+                    'choice_label' => 'obtainEncounterNumber', //'obtainEncounterNumberOnlyAndDate', //'obtainEncounterNumber',
+                    'attr' => array('class' => 'combobox combobox-previous-encounters', 'placeholder' => "New or Previous Encounters"),
+                ));
+//                $builder->add('previousEncounterId', HiddenType::class, array(
+//                    'label' => false,
+//                    'mapped' => false,
+//                    'attr' => array('class' => 'message-previousEncounterId')
+//                ));
+            }
         }
-        if(0) {
-            $builder->add('previousEncounters', ChoiceType::class, array(
-                //'class' => 'OlegOrderformBundle:Encounter',
-                'label' => 'New or Previous Encounter:',
-                'required' => true,
-                'mapped' => false,
-                'multiple' => false,
-                //'data' => $this->params['previousEncounters'],
-                'choices' => $this->params['previousEncounters'],
-                'choice_label' => 'obtainEncounterNumber', //'obtainEncounterNumberOnlyAndDate', //'obtainEncounterNumber',
-                'attr' => array('class' => 'combobox combobox-previous-encounters', 'placeholder' => "New or Previous Encounters"),
-            ));
-            $builder->add( 'previousEncounterId', HiddenType::class, array(
-                'label' => false,
-                'mapped' => false,
-                'attr'=>array('class'=>'message-previousEncounterId')
-            ));
-        }
+
+        $builder->add('previousEncounterId', HiddenType::class, array(
+            'label' => false,
+            'mapped' => false,
+            'attr' => array('class' => 'message-previousEncounterId')
+        ));
 
         /////////////////////////////////////// messageCategory ///////////////////////////////////////
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
