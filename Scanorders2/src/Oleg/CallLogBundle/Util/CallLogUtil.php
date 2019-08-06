@@ -23,6 +23,7 @@ use Oleg\OrderformBundle\Entity\Block;
 use Oleg\OrderformBundle\Entity\CalllogEntryMessage;
 use Oleg\OrderformBundle\Entity\Encounter;
 use Oleg\OrderformBundle\Entity\EncounterAttendingPhysician;
+use Oleg\OrderformBundle\Entity\EncounterDate;
 use Oleg\OrderformBundle\Entity\EncounterReferringProvider;
 use Oleg\OrderformBundle\Entity\FormVersion;
 use Oleg\OrderformBundle\Entity\MrnType;
@@ -2205,12 +2206,14 @@ class CallLogUtil
             //Encounter Number Type Backup
             $keytype = $key->getKeytype();
             if( $keytype ) {
+                //echo "Set keytype=$keytype <br>";
                 $calllogEntryMessage->setEncounterTypeBackup($keytype);
             }
 
             //Encounter Number Backup
             $number = $key->getField();
             if( $number ) {
+                //echo "Set number=$number <br>";
                 $calllogEntryMessage->setEncounterNumberBackup($number);
             }
         }
@@ -2218,7 +2221,15 @@ class CallLogUtil
         //Encounter Date Backup
         $date = $encounter->getDate()->first();
         if( $date ) {
-            $calllogEntryMessage->setEncounterDateBackup($date);
+            //echo "Set date=".$date."<br>";
+            //$calllogEntryMessage->setEncounterDateBackup($date);
+            //Construct a new EncounterDate
+            $encounterDate = new EncounterDate($date->getStatus(),$date->getProvider(),$date->getSource());
+            $encounterDate->setEncounter($encounter);
+            $encounterDate->setField($date->getField());
+            $encounterDate->setTime($date->getTime());
+            $encounterDate->setTimezone($date->getTimezone());
+            $calllogEntryMessage->setEncounterDateBackup($encounterDate);
         }
     }
 

@@ -1321,6 +1321,9 @@ class CallEntryController extends Controller
 
                     //$newEncounter = $previousEncounter;
                     $newEncounter = $em->getRepository('OlegOrderformBundle:Encounter')->find($previousEncounterId);
+                    if( !$newEncounter ) {
+                        throw new \Exception("Previous encounter is not found by ID=".$previousEncounterId);
+                    }
 
                 } else {
                     ////////////// processing new encounter ///////////////////
@@ -1487,11 +1490,11 @@ class CallEntryController extends Controller
                     //exit('Exit Case 1');
                     //$em->persist($patient);
                     if( !$testing ) {
-                        //if( !$previousEncounterId ) {
+                        if( !$previousEncounterId ) {
                             //echo "persist new encounter<br>";
                             //new encounter
                             $em->persist($newEncounter);
-                        //}
+                        }
                         $em->persist($message);
                         $em->flush();
                     }
@@ -1501,7 +1504,11 @@ class CallEntryController extends Controller
                     //do it after message is in DB and has ID
                     $calllogUtil->addToPatientLists($patient,$message,$testing);
 
-                    $msg = "New Encounter (ID#" . $newEncounter->getId() . ") is created with number " . $newEncounter->obtainEncounterNumber() . " for the Patient with ID #" . $patient->getId();
+                    if( $previousEncounterId ) {
+                        $msg = "Previous Encounter (ID#" . $newEncounter->getId() . ") has been used with number " . $newEncounter->obtainEncounterNumber() . " for the Patient with ID #" . $patient->getId();
+                    } else {
+                        $msg = "New Encounter (ID#" . $newEncounter->getId() . ") is created with number " . $newEncounter->obtainEncounterNumber() . " for the Patient with ID #" . $patient->getId();
+                    }
 
                 } else {
                     //CASE 2

@@ -146,6 +146,7 @@ class CalllogMessageType extends AbstractType
                 'attr' => array('class' => 'combobox combobox-previous-encounters', 'placeholder' => "New or Previous Encounters"),
             ));
             $builder->add( 'previousEncounterId', HiddenType::class, array(
+                'label' => false,
                 'mapped' => false,
                 'attr'=>array('class'=>'message-previousEncounterId')
             ));
@@ -163,6 +164,7 @@ class CalllogMessageType extends AbstractType
                 'attr' => array('class' => 'combobox combobox-previous-encounters', 'placeholder' => "New or Previous Encounters"),
             ));
             $builder->add( 'previousEncounterId', HiddenType::class, array(
+                'label' => false,
                 'mapped' => false,
                 'attr'=>array('class'=>'message-previousEncounterId')
             ));
