@@ -2378,6 +2378,8 @@ function calllogRemovePreviousEncounters() {
         }
     });
     $("select.combobox-previous-encounters").trigger('change');
+
+    $(".message-previousEncounterId").val(null);
 }
 
 function calllogEncounterListener() {
@@ -2386,6 +2388,7 @@ function calllogEncounterListener() {
         var encounterId = $(this).select2('val');
         console.log("encounter changed: change encounterId="+encounterId);
 
+        //set previous EncounterId - it will be used by a controller to attach this previous encounter to the message
         $(".message-previousEncounterId").val(encounterId);
 
         //hide current encounter data and show snapshot of the selected encounter?
