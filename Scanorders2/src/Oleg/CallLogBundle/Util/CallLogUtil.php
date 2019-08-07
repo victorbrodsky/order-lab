@@ -2716,87 +2716,32 @@ class CallLogUtil
 
 
 
-    public function getUnprocessedTextObjects() {
+    public function getUnprocessedTextObjects($sourceFormNodeId,$destinationFormNodeId) {
         $logger = $this->container->get('logger');
         $em = $this->em;
         //$formNodeUtil = $this->container->get('user_formnode_utility');
         //$userSecUtil = $this->container->get('user_security_utility');
 
-        $historySourceFormNode = $this->getSourceFormNodeByName("History/Findings");
-        if( !$historySourceFormNode ) {
-            exit("Error: no source form node History/Findings");
-        }
-        $impressionSourceFormNode = $this->getSourceFormNodeByName("Impression/Outcome");
-        if( !$impressionSourceFormNode ) {
-            exit("Error: no source form node Impression/Outcome");
-        }
-
-        $historyDestinationFormNode = $this->getDestinationFormNodeByName("History/Findings HTML");
-        if( !$historyDestinationFormNode ) {
-            exit("Error: no destination form node History/Findings HTML");
-        }
-        $historyDestinationFormNodeId = $historyDestinationFormNode->getId();
-
-        $impressionDestinationFormNode = $this->getDestinationFormNodeByName("Impression/Outcome HTML");
-        if( !$impressionDestinationFormNode ) {
-            exit("Error: no destination form node Impression/Outcome HTML");
-        }
-        $impressionDestinationFormNodeId = $impressionDestinationFormNode->getId();
-
-
-//        $rsm = new ResultSetMapping();
-//        $rsm->addEntityResult('OlegUserdirectoryBundle:ObjectTypeText', 'list')
-//            //->addEntityResult('OlegUserdirectoryBundle:ObjectTypeText', 'listHtml')
-//            ->addFieldResult('list', 'id', 'id')
-//            ->addFieldResult('list', 'value', 'value')
-//            ->addFieldResult('list', 'secondaryValue', 'secondaryValue')
-//        ;
-//        $rsm->addJoinedEntityResult('OlegUserdirectoryBundle:FormNode' , 'f', 'list', 'formNode');
-//        //"formNode.id = " . $historySourceFormNode->getId() . " OR formNode.id = " . $impressionSourceFormNode->getId()
-//        $sql = "
-//            SELECT
-//                list.id,
-//                list.value,
-//                list.secondaryValue
-//            FROM
-//                (SELECT ...very long query...) charges
-//            LEFT JOIN
-//                (SELECT ...very long query...) refunds ON charges.id = refunds.id AND charges.currency = refunds.currency
-//            WHERE some_field = ?
-//        ";
+//        $historySourceFormNode = $this->getSourceFormNodeByName("History/Findings");
+//        if( !$historySourceFormNode ) {
+//            exit("Error: no source form node History/Findings");
+//        }
+//        $impressionSourceFormNode = $this->getSourceFormNodeByName("Impression/Outcome");
+//        if( !$impressionSourceFormNode ) {
+//            exit("Error: no source form node Impression/Outcome");
+//        }
 //
-//        $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
-//        $query->setParameter(1, $name);
-//        $entities = $query->getResult();
-
-
-//        $expr = $em->getExpressionBuilder();
-//        $dql = $em->createQueryBuilder()
-//            ->select('list')
-//            ->from('OlegUserdirectoryBundle:ObjectTypeText', 'list')
-//            ->join('list.formNode', 'formNode')
-//            ->where(
-//                $expr->in(
-//                    'o.id',
-//                    $em->createQueryBuilder()
-//                        ->select('o2.id')
-//                        ->from('Order', 'o2')
-//                        ->join('Item',
-//                            'i2',
-//                            \Doctrine\ORM\Query\Expr\Join::WITH,
-//                            $expr->andX(
-//                                $expr->eq('i2.order', 'o2'),
-//                                $expr->eq('i2.id', '?1')
-//                            )
-//                        )
-//                        ->getDQL()
-//                )
-//            )
-//            ->andWhere($expr->neq('i.id', '?2'))
-//            ->orderBy('o.orderdate', 'DESC')
-//            ->setParameter(1, 5)
-//            ->setParameter(2, 5)
-//        ;
+//        $historyDestinationFormNode = $this->getDestinationFormNodeByName("History/Findings HTML");
+//        if( !$historyDestinationFormNode ) {
+//            exit("Error: no destination form node History/Findings HTML");
+//        }
+//        $historyDestinationFormNodeId = $historyDestinationFormNode->getId();
+//
+//        $impressionDestinationFormNode = $this->getDestinationFormNodeByName("Impression/Outcome HTML");
+//        if( !$impressionDestinationFormNode ) {
+//            exit("Error: no destination form node Impression/Outcome HTML");
+//        }
+//        $impressionDestinationFormNodeId = $impressionDestinationFormNode->getId();
 
         //1) subquery to get a fellowship application object with logger.entityId and fellowshipSubspecialty in the $fellowshipTypes array
         $subquery = $em->createQueryBuilder()
@@ -2804,7 +2749,7 @@ class CallLogUtil
             //->select('html.id')
             ->from('OlegUserdirectoryBundle:ObjectTypeText', 'html')
             ->leftJoin('html.formNode','formNodeHtml')
-            ->where("formNodeHtml.id = " . $historyDestinationFormNodeId)
+            ->where("formNodeHtml.id = " . $destinationFormNodeId)
             ->andWhere("html.value IS NOT NULL")
             ->andWhere("html.entityName = 'Message'")
             ->andWhere("html.entityId = list.entityId")
@@ -2816,7 +2761,7 @@ class CallLogUtil
         $dql = $repository->createQueryBuilder("list");;
         $dql->select('list');
         $dql->leftJoin("list.formNode", "formNode");
-        $dql->where("formNode.id = " . $historySourceFormNode->getId());
+        $dql->where("formNode.id = " . $sourceFormNodeId);
         $dql->andWhere("list.entityName = 'Message'");
         //$dql->andWhere("list.value IS NOT NULL");
         $dql->andWhere($subquery."=0");
@@ -2825,7 +2770,7 @@ class CallLogUtil
         $query = $em->createQuery($dql);
 
         $unprocessedSourceTextObjects = $query->getResult();
-        echo "\n\r getUnprocessedTextObjects: UnprocessedSourceTextObjects count=".count($unprocessedSourceTextObjects)."<br>";
+        //echo "\n\r getUnprocessedTextObjects: UnprocessedSourceTextObjects count=".count($unprocessedSourceTextObjects)."<br>";
         //$logger->notice("getUnprocessedTextObjects: UnprocessedSourceTextObjects count=".count($unprocessedSourceTextObjects));
 
         return $unprocessedSourceTextObjects;
@@ -2896,13 +2841,6 @@ class CallLogUtil
 //            return $this->redirect($this->generateUrl('employees-nopermission'));
 //        }
 
-        //testing
-        $unprocessedSourceTextObjects = $this->getUnprocessedTextObjects();
-        //exit("EOF unprocessedSourceTextObjects=".count($unprocessedSourceTextObjects));
-
-        //$this->getUnprocessedTextObjectsLoop();
-        exit('EOF testing counting');
-
         set_time_limit(900); //600 seconds => 10 mins; 900=15min; 1800=30 min
 
         $logger = $this->container->get('logger');
@@ -2917,10 +2855,6 @@ class CallLogUtil
         if( !$historySourceFormNode ) {
             exit("Error: no source form node History/Findings");
         }
-        $impressionSourceFormNode = $this->getSourceFormNodeByName("Impression/Outcome");
-        if( !$impressionSourceFormNode ) {
-            exit("Error: no source form node Impression/Outcome");
-        }
 
         $historyDestinationFormNode = $this->getDestinationFormNodeByName("History/Findings HTML");
         if( !$historyDestinationFormNode ) {
@@ -2928,11 +2862,30 @@ class CallLogUtil
         }
         $historyDestinationFormNodeId = $historyDestinationFormNode->getId();
 
+        $impressionSourceFormNode = $this->getSourceFormNodeByName("Impression/Outcome");
+        if( !$impressionSourceFormNode ) {
+            exit("Error: no source form node Impression/Outcome");
+        }
+
         $impressionDestinationFormNode = $this->getDestinationFormNodeByName("Impression/Outcome HTML");
         if( !$impressionDestinationFormNode ) {
             exit("Error: no destination form node Impression/Outcome HTML");
         }
         $impressionDestinationFormNodeId = $impressionDestinationFormNode->getId();
+
+
+        //testing
+        //History
+        $unprocessedHistorySourceTextObjects = $this->getUnprocessedTextObjects($historySourceFormNode->getId(),$historyDestinationFormNode->getId());
+        echo "History unprocessedSourceTextObjects=".count($unprocessedHistorySourceTextObjects)."<br>";
+
+        //Impression
+        $unprocessedImpressionSourceTextObjects = $this->getUnprocessedTextObjects($impressionSourceFormNode->getId(),$impressionDestinationFormNode->getId());
+        echo "Impression unprocessedSourceTextObjects=".count($unprocessedImpressionSourceTextObjects)."<br>";
+
+        //$this->getUnprocessedTextObjectsLoop();
+        exit('EOF testing counting');
+
 
         //$formNodeHtml = $em->getRepository('OlegUserdirectoryBundle:ObjectTypeText')->findAll();
 
