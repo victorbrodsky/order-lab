@@ -2841,6 +2841,8 @@ class CallLogUtil
 //            return $this->redirect($this->generateUrl('employees-nopermission'));
 //        }
 
+        $newline = "\n\r";
+
         set_time_limit(900); //600 seconds => 10 mins; 900=15min; 1800=30 min
 
         $logger = $this->container->get('logger');
@@ -2877,14 +2879,14 @@ class CallLogUtil
         //testing
         //History
         $unprocessedHistorySourceTextObjects = $this->getUnprocessedTextObjects($historySourceFormNode->getId(),$historyDestinationFormNode->getId());
-        echo "History unprocessedSourceTextObjects=".count($unprocessedHistorySourceTextObjects)."<br>";
+        echo $newline."History unprocessedSourceTextObjects=".count($unprocessedHistorySourceTextObjects)."<br>";
 
         //Impression
         $unprocessedImpressionSourceTextObjects = $this->getUnprocessedTextObjects($impressionSourceFormNode->getId(),$impressionDestinationFormNode->getId());
-        echo "Impression unprocessedSourceTextObjects=".count($unprocessedImpressionSourceTextObjects)."<br>";
+        echo $newline."Impression unprocessedSourceTextObjects=".count($unprocessedImpressionSourceTextObjects)."<br>";
 
         //$this->getUnprocessedTextObjectsLoop();
-        exit('EOF testing counting');
+        exit($newline.'EOF testing counting');
 
 
         //$formNodeHtml = $em->getRepository('OlegUserdirectoryBundle:ObjectTypeText')->findAll();
