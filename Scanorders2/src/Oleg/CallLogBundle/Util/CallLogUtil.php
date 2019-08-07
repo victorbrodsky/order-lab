@@ -17,6 +17,7 @@
 
 namespace Oleg\CallLogBundle\Util;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Query\ResultSetMapping;
 use Oleg\CallLogBundle\Form\CalllogNavbarFilterType;
 use Oleg\OrderformBundle\Entity\Accession;
 use Oleg\OrderformBundle\Entity\Block;
@@ -2715,15 +2716,194 @@ class CallLogUtil
 
 
 
+    public function getUnprocessedTextObjects() {
+        $logger = $this->container->get('logger');
+        $em = $this->em;
+        //$formNodeUtil = $this->container->get('user_formnode_utility');
+        //$userSecUtil = $this->container->get('user_security_utility');
 
+        $historySourceFormNode = $this->getSourceFormNodeByName("History/Findings");
+        if( !$historySourceFormNode ) {
+            exit("Error: no source form node History/Findings");
+        }
+        $impressionSourceFormNode = $this->getSourceFormNodeByName("Impression/Outcome");
+        if( !$impressionSourceFormNode ) {
+            exit("Error: no source form node Impression/Outcome");
+        }
+
+        $historyDestinationFormNode = $this->getDestinationFormNodeByName("History/Findings HTML");
+        if( !$historyDestinationFormNode ) {
+            exit("Error: no destination form node History/Findings HTML");
+        }
+        $historyDestinationFormNodeId = $historyDestinationFormNode->getId();
+
+        $impressionDestinationFormNode = $this->getDestinationFormNodeByName("Impression/Outcome HTML");
+        if( !$impressionDestinationFormNode ) {
+            exit("Error: no destination form node Impression/Outcome HTML");
+        }
+        $impressionDestinationFormNodeId = $impressionDestinationFormNode->getId();
+
+
+//        $rsm = new ResultSetMapping();
+//        $rsm->addEntityResult('OlegUserdirectoryBundle:ObjectTypeText', 'list')
+//            //->addEntityResult('OlegUserdirectoryBundle:ObjectTypeText', 'listHtml')
+//            ->addFieldResult('list', 'id', 'id')
+//            ->addFieldResult('list', 'value', 'value')
+//            ->addFieldResult('list', 'secondaryValue', 'secondaryValue')
+//        ;
+//        $rsm->addJoinedEntityResult('OlegUserdirectoryBundle:FormNode' , 'f', 'list', 'formNode');
+//        //"formNode.id = " . $historySourceFormNode->getId() . " OR formNode.id = " . $impressionSourceFormNode->getId()
+//        $sql = "
+//            SELECT
+//                list.id,
+//                list.value,
+//                list.secondaryValue
+//            FROM
+//                (SELECT ...very long query...) charges
+//            LEFT JOIN
+//                (SELECT ...very long query...) refunds ON charges.id = refunds.id AND charges.currency = refunds.currency
+//            WHERE some_field = ?
+//        ";
+//
+//        $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
+//        $query->setParameter(1, $name);
+//        $entities = $query->getResult();
+
+
+//        $expr = $em->getExpressionBuilder();
+//        $dql = $em->createQueryBuilder()
+//            ->select('list')
+//            ->from('OlegUserdirectoryBundle:ObjectTypeText', 'list')
+//            ->join('list.formNode', 'formNode')
+//            ->where(
+//                $expr->in(
+//                    'o.id',
+//                    $em->createQueryBuilder()
+//                        ->select('o2.id')
+//                        ->from('Order', 'o2')
+//                        ->join('Item',
+//                            'i2',
+//                            \Doctrine\ORM\Query\Expr\Join::WITH,
+//                            $expr->andX(
+//                                $expr->eq('i2.order', 'o2'),
+//                                $expr->eq('i2.id', '?1')
+//                            )
+//                        )
+//                        ->getDQL()
+//                )
+//            )
+//            ->andWhere($expr->neq('i.id', '?2'))
+//            ->orderBy('o.orderdate', 'DESC')
+//            ->setParameter(1, 5)
+//            ->setParameter(2, 5)
+//        ;
+
+        //1) subquery to get a fellowship application object with logger.entityId and fellowshipSubspecialty in the $fellowshipTypes array
+        $subquery = $em->createQueryBuilder()
+            ->select('COUNT(html.id)')
+            ->from('OlegUserdirectoryBundle:ObjectTypeText', 'html')
+            ->leftJoin('html.formNode','formNodeHtml')
+            //->where('fellapp.id = logger.entityId AND fellowshipSubspecialty.id IN('.implode(",", $fellowshipTypes).')') //AND fellowshipSubspecialty.id IN(37)
+            ->where("formNode.id = " . $historyDestinationFormNodeId)
+            //        $dql->andWhere("list.value IS NOT NULL");
+            ->andWhere("html.value IS NOT NULL")
+            //        $dql->andWhere("list.entityName = '$entityName' AND list.entityId = '$entityId'");
+            ->andWhere("list.entityName = 'Message'")
+            ->andWhere("list.entityId = html.entityId")
+            ->getDQL();
+        $subquery = '('.$subquery.')';
+
+        //query
+        $repository = $em->getRepository('OlegUserdirectoryBundle:ObjectTypeText');
+        $dql = $repository->createQueryBuilder("list");;
+        $dql->select('list');
+        $dql->leftJoin("list.formNode", "formNode");
+        //$dql->andWhere("list.name = 'History/Findings' OR list.name = 'Impression/Outcome'");
+        $dql->where("formNode.id = " . $historySourceFormNode->getId());
+        $dql->andWhere("list.entityName = 'Message'");
+        $dql->andWhere($subquery."=0");
+        //$dql->andWhere("list.entityId = html.entityId");
+
+        $query = $em->createQuery($dql);
+
+        $unprocessedSourceTextObjects = $query->getResult();
+        echo "\n\r getUnprocessedTextObjects: UnprocessedSourceTextObjects count=".count($unprocessedSourceTextObjects)."<br>";
+        //$logger->notice("getUnprocessedTextObjects: UnprocessedSourceTextObjects count=".count($unprocessedSourceTextObjects));
+
+        return $unprocessedSourceTextObjects;
+    }
+    //$historySourceFormNode
+    public function getUnprocessedTextObjectsLoop() {
+        $logger = $this->container->get('logger');
+        $em = $this->em;
+
+        $historySourceFormNode = $this->getSourceFormNodeByName("History/Findings");
+        if( !$historySourceFormNode ) {
+            exit("Error: no source form node History/Findings");
+        }
+        $impressionSourceFormNode = $this->getSourceFormNodeByName("Impression/Outcome");
+        if( !$impressionSourceFormNode ) {
+            exit("Error: no source form node Impression/Outcome");
+        }
+
+        $historyDestinationFormNode = $this->getDestinationFormNodeByName("History/Findings HTML");
+        if( !$historyDestinationFormNode ) {
+            exit("Error: no destination form node History/Findings HTML");
+        }
+        $historyDestinationFormNodeId = $historyDestinationFormNode->getId();
+
+        $impressionDestinationFormNode = $this->getDestinationFormNodeByName("Impression/Outcome HTML");
+        if( !$impressionDestinationFormNode ) {
+            exit("Error: no destination form node Impression/Outcome HTML");
+        }
+        $impressionDestinationFormNodeId = $impressionDestinationFormNode->getId();
+
+        $repository = $em->getRepository('OlegUserdirectoryBundle:ObjectTypeText');
+        $dql = $repository->createQueryBuilder("list");;
+        $dql->select('list');
+        $dql->leftJoin("list.formNode", "formNode");
+        $dql->where("formNode.id = " . $historySourceFormNode->getId());
+
+        $query = $em->createQuery($dql);
+
+        $sourceTextObjects = $query->getResult();
+        //echo "\n\rSearching text objects by formnode ID ".$historySourceFormNode->getId()." and ".$impressionSourceFormNode->getId()."<br>";
+        echo "\n\r History SourceTextObjects count=".count($sourceTextObjects)."<br>";
+        //$logger->notice("SourceTextObjects count=".count($sourceTextObjects));
+
+        $unprocessedSourceTextObjects = array();
+        foreach($sourceTextObjects as $textObject) {
+            $formValue = $textObject->getValue();
+            $formNode = $textObject->getFormNode();
+            $entityNamespace = $textObject->getEntityNamespace();
+            $entityName = $textObject->getEntityName();
+            $entityId = $textObject->getEntityId();
+            $existingHtmlText = $this->findExistingTextHtmlByName($formNode,$formValue,$historyDestinationFormNodeId,null,$entityNamespace,$entityName,$entityId);
+            if( !$existingHtmlText ) {
+                //echo $totalCounter.": Skipped (".$formNode->getName()."): Text HTML does not exist value=[$formValue], existingHtml=[$existingHtmlText]<br>";
+                $unprocessedSourceTextObjects[] = $textObject;
+            }
+        }
+        echo "\n\rLoop unprocessedSourceTextObjects count=".count($unprocessedSourceTextObjects)."<br>";
+        //$logger->notice("Loop unprocessedSourceTextObjects count=".count($unprocessedSourceTextObjects));
+        exit('EOF counting');
+    }
 
     //127.0.0.1/order/call-log-book/update-text-html
+    //php app/console cron:util-command --env=prod
     //Copy text to html text for "History/Findings" and "Impression/Outcome" fields
     public function updateTextHtml()
     {
 //        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
 //            return $this->redirect($this->generateUrl('employees-nopermission'));
 //        }
+
+        //testing
+        $unprocessedSourceTextObjects = $this->getUnprocessedTextObjects();
+        //exit("EOF unprocessedSourceTextObjects=".count($unprocessedSourceTextObjects));
+
+        $this->getUnprocessedTextObjectsLoop();
+        exit('EOF testing counting');
 
         set_time_limit(900); //600 seconds => 10 mins; 900=15min; 1800=30 min
 
@@ -2769,6 +2949,23 @@ class CallLogUtil
         //$dql->where("list.level = 4 AND objectType.id = ".$objectTypeText->getId()." AND parent.level = 3 AND grandParent.name = 'Pathology Call Log Entry'");
         //$dql->andWhere("list.name = 'History/Findings' OR list.name = 'Impression/Outcome'");
         $dql->where("formNode.id = " . $historySourceFormNode->getId() . " OR formNode.id = " . $impressionSourceFormNode->getId());
+
+
+//        //////////////
+//        $dql->leftJoin("list.formNode", "formNode");
+//
+//        if( $formNode->getName() == 'History/Findings' ) {
+//            $dql->where("formNode.id = " . $historyDestinationFormNodeId);
+//        }
+//        if( $formNode->getName() == 'Impression/Outcome' ) {
+//            $dql->where("formNode.id = " . $impressionDestinationFormNodeId);
+//        }
+//        //$dql->andWhere("list.value = '$formValue'");
+//        $dql->andWhere("list.value IS NOT NULL");
+//        $dql->andWhere("list.entityName = '$entityName' AND list.entityId = '$entityId'");
+//        //////////////
+
+
         //$dql->orderBy('list.arraySectionIndex','DESC');
         //$dql->addOrderBy('list.orderinlist', 'ASC');
         $query = $em->createQuery($dql);
@@ -2795,9 +2992,11 @@ class CallLogUtil
                 $unprocessedSourceTextObjects[] = $textObject;
             }
         }
-        echo "\n\unprocessedSourceTextObjects count=".count($unprocessedSourceTextObjects)."<br>";
+        echo "\n\runprocessedSourceTextObjects count=".count($unprocessedSourceTextObjects)."<br>";
         $logger->notice("unprocessedSourceTextObjects count=".count($unprocessedSourceTextObjects));
         exit('EOF counting');
+
+
 
         $totalCounter = 0;
         $processedCounter = 0;
@@ -2995,17 +3194,18 @@ class CallLogUtil
         $dql->select('list');
         $dql->leftJoin("list.formNode", "formNode");
 
-        if( $formNode->getName() == 'History/Findings' ) {
+        if( $formNode->getName() == 'History/Findings' && $historyDestinationFormNodeId ) {
             $dql->where("formNode.id = " . $historyDestinationFormNodeId);
         }
-        if( $formNode->getName() == 'Impression/Outcome' ) {
+        if( $formNode->getName() == 'Impression/Outcome' && $impressionDestinationFormNodeId ) {
             $dql->where("formNode.id = " . $impressionDestinationFormNodeId);
         }
 
         //$dql->andWhere("list.value = '$formValue'");
         $dql->andWhere("list.value IS NOT NULL");
 
-        $dql->andWhere("list.entityNamespace = '$entityNamespace' AND list.entityName = '$entityName' AND list.entityId = '$entityId'");
+        //$dql->andWhere("list.entityNamespace = '$entityNamespace' AND list.entityName = '$entityName' AND list.entityId = '$entityId'");
+        $dql->andWhere("list.entityName = '$entityName' AND list.entityId = '$entityId'");
 
         $query = $em->createQuery($dql);
         $destinationTextObjects = $query->getResult();
