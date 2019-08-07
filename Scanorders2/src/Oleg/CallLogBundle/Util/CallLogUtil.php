@@ -2803,13 +2803,10 @@ class CallLogUtil
             ->select('COUNT(html.id)')
             ->from('OlegUserdirectoryBundle:ObjectTypeText', 'html')
             ->leftJoin('html.formNode','formNodeHtml')
-            //->where('fellapp.id = logger.entityId AND fellowshipSubspecialty.id IN('.implode(",", $fellowshipTypes).')') //AND fellowshipSubspecialty.id IN(37)
             ->where("formNode.id = " . $historyDestinationFormNodeId)
-            //        $dql->andWhere("list.value IS NOT NULL");
-            ->andWhere("html.value IS NOT NULL")
-            //        $dql->andWhere("list.entityName = '$entityName' AND list.entityId = '$entityId'");
-            ->andWhere("list.entityName = 'Message'")
-            ->andWhere("list.entityId = html.entityId")
+            //->andWhere("html.value IS NOT NULL")
+            ->andWhere("html.entityName = 'Message'")
+            ->andWhere("html.entityId = list.entityId")
             ->getDQL();
         $subquery = '('.$subquery.')';
 
@@ -2818,9 +2815,9 @@ class CallLogUtil
         $dql = $repository->createQueryBuilder("list");;
         $dql->select('list');
         $dql->leftJoin("list.formNode", "formNode");
-        //$dql->andWhere("list.name = 'History/Findings' OR list.name = 'Impression/Outcome'");
         $dql->where("formNode.id = " . $historySourceFormNode->getId());
         $dql->andWhere("list.entityName = 'Message'");
+        //$dql->andWhere("list.value IS NOT NULL");
         $dql->andWhere($subquery."=0");
         //$dql->andWhere("list.entityId = html.entityId");
 
@@ -2886,7 +2883,7 @@ class CallLogUtil
         }
         echo "\n\rLoop unprocessedSourceTextObjects count=".count($unprocessedSourceTextObjects)."<br>";
         //$logger->notice("Loop unprocessedSourceTextObjects count=".count($unprocessedSourceTextObjects));
-        exit('EOF counting');
+        //exit('EOF counting');
     }
 
     //127.0.0.1/order/call-log-book/update-text-html
