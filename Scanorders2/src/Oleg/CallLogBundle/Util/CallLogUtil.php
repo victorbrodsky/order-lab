@@ -3211,7 +3211,8 @@ class CallLogUtil
         //exit("eof");
 
         if( count($destinationTextObjects) > 0 ) {
-            return $destinationTextObjects[0]->getValue();
+            //return $destinationTextObjects[0]->getValue();
+            return true;
         }
 
         return false;
