@@ -2899,7 +2899,7 @@ class CallLogUtil
         $unprocessedSourceTextObjects = $this->getUnprocessedTextObjects();
         //exit("EOF unprocessedSourceTextObjects=".count($unprocessedSourceTextObjects));
 
-        $this->getUnprocessedTextObjectsLoop();
+        //$this->getUnprocessedTextObjectsLoop();
         exit('EOF testing counting');
 
         set_time_limit(900); //600 seconds => 10 mins; 900=15min; 1800=30 min
