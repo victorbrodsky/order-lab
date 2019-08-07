@@ -2801,10 +2801,11 @@ class CallLogUtil
         //1) subquery to get a fellowship application object with logger.entityId and fellowshipSubspecialty in the $fellowshipTypes array
         $subquery = $em->createQueryBuilder()
             ->select('COUNT(html.id)')
+            //->select('html.id')
             ->from('OlegUserdirectoryBundle:ObjectTypeText', 'html')
             ->leftJoin('html.formNode','formNodeHtml')
-            ->where("formNode.id = " . $historyDestinationFormNodeId)
-            //->andWhere("html.value IS NOT NULL")
+            ->where("formNodeHtml.id = " . $historyDestinationFormNodeId)
+            ->andWhere("html.value IS NOT NULL")
             ->andWhere("html.entityName = 'Message'")
             ->andWhere("html.entityId = list.entityId")
             ->getDQL();
