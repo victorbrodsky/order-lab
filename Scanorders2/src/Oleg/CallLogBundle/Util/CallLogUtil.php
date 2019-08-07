@@ -2782,6 +2782,22 @@ class CallLogUtil
         //$iterableResult = $query->iterate();
         // echo "iterableResult count=".count($iterableResult)."<br>";
 
+        $unprocessedSourceTextObjects = array();
+        foreach($sourceTextObjects as $textObject) {
+            $formValue = $textObject->getValue();
+            $formNode = $textObject->getFormNode();
+            $entityNamespace = $textObject->getEntityNamespace();
+            $entityName = $textObject->getEntityName();
+            $entityId = $textObject->getEntityId();
+            $existingHtmlText = $this->findExistingTextHtmlByName($formNode,$formValue,$historyDestinationFormNodeId,$impressionDestinationFormNodeId,$entityNamespace,$entityName,$entityId);
+            if( !$existingHtmlText ) {
+                //echo $totalCounter.": Skipped (".$formNode->getName()."): Text HTML does not exist value=[$formValue], existingHtml=[$existingHtmlText]<br>";
+                $unprocessedSourceTextObjects[] = $textObject;
+            }
+        }
+        echo "\n\unprocessedSourceTextObjects count=".count($unprocessedSourceTextObjects)."<br>";
+        $logger->notice("unprocessedSourceTextObjects count=".count($unprocessedSourceTextObjects));
+        exit('EOF counting');
 
         $totalCounter = 0;
         $processedCounter = 0;
