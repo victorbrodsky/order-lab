@@ -2750,7 +2750,8 @@ class CallLogUtil
             ->from('OlegUserdirectoryBundle:ObjectTypeText', 'html')
             ->leftJoin('html.formNode','formNodeHtml')
             ->where("formNodeHtml.id = " . $destinationFormNodeId)
-            ->andWhere("html.value IS NOT NULL")
+            //->andWhere("html.value IS NOT NULL")
+            //->andWhere("html.entityId IS NOT NULL")
             ->andWhere("html.entityName = 'Message'")
             ->andWhere("html.entityId = list.entityId")
             ->getDQL();
@@ -2764,6 +2765,7 @@ class CallLogUtil
         $dql->where("formNode.id = " . $sourceFormNodeId);
         $dql->andWhere("list.entityName = 'Message'");
         //$dql->andWhere("list.value IS NOT NULL");
+        $dql->andWhere("list.entityId IS NOT NULL");
         $dql->andWhere($subquery."=0");
         //$dql->andWhere("list.entityId = html.entityId");
 
@@ -2776,7 +2778,7 @@ class CallLogUtil
         return $unprocessedSourceTextObjects;
     }
     //$historySourceFormNode
-    public function getUnprocessedTextObjectsLoop() {
+    public function getLoopUnprocessedTextObjects() {
         $logger = $this->container->get('logger');
         $em = $this->em;
 
@@ -2806,12 +2808,13 @@ class CallLogUtil
         $dql->select('list');
         $dql->leftJoin("list.formNode", "formNode");
         $dql->where("formNode.id = " . $historySourceFormNode->getId());
+        $dql->andWhere("list.entityId IS NOT NULL");
 
         $query = $em->createQuery($dql);
 
         $sourceTextObjects = $query->getResult();
         //echo "\n\rSearching text objects by formnode ID ".$historySourceFormNode->getId()." and ".$impressionSourceFormNode->getId()."<br>";
-        echo "\n\r History SourceTextObjects count=".count($sourceTextObjects)."<br>";
+        echo "\n\r ##### Loop test: History total SourceTextObjects count=".count($sourceTextObjects)."#####<br>";
         //$logger->notice("SourceTextObjects count=".count($sourceTextObjects));
 
         $unprocessedSourceTextObjects = array();
@@ -2827,7 +2830,7 @@ class CallLogUtil
                 $unprocessedSourceTextObjects[] = $textObject;
             }
         }
-        echo "\n\rLoop unprocessedSourceTextObjects count=".count($unprocessedSourceTextObjects)."<br>";
+        echo "\n\r ##### EOF Loop test: Loop unprocessedSourceTextObjects count=".count($unprocessedSourceTextObjects)."#####<br>";
         //$logger->notice("Loop unprocessedSourceTextObjects count=".count($unprocessedSourceTextObjects));
         //exit('EOF counting');
     }
@@ -2864,6 +2867,9 @@ class CallLogUtil
         $unprocessedHistorySourceTextObjects = $this->getUnprocessedTextObjects($historySourceFormNode->getId(),$historyDestinationFormNode->getId());
         echo $newline."History unprocessedSourceTextObjects=".count($unprocessedHistorySourceTextObjects)."<br>";
         $logger->notice("History unprocessedSourceTextObjects=".count($unprocessedHistorySourceTextObjects));
+        //foreach($unprocessedHistorySourceTextObjects as $unprocessedHistorySourceTextObject){
+        //    echo "unprocessedHistorySourceTextObject ID=".$unprocessedHistorySourceTextObject->getId()."<br>";
+        //}
         //$processedHistoryCounter = $this->updateUnprocessedSourceTextHtml($unprocessedHistorySourceTextObjects);
         //echo $newline."Processed History $processedHistoryCounter text objects";
         //$logger->notice("Processed History $processedHistoryCounter text objects");
@@ -2876,7 +2882,7 @@ class CallLogUtil
         //echo $newline."Processed Impression $processedImpressionCounter text objects";
         //$logger->notice("Processed Impression $processedImpressionCounter text objects");
 
-        //$this->getUnprocessedTextObjectsLoop();
+        $this->getLoopUnprocessedTextObjects();
         exit($newline.'EOF testing counting');
     }
     public function updateUnprocessedSourceTextHtml($sourceTextObjects)
@@ -3025,8 +3031,8 @@ class CallLogUtil
             //echo "textHtmlObject: Namespace=" . $textHtmlObject->getEntityNamespace() . ", Name=" . $textHtmlObject->getEntityName() . ", Value=" . $textHtmlObject->getValue() . "<br>";
             $processedCounter++;
 
-            //$testing = true;
-            $testing = false;
+            $testing = true;
+            //$testing = false;
             if( !$testing ) {
 
                 //$updateCache = false;
@@ -3057,22 +3063,26 @@ class CallLogUtil
                 //EventLog
                 //$eventType = "Call Log Book Entry Updated";
                 //$userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $msgLog, $user, $message, $request, $eventType);
-            }
+            }//$testing
 
             //echo $msgLog . "<br>";
             $logger->notice($msgLog);
 
             if( $processedCounter > 300 ) {
-                $em->flush(); //testing
-                $em->clear();
+                if( !$testing ) {
+                    $em->flush();
+                    $em->clear();
+                }
                 $logger->notice("Break processing $totalCounter text objects after copying $processedCounter text objects");
                 exit("\n\rBreak processing $totalCounter text objects after copying $processedCounter text objects");
             }
 
         }//foreach
 
-        $em->flush();
-        $em->clear();
+        if( !$testing ) {
+            $em->flush();
+            $em->clear();
+        }
 
         //$logger->notice("Processed $processedCounter text objects");
         //exit("\n\rProcessed $processedCounter text objects");
@@ -3082,7 +3092,7 @@ class CallLogUtil
     //127.0.0.1/order/call-log-book/update-text-html
     //php app/console cron:util-command --env=prod
     //Copy text to html text for "History/Findings" and "Impression/Outcome" fields
-    public function updateLoopTextHtml()
+    public function updateLoopTextHtml_OLD()
     {
 //        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
 //            return $this->redirect($this->generateUrl('employees-nopermission'));
@@ -3132,8 +3142,8 @@ class CallLogUtil
         $unprocessedImpressionSourceTextObjects = $this->getUnprocessedTextObjects($impressionSourceFormNode->getId(),$impressionDestinationFormNode->getId());
         echo $newline."Impression unprocessedSourceTextObjects=".count($unprocessedImpressionSourceTextObjects)."<br>";
 
-        //$this->getUnprocessedTextObjectsLoop();
-        exit($newline.'EOF testing counting');
+        //$this->getLoopUnprocessedTextObjects();
+        exit($newline.'EOF Loop testing counting');
 
 
         //$formNodeHtml = $em->getRepository('OlegUserdirectoryBundle:ObjectTypeText')->findAll();
@@ -3149,6 +3159,7 @@ class CallLogUtil
         //$dql->where("list.level = 4 AND objectType.id = ".$objectTypeText->getId()." AND parent.level = 3 AND grandParent.name = 'Pathology Call Log Entry'");
         //$dql->andWhere("list.name = 'History/Findings' OR list.name = 'Impression/Outcome'");
         $dql->where("formNode.id = " . $historySourceFormNode->getId() . " OR formNode.id = " . $impressionSourceFormNode->getId());
+        $dql->andWhere("list.entityId IS NOT NULL");
 
 
 //        //////////////
@@ -3403,7 +3414,8 @@ class CallLogUtil
         //$dql->where("formNode.id = " . $destinationFormNodeId);
 
         //$dql->andWhere("list.value = '$formValue'");
-        $dql->andWhere("list.value IS NOT NULL");
+        //$dql->andWhere("list.value IS NOT NULL");
+        $dql->andWhere("list.entityId IS NOT NULL");
 
         //$dql->andWhere("list.entityNamespace = '$entityNamespace' AND list.entityName = '$entityName' AND list.entityId = '$entityId'");
         $dql->andWhere("list.entityName = '$entityName' AND list.entityId = '$entityId'");
@@ -3440,7 +3452,8 @@ class CallLogUtil
         }
 
         //$dql->andWhere("list.value = '$formValue'");
-        $dql->andWhere("list.value IS NOT NULL");
+        //$dql->andWhere("list.value IS NOT NULL");
+        $dql->andWhere("list.entityId IS NOT NULL");
 
         //$dql->andWhere("list.entityNamespace = '$entityNamespace' AND list.entityName = '$entityName' AND list.entityId = '$entityId'");
         $dql->andWhere("list.entityName = '$entityName' AND list.entityId = '$entityId'");
