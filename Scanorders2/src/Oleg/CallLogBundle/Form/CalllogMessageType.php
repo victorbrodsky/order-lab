@@ -134,7 +134,7 @@ class CalllogMessageType extends AbstractType
         //}
 
         if( $this->params['previousEncounters'] ) {
-            if (0) {
+            if (1) {
                 $builder->add('previousEncounters', EntityType::class, array(
                     'class' => 'OlegOrderformBundle:Encounter',
                     'label' => 'New or Previous Encounter:',

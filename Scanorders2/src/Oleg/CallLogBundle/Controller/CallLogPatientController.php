@@ -1367,6 +1367,7 @@ class CallLogPatientController extends PatientController {
         //get encounter html page and send it to the calllog page
         //////////////////
         $params = array(
+            'encounter' => $encounter
             //'filterform' =>  ($filterform ? $filterform->createView() : null), //$filterform->createView(),
             //'route_path' => $request->get('_route'),
             //'messages' => $messages,
@@ -1375,7 +1376,11 @@ class CallLogPatientController extends PatientController {
             //'messageid' => $messageId
             //'testing' => true
         );
-        //$htmlPage = $this->render('OlegCallLogBundle:PatientList:patient_entries.html.twig',$params);
+        $htmlPage = $this->render('OlegCallLogBundle:PatientList:encounter_show.html.twig',$params);
+
+        //testing
+        $response = new Response($htmlPage);
+        return $response;
 
         //testing
         $testing = true;
@@ -1384,8 +1389,8 @@ class CallLogPatientController extends PatientController {
             //return $htmlPage;
         }
 
-        $template = $result; //testing
-        //$template = $htmlPage->getContent();
+        //$template = $result; //testing
+        $template = $htmlPage->getContent();
 
         $json = json_encode($template);
         $response = new Response($json);

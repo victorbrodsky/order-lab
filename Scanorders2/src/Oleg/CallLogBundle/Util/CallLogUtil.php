@@ -2884,8 +2884,8 @@ class CallLogUtil
 
         //$this->getLoopUnprocessedTextObjects();
 
-        $logger->notice('### EOF testing counting');
-        exit($newline.'### EOF testing counting');
+        $logger->notice('### EOF update TextHtml');
+        exit($newline.'### EOF update TextHtml');
     }
     public function updateUnprocessedSourceTextHtml($sourceTextObjects)
     {
