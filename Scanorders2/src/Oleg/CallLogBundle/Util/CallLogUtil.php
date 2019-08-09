@@ -2865,26 +2865,27 @@ class CallLogUtil
         //testing
         //History
         $unprocessedHistorySourceTextObjects = $this->getUnprocessedTextObjects($historySourceFormNode->getId(),$historyDestinationFormNode->getId());
-        echo $newline."History unprocessedSourceTextObjects=".count($unprocessedHistorySourceTextObjects)."<br>";
+        echo $newline."### History unprocessedSourceTextObjects=".count($unprocessedHistorySourceTextObjects)."<br>";
         $logger->notice("History unprocessedSourceTextObjects=".count($unprocessedHistorySourceTextObjects));
         //foreach($unprocessedHistorySourceTextObjects as $unprocessedHistorySourceTextObject){
         //    echo "unprocessedHistorySourceTextObject ID=".$unprocessedHistorySourceTextObject->getId()."<br>";
         //}
-        //$processedHistoryCounter = $this->updateUnprocessedSourceTextHtml($unprocessedHistorySourceTextObjects);
-        //echo $newline."Processed History $processedHistoryCounter text objects";
-        //$logger->notice("Processed History $processedHistoryCounter text objects");
+        $processedHistoryCounter = $this->updateUnprocessedSourceTextHtml($unprocessedHistorySourceTextObjects);
+        echo $newline."Processed History $processedHistoryCounter text objects"."<br>";
+        $logger->notice("Processed History $processedHistoryCounter text objects");
 
         //Impression
         $unprocessedImpressionSourceTextObjects = $this->getUnprocessedTextObjects($impressionSourceFormNode->getId(),$impressionDestinationFormNode->getId());
-        echo $newline."Impression unprocessedSourceTextObjects=".count($unprocessedImpressionSourceTextObjects)."<br>";
+        echo $newline."### Impression unprocessedSourceTextObjects=".count($unprocessedImpressionSourceTextObjects)."<br>";
         $logger->notice("Impression unprocessedSourceTextObjects=".count($unprocessedImpressionSourceTextObjects));
-        //$processedImpressionCounter = $this->updateUnprocessedSourceTextHtml($unprocessedImpressionSourceTextObjects);
-        //echo $newline."Processed Impression $processedImpressionCounter text objects";
-        //$logger->notice("Processed Impression $processedImpressionCounter text objects");
+        $processedImpressionCounter = $this->updateUnprocessedSourceTextHtml($unprocessedImpressionSourceTextObjects);
+        echo $newline."Processed Impression $processedImpressionCounter text objects"."<br>";
+        $logger->notice("Processed Impression $processedImpressionCounter text objects");
 
         //$this->getLoopUnprocessedTextObjects();
 
-        exit($newline.'EOF testing counting');
+        $logger->notice('### EOF testing counting');
+        exit($newline.'### EOF testing counting');
     }
     public function updateUnprocessedSourceTextHtml($sourceTextObjects)
     {
