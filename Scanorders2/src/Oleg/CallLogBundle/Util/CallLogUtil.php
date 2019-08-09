@@ -3070,7 +3070,7 @@ class CallLogUtil
             //echo $msgLog . "<br>";
             $logger->notice($msgLog);
 
-            if( $processedCounter >= 1000 ) {
+            if( $processedCounter >= 300 ) {
                 if( !$testing ) {
                     $em->flush();
                     $em->clear();
