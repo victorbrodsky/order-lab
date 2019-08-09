@@ -77,7 +77,7 @@
                     {% set formfield = spot.currentLocation %}
 
                     {% if formfield.locationTypes is defined %}
-                        {{ formmacros.simplefield( "Location Type:", formfield.locationTypes, "", "disabled" ) }}
+                        {{ formmacros.simplefield( "Location Type:", formfield.locationTypes, "combobox", "disabled" ) }}
                     {% endif %}
 
                     {% if formfield.institution is defined %}
@@ -88,6 +88,60 @@
                         {{ formmacros.simplefield( "Phone Number:", formfield.phone, "", "disabled" ) }}
                     {% endif %}
 
+                    {% if formfield.room is defined %}
+                        {{ formmacros.simplefield( "Room Number:", formfield.room, "combobox", "disabled" ) }}
+                    {% endif %}
+
+                    {% if formfield.suite is defined %}
+                        {{ formmacros.simplefield( "Suite:", formfield.suite, "combobox", "disabled" ) }}
+                    {% endif %}
+
+                    {% if formfield.floor is defined %}
+                        {{ formmacros.simplefield( "Floor:", formfield.floor, "combobox", "disabled" ) }}
+                    {% endif %}
+
+                    {% if formfield.floorSide is defined %}
+                        {{ formmacros.simplefield( "Floor Side:", formfield.floorSide, "", "disabled" ) }}
+                    {% endif %}
+
+                    {% if formfield.building is defined %}
+                        {{ formmacros.simplefield( "Building:", formfield.building, "combobox", "disabled" ) }}
+                    {% endif %}
+
+                    {#geoLocation#}
+                    {% set geoLocation = formfield.geoLocation %}
+
+                    {% if geoLocation.street1 is defined %}
+                        {{ formmacros.simplefield( "Street Address [Line 1]:", geoLocation.street1, "", "disabled" ) }}
+                    {% endif %}
+
+                    {% if geoLocation.street2 is defined %}
+                        {{ formmacros.simplefield( "Room Number:Street Address [Line 2]:", geoLocation.street2, "", "disabled" ) }}
+                    {% endif %}
+
+                    {% if geoLocation.city is defined %}
+                        {{ formmacros.simplefield( "City:", geoLocation.city, "combobox", "disabled" ) }}
+                    {% endif %}
+
+                    {% if geoLocation.state is defined %}
+                        {{ formmacros.simplefield( "State:", geoLocation.state, "combobox", "disabled" ) }}
+                    {% endif %}
+
+                    {% if geoLocation.zip is defined %}
+                        {{ formmacros.simplefield( "Zip Code:", geoLocation.zip, "", "disabled" ) }}
+                    {% endif %}
+
+                    {% if geoLocation.county is defined %}
+                        {{ formmacros.simplefield( "County:", geoLocation.county, "", "disabled" ) }}
+                    {% endif %}
+
+                    {% if geoLocation.country is defined %}
+                        {{ formmacros.simplefield( "Country:", geoLocation.country, "combobox", "disabled" ) }}
+                    {% endif %}
+
+                    {% if formfield.comment is defined %}
+                        {{ formmacros.simplefield( "Comment:", formfield.comment, "", "disabled" ) }}
+                    {% endif %}
 
                 {% endfor %}
 
@@ -98,7 +152,24 @@
 
 {% endblock %}
 
+{% block additionaljs %}
 
+    {#<script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote.js"></script>#}
+
+    <script language="Javascript">
+
+
+        $(document).ready(function() {
+
+            //init
+            var holder = $("#calllog-message-encounter-previous");
+            regularCombobox(holder);
+
+        });
+
+
+    </script>
+{% endblock %}
 
  
     

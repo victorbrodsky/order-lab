@@ -118,6 +118,8 @@
                                 {{ formmacros.field(form.previousEncounterId) }}
                             {% endif %}
 
+                            <div id="calllog-message-encounter-new">
+
                             {{ calllogmacros.encounterDateTimeWithTimezone(encounter.date,cycle) }}
                             {#{{ datetime.timezone.vars.label }}#}
                             {% if cycle == "new" %}
@@ -141,6 +143,9 @@
 
                             {#Update Patient Info: encounter with status='valid'#}
                             {{ calllogmacros.updatePatientInfoSection(encounter,cycle,status) }}
+
+                            </div>
+                            <div id="calllog-message-encounter-previous"></div>
 
                         </div> <!-- panel-body -->
                     </div> <!-- panel-collapse -->

@@ -1379,15 +1379,15 @@ class CallLogPatientController extends PatientController {
         $htmlPage = $this->render('OlegCallLogBundle:PatientList:encounter_show.html.twig',$params);
 
         //testing
-        $response = new Response($htmlPage);
-        return $response;
+        //$response = new Response($htmlPage);
+        //return $response;
 
         //testing
-        $testing = true;
-        $testing = false;
-        if( $testing ) {
+        //$testing = true;
+        //$testing = false;
+        //if( $testing ) {
             //return $htmlPage;
-        }
+        //}
 
         //$template = $result; //testing
         $template = $htmlPage->getContent();
