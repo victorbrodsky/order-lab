@@ -2882,7 +2882,8 @@ class CallLogUtil
         //echo $newline."Processed Impression $processedImpressionCounter text objects";
         //$logger->notice("Processed Impression $processedImpressionCounter text objects");
 
-        $this->getLoopUnprocessedTextObjects();
+        //$this->getLoopUnprocessedTextObjects();
+
         exit($newline.'EOF testing counting');
     }
     public function updateUnprocessedSourceTextHtml($sourceTextObjects)
