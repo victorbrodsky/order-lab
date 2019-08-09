@@ -3033,7 +3033,7 @@ class CallLogUtil
             //echo "textHtmlObject: Namespace=" . $textHtmlObject->getEntityNamespace() . ", Name=" . $textHtmlObject->getEntityName() . ", Value=" . $textHtmlObject->getValue() . "<br>";
             $processedCounter++;
 
-            //$testing = true;
+            $testing = true;
             $testing = false;
             if( !$testing ) {
 
@@ -3070,7 +3070,7 @@ class CallLogUtil
             //echo $msgLog . "<br>";
             $logger->notice($msgLog);
 
-            if( $processedCounter > 300 ) {
+            if( $processedCounter >= 1000 ) {
                 if( !$testing ) {
                     $em->flush();
                     $em->clear();
