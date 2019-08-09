@@ -3033,8 +3033,8 @@ class CallLogUtil
             //echo "textHtmlObject: Namespace=" . $textHtmlObject->getEntityNamespace() . ", Name=" . $textHtmlObject->getEntityName() . ", Value=" . $textHtmlObject->getValue() . "<br>";
             $processedCounter++;
 
-            $testing = true;
-            //$testing = false;
+            //$testing = true;
+            $testing = false;
             if( !$testing ) {
 
                 //$updateCache = false;
