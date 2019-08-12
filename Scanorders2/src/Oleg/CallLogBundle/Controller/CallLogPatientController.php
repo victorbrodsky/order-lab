@@ -1318,16 +1318,16 @@ class CallLogPatientController extends PatientController {
         }
 
         $result = array();
-        $encounters = $calllogUtil->getPreviousEncounterByPatient($patient);
-        foreach($encounters as $encounter) {
-            //$result[] = array("id"=>$encounter->getId(), "number"=>$encounter->obtainEncounterNumberOnlyAndDate(), "snapshot"=>$snapshot);
-            $result[$encounter->getId()] = $encounter->obtainEncounterNumberOnlyAndDate();
-            //$result[$encounter->getId()] = $encounter->getId();
-        }
+        $resultEncounters = $calllogUtil->getPreviousEncounterByPatient($patient);
+//        foreach($encounters as $encounter) {
+//            //$result[] = array("id"=>$encounter->getId(), "number"=>$encounter->obtainEncounterNumberOnlyAndDate(), "snapshot"=>$snapshot);
+//            $result[$encounter->getId()] = $encounter->obtainEncounterNumberOnlyAndDate();
+//            //$result[$encounter->getId()] = $encounter->getId();
+//        }
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
-        $response->setContent(json_encode($result));
+        $response->setContent(json_encode($resultEncounters));
         return $response;
     }
 

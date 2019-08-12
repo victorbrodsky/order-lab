@@ -3603,21 +3603,33 @@ class CallLogUtil
 
         return $previousEncounters;
     }
-    public function getPreviousEncounterByPatient($patient) {
+    public function getPreviousEncounterByPatient( $patient, $asCombobox=true ) {
         $previousEncounters = array();
         
         if( $patient ) {
             //if patient exists
             //$encounters = "";
-            $encounters = $patient->getEncounter();
+            //$encounters = $patient->getEncounter();
+            $encounters = $this->em->getRepository('OlegOrderformBundle:Encounter')->findBy(
+                array('patient'=> $patient->getId()),
+                array('id' => 'ASC')
+                //array('id' => 'DESC')
+            );
+
             foreach($encounters as $thisEncounter) {
-                //$this->em->persist($thisEncounter);
-                $previousEncounters[] = $thisEncounter;
+                echo "id=".$thisEncounter->getId()."<br>";
+                if( $asCombobox ) {
+                    $previousEncounters[$thisEncounter->getId()] = $thisEncounter->obtainEncounterNumberOnlyAndDate();;
+                } else {
+                    //$this->em->persist($thisEncounter);
+                    $previousEncounters[] = $thisEncounter;
+                }
             }
         } else {
             //if patient does not exists
             //return NULL as previous encounter?
         }
+        exit("111");
 
         return $previousEncounters;
     }
