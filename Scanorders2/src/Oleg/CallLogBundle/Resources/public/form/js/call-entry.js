@@ -2338,13 +2338,13 @@ function calllogAddPreviousEncounters(patient) {
         dataType: 'json',
         async: true //use synchronous => wait for response.
     }).done(function(response) {
-        //console.log('response='+response);
+        console.log('response:');
+        console.log(response);
         //TODO: add encounters to .combobox-previous-encounters select2 (implement as in updateUserComboboxes)
 
-        //var text = "";
-        var thisEncounterId;
-        for(thisEncounterId in response) {
-            var thisEncounterText = response[thisEncounterId];
+        response.forEach(function(item){
+            var thisEncounterId = item['id'];
+            var thisEncounterText = item['text'];
             console.log('thisEncounterText='+thisEncounterText+", thisEncounterId="+thisEncounterId);
             //text += thisEncounterText;
             if( thisEncounterText ) {
@@ -2353,7 +2353,19 @@ function calllogAddPreviousEncounters(patient) {
                 $("select.combobox-previous-encounters").append(newOption).trigger('change');
                 //$("select.combobox-previous-encounters").append(newOption);
             }
-        }
+        });
+
+
+        // for(var thisEncounterId in responseReverse) {
+        //     var thisEncounterText = responseReverse[thisEncounterId];
+        //     console.log('thisEncounterText='+thisEncounterText+", thisEncounterId="+thisEncounterId);
+        //     if( thisEncounterText ) {
+        //         var newOption = new Option(thisEncounterText, thisEncounterId, false, false);
+        //         //var newOption = new Option(thisEncounterId, thisEncounterText, false, false);
+        //         $("select.combobox-previous-encounters").append(newOption).trigger('change');
+        //         //$("select.combobox-previous-encounters").append(newOption);
+        //     }
+        // }
         //$("select.combobox-previous-encounters").trigger('change');
         //console.log("text="+text);
 

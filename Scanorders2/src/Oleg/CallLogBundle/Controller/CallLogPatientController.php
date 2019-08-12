@@ -1317,7 +1317,7 @@ class CallLogPatientController extends PatientController {
             return $response;
         }
 
-        $result = array();
+        //$result = array();
         $resultEncounters = $calllogUtil->getPreviousEncounterByPatient($patient);
 //        foreach($encounters as $encounter) {
 //            //$result[] = array("id"=>$encounter->getId(), "number"=>$encounter->obtainEncounterNumberOnlyAndDate(), "snapshot"=>$snapshot);

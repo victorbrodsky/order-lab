@@ -3612,14 +3612,15 @@ class CallLogUtil
             //$encounters = $patient->getEncounter();
             $encounters = $this->em->getRepository('OlegOrderformBundle:Encounter')->findBy(
                 array('patient'=> $patient->getId()),
-                array('id' => 'ASC')
-                //array('id' => 'DESC')
+                //array('id' => 'ASC')
+                array('id' => 'DESC')
             );
 
             foreach($encounters as $thisEncounter) {
-                echo "id=".$thisEncounter->getId()."<br>";
+                //echo "id=".$thisEncounter->getId()."<br>";
                 if( $asCombobox ) {
-                    $previousEncounters[$thisEncounter->getId()] = $thisEncounter->obtainEncounterNumberOnlyAndDate();;
+                    //$previousEncounters[$thisEncounter->getId()] = $thisEncounter->obtainEncounterNumberOnlyAndDate();
+                    $previousEncounters[] = array('id'=>$thisEncounter->getId(),'text'=>$thisEncounter->obtainEncounterNumberOnlyAndDate());
                 } else {
                     //$this->em->persist($thisEncounter);
                     $previousEncounters[] = $thisEncounter;
@@ -3629,7 +3630,7 @@ class CallLogUtil
             //if patient does not exists
             //return NULL as previous encounter?
         }
-        exit("111");
+        //exit("111");
 
         return $previousEncounters;
     }
