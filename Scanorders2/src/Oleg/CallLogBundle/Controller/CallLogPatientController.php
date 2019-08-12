@@ -101,7 +101,7 @@ class CallLogPatientController extends PatientController {
         }
 
         //ini_set('memory_limit', '5120M');
-        ini_set('max_execution_time', '300'); //300 seconds = 5 minutes
+        //ini_set('max_execution_time', '300'); //300 seconds = 5 minutes
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $userSecUtil = $this->get('user_security_utility');
@@ -1358,12 +1358,18 @@ class CallLogPatientController extends PatientController {
             return $response;
         }
 
-        $result = array();
+        //$result = array();
+        //$result['number'] = $encounter->obtainEncounterNumberOnlyAndDate();
+        //$result['date'] = $encounter->getCreationdate()->format("m/d/Y H:i:s");
 
-
-        $result['number'] = $encounter->obtainEncounterNumberOnlyAndDate();
-        $result['date'] = $encounter->getCreationdate()->format("m/d/Y H:i:s");
-
+        foreach($encounter->getTracker()->getSpots() as $spot) {
+            $currentLocation = $spot->getCurrentLocation();
+            $room = $currentLocation->getRoom();
+            //foreach($currentLocation->getRoom() as $room) {
+                echo "room=".$room."<br>";
+            //}
+        }
+        exit('111');
 
         //get encounter html page and send it to the calllog page
         //////////////////

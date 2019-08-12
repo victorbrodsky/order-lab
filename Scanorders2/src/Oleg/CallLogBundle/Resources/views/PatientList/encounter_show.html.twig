@@ -74,49 +74,55 @@
 
                 {% for spot in encounter.tracker.spots %}
 
-                    {% set formfield = spot.currentLocation %}
+                    {% set currentLocation = spot.currentLocation %}
 
-                    {% if formfield.locationTypes is defined %}
-                        {{ formmacros.simplefield( "Location Type:", formfield.locationTypes, "combobox", "disabled" ) }}
+                    {% if currentLocation.locationTypes is defined %}
+                        {{ formmacros.simplefield( "Location Type:", currentLocation.locationTypes, "combobox", "disabled" ) }}
                     {% endif %}
 
-                    {% if formfield.institution is defined %}
-                        {{ formmacros.simplefield( "Institution or Collaboration:", formfield.institution, "", "disabled" ) }}
+                    {% if currentLocation.institution is defined %}
+                        {{ formmacros.simplefield( "Institution or Collaboration:", currentLocation.institution, "", "disabled" ) }}
                     {% endif %}
 
-                    {% if formfield.phone is defined %}
-                        {{ formmacros.simplefield( "Phone Number:", formfield.phone, "", "disabled" ) }}
+                    {% if currentLocation.phone is defined %}
+                        {{ formmacros.simplefield( "Phone Number:", currentLocation.phone, "", "disabled" ) }}
                     {% endif %}
 
-                    formfield.room|length={{ formfield.room|length }}<br>
-                    {% for thisRoom in formfield.room %}
-                        thisRoom1={{ thisRoom.id }}<br>
-                    {% endfor %}
-                    {% if formfield.room is defined %}
-                        {% for thisRoom in formfield.room %}
-                            thisRoom2={{ thisRoom }}
-                        {% endfor %}
-                        {{ formmacros.simplefield( "Room Number:", formfield.room, "combobox", "disabled" ) }}
+                    {% if currentLocation.room is defined %}
+                        {{ formmacros.simplefield( "Room Number:", currentLocation.room, "", "disabled" ) }}
+                    {% endif %}
+                    {#currentLocation.room|length={{ currentLocation.room|length }}<br>#}
+                    {#{% for thisRoom in currentLocation.room %}#}
+                        {#thisRoom1={{ thisRoom.id }}<br>#}
+                    {#{% endfor %}#}
+                    {#{% if currentLocation.room is defined %}#}
+                        {#{% for thisRoom in currentLocation.room %}#}
+                            {#thisRoom2={{ thisRoom }}#}
+                        {#{% endfor %}#}
+                        {#{{ formmacros.simplefield( "Room Number:", currentLocation.room, "combobox", "disabled" ) }}#}
+                    {#{% endif %}#}
+
+                    {#{% for suite in currentLocation.suite %}#}
+                        {#suite={{ suite.id }}<br>#}
+                    {#{% endfor %}#}
+                    {% if currentLocation.suite is defined %}
+                        {{ formmacros.simplefield( "Suite:", currentLocation.suite, "combobox", "disabled" ) }}
                     {% endif %}
 
-                    {% if formfield.suite is defined %}
-                        {{ formmacros.simplefield( "Suite:", formfield.suite, "combobox", "disabled" ) }}
+                    {% if currentLocation.floor is defined %}
+                        {{ formmacros.simplefield( "Floor:", currentLocation.floor, "combobox", "disabled" ) }}
                     {% endif %}
 
-                    {% if formfield.floor is defined %}
-                        {{ formmacros.simplefield( "Floor:", formfield.floor, "combobox", "disabled" ) }}
+                    {% if currentLocation.floorSide is defined %}
+                        {{ formmacros.simplefield( "Floor Side:", currentLocation.floorSide, "", "disabled" ) }}
                     {% endif %}
 
-                    {% if formfield.floorSide is defined %}
-                        {{ formmacros.simplefield( "Floor Side:", formfield.floorSide, "", "disabled" ) }}
-                    {% endif %}
-
-                    {% if formfield.building is defined %}
-                        {{ formmacros.simplefield( "Building:", formfield.building, "combobox", "disabled" ) }}
+                    {% if currentLocation.building is defined %}
+                        {{ formmacros.simplefield( "Building:", currentLocation.building, "combobox", "disabled" ) }}
                     {% endif %}
 
                     {#geoLocation#}
-                    {% set geoLocation = formfield.geoLocation %}
+                    {% set geoLocation = currentLocation.geoLocation %}
 
                     {% if geoLocation.street1 is defined %}
                         {{ formmacros.simplefield( "Street Address [Line 1]:", geoLocation.street1, "", "disabled" ) }}
@@ -146,8 +152,8 @@
                         {{ formmacros.simplefield( "Country:", geoLocation.country, "combobox", "disabled" ) }}
                     {% endif %}
 
-                    {% if formfield.comment is defined %}
-                        {{ formmacros.simplefield( "Comment:", formfield.comment, "", "disabled" ) }}
+                    {% if currentLocation.comment is defined %}
+                        {{ formmacros.simplefield( "Comment:", currentLocation.comment, "", "disabled" ) }}
                     {% endif %}
 
                 {% endfor %}
