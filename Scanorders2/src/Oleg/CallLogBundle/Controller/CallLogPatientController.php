@@ -1362,14 +1362,14 @@ class CallLogPatientController extends PatientController {
         //$result['number'] = $encounter->obtainEncounterNumberOnlyAndDate();
         //$result['date'] = $encounter->getCreationdate()->format("m/d/Y H:i:s");
 
-        foreach($encounter->getTracker()->getSpots() as $spot) {
-            $currentLocation = $spot->getCurrentLocation();
-            $room = $currentLocation->getRoom();
-            //foreach($currentLocation->getRoom() as $room) {
-                echo "room=".$room."<br>";
-            //}
-        }
-        exit('111');
+//        foreach($encounter->getTracker()->getSpots() as $spot) {
+//            $currentLocation = $spot->getCurrentLocation();
+//            $room = $currentLocation->getRoom();
+//            //foreach($currentLocation->getRoom() as $room) {
+//                echo "room=".$room."<br>";
+//            //}
+//        }
+        //exit('111');
 
         //get encounter html page and send it to the calllog page
         //////////////////

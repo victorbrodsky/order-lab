@@ -31,8 +31,6 @@
         <div id="calllog-encounter-referringprovider" class="panel-collapse collapse in">
             <div class="panel-body">
 
-                encounter.id={{ encounter.id }}<br>
-
                 {#{{ formmacros.inputArrayField(encounter.referringProviders,cycle,"encounterreferringprovider","","","","",status) }}#}
                 {% for referringProvider in encounter.referringProviders %}
 
@@ -65,8 +63,6 @@
         </div>
         <div id="calllog-encounter-location" class="panel-collapse collapse in">
             <div class="panel-body">
-
-                encounter.locationName={{ encounter.locationName }}<br>
 
                 {% if encounter.locationName is defined %}
                     {{ formmacros.simplefield( "Location Name:", encounter.locationName, "", "disabled" ) }}
@@ -106,11 +102,11 @@
                         {#suite={{ suite.id }}<br>#}
                     {#{% endfor %}#}
                     {% if currentLocation.suite is defined %}
-                        {{ formmacros.simplefield( "Suite:", currentLocation.suite, "combobox", "disabled" ) }}
+                        {{ formmacros.simplefield( "Suite:", currentLocation.suite, "", "disabled" ) }}
                     {% endif %}
 
                     {% if currentLocation.floor is defined %}
-                        {{ formmacros.simplefield( "Floor:", currentLocation.floor, "combobox", "disabled" ) }}
+                        {{ formmacros.simplefield( "Floor:", currentLocation.floor, "", "disabled" ) }}
                     {% endif %}
 
                     {% if currentLocation.floorSide is defined %}
@@ -118,7 +114,7 @@
                     {% endif %}
 
                     {% if currentLocation.building is defined %}
-                        {{ formmacros.simplefield( "Building:", currentLocation.building, "combobox", "disabled" ) }}
+                        {{ formmacros.simplefield( "Building:", currentLocation.building, "", "disabled" ) }}
                     {% endif %}
 
                     {#geoLocation#}
@@ -133,11 +129,11 @@
                     {% endif %}
 
                     {% if geoLocation.city is defined %}
-                        {{ formmacros.simplefield( "City:", geoLocation.city, "combobox", "disabled" ) }}
+                        {{ formmacros.simplefield( "City:", geoLocation.city, "", "disabled" ) }}
                     {% endif %}
 
                     {% if geoLocation.state is defined %}
-                        {{ formmacros.simplefield( "State:", geoLocation.state, "combobox", "disabled" ) }}
+                        {{ formmacros.simplefield( "State:", geoLocation.state, "", "disabled" ) }}
                     {% endif %}
 
                     {% if geoLocation.zip is defined %}
@@ -149,7 +145,7 @@
                     {% endif %}
 
                     {% if geoLocation.country is defined %}
-                        {{ formmacros.simplefield( "Country:", geoLocation.country, "combobox", "disabled" ) }}
+                        {{ formmacros.simplefield( "Country:", geoLocation.country, "", "disabled" ) }}
                     {% endif %}
 
                     {% if currentLocation.comment is defined %}
@@ -162,6 +158,28 @@
         </div> <!-- panel-collapse -->
     </div> <!-- panel panel-primary -->
 
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" href="#calllog-encounter-patient-info">
+                    Update Patient Info
+                </a>
+            </h4>
+        </div>
+        <div id="calllog-encounter-patient-info" class="panel-collapse collapse in">
+            <div class="panel-body">
+
+                {{ formmacros.simplefield( "Patient's Last Name (at the time of encounter):", encounter.patlastname, "", "disabled" ) }}
+                {{ formmacros.simplefield( "Patient's First Name (at the time of encounter):", encounter.patfirstname, "", "disabled" ) }}
+                {{ formmacros.simplefield( "Patient's Middle Name (at the time of encounter):", encounter.patmiddlename, "", "disabled" ) }}
+                {{ formmacros.simplefield( "Patient's Suffix (at the time of encounter):", encounter.patsuffix, "", "disabled" ) }}
+                {{ formmacros.simplefield( "Patient's Gender (at the time of encounter):", encounter.patsex, "", "disabled" ) }}
+                {{ formmacros.simplefield( "Date of Birth:", encounter.patientDob|date("m/d/Y"), "", "disabled" ) }}
+                {#{{ formmacros.fieldDateLabel(encounter.patientDob,'regular-datepicker') }}#}
+
+            </div> <!-- panel-body -->
+        </div> <!-- panel-collapse -->
+    </div> <!-- panel panel-primary -->
 
 {% endblock %}
 
