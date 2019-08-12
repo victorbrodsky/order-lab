@@ -100,7 +100,8 @@ class CallLogPatientController extends PatientController {
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
-        ini_set('memory_limit', '5120M');
+        //ini_set('memory_limit', '5120M');
+        ini_set('max_execution_time', '300'); //300 seconds = 5 minutes
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $userSecUtil = $this->get('user_security_utility');

@@ -201,20 +201,22 @@ class CalllogEncounterType extends AbstractType
 //            'prototype_name' => '__encounterpathistory__',
 //        ));
 
-        //number and source
-        $builder->add('number', CollectionType::class, array(
-            'entry_type' => CalllogEncounterNumberType::class,
-            'entry_options' => array(
-                'form_custom_value' => $this->params
-            ),
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'label' => false,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__encounternumber__',
-        ));
+        if(0) {
+            //number and source
+            $builder->add('number', CollectionType::class, array(
+                'entry_type' => CalllogEncounterNumberType::class,
+                'entry_options' => array(
+                    'form_custom_value' => $this->params
+                ),
+                'allow_add' => true,
+                'allow_delete' => true,
+                'required' => false,
+                'label' => false,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__encounternumber__',
+            ));
+        }
 
         //TODO: select box showing new and previous encounters
 //        $builder->add('previousEncounters', ChoiceType::class, array(

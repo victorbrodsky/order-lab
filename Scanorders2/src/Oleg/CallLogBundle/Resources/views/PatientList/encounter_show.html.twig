@@ -88,7 +88,14 @@
                         {{ formmacros.simplefield( "Phone Number:", formfield.phone, "", "disabled" ) }}
                     {% endif %}
 
+                    formfield.room|length={{ formfield.room|length }}<br>
+                    {% for thisRoom in formfield.room %}
+                        thisRoom1={{ thisRoom.id }}<br>
+                    {% endfor %}
                     {% if formfield.room is defined %}
+                        {% for thisRoom in formfield.room %}
+                            thisRoom2={{ thisRoom }}
+                        {% endfor %}
                         {{ formmacros.simplefield( "Room Number:", formfield.room, "combobox", "disabled" ) }}
                     {% endif %}
 

@@ -90,9 +90,14 @@
                         {{ form_row(encounter.id) }}
                         {{ form_row(encounter.status) }}
 
-                        {{ formmacros.inputArrayField(encounter.number,"new","encounternumber","key","","","",status) }}
+                        {% if encounter.number is defined %}
+                            {{ formmacros.inputArrayField(encounter.number,"new","encounternumber","key","","","",status) }}
+                        {% endif %}
 
                         {#previous encounter drop down menu#}
+                        {% if form.encounterKeytype is defined %}
+                            {{ formmacros.field(form.encounterKeytype) }}
+                        {% endif %}
                         {% if form.previousEncounters is defined %}
                             {{ formmacros.field(form.previousEncounters) }}
                         {% endif %}

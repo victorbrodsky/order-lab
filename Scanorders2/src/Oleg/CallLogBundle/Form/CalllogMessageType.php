@@ -135,9 +135,17 @@ class CalllogMessageType extends AbstractType
 
         if( $this->params['previousEncounters'] ) {
             if (1) {
+                $builder->add('encounterKeytype', TextType::class, array(
+                    'label' => 'Encounter Type:',
+                    'mapped' => false,
+                    'required' => false,
+                    'disabled' => true,
+                    'data' => 'Auto-generated Encounter Number',
+                    'attr' => array('class' => 'form-control'),
+                ));
                 $builder->add('previousEncounters', EntityType::class, array(
                     'class' => 'OlegOrderformBundle:Encounter',
-                    'label' => 'New or Previous Encounter:',
+                    'label' => 'Encounter ID:',
                     'required' => true,
                     'mapped' => false,
                     'multiple' => false,
