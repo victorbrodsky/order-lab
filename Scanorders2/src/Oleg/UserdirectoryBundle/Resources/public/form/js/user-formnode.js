@@ -401,6 +401,8 @@ function richTextInit(formNodeId) {
             ['view', ['fullscreen', 'codeview', 'undo', 'redo', 'help']]
         ]
     });
+
+    $(".summernote").find(".note-editable").css({"text-align": "justify"});
 }
 
 ////NOT USED
