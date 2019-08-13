@@ -2889,6 +2889,8 @@ class CallLogUtil
     }
     public function updateUnprocessedSourceTextHtml($sourceTextObjects)
     {
+        return 0; //run only once after swap simple and rich text fields
+
         $logger = $this->container->get('logger');
         $em = $this->em;
         $formNodeUtil = $this->container->get('user_formnode_utility');
