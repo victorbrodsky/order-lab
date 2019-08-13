@@ -3034,7 +3034,7 @@ class CallLogUtil
             $processedCounter++;
 
             $testing = true;
-            //$testing = false;
+            $testing = false;
             if( !$testing ) {
 
                 //$updateCache = false;
