@@ -402,8 +402,8 @@ function richTextInit(formNodeId) {
         ]
     });
 
-    $('#oleg_userdirectorybundle_formnode_'+formNodeId).find(".note-editable").css({"text-align": "justify"});
-    //$(".note-editable").css({"text-align": "justify"});
+    //$('#oleg_userdirectorybundle_formnode_'+formNodeId).find(".note-editable").css({"text-align": "justify"});
+    $(".note-editable").css({"text-align": "justify"});
 }
 
 ////NOT USED
