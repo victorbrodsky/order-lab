@@ -111,13 +111,13 @@ sed -i -e "s/bash_domainname/$domainname/g" order-packer.json
 sed -i -e "s/bash_sslcertificate/$sslcertificate/g" order-packer.json
 sed -i -e "s/bash_sslprivatekey/$sslprivatekey/g" order-packer.json
 
-echo "Testing: domainname=$domainname"
-if [ ! -z "$domainname" ] && [ "$domainname" != "domainname" ]
-  then 	 
-	echo "Testing: Create domain domainname=$domainname"
-  else
-	echo "Testing: Do not create domain domainname=$domainname"
-fi	
+#echo "Testing: domainname=$domainname"
+#if [ ! -z "$domainname" ] && [ "$domainname" != "domainname" ]
+#  then 	 
+#	echo "Testing: Create domain domainname=$domainname"
+#  else
+#	echo "Testing: Do not create domain domainname=$domainname"
+#fi	
 #exit 0
 
 echo "*** Building VM image ... ***"
