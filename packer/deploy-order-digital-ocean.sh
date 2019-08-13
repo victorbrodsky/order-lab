@@ -111,6 +111,14 @@ sed -i -e "s/bash_domainname/$domainname/g" order-packer.json
 sed -i -e "s/bash_sslcertificate/$sslcertificate/g" order-packer.json
 sed -i -e "s/bash_sslprivatekey/$sslprivatekey/g" order-packer.json
 
+echo "Testing: domainname=$domainname"
+if [ ! -z "$domainname" ] && [ "$domainname" != "domainname" ]
+  then 	 
+	echo "Testing: Create domain domainname=$domainname"
+  else
+	echo "Testing: Do not create domain domainname=$domainname"
+fi	
+exit 0
 
 echo "*** Building VM image ... ***"
 packer build order-packer.json
@@ -152,7 +160,7 @@ sleep 120
 
 #DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/"
 
-if [ ! -z "$domainname" ]
+if [ ! -z "$domainname" ] && [ "$domainname" != "domainname" ]
   then 	
 	#0) check and create domain and DNS 
 	echo "Create domain domainname=$domainname"
@@ -183,6 +191,8 @@ if [ ! -z "$domainname" ]
 	DOMAIN=$(doctl compute domain records create $domainname --record-type A --record-name www --record-data $DROPLETIP -v)
 	echo "DOMAIN=$DOMAIN"
 	DROPLETIP="www.$domainname"
+  else
+	echo "Do not create domain domainname=$domainname"
 fi
 
 if [ ! -z "$protocol" ] && [ "$protocol" = "https" ]
