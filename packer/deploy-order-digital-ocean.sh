@@ -118,7 +118,7 @@ if [ ! -z "$domainname" ] && [ "$domainname" != "domainname" ]
   else
 	echo "Testing: Do not create domain domainname=$domainname"
 fi	
-exit 0
+#exit 0
 
 echo "*** Building VM image ... ***"
 packer build order-packer.json
@@ -160,6 +160,7 @@ sleep 120
 
 #DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/"
 
+echo "Before creating domainname=$domainname"
 if [ ! -z "$domainname" ] && [ "$domainname" != "domainname" ]
   then 	
 	#0) check and create domain and DNS 
