@@ -16,6 +16,7 @@
 
 
 {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% import "OlegCallLogBundle::Default/calllogmacros.html.twig" as calllogmacros %}
 
 {#{% block header %}{% endblock %}#}
 {% block content %}
@@ -169,14 +170,14 @@
         <div id="calllog-encounter-patient-info" class="panel-collapse collapse in">
             <div class="panel-body">
 
-                {{ formmacros.inputArrayField(encounter.patlastname,cycle,"encounterpatlastname","","","","",status) }}
+                {{ calllogmacros.calllogInputArray("Patient's Last Name (at the time of encounter):",encounter.patlastname) }}
+                {{ calllogmacros.calllogInputArray( "Patient's Last Name (at the time of encounter):", encounter.patlastname) }}
+                {{ calllogmacros.calllogInputArray( "Patient's First Name (at the time of encounter):", encounter.patfirstname) }}
+                {{ calllogmacros.calllogInputArray( "Patient's Middle Name (at the time of encounter):", encounter.patmiddlename) }}
+                {{ calllogmacros.calllogInputArray( "Patient's Suffix (at the time of encounter):", encounter.patsuffix) }}
+                {{ calllogmacros.calllogInputArray( "Patient's Gender (at the time of encounter):", encounter.patsex) }}
 
-                {#{{ formmacros.simplefield( "Patient's Last Name (at the time of encounter):", encounter.patlastname, "", "disabled" ) }}#}
-                {#{{ formmacros.simplefield( "Patient's First Name (at the time of encounter):", encounter.patfirstname, "", "disabled" ) }}#}
-                {#{{ formmacros.simplefield( "Patient's Middle Name (at the time of encounter):", encounter.patmiddlename, "", "disabled" ) }}#}
-                {#{{ formmacros.simplefield( "Patient's Suffix (at the time of encounter):", encounter.patsuffix, "", "disabled" ) }}#}
-                {#{{ formmacros.simplefield( "Patient's Gender (at the time of encounter):", encounter.patsex, "", "disabled" ) }}#}
-                {#{{ formmacros.simplefield( "Date of Birth:", encounter.patientDob|date("m/d/Y"), "", "disabled" ) }}#}
+                {{ formmacros.simplefield( "Date of Birth:", encounter.patientDob|date("m/d/Y"), "", "disabled" ) }}
                 {#{{ formmacros.fieldDateLabel(encounter.patientDob,'regular-datepicker') }}#}
 
             </div> <!-- panel-body -->
