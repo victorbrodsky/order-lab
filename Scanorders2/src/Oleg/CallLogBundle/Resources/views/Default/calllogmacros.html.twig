@@ -1232,6 +1232,8 @@
     {% for value in arrayValues %}
         {% if value.status == 'valid' %}
             {{ formmacros.simplefield( label, value.getField(), "", "disabled" ) }}
+        {% else %}
+            {{ formmacros.simplefield( label, null, "", "disabled" ) }}
         {% endif %}
     {% endfor %}
 

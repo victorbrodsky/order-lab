@@ -32,22 +32,33 @@
         <div id="calllog-encounter-referringprovider" class="panel-collapse collapse in">
             <div class="panel-body">
 
-                {#{{ formmacros.inputArrayField(encounter.referringProviders,cycle,"encounterreferringprovider","","","","",status) }}#}
-                {% for referringProvider in encounter.referringProviders %}
+                {% if encounter.referringProviders|length == 0 %}
 
-                    {#{{ formmacros.field(referringProvider.field) }}#}
-                    {{ formmacros.simplefield( "Referring Provider Name:", referringProvider.field, "", "disabled" ) }}
+                    {{ formmacros.simplefield( "Referring Provider Name:", null, "", "disabled" ) }}
+                    {{ formmacros.simplefield( "Referring Provider Specialty:", null, "", "disabled" ) }}
+                    {{ formmacros.simplefield( "Referring Provider Phone Number:", null, "", "disabled" ) }}
+                    {{ formmacros.simplefield( "Referring Provider E-Mail:", null, "", "disabled" ) }}
 
-                    {#{{ formmacros.field(referringProvider.referringProviderSpecialty) }}#}
-                    {{ formmacros.simplefield( "Referring Provider Specialty:", referringProvider.referringProviderSpecialty, "", "disabled" ) }}
+                {% else %}
 
-                    {#{{ formmacros.field(referringProvider.referringProviderPhone) }}#}
-                    {{ formmacros.simplefield( "Referring Provider Phone Number:", referringProvider.referringProviderPhone, "", "disabled" ) }}
+                    {#{{ formmacros.inputArrayField(encounter.referringProviders,cycle,"encounterreferringprovider","","","","",status) }}#}
+                    {% for referringProvider in encounter.referringProviders %}
 
-                    {#{{ formmacros.field(referringProvider.referringProviderEmail) }}#}
-                    {{ formmacros.simplefield( "Referring Provider E-Mail:", referringProvider.referringProviderEmail, "", "disabled" ) }}
+                        {#{{ formmacros.field(referringProvider.field) }}#}
+                        {{ formmacros.simplefield( "Referring Provider Name:", referringProvider.field, "", "disabled" ) }}
 
-                {% endfor %}
+                        {#{{ formmacros.field(referringProvider.referringProviderSpecialty) }}#}
+                        {{ formmacros.simplefield( "Referring Provider Specialty:", referringProvider.referringProviderSpecialty, "", "disabled" ) }}
+
+                        {#{{ formmacros.field(referringProvider.referringProviderPhone) }}#}
+                        {{ formmacros.simplefield( "Referring Provider Phone Number:", referringProvider.referringProviderPhone, "", "disabled" ) }}
+
+                        {#{{ formmacros.field(referringProvider.referringProviderEmail) }}#}
+                        {{ formmacros.simplefield( "Referring Provider E-Mail:", referringProvider.referringProviderEmail, "", "disabled" ) }}
+
+                    {% endfor %}
+
+                {% endif %}
 
             </div> <!-- panel-body -->
         </div> <!-- panel-collapse -->
@@ -181,21 +192,15 @@
                 {#{{ formmacros.fieldDateLabel(encounter.patientDob,'regular-datepicker') }}#}
 
                 {% set patient = encounter.getPatient() %}
-                {#patient.id={{ patient.id }}<br>#}
                 {% if patient %}
                     {% set dob = patient.obtainValidField('dob') %}
                     {% if dob and dob.field %}
-                        {{ formmacros.simplefield( label, dob.field|date('m/d/Y',false), "", "disabled" ) }}
+                        {{ formmacros.simplefield( "Date of Birth:", dob.field|date('m/d/Y',false), "", "disabled" ) }}
+                    {% else %}
+                        {{ formmacros.simplefield( "Date of Birth:", null, "", "disabled" ) }}
                     {% endif %}
-                    {#{% for dob in patient.getDob() %}#}
-                        {#dob={{ dob.getField()|date("m/d/Y") }}<br>#}
-                        {#{% if dob and dob.status == 'valid' %}#}
-                            {#MM/dd/yyyy#}
-                            {#dob.id={{ dob.id }}<br>#}
-                            {#{{ formmacros.simplefield( label, dob.field|date('m/d/Y',false), "", "disabled" ) }}#}
-                            {#{{ formmacros.simplefield( label, dob.getField()|date("m/d/Y"), "", "disabled" ) }}#}
-                        {#{% endif %}#}
-                    {#{% endfor %}#}
+                {% else %}
+                    {{ formmacros.simplefield( "Date of Birth:", null, "", "disabled" ) }}
                 {% endif %}
 
 
