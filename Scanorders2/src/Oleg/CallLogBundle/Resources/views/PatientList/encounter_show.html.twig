@@ -177,8 +177,21 @@
                 {{ calllogmacros.calllogInputArray( "Patient's Suffix (at the time of encounter):", encounter.patsuffix) }}
                 {{ calllogmacros.calllogInputArray( "Patient's Gender (at the time of encounter):", encounter.patsex) }}
 
-                {{ formmacros.simplefield( "Date of Birth:", encounter.patientDob|date("m/d/Y"), "", "disabled" ) }}
+                {#{{ formmacros.simplefield( "Date of Birth:", encounter.getPatient.getDob|date("m/d/Y"), "", "disabled" ) }}#}
                 {#{{ formmacros.fieldDateLabel(encounter.patientDob,'regular-datepicker') }}#}
+
+                {% for dob in encounter.getPatient.getDob %}
+
+                    {% if dob.status == 'valid' %}
+
+                        {{ formmacros.simplefield( label, dob.getField()|date("m/d/Y"), "", "disabled" ) }}
+
+                    {% else %}
+
+                    {% endif %}
+
+                {% endfor %}
+
 
             </div> <!-- panel-body -->
         </div> <!-- panel-collapse -->
