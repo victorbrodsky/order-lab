@@ -180,17 +180,23 @@
                 {#{{ formmacros.simplefield( "Date of Birth:", encounter.getPatient.getDob|date("m/d/Y"), "", "disabled" ) }}#}
                 {#{{ formmacros.fieldDateLabel(encounter.patientDob,'regular-datepicker') }}#}
 
-                {% for dob in encounter.getPatient.getDob %}
-
-                    {% if dob.status == 'valid' %}
-
-                        {{ formmacros.simplefield( label, dob.getField()|date("m/d/Y"), "", "disabled" ) }}
-
-                    {% else %}
-
+                {% set patient = encounter.getPatient() %}
+                {#patient.id={{ patient.id }}<br>#}
+                {% if patient %}
+                    {% set dob = patient.obtainValidField('dob') %}
+                    {% if dob and dob.field %}
+                        {{ formmacros.simplefield( label, dob.field|date('m/d/Y',false), "", "disabled" ) }}
                     {% endif %}
-
-                {% endfor %}
+                    {#{% for dob in patient.getDob() %}#}
+                        {#dob={{ dob.getField()|date("m/d/Y") }}<br>#}
+                        {#{% if dob and dob.status == 'valid' %}#}
+                            {#MM/dd/yyyy#}
+                            {#dob.id={{ dob.id }}<br>#}
+                            {#{{ formmacros.simplefield( label, dob.field|date('m/d/Y',false), "", "disabled" ) }}#}
+                            {#{{ formmacros.simplefield( label, dob.getField()|date("m/d/Y"), "", "disabled" ) }}#}
+                        {#{% endif %}#}
+                    {#{% endfor %}#}
+                {% endif %}
 
 
             </div> <!-- panel-body -->

@@ -1230,15 +1230,9 @@
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
     {% for value in arrayValues %}
-
         {% if value.status == 'valid' %}
-
             {{ formmacros.simplefield( label, value.getField(), "", "disabled" ) }}
-
-        {% else %}
-
         {% endif %}
-
     {% endfor %}
 
 {% endmacro %}
