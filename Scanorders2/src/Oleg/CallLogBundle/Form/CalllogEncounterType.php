@@ -201,7 +201,9 @@ class CalllogEncounterType extends AbstractType
 //            'prototype_name' => '__encounterpathistory__',
 //        ));
 
-        if(0) {
+        //disable for new/edit page
+        //TODO: test "new entry same encounter"
+        if( !$this->params['previousEncounters'] ) {
             //number and source
             $builder->add('number', CollectionType::class, array(
                 'entry_type' => CalllogEncounterNumberType::class,
