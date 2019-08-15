@@ -110,7 +110,7 @@
                 </a>
             </h4>
         </div>
-        <div id="calllog-encounter-location" class="panel-collapse collapse in">
+        <div id="calllog-encounter-location" class="panel-collapse collapse">
             <div class="panel-body">
 
                 {% if encounter.locationName is defined %}
@@ -215,7 +215,7 @@
                 </a>
             </h4>
         </div>
-        <div id="calllog-encounter-patient-info" class="panel-collapse collapse in">
+        <div id="calllog-encounter-patient-info" class="panel-collapse collapse">
             <div class="panel-body">
 
                 {{ calllogmacros.calllogInputArray("Patient's Last Name (at the time of encounter):",encounter.patlastname) }}
