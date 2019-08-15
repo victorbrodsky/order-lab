@@ -21,6 +21,43 @@
 {#{% block header %}{% endblock %}#}
 {% block content %}
 
+    {#{% set encounterDate = null %}#}
+    {#{% set encounterHour = null %}#}
+    {#{% set encounterMin = null %}#}
+    {% set encounterTimezone = null %}
+    {% set encounterDateObject = encounter.obtainValidField('date') %}
+    {% if encounterDateObject %}
+        {#{% set encounterDate = encounterDateObject.getField()|date("m/d/Y",false) %}#}
+        {#{% set encounterHour = encounterDateObject.time|date("h",false) %}#}
+        {#{% set encounterMin = encounterDateObject.time|date("i",false) %}#}
+        {#{% if encounterHour %}#}
+            {#{% set encounterDate = encounterDate ~ " at " ~ encounterHour  %}#}
+            {#{% if encounterMin %}#}
+                {#{% set encounterDate = encounterDate ~ ":" ~ encounterMin  %}#}
+            {#{% endif %}#}
+        {#{% endif %}#}
+        {% set encounterTimezone = encounterDateObject.timezone %}
+    {% endif %}
+    {#{{ formmacros.simplefield( "Encounter Date:", encounterDate, "", "disabled" ) }}#}
+
+    {#Encounter Date:#}
+    {{ formmacros.simplefield( "Encounter Date:", encounter.obtainEncounterDate(), "", "disabled" ) }}
+
+    {#Timezone:#}
+    {{ formmacros.simplefield( "Timezone:", encounterTimezone, "", "disabled" ) }}
+
+    {#Provider:#}
+    {{ formmacros.simplefield( "Provider:", encounter.provider, "", "disabled" ) }}
+
+    {#Attending Physician:#}
+    {% if encounter.attendingPhysicians|length > 0 %}
+        {% for attendingPhysician in encounter.attendingPhysicians %}
+            {{ formmacros.simplefield( "Attending Physician:", attendingPhysician, "", "disabled" ) }}
+        {% endfor %}
+    {% else %}
+        {{ formmacros.simplefield( "Attending Physician:", null, "", "disabled" ) }}
+    {% endif %}
+
     <div class="panel panel-default">
         <div class="panel-heading">
             <h4 class="panel-title">

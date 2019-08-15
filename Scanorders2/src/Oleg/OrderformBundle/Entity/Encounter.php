@@ -958,10 +958,54 @@ class Encounter extends ObjectAbstract
         $key = $this->obtainValidField('number');
         if( $key ) {
             $number = $key->getField();
+
+            $dateTimeStr = null;
+            $date = $this->obtainValidField('date');
+            if( $date ) {
+                $dateTimeStr = $date."";
+                //$dateTime = $date->getField();
+                //if( $dateTime ) {
+                //    $dateTimeStr = $dateTime->format("m/d/Y H:i:s");
+                //}
+            }
+
+            if( !$dateTimeStr ) {
+                $dateTimeStr = $this->getCreationdate()->format("m/d/Y H:i:s");
+            }
+
             //PreviousEncounterID (MM/DD/YYYY HH:MM:SS)
-            $number = $number . " (" . $this->getCreationdate()->format("m/d/Y H:i:s") . ")";
+            //$number = $number . " (" . $this->getCreationdate()->format("m/d/Y H:i:s") . ")";
+            $number = $number . " (" . $dateTimeStr . ")";
         }
         return $number;
+    }
+
+    //Encounter Date (MM/DD/YYYY HH:MM)
+    public function obtainEncounterDate() {
+
+        $dateTimeStr = null;
+
+        $date = $this->obtainValidField('date');
+
+        if( $date ) {
+            $dateTime = $date->getField();
+            $dateTimeStr = $dateTime->format("m/d/Y");
+
+            $time = $date->getTime();
+            if( $time ) {
+                $hour = $time->format("H");
+                $minutes = $time->format("i");
+
+                if( $hour ) {
+                    $dateTimeStr = $dateTimeStr . " at " . $hour;
+                    if( $minutes ) {
+                        $dateTimeStr = $dateTimeStr . ":" . $minutes;
+                    }
+                }
+            }
+        }
+
+        return $dateTimeStr;
     }
 
     //[EncounterLocation'sName] / [EncounterLocation'sPhoneNumber]
