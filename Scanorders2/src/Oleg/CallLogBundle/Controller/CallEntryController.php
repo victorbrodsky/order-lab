@@ -1104,7 +1104,8 @@ class CallEntryController extends Controller
         $message->addEncounter($encounter2);
         ///////////// EOF Message //////////////
 
-        $form = $this->createCalllogEntryForm($message,$mrntype,$mrn,$cycle,$readonlyEncounter,true); //entry/new
+        $showPreviousEncounters = true;
+        $form = $this->createCalllogEntryForm($message,$mrntype,$mrn,$cycle,$readonlyEncounter,$showPreviousEncounters); //entry/new
 
         //$encounterid = $calllogUtil->getNextEncounterGeneratedId();
 
@@ -1143,7 +1144,8 @@ class CallEntryController extends Controller
             'formnodetrigger' => $formnodetrigger,
             'formnodeTopHolderId' => $formnodeTopHolderId,
             'readonlyPatient' => $readonlyPatient,
-            'readonlyEncounter' => $readonlyEncounter
+            'readonlyEncounter' => $readonlyEncounter,
+            'showPreviousEncounters' => $showPreviousEncounters
             //'encounterid' => $encounterid
         );
     }
@@ -1201,7 +1203,8 @@ class CallEntryController extends Controller
 
         $message = $this->createCalllogEntryMessage($user,$permittedInstitutions,$system); //save
 
-        $form = $this->createCalllogEntryForm($message,$mrntype,$mrn,$cycle,false,true); ///entry/save
+        $showPreviousEncounters = true;
+        $form = $this->createCalllogEntryForm($message,$mrntype,$mrn,$cycle,false,$showPreviousEncounters); ///entry/save
 
         $form->handleRequest($request);
 
@@ -1608,7 +1611,8 @@ class CallEntryController extends Controller
             'formtype' => $formtype,
             'triggerSearch' => 0,
             'mrn' => $mrn,
-            'mrntype' => $mrntype
+            'mrntype' => $mrntype,
+            'showPreviousEncounters' => $showPreviousEncounters
         );
     }//save
 

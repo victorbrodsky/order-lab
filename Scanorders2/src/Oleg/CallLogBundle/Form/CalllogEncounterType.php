@@ -201,24 +201,21 @@ class CalllogEncounterType extends AbstractType
 //            'prototype_name' => '__encounterpathistory__',
 //        ));
 
-        //disable for new/edit page
-        //TODO: test "new entry same encounter"
-        if( !$this->params['previousEncounters'] ) {
-            //number and source
-            $builder->add('number', CollectionType::class, array(
-                'entry_type' => CalllogEncounterNumberType::class,
-                'entry_options' => array(
-                    'form_custom_value' => $this->params
-                ),
-                'allow_add' => true,
-                'allow_delete' => true,
-                'required' => false,
-                'label' => false,
-                'by_reference' => false,
-                'prototype' => true,
-                'prototype_name' => '__encounternumber__',
-            ));
-        }
+        //hide for new page
+        //encounter type and number. Use showPreviousEncounters in the form: hide if defined and true.
+        $builder->add('number', CollectionType::class, array(
+            'entry_type' => CalllogEncounterNumberType::class,
+            'entry_options' => array(
+                'form_custom_value' => $this->params
+            ),
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'label' => false,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__encounternumber__',
+        ));
 
         //TODO: select box showing new and previous encounters
 //        $builder->add('previousEncounters', ChoiceType::class, array(

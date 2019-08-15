@@ -104,9 +104,16 @@
                             {{ form_row(encounter.id) }}
                             {{ form_row(encounter.status) }}
 
+                            {#Encounter type and number. Hide for new entry. Use showPreviousEncounters in the form: hide if defined and true.#}
+                            {% if showPreviousEncounters is defined and showPreviousEncounters==true %}
+                                <div style="display: none">
+                            {% endif %}
                             {% if encounter.number is defined %}
                                 {{ formmacros.inputArrayField(encounter.number,"new","encounternumber","key","","","",status) }}
                                 {#{{ formmacros.inputArrayField(encounter.date,cycle,"encounterdate","date","","","",status) }}#}
+                            {% endif %}
+                            {% if showPreviousEncounters is defined and showPreviousEncounters==true %}
+                                </div>
                             {% endif %}
 
                             {#previous encounter drop down menu#}
