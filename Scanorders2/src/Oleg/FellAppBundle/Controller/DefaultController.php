@@ -175,7 +175,7 @@ class DefaultController extends Controller
      */
     public function generateThumbnailsAction( Request $request ) {
 
-        exit("not allowed");
+        //exit("not allowed");
 
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->container->getParameter('fellapp.sitename').'-nopermission') );
