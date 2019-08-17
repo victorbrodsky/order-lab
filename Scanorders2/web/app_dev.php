@@ -17,6 +17,9 @@
 use Symfony\Component\Debug\Debug;
 use Symfony\Component\HttpFoundation\Request;
 
+//mvds - trick php into thinking it is running in HTTPS and let the script run for 5 min max
+$_SERVER['HTTPS'] = 'on';
+
 // If you don't want to setup permissions the proper way, just uncomment the
 // following PHP line. See:
 // https://symfony.com/doc/current/book/installation.html#configuration-and-setup for more information
