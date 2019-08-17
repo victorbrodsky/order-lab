@@ -23,7 +23,7 @@ $_SERVER['HTTPS'] = 'on';
 //ini_set('max_execution_time', 180);  //in sec
 
 // Report all errors except E_NOTICE
-//error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
+error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
 //error_reporting(0);
 //ini_set('display_errors', 0);
 
