@@ -19,6 +19,10 @@ use Symfony\Component\HttpFoundation\Request;
 //ini_set('memory_limit', '2048M');
 //ini_set('max_execution_time', 180);  //in sec
 
+// Report all errors except E_NOTICE
+error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
+//error_reporting(0);
+
 /**
  * @var Composer\Autoload\ClassLoader
  */
