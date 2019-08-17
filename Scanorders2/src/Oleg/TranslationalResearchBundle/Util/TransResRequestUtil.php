@@ -3823,9 +3823,14 @@ class TransResRequestUtil
         //return number_format($number,$digits);
     }
     function toMoney($val,$symbol='$',$r=2) {
+        //echo "val=".$val."<br>";
+        if( !$val ) {
+            $val = 0;
+        }
+        //$n = (float)$val;
         $n = $val;
-        $c = is_float($n) ? 1 : number_format($n,$r);
-        $d = '.';
+        //$c = is_float($n) ? 1 : number_format($n,$r);
+        //$d = '.';
         $t = ',';
         $sign = ($n < 0) ? '-' : '';
         $i = $n=number_format(abs($n),$r);
