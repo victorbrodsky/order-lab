@@ -17,6 +17,7 @@
 use Symfony\Component\HttpFoundation\Request;
 
 //mvds - trick php into thinking it is running in HTTPS and let the script run for 5 min max
+//TODO: add if statement apache64bitProxy to parameters and site settings
 $_SERVER['HTTPS'] = 'on';
 
 //ini_set('memory_limit', '2048M');
