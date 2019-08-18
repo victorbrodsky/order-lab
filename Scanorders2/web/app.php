@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 //TODO: add if statement apache64bitProxy to parameters and site settings
 //$connectionChannel = $container->getParameter('connection_channel');
 if( $_SERVER['SERVER_NAME'] == "c.med.cornell.edu" || $_SERVER['SERVER_NAME'] == "collage.med.cornell.edu" ) {
-    $_SERVER['HTTPS'] = 'on';
+    //$_SERVER['HTTPS'] = 'on';
 }
 
 
