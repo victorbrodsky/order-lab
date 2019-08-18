@@ -18,7 +18,15 @@ use Symfony\Component\HttpFoundation\Request;
 
 //mvds - trick php into thinking it is running in HTTPS and let the script run for 5 min max
 //TODO: add if statement apache64bitProxy to parameters and site settings
-$_SERVER['HTTPS'] = 'on';
+
+$addr = $_SERVER['REMOTE_ADDR'];
+print_r($addr);
+
+//$connectionChannel = $container->getParameter('connection_channel');
+//if( $connectionChannel == "https" ) {
+    $_SERVER['HTTPS'] = 'on';
+//}
+
 
 //ini_set('memory_limit', '2048M');
 //ini_set('max_execution_time', 180);  //in sec
@@ -36,6 +44,9 @@ if (PHP_VERSION_ID < 70000) {
     include_once __DIR__.'/../app/bootstrap.php.cache';
     //$loader = require_once __DIR__.'/../app/bootstrap.php.cache';
 }
+
+//$connectionChannel = $container->getParameter('connection_channel');
+//echo "connectionChannel=$connectionChannel<br>";
 
 // Change 'sf' by something unique to this app to prevent
 // conflicts with other applications running in the same server
@@ -60,6 +71,10 @@ $kernel = new AppKernel('prod', false);
 if (PHP_VERSION_ID < 70000) {
     $kernel->loadClassCache();
 }
+
+$container = $kernel->getContainer();
+$connectionChannel = $container->getParameter('connection_channel');
+//echo "connectionChannel=$connectionChannel<br>";
 
 // When using the HTTP Cache to improve application performance, the application
 // kernel is wrapped by the AppCache class to activate the built-in reverse proxy.
