@@ -18,21 +18,10 @@ use Symfony\Component\HttpFoundation\Request;
 
 //mvds - trick php into thinking it is running in HTTPS and let the script run for 5 min max
 //TODO: add if statement apache64bitProxy to parameters and site settings
-
-//$addr = $_SERVER['REMOTE_ADDR'];
-//print_r($addr);
-
-$host = $_SERVER['HTTP_HOST'];
-$SERVER_NAME = $_SERVER['SERVER_NAME'];
-$PHP_SELF = $_SERVER['PHP_SELF'];
-$link = $_SERVER['REQUEST_URI'];
-echo "name=$SERVER_NAME, self=$PHP_SELF, uri=$link, host=$host<br>";
-
 //$connectionChannel = $container->getParameter('connection_channel');
-//$connectionChannel = $container->getParameter('connection_channel');
-//if( $connectionChannel == "https" ) {
-    //$_SERVER['HTTPS'] = 'on';
-//}
+if( $_SERVER['SERVER_NAME'] == "c.med.cornell.edu" || $_SERVER['SERVER_NAME'] == "collage.med.cornell.edu" ) {
+    $_SERVER['HTTPS'] = 'on';
+}
 
 
 //ini_set('memory_limit', '2048M');
