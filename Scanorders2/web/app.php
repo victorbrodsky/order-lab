@@ -19,12 +19,19 @@ use Symfony\Component\HttpFoundation\Request;
 //mvds - trick php into thinking it is running in HTTPS and let the script run for 5 min max
 //TODO: add if statement apache64bitProxy to parameters and site settings
 
-$addr = $_SERVER['REMOTE_ADDR'];
-print_r($addr);
+//$addr = $_SERVER['REMOTE_ADDR'];
+//print_r($addr);
+
+$host = $_SERVER['HTTP_HOST'];
+$SERVER_NAME = $_SERVER['SERVER_NAME'];
+$PHP_SELF = $_SERVER['PHP_SELF'];
+$link = $_SERVER['REQUEST_URI'];
+echo "name=$SERVER_NAME, self=$PHP_SELF, uri=$link, host=$host<br>";
 
 //$connectionChannel = $container->getParameter('connection_channel');
+//$connectionChannel = $container->getParameter('connection_channel');
 //if( $connectionChannel == "https" ) {
-    $_SERVER['HTTPS'] = 'on';
+    //$_SERVER['HTTPS'] = 'on';
 //}
 
 
@@ -44,9 +51,6 @@ if (PHP_VERSION_ID < 70000) {
     include_once __DIR__.'/../app/bootstrap.php.cache';
     //$loader = require_once __DIR__.'/../app/bootstrap.php.cache';
 }
-
-//$connectionChannel = $container->getParameter('connection_channel');
-//echo "connectionChannel=$connectionChannel<br>";
 
 // Change 'sf' by something unique to this app to prevent
 // conflicts with other applications running in the same server
@@ -71,10 +75,6 @@ $kernel = new AppKernel('prod', false);
 if (PHP_VERSION_ID < 70000) {
     $kernel->loadClassCache();
 }
-
-$container = $kernel->getContainer();
-$connectionChannel = $container->getParameter('connection_channel');
-//echo "connectionChannel=$connectionChannel<br>";
 
 // When using the HTTP Cache to improve application performance, the application
 // kernel is wrapped by the AppCache class to activate the built-in reverse proxy.
