@@ -42,7 +42,7 @@ $response = $kernel->handle($request);
 //mvds - trick php into thinking it is running in HTTPS and let the script run for 5 min max
 //if statement to enable https based on the connection_channel container's parameter
 //Now container should be initialized
-$kernel->boot();
+//$kernel->boot();
 $container = $kernel->getContainer();
 $connectionChannel = $container->getParameter('connection_channel');
 echo "connectionChannel=".$connectionChannel."<br>";
