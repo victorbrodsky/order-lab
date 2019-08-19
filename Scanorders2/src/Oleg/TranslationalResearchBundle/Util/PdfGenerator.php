@@ -379,7 +379,7 @@ class PdfGenerator
         $this->generatePdfPhantomjs($pdfPath,$pdfPathParametersArr,$applicationFilePath,$request);
 
         $filesize = filesize($applicationFilePath);
-        echo "filesize=".$filesize."<br>";
+        //echo "filesize=".$filesize."<br>";
 
         if( !$filesize ) {
             $logger->warning('PackingSlipPDF failed. filesize=['.$filesize.']; applicationFilePath='.$applicationFilePath);

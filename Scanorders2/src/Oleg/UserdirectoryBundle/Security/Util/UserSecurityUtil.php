@@ -1246,6 +1246,37 @@ class UserSecurityUtil {
         return $res;
     }
 
+    public function getMaxIdleTime() {
+
+//        $params = $this->em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+//
+//        if( !$params ) {
+//            //new DB does not have SiteParameters object
+//            return 1800; //30 min
+//            //throw new \Exception( 'Parameter object is not found' );
+//        }
+//
+//        if( count($params) != 1 ) {
+//            throw new \Exception( 'Must have only one parameter object. Found '.count($params).'object(s)' );
+//        }
+//
+//        $param = $params[0];
+//        $maxIdleTime = $param->getMaxIdleTime();
+
+        $maxIdleTime = $this->getSiteSettingParameter("maxIdleTime");
+        //echo "maxIdleTime=".$maxIdleTime."<br>";
+
+        if( !$maxIdleTime ) {
+            //new DB does not have SiteParameters object
+            return 1800; //30 min default
+        }
+
+        //return time in seconds
+        $maxIdleTime = $maxIdleTime * 60;
+
+        return $maxIdleTime;
+    }
+
     public function getAutoAssignInstitution( $withAutoAssignEnable=true ) {
         if( $withAutoAssignEnable ) {
             $enableAutoAssignmentInstitutionalScope = $this->getSiteSettingParameter('enableAutoAssignmentInstitutionalScope');

@@ -51,8 +51,12 @@ class SessionIdleHandler
         $this->router = $router;
         $this->em = $em;
 
-        $userUtil = new UserUtil();
-        $this->maxIdleTime = $userUtil->getMaxIdleTime($this->em);
+        //getMaxIdleTime
+        //$userUtil = new UserUtil();
+        //$this->maxIdleTime = $userUtil->getMaxIdleTime($this->em);
+        $userSecUtil = $this->container->get('user_security_utility');
+        $this->maxIdleTime = $userSecUtil->getMaxIdleTime();
+        //echo "maxIdleTime=".$this->maxIdleTime."<br>";
     }
 
     public function onKernelRequest(GetResponseEvent $event)
@@ -73,29 +77,29 @@ class SessionIdleHandler
 
             $this->session->start();
             
-    if( 0 ) {
-            //Don't use getLastUsed(). But it is the same until page is closed.
-            $lapse = time() - $this->session->getMetadataBag()->getLastUsed();
+        if( 0 ) {
+                //Don't use getLastUsed(). But it is the same until page is closed.
+                $lapse = time() - $this->session->getMetadataBag()->getLastUsed();
 
-            //$msg = "'lapse=".$lapse.", max idle time=".$this->maxIdleTime."'";
-            //echo $msg;
-            //exit();
-            
-    } else {
-            //set lastRequest timestamp $this->getUser()->getAttribute('lastRequest');
-            $lastRequest = $this->session->get('lastRequest');
-            //echo "Handler: lastRequest=".gmdate("Y-m-d H:i:s",$lastRequest)."<br>";
-            //echo "Handler: pingCheck=".$this->session->get('pingCheck')."<br>";
-            if( !$lastRequest ) {  
-                $logger = $this->container->get('logger');
-                $logger->notice("onKernelRequest: set lastRequest to ".time());
+                //$msg = "'lapse=".$lapse.", max idle time=".$this->maxIdleTime."'";
+                //echo $msg;
+                //exit();
+
+        } else {
+                //set lastRequest timestamp $this->getUser()->getAttribute('lastRequest');
+                $lastRequest = $this->session->get('lastRequest');
+                //echo "Handler: lastRequest=".gmdate("Y-m-d H:i:s",$lastRequest)."<br>";
+                //echo "Handler: pingCheck=".$this->session->get('pingCheck')."<br>";
+                if( !$lastRequest ) {
+                    $logger = $this->container->get('logger');
+                    $logger->notice("onKernelRequest: set lastRequest to ".time());
+                    $this->session->set('lastRequest',time());
+                    //$this->session->set('pingCheck','Yes!');
+                }
+
+                $lapse = time() - $this->session->get('lastRequest');
                 $this->session->set('lastRequest',time());
-                //$this->session->set('pingCheck','Yes!');
-            }
-            
-            $lapse = time() - $this->session->get('lastRequest'); 
-            $this->session->set('lastRequest',time());
-    }    
+        }
 
             if ($lapse > $this->maxIdleTime) {
 

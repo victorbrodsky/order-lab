@@ -13,72 +13,42 @@
 // production environment ('prod'). See:
 //   * https://symfony.com/doc/current/cookbook/configuration/front_controllers_and_kernel.html
 //   * https://symfony.com/doc/current/cookbook/configuration/environments.html
+//https://github.com/symfony/symfony-standard/blob/3.4/web/app.php
 
 use Symfony\Component\HttpFoundation\Request;
 
-//mvds - trick php into thinking it is running in HTTPS and let the script run for 5 min max
-//TODO: add if statement apache64bitProxy to parameters and site settings
-//$connectionChannel = $container->getParameter('connection_channel');
-//if $connectionChannel is https => $_SERVER['HTTPS'] = 'on';
-//echo "Server name=".$_SERVER['SERVER_NAME']."<br>";
-if( $_SERVER['SERVER_NAME'] == "c.med.cornell.edu" || $_SERVER['SERVER_NAME'] == "collage.med.cornell.edu" || $_SERVER['SERVER_NAME'] == "localhost" ) {
-    $_SERVER['HTTPS'] = 'on';
-}
-//$_SERVER['HTTPS'] = 'on';
-
-//ini_set('memory_limit', '2048M');
-//ini_set('max_execution_time', 180);  //in sec
 
 // Report all errors except E_NOTICE
 //error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
 //error_reporting(0);
 ini_set('display_errors', 0);
 
-/**
- * @var Composer\Autoload\ClassLoader
- */
-$loader = require __DIR__.'/../vendor/autoload.php';
+require __DIR__.'/../vendor/autoload.php';
 if (PHP_VERSION_ID < 70000) {
-    include_once __DIR__.'/../app/bootstrap.php.cache';
-    //$loader = require_once __DIR__.'/../app/bootstrap.php.cache';
+    include_once __DIR__.'/../var/bootstrap.php.cache';
 }
-
-// Change 'sf' by something unique to this app to prevent
-// conflicts with other applications running in the same server
-//$loader = new ApcClassLoader('sf', $loader);
-//$loader->register(true);
-
-
-// If your web server provides APC support for PHP applications, uncomment these
-// lines to use APC for class autoloading. This can improve application performance
-// very significantly. See https://symfony.com/doc/current/components/class_loader/cache_class_loader.html#apcclassloader
-
-// NOTE: The first argument of ApcClassLoader() is the prefix used to prevent
-// cache key conflicts. In a real Symfony application, make sure to change
-// it to a value that it's unique in the web server. A common practice is to use
-// the domain name associated to the Symfony application (e.g. 'example_com').
-
-// $apcLoader = new Symfony\Component\ClassLoader\ApcClassLoader(sha1(__FILE__), $loader);
-// $loader->unregister();
-// $apcLoader->register(true);
 
 $kernel = new AppKernel('prod', false);
 if (PHP_VERSION_ID < 70000) {
     $kernel->loadClassCache();
 }
+//$kernel = new AppCache($kernel);
 
-// When using the HTTP Cache to improve application performance, the application
-// kernel is wrapped by the AppCache class to activate the built-in reverse proxy.
-// See https://symfony.com/doc/current/book/http_cache.html#symfony-reverse-proxy
-$kernel = new AppCache($kernel);
-
-// If you use HTTP Cache and your application relies on the _method request parameter
-// to get the intended HTTP method, uncomment this line.
-// See https://symfony.com/doc/current/reference/configuration/framework.html#http-method-override
-Request::enableHttpMethodParameterOverride();
-
+// When using the HttpCache, you need to call the method in your front controller instead of relying on the configuration parameter
+//Request::enableHttpMethodParameterOverride();
 $request = Request::createFromGlobals();
 $response = $kernel->handle($request);
-$response->send();
 
+//mvds - trick php into thinking it is running in HTTPS and let the script run for 5 min max
+//if statement to enable https based on the connection_channel container's parameter
+//Now container should be initialized
+$kernel->boot();
+$container = $kernel->getContainer();
+$connectionChannel = $container->getParameter('connection_channel');
+echo "connectionChannel=".$connectionChannel."<br>";
+if ($connectionChannel == "https") {
+    $_SERVER['HTTPS'] = 'on';
+}
+
+$response->send();
 $kernel->terminate($request, $response);
