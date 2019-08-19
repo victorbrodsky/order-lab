@@ -32,23 +32,24 @@ $kernel = new AppKernel('prod', false);
 if (PHP_VERSION_ID < 70000) {
     $kernel->loadClassCache();
 }
+
+//mvds - trick php into thinking it is running in HTTPS and let the script run for 5 min max
+//if statement to enable https based on the connection_channel container's parameter
+//Now we can initialize the container by boot(). This boot() method exists in the handle(), however it will be skipped and will not be run twice.
+$kernel->boot();
+$container = $kernel->getContainer();
+$connectionChannel = $container->getParameter('connection_channel');
+//echo "connectionChannel=".$connectionChannel."<br>";
+if ($connectionChannel == "https") {
+    $_SERVER['HTTPS'] = 'on';
+}
+
 //$kernel = new AppCache($kernel);
 
 // When using the HttpCache, you need to call the method in your front controller instead of relying on the configuration parameter
 //Request::enableHttpMethodParameterOverride();
 $request = Request::createFromGlobals();
 $response = $kernel->handle($request);
-
-//mvds - trick php into thinking it is running in HTTPS and let the script run for 5 min max
-//if statement to enable https based on the connection_channel container's parameter
-//Now container should be initialized
-//$kernel->boot();
-$container = $kernel->getContainer();
-$connectionChannel = $container->getParameter('connection_channel');
-echo "connectionChannel=".$connectionChannel."<br>";
-if ($connectionChannel == "https") {
-    $_SERVER['HTTPS'] = 'on';
-}
 
 $response->send();
 $kernel->terminate($request, $response);
