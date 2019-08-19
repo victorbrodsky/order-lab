@@ -80,8 +80,10 @@ fellapp_instructions:
 #logout - is a general logout route used in SessionIdleHandler and MaintenanceListener
 logout:
     path:   /directory/logout
+    schemes:  ['%connection_channel%']
 login:
     path:   /directory/login
+    schemes:  ['%connection_channel%']
 
 scan_login_check:
     path:   /scan/login_check
@@ -90,8 +92,10 @@ scan_logout:
 
 employees_login_check:
     path:   /directory/login_check
+    schemes:  ['%connection_channel%']
 employees_logout:
     path:   /directory/logout
+    schemes:  ['%connection_channel%']
 
 fellapp_login_check:
     path:   /fellowship-applications/login_check

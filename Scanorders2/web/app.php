@@ -41,7 +41,7 @@ $container = $kernel->getContainer();
 $connectionChannel = $container->getParameter('connection_channel');
 //echo "connectionChannel=".$connectionChannel."<br>";
 if( $connectionChannel == "https" ) {
-    $_SERVER['HTTPS'] = 'on';
+    //$_SERVER['HTTPS'] = 'on';
 }
 
 //$kernel = new AppCache($kernel);
