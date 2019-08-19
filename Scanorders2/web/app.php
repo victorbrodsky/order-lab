@@ -20,11 +20,11 @@ use Symfony\Component\HttpFoundation\Request;
 //TODO: add if statement apache64bitProxy to parameters and site settings
 //$connectionChannel = $container->getParameter('connection_channel');
 //if $connectionChannel is https => $_SERVER['HTTPS'] = 'on';
-echo "Server name=".$_SERVER['SERVER_NAME']."<br>";
-if( $_SERVER['SERVER_NAME'] == "c.med.cornell.edu" || $_SERVER['SERVER_NAME'] == "collage.med.cornell.edu" ) {
+//echo "Server name=".$_SERVER['SERVER_NAME']."<br>";
+if( $_SERVER['SERVER_NAME'] == "c.med.cornell.edu" || $_SERVER['SERVER_NAME'] == "collage.med.cornell.edu" || $_SERVER['SERVER_NAME'] == "localhost" ) {
     $_SERVER['HTTPS'] = 'on';
 }
-$_SERVER['HTTPS'] = 'on';
+//$_SERVER['HTTPS'] = 'on';
 
 //ini_set('memory_limit', '2048M');
 //ini_set('max_execution_time', 180);  //in sec
