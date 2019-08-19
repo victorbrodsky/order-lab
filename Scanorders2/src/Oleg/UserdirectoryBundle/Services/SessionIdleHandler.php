@@ -31,8 +31,6 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
-//use Oleg\UserdirectoryBundle\Util\UserUtil;
-
 //This handle will (independently from JS) verify if max idle time out is reached and logout user on the first page redirect or reload
 
 class SessionIdleHandler
@@ -51,12 +49,8 @@ class SessionIdleHandler
         $this->router = $router;
         $this->em = $em;
 
-        //getMaxIdleTime
-        //$userUtil = new UserUtil();
-        //$this->maxIdleTime = $userUtil->getMaxIdleTime($this->em);
         $userSecUtil = $this->container->get('user_security_utility');
         $this->maxIdleTime = $userSecUtil->getMaxIdleTime();
-        //echo "maxIdleTime=".$this->maxIdleTime."<br>";
     }
 
     public function onKernelRequest(GetResponseEvent $event)
