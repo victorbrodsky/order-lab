@@ -23,7 +23,6 @@ use Symfony\Component\HttpFoundation\Request;
 if( $_SERVER['SERVER_NAME'] == "c.med.cornell.edu" || $_SERVER['SERVER_NAME'] == "collage.med.cornell.edu" ) {
     $_SERVER['HTTPS'] = 'on';
 }
-$_SERVER['HTTPS'] = 'on';
 
 //ini_set('memory_limit', '2048M');
 //ini_set('max_execution_time', 180);  //in sec
