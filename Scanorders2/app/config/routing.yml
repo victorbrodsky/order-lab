@@ -2,6 +2,7 @@
 main_common_home:
     path:      /
     defaults:  { _controller: OlegUserdirectoryBundle:Home:mainCommonHome }
+    schemes:  ['%connection_channel%']
 
 main_under_construction:
     path:      /under-construction
