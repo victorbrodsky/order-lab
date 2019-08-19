@@ -239,16 +239,19 @@ class UserSecurityUtil {
 
     function idleLogout( $request, $sitename, $flag = null ) {
 
-        $userUtil = new UserUtil();
-        $res = $userUtil->getMaxIdleTimeAndMaintenance($this->em,$this->secAuth,$this->container);
+        //$userUtil = new UserUtil();
+        //$res = $userUtil->getMaxIdleTimeAndMaintenance($this->em,$this->secAuth,$this->container);
+
+        $res = $this->getMaxIdleTimeAndMaintenance();
         $maxIdleTime = $res['maxIdleTime'];
         $maintenance = $res['maintenance'];
 
         if( $maintenance ) {
 
-            $msg = $userUtil->getSiteSetting($this->em,'MaintenancelogoutmsgWithDate');
+            //$msg = $userUtil->getSiteSetting($this->em,'MaintenancelogoutmsgWithDate');
             //$userSecUtil = $this->container->get('user_security_utility');
             //$msg = $userSecUtil->getSiteSettingParameter('MaintenancelogoutmsgWithDate');
+            $msg = $this->getSiteSettingParameter('MaintenancelogoutmsgWithDate');
 
         } else {
 
@@ -1276,6 +1279,50 @@ class UserSecurityUtil {
 
         return $maxIdleTime;
     }
+    public function getMaxIdleTimeAndMaintenance() {
+
+        $params = $this->em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+
+        if( !$params ) {
+            //new DB does not have SiteParameters object
+            $res = array(
+                'maxIdleTime' => 1800,
+                'maintenance' => false
+            );
+            return $res; //30 min
+            //throw new \Exception( 'Parameter object is not found' );
+        }
+
+        if( count($params) != 1 ) {
+            throw new \Exception( 'Must have only one parameter object. Found '.count($params).'object(s)' );
+        }
+
+        $param = $params[0];
+        $maxIdleTime = $param->getMaxIdleTime();
+        $maintenance = $param->getMaintenance();
+
+        //do not use maintenance for admin
+        //if( $secAuth->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( $this->secAuth->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            $maintenance = false;
+        }
+
+        $debug = in_array( $this->container->get('kernel')->getEnvironment(), array('test', 'dev') );
+        if( $debug ) {
+            $maintenance = false;
+        }
+
+        //return time in seconds
+        $maxIdleTime = $maxIdleTime * 60;
+
+        $res = array(
+            'maxIdleTime' => $maxIdleTime,
+            'maintenance' => $maintenance
+        );
+
+        return $res;
+    }
+
 
     public function getAutoAssignInstitution( $withAutoAssignEnable=true ) {
         if( $withAutoAssignEnable ) {

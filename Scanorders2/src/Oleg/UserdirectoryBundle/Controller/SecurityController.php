@@ -336,9 +336,11 @@ class SecurityController extends Controller
         $response = new Response();
         
         $logger = $this->container->get('logger');
+        $userSecUtil = $this->container->get('user_security_utility');
 
-        $userUtil = new UserUtil();
-        $res = $userUtil->getMaxIdleTimeAndMaintenance($this->getDoctrine()->getManager(),$this->get('security.authorization_checker'),$this->container);
+        //$userUtil = new UserUtil();
+        //$res = $userUtil->getMaxIdleTimeAndMaintenance($this->getDoctrine()->getManager(),$this->get('security.authorization_checker'),$this->container);
+        $res = $userSecUtil->getMaxIdleTimeAndMaintenance();
         $maxIdleTime = $res['maxIdleTime']+5; //in seconds; add some seconds as a safety delay.
         $maintenance = $res['maintenance'];
 
@@ -426,11 +428,13 @@ class SecurityController extends Controller
     public function getmaxidletimeAction( Request $request )
     {
 
+        $userSecUtil = $this->container->get('user_security_utility');
         //$userUtil = new UserUtil();
         //$maxIdleTime = $userUtil->getMaxIdleTime($this->getDoctrine()->getManager());
 
-        $userUtil = new UserUtil();
-        $res = $userUtil->getMaxIdleTimeAndMaintenance($this->getDoctrine()->getManager(),$this->get('security.authorization_checker'),$this->container);
+        //$userUtil = new UserUtil();
+        //$res = $userUtil->getMaxIdleTimeAndMaintenance($this->getDoctrine()->getManager(),$this->get('security.authorization_checker'),$this->container);
+        $res = $userSecUtil->getMaxIdleTimeAndMaintenance();
         $maxIdleTime = $res['maxIdleTime']; //in seconds
         $maintenance = $res['maintenance'];
 
