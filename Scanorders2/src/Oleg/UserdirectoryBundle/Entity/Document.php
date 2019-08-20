@@ -552,7 +552,8 @@ class Document {
     public function getAttachmentEmailPath()
     {
         //return $this->getAbsoluteUploadFullPath(); //old style, not working properly (after $_SERVER['HTTPS'] = 'on'; ?)
-        return $this->getServerPath();
+        //return $this->getServerPath();
+        return $this->getFullServerPath();
     }
 
 //    public function getCommandAbsoluteUploadFullPath()

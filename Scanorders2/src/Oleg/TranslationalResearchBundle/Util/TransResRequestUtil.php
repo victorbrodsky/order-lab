@@ -2576,7 +2576,7 @@ class TransResRequestUtil
         $invoicePDF = $invoice->getRecentPDF();
         if( $invoicePDF ) {
             $attachmentPath = $invoicePDF->getAbsoluteUploadFullPath();
-            //$attachmentPath = $invoicePDF->getAttachmentEmailPath();
+            $attachmentPath = $invoicePDF->getAttachmentEmailPath();
         }
         $logger = $this->container->get('logger');
         $logger->notice("attachmentPath=".$attachmentPath);
