@@ -1885,7 +1885,7 @@ class RequestController extends Controller
         //$withMatching = true; //slower 7.5 sec
         //$withMatching = false; //twice faster 3.5 sec
         
-        $dql->groupBy("transresRequest");
+        //$dql->groupBy("transresRequest");
 
         //testing
         //$dql->andWhere("transresRequest.id = 2");
@@ -1915,7 +1915,7 @@ class RequestController extends Controller
         $paginationParams = array(
             'defaultSortFieldName' => 'transresRequest.createDate',
             'defaultSortDirection' => 'DESC',
-            //'wrap-queries' => true
+            'wrap-queries' => true
         );
 
 //        if( $timer ) {
