@@ -388,6 +388,7 @@ function richTextInit(formNodeId) {
     // Misc: Undo, Redo, Full Screen, Codeview .
     // Do not show the other buttons.
     $('#oleg_userdirectorybundle_formnode_'+formNodeId).summernote({
+        //stripTags: true,
         toolbar: [
             // [groupName, [list of button]]
             ['style', ['bold', 'italic', 'underline', 'clear']],
@@ -399,7 +400,15 @@ function richTextInit(formNodeId) {
             //['insert', ['link', 'picture', 'video']],
             ['table', ['table']],
             ['view', ['fullscreen', 'codeview', 'undo', 'redo', 'help']]
-        ]
+        ],
+        callbacks: {
+            //use this for v0.7.0+: https://stackoverflow.com/questions/30993836/paste-content-as-plain-text-in-summernote-editor/31019586#31019586
+            onPaste: function (e) {
+                var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+                e.preventDefault();
+                document.execCommand('insertText', false, bufferText);
+            }
+        }
     });
 
     //$('#oleg_userdirectorybundle_formnode_'+formNodeId).find(".note-editable").css({"text-align": "justify"});
