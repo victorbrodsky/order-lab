@@ -47,6 +47,7 @@ class UtilCommand extends ContainerAwareCommand {
     //php app/console cron:util-command --env=prod
     protected function execute(InputInterface $input, OutputInterface $output) {
 
+        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         //$logger = $this->getContainer()->get('logger');
         $res = "EOF util-command";
 
@@ -54,15 +55,29 @@ class UtilCommand extends ContainerAwareCommand {
         //$res = $calllogUtil->updateTextHtml();
         //exit("EOF updateTextHtmlAction. Res=".$res);
 
-        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-        $oid = "APCP3296-REQ13549-V1"; //dev
-        $oid = "APCP2173-REQ15079-V2"; //collage
-        $invoice = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findOneByOid($oid);
-        if( !$invoice ) {
-            throw new \Exception("Invoice is not found by invoice number (oid) '" . $oid . "'");
+        if(0) {
+            $oid = "APCP3296-REQ13549-V1"; //dev
+            $oid = "APCP2173-REQ15079-V2"; //collage
+            $invoice = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findOneByOid($oid);
+            if (!$invoice) {
+                throw new \Exception("Invoice is not found by invoice number (oid) '" . $oid . "'");
+            }
+            $transresRequestUtil = $this->getContainer()->get('transres_request_util');
+            $res = $transresRequestUtil->sendInvoicePDFByEmail($invoice);
         }
-        $transresRequestUtil = $this->getContainer()->get('transres_request_util');
-        $res = $transresRequestUtil->sendInvoicePDFByEmail($invoice);
+
+        ///// rec letter ////////
+        $fellappRecLetterUtil = $this->getContainer()->get('fellapp_rec_letter_util');
+        $fellapp = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->find(1414); //8-testing, 1414-collage, 1439-live
+        $references = $fellapp->getReferences();
+        $reference = $references->first();
+        $letters = $reference->getDocuments();
+        $uploadedLetterDb = $letters->first();
+        $res = $fellappRecLetterUtil->sendRefLetterReceivedNotificationEmail($fellapp,$uploadedLetterDb);
+
+        $fellappType = $fellapp->getFellowshipSubspecialty();
+        $res = "ID=".$fellapp->getId().", fellappType=".$fellappType.": res=".$res."<br>";
+        /////////////////////////
 
         //$output->writeln($res);
         $output->writeln($res);
