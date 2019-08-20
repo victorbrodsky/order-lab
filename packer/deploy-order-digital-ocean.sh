@@ -103,6 +103,8 @@ sed -i -e "s/api_token_bash_value/$apitoken/g" order-packer.json
 sed -i -e "s/parameters_bash_file/$parameters/g" order-packer.json
 sed -i -e "s/bash_dbuser/$dbuser/g" order-packer.json
 sed -i -e "s/bash_dbpass/$dbpass/g" order-packer.json
+sed -i -e "s/bash_dbuser/$dbuser/g" parameters.yml
+sed -i -e "s/bash_dbpass/$dbpass/g" parameters.yml
 
 #modify http.config file to insert virtual host for https protocol
 #https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-apache-in-ubuntu-16-04
@@ -132,6 +134,8 @@ sed -i -e "s/$apitoken/api_token_bash_value/g" order-packer.json
 sed -i -e "s/$parameters/parameters_bash_file/g" order-packer.json
 sed -i -e "s/$dbuser/bash_dbuser/g" order-packer.json
 sed -i -e "s/$dbpass/bash_dbpass/g" order-packer.json
+sed -i -e "s/$dbuser/bash_dbuser/g" parameters.yml
+sed -i -e "s/$dbpass/bash_dbpass/g" parameters.yml
 
 sed -i -e "s/$protocol/bash_protocol/g" order-packer.json
 sed -i -e "s/$domainname/bash_domainname/g" order-packer.json

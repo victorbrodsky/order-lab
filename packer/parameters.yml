@@ -5,8 +5,8 @@ parameters:
     database_host: localhost
     database_port: null
     database_name: scanorder
-    database_user: symfony
-    database_password: symfony
+    database_user: bash_dbuser
+    database_password: bash_dbpass
     database_driver_external: pdo_sqlsrv
     database_host_external: null
     database_port_external: null
