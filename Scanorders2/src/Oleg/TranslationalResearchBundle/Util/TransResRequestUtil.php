@@ -3179,9 +3179,9 @@ class TransResRequestUtil
         $body = str_replace("[[EMAILS]]",implode(", ",$adminEmailInfos),$body);
 
         $attachmentPath = $pdf->getAbsoluteUploadFullPath();
-        echo "attachmentPath1=$attachmentPath<br>";
-        $attachmentPath = $pdf->getServerPath();
-        echo "attachmentPath2=$attachmentPath<br>";
+        //echo "attachmentPath1=$attachmentPath<br>";
+        //$attachmentPath = $pdf->getServerPath();
+        //echo "attachmentPath2=$attachmentPath<br>";
         //$logger = $this->container->get('logger');
         //$logger->notice("attachmentPath=".$attachmentPath);
 
