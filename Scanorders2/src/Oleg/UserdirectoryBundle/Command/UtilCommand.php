@@ -48,11 +48,20 @@ class UtilCommand extends ContainerAwareCommand {
     protected function execute(InputInterface $input, OutputInterface $output) {
 
         //$logger = $this->getContainer()->get('logger');
+        $res = "EOF util-command";
 
-        $calllogUtil = $this->getContainer()->get('calllog_util');
-        $res = $calllogUtil->updateTextHtml();
-
+        //$calllogUtil = $this->getContainer()->get('calllog_util');
+        //$res = $calllogUtil->updateTextHtml();
         //exit("EOF updateTextHtmlAction. Res=".$res);
+
+        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
+        $oid = "APCP3296-REQ13549-V1";
+        $invoice = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findOneByOid($oid);
+        if( !$invoice ) {
+            throw new \Exception("Invoice is not found by invoice number (oid) '" . $oid . "'");
+        }
+        $transresRequestUtil = $this->getContainer()->get('transres_request_util');
+        $res = $transresRequestUtil->sendInvoicePDFByEmail($invoice);
 
         //$output->writeln($res);
         $output->writeln($res);

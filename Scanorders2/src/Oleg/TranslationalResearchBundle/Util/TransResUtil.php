@@ -2300,7 +2300,11 @@ class TransResUtil
 
     //Event Log
     public function setEventLog($project, $eventType, $event, $testing=false) {
-        $user = $this->secTokenStorage->getToken()->getUser();
+        if( $this->secTokenStorage->getToken() ) {
+            $user = $this->secTokenStorage->getToken()->getUser();
+        } else {
+            $user = null;
+        }
         $userSecUtil = $this->container->get('user_security_utility');
         if( !$testing ) {
             $userSecUtil->createUserEditEvent($this->container->getParameter('translationalresearch.sitename'), $event, $user, $project, null, $eventType);

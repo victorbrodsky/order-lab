@@ -549,6 +549,12 @@ class Document {
         //return "http://collage.med.cornell.edu/".$this->getRelativeUploadFullPath();
     }
 
+    public function getAttachmentEmailPath()
+    {
+        //return $this->getAbsoluteUploadFullPath(); //old style, not working properly (after $_SERVER['HTTPS'] = 'on'; ?)
+        return $this->getServerPath();
+    }
+
 //    public function getCommandAbsoluteUploadFullPath()
 //    {
 //        //return $this->container->get('kernel')->getRootDir() . '/../web/' . $this->getUploadDirectory().'/'.$this->getUniquename();

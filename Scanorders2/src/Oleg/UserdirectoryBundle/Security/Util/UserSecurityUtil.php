@@ -521,6 +521,8 @@ class UserSecurityUtil {
             } else {
                 $user = $this->findSystemUser();
             }
+        } else {
+            $user = $this->findSystemUser();
         }
 
         $eventLog = $this->constructEventLog($sitename,$user,$request);
