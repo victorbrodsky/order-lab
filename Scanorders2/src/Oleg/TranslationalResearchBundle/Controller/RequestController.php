@@ -1915,7 +1915,7 @@ class RequestController extends Controller
         $paginationParams = array(
             'defaultSortFieldName' => 'transresRequest.createDate',
             'defaultSortDirection' => 'DESC',
-            'wrap-queries' => true
+            //'wrap-queries' => true
         );
 
 //        if( $timer ) {

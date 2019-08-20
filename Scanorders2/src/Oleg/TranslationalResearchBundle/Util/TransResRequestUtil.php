@@ -3180,7 +3180,7 @@ class TransResRequestUtil
 
         //$attachmentPath = $pdf->getAbsoluteUploadFullPath();
         //echo "attachmentPath1=$attachmentPath<br>";
-        $attachmentPath = $pdf->getServerPath();
+        $attachmentPath = $pdf->getServerPath(); //TODO: test and replace all other getAbsoluteUploadFullPath to getServerPath for email attachment
         //echo "attachmentPath2=$attachmentPath<br>";
         //$logger = $this->container->get('logger');
         //$logger->notice("attachmentPath=".$attachmentPath);
