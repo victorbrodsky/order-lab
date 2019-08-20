@@ -56,7 +56,7 @@ class UtilCommand extends ContainerAwareCommand {
 
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $oid = "APCP3296-REQ13549-V1"; //dev
-        //$oid = "APCP2173-REQ15079-V2"; //collage
+        $oid = "APCP2173-REQ15079-V2"; //collage
         $invoice = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findOneByOid($oid);
         if( !$invoice ) {
             throw new \Exception("Invoice is not found by invoice number (oid) '" . $oid . "'");
