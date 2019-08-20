@@ -1433,7 +1433,7 @@ class SiteParametersType extends AbstractType
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'phantomjs' )
             $builder->add('phantomjs',null,array(
-                'label'=>'Path to phantomjs.exe (with double quotation marks for path with space i.e. "C:\Program Files\phantomjs\bin\phantomjs.exe"):',
+                'label'=>'Path to phantomjs.exe (i.e. "C:\Program Files\phantomjs\bin\phantomjs.exe):',
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'phantomjsLinux' )
@@ -1444,7 +1444,7 @@ class SiteParametersType extends AbstractType
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'rasterize' )
             $builder->add('rasterize',null,array(
-                'label'=>'Path to rasterize.js (with double quotation marks for path with space i.e. "C:\Program Files\phantomjs\example\rasterize.js"):',
+                'label'=>'Path to rasterize.js (i.e. C:\Program Files\phantomjs\example\rasterize.js):',
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'rasterizeLinux' )

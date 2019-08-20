@@ -379,7 +379,7 @@ class PdfGenerator
         $this->generatePdfPhantomjs($pdfPath,$pdfPathParametersArr,$applicationFilePath,$request);
 
         $filesize = filesize($applicationFilePath);
-        //echo "filesize=".$filesize."<br>";
+        echo "filesize=".$filesize."<br>";
 
         if( !$filesize ) {
             $logger->warning('PackingSlipPDF failed. filesize=['.$filesize.']; applicationFilePath='.$applicationFilePath);
@@ -551,6 +551,7 @@ class PdfGenerator
             $pdfPathParametersArr,
             UrlGeneratorInterface::ABSOLUTE_URL
         ); //this does not work from console: 'order' is missing
+        //echo "pageUrl=$pageUrl <br>";
 
         //set back to original context
         if( $context ) {
@@ -606,7 +607,8 @@ class PdfGenerator
         $cmd = $phantomjs . ' ' . $parameters . ' ' . $rasterize . ' ' . $pageUrl . ' ' . $applicationOutputFilePath . ' "A4"';
         //$cmd = $phantomjs . ' ' . $rasterize . ' ' . $pageUrl . ' ' . $applicationOutputFilePath . ' "A4"';
         //$logger->notice("cmd=".$cmd);
-        echo "phantomjs cmd=".$cmd."<br>";
+        //echo "phantomjs cmd=".$cmd."<br>";
+        //exit('111');
 
         //$shellout = shell_exec( $cmd );
         $shellout = exec( $cmd );
