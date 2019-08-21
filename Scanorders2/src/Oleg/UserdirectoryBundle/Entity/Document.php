@@ -553,6 +553,7 @@ class Document {
     //TODO: swiftmailer\swiftmailer\lib\classes\Swift\ByteStream\FileByteStream.php Error: Unable to open file for reading => use 'realpath' in email util
     public function getAttachmentEmailPath()
     {
+        return $this->getAbsoluteUploadFullPath();
         return realpath($this->getAbsoluteUploadFullPath()); //old style, not working properly (after $_SERVER['HTTPS'] = 'on'; ?)
         //return $this->getServerPath();
         //return $this->getFullServerPath();
