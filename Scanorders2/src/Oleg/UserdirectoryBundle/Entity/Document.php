@@ -559,8 +559,10 @@ class Document {
         $uniquename = $this->getUniquename();
 
         //echo "getcwd=".getcwd()."<br>"; //getcwd()=C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2
-        if( $this->getUploadDirectory() ) {
-            $path = realpath($this->getUploadDirectory());
+        $dir = $this->getUploadDirectory();
+        echo "dir=$dir<br>";
+        if( $dir ) {
+            $path = realpath($dir);
         } else {
             $path = "";
         }
