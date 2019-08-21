@@ -483,7 +483,8 @@ class Document {
         }
 
         //echo "getcwd=".getcwd()."<br>"; //getcwd()=C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2
-        return $this->getUploadDirectory().'/'.$uniquename;
+        //return $this->getUploadDirectory().'/'.$uniquename;
+        return $this->getUploadDirectory().DIRECTORY_SEPARATOR.$uniquename;
     }
 
     //use for command console to get a full absolute server path
@@ -559,16 +560,16 @@ class Document {
         $uniquename = $this->getUniquename();
 
         //echo "getcwd=".getcwd()."<br>"; //getcwd()=C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2
-        $dir = $this->getUploadDirectory();
-        if( $dir ) {
-            echo "dir=$dir<br>";
-            $path = realpath($dir);
-            echo "after realpath=$path<br>";
+        $path = $this->getUploadDirectory();
+        if( $path ) {
+            //echo "path=$path<br>";
+            $path = realpath($path);
+            //echo "after realpath=$path<br>";
         } else {
             $path = "";
         }
 
-        return $path.'/'.$uniquename;
+        return $path.DIRECTORY_SEPARATOR.$uniquename;
 
     }
 
