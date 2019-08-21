@@ -218,7 +218,7 @@ class EmailUtil {
             echo "1attachmentPath=$attachmentPath<br>";
             exit('111');
             $attachmentPath = realpath($attachmentPath);
-            //echo "2attachmentPath=$attachmentPath<br>";
+            echo "2attachmentPath=$attachmentPath<br>";
             $attachment = \Swift_Attachment::fromPath($attachmentPath);
             if( $attachmentFilename ) {
                 $attachment->setFilename($attachmentFilename);
