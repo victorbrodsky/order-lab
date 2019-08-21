@@ -1105,8 +1105,8 @@ class RecLetterUtil {
         //add ref letter as an attachment
         $attachmentPath = null;
         if( $uploadedLetterDb ) {
-            $attachmentPath = $uploadedLetterDb->getAbsoluteUploadFullPath();
-            //$attachmentPath = $uploadedLetterDb->getAttachmentEmailPath();
+            //$attachmentPath = $uploadedLetterDb->getAbsoluteUploadFullPath();
+            $attachmentPath = $uploadedLetterDb->getAttachmentEmailPath();
             //echo "attachmentPath=[$attachmentPath]<br>";
         }
 
