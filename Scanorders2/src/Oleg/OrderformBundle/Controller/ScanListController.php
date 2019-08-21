@@ -296,8 +296,8 @@ class ScanListController extends ListController
      * @Route("/patient-record-statuses/new", name="patientrecordstatuses_new")
      * @Route("/message-statuses/new", name="messagestatuses_new")
      * @Route("/encounter-info-types/new", name="encounterinfotypes_new")
-     * @Route("/suggested-message-categories/", name="suggestedmessagecategorys_new")
-     * @Route("/calllog-entry-tags/", name="calllogentrytags_new")
+     * @Route("/suggested-message-categories/new", name="suggestedmessagecategorys_new")
+     * @Route("/calllog-entry-tags/new", name="calllogentrytags_new")
      *
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:new.html.twig")
