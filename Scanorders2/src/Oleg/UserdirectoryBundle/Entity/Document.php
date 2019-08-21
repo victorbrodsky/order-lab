@@ -551,36 +551,22 @@ class Document {
     }
 
     //TODO: swiftmailer\swiftmailer\lib\classes\Swift\ByteStream\FileByteStream.php Error: Unable to open file for reading => use 'realpath' in email util
+    //Accepted path: E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\web\Uploaded\fellapp\documents\filename.pdf
     public function getAttachmentEmailPath()
     {
-        return $this->getFullServerPath();
+        $path = $this->getFullServerPath();
+        if( $path ) {
+            $path = realpath($path);
+        }
+        return $path;
+
         return $this->getAbsoluteUploadFullPath();
         return realpath($this->getAbsoluteUploadFullPath()); //old style, not working properly (after $_SERVER['HTTPS'] = 'on'; ?)
         //return $this->getServerPath();
         //return $this->getFullServerPath();
 
-        $uniquename = $this->getUniquename();
-
-        //echo "getcwd=".getcwd()."<br>"; //getcwd()=C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2
-        $path = $this->getUploadDirectory();
-        if( $path ) {
-            //echo "path=$path<br>";
-            //$path = realpath($path);
-            //echo "after realpath=$path<br>";
-        } else {
-            $path = "";
-        }
-
-        //return DIRECTORY_SEPARATOR.$path.DIRECTORY_SEPARATOR.$uniquename;
-
-        //\Uploaded/fellapp/documents\5cc9b119ca40b.pdf
-        //return "Uploaded".DIRECTORY_SEPARATOR."fellapp".DIRECTORY_SEPARATOR."documents".DIRECTORY_SEPARATOR."5cc9b119ca40b.pdf";
-
-        //E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\web
-
+        //DIRECTORY_SEPARATOR
         //E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\web\Uploaded\fellapp\documents
-        return "E:/Program Files (x86)/Aperio/Spectrum/htdocs/order/scanorder/Scanorders2/web/Uploaded/fellapp/documents/5cc9b119ca40b.pdf";
-
     }
 
 //    public function getCommandAbsoluteUploadFullPath()
