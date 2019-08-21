@@ -492,8 +492,23 @@ class Document {
     public function getFullServerPath()
     {
         //echo "getcwd=".getcwd()."<br>"; //getcwd()=C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2
-        $fullPath = getcwd() . "/web/" . $this->getUploadDirectory().'/'.$this->getUniquename();
+
+        //From web getcwd()=C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\web
+        //From console getcwd()=C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2
+        $fullPath = getcwd();
+
+        if( strpos($fullPath, 'web') !== false ) {
+            //web exists
+        } else {
+            //web does not exist
+            $fullPath = $fullPath.DIRECTORY_SEPARATOR."web";
+        }
+
+        $fullPath = $fullPath . DIRECTORY_SEPARATOR . $this->getUploadDirectory() . DIRECTORY_SEPARATOR . $this->getUniquename();
+
+        //$fullPath = getcwd() . "/web/" . $this->getUploadDirectory().'/'.$this->getUniquename();
         //$fullPath = realpath($fullPath);
+
         return $fullPath;
     }
 
