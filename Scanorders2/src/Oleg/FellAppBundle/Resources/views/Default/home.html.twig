@@ -665,10 +665,12 @@
                                    style="color:black;"
                                    data-toggle="tooltip" title="Download Itinerary"
                                 >
-                                    {{ entity.interviewDate|date('m/d/Y','UTC') }}
+                                    {#{{ entity.interviewDate|date('m/d/Y','UTC') }}#}
+                                    {{ entity.interviewDate|date('m/d/Y',false) }}
                                 </a>
                             {% else %}
-                                {{ entity.interviewDate|date('m/d/Y','UTC') }}
+                                {#{{ entity.interviewDate|date('m/d/Y','UTC') }}#}
+                                {{ entity.interviewDate|date('m/d/Y',false) }}
                             {% endif %}
 
                         {% endif %}
