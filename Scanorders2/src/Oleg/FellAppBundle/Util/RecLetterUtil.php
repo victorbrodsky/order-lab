@@ -563,7 +563,7 @@ class RecLetterUtil {
         $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
         $response = $googlesheetmanagement->downloadFile($service,$file,$documentType);
         if( !$response ) {
-            throw new IOException('Error file response is empty: file id='.$file->getId());
+            throw new IOException('Error Rec Letter file response is empty: file id='.$file->getId());
         }
 
         if( !file_exists($fullpath) ) {
