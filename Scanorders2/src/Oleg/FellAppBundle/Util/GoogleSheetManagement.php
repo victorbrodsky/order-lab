@@ -294,7 +294,7 @@ class GoogleSheetManagement {
                 return $documentDb;
             }
 
-            $logger->notice("Attempt to download file from Google drive file id=".$fileId);
+            $logger->notice("Attempt to download file from Google drive file id=".$fileId."; title=".$file->getTitle());
             $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
             $response = $googlesheetmanagement->downloadFile($service, $file, $documentType);
             //echo "response=".$response."<br>";
