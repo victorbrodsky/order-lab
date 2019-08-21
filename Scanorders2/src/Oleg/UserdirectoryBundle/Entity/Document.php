@@ -549,7 +549,7 @@ class Document {
         //return "http://collage.med.cornell.edu/".$this->getRelativeUploadFullPath();
     }
 
-    //TODO: swiftmailer\swiftmailer\lib\classes\Swift\ByteStream\FileByteStream.php Error: Unable to open file for reading
+    //TODO: swiftmailer\swiftmailer\lib\classes\Swift\ByteStream\FileByteStream.php Error: Unable to open file for reading => use 'realpath' in email util
     public function getAttachmentEmailPath()
     {
         //return $this->getAbsoluteUploadFullPath(); //old style, not working properly (after $_SERVER['HTTPS'] = 'on'; ?)
