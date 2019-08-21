@@ -555,13 +555,15 @@ class Document {
     public function getAttachmentEmailPath()
     {
         $path = $this->getFullServerPath();
+        echo "1path=$path<br>";
         if( $path ) {
             $path = realpath($path);
+            echo "2path=$path<br>";
         }
         return $path;
 
-        return $this->getAbsoluteUploadFullPath();
-        return realpath($this->getAbsoluteUploadFullPath()); //old style, not working properly (after $_SERVER['HTTPS'] = 'on'; ?)
+        //return $this->getAbsoluteUploadFullPath();
+        //return realpath($this->getAbsoluteUploadFullPath()); //old style, not working properly (after $_SERVER['HTTPS'] = 'on'; ?)
         //return $this->getServerPath();
         //return $this->getFullServerPath();
 
