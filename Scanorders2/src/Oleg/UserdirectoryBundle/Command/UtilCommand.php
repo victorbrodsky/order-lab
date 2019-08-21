@@ -66,18 +66,24 @@ class UtilCommand extends ContainerAwareCommand {
             $res = $transresRequestUtil->sendInvoicePDFByEmail($invoice);
         }
 
-        ///// rec letter ////////
-        $fellappRecLetterUtil = $this->getContainer()->get('fellapp_rec_letter_util');
-        $fellapp = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->find(1414); //8-testing, 1414-collage, 1439-live
-        $references = $fellapp->getReferences();
-        $reference = $references->first();
-        $letters = $reference->getDocuments();
-        $uploadedLetterDb = $letters->first();
-        $res = $fellappRecLetterUtil->sendRefLetterReceivedNotificationEmail($fellapp,$uploadedLetterDb);
+        if(0) {
+            ///// rec letter ////////
+            $fellappRecLetterUtil = $this->getContainer()->get('fellapp_rec_letter_util');
+            $fellapp = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->find(1414); //8-testing, 1414-collage, 1439-live
+            $references = $fellapp->getReferences();
+            $reference = $references->first();
+            $letters = $reference->getDocuments();
+            $uploadedLetterDb = $letters->first();
+            $res = $fellappRecLetterUtil->sendRefLetterReceivedNotificationEmail($fellapp, $uploadedLetterDb);
 
-        $fellappType = $fellapp->getFellowshipSubspecialty();
-        $res = "ID=".$fellapp->getId().", fellappType=".$fellappType.": res=".$res."<br>";
-        /////////////////////////
+            $fellappType = $fellapp->getFellowshipSubspecialty();
+            $res = "ID=" . $fellapp->getId() . ", fellappType=" . $fellappType . ": res=" . $res . "<br>";
+            /////////////////////////
+        }
+
+        $emailUtil = $this->getContainer()->get('user_mailer_utility');
+        $emailUtil->testEmailWithAttachments();
+        $res = "EOF testEmailWithAttachments";
 
         //$output->writeln($res);
         $output->writeln($res);

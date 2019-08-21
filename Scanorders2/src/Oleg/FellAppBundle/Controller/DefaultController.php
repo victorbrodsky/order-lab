@@ -78,6 +78,9 @@ class DefaultController extends Controller
             return $this->redirect( $this->generateUrl($this->container->getParameter('fellapp.sitename').'-nopermission') );
         }
 
+        $emailUtil = $this->container->get('user_mailer_utility');
+        $emailUtil->testEmailWithAttachments();
+        exit("EOF testEmailWithAttachments");
 
         //test 1) sendRefLetterReceivedNotificationEmail
         $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');

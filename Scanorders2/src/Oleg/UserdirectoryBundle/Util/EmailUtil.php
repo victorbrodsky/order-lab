@@ -651,6 +651,42 @@ class EmailUtil {
         return $result;
     }
 
+
+
+
+    //Testing attachments
+    public function testEmailWithAttachments() {
+
+
+        ///// Test 1) new reference letter ////////
+        $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
+        $fellapp = $this->em->getRepository('OlegFellAppBundle:FellowshipApplication')->find(1414); //8-testing, 1414-collage, 1439-live
+        $references = $fellapp->getReferences();
+        $reference = $references->first();
+        $letters = $reference->getDocuments();
+        $uploadedLetterDb = $letters->first();
+        $res = $fellappRecLetterUtil->sendRefLetterReceivedNotificationEmail($fellapp,$uploadedLetterDb);
+
+        $fellappType = $fellapp->getFellowshipSubspecialty();
+        $res = "ID=".$fellapp->getId().", fellappType=".$fellappType.": res=".$res."<br>";
+        echo "Test1: $res<br>";
+        /////////////////////////
+
+
+        ////// Test 2) send invoice sendInvoicePDFByEmail /////////
+        $transresRequestUtil = $this->container->get('transres_request_util');
+        $oid = "APCP2173-REQ15079-V2"; //collage
+        $invoice = $this->em->getRepository('OlegTranslationalResearchBundle:Invoice')->findOneByOid($oid); //8-testing, 1414-collage, 1439-live
+        if( !$invoice ) {
+            exit("Invoice not found by oid=$oid");
+        }
+        $res = $transresRequestUtil->sendInvoicePDFByEmail($invoice);
+        echo "Test1: $res<br>";
+        /////////////////////////
+
+        
+    }
+
 }
 
 
@@ -668,6 +704,7 @@ class EmailUtil {
 //in the /vendor/swiftmailer/swiftmailer/lib/preferences.php everything works fine.
 // I think that the problem was in the permission to the directory.
 // Swiftmailer uses sys_get_temp_dir() function which trying refer to /tmp directory.
+
 
 
 ?>
