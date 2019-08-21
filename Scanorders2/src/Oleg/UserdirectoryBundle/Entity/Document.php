@@ -569,7 +569,7 @@ class Document {
             $path = "";
         }
 
-        return $path.DIRECTORY_SEPARATOR.$uniquename;
+        return DIRECTORY_SEPARATOR.$path.DIRECTORY_SEPARATOR.$uniquename;
 
     }
 
