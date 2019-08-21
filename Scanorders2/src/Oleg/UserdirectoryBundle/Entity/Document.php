@@ -560,9 +560,10 @@ class Document {
 
         //echo "getcwd=".getcwd()."<br>"; //getcwd()=C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2
         $dir = $this->getUploadDirectory();
-        echo "dir=$dir<br>";
         if( $dir ) {
+            echo "dir=$dir<br>";
             $path = realpath($dir);
+            echo "after realpath=$path<br>";
         } else {
             $path = "";
         }
