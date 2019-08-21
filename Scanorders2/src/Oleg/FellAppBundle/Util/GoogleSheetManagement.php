@@ -983,6 +983,7 @@ class GoogleSheetManagement {
      * @return String The file's content if successful, null otherwise.
      */
     function downloadFile($service, $file, $type=null) {
+        $logger = $this->container->get('logger');
         if( $type && ($type == 'Fellowship Application Spreadsheet' || $type == 'Fellowship Application Backup Spreadsheet' || $type == 'Fellowship Recommendation Letter Spreadsheet') ) {
             $downloadUrl = $file->getExportLinks()['text/csv'];
         } else {
@@ -997,10 +998,12 @@ class GoogleSheetManagement {
                 return $httpRequest->getResponseBody();
             } else {
                 // An error occurred.
+                $logger->error("Error download file: invalid response =".$httpRequest->getResponseHttpCode());
                 return null;
             }
         } else {
             // The file doesn't have any content stored on Drive.
+            $logger->error("Error download file: downloadUrl is null=".$downloadUrl);
             return null;
         }
     }
