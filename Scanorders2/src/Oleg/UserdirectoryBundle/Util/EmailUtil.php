@@ -215,6 +215,7 @@ class EmailUtil {
 
         // Optionally add any attachments
         if( $attachmentPath ) {
+            $attachmentPath = realpath($attachmentPath);
             $attachment = \Swift_Attachment::fromPath($attachmentPath);
             if( $attachmentFilename ) {
                 $attachment->setFilename($attachmentFilename);

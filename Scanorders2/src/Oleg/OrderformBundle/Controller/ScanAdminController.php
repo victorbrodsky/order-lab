@@ -2133,7 +2133,8 @@ class ScanAdminController extends AdminController
 
         $elements = array(
             "Sign out issue",
-            "Educational"
+            "Educational",
+            "Red Book"
         );
 
         $username = $this->get('security.token_storage')->getToken()->getUser();
