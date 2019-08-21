@@ -509,6 +509,10 @@ class Document {
         //$fullPath = getcwd() . "/web/" . $this->getUploadDirectory().'/'.$this->getUniquename();
         //$fullPath = realpath($fullPath);
 
+        if( $fullPath ) {
+            $fullPath = realpath($fullPath);
+        }
+
         return $fullPath;
     }
 
@@ -569,13 +573,15 @@ class Document {
     //Accepted path: E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\web\Uploaded\fellapp\documents\filename.pdf
     public function getAttachmentEmailPath()
     {
-        $path = $this->getFullServerPath();
-        echo "1path=$path<br>";
-        if( $path ) {
-            $path = realpath($path);
-            echo "2path=$path<br>";
-        }
-        return $path;
+        return $this->getFullServerPath();
+
+//        $path = $this->getFullServerPath();
+//        //echo "1path=$path<br>";
+//        if( $path ) {
+//            $path = realpath($path);
+//            //echo "2path=$path<br>";
+//        }
+//        return $path;
 
         //return $this->getAbsoluteUploadFullPath();
         //return realpath($this->getAbsoluteUploadFullPath()); //old style, not working properly (after $_SERVER['HTTPS'] = 'on'; ?)
