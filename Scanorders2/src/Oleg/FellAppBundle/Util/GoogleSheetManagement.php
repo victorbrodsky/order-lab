@@ -299,7 +299,7 @@ class GoogleSheetManagement {
             $response = $googlesheetmanagement->downloadFile($service, $file, $documentType);
             //echo "response=".$response."<br>";
             if( !$response ) {
-                throw new IOException('Error application file response is empty: file id='.$fileId);
+                throw new IOException('Error application file response is empty: file id='.$fileId."; documentType=".$documentType);
             }
 
             //create unique file name
