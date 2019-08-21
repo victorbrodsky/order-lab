@@ -563,7 +563,7 @@ class Document {
         $path = $this->getUploadDirectory();
         if( $path ) {
             //echo "path=$path<br>";
-            $path = realpath($path);
+            //$path = realpath($path);
             //echo "after realpath=$path<br>";
         } else {
             $path = "";
