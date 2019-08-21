@@ -995,7 +995,8 @@ class GoogleSheetManagement {
             $httpRequest = $service->getClient()->getAuth()->authenticatedRequest($request);
             //echo "res code=".$httpRequest->getResponseHttpCode()."<br>";
             if ($httpRequest->getResponseHttpCode() == 200) {
-                $logger->notice("download file: response=".$httpRequest->getResponseHttpCode());
+                $logger->notice("download file: response=".$httpRequest->getResponseHttpCode()."; file id=".$file->getId()."; type=".$type);
+                $logger->notice("getResponseBody=".$httpRequest->getResponseBody());
                 return $httpRequest->getResponseBody();
             } else {
                 // An error occurred.
