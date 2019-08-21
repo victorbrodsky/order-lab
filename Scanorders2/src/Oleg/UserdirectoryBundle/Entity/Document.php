@@ -553,8 +553,20 @@ class Document {
     public function getAttachmentEmailPath()
     {
         //return $this->getAbsoluteUploadFullPath(); //old style, not working properly (after $_SERVER['HTTPS'] = 'on'; ?)
-        return $this->getServerPath();
+        //return $this->getServerPath();
         //return $this->getFullServerPath();
+
+        $uniquename = $this->getUniquename();
+
+        //echo "getcwd=".getcwd()."<br>"; //getcwd()=C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2
+        if( $this->getUploadDirectory() ) {
+            $path = realpath($this->getUploadDirectory());
+        } else {
+            $path = "";
+        }
+
+        return $path.'/'.$uniquename;
+
     }
 
 //    public function getCommandAbsoluteUploadFullPath()
