@@ -673,6 +673,12 @@ class RecLetterUtil {
 //        $emailUtil->sendEmail( $emails, $subject, $body, $ccs );
 //        //test
 
+        $filesize = $file->getFileSize();
+        if( $filesize == 0 ) {
+            $logger->error("Error processing reference letter with title=".$file->getTitle().": size is zero, filesize=".$filesize);
+            return NULL;
+        }
+
         //check if file already exists by file id
         $documentDb = $this->em->getRepository('OlegUserdirectoryBundle:Document')->findOneByUniqueid($file->getId());
         if( $documentDb && $documentType != 'Fellowship Application Backup Spreadsheet' ) {
