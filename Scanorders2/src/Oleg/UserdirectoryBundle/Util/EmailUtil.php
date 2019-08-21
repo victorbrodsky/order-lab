@@ -216,9 +216,9 @@ class EmailUtil {
         // Optionally add any attachments
         if( $attachmentPath ) {
 
-            $appPath = $this->container->getParameter('kernel.root_dir');
-            $webPath = realpath($appPath . '/../web');
-            echo "webPath=$webPath<br>";
+            //$appPath = $this->container->getParameter('kernel.root_dir');
+            //$webPath = realpath($appPath . '/../web');
+            //echo "webPath=$webPath<br>";
 
             echo "attachmentPath=$attachmentPath<br>";
             //$attachmentPath = realpath($attachmentPath);

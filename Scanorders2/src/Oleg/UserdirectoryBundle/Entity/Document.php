@@ -553,7 +553,7 @@ class Document {
     //TODO: swiftmailer\swiftmailer\lib\classes\Swift\ByteStream\FileByteStream.php Error: Unable to open file for reading => use 'realpath' in email util
     public function getAttachmentEmailPath()
     {
-        //return $this->getAbsoluteUploadFullPath(); //old style, not working properly (after $_SERVER['HTTPS'] = 'on'; ?)
+        return realpath($this->getAbsoluteUploadFullPath()); //old style, not working properly (after $_SERVER['HTTPS'] = 'on'; ?)
         //return $this->getServerPath();
         //return $this->getFullServerPath();
 
@@ -573,6 +573,8 @@ class Document {
 
         //\Uploaded/fellapp/documents\5cc9b119ca40b.pdf
         //return "Uploaded".DIRECTORY_SEPARATOR."fellapp".DIRECTORY_SEPARATOR."documents".DIRECTORY_SEPARATOR."5cc9b119ca40b.pdf";
+
+        //E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\web
 
         //E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\web\Uploaded\fellapp\documents
         return "E:/Program Files (x86)/Aperio/Spectrum/htdocs/order/scanorder/Scanorders2/web/Uploaded/fellapp/documents/5cc9b119ca40b.pdf";
