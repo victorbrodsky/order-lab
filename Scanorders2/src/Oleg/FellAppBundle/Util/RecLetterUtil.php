@@ -613,13 +613,13 @@ class RecLetterUtil {
         //find folder by name
         $letterFolder = $googlesheetmanagement->findOneRecLetterUploadFolder($service,$folderIdFellAppId);
         //echo "letterFolder: Title=".$letterFolder->getTitle()."; ID=".$letterFolder->getId()."<br>";
-        $logger->notice("Getting reference letters from folder ID=".$letterFolder->getId());
+        //$logger->notice("Getting reference letters from folder ID=".$letterFolder->getId());
 
         //get all files in google folder
         $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
         $files = $googlesheetmanagement->retrieveFilesByFolderId($letterFolder->getId(),$service);
         //echo "files count=".count($files)."<br>";
-        $logger->notice("Found ".count($files)." reference letters from folder ID=".$letterFolder->getId());
+        //$logger->notice("Found ".count($files)." reference letters from folder ID=".$letterFolder->getId());
 
         //Download files to the server
         $importedLetters = array();
@@ -643,7 +643,7 @@ class RecLetterUtil {
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
         $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
-        //$emailUtil = $this->container->get('user_mailer_utility');
+        $emailUtil = $this->container->get('user_mailer_utility');
         $systemUser = $userSecUtil->findSystemUser();
         //$environment = $userSecUtil->getSiteSettingParameter('environment');
 
@@ -676,6 +676,25 @@ class RecLetterUtil {
         $filesize = $file->getFileSize();
         if( $filesize == 0 ) {
             $logger->error("Error processing reference letter with title=".$file->getTitle().": size is zero, filesize=".$filesize);
+            //Send email to admin
+
+            //send email
+            $msg = "Error processing reference letter with title ".$file->getTitle().": reference file is empty";
+            //$userSecUtil->sendEmailToSystemEmail($msg, $msg);
+
+            /////////////////
+//            $adminEmails = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'),"Administrator");
+//            $platformAdminEmails = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'),"Platform Administrator");
+//            if( $platformAdminEmails ) {
+//                $adminEmails = array_merge($adminEmails,$platformAdminEmails);
+//            }
+//            $adminEmails = array_unique($adminEmails);
+//            $emailUtil->sendEmail( $adminEmails, $msg, $msg );
+            /////////////////
+
+            //eventlog
+            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'), $msg, $systemUser, null, null, "No Recommendation Letters");
+
             return NULL;
         }
 
