@@ -613,11 +613,13 @@ class RecLetterUtil {
         //find folder by name
         $letterFolder = $googlesheetmanagement->findOneRecLetterUploadFolder($service,$folderIdFellAppId);
         //echo "letterFolder: Title=".$letterFolder->getTitle()."; ID=".$letterFolder->getId()."<br>";
+        $logger->notice("Getting reference letters from folder ID=".$letterFolder->getId());
 
         //get all files in google folder
         $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
         $files = $googlesheetmanagement->retrieveFilesByFolderId($letterFolder->getId(),$service);
         //echo "files count=".count($files)."<br>";
+        $logger->notice("Found ".count($files)." reference letters from folder ID=".$letterFolder->getId());
 
         //Download files to the server
         $importedLetters = array();
