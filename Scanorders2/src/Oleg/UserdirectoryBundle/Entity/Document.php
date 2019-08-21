@@ -569,7 +569,10 @@ class Document {
             $path = "";
         }
 
-        return DIRECTORY_SEPARATOR.$path.DIRECTORY_SEPARATOR.$uniquename;
+        //return DIRECTORY_SEPARATOR.$path.DIRECTORY_SEPARATOR.$uniquename;
+
+        //\Uploaded/fellapp/documents\5cc9b119ca40b.pdf
+        return "\\Uploaded\\fellapp\\documents\\5cc9b119ca40b.pdf";
 
     }
 
