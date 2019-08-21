@@ -215,7 +215,12 @@ class EmailUtil {
 
         // Optionally add any attachments
         if( $attachmentPath ) {
-            echo "1attachmentPath=$attachmentPath<br>";
+
+            $appPath = $this->container->getParameter('kernel.root_dir');
+            $webPath = realpath($appPath . '/../web');
+            echo "webPath=$webPath<br>";
+
+            echo "attachmentPath=$attachmentPath<br>";
             //$attachmentPath = realpath($attachmentPath);
             //echo "2attachmentPath=$attachmentPath<br>";
             $attachment = \Swift_Attachment::fromPath($attachmentPath);
