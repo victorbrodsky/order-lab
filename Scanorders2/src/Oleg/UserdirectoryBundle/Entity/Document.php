@@ -572,7 +572,7 @@ class Document {
         //return DIRECTORY_SEPARATOR.$path.DIRECTORY_SEPARATOR.$uniquename;
 
         //\Uploaded/fellapp/documents\5cc9b119ca40b.pdf
-        return "\\Uploaded\\fellapp\\documents\\5cc9b119ca40b.pdf";
+        return "Uploaded".DIRECTORY_SEPARATOR."fellapp".DIRECTORY_SEPARATOR."documents".DIRECTORY_SEPARATOR."5cc9b119ca40b.pdf";
 
     }
 
