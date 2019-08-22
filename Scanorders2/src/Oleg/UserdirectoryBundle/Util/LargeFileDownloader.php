@@ -102,10 +102,10 @@ class LargeFileDownloader {
         ///// EOF remove dots except extension /////
 
         $mimeType = $this->getMimeType($filename);
-        echo "readfile filename=".$filename."; mimeType=".$mimeType."; viewType=".$viewType."<br>";
+        //echo "readfile filename=".$filename."; mimeType=".$mimeType."; viewType=".$viewType."<br>";
         //exit("111");
 
-        if(0) {
+        if(1) {
             //header('Content-Description: File Transfer');
             header('Content-Type: ' . $mimeType);
             header('Expires: 0');
@@ -177,11 +177,11 @@ class LargeFileDownloader {
 //                $response = file_get_contents($filenameClean, false, stream_context_create($arrContextOptions));
 //                echo $response;
 
-                echo "size is < 3000000 <br>";
+                //echo "size is < 3000000 <br>";
                 echo $this->getFileContent($filenameClean);
 
             } else {
-                echo "size is > 3000000 <br>";
+                //echo "size is > 3000000 <br>";
                 $this->readfile_chunked($filenameClean);
             }
         }
