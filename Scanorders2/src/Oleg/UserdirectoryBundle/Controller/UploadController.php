@@ -305,6 +305,7 @@ class UploadController extends Controller {
                 $originalname = $document->getOriginalnameClean();
                 $abspath = $document->getAbsoluteUploadFullPath();
                 $size = $document->getSize();
+                echo "not snapshot abspath=$abspath <br>";
             } else {
 
                 $viewTypeArr = explode("-", $viewType);
@@ -368,12 +369,15 @@ class UploadController extends Controller {
                     $originalname = $document->getOriginalnameClean();
                     $abspath = $document->getAbsoluteUploadFullPath();
                     $size = $document->getSize();
+                    //echo "default abspath=$abspath <br>";
                 }
             }
             //abspath=http://127.0.0.1/order/Uploaded/fellapp/FellowshipApplicantUploads/1557157978ID1J9qjngqM1Bt_PZedHfJtX1S_sALg8YS-.jpg
             //$abspath = "http://127.0.0.1/order/Uploaded/fellapp/FellowshipApplicantUploads/small-1557157978ID1J9qjngqM1Bt_PZedHfJtX1S_sALg8YS-.jpg";
-            //echo "abspath=$abspath <br>";
-            //exit(111);
+            echo "abspath=$abspath <br>";
+            exit(111);
+            //$logger = $this->container->get('logger');
+            //$logger->notice("abspath=$abspath");
 
             $downloader = new LargeFileDownloader();
             ////$filepath, $filename=null, $size=null, $retbytes=true, $action="download", $viewType=null

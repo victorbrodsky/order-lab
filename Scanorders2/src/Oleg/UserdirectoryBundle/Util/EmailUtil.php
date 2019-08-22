@@ -18,6 +18,7 @@
 namespace Oleg\UserdirectoryBundle\Util;
 use Crontab\Crontab;
 use Crontab\Job;
+use Oleg\FellAppBundle\Controller\FellAppApplicantController;
 
 
 /**
@@ -657,7 +658,6 @@ class EmailUtil {
     //Testing attachments
     public function testEmailWithAttachments() {
 
-
         ///// Test 1) new reference letter ////////
         $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
         $fellapp = $this->em->getRepository('OlegFellAppBundle:FellowshipApplication')->find(1414); //8-testing, 1414-collage, 1439-live
@@ -705,6 +705,21 @@ class EmailUtil {
         $res = $transresReminderUtil->sendReminderUnpaidInvoices($showSummary,$testing);
         echo "Test4: $res<br>";
         /////////////////////////
+
+
+        //test is not implemented, unless sendInvitationEmail function is moved to utility
+        if(0) {
+            /////// Test 5) /invite-interviewer-to-rate/{interviewId} //////////////
+            $fellAppApplicantController = new FellAppApplicantController();
+            $interviewId = 1414;
+            $interview = $this->em->getRepository('OlegFellAppBundle:Interview')->find($interviewId);
+            if (!$interviewId) {
+                exit('Interviewer can not be found: interviewId=' . $interviewId);
+            }
+            $res = $fellAppApplicantController->sendInvitationEmail($interview);
+            echo "Test5: $res<br>";
+            //////////////////////////////
+        }
 
     }
 

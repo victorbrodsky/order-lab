@@ -59,6 +59,7 @@ class LargeFileDownloader {
         }
 
         //echo "filename=".$filename."<br>";
+        //exit('111');
         //remove commas
         $filename = str_replace(",", "_", $filename);
 
