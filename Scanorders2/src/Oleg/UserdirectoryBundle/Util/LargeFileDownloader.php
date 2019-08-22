@@ -137,10 +137,12 @@ class LargeFileDownloader {
                     $resize = null;
                 }
             }
+
             $resize = null; //disable resize for now. //use pre-generated thumbnail instead
 
             if( !$resize ) {
                 echo $this->getFileContent($filenameClean);
+                //exit('111');
             } else {
                 //don't use this. Use pre-generated thumbnail instead.
                 if(0) {
@@ -193,6 +195,7 @@ class LargeFileDownloader {
             ),
         );
         $response = file_get_contents($filenameClean, false, stream_context_create($arrContextOptions));
+        exit($response);
         return $response;
     }
 
