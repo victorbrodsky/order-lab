@@ -162,20 +162,13 @@ class LargeFileDownloader {
             }
 
         } else {
+            //$useAlwaysRequalrFileContent = false; //readfile_chunked does not work
+            $useAlwaysRequalrFileContent = true;
             //use regular readfile for file less than 3000000=>3 000 000 bytes => 3MB
-            if( $size < 3000000 ) {
+            if( $useAlwaysRequalrFileContent || $size < 3000000 ) {
                 //readfile($filenameClean); //use for files less than 10MB => 10000000 bytes
                 //echo "filenameClean=".$filenameClean."<br>";
                 //echo file_get_contents($filenameClean);
-
-//                $arrContextOptions=array(
-//                    "ssl"=>array(
-//                        "verify_peer"=>false,
-//                        "verify_peer_name"=>false,
-//                    ),
-//                );
-//                $response = file_get_contents($filenameClean, false, stream_context_create($arrContextOptions));
-//                echo $response;
 
                 //echo "size is < 3000000 <br>";
                 echo $this->getFileContent($filenameClean);
