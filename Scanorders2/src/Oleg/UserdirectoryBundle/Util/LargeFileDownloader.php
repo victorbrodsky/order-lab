@@ -102,8 +102,8 @@ class LargeFileDownloader {
         ///// EOF remove dots except extension /////
 
         $mimeType = $this->getMimeType($filename);
-        //echo "readfile filename=".$filename."; mimeType=".$mimeType."<br>";
-        //exit("111");
+        echo "readfile filename=".$filename."; mimeType=".$mimeType."; viewType=".$viewType."<br>";
+        exit("111");
 
         if(0) {
             //header('Content-Description: File Transfer');
