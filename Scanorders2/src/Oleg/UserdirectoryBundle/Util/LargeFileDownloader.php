@@ -162,7 +162,7 @@ class LargeFileDownloader {
             }
 
         } else {
-            $notUseChunked = false;
+            //$notUseChunked = false;
             $notUseChunked = true;
             //use regular readfile for file less than 3000000=>3 000 000 bytes => 3MB
             if( $notUseChunked || $size < 3000000 ) {
