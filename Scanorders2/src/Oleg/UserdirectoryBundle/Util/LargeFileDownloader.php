@@ -177,10 +177,11 @@ class LargeFileDownloader {
 //                $response = file_get_contents($filenameClean, false, stream_context_create($arrContextOptions));
 //                echo $response;
 
-                exit("size is small");
+                echo "size is < 3000000 <br>";
                 echo $this->getFileContent($filenameClean);
 
             } else {
+                echo "size is > 3000000 <br>";
                 $this->readfile_chunked($filenameClean);
             }
         }
