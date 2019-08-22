@@ -1106,7 +1106,7 @@ class RecLetterUtil {
         $attachmentPath = null;
         if( $uploadedLetterDb ) {
             //$attachmentPath = $uploadedLetterDb->getAbsoluteUploadFullPath();
-            $attachmentPath = $uploadedLetterDb->getAttachmentEmailPath();
+            $attachmentPath = $uploadedLetterDb->getAttachmentEmailPath(); //test is implemented
             //echo "attachmentPath=[$attachmentPath]<br>";
         }
 

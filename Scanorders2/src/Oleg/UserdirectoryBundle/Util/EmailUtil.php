@@ -684,7 +684,18 @@ class EmailUtil {
         echo "Test1: $res<br>";
         /////////////////////////
 
-
+        ////// Test 3) sendPackingSlipPdfByEmail //////////
+        $transresRequestUtil = $this->container->get('transres_request_util');
+        $subject = "Test packing slip pdf by email";
+        $body = "Test packing slip pdf by email";
+        $id = "15079";
+        $transresRequest = $this->em->getRepository('OlegTranslationalResearchBundle:TransResRequest')->find($id);
+        if( !$transresRequest ) {
+            exit("TransResRequest not found by id=$id");
+        }
+        $pdf = $transresRequestUtil->getLatestPackingSlipPdf($transresRequest);
+        $transresRequestUtil->sendPackingSlipPdfByEmail($transresRequest,$pdf,$subject,$body);
+        /////////////////////////
 
     }
 
