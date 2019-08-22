@@ -105,21 +105,23 @@ class LargeFileDownloader {
         //echo "readfile filename=".$filename."; mimeType=".$mimeType."<br>";
         //exit("111");
 
-        //header('Content-Description: File Transfer');
-        header('Content-Type: '.$mimeType);
-        header('Expires: 0');
-        header('Cache-Control: must-revalidate');
-        header('Pragma: public');
-        header('Content-Length: ' . $size);
+        if(0) {
+            //header('Content-Description: File Transfer');
+            header('Content-Type: ' . $mimeType);
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate');
+            header('Pragma: public');
+            header('Content-Length: ' . $size);
 
-        if( $action == "download" ) {
-            header('Content-Disposition: attachment; filename='.$filename);
-        } elseif( $action == "view" ) {
-            header('Content-Disposition: inline; filename='.$filename);
-            header('Accept-Ranges: bytes');
-        } else {
-            //default as "download" action
-            header('Content-Disposition: attachment; filename='.$filename);
+            if ($action == "download") {
+                header('Content-Disposition: attachment; filename=' . $filename);
+            } elseif ($action == "view") {
+                header('Content-Disposition: inline; filename=' . $filename);
+                header('Accept-Ranges: bytes');
+            } else {
+                //default as "download" action
+                header('Content-Disposition: attachment; filename=' . $filename);
+            }
         }
 
         //if( $viewType == 'snapshot' ) {
@@ -142,7 +144,6 @@ class LargeFileDownloader {
 
             if( !$resize ) {
                 echo $this->getFileContent($filenameClean);
-                //exit('111');
             } else {
                 //don't use this. Use pre-generated thumbnail instead.
                 if(0) {
@@ -195,7 +196,7 @@ class LargeFileDownloader {
             ),
         );
         $response = file_get_contents($filenameClean, false, stream_context_create($arrContextOptions));
-        exit('111');
+        //exit('111');
         return $response;
     }
 
