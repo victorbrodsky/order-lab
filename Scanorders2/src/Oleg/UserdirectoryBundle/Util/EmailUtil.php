@@ -681,7 +681,7 @@ class EmailUtil {
             exit("Invoice not found by oid=$oid");
         }
         $res = $transresRequestUtil->sendInvoicePDFByEmail($invoice);
-        echo "Test1: $res<br>";
+        echo "Test2: $res<br>";
         /////////////////////////
 
         ////// Test 3) sendPackingSlipPdfByEmail //////////
@@ -694,7 +694,16 @@ class EmailUtil {
             exit("TransResRequest not found by id=$id");
         }
         $pdf = $transresRequestUtil->getLatestPackingSlipPdf($transresRequest);
-        $transresRequestUtil->sendPackingSlipPdfByEmail($transresRequest,$pdf,$subject,$body);
+        $res = $transresRequestUtil->sendPackingSlipPdfByEmail($transresRequest,$pdf,$subject,$body);
+        echo "Test3: $res<br>";
+        /////////////////////////
+
+        ////// Test 4) sendReminderUnpaidInvoices->sendReminderUnpaidInvoicesBySpecialty  //////////
+        $transresReminderUtil = $this->container->get('transres_reminder_util');
+        $showSummary=false;
+        $testing=true;
+        $res = $transresReminderUtil->sendReminderUnpaidInvoices($showSummary,$testing);
+        echo "Test4: $res<br>";
         /////////////////////////
 
     }

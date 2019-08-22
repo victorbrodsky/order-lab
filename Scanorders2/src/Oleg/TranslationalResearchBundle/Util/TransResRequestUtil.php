@@ -3179,10 +3179,8 @@ class TransResRequestUtil
         //Replace [[EMAILS]] with
         $body = str_replace("[[EMAILS]]",implode(", ",$adminEmailInfos),$body);
 
-        //$attachmentPath = $pdf->getAbsoluteUploadFullPath();
-        //echo "attachmentPath1=$attachmentPath<br>";
-        $attachmentPath = $pdf->getAttachmentEmailPath(); //TODO: test and replace all other getAbsoluteUploadFullPath to getServerPath for email attachment
-        //echo "attachmentPath2=$attachmentPath<br>";
+        //$attachmentPath = $pdf->getAbsoluteUploadFullPath(); //original but it does not work in swift from console and web
+        $attachmentPath = $pdf->getAttachmentEmailPath(); //test is implemented //TODO: test and replace all other getAbsoluteUploadFullPath to getServerPath for email attachment
         //$logger = $this->container->get('logger');
         //$logger->notice("attachmentPath=".$attachmentPath);
 

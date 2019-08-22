@@ -48,14 +48,14 @@ class ReminderUtil
     }
 
 
-    public function sendReminderUnpaidInvoices($showSummary=false) {
+    public function sendReminderUnpaidInvoices($showSummary=false, $testing=false) {
         $transresUtil = $this->container->get('transres_util');
 
         $resultArr = array();
 
         $projectSpecialties = $transresUtil->getTransResProjectSpecialties(false);
         foreach($projectSpecialties as $projectSpecialty) {
-            $results = $this->sendReminderUnpaidInvoicesBySpecialty($projectSpecialty,$showSummary);
+            $results = $this->sendReminderUnpaidInvoicesBySpecialty($projectSpecialty,$showSummary,$testing);
             if( $results ) {
                 $resultArr[] = $results;
             }
@@ -73,7 +73,7 @@ class ReminderUtil
 
         return $result;
     }
-    public function sendReminderUnpaidInvoicesBySpecialty( $projectSpecialty, $showSummary=false ) {
+    public function sendReminderUnpaidInvoicesBySpecialty( $projectSpecialty, $showSummary=false, $testing=false ) {
         $transresUtil = $this->container->get('transres_util');
         $transresRequestUtil = $this->container->get('transres_request_util');
         $userSecUtil = $this->container->get('user_security_utility');
@@ -91,7 +91,7 @@ class ReminderUtil
         $eventType = "Unpaid Invoice Reminder Email";
         $sentInvoices = 0;
 
-        $testing = false;
+        //$testing = false;
         //$testing = true;
 
         //$invoiceReminderSchedule: invoiceDueDateMax,reminderIntervalMonths,maxReminderCount (i.e. 3,3,5)
@@ -272,7 +272,8 @@ class ReminderUtil
             $attachmentPath = null;
             $invoicePDF = $invoice->getRecentPDF();
             if ($invoicePDF) {
-                $attachmentPath = $invoicePDF->getAbsoluteUploadFullPath();
+                //$attachmentPath = $invoicePDF->getAbsoluteUploadFullPath();
+                $attachmentPath = $invoicePDF->getAttachmentEmailPath(); //test is implemented
             }
 
             //replace [[...]]
