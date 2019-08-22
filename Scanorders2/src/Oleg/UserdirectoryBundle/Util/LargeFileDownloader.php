@@ -103,7 +103,7 @@ class LargeFileDownloader {
 
         $mimeType = $this->getMimeType($filename);
         echo "readfile filename=".$filename."; mimeType=".$mimeType."; viewType=".$viewType."<br>";
-        exit("111");
+        //exit("111");
 
         if(0) {
             //header('Content-Description: File Transfer');
@@ -196,6 +196,7 @@ class LargeFileDownloader {
             ),
         );
         echo "before get content <br>";
+        exit('000');
         $response = file_get_contents($filenameClean, false, stream_context_create($arrContextOptions));
         exit('111');
         return $response;
