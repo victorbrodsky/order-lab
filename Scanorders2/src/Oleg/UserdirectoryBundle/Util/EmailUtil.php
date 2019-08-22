@@ -658,6 +658,8 @@ class EmailUtil {
     //Testing attachments
     public function testEmailWithAttachments() {
 
+        exit('not allowed');
+
         ///// Test 1) new reference letter ////////
         $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
         $fellapp = $this->em->getRepository('OlegFellAppBundle:FellowshipApplication')->find(1414); //8-testing, 1414-collage, 1439-live
