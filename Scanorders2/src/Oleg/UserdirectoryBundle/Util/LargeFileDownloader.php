@@ -177,6 +177,7 @@ class LargeFileDownloader {
 //                $response = file_get_contents($filenameClean, false, stream_context_create($arrContextOptions));
 //                echo $response;
 
+                exit("size is small");
                 echo $this->getFileContent($filenameClean);
 
             } else {
