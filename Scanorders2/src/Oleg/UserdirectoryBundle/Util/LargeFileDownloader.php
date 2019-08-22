@@ -195,7 +195,7 @@ class LargeFileDownloader {
             ),
         );
         $response = file_get_contents($filenameClean, false, stream_context_create($arrContextOptions));
-        exit($response);
+        exit('111');
         return $response;
     }
 
