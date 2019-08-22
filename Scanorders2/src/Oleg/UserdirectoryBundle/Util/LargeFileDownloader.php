@@ -195,6 +195,7 @@ class LargeFileDownloader {
                 "verify_peer_name"=>false,
             ),
         );
+        echo "before get content <br>";
         $response = file_get_contents($filenameClean, false, stream_context_create($arrContextOptions));
         exit('111');
         return $response;
