@@ -524,7 +524,8 @@ class FellAppApplicantController extends Controller {
             $attachmentFilename = null;
             $recentReport = $entity->getTheMostRecentReport();
             if( $recentReport ) {
-                $attachmentPath = $recentReport->getAbsoluteUploadFullPath();
+                //$attachmentPath = $recentReport->getAbsoluteUploadFullPath();
+                $attachmentPath = $recentReport->getAttachmentEmailPath(); //test is not implemented, unless this function is moved to utility
                 $attachmentFilename = $recentReport->getDescriptiveFilename();
             }
 
