@@ -64,10 +64,17 @@ function changeFilterColorButton() {
 }
 
 function toggleBtnListener() {
-    $('.toggle-btn-state').click(function(e) {
-        $(this).toggleClass('toggle-btn-state-active');
-        e.preventDefault();
-    });
+    //$('.toggle-btn-state').click(function(e) {
+        //$(this).toggleClass('toggle-btn-state-active');
+        // if( $(this).hasClass('toggle-btn-state-active') ) {
+        //     $(this).removeClass('toggle-btn-state-active').addClass('toggle-btn-state-inactive');
+        // }
+        // if( $(this).hasClass('toggle-btn-state-inactive') ) {
+        //     $(this).removeClass('toggle-btn-state-inactive').addClass('toggle-btn-state-active');
+        // }
+        //
+        // e.preventDefault();
+    //});
 
     //Default: if #transres-AdvancedSearch has "collapse in" => grey
     if( $("#transres-AdvancedSearch").hasClass("in") ) {

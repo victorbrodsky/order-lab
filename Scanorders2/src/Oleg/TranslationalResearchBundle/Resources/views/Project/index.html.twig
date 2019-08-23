@@ -51,7 +51,17 @@
                     {#</a>#}
                     {#<button id="filter-btn" type="submit" class="btn btn-default">Filter</button>#}
                     <div class="btn-group btn-group-sm">
-                        <button data-toggle="collapse" href="#transres-AdvancedSearch" class="btn btn-default btn-sm toggle-btn-state"><span class="glyphicon glyphicon-wrench"></span></button>
+                        <span data-toggle="buttons-checkbox">
+                            <div
+                                    data-toggle="collapse"
+                                    {#data-toggle="buttons-checkbox"#}
+                                    href="#transres-AdvancedSearch"
+                                    class="btn btn-default btn-sm toggle-btn-state"
+                                    data-active-class="info"
+                            >
+                                    <span class="glyphicon glyphicon-wrench"></span>
+                            </div>
+                        </span>
                         <button id="filter-btn" type="submit" class="btn btn-default btn-sm">Filter</button>
                     </div>
                 </div>
