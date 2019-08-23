@@ -678,8 +678,8 @@ Bootstrap NavBar not collapsing as expected - separating onto two lines.
     background-color: #fff;
 }
 /*https://stackoverflow.com/questions/11267137/toggle-twitter-bootstrap-button-class-when-active*/
-.btn.active[data-active-class="info"] {
-    color: #fff;
+.btn.active[data-active-class="advance-search-wrench"] {
+    /*color: #fff;*/
     background-color: #31b0d5;
     border-color: #269abc;
 }

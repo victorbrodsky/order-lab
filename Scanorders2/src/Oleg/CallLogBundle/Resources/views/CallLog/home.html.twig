@@ -63,8 +63,24 @@
                 {{ form_widget(filterform.mrntype) }}
                 {{ form_widget(filterform.search) }}
             </div>
+
             <div class="col-xs-1">
-                <button id="Search_button" type="submit" class="btn btn-default">Filter</button>
+                {#<button id="Search_button" type="submit" class="btn btn-default">Filter</button>#}
+
+                <div class="btn-group btn-group-sm">
+                        <span data-toggle="buttons-checkbox">
+                            <div
+                                    data-toggle="collapse"
+                                    href="#calllog-AdvancedSearch"
+                                    class="btn btn-default btn-sm toggle-btn-state"
+                                    data-active-class="advance-search-wrench"
+                            >
+                                    <span class="glyphicon glyphicon-wrench"></span>
+                            </div>
+                        </span>
+                    <button id="Search_button" type="submit" class="btn btn-default btn-sm">Filter</button>
+                </div>
+
             </div>
         </div>
 
@@ -87,9 +103,9 @@
             {% set advacedCollapse = '' %}
         {% endif %}
         {#<br>#}
-        <div class="row">
-            <a data-toggle="collapse" href="#calllog-AdvancedSearch">Advanced Search</a>
-        </div>
+        {#<div class="row">#}
+            {#<a data-toggle="collapse" href="#calllog-AdvancedSearch">Advanced Search</a>#}
+        {#</div>#}
         <div id="calllog-AdvancedSearch" class="panel-collapse collapse {{ advacedCollapse }}">
             <div class="panel-body">
 
@@ -178,7 +194,29 @@
             $('[data-toggle="tooltip"]').tooltip();
 
             changeFilterColorButton("#Search_button");
+
+            toggleBtnListener();
+
         });
+
+        function toggleBtnListener() {
+            //$('.toggle-btn-state').click(function(e) {
+            //$(this).toggleClass('toggle-btn-state-active');
+            // if( $(this).hasClass('toggle-btn-state-active') ) {
+            //     $(this).removeClass('toggle-btn-state-active').addClass('toggle-btn-state-inactive');
+            // }
+            // if( $(this).hasClass('toggle-btn-state-inactive') ) {
+            //     $(this).removeClass('toggle-btn-state-inactive').addClass('toggle-btn-state-active');
+            // }
+            //
+            // e.preventDefault();
+            //});
+
+            //Default: if #calllog-AdvancedSearch has "collapse in" => grey
+            if( $("#calllog-AdvancedSearch").hasClass("in") ) {
+                $('.toggle-btn-state').toggleClass('toggle-btn-state-active');
+            }
+        }
 
         //I think the "Filter" button needs to turn green if any of the fields
         // in the filter well are modified. When the "Filter" button is pressed
