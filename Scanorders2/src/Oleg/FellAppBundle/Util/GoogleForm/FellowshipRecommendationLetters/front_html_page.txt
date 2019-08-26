@@ -1,6 +1,5 @@
 The script ID is taken from Deployments list by creating a new deploy:
 Publish => Deploy from manifest => Create => choose a new version, type a name and click "Save"
-
 Note: don't insert it via the "Apps Script". The web published script ID will be in the code and it will give an iframe error. 
 
 ////// WORKING with script ID AKfycbyuyLIErKUD23whwR0t_gGa9XZQ8gHbTWBtOIg0m3t54coP1RpwNLkQLfiUVeCZRRsz /////////////

@@ -268,6 +268,11 @@
                     {% endif %}
                 </div>
 
+                <div id="patient-email-phone">
+                    {{ formmacros.field(form.phone) }}
+                    {{ formmacros.field(form.email) }}
+                </div>
+
                 {% if readonlyEncounter %}
                     {% set reenterPatientIdPrefix = "_always_hidden" %}
                 {% else %}

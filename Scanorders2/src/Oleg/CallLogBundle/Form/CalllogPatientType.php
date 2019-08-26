@@ -27,6 +27,7 @@ use Oleg\UserdirectoryBundle\Form\TrackerType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 //use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -121,6 +122,20 @@ class CalllogPatientType extends AbstractType
                 'prototype_name' => '__encounter__',
             ));
         }
+
+        //TODO: Disable these fields when patient is found
+        $builder->add('phone', TextType::class, array(
+            'required' => false,
+            'label' => "Phone Number:",
+            'attr' => array('class' => 'form-control patient-phone'),
+        ));
+
+        $builder->add('email', TextType::class, array(
+            'required' => false,
+            'label' => "E-Mail:",
+            'attr' => array('class' => 'form-control patient-phone'),
+        ));
+
 
 
 //        $builder->add('lastname', CollectionType::class, array(
