@@ -1958,7 +1958,10 @@ class CallEntryController extends Controller
         $dob = trim($request->get('dob'));
         $lastname = trim($request->get('lastname'));
         $firstname = trim($request->get('firstname'));
+        $phone = trim($request->get('phone'));
+        $email = trim($request->get('email'));
         $metaphone = trim($request->get('metaphone'));
+        //echo "phone=".$phone.", email=".$email."<br>";
         //print_r($allgets);
         //echo "metaphone=".$metaphone."<br>";
         //exit('1');
@@ -1967,11 +1970,14 @@ class CallEntryController extends Controller
         $matchAnd = true;
 
         if( $params ) {
+            //echo "params true<br>";
             $mrntype = ( array_key_exists('mrntype', $params) ? $params['mrntype'] : null);
             $mrn = ( array_key_exists('mrn', $params) ? $params['mrn'] : null);
             $dob = ( array_key_exists('dob', $params) ? $params['dob'] : null);
             $lastname = ( array_key_exists('lastname', $params) ? $params['lastname'] : null);
             $firstname = ( array_key_exists('firstname', $params) ? $params['firstname'] : null);
+            $phone = ( array_key_exists('phone', $params) ? $params['phone'] : null);
+            $email = ( array_key_exists('email', $params) ? $params['email'] : null);
             $metaphone = ( array_key_exists('metaphone', $params) ? $params['metaphone'] : null);
         }
 
@@ -2044,6 +2050,27 @@ class CallEntryController extends Controller
 
             $where = true;
             $searchArr[] = "MRN Type: ".$mrntype."; MRN: ".$mrn;
+        }
+
+        //$phone
+        //echo "phone=".$phone.", email=".$email."<br>";
+        if( $phone && ($where == false || $matchAnd == true) ) {
+            $searchArr[] = "Phone: " . $phone;
+            //$statusStr = "(patient.phoneCanonical = :phoneCanonical)";
+            //$searchCriterionArr[] = $statusStr;
+            $dql->andWhere("(patient.phoneCanonical = :phoneCanonical)");
+            $phoneCanonical = str_replace(' ', '', $phone); // Replaces all spaces with hyphens.
+            $phoneCanonical = preg_replace('/[^0-9\]/', '', $phoneCanonical); // Removes special chars.
+            $parameters['phoneCanonical'] = $phoneCanonical;
+        }
+
+        if( $email && ($where == false || $matchAnd == true) ) {
+            $searchArr[] = "E-Mail: " . $email;
+            //$statusStr = "(patient.emailCanonical = :emailCanonical)";
+            $dql->andWhere("(patient.emailCanonical = :emailCanonical)");
+            //$searchCriterionArr[] = $statusStr;
+            $emailCanonical = strtolower($email);
+            $parameters['emailCanonical'] = $emailCanonical;
         }
 
         //DOB
@@ -2460,6 +2487,8 @@ class CallEntryController extends Controller
         $middlename = trim($request->get('middlename'));
         $suffix = trim($request->get('suffix'));
         $sex = trim($request->get('sex'));
+        $phone = trim($request->get('phone'));
+        $email = trim($request->get('email'));
         //print_r($allgets);
         //echo "mrn=".$mrn."<br>";
         //echo "mrntype=".$mrntype."<br>";
@@ -2582,6 +2611,12 @@ class CallEntryController extends Controller
             }
             if( $dob ) {
                 $output .= "DOB: " . $dob . "<br>";
+            }
+            if( $phone ) {
+                $output .= "Phone: " . $phone . "<br>";
+            }
+            if( $email ) {
+                $output .= "E-Mail: " . $email . "<br>";
             }
 
             $res['patients'] = null;
@@ -2758,6 +2793,14 @@ class CallEntryController extends Controller
             $patient->addSex( $PatientSex );
 
             $createdWithArr[] = "Gender: " . $sexObj;
+        }
+
+        if( $phone ) {
+            $patient->setPhone($phone);
+        }
+
+        if( $email ) {
+            $patient->setEmail($email);
         }
 
         if( $withEncounter ) {

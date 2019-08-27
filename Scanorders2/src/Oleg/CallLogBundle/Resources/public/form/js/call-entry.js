@@ -119,6 +119,24 @@ function addnewCalllogPatient(holderId) {
     var sexStr = holder.find(".encountersex-field").select2('data').text;
     //sexStr = trimWithCheck(sexStr);
 
+    var phone = holder.find(".patient-phone").val();
+    phone = trimWithCheck(phone);
+
+    var email = holder.find(".patient-email").val();
+    email = trimWithCheck(email);
+
+    if( email ) {
+        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        if( re.test(String(email).toLowerCase()) ) {
+            //email is valid
+        } else {
+            holder.find('#calllog-danger-box').html("Please enter a valid email address.");
+            holder.find('#calllog-danger-box').show(_transTime);
+            calllogStopBtn(lbtn);
+            return false;
+        }
+    }
+
     //check if "Last Name" field + DOB field, or "MRN" fields are not empty
     //allow the creation of a patient record with the Last Name alone only
     //if( !mrn || !mrntype || !lastname || !dob ) {
@@ -154,6 +172,10 @@ function addnewCalllogPatient(holderId) {
         creationStr += " Gender: "+sexStr+" ";
     if( dob )
         creationStr += " DOB: "+dob+" ";
+    if( phone )
+        creationStr += " Phone: "+phone+" ";
+    if( email )
+        creationStr += " E-Mail: "+email+" ";
 
     confirmMsg = confirmMsg + creationStr;
 
@@ -183,7 +205,7 @@ function addnewCalllogPatient(holderId) {
         url: url,
         timeout: _ajaxTimeout,
         async: true,
-        data: {mrntype: mrntype, mrn: mrn, dob: dob, lastname: lastname, firstname: firstname, middlename: middlename, suffix: suffix, sex: sex, metaphone:metaphone  },
+        data: {mrntype: mrntype, mrn: mrn, dob: dob, lastname: lastname, firstname: firstname, middlename: middlename, phone: phone, email: email, suffix: suffix, sex: sex, metaphone:metaphone  },
     }).success(function(data) {
         //console.log("output="+data);
 
@@ -352,6 +374,24 @@ function submitPatientBtn(holderId) {
     var sex = holder.find(".encountersex-field").select2('val');
     sex = trimWithCheck(sex);
 
+    var phone = holder.find(".patient-phone").val();
+    phone = trimWithCheck(phone);
+
+    var email = holder.find(".patient-email").val();
+    email = trimWithCheck(email);
+
+    if( email ) {
+        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        if( re.test(String(email).toLowerCase()) ) {
+            //email is valid
+        } else {
+            holder.find('#calllog-danger-box').html("Please enter a valid email address.");
+            holder.find('#calllog-danger-box').show(_transTime);
+            calllogStopBtn(lbtn);
+            return false;
+        }
+    }
+
     //check if "Last Name" field + DOB field, or "MRN" fields are not empty
     //if( !mrn || !mrntype || !lastname || !dob ) {
     if( mrntype && mrn || lastname && dob ) {
@@ -384,6 +424,10 @@ function submitPatientBtn(holderId) {
         confirmMsg += " Gender:"+sex;
     if( dob )
         confirmMsg += " DOB:"+dob;
+    if( phone )
+        confirmMsg += " Phone:"+phone;
+    if( email )
+        confirmMsg += " E-Mail:"+email;
 
     if( confirm(confirmMsg) == true ) {
         //x = "You pressed OK!";
@@ -404,7 +448,7 @@ function submitPatientBtn(holderId) {
         url: url,
         timeout: _ajaxTimeout,
         async: true,
-        data: {patientId: patientId, mrntype: mrntype, mrn: mrn, dob: dob, lastname: lastname, firstname: firstname, middlename: middlename, suffix: suffix, sex: sex, metaphone:metaphone},
+        data: {patientId: patientId, mrntype: mrntype, mrn: mrn, dob: dob, lastname: lastname, firstname: firstname, middlename: middlename, phone: phone, email: email, suffix: suffix, sex: sex, metaphone:metaphone},
     }).success(function(data) {
         //console.log("output="+data);
         if( data == "OK" ) {
@@ -538,7 +582,25 @@ function findCalllogPatient(holderId,formtype,mrntype,mrn) {
     var firstname = holder.find(".encounter-firstName").val();
     firstname = trimWithCheck(firstname);
 
+    var phone = holder.find(".patient-phone").val();
+    phone = trimWithCheck(phone);
+
+    var email = holder.find(".patient-email").val();
+    email = trimWithCheck(email);
+
     //console.log('mrntype='+mrntype+", mrn="+mrn+", dob="+dob+", lastname="+lastname+", firstname="+firstname);
+
+    if( email ) {
+        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        if( re.test(String(email).toLowerCase()) ) {
+            //email is valid
+        } else {
+            holder.find('#calllog-danger-box').html("Please enter a valid email address.");
+            holder.find('#calllog-danger-box').show(_transTime);
+            calllogStopBtn(lbtn);
+            return false;
+        }
+    }
 
     //Check if the entered MRN string has no digits AND the Last Name field is empty,
     // then set the MRN field value to empty, and set the Last Name field to the value entered in the MRN field,
@@ -596,7 +658,7 @@ function findCalllogPatient(holderId,formtype,mrntype,mrn) {
         url: url,
         timeout: _ajaxTimeout,
         async: true,
-        data: {mrntype: mrntype, mrn: mrn, dob: dob, lastname: lastname, firstname: firstname, formtype: formtype, metaphone: metaphone },
+        data: {mrntype: mrntype, mrn: mrn, dob: dob, lastname: lastname, firstname: firstname, phone: phone, email: email, formtype: formtype, metaphone: metaphone },
     }).success(function(resData) {
         var dataOk = false;
         var data = resData.patients;
@@ -1152,6 +1214,11 @@ function disableAllFields(disable,holderId) {
 
     disableSelectFieldCalllog(holder.find(".encountersex-field"),disable);
     //disableField(holder.find(".encountersex-field"),disable);
+
+    disableField(holder.find(".patient-phone"),disable);
+
+    disableField(holder.find(".patient-email"),disable);
+
     //console.log("disableAllFields: finished");
 }
 function disableField(fieldEl,disable) {
@@ -1243,6 +1310,10 @@ function populatePatientInfo( patient, showinfo, modify, holderId, singleMatch )
     populateInputFieldCalllog(holder.find(".encounter-suffix"),patient,'suffix');
 
     populateSelectFieldCalllog(holder.find(".encountersex-field"),patient,'sex');
+
+    populateInputFieldCalllog(holder.find(".patient-phone"),patient,'phone',modify);
+
+    populateInputFieldCalllog(holder.find(".patient-email"),patient,'email',modify);
 
     //console.log('middlename='+middlename+'; suffix='+suffix+'; sex='+sex);
     //console.log('showinfo='+showinfo);
@@ -1553,7 +1624,7 @@ function calllogPressEnterOnKeyboardAction( holderId ) {
     if( formtype == 'call-entry' || formtype == 'add-patient-to-list' ) {
         var holder = getHolder(holderId);
 
-        holder.find('.patientmrn-mask, .patient-dob-date, .encounter-lastName, .encounter-firstName').on('keydown', function (event) {
+        holder.find('.patientmrn-mask, .patient-dob-date, .encounter-lastName, .encounter-firstName, .patient-phone, .patient-email').on('keydown', function (event) {
         //holder.find('.patientmrn-mask').on('keydown', function (event) {
             //console.log("calllog PressEnterOnKeyboardAction val=" + $(this).val()+", event="+event.which);
 
@@ -1710,8 +1781,10 @@ function calllogSubmitForm(btn,messageStatus) {
     var dob = holder.find(".patient-dob-date").val();
     var lastname = holder.find(".encounter-lastName").val();
     var firstname = holder.find(".encounter-firstName").val();
+    var phone = holder.find(".patient-phone").val();
+    var email = holder.find(".patient-email").val();
     var patientId = holder.find(".patienttype-patient-id").val();
-    if( !patientId && (mrn || dob || lastname || firstname) ) {
+    if( !patientId && (mrn || dob || lastname || firstname || phone || email) ) {
         var confMsg = 'You have entered patient information, but patient has not been found.'+
             ' The patient info will be discarded and call entry will not be attached to the patient.' +
             ' Otherwise, press "Cancel" and then press "Find Patient" button.'+

@@ -837,6 +837,8 @@ class Patient extends ObjectAbstract
     public function setPhone($phone)
     {
         $this->phone = $phone;
+
+        $this->setPhoneCanonical($phone);
     }
 
     /**
@@ -877,6 +879,8 @@ class Patient extends ObjectAbstract
     public function setEmail($email)
     {
         $this->email = $email;
+
+        $this->setEmailCanonical($email);
     }
 
     /**

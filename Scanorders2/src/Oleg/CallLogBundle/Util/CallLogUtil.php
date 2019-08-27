@@ -416,6 +416,9 @@ class CallLogUtil
             'sex' => (($sexRes && $sexRes->getField()) ? $sexRes->getField()->getId() : null),    //$sexRes->getId(),
             'sexstr' => $sexRes."",
 
+            'email' => $patient->getEmail(),
+            'phone' => $patient->getPhone(),
+
             'contactinfo' => $contactinfo,
 
             'fullName' => $patient->getFullPatientName(),

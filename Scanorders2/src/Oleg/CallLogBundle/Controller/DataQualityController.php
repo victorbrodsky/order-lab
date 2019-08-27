@@ -604,6 +604,8 @@ class DataQualityController extends CallEntryController
         $middlename = trim($request->get('middlename'));
         $suffix = trim($request->get('suffix'));
         $sex = trim($request->get('sex'));
+        $phone = trim($request->get('phone'));
+        $email = trim($request->get('email'));
         //print_r($allgets);
         echo "patientId=".$patientId."; mrn=".$mrn."<br>";
 
