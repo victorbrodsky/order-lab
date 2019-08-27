@@ -121,13 +121,13 @@ class CalllogSinglePatientType extends AbstractType
             'attr' => array('class' => 'form-control'),
         ));
 
-        $builder->add('patientPhone', TextType::class, array(
+        $builder->add('phone', TextType::class, array(
             'required' => false,
             'label' => "Phone:",
             'attr' => array('class' => 'form-control'),
         ));
 
-        $builder->add('patientEmail', TextType::class, array(
+        $builder->add('email', TextType::class, array(
             'required' => false,
             'label' => "E-mail:",
             'attr' => array('class' => 'form-control'),
