@@ -404,6 +404,8 @@ class CallLogPatientController extends PatientController {
             $newMiddlename = $singlePatient->getMiddlename();
             $newSuffix = $singlePatient->getSuffix();
             $newGender = $singlePatient->getGender();
+            $phone = $singlePatient->getPhone();
+            $email = $singlePatient->getEmail();
 
             $mrntypeObject = null;
             $createNewMrn = false;
@@ -540,6 +542,13 @@ class CallLogPatientController extends PatientController {
                     $newSuffixObject->setField($newSuffix);
                     $patient->addSuffix($newSuffixObject, true);
                 }
+            }
+
+            if( $phone ) {
+                $patient->setPhone($phone);
+            }
+            if( $email ) {
+                $patient->setEmail($email);
             }
             ///////////////// EOF Create new object if a new value exists and is not equal to the original /////////////////////
 
@@ -684,6 +693,16 @@ class CallLogPatientController extends PatientController {
             //echo "sexObject=".$sexObject->getId().": ".$sexObject->getName()."<br>";
             $singlePatient->setGender($sexObject->getId());
         }
+
+        $phone = $patient->getPhone();
+        if( $phone ) {
+            $singlePatient->setPhone($phone);
+        }
+        $email = $patient->getEmail();
+        if( $email ) {
+            $singlePatient->setEmail($email);
+        }
+
 
         //get mrntypes
         $mrntypeChoices = array();
