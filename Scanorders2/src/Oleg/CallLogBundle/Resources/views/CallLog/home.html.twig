@@ -150,6 +150,22 @@
                     </div>
                 </div>
 
+                <br>
+                <div class="row">
+                    <div class="col-xs-3" align="left">
+                        {{ form_widget(filterform.patientPhone) }}
+                    </div>
+                    <div class="col-xs-3" align="left">
+                        {{ form_widget(filterform.patientEmail) }}
+                    </div>
+                    <div class="col-xs-2" align="left">
+                    </div>
+                    <div class="col-xs-2" align="left">
+                    </div>
+                    <div class="col-xs-2" align="left">
+                    </div>
+                </div>
+
                 {% if user_security_utility.getSiteSettingParameter('enableMetaphone') %}
                     <br>
                     <div class="row">

@@ -224,6 +224,8 @@ class CallEntryController extends Controller
         $messageCategorieDefaultIdStr = null;
         $defaultMrnTypeId = null;
         $metaphone = false;
+        $patientPhone = null;
+        $patientEmail = null;
 
         //child nodes of "Pathology Call Log Entry"
         //$messageCategoryParent = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName("Encounter Note");
@@ -361,6 +363,8 @@ class CallEntryController extends Controller
         $patientListTitleFilter = $filterform['patientListTitle']->getData();
         $attendingFilter = $filterform['attending']->getData();
         $entryTags = $filterform['entryTags']->getData();
+        $patientPhone = $filterform['patientPhone']->getData();;
+        $patientEmail = $filterform['patientEmail']->getData();;
 
         if( !$searchFilter ) {
             $searchFilter = $filterform['search']->getData();
@@ -725,6 +729,21 @@ class CallEntryController extends Controller
 
             $advancedFilter++;
         }
+
+        if( $patientPhone ) {
+            $phoneCanonical = str_replace(' ', '', $patientPhone); // Replaces all spaces with hyphens.
+            $phoneCanonical = preg_replace('/[^0-9\]/', '', $phoneCanonical); // Removes special chars.
+            $dql->andWhere("patient.phoneCanonical = :patientPhone");
+            $queryParameters['patientPhone'] = $phoneCanonical;
+            $advancedFilter++;
+        }
+        if( $patientEmail ) {
+            $emailCanonical = strtolower($patientEmail);
+            $dql->andWhere("patient.emailCanonical = :patientEmail");
+            $queryParameters['patientEmail'] = $emailCanonical;
+            $advancedFilter++;
+        }
+
 
         ///////////////// search in navbar /////////////////
         if( $calllogsearchtype && $calllogsearch ) {
