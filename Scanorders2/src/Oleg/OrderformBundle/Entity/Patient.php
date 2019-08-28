@@ -857,8 +857,10 @@ class Patient extends ObjectAbstract
     public function setPhoneCanonical($phoneCanonical)
     {
         if( $phoneCanonical ) {
+            //echo "original phone=".$phoneCanonical."<br>";
             $phoneCanonical = str_replace(' ', '', $phoneCanonical); // Replaces all spaces with hyphens.
-            $phoneCanonical = preg_replace('/[^0-9\]/', '', $phoneCanonical); // Removes special chars.
+            $phoneCanonical = preg_replace('/[^0-9]/', '', $phoneCanonical); // Removes special chars.
+            //exit("phoneCanonical=".$phoneCanonical);
         }
 
         $this->phoneCanonical = $phoneCanonical;

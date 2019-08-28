@@ -123,7 +123,6 @@ class CalllogPatientType extends AbstractType
             ));
         }
 
-        //TODO: Disable these fields when patient is found
         $builder->add('phone', TextType::class, array(
             'required' => false,
             'label' => "Phone Number:",

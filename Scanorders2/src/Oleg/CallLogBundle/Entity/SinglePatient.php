@@ -80,18 +80,18 @@ class SinglePatient {
      * @ORM\Column(type="string", nullable=true)
      */
     private $phone;
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $phoneCanonical;
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $phoneCanonical;
     /**
      * @ORM\Column(type="string", nullable=true)
      */
     private $email;
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $emailCanonical;
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $emailCanonical;
 
 
 
@@ -240,28 +240,28 @@ class SinglePatient {
         $this->phone = $phone;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getPhoneCanonical()
-    {
-        return $this->phoneCanonical;
-    }
-
-    /**
-     * “+1 (234) 567-8901” becomes “12345678901”
-     *
-     * @param mixed $phoneCanonical
-     */
-    public function setPhoneCanonical($phoneCanonical)
-    {
-        if( $phoneCanonical ) {
-            $phoneCanonical = str_replace(' ', '', $phoneCanonical); // Replaces all spaces with hyphens.
-            $phoneCanonical = preg_replace('/[^0-9\]/', '', $phoneCanonical); // Removes special chars.
-        }
-
-        $this->phoneCanonical = $phoneCanonical;
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getPhoneCanonical()
+//    {
+//        return $this->phoneCanonical;
+//    }
+//
+//    /**
+//     * “+1 (234) 567-8901” becomes “12345678901”
+//     *
+//     * @param mixed $phoneCanonical
+//     */
+//    public function setPhoneCanonical($phoneCanonical)
+//    {
+//        if( $phoneCanonical ) {
+//            $phoneCanonical = str_replace(' ', '', $phoneCanonical); // Replaces all spaces with hyphens.
+//            $phoneCanonical = preg_replace('/[^0-9\]/', '', $phoneCanonical); // Removes special chars.
+//        }
+//
+//        $this->phoneCanonical = $phoneCanonical;
+//    }
 
     /**
      * @return mixed
@@ -279,24 +279,24 @@ class SinglePatient {
         $this->email = $email;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getEmailCanonical()
-    {
-        return $this->emailCanonical;
-    }
-
-    /**
-     * @param mixed $emailCanonical
-     */
-    public function setEmailCanonical($emailCanonical)
-    {
-        if( $emailCanonical ) {
-            $emailCanonical = strtolower($emailCanonical);
-            $this->emailCanonical = $emailCanonical;
-        }
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getEmailCanonical()
+//    {
+//        return $this->emailCanonical;
+//    }
+//
+//    /**
+//     * @param mixed $emailCanonical
+//     */
+//    public function setEmailCanonical($emailCanonical)
+//    {
+//        if( $emailCanonical ) {
+//            $emailCanonical = strtolower($emailCanonical);
+//            $this->emailCanonical = $emailCanonical;
+//        }
+//    }
 
 
 

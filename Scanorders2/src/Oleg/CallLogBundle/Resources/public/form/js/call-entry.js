@@ -145,6 +145,7 @@ function addnewCalllogPatient(holderId) {
         //ok
     } else {
         holder.find('#calllog-danger-box').html("Please enter at least an MRN or Last Name and Date of Birth.");
+        //holder.find('#calllog-danger-box').html("Please enter at least an MRN, Last Name, Date of Birth, Patient's Phone or Email.");
         //holder.find('#calllog-danger-box').html("Please enter at least an MRN or Last Name.");
         holder.find('#calllog-danger-box').show(_transTime);
 
@@ -615,28 +616,54 @@ function findCalllogPatient(holderId,formtype,mrntype,mrn) {
         }
     }
 
-    if( mrn && mrntype || dob && lastname || dob && lastname && firstname || lastname ) {
+    if( mrn && mrntype || dob && lastname || dob && lastname && firstname || lastname  || phone || email ) {
+        var andSearchStr = "";
+        if( phone ) {
+            andSearchStr = andSearchStr + " Phone: " + phone;
+        }
+        if( email ) {
+            andSearchStr = andSearchStr + " E-mail: " + email;
+        }
         //ok
         if( !searchedStr && mrn && mrntype ) {
-            searchedStr = " (searched for MRN Type: "+holder.find(".mrntype-combobox").select2('data').text+"; MRN: "+mrn+")";
+            searchedStr = " (searched for MRN Type: "+holder.find(".mrntype-combobox").select2('data').text+"; MRN: "+mrn;
         }
         if( !searchedStr && dob && lastname ) {
             var firstnameStr = "";
             if( firstname ) {
                 firstnameStr = "; First Name: "+firstname;
             }
-            searchedStr = " (searched for DOB: "+dob+"; Last Name: "+lastname+firstnameStr+")";
+            searchedStr = " (searched for DOB: "+dob+"; Last Name: "+lastname+firstnameStr;
         }
         if( !searchedStr && lastname ) {
             var firstnameStr = "";
             if( firstname ) {
                 firstnameStr = "; First Name: "+firstname;
             }
-            searchedStr = " (searched for Last Name: "+lastname+firstnameStr+")";
+            searchedStr = " (searched for Last Name: "+lastname+firstnameStr;
         }
+
+
+        if( searchedStr ) {
+            if( andSearchStr ) {
+                searchedStr = searchedStr + ";" + andSearchStr;
+            } else {
+                //no additional search
+            }
+            searchedStr = searchedStr + ")";
+        } else {
+            if( andSearchStr ) {
+                searchedStr = " (searched for" + andSearchStr + ")";
+            } else {
+                //no search params
+            }
+        }
+
+
     } else {
         //holder.find('#calllog-danger-box').html("Please enter at least an MRN or Last Name and Date of Birth.");
-        holder.find('#calllog-danger-box').html("Please enter at least an MRN or Last Name.");
+        //holder.find('#calllog-danger-box').html("Please enter at least an MRN or Last Name.");
+        holder.find('#calllog-danger-box').html("Please enter at least an MRN, Last Name, Date of Birth, Patient's Phone or Email.");
         holder.find('#calllog-danger-box').show(_transTime);
         calllogStopBtn(lbtn);
         return false;

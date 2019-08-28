@@ -732,15 +732,15 @@ class CallEntryController extends Controller
 
         if( $patientPhone ) {
             $phoneCanonical = str_replace(' ', '', $patientPhone); // Replaces all spaces with hyphens.
-            $phoneCanonical = preg_replace('/[^0-9\]/', '', $phoneCanonical); // Removes special chars.
-            $dql->andWhere("patient.phoneCanonical = :patientPhone");
-            $queryParameters['patientPhone'] = $phoneCanonical;
+            $phoneCanonical = preg_replace('/[^0-9]/', '', $phoneCanonical); // Removes special chars.
+            $dql->andWhere("patient.phoneCanonical LIKE :patientPhone");
+            $queryParameters['patientPhone'] = "%" . $phoneCanonical . "%";
             $advancedFilter++;
         }
         if( $patientEmail ) {
             $emailCanonical = strtolower($patientEmail);
-            $dql->andWhere("patient.emailCanonical = :patientEmail");
-            $queryParameters['patientEmail'] = $emailCanonical;
+            $dql->andWhere("patient.emailCanonical LIKE :patientEmail");
+            $queryParameters['patientEmail'] = "%" . $emailCanonical . "%";
             $advancedFilter++;
         }
 
@@ -2077,19 +2077,19 @@ class CallEntryController extends Controller
             $searchArr[] = "Phone: " . $phone;
             //$statusStr = "(patient.phoneCanonical = :phoneCanonical)";
             //$searchCriterionArr[] = $statusStr;
-            $dql->andWhere("(patient.phoneCanonical = :phoneCanonical)");
+            $dql->andWhere("(patient.phoneCanonical LIKE :phoneCanonical)");
             $phoneCanonical = str_replace(' ', '', $phone); // Replaces all spaces with hyphens.
-            $phoneCanonical = preg_replace('/[^0-9\]/', '', $phoneCanonical); // Removes special chars.
-            $parameters['phoneCanonical'] = $phoneCanonical;
+            $phoneCanonical = preg_replace('/[^0-9]/', '', $phoneCanonical); // Removes special chars.
+            $parameters['phoneCanonical'] = "%".$phoneCanonical."%";
         }
 
         if( $email && ($where == false || $matchAnd == true) ) {
             $searchArr[] = "E-Mail: " . $email;
             //$statusStr = "(patient.emailCanonical = :emailCanonical)";
-            $dql->andWhere("(patient.emailCanonical = :emailCanonical)");
+            $dql->andWhere("(patient.emailCanonical LIKE :emailCanonical)");
             //$searchCriterionArr[] = $statusStr;
             $emailCanonical = strtolower($email);
-            $parameters['emailCanonical'] = $emailCanonical;
+            $parameters['emailCanonical'] = "%".$emailCanonical."%";
         }
 
         //DOB
