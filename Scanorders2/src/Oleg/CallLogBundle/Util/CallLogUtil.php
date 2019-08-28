@@ -2229,7 +2229,13 @@ class CallLogUtil
             //$calllogEntryMessage->setEncounterDateBackup($date);
             //Construct a new EncounterDate
             $encounterDate = new EncounterDate($date->getStatus(),$date->getProvider(),$date->getSource());
-            $encounterDate->setEncounter($encounter);
+
+            //not for previous encounter
+            $encounterDates = $encounter->getDate();
+            if( count($encounterDates) == 0 ) {
+                $encounterDate->setEncounter($encounter);
+            }
+
             $encounterDate->setField($date->getField());
             $encounterDate->setTime($date->getTime());
             $encounterDate->setTimezone($date->getTimezone());

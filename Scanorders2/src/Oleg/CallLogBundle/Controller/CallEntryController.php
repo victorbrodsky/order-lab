@@ -731,8 +731,7 @@ class CallEntryController extends Controller
         }
 
         if( $patientPhone ) {
-            $phoneCanonical = str_replace(' ', '', $patientPhone); // Replaces all spaces with hyphens.
-            $phoneCanonical = preg_replace('/[^0-9]/', '', $phoneCanonical); // Removes special chars.
+            $phoneCanonical = $this->obtainPhoneCanonical($patientPhone);
             $dql->andWhere("patient.phoneCanonical LIKE :patientPhone");
             $queryParameters['patientPhone'] = "%" . $phoneCanonical . "%";
             $advancedFilter++;
@@ -1297,7 +1296,7 @@ class CallEntryController extends Controller
             //if $previousEncounterId set => use this encounter, $previousEncounterId is null => don't change anything and use existing message encounter
             //$previousEncounter = null;
             $previousEncounterId = $form->get("previousEncounterId")->getData();
-            echo "previousEncounterId=".$previousEncounterId."<br>";
+            //echo "previousEncounterId=".$previousEncounterId."<br>";
             //if( $previousEncounterId ) {
             //    $previousEncounter = $em->getRepository('OlegOrderformBundle:Encounter')->find($previousEncounterId);
             //}
@@ -1478,7 +1477,7 @@ class CallEntryController extends Controller
 
                     if( !$previousEncounterId ) {
                         /////////// processing new encounter ///////////
-                        echo "processing new encounter<br>";
+                        //echo "processing new encounter<br>";
                         //reset institution from the patient
                         $newEncounter->setInstitution($patient->getInstitution());
 
@@ -2390,8 +2389,7 @@ class CallEntryController extends Controller
             //$statusStr = "(patient.phoneCanonical = :phoneCanonical)";
             //$searchCriterionArr[] = $statusStr;
             $dql->andWhere("(patient.phoneCanonical LIKE :phoneCanonical)");
-            $phoneCanonical = str_replace(' ', '', $phone); // Replaces all spaces with hyphens.
-            $phoneCanonical = preg_replace('/[^0-9]/', '', $phoneCanonical); // Removes special chars.
+            $phoneCanonical = $this->obtainPhoneCanonical($phone);
             //echo "phoneCanonical=".$phoneCanonical."<br>";
             $parameters['phoneCanonical'] = "%".$phoneCanonical."%";
             $where = true;
@@ -3953,5 +3951,13 @@ class CallEntryController extends Controller
 
         $logger = $this->container->get('logger');
         $logger->notice($msg);
+    }
+
+    public function obtainPhoneCanonical($phone) {
+        //echo "original phone=".$phoneCanonical."<br>";
+        $phoneCanonical = str_replace(' ', '', $phone); // Replaces all spaces with hyphens.
+        $phoneCanonical = preg_replace('/[^0-9]/', '', $phoneCanonical); // Removes special chars.
+        //exit("phoneCanonical=".$phoneCanonical);
+        return $phoneCanonical;
     }
 }

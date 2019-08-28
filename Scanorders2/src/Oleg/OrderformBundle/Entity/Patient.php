@@ -858,12 +858,20 @@ class Patient extends ObjectAbstract
     {
         if( $phoneCanonical ) {
             //echo "original phone=".$phoneCanonical."<br>";
-            $phoneCanonical = str_replace(' ', '', $phoneCanonical); // Replaces all spaces with hyphens.
-            $phoneCanonical = preg_replace('/[^0-9]/', '', $phoneCanonical); // Removes special chars.
+            //$phoneCanonical = str_replace(' ', '', $phoneCanonical); // Replaces all spaces with hyphens.
+            //$phoneCanonical = preg_replace('/[^0-9]/', '', $phoneCanonical); // Removes special chars.
             //exit("phoneCanonical=".$phoneCanonical);
+            $phoneCanonical = $this->obtainPhoneCanonical($phoneCanonical);
         }
 
         $this->phoneCanonical = $phoneCanonical;
+    }
+    public function obtainPhoneCanonical($phone) {
+        //echo "original phone=".$phoneCanonical."<br>";
+        $phoneCanonical = str_replace(' ', '', $phone); // Replaces all spaces with hyphens.
+        $phoneCanonical = preg_replace('/[^0-9]/', '', $phoneCanonical); // Removes special chars.
+        //exit("phoneCanonical=".$phoneCanonical);
+        return $phoneCanonical;
     }
 
 
