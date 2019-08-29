@@ -122,8 +122,8 @@ class CalllogEntryMessageType extends AbstractType
         $builder->add('documents', CollectionType::class, array(
             'entry_type' => DocumentType::class,
             'label' => 'Uploaded Document(s):',
-            'allow_add' => true,
-            'allow_delete' => true,
+            'allow_add' => false,
+            'allow_delete' => false,
             'required' => false,
             'by_reference' => false,
             'prototype' => true,

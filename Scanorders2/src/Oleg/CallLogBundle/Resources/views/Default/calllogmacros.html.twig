@@ -883,7 +883,6 @@
 {% endmacro %}
 
 {% macro calllogEntryDocuments( message, cycle ) %}
-    {#{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
     <div class="panel panel-default">
         <div class="panel-heading">
@@ -903,7 +902,15 @@
                     <label class="col-xs-12 control-label">Document(s)</label>
                     <div class="row withpaddingtop">
                         <div class="col-xs-12">
-                            {{ usermacros.documentsContainer(message,message.documents,cycle,'noprototype',8,'default','Call Log Entry Document','asForm',false) }}
+                            {% if message.calllogEntryMessage.documents is defined %}
+                                message.calllogEntryMessage.documents:<br>
+                                {#{{ usermacros.documentsContainer(message.calllogEntryMessage,message.calllogEntryMessage.documents,cycle,'noprototype',8,'default','Call Log Entry Document','asForm',false) }}#}
+                                {#{{ usermacros.documentsContainer(message.calllogEntryMessage,message.calllogEntryMessage.documents,cycle,'noprototype',8,'default','Call Log Entry Document') }}#}
+                                {#{{ usermacros.document(message.calllogEntryMessage.documents,cycle,'noprototype','default',"asForm") }}#}
+                                {% for document in message.calllogEntryMessage.documents %}
+                                    id={{ docuemnt.vars.value.id }}<br>
+                                {% endfor %}
+                            {% endif %}
                         </div>
                     </div>
                 </div>
