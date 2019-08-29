@@ -226,6 +226,7 @@ class CallEntryController extends Controller
         $metaphone = false;
         $patientPhone = null;
         $patientEmail = null;
+        $sortBy = null;
 
         //child nodes of "Pathology Call Log Entry"
         //$messageCategoryParent = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName("Encounter Note");
@@ -363,8 +364,9 @@ class CallEntryController extends Controller
         $patientListTitleFilter = $filterform['patientListTitle']->getData();
         $attendingFilter = $filterform['attending']->getData();
         $entryTags = $filterform['entryTags']->getData();
-        $patientPhone = $filterform['patientPhone']->getData();;
-        $patientEmail = $filterform['patientEmail']->getData();;
+        $patientPhone = $filterform['patientPhone']->getData();
+        $patientEmail = $filterform['patientEmail']->getData();
+        $sortBy = $filterform['sortBy']->getData();
 
         if( !$searchFilter ) {
             $searchFilter = $filterform['search']->getData();
@@ -832,6 +834,15 @@ class CallEntryController extends Controller
         //$logger->notice("setMaxResults limit=".$limit);
         if( $limit ) {
             $query->setMaxResults($limit);
+        }
+
+        //$sortBy
+        echo "sortBy=$sortBy <br>";
+        exit('111');
+        if( $sortBy && $sortBy == "sort-by-latest-edit-date" ) {
+
+        } else {
+            //default as now: Sort by date of entry creation, latest first
         }
 
         //echo "query=".$query->getSql()."<br>";

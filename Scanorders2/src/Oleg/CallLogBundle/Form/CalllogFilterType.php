@@ -296,10 +296,10 @@ class CalllogFilterType extends AbstractType
         $builder->add('metaphone', CheckboxType::class, $mateaphoneArr);
 
         $sortBys = array(
-            'Sort by date of entry creation, latest first' => 'Sort by date of entry creation, latest first',
-            'Sort by date of latest edit, latest first' => 'Sort by date of latest edit, latest first'
+            'Sort by date of entry creation, latest first' => 'sort-by-creation-date',
+            'Sort by date of latest edit, latest first' => 'sort-by-latest-edit-date'
         );
-        $builder->add('sortBys', ChoiceType::class, array(
+        $builder->add('sortBy', ChoiceType::class, array(
             'label' => false,
             'required' => true,
             'attr' => array('class' => 'combobox', 'placeholder' => "Sort By"),
