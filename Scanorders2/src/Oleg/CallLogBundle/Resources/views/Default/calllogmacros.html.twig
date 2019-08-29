@@ -882,6 +882,37 @@
     </div> <!-- panel panel-default -->
 {% endmacro %}
 
+{% macro calllogEntryDocuments( message, cycle ) %}
+    {#{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
+    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" href="#calllog-documents">
+                    Document(s)
+                </a>
+            </h4>
+        </div>
+        <div id="calllog-documents" class="panel-collapse collapse in">
+            <div class="panel-body">
+
+                {#{{ formmacros.field(message.documents) }}#}
+
+                <p>
+                <div class="well form-element-holder user-documents">
+                    <label class="col-xs-12 control-label">Document(s)</label>
+                    <div class="row withpaddingtop">
+                        <div class="col-xs-12">
+                            {{ usermacros.documentsContainer(message,message.documents,cycle,'noprototype',8,'default','Call Log Entry Document','asForm',false) }}
+                        </div>
+                    </div>
+                </div>
+                </p>
+
+            </div> <!-- panel-body -->
+        </div> <!-- panel-collapse -->
+    </div> <!-- panel panel-default -->
+{% endmacro %}
 
 {% macro patientListAction( patient, patientListId ) %}
 

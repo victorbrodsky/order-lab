@@ -837,8 +837,8 @@ class CallEntryController extends Controller
         }
 
         //$sortBy
-        echo "sortBy=$sortBy <br>";
-        exit('111');
+        //echo "sortBy=$sortBy <br>";
+        //exit('111');
         if( $sortBy && $sortBy == "sort-by-latest-edit-date" ) {
 
         } else {

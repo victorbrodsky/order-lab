@@ -19,11 +19,13 @@ namespace Oleg\CallLogBundle\Form;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
+use Oleg\UserdirectoryBundle\Form\DocumentType;
 use Oleg\UserdirectoryBundle\Form\FormNode\FormNodeType;
 use Oleg\UserdirectoryBundle\Form\InstitutionType;
 use Oleg\UserdirectoryBundle\Form\FormNode\MessageCategoryFormNodeType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -115,6 +117,17 @@ class CalllogEntryMessageType extends AbstractType
             'required' => false,
             //'data' => $this->params['mrntype'],
             'attr' => array('class' => 'form-control digit-mask-seven'),
+        ));
+
+        $builder->add('documents', CollectionType::class, array(
+            'entry_type' => DocumentType::class,
+            'label' => 'Uploaded Document(s):',
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__documentsid__',
         ));
 
     }
