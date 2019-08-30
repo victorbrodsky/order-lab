@@ -833,6 +833,11 @@
                 <td>{{ entity.transresuploadpath }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'transresuploadpath'}) }}">Edit</a></td>
             </tr>
+            <tr>
+                <td>Call Log Upload Folder (example: calllog/documents)</td>
+                <td>{{ entity.callloguploadpath }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'callloguploadpath'}) }}">Edit</a></td>
+            </tr>
 
             {#Titles and Messages#}
             <tr>

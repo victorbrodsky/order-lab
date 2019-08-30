@@ -413,6 +413,10 @@ class SiteParameters {
      */
     private $transresuploadpath;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $callloguploadpath;
 
     //site titles and messages
     /**
@@ -3122,6 +3126,22 @@ class SiteParameters {
     public function setTransresuploadpath($transresuploadpath)
     {
         $this->transresuploadpath = $transresuploadpath;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCallloguploadpath()
+    {
+        return $this->callloguploadpath;
+    }
+
+    /**
+     * @param mixed $callloguploadpath
+     */
+    public function setCallloguploadpath($callloguploadpath)
+    {
+        $this->callloguploadpath = $callloguploadpath;
     }
 
 

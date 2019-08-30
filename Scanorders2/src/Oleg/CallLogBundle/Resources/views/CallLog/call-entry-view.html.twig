@@ -303,6 +303,10 @@
                             {#</table>#}
                             {#</div>#}
 
+                            {% if message.calllogEntryMessage and message.calllogEntryMessage.documents|length > 0 %}
+                                {{ calllogmacros.calllogEntryDocuments(form,cycle) }}
+                            {% endif %}
+
                             {% if message.calllogEntryMessage and message.calllogEntryMessage.entryTags %}
                                 {{ calllogmacros.calllogEntryTags(form,cycle) }}
                             {% endif %}

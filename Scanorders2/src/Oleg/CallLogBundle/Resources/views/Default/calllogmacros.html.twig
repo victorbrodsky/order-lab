@@ -910,64 +910,65 @@
                     <div class="row withpaddingtop">
                         <div class="col-xs-12">
                             {% if message.calllogEntryMessage.documents is defined %}
-                                message.calllogEntryMessage.documents:<br>
+                                cycle={{ cycle }}<br>
+                                {#message.calllogEntryMessage.documents:<br>#}
                                 {#{{ usermacros.documentsContainer(message.calllogEntryMessage,message.calllogEntryMessage.documents,cycle,'noprototype',8,'default','Call Log Entry Document','asForm',false) }}#}
                                 {#{{ usermacros.documentsContainer(message.calllogEntryMessage,message.calllogEntryMessage.documents,cycle,'noprototype',8,'default','Call Log Entry Document') }}#}
                                 {#{{ usermacros.document(message.calllogEntryMessage.documents,cycle,'noprototype','default',"asForm") }}#}
 
                                 {{ usermacros.documentsContainer(null,message.calllogEntryMessage.documents,cycle,'noprototype',8,'default','Call Log Entry Document') }}
 
-                                {% if 0 %}
-                                {% for document in message.calllogEntryMessage.documents %}
-                                    id1={{ docuemnt.vars.value.id }}<br>
-                                    {% set documentObj = document.vars.value %}
-                                    id2={{ documentObj.id }}<br>
+                                {#{% if 0 %}#}
+                                {#{% for document in message.calllogEntryMessage.documents %}#}
+                                    {#id1={{ docuemnt.vars.value.id }}<br>#}
+                                    {#{% set documentObj = document.vars.value %}#}
+                                    {#id2={{ documentObj.id }}<br>#}
 
-                                    {% if documentObj %}
-                                        documentObj.id:{{ documentObj.id }}
+                                    {#{% if documentObj %}#}
+                                        {#documentObj.id:{{ documentObj.id }}#}
 
-                                        {% set sitename = calllog_sitename %}
+                                        {#{% set sitename = calllog_sitename %}#}
 
-                                        <div class="dz-preview dz-file-preview" style="width:100%; height:220px; margin-left:1px; margin-right:0px;">
-                                            <div class="dz-details">
+                                        {#<div class="dz-preview dz-file-preview" style="width:100%; height:220px; margin-left:1px; margin-right:0px;">#}
+                                            {#<div class="dz-details">#}
                                                 {#<div class="dz-filename"><span data-dz-name>{{ documentObj.uniquename }}</span></div>#}
-                                                <div class="dz-size" data-dz-size><strong>{{ documentObj.getSizeStr() }}</strong></div>
+                                                {#<div class="dz-size" data-dz-size><strong>{{ documentObj.getSizeStr() }}</strong></div>#}
                                                 {#{{ usermacros.showDocumentAsImage(documentObj,'Document','data-dz-thumbnail') }}#}
-                                                {{ usermacros.showDocumentAsImage(documentObj,'Document','data-dz-thumbnail',null,null,'snapshot-small') }}
-                                            </div>
-                                            <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
-                                            <div class="dz-success-mark"><span>✔</span></div>
-                                            <div class="dz-error-mark"><span>✘</span></div>
-                                            <div class="dz-error-message"><span data-dz-errormessage></span></div>
+                                                {#{{ usermacros.showDocumentAsImage(documentObj,'Document','data-dz-thumbnail',null,null,'snapshot-small') }}#}
+                                            {#</div>#}
+                                            {#<div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>#}
+                                            {#<div class="dz-success-mark"><span>✔</span></div>#}
+                                            {#<div class="dz-error-mark"><span>✘</span></div>#}
+                                            {#<div class="dz-error-message"><span data-dz-errormessage></span></div>#}
 
 
                                             {#link to open/download file#}
-                                            <div class="file-upload-showlink">
-                                                <div style="overflow:hidden; white-space:nowrap;">
-                                                    {% if documentObj.id %}
-                                                        <a target="_blank"
-                                                           href="{{ path(sitename~'_file_download', { 'id': documentObj.id }) }}">{{ documentObj.originalname }} (uploaded {{ documentObj.createdate|date('m/d/Y H:i:s') }})</a>
-                                                    {% endif %}
-                                                </div>
-                                            </div>
+                                            {#<div class="file-upload-showlink">#}
+                                                {#<div style="overflow:hidden; white-space:nowrap;">#}
+                                                    {#{% if documentObj.id %}#}
+                                                        {#<a target="_blank"#}
+                                                           {#href="{{ path(sitename~'_file_download', { 'id': documentObj.id }) }}">{{ documentObj.originalname }} (uploaded {{ documentObj.createdate|date('m/d/Y H:i:s') }})</a>#}
+                                                    {#{% endif %}#}
+                                                {#</div>#}
+                                            {#</div>#}
 
                                             {#{% if addRemoveLink or addRemoveLink == 'default' %}#}
-                                                <a data-dz-remove="" href="javascript:void(0);" class="dz-remove" onclick="removeUploadedFile(this)">Remove file</a>
+                                                {#<a data-dz-remove="" href="javascript:void(0);" class="dz-remove" onclick="removeUploadedFile(this)">Remove file</a>#}
                                             {#{% endif %}#}
 
                                             {#{% if asFormOrEntity == "asForm" %}#}
-                                                {{ formmacros.field(document.id) }}
-                                                {{ formmacros.field(document.dummyprototypefield) }}
+                                                {#{{ formmacros.field(document.id) }}#}
+                                                {#{{ formmacros.field(document.dummyprototypefield) }}#}
                                             {#{% endif %}#}
-                                        </div>
+                                        {#</div>#}
 
                                         {#{% if asFormOrEntity == "asForm" %}#}
-                                            {% do document.setRendered %}
+                                            {#{% do document.setRendered %}#}
                                         {#{% endif %}#}
 
-                                    {% endif %}
-                                {% endfor %}
-                                {% endif %}
+                                    {#{% endif %}#}
+                                {#{% endfor %}#}
+                                {#{% endif %}#}
 
                             {% endif %}
                         </div>

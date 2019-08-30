@@ -62,6 +62,9 @@ $container->setParameter('vacreq.uploadpath',$vacrequploadpath);
 //transres
 $transresuploadpath = "transres";
 $container->setParameter('transres.uploadpath',$transresuploadpath);
+//calllog
+$callloguploadpath = "calllog";
+$container->setParameter('calllog.uploadpath',$callloguploadpath);
 
 //exit("1");
 $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
@@ -272,6 +275,8 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
 //            }
             $transresuploadpath = getDBParameter($row,$transresuploadpath,'transresuploadpath');
 
+            $callloguploadpath = getDBParameter($row,$callloguploadpath,'callloguploadpath');
+
             //titles
 //            if( array_key_exists('mainHomeTitle', $row) )
 //                $mainhome_title = $row['mainHomeTitle'];
@@ -378,6 +383,8 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
             $container->setParameter('vacreq.uploadpath',$vacrequploadpath);
         if( $transresuploadpath )
             $container->setParameter('transres.uploadpath',$transresuploadpath);
+        if( $callloguploadpath )
+            $container->setParameter('calllog.uploadpath',$callloguploadpath);
 
         //titles
         $mainhome_title = str_replace("%","%%",$mainhome_title);

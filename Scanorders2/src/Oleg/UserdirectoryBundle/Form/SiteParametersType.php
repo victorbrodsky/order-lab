@@ -491,6 +491,12 @@ class SiteParametersType extends AbstractType
                 'attr' => array('class'=>'form-control')
             ));
 
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'callloguploadpath' )
+            $builder->add('callloguploadpath',null,array(
+                'label'=>'Call Log Upload Folder:',
+                'attr' => array('class'=>'form-control')
+            ));
+
         //vacrequploadpath
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'vacrequploadpath' )
             $builder->add('vacrequploadpath',null,array(
