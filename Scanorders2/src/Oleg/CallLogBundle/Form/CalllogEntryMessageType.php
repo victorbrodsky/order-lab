@@ -130,7 +130,7 @@ class CalllogEntryMessageType extends AbstractType
             'prototype_name' => '__documentsid__',
         ));
 
-        //TODO: use Document's "type" list value???
+        //TODO: use Document's "type" list value??? use unmapped "calllogAttachmentType" from document's type?
 //        $builder->add('calllogAttachmentType', ChoiceType::class, array(
 //            'label' => 'Attachment Type:',
 //            'required' => false,
