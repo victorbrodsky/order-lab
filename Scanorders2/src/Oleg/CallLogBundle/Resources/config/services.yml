@@ -1,7 +1,7 @@
 parameters:
 
     calllog.sitename: calllog
-    calllog.uploadpath:
+    calllog.uploadpath: calllog
 
 
 twig:

@@ -118,12 +118,12 @@ class CalllogEntryMessageType extends AbstractType
             //'data' => $this->params['mrntype'],
             'attr' => array('class' => 'form-control digit-mask-seven'),
         ));
-
+        
         $builder->add('documents', CollectionType::class, array(
             'entry_type' => DocumentType::class,
             'label' => 'Uploaded Document(s):',
-            'allow_add' => false,
-            'allow_delete' => false,
+            'allow_add' => true,
+            'allow_delete' => true,
             'required' => false,
             'by_reference' => false,
             'prototype' => true,

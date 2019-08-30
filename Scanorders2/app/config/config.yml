@@ -85,6 +85,7 @@ twig:
         fellapp_uploadpath: 'Uploaded/%fellapp.uploadpath%'
         vacreq_uploadpath: 'Uploaded/%vacreq.uploadpath%'
         transres_uploadpath: 'Uploaded/%transres.uploadpath%'
+        calllog_uploadpath: 'Uploaded/%calllog.uploadpath%'
 
         #service
         user_security_utility: "@user_security_utility"
@@ -282,6 +283,10 @@ oneup_uploader:
             frontend: dropzone
             storage:
                 directory: 'Uploaded/%transres.uploadpath%'
+        calllog_gallery:
+            frontend: dropzone
+            storage:
+                directory: 'Uploaded/%calllog.uploadpath%'
 #    orphanage:
 #        maxage: 86400
 #        directory: Uploaded/orphanage
