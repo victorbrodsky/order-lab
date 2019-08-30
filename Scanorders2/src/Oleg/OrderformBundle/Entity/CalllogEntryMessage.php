@@ -162,6 +162,19 @@ class CalllogEntryMessage extends OrderBase {
      **/
     private $documents;
 
+//    /**
+//     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\CalllogAttachmentTypeList")
+//     * @ORM\JoinColumn(name="sex_id", referencedColumnName="id", nullable=true)
+//     */
+//    private $calllogAttachmentType;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="DocumentTypeList")
+     * @ORM\JoinColumn(name="type_id", referencedColumnName="id", nullable=true)
+     */
+    private $type;
+
+
 
     public function __construct() {
 

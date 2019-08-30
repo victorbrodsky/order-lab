@@ -885,100 +885,66 @@
 {% macro calllogEntryDocuments( message, cycle ) %}
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
-    <div id="form-prototype-data"
-         data-userurllink = "{{ usermacros.userUrlLink()|e }}"
-         data-uploadurl = "{{ oneup_uploader_endpoint('calllog_gallery') }}"
-         data-userid = "{{ app.user.id }}"
-    ></div>
+    {% if cycle == "new" or cycle == "edit" %}
+        <div id="form-prototype-data"
+             data-userurllink = "{{ usermacros.userUrlLink()|e }}"
+             data-uploadurl = "{{ oneup_uploader_endpoint('calllog_gallery') }}"
+             data-userid = "{{ app.user.id }}"
+        ></div>
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h4 class="panel-title">
-                <a data-toggle="collapse" href="#calllog-documents">
-                    Document(s)
-                </a>
-            </h4>
-        </div>
-        <div id="calllog-documents" class="panel-collapse collapse in">
-            <div class="panel-body">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#calllog-documents">
+                        Document(s)
+                    </a>
+                </h4>
+            </div>
+            <div id="calllog-documents" class="panel-collapse collapse in">
+                <div class="panel-body">
 
-                {#{{ formmacros.field(message.documents) }}#}
+                    <p>
+                    <div class="well form-element-holder user-documents">
+                        <label class="col-xs-12 control-label">Document(s)</label>
+                        <div class="row withpaddingtop">
+                            <div class="col-xs-12">
+                                {% if message.calllogEntryMessage.documents is defined %}
+                                    {# Attachment Type #}
+                                    {#{{ formmacros.field(message.calllogEntryMessage.calllogAttachmentType) }}#}
 
-                <p>
-                <div class="well form-element-holder user-documents">
-                    <label class="col-xs-12 control-label">Document(s)</label>
-                    <div class="row withpaddingtop">
-                        <div class="col-xs-12">
-                            {% if message.calllogEntryMessage.documents is defined %}
-                                cycle={{ cycle }}<br>
-                                {#message.calllogEntryMessage.documents:<br>#}
-                                {#{{ usermacros.documentsContainer(message.calllogEntryMessage,message.calllogEntryMessage.documents,cycle,'noprototype',8,'default','Call Log Entry Document','asForm',false) }}#}
-                                {#{{ usermacros.documentsContainer(message.calllogEntryMessage,message.calllogEntryMessage.documents,cycle,'noprototype',8,'default','Call Log Entry Document') }}#}
-                                {#{{ usermacros.document(message.calllogEntryMessage.documents,cycle,'noprototype','default',"asForm") }}#}
-
-                                {{ usermacros.documentsContainer(null,message.calllogEntryMessage.documents,cycle,'noprototype',8,'default','Call Log Entry Document') }}
-
-                                {#{% if 0 %}#}
-                                {#{% for document in message.calllogEntryMessage.documents %}#}
-                                    {#id1={{ docuemnt.vars.value.id }}<br>#}
-                                    {#{% set documentObj = document.vars.value %}#}
-                                    {#id2={{ documentObj.id }}<br>#}
-
-                                    {#{% if documentObj %}#}
-                                        {#documentObj.id:{{ documentObj.id }}#}
-
-                                        {#{% set sitename = calllog_sitename %}#}
-
-                                        {#<div class="dz-preview dz-file-preview" style="width:100%; height:220px; margin-left:1px; margin-right:0px;">#}
-                                            {#<div class="dz-details">#}
-                                                {#<div class="dz-filename"><span data-dz-name>{{ documentObj.uniquename }}</span></div>#}
-                                                {#<div class="dz-size" data-dz-size><strong>{{ documentObj.getSizeStr() }}</strong></div>#}
-                                                {#{{ usermacros.showDocumentAsImage(documentObj,'Document','data-dz-thumbnail') }}#}
-                                                {#{{ usermacros.showDocumentAsImage(documentObj,'Document','data-dz-thumbnail',null,null,'snapshot-small') }}#}
-                                            {#</div>#}
-                                            {#<div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>#}
-                                            {#<div class="dz-success-mark"><span>✔</span></div>#}
-                                            {#<div class="dz-error-mark"><span>✘</span></div>#}
-                                            {#<div class="dz-error-message"><span data-dz-errormessage></span></div>#}
-
-
-                                            {#link to open/download file#}
-                                            {#<div class="file-upload-showlink">#}
-                                                {#<div style="overflow:hidden; white-space:nowrap;">#}
-                                                    {#{% if documentObj.id %}#}
-                                                        {#<a target="_blank"#}
-                                                           {#href="{{ path(sitename~'_file_download', { 'id': documentObj.id }) }}">{{ documentObj.originalname }} (uploaded {{ documentObj.createdate|date('m/d/Y H:i:s') }})</a>#}
-                                                    {#{% endif %}#}
-                                                {#</div>#}
-                                            {#</div>#}
-
-                                            {#{% if addRemoveLink or addRemoveLink == 'default' %}#}
-                                                {#<a data-dz-remove="" href="javascript:void(0);" class="dz-remove" onclick="removeUploadedFile(this)">Remove file</a>#}
-                                            {#{% endif %}#}
-
-                                            {#{% if asFormOrEntity == "asForm" %}#}
-                                                {#{{ formmacros.field(document.id) }}#}
-                                                {#{{ formmacros.field(document.dummyprototypefield) }}#}
-                                            {#{% endif %}#}
-                                        {#</div>#}
-
-                                        {#{% if asFormOrEntity == "asForm" %}#}
-                                            {#{% do document.setRendered %}#}
-                                        {#{% endif %}#}
-
-                                    {#{% endif %}#}
-                                {#{% endfor %}#}
-                                {#{% endif %}#}
-
-                            {% endif %}
+                                    {{ usermacros.documentsContainer(null,message.calllogEntryMessage.documents,cycle,'noprototype',8,'default','Call Log Entry Document') }}
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
-                </div>
-                </p>
+                    </p>
 
-            </div> <!-- panel-body -->
-        </div> <!-- panel-collapse -->
-    </div> <!-- panel panel-default -->
+                </div> <!-- panel-body -->
+            </div> <!-- panel-collapse -->
+        </div> <!-- panel panel-default -->
+    {% else %}
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#calllog-documents">
+                        Document(s)
+                    </a>
+                </h4>
+            </div>
+            <div id="calllog-documents" class="panel-collapse collapse in">
+                <div class="panel-body">
+
+                    {#{% for document in message.calllogEntryMessage.documents %}#}
+                    {##}
+                    {#{% endfor %}#}
+
+                </div> <!-- panel-body -->
+            </div> <!-- panel-collapse -->
+        </div> <!-- panel panel-default -->
+
+    {% endif %}
+
 {% endmacro %}
 
 {% macro patientListAction( patient, patientListId ) %}
