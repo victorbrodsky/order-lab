@@ -515,6 +515,9 @@ class CallLogEditController extends CallEntryController
 //                echo "### message encounter ID=" . $messageEncounter->getId() . "<br>";
 //            }
 
+            //process Attached Documents
+            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($message->getCalllogEntryMessage());
+
             //set system source and user's default institution
             if( $newEncounter ) {
 
