@@ -6797,7 +6797,8 @@ class AdminController extends Controller
             "encounterinfotypes" => array('','-list'),
             "suggestedmessagecategorys" => array('','-list'),
             "calllogentrytags" => array('','-list'),
-            
+            "calllogattachmenttypes" => array('','-list'),
+
             "antibodies" => array('AntibodyList','antibodies-list','Antibody List'),
             "transrestissueprocessingservices" => array('TissueProcessingServiceList','transrestissueprocessingservices-list','Translational Research Tissue Processing Service List'),
             "transresotherrequestedservices" => array('OtherRequestedServiceList','transresotherrequestedservices-list','Translational Research Other Requested Service List'),

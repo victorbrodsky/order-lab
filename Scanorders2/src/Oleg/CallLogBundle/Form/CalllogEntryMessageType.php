@@ -23,6 +23,7 @@ use Oleg\UserdirectoryBundle\Form\DocumentType;
 use Oleg\UserdirectoryBundle\Form\FormNode\FormNodeType;
 use Oleg\UserdirectoryBundle\Form\InstitutionType;
 use Oleg\UserdirectoryBundle\Form\FormNode\MessageCategoryFormNodeType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -130,7 +131,8 @@ class CalllogEntryMessageType extends AbstractType
             'prototype_name' => '__documentsid__',
         ));
 
-        //TODO: use Document's "type" list value??? use unmapped "calllogAttachmentType" from document's type?
+        //TODO: use Document's "type" list value??? use unmapped "calllogAttachmentType" from document's type (problem: one dropzone might contains multiple documents)?
+        //Use a specific CalllogMessage' object calllogAttachmentType for each document's dropzone
 //        $builder->add('calllogAttachmentType', ChoiceType::class, array(
 //            'label' => 'Attachment Type:',
 //            'required' => false,
@@ -139,6 +141,23 @@ class CalllogEntryMessageType extends AbstractType
 //            //'choice_label' => 'obtainEncounterNumber', //'obtainEncounterNumberOnlyAndDate', //'obtainEncounterNumber',
 //            'attr' => array('class' => 'combobox', 'placeholder' => "Attachment Type"),
 //        ));
+        $builder->add( 'calllogAttachmentType', EntityType::class, array(
+            'class' => 'OlegOrderformBundle:CalllogAttachmentTypeList',
+            //'choice_label' => 'name',
+            'label'=>'Attachment Type:',
+            'required'=> false,
+            'multiple' => false,
+            'attr' => array('class' => 'combobox combobox-width'),
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->where("list.type = :typedef OR list.type = :typeadd")
+                    ->orderBy("list.orderinlist","ASC")
+                    ->setParameters( array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                    ));
+            },
+        ));
 
 
     }

@@ -23,6 +23,7 @@ namespace Oleg\OrderformBundle\Controller;
 
 
 use Oleg\OrderformBundle\Entity\AmendmentReasonList;
+use Oleg\OrderformBundle\Entity\CalllogAttachmentTypeList;
 use Oleg\OrderformBundle\Entity\CalllogEntryTagsList;
 use Oleg\OrderformBundle\Entity\CourseGroupType;
 use Oleg\OrderformBundle\Entity\DiseaseOriginList;
@@ -213,6 +214,7 @@ class ScanAdminController extends AdminController
         $count_generatePatientRecordStatus = $this->generatePatientRecordStatus();
         $count_generateMessageStatus = $this->generateMessageStatus();
         $count_generateCalllogEntryTagsList = $this->generateCalllogEntryTagsList();
+        $count_generateCalllogAttachmentTypeList = $this->generateCalllogAttachmentTypeList();
 
         $msg =
             'Generated Tables: '.
@@ -251,6 +253,7 @@ class ScanAdminController extends AdminController
             'PatientRecordStatus='.$count_generatePatientRecordStatus.', '.
             'MessageStatus='.$count_generateMessageStatus.', '.
             'CalllogEntryTagsList='.$count_generateCalllogEntryTagsList.', '.
+            'CalllogAttachmentTypeList='.$count_generateCalllogAttachmentTypeList.', '.
 
             ' (Note: -1 means that this table is already exists)';
 
@@ -2148,6 +2151,39 @@ class ScanAdminController extends AdminController
             }
 
             $entity = new CalllogEntryTagsList();
+            $this->setDefaultList($entity,$count,$username,$name);
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+
+    }
+
+    public function generateCalllogAttachmentTypeList() {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $elements = array(
+            "Image",
+            "Document"
+        );
+
+        $username = $this->get('security.token_storage')->getToken()->getUser();
+
+        $count = 10;
+        foreach( $elements as $name ) {
+
+            $entity = $em->getRepository('OlegOrderformBundle:CalllogAttachmentTypeList')->findOneByName($name);
+            if( $entity ) {
+                continue;
+            }
+
+            $entity = new CalllogAttachmentTypeList();
             $this->setDefaultList($entity,$count,$username,$name);
 
             $em->persist($entity);

@@ -87,6 +87,9 @@ class Document {
     private  $file;
 
     /**
+     * Used in event type text (i.e. "Fellowship Application Spreadsheet Deleted") and
+     * to distinguish "Fellowship Photo" & "Avatar Image" for thumbnails generation
+     *
      * @ORM\ManyToOne(targetEntity="DocumentTypeList")
      * @ORM\JoinColumn(name="type_id", referencedColumnName="id", nullable=true)
      */
