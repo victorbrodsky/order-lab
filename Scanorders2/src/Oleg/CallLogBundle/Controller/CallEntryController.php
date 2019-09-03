@@ -1338,6 +1338,9 @@ class CallEntryController extends Controller
                 //}
             }
 
+            //process Attached Documents
+            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($message->getCalllogEntryMessage());
+
             //set system source and user's default institution
             if( $newEncounter ) {
 

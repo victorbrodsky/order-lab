@@ -154,7 +154,7 @@ class CalllogEntryMessage extends OrderBase {
     
     /**
      * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="calllog_message_document",
+     * @ORM\JoinTable(name="calllog_calllogentrymessage_document",
      *      joinColumns={@ORM\JoinColumn(name="message_id", referencedColumnName="id", onDelete="CASCADE")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE", unique=true)}
      *      )
