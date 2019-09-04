@@ -251,6 +251,14 @@ class CallLogEditController extends CallEntryController
             }
         }
 
+        //Testing: Check and copy attachments
+        $documents = $message->getCalllogEntryMessage()->getDocuments();
+        echo "documents count=".count($documents)."<br>";
+        foreach ($documents as $document) {
+            echo "document: ID=".$document->getId()."; Size==".$document->getSizeStr()."; abspath=".$document->getAbsoluteUploadFullPath()."<br>";
+        }
+        //exit('111');
+
         $messageInfo = "Entry ID ".$message->getMessageOidVersion()." submitted on ".$userServiceUtil->getSubmitterInfo($message); // . " | Call Log Book";
         //echo "messageInfo=".$messageInfo."<br>";
         //exit('1');
@@ -476,6 +484,11 @@ class CallLogEditController extends CallEntryController
 
         $message = $this->createCalllogEntryMessage($user,$permittedInstitutions,$system);
 
+        //Check and copy attachments
+        $documents = $message->getCalllogEntryMessage()->getDocuments();
+        echo "documents count=".count($documents)."<br>";
+        exit('111');
+
         $form = $this->createCalllogEntryForm($message,$mrntype,$mrn,$cycleForm);
 
         $form->handleRequest($request);
@@ -516,7 +529,7 @@ class CallLogEditController extends CallEntryController
 //            }
 
             //process Attached Documents
-            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($message->getCalllogEntryMessage());
+            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($message->getCalllogEntryMessage()); //save update
 
             //set system source and user's default institution
             if( $newEncounter ) {

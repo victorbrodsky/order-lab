@@ -309,8 +309,8 @@ class CallEntrySamePatientController extends CallEntryController
         $calllogUtil = $this->get('calllog_util');
         $em = $this->getDoctrine()->getManager();
 
-        $readonlyPatient = trim($request->get('readonlyPatient'));
-        $readonlyEncounter = trim($request->get('readonlyEncounter'));
+        //$readonlyPatient = trim($request->get('readonlyPatient'));
+        //$readonlyEncounter = trim($request->get('readonlyEncounter'));
 
         $testing = false;
         //$testing = true;
@@ -391,8 +391,8 @@ class CallEntrySamePatientController extends CallEntryController
                 }
             }
 
-            //process Attached Documents
-            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($message->getCalllogEntryMessage());
+            ////Testing: process Attached Documents
+            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($message->getCalllogEntryMessage()); //Save Call Log Entry Same Patient
 
             //set system source and user's default institution
             if( $newEncounter ) {
