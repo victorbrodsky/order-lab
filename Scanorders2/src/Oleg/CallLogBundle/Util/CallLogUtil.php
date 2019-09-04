@@ -3647,52 +3647,119 @@ class CallLogUtil
         return $previousEncounters;
     }
 
-    public function createCopyDocument($holderEntity,$document) {
+    public function createCopyDocument($document) {
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $newDocument = new Document($user);
 
-        $cleanOriginalname = $document->getCleanOriginalname();
-        if( $cleanOriginalname ) {
-            $newDocument->setCleanOriginalname($cleanOriginalname);
+        $originalname = $document->getOriginalname();
+        if( $originalname ) {
+            $newDocument->setOriginalname($originalname);
         }
 
+        //$uniquename;
         $uniquename = $document->getUniquename();
         if( $uniquename ) {
+            $uniquename = "copy_".$uniquename;
             $newDocument->setUniquename($uniquename);
         }
 
+        //$uploadDirectory;
         $uploadDirectory = $document->getUploadDirectory();
         if( $uploadDirectory ) {
             $newDocument->setUploadDirectory($uploadDirectory);
         }
 
-        $filename = $uploadDirectory."/".$uniquename;
-        if( file_exists($filename) ) {
-            $imagesize = filesize($filename);
-            //echo "The imagesize=$imagesize<br>";
-            $document->setSize($imagesize);
-        } else {
-            //copy file to
-
-            $originalFile = __DIR__."/../../UserdirectoryBundle/Util/".$uniqueName;
-            if( !file_exists($originalFile) ) {
-                throw new \Exception( 'There is no original file '.$originalFile );
-            }
-            if( !file_exists($dir) ) {
-                // 0700 - Read and write, execute for owner, nothing for everybody else
-                mkdir($dir, 0700, true);
-                chmod($dir, 0700);
-                //throw new \Exception( 'There is no dir '.$dir );
-            }
-            if( !copy($originalFile,$filename) ) {
-                throw new \Exception( 'Copy Failed: the file '.$filename.' does not exist. Please copy this file to web/'.$dir );
-            }
-
+        //$size;
+        $size = $document->getSize();
+        if( $size ) {
+            $newDocument->setSize($size);
         }
 
-        if( !file_exists($filename) ) {
-            throw new \Exception( 'The file '.$filename.' does not exist. Please copy this file to web/'.$dir );
+        //$file;
+
+        //$type;
+        $type = $document->getType();
+        if( $type ) {
+            $newDocument->setType($type);
         }
+
+        //$creator;
+        $creator = $document->getCreator();
+        if( $creator ) {
+            $newDocument->setCreator($creator);
+        }
+
+        //$createdate;
+        $createdate = $document->getCreatedate();
+        if( $createdate ) {
+            $newDocument->setCreatedate($createdate);
+        }
+
+        //$externalCreatedate;
+        $externalCreatedate = $document->getExternalCreatedate();
+        if( $externalCreatedate ) {
+            $newDocument->setExternalCreatedate($externalCreatedate);
+        }
+
+        //$title;
+        $title = $document->getTitle();
+        if( $title ) {
+            $newDocument->setTitle($title);
+        }
+
+        //$uniqueid;
+        $uniqueid = $document->getUniqueid();
+        if( $uniqueid ) {
+            $uniqueid = "copy_".$uniqueid;
+            $newDocument->setUniqueid($uniqueid);
+        }
+
+        $originalFile = $document->getFullServerPath();
+        $newDocument = $newDocument->getFullServerPath();
+
+        if (!copy($originalFile, $newDocument)) {
+            echo "failed to copy $originalFile...\n";
+            exit('test');
+        }
+
+        if( !file_exists($newDocument) ) {
+            // 0700 - Read and write, execute for owner, nothing for everybody else
+            chmod($newDocument, 0700);
+        }
+
+//        private $entityNamespace;
+//        private $entityName;
+//        private $entityId;
+        //$newDocument->setObject($holderEntity);
+
+//        $filename = $uploadDirectory."/".$uniquename;
+//        if( file_exists($filename) ) {
+//            $imagesize = filesize($filename);
+//            //echo "The imagesize=$imagesize<br>";
+//            $document->setSize($imagesize);
+//        } else {
+//            //copy file to
+//
+//            $originalFile = __DIR__."/../../UserdirectoryBundle/Util/".$uniqueName;
+//            if( !file_exists($originalFile) ) {
+//                throw new \Exception( 'There is no original file '.$originalFile );
+//            }
+//            if( !file_exists($dir) ) {
+//                // 0700 - Read and write, execute for owner, nothing for everybody else
+//                mkdir($dir, 0700, true);
+//                chmod($dir, 0700);
+//                //throw new \Exception( 'There is no dir '.$dir );
+//            }
+//            if( !copy($originalFile,$filename) ) {
+//                throw new \Exception( 'Copy Failed: the file '.$filename.' does not exist. Please copy this file to web/'.$dir );
+//            }
+//
+//        }
+//        if( !file_exists($filename) ) {
+//            throw new \Exception( 'The file '.$filename.' does not exist. Please copy this file to web/'.$dir );
+//        }
+
+        return $newDocument;
     }
 
 }

@@ -559,7 +559,7 @@ class CallLogEditController extends CallEntryController
 //                        $calllogEntryMessage->removeDocument($document);
 //                        $calllogEntryMessage->addDocument($newDocument);
 
-                        $calllogUtil->createCopyDocument($calllogEntryMessage,$document);
+                        $calllogUtil->createCopyDocument($document);
                     }
                 }
             }
@@ -811,7 +811,7 @@ class CallLogEditController extends CallEntryController
                 }
 
             }//if $newEncounter
-            
+
             //process Attached Documents
             $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($message->getCalllogEntryMessage()); //save update
 
