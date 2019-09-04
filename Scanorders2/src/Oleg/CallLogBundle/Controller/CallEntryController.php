@@ -1339,7 +1339,7 @@ class CallEntryController extends Controller
             }
 
             //process Attached Documents
-            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($message->getCalllogEntryMessage());
+            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($message->getCalllogEntryMessage()); //Save new entry
 
             //set system source and user's default institution
             if( $newEncounter ) {
