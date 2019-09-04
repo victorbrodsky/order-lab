@@ -1338,9 +1338,6 @@ class CallEntryController extends Controller
                 //}
             }
 
-            //process Attached Documents
-            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($message->getCalllogEntryMessage()); //Save new entry
-
             //set system source and user's default institution
             if( $newEncounter ) {
 
@@ -1602,6 +1599,9 @@ class CallEntryController extends Controller
                 }
 
             }//if $newEncounter
+
+            //process Attached Documents
+            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($message->getCalllogEntryMessage()); //Save new entry
 
             //TODO: save call log entry short info to setShortInfo($shortInfo)
             //$calllogUtil->updateMessageShortInfo($message);

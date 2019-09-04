@@ -549,10 +549,19 @@ class CallLogEditController extends CallEntryController
                 if( $documentId ) {
                     $documentEntity = $em->getRepository('OlegUserdirectoryBundle:Document')->find($documentId);
                     if( $documentEntity ) {
-                        $calllogEntryMessage->addDocument($documentEntity);
+                        //TODO: create a new document (clone)
+
+//                        $newDocument = clone $document;
+//                        //create a copy of attachment
+//                        echo "newDocument: ID=".$newDocument->getId()."; Size==".$newDocument->getSizeStr()."; abspath=".$newDocument->getAbsoluteUploadFullPath()."<br>";
+//                        $em->detach($newDocument);
+//                        $em->persist($newDocument);
+//                        $calllogEntryMessage->removeDocument($document);
+//                        $calllogEntryMessage->addDocument($newDocument);
+
+                        $calllogUtil->createCopyDocument($calllogEntryMessage,$document);
                     }
                 }
-                $calllogEntryMessage->removeDocument($document);
             }
 
             //Testing (Save/Update Call Log Entry): Check and copy attachments
@@ -561,11 +570,8 @@ class CallLogEditController extends CallEntryController
             foreach ($documents as $document) {
                 echo "3document: ID=".$document->getId()."; Size==".$document->getSizeStr()."; abspath=".$document->getAbsoluteUploadFullPath()."<br>";
             }
-            //exit('222');
+            exit('222');
             //////////// EOF Find and Add document by ID. The documents will be shared between original and amended calllog entries. //////////////
-
-            //process Attached Documents
-            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($message->getCalllogEntryMessage()); //save update
 
             //set system source and user's default institution
             if( $newEncounter ) {
@@ -805,6 +811,9 @@ class CallLogEditController extends CallEntryController
                 }
 
             }//if $newEncounter
+            
+            //process Attached Documents
+            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($message->getCalllogEntryMessage()); //save update
 
             //TODO: save call log entry short info to setShortInfo($shortInfo)
             //$calllogUtil->updateMessageShortInfo($message);

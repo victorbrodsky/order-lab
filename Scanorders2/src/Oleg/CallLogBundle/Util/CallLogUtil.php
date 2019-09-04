@@ -41,6 +41,7 @@ use Oleg\OrderformBundle\Entity\PatientSex;
 use Oleg\OrderformBundle\Entity\PatientSuffix;
 use Oleg\OrderformBundle\Entity\Procedure;
 use Oleg\OrderformBundle\Form\DataTransformer\MrnTypeTransformer;
+use Oleg\UserdirectoryBundle\Entity\Document;
 use Oleg\UserdirectoryBundle\Entity\GeoLocation;
 use Oleg\UserdirectoryBundle\Entity\Location;
 use Oleg\UserdirectoryBundle\Entity\ObjectTypeText;
@@ -3644,6 +3645,54 @@ class CallLogUtil
         //exit("111");
 
         return $previousEncounters;
+    }
+
+    public function createCopyDocument($holderEntity,$document) {
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+        $newDocument = new Document($user);
+
+        $cleanOriginalname = $document->getCleanOriginalname();
+        if( $cleanOriginalname ) {
+            $newDocument->setCleanOriginalname($cleanOriginalname);
+        }
+
+        $uniquename = $document->getUniquename();
+        if( $uniquename ) {
+            $newDocument->setUniquename($uniquename);
+        }
+
+        $uploadDirectory = $document->getUploadDirectory();
+        if( $uploadDirectory ) {
+            $newDocument->setUploadDirectory($uploadDirectory);
+        }
+
+        $filename = $uploadDirectory."/".$uniquename;
+        if( file_exists($filename) ) {
+            $imagesize = filesize($filename);
+            //echo "The imagesize=$imagesize<br>";
+            $document->setSize($imagesize);
+        } else {
+            //copy file to
+
+            $originalFile = __DIR__."/../../UserdirectoryBundle/Util/".$uniqueName;
+            if( !file_exists($originalFile) ) {
+                throw new \Exception( 'There is no original file '.$originalFile );
+            }
+            if( !file_exists($dir) ) {
+                // 0700 - Read and write, execute for owner, nothing for everybody else
+                mkdir($dir, 0700, true);
+                chmod($dir, 0700);
+                //throw new \Exception( 'There is no dir '.$dir );
+            }
+            if( !copy($originalFile,$filename) ) {
+                throw new \Exception( 'Copy Failed: the file '.$filename.' does not exist. Please copy this file to web/'.$dir );
+            }
+
+        }
+
+        if( !file_exists($filename) ) {
+            throw new \Exception( 'The file '.$filename.' does not exist. Please copy this file to web/'.$dir );
+        }
     }
 
 }

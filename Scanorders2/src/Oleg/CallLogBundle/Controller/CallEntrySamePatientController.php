@@ -391,9 +391,6 @@ class CallEntrySamePatientController extends CallEntryController
                 }
             }
 
-            ////Testing: process Attached Documents
-            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($message->getCalllogEntryMessage()); //Save Call Log Entry Same Patient
-
             //set system source and user's default institution
             if( $newEncounter ) {
 
@@ -598,6 +595,9 @@ class CallEntrySamePatientController extends CallEntryController
                 }
 
             }//if $newEncounter
+
+            ////Testing: process Attached Documents
+            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($message->getCalllogEntryMessage()); //Save Call Log Entry Same Patient
 
             if( $testing ) {
                 echo "<br><br>message id=" . $message->getId() . "<br>";
