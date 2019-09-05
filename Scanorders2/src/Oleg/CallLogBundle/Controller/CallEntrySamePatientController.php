@@ -391,7 +391,7 @@ class CallEntrySamePatientController extends CallEntryController
                 }
             }
 
-            //Testing: process Attached Documents
+            //process Attached Documents
             $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($message->getCalllogEntryMessage()); //Save Call Log Entry Same Patient
 
             //set system source and user's default institution

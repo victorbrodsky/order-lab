@@ -938,9 +938,8 @@
             </div>
             <div id="calllog-documents" class="panel-collapse collapse in">
                 <div class="panel-body">
-
                     {% for documentObj in message.calllogEntryMessage.documents %}
-                        Attachment {{ loop.index }}: {{ documentObj.getTitle() }} ({{ message.calllogEntryMessage.getCalllogAttachmentType() }})
+                        Attachment {{ loop.index }}: {{ documentObj.getTitle() }}
                         {#{{ documentObj.getFullServerPath() }}#}
                         {% if documentObj.id %}
                             {% set sitename = calllog_sitename %}
@@ -949,14 +948,8 @@
                                href="{{ path(sitename~'_file_view', { 'id': documentObj.id }) }}">
                                   {{ documentObj.originalname }} (uploaded {{ documentObj.createdate|date('m/d/Y H:i:s') }})
                             </a>
-
-                            {#<a target="_blank"#}
-                               {#href="{{ path(sitename~'_file_download', { 'id': documentObj.id }) }}">#}
-                                {#{{ documentObj.originalname }} (uploaded {{ documentObj.createdate|date('m/d/Y H:i:s') }})#}
-                            {#</a>#}
-
-                            {#showDocumentAsImage#}
                         {% endif %}
+                        &nbsp;({{ message.calllogEntryMessage.getCalllogAttachmentType() }})
                     {% endfor %}
 
                 </div> <!-- panel-body -->

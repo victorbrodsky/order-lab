@@ -252,11 +252,11 @@ class CallLogEditController extends CallEntryController
         }
 
         //Testing (show): Check and copy attachments
-        $documents = $message->getCalllogEntryMessage()->getDocuments();
-        echo "documents count=".count($documents)."<br>";
-        foreach ($documents as $document) {
-            echo "document: ID=".$document->getId()."; Size==".$document->getSizeStr()."; abspath=".$document->getAbsoluteUploadFullPath()."<br>";
-        }
+//        $documents = $message->getCalllogEntryMessage()->getDocuments();
+//        echo "documents count=".count($documents)."<br>";
+//        foreach ($documents as $document) {
+//            echo "document: ID=".$document->getId()."; Size==".$document->getSizeStr()."; abspath=".$document->getAbsoluteUploadFullPath()."<br>";
+//        }
         //exit('111');
 
         $messageInfo = "Entry ID ".$message->getMessageOidVersion()." submitted on ".$userServiceUtil->getSubmitterInfo($message); // . " | Call Log Book";
