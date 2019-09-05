@@ -559,7 +559,7 @@ class CallLogEditController extends CallEntryController
 //                        $calllogEntryMessage->removeDocument($document);
 //                        $calllogEntryMessage->addDocument($newDocument);
 
-                        $calllogUtil->createCopyDocument($document);
+                        $calllogUtil->createCopyDocument($documentEntity);
                     }
                 }
             }
@@ -570,7 +570,7 @@ class CallLogEditController extends CallEntryController
             foreach ($documents as $document) {
                 echo "3document: ID=".$document->getId()."; Size==".$document->getSizeStr()."; abspath=".$document->getAbsoluteUploadFullPath()."<br>";
             }
-            exit('222');
+            //exit('222');
             //////////// EOF Find and Add document by ID. The documents will be shared between original and amended calllog entries. //////////////
 
             //set system source and user's default institution

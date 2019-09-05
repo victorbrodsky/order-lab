@@ -3650,6 +3650,7 @@ class CallLogUtil
     public function createCopyDocument($document) {
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $newDocument = new Document($user);
+        $this->em->persist($newDocument);
 
         $originalname = $document->getOriginalname();
         if( $originalname ) {
@@ -3658,10 +3659,13 @@ class CallLogUtil
 
         //$uniquename;
         $uniquename = $document->getUniquename();
+        echo $document->getId().": uniquename=".$uniquename."<br>";
+        echo $document->getId().": originalname=".$document->getOriginalname()."<br>";
         if( $uniquename ) {
             $uniquename = "copy_".$uniquename;
             $newDocument->setUniquename($uniquename);
         }
+        echo "newDocument->getUniquename=".$newDocument->getUniquename()."<br>";
 
         //$uploadDirectory;
         $uploadDirectory = $document->getUploadDirectory();
@@ -3715,18 +3719,21 @@ class CallLogUtil
         }
 
         $originalFile = $document->getFullServerPath();
-        $newDocument = $newDocument->getFullServerPath();
+        echo "originalFile=$originalFile<br>";
+        $newFile = $newDocument->getFullServerPath(false); //use $withRealPath=false because file does not exists yet
+        echo "newFile=$newFile<br>";
+        //exit('test');
 
-        if (!copy($originalFile, $newDocument)) {
+        if (!copy($originalFile, $newFile)) {
             echo "failed to copy $originalFile...\n";
             exit('test');
         }
 
-        if( file_exists($newDocument) ) {
+        if( file_exists($newFile) ) {
             // 0700 - Read and write, execute for owner, nothing for everybody else
             //chmod($newDocument, 0700);
         } else {
-            echo "File does not exists: [".$newDocument."] <br>";
+            echo "File does not exists: [".$newFile."] <br>";
             exit('test');
         }
 

@@ -492,7 +492,7 @@ class Document {
 
     //use for command console to get a full absolute server path
     //example: C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\scanorder\Scanorders2/web/Uploaded/fellapp/documents/56fbf9e8867c3.jpg
-    public function getFullServerPath()
+    public function getFullServerPath($withRealPath=true)
     {
         //echo "getcwd=".getcwd()."<br>"; //getcwd()=C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2
 
@@ -512,7 +512,7 @@ class Document {
         //$fullPath = getcwd() . "/web/" . $this->getUploadDirectory().'/'.$this->getUniquename();
         //$fullPath = realpath($fullPath);
 
-        if( $fullPath ) {
+        if( $fullPath && $withRealPath ) {
             $fullPath = realpath($fullPath);
         }
 

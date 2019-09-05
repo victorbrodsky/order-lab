@@ -1321,6 +1321,9 @@ class CallEntryController extends Controller
 
             //exit('111');
 
+            //process Attached Documents (here this function works, but entityId is NULL - still it's OK)
+            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($message->getCalllogEntryMessage()); //Save new entry
+
             $patientInfoDummyEncounter = null;
             $newEncounter = null;
             //get a new encounter without id
@@ -1600,8 +1603,8 @@ class CallEntryController extends Controller
 
             }//if $newEncounter
 
-            //process Attached Documents
-            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($message->getCalllogEntryMessage()); //Save new entry
+            //process Attached Documents (Here this function creates additional broken document object)
+            //$em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($message->getCalllogEntryMessage()); //Save new entry
 
             //TODO: save call log entry short info to setShortInfo($shortInfo)
             //$calllogUtil->updateMessageShortInfo($message);
