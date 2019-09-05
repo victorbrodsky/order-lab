@@ -3722,9 +3722,12 @@ class CallLogUtil
             exit('test');
         }
 
-        if( !file_exists($newDocument) ) {
+        if( file_exists($newDocument) ) {
             // 0700 - Read and write, execute for owner, nothing for everybody else
-            chmod($newDocument, 0700);
+            //chmod($newDocument, 0700);
+        } else {
+            echo "File does not exists: [".$newDocument."] <br>";
+            exit('test');
         }
 
 //        private $entityNamespace;

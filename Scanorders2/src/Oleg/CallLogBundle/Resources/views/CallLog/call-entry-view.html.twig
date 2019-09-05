@@ -303,8 +303,10 @@
                             {#</table>#}
                             {#</div>#}
 
+                            {#formnode: message.calllogEntryMessage.documents={{ message.calllogEntryMessage.documents|length }}<br>#}
                             {% if message.calllogEntryMessage and message.calllogEntryMessage.documents|length > 0 %}
-                                {{ calllogmacros.calllogEntryDocuments(form,cycle) }}
+                                {#show documents<br>#}
+                                {{ calllogmacros.calllogEntryDocuments(message.calllogEntryMessage,cycle) }}
                             {% endif %}
 
                             {% if message.calllogEntryMessage and message.calllogEntryMessage.entryTags %}
@@ -350,6 +352,11 @@
 
             {#enrty form body#}
             {{ user_formnode_utility.getFormNodeHolderShortInfoForView(message,message.messageCategory,false)|raw }}
+
+            {% if message.calllogEntryMessage and message.calllogEntryMessage.documents|length > 0 %}
+                show documents<br>
+                {{ calllogmacros.calllogEntryDocuments(message.calllogEntryMessage,cycle) }}
+            {% endif %}
 
             {{ calllog_util_form.getEntryTagsHtml(message,status)|raw }}
 
