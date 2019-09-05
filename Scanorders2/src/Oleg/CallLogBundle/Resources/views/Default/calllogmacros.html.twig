@@ -950,10 +950,10 @@
                                   {{ documentObj.originalname }} (uploaded {{ documentObj.createdate|date('m/d/Y H:i:s') }})
                             </a>
 
-                            <a target="_blank"
-                               href="{{ path(sitename~'_file_download', { 'id': documentObj.id }) }}">
-                                {{ documentObj.originalname }} (uploaded {{ documentObj.createdate|date('m/d/Y H:i:s') }})
-                            </a>
+                            {#<a target="_blank"#}
+                               {#href="{{ path(sitename~'_file_download', { 'id': documentObj.id }) }}">#}
+                                {#{{ documentObj.originalname }} (uploaded {{ documentObj.createdate|date('m/d/Y H:i:s') }})#}
+                            {#</a>#}
 
                             {#showDocumentAsImage#}
                         {% endif %}

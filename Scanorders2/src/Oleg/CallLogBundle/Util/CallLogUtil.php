@@ -3647,10 +3647,10 @@ class CallLogUtil
         return $previousEncounters;
     }
 
-    public function createCopyDocument($document) {
+    public function createCopyDocument($document,$holderEntity) {
+        $logger = $this->container->get('logger');
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $newDocument = new Document($user);
-        $this->em->persist($newDocument);
 
         $originalname = $document->getOriginalname();
         if( $originalname ) {
@@ -3659,13 +3659,13 @@ class CallLogUtil
 
         //$uniquename;
         $uniquename = $document->getUniquename();
-        echo $document->getId().": uniquename=".$uniquename."<br>";
-        echo $document->getId().": originalname=".$document->getOriginalname()."<br>";
+        //echo $document->getId().": uniquename=".$uniquename."<br>";
+        //echo $document->getId().": originalname=".$document->getOriginalname()."<br>";
         if( $uniquename ) {
             $uniquename = "copy_".$uniquename;
             $newDocument->setUniquename($uniquename);
         }
-        echo "newDocument->getUniquename=".$newDocument->getUniquename()."<br>";
+        //echo "newDocument->getUniquename=".$newDocument->getUniquename()."<br>";
 
         //$uploadDirectory;
         $uploadDirectory = $document->getUploadDirectory();
@@ -3719,55 +3719,32 @@ class CallLogUtil
         }
 
         $originalFile = $document->getFullServerPath();
-        echo "originalFile=$originalFile<br>";
+        //echo "originalFile=$originalFile<br>";
         $newFile = $newDocument->getFullServerPath(false); //use $withRealPath=false because file does not exists yet
-        echo "newFile=$newFile<br>";
+        //echo "newFile=$newFile<br>";
         //exit('test');
 
         if (!copy($originalFile, $newFile)) {
-            echo "failed to copy $originalFile...\n";
-            exit('test');
+            //echo "failed to copy $originalFile...\n";
+            //exit('test');
+            $logger->error("createCopyDocument: failed to copy $originalFile");
         }
 
         if( file_exists($newFile) ) {
             // 0700 - Read and write, execute for owner, nothing for everybody else
             //chmod($newDocument, 0700);
         } else {
-            echo "File does not exists: [".$newFile."] <br>";
-            exit('test');
+            //echo "File does not exists: [".$newFile."] <br>";
+            //exit('test');
+            $logger->error("createCopyDocument: file does not exists: [".$newFile."]");
         }
 
 //        private $entityNamespace;
 //        private $entityName;
 //        private $entityId;
-        //$newDocument->setObject($holderEntity);
+        $newDocument->setObject($holderEntity);
 
-//        $filename = $uploadDirectory."/".$uniquename;
-//        if( file_exists($filename) ) {
-//            $imagesize = filesize($filename);
-//            //echo "The imagesize=$imagesize<br>";
-//            $document->setSize($imagesize);
-//        } else {
-//            //copy file to
-//
-//            $originalFile = __DIR__."/../../UserdirectoryBundle/Util/".$uniqueName;
-//            if( !file_exists($originalFile) ) {
-//                throw new \Exception( 'There is no original file '.$originalFile );
-//            }
-//            if( !file_exists($dir) ) {
-//                // 0700 - Read and write, execute for owner, nothing for everybody else
-//                mkdir($dir, 0700, true);
-//                chmod($dir, 0700);
-//                //throw new \Exception( 'There is no dir '.$dir );
-//            }
-//            if( !copy($originalFile,$filename) ) {
-//                throw new \Exception( 'Copy Failed: the file '.$filename.' does not exist. Please copy this file to web/'.$dir );
-//            }
-//
-//        }
-//        if( !file_exists($filename) ) {
-//            throw new \Exception( 'The file '.$filename.' does not exist. Please copy this file to web/'.$dir );
-//        }
+        $this->em->persist($newDocument);
 
         return $newDocument;
     }

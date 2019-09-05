@@ -498,7 +498,7 @@ class CallLogEditController extends CallEntryController
 
         if( $form->isSubmitted() ) {
 
-            echo "message id=".$message->getId()."<br>";
+            //echo "message id=".$message->getId()."<br>";
 
             $msg = "No Case found. No action has been performed.";
             $institution = $userSecUtil->getCurrentUserInstitution($user);
@@ -507,7 +507,7 @@ class CallLogEditController extends CallEntryController
             $patients = $message->getPatient();
             if( count($patients) > 0 ) {
                 $patient = $patients->first();
-                echo "patient id=".$patient->getId()."<br>";
+                //echo "patient id=".$patient->getId()."<br>";
             }
 
             //For edit page we have only one encounter with patient info => use first encounter.
@@ -540,38 +540,64 @@ class CallLogEditController extends CallEntryController
             //exit('222');
 
             //////////// Find and Add document by ID. The documents will be shared between original and amended calllog entries. //////////////
+            //$newDocuments = array();
             $calllogEntryMessage = $message->getCalllogEntryMessage();
             $documents = $calllogEntryMessage->getDocuments();
             foreach ($documents as $document) {
-                $calllogEntryMessage->removeDocument($document);
+                //$calllogEntryMessage->removeDocument($document);
                 //echo "2document: ID=".$document->getId()."; Size==".$document->getSizeStr()."; abspath=".$document->getAbsoluteUploadFullPath()."<br>";
                 $documentId = $document->getId();
                 if( $documentId ) {
                     $documentEntity = $em->getRepository('OlegUserdirectoryBundle:Document')->find($documentId);
+                    //echo "documentEntity: ID=".$documentEntity->getId()."; Size=".$documentEntity->getSizeStr()."; abspath=".$documentEntity->getAbsoluteUploadFullPath()."<br>";
                     if( $documentEntity ) {
-                        //TODO: create a new document (clone)
-
-//                        $newDocument = clone $document;
-//                        //create a copy of attachment
-//                        echo "newDocument: ID=".$newDocument->getId()."; Size==".$newDocument->getSizeStr()."; abspath=".$newDocument->getAbsoluteUploadFullPath()."<br>";
-//                        $em->detach($newDocument);
-//                        $em->persist($newDocument);
-//                        $calllogEntryMessage->removeDocument($document);
-//                        $calllogEntryMessage->addDocument($newDocument);
-
-                        $calllogUtil->createCopyDocument($documentEntity);
+                        //Create a new document (clone)
+                        $newDocument = $calllogUtil->createCopyDocument($documentEntity,$calllogEntryMessage);
+                        //echo "newDocument: ID=".$newDocument->getId()."; Size=".$newDocument->getSizeStr()."; abspath=".$newDocument->getAbsoluteUploadFullPath()."<br>";
+                        //$newDocuments[] = $newDocument;
+                        $calllogEntryMessage->removeDocument($document);
+                        $calllogEntryMessage->addDocument($newDocument);
                     }
                 }
             }
 
             //Testing (Save/Update Call Log Entry): Check and copy attachments
-            $documents = $message->getCalllogEntryMessage()->getDocuments();
-            echo "3documents count=".count($documents)."<br>";
-            foreach ($documents as $document) {
-                echo "3document: ID=".$document->getId()."; Size==".$document->getSizeStr()."; abspath=".$document->getAbsoluteUploadFullPath()."<br>";
-            }
+//            $documents = $calllogEntryMessage->getDocuments();
+//            echo "2documents count=".count($documents)."<br>";
+//            foreach ($documents as $document) {
+//                echo "2document: ID=".$document->getId()."; Size=".$document->getSizeStr()."; abspath=".$document->getAbsoluteUploadFullPath()."<br>";
+//            }
             //exit('222');
+
+//            if(0) {
+//                //Remove all existing documents
+//                $documents = $calllogEntryMessage->getDocuments();
+//                foreach ($documents as $document) {
+//                    echo "remove document: ID=" . $document->getId() . "; Size=" . $document->getSizeStr() . "; abspath=" . $document->getAbsoluteUploadFullPath() . "<br>";
+//                    $calllogEntryMessage->removeDocument($document);
+//                }
+//                //$documents = $calllogEntryMessage->getDocuments();
+//                //echo "after removal documents count=".count($documents)."<br>";
+//
+//                //Add all new documents
+//                foreach ($newDocuments as $newDocument) {
+//                    echo "add newDocument: ID=" . $newDocument->getId() . "; Size=" . $newDocument->getSizeStr() . "; abspath=" . $newDocument->getAbsoluteUploadFullPath() . "<br>";
+//                    $calllogEntryMessage->addDocument($newDocument);
+//                }
+//                //$documents = $calllogEntryMessage->getDocuments();
+//                //echo "after adding documents count=".count($documents)."<br>";
+//            }
             //////////// EOF Find and Add document by ID. The documents will be shared between original and amended calllog entries. //////////////
+
+            //process Attached Documents
+            //$em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($message->getCalllogEntryMessage()); //save update
+
+//            $documents = $calllogEntryMessage->getDocuments();
+//            echo "3documents count=".count($documents)."<br>";
+//            foreach ($documents as $document) {
+//                echo "3document: ID=".$document->getId()."; Size=".$document->getSizeStr()."; abspath=".$document->getAbsoluteUploadFullPath()."<br>";
+//            }
+            //exit('333');
 
             //set system source and user's default institution
             if( $newEncounter ) {
@@ -813,7 +839,7 @@ class CallLogEditController extends CallEntryController
             }//if $newEncounter
 
             //process Attached Documents
-            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($message->getCalllogEntryMessage()); //save update
+            //$em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($message->getCalllogEntryMessage()); //save update
 
             //TODO: save call log entry short info to setShortInfo($shortInfo)
             //$calllogUtil->updateMessageShortInfo($message);
