@@ -946,7 +946,7 @@
                             {% set sitename = calllog_sitename %}
                             <a
                                target="_blank"
-                               href="{{ path(sitename~'_file_download', { 'id': documentObj.id }) }}">
+                               href="{{ path(sitename~'_file_view', { 'id': documentObj.id }) }}">
                                   {{ documentObj.originalname }} (uploaded {{ documentObj.createdate|date('m/d/Y H:i:s') }})
                             </a>
 
