@@ -2170,7 +2170,10 @@ class ScanAdminController extends AdminController
 
         $elements = array(
             "Image",
-            "Document"
+            "Document",
+            "Clinical Guideline",
+            "Research Publication",
+            "Multiple Attachment Types"
         );
 
         $username = $this->get('security.token_storage')->getToken()->getUser();
