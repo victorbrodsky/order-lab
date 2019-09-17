@@ -887,7 +887,7 @@
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
-    {% if cycle == "new" or cycle == "edit" %}
+    {% if cycle == "new" or cycle == "edit" or cycle == "amend" %}
         <div id="form-prototype-data"
              data-userurllink = "{{ usermacros.userUrlLink()|e }}"
              data-uploadurl = "{{ oneup_uploader_endpoint('calllog_gallery') }}"
@@ -927,7 +927,7 @@
             </div> <!-- panel-collapse -->
         </div> <!-- panel panel-default -->
     {% else %}
-        show document cycle = {{ cycle }}<br>
+        {#show document cycle = {{ cycle }}<br>#}
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4 class="panel-title">
