@@ -949,7 +949,10 @@
                                   {{ documentObj.originalname }} (uploaded {{ documentObj.createdate|date('m/d/Y H:i:s') }})
                             </a>
                         {% endif %}
-                        &nbsp;({{ message.calllogEntryMessage.getCalllogAttachmentType() }})
+                        {% set calllogAttachmentType = message.calllogEntryMessage.getCalllogAttachmentType() %}
+                        {% if calllogAttachmentType %}
+                            &nbsp;({{ calllogAttachmentType }})
+                        {% endif %}
                     {% endfor %}
 
                 </div> <!-- panel-body -->
