@@ -168,6 +168,12 @@ class CalllogEntryMessage extends OrderBase {
      */
     private $calllogAttachmentType;
 
+    /**
+     * Tasks for Call Log
+     *
+     * @ORM\OneToMany(targetEntity="CalllogTask", mappedBy="calllogEntryMessage", cascade={"persist"})
+     **/
+    private $calllogTasks;
 
 
     public function __construct() {
@@ -175,6 +181,7 @@ class CalllogEntryMessage extends OrderBase {
         $this->patientLists = new ArrayCollection();
         $this->entryTags = new ArrayCollection();
         $this->documents = new ArrayCollection();
+        $this->calllogTasks = new ArrayCollection();
 
     }
 
@@ -422,6 +429,22 @@ class CalllogEntryMessage extends OrderBase {
     public function setCalllogAttachmentType($calllogAttachmentType)
     {
         $this->calllogAttachmentType = $calllogAttachmentType;
+    }
+
+    public function addCalllogTask($item)
+    {
+        if( $item && !$this->calllogTasks->contains($item) ) {
+            $this->calllogTasks->add($item);
+        }
+        return $this;
+    }
+    public function removeCalllogTask($item)
+    {
+        $this->calllogTasks->removeElement($item);
+    }
+    public function getCalllogTasks()
+    {
+        return $this->calllogTasks;
     }
 
 
