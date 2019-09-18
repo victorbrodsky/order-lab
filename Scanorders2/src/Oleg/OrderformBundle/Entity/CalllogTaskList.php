@@ -44,19 +44,30 @@ class CalllogTask
      */
     private $calllogEntryMessage;
 
-    //Task Type
-    //list titled “Task Type” with the following values: “Contact Referring Provider”, “Order a medication”, “Order blood products”, “Check lab results”.
+    /**
+     * “Contact Referring Provider”, “Order a medication”, “Order blood products”, “Check lab results”
+     *
+     * @ORM\ManyToOne(targetEntity="CalllogTaskTypeList")
+     * @ORM\JoinColumn(name="calllogTaskTypeList_id", referencedColumnName="id", nullable=true)
+     */
+    private $calllogTaskTypeList;
 
-    //Task Description
     /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $description;
 
-    //Status (Checkbox hidden on new entry page)
-    //“Pending”, “Completed”, “Superseded”, “Deleted”
     /**
-     * @ORM\Column(name="status", type="string", nullable=true)
+     * “pending”, “completed”, “superseded”, “deleted”
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $systemStatus;
+
+    /**
+     * Checkbox (Checkbox hidden on new entry page): 0-Pending, 1-Completed
+     *
+     * @ORM\Column(type="boolean", nullable=true)
      */
     private $status;
 
@@ -82,11 +93,27 @@ class CalllogTask
      */
     private $updatedBy;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $statusUpdatedDate;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
+     */
+    private $statusUpdatedBy;
 
 
 
-    public function __construct() {
-        $this->synonyms = new ArrayCollection();
+
+    public function __construct($creator=null) {
+        $this->setCreatedDate(new \DateTime());
+        $this->setSystemStatus("pending");
+
+        if( $creator ) {
+            $this->setCreatedBy($creator);
+        }
     }
 
 
@@ -107,7 +134,180 @@ class CalllogTask
         $this->calllogEntryMessage = $calllogEntryMessage;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
+    /**
+     * @param mixed $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
 
+    /**
+     * @return mixed
+     */
+    public function getCalllogTaskTypeList()
+    {
+        return $this->calllogTaskTypeList;
+    }
+
+    /**
+     * @param mixed $calllogTaskTypeList
+     */
+    public function setCalllogTaskTypeList($calllogTaskTypeList)
+    {
+        $this->calllogTaskTypeList = $calllogTaskTypeList;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param mixed $description
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSystemStatus()
+    {
+        return $this->systemStatus;
+    }
+
+    /**
+     * @param mixed $systemStatus
+     */
+    public function setSystemStatus($systemStatus)
+    {
+        $this->systemStatus = $systemStatus;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param mixed $status
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCreatedDate()
+    {
+        return $this->createdDate;
+    }
+
+    /**
+     * @param mixed $createdDate
+     */
+    public function setCreatedDate($createdDate)
+    {
+        $this->createdDate = $createdDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCreatedBy()
+    {
+        return $this->createdBy;
+    }
+
+    /**
+     * @param mixed $createdBy
+     */
+    public function setCreatedBy($createdBy)
+    {
+        $this->createdBy = $createdBy;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUpdatedDate()
+    {
+        return $this->updatedDate;
+    }
+
+    /**
+     * @param mixed $updatedDate
+     */
+    public function setUpdatedDate($updatedDate)
+    {
+        $this->updatedDate = $updatedDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUpdatedBy()
+    {
+        return $this->updatedBy;
+    }
+
+    /**
+     * @param mixed $updatedBy
+     */
+    public function setUpdatedBy($updatedBy)
+    {
+        $this->updatedBy = $updatedBy;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStatusUpdatedDate()
+    {
+        return $this->statusUpdatedDate;
+    }
+
+    /**
+     * @param mixed $statusUpdatedDate
+     */
+    public function setStatusUpdatedDate($statusUpdatedDate)
+    {
+        $this->statusUpdatedDate = $statusUpdatedDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStatusUpdatedBy()
+    {
+        return $this->statusUpdatedBy;
+    }
+
+    /**
+     * @param mixed $statusUpdatedBy
+     */
+    public function setStatusUpdatedBy($statusUpdatedBy)
+    {
+        $this->statusUpdatedBy = $statusUpdatedBy;
+    }
 
 }
