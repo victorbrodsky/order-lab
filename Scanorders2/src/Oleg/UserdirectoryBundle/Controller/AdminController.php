@@ -6798,6 +6798,7 @@ class AdminController extends Controller
             "suggestedmessagecategorys" => array('','-list'),
             "calllogentrytags" => array('','-list'),
             "calllogattachmenttypes" => array('','-list'),
+            "calllogtasktypes" => array('','-list'),
 
             "antibodies" => array('AntibodyList','antibodies-list','Antibody List'),
             "transrestissueprocessingservices" => array('TissueProcessingServiceList','transrestissueprocessingservices-list','Translational Research Tissue Processing Service List'),

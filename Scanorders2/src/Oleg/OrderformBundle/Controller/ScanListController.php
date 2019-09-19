@@ -179,6 +179,7 @@ class ScanListController extends ListController
      * @Route("/suggested-message-categories/", name="suggestedmessagecategorys-list")
      * @Route("/calllog-entry-tags/", name="calllogentrytags-list")
      * @Route("/calllog-attachment-types/", name="calllogattachmenttypes-list")
+     * @Route("/calllog-task-types/", name="calllogtasktypes-list")
      *
      *
      * @Method("GET")
@@ -241,6 +242,7 @@ class ScanListController extends ListController
      * @Route("/suggested-message-categories/", name="suggestedmessagecategorys_create")
      * @Route("/calllog-entry-tags/", name="calllogentrytags_create")
      * @Route("/calllog-attachment-types/", name="calllogattachmenttypes_create")
+     * @Route("/calllog-task-types/", name="calllogtasktypes_create")
      *
      * @Method("POST")
      * @Template("OlegOrderformBundle:ListForm:new.html.twig")
@@ -302,6 +304,7 @@ class ScanListController extends ListController
      * @Route("/suggested-message-categories/new", name="suggestedmessagecategorys_new")
      * @Route("/calllog-entry-tags/new", name="calllogentrytags_new")
      * @Route("/calllog-attachment-types/new", name="calllogattachmenttypes_new")
+     * @Route("/calllog-task-types/new", name="calllogtasktypes_new")
      *
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:new.html.twig")
@@ -363,6 +366,7 @@ class ScanListController extends ListController
      * @Route("/suggested-message-categories/{id}", name="suggestedmessagecategorys_show")
      * @Route("/calllog-entry-tags/{id}", name="calllogentrytags_show")
      * @Route("/calllog-attachment-types/{id}", name="calllogattachmenttypes_show")
+     * @Route("/calllog-task-types/{id}", name="calllogtasktypes_show")
      *
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:show.html.twig")
@@ -424,6 +428,7 @@ class ScanListController extends ListController
      * @Route("/suggested-message-categories/{id}/edit", name="suggestedmessagecategorys_edit")
      * @Route("/calllog-entry-tags/{id}/edit", name="calllogentrytags_edit")
      * @Route("/calllog-attachment-types/{id}/edit", name="calllogattachmenttypes_edit")
+     * @Route("/calllog-task-types/{id}/edit", name="calllogtasktypes_edit")
      *
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:edit.html.twig")
@@ -485,6 +490,7 @@ class ScanListController extends ListController
      * @Route("/suggested-message-categories/{id}", name="suggestedmessagecategorys_update")
      * @Route("/calllog-entry-tags/{id}", name="calllogentrytags_update")
      * @Route("/calllog-attachment-types/{id}", name="calllogattachmenttypes_update")
+     * @Route("/calllog-task-types/{id}", name="calllogtasktypes_update")
      *
      * @Method("PUT")
      * @Template("OlegOrderformBundle:ListForm:edit.html.twig")
@@ -694,7 +700,10 @@ class ScanListController extends ListController
             $className = "CalllogAttachmentTypeList";
             $displayName = "Call Log Attachment Type List";
             break;
-
+        case "calllogtasktypes":
+            $className = "CalllogTaskTypeList";
+            $displayName = "Call Log Task Type List";
+            break;
 
         default:
             $className = null;
@@ -762,6 +771,7 @@ class ScanListController extends ListController
      * @Route("/suggested-message-categories/{id}", name="suggestedmessagecategorys_delete")
      * @Route("/calllog-entry-tags/{id}", name="calllogentrytags_delete")
      * @Route("/calllog-attachment-types/{id}", name="calllogattachmenttypes_delete")
+     * @Route("/calllog-task-types/{id}", name="calllogtasktypes_delete")
      *
      *
      * @Method("DELETE")

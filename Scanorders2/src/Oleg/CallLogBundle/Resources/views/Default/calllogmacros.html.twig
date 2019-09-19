@@ -963,6 +963,32 @@
 
 {% endmacro %}
 
+{% macro calllogTaskList( message, cycle ) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" href="#calllog-tasklist">
+                    Task List
+                </a>
+            </h4>
+        </div>
+        <div id="calllog-tasklist" class="panel-collapse collapse in">
+            <div class="panel-body">
+
+                {% for calllogTask in message.messageCategory.calllogTasks %}
+                    {{ formmacros.field(calllogTask.status) }}
+                    {{ formmacros.field(calllogTask.calllogTaskTypeList) }}
+                    {{ formmacros.field(calllogTask.description) }}
+                {% endfor %}
+
+            </div> <!-- panel-body -->
+        </div> <!-- panel-collapse -->
+    </div> <!-- panel panel-default -->
+
+{% endmacro %}
+
 {% macro patientListAction( patient, patientListId ) %}
 
     <div class="btn-group">

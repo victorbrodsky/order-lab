@@ -25,6 +25,7 @@ namespace Oleg\OrderformBundle\Controller;
 use Oleg\OrderformBundle\Entity\AmendmentReasonList;
 use Oleg\OrderformBundle\Entity\CalllogAttachmentTypeList;
 use Oleg\OrderformBundle\Entity\CalllogEntryTagsList;
+use Oleg\OrderformBundle\Entity\CalllogTaskTypeList;
 use Oleg\OrderformBundle\Entity\CourseGroupType;
 use Oleg\OrderformBundle\Entity\DiseaseOriginList;
 use Oleg\OrderformBundle\Entity\DiseaseTypeList;
@@ -215,6 +216,7 @@ class ScanAdminController extends AdminController
         $count_generateMessageStatus = $this->generateMessageStatus();
         $count_generateCalllogEntryTagsList = $this->generateCalllogEntryTagsList();
         $count_generateCalllogAttachmentTypeList = $this->generateCalllogAttachmentTypeList();
+        $count_generateCalllogTaskTypeList = $this->generateCalllogTaskTypeList();
 
         $msg =
             'Generated Tables: '.
@@ -254,6 +256,7 @@ class ScanAdminController extends AdminController
             'MessageStatus='.$count_generateMessageStatus.', '.
             'CalllogEntryTagsList='.$count_generateCalllogEntryTagsList.', '.
             'CalllogAttachmentTypeList='.$count_generateCalllogAttachmentTypeList.', '.
+            'CalllogTaskTypeList='.$count_generateCalllogTaskTypeList.', '.
 
             ' (Note: -1 means that this table is already exists)';
 
@@ -2187,6 +2190,41 @@ class ScanAdminController extends AdminController
             }
 
             $entity = new CalllogAttachmentTypeList();
+            $this->setDefaultList($entity,$count,$username,$name);
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+
+    }
+
+    public function generateCalllogTaskTypeList() {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $elements = array(
+            "Contact Referring Provider",
+            "Order a medication",
+            "Order blood products",
+            "Check lab results",
+        );
+
+        $username = $this->get('security.token_storage')->getToken()->getUser();
+
+        $count = 10;
+        foreach( $elements as $name ) {
+
+            $entity = $em->getRepository('OlegOrderformBundle:CalllogTaskTypeList')->findOneByName($name);
+            if( $entity ) {
+                continue;
+            }
+
+            $entity = new CalllogTaskTypeList();
             $this->setDefaultList($entity,$count,$username,$name);
 
             $em->persist($entity);

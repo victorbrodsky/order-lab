@@ -225,6 +225,7 @@
                 {% if requestTypeAbbreviation != 'carryover' %}
                     <td>
                         {% if entity.firstDayBackInOffice %}
+                            {#The php.ini timezone should be set to UTC: date.timezone="UTC"#}
                             {{ entity.firstDayBackInOffice|date('m/d/Y','UTC') }}
                         {% endif %}
                     </td>

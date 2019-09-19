@@ -292,12 +292,15 @@ Note: If you choose to use MySQL database on Linux instead of Postgres, you will
 		;extension=php_intl.dll
 		;extension=php_gd2.dll
 		;extension=php_fileinfo.dll
+		
+	d) Set UTC as a default timezone:
+		date.timezone="UTC"
 
-	d) Temporarily modify the value of the memory_limit in php.ini by editing the existing line or add the following line to the php.ini to enable the later "composer update" command in step 4c to complete successfully. You can comment this line out later by specifying "memory_limit = 2048M" and restarting the Apache web server.
+	e) Temporarily modify the value of the memory_limit in php.ini by editing the existing line or add the following line to the php.ini to enable the later "composer update" command in step 4c to complete successfully. You can comment this line out later by specifying "memory_limit = 2048M" and restarting the Apache web server.
 
 		memory_limit = -1
 
-	e) If an option other than AMPPS is being used, the following configuration step may be necessary. If AMPPS is being used, skip this step.
+	f) If an option other than AMPPS is being used, the following configuration step may be necessary. If AMPPS is being used, skip this step.
 
 	The pdo extension may need to be enabled. For PHP version 5.6 "php_pdo_sqlsrv_56_ts.dll" and "php_sqlsrv_56_ts.dll" files should be placed in PHP/ext folder, and the following lines added to php.ini:
 
@@ -320,7 +323,7 @@ Note: If you choose to use MySQL database on Linux instead of Postgres, you will
 
 			zend_extension="PATH-TO-WEB-SERVER\WebServer\PHP\Ext\php_opcache.dll"
 
-	f) Make sure that Apache can find and load icu*.dll files from the PHP base folder. One possible solution is to copy these files to Apache's "bin" folder:
+	g) Make sure that Apache can find and load icu*.dll files from the PHP base folder. One possible solution is to copy these files to Apache's "bin" folder:
 
 			 * icudt49.dll
 			 * icuin49.dll
@@ -330,7 +333,7 @@ Note: If you choose to use MySQL database on Linux instead of Postgres, you will
 			 * icutu49.dll
 			 * icuuc49.dll
 
-	g) Set up an alias on the server directing Apache to the order-lab-master files. In the AMPPS tray menu, click the globe icon at the top of the window to open [http://localhost/AMPPS/](http://localhost/AMPPS/) in the web browser (recent versions of Firefox or Chrome are preferred). From this [AMPPS Home page](http://localhost/AMPPS/), various server settings can be configured. Open "Alias Manager", click "Add New", enter "order" under "Alias Name" and "C:/ORDER_LOCATION/order-lab-master/Scanorders2/web" (or "C:/ORDER_LOCATION/order-lab/Scanorders2/web" if you cloned using git) under "Path" (using backslashes in the file path, rather than forward slashes). Click "Create Alias". Now create a second alias with the name "ORDER" and the same path.
+	h) Set up an alias on the server directing Apache to the order-lab-master files. In the AMPPS tray menu, click the globe icon at the top of the window to open [http://localhost/AMPPS/](http://localhost/AMPPS/) in the web browser (recent versions of Firefox or Chrome are preferred). From this [AMPPS Home page](http://localhost/AMPPS/), various server settings can be configured. Open "Alias Manager", click "Add New", enter "order" under "Alias Name" and "C:/ORDER_LOCATION/order-lab-master/Scanorders2/web" (or "C:/ORDER_LOCATION/order-lab/Scanorders2/web" if you cloned using git) under "Path" (using backslashes in the file path, rather than forward slashes). Click "Create Alias". Now create a second alias with the name "ORDER" and the same path.
 
 	If you are not using AMPPS, different Apache-PHP-MySQL stacks may require modifying the httpd.conf file directly by setting the alias to the order-lab www folder as follows:
 
@@ -365,9 +368,9 @@ Note: If you choose to use MySQL database on Linux instead of Postgres, you will
 			</VirtualHost>
 		
 		
-	h) Restart the apache server and make sure Apache and PHP are running.	
+	i) Restart the apache server and make sure Apache and PHP are running.	
 
-	i) Create the database and the database user. On the [AMPPS Home page](http://localhost/AMPPS/), open "Add Database". Enter the name "ScanOrder" for the database. Click "Create". Open the "Databases" tab. Click "Check Privileges" to the right of the newly created "ScanOrder" database. Click "Add user". Enter "symfony2" as the "User Name". Change the "Host" to "Local". Enter "symfony2" (for example) as the password, and confirm the password. Ensure the option "Grant all privileges on database "Scanorder"" is checked. Check the box for "Global Privileges" "Check All". Click "Go" at the bottom of the page to create the database user.
+	j) Create the database and the database user. On the [AMPPS Home page](http://localhost/AMPPS/), open "Add Database". Enter the name "ScanOrder" for the database. Click "Create". Open the "Databases" tab. Click "Check Privileges" to the right of the newly created "ScanOrder" database. Click "Add user". Enter "symfony2" as the "User Name". Change the "Host" to "Local". Enter "symfony2" (for example) as the password, and confirm the password. Ensure the option "Grant all privileges on database "Scanorder"" is checked. Check the box for "Global Privileges" "Check All". Click "Go" at the bottom of the page to create the database user.
 	
 3. Download [Composer](https://getcomposer.org/download/) and [install](https://getcomposer.org/doc/00-intro.md). Run the installer (tested with version 1.4.1). When prompted to "Choose the command-line PHP you want to use", browse to the file location "C:\Program Files (x86)\AMPPS\php\php.exe". For other options, choose the default configuration.
 
