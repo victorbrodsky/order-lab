@@ -1247,6 +1247,12 @@ class CallEntryController extends Controller
 
         $message = $this->createCalllogEntryMessage($user,$permittedInstitutions,$system); //save
 
+        // Create an ArrayCollection of the current Task objects in the database
+        $originalTasks = new ArrayCollection();
+        foreach($message->getCalllogEntryMessage()->getCalllogTasks() as $task) {
+            $originalTasks->add($task);
+        }
+
         $showPreviousEncounters = true;
         $form = $this->createCalllogEntryForm($message,$mrntype,$mrn,$cycle,false,$showPreviousEncounters); ///entry/save
 
@@ -1351,6 +1357,20 @@ class CallEntryController extends Controller
                         $patientInfoDummyEncounter = $encounter;
                     }
                 //}
+            }
+
+            //process Task sections
+            // remove the relationship between the CalllogEntryMessage and the Task
+            foreach($originalTasks as $task) {
+                if( false === $message->getCalllogEntryMessage()->getCalllogTasks()->contains($task) ) {
+                    // remove the Task from the Tag
+                    $message->getCalllogEntryMessage()->getCalllogTasks()->removeElement($task);
+                    // if it was a many-to-one relationship, remove the relationship like this
+                    $task->setCalllogEntryMessage(null);
+                    $em->persist($task);
+                    // if you wanted to delete the Tag entirely, you can also do that
+                    $em->remove($task);
+                }
             }
 
             //process Attached Documents (here this function works, but entityId is NULL - still it's OK)

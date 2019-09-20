@@ -434,6 +434,7 @@ class CalllogEntryMessage extends OrderBase {
     public function addCalllogTask($item)
     {
         if( $item && !$this->calllogTasks->contains($item) ) {
+            $item->setCalllogEntryMessage($this);
             $this->calllogTasks->add($item);
         }
         return $this;

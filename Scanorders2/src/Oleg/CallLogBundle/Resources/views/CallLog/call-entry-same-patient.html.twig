@@ -54,6 +54,8 @@
     <input type="hidden" id="readonlyPatient" value="{{ readonlyPatient }}" />
     <input type="hidden" id="readonlyEncounter" value="{{ readonlyEncounter }}" />
 
+    {{ calllogmacros.taskPrototype(form) }}
+
     <div id="calllog-patient-list">
 
     {% set holderId = "patient-holder-1" %}

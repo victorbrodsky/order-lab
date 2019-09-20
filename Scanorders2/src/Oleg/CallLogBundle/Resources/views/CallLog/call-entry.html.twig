@@ -58,6 +58,7 @@
     <input type="hidden" id="formnodetrigger" value="{{ formnodetrigger }}" />
     <input type="hidden" id="formnodeTopHolderId" value="{{ formnodeTopHolderId }}" />
 
+    {{ calllogmacros.taskPrototype(form) }}
 
     <div id="calllog-patient-list">
 
@@ -65,14 +66,15 @@
 
     {{ form_start(form,{'attr': {'id': 'calllog-new-entry-form'}, 'method': 'POST', 'action': path('calllog_save_entry')}) }}
 
-        {% set sitename = calllog_sitename %}
-        <div id="form-prototype-data"
-             data-userurllink = "{{ usermacros.userUrlLink()|e }}"
-             data-uploadurl = "{{ oneup_uploader_endpoint('calllog_gallery') }}"
-             data-userid = "{{ app.user.id }}"
-
-             data-prototype-calllog-tasks = "{{ calllogmacros.taskForm(form.calllogEntryMessage.calllogTasks,cycle,'calllog-tasks','prototype',sitename,1)|e }}"
-        ></div>
+        {#prototype must be defined after form tag#}
+        {#{{ calllogmacros.taskPrototype(form) }}#}
+        {#{% set sitename = calllog_sitename %}#}
+        {#<div id="form-prototype-data"#}
+             {#data-userurllink = "{{ usermacros.userUrlLink()|e }}"#}
+             {#data-uploadurl = "{{ oneup_uploader_endpoint('calllog_gallery') }}"#}
+             {#data-userid = "{{ app.user.id }}"#}
+             {#data-prototype-calllog-tasks = "{{ calllogmacros.taskForm(form.calllogEntryMessage.calllogTasks,cycle,'calllog-tasks','prototype',sitename,1)|e }}"#}
+        {#></div>#}
 
         <input type="hidden" id="messageStatusJs" name="messageStatusJs" value="" />
 

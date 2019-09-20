@@ -95,12 +95,12 @@ function initBaseAdd(newForm,callback) {
 //get input field only
 function getBaseTitleForm( elclass ) {
 
-    console.log('elclass='+elclass);
+    //console.log('elclass='+elclass);
 
     var dataholder = "#form-prototype-data"; //fixed data holder
 
     var holderClass = elclass+'-holder';
-    console.log('holderClass='+holderClass);
+    //console.log('holderClass='+holderClass);
 
     var elementsHolder = $('.'+holderClass);
 
@@ -109,11 +109,11 @@ function getBaseTitleForm( elclass ) {
 
     var identLowerCase = elclass.toLowerCase();
 
-    console.log("identLowerCase="+identLowerCase);
+    //console.log("identLowerCase="+identLowerCase);
 
-    var collectionHolder =  $(dataholder);
+    var collectionHolder = $(dataholder);
     var prototype = collectionHolder.data('prototype-'+identLowerCase);
-    console.log("prototype="+prototype);
+    //console.log("prototype="+prototype);
 
     //grant __documentContainers__ => 0
     prototype = prototype.replace("__documentContainers__", "0");
