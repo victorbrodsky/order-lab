@@ -236,7 +236,7 @@ class CallEntrySamePatientController extends CallEntryController
             $encounter2 = $calllogUtil->addDefaultLocation($encounter2,$user,$system);
         }//!$encounter2
 
-        $message = $this->createCalllogEntryMessage($user,$permittedInstitutions,$system,$messageTypeId);
+        $message = $this->createCalllogEntryMessage($user,$permittedInstitutions,$system,$messageTypeId); //new
 
         //set patient list
         $patientList = $calllogUtil->getDefaultPatientList();
@@ -247,6 +247,10 @@ class CallEntrySamePatientController extends CallEntryController
         $message->addPatient($patient);
         //add encounter
         $message->addEncounter($encounter2);
+
+        //add calllog task
+        $task = new CalllogTask($user);
+        $message->getCalllogEntryMessage()->addCalllogTask($task);
         ///////////// EOF Message //////////////
 
         $form = $this->createCalllogEntryForm($message,$mrntype,$mrn,$cycle,$readonlyEncounter); //entry/new

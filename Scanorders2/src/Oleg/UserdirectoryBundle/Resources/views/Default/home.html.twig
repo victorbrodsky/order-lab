@@ -32,6 +32,8 @@
 
         {% if all is defined and all %}
             {% set checked = "checked" %}
+        {% else %}
+            {% set checked = "" %}
         {% endif %}
 
         <form class="navbar-form user-typeahead-search-form" role="search" id="user-typeahead-search-form" action="{{ path(employees_sitename~'_home') }}" method="get">

@@ -963,8 +963,22 @@
 
 {% endmacro %}
 
+{#message - form for cycle new/edit and object for view#}
 {% macro calllogTaskList( message, cycle ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "OlegCallLogBundle::Default/calllogmacros.html.twig" as calllogmacros %}
+
+    {% set sitename = calllog_sitename %}
+
+    {#message is form here#}
+    {#<div id="form-prototype-data"#}
+         {#data-userurllink = "{{ usermacros.userUrlLink()|e }}"#}
+         {#data-uploadurl = "{{ oneup_uploader_endpoint('calllog_gallery') }}"#}
+         {#data-userid = "{{ app.user.id }}"#}
+
+         {#data-prototype-calllog-tasks = "{{ calllogmacros.taskForm(message.calllogEntryMessage.calllogTasks,cycle,'calllog-tasks','prototype',sitename,1)|e }}"#}
+    {#></div>#}
 
     <div class="panel panel-default">
         <div class="panel-heading">
@@ -977,15 +991,58 @@
         <div id="calllog-tasklist" class="panel-collapse collapse in">
             <div class="panel-body">
 
-                {% for calllogTask in message.messageCategory.calllogTasks %}
-                    {{ formmacros.field(calllogTask.status) }}
-                    {{ formmacros.field(calllogTask.calllogTaskTypeList) }}
-                    {{ formmacros.field(calllogTask.description) }}
-                {% endfor %}
+                <div class="calllog-tasks-holder">
+                    {#message.messageCategory.calllogTasks={{ message.calllogEntryMessage.calllogTasks|length }}#}
+                    {% for calllogTask in message.calllogEntryMessage.calllogTasks %}
+                        {#{{ formmacros.checkbox(calllogTask.status) }}#}
+                        {#{{ formmacros.field(calllogTask.calllogTaskTypeList) }}#}
+                        {#{{ formmacros.field(calllogTask.description) }}#}
+
+                        {{ calllogmacros.taskForm(calllogTask, cycle, 'calllog-tasks', 'noprototype', sitename, 1) }}
+                    {% endfor %}
+
+                    {% if cycle != "show" %}
+                        {{ usermacros.addNewObjectBtn(cycle,'calllog-tasks','Add Task',null,null) }}
+                    {% endif %}
+                </div>
 
             </div> <!-- panel-body -->
         </div> <!-- panel-collapse -->
     </div> <!-- panel panel-default -->
+
+{% endmacro %}
+{% macro taskForm( calllogTask, cycle, classname, prototype, sitename, showAddDeleteBtn ) %}
+
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+    {% if showAddDeleteBtn is not defined %}
+        {% set showAddDeleteBtn = 0 %}
+    {% endif %}
+
+    {% if prototype == "prototype" %}
+        {% set formCalllogTask = calllogTask.vars.prototype %}
+    {% else %}
+        {% set formCalllogTask = calllogTask %}
+    {% endif %}
+
+    {% set wellclass = "alert-default well well-sm" %}
+
+    <div class="user-collection-holder alert {{ classname }} {{ wellclass }}">
+        {% if cycle != "show" and showAddDeleteBtn %}
+            <div class="text-right">
+                <button type="button" class="btn btn-default btn-sm" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+            </div>
+            <br>
+        {% else %}
+        {% endif %}
+
+        {{ form_widget(formCalllogTask.id) }}
+
+        {{ formmacros.checkbox(formCalllogTask.status) }}
+        {{ formmacros.field(formCalllogTask.calllogTaskTypeList) }}
+        {{ formmacros.field(formCalllogTask.description) }}
+
+    </div>
 
 {% endmacro %}
 

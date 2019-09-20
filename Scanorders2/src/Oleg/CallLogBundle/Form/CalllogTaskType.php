@@ -19,6 +19,7 @@ namespace Oleg\CallLogBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -37,6 +38,8 @@ class CalllogTaskType extends AbstractType
     {
 
         $this->formConstructor($options['form_custom_value']);
+
+        $builder->add('id', HiddenType::class);
 
         $builder->add('description', TextType::class, array(
             'label' => "Description:",
@@ -59,7 +62,7 @@ class CalllogTaskType extends AbstractType
         $builder->add('calllogTaskTypeList', null, array(
             'label' => "Task Type:",
             'required' => false,
-            'attr' => array('class' => 'form-control combobox'),
+            'attr' => array('class' => 'combobox'),
         ));
 
 

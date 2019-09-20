@@ -159,7 +159,7 @@ class CalllogEntryMessageType extends AbstractType
             },
         ));
 
-        if(0) {
+        if(1) {
             $builder->add('calllogTasks', CollectionType::class, array(
                 'entry_type' => CalllogTaskType::class,
                 'label' => 'Task(s):',
@@ -168,7 +168,7 @@ class CalllogEntryMessageType extends AbstractType
                 'required' => false,
                 'by_reference' => false,
                 'prototype' => true,
-                'prototype_name' => '__calllogtasksid__',
+                'prototype_name' => '__tasks__',
             ));
         }
 

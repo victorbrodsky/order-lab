@@ -307,6 +307,10 @@
                                 {{ calllogmacros.calllogEntryDocuments(message,cycle) }}
                             {% endif %}
 
+                            {% if message.calllogEntryMessage and message.calllogEntryMessage.calllogTasks|length > 0 %}
+                                {{ calllogmacros.calllogTaskList(form,cycle) }}
+                            {% endif %}
+
                             {% if message.calllogEntryMessage and message.calllogEntryMessage.entryTags %}
                                 {{ calllogmacros.calllogEntryTags(form,cycle) }}
                             {% endif %}
@@ -353,6 +357,10 @@
 
             {% if message.calllogEntryMessage and message.calllogEntryMessage.documents|length > 0 %}
                 {{ calllogmacros.calllogEntryDocuments(message,cycle) }}
+            {% endif %}
+
+            {% if message.calllogEntryMessage and message.calllogEntryMessage.calllogTasks|length > 0 %}
+                {{ calllogmacros.calllogTaskList(message,cycle) }}
             {% endif %}
 
             {{ calllog_util_form.getEntryTagsHtml(message,status)|raw }}

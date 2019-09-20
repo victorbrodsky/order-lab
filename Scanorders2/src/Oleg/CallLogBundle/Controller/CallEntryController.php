@@ -29,6 +29,7 @@ use Oleg\CallLogBundle\Form\CalllogFilterType;
 use Oleg\CallLogBundle\Form\CalllogMessageType;
 use Oleg\CallLogBundle\Form\CalllogNavbarFilterType;
 use Oleg\OrderformBundle\Entity\CalllogEntryMessage;
+use Oleg\OrderformBundle\Entity\CalllogTask;
 use Oleg\OrderformBundle\Entity\Encounter;
 use Oleg\OrderformBundle\Entity\EncounterAttendingPhysician;
 use Oleg\OrderformBundle\Entity\EncounterPatfirstname;
@@ -1131,10 +1132,24 @@ class CallEntryController extends Controller
         $message->addPatient($patient);
         //add encounter
         $message->addEncounter($encounter2);
+
+        //add calllog task
+        $task = new CalllogTask($user);
+        $message->getCalllogEntryMessage()->addCalllogTask($task);
         ///////////// EOF Message //////////////
+
+        //testing
+//        $calllogEntryMessage = $message->getCalllogEntryMessage();
+//        $tasks = $calllogEntryMessage->getCalllogTasks();
+//        echo "tasks count=".count($tasks)."<br>";
 
         $showPreviousEncounters = true;
         $form = $this->createCalllogEntryForm($message,$mrntype,$mrn,$cycle,$readonlyEncounter,$showPreviousEncounters); //entry/new
+
+        //testing
+//        $calllogEntryMessage = $message->getCalllogEntryMessage();
+//        $tasks = $calllogEntryMessage->getCalllogTasks();
+//        echo "tasks count=".count($tasks)."<br>";
 
         //$encounterid = $calllogUtil->getNextEncounterGeneratedId();
 
@@ -1592,7 +1607,7 @@ class CallEntryController extends Controller
                     //$eventStr = $eventStr . " submitted by " . $user;
 
                     if( !$testing ) {
-                        $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $eventStr, $user, $message, $request, $eventType);
+                        $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $eventStr, $user, $message, $request, $eventType); //Save Call Log Entry
                     }
                 }
 
@@ -1780,6 +1795,10 @@ class CallEntryController extends Controller
             $calllogEntryMessage = new CalllogEntryMessage();
             $message->setCalllogEntryMessage($calllogEntryMessage);
         }
+
+//        //add calllog task
+//        $task = new CalllogTask($user);
+//        $calllogEntryMessage->addCalllogTask($task);
 
         //add patient
         //$message->addPatient($patient);
@@ -2456,7 +2475,7 @@ class CallEntryController extends Controller
                 $eventType = "Patient Searched";
                 $event = "Patient searched by ".$searchBy;
                 $event = $event . "; found ".count($patients)." patient(s).";
-                $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'),$event,$user,$patientEntities,$request,$eventType);
+                $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'),$event,$user,$patientEntities,$request,$eventType); //searchPatient
             }
 
         } else {
@@ -2860,7 +2879,7 @@ class CallEntryController extends Controller
 
         //log patient creation action
         $userSecUtil = $this->container->get('user_security_utility');
-        $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $event, $user, $patient, $request, $eventType);
+        $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $event, $user, $patient, $request, $eventType); //Create a new Patient
 
         $response->setContent(json_encode($res));
         return $response;
@@ -3316,7 +3335,7 @@ class CallEntryController extends Controller
         //An entry should be added to the Event Log, Titled "Call Log Book data exported".
         $eventType = "Call Log Book data exported";
         $eventDesc = "Call Log Book data exported on ".date('m/d/Y H:i')." by ".$user.". Exported entries count is ".count($entries);
-        $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $eventDesc, $user, $entries, $request, $eventType);
+        $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $eventDesc, $user, $entries, $request, $eventType); //exportCsvAction
 
         //filename: The title of the file should be "Call-Log-Book-Entries-exported-on-[Timestamp]-by-[Logged-In-User-FirstName-LastName-(cwid)].csv .
         $userName = $user."";//->getUsernameOptimal();
