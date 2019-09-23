@@ -66,6 +66,8 @@
 
                 {{ formmacros.checkbox(form.useCache) }}
 
+                {{ formmacros.checkbox(form.enableDocumentUpload) }}
+
                 {% if cycle == "show" %}
                     <p>
                         <a class="btn btn-primary" href="{{ path('calllog_siteparameters_edit_specific_site_parameters') }}">Edit</a>

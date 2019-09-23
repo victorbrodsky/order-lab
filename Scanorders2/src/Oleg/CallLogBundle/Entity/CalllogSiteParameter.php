@@ -119,10 +119,17 @@ class CalllogSiteParameter
      */
     private $institution;
 
+    /**
+     * enable/disable document upload section
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $enableDocumentUpload;
+
 
 
     public function __construct() {
-
+        $this->setEnableDocumentUpload(true);
     }
 
 
@@ -335,7 +342,21 @@ class CalllogSiteParameter
         $this->institution = $institution;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getEnableDocumentUpload()
+    {
+        return $this->enableDocumentUpload;
+    }
 
+    /**
+     * @param mixed $enableDocumentUpload
+     */
+    public function setEnableDocumentUpload($enableDocumentUpload)
+    {
+        $this->enableDocumentUpload = $enableDocumentUpload;
+    }
 
 
 }

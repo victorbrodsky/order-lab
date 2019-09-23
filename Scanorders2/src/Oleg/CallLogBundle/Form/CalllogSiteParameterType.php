@@ -182,6 +182,12 @@ class CalllogSiteParameterType extends AbstractType
             'attr' => array('class' => 'form-control'),
         ));
 
+        $builder->add('enableDocumentUpload',CheckboxType::class, array(
+            'label' => 'Enable Document Upload Section:',
+            'required' => false,
+            'attr' => array('class' => 'form-control'),
+        ));
+
         $builder->add('county', null, array(
             'label' => 'County:',
             'attr' => array('class' => 'form-control geo-field-county')

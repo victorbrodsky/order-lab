@@ -1750,6 +1750,8 @@ class CallEntryController extends Controller
             //$previousEncounters = array("Encounter 1"=>"Encounter 1", "Encounter 2"=>"Encounter 2", "Encounter 3"=>"Encounter 3");
         }
 
+        $enableDocumentUpload = $userSecUtil->getSiteSettingParameter('enableDocumentUpload',$sitename);
+
         $params = array(
             'cycle' => $cycle,  //'new',
             'user' => $user,
@@ -1768,7 +1770,8 @@ class CallEntryController extends Controller
             'previousEncounters' => $previousEncounters,
             'attendingPhysicians-readonly' => false,
             'referringProviders-readonly' => false,
-            'readonlyLocationType' => true //lock the "Location Type" field (with the default "Encounter Location" value in it)
+            'readonlyLocationType' => true, //lock the "Location Type" field (with the default "Encounter Location" value in it)
+            'enableDocumentUpload' => $enableDocumentUpload
         );
 
         $form = $this->createForm(

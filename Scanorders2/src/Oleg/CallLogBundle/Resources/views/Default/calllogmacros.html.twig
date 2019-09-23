@@ -887,77 +887,81 @@
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
-    {% if cycle == "new" or cycle == "edit" or cycle == "amend" %}
-        {#<div id="form-prototype-data"#}
-             {#data-userurllink = "{{ usermacros.userUrlLink()|e }}"#}
-             {#data-uploadurl = "{{ oneup_uploader_endpoint('calllog_gallery') }}"#}
-             {#data-userid = "{{ app.user.id }}"#}
-        {#></div>#}
+    {% if message.calllogEntryMessage.documents is defined %}
 
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <a data-toggle="collapse" href="#calllog-documents">
-                        Document(s)
-                    </a>
-                </h4>
-            </div>
-            <div id="calllog-documents" class="panel-collapse collapse in">
-                <div class="panel-body">
+        {% if cycle == "new" or cycle == "edit" or cycle == "amend" %}
+            {#<div id="form-prototype-data"#}
+                 {#data-userurllink = "{{ usermacros.userUrlLink()|e }}"#}
+                 {#data-uploadurl = "{{ oneup_uploader_endpoint('calllog_gallery') }}"#}
+                 {#data-userid = "{{ app.user.id }}"#}
+            {#></div>#}
 
-                    {{ formmacros.field(message.calllogEntryMessage.calllogAttachmentType) }}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" href="#calllog-documents">
+                            Document(s)
+                        </a>
+                    </h4>
+                </div>
+                <div id="calllog-documents" class="panel-collapse collapse in">
+                    <div class="panel-body">
 
-                    <p>
-                    <div class="well form-element-holder user-documents">
-                        <label class="col-xs-12 control-label">Document(s)</label>
-                        <div class="row withpaddingtop">
-                            <div class="col-xs-12">
-                                {% if message.calllogEntryMessage.documents is defined %}
-                                    {# Attachment Type #}
-                                    {#{{ formmacros.field(message.calllogEntryMessage.calllogAttachmentType) }}#}
+                        {{ formmacros.field(message.calllogEntryMessage.calllogAttachmentType) }}
 
-                                    {{ usermacros.documentsContainer(null,message.calllogEntryMessage.documents,cycle,'noprototype',8,'default','Call Log Entry Document') }}
-                                {% endif %}
+                        <p>
+                        <div class="well form-element-holder user-documents">
+                            <label class="col-xs-12 control-label">Document(s)</label>
+                            <div class="row withpaddingtop">
+                                <div class="col-xs-12">
+                                    {% if message.calllogEntryMessage.documents is defined %}
+                                        {# Attachment Type #}
+                                        {#{{ formmacros.field(message.calllogEntryMessage.calllogAttachmentType) }}#}
+
+                                        {{ usermacros.documentsContainer(null,message.calllogEntryMessage.documents,cycle,'noprototype',8,'default','Call Log Entry Document') }}
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    </p>
+                        </p>
 
-                </div> <!-- panel-body -->
-            </div> <!-- panel-collapse -->
-        </div> <!-- panel panel-default -->
-    {% else %}
-        {#show document cycle = {{ cycle }}<br>#}
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <a data-toggle="collapse" href="#calllog-documents">
-                        Document(s)
-                    </a>
-                </h4>
-            </div>
-            <div id="calllog-documents" class="panel-collapse collapse in">
-                <div class="panel-body">
-                    {% for documentObj in message.calllogEntryMessage.documents %}
-                        Attachment {{ loop.index }}: {{ documentObj.getTitle() }}
-                        {#{{ documentObj.getFullServerPath() }}#}
-                        {% if documentObj.id %}
-                            {% set sitename = calllog_sitename %}
-                            <a
-                               target="_blank"
-                               href="{{ path(sitename~'_file_view', { 'id': documentObj.id }) }}">
-                                  {{ documentObj.originalname }} (uploaded {{ documentObj.createdate|date('m/d/Y H:i:s') }})
-                            </a>
-                        {% endif %}
-                        {% set calllogAttachmentType = message.calllogEntryMessage.getCalllogAttachmentType() %}
-                        {% if calllogAttachmentType %}
-                            &nbsp;({{ calllogAttachmentType }})
-                        {% endif %}
-                    {% endfor %}
+                    </div> <!-- panel-body -->
+                </div> <!-- panel-collapse -->
+            </div> <!-- panel panel-default -->
+        {% else %}
+            {#show document cycle = {{ cycle }}<br>#}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" href="#calllog-documents">
+                            Document(s)
+                        </a>
+                    </h4>
+                </div>
+                <div id="calllog-documents" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        {% for documentObj in message.calllogEntryMessage.documents %}
+                            Attachment {{ loop.index }}: {{ documentObj.getTitle() }}
+                            {#{{ documentObj.getFullServerPath() }}#}
+                            {% if documentObj.id %}
+                                {% set sitename = calllog_sitename %}
+                                <a
+                                   target="_blank"
+                                   href="{{ path(sitename~'_file_view', { 'id': documentObj.id }) }}">
+                                      {{ documentObj.originalname }} (uploaded {{ documentObj.createdate|date('m/d/Y H:i:s') }})
+                                </a>
+                            {% endif %}
+                            {% set calllogAttachmentType = message.calllogEntryMessage.getCalllogAttachmentType() %}
+                            {% if calllogAttachmentType %}
+                                &nbsp;({{ calllogAttachmentType }})
+                            {% endif %}
+                        {% endfor %}
 
-                </div> <!-- panel-body -->
-            </div> <!-- panel-collapse -->
-        </div> <!-- panel panel-default -->
+                    </div> <!-- panel-body -->
+                </div> <!-- panel-collapse -->
+            </div> <!-- panel panel-default -->
+
+        {% endif %}
 
     {% endif %}
 

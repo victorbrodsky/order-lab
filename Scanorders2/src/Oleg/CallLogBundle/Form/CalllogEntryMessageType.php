@@ -120,19 +120,20 @@ class CalllogEntryMessageType extends AbstractType
             'attr' => array('class' => 'form-control digit-mask-seven'),
         ));
 
-        $builder->add('documents', CollectionType::class, array(
-            'entry_type' => DocumentType::class,
-            'label' => 'Uploaded Document(s):',
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__documentsid__',
-        ));
+        if( $this->params['enableDocumentUpload'] ) {
+            $builder->add('documents', CollectionType::class, array(
+                'entry_type' => DocumentType::class,
+                'label' => 'Uploaded Document(s):',
+                'allow_add' => true,
+                'allow_delete' => true,
+                'required' => false,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__documentsid__',
+            ));
 
-        //TODO: use Document's "type" list value??? use unmapped "calllogAttachmentType" from document's type (problem: one dropzone might contains multiple documents)?
-        //Use a specific CalllogMessage' object calllogAttachmentType for each document's dropzone
+            //TODO: use Document's "type" list value??? use unmapped "calllogAttachmentType" from document's type (problem: one dropzone might contains multiple documents)?
+            //Use a specific CalllogMessage' object calllogAttachmentType for each document's dropzone
 //        $builder->add('calllogAttachmentType', ChoiceType::class, array(
 //            'label' => 'Attachment Type:',
 //            'required' => false,
@@ -141,23 +142,24 @@ class CalllogEntryMessageType extends AbstractType
 //            //'choice_label' => 'obtainEncounterNumber', //'obtainEncounterNumberOnlyAndDate', //'obtainEncounterNumber',
 //            'attr' => array('class' => 'combobox', 'placeholder' => "Attachment Type"),
 //        ));
-        $builder->add( 'calllogAttachmentType', EntityType::class, array(
-            'class' => 'OlegOrderformBundle:CalllogAttachmentTypeList',
-            //'choice_label' => 'name',
-            'label'=>'Attachment Type:',
-            'required'=> false,
-            'multiple' => false,
-            'attr' => array('class' => 'combobox combobox-width'),
-            'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->where("list.type = :typedef OR list.type = :typeadd")
-                    ->orderBy("list.orderinlist","ASC")
-                    ->setParameters( array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ));
-            },
-        ));
+            $builder->add('calllogAttachmentType', EntityType::class, array(
+                'class' => 'OlegOrderformBundle:CalllogAttachmentTypeList',
+                //'choice_label' => 'name',
+                'label' => 'Attachment Type:',
+                'required' => false,
+                'multiple' => false,
+                'attr' => array('class' => 'combobox combobox-width'),
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.orderinlist", "ASC")
+                        ->setParameters(array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
+            ));
+        }
 
         if(1) {
             $builder->add('calllogTasks', CollectionType::class, array(
