@@ -249,8 +249,8 @@ class CallEntrySamePatientController extends CallEntryController
         $message->addEncounter($encounter2);
 
         //add calllog task
-        $task = new CalllogTask($user);
-        $message->getCalllogEntryMessage()->addCalllogTask($task);
+        //$task = new CalllogTask($user);
+        //$message->getCalllogEntryMessage()->addCalllogTask($task);
         ///////////// EOF Message //////////////
 
         $form = $this->createCalllogEntryForm($message,$mrntype,$mrn,$cycle,$readonlyEncounter); //entry/new
@@ -345,6 +345,12 @@ class CallEntrySamePatientController extends CallEntryController
 
         $message = $this->createCalllogEntryMessage($user,$permittedInstitutions,$system);
 
+        // Create an ArrayCollection of the current Task objects in the database
+        $originalTasks = new ArrayCollection();
+        foreach($message->getCalllogEntryMessage()->getCalllogTasks() as $task) {
+            $originalTasks->add($task);
+        }
+
         $form = $this->createCalllogEntryForm($message,$mrntype,$mrn,$cycle); ///entry/save
 
         $form->handleRequest($request);
@@ -394,6 +400,9 @@ class CallEntrySamePatientController extends CallEntryController
                     $newEncounter = $encounterDB;
                 }
             }
+
+            //process Task sections
+            $calllogUtil->processCalllogTask($message,$originalTasks);
 
             //process Attached Documents
             $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($message->getCalllogEntryMessage()); //Save Call Log Entry Same Patient

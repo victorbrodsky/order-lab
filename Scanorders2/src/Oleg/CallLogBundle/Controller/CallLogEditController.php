@@ -17,6 +17,7 @@
 
 namespace Oleg\CallLogBundle\Controller;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Oleg\OrderformBundle\Entity\EncounterAttendingPhysician;
 use Oleg\OrderformBundle\Entity\EncounterReferringProvider;
 use Oleg\UserdirectoryBundle\Entity\ModifierInfo;
@@ -484,12 +485,18 @@ class CallLogEditController extends CallEntryController
 
         $message = $this->createCalllogEntryMessage($user,$permittedInstitutions,$system);
 
-        //Testing (Save/Update Call Log Entry): Check and copy attachments
-        $documents = $message->getCalllogEntryMessage()->getDocuments();
-        echo "1documents count=".count($documents)."<br>";
-        foreach ($documents as $document) {
-            echo "1document: ID=".$document->getId()."; Size==".$document->getSizeStr()."; abspath=".$document->getAbsoluteUploadFullPath()."<br>";
+        // Create an ArrayCollection of the current Task objects in the database
+        $originalTasks = new ArrayCollection();
+        foreach($message->getCalllogEntryMessage()->getCalllogTasks() as $task) {
+            $originalTasks->add($task);
         }
+
+//        //Testing (Save/Update Call Log Entry): Check and copy attachments
+//        $documents = $message->getCalllogEntryMessage()->getDocuments();
+//        echo "1documents count=".count($documents)."<br>";
+//        foreach ($documents as $document) {
+//            echo "1document: ID=".$document->getId()."; Size==".$document->getSizeStr()."; abspath=".$document->getAbsoluteUploadFullPath()."<br>";
+//        }
         //exit('111');
 
         $form = $this->createCalllogEntryForm($message,$mrntype,$mrn,$cycleForm);
@@ -598,6 +605,9 @@ class CallLogEditController extends CallEntryController
 //                echo "3document: ID=".$document->getId()."; Size=".$document->getSizeStr()."; abspath=".$document->getAbsoluteUploadFullPath()."<br>";
 //            }
             //exit('333');
+
+            //process Task sections
+            $calllogUtil->processCalllogTask($message,$originalTasks);
 
             //set system source and user's default institution
             if( $newEncounter ) {
