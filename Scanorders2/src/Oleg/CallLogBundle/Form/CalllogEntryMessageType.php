@@ -162,6 +162,9 @@ class CalllogEntryMessageType extends AbstractType
         if(1) {
             $builder->add('calllogTasks', CollectionType::class, array(
                 'entry_type' => CalllogTaskType::class,
+                'entry_options' => array(
+                    'form_custom_value' => $this->params,
+                ),
                 'label' => 'Task(s):',
                 'allow_add' => true,
                 'allow_delete' => true,

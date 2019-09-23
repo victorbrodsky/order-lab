@@ -980,6 +980,7 @@
          {#data-prototype-calllog-tasks = "{{ calllogmacros.taskForm(message.calllogEntryMessage.calllogTasks,cycle,'calllog-tasks','prototype',sitename,1)|e }}"#}
     {#></div>#}
 
+    {#TODO: make a view, when message is an object#}
     <div class="panel panel-default">
         <div class="panel-heading">
             <h4 class="panel-title">
@@ -991,20 +992,37 @@
         <div id="calllog-tasklist" class="panel-collapse collapse in">
             <div class="panel-body">
 
-                <div class="calllog-tasks-holder">
-                    {#message.messageCategory.calllogTasks={{ message.calllogEntryMessage.calllogTasks|length }}#}
-                    {% for calllogTask in message.calllogEntryMessage.calllogTasks %}
-                        {#{{ formmacros.checkbox(calllogTask.status) }}#}
-                        {#{{ formmacros.field(calllogTask.calllogTaskTypeList) }}#}
-                        {#{{ formmacros.field(calllogTask.description) }}#}
+                {% if cycle == "new" or cycle == "edit" or cycle == "amend" %}
 
-                        {{ calllogmacros.taskForm(calllogTask, cycle, 'calllog-tasks', 'noprototype', sitename, 1) }}
+                    <div class="calllog-tasks-holder">
+                        {#message.messageCategory.calllogTasks={{ message.calllogEntryMessage.calllogTasks|length }}#}
+                        {% for calllogTask in message.calllogEntryMessage.calllogTasks %}
+                            {#{{ formmacros.checkbox(calllogTask.status) }}#}
+                            {#{{ formmacros.field(calllogTask.calllogTaskType) }}#}
+                            {#{{ formmacros.field(calllogTask.description) }}#}
+
+                            {{ calllogmacros.taskForm(calllogTask, cycle, 'calllog-tasks', 'noprototype', sitename, 1) }}
+                        {% endfor %}
+
+                        {% if cycle != "show" %}
+                            {{ usermacros.addNewObjectBtn(cycle,'calllog-tasks','Add Task',null,null) }}
+                        {% endif %}
+                    </div>
+
+                {% else %}
+                    {#view/show#}
+                    {#2message.calllogEntryMessage.calllogTasks|length={{ message.getCalllogEntryMessage().getCalllogTasks()|length }}<br>#}
+                    {% for calllogTask in message.getCalllogEntryMessage().getCalllogTasks() %}
+                        <div class="well well-sm">
+                            <p align="center">{{ calllogTask.getTaskInfo() }}</p>
+                            {#{{ formmacros.simplefield("Status:", calllogTask.status, "", "disabled") }}#}
+                            {{ formmacros.simplefield_checkbox( "Status:", calllogTask.status, "", "disabled" ) }}
+                            {{ formmacros.simplefield("Task Type:", calllogTask.calllogTaskType, "", "disabled") }}
+                            {{ formmacros.simplefield("Description:", calllogTask.description, "", "disabled") }}
+
+                        </div>
                     {% endfor %}
-
-                    {% if cycle != "show" %}
-                        {{ usermacros.addNewObjectBtn(cycle,'calllog-tasks','Add Task',null,null) }}
-                    {% endif %}
-                </div>
+                {% endif %}
 
             </div> <!-- panel-body -->
         </div> <!-- panel-collapse -->
@@ -1039,7 +1057,7 @@
         {{ form_widget(formCalllogTask.id) }}
 
         {{ formmacros.checkbox(formCalllogTask.status) }}
-        {{ formmacros.field(formCalllogTask.calllogTaskTypeList) }}
+        {{ formmacros.field(formCalllogTask.calllogTaskType) }}
         {{ formmacros.field(formCalllogTask.description) }}
 
     </div>

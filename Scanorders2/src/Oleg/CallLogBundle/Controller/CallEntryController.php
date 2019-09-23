@@ -1023,6 +1023,10 @@ class CallEntryController extends Controller
         $encounter1->setProvider($user);
         $patient->addEncounter($encounter1); //add new encounter to patient
 
+        //this will create a new patient and encounter
+        //$em->persist($patient);
+        //$em->persist($encounter1);
+
 //        $encounter2 = $em->getRepository('OlegOrderformBundle:Encounter')->findOneEncounterByNumberAndType($encounterTypeId,$encounterNumber);
 //
 //        //check whether patient MRN supplied in the URL corresponds to the supplied encounter number.
@@ -1134,8 +1138,8 @@ class CallEntryController extends Controller
         $message->addEncounter($encounter2);
 
         //add calllog task
-        $task = new CalllogTask($user);
-        $message->getCalllogEntryMessage()->addCalllogTask($task);
+        //$task = new CalllogTask($user);
+        //$message->getCalllogEntryMessage()->addCalllogTask($task);
         ///////////// EOF Message //////////////
 
         //testing
@@ -1306,6 +1310,13 @@ class CallEntryController extends Controller
         //if( $form->isSubmitted() && $form->isValid() ) {
         if( $form->isSubmitted() ) {
 
+            //testing task
+//            $tasks = $message->getCalllogEntryMessage()->getCalllogTasks();
+//            foreach ($tasks as $task) {
+//                echo "Task: created=".$task->getCreatedBy()."<br>";
+//            }
+//            exit('111');
+
             $msg = "No Case found. No action has been performed.";
             $institution = $userSecUtil->getCurrentUserInstitution($user);
 
@@ -1360,18 +1371,20 @@ class CallEntryController extends Controller
             }
 
             //process Task sections
-            // remove the relationship between the CalllogEntryMessage and the Task
-            foreach($originalTasks as $task) {
-                if( false === $message->getCalllogEntryMessage()->getCalllogTasks()->contains($task) ) {
-                    // remove the Task from the Tag
-                    $message->getCalllogEntryMessage()->getCalllogTasks()->removeElement($task);
-                    // if it was a many-to-one relationship, remove the relationship like this
-                    $task->setCalllogEntryMessage(null);
-                    $em->persist($task);
-                    // if you wanted to delete the Tag entirely, you can also do that
-                    $em->remove($task);
-                }
-            }
+//            // remove the relationship between the CalllogEntryMessage and the Task
+//            foreach($originalTasks as $task) {
+//                if( false === $message->getCalllogEntryMessage()->getCalllogTasks()->contains($task) ) {
+//                    // remove the Task from the Tag
+//                    $message->getCalllogEntryMessage()->getCalllogTasks()->removeElement($task);
+//                    // if it was a many-to-one relationship, remove the relationship like this
+//                    $task->setCalllogEntryMessage(null);
+//                    $em->persist($task);
+//                    // if you wanted to delete the Tag entirely, you can also do that
+//                    $em->remove($task);
+//                }
+//            }
+            //process Task sections
+            $calllogUtil->processCalllogTask($message,$originalTasks);
 
             //process Attached Documents (here this function works, but entityId is NULL - still it's OK)
             $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($message->getCalllogEntryMessage()); //Save new entry

@@ -48,9 +48,9 @@ class CalllogTask
      * “Contact Referring Provider”, “Order a medication”, “Order blood products”, “Check lab results”
      *
      * @ORM\ManyToOne(targetEntity="CalllogTaskTypeList")
-     * @ORM\JoinColumn(name="calllogTaskTypeList_id", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="calllogTaskType_id", referencedColumnName="id", nullable=true)
      */
-    private $calllogTaskTypeList;
+    private $calllogTaskType;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -153,17 +153,17 @@ class CalllogTask
     /**
      * @return mixed
      */
-    public function getCalllogTaskTypeList()
+    public function getCalllogTaskType()
     {
-        return $this->calllogTaskTypeList;
+        return $this->calllogTaskType;
     }
 
     /**
-     * @param mixed $calllogTaskTypeList
+     * @param mixed $calllogTaskType
      */
-    public function setCalllogTaskTypeList($calllogTaskTypeList)
+    public function setCalllogTaskType($calllogTaskType)
     {
-        $this->calllogTaskTypeList = $calllogTaskTypeList;
+        $this->calllogTaskType = $calllogTaskType;
     }
 
     /**
@@ -310,4 +310,18 @@ class CalllogTask
         $this->statusUpdatedBy = $statusUpdatedBy;
     }
 
+    public function getTaskInfo() {
+        $creator = $this->getCreatedBy();
+        if( $creator ) {
+            $creator = " by " . $creator;
+        }
+        $createdDate = $this->getCreatedDate();
+        if( $createdDate ) {
+            $createdDateStr = " on " . $createdDate->format('m/d/Y H:i:s');
+        } else {
+            $createdDateStr = null;
+        }
+
+        return "Created" . $creator . $createdDateStr;
+    }
 }

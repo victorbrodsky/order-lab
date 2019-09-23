@@ -307,7 +307,8 @@
                                 {{ calllogmacros.calllogEntryDocuments(message,cycle) }}
                             {% endif %}
 
-                            {% if message.calllogEntryMessage and message.calllogEntryMessage.calllogTasks|length > 0 %}
+                            {#1message.calllogEntryMessage.calllogTasks|length={{ message.getCalllogEntryMessage().getCalllogTasks()|length }}<br>#}
+                            {% if message.getCalllogEntryMessage() and message.getCalllogEntryMessage().getCalllogTasks()|length > 0 %}
                                 {{ calllogmacros.calllogTaskList(form,cycle) }}
                             {% endif %}
 

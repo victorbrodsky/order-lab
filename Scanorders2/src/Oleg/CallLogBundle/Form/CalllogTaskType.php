@@ -41,10 +41,18 @@ class CalllogTaskType extends AbstractType
 
         $builder->add('id', HiddenType::class);
 
+//        echo "User=".$this->params['user']."<br>";
+//        $builder->add('createdBy', HiddenType::class, array(
+//            'label' => false,
+//            'required' => false,
+//            'data' => $this->params['user'],
+//            'attr' => array('class' => 'form-control'),
+//        ));
+
         $builder->add('description', TextType::class, array(
             'label' => "Description:",
             'required' => false,
-            'attr' => array('class' => 'form-control'),
+            'attr' => array('class' => 'form-control textarea'),
         ));
 
 //        $builder->add('systemStatus', TextType::class, array(
@@ -59,7 +67,7 @@ class CalllogTaskType extends AbstractType
             'attr' => array('class' => 'form-control')
         ));
 
-        $builder->add('calllogTaskTypeList', null, array(
+        $builder->add('calllogTaskType', null, array(
             'label' => "Task Type:",
             'required' => false,
             'attr' => array('class' => 'combobox'),
@@ -73,7 +81,7 @@ class CalllogTaskType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\OrderformBundle\Entity\CalllogTask',
-            'form_custom_value' => null
+            'form_custom_value' => null,
         ));
     }
 

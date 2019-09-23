@@ -510,6 +510,8 @@ class UserSecurityUtil {
 
         $saveEventObjectType = false;
 
+        //$em->clear(); //testing: prevent errors related to "not persisted objects"
+
         //if( !$user ) {
         //    $logger->warning("createUserEditEvent: "."User is not defined for $sitename for event=".$event);
         //    return null;
