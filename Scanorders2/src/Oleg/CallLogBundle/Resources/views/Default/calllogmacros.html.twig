@@ -1332,6 +1332,13 @@
                     {#</table>#}
                 {#</td>#}
 
+                {#<br><p>#}
+                {#<table class="table">#}
+                    {#$result#}
+                {#</table>#}
+                {#</p><br>#}
+                {{ calllog_util.getTasksInfo(message)|raw }}
+
             </tr>
             </tbody>
 

@@ -3771,4 +3771,39 @@ class CallLogUtil
 
         return true;
     }
+
+    public function getTasksInfo( $message ) {
+
+        $colspan = 9;
+        $colspan1 = 3;
+        $colspan2 = $colspan - 3;
+
+        $tasks = $message->getCalllogEntryMessage()->getCalllogTasks();
+        if( count($tasks) == 0 ) {
+            return null;
+        }
+
+        $result = "<tr>";
+//            //'<tr class="' . $trclassname . '">' .
+//            $tr .
+//            '<td colspan='.$colspan1.' class="rowlink-skip" style="width:20%">' . $formNodeName . '</td>' .
+//            '<td colspan='.$colspan2.' class="rowlink-skip" style="width:80%">' . $nameValueArr['value'] . '</td>' .
+//            '</tr>';
+
+        $tableBody = "";
+        foreach( $tasks as $task ) {
+            $tableBody = $tableBody . '<tr>';
+            $tableBody = $tableBody . '<td colspan='.$colspan1 . ' class="rowlink-skip" style="width:20%">' . $task->getCalllogTaskType() . '</td>';
+            $tableBody = $tableBody . '<td colspan='.$colspan2 . ' class="rowlink-skip" style="width:80%">' . $task->getDecription() . '</td>';
+            $tableBody = $tableBody . '</tr>';
+        }
+
+        $result =
+            '<td colspan='.$colspan.'>'.
+            '<table class = "table table-hover table-condensed">' .
+            $tableBody .
+            '</table></td>';
+
+        return $result;
+    }
 }
