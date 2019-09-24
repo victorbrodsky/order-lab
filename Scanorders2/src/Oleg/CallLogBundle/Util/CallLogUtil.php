@@ -3860,7 +3860,7 @@ class CallLogUtil
             //$status = $status . 'name="' . 'taskid-'.$task->getId() . '"';
             //$status = $status . ' value="' . $statusValue . '"';
             $status = $status . ' ' . $statusValue;
-            $status = $status . 'onClick="calllogTaskStatusBtnClick(this);"';
+            $status = $status . ' onClick="calllogTaskStatusBtnClick(this);"';
             $status = $status . '>';
             $body = $body . '<td colspan='.$colspan1 . ' class='.$tdClass2.' style="width:5%">' . $status . '</td>';
             /////////// EOF Checkbox ///////////
