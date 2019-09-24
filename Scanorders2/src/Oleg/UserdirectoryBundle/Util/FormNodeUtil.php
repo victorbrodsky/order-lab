@@ -1780,7 +1780,7 @@ class FormNodeUtil
 
         return $shortInfo;
 
-        ############################################
+        #################### BELOW NOT USED ########################
 
         if( !$holderEntity ) {
             //echo "holderEntity is NULL !!! <br>";

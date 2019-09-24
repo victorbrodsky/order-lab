@@ -2543,3 +2543,18 @@ function calllogPopulatePreviousEncounterInfo(encounterHtml) {
     }
 }
 
+
+function taskStatusBtnListener() {
+    $('.task-status-checkbox').on('change',function() {
+        console.log("on task-status-checkbox changed!");
+    });
+
+    $('.task-status-checkbox').change(function(){
+        console.log("change task-status-checkbox changed!");
+        if($(this).is(':checked')) {
+            // Checkbox is checked..
+        } else {
+            // Checkbox is not checked..
+        }
+    });
+}

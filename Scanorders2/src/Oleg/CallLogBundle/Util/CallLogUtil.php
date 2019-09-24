@@ -3775,35 +3775,125 @@ class CallLogUtil
     public function getTasksInfo( $message ) {
 
         $colspan = 9;
-        $colspan1 = 3;
-        $colspan2 = $colspan - 3;
+        $colspan1 = 1;
+        $colspan2 = 3;
+        $colspan3 = $colspan - $colspan1 - $colspan2;
 
         $tasks = $message->getCalllogEntryMessage()->getCalllogTasks();
         if( count($tasks) == 0 ) {
             return null;
         }
+        //return null;
 
-        $result = "<tr>";
-//            //'<tr class="' . $trclassname . '">' .
-//            $tr .
-//            '<td colspan='.$colspan1.' class="rowlink-skip" style="width:20%">' . $formNodeName . '</td>' .
-//            '<td colspan='.$colspan2.' class="rowlink-skip" style="width:80%">' . $nameValueArr['value'] . '</td>' .
-//            '</tr>';
+//        <tr class="table-no-border">
+//           <td style="display: none">
+//              <a href="/order/call-log-book/entry/view/548/1" target="_blank">548.1</a>
+//           </td>
+//           <td colspan="9">
+//              <table class="table table-hover table-condensed">
+//                  <tbody>
+//                      <tr class="table-row-separator-white">
+//                          <td colspan="9" class="rowlink-skip"><i>History/Findings</i></td>
+//                      </tr>
+//                      <tr class="table-row-separator-white">
+//                          <td colspan="3" class="rowlink-skip" style="width:20%"></td>
+//                          <td colspan="6" class="rowlink-skip" style="width:80%"><p>hhh<br></p></td>
+//                      </tr>
+//                      <tr class="table-row-separator-white">
+//                          <td colspan="9" class="rowlink-skip"><i>Impression/Outcome</i></td>
+//                      </tr>
+//                      <tr class="table-row-separator-white">
+//                          <td colspan="3" class="rowlink-skip" style="width:20%"></td>
+//                          <td colspan="6" class="rowlink-skip" style="width:80%"><p>iii<br></p></td>
+//                      </tr>
+//                  </tbody>
+//              </table>
+//            </td>
+//        </tr>
 
-        $tableBody = "";
+        $tdClass = '"rowlink-skip"';
+        //$tdClass = '';
+
+        $body = "";
+        $body = $body . '<tr class="table-no-border">';
+
+//        $body = $body . '<td style="display: none">';
+//        $messageUrl = $this->container->get('router')->generate(
+//            'calllog_callentry_view',
+//            array(
+//                'messageOid' => $message->getOid(),
+//                'messageVersion' => $message->getVersion()
+//            ),
+//            UrlGeneratorInterface::ABSOLUTE_URL
+//        );
+//        $body = $body . '<a target="_blank" href="' . $messageUrl . '"</a>';
+//        $body = $body . '</td>';
+
+        $body = $body . '<td colspan="9" class='.$tdClass.'>';
+        $body = $body . '<table class="table table-hover table-condensed">';
+        //$body = $body . '<tbody data-link="row" class="rowlink">';
+        $body = $body . '<tbody>';
+
         foreach( $tasks as $task ) {
-            $tableBody = $tableBody . '<tr>';
-            $tableBody = $tableBody . '<td colspan='.$colspan1 . ' class="rowlink-skip" style="width:20%">' . $task->getCalllogTaskType() . '</td>';
-            $tableBody = $tableBody . '<td colspan='.$colspan2 . ' class="rowlink-skip" style="width:80%">' . $task->getDecription() . '</td>';
-            $tableBody = $tableBody . '</tr>';
+
+            $body = $body . '<tr class="table-row-separator-white">';
+
+//            $body = $body . '<td style="display: none">';
+//            $messageUrl = $this->container->get('router')->generate(
+//                'calllog_callentry_view',
+//                array(
+//                    'messageOid' => $message->getOid(),
+//                    'messageVersion' => $message->getVersion()
+//                ),
+//                UrlGeneratorInterface::ABSOLUTE_URL
+//            );
+//            $body = $body . '<a target="_blank" href="' . $messageUrl . '"</a>';
+//            $body = $body . '</td>';
+
+            //checkbutton
+            //<input type="checkbox"
+            // id="oleg_calllogformbundle_messagetype_calllogEntryMessage_calllogTasks_1_status"
+            // name="oleg_calllogformbundle_messagetype[calllogEntryMessage][calllogTasks][1][status]"
+            // class="form-control" value="1">
+
+            $taskInfo = $task->getTaskInfo();
+            if( $taskInfo ) {
+                $taskInfo = " (" . $taskInfo . ")";
+            }
+
+            if( $task->getStatus() ) {
+                $statusValue = "checked";
+            } else {
+                $statusValue = "";
+            }
+
+            $status = '<input type="checkbox" class="task-status-checkbox"';
+            $status = $status . ' id="' . 'taskid-'.$task->getId() . '"';
+            //$status = $status . 'name="' . 'taskid-'.$task->getId() . '"';
+            //$status = $status . ' value="' . $statusValue . '"';
+            $status = $status . ' ' . $statusValue;
+            //$status = $status . 'onClick="this.checked=!this.checked;"';
+            $status = $status . '>';
+            $body = $body . '<td colspan='.$colspan1 . ' class='.$tdClass.' style="width:5%">' . $status . '</td>';
+
+            $body = $body . '<td colspan='.$colspan2 . ' class='.$tdClass.' style="width:20%">' . '' . $task->getCalllogTaskType() . '</td>';
+            $body = $body . '<td colspan='.$colspan3 . ' class='.$tdClass.' style="width:75%">' . $task->getDescription() . $taskInfo . '</td>';
+
+            $body = $body . '</tr>';
+
         }
 
-        $result =
-            '<td colspan='.$colspan.'>'.
-            '<table class = "table table-hover table-condensed">' .
-            $tableBody .
-            '</table></td>';
+        $body = $body . '</tbody>';
+        $body = $body . '</table>';
+        $body = $body . '</td>';
+        $body = $body . '</tr>';
 
-        return $result;
+//        $result =
+//            '<td colspan='.$colspan.'>'.
+//            '<table class = "table table-hover table-condensed">' .
+//            $body .
+//            '</table></td>';
+
+        return $body;
     }
 }

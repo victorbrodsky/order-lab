@@ -313,7 +313,7 @@ class CalllogTask
     public function getTaskInfo() {
         $creator = $this->getCreatedBy();
         if( $creator ) {
-            $creator = " by " . $creator;
+            $creator = " by " . $creator->getUsernameShortest();
         }
         $createdDate = $this->getCreatedDate();
         if( $createdDate ) {
