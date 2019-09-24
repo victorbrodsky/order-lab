@@ -1186,8 +1186,11 @@
             {% endif %}
 
             {#https://jsfiddle.net/dqq5B/670/#}
-            <tbody data-link="row" class="rowlink table-tbody-hover {{ trclassname }}">
-            <tr style="border-bottom: 1px solid #C6C6C6;">
+            {#<tbody data-link="row" class="rowlink table-tbody-hover {{ trclassname }}">#}
+            <tbody class="table-tbody-hover {{ trclassname }}">
+
+            {#<tr style="border-bottom: 1px solid #C6C6C6;">#}
+            <tr class="rowlink" data-link="row" style="border-bottom: 1px solid #C6C6C6;">
 
                 {#ID#}
                 <td>
@@ -1317,7 +1320,8 @@
                 {% endif %}
 
             </tr>
-            <tr class="table-no-border">
+            {#<tr class="table-no-border rowlink">#}
+            <tr data-link="row" class="table-no-border rowlink">
                 <td style="display: none">
                     <a href="{{ path(calllog_sitename~'_callentry_view', { 'messageOid': message.oid, 'messageVersion':message.version }) }}" target="_blank">{{ message.getMessageOidVersion }}</a>
                 </td>
@@ -1337,9 +1341,8 @@
                     {#$result#}
                 {#</table>#}
                 {#</p><br>#}
-                {{ calllog_util.getTasksInfo(message)|raw }}
-
             </tr>
+            {{ calllog_util.getTasksInfo(message)|raw }}
             </tbody>
 
         {% endfor %}

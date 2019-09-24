@@ -2545,6 +2545,8 @@ function calllogPopulatePreviousEncounterInfo(encounterHtml) {
 
 
 function taskStatusBtnListener() {
+    return false;
+
     $('.task-status-checkbox').on('change',function() {
         console.log("on task-status-checkbox changed!");
     });
@@ -2557,4 +2559,13 @@ function taskStatusBtnListener() {
             // Checkbox is not checked..
         }
     });
+}
+function calllogTaskStatusBtnClick(btn) {
+    console.log(btn);
+    if ($(btn).is(':checked')) {
+        console.log("task-status-checkbox checked");
+    }
+    else {
+        console.log("task-status-checkbox !checked");
+    }
 }

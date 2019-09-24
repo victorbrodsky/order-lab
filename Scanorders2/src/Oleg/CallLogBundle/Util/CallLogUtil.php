@@ -3812,10 +3812,15 @@ class CallLogUtil
 //        </tr>
 
         $tdClass = '"rowlink-skip"';
-        //$tdClass = '';
+        //$tdClass = 'rowlink-skip';
+        $tdClass = '';
+
+        $tdClass2 = '"rowlink-skip"';
+        $tdClass2 = '';
 
         $body = "";
         $body = $body . '<tr class="table-no-border">';
+        //$body = $body . '<tr class="table-no-border rowlink-skip">';
 
 //        $body = $body . '<td style="display: none">';
 //        $messageUrl = $this->container->get('router')->generate(
@@ -3829,7 +3834,7 @@ class CallLogUtil
 //        $body = $body . '<a target="_blank" href="' . $messageUrl . '"</a>';
 //        $body = $body . '</td>';
 
-        $body = $body . '<td colspan="9" class='.$tdClass.'>';
+        $body = $body . '<td colspan="9" class='.$tdClass.'>Task(s)';
         $body = $body . '<table class="table table-hover table-condensed">';
         //$body = $body . '<tbody data-link="row" class="rowlink">';
         $body = $body . '<tbody>';
@@ -3838,23 +3843,75 @@ class CallLogUtil
 
             $body = $body . '<tr class="table-row-separator-white">';
 
-//            $body = $body . '<td style="display: none">';
-//            $messageUrl = $this->container->get('router')->generate(
-//                'calllog_callentry_view',
-//                array(
-//                    'messageOid' => $message->getOid(),
-//                    'messageVersion' => $message->getVersion()
-//                ),
-//                UrlGeneratorInterface::ABSOLUTE_URL
-//            );
-//            $body = $body . '<a target="_blank" href="' . $messageUrl . '"</a>';
-//            $body = $body . '</td>';
+            /////////// Checkbox ///////////
+            $taskInfo = $task->getTaskInfo();
+            if( $taskInfo ) {
+                $taskInfo = " (" . $taskInfo . ")";
+            }
 
-            //checkbutton
-            //<input type="checkbox"
-            // id="oleg_calllogformbundle_messagetype_calllogEntryMessage_calllogTasks_1_status"
-            // name="oleg_calllogformbundle_messagetype[calllogEntryMessage][calllogTasks][1][status]"
-            // class="form-control" value="1">
+            if( $task->getStatus() ) {
+                $statusValue = "checked";
+            } else {
+                $statusValue = "";
+            }
+
+            $status = '<input type="checkbox" class="task-status-checkbox"';
+            $status = $status . ' id="' . 'taskid-'.$task->getId() . '"';
+            //$status = $status . 'name="' . 'taskid-'.$task->getId() . '"';
+            //$status = $status . ' value="' . $statusValue . '"';
+            $status = $status . ' ' . $statusValue;
+            $status = $status . 'onClick="calllogTaskStatusBtnClick(this);"';
+            $status = $status . '>';
+            $body = $body . '<td colspan='.$colspan1 . ' class='.$tdClass2.' style="width:5%">' . $status . '</td>';
+            /////////// EOF Checkbox ///////////
+
+            $body = $body . '<td colspan='.$colspan2 . ' class='.$tdClass2.' style="width:20%">' . '' . $task->getCalllogTaskType() . '</td>';
+            $body = $body . '<td colspan='.$colspan3 . ' class='.$tdClass2.' style="width:75%">' . $task->getDescription() . $taskInfo . '</td>';
+
+            $body = $body . '</tr>';
+
+        }
+
+        $body = $body . '</tbody>';
+        $body = $body . '</table>';
+        $body = $body . '</td>';
+        $body = $body . '</tr>';
+
+//        $result =
+//            '<td colspan='.$colspan.'>'.
+//            '<table class = "table table-hover table-condensed">' .
+//            $body .
+//            '</table></td>';
+
+        return $body;
+    }
+    public function getTasksInfo2( $message ) {
+
+        $colspan = 9;
+        $colspan1 = 1;
+        $colspan2 = 3;
+        $colspan3 = $colspan - $colspan1 - $colspan2;
+
+        $tasks = $message->getCalllogEntryMessage()->getCalllogTasks();
+        if( count($tasks) == 0 ) {
+            return null;
+        }
+        //return null;
+
+        $tdClass = '"rowlink-skip"';
+        //$tdClass = '';
+
+        $body = "";
+        //$body = $body . '<tr class="table-no-border">';
+
+        //$body = $body . '<td colspan="9" class='.$tdClass.'>';
+        //$body = $body . '<table class="table table-hover table-condensed">';
+        //$body = $body . '<tbody data-link="row" class="rowlink">';
+        //$body = $body . '<tbody>';
+
+        foreach( $tasks as $task ) {
+
+            $body = $body . '<tr class="table-row-separator-white rowlink-skip">';
 
             $taskInfo = $task->getTaskInfo();
             if( $taskInfo ) {
@@ -3873,6 +3930,7 @@ class CallLogUtil
             //$status = $status . ' value="' . $statusValue . '"';
             $status = $status . ' ' . $statusValue;
             //$status = $status . 'onClick="this.checked=!this.checked;"';
+            $status = $status . 'onClick="calllogTaskStatusBtnClick(this)"';
             $status = $status . '>';
             $body = $body . '<td colspan='.$colspan1 . ' class='.$tdClass.' style="width:5%">' . $status . '</td>';
 
@@ -3883,16 +3941,11 @@ class CallLogUtil
 
         }
 
-        $body = $body . '</tbody>';
-        $body = $body . '</table>';
-        $body = $body . '</td>';
-        $body = $body . '</tr>';
+        //$body = $body . '</tbody>';
+        //$body = $body . '</table>';
+        //$body = $body . '</td>';
+        //$body = $body . '</tr>';
 
-//        $result =
-//            '<td colspan='.$colspan.'>'.
-//            '<table class = "table table-hover table-condensed">' .
-//            $body .
-//            '</table></td>';
 
         return $body;
     }
