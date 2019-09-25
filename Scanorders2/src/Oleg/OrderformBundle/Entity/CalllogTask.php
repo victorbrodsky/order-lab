@@ -322,6 +322,22 @@ class CalllogTask
             $createdDateStr = null;
         }
 
-        return "Created" . $creator . $createdDateStr;
+        //status updated
+        $statusUpdatedStr = null;
+        $statusUpdatedBy = $this->getStatusUpdatedBy();
+        if( $statusUpdatedBy ) {
+            $statusUpdatedStr = ", updated by ".$statusUpdatedBy->getUsernameShortest();
+        }
+        $statusUpdatedDate = $this->getStatusUpdatedDate();
+        if( $statusUpdatedDate ) {
+            $statusUpdatedStr = $statusUpdatedStr . " on " . $statusUpdatedDate->format('m/d/Y H:i:s');
+        }
+
+        return "Created" . $creator . $createdDateStr . $statusUpdatedStr;
+    }
+
+    public function __toString()
+    {
+        return "ID=".$this->getId().", status=".$this->getStatus().", type=".$this->getCalllogTaskType().", description=".$this->getDescription().$this->getTaskInfo();
     }
 }

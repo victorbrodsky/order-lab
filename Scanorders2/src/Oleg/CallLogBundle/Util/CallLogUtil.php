@@ -3775,7 +3775,7 @@ class CallLogUtil
     public function getTasksInfo( $message ) {
 
         $colspan = 9;
-        $colspan1 = 1;
+        $colspan1 = 2;
         $colspan2 = 3;
         $colspan3 = $colspan - $colspan1 - $colspan2;
 
@@ -3834,7 +3834,8 @@ class CallLogUtil
 //        $body = $body . '<a target="_blank" href="' . $messageUrl . '"</a>';
 //        $body = $body . '</td>';
 
-        $body = $body . '<td colspan="9" class='.$tdClass.'>Task(s)';
+        $errHolder = '<div class="alert alert-danger calllog-danger-box" style="display: none; margin-top: 5px;"></div>';
+        $body = $body . '<td colspan="9" class='.$tdClass.'>Task(s)'.' '.$errHolder;
         $body = $body . '<table class="table table-hover table-condensed">';
         //$body = $body . '<tbody data-link="row" class="rowlink">';
         $body = $body . '<tbody>';
@@ -3856,13 +3857,20 @@ class CallLogUtil
             }
 
             $status = '<input type="checkbox" class="task-status-checkbox"';
-            $status = $status . ' id="' . 'taskid-'.$task->getId() . '"';
+            $status = $status . ' id="' . $task->getId() . '"';
             //$status = $status . 'name="' . 'taskid-'.$task->getId() . '"';
             //$status = $status . ' value="' . $statusValue . '"';
             $status = $status . ' ' . $statusValue;
-            $status = $status . ' onClick="calllogTaskStatusBtnClick(this);"';
+            $status = $status . ' onClick="calllogTaskStatusCheckboxClick(this);"';
             $status = $status . '>';
-            $body = $body . '<td colspan='.$colspan1 . ' class='.$tdClass2.' style="width:5%">' . $status . '</td>';
+
+            //Update button
+            $updateBtn = '&nbsp; <div class="btn btn-sm btn-primary btn-update-task" style="display: none;" onClick="calllogUpdateTaskBtnClicked(this)">Update</div>';
+
+            //calllog-danger-box
+            $dangerBox = '&nbsp; <div class="alert alert-danger calllog-danger-box" style="display: none;">Update</div>';
+
+            $body = $body . '<td colspan='.$colspan1 . ' class="calllog-checkbox-checkbox '.$tdClass2.'" style="width:10%">' . $status . $updateBtn . $dangerBox . '</td>';
             /////////// EOF Checkbox ///////////
 
             $body = $body . '<td colspan='.$colspan2 . ' class='.$tdClass2.' style="width:20%">' . '' . $task->getCalllogTaskType() . '</td>';
@@ -3925,12 +3933,12 @@ class CallLogUtil
             }
 
             $status = '<input type="checkbox" class="task-status-checkbox"';
-            $status = $status . ' id="' . 'taskid-'.$task->getId() . '"';
+            $status = $status . ' id="' . $task->getId() . '"';
             //$status = $status . 'name="' . 'taskid-'.$task->getId() . '"';
             //$status = $status . ' value="' . $statusValue . '"';
             $status = $status . ' ' . $statusValue;
             //$status = $status . 'onClick="this.checked=!this.checked;"';
-            $status = $status . 'onClick="calllogTaskStatusBtnClick(this)"';
+            $status = $status . 'onClick="calllogTaskStatusCheckboxClick(this)"';
             $status = $status . '>';
             $body = $body . '<td colspan='.$colspan1 . ' class='.$tdClass.' style="width:5%">' . $status . '</td>';
 

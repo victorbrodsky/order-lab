@@ -725,4 +725,57 @@ class DataQualityController extends CallEntryController
     }
 
 
+    /**
+     * @Route("/calllog_update_task/{taskId}/{status}", name="calllog_update_task", options={"expose"=true})
+     */
+    public function updateTaskAction(Request $request, $taskId, $status)
+    {
+
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        //$calllogUtil = $this->get('calllog_util');
+        $em = $this->getDoctrine()->getManager();
+
+        $error = false;
+        $msg = "";
+
+        if( $taskId && $status ) {
+            $task = $this->getDoctrine()->getRepository('OlegOrderformBundle:CalllogTask')->find($taskId);
+            //echo "$task=".$task."<br>";
+
+            $task->setStatus($status);
+            $task->setStatusUpdatedBy($user);
+            $task->setStatusUpdatedDate(new \DateTime());
+
+            $em->flush($task);
+
+            $patient = NULL;
+            $calllogEntryMessage = $task->getCalllogEntryMessage();
+            $message = $calllogEntryMessage->getMessage();
+            $patients = $message->getPatient();
+            if( count($patients) > 0 ) {
+                $patient = $message->getPatient()->first();
+            }
+
+            $msg .= "Task associated with Call Log entry ID#".$message->getOid()." for patient ".$patient." has been updated: status is set to '".$status."' by ".$task->getTaskInfo();
+
+            //EventLog
+            $userSecUtil = $this->container->get('user_security_utility');
+            $eventType = "Task Updated";
+            $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $msg, $user, $message, $request, $eventType);
+
+        } else {
+            $error = true;
+            $msg .= "Task has not been updated: task id or status are not provided.";
+        }
+
+        $result = array();
+        $result['error'] = $error;
+        $result['msg'] = $msg;
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($result));
+        return $response;
+    }
+
 }

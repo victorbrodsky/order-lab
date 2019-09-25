@@ -2544,28 +2544,101 @@ function calllogPopulatePreviousEncounterInfo(encounterHtml) {
 }
 
 
-function taskStatusBtnListener() {
-    return false;
-
-    $('.task-status-checkbox').on('change',function() {
-        console.log("on task-status-checkbox changed!");
-    });
-
-    $('.task-status-checkbox').change(function(){
-        console.log("change task-status-checkbox changed!");
-        if($(this).is(':checked')) {
-            // Checkbox is checked..
-        } else {
-            // Checkbox is not checked..
-        }
-    });
-}
-function calllogTaskStatusBtnClick(btn) {
+// function taskStatusBtnListener() {
+//     return false;
+//
+//     $('.task-status-checkbox').on('change',function() {
+//         console.log("on task-status-checkbox changed!");
+//     });
+//
+//     $('.task-status-checkbox').change(function(){
+//         console.log("change task-status-checkbox changed!");
+//         if($(this).is(':checked')) {
+//             // Checkbox is checked..
+//         } else {
+//             // Checkbox is not checked..
+//         }
+//     });
+// }
+function calllogTaskStatusCheckboxClick(btn) {
     console.log(btn);
+    var holderCheckbox = $(btn).closest('.calllog-checkbox-checkbox');
+    var updateBtn = holderCheckbox.find('.btn-update-task');
+    updateBtn.show();
     if ($(btn).is(':checked')) {
         console.log("task-status-checkbox checked");
+        //calllogBuildUpdateButton(btn,'completed');
     }
     else {
         console.log("task-status-checkbox !checked");
+        //calllogBuildUpdateButton(btn,'pending');
     }
+}
+function calllogUpdateTaskBtnClicked(btn) {
+    //build "Update Status" button
+    var holderCheckbox = $(btn).closest('.calllog-checkbox-checkbox');
+    var updateBtn = holderCheckbox.find('.btn-update-task');
+
+    //$(btn).hide();
+    $(btn).prop('disabled', true);
+    $(btn).attr("disabled", true);
+
+    calllogUpdateTask(btn);
+}
+function calllogUpdateTask(btn,status) {
+    var errorDiv = $(btn).closest('.calllog-checkbox-checkbox').find('.calllog-danger-box');
+    errorDiv.html(null);
+    errorDiv.hide();
+
+    var checkboxBtn = $(btn).closest('.calllog-checkbox-checkbox').find('.task-status-checkbox');
+
+    var status = null;
+    if( checkboxBtn.is(':checked') ) {
+        console.log("task-status-checkbox is checked");
+        //calllogBuildUpdateButton(btn,'completed');
+        status = 'completed';
+    }
+    else {
+        console.log("task-status-checkbox is not checked");
+        //calllogBuildUpdateButton(btn,'pending');
+        status = 'pending';
+    }
+
+    var taskId = checkboxBtn.attr('id');
+    console.log("update task id="+taskId+"; status="+status);
+
+    var url = Routing.generate('calllog_update_task');
+
+    url = url + "/" + taskId + "/" + status;
+    console.log("url="+url);
+    //return;
+
+    $.ajax({
+        url: url,
+        timeout: _ajaxTimeout,
+        async: true,
+        //data: {patientListId: patientListId, patientId: patientId},
+    }).success(function(data) {
+        //console.log("data="+data);
+
+        var error = data['error'];
+        var msg = data['msg'];
+
+        if( !error ) {
+            //Cancel onbeforeunload event handler
+            window.onbeforeunload = null;
+
+            //reload this page
+            location.reload();
+        } else {
+            //console.log("Patient has not been created not OK: data="+data);
+            errorDiv.html(msg);
+            errorDiv.show(_transTime);
+        }
+
+    }).done(function() {
+        //console.log("add new CalllogPatient done");
+        //calllogStopBtn(lbtn);
+
+    });
 }
