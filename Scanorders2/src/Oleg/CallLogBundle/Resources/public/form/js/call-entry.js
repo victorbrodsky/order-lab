@@ -2380,6 +2380,72 @@ function calllogListPreviousEntriesForPatient( holderId, messageCategoryId ) {
     });
 }
 
+function calllogShowHideListPreviousTasksBtn(patient) {
+    if( patient ) {
+        $('#calllog-list-previous-tasks').html("");
+    } else {
+        $('#calllog-list-previous-tasks-btn').hide();
+    }
+}
+function calllogListPreviousTasksForPatient( holderId, messageCategoryId ) {
+
+    //patientId = patient['id'];
+    var holder = getHolder(holderId);
+    var patientId = holder.find("#calllog-patient-id-"+holderId).val();
+    if( !patientId ) {
+        return;
+    }
+
+    var messageIdStr = "";
+    var messageId = $("#calllog-current-message-id").val();
+    if( messageId ) {
+        messageIdStr = "&messageid="+messageId;
+    }
+
+    //reset: show button and clear tasks list
+    calllogShowHideListPreviousTasksBtn(true);
+
+    if( typeof messageCategoryId === 'undefined' ) {
+        messageCategoryId = null;
+    }
+    //console.log("messageCategoryId="+messageCategoryId);
+
+    var btn = document.getElementById("calllog-list-previous-tasks-btn");
+    var lbtn = Ladda.create(btn);
+    calllogStartBtn(lbtn);
+
+    var url = Routing.generate('calllog-list-previous-tasks');
+    url = url + "?patientid="+patientId+"&type="+messageCategoryId+messageIdStr;
+
+    $.ajax({
+        url: url,
+        timeout: _ajaxTimeout,
+        type: "GET",
+        //type: "POST",
+        //data: {id: userid },
+        dataType: 'json',
+        async: asyncflag
+    }).success(function(response) {
+        //console.log(response);
+        var template = response;
+        $('#calllog-list-previous-tasks').html(template); //Change the html of the div with the id = "your_div"
+        calllogShowHideListPreviousTasksBtn(null); //hide btn
+
+        var filterSelectBox = $('.filter-message-category');
+        //printF(filterSelectBox,"filterSelectBox:");
+        //console.log(filterSelectBox);
+        specificRegularCombobox(filterSelectBox);
+        if( messageCategoryId ) {
+            filterSelectBox.select2('val', messageCategoryId);
+        }
+
+    }).done(function() {
+        calllogStopBtn(lbtn);
+    }).error(function(jqXHR, textStatus, errorThrown) {
+        console.log('Error : ' + errorThrown);
+    });
+}
+
 function calllogGetMetaphoneValue(holderId) {
     var holder = getHolder(holderId);
     var metaphoneRes = null;
@@ -2564,28 +2630,49 @@ function calllogTaskStatusCheckboxClick(btn) {
     console.log(btn);
     var holderCheckbox = $(btn).closest('.calllog-checkbox-checkbox');
     var updateBtn = holderCheckbox.find('.btn-update-task');
-    updateBtn.show();
+
+    var originalTaskStatus = $(btn).data("taskstatus");
+
+
+
     if ($(btn).is(':checked')) {
         console.log("task-status-checkbox checked");
-        //calllogBuildUpdateButton(btn,'completed');
+        if( originalTaskStatus == "checked" ) {
+            updateBtn.hide();
+        } else {
+            updateBtn.show();
+        }
     }
     else {
         console.log("task-status-checkbox !checked");
-        //calllogBuildUpdateButton(btn,'pending');
+        if( originalTaskStatus == "checked" ) {
+            updateBtn.show();
+        } else {
+            updateBtn.hide();
+        }
     }
 }
-function calllogUpdateTaskBtnClicked(btn) {
+function calllogUpdateTaskBtnClicked_OLD(btn) {
     //build "Update Status" button
     var holderCheckbox = $(btn).closest('.calllog-checkbox-checkbox');
     var updateBtn = holderCheckbox.find('.btn-update-task');
 
     //$(btn).hide();
+    var lbtn = Ladda.create(btn);
     $(btn).prop('disabled', true);
     $(btn).attr("disabled", true);
+    lbtn.start();
 
     calllogUpdateTask(btn);
 }
-function calllogUpdateTask(btn,status) {
+function calllogUpdateTaskBtnClicked(btn) {
+
+    //$(btn).hide();
+    var lbtn = Ladda.create(btn);
+    $(btn).prop('disabled', true);
+    $(btn).attr("disabled", true);
+    lbtn.start();
+
     var errorDiv = $(btn).closest('.calllog-checkbox-checkbox').find('.calllog-danger-box');
     errorDiv.html(null);
     errorDiv.hide();
@@ -2626,14 +2713,18 @@ function calllogUpdateTask(btn,status) {
 
         if( !error ) {
             //Cancel onbeforeunload event handler
-            window.onbeforeunload = null;
+            //window.onbeforeunload = null;
 
             //reload this page
+            //location.reload(true);
             location.reload();
         } else {
             //console.log("Patient has not been created not OK: data="+data);
             errorDiv.html(msg);
             errorDiv.show(_transTime);
+            lbtn.stop();
+            $(btn).prop('disabled', false);
+            $(btn).attr("disabled", false);
         }
 
     }).done(function() {

@@ -72,6 +72,12 @@
     <div id="calllog-list-previous-entries"></div>
     <br>
 
+    {#List previous tasks#}
+    <button id="calllog-list-previous-tasks-btn"
+            class="btn btn-primary" type="button"
+            onclick="calllogListPreviousTasksForPatient('{{ holderId }}')">Tasks for this patient (including one currently shown)</button>
+    <div id="calllog-list-previous-tasks"></div>
+    <br>
 
 
     {% set mainPanelClass = "panel-primary" %}
@@ -392,6 +398,9 @@
 
             $('#calllog-list-previous-entries-btn').click();
             $('#calllog-list-previous-entries-btn').hide();
+
+            $('#calllog-list-previous-tasks-btn').click();
+            $('#calllog-list-previous-tasks-btn').hide();
 
         });
 

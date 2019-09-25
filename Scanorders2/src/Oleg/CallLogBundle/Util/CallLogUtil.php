@@ -3811,11 +3811,11 @@ class CallLogUtil
 //            </td>
 //        </tr>
 
-        $tdClass = '"rowlink-skip"';
+        //$tdClass = '"rowlink-skip"';
         //$tdClass = 'rowlink-skip';
         $tdClass = '';
 
-        $tdClass2 = '"rowlink-skip"';
+        //$tdClass2 = '"rowlink-skip"';
         $tdClass2 = '';
 
         $body = "";
@@ -3852,11 +3852,15 @@ class CallLogUtil
 
             if( $task->getStatus() ) {
                 $statusValue = "checked";
+                $tdClass2 = '"bg-success"';
             } else {
                 $statusValue = "";
+                $tdClass2 = '"bg-danger"';
             }
 
-            $status = '<input type="checkbox" class="task-status-checkbox"';
+            $status = null;
+            //$status = "ID#".$task->getId();
+            $status = $status.'<input type="checkbox" class="task-status-checkbox" data-taskstatus="'.$statusValue.'"';
             $status = $status . ' id="' . $task->getId() . '"';
             //$status = $status . 'name="' . 'taskid-'.$task->getId() . '"';
             //$status = $status . ' value="' . $statusValue . '"';
@@ -3874,7 +3878,7 @@ class CallLogUtil
             /////////// EOF Checkbox ///////////
 
             $body = $body . '<td colspan='.$colspan2 . ' class='.$tdClass2.' style="width:20%">' . '' . $task->getCalllogTaskType() . '</td>';
-            $body = $body . '<td colspan='.$colspan3 . ' class='.$tdClass2.' style="width:75%">' . $task->getDescription() . $taskInfo . '</td>';
+            $body = $body . '<td colspan='.$colspan3 . ' class='.$tdClass2.' style="width:70%">' . $task->getDescription() . $taskInfo . '</td>';
 
             $body = $body . '</tr>';
 

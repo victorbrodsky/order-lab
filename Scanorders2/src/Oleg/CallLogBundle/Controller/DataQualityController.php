@@ -738,17 +738,38 @@ class DataQualityController extends CallEntryController
         $error = false;
         $msg = "";
 
+        //$status = null;//testing
+
         if( $taskId && $status ) {
             $task = $this->getDoctrine()->getRepository('OlegOrderformBundle:CalllogTask')->find($taskId);
             //echo "$task=".$task."<br>";
 
-            $task->setStatus($status);
+            //Convert status to boolean
+            if( $status == "completed" ) {
+                $statusBoolean = true;
+            }
+            elseif( $status == "pending" ) {
+                $statusBoolean = false;
+            } else {
+                //error
+                $result = array();
+                $result['error'] = $error;
+                $result['msg'] = "Status is invalid: '".$status."'";
+
+                $response = new Response();
+                $response->headers->set('Content-Type', 'application/json');
+                $response->setContent(json_encode($result));
+                return $response;
+            }
+
+            $task->setStatus($statusBoolean);
             $task->setStatusUpdatedBy($user);
             $task->setStatusUpdatedDate(new \DateTime());
 
             $em->flush($task);
 
             $patient = NULL;
+            $patientStr = NULL;
             $calllogEntryMessage = $task->getCalllogEntryMessage();
             $message = $calllogEntryMessage->getMessage();
             $patients = $message->getPatient();
@@ -756,7 +777,11 @@ class DataQualityController extends CallEntryController
                 $patient = $message->getPatient()->first();
             }
 
-            $msg .= "Task associated with Call Log entry ID#".$message->getOid()." for patient ".$patient." has been updated: status is set to '".$status."' by ".$task->getTaskInfo();
+            if( $patient ) {
+                $patientStr = " and patient " . $patient->getFullPatientName();
+            }
+
+            $msg .= "Task associated with Call Log entry ID#".$message->getOid().$patientStr." has been updated: status is set to '".$status."' (".$task->getTaskInfo().")";
 
             //EventLog
             $userSecUtil = $this->container->get('user_security_utility');
@@ -767,6 +792,11 @@ class DataQualityController extends CallEntryController
             $error = true;
             $msg .= "Task has not been updated: task id or status are not provided.";
         }
+
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            $msg
+        );
 
         $result = array();
         $result['error'] = $error;

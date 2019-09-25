@@ -1276,6 +1276,194 @@ class CallLogPatientController extends PatientController {
         exit("testing");
     }
 
+    //calllog-list-previous-tasks
+    /**
+     * @Route("/patient/list-previous-tasks/", name="calllog-list-previous-tasks", options={"expose"=true})
+     * @Method({"GET", "POST"})
+     */
+    public function listPatientPreviousTasksAction(Request $request)
+    {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USER') ) {
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
+        $calllogUtil = $this->get('calllog_util');
+        $em = $this->getDoctrine()->getManager();
+
+        $title = "Outstanding/Pending To Do Tasks";
+        $template = null;
+        $filterMessageCategory = null;
+
+        $messageId = $request->query->get('messageid');
+
+        $patientid = $request->query->get('patientid');
+        //echo "patientid=".$patientid."<br>";
+
+        $patient = $em->getRepository('OlegOrderformBundle:Patient')->find($patientid);
+        if( !$patient ) {
+            throw new \Exception( "Patient not found by id $patientid" );
+        }
+
+        //get linked patients
+        $mergedPatients = $calllogUtil->getAllMergedPatients( array($patient) );
+
+        //get master patient If the entered patient is linked to another
+        if( count($mergedPatients) > 1 ) {
+            $masterPatient = $calllogUtil->getMasterRecordPatients($mergedPatients);
+            if ($masterPatient) {
+                if ($masterPatient->getId() != $patientid) {
+                    //not master record
+                    //"Previous Entries for FirstNameOfMasterRecord LastNameOfMasterRecord (DOB: DateOfBirthOfMasterRecord, MRNTypeOfMasterRecord: MRNofMasterRecord)
+                    $title = "Previous entries for all patients linked with the master patient record of ".$masterPatient->obtainPatientInfoSimple();
+                }
+            }
+        }
+
+        //get patient ids
+        $patientIdArr = array();
+        foreach( $mergedPatients as $mergedPatient ) {
+            $patientIdArr[] = $mergedPatient->getId();
+        }
+        if( count($patientIdArr) > 0 ) {
+            $patientIds = implode(",", $patientIdArr);
+        } else {
+            throw new \Exception( "Patient array does not have any patients. count=".count($patientIdArr) );
+        }
+
+        $messageCategoryId = $request->query->get('type');
+        //if ( strval($messageCategoryId) != strval(intval($messageCategoryId)) ) {
+        //echo "Your variable is not an integer";
+        //$messageCategoryId = null;
+        //} else {
+        //$filterMessageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->find($messageCategoryId);
+        //echo "filter=".$filterMessageCategory."<br>";
+        //}
+        if( !$messageCategoryId || $messageCategoryId == "null" || $messageCategoryId == "undefined" ) {
+            $messageCategoryId = null;
+        }
+
+        //echo "patientid=".$patientid."<br>";
+        //echo "messageCategory=".$messageCategory."<br>";
+
+        $testing = $request->query->get('testing');
+
+        //$showUserArr = $this->showUser($userid,$this->container->getParameter('employees.sitename'),false);
+        //$template = $this->render('OlegUserdirectoryBundle:Profile:edit_user_only.html.twig',$showUserArr)->getContent();
+
+        //child nodes of "Pathology Call Log Entry"
+        //$messageCategoriePathCall = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName("Pathology Call Log Entry");
+        $messageCategoriePathCall = $calllogUtil->getDefaultMessageCategory();
+        $messageCategories = array();
+        if( $messageCategoriePathCall ) {
+            //$messageCategories = $messageCategoriePathCall->printTreeSelectList();
+            //#51: Show them in the same way as the "Message Type" dropdown menu on the homepage shows its values.
+            $messageCategories = $messageCategoriePathCall->printTreeSelectListIncludingThis(true,array("default","user-added"));
+        }
+        //print_r($messageCategories);
+
+        $filterform = null;
+
+        //////////////// find previous pending tasks ////////////////
+
+        $queryParameters = array();
+        $repository = $em->getRepository('OlegOrderformBundle:CalllogTask');
+        $dql = $repository->createQueryBuilder('task');
+        $dql->select('task');
+
+        //$dql->select('message, MAX(message.version) AS HIDDEN max_version');
+        //$dql->groupBy('message.oid');
+        //$dql->addGroupBy('message.version');
+
+        $dql->leftJoin("task.calllogEntryMessage","calllogEntryMessage");
+        $dql->leftJoin("calllogEntryMessage.message","message");
+        $dql->leftJoin("message.patient","patient");
+        $dql->leftJoin("message.messageStatus","messageStatus");
+
+        $dql->orderBy("task.createdBy","DESC");
+
+        $dql->where('patient.id IN (:patientIds)');
+        $queryParameters['patientIds'] = $patientIds;
+
+        //We can use the fact that latest version messages have status not "Deleted"
+        $dql->andWhere("task.status IS NULL");
+
+        //We can use the fact that latest version messages have status not "Deleted"
+        $dql->andWhere("messageStatus.name != :deletedMessageStatus");
+        $queryParameters['deletedMessageStatus'] = "Deleted";
+
+        if( $messageCategoryId ) {
+            $dql->andWhere("messageCategory.name=:messageCategoryId");
+            $queryParameters['messageCategoryId'] = $messageCategoryId;
+        }
+
+        $query = $em->createQuery($dql);
+        $query->setParameters($queryParameters);
+
+        //$limit = 10;
+
+        $tasks = $query->getResult();
+
+        //////////////// find messages ////////////////
+        //do not show section if none previous messages
+        if( count($tasks) == 0 ) {
+            $json = json_encode(null);
+            $response = new Response($json);
+            $response->headers->set('Content-Type', 'application/json');
+            return $response;
+        }
+        //do not show if 1 result with the same message id (if there is only itself as the previous note)
+        if( count($tasks) == 1 ) {
+            $singleMessage = $tasks[0];
+            if( $messageId && $singleMessage->getId() == $messageId ) {
+                $json = json_encode(null);
+                $response = new Response($json);
+                $response->headers->set('Content-Type', 'application/json');
+                return $response;
+            }
+        }
+
+//        if( count($tasks) > $limit ) {
+//            $mrnRes = $patient->obtainStatusField('mrn', "valid");
+//            $mrntype = $mrnRes->getKeytype()->getId();
+//            $mrn = $mrnRes->getField();
+//            $linkUrl = $this->generateUrl(
+//                "calllog_home",
+//                array(
+//                    'filter[mrntype]'=>$mrntype,
+//                    'filter[search]'=>$mrn,
+//                    'filter[messageStatus]'=>"All except deleted",
+//                ),
+//                UrlGeneratorInterface::ABSOLUTE_URL
+//            );
+//            $showAllMsg = "showing outstanding To Do tasks, click here to view all";
+//            $href = '<a href="'.$linkUrl.'" target="_blank">'.$showAllMsg.'</a>';
+//            $title = $title . " (" . $href . ")";
+//        }
+
+        $params = array(
+            'filterform' =>  null,
+            'route_path' => $request->get('_route'),
+            'tasks' => $tasks,
+            'title' => $title,
+            //'limit' => $limit,
+            'messageid' => $messageId
+            //'testing' => true
+        );
+        $htmlPage = $this->render('OlegCallLogBundle:PatientList:patient_tasks.html.twig',$params);
+
+        //testing
+        if( $testing ) {
+            return $htmlPage;
+        }
+
+        $template = $htmlPage->getContent();
+
+        $json = json_encode($template);
+        $response = new Response($json);
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+    }
+
 
     public function createPatientForm($patient, $mrntype=null, $mrn=null) {
         $user = $this->get('security.token_storage')->getToken()->getUser();

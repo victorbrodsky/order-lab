@@ -326,14 +326,25 @@ class CalllogTask
         $statusUpdatedStr = null;
         $statusUpdatedBy = $this->getStatusUpdatedBy();
         if( $statusUpdatedBy ) {
-            $statusUpdatedStr = ", updated by ".$statusUpdatedBy->getUsernameShortest();
+            $statusUpdatedStr = ", status updated by ".$statusUpdatedBy->getUsernameShortest();
         }
         $statusUpdatedDate = $this->getStatusUpdatedDate();
         if( $statusUpdatedDate ) {
             $statusUpdatedStr = $statusUpdatedStr . " on " . $statusUpdatedDate->format('m/d/Y H:i:s');
         }
 
-        return "Created" . $creator . $createdDateStr . $statusUpdatedStr;
+        return "Task ID#".$this->getId().": "."Created" . $creator . $createdDateStr . $statusUpdatedStr;
+        //return "Created" . $creator . $createdDateStr . $statusUpdatedStr;
+    }
+    
+    public function getTaskStatusStr() {
+        $statusStr = null;
+        if( $this->getStatus() ) {
+            $statusStr = "completed";
+        } else {
+            $statusStr = "pending";
+        }
+        return $statusStr;
     }
 
     public function __toString()
