@@ -91,6 +91,13 @@
             <div id="calllog-list-previous-entries"></div>
             <br>
 
+            {#List previous tasks#}
+            <button id="calllog-list-previous-tasks-btn"
+                    class="btn btn-primary" type="button" style="display: none;"
+                    onclick="calllogListPreviousTasksForPatient('{{ holderId }}')">Outstanding/Pending To Do tasks for this patient (including one currently shown)</button>
+            <div id="calllog-list-previous-tasks"></div>
+            <br>
+
             {#<a id="callentry-nosinglepatient-link" class="collapsed" role="button" data-toggle="collapse" href="#callentry-form" onclick="$(this).hide();">#}
             <a id="callentry-nosinglepatient-link" href="javascript:;" onclick="showCalllogCallentryForm(true);">
                 No single patient is referenced by this entry or I'll add the patient info later

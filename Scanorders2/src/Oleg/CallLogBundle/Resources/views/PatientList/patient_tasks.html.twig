@@ -92,15 +92,16 @@
                 <tr class="{{ trclassname }}">
 
                     <td>
-                        {{ task.createdBy }}
-                    </td>
-
-                    <td>
                         {{ task.createdDate|date('m/d/Y H:i:s') }}
                     </td>
 
+                    <td>
+                        {{ task.createdBy }}
+                    </td>
+
                     <td >
-                        <a href="{{ path(calllog_sitename~'_callentry_view', {'messageOid': message.oid, 'messageVersion':message.version}) }}" target="_blank">{{ message.getMessageOidVersion }}</a>
+                        {#<a href="{{ path(calllog_sitename~'_callentry_view', {'messageOid': message.oid, 'messageVersion':message.version}) }}" target="_blank">{{ message.getMessageOidVersion }}</a>#}
+                        <a href="{{ path(calllog_sitename~'_callentry_view', {'messageOid': message.oid, 'messageVersion':message.version}) }}" target="_blank">ID:{{ message.getMessageOidVersion }} {{ message.messageCategory.getNodeNameWithParents }}</a>
                     </td>
 
                     <td>
@@ -113,6 +114,7 @@
 
 
                     <td>
+                        {#TODO: Show as checkbox with the same functionality as on home page#}
                         {{ task.getTaskStatusStr() }}
                     </td>
 

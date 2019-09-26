@@ -1276,7 +1276,6 @@ class CallLogPatientController extends PatientController {
         exit("testing");
     }
 
-    //calllog-list-previous-tasks
     /**
      * @Route("/patient/list-previous-tasks/", name="calllog-list-previous-tasks", options={"expose"=true})
      * @Method({"GET", "POST"})
@@ -1391,6 +1390,9 @@ class CallLogPatientController extends PatientController {
         //We can use the fact that latest version messages have status not "Deleted"
         $dql->andWhere("messageStatus.name != :deletedMessageStatus");
         $queryParameters['deletedMessageStatus'] = "Deleted";
+        //$dql->andWhere("messageStatus.name != :deletedMessageStatus AND messageStatus.name != :draftMessageStatus");
+        //$queryParameters['deletedMessageStatus'] = "Deleted";
+        //$queryParameters['draftMessageStatus'] = "Draft";
 
         if( $messageCategoryId ) {
             $dql->andWhere("messageCategory.name=:messageCategoryId");

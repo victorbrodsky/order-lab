@@ -1370,6 +1370,7 @@ function populatePatientInfo( patient, showinfo, modify, holderId, singleMatch )
     if( patient ) {
         //click btn
         $('#calllog-list-previous-entries-btn').click();
+        $('#calllog-list-previous-tasks-btn').click();
     }
 
     //TODO: add previous encounters to the ".combobox-previous-encounters"
