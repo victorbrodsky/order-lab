@@ -61,7 +61,7 @@
         </p>
         {% endif %}
 
-        {#Messages List#}
+        {#Tasks List#}
 
         <table class="records_list table table-hover table-condensed table-striped text-left">
             <thead>
@@ -77,13 +77,13 @@
             </thead>
             <tbody data-link="row" class="rowlink">
 
-            {% set count = 0 %}
-            {% for task in tasks if count < limit %}
+            {#{% set count = 0 %}#}
+            {% for task in tasks %}
 
-                {% set count = count + 1 %}
+                {#{% set count = count + 1 %}#}
                 {% set trclassname = "" %}
 
-                {% set message = task.calllogEntryMessage %}
+                {% set message = task.calllogEntryMessage.message %}
 
                 {% if messageid is defined and messageid and message.id == messageid %}
                     {% set trclassname = "success" %}
@@ -134,22 +134,3 @@
     </div> <!-- panel-collapse -->
 </div> <!-- panel panel-primary -->
 
-{#{% endblock %}#}
-
-{#{% block additionaljs %}#}
-    {#<script language="Javascript">#}
-
-        {#$(document).ready(function() {#}
-
-            {#//init#}
-            {#var filterSelectBox = $('.filter-message-category');#}
-            {#specificRegularCombobox(filterSelectBox);#}
-
-        {#});#}
-
-    {#</script>#}
-{#{% endblock %}#}
-
- 
-    
-   

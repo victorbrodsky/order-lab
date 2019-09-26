@@ -1343,7 +1343,7 @@ class CallLogPatientController extends PatientController {
         }
 
         //echo "patientid=".$patientid."<br>";
-        //echo "messageCategory=".$messageCategory."<br>";
+        //echo "messageCategory=".$messageCategoryId."<br>";
 
         $testing = $request->query->get('testing');
 
@@ -1381,11 +1381,12 @@ class CallLogPatientController extends PatientController {
 
         $dql->orderBy("task.createdBy","DESC");
 
+        //echo "patientIds=$patientIds <br>";
         $dql->where('patient.id IN (:patientIds)');
         $queryParameters['patientIds'] = $patientIds;
 
         //We can use the fact that latest version messages have status not "Deleted"
-        $dql->andWhere("task.status IS NULL");
+        $dql->andWhere("task.status IS NULL OR task.status = 0");
 
         //We can use the fact that latest version messages have status not "Deleted"
         $dql->andWhere("messageStatus.name != :deletedMessageStatus");
@@ -1402,6 +1403,8 @@ class CallLogPatientController extends PatientController {
         //$limit = 10;
 
         $tasks = $query->getResult();
+        //echo "tasks count=".count($tasks)."<br>";
+        //exit('testing');
 
         //////////////// find messages ////////////////
         //do not show section if none previous messages
@@ -1440,6 +1443,9 @@ class CallLogPatientController extends PatientController {
 //            $title = $title . " (" . $href . ")";
 //        }
 
+            $showAllMsg = "showing ".count($tasks)." outstanding To Do tasks";
+            $title = $title . " (" . $showAllMsg . ")";
+
         $params = array(
             'filterform' =>  null,
             'route_path' => $request->get('_route'),
@@ -1455,6 +1461,7 @@ class CallLogPatientController extends PatientController {
         if( $testing ) {
             return $htmlPage;
         }
+        //exit('testing');
 
         $template = $htmlPage->getContent();
 

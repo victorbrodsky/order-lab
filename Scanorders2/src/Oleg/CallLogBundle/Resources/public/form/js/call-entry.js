@@ -2408,7 +2408,7 @@ function calllogListPreviousTasksForPatient( holderId, messageCategoryId ) {
     if( typeof messageCategoryId === 'undefined' ) {
         messageCategoryId = null;
     }
-    //console.log("messageCategoryId="+messageCategoryId);
+    console.log("messageCategoryId="+messageCategoryId);
 
     var btn = document.getElementById("calllog-list-previous-tasks-btn");
     var lbtn = Ladda.create(btn);
@@ -2667,6 +2667,25 @@ function calllogUpdateTaskBtnClicked_OLD(btn) {
 }
 function calllogUpdateTaskBtnClicked(btn) {
 
+    var checkboxBtn = $(btn).closest('.calllog-checkbox-checkbox').find('.task-status-checkbox');
+
+    var status = null;
+    if( checkboxBtn.is(':checked') ) {
+        //console.log("task-status-checkbox is checked");
+        status = 'completed';
+    }
+    else {
+        //console.log("task-status-checkbox is unchecked");
+        status = 'pending';
+    }
+
+    var r = confirm("Are you sure you want to change this task's status to "+status+"?");
+    if( r == true ) {
+        //OK
+    } else {
+        return false;
+    }
+
     //$(btn).hide();
     var lbtn = Ladda.create(btn);
     $(btn).prop('disabled', true);
@@ -2677,34 +2696,19 @@ function calllogUpdateTaskBtnClicked(btn) {
     errorDiv.html(null);
     errorDiv.hide();
 
-    var checkboxBtn = $(btn).closest('.calllog-checkbox-checkbox').find('.task-status-checkbox');
-
-    var status = null;
-    if( checkboxBtn.is(':checked') ) {
-        console.log("task-status-checkbox is checked");
-        //calllogBuildUpdateButton(btn,'completed');
-        status = 'completed';
-    }
-    else {
-        console.log("task-status-checkbox is not checked");
-        //calllogBuildUpdateButton(btn,'pending');
-        status = 'pending';
-    }
-
     var taskId = checkboxBtn.attr('id');
-    console.log("update task id="+taskId+"; status="+status);
+    //console.log("update task id="+taskId+"; status="+status);
 
     var url = Routing.generate('calllog_update_task');
 
     url = url + "/" + taskId + "/" + status;
-    console.log("url="+url);
+    //console.log("url="+url);
     //return;
 
     $.ajax({
         url: url,
         timeout: _ajaxTimeout,
-        async: true,
-        //data: {patientListId: patientListId, patientId: patientId},
+        async: true
     }).success(function(data) {
         //console.log("data="+data);
 
@@ -2712,14 +2716,9 @@ function calllogUpdateTaskBtnClicked(btn) {
         var msg = data['msg'];
 
         if( !error ) {
-            //Cancel onbeforeunload event handler
-            //window.onbeforeunload = null;
-
             //reload this page
-            //location.reload(true);
             location.reload();
         } else {
-            //console.log("Patient has not been created not OK: data="+data);
             errorDiv.html(msg);
             errorDiv.show(_transTime);
             lbtn.stop();
@@ -2728,8 +2727,8 @@ function calllogUpdateTaskBtnClicked(btn) {
         }
 
     }).done(function() {
-        //console.log("add new CalllogPatient done");
-        //calllogStopBtn(lbtn);
-
+        //lbtn.stop();
+        //$(btn).prop('disabled', false);
+        //$(btn).attr("disabled", false);
     });
 }

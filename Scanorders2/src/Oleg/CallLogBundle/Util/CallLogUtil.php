@@ -3860,7 +3860,7 @@ class CallLogUtil
 
             $status = null;
             //$status = "ID#".$task->getId();
-            $status = $status.'<input type="checkbox" class="task-status-checkbox" data-taskstatus="'.$statusValue.'"';
+            $status = $status.'<input data-toggle="tooltip" title="Check to mark task as completed" type="checkbox" class="task-status-checkbox" data-taskstatus="'.$statusValue.'"';
             $status = $status . ' id="' . $task->getId() . '"';
             //$status = $status . 'name="' . 'taskid-'.$task->getId() . '"';
             //$status = $status . ' value="' . $statusValue . '"';
