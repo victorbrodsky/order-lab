@@ -1298,6 +1298,8 @@ class CallLogPatientController extends PatientController {
         $patientid = $request->query->get('patientid');
         //echo "patientid=".$patientid."<br>";
 
+        $cycle = $request->query->get('cycle');
+
         $patient = $em->getRepository('OlegOrderformBundle:Patient')->find($patientid);
         if( !$patient ) {
             throw new \Exception( "Patient not found by id $patientid" );
@@ -1378,7 +1380,7 @@ class CallLogPatientController extends PatientController {
         $dql->leftJoin("message.patient","patient");
         $dql->leftJoin("message.messageStatus","messageStatus");
 
-        $dql->orderBy("task.createdBy","DESC");
+        $dql->orderBy("task.createdDate","DESC");
 
         //echo "patientIds=$patientIds <br>";
         $dql->where('patient.id IN (:patientIds)');
@@ -1453,6 +1455,7 @@ class CallLogPatientController extends PatientController {
             'route_path' => $request->get('_route'),
             'tasks' => $tasks,
             'title' => $title,
+            'cycle' => $cycle,
             //'limit' => $limit,
             'messageid' => $messageId
             //'testing' => true

@@ -739,6 +739,7 @@ class DataQualityController extends CallEntryController
         $msg = "";
 
         //$status = null;//testing
+        //exit("status=".$status);
 
         if( $taskId && $status ) {
             $task = $this->getDoctrine()->getRepository('OlegOrderformBundle:CalllogTask')->find($taskId);

@@ -3842,7 +3842,7 @@ class CallLogUtil
 
         foreach( $tasks as $task ) {
 
-            $body = $body . '<tr class="table-row-separator-white">';
+            $body = $body . '<tr class="table-row-separator-white calllog-task-tr">';
 
             /////////// Checkbox ///////////
             $taskInfo = $task->getTaskInfo();
@@ -3869,12 +3869,13 @@ class CallLogUtil
             $status = $status . '>';
 
             //Update button
-            $updateBtn = '&nbsp; <div class="btn btn-sm btn-primary btn-update-task" style="display: none;" onClick="calllogUpdateTaskBtnClicked(this)">Update</div>';
+            $cycle = '"list"';
+            $updateBtn = '&nbsp; <div class="btn btn-sm btn-primary btn-update-task" style="display: none;" onClick="calllogUpdateTaskBtnClicked(this,'.$cycle.')">Update</div>';
 
             //calllog-danger-box
             $dangerBox = '&nbsp; <div class="alert alert-danger calllog-danger-box" style="display: none;">Update</div>';
 
-            $body = $body . '<td colspan='.$colspan1 . ' class="calllog-checkbox-checkbox '.$tdClass2.'" style="width:10%">' . $status . $updateBtn . $dangerBox . '</td>';
+            $body = $body . '<td colspan='.$colspan1 . ' class="calllog-checkbox-checkbox" style="width:10%">' . $status . $updateBtn . $dangerBox . '</td>';
             /////////// EOF Checkbox ///////////
 
             $body = $body . '<td colspan='.$colspan2 . ' class='.$tdClass2.' style="width:20%">' . '' . $task->getCalllogTaskType() . '</td>';

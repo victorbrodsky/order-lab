@@ -46,7 +46,7 @@
 
                     <div class="col-xs-1" align="left">
                         <button id="Search_button" type="button" class="btn btn-default"
-                                onclick="calllogListPreviousTasksForPatient( '{{ holderId }}', $('#filter_messageCategory').val() )"
+                                onclick="calllogListPreviousTasksForPatient( '{{ holderId }}','{{ cycle }}', $('#filter_messageCategory').val() )"
                         >Filter</button>
                     </div>
 
@@ -75,7 +75,8 @@
                 <th>Status </th>
             </tr>
             </thead>
-            <tbody data-link="row" class="rowlink">
+            {#<tbody data-link="row" class="rowlink">#}
+            <tbody>
 
             {#{% set count = 0 %}#}
             {% for task in tasks %}
@@ -83,13 +84,21 @@
                 {#{% set count = count + 1 %}#}
                 {% set trclassname = "" %}
 
-                {% set message = task.calllogEntryMessage.message %}
-
-                {% if messageid is defined and messageid and message.id == messageid %}
+                {% if task.status %}
+                    {% set statusValue = "checked" %}
                     {% set trclassname = "success" %}
+                {% else %}
+                    {% set statusValue = "" %}
+                    {% set trclassname = "danger" %}
                 {% endif %}
 
-                <tr class="{{ trclassname }}">
+                {% set message = task.calllogEntryMessage.message %}
+
+                {#{% if messageid is defined and messageid and message.id == messageid %}#}
+                    {#{% set trclassname = "success" %}#}
+                {#{% endif %}#}
+
+                <tr class="calllog-task-tr {{ trclassname }}">
 
                     <td>
                         {{ task.createdDate|date('m/d/Y H:i:s') }}
@@ -99,7 +108,7 @@
                         {{ task.createdBy }}
                     </td>
 
-                    <td >
+                    <td>
                         {#<a href="{{ path(calllog_sitename~'_callentry_view', {'messageOid': message.oid, 'messageVersion':message.version}) }}" target="_blank">{{ message.getMessageOidVersion }}</a>#}
                         <a href="{{ path(calllog_sitename~'_callentry_view', {'messageOid': message.oid, 'messageVersion':message.version}) }}" target="_blank">ID:{{ message.getMessageOidVersion }} {{ message.messageCategory.getNodeNameWithParents }}</a>
                     </td>
@@ -113,11 +122,28 @@
                     </td>
 
 
-                    <td>
+                    {#<td>#}
                         {#TODO: Show as checkbox with the same functionality as on home page#}
-                        {{ task.getTaskStatusStr() }}
+                        {#{{ task.getTaskStatusStr() }}#}
+                    {#</td>#}
+                    <td class="calllog-checkbox-checkbox">
+                        <input
+                                type="checkbox"
+                                class="task-status-checkbox" data-taskstatus=""
+                                id="{{ task.id }}"
+                                onclick="calllogTaskStatusCheckboxClick(this);"
+                                {#data-toggle="tooltip" #}
+                                {#data-original-title="Check to mark task as completed"#}
+                                title="Check to mark task as completed"
+                                {{ statusValue }}
+                        >
+                        &nbsp;
+                        <div class="btn btn-sm btn-primary btn-update-task" style="display: none;"
+                             onclick="calllogUpdateTaskBtnClicked(this,'{{ cycle }}')">Update
+                        </div>
+                        &nbsp;
+                        <div class="alert alert-danger calllog-danger-box" style="display: none;">Update</div>
                     </td>
-
 
                 </tr>
 
