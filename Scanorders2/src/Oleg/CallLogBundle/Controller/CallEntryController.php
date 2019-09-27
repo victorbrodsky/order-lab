@@ -779,8 +779,10 @@ class CallEntryController extends Controller
             $advancedFilter++;
         }
         if( $task == "with-tasks" ) {
+            //$dql->innerJoin("calllogEntryMessage.calllogTasks","calllogTasks");
+            //$dql->andWhere("calllogTasks IS NOT NULL");
             $dql->leftJoin("calllogEntryMessage.calllogTasks","calllogTasks");
-            $dql->andWhere("calllogTasks IS NOT NULL");
+            $dql->andWhere("calllogTasks.id IS NOT NULL");
             $advancedFilter++;
         }
         if( $task == "with-outstanding-tasks" ) {
@@ -794,7 +796,9 @@ class CallEntryController extends Controller
             $advancedFilter++;
         }
         if( $task == "without-tasks" ) {
-            $dql->andWhere("calllogEntryMessage.calllogTasks IS NULL");
+            $dql->leftJoin("calllogEntryMessage.calllogTasks","calllogTasks");
+            $dql->andWhere("calllogTasks.id IS NULL");
+            //$dql->andHaving('COUNT(calllogTasks.id) = 0');
             $advancedFilter++;
         }
 
