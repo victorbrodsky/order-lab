@@ -434,6 +434,7 @@ class CallEntryController extends Controller
         $dql->leftJoin("patient.firstname","firstname");
         $dql->leftJoin("message.encounter","encounter");
         $dql->leftJoin("message.calllogEntryMessage","calllogEntryMessage");
+        $dql->leftJoin("calllogEntryMessage.calllogTasks","calllogTasks");
 
         $dql->leftJoin("encounter.referringProviders","referringProviders");
         $dql->leftJoin("referringProviders.field","referringProviderWrapper");
@@ -773,32 +774,48 @@ class CallEntryController extends Controller
 //            "With Any Completed Tasks" =>   "with-completed-tasks",
 //            "Without Tasks" =>              "without-tasks"
 //        );
-        echo "task=".$task."<br>";
+        //echo "task=".$task."<br>";
         if( $task == "with-without-tasks" ) {
 //            $dql->andWhere("calllogEntryMessage.task IS NOT NULL");
             $advancedFilter++;
         }
         if( $task == "with-tasks" ) {
-            //$dql->innerJoin("calllogEntryMessage.calllogTasks","calllogTasks");
-            //$dql->andWhere("calllogTasks IS NOT NULL");
-            $dql->leftJoin("calllogEntryMessage.calllogTasks","calllogTasks");
             $dql->andWhere("calllogTasks.id IS NOT NULL");
             $advancedFilter++;
         }
         if( $task == "with-outstanding-tasks" ) {
-            $dql->leftJoin("calllogEntryMessage.calllogTasks","calllogTasks");
             $dql->andWhere("calllogTasks.status = 0");
             $advancedFilter++;
         }
         if( $task == "with-completed-tasks" ) {
-            $dql->leftJoin("calllogEntryMessage.calllogTasks","calllogTasks");
             $dql->andWhere("calllogTasks.status = 1");
             $advancedFilter++;
         }
         if( $task == "without-tasks" ) {
-            $dql->leftJoin("calllogEntryMessage.calllogTasks","calllogTasks");
             $dql->andWhere("calllogTasks.id IS NULL");
-            //$dql->andHaving('COUNT(calllogTasks.id) = 0');
+            $advancedFilter++;
+        }
+
+        //taskType
+        if( $taskType ) {
+            $dql->leftJoin("calllogTasks.calllogTaskType","calllogTaskType");
+            $dql->andWhere("calllogTaskType.id = :taskTypeId");
+            $queryParameters['taskTypeId'] = $taskType->getId();
+            $advancedFilter++;
+        }
+
+        //taskUpdatedBy statusUpdatedBy
+        if( $taskUpdatedBy ) {
+            $dql->leftJoin("calllogTasks.statusUpdatedBy","statusUpdatedBy");
+            $dql->andWhere("statusUpdatedBy.id = :statusUpdatedById");
+            $queryParameters['statusUpdatedById'] = $taskUpdatedBy->getId();
+            $advancedFilter++;
+        }
+
+        if( $taskAddedBy ) {
+            $dql->leftJoin("calllogTasks.createdBy","createdBy");
+            $dql->andWhere("createdBy.id = :createdById");
+            $queryParameters['createdById'] = $taskAddedBy->getId();
             $advancedFilter++;
         }
 

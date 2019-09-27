@@ -310,6 +310,7 @@ class CalllogFilterType extends AbstractType
         //4 Task filters
         $builder->add('task', ChoiceType::class, array(
             'label' => false,
+            //'required' => true,
             'required' => false,
             'attr' => array('class' => 'combobox', 'placeholder' => "Tasks"),
             'choices' => $this->params['tasks'],
