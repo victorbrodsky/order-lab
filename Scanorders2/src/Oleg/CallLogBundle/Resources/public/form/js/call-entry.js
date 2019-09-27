@@ -2712,9 +2712,26 @@ function calllogUpdateTaskBtnClicked(btn,cycle) {
         var msg = data['msg'];
 
         if( !error ) {
-            if( cycle == "show" || cycle == "list" ) {
-                location.reload(); //reload this page
-            } else if( cycle == "new" ) {
+            if ( cycle == "list" )
+            {
+                lbtn.stop();
+                $(btn).prop('disabled', false);
+                $(btn).attr("disabled", false);
+                $(btn).hide(_transTime);
+                //remove record from new page
+                var taskTr = $(btn).closest('.calllog-task-tr');
+                if( status == 'completed' ) {
+                    taskTr.find('.calllog-task-td').removeClass('bg-danger').addClass('bg-success');
+                    taskTr.find('.task-status-checkbox').data('taskstatus', "checked");
+                }
+                if( status == 'pending' ) {
+                    taskTr.find('.calllog-task-td').removeClass('bg-success').addClass('bg-danger');
+                    taskTr.find('.task-status-checkbox').data('taskstatus', null);
+                }
+                //taskTr.hide('slow');
+            }
+            else if( cycle == "new" || cycle == "show" )
+            {
                 lbtn.stop();
                 $(btn).prop('disabled', false);
                 $(btn).attr("disabled", false);

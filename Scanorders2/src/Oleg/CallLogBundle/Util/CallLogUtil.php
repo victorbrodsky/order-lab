@@ -3852,10 +3852,10 @@ class CallLogUtil
 
             if( $task->getStatus() ) {
                 $statusValue = "checked";
-                $tdClass2 = '"bg-success"';
+                $tdClass2 = '"calllog-task-td bg-success"';
             } else {
                 $statusValue = "";
-                $tdClass2 = '"bg-danger"';
+                $tdClass2 = '"calllog-task-td bg-danger"';
             }
 
             $status = null;
@@ -3870,6 +3870,7 @@ class CallLogUtil
 
             //Update button
             $cycle = '"list"';
+            $cycle = "'list'";
             $updateBtn = '&nbsp; <div class="btn btn-sm btn-primary btn-update-task" style="display: none;" onClick="calllogUpdateTaskBtnClicked(this,'.$cycle.')">Update</div>';
 
             //calllog-danger-box
