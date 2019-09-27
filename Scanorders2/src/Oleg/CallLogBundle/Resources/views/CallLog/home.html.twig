@@ -157,6 +157,22 @@
                 <br>
                 <div class="row">
                     <div class="col-xs-3" align="left">
+                        {{ form_widget(filterform.task) }}
+                    </div>
+                    <div class="col-xs-3" align="left">
+                        {{ form_widget(filterform.taskType) }}
+                    </div>
+                    <div class="col-xs-3" align="left">
+                        {{ form_widget(filterform.taskUpdatedBy) }}
+                    </div>
+                    <div class="col-xs-3" align="left">
+                        {{ form_widget(filterform.taskAddedBy) }}
+                    </div>
+                </div>
+
+                <br>
+                <div class="row">
+                    <div class="col-xs-3" align="left">
                         {{ form_widget(filterform.patientPhone) }}
                     </div>
                     <div class="col-xs-3" align="left">

@@ -307,6 +307,65 @@ class CalllogFilterType extends AbstractType
             'choices_as_values' => true,
         ));
 
+        //4 Task filters
+        $builder->add('task', ChoiceType::class, array(
+            'label' => false,
+            'required' => false,
+            'attr' => array('class' => 'combobox', 'placeholder' => "Tasks"),
+            'choices' => $this->params['tasks'],
+            'choices_as_values' => true,
+        ));
+        $builder->add('taskType', EntityType::class, array(
+            'class' => 'OlegOrderformBundle:CalllogTaskTypeList',
+            'label' => false,
+            'required' => false,
+            //'choice_label' => 'name',
+            'attr' => array('class' => 'combobox', 'placeholder' => "Task Type"),
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('u')
+                    ->andWhere("u.type = :typedef OR u.type = :typeadd")
+                    ->orderBy("u.orderinlist","ASC")
+                    ->setParameters( array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                    ));
+            },
+        ));
+        $builder->add('taskUpdatedBy', EntityType::class, array(
+            'class' => 'OlegUserdirectoryBundle:User',
+            'label' => false,
+            'required' => false,
+            'choice_label' => 'getUsernameOptimal',
+            'attr' => array('class' => 'combobox combobox-width', 'placeholder' => "Task Status Updated By"),
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('u')
+                    ->leftJoin("u.infos", "infos")
+                    ->leftJoin("u.employmentStatus", "employmentStatus")
+                    ->leftJoin("employmentStatus.employmentType", "employmentType")
+                    ->andWhere("(employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
+                    ->andWhere("(u.testingAccount = false OR u.testingAccount IS NULL)")
+                    ->andWhere("(u.keytype IS NOT NULL AND u.primaryPublicUserId != 'system')")
+                    ->orderBy("infos.displayName","ASC");
+            },
+        ));
+        $builder->add('taskAddedBy', EntityType::class, array(
+            'class' => 'OlegUserdirectoryBundle:User',
+            'label' => false,
+            'required' => false,
+            'choice_label' => 'getUsernameOptimal',
+            'attr' => array('class' => 'combobox combobox-width', 'placeholder' => "Task Added By"),
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('u')
+                    ->leftJoin("u.infos", "infos")
+                    ->leftJoin("u.employmentStatus", "employmentStatus")
+                    ->leftJoin("employmentStatus.employmentType", "employmentType")
+                    ->andWhere("(employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
+                    ->andWhere("(u.testingAccount = false OR u.testingAccount IS NULL)")
+                    ->andWhere("(u.keytype IS NOT NULL AND u.primaryPublicUserId != 'system')")
+                    ->orderBy("infos.displayName","ASC");
+            },
+        ));
+
     }
 
     public function configureOptions(OptionsResolver $resolver)

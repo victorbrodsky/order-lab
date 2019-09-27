@@ -229,6 +229,13 @@ class CallEntryController extends Controller
         $patientEmail = null;
         $sortBy = null;
 
+        //4 Tasks
+        $task = null;
+        $taskType = null;
+        $taskUpdatedBy = null;
+        $taskAddedBy = null;
+
+
         //child nodes of "Pathology Call Log Entry"
         //$messageCategoryParent = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName("Encounter Note");
         $messageCategoriePathCall = $calllogUtil->getDefaultMessageCategory();
@@ -333,6 +340,14 @@ class CallEntryController extends Controller
         //echo "navbar: searchFilter=".$searchFilter."; entryBodySearchFilter=".$entryBodySearchFilter."<br>";
         ///////////////// EOF search in navbar /////////////////
 
+        $tasks = array(
+            "With or without tasks" =>      "with-without-tasks",
+            "With Tasks" =>                 "with-tasks",
+            "With Any Outstanding Tasks" => "with-outstanding-tasks",
+            "With Any Completed Tasks" =>   "with-completed-tasks",
+            "Without Tasks" =>              "without-tasks"
+        );
+
         $params = array(
             'messageStatuses' => $messageStatusesChoice,
             'messageCategories' => $messageCategories, //for home to list all entries page
@@ -344,6 +359,7 @@ class CallEntryController extends Controller
             'search' => $searchFilter,
             'entryBodySearch' => $entryBodySearchFilter,
             'messageCategoryType' => $messageCategoryTypeId,
+            'tasks' => $tasks,
             'metaphone' => $metaphone
         );
         $filterform = $this->createForm(CalllogFilterType::class, null, array(
@@ -368,6 +384,10 @@ class CallEntryController extends Controller
         $patientPhone = $filterform['patientPhone']->getData();
         $patientEmail = $filterform['patientEmail']->getData();
         $sortBy = $filterform['sortBy']->getData();
+        $task = $filterform['task']->getData();;
+        $taskType = $filterform['taskType']->getData();;
+        $taskUpdatedBy = $filterform['taskUpdatedBy']->getData();;
+        $taskAddedBy = $filterform['taskAddedBy']->getData();;
 
         if( !$searchFilter ) {
             $searchFilter = $filterform['search']->getData();
@@ -746,6 +766,37 @@ class CallEntryController extends Controller
             $advancedFilter++;
         }
 
+//        $tasks = array(
+//            "With or without tasks" =>      "with-without-tasks",
+//            "With Tasks" =>                 "with-tasks",
+//            "With Any Outstanding Tasks" => "with-outstanding-tasks",
+//            "With Any Completed Tasks" =>   "with-completed-tasks",
+//            "Without Tasks" =>              "without-tasks"
+//        );
+        echo "task=".$task."<br>";
+        if( $task == "with-without-tasks" ) {
+//            $dql->andWhere("calllogEntryMessage.task IS NOT NULL");
+            $advancedFilter++;
+        }
+        if( $task == "with-tasks" ) {
+            $dql->leftJoin("calllogEntryMessage.calllogTasks","calllogTasks");
+            $dql->andWhere("calllogTasks IS NOT NULL");
+            $advancedFilter++;
+        }
+        if( $task == "with-outstanding-tasks" ) {
+            $dql->leftJoin("calllogEntryMessage.calllogTasks","calllogTasks");
+            $dql->andWhere("calllogTasks.status = 0");
+            $advancedFilter++;
+        }
+        if( $task == "with-completed-tasks" ) {
+            $dql->leftJoin("calllogEntryMessage.calllogTasks","calllogTasks");
+            $dql->andWhere("calllogTasks.status = 1");
+            $advancedFilter++;
+        }
+        if( $task == "without-tasks" ) {
+            $dql->andWhere("calllogEntryMessage.calllogTasks IS NULL");
+            $advancedFilter++;
+        }
 
         ///////////////// search in navbar /////////////////
         if( $calllogsearchtype && $calllogsearch ) {
