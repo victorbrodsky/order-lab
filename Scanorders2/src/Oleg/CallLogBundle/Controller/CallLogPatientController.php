@@ -873,7 +873,7 @@ class CallLogPatientController extends PatientController {
 
 
     /**
-     * Listing patients whose notes have been updated in the last 96 hours
+     * Listing patients whose notes have been updated in the last 96 hours (4 days)
      *
      * @Route("/recent-patients", name="calllog_recent_patients")
      * @Template("OlegCallLogBundle:PatientList:recent-patients.html.twig")
@@ -895,6 +895,11 @@ class CallLogPatientController extends PatientController {
         $repository = $em->getRepository('OlegOrderformBundle:Patient');
         $dql = $repository->createQueryBuilder("patient");
 
+        $dql->leftJoin("patient.message", "message");
+        $dql->leftJoin("message.editorInfos", "editorInfos");
+        $dql->leftJoin("message.calllogEntryMessage", "calllogEntryMessage");
+        $dql->leftJoin("calllogEntryMessage.calllogTasks", "calllogTasks");
+
         $dql->leftJoin("patient.lastname", "lastname");
         $dql->leftJoin("patient.firstname", "firstname");
         $dql->leftJoin("patient.mrn", "mrn");
@@ -903,7 +908,18 @@ class CallLogPatientController extends PatientController {
         //$parameters['parentId'] = $listid;
         //$parameters['patientGroup'] = $patientGroup->getId();
 
-        //$dql->andWhere("list.type = 'user-added' OR list.type = 'default'");
+        $dql->where("calllogEntryMessage.id IS NOT NULL");
+        //$dql->andWhere("message.orderdate >= :hours96Ago OR editorInfos.modifiedOn >= :hours96Ago OR calllogTasks.statusUpdatedDate >= :hours96Ago");
+
+        $andWhere = "message.orderdate >= :hours96Ago OR editorInfos.modifiedOn >= :hours96Ago OR calllogTasks.statusUpdatedDate >= :hours96Ago";
+        //$andWhere = "message.orderdate >= :hours96Ago";
+        $dql->andWhere($andWhere);
+
+        $hours96Ago = new \DateTime();
+        $hours96Ago->modify('-96 hours');
+        //$hours96Ago->modify('-5 hours');
+        //$parameters['hours96Ago'] = $hours96Ago->format('Y-m-d');
+        $parameters['hours96Ago'] = $hours96Ago;
 
         $query = $em->createQuery($dql);
         $query->setParameters($parameters);
@@ -924,7 +940,7 @@ class CallLogPatientController extends PatientController {
         );
         //$patients = $query->getResult();
 
-        echo "patients=".count($patients)."<br>";
+        //echo "patients=".count($patients)."<br>";
 
         //create patient form for "Add Patient" section
 //        $status = 'invalid';

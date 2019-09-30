@@ -402,7 +402,7 @@ class CallEntrySamePatientController extends CallEntryController
             }
 
             //process Task sections
-            $calllogUtil->processCalllogTask($message,$originalTasks);
+            $taskUpdateStr = $calllogUtil->processCalllogTask($message,$originalTasks);
 
             //process Attached Documents
             $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($message->getCalllogEntryMessage()); //Save Call Log Entry Same Patient
@@ -599,6 +599,11 @@ class CallEntrySamePatientController extends CallEntryController
                     //exit('eventStr='.$eventStr);
 
                     //$eventStr = $eventStr . " submitted by " . $user;
+
+                    if( $taskUpdateStr ) {
+                        $eventStr = $eventStr . "<br><br>" . $taskUpdateStr;
+                        $msg = $msg . "<br><br>" . $taskUpdateStr;
+                    }
 
                     if( !$testing ) {
                         $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $eventStr, $user, $message, $request, $eventType);

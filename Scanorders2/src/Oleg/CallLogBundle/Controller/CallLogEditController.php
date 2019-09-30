@@ -607,7 +607,7 @@ class CallLogEditController extends CallEntryController
             //exit('333');
 
             //process Task sections
-            $calllogUtil->processCalllogTask($message,$originalTasks);
+            $taskUpdateStr = $calllogUtil->processCalllogTask($message,$originalTasks);
 
             //set system source and user's default institution
             if( $newEncounter ) {
@@ -833,6 +833,11 @@ class CallLogEditController extends CallEntryController
 
                     $eventStr = $calllogUtil->getEventLogDescription($message,$patient,$newEncounter);
                     //exit('eventStr='.$eventStr);
+
+                    if( $taskUpdateStr ) {
+                        $eventStr = $eventStr . "<br><br>" . $taskUpdateStr;
+                        $msg = $msg . "<br><br>" . $taskUpdateStr;
+                    }
 
                     if( !$testing ) {
                         $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $eventStr, $user, $message, $request, $eventType);

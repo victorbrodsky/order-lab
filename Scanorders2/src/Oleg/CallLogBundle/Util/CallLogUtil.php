@@ -3769,8 +3769,10 @@ class CallLogUtil
 
     public function processCalllogTask($message,$originalTasks) {
         // remove the relationship between the CalllogEntryMessage and the Task
+        $taskUpdateArr = array();
         foreach($originalTasks as $task) {
             if( false === $message->getCalllogEntryMessage()->getCalllogTasks()->contains($task) ) {
+                $taskUpdateArr[] = "Removed task: ".$task->getTaskFullInfo();
                 // remove the Task from the Tag
                 $message->getCalllogEntryMessage()->getCalllogTasks()->removeElement($task);
                 // if it was a many-to-one relationship, remove the relationship like this
@@ -3784,10 +3786,17 @@ class CallLogUtil
         //set creator for remaining tasks
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
         foreach( $message->getCalllogEntryMessage()->getCalllogTasks() as $task ) {
-            $task->setCreatedBy($user);
+            if( !$task->getCreatedBy() ) {
+                $task->setCreatedBy($user);
+            }
         }
 
-        return true;
+        $taskUpdateStr = NULL;
+        if( count($taskUpdateArr) > 0 ) {
+            $taskUpdateStr = implode("<br>", $taskUpdateArr);
+        }
+
+        return $taskUpdateStr;
     }
 
     public function getTasksInfo( $message ) {

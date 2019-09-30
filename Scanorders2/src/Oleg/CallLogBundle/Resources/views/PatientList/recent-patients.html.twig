@@ -33,7 +33,7 @@
 
     {% set holderId = "patient-holder-1" %}
 
-    <input type="hidden" id="formcycle" value="{{ cycle }}" />
+    {#<input type="hidden" id="formcycle" value="{{ cycle }}" />#}
     {#<input type="hidden" id="orderformtype" value="calllog" />#}
     {#<input type="hidden" id="formtype" value="{{ formtype }}" />#}
     {#<input type="hidden" id="mrn" value="{{ mrn }}" />#}
@@ -135,21 +135,21 @@
 
 {% endblock %}
 
-{% block additionaljs %}
-    <script language="Javascript">
+{#{% block additionaljs %}#}
+    {#<script language="Javascript">#}
 
 
 
-        $(document).ready(function() {
+        {#$(document).ready(function() {#}
 
-            //init
-            initCallLogPage();
+            {#//init#}
+            {#initCallLogPage();#}
 
-            //preset mrn and mrn-type
-            calllogPresetMrnMrntype('patient-holder-1');
+            {#//preset mrn and mrn-type#}
+            {#calllogPresetMrnMrntype('patient-holder-1');#}
 
-        });
+        {#});#}
 
 
-    </script>
-{% endblock %}
+    {#</script>#}
+{#{% endblock %}#}
