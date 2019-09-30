@@ -339,6 +339,9 @@ function setCallLogNavBar() {
     if( full.indexOf("/patient-list/") !== -1 ) {
         id = 'patientlist';
     }
+    if( full.indexOf("/recent-patients") !== -1 ) {
+        id = 'patientlist';
+    }
 
     if( full.indexOf("/call-log-book/resources/") !== -1 ) {
         id = 'resources';

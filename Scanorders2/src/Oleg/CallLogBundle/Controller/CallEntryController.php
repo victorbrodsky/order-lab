@@ -1006,6 +1006,53 @@ class CallEntryController extends Controller
         return true;
     }
 
+    /**
+     * <li><a href="{{ path(calllog_sitename~'_tasks_todo') }}">To Do</a></li>
+     * <li><a href="{{ path(calllog_sitename~'_tasks_i_added') }}">Tasks I Added</a></li>
+     * <li><a href="{{ path(calllog_sitename~'_tasks_i_updated') }}">Tasks I Updated</a></li>
+     *
+     * @Route("/tasks/to-do", name="calllog_tasks_todo")
+     * @Route("/tasks/i-added", name="calllog_tasks_i_added")
+     * @Route("/tasks/i-updated", name="calllog_tasks_i_updated")
+     */
+    public function listTasksAction(Request $request)
+    {
+        if (false == $this->get('security.authorization_checker')->isGranted("ROLE_CALLLOG_USER")) {
+            return $this->redirect($this->generateUrl('calllog-nopermission'));
+        }
+
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $routename = $request->get('_route');
+
+        if( $routename == "calllog_tasks_todo" ) {
+            return $this->redirectToRoute('calllog_home',
+                array(
+                    'filter[messageStatus]' => "All except deleted",
+                    'filter[task]' => "with-outstanding-tasks"
+                )
+            );
+        }
+
+        if( $routename == "calllog_tasks_i_added" ) {
+            return $this->redirectToRoute('calllog_home',
+                array(
+                    'filter[messageStatus]' => "All except deleted",
+                    'filter[taskAddedBy]' => $user->getId()
+                )
+            );
+        }
+
+        if( $routename == "calllog_tasks_i_updated" ) {
+            return $this->redirectToRoute('calllog_home',
+                array(
+                    'filter[messageStatus]' => "All except deleted",
+                    'filter[taskUpdatedBy]' => $user->getId()
+                )
+            );
+        }
+
+    }
+
 
     /**
      * Call Entry New Page
@@ -1456,7 +1503,7 @@ class CallEntryController extends Controller
 //                }
 //            }
             //process Task sections
-            $calllogUtil->processCalllogTask($message,$originalTasks);
+            $calllogUtil->processCalllogTask($message,$originalTasks); //Save Call Log Entry
 
             //process Attached Documents (here this function works, but entityId is NULL - still it's OK)
             $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($message->getCalllogEntryMessage()); //Save new entry

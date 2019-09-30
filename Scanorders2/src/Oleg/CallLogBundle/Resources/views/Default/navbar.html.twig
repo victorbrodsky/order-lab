@@ -107,8 +107,13 @@
                         </ul>
                     </li>
 
-                    <li id="nav-bar-tasks">
-                        <a href="{{ path(calllog_sitename~'_tasks') }}">Tasks</a>
+                    <li id="nav-bar-tasks" class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Tasks<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                                <li><a href="{{ path(calllog_sitename~'_tasks_todo') }}">To Do</a></li>
+                                <li><a href="{{ path(calllog_sitename~'_tasks_i_added') }}">Tasks I Added</a></li>
+                                <li><a href="{{ path(calllog_sitename~'_tasks_i_updated') }}">Tasks I Updated</a></li>
+                        </ul>
                     </li>
 
                     <li id="nav-bar-resources">

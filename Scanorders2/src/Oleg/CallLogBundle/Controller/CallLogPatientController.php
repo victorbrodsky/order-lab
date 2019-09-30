@@ -871,6 +871,77 @@ class CallLogPatientController extends PatientController {
         );
     }
 
+
+    /**
+     * Listing patients whose notes have been updated in the last 96 hours
+     *
+     * @Route("/recent-patients", name="calllog_recent_patients")
+     * @Template("OlegCallLogBundle:PatientList:recent-patients.html.twig")
+     */
+    public function recentPatientsAction(Request $request)
+    {
+        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_CALLLOG_USER') ){
+            return $this->redirect( $this->generateUrl('calllog-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $securityUtil = $this->get('order_security_utility');
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+        //listing patients whose notes have been updated in the last 96 hours
+
+        $parameters = array();
+
+        $repository = $em->getRepository('OlegOrderformBundle:Patient');
+        $dql = $repository->createQueryBuilder("patient");
+
+        $dql->leftJoin("patient.lastname", "lastname");
+        $dql->leftJoin("patient.firstname", "firstname");
+        $dql->leftJoin("patient.mrn", "mrn");
+
+        //$dql->where("list.parent = :parentId AND list.organizationalGroupType = :patientGroup");
+        //$parameters['parentId'] = $listid;
+        //$parameters['patientGroup'] = $patientGroup->getId();
+
+        //$dql->andWhere("list.type = 'user-added' OR list.type = 'default'");
+
+        $query = $em->createQuery($dql);
+        $query->setParameters($parameters);
+        //echo "sql=".$query->getSql()."<br>";
+
+        $limit = 30;
+        $paginator  = $this->get('knp_paginator');
+        $patients = $paginator->paginate(
+            $query,
+            $request->query->get('page', 1), /*page number*/
+            //$request->query->getInt('page', 1),
+            $limit,      /*limit per page*/
+            array(
+                'defaultSortFieldName' => 'patient.id',
+                'defaultSortDirection' => 'DESC',
+                'wrap-queries'=>true
+            )
+        );
+        //$patients = $query->getResult();
+
+        echo "patients=".count($patients)."<br>";
+
+        //create patient form for "Add Patient" section
+//        $status = 'invalid';
+//        $system = $securityUtil->getDefaultSourceSystem($this->container->getParameter('calllog.sitename'));
+//        $newPatient = new Patient(true,$status,$user,$system);
+//        $newEncounter = new Encounter(true,'dummy',$user,$system);
+//        $newPatient->addEncounter($newEncounter);
+//        $patientForm = $this->createPatientForm($newPatient);
+
+        //src/Oleg/CallLogBundle/Resources/views/PatientList/complex-patient-list.html.twig
+        return array(
+            'patients' => $patients,
+            'title' => "Recent Patients (96 hours)",
+        );
+    }
+
+
     /**
      * @Route("/patient/remove-patient-from-list/{patientId}/{patientListId}", name="calllog_remove_patient_from_list")
      */

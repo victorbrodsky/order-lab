@@ -782,7 +782,9 @@ class DataQualityController extends CallEntryController
                 $patientStr = " and patient " . $patient->getFullPatientName();
             }
 
-            $msg .= "Task associated with Call Log entry ID#".$message->getOid().$patientStr." has been updated: status is set to '".$status."' (".$task->getTaskInfo().")";
+            $msg .= "Task associated with Call Log entry ID#".$message->getOid().$patientStr." has been updated: status is set to '".$status."'".":";
+
+            $msg = $msg . "<br>" .  $task->getTaskFullInfo();
 
             //EventLog
             $userSecUtil = $this->container->get('user_security_utility');
@@ -809,29 +811,5 @@ class DataQualityController extends CallEntryController
         return $response;
     }
 
-    /**
-     * @Route("/tasks/", name="calllog_tasks")
-     * @Template("OlegCallLogBundle:CallLog:tasks.html.twig")
-     */
-    public function tasksAction(Request $request)
-    {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_CALLLOG_USER') ) {
-            return $this->redirect( $this->generateUrl('calllog-nopermission') );
-        }
-
-        $em = $this->getDoctrine()->getManager();
-        $tasks = $this->getDoctrine()->getRepository('OlegOrderformBundle:CalllogTask')->findAll();
-
-
-
-
-        return array(
-            //'entity' => $entity,
-            //'form' => $form->createView(),
-            //'cycle' => $cycle,
-            'title' => "Tasks",
-            'tasks' => $tasks
-        );
-    }
 
 }

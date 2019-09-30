@@ -1102,8 +1102,10 @@
                            target="_blank">View Patient Record</a>
                     </li>
 
-                    <li><a href="{{ path('calllog_patient_edit_by_mrn', { 'mrn': mrnNumber, 'mrntype': mrnTypeId, 'show-tree-depth': 2}) }}"
-                           target="_blank">Edit Patient Record</a>
+                    <li>
+                        {#<a href="{{ path('calllog_patient_edit_by_mrn', { 'mrn': mrnNumber, 'mrntype': mrnTypeId, 'show-tree-depth': 2}) }}"#}
+                           {#target="_blank">Edit Patient Record</a>#}
+                        <a href="{{ path('calllog_single_patient_edit', { 'id': patient.id}) }}" target="_blank">Edit Patient Demographics</a>
                     </li>
 
                     <li><a href="{{ path('calllog_merge_patient_records', { 'mrn': mrnNumber, 'mrntype': mrnTypeId}) }}"
@@ -1117,10 +1119,12 @@
                     {% endif %}
                 {% endif %}
 
-                <li><a data-confirm="Are you sure you want to remove this patient from this list?"
-                       href="{{ path('calllog_remove_patient_from_list', { 'patientId': patient.id, 'patientListId': patientListId }) }}"
-                       target="_blank">Remove patient from this list</a>
-                </li>
+                {% if patientListId is defined and patientListId %}
+                    <li><a data-confirm="Are you sure you want to remove this patient from this list?"
+                           href="{{ path('calllog_remove_patient_from_list', { 'patientId': patient.id, 'patientListId': patientListId }) }}"
+                           target="_blank">Remove patient from this list</a>
+                    </li>
+                {% endif %}
 
 
             {% endif %}

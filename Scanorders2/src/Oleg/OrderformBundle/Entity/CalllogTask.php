@@ -333,17 +333,43 @@ class CalllogTask
             $statusUpdatedStr = $statusUpdatedStr . " on " . $statusUpdatedDate->format('m/d/Y H:i:s');
         }
 
-        return "Task ID#".$this->getId().": "."Created" . $creator . $createdDateStr . $statusUpdatedStr;
-        //return "Created" . $creator . $createdDateStr . $statusUpdatedStr;
+        //return "Task ID#".$this->getId().": "."Created" . $creator . $createdDateStr . $statusUpdatedStr;
+        return "Created" . $creator . $createdDateStr . $statusUpdatedStr;
+    }
+
+    public function getTaskFullInfo( $delimiter="<br>", $html=true ) {
+        $fullInfo = $this->getTaskStatusStr(true) . " task";
+
+        if( $html ) {
+            $fullInfo = "<b>" . $fullInfo . "</b>";
+        }
+
+        $fullInfo = $fullInfo . " (" . $this->getTaskInfo() . ")" . ":";
+
+        $taskType = $this->getCalllogTaskType();
+        if( $taskType ) {
+            $fullInfo = $fullInfo . $delimiter . "Type: " . $taskType;
+        }
+        $description = $this->getDescription();
+        if( $description ) {
+            $fullInfo = $fullInfo . $delimiter . "Description: " . $description;
+        }
+
+        return $fullInfo;
     }
     
-    public function getTaskStatusStr() {
+    public function getTaskStatusStr($uppercase=false) {
         $statusStr = null;
         if( $this->getStatus() ) {
             $statusStr = "completed";
         } else {
             $statusStr = "pending";
         }
+
+        if($uppercase) {
+            $statusStr = ucfirst($statusStr);
+        }
+
         return $statusStr;
     }
 

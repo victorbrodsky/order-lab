@@ -1101,6 +1101,15 @@ class CallLogUtil
         //add message info: ID and status
         $event = $event . " [Message Entry ID#" . $message->getMessageOidVersion() . "; Status: " . $message->getMessageStatus()->getName() . "]";
 
+        //Tasks Info
+        $taskInfoArr = array();
+        foreach( $message->getCalllogEntryMessage()->getCalllogTasks() as $task ) {
+            $taskInfoArr[] = $task->getTaskFullInfo();
+        }
+        if( count($taskInfoArr) > 0 ) {
+            $event = $event . "<br><br>" . implode("<br>",$taskInfoArr);
+        }
+
         //exit('event='.$event);
         return $event;
     }
@@ -1146,6 +1155,15 @@ class CallLogUtil
         //list.name = "Pathology Call Complex Patients"
         //list.url = "http://collage.med.cornell.edu/order/call-log-book/patient-list/pathology-call-complex-patients"
         $resList = array();
+
+        $listId = "recent-patient-96-hours";
+        $listName = "Recent Patients (96 hours)";
+        $url = $this->container->get('router')->generate('calllog_recent_patients');
+        $resList[] = array(
+            'listid' => $listId,
+            'name' => $listName,
+            'url' => $url   //"order/call-log-book/patient-list/pathology-call-complex-patients"
+        );
 
         foreach( $patientLists as $list ) {
 
