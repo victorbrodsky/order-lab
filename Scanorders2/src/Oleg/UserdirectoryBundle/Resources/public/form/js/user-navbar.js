@@ -344,6 +344,10 @@ function setCallLogNavBar() {
         id = 'resources';
     }
 
+    if( full.indexOf("/call-log-book/tasks/") !== -1 ) {
+        id = 'tasks';
+    }
+
     if( full.indexOf("/call-log-book/merge-patient-records") !== -1 ||
         full.indexOf("/call-log-book/un-merge-patient-records") !== -1 ||
         full.indexOf("/call-log-book/edit-patient-record") !== -1 ||
