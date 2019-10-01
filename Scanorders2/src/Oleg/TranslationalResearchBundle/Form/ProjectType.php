@@ -307,7 +307,7 @@ class ProjectType extends AbstractType
             'required'=> true,
             'multiple' => true,
             'attr' => array('class'=>'combobox combobox-width add-new-user-on-enter', 'data-otheruserparam'=>$this->params['otherUserParam']),
-            'query_builder' => $this->params['transresUtil']->userQueryBuilder()
+            'query_builder' => $this->params['transresUtil']->userQueryBuilder($this->params['cycle'])
         ));
 
         $builder->add( 'principalIrbInvestigator', EntityType::class, array(
@@ -316,7 +316,7 @@ class ProjectType extends AbstractType
             'required'=> false,
             'multiple' => false,
             'attr' => array('class'=>'combobox combobox-width add-new-user-on-enter', 'data-otheruserparam'=>$this->params['otherUserParam']),
-            'query_builder' => $this->params['transresUtil']->userQueryBuilder()
+            'query_builder' => $this->params['transresUtil']->userQueryBuilder($this->params['cycle'])
         ));
 
         $builder->add( 'coInvestigators', EntityType::class, array(
@@ -325,7 +325,7 @@ class ProjectType extends AbstractType
             'required'=> false,
             'multiple' => true,
             'attr' => array('class'=>'combobox combobox-width add-new-user-on-enter', 'data-otheruserparam'=>$this->params['otherUserParam']),
-            'query_builder' => $this->params['transresUtil']->userQueryBuilder()
+            'query_builder' => $this->params['transresUtil']->userQueryBuilder($this->params['cycle'])
         ));
 
         $builder->add( 'pathologists', EntityType::class, array(
@@ -334,7 +334,7 @@ class ProjectType extends AbstractType
             'required'=> false,
             'multiple' => true,
             'attr' => array('class'=>'combobox combobox-width add-new-user-on-enter', 'data-otheruserparam'=>$this->params['otherUserParam']),
-            'query_builder' => $this->params['transresUtil']->userQueryBuilder()
+            'query_builder' => $this->params['transresUtil']->userQueryBuilder($this->params['cycle'])
         ));
 
         $builder->add( 'contacts', EntityType::class, array(
@@ -353,7 +353,7 @@ class ProjectType extends AbstractType
 //                    ->leftJoin("list.infos", "infos")
 //                    ->orderBy("infos.displayName","ASC");
 //            },
-            'query_builder' => $this->params['transresUtil']->userQueryBuilder()
+            'query_builder' => $this->params['transresUtil']->userQueryBuilder($this->params['cycle'])
         ));
 
         $builder->add( 'billingContact', EntityType::class, array(
@@ -362,7 +362,7 @@ class ProjectType extends AbstractType
             'required'=> false,
             'multiple' => false,
             'attr' => array('class'=>'combobox combobox-width add-new-user-on-enter', 'data-otheruserparam'=>$this->params['otherUserParam']),
-            'query_builder' => $this->params['transresUtil']->userQueryBuilder()
+            'query_builder' => $this->params['transresUtil']->userQueryBuilder($this->params['cycle'])
         ));
 
         //Reviews

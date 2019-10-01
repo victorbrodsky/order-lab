@@ -2705,7 +2705,7 @@ class VacReqUtil
         //Add a filter to the vacation request site for the "My Group" page: show stats only for current employees,
         // meaning check if the listed users have a non-empty "end" date in the Employment Period section of their profile.
         $dql->leftJoin("user.employmentStatus", "employmentStatus");
-        $dql->andWhere("employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate IS NULL");
+        $dql->andWhere("employmentStatus.terminationDate IS NULL");
 
         $dql->orderBy('infos.lastName', 'ASC');
 

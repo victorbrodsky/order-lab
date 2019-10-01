@@ -4888,7 +4888,21 @@ class TransResUtil
 //        return $role;
 //    }
 
-    public function userQueryBuilder() {
+    public function userQueryBuilder( $cycle=NULL ) {
+        //echo "cycle=$cycle <br>";
+        if( $cycle && $cycle == "new" ) {
+            return function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->leftJoin("list.employmentStatus", "employmentStatus")
+                    ->leftJoin("employmentStatus.employmentType", "employmentType")
+                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+                    //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
+                    ->andWhere("employmentStatus.terminationDate IS NULL")
+                    ->leftJoin("list.infos", "infos")
+                    ->orderBy("infos.displayName","ASC");
+            };
+        }
+
         return function(EntityRepository $er) {
             return $er->createQueryBuilder('list')
                 ->leftJoin("list.employmentStatus", "employmentStatus")
@@ -5262,12 +5276,21 @@ class TransResUtil
         $dql = $repository->createQueryBuilder("list");
         $dql->select('list');
 
-        //$dql->leftJoin("list.employmentStatus", "employmentStatus");
-        //$dql->leftJoin("employmentStatus.employmentType", "employmentType");
+        $dql->leftJoin("list.employmentStatus", "employmentStatus");
+        $dql->leftJoin("employmentStatus.employmentType", "employmentType");
         $dql->leftJoin("list.infos", "infos");
 
         //$dql->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL");
         $dql->where("list.createdby != 'googleapi'"); //googleapi is used only by fellowship application population
+
+        //added additional filters
+        //$dql->andWhere("list.keytype IS NOT NULL AND list.primaryPublicUserId != 'system'");
+        //$dql->andWhere("(employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)");
+        //$dql->andWhere("(list.testingAccount = false OR list.testingAccount IS NULL)");
+        //Currently working employee
+        //$dql->andWhere("(employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate IS NULL)");
+        //$curdate = date("Y-m-d", time());
+        //$dql->andWhere("(employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '".$curdate."')");
 
         //$dql->orderBy("infos.displayName","ASC");
         $dql->orderBy("infos.lastName","ASC");
