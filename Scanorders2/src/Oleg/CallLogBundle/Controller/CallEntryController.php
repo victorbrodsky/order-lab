@@ -1503,7 +1503,7 @@ class CallEntryController extends Controller
 //                }
 //            }
             //process Task sections
-            $taskUpdateStr = $calllogUtil->processCalllogTask($message,$originalTasks); //Save Call Log Entry
+            $taskUpdateStr = $calllogUtil->processCalllogTask($message,$originalTasks); //Save New Call Log Entry
 
             //process Attached Documents (here this function works, but entityId is NULL - still it's OK)
             $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($message->getCalllogEntryMessage()); //Save new entry

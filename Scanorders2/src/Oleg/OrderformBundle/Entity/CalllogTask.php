@@ -338,7 +338,7 @@ class CalllogTask
     }
 
     public function getTaskFullInfo( $delimiter="<br>", $html=true ) {
-        $fullInfo = $this->getTaskStatusStr(true) . " task";
+        $fullInfo = $this->getTaskStatusStr(true) . " task"." ID#".$this->getId();
 
         if( $html ) {
             $fullInfo = "<b>" . $fullInfo . "</b>";

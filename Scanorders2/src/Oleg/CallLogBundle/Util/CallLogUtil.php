@@ -3769,17 +3769,29 @@ class CallLogUtil
 
     public function processCalllogTask($message,$originalTasks) {
         // remove the relationship between the CalllogEntryMessage and the Task
+
+//        //testing
+//        foreach($message->getCalllogEntryMessage()->getCalllogTasks() as $task) {
+//            echo "Current task=".$task."<br>";
+//        }
+//        foreach($originalTasks as $task) {
+//            echo "Original task=".$task."<br>";
+//        }
+
+
         $taskUpdateArr = array();
         foreach($originalTasks as $task) {
-            if( false === $message->getCalllogEntryMessage()->getCalllogTasks()->contains($task) ) {
+            //if( false === $message->getCalllogEntryMessage()->getCalllogTasks()->contains($task) ) {
+            if( $this->taskExists($task,$message->getCalllogEntryMessage()->getCalllogTasks()) === false ) {
+                //$taskUpdateArr[] = "Removed task ID#".$task->getId().": ".$task->getTaskFullInfo();
                 $taskUpdateArr[] = "Removed task: ".$task->getTaskFullInfo();
                 // remove the Task from the Tag
                 $message->getCalllogEntryMessage()->getCalllogTasks()->removeElement($task);
                 // if it was a many-to-one relationship, remove the relationship like this
-                $task->setCalllogEntryMessage(null);
-                $this->em->persist($task);
+                //$task->setCalllogEntryMessage(null);
+                //$this->em->persist($task);
                 // if you wanted to delete the Tag entirely, you can also do that
-                $this->em->remove($task);
+                //$this->em->remove($task);
             }
         }
 
@@ -3796,7 +3808,20 @@ class CallLogUtil
             $taskUpdateStr = implode("<br>", $taskUpdateArr);
         }
 
+//        //testing
+//        foreach($message->getCalllogEntryMessage()->getCalllogTasks() as $task) {
+//            echo "Final task=".$task."<br>";
+//        }
+
         return $taskUpdateStr;
+    }
+    public function taskExists($task,$tasks) {
+        foreach($tasks as $thisTask) {
+            if( $thisTask->getId() == $task->getId() ) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public function getTasksInfo( $message ) {

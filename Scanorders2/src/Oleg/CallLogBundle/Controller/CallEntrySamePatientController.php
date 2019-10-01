@@ -402,7 +402,7 @@ class CallEntrySamePatientController extends CallEntryController
             }
 
             //process Task sections
-            $taskUpdateStr = $calllogUtil->processCalllogTask($message,$originalTasks);
+            $taskUpdateStr = $calllogUtil->processCalllogTask($message,$originalTasks); //Save New Call Log Entry
 
             //process Attached Documents
             $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($message->getCalllogEntryMessage()); //Save Call Log Entry Same Patient

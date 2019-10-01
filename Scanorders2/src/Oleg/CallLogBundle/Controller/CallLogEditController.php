@@ -487,9 +487,12 @@ class CallLogEditController extends CallEntryController
 
         // Create an ArrayCollection of the current Task objects in the database
         $originalTasks = new ArrayCollection();
-        foreach($message->getCalllogEntryMessage()->getCalllogTasks() as $task) {
+        foreach($originalMessage->getCalllogEntryMessage()->getCalllogTasks() as $task) {
             $originalTasks->add($task);
         }
+//        foreach($originalTasks as $task) {
+//            echo "Original task=".$task."<br>";
+//        }
 
 //        //Testing (Save/Update Call Log Entry): Check and copy attachments
 //        $documents = $message->getCalllogEntryMessage()->getDocuments();
@@ -608,6 +611,8 @@ class CallLogEditController extends CallEntryController
 
             //process Task sections
             $taskUpdateStr = $calllogUtil->processCalllogTask($message,$originalTasks);
+            //echo "taskUpdateStr=".$taskUpdateStr."<br>";
+            //exit('111');
 
             //set system source and user's default institution
             if( $newEncounter ) {
