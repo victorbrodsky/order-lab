@@ -18,8 +18,8 @@
 	{
         "type": "shell",
         "inline": [
-			"echo @### Install yum-utils & enable epel repository ###",
-			"sudo yum -y install epel-release"	   
+			"echo @### Install yum-utils and enable epel repository ###",
+			"sudo yum -y install epel-release yum-utils"	   
          ]
     },
 	 

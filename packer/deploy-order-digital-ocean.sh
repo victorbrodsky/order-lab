@@ -13,7 +13,7 @@
 #--sslprivatekey intermediate_certificate.ca-crt 
 
 
-#os - ubuntu or centos
+#os - centos or ubuntu
 #apitoken=$1
 #parameters=$2
 #dbuser=$3
@@ -26,7 +26,7 @@
 
 
 
-#$ bash deploy_test.sh --token apitoken --os ubuntu--parameters parameters.yml --dbuser symfony --dbpass symfony --protocol http --domainname domainname --sslcertificate localhost.crt --sslprivatekey localhost.key
+#$ bash deploy_test.sh --token apitoken --os centos --parameters parameters.yml --dbuser symfony --dbpass symfony --protocol http --domainname domainname --sslcertificate localhost.crt --sslprivatekey localhost.key
 
 POSITIONAL=()
 while [[ $# -gt 0 ]]
