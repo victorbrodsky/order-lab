@@ -172,6 +172,14 @@ then
 fi
 
 echo "ORDERPACKERJSON=$ORDERPACKERJSON"
+
+if [ -f "$ORDERPACKERJSON" ]; then
+    echo "$ORDERPACKERJSON exist"
+else 
+    echo "$ORDERPACKERJSON does not exist"
+	exit 0;
+fi
+
 exit 0;
 
 echo "*** Pre processing json file ***"
