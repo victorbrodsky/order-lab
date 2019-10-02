@@ -182,20 +182,20 @@ fi
 
 
 echo "*** Pre processing json file ***"
-sed -i -e "s/api_token_bash_value/$apitoken/g" $ORDERPACKERJSON
-sed -i -e "s/parameters_bash_file/$parameters/g" $ORDERPACKERJSON
-sed -i -e "s/bash_dbuser/$dbuser/g" $ORDERPACKERJSON
-sed -i -e "s/bash_dbpass/$dbpass/g" $ORDERPACKERJSON
+sed -i -e "s/api_token_bash_value/$apitoken/g" "$ORDERPACKERJSON"
+sed -i -e "s/parameters_bash_file/$parameters/g" "$ORDERPACKERJSON"
+sed -i -e "s/bash_dbuser/$dbuser/g" "$ORDERPACKERJSON"
+sed -i -e "s/bash_dbpass/$dbpass/g" "$ORDERPACKERJSON"
 sed -i -e "s/bash_dbuser/$dbuser/g" parameters.yml
 sed -i -e "s/bash_dbpass/$dbpass/g" parameters.yml
 
-sed -i -e "s/bash_domainname/$domainname/g" $ORDERPACKERJSON
-sed -i -e "s/bash_sslcertificate/$sslcertificate/g" $ORDERPACKERJSON
-sed -i -e "s/bash_sslprivatekey/$sslprivatekey/g" $ORDERPACKERJSON
+sed -i -e "s/bash_domainname/$domainname/g" "$ORDERPACKERJSON"
+sed -i -e "s/bash_sslcertificate/$sslcertificate/g" "$ORDERPACKERJSON"
+sed -i -e "s/bash_sslprivatekey/$sslprivatekey/g" "$ORDERPACKERJSON"
 
 
 echo "*** Building VM image ... ***"
-packer build $ORDERPACKERJSON
+packer build "$ORDERPACKERJSON"
 
 
 echo "*** Getting image ID ***"
@@ -210,16 +210,16 @@ echo "image ID=$IMAGEID; name=$IMAGENAME"
 
 
 echo "*** Post processing json file ***"
-sed -i -e "s/$apitoken/api_token_bash_value/g" $ORDERPACKERJSON
-sed -i -e "s/$parameters/parameters_bash_file/g" $ORDERPACKERJSON
-sed -i -e "s/$dbuser/bash_dbuser/g" $ORDERPACKERJSON
-sed -i -e "s/$dbpass/bash_dbpass/g" $ORDERPACKERJSON
+sed -i -e "s/$apitoken/api_token_bash_value/g" "$ORDERPACKERJSON"
+sed -i -e "s/$parameters/parameters_bash_file/g" "$ORDERPACKERJSON"
+sed -i -e "s/$dbuser/bash_dbuser/g" "$ORDERPACKERJSON"
+sed -i -e "s/$dbpass/bash_dbpass/g" "$ORDERPACKERJSON"
 sed -i -e "s/$dbuser/bash_dbuser/g" parameters.yml
 sed -i -e "s/$dbpass/bash_dbpass/g" parameters.yml
 
-sed -i -e "s/$domainname/bash_domainname/g" $ORDERPACKERJSON
-sed -i -e "s/$sslcertificate/bash_sslcertificate/g" $ORDERPACKERJSON
-sed -i -e "s/$sslprivatekey/bash_sslprivatekey/g" $ORDERPACKERJSON
+sed -i -e "s/$domainname/bash_domainname/g" "$ORDERPACKERJSON"
+sed -i -e "s/$sslcertificate/bash_sslcertificate/g" "$ORDERPACKERJSON"
+sed -i -e "s/$sslprivatekey/bash_sslprivatekey/g" "$ORDERPACKERJSON"
 
 
 echo "*** Creating droplet ... ***"
