@@ -180,7 +180,6 @@ else
 	exit 0;
 fi
 
-exit 0;
 
 echo "*** Pre processing json file ***"
 sed -i -e "s/api_token_bash_value/$apitoken/g" order-packer.json
