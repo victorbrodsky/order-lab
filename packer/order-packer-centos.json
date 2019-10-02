@@ -71,8 +71,7 @@
         "type": "shell",
         "inline": [   
 		   "echo @### Install Git ###",		
-           "sudo yum install git -y",
-		  
+           "sudo yum install git -y"		
          ]    
       },
 
