@@ -1,100 +1,41 @@
 #!/bin/bash
-# ORDER installation script
+# A sample Bash script, by Ryan
 
 #bash deploy-order-digital-ocean.sh 
-#--token API-TOKEN-FROM-STEP-1 
-#--os operational system: centos(default) or ubuntu
-#-p parameters.yml 
-#-dbuser - optional (default symfony)
-#-dbpass - optional (default symfony)
-#-protocol - optional (default http)
-#--domainname domain_name.tld - optional
-#--sslcertificate ssl_certificate.crt - optional
-#--sslprivatekey intermediate_certificate.ca-crt 
+#$1 API-TOKEN-FROM-STEP-1 
+#$2 parameters.yml 
+#$3 dbuser - optional (default symfony)
+#$4 dbpass - optional (default symfony)
+#$5 protocol - optional (default http)
+#$6 domain_name.tld - optional
+#$7 ssl_certificate.crt - optional
+#$8 intermediate_certificate.ca-crt 
+#$9 ssl.key - optional
 
+#http: 
+#1) bash deploy-order-digital-ocean.sh API-TOKEN-FROM-STEP-1 parameters.yml dbusername dbpassword
 
-#os - ubuntu or centos
-#apitoken=$1
-#parameters=$2
-#dbuser=$3
-#dbpass=$4
+#https: 
+#1) copy sslcertificate sslprivatekey files to the packer folder
+#2) bash deploy-order-digital-ocean.sh API-TOKEN-FROM-STEP-1 parameters.yml dbusername dbpassword http domainname sslcertificate sslprivatekey
+#3) select 'https' connection channel on the domainname/order/directory/admin/first-time-login-generation-init/ page 
 
-#protocol=$5
-#domainname=$6
-#sslcertificate=$7
-#sslprivatekey=$8
+#Notes: manually solve "cannot allocate memory" without rebooting: 
+#echo 1 > /proc/sys/kernel/sysrq
+#echo f > /proc/sysrq-trigger
+#echo 0 > /proc/sys/kernel/sysrq
+#Or: free -m
 
+apitoken=$1
+parameters=$2
+dbuser=$3
+dbpass=$4
 
+protocol=$5
+domainname=$6
+sslcertificate=$7
+sslprivatekey=$8
 
-#$ bash deploy_test.sh --token apitoken --os ubuntu--parameters parameters.yml --dbuser symfony --dbpass symfony --protocol http --domainname domainname --sslcertificate localhost.crt --sslprivatekey localhost.key
-
-POSITIONAL=()
-while [[ $# -gt 0 ]]
-do
-key="$1"
-
-case $key in
-    -t|--token)
-		apitoken="$2"
-		shift # past argument
-		shift # past value
-    ;;
-	-o|--os)
-		os="$2"
-		shift # past argument
-		shift # past value
-    ;;
-    -s|--parameters)
-		parameters="$2"
-		shift # past argument
-		shift # past value
-    ;;
-    -u|--dbuser)
-		dbuser="$2"
-		shift # past argument
-		shift # past value
-    ;;
-	-p|--dbpass)
-		dbpass="$2"
-		shift # past argument
-		shift # past value
-    ;;
-	-l|--protocol)
-		protocol="$2"
-		shift # past argument
-		shift # past value
-    ;;
-	-d|--domainname)
-		domainname="$2"
-		shift # past argument
-		shift # past value
-    ;;
-	-c|--sslcertificate)
-		sslcertificate="$2"
-		shift # past argument
-		shift # past value
-    ;;
-	-k|--sslprivatekey)
-		sslprivatekey="$2"
-		shift # past argument
-		shift # past value
-    ;;
-    --default)
-		DEFAULT=YES
-		shift # past argument
-    ;;
-    *)    # unknown option
-		POSITIONAL+=("$1") # save it in an array for later
-		shift # past argument
-    ;;
-esac
-done
-set -- "${POSITIONAL[@]}" # restore positional parameters
-
-if [ -z "$os" ]
-  then 	
-    os='centos'
-fi
 
 if [ -z "$dbuser" ]
   then 	
@@ -104,11 +45,6 @@ fi
 if [ -z "$dbpass" ]
   then 	
     dbpass='symfony'
-fi
-
-if [ -z "$parameters" ]
-  then 	
-    parameters='parameters.yml'
 fi
 
 if [ -z "$protocol" ]
@@ -131,8 +67,9 @@ if [ -z "$sslprivatekey" ]
     sslprivatekey='localhost.key'
 fi
 
+echo "*** Deploy order to Digital Ocean ***"
+
 echo "api_token=$apitoken" 
-echo "os=$os"
 echo "parameters=$parameters" 
 echo "dbuser=$dbuser"
 echo "dbpass=$dbpass"
@@ -155,24 +92,11 @@ if [ -z "$parameters" ]
     exit 0
 fi
 
-if [ "$os" = "centos" ]
-  then 	
-	ORDERPACKERJSON="order-packer-centos.json"
-fi
-
-if [ "$os" = "ubuntu" ]
-  then 	
-	ORDERPACKERJSON="order-packer-ubuntu.json"
-fi
-
-if [ -z "$ORDERPACKERJSON" ]
+if [ -z order-packer.json ]
 then
     echo "order-packer.json not found."
 	exit 0
 fi
-
-echo "ORDERPACKERJSON=$ORDERPACKERJSON"
-exit 0;
 
 echo "*** Pre processing json file ***"
 sed -i -e "s/api_token_bash_value/$apitoken/g" order-packer.json
@@ -182,6 +106,9 @@ sed -i -e "s/bash_dbpass/$dbpass/g" order-packer.json
 sed -i -e "s/bash_dbuser/$dbuser/g" parameters.yml
 sed -i -e "s/bash_dbpass/$dbpass/g" parameters.yml
 
+#modify http.config file to insert virtual host for https protocol
+#https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-apache-in-ubuntu-16-04
+sed -i -e "s/bash_protocol/$protocol/g" order-packer.json
 sed -i -e "s/bash_domainname/$domainname/g" order-packer.json
 sed -i -e "s/bash_sslcertificate/$sslcertificate/g" order-packer.json
 sed -i -e "s/bash_sslprivatekey/$sslprivatekey/g" order-packer.json
@@ -210,6 +137,7 @@ sed -i -e "s/$dbpass/bash_dbpass/g" order-packer.json
 sed -i -e "s/$dbuser/bash_dbuser/g" parameters.yml
 sed -i -e "s/$dbpass/bash_dbpass/g" parameters.yml
 
+sed -i -e "s/$protocol/bash_protocol/g" order-packer.json
 sed -i -e "s/$domainname/bash_domainname/g" order-packer.json
 sed -i -e "s/$sslcertificate/bash_sslcertificate/g" order-packer.json
 sed -i -e "s/$sslprivatekey/bash_sslprivatekey/g" order-packer.json
@@ -274,7 +202,4 @@ fi
 echo "Trying to open a web browser... You can try to open a web browser manually and go to $DROPLETIPWEB"
 
 xdg-open "$DROPLETIPWEB"
-
-
-
 

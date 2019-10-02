@@ -6,7 +6,7 @@ parameters:
     database_port: null
     database_name: scanorder
     database_user: bash_dbuser
-    database_password: bash_dbpass
+    database_password: bash_dbuser
     database_driver_external: pdo_sqlsrv
     database_host_external: null
     database_port_external: null

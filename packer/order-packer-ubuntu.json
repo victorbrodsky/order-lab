@@ -1,0 +1,151 @@
+{
+
+  "variables": {
+        "ssh_name": "root"
+  },	
+
+  "builders": [{
+    "type": "digitalocean",
+    "api_token": "api_token_bash_value",
+    "region": "nyc3",
+    "size": "2gb",
+    "image": "ubuntu-16-04-x64",
+    "ssh_username": "{{user `ssh_name`}}"  
+  }],
+
+  "provisioners": [
+  
+     {
+        "type": "shell",
+        "inline": [
+		   "echo @### Install apache ###",
+		   "echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections",
+           "sleep 30",
+           "sudo apt-get update",
+           "sudo apt-get install -y apache2"          
+         ]
+     },
+   
+     {
+        "type": "shell",
+        "inline": [
+		   "echo @### Install php ###",	
+           "sleep 30",	
+	       "sudo apt-add-repository -y ppa:ondrej/php",
+           "sudo apt-get update",
+	       "sudo apt-get install -y php7.0 php5.6 php5.6-mysql php-gettext php5.6-mbstring php-mbstring php7.0-mbstring libapache2-mod-php5.6 libapache2-mod-php7.0",	
+           "sudo apt-get install -y php5.6-xml php5.6-cli php5.6-curl php5.6-json php5.6-intl php5.6-ldap php5.6-gd",   
+           "sudo apt-get install -y zip unzip php5.6-zip",                   
+           "sudo a2dismod php7.0 ; sudo a2enmod php5.6 ; sudo service apache2 restart ; echo 1 | sudo update-alternatives --config php"
+         ]     
+      },
+
+      {
+        "type": "shell",
+        "inline": [  
+		   "echo @### Install postgresql and pgsql ###",		
+           "sudo apt-get install -y postgresql postgresql-contrib",
+           "sudo apt-get install -y php5.6-pgsql",
+           "sudo service apache2 restart"         
+         ]    
+      },
+
+      {
+        "type": "shell",
+        "inline": [   
+		   "echo @### Create DB and create user ###",		
+           "sudo -Hiu postgres createdb scanorder",
+		   "sudo -Hiu postgres psql -c \"CREATE USER bash_dbuser WITH PASSWORD 'bash_dbuser'\"",  
+	       "sudo -Hiu postgres psql -c \"ALTER USER bash_dbuser WITH SUPERUSER\"",
+           "sudo -Hiu postgres psql -c \"GRANT ALL PRIVILEGES ON DATABASE scanorder to bash_dbuser\""          
+         ]    
+      },
+
+      {
+        "type": "shell",
+        "inline": [  
+		   "echo @### Clone ORDER and copy config and php.ini files, install composer ###",
+           "sudo apt-get install -y git",
+           "ssh-keyscan github.com >> ~/.ssh/known_hosts",
+           "cd /usr/local/bin/",
+           "git clone https://github.com/victorbrodsky/order-lab.git /usr/local/bin/order-lab",
+           "sudo chmod a+x /usr/local/bin/order-lab",
+           "sudo chown -R www-data:www-data /usr/local/bin/order-lab",
+           "cp /usr/local/bin/order-lab/packer/000-default.conf /etc/apache2/sites-available/",
+           "cp /usr/local/bin/order-lab/packer/php.ini /etc/php/5.6/apache2/",
+           "sudo a2enmod rewrite",
+           "sudo service apache2 restart",
+           "curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer"                 
+         ]    
+      },
+ 
+      {
+          "type": "file",
+          "source": "parameters_bash_file",
+          "destination": "/usr/local/bin/order-lab/Scanorders2/app/config/parameters_bash_file"         
+       },
+	   
+	   {
+        "type": "shell",
+        "inline": [   
+		   "echo @### Install wkhtmltopdf, libreoffice, ghostscript, pdftk ###",
+		   "sudo apt-get update",
+		   "sudo apt-get install -y xvfb libfontconfig wkhtmltopdf",	
+		   "sudo apt-get install -y libreoffice",		
+           "sudo apt-get install -y ghostscript",
+		   "sudo apt-get install -y pdftk"      
+         ]    
+      },
+	  
+	  {
+        "type": "shell",
+        "inline": [ 
+           "echo @### Create ssl folder /usr/local/bin/order-lab/ssl ###",		
+		   "sudo mkdir /usr/local/bin/order-lab/ssl"
+         ]    
+      },
+	  
+	  {
+          "type": "file",
+          "source": "bash_sslcertificate",
+          "destination": "/usr/local/bin/order-lab/ssl/apache2.crt"         
+       },
+	   
+	   {
+          "type": "file",
+          "source": "bash_sslprivatekey",
+          "destination": "/usr/local/bin/order-lab/ssl/apache2.key"         
+       },
+
+	   {
+		   "type": "shell",
+           "inline": [ 
+		   "echo @### Enable ssl ###",		   
+		   "cp /usr/local/bin/order-lab/packer/default-ssl.conf /etc/apache2/sites-available/",
+           "sudo a2enmod ssl",          
+		   "sudo a2enmod headers",	
+           "sudo a2ensite default-ssl",
+		   "sudo systemctl restart apache2"		   
+         ]    
+      },
+	  
+	  {
+        "type": "shell",
+        "inline": [ 
+		   "echo @### Composer and deploy ###",
+           "cd /usr/local/bin/order-lab/Scanorders2",		  
+		   "composer self-update",
+           "php -dmemory_limit=-1 /usr/local/bin/composer install",
+		   "git pull",
+           "git rev-parse HEAD",		   
+	       "sudo chmod +x /usr/local/bin/order-lab/Scanorders2/deploy_prod.sh",
+	       "bash /usr/local/bin/order-lab/Scanorders2/deploy_prod.sh",
+	       "sudo chown -R www-data:www-data /usr/local/bin/order-lab",		           
+           "sudo chown -R www-data:www-data /usr/local/bin/order-lab/.git/"			   
+         ]    
+      }  
+	  
+      
+   ]
+
+}
