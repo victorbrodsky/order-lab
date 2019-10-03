@@ -25,13 +25,18 @@ sudo yum install httpd -y
 sudo systemctl start httpd.service
 sudo systemctl enable httpd.service
 
-echo @### Install postgresql and pgsql ###		
+echo @### Install the repository RPM, client and server packages ###		
 sudo yum install https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
-sudo yum -y install postgresql11 postgresql11-server postgresql11-contrib postgresql11-libs
+#No package postgresql11 available
+yum install postgresql12
+yum install postgresql12-server
+#sudo yum -y install postgresql11 postgresql11-server postgresql11-contrib postgresql11-libs
 
 #echo @### (use this???) /usr/pgsql-11/bin/postgresql-11-setup initdb ###
-sudo systemctl start postgresql-11.service
-sudo systemctl enable postgresql-11.service 
+echo @### Optionally initialize the database and enable automatic start ###	
+/usr/pgsql-12/bin/postgresql-12-setup initdb
+systemctl enable postgresql-12
+systemctl start postgresql-12
 
 
 
