@@ -34,9 +34,18 @@
 	{
         "type": "shell",
         "inline": [
-			"echo @### RUN2: sudo yum install php php-common -y ###",
+			"echo @### RUN2: sudo yum install php -y ###",
 			"sudo yum update",
-			"sudo yum install php php-common -y"
+			"sudo yum install php -y"
+         ]
+    },
+	
+	{
+        "type": "shell",
+        "inline": [
+			"echo @### RUN3: sudo yum install php-common -y ###",
+			"sudo yum update",
+			"sudo yum install php-common -y"
          ]
     },
 	
