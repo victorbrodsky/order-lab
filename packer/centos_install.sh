@@ -49,7 +49,7 @@ echo @### Optionally initialize the database and enable automatic start ###
 systemctl enable postgresql-12
 systemctl start postgresql-12
 
-echo @### Create DB and create user ###
+echo @### Create DB and create user $bashdbuser with password $bashdbpass###
 sudo -Hiu postgres createdb scanorder
 sudo -Hiu postgres psql -c "CREATE USER $bashdbuser WITH PASSWORD '$bashdbpass'"
 sudo -Hiu postgres psql -c "ALTER USER $bashdbuser WITH SUPERUSER"
@@ -78,7 +78,7 @@ cp /usr/local/bin/order-lab/packer/000-default.conf /etc/httpd/conf.d
 echo @### Copy php.ini to /etc/httpd/conf.d ###
 #/etc/opt/remi/php72/ or /etc/
 cp /usr/local/bin/order-lab/packer/php.ini /etc/
-sudo a2enmod rewrite
+
 #sudo service apache2 restart
 sudo systemctl restart httpd.service
 curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer      		   
