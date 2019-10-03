@@ -35,7 +35,7 @@
         "type": "shell",
         "inline": [
 			"echo @### RUN2: sudo yum install php php-common -y ###",
-			"sudo yum update"
+			"sudo yum update",
 			"sudo yum install php php-common -y"
          ]
     },
