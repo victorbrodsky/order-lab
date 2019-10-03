@@ -17,6 +17,10 @@
   
 	{
         "type": "shell",
+		"environment_vars": [
+			"HOSTNAME={{user `vm_name`}}",
+			"FOO=bar"
+		],
         "script": "centos_install.sh $bash_dbuser $bash_dbpass"
     },
 	

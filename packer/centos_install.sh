@@ -2,8 +2,10 @@
 # CentOs installation script (Rhel 7, PHP 7.2, Postgresql)
 
 echo @### Get bash_dbuser bash_dbpass ###
-bashdbuser=$1
-bashdbpass=$2
+#bashdbuser=$1
+#bashdbpass=$2
+echo bashdbuser=$bashdbuser
+echo bashdbpass=$bashdbpass
 
 echo @### Install yum-utils and enable epel repository ###
 sudo yum -y install epel-release
