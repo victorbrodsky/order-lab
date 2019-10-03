@@ -17,7 +17,7 @@
   
 	{
         "type": "shell",
-        "script": "centos_install.sh $bash_dbuser $bash_dbuser "
+        "script": "centos_install.sh $bash_dbuser $bash_dbpass"
     },
 	
 	{

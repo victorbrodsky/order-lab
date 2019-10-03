@@ -1,6 +1,10 @@
 #!/bin/bash
 # CentOs installation script (Rhel 7, PHP 7.2, Postgresql)
 
+echo @### Get bash_dbuser bash_dbpass ###
+bashdbuser=$1
+bashdbpass=$2
+
 echo @### Install yum-utils and enable epel repository ###
 sudo yum -y install epel-release
 
@@ -45,9 +49,9 @@ systemctl start postgresql-12
 
 echo @### Create DB and create user ###
 sudo -Hiu postgres createdb scanorder
-sudo -Hiu postgres psql -c "CREATE USER bash_dbuser WITH PASSWORD 'bash_dbuser'"
-sudo -Hiu postgres psql -c "ALTER USER bash_dbuser WITH SUPERUSER"
-sudo -Hiu postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE scanorder to bash_dbuser"
+sudo -Hiu postgres psql -c "CREATE USER $bashdbuser WITH PASSWORD '$bashdbpass'"
+sudo -Hiu postgres psql -c "ALTER USER $bashdbuser WITH SUPERUSER"
+sudo -Hiu postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE scanorder to $bashdbuser"
 
 echo @### Install Git ###		
 sudo yum install git -y	
