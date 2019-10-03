@@ -77,7 +77,7 @@ cp /usr/local/bin/order-lab/packer/000-default.conf /etc/httpd/conf.d
 
 echo @### Copy php.ini to /etc/httpd/conf.d ###
 #/etc/opt/remi/php72/ or /etc/
-cp /usr/local/bin/order-lab/packer/php.ini /etc/
+cp /usr/local/bin/order-lab/packer/php.ini /etc/opt/remi/php72/
 
 #sudo service apache2 restart
 sudo systemctl restart httpd.service
