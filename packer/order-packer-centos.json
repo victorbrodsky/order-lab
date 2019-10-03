@@ -49,18 +49,6 @@
           "source": "bash_sslprivatekey",
           "destination": "/usr/local/bin/order-lab/ssl/apache2.key"         
        },
-
-	   {
-		   "type": "shell",
-           "inline": [ 
-		   "echo @### Enable ssl ###",		   
-		   "cp /usr/local/bin/order-lab/packer/default-ssl.conf /etc/apache2/sites-available/",
-           "sudo a2enmod ssl",          
-		   "sudo a2enmod headers",	
-           "sudo a2ensite default-ssl",
-		   "sudo systemctl restart apache2"		   
-         ]    
-      },
 	  
 	  {
         "type": "shell",

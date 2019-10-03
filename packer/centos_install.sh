@@ -81,8 +81,15 @@ cp /usr/local/bin/order-lab/packer/php.ini /etc/
 
 #sudo service apache2 restart
 sudo systemctl restart httpd.service
-curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer      		   
-		   
+#curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer   
+sudo yum install php-cli php-zip wget unzip -y  
+php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" 
+#verify the data integrity of the script compare the script SHA-384 hash with the latest installer
+HASH="$(wget -q -O - https://composer.github.io/installer.sig)"	
+#Output should be "Installer verified"
+php -r "if (hash_file('SHA384', 'composer-setup.php') === '$HASH') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"	   
+#install Composer in the /usr/local/bin directory
+sudo php composer-setup.php --install-dir=/usr/local/bin --filename=composer		   
 		   
 
 	  
