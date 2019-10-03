@@ -59,7 +59,7 @@ echo @### Install Git ###
 sudo yum install git -y	
 
 echo @### Install wkhtmltopdf, libreoffice, ghostscript, pdftk ###
-sudo yum update
+#sudo yum update
 sudo yum install -y xvfb libfontconfig wkhtmltopdf	
 sudo yum install -y libreoffice	
 sudo yum install -y ghostscript
