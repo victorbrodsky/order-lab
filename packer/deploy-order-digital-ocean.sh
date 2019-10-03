@@ -167,8 +167,8 @@ fi
 
 if [ -z "$ORDERPACKERJSON" ]
 then
-    echo "order-packer.json not found."
-	exit 0
+    echo "order-packer.json not found. Use default order-packer-centos.json"
+	ORDERPACKERJSON="order-packer-centos.json"
 fi
 
 echo "ORDERPACKERJSON=$ORDERPACKERJSON"
