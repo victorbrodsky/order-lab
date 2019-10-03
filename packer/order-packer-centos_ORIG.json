@@ -122,9 +122,9 @@
           "type": "file",
           "source": "parameters_bash_file",
           "destination": "/usr/local/bin/order-lab/Scanorders2/app/config/parameters_bash_file"         
-       },
+      },
 	   
-	   {
+	{
         "type": "shell",
         "inline": [   
 		   "echo @### Install wkhtmltopdf, libreoffice, ghostscript, pdftk ###",
@@ -134,15 +134,15 @@
            "sudo yum install -y ghostscript",
 		   "sudo yum install -y pdftk"      
          ]    
-      },
+	},
 	  
-	  {
+	{
         "type": "shell",
         "inline": [ 
            "echo @### Create ssl folder /usr/local/bin/order-lab/ssl ###",		
 		   "sudo mkdir /usr/local/bin/order-lab/ssl"
          ]    
-      },
+	},
 	  
 	  {
           "type": "file",
