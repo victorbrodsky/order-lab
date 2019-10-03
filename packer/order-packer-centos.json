@@ -26,16 +26,16 @@
 	{
         "type": "shell",
         "inline": [
-			"echo @### RUN: sudo yum-config-manager --enable remi-php72 ###",
-			"sudo yum-config-manager --enable remi-php72",
-			"sudo yum update"
+			"echo @### RUN1: sudo yum-config-manager --enable remi-php72 ###",
+			"sudo yum-config-manager --enable remi-php72"
          ]
     },
 	
 	{
         "type": "shell",
         "inline": [
-			"echo @### RUN: sudo yum install php php-common -y ###",
+			"echo @### RUN2: sudo yum install php php-common -y ###",
+			"sudo yum update"
 			"sudo yum install php php-common -y"
          ]
     },
