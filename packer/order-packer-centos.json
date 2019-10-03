@@ -26,9 +26,26 @@
 	{
         "type": "shell",
         "inline": [
-			"echo @### Install PHP 7.2 ###",
+			"echo @### RUN: sudo yum-config-manager --enable remi-php72 ###",
 			"sudo yum-config-manager --enable remi-php72",
-			"sudo yum update",  
+			"sudo yum update"
+         ]
+    },
+	
+	{
+        "type": "shell",
+        "inline": [
+			"echo @### RUN: sudo yum install php php-common -y ###",
+			"sudo yum install php php-common -y"
+         ]
+    },
+	
+	{
+        "type": "shell",
+        "inline": [
+			"echo @### Install PHP 7.2 TODO: error ###",
+			"sudo yum-config-manager --enable remi-php72",
+			"sudo yum update", 
 			"sudo yum install php php-common -y",
 			"sudo yum install php-cli php-pear php-pdo php-mysqlnd php-gd php-mbstring php-mcrypt php-xml php-curl -y"		   
          ]
