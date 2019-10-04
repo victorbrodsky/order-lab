@@ -7,89 +7,180 @@ echo @### Get bash_dbuser bash_dbpass ###
 echo bashdbuser=$bashdbuser
 echo bashdbpass=$bashdbpass
 
-echo @### Install yum-utils and enable epel repository ###
-sudo yum -y install epel-release
+#https://gitlab.com/Danny_Pham/WriteBash.com/blob/master/Install/06-Script_install_LAMP_PHP_7.2_on_CentOS_7.sh
+# Function update os
+f_update_os () {
+    echo "Starting update os ..."
+    sleep 1
+
+    sudo yum update
+    sudo yum upgrade -y
+
+    echo ""
+    sleep 1
+}
+
+# Function install LAMP stack
+f_install_apache () {
+    ########## INSTALL APACHE ##########
+    echo "Installing apache ..."
+    sleep 1
+
+	sudo yum install httpd -y
+	sudo systemctl enable httpd.service
+	sudo systemctl start httpd.service
+	sudo systemctl status httpd.service
+	
+	echo ""
+    sleep 1
+}
+
+f_install_postgresql12 () {
+    ########## INSTALL Postgresql ##########
+    echo "Installing Postgresql ..."
+    sleep 1
+
+	echo @### Install the repository RPM, client and server packages ###		
+	sudo yum install https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm -y
+	
+	yum install postgresql12 -y
+	yum install postgresql12-server -y
+	#sudo yum -y install postgresql11 postgresql11-server postgresql11-contrib postgresql11-libs
+
+	#echo @### (use this???) /usr/pgsql-11/bin/postgresql-11-setup initdb ###
+	echo @### Optionally initialize the database and enable automatic start ###	
+	/usr/pgsql-12/bin/postgresql-12-setup initdb
+	systemctl enable postgresql-12
+	systemctl start postgresql-12
+
+	echo @### Create DB and create user $bashdbuser with password $bashdbpass###
+	udo -Hiu postgres createdb scanorder
+	sudo -Hiu postgres psql -c "CREATE USER $bashdbuser WITH PASSWORD '$bashdbpass'"
+	sudo -Hiu postgres psql -c "ALTER USER $bashdbuser WITH SUPERUSER"
+	sudo -Hiu postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE scanorder to $bashdbuser"
+	
+	echo ""
+    sleep 1
+}
+
+f_install_php72 () {
+    ########## INSTALL APACHE 7.2 ##########
+    echo "Installing apache 7.2 ..."
+    sleep 1
+
+	echo @### Install yum-utils and enable epel repository ###
+	sudo yum -y install epel-release
+	sudo yum install http://rpms.remirepo.net/enterprise/remi-release-7.rpm -y
+
+	echo @### PHP1: install yum-utils -y ###
+	sudo yum install yum-utils -y
+
+	echo @### PHP2: sudo yum-config-manager --enable remi-php72 ###
+	yum-config-manager --enable remi-php72 -y
+
+	echo @### PHP3: sudo yum install php72 -y ###
+	yum install php php-mcrypt php-cli php-gd php-curl php-mysql php-ldap php-zip php-fileinfo php-pear -y
+	
+	# Config to fix error Apache not load PHP file
+    #chown -R apache:apache /var/www
+    #sed -i '/<Directory \/>/,/<\/Directory/{//!d}' /etc/httpd/conf/httpd.conf
+    #sed -i '/<Directory \/>/a\    Options Indexes FollowSymLinks\n    AllowOverride All\n    Require all granted' /etc/httpd/conf/httpd.conf
+
+	# Restart Apache
+    systemctl restart httpd
+
+	
+	#echo @### PHP3: sudo yum install php-common -y ###
+	#sudo yum update
+	#sudo yum install php-common -y
+
+	#echo @### PHP4: sudo yum install php-cli and others -y ###
+	#TODO: error: No package vailable
+	#sudo yum install -y php72 php72-php-fpm php72-php-gd php72-php-json php72-php-mbstring php72-php-mysqlnd php72-php-xml php72-php-xmlrpc php72-php-opcache
+	#sudo systemctl enable php72-php-fpm.service
+	#sudo systemctl start php72-php-fpm.service
+	
+	echo ""
+    sleep 1
+}
 
 
-echo @### PHP1: sudo yum-config-manager --enable remi-php72 ###
-sudo yum-config-manager --enable remi-php72 -y
 
-echo @### PHP2: sudo yum install php72 -y ###
-sudo yum install yum-utils -y
-sudo yum update
-sudo yum search php72 | more
-sudo yum install -y php72 
+f_install_util () {
+    ########## INSTALL UTILITIES ##########
+    echo "Installing apache ..."
+    sleep 1
 
-#echo @### PHP3: sudo yum install php-common -y ###
-#sudo yum update
-#sudo yum install php-common -y
+	echo @### Install Git ###		
+	yum install git -y	
+	
+	echo @### Install wkhtmltopdf, libreoffice, ghostscript, pdftk ###
+	#sudo yum update
+	yum install -y xvfb libfontconfig wkhtmltopdf	
+	yum install -y libreoffice	
+	yum install -y ghostscript
+	yum install -y pdftk  
 
-echo @### PHP4: sudo yum install php-cli and others -y ###
-sudo yum install -y php72 php72-php-fpm php72-php-gd php72-php-json php72-php-mbstring php72-php-mysqlnd php72-php-xml php72-php-xmlrpc php72-php-opcache
-sudo systemctl enable php72-php-fpm.service
-sudo systemctl start php72-php-fpm.service
-
-echo @### Install Apache ###
-sudo yum install httpd -y
-sudo systemctl enable httpd.service
-sudo systemctl start httpd.service
-sudo systemctl status httpd.service
+	yum install wget unzip -y	
+	
+	echo ""
+    sleep 1
+}
 
 
-echo @### Install the repository RPM, client and server packages ###		
-sudo yum install https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm -y
-#No package postgresql11 available
-yum install postgresql12 -y
-yum install postgresql12-server -y
-#sudo yum -y install postgresql11 postgresql11-server postgresql11-contrib postgresql11-libs
+f_install_order () {
+    ########## Clone ORDER ##########
+    echo "Installing apache ..."
+    sleep 1
 
-#echo @### (use this???) /usr/pgsql-11/bin/postgresql-11-setup initdb ###
-echo @### Optionally initialize the database and enable automatic start ###	
-/usr/pgsql-12/bin/postgresql-12-setup initdb
-systemctl enable postgresql-12
-systemctl start postgresql-12
+	echo @### Clone ORDER and copy config and php.ini files, install composer ###
+	ssh-keyscan github.com >> ~/.ssh/known_hosts
+	cd /usr/local/bin/
+	git clone https://github.com/victorbrodsky/order-lab.git /usr/local/bin/order-lab
+	sudo chmod a+x /usr/local/bin/order-lab
+	sudo chown -R www-data:www-data /usr/local/bin/order-lab
+	
+	echo ""
+    sleep 1
+}
+     	
+f_install_prepare () {
+    ########## Clone ORDER ##########
+    echo "Installing apache ..."
+    sleep 1
 
-echo @### Create DB and create user $bashdbuser with password $bashdbpass###
-sudo -Hiu postgres createdb scanorder
-sudo -Hiu postgres psql -c "CREATE USER $bashdbuser WITH PASSWORD '$bashdbpass'"
-sudo -Hiu postgres psql -c "ALTER USER $bashdbuser WITH SUPERUSER"
-sudo -Hiu postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE scanorder to $bashdbuser"
+	echo @### Copy 000-default.conf to /etc/httpd/conf.d ###
+	cp /usr/local/bin/order-lab/packer/000-default.conf /etc/httpd/conf.d
+	
+	echo @### Copy php.ini to /etc/httpd/conf.d ###
+	#/etc/opt/remi/php72/ or /etc/
+	cp /usr/local/bin/order-lab/packer/php.ini /etc/opt/remi/php72/
+	#cp /usr/local/bin/order-lab/packer/php.ini /etc/
+	
+	#sudo service apache2 restart
+	sudo systemctl restart httpd.service
+	
+	echo @### Install composer ###
+	php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" 
+	
+	#verify the data integrity of the script compare the script SHA-384 hash with the latest installer
+	HASH="$(wget -q -O - https://composer.github.io/installer.sig)"	
+	#Output should be "Installer verified"
+	php -r "if (hash_file('SHA384', 'composer-setup.php') === '$HASH') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"	   
+	#install Composer in the /usr/local/bin directory
+	sudo php composer-setup.php --install-dir=/usr/local/bin --filename=composer		
+	
+	echo ""
+    sleep 1
+}	
 
-echo @### Install Git ###		
-sudo yum install git -y	
-
-echo @### Install wkhtmltopdf, libreoffice, ghostscript, pdftk ###
-#sudo yum update
-sudo yum install -y xvfb libfontconfig wkhtmltopdf	
-sudo yum install -y libreoffice	
-sudo yum install -y ghostscript
-sudo yum install -y pdftk      	
-		   
-echo @### Clone ORDER and copy config and php.ini files, install composer ###
-ssh-keyscan github.com >> ~/.ssh/known_hosts
-cd /usr/local/bin/
-git clone https://github.com/victorbrodsky/order-lab.git /usr/local/bin/order-lab
-sudo chmod a+x /usr/local/bin/order-lab
-sudo chown -R www-data:www-data /usr/local/bin/order-lab
-
-echo @### Copy 000-default.conf to /etc/httpd/conf.d ###
-cp /usr/local/bin/order-lab/packer/000-default.conf /etc/httpd/conf.d
-
-echo @### Copy php.ini to /etc/httpd/conf.d ###
-#/etc/opt/remi/php72/ or /etc/
-cp /usr/local/bin/order-lab/packer/php.ini /etc/opt/remi/php72/
-
-#sudo service apache2 restart
-sudo systemctl restart httpd.service
-#curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer   
-sudo yum install php-cli php-zip wget unzip -y  
-php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" 
-#verify the data integrity of the script compare the script SHA-384 hash with the latest installer
-HASH="$(wget -q -O - https://composer.github.io/installer.sig)"	
-#Output should be "Installer verified"
-php -r "if (hash_file('SHA384', 'composer-setup.php') === '$HASH') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"	   
-#install Composer in the /usr/local/bin directory
-sudo php composer-setup.php --install-dir=/usr/local/bin --filename=composer		   
+f_update_os
+f_install_apache
+f_install_postgresql12
+f_install_php72
+f_install_util
+f_install_order
+f_install_prepare
 		   
 
 	  
