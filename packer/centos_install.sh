@@ -154,8 +154,8 @@ f_install_prepare () {
 	
 	echo @### Copy php.ini to /etc/httpd/conf.d ###
 	#/etc/opt/remi/php72/ or /etc/
-	cp /usr/local/bin/order-lab/packer/php.ini /etc/opt/remi/php72/
-	#cp /usr/local/bin/order-lab/packer/php.ini /etc/
+	#cp /usr/local/bin/order-lab/packer/php.ini /etc/opt/remi/php72/
+	cp /usr/local/bin/order-lab/packer/php.ini /etc/
 	
 	#sudo service apache2 restart
 	sudo systemctl restart httpd.service
@@ -178,9 +178,9 @@ f_update_os
 f_install_apache
 f_install_postgresql12
 f_install_php72
-f_install_util
-f_install_order
-f_install_prepare
+#f_install_util
+#f_install_order
+#f_install_prepare
 		   
 
 	  

@@ -21,7 +21,7 @@
 			"bashdbuser=bash_dbuser",
 			"bashdbpass=bash_dbpass"
 		],
-        "script": "centos_install.sh"
+        "script": "06-Script_install_LAMP_PHP_7.2_on_CentOS_7.sh"
     },
 	
 	{
