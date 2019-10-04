@@ -11,7 +11,7 @@
     "size": "2gb",
     "image": "centos-7-x64",
     "ssh_username": "{{user `ssh_name`}}"  
-  }],
+  }]
 
 
 
