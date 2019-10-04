@@ -63,7 +63,7 @@ f_install_postgresql12 () {
     sleep 1
 }
 
-f_install_php72 () {
+f_install_php72_ORIG () {
     ########## INSTALL APACHE 7.2 ##########
     echo "Installing apache 7.2 ..."
     sleep 1
@@ -88,6 +88,53 @@ f_install_php72 () {
 
 	# Restart Apache
     systemctl restart httpd
+
+	
+	#echo @### PHP3: sudo yum install php-common -y ###
+	#sudo yum update
+	#sudo yum install php-common -y
+
+	#echo @### PHP4: sudo yum install php-cli and others -y ###
+	#TODO: error: No package vailable
+	#sudo yum install -y php72 php72-php-fpm php72-php-gd php72-php-json php72-php-mbstring php72-php-mysqlnd php72-php-xml php72-php-xmlrpc php72-php-opcache
+	#sudo systemctl enable php72-php-fpm.service
+	#sudo systemctl start php72-php-fpm.service
+	
+	echo ""
+    sleep 1
+}
+f_install_php72 () {
+    ########## INSTALL APACHE 7.2 ##########
+    echo "Installing apache 7.2 ..."
+    sleep 1
+
+	echo @### Install yum-utils and enable epel repository ###
+	sudo yum -y install epel-release
+	sudo yum install http://rpms.remirepo.net/enterprise/remi-release-7.rpm -y
+
+	echo @### PHP1: install yum-utils -y ###
+	sudo yum install yum-utils -y
+
+	echo @### PHP2: sudo yum-config-manager --enable remi-php72 ###
+	yum-config-manager --enable remi-php72 -y
+
+	echo @### PHP3: Search for PHP 7.2 packages ###
+	sudo yum search php72 | more
+	sudo yum search php72 | egrep 'fpm|gd|mysql|memcache'
+	
+	echo @### PHP4: Install PHP 7.2 ###
+	sudo yum install php72 -y
+	
+	echo @### PHP4: Install PHP packages ###
+	sudo yum -y install php72-php-fpm php72-php-gd php72-php-json php72-php-mbstring php72-php-mysqlnd php72-php-xml php72-php-xmlrpc php72-php-opcache
+	
+	# Config to fix error Apache not load PHP file
+    #chown -R apache:apache /var/www
+    #sed -i '/<Directory \/>/,/<\/Directory/{//!d}' /etc/httpd/conf/httpd.conf
+    #sed -i '/<Directory \/>/a\    Options Indexes FollowSymLinks\n    AllowOverride All\n    Require all granted' /etc/httpd/conf/httpd.conf
+
+	# Restart Apache
+    #systemctl restart httpd
 
 	
 	#echo @### PHP3: sudo yum install php-common -y ###
