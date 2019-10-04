@@ -13,65 +13,6 @@
     "ssh_username": "{{user `ssh_name`}}"  
   }],
 
-  "provisioners": [
-  
-	{
-        "type": "shell",
-		"environment_vars": [
-			"bashdbuser=bash_dbuser",
-			"bashdbpass=bash_dbpass"
-		],
-        "script": "centos_install.sh"
-    },
-	
-	{
-		"type": "file",
-		"source": "parameters_bash_file",
-		"destination": "/usr/local/bin/order-lab/Scanorders2/app/config/parameters_bash_file"         
-	},
-	
-	{
-        "type": "shell",
-        "inline": [ 
-           "echo @### Create ssl folder /usr/local/bin/order-lab/ssl ###",		
-		   "sudo mkdir /usr/local/bin/order-lab/ssl"
-         ]    
-	},
-	  
-	  {
-          "type": "file",
-          "source": "bash_sslcertificate",
-          "destination": "/usr/local/bin/order-lab/ssl/apache2.crt"         
-       },
-	   
-	   {
-          "type": "file",
-          "source": "bash_sslprivatekey",
-          "destination": "/usr/local/bin/order-lab/ssl/apache2.key"         
-       },
-	   
-	   {
-          "type": "file",
-          "source": "composer_centos_php7.json",
-          "destination": "/usr/local/bin/order-lab/Scanorders2/composer.json"         
-       },
-	  
-	  {
-        "type": "shell",
-        "inline": [ 
-		   "echo @### Composer and deploy ###",
-           "cd /usr/local/bin/order-lab/Scanorders2",		  
-		   "composer self-update",
-           "composer update",
-		   "git pull",
-           "git rev-parse HEAD",		   
-	       "sudo chmod +x /usr/local/bin/order-lab/Scanorders2/deploy_prod.sh",
-	       "bash /usr/local/bin/order-lab/Scanorders2/deploy_prod.sh",
-	       "sudo chown -R www-data:www-data /usr/local/bin/order-lab",		           
-           "sudo chown -R www-data:www-data /usr/local/bin/order-lab/.git/"			   
-         ]    
-      } 
-      
-   ]
+
 
 }
