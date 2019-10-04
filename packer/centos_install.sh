@@ -160,7 +160,7 @@ f_install_php72 () {
 	echo ""
     sleep 1
 }
-f_install_php56 () {
+f_install_php54 () {
     ########## INSTALL APACHE 5.6 ##########
     echo "Installing apache 5.6 ..."
     sleep 1
@@ -180,7 +180,7 @@ f_install_php56 () {
 	sudo yum -y install php php-opcache
 	
 	echo @### PHP4: Install PHP packages ###
-	sudo yum -y install php php-mcrypt php-cli php-gd php-curl php-mysql php-ldap php-zip php-fileinfo
+	sudo yum -y install php-mcrypt php-cli php-gd php-curl php-mysql php-ldap php-zip php-fileinfo
 	
 	# Config to fix error Apache not load PHP file
     #chown -R apache:apache /var/www
@@ -198,8 +198,8 @@ f_install_php56 () {
 	#TODO: error: No package vailable
 	#sudo yum install -y php72 php72-php-fpm php72-php-gd php72-php-json php72-php-mbstring php72-php-mysqlnd php72-php-xml php72-php-xmlrpc php72-php-opcache
 	
-	sudo systemctl enable php-php-fpm.service
-	sudo systemctl start php-php-fpm.service
+	#sudo systemctl enable php-php-fpm.service
+	#sudo systemctl start php-php-fpm.service
 	
 	# Restart Apache
     sudo systemctl restart httpd.service
@@ -207,7 +207,32 @@ f_install_php56 () {
 	echo ""
     sleep 1
 }
-
+#https://www.svnlabs.com/blogs/install-apache-mysql-php-5-6-on-centos-7/
+f_install_php56 () {
+    ########## INSTALL APACHE 5.6 ##########
+    echo "Installing apache 5.6 ..."
+    sleep 1
+	
+	#Install EPEL repository
+	rpm -Uvh http://vault.centos.org/7.0.1406/extras/x86_64/Packages/epel-release-7-5.noarch.rpm
+	#Install remi repository
+	rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-7.rpm	
+	
+	#Enable remi
+	yum -y --enablerepo=remi,remi-php56 install php php-common
+	
+	#Install php 5.6 on Centos 7
+	yum -y --enablerepo=remi,remi-php56 install php-cli php-pear php-pdo php-mysql php-mysqlnd php-pgsql php-sqlite php-gd php-mbstring php-mcrypt php-xml php-simplexml php-curl php-zip
+	
+	# Restart Apache
+    sudo systemctl restart httpd.service
+	
+	#chown -R apache:apache /var/www/html/
+	#chmod -R 775 /var/www/
+	
+	echo ""
+    sleep 1
+}
 
 f_install_util () {
     ########## INSTALL UTILITIES ##########
