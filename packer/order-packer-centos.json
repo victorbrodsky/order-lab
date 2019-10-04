@@ -62,7 +62,7 @@
 		   "echo @### Composer and deploy ###",
            "cd /usr/local/bin/order-lab/Scanorders2",		  
 		   "composer self-update",
-           "php -dmemory_limit=-1 /usr/local/bin/composer update",
+           "composer update",
 		   "git pull",
            "git rev-parse HEAD",		   
 	       "sudo chmod +x /usr/local/bin/order-lab/Scanorders2/deploy_prod.sh",
