@@ -54,7 +54,7 @@ f_install_postgresql12 () {
 	systemctl start postgresql-12
 
 	echo @### Create DB and create user $bashdbuser with password $bashdbpass###
-	udo -Hiu postgres createdb scanorder
+	sudo -Hiu postgres createdb scanorder
 	sudo -Hiu postgres psql -c "CREATE USER $bashdbuser WITH PASSWORD '$bashdbpass'"
 	sudo -Hiu postgres psql -c "ALTER USER $bashdbuser WITH SUPERUSER"
 	sudo -Hiu postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE scanorder to $bashdbuser"
@@ -87,9 +87,8 @@ f_install_php72_ORIG () {
     sed -i '/<Directory \/>/a\    Options Indexes FollowSymLinks\n    AllowOverride All\n    Require all granted' /etc/httpd/conf/httpd.conf
 
 	# Restart Apache
-    systemctl restart httpd
+    sudo systemctl restart httpd.service
 
-	
 	#echo @### PHP3: sudo yum install php-common -y ###
 	#sudo yum update
 	#sudo yum install php-common -y
@@ -97,8 +96,12 @@ f_install_php72_ORIG () {
 	#echo @### PHP4: sudo yum install php-cli and others -y ###
 	#TODO: error: No package vailable
 	#sudo yum install -y php72 php72-php-fpm php72-php-gd php72-php-json php72-php-mbstring php72-php-mysqlnd php72-php-xml php72-php-xmlrpc php72-php-opcache
-	#sudo systemctl enable php72-php-fpm.service
-	#sudo systemctl start php72-php-fpm.service
+	
+	sudo systemctl enable php72-php-fpm.service
+	sudo systemctl start php72-php-fpm.service
+	
+	# Restart Apache
+    sudo systemctl restart httpd.service
 	
 	echo ""
     sleep 1
@@ -116,17 +119,21 @@ f_install_php72 () {
 	sudo yum install yum-utils -y
 
 	echo @### PHP2: sudo yum-config-manager --enable remi-php72 ###
-	yum-config-manager --enable remi-php72 -y
+	sudo yum-config-manager --enable remi-php72 -y
+	#created /var/lib/yum/repos/x86_64/7/remi-php72
+	sudo yum update -y
 
-	echo @### PHP3: Search for PHP 7.2 packages ###
-	sudo yum search php72 | more
-	sudo yum search php72 | egrep 'fpm|gd|mysql|memcache'
+	#echo @### PHP3: Search for PHP 7.2 packages ###
+	#sudo yum search php72 | more
+	#sudo yum search php72 | egrep 'fpm|gd|mysql|memcache'
 	
 	echo @### PHP4: Install PHP 7.2 ###
-	sudo yum install php72 -y
+	#sudo yum -y install php72
+	sudo yum -y install php php-opcache
 	
 	echo @### PHP4: Install PHP packages ###
-	sudo yum -y install php72-php-fpm php72-php-gd php72-php-json php72-php-mbstring php72-php-mysqlnd php72-php-xml php72-php-xmlrpc php72-php-opcache
+	#sudo yum -y install php72-php-fpm php72-php-gd php72-php-json php72-php-mbstring php72-php-mysqlnd php72-php-xml php72-php-xmlrpc php72-php-opcache
+	sudo yum -y install php php-mcrypt php-cli php-gd php-curl php-mysql php-ldap php-zip php-fileinfo
 	
 	# Config to fix error Apache not load PHP file
     #chown -R apache:apache /var/www
@@ -134,9 +141,8 @@ f_install_php72 () {
     #sed -i '/<Directory \/>/a\    Options Indexes FollowSymLinks\n    AllowOverride All\n    Require all granted' /etc/httpd/conf/httpd.conf
 
 	# Restart Apache
-    #systemctl restart httpd
+    #systemctl restart httpd.service
 
-	
 	#echo @### PHP3: sudo yum install php-common -y ###
 	#sudo yum update
 	#sudo yum install php-common -y
@@ -144,13 +150,63 @@ f_install_php72 () {
 	#echo @### PHP4: sudo yum install php-cli and others -y ###
 	#TODO: error: No package vailable
 	#sudo yum install -y php72 php72-php-fpm php72-php-gd php72-php-json php72-php-mbstring php72-php-mysqlnd php72-php-xml php72-php-xmlrpc php72-php-opcache
-	#sudo systemctl enable php72-php-fpm.service
-	#sudo systemctl start php72-php-fpm.service
+	
+	sudo systemctl enable php-php-fpm.service
+	sudo systemctl start php-php-fpm.service
+	
+	# Restart Apache
+    sudo systemctl restart httpd.service
 	
 	echo ""
     sleep 1
 }
+f_install_php56 () {
+    ########## INSTALL APACHE 5.6 ##########
+    echo "Installing apache 5.6 ..."
+    sleep 1
 
+	echo @### Install yum-utils and enable epel repository ###
+	sudo yum -y install epel-release
+	sudo yum install http://rpms.remirepo.net/enterprise/remi-release-7.rpm -y
+
+	echo @### PHP1: install yum-utils -y ###
+	sudo yum install yum-utils -y
+
+	echo @### PHP2: sudo yum-config-manager --enable remi-php56 ###
+	sudo yum-config-manager --enable remi-php56 -y
+	sudo yum update -y
+	
+	echo @### PHP4: Install PHP 5.6 ###
+	sudo yum -y install php php-opcache
+	
+	echo @### PHP4: Install PHP packages ###
+	sudo yum -y install php php-mcrypt php-cli php-gd php-curl php-mysql php-ldap php-zip php-fileinfo
+	
+	# Config to fix error Apache not load PHP file
+    #chown -R apache:apache /var/www
+    #sed -i '/<Directory \/>/,/<\/Directory/{//!d}' /etc/httpd/conf/httpd.conf
+    #sed -i '/<Directory \/>/a\    Options Indexes FollowSymLinks\n    AllowOverride All\n    Require all granted' /etc/httpd/conf/httpd.conf
+
+	# Restart Apache
+    #systemctl restart httpd.service
+
+	#echo @### PHP3: sudo yum install php-common -y ###
+	#sudo yum update
+	#sudo yum install php-common -y
+
+	#echo @### PHP4: sudo yum install php-cli and others -y ###
+	#TODO: error: No package vailable
+	#sudo yum install -y php72 php72-php-fpm php72-php-gd php72-php-json php72-php-mbstring php72-php-mysqlnd php72-php-xml php72-php-xmlrpc php72-php-opcache
+	
+	sudo systemctl enable php-php-fpm.service
+	sudo systemctl start php-php-fpm.service
+	
+	# Restart Apache
+    sudo systemctl restart httpd.service
+	
+	echo ""
+    sleep 1
+}
 
 
 f_install_util () {
@@ -184,6 +240,8 @@ f_install_order () {
 	ssh-keyscan github.com >> ~/.ssh/known_hosts
 	cd /usr/local/bin/
 	git clone https://github.com/victorbrodsky/order-lab.git /usr/local/bin/order-lab
+	
+	#chown -R apache:apache /var/www
 	sudo chmod a+x /usr/local/bin/order-lab
 	sudo chown -R www-data:www-data /usr/local/bin/order-lab
 	
@@ -201,8 +259,11 @@ f_install_prepare () {
 	
 	echo @### Copy php.ini to /etc/httpd/conf.d ###
 	#/etc/opt/remi/php72/ or /etc/
-	#cp /usr/local/bin/order-lab/packer/php.ini /etc/opt/remi/php72/
-	cp /usr/local/bin/order-lab/packer/php.ini /etc/
+	cp /etc/opt/remi/php72/php.ini /etc/opt/remi/php72/php_ORIG.ini
+	yes | cp /usr/local/bin/order-lab/packer/php.ini /etc/opt/remi/php72/
+	
+	cp /etc/php.ini /etc/php_ORIG.ini
+	yes | cp /usr/local/bin/order-lab/packer/php.ini /etc/
 	
 	#sudo service apache2 restart
 	sudo systemctl restart httpd.service
@@ -224,7 +285,8 @@ f_install_prepare () {
 f_update_os
 f_install_apache
 f_install_postgresql12
-f_install_php72
+#f_install_php72
+f_install_php56
 #f_install_util
 #f_install_order
 #f_install_prepare
