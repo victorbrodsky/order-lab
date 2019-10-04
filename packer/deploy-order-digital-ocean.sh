@@ -157,6 +157,10 @@ fi
 
 if [ "$os" = "centos" ]
   then 	
+	ORDERPACKERJSON="order-packer-centos.json"
+fi
+if [ "$os" = "centosonly" ]
+  then 	
 	ORDERPACKERJSON="order-packer-centos-only.json"
 fi
 
