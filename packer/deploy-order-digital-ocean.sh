@@ -3,7 +3,7 @@
 
 #bash deploy-order-digital-ocean.sh 
 #--token API-TOKEN-FROM-STEP-1 
-#--os operational system: centos(default) or ubuntu
+#--os operational system: centos or ubuntu (default)
 #-p parameters.yml 
 #-dbuser - optional (default symfony)
 #-dbpass - optional (default symfony)
@@ -93,7 +93,7 @@ set -- "${POSITIONAL[@]}" # restore positional parameters
 
 if [ -z "$os" ]
   then 	
-    os='centos'
+    os='ubuntu'
 fi
 
 if [ -z "$dbuser" ]
@@ -171,8 +171,8 @@ fi
 
 if [ -z "$ORDERPACKERJSON" ]
 then
-    echo "order-packer.json not found. Use default order-packer-centos.json"
-	ORDERPACKERJSON="order-packer-centos.json"
+    echo "order-packer.json not found. Use default order-packer-ubuntu.json"
+	ORDERPACKERJSON="order-packer-ubuntu.json"
 fi
 
 echo "ORDERPACKERJSON=$ORDERPACKERJSON"
