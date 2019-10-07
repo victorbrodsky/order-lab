@@ -269,7 +269,9 @@ f_install_order () {
 	git clone https://github.com/victorbrodsky/order-lab.git /usr/local/bin/order-lab
 	
 	#chown -R apache:apache /var/www
+	echo @### sudo chmod a+x /usr/local/bin/order-lab ###
 	sudo chmod a+x /usr/local/bin/order-lab
+	echo @### sudo chown -R www-data:www-data /usr/local/bin/order-lab ###
 	sudo chown -R www-data:www-data /usr/local/bin/order-lab
 	
 	echo ""
