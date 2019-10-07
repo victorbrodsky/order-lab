@@ -209,14 +209,23 @@ Note: If you choose to use MySQL database on Linux instead of Postgres, you will
 	Note: If you get your SSL certificate from [Let's Encrypt](https://letsencrypt.org/), make sure to follow their recommendation to ensure the certificate gets updated in a timely fashion and to avoid expiration. [certbot](https://certbot.eff.org/lets-encrypt/ubuntuxenial-apache) and a [symfony bundle](https://packagist.org/packages/cert/letsencrypt-bundle) are available.  In the past, uncommenting (removing "#" from the beginning of) the line 289 in /order-lab/Scanorders2/app/config/security.yml file was necessary to enable SSL, but everything should be done automatically now and is controlled via the "Connection Channel" variable in Site Settings being set to either “https” or "http".
 
 	The full list of parameters for script deploy-order-digital-ocean.sh:
+	
 	--token: API-TOKEN-FROM-STEP-1 (must be provided)
+	
 	--os: operational system: centos or ubuntu (default ubuntu)
+	
 	--parameters: parameters.yml file name (default parameters.yml)
+	
 	--dbuser: optional (default symfony)
+	
 	--dbpass: optional (default symfony)
+	
 	--protocol: optional (default http)
+	
 	--domainname: domain name (optional)
+	
 	--sslcertificate: ssl certificate file (optional)
+	
 	--sslprivatekey: ssl private key file (optional)
 
 7. If the browser window with this URL does not open automatically at the end of the previous step, visit http://IPADDRESS/order/directory/admin/first-time-login-generation-init/ (or either http://example.com/order/directory/admin/first-time-login-generation-init/ or https://example.com/order/directory/admin/first-time-login-generation-init/ depending whether you used the domain name and the ssl certificate in the command above) to generate the initial Administrator account, where IPADDRESS is the IP address of the server. Wait until the site redirects to the log in screen (it might take a while.)
