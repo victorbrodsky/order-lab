@@ -218,19 +218,31 @@ f_install_php56 () {
 	#Install remi repository
 	sudo rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-7.rpm	
 	
+	echo @### Install: yum install -y yum-utils ###		
+	sudo yum install -y yum-utils
+	
 	#Enable remi
 	#echo "Enable remi"
 	#yum -y --enablerepo=remi,remi-php56 install php php-common
 	
+	echo @### Enable remi-php56 ###	
+	yum-config-manager --enable remi-php56
+	
+	echo @### Install php 5.6: install -y php ###	
+	yum install -y php php-mcrypt php-cli php-gd php-curl php-mysql php-ldap php-zip php-fileinfo
+
 	#Install php 5.6 on Centos 7
-	echo "Enable remi and Install php 5.6 on Centos 7"
-	sudo yum -y --enablerepo=remi,remi-php56 install php-cli php-pear php-pdo php-mysql php-mysqlnd php-pgsql php-sqlite php-gd php-mbstring php-mcrypt php-xml php-simplexml php-curl php-zip
+	#echo "Enable remi and Install php 5.6 on Centos 7"
+	#sudo yum -y --enablerepo=remi,remi-php56 install php-cli php-pear php-pdo php-mysql php-mysqlnd php-pgsql php-sqlite php-gd php-mbstring php-mcrypt php-xml php-simplexml php-curl php-zip
 	
 	# Restart Apache
     sudo systemctl restart httpd.service
 	
 	#chown -R apache:apache /var/www/html/
 	#chmod -R 775 /var/www/
+
+	echo @### php -v ###	
+	php -v
 	
 	echo ""
     sleep 1
