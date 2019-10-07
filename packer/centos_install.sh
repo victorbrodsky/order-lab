@@ -218,6 +218,7 @@ f_install_php56 () {
 	#Install remi repository
 	#sudo rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-7.rpm	
 	
+	#https://www.tecmint.com/install-php-5-6-on-centos-7/
 	echo @### Install: noarch and remi ###	
 	sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 	sudo yum install -y http://rpms.remirepo.net/enterprise/remi-release-7.rpm
