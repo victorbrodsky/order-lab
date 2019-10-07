@@ -242,16 +242,16 @@ f_install_util () {
     sleep 1
 
 	echo @### Install Git ###		
-	yum install git -y	
+	sudo yum install -y git	
 	
 	echo @### Install wkhtmltopdf, libreoffice, ghostscript, pdftk ###
 	#sudo yum update
-	yum install -y xvfb libfontconfig wkhtmltopdf	
-	yum install -y libreoffice	
-	yum install -y ghostscript
-	yum install -y pdftk  
+	sudo yum install -y xvfb libfontconfig wkhtmltopdf	
+	sudo yum install -y libreoffice	
+	sudo yum install -y ghostscript
+	sudo yum install -y pdftk  
 
-	yum install wget unzip -y	
+	sudo yum install -y wget unzip
 	
 	echo ""
     sleep 1
@@ -262,6 +262,9 @@ f_install_order () {
     ########## Clone ORDER ##########
     echo "Installing order ..."
     sleep 1
+	
+	echo @### Install Git ###		
+	sudo yum install -y git	
 
 	echo @### Clone ORDER and copy config and php.ini files, install composer ###
 	ssh-keyscan github.com >> ~/.ssh/known_hosts
