@@ -214,9 +214,13 @@ f_install_php56 () {
     sleep 1
 	
 	#Install EPEL repository
-	sudo rpm -Uvh http://vault.centos.org/7.0.1406/extras/x86_64/Packages/epel-release-7-5.noarch.rpm
+	#sudo rpm -Uvh http://vault.centos.org/7.0.1406/extras/x86_64/Packages/epel-release-7-5.noarch.rpm
 	#Install remi repository
-	sudo rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-7.rpm	
+	#sudo rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-7.rpm	
+	
+	echo @### Install: noarch and remi ###	
+	sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+	sudo yum install -y http://rpms.remirepo.net/enterprise/remi-release-7.rpm
 	
 	echo @### Install: yum install -y yum-utils ###		
 	sudo yum install -y yum-utils
