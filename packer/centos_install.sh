@@ -258,7 +258,7 @@ f_install_util () {
 
 f_install_order () {
     ########## Clone ORDER ##########
-    echo "Installing apache ..."
+    echo "Installing order ..."
     sleep 1
 
 	echo @### Clone ORDER and copy config and php.ini files, install composer ###
@@ -276,7 +276,7 @@ f_install_order () {
      	
 f_install_prepare () {
     ########## Clone ORDER ##########
-    echo "Installing apache ..."
+    echo "Prepare ..."
     sleep 1
 
 	echo @### Copy 000-default.conf to /etc/httpd/conf.d ###

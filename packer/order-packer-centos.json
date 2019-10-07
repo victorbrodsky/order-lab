@@ -25,6 +25,13 @@
     },
 	
 	{
+        "type": "shell",
+        "inline": [ 
+           "echo @### Copy parameters file [parameters_bash_file] to [/usr/local/bin/order-lab/Scanorders2/app/config/parameters_bash_file] ###"
+         ]    
+	},
+	
+	{
 		"type": "file",
 		"source": "parameters_bash_file",
 		"destination": "/usr/local/bin/order-lab/Scanorders2/app/config/parameters_bash_file"         
