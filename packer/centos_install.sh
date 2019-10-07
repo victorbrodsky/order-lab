@@ -286,10 +286,10 @@ f_install_prepare () {
 	echo @### Copy 000-default.conf to /etc/httpd/conf.d ###
 	cp /usr/local/bin/order-lab/packer/000-default.conf /etc/httpd/conf.d
 	
-	echo @### Copy php.ini to /etc/opt/remi/php72/ ###
+	#echo @### Copy php.ini to /etc/opt/remi/php72/ ###
 	#/etc/opt/remi/php72/ or /etc/
-	cp /etc/opt/remi/php72/php.ini /etc/opt/remi/php72/php_ORIG.ini
-	yes | cp /usr/local/bin/order-lab/packer/php.ini /etc/opt/remi/php72/
+	#cp /etc/opt/remi/php72/php.ini /etc/opt/remi/php72/php_ORIG.ini
+	#yes | cp /usr/local/bin/order-lab/packer/php.ini /etc/opt/remi/php72/
 	
 	echo @### Copy php.ini to /etc/ ###
 	cp /etc/php.ini /etc/php_ORIG.ini
