@@ -209,8 +209,8 @@ f_install_php54 () {
 }
 #https://www.svnlabs.com/blogs/install-apache-mysql-php-5-6-on-centos-7/
 f_install_php56 () {
-    ########## INSTALL APACHE 5.6 ##########
-    echo "Installing apache 5.6 ..."
+    ########## INSTALL PHP 5.6 ##########
+    echo "Installing php 5.6 ..."
     sleep 1
 	
 	#Install EPEL repository
@@ -219,9 +219,11 @@ f_install_php56 () {
 	rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-7.rpm	
 	
 	#Enable remi
-	yum -y --enablerepo=remi,remi-php56 install php php-common
+	#echo "Enable remi"
+	#yum -y --enablerepo=remi,remi-php56 install php php-common
 	
 	#Install php 5.6 on Centos 7
+	echo "Enable remi and Install php 5.6 on Centos 7"
 	yum -y --enablerepo=remi,remi-php56 install php-cli php-pear php-pdo php-mysql php-mysqlnd php-pgsql php-sqlite php-gd php-mbstring php-mcrypt php-xml php-simplexml php-curl php-zip
 	
 	# Restart Apache
@@ -236,7 +238,7 @@ f_install_php56 () {
 
 f_install_util () {
     ########## INSTALL UTILITIES ##########
-    echo "Installing apache ..."
+    echo "Installing util ..."
     sleep 1
 
 	echo @### Install Git ###		
@@ -282,11 +284,12 @@ f_install_prepare () {
 	echo @### Copy 000-default.conf to /etc/httpd/conf.d ###
 	cp /usr/local/bin/order-lab/packer/000-default.conf /etc/httpd/conf.d
 	
-	echo @### Copy php.ini to /etc/httpd/conf.d ###
+	echo @### Copy php.ini to /etc/opt/remi/php72/ ###
 	#/etc/opt/remi/php72/ or /etc/
 	cp /etc/opt/remi/php72/php.ini /etc/opt/remi/php72/php_ORIG.ini
 	yes | cp /usr/local/bin/order-lab/packer/php.ini /etc/opt/remi/php72/
 	
+	echo @### Copy php.ini to /etc/ ###
 	cp /etc/php.ini /etc/php_ORIG.ini
 	yes | cp /usr/local/bin/order-lab/packer/php.ini /etc/
 	
