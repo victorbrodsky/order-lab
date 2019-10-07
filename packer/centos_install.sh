@@ -214,9 +214,9 @@ f_install_php56 () {
     sleep 1
 	
 	#Install EPEL repository
-	rpm -Uvh http://vault.centos.org/7.0.1406/extras/x86_64/Packages/epel-release-7-5.noarch.rpm
+	sudo rpm -Uvh http://vault.centos.org/7.0.1406/extras/x86_64/Packages/epel-release-7-5.noarch.rpm
 	#Install remi repository
-	rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-7.rpm	
+	sudo rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-7.rpm	
 	
 	#Enable remi
 	#echo "Enable remi"
@@ -224,7 +224,7 @@ f_install_php56 () {
 	
 	#Install php 5.6 on Centos 7
 	echo "Enable remi and Install php 5.6 on Centos 7"
-	yum -y --enablerepo=remi,remi-php56 install php-cli php-pear php-pdo php-mysql php-mysqlnd php-pgsql php-sqlite php-gd php-mbstring php-mcrypt php-xml php-simplexml php-curl php-zip
+	sudo yum -y --enablerepo=remi,remi-php56 install php-cli php-pear php-pdo php-mysql php-mysqlnd php-pgsql php-sqlite php-gd php-mbstring php-mcrypt php-xml php-simplexml php-curl php-zip
 	
 	# Restart Apache
     sudo systemctl restart httpd.service
