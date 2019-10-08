@@ -110,6 +110,7 @@ class CalllogTask
     public function __construct($creator=null) {
         $this->setCreatedDate(new \DateTime());
         $this->setSystemStatus("pending");
+        $this->setStatus(false);
 
         if( $creator ) {
             $this->setCreatedBy($creator);
@@ -371,6 +372,16 @@ class CalllogTask
         }
 
         return $statusStr;
+    }
+
+    public function isEmpty() {
+        if( !$this->getDescription() ) {
+            return true;
+        }
+        //if( !$this->getDescription() && !$this->getCalllogTaskType() ) {
+        //    return true;
+        //}
+        return false;
     }
 
     public function __toString()

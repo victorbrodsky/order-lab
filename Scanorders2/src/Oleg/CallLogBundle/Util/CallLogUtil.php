@@ -3778,15 +3778,16 @@ class CallLogUtil
 //            echo "Original task=".$task."<br>";
 //        }
 
+        $calllogEntryMessage = $message->getCalllogEntryMessage();
 
         $taskUpdateArr = array();
         foreach($originalTasks as $task) {
-            //if( false === $message->getCalllogEntryMessage()->getCalllogTasks()->contains($task) ) {
-            if( $this->taskExists($task,$message->getCalllogEntryMessage()->getCalllogTasks()) === false ) {
+            //if( false === $calllogEntryMessage->getCalllogTasks()->contains($task) ) {
+            if( $this->taskExists($task,$calllogEntryMessage->getCalllogTasks()) === false ) {
                 //$taskUpdateArr[] = "Removed task ID#".$task->getId().": ".$task->getTaskFullInfo();
                 $taskUpdateArr[] = "Removed task: ".$task->getTaskFullInfo();
                 // remove the Task from the Tag
-                $message->getCalllogEntryMessage()->getCalllogTasks()->removeElement($task);
+                $calllogEntryMessage->getCalllogTasks()->removeElement($task);
                 // if it was a many-to-one relationship, remove the relationship like this
                 //$task->setCalllogEntryMessage(null);
                 //$this->em->persist($task);
@@ -3797,7 +3798,15 @@ class CallLogUtil
 
         //set creator for remaining tasks
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
-        foreach( $message->getCalllogEntryMessage()->getCalllogTasks() as $task ) {
+        foreach( $calllogEntryMessage->getCalllogTasks() as $task ) {
+
+            //remove empty tasks
+            if( $task->isEmpty() ) {
+                $taskUpdateArr[] = "Removed empty (no description) task: ".$task->getTaskFullInfo();
+                $calllogEntryMessage->removeCalllogTask($task);
+                $task->setCalllogEntryMessage(NULL);
+            }
+
             if( !$task->getCreatedBy() ) {
                 $task->setCreatedBy($user);
             }

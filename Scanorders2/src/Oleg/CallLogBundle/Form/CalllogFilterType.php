@@ -275,12 +275,12 @@ class CalllogFilterType extends AbstractType
         $builder->add('patientPhone', TextType::class, array(
             'required'=>false,
             'label' => false,
-            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder' => "Patient Phone"),
+            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder' => "Patient's Phone Number"),
         ));
         $builder->add('patientEmail', TextType::class, array(
             'required'=>false,
             'label' => false,
-            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder' => "Patient Email"),
+            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder' => "Patient's Email"),
         ));
 
         $mateaphoneArr = array(

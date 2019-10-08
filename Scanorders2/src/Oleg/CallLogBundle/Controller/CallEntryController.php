@@ -1956,9 +1956,11 @@ class CallEntryController extends Controller
             $message->setCalllogEntryMessage($calllogEntryMessage);
         }
 
-//        //add calllog task
-//        $task = new CalllogTask($user);
-//        $calllogEntryMessage->addCalllogTask($task);
+        //add calllog task
+        if( count($calllogEntryMessage->getCalllogTasks()) == 0 ) {
+            $task = new CalllogTask($user);
+            $calllogEntryMessage->addCalllogTask($task);
+        }
 
         //add patient
         //$message->addPatient($patient);

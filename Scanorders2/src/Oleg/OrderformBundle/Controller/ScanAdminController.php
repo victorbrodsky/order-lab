@@ -2212,6 +2212,7 @@ class ScanAdminController extends AdminController
             "Order a medication",
             "Order blood products",
             "Check lab results",
+            "Other"
         );
 
         $username = $this->get('security.token_storage')->getToken()->getUser();

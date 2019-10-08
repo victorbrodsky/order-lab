@@ -70,13 +70,28 @@ class CalllogTaskType extends AbstractType
             ));
         }
 
-        $builder->add('calllogTaskType', null, array(
-            'label' => "Task Type:",
-            'required' => false,
-            'attr' => array('class' => 'combobox'),
-        ));
-
-
+        //set default to "Other"
+        $taskTypeDefault = null;
+        if( $this->params['cycle'] == 'new' ) {
+            $em = $this->params["em"];
+            $taskTypeDefault = $em->getRepository('OlegOrderformBundle:CalllogTaskTypeList')->findOneByName("Other");
+            //Testing: Order blood products
+            //$taskTypeDefault = $em->getRepository('OlegOrderformBundle:CalllogTaskTypeList')->findOneByName("Order blood products");
+        }
+        if( $taskTypeDefault ) {
+            $builder->add('calllogTaskType', null, array(
+                'label' => "Task Type:",
+                'required' => false,
+                'data' => $taskTypeDefault,
+                'attr' => array('class' => 'combobox'),
+            ));
+        } else {
+            $builder->add('calllogTaskType', null, array(
+                'label' => "Task Type:",
+                'required' => false,
+                'attr' => array('class' => 'combobox'),
+            ));
+        }
 
     }
 
