@@ -2648,7 +2648,7 @@ class CallLogUtil
             //county
             $county = $userSecUtil->getSiteSettingParameter('county',$sitename);
             if( !$county ) {
-                $county = "New York County";
+                //$county = "New York County";
             }
             $geoLocation->setCounty($county);
 

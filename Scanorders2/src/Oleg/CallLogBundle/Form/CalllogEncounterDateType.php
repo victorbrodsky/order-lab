@@ -69,7 +69,7 @@ class CalllogEncounterDateType extends AbstractType
         $tzUtil = new TimeZoneUtil();
         $builder->add('timezone', ChoiceType::class, array(
             //'label' => false,
-            'label' => "Timezone:",
+            'label' => "Time zone:",
             'choices' => $tzUtil->tz_list(),
             'choices_as_values' => true,
             'required' => true,

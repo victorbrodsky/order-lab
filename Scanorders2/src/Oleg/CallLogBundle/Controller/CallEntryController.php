@@ -162,7 +162,11 @@ class CallEntryController extends Controller
         }
 
         if( $messages && count($messages)>0 ) {
-            $title = $title . " (".$messages->getTotalItemCount()." matching entries)";
+            $postfixTitle = "matching entries";
+            if( count($messages) == 1 ) {
+                $postfixTitle = "matching entry";
+            }
+            $title = $title . " (".$messages->getTotalItemCount()." ".$postfixTitle.")";
         }
         
         return array(
