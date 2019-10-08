@@ -989,7 +989,7 @@
         <div class="panel-heading">
             <h4 class="panel-title">
                 <a data-toggle="collapse" href="#calllog-tasklist">
-                    Task List
+                    Tasks
                 </a>
             </h4>
         </div>
@@ -1060,7 +1060,10 @@
 
         {{ form_widget(formCalllogTask.id) }}
 
-        {{ formmacros.checkbox(formCalllogTask.status) }}
+        {% if formCalllogTask.status is defined %}
+            {{ formmacros.checkbox(formCalllogTask.status) }}
+        {% endif %}
+
         {{ formmacros.field(formCalllogTask.calllogTaskType) }}
         {{ formmacros.field(formCalllogTask.description) }}
 

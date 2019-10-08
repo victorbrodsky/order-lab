@@ -212,7 +212,7 @@ Note: If you choose to use MySQL database on Linux instead of Postgres, you will
 	
 	--token: API-TOKEN-FROM-STEP-1 (must be provided)
 	
-	--os: operational system: centos or ubuntu (default ubuntu)
+	--os: centos or ubuntu operating system (default is ubuntu)
 	
 	--parameters: parameters.yml file name (default parameters.yml)
 	

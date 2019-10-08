@@ -62,11 +62,13 @@ class CalllogTaskType extends AbstractType
 //            'attr' => array('class' => 'form-control'),
 //        ));
 
-        $builder->add('status', CheckboxType::class, array(
-            'label' => 'Status:',
-            'required' => false,
-            'attr' => array('class' => 'form-control')
-        ));
+        if( $this->params['cycle'] != 'new' ) {
+            $builder->add('status', CheckboxType::class, array(
+                'label' => 'Status:',
+                'required' => false,
+                'attr' => array('class' => 'form-control')
+            ));
+        }
 
         $builder->add('calllogTaskType', null, array(
             'label' => "Task Type:",
