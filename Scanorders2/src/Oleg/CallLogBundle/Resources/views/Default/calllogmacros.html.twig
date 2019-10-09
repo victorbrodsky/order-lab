@@ -1050,13 +1050,13 @@
     {% set wellclass = "alert-default well well-sm" %}
 
     <div class="user-collection-holder alert {{ classname }} {{ wellclass }}">
-        {% if cycle != "show" and showAddDeleteBtn %}
-            <div class="text-right">
-                <button type="button" class="btn btn-default btn-sm" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
-            </div>
-            <br>
-        {% else %}
-        {% endif %}
+        {#{% if cycle != "show" and showAddDeleteBtn %}#}
+            {#<div class="text-right">#}
+                {#<button type="button" class="btn btn-default btn-sm" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>#}
+            {#</div>#}
+            {#<br>#}
+        {#{% else %}#}
+        {#{% endif %}#}
 
         {#{{ form_widget(formCalllogTask.id) }}#}
 
@@ -1073,17 +1073,32 @@
             <div class="col-xs-1">
                 {{ form_widget(formCalllogTask.id) }}
             </div>
-            <div class="col-xs-1">
+            <div class="col-xs-1" title="Check to mark as Completed" data-toggle="tooltip">
                 {% if formCalllogTask.status is defined %}
-                    {{ form_widget(formCalllogTask.status) }}
+                    {{ form_row(formCalllogTask.status) }}
                 {% endif %}
             </div>
-            <div class="col-xs-3">
-                {{ form_widget(formCalllogTask.calllogTaskType) }}
+            <div class="col-xs-2">
+                {{ form_row(formCalllogTask.calllogTaskType) }}
             </div>
             <div class="col-xs-7">
-                {{ form_widget(formCalllogTask.description) }}
+                {{ form_row(formCalllogTask.description) }}
             </div>
+
+            <div class="col-xs-1">
+                {% if cycle != "show" and showAddDeleteBtn %}
+                    {#<div class="text-right">#}
+                        <br>
+                        <button
+                                type="button"
+                                class="btn btn-default"
+                                onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+                    {#</div>#}
+                    {#<br>#}
+                {% else %}
+                {% endif %}
+            </div>
+
         </div>
 
     </div>
