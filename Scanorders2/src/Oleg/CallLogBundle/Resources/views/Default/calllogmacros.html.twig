@@ -1018,11 +1018,53 @@
                     {#2message.calllogEntryMessage.calllogTasks|length={{ message.getCalllogEntryMessage().getCalllogTasks()|length }}<br>#}
                     {% for calllogTask in message.getCalllogEntryMessage().getCalllogTasks() %}
                         <div class="well well-sm">
-                            <p align="center">{{ calllogTask.getTaskInfo() }}</p>
-                            {#{{ formmacros.simplefield("Status:", calllogTask.status, "", "disabled") }}#}
-                            {{ formmacros.simplefield_checkbox( "Status:", calllogTask.status, "", "disabled" ) }}
-                            {{ formmacros.simplefield("Task Type:", calllogTask.calllogTaskType, "", "disabled") }}
-                            {{ formmacros.simplefield("Description:", calllogTask.description, "", "disabled") }}
+
+                            {% if 0 %}
+
+                                <p align="center">{{ calllogTask.getTaskInfo() }}</p>
+                                {#{{ formmacros.simplefield("Status:", calllogTask.status, "", "disabled") }}#}
+                                {{ formmacros.simplefield_checkbox( "Status:", calllogTask.status, "", "disabled" ) }}
+                                {{ formmacros.simplefield("Task Type:", calllogTask.calllogTaskType, "", "disabled") }}
+                                {{ formmacros.simplefield("Description:", calllogTask.description, "", "disabled") }}
+
+                            {% else %}
+
+                                {#{{ calllog_util.getTasksInfo(message)|raw }}#}
+
+                                <p align="center">{{ calllogTask.getTaskInfo() }}</p>
+
+                            <div class="row">
+
+                                <div class="col-xs-1" align="right">
+                                    {#<div class="form-control not-mapped-simplefield" style="min-height:34px; height:auto;" disabled>#}
+                                        {#{{ calllogTask.status|raw }}#}
+                                    {#</div>#}
+                                    {% if calllogTask.status %}
+                                        {% set checked = 'checked' %}
+                                    {% else %}
+                                        {% set checked = '' %}
+                                    {% endif %}
+                                    <div class="not-mapped-simplefield" style="min-height:34px; height:auto;" disabled>
+                                        <input type="checkbox" {{ checked }} disabled>
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-3" align="left">
+                                    <div class="form-control not-mapped-simplefield" style="min-height:34px; height:auto;" disabled>
+                                        {{ calllogTask.calllogTaskType|raw }}
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-8" align="left">
+                                    {#<div class="form-control not-mapped-simplefield" style="min-height:34px; height:auto;" disabled>#}
+                                        {#{{ calllogTask.description|raw }}#}
+                                    {#</div>#}
+                                    <textarea class="form-control textarea" disabled>{{ calllogTask.description|raw }}</textarea>
+                                </div>
+
+                            </div>
+
+                            {% endif %}
 
                         </div>
                     {% endfor %}
@@ -1073,31 +1115,53 @@
             <div class="col-xs-1">
                 {{ form_widget(formCalllogTask.id) }}
             </div>
-            <div class="col-xs-1" title="Check to mark as Completed" data-toggle="tooltip">
-                {% if formCalllogTask.status is defined %}
-                    {{ form_row(formCalllogTask.status) }}
-                {% endif %}
-            </div>
-            <div class="col-xs-2">
-                {{ form_row(formCalllogTask.calllogTaskType) }}
-            </div>
-            <div class="col-xs-7">
-                {{ form_row(formCalllogTask.description) }}
-            </div>
 
-            <div class="col-xs-1">
-                {% if cycle != "show" and showAddDeleteBtn %}
-                    {#<div class="text-right">#}
+            {% if 0 %}
+                {#With Titles#}
+                <div class="col-xs-1" title="Check to mark as Completed" data-toggle="tooltip">
+                    {% if formCalllogTask.status is defined %}
+                        {{ form_row(formCalllogTask.status) }}
+                    {% endif %}
+                </div>
+                <div class="col-xs-2" align="left">
+                    {{ form_row(formCalllogTask.calllogTaskType) }}
+                </div>
+                <div class="col-xs-7" align="left">
+                    {{ form_row(formCalllogTask.description) }}
+                </div>
+                <div class="col-xs-1" align="left">
+                    {% if cycle != "show" and showAddDeleteBtn %}
                         <br>
                         <button
                                 type="button"
                                 class="btn btn-default"
                                 onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
-                    {#</div>#}
-                    {#<br>#}
-                {% else %}
-                {% endif %}
-            </div>
+                    {% else %}
+                    {% endif %}
+                </div>
+            {% else %}
+                {#No Titles#}
+                <div class="col-xs-1" align="right" title="Check to mark as Completed" data-toggle="tooltip">
+                    {% if formCalllogTask.status is defined %}
+                        {{ form_widget(formCalllogTask.status) }}
+                    {% endif %}
+                </div>
+                <div class="col-xs-2" align="left">
+                    {{ form_widget(formCalllogTask.calllogTaskType) }}
+                </div>
+                <div class="col-xs-7" align="left">
+                    {{ form_widget(formCalllogTask.description) }}
+                </div>
+                <div class="col-xs-1" align="left">
+                    {% if cycle != "show" and showAddDeleteBtn %}
+                        <button
+                                type="button"
+                                class="btn btn-default"
+                                onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+                    {% else %}
+                    {% endif %}
+                </div>
+            {% endif %}
 
         </div>
 
