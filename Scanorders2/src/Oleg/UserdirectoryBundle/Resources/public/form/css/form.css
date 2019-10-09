@@ -671,7 +671,7 @@ Bootstrap NavBar not collapsing as expected - separating onto two lines.
 }
 
 .toggle-btn-state-active {
-    background-color: #31b0d5;
+    background-color: #A0A0A0;
     /*#e6e6e6;*/
 }
 .toggle-btn-state-inactive {

@@ -1058,14 +1058,33 @@
         {% else %}
         {% endif %}
 
-        {{ form_widget(formCalllogTask.id) }}
+        {#{{ form_widget(formCalllogTask.id) }}#}
 
-        {% if formCalllogTask.status is defined %}
-            {{ formmacros.checkbox(formCalllogTask.status) }}
-        {% endif %}
+        {#{% if formCalllogTask.status is defined %}#}
+            {#{{ formmacros.checkbox(formCalllogTask.status) }}#}
+        {#{% endif %}#}
 
-        {{ formmacros.field(formCalllogTask.calllogTaskType) }}
-        {{ formmacros.field(formCalllogTask.description) }}
+        {#{{ formmacros.field(formCalllogTask.calllogTaskType) }}#}
+        {#{{ formmacros.field(formCalllogTask.description) }}#}
+
+
+        {#make it as a row#}
+        <div class="row">
+            <div class="col-xs-1">
+                {{ form_widget(formCalllogTask.id) }}
+            </div>
+            <div class="col-xs-1">
+                {% if formCalllogTask.status is defined %}
+                    {{ form_widget(formCalllogTask.status) }}
+                {% endif %}
+            </div>
+            <div class="col-xs-3">
+                {{ form_widget(formCalllogTask.calllogTaskType) }}
+            </div>
+            <div class="col-xs-7">
+                {{ form_widget(formCalllogTask.description) }}
+            </div>
+        </div>
 
     </div>
 

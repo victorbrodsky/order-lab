@@ -140,7 +140,7 @@ class ExceptionListener {
             //exit('111');
 
             //2- If the checkbox is checked, Send an email to all users with System Administrator role saying:
-            $subject = "Server Critical Error";
+            $subject = "Critical Server Error";
             $dateStr = date("m/d/Y \\a\\t H:i:s");
             //exit("dateStr=".$dateStr);
             //On MM/DD/YYYY, at HH:MM:SS the following error has been logged on the [server domain name/C.MED.CORNELL.EDU vs Collage, or IP address etc]: [text of error]
