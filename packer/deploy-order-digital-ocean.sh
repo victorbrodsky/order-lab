@@ -169,11 +169,11 @@ if [ "$os" = "ubuntu" ]
 	ORDERPACKERJSON="order-packer-ubuntu.json"
 fi
 
-if [ -z "$ORDERPACKERJSON" ]
-then
-    echo "order-packer.json not found. Use default order-packer-ubuntu.json"
-	ORDERPACKERJSON="order-packer-ubuntu.json"
-fi
+#if [ -z "$ORDERPACKERJSON" ]
+#then
+#    echo "order-packer.json not found. Use default order-packer-ubuntu.json"
+#	ORDERPACKERJSON="order-packer-ubuntu.json"
+#fi
 
 echo "ORDERPACKERJSON=$ORDERPACKERJSON"
 
