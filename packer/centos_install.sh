@@ -16,7 +16,7 @@ f_update_os () {
     echo -e ${WHITE} Starting update os centos ... ${NC}
 	#echo -e ${WHITE} @### Test Color 1 ### ${NC}	
 	#echo -e "${WHITE}" @### Test Color 2 ### "${NC}"	
-	exit 0
+	#exit 0
     sleep 1
 
     sudo yum update
