@@ -13,9 +13,9 @@ NC='\033[0m' # No Color
 #https://gitlab.com/Danny_Pham/WriteBash.com/blob/master/Install/06-Script_install_LAMP_PHP_7.2_on_CentOS_7.sh
 # Function update os
 f_update_os () {
-    echo -e "${WHITE} Starting update os ... ${NC}"
-	echo -e ${WHITE} @### Test Color 1 ### ${NC}	
-	echo -e "${WHITE}" @### Test Color 2 ### "${NC}"	
+    echo -e ${WHITE} Starting update os ... ${NC}
+	#echo -e ${WHITE} @### Test Color 1 ### ${NC}	
+	#echo -e "${WHITE}" @### Test Color 2 ### "${NC}"	
 	exit 0
     sleep 1
 
@@ -29,7 +29,7 @@ f_update_os () {
 # Function install LAMP stack
 f_install_apache () {
     ########## INSTALL APACHE ##########
-    echo "${WHITE} Installing apache ... ${NC}"
+    echo -e "${WHITE} Installing apache ... ${NC}"
     sleep 1
 
 	sudo yum install httpd -y
@@ -43,10 +43,10 @@ f_install_apache () {
 
 f_install_postgresql12 () {
     ########## INSTALL Postgresql ##########
-    echo "${WHITE} Installing Postgresql ... ${NC}"
+    echo -e "${WHITE} Installing Postgresql ... ${NC}"
     sleep 1
 
-	echo ${WHITE} @### Install the repository RPM, client and server packages ### ${NC}		
+	echo -e ${WHITE} Install the repository RPM, client and server packages ${NC}		
 	sudo yum install https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm -y
 	
 	yum install postgresql12 -y
@@ -167,8 +167,8 @@ f_install_php72 () {
     sleep 1
 }
 f_install_php54 () {
-    ########## INSTALL APACHE 5.6 ##########
-    echo "${WHITE} Installing apache 5.6 ... ${NC}"
+    ########## INSTALL APACHE 5.4 ##########
+    echo -e "${WHITE} Installing apache 5.4 ... ${NC}"
     sleep 1
 
 	echo @### Install yum-utils and enable epel repository ###
@@ -182,7 +182,7 @@ f_install_php54 () {
 	sudo yum-config-manager --enable remi-php56 -y
 	sudo yum update -y
 	
-	echo @### PHP4: Install PHP 5.6 ###
+	echo @### PHP4: Install PHP 5.4 ###
 	sudo yum -y install php php-opcache
 	
 	echo @### PHP4: Install PHP packages ###
@@ -216,7 +216,7 @@ f_install_php54 () {
 #https://www.svnlabs.com/blogs/install-apache-mysql-php-5-6-on-centos-7/
 f_install_php56 () {
     ########## INSTALL PHP 5.6 ##########
-    echo "${WHITE} Installing php 5.6 ... ${NC}"
+    echo -e "${WHITE} Installing php 5.6 ... ${NC}"
     sleep 1
 	
 	#Install EPEL repository
@@ -225,21 +225,21 @@ f_install_php56 () {
 	#sudo rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-7.rpm	
 	
 	#https://www.tecmint.com/install-php-5-6-on-centos-7/
-	echo "${WHITE}" @### Install: noarch and remi ### "${NC}"	
+	echo -e ${WHITE} Install: noarch and remi ${NC}	
 	sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 	sudo yum install -y http://rpms.remirepo.net/enterprise/remi-release-7.rpm
 	
-	echo "${WHITE}" @### Install: yum install -y yum-utils ### "${NC}"		
+	echo -e ${WHITE} Install: yum install -y yum-utils ${NC}		
 	sudo yum install -y yum-utils
 	
 	#Enable remi
 	#echo "Enable remi"
 	#yum -y --enablerepo=remi,remi-php56 install php php-common
 	
-	echo "${WHITE}" @### Enable remi-php56 ###	"${NC}"
+	echo -e  ${WHITE} Enable remi-php56 ${NC}
 	yum-config-manager --enable remi-php56
 	
-	echo "${WHITE}" @### Install php 5.6: install -y php ### "${NC}"	
+	echo -e ${WHITE} Install php 5.6: install -y php ${NC}	
 	yum install -y php php-mcrypt php-cli php-gd php-curl php-mysql php-ldap php-zip php-fileinfo
 
 	#Install php 5.6 on Centos 7
@@ -252,7 +252,7 @@ f_install_php56 () {
 	#chown -R apache:apache /var/www/html/
 	#chmod -R 775 /var/www/
 
-	echo "${WHITE}" @### php -v ###	"${NC}"
+	echo -e  ${WHITE} php -v ${NC}
 	php -v
 	
 	echo ""
@@ -264,10 +264,10 @@ f_install_util () {
     echo "Installing util ..."
     sleep 1
 
-	echo @### Install Git ###		
+	echo -e ${WHITE} Install Git ${NC}		
 	sudo yum install -y git	
 	
-	echo @### Install wkhtmltopdf, libreoffice, ghostscript, pdftk ###
+	echo -e ${WHITE} Install wkhtmltopdf, libreoffice, ghostscript, pdftk ${NC}
 	#sudo yum update
 	sudo yum install -y xvfb libfontconfig wkhtmltopdf	
 	sudo yum install -y libreoffice	
@@ -283,21 +283,21 @@ f_install_util () {
 
 f_install_order () {
     ########## Clone ORDER ##########
-    echo "Installing order ..."
+    echo -e "${WHITE} Installing order ..."
     sleep 1
 	
 	echo @### Install Git ###		
 	sudo yum install -y git	
 
-	echo @### Clone ORDER and copy config and php.ini files, install composer ###
+	echo -e ${WHITE} Clone ORDER and copy config and php.ini files, install composer ${NC}
 	ssh-keyscan github.com >> ~/.ssh/known_hosts
 	cd /usr/local/bin/
 	git clone https://github.com/victorbrodsky/order-lab.git /usr/local/bin/order-lab
 	
 	#chown -R apache:apache /var/www
-	echo @### sudo chmod a+x /usr/local/bin/order-lab ###
+	echo -e ${WHITE} sudo chmod a+x /usr/local/bin/order-lab ${NC}
 	sudo chmod a+x /usr/local/bin/order-lab
-	echo @### sudo chown -R www-data:www-data /usr/local/bin/order-lab ###
+	echo -e ${WHITE} sudo chown -R www-data:www-data /usr/local/bin/order-lab ${NC}
 	sudo chown -R www-data:www-data /usr/local/bin/order-lab
 	
 	echo ""
@@ -306,10 +306,10 @@ f_install_order () {
      	
 f_install_prepare () {
     ########## Clone ORDER ##########
-    echo "Prepare ..."
+    echo -e "${WHITE} Prepare ... ${NC}"
     sleep 1
 
-	echo @### Copy 000-default.conf to /etc/httpd/conf.d ###
+	echo -e ${WHITE} Copy 000-default.conf to /etc/httpd/conf.d ${NC}
 	cp /usr/local/bin/order-lab/packer/000-default.conf /etc/httpd/conf.d
 	
 	#echo @### Copy php.ini to /etc/opt/remi/php72/ ###
@@ -317,14 +317,14 @@ f_install_prepare () {
 	#cp /etc/opt/remi/php72/php.ini /etc/opt/remi/php72/php_ORIG.ini
 	#yes | cp /usr/local/bin/order-lab/packer/php.ini /etc/opt/remi/php72/
 	
-	echo @### Copy php.ini to /etc/ ###
+	echo -e ${WHITE} Copy php.ini to /etc/ ${NC}
 	cp /etc/php.ini /etc/php_ORIG.ini
 	yes | cp /usr/local/bin/order-lab/packer/php.ini /etc/
 	
 	#sudo service apache2 restart
 	sudo systemctl restart httpd.service
 	
-	echo @### Install composer ###
+	echo -e ${WHITE} Install composer ${NC}
 	php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" 
 	
 	#verify the data integrity of the script compare the script SHA-384 hash with the latest installer
