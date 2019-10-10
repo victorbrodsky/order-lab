@@ -7,6 +7,9 @@ echo @### Get bash_dbuser bash_dbpass ###
 echo bashdbuser=$bashdbuser
 echo bashdbpass=$bashdbpass
 
+WHITE='\033[1;37m'
+NC='\033[0m' # No Color
+
 #https://gitlab.com/Danny_Pham/WriteBash.com/blob/master/Install/06-Script_install_LAMP_PHP_7.2_on_CentOS_7.sh
 # Function update os
 f_update_os () {
@@ -23,7 +26,7 @@ f_update_os () {
 # Function install LAMP stack
 f_install_apache () {
     ########## INSTALL APACHE ##########
-    echo "Installing apache ..."
+    echo "${WHITE} Installing apache ... ${NC}"
     sleep 1
 
 	sudo yum install httpd -y
@@ -37,10 +40,10 @@ f_install_apache () {
 
 f_install_postgresql12 () {
     ########## INSTALL Postgresql ##########
-    echo "Installing Postgresql ..."
+    echo "${WHITE} Installing Postgresql ... ${NC}"
     sleep 1
 
-	echo @### Install the repository RPM, client and server packages ###		
+	echo ${WHITE} @### Install the repository RPM, client and server packages ### ${NC}		
 	sudo yum install https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm -y
 	
 	yum install postgresql12 -y
@@ -162,7 +165,7 @@ f_install_php72 () {
 }
 f_install_php54 () {
     ########## INSTALL APACHE 5.6 ##########
-    echo "Installing apache 5.6 ..."
+    echo "${WHITE} Installing apache 5.6 ... ${NC}"
     sleep 1
 
 	echo @### Install yum-utils and enable epel repository ###
@@ -210,7 +213,7 @@ f_install_php54 () {
 #https://www.svnlabs.com/blogs/install-apache-mysql-php-5-6-on-centos-7/
 f_install_php56 () {
     ########## INSTALL PHP 5.6 ##########
-    echo "Installing php 5.6 ..."
+    echo "${WHITE} Installing php 5.6 ... ${NC}"
     sleep 1
 	
 	#Install EPEL repository
@@ -219,21 +222,21 @@ f_install_php56 () {
 	#sudo rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-7.rpm	
 	
 	#https://www.tecmint.com/install-php-5-6-on-centos-7/
-	echo @### Install: noarch and remi ###	
+	echo "${WHITE}" @### Install: noarch and remi ### "${NC}"	
 	sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 	sudo yum install -y http://rpms.remirepo.net/enterprise/remi-release-7.rpm
 	
-	echo @### Install: yum install -y yum-utils ###		
+	echo "${WHITE}" @### Install: yum install -y yum-utils ### "${NC}"		
 	sudo yum install -y yum-utils
 	
 	#Enable remi
 	#echo "Enable remi"
 	#yum -y --enablerepo=remi,remi-php56 install php php-common
 	
-	echo @### Enable remi-php56 ###	
+	echo "${WHITE}" @### Enable remi-php56 ###	"${NC}"
 	yum-config-manager --enable remi-php56
 	
-	echo @### Install php 5.6: install -y php ###	
+	echo "${WHITE}" @### Install php 5.6: install -y php ### "${NC}"	
 	yum install -y php php-mcrypt php-cli php-gd php-curl php-mysql php-ldap php-zip php-fileinfo
 
 	#Install php 5.6 on Centos 7
@@ -246,7 +249,7 @@ f_install_php56 () {
 	#chown -R apache:apache /var/www/html/
 	#chmod -R 775 /var/www/
 
-	echo @### php -v ###	
+	echo "${WHITE}" @### php -v ###	"${NC}"
 	php -v
 	
 	echo ""
