@@ -198,7 +198,7 @@ sed -i -e "s/bash_sslcertificate/$sslcertificate/g" "$ORDERPACKERJSON"
 sed -i -e "s/bash_sslprivatekey/$sslprivatekey/g" "$ORDERPACKERJSON"
 
 
-echo "*** Building VM image from packer=[$ORDERPACKERJSON"] ... ***"
+echo "*** Building VM image from packer=[$ORDERPACKERJSON] ... ***"
 packer build "$ORDERPACKERJSON"
 
 
