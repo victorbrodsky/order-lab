@@ -13,7 +13,10 @@ NC='\033[0m' # No Color
 #https://gitlab.com/Danny_Pham/WriteBash.com/blob/master/Install/06-Script_install_LAMP_PHP_7.2_on_CentOS_7.sh
 # Function update os
 f_update_os () {
-    echo "Starting update os ..."
+    echo -e "${WHITE} Starting update os ... ${NC}"
+	echo -e ${WHITE} @### Test Color 1 ### ${NC}	
+	echo -e "${WHITE}" @### Test Color 2 ### "${NC}"	
+	exit 0
     sleep 1
 
     sudo yum update
