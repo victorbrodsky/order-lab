@@ -472,16 +472,18 @@ class CallEntryController extends Controller
         //$sortBy
         //'Sort by date of entry creation, latest first' => 'sort-by-creation-date', (default)
         //'Sort by date of latest edit, latest first' => 'sort-by-latest-edit-date'
-        echo "sortBy=$sortBy <br>";
+        //echo "sortBy=$sortBy <br>";
         //exit('111');
         if( $sortBy ) {
             if( $sortBy == "sort-by-creation-date" ) {
-                //default: do nothing. Sort by ID in paginator
+                //default
                 $dql->orderBy("message.id","DESC");
             }
             if( $sortBy == "sort-by-latest-edit-date" ) {
                 $dql->orderBy("message.orderdate","DESC");
             }
+        } else {
+            $dql->orderBy("message.id","DESC");
         }
 
         $dql->addOrderBy("editorInfos.modifiedOn","DESC");
