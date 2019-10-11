@@ -241,7 +241,7 @@ f_install_php56 () {
 	yum-config-manager --enable remi-php56
 	
 	echo -e ${COLOR} Install php 5.6: install -y php ${NC}	
-	yum install -y php php-mcrypt php-cli php-gd php-curl php-mysql php-ldap php-zip php-fileinfo
+	yum install -y php php-mcrypt php-cli php-gd php-curl php-mysql php-ldap php-zip php-fileinfo php-pear php-pdo php-pgsql php-xml php-simplexml php-zip php-mbstring
 
 	#Install php 5.6 on Centos 7
 	#echo "Enable remi and Install php 5.6 on Centos 7"
