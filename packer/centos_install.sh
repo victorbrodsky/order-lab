@@ -75,8 +75,8 @@ f_install_postgresql () {
 	echo -e "${COLOR} Installing Postgresql ... ${NC}"
     sleep 1
 
-	echo -e ${COLOR} Install the repository RPM, client and server packages ${NC}		
-	sudo yum install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm -y
+	#echo -e ${COLOR} Install the repository RPM, client and server packages ${NC}		
+	#sudo yum install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm -y
 	
 	sudo yum install -y postgresql-server postgresql-contrib
 	
