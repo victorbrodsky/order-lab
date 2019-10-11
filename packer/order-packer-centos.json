@@ -60,7 +60,7 @@
 	  {
         "type": "shell",
         "inline": [ 
-		   "echo -e \033[1;36m @### Composer and deploy ### \033[0m",
+		   "echo @### Composer and deploy ###",
            "cd /usr/local/bin/order-lab/Scanorders2",		  
 		   "composer self-update",
            "composer install",
