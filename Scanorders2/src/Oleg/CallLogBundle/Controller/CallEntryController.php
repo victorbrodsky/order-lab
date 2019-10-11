@@ -121,7 +121,7 @@ class CallEntryController extends Controller
         }
 
         //create a filter and perform search
-        $res = $this->getCalllogEntryFilter($request);
+        $res = $this->getCalllogEntryFilter($request); //Home page
 
         if( $res['redirect'] ) {
             return $res['redirect'];
@@ -131,13 +131,22 @@ class CallEntryController extends Controller
         $filterform = $res['filterform'];
         $advancedFilter = $res['advancedFilter'];
 
+        //Sort Default by ID
+//        $paginationParams = array(
+//            //'defaultSortFieldName' => 'calllogEntryMessage.oid',
+//            'defaultSortFieldName' => 'message.oid',
+//            'defaultSortDirection' => 'DESC',
+//            'wrap-queries' => true
+//        );
+        $paginationParams = array('wrap-queries'=>true);
+
         $paginator  = $this->get('knp_paginator');
         $messages = $paginator->paginate(
             $query,
             $request->query->get('page', 1), /*page number*/
             //$request->query->getInt('page', 1),
             $limit,      /*limit per page*/
-            array('wrap-queries'=>true)
+            $paginationParams   //array('wrap-queries'=>true)
         );
         //echo "messages count=".count($messages)."<br>";
 
@@ -455,7 +464,26 @@ class CallEntryController extends Controller
 
         $dql->leftJoin("message.messageCategory","messageCategory");
         //$dql->where("institution.id = ".$pathology->getId());
-        $dql->orderBy("message.orderdate","DESC");
+
+        //sortBy
+        //$dql->orderBy("message.orderdate","DESC");
+        //$dql->addOrderBy("editorInfos.modifiedOn","DESC");
+
+        //$sortBy
+        //'Sort by date of entry creation, latest first' => 'sort-by-creation-date', (default)
+        //'Sort by date of latest edit, latest first' => 'sort-by-latest-edit-date'
+        echo "sortBy=$sortBy <br>";
+        //exit('111');
+        if( $sortBy ) {
+            if( $sortBy == "sort-by-creation-date" ) {
+                //default: do nothing. Sort by ID in paginator
+                $dql->orderBy("message.id","DESC");
+            }
+            if( $sortBy == "sort-by-latest-edit-date" ) {
+                $dql->orderBy("message.orderdate","DESC");
+            }
+        }
+
         $dql->addOrderBy("editorInfos.modifiedOn","DESC");
 
         //testing
@@ -903,6 +931,22 @@ class CallEntryController extends Controller
             }
         }
 
+        //$sortBy
+        //'Sort by date of entry creation, latest first' => 'sort-by-creation-date', (default)
+        //'Sort by date of latest edit, latest first' => 'sort-by-latest-edit-date'
+//        echo "sortBy=$sortBy <br>";
+//        //exit('111');
+//        if( $sortBy ) {
+//            if( $sortBy == "sort-by-creation-date" ) {
+//                //default: do nothing. Sort by ID in paginator
+//            }
+//            if( $sortBy == "sort-by-latest-edit-date" ) {
+//
+//            }
+//        }
+
+        //$dql->orderBy("message.id","DESC");
+
         //$limit = 10;
         $query = $em->createQuery($dql);
         $query->setParameters($queryParameters);
@@ -911,15 +955,6 @@ class CallEntryController extends Controller
         //$logger->notice("setMaxResults limit=".$limit);
         if( $limit ) {
             $query->setMaxResults($limit);
-        }
-
-        //$sortBy
-        //echo "sortBy=$sortBy <br>";
-        //exit('111');
-        if( $sortBy && $sortBy == "sort-by-latest-edit-date" ) {
-
-        } else {
-            //default as now: Sort by date of entry creation, latest first
         }
 
         //echo "query=".$query->getSql()."<br>";
@@ -3460,7 +3495,7 @@ class CallEntryController extends Controller
         }
 
         if(1) {
-            $res = $this->getCalllogEntryFilter($request, $limit);
+            $res = $this->getCalllogEntryFilter($request, $limit); //Export CSV
 
             if ($res['redirect']) {
                 //exit('redirect to home page');

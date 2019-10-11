@@ -1250,6 +1250,9 @@
 
             {% if headFlag == "sortable" %}
                 <th>{{ knp_pagination_sortable(messages, 'ID', 'message.oid') }}</th>
+                {#Sorting by creation of the original entry date by default#}
+                {#<th>{{ knp_pagination_sortable(messages, 'ID', 'message.id') }}</th>#}
+
                 <th>{{ knp_pagination_sortable(messages, 'Last Modified', 'editorInfos.modifiedOn') }}</th>
                 <th>{{ knp_pagination_sortable(messages, 'Patient Name', 'lastname.field') }}</th>
                 <th>{{ knp_pagination_sortable(messages, 'MRN', 'mrn.field') }}</th>

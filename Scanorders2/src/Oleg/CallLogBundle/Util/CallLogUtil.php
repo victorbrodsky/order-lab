@@ -3840,6 +3840,10 @@ class CallLogUtil
         $colspan2 = 3;
         $colspan3 = $colspan - $colspan1 - $colspan2;
 
+        if( !$message->getCalllogEntryMessage() ) {
+            return null;
+        }
+
         $tasks = $message->getCalllogEntryMessage()->getCalllogTasks();
         if( count($tasks) == 0 ) {
             return null;
