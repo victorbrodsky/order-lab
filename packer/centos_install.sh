@@ -44,11 +44,11 @@ f_install_apache () {
 
 f_install_postgresql12 () {
     ########## INSTALL Postgresql ##########
-    echo -e "${COLOR} Installing Postgresql ... ${NC}"
+    echo -e "${COLOR} Installing Postgresql 12 ... ${NC}"
     sleep 1
 
 	echo -e ${COLOR} Install the repository RPM, client and server packages ${NC}		
-	sudo yum install https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm -y
+	sudo yum install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm -y
 	
 	yum install postgresql12 -y
 	yum install postgresql12-server -y
@@ -56,9 +56,9 @@ f_install_postgresql12 () {
 
 	#echo @### (use this???) /usr/pgsql-11/bin/postgresql-11-setup initdb ###
 	echo @### Optionally initialize the database and enable automatic start ###	
-	/usr/pgsql-12/bin/postgresql-12-setup initdb
-	systemctl enable postgresql-12
-	systemctl start postgresql-12
+	sudo /usr/pgsql-12/bin/postgresql-12-setup initdb
+	sudo systemctl enable postgresql-12
+	sudo systemctl start postgresql-12
 
 	echo @### Create DB and create user $bashdbuser with password $bashdbpass###
 	sudo -Hiu postgres createdb scanorder
@@ -69,6 +69,180 @@ f_install_postgresql12 () {
 	echo ""
     sleep 1
 }
+
+#https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-centos-7
+f_install_postgresql () {
+	echo -e "${COLOR} Installing Postgresql ... ${NC}"
+    sleep 1
+
+	echo -e ${COLOR} Install the repository RPM, client and server packages ${NC}		
+	sudo yum install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm -y
+	
+	sudo yum install -y postgresql-server postgresql-contrib
+	
+	echo -e ${COLOR} Optionally initialize the database and enable automatic start ${NC}
+	sudo postgresql-setup initdb
+	
+	echo -e ${COLOR} Start and enable postgresql ${NC}
+	sudo systemctl start postgresql
+	sudo systemctl enable postgresql
+	sudo systemctl status postgresql
+	
+	echo @### Create DB and create user $bashdbuser with password $bashdbpass###
+	sudo -Hiu postgres createdb scanorder
+	#sudo -Hiu postgres psql -c "CREATE USER symfony WITH PASSWORD 'symfony'"
+	sudo -Hiu postgres psql -c "CREATE USER $bashdbuser WITH PASSWORD '$bashdbpass'"
+	sudo -Hiu postgres psql -c "ALTER USER $bashdbuser WITH SUPERUSER"
+	sudo -Hiu postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE scanorder to $bashdbuser"
+	
+	echo ""
+    sleep 1
+}
+
+#https://www.svnlabs.com/blogs/install-apache-mysql-php-5-6-on-centos-7/
+f_install_php56 () {
+    ########## INSTALL PHP 5.6 ##########
+    echo -e "${COLOR} Installing php 5.6 ... ${NC}"
+    sleep 1
+	
+	#Install EPEL repository
+	#sudo rpm -Uvh http://vault.centos.org/7.0.1406/extras/x86_64/Packages/epel-release-7-5.noarch.rpm
+	#Install remi repository
+	#sudo rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-7.rpm	
+	
+	#https://www.tecmint.com/install-php-5-6-on-centos-7/
+	echo -e ${COLOR} Install: noarch and remi ${NC}	
+	sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+	sudo yum install -y http://rpms.remirepo.net/enterprise/remi-release-7.rpm
+	
+	echo -e ${COLOR} Install: yum install -y yum-utils ${NC}		
+	sudo yum install -y yum-utils
+	
+	#Enable remi
+	#echo "Enable remi"
+	#yum -y --enablerepo=remi,remi-php56 install php php-common
+	
+	echo -e  ${COLOR} Enable remi-php56 ${NC}
+	yum-config-manager --enable remi-php56
+	
+	echo -e ${COLOR} Install php 5.6: install -y php ${NC}	
+	yum install -y php php-mcrypt php-cli php-gd php-curl php-mysql php-ldap php-zip php-fileinfo php-pear php-pdo php-pgsql php-xml php-simplexml php-zip php-mbstring
+
+	#Install php 5.6 on Centos 7
+	#echo "Enable remi and Install php 5.6 on Centos 7"
+	#sudo yum -y --enablerepo=remi,remi-php56 install php-cli php-pear php-pdo php-mysql php-mysqlnd php-pgsql php-sqlite php-gd php-mbstring php-mcrypt php-xml php-simplexml php-curl php-zip
+	
+	# Restart Apache
+    sudo systemctl restart httpd.service
+	
+	#chown -R apache:apache /var/www/html/
+	#chmod -R 775 /var/www/
+
+	echo -e  ${COLOR} php -v ${NC}
+	php -v
+	
+	echo ""
+    sleep 1
+}
+
+f_install_util () {
+    ########## INSTALL UTILITIES ##########
+    echo "Installing util ..."
+    sleep 1
+
+	echo -e ${COLOR} Install Git ${NC}		
+	sudo yum install -y git	
+	
+	echo -e ${COLOR} Install wkhtmltopdf, libreoffice, ghostscript, pdftk ${NC}
+	#sudo yum update
+	sudo yum install -y xvfb libfontconfig wkhtmltopdf	
+	sudo yum install -y libreoffice	
+	sudo yum install -y ghostscript
+	sudo yum install -y pdftk  
+
+	sudo yum install -y wget unzip
+	
+	echo ""
+    sleep 1
+}
+
+
+f_install_order () {
+    ########## Clone ORDER ##########
+    echo -e "${COLOR} Installing order ..."
+    sleep 1
+	
+	echo @### Install Git ###		
+	sudo yum install -y git	
+
+	echo -e ${COLOR} Clone ORDER and copy config and php.ini files, install composer ${NC}
+	ssh-keyscan github.com >> ~/.ssh/known_hosts
+	cd /usr/local/bin/
+	git clone https://github.com/victorbrodsky/order-lab.git /usr/local/bin/order-lab
+	
+	#chown -R apache:apache /var/www
+	echo -e ${COLOR} sudo chmod a+x /usr/local/bin/order-lab ${NC}
+	sudo chmod a+x /usr/local/bin/order-lab
+	echo -e ${COLOR} sudo chown -R www-data:www-data /usr/local/bin/order-lab ${NC}
+	sudo chown -R www-data:www-data /usr/local/bin/order-lab
+	
+	echo ""
+    sleep 1
+}
+     	
+f_install_prepare () {
+    ########## Clone ORDER ##########
+    echo -e "${COLOR} Prepare ... ${NC}"
+    sleep 1
+
+	echo -e ${COLOR} Copy 000-default.conf to /etc/httpd/conf.d ${NC}
+	cp /usr/local/bin/order-lab/packer/000-default.conf /etc/httpd/conf.d
+	
+	#echo @### Copy php.ini to /etc/opt/remi/php72/ ###
+	#/etc/opt/remi/php72/ or /etc/
+	#cp /etc/opt/remi/php72/php.ini /etc/opt/remi/php72/php_ORIG.ini
+	#yes | cp /usr/local/bin/order-lab/packer/php.ini /etc/opt/remi/php72/
+	
+	echo -e ${COLOR} Copy php.ini to /etc/ ${NC}
+	cp /etc/php.ini /etc/php_ORIG.ini
+	yes | cp /usr/local/bin/order-lab/packer/php.ini /etc/
+	
+	#sudo service apache2 restart
+	sudo systemctl restart httpd.service
+	
+	echo -e ${COLOR} Install composer ${NC}
+	php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" 
+	
+	#verify the data integrity of the script compare the script SHA-384 hash with the latest installer
+	HASH="$(wget -q -O - https://composer.github.io/installer.sig)"	
+	#Output should be "Installer verified"
+	php -r "if (hash_file('SHA384', 'composer-setup.php') === '$HASH') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"	   
+	#install Composer in the /usr/local/bin directory
+	sudo php composer-setup.php --install-dir=/usr/local/bin --filename=composer		
+	
+	echo -e ${COLOR} OS Info ${NC}
+	sudo hostnamectl
+	
+	echo ""
+    sleep 1
+}	
+
+f_update_os
+f_install_apache
+#f_install_postgresql12
+f_install_postgresql
+#f_install_php72
+f_install_php56
+f_install_util
+f_install_order
+f_install_prepare
+		   
+
+
+
+
+
+
 
 f_install_php72_ORIG () {
     ########## INSTALL APACHE 7.2 ##########
@@ -214,142 +388,6 @@ f_install_php54 () {
 	echo ""
     sleep 1
 }
-#https://www.svnlabs.com/blogs/install-apache-mysql-php-5-6-on-centos-7/
-f_install_php56 () {
-    ########## INSTALL PHP 5.6 ##########
-    echo -e "${COLOR} Installing php 5.6 ... ${NC}"
-    sleep 1
-	
-	#Install EPEL repository
-	#sudo rpm -Uvh http://vault.centos.org/7.0.1406/extras/x86_64/Packages/epel-release-7-5.noarch.rpm
-	#Install remi repository
-	#sudo rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-7.rpm	
-	
-	#https://www.tecmint.com/install-php-5-6-on-centos-7/
-	echo -e ${COLOR} Install: noarch and remi ${NC}	
-	sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-	sudo yum install -y http://rpms.remirepo.net/enterprise/remi-release-7.rpm
-	
-	echo -e ${COLOR} Install: yum install -y yum-utils ${NC}		
-	sudo yum install -y yum-utils
-	
-	#Enable remi
-	#echo "Enable remi"
-	#yum -y --enablerepo=remi,remi-php56 install php php-common
-	
-	echo -e  ${COLOR} Enable remi-php56 ${NC}
-	yum-config-manager --enable remi-php56
-	
-	echo -e ${COLOR} Install php 5.6: install -y php ${NC}	
-	yum install -y php php-mcrypt php-cli php-gd php-curl php-mysql php-ldap php-zip php-fileinfo php-pear php-pdo php-pgsql php-xml php-simplexml php-zip php-mbstring
 
-	#Install php 5.6 on Centos 7
-	#echo "Enable remi and Install php 5.6 on Centos 7"
-	#sudo yum -y --enablerepo=remi,remi-php56 install php-cli php-pear php-pdo php-mysql php-mysqlnd php-pgsql php-sqlite php-gd php-mbstring php-mcrypt php-xml php-simplexml php-curl php-zip
-	
-	# Restart Apache
-    sudo systemctl restart httpd.service
-	
-	#chown -R apache:apache /var/www/html/
-	#chmod -R 775 /var/www/
-
-	echo -e  ${COLOR} php -v ${NC}
-	php -v
-	
-	echo ""
-    sleep 1
-}
-
-f_install_util () {
-    ########## INSTALL UTILITIES ##########
-    echo "Installing util ..."
-    sleep 1
-
-	echo -e ${COLOR} Install Git ${NC}		
-	sudo yum install -y git	
-	
-	echo -e ${COLOR} Install wkhtmltopdf, libreoffice, ghostscript, pdftk ${NC}
-	#sudo yum update
-	sudo yum install -y xvfb libfontconfig wkhtmltopdf	
-	sudo yum install -y libreoffice	
-	sudo yum install -y ghostscript
-	sudo yum install -y pdftk  
-
-	sudo yum install -y wget unzip
-	
-	echo ""
-    sleep 1
-}
-
-
-f_install_order () {
-    ########## Clone ORDER ##########
-    echo -e "${COLOR} Installing order ..."
-    sleep 1
-	
-	echo @### Install Git ###		
-	sudo yum install -y git	
-
-	echo -e ${COLOR} Clone ORDER and copy config and php.ini files, install composer ${NC}
-	ssh-keyscan github.com >> ~/.ssh/known_hosts
-	cd /usr/local/bin/
-	git clone https://github.com/victorbrodsky/order-lab.git /usr/local/bin/order-lab
-	
-	#chown -R apache:apache /var/www
-	echo -e ${COLOR} sudo chmod a+x /usr/local/bin/order-lab ${NC}
-	sudo chmod a+x /usr/local/bin/order-lab
-	echo -e ${COLOR} sudo chown -R www-data:www-data /usr/local/bin/order-lab ${NC}
-	sudo chown -R www-data:www-data /usr/local/bin/order-lab
-	
-	echo ""
-    sleep 1
-}
-     	
-f_install_prepare () {
-    ########## Clone ORDER ##########
-    echo -e "${COLOR} Prepare ... ${NC}"
-    sleep 1
-
-	echo -e ${COLOR} Copy 000-default.conf to /etc/httpd/conf.d ${NC}
-	cp /usr/local/bin/order-lab/packer/000-default.conf /etc/httpd/conf.d
-	
-	#echo @### Copy php.ini to /etc/opt/remi/php72/ ###
-	#/etc/opt/remi/php72/ or /etc/
-	#cp /etc/opt/remi/php72/php.ini /etc/opt/remi/php72/php_ORIG.ini
-	#yes | cp /usr/local/bin/order-lab/packer/php.ini /etc/opt/remi/php72/
-	
-	echo -e ${COLOR} Copy php.ini to /etc/ ${NC}
-	cp /etc/php.ini /etc/php_ORIG.ini
-	yes | cp /usr/local/bin/order-lab/packer/php.ini /etc/
-	
-	#sudo service apache2 restart
-	sudo systemctl restart httpd.service
-	
-	echo -e ${COLOR} Install composer ${NC}
-	php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" 
-	
-	#verify the data integrity of the script compare the script SHA-384 hash with the latest installer
-	HASH="$(wget -q -O - https://composer.github.io/installer.sig)"	
-	#Output should be "Installer verified"
-	php -r "if (hash_file('SHA384', 'composer-setup.php') === '$HASH') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"	   
-	#install Composer in the /usr/local/bin directory
-	sudo php composer-setup.php --install-dir=/usr/local/bin --filename=composer		
-	
-	echo -e ${COLOR} OS Info ${NC}
-	sudo hostnamectl
-	
-	echo ""
-    sleep 1
-}	
-
-f_update_os
-f_install_apache
-f_install_postgresql12
-#f_install_php72
-f_install_php56
-f_install_util
-f_install_order
-f_install_prepare
-		   
 
 	  
