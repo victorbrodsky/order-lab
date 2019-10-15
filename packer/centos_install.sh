@@ -79,7 +79,7 @@ f_install_postgresql12 () {
 
 #https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-centos-7
 f_install_postgresql () {
-	echo -e "${COLOR} Installing Postgresql ... ${NC}"
+	echo -e "${COLOR} Installing Postgresql (9.2?) ... ${NC}"
     sleep 1
 
 	#echo -e ${COLOR} Install the repository RPM, client and server packages ${NC}		
@@ -104,11 +104,11 @@ f_install_postgresql () {
 	sudo -Hiu postgres psql -c "ALTER USER $bashdbuser WITH SUPERUSER"
 	sudo -Hiu postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE scanorder to $bashdbuser"
 	
-	echo -e ${COLOR} Modify pg_hba.conf in /var/lib/pgsql/data to replace "ident" to "md5" ${NC}
+	echo -e ${COLOR} Modify pg_hba.conf in /var/lib/pgsql/12/data to replace "ident" to "md5" ${NC}
 	#Modify pg_hba.conf in /var/lib/pgsql/12/data to replace "ident" to "md5"
-	sed -i -e "s/ident/md5/g" /var/lib/pgsql/data/pg_hba.conf
+	sed -i -e "s/ident/md5/g" /var/lib/pgsql/12/data/pg_hba.conf
 	
-	sudo systemctl restart postgresql
+	sudo systemctl restart postgresql-12
 	
 	echo ""
     sleep 1
@@ -141,10 +141,13 @@ f_install_php56 () {
 	yum-config-manager --enable remi-php56
 	
 	echo -e ${COLOR} Install php 5.6: install -y php ${NC}	
-	sudo yum install -y php php-mcrypt php-cli php-gd php-curl php-mysql php-ldap
+	sudo yum install -y php php-mcrypt php-cli php-gd php-curl php-mysql php-ldap php-zip php-fileinfo php-pear php-pdo php-pgsql php-xml php-simplexml php-zip php-mbstring
+	
+	#echo -e ${COLOR} Install php 5.6: install -y php ${NC}	
+	#sudo yum install -y php php-mcrypt php-cli php-gd php-curl php-mysql php-ldap 
 
-	echo -e ${COLOR} Install php extensions ${NC}	
-	sudo yum install -y php-zip php-fileinfo php-pear php-pdo php-pgsql php-xml php-simplexml php-zip php-mbstring
+	#echo -e ${COLOR} Install php extensions ${NC}	
+	#sudo yum install -y php-zip php-fileinfo php-pear php-pdo php-pgsql php-xml php-simplexml php-zip php-mbstring
 
 	#Install php 5.6 on Centos 7
 	#echo "Enable remi and Install php 5.6 on Centos 7"
@@ -202,13 +205,14 @@ f_install_order () {
 	echo -e ${COLOR} sudo chmod a+x /usr/local/bin/order-lab ${NC}
 	sudo chmod a+x /usr/local/bin/order-lab
 	
-	echo -e ${COLOR} sudo chown -R www-data:www-data /usr/local/bin/order-lab ${NC}
-	sudo chown -R www-data:www-data /usr/local/bin/order-lab
+	#echo -e ${COLOR} sudo chown -R www-data:www-data /usr/local/bin/order-lab ${NC}
+	#sudo chown -R www-data:www-data /usr/local/bin/order-lab
 	
-	echo -e ${COLOR} sudo chown -R www-data:www-data /usr/local/bin/order-lab ${NC}
+	echo -e ${COLOR} sudo chown -R apache:apache /usr/local/bin/order-lab ${NC}
 	sudo chown -R apache:apache /usr/local/bin/order-lab
-	chown -R apache:apache /usr/local/bin/order-lab/Scanorders2/var/cache
-	chown -R apache:apache /usr/local/bin/order-lab/Scanorders2/var/logs
+	
+	#chown -R apache:apache /usr/local/bin/order-lab/Scanorders2/var/cache
+	#chown -R apache:apache /usr/local/bin/order-lab/Scanorders2/var/logs
 	
 	echo ""
     sleep 1

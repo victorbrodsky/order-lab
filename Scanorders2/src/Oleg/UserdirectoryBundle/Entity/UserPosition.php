@@ -41,12 +41,18 @@ class UserPosition {
      */
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="AdministrativeTitle", inversedBy="userPositions", cascade={"persist"})
-     * @ORM\JoinColumn(name="administrativeTitle_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
-     */
-    private $administrativeTitle;
+//    /**
+//     * @ORM\ManyToOne(targetEntity="AdministrativeTitle", inversedBy="userPositions", cascade={"persist"})
+//     * @ORM\JoinColumn(name="administrativeTitle_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
+//     */
+//    private $administrativeTitle;
 
+//    /**
+//     * //Position Type: Head, Manager, Primary Contact, Transcriptionist
+//     * @ORM\ManyToMany(targetEntity="PositionTypeList", inversedBy="userPositions")
+//     * @ORM\JoinTable(name="user_userPositions_positionTypes")
+//     **/
+//    private $positionTypes;
     /**
      * //Position Type: Head, Manager, Primary Contact, Transcriptionist
      * @ORM\ManyToMany(targetEntity="PositionTypeList", inversedBy="userPositions")
@@ -78,21 +84,21 @@ class UserPosition {
         return $this->id;
     }
 
-    /**
-     * @param mixed $administrativeTitle
-     */
-    public function setAdministrativeTitle($administrativeTitle)
-    {
-        $this->administrativeTitle = $administrativeTitle;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAdministrativeTitle()
-    {
-        return $this->administrativeTitle;
-    }
+//    /**
+//     * @param mixed $administrativeTitle
+//     */
+//    public function setAdministrativeTitle($administrativeTitle)
+//    {
+//        $this->administrativeTitle = $administrativeTitle;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getAdministrativeTitle()
+//    {
+//        return $this->administrativeTitle;
+//    }
 
 
     public function addPositionType($item)

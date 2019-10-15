@@ -39,34 +39,34 @@ class PositionTypeList extends ListAbstract
     protected $original;
 
 
-//    /**
-//     * @ORM\ManyToMany(targetEntity="AdministrativeTitle", mappedBy="positionTypes")
-//     **/
-//    private $userPositions;
+    /**
+     * @ORM\ManyToMany(targetEntity="UserPosition", mappedBy="positionTypes")
+     **/
+    private $userPositions;
 
 
 
-//    public function __construct() {
-//        $this->userPositions = new ArrayCollection();
-//    }
+    public function __construct() {
+        $this->userPositions = new ArrayCollection();
+    }
 
 
 
 
-//    public function addUserPosition($item)
-//    {
-//        if( !$this->userPositions->contains($item) ) {
-//            $this->userPositions->add($item);
-//        }
-//        return $this;
-//    }
-//    public function removeUserPosition($item)
-//    {
-//        $this->userPositions->removeElement($item);
-//    }
-//    public function getUserPositions()
-//    {
-//        return $this->userPositions;
-//    }
+    public function addUserPosition($item)
+    {
+        if( !$this->userPositions->contains($item) ) {
+            $this->userPositions->add($item);
+        }
+        return $this;
+    }
+    public function removeUserPosition($item)
+    {
+        $this->userPositions->removeElement($item);
+    }
+    public function getUserPositions()
+    {
+        return $this->userPositions;
+    }
 
 }

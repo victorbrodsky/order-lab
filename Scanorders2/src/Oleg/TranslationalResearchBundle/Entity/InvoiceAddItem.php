@@ -27,11 +27,13 @@ namespace Oleg\TranslationalResearchBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="transres_invoiceAddItem")
- * @ORM\HasLifecycleCallbacks
- */
+//NOT USED
+///**
+// * @ORM\Entity
+// * @ORM\Table(name="transres_invoiceAddItem")
+// * @ORM\HasLifecycleCallbacks
+// */
+
 class InvoiceAddItem {
 
     /**
@@ -67,11 +69,11 @@ class InvoiceAddItem {
      */
     private $updateDate;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Invoice", inversedBy="invoiceAddItems")
-     * @ORM\JoinColumn(name="invoice_id", referencedColumnName="id")
-     */
-    private $invoice;
+//    /**
+//     * @ORM\ManyToOne(targetEntity="Invoice", inversedBy="invoiceAddItems")
+//     * @ORM\JoinColumn(name="invoice_id", referencedColumnName="id")
+//     */
+//    private $invoice;
 
 
     /**
@@ -177,21 +179,21 @@ class InvoiceAddItem {
         $this->updateDate = $updateDate;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getInvoice()
-    {
-        return $this->invoice;
-    }
-
-    /**
-     * @param mixed $invoice
-     */
-    public function setInvoice($invoice)
-    {
-        $this->invoice = $invoice;
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getInvoice()
+//    {
+//        return $this->invoice;
+//    }
+//
+//    /**
+//     * @param mixed $invoice
+//     */
+//    public function setInvoice($invoice)
+//    {
+//        $this->invoice = $invoice;
+//    }
 
     /**
      * @return mixed
