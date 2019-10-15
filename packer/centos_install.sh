@@ -104,6 +104,7 @@ f_install_postgresql () {
 	sudo -Hiu postgres psql -c "ALTER USER $bashdbuser WITH SUPERUSER"
 	sudo -Hiu postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE scanorder to $bashdbuser"
 	
+	echo -e ${COLOR} Modify pg_hba.conf in /var/lib/pgsql/data to replace "ident" to "md5" ${NC}
 	#Modify pg_hba.conf in /var/lib/pgsql/12/data to replace "ident" to "md5"
 	sed -i -e "s/ident/md5/g" /var/lib/pgsql/data/pg_hba.conf
 	
