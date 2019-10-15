@@ -54,6 +54,8 @@ f_install_postgresql12 () {
 	yum install postgresql12-server -y
 	#sudo yum -y install postgresql11 postgresql11-server postgresql11-contrib postgresql11-libs
 
+	sudo yum -y install oidentd
+
 	#echo @### (use this???) /usr/pgsql-11/bin/postgresql-11-setup initdb ###
 	echo @### Optionally initialize the database and enable automatic start ###	
 	sudo /usr/pgsql-12/bin/postgresql-12-setup initdb
@@ -65,6 +67,11 @@ f_install_postgresql12 () {
 	sudo -Hiu postgres psql -c "CREATE USER $bashdbuser WITH PASSWORD '$bashdbpass'"
 	sudo -Hiu postgres psql -c "ALTER USER $bashdbuser WITH SUPERUSER"
 	sudo -Hiu postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE scanorder to $bashdbuser"
+	
+	#Modify pg_hba.conf in /var/lib/pgsql/12/data to replace "ident" to "md5"
+	sed -i -e "s/ident/md5/g" /var/lib/pgsql/12/data/pg_hba.conf
+	
+	sudo systemctl restart postgresql-12
 	
 	echo ""
     sleep 1
@@ -80,6 +87,8 @@ f_install_postgresql () {
 	
 	sudo yum install -y postgresql-server postgresql-contrib
 	
+	sudo yum install -y oidentd
+	
 	echo -e ${COLOR} Optionally initialize the database and enable automatic start ${NC}
 	sudo postgresql-setup initdb
 	
@@ -94,6 +103,11 @@ f_install_postgresql () {
 	sudo -Hiu postgres psql -c "CREATE USER $bashdbuser WITH PASSWORD '$bashdbpass'"
 	sudo -Hiu postgres psql -c "ALTER USER $bashdbuser WITH SUPERUSER"
 	sudo -Hiu postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE scanorder to $bashdbuser"
+	
+	#Modify pg_hba.conf in /var/lib/pgsql/12/data to replace "ident" to "md5"
+	sed -i -e "s/ident/md5/g" /var/lib/pgsql/data/pg_hba.conf
+	
+	sudo systemctl restart postgresql
 	
 	echo ""
     sleep 1
@@ -126,7 +140,10 @@ f_install_php56 () {
 	yum-config-manager --enable remi-php56
 	
 	echo -e ${COLOR} Install php 5.6: install -y php ${NC}	
-	yum install -y php php-mcrypt php-cli php-gd php-curl php-mysql php-ldap php-zip php-fileinfo php-pear php-pdo php-pgsql php-xml php-simplexml php-zip php-mbstring
+	sudo yum install -y php php-mcrypt php-cli php-gd php-curl php-mysql php-ldap
+
+	echo -e ${COLOR} Install php extensions ${NC}	
+	sudo yum install -y php-zip php-fileinfo php-pear php-pdo php-pgsql php-xml php-simplexml php-zip php-mbstring
 
 	#Install php 5.6 on Centos 7
 	#echo "Enable remi and Install php 5.6 on Centos 7"
@@ -183,8 +200,14 @@ f_install_order () {
 	#chown -R apache:apache /var/www
 	echo -e ${COLOR} sudo chmod a+x /usr/local/bin/order-lab ${NC}
 	sudo chmod a+x /usr/local/bin/order-lab
+	
 	echo -e ${COLOR} sudo chown -R www-data:www-data /usr/local/bin/order-lab ${NC}
 	sudo chown -R www-data:www-data /usr/local/bin/order-lab
+	
+	echo -e ${COLOR} sudo chown -R www-data:www-data /usr/local/bin/order-lab ${NC}
+	sudo chown -R apache:apache /usr/local/bin/order-lab
+	chown -R apache:apache /usr/local/bin/order-lab/Scanorders2/var/cache
+	chown -R apache:apache /usr/local/bin/order-lab/Scanorders2/var/logs
 	
 	echo ""
     sleep 1
