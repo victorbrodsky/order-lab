@@ -523,8 +523,16 @@ class LoggerController extends Controller
         }
 
         if( $objectId ) {
-            $dql->andWhere("logger.entityId = :objectId");
-            $dqlParameters['objectId'] = $objectId;
+            //echo "objectId=$objectId<br>";
+            if( strpos($objectId, ',') !== false ) {
+                $objectIdArr = explode(",",$objectId);
+                $dql->andWhere("logger.entityId IN (:objectId)");
+                $dqlParameters['objectId'] = $objectIdArr;
+            } else {
+                $dql->andWhere("logger.entityId = :objectId");
+                $dqlParameters['objectId'] = $objectId;
+            }
+
 
             $filtered = true;
         }
