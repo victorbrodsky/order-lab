@@ -346,9 +346,27 @@ class CallLogLoggerController extends LoggerController
 
         $params = array('sitename'=>$this->container->getParameter('calllog.sitename'));
 
-        $filterform = $this->createLoggerFilter($request,$params);
-        $objectId = $filterform['objectId']->getData();
-        echo "calllog: objectId=".$objectId."<br>";
+        //$filterform = $this->createLoggerFilter($request,$params);
+        //$filterform->handleRequest($request);
+        //$objectId = $filterform['objectId']->getData();
+        //echo "calllog: objectId=".$objectId."<br>";
+        //print_r($request);
+
+//        $objectId = $_GET['filter[objectId]'];
+//        echo "calllog: filter[objectId]=".$objectId."<br>";
+//
+//        $objectId = $_GET['testkey'];
+//        echo "calllog: testkey=".$objectId."<br>";
+//
+//        if( isset($_GET['filter[objectId]']) ) {
+//            $objectId = $_GET['filter[objectId]'];
+//            echo "calllog: objectId=".$objectId."<br>";
+//            $objectId = "566,568,570";
+//            //$filterform->get('objectId')->setData($objectId);
+//        }
+
+        //$objectId = "566";
+        //$filterform['objectId']->setData($objectId);
 
         $loggerFormParams = $this->listLogger($params,$request);
 

@@ -664,7 +664,11 @@
 
             {% if eventObjectTypeId is defined and eventObjectTypeId %}
                 {#eventlog DB id#}
-                <li><a href="{{ path('calllog_event-log-per-object_log', { 'filter[objectType][]': eventObjectTypeId, 'filter[objectId]': message.id}) }}" target="_blank">View Event Log</a></li>
+                {#<li><a href="{{ path('calllog_event-log-per-object_log', { 'filter[objectType][]': eventObjectTypeId, 'filter[objectId]': message.id}) }}" target="_blank">View Event Log</a></li>#}
+                <li><a
+                     href="{{ path('calllog_event-log-per-object_log', {'filter[objectType][]': eventObjectTypeId,'filter[objectId]': calllog_util.getAllMessagesByOid(message.oid)}) }}"
+                     target="_blank">View Event Log</a>
+                </li>
             {% endif %}
 
             {% if message.patient|length > 0 %}

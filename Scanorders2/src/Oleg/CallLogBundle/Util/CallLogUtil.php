@@ -2501,6 +2501,25 @@ class CallLogUtil
         return $initialMessage;
     }
 
+    public function getAllMessagesByOid($messageOid,$asCommaSeparetedString=true) {
+        $messages = $this->em->getRepository('OlegOrderformBundle:Message')->findAllMessagesByOid($messageOid);
+
+        if( !$asCommaSeparetedString ) {
+            return $messages;
+        }
+
+        $messageIdArr = array();
+        foreach($messages as $message) {
+            $messageIdArr[] = $message->getId();
+        }
+        if( count($messageIdArr) > 0 ) {
+            //return as comma seperated string of Ids
+            return implode(",",$messageIdArr);
+        }
+
+        return null;
+    }
+
     //set all other messages status to deleted
     public function deleteAllOtherMessagesByOid( $message, $cycle, $testing=false ) {
         $userSecUtil = $this->container->get('user_security_utility');
