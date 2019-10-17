@@ -116,6 +116,7 @@ f_install_postgresql_9.2_12 () {
 	echo ""
     sleep 1
 }
+#https://www.linode.com/docs/databases/postgresql/how-to-install-postgresql-relational-databases-on-centos-7/
 f_install_postgresql () {
 	echo -e "${COLOR} Installing Postgresql (9.2.24) ... ${NC}"
     sleep 1

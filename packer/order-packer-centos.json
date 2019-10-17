@@ -69,11 +69,7 @@
 	       "sudo chmod +x /usr/local/bin/order-lab/Scanorders2/deploy_prod.sh",
 	       "bash /usr/local/bin/order-lab/Scanorders2/deploy_prod.sh",
 	       "sudo chown -R apache:apache /usr/local/bin/order-lab",		           
-           "sudo chown -R apache:apache /usr/local/bin/order-lab/.git/",
-		   "sudo mkdir /usr/local/bin/order-lab/Scanorders2/var/cache/prod",
-		   "sudo mkdir /usr/local/bin/order-lab/Scanorders2/var/cache/prod/profiler",
-		   "sudo chown -R apache:apache /usr/local/bin/order-lab/Scanorders2/var/cache/prod",
-		   "sudo chown -R apache:apache /usr/local/bin/order-lab/Scanorders2/var/cache/prod/profiler"	   	   
+           "sudo chown -R apache:apache /usr/local/bin/order-lab/.git/"		      	   
          ]    
       } 
       

@@ -1,6 +1,7 @@
 Centos:
 
-/var/lib/pgsql/12/data/pg_hba.conf
+Postgresql 12: /var/lib/pgsql/12/data/pg_hba.conf
+Postgresql 9.2: /var/lib/pgsql/data/pg_hba.conf
 
 /etc/php.ini
 
@@ -12,3 +13,10 @@ sudo -Hiu postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE scanorder to symfon
 
 php bin/console doctrine:schema:validate
 
+
+"sudo mkdir /usr/local/bin/order-lab/Scanorders2/var/cache/prod",
+		   "sudo mkdir /usr/local/bin/order-lab/Scanorders2/var/cache/prod/profiler",
+		   "sudo chown -R apache:apache /usr/local/bin/order-lab/Scanorders2/var/cache/prod",
+		   "sudo chown -R apache:apache /usr/local/bin/order-lab/Scanorders2/var/cache/prod/profiler"
+		   
+		   
