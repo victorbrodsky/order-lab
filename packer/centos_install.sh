@@ -78,7 +78,7 @@ f_install_postgresql12 () {
 }
 
 #https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-centos-7
-f_install_postgresql () {
+f_install_postgresql_9.2_12 () {
 	echo -e "${COLOR} Installing Postgresql (9.2?) ... ${NC}"
     sleep 1
 
@@ -109,6 +109,42 @@ f_install_postgresql () {
 	sed -i -e "s/ident/md5/g" /var/lib/pgsql/12/data/pg_hba.conf
 	
 	sudo systemctl restart postgresql-12
+	
+	echo -e ${COLOR} Check Postgresql version: psql --version ${NC}
+	psql --version
+	
+	echo ""
+    sleep 1
+}
+f_install_postgresql () {
+	echo -e "${COLOR} Installing Postgresql (9.2.24) ... ${NC}"
+    sleep 1
+
+	#echo -e ${COLOR} Install the repository RPM, client and server packages ${NC}		
+	#sudo yum install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm -y
+	
+	sudo yum install -y postgresql-server postgresql-contrib
+	
+	echo -e ${COLOR} Optionally initialize the database and enable automatic start ${NC}
+	sudo postgresql-setup initdb
+	
+	echo -e ${COLOR} Start and enable postgresql ${NC}
+	sudo systemctl start postgresql
+	sudo systemctl enable postgresql
+	sudo systemctl status postgresql
+	
+	echo @### Create DB and create user $bashdbuser with password $bashdbpass###
+	sudo -Hiu postgres createdb scanorder
+	#sudo -Hiu postgres psql -c "CREATE USER symfony WITH PASSWORD 'symfony'"
+	sudo -Hiu postgres psql -c "CREATE USER $bashdbuser WITH PASSWORD '$bashdbpass'"
+	sudo -Hiu postgres psql -c "ALTER USER $bashdbuser WITH SUPERUSER"
+	sudo -Hiu postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE scanorder to $bashdbuser"
+	
+	echo -e ${COLOR} Modify pg_hba.conf in /var/lib/pgsql/data to replace "ident" to "md5" ${NC}
+	#Modify pg_hba.conf in /var/lib/pgsql/data to replace "ident" to "md5"
+	sed -i -e "s/ident/md5/g" /var/lib/pgsql/data/pg_hba.conf
+	
+	sudo systemctl restart postgresql
 	
 	echo -e ${COLOR} Check Postgresql version: psql --version ${NC}
 	psql --version
@@ -253,6 +289,12 @@ f_install_prepare () {
 	
 	echo -e ${COLOR} OS Info ${NC}
 	sudo hostnamectl
+	
+	echo -e  ${COLOR} Check PHP version: php -v ${NC}
+	php -v
+	
+	echo -e ${COLOR} Check Postgresql version: psql --version ${NC}
+	psql --version
 	
 	echo ""
     sleep 1

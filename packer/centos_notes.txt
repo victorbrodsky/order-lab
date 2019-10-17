@@ -1,3 +1,14 @@
 Centos:
 
 /var/lib/pgsql/12/data/pg_hba.conf
+
+/etc/php.ini
+
+/usr/local/bin/order-lab/Scanorders2
+
+sudo -Hiu postgres psql -c "CREATE USER symfony WITH PASSWORD 'symfony'"
+sudo -Hiu postgres psql -c "ALTER USER symfony WITH SUPERUSER"
+sudo -Hiu postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE scanorder to symfony"
+
+php bin/console doctrine:schema:validate
+
