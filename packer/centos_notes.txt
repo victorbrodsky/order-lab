@@ -1,0 +1,3 @@
+Centos:
+
+/var/lib/pgsql/12/data/pg_hba.conf

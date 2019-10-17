@@ -59,10 +59,6 @@
 
         <div class="collapse navbar-collapse navbar-ex1-collapse" style="max-height:none;">
 
-            {#<div class="row">#}
-
-            {#<div class="col-xs-8">#}
-
             {% if is_granted('ROLE_CALLLOG_USER') %}
 
                 <ul class="nav navbar-nav">
@@ -153,10 +149,6 @@
 
             {% endif %}
 
-            {#</div>#}
-
-
-            {#<div class="col-xs-4">#}
 
             <ul class="nav navbar-nav navbar-right">
 
@@ -171,7 +163,6 @@
                         {#</li>#}
                         {#testing: https://www.bootply.com/JVmUT4RhnR https://www.bootply.com/T7XXw0VSNj#}
 
-                        {#<div class="col-xs-3">#}
                         <li id="nav-bar-calllogsearch">
                             {% set navbarfilterform = calllog_util.getNavbarFilterForm(app.request) %}
                             {#<form class="navbar-form navbar-left form-inline" role="search" id="calllogsearchform" name="calllogsearchform" method="get" action="{{ path('calllog_home') }}">#}
@@ -197,12 +188,10 @@
                             {#</form>#}
                             {{ form_end(navbarfilterform) }}
                         </li>
-                        {#</div>#}
                     {% endif %}
 
                 {% endif %}
 
-                {#<div class="col-xs-1">#}
                 {% if is_granted('ROLE_CALLLOG_ADMIN') %}
                     <li id="nav-bar-admin" class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin<b class="caret"></b></a>
@@ -257,13 +246,10 @@
                     </li>
 
                 {% endif %}
-                {#</div>#}
 
             </ul>
 
             </div>
-
-            {#</div>#}
 
         </div><!-- /.navbar-collapse -->
 

@@ -78,7 +78,8 @@ function toggleBtnListener() {
 
     //Default: if #transres-AdvancedSearch has "collapse in" => grey
     if( $("#transres-AdvancedSearch").hasClass("in") ) {
-        $('.toggle-btn-state').toggleClass('toggle-btn-state-active');
+        // $('.toggle-btn-state').toggleClass('toggle-btn-state-active');
+        $('.toggle-btn-state').toggleClass('active');
     }
 }
 
