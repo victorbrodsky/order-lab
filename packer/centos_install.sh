@@ -110,6 +110,9 @@ f_install_postgresql () {
 	
 	sudo systemctl restart postgresql-12
 	
+	echo -e ${COLOR} Check Postgresql version: psql --version ${NC}
+	psql --version
+	
 	echo ""
     sleep 1
 }
