@@ -101,7 +101,9 @@ class UserController extends Controller
 //        exit('1');
 
         //testing id of the created entity
-        $testEntity = new Logger("employees");
+        $userSecUtil = $this->get('user_security_utility');
+        $site = $userSecUtil->getSiteBySitename($sitename);
+        $testEntity = new Logger($site);
         echo "testEntity ID=".$testEntity->getId()."<br>";
         if( $testEntity ) {
             echo "!!! ID exists = ".$testEntity->getId()."<br>";
