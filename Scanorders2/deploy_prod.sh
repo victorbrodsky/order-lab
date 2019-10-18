@@ -83,6 +83,7 @@ function prep(){
 
     #try to set permission
     chown -R www-data:www-data $PROJECT_LOCAL_PATH/web
+    chown -R apache:apache $PROJECT_LOCAL_PATH/web
 
     if [[ $PARAM2 != "-nodb" ]]
     then
