@@ -105,7 +105,7 @@ class UserController extends Controller
         $site = $userSecUtil->getSiteBySitename("employees");
         $testEntity = new Logger($site);
         echo "testEntity ID=[".$testEntity->getId()."]<br>";
-        if( $testEntity ) {
+        if( $testEntity->getId() ) {
             echo "!!! ID exists = [".$testEntity->getId()."]<br>";
         } else {
             echo "ID does not exists <br>";
