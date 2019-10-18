@@ -101,16 +101,16 @@ class UserController extends Controller
 //        exit('1');
 
         //testing id of the created entity
-        $userSecUtil = $this->get('user_security_utility');
-        $site = $userSecUtil->getSiteBySitename("employees");
-        $testEntity = new Logger($site);
-        echo "testEntity ID=[".$testEntity->getId()."]<br>";
-        if( $testEntity->getId() ) {
-            echo "!!! ID exists = [".$testEntity->getId()."]<br>";
-        } else {
-            echo "ID does not exists <br>";
-        }
-        exit('eof id test');
+//        $userSecUtil = $this->get('user_security_utility');
+//        $site = $userSecUtil->getSiteBySitename("employees");
+//        $testEntity = new Logger($site);
+//        echo "testEntity ID=[".$testEntity->getId()."]<br>";
+//        if( $testEntity->getId() ) {
+//            echo "!!! ID exists = [".$testEntity->getId()."]<br>";
+//        } else {
+//            echo "ID does not exists <br>";
+//        }
+//        exit('eof id test');
 
         return array('sitename'=>$this->container->getParameter('employees.sitename'));
     }
