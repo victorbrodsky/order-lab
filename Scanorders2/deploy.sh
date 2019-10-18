@@ -46,6 +46,9 @@ function prep()
     echo "*** Update tables in Doctrine DB ***"
     php $PROJECT_LOCAL_PATH/bin/console doctrine:schema:update --force
 
+    echo "*** Validate Doctrine DB ***"
+    php $PROJECT_LOCAL_PATH/bin/console doctrine:schema:validate
+
     echo "*** Install assets ***"
     php $PROJECT_LOCAL_PATH/bin/console assets:install
 

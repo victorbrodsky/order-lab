@@ -90,6 +90,9 @@ function prep(){
         echo
         echo "*** Update tables in Doctrine DB ***"
         php -d memory_limit=1024M $PROJECT_LOCAL_PATH/bin/console doctrine:schema:update --force
+
+        echo "*** Validate Doctrine DB ***"
+        php $PROJECT_LOCAL_PATH/bin/console doctrine:schema:validate
     fi
 
     #echo "*** Create LEVENSHTEIN functions for fuzzy search ***"
