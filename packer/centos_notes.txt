@@ -33,3 +33,15 @@ Error: centos SQLSTATE[08006] [7] could not connect to server: Permission denied
 Is the server running on host "localhost" (127.0.0.1) and accepting TCP/IP connections on port 5432 on PDOConnection.php:43
 
 /etc/httpd/conf.d
+
+
+Setting up Permissions
+
+One common issue when installing Symfony is that the app/cache and app/logs directories must be writable both by the web server and the command line user. 
+On a UNIX system, if your web server user is different from your command line user, you can try one of the following solutions.
+Use the same user for the CLI and the web server
+
+In development environments, it is a common practice to use the same UNIX user for the CLI and the web server because 
+it avoids any of these permissions issues when setting up new projects. This can be done by editing your web server configuration 
+(e.g. commonly httpd.conf or apache2.conf for Apache) and setting its user to be the same as your CLI user 
+(e.g. for Apache, update the User and Group values).

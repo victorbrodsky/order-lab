@@ -69,9 +69,7 @@
 	       "sudo chmod +x /usr/local/bin/order-lab/Scanorders2/deploy_prod.sh",
 	       "bash /usr/local/bin/order-lab/Scanorders2/deploy_prod.sh",
 	       "sudo chown -R apache:apache /usr/local/bin/order-lab",		           
-           "sudo chown -R apache:apache /usr/local/bin/order-lab/.git/",		  
-		   "sudo setfacl -dR -m u:'$HTTPDUSER':rwX -m u:$(whoami):rwX var",
-		   "sudo setfacl -R -m u:'$HTTPDUSER':rwX -m u:$(whoami):rwX var"
+           "sudo chown -R apache:apache /usr/local/bin/order-lab/.git/"
          ]    
       } 
       
