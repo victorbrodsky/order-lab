@@ -19,7 +19,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 //Testing permission
 //umask(0000);
-umask();
 
 // Report all errors except E_NOTICE
 //error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);

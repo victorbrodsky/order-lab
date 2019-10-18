@@ -30,7 +30,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 //Testing permission
 //umask(0000);
-umask();
 
 // This check prevents access to debug front controllers that are deployed by
 // accident to production servers. Feel free to remove this, extend it, or make
