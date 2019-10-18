@@ -24,7 +24,8 @@ f_update_os () {
     sudo yum upgrade -y
 	
 	echo -e ${COLOR} Disable SELinux ${NC}
-	sudo setenforce 0
+	#sudo setenforce 0
+	sed -i -e "s/SELINUX=enforcing/SELINUX=disabled/g" /etc/selinux/config
 
     echo ""
     sleep 1
@@ -299,6 +300,9 @@ f_install_prepare () {
 	
 	echo -e ${COLOR} Check Postgresql version: psql --version ${NC}
 	psql --version
+	
+	echo -e ${COLOR} Check SELinux Status ${NC}
+	sestatus
 	
 	echo ""
     sleep 1
