@@ -13,10 +13,23 @@ sudo -Hiu postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE scanorder to symfon
 
 php bin/console doctrine:schema:validate
 
+sudo systemctl restart postgresql
+sudo systemctl restart httpd.service
 
 "sudo mkdir /usr/local/bin/order-lab/Scanorders2/var/cache/prod",
 		   "sudo mkdir /usr/local/bin/order-lab/Scanorders2/var/cache/prod/profiler",
 		   "sudo chown -R apache:apache /usr/local/bin/order-lab/Scanorders2/var/cache/prod",
 		   "sudo chown -R apache:apache /usr/local/bin/order-lab/Scanorders2/var/cache/prod/profiler"
 		   
-		   
+
+Postgres login: psql -d scanorder -U symfony
+List Databases: \l		   
+
+SELECT version();
+Server version: pg_config --version
+Client version: psql --version
+
+Error: centos SQLSTATE[08006] [7] could not connect to server: Permission denied
+Is the server running on host "localhost" (127.0.0.1) and accepting TCP/IP connections on port 5432 on PDOConnection.php:43
+
+/etc/httpd/conf.d
