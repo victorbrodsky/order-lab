@@ -22,6 +22,9 @@ f_update_os () {
 
     sudo yum update
     sudo yum upgrade -y
+	
+	echo -e ${COLOR} Disable SELinux ${NC}
+	sudo setenforce 0
 
     echo ""
     sleep 1

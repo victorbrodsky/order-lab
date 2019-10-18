@@ -60,3 +60,15 @@ Both of these commands assign permissions for the system user and the Apache use
 echo $HTTPDUSER => apache
 echo $(whoami) => root
 Install ACL: yum install acl
+
+
+
+To switch to apache user:
+su -s /bin/bash apache
+
+Disable in Linux 
+https://linuxize.com/post/how-to-disable-selinux-on-centos-7/
+sestatus
+sudo setenforce 0
+Open the /etc/selinux/config file and set the SELINUX mod to disabled: SELINUX=disabled
+
