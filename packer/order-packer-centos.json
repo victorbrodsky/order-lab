@@ -60,7 +60,7 @@
 	  {
         "type": "shell",
         "inline": [ 
-		   "echo @### Composer and deploy (HTTPDUSER=$HTTPDUSER) ###",
+		   "echo @### Composer and deploy ###",
            "cd /usr/local/bin/order-lab/Scanorders2",		  
 		   "composer self-update",
            "composer install",

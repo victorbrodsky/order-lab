@@ -29,11 +29,16 @@ SELECT version();
 Server version: pg_config --version
 Client version: psql --version
 
+Apache: /etc/httpd/
+
 Error: centos SQLSTATE[08006] [7] could not connect to server: Permission denied
 Is the server running on host "localhost" (127.0.0.1) and accepting TCP/IP connections on port 5432 on PDOConnection.php:43
 
 /etc/httpd/conf.d
 
+| symbol got >
+temporarily: loadkeys us-intl
+permanently: localectl set-keymap us-intl
 
 Setting up Permissions
 
@@ -45,3 +50,13 @@ In development environments, it is a common practice to use the same UNIX user f
 it avoids any of these permissions issues when setting up new projects. This can be done by editing your web server configuration 
 (e.g. commonly httpd.conf or apache2.conf for Apache) and setting its user to be the same as your CLI user 
 (e.g. for Apache, update the User and Group values).
+
+
+HTTPDUSER=$(ps axo user,comm | grep -E '[a]pache|[h]ttpd|[_]www|[w]ww-data|[n]ginx' | grep -v root | head -1 | cut -d\  -f1)
+sudo setfacl -dR -m u:"$HTTPDUSER":rwX -m u:$(whoami):rwX var
+sudo setfacl -R -m u:"$HTTPDUSER":rwX -m u:$(whoami):rwX var
+The first setfacl command sets permissions for future files and folders, while the second one sets permissions on the existing files and folders. 
+Both of these commands assign permissions for the system user and the Apache user.
+echo $HTTPDUSER => apache
+echo $(whoami) => root
+Install ACL: yum install acl
