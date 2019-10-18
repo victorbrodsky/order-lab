@@ -60,7 +60,7 @@
 	  {
         "type": "shell",
         "inline": [ 
-		   "echo @### Composer and deploy ###",
+		   "echo @### Composer and deploy (HTTPDUSER=$HTTPDUSER) ###",
            "cd /usr/local/bin/order-lab/Scanorders2",		  
 		   "composer self-update",
            "composer install",
@@ -69,8 +69,7 @@
 	       "sudo chmod +x /usr/local/bin/order-lab/Scanorders2/deploy_prod.sh",
 	       "bash /usr/local/bin/order-lab/Scanorders2/deploy_prod.sh",
 	       "sudo chown -R apache:apache /usr/local/bin/order-lab",		           
-           "sudo chown -R apache:apache /usr/local/bin/order-lab/.git/",
-		   "HTTPDUSER=$(ps axo user,comm | grep -E '[a]pache|[h]ttpd|[_]www|[w]ww-data|[n]ginx' | grep -v root | head -1 | cut -d\ -f1)",
+           "sudo chown -R apache:apache /usr/local/bin/order-lab/.git/",		  
 		   "sudo setfacl -dR -m u:'$HTTPDUSER':rwX -m u:$(whoami):rwX var",
 		   "sudo setfacl -R -m u:'$HTTPDUSER':rwX -m u:$(whoami):rwX var"
          ]    
