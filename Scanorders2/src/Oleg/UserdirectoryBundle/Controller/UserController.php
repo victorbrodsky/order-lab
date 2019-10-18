@@ -99,6 +99,16 @@ class UserController extends Controller
 //        echo "</pre>";
 //        exit('1');
 
+        //testing id of the created entity
+        $testEntity = new Logger("employees");
+        echo "testEntity ID=".$testEntity->getId()."<br>";
+        if( $testEntity ) {
+            echo "!!! ID exists = ".$testEntity->getId()."<br>";
+        } else {
+            echo "ID does not exists <br>";
+        }
+        exit('eof id test');
+
         return array('sitename'=>$this->container->getParameter('employees.sitename'));
     }
 

@@ -72,3 +72,5 @@ sestatus
 sudo setenforce 0
 Open the /etc/selinux/config file and set the SELINUX mod to disabled: SELINUX=disabled
 
+Reboot: sudo shutdown -r now
+

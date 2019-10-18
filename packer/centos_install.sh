@@ -227,6 +227,9 @@ f_install_util () {
 
 	sudo yum install -y wget unzip
 	
+	echo -e ${COLOR} Install xorg-x11-server-Xvfb ${NC}
+	sudo yum install -y xorg-x11-server-Xvfb
+	
 	echo ""
     sleep 1
 }
