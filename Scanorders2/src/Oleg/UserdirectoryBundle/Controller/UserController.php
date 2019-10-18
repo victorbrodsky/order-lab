@@ -20,6 +20,7 @@ namespace Oleg\UserdirectoryBundle\Controller;
 
 use Oleg\UserdirectoryBundle\Entity\Book;
 use Oleg\UserdirectoryBundle\Entity\Lecture;
+use Oleg\UserdirectoryBundle\Entity\Logger;
 use Oleg\UserdirectoryBundle\Entity\PerSiteSettings;
 use Oleg\UserdirectoryBundle\Entity\Publication;
 //use Symfony\Component\Translation\Translator;
