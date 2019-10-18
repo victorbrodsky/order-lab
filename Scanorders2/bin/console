@@ -11,6 +11,7 @@ use Symfony\Component\Debug\Debug;
 
 //Testing permission
 //umask(0000);
+umask();
 
 set_time_limit(0);
 
