@@ -168,6 +168,12 @@ class ReportGenerator {
         //$this->tryRun();
         //return;
 
+        if( !$cmd ) {
+            $logger = $this->container->get('logger');
+            $logger->error("Command to generate PDF report is NULL");
+            throw new \InvalidArgumentException('Command to generate PDF report is NULL');
+        }
+
         $oExec = null;
         //$WshShell = new \COM("WScript.Shell");
         //$oExec = $WshShell->Run($cmd, 0, false);

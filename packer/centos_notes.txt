@@ -76,3 +76,10 @@ Reboot: sudo shutdown -r now
 
 
 wkhtmltopdf: cannot connect to X server
+
+[2019-10-21 17:22:42] app.NOTICE: cmd=[
+"phantomjs" --disk-cache=true "/usr/local/bin/order-lab/Scanorders2/packer/rasterize.js" http://localhost/order/translational-research/work-request/download-packing-slip-pdf/1 "/usr/local/bin/order-lab/Scanorders2/app/../web/Uploaded/transres/PackingSlipPDF/PackingSlip-PDF-HP1-REQ1-administrator-10-21-2019.pdf" "A4"] [] []
+/opt/phantomjs-2.1.1-linux-x86_64/bin/phantomjs --disk-cache=true /usr/local/bin/order-lab/Scanorders2/packer/rasterize.js http://yahoo.com /usr/local/bin/order-lab/Scanorders2/app/../web/Uploaded/transres/PackingSlipPDF/test_21-10-2019.pdf A4
+
+
+

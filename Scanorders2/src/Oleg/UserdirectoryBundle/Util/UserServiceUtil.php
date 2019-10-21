@@ -1080,8 +1080,8 @@ class UserServiceUtil {
         //set default Third-Party Software Dependencies for Linux not used in container
         if( !$this->isWindows() ) {
             //set the same value as in setparameters.php run on deploy $wkhtmltopdfpath = "/usr/bin/xvfb-run /usr/bin/wkhtmltopdf";
-            //$types['wkhtmltopdfpathLinux'] = "/usr/bin/xvfb-run /usr/bin/wkhtmltopdf";
-            $types['wkhtmltopdfpathLinux'] = "wkhtmltopdf";
+            $types['wkhtmltopdfpathLinux'] = "/usr/bin/xvfb-run /usr/bin/wkhtmltopdf";
+            //$types['wkhtmltopdfpathLinux'] = "xvfb-run wkhtmltopdf";
 
             //set other Linux parameters
             $types['libreOfficeConvertToPDFPathFellAppLinux'] = "/usr/lib/libreoffice/program";
@@ -1093,8 +1093,8 @@ class UserServiceUtil {
             $types['gsPathFellAppLinux'] = "/usr/bin";
             $types['gsFilenameFellAppLinux'] = "gs";
             $types['gsArgumentsFellAppLinux'] = "-q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile= ###outputFile###  -c .setpdfwrite -f ###inputFiles###";
-            $types['phantomjsLinux'] = "phantomjs";
-            $types['rasterizeLinux'] = "/usr/local/bin/order-lab/Scanorders2/packer/rasterize.js";
+            $types['phantomjsLinux'] = "/opt/phantomjs-2.1.1-linux-x86_64/bin/phantomjs";
+            $types['rasterizeLinux'] = "/usr/local/bin/order-lab/packer/rasterize.js";
             //$types[''] = "";
             //$types[''] = "";
         }
