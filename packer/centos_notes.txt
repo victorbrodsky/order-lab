@@ -74,3 +74,5 @@ Open the /etc/selinux/config file and set the SELINUX mod to disabled: SELINUX=d
 
 Reboot: sudo shutdown -r now
 
+
+wkhtmltopdf: cannot connect to X server
