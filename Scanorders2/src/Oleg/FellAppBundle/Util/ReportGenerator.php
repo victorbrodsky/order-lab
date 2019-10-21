@@ -447,6 +447,7 @@ class ReportGenerator {
         ini_set('max_execution_time', 300); //300 seconds = 5 minutes
         $logger = $this->container->get('logger');
 
+        $userServiceUtil = $this->container->get('user_service_utility');
         $userSecUtil = $this->container->get('user_security_utility');
         $systemUser = $userSecUtil->findSystemUser();
 
@@ -475,9 +476,10 @@ class ReportGenerator {
         $reportPath = $this->container->get('kernel')->getRootDir() . DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'web'.DIRECTORY_SEPARATOR. $uploadReportPath;
 
         $logger->notice("reportPath(before realpath)=".$reportPath);
-        $reportPath = realpath($reportPath);
+        //$reportPath = realpath($reportPath);
+        $reportPath = $userServiceUtil->normalizePath($reportPath);
         $logger->notice("reportPath(after realpath)=".$reportPath);
-        
+
         if( !file_exists($reportPath) ) {
             mkdir($reportPath, 0700, true);
             chmod($reportPath, 0700);
