@@ -164,6 +164,21 @@ class ReportGenerator {
     //http://www.somacon.com/p395.php
     public function windowsCmdRunAsync($cmd) {
 
+        $userServiceUtil = $this->container->get('user_service_utility');
+
+        if( $userServiceUtil->isWinOs() ) {
+            //Windows
+            $oExec = $this->windowsOsCmdRunAsync($cmd);
+        } else {
+            //Linux
+            $oExec = $this->linuxOsCmdRunAsync($cmd);
+        }
+
+        return $oExec;
+    }
+    //http://www.somacon.com/p395.php
+    public function windowsOsCmdRunAsync($cmd) {
+
         //TESTING
         //$this->tryRun();
         //return;
@@ -187,6 +202,12 @@ class ReportGenerator {
 
         return $oExec;
     }
+    public function linuxOsCmdRunAsync($cmd) {
+        $oExec = exec($cmd);
+        return $oExec;
+    }
+
+
     
     public function tryRun() {
 
