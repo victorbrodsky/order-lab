@@ -259,6 +259,10 @@ class Document {
      */
     public function setUploadDirectory($uploadDirectory)
     {
+        if( $uploadDirectory ) {
+            
+        }
+        
         $this->uploadDirectory = $uploadDirectory;
     }
 

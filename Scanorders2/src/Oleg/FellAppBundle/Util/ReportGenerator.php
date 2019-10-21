@@ -1432,6 +1432,7 @@ class ReportGenerator {
     //create fellapp report in DB
     protected function createFellAppReportDB($holderEntity,$holderMethodSingularStr,$author,$uniqueTitle,$path,$filesize,$documentType,$deleteOldFileFromServer) {
 
+        $userServiceUtil = $this->container->get('user_service_utility');
         $logger = $this->container->get('logger');
 
         $object = new Document($author);
@@ -1441,7 +1442,14 @@ class ReportGenerator {
         $object->setTitle($uniqueTitle);
         $object->setUniquename($uniqueTitle);
 
+        if( $path ) {
+            $path = $userServiceUtil->normalizePath($path);
+        }
         $object->setUploadDirectory($path);
+
+        if( !$filesize ) {
+            $filesize = 0;
+        }
         $object->setSize($filesize);
 
         $transformer = new GenericTreeTransformer($this->em, $author, "DocumentTypeList", "UserdirectoryBundle");
