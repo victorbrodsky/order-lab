@@ -639,7 +639,7 @@ class ReportGenerator {
 
         //4) add the report to application report DB
         $filesize = filesize($filenameMerged);
-        $logger->notice("Merged filesize=".$filesize);
+        $logger->notice("Merged filesize=".$filesize); //TODO: filesize is 0?
 
         $deleteOldFileFromServer = false;
         $documentPdf = $this->createFellAppReportDB($entity,"report",$systemUser,$fileFullReportUniqueName,$uploadReportPath,$filesize,'Complete Fellowship Application PDF',$deleteOldFileFromServer);
