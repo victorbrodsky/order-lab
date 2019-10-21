@@ -852,6 +852,9 @@ class UserServiceUtil {
                                                 please press the "New Hematopathology Project Request" button.<br>
                                                 For all other project requests, please press the "New AP/CP Project Request" button.',
 
+
+            ////////////////////// EOF Third-Party Software //////////////////
+
             "contentAboutPage" => '
                 <p>
                     This site is built on the platform titled "O R D E R" (as in the opposite of disorder).
@@ -1077,7 +1080,8 @@ class UserServiceUtil {
         //set default Third-Party Software Dependencies for Linux not used in container
         if( !$this->isWindows() ) {
             //set the same value as in setparameters.php run on deploy $wkhtmltopdfpath = "/usr/bin/xvfb-run /usr/bin/wkhtmltopdf";
-            $types['wkhtmltopdfpathLinux'] = "/usr/bin/xvfb-run /usr/bin/wkhtmltopdf";
+            //$types['wkhtmltopdfpathLinux'] = "/usr/bin/xvfb-run /usr/bin/wkhtmltopdf";
+            $types['wkhtmltopdfpathLinux'] = "wkhtmltopdf";
 
             //set other Linux parameters
             $types['libreOfficeConvertToPDFPathFellAppLinux'] = "/usr/lib/libreoffice/program";
@@ -1089,6 +1093,10 @@ class UserServiceUtil {
             $types['gsPathFellAppLinux'] = "/usr/bin";
             $types['gsFilenameFellAppLinux'] = "gs";
             $types['gsArgumentsFellAppLinux'] = "-q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile= ###outputFile###  -c .setpdfwrite -f ###inputFiles###";
+            $types['phantomjsLinux'] = "phantomjs";
+            $types['rasterizeLinux'] = "/usr/local/bin/order-lab/Scanorders2/packer/rasterize.js";
+            //$types[''] = "";
+            //$types[''] = "";
         }
 
         $params = new SiteParameters();
