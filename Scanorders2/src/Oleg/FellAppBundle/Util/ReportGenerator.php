@@ -479,7 +479,7 @@ class ReportGenerator {
 
         //It works
         $outdir = $reportPath.'/temp_'.$id.'/';
-        //$logger->notice("1 outdir=".$outdir);
+        $logger->notice("outdir=".$outdir);
         if( !file_exists($outdir) ) {
             mkdir($outdir, 0700, true);
             chmod($outdir, 0700);
