@@ -465,13 +465,19 @@ class ReportGenerator {
             $reportsUploadPathFellApp = "Reports";
             $logger->warning('reportsUploadPathFellApp is not defined in Site Parameters. Use default "'.$reportsUploadPathFellApp.'" folder.');
         }
+        $logger->notice("reportsUploadPathFellApp=".$reportsUploadPathFellApp);
+
         //$uploadReportPath = $this->uploadDir.'/'.$reportsUploadPathFellApp;
         $uploadReportPath = $this->uploadDir.DIRECTORY_SEPARATOR.$reportsUploadPathFellApp;
+        $logger->notice("uploadReportPath=".$uploadReportPath);
 
         //$reportPath = $this->container->get('kernel')->getRootDir() . '/../web/' . $uploadReportPath;
         $reportPath = $this->container->get('kernel')->getRootDir() . DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'web'.DIRECTORY_SEPARATOR. $uploadReportPath;
-        $reportPath = realpath($reportPath);
 
+        $logger->notice("reportPath(before realpath)=".$reportPath);
+        $reportPath = realpath($reportPath);
+        $logger->notice("reportPath(after realpath)=".$reportPath);
+        
         if( !file_exists($reportPath) ) {
             mkdir($reportPath, 0700, true);
             chmod($reportPath, 0700);
