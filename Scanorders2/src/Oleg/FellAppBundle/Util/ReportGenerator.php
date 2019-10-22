@@ -117,7 +117,9 @@ class ReportGenerator {
 //        $query = $this->em->createQuery('UPDATE OlegFellAppBundle:Process p SET p.startTimestamp = NULL WHERE p.startTimestamp IS NOT NULL');
 //        $numUpdated = $query->execute();
 
-        $this->cmdRunAsync($this->generatereportrunCmd);
+        //$this->cmdRunAsync($this->generatereportrunCmd);
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $userServiceUtil->execInBackground($this->generatereportrunCmd);
 
         return $numUpdated;
     }
@@ -157,63 +159,66 @@ class ReportGenerator {
         $logger->notice("call tryRun() asynchronous");
 
         //call tryRun() asynchronous
-        $this->cmdRunAsync($this->generatereportrunCmd);
+        //$this->cmdRunAsync($this->generatereportrunCmd);
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $userServiceUtil->execInBackground($this->generatereportrunCmd);
 
     }
 
-    //http://www.somacon.com/p395.php
-    //previously windowsCmdRunAsync
-    public function cmdRunAsync($cmd) {
-
-        $userServiceUtil = $this->container->get('user_service_utility');
-        $oExec = $userServiceUtil->execInBackground($cmd);
-        return $oExec;
-
-//        $userServiceUtil = $this->container->get('user_service_utility');
+//    //http://www.somacon.com/p395.php
+//    //previously windowsCmdRunAsync
+//    //TODO: can be replaced directly by execInBackground
+//    public function cmdRunAsync($cmd) {
 //
-//        if( $userServiceUtil->isWinOs() ) {
-//            //Windows
-//            $oExec = $this->windowsOsCmdRunAsync($cmd);
-//        } else {
-//            //Linux
-//            $oExec = $this->linuxOsCmdRunAsync($cmd);
+//        $userServiceUtil = $this->container->get('user_service_utility');
+//        $oExec = $userServiceUtil->execInBackground($cmd);
+//        return $oExec;
+//
+////        $userServiceUtil = $this->container->get('user_service_utility');
+////
+////        if( $userServiceUtil->isWinOs() ) {
+////            //Windows
+////            $oExec = $this->windowsOsCmdRunAsync($cmd);
+////        } else {
+////            //Linux
+////            $oExec = $this->linuxOsCmdRunAsync($cmd);
+////        }
+////
+////        return $oExec;
+//    }
+//    //http://www.somacon.com/p395.php
+//    public function windowsOsCmdRunAsync($cmd) {
+//
+//        //TESTING
+//        //$this->tryRun();
+//        //return;
+//
+//        if( !$cmd ) {
+//            $logger = $this->container->get('logger');
+//            $logger->error("Command to generate PDF report is NULL");
+//            throw new \InvalidArgumentException('Command to generate PDF report is NULL');
 //        }
 //
+//        $oExec = null;
+//        //$WshShell = new \COM("WScript.Shell");
+//        //$oExec = $WshShell->Run($cmd, 0, false);
+//
+//        //$oExec = pclose(popen("start ". $cmd, "r"));
+//        //$oExec = pclose(popen("start /B ". $cmd, "r"));
+//        //$oExec = exec($cmd);
+//
+//        $userServiceUtil = $this->container->get('user_service_utility');
+//        $oExec = $userServiceUtil->execInBackground($cmd);
+//
+//        //$logger = $this->container->get('logger');
+//        //$logger->notice("Windows Cmd Run Sync: oExec=".$oExec);
+//
 //        return $oExec;
-    }
-    //http://www.somacon.com/p395.php
-    public function windowsOsCmdRunAsync($cmd) {
-
-        //TESTING
-        //$this->tryRun();
-        //return;
-
-        if( !$cmd ) {
-            $logger = $this->container->get('logger');
-            $logger->error("Command to generate PDF report is NULL");
-            throw new \InvalidArgumentException('Command to generate PDF report is NULL');
-        }
-
-        $oExec = null;
-        //$WshShell = new \COM("WScript.Shell");
-        //$oExec = $WshShell->Run($cmd, 0, false);
-
-        //$oExec = pclose(popen("start ". $cmd, "r"));
-        //$oExec = pclose(popen("start /B ". $cmd, "r"));
-        //$oExec = exec($cmd);
-
-        $userServiceUtil = $this->container->get('user_service_utility');
-        $oExec = $userServiceUtil->execInBackground($cmd);
-
-        //$logger = $this->container->get('logger');
-        //$logger->notice("Windows Cmd Run Sync: oExec=".$oExec);
-
-        return $oExec;
-    }
-    public function linuxOsCmdRunAsync($cmd) {
-        $oExec = exec($cmd);
-        return $oExec;
-    }
+//    }
+//    public function linuxOsCmdRunAsync($cmd) {
+//        $oExec = exec($cmd);
+//        return $oExec;
+//    }
 
 
     
@@ -344,7 +349,9 @@ class ReportGenerator {
 
             //4) run next in queue
             //$this->tryRun();
-            $this->cmdRunAsync($this->generatereportrunCmd);
+            //$this->cmdRunAsync($this->generatereportrunCmd);
+            $userServiceUtil = $this->container->get('user_service_utility');
+            $userServiceUtil->execInBackground($this->generatereportrunCmd);
 
             $reportFileName = $res['filename'];
         }

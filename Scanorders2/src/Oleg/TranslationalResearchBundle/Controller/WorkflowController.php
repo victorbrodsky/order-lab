@@ -77,17 +77,17 @@ class WorkflowController extends Controller
         if( $type == "project-requests" ) {
             $title = "Project Request Workflow";
             $filename = "project.png";
-            $this->cmdRunAsync($type,$filename);
+            $this->makeAndRunCmdAsync($type,$filename);
         }
         if( $type == "work-requests-billing" ) {
             $title = "Work Request Billing Progress Workflow";
             $filename = "request_billing.png";
-            $this->cmdRunAsync($type,$filename);
+            $this->makeAndRunCmdAsync($type,$filename);
         }
         if( $type == "work-requests-completion-progress" ) {
             $title = "Work Request Completion Progress Workflow";
             $filename = "request_progress.png";
-            $this->cmdRunAsync($type,$filename);
+            $this->makeAndRunCmdAsync($type,$filename);
         }
 
         if( !$filename ) {
@@ -134,7 +134,7 @@ class WorkflowController extends Controller
     }
 
     //previously windowsOsCmdRunAsync
-    public function cmdRunAsync($type,$filename) {
+    public function makeAndRunCmdAsync($type,$filename) {
 
         return;
 
