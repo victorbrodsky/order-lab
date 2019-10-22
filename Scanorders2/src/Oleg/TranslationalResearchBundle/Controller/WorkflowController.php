@@ -77,17 +77,17 @@ class WorkflowController extends Controller
         if( $type == "project-requests" ) {
             $title = "Project Request Workflow";
             $filename = "project.png";
-            $this->windowsCmdRunAsync($type,$filename);
+            $this->cmdRunAsync($type,$filename);
         }
         if( $type == "work-requests-billing" ) {
             $title = "Work Request Billing Progress Workflow";
             $filename = "request_billing.png";
-            $this->windowsCmdRunAsync($type,$filename);
+            $this->cmdRunAsync($type,$filename);
         }
         if( $type == "work-requests-completion-progress" ) {
             $title = "Work Request Completion Progress Workflow";
             $filename = "request_progress.png";
-            $this->windowsCmdRunAsync($type,$filename);
+            $this->cmdRunAsync($type,$filename);
         }
 
         if( !$filename ) {
@@ -133,7 +133,8 @@ class WorkflowController extends Controller
         );
     }
 
-    public function windowsCmdRunAsync($type,$filename) {
+    //previously windowsOsCmdRunAsync
+    public function cmdRunAsync($type,$filename) {
 
         return;
 
@@ -151,12 +152,15 @@ class WorkflowController extends Controller
         //$oExec = $WshShell->Run($cmd, 0, false);
 
         //$oExec = pclose(popen("start ". $cmd, "r"));
-        $oExec = pclose(popen("start /B ". $cmd, "r"));
+        //$oExec = pclose(popen("start /B ". $cmd, "r"));
         //$oExec = exec($cmd);
         //$oExec = system($cmd);
 
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $oExec = $userServiceUtil->execInBackground($cmd);
+
         //$logger = $this->container->get('logger');
-        echo "Windows Cmd Run Sync: oExec=".$oExec."<br>";
+        echo "Cmd Run Sync: oExec=".$oExec."<br>";
 
         return $oExec;
     }

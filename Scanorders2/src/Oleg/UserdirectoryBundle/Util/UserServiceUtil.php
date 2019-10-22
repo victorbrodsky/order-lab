@@ -1716,6 +1716,19 @@ class UserServiceUtil {
         return implode('/', $parts);
     }
 
+    function execInBackground($cmd) {
+        if( $this->isWinOs() ){
+            //pclose(popen("start /B ". $cmd, "r"));
+            $oExec = pclose(popen("start /B ". $cmd, "r"));
+        }
+        else {
+            $oExec = exec($cmd . " > /dev/null &");
+        }
+
+        return $oExec;
+    }
+
+
 
 
 

@@ -545,7 +545,7 @@ class FellAppImportPopulateUtil {
         //call tryRun() asynchronous
         $fellappRepGen = $this->container->get('fellapp_reportgenerator');
         $cmd = 'php ../bin/console fellapp:generatereportrun --env=prod';
-        $fellappRepGen->windowsCmdRunAsync($cmd);
+        $fellappRepGen->cmdRunAsync($cmd);
 
         return $populatedFellowshipApplications;
     }
