@@ -785,8 +785,8 @@ class ReportGenerator {
             'fellapp_download',
             array(
                 'id' => $applicationId
-            ),
-            UrlGeneratorInterface::ABSOLUTE_URL
+            )
+            //UrlGeneratorInterface::ABSOLUTE_URL
         ); //this does not work from console: 'order' is missing
         $logger->notice("pageUrl=[".$pageUrl."]");
         //echo "pageurl=". $pageUrl . "<br>";
