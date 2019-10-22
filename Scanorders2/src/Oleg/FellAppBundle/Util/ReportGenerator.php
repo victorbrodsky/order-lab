@@ -641,6 +641,12 @@ class ReportGenerator {
         $filesize = filesize($filenameMerged);
         $logger->notice("Merged filesize=".$filesize); //TODO: filesize is 0?
 
+        if( !file_exists($filenameMerged) ) {
+            $logger->notice("filenameMerged does not exist");
+        } else {
+            $logger->notice("filenameMerged exists!!!");
+        }
+
         $deleteOldFileFromServer = false;
         $documentPdf = $this->createFellAppReportDB($entity,"report",$systemUser,$fileFullReportUniqueName,$uploadReportPath,$filesize,'Complete Fellowship Application PDF',$deleteOldFileFromServer);
         if( $documentPdf ) {
