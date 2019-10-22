@@ -34,14 +34,14 @@
                 <label class="col-xs-12 control-label">Applicant:</label>
                 {#{{ form_row(form.fellowshipSubspecialty) }}#}
                 <div class="row">
-                    <div class="col-xs-8">
+                    <div class="col-xs-6">
                         <br>
                         {{ form_row(form.fellowshipSubspecialty) }}
                     </div>
-                    <div class="col-xs-2">
+                    <div class="col-xs-3">
                         {{ formmacros.fieldDateLabel_vertical(form.startDate,'allow-future-date') }}
                     </div>
-                    <div class="col-xs-2">
+                    <div class="col-xs-3">
                         {{ formmacros.fieldDateLabel_vertical(form.endDate,'allow-future-date') }}
                     </div>
                 </div> <!-- row -->
