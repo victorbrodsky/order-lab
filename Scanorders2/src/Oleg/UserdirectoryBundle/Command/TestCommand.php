@@ -46,6 +46,7 @@ class TestCommand extends ContainerAwareCommand
         $logger = $this->getContainer()->get('logger');
 
         $fellappRepGen = $this->getContainer()->get('fellapp_reportgenerator');
+        $transresPdfUtil = $this->get('transres_pdf_generator');
         $fellappApplicationId = 1;
 
         //$reportsUploadPathFellApp = "Reports";
@@ -75,7 +76,7 @@ class TestCommand extends ContainerAwareCommand
         //$result = $fellappRepGen->generateApplicationPdf($fellappApplicationId,$applicationFilePath);
         $pdfPath = "fellapp_download";
         $pdfPathParametersArr = array('id' => $fellappApplicationId);
-        $result = $this->generatePdfPhantomjs($pdfPath,$pdfPathParametersArr,$applicationFilePath,null);
+        $result = $transresPdfUtil->generatePdfPhantomjs($pdfPath,$pdfPathParametersArr,$applicationFilePath,null);
         $resultArr[] = $result;
 
         $resultTotal = implode("\r\n",$resultArr);
