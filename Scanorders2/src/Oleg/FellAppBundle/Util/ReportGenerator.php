@@ -825,6 +825,8 @@ class ReportGenerator {
         //$this->generatePdfPhantomjs($pdfPath,$pdfPathParametersArr,$applicationOutputFilePath,null);
 
         //echo "generated ok! <br>";
+
+        return "PDF generated=[".$applicationOutputFilePath."]";
     }
 
     //convert all uploads to pdf using LibreOffice
