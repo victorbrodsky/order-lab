@@ -46,7 +46,7 @@ class TestCommand extends ContainerAwareCommand
         $logger = $this->getContainer()->get('logger');
 
         $fellappRepGen = $this->getContainer()->get('fellapp_reportgenerator');
-        $id = 1;
+        $fellappApplicationId = 1;
 
         //$reportsUploadPathFellApp = "Reports";
         //$uploadpath = $this->getContainer()->getParameter('fellapp.uploadpath');
@@ -56,17 +56,30 @@ class TestCommand extends ContainerAwareCommand
         ///usr/local/bin/order-lab/Scanorders2/web/Uploaded/fellapp/Reports
         $reportPath = $this->getContainer()->get('kernel')->getRootDir() . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'web' . DIRECTORY_SEPARATOR . $uploadReportPath. DIRECTORY_SEPARATOR;
 
-        $outdir = $reportPath . 'temp_' . $id . DIRECTORY_SEPARATOR;
+        $outdir = $reportPath . 'temp_' . $fellappApplicationId . DIRECTORY_SEPARATOR;
 
         $now = date("H:s:i");
         $now = str_replace(":","_",$now);
-        $applicationFilePath = $outdir . "application_ID" . $id . "_wkhtmltopdf_" . $now . ".pdf";
 
+        $resultArr = array();
+
+        //wkhtmltopdf
+        $applicationFilePath = $outdir . "application_ID" . $fellappApplicationId . "_wkhtmltopdf_" . $now . ".pdf";
         $logger->notice("applicationFilePath=[".$applicationFilePath."]");
+        $result = $fellappRepGen->generateApplicationPdf($fellappApplicationId,$applicationFilePath);
+        $resultArr[] = $result;
 
-        $result = $fellappRepGen->generateApplicationPdf($id,$applicationFilePath);
+        //phantomjs
+        $applicationFilePath = $outdir . "application_ID" . $fellappApplicationId . "_phantomjs_" . $now . ".pdf";
+        $logger->notice("applicationFilePath=[".$applicationFilePath."]");
+        //$result = $fellappRepGen->generateApplicationPdf($fellappApplicationId,$applicationFilePath);
+        $pdfPath = "fellapp_download";
+        $pdfPathParametersArr = array('id' => $fellappApplicationId);
+        $result = $this->generatePdfPhantomjs($pdfPath,$pdfPathParametersArr,$applicationFilePath,null);
+        $resultArr[] = $result;
 
-        $output->writeln($result);
+        $resultTotal = implode("\r\n",$resultArr);
+        $output->writeln($resultTotal);
     }
 
 
