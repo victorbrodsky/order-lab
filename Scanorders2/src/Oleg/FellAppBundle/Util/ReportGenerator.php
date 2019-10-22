@@ -1164,8 +1164,8 @@ class ReportGenerator {
         $shellout = exec( $cmd, $output, $return );
         //$shellout = exec( $cmd );
 
-        //$logger->error("pdftk output: " . print_r($output));
-        //$logger->error("pdftk return: " . $return);
+        $logger->error("pdftk output: " . print_r($output));
+        $logger->error("pdftk return: " . $return);
 
         //return 0 => ok, return 1 => failed
         if( $return == 1 ) {
