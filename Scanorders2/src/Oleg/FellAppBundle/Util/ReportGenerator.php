@@ -781,8 +781,14 @@ class ReportGenerator {
         //$pageUrl = "http://localhost/scanorder/Scanorders2/web/fellowship-applications/download/".$applicationId;
 
         //fellapp_download
-        $pageUrl = $router->generate('fellapp_download',array('id' => $applicationId),UrlGeneratorInterface::ABSOLUTE_URL); //this does not work from console: 'order' is missing
-        //$logger->notice("### pageUrl=".$pageUrl);
+        $pageUrl = $router->generate(
+            'fellapp_download',
+            array(
+                'id' => $applicationId
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        ); //this does not work from console: 'order' is missing
+        $logger->notice("pageUrl=[".$pageUrl."]");
         //echo "pageurl=". $pageUrl . "<br>";
         //exit();
 
