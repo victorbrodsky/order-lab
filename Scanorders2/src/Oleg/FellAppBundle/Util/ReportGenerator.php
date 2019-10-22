@@ -770,6 +770,8 @@ class ReportGenerator {
             //$context->setScheme('http');
             //$context->setBaseUrl('/scanorder/Scanorders2/web');
         }
+        $transresUtil = $this->container->get('transres_util');
+        $router = $transresUtil->getRequestContextRouter();
         
         //$url = $router->generate('fellapp_download',array('id' => $applicationId),true); //fellowship-applications/show/43
         //echo "url=". $url . "<br>";
@@ -785,8 +787,8 @@ class ReportGenerator {
             'fellapp_download',
             array(
                 'id' => $applicationId
-            )
-            //UrlGeneratorInterface::ABSOLUTE_URL
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
         ); //this does not work from console: 'order' is missing
         $logger->notice("pageUrl=[".$pageUrl."]");
         //echo "pageurl=". $pageUrl . "<br>";
