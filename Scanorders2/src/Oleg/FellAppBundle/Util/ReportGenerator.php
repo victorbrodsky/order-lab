@@ -870,7 +870,7 @@ class ReportGenerator {
         //$pageUrl = "http://localhost/scanorder/Scanorders2/web/app_dev.php/fellowship-applications/download/".$applicationId;
         //$pageUrl = "http://localhost/scanorder/Scanorders2/web/fellowship-applications/download/".$applicationId;
         //$pageUrl = "http://142.93.180.104/order/fellowship-applications/download/1";
-        //$pageUrl = "http://127.0.0.1/order/fellowship-applications/download/1";
+        $pageUrl = "http://127.0.0.1/order/dev_app.php/fellowship-applications/download/1";
 
         $logger->notice("pageUrl=[".$pageUrl."]");
         //echo "pageurl=". $pageUrl . "<br>";
