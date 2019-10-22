@@ -740,7 +740,7 @@ class ReportGenerator {
         $router = $this->container->get('router');
 
         $modifyContext = true;
-        $modifyContext = false;
+        //$modifyContext = false;
         if( $modifyContext ) {
             $context = $this->container->get('router')->getContext();
 
@@ -820,9 +820,9 @@ class ReportGenerator {
         );
 
         //testing
-        $pdfPath = "fellapp_download";
-        $pdfPathParametersArr = array('id' => $applicationId);
-        $this->generatePdfPhantomjs($pdfPath,$pdfPathParametersArr,$applicationOutputFilePath,null);
+        //$pdfPath = "fellapp_download";
+        //$pdfPathParametersArr = array('id' => $applicationId);
+        //$this->generatePdfPhantomjs($pdfPath,$pdfPathParametersArr,$applicationOutputFilePath,null);
 
         //echo "generated ok! <br>";
     }
