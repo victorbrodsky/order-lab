@@ -46,7 +46,7 @@ class TestCommand extends ContainerAwareCommand
         $logger = $this->getContainer()->get('logger');
 
         $fellappRepGen = $this->getContainer()->get('fellapp_reportgenerator');
-        $transresPdfUtil = $this->get('transres_pdf_generator');
+        $transresPdfUtil = $this->getContainer()->get('transres_pdf_generator');
         $fellappApplicationId = 1;
 
         //$reportsUploadPathFellApp = "Reports";
