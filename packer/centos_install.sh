@@ -223,9 +223,21 @@ f_install_util () {
 	sudo yum install -y xvfb libfontconfig wkhtmltopdf	
 	sudo yum install -y libreoffice	
 	sudo yum install -y ghostscript
-	sudo yum install -y pdftk  
+	#sudo yum install -y pdftk  
 
 	sudo yum install -y wget unzip
+	
+	#http://bashworkz.com/installing-pdftk-on-centos-5-and-6-pdf-management-utility-tool/
+	#echo -e ${COLOR} Install pdftk ${NC}
+	#sudo yum install -y libgcj
+	#yum install -y https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/pdftk-2.02-1.el6.x86_64.rpm
+	#pdftk --help | more
+	
+	#https://github.com/documentcloud/docsplit/issues/123
+	echo -e ${COLOR} Install pdftk ${NC}
+	wget https://copr.fedorainfracloud.org/coprs/robert/gcj/repo/epel-7/robert-gcj-epel-7.repo -P /etc/yum.repos.d
+	wget https://copr.fedorainfracloud.org/coprs/robert/pdftk/repo/epel-7/robert-pdftk-epel-7.repo -P /etc/yum.repos.d
+	yum install -y pdftk
 	
 	echo -e ${COLOR} Install xorg-x11-server-Xvfb ${NC}
 	sudo yum install -y xorg-x11-server-Xvfb
