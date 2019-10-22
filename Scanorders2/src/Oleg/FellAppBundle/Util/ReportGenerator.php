@@ -654,22 +654,20 @@ class ReportGenerator {
 
         //4) add the report to application report DB
         $filesize = filesize($filenameMerged);
-        $logger->notice("Merged filesize=".$filesize); //TODO: filesize is 0?
+        //$logger->notice("Merged filesize=".$filesize);
 
-        if( !file_exists($filenameMerged) ) {
-            $logger->notice("filenameMerged does not exist");
+        if( file_exists($filenameMerged) ) {
+            $deleteOldFileFromServer = false;
+            $documentPdf = $this->createFellAppReportDB($entity,"report",$systemUser,$fileFullReportUniqueName,$uploadReportPath,$filesize,'Complete Fellowship Application PDF',$deleteOldFileFromServer);
+            if( $documentPdf ) {
+                $documentPdfId = $documentPdf->getId();
+            } else {
+                $documentPdfId = null;
+            }
+            $logger->notice("createFellAppReportDB (filesize=".$filesize.") result: documentPdf=" . $documentPdf );
         } else {
-            $logger->notice("filenameMerged exists!!!");
+            $logger->error("filenameMerged (filesize=".$filesize.") does not exist: ".$filenameMerged);
         }
-
-        $deleteOldFileFromServer = false;
-        $documentPdf = $this->createFellAppReportDB($entity,"report",$systemUser,$fileFullReportUniqueName,$uploadReportPath,$filesize,'Complete Fellowship Application PDF',$deleteOldFileFromServer);
-        if( $documentPdf ) {
-            $documentPdfId = $documentPdf->getId();
-        } else {
-            $documentPdfId = null;
-        }
-        $logger->notice("createFellAppReportDB result: documentPdf=" . $documentPdf );
 
         //keep application form pdf for "Application PDF without attached documents"
         $fileUniqueName = $this->constructUniqueFileName($entity,"Fellowship-Application-Without-Attachments");
