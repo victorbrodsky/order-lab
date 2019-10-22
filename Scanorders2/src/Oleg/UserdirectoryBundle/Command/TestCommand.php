@@ -47,12 +47,21 @@ class TestCommand extends ContainerAwareCommand
 
         $fellappRepGen = $this->getContainer()->get('fellapp_reportgenerator');
         $id = 1;
-        $reportsUploadPathFellApp = "Reports";
-        $uploadpath = $this->getContainer()->getParameter('fellapp.uploadpath');
-        $uploadReportPath = 'Uploaded' . DIRECTORY_SEPARATOR . $uploadpath . DIRECTORY_SEPARATOR .$reportsUploadPathFellApp;
+
+        //$reportsUploadPathFellApp = "Reports";
+        //$uploadpath = $this->getContainer()->getParameter('fellapp.uploadpath');
+        //$uploadReportPath = 'Uploaded' . DIRECTORY_SEPARATOR . $uploadpath . DIRECTORY_SEPARATOR .$reportsUploadPathFellApp;
+        $uploadReportPath = "Uploaded/fellapp/Reports";
+
+        ///usr/local/bin/order-lab/Scanorders2/web/Uploaded/fellapp/Reports
         $reportPath = $this->getContainer()->get('kernel')->getRootDir() . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'web' . DIRECTORY_SEPARATOR . $uploadReportPath. DIRECTORY_SEPARATOR;
+
         $outdir = $reportPath . 'temp_' . $id . DIRECTORY_SEPARATOR;
-        $applicationFilePath = $outdir . "application_ID" . $id . "_wkhtmltopdf" . ".pdf";
+
+        $now = date("H:s:i");
+        $now = str_replace(":","_",$now);
+        $applicationFilePath = $outdir . "application_ID" . $id . "_wkhtmltopdf_" . $now . ".pdf";
+
         $logger->notice("applicationFilePath=[".$applicationFilePath."]");
 
         $result = $fellappRepGen->generateApplicationPdf($id,$applicationFilePath);
