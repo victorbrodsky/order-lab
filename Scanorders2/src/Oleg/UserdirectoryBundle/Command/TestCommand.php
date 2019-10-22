@@ -34,7 +34,37 @@ use Symfony\Component\Console\Output\OutputInterface;
 class TestCommand extends ContainerAwareCommand
 {
 
-    protected function configure()
+    protected function configure() {
+        $this
+            ->setName('cron:simple-tests')
+            ->setDescription('Run simple tests');
+    }
+
+    //php app/console cron:simple-tests --env=prod
+    protected function execute(InputInterface $input, OutputInterface $output) {
+
+        $logger = $this->getContainer()->get('logger');
+
+        $fellappRepGen = $this->getContainer()->get('fellapp_reportgenerator');
+        $id = $input->getArgument('id');
+        $reportsUploadPathFellApp = "Reports";
+        $uploadpath = $this->getContainer()->getParameter('fellapp.uploadpath');
+        $uploadReportPath = 'Uploaded' . DIRECTORY_SEPARATOR . $uploadpath . DIRECTORY_SEPARATOR .$reportsUploadPathFellApp;
+        $reportPath = $this->getContainer()->get('kernel')->getRootDir() . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'web' . DIRECTORY_SEPARATOR . $uploadReportPath. DIRECTORY_SEPARATOR;
+        $outdir = $reportPath . 'temp_' . $id . DIRECTORY_SEPARATOR;
+        $applicationFilePath = $outdir . "application_ID" . $id . "_wkhtmltopdf_" . ".pdf";
+        $logger->notice("applicationFilePath=[".$applicationFilePath."]");
+
+        $result = $fellappRepGen->generateApplicationPdf($id,$applicationFilePath);
+
+        $output->writeln($result);
+    }
+
+
+
+
+
+    protected function configure_user()
     {
         $this
             // the name of the command (the part after "bin/console")
@@ -50,7 +80,7 @@ class TestCommand extends ContainerAwareCommand
     }
 
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute_user(InputInterface $input, OutputInterface $output)
     {
         // outputs multiple lines to the console (adding "\n" at the end of each line)
         $output->writeln([
