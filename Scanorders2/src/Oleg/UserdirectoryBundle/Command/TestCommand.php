@@ -46,7 +46,7 @@ class TestCommand extends ContainerAwareCommand
         $logger = $this->getContainer()->get('logger');
 
         $fellappRepGen = $this->getContainer()->get('fellapp_reportgenerator');
-        $id = $input->getArgument('id');
+        $id = 1;
         $reportsUploadPathFellApp = "Reports";
         $uploadpath = $this->getContainer()->getParameter('fellapp.uploadpath');
         $uploadReportPath = 'Uploaded' . DIRECTORY_SEPARATOR . $uploadpath . DIRECTORY_SEPARATOR .$reportsUploadPathFellApp;
