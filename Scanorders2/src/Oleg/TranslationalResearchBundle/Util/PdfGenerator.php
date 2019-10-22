@@ -523,21 +523,23 @@ class PdfGenerator
         $router = $this->container->get('router');
         $context = null;
 
-        $replaceContext = true;
-        $schemeAndHttpHost = $request->getSchemeAndHttpHost();
-        //exit("schemeAndHttpHost=$schemeAndHttpHost");
-        if( $replaceContext && strpos($schemeAndHttpHost,"localhost") === false && strpos($schemeAndHttpHost,"127.0.0.1") === false ) {
-            //exit('use localhost');
-            $context = $router->getContext();
+        if( $request ) {
+            $replaceContext = true;
+            $schemeAndHttpHost = $request->getSchemeAndHttpHost();
+            //exit("schemeAndHttpHost=$schemeAndHttpHost");
+            if ($replaceContext && strpos($schemeAndHttpHost, "localhost") === false && strpos($schemeAndHttpHost, "127.0.0.1") === false) {
+                //exit('use localhost');
+                $context = $router->getContext();
 
-            $originalHost = $context->getHost();
-            $originalScheme = $context->getScheme();
-            $originalBaseUrl = $context->getBaseUrl();
+                $originalHost = $context->getHost();
+                $originalScheme = $context->getScheme();
+                $originalBaseUrl = $context->getBaseUrl();
 
-            //http://192.168.37.128/order/app_dev.php/translational-research/download-invoice-pdf/49
-            $context->setHost('localhost');
-            $context->setScheme($connectionChannel);
-            $context->setBaseUrl('/order');
+                //http://192.168.37.128/order/app_dev.php/translational-research/download-invoice-pdf/49
+                $context->setHost('localhost');
+                $context->setScheme($connectionChannel);
+                $context->setBaseUrl('/order');
+            }
         }
 
         //packing slip url

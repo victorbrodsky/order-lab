@@ -770,8 +770,8 @@ class ReportGenerator {
             //$context->setScheme('http');
             //$context->setBaseUrl('/scanorder/Scanorders2/web');
         }
-        $transresUtil = $this->container->get('transres_util');
-        $router = $transresUtil->getRequestContextRouter();
+        //$transresUtil = $this->container->get('transres_util');
+        //$router = $transresUtil->getRequestContextRouter();
         
         //$url = $router->generate('fellapp_download',array('id' => $applicationId),true); //fellowship-applications/show/43
         //echo "url=". $url . "<br>";
@@ -818,6 +818,11 @@ class ReportGenerator {
             )
             //array('cookie' => array($session->getName() => $session->getId()))
         );
+
+        //testing
+        $pdfPath = "fellapp_download";
+        $pdfPathParametersArr = array('id' => $applicationId);
+        $this->generatePdfPhantomjs($pdfPath,$pdfPathParametersArr,$applicationOutputFilePath,null);
 
         //echo "generated ok! <br>";
     }
