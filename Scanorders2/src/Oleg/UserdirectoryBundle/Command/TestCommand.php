@@ -52,7 +52,7 @@ class TestCommand extends ContainerAwareCommand
         $uploadReportPath = 'Uploaded' . DIRECTORY_SEPARATOR . $uploadpath . DIRECTORY_SEPARATOR .$reportsUploadPathFellApp;
         $reportPath = $this->getContainer()->get('kernel')->getRootDir() . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'web' . DIRECTORY_SEPARATOR . $uploadReportPath. DIRECTORY_SEPARATOR;
         $outdir = $reportPath . 'temp_' . $id . DIRECTORY_SEPARATOR;
-        $applicationFilePath = $outdir . "application_ID" . $id . "_wkhtmltopdf_" . ".pdf";
+        $applicationFilePath = $outdir . "application_ID" . $id . "_wkhtmltopdf" . ".pdf";
         $logger->notice("applicationFilePath=[".$applicationFilePath."]");
 
         $result = $fellappRepGen->generateApplicationPdf($id,$applicationFilePath);
