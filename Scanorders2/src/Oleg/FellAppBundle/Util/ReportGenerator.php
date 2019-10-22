@@ -481,19 +481,19 @@ class ReportGenerator {
             $reportsUploadPathFellApp = "Reports";
             $logger->warning('reportsUploadPathFellApp is not defined in Site Parameters. Use default "'.$reportsUploadPathFellApp.'" folder.');
         }
-        $logger->notice("reportsUploadPathFellApp=".$reportsUploadPathFellApp);
+        //$logger->notice("reportsUploadPathFellApp=".$reportsUploadPathFellApp);
 
         //$uploadReportPath = $this->uploadDir.'/'.$reportsUploadPathFellApp;
         $uploadReportPath = $this->uploadDir.DIRECTORY_SEPARATOR.$reportsUploadPathFellApp;
-        $logger->notice("uploadReportPath=".$uploadReportPath);
+        //$logger->notice("uploadReportPath=".$uploadReportPath);
 
         //$reportPath = $this->container->get('kernel')->getRootDir() . '/../web/' . $uploadReportPath;
         $reportPath = $this->container->get('kernel')->getRootDir() . DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'web'.DIRECTORY_SEPARATOR. $uploadReportPath;
 
-        $logger->notice("reportPath(before realpath)=".$reportPath);
+        //$logger->notice("reportPath(before realpath)=".$reportPath);
         //$reportPath = realpath($reportPath);
         $reportPath = $userServiceUtil->normalizePath($reportPath);
-        $logger->notice("reportPath(after realpath)=".$reportPath);
+        //$logger->notice("reportPath(after realpath)=".$reportPath);
 
         if( !file_exists($reportPath) ) {
             mkdir($reportPath, 0700, true);
@@ -502,7 +502,7 @@ class ReportGenerator {
 
         //It works
         $outdir = $reportPath.'/temp_'.$id.'/';
-        $logger->notice("outdir=".$outdir);
+        //$logger->notice("outdir=".$outdir);
         //if( !file_exists($outdir) ) {
         //    mkdir($outdir, 0700, true);
         //    chmod($outdir, 0700);
@@ -739,20 +739,23 @@ class ReportGenerator {
         //generate application URL
         $router = $this->container->get('router');
 
-        $context = $this->container->get('router')->getContext();
-        
-        //$rootDir = $this->container->get('kernel')->getRootDir();
-        //echo "rootDir=".$rootDir."<br>";
-        //echo "getcwd=".getcwd()."<br>";
-        
-        //$env = $this->container->get('kernel')->getEnvironment();
-        //echo "env=".$env."<br>";
-        //$logger->notice("env=".$env."<br>");
+        $modifyContext = true;
+        $modifyContext = false;
+        if( $modifyContext ) {
+            $context = $this->container->get('router')->getContext();
 
-        //http://192.168.37.128/order/app_dev.php/fellowship-applications/download-pdf/49
-        $context->setHost('localhost');
-        $context->setScheme($connectionChannel);
-        $context->setBaseUrl('/order');
+            //$rootDir = $this->container->get('kernel')->getRootDir();
+            //echo "rootDir=".$rootDir."<br>";
+            //echo "getcwd=".getcwd()."<br>";
+
+            //$env = $this->container->get('kernel')->getEnvironment();
+            //echo "env=".$env."<br>";
+            //$logger->notice("env=".$env."<br>");
+
+            //http://192.168.37.128/order/app_dev.php/fellowship-applications/download-pdf/49
+            $context->setHost('localhost');
+            $context->setScheme($connectionChannel);
+            $context->setBaseUrl('/order');
 
 //        if( $env == 'dev' ) {
 //            //$context->setHost('localhost');
@@ -762,10 +765,11 @@ class ReportGenerator {
 //            //$context->setHost('localhost');
 //            $context->setBaseUrl('/order');
 //        }
-                
-        //$context->setHost('localhost');
-        //$context->setScheme('http');
-        //$context->setBaseUrl('/scanorder/Scanorders2/web');
+
+            //$context->setHost('localhost');
+            //$context->setScheme('http');
+            //$context->setBaseUrl('/scanorder/Scanorders2/web');
+        }
         
         //$url = $router->generate('fellapp_download',array('id' => $applicationId),true); //fellowship-applications/show/43
         //echo "url=". $url . "<br>";
