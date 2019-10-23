@@ -2005,7 +2005,7 @@ class AdminController extends Controller
         if( strpos($role,$VacReqGroupStr) !== false ) {
             $groupObject = $em->getRepository('OlegUserdirectoryBundle:Institution')->findNodeByNameAndRoot($root->getId(),$instName);
             if( !$groupObject ) {
-                echo "vacreqRoleSetSingleUserInstitution: ".$root.": no child found with name=".$instName."<br>";
+                echo "vacreqRoleSetSingleUserInstitution: ".$root." (ID ".$root->getId()."): no child found with name=".$instName."<br>";
                 exit();
                 //return;
             }
@@ -7239,6 +7239,8 @@ class AdminController extends Controller
 
 
     /**
+     * http://hosthame/order/directory/admin/sync-db/
+     *
      * @Route("/sync-db/", name="user_sync_db")
      * @Method("GET")
      */
