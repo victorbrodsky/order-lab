@@ -118,3 +118,6 @@ wkhtmltopdf: cannot connect to X server
 DB Migrating:
 https://severalnines.com/database-blog/migrating-mssql-postgresql-what-you-should-know
 
+Using MSSQL Management Studio:
+https://stackoverflow.com/questions/1370326/migrate-data-from-ms-sql-to-postgresql/50919468#50919468
+Driver={PostgreSQL ODBC Driver(UNICODE)};Server=142.93.180.104;Port=null;Database=scanorder;UID=symfony;PWD=symfony
