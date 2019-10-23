@@ -67,7 +67,7 @@ class TestCommand extends ContainerAwareCommand
         //wkhtmltopdf
         $applicationFilePath = $outdir . "application_ID" . $fellappApplicationId . "_wkhtmltopdf_" . $now . ".pdf";
         $logger->notice("applicationFilePath=[".$applicationFilePath."]");
-        $result = $fellappRepGen->generateApplicationPdfLinux($fellappApplicationId,$applicationFilePath);
+        $result = $fellappRepGen->generateApplicationPdf($fellappApplicationId,$applicationFilePath);
         $resultArr[] = $result;
 
         //phantomjs
