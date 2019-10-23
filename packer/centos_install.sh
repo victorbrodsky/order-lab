@@ -218,14 +218,26 @@ f_install_util () {
 	echo -e ${COLOR} Install Git ${NC}		
 	sudo yum install -y git	
 	
-	echo -e ${COLOR} Install wkhtmltopdf, libreoffice, ghostscript, pdftk ${NC}
+	echo -e ${COLOR} Install libreoffice, ghostscript, pdftk ${NC}
 	#sudo yum update
-	sudo yum install -y xvfb libfontconfig wkhtmltopdf	
+	sudo yum install -y xvfb libfontconfig	
 	sudo yum install -y libreoffice	
 	sudo yum install -y ghostscript
 	#sudo yum install -y pdftk  
 
 	sudo yum install -y wget unzip
+	
+	#https://gist.github.com/apphancer/8654e82aa582d1cf02c955536df06449
+	#https://jaimegris.wordpress.com/2015/03/04/how-to-install-wkhtmltopdf-in-centos-7-0/
+	echo -e ${COLOR} Install wkhtmltopdf dependencies xorg-x11-fonts-75dpi and xorg-x11-fonts-Type1 ${NC}
+	yum install -y xorg-x11-fonts-75dpi
+	yum install -y xorg-x11-fonts-Type1
+	yum install xz
+	echo -e ${COLOR} Install wkhtmltopdf ${NC}
+	wget https://downloads.wkhtmltopdf.org/0.12/0.12.5/wkhtmltox-0.12.5-1.centos7.x86_64.rpm
+	sudo rpm -Uvh wkhtmltox-0.12.5-1.centos7.x86_64.rpm
+	echo -e ${COLOR} Get version wkhtmltopdf ${NC}
+	/usr/bin/xvfb-run wkhtmltopdf --version
 	
 	#http://bashworkz.com/installing-pdftk-on-centos-5-and-6-pdf-management-utility-tool/
 	#echo -e ${COLOR} Install pdftk ${NC}
