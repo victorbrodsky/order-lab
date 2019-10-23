@@ -828,81 +828,81 @@ class ReportGenerator {
 
         return "PDF generated=[".$applicationOutputFilePath."]";
     }
-    public function generateApplicationPdfLinux($applicationId,$applicationOutputFilePath) {
-        $logger = $this->container->get('logger');
-        $userSecUtil = $this->container->get('user_security_utility');
-
-        if( file_exists($applicationOutputFilePath) ) {
-            $logger->notice("generateApplicationPdf: unlink file already exists path=" . $applicationOutputFilePath );
-            unlink($applicationOutputFilePath);
-        }
-
-        ini_set('max_execution_time', 300); //300 sec
-
-        $connectionChannel = $userSecUtil->getSiteSettingParameter('connectionChannel');
-        if( !$connectionChannel ) {
-            $connectionChannel = 'http';
-        }
-
-        //generate application URL
-        $router = $this->container->get('router');
-
-        $modifyContext = true;
-        //$modifyContext = false;
-        if( $modifyContext ) {
-            $context = $this->container->get('router')->getContext();
-
-            //http://192.168.37.128/order/app_dev.php/fellowship-applications/download-pdf/49
-            $context->setHost('localhost');
-            $context->setScheme($connectionChannel);
-            $context->setBaseUrl('/order');
-        }
-
-        //fellapp_download
-        $pageUrl = $router->generate(
-            'fellapp_download',
-            array(
-                'id' => $applicationId
-            ),
-            UrlGeneratorInterface::ABSOLUTE_URL
-        ); //this does not work from console: 'order' is missing
-
-        //$pageUrl = "http://localhost/scanorder/Scanorders2/web/app_dev.php/fellowship-applications/download/".$applicationId;
-        //$pageUrl = "http://localhost/scanorder/Scanorders2/web/fellowship-applications/download/".$applicationId;
-        //$pageUrl = "http://142.93.180.104/order/fellowship-applications/download/1";
-        $pageUrl = "http://127.0.0.1/order/dev_app.php/fellowship-applications/download/1";
-
-        $logger->notice("pageUrl=[".$pageUrl."]");
-        //echo "pageurl=". $pageUrl . "<br>";
-        //exit();
-
-        //take care of authentication
-        $session = $this->container->get('session');
-        $session->save();
-        session_write_close();
-        $PHPSESSID = $session->getId();
-
-        //$application =
-        $this->container->get('knp_snappy.pdf')->generate(
-            $pageUrl,
-            $applicationOutputFilePath,
-            array(
-                'cookie' => array(
-                    'PHPSESSID' => $PHPSESSID
-                )
-            )
-        //array('cookie' => array($session->getName() => $session->getId()))
-        );
-
-        //testing
-        //$pdfPath = "fellapp_download";
-        //$pdfPathParametersArr = array('id' => $applicationId);
-        //$this->generatePdfPhantomjs($pdfPath,$pdfPathParametersArr,$applicationOutputFilePath,null);
-
-        //echo "generated ok! <br>";
-
-        return "PDF generated=[".$applicationOutputFilePath."]";
-    }
+//    public function generateApplicationPdfLinux($applicationId,$applicationOutputFilePath) {
+//        $logger = $this->container->get('logger');
+//        $userSecUtil = $this->container->get('user_security_utility');
+//
+//        if( file_exists($applicationOutputFilePath) ) {
+//            $logger->notice("generateApplicationPdf: unlink file already exists path=" . $applicationOutputFilePath );
+//            unlink($applicationOutputFilePath);
+//        }
+//
+//        ini_set('max_execution_time', 300); //300 sec
+//
+//        $connectionChannel = $userSecUtil->getSiteSettingParameter('connectionChannel');
+//        if( !$connectionChannel ) {
+//            $connectionChannel = 'http';
+//        }
+//
+//        //generate application URL
+//        $router = $this->container->get('router');
+//
+//        $modifyContext = true;
+//        //$modifyContext = false;
+//        if( $modifyContext ) {
+//            $context = $this->container->get('router')->getContext();
+//
+//            //http://192.168.37.128/order/app_dev.php/fellowship-applications/download-pdf/49
+//            $context->setHost('localhost');
+//            $context->setScheme($connectionChannel);
+//            $context->setBaseUrl('/order');
+//        }
+//
+//        //fellapp_download
+//        $pageUrl = $router->generate(
+//            'fellapp_download',
+//            array(
+//                'id' => $applicationId
+//            ),
+//            UrlGeneratorInterface::ABSOLUTE_URL
+//        ); //this does not work from console: 'order' is missing
+//
+//        //$pageUrl = "http://localhost/scanorder/Scanorders2/web/app_dev.php/fellowship-applications/download/".$applicationId;
+//        //$pageUrl = "http://localhost/scanorder/Scanorders2/web/fellowship-applications/download/".$applicationId;
+//        //$pageUrl = "http://142.93.180.104/order/fellowship-applications/download/1";
+//        $pageUrl = "http://127.0.0.1/order/dev_app.php/fellowship-applications/download/1";
+//
+//        $logger->notice("pageUrl=[".$pageUrl."]");
+//        //echo "pageurl=". $pageUrl . "<br>";
+//        //exit();
+//
+//        //take care of authentication
+//        $session = $this->container->get('session');
+//        $session->save();
+//        session_write_close();
+//        $PHPSESSID = $session->getId();
+//
+//        //$application =
+//        $this->container->get('knp_snappy.pdf')->generate(
+//            $pageUrl,
+//            $applicationOutputFilePath,
+//            array(
+//                'cookie' => array(
+//                    'PHPSESSID' => $PHPSESSID
+//                )
+//            )
+//        //array('cookie' => array($session->getName() => $session->getId()))
+//        );
+//
+//        //testing
+//        //$pdfPath = "fellapp_download";
+//        //$pdfPathParametersArr = array('id' => $applicationId);
+//        //$this->generatePdfPhantomjs($pdfPath,$pdfPathParametersArr,$applicationOutputFilePath,null);
+//
+//        //echo "generated ok! <br>";
+//
+//        return "PDF generated=[".$applicationOutputFilePath."]";
+//    }
 
     //convert all uploads to pdf using LibreOffice
     protected function convertToPdf( $filePathsArr, $outdir, $entity ) {

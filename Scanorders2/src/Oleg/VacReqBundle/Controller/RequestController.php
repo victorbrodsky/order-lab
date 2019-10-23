@@ -1313,6 +1313,7 @@ class RequestController extends Controller
         //exit('1');
 
         if( count($organizationalInstitutions) == 0 ) {
+            //If count($organizationalInstitutions) == 0 then try to run http://hosthame/order/directory/admin/sync-db/
 
             if( $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') ) {
                 //admin user
