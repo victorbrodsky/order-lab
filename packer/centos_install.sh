@@ -153,7 +153,8 @@ f_install_postgresql () {
 	sudo -Hiu postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE scanorder to $bashdbuser"
 	
 	echo -e ${COLOR} Modify pg_hba.conf in /var/lib/pgsql/data to replace "ident" to "md5" ${NC}
-	#Modify pg_hba.conf in /var/lib/pgsql/data to replace "ident" to "md5"
+	#Modify pg_hba.conf in /var/lib/pgsql/data to replace "ident" and "peer" to "md5"
+	sed -i -e "s/peer/md5/g" /var/lib/pgsql/data/pg_hba.conf
 	sed -i -e "s/ident/md5/g" /var/lib/pgsql/data/pg_hba.conf
 	sed -i -e "\$aTEXTTOEND" /var/lib/pgsql/data/pg_hba.conf
 	sed -i -e "s/TEXTTOEND/host all all 0.0.0.0/0 md5/g" /var/lib/pgsql/data/pg_hba.conf
