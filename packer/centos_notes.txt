@@ -125,4 +125,5 @@ Driver={PostgreSQL ODBC Driver(UNICODE)};Server=142.93.180.104;Port=5432;Databas
 To remotely connect: in pg_hba.conf allow connection by all users to all databases from any IP if the 
 user has right MD5-encrypted password by adding the following line:
 host all all 0.0.0.0/0 md5
+listen_addresses='*'
 

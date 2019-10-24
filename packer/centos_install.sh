@@ -111,6 +111,12 @@ f_install_postgresql_9.2_12 () {
 	echo -e ${COLOR} Modify pg_hba.conf in /var/lib/pgsql/12/data to replace "ident" to "md5" ${NC}
 	#Modify pg_hba.conf in /var/lib/pgsql/12/data to replace "ident" to "md5"
 	sed -i -e "s/ident/md5/g" /var/lib/pgsql/12/data/pg_hba.conf
+	sed -i -e "\$aTEXTTOEND" /var/lib/pgsql/12/data/pg_hba.conf
+	sed -i -e "s/TEXTTOEND/host all all 0.0.0.0/0 md5/g" /var/lib/pgsql/12/data/pg_hba.conf
+	
+	echo -e ${COLOR} postgresql.conf to listen all addresses on specified port ${NC}
+	sed -i -e "s/#listen_addresses/listen_addresses='*' #listen_addresses/g" /var/lib/pgsql/12/data/postgresql.conf
+	sed -i -e "s/#port/port = 5432 #port/g" /var/lib/pgsql/12/data/postgresql.conf
 	
 	sudo systemctl restart postgresql-12
 	
