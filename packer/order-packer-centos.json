@@ -26,6 +26,7 @@
 	
 	{
         "type": "shell",
+		"expect_disconnect": "true",
         "inline": [ 
            "echo @### Reboot Server ###",		
 		   "sudo shutdown -r now"
@@ -34,10 +35,12 @@
 	
 	{
         "type": "shell",
+		"expect_disconnect": "true",
+		"pause_before": "60s",
         "inline": [ 
            "echo @### PostgreSQL Version after centos_install ###",		
 		   "psql --version"
-         ]    
+         ]
 	},
 	
 	{
