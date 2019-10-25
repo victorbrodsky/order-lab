@@ -48,7 +48,7 @@ f_install_apache () {
 }
 
 f_install_postgresql12 () {
-	#This causes error: Undefined column: 7 RROR: column min_value does not exists (FROM "scan_accession_id_seq")
+	#This causes error: Undefined column: 7 ERROR: column min_value does not exists (FROM "scan_accession_id_seq")
     ########## INSTALL Postgresql ##########
     echo -e "${COLOR} Installing Postgresql 12 ... ${NC}"
     sleep 1
@@ -56,8 +56,8 @@ f_install_postgresql12 () {
 	echo -e ${COLOR} Install the repository RPM, client and server packages ${NC}		
 	sudo yum install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm -y
 	
-	yum install postgresql12 -y
-	yum install postgresql12-server -y
+	yum install -y postgresql12
+	yum install -y postgresql12-server
 	#sudo yum -y install postgresql11 postgresql11-server postgresql11-contrib postgresql11-libs
 
 	sudo yum -y install oidentd
@@ -76,6 +76,13 @@ f_install_postgresql12 () {
 	
 	#Modify pg_hba.conf in /var/lib/pgsql/12/data to replace "ident" to "md5"
 	sed -i -e "s/ident/md5/g" /var/lib/pgsql/12/data/pg_hba.conf
+	
+	sed -i -e "\$aTEXTTOEND" /var/lib/pgsql/12/data/pg_hba.conf
+	sed -i -e "s/TEXTTOEND/host all all 0.0.0.0/0 md5/g" /var/lib/pgsql/12/data/pg_hba.conf
+	
+	echo -e ${COLOR} postgresql.conf to listen all addresses on specified port ${NC}
+	sed -i -e "s/#listen_addresses/listen_addresses='*' #listen_addresses/g" /var/lib/pgsql/12/data/postgresql.conf
+	sed -i -e "s/#port/port = 5432 #port/g" /var/lib/pgsql/12/data/postgresql.conf
 	
 	sudo systemctl restart postgresql-12
 	
@@ -366,8 +373,8 @@ f_install_prepare () {
 
 f_update_os
 f_install_apache
-#f_install_postgresql12
-f_install_postgresql
+f_install_postgresql12
+#f_install_postgresql
 #f_install_php72
 f_install_php56
 f_install_util
