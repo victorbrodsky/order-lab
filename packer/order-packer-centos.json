@@ -27,6 +27,14 @@
 	{
         "type": "shell",
         "inline": [ 
+           "echo @### Reboot Server ###",		
+		   "sudo shutdown -r now"
+         ]    
+	},
+	
+	{
+        "type": "shell",
+        "inline": [ 
            "echo @### PostgreSQL Version after centos_install ###",		
 		   "psql --version"
          ]    
