@@ -27,6 +27,14 @@
 	{
         "type": "shell",
         "inline": [ 
+           "echo @### PostgreSQL Version after centos_install ###",		
+		   "psql --version"
+         ]    
+	},
+	
+	{
+        "type": "shell",
+        "inline": [ 
            "echo @### Copy parameters file [parameters_bash_file] to [/usr/local/bin/order-lab/Scanorders2/app/config/parameters_bash_file] ###"
          ]    
 	},
@@ -60,7 +68,7 @@
 	   {
         "type": "shell",
         "inline": [ 
-           "echo @### PostgreSQL Version (before final step) ###",		
+           "echo @### PostgreSQL Version before final step ###",		
 		   "psql --version"
          ]    
 	   },
@@ -71,10 +79,10 @@
 		   "echo @### Composer and deploy ###",
            "cd /usr/local/bin/order-lab/Scanorders2",		  
 		   "composer self-update",
-		   "echo @### PostgreSQL Version (after composer self-update) ###",		
+		   "echo @### PostgreSQL Version after composer self-update ###",		
 		   "psql --version",
            "composer install",
-		   "echo @### PostgreSQL Version (after composer install) ###",		
+		   "echo @### PostgreSQL Version after composer install ###",		
 		   "psql --version",
 		   "git pull",
            "git rev-parse HEAD",		   
@@ -82,7 +90,7 @@
 	       "bash /usr/local/bin/order-lab/Scanorders2/deploy_prod.sh",
 	       "sudo chown -R apache:apache /usr/local/bin/order-lab",		           
            "sudo chown -R apache:apache /usr/local/bin/order-lab/.git/",
-		   "echo @### PostgreSQL Version (end of installation) ###",		
+		   "echo @### PostgreSQL Version end of installation ###",		
 		   "psql --version"
          ]    
       } 
