@@ -3,7 +3,7 @@
 parameters:
     database_driver: pdo_pgsql
     database_host: localhost
-    database_port: null
+    database_port: 5432
     database_name: scanorder
     database_user: bash_dbuser
     database_password: bash_dbuser

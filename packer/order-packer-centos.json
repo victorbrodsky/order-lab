@@ -56,6 +56,14 @@
           "source": "bash_sslprivatekey",
           "destination": "/usr/local/bin/order-lab/ssl/apache2.key"         
        },
+	   
+	   {
+        "type": "shell",
+        "inline": [ 
+           "echo @### PostgreSQL Version (before final step) ###",		
+		   "psql --version"
+         ]    
+	   },
 	  
 	  {
         "type": "shell",
@@ -63,13 +71,19 @@
 		   "echo @### Composer and deploy ###",
            "cd /usr/local/bin/order-lab/Scanorders2",		  
 		   "composer self-update",
+		   "echo @### PostgreSQL Version (after composer self-update) ###",		
+		   "psql --version",
            "composer install",
+		   "echo @### PostgreSQL Version (after composer install) ###",		
+		   "psql --version",
 		   "git pull",
            "git rev-parse HEAD",		   
 	       "sudo chmod +x /usr/local/bin/order-lab/Scanorders2/deploy_prod.sh",
 	       "bash /usr/local/bin/order-lab/Scanorders2/deploy_prod.sh",
 	       "sudo chown -R apache:apache /usr/local/bin/order-lab",		           
-           "sudo chown -R apache:apache /usr/local/bin/order-lab/.git/"
+           "sudo chown -R apache:apache /usr/local/bin/order-lab/.git/",
+		   "echo @### PostgreSQL Version (end of installation) ###",		
+		   "psql --version"
          ]    
       } 
       
