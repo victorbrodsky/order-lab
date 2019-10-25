@@ -28,7 +28,9 @@
         "type": "shell",
 		"expect_disconnect": "true",
         "inline": [ 
-           "echo @### Reboot Server ###",		
+           "echo @### Disable SELinux again ###",
+		   "sudo setenforce 0",
+		   "echo @### Reboot Server ###",
 		   "sudo shutdown -r now"
          ]    
 	},
@@ -38,6 +40,8 @@
 		"expect_disconnect": "true",
 		"pause_before": "60s",
         "inline": [ 
+		   "echo @### Check SELinux status ###",	
+		   "sestatus",
            "echo @### PostgreSQL Version after centos_install ###",		
 		   "psql --version"
          ]
@@ -92,6 +96,8 @@
 		   "composer self-update",
 		   "echo @### PostgreSQL Version after composer self-update ###",		
 		   "psql --version",
+		   "echo @### Check SELinux status before composer ###",	
+		   "sestatus",
            "composer install",
 		   "echo @### PostgreSQL Version after composer install ###",		
 		   "psql --version",
