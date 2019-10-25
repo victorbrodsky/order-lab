@@ -81,15 +81,25 @@ f_install_postgresql12 () {
 	sudo -Hiu postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE scanorder to $bashdbuser"
 	
 	#Modify pg_hba.conf in /var/lib/pgsql/12/data to replace "ident" to "md5"
+	echo -e ${COLOR} Modify pg_hba.conf in /var/lib/pgsql/12/data to replace "ident" to "md5" ${NC}
+	#Modify pg_hba.conf in /var/lib/pgsql/data to replace "ident" and "peer" to "md5"
+	sed -i -e "s/peer/md5/g" /var/lib/pgsql/12/data/pg_hba.conf
+	
+	echo -e ${COLOR} Modify pg_hba.conf ident to md5 ${NC}
 	sed -i -e "s/ident/md5/g" /var/lib/pgsql/12/data/pg_hba.conf
 	
+	echo -e ${COLOR} Add TEXTTOEND to pg_hba.conf ${NC}
 	sed -i -e "\$aTEXTTOEND" /var/lib/pgsql/12/data/pg_hba.conf
+	
+	echo -e ${COLOR} Replace TEXTTOEND in pg_hba.conf ${NC}
 	sed -i -e "s/TEXTTOEND/host all all 0.0.0.0/0 md5/g" /var/lib/pgsql/12/data/pg_hba.conf
 	
-	echo -e ${COLOR} postgresql.conf to listen all addresses on specified port ${NC}
+	echo -e ${COLOR} postgresql.conf to listen all addresses ${NC}
 	sed -i -e "s/#listen_addresses/listen_addresses='*' #listen_addresses/g" /var/lib/pgsql/12/data/postgresql.conf
-	sed -i -e "s/#port/port = 5432 #port/g" /var/lib/pgsql/12/data/postgresql.conf
 	
+	echo -e ${COLOR} Set port ${NC}
+	sed -i -e "s/#port/port = 5432 #port/g" /var/lib/pgsql/12/data/postgresql.conf
+		
 	sudo systemctl restart postgresql-12
 	
 	echo ""
