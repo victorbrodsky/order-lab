@@ -76,6 +76,8 @@
 	  {
         "type": "shell",
         "inline": [ 
+			"echo @### Set sudo setenforce 0 again to complete composer later ###",
+		   "sudo setenforce 0",
 		   "echo @### Composer and deploy ###",
            "cd /usr/local/bin/order-lab/Scanorders2",		  
 		   "composer self-update",

@@ -24,7 +24,8 @@ f_update_os () {
     sudo yum upgrade -y
 	
 	echo -e ${COLOR} Disable SELinux ${NC}
-	#sudo setenforce 0
+	#Set "sudo setenforce 0" for now to complete composer later
+	sudo setenforce 0
 	sed -i -e "s/SELINUX=enforcing/SELINUX=disabled/g" /etc/selinux/config
 
     echo ""
