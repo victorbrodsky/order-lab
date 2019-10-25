@@ -20,13 +20,19 @@ f_update_os () {
 	#exit 0
     sleep 1
 
-    sudo yum update
+	echo -e ${COLOR} sudo yum update -y ${NC}
+    sudo yum update -y
+	
+	echo -e ${COLOR} sudo yum upgrade -y ${NC}
     sudo yum upgrade -y
 	
 	echo -e ${COLOR} Disable SELinux ${NC}
 	#Set "sudo setenforce 0" for now to complete composer later
 	sudo setenforce 0
 	sed -i -e "s/SELINUX=enforcing/SELINUX=disabled/g" /etc/selinux/config
+	
+	echo -e ${COLOR} Check SELinux Status ${NC}
+	sestatus
 
     echo ""
     sleep 1
