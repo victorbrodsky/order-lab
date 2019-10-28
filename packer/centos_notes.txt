@@ -13,6 +13,9 @@ sudo -Hiu postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE scanorder to symfon
 
 php bin/console doctrine:schema:validate
 
+https://stackoverflow.com/questions/6674327/redirect-all-output-to-file
+Write output to a file: foo > allout.txt 2>&1
+
 sudo systemctl restart postgresql
 sudo systemctl restart httpd.service
 
