@@ -92,8 +92,7 @@ f_install_postgresql12 () {
 	sed -i -e "\$aTEXTTOEND" /var/lib/pgsql/12/data/pg_hba.conf
 	
 	#echo -e ${COLOR} Replace TEXTTOEND in pg_hba.conf ${NC}
-	TEXTTOENDREPLACE='host all all 0.0.0.0/0 md5'
-	sed -i -e "s/TEXTTOEND/$TEXTTOENDREPLACE/g" /var/lib/pgsql/12/data/pg_hba.conf	
+	sed -i "s/TEXTTOEND/host all all 0.0.0.0\/0 md5/g" /var/lib/pgsql/12/data/pg_hba.conf
 	
 	echo -e ${COLOR} postgresql.conf to listen all addresses ${NC}
 	sed -i -e "s/#listen_addresses/listen_addresses='*' #listen_addresses/g" /var/lib/pgsql/12/data/postgresql.conf
