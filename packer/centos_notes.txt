@@ -133,6 +133,11 @@ Driver={PostgreSQL Unicode};Server=142.93.188.82;Port=5432;Database=scanorder;UI
 Driver={PostgreSQL Unicode};Server=142.93.180.104;Port=5432;Database=scanorder;UID=symfony;PWD=symfony;DSN=PostreSQL35W1
 Driver={PostgreSQL ANSI};Server=142.93.180.104;Port=5432;Database=scanorder;UID=symfony;PWD=symfony;DSN=PostreSQL301
 
+Driver={PostgreSQL Unicode};Server=167.71.175.216;Port=5432;Database=scanorder;UID=symfony;PWD=symfony;DSN=PostreSQL35W_216
+Driver={PostgreSQL Unicode};Server=167.71.175.216;Port=5432;Database=scanorder;UID=symfony;PWD=symfony;DSN=PostreSQL35W
+
+Driver={PostgreSQL Unicode};Server=167.71.169.61;Port=5432;Database=scanorder;UID=symfony;PWD=symfony;DSN=PostreSQL35W
+
 To remotely connect: in pg_hba.conf allow connection by all users to all databases from any IP if the 
 user has right MD5-encrypted password by adding the following line:
 host all all 0.0.0.0/0 md5
@@ -150,9 +155,31 @@ sed -i -e "s/TEXTTOEND/'host all all 0.0.0.0/0 md5'/g" /var/lib/pgsql/12/data/pg
 sed -i -e "s/TEXTTOEND/TEXTTOEND1/g" /var/lib/pgsql/12/data/pg_hba.conf
 35 or 34 chars error
 
+Copy all tables to csv:
+https://stackoverflow.com/questions/30791482/sql-server-management-studio-2012-export-all-tables-of-database-as-csv
+
 https://www.youtube.com/watch?v=5eF9_UB73TI
 
 https://github.com/dimitri/pgloader
 pgloader mysql://mysql_username:password@mysql_server_ip_/source_database_name?option_1=value&option_n=value postgresql://postgresql_role_name:password@postgresql_server_ip/target_database_name?option_1=value&option_n=value
 pgloader psql://symfony:symfony@mysql_server_ip_/source_database_name?option_1=value&option_n=value postgresql://postgresql_role_name:password@postgresql_server_ip/target_database_name?option_1=value&option_n=value
 
+echo -e ${COLOR} Install pgloader ${NC}
+	#yum install -y pgloader
+	sudo mkdir /usr/local/temp
+	cd /usr/local/temp
+	git clone https://github.com/dimitri/pgloader.git
+	cd pgloader
+	chmod +x ./bootstrap-centos7.sh
+	sudo ./bootstrap-centos7.sh
+	make pgloader
+
+#https://github.com/dimitri/pgloader/blob/master/docs/ref/mssql.rst
+#Collage IP: 157.139.46.96
+pgloader mssql://symfony2@157.139.46.96/ScanOrder postgresql://symfony:symfony@167.71.169.61/scanorder
+
+
+
+#Commercial tool $149
+#https://www.postgresql.org/download/products/1-administrationdevelopment-tools/
+#https://dbconvert.com/mssql/postgresql/

@@ -306,9 +306,6 @@ f_install_util () {
 	tar -xvf phantomjs-2.1.1-linux-x86_64.tar.bz2
 	ln -s /opt/phantomjs-2.1.1-linux-x86_64/bin/phantomjs /usr/local/bin/phantomjs phantomjs --version
 	
-	echo -e ${COLOR} Install pgloader ${NC}
-	yum install -y pgloader
-	
 	echo ""
     sleep 1
 }
@@ -336,6 +333,17 @@ f_install_order () {
 	
 	echo -e ${COLOR} sudo chown -R apache:apache /usr/local/bin/order-lab ${NC}
 	sudo chown -R apache:apache /usr/local/bin/order-lab
+	
+	echo -e ${COLOR} Install pgloader ${NC}
+	#yum install -y pgloader
+	sudo mkdir /usr/local/temp
+	cd /usr/local/temp
+	git clone https://github.com/dimitri/pgloader.git
+	cd pgloader
+	chmod +x ./bootstrap-centos7.sh
+	sudo ./bootstrap-centos7.sh
+	make pgloader
+	cd /usr/local/bin/
 	
 	#chown -R apache:apache /usr/local/bin/order-lab/Scanorders2/var/cache
 	#chown -R apache:apache /usr/local/bin/order-lab/Scanorders2/var/logs
