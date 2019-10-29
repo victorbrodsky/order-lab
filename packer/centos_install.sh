@@ -336,8 +336,9 @@ f_install_order () {
 	
 	echo -e ${COLOR} Install pgloader ${NC}
 	#yum install -y pgloader
-	sudo mkdir /usr/local/temp
-	cd /usr/local/temp
+	sudo mkdir /usr/local/bin/temp
+	sudo chown -R apache:apache /usr/local/bin/temp
+	cd /usr/local/bin/temp
 	git clone https://github.com/dimitri/pgloader.git
 	cd pgloader
 	chmod +x ./bootstrap-centos7.sh
