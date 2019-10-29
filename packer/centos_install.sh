@@ -306,6 +306,9 @@ f_install_util () {
 	tar -xvf phantomjs-2.1.1-linux-x86_64.tar.bz2
 	ln -s /opt/phantomjs-2.1.1-linux-x86_64/bin/phantomjs /usr/local/bin/phantomjs phantomjs --version
 	
+	echo -e ${COLOR} Install pgloader ${NC}
+	yum install -y pgloader
+	
 	echo ""
     sleep 1
 }
@@ -410,7 +413,7 @@ f_install_php72_ORIG () {
     sleep 1
 
 	echo @### Install yum-utils and enable epel repository ###
-	sudo yum -y install epel-release
+	sudo yum -y install epel-release - 
 	sudo yum install http://rpms.remirepo.net/enterprise/remi-release-7.rpm -y
 
 	echo @### PHP1: install yum-utils -y ###

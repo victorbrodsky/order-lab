@@ -149,3 +149,10 @@ Use odbc posyresql the same version as installed Postgresql?
 sed -i -e "s/TEXTTOEND/'host all all 0.0.0.0/0 md5'/g" /var/lib/pgsql/12/data/pg_hba.conf
 sed -i -e "s/TEXTTOEND/TEXTTOEND1/g" /var/lib/pgsql/12/data/pg_hba.conf
 35 or 34 chars error
+
+https://www.youtube.com/watch?v=5eF9_UB73TI
+
+https://github.com/dimitri/pgloader
+pgloader mysql://mysql_username:password@mysql_server_ip_/source_database_name?option_1=value&option_n=value postgresql://postgresql_role_name:password@postgresql_server_ip/target_database_name?option_1=value&option_n=value
+pgloader psql://symfony:symfony@mysql_server_ip_/source_database_name?option_1=value&option_n=value postgresql://postgresql_role_name:password@postgresql_server_ip/target_database_name?option_1=value&option_n=value
+
