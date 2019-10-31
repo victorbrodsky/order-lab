@@ -89,7 +89,8 @@ function prep(){
     then
         echo
         echo "*** Update tables in Doctrine DB ***"
-        php -d memory_limit=1024M $PROJECT_LOCAL_PATH/bin/console doctrine:schema:update --force
+        #php -d memory_limit=1024M $PROJECT_LOCAL_PATH/bin/console doctrine:schema:update --force
+        php -d memory_limit=1024M $PROJECT_LOCAL_PATH/bin/console doctrine:schema:update
 
         echo "*** Validate Doctrine DB ***"
         php $PROJECT_LOCAL_PATH/bin/console doctrine:schema:validate

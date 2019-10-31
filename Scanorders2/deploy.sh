@@ -44,7 +44,8 @@ function prep()
     #git pull
 
     echo "*** Update tables in Doctrine DB ***"
-    php $PROJECT_LOCAL_PATH/bin/console doctrine:schema:update --force
+    #php $PROJECT_LOCAL_PATH/bin/console doctrine:schema:update --force
+    php $PROJECT_LOCAL_PATH/bin/console doctrine:schema:update
 
     echo "*** Validate Doctrine DB ***"
     php $PROJECT_LOCAL_PATH/bin/console doctrine:schema:validate

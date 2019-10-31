@@ -178,6 +178,8 @@ echo -e ${COLOR} Install pgloader ${NC}
 #Collage IP: 157.139.46.96
 pgloader mssql://symfony2@157.139.46.96/ScanOrder postgresql://symfony:symfony@167.71.169.61/scanorder
 
+https://stackoverflow.com/questions/2987433/how-to-import-csv-file-data-into-a-postgresql-table
+http://www.postgresqltutorial.com/import-csv-file-into-posgresql-table/
 
 
 #Commercial tool $149
