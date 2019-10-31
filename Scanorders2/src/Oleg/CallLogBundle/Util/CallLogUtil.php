@@ -392,6 +392,8 @@ class CallLogUtil
         //get most recent location's institution
         //$locationInstitution = NULL;
 
+        //$emptyValue = NULL;
+        $emptyValue = "";
 
         $patientInfo = array(
             'id' => $patient->getId(),
@@ -401,20 +403,20 @@ class CallLogUtil
             'dob' => $dobRes."",
             'age' => $patient->calculateAge()."",
 
-            'lastname' => (($lastNameRes) ? $lastNameRes->getField() : null),  //$lastNameRes->getField(),
-            'lastnameStatus' => (($lastNameRes) ? $lastNameRes->getStatus() : null),
+            'lastname' => (($lastNameRes) ? $lastNameRes->getField() : $emptyValue),  //$lastNameRes->getField(),
+            'lastnameStatus' => (($lastNameRes) ? $lastNameRes->getStatus() : $emptyValue),
             //'lastnameStatus' => 'alias',
 
-            'firstname' => (($firstNameRes) ? $firstNameRes->getField() : null),  //$firstNameStr,
-            'firstnameStatus' => (($firstNameRes) ? $firstNameRes->getStatus() : null),
+            'firstname' => (($firstNameRes) ? $firstNameRes->getField() : $emptyValue),  //$firstNameStr,
+            'firstnameStatus' => (($firstNameRes) ? $firstNameRes->getStatus() : $emptyValue),
 
-            'middlename' => (($middleNameRes) ? $middleNameRes->getField() : null), //$middleNameRes->getField(),
-            'middlenameStatus' => (($middleNameRes) ? $middleNameRes->getStatus() : null),
+            'middlename' => (($middleNameRes) ? $middleNameRes->getField() : $emptyValue), //$middleNameRes->getField(),
+            'middlenameStatus' => (($middleNameRes) ? $middleNameRes->getStatus() : $emptyValue),
 
-            'suffix' => (($suffixRes) ? $suffixRes->getField() : null),   //$suffixRes->getField(),
-            'suffixStatus' => (($suffixRes) ? $suffixRes->getStatus() : null),
+            'suffix' => (($suffixRes) ? $suffixRes->getField() : $emptyValue),   //$suffixRes->getField(),
+            'suffixStatus' => (($suffixRes) ? $suffixRes->getStatus() : $emptyValue),
 
-            'sex' => (($sexRes && $sexRes->getField()) ? $sexRes->getField()->getId() : null),    //$sexRes->getId(),
+            'sex' => (($sexRes && $sexRes->getField()) ? $sexRes->getField()->getId() : $emptyValue),    //$sexRes->getId(),
             'sexstr' => $sexRes."",
 
             'email' => $patient->getEmail(),
@@ -430,7 +432,8 @@ class CallLogUtil
 
             'masterPatientId' => NULL,
 
-            'patientInfoStr' => "Patient ID# ".$patient->getId().": ",    //.$masterStr.": "//testing
+            //'patientInfoStr' => "Patient ID# ".$patient->getId().": ",    //.$masterStr.": "//testing
+            'patientInfoStr' => $patient->getId(),
 
         );
 
@@ -2475,6 +2478,39 @@ class CallLogUtil
         }
 
         return $dateStr;
+    }
+
+    public function getPreviousAuthorsInfoStr($message) {
+        $info = NULL;
+        //$info = "Testaaa authors";
+
+        $messageOid = $message->getOid();
+        $messages = $this->em->getRepository('OlegOrderformBundle:Message')->findAllMessagesByOid($messageOid);
+
+        if( $message->getProvider() ) {
+            $providerId = $message->getProvider()->getId();
+        } else {
+            $providerId = NULL;
+        }
+
+        $infoArr = array();
+        foreach($messages as $thisMessage) {
+            if( $thisMessage->getId() == $message->getId() ) {
+                continue;
+            }
+
+            if( $thisMessage->getProvider() && $thisMessage->getProvider()->getId() == $providerId ) {
+                continue;
+            }
+
+            $infoArr[$thisMessage->getProvider()->getId()] = $thisMessage->getProvider()->getUsernameOptimal();
+        }
+
+        if( count($infoArr) > 0 ) {
+            $info = implode("<br>",$infoArr);
+        }
+
+        return $info;
     }
 
     public function getInitialMessage($message) {

@@ -189,7 +189,7 @@ class CallLogEditController extends CallEntryController
         //ini_set('memory_limit', '5120M');
         //ini_set('memory_limit', '-1');
 
-        //$userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->get('user_security_utility');
         $calllogUtil = $this->get('calllog_util');
         $securityUtil = $this->get('order_security_utility');
         $userServiceUtil = $this->get('user_service_utility');
@@ -402,6 +402,14 @@ class CallLogEditController extends CallEntryController
 
         $maxEncounterVersion = $em->getRepository('OlegOrderformBundle:Encounter')->getMaxEncounterVersion($existingEncounter);
         $latestNextEncounterVersion = intval($maxEncounterVersion) + 1;
+
+        //Event Log - User accessing “Edit Entry” page should be added to the event log as an event for that object/note (Event Type “Entry Edit Accessed”)
+        //$userSecUtil = $this->get('user_security_utility');
+        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        $eventType = "Call Log Book Entry Edit Accessed";
+        $eventStr = "Call Log Book Entry ID#".$message->getMessageOidVersion()." has been viewed on the edit page by ".$user;
+        $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $eventStr, $user, $message, $request, $eventType); //View Call Log Entry
+
 
         return array(
             //'entity' => $entity,

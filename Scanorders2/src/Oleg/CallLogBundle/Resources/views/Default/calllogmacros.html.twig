@@ -1397,7 +1397,24 @@
                 </td>
 
                 {#Author#}
-                <td class="rowlink-skip">
+                {% if message.version > 1 %}
+                    {#show a black tooltip with authors of previous versions if there is more than one#}
+                    {% set datatoggle = 'data-toggle=tooltip' %}
+                    {% set datacontainer = 'data-container=body' %}
+                    {% set datatitle = calllog_util.getPreviousAuthorsInfoStr(initialMessage)|raw %}
+                {% else %}
+                    {% set datatoggle = "" %}
+                    {% set datacontainer = "" %}
+                    {% set datatitle = "" %}
+                {% endif %}
+                <td class="rowlink-skip"
+                    {#{{ datatoggle }}#}
+                    {#{{ datacontainer }}#}
+                    {#{{ datatitle }}#}
+                    data-toggle="tooltip"
+                    data-container="body"
+                    title="{{ datatitle }}"
+                >
                     {% if message.messageStatus and message.messageStatus.name == "Draft" %}
                         {% if message.provider %}
                             {#{{ message.provider.getUsernameOptimal }}<br>#}

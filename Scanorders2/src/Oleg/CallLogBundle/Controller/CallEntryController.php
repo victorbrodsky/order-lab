@@ -3355,6 +3355,13 @@ class CallEntryController extends Controller
 
         //previous entries similar to calllog-list-previous-entries: get it in the view by ajax
 
+        //Event Log - User accessing “Show Entry” page should be added to the event log as an event for that object/note (Event Type “Entry Viewed”)
+        $userSecUtil = $this->get('user_security_utility');
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $eventType = "Call Log Book Entry Viewed";
+        $eventStr = "Call Log Book Entry ID#".$message->getMessageOidVersion()." has been viewed by ".$user;
+        $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $eventStr, $user, $message, $request, $eventType); //View Call Log Entry
+
         if( $formbased ) {
             return array(
                 //'entity' => $entity,
