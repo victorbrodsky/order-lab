@@ -43,34 +43,23 @@
 
         {#basic search#}
         <div class="row">
-            <div class="col-xs-1">
+            <div class="col-xs-4">
                 {{ form_widget(filterform.sortBy) }}
             </div>
 
-            <div class="col-xs-1" align="left" data-toggle="tooltip" title="Start Date">
+            <div class="col-xs-3" align="left" data-toggle="tooltip" title="Start Date">
                 {#{{ calllogmacros.singleDateField('','Start Date') }}#}
                 {{ formmacros.fielddate(filterform.startDate,'allow-future-date') }}
                 {#{{ form_row(filterform.startDate, {'attr': {'placeholder': 'Start Date'}}) }}#}
             </div>
-            <div class="col-xs-1" align="left" data-toggle="tooltip" title="End Date">
+            <div class="col-xs-3" align="left" data-toggle="tooltip" title="End Date">
                 {#{{ calllogmacros.singleDateField('','End Date') }}#}
                 {{ formmacros.fielddate(filterform.endDate,'allow-future-date') }}
                 {#{{ form_row(filterform.endDate, {'attr': {'placeholder': 'End Date'}}) }}#}
             </div>
-            {#<div class="col-xs-2" align="left">#}
-                {#{{ form_widget(filterform.entryTags) }}#}
-            {#</div>#}
-            <div class="col-xs-3" align="left">
-                {{ form_widget(filterform.messageCategory) }}
-            </div>
-            <div class="col-xs-4">
-                {{ form_widget(filterform.mrntype) }}
-                {{ form_widget(filterform.search) }}
-            </div>
 
-            <div class="col-xs-2">
+            <div class="col-xs-2" style="padding-left: 0px;">
                 {#<button id="Search_button" type="submit" class="btn btn-default">Filter</button>#}
-
                 <div class="btn-group btn-group-sm">
                         <span data-toggle="buttons-checkbox">
                             <div
@@ -84,8 +73,55 @@
                         </span>
                     <button id="Search_button" type="submit" class="btn btn-default btn-sm">Filter</button>
                 </div>
-
             </div>
+        </div>
+
+        <br>
+        <div class="row">
+            {#<div class="col-xs-2">#}
+                {#{{ form_widget(filterform.sortBy) }}#}
+            {#</div>#}
+
+            {#<div class="col-xs-1" align="left" data-toggle="tooltip" title="Start Date">#}
+                {#{{ calllogmacros.singleDateField('','Start Date') }}#}
+                {#{{ formmacros.fielddate(filterform.startDate,'allow-future-date') }}#}
+                {#{{ form_row(filterform.startDate, {'attr': {'placeholder': 'Start Date'}}) }}#}
+            {#</div>#}
+            {#<div class="col-xs-1" align="left" data-toggle="tooltip" title="End Date">#}
+                {#{{ calllogmacros.singleDateField('','End Date') }}#}
+                {#{{ formmacros.fielddate(filterform.endDate,'allow-future-date') }}#}
+                {#{{ form_row(filterform.endDate, {'attr': {'placeholder': 'End Date'}}) }}#}
+            {#</div>#}
+
+            {#<div class="col-xs-2" align="left">#}
+                {#{{ form_widget(filterform.entryTags) }}#}
+            {#</div>#}
+            <div class="col-xs-5" align="left">
+                {{ form_widget(filterform.messageCategory) }}
+            </div>
+            <div class="col-xs-7">
+                {{ form_widget(filterform.mrntype) }}
+                {{ form_widget(filterform.search) }}
+            </div>
+
+            {#<div class="col-xs-2">#}
+                {#<button id="Search_button" type="submit" class="btn btn-default">Filter</button>#}
+
+                {#<div class="btn-group btn-group-sm">#}
+                        {#<span data-toggle="buttons-checkbox">#}
+                            {#<div#}
+                                    {#data-toggle="collapse"#}
+                                    {#href="#calllog-AdvancedSearch"#}
+                                    {#class="btn btn-default btn-sm toggle-btn-state"#}
+                                    {#data-active-class="advance-search-wrench"#}
+                            {#>#}
+                                    {#<span class="glyphicon glyphicon-wrench"></span>#}
+                            {#</div>#}
+                        {#</span>#}
+                    {#<button id="Search_button" type="submit" class="btn btn-default btn-sm">Filter</button>#}
+                {#</div>#}
+
+            {#</div>#}
         </div>
 
         {#<div class="row">#}
