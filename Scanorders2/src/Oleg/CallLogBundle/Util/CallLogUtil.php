@@ -2506,8 +2506,12 @@ class CallLogUtil
             $infoArr[$thisMessage->getProvider()->getId()] = $thisMessage->getProvider()->getUsernameOptimal();
         }
 
+        //testing
+        //$infoArr[] = "testuser1";
+        //$infoArr[] = "testuser2";
+
         if( count($infoArr) > 0 ) {
-            $info = implode("<br>",$infoArr);
+            $info = implode("; ",$infoArr);
         }
 
         return $info;

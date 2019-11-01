@@ -1401,7 +1401,7 @@
                     {#show a black tooltip with authors of previous versions if there is more than one#}
                     {% set datatoggle = 'data-toggle=tooltip' %}
                     {% set datacontainer = 'data-container=body' %}
-                    {% set datatitle = calllog_util.getPreviousAuthorsInfoStr(initialMessage)|raw %}
+                    {% set datatitle = calllog_util.getPreviousAuthorsInfoStr(initialMessage) %}
                 {% else %}
                     {% set datatoggle = "" %}
                     {% set datacontainer = "" %}
