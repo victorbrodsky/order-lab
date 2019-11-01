@@ -2493,6 +2493,7 @@ class CallLogUtil
             $providerId = NULL;
         }
 
+        echo $message->getId().": ########## count=".count($messages)." ##########";
         $infoArr = array();
         foreach($messages as $thisMessage) {
 
@@ -2510,6 +2511,7 @@ class CallLogUtil
         }
 
         //testing
+        echo "##########";
         //$infoArr[] = "testuser1";
         //$infoArr[] = "testuser2";
 
