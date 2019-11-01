@@ -150,6 +150,8 @@ https://stackoverflow.com/questions/17115632/microsoftodbc-driver-manager-data-s
 https://blogs.msdn.microsoft.com/sqlcat/2011/03/31/32-and-64-bit-connectivity-from-the-same-machine/
 https://www.codeproject.com/Questions/1003767/PostgreSQL-ODBC-driver-throws-error
 Use odbc posyresql the same version as installed Postgresql?
+32 bit: c:\Windows\System32\odbcad32.exe
+64 bit: C:\Windows\SysWOW64\odbcad32.exe
 
 sed -i -e "s/TEXTTOEND/'host all all 0.0.0.0/0 md5'/g" /var/lib/pgsql/12/data/pg_hba.conf
 sed -i -e "s/TEXTTOEND/TEXTTOEND1/g" /var/lib/pgsql/12/data/pg_hba.conf
