@@ -2493,11 +2493,11 @@ class CallLogUtil
             $providerId = NULL;
         }
 
-        echo $message->getMessageOidVersion().": ########## count=".count($messages)." ##########";
+        //echo $message->getMessageOidVersion().": ########## count=".count($messages)." ##########";
         $infoArr = array();
         foreach($messages as $thisMessage) {
 
-            echo "message ID ".$thisMessage->getId().", provider=".$thisMessage->getProvider()."<br>";
+            //echo "message ID ".$thisMessage->getId().", provider=".$thisMessage->getProvider()."<br>";
 
             if( $thisMessage->getId() == $message->getId() ) {
                 continue;
@@ -2511,7 +2511,7 @@ class CallLogUtil
         }
 
         //testing
-        echo "##########";
+        //echo "##########";
         //$infoArr[] = "testuser1";
         //$infoArr[] = "testuser2";
 
