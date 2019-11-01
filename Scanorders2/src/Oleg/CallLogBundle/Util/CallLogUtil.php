@@ -2495,6 +2495,9 @@ class CallLogUtil
 
         $infoArr = array();
         foreach($messages as $thisMessage) {
+
+            echo "message ID ".$thisMessage->getId().", provider=".$thisMessage->getProvider()."<br>";
+
             if( $thisMessage->getId() == $message->getId() ) {
                 continue;
             }
