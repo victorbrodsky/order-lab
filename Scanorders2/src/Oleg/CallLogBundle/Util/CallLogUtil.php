@@ -2493,7 +2493,7 @@ class CallLogUtil
             $providerId = NULL;
         }
 
-        echo $message->getId().": ########## count=".count($messages)." ##########";
+        echo $message->getMessageOidVersion().": ########## count=".count($messages)." ##########";
         $infoArr = array();
         foreach($messages as $thisMessage) {
 
