@@ -287,15 +287,21 @@ class UserSecurityUtil {
         $logger->setUsername($user."");
 
         if( $request ) {
+            $logger2 = $this->container->get('logger');
             $clientIp = $this->container->get('request_stack')->getCurrentRequest()->getClientIp();
             echo "clientIp=".$clientIp."<br>";
+            $logger2->notice("clientIp=".$clientIp);
             $clientIp = $this->container->get('request_stack')->getMasterRequest()->getClientIp();
             echo "clientIp=".$clientIp."<br>";
+            $logger2->notice("clientIp=".$clientIp);
             $clientIp = $this->container->get('request')->server->get("REMOTE_ADDR");
             echo "clientIp=".$clientIp."<br>";
+            $logger2->notice("clientIp=".$clientIp);
             $clientIp = $request->getClientIp();
             echo "clientIp=".$clientIp."<br>";
-            exit('1');
+            $logger2->notice("clientIp=".$clientIp);
+            //exit('1');
+            
             $logger->setUseragent($_SERVER['HTTP_USER_AGENT']);
             $logger->setIp($request->getClientIp());
             $logger->setWidth($request->get('display_width'));
