@@ -287,21 +287,21 @@ class UserSecurityUtil {
         $logger->setUsername($user."");
 
         if( $request ) {
-            $logger2 = $this->container->get('logger');
-            $clientIp = $this->container->get('request_stack')->getCurrentRequest()->getClientIp();
-            //echo "clientIp=".$clientIp."<br>";
-            $logger2->notice("clientIp=".$clientIp);
-            $clientIp = $this->container->get('request_stack')->getMasterRequest()->getClientIp();
-            //echo "clientIp=".$clientIp."<br>";
-            $logger2->notice("clientIp=".$clientIp);
 
+            //IP is always 127.0.0.1: this is caused by a proxy server because the requests are redirected from a localhost.
+            //$logger2 = $this->container->get('logger');
+            //$clientIp = $this->container->get('request_stack')->getCurrentRequest()->getClientIp();
+            //echo "clientIp=".$clientIp."<br>";
+            //$logger2->notice("clientIp=".$clientIp);
+            //$clientIp = $this->container->get('request_stack')->getMasterRequest()->getClientIp();
+            //echo "clientIp=".$clientIp."<br>";
+            //$logger2->notice("clientIp=".$clientIp);
             //$clientIp = $this->container->get('request')->server->get("REMOTE_ADDR");
             //echo "clientIp=".$clientIp."<br>";
             //$logger2->notice("clientIp=".$clientIp);
-
-            $clientIp = $request->getClientIp();
+            //$clientIp = $request->getClientIp();
             //echo "clientIp=".$clientIp."<br>";
-            $logger2->notice("clientIp=".$clientIp);
+            //$logger2->notice("clientIp=".$clientIp);
             //exit('1');
 
             $logger->setUseragent($_SERVER['HTTP_USER_AGENT']);
