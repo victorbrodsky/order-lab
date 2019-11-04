@@ -304,7 +304,8 @@ class FilterRequestType extends AbstractType
         } else {
             $builder->add('projectSearch', TextType::class, array(
                 'required' => false,
-                'attr' => array('class' => 'form-control typeahead', 'placeholder' => "Project", 'style' => 'font-size: 14px;' ),
+                //'attr' => array('class' => 'form-control typeahead', 'placeholder' => "Project", 'style' => 'font-size: 14px; width: 380px;' ),
+                'attr' => array('class' => 'form-control typeahead', 'placeholder' => "Project", 'style' => 'font-size: 14px; width: 320px;' ),
             ));
         }
     }
