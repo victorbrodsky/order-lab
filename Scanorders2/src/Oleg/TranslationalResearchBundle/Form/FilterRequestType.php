@@ -303,13 +303,8 @@ class FilterRequestType extends AbstractType
             }
         } else {
             $builder->add('projectSearch', TextType::class, array(
-                //'class' => 'OlegTranslationalResearchBundle:Project',
-                //'choice_label' => "getProjectInfoNameChoice",          //Without PIs
-                //'choice_label' => $projectChoiceLabel, //"getProjectInfoNameWithPIsChoice",     //With PIs
                 'required' => false,
-                //'label' => false,
-                //'data' => $this->params['project'],
-                'attr' => array('class' => 'form-control typeahead', 'placeholder' => "Project", 'style' => 'font-size: 14px; width: 380px;' ),
+                'attr' => array('class' => 'form-control typeahead', 'placeholder' => "Project", 'style' => 'font-size: 14px;' ),
             ));
         }
     }
