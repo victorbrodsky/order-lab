@@ -241,6 +241,7 @@ class CallEntryController extends Controller
         $patientPhone = null;
         $patientEmail = null;
         $sortBy = null;
+        $attachmentType = null;
 
         //4 Tasks
         $task = null;
@@ -361,6 +362,17 @@ class CallEntryController extends Controller
             "Without Tasks" =>              "without-tasks"
         );
 
+        ////////// attachmentTypes //////////
+        $attachmentTypes = $em->getRepository('OlegOrderformBundle:CalllogAttachmentTypeList')->findBy(array('type'=>array('default','user-added')));
+        $attachmentTypesChoice = array();
+        //add: "With attachments", "Without attachments"
+        $attachmentTypesChoice["With attachments"] = "With attachments";
+        $attachmentTypesChoice["Without attachments"] = "Without attachments";
+        foreach( $attachmentTypes as $attachmentType ) {
+            $attachmentTypesChoice[$attachmentType.""] = $attachmentType->getId();
+        }
+        ////////// EOF attachmentTypes //////////
+
         $params = array(
             'messageStatuses' => $messageStatusesChoice,
             'messageCategories' => $messageCategories, //for home to list all entries page
@@ -373,6 +385,7 @@ class CallEntryController extends Controller
             'entryBodySearch' => $entryBodySearchFilter,
             'messageCategoryType' => $messageCategoryTypeId,
             'tasks' => $tasks,
+            'attachmentTypesChoice' => $attachmentTypesChoice,
             'metaphone' => $metaphone
         );
         $filterform = $this->createForm(CalllogFilterType::class, null, array(
@@ -397,10 +410,11 @@ class CallEntryController extends Controller
         $patientPhone = $filterform['patientPhone']->getData();
         $patientEmail = $filterform['patientEmail']->getData();
         $sortBy = $filterform['sortBy']->getData();
-        $task = $filterform['task']->getData();;
-        $taskType = $filterform['taskType']->getData();;
-        $taskUpdatedBy = $filterform['taskUpdatedBy']->getData();;
-        $taskAddedBy = $filterform['taskAddedBy']->getData();;
+        $task = $filterform['task']->getData();
+        $taskType = $filterform['taskType']->getData();
+        $taskUpdatedBy = $filterform['taskUpdatedBy']->getData();
+        $taskAddedBy = $filterform['taskAddedBy']->getData();
+        $attachmentType = $filterform['attachmentType']->getData();
 
         if( !$searchFilter ) {
             $searchFilter = $filterform['search']->getData();
@@ -798,6 +812,24 @@ class CallEntryController extends Controller
             $emailCanonical = strtolower($patientEmail);
             $dql->andWhere("patient.emailCanonical LIKE :patientEmail");
             $queryParameters['patientEmail'] = "%" . $emailCanonical . "%";
+            $advancedFilter++;
+        }
+
+        if( $attachmentType ) {
+            $dql->leftJoin("calllogEntryMessage.documents","documents");
+            if( $attachmentType == "With attachments" ) {
+                //$dql->andWhere("calllogEntryMessage.calllogAttachmentType IS NOT NULL");
+                //$dql->leftJoin("calllogEntryMessage.documents","documents");
+                $dql->andWhere("documents.id IS NOT NULL");
+            } elseif( $attachmentType == "Without attachments" ) {
+//                $dql->andWhere("calllogEntryMessage.calllogAttachmentType IS NULL");
+                //$dql->leftJoin("calllogEntryMessage.documents","documents");
+                $dql->andWhere("documents.id IS NULL");
+            } else {
+                $dql->andWhere("documents.id IS NOT NULL");
+                $dql->andWhere("calllogEntryMessage.calllogAttachmentType = :calllogAttachmentTypeId");
+                $queryParameters['calllogAttachmentTypeId'] = $attachmentType;
+            }
             $advancedFilter++;
         }
 

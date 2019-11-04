@@ -367,6 +367,27 @@ class CalllogFilterType extends AbstractType
             },
         ));
 
+        //Use OlegOrderformBundle:CalllogAttachmentTypeList
+//        $attachmentTypes = array(
+//            'With attachments' => 'With attachments',
+//            'Without attachments' => 'Without attachments',
+//            'Image' => 'Image',
+//            'Document' => 'Document',
+//            '' => '',
+//            '' => '',
+//            '' => '',
+//            '' => '',
+//            '' => '',
+//        );
+        $builder->add('attachmentType', ChoiceType::class, array(
+            'label' => false,
+            'required' => false,
+            'attr' => array('class' => 'combobox', 'placeholder' => "Attachment Type"),
+            'choices' => $this->params['attachmentTypesChoice'],
+            'multiple' => false,
+            'choices_as_values' => true,
+        ));
+
     }
 
     public function configureOptions(OptionsResolver $resolver)
