@@ -147,7 +147,6 @@ function removeExistingObject(btn,classname,confirmationMessage) {
         confirmationMessage = "Are you sure you want to remove this record?";
     }
 
-    //var r = confirm("Are you sure you want to remove this record?");
     var r = confirm(confirmationMessage);
 
     if (r == true) {

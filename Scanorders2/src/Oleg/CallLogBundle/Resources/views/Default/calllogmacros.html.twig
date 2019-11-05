@@ -628,6 +628,19 @@
 
 {% macro indexAction( message, eventObjectTypeId, patientListId ) %}
 
+    {#Get patient (if exists)#}
+    {% set patient = NULL %}
+    {% set mrnNumber = NULL %}
+    {% set mrnTypeId = NULL %}
+    {% if message.patient|length > 0 %}
+        {% set patient = message.patient|first %}
+        {% set mrn = patient.obtainValidField('mrn') %}
+        {% if mrn and mrn.field and mrn.keytype %}
+            {% set mrnNumber = mrn.field %}
+            {% set mrnTypeId = mrn.keytype.id %}
+        {% endif %}
+    {% endif %}
+
     <div class="btn-group">
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
             Action <span class="caret"></span>
@@ -662,6 +675,12 @@
                     href="{{ path('calllog_undelete', {'messageOid': message.oid, 'messageVersion':message.version}) }}">Undelete Entry</a></li>
             {% endif %}
 
+            {% if patient and mrnNumber and mrnTypeId %}
+                <li><a href="{{ path('calllog_home', { 'filter[search]': mrnNumber, 'filter[mrntype]': mrnTypeId, 'filter[messageStatus]': "All except deleted" }) }}"
+                       target="_blank">View Previous Entries</a>
+                </li>
+            {% endif %}
+
             {% if eventObjectTypeId is defined and eventObjectTypeId %}
                 {#eventlog DB id#}
                 {#<li><a href="{{ path('calllog_event-log-per-object_log', { 'filter[objectType][]': eventObjectTypeId, 'filter[objectId]': message.id}) }}" target="_blank">View Event Log</a></li>#}
@@ -671,13 +690,15 @@
                 </li>
             {% endif %}
 
-            {% if message.patient|length > 0 %}
-                {% set patient = message.patient|first %}
-                {% set mrn = patient.obtainValidField('mrn') %}
-                {% if mrn and mrn.field and mrn.keytype %}
-                    {% set mrnNumber = mrn.field %}
-                    {% set mrnTypeId = mrn.keytype.id %}
-                    {% if mrnNumber and mrnTypeId %}
+            {#{% if message.patient|length > 0 %}#}
+            {% if patient %}
+                {% if mrnNumber and mrnTypeId %}
+                {#{% set patient = message.patient|first %}#}
+                {#{% set mrn = patient.obtainValidField('mrn') %}#}
+                {#{% if mrn and mrn.field and mrn.keytype %}#}
+                    {#{% set mrnNumber = mrn.field %}#}
+                    {#{% set mrnTypeId = mrn.keytype.id %}#}
+                    {#{% if mrnNumber and mrnTypeId %}#}
 
                         {#Add Entry (Same Encounter) and Add Entry (Same Encounter & Type)#}
                         {% set validEncounter = message.getValidEncounter() %}
@@ -723,7 +744,7 @@
                         {% if patient.obtainMergeMrnArr('valid')|length > 0 %}
                             <li><a href="{{ path('calllog_unmerge_patient_records', { 'mrn': mrnNumber, 'mrntype': mrnTypeId}) }}" target="_blank">Un-merge Patient Record</a></li>
                         {% endif %}
-                    {% endif %}
+                    {#{% endif %}#}
                 {% endif %}
 
                 <li><a href="{{ path('calllog_single_patient_edit', { 'id': patient.id}) }}" target="_blank">Edit Patient Demographics</a></li>
@@ -1139,7 +1160,7 @@
                         <button
                                 type="button"
                                 class="btn btn-default"
-                                onClick="removeExistingObject(this,'{{ classname }}',null,'Are you sure you want to remove this task?')" ><span class="glyphicon glyphicon-remove"></span></button>
+                                onClick="removeExistingObject(this,'{{ classname }}','Are you sure you want to remove this task?')" ><span class="glyphicon glyphicon-remove"></span></button>
                     {% else %}
                     {% endif %}
                 </div>
@@ -1161,7 +1182,7 @@
                         <button
                                 type="button"
                                 class="btn btn-default"
-                                onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+                                onClick="removeExistingObject(this,'{{ classname }}','Are you sure you want to remove this task?')" ><span class="glyphicon glyphicon-remove"></span></button>
                     {% else %}
                     {% endif %}
                 </div>

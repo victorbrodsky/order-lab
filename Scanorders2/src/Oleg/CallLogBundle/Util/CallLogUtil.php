@@ -4008,8 +4008,8 @@ class CallLogUtil
             $body = $body . '<td colspan='.$colspan1 . ' class="calllog-checkbox-checkbox" style="width:2%">' . $status . $updateBtn . $dangerBox . '</td>';
             /////////// EOF Checkbox ///////////
 
-            $body = $body . '<td colspan='.$colspan2 . ' class='.$tdClass2.' style="width:20%">' . '' . $task->getCalllogTaskType() . '</td>';
-            $body = $body . '<td colspan='.$colspan3 . ' class='.$tdClass2.' style="width:70%">' . $task->getDescription() . $taskInfo . '</td>';
+            $body = $body . '<td colspan='.$colspan2 . ' class='.$tdClass2.' style="width:18%">' . '' . $task->getCalllogTaskType() . '</td>';
+            $body = $body . '<td colspan='.$colspan3 . ' class='.$tdClass2.' style="width:80%">' . $task->getDescription() . $taskInfo . '</td>';
 
             $body = $body . '</tr>';
 
