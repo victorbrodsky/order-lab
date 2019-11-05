@@ -190,6 +190,9 @@ Note: If you choose to use MySQL database on Linux instead of Postgres, you will
 
         bash deploy-order-digital-ocean.sh --token API-TOKEN-FROM-STEP-1 --parameters parameters.yml --dbuser dbusername --dbpass dbpassword
 		
+		Centos:
+		bash deploy-order-digital-ocean.sh --token API-TOKEN-FROM-STEP-1 --parameters parameters.yml --dbuser dbusername --dbpass dbpassword --os centos
+		
 	(b) Obtain a domain name from a registrar (for example from [Google Domains](https://domains.google/#/)) if you don't have one already and follow these [instructions to add the nameservers of your Digital Ocean webhost](https://www.digitalocean.com/community/tutorials/how-to-point-to-digitalocean-nameservers-from-common-domain-registrars). It may take up to 48 hours for the domain name to start working. Get an SSL certificate from a Certificate Authority such as [Let's Encrypt](https://letsencrypt.org/) or [Comodo](https://comodosslstore.com/positivessl.aspx) using the [Certificate Signing Request (CSR)](https://developers.google.com/web/fundamentals/security/encrypt-in-transit/enable-https). You can also [generate a local certificate](https://letsencrypt.org/docs/certificates-for-localhost/) for testing purposes. Copy the SSL Certificate file (www.example.com.crt) and SSL Private Key file (www.example.com.key) to the /packer folder. The SSL Private Key file (www.example.com.key) is the one that was generated when preparing the Certificate Signing Request (CSR), likely via a command similar to this one:
 	
 		openssl genrsa -out www.example.com.key 2048
@@ -202,9 +205,15 @@ Note: If you choose to use MySQL database on Linux instead of Postgres, you will
 
         bash deploy-order-digital-ocean.sh --token API-TOKEN-FROM-STEP-1 --parameters parameters.yml --dbuser dbusername --dbpass dbpassword --protocol https --domainname example.com --sslcertificate www.example.com.crt --sslprivatekey www.example.com.key
 		
+		Centos:
+		bash deploy-order-digital-ocean.sh --token API-TOKEN-FROM-STEP-1 --parameters parameters.yml --dbuser dbusername --dbpass dbpassword --protocol https --domainname example.com --sslcertificate www.example.com.crt --sslprivatekey www.example.com.key --os centos
+		
 	(c) Obtain a domain name from a registrar (for example from [Google Domains](https://domains.google/#/)) if you don't have one already and follow these [instructions to add the nameservers of your Digital Ocean webhost](https://www.digitalocean.com/community/tutorials/how-to-point-to-digitalocean-nameservers-from-common-domain-registrars). It may take up to 48 hours for the domain name to start working. Run the following command in the terminal (make sure to substitute your API token, database user name, the database password, and your domain name (such as "example.com") instead of "example.com" below. If "dbusername" and "dbpassword" are not provided, the default "symfony"/"symfony" values are used.):
 
         bash deploy-order-digital-ocean.sh --token API-TOKEN-FROM-STEP-1 --parameters parameters.yml --dbuser dbusername --dbpass dbpassword --protocol http --domainname example.com
+
+		Centos:
+		bash deploy-order-digital-ocean.sh --token API-TOKEN-FROM-STEP-1 --parameters parameters.yml --dbuser dbusername --dbpass dbpassword --protocol http --domainname example.com --os centos
 
 	Note: If you get your SSL certificate from [Let's Encrypt](https://letsencrypt.org/), make sure to follow their recommendation to ensure the certificate gets updated in a timely fashion and to avoid expiration. [certbot](https://certbot.eff.org/lets-encrypt/ubuntuxenial-apache) and a [symfony bundle](https://packagist.org/packages/cert/letsencrypt-bundle) are available.  In the past, uncommenting (removing "#" from the beginning of) the line 289 in /order-lab/Scanorders2/app/config/security.yml file was necessary to enable SSL, but everything should be done automatically now and is controlled via the "Connection Channel" variable in Site Settings being set to either “https” or "http".
 
