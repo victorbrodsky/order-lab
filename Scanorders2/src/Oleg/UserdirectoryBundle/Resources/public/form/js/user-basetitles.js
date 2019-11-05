@@ -135,7 +135,7 @@ function getBaseTitleForm( elclass ) {
     return newForm;
 }
 
-function removeExistingObject(btn,classname,id) {
+function removeExistingObject(btn,classname,confirmationMessage) {
 
     var btnEl = $(btn);
 
@@ -143,10 +143,16 @@ function removeExistingObject(btn,classname,id) {
         return;
     }
 
-    var r = confirm("Are you sure you want to remove this record?");
+    if( typeof confirmationMessage === 'undefined' ) {
+        confirmationMessage = "Are you sure you want to remove this record?";
+    }
+
+    //var r = confirm("Are you sure you want to remove this record?");
+    var r = confirm(confirmationMessage);
+
     if (r == true) {
         //for location only: check if this location is used by somewhere else
-        if( objectIsDeleteable(btn,classname,id) == false ) {
+        if( objectIsDeleteable(btn,classname) == false ) {
             return;
         }
     } else {
@@ -159,7 +165,7 @@ function removeExistingObject(btn,classname,id) {
     element.remove();
 }
 
-function objectIsDeleteable(btn,classname,id) {
+function objectIsDeleteable(btn,classname) {
     var btnEl = $(btn);
     var element = btnEl.closest('.'+classname);
     var idField = element.find('.user-object-id-field');
