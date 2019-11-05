@@ -188,6 +188,7 @@ Note: If you choose to use MySQL database on Linux instead of Postgres, you will
 
 	(a) Run /packer/deploy-order-digital-ocean.sh via the following command (make sure to substitute your API token, database user name, and the database password. If "dbusername" and "dbpassword" are not provided, the default "symfony"/"symfony" values are used.):
 
+		Ubuntu (--os is set to Unbuntu by default):
         bash deploy-order-digital-ocean.sh --token API-TOKEN-FROM-STEP-1 --parameters parameters.yml --dbuser dbusername --dbpass dbpassword
 		
 		Centos:
@@ -203,6 +204,7 @@ Note: If you choose to use MySQL database on Linux instead of Postgres, you will
 	
 	to generate the [Certificate Signing Request (CSR)](https://developers.google.com/web/fundamentals/security/encrypt-in-transit/enable-https)file, later used to obtain the SSL certificate file (www.example.com.crt) from your Certificate Authority. Once both the www.example.com.crt and the www.example.com.key files are in the /packer folder, run the following command in the terminal (make sure to substitute your API token (from step 1 above), database user name (such as "symfony"), the database password (such as "symfony"), your domain name (such as "example.com"), and the SSL certificate and private key file names below.):
 
+		Ubuntu (--os is set to Unbuntu by default):
         bash deploy-order-digital-ocean.sh --token API-TOKEN-FROM-STEP-1 --parameters parameters.yml --dbuser dbusername --dbpass dbpassword --protocol https --domainname example.com --sslcertificate www.example.com.crt --sslprivatekey www.example.com.key
 		
 		Centos:
@@ -210,6 +212,7 @@ Note: If you choose to use MySQL database on Linux instead of Postgres, you will
 		
 	(c) Obtain a domain name from a registrar (for example from [Google Domains](https://domains.google/#/)) if you don't have one already and follow these [instructions to add the nameservers of your Digital Ocean webhost](https://www.digitalocean.com/community/tutorials/how-to-point-to-digitalocean-nameservers-from-common-domain-registrars). It may take up to 48 hours for the domain name to start working. Run the following command in the terminal (make sure to substitute your API token, database user name, the database password, and your domain name (such as "example.com") instead of "example.com" below. If "dbusername" and "dbpassword" are not provided, the default "symfony"/"symfony" values are used.):
 
+		Ubuntu (--os is set to Unbuntu by default):
         bash deploy-order-digital-ocean.sh --token API-TOKEN-FROM-STEP-1 --parameters parameters.yml --dbuser dbusername --dbpass dbpassword --protocol http --domainname example.com
 
 		Centos:
