@@ -490,17 +490,19 @@ class CallEntryController extends Controller
         //exit('111');
         if( $sortBy ) {
             if( $sortBy == "sort-by-creation-date" ) {
-                //creation date correlates with message's ID. Also, message.orderdate can be used simultaneously.
+                //Sort by date of entry creation, latest first (default)
+                //list ordered by submission date of the first version of the entries
+                //Creation date correlates with the original message's ID (oid).
+                $dql->orderBy("message.oid","DESC");
+            }
+            if( $sortBy == "sort-by-latest-edit-date" ) {
+                //Sort by date of latest edit, latest first
+                //Latest edit date correlates with the current message's ID (oid). Also, message's orderdate can be used simultaneously.
                 //$dql->orderBy("message.id","DESC");
                 $dql->orderBy("message.orderdate","DESC");
             }
-            if( $sortBy == "sort-by-latest-edit-date" ) {
-                //default:
-                //list ordered by submission date of the first version of the entries
-                $dql->orderBy("message.oid","DESC");
-            }
         } else {
-            $dql->orderBy("message.id","DESC");
+            $dql->orderBy("message.oid","DESC");
         }
 
         $dql->addOrderBy("editorInfos.modifiedOn","DESC");
