@@ -187,3 +187,6 @@ http://www.postgresqltutorial.com/import-csv-file-into-posgresql-table/
 #Commercial tool $149
 #https://www.postgresql.org/download/products/1-administrationdevelopment-tools/
 #https://dbconvert.com/mssql/postgresql/
+
+#Copy: pgAdmin GUI -> import => ERROR:  syntax error at or near "OIDS" LINE 1: ...canonical, notificationemailuser_id ) FROM STDIN  OIDS  DELI...
+
