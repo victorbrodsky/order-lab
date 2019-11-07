@@ -183,10 +183,30 @@ pgloader mssql://symfony2@157.139.46.96/ScanOrder postgresql://symfony:symfony@1
 https://stackoverflow.com/questions/2987433/how-to-import-csv-file-data-into-a-postgresql-table
 http://www.postgresqltutorial.com/import-csv-file-into-posgresql-table/
 
+php bin/console doctrine:database:drop --force
+php bin/console doctrine:database:create
+php bin/console doctrine:schema:update --force
 
 #Commercial tool $149
 #https://www.postgresql.org/download/products/1-administrationdevelopment-tools/
 #https://dbconvert.com/mssql/postgresql/
 
 #Copy: pgAdmin GUI -> import => ERROR:  syntax error at or near "OIDS" LINE 1: ...canonical, notificationemailuser_id ) FROM STDIN  OIDS  DELI...
+"C:\\Program Files (x86)\\pgAdmin 4\\v4\\runtime\\psql.exe" --command " "\\copy public.user_fosuser (id, keytype, preferences_id, credentials_id, avatar_id, author_id, username, username_canonical, enabled, salt, password, last_login) FROM 'C:\Users\ch3\Documents\MyDocs\WCMC\Migration\cvs\fos_user_test.csv' CSV QUOTE '\"' ESCAPE '''';""
+"C:\\Program Files (x86)\\pgAdmin 4\\v4\\runtime\\psql.exe" --command " "\\copy public.user_fosuser (id, username, username_canonical) FROM 
+'C:\Users\ch3\Documents\MyDocs\WCMC\Migration\cvs\fos_user_test.csv' DELIMITER ',' CSV QUOTE '\"' ESCAPE '''';""
+COPY user_fosuser FROM 'C:\Users\ch3\Documents\MyDocs\WCMC\Migration\cvs\fos_user_test.csv';
+
+INSERT INTO public.user_fosuser(id, username, username_canonical,enabled,password,roles,primarypublicuserid)
+VALUES (1, 'system', 'system',TRUE,'','a:0:{}','system');
+
+#Copy from console on digitalocean side:
+1) upload csv file to digitalocean server
+2) psql -d scanorder -U symfony (EXIT \q)
+
+#COPY trip.test(VendorID int,passenger_count int) FROM '/home/Documents/trip.csv' DELIMITER ',' CSV HEADER;
+#COPY zip_codes FROM '/path/to/csv/ZIP_CODES.txt' WITH (FORMAT csv);
+3)COPY user_fosuser(id,username,username_canonical,enabled,password,roles,primarypublicuserid) FROM '/usr/local/bin/order-lab/temp/fos_user_test.csv' DELIMITER ',' CSV HEADER;
+COPY user_fosuser FROM '/usr/local/bin/order-lab/temp/fos_user_test.csv' DELIMITER ',' CSV HEADER;
+COPY user_fosuser FROM '/usr/local/bin/order-lab/temp/fos_user_test_int.csv' DELIMITER ',' CSV HEADER;
 
