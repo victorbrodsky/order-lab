@@ -232,3 +232,4 @@ Sent a question to tech support.
 
 Ispirer:
 Can not connect to the specifica DB (Choose the specific DB in options) - Looks OK
+Install psql.exe for import
