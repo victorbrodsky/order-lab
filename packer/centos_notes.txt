@@ -31,6 +31,7 @@ List Databases: \l
 SELECT version();
 Server version: pg_config --version
 Client version: psql --version
+SELECT * FROM public.user_fosuser;
 
 Apache: /etc/httpd/
 
@@ -220,3 +221,14 @@ Working: https://www.spectralcore.com/fullconvert
 COPY user_fosuser FROM '/usr/local/bin/order-lab/temp/fos_user_test.csv' DELIMITER ',' CSV HEADER;
 COPY user_fosuser FROM '/usr/local/bin/order-lab/temp/fos_user_test_int.csv' DELIMITER ',' CSV HEADER;
 
+
+
+
+IntellegentConverter:
+[dbo].[calllog_calllogentrymessage_document]: 
+Cannot create table: CREATE TABLE "dbo"."calllog_calllogentrymessage_document" ("message_id" INTEGER NOT NULL, "document_id" INTEGER NOT NULL) WITH OIDS. 
+ERROR:  syntax error at or near "OIDS" LINE 1: ... INTEGER NOT NULL, "document_id" INTEGER NOT NULL) WITH OIDS  
+Sent a question to tech support.
+
+Ispirer:
+Can not connect to the specifica DB (Choose the specific DB in options) - Looks OK
