@@ -209,7 +209,7 @@ INSERT INTO public.user_fosuser(
 https://wiki.postgresql.org/wiki/Microsoft_SQL_Server_to_PostgreSQL_Migration_by_Ian_Harding
 List all migrations: https://wiki.postgresql.org/wiki/Converting_from_other_Databases_to_PostgreSQL
 Working: https://www.spectralcore.com/fullconvert
-
+Migrating from MSSQL to PostgreSQL - What You Should Know: https://severalnines.com/database-blog/migrating-mssql-postgresql-what-you-should-know
 
 #Copy from console on digitalocean side:
 1) upload csv file to digitalocean server
@@ -231,5 +231,12 @@ ERROR:  syntax error at or near "OIDS" LINE 1: ... INTEGER NOT NULL, "document_i
 Sent a question to tech support.
 
 Ispirer:
-Can not connect to the specifica DB (Choose the specific DB in options) - Looks OK
-Install psql.exe for import
+https://www.ispirer.com/products/sql-server-to-postgresql-migration
+Can not connect to the specifica DB:
+Choose the specific DB in options: Create a new data source to SQL Server->"Change the default databse to:") - Looks OK
+Install psql.exe for import (https://www.enterprisedb.com/thank-you-downloading-postgresql?anid=1256972)
+
+TODO:
+1)Try Management Studio again now when PostgreSQL is installed on Collage
+2) Try https://severalnines.com/database-blog/migrating-mssql-postgresql-what-you-should-know (Pgloader)
+
