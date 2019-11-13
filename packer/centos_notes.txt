@@ -138,6 +138,16 @@ Driver={PostgreSQL Unicode};Server=167.71.175.216;Port=5432;Database=scanorder;U
 Driver={PostgreSQL Unicode};Server=167.71.175.216;Port=5432;Database=scanorder;UID=symfony;PWD=symfony;DSN=PostreSQL35W
 
 Driver={PostgreSQL Unicode};Server=167.71.169.61;Port=5432;Database=scanorder;UID=symfony;PWD=symfony;DSN=PostreSQL35W
+Driver={PostgreSQL ODBC Driver(ANSI)};Server=167.71.175.216;Port=5432;Database=scanorder;UID=symfony;PWD=symfony;DSN=PostreSQL30
+Driver={PostgreSQL ODBC Driver(ANSI)};Server=127.0.0.1;Port=5432;Database=scanorder;UID=postgres;PWD=postgres;DSN=PostreSQL30
+Driver={PostgreSQL ODBC Driver(UNICODE)};Server=127.0.0.1;Port=5432;Database=scanorder;UID=postgres;PWD=postgres;DSN=PostreSQL30W;Trusted_Connection=Yes
+DRIVER={PostgreSQL ODBC Driver(UNICODE)}
+DRIVER=PostgreSQL ODBC Driver(UNICODE);SERVER=localhost;DATABASE=scanorder;Trusted_Connection=Yes;DSN=TestPostgreSQLODBC.dsn
+Driver={PostgreSQL ODBC Driver(UNICODE)};Server=127.0.0.1;Port=5432;Database=scanorder;UID=postgres;PWD=postgres;DSN=PostreSQL35W
+Driver={PostgreSQL ODBC Driver(ANSI)};Server=127.0.0.1;Port=5432;Database=scanorder;UID=postgres;PWD=postgres;DSN=PostreSQL30
+Driver=PostgreSQL Unicode;Server=127.0.0.1;Port=5432;Database=scanorder;UID=postgres;PWD=postgres;DSN=PostreSQL35W32
+Please enable XA transaction in MSDTC: https://www.ibm.com/support/knowledgecenter/SSFTBX_8.5.5/com.ibm.wbpm.imuc.sbpm.doc/topics/db_xa_typ_nd_sol.html
+
 
 To remotely connect: in pg_hba.conf allow connection by all users to all databases from any IP if the 
 user has right MD5-encrypted password by adding the following line:
@@ -238,5 +248,7 @@ Install psql.exe for import (https://www.enterprisedb.com/thank-you-downloading-
 
 TODO:
 1)Try Management Studio again now when PostgreSQL is installed on Collage
+https://docs.microsoft.com/en-us/sql/integration-services/import-export-data/connect-to-a-postgresql-data-source-sql-server-import-and-export-wizard?view=sql-server-2017
+
 2) Try https://severalnines.com/database-blog/migrating-mssql-postgresql-what-you-should-know (Pgloader)
 

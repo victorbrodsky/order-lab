@@ -1,0 +1,32 @@
+List all migrations: https://wiki.postgresql.org/wiki/Converting_from_other_Databases_to_PostgreSQL
+
+1) Using MSSQL Management Studio:
+https://stackoverflow.com/questions/1370326/migrate-data-from-ms-sql-to-postgresql/50919468#50919468
+Driver={PostgreSQL ODBC Driver(UNICODE)};Server=127.0.0.1;Port=5432;Database=scanorder;UID=postgres;PWD=postgres;DSN=PostreSQL35W
+Driver={PostgreSQL ODBC Driver(ANSI)};Server=127.0.0.1;Port=5432;Database=scanorder;UID=postgres;PWD=postgres;DSN=PostreSQL30
+Driver=PostgreSQL Unicode;Server=127.0.0.1;Port=5432;Database=scanorder;UID=postgres;PWD=postgres;DSN=PostreSQL35W32
+Error: server export wizard error IM002 ODBC Driver Manager data source name not found and no default driver specified
+
+2) Using csv.
+Problem: only one table at a time, must fix lots of incompatibility issues (https://severalnines.com/database-blog/migrating-mssql-postgresql-what-you-should-know)
+
+3) pgloader (https://github.com/dimitri/pgloader)
+Collage: 157.139.46.96
+  from mssql://user@host/dbname
+  into postgresql:///dbname postgresql://postgres:pssword@servername:5432/mydb
+pgloader mssql://symfony2@157.139.46.96/ScanOrder mssql://symfony2:symfony2@157.139.46.96:5432/scanorder
+pgloader mssql://symfony2:symfony2@157.139.46.96:1433/scanorder postgresql:///scanorder
+Running: pgloader -v "mssql://symfony2:symfony2@157.139.46.96/ScanOrder" "postgres://symfony:symfony@127.0.0.1/scanorder"
+Problem: ERROR msql: Failed to connect to mssql at "a57.139.46.96" (port 1433) as user "symfony2": Connection to database failed for uknown reason.
+
+4) DBConvert ($149): https://dbconvert.com/mssql/postgre/
+a) DBConvert -> Error: Database can not be converted correctly. Foreign keys problem.
+b) DBSync -> running for couple hours so far
+
+5) IntellegentConverter $49 (https://www.convert-in.com/software.htm):
+Problem: Cannot create table with OIDS
+
+6) Ispirer (4,065.00 USD!)
+
+7) Full Convert $699 with 60 day money-back guarantee (https://www.spectralcore.com/order/fc-ent)
+No problems
