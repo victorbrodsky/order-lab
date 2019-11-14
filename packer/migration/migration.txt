@@ -20,11 +20,15 @@ Running: pgloader -v "mssql://symfony2:symfony2@157.139.46.96/ScanOrder" "postgr
 Problem: ERROR msql: Failed to connect to mssql at "a57.139.46.96" (port 1433) as user "symfony2": Connection to database failed for uknown reason.
 
 4) DBConvert ($149): https://dbconvert.com/mssql/postgre/
-a) DBConvert -> Error: Database can not be converted correctly. Foreign keys problem.
+a) DBConvert -> Error: Database can not be converted correctly. Foreign keys problem ("Error! Some fields, indexes or foreign keys have too long name.").
 b) DBSync -> running for couple hours so far
 
 5) IntellegentConverter $49 (https://www.convert-in.com/software.htm):
 Problem: Cannot create table with OIDS
+Problem "Overwrite the entire database": "ERROR" cannot drop the currently open database". 
+Solution: Try to terminate all processes that work with the database using this statement:  
+SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'scanorder' 
+sudo -Hiu postgres psql -c "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'scanorder'"
 
 6) Ispirer (4,065.00 USD!)
 

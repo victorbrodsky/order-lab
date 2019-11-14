@@ -184,6 +184,7 @@ echo -e ${COLOR} Install pgloader ${NC}
 	git clone https://github.com/dimitri/pgloader.git
 	cd pgloader
 	chmod +x ./bootstrap-centos7.sh
+	chmod -R 0777 /usr/local/bin/temp
 	sudo ./bootstrap-centos7.sh
 	make pgloader
 
