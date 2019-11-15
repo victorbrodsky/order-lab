@@ -176,6 +176,20 @@ https://www.youtube.com/watch?v=5eF9_UB73TI
 https://github.com/dimitri/pgloader
 pgloader mysql://mysql_username:password@mysql_server_ip_/source_database_name?option_1=value&option_n=value postgresql://postgresql_role_name:password@postgresql_server_ip/target_database_name?option_1=value&option_n=value
 pgloader psql://symfony:symfony@mysql_server_ip_/source_database_name?option_1=value&option_n=value postgresql://postgresql_role_name:password@postgresql_server_ip/target_database_name?option_1=value&option_n=value
+Installation problem via VPN:
+xits-po-order-dev1
+150521.7.1
+ITS - Weill Medical College of Cornell University
+-=[ Unauthorized Use Prohibited ]=-
+-=[ All Connections Are Logged  ]=-
+You are attempting to access a system with confidential data. 
+This system is provided only for authorized use. 
+If you do not have appropriate permissions, you should not proceed. 
+By logging in, you acknowledge your understanding that system access is monitored for compliance with federal and/or state laws and regulations. 
+Inappropriate access may result in sanctions up to and including suspension, termination, or criminal penalties.
+
+
+
 
 echo -e ${COLOR} Install pgloader ${NC}
 	#yum install -y pgloader

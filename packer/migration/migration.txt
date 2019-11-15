@@ -34,6 +34,7 @@ sudo -Hiu postgres psql -c "SELECT pg_terminate_backend(pid) FROM pg_stat_activi
 
 7) Full Convert $699 with 60 day money-back guarantee (https://www.spectralcore.com/order/fc-ent)
 No problems
+Migration problem1: "There was a fatal error. Creating foreign keys 42703: column defs.adscr does not exist. Conversion aborted!"
 "Demo" problems:
 1) TableNotFoundException: "An exception occurred while executing 'SELECT NEXTVAL('user_logger_id_seq')'
 ERROR:  relation "user_logger_id_seq" does not exist LINE 1: SELECT NEXTVAL('user_logger_id_seq') 
@@ -55,4 +56,4 @@ Solution: https://stackoverflow.com/questions/45648139/unable-to-insert-data-int
 
 2) SQLSTATE[42703]: Undefined column: 7 ERROR:  column "min_value" does not exist
 LINE 1: SELECT min_value, increment_by FROM "oc_activity_mq_mail_id_...
-https://github.com/nextcloud/server/issues/5930
+Change _getPortableSequenceDefinition https://github.com/nextcloud/server/issues/5930

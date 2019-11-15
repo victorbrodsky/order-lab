@@ -11,9 +11,11 @@ namespace Oleg\UserdirectoryBundle\Controller;
 
 use Doctrine\DBAL\Schema\PostgreSqlSchemaManager as PostgreSqlSchemaManagerBaseController;
 
+//NOT USED
+//Override
 class PostgreSqlSchemaManager extends PostgreSqlSchemaManagerBaseController
 {
-    
+
     /**
      * {@inheritdoc}
      */
