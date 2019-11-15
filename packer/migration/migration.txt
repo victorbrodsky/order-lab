@@ -34,3 +34,25 @@ sudo -Hiu postgres psql -c "SELECT pg_terminate_backend(pid) FROM pg_stat_activi
 
 7) Full Convert $699 with 60 day money-back guarantee (https://www.spectralcore.com/order/fc-ent)
 No problems
+"Demo" problems:
+1) TableNotFoundException: "An exception occurred while executing 'SELECT NEXTVAL('user_logger_id_seq')'
+ERROR:  relation "user_logger_id_seq" does not exist LINE 1: SELECT NEXTVAL('user_logger_id_seq') 
+[2019-11-15 15:30:04] request.CRITICAL: Uncaught PHP Exception Doctrine\DBAL\Exception\TableNotFoundException: 
+"An exception occurred while executing 'SELECT NEXTVAL('user_logger_id_seq')':  SQLSTATE[42P01]: 
+Undefined table: 7 ERROR:  relation "user_logger_id_seq" does not exist LINE 1: SELECT NEXTVAL('user_logger_id_seq')                        ^" 
+at /usr/local/bin/order-lab/Scanorders2/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/AbstractPostgreSQLDriver.php line 75 
+{"exception":"[object] (Doctrine\\DBAL\\Exception\\TableNotFoundException(code: 0): 
+An exception occurred while executing 'SELECT NEXTVAL('user_logger_id_seq')':\n\nSQLSTATE[42P01]: 
+Undefined table: 7 ERROR:  relation \"user_logger_id_seq\" does not exist\nLINE 1: 
+SELECT NEXTVAL('user_logger_id_seq')\n                       ^ 
+at /usr/local/bin/order-lab/Scanorders2/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/AbstractPostgreSQLDriver.php:75, 
+Doctrine\\DBAL\\Driver\\PDOException(code: 42P01): SQLSTATE[42P01]: Undefined table: 7 ERROR:  relation \"user_logger_id_seq\" 
+does not exist\nLINE 1: SELECT NEXTVAL('user_logger_id_seq')\n                       ^ 
+at /usr/local/bin/order-lab/Scanorders2/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDOConnection.php:106, PDOException(code: 42P01): 
+SQLSTATE[42P01]: Undefined table: 7 ERROR:  relation \"user_logger_id_seq\" does not exist\nLINE 1: SELECT NEXTVAL('user_logger_id_seq')\n                       ^ 
+at /usr/local/bin/order-lab/Scanorders2/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDOConnection.php:104)"} []
+Solution: https://stackoverflow.com/questions/45648139/unable-to-insert-data-into-postgresql-in-symfony-with-complex-relation
+
+2) SQLSTATE[42703]: Undefined column: 7 ERROR:  column "min_value" does not exist
+LINE 1: SELECT min_value, increment_by FROM "oc_activity_mq_mail_id_...
+https://github.com/nextcloud/server/issues/5930

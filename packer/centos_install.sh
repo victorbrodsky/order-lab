@@ -1,9 +1,16 @@
 #!/bin/bash
 # CentOs installation script (Rhel 7, PHP 7.2, Postgresql)
-
 echo @### Get bash_dbuser bash_dbpass ###
 #bashdbuser=$1
 #bashdbpass=$2
+if [ -z "$bashdbuser" ]
+  then 	
+    bashdbuser=$1
+fi
+if [ -z "$bashdbpass" ]
+  then 	
+    bashdbpass=$2
+fi
 echo bashdbuser=$bashdbuser
 echo bashdbpass=$bashdbpass
 
@@ -334,18 +341,6 @@ f_install_order () {
 	echo -e ${COLOR} sudo chown -R apache:apache /usr/local/bin/order-lab ${NC}
 	sudo chown -R apache:apache /usr/local/bin/order-lab
 	
-	echo -e ${COLOR} Install pgloader ${NC}
-	#yum install -y pgloader
-	sudo mkdir /usr/local/bin/temp
-	sudo chown -R apache:apache /usr/local/bin/temp
-	cd /usr/local/bin/temp
-	git clone https://github.com/dimitri/pgloader.git
-	cd pgloader
-	chmod +x ./bootstrap-centos7.sh
-	sudo ./bootstrap-centos7.sh
-	make pgloader
-	cd /usr/local/bin/
-	
 	#chown -R apache:apache /usr/local/bin/order-lab/Scanorders2/var/cache
 	#chown -R apache:apache /usr/local/bin/order-lab/Scanorders2/var/logs
 	
@@ -413,7 +408,19 @@ f_install_prepare
 
 
 
-
+f_install_pgloader () {
+	echo -e ${COLOR} Install pgloader ${NC}
+	#yum install -y pgloader
+	sudo mkdir /usr/local/bin/temp
+	sudo chown -R apache:apache /usr/local/bin/temp
+	cd /usr/local/bin/temp
+	git clone https://github.com/dimitri/pgloader.git
+	cd pgloader
+	chmod +x ./bootstrap-centos7.sh
+	sudo ./bootstrap-centos7.sh
+	make pgloader
+	cd /usr/local/bin/
+}
 
 
 f_install_php72_ORIG () {
