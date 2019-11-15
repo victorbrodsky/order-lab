@@ -242,6 +242,15 @@ f_install_php56 () {
 	#echo "Enable remi and Install php 5.6 on Centos 7"
 	#sudo yum -y --enablerepo=remi,remi-php56 install php-cli php-pear php-pdo php-mysql php-mysqlnd php-pgsql php-sqlite php-gd php-mbstring php-mcrypt php-xml php-simplexml php-curl php-zip
 	
+	#Install php 5.6 on Rhel 7
+	#https://docs.nextcloud.com/server/13.0.0/admin_manual/installation/php_56_installation.html
+	#1) subscription-manager repos --enable rhel-server-rhscl-7-eus-rpms
+	#2) yum install rh-php56 rh-php56-php rh-php56-php-gd rh-php56-php-mbstring
+	#3) sudo yum install rh-php56-php-pgsql
+	#4) cp /opt/rh/httpd24/root/etc/httpd/conf.d/rh-php56-php.conf /etc/httpd/conf.d/
+	#   cp /opt/rh/httpd24/root/etc/httpd/conf.modules.d/10-rh-php56-php.conf /etc/httpd/conf.modules.d/
+	#   cp /opt/rh/httpd24/root/etc/httpd/modules/librh-php56-php5.so /etc/httpd/modules/
+	
 	# Restart Apache
     sudo systemctl restart httpd.service
 	
