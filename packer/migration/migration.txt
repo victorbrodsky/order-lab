@@ -18,7 +18,9 @@ pgloader mssql://symfony2@157.139.46.96/ScanOrder mssql://symfony2:symfony2@157.
 pgloader mssql://symfony2:symfony2@157.139.46.96:1433/scanorder postgresql:///scanorder
 Running: pgloader -v "mssql://symfony2:symfony2@157.139.46.96/ScanOrder" "postgres://symfony:symfony@127.0.0.1/scanorder"
 Problem: ERROR msql: Failed to connect to mssql at "a57.139.46.96" (port 1433) as user "symfony2": Connection to database failed for uknown reason.
-pgloader -v "mssql://symfony2:symfony2@157.139.46.96/ScanOrder" "postgres://postgres:postgres@157.139.46.96/scanorder6"
+pgloader -v "mssql://symfonyc:symfonyc@157.139.46.96/ScanOrder" "postgres://postgres:postgres@157.139.46.96/scanorder6"
+Collage DB: pgloader -v "mssql://symfonyc:symfonyc@157.139.46.96/ScanOrder" "postgres://postgres:postgres@167.71.169.61/scanorder10"
+Fix stack: batch size = 40MB did it for me as well. I also lowered it to concurrency = 1 just to be safe
 
 4) DBConvert ($149): https://dbconvert.com/mssql/postgre/
 a) DBConvert -> Error: Database can not be converted correctly. Foreign keys problem ("Error! Some fields, indexes or foreign keys have too long name.").
@@ -57,6 +59,7 @@ Solution: https://stackoverflow.com/questions/45648139/unable-to-insert-data-int
 
 8) Migrate2Postgres
 JDBC driver: CLASSPATH =.;C:\Program Files\Microsoft JDBC Driver 7.4 for SQL Server\Microsoft JDBC Driver 7.4 for SQL Server\sqljdbc_7.4\enu\mssql-jdbc-7.4.1.jre8.jar
+Problem: Primary and foreign keys are not generated.
 
 2) SQLSTATE[42703]: Undefined column: 7 ERROR:  column "min_value" does not exist
 LINE 1: SELECT min_value, increment_by FROM "oc_activity_mq_mail_id_...
