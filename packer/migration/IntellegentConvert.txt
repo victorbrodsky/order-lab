@@ -1,0 +1,3 @@
+Problem:
+1) oid generated as oid00000
+2) schema update: ALTER INDEX idx_92429f1e63b59e5c RENAME TO IDX_EA22B84E63B59E5C; => relation idx_92429f1e63b59e5c does not exist
