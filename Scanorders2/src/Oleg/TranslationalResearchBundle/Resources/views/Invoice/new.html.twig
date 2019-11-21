@@ -114,6 +114,10 @@
             {{ transres.userInfo(form.salesperson,form.vars.value.salesperson,cycle,'left') }}
         {% endif %}
 
+        {% if form.submitter is defined %}
+            {{ transres.userInfo(form.submitter,form.vars.value.submitter,cycle,'left') }}
+        {% endif %}
+
         <hr />
 
         {#{% if form.documents is defined %}#}

@@ -60,7 +60,8 @@
                 Due Date: {{ invoice.dueDate|date("m/d/Y",false) }}
             </p>
             <p>
-                Salesperson: {{ invoice.salesperson.getUsernameOptimal() }}
+                {#Salesperson: {{ invoice.salesperson.getUsernameOptimal() }}#}
+                Requester: {{ invoice.submitter.getUsernameOptimal() }}
             </p>
             <p>
                 Status: {{ invoice.status }}

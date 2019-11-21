@@ -118,10 +118,10 @@ class InvoiceType extends AbstractType
             },
         ));
 
-        if(0) {
+        if(1) {
             $builder->add('submitter', EntityType::class, array(
                 'class' => 'OlegUserdirectoryBundle:User',
-                'label' => "Submitter:",
+                'label' => "Submitter (will be shown in the invoice PDF as Requester):",
                 'disabled' => true,
                 'required' => false,
                 'multiple' => false,
