@@ -1,3 +1,10 @@
-Problem:
+After migration:
+Update site parameters.
+/usr/local/bin/order-lab/Scanorders2/src/Oleg/FellAppBundle/Util/FellowshipApplication-f1d9f98353e5.p12
+
+Issues:
 1) oid generated as oid00000
 2) schema update: ALTER INDEX idx_92429f1e63b59e5c RENAME TO IDX_EA22B84E63B59E5C; => relation idx_92429f1e63b59e5c does not exist
+
+
+

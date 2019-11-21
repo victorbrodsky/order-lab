@@ -346,6 +346,7 @@ f_install_order () {
 	
 	#echo -e ${COLOR} sudo chown -R www-data:www-data /usr/local/bin/order-lab ${NC}
 	#sudo chown -R www-data:www-data /usr/local/bin/order-lab
+	#sudo chown -R nobody:nobody /usr/local/bin/order-lab 
 	
 	echo -e ${COLOR} sudo chown -R apache:apache /usr/local/bin/order-lab ${NC}
 	sudo chown -R apache:apache /usr/local/bin/order-lab
@@ -373,6 +374,8 @@ f_install_prepare () {
 	echo -e ${COLOR} Copy php.ini to /etc/ ${NC}
 	cp /etc/php.ini /etc/php_ORIG.ini
 	yes | cp /usr/local/bin/order-lab/packer/php.ini /etc/
+	#Rhel7: /etc/opt/rh/rh-php56/php.ini /opt/rh/rh-php56/register.content/etc/opt/rh/rh-php56/php.ini
+	#cp /etc/php.ini /etc/php_ORIG.ini
 	
 	#sudo service apache2 restart
 	sudo systemctl restart httpd.service
