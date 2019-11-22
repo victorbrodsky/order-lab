@@ -4,6 +4,11 @@ Update site parameters.
 
 Issues:
 1) oid generated as oid00000
+ALTER TABLE transres_invoice RENAME COLUMN oid00000 TO oid;
+ALTER TABLE scan_message RENAME COLUMN oid00000 TO oid;
+ALTER TABLE transres_project RENAME COLUMN oid00000 TO oid;
+ALTER TABLE transres_request RENAME COLUMN oid00000 TO oid;
+
 2) schema update: ALTER INDEX idx_92429f1e63b59e5c RENAME TO IDX_EA22B84E63B59E5C; => relation idx_92429f1e63b59e5c does not exist
 
 
