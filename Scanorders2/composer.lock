@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "62144bd34c431664a7f9c3c84dfb3ace",
+    "content-hash": "1d8d887da41518dcd2fa85b91d522846",
     "packages": [
         {
             "name": "adesigns/calendar-bundle",
