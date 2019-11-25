@@ -28,6 +28,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 //This list has a link to the patient list (i.e. PathologyCallComplexPatients) via entityNamespace, entityName, entityId
 
+//      name="scan_patientListHierarchy",
+//*     indexes={
+//*         @ORM\Index( name="patientListHierarchy_name_idx", columns={"name"} ),
+// *    }
+
 /**
  * Use Composite pattern:
  * The composite pattern describes that a group of objects is to be treated in the same
@@ -39,10 +44,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @Gedmo\Tree(type="nested")
  * @ORM\Entity(repositoryClass="Oleg\UserdirectoryBundle\Repository\TreeRepository")
  * @ORM\Table(
- *  name="scan_patientListHierarchy",
- *  indexes={
- *      @ORM\Index( name="patientListHierarchy_name_idx", columns={"name"} ),
- *  }
+ *  name="scan_patientListHierarchy"
  * )
  */
 class PatientListHierarchy extends BaseCompositeNode {
