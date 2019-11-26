@@ -28,8 +28,8 @@ class PostgresMigration extends AbstractMigration
 
     }
 
-
-    public function addSql( $sql ) {
+    //addSql($sql, array $params = Array, array $types = Array)
+    public function addSql( $sql, $params = null, array $types = null ) {
         //wrapper for addSql
         if( strpos($sql, ' ADD PRIMARY KEY ') !== false ) {
             return false;
