@@ -41,7 +41,7 @@ class PostgresMigration extends AbstractMigration
             //it's ok to rename with 5 zeros '00000': ALTER INDEX idx_c6f1cf80537a132900000 RENAME TO IDX_C6F1CF80537A1329
             if( strpos($sql, '00000') !== false ) {
                 //has 00000
-                $this->addSql($sql);
+                $this->addParentSql($sql);
                 return false;
             } else {
                 //does not have 00000
@@ -55,7 +55,11 @@ class PostgresMigration extends AbstractMigration
             return false;
         }
 
-        $this->addSql($sql);
+        $this->addParentSql($sql);
+    }
+
+    public function addParentSql($sql) {
+        parent::addSql($sql);
     }
 
 
