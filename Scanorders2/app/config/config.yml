@@ -1,6 +1,7 @@
 imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
+    - { resource: doctrine_migrations.yml }
     - { resource: "@OlegUserdirectoryBundle/Resources/config/services.yml" }
     - { resource: "@OlegOrderformBundle/Resources/config/services.yml" }
     - { resource: "@OlegFellAppBundle/Resources/config/services.yml" }

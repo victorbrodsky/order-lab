@@ -57,6 +57,7 @@ class AppKernel extends Kernel
             new FOS\CommentBundle\FOSCommentBundle(),
             new JMS\SerializerBundle\JMSSerializerBundle($this),
             //new Cert\LetsEncryptBundle\CertLetsEncryptBundle(),
+            new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
 
             new Bmatzner\FontAwesomeBundle\BmatznerFontAwesomeBundle(),
 
