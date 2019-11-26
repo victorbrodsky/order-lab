@@ -28,16 +28,40 @@ class PostgresMigration extends AbstractMigration
 
     }
 
-    public function processSql( $sql ) {
+    public function indexExists($sql,$schema) {
+
+        $index = null;
+
+        //DROP INDEX idx_d267b39c33f7837
+        $sqlArr = explode(" ",$sql);
+
+        if( strpos($sql, 'DROP INDEX ') !== false ) {
+            if( count($sqlArr) == 3 ) {
+                $index = $sqlArr[2];
+            }
+        }
+
+        //ALTER INDEX idx_15b668721aca1422 RENAME TO IDX_5AFC0F4BCD46F646
+
+        //ALTER TABLE calllog_calllogentrymessage_document ADD PRIMARY KEY (message_id, document_id)
+
+        if (!$schema->getTable('your_table')->hasColumn('your_column')) {
+            // do your code
+        }
+    }
+
+    //TODO: Skip a statement in a Doctrine migration if a index is present
+    //https://stackoverflow.com/questions/49897499/skip-a-statement-in-a-doctrine-migration-if-a-column-is-present
+    public function processSql( $schema, $sql ) {
         //wrapper for processSql
 
         //An exception occurred while executing 'DROP INDEX "primary"':
-//        if( $sql == 'DROP INDEX "primary"' ) {
-//            return false;
-//        }
-        if( strpos($sql, 'DROP INDEX ') !== false && strpos($sql, 'primary') !== false ) {
+        if( $sql == 'DROP INDEX "primary"' ) {
             return false;
         }
+//        if( strpos($sql, 'DROP INDEX ') !== false && strpos($sql, 'primary') !== false ) {
+//            return false;
+//        }
 
         if( strpos($sql, ' ADD PRIMARY KEY ') !== false ) {
             return false;
