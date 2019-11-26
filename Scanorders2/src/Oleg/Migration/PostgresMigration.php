@@ -13,7 +13,8 @@ use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 //In VersionYYYYMMDDHHMM.php
-//Rename after extends "AbstractMigration" to "PostgresMigration"
+//1) Add "use Oleg\Migration\PostgresMigration;"
+// rename after extends "AbstractMigration" to "PostgresMigration"
 class PostgresMigration extends AbstractMigration
 {
 
