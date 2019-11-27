@@ -41,7 +41,7 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
 
         $sqlIndex = null;
         $sqlArr = explode(" ",$sql);
-        $newline = "\n";
+        //$newline = "\n";
 
         //Case: DROP INDEX idx_d267b39c33f7837
         if( strpos($sql, 'DROP INDEX ') !== false ) {
@@ -101,10 +101,11 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
         foreach( $this->indexArr as $index=>$table ) {
             //echo $index->getName() . ': ' . ($index->isUnique() ? 'unique' : 'not unique') . "\n";
             if( $sqlIndex == $index ) {
-                echo $this->counter.": Index=".$sqlIndex." (".$table.") exists.".$newline;
+                echo $this->counter.": Found index=".$sqlIndex." (".$table.").".$newline;
                 return true;
             }
         }
+        echo $this->counter.": NotFound index=".$sqlIndex." (".$table.").".$newline;
         return false;
     }
     public function createIndexArr() {
@@ -141,7 +142,7 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
 
         //Always skip: An exception occurred while executing 'DROP INDEX "primary"':
         if( $sql == 'DROP INDEX "primary"' ) {
-            echo $this->counter.":###Ignore ".$sql.$newline;
+            echo $this->counter.":###Ignore1 ".$sql.$newline;
             return FALSE;
         }
 //        if( strpos($sql, 'DROP INDEX ') !== false && strpos($sql, 'primary') !== false ) {
@@ -150,7 +151,7 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
 
         //Always skip: Primary keys are already exists
         if( strpos($sql, ' ADD PRIMARY KEY ') !== FALSE ) {
-            echo $this->counter.":###Ignore ".$sql.$newline;
+            echo $this->counter.":###Ignore2 ".$sql.$newline;
             return FALSE;
         }
 
@@ -161,7 +162,7 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
             }
 
             if( $this->indexExists($sql) === FALSE ) {
-                echo $this->counter.":###Ignore " . $sql . $newline;
+                echo $this->counter.":###Ignore3 " . $sql . $newline;
                 return FALSE;
             }
         } else {
@@ -175,7 +176,7 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
                     return FALSE;
                 } else {
                     //does not have 00000
-                    echo $this->counter.":###Ignore " . $sql . $newline;
+                    echo $this->counter.":###Ignore4 " . $sql . $newline;
                     return FALSE;
                 }
             }
@@ -186,8 +187,22 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
             }
         }
 
+        echo $this->counter.": Process sql=".$sql.$newline;
         $this->addSql($sql);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     //addSql($sql, array $params = Array, array $types = Array)
