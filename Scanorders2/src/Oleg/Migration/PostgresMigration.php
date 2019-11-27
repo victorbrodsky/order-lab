@@ -15,7 +15,7 @@ use Doctrine\DBAL\Schema\Schema;
 //In VersionYYYYMMDDHHMM.php
 //1) Add "use Oleg\Migration\PostgresMigration;"
 //2) Rename after extends "AbstractMigration" to "PostgresMigration"
-//3) Rename [addSql] to [processSql($schema,]
+//3) Rename [addSql(] to [processSql($schema,]
 class PostgresMigration extends AbstractMigration
 {
 
@@ -67,10 +67,11 @@ class PostgresMigration extends AbstractMigration
         return $this->indexExistsSimple($sqlIndex,$schema);
     }
     public function indexExistsSimple($sqlIndex,$schema) {
-        $tables = $schema->listTables();
+        $sm = Schema::getConnection()->getDoctrineSchemaManager();
+        $tables = $sm->listTables();
         //ALTER INDEX idx_15b668721aca1422 RENAME TO IDX_5AFC0F4BCD46F646
         foreach ($tables as $table) {
-            $indexes = $schema->listTableIndexes($table->getName());
+            $indexes = $sm->listTableIndexes($table->getName());
             foreach ($indexes as $index) {
                 //echo $index->getName() . ': ' . ($index->isUnique() ? 'unique' : 'not unique') . "\n";
                 if( $sqlIndex == $index ) {
@@ -110,13 +111,12 @@ class PostgresMigration extends AbstractMigration
             return FALSE;
         }
 
-        if( $this->indexExists($sql,$schema) === FALSE ) {
-            echo "Ignore " . $sql . $newline;
-            return FALSE;
-        }
-
-        if(0) {
-            //TODO: Check if exists
+        if( $schema ) {
+            if( $this->indexExists($sql,$schema) === FALSE ) {
+                echo "Ignore " . $sql . $newline;
+                return FALSE;
+            }
+        } else {
             //ALTER INDEX idx_e573a753bdd0acfa RENAME TO IDX_6BE23A97726D9566
             if (strpos($sql, ' RENAME TO IDX_') !== FALSE) {
                 //has string
@@ -132,7 +132,6 @@ class PostgresMigration extends AbstractMigration
                 }
             }
 
-            //TODO: Check if exists
             //DROP INDEX IDX_22984163C33F7837
             if (strpos($sql, 'DROP INDEX IDX_') !== false) {
                 return false;
