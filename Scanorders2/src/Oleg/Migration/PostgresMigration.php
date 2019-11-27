@@ -14,7 +14,8 @@ use Doctrine\DBAL\Schema\Schema;
 
 //In VersionYYYYMMDDHHMM.php
 //1) Add "use Oleg\Migration\PostgresMigration;"
-// rename after extends "AbstractMigration" to "PostgresMigration"
+//2) Rename after extends "AbstractMigration" to "PostgresMigration"
+//3) Rename addSql to processSql
 class PostgresMigration extends AbstractMigration
 {
 
@@ -94,7 +95,7 @@ class PostgresMigration extends AbstractMigration
     //addSql($sql, array $params = Array, array $types = Array)
     //public function processSql( $sql, array $params = [], array $types = [] ) {
 
-    public function processSql111( $sql ) {
+    public function processSql_old( $sql ) {
         //wrapper for addSql
 
         //An exception occurred while executing 'DROP INDEX "primary"':
@@ -132,9 +133,6 @@ class PostgresMigration extends AbstractMigration
         $this->addSql($sql);
     }
 
-    public function addParentSql($sql) {
-        parent::addSql($sql);
-    }
 
 
 }
