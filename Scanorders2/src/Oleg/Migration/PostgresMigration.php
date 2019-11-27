@@ -156,16 +156,21 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
                 $this->createIndexArr();
             }
 
-            if( $this->indexExists($sql) === FALSE ) {
-
-                if( strpos($sql, 'CREATE UNIQUE INDEX ') !== FALSE ) {
-                    //exception: if index does not exists => create index
+            if( strpos($sql, 'CREATE UNIQUE INDEX ') !== FALSE ) {
+                //exception: if index does not exists => create index
+                if( $this->indexExists($sql) === FALSE ) {
+                    //index does not exists => ok create index
                 } else {
-                    echo $this->counter.":###Ignore3 " . $sql . $newline;
+                    echo $this->counter.":###Ignore3a " . $sql . $newline;
                     return FALSE;
                 }
-
+            } else {
+                if( $this->indexExists($sql) === FALSE ) {
+                    echo $this->counter.":###Ignore3b " . $sql . $newline;
+                    return FALSE;
+                }
             }
+
         } else {
             //ALTER INDEX idx_e573a753bdd0acfa RENAME TO IDX_6BE23A97726D9566
             if (strpos($sql, ' RENAME TO IDX_') !== FALSE) {
