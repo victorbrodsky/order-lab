@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 //In VersionYYYYMMDDHHMM.php
 //1) Add "use Oleg\Migration\PostgresMigration;"
 //2) Rename after extends "AbstractMigration" to "PostgresMigration"
-//3) Rename [addSql] to [processSql]
+//3) Rename [addSql] to [processSql] (sed -i -e "s/addSql/processSql/g" Version....php)
 class PostgresMigration extends AbstractMigration implements ContainerAwareInterface
 {
 
