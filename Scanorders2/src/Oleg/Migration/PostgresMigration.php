@@ -24,6 +24,7 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
 {
 
     private $container;
+    private $indexArr = array();
 
     public function setContainer(ContainerInterface $container = null)
     {
@@ -77,7 +78,7 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
 
         return $this->indexExistsSimple($sqlIndex);
     }
-    public function indexExistsSimple($sqlIndex) {
+    public function indexExistsSimpleFromScratch($sqlIndex) {
         $em = $this->container->get('doctrine.orm.entity_manager');
         $sm = $em->getConnection()->getSchemaManager();
 
@@ -94,6 +95,29 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
         }
         return false;
     }
+    public function indexExistsSimple($sqlIndex) {
+        foreach( $this->indexArr as $index=>$table ) {
+            //echo $index->getName() . ': ' . ($index->isUnique() ? 'unique' : 'not unique') . "\n";
+            if( $sqlIndex == $index ) {
+                return true;
+            }
+        }
+        return false;
+    }
+    public function createIndexArr() {
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $sm = $em->getConnection()->getSchemaManager();
+        $tables = $sm->listTables();
+        //ALTER INDEX idx_15b668721aca1422 RENAME TO IDX_5AFC0F4BCD46F646
+        foreach ($tables as $table) {
+            $indexes = $sm->listTableIndexes($table->getName());
+            foreach ($indexes as $index) {
+                //echo $index->getName() . ': ' . ($index->isUnique() ? 'unique' : 'not unique') . "\n";
+                $this->indexArr[$index] = $table->getName();
+            }
+        }
+    }
+
 
     public function processSql($sql) {
         $this->processComplexSql($sql,TRUE);
@@ -125,6 +149,11 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
         }
 
         if( $useSchema ) {
+
+            if( count($this->indexArr) == 0 ) {
+                $this->createIndexArr();
+            }
+
             if( $this->indexExists($sql) === FALSE ) {
                 echo "###Ignore " . $sql . $newline;
                 return FALSE;
