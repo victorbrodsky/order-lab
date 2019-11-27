@@ -53,7 +53,7 @@ class PostgresMigration extends AbstractMigration
 
     //TODO: Skip a statement in a Doctrine migration if a index is present
     //https://stackoverflow.com/questions/49897499/skip-a-statement-in-a-doctrine-migration-if-a-column-is-present
-    public function processSql( $schema, $sql ) {
+    public function processSql( $sql ) {
         //wrapper for processSql
 
         //An exception occurred while executing 'DROP INDEX "primary"':
