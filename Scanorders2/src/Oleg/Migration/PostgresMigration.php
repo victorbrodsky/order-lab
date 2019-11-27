@@ -60,8 +60,9 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
         }
 
         //CREATE UNIQUE INDEX UNIQ_D267B39C33F7837 ON calllog_calllogentrymessage_document (document_id)
+        //CREATE UNIQUE INDEX UNIQ_22984163C33F7837 ON fellapp_reference_document (document_id)
         if( strpos($sql, 'CREATE UNIQUE INDEX ') !== false && strpos($sql, ' ON ') !== false ) {
-            if( count($sqlArr) > 7 ) {
+            if( count($sqlArr) >= 7 ) {
                 //We need the index 4
                 $sqlIndex = $sqlArr[3];
             }
