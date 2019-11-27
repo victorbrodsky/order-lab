@@ -101,7 +101,7 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
         $newline = "\n";
         foreach( $this->indexArr as $index=>$table ) {
             //echo $index->getName() . ': ' . ($index->isUnique() ? 'unique' : 'not unique') . "\n";
-            if( $sqlIndex == $index ) {
+            if( strtolower($sqlIndex) == strtolower($index) ) {
                 echo $this->counter.": Found index=".$sqlIndex." (".$table.").".$newline;
                 return true;
             }
