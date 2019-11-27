@@ -128,6 +128,11 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
     public function processSql($sql) {
         $this->counter++;
         $this->processComplexSql($sql,TRUE);
+
+        //testing
+        if( strpos($sql, 'UNIQ_22984163C33F7837') !== FALSE ) {
+            exit("Testing exit sql=".$sql);
+        }
     }
 //    public function processSimpleSql($sql) {
 //        $this->processComplexSql($sql,null);
