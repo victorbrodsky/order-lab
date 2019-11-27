@@ -105,6 +105,7 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
         return false;
     }
     public function createIndexArr() {
+        $newline = "\n";
         $em = $this->container->get('doctrine.orm.entity_manager');
         $sm = $em->getConnection()->getSchemaManager();
         $tables = $sm->listTables();
@@ -116,6 +117,7 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
                 $this->indexArr[$index->getName()] = $table->getName();
             }
         }
+        echo "Found " . count($this->indexArr) . " indexes in " . count($tables) . " tables" . $newline;
     }
 
 
