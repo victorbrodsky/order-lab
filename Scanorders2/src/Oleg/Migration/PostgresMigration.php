@@ -41,7 +41,7 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
 
         $sqlIndex = null;
         $sqlArr = explode(" ",$sql);
-        //$newline = "\n";
+        $newline = "\n";
 
         //Case: DROP INDEX idx_d267b39c33f7837
         if( strpos($sql, 'DROP INDEX ') !== false ) {
@@ -73,6 +73,7 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
 
         //index from sql not found => assume it does not exist
         if( !$sqlIndex ) {
+            echo $this->counter.": !!!Index not found in ".$sql.$newline;
             return false;
         }
 
@@ -90,7 +91,7 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
             $indexes = $sm->listTableIndexes($table->getName());
             foreach ($indexes as $index) {
                 //echo $index->getName() . ': ' . ($index->isUnique() ? 'unique' : 'not unique') . "\n";
-                if( $sqlIndex == $index ) {
+                if( strtolower($sqlIndex) == strtolower($index) ) {
                     return true;
                 }
             }
