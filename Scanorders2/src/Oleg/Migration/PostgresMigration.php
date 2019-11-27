@@ -81,23 +81,6 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
 
         return $this->indexExistsSimple($sqlIndex);
     }
-    public function indexExistsSimpleFromScratch($sqlIndex) {
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $sm = $em->getConnection()->getSchemaManager();
-
-        $tables = $sm->listTables();
-        //ALTER INDEX idx_15b668721aca1422 RENAME TO IDX_5AFC0F4BCD46F646
-        foreach ($tables as $table) {
-            $indexes = $sm->listTableIndexes($table->getName());
-            foreach ($indexes as $index) {
-                //echo $index->getName() . ': ' . ($index->isUnique() ? 'unique' : 'not unique') . "\n";
-                if( strtolower($sqlIndex) == strtolower($index) ) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
     public function indexExistsSimple($sqlIndex) {
         $newline = "\n";
         foreach( $this->indexArr as $index=>$table ) {
@@ -110,6 +93,7 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
         echo $this->counter.": NotFound index=".$sqlIndex." (".$table.").".$newline;
         return false;
     }
+
     public function createIndexArr() {
         $newline = "\n";
         $em = $this->container->get('doctrine.orm.entity_manager');
@@ -132,9 +116,9 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
         $this->processComplexSql($sql,TRUE);
 
         //testing
-        //if( strpos($sql, 'UNIQ_22984163C33F7837') !== FALSE ) {
-        //    exit("Testing exit sql=".$sql);
-        //}
+        if( strpos($sql, 'UNIQ_22984163C33F7837') !== FALSE ) {
+            exit("Testing exit sql=".$sql);
+        }
     }
 //    public function processSimpleSql($sql) {
 //        $this->processComplexSql($sql,null);
@@ -216,7 +200,23 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
 
 
 
+    public function indexExistsSimpleFromScratch($sqlIndex) {
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $sm = $em->getConnection()->getSchemaManager();
 
+        $tables = $sm->listTables();
+        //ALTER INDEX idx_15b668721aca1422 RENAME TO IDX_5AFC0F4BCD46F646
+        foreach ($tables as $table) {
+            $indexes = $sm->listTableIndexes($table->getName());
+            foreach ($indexes as $index) {
+                //echo $index->getName() . ': ' . ($index->isUnique() ? 'unique' : 'not unique') . "\n";
+                if( strtolower($sqlIndex) == strtolower($index) ) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     //addSql($sql, array $params = Array, array $types = Array)
     //public function processSql( $sql, array $params = [], array $types = [] ) {
