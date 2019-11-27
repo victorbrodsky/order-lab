@@ -12,12 +12,23 @@ namespace Oleg\Migration;
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+
 //In VersionYYYYMMDDHHMM.php
 //1) Add "use Oleg\Migration\PostgresMigration;"
 //2) Rename after extends "AbstractMigration" to "PostgresMigration"
 //3) Rename [addSql(] to [processSql($schema,]
-class PostgresMigration extends AbstractMigration
+class PostgresMigration extends AbstractMigration implements ContainerAwareInterface
 {
+
+    private $container;
+
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
+    }
 
     public function up(Schema $schema){}
     public function down(Schema $schema){}
@@ -67,7 +78,11 @@ class PostgresMigration extends AbstractMigration
         return $this->indexExistsSimple($sqlIndex,$schema);
     }
     public function indexExistsSimple($sqlIndex,$schema) {
-        $sm = Schema::getConnection()->getDoctrineSchemaManager();
+        //$sm = Schema::getConnection()->getDoctrineSchemaManager();
+
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $sm = $em->getConnection()->getSchemaManager();
+
         $tables = $sm->listTables();
         //ALTER INDEX idx_15b668721aca1422 RENAME TO IDX_5AFC0F4BCD46F646
         foreach ($tables as $table) {
