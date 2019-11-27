@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 //In VersionYYYYMMDDHHMM.php
 //1) Add "use Oleg\Migration\PostgresMigration;"
 //2) Rename after extends "AbstractMigration" to "PostgresMigration"
-//3) Rename [addSql(] to [processSql($schema,]
+//3) Rename [addSql] to [processSql]
 class PostgresMigration extends AbstractMigration implements ContainerAwareInterface
 {
 
@@ -35,7 +35,7 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
 
     //TODO: check if index exists in schema
     //https://www.doctrine-project.org/projects/doctrine-dbal/en/2.9/reference/schema-manager.html
-    public function indexExists($sql,$schema) {
+    public function indexExists($sql) {
 
         $sqlIndex = null;
         $sqlArr = explode(" ",$sql);
@@ -75,11 +75,9 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
 
         echo "Index=".$sqlIndex."; sql=".$sql.$newline;
 
-        return $this->indexExistsSimple($sqlIndex,$schema);
+        return $this->indexExistsSimple($sqlIndex);
     }
-    public function indexExistsSimple($sqlIndex,$schema) {
-        //$sm = Schema::getConnection()->getDoctrineSchemaManager();
-
+    public function indexExistsSimple($sqlIndex) {
         $em = $this->container->get('doctrine.orm.entity_manager');
         $sm = $em->getConnection()->getSchemaManager();
 
@@ -97,23 +95,23 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
         return false;
     }
 
-    public function processSql($schema,$sql) {
-        $this->processComplexSql($sql,$schema);
+    public function processSql($sql) {
+        $this->processComplexSql($sql,TRUE);
     }
-    public function processSimpleSql($sql) {
-        $this->processComplexSql($sql,null);
-    }
+//    public function processSimpleSql($sql) {
+//        $this->processComplexSql($sql,null);
+//    }
 
     //TODO: Skip a statement in a Doctrine migration if a index is present
     //https://stackoverflow.com/questions/49897499/skip-a-statement-in-a-doctrine-migration-if-a-column-is-present
-    public function processComplexSql($sql,$schema=null) {
+    public function processComplexSql($sql,$useSchema=FALSE) {
         //wrapper for processSql
 
         $newline = "\n";
 
         //Always skip: An exception occurred while executing 'DROP INDEX "primary"':
         if( $sql == 'DROP INDEX "primary"' ) {
-            echo "Ignore ".$sql.$newline;
+            echo "###Ignore ".$sql.$newline;
             return FALSE;
         }
 //        if( strpos($sql, 'DROP INDEX ') !== false && strpos($sql, 'primary') !== false ) {
@@ -122,13 +120,13 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
 
         //Always skip: Primary keys are already exists
         if( strpos($sql, ' ADD PRIMARY KEY ') !== FALSE ) {
-            echo "Ignore ".$sql.$newline;
+            echo "###Ignore ".$sql.$newline;
             return FALSE;
         }
 
-        if( $schema ) {
-            if( $this->indexExists($sql,$schema) === FALSE ) {
-                echo "Ignore " . $sql . $newline;
+        if( $useSchema ) {
+            if( $this->indexExists($sql) === FALSE ) {
+                echo "###Ignore " . $sql . $newline;
                 return FALSE;
             }
         } else {
@@ -142,7 +140,7 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
                     return FALSE;
                 } else {
                     //does not have 00000
-                    echo "Ignore " . $sql . $newline;
+                    echo "###Ignore " . $sql . $newline;
                     return FALSE;
                 }
             }
@@ -185,7 +183,7 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
                 return false;
             } else {
                 //does not have 00000
-                echo "ignore ".$sql;
+                echo "###Ignore ".$sql;
                 return false;
             }
         }
