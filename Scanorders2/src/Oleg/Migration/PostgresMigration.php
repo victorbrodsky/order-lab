@@ -113,7 +113,7 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
             $indexes = $sm->listTableIndexes($table->getName());
             foreach ($indexes as $index) {
                 //echo $index->getName() . ': ' . ($index->isUnique() ? 'unique' : 'not unique') . "\n";
-                $this->indexArr[$index] = $table->getName();
+                $this->indexArr[$index->getName()] = $table->getName();
             }
         }
     }
