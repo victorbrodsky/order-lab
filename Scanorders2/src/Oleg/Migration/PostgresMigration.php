@@ -73,7 +73,11 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
 
         //index from sql not found => assume it does not exist
         if( !$sqlIndex ) {
-            echo $this->counter.": !!!Index not found in ".$sql.$newline;
+            if( preg_match('/[0-9]/', $sql) ) {
+                //echo 'Contains at least one number';
+                echo $this->counter.": !!!Index not found in ".$sql.$newline;
+            }
+
             return false;
         }
 
@@ -161,12 +165,12 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
                 if( $this->indexExists($sql) === FALSE ) {
                     //index does not exists => ok create index
                 } else {
-                    echo $this->counter.":###Ignore3a " . $sql . $newline;
+                    echo $this->counter.":############Ignore3a " . $sql . $newline;
                     return FALSE;
                 }
             } else {
                 if( $this->indexExists($sql) === FALSE ) {
-                    echo $this->counter.":###Ignore3b " . $sql . $newline;
+                    //echo $this->counter.":###Ignore3b " . $sql . $newline;
                     return FALSE;
                 }
             }
