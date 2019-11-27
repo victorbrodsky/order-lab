@@ -28,6 +28,7 @@ class PostgresMigration extends AbstractMigration
 
         $sqlIndex = null;
         $sqlArr = explode(" ",$sql);
+        $newline = "\n";
 
         //Case: DROP INDEX idx_d267b39c33f7837
         if( strpos($sql, 'DROP INDEX ') !== false ) {
@@ -61,6 +62,8 @@ class PostgresMigration extends AbstractMigration
             return false;
         }
 
+        echo "Index=".$sqlIndex."; sql=".$sql.$newline;
+
         return $this->indexExistsSimple($sqlIndex,$schema);
     }
     public function indexExistsSimple($sqlIndex,$schema) {
@@ -90,7 +93,7 @@ class PostgresMigration extends AbstractMigration
     public function processComplexSql($sql,$schema=null) {
         //wrapper for processSql
 
-        $newline = "\r\n";
+        $newline = "\n";
 
         //Always skip: An exception occurred while executing 'DROP INDEX "primary"':
         if( $sql == 'DROP INDEX "primary"' ) {
