@@ -35,11 +35,11 @@ $kernel = new AppKernel('prod', false);
 //mvds - trick php into thinking it is running in HTTPS and let the script run for 5 min max
 //if statement to enable https based on the connection_channel container's parameter
 //Now we can initialize the container by boot(). This boot() method exists in the handle(), however it will be skipped and will not be run twice.
-if(1) {
+if(0) {
     $kernel->boot();
     $container = $kernel->getContainer();
     $connectionChannel = $container->getParameter('connection_channel');
-    echo "connectionChannel=".$connectionChannel."<br>";
+    //echo "connectionChannel=".$connectionChannel."<br>";
     if ($connectionChannel == "https") {
         $_SERVER['HTTPS'] = 'on';
     }
