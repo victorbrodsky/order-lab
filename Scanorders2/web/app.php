@@ -39,8 +39,9 @@ if(1) {
     $kernel->boot();
     $container = $kernel->getContainer();
     $connectionChannel = $container->getParameter('connection_channel');
-    //echo "connectionChannel=".$connectionChannel."<br>";
+    echo "connectionChannel=".$connectionChannel."<br>";
     if ($connectionChannel == "https") {
+        exit('https on!');
         $_SERVER['HTTPS'] = 'on';
     }
 }
