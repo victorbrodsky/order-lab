@@ -268,3 +268,15 @@ https://docs.microsoft.com/en-us/sql/integration-services/import-export-data/con
 
 2) Try https://severalnines.com/database-blog/migrating-mssql-postgresql-what-you-should-know (Pgloader)
 
+Generate Invoice PDF:
+[2019-12-02 20:19:10] request.CRITICAL: Uncaught PHP Exception RuntimeException: "The exit status code '127' says something went wrong: 
+stderr: "sh: --lowquality: command not found " stdout: "" command:  
+--lowquality --cookie 'PHPSESSID' 'oa09mpp6rncmg7q3p1l6pknop7' --javascript-delay '9000' 
+--load-error-handling 'ignore' 'http://localhost/order/translational-research/invoice/download-invoice-pdf/5' 
+'/opt/order-lab/Scanorders2/app/../web/Uploaded/transres/InvoicePDF/Invoice-APCP2173-REQ15079-V2-nyptestuser1-12-02-2019.pdf'
+." at /opt/order-lab/Scanorders2/vendor/knplabs/knp-snappy/src/Knp/Snappy/AbstractGenerator.php line 336 {"exception":"[object] 
+(RuntimeException(code: 0): The exit status code '127' says something went wrong:\nstderr: \"sh: --lowquality: command not found\n\"\nstdout: \"\"\ncommand:  
+--lowquality --cookie 'PHPSESSID' 'oa09mpp6rncmg7q3p1l6pknop7' --javascript-delay '9000' --load-error-handling 'ignore' 
+'http://localhost/order/translational-research/invoice/download-invoice-pdf/5' 
+'/opt/order-lab/Scanorders2/app/../web/Uploaded/transres/InvoicePDF/Invoice-APCP2173-REQ15079-V2-nyptestuser1-12-02-2019.pdf'
+. at /opt/order-lab/Scanorders2/vendor/knplabs/knp-snappy/src/Knp/Snappy/AbstractGenerator.php:336)"} []

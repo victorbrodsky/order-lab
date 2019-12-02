@@ -301,25 +301,25 @@ f_install_util () {
 	
 	#https://github.com/documentcloud/docsplit/issues/123
 	echo -e ${COLOR} Install pdftk ${NC}
-	wget https://copr.fedorainfracloud.org/coprs/robert/gcj/repo/epel-7/robert-gcj-epel-7.repo -P /etc/yum.repos.d
-	wget https://copr.fedorainfracloud.org/coprs/robert/pdftk/repo/epel-7/robert-pdftk-epel-7.repo -P /etc/yum.repos.d
-	yum install -y pdftk
+	sudo wget https://copr.fedorainfracloud.org/coprs/robert/gcj/repo/epel-7/robert-gcj-epel-7.repo -P /etc/yum.repos.d
+	sudo wget https://copr.fedorainfracloud.org/coprs/robert/pdftk/repo/epel-7/robert-pdftk-epel-7.repo -P /etc/yum.repos.d
+	sudo yum install -y pdftk
 	
 	echo -e ${COLOR} Install xorg-x11-server-Xvfb ${NC}
 	sudo yum install -y xorg-x11-server-Xvfb
 	
 	#http://www.vassox.com/linux-general/installing-phantomjs-on-centos-7-rhel/
 	echo -e ${COLOR} Install PhantomJS ${NC}
-	yum install -y dnf
-	dnf install -y glibc fontconfig
-	yum install -y lbzip2
-	yum install -y fontconfig
-	yum install -y freetype
-	yum install -y wget
-	yum install -y bzip2
+	sudo yum install -y dnf
+	sudo dnf install -y glibc fontconfig
+	sudo yum install -y lbzip2
+	sudo yum install -y fontconfig
+	sudo yum install -y freetype
+	sudo yum install -y wget
+	sudo yum install -y bzip2
 	cd /opt
-	wget https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2
-	tar -xvf phantomjs-2.1.1-linux-x86_64.tar.bz2
+	sudo wget https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2
+	sudo tar -xvf phantomjs-2.1.1-linux-x86_64.tar.bz2
 	ln -s /opt/phantomjs-2.1.1-linux-x86_64/bin/phantomjs /usr/local/bin/phantomjs phantomjs --version
 	
 	echo ""
