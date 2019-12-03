@@ -309,9 +309,9 @@ knp_snappy:
 #            load-error-handling: abort
             #load-media-error-handling: ignore
 #            enable-forms: true       #Turn HTML form fields into pdf form fields
-            no-stop-slow-scripts: true
-            enable-javascript: true
-            debug-javascript: true
+#            no-stop-slow-scripts: true
+#            enable-javascript: true
+#            debug-javascript: true
 
 #    image:
 #        enabled:    true
