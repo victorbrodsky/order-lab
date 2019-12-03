@@ -491,5 +491,3 @@ security:
 
        - { path: ^/translational-research/, role: ROLE_TRANSRES_USER }
 
-       - { path: ^/translational-research/work-request/download-packing-slip-pdf/, roles: IS_AUTHENTICATED_ANONYMOUSLY, ips: [127.0.0.1, ::1, 157.139.226.86] }
-

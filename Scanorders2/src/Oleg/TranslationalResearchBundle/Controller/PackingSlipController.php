@@ -314,9 +314,9 @@ class PackingSlipController extends Controller
             $logger->notice("Download view: Token user is valid security.token_storage user=".$user);
         }
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
-        }
+        //if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
+        //    return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+        //}
 
         $cycle = "download";
 
