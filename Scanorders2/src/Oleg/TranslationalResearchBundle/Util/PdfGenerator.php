@@ -528,8 +528,8 @@ class PdfGenerator
         $context = null;
 
         if( $request ) {
-            //$replaceContext = true;
-            $replaceContext = false;
+            $replaceContext = true;
+            //$replaceContext = false;
             $schemeAndHttpHost = $request->getSchemeAndHttpHost();
             //exit("schemeAndHttpHost=$schemeAndHttpHost");
             if ($replaceContext && strpos($schemeAndHttpHost, "localhost") === false && strpos($schemeAndHttpHost, "127.0.0.1") === false) {
