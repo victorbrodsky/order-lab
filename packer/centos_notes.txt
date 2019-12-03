@@ -289,6 +289,6 @@ Check: /usr/bin/xvfb-run wkhtmltopdf --load-error-handling 'ignore' http://local
 
 Packing Slip PDF:
 "/opt/phantomjs-2.1.1-linux-x86_64/bin/phantomjs" --disk-cache=true "/opt/order-lab/Scanorders2/vendor/olegutil/phantomjs/rasterize.js" http://157.139.226.86/order/translational-research/work-request/download-packing-slip-pdf/15079 "/opt/order-lab/Scanorders2/app/../web/Uploaded/transres/PackingSlipPDF/PackingSlip-PDF-APCP2173-REQ15079-Ivanov-12-03-2019.pdf" "A4"
-"/opt/phantomjs-2.1.1-linux-x86_64/bin/phantomjs" --disk-cache=true "/opt/order-lab/Scanorders2/vendor/olegutil/phantomjs/rasterize.js" http://157.139.226.86/order/translational-research/work-request/download-packing-slip-pdf/15079 "/opt/order-lab/Scanorders2/app/../web/Uploaded/transres/PackingSlipPDF/PackingSlipTest.pdf" "A4"
+"/opt/phantomjs-2.1.1-linux-x86_64/bin/phantomjs" --disk-cache=true "/opt/order-lab/Scanorders2/vendor/olegutil/phantomjs/rasterize.js" http://localhost/order/translational-research/work-request/download-packing-slip-pdf/15079 "/opt/order-lab/Scanorders2/app/../web/Uploaded/transres/PackingSlipPDF/PackingSlipTest.pdf" "A4"
 
 
