@@ -495,9 +495,7 @@ class PdfGenerator
     }
 
 
-    //use KnpSnappyBundle to convert html to pdf
-    //http://wkhtmltopdf.org must be installed on server
-    //use --ignore-ssl-errors=true for https
+    //use Phantomjs to convert html to pdf
     public function generatePdfPhantomjs($pdfPath,$pdfPathParametersArr,$applicationOutputFilePath,$request) {
         $logger = $this->container->get('logger');
         $userServiceUtil = $this->container->get('user_service_utility');
@@ -541,7 +539,8 @@ class PdfGenerator
                 $originalBaseUrl = $context->getBaseUrl();
 
                 //http://192.168.37.128/order/app_dev.php/translational-research/download-invoice-pdf/49
-                $context->setHost('localhost');
+                //$context->setHost('localhost');
+                $context->setHost('127.0.0.1');
                 $context->setScheme($connectionChannel);
                 $context->setBaseUrl('/order');
             }
