@@ -602,9 +602,11 @@ class PdfGenerator
 //            ' ' . $applicationOutputFilePath
 //            ;
 
-        $phantomjs = '"'.$phantomjs.'"';
-        $rasterize = '"'.$rasterize.'"';
-        $applicationOutputFilePath = '"'.$applicationOutputFilePath.'"';
+        if( $userServiceUtil->isWinOs() ) {
+            $phantomjs = '"' . $phantomjs . '"';
+            $rasterize = '"' . $rasterize . '"';
+            $applicationOutputFilePath = '"' . $applicationOutputFilePath . '"';
+        }
 
         $parameters = "--disk-cache=true";
         if( $connectionChannel == 'https' ) {
