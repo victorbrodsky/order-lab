@@ -483,10 +483,10 @@ security:
        - { path: ^/translational-research/project/new, role: ROLE_TRANSRES_USER }
 #       - { path: ^/translational-research/account-confirmation/, role: ROLE_USER }
 
-       - { path: ^/translational-research/invoice/download-invoice-pdf/, roles: IS_AUTHENTICATED_ANONYMOUSLY, ips: [127.0.0.1, ::1] }
+       - { path: ^/translational-research/invoice/download-invoice-pdf/, roles: IS_AUTHENTICATED_ANONYMOUSLY, ips: [localhost, 127.0.0.1, ::1] }
        - { path: ^/translational-research/invoice/download-invoice-pdf/, roles: ROLE_TRANSRES_USER }
 
-       - { path: ^/translational-research/work-request/download-packing-slip-pdf/, roles: IS_AUTHENTICATED_ANONYMOUSLY, ips: [127.0.0.1, ::1] }
+       - { path: ^/translational-research/work-request/download-packing-slip-pdf/, roles: IS_AUTHENTICATED_ANONYMOUSLY, ips: [localhost, 127.0.0.1, ::1] }
        - { path: ^/translational-research/work-request/download-packing-slip-pdf/, roles: ROLE_TRANSRES_USER }
 
        - { path: ^/translational-research/, role: ROLE_TRANSRES_USER }

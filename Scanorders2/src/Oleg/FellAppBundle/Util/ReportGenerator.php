@@ -739,7 +739,7 @@ class ReportGenerator {
         //generate application URL
         $router = $this->container->get('router');
 
-        $replaceContext = true;
+        //$replaceContext = true;
         $replaceContext = false;
         if( $replaceContext ) {
             $context = $this->container->get('router')->getContext();
