@@ -740,7 +740,7 @@ class ReportGenerator {
         $router = $this->container->get('router');
 
         $replaceContext = true;
-        //$replaceContext = false;
+        $replaceContext = false;
         if( $replaceContext ) {
             $context = $this->container->get('router')->getContext();
 
