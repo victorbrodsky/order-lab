@@ -448,7 +448,9 @@ class PdfGenerator
         $router = $this->container->get('router');
 
         //change context only if not localhost or 127.0.0.1
-        if(1) {
+        $replaceContext = false;
+        //$replaceContext = true;
+        if($replaceContext) {
             $context = $router->getContext();
             //http://192.168.37.128/order/app_dev.php/translational-research/download-invoice-pdf/49
             $context->setHost('localhost');
