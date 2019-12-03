@@ -32,6 +32,7 @@ use Oleg\TranslationalResearchBundle\Entity\Project;
 use Oleg\TranslationalResearchBundle\Entity\TransResRequest;
 use Oleg\TranslationalResearchBundle\Form\FilterRequestType;
 use Oleg\TranslationalResearchBundle\Form\TransResRequestType;
+use Oleg\UserdirectoryBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
