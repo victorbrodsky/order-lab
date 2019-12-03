@@ -280,3 +280,9 @@ stderr: "sh: --lowquality: command not found " stdout: "" command:
 'http://localhost/order/translational-research/invoice/download-invoice-pdf/5' 
 '/opt/order-lab/Scanorders2/app/../web/Uploaded/transres/InvoicePDF/Invoice-APCP2173-REQ15079-V2-nyptestuser1-12-02-2019.pdf'
 . at /opt/order-lab/Scanorders2/vendor/knplabs/knp-snappy/src/Knp/Snappy/AbstractGenerator.php:336)"} []
+
+/usr/bin/xvfb-run wkhtmltopdf --lowquality --cookie 'PHPSESSID' 'lgl591vfh1p0esokkqcdv5crj5' --javascript-delay '9000' --load-error-handling 'ignore' 'http://157.139.226.86/order/translational-research/invoice/download-invoice-pdf/5' '/opt/order-lab/Scanorders2/app/../web/Uploaded/transres/InvoicePDF/Invoice-APCP2173-REQ15079-V2-nyptestuser1-12-03-2019.pdf'
+Error: Failed to load http://127.0.0.1/order/translational-research/invoice/download-invoice-pdf/5, with network status code 1 and http status code 0 - Connection refused
+Check: /usr/bin/xvfb-run wkhtmltopdf --load-error-handling 'ignore' http://localhost/order/css/2d57033.css?1575379007 /opt/order-lab/Scanorders2/web/Uploaded/transres/InvoicePDF/test.pdf
+
+

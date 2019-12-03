@@ -448,11 +448,13 @@ class PdfGenerator
         $router = $this->container->get('router');
 
         //change context only if not localhost or 127.0.0.1
-        $context = $router->getContext();
-        //http://192.168.37.128/order/app_dev.php/translational-research/download-invoice-pdf/49
-        $context->setHost('localhost');
-        $context->setScheme($connectionChannel);
-        $context->setBaseUrl('/order');
+        if(0) {
+            $context = $router->getContext();
+            //http://192.168.37.128/order/app_dev.php/translational-research/download-invoice-pdf/49
+            $context->setHost('localhost');
+            $context->setScheme($connectionChannel);
+            $context->setBaseUrl('/order');
+        }
 
         //invoice download
         $pageUrl = $router->generate('translationalresearch_packing_slip_download',
