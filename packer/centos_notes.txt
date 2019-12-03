@@ -268,6 +268,7 @@ https://docs.microsoft.com/en-us/sql/integration-services/import-export-data/con
 
 2) Try https://severalnines.com/database-blog/migrating-mssql-postgresql-what-you-should-know (Pgloader)
 
+Test as apache: su -s /bin/bash apache
 Generate Invoice PDF:
 [2019-12-02 20:19:10] request.CRITICAL: Uncaught PHP Exception RuntimeException: "The exit status code '127' says something went wrong: 
 stderr: "sh: --lowquality: command not found " stdout: "" command:  

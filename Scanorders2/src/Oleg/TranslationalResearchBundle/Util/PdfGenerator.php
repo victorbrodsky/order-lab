@@ -528,7 +528,8 @@ class PdfGenerator
         $context = null;
 
         if( $request ) {
-            $replaceContext = true;
+            //$replaceContext = true;
+            $replaceContext = false;
             $schemeAndHttpHost = $request->getSchemeAndHttpHost();
             //exit("schemeAndHttpHost=$schemeAndHttpHost");
             if ($replaceContext && strpos($schemeAndHttpHost, "localhost") === false && strpos($schemeAndHttpHost, "127.0.0.1") === false) {
@@ -612,7 +613,7 @@ class PdfGenerator
 
         $cmd = $phantomjs . ' ' . $parameters . ' ' . $rasterize . ' ' . $pageUrl . ' ' . $applicationOutputFilePath . ' "A4"';
         //$cmd = $phantomjs . ' ' . $rasterize . ' ' . $pageUrl . ' ' . $applicationOutputFilePath . ' "A4"';
-        //$logger->notice("cmd=[".$cmd."]");
+        $logger->notice("Phantomjs cmd=[".$cmd."]");
         //echo "phantomjs cmd=".$cmd."<br>";
         //exit('111');
 
