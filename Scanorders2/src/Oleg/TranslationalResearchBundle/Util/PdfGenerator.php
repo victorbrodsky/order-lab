@@ -371,12 +371,17 @@ class PdfGenerator
         //$applicationFilePath = $outdir . "application_ID" . $invoice->getOid() . ".pdf";
         $applicationFilePath = $outdir . $fileFullReportUniqueName;
 
-        //$this->generatePdfPackingSlip($transresRequest,$fileFullReportUniqueName,$applicationFilePath);
-        //$this->generatePdfPhantomjsPackingSlip($transresRequest,$applicationFilePath,$request);
-        //packing slip url
-        $pdfPath = "translationalresearch_packing_slip_download";
-        $pdfPathParametersArr = array('id' => $transresRequest->getId());
-        $this->generatePdfPhantomjs($pdfPath,$pdfPathParametersArr,$applicationFilePath,$request);
+        $useKnpSnappy = true;
+        //$useKnpSnappy = false;
+        if( $useKnpSnappy ) {
+            $this->generatePdfPackingSlip($transresRequest,$fileFullReportUniqueName,$applicationFilePath);
+            //$this->generatePdfPhantomjsPackingSlip($transresRequest,$applicationFilePath,$request);
+        } else {
+            //packing slip url
+            $pdfPath = "translationalresearch_packing_slip_download";
+            $pdfPathParametersArr = array('id' => $transresRequest->getId());
+            $this->generatePdfPhantomjs($pdfPath, $pdfPathParametersArr, $applicationFilePath, $request);
+        }
 
         $filesize = filesize($applicationFilePath);
         echo "filesize=".$filesize."<br>";
