@@ -306,6 +306,7 @@ knp_snappy:
         options:
             javascript-delay: 9000    #Wait some milliseconds for javascript finish (default 200)
             load-error-handling: ignore
+            disable-smart-shrinking: true
 #            load-error-handling: abort
             #load-media-error-handling: ignore
 #            enable-forms: true       #Turn HTML form fields into pdf form fields
