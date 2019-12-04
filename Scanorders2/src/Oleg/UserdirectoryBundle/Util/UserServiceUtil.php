@@ -1733,11 +1733,12 @@ class UserServiceUtil {
 
             //echo "pwd=".exec('pwd');
             $oExec = shell_exec('pwd');
+            echo "pwd oExec=".$oExec."<br>";
             $logger->notice("pwd oExec=$oExec");
-            //echo "pwd=$pwd";
+            
             $oExec = shell_exec($cmd);
             $logger->notice("cmd oExec=$oExec");
-            //echo "oExec=".$oExec."<br>";
+            echo "cmd oExec=".$oExec."<br>";
 
             //$outputfile = "/opt/order-lab/Scanorders2/var/log/execout.txt";
             //$pidfile = "/opt/order-lab/Scanorders2/var/log/execpid.txt";
