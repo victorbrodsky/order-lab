@@ -148,8 +148,8 @@ class PdfGenerator
         //$serverTimezone = date_default_timezone_get(); //server timezone
 
         $entityOid = $entity->getOId();
-        $entityOid = str_replace("[","",$entityOid);
-        $entityOid = str_replace("]","",$entityOid);
+        $entityOid = str_replace("(","[",$entityOid);
+        $entityOid = str_replace(")","]",$entityOid);
 
         //h-i-s-a
         $filename =
