@@ -1726,6 +1726,9 @@ class UserServiceUtil {
             $logger = $this->container->get('logger');
             $logger->notice("Start execInBackground Linux");
 
+            $output = shell_exec('ls -lart');
+            $logger->notice("output=".$output);
+
             //$oExec = exec($cmd . " > /dev/null &");
 
             //echo "pwd=".exec('pwd');
