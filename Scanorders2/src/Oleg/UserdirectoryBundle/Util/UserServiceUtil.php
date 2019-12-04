@@ -1741,8 +1741,11 @@ class UserServiceUtil {
             $logger->notice("cmd oExec=$oExec");
             echo "cmd oExec=".$oExec."<br>";
 
-            echo exec("pwd");
-            echo exec($cmd);
+            echo exec("pwd",$o);
+            echo $o;
+
+            echo exec($cmd,$o);
+            echo $o;
 
             exec("ls",$o);
             print_r($o);
