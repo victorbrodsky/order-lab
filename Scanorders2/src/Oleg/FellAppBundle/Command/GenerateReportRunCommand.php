@@ -54,6 +54,7 @@ class GenerateReportRunCommand extends ContainerAwareCommand {
 
         $logger = $this->getContainer()->get('logger');
         $logger->notice("Run Command: try run");
+        echo "Run Command: try run<br>";
         
         //$result = ReportGeneratorManager::getInstance($this->getContainer())->tryRun();
 
