@@ -91,10 +91,15 @@
         {% if form.createDate is defined %}
             {{ formmacros.field_left(form.createDate) }}
         {% endif %}
+
         {#{% if form.submitter is defined %}#}
             {#{{ formmacros.field_left(form.submitter) }}#}
         {#{% endif %}#}
-        {{ formmacros.simplefield("Requester (Work Request's Submitter):", invoice.getTransresRequest().getSubmitter().getUsernameOptimal(), "input", "disabled") }}
+                                {#label,                                   value,                                               type,   disabled, tooltip, id, shift#}
+        {{ formmacros.simplefield("Requester (Work Request's Submitter):", transresRequest.getSubmitter().getUsernameOptimal(), "input", "disabled", "", "", "2-6") }}
+        {#<p>#}
+            {#Requester (Work Request's Submitter): {{ transresRequest.getSubmitter().getUsernameOptimal() }}#}
+        {#</p>#}
 
         {% if form.status is defined %}
             {{ formmacros.field_left(form.status) }}

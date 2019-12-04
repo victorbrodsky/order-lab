@@ -87,16 +87,24 @@
     </p>
 {% endmacro %}
 
-{% macro simplefield( label, value, type, disabled, tooltip, id ) %}
-    {% if id is not defined %}
+{% macro simplefield( label, value, type, disabled, tooltip, id, shift ) %}
+    {% if id is not defined or id=="" %}
         {% set id = "not-mapped-simplefield" %}
     {% endif %}
+
+    {% set xs1 = "col-xs-6" %}
+    {% set xs2 = "col-xs-6" %}
+    {% if shift is defined and shift == "2-6" %}
+        {% set xs1 = "col-xs-2" %}
+        {% set xs2 = "col-xs-6" %}
+    {% endif %}
+
     <p>
     <div class="row">
-        <div class="col-xs-6" align="right">
+        <div class="{{ xs1 }}" align="right">
             <label>{{ label }}</label>
         </div>
-        <div class="col-xs-6" align="left">
+        <div class="{{ xs2 }}" align="left">
             {% if type is defined and type == "input" %}
                 {% if tooltip is defined and tooltip %}
                     <input id="{{ id }}" class="form-control not-mapped-simplefield element-with-tooltip-always"
