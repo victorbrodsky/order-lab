@@ -103,7 +103,7 @@ class ReportGenerator {
 
     public function resetQueueRun() {
 
-        //$logger = $this->container->get('logger');
+        $logger = $this->container->get('logger');
         $logger->notice("Start resetQueueRun");
 
         $queue = $this->getQueue();
