@@ -1741,6 +1741,7 @@ class UserServiceUtil {
             $logger->notice("cmd oExec=$oExec");
             echo "cmd oExec=".$oExec."<br>";
 
+            echo exec("pwd");
             echo exec($cmd);
 
             //$outputfile = "/opt/order-lab/Scanorders2/var/log/execout.txt";
