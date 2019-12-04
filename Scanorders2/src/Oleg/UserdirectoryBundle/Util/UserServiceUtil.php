@@ -1756,10 +1756,12 @@ class UserServiceUtil {
             $phppath = str_replace(" ","",$phppath);
 
             $cmd = str_replace("php ",$phppath." ",$cmd);
-            //echo "<br><br>######<br>cmd:<br>";
-            echo exec($cmd,$o);
-            //print_r($o);
-            //echo "######<br><br>";
+            $logger->notice("cmd=".$cmd);
+
+            echo "<br><br>######<br>cmd:<br>";
+            echo exec($cmd,$oExec);
+            print_r($oExec);
+            echo "######<br><br>";
 
             //exec("ls",$o);
             //print_r($o);
@@ -1768,7 +1770,7 @@ class UserServiceUtil {
             //$pidfile = "/opt/order-lab/Scanorders2/var/log/execpid.txt";
             //exec(sprintf("%s > %s 2>&1 & echo $! >> %s", $cmd, $outputfile, $pidfile));
 
-            //exit("exit");
+            exit("exit");
         }
 
         return $oExec;
