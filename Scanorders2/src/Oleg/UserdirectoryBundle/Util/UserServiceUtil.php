@@ -1726,35 +1726,38 @@ class UserServiceUtil {
             $logger = $this->container->get('logger');
             $logger->notice("Start execInBackground Linux");
 
-            $output = shell_exec('ls -lart');
-            $logger->notice("output=".$output);
+            //$output = shell_exec('ls -lart');
+            //$logger->notice("output=".$output);
 
             //$oExec = exec($cmd . " > /dev/null &");
 
             //echo "pwd=".exec('pwd');
-            $oExec = shell_exec('pwd');
-            echo "pwd oExec=".$oExec."<br>";
-            $logger->notice("pwd oExec=$oExec");
+            //$oExec = shell_exec('pwd');
+            //echo "pwd oExec=".$oExec."<br>";
+            //$logger->notice("pwd oExec=$oExec");
 
-            $cmd = "php /opt/order-lab/Scanorders2/bin/console fellapp:generatereportrun";
-            echo "cmd=".$cmd."<br>";
-            $oExec = shell_exec($cmd);
-            $logger->notice("cmd oExec=$oExec");
-            echo "cmd oExec=".$oExec."<br>";
+            //$cmd = "php /opt/order-lab/Scanorders2/bin/console fellapp:generatereportrun";
+            //echo "cmd=".$cmd."<br>";
+            //$oExec = shell_exec($cmd);
+            //$logger->notice("cmd oExec=$oExec");
+            //echo "cmd oExec=".$oExec."<br>";
 
-            echo exec("pwd",$o);
-            print_r($o);
+            //echo exec("pwd",$o);
+            //print_r($o);
 
             echo exec("/opt/rh/rh-php56/root/usr/bin/php --version",$o);
             echo "######<br>php --version:<br>";
             print_r($o);
             echo "######<br>";
 
+            $cmd = str_replace("php","/opt/rh/rh-php56/root/usr/bin/php",$cmd);
+            echo "<br><br>######<br>cmd:<br>";
             echo exec($cmd,$o);
             print_r($o);
+            echo "######<br><br>";
 
-            exec("ls",$o);
-            print_r($o);
+            //exec("ls",$o);
+            //print_r($o);
 
             //$outputfile = "/opt/order-lab/Scanorders2/var/log/execout.txt";
             //$pidfile = "/opt/order-lab/Scanorders2/var/log/execpid.txt";
