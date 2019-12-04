@@ -1745,9 +1745,10 @@ class UserServiceUtil {
             echo exec("pwd",$o);
             print_r($o);
 
-            echo exec("php --version",$o);
-            echo "php --version:<br>";
+            echo exec("/opt/rh/rh-php56/root/usr/bin/php --version",$o);
+            echo "######<br>php --version:<br>";
             print_r($o);
+            echo "######<br>";
 
             echo exec($cmd,$o);
             print_r($o);
