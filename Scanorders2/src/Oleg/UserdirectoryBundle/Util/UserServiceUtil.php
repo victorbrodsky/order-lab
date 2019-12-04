@@ -1729,7 +1729,7 @@ class UserServiceUtil {
             //$pwd = shell_exec('pwd');
             //echo "pwd=$pwd";
             $oExec = exec($cmd);
-            echo "oExec=".$oExec."<br>";
+            //echo "oExec=".$oExec."<br>";
         }
 
         return $oExec;
