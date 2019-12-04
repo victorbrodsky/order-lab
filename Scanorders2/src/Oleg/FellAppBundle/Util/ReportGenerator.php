@@ -122,15 +122,16 @@ class ReportGenerator {
 
         //$this->cmdRunAsync($this->generatereportrunCmd);
         $userServiceUtil = $this->container->get('user_service_utility');
-        $logger->notice("Start execInBackground: cmd=".$this->generatereportrunCmd);
-        $pwd = shell_exec('pwd');
-        $logger->notice("pwd=".$pwd);
+        $userServiceUtil->execInBackground($this->generatereportrunCmd);
 
-        $cmd = "php /opt/order-lab/Scanorders2/bin/console fellapp:generatereportrun --env=prod";
-        $logger->notice("Start execInBackground: cmd=".$cmd);
-        $userServiceUtil->execInBackground($cmd);
-        //$userServiceUtil->execInBackground($this->generatereportrunCmd);
+        //$logger->notice("Start execInBackground: cmd=".$this->generatereportrunCmd);
+        //$pwd = shell_exec('pwd');
+        //$logger->notice("pwd=".$pwd);
 
+        //$cmd = "php /opt/order-lab/Scanorders2/bin/console fellapp:generatereportrun --env=prod";
+        //$logger->notice("Start execInBackground: cmd=".$cmd);
+        //$userServiceUtil->execInBackground($cmd);
+        
         $logger->notice("End resetQueueRun, numUpdated=".$numUpdated);
         return $numUpdated;
     }

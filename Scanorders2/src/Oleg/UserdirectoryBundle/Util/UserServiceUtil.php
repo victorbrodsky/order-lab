@@ -1743,10 +1743,10 @@ class UserServiceUtil {
             echo "cmd oExec=".$oExec."<br>";
 
             echo exec("pwd",$o);
-            echo "pwd=".$o;
+            print_r($o);
 
             echo exec($cmd,$o);
-            echo "cmd=".$o;
+            print_r($o);
 
             exec("ls",$o);
             print_r($o);
