@@ -1728,8 +1728,13 @@ class UserServiceUtil {
             //echo "pwd=".exec('pwd');
             //$pwd = shell_exec('pwd');
             //echo "pwd=$pwd";
-            $oExec = exec($cmd);
+            //$oExec = exec($cmd);
             //echo "oExec=".$oExec."<br>";
+
+            $outputfile = "/opt/order-lab/Scanorders2/var/log/execout.txt";
+            $pidfile = "/opt/order-lab/Scanorders2/var/log/execpid.txt";
+            exec(sprintf("%s > %s 2>&1 & echo $! >> %s", $cmd, $outputfile, $pidfile));
+
         }
 
         return $oExec;
