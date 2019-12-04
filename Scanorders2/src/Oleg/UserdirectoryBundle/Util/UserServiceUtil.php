@@ -1724,11 +1724,12 @@ class UserServiceUtil {
         }
         else {
             //$oExec = exec($cmd . " > /dev/null &");
-            echo "pwd=".exec('pwd');
-            $pwd = shell_exec('pwd');
-            echo "pwd=$pwd";
+
+            //echo "pwd=".exec('pwd');
+            //$pwd = shell_exec('pwd');
+            //echo "pwd=$pwd";
             $oExec = exec($cmd);
-            echo $oExec;
+            echo "oExec=".$oExec."<br>";
         }
 
         return $oExec;
