@@ -1723,7 +1723,8 @@ class UserServiceUtil {
             $oExec = pclose(popen("start /B ". $cmd, "r"));
         }
         else {
-            $oExec = exec($cmd . " > /dev/null &");
+            //$oExec = exec($cmd . " > /dev/null &");
+            $oExec = exec($cmd);
         }
 
         return $oExec;
