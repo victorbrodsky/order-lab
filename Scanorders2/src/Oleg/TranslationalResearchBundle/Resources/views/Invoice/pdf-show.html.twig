@@ -61,7 +61,9 @@
             </p>
             <p>
                 {#Salesperson: {{ invoice.salesperson.getUsernameOptimal() }}#}
-                Requester: {{ invoice.submitter.getUsernameOptimal() }}
+                {#Requester: {{ invoice.submitter.getUsernameOptimal() }}#}
+                {#Work Request's submitter as Requester $transresRequest = $invoice->getTransresRequest();#}
+                Requester: {{ invoice.getTransresRequest().getSubmitter().getUsernameOptimal() }}
             </p>
             <p>
                 Status: {{ invoice.status }}
