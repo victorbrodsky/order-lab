@@ -1723,12 +1723,16 @@ class UserServiceUtil {
             $oExec = pclose(popen("start /B ". $cmd, "r"));
         }
         else {
+            $logger = $this->container->get('logger');
+            $logger->notice("Start execInBackground Linux");
+
             //$oExec = exec($cmd . " > /dev/null &");
 
             //echo "pwd=".exec('pwd');
             //$pwd = shell_exec('pwd');
             //echo "pwd=$pwd";
-            //$oExec = exec($cmd);
+            $oExec = exec($cmd);
+            $logger->notice("oExec=$oExec");
             //echo "oExec=".$oExec."<br>";
 
             $outputfile = "/opt/order-lab/Scanorders2/var/log/execout.txt";
