@@ -103,8 +103,8 @@ class ReportGenerator {
 
     public function resetQueueRun() {
 
-        $logger = $this->container->get('logger');
-        $logger->notice("Start resetQueueRun");
+        //$logger = $this->container->get('logger');
+        //$logger->notice("Start resetQueueRun");
 
         $queue = $this->getQueue();
 
@@ -122,7 +122,7 @@ class ReportGenerator {
 
         //$this->cmdRunAsync($this->generatereportrunCmd);
         $userServiceUtil = $this->container->get('user_service_utility');
-        $logger->notice("Start execInBackground: cmd=".$this->generatereportrunCmd);
+        //$logger->notice("Start execInBackground: cmd=".$this->generatereportrunCmd);
         $userServiceUtil->execInBackground($this->generatereportrunCmd);
 
         //$logger->notice("Start execInBackground: cmd=".$this->generatereportrunCmd);
@@ -133,7 +133,7 @@ class ReportGenerator {
         //$logger->notice("Start execInBackground: cmd=".$cmd);
         //$userServiceUtil->execInBackground($cmd);
 
-        $logger->notice("End resetQueueRun, numUpdated=".$numUpdated);
+        //$logger->notice("End resetQueueRun, numUpdated=".$numUpdated);
         return $numUpdated;
     }
     

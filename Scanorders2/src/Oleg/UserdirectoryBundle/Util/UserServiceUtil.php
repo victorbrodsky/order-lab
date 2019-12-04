@@ -1726,60 +1726,69 @@ class UserServiceUtil {
             $logger = $this->container->get('logger');
             //$logger->notice("Start execInBackground Linux");
 
-            //$output = shell_exec('ls -lart');
-            //$logger->notice("output=".$output);
+            if(0) {
+                //$output = shell_exec('ls -lart');
+                //$logger->notice("output=".$output);
 
-            //$oExec = exec($cmd . " > /dev/null &");
+                //$oExec = exec($cmd . " > /dev/null &");
 
-            //echo "pwd=".exec('pwd');
-            //$oExec = shell_exec('pwd');
-            //echo "pwd oExec=".$oExec."<br>";
-            //$logger->notice("pwd oExec=$oExec");
+                //echo "pwd=".exec('pwd');
+                //$oExec = shell_exec('pwd');
+                //echo "pwd oExec=".$oExec."<br>";
+                //$logger->notice("pwd oExec=$oExec");
 
-            //$cmd = "php /opt/order-lab/Scanorders2/bin/console fellapp:generatereportrun";
-            //echo "cmd=".$cmd."<br>";
-            //$oExec = shell_exec($cmd);
-            //$logger->notice("cmd oExec=$oExec");
-            //echo "cmd oExec=".$oExec."<br>";
+                //$cmd = "php /opt/order-lab/Scanorders2/bin/console fellapp:generatereportrun";
+                //echo "cmd=".$cmd."<br>";
+                //$oExec = shell_exec($cmd);
+                //$logger->notice("cmd oExec=$oExec");
+                //echo "cmd oExec=".$oExec."<br>";
 
-            echo exec("pwd",$o);
-            //print_r($o);
-            $o = implode(" ",$o);
-            $logger->notice("execInBackground pwd=$o");
+                echo exec("pwd", $o);
+                //print_r($o);
+                $o = implode(" ", $o);
+                $logger->notice("execInBackground pwd=$o");
 
-            //echo exec("/opt/rh/rh-php56/root/usr/bin/php --version",$o);
-            //echo "######<br>php --version:<br>";
-            //print_r($o);
-            //echo "######<br>";
+                //echo exec("/opt/rh/rh-php56/root/usr/bin/php --version",$o);
+                //echo "######<br>php --version:<br>";
+                //print_r($o);
+                //echo "######<br>";
 
-            //exec("whereis php",$phppath);
-            //$phppath = implode(" ",$phppath);
-            //print_r($phppath);
-            //php: /opt/rh/rh-php56/root/usr/bin/php
-            //$phppath = str_replace("php:","",$phppath);
-            //$phppath = str_replace(" ","",$phppath);
-            $phppath = "/opt/rh/rh-php56/root/usr/bin/php";
+                //exec("whereis php",$phppath);
+                //$phppath = implode(" ",$phppath);
+                //print_r($phppath);
+                //php: /opt/rh/rh-php56/root/usr/bin/php
+                //$phppath = str_replace("php:","",$phppath);
+                //$phppath = str_replace(" ","",$phppath);
+                $phppath = "/opt/rh/rh-php56/root/usr/bin/php";
 
-            $cmd = str_replace("php ",$phppath." ",$cmd);
-            $logger->notice("execInBackground cmd=".$cmd);
+                $cmd = str_replace("php ", $phppath . " ", $cmd);
+                $logger->notice("execInBackground cmd=" . $cmd);
 
-            ///opt/rh/rh-php56/root/usr/bin/php ../bin/console fellapp:generatereportrun --env=prod
-            //$cmd = str_replace(" ../bin/console "," /opt/order-lab/Scanorders2/bin/console ",$cmd);
-            //$logger->notice("execInBackground cmd=".$cmd);
+                ///opt/rh/rh-php56/root/usr/bin/php ../bin/console fellapp:generatereportrun --env=prod
+                //$cmd = str_replace(" ../bin/console "," /opt/order-lab/Scanorders2/bin/console ",$cmd);
+                //$logger->notice("execInBackground cmd=".$cmd);
 
-            //echo "<br><br>######<br>cmd:<br>";
-            echo exec($cmd,$oExec);
-            //print_r($oExec);
-            //echo "######<br><br>";
+                //echo "<br><br>######<br>cmd:<br>";
+                echo exec($cmd, $oExec);
+                //print_r($oExec);
+                //echo "######<br><br>";
 
-            //exec("ls",$o);
-            //print_r($o);
+                //exec("ls",$o);
+                //print_r($o);
 
-            //$outputfile = "/opt/order-lab/Scanorders2/var/log/execout.txt";
-            //$pidfile = "/opt/order-lab/Scanorders2/var/log/execpid.txt";
-            //exec(sprintf("%s > %s 2>&1 & echo $! >> %s", $cmd, $outputfile, $pidfile));
+                //$outputfile = "/opt/order-lab/Scanorders2/var/log/execout.txt";
+                //$pidfile = "/opt/order-lab/Scanorders2/var/log/execpid.txt";
+                //exec(sprintf("%s > %s 2>&1 & echo $! >> %s", $cmd, $outputfile, $pidfile));
 
-            //exit("exit");
+                //exit("exit");
+            } else {
+                $phppath = "/opt/rh/rh-php56/root/usr/bin/php";
+                $cmd = str_replace("php ", $phppath . " ", $cmd);
+                $logger->notice("execInBackground cmd=" . $cmd);
+                //echo exec($cmd, $oExec);
+                $oExec = exec($cmd . " > /dev/null &");
+            }
+
         }
 
         return $oExec;
