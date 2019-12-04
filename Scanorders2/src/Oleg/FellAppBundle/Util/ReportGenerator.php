@@ -123,6 +123,8 @@ class ReportGenerator {
         //$this->cmdRunAsync($this->generatereportrunCmd);
         $userServiceUtil = $this->container->get('user_service_utility');
         $logger->notice("Start execInBackground: cmd=".$this->generatereportrunCmd);
+        $pwd = shell_exec('pwd');
+        echo "pwd=$pwd";
         $userServiceUtil->execInBackground($this->generatereportrunCmd);
 
         $logger->notice("End resetQueueRun, numUpdated=".$numUpdated);
