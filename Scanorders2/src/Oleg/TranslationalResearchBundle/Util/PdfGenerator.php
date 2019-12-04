@@ -454,7 +454,7 @@ class PdfGenerator
 
         //change context only if not localhost or 127.0.0.1
         $replaceContext = false;
-        //$replaceContext = true;
+        $replaceContext = true;
         if($replaceContext) {
             $context = $router->getContext();
             //http://192.168.37.128/order/app_dev.php/translational-research/download-invoice-pdf/49
