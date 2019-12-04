@@ -1729,9 +1729,9 @@ class UserServiceUtil {
             //$oExec = exec($cmd . " > /dev/null &");
 
             //echo "pwd=".exec('pwd');
-            //$pwd = shell_exec('pwd');
+            $oExec = shell_exec('pwd');
             //echo "pwd=$pwd";
-            $oExec = exec($cmd);
+            //$oExec = exec($cmd);
             $logger->notice("oExec=$oExec");
             //echo "oExec=".$oExec."<br>";
 
