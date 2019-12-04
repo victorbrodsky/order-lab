@@ -371,7 +371,11 @@ class PdfGenerator
         //$applicationFilePath = $outdir . "application_ID" . $invoice->getOid() . ".pdf";
         $applicationFilePath = $outdir . $fileFullReportUniqueName;
 
-        $useKnpSnappy = true;
+        //remove '(' and ')'
+        $applicationFilePath = str_replace(")","[",$applicationFilePath);
+        $applicationFilePath = str_replace("(","[",$applicationFilePath);
+
+        //$useKnpSnappy = true;
         $useKnpSnappy = false;
         if( $useKnpSnappy ) {
             $this->generatePdfPackingSlip($transresRequest,$fileFullReportUniqueName,$applicationFilePath);

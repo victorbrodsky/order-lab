@@ -292,6 +292,7 @@ Packing Slip PDF:
 /opt/phantomjs-2.1.1-linux-x86_64/bin/phantomjs --disk-cache=true --ssl-protocol=any "/opt/order-lab/Scanorders2/vendor/olegutil/phantomjs/rasterize.js" http://localhost/order/translational-research/work-request/download-packing-slip-pdf/15079 "/opt/order-lab/Scanorders2/app/../web/Uploaded/transres/PackingSlipPDF/PackingSlipTest.pdf" "A4"
 /opt/phantomjs-2.1.1-linux-x86_64/bin/phantomjs --disk-cache=true --debug=yes --ignore-ssl-errors=true --ssl-protocol=any --web-security=true "/opt/order-lab/Scanorders2/vendor/olegutil/phantomjs/rasterize.js" http://localhost/order/translational-research/work-request/download-packing-slip-pdf/15079 "/opt/order-lab/Scanorders2/app/../web/Uploaded/transres/PackingSlipPDF/PackingSlipTest.pdf" "A4"
 Result: Resource request error: QNetworkReply::NetworkError(ConnectionRefusedError) ( "Connection refused" )
+/opt/phantomjs-2.1.1-linux-x86_64/bin/phantomjs --disk-cache=true /opt/order-lab/Scanorders2/vendor/olegutil/phantomjs/rasterize.js http://localhost/order/translational-research/work-request/download-packing-slip-pdf/14017 /opt/order-lab/Scanorders2/app/../web/Uploaded/transres/PackingSlipPDF/PackingSlip-PDF-APCP585-REQ14017_(14542-RS73305)-Hebding-12-04-2019.pdf "A4"
 
 Accept connection from localhost?
 "knplabs/knp-components": "^1.3",
