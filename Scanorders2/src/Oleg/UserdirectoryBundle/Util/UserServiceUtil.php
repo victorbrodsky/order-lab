@@ -1744,6 +1744,9 @@ class UserServiceUtil {
             echo exec("pwd");
             echo exec($cmd);
 
+            exec("ls",$o);
+            print_r($o);
+
             //$outputfile = "/opt/order-lab/Scanorders2/var/log/execout.txt";
             //$pidfile = "/opt/order-lab/Scanorders2/var/log/execpid.txt";
             //exec(sprintf("%s > %s 2>&1 & echo $! >> %s", $cmd, $outputfile, $pidfile));
