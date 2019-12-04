@@ -1750,7 +1750,9 @@ class UserServiceUtil {
             //print_r($o);
             //echo "######<br>";
 
-            echo exec("whereis php",$phppath);
+            exec("whereis php",$phppath);
+            $phppath = implode(" ",$phppath);
+            print_r($phppath);
             //php: /opt/rh/rh-php56/root/usr/bin/php
             $phppath = str_replace("php:","",$phppath);
             $phppath = str_replace(" ","",$phppath);
