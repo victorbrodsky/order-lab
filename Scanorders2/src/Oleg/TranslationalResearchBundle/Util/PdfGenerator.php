@@ -372,8 +372,8 @@ class PdfGenerator
         $applicationFilePath = $outdir . $fileFullReportUniqueName;
 
         //remove '(' and ')'
-        $applicationFilePath = str_replace(")","[",$applicationFilePath);
-        $applicationFilePath = str_replace("(","[",$applicationFilePath);
+        $applicationFilePath = str_replace(")","-",$applicationFilePath);
+        $applicationFilePath = str_replace("(","-",$applicationFilePath);
 
         //$useKnpSnappy = true;
         $useKnpSnappy = false;
