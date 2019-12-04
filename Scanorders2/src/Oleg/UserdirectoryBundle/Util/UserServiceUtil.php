@@ -1745,16 +1745,21 @@ class UserServiceUtil {
             //echo exec("pwd",$o);
             //print_r($o);
 
-            echo exec("/opt/rh/rh-php56/root/usr/bin/php --version",$o);
-            echo "######<br>php --version:<br>";
-            print_r($o);
-            echo "######<br>";
+            //echo exec("/opt/rh/rh-php56/root/usr/bin/php --version",$o);
+            //echo "######<br>php --version:<br>";
+            //print_r($o);
+            //echo "######<br>";
 
-            $cmd = str_replace("php","/opt/rh/rh-php56/root/usr/bin/php",$cmd);
-            echo "<br><br>######<br>cmd:<br>";
+            echo exec("whereis php",$phppath);
+            //php: /opt/rh/rh-php56/root/usr/bin/php
+            $phppath = str_replace("php:","",$phppath);
+            $phppath = str_replace(" ","",$phppath);
+
+            $cmd = str_replace("php ",$phppath." ",$cmd);
+            //echo "<br><br>######<br>cmd:<br>";
             echo exec($cmd,$o);
-            print_r($o);
-            echo "######<br><br>";
+            //print_r($o);
+            //echo "######<br><br>";
 
             //exec("ls",$o);
             //print_r($o);
@@ -1763,7 +1768,7 @@ class UserServiceUtil {
             //$pidfile = "/opt/order-lab/Scanorders2/var/log/execpid.txt";
             //exec(sprintf("%s > %s 2>&1 & echo $! >> %s", $cmd, $outputfile, $pidfile));
 
-            exit("exit");
+            //exit("exit");
         }
 
         return $oExec;

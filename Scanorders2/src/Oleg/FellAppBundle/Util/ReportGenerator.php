@@ -103,8 +103,8 @@ class ReportGenerator {
 
     public function resetQueueRun() {
 
-        $logger = $this->container->get('logger');
-        $logger->notice("Start resetQueueRun");
+        //$logger = $this->container->get('logger');
+        //$logger->notice("Start resetQueueRun");
 
         $queue = $this->getQueue();
 
@@ -131,8 +131,8 @@ class ReportGenerator {
         //$cmd = "php /opt/order-lab/Scanorders2/bin/console fellapp:generatereportrun --env=prod";
         //$logger->notice("Start execInBackground: cmd=".$cmd);
         //$userServiceUtil->execInBackground($cmd);
-        
-        $logger->notice("End resetQueueRun, numUpdated=".$numUpdated);
+
+        //$logger->notice("End resetQueueRun, numUpdated=".$numUpdated);
         return $numUpdated;
     }
     
