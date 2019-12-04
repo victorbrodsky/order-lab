@@ -372,7 +372,7 @@ class PdfGenerator
         $applicationFilePath = $outdir . $fileFullReportUniqueName;
 
         $useKnpSnappy = true;
-        //$useKnpSnappy = false;
+        $useKnpSnappy = false;
         if( $useKnpSnappy ) {
             $this->generatePdfPackingSlip($transresRequest,$fileFullReportUniqueName,$applicationFilePath);
             //$this->generatePdfPhantomjsPackingSlip($transresRequest,$applicationFilePath,$request);
