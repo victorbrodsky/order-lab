@@ -743,8 +743,8 @@ class ReportGenerator {
         //Error: Failed to load http://localhost/order/fellowship-applications/download/1, with network status code 1 and http status code 0 - Connection refused
         //However, it works with the real IP (i.e. 157.139.226.86)
         //Therefore, the problem is to generate report on the localhost by the cron or internally without web
-        //$replaceContext = true;
-        $replaceContext = false;
+        $replaceContext = true;
+        //$replaceContext = false;
         if( $replaceContext ) {
             $context = $this->container->get('router')->getContext();
 
