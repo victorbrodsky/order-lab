@@ -1736,6 +1736,7 @@ class UserServiceUtil {
             echo "pwd oExec=".$oExec."<br>";
             $logger->notice("pwd oExec=$oExec");
 
+            $cmd = "php /opt/order-lab/Scanorders2/bin/console fellapp:generatereportrun";
             echo "cmd=".$cmd."<br>";
             $oExec = shell_exec($cmd);
             $logger->notice("cmd oExec=$oExec");
