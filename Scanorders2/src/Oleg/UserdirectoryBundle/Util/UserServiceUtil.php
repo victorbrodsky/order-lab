@@ -1724,7 +1724,9 @@ class UserServiceUtil {
         }
         else {
             //$oExec = exec($cmd . " > /dev/null &");
+            echo exec('pwd');
             $oExec = exec($cmd);
+            echo $oExec;
         }
 
         return $oExec;
