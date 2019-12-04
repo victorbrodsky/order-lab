@@ -1744,6 +1744,7 @@ class UserServiceUtil {
 
             echo exec("pwd",$o);
             //print_r($o);
+            $o = implode(" ",$o);
             $logger->notice("execInBackground pwd=$o");
 
             //echo exec("/opt/rh/rh-php56/root/usr/bin/php --version",$o);
