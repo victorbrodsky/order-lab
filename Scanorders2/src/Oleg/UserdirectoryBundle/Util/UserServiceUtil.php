@@ -1724,7 +1724,7 @@ class UserServiceUtil {
         }
         else {
             $logger = $this->container->get('logger');
-            $logger->notice("Start execInBackground Linux");
+            //$logger->notice("Start execInBackground Linux");
 
             //$output = shell_exec('ls -lart');
             //$logger->notice("output=".$output);
@@ -1750,20 +1750,21 @@ class UserServiceUtil {
             //print_r($o);
             //echo "######<br>";
 
-            exec("whereis php",$phppath);
-            $phppath = implode(" ",$phppath);
-            print_r($phppath);
+            //exec("whereis php",$phppath);
+            //$phppath = implode(" ",$phppath);
+            //print_r($phppath);
             //php: /opt/rh/rh-php56/root/usr/bin/php
-            $phppath = str_replace("php:","",$phppath);
-            $phppath = str_replace(" ","",$phppath);
+            //$phppath = str_replace("php:","",$phppath);
+            //$phppath = str_replace(" ","",$phppath);
+            $phppath = "/opt/rh/rh-php56/root/usr/bin/php";
 
             $cmd = str_replace("php ",$phppath." ",$cmd);
-            $logger->notice("cmd=".$cmd);
+            $logger->notice("execInBackground cmd=".$cmd);
 
-            echo "<br><br>######<br>cmd:<br>";
-            echo exec($cmd,$oExec);
-            print_r($oExec);
-            echo "######<br><br>";
+            //echo "<br><br>######<br>cmd:<br>";
+            //echo exec($cmd,$oExec);
+            //print_r($oExec);
+            //echo "######<br><br>";
 
             //exec("ls",$o);
             //print_r($o);
@@ -1772,7 +1773,7 @@ class UserServiceUtil {
             //$pidfile = "/opt/order-lab/Scanorders2/var/log/execpid.txt";
             //exec(sprintf("%s > %s 2>&1 & echo $! >> %s", $cmd, $outputfile, $pidfile));
 
-            exit("exit");
+            //exit("exit");
         }
 
         return $oExec;
