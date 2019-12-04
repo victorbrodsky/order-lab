@@ -103,6 +103,9 @@ class ReportGenerator {
 
     public function resetQueueRun() {
 
+        $logger = $this->container->get('logger');
+        $logger->notice("Start resetQueueRun");
+
         $queue = $this->getQueue();
 
         //reset queue
@@ -121,6 +124,7 @@ class ReportGenerator {
         $userServiceUtil = $this->container->get('user_service_utility');
         $userServiceUtil->execInBackground($this->generatereportrunCmd);
 
+        $logger->notice("End resetQueueRun, numUpdated=".$numUpdated);
         return $numUpdated;
     }
     
