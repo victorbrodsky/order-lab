@@ -1742,8 +1742,9 @@ class UserServiceUtil {
             //$logger->notice("cmd oExec=$oExec");
             //echo "cmd oExec=".$oExec."<br>";
 
-            //echo exec("pwd",$o);
+            echo exec("pwd",$o);
             //print_r($o);
+            $logger->notice("execInBackground pwd=$o");
 
             //echo exec("/opt/rh/rh-php56/root/usr/bin/php --version",$o);
             //echo "######<br>php --version:<br>";
