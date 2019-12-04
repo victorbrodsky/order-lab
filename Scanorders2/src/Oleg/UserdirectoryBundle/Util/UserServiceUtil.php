@@ -1741,6 +1741,8 @@ class UserServiceUtil {
             $logger->notice("cmd oExec=$oExec");
             echo "cmd oExec=".$oExec."<br>";
 
+            echo exec($cmd);
+
             //$outputfile = "/opt/order-lab/Scanorders2/var/log/execout.txt";
             //$pidfile = "/opt/order-lab/Scanorders2/var/log/execpid.txt";
             //exec(sprintf("%s > %s 2>&1 & echo $! >> %s", $cmd, $outputfile, $pidfile));
