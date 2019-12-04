@@ -119,8 +119,8 @@ class PdfGenerator
 
     protected function constructUniqueFileName($entity,$filenameStr,$subjectUser=null) {
 
-        $logger = $this->container->get('logger');
-        $user = $this->secTokenStorage->getToken()->getUser();
+        //$logger = $this->container->get('logger');
+        //$user = $this->secTokenStorage->getToken()->getUser();
 
         $currentDate = new \DateTime();
 
@@ -147,10 +147,14 @@ class PdfGenerator
 
         //$serverTimezone = date_default_timezone_get(); //server timezone
 
+        $entityOid = $entity->getOId();
+        $entityOid = str_replace("[","",$entityOid);
+        $entityOid = str_replace("]","",$entityOid);
+
         //h-i-s-a
         $filename =
             $filenameStr.
-            "-".$entity->getOId().
+            "-".$entityOid.
             //"-".$subjectUser->getLastNameUppercase().
             //"-".$subjectUser->getFirstNameUppercase().
             $submitterName.
@@ -344,6 +348,11 @@ class PdfGenerator
         $fileFullReportUniqueName = $this->constructUniqueFileName($transresRequest,"PackingSlip-PDF");
         $logger->notice("Start to generate Packing Slip PDF ID=".$transresRequest->getOid()."; filename=".$fileFullReportUniqueName);
 
+        //remove '(' and ')'
+        //$fileFullReportUniqueName = str_replace(")","",$fileFullReportUniqueName);
+        //$fileFullReportUniqueName = str_replace("(","",$fileFullReportUniqueName);
+        //$fileFullReportUniqueName = str_replace("--","-",$fileFullReportUniqueName);
+
         //check and create Report and temp folders (transresuploadpath)
         $reportsUploadPath = "transres/PackingSlipPDF";  //$userSecUtil->getSiteSettingParameter('reportsUploadPathFellApp');
         if( !$reportsUploadPath ) {
@@ -370,11 +379,6 @@ class PdfGenerator
         //0) generate application pdf
         //$applicationFilePath = $outdir . "application_ID" . $invoice->getOid() . ".pdf";
         $applicationFilePath = $outdir . $fileFullReportUniqueName;
-
-        //remove '(' and ')'
-        $applicationFilePath = str_replace(")","",$applicationFilePath);
-        $applicationFilePath = str_replace("(","",$applicationFilePath);
-        $applicationFilePath = str_replace("--","-",$applicationFilePath);
 
         //$useKnpSnappy = true;
         $useKnpSnappy = false;
@@ -427,7 +431,7 @@ class PdfGenerator
         //exit('exit generatePackingSlipPdf');
     }
 
-    //NOT USED
+    //NOT USED (js generated barcodes are not shown)
     //Do not use KnpSnappyBundle to convert html to pdf for packing slip
     //http://wkhtmltopdf.org must be installed on server
     public function generatePdfPackingSlip($transresRequest,$fileFullReportUniqueName,$applicationOutputFilePath) {
@@ -603,6 +607,11 @@ class PdfGenerator
                 throw new \InvalidArgumentException('rasterizeLinux is not defined in Site Parameters.');
             }
         }
+
+        //remove '(' and ')'
+        //$applicationOutputFilePath = str_replace(")","",$applicationOutputFilePath);
+        //$applicationOutputFilePath = str_replace("(","",$applicationOutputFilePath);
+        //$applicationOutputFilePath = str_replace("--","-",$applicationOutputFilePath);
 
 //        $cmd =
 //            '"C:/Users/ch3/Desktop/php/phantomjs-2.1.1-windows/phantomjs-2.1.1-windows/bin/phantomjs.exe"' .
