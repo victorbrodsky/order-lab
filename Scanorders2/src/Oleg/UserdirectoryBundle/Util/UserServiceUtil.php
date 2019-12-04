@@ -1763,8 +1763,12 @@ class UserServiceUtil {
             $cmd = str_replace("php ",$phppath." ",$cmd);
             $logger->notice("execInBackground cmd=".$cmd);
 
+            ///opt/rh/rh-php56/root/usr/bin/php ../bin/console fellapp:generatereportrun --env=prod
+            //$cmd = str_replace(" ../bin/console "," /opt/order-lab/Scanorders2/bin/console ",$cmd);
+            //$logger->notice("execInBackground cmd=".$cmd);
+
             //echo "<br><br>######<br>cmd:<br>";
-            //echo exec($cmd,$oExec);
+            echo exec($cmd,$oExec);
             //print_r($oExec);
             //echo "######<br><br>";
 
