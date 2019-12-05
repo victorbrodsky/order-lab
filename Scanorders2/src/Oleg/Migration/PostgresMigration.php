@@ -84,10 +84,12 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
         //ALTER TABLE transres_siteparameters ADD CONSTRAINT FK_74EBD228B9851374 FOREIGN KEY (testuser) REFERENCES user_fosuser (id) NOT DEFERRABLE INITIALLY IMMEDIATE
         //ALTER TABLE transres_siteparameters ADD CONSTRAINT FK_74EBD22819B7BC4A FOREIGN KEY (testUser) REFERENCES user_fosuser (id) NOT DEFERRABLE INITIALLY IMMEDIATE
         if( strpos($sql, 'ALTER TABLE ') !== false && strpos($sql, ' ADD CONSTRAINT ') !== false && strpos($sql, ' FOREIGN KEY ') !== false ) {
+            echo "  ADD CONSTRAINT  !!!!!" . $newline;
             if( count($sqlArr) >= 10 ) {
                 //We need the index 6
                 $sqlIndex = $sqlArr[5];
             }
+            echo "  ADD CONSTRAINT : sqlIndex=$sqlIndex" . $newline;
         }
 
         //CREATE INDEX IDX_74EBD22819B7BC4A ON transres_siteparameters (testUser)
@@ -134,7 +136,7 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
         foreach( $processArr as $index => $table ) {
             //echo $index->getName() . ': ' . ($index->isUnique() ? 'unique' : 'not unique') . "\n";
             if (strtolower($sqlIndex) == strtolower($index)) {
-                echo $this->counter . ": Found index=" . $sqlIndex . " (" . $table . ")." . $newline;
+                echo $this->counter . ": Found $name=" . $sqlIndex . " (" . $table . ")." . $newline;
                 return true;
             }
         }
