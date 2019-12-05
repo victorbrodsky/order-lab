@@ -400,9 +400,9 @@ class TransResSiteParameters {
 
     /**
      * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(name="testUser", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="testuser", referencedColumnName="id", nullable=true)
      */
-    private $testUser;
+    private $testuser;
 
 
     public function __construct($user=null) {
