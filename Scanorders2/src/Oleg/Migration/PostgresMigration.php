@@ -177,9 +177,9 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
         //if( $sql == "CREATE UNIQUE INDEX UNIQ_D267B39C33F7837 ON calllog_calllogentrymessage_document (document_id)" ) {
         //    exit("Testing exit sql=".$sql);
         //}
-        if( strpos($sql, 'FK_74EBD228B9851374') !== FALSE ) {
-            exit("Testing exit sql=".$sql);
-        }
+        //if( strpos($sql, 'FK_74EBD228B9851374') !== FALSE ) {
+        //    exit("Testing exit sql=".$sql);
+        //}
     }
 //    public function processSimpleSql($sql) {
 //        $this->processComplexSql($sql,null);
