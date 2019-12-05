@@ -119,7 +119,11 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
         $newline = "\n";
         $processArr = array();
         $name = 'undefined key/index';
-        if( strpos($sqlIndex, 'IDX_') !== false || strpos($sqlIndex, 'idx_') !== false ) {
+        if(
+            strpos($sqlIndex, 'IDX_') !== false ||
+            strpos($sqlIndex, 'idx_') !== false ||
+            strpos($sqlIndex, '_idx') !== false     //CREATE INDEX oid_idx ON scan_message (oid)
+        ) {
             $processArr = $this->indexArr;
             $name = "index";
         }
