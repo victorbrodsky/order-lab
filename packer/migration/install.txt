@@ -1,0 +1,93 @@
+COLOR='\033[1;36m'
+NC='\033[0m'  # No Color
+
+echo -e ${COLOR} sudo yum update -y ${NC}
+sudo yum update -y
+echo -e ${COLOR} sudo yum upgrade -y ${NC}
+sudo yum upgrade -y
+
+#Optional if setenforce is enabled
+echo -e ${COLOR} Disable SELinux ${NC}
+sudo setenforce 0
+sed -i -e "s/SELINUX=enforcing/SELINUX=disabled/g" /etc/selinux/config
+
+echo -e ${COLOR} Check SELinux Status ${NC}
+sestatus
+	
+	
+########## INSTALL APACHE ##########
+    echo -e "${COLOR} Installing apache ... ${NC}"
+    sleep 1
+
+	sudo yum install httpd -y
+	sudo systemctl enable httpd.service
+	sudo systemctl start httpd.service
+	sudo systemctl status httpd.service
+
+
+########## INSTALL Postgresql 12 ##########
+yum install -y postgresql12
+yum install -y postgresql12-server
+sudo yum -y install oidentd
+
+sudo /usr/pgsql-12/bin/postgresql-12-setup initdb
+sudo systemctl enable postgresql-12
+sudo systemctl start postgresql-12
+
+sudo -Hiu postgres createdb scanorder
+sudo -Hiu postgres psql -c "CREATE USER symfony WITH PASSWORD 'symfony'"
+sudo -Hiu postgres psql -c "ALTER USER symfony WITH SUPERUSER"
+sudo -Hiu postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE scanorder to symfony"
+
+sed -i -e "s/peer/md5/g" /var/lib/pgsql/12/data/pg_hba.conf
+sed -i -e "s/ident/md5/g" /var/lib/pgsql/12/data/pg_hba.conf
+
+sed -i -e "\$aTEXTTOEND" /var/lib/pgsql/12/data/pg_hba.conf
+sed -i "s/TEXTTOEND/host all all 0.0.0.0\/0 md5/g" /var/lib/pgsql/12/data/pg_hba.conf
+
+echo -e ${COLOR} postgresql.conf to listen all addresses ${NC}
+sed -i -e "s/#listen_addresses/listen_addresses='*' #listen_addresses/g" /var/lib/pgsql/12/data/postgresql.conf	
+echo -e ${COLOR} Set port ${NC}
+sed -i -e "s/#port/port = 5432 #port/g" /var/lib/pgsql/12/data/postgresql.conf		
+sudo systemctl restart postgresql-12
+
+#Check iptables: 
+sudo iptables -L
+#Important: Open all incoming traffic in port 80:
+sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+sudo iptables -A INPUT -p tcp --dport 5432 -j ACCEPT
+sudo /sbin/service iptables save
+
+########## INSTALL PHP 5.6 ##########
+echo -e ${COLOR} Install: noarch and remi ${NC}	
+	sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+	sudo yum install -y http://rpms.remirepo.net/enterprise/remi-release-7.rpm
+	
+	echo -e ${COLOR} Install: yum install -y yum-utils ${NC}		
+	sudo yum install -y yum-utils
+
+echo -e  ${COLOR} Enable remi-php56 ${NC}
+yum-config-manager --enable remi-php56
+	
+echo -e ${COLOR} Install php 5.6: install -y php ${NC}	
+sudo yum install -y php
+#make sure they are installed. If not install one by one each component. Except php-mcrypt, we don't need it.
+sudo yum install -y php-mcrypt php-cli php-gd php-curl php-mysql php-ldap php-zip php-fileinfo php-pear php-pdo php-pgsql php-xml php-simplexml php-zip php-mbstring php-intl
+		
+sudo systemctl restart httpd.service	
+php -v	
+	
+#Install everything in this funstion	
+f_install_util ()	
+
+########## Clone ORDER ##########	
+#Install scanorder to /opt/order-lab
+cd /usr/local/bin/
+git clone https://github.com/victorbrodsky/order-lab.git /opt/order-lab	
+sudo chmod a+x /opt/order-lab
+sudo chown -R apache:apache /opt/order-lab
+	
+	
+	
+	
+	

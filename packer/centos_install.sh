@@ -290,6 +290,10 @@ f_install_util () {
 	echo -e ${COLOR} Install wkhtmltopdf ${NC}
 	wget https://downloads.wkhtmltopdf.org/0.12/0.12.5/wkhtmltox-0.12.5-1.centos7.x86_64.rpm
 	sudo rpm -Uvh wkhtmltox-0.12.5-1.centos7.x86_64.rpm
+	
+	echo -e ${COLOR} Install xorg-x11-server-Xvfb ${NC}
+	sudo yum install -y xorg-x11-server-Xvfb
+	
 	echo -e ${COLOR} Get version wkhtmltopdf ${NC}
 	/usr/bin/xvfb-run wkhtmltopdf --version
 	
@@ -304,9 +308,6 @@ f_install_util () {
 	sudo wget https://copr.fedorainfracloud.org/coprs/robert/gcj/repo/epel-7/robert-gcj-epel-7.repo -P /etc/yum.repos.d
 	sudo wget https://copr.fedorainfracloud.org/coprs/robert/pdftk/repo/epel-7/robert-pdftk-epel-7.repo -P /etc/yum.repos.d
 	sudo yum install -y pdftk
-	
-	echo -e ${COLOR} Install xorg-x11-server-Xvfb ${NC}
-	sudo yum install -y xorg-x11-server-Xvfb
 	
 	#http://www.vassox.com/linux-general/installing-phantomjs-on-centos-7-rhel/
 	echo -e ${COLOR} Install PhantomJS ${NC}
