@@ -68,6 +68,22 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
             }
         }
 
+        //ALTER TABLE transres_siteparameters ADD CONSTRAINT FK_74EBD22819B7BC4A FOREIGN KEY (testUser) REFERENCES user_fosuser (id) NOT DEFERRABLE INITIALLY IMMEDIATE
+        if( strpos($sql, 'ALTER TABLE ') !== false && strpos($sql, ' ADD CONSTRAINT ') !== false && strpos($sql, ' FOREIGN KEY ') !== false ) {
+            if( count($sqlArr) >= 12 ) {
+                //We need the index 6
+                $sqlIndex = $sqlArr[5];
+            }
+        }
+
+        //CREATE INDEX IDX_74EBD22819B7BC4A ON transres_siteparameters (testUser)
+        if( strpos($sql, 'CREATE INDEX ') !== false && strpos($sql, ' ON ') ) {
+            if( count($sqlArr) >= 6 ) {
+                //We need the index 3
+                $sqlIndex = $sqlArr[2];
+            }
+        }
+
         //Skip:
         //ALTER TABLE calllog_calllogentrymessage_document ADD PRIMARY KEY (message_id, document_id)
 
@@ -161,7 +177,7 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
             }
 
             if( strpos($sql, 'CREATE UNIQUE INDEX ') !== FALSE ) {
-                //exception: if index does not exists => create index
+                //exception SQL: if index does not exists => create index
                 if( $this->indexExists($sql) === FALSE ) {
                     //index does not exists => ok create index
                 } else {
@@ -169,6 +185,7 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
                     return FALSE;
                 }
             } else {
+                //All others SQL
                 if( $this->indexExists($sql) === FALSE ) {
                     //echo $this->counter.":###Ignore3b " . $sql . $newline;
                     return FALSE;
