@@ -134,7 +134,7 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
                 return true;
             }
         }
-        echo $this->counter . ": NotFound $name=" . $sqlIndex . " (" . $table . ")." . $newline;
+        echo $this->counter . ": NotFound $name=" . $sqlIndex . $newline;
 
         return false;
     }
