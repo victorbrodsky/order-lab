@@ -25,6 +25,7 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
 
     private $container;
     private $indexArr = array();
+    private $foreignkeyArr = array();
     private $counter = 0;
 
     public function setContainer(ContainerInterface $container = null)
@@ -80,9 +81,10 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
             return TRUE;
         }
 
+        //ALTER TABLE transres_siteparameters ADD CONSTRAINT FK_74EBD228B9851374 FOREIGN KEY (testuser) REFERENCES user_fosuser (id) NOT DEFERRABLE INITIALLY IMMEDIATE
         //ALTER TABLE transres_siteparameters ADD CONSTRAINT FK_74EBD22819B7BC4A FOREIGN KEY (testUser) REFERENCES user_fosuser (id) NOT DEFERRABLE INITIALLY IMMEDIATE
         if( strpos($sql, 'ALTER TABLE ') !== false && strpos($sql, ' ADD CONSTRAINT ') !== false && strpos($sql, ' FOREIGN KEY ') !== false ) {
-            if( count($sqlArr) >= 12 ) {
+            if( count($sqlArr) >= 10 ) {
                 //We need the index 6
                 $sqlIndex = $sqlArr[5];
             }
@@ -115,14 +117,25 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
     }
     public function indexExistsSimple($sqlIndex) {
         $newline = "\n";
-        foreach( $this->indexArr as $index=>$table ) {
+        $processArr = array();
+        $name = 'undefined key/index';
+        if( strpos($sqlIndex, 'IDX_') !== false || strpos($sqlIndex, 'idx_') !== false ) {
+            $processArr = $this->indexArr;
+            $name = "index";
+        }
+        if( strpos($sqlIndex, 'FK_') !== false || strpos($sqlIndex, 'fk_') !== false ) {
+            $processArr = $this->foreignkeyArr;
+            $name = "foreign key";
+        }
+        foreach( $processArr as $index => $table ) {
             //echo $index->getName() . ': ' . ($index->isUnique() ? 'unique' : 'not unique') . "\n";
-            if( strtolower($sqlIndex) == strtolower($index) ) {
-                echo $this->counter.": Found index=".$sqlIndex." (".$table.").".$newline;
+            if (strtolower($sqlIndex) == strtolower($index)) {
+                echo $this->counter . ": Found index=" . $sqlIndex . " (" . $table . ")." . $newline;
                 return true;
             }
         }
-        echo $this->counter.": NotFound index=".$sqlIndex." (".$table.").".$newline;
+        echo $this->counter . ": NotFound $name=" . $sqlIndex . " (" . $table . ")." . $newline;
+
         return false;
     }
 
@@ -138,8 +151,14 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
                 //echo $index->getName() . ': ' . ($index->isUnique() ? 'unique' : 'not unique') . "\n";
                 $this->indexArr[$index->getName()] = $table->getName();
             }
+            $foreignkeys = $sm->listTableForeignKeys($table->getName());
+            foreach ($foreignkeys as $foreignkey) {
+                //echo $foreignkey->getName() . ': ' . ($foreignkey->isUnique() ? 'unique' : 'not unique') . "\n";
+                $this->foreignkeyArr[$foreignkey->getName()] = $table->getName();
+            }
         }
         echo "Found " . count($this->indexArr) . " indexes in " . count($tables) . " tables" . $newline;
+        echo "Found " . count($this->foreignkeyArr) . " foreign keys in " . count($tables) . " tables" . $newline;
     }
 
 
@@ -198,7 +217,7 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
                 if( $this->indexExists($sql) === FALSE ) {
                     //index does not exists => ok create index
                 } else {
-                    echo $this->counter.":############Ignore3a " . $sql . $newline;
+                    echo $this->counter.":############Ignore3a (Index/Constraint exists) " . $sql . $newline;
                     return FALSE;
                 }
             } else {
