@@ -176,7 +176,12 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
                 $this->createIndexArr();
             }
 
-            if( strpos($sql, 'CREATE UNIQUE INDEX ') !== FALSE ) {
+            //if( strpos($sql, 'CREATE UNIQUE INDEX ') !== FALSE ) {
+            if(
+                $this->SpecialCaseExists($sql,'CREATE UNIQUE INDEX ') ||
+                $this->SpecialCaseExists($sql,' ADD CONSTRAINT ') ||
+                $this->SpecialCaseExists($sql,'CREATE INDEX ')
+            ) {
                 //exception SQL: if index does not exists => create index
                 if( $this->indexExists($sql) === FALSE ) {
                     //index does not exists => ok create index
@@ -218,6 +223,12 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
         $this->addSql($sql);
     }
 
+    public function SpecialCaseExists($sql,$sqlSubstring) {
+        if( strpos($sql, $sqlSubstring) !== FALSE ) {
+            return TRUE;
+        }
+        return FALSE;
+    }
 
 
 
