@@ -398,6 +398,12 @@ class TransResSiteParameters {
     ////////////// EOF Completed Work Requests reminder email //////////////
 
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\JoinColumn(name="testUser", referencedColumnName="id", nullable=true)
+     */
+    private $testUser;
+
 
     public function __construct($user=null) {
         $this->setCreator($user);
