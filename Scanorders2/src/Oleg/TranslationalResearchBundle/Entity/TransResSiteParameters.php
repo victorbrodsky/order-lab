@@ -398,11 +398,11 @@ class TransResSiteParameters {
     ////////////// EOF Completed Work Requests reminder email //////////////
 
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(name="testuser", referencedColumnName="id", nullable=true)
-     */
-    private $testuser;
+//    /**
+//     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+//     * @ORM\JoinColumn(name="testuser", referencedColumnName="id", nullable=true)
+//     */
+//    private $testuser;
 
 
     public function __construct($user=null) {
