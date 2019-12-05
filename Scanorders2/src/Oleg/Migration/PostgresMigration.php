@@ -68,6 +68,18 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
             }
         }
 
+        //ALTER TABLE transres_siteparameters ADD testuser INT DEFAULT NULL
+        if( strpos($sql, 'ALTER TABLE ') !== false && strpos($sql, ' ADD ') !== false ) {
+            //No index to verify, just add not existing column => return TRUE
+            return TRUE;
+        }
+
+        //'ALTER TABLE transres_siteparameters ALTER id DROP DEFAULT'
+        if( strpos($sql, 'ALTER TABLE ') !== false && strpos($sql, ' ALTER ') !== false && strpos($sql, ' DROP ') !== false ) {
+            //No index to verify, just DROP parameter on existing column => return TRUE
+            return TRUE;
+        }
+
         //ALTER TABLE transres_siteparameters ADD CONSTRAINT FK_74EBD22819B7BC4A FOREIGN KEY (testUser) REFERENCES user_fosuser (id) NOT DEFERRABLE INITIALLY IMMEDIATE
         if( strpos($sql, 'ALTER TABLE ') !== false && strpos($sql, ' ADD CONSTRAINT ') !== false && strpos($sql, ' FOREIGN KEY ') !== false ) {
             if( count($sqlArr) >= 12 ) {
