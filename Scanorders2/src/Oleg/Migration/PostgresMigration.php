@@ -70,7 +70,7 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
         }
 
         //ALTER TABLE transres_siteparameters ADD testuser INT DEFAULT NULL
-        if( strpos($sql, 'ALTER TABLE ') !== false && strpos($sql, ' ADD ') !== false ) {
+        if( strpos($sql, 'ALTER TABLE ') !== false && strpos($sql, ' ADD ') !== false && strpos($sql, ' ADD CONSTRAINT ') === false  ) {
             //No index to verify, just add not existing column => return TRUE
             return TRUE;
         }
