@@ -1,3 +1,8 @@
+ALTER TABLE transres_invoice RENAME COLUMN oid00000 TO oid;
+ALTER TABLE scan_message RENAME COLUMN oid00000 TO oid;
+ALTER TABLE transres_project RENAME COLUMN oid00000 TO oid;
+ALTER TABLE transres_request RENAME COLUMN oid00000 TO oid;
+
 #Unique indexes
 CREATE INDEX idx_ea22b84e63b59e5c
     ON public.scan_calllogentrymessage_patientlist USING btree
@@ -79,14 +84,33 @@ UPDATE public.user_siteparameters
 
 UPDATE public.user_siteparameters SET connectionchannel='http';
 UPDATE public.user_siteparameters SET emailcriticalerror=false;
-UPDATE public.user_siteparameters SET p12keypathfellapp='/usr/local/bin/order-lab/Scanorders2/src/Oleg/FellAppBundle/Util/FellowshipApplication-f1d9f98353e5.p12';
-UPDATE public.user_siteparameters SET connectionChannel='http';
-UPDATE public.user_siteparameters SET connectionChannel='http';
-UPDATE public.user_siteparameters SET connectionChannel='http';
-UPDATE public.user_siteparameters SET connectionChannel='http';
+UPDATE public.user_siteparameters SET p12keypathfellapp='/opt/order-lab/Scanorders2/src/Oleg/FellAppBundle/Util/FellowshipApplication-f1d9f98353e5.p12';
+
+UPDATE public.user_siteparameters SET pdftkfilenamefellapp='/usr/bin';
+UPDATE public.user_siteparameters SET libreofficeconverttopdffilenamefellapplinux='soffice';
+UPDATE public.user_siteparameters SET libreofficeconverttopdfargumentsdfellapplinux='--headless -convert-to pdf -outdir';
+UPDATE public.user_siteparameters SET pdftkpathfellapplinux='/usr/bin';
+UPDATE public.user_siteparameters SET pdftkfilenamefellapplinux='pdftk';
+UPDATE public.user_siteparameters SET pdftkargumentsfellapplinux='###inputFiles### cat output ###outputFile### dont_ask';
+UPDATE public.user_siteparameters SET gspathfellapplinux='/usr/bin';
+UPDATE public.user_siteparameters SET gsfilenamefellapplinux='ghostscript';
+UPDATE public.user_siteparameters SET gsArgumentsFellAppLinux='-q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=###outputFile### -c .setpdfwrite -f ###inputFiles###';
+UPDATE public.user_siteparameters SET wkhtmltopdfpathLinux='/usr/bin/xvfb-run wkhtmltopdf';
+UPDATE public.user_siteparameters SET phantomjsLinux='/opt/phantomjs-2.1.1-linux-x86_64/bin/phantomjs';
+UPDATE public.user_siteparameters SET rasterizeLinux='/opt/order-lab/Scanorders2/vendor/olegutil/phantomjs/rasterize.js';
+UPDATE public.user_siteparameters SET pathMetaphone='/opt/order-lab/Scanorders2/vendor/olegutil/Metaphone3/metaphone3.php';
+UPDATE public.user_siteparameters SET networkDrivePath='';
+
+UPDATE public.user_siteparameters SET allowpopulatefellapp=false;
+UPDATE public.user_siteparameters SET mailerspool=false;
+UPDATE public.user_siteparameters SET environment='test';
+
+UPDATE public.user_siteparameters SET networkDrivePath='';
 UPDATE public.user_siteparameters SET connectionChannel='http';
 UPDATE public.user_siteparameters SET connectionChannel='http';
 UPDATE public.user_siteparameters SET connectionChannel='http';
 UPDATE public.user_siteparameters SET connectionChannel='http';
 
+user_organizationalgroupdefault_permittedinstitutionalphiscope
+user_organizationalGroupDefault_permittedInstitutionalPHIScope
 

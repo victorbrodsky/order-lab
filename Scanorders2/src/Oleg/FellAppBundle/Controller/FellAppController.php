@@ -222,7 +222,7 @@ class FellAppController extends Controller {
         //echo "0startDates=".$startDates->format('Y-m-d')."<br>";
         //echo "active=".$active."<br>";
         //echo "filter=".$filter."<br>";
-        //echo "<br>search=".$search."<br>";
+        echo "<br>search=".$search."<br>";
         //exit('1');
 
         $filterParams = $request->query->all();
@@ -314,6 +314,7 @@ class FellAppController extends Controller {
         $dql->leftJoin("fellapp.rank", "rank");
 
         if( $search ) {
+            echo "<br>search=".$search."<br>";
             $dql->leftJoin("applicant.infos", "userinfos");
             $dql->andWhere("userinfos.firstName LIKE '%".$search."%' OR userinfos.lastName LIKE '%".$search."%'");
             $searchFlag = true;
