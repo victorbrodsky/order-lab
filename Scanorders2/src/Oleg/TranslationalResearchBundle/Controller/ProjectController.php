@@ -359,7 +359,8 @@ class ProjectController extends Controller
 
         if( $searchId ) {
             //echo "searchId=$searchId<br>";
-            $dql->andWhere("LOWER(project.oid) LIKE LOWER(:oid)");
+            //$dql->andWhere("LOWER(project.oid) LIKE LOWER(:oid)");
+            $dql->andWhere("project.oid LIKE :oid");
             $dqlParameters["oid"] = "%".$searchId."%";
         }
 
