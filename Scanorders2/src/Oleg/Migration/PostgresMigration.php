@@ -220,8 +220,8 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
         }
 
         //Testing
-        echo $this->counter.": Process sql=".$sql.$newline;
-        $this->addSql($sql);
+        //echo $this->counter.": Process sql=".$sql.$newline;
+        //$this->addSql($sql);
 
         if( $useSchema ) {
 
