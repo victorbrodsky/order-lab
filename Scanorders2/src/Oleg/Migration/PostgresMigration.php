@@ -208,6 +208,11 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
             echo $this->counter.":###Ignore1 ".$sql.$newline;
             return FALSE;
         }
+
+        //Testing
+        echo $this->counter.": Process sql=".$sql.$newline;
+        $this->addSql($sql);
+
 //        if( strpos($sql, 'DROP INDEX ') !== false && strpos($sql, 'primary') !== false ) {
 //            return false;
 //        }
