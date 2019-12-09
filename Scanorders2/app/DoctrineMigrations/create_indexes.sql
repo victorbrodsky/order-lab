@@ -100,13 +100,13 @@ UPDATE public.user_siteparameters SET phantomjsLinux='/opt/phantomjs-2.1.1-linux
 UPDATE public.user_siteparameters SET rasterizeLinux='/opt/order-lab/Scanorders2/vendor/olegutil/phantomjs/rasterize.js';
 UPDATE public.user_siteparameters SET pathMetaphone='/opt/order-lab/Scanorders2/vendor/olegutil/Metaphone3/metaphone3.php';
 UPDATE public.user_siteparameters SET networkDrivePath='';
+UPDATE public.user_siteparameters SET libreOfficeConvertToPDFPathFellAppLinux='/usr/bin';
 
 UPDATE public.user_siteparameters SET allowpopulatefellapp=false;
 UPDATE public.user_siteparameters SET mailerspool=false;
 UPDATE public.user_siteparameters SET environment='test';
 
-UPDATE public.user_siteparameters SET networkDrivePath='';
-UPDATE public.user_siteparameters SET connectionChannel='http';
+
 UPDATE public.user_siteparameters SET connectionChannel='http';
 UPDATE public.user_siteparameters SET connectionChannel='http';
 UPDATE public.user_siteparameters SET connectionChannel='http';
