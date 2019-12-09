@@ -315,9 +315,9 @@ class FellAppController extends Controller {
 
         if( $search ) {
             echo "<br>search=".$search."<br>";
-            $dql->leftJoin("applicant.infos", "userinfos");
+            //$dql->leftJoin("applicant.infos", "applicantinfos");
             //$dql->andWhere("userinfos.firstName LIKE '%".$search."%' OR userinfos.lastName LIKE '%".$search."%'");
-            $dql->andWhere("userinfos.firstName = '".$search."' OR userinfos.lastName = '".$search."'");
+            $dql->andWhere("applicantinfos.firstName = '".$search."' OR applicantinfos.lastName = '".$search."'");
             $searchFlag = true;
         }
 
