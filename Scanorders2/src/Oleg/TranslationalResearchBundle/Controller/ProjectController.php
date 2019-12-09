@@ -359,18 +359,18 @@ class ProjectController extends Controller
 
         if( $searchId ) {
             //echo "searchId=$searchId<br>";
-            $dql->andWhere("project.oid LIKE :oid");
+            $dql->andWhere("LOWER(project.oid) LIKE LOWER(:oid)");
             $dqlParameters["oid"] = "%".$searchId."%";
         }
 
         if( $exportId ) {
-            $dql->andWhere("project.exportId LIKE :exportId");
+            $dql->andWhere("LOWER(project.exportId) LIKE LOWER(:exportId)");
             $dqlParameters["exportId"] = "%".$exportId."%";
             $advancedFilter++;
         }
 
         if( $briefDescription ) {
-            $dql->andWhere("project.description LIKE :description");
+            $dql->andWhere("LOWER(project.description) LIKE LOWER(:description)");
             $dqlParameters["description"] = "%".$briefDescription."%";
             $advancedFilter++;
         }
@@ -431,17 +431,17 @@ class ProjectController extends Controller
             $advancedFilter++;
         }
         if( $searchTitle ) {
-            $dql->andWhere("project.title LIKE :title");
+            $dql->andWhere("LOWER(project.title) LIKE (:title)");
             $dqlParameters["title"] = "%".$searchTitle."%";
             $advancedFilter++;
         }
         if( $searchIrbNumber ) {
-            $dql->andWhere("project.irbNumber LIKE :irbNumber OR project.iacucNumber LIKE :irbNumber");
+            $dql->andWhere("LOWER(project.irbNumber) LIKE LOWER(:irbNumber) OR LOWER(project.iacucNumber) LIKE LOWER(:irbNumber)");
             $dqlParameters["irbNumber"] = "%".$searchIrbNumber."%";
             $advancedFilter++;
         }
         if( $fundingNumber ) {
-            $dql->andWhere("project.fundedAccountNumber LIKE :fundedAccountNumber");
+            $dql->andWhere("LOWER(project.fundedAccountNumber) LIKE LOWER(:fundedAccountNumber)");
             $dqlParameters["fundedAccountNumber"] = "%".$fundingNumber."%";
             $advancedFilter++;
         }

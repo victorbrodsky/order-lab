@@ -2331,7 +2331,7 @@ class CallEntryController extends Controller
                 }
 
             } else {
-                $dql->andWhere("mrn.field LIKE :mrn");
+                $dql->andWhere("LOWER(mrn.field) LIKE LOWER(:mrn)");
                 $parameters['mrn'] = '%' . $mrn . '%';
             }
 

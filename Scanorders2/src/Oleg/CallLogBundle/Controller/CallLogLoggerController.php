@@ -291,7 +291,7 @@ class CallLogLoggerController extends LoggerController
 //            $dql->andWhere("EXISTS (".$entryBodySearchStr.")");
 
             //echo "show only logger records where user=$currentUserName <br>";
-            $dql->andWhere("logger.event LIKE :currentUserName");
+            $dql->andWhere("LOWER(logger.event) LIKE LOWER(:currentUserName)");
             $dqlParameters['currentUserName'] = '%'.$currentUserName.'%';
 
             //$dqlParameters['loggerUser'] = "IS NOT NULL";

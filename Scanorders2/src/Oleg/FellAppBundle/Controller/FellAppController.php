@@ -314,10 +314,8 @@ class FellAppController extends Controller {
         $dql->leftJoin("fellapp.rank", "rank");
 
         if( $search ) {
-            echo "<br>search=".$search."<br>";
-            //$dql->leftJoin("applicant.infos", "applicantinfos");
+            //echo "<br>search=".$search."<br>";
             $dql->andWhere("LOWER(applicantinfos.firstName) LIKE LOWER('%".$search."%') OR LOWER(applicantinfos.lastName) LIKE LOWER('%".$search."%')");
-            //$dql->andWhere("applicantinfos.firstName = '".$search."' OR applicantinfos.lastName = '".$search."'");
             $searchFlag = true;
         }
 
@@ -454,7 +452,7 @@ class FellAppController extends Controller {
             $dql->andWhere("interviews.interviewer = " . $user->getId() );
         }
 
-        echo "dql=".$dql."<br>";
+        //echo "dql=".$dql."<br>";
 
         $limit = 200;
         //$limit = 10; //testing
