@@ -139,17 +139,17 @@ class ComplexListController extends Controller
 
         if( $search ) {
 
-            $searchStr = "ent.id LIKE :search OR ent.name LIKE :search OR ent.abbreviation LIKE :search OR ent.shortname LIKE :search OR ent.description LIKE :search";
+            $searchStr = "ent.id LIKE :search OR LOWER(ent.name) LIKE LOWER(:search) OR LOWER(ent.abbreviation) LIKE LOWER(:search) OR LOWER(ent.shortname) LIKE LOWER(:search) OR LOWER(ent.description) LIKE LOWER(:search)";
 
             //search location: phone, building, room
             if( $mapper['pathname'] == 'locations' ) {
                 $searchStr = $searchStr . " OR ent.phone LIKE :search";
 
                 $dql->leftJoin("ent.building", "building");
-                $searchStr = $searchStr . " OR building.name LIKE :search";
+                $searchStr = $searchStr . " OR LOWER(building.name) LIKE LOWER(:search)";
 
                 $dql->leftJoin("ent.room", "room");
-                $searchStr = $searchStr . " OR room.name LIKE :search";
+                $searchStr = $searchStr . " OR LOWER(room.name) LIKE LOWER(:search)";
             }
 
             $dql->andWhere($searchStr);

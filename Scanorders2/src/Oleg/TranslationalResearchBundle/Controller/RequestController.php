@@ -1785,13 +1785,13 @@ class RequestController extends Controller
 
         if( $externalId ) {
             //echo $externalId."<br>";
-            $dql->andWhere('transresRequest.exportId LIKE :exportId');
+            $dql->andWhere('LOWER(transresRequest.exportId) LIKE LOWER(:exportId)');
             $dqlParameters['exportId'] = "%".$externalId."%";
             $advancedFilter++;
         }
 
         if( $requestId ) {
-            $dql->andWhere('transresRequest.oid LIKE :requestId');
+            $dql->andWhere('LOWER(transresRequest.oid) LIKE LOWER(:requestId)');
             $dqlParameters['requestId'] = "%".$requestId."%";
         }
 
@@ -1802,7 +1802,7 @@ class RequestController extends Controller
 //        }
 
         if( $fundingNumber ) {
-            $dql->andWhere("transresRequest.fundedAccountNumber LIKE :fundedAccountNumber");
+            $dql->andWhere("LOWER(transresRequest.fundedAccountNumber) LIKE LOWER(:fundedAccountNumber)");
             $dqlParameters["fundedAccountNumber"] = "%".$fundingNumber."%";
             $advancedFilter++;
         }
@@ -1821,7 +1821,7 @@ class RequestController extends Controller
 
         if( $sampleName ) {
             $dql->leftJoin('transresRequest.dataResults','dataResults');
-            $dql->andWhere("dataResults.barcode LIKE :sampleName");
+            $dql->andWhere("LOWER(dataResults.barcode) LIKE LOWER(:sampleName)");
             $dqlParameters["sampleName"] = "%".$sampleName."%";
             $advancedFilter++;
         }
@@ -1850,7 +1850,7 @@ class RequestController extends Controller
             if ($searchStr) {
                 $dql->leftJoin('transresRequest.dataResults','dataResults');
                 //$dql->andWhere("(category.name LIKE :categoryStr OR category.productId LIKE :categoryStr OR category.feeUnit LIKE :categoryStr OR category.fee LIKE :categoryStr)");
-                $commentCriterion = "products.comment LIKE :searchStr OR products.note LIKE :searchStr OR transresRequest.comment LIKE :searchStr OR dataResults.comment LIKE :searchStr";
+                $commentCriterion = "LOWER(products.comment) LIKE LOWER(:searchStr) OR LOWER(products.note) LIKE LOWER(:searchStr) OR LOWER(transresRequest.comment) LIKE LOWER(:searchStr) OR LOWER(dataResults.comment) LIKE LOWER(:searchStr)";
                 $dqlParameters["searchStr"] = "%".$searchStr."%";
 
                 //add search fos bundle comments

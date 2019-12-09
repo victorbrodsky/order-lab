@@ -3337,7 +3337,7 @@ class TransResRequestUtil
         $dql->select('foscomment');
 
 
-        $dql->where("foscomment.body LIKE :searchStr");
+        $dql->where("LOWER(foscomment.body) LIKE LOWER(:searchStr)");
         $dql->andWhere("foscomment.entityName = 'TransResRequest'");
         //$dql->andWhere("(foscomment.entityName IS NULL OR foscomment.entityName = 'TransResRequest')");
 

@@ -624,74 +624,74 @@ class UserController extends Controller
         }
 
         //last name
-        $criteriastr .= "infos.lastName LIKE '%".$search."%' OR ";
+        $criteriastr .= "LOWER(infos.lastName) LIKE LOWER('%".$search."%') OR ";
         //$criteriastr .= "user.lastName='".$search."' OR ";
 
         //first name
-        $criteriastr .= "infos.firstName LIKE '%".$search."%' OR ";
+        $criteriastr .= "LOWER(infos.firstName) LIKE LOWER('%".$search."%') OR ";
         //$criteriastr .= "user.firstName='".$search."' OR ";
 
         //Middle Name
-        $criteriastr .= "infos.middleName LIKE '%".$search."%' OR ";
+        $criteriastr .= "LOWER(infos.middleName) LIKE LOWER('%".$search."%') OR ";
         //$criteriastr .= "user.middleName='".$search."' OR ";
 
         //Preferred Full Name for Display
-        $criteriastr .= "infos.displayName LIKE '%".$search."%' OR ";
+        $criteriastr .= "LOWER(infos.displayName) LIKE LOWER('%".$search."%') OR ";
 
         //Abbreviated Name/Initials field
         //$criteriastr .= "user.initials LIKE '%".$search."%' OR ";
-        $criteriastr .= "infos.initials='".$search."' OR ";
+        $criteriastr .= "LOWER(infos.initials)=LOWER('".$search."') OR ";
 
         //preferred email
-        $criteriastr .= "infos.email LIKE '%".$search."%' OR ";
+        $criteriastr .= "LOWER(infos.email) LIKE LOWER('%".$search."%') OR ";
         //$criteriastr .= "user.email='".$search."' OR ";
 
         //email in locations
-        $criteriastr .= "locations.email LIKE '%".$search."%' OR ";
+        $criteriastr .= "LOWER(locations.email) LIKE LOWER('%".$search."%') OR ";
         //$criteriastr .= "locations.email='".$search."' OR ";
 
         //User ID/CWID
-        $criteriastr .= "user.primaryPublicUserId LIKE '%".$search."%' OR ";
+        $criteriastr .= "LOWER(user.primaryPublicUserId) LIKE LOWER('%".$search."%') OR ";
         //$criteriastr .= "user.primaryPublicUserId='".$search."' OR ";
 
         //Username
-        $criteriastr .= "user.username LIKE '%".$search."%' OR ";
+        $criteriastr .= "LOWER(user.username) LIKE LOWER('%".$search."%') OR ";
 
 
         //////////////////// administrative title
         //institution
-        $criteriastr .= "administrativeInstitution.name LIKE '%".$search."%' OR ";
+        $criteriastr .= "LOWER(administrativeInstitution.name) LIKE LOWER('%".$search."%') OR ";
         //department
         //$criteriastr .= "administrativeDepartment.name LIKE '%".$search."%' OR ";
         //division
         //$criteriastr .= "administrativeDivision.name LIKE '%".$search."%' OR ";
         //service
         //$criteriastr .= "administrativeService.name LIKE '%".$search."%' OR ";
-        $criteriastr .= "administrativeName.name LIKE '%".$search."%' OR ";
+        $criteriastr .= "LOWER(administrativeName.name) LIKE LOWER('%".$search."%') OR ";
 
 
         //////////////////// academic appointment title
         //institution
-        $criteriastr .= "appointmentInstitution.name LIKE '%".$search."%' OR ";
+        $criteriastr .= "LOWER(appointmentInstitution.name) LIKE LOWER('%".$search."%') OR ";
         //department
         //$criteriastr .= "appointmentDepartment.name LIKE '%".$search."%' OR ";
         //division
         //$criteriastr .= "appointmentDivision.name LIKE '%".$search."%' OR ";
         //service
         //$criteriastr .= "appointmentService.name LIKE '%".$search."%' OR ";
-        $criteriastr .= "appointmentName.name LIKE '%".$search."%' OR ";
+        $criteriastr .= "LOWER(appointmentName.name) LIKE LOWER('%".$search."%') OR ";
 
 
         //////////////////// medical appointment title
         //institution
-        $criteriastr .= "medicalInstitution.name LIKE '%".$search."%' OR ";
+        $criteriastr .= "LOWER(medicalInstitution.name) LIKE LOWER('%".$search."%') OR ";
         //department
         //$criteriastr .= "medicalDepartment.name LIKE '%".$search."%' OR ";
         //division
         //$criteriastr .= "medicalDivision.name LIKE '%".$search."%' OR ";
         //service
         //$criteriastr .= "medicalService.name LIKE '%".$search."%' OR ";
-        $criteriastr .= "medicalName.name LIKE '%".$search."%' OR ";
+        $criteriastr .= "LOWER(medicalName.name) LIKE LOWER('%".$search."%') OR ";
 
 
         //Associated NYPH Code in Locations

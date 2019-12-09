@@ -1247,7 +1247,7 @@ class UtilController extends Controller {
             if( $search == "prefetchmin" ) {
                 $criteriastr = "infos.displayName IS NOT NULL";
             } else {
-                $criteriastr = "infos.displayName LIKE '%".$search."%'";
+                $criteriastr = "LOWER(infos.displayName( LIKE LOWER('%".$search."%')";
             }
         }
 
@@ -1354,7 +1354,7 @@ class UtilController extends Controller {
             if( $search == "prefetchmin" ) {
                 $criteriastr .= "infos.displayName IS NOT NULL";
             } else {
-                $criteriastr .= "infos.displayName LIKE '%".$search."%'";
+                $criteriastr .= "LOWER(infos.displayName) LIKE LOWER('%".$search."%')";
             }
 
             //echo "1 criteriastr=".$criteriastr."<br>";

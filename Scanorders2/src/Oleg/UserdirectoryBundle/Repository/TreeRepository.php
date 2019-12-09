@@ -375,7 +375,7 @@ class TreeRepository extends NestedTreeRepository {
         $treeRepository = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
         $dql =  $treeRepository->createQueryBuilder("list");
         $dql->select('list');
-        $dql->where('list.name LIKE :name');
+        $dql->where('LOWER(list.name) LIKE LOWER(:name)');
 
         $params = array('name' => '%"' . $nameStr . '"%');
 
