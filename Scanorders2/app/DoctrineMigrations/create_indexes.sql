@@ -111,6 +111,22 @@ UPDATE public.user_siteparameters SET connectionChannel='http';
 UPDATE public.user_siteparameters SET connectionChannel='http';
 UPDATE public.user_siteparameters SET connectionChannel='http';
 
-user_organizationalgroupdefault_permittedinstitutionalphiscope
+user_organizationalgroupdefault_permittedinstitutionalphiscope (63 chars max)
 user_organizationalGroupDefault_permittedInstitutionalPHIScope
 
+
+//Do not import these not existing tables:
+$this->processSql('DROP TABLE scan_accountrequest');
+$this->processSql('DROP TABLE scan_collaboration');
+$this->processSql('DROP TABLE scan_accountrequest_institution');
+$this->processSql('DROP TABLE scan_systemaccountrequesttype');
+
+$this->processSql('DROP TABLE transres_invoiceadditem');
+$this->processSql('DROP TABLE transres_project_billingcontact');
+$this->processSql('DROP TABLE transres_request_invoice');
+
+$this->processSql('DROP TABLE user_collaboration');
+$this->processSql('DROP TABLE user_collaboration_institution');
+
+$this->processSql('DROP TABLE vacreq_request_availability');
+$this->processSql('DROP TABLE vacreq_availabilitylist');
