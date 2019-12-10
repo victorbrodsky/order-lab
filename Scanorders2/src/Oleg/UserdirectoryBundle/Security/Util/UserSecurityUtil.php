@@ -521,6 +521,9 @@ class UserSecurityUtil {
     //$subjectEntities: single object or array of objects
     public function createUserEditEvent($sitename,$event,$user,$subjectEntities,$request,$action='Unknown Event') {
 
+        //testing
+        return null;
+
         $logger = $this->container->get('logger');
         $em = $this->em;
         $userServiceUtil = $this->container->get('user_service_utility');
@@ -536,7 +539,7 @@ class UserSecurityUtil {
 
         if( $user ) {
             if( $user instanceof User ) {
-                //$user = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId()); //to fix error "new un persisted entity found"
+                $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId()); //to fix error "new un persisted entity found"
             } else {
                 $user = $this->findSystemUser();
             }
