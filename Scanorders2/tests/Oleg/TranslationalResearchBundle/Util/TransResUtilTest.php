@@ -21,8 +21,8 @@ class TransResUtilTest extends TestCase
     }
 
 
-    public function testComp()
-    {
-        $this->assertTrue(false);
-    }
+//    public function testComp()
+//    {
+//        $this->assertTrue(false);
+//    }
 }
