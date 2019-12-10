@@ -4,6 +4,9 @@ namespace Oleg\TranslationalResearchBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
+
+// ./bin/simple-phpunit
+
 class DefaultControllerTest extends WebTestCase
 {
     public function testIndex()
