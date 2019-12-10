@@ -522,7 +522,7 @@ class UserSecurityUtil {
     public function createUserEditEvent($sitename,$event,$user,$subjectEntities,$request,$action='Unknown Event') {
 
         //testing
-        return null;
+        //return null;
 
         $logger = $this->container->get('logger');
         $em = $this->em;
