@@ -536,7 +536,7 @@ class UserSecurityUtil {
 
         if( $user ) {
             if( $user instanceof User ) {
-                $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId()); //to fix error "new un persisted entity found"
+                //$user = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId()); //to fix error "new un persisted entity found"
             } else {
                 $user = $this->findSystemUser();
             }

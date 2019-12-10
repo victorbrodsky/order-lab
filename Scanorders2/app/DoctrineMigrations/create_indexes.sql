@@ -130,3 +130,6 @@ $this->processSql('DROP TABLE user_collaboration_institution');
 
 $this->processSql('DROP TABLE vacreq_request_availability');
 $this->processSql('DROP TABLE vacreq_availabilitylist');
+
+Cannot create foreign key:ERROR:  relation "scan_collaboration" does not exist
+

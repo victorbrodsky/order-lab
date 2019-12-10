@@ -22,6 +22,8 @@ pgloader -v "mssql://symfonyc:symfonyc@157.139.46.96/ScanOrder" "postgres://post
 Collage DB: pgloader -v "mssql://symfonyc:symfonyc@157.139.46.96/ScanOrder" "postgres://postgres:postgres@167.71.169.61/scanorder10"
 Fix stack: batch size = 40MB did it for me as well. I also lowered it to concurrency = 1 just to be safe
 Example: https://stackoverflow.com/questions/27937842/pgloader-fast-data-loading-for-postgresql
+Copy data to existing schema: 
+pgloader --with "data only" --with truncate --with "drop indexes" --verbose mssql://symfonyc:symfonyc@157.139.46.96/ScanOrder postgres://symfony:symfony@157.139.226.86/ScanOrder
 
 4) DBConvert ($149): https://dbconvert.com/mssql/postgre/
 a) DBConvert -> Error: Database can not be converted correctly. Foreign keys problem ("Error! Some fields, indexes or foreign keys have too long name.").

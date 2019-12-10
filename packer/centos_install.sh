@@ -250,6 +250,10 @@ f_install_php56 () {
 	#4) cp /opt/rh/httpd24/root/etc/httpd/conf.d/rh-php56-php.conf /etc/httpd/conf.d/
 	#   cp /opt/rh/httpd24/root/etc/httpd/conf.modules.d/10-rh-php56-php.conf /etc/httpd/conf.modules.d/
 	#   cp /opt/rh/httpd24/root/etc/httpd/modules/librh-php56-php5.so /etc/httpd/modules/
+	#yum install php56-php-cli
+	
+	#/opt/rh/rh-php56/root/usr/bin/php -v
+	#ln -s /usr/bin/php56 /usr/bin/php
 	
 	# Restart Apache
     sudo systemctl restart httpd.service

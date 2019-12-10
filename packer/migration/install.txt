@@ -59,23 +59,24 @@ sudo iptables -A INPUT -p tcp --dport 5432 -j ACCEPT
 sudo /sbin/service iptables save
 
 ########## INSTALL PHP 5.6 ##########
-echo -e ${COLOR} Install: noarch and remi ${NC}	
-	sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-	sudo yum install -y http://rpms.remirepo.net/enterprise/remi-release-7.rpm
-	
-	echo -e ${COLOR} Install: yum install -y yum-utils ${NC}		
-	sudo yum install -y yum-utils
+#Install php 5.6 on Rhel 7
+#https://docs.nextcloud.com/server/13.0.0/admin_manual/installation/php_56_installation.html
+#1) subscription-manager repos --enable rhel-server-rhscl-7-eus-rpms
+#2) yum install rh-php56 rh-php56-php rh-php56-php-gd rh-php56-php-mbstring
+#3) sudo yum install rh-php56-php-pgsql
+#4) cp /opt/rh/httpd24/root/etc/httpd/conf.d/rh-php56-php.conf /etc/httpd/conf.d/
+#   cp /opt/rh/httpd24/root/etc/httpd/conf.modules.d/10-rh-php56-php.conf /etc/httpd/conf.modules.d/
+#   cp /opt/rh/httpd24/root/etc/httpd/modules/librh-php56-php5.so /etc/httpd/modules/	
+#yum install php56-php-cli
 
-echo -e  ${COLOR} Enable remi-php56 ${NC}
-yum-config-manager --enable remi-php56
-	
-echo -e ${COLOR} Install php 5.6: install -y php ${NC}	
-sudo yum install -y php
-#make sure they are installed. If not install one by one each component. Except php-mcrypt, we don't need it.
-sudo yum install -y php-mcrypt php-cli php-gd php-curl php-mysql php-ldap php-zip php-fileinfo php-pear php-pdo php-pgsql php-xml php-simplexml php-zip php-mbstring php-intl
-		
-sudo systemctl restart httpd.service	
-php -v	
+yum install rh-php56-xmlreader
+yum install rh-php56-pdo
+yum install rh-php56-xml
+yum install rh-php56-dom
+
+#/opt/rh/rh-php56/root/usr/bin/php -v
+#ln -s /opt/rh/rh-php56/root/usr/bin/php /usr/bin/php	
+
 	
 #Install everything in this funstion	
 f_install_util ()	
@@ -86,8 +87,18 @@ cd /usr/local/bin/
 git clone https://github.com/victorbrodsky/order-lab.git /opt/order-lab	
 sudo chmod a+x /opt/order-lab
 sudo chown -R apache:apache /opt/order-lab
-	
-	
+
+########## Modify httpd and php.ini (/etc/opt/rh/rh-php56/php.ini) ##########	
+#1) httpd.conf: 
+#Listen *:80
+#ServerName 157.139.226.86:80 
+#2) Copy 000-default.conf to conf.d and make sure path is pointed to /opt/order-lab/Scanorders2/web/
+cp /opt/order-lab/packer/000-default.conf /etc/httpd/conf.d
+f_install_prepare()	
+
+#Modify parameters.yml
+#Collage IP: 157.139.46.96
+#C.med IP: 140.251.6.82
 	
 	
 	
