@@ -112,6 +112,9 @@ class UserController extends Controller
 //        }
 //        exit('eof id test');
 
+        //$session = $request->getSession();
+        //echo $session->get('_security_scan_auth');
+
         return array('sitename'=>$this->container->getParameter('employees.sitename'));
     }
 

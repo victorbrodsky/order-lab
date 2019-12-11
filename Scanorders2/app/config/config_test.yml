@@ -1,5 +1,5 @@
 imports:
-    - { resource: config_dev.yml }
+    - { resource: config.yml }
 
 framework:
     test: ~
@@ -8,6 +8,9 @@ framework:
         #storage_id: session.storage.filesystem
     profiler:
         enabled: false
+    router:
+        resource: "%kernel.project_dir%/app/config/routing_test.yml"
+        strict_requirements: true
 
 web_profiler:
     toolbar: false

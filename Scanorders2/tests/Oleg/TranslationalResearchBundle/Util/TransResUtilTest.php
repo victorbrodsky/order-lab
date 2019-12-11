@@ -11,34 +11,59 @@
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\BrowserKit\Cookie;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
-class TransResUtilTest extends KernelTestCase
+//class TransResUtilTest extends KernelTestCase
+class TransResUtilTest extends WebTestCase
 {
 
     /**
      * @var \Doctrine\ORM\EntityManager
      */
-    private $entityManager;
+    private $em;
     private $container;
+    private $client = null;
+    private $user = null;
 
     protected function setUp()
     {
-        $kernel = self::bootKernel();
+//        $kernel = self::bootKernel();
+//
+//        $this->container = $kernel->getContainer();
+//
+//        $this->em = $this->container
+//            ->get('doctrine')
+//            ->getManager();
+//
+//        $this->client = static::createClient([], [
+//            'HTTP_HOST'       => '127.0.0.1',
+//            'HTTP_USER_AGENT' => 'MySuperBrowser/1.0',
+//        ]);
 
-        $this->container = $kernel->getContainer();
+        //$this->client = static::createClient();
+        $this->client = static::createClient([], [
+            'HTTP_HOST'       => '127.0.0.1',
+            'HTTP_USER_AGENT' => 'MySuperBrowser/1.0',
+        ]);
 
-        $this->entityManager = $this->container
-            ->get('doctrine')
-            ->getManager();
+        $this->container = $this->client->getContainer();
+        $this->em = $this->container->get('doctrine.orm.entity_manager');
+
+        $this->user = $this->createAuthorizeClient();
     }
 
     public function testGeneratePackingSlipPdf() {
+
+        return;
 
         //$transresRequestUtil = $this->container->get('transres_request_util');
         $transresPdfUtil = $this->container->get('transres_pdf_generator');
 
         $requestsId = 1;
-        $transresRequest = $this->entityManager->getRepository('OlegTranslationalResearchBundle:TransResRequest')->find($requestsId);
+        $transresRequest = $this->em->getRepository('OlegTranslationalResearchBundle:TransResRequest')->find($requestsId);
 
 
         echo "transresRequest ID=".$transresRequest->getId().", OID=".$transresRequest->getOid()."\n";
@@ -64,6 +89,20 @@ class TransResUtilTest extends KernelTestCase
     }
 
     public function testGetAvailableProjects() {
+
+        if(1) {
+            $this->logIn();
+        } else {
+            $this->client = static::createClient([], [
+                'HTTP_HOST' => '127.0.0.1',
+                'HTTP_USER_AGENT' => 'MySuperBrowser/1.0',
+            ]);
+        }
+
+        echo "testGetAvailableProjects \r\n";
+
+        echo "User=".$this->user."\r\n";
+
         //$transresRequestUtil = $this->container->get('transres_request_util');
         $transresUtil = $this->container->get('transres_util');
         $projects = $transresUtil->getAvailableRequesterOrReviewerProjects();
@@ -91,6 +130,43 @@ class TransResUtilTest extends KernelTestCase
 
 
 
+
+    private function logIn()
+    {
+        $session = $this->client->getContainer()->get('session');
+
+        $firewallName = 'external_ldap_firewall';
+        // if you don't define multiple connected firewalls, the context defaults to the firewall name
+        // See https://symfony.com/doc/current/reference/configuration/security.html#firewall-context
+        $firewallContext = 'scan_auth';
+
+        // you may need to use a different token class depending on your application.
+        // for example, when using Guard authentication you must instantiate PostAuthenticationGuardToken
+        $token = new UsernamePasswordToken('administrator', null, $firewallName, array('ROLE_ADMIN','ROLE_PLATFORM_ADMIN'));
+        $session->set('_security_'.$firewallContext, serialize($token));
+        //$securityContext = "scan_auth";
+        //$securityContext = '_security_'.$firewallContext; //_security_scan_auth
+        //$securityContext = '_security_scan_auth';
+        //$session->set($securityContext, serialize($token));
+
+        //$firewallName = 'ldap_employees_firewall';
+        //$token = new UsernamePasswordToken('oli2002', null, 'ldap_employees_firewall', ['ROLE_PLATFORM_ADMIN']);
+        //$session->set('_security_scan_auth'.$firewallContext, serialize($token));
+
+        $session->save();
+
+        $cookie = new Cookie($session->getName(), $session->getId());
+        $this->client->getCookieJar()->set($cookie);
+    }
+    public function createAuthorizeClient()
+    {
+        $session = $this->container->get('session');
+        $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername('administrator');
+
+        return $user;
+        // rest of the class here
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -98,10 +174,12 @@ class TransResUtilTest extends KernelTestCase
     {
         parent::tearDown();
 
-        $this->entityManager->close();
-        $this->entityManager = null; // avoid memory leaks
+        $this->em->close();
+        $this->em = null; // avoid memory leaks
 
         $this->container = null; // avoid memory leaks
+
+        $this->client = null;
     }
 
 }
