@@ -30,8 +30,8 @@ class DefaultControllerTest extends WebTestCase
         echo "uri=$uri \n";
         //exit("uri=$uri");
 
-        $content = $client->getResponse()->getContent();
-        exit("content=$content");
+        //$content = $client->getResponse()->getContent();
+        //exit("content=$content");
 
         $this->assertGreaterThan(
             0,
@@ -40,10 +40,10 @@ class DefaultControllerTest extends WebTestCase
             //$crawler->filter('html:contains("Please use your")')->count()
         );
 
-        $this->assertContains(
-            'The following sites are available',
-            $client->getResponse()->getContent()
-        );
+//        $this->assertContains(
+//            'The following sites are available',
+//            $client->getResponse()->getContent()
+//        );
     }
 
     public function testAboutAction() {

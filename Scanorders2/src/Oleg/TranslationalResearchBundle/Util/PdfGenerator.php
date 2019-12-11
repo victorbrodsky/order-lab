@@ -344,6 +344,10 @@ class PdfGenerator
             return null;
         }
 
+        if( !$authorUser ) {
+            $authorUser = $userSecUtil->findSystemUser();
+        }
+
         //generate file name
         $fileFullReportUniqueName = $this->constructUniqueFileName($transresRequest,"PackingSlip-PDF");
         $logger->notice("Start to generate Packing Slip PDF ID=".$transresRequest->getOid()."; filename=".$fileFullReportUniqueName);
