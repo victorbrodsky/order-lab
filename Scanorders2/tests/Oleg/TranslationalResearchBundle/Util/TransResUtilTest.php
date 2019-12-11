@@ -105,6 +105,7 @@ class TransResUtilTest extends WebTestCase
 
         //$transresRequestUtil = $this->container->get('transres_request_util');
         $transresUtil = $this->container->get('transres_util');
+        //$transresUtil = new \Oleg\TranslationalResearchBundle\Util\TransResUtil($this->em, $this->container);
         $projects = $transresUtil->getAvailableRequesterOrReviewerProjects();
 
         $this->assertGreaterThan(1000, count($projects));
@@ -152,6 +153,9 @@ class TransResUtilTest extends WebTestCase
         //$firewallName = 'ldap_employees_firewall';
         //$token = new UsernamePasswordToken('oli2002', null, 'ldap_employees_firewall', ['ROLE_PLATFORM_ADMIN']);
         //$session->set('_security_scan_auth'.$firewallContext, serialize($token));
+
+        //echo "!!!!!!!token user=".$token->getUser()."<br>\r";
+        //exit('11111111');
 
         $session->save();
 
