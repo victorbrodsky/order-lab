@@ -101,17 +101,21 @@ class TransResUtilTest extends WebTestCase
 
         echo "testGetAvailableProjects \r\n";
 
-        echo "User=".$this->user."\r\n";
+        //echo "User=".$this->user."\r\n";
 
         //$transresRequestUtil = $this->container->get('transres_request_util');
         $transresUtil = $this->container->get('transres_util');
         //$transresUtil = new \Oleg\TranslationalResearchBundle\Util\TransResUtil($this->em, $this->container);
         $projects = $transresUtil->getAvailableRequesterOrReviewerProjects();
+        $projectsCount = count($projects);
+        echo "Count projects=$projectsCount \r\n";
 
-        $this->assertGreaterThan(1000, count($projects));
+        $this->assertGreaterThan(10, $projectsCount);
 
         $requests = $transresUtil->getTotalRequestCount();
-        $this->assertGreaterThan(1000, count($requests));
+        $requestsCount = count($requests);
+        echo "Count requests=$requestsCount \r\n";
+        $this->assertGreaterThan(0, $requestsCount);
 
     }
 
@@ -131,8 +135,9 @@ class TransResUtilTest extends WebTestCase
 
 
 
-
-    private function logIn()
+    //https://stackoverflow.com/questions/50310399/symfony-test-app-user-is-null-in-twig
+    //https://stackoverflow.com/questions/27782781/how-to-get-the-current-logged-user-in-unit-test-with-symfony-2
+    private function logIn_orig()
     {
         $session = $this->client->getContainer()->get('session');
 
@@ -169,6 +174,29 @@ class TransResUtilTest extends WebTestCase
 
         return $user;
         // rest of the class here
+    }
+
+    public function logIn() {
+
+        $session = $this->client->getContainer()->get('session');
+
+        //$firewallName = 'external_ldap_firewall';
+        // if you don't define multiple connected firewalls, the context defaults to the firewall name
+        // See https://symfony.com/doc/current/reference/configuration/security.html#firewall-context
+        $firewallContext = 'scan_auth';
+
+        $firewallName = 'ldap_fellapp_firewall';
+        $userSecUtil = $this->container->get('user_security_utility');
+        $systemUser = $userSecUtil->findSystemUser();
+        //$systemUser = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername('administrator');
+
+        //if( $systemUser ) {
+            $token = new UsernamePasswordToken($systemUser, null, $firewallName, $systemUser->getRoles());
+            $this->container->get('security.token_storage')->setToken($token);
+            //$this->get('security.token_storage')->setToken($token);
+        //}
+
+        $session->set('_security_'.$firewallContext, serialize($token));
     }
 
     /**
