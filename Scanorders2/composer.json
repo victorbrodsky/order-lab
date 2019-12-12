@@ -5,7 +5,8 @@
     "description": "Order system",
     "autoload": {
         "psr-4": {
-            "": "src/"
+            "": "src/",
+            "Tests\\": "tests/"
         },
         "classmap": [
             "app/AppKernel.php",

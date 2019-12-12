@@ -10,7 +10,7 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 //./bin/simple-phpunit tests/Oleg/TranslationalResearchBundle/Controller/TranslationalResearchControllerTest.php
 
-class TranslationalResearchControllerTest extends WebTestCase
+class FunctionalTest extends WebTestCase
 {
 
     private $client = null;
