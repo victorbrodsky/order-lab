@@ -87,12 +87,19 @@ class FellowshipApplicationType extends AbstractType
         //get subfellowship types as for ROLE_FELLAPP_ADMIN
         //$fellappUtil = $this->params['container']->get('fellapp_util');
         //$fellTypes = $fellappUtil->getFellowshipTypesByInstitution(true);
+
+        if( array_key_exists('fellappTypes', $this->params) ) {
+            $fellappChoices = $this->params['fellappTypes'];
+        } else {
+            $fellappChoices = array();
+        }
+
         $builder->add('fellowshipSubspecialty', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:FellowshipSubspecialty',
             'label' => "Fellowship Application Type:",
             //'required' => true,
             'required' => false,
-            'choices' => $this->params['fellappTypes'], //$fellTypes,
+            'choices' => $fellappChoices,   //$this->params['fellappTypes'], //$fellTypes,
             'invalid_message' => 'fellowshipSubspecialty invalid value',
             //'choices_as_values' => true,
             'attr' => array('class' => 'combobox combobox-width fellapp-fellowshipSubspecialty'),

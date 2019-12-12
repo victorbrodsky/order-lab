@@ -22,6 +22,109 @@ class TrpTest extends WebTestBase
         );
     }
 
+    public function testShowProjectApplication() {
+        return;
+
+        $this->logIn();
+
+        $projects = $this->em->getRepository('OlegTranslationalResearchBundle:Project')->findAll();
+        //$transresUtil = $this->container->get('transres_util');
+        //$projects = $transresUtil->getAvailableProjects();
+
+        if( count($projects) > 0 ) {
+            $project = end($projects);
+            $projectId = $project->getId();
+        } else {
+            echo "Skip testShowProjectApplication; There are no available projects found";
+            return null;
+        }
+
+        //Test Show
+        //[2019-12-12 21:43:17] request.CRITICAL: Uncaught PHP Exception Twig\Error\RuntimeError:
+        // "Impossible to access an attribute ("id") on a null variable in "OlegUserdirectoryBundle::Default/usermacros.html.twig"."
+        // at C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\scanorder\Scanorders2\vendor\twig\twig\src\Template.php line 581
+        // {"exception":"[object] (Twig\\Error\\RuntimeError(code: 0): Impossible to access an attribute (\"id\") on a null variable
+        // in \"OlegUserdirectoryBundle::Default/usermacros.html.twig\". at
+        // C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\scanorder\\Scanorders2\\vendor\\twig\\twig\\src\\Template.php:581)"} []
+
+//        $crawler = $this->client->request('GET', '/translational-research/project/show/'.$projectId);
+//
+//        $this->assertGreaterThan(
+//            0,
+//            $crawler->filter('html:contains("Edit Project Request")')->count()
+//        );
+//        $this->assertGreaterThan(
+//            0,
+//            $crawler->filter('html:contains("Principal Investigator(s) for the project:")')->count()
+//        );
+//        $this->assertGreaterThan(
+//            0,
+//            $crawler->filter('html:contains("Tissue Request Details")')->count()
+//        );
+//        $this->assertGreaterThan(
+//            0,
+//            $crawler->filter('html:contains("Edit Project Request")')->count()
+//        );
+
+
+        //Test Edit
+        $crawler = $this->client->request('GET', '/translational-research/project/edit/'.$projectId);
+
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Please make sure to update your Project Request prior leaving this page.")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Principal Investigator(s) for the project")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Tissue Request Details")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Save Changes")')->count()
+        );
+    }
+
+    //getTotalRequests
+
+    public function testInvoicePdfSlip() {
+        $this->logIn();
+
+        $invoices = $this->em->getRepository('OlegTranslationalResearchBundle:Invoice')->findAll();
+        if( count($invoices) > 0 ) {
+
+            $invoice = end($invoices);
+            $invoiceId = $invoice->getId();
+
+            $crawler = $this->client->request('GET', '/translational-research/invoice/download-invoice-pdf/'.$invoiceId);
+
+            //$content = $this->client->getResponse()->getContent();
+            //exit("content=$content");
+
+            $this->assertGreaterThan(
+                0,
+                $crawler->filter('html:contains("Invoice")')->count()
+            );
+            $this->assertGreaterThan(
+                0,
+                $crawler->filter('html:contains("Bill To:")')->count()
+            );
+            $this->assertGreaterThan(
+                0,
+                $crawler->filter('html:contains("Bill From:")')->count()
+            );
+            $this->assertGreaterThan(
+                0,
+                $crawler->filter('html:contains("Detach and return with payment")')->count()
+            );
+        } else {
+            echo "Skip testInvoicePdfSlip, invoices not found";
+        }
+    }
+
     public function testDefaultReviewersAction() {
         $this->logIn();
         $crawler = $this->client->request('GET', '/translational-research/default-reviewers/ap-cp');
@@ -98,6 +201,51 @@ class TrpTest extends WebTestBase
         //exit("content=$content");
     }
 
+    //http://127.0.0.1/order/translational-research/dashboard/graphs/?filter%5BstartDate%5D=12/12/2018&filter%5BendDate%5D=12/12/2019&filter%5BprojectSpecialty%5D%5B%5D=0&filter%5BchartType%5D%5B0%5D=compare-projectspecialty-pis&filter%5BchartType%5D%5B1%5D=compare-projectspecialty-projects&filter%5BchartType%5D%5B2%5D=compare-projectspecialty-projects-stack&filter%5BchartType%5D%5B3%5D=compare-projectspecialty-requests&filter%5BchartType%5D%5B4%5D=compare-projectspecialty-invoices
+    public function testDashboardComparasionAction() {
+        $this->logIn();
+        $crawler = $this->client->request('GET', '/translational-research/dashboard/graphs/?filter[startDate]=12/12/2018&filter[endDate]=12/12/2019&filter[projectSpecialty][]=0&filter[chartType][0]=compare-projectspecialty-pis&filter[chartType][1]=compare-projectspecialty-projects&filter[chartType][2]=compare-projectspecialty-projects-stack&filter[chartType][3]=compare-projectspecialty-requests&filter[chartType][4]=compare-projectspecialty-invoices');
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Translational Research Dashboard")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Total Number of")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Total Number of Projects per PI (Top) (linked)")')->count()
+        );
+
+        //$content = $this->client->getResponse()->getContent();
+        //exit("content=$content");
+    }
+
+    public function testUnpaidInvoiceReminderAction() {
+        $this->logIn();
+        $crawler = $this->client->request('GET', '/translational-research/unpaid-invoice-reminder/show-summary');
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Send Reminder Emails")')->count()
+        );
+    }
+
+    public function testEventLogAction() {
+        $this->logIn();
+
+        unset($_GET['sort']);
+        $crawler = $this->client->request('GET', '/translational-research/event-log/');
+
+        //$content = $this->client->getResponse()->getContent();
+        //exit("content=$content");
+
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Event Log showing")')->count()
+        );
+    }
+
     public function testPackingSlip() {
         $this->logIn();
 
@@ -128,8 +276,9 @@ class TrpTest extends WebTestBase
         } else {
             echo "Skip testPackingSlip, work requests not found";
         }
-
     }
+
+
 
     public function testAboutAction() {
         $this->logIn();

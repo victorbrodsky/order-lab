@@ -426,6 +426,8 @@ class LoggerController extends Controller
 
         if( isset($filterform['sites']) ) {
             $sites = $filterform['sites']->getData();
+        } else {
+            $sites = null;
         }
 
         $currentUser = $this->get('security.token_storage')->getToken()->getUser();
@@ -584,7 +586,8 @@ class LoggerController extends Controller
     }
 
     public function createLoggerFilter($request,$params) {
-        $userid = $params['entityId'];
+        //$userid = $params['entityId'];
+        $userid = ( array_key_exists('entityId', $params) ? $params['entityId'] : null);
         //echo "userid=".$userid."<br>";
 
         //disabled
