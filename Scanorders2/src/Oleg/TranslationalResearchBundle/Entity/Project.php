@@ -1906,6 +1906,9 @@ class Project {
 
         $resultArr = array();
 
+        $irb = false;
+        $iacuc = false;
+
         $irbApproval = $this->getExemptIrbApproval();
         if( !$irbApproval || ($irbApproval && $irbApproval->getName() == "Not Exempt") ) {
             //echo $this->getId().": irb true <br>";

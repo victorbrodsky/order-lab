@@ -287,6 +287,9 @@ class RequestController extends Controller
             'form' => $form->createView(),
             'cycle' => $cycle,
             'title' => $title,
+            'defaultAccessionType' => null,
+            'defaultAntibodyType' => null,
+            'handsometableData' => null,
             //'formnodetrigger' => $formnodetrigger,
             //'formnodeTopHolderId' => $formnodeTopHolderId,
             'routeName' => $request->get('_route')

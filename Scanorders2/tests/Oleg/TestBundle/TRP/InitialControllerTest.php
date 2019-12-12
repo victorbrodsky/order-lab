@@ -10,24 +10,24 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 //./bin/simple-phpunit tests/Oleg/TranslationalResearchBundle/Controller/InitialControllerTest.php
 
-class InitialControllerTest extends WebTestCase
+class InitialControllerTest extends \Tests\Oleg\TestBundle\WebTestBase
 {
 
-    private $client = null;
-
-    public function setUp()
-    {
-//        $this->client = static::createClient();
-//        $this->client->request('GET', '/', [], [], [
+//    private $client = null;
+//
+//    public function setUp()
+//    {
+////        $this->client = static::createClient();
+////        $this->client->request('GET', '/', [], [], [
+////            'HTTP_HOST'       => '127.0.0.1',
+////            'HTTP_USER_AGENT' => 'MySuperBrowser/1.0',
+////        ]);
+//
+//        $this->client = static::createClient([], [
 //            'HTTP_HOST'       => '127.0.0.1',
 //            'HTTP_USER_AGENT' => 'MySuperBrowser/1.0',
 //        ]);
-
-        $this->client = static::createClient([], [
-            'HTTP_HOST'       => '127.0.0.1',
-            'HTTP_USER_AGENT' => 'MySuperBrowser/1.0',
-        ]);
-    }
+//    }
 
 
     public function testLoginProcess()
@@ -213,7 +213,8 @@ class InitialControllerTest extends WebTestCase
     }
 
     public function testPackingSlip() {
-        
+        return;
+
         if(0) {
             $this->logIn();
         } else {
@@ -247,22 +248,22 @@ class InitialControllerTest extends WebTestCase
     }
 
 
-    private function logIn()
-    {
-        $session = $this->client->getContainer()->get('session');
-
-        $firewallName = 'ldap_fellapp_firewall';
-        // if you don't define multiple connected firewalls, the context defaults to the firewall name
-        // See https://symfony.com/doc/current/reference/configuration/security.html#firewall-context
-        $firewallContext = 'scan_auth';
-
-        // you may need to use a different token class depending on your application.
-        // for example, when using Guard authentication you must instantiate PostAuthenticationGuardToken
-        $token = new UsernamePasswordToken('administrator', null, $firewallName, ['ROLE_PLATFORM_ADMIN']);
-        $session->set('_security_'.$firewallContext, serialize($token));
-        $session->save();
-
-        $cookie = new Cookie($session->getName(), $session->getId());
-        $this->client->getCookieJar()->set($cookie);
-    }
+//    public function logIn()
+//    {
+//        $session = $this->client->getContainer()->get('session');
+//
+//        $firewallName = 'ldap_fellapp_firewall';
+//        // if you don't define multiple connected firewalls, the context defaults to the firewall name
+//        // See https://symfony.com/doc/current/reference/configuration/security.html#firewall-context
+//        $firewallContext = 'scan_auth';
+//
+//        // you may need to use a different token class depending on your application.
+//        // for example, when using Guard authentication you must instantiate PostAuthenticationGuardToken
+//        $token = new UsernamePasswordToken('administrator', null, $firewallName, ['ROLE_PLATFORM_ADMIN']);
+//        $session->set('_security_'.$firewallContext, serialize($token));
+//        $session->save();
+//
+//        $cookie = new Cookie($session->getName(), $session->getId());
+//        $this->client->getCookieJar()->set($cookie);
+//    }
 }

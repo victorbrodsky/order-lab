@@ -5227,6 +5227,17 @@ class TransResUtil
         return $ids;
     }
 
+    public function getTotalRequests() {
+        $repository = $this->em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
+        $dql = $repository->createQueryBuilder("transresRequest");
+        $dql->select('transresRequest');
+
+        $query = $dql->getQuery();
+        
+        $requests = $query->getResult();
+
+        return $requests;
+    }
     public function getTotalRequestCount() {
         $repository = $this->em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
         $dql = $repository->createQueryBuilder("transresRequest");

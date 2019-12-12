@@ -9,7 +9,7 @@
 
 //./bin/simple-phpunit tests/Oleg/TranslationalResearchBundle/Util/TransResUtilTest.php
 
-namespace Tests\Oleg\TranslationalResearchBundle\Util;
+namespace Tests\Oleg\TestBundle\TRP;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -18,50 +18,15 @@ use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
-use Tests\Oleg\TranslationalResearchBundle\Util\WebTestBase;
+use Tests\Oleg\TestBundle\WebTestBase;
 
 //class TransResUtilTest extends KernelTestCase
-class UtilTest extends OlegWebTestBase
+class UtilTest extends WebTestBase
 {
-
-//    /**
-//     * @var \Doctrine\ORM\EntityManager
-//     */
-//    private $em;
-//    private $container;
-//    private $client = null;
-//    private $user = null;
-
-//    protected function setUp()
-//    {
-////        $kernel = self::bootKernel();
-////
-////        $this->container = $kernel->getContainer();
-////
-////        $this->em = $this->container
-////            ->get('doctrine')
-////            ->getManager();
-////
-////        $this->client = static::createClient([], [
-////            'HTTP_HOST'       => '127.0.0.1',
-////            'HTTP_USER_AGENT' => 'MySuperBrowser/1.0',
-////        ]);
-//
-//        //$this->client = static::createClient();
-//        $this->client = static::createClient([], [
-//            'HTTP_HOST'       => '127.0.0.1',
-//            'HTTP_USER_AGENT' => 'MySuperBrowser/1.0',
-//        ]);
-//
-//        $this->container = $this->client->getContainer();
-//        $this->em = $this->container->get('doctrine.orm.entity_manager');
-//
-//        $this->user = $this->createAuthorizeClient();
-//    }
 
     public function testGeneratePackingSlipPdf() {
 
-        return;
+        //return;
 
         //$transresRequestUtil = $this->container->get('transres_request_util');
         $transresPdfUtil = $this->container->get('transres_pdf_generator');
@@ -103,7 +68,7 @@ class UtilTest extends OlegWebTestBase
             ]);
         }
 
-        echo "testGetAvailableProjects \r\n";
+        //echo "testGetAvailableProjects \r\n";
 
         //echo "User=".$this->user."\r\n";
 
@@ -116,11 +81,10 @@ class UtilTest extends OlegWebTestBase
 
         $this->assertGreaterThan(10, $projectsCount);
 
-        $requests = $transresUtil->getTotalRequestCount();
-        $requestsCount = count($requests);
+        $requestsCount = $transresUtil->getTotalRequestCount();
+        //$requestsCount = count($requests);
         echo "Count requests=$requestsCount \r\n";
         $this->assertGreaterThan(0, $requestsCount);
-
     }
 
     public function testAdd()
