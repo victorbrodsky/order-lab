@@ -16,6 +16,18 @@ use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
+//1) Make sure to include in composer.json "Tests\\": "tests/" under autoload:
+//"autoload": {
+//    "psr-4": {
+//        "": "src/",
+//            "Tests\\": "tests/"
+//        },
+//        "classmap": [
+//        "app/AppKernel.php",
+//        "app/AppCache.php"
+//    ]
+//},
+//2) Run composer.phar dumpautoload
 
 class WebTestBase extends WebTestCase
 {

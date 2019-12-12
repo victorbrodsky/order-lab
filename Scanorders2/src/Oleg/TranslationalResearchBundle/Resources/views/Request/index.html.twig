@@ -123,9 +123,11 @@
                 {#{% stopwatch "### submitter.getUsernameOptimal() ###" %}#}
                 <td class="rowlink-skip">
                     {#{{ principalInvestigator }}<br>#}
-                    {% set personurl = path(translationalresearch_sitename~'_showuser',{'id':transresRequest.submitter.id}) %}
-                    {% set personlink = '<a href="'~personurl~'" target="_blank">'~transresRequest.submitter.getUsernameOptimal()~'</a>'  %}
-                    {{ personlink|raw }}<br>
+                    {% if transresRequest.submitter %}
+                        {% set personurl = path(translationalresearch_sitename~'_showuser',{'id':transresRequest.submitter.id}) %}
+                        {% set personlink = '<a href="'~personurl~'" target="_blank">'~transresRequest.submitter.getUsernameOptimal()~'</a>'  %}
+                        {{ personlink|raw }}<br>
+                    {% endif %}
                 </td>
                 {#{% endstopwatch %}#}
 

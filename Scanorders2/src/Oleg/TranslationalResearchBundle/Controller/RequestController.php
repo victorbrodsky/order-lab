@@ -2462,6 +2462,8 @@ class RequestController extends Controller
         $dql =  $repository->createQueryBuilder("list");
         $dql->select('list');
 
+        $dqlParameters = array();
+
         if( $search ) {
             $searchStr = "";
 

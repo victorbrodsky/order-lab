@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Oleg\TestBundle\TRP;
+namespace Tests\Oleg\TestBundle;
 
 use Tests\Oleg\TestBundle\WebTestBase;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -10,7 +10,7 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 //./bin/simple-phpunit tests/Oleg/TranslationalResearchBundle/Controller/TranslationalResearchControllerTest.php
 
-class FunctionalTest extends WebTestBase
+class TrpTest extends WebTestBase
 {
 
     public function testHomeAction() {
@@ -22,26 +22,84 @@ class FunctionalTest extends WebTestBase
         );
     }
 
+    public function testDefaultReviewersAction() {
+        $this->logIn();
+        $crawler = $this->client->request('GET', '/translational-research/default-reviewers/ap-cp');
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Default Reviewers for AP/CP")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Default Reviewers for AP/CP Final Review")')->count()
+        );
+    }
+
+    public function testFeeScheduleAction() {
+        $this->logIn();
+        $crawler = $this->client->request('GET', '/translational-research/request/fee-schedule');
+
+        //$content = $this->client->getResponse()->getContent();
+        //exit("content=$content");
+
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Fee Schedule")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Histology")')->count()
+        );
+    }
+
+    public function testAntibodiesAction() {
+        $this->logIn();
+
+        //https://github.com/KnpLabs/knp-components/issues/90
+        //request.CRITICAL: Uncaught PHP Exception UnexpectedValueException: "There is no component aliased by [list] in the given Query" at OrderByWalker.php line 54
+        unset($_GET['sort']);
+        $crawler = $this->client->request('GET', '/translational-research/list/antibodies/');
+
+        //$content = $this->client->getResponse()->getContent();
+        //exit("content=$content");
+
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Antibodies")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Alternative Name")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Create a new entry")')->count()
+        );
+    }
+
+    //Translational Research Dashboard
+    public function testDashboardAction() {
+        $this->logIn();
+        $crawler = $this->client->request('GET', '/translational-research/dashboard/graphs/?filter[startDate]=12/12/2018&filter[endDate]=12/12/2019&filter[projectSpecialty][]=0');
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Translational Research Dashboard")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Products/Services")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Filter")')->count()
+        );
+
+        //$content = $this->client->getResponse()->getContent();
+        //exit("content=$content");
+    }
+
     public function testPackingSlip() {
-        //return;
-
-        if(1) {
-            $this->logIn();
-        } else {
-            $this->client = static::createClient([], [
-                'HTTP_HOST' => '127.0.0.1',
-                'HTTP_USER_AGENT' => 'MySuperBrowser/1.0',
-            ]);
-        }
-
-        //http://localhost/order/directory/login
-        //$crawler = $this->client->request('GET', 'directory/');
-        //$crawler = $this->client->request('GET', '/directory/under-construction');
-        //$crawler = $this->client->request('GET', 'http://127.0.0.1/order/directory/under-construction');
-
-        //http://127.0.0.1/order/translational-research/work-request/download-packing-slip-pdf/1
-        //$crawler = $this->client->request('GET', 'http://127.0.0.1/translational-research/work-request/download-packing-slip-pdf/1');
-        //$crawler = $this->client->request('GET', '/translational-research/work-request/download-packing-slip-pdf/1');
+        $this->logIn();
 
         $transresUtil = $this->container->get('transres_util');
         $requests = $transresUtil->getTotalRequests();
@@ -67,19 +125,9 @@ class FunctionalTest extends WebTestBase
 //            // assert that size is greater than zero
 //            $this->assertGreaterThan(100, $size);
 
+        } else {
+            echo "Skip testPackingSlip, work requests not found";
         }
-
-        //$uri = $this->client->getRequest()->getUri();
-        //echo "uri=$uri \r\n";
-        //exit("uri=$uri");
-
-        //$content = $this->client->getResponse()->getContent();
-        //exit("home content=$content");
-
-//        $this->assertGreaterThan(
-//            0,
-//            $crawler->filter('html:contains("Packing Slip")')->count()
-//        );
 
     }
 
@@ -97,7 +145,10 @@ class FunctionalTest extends WebTestBase
 
     public function testProjectAction() {
         $this->logIn();
+
+        unset($_GET['sort']);
         $crawler = $this->client->request('GET', '/translational-research/projects/');
+
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
         $this->assertGreaterThan(
@@ -127,9 +178,12 @@ class FunctionalTest extends WebTestBase
 
     public function testRequestAction() {
         $this->logIn();
+
+        unset($_GET['sort']);
         $crawler = $this->client->request('GET', '/translational-research/work-requests/list/?filter[progressState][0]=All-except-Drafts-and-Canceled&title=All Work Requests');
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
+
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("All Work Requests")')->count()
@@ -179,19 +233,9 @@ class FunctionalTest extends WebTestBase
                 0,
                 $crawler->filter('html:contains("Show associated invoices for the same work request")')->count()
             );
+        } else {
+            echo "Skip testNewInvoiceAction, work requests not found";
         }
-
-//        $crawler = $this->client->request('GET', '/translational-research/invoice/new/1');
-//        $content = $this->client->getResponse()->getContent();
-//        exit("content=$content");
-//        $this->assertGreaterThan(
-//            0,
-//            $crawler->filter('html:contains("List of Invoices")')->count()
-//        );
-//        $this->assertGreaterThan(
-//            0,
-//            $crawler->filter('html:contains("New Project Request")')->count()
-//        );
     }
 
 
