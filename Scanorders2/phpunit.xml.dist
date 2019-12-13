@@ -25,9 +25,10 @@
         <server name="KERNEL_DIR" value="app" />
         <!--<env name="SYMFONY_DEPRECATIONS_HELPER" value="weak" />-->
         <env name="SYMFONY_DEPRECATIONS_HELPER" value="disabled" />
-        <server name='HTTP_HOST' value='http://127.0.0.1' />
+        <!--<server name='HTTP_HOST' value='http://127.0.0.1' />-->
         <server name='HTTP_USER_AGENT' value='none' />
-        <server name='REQUEST_URI' value='http://127.0.0.1' />
+        <!--<server name='REQUEST_URI' value='http://127.0.0.1' />-->
+        <server name='REQUEST_URI' value='' />
     </php>
 
     <filter>
