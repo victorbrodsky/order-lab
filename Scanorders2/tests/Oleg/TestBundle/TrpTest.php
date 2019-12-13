@@ -129,7 +129,7 @@ class TrpTest extends WebTestBase
 
 
         //Test Edit
-        $crawler = $this->client->request('GET', '/translational-research/work-request/edit/'.$projectId);
+        $crawler = $this->client->request('GET', '/translational-research/work-request/edit/'.$requestId);
 
         $this->assertGreaterThan(
             0,
