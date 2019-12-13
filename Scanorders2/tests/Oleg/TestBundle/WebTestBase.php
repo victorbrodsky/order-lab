@@ -75,13 +75,13 @@ class WebTestBase extends WebTestCase
 
         //$httpChanel = true;
         //$httpChanel = false;
-
-        $this->client = static::createClient([], [
-            'HTTP_HOST'       => '127.0.0.1',
-            'HTTP_USER_AGENT' => 'MySuperBrowser/1.0',
-            //'HTTPS' => $httpChanel
-        ]);
-        $this->client->followRedirects();
+//        $this->client = static::createClient([], [
+//            'HTTP_HOST'       => '127.0.0.1',
+//            'HTTP_USER_AGENT' => 'MySuperBrowser/1.0',
+//            //'HTTPS' => $httpChanel
+//        ]);
+        //$this->client->followRedirects();
+        $this->getClient();
 
         $this->container = $this->client->getContainer();
 
@@ -133,10 +133,14 @@ class WebTestBase extends WebTestCase
     }
 
     public function getClient() {
+        //$httpChanel = true;
+        //$httpChanel = false;
         $this->client = static::createClient([], [
             'HTTP_HOST' => '127.0.0.1',
             'HTTP_USER_AGENT' => 'MySuperBrowser/1.0',
+            //'HTTPS' => $httpChanel
         ]);
+        $this->client->followRedirects();
     }
 
 //    public function logIn_old()

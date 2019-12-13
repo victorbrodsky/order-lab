@@ -15,7 +15,7 @@ class FellappTest extends WebTestBase
     public function testLoginPageAction() {
         $this->getClient();
 
-//        $this->client->followRedirects();
+        $this->client->followRedirects();
         $crawler = $this->client->request('GET', '/fellowship-applications/login');
 
         $content = $this->client->getResponse()->getContent();
