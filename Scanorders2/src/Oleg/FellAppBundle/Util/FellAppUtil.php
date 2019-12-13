@@ -1705,7 +1705,7 @@ class FellAppUtil {
         $dql = $repository->createQueryBuilder("logger");
 
         $dql->innerJoin('logger.eventType', 'eventType');
-        $dql->where("logger.entityName = 'FellowshipApplication' AND logger.entityId = ".$fellapp->getId());
+        $dql->where("logger.entityName = 'FellowshipApplication' AND logger.entityId = ".strval($fellapp->getId()));
 
         //$dql->andWhere("logger.event LIKE :eventStr AND logger.event LIKE :eventStr2");
         $dql->andWhere("eventType.name = :eventTypeStr");
