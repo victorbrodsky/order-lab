@@ -16,8 +16,8 @@ class FellappTest extends WebTestBase
         $this->getClient();
         $crawler = $this->client->request('GET', '/fellowship-applications/login');
 
-        //$content = $this->client->getResponse()->getContent();
-        //exit("content=$content");
+        $content = $this->client->getResponse()->getContent();
+        exit("content=$content");
 
         $this->assertGreaterThan(
             0,
