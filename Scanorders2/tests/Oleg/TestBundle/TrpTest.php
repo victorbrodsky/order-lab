@@ -364,12 +364,12 @@ class TrpTest extends WebTestBase
         $this->logIn();
         $crawler = $this->client->request('GET', '/translational-research/unpaid-invoice-reminder/show-summary');
 
-        $content = $this->client->getResponse()->getContent();
-        exit("content=$content");
+        //$content = $this->client->getResponse()->getContent();
+        //exit("content=$content");
 
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Send Reminder Emails")')->count()
+            $crawler->filter('html:contains("invoices have remained unpaid.")')->count()
         );
     }
 
