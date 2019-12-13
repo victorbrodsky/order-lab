@@ -1499,7 +1499,7 @@ class DashboardUtil
         //$dql->where("logger.entityName = 'Invoice' AND logger.entityId = ".$invoice->getId());
 
         //Work Request ID APCP843-REQ16216 billing state has been changed to Invoiced, triggered by invoice status change to Unpaid/Issued
-        $dql->where("logger.entityName = 'TransResRequest' AND logger.entityId = ".$request->getId());
+        $dql->where("logger.entityName = 'TransResRequest' AND logger.entityId = '".$request->getId()."'");
 
         //$dql->andWhere("logger.event LIKE '%"."status changed to '/Unpaid/Issued"."%'"); //status changed to 'Unpaid/Issued'
         //$dql->andWhere("logger.event LIKE :eventStr OR logger.event LIKE :eventStr2");
@@ -1527,7 +1527,7 @@ class DashboardUtil
         //try to use "Invoice PDF Issued" event "Invoice APCP668-REQ14079-V1 PDF has been sent by email ..."
         if( count($loggers) == 0 ) {
             $dql2 = $repository->createQueryBuilder("logger");
-            $dql2->where("logger.entityName = 'Invoice' AND logger.entityId = ".$invoice->getId());
+            $dql2->where("logger.entityName = 'Invoice' AND logger.entityId = '".$invoice->getId()."'");
             $dql2->andWhere("logger.event LIKE :eventStr");
 
             $dql2->orderBy("logger.id","DESC");

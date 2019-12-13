@@ -2093,7 +2093,7 @@ class UserSecurityUtil {
         $treeRepository = $this->em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
         $dql =  $treeRepository->createQueryBuilder("list");
         $dql->select('list');
-        $dql->where('list.entityName = :entityName AND list.entityNamespace = :entityNamespace AND list.entityId = :entityId');
+        $dql->where("list.entityName = :entityName AND list.entityNamespace = :entityNamespace AND list.entityId = :entityId");
 
         $query = $this->em->createQuery($dql);
 
@@ -2103,7 +2103,7 @@ class UserSecurityUtil {
             array(
                 'entityName' => $className,
                 'entityNamespace' => $classNamespace,
-                'entityId' => $object->getId()
+                'entityId' => "'".$object->getId()."'"
             )
         );
 

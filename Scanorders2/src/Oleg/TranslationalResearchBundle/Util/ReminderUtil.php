@@ -594,7 +594,7 @@ class ReminderUtil
         //$dql->leftJoin('logger.site', 'site');
 
         //$dql->where("logger.siteName = 'translationalresearch' AND logger.entityName = 'Invoice' AND logger.entityId = ".$invoice->getId());
-        $dql->where("logger.entityNamespace = 'Oleg\TranslationalResearchBundle\Entity' AND logger.entityName = 'Project' AND logger.entityId = ".$project->getId());
+        $dql->where("logger.entityNamespace = 'Oleg\TranslationalResearchBundle\Entity' AND logger.entityName = 'Project' AND logger.entityId = '".$project->getId()."'");
 
         $dql->andWhere("eventType.name = :eventTypeName");
         $dqlParameters['eventTypeName'] = "Project Reminder Email";
@@ -891,7 +891,7 @@ class ReminderUtil
         $dql->innerJoin('logger.eventType', 'eventType');
 
         //$dql->where("logger.siteName = 'translationalresearch' AND logger.entityName = 'Invoice' AND logger.entityId = ".$invoice->getId());
-        $dql->where("logger.entityNamespace = 'Oleg\TranslationalResearchBundle\Entity' AND logger.entityName = 'TransResRequest' AND logger.entityId = ".$request->getId());
+        $dql->where("logger.entityNamespace = 'Oleg\TranslationalResearchBundle\Entity' AND logger.entityName = 'TransResRequest' AND logger.entityId = '".$request->getId()."'");
 
         $dql->andWhere("eventType.name = :eventTypeName");
         $dqlParameters['eventTypeName'] = "Work Request Reminder Email";

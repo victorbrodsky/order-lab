@@ -211,6 +211,12 @@ class LoggerController extends Controller
 
         $createLogger = null;
         $updateLogger = null;
+        //exit('111111');
+
+        //test
+        //$entityNamespace = " ";
+        //$entityName = " ";
+        //$entityId = 2;
 
         //get only specific object log
         if( $entityNamespace && $entityName && $entityId ) {
@@ -221,12 +227,14 @@ class LoggerController extends Controller
             //echo "0=".$namepartsArr[0]."<br>";
             //$subjectUser = $em->getRepository($repName.':'.$entityName)->find($entityId);
 
-            $queryParameters = array( 'entityNamespace'=>$entityNamespace, 'entityName'=>$entityName, 'entityId'=>$entityId );
+            $queryParameters = array( 'entityNamespace'=>$entityNamespace, 'entityName'=>$entityName, 'entityId'=>"'".$entityId."'" );
 
             $dql->andWhere('logger.entityNamespace = :entityNamespace');
             $dql->andWhere('logger.entityName = :entityName');
             //$dql->andWhere('logger.objectType = :objectType');
-            $dql->andWhere('logger.entityId = :entityId');
+
+            //exit('22222');
+            $dql->andWhere("logger.entityId = :entityId");
 
             if( $onlyheader ) {
 
@@ -532,7 +540,7 @@ class LoggerController extends Controller
                 $dqlParameters['objectId'] = $objectIdArr;
             } else {
                 $dql->andWhere("logger.entityId = :objectId");
-                $dqlParameters['objectId'] = $objectId;
+                $dqlParameters['objectId'] = "'".$objectId."'";
             }
 
 

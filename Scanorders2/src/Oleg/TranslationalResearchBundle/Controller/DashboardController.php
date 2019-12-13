@@ -1080,7 +1080,7 @@ class DashboardController extends Controller
         //$dql->where("logger.entityName = 'Invoice' AND logger.entityId = ".$invoice->getId());
 
         //Work Request ID APCP843-REQ16216 billing state has been changed to Invoiced, triggered by invoice status change to Unpaid/Issued
-        $dql->where("logger.entityName = 'TransResRequest' AND logger.entityId = ".$request->getId());
+        $dql->where("logger.entityName = 'TransResRequest' AND logger.entityId = '".$request->getId()."'");
 
         //$dql->andWhere("logger.event LIKE '%"."status changed to '/Unpaid/Issued"."%'"); //status changed to 'Unpaid/Issued'
         //$dql->andWhere("logger.event LIKE :eventStr OR logger.event LIKE :eventStr2");
@@ -1109,7 +1109,7 @@ class DashboardController extends Controller
         //2) try to use "Invoice PDF Issued" event "Invoice APCP668-REQ14079-V1 PDF has been sent by email ..."
         if( count($loggers) == 0 ) {
             $dql2 = $repository->createQueryBuilder("logger");
-            $dql2->where("logger.entityName = 'TransResRequest' AND logger.entityId = ".$request->getId());
+            $dql2->where("logger.entityName = 'TransResRequest' AND logger.entityId = '".$request->getId()."'");
             $dql2->andWhere("logger.event LIKE :eventStr AND logger.event LIKE :eventStr2");
 
             $dql2->orderBy("logger.id","DESC");
@@ -1131,7 +1131,7 @@ class DashboardController extends Controller
         //3)
         if( count($loggers) == 0 ) {
             $dql3 = $repository->createQueryBuilder("logger");
-            $dql3->where("logger.entityName = 'TransResRequest' AND logger.entityId = ".$request->getId());
+            $dql3->where("logger.entityName = 'TransResRequest' AND logger.entityId = '".$request->getId()."'");
             $dql3->andWhere("logger.event LIKE :eventStr AND logger.event LIKE :eventStr2 AND logger.event LIKE :eventStr3");
 
             $dql3->orderBy("logger.id","DESC");
@@ -1161,7 +1161,7 @@ class DashboardController extends Controller
         //4) Request APCP936-REQ14092 has been sent to Completed
         if( count($loggers) == 0 ) {
             $dql4 = $repository->createQueryBuilder("logger");
-            $dql4->where("logger.entityName = 'TransResRequest' AND logger.entityId = ".$request->getId());
+            $dql4->where("logger.entityName = 'TransResRequest' AND logger.entityId = '".$request->getId()."'");
             $dql4->andWhere("logger.event LIKE :eventStr AND logger.event LIKE :eventStr2");
 
             $dql4->orderBy("logger.id","DESC");
@@ -1188,7 +1188,7 @@ class DashboardController extends Controller
         //5) Request APCP936-REQ14092 has been sent to Completed
         if( count($loggers) == 0 ) {
             $dql4 = $repository->createQueryBuilder("logger");
-            $dql4->where("logger.entityName = 'TransResRequest' AND logger.entityId = ".$request->getId());
+            $dql4->where("logger.entityName = 'TransResRequest' AND logger.entityId = '".$request->getId()."'");
             $dql4->andWhere("logger.event LIKE :eventStr AND logger.event LIKE :eventStr2");
 
             $dql4->orderBy("logger.id","DESC");
@@ -1215,7 +1215,7 @@ class DashboardController extends Controller
         //6) Work Request APCP1080-REQ16124 has been updated. The request's current status is 'Completed'.
         if( count($loggers) == 0 ) {
             $dql4 = $repository->createQueryBuilder("logger");
-            $dql4->where("logger.entityName = 'TransResRequest' AND logger.entityId = ".$request->getId());
+            $dql4->where("logger.entityName = 'TransResRequest' AND logger.entityId = '".$request->getId()."'");
             $dql4->andWhere("logger.event LIKE :eventStr AND logger.event LIKE :eventStr2");
 
             $dql4->orderBy("logger.id","DESC");
@@ -1242,7 +1242,7 @@ class DashboardController extends Controller
         //7) Work Request APCP1080-REQ16124 has been updated. The request's current status is 'Completed'.
         if( count($loggers) == 0 ) {
             $dql4 = $repository->createQueryBuilder("logger");
-            $dql4->where("logger.entityName = 'TransResRequest' AND logger.entityId = ".$request->getId());
+            $dql4->where("logger.entityName = 'TransResRequest' AND logger.entityId = '".$request->getId()."'");
             $dql4->andWhere("logger.event LIKE :eventStr AND logger.event LIKE :eventStr2");
 
             $dql4->orderBy("logger.id","DESC");
@@ -1342,7 +1342,7 @@ class DashboardController extends Controller
         //$dql->where("logger.entityName = 'Invoice' AND logger.entityId = ".$invoice->getId());
 
         //Work Request ID APCP843-REQ16216 billing state has been changed to Invoiced, triggered by invoice status change to Unpaid/Issued
-        $dql->where("logger.entityName = 'TransResRequest' AND logger.entityId = ".$request->getId());
+        $dql->where("logger.entityName = 'TransResRequest' AND logger.entityId = '".$request->getId()."'");
 
         //$dql->andWhere("logger.event LIKE '%"."status changed to '/Unpaid/Issued"."%'"); //status changed to 'Unpaid/Issued'
         //$dql->andWhere("logger.event LIKE :eventStr OR logger.event LIKE :eventStr2");
@@ -1371,7 +1371,7 @@ class DashboardController extends Controller
         //2) try to use "Invoice PDF Issued" event "Invoice APCP668-REQ14079-V1 PDF has been sent by email ..."
         if( count($loggers) == 0 ) {
             $dql2 = $repository->createQueryBuilder("logger");
-            $dql2->where("logger.entityName = 'TransResRequest' AND logger.entityId = ".$request->getId());
+            $dql2->where("logger.entityName = 'TransResRequest' AND logger.entityId = '".$request->getId()."'");
             $dql2->andWhere("logger.event LIKE :eventStr AND logger.event LIKE :eventStr2");
 
             $dql2->orderBy("logger.id","DESC");
@@ -1393,7 +1393,7 @@ class DashboardController extends Controller
         //3)
         if( count($loggers) == 0 ) {
             $dql3 = $repository->createQueryBuilder("logger");
-            $dql3->where("logger.entityName = 'TransResRequest' AND logger.entityId = ".$request->getId());
+            $dql3->where("logger.entityName = 'TransResRequest' AND logger.entityId = '".$request->getId()."'");
             $dql3->andWhere("logger.event LIKE :eventStr AND logger.event LIKE :eventStr2 AND logger.event LIKE :eventStr3");
 
             $dql3->orderBy("logger.id","DESC");
@@ -1423,7 +1423,7 @@ class DashboardController extends Controller
         //4) Request APCP936-REQ14092 has been sent to Completed
         if( count($loggers) == 0 ) {
             $dql4 = $repository->createQueryBuilder("logger");
-            $dql4->where("logger.entityName = 'TransResRequest' AND logger.entityId = ".$request->getId());
+            $dql4->where("logger.entityName = 'TransResRequest' AND logger.entityId = '".$request->getId()."'");
             $dql4->andWhere("logger.event LIKE :eventStr AND logger.event LIKE :eventStr2");
 
             $dql4->orderBy("logger.id","DESC");
@@ -1450,7 +1450,7 @@ class DashboardController extends Controller
         //5) Request APCP936-REQ14092 has been sent to Completed
         if( count($loggers) == 0 ) {
             $dql4 = $repository->createQueryBuilder("logger");
-            $dql4->where("logger.entityName = 'TransResRequest' AND logger.entityId = ".$request->getId());
+            $dql4->where("logger.entityName = 'TransResRequest' AND logger.entityId = '".$request->getId()."'");
             $dql4->andWhere("logger.event LIKE :eventStr AND logger.event LIKE :eventStr2");
 
             $dql4->orderBy("logger.id","DESC");
@@ -1477,7 +1477,7 @@ class DashboardController extends Controller
         //6) Work Request APCP1080-REQ16124 has been updated. The request's current status is 'Completed'.
         if( count($loggers) == 0 ) {
             $dql4 = $repository->createQueryBuilder("logger");
-            $dql4->where("logger.entityName = 'TransResRequest' AND logger.entityId = ".$request->getId());
+            $dql4->where("logger.entityName = 'TransResRequest' AND logger.entityId = '".$request->getId()."'");
             $dql4->andWhere("logger.event LIKE :eventStr AND logger.event LIKE :eventStr2");
 
             $dql4->orderBy("logger.id","DESC");
@@ -1504,7 +1504,7 @@ class DashboardController extends Controller
         //7) Work Request APCP1080-REQ16124 has been updated. The request's current status is 'Completed'.
         if( count($loggers) == 0 ) {
             $dql4 = $repository->createQueryBuilder("logger");
-            $dql4->where("logger.entityName = 'TransResRequest' AND logger.entityId = ".$request->getId());
+            $dql4->where("logger.entityName = 'TransResRequest' AND logger.entityId = '".$request->getId()."'");
             $dql4->andWhere("logger.event LIKE :eventStr AND logger.event LIKE :eventStr2");
 
             $dql4->orderBy("logger.id","DESC");
@@ -1609,7 +1609,7 @@ class DashboardController extends Controller
         //$dql->where("logger.entityName = 'Invoice' AND logger.entityId = ".$invoice->getId());
 
         //Work Request ID APCP843-REQ16216 billing state has been changed to Invoiced, triggered by invoice status change to Unpaid/Issued
-        $dql->where("logger.entityName = 'Project' AND logger.entityId = ".$project->getId());
+        $dql->where("logger.entityName = 'Project' AND logger.entityId = '".$project->getId()."'");
 
         //$dql->andWhere("logger.event LIKE '%"."status changed to '/Unpaid/Issued"."%'"); //status changed to 'Unpaid/Issued'
         //$dql->andWhere("logger.event LIKE :eventStr OR logger.event LIKE :eventStr2");
@@ -1639,7 +1639,7 @@ class DashboardController extends Controller
         //2) Thank you for your submission! Your project request has been received and assigned the following ID of APCP2202.
         if( count($loggers) == 0 ) {
             $dql = $repository->createQueryBuilder("logger");
-            $dql->where("logger.entityName = 'Project' AND logger.entityId = ".$project->getId());
+            $dql->where("logger.entityName = 'Project' AND logger.entityId = '".$project->getId()."'");
             $dql->andWhere("logger.event LIKE :eventStr AND logger.event LIKE :eventStr2");
 
             $dql->orderBy("logger.id","DESC");
@@ -1665,7 +1665,7 @@ class DashboardController extends Controller
         //3) Thank you for your submission! Your project request has been assigned an ID of APCP2182 and will be reviewed.
         if( count($loggers) == 0 ) {
             $dql = $repository->createQueryBuilder("logger");
-            $dql->where("logger.entityName = 'Project' AND logger.entityId = ".$project->getId());
+            $dql->where("logger.entityName = 'Project' AND logger.entityId = '".$project->getId()."'");
             $dql->andWhere("logger.event LIKE :eventStr AND logger.event LIKE :eventStr2");
 
             $dql->orderBy("logger.id","DESC");

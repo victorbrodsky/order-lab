@@ -185,7 +185,7 @@ class DefaultController extends Controller
         $dql = $repository->createQueryBuilder("logger");
 
 
-        $dql->where("logger.entityName = 'User' AND logger.entityId = ".$user->getId());
+        $dql->where("logger.entityName = 'User' AND logger.entityId = '".$user->getId()."'");
 
         //$dql->andWhere("logger.event LIKE '%"."status changed to '/Unpaid/Issued"."%'"); //status changed to 'Unpaid/Issued'
         //$dql->andWhere("logger.event LIKE :eventStr OR logger.event LIKE :eventStr2");

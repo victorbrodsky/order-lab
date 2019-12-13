@@ -597,7 +597,7 @@ class FormNodeUtil
 
         $dql =  $treeRepository->createQueryBuilder("list");
         $dql->select('list');
-        $dql->where('list.entityName = :entityName AND list.entityNamespace = :entityNamespace AND list.entityId = :entityId');
+        $dql->where("list.entityName = :entityName AND list.entityNamespace = :entityNamespace AND list.entityId = :entityId");
         $dql->andWhere('list.formNode = :formNodeId');
         $dql->orderBy('list.arraySectionIndex','DESC');
         $dql->addOrderBy('list.orderinlist', 'ASC');
@@ -612,7 +612,7 @@ class FormNodeUtil
             array(
                 'entityName' => $mapper['entityName'],              //Project
                 'entityNamespace' => $mapper['entityNamespace'],    //Oleg\TranslationalResearchBundle\Entity
-                'entityId' => $mapper['entityId'],                  //project ID
+                'entityId' => "'".$mapper['entityId']."'",                  //project ID
                 'formNodeId' => $formNode->getId()
             )
         );
@@ -654,8 +654,8 @@ class FormNodeUtil
 
         //provide the exact entityId
         if( isset($mapper['entityId']) && $mapper['entityId'] ) {
-            $dql->andWhere('list.entityId = :entityId');
-            $queryParameters['entityId'] = $mapper['entityId'];
+            $dql->andWhere("list.entityId = :entityId");
+            $queryParameters['entityId'] = "'".$mapper['entityId']."'";
         }
 
         //$parameterValue = $value;
@@ -2460,7 +2460,7 @@ class FormNodeUtil
 
         $dql =  $treeRepository->createQueryBuilder("list");
         $dql->select('list');
-        $dql->where('list.entityName = :entityName AND list.entityNamespace = :entityNamespace AND list.entityId = :entityId');
+        $dql->where("list.entityName = :entityName AND list.entityNamespace = :entityNamespace AND list.entityId = :entityId");
         $dql->andWhere('list.formNode = :formNodeId');
         $dql->orderBy('list.arraySectionIndex','DESC');
         $dql->addOrderBy('list.orderinlist', 'ASC');
@@ -2473,7 +2473,7 @@ class FormNodeUtil
             array(
                 'entityName' => $mapper['entityName'],
                 'entityNamespace' => $mapper['entityNamespace'],
-                'entityId' => $mapper['entityId'],
+                'entityId' => "'".$mapper['entityId']."'",
                 'formNodeId' => $formNode->getId()
             )
         );
