@@ -1708,7 +1708,7 @@ class FellAppUtil {
         echo "fellappIdInteger=".$fellappIdInteger."<br>";
 
         $dql->innerJoin('logger.eventType', 'eventType');
-        $dql->where("logger.entityName = 'FellowshipApplication' AND logger.entityId = ".$fellappIdInteger);
+        //$dql->where("logger.entityName = 'FellowshipApplication' AND logger.entityId = ".$fellappIdInteger);
 
         //$dql->andWhere("logger.event LIKE :eventStr AND logger.event LIKE :eventStr2");
         $dql->andWhere("eventType.name = :eventTypeStr");
