@@ -258,6 +258,40 @@ class VacationTest extends WebTestBase
                 0,
                 $crawler->filter('html:contains("Emergency Contact Info (optional)")')->count()
             );
+            $this->assertGreaterThan(
+                0,
+                $crawler->filter('html:contains("Edit")')->count()
+            );
+
+            $crawler = $this->client->request('GET', '/vacation-request/edit/'.$requestId);
+
+            //$content = $this->client->getResponse()->getContent();
+            //exit("content=$content");
+
+            $this->assertGreaterThan(
+                0,
+                $crawler->filter('html:contains("Vacation/Business Travel Request")')->count()
+            );
+            $this->assertGreaterThan(
+                0,
+                $crawler->filter('html:contains("Vacation Travel")')->count()
+            );
+            $this->assertGreaterThan(
+                0,
+                $crawler->filter('html:contains("First Day Back In Office")')->count()
+            );
+            $this->assertGreaterThan(
+                0,
+                $crawler->filter('html:contains("Emergency Contact Info (optional)")')->count()
+            );
+            $this->assertGreaterThan(
+                0,
+                $crawler->filter('html:contains("Update")')->count()
+            );
+            $this->assertGreaterThan(
+                0,
+                $crawler->filter('html:contains("Cancel")')->count()
+            );
         } else {
             echo "Skip testShowEditRequest, vacation/business requests not found";
         }
