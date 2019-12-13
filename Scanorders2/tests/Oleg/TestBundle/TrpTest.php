@@ -169,50 +169,62 @@ class TrpTest extends WebTestBase
         }
 
         //Test Show
-        $crawler = $this->client->request('GET', '/translational-research/work-request/show/'.$invoiceId);
+        $crawler = $this->client->request('GET', '/translational-research/invoice/show/'.$invoiceId);
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
 
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Work Request")')->count()
+            $crawler->filter('html:contains("Invoice ID ")')->count()
         );
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Request Details")')->count()
+            $crawler->filter('html:contains("Show associated invoices for this work request")')->count()
         );
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Product or Service")')->count()
+            $crawler->filter('html:contains("Invoice Items")')->count()
         );
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Edit work request")')->count()
+            $crawler->filter('html:contains("Invoice in PDF(s)")')->count()
         );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Edit invoice")')->count()
+        );
+
+        //link Edit invoice
+        $link = $crawler->selectLink('Edit invoice')->link();
+        $crawler = $this->client->click($link);
 
 
         //Test Edit
-        $crawler = $this->client->request('GET', '/translational-research/work-request/edit/'.$invoiceId);
+        //$crawler = $this->client->request('GET', '/translational-research/invoice/edit/'.$invoiceId);
 
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Edit Work Request")')->count()
+            $crawler->filter('html:contains("Invoice ID ")')->count()
         );
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Product or Service")')->count()
+            $crawler->filter('html:contains("Show associated invoices for this work request")')->count()
         );
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Work Request Info")')->count()
+            $crawler->filter('html:contains("Invoice Items")')->count()
         );
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Update Changes")')->count()
+            $crawler->filter('html:contains("Invoice in PDF(s)")')->count()
         );
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Associated Project Info")')->count()
+            $crawler->filter('html:contains("Update and Regenerate PDF Invoice")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Cancel")')->count()
         );
     }
 
@@ -351,6 +363,10 @@ class TrpTest extends WebTestBase
     public function testUnpaidInvoiceReminderAction() {
         $this->logIn();
         $crawler = $this->client->request('GET', '/translational-research/unpaid-invoice-reminder/show-summary');
+
+        $content = $this->client->getResponse()->getContent();
+        exit("content=$content");
+
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Send Reminder Emails")')->count()
