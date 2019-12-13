@@ -966,7 +966,8 @@ class RequestController extends Controller
             //'handsometableData' => json_encode($jsonData)
             'handsometableData' => $jsonData,
             'showPackingSlip' => $showPackingSlip,
-            'defaultAccessionType' => null
+            'defaultAccessionType' => null,
+            'defaultAntibodyType' => null,
             //'delete_form' => $deleteForm->createView(),
             //'review_forms' => $reviewFormViews
         );
