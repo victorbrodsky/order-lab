@@ -74,6 +74,7 @@ class WebTestBase extends WebTestCase
 //        ]);
 
         $httpChanel = true;
+        $httpChanel = false;
 
         $this->client = static::createClient([], [
             'HTTP_HOST'       => '127.0.0.1',
