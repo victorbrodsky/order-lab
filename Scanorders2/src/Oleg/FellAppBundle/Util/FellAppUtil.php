@@ -1704,8 +1704,8 @@ class FellAppUtil {
         $repository = $this->em->getRepository('OlegUserdirectoryBundle:Logger');
         $dql = $repository->createQueryBuilder("logger");
 
-        $fellappIdInteger = strval($fellapp->getId());
-        exit("fellappIdInteger=".$fellappIdInteger);
+        $fellappIdInteger = $fellapp->getId()."";
+        echo "fellappIdInteger=".$fellappIdInteger."<br>";
 
         $dql->innerJoin('logger.eventType', 'eventType');
         $dql->where("logger.entityName = 'FellowshipApplication' AND logger.entityId = ".$fellappIdInteger);
