@@ -35,7 +35,7 @@ class FellappTest extends WebTestBase
         //exit("content=$content");
 
         $this->assertGreaterThan(
-            0,
+            10,
             $crawler->filter('html:contains("Applications matching search criteria")')->count()
         );
     }

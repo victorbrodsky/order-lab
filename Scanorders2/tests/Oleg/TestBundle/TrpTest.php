@@ -23,7 +23,7 @@ class TrpTest extends WebTestBase
     }
 
     public function testShowProjectApplication() {
-        return;
+        //return;
 
         $this->logIn();
 

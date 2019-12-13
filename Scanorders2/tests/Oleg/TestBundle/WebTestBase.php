@@ -140,6 +140,8 @@ class WebTestBase extends WebTestCase
             'HTTP_USER_AGENT' => 'MySuperBrowser/1.0',
             //'HTTPS' => $httpChanel
         ]);
+
+        //When running on https this will follow redirect from http://127.0.0.1 to https://127.0.0.1
         $this->client->followRedirects();
     }
 
