@@ -133,16 +133,27 @@ class WebTestBase extends WebTestCase
     }
 
     public function getClient() {
-        //$httpChanel = true;
-        //$httpChanel = false;
+
+        //Set HTTPS if required
+        $client = static::createClient([], [
+            'HTTP_HOST'       => '127.0.0.1',
+            'HTTP_USER_AGENT' => 'MySuperBrowser/1.0',
+        ]);
+        $userSecUtil = $client->getContainer()->get('user_security_utility');
+        $connectionChannel = $userSecUtil->getSiteSettingParameter('connectionChannel');
+        $httpsChannel = false;
+        if( $connectionChannel == 'https' ) {
+            $httpsChannel = true;
+        }
+
         $this->client = static::createClient([], [
             'HTTP_HOST' => '127.0.0.1',
             'HTTP_USER_AGENT' => 'MySuperBrowser/1.0',
-            //'HTTPS' => $httpChanel
+            'HTTPS' => $httpsChannel
         ]);
 
-        //When running on https this will follow redirect from http://127.0.0.1 to https://127.0.0.1
-        $this->client->followRedirects();
+        //Alternative of setting HTTPS: When running on https this will follow redirect from http://127.0.0.1 to https://127.0.0.1
+        //$this->client->followRedirects();
     }
 
 //    public function logIn_old()
