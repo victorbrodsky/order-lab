@@ -189,7 +189,8 @@
                 <td style="background-color: {{ backgroundColor }}">
                     {#{{ totalRemainingDays }}#}
                     {#{{ (totalAllocatedDays|number_format - vacationDays|number_format + carryOverDaysPrevYear|number_format) }}=>#}
-                    {% set totalRemainingDaysRes = vacreq_util.totalVacationRemainingDays(submitter,totalAllocatedDays,vacationDays,carryOverDaysNextYear,carryOverDays,yearRange) %}
+                    {% set carryOverDays = null %}
+                    {% set totalRemainingDaysRes = vacreq_util.totalVacationRemainingDays(submitter,totalAllocatedDays,vacationDays,carryOverDaysNextYear,carryOverDaysPrevYear,yearRange) %}
                     {{ totalRemainingDaysRes['numberOfDays'] }}
                     {% if not totalRemainingDaysRes['accurate'] %}
                         <span data-toggle="tooltip" title="{{ inaccuracyMessage }}">*</span>

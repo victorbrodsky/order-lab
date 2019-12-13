@@ -440,7 +440,7 @@
 
     {% if cycle == "new" %}
         <p>
-            <button class="btn btn-warning" name="btnCreate" type="button" onclick="validateVacReqForm(this)">Submit</button>
+            <button id="btnCreateVacReq" class="btn btn-warning" name="btnCreate" type="button" onclick="validateVacReqForm(this)">Submit</button>
         </p>
     {% endif %}
 
@@ -451,7 +451,7 @@
 
     {% if cycle == "edit" or review %}
         <p>
-            <button class="btn btn-warning" name="btnUpdate" type="button" onclick="validateVacReqForm(this)">Update</button>
+            <button id="btnCreateVacReq" class="btn btn-warning" name="btnUpdate" type="button" onclick="validateVacReqForm(this)">Update</button>
             {% if review %}
                 <a class="btn btn-primary" href="{{ path(vacreq_sitename~'_incomingrequests') }}">Cancel</a>
             {% else %}
