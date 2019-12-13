@@ -1015,9 +1015,13 @@
         {% if wellLabel is defined and wellLabel %}
             {{ wellLabel|raw }}
         {% endif %}
-        {% set personurl = path(sitename~'_showuser',{'id':person.id}) %}
-        {% set personlink = '<a href="'~personurl~'">'~person.getUsernameOptimal()~'</a>'  %}
-        {{ formmacros.simplefield( "Name:", personlink, "", "disabled" ) }}
+
+        {% if person.id %}
+            {% set personurl = path(sitename~'_showuser',{'id':person.id}) %}
+            {% set personlink = '<a href="'~personurl~'">'~person.getUsernameOptimal()~'</a>'  %}
+            {{ formmacros.simplefield( "Name:", personlink, "", "disabled" ) }}
+        {% endif %}
+
         {{ usermacros.emailPhoneField(person.getSinglePhone,cycle,'phone',"Preferred Phone Number:") }}
         {{ usermacros.emailPhoneField(person.getSingleEmail,cycle,'email',"Preferred Email:") }}
     </div>

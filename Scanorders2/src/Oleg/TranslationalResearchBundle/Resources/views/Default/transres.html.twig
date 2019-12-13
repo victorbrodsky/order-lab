@@ -572,8 +572,8 @@
 
 {% macro projectRequesters( form, project, cycle ) %}
     {% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {#{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
+    {#{% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}#}
 
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         <div class="panel panel-default">
@@ -676,7 +676,7 @@
 {% endmacro %}
 
 {% macro usersInfo( usersForm, usersEntity, cycle, required ) %}
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {#{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
     {% if cycle == "show" %}
         <div class="well well-sm">
@@ -689,8 +689,10 @@
                 </p>
             </div>
             {% for userEntity in usersEntity %}
-                {{ usermacros.personInfo(userEntity, cycle, 'translationalresearch') }}
-                {#{% if not loop.last %}<hr>{% endif %}#}
+                {% if userEntity and userEntity.id %}
+                    {{ usermacros.personInfo(userEntity, cycle, 'translationalresearch') }}
+                    {#{% if not loop.last %}<hr>{% endif %}#}
+                {% endif %}
             {% endfor %}
         </div>
         {% do usersForm.setRendered %}

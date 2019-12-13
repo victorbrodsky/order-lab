@@ -47,24 +47,26 @@ class TrpTest extends WebTestBase
         // in \"OlegUserdirectoryBundle::Default/usermacros.html.twig\". at
         // C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\scanorder\\Scanorders2\\vendor\\twig\\twig\\src\\Template.php:581)"} []
 
-//        $crawler = $this->client->request('GET', '/translational-research/project/show/'.$projectId);
-//
-//        $this->assertGreaterThan(
-//            0,
-//            $crawler->filter('html:contains("Edit Project Request")')->count()
-//        );
-//        $this->assertGreaterThan(
-//            0,
-//            $crawler->filter('html:contains("Principal Investigator(s) for the project:")')->count()
-//        );
-//        $this->assertGreaterThan(
-//            0,
-//            $crawler->filter('html:contains("Tissue Request Details")')->count()
-//        );
-//        $this->assertGreaterThan(
-//            0,
-//            $crawler->filter('html:contains("Edit Project Request")')->count()
-//        );
+        $crawler = $this->client->request('GET', '/translational-research/project/show/'.$projectId);
+        //$content = $this->client->getResponse()->getContent();
+        //exit("content=$content");
+
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Edit Project Request")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Principal Investigator(s) for the project:")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Tissue Request Details")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Edit Project Request")')->count()
+        );
 
 
         //Test Edit
@@ -85,6 +87,69 @@ class TrpTest extends WebTestBase
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Save Changes")')->count()
+        );
+    }
+
+    public function testShowRequestApplication() {
+        //return;
+
+        $this->logIn();
+
+        $transresUtil = $this->container->get('transres_util');
+        $requests = $transresUtil->getTotalRequests();
+        if( count($requests) > 0 ) {
+            $transRequest = end($requests);
+            $requestId = $transRequest->getId();
+        } else {
+            echo "Skip testShowRequestApplication; There are no available requests found";
+            return null;
+        }
+
+        //Test Show
+        $crawler = $this->client->request('GET', '/translational-research/work-request/show/'.$requestId);
+        //$content = $this->client->getResponse()->getContent();
+        //exit("content=$content");
+
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Work Request")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Request Details")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Product or Service")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Edit work request")')->count()
+        );
+
+
+        //Test Edit
+        $crawler = $this->client->request('GET', '/translational-research/work-request/edit/'.$projectId);
+
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Edit Work Request")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Product or Service")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Work Request Info")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Update Changes")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Associated Project Info")')->count()
         );
     }
 
