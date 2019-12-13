@@ -153,7 +153,68 @@ class TrpTest extends WebTestBase
         );
     }
 
-    //getTotalRequests
+    public function testShowInvoiceApplication() {
+        //return;
+
+        $this->logIn();
+
+        $invoices = $this->em->getRepository('OlegTranslationalResearchBundle:Invoice')->findAll();
+
+        if( count($invoices) > 0 ) {
+            $invoice = end($invoices);
+            $invoiceId = $invoice->getOId();
+        } else {
+            echo "Skip testShowInvoiceApplication; There are no available invoices found";
+            return null;
+        }
+
+        //Test Show
+        $crawler = $this->client->request('GET', '/translational-research/work-request/show/'.$invoiceId);
+        //$content = $this->client->getResponse()->getContent();
+        //exit("content=$content");
+
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Work Request")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Request Details")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Product or Service")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Edit work request")')->count()
+        );
+
+
+        //Test Edit
+        $crawler = $this->client->request('GET', '/translational-research/work-request/edit/'.$invoiceId);
+
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Edit Work Request")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Product or Service")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Work Request Info")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Update Changes")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Associated Project Info")')->count()
+        );
+    }
 
     public function testInvoicePdfSlip() {
         $this->logIn();
