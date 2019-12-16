@@ -2474,7 +2474,8 @@ class FormNodeUtil
                 'entityName' => $mapper['entityName'],
                 'entityNamespace' => $mapper['entityNamespace'],
                 //'entityId' => "'".$mapper['entityId']."'",
-                'entityId' => $mapper['entityId']."",
+                //'entityId' => $mapper['entityId']."",
+                'entityId' => $mapper['entityId'],
                 'formNodeId' => $formNode->getId()
             )
         );
