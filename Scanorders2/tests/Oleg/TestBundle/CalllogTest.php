@@ -78,6 +78,7 @@ class CalllogTest extends WebTestBase
             0,
             $crawler->filter('html:contains("History/Findings")')->count()
         );
+        //TODO: add assert to make sure that td > p > has text
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Laboratory Values")')->count()

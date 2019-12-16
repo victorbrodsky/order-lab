@@ -342,7 +342,7 @@
                 {{ calllogmacros.calllogAuthors(message,cycle,sitename,mainPanelClass) }}
             </p>
 
-        {% else %}
+    {% else %}
 
             {% if patient == null %}
                 <p>No single patient is referenced by this entry</p>
@@ -382,7 +382,7 @@
             {#Cached entry content in XML#}
             {{ calllogmacros.calllogEntryCache(message,cycle) }}
 
-        {% endif %}
+    {% endif %}
 
 
 
