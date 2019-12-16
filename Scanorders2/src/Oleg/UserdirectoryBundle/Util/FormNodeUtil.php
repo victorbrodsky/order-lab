@@ -613,7 +613,7 @@ class FormNodeUtil
                 'entityName' => $mapper['entityName'],              //Project
                 'entityNamespace' => $mapper['entityNamespace'],    //Oleg\TranslationalResearchBundle\Entity
                 //'entityId' => "'".$mapper['entityId']."'",                  //project ID
-                'entityId' => $mapper['entityId'],
+                'entityId' => $mapper['entityId']."",
                 'formNodeId' => $formNode->getId()
             )
         );
@@ -2476,7 +2476,7 @@ class FormNodeUtil
                 'entityNamespace' => $mapper['entityNamespace'],
                 //'entityId' => "'".$mapper['entityId']."'",
                 //'entityId' => $mapper['entityId']."",
-                'entityId' => $mapper['entityId'],
+                'entityId' => $mapper['entityId']."",
                 'formNodeId' => $formNode->getId()
             )
         );

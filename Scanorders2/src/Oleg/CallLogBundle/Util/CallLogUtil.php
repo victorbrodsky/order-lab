@@ -2869,7 +2869,7 @@ class CallLogUtil
 
         return $unprocessedSourceTextObjects;
     }
-    //$historySourceFormNode
+    //NOT USED
     public function getLoopUnprocessedTextObjects() {
         $logger = $this->container->get('logger');
         $em = $this->em;
@@ -3293,6 +3293,7 @@ class CallLogUtil
             $entityNamespace = $textObject->getEntityNamespace();
             $entityName = $textObject->getEntityName();
             $entityId = $textObject->getEntityId();
+            //NOT USED
             $existingHtmlText = $this->findExistingTextHtmlByName($formNode,$formValue,$historyDestinationFormNodeId,$impressionDestinationFormNodeId,$entityNamespace,$entityName,$entityId);
             if( !$existingHtmlText ) {
                 //echo $totalCounter.": Skipped (".$formNode->getName()."): Text HTML does not exist value=[$formValue], existingHtml=[$existingHtmlText]<br>";
@@ -3356,7 +3357,7 @@ class CallLogUtil
 
             $arraySectionId = $textObject->getArraySectionId();
             $arraySectionIndex = $textObject->getArraySectionIndex();
-
+            //NOT USED
             $existingHtmlText = $this->findExistingTextHtmlByName($formNode,$formValue,$historyDestinationFormNodeId,$impressionDestinationFormNodeId,$entityNamespace,$entityName,$entityId);
             if( $existingHtmlText ) {
                 //echo $totalCounter.": Skipped (".$formNode->getName()."): Text HTML already exists value=[$formValue], existingHtml=[$existingHtmlText]<br>";

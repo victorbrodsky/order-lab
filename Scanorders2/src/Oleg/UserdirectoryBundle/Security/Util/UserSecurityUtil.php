@@ -2104,7 +2104,7 @@ class UserSecurityUtil {
                 'entityName' => $className,
                 'entityNamespace' => $classNamespace,
                 //'entityId' => "'".$object->getId()."'"
-                'entityId' => $object->getId()
+                'entityId' => $object->getId().""
             )
         );
 
