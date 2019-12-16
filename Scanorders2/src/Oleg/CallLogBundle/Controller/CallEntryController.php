@@ -855,11 +855,11 @@ class CallEntryController extends Controller
             $advancedFilter++;
         }
         if( $task == "with-outstanding-tasks" ) {
-            $dql->andWhere("calllogTasks.status = 0");
+            $dql->andWhere("calllogTasks.status = false");
             $advancedFilter++;
         }
         if( $task == "with-completed-tasks" ) {
-            $dql->andWhere("calllogTasks.status = 1");
+            $dql->andWhere("calllogTasks.status = true");
             $advancedFilter++;
         }
         if( $task == "without-tasks" ) {

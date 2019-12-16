@@ -1474,7 +1474,7 @@ class CallLogPatientController extends PatientController {
         $queryParameters['patientIds'] = $patientIds;
 
         //We can use the fact that latest version messages have status not "Deleted"
-        $dql->andWhere("task.status IS NULL OR task.status = 0");
+        $dql->andWhere("task.status IS NULL OR task.status = false");
 
         //We can use the fact that latest version messages have status not "Deleted"
         $dql->andWhere("messageStatus.name != :deletedMessageStatus");
