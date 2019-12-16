@@ -102,6 +102,9 @@ class UserServiceUtil {
 
         //$user_tz = 'America/New_York';
         $user_tz = $user->getPreferences()->getTimezone();
+        if( !$user_tz ) {
+            $user_tz = "America/New York";
+        }
 
         //echo "input datetime=".$datetime->format('Y-m-d H:i')."<br>";
         //$datetimeUTC = new \DateTime($datetime->format('Y-m-d H:i'), new \DateTimeZone('UTC') );
