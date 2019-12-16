@@ -31,10 +31,13 @@ class CalllogTest extends WebTestBase
 
     public function testHomeAction() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/call-log-book/?filter[messageStatus]=All except deleted&filter[messageCategory]=Pathology Call Log Entry_32&filter[mrntype]=1');
 
-        //$content = $this->client->getResponse()->getContent();
-        //exit("content=$content");
+        $this->client->followRedirects();
+        $crawler = $this->client->request('GET', '/call-log-book/');
+        //$crawler = $this->client->request('GET', '/call-log-book/?filter[messageStatus]=All except deleted&filter[messageCategory]=Pathology Call Log Entry_32&filter[mrntype]=1');
+
+        $content = $this->client->getResponse()->getContent();
+        exit("content=$content");
 
         $this->assertGreaterThan(
             0,
