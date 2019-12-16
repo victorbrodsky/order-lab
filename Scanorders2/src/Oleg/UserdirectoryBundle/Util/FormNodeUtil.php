@@ -612,7 +612,8 @@ class FormNodeUtil
             array(
                 'entityName' => $mapper['entityName'],              //Project
                 'entityNamespace' => $mapper['entityNamespace'],    //Oleg\TranslationalResearchBundle\Entity
-                'entityId' => "'".$mapper['entityId']."'",                  //project ID
+                //'entityId' => "'".$mapper['entityId']."'",                  //project ID
+                'entityId' => $mapper['entityId'],
                 'formNodeId' => $formNode->getId()
             )
         );
