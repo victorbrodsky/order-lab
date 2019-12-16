@@ -154,4 +154,21 @@ class UserTest extends WebTestBase
         );
     }
 
+    public function testHierarchyManagerAction() {
+        $this->logIn();
+        $crawler = $this->client->request('GET', '/directory/admin/hierarchies/');
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Hierarchy Manager")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Institution Tree Management")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Patient Lists Hierarchy Management")')->count()
+        );
+    }
+
 }
