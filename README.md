@@ -679,9 +679,14 @@ c) Run command:
 
 	 git checkout abcde file/to/restore
 
-### Testing: run phpunit script, located in symfony's 'bin' folder, with the test file as a parameter:
+### Testing: run phpunit script, located in symfony's 'bin' folder:
 
-	 ./bin/phpunit -c app src/Oleg/OrderformBundle/Tests/LoginTest.php
+	Run all tests (>70 tests, >210 assertions in ~9 minutes): ./bin/simple-phpunit
+	Run Employee directory test only: ./bin/simple-phpunit tests/Oleg/TestBundle/UserTest.php
+	Run Business/Vacation test only: ./bin/simple-phpunit tests/Oleg/TestBundle/VacationTest.php
+	Run Call Log test only: ./bin/simple-phpunit tests/Oleg/TestBundle/CalllogTest.php
+	Run TRP test only: ./bin/simple-phpunit tests/Oleg/TestBundle/TrpTest.php
+	Run Fellowship test only: ./bin/simple-phpunit tests/Oleg/TestBundle/FellappTest.php
 
 ### Testing with casperjs on the original Dev server on the intranet: 
 

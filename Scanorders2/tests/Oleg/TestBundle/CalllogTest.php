@@ -330,6 +330,24 @@ class CalllogTest extends WebTestBase
         );
     }
 
+    public function testDataEditPatientInfoAction() {
+        $this->logIn();
+        $this->client->followRedirects();
+        $crawler = $this->client->request('GET', '/call-log-book/find-and-edit-patient-record');
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Edit Patient Info")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Find Patient")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("MRN Type")')->count()
+        );
+    }
+
     //getNextEncounterGeneratedId
     //getPatientList
     //getDefaultPatientLists
