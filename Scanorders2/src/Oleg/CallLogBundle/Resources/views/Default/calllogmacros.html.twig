@@ -1193,7 +1193,7 @@
     </div>
 
 {% endmacro %}
-{% macro taskPrototype(form) %}
+{% macro taskPrototype(form,cycle) %}
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
     {% import "OlegCallLogBundle::Default/calllogmacros.html.twig" as calllogmacros %}
     {#prototype must be defined after form tag#}
@@ -1332,7 +1332,11 @@
                         {#{% set messageStatusStr = "<br>Draft" %}#}
                     {#{% endif %}#}
                     {#{{ 'messageOid': message.oid, 'messageVersion':message.version }}#}
-                    <a href="{{ path(calllog_sitename~'_callentry_view', { 'messageOid': message.oid, 'messageVersion':message.version }) }}" target="_blank">{{ message.getMessageOidVersion }}</a>
+                    <a
+                        class="calllog_entry_view_link"
+                        href="{{ path(calllog_sitename~'_callentry_view', { 'messageOid': message.oid, 'messageVersion':message.version }) }}"
+                        target="_blank"
+                    >{{ message.getMessageOidVersion }}</a>
                     {% if message.messageStatus and "Draft" in message.messageStatus.name %}
                         <br>Draft
                     {% endif %}

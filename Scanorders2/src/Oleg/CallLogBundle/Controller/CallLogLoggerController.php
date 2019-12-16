@@ -228,7 +228,8 @@ class CallLogLoggerController extends LoggerController
     }
 
     public function createLoggerFilter($request,$params) {
-        $userid = $params['entityId'];
+        //$userid = $params['entityId'];
+        $userid = ( array_key_exists('entityId', $params) ? $params['entityId'] : null);
         //echo "userid=".$userid."<br>";
         $routename = $request->get('_route');
         //echo "route=".$routename."<br>";

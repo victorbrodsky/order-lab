@@ -677,6 +677,8 @@ class DataQualityController extends CallEntryController
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
         $calllogUtil = $this->get('calllog_util');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $sitename = $this->container->getParameter('calllog.sitename');
 
         ////////////////////////
 //        $query = $em->createQueryBuilder()
@@ -702,6 +704,8 @@ class DataQualityController extends CallEntryController
             }
         }
 
+        $userTimeZone = $userSecUtil->getSiteSettingParameter('timezone',$sitename);
+
         $params = array(
             'cycle' => 'new',
             'user' => $user,
@@ -713,7 +717,8 @@ class DataQualityController extends CallEntryController
             'mrn' => $mrn,
             'formtype' => 'call-entry',
             'complexLocation' => false,
-            'alias' => false
+            'alias' => false,
+            'timezoneDefault' => $userTimeZone,
         );
 
         $form = $this->createForm(CalllogPatientType::class, $patient, array(

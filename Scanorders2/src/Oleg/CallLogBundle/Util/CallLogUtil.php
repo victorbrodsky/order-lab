@@ -957,55 +957,55 @@ class CallLogUtil
         return $nextKey;
     }
 
-    public function checkNextEncounterGeneratedId($user=null) {
-        $userSecUtil = $this->container->get('user_security_utility');
-        $institution = $userSecUtil->getCurrentUserInstitution($user);
-
-        //patient
-        $patient = new Patient();
-        $patient->setInstitution($institution);
-        $nextKey = $this->em->getRepository('OlegOrderformBundle:Patient')->getNextNonProvided($patient);
-        echo "next key=".$nextKey."<br>";
-
-        //encounter
-        $encounter = new Encounter();
-        $encounter->setInstitution($institution);
-        $patient->addEncounter($encounter);
-        $nextKey = $this->em->getRepository('OlegOrderformBundle:Encounter')->getNextNonProvided($encounter);
-        echo "next key=".$nextKey."<br>";
-
-        //procedure
-        $procedure = new Procedure();
-        $procedure->setInstitution($institution);
-        $encounter->addProcedure($procedure);
-        $nextKey = $this->em->getRepository('OlegOrderformBundle:Procedure')->getNextNonProvided($procedure);
-        echo "next key=".$nextKey."<br>";
-
-        //accession
-        $accession = new Accession(true,'valid');
-        $accession->setInstitution($institution);
-        $procedure->addAccession($accession);
-        $accessionKey = $this->em->getRepository('OlegOrderformBundle:AccessionType')->findOneByName('Auto-generated Accession Number');
-        $accession->getAccession()->first()->setKeytype($accessionKey);
-        $nextKey = $this->em->getRepository('OlegOrderformBundle:Accession')->getNextNonProvided($accession);
-        echo "next key=".$nextKey."<br>";
-
-        //part
-        $part = new Part(true,'valid');
-        $part->setInstitution($institution);
-        $accession->addPart($part);
-        $nextKey = $this->em->getRepository('OlegOrderformBundle:Part')->getNextNonProvided($part);
-        echo "next key=".$nextKey."<br>";
-
-        //block
-        $block = new Block(true,'valid');
-        $block->setInstitution($institution);
-        $part->addBlock($block);
-        $nextKey = $this->em->getRepository('OlegOrderformBundle:Block')->getNextNonProvided($block);
-        echo "next key=".$nextKey."<br>";
-
-        return $nextKey;
-    }
+//    public function checkNextEncounterGeneratedId($user=null) {
+//        $userSecUtil = $this->container->get('user_security_utility');
+//        $institution = $userSecUtil->getCurrentUserInstitution($user);
+//
+//        //patient
+//        $patient = new Patient();
+//        $patient->setInstitution($institution);
+//        $nextKey = $this->em->getRepository('OlegOrderformBundle:Patient')->getNextNonProvided($patient);
+//        echo "next key=".$nextKey."<br>";
+//
+//        //encounter
+//        $encounter = new Encounter();
+//        $encounter->setInstitution($institution);
+//        $patient->addEncounter($encounter);
+//        $nextKey = $this->em->getRepository('OlegOrderformBundle:Encounter')->getNextNonProvided($encounter);
+//        echo "next key=".$nextKey."<br>";
+//
+//        //procedure
+//        $procedure = new Procedure();
+//        $procedure->setInstitution($institution);
+//        $encounter->addProcedure($procedure);
+//        $nextKey = $this->em->getRepository('OlegOrderformBundle:Procedure')->getNextNonProvided($procedure);
+//        echo "next key=".$nextKey."<br>";
+//
+//        //accession
+//        $accession = new Accession(true,'valid');
+//        $accession->setInstitution($institution);
+//        $procedure->addAccession($accession);
+//        $accessionKey = $this->em->getRepository('OlegOrderformBundle:AccessionType')->findOneByName('Auto-generated Accession Number');
+//        $accession->getAccession()->first()->setKeytype($accessionKey);
+//        $nextKey = $this->em->getRepository('OlegOrderformBundle:Accession')->getNextNonProvided($accession);
+//        echo "next key=".$nextKey."<br>";
+//
+//        //part
+//        $part = new Part(true,'valid');
+//        $part->setInstitution($institution);
+//        $accession->addPart($part);
+//        $nextKey = $this->em->getRepository('OlegOrderformBundle:Part')->getNextNonProvided($part);
+//        echo "next key=".$nextKey."<br>";
+//
+//        //block
+//        $block = new Block(true,'valid');
+//        $block->setInstitution($institution);
+//        $part->addBlock($block);
+//        $nextKey = $this->em->getRepository('OlegOrderformBundle:Block')->getNextNonProvided($block);
+//        echo "next key=".$nextKey."<br>";
+//
+//        return $nextKey;
+//    }
 
 
     public function getEventLogDescription( $message, $patient, $encounter )

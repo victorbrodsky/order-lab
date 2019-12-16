@@ -1568,12 +1568,16 @@ class CallLogPatientController extends PatientController {
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
         $calllogUtil = $this->get('calllog_util');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $sitename = $this->container->getParameter('calllog.sitename');
 
         if( !$mrntype ) {
             //$mrntype = 1;
             $defaultMrnType = $calllogUtil->getDefaultMrnType();
             $mrntype = $defaultMrnType->getId();
         }
+
+        $userTimeZone = $userSecUtil->getSiteSettingParameter('timezone',$sitename);
 
         $params = array(
             'cycle' => 'new',
@@ -1586,7 +1590,8 @@ class CallLogPatientController extends PatientController {
             'mrn' => $mrn,
             'formtype' => 'call-entry',
             'complexLocation' => false,
-            'alias' => false
+            'alias' => false,
+            'timezoneDefault' => $userTimeZone,
         );
 
         $form = $this->createForm(CalllogPatientType::class, $patient, array(
