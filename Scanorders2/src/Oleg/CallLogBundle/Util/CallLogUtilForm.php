@@ -103,6 +103,9 @@ class CallLogUtilForm
             $dateTimezone = $date->getTimezone();
             $user = $this->container->get('security.token_storage')->getToken()->getUser();
             $user_tz = $user->getPreferences()->getTimezone();
+            if( !$user_tz ) {
+                $user_tz = "America/New_York";
+            }
 
             if(0) {
                 //show as original submitted timezone
