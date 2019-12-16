@@ -1278,7 +1278,7 @@ class CallEntryController extends Controller
             $date = $encounter2->getDate()->first();
             $userTimeZone = $user->getPreferences()->getTimezone();
             if( !$userTimeZone ) {
-                $userTimeZone = "America/New York";
+                $userTimeZone = "America/New_York";
             }
             $nowDate = new \DateTime("now", new \DateTimeZone($userTimeZone));
             $date->setField($nowDate);
