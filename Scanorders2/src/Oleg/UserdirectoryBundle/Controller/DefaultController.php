@@ -76,6 +76,39 @@ class DefaultController extends Controller
         return array();
     }
 
+    /**
+     * @Route("/show-system-test-error-log", name="employees_show_system_test_error_log")
+     * @Template("OlegUserdirectoryBundle:Default:show-system-log.html.twig")
+     * @Method("GET")
+     */
+    public function showSystemTestLogAction(Request $request) {
+
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
+        }
+
+        $logDir = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . "var" . DIRECTORY_SEPARATOR . "logs";
+
+        $systemLogFile = $logDir . DIRECTORY_SEPARATOR . "test_ERROR.log";
+
+        //echo file_get_contents( $systemLogFile );
+
+        //$orig = file_get_contents($systemLogFile);
+        //$a = htmlentities($orig);
+
+        echo '<code>';
+        echo '<pre>';
+
+        //echo $a;
+        echo file_get_contents( $systemLogFile );
+
+        echo '</pre>';
+        echo '</code>';
+
+        exit();
+        return array();
+    }
+
 
 //    /**
 //     * @Route("/", name="employees_home")
