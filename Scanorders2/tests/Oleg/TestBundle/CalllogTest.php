@@ -29,6 +29,80 @@ class CalllogTest extends WebTestBase
         );
     }
 
+    public function testFormNodeValue() {
+
+        if( $this->environment == "nodata" ) {
+            echo "nodata";
+            return;
+        }
+
+        $this->logIn();
+
+        $mapper = array(
+            'entityName' => 'Message',
+            'entityNamespace' => 'Oleg\OrderformBundle\Entity',
+        );
+
+        //get non empty formnode and use getFormNodeValueByFormnodeAndReceivingmapper to find value
+        $treeRepository = $this->em->getRepository("OlegUserdirectoryBundle:ObjectTypeText");
+        $dql =  $treeRepository->createQueryBuilder("list");
+        $dql->select('list');
+        $dql->where("list.entityName = :entityName AND list.entityNamespace = :entityNamespace");
+        $dql->andWhere('list.value IS NOT NULL');
+        $dql->andWhere('list.entityId IS NOT NULL');
+        $dql->andWhere('list.formNode IS NOT NULL');
+
+        $query = $this->em->createQuery($dql);
+
+        //echo "query=".$query->getSql()."<br>";
+
+        $query->setParameters(
+            array(
+                'entityName' => $mapper['entityName'],
+                'entityNamespace' => $mapper['entityNamespace'],
+            )
+        );
+
+        $objectTypeTexts = $query->getResult();
+
+        if( count($objectTypeTexts) > 0 ) {
+            $objectTypeText = $objectTypeTexts[0];
+            $formNode = $objectTypeText->getFormNode();
+
+            if( !$formNode ) {
+                $this->assertTrue(false,"formNode not found");
+            }
+
+            $mapper = array(
+                'entityName' => 'Message',
+                'entityNamespace' => 'Oleg\OrderformBundle\Entity',
+                'entityId' => $objectTypeText->getEntityId()
+            );
+
+            $originalFormnodeValue = $objectTypeText->getValue();
+            $originalFormnodeValue = trim($originalFormnodeValue);
+            $this->assertNotEmpty($originalFormnodeValue,"Original formNode value is empty");
+
+            $formNodeUtil = $this->container->get('user_formnode_utility');
+            $complexRes = $formNodeUtil->getFormNodeValueByFormnodeAndReceivingmapper($formNode,$mapper);
+            if( $complexRes ) {
+                $formNodeValue = $complexRes['formNodeValue'];
+                //$receivingEntity = $complexRes['receivingEntity'];
+                $formNodeValue = trim($formNodeValue);
+                $this->assertNotEmpty($formNodeValue,"formNodeValue is empty");
+
+                //echo "formNode Values compare: [$formNodeValue] != [$originalFormnodeValue]";
+                $this->assertEquals($formNodeValue, $originalFormnodeValue, "formNode Values are not the same [$formNodeValue] != [$originalFormnodeValue]");
+
+            } else {
+                $this->assertTrue(false,"getFormNodeValueByFormnodeAndReceivingmapper complexRes not found");
+            }
+
+        } else {
+            $this->assertTrue(false,"ObjectTypeText not found");
+        }
+    }
+
     public function testHomeAction() {
         $this->logIn();
 
@@ -521,5 +595,7 @@ class CalllogTest extends WebTestBase
         $keytypemrn = $calllogUtil->getDefaultMrnType();
         $this->assertGreaterThan(0, $keytypemrn->getId());
     }
+
+
 
 }
