@@ -2480,8 +2480,8 @@ class FormNodeUtil
             array(
                 'entityName' => $mapper['entityName'],
                 'entityNamespace' => $mapper['entityNamespace'],
-                'entityId' => "'".$mapper['entityId']."'", //this does not found any results
-                //'entityId' => $mapper['entityId']."",
+                //'entityId' => "'".$mapper['entityId']."'", //this does not found any results
+                'entityId' => $mapper['entityId']."",
                 'formNodeId' => $formNode->getId()
             )
         );
