@@ -656,7 +656,8 @@ class FormNodeUtil
         //provide the exact entityId
         if( isset($mapper['entityId']) && $mapper['entityId'] ) {
             $dql->andWhere("list.entityId = :entityId");
-            $queryParameters['entityId'] = "'".$mapper['entityId']."'";
+            //$queryParameters['entityId'] = "'".$mapper['entityId']."'";
+            $queryParameters['entityId'] = $mapper['entityId']."";
         }
 
         //$parameterValue = $value;
@@ -1700,7 +1701,7 @@ class FormNodeUtil
                             //'<tr class="' . $trclassname . '">' .
                             $tr .
                             '<td colspan='.$colspan1.' class="rowlink-skip" style="width:20%">' . $formNodeName . '</td>' .
-                            '<td colspan='.$colspan2.' class="rowlink-skip" style="width:80%">' . $nameValueArr['value'] . '</td>' .
+                            '<td colspan='.$colspan2.' class="rowlink-skip formnode-field-value" style="width:80%">' . $nameValueArr['value'] . '</td>' .
                             '</tr>';
                     } else {
                         //excel array
@@ -2474,7 +2475,7 @@ class FormNodeUtil
             array(
                 'entityName' => $mapper['entityName'],
                 'entityNamespace' => $mapper['entityNamespace'],
-                //'entityId' => "'".$mapper['entityId']."'",
+                //'entityId' => "'".$mapper['entityId']."'", //this does not found any results
                 //'entityId' => $mapper['entityId']."",
                 'entityId' => $mapper['entityId']."",
                 'formNodeId' => $formNode->getId()

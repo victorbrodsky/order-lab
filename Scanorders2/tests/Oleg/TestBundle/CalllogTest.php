@@ -53,18 +53,55 @@ class CalllogTest extends WebTestBase
         );
 
 
-        //Test view
-        $links = $crawler->filter('.calllog_entry_view_link');
-
         if( $this->environment == "nodata" ) {
-            //echo "Run without data consistency check";
+            echo "nodata";
             return;
         }
 
+        //Test view data
+
+        $links = $crawler->filter('.calllog_entry_view_link');
         $this->assertGreaterThan(
             9, //we have 10 entries per page
             $links->count()
         );
+
+        $links = $crawler->filter('.calllog-patient-name');
+        $this->assertGreaterThan(
+            9, //we have 10 entries per page
+            $links->count()
+        );
+
+
+        $records = $crawler->filter('.calllog-patient-name');
+        //echo "records count=".count($records)."<br>";
+        foreach( $records as $record ) {
+            //var_dump($record);
+            //$href = $record; //->getContent();
+            //echo "records=".$record->getAttribute("nodeValue")."";
+            //$xmlAuthorID = $record->getElementsByTagName( "AuthorID" );
+            $value = $record->nodeValue;
+            //echo "records=".trim($value)."";
+            //exit('exit111');
+            $this->assertNotEmpty($value,"Patient name is empty");
+        }
+        //exit('exit222');
+
+        //formnode-field-value
+        $records = $crawler->filter('.formnode-field-value');
+        //echo "records count=".count($records)."<br>";
+        foreach( $records as $record ) {
+            //var_dump($record);
+            //$href = $record; //->getContent();
+            //echo "records=".$record->getAttribute("nodeValue")."";
+            //$xmlAuthorID = $record->getElementsByTagName( "AuthorID" );
+            $value = $record->textContent;
+            //echo "records=".trim($value)."";
+            //exit('exit111');
+            $this->assertNotEmpty($value,"Field value is empty");
+        }
+
+        return;
 
         $link = $crawler
             //->filter('a:contains("/order/call-log-book/entry/view/")') // find all links with the text "Greet"
@@ -91,6 +128,22 @@ class CalllogTest extends WebTestBase
             $crawler->filter('html:contains("History/Findings")')->count()
         );
         //TODO: add assert to make sure that td > p > has text
+        $count = $crawler->filter('td:contains("calllog-patient-name")')->count();
+        exit('count='.$count);
+        $record = $crawler->filter('.calllog-patient-name > i')->eq(0)->link();
+        echo "record=".$record."<br>";
+        exit('000');
+        $trRecords = $crawler->filter('tbody');
+        echo "records count=".count($trRecords)."<br>";
+        exit('000');
+        $records = $crawler->filter('.calllog-patient-name');
+        echo "records count=".count($records)."<br>";
+        foreach( $records as $record ) {
+            $href = $record->filter('.calllog-patient-name > href');
+            echo "href=$href";
+            exit('exit111');
+        }
+        exit('exit222');
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Laboratory Values")')->count()
