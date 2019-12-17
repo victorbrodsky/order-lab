@@ -72,6 +72,40 @@ class CalllogTest extends WebTestBase
             $links->count()
         );
 
+        $links = $crawler->filter('.formnode-field-notempty-value');
+        $this->assertGreaterThan(
+            19, //we should have 2 (history, outcome) per entry entries per page
+            $links->count()
+        );
+
+//        $newCrawler = $crawler->filter('tbody.table-tbody-hover:contains("History/Findings")')
+//            ->last()
+//            ->parents()
+//            ->first()
+//        ;
+//        exit('');
+
+//        $crawler->filter('tbody.table-tbody-hover:contains("History/Findings")')->each(function ($node, $i) {
+//            //return $node->attr('href');
+//            //var_dump($node);
+//            //$nodeThis = $node->filter('.formnode-field-notempty-value > p')->eq($i);
+//            var_dump($node);
+//            $this->assertGreaterThan(
+//                0,
+//                $node->filter('html:contains("formnode-field-notempty-value")')->count()
+//            );
+//            //exit('000');
+//        });
+//        exit('111');
+
+//        $tbodys = $crawler->filter('tbody.table-tbody-hover:contains("History/Findings")');
+//        echo "tbodys count=".count($tbodys)."<br>";
+//        foreach( $tbodys as $tbody ) {
+//            $tbody->filter('.formnode-field-notempty-value');
+//            var_dump($tbody);
+//            //exit('exit111');
+//        }
+//        exit('exit333');
 
         $records = $crawler->filter('.calllog-patient-name');
         //echo "records count=".count($records)."<br>";
@@ -87,8 +121,8 @@ class CalllogTest extends WebTestBase
         }
         //exit('exit222');
 
-        //formnode-field-value
-        $records = $crawler->filter('.formnode-field-value');
+        //formnode-field-notempty-value
+        $records = $crawler->filter('.formnode-field-notempty-value');
         //echo "records count=".count($records)."<br>";
         foreach( $records as $record ) {
             //var_dump($record);
@@ -101,20 +135,40 @@ class CalllogTest extends WebTestBase
             $this->assertNotEmpty($value,"Field value is empty");
         }
 
-        return;
+        //return;
 
         $link = $crawler
             //->filter('a:contains("/order/call-log-book/entry/view/")') // find all links with the text "Greet"
             //->filter('.calllog_entry_view_link')
             ->filter('.calllog_entry_view_link')
-            ->eq(0) // select the second link in the list
+            ->eq(1) // select the first link in the list
             ->link()
         ;
+
+//        $link2 = $crawler
+//            //->filter('a:contains("/order/call-log-book/entry/view/")') // find all links with the text "Greet"
+//            //->filter('.calllog_entry_view_link')
+//            ->filter('.calllog_entry_view_link')
+//            ->eq(1) // select the first link in the list
+//            ->link()
+//        ;
+//        $crawler2 = $this->client->click($link2);
+//        //formnode-field-notempty-value
+//        $records = $crawler2->filter('.formnode-field-notempty-value');
+//        echo "records count=".count($records)."<br>";
+//        foreach( $records as $record ) {
+//            //var_dump($record);
+//            $value = $record->textContent;
+//            echo "records=".trim($value)."";
+//            $this->assertNotEmpty($value,"Field value is empty");
+//        }
+//        exit('exit222');
         //$links = $crawler->filter('a:contains("/order/call-log-book/entry/view/")');
         //print_r($links);
         //exit('////////////////////');
 
         $crawler = $this->client->click($link);
+
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Encounter Info")')->count()
@@ -128,22 +182,22 @@ class CalllogTest extends WebTestBase
             $crawler->filter('html:contains("History/Findings")')->count()
         );
         //TODO: add assert to make sure that td > p > has text
-        $count = $crawler->filter('td:contains("calllog-patient-name")')->count();
-        exit('count='.$count);
-        $record = $crawler->filter('.calllog-patient-name > i')->eq(0)->link();
-        echo "record=".$record."<br>";
-        exit('000');
-        $trRecords = $crawler->filter('tbody');
-        echo "records count=".count($trRecords)."<br>";
-        exit('000');
-        $records = $crawler->filter('.calllog-patient-name');
-        echo "records count=".count($records)."<br>";
-        foreach( $records as $record ) {
-            $href = $record->filter('.calllog-patient-name > href');
-            echo "href=$href";
-            exit('exit111');
-        }
-        exit('exit222');
+//        $count = $crawler->filter('td:contains("calllog-patient-name")')->count();
+//        exit('count='.$count);
+//        $record = $crawler->filter('.calllog-patient-name > i')->eq(0)->link();
+//        echo "record=".$record."<br>";
+//        exit('000');
+//        $trRecords = $crawler->filter('tbody');
+//        echo "records count=".count($trRecords)."<br>";
+//        exit('000');
+//        $records = $crawler->filter('.calllog-patient-name');
+//        echo "records count=".count($records)."<br>";
+//        foreach( $records as $record ) {
+//            $href = $record->filter('.calllog-patient-name > href');
+//            echo "href=$href";
+//            exit('exit111');
+//        }
+//        exit('exit222');
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Laboratory Values")')->count()
@@ -172,6 +226,29 @@ class CalllogTest extends WebTestBase
             0,
             $crawler->filter('html:contains("View Event Log")')->count()
         );
+
+//        //formnode-field-notempty-value
+//        $records = $crawler->filter('.formnode-field-notempty-value');
+//        //echo "records count=".count($records)."<br>";
+//        foreach( $records as $record ) {
+//            //var_dump($record);
+//            $value = $record->textContent;
+//            //echo "records=".trim($value)."";
+//            $this->assertNotEmpty($value,"Field value is empty");
+//        }
+        $crawler->filter('tbody.table-tbody-hover:contains("History/Findings")')->each(function ($node, $i) {
+            //return $node->attr('href');
+            //var_dump($node);
+            //$nodeThis = $node->filter('.formnode-field-notempty-value > p')->eq($i);
+            //var_dump($node);
+            $this->assertGreaterThan(
+                0,
+                $node->filter('html:contains("formnode-field-notempty-value")')->count()
+            );
+            //exit('000');
+        });
+        //exit('111');
+        //exit('exit222');
 
         //Test edit
 //        $link = $crawler
