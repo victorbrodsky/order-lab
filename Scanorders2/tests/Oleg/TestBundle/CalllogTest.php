@@ -141,7 +141,7 @@ class CalllogTest extends WebTestBase
             //->filter('a:contains("/order/call-log-book/entry/view/")') // find all links with the text "Greet"
             //->filter('.calllog_entry_view_link')
             ->filter('.calllog_entry_view_link')
-            ->eq(1) // select the first link in the list
+            ->eq(0) // select the first link in the list
             ->link()
         ;
 
@@ -213,10 +213,6 @@ class CalllogTest extends WebTestBase
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Amount of Time Spent in Minutes")')->count()
-        );
-        $this->assertGreaterThan(
-            0,
-            $crawler->filter('html:contains("Submitter role(s) at submission time")')->count()
         );
         $this->assertGreaterThan(
             0,
