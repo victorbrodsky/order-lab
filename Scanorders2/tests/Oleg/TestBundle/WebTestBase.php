@@ -39,6 +39,7 @@ class WebTestBase extends WebTestCase
     protected $container;
     protected $client = null;
     protected $user = null;
+    protected $environment = null;
 
 
 //    public function testGetLink($linkName,$expectedText) {
@@ -57,6 +58,20 @@ class WebTestBase extends WebTestCase
 //            //$crawler->filter('html:contains("Current Version")')->count()
 //        );
 //    }
+
+    public function testHasParam() {
+//        global $argv, $argc;
+//        $this->assertGreaterThan(2, $argc, 'No environment name passed');
+//        if (strpos($argv[1], '---') !== false) {
+//            $this->environment = $argv[1];
+//        }
+        $this->environment = getenv('TESTENV');
+        //To test without data run: TESTENV=nodata ./bin/simple-phpunit
+
+//        if( $this->environment == "nodata" ) {
+//            echo "Run without data consistency check";
+//        }
+    }
 
     protected function setUp()
     {
@@ -88,6 +103,9 @@ class WebTestBase extends WebTestCase
         $this->em = $this->container->get('doctrine.orm.entity_manager');
 
         $this->user = $this->getUser();
+
+        $this->testHasParam();
+        //exit("environment=".$this->environment);
     }
 
     /**

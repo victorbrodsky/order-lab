@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 
-class CalllogTest extends WebTestBase
+class DataTest extends WebTestBase
 {
 
     public function testLoginPageAction() {
@@ -56,26 +56,23 @@ class CalllogTest extends WebTestBase
         //Test view
         $links = $crawler->filter('.calllog_entry_view_link');
 
-        if( $this->environment == "nodata" ) {
-            //echo "Run without data consistency check";
-            return;
-        }
 
         $this->assertGreaterThan(
             9, //we have 10 entries per page
             $links->count()
         );
 
-        $link = $crawler
-            //->filter('a:contains("/order/call-log-book/entry/view/")') // find all links with the text "Greet"
-            //->filter('.calllog_entry_view_link')
-            ->filter('.calllog_entry_view_link')
-            ->eq(0) // select the second link in the list
-            ->link()
-        ;
+//        $link = $crawler
+//            //->filter('a:contains("/order/call-log-book/entry/view/")') // find all links with the text "Greet"
+//            //->filter('.calllog_entry_view_link')
+//            ->filter('.calllog_entry_view_link')
+//            ->eq(0) // select the second link in the list
+//            ->link()
+//        ;
         //$links = $crawler->filter('a:contains("/order/call-log-book/entry/view/")');
         //print_r($links);
         //exit('////////////////////');
+        $link = $links->eq(0)->link();
 
         $crawler = $this->client->click($link);
         $this->assertGreaterThan(
