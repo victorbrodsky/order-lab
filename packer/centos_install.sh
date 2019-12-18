@@ -267,6 +267,61 @@ f_install_php56 () {
 	echo ""
     sleep 1
 }
+f_install_php74 () {
+    ########## INSTALL APACHE 7.4 ##########
+    echo "Installing apache 7.4 ..."
+    sleep 1
+
+	echo @### Install yum-utils and epel repository ###
+	sudo yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+	sudo yum -y install https://rpms.remirepo.net/enterprise/remi-release-7.rpm
+
+	echo @### PHP1: install yum-utils -y ###
+	sudo yum -y install yum-utils
+	sudo yum-config-manager --enable remi-php74
+
+	echo @### PHP2: sudo yum-config-manager --enable remi-php72 ###
+	sudo yum -y update
+
+	#echo @### PHP3: Search for PHP 7.4 packages ###
+	#sudo yum search php72 | more
+	#sudo yum search php72 | egrep 'fpm|gd|mysql|memcache'
+	
+	echo @### PHP3: Install PHP 7.4 ###
+	#sudo yum -y install php72
+	#sudo yum -y install php php-opcache
+	sudo yum -y install php php-cli
+	
+	echo @### PHP4: Install PHP packages ###
+	#sudo yum -y install php72-php-fpm php72-php-gd php72-php-json php72-php-mbstring php72-php-mysqlnd php72-php-xml php72-php-xmlrpc php72-php-opcache
+	sudo yum -y install php php-mcrypt php-cli php-gd php-curl php-ldap php-zip php-fileinfo php-opcache php-fpm php-mbstring php-xml php-json
+	sudo yum -y install php-pgsql php-xmlreader php-pdo php-dom
+	
+	# Config to fix error Apache not load PHP file
+    #chown -R apache:apache /var/www
+    #sed -i '/<Directory \/>/,/<\/Directory/{//!d}' /etc/httpd/conf/httpd.conf
+    #sed -i '/<Directory \/>/a\    Options Indexes FollowSymLinks\n    AllowOverride All\n    Require all granted' /etc/httpd/conf/httpd.conf
+
+	# Restart Apache
+    #systemctl restart httpd.service
+
+	#echo @### PHP3: sudo yum install php-common -y ###
+	#sudo yum update
+	#sudo yum install php-common -y
+
+	#echo @### PHP4: sudo yum install php-cli and others -y ###
+	#TODO: error: No package vailable
+	#sudo yum install -y php72 php72-php-fpm php72-php-gd php72-php-json php72-php-mbstring php72-php-mysqlnd php72-php-xml php72-php-xmlrpc php72-php-opcache
+	
+	#sudo systemctl enable php-php-fpm.service
+	#sudo systemctl start php-php-fpm.service
+	
+	# Restart Apache
+    sudo systemctl restart httpd.service
+	
+	echo ""
+    sleep 1
+}
 
 f_install_util () {
     ########## INSTALL UTILITIES ##########
@@ -416,7 +471,8 @@ f_install_apache
 f_install_postgresql12
 #f_install_postgresql
 #f_install_php72
-f_install_php56
+#f_install_php56
+f_install_php74
 f_install_util
 f_install_order
 f_install_prepare

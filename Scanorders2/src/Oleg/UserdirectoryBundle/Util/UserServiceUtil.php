@@ -1239,6 +1239,28 @@ class UserServiceUtil {
         }
     }
 
+    /**
+     * Get installed software (apache, php)
+     */
+    function getInstalledSoftware() {
+        if(!function_exists('apache_get_version')){
+            function apache_get_version(){
+                if(!isset($_SERVER['SERVER_SOFTWARE']) || strlen($_SERVER['SERVER_SOFTWARE']) == 0){
+                    return false;
+                }
+                return $_SERVER["SERVER_SOFTWARE"];
+            }
+        }
+        $apacheVersion = apache_get_version();
+        $res = "Apache: ".$apacheVersion;
+
+        $phpVersion = phpversion();
+        $res = $res . "<br>" . "PHP: ".$phpVersion;
+        $phpVersion2 = PHP_VERSION;
+        $res = $res . "<br>" . "PHP_VERSION: ".$phpVersion2;
+
+        return $res;
+    }
 
 //    public function gitVersion() {
 //        //exec('git describe --always',$version_mini_hash);

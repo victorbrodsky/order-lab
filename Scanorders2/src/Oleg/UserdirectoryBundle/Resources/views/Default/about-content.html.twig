@@ -22,6 +22,12 @@
         <p>
         {{ ver|raw }}
         </p>
+    {% endif %}
+    {% set soft = user_service_utility.getInstalledSoftware() %}
+    {% if soft %}
+        <p>
+            {{ soft|raw }}
+        </p>
         <br>
     {% endif %}
 
