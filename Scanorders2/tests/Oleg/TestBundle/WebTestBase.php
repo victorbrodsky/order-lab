@@ -59,7 +59,7 @@ class WebTestBase extends WebTestCase
 //        );
 //    }
 
-    public function testHasParam() {
+    public function getParam() {
 //        global $argv, $argc;
 //        $this->assertGreaterThan(2, $argc, 'No environment name passed');
 //        if (strpos($argv[1], '---') !== false) {
@@ -104,7 +104,7 @@ class WebTestBase extends WebTestCase
 
         $this->user = $this->getUser();
 
-        $this->testHasParam();
+        $this->getParam();
         //exit("environment=".$this->environment);
     }
 

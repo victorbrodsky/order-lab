@@ -606,6 +606,11 @@ Note: If you choose to use MySQL database on Linux instead of Postgres, you will
 
 7) repeat 3-5 for development
 
+### Check symfony requirements:
+
+php ./bin/symfony_requirements
+
+
 ### To get changes onto your local machine:
 
 1) cd to folder created by clone
@@ -687,6 +692,8 @@ c) Run command:
 	Run Call Log test only: ./bin/simple-phpunit tests/Oleg/TestBundle/CalllogTest.php
 	Run TRP test only: ./bin/simple-phpunit tests/Oleg/TestBundle/TrpTest.php
 	Run Fellowship test only: ./bin/simple-phpunit tests/Oleg/TestBundle/FellappTest.php
+	
+	To run test on the server without existing data use TESTENV=nodata in front of ./bin/simple-phpunit: TESTENV=nodata ./bin/simple-phpunit
 
 ### Testing with casperjs on the original Dev server on the intranet: 
 

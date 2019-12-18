@@ -1243,15 +1243,15 @@ class UserServiceUtil {
      * Get installed software (apache, php)
      */
     function getInstalledSoftware() {
-        if(!function_exists('apache_get_version')){
-            function apache_get_version(){
-                if(!isset($_SERVER['SERVER_SOFTWARE']) || strlen($_SERVER['SERVER_SOFTWARE']) == 0){
-                    return false;
-                }
-                return $_SERVER["SERVER_SOFTWARE"];
-            }
-        }
-        $apacheVersion = apache_get_version();
+//        if(!function_exists('apache_get_version')){
+//            function apache_get_version(){
+//                if(!isset($_SERVER['SERVER_SOFTWARE']) || strlen($_SERVER['SERVER_SOFTWARE']) == 0){
+//                    return false;
+//                }
+//                return $_SERVER["SERVER_SOFTWARE"];
+//            }
+//        }
+        $apacheVersion = $_SERVER["SERVER_SOFTWARE"];
         $res = "Apache: ".$apacheVersion;
 
         $phpVersion = phpversion();

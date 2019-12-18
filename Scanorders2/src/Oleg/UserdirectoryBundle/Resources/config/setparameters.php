@@ -16,6 +16,38 @@
  */
 
 //include_once('setparameters_function.php');
+include_once('setparameters_util.php');
+
+//function getDBParameter( $row, $originalParam, $name ) {
+////    if( strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ) {
+////        //keep it for MSSQL
+////    } else {
+////        $name = strtolower($name);
+////    }
+//
+//    //1) try as it is
+//    if( array_key_exists($name, $row) ) {
+//        //echo "1 parameter=".$row[$name]."<br>";
+//        return trim($row[$name]);
+//    }
+//
+//    //2) try with lowercase for postgresql
+//    $name = strtolower($name);
+//    if( array_key_exists($name, $row) ) {
+//        //echo "2 parameter=".$row[$name]."<br>";
+//        return trim($row[$name]);
+//    }
+//
+//    return $originalParam;
+//}
+//
+//function isWindows() {
+//    if( strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ) {
+//        //Windows
+//        return true;
+//    }
+//    return false;
+//}
 
 //$dtz = $this->container->getParameter('default_time_zone');
 //echo "dtz=".$dtz."<br>";
@@ -451,35 +483,6 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
 } else {
     //exit("table false<br>");
     //echo("table false<br>");
-}
+} //if
 
-function getDBParameter( $row, $originalParam, $name ) {
-//    if( strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ) {
-//        //keep it for MSSQL
-//    } else {
-//        $name = strtolower($name);
-//    }
 
-    //1) try as it is
-    if( array_key_exists($name, $row) ) {
-        //echo "1 parameter=".$row[$name]."<br>";
-        return trim($row[$name]);
-    }
-
-    //2) try with lowercase for postgresql
-    $name = strtolower($name);
-    if( array_key_exists($name, $row) ) {
-        //echo "2 parameter=".$row[$name]."<br>";
-        return trim($row[$name]);
-    }
-
-    return $originalParam;
-}
-
-function isWindows() {
-    if( strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ) {
-        //Windows
-        return true;
-    }
-    return false;
-}
