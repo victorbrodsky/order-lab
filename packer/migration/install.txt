@@ -96,9 +96,18 @@ sudo chown -R apache:apache /opt/order-lab
 cp /opt/order-lab/packer/000-default.conf /etc/httpd/conf.d
 f_install_prepare()	
 
+
+
+
+
 #Modify parameters.yml
 #Collage IP: 157.139.46.96
 #C.med IP: 140.251.6.82
+
+#DigitalOcean install: 
+#1) git clone github.com/.../order-lab.git
+#2) cd order-lab/packer
+#3) bash deploy-order-digital-ocena.sh --token xxx --os centos 
 
 Multiple PHP: https://stackoverflow.com/questions/50004406/multiple-php-version-with-apache-on-centos-7
 https://computingforgeeks.com/how-to-install-php-7-4-on-centos-7/	

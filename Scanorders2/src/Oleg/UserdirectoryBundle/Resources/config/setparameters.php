@@ -92,7 +92,7 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
     //echo "count=".count($params)."<br>";
 
     //if( $params && is_array($params) && count($params) >= 1 ) {
-    if( $params && count($params) >= 1 ) {
+    if( $params && is_array($params) && count($params) >= 1 ) {
 
 //        $aDLDAPServerAddress = null;
 //        $aDLDAPServerPort = null;

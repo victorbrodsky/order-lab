@@ -280,7 +280,7 @@ f_install_php74 () {
 	sudo yum -y install yum-utils
 	sudo yum-config-manager --enable remi-php74
 
-	echo @### PHP2: sudo yum-config-manager --enable remi-php72 ###
+	echo @### PHP2: sudo yum-config-manager --enable remi-php74 ###
 	sudo yum -y update
 
 	#echo @### PHP3: Search for PHP 7.4 packages ###
