@@ -14,6 +14,8 @@
     limitations under the License.
 #}
 
+{% import "OlegTranslationalResearchBundle::Default/navbar.html.twig" as navbarmacros %}
+
 {% macro createFilterRequestType( filterTypes ) %}
     {% for filterType in filterTypes %}
         {% if filterType == "[[hr]]" %}
@@ -204,7 +206,7 @@
                             <hr style="margin-top: 10px; margin-bottom: 10px;">
 
                             {% set filterRequestTypes = transres_request_util.getRequestFilterPresetType() %}
-                            {{ _self.createFilterRequestType(filterRequestTypes) }}
+                            {{ navbarmacros.createFilterRequestType(filterRequestTypes) }}
 
                             </ul>
                         </li>
@@ -232,7 +234,7 @@
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Invoices<b class="caret"></b></a>
                             <ul class="dropdown-menu">
                                 {% set filterTypes = transres_request_util.getInvoiceFilterPresetType() %}
-                                {{ _self.createFilterType(filterTypes) }}
+                                {{ navbarmacros.createFilterType(filterTypes) }}
                             </ul>
                         </li>
                     {#{% endif %}#}
