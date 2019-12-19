@@ -230,7 +230,7 @@ class MessageObjectType extends AbstractType
         $priorityArr = array(
             'label' => $this->labels['priority'],
             'choices' => array( 'Routine'=>'Routine', 'Stat'=>'Stat' ), //$helper->getPriority(),
-            'choices_as_values' => true,
+            //'choices_as_values' => true,
             'required' => true,
             'multiple' => false,
             'expanded' => true,

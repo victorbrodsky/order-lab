@@ -50,27 +50,27 @@ function prep()
     echo "*** Validate Doctrine DB ***"
     php $PROJECT_LOCAL_PATH/bin/console doctrine:schema:validate
 
+    #By default, console commands run in the dev environment
+    #console: php bin/console assets:install
     echo "*** Install assets ***"
     php $PROJECT_LOCAL_PATH/bin/console assets:install
-
-
 
     echo "********* Prepare development/testing *********"
 
     echo "*** Clear cache ***"
-    php $PROJECT_LOCAL_PATH/bin/console cache:clear
+    php $PROJECT_LOCAL_PATH/bin/console cache:clear --no-warmup
 
     echo "*** Dump assets ***"
     php $PROJECT_LOCAL_PATH/bin/console assetic:dump
 
 
-
+    #By default, console commands run in the dev environment
     echo "********* Prepare production *********"
 
     echo "*** Clear cache ***"
     #php $PROJECT_LOCAL_PATH/app/console cache:clear --env=prod --no-debug --no-warmup
-    #php $PROJECT_LOCAL_PATH/app/console cache:clear --env=prod --no-debug
-    php $PROJECT_LOCAL_PATH/bin/console cache:clear --no-warmup --env=prod
+    #php $PROJECT_LOCAL_PATH/app/console cache:clear --env=prod --no-debug --no-warmup
+    php $PROJECT_LOCAL_PATH/bin/console cache:clear --env=prod --no-debug
 
     #echo "*** Warmup cache ***"
     #php -d memory_limit=1024M $PROJECT_LOCAL_PATH/bin/console cache:warmup --env=prod

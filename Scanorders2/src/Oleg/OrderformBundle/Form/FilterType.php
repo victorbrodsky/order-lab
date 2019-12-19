@@ -41,7 +41,7 @@ class FilterType extends AbstractType
             'label' => 'Filter by Order Status:',
             //'max_length'=>50,
             'choices' => $this->params['statuses'],
-            'choices_as_values' => true,
+            //'choices_as_values' => true,
             'required' => true,
             'attr' => array('class' => 'combobox combobox-width order-status-filter')
         ));                       
@@ -57,7 +57,7 @@ class FilterType extends AbstractType
             'label'     => 'Services',
             'required'  => true,
             'choices' => $this->params['services'],
-            'choices_as_values' => true,
+            //'choices_as_values' => true,
             'attr' => array('class' => 'combobox combobox-width')
         ));
         

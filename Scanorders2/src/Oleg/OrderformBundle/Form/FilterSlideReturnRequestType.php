@@ -65,7 +65,7 @@ class FilterSlideReturnRequestType extends AbstractType
                 //'preferred_choices' => array($this->status),
                 'attr' => array('class' => 'combobox combobox-width'),
                 'choices' => $choices,
-                'choices_as_values' => true,
+                //'choices_as_values' => true,
             )
         );
         

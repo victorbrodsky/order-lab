@@ -65,7 +65,7 @@ class UserRequestType extends AbstractType
         $builder->add( 'hascwid', ChoiceType::class, array( //flipped
             'label' => false, //'Do you (the person for whom the account is being requested) have a CWID username?',
             'choices' => array("Yes"=>"Yes", "No"=>"No"),
-            'choices_as_values' => true,
+            //'choices_as_values' => true,
             'multiple' => false,
             'expanded' => true,
             'attr' => array('class' => 'horizontal_type hascwid')

@@ -191,7 +191,7 @@ class LocationType extends AbstractType
                         $baseUserAttr->getStatusStrByStatus($baseUserAttr::STATUS_VERIFIED) => $baseUserAttr::STATUS_VERIFIED
                     ),
                     'invalid_message' => 'invalid value: location status',
-                    'choices_as_values' => true,
+                    //'choices_as_values' => true,
                     'label' => "Status:",
                     'required' => true,
                     'attr' => $statusAttr,  //array('class' => 'combobox combobox-width'),

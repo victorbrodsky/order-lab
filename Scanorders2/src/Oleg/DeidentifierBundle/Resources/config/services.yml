@@ -6,6 +6,7 @@ twig:
         deidentifier_sitename: '%deidentifier.sitename%'
 
 services:
+    _defaults: { public: true }
 #    oleg_deidentifier.example:
 #        class: Oleg\DeidentifierBundle\Example
 #        arguments: [@service_id, "plain_value", %parameter%]

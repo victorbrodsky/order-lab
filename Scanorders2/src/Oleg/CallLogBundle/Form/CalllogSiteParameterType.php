@@ -202,7 +202,7 @@ class CalllogSiteParameterType extends AbstractType
         $builder->add('timezone', ChoiceType::class, array(
             'label' => false,
             'choices' => $tzUtil->tz_list(),
-            'choices_as_values' => true,
+            //'choices_as_values' => true,
             'required' => true,
             //'data' => $this->params['timezoneDefault'],
             'preferred_choices' => array('America/New_York'),

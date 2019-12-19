@@ -12,6 +12,7 @@ twig:
 
 
 services:
+    _defaults: { public: true }
 
     vacreq_authentication_handler:
         class: Oleg\VacReqBundle\Security\Authentication\VacReqLoginSuccessHandler

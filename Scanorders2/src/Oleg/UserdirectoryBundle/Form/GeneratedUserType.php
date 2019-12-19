@@ -70,7 +70,7 @@ class GeneratedUserType extends AbstractType
 
         $builder->add('roles', ChoiceType::class, array(
             'choices' => $this->params['roles'],
-            'choices_as_values' => true,
+            //'choices_as_values' => true,
             'label' => ucfirst($this->params['sitename']) . ' Role(s):',
             'attr' => array('class' => 'combobox'),
             'multiple' => true,

@@ -12,6 +12,7 @@ twig:
 
 
 services:
+    _defaults: { public: true }
 
     translationalresearch_authentication_handler:
         class: Oleg\TranslationalResearchBundle\Security\Authentication\TranslationalResearchLoginSuccessHandler

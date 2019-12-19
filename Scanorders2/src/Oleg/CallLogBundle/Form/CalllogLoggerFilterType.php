@@ -46,7 +46,7 @@ class CalllogLoggerFilterType extends LoggerFilterType
                 'label' => false,
                 'required'=> false,
                 'choices' => $capacities,
-                'choices_as_values' => true,
+                //'choices_as_values' => true,
                 'attr' => array('class' => 'combobox', 'placeholder' => 'Capacity'),
             ));
         }

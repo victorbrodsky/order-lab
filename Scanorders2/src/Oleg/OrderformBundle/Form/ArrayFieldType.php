@@ -83,7 +83,7 @@ class ArrayFieldType extends AbstractType
                     'valid' => 'valid',
                     'invalid' => 'invalid'
                 ),
-                'choices_as_values' => true,
+                //'choices_as_values' => true,
                 'label' => "Status:",
                 'required' => true,
                 'attr' => array('class' => 'combobox combobox-no-width other-status'),

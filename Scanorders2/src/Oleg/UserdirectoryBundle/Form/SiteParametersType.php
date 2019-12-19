@@ -64,7 +64,7 @@ class SiteParametersType extends AbstractType
             $builder->add('connectionChannel',ChoiceType::class,array( //flipped
                 'label'=>'Connection Channel (http or https; Clearing Cache is required):',
                 'choices' => array("http"=>"http", "https"=>"https"),
-                'choices_as_values' => true,
+                //'choices_as_values' => true,
                 'attr' => array('class'=>'form-control')
             ));
         }
@@ -79,7 +79,7 @@ class SiteParametersType extends AbstractType
         $builder->add('environment',ChoiceType::class,array( //flipped
             'label'=>'Environment:',
             'choices' => array("live"=>"live", "test"=>"test", "dev"=>"dev"),
-            'choices_as_values' => true,
+            //'choices_as_values' => true,
             'attr' => array('class'=>'form-control')
         ));
 

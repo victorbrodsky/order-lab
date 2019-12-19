@@ -10,6 +10,7 @@ twig:
         fellapp_util: "@fellapp_util"
 
 services:
+    _defaults: { public: true }
 
     fellapp_authentication_handler:
         class: Oleg\FellAppBundle\Security\Authentication\FellAppLoginSuccessHandler

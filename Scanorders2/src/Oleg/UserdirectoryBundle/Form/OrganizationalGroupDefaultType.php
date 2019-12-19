@@ -73,7 +73,7 @@ class OrganizationalGroupDefaultType extends AbstractType
 
         $builder->add('roles', ChoiceType::class, array( //flipped
             'choices' => $this->params['roles'],
-            'choices_as_values' => true,
+            //'choices_as_values' => true,
             'label' => 'Role(s):',
             'multiple' => true,
             'attr' => array('class' => 'combobox combobox-width'),
@@ -85,7 +85,7 @@ class OrganizationalGroupDefaultType extends AbstractType
             'label' => 'Time Zone:',
             //'label' => $translator->translate('timezone',$formtype,'Time Zone:'),
             'choices' => $tzUtil->tz_list(),
-            'choices_as_values' => true,
+            //'choices_as_values' => true,
             'invalid_message' => 'invalid value: timezone',
             'required' => true,
             'preferred_choices' => array('America/New_York'),

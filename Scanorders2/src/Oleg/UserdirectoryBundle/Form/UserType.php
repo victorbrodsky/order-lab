@@ -362,7 +362,7 @@ class UserType extends AbstractType
             $attr = array('class' => 'combobox combobox-width');
             $builder->add('roles', ChoiceType::class, array( //flipped
                 'choices' => $this->roles,
-                'choices_as_values' => true,
+                //'choices_as_values' => true,
                 'invalid_message' => 'invalid value: user roles',
                 'label' => 'Role(s):',
                 'attr' => $attr,

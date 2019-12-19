@@ -41,7 +41,7 @@ class CalllogListPreviousEntriesFilterType extends AbstractType
             'label' => false,
             'required' => false,
             'choices' => $this->params['messageCategories'],
-            'choices_as_values' => true,
+            //'choices_as_values' => true,
             'attr' => array('class' => 'combobox filter-message-category submit-on-enter-field', 'placeholder' => "Message Type"),
         );
 

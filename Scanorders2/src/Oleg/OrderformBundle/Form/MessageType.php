@@ -144,7 +144,7 @@ class MessageType extends AbstractType
         $priorityArr = array(
             'label' => 'Priority:',
             'choices' => array( 'Routine'=>'Routine', 'Stat'=>'Stat' ), //$helper->getPriority(),
-            'choices_as_values' => true,
+            //'choices_as_values' => true,
             'required' => true,
             'multiple' => false,
             'expanded' => true,
@@ -305,7 +305,7 @@ class MessageType extends AbstractType
                 "For Internal Use by the Department of Pathology"=>"For Internal Use by the Department of Pathology",
                 "For External Use (Invoice Fund Number)"=>"For External Use (Invoice Fund Number)"
             ),
-            'choices_as_values' => true,
+            //'choices_as_values' => true,
             'multiple' => false,
             'expanded' => true,
             'attr' => array('class' => 'horizontal_type')

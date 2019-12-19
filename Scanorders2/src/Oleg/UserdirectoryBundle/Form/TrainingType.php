@@ -77,7 +77,7 @@ class TrainingType extends AbstractType
                 $baseUserAttr->getStatusStrByStatus($baseUserAttr::STATUS_UNVERIFIED) => $baseUserAttr::STATUS_UNVERIFIED,
                 $baseUserAttr->getStatusStrByStatus($baseUserAttr::STATUS_VERIFIED) => $baseUserAttr::STATUS_VERIFIED
             ),
-            'choices_as_values' => true,
+            //'choices_as_values' => true,
             'invalid_message' => 'invalid value: training status',
             'label' => "Status:",
             'required' => true,

@@ -71,7 +71,7 @@ class CalllogFilterType extends AbstractType
             'label' => false,
             'required' => false,
             'choices' => $this->params['messageCategories'],
-            'choices_as_values' => true,
+            //'choices_as_values' => true,
             'empty_data' => $this->params['messageCategoryType'],
             'attr' => array('class' => 'combobox submit-on-enter-field', 'placeholder' => "Message Type"),
         ));
@@ -103,7 +103,7 @@ class CalllogFilterType extends AbstractType
             //'required' => true,
             'required' => false,
             'choices' => $this->params['mrntypeChoices'],
-            'choices_as_values' => true,
+            //'choices_as_values' => true,
             'data' => $this->params['mrntypeDefault'],
             //'data' => 'Epic Ambulatory Enterprise ID Number',
             //'empty_data' => $this->params['mrntypeDefault'],
@@ -172,7 +172,7 @@ class CalllogFilterType extends AbstractType
             'required' => false,
             'attr' => array('class' => 'combobox combobox-width', 'placeholder' => "Referring Provider"),
             'choices' => $this->params['referringProviders'],
-            'choices_as_values' => true,
+            //'choices_as_values' => true,
         ));
 
         $builder->add('referringProviderSpecialty', EntityType::class, array(
@@ -221,7 +221,7 @@ class CalllogFilterType extends AbstractType
             'required' => false,
             'attr' => array('class' => 'combobox', 'placeholder' => "Message Status"),
             'choices' => $this->params['messageStatuses'],
-            'choices_as_values' => true,
+            //'choices_as_values' => true,
         ));
 
         //Patient List
@@ -304,7 +304,7 @@ class CalllogFilterType extends AbstractType
             'required' => true,
             'attr' => array('class' => 'combobox', 'placeholder' => "Sort By"),
             'choices' => $sortBys,
-            'choices_as_values' => true,
+            //'choices_as_values' => true,
         ));
 
         //4 Task filters
@@ -314,7 +314,7 @@ class CalllogFilterType extends AbstractType
             'required' => false,
             'attr' => array('class' => 'combobox', 'placeholder' => "Tasks"),
             'choices' => $this->params['tasks'],
-            'choices_as_values' => true,
+            //'choices_as_values' => true,
         ));
         $builder->add('taskType', EntityType::class, array(
             'class' => 'OlegOrderformBundle:CalllogTaskTypeList',
@@ -385,7 +385,7 @@ class CalllogFilterType extends AbstractType
             'attr' => array('class' => 'combobox', 'placeholder' => "Attachment Type"),
             'choices' => $this->params['attachmentTypesChoice'],
             'multiple' => false,
-            'choices_as_values' => true,
+            //'choices_as_values' => true,
         ));
 
     }

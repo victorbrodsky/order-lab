@@ -65,6 +65,7 @@ fos_comment:
             thread: Oleg\UserdirectoryBundle\Entity\FosThread
 
 services:
+    _defaults: { public: true }
 
     custom_authenticator:
         class:     Oleg\UserdirectoryBundle\Security\Authentication\CustomAuthenticator

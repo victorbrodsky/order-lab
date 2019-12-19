@@ -72,7 +72,7 @@ class BaseCommentsType extends AbstractType
                     $baseAttr->getStatusStrByStatus($baseAttr::STATUS_UNVERIFIED) => $baseAttr::STATUS_UNVERIFIED,
                     $baseAttr->getStatusStrByStatus($baseAttr::STATUS_VERIFIED) => $baseAttr::STATUS_VERIFIED
                 ),
-                'choices_as_values' => true,
+                //'choices_as_values' => true,
                 'invalid_message' => 'organizationalGroup invalid value',
                 'label' => "Status:",
                 'required' => true,

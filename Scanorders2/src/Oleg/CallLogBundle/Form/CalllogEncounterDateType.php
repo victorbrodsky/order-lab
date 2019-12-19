@@ -71,7 +71,7 @@ class CalllogEncounterDateType extends AbstractType
             //'label' => false,
             'label' => "Time zone:",
             'choices' => $tzUtil->tz_list(),
-            'choices_as_values' => true,
+            //'choices_as_values' => true,
             'required' => true,
             'data' => $this->params['timezoneDefault'],
             'preferred_choices' => array('America/New_York'),

@@ -12,6 +12,7 @@ twig:
 
 
 services:
+    _defaults: { public: true }
 
     calllog_authentication_handler:
         class: Oleg\CallLogBundle\Security\Authentication\CallLogLoginSuccessHandler

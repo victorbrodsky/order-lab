@@ -83,7 +83,7 @@ class SimpleUserType extends UserType {
             //'required' => true,
             'multiple' => false,
             'choices' => $this->params['keytypeChoices'],
-            'choices_as_values' => true,
+            //'choices_as_values' => true,
             'data' => $defaultPrimaryPublicUserIdType,
             'attr' => array('class' => 'combobox combobox-width'),
         ));

@@ -546,7 +546,7 @@ class ProjectType extends AbstractType
         $builder->add('involveHumanTissue', ChoiceType::class, array( //flipped
             'label' => 'Will this project involve human tissue?',
             'choices' => array("Yes"=>"Yes", "No"=>"No"),
-            'choices_as_values' => true,
+            //'choices_as_values' => true,
             'multiple' => false,
             'required' => true,
             'expanded' => true,

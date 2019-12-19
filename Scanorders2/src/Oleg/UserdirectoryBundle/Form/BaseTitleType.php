@@ -99,7 +99,7 @@ class BaseTitleType extends AbstractType
                 $baseUserAttr->getStatusStrByStatus($baseUserAttr::STATUS_UNVERIFIED) => $baseUserAttr::STATUS_UNVERIFIED,
                 $baseUserAttr->getStatusStrByStatus($baseUserAttr::STATUS_VERIFIED) => $baseUserAttr::STATUS_VERIFIED
             ),
-            'choices_as_values' => true,
+            //'choices_as_values' => true,
             'invalid_message' => 'status invalid value',
             'label' => "Status:",
             'required' => true,
@@ -114,7 +114,7 @@ class BaseTitleType extends AbstractType
                     'Secondary' => '1'
                 ),
                 'invalid_message' => 'invalid value: priority',
-                'choices_as_values' => true,
+                //'choices_as_values' => true,
                 'label' => $this->params['label'] . " Title Type:",
                 'required' => false,
                 'attr' => array('class' => 'combobox combobox-width'),
