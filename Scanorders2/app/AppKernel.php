@@ -58,14 +58,11 @@ class AppKernel extends Kernel
             new JMS\SerializerBundle\JMSSerializerBundle($this),
             //new Cert\LetsEncryptBundle\CertLetsEncryptBundle(),
             new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
-
             new Bmatzner\FontAwesomeBundle\BmatznerFontAwesomeBundle(),
-
             new Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle(),
-            
+
             //password encoder
             //new Usu\ScryptPasswordEncoderBundle\UsuScryptPasswordEncoderBundle(),
-
             //new Acme\DemoBundle\AcmeDemoBundle(),
             new Oleg\UserdirectoryBundle\OlegUserdirectoryBundle(),
             new Oleg\OrderformBundle\OlegOrderformBundle(),
@@ -74,7 +71,6 @@ class AppKernel extends Kernel
             new Oleg\VacReqBundle\OlegVacReqBundle(),
             new Oleg\CallLogBundle\OlegCallLogBundle(),
             new Oleg\TranslationalResearchBundle\OlegTranslationalResearchBundle(),
-
         );
 
         // Some bundles are only used while developing the application or during

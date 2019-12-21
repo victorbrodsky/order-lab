@@ -23,12 +23,12 @@
         "stof/doctrine-extensions-bundle": "~1.1@dev",
 
         "symfony/symfony": "^3.4",
+        "symfony/assetic-bundle": "^2.8",
         "symfony/swiftmailer-bundle": "v2.6.7",
         "symfony/monolog-bundle": "~2.4",
-        "sensio/distribution-bundle": "^5.0",
         "sensio/framework-extra-bundle": "^3.0",
+
         "incenteev/composer-parameter-handler": "~2.0",
-        "symfony/assetic-bundle": "^2.8",
         "twig/twig": "^1.28 || ^2.0",
         "twig/extensions": "^1.5",
 

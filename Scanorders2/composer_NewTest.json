@@ -1,0 +1,65 @@
+{
+    "name": "symfony/framework-standard-edition",
+    "license": "MIT",
+    "type": "project",
+    "description": "Order system",
+    "autoload": {
+        "psr-4": {
+            "": "src/",
+            "Tests\\": "tests/"
+        },
+        "classmap": [
+            "app/AppKernel.php",
+            "app/AppCache.php"
+        ]
+    },
+    "require": {
+        "php": "^5.5.9|>=7.0.8",
+
+        "symfony/symfony": "v3.4.36",
+        "symfony/assetic-bundle": "v2.8.2",
+        "symfony/monolog-bundle": "v3.5.0",
+        "symfony/swiftmailer-bundle": "v2.6.7",
+
+        "sensio/distribution-bundle": "v5.0.25",
+        "sensio/framework-extra-bundle": "v3.0.29",
+
+        "doctrine/doctrine-bundle": "^1.1",
+        "doctrine/orm": "^2.7",
+
+        "doctrine/doctrine-fixtures-bundle": "3.3.0",
+        "doctrine/doctrine-migrations-bundle": "2.1.2",
+        "stof/doctrine-extensions-bundle": "v1.3.0",
+        "friendsofsymfony/user-bundle": "~2.0"
+
+
+    },
+    "require-dev": {
+
+    },
+    "scripts": {
+        "post-install-cmd": [
+        ],
+        "post-update-cmd": [
+        ]
+    },
+    "config": {
+        "bin-dir": "bin"
+    },
+    "minimum-stability": "stable",
+    "extra": {
+        "symfony-app-dir": "app",
+        "symfony-bin-dir": "bin",
+        "symfony-var-dir": "var",
+        "symfony-web-dir": "web",
+        "symfony-tests-dir": "tests",
+        "symfony-assets-install": "relative",
+        "incenteev-parameters": {
+            "file": "app/config/parameters.yml",
+            "env-map": {
+                "database_url": "DATABASE_URL",
+                "secret": "SYMFONY_SECRET"
+            }
+        }
+    }
+}

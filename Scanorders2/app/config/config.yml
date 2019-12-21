@@ -301,8 +301,8 @@ oneup_uploader:
 stof_doctrine_extensions:
     default_locale: en_US
     orm:
-        default:
-            tree: true
+                              default:
+                                  tree: true
 
 #Available options as in configure(): https://github.com/KnpLabs/snappy/blob/master/src/Knp/Snappy/Pdf.php
 knp_snappy:
