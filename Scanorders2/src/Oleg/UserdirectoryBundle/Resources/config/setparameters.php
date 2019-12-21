@@ -16,7 +16,7 @@
  */
 
 //include_once('setparameters_function.php');
-include_once('setparameters_util.php');
+//include_once('setparameters_util.php');
 
 //function getDBParameter( $row, $originalParam, $name ) {
 ////    if( strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ) {
@@ -48,6 +48,34 @@ include_once('setparameters_util.php');
 //    }
 //    return false;
 //}
+
+if( ! function_exists('getDBParameter') ) {
+    function getDBParameter( $row, $originalParam, $name ) {
+        //1) try as it is
+        if( array_key_exists($name, $row) ) {
+            //echo "1 parameter=".$row[$name]."<br>";
+            return trim($row[$name]);
+        }
+
+        //2) try with lowercase for postgresql
+        $name = strtolower($name);
+        if( array_key_exists($name, $row) ) {
+            //echo "2 parameter=".$row[$name]."<br>";
+            return trim($row[$name]);
+        }
+
+        return $originalParam;
+    }
+}
+if( ! function_exists('isWindows') ) {
+    function isWindows() {
+        if( strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ) {
+            //Windows
+            return true;
+        }
+        return false;
+    }
+}
 
 //$dtz = $this->container->getParameter('default_time_zone');
 //echo "dtz=".$dtz."<br>";
@@ -122,9 +150,44 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
 
     //var_dump($params);
     //echo "count=".count($params)."<br>";
+    //var_dump($params->fetch());
+
+    ////////// condition to continue for empty and not empty DB ////////////
+    $continue = true;
+    if($params) {
+    } else {
+        $continue = false;
+        //exit('!params');
+    }
+//    if(is_array($params)) {
+//    } else {
+//        //it is not array even if DB exists
+//        $continue = false;
+//        exit('!is_array($params)');
+//    }
+    if( is_object($params) ) {
+    } else {
+        $continue = false;
+        //exit('!is_object($params)');
+    }
+    if( count($params) >= 1 ) {
+    } else {
+        $continue = false;
+        //exit('!count($params) >= 1)');
+    }
+    $row = $params->fetch();
+    if( count($row) == 0 ) {
+        $continue = false;
+        //exit('!count($row) == 0');
+    }
+    ////////// condition to continue for empty and not empty DB ////////////
+
+    //exit('111');
 
     //if( $params && is_array($params) && count($params) >= 1 ) {
-    if( $params && is_array($params) && count($params) >= 1 ) {
+    if( $continue ) {
+
+        //exit('111');
 
 //        $aDLDAPServerAddress = null;
 //        $aDLDAPServerPort = null;
@@ -191,9 +254,11 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
         //$container->setParameter('knp_snappy.image.binary',$knp_snappy_path_image);
         //echo "knp_snappy.pdf.binary=".$container->getParameter('knp_snappy.pdf.binary')."<br>";
 
-        while( $row = $params->fetch() ) {
+        //while( $row = $params->fetch() ) { //we have only 1 row of siteParameters
+        if( $row ) {
 
             //print_r($row);
+            //exit('111');
 
 //            if( array_key_exists('aDLDAPServerAddress', $row) )
 //                $aDLDAPServerAddress = $row['aDLDAPServerAddress'];
@@ -385,7 +450,8 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
 
             $connection_channel = getDBParameter($row,$connection_channel,'connectionChannel');
             //echo "connection_channel=[".$connection_channel."]\n";
-        }
+
+        }//while
 
         $container->setParameter('connection_channel',$connection_channel);
 
@@ -477,6 +543,9 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
 //        if( $database_password )
 //            $container->setParameter('database_password',$database_password);
 
+    } else {
+        //var_dump($params);
+        //exit("params are not valid<br>");
     }//if param
 
 

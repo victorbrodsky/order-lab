@@ -684,6 +684,9 @@ c) Run command:
 
 	 git checkout abcde file/to/restore
 
+### To push tags to remote. If you're pushing to your origin you can ignore the <remote> part.
+	 git push --tags <remote>
+
 ### Testing: run phpunit script, located in symfony's 'bin' folder:
 
 	Run all tests (>70 tests, >210 assertions in ~9 minutes): ./bin/simple-phpunit
