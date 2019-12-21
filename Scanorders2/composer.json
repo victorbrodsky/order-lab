@@ -37,7 +37,7 @@
         "friendsofsymfony/jsrouting-bundle": "@stable",
         "friendsofsymfony/comment-bundle": "v2.0.12",
 
-        "phpoffice/phpspreadsheet": "1.2.1",
+        "phpoffice/phpspreadsheet": "1.8.2",
         "phpoffice/phpexcel": "v1.8.0",
         "oneup/uploader-bundle": "~1.3",
 
