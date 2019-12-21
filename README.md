@@ -687,6 +687,10 @@ c) Run command:
 ### To push tags to remote. If you're pushing to your origin you can ignore the <remote> part.
 	 git push --tags <remote>
 
+### To remove a file wrongly committed
+	 git filter-branch --tree-filter 'rm -rf path/to/your/file' HEAD
+	 git push
+
 ### Testing: run phpunit script, located in symfony's 'bin' folder:
 
 	Run all tests (>70 tests, >210 assertions in ~9 minutes): ./bin/simple-phpunit
