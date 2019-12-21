@@ -1243,6 +1243,8 @@ class UserServiceUtil {
      * Get installed software (apache, php)
      */
     function getInstalledSoftware() {
+        $res = NULL;
+        $apacheVersion = NULL;
 //        if(!function_exists('apache_get_version')){
 //            function apache_get_version(){
 //                if(!isset($_SERVER['SERVER_SOFTWARE']) || strlen($_SERVER['SERVER_SOFTWARE']) == 0){
@@ -1251,8 +1253,24 @@ class UserServiceUtil {
 //                return $_SERVER["SERVER_SOFTWARE"];
 //            }
 //        }
-        $apacheVersion = $_SERVER["SERVER_SOFTWARE"];
-        $res = "Apache: ".$apacheVersion;
+        //$apacheVersion = $_SERVER["SERVER_SOFTWARE"];
+        //$apacheVersion = apache_get_version();
+
+        if( !$apacheVersion ) {
+            if (function_exists('apache_get_version')) {
+                $apacheVersion = apache_get_version();
+            }
+        }
+        if( !$apacheVersion ) {
+            if (!isset($_SERVER['SERVER_SOFTWARE']) || strlen($_SERVER['SERVER_SOFTWARE']) == 0) {
+            } else {
+                $apacheVersion = $_SERVER["SERVER_SOFTWARE"];
+            }
+        }
+
+        if( $apacheVersion ) {
+            $res = "Apache: " . $apacheVersion;
+        }
 
         $phpVersion = phpversion();
         $res = $res . "<br>" . "PHP: ".$phpVersion;

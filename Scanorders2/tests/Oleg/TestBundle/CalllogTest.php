@@ -33,6 +33,22 @@ class CalllogTest extends WebTestBase
         );
     }
 
+    public function testAboutAction() {
+        $this->logIn();
+        $crawler = $this->client->request('GET', '/call-log-book/about');
+
+        //$content = $this->client->getResponse()->getContent();
+        //exit("content=$content");
+
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Current Version")')->count()
+        );
+        //$linkName = '/translational-research/about';
+        //$this->testGetLink($linkName,"Current Version");
+        //$this->testGetLink($linkName);
+    }
+
     public function testFormNodeValue() {
 
         if( $this->environment == "nodata" ) {
@@ -391,18 +407,6 @@ class CalllogTest extends WebTestBase
             0,
             $crawler->filter('html:contains("Event Log showing")')->count()
         );
-    }
-
-    public function testAboutAction() {
-        $this->logIn();
-        $crawler = $this->client->request('GET', '/call-log-book/about');
-        $this->assertGreaterThan(
-            0,
-            $crawler->filter('html:contains("Current Version")')->count()
-        );
-        //$linkName = '/translational-research/about';
-        //$this->testGetLink($linkName,"Current Version");
-        //$this->testGetLink($linkName);
     }
 
     public function testComplexPatientsAction() {
