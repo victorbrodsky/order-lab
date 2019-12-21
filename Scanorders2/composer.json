@@ -14,7 +14,7 @@
         ]
     },
     "require": {
-        "php": ">=5.5.9",
+        "php": ">=5.5.9 | >=7",
 
         "doctrine/orm": "^2.5",
         "doctrine/doctrine-bundle": "^1.10",
@@ -45,7 +45,6 @@
         "asimlqt/php-google-spreadsheet-client": "2.3.*",
         "ensepar/html2pdf-bundle": "~2.0",
         "spraed/pdf-generator-bundle": "v1.0",
-        "itbz/fpdi": "dev-master",
         "bmatzner/fontawesome-bundle": "~4.4",
         "adesigns/calendar-bundle": "^1.1",
         "yzalis/crontab": "1.0.x-dev",
@@ -56,6 +55,7 @@
         "knplabs/knp-components": "^1.3",
         "knplabs/knp-paginator-bundle": "^3.0",
         "knplabs/knp-snappy-bundle": "v1.4"
+
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",
@@ -82,7 +82,10 @@
         ]
     },
     "config": {
-        "bin-dir": "bin"
+        "bin-dir": "bin",
+        "platform": {
+            "php": "7.3.12"
+        }
     },
     "minimum-stability": "stable",
     "extra": {

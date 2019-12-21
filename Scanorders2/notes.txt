@@ -1,6 +1,9 @@
 https://symfony.com/doc/3.4/setup/flex.html
 https://symfonycasts.com/screencast/symfony4-upgrade/sf34-deprecations
 
+Use 64-bit from xampp:
+/c/xampp/php/php /c/php/Composer/composer.phar update
+
 To add later:
 Under "auto-scripts":
 "cache:clear": "symfony-cmd", "assets:install %PUBLIC_DIR%": "symfony-cmd",
