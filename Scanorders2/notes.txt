@@ -1,6 +1,8 @@
 https://symfony.com/doc/3.4/setup/flex.html
 https://symfonycasts.com/screencast/symfony4-upgrade/sf34-deprecations
 
+Branches: https://nvie.com/posts/a-successful-git-branching-model/
+
 Use 64-bit from xampp:
 /c/xampp/php/php /c/php/Composer/composer.phar update
 
