@@ -2,14 +2,14 @@ https://symfony.com/doc/3.4/setup/flex.html
 https://symfonycasts.com/screencast/symfony4-upgrade/sf34-deprecations
 
 Branches: https://nvie.com/posts/a-successful-git-branching-model/
-Migrating to 3.4, adapt the source code:
+### Migrating to 3.4, adapt the source code: ###
 1)Rename namespaces and DB's entityNameSpace to App
-Migrating to 3.4 Flex:
+### Migrating to 3.4 Flex: ###
 1) create new Symfony skeleton
 2) Merge yaml config
 3) Move original templates from app/Resources/views/ to templates/
 4) Merge app_*.php
-Migrating to 4:
+### Migrating to 4: ###
 
 Use 64-bit from xampp:
 /c/xampp/php/php /c/php/Composer/composer.phar update
@@ -49,3 +49,53 @@ TODO:
 1) Make old symfony source code to original working state (composer.json, Kernel and vendor)
 2) Move the original source code from src/{App,...}Bundle/ to src/ and update the namespaces of every PHP file to be App\... (advanced IDEs can do this automatically).
 3) Copy App to src
+
+### Symfony 3.4 Standard Edition: ###
+composer.phar require symfony/symfony "^3.4" doctrine/doctrine-bundle "^1.1" symfony/monolog-bundle symfony/swiftmailer-bundle "^2.6"
+symfony/assetic-bundle
+sensio/framework-extra-bundle "^4.0"
+knplabs/knp-paginator-bundle "^4.1"
+paragonie/random_compat "^2"
+friendsofsymfony/user-bundle "~2.0" "v2.0.1" (requires paragonie/random_compat "^2" "v2.0.18")
+oneup/uploader-bundle
+friendsofsymfony/jsrouting-bundle
+stof/doctrine-extensions-bundle
+knplabs/knp-snappy-bundle
+adesigns/calendar-bundle
+friendsofsymfony/comment-bundle
+doctrine/doctrine-migrations-bundle
+bmatzner/fontawesome-bundle
+google/apiclient
+yzalis/crontab "1.0.x-dev"
+box/spout
+sinergi/browser-detector
+doctrine/orm
+require-dev sensio/generator-bundle "^3.1" (#sensio/distribution-bundle)
+twig/extensions
+phpoffice/phpspreadsheet
+phpoffice/phpexcel
+
+doctrine/common
+
+creof/doctrine2-spatial "~1" ?
+doctrine/lexer (^1.2)
+
+#doctrine-fixtures-bundle (for testing )
+
+
+
+[2019-12-22 18:20:30] request.CRITICAL: Uncaught PHP Exception Symfony\Component\Debug\Exception\FatalThrowableError: "Type error: preg_split() expects parameter 2 to be string, object given" at
+C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\Scanorders2\vendor\doctrine\lexer\lib\Doctrine\Common\Lexer\AbstractLexer.php line 255
+{"exception":"[object] (Symfony\\Component\\Debug\\Exception\\FatalThrowableError(code: 0): Type error: preg_split() expects parameter 2 to be string, object given
+php.CRITICAL: preg_split() expects parameter 2 to be string, float given doctrine/lexer#31
+Problem with version of 1.1.0 doctrine/lexer #204
+creof/doctrine2-spatial => creof/geo-parser => doctrine/lexer
+Fix: convert input to string (AbstractLexer.php adding line $input = $input."";)
+$input = $input."";
+$matches = preg_split($this->regex, $input, -1, $flags);
+
+UPDATE scan_patientlastname SET field = array_to_string(ARRAY(SELECT chr((65 + round(random() * 25)) :: integer) FROM generate_series(1,12)), '');
+array_to_string(ARRAY(SELECT chr((65 + round(random() * 25)) :: integer) FROM generate_series(1,12)), '');
+UPDATE scan_patientmrn SET field = CAST (field AS INTEGER) + 100 WHERE field ~ '^[0-9]*$';
+UPDATE scan_patientmrn SET field = CAST (field AS INTEGER) + 1000 WHERE field ~ '^[0-9]*$';
+UPDATE scan_patientmrn SET original = field;

@@ -49,8 +49,8 @@ class AppKernel extends Kernel
             new Oneup\UploaderBundle\OneupUploaderBundle(),
             new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
             new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
-            new Ensepar\Html2pdfBundle\EnseparHtml2pdfBundle(),
-            new Spraed\PDFGeneratorBundle\SpraedPDFGeneratorBundle(),
+            //new Ensepar\Html2pdfBundle\EnseparHtml2pdfBundle(),
+            //new Spraed\PDFGeneratorBundle\SpraedPDFGeneratorBundle(),
             new Knp\Bundle\SnappyBundle\KnpSnappyBundle(),
             new ADesigns\CalendarBundle\ADesignsCalendarBundle(),
             new FOS\RestBundle\FOSRestBundle(),
@@ -72,6 +72,7 @@ class AppKernel extends Kernel
             new Oleg\CallLogBundle\OlegCallLogBundle(),
             new Oleg\TranslationalResearchBundle\OlegTranslationalResearchBundle(),
         );
+        //$bundles = array();
 
         // Some bundles are only used while developing the application or during
         // the unit and functional tests. Therefore, they are only registered
