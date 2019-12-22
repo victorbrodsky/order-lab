@@ -2,6 +2,14 @@ https://symfony.com/doc/3.4/setup/flex.html
 https://symfonycasts.com/screencast/symfony4-upgrade/sf34-deprecations
 
 Branches: https://nvie.com/posts/a-successful-git-branching-model/
+Migrating to 3.4, adapt the source code:
+1)Rename namespaces and DB's entityNameSpace to App
+Migrating to 3.4 Flex:
+1) create new Symfony skeleton
+2) Merge yaml config
+3) Move original templates from app/Resources/views/ to templates/
+4) Merge app_*.php
+Migrating to 4:
 
 Use 64-bit from xampp:
 /c/xampp/php/php /c/php/Composer/composer.phar update
