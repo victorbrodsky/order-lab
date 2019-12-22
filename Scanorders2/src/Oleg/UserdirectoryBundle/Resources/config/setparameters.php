@@ -165,18 +165,18 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
 //        $continue = false;
 //        exit('!is_array($params)');
 //    }
-    if( is_object($params) ) {
+    if( $continue && (is_object($params) || is_array($params)) ) {
     } else {
         $continue = false;
         //exit('!is_object($params)');
     }
-    if( count($params) >= 1 ) {
-    } else {
-        $continue = false;
-        //exit('!count($params) >= 1)');
-    }
+//    if( $continue && (is_object($params) || is_array($params)) && count($params) >= 1 ) {
+//    } else {
+//        $continue = false;
+//        //exit('!count($params) >= 1)');
+//    }
     $row = $params->fetch();
-    if( count($row) == 0 ) {
+    if( $continue && (is_object($row) || is_array($row)) && count($row) == 0 ) {
         $continue = false;
         //exit('!count($row) == 0');
     }
