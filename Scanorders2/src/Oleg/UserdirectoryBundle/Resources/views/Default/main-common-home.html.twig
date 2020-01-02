@@ -20,12 +20,24 @@
 
 <head>
 
-    {% stylesheets
-    'bundles/oleguserdirectory/bootstrap/css/*' filter='cssrewrite'
-    'bundles/oleguserdirectory/form/css/form.css' filter='cssrewrite'
-    %}
-    <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
-    {% endstylesheets %}
+    {#{% stylesheets#}
+    {#'bundles/oleguserdirectory/bootstrap/css/*' filter='cssrewrite'#}
+    {#'bundles/oleguserdirectory/form/css/form.css' filter='cssrewrite'#}
+    {#%}#}
+    {#<link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />#}
+    {#{% endstylesheets %}#}
+
+    {#{% stylesheets#}
+        {#'bundles/oleguserdirectory/bootstrap/css/*'#}
+        {#'bundles/oleguserdirectory/form/css/form.css'#}
+    {#%}#}
+        {#<link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />#}
+    {#{% endstylesheets %}#}
+    {#<link rel="stylesheet" type="text/css" href="{{ asset('bundles/oleguserdirectory/bootstrap/css/*') }}" />#}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/oleguserdirectory/bootstrap/css/bootstrap.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/oleguserdirectory/bootstrap/css/bootstrap-theme.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/oleguserdirectory/form/css/form.css') }}" />
+
 
     <title>O R D E R</title>
 

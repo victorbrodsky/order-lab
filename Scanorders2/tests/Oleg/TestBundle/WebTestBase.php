@@ -73,7 +73,7 @@ class WebTestBase extends WebTestCase
 //        }
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
 //        $kernel = self::bootKernel();
 //
@@ -111,7 +111,7 @@ class WebTestBase extends WebTestCase
     /**
      * {@inheritDoc}
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
 

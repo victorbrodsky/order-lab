@@ -1,6 +1,6 @@
 imports:
     - { resource: config.yml }
-    - { resource: assets_version.php }
+#    - { resource: assets_version.php }
 
 #framework:
 #    validation:

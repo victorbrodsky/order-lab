@@ -10,6 +10,16 @@ Branches: https://nvie.com/posts/a-successful-git-branching-model/
 3) Move original templates from app/Resources/views/ to templates/
 4) Merge app_*.php
 ### Migrating to 4: ###
+1) Remove Assetic:
+{% stylesheets
+   'bundles/oleguserdirectory/bootstrap/css/*'
+   'bundles/oleguserdirectory/form/css/form.css'
+%}
+   <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
+{% endstylesheets %}
+Replace stylesheets by
+<link href="{{ asset('bootstrap/css/*') }}" rel="stylesheet" />
+<link href="{{ asset('form/css/form.css') }}" rel="stylesheet" />
 
 Use 64-bit from xampp:
 /c/xampp/php/php /c/php/Composer/composer.phar update
@@ -61,8 +71,6 @@ oneup/uploader-bundle
 friendsofsymfony/jsrouting-bundle
 stof/doctrine-extensions-bundle
 knplabs/knp-snappy-bundle
-adesigns/calendar-bundle
-friendsofsymfony/comment-bundle
 doctrine/doctrine-migrations-bundle
 bmatzner/fontawesome-bundle
 google/apiclient
@@ -99,3 +107,4 @@ array_to_string(ARRAY(SELECT chr((65 + round(random() * 25)) :: integer) FROM ge
 UPDATE scan_patientmrn SET field = CAST (field AS INTEGER) + 100 WHERE field ~ '^[0-9]*$';
 UPDATE scan_patientmrn SET field = CAST (field AS INTEGER) + 1000 WHERE field ~ '^[0-9]*$';
 UPDATE scan_patientmrn SET original = field;
+

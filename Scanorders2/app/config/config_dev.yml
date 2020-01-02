@@ -27,8 +27,8 @@ web_profiler:
 #            type:  chromephp
 #            level: info
 
-assetic:
-    use_controller: true
+#assetic:
+#    use_controller: true
 
 swiftmailer:
     delivery_address: oli2002@med.cornell.edu

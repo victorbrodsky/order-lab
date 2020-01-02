@@ -27,7 +27,8 @@ PARAM2="-withdb"
 #PARAM2=$2
 
 echo
-echo "Example of full deploy(DB, casche, assetic updates and cache warmup): bash deploy_prod.sh"
+#echo "Example of full deploy(DB, casche, assetic updates and cache warmup): bash deploy_prod.sh"
+echo "Example of full deploy(DB, casche, updates and cache warmup): bash deploy_prod.sh"
 echo "Example of fast update twig and js scripts: bash deploy_prod.sh -fast -nodb"
 echo "Example of full deploy, except cache warmpup: bash deploy_prod.sh -fast"
 echo
@@ -113,10 +114,10 @@ function prep(){
         php -d memory_limit=1024M $PROJECT_LOCAL_PATH/bin/console cache:warmup --env=prod
     fi
 
-    echo "*** Dump assets ***"
-    #console: php bin/console assetic:dump --env=prod --no-debug
-    php $PROJECT_LOCAL_PATH/bin/console assetic:dump --env=prod --no-debug
-    #php $PROJECT_LOCAL_PATH/app/console assetic:watch
+    #echo "*** Dump assets ***"
+    ###console: php bin/console assetic:dump --env=prod --no-debug
+    #php $PROJECT_LOCAL_PATH/bin/console assetic:dump --env=prod --no-debug
+    ###php $PROJECT_LOCAL_PATH/app/console assetic:watch
 
     echo "*** Set permissions ***"
     chown -R www-data:www-data $PROJECT_LOCAL_PATH/var/cache
