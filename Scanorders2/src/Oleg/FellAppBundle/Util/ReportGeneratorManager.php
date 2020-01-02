@@ -50,7 +50,7 @@ class ReportGeneratorManager {
     
     private $processes = array();
     
-    private $consoledir = '"cd C:\Php\Wampp\wamp\www\scanorder\Scanorders2\"';
+    //private $consoledir = '"cd C:\Php\Wampp\wamp\www\scanorder\Scanorders2\"';
 
 
     /**

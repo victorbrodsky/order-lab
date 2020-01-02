@@ -1212,8 +1212,10 @@ class UserServiceUtil {
      */
     function getCurrentGitCommit( $branch='master' ) {
         $projectDir = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\scanorder\Scanorders2
-        $projectDir = str_replace("Scanorders2","",$projectDir);
-        $filename = $projectDir.".git".DIRECTORY_SEPARATOR."refs".DIRECTORY_SEPARATOR."heads".DIRECTORY_SEPARATOR.$branch;
+        //echo "projectDir=$projectDir<br>";
+        //$projectDir = str_replace("Scanorders2","",$projectDir);
+        $filename = $projectDir.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR.".git".DIRECTORY_SEPARATOR.
+            "refs".DIRECTORY_SEPARATOR."heads".DIRECTORY_SEPARATOR.$branch;
         //echo $filename."<br>";
 
         //$filename = sprintf('.git/refs/heads/%s',$branch);

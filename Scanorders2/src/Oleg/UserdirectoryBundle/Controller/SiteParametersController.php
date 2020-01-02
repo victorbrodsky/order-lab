@@ -171,8 +171,9 @@ class SiteParametersController extends Controller
         //$sitename,SiteParameters $entity, $param=null, $disabled=false
         $editForm = $this->createEditForm($sitename,$entity,null,$disabled,$singleField);
 
-        $link = realpath($_SERVER['DOCUMENT_ROOT']).DIRECTORY_SEPARATOR.'scanorder'.DIRECTORY_SEPARATOR.'Scanorders2'.
-            DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'parameters.yml';
+        //$link = realpath($_SERVER['DOCUMENT_ROOT']).DIRECTORY_SEPARATOR.'scanorder'.DIRECTORY_SEPARATOR.'Scanorders2'.
+        //    DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'parameters.yml';
+        $link = 'parameters.yml';
         //echo "link=".$link."<br>";
 
         //get absolute path prefix for Upload folder
