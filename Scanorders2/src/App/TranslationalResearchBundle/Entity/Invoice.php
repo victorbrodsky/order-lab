@@ -22,7 +22,7 @@
  * Time: 12:10 PM
  */
 
-namespace Oleg\TranslationalResearchBundle\Entity;
+namespace App\TranslationalResearchBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -44,13 +44,13 @@ class Invoice {
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
      */
     private $submitter;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(name="updateUser", referencedColumnName="id", nullable=true)
      */
     private $updateUser;
@@ -99,13 +99,13 @@ class Invoice {
     /**
      * Is not the same as Request's contact (Billing Contact). Pre-populated from default salesperson setting
      *
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(name="salesperson", referencedColumnName="id", nullable=true)
      */
     private $salesperson;
 
 //    /**
-//     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+//     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\User")
 //     * @ORM\JoinTable(name="transres_invoice_principalinvestigator",
 //     *      joinColumns={@ORM\JoinColumn(name="invoice_id", referencedColumnName="id")},
 //     *      inverseJoinColumns={@ORM\JoinColumn(name="principalinvestigator_id", referencedColumnName="id")}
@@ -115,7 +115,7 @@ class Invoice {
     /**
      * Pre-Populated by Request's contact (Billing Contact: "Bill To")
      *
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(name="principalInvestigator", referencedColumnName="id", nullable=true)
      */
     private $principalInvestigator;
@@ -123,7 +123,7 @@ class Invoice {
     /**
      * Billing contact (from PI side) is populated from Request's  billing contact ($contact)
      *
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(name="billingContact", referencedColumnName="id", nullable=true)
      */
     private $billingContact;
@@ -138,7 +138,7 @@ class Invoice {
     /**
      * Generated Invoices
      *
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
      * @ORM\JoinTable(name="transres_invoice_document",
      *      joinColumns={@ORM\JoinColumn(name="invoice_id", referencedColumnName="id", onDelete="CASCADE")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE")}

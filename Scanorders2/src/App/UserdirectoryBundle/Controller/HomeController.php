@@ -15,14 +15,14 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Controller;
+namespace App\UserdirectoryBundle\Controller;
 
 
-use Oleg\UserdirectoryBundle\Entity\SiteList;
-use Oleg\UserdirectoryBundle\Entity\User;
-use Oleg\UserdirectoryBundle\Form\LabelType;
-use Oleg\UserdirectoryBundle\Security\Util\UserSecurityUtil;
-use Oleg\UserdirectoryBundle\Util\UserUtil;
+use App\UserdirectoryBundle\Entity\SiteList;
+use App\UserdirectoryBundle\Entity\User;
+use App\UserdirectoryBundle\Form\LabelType;
+use App\UserdirectoryBundle\Security\Util\UserSecurityUtil;
+use App\UserdirectoryBundle\Util\UserUtil;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -47,7 +47,7 @@ class HomeController extends Controller {
             $platformLogoPath = $platformLogo->getAbsoluteUploadFullPath();
         }
 
-        return $this->render('OlegUserdirectoryBundle:Default:main-common-home.html.twig',
+        return $this->render('AppUserdirectoryBundle:Default:main-common-home.html.twig',
             array(
                 'platformLogo' => $platformLogoPath,
                 'width' => $width,
@@ -64,7 +64,7 @@ class HomeController extends Controller {
         //exit('maint controller');
 
         $em = $this->getDoctrine()->getManager();
-        $params = $roles = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+        $params = $roles = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
 
         if( count($params) != 1 ) {
             throw new \Exception( 'Must have only one parameter object. Found '.count($params).'object(s)' );
@@ -76,7 +76,7 @@ class HomeController extends Controller {
         //$maintenance = $param->getMaintenance();
         //echo "maintenance=".$maintenance."<br>";
 
-        return $this->render('OlegUserdirectoryBundle:Default:maintenance.html.twig',
+        return $this->render('AppUserdirectoryBundle:Default:maintenance.html.twig',
             array(
                 'param' => $param
             )
@@ -87,7 +87,7 @@ class HomeController extends Controller {
      * @Route("/under-construction", name="under_construction")
      */
     public function underConstructionAction() {
-        return $this->render('OlegUserdirectoryBundle:Default:under_construction.html.twig');
+        return $this->render('AppUserdirectoryBundle:Default:under_construction.html.twig');
     }
 
 
@@ -110,7 +110,7 @@ class HomeController extends Controller {
      */
     public function firstTimeUserGenerationAction() {
         exit("not used");
-//        return $this->render('OlegUserdirectoryBundle:Default:under_construction.html.twig');
+//        return $this->render('AppUserdirectoryBundle:Default:under_construction.html.twig');
 
         //exit("firstTimeUserGenerationAction");
 
@@ -119,7 +119,7 @@ class HomeController extends Controller {
         $default_time_zone = null;
         $usernamePrefix = "local-user";
         //$username = "oli2002";
-        //$user = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername( $username."_@_". $usernamePrefix);
+        //$user = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByUsername( $username."_@_". $usernamePrefix);
 
 
         $userSecUtil = new UserSecurityUtil($em,null,null,null);
@@ -131,7 +131,7 @@ class HomeController extends Controller {
 
             $usetUtil = new UserUtil();
             $usetUtil->generateUsernameTypes($em);
-            //$userkeytype = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findOneByAbbreviation("local-user");
+            //$userkeytype = $em->getRepository('AppUserdirectoryBundle:UsernameType')->findOneByAbbreviation("local-user");
 
             $userSecUtil = $this->container->get('user_security_utility');
             $userkeytype = $userSecUtil->getUsernameType($usernamePrefix);
@@ -190,7 +190,7 @@ class HomeController extends Controller {
         $count = 10;
         foreach( $elements as $name => $abbreviation ) {
 
-            $entity = $em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByName($name);
+            $entity = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByName($name);
             if( $entity ) {
                 continue;
             }

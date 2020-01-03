@@ -22,7 +22,7 @@
  * Time: 3:05 PM
  */
 
-namespace Oleg\FellAppBundle\Util;
+namespace App\FellAppBundle\Util;
 
 
 use Google\Spreadsheet\DefaultServiceRequest;

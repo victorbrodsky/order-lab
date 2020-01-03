@@ -22,7 +22,7 @@
  * Time: 11:28 AM
  */
 
-namespace Oleg\OrderformBundle\Security\Voter;
+namespace App\OrderformBundle\Security\Voter;
 
 
 //use App\OrderformBundle\Entity\Accession;
@@ -35,15 +35,15 @@ namespace Oleg\OrderformBundle\Security\Voter;
 //use App\OrderformBundle\Entity\Procedure;
 //use App\OrderformBundle\Entity\Slide;
 //use App\UserdirectoryBundle\Entity\User;
-use Oleg\OrderformBundle\Entity\Accession;
-use Oleg\OrderformBundle\Entity\Block;
-use Oleg\OrderformBundle\Entity\Encounter;
-use Oleg\OrderformBundle\Entity\Imaging;
-use Oleg\OrderformBundle\Entity\Part;
-use Oleg\OrderformBundle\Entity\Patient;
-use Oleg\OrderformBundle\Entity\Procedure;
-use Oleg\OrderformBundle\Entity\Slide;
-use Oleg\UserdirectoryBundle\Security\Voter\BasePermissionVoter;
+use App\OrderformBundle\Entity\Accession;
+use App\OrderformBundle\Entity\Block;
+use App\OrderformBundle\Entity\Encounter;
+use App\OrderformBundle\Entity\Imaging;
+use App\OrderformBundle\Entity\Part;
+use App\OrderformBundle\Entity\Patient;
+use App\OrderformBundle\Entity\Procedure;
+use App\OrderformBundle\Entity\Slide;
+use App\UserdirectoryBundle\Security\Voter\BasePermissionVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 
@@ -113,7 +113,7 @@ class ScanPermissionVoter extends BasePermissionVoter {
             $securityUtil = $this->container->get('order_security_utility');
             $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
             $userChiefServices = $userSiteSettings->getChiefServices();
-            if ($this->em->getRepository('OlegUserdirectoryBundle:Institution')->isNodeUnderParentnodes($userChiefServices, $subjectInstitution)) {
+            if ($this->em->getRepository('AppUserdirectoryBundle:Institution')->isNodeUnderParentnodes($userChiefServices, $subjectInstitution)) {
                 return true;
             }
         }

@@ -16,31 +16,31 @@
 
 
 {% if sitename == 'employees' %}
-    {% set extendStr = "OlegUserdirectoryBundle::Default/base.html.twig" %}
+    {% set extendStr = "AppUserdirectoryBundle::Default/base.html.twig" %}
 {% endif %}
 
 {% if sitename == 'fellapp' %}
-    {% set extendStr = "OlegFellAppBundle::Default/base.html.twig" %}
+    {% set extendStr = "AppFellAppBundle::Default/base.html.twig" %}
 {% endif %}
 
 {% if sitename == 'scan' %}
-    {% set extendStr = "OlegOrderformBundle::Default/base.html.twig" %}
+    {% set extendStr = "AppOrderformBundle::Default/base.html.twig" %}
 {% endif %}
 
 {% if sitename == 'deidentifier' %}
-    {% set extendStr = "OlegDeidentifierBundle::Default/base.html.twig" %}
+    {% set extendStr = "AppDeidentifierBundle::Default/base.html.twig" %}
 {% endif %}
 
 {% if sitename == 'vacreq' %}
-    {% set extendStr = "OlegVacReqBundle::Default/base.html.twig" %}
+    {% set extendStr = "AppVacReqBundle::Default/base.html.twig" %}
 {% endif %}
 
 {% if sitename == 'calllog' %}
-    {% set extendStr = "OlegCallLogBundle::Default/base.html.twig" %}
+    {% set extendStr = "AppCallLogBundle::Default/base.html.twig" %}
 {% endif %}
 
 {% if sitename == 'translationalresearch' %}
-    {% set extendStr = 'OlegTranslationalResearchBundle::Default/base.html.twig' %}
+    {% set extendStr = 'AppTranslationalResearchBundle::Default/base.html.twig' %}
 {% endif %}
 
 {% extends extendStr%}
@@ -480,7 +480,7 @@
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'aDLDAPServerAccountPassword'}) }}">Edit</a></td>
             </tr>
             <tr>
-                <td>LDAP/AD Authenticator Relative Path (Default: "../src/Oleg/UserdirectoryBundle/Util/" )</td>
+                <td>LDAP/AD Authenticator Relative Path (Default: "../src/App/UserdirectoryBundle/Util/" )</td>
                 <td>{{ entity.ldapExePath }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'ldapExePath'}) }}">Edit</a></td>
             </tr>
@@ -538,7 +538,7 @@
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'aDLDAPServerAccountPassword2'}) }}">Edit</a></td>
             </tr>
             <tr>
-                <td>LDAP/AD Authenticator Relative Path (Default: "../src/Oleg/UserdirectoryBundle/Util/" )</td>
+                <td>LDAP/AD Authenticator Relative Path (Default: "../src/App/UserdirectoryBundle/Util/" )</td>
                 <td>{{ entity.ldapExePath2 }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'ldapExePath2'}) }}">Edit</a></td>
             </tr>
@@ -949,7 +949,7 @@
                 <td>Platform Logo Image</td>
                 <td>
                     {% if entity.platformLogos %}
-                        {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+                        {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
                         <input type="hidden" id="formcycle" value="{{ cycle }}" />
                         <div id="form-prototype-data"
                              data-userurllink = "{{ usermacros.userUrlLink()|e }}"
@@ -981,34 +981,34 @@
 
     {#Defaults for an Organizational Group#}
     {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
-        {% include 'OlegUserdirectoryBundle:SiteParameters:organizational-group-defaults.html.twig' %}
+        {% include 'AppUserdirectoryBundle:SiteParameters:organizational-group-defaults.html.twig' %}
     {% endif %}
 
     {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
-        {% include 'OlegUserdirectoryBundle:SiteParameters:third-party-software-content.html.twig' %}
+        {% include 'AppUserdirectoryBundle:SiteParameters:third-party-software-content.html.twig' %}
     {% endif %}
 
     {% if (sitename == "employees" or sitename == "fellapp") and is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
-        {% include 'OlegUserdirectoryBundle:SiteParameters:fellapp-content.html.twig' %}
+        {% include 'AppUserdirectoryBundle:SiteParameters:fellapp-content.html.twig' %}
     {% endif %}
 
     {% if (sitename == "employees" or sitename == "calllog") and is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
-        {% include 'OlegUserdirectoryBundle:SiteParameters:calllog-content.html.twig' %}
+        {% include 'AppUserdirectoryBundle:SiteParameters:calllog-content.html.twig' %}
     {% endif %}
 
     {% if (sitename == "employees" or sitename == "translationalresearch") and is_granted('ROLE_TRANSRES_ADMIN') %}
-        {% include 'OlegUserdirectoryBundle:SiteParameters:transres-content.html.twig' %}
+        {% include 'AppUserdirectoryBundle:SiteParameters:transres-content.html.twig' %}
     {% endif %}
 
     {% if (sitename == "employees" or sitename == "deidentifier") and is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
-        {% include 'OlegUserdirectoryBundle:SiteParameters:deidentifier-content.html.twig' %}
+        {% include 'AppUserdirectoryBundle:SiteParameters:deidentifier-content.html.twig' %}
     {% endif %}
 
     {% if (sitename == "employees" or sitename == "scan") and is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
-        {% include 'OlegUserdirectoryBundle:SiteParameters:scan-content.html.twig' %}
+        {% include 'AppUserdirectoryBundle:SiteParameters:scan-content.html.twig' %}
     {% endif %}
 
-    {% include 'OlegUserdirectoryBundle:SiteParameters:miscellaneous.html.twig' %}
+    {% include 'AppUserdirectoryBundle:SiteParameters:miscellaneous.html.twig' %}
 
     {#<br>#}
     {#<p>#}

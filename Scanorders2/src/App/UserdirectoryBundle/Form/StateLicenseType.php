@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Form;
+namespace App\UserdirectoryBundle\Form;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\FormEvents;
@@ -89,7 +89,7 @@ class StateLicenseType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\StateLicense',
+            'data_class' => 'App\UserdirectoryBundle\Entity\StateLicense',
             'form_custom_value' => null
         ));
     }
@@ -114,7 +114,7 @@ class StateLicenseType extends AbstractType
 
             //state
             $stateParams = array(
-                'class' => 'OlegUserdirectoryBundle:States',
+                'class' => 'AppUserdirectoryBundle:States',
                 //'choice_label' => 'name',
                 'label'=>'State:',
                 'required'=> false,
@@ -133,19 +133,19 @@ class StateLicenseType extends AbstractType
 
             if( $stateLicense && !$stateLicense->getState() ) {
                 if( $createCycle ) {
-                    $stateParams['data'] = $this->params['em']->getRepository('OlegUserdirectoryBundle:States')->findOneByName("New York");
+                    $stateParams['data'] = $this->params['em']->getRepository('AppUserdirectoryBundle:States')->findOneByName("New York");
                 }
             }
 
             $form->add('state', EntityType::class, $stateParams);
 
             //country
-            //$preferredCountries = $this->params['em']->getRepository('OlegUserdirectoryBundle:Countries')->findByName(array('United States'));
-            $defaultCountry = $this->params['em']->getRepository('OlegUserdirectoryBundle:Countries')->findOneByName("United States");
+            //$preferredCountries = $this->params['em']->getRepository('AppUserdirectoryBundle:Countries')->findByName(array('United States'));
+            $defaultCountry = $this->params['em']->getRepository('AppUserdirectoryBundle:Countries')->findOneByName("United States");
             $preferredCountries = array($defaultCountry);
 
             $countryParams = array(
-                'class' => 'OlegUserdirectoryBundle:Countries',
+                'class' => 'AppUserdirectoryBundle:Countries',
                 'choice_label' => 'name',
                 'label'=>'Country:',
                 'required'=> false,

@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Entity;
+namespace App\UserdirectoryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -549,7 +549,7 @@ class Location extends ListAbstract
     /**
      * Add assistant
      *
-     * @param \Oleg\OrderformBundle\Entity\User $assistant
+     * @param \App\OrderformBundle\Entity\User $assistant
      * @return User
      */
     public function addAssistant($assistant)
@@ -563,7 +563,7 @@ class Location extends ListAbstract
     /**
      * Remove assistant
      *
-     * @param \Oleg\OrderformBundle\Entity\User $assistant
+     * @param \App\OrderformBundle\Entity\User $assistant
      */
     public function removeAssistant($assistant)
     {

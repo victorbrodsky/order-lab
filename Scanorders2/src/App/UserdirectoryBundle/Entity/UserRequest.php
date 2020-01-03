@@ -15,14 +15,14 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Entity;
+namespace App\UserdirectoryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @ORM\Entity(repositoryClass="Oleg\UserdirectoryBundle\Repository\UserRequestRepository")
+ * @ORM\Entity(repositoryClass="App\UserdirectoryBundle\Repository\UserRequestRepository")
  * @ORM\Table(name="user_accountrequest")
  * @ORM\HasLifecycleCallbacks
  */
@@ -88,7 +88,7 @@ class UserRequest
     /**
      * request permittedInstitutionalPHIScope
      *
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Institution")
      * @ORM\JoinTable(name="user_accountrequest_institution",
      *      joinColumns={@ORM\JoinColumn(name="request_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="institution_id", referencedColumnName="id")}
@@ -99,7 +99,7 @@ class UserRequest
     /**
      * requested Institution (ScanOrders Institution Scope)
      *
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Institution")
      * @ORM\JoinColumn(name="institution_id", referencedColumnName="id")
      **/
     private $requestedScanOrderInstitutionScope;
@@ -298,7 +298,7 @@ class UserRequest
     }
 
 
-//    public function addServices(\Oleg\UserdirectoryBundle\Entity\Service $service)
+//    public function addServices(\App\UserdirectoryBundle\Entity\Service $service)
 //    {
 //        if( !$this->services->contains($service) ) {
 //            $this->services->add($service);
@@ -307,7 +307,7 @@ class UserRequest
 //        return $this;
 //    }
 //
-//    public function removeServices(\Oleg\UserdirectoryBundle\Entity\Service $service)
+//    public function removeServices(\App\UserdirectoryBundle\Entity\Service $service)
 //    {
 //        $this->services->removeElement($service);
 //    }
@@ -464,7 +464,7 @@ class UserRequest
         return $this->requestedInstitutionalPHIScope;
     }
 
-    public function addRequestedInstitutionalPHIScope(\Oleg\UserdirectoryBundle\Entity\Institution $institution)
+    public function addRequestedInstitutionalPHIScope(\App\UserdirectoryBundle\Entity\Institution $institution)
     {
         if( !$this->requestedInstitutionalPHIScope->contains($institution) ) {
             $this->requestedInstitutionalPHIScope->add($institution);
@@ -472,7 +472,7 @@ class UserRequest
         return $this;
     }
 
-    public function removeRequestedInstitutionalPHIScope(\Oleg\UserdirectoryBundle\Entity\Institution $institution)
+    public function removeRequestedInstitutionalPHIScope(\App\UserdirectoryBundle\Entity\Institution $institution)
     {
         $this->requestedInstitutionalPHIScope->removeElement($institution);
     }

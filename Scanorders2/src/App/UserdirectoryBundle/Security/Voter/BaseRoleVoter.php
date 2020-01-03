@@ -22,13 +22,13 @@
  * Time: 11:28 AM
  */
 
-namespace Oleg\UserdirectoryBundle\Security\Voter;
+namespace App\UserdirectoryBundle\Security\Voter;
 
 
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
-use Oleg\UserdirectoryBundle\Entity\User;
+use App\UserdirectoryBundle\Entity\User;
 
 
 //Role have permission objects (Permission);
@@ -154,7 +154,7 @@ abstract class BaseRoleVoter extends Voter {
         }
 
         //Check if a $user has this role or partial role name ($attribute) with given $sitename
-        $roleObjects = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserRolesBySiteAndPartialRoleName($user,$sitename,$attribute);
+        $roleObjects = $this->em->getRepository('AppUserdirectoryBundle:User')->findUserRolesBySiteAndPartialRoleName($user,$sitename,$attribute);
         //echo $attribute.": roleObjects count=".count($roleObjects)."<br>";
         if( count($roleObjects) > 0 ) {
             //exit($attribute.': Dummy partial rolename-site ok');
@@ -178,7 +178,7 @@ abstract class BaseRoleVoter extends Voter {
                 continue;
             }
 
-            $role = $this->em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName($roleStr);
+            $role = $this->em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($roleStr);
             if( $role ) {
                 foreach( $role->getSites() as $site ) {
                     //echo 'role='.$role.", site=".$site->getName()."<br>";

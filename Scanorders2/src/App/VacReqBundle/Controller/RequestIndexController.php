@@ -15,12 +15,12 @@
  *  limitations under the License.
  */
 
-namespace Oleg\VacReqBundle\Controller;
+namespace App\VacReqBundle\Controller;
 
-use Oleg\UserdirectoryBundle\Entity\User;
-use Oleg\VacReqBundle\Entity\VacReqRequest;
-use Oleg\VacReqBundle\Form\VacReqFilterType;
-use Oleg\VacReqBundle\Form\VacReqRequestType;
+use App\UserdirectoryBundle\Entity\User;
+use App\VacReqBundle\Entity\VacReqRequest;
+use App\VacReqBundle\Form\VacReqFilterType;
+use App\VacReqBundle\Form\VacReqRequestType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -40,7 +40,7 @@ class RequestIndexController extends Controller
      *
      * @Route("/my-requests/", name="vacreq_myrequests")
      * @Method({"GET", "POST"})
-     * @Template("OlegVacReqBundle:Request:index.html.twig")
+     * @Template("AppVacReqBundle:Request:index.html.twig")
      */
     public function myRequestsAction(Request $request)
     {
@@ -52,7 +52,7 @@ class RequestIndexController extends Controller
         //$vacreqUtil = $this->get('vacreq_util');
 
         //$em = $this->getDoctrine()->getManager();
-        //$entities = $em->getRepository('OlegVacReqBundle:VacReqRequest')->findAll();
+        //$entities = $em->getRepository('AppVacReqBundle:VacReqRequest')->findAll();
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
@@ -78,7 +78,7 @@ class RequestIndexController extends Controller
      *
      * @Route("/incoming-requests/", name="vacreq_incomingrequests")
      * @Method({"GET", "POST"})
-     * @Template("OlegVacReqBundle:Request:index.html.twig")
+     * @Template("AppVacReqBundle:Request:index.html.twig")
      */
     public function incomingRequestsAction(Request $request)
     {
@@ -112,7 +112,7 @@ class RequestIndexController extends Controller
 
         $routeName = $request->get('_route');
 
-        $repository = $em->getRepository('OlegVacReqBundle:VacReqRequest');
+        $repository = $em->getRepository('AppVacReqBundle:VacReqRequest');
         $dql =  $repository->createQueryBuilder("request");
 
         $dql->select('request as object');
@@ -143,7 +143,7 @@ class RequestIndexController extends Controller
         if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') ) {
             if( $approver ) {
                 $partialRoleName = "ROLE_VACREQ_";  //"ROLE_VACREQ_APPROVER"
-                $vacreqRoles = $em->getRepository('OlegUserdirectoryBundle:User')->
+                $vacreqRoles = $em->getRepository('AppUserdirectoryBundle:User')->
                     findUserRolesBySiteAndPartialRoleName($approver, "vacreq", $partialRoleName, null, false);
 
 //                $instArr = array();
@@ -165,10 +165,10 @@ class RequestIndexController extends Controller
                         if( !in_array($roleInst->getId(), $addedNodes) ) {
                             $addedNodes[] = $roleInst->getId();
                             //regular institution
-                            $instCriterionArr[] = $em->getRepository('OlegUserdirectoryBundle:Institution')->
+                            $instCriterionArr[] = $em->getRepository('AppUserdirectoryBundle:Institution')->
                                 selectNodesUnderParentNode($roleInst,"institution",false);
                             //regular tentativeInstitution
-                            $instCriterionArr[] = $em->getRepository('OlegUserdirectoryBundle:Institution')->
+                            $instCriterionArr[] = $em->getRepository('AppUserdirectoryBundle:Institution')->
                                 selectNodesUnderParentNode($roleInst,"tentativeInstitution",false);
                         }
                     }
@@ -310,7 +310,7 @@ class RequestIndexController extends Controller
 
         //////////////////// get list of users with "unknown" user ////////////////////
         $em = $this->getDoctrine()->getManager();
-        $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:User');
+        $repository = $this->getDoctrine()->getRepository('AppUserdirectoryBundle:User');
         $dqlFilterUser = $repository->createQueryBuilder('user');
         $dqlFilterUser->select('user');
         $dqlFilterUser->leftJoin("user.infos","infos");
@@ -347,7 +347,7 @@ class RequestIndexController extends Controller
         }
         //echo "requestTypeId=".$requestTypeId."<br>";
         if( $requestTypeId ) {
-            $requestType = $em->getRepository('OlegVacReqBundle:VacReqRequestTypeList')->find($requestTypeId);
+            $requestType = $em->getRepository('AppVacReqBundle:VacReqRequestTypeList')->find($requestTypeId);
             if (!$requestType) {
                 throw $this->createNotFoundException('Unable to find Request Type by id=' . $requestTypeId);
             }
@@ -405,7 +405,7 @@ class RequestIndexController extends Controller
                     " Once they are set up, this page will show cumulative summary data.";
             } else {
                 //regular user
-                $adminUsers = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole("ROLE_VACREQ_ADMIN", "infos.lastName", true);
+                $adminUsers = $em->getRepository('AppUserdirectoryBundle:User')->findUserByRole("ROLE_VACREQ_ADMIN", "infos.lastName", true);
                 $emails = array();
                 foreach ($adminUsers as $adminUser) {
                     $singleEmail = $adminUser->getSingleEmail();
@@ -595,15 +595,15 @@ class RequestIndexController extends Controller
             if( $groups ) {
                 //add institution hierarchy: "Pathology and Laboratory Medicine" institution is under "WCM-NYP Collaboration" institution.
                 //$where .= "institution=".$groups->getId();
-                //$where .= $em->getRepository('OlegUserdirectoryBundle:Institution')->selectNodesUnderParentNode($groups,"institution",false);
-                $where .= $em->getRepository('OlegUserdirectoryBundle:Institution')->getCriterionStrForCollaborationsByNode(
+                //$where .= $em->getRepository('AppUserdirectoryBundle:Institution')->selectNodesUnderParentNode($groups,"institution",false);
+                $where .= $em->getRepository('AppUserdirectoryBundle:Institution')->getCriterionStrForCollaborationsByNode(
                     $groups,
                     "institution",
                     array("Union", "Intersection", "Untrusted Intersection"),
                     true,
                     false
                 );
-//                $where .= $em->getRepository('OlegUserdirectoryBundle:Institution')->getCriterionStrUnderlyingCollaborationsByNode(
+//                $where .= $em->getRepository('AppUserdirectoryBundle:Institution')->getCriterionStrUnderlyingCollaborationsByNode(
 //                    $groups,
 //                    "institution",
 //                    array("Union", "Intersection", "Untrusted Intersection")

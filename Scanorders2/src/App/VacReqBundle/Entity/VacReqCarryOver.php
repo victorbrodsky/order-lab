@@ -22,7 +22,7 @@
  * Time: 11:35 AM
  */
 
-namespace Oleg\VacReqBundle\Entity;
+namespace App\VacReqBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;

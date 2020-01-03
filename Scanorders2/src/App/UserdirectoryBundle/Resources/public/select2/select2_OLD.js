@@ -837,7 +837,7 @@ the specific language governing permissions and limitations under the Apache Lic
 
             if (select) {
                 // these options are not allowed when attached to a select because they are picked up off the element itself
-                // Modified by Oleg to keep user input text
+                // Modified by App to keep user input text
                 $.each(["id", "multiple", "ajax", "query", "createSearchChoice", "initSelection", "data", "tags"], function () {
 //                $.each(["id", "multiple", "ajax", "query", "initSelection", "data", "tags"], function () {
                     if (this in opts) {

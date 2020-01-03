@@ -18,7 +18,7 @@
 
 {% block navbar %}
 
-    {#{% set pendingadminreview = render(controller("OlegUserdirectoryBundle:User:pendingAdminReview")) %}#}
+    {#{% set pendingadminreview = render(controller("AppUserdirectoryBundle:User:pendingAdminReview")) %}#}
 
     <nav class="navbar navbar-default" role="navigation">
 
@@ -45,7 +45,7 @@
 
                 <ul class="nav navbar-nav">
 
-                    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+                    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
                     {{ usermacros.siteSwitch() }}
 
                     <li id="nav-bar-fellapphome" class="hidden-xs divider-vertical">

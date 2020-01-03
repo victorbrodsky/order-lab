@@ -15,13 +15,13 @@
  *  limitations under the License.
  */
 
-namespace Oleg\FellAppBundle\Form;
+namespace App\FellAppBundle\Form;
 
-use Oleg\UserdirectoryBundle\Entity\Identifier;
-use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
-use Oleg\UserdirectoryBundle\Form\DocumentType;
-use Oleg\FellAppBundle\Form\FellAppGeoLocationType;
-use Oleg\UserdirectoryBundle\Form\GeoLocationType;
+use App\UserdirectoryBundle\Entity\Identifier;
+use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
+use App\UserdirectoryBundle\Form\DocumentType;
+use App\FellAppBundle\Form\FellAppGeoLocationType;
+use App\UserdirectoryBundle\Form\GeoLocationType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -63,7 +63,7 @@ class ReferenceType extends AbstractType
 
         $builder->add('geoLocation', FellAppGeoLocationType::class, array(
             'form_custom_value' => $this->params,
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\GeoLocation',
+            'data_class' => 'App\UserdirectoryBundle\Entity\GeoLocation',
             'label' => false,
             'required' => false
         ));
@@ -121,7 +121,7 @@ class ReferenceType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\FellAppBundle\Entity\Reference',
+            'data_class' => 'App\FellAppBundle\Entity\Reference',
             'form_custom_value' => null
         ));
     }

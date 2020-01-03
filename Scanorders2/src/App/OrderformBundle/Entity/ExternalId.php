@@ -15,11 +15,11 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Entity;
+namespace App\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Oleg\UserdirectoryBundle\Entity\DocumentContainer;
+use App\UserdirectoryBundle\Entity\DocumentContainer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -52,22 +52,22 @@ class ExternalId {
     private $externalId;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\SourceSystemList")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\SourceSystemList")
      */
     private $sourceSystem;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\SourceSystemList")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\SourceSystemList")
      */
     private $precedingRelaySystem;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\SourceSystemList")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\SourceSystemList")
      */
     private $nextRelaySystem;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\SourceSystemList")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\SourceSystemList")
      */
     private $targetSystem;
 
@@ -94,13 +94,13 @@ class ExternalId {
     private $transmittedOn;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(name="submitter", referencedColumnName="id", nullable=true)
      */
     private $submitter;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(name="transmitter", referencedColumnName="id", nullable=true)
      */
     private $transmitter;
@@ -112,7 +112,7 @@ class ExternalId {
     private $updatedOn;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(name="updatedBy", referencedColumnName="id", nullable=true)
      */
     private $updatedBy;

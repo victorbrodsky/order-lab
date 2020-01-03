@@ -15,19 +15,19 @@
  *  limitations under the License.
  */
 
-namespace Oleg\CallLogBundle\Controller;
+namespace App\CallLogBundle\Controller;
 
 
-use Oleg\CallLogBundle\Form\CalllogLoggerFilterType;
+use App\CallLogBundle\Form\CalllogLoggerFilterType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Oleg\UserdirectoryBundle\Entity\Logger;
-use Oleg\UserdirectoryBundle\Form\LoggerType;
+use App\UserdirectoryBundle\Entity\Logger;
+use App\UserdirectoryBundle\Form\LoggerType;
 
-use Oleg\UserdirectoryBundle\Controller\LoggerController;
+use App\UserdirectoryBundle\Controller\LoggerController;
 
 /**
  * Logger controller.
@@ -42,7 +42,7 @@ class CallLogLoggerController extends LoggerController
      *
      * @Route("/", name="calllog_logger")
      * @Method("GET")
-     * @Template("OlegCallLogBundle:Logger:index.html.twig")
+     * @Template("AppCallLogBundle:Logger:index.html.twig")
      */
     public function indexAction(Request $request)
     {
@@ -60,7 +60,7 @@ class CallLogLoggerController extends LoggerController
     /**
      * @Route("/user/{id}/all", name="calllog_logger_user_all")
      * @Method("GET")
-     * @Template("OlegCallLogBundle:Logger:index.html.twig")
+     * @Template("AppCallLogBundle:Logger:index.html.twig")
      */
     public function getAuditLogAllAction(Request $request)
     {
@@ -90,7 +90,7 @@ class CallLogLoggerController extends LoggerController
 //     *
 //     * @Route("/generation-log/", name="calllog_generation_log")
 //     * @Method("GET")
-//     * @Template("OlegCallLogBundle:Logger:index.html.twig")
+//     * @Template("AppCallLogBundle:Logger:index.html.twig")
 //     */
 //    public function generationLogAction(Request $request)
 //    {
@@ -103,7 +103,7 @@ class CallLogLoggerController extends LoggerController
      *
      * @Route("/event-log-per-user-per-event-type/", name="calllog_my_generation_log")
      * @Method("GET")
-     * @Template("OlegCallLogBundle:Logger:index.html.twig")
+     * @Template("AppCallLogBundle:Logger:index.html.twig")
      */
     public function myGenerationLogAction(Request $request) {
         if( false == $this->get('security.authorization_checker')->isGranted("ROLE_CALLLOG_USER") ){
@@ -114,12 +114,12 @@ class CallLogLoggerController extends LoggerController
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $userSecUtil = $this->get('user_security_utility');
 
-        $eventType = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findOneByName("New Call Log Book Entry Submitted");
+        $eventType = $em->getRepository('AppUserdirectoryBundle:EventTypeList')->findOneByName("New Call Log Book Entry Submitted");
         if( !$eventType ) {
             throw $this->createNotFoundException('EventTypeList is not found by name ' . "New Call Log Book Entry Submitted");
         }
 
-        //$objectType = $em->getRepository('OlegUserdirectoryBundle:EventObjectTypeList')->findOneByName("Message");
+        //$objectType = $em->getRepository('AppUserdirectoryBundle:EventObjectTypeList')->findOneByName("Message");
         $objectType = $userSecUtil->getObjectByNameTransformer($user,"Message",'UserdirectoryBundle','EventObjectTypeList');
         if( !$objectType ) {
             throw $this->createNotFoundException('EventObjectTypeList is not found by name ' . "Message");
@@ -210,9 +210,9 @@ class CallLogLoggerController extends LoggerController
         //exit();
 
         $em = $this->getDoctrine()->getManager();
-        $eventType = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->find($eventTypes[0]);
-        $objectType = $em->getRepository('OlegUserdirectoryBundle:EventObjectTypeList')->find($objectTypes[0]);
-        $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($users[0]);
+        $eventType = $em->getRepository('AppUserdirectoryBundle:EventTypeList')->find($eventTypes[0]);
+        $objectType = $em->getRepository('AppUserdirectoryBundle:EventObjectTypeList')->find($objectTypes[0]);
+        $user = $em->getRepository('AppUserdirectoryBundle:User')->find($users[0]);
 
         //Event Log showing 1 matching "New Call Log Book Entry Submitted" event(s) for user:
         //$loggerFormParams['titlePostfix'] = " matching \"".$eventType."\" event(s) for user: ".$user;
@@ -279,11 +279,11 @@ class CallLogLoggerController extends LoggerController
         }
         if( $capacity == "Attending" ) {
             //encounter_1_attendingPhysicians_0_field
-            //OlegOrderformBundle:Message message
+            //AppOrderformBundle:Message message
 
             //1) create select Message with encounter->attendingPhysicians->field(Wrapper)->user == $currentUser
 //            $entryBodySearchStr =
-//                " SELECT message.id FROM OlegOrderformBundle:Message message ".
+//                " SELECT message.id FROM AppOrderformBundle:Message message ".
 //                " LEFT JOIN message.encounter encounter ON message.id = encounter.message_id ".
 //                " LEFT JOIN scan_encounterAttendingPhysician attendingPhysician ON encounter.id = attendingPhysician.encounter_id ".
 //                " LEFT JOIN user_userWrapper userWrapper ON attendingPhysician.id = userWrapper.user ".
@@ -325,7 +325,7 @@ class CallLogLoggerController extends LoggerController
      *
      * @Route("/event-log-per-object/", name="calllog_event-log-per-object_log")
      * @Method("GET")
-     * @Template("OlegCallLogBundle:Logger:index.html.twig")
+     * @Template("AppCallLogBundle:Logger:index.html.twig")
      */
     public function calllogEventLogPerObjectAction(Request $request)
     {

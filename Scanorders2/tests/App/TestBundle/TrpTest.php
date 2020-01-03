@@ -1,14 +1,14 @@
 <?php
 
-namespace Tests\Oleg\TestBundle;
+namespace Tests\App\TestBundle;
 
-use Tests\Oleg\TestBundle\WebTestBase;
+use Tests\App\TestBundle\WebTestBase;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
-//./bin/simple-phpunit tests/Oleg/TranslationalResearchBundle/Controller/TranslationalResearchControllerTest.php
+//./bin/simple-phpunit tests/App/TranslationalResearchBundle/Controller/TranslationalResearchControllerTest.php
 
 class TrpTest extends WebTestBase
 {
@@ -31,7 +31,7 @@ class TrpTest extends WebTestBase
 
         $this->logIn();
 
-        $projects = $this->em->getRepository('OlegTranslationalResearchBundle:Project')->findAll();
+        $projects = $this->em->getRepository('AppTranslationalResearchBundle:Project')->findAll();
         //$transresUtil = $this->container->get('transres_util');
         //$projects = $transresUtil->getAvailableProjects();
 
@@ -45,10 +45,10 @@ class TrpTest extends WebTestBase
 
         //Test Show
         //[2019-12-12 21:43:17] request.CRITICAL: Uncaught PHP Exception Twig\Error\RuntimeError:
-        // "Impossible to access an attribute ("id") on a null variable in "OlegUserdirectoryBundle::Default/usermacros.html.twig"."
+        // "Impossible to access an attribute ("id") on a null variable in "AppUserdirectoryBundle::Default/usermacros.html.twig"."
         // at C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\scanorder\Scanorders2\vendor\twig\twig\src\Template.php line 581
         // {"exception":"[object] (Twig\\Error\\RuntimeError(code: 0): Impossible to access an attribute (\"id\") on a null variable
-        // in \"OlegUserdirectoryBundle::Default/usermacros.html.twig\". at
+        // in \"AppUserdirectoryBundle::Default/usermacros.html.twig\". at
         // C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\scanorder\\Scanorders2\\vendor\\twig\\twig\\src\\Template.php:581)"} []
 
         $crawler = $this->client->request('GET', '/translational-research/project/show/'.$projectId);
@@ -162,7 +162,7 @@ class TrpTest extends WebTestBase
 
         $this->logIn();
 
-        $invoices = $this->em->getRepository('OlegTranslationalResearchBundle:Invoice')->findAll();
+        $invoices = $this->em->getRepository('AppTranslationalResearchBundle:Invoice')->findAll();
 
         if( count($invoices) > 0 ) {
             $invoice = end($invoices);
@@ -235,7 +235,7 @@ class TrpTest extends WebTestBase
     public function testInvoicePdfSlip() {
         $this->logIn();
 
-        $invoices = $this->em->getRepository('OlegTranslationalResearchBundle:Invoice')->findAll();
+        $invoices = $this->em->getRepository('AppTranslationalResearchBundle:Invoice')->findAll();
         if( count($invoices) > 0 ) {
 
             $invoice = end($invoices);

@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Form;
+namespace App\UserdirectoryBundle\Form;
 
 
 
@@ -28,7 +28,7 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 
-use Oleg\UserdirectoryBundle\Entity\Location;
+use App\UserdirectoryBundle\Entity\Location;
 
 class BuildingType extends AbstractType
 {
@@ -59,13 +59,13 @@ class BuildingType extends AbstractType
             $params['cycle'] = $this->params['cycle'];
             $params['standalone'] = true;
             $mapper['className'] = "BuildingList";
-            $mapper['bundleName'] = "OlegUserdirectoryBundle";
+            $mapper['bundleName'] = "AppUserdirectoryBundle";
 
             //ListType($params, $mapper)
             $builder->add('list', ListType::class, array(
                 'form_custom_value' => $params,
                 'form_custom_value_mapper' => $mapper,
-                'data_class' => 'Oleg\UserdirectoryBundle\Entity\BuildingList',
+                'data_class' => 'App\UserdirectoryBundle\Entity\BuildingList',
                 'label' => false
             ));
         }
@@ -81,7 +81,7 @@ class BuildingType extends AbstractType
         ));
 
         $builder->add( 'institutions', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:Institution',
+            'class' => 'AppUserdirectoryBundle:Institution',
             'choice_label' => 'name',
             'label'=>'Institution(s):',
             'required'=> false,
@@ -101,7 +101,7 @@ class BuildingType extends AbstractType
         //GeoLocationType($this->params)
         $builder->add('geoLocation', GeoLocationType::class, array(
             'form_custom_value' => $this->params,
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\GeoLocation',
+            'data_class' => 'App\UserdirectoryBundle\Entity\GeoLocation',
             'label' => false,
             'required' => false
         ));
@@ -111,7 +111,7 @@ class BuildingType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\BuildingList',
+            'data_class' => 'App\UserdirectoryBundle\Entity\BuildingList',
             'form_custom_value' => null
             //'csrf_protection' => false,
         ));

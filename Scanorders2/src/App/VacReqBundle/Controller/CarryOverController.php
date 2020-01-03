@@ -15,21 +15,21 @@
  *  limitations under the License.
  */
 
-namespace Oleg\VacReqBundle\Controller;
+namespace App\VacReqBundle\Controller;
 
-use Oleg\UserdirectoryBundle\Entity\Roles;
-use Oleg\UserdirectoryBundle\Form\SimpleUserType;
-use Oleg\UserdirectoryBundle\Util\UserUtil;
-use Oleg\VacReqBundle\Entity\VacReqCarryOver;
-use Oleg\VacReqBundle\Entity\VacReqRequest;
-use Oleg\VacReqBundle\Entity\VacReqSettings;
-use Oleg\VacReqBundle\Entity\VacReqUserCarryOver;
-use Oleg\VacReqBundle\Form\VacReqEmailusersType;
-use Oleg\VacReqBundle\Form\VacReqGroupType;
-use Oleg\VacReqBundle\Form\VacReqRequestType;
-use Oleg\VacReqBundle\Form\VacReqUserCarryOverType;
-use Oleg\VacReqBundle\Form\VacReqUserComboboxType;
-use Oleg\VacReqBundle\Form\VacReqUserType;
+use App\UserdirectoryBundle\Entity\Roles;
+use App\UserdirectoryBundle\Form\SimpleUserType;
+use App\UserdirectoryBundle\Util\UserUtil;
+use App\VacReqBundle\Entity\VacReqCarryOver;
+use App\VacReqBundle\Entity\VacReqRequest;
+use App\VacReqBundle\Entity\VacReqSettings;
+use App\VacReqBundle\Entity\VacReqUserCarryOver;
+use App\VacReqBundle\Form\VacReqEmailusersType;
+use App\VacReqBundle\Form\VacReqGroupType;
+use App\VacReqBundle\Form\VacReqRequestType;
+use App\VacReqBundle\Form\VacReqUserCarryOverType;
+use App\VacReqBundle\Form\VacReqUserComboboxType;
+use App\VacReqBundle\Form\VacReqUserType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -47,7 +47,7 @@ class CarryOverController extends Controller
 //    /**
 //     * @Route("/carry-over-request/review/{id}", name="vacreq_carryoverrequest_review")
 //     * @Method({"GET", "POST"})
-//     * @Template("OlegVacReqBundle:CarryOver:carryoverrequest.html.twig")
+//     * @Template("AppVacReqBundle:CarryOver:carryoverrequest.html.twig")
 //     */
 //    public function carryOverRequestReviewAction(Request $request, $id)
 //    {
@@ -60,9 +60,9 @@ class CarryOverController extends Controller
 //        //$vacreqUtil = $this->get('vacreq_util');
 //        exit('not implemented');
 //
-//        $subjectUser = $em->getRepository('OlegUserdirectoryBundle:User')->find($userId);
+//        $subjectUser = $em->getRepository('AppUserdirectoryBundle:User')->find($userId);
 //
-//        $userCarryOver = $em->getRepository('OlegVacReqBundle:VacReqUserCarryOver')->findOneByUser($userId);
+//        $userCarryOver = $em->getRepository('AppVacReqBundle:VacReqUserCarryOver')->findOneByUser($userId);
 //
 //        if( !$userCarryOver ) {
 //            $userCarryOver = new VacReqUserCarryOver($subjectUser);
@@ -110,7 +110,7 @@ class CarryOverController extends Controller
     /**
      * @Route("/carry-over-vacation-days/{userId}", name="vacreq_carryover")
      * @Method({"GET", "POST"})
-     * @Template("OlegVacReqBundle:Group:carryover.html.twig")
+     * @Template("AppVacReqBundle:Group:carryover.html.twig")
      */
     public function carryOverAction(Request $request, $userId)
     {
@@ -123,9 +123,9 @@ class CarryOverController extends Controller
         $user = $this->get('security.token_storage')->getToken()->getUser();
         //$vacreqUtil = $this->get('vacreq_util');
 
-        $subjectUser = $em->getRepository('OlegUserdirectoryBundle:User')->find($userId);
+        $subjectUser = $em->getRepository('AppUserdirectoryBundle:User')->find($userId);
 
-        $userCarryOver = $em->getRepository('OlegVacReqBundle:VacReqUserCarryOver')->findOneByUser($userId);
+        $userCarryOver = $em->getRepository('AppVacReqBundle:VacReqUserCarryOver')->findOneByUser($userId);
 
         if( !$userCarryOver ) {
             $userCarryOver = new VacReqUserCarryOver($subjectUser);
@@ -252,7 +252,7 @@ class CarryOverController extends Controller
      * @Route("/carry-over-vacation-days/status/{id}/{requestName}/{status}", name="vacreq_status_change_carryover")
      * @Route("/carry-over-vacation-days/estatus/{id}/{requestName}/{status}", name="vacreq_status_email_change_carryover")
      * @Method({"GET"})
-     * @Template("OlegVacReqBundle:Request:edit.html.twig")
+     * @Template("AppVacReqBundle:Request:edit.html.twig")
      */
     public function statusAction(Request $request, $id, $requestName, $status) {
 
@@ -278,7 +278,7 @@ class CarryOverController extends Controller
             throw $this->createNotFoundException('Status is not supported (supported statuses: approved, rejected): status='.$status);
         }
 
-        $entity = $em->getRepository('OlegVacReqBundle:VacReqRequest')->find($id);
+        $entity = $em->getRepository('AppVacReqBundle:VacReqRequest')->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Request by id='.$id);

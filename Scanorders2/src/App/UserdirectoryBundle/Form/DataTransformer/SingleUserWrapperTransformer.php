@@ -23,10 +23,10 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Oleg\UserdirectoryBundle\Form\DataTransformer;
+namespace App\UserdirectoryBundle\Form\DataTransformer;
 
-use Oleg\UserdirectoryBundle\Entity\User;
-use Oleg\UserdirectoryBundle\Entity\UserWrapper;
+use App\UserdirectoryBundle\Entity\User;
+use App\UserdirectoryBundle\Entity\UserWrapper;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Doctrine\Common\Persistence\ObjectManager;

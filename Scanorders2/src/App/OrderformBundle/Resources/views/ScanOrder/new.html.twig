@@ -14,9 +14,9 @@
     limitations under the License.
 #}
 
-{% extends "OlegOrderformBundle::Default/base.html.twig" %}
+{% extends "AppOrderformBundle::Default/base.html.twig" %}
 
-{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
 {% block title %}
     Scan Order
@@ -27,7 +27,7 @@
     
     <h3 class="text-info">Scan Order</h3>
 
-    {#    {% include 'OlegOrderformBundle:ScanOrder:table.html.twig' %}       #}
+    {#    {% include 'AppOrderformBundle:ScanOrder:table.html.twig' %}       #}
 {#    EMAIL:{{ app.security.getToken().getAttribute('email') }}#}
 
     {% set diffDiagnosesField = form_part.diffDisident %}

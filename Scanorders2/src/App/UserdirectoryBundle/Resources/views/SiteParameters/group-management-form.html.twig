@@ -16,9 +16,9 @@
 
 
 {% if sitename == 'employees' %}
-    {% set extendStr = "OlegUserdirectoryBundle::Default/base.html.twig" %}
+    {% set extendStr = "AppUserdirectoryBundle::Default/base.html.twig" %}
 {% else %}
-    {% set extendStr = "OlegOrderformBundle::Default/base.html.twig" %}
+    {% set extendStr = "AppOrderformBundle::Default/base.html.twig" %}
 {% endif %}
 {% extends extendStr%}
 
@@ -30,8 +30,8 @@
 
 {% block content %}
 
-    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
-    {% import "OlegUserdirectoryBundle::SiteParameters/site-parameters-macros.html.twig" as siteparametersmacros %}
+    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "AppUserdirectoryBundle::SiteParameters/site-parameters-macros.html.twig" as siteparametersmacros %}
 
 
     {% set organizationalGroupDefaultPrototype = null %}

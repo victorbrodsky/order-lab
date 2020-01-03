@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\VacReqBundle\Controller;
+namespace App\VacReqBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -32,7 +32,7 @@ class DefaultController extends Controller
 
     /**
      * @Route("/about", name="vacreq_about_page")
-     * @Template("OlegUserdirectoryBundle:Default:about.html.twig")
+     * @Template("AppUserdirectoryBundle:Default:about.html.twig")
      */
     public function aboutAction( Request $request ) {
         return array('sitename'=>$this->container->getParameter('vacreq.sitename'));
@@ -40,7 +40,7 @@ class DefaultController extends Controller
 
 //    /**
 //     * @Route("/", name="vacreq_home")
-//     * @Template("OlegVacReqBundle:Request:index.html.twig")
+//     * @Template("AppVacReqBundle:Request:index.html.twig")
 //     * @Method("GET")
 //     */
 //    public function indexAction()
@@ -51,7 +51,7 @@ class DefaultController extends Controller
 //
 //        $em = $this->getDoctrine()->getManager();
 //
-//        $vacReqRequests = $em->getRepository('OlegVacReqBundle:VacReqRequest')->findAll();
+//        $vacReqRequests = $em->getRepository('AppVacReqBundle:VacReqRequest')->findAll();
 //
 //        return array(
 //            'vacReqRequests' => $vacReqRequests

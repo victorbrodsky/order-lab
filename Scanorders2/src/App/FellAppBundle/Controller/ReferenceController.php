@@ -15,13 +15,13 @@
  *  limitations under the License.
  */
 
-namespace Oleg\FellAppBundle\Controller;
+namespace App\FellAppBundle\Controller;
 
-use Oleg\FellAppBundle\Entity\FellowshipApplication;
-use Oleg\FellAppBundle\Entity\GoogleFormConfig;
-use Oleg\FellAppBundle\Entity\Reference;
-use Oleg\FellAppBundle\Form\GoogleFormConfigType;
-use Oleg\UserdirectoryBundle\Entity\GeoLocation;
+use App\FellAppBundle\Entity\FellowshipApplication;
+use App\FellAppBundle\Entity\GoogleFormConfig;
+use App\FellAppBundle\Entity\Reference;
+use App\FellAppBundle\Form\GoogleFormConfigType;
+use App\UserdirectoryBundle\Entity\GeoLocation;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -123,7 +123,7 @@ class ReferenceController extends Controller
         //$em = $this->getDoctrine()->getManager();
         //$user = $this->get('security.token_storage')->getToken()->getUser();
 
-        $reference = $this->getDoctrine()->getRepository('OlegFellAppBundle:Reference')->find($referenceid);
+        $reference = $this->getDoctrine()->getRepository('AppFellAppBundle:Reference')->find($referenceid);
         if( !$reference ) {
             throw new \Exception("No reference found by ID ".$referenceid);
         }

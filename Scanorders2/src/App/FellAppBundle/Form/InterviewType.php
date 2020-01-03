@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\FellAppBundle\Form;
+namespace App\FellAppBundle\Form;
 
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -52,7 +52,7 @@ class InterviewType extends AbstractType
         if( $this->params['showFull'] ) {
 
             $builder->add('interviewer', EntityType::class, array(
-                'class' => 'OlegUserdirectoryBundle:User',
+                'class' => 'AppUserdirectoryBundle:User',
                 'label' => "Interviewer:",
                 'required' => false,
                 'attr' => array('class' => 'combobox combobox-width'),
@@ -99,7 +99,7 @@ class InterviewType extends AbstractType
 //
 //                $options = array(
 //                    'label' => "Interview Location:",
-//                    'class' => 'OlegUserdirectoryBundle:Location',
+//                    'class' => 'AppUserdirectoryBundle:Location',
 //                    'required' => false,
 //                    'attr' => array('class' => 'combobox combobox-width interview-location'),
 //                );
@@ -161,7 +161,7 @@ class InterviewType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\FellAppBundle\Entity\Interview',
+            'data_class' => 'App\FellAppBundle\Entity\Interview',
             'form_custom_value' => null
             //'csrf_protection' => false,
         ));

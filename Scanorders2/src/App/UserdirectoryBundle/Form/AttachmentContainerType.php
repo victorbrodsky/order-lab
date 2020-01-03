@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Form;
+namespace App\UserdirectoryBundle\Form;
 
 
 
@@ -59,7 +59,7 @@ class AttachmentContainerType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\AttachmentContainer',
+            'data_class' => 'App\UserdirectoryBundle\Entity\AttachmentContainer',
             'form_custom_value' => null
         ));
     }

@@ -15,13 +15,13 @@
  *  limitations under the License.
  */
 
-namespace Oleg\TranslationalResearchBundle\Util;
+namespace App\TranslationalResearchBundle\Util;
 
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Oleg\TranslationalResearchBundle\Entity\Invoice;
-use Oleg\TranslationalResearchBundle\Entity\InvoiceItem;
-use Oleg\TranslationalResearchBundle\Entity\TransResSiteParameters;
+use App\TranslationalResearchBundle\Entity\Invoice;
+use App\TranslationalResearchBundle\Entity\InvoiceItem;
+use App\TranslationalResearchBundle\Entity\TransResSiteParameters;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 

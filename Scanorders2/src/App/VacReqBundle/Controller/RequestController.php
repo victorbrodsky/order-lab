@@ -15,14 +15,14 @@
  *  limitations under the License.
  */
 
-namespace Oleg\VacReqBundle\Controller;
+namespace App\VacReqBundle\Controller;
 
-use Oleg\UserdirectoryBundle\Entity\AccessRequest;
-use Oleg\VacReqBundle\Entity\VacReqRequest;
-use Oleg\VacReqBundle\Entity\VacReqRequestBusiness;
-use Oleg\VacReqBundle\Entity\VacReqRequestVacation;
-use Oleg\VacReqBundle\Form\VacReqRequestType;
-use Oleg\VacReqBundle\Util\VacReqImportData;
+use App\UserdirectoryBundle\Entity\AccessRequest;
+use App\VacReqBundle\Entity\VacReqRequest;
+use App\VacReqBundle\Entity\VacReqRequestBusiness;
+use App\VacReqBundle\Entity\VacReqRequestVacation;
+use App\VacReqBundle\Form\VacReqRequestType;
+use App\VacReqBundle\Util\VacReqImportData;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -46,7 +46,7 @@ class RequestController extends Controller
      * @Route("/carry-over-request/new", name="vacreq_carryoverrequest")
      *
      * @Method({"GET", "POST"})
-     * @Template("OlegVacReqBundle:Request:edit.html.twig")
+     * @Template("AppVacReqBundle:Request:edit.html.twig")
      */
     public function newAction(Request $request)
     {
@@ -86,7 +86,7 @@ class RequestController extends Controller
         $routeName = $request->get('_route');
         if( $routeName == "vacreq_carryoverrequest" ) {
             //carryover request
-            $requestType = $em->getRepository('OlegVacReqBundle:VacReqRequestTypeList')->findOneByAbbreviation("carryover");
+            $requestType = $em->getRepository('AppVacReqBundle:VacReqRequestTypeList')->findOneByAbbreviation("carryover");
             $title = "Request carry over of vacation days";
             $eventType = "Carry Over Request Created";
 
@@ -121,7 +121,7 @@ class RequestController extends Controller
 
         } else {
             //business/vacation request
-            $requestType = $em->getRepository('OlegVacReqBundle:VacReqRequestTypeList')->findOneByAbbreviation("business-vacation");
+            $requestType = $em->getRepository('AppVacReqBundle:VacReqRequestTypeList')->findOneByAbbreviation("business-vacation");
             $title = "Vacation/Business Travel Request";
             $eventType = "Business/Vacation Request Created";
 
@@ -288,7 +288,7 @@ class RequestController extends Controller
 
         //get $requestTypeCarryOverId
         $carryoverPendingRequests = $vacreqUtil->getPendingCarryOverRequests($user);
-        $requestTypeCarryOver = $em->getRepository('OlegVacReqBundle:VacReqRequestTypeList')->findOneByAbbreviation("carryover");
+        $requestTypeCarryOver = $em->getRepository('AppVacReqBundle:VacReqRequestTypeList')->findOneByAbbreviation("carryover");
         if( $requestTypeCarryOver ) {
             $requestTypeCarryOverId = $requestTypeCarryOver->getId();
         } else {
@@ -321,7 +321,7 @@ class RequestController extends Controller
      * @Route("/show/{id}", name="vacreq_show")
      *
      * @Method("GET")
-     * @Template("OlegVacReqBundle:Request:edit.html.twig")
+     * @Template("AppVacReqBundle:Request:edit.html.twig")
      */
     public function showAction(Request $request, $id)
     {
@@ -332,7 +332,7 @@ class RequestController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegVacReqBundle:VacReqRequest')->find($id);
+        $entity = $em->getRepository('AppVacReqBundle:VacReqRequest')->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Vacation Request by id='.$id);
@@ -374,19 +374,19 @@ class RequestController extends Controller
      * @Route("/review/{id}", name="vacreq_review")
      *
      * @Method({"GET", "POST"})
-     * @Template("OlegVacReqBundle:Request:edit.html.twig")
+     * @Template("AppVacReqBundle:Request:edit.html.twig")
      */
     public function editAction(Request $request, $id)
     {
         //$deleteForm = $this->createDeleteForm($vacReqRequest);
-        //$editForm = $this->createForm('Oleg\VacReqBundle\Form\VacReqRequestType', $vacReqRequest);
+        //$editForm = $this->createForm('App\VacReqBundle\Form\VacReqRequestType', $vacReqRequest);
 
         $logger = $this->container->get('logger');
         $em = $this->getDoctrine()->getManager();
         $vacreqUtil = $this->get('vacreq_util');
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
-        $entity = $em->getRepository('OlegVacReqBundle:VacReqRequest')->find($id);
+        $entity = $em->getRepository('AppVacReqBundle:VacReqRequest')->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Vacation Request by id='.$id);
@@ -695,7 +695,7 @@ class RequestController extends Controller
      * @Route("/status/{id}/{requestName}/{status}", name="vacreq_status_change")
      * @Route("/estatus/{id}/{requestName}/{status}", name="vacreq_status_email_change")
      * @Method({"GET"})
-     * @Template("OlegVacReqBundle:Request:edit.html.twig")
+     * @Template("AppVacReqBundle:Request:edit.html.twig")
      */
     public function statusAction(Request $request, $id, $requestName, $status) {
 
@@ -709,7 +709,7 @@ class RequestController extends Controller
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $vacreqUtil = $this->get('vacreq_util');
 
-        $entity = $em->getRepository('OlegVacReqBundle:VacReqRequest')->find($id);
+        $entity = $em->getRepository('AppVacReqBundle:VacReqRequest')->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Request by id='.$id);
@@ -995,7 +995,7 @@ class RequestController extends Controller
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
-        $entity = $em->getRepository('OlegVacReqBundle:VacReqRequest')->find($id);
+        $entity = $em->getRepository('AppVacReqBundle:VacReqRequest')->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Request by id='.$id);
@@ -1109,7 +1109,7 @@ class RequestController extends Controller
         $routeName = $request->get('_route');
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
-        $entity = $em->getRepository('OlegVacReqBundle:VacReqRequest')->find($id);
+        $entity = $em->getRepository('AppVacReqBundle:VacReqRequest')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Request by id=' . $id);
@@ -1193,7 +1193,7 @@ class RequestController extends Controller
         $em = $this->getDoctrine()->getManager();
         //$user = $this->get('security.token_storage')->getToken()->getUser();
 
-        $entity = $em->getRepository('OlegVacReqBundle:VacReqRequest')->find($id);
+        $entity = $em->getRepository('AppVacReqBundle:VacReqRequest')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Request by id=' . $id);
@@ -1326,7 +1326,7 @@ class RequestController extends Controller
                     ' <a href="'.$groupPageUrl.'" target="_blank">Please create a group and/or assign a Submitter role to your user account.</a> ';
             } else {
                 //regular user
-                $adminUsers = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole("ROLE_VACREQ_ADMIN", "infos.lastName", true);
+                $adminUsers = $em->getRepository('AppUserdirectoryBundle:User')->findUserByRole("ROLE_VACREQ_ADMIN", "infos.lastName", true);
                 $emails = array();
                 foreach ($adminUsers as $adminUser) {
                     $singleEmail = $adminUser->getSingleEmail();
@@ -1502,7 +1502,7 @@ class RequestController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $repository = $em->getRepository('OlegVacReqBundle:VacReqRequest');
+        $repository = $em->getRepository('AppVacReqBundle:VacReqRequest');
 
         $dql =  $repository->createQueryBuilder("request");
         $dql->select('request');
@@ -1564,7 +1564,7 @@ class RequestController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $repository = $em->getRepository('OlegVacReqBundle:VacReqRequest');
+        $repository = $em->getRepository('AppVacReqBundle:VacReqRequest');
 
         $dql =  $repository->createQueryBuilder("request");
         $dql->select('request');
@@ -1656,7 +1656,7 @@ class RequestController extends Controller
     }
     public function findUniqueUserRequests() {
         $em = $this->getDoctrine()->getManager();
-        $repository = $em->getRepository('OlegVacReqBundle:VacReqRequest');
+        $repository = $em->getRepository('AppVacReqBundle:VacReqRequest');
 
         $dql =  $repository->createQueryBuilder("request");
         //$dql->select('request');
@@ -1684,7 +1684,7 @@ class RequestController extends Controller
         $vacreqUtil = $this->get('vacreq_util');
         $logger = $this->container->get('logger');
         $em = $this->getDoctrine()->getManager();
-        $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($userId);
+        $user = $em->getRepository('AppUserdirectoryBundle:User')->find($userId);
         $overlapRequests = $vacreqUtil->getOverlappedUserRequests($user,true,true);
         //$overlapRequests = $vacreqUtil->getNotOverlapNumberOfWorkingDays($user,'requestVacation');
 
@@ -1714,7 +1714,7 @@ class RequestController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         //find pending carryover request
-        $repository = $em->getRepository('OlegVacReqBundle:VacReqRequest');
+        $repository = $em->getRepository('AppVacReqBundle:VacReqRequest');
         $dql =  $repository->createQueryBuilder("request");
         $dql->leftJoin("request.institution", "institution");
         $dql->leftJoin("request.requestType", "requestType");

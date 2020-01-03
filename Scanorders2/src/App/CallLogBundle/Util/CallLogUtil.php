@@ -15,38 +15,38 @@
  *  limitations under the License.
  */
 
-namespace Oleg\CallLogBundle\Util;
+namespace App\CallLogBundle\Util;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query\ResultSetMapping;
-use Oleg\CallLogBundle\Form\CalllogNavbarFilterType;
-use Oleg\OrderformBundle\Entity\Accession;
-use Oleg\OrderformBundle\Entity\Block;
-use Oleg\OrderformBundle\Entity\CalllogEntryMessage;
-use Oleg\OrderformBundle\Entity\Encounter;
-use Oleg\OrderformBundle\Entity\EncounterAttendingPhysician;
-use Oleg\OrderformBundle\Entity\EncounterDate;
-use Oleg\OrderformBundle\Entity\EncounterReferringProvider;
-use Oleg\OrderformBundle\Entity\FormVersion;
-use Oleg\OrderformBundle\Entity\MrnType;
-use Oleg\OrderformBundle\Entity\Part;
-use Oleg\OrderformBundle\Entity\Patient;
-use Oleg\OrderformBundle\Entity\PatientDob;
-use Oleg\OrderformBundle\Entity\PatientFirstName;
-use Oleg\OrderformBundle\Entity\PatientLastName;
-use Oleg\OrderformBundle\Entity\PatientListHierarchy;
-use Oleg\OrderformBundle\Entity\PatientMasterMergeRecord;
-use Oleg\OrderformBundle\Entity\PatientMiddleName;
-use Oleg\OrderformBundle\Entity\PatientMrn;
-use Oleg\OrderformBundle\Entity\PatientSex;
-use Oleg\OrderformBundle\Entity\PatientSuffix;
-use Oleg\OrderformBundle\Entity\Procedure;
-use Oleg\OrderformBundle\Form\DataTransformer\MrnTypeTransformer;
-use Oleg\UserdirectoryBundle\Entity\Document;
-use Oleg\UserdirectoryBundle\Entity\GeoLocation;
-use Oleg\UserdirectoryBundle\Entity\Location;
-use Oleg\UserdirectoryBundle\Entity\ObjectTypeText;
-use Oleg\UserdirectoryBundle\Entity\Spot;
-use Oleg\UserdirectoryBundle\Entity\Tracker;
+use App\CallLogBundle\Form\CalllogNavbarFilterType;
+use App\OrderformBundle\Entity\Accession;
+use App\OrderformBundle\Entity\Block;
+use App\OrderformBundle\Entity\CalllogEntryMessage;
+use App\OrderformBundle\Entity\Encounter;
+use App\OrderformBundle\Entity\EncounterAttendingPhysician;
+use App\OrderformBundle\Entity\EncounterDate;
+use App\OrderformBundle\Entity\EncounterReferringProvider;
+use App\OrderformBundle\Entity\FormVersion;
+use App\OrderformBundle\Entity\MrnType;
+use App\OrderformBundle\Entity\Part;
+use App\OrderformBundle\Entity\Patient;
+use App\OrderformBundle\Entity\PatientDob;
+use App\OrderformBundle\Entity\PatientFirstName;
+use App\OrderformBundle\Entity\PatientLastName;
+use App\OrderformBundle\Entity\PatientListHierarchy;
+use App\OrderformBundle\Entity\PatientMasterMergeRecord;
+use App\OrderformBundle\Entity\PatientMiddleName;
+use App\OrderformBundle\Entity\PatientMrn;
+use App\OrderformBundle\Entity\PatientSex;
+use App\OrderformBundle\Entity\PatientSuffix;
+use App\OrderformBundle\Entity\Procedure;
+use App\OrderformBundle\Form\DataTransformer\MrnTypeTransformer;
+use App\UserdirectoryBundle\Entity\Document;
+use App\UserdirectoryBundle\Entity\GeoLocation;
+use App\UserdirectoryBundle\Entity\Location;
+use App\UserdirectoryBundle\Entity\ObjectTypeText;
+use App\UserdirectoryBundle\Entity\Spot;
+use App\UserdirectoryBundle\Entity\Tracker;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -81,7 +81,7 @@ class CallLogUtil
     //auto-generating a unique MRN on Scan Order, but prepend a prefix "MERGE"
     public function autoGenerateMergeMrn( $patient ) {
 
-        $keyTypeMergeID = $this->em->getRepository('OlegOrderformBundle:MrnType')->findOneByName("Merge ID");
+        $keyTypeMergeID = $this->em->getRepository('AppOrderformBundle:MrnType')->findOneByName("Merge ID");
         if( !$keyTypeMergeID ) {
             $msg = 'MrnType not found by name Merge ID';
             throw new \Exception($msg);
@@ -90,7 +90,7 @@ class CallLogUtil
         $extra = array( "keytype" => $keyTypeMergeID->getId() );
         //$extra = null;
 
-        $nextKey = $this->em->getRepository('OlegOrderformBundle:Patient')->getNextNonProvided($patient,$extra,null,"MERGE-ID");
+        $nextKey = $this->em->getRepository('AppOrderformBundle:Patient')->getNextNonProvided($patient,$extra,null,"MERGE-ID");
 
         //convert NOMRNPROVIDED-0000000002 to MERGE-ID-0000000002
         //$nextKey = str_replace("NOMRNPROVIDED","",$nextKey);
@@ -122,7 +122,7 @@ class CallLogUtil
             return $msg;
         }
 
-        $keyTypeMergeID = $this->em->getRepository('OlegOrderformBundle:MrnType')->findOneByName("Merge ID");
+        $keyTypeMergeID = $this->em->getRepository('AppOrderformBundle:MrnType')->findOneByName("Merge ID");
         if( !$keyTypeMergeID ) {
             $msg = 'MrnType not found by name Merge ID';
             //throw new \Exception($msg);
@@ -153,7 +153,7 @@ class CallLogUtil
             return $msg;
         }
 
-        $keyTypeMergeID = $this->em->getRepository('OlegOrderformBundle:MrnType')->findOneByName("Merge ID");
+        $keyTypeMergeID = $this->em->getRepository('AppOrderformBundle:MrnType')->findOneByName("Merge ID");
         if( !$keyTypeMergeID ) {
             $msg = 'MrnType not found by name Merge ID';
             //throw new \Exception($msg);
@@ -161,7 +161,7 @@ class CallLogUtil
         }
 
         //check if invalid PatientMrn already exists by field and keytype
-//        $patientMrns = $this->em->getRepository('OlegOrderformBundle:PatientMrn')->findBy(
+//        $patientMrns = $this->em->getRepository('AppOrderformBundle:PatientMrn')->findBy(
 //            array(
 //                'keytype' => $keyTypeMergeID->getId(),
 //                'field' => $mrnId,
@@ -212,7 +212,7 @@ class CallLogUtil
 
     public function getMergedPatients( $mergeId, $mergedPatients=null, $existingPatientIds=null ) {
 
-        $keyTypeMergeID = $this->em->getRepository('OlegOrderformBundle:MrnType')->findOneByName("Merge ID");
+        $keyTypeMergeID = $this->em->getRepository('AppOrderformBundle:MrnType')->findOneByName("Merge ID");
         if( !$keyTypeMergeID ) {
             $msg = 'MrnType not found by name Merge ID';
             throw new \Exception($msg);
@@ -221,7 +221,7 @@ class CallLogUtil
 
         $parameters = array();
 
-        $repository = $this->em->getRepository('OlegOrderformBundle:Patient');
+        $repository = $this->em->getRepository('AppOrderformBundle:Patient');
         $dql = $repository->createQueryBuilder("patient");
         $dql->leftJoin("patient.mrn", "mrn");
 
@@ -909,7 +909,7 @@ class CallLogUtil
         }
         //echo "mrntypeId=".$mrntypeId."<br>";
 
-        $mrntype = $this->em->getRepository('OlegOrderformBundle:MrnType')->find($mrntypeId);
+        $mrntype = $this->em->getRepository('AppOrderformBundle:MrnType')->find($mrntypeId);
         if( !$mrntype ) {
             //exit("MrnType not found");
             //$msg = 'MrnType not found by ID ' . $mrntypeId;
@@ -922,7 +922,7 @@ class CallLogUtil
         return $mrntype;
 
 //        if( $mrntype->getName() == "Auto-generated MRN" ) {
-//            $convertedMrntype = $this->em->getRepository('OlegOrderformBundle:MrnType')->findOneByName("Existing Auto-generated MRN");
+//            $convertedMrntype = $this->em->getRepository('AppOrderformBundle:MrnType')->findOneByName("Existing Auto-generated MRN");
 //
 //            if( $asObject ) {
 //                return $convertedMrntype;
@@ -932,7 +932,7 @@ class CallLogUtil
 //        }
 //
 //        if( $mrntype->getName() == "Existing Auto-generated MRN" ) {
-//            $convertedMrntype = $this->em->getRepository('OlegOrderformBundle:MrnType')->findOneByName("Auto-generated MRN");
+//            $convertedMrntype = $this->em->getRepository('AppOrderformBundle:MrnType')->findOneByName("Auto-generated MRN");
 //
 //            if( $asObject ) {
 //                return $convertedMrntype;
@@ -953,7 +953,7 @@ class CallLogUtil
         $institution = $userSecUtil->getCurrentUserInstitution($user);
         $encounter = new Encounter();
         $encounter->setInstitution($institution);
-        $nextKey = $this->em->getRepository('OlegOrderformBundle:Encounter')->getNextNonProvided($encounter);
+        $nextKey = $this->em->getRepository('AppOrderformBundle:Encounter')->getNextNonProvided($encounter);
         return $nextKey;
     }
 
@@ -964,44 +964,44 @@ class CallLogUtil
 //        //patient
 //        $patient = new Patient();
 //        $patient->setInstitution($institution);
-//        $nextKey = $this->em->getRepository('OlegOrderformBundle:Patient')->getNextNonProvided($patient);
+//        $nextKey = $this->em->getRepository('AppOrderformBundle:Patient')->getNextNonProvided($patient);
 //        echo "next key=".$nextKey."<br>";
 //
 //        //encounter
 //        $encounter = new Encounter();
 //        $encounter->setInstitution($institution);
 //        $patient->addEncounter($encounter);
-//        $nextKey = $this->em->getRepository('OlegOrderformBundle:Encounter')->getNextNonProvided($encounter);
+//        $nextKey = $this->em->getRepository('AppOrderformBundle:Encounter')->getNextNonProvided($encounter);
 //        echo "next key=".$nextKey."<br>";
 //
 //        //procedure
 //        $procedure = new Procedure();
 //        $procedure->setInstitution($institution);
 //        $encounter->addProcedure($procedure);
-//        $nextKey = $this->em->getRepository('OlegOrderformBundle:Procedure')->getNextNonProvided($procedure);
+//        $nextKey = $this->em->getRepository('AppOrderformBundle:Procedure')->getNextNonProvided($procedure);
 //        echo "next key=".$nextKey."<br>";
 //
 //        //accession
 //        $accession = new Accession(true,'valid');
 //        $accession->setInstitution($institution);
 //        $procedure->addAccession($accession);
-//        $accessionKey = $this->em->getRepository('OlegOrderformBundle:AccessionType')->findOneByName('Auto-generated Accession Number');
+//        $accessionKey = $this->em->getRepository('AppOrderformBundle:AccessionType')->findOneByName('Auto-generated Accession Number');
 //        $accession->getAccession()->first()->setKeytype($accessionKey);
-//        $nextKey = $this->em->getRepository('OlegOrderformBundle:Accession')->getNextNonProvided($accession);
+//        $nextKey = $this->em->getRepository('AppOrderformBundle:Accession')->getNextNonProvided($accession);
 //        echo "next key=".$nextKey."<br>";
 //
 //        //part
 //        $part = new Part(true,'valid');
 //        $part->setInstitution($institution);
 //        $accession->addPart($part);
-//        $nextKey = $this->em->getRepository('OlegOrderformBundle:Part')->getNextNonProvided($part);
+//        $nextKey = $this->em->getRepository('AppOrderformBundle:Part')->getNextNonProvided($part);
 //        echo "next key=".$nextKey."<br>";
 //
 //        //block
 //        $block = new Block(true,'valid');
 //        $block->setInstitution($institution);
 //        $part->addBlock($block);
-//        $nextKey = $this->em->getRepository('OlegOrderformBundle:Block')->getNextNonProvided($block);
+//        $nextKey = $this->em->getRepository('AppOrderformBundle:Block')->getNextNonProvided($block);
 //        echo "next key=".$nextKey."<br>";
 //
 //        return $nextKey;
@@ -1198,8 +1198,8 @@ class CallLogUtil
         $level = 3;
 
         //PatientListHierarchy
-        //OlegOrderformBundle
-        $patientLists = $this->em->getRepository('OlegOrderformBundle:PatientListHierarchy')->findBy(
+        //AppOrderformBundle
+        $patientLists = $this->em->getRepository('AppOrderformBundle:PatientListHierarchy')->findBy(
             array(
                 'type' => array('default','user-added'),
                 'level' => $level
@@ -1223,7 +1223,7 @@ class CallLogUtil
             if( $location ) {
                 if( $location->getId() ) {
                     //echo "find location by ID=".$location->getId()."<br>";
-                    $locationDb = $this->em->getRepository('OlegUserdirectoryBundle:Location')->find($location->getId());
+                    $locationDb = $this->em->getRepository('AppUserdirectoryBundle:Location')->find($location->getId());
                     if ($locationDb) {
                         //echo "set found location by ID=".$location->getId()."<br>";
                         $spot->setCurrentLocation($locationDb);
@@ -1254,7 +1254,7 @@ class CallLogUtil
                     $parameters = array();
 
                     //if id is not provided, then find location by the fields (except prefilled locationTypes="Encounter Location" and name="New York Hospital Location")
-                    $repository = $this->em->getRepository('OlegUserdirectoryBundle:Location');
+                    $repository = $this->em->getRepository('AppUserdirectoryBundle:Location');
                     $dql = $repository->createQueryBuilder("list");
 
                     if( $location->getName() ) {
@@ -1702,7 +1702,7 @@ class CallLogUtil
         //echo " (+1)=> $level <br>";
         $newListElement->setLevel($level);
         //set group
-        $group = $this->em->getRepository('OlegOrderformBundle:PatientListHierarchyGroupType')->findOneByName('Patient');
+        $group = $this->em->getRepository('AppOrderformBundle:PatientListHierarchyGroupType')->findOneByName('Patient');
         $newListElement->setOrganizationalGroupType($group);
 
         $patientList->addChild($newListElement);
@@ -1722,7 +1722,7 @@ class CallLogUtil
         } else {
             return null;
         }
-        $repository = $this->em->getRepository('OlegOrderformBundle:PatientListHierarchy');
+        $repository = $this->em->getRepository('AppOrderformBundle:PatientListHierarchy');
         $dql = $repository->createQueryBuilder("list");
 
         $dql->where("list.parent = :parentId AND list.patient = :patientId");
@@ -1752,10 +1752,10 @@ class CallLogUtil
         if( !$patientList ) {
             $patientListName = "Pathology Call Complex Patients";
 
-            //$patientList = $this->em->getRepository('OlegOrderformBundle:PatientListHierarchy')->findOneByName($patientListName);
+            //$patientList = $this->em->getRepository('AppOrderformBundle:PatientListHierarchy')->findOneByName($patientListName);
             $patientList = null;
 
-            $patientLists = $this->em->getRepository('OlegOrderformBundle:PatientListHierarchy')->findBy(array('name'=>$patientListName,'type'=>array('default','user-added')));
+            $patientLists = $this->em->getRepository('AppOrderformBundle:PatientListHierarchy')->findBy(array('name'=>$patientListName,'type'=>array('default','user-added')));
             if( count($patientLists) > 0 ) {
                 $patientList = $patientLists[0];
             }
@@ -1853,7 +1853,7 @@ class CallLogUtil
 
         ///////////// 1) get all real users /////////////
         $query = $em->createQueryBuilder()
-            ->from('OlegUserdirectoryBundle:User', 'list')
+            ->from('AppUserdirectoryBundle:User', 'list')
             ->select("list")
             //->groupBy('list.id')
             ->leftJoin("list.infos", "infos")
@@ -1877,7 +1877,7 @@ class CallLogUtil
         ///////////// 2) default user wrappers for this source ///////////////
         ///////////// 3) user-added user wrappers created by logged in user for this source ///////////////
         $query = $em->createQueryBuilder()
-            ->from('OlegUserdirectoryBundle:UserWrapper', 'list')
+            ->from('AppUserdirectoryBundle:UserWrapper', 'list')
             ->select("list")
             ->leftJoin("list.user", "user")
             ->leftJoin("user.infos", "infos")
@@ -1966,15 +1966,15 @@ class CallLogUtil
         if( strpos($messageCategoryIdStr, '_') !== false ) {
             list($messageCategoryStr, $messageCategoryId) = explode('_', $messageCategoryIdStr);
             //echo "search messageCategoryId=".$messageCategoryId."<br>";
-            $messageCategoryEntity = $this->em->getRepository('OlegOrderformBundle:MessageCategory')->find($messageCategoryId);
+            $messageCategoryEntity = $this->em->getRepository('AppOrderformBundle:MessageCategory')->find($messageCategoryId);
         } else {
             $mapper = array(
-                'prefix' => "Oleg",
+                'prefix' => "App",
                 'className' => "MessageCategory",
                 'bundleName' => "OrderformBundle"
             );
-            //$messageCategoryEntity = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($messageCategory);
-            $messageCategoryEntity = $this->em->getRepository('OlegOrderformBundle:MessageCategory')->findNodeByPartialName($messageCategoryIdStr,$mapper);
+            //$messageCategoryEntity = $em->getRepository('AppOrderformBundle:MessageCategory')->findOneByName($messageCategory);
+            $messageCategoryEntity = $this->em->getRepository('AppOrderformBundle:MessageCategory')->findNodeByPartialName($messageCategoryIdStr,$mapper);
         }
 
         return $messageCategoryEntity;
@@ -2061,7 +2061,7 @@ class CallLogUtil
                     //If current message status = "Post-deletion Draft",
                     // and the user clicks "Finalize & Sign", check in the Event Log if this message ever had a status of "Signed",
 
-                    //$signedMessages = $this->em->getRepository('OlegOrderformBundle:Message')->findByOidAndStatus($oid,"Signed");
+                    //$signedMessages = $this->em->getRepository('AppOrderformBundle:Message')->findByOidAndStatus($oid,"Signed");
                     //if( count($signedMessages) > 0 ) {
                     if( $this->hadMessageStatus($oid,"Signed") ) {
                         // if yes - save the new copy/version of the message with message status = "Signed, Amended",
@@ -2075,7 +2075,7 @@ class CallLogUtil
         }
 
         if( $newStatusStr ) {
-            $newMessageStatusObj = $this->em->getRepository('OlegOrderformBundle:MessageStatusList')->findOneByName($newStatusStr);
+            $newMessageStatusObj = $this->em->getRepository('AppOrderformBundle:MessageStatusList')->findOneByName($newStatusStr);
         }
         //exit("newMessageStatusObj=".$newMessageStatusObj);
 
@@ -2086,14 +2086,14 @@ class CallLogUtil
     public function hadMessageStatus( $oid, $statusName="Signed" ) {
         $sitename = "calllog";
 
-        $repository = $this->em->getRepository('OlegUserdirectoryBundle:Logger');
+        $repository = $this->em->getRepository('AppUserdirectoryBundle:Logger');
         $dql = $repository->createQueryBuilder("logger");
 
         $dql->innerJoin('logger.eventType', 'eventType');
         $dql->leftJoin('logger.objectType', 'objectType');
         $dql->leftJoin('logger.site', 'site');
 
-        //$dql->andWhere("logger.entityNamespace = 'Oleg\OrderformBundle\Entity'");
+        //$dql->andWhere("logger.entityNamespace = 'App\OrderformBundle\Entity'");
         $dql->andWhere("logger.entityName = 'Message'");
         $dql->andWhere("site.abbreviation = '".$sitename."'");
 
@@ -2125,7 +2125,7 @@ class CallLogUtil
         $maxVersion = 0;
 
         //get encounters found by provided encounter's key (keytype and number)
-        $otherEncounters = $this->em->getRepository('OlegOrderformBundle:Encounter')->findAllEncountersByEncounter($encounter);
+        $otherEncounters = $this->em->getRepository('AppOrderformBundle:Encounter')->findAllEncountersByEncounter($encounter);
 
         foreach( $otherEncounters as $otherEncounter ) {
             $otherEncounter->setStatus('invalid');
@@ -2148,7 +2148,7 @@ class CallLogUtil
     }
 
     public function incrementVersionEncounterFamily( $encounter ) {
-        $maxVersion = $this->em->getRepository('OlegOrderformBundle:Encounter')->getMaxEncounterVersion($encounter);
+        $maxVersion = $this->em->getRepository('AppOrderformBundle:Encounter')->getMaxEncounterVersion($encounter);
         //increment encounter version for current encounter
         $encounterIncrementedVersion = $maxVersion + 1;
         //echo "encounterIncrementedVersion=".$encounterIncrementedVersion."<br>";
@@ -2156,7 +2156,7 @@ class CallLogUtil
     }
 
     public function isMessageVersionMatch( $message, $latestNextMessageVersion ) {
-        $maxVersion = $this->em->getRepository('OlegOrderformBundle:Message')->getMaxMessageVersion($message);
+        $maxVersion = $this->em->getRepository('AppOrderformBundle:Message')->getMaxMessageVersion($message);
 
         //$maxVersion = $maxVersion + 1; //test
         //echo "$maxVersion < $latestNextMessageVersion<br>";
@@ -2168,7 +2168,7 @@ class CallLogUtil
     }
 
     public function isEncounterVersionMatch( $encounter, $latestNextEncounterVersion ) {
-        $maxVersion = $this->em->getRepository('OlegOrderformBundle:Encounter')->getMaxEncounterVersion($encounter);
+        $maxVersion = $this->em->getRepository('AppOrderformBundle:Encounter')->getMaxEncounterVersion($encounter);
 
         //echo "$maxVersion < $latestNextEncounterVersion<br>";
         if( $maxVersion < $latestNextEncounterVersion ) {
@@ -2179,7 +2179,7 @@ class CallLogUtil
     }
 
     public function isLatestEncounterVersion( $encounter ) {
-        $maxVersion = $this->em->getRepository('OlegOrderformBundle:Encounter')->getMaxEncounterVersion($encounter);
+        $maxVersion = $this->em->getRepository('AppOrderformBundle:Encounter')->getMaxEncounterVersion($encounter);
 
         //echo "$maxVersion < $latestNextEncounterVersion<br>";
         if( $maxVersion == $encounter->getVersion() ) {
@@ -2198,7 +2198,7 @@ class CallLogUtil
         }
         //echo "encounter=".$encounter->getId()."<br>";
 
-        $maxVersion = $this->em->getRepository('OlegOrderformBundle:Encounter')->getMaxEncounterVersion($encounter);
+        $maxVersion = $this->em->getRepository('AppOrderformBundle:Encounter')->getMaxEncounterVersion($encounter);
 
         //echo "$maxVersion == ".$encounter->getVersion()."<br>";
         if( $maxVersion != $encounter->getVersion() ) {
@@ -2337,7 +2337,7 @@ class CallLogUtil
         //echo "sundayDBStr=".$sundayDBStr."<br>";
 
         //get the sum of timeSpentMinutes from CalllogEntryMessage for Message's provider for this week by orderdate
-        $repository = $this->em->getRepository('OlegOrderformBundle:Message');
+        $repository = $this->em->getRepository('AppOrderformBundle:Message');
         $dql =  $repository->createQueryBuilder("message");
         $dql->leftJoin("message.calllogEntryMessage","calllogEntryMessage");
         $dql->leftJoin("message.provider","provider");
@@ -2418,7 +2418,7 @@ class CallLogUtil
     //get the date of last entry for this patient
     public function getLastEntryDate( $patient ) {
         //get the sum of timeSpentMinutes from CalllogEntryMessage for Message's provider for this week by orderdate
-        $repository = $this->em->getRepository('OlegOrderformBundle:Message');
+        $repository = $this->em->getRepository('AppOrderformBundle:Message');
         $dql =  $repository->createQueryBuilder("message");
         $dql->select('message');
         $dql->leftJoin("message.messageStatus","messageStatus");
@@ -2485,7 +2485,7 @@ class CallLogUtil
         //$info = "Testaaa authors";
 
         $messageOid = $message->getOid();
-        $messages = $this->em->getRepository('OlegOrderformBundle:Message')->findAllMessagesByOid($messageOid);
+        $messages = $this->em->getRepository('AppOrderformBundle:Message')->findAllMessagesByOid($messageOid);
 
         if( $message->getProvider() ) {
             $providerId = $message->getProvider()->getId();
@@ -2527,7 +2527,7 @@ class CallLogUtil
         $oid = $message->getOid();
         $parameters = array();
 
-        $repository = $this->em->getRepository('OlegOrderformBundle:Message');
+        $repository = $this->em->getRepository('AppOrderformBundle:Message');
         $dql = $repository->createQueryBuilder("message");
 
         $dql->where("message.oid = :oid");
@@ -2547,7 +2547,7 @@ class CallLogUtil
     }
 
     public function getAllMessagesByOid($messageOid,$asCommaSeparetedString=true) {
-        $messages = $this->em->getRepository('OlegOrderformBundle:Message')->findAllMessagesByOid($messageOid);
+        $messages = $this->em->getRepository('AppOrderformBundle:Message')->findAllMessagesByOid($messageOid);
 
         if( !$asCommaSeparetedString ) {
             return $messages;
@@ -2576,12 +2576,12 @@ class CallLogUtil
             return false;
         }
 
-        $messageStatusDeleted = $em->getRepository('OlegOrderformBundle:MessageStatusList')->findOneByName("Deleted");
+        $messageStatusDeleted = $em->getRepository('AppOrderformBundle:MessageStatusList')->findOneByName("Deleted");
         if( !$messageStatusDeleted ) {
             throw new \Exception( "Message Status is not found by name '"."Deleted"."'" );
         }
 
-        $messages = $em->getRepository('OlegOrderformBundle:Message')->findByOid($message->getOid());
+        $messages = $em->getRepository('AppOrderformBundle:Message')->findByOid($message->getOid());
 
         $deletedMessageInfos = array();
 
@@ -2624,7 +2624,7 @@ class CallLogUtil
 
         $messageCategory = $userSecUtil->getSiteSettingParameter('messageCategory',$sitename);
         if( !$messageCategory ) {
-            $messageCategory = $this->em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName("Pathology Call Log Entry");
+            $messageCategory = $this->em->getRepository('AppOrderformBundle:MessageCategory')->findOneByName("Pathology Call Log Entry");
         }
 
         return $messageCategory;
@@ -2636,11 +2636,11 @@ class CallLogUtil
 
         $keytypemrn = $userSecUtil->getSiteSettingParameter('keytypemrn',$sitename);
         if( !$keytypemrn ) {
-            $keytypemrn = $this->em->getRepository('OlegOrderformBundle:MrnType')->findOneByName("New York Hospital MRN");
+            $keytypemrn = $this->em->getRepository('AppOrderformBundle:MrnType')->findOneByName("New York Hospital MRN");
         }
 
         if( !$keytypemrn ) {
-            $keytypemrns = $this->em->getRepository('OlegOrderformBundle:MrnType')->findAll();
+            $keytypemrns = $this->em->getRepository('AppOrderformBundle:MrnType')->findAll();
             if( count($keytypemrns) > 0 ) {
                 $keytypemrn = $keytypemrns[0];
             }
@@ -2656,7 +2656,7 @@ class CallLogUtil
 
         $withdummyfields = true;
         //$locationTypePrimary = null;
-        $locationType = $this->em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Encounter Location");
+        $locationType = $this->em->getRepository('AppUserdirectoryBundle:LocationTypeList')->findOneByName("Encounter Location");
         if (!$locationType) {
             throw new \Exception('Location type is not found by name Encounter Location');
         }
@@ -2698,14 +2698,14 @@ class CallLogUtil
             //city
             $city = $userSecUtil->getSiteSettingParameter('city',$sitename);
             if( !$city ) {
-                $city = $this->em->getRepository('OlegUserdirectoryBundle:CityList')->findOneByName('New York');
+                $city = $this->em->getRepository('AppUserdirectoryBundle:CityList')->findOneByName('New York');
             }
             $geoLocation->setCity($city);
 
             //state
             $state = $userSecUtil->getSiteSettingParameter('state',$sitename);
             if( !$state ) {
-                $state = $this->em->getRepository('OlegUserdirectoryBundle:States')->findOneByName('New York');
+                $state = $this->em->getRepository('AppUserdirectoryBundle:States')->findOneByName('New York');
             }
             $geoLocation->setState($state);
 
@@ -2719,7 +2719,7 @@ class CallLogUtil
             //country
             $country = $userSecUtil->getSiteSettingParameter('country',$sitename);
             if( !$country ) {
-                $country = $this->em->getRepository('OlegUserdirectoryBundle:Countries')->findOneByName('New York');
+                $country = $this->em->getRepository('AppUserdirectoryBundle:Countries')->findOneByName('New York');
             }
             $geoLocation->setCountry($country);
 
@@ -2839,7 +2839,7 @@ class CallLogUtil
         $subquery = $em->createQueryBuilder()
             ->select('COUNT(html.id)')
             //->select('html.id')
-            ->from('OlegUserdirectoryBundle:ObjectTypeText', 'html')
+            ->from('AppUserdirectoryBundle:ObjectTypeText', 'html')
             ->leftJoin('html.formNode','formNodeHtml')
             ->where("formNodeHtml.id = " . $destinationFormNodeId)
             //->andWhere("html.value IS NOT NULL")
@@ -2850,7 +2850,7 @@ class CallLogUtil
         $subquery = '('.$subquery.')';
 
         //query
-        $repository = $em->getRepository('OlegUserdirectoryBundle:ObjectTypeText');
+        $repository = $em->getRepository('AppUserdirectoryBundle:ObjectTypeText');
         $dql = $repository->createQueryBuilder("list");;
         $dql->select('list');
         $dql->leftJoin("list.formNode", "formNode");
@@ -2895,7 +2895,7 @@ class CallLogUtil
         }
         $impressionDestinationFormNodeId = $impressionDestinationFormNode->getId();
 
-        $repository = $em->getRepository('OlegUserdirectoryBundle:ObjectTypeText');
+        $repository = $em->getRepository('AppUserdirectoryBundle:ObjectTypeText');
         $dql = $repository->createQueryBuilder("list");;
         $dql->select('list');
         $dql->leftJoin("list.formNode", "formNode");
@@ -3136,7 +3136,7 @@ class CallLogUtil
                 if( $updateCache ) {
                     $message = null;
                     if ($entityId) {
-                        $message = $em->getRepository('OlegOrderformBundle:Message')->find($entityId);
+                        $message = $em->getRepository('AppOrderformBundle:Message')->find($entityId);
                         if (!$message) {
                             throw new \Exception("Message is not found by id " . $entityId);
                         }
@@ -3242,10 +3242,10 @@ class CallLogUtil
         exit($newline.'EOF Loop testing counting');
 
 
-        //$formNodeHtml = $em->getRepository('OlegUserdirectoryBundle:ObjectTypeText')->findAll();
+        //$formNodeHtml = $em->getRepository('AppUserdirectoryBundle:ObjectTypeText')->findAll();
 
-        //$sourceTextObjects = $em->getRepository('OlegUserdirectoryBundle:FormNode')->findOneByName("History/Findings");
-        $repository = $em->getRepository('OlegUserdirectoryBundle:ObjectTypeText');
+        //$sourceTextObjects = $em->getRepository('AppUserdirectoryBundle:FormNode')->findOneByName("History/Findings");
+        $repository = $em->getRepository('AppUserdirectoryBundle:ObjectTypeText');
         $dql = $repository->createQueryBuilder("list");;
         $dql->select('list');
         $dql->leftJoin("list.formNode", "formNode");
@@ -3448,7 +3448,7 @@ class CallLogUtil
                 if( $updateCache ) {
                     $message = null;
                     if ($entityId) {
-                        $message = $em->getRepository('OlegOrderformBundle:Message')->find($entityId);
+                        $message = $em->getRepository('AppOrderformBundle:Message')->find($entityId);
                         if (!$message) {
                             throw new \Exception("Message is not found by id " . $entityId);
                         }
@@ -3497,7 +3497,7 @@ class CallLogUtil
 
         $em = $this->em;
 
-        $repository = $em->getRepository('OlegUserdirectoryBundle:ObjectTypeText');
+        $repository = $em->getRepository('AppUserdirectoryBundle:ObjectTypeText');
         $dql = $repository->createQueryBuilder("list");;
         $dql->select('list');
         $dql->leftJoin("list.formNode", "formNode");
@@ -3536,7 +3536,7 @@ class CallLogUtil
 
         $em = $this->em;
 
-        $repository = $em->getRepository('OlegUserdirectoryBundle:ObjectTypeText');
+        $repository = $em->getRepository('AppUserdirectoryBundle:ObjectTypeText');
         $dql = $repository->createQueryBuilder("list");;
         $dql->select('list');
         $dql->leftJoin("list.formNode", "formNode");
@@ -3575,7 +3575,7 @@ class CallLogUtil
 
         $objectTypeText = $formNodeUtil->getObjectTypeByName('Form Field - Free Text');
 
-        $repository = $em->getRepository('OlegUserdirectoryBundle:FormNode');
+        $repository = $em->getRepository('AppUserdirectoryBundle:FormNode');
         $dql = $repository->createQueryBuilder("list");;
         $dql->select('list');
         $dql->leftJoin("list.objectType", "objectType");
@@ -3600,7 +3600,7 @@ class CallLogUtil
 
         $objectTypeText = $formNodeUtil->getObjectTypeByName('Form Field - Free Text, HTML');
 
-        $repository = $em->getRepository('OlegUserdirectoryBundle:FormNode');
+        $repository = $em->getRepository('AppUserdirectoryBundle:FormNode');
         $dql = $repository->createQueryBuilder("list");;
         $dql->select('list');
         $dql->leftJoin("list.objectType", "objectType");
@@ -3644,15 +3644,15 @@ class CallLogUtil
 
             //set encounter generated id
             $key = $encounter2->obtainAllKeyfield()->first();
-            $encounter2 = $this->em->getRepository('OlegOrderformBundle:Encounter')->setEncounterKey($key, $encounter2, $user);
+            $encounter2 = $this->em->getRepository('AppOrderformBundle:Encounter')->setEncounterKey($key, $encounter2, $user);
             $this->em->persist($encounter2);
             $previousEncounters[] = $encounter2;
             //$previousEncounters[$encounter2->obtainEncounterNumberOnlyAndDate()] = $encounter2->getId();
         }
 
         //Autogenerated new ID, selected by default
-        //$newkeytypeEntity = $this->em->getRepository('OlegOrderformBundle:EncounterType')->findOneByName("Auto-generated Encounter Number");
-        //$nextKey = $this->em->getRepository('OlegOrderformBundle:Encounter')->getNextNonProvided($encounter2,null,$message);
+        //$newkeytypeEntity = $this->em->getRepository('AppOrderformBundle:EncounterType')->findOneByName("Auto-generated Encounter Number");
+        //$nextKey = $this->em->getRepository('AppOrderformBundle:Encounter')->getNextNonProvided($encounter2,null,$message);
         //$newEncounterStr = $nextKey." (".$newkeytypeEntity.")";
         //$previousEncounters[$newEncounterStr] = $newEncounterStr;
 
@@ -3665,7 +3665,7 @@ class CallLogUtil
             }
         }
 
-        //$patient = $this->em->getRepository('OlegOrderformBundle:Patient')->find(47); //testing
+        //$patient = $this->em->getRepository('AppOrderformBundle:Patient')->find(47); //testing
         if( $patient ) {
             //if patient exists
             //$encounters = "";
@@ -3705,7 +3705,7 @@ class CallLogUtil
             //if patient exists
             //$encounters = "";
             //$encounters = $patient->getEncounter();
-            $encounters = $this->em->getRepository('OlegOrderformBundle:Encounter')->findBy(
+            $encounters = $this->em->getRepository('AppOrderformBundle:Encounter')->findBy(
                 array('patient'=> $patient->getId()),
                 //array('id' => 'ASC')
                 array('id' => 'DESC')

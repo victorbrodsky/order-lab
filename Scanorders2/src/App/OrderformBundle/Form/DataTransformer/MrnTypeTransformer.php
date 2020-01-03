@@ -23,12 +23,12 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Oleg\OrderformBundle\Form\DataTransformer;
+namespace App\OrderformBundle\Form\DataTransformer;
 
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Doctrine\Common\Persistence\ObjectManager;
-use Oleg\OrderformBundle\Entity\MrnType;
+use App\OrderformBundle\Entity\MrnType;
 
 class MrnTypeTransformer implements DataTransformerInterface
 {
@@ -68,7 +68,7 @@ class MrnTypeTransformer implements DataTransformerInterface
 
         //if( is_int($type) ) {
         if( strval($type) == strval(intval($type)) ) {
-            $type = $this->em->getRepository('OlegOrderformBundle:MrnType')->findOneById($type);
+            $type = $this->em->getRepository('AppOrderformBundle:MrnType')->findOneById($type);
             //echo "findOneById type=".$type."<br>";
         }
         
@@ -102,7 +102,7 @@ class MrnTypeTransformer implements DataTransformerInterface
         //if( is_numeric ( $text ) ) {    //number => most probably it is id
         if( strval($text) == strval(intval($text)) ) {
 
-            $entity = $this->em->getRepository('OlegOrderformBundle:MrnType')->findOneById($text);
+            $entity = $this->em->getRepository('AppOrderformBundle:MrnType')->findOneById($text);
 
             if( null === $entity ) {
 
@@ -128,7 +128,7 @@ class MrnTypeTransformer implements DataTransformerInterface
         //echo "mrn type name=".$name."<br>";
 
         //check if it is already exists in db
-        $entity = $this->em->getRepository('OlegOrderformBundle:MrnType')->findOneByName($name);
+        $entity = $this->em->getRepository('AppOrderformBundle:MrnType')->findOneByName($name);
         
         if( null === $entity ) {
 
@@ -139,7 +139,7 @@ class MrnTypeTransformer implements DataTransformerInterface
             $newEntity->setCreator($this->user);
             
             //get max orderinlist
-            $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM OlegOrderformBundle:MrnType c');
+            $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM AppOrderformBundle:MrnType c');
             $nextorder = $query->getSingleResult()['maxorderinlist']+10;          
             $newEntity->setOrderinlist($nextorder);
 

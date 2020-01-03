@@ -15,9 +15,9 @@
  *  limitations under the License.
  */
 
-namespace Oleg\TranslationalResearchBundle\Controller;
+namespace App\TranslationalResearchBundle\Controller;
 
-use Oleg\UserdirectoryBundle\Controller\ListController;
+use App\UserdirectoryBundle\Controller\ListController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -32,7 +32,7 @@ class TransResListController extends ListController
      * @Route("/list/translational-research-work-request-products-and-services/", name="transresrequestcategorytypes-list_translationalresearch")
      *
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:ListForm:index.html.twig")
+     * @Template("AppUserdirectoryBundle:ListForm:index.html.twig")
      */
     public function indexAction(Request $request)
     {
@@ -52,7 +52,7 @@ class TransResListController extends ListController
      * @Route("/list/antibodies/", name="antibodies-list_translationalresearch")
      *
      * @Method("GET")
-     * @Template("OlegTranslationalResearchBundle:Request:antibodies.html.twig")
+     * @Template("AppTranslationalResearchBundle:Request:antibodies.html.twig")
      */
     public function indexAntibodiesAction(Request $request)
     {
@@ -77,7 +77,7 @@ class TransResListController extends ListController
      * @Route("/list/antibodies/", name="antibodies_create_translationalresearch")
      *
      * @Method("POST")
-     * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
+     * @Template("AppUserdirectoryBundle:ListForm:new.html.twig")
      */
     public function createAction(Request $request)
     {
@@ -96,7 +96,7 @@ class TransResListController extends ListController
      * @Route("/list/antibodies/new", name="antibodies_new_translationalresearch")
      *
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
+     * @Template("AppUserdirectoryBundle:ListForm:new.html.twig")
      */
     public function newAction(Request $request)
     {
@@ -115,7 +115,7 @@ class TransResListController extends ListController
      * @Route("/list/antibodies/{id}", name="antibodies_show_translationalresearch")
      *
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:ListForm:show.html.twig")
+     * @Template("AppUserdirectoryBundle:ListForm:show.html.twig")
      */
     public function showAction(Request $request,$id)
     {
@@ -135,7 +135,7 @@ class TransResListController extends ListController
      * @Route("/list/antibodies/{id}/edit", name="antibodies_edit_translationalresearch")
      *
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
+     * @Template("AppUserdirectoryBundle:ListForm:edit.html.twig")
      */
     public function editAction(Request $request,$id)
     {
@@ -154,7 +154,7 @@ class TransResListController extends ListController
      * @Route("/list/antibodies/{id}", name="antibodies_update_translationalresearch")
      *
      * @Method("PUT")
-     * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
+     * @Template("AppUserdirectoryBundle:ListForm:edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {

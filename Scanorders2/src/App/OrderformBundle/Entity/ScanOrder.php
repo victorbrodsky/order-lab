@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Entity;
+namespace App\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -35,7 +35,7 @@ class ScanOrder extends OrderBase {
 
 
     /**
-//     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Service")
+//     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Service")
 //     * @ORM\JoinColumn(name="service_id", referencedColumnName="id", nullable=true)
 //     */
 //    private $service;
@@ -45,7 +45,7 @@ class ScanOrder extends OrderBase {
      * It might be make a sense to have this Originating Organizational Group Institution in the Message object
      *
      * This serves as default institution to set scan order scope (who can view this order: users from the with the same institutional scope can view this order)
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Institution")
      */
     private $scanOrderInstitutionScope;
 

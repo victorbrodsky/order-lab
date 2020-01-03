@@ -1,8 +1,8 @@
 <?php
 
-namespace Tests\Oleg\TestBundle;
+namespace Tests\App\TestBundle;
 
-use Tests\Oleg\TestBundle\WebTestBase;
+use Tests\App\TestBundle\WebTestBase;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\HttpFoundation\Response;
@@ -231,7 +231,7 @@ class VacationTest extends WebTestBase
     public function testShowEditRequest() {
         $this->logIn();
 
-        $requests = $this->em->getRepository('OlegVacReqBundle:VacReqRequest')->findAll();
+        $requests = $this->em->getRepository('AppVacReqBundle:VacReqRequest')->findAll();
         if( count($requests) > 0 ) {
 
             $request = end($requests);

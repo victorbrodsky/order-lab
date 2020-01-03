@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Entity;
+namespace App\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -23,7 +23,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Procedure (use 'procedures', because 'procedure' causes problems (reserved?))
- * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\ProcedureRepository")
+ * @ORM\Entity(repositoryClass="App\OrderformBundle\Repository\ProcedureRepository")
  * @ORM\Table(name="scan_procedure")
  */
 class Procedure extends ObjectAbstract
@@ -186,10 +186,10 @@ class Procedure extends ObjectAbstract
     /**
      * Add accession
      *
-     * @param \Oleg\OrderformBundle\Entity\Accession $accession
+     * @param \App\OrderformBundle\Entity\Accession $accession
      * @return Procedure
      */
-    public function addAccession(\Oleg\OrderformBundle\Entity\Accession $accession)
+    public function addAccession(\App\OrderformBundle\Entity\Accession $accession)
     {
         if( !$this->accession->contains($accession) ) {
             $accession->setProcedure($this);
@@ -201,9 +201,9 @@ class Procedure extends ObjectAbstract
     /**
      * Remove accession
      *
-     * @param \Oleg\OrderformBundle\Entity\Accession $accession
+     * @param \App\OrderformBundle\Entity\Accession $accession
      */
-    public function removeAccession(\Oleg\OrderformBundle\Entity\Accession $accession)
+    public function removeAccession(\App\OrderformBundle\Entity\Accession $accession)
     {
         $this->accession->removeElement($accession);
     }
@@ -227,10 +227,10 @@ class Procedure extends ObjectAbstract
     /**
      * Set encounter
      *
-     * @param \Oleg\OrderformBundle\Entity\Encounter $encounter
+     * @param \App\OrderformBundle\Entity\Encounter $encounter
      * @return Procedure
      */
-    public function setEncounter(\Oleg\OrderformBundle\Entity\Encounter $encounter = null)
+    public function setEncounter(\App\OrderformBundle\Entity\Encounter $encounter = null)
     {
         $this->encounter = $encounter;
     
@@ -239,7 +239,7 @@ class Procedure extends ObjectAbstract
     /**
      * Get encounter
      *
-     * @return \Oleg\OrderformBundle\Entity\Encounter
+     * @return \App\OrderformBundle\Entity\Encounter
      */
     public function getEncounter()
     {

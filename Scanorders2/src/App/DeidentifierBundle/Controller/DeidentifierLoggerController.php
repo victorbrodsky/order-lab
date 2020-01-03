@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\DeidentifierBundle\Controller;
+namespace App\DeidentifierBundle\Controller;
 
 
 use Symfony\Component\HttpFoundation\Request;
@@ -23,10 +23,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Oleg\UserdirectoryBundle\Entity\Logger;
-use Oleg\UserdirectoryBundle\Form\LoggerType;
+use App\UserdirectoryBundle\Entity\Logger;
+use App\UserdirectoryBundle\Form\LoggerType;
 
-use Oleg\UserdirectoryBundle\Controller\LoggerController;
+use App\UserdirectoryBundle\Controller\LoggerController;
 
 /**
  * Logger controller.
@@ -41,7 +41,7 @@ class DeidentifierLoggerController extends LoggerController
      *
      * @Route("/", name="deidentifier_logger")
      * @Method("GET")
-     * @Template("OlegDeidentifierBundle:Logger:index.html.twig")
+     * @Template("AppDeidentifierBundle:Logger:index.html.twig")
      */
     public function indexAction(Request $request)
     {
@@ -59,7 +59,7 @@ class DeidentifierLoggerController extends LoggerController
     /**
      * @Route("/user/{id}/all", name="deidentifier_logger_user_all")
      * @Method("GET")
-     * @Template("OlegDeidentifierBundle:Logger:index.html.twig")
+     * @Template("AppDeidentifierBundle:Logger:index.html.twig")
      */
     public function getAuditLogAllAction(Request $request)
     {
@@ -74,7 +74,7 @@ class DeidentifierLoggerController extends LoggerController
 
         $params = array(
             'sitename'=>$this->container->getParameter('deidentifier.sitename'),
-            'entityNamespace'=>'Oleg\UserdirectoryBundle\Entity',
+            'entityNamespace'=>'App\UserdirectoryBundle\Entity',
             'entityName'=>$entityName,
             'entityId'=>$userid,
             'postData'=>$postData,
@@ -93,7 +93,7 @@ class DeidentifierLoggerController extends LoggerController
      *
      * @Route("/generation-log/", name="deidentifier_generation_log")
      * @Method("GET")
-     * @Template("OlegDeidentifierBundle:Logger:index.html.twig")
+     * @Template("AppDeidentifierBundle:Logger:index.html.twig")
      */
     public function generationLogAction(Request $request)
     {
@@ -102,7 +102,7 @@ class DeidentifierLoggerController extends LoggerController
         }
 
         $em = $this->getDoctrine()->getManager();
-        $eventType = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findOneByName("Generate Accession Deidentifier ID");
+        $eventType = $em->getRepository('AppUserdirectoryBundle:EventTypeList')->findOneByName("Generate Accession Deidentifier ID");
 
         if( !$eventType ) {
             throw $this->createNotFoundException('EventTypeList is not found by name ' . "Generate Accession Deidentifier ID");
@@ -155,7 +155,7 @@ class DeidentifierLoggerController extends LoggerController
      *
      * @Route("/event-log-per-user-per-event-type/", name="deidentifier_my_generation_log")
      * @Method("GET")
-     * @Template("OlegDeidentifierBundle:Logger:index.html.twig")
+     * @Template("AppDeidentifierBundle:Logger:index.html.twig")
      */
     public function myGenerationLogAction(Request $request)
     {
@@ -164,7 +164,7 @@ class DeidentifierLoggerController extends LoggerController
         }
 
         $em = $this->getDoctrine()->getManager();
-        $eventType = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findOneByName("Generate Accession Deidentifier ID");
+        $eventType = $em->getRepository('AppUserdirectoryBundle:EventTypeList')->findOneByName("Generate Accession Deidentifier ID");
 
         if( !$eventType ) {
             throw $this->createNotFoundException('EventTypeList is not found by name ' . "Generate Accession Deidentifier ID");
@@ -237,8 +237,8 @@ class DeidentifierLoggerController extends LoggerController
         $users = $filterform['user']->getData();
 
         $em = $this->getDoctrine()->getManager();
-        $eventType = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->find($eventTypes[0]);
-        $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($users[0]);
+        $eventType = $em->getRepository('AppUserdirectoryBundle:EventTypeList')->find($eventTypes[0]);
+        $user = $em->getRepository('AppUserdirectoryBundle:User')->find($users[0]);
 
         $eventlogTitle = $this->container->getParameter('eventlog_title');
         if( $loggerFormParams['filtered'] ) {

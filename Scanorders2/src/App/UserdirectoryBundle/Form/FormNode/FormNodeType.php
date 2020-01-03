@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Form\FormNode;
+namespace App\UserdirectoryBundle\Form\FormNode;
 
 
 use Symfony\Component\Form\AbstractType;
@@ -94,7 +94,7 @@ class FormNodeType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\FormNode',
+            'data_class' => 'App\UserdirectoryBundle\Entity\FormNode',
             //'csrf_protection' => false
             //'allow_extra_fields' => true
         ));

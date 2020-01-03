@@ -15,18 +15,18 @@
  *  limitations under the License.
  */
 
-namespace Oleg\TranslationalResearchBundle\Util;
+namespace App\TranslationalResearchBundle\Util;
 
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
-use Oleg\TranslationalResearchBundle\Entity\AdminReview;
-use Oleg\TranslationalResearchBundle\Entity\CommitteeReview;
-use Oleg\TranslationalResearchBundle\Entity\FinalReview;
-use Oleg\TranslationalResearchBundle\Entity\IrbReview;
-use Oleg\TranslationalResearchBundle\Entity\SpecialtyList;
-use Oleg\TranslationalResearchBundle\Entity\TransResSiteParameters;
+use App\TranslationalResearchBundle\Entity\AdminReview;
+use App\TranslationalResearchBundle\Entity\CommitteeReview;
+use App\TranslationalResearchBundle\Entity\FinalReview;
+use App\TranslationalResearchBundle\Entity\IrbReview;
+use App\TranslationalResearchBundle\Entity\SpecialtyList;
+use App\TranslationalResearchBundle\Entity\TransResSiteParameters;
 //use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -165,7 +165,7 @@ class DashboardUtil
 
         foreach($institutions as $institution) {
             //echo $user.": parentNode:".$parentInstitution."(".$parentInstitution->getId().") and node:".$institution."(".$institution->getId().") are the same? <br>";
-            if( $this->em->getRepository('OlegUserdirectoryBundle:Institution')->isNodeUnderParentnode($parentInstitution,$institution) ) {
+            if( $this->em->getRepository('AppUserdirectoryBundle:Institution')->isNodeUnderParentnode($parentInstitution,$institution) ) {
                 //echo $user.": isUserBelongsToInstitution Yes! <br>";
                 return true;
             }
@@ -974,7 +974,7 @@ class DashboardUtil
 
     public function getProjectsByFilter($startDate, $endDate, $projectSpecialties, $states=null, $addOneEndDay=true) {
 
-        $repository = $this->em->getRepository('OlegTranslationalResearchBundle:Project');
+        $repository = $this->em->getRepository('AppTranslationalResearchBundle:Project');
         $dql =  $repository->createQueryBuilder("project");
         $dql->select('project');
 
@@ -1034,7 +1034,7 @@ class DashboardUtil
     }
 
     public function getRequestsByFilter($startDate, $endDate, $projectSpecialties, $addOneEndDay=true) {
-        $repository = $this->em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
+        $repository = $this->em->getRepository('AppTranslationalResearchBundle:TransResRequest');
         $dql =  $repository->createQueryBuilder("request");
         $dql->select('request');
 
@@ -1086,7 +1086,7 @@ class DashboardUtil
         $em = $this->em;
         //$transresUtil = $this->container->get('transres_util');
 
-        $repository = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
+        $repository = $em->getRepository('AppTranslationalResearchBundle:TransResRequest');
         $dql =  $repository->createQueryBuilder("request");
         $dql->select('request');
 
@@ -1153,7 +1153,7 @@ class DashboardUtil
     }
 
     public function getInvoicesByFilter($startDate, $endDate, $projectSpecialties, $states=null, $overdue=false, $addOneEndDay=true, $compareType='last invoice generation date',$filterRequest=true) {
-        $repository = $this->em->getRepository('OlegTranslationalResearchBundle:Invoice');
+        $repository = $this->em->getRepository('AppTranslationalResearchBundle:Invoice');
         $dql =  $repository->createQueryBuilder("invoice");
         $dql->select('invoice');
         $dql->leftJoin('invoice.transresRequest','request');
@@ -1489,7 +1489,7 @@ class DashboardUtil
         $request = $invoice->getTransresRequest();
 
         //get the date from event log
-        $repository = $this->em->getRepository('OlegUserdirectoryBundle:Logger');
+        $repository = $this->em->getRepository('AppUserdirectoryBundle:Logger');
         $dql = $repository->createQueryBuilder("logger");
         //$dql->innerJoin('logger.eventType', 'eventType');
         //$dql->leftJoin('logger.objectType', 'objectType');
@@ -1642,7 +1642,7 @@ class DashboardUtil
         //echo "projectSpecialty=".$projectSpecialty."<br>";
         if( $projectSpecialty != 0 ) {
             //echo "projectSpecialty=".$projectSpecialty."<br>";
-            $projectSpecialtyObject = $this->em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->find($projectSpecialty);
+            $projectSpecialtyObject = $this->em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->find($projectSpecialty);
             $projectSpecialtyObjects[] = $projectSpecialtyObject;
         }
         //exit('1');
@@ -5484,15 +5484,15 @@ class DashboardUtil
             $ProjectReminderEventTypeId = null;
             $RequestReminderEventTypeId = null;
             $InvoiceReminderEventTypeId = null;
-            $ProjectReminderEventType = $this->em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findOneByName("Project Reminder Email");
+            $ProjectReminderEventType = $this->em->getRepository('AppUserdirectoryBundle:EventTypeList')->findOneByName("Project Reminder Email");
             if( $ProjectReminderEventType ) {
                 $ProjectReminderEventTypeId = $ProjectReminderEventType->getId();
             }
-            $RequestReminderEventType = $this->em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findOneByName("Work Request Reminder Email");
+            $RequestReminderEventType = $this->em->getRepository('AppUserdirectoryBundle:EventTypeList')->findOneByName("Work Request Reminder Email");
             if( $RequestReminderEventType ) {
                 $RequestReminderEventTypeId = $RequestReminderEventType->getId();
             }
-            $InvoiceReminderEventType = $this->em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findOneByName("Unpaid Invoice Reminder Email");
+            $InvoiceReminderEventType = $this->em->getRepository('AppUserdirectoryBundle:EventTypeList')->findOneByName("Unpaid Invoice Reminder Email");
             if( $InvoiceReminderEventType ) {
                 $InvoiceReminderEventTypeId = $InvoiceReminderEventType->getId();
             }
@@ -5844,7 +5844,7 @@ class DashboardUtil
 //                    if( isset($userArr[$loginUserId]) ) {
 //                        $userTitle = $userArr[$loginUserId];
 //                    } else {
-//                        $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->find($loginUserId);
+//                        $user = $this->em->getRepository('AppUserdirectoryBundle:User')->find($loginUserId);
 //                        $userTitle = $user->getUsernameOptimal();
 //                        $userArr[$loginUserId] = $userTitle;
 //                    }

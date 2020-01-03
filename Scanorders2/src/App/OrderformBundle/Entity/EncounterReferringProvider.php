@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Entity;
+namespace App\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -36,13 +36,13 @@ class EncounterReferringProvider extends EncounterArrayFieldAbstract
 
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\UserWrapper", cascade={"persist","remove"})
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\UserWrapper", cascade={"persist","remove"})
      * @ORM\JoinColumn(name="referringProvider", referencedColumnName="id")
      */
     protected $field;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\HealthcareProviderSpecialtiesList", cascade={"persist","remove"})
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\HealthcareProviderSpecialtiesList", cascade={"persist","remove"})
      * @ORM\JoinColumn(name="referringProviderSpecialty", referencedColumnName="id")
      */
     private $referringProviderSpecialty;

@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Entity;
+namespace App\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -35,7 +35,7 @@ class EncounterLocation extends EncounterArrayFieldAbstract
 
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Location")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Location")
      * @ORM\JoinColumn(name="location_id", referencedColumnName="id", nullable=true)
      */
     protected $field;

@@ -15,11 +15,11 @@
  *  limitations under the License.
  */
 
-namespace Oleg\CallLogBundle\Form;
+namespace App\CallLogBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
-use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
-use Oleg\UserdirectoryBundle\Util\TimeZoneUtil;
+use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
+use App\UserdirectoryBundle\Util\TimeZoneUtil;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -47,7 +47,7 @@ class CalllogSiteParameterType extends AbstractType
         $this->formConstructor($options['form_custom_value']);
 
         $builder->add('institution', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:Institution',
+            'class' => 'AppUserdirectoryBundle:Institution',
             'label' => "Institution or Collaboration:",
             'required' => false,
             'attr' => array('class' => 'combobox'),
@@ -61,7 +61,7 @@ class CalllogSiteParameterType extends AbstractType
 
         //keytypemrn
         $builder->add('keytypemrn', EntityType::class, array(
-            'class' => 'OlegOrderformBundle:MrnType',
+            'class' => 'AppOrderformBundle:MrnType',
             'choice_label' => 'name',
             'label' => 'MRN Type:',
             'required'=> false,
@@ -95,7 +95,7 @@ class CalllogSiteParameterType extends AbstractType
 
         //state
 //        $stateArray = array(
-//            'class' => 'OlegUserdirectoryBundle:States',
+//            'class' => 'AppUserdirectoryBundle:States',
 //            //'choice_label' => 'name',
 //            'label'=>'State:',
 //            'required'=> false,
@@ -112,7 +112,7 @@ class CalllogSiteParameterType extends AbstractType
 //            },
 //        );
 //        if( $this->params['cycle'] == 'new_standalone' ) {
-//            $stateArray['data'] = $this->params['em']->getRepository('OlegUserdirectoryBundle:States')->findOneByName('New York');
+//            $stateArray['data'] = $this->params['em']->getRepository('AppUserdirectoryBundle:States')->findOneByName('New York');
 //        }
 //        $builder->add( 'state', EntityType::class, $stateArray);
         $builder->add('state', null, array(
@@ -132,7 +132,7 @@ class CalllogSiteParameterType extends AbstractType
 
         //country
 //        $countryArray = array(
-//            'class' => 'OlegUserdirectoryBundle:Countries',
+//            'class' => 'AppUserdirectoryBundle:Countries',
 //            'choice_label' => 'name',
 //            'label'=>'Country:',
 //            'required'=> false,
@@ -149,9 +149,9 @@ class CalllogSiteParameterType extends AbstractType
 //                    ));
 //            },
 //        );
-//        $countryArray['preferred_choices'] = $this->params['em']->getRepository('OlegUserdirectoryBundle:Countries')->findByName(array('United States'));
+//        $countryArray['preferred_choices'] = $this->params['em']->getRepository('AppUserdirectoryBundle:Countries')->findByName(array('United States'));
 //        if( $this->params['cycle'] == 'new_standalone' ) {
-//            $countryArray['data'] = $this->params['em']->getRepository('OlegUserdirectoryBundle:Countries')->findOneByName('United States');
+//            $countryArray['data'] = $this->params['em']->getRepository('AppUserdirectoryBundle:Countries')->findOneByName('United States');
 //        }
 //        $builder->add( 'country', EntityType::class, $countryArray);
         $builder->add('country', null, array(
@@ -218,7 +218,7 @@ class CalllogSiteParameterType extends AbstractType
 
                 $label = null;
                 $mapper = array(
-                    'prefix' => "Oleg",
+                    'prefix' => "App",
                     'className' => "MessageCategory",
                     'bundleName' => "OrderformBundle",
                     'organizationalGroupType' => "MessageTypeClassifiers"
@@ -226,11 +226,11 @@ class CalllogSiteParameterType extends AbstractType
                 if ($message) {
                     $messageCategory = $message->getMessageCategory();
                     if ($messageCategory) {
-                        $label = $this->params['em']->getRepository('OlegOrderformBundle:MessageCategory')->getLevelLabels($messageCategory, $mapper);
+                        $label = $this->params['em']->getRepository('AppOrderformBundle:MessageCategory')->getLevelLabels($messageCategory, $mapper);
                     }
                 }
                 if (!$label) {
-                    $label = $this->params['em']->getRepository('OlegOrderformBundle:MessageCategory')->getLevelLabels(null, $mapper);
+                    $label = $this->params['em']->getRepository('AppOrderformBundle:MessageCategory')->getLevelLabels(null, $mapper);
                 }
 
                 if ($label) {
@@ -292,7 +292,7 @@ class CalllogSiteParameterType extends AbstractType
 
                 $label = null;
                 $mapper = array(
-                    'prefix' => "Oleg",
+                    'prefix' => "App",
                     'className' => "PatientListHierarchy",
                     'bundleName' => "OrderformBundle",
                     'organizationalGroupType' => "MessageTypeClassifiers"
@@ -300,11 +300,11 @@ class CalllogSiteParameterType extends AbstractType
                 if ($message) {
                     $messageCategory = $message->getMessageCategory();
                     if ($messageCategory) {
-                        $label = $this->params['em']->getRepository('OlegOrderformBundle:PatientListHierarchy')->getLevelLabels($messageCategory, $mapper);
+                        $label = $this->params['em']->getRepository('AppOrderformBundle:PatientListHierarchy')->getLevelLabels($messageCategory, $mapper);
                     }
                 }
                 if (!$label) {
-                    $label = $this->params['em']->getRepository('OlegOrderformBundle:PatientListHierarchy')->getLevelLabels(null, $mapper);
+                    $label = $this->params['em']->getRepository('AppOrderformBundle:PatientListHierarchy')->getLevelLabels(null, $mapper);
                 }
 
                 if ($label) {
@@ -358,7 +358,7 @@ class CalllogSiteParameterType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\CallLogBundle\Entity\CalllogSiteParameter',
+            'data_class' => 'App\CallLogBundle\Entity\CalllogSiteParameter',
             'form_custom_value' => null,
             //'csrf_protection' => false
         ));

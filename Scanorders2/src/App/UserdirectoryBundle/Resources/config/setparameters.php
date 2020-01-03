@@ -245,9 +245,9 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
         $database_password_pacsvendor = null;
 
         //set path to binary for knp_snappy
-        //$knp_snappy_path = $_SERVER['DOCUMENT_ROOT']."/order/scanorder/Scanorders2/src/Oleg/UserdirectoryBundle/Util/wkhtmltopdf/bin/";
+        //$knp_snappy_path = $_SERVER['DOCUMENT_ROOT']."/order/scanorder/Scanorders2/src/App/UserdirectoryBundle/Util/wkhtmltopdf/bin/";
         //$knp_snappy_path = str_replace("/","\\\\",$knp_snappy_path);
-        //"\"C:\\Program Files (x86)\\pacsvendor\\pacsname\\htdocs\\order\\scanorder\\Scanorders2\\src\\Oleg\\UserdirectoryBundle\\Util\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\""
+        //"\"C:\\Program Files (x86)\\pacsvendor\\pacsname\\htdocs\\order\\scanorder\\Scanorders2\\src\\App\\UserdirectoryBundle\\Util\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\""
         //$knp_snappy_path_pdf = '"\"'.$knp_snappy_path.'wkhtmltopdf.exe'.'\""';
         //$knp_snappy_path_image = '"\"'.$knp_snappy_path.'wkhtmltoimage.exe'.'\""';
         //$container->setParameter('knp_snappy.pdf.binary',$knp_snappy_path_pdf);

@@ -22,7 +22,7 @@
  * Time: 12:23 PM
  */
 
-namespace Oleg\UserdirectoryBundle\Security\Authentication;
+namespace App\UserdirectoryBundle\Security\Authentication;
 
 
 use Symfony\Component\HttpFoundation\Request;

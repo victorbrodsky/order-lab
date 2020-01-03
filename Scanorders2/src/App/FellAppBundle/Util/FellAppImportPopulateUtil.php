@@ -22,30 +22,30 @@
  * Time: 4:21 PM
  */
 
-namespace Oleg\FellAppBundle\Util;
+namespace App\FellAppBundle\Util;
 
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityNotFoundException;
-use Oleg\FellAppBundle\Entity\DataFile;
-use Oleg\FellAppBundle\Entity\Interview;
-use Oleg\UserdirectoryBundle\Entity\AccessRequest;
-use Oleg\UserdirectoryBundle\Entity\BoardCertification;
-use Oleg\UserdirectoryBundle\Entity\Citizenship;
-use Oleg\UserdirectoryBundle\Entity\Document;
-use Oleg\UserdirectoryBundle\Entity\EmploymentStatus;
-use Oleg\UserdirectoryBundle\Entity\Examination;
-use Oleg\FellAppBundle\Entity\FellowshipApplication;
-use Oleg\UserdirectoryBundle\Entity\GeoLocation;
-use Oleg\UserdirectoryBundle\Entity\JobTitleList;
-use Oleg\UserdirectoryBundle\Entity\Location;
-use Oleg\FellAppBundle\Entity\Reference;
-use Oleg\UserdirectoryBundle\Entity\StateLicense;
-use Oleg\UserdirectoryBundle\Entity\Training;
-use Oleg\UserdirectoryBundle\Entity\User;
-use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
-use Oleg\UserdirectoryBundle\Util\EmailUtil;
-use Oleg\UserdirectoryBundle\Util\UserUtil;
+use App\FellAppBundle\Entity\DataFile;
+use App\FellAppBundle\Entity\Interview;
+use App\UserdirectoryBundle\Entity\AccessRequest;
+use App\UserdirectoryBundle\Entity\BoardCertification;
+use App\UserdirectoryBundle\Entity\Citizenship;
+use App\UserdirectoryBundle\Entity\Document;
+use App\UserdirectoryBundle\Entity\EmploymentStatus;
+use App\UserdirectoryBundle\Entity\Examination;
+use App\FellAppBundle\Entity\FellowshipApplication;
+use App\UserdirectoryBundle\Entity\GeoLocation;
+use App\UserdirectoryBundle\Entity\JobTitleList;
+use App\UserdirectoryBundle\Entity\Location;
+use App\FellAppBundle\Entity\Reference;
+use App\UserdirectoryBundle\Entity\StateLicense;
+use App\UserdirectoryBundle\Entity\Training;
+use App\UserdirectoryBundle\Entity\User;
+use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
+use App\UserdirectoryBundle\Util\EmailUtil;
+use App\UserdirectoryBundle\Util\UserUtil;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -183,7 +183,7 @@ class FellAppImportPopulateUtil {
         }
 
         //get not completed DataFile
-        $repository = $this->em->getRepository('OlegFellAppBundle:DataFile');
+        $repository = $this->em->getRepository('AppFellAppBundle:DataFile');
         $dql =  $repository->createQueryBuilder("datafile");
         $dql->select('datafile');
         $dql->leftJoin("datafile.fellapp", "fellapp");
@@ -247,7 +247,7 @@ class FellAppImportPopulateUtil {
         }
 
         //get completed DataFile
-        $repository = $this->em->getRepository('OlegFellAppBundle:DataFile');
+        $repository = $this->em->getRepository('AppFellAppBundle:DataFile');
         $dql =  $repository->createQueryBuilder("datafile");
         $dql->select('datafile');
         $dql->leftJoin("datafile.fellapp", "fellapp");
@@ -464,7 +464,7 @@ class FellAppImportPopulateUtil {
 
         $logger = $this->container->get('logger');
 
-        $dataFile = $this->em->getRepository('OlegFellAppBundle:DataFile')->findOneByDocument($document->getId());
+        $dataFile = $this->em->getRepository('AppFellAppBundle:DataFile')->findOneByDocument($document->getId());
         if( $dataFile ) {
             //$event = "DataFile already exists with document ID=".$document->getId();
             //$logger->notice($event);
@@ -625,24 +625,24 @@ class FellAppImportPopulateUtil {
             throw new EntityNotFoundException('Unable to find local user keytype');
         }
 
-        $employmentType = $em->getRepository('OlegUserdirectoryBundle:EmploymentType')->findOneByName("Pathology Fellowship Applicant");
+        $employmentType = $em->getRepository('AppUserdirectoryBundle:EmploymentType')->findOneByName("Pathology Fellowship Applicant");
         if( !$employmentType ) {
             throw new EntityNotFoundException('Unable to find entity by name='."Pathology Fellowship Applicant");
         }
-        $presentLocationType = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Present Address");
+        $presentLocationType = $em->getRepository('AppUserdirectoryBundle:LocationTypeList')->findOneByName("Present Address");
         if( !$presentLocationType ) {
             throw new EntityNotFoundException('Unable to find entity by name='."Present Address");
         }
-        $permanentLocationType = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Permanent Address");
+        $permanentLocationType = $em->getRepository('AppUserdirectoryBundle:LocationTypeList')->findOneByName("Permanent Address");
         if( !$permanentLocationType ) {
             throw new EntityNotFoundException('Unable to find entity by name='."Permanent Address");
         }
-        $workLocationType = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Work Address");
+        $workLocationType = $em->getRepository('AppUserdirectoryBundle:LocationTypeList')->findOneByName("Work Address");
         if( !$workLocationType ) {
             throw new EntityNotFoundException('Unable to find entity by name='."Work Address");
         }
 
-        $activeStatus = $em->getRepository('OlegFellAppBundle:FellAppStatus')->findOneByName("active");
+        $activeStatus = $em->getRepository('AppFellAppBundle:FellAppStatus')->findOneByName("active");
         if( !$activeStatus ) {
             throw new EntityNotFoundException('Unable to find entity by name='."active");
         }
@@ -820,7 +820,7 @@ class FellAppImportPopulateUtil {
 
                 //echo "row=".$row.": id=".$googleFormId."<br>";
 
-                $fellowshipApplicationDb = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->findOneByGoogleFormId($googleFormId);
+                $fellowshipApplicationDb = $em->getRepository('AppFellAppBundle:FellowshipApplication')->findOneByGoogleFormId($googleFormId);
                 if( $fellowshipApplicationDb ) {
                     //$logger->notice('Skip this fell application, because it already exists in DB. googleFormId='.$googleFormId);
                     continue; //skip this fell application, because it already exists in DB
@@ -863,7 +863,7 @@ class FellAppImportPopulateUtil {
 
 
                 //check if the user already exists in DB by $googleFormId
-                $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($username);
+                $user = $em->getRepository('AppUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($username);
 
                 if (!$user) {
                     //create excel user
@@ -937,23 +937,23 @@ class FellAppImportPopulateUtil {
                         $rootInst = str_replace("(", "", $rootInst);
                         $rootInst = str_replace(")", "", $rootInst);
                         //$logger->warning('rootInst='.$rootInst.'; localInst='.$localInst);
-                        $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation($rootInst);
+                        $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation($rootInst);
                         if( !$wcmc ) {
-                            $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName($rootInst);
+                            $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByName($rootInst);
                             if( !$wcmc ) {
                                 throw new EntityNotFoundException('Unable to find Institution by name=' . $rootInst);
                             }
                         }
-                        $instPathologyFellowshipProgram = $em->getRepository('OlegUserdirectoryBundle:Institution')->findNodeByNameAndRoot($wcmc->getId(), $localInst);
+                        $instPathologyFellowshipProgram = $em->getRepository('AppUserdirectoryBundle:Institution')->findNodeByNameAndRoot($wcmc->getId(), $localInst);
                         if( !$instPathologyFellowshipProgram ) {
                             throw new EntityNotFoundException('Unable to find Institution by name=' . $localInst);
                         }
                     }
                 } else {
                     //Case 2: get string from SiteParameters - "WCM" or "Weill Cornell Medical College"
-                    $instPathologyFellowshipProgram = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation($localInstitutionFellApp);
+                    $instPathologyFellowshipProgram = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation($localInstitutionFellApp);
                     if( !$instPathologyFellowshipProgram ) {
-                        $instPathologyFellowshipProgram = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName($localInstitutionFellApp);
+                        $instPathologyFellowshipProgram = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByName($localInstitutionFellApp);
                     }
                 }
 
@@ -1706,32 +1706,32 @@ class FellAppImportPopulateUtil {
 
         //set TrainingType
         if( $typeStr == 'undergraduateSchool' ) {
-            $trainingType = $em->getRepository('OlegUserdirectoryBundle:TrainingTypeList')->findOneByName('Undergraduate');
+            $trainingType = $em->getRepository('AppUserdirectoryBundle:TrainingTypeList')->findOneByName('Undergraduate');
             $training->setTrainingType($trainingType);
         }
         if( $typeStr == 'graduateSchool' ) {
-            $trainingType = $em->getRepository('OlegUserdirectoryBundle:TrainingTypeList')->findOneByName('Graduate');
+            $trainingType = $em->getRepository('AppUserdirectoryBundle:TrainingTypeList')->findOneByName('Graduate');
             $training->setTrainingType($trainingType);
         }
         if( strpos($typeStr,'medical') !== false ) {
-            $trainingType = $em->getRepository('OlegUserdirectoryBundle:TrainingTypeList')->findOneByName('Medical');
+            $trainingType = $em->getRepository('AppUserdirectoryBundle:TrainingTypeList')->findOneByName('Medical');
             $training->setTrainingType($trainingType);
         }
         if( strpos($typeStr,'residency') !== false ) {
-            $trainingType = $em->getRepository('OlegUserdirectoryBundle:TrainingTypeList')->findOneByName('Residency');
+            $trainingType = $em->getRepository('AppUserdirectoryBundle:TrainingTypeList')->findOneByName('Residency');
             $training->setTrainingType($trainingType);
         }
         if( strpos($typeStr,'gme1') !== false ) {
             //Post-Residency Fellowship
-            $trainingType = $em->getRepository('OlegUserdirectoryBundle:TrainingTypeList')->findOneByName('Post-Residency Fellowship');
+            $trainingType = $em->getRepository('AppUserdirectoryBundle:TrainingTypeList')->findOneByName('Post-Residency Fellowship');
             $training->setTrainingType($trainingType);
         }
         if( strpos($typeStr,'gme2') !== false ) {
-            $trainingType = $em->getRepository('OlegUserdirectoryBundle:TrainingTypeList')->findOneByName('GME');
+            $trainingType = $em->getRepository('AppUserdirectoryBundle:TrainingTypeList')->findOneByName('GME');
             $training->setTrainingType($trainingType);
         }
         if( strpos($typeStr,'other') !== false ) {
-            $trainingType = $em->getRepository('OlegUserdirectoryBundle:TrainingTypeList')->findOneByName('Other');
+            $trainingType = $em->getRepository('AppUserdirectoryBundle:TrainingTypeList')->findOneByName('Other');
             $training->setTrainingType($trainingType);
         }
 

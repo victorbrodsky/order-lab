@@ -15,10 +15,10 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Controller;
+namespace App\UserdirectoryBundle\Controller;
 
 
-use Oleg\UserdirectoryBundle\Form\ListFilterType;
+use App\UserdirectoryBundle\Form\ListFilterType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -31,10 +31,10 @@ use Symfony\Component\HttpFoundation\Session;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Config\Definition\Exception\ForbiddenOverwriteException;
 
-use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
-use Oleg\UserdirectoryBundle\Form\LocationType;
-use Oleg\UserdirectoryBundle\Util\UserUtil;
-use Oleg\UserdirectoryBundle\Entity\Location;
+use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
+use App\UserdirectoryBundle\Form\LocationType;
+use App\UserdirectoryBundle\Util\UserUtil;
+use App\UserdirectoryBundle\Entity\Location;
 
 
 class ComplexListController extends Controller
@@ -48,7 +48,7 @@ class ComplexListController extends Controller
      * @Route("/list/research-labs/", name="employees_researchlabs_pathaction_list")
      * @Route("/list/grants/", name="employees_grants_pathaction_list")
      *
-     * @Template("OlegUserdirectoryBundle:ComplexList:index.html.twig")
+     * @Template("AppUserdirectoryBundle:ComplexList:index.html.twig")
      */
     public function indexAction(Request $request)
     {
@@ -204,7 +204,7 @@ class ComplexListController extends Controller
      *
      *
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:ComplexList:new.html.twig")
+     * @Template("AppUserdirectoryBundle:ComplexList:new.html.twig")
      */
     public function showListAction(Request $request, $id)
     {
@@ -265,7 +265,7 @@ class ComplexListController extends Controller
      * @Route("/admin/grants/new", name="employees_grants_pathaction_new_standalone")
      *
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:ComplexList:new.html.twig")
+     * @Template("AppUserdirectoryBundle:ComplexList:new.html.twig")
      */
     public function newListAction(Request $request)
     {
@@ -313,7 +313,7 @@ class ComplexListController extends Controller
      * @Route("/admin/grants/new", name="employees_grants_pathaction_new_post_standalone")
      *
      * @Method("POST")
-     * @Template("OlegUserdirectoryBundle:ComplexList:new.html.twig")
+     * @Template("AppUserdirectoryBundle:ComplexList:new.html.twig")
      */
     public function createListAction( Request $request )
     {
@@ -373,7 +373,7 @@ class ComplexListController extends Controller
                 $entity->setStatus($entity::STATUS_VERIFIED);
 
                 //set Location Privacy
-                $locPrivacy = $em->getRepository('OlegUserdirectoryBundle:LocationPrivacyList')->findOneByName("Anyone can see this contact information");
+                $locPrivacy = $em->getRepository('AppUserdirectoryBundle:LocationPrivacyList')->findOneByName("Anyone can see this contact information");
                 $entity->setPrivacy($locPrivacy);
             }
 
@@ -392,7 +392,7 @@ class ComplexListController extends Controller
                 //process attachment documents
                 if( $entity->getAttachmentContainer() ) {
                     foreach( $entity->getAttachmentContainer()->getDocumentContainers() as $documentContainer) {
-                        $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $documentContainer );
+                        $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $documentContainer );
                     }
                     //echo "grant's documents count:".count($entity->getAttachmentContainer()->getDocumentContainers()->first()->getDocuments())."<br>";
                 }
@@ -429,7 +429,7 @@ class ComplexListController extends Controller
      * @Route("/admin/grants/update/{id}", name="employees_grants_pathaction_edit_put_standalone",requirements={"id" = "\d+"})
      *
      * @Method("PUT")
-     * @Template("OlegUserdirectoryBundle:ComplexList:new.html.twig")
+     * @Template("AppUserdirectoryBundle:ComplexList:new.html.twig")
      */
     public function updateListAction( Request $request, $id )
     {
@@ -492,7 +492,7 @@ class ComplexListController extends Controller
                 //process attachment documents
                 if( $entity->getAttachmentContainer() ) {
                     foreach( $entity->getAttachmentContainer()->getDocumentContainers() as $documentContainer) {
-                        $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $documentContainer );
+                        $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $documentContainer );
                     }
                     //echo "grant's documents count:".count($entity->getAttachmentContainer()->getDocumentContainers()->first()->getDocuments())."<br>";
                 }
@@ -619,7 +619,7 @@ class ComplexListController extends Controller
         $pieces = explode("_pathaction_", $route);
         $name = str_replace("employees_","",$pieces[0]);
         $cycle = $pieces[1];
-        $bundlePrefix = "Oleg";
+        $bundlePrefix = "App";
         $bundleName = "UserdirectoryBundle";
 
         switch( $name ) {

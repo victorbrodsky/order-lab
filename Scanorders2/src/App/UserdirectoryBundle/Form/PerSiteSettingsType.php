@@ -15,10 +15,10 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Form;
+namespace App\UserdirectoryBundle\Form;
 
-//use Oleg\UserdirectoryBundle\Form\InstitutionType;
-use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
+//use App\UserdirectoryBundle\Form\InstitutionType;
+use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -52,7 +52,7 @@ class PerSiteSettingsType extends AbstractType
         if( $this->roleAdmin ) {
 
             $builder->add( 'permittedInstitutionalPHIScope', EntityType::class, array(
-                'class' => 'OlegUserdirectoryBundle:Institution',
+                'class' => 'AppUserdirectoryBundle:Institution',
                 //'choice_label' => 'name',
                 'choice_label' => 'getTreeName',
                 'label'=>'Order data visible to members of (Institutional PHI Scope):',
@@ -87,7 +87,7 @@ class PerSiteSettingsType extends AbstractType
 
             //ScanOrdersServicesScope
             $builder->add( 'scanOrdersServicesScope', EntityType::class, array(
-                'class' => 'OlegUserdirectoryBundle:Institution',
+                'class' => 'AppUserdirectoryBundle:Institution',
                 //'choice_label' => 'name',
                 'choice_label' => 'getTreeName',
                 'label'=>'Service(s) Scope:',
@@ -111,7 +111,7 @@ class PerSiteSettingsType extends AbstractType
 
             //chiefServices
             $builder->add( 'chiefServices', EntityType::class, array(
-                'class' => 'OlegUserdirectoryBundle:Institution',
+                'class' => 'AppUserdirectoryBundle:Institution',
                 //'choice_label' => 'name',
                 'choice_label' => 'getTreeName',
                 'label'=>'Chief of the following Service(s) for Scope:',
@@ -143,11 +143,11 @@ class PerSiteSettingsType extends AbstractType
                     if( $title ) {
                         $institution = $title->getDefaultInstitution();
                         if( $institution ) {
-                            $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels($institution);
+                            $label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels($institution);
                         }
                     }
                     if( !$label ) {
-                        $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels(null);
+                        $label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels(null);
                     }
 
                     //echo "show defaultInstitution label=".$label."<br>";
@@ -221,7 +221,7 @@ class PerSiteSettingsType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\PerSiteSettings',
+            'data_class' => 'App\UserdirectoryBundle\Entity\PerSiteSettings',
             'csrf_protection' => false,
             'form_custom_value_user' => null,
             'form_custom_value_roleAdmin' => null,

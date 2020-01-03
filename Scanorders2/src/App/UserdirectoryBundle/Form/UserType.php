@@ -16,7 +16,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Form;
+namespace App\UserdirectoryBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -29,7 +29,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 
-//use Oleg\UserdirectoryBundle\Form\PerSiteSettingsType;
+//use App\UserdirectoryBundle\Form\PerSiteSettingsType;
 
 class UserType extends AbstractType
 {
@@ -165,7 +165,7 @@ class UserType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\User',
+            'data_class' => 'App\UserdirectoryBundle\Entity\User',
             'csrf_protection' => false,
             'form_custom_value' => null,
         ));
@@ -190,7 +190,7 @@ class UserType extends AbstractType
     public function cloneUser($builder) {
 
         $options = array(
-            'class' => 'OlegUserdirectoryBundle:User',
+            'class' => 'AppUserdirectoryBundle:User',
             'label' => "Clone:",
             'multiple' => false,
             'attr' => array('class'=>'combobox combobox-width user-userclone-field'),
@@ -239,7 +239,7 @@ class UserType extends AbstractType
         ));
 
         $builder->add('avatar', DocumentType::class, array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\Document',
+            'data_class' => 'App\UserdirectoryBundle\Entity\Document',
             'label' => false
         ));
 
@@ -318,7 +318,7 @@ class UserType extends AbstractType
         //print_r($attr);
 
         $paramArr = array(
-            'class' => 'OlegUserdirectoryBundle:UsernameType',
+            'class' => 'AppUserdirectoryBundle:UsernameType',
             //'disabled' => ($this->cycle == 'create' ? false : true ), //it is not possible to edit keytype for existed user
             'choice_label' => 'name',
             'label' => $label,
@@ -351,7 +351,7 @@ class UserType extends AbstractType
         if( !$this->hasRoleSimpleView ) {
             $builder->add('preferences', UserPreferencesType::class, array(
                 'form_custom_value' => $this->params,
-                'data_class' => 'Oleg\UserdirectoryBundle\Entity\UserPreferences',
+                'data_class' => 'App\UserdirectoryBundle\Entity\UserPreferences',
                 'label' => false,
                 'required' => false,
             ));
@@ -410,7 +410,7 @@ class UserType extends AbstractType
                 'form_custom_value_user' => null,
                 'form_custom_value_roleAdmin' => $this->roleAdmin,
                 'form_custom_value' => $this->params,
-                'data_class' => 'Oleg\UserdirectoryBundle\Entity\PerSiteSettings',
+                'data_class' => 'App\UserdirectoryBundle\Entity\PerSiteSettings',
                 'label' => false,
                 'required' => false,
             ));
@@ -419,7 +419,7 @@ class UserType extends AbstractType
 
     public function titlesSections($builder) {
         //Administrative Titles
-        $params = array('disabled'=>$this->readonly,'label'=>'Administrative','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\AdministrativeTitle','formname'=>'administrativetitletype','cycle'=>$this->cycle);
+        $params = array('disabled'=>$this->readonly,'label'=>'Administrative','fullClassName'=>'App\UserdirectoryBundle\Entity\AdministrativeTitle','formname'=>'administrativetitletype','cycle'=>$this->cycle);
         $params = array_merge($this->params, $params);
         //BaseTitleType($params)
         $builder->add('administrativeTitles', CollectionType::class, array(
@@ -436,7 +436,7 @@ class UserType extends AbstractType
             'prototype_name' => '__administrativetitles__',
         ));
 
-        $params = array('disabled'=>$this->readonly,'label'=>'Academic Appointment','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\AppointmentTitle','formname'=>'appointmenttitletype','cycle'=>$this->cycle);
+        $params = array('disabled'=>$this->readonly,'label'=>'Academic Appointment','fullClassName'=>'App\UserdirectoryBundle\Entity\AppointmentTitle','formname'=>'appointmenttitletype','cycle'=>$this->cycle);
         $params = array_merge($this->params, $params);
         $builder->add('appointmentTitles', CollectionType::class, array(
             'entry_type' => AppointmentTitleType::class,
@@ -452,7 +452,7 @@ class UserType extends AbstractType
             'prototype_name' => '__appointmenttitles__',
         ));
 
-        $params = array('disabled'=>$this->readonly,'label'=>'Medical Appointment','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\MedicalTitle','formname'=>'medicaltitletype','cycle'=>$this->cycle);
+        $params = array('disabled'=>$this->readonly,'label'=>'Medical Appointment','fullClassName'=>'App\UserdirectoryBundle\Entity\MedicalTitle','formname'=>'medicaltitletype','cycle'=>$this->cycle);
         $params = array_merge($this->params, $params);
         $builder->add('medicalTitles', CollectionType::class, array(
             'entry_type' => MedicalTitleType::class,
@@ -629,7 +629,7 @@ if(1){
             $params = array('container'=>$this->container,'em'=>$this->em,'cycle'=>$this->cycle,'roleAdmin'=>$this->roleAdmin);
             $builder->add('credentials', CredentialsType::class, array(
                 'form_custom_value' => $params,
-                'data_class' => 'Oleg\UserdirectoryBundle\Entity\Credentials',
+                'data_class' => 'App\UserdirectoryBundle\Entity\Credentials',
                 'label' => false,
                 'required' => false,
             ));
@@ -644,7 +644,7 @@ if(1){
             $readOnlyComment = false;
         }
 
-        $params = array('disabled'=>$readOnlyComment,'label'=>'Public','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\PublicComment','formname'=>'publiccomments','em'=>$this->params['em']);
+        $params = array('disabled'=>$readOnlyComment,'label'=>'Public','fullClassName'=>'App\UserdirectoryBundle\Entity\PublicComment','formname'=>'publiccomments','em'=>$this->params['em']);
         $builder->add('publicComments', CollectionType::class, array(
             'entry_type' => PublicCommentType::class,
             'entry_options' => array(
@@ -660,7 +660,7 @@ if(1){
         ));
 
         if( $this->roleAdmin || $this->currentUser ) {
-            $params = array('roleAdmin'=>$this->roleAdmin,'disabled'=>$readOnlyComment,'label'=>'Private','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\PrivateComment','formname'=>'privatecomments','em'=>$this->params['em']);
+            $params = array('roleAdmin'=>$this->roleAdmin,'disabled'=>$readOnlyComment,'label'=>'Private','fullClassName'=>'App\UserdirectoryBundle\Entity\PrivateComment','formname'=>'privatecomments','em'=>$this->params['em']);
             $builder->add('privateComments', CollectionType::class, array(
                 'entry_type' => PrivateCommentType::class,
                 'entry_options' => array(
@@ -677,7 +677,7 @@ if(1){
         }
 
         if( $this->roleAdmin ) {
-            $params = array('disabled'=>$this->readonly,'label'=>'Administrative','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\AdminComment','formname'=>'admincomments','em'=>$this->params['em']);
+            $params = array('disabled'=>$this->readonly,'label'=>'Administrative','fullClassName'=>'App\UserdirectoryBundle\Entity\AdminComment','formname'=>'admincomments','em'=>$this->params['em']);
             $builder->add('adminComments', CollectionType::class, array(
                 'entry_type' => AdminCommentType::class,
                 'entry_options' => array(
@@ -694,7 +694,7 @@ if(1){
         }
 
         if( $this->roleAdmin || ($this->currentUser && $this->cycle == 'show') ) {
-            $params = array('disabled'=>$this->readonly,'label'=>'Confidential','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\ConfidentialComment','formname'=>'confidentialcomments','em'=>$this->params['em']);
+            $params = array('disabled'=>$this->readonly,'label'=>'Confidential','fullClassName'=>'App\UserdirectoryBundle\Entity\ConfidentialComment','formname'=>'confidentialcomments','em'=>$this->params['em']);
             $builder->add('confidentialComments', CollectionType::class, array(
                 'entry_type' => ConfidentialCommentType::class,
                 'entry_options' => array(

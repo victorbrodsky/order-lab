@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Form;
+namespace App\UserdirectoryBundle\Form;
 
 
 use Symfony\Component\Form\AbstractType;
@@ -34,7 +34,7 @@ class PrivateCommentType extends BaseCommentsType
     {
 
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\PrivateComment',
+            'data_class' => 'App\UserdirectoryBundle\Entity\PrivateComment',
             'form_custom_value' => null
         ));
     }

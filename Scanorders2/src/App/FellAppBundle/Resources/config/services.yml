@@ -13,39 +13,39 @@ services:
     _defaults: { public: true }
 
     fellapp_authentication_handler:
-        class: Oleg\FellAppBundle\Security\Authentication\FellAppLoginSuccessHandler
+        class: App\FellAppBundle\Security\Authentication\FellAppLoginSuccessHandler
         arguments:  ["@service_container", "@doctrine.orm.entity_manager"]
 
     #fellowship application utilities
     fellapp_util:
-            class: Oleg\FellAppBundle\Util\FellAppUtil
+            class: App\FellAppBundle\Util\FellAppUtil
             arguments: ["@doctrine.orm.entity_manager", "@service_container"]
     fellapp_importpopulate_util:
-        class: Oleg\FellAppBundle\Util\FellAppImportPopulateUtil
+        class: App\FellAppBundle\Util\FellAppImportPopulateUtil
         arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
     fellapp_reportgenerator:
-        class: Oleg\FellAppBundle\Util\ReportGenerator
+        class: App\FellAppBundle\Util\ReportGenerator
         arguments: ["@doctrine.orm.entity_manager", "@service_container", "@templating"]
 
     fellapp_googlesheetmanagement:
-        class: Oleg\FellAppBundle\Util\GoogleSheetManagement
+        class: App\FellAppBundle\Util\GoogleSheetManagement
         arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
     fellapp_rec_letter_util:
-        class: Oleg\FellAppBundle\Util\RecLetterUtil
+        class: App\FellAppBundle\Util\RecLetterUtil
         arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
 
     fellapp_role_voter:
-        class: Oleg\FellAppBundle\Security\Voter\FellAppRoleVoter
+        class: App\FellAppBundle\Security\Voter\FellAppRoleVoter
         public: false
         arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
         tags:
             - { name: security.voter }
 
     fellapp_permission_voter:
-        class: Oleg\FellAppBundle\Security\Voter\FellAppPermissionVoter
+        class: App\FellAppBundle\Security\Voter\FellAppPermissionVoter
         public: false
         arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
         tags:

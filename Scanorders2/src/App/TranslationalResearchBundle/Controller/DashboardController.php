@@ -1,9 +1,9 @@
 <?php
 
-namespace Oleg\TranslationalResearchBundle\Controller;
+namespace App\TranslationalResearchBundle\Controller;
 
-use Oleg\TranslationalResearchBundle\Form\FilterDashboardType;
-use Oleg\UserdirectoryBundle\Util\LargeFileDownloader;
+use App\TranslationalResearchBundle\Form\FilterDashboardType;
+use App\UserdirectoryBundle\Util\LargeFileDownloader;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -27,7 +27,7 @@ class DashboardController extends Controller
 
     /**
      * @Route("/graphs/", name="translationalresearch_dashboard_choices")
-     * @Template("OlegTranslationalResearchBundle:Dashboard:dashboard-choices.html.twig")
+     * @Template("AppTranslationalResearchBundle:Dashboard:dashboard-choices.html.twig")
      */
     public function dashboardChoicesAction( Request $request )
     {
@@ -43,7 +43,7 @@ class DashboardController extends Controller
         //testing
 //        $dashboardUtil = $this->container->get('transres_dashboard');
 //        $em = $this->getDoctrine()->getManager();
-//        $invoices = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findAll();
+//        $invoices = $em->getRepository('AppTranslationalResearchBundle:Invoice')->findAll();
 //        foreach($invoices as $invoice) {
 //            $issuedDate = $dashboardUtil->getInvoiceIssuedDate($invoice);
 //            if( $issuedDate ) {
@@ -68,7 +68,7 @@ class DashboardController extends Controller
 //        $endDate = $filterform['endDate']->getData();
 //        $projectSpecialty = $filterform['projectSpecialty']->getData();
 //        if( $projectSpecialty != 0 ) {
-//            $projectSpecialtyObject = $em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->find($projectSpecialty);
+//            $projectSpecialtyObject = $em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->find($projectSpecialty);
 //            $projectSpecialtyObjects[] = $projectSpecialtyObject;
 //        }
 
@@ -687,7 +687,7 @@ class DashboardController extends Controller
 
 //    /**
 //     * @Route("/funded-level/", name="translationalresearch_dashboard_fundedlevel")
-//     * @Template("OlegTranslationalResearchBundle:Dashboard:pilevel.html.twig")
+//     * @Template("AppTranslationalResearchBundle:Dashboard:pilevel.html.twig")
 //     */
 //    public function fundedLevelAction( Request $request ) {
 //
@@ -726,7 +726,7 @@ class DashboardController extends Controller
         $em = $this->getDoctrine()->getManager();
         //$transresUtil = $this->container->get('transres_util');
 
-        $repository = $em->getRepository('OlegTranslationalResearchBundle:Project');
+        $repository = $em->getRepository('AppTranslationalResearchBundle:Project');
         $dql =  $repository->createQueryBuilder("project");
         $dql->select('project');
 
@@ -818,7 +818,7 @@ class DashboardController extends Controller
         $institutions = $user->getInstitutions();
 
         foreach($institutions as $institution) {
-            if( $em->getRepository('OlegUserdirectoryBundle:Institution')->isNodeUnderParentnode($parentInstitution,$institution) ) {
+            if( $em->getRepository('AppUserdirectoryBundle:Institution')->isNodeUnderParentnode($parentInstitution,$institution) ) {
                 return true;
             }
         }
@@ -830,7 +830,7 @@ class DashboardController extends Controller
         $em = $this->getDoctrine()->getManager();
         //$transresUtil = $this->container->get('transres_util');
 
-        $repository = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
+        $repository = $em->getRepository('AppTranslationalResearchBundle:TransResRequest');
         $dql =  $repository->createQueryBuilder("request");
         $dql->select('request');
 
@@ -883,7 +883,7 @@ class DashboardController extends Controller
         $em = $this->getDoctrine()->getManager();
         //$transresUtil = $this->container->get('transres_util');
 
-        $repository = $em->getRepository('OlegTranslationalResearchBundle:Invoice');
+        $repository = $em->getRepository('AppTranslationalResearchBundle:Invoice');
         $dql =  $repository->createQueryBuilder("invoice");
         $dql->select('invoice');
         $dql->leftJoin('invoice.transresRequest','request');
@@ -978,9 +978,9 @@ class DashboardController extends Controller
         $dashboardUtil = $this->container->get('transres_dashboard');
         $em = $this->getDoctrine()->getManager();
 
-        //$invoices = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findAll();
+        //$invoices = $em->getRepository('AppTranslationalResearchBundle:Invoice')->findAll();
         $invoiceStates = array("Paid in Full","Paid Partially","Unpaid/Issued");
-        $repository = $em->getRepository('OlegTranslationalResearchBundle:Invoice');
+        $repository = $em->getRepository('AppTranslationalResearchBundle:Invoice');
         $dql =  $repository->createQueryBuilder("invoice");
         $dql->select('invoice');
         $dql->leftJoin('invoice.transresRequest','request');
@@ -1039,7 +1039,7 @@ class DashboardController extends Controller
         //$dashboardUtil = $this->container->get('transres_dashboard');
         $em = $this->getDoctrine()->getManager();
 
-        $repository = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
+        $repository = $em->getRepository('AppTranslationalResearchBundle:TransResRequest');
         $dql =  $repository->createQueryBuilder("request");
         $dql->select('request');
 
@@ -1070,7 +1070,7 @@ class DashboardController extends Controller
     public function getRequestCompletedDate($request) {
         $em = $this->getDoctrine()->getManager();
         //get the date from event log
-        $repository = $em->getRepository('OlegUserdirectoryBundle:Logger');
+        $repository = $em->getRepository('AppUserdirectoryBundle:Logger');
         $dql = $repository->createQueryBuilder("logger");
         //$dql->innerJoin('logger.eventType', 'eventType');
         //$dql->leftJoin('logger.objectType', 'objectType');
@@ -1301,7 +1301,7 @@ class DashboardController extends Controller
         //$dashboardUtil = $this->container->get('transres_dashboard');
         $em = $this->getDoctrine()->getManager();
 
-        $repository = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
+        $repository = $em->getRepository('AppTranslationalResearchBundle:TransResRequest');
         $dql =  $repository->createQueryBuilder("request");
         $dql->select('request');
 
@@ -1332,7 +1332,7 @@ class DashboardController extends Controller
     public function getRequestCompletedUser($request) {
         $em = $this->getDoctrine()->getManager();
         //get the date from event log
-        $repository = $em->getRepository('OlegUserdirectoryBundle:Logger');
+        $repository = $em->getRepository('AppUserdirectoryBundle:Logger');
         $dql = $repository->createQueryBuilder("logger");
         //$dql->innerJoin('logger.eventType', 'eventType');
         //$dql->leftJoin('logger.objectType', 'objectType');
@@ -1566,7 +1566,7 @@ class DashboardController extends Controller
         //$dashboardUtil = $this->container->get('transres_dashboard');
         $em = $this->getDoctrine()->getManager();
 
-        $repository = $em->getRepository('OlegTranslationalResearchBundle:Project');
+        $repository = $em->getRepository('AppTranslationalResearchBundle:Project');
         $dql =  $repository->createQueryBuilder("project");
         $dql->select('project');
 
@@ -1599,7 +1599,7 @@ class DashboardController extends Controller
     public function getProjectStartReviewDate($project) {
         $em = $this->getDoctrine()->getManager();
         //get the date from event log
-        $repository = $em->getRepository('OlegUserdirectoryBundle:Logger');
+        $repository = $em->getRepository('AppUserdirectoryBundle:Logger');
         $dql = $repository->createQueryBuilder("logger");
         //$dql->innerJoin('logger.eventType', 'eventType');
         //$dql->leftJoin('logger.objectType', 'objectType');

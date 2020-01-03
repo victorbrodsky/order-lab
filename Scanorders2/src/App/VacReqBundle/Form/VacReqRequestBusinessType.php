@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\VacReqBundle\Form;
+namespace App\VacReqBundle\Form;
 
 
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -72,7 +72,7 @@ class VacReqRequestBusinessType extends VacReqRequestBaseType {
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\VacReqBundle\Entity\VacReqRequestBusiness',
+            'data_class' => 'App\VacReqBundle\Entity\VacReqRequestBusiness',
             'form_custom_value' => null
         ));
     }

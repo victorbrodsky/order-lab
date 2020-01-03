@@ -23,10 +23,10 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Oleg\OrderformBundle\Entity;
+namespace App\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Oleg\OrderformBundle\Entity\ArrayFieldAbstract;
+use App\OrderformBundle\Entity\ArrayFieldAbstract;
 
 /**
  * @ORM\MappedSuperclass
@@ -42,10 +42,10 @@ abstract class BlockArrayFieldAbstract extends ArrayFieldAbstract {
     /**
      * Set block
      *
-     * @param \Oleg\OrderformBundle\Entity\Block $block
+     * @param \App\OrderformBundle\Entity\Block $block
      * @return BlockArrayFieldAbstract
      */
-    public function setBlock(\Oleg\OrderformBundle\Entity\Block $block = null)
+    public function setBlock(\App\OrderformBundle\Entity\Block $block = null)
     {
         $this->block = $block;
 
@@ -55,7 +55,7 @@ abstract class BlockArrayFieldAbstract extends ArrayFieldAbstract {
     /**
      * Get block
      *
-     * @return \Oleg\OrderformBundle\Entity\Block
+     * @return \App\OrderformBundle\Entity\Block
      */
     public function getBlock()
     {

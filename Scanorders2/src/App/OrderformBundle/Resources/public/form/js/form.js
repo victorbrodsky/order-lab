@@ -1131,7 +1131,7 @@ function processPatientHierarchyPrototypeField( classname, holder, action ) {
         case 'encounterpatage':
             var target = '.encounterage-field';
             if( action == "index" ) {
-                //oleg_orderformbundle_patienttype_encounter_0_patage_0_field
+                //app_orderformbundle_patienttype_encounter_0_patage_0_field
                 var nameArr = {patient:'', encounter:'', encounterpatage:'patage'};
                 resArr = getMaxIndexByArrayName(holder, target, nameArr);
             }
@@ -1140,7 +1140,7 @@ function processPatientHierarchyPrototypeField( classname, holder, action ) {
         case 'encounterpathistory':
             var target = '.encounterhistory-field';
             if( action == "index" ) {
-                //oleg_orderformbundle_patienttype_encounter_0_pathistory_0_field
+                //app_orderformbundle_patienttype_encounter_0_pathistory_0_field
                 var nameArr = {patient:'', encounter:'', encounterpathistory:'pathistory'};
                 resArr = getMaxIndexByArrayName(holder, target, nameArr);
             }

@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Form;
+namespace App\UserdirectoryBundle\Form;
 
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -58,7 +58,7 @@ class UserWrapperType extends AbstractType
         ));
 
         $builder->add( 'user', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:User',
+            'class' => 'AppUserdirectoryBundle:User',
             'label' => $this->params['user.label'],
             'required'=> false,
             'multiple' => false,
@@ -89,7 +89,7 @@ class UserWrapperType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\UserWrapper',
+            'data_class' => 'App\UserdirectoryBundle\Entity\UserWrapper',
             'form_custom_value' => null
         ));
     }

@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Form;
+namespace App\OrderformBundle\Form;
 
 
 use Symfony\Component\Form\AbstractType;
@@ -23,8 +23,8 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-use Oleg\OrderformBundle\Helper\FormHelper;
-use Oleg\UserdirectoryBundle\Form\DocumentType;
+use App\OrderformBundle\Helper\FormHelper;
+use App\UserdirectoryBundle\Form\DocumentType;
 
 
 class PartPaperType extends AbstractType
@@ -53,7 +53,7 @@ class PartPaperType extends AbstractType
         ));
 
         $builder->add('others', ArrayFieldType::class, array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\PartPaper',
+            'data_class' => 'App\OrderformBundle\Entity\PartPaper',
             'form_custom_value' => $this->params,
             'label' => false,
 			'attr' => array('class'=>'field-partpaperothers','style'=>'display:none;')
@@ -64,7 +64,7 @@ class PartPaperType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\PartPaper',
+            'data_class' => 'App\OrderformBundle\Entity\PartPaper',
             'form_custom_value' => null
         ));
     }

@@ -15,13 +15,13 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Entity;
+namespace App\OrderformBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-use Oleg\UserdirectoryBundle\Entity\ListAbstract;
+use App\UserdirectoryBundle\Entity\ListAbstract;
 
 /**
  * @ORM\Entity
@@ -92,10 +92,10 @@ class Status extends ListAbstract
 //    /**
 //     * Add message
 //     *
-//     * @param \Oleg\OrderformBundle\Entity\Message $message
+//     * @param \App\OrderformBundle\Entity\Message $message
 //     * @return Status
 //     */
-//    public function addMessage(\Oleg\OrderformBundle\Entity\Message $message)
+//    public function addMessage(\App\OrderformBundle\Entity\Message $message)
 //    {
 //        //echo "Status addMessage=".$message."<br>";
 //        if( !$this->message->contains($message) ) {
@@ -106,9 +106,9 @@ class Status extends ListAbstract
 //    /**
 //     * Remove message
 //     *
-//     * @param \Oleg\OrderformBundle\Entity\Message $message
+//     * @param \App\OrderformBundle\Entity\Message $message
 //     */
-//    public function removeMessage(\Oleg\OrderformBundle\Entity\Message $message)
+//    public function removeMessage(\App\OrderformBundle\Entity\Message $message)
 //    {
 //        $this->message->removeElement($message);
 //    }

@@ -15,11 +15,11 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Form;
+namespace App\UserdirectoryBundle\Form;
 
 
-use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
-use Oleg\UserdirectoryBundle\Util\TimeZoneUtil;
+use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
+use App\UserdirectoryBundle\Util\TimeZoneUtil;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -49,7 +49,7 @@ class OrganizationalGroupDefaultType extends AbstractType
         $builder->add('id',HiddenType::class,array('label'=>false));
 
         $builder->add('primaryPublicUserIdType', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:UsernameType',
+            'class' => 'AppUserdirectoryBundle:UsernameType',
             'choice_label' => 'name',
             'label' => "Primary Public User ID Type:",
             'required' => false,
@@ -93,7 +93,7 @@ class OrganizationalGroupDefaultType extends AbstractType
         ));
 
         $builder->add( 'languages', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:LanguageList',
+            'class' => 'AppUserdirectoryBundle:LanguageList',
             'label'=> "Language(s):",
             'required'=> false,
             'multiple' => true,
@@ -111,7 +111,7 @@ class OrganizationalGroupDefaultType extends AbstractType
         ));
 
         $builder->add( 'locale', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:LocaleList',
+            'class' => 'AppUserdirectoryBundle:LocaleList',
             'label'=> "Locale:",
             'required'=> false,
             'multiple' => false,
@@ -129,7 +129,7 @@ class OrganizationalGroupDefaultType extends AbstractType
         ));
 
         $builder->add( 'showToInstitutions', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:Institution',
+            'class' => 'AppUserdirectoryBundle:Institution',
             //'choice_label' => 'name',
             'choice_label' => 'getTreeName',
             'label'=>'Only show this profile to members of the following institution(s):',
@@ -156,7 +156,7 @@ class OrganizationalGroupDefaultType extends AbstractType
         ));
 
         $builder->add( 'permittedInstitutionalPHIScope', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:Institution',
+            'class' => 'AppUserdirectoryBundle:Institution',
             //'choice_label' => 'name',
             'choice_label' => 'getTreeName',
             'label'=>'Order data visible to members of (Institutional PHI Scope):',
@@ -184,7 +184,7 @@ class OrganizationalGroupDefaultType extends AbstractType
         ));
 
         $builder->add('locationTypes',EntityType::class,array(
-            'class' => 'OlegUserdirectoryBundle:LocationTypeList',
+            'class' => 'AppUserdirectoryBundle:LocationTypeList',
             'label' => "Location Type:",
             'multiple' => true,
             'attr' => array('class'=>'combobox combobox-width'),
@@ -207,12 +207,12 @@ class OrganizationalGroupDefaultType extends AbstractType
 
         //state
         $builder->add( 'state', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:States',
+            'class' => 'AppUserdirectoryBundle:States',
             //'choice_label' => 'name',
             'label'=>'Location State:',
             'required'=> false,
             'multiple' => false,
-            'data' => $this->params['em']->getRepository('OlegUserdirectoryBundle:States')->findOneByName('New York'),
+            'data' => $this->params['em']->getRepository('AppUserdirectoryBundle:States')->findOneByName('New York'),
             'attr' => array('class'=>'combobox combobox-width geo-field-state'),
             'query_builder' => function(EntityRepository $er) {
                 return $er->createQueryBuilder('list')
@@ -232,13 +232,13 @@ class OrganizationalGroupDefaultType extends AbstractType
 
         //country
         $builder->add( 'country', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:Countries',
+            'class' => 'AppUserdirectoryBundle:Countries',
             'choice_label' => 'name',
             'label'=>'Location Country:',
             'required'=> false,
             'multiple' => false,
-            'data' => $this->params['em']->getRepository('OlegUserdirectoryBundle:Countries')->findOneByName('United States'),
-            'preferred_choices' => $this->params['em']->getRepository('OlegUserdirectoryBundle:Countries')->findByName(array('United States')),
+            'data' => $this->params['em']->getRepository('AppUserdirectoryBundle:Countries')->findOneByName('United States'),
+            'preferred_choices' => $this->params['em']->getRepository('AppUserdirectoryBundle:Countries')->findByName(array('United States')),
             'attr' => array('class'=>'combobox combobox-width geo-field-country'),
             'query_builder' => function(EntityRepository $er) {
                 return $er->createQueryBuilder('list')
@@ -252,7 +252,7 @@ class OrganizationalGroupDefaultType extends AbstractType
         ));
 
         $builder->add( 'state', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:States',
+            'class' => 'AppUserdirectoryBundle:States',
             //'choice_label' => 'name',
             'label'=>'Location State:',
             'required'=> false,
@@ -271,13 +271,13 @@ class OrganizationalGroupDefaultType extends AbstractType
 
 
         $builder->add( 'medicalLicenseCountry', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:Countries',
+            'class' => 'AppUserdirectoryBundle:Countries',
             'choice_label' => 'name',
             'label'=>'Medical License Country:',
             'required'=> false,
             'multiple' => false,
-            'data' => $this->params['em']->getRepository('OlegUserdirectoryBundle:Countries')->findOneByName('United States'),
-            'preferred_choices' => $this->params['em']->getRepository('OlegUserdirectoryBundle:Countries')->findByName(array('United States')),
+            'data' => $this->params['em']->getRepository('AppUserdirectoryBundle:Countries')->findOneByName('United States'),
+            'preferred_choices' => $this->params['em']->getRepository('AppUserdirectoryBundle:Countries')->findByName(array('United States')),
             'attr' => array('class'=>'combobox combobox-width geo-field-country'),
             'query_builder' => function(EntityRepository $er) {
                 return $er->createQueryBuilder('list')
@@ -291,7 +291,7 @@ class OrganizationalGroupDefaultType extends AbstractType
         ));
 
         $builder->add( 'medicalLicenseState', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:States',
+            'class' => 'AppUserdirectoryBundle:States',
             //'choice_label' => 'name',
             'label'=>'Medical License State:',
             'required'=> false,
@@ -318,11 +318,11 @@ class OrganizationalGroupDefaultType extends AbstractType
             if( $title ) {
                 $institution = $title->getInstitution();
                 if( $institution ) {
-                    $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
+                    $label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
                 }
             }
             if( !$label ) {
-                $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
+                $label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
             }
 
             $targetPrefix = "Organizational Group for new user's default values in Employee Directory - ";
@@ -428,7 +428,7 @@ class OrganizationalGroupDefaultType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\OrganizationalGroupDefault',
+            'data_class' => 'App\UserdirectoryBundle\Entity\OrganizationalGroupDefault',
             'form_custom_value' => null
         ));
     }

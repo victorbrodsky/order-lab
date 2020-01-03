@@ -22,10 +22,10 @@
  * Time: 9:27 AM
  */
 
-namespace Oleg\DeidentifierBundle\Security\Voter;
+namespace App\DeidentifierBundle\Security\Voter;
 
 
-use Oleg\UserdirectoryBundle\Security\Voter\BaseRoleVoter;
+use App\UserdirectoryBundle\Security\Voter\BaseRoleVoter;
 //use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
@@ -172,7 +172,7 @@ class DeidentifierRoleVoter extends BaseRoleVoter {
 //        //exit('uknown dummy user role='.$attribute);
 //
 //        //Dummy unknown role: check if this role has appropriate site name
-//        $roleObject = $this->em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName($attribute);
+//        $roleObject = $this->em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($attribute);
 //        if( $roleObject ) {
 //            foreach( $roleObject->getSites() as $site ) {
 //                if( $site->getName()."" == 'deidentifier' ) {
@@ -193,7 +193,7 @@ class DeidentifierRoleVoter extends BaseRoleVoter {
 //
 //        foreach( $user->getRoles() as $roleStr ) {
 //            //echo 'roleStr='.$roleStr."<br>";
-//            $role = $this->em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName($roleStr);
+//            $role = $this->em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($roleStr);
 //            if( $role ) {
 //                foreach( $role->getSites() as $site ) {
 //                    //echo 'role='.$role.", site=".$site->getName()."<br>";

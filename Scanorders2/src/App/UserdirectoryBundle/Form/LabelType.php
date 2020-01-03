@@ -15,10 +15,10 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Form;
+namespace App\UserdirectoryBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
-use Oleg\UserdirectoryBundle\Entity\User;
+use App\UserdirectoryBundle\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
@@ -71,7 +71,7 @@ class LabelType extends AbstractType
             //echo "user count=".count($this->params['users'])."<br>";
 
             $builder->add('users', EntityType::class, array(
-                'class' => 'OlegUserdirectoryBundle:User',
+                'class' => 'AppUserdirectoryBundle:User',
                 'label' => "Users:",
                 'choice_label' => "getUsernameOptimal",
                 'multiple' => true,

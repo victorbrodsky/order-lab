@@ -15,10 +15,10 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Form;
+namespace App\UserdirectoryBundle\Form;
 
 
-use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
+use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -30,7 +30,7 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 
-use Oleg\UserdirectoryBundle\Entity\Training;
+use App\UserdirectoryBundle\Entity\Training;
 
 class PublicationType extends AbstractType
 {
@@ -88,7 +88,7 @@ class PublicationType extends AbstractType
         ));
 
         $builder->add( 'importance', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:ImportanceList',
+            'class' => 'AppUserdirectoryBundle:ImportanceList',
             'label'=> "Importance:",
             'required'=> false,
             'multiple' => false,

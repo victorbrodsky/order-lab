@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Form;
+namespace App\OrderformBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -74,7 +74,7 @@ class FilterSlideReturnRequestType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         //$resolver->setDefaults(array(
-            //'data_class' => 'Oleg\OrderformBundle\Entity\Scan'
+            //'data_class' => 'App\OrderformBundle\Entity\Scan'
         //));
         $resolver->setDefaults(array(
             'form_custom_value' => null,

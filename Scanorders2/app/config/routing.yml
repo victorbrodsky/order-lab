@@ -1,52 +1,52 @@
 
 main_common_home:
     path:      /
-    defaults:  { _controller: OlegUserdirectoryBundle:Home:mainCommonHome }
+    defaults:  { _controller: AppUserdirectoryBundle:Home:mainCommonHome }
 
 main_under_construction:
     path:      /under-construction
-    defaults:  { _controller: OlegUserdirectoryBundle:Home:underConstruction }
+    defaults:  { _controller: AppUserdirectoryBundle:Home:underConstruction }
     schemes:  ['%connection_channel%']
 
 #order is important: base bundle userdirectory must be the last one
 oleg_deidentifier:
-    resource: "@OlegDeidentifierBundle/Controller/"
+    resource: "@AppDeidentifierBundle/Controller/"
     type:     annotation
     prefix:   /deidentifier
     schemes:  ['%connection_channel%']
 
 oleg_fellapp:
-    resource: "@OlegFellAppBundle/Controller/"
+    resource: "@AppFellAppBundle/Controller/"
     type:     annotation
     prefix:   /fellowship-applications
     schemes:  ['%connection_channel%']
 
 oleg_vacreq:
-    resource: "@OlegVacReqBundle/Controller/"
+    resource: "@AppVacReqBundle/Controller/"
     type:     annotation
     prefix:   /vacation-request
     schemes:  ['%connection_channel%']
 
 oleg_calllog:
-    resource: "@OlegCallLogBundle/Controller/"
+    resource: "@AppCallLogBundle/Controller/"
     type:     annotation
     prefix:   /call-log-book
     schemes:  ['%connection_channel%']
 
 oleg_orderform:
-    resource: "@OlegOrderformBundle/Controller/"
+    resource: "@AppOrderformBundle/Controller/"
     type:     annotation
     prefix:   /scan
     schemes:  ['%connection_channel%']
 
 oleg_translationalresearch:
-    resource: "@OlegTranslationalResearchBundle/Controller/"
+    resource: "@AppTranslationalResearchBundle/Controller/"
     type:     annotation
     prefix:   /translational-research
     schemes:  ['%connection_channel%']
 
 oleg_userdirectory:
-    resource: "@OlegUserdirectoryBundle/Controller/"
+    resource: "@AppUserdirectoryBundle/Controller/"
     type:     annotation
     prefix:   /directory
     schemes:  ['%connection_channel%']
@@ -67,13 +67,13 @@ oleg_testpage:
     path: /directory/testpage
     defaults:
         _controller: FrameworkBundle:Template:template
-        template:    'OlegUserdirectoryBundle:Default:testpage.html.twig'
+        template:    'AppUserdirectoryBundle:Default:testpage.html.twig'
 
 fellapp_instructions:
     path: /fellowship-applications/instructions-to-change-import-interval
     defaults:
         _controller: FrameworkBundle:Template:template
-        template:    'OlegFellAppBundle:Instructions:taskSchedulerWindows.html.twig'
+        template:    'AppFellAppBundle:Instructions:taskSchedulerWindows.html.twig'
 
 #login and logout routes
 

@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Controller;
+namespace App\OrderformBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,16 +31,16 @@ class DataReviewController extends Controller {
     /**
      * @Route("/scan-order/{id}/data-review", name="scan-order-data-review-full", requirements={"id" = "\d+"})
      * @Method("GET")
-     * @Template("OlegOrderformBundle:DataReview:index-order.html.twig")
+     * @Template("AppOrderformBundle:DataReview:index-order.html.twig")
      */
     public function getDataReviewAction($id) {
 
         $em = $this->getDoctrine()->getManager();
 
-        $message = $em->getRepository('OlegOrderformBundle:Message')->findOneByOid($id);
+        $message = $em->getRepository('AppOrderformBundle:Message')->findOneByOid($id);
 
         $queryE = $em->createQueryBuilder()
-            ->from('OlegOrderformBundle:Educational', 'e')
+            ->from('AppOrderformBundle:Educational', 'e')
             ->select("e")
             ->leftJoin("e.message", "message")
             ->where("message.id=:id")
@@ -50,7 +50,7 @@ class DataReviewController extends Controller {
 
 
         $queryR = $em->createQueryBuilder()
-            ->from('OlegOrderformBundle:Research', 'e')
+            ->from('AppOrderformBundle:Research', 'e')
             ->select("e")
             ->leftJoin("e.message", "message")
             ->where("message.id=:id")

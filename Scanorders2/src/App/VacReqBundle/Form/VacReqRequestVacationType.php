@@ -15,10 +15,10 @@
  *  limitations under the License.
  */
 
-namespace Oleg\VacReqBundle\Form;
+namespace App\VacReqBundle\Form;
 
 
-use Oleg\UserdirectoryBundle\Form\GeoLocationType;
+use App\UserdirectoryBundle\Form\GeoLocationType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -46,7 +46,7 @@ class VacReqRequestVacationType extends VacReqRequestBaseType {
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\VacReqBundle\Entity\VacReqRequestVacation',
+            'data_class' => 'App\VacReqBundle\Entity\VacReqRequestVacation',
             'form_custom_value' => null
         ));
     }

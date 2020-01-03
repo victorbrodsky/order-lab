@@ -16,7 +16,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\TranslationalResearchBundle\Command;
+namespace App\TranslationalResearchBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Command\Command;

@@ -14,7 +14,7 @@
     limitations under the License.
 #}
 
-{% extends "OlegUserdirectoryBundle::Default/base.html.twig" %}
+{% extends "AppUserdirectoryBundle::Default/base.html.twig" %}
 
 
 {% block title %}
@@ -30,7 +30,7 @@
 
         {#display search result for locations #}
         {% if locations and locations|length > 0 %}
-            {% include 'OlegUserdirectoryBundle::Location/locations-content-search.html.twig' with {'sitename': employees_sitename} %}
+            {% include 'AppUserdirectoryBundle::Location/locations-content-search.html.twig' with {'sitename': employees_sitename} %}
         {% endif %}
 
     </div>

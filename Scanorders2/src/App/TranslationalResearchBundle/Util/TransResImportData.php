@@ -22,16 +22,16 @@
  * Time: 11:35 AM
  */
 
-namespace Oleg\TranslationalResearchBundle\Util;
+namespace App\TranslationalResearchBundle\Util;
 
 
-use Oleg\TranslationalResearchBundle\Entity\AntibodyList;
-use Oleg\TranslationalResearchBundle\Entity\CommitteeReview;
-use Oleg\TranslationalResearchBundle\Entity\Project;
-use Oleg\TranslationalResearchBundle\Entity\TransResRequest;
-use Oleg\UserdirectoryBundle\Security\Authentication\AuthUtil;
-use Oleg\UserdirectoryBundle\Security\Util\UserSecurityUtil;
-use Oleg\UserdirectoryBundle\Util\UserUtil;
+use App\TranslationalResearchBundle\Entity\AntibodyList;
+use App\TranslationalResearchBundle\Entity\CommitteeReview;
+use App\TranslationalResearchBundle\Entity\Project;
+use App\TranslationalResearchBundle\Entity\TransResRequest;
+use App\UserdirectoryBundle\Security\Authentication\AuthUtil;
+use App\UserdirectoryBundle\Security\Util\UserSecurityUtil;
+use App\UserdirectoryBundle\Util\UserUtil;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 use Symfony\Component\Validator\Constraints\DateTime;
 
@@ -99,11 +99,11 @@ class TransResImportData
 
         $institution = $userSecUtil->getAutoAssignInstitution();
         if( !$institution ) {
-            $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
+            $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
         }
 
         //////// Admin user ///////////
-        $specialty = $this->em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation("ap-cp");
+        $specialty = $this->em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation("ap-cp");
         if( !$specialty ) {
             exit("Project specialty not found by abbreviation=ap-cp");
         }
@@ -232,7 +232,7 @@ class TransResImportData
             //echo $count." [".$exportId."]: ";
             //exit("exit");
 
-            $transresRequest = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest')->findOneByExportId($requestID);
+            $transresRequest = $em->getRepository('AppTranslationalResearchBundle:TransResRequest')->findOneByExportId($requestID);
             //echo "transresRequest=".$transresRequest->getExportId()."<br>";
             if (!$transresRequest) {
                 $transresRequest = new TransResRequest();
@@ -240,7 +240,7 @@ class TransResImportData
                 $transresRequest->setInstitution($institution);
                 $transresRequest->setVersion(1);
 
-                $project = $this->em->getRepository('OlegTranslationalResearchBundle:Project')->findOneByExportId($exportId);
+                $project = $this->em->getRepository('AppTranslationalResearchBundle:Project')->findOneByExportId($exportId);
                 if (!$project) {
                     exit("Project wit external ID '$exportId' does not exist.");
                 }
@@ -795,11 +795,11 @@ class TransResImportData
 
         //$institution = $userSecUtil->getAutoAssignInstitution();
         //if( !$institution ) {
-        //    $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
+        //    $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
         //}
 
         //////// Admin user ///////////
-        $specialty = $this->em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation("ap-cp");
+        $specialty = $this->em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation("ap-cp");
         if( !$specialty ) {
             exit("Project specialty not found by abbreviation=ap-cp");
         }
@@ -851,7 +851,7 @@ class TransResImportData
             //$requestID = $requestID."0000000"; //test
             echo "<br>" . $count . ": RS ID " . $requestID . "<br>";
 
-            $transresRequest = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest')->findOneByExportId($requestID);
+            $transresRequest = $em->getRepository('AppTranslationalResearchBundle:TransResRequest')->findOneByExportId($requestID);
             if( !$transresRequest ) {
                 exit("Request not found by External ID ".$requestID);
             }
@@ -942,7 +942,7 @@ class TransResImportData
 
         $cwid = $emailParts[0];
         //$username = $cwid."_@_". $this->usernamePrefix;
-        $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($cwid);
+        $user = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($cwid);
 
         return $user;
     }
@@ -1007,7 +1007,7 @@ class TransResImportData
                 $reviewerUser = $userMapper[$userId];
                 if( !$reviewerUser ) {
                     //////// get default committee reviewer ///////////
-                    $specialty = $this->em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation("ap-cp");
+                    $specialty = $this->em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation("ap-cp");
                     if( !$specialty ) {
                         exit("Project specialty not found by abbreviation=ap-cp");
                     }
@@ -1019,7 +1019,7 @@ class TransResImportData
                 }
 
                 if( $reviewerUser ) {
-                    $project = $this->em->getRepository('OlegTranslationalResearchBundle:Project')->findOneByExportId($exportId);
+                    $project = $this->em->getRepository('AppTranslationalResearchBundle:Project')->findOneByExportId($exportId);
                     if( !$project ) {
                         exit("Project wit external ID '$exportId' does not exist.");
                     }
@@ -1078,7 +1078,7 @@ class TransResImportData
             FALSE);
 
         //////// Admin user ///////////
-        $specialty = $this->em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation("ap-cp");
+        $specialty = $this->em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation("ap-cp");
         if( !$specialty ) {
             exit("Project specialty not found by abbreviation=ap-cp");
         }
@@ -1103,7 +1103,7 @@ class TransResImportData
             $exportId = $this->getValueByHeaderName('PROJECT_ID', $rowData, $headers);
             $exportId = trim($exportId);
 
-            $project = $this->em->getRepository('OlegTranslationalResearchBundle:Project')->findOneByExportId($exportId);
+            $project = $this->em->getRepository('AppTranslationalResearchBundle:Project')->findOneByExportId($exportId);
             if( !$project ) {
                 exit("Project wit external ID '$exportId' does not exist.");
             }
@@ -1199,7 +1199,7 @@ class TransResImportData
         $systemUser = $userSecUtil->findSystemUser();
         ////////////// end of add system user /////////////////
 
-        $specialty = $this->em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation("ap-cp");
+        $specialty = $this->em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation("ap-cp");
         if( !$specialty ) {
             exit("Project specialty not found by abbreviation=ap-cp");
         }
@@ -1257,7 +1257,7 @@ class TransResImportData
 
             //if( $exportId != 1840 ) {continue;} //testing
 
-//            $project = $this->em->getRepository('OlegTranslationalResearchBundle:Project')->findOneByExportId($exportId);
+//            $project = $this->em->getRepository('AppTranslationalResearchBundle:Project')->findOneByExportId($exportId);
 //            if( $project ) {
 //                if( !$testing ) {
 //                    continue; //testing
@@ -1342,7 +1342,7 @@ class TransResImportData
 
         $thisNotExistingUsers = array(); //only for required users
 
-        $project = $this->em->getRepository('OlegTranslationalResearchBundle:Project')->findOneByExportId($exportId);
+        $project = $this->em->getRepository('AppTranslationalResearchBundle:Project')->findOneByExportId($exportId);
         if( $project ) {
             if( !$testing ) {
                 //ignore existing request to prevent overwrite
@@ -1364,7 +1364,7 @@ class TransResImportData
         if( !$project->getInstitution() ) {
             $institution = $userSecUtil->getAutoAssignInstitution();
             if( !$institution ) {
-                $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
+                $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
             }
             $project->setInstitution($institution);
         }
@@ -1373,7 +1373,7 @@ class TransResImportData
 //            if( !$project->getMessageCategory() ) {
 //                $categoryStr = "HemePath Translational Research Project";  //"Pathology Call Log Entry";
 //                //$categoryStr = "Nesting Test"; //testing
-//                $messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($categoryStr);
+//                $messageCategory = $em->getRepository('AppOrderformBundle:MessageCategory')->findOneByName($categoryStr);
 //
 //                if (!$messageCategory) {
 //                    throw new \Exception("Message category is not found by name '" . $categoryStr . "'");
@@ -1421,7 +1421,7 @@ class TransResImportData
         //SUBMITTED_BY
         $submitterCwid = $this->getValueByHeaderName('SUBMITTED_BY', $rowData, $headers);
         $requestersStrArr[] = "SUBMITTED_BY: ".$submitterCwid;
-        $submitterUser = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($submitterCwid);
+        $submitterUser = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($submitterCwid);
         if( $submitterUser ) {
             $project->setSubmitter($submitterUser);
         } else {
@@ -1479,7 +1479,7 @@ class TransResImportData
             $piFound = false;
             foreach($priInvestigatorsArr as $pi) {
                 //assume "amy chadburn": second if family name
-                $thisUser = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByAnyNameStr($pi);
+                $thisUser = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByAnyNameStr($pi);
                 if( $thisUser ) {
                     $project->addPrincipalInvestigator($thisUser);
                     $requestersArr[] = $thisUser;
@@ -1525,7 +1525,7 @@ class TransResImportData
         foreach($coInvestigatorsArr as $coInvestigator) {
             //echo "coInvestigator=".$coInvestigator."<br>";
             //assume "amy chadburn": second if family name
-            $thisUser = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByAnyNameStr($coInvestigator);
+            $thisUser = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByAnyNameStr($coInvestigator);
             if( $thisUser ) {
                 $project->addCoInvestigator($thisUser);
                 $requestersArr[] = $thisUser;
@@ -1777,7 +1777,7 @@ class TransResImportData
 
         //$testing = true;
 
-        $project = $this->em->getRepository('OlegTranslationalResearchBundle:Project')->findOneByExportId($exportId);
+        $project = $this->em->getRepository('AppTranslationalResearchBundle:Project')->findOneByExportId($exportId);
         if( $project ) {
             //ok
         } else {
@@ -1868,7 +1868,7 @@ class TransResImportData
         $adminComment = $this->getValueByHeaderName('ADMIN_COMMENT', $rowData, $headers);
         if( $adminComment ) {
 
-            $project = $this->em->getRepository('OlegTranslationalResearchBundle:Project')->findOneByExportId($exportId);
+            $project = $this->em->getRepository('AppTranslationalResearchBundle:Project')->findOneByExportId($exportId);
             if( !$project ) {
                 exit("Project wit external ID '$exportId' does not exist.");
             }
@@ -2060,20 +2060,20 @@ class TransResImportData
 
             $cwid = $emailParts[0];
             //$username = $cwid."_@_". $this->usernamePrefix;
-            $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($cwid);
+            $user = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($cwid);
             if( $user ) {
                 $users[] = $user;
             }
 
             if( !$user ) {
-                $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByEmail($email);
+                $user = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByEmail($email);
                 if( $user ) {
                     $users[] = $user;
                 }
             }
 
             if( !$user ) {
-                $userArr = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserByUserInfoEmail($email);
+                $userArr = $this->em->getRepository('AppUserdirectoryBundle:User')->findUserByUserInfoEmail($email);
                 if( count($userArr) == 1 ) {
                     $users[] = $userArr[0];
                 }
@@ -2123,7 +2123,7 @@ class TransResImportData
         }
 
         //check if the user already exists in DB $cwid
-        $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($cwid);
+        $user = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($cwid);
         if( $user ) {
             return $user;
         }
@@ -2162,7 +2162,7 @@ class TransResImportData
         }
 
         //assign minimum roles
-        $siteObject = $this->em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation("translationalresearch");
+        $siteObject = $this->em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation("translationalresearch");
         $lowestRoles = $siteObject->getLowestRoles();
         foreach($lowestRoles as $role) {
             $user->addRole($role);
@@ -2286,7 +2286,7 @@ class TransResImportData
         $formNodeUtil = $this->container->get('user_formnode_utility');
         $receivingObject = $transresRequestUtil->setValueToFormNodeProject($project,$fieldName,$value);
         if( !$receivingObject ) {
-            //$thisFormNode = $this->em->getRepository("OlegUserdirectoryBundle:FormNode")->find($formNodeId);
+            //$thisFormNode = $this->em->getRepository("AppUserdirectoryBundle:FormNode")->find($formNodeId);
             $thisFormNode = $transResFormNodeUtil->getFormNodeByFieldNameAndParents($fieldName);
 
             //echo "create formnode=".$thisFormNode."<br>";
@@ -2322,7 +2322,7 @@ class TransResImportData
     public function getApproverByUserId($userId) {
         $cwid = $this->userMapper($userId);
         $username = $cwid."_@_". $this->usernamePrefix;
-        $approver = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername($username);
+        $approver = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByUsername($username);
         if( !$approver ) {
             $logger = $this->container->get('logger');
             $logger->error("Can not find user by username=".$username);
@@ -2509,7 +2509,7 @@ class TransResImportData
         }
 
         if( $statusNewSystem ) {
-            $listEntity = $this->em->getRepository('OlegTranslationalResearchBundle:ProjectTypeList')->findOneByName($statusNewSystem);
+            $listEntity = $this->em->getRepository('AppTranslationalResearchBundle:ProjectTypeList')->findOneByName($statusNewSystem);
             return $listEntity;
         }
 
@@ -2566,7 +2566,7 @@ class TransResImportData
             $exportId = trim($exportId);
             //echo "<br>########## Request exportId=" . $exportId . "#############<br>";
 
-            $transresRequest = $this->em->getRepository('OlegTranslationalResearchBundle:TransResRequest')->findOneByExportId($exportId);
+            $transresRequest = $this->em->getRepository('AppTranslationalResearchBundle:TransResRequest')->findOneByExportId($exportId);
             if( !$transresRequest ) {
                 //exit("Request not found by External ID ".$exportId);
                 continue;
@@ -2675,7 +2675,7 @@ class TransResImportData
         //INSERT INTO `IHC_antibody` (`id`, `category`, `name`, `altname`, `company`, `catalog`, `lot`, `igconcentration`, `clone`, `host`, `reactivity`, `control`, `protocol`, `retrieval`, `dilution`, `storage`, `comment`, `datasheet`, `pdf`) VALUES
         //(1, 'M', 'Androgen Receptor', 'AR ', 'Abcam', 'ab74272', 'GR32463-1', '0.2 mg/ml', 'Poly', 'Rabbit ', 'Human, mouse', 'Xenograft Control/Prostate Ca.', 'Envision Rabbit R. ', 'H130', '1:200', '-20 oC', 'Project: 12743 RS#: 30323 PI: Rubin/Kyung Condition confirmed by Dr. Rubin/Kyung on 03/09/2011', 'http://www.abcam.com/Androgen-Receptor-antibody-ab74272.html', 'upload/pdf/1296507249.pdf'),
 
-        $lists = $this->em->getRepository('OlegTranslationalResearchBundle:AntibodyList')->findAll();
+        $lists = $this->em->getRepository('AppTranslationalResearchBundle:AntibodyList')->findAll();
         if( count($lists) > 0 ) {
             return "AntibodyList is already exists.";
         }
@@ -2702,7 +2702,7 @@ class TransResImportData
         $userSecUtil = $this->container->get('user_security_utility');
         $systemuser = $userSecUtil->findSystemUser();
 
-        $lists = $this->em->getRepository('OlegTranslationalResearchBundle:AntibodyList')->findAll();
+        $lists = $this->em->getRepository('AppTranslationalResearchBundle:AntibodyList')->findAll();
 
         //set creator, createdate, type, orderinlist and creation time
         $orderinlist = 1;
@@ -2796,10 +2796,10 @@ class TransResImportData
             $antibodyId = trim($antibodyId);
             //echo "<br>########## antibodyId=" . $antibodyId . "#############<br>";
 
-            $antibody = $this->em->getRepository('OlegTranslationalResearchBundle:AntibodyList')->find($antibodyId);
+            $antibody = $this->em->getRepository('AppTranslationalResearchBundle:AntibodyList')->find($antibodyId);
 
 //            if( !$antibody ) {
-//                $antibody = $this->em->getRepository('OlegTranslationalResearchBundle:AntibodyList')->findOneByExportId($antibodyId);
+//                $antibody = $this->em->getRepository('AppTranslationalResearchBundle:AntibodyList')->findOneByExportId($antibodyId);
 //                echo "Found by exportId antibodyId=" . $antibodyId . "<br>";
 //            }
 
@@ -2813,7 +2813,7 @@ class TransResImportData
 
                 $antibody->setType('default');
 
-                $classNamespaceShort = "OlegTranslationalResearchBundle";
+                $classNamespaceShort = "AppTranslationalResearchBundle";
                 $className = "AntibodyList";
                 $classFullName = $classNamespaceShort . ":" . $className;
                 $orderinlist = $userSecUtil->getMaxField($classFullName);
@@ -2986,8 +2986,8 @@ class TransResImportData
     //NOT USED: DOES NOT WORK ON SQL SERVER MSSQL
     //run: http://127.0.0.1/order/translational-research/sync-id-antibody-list
     public function syncIdAntibodyList() {
-        //$antibodies = $this->em->getRepository('OlegTranslationalResearchBundle:AntibodyList')->findAll();
-        $repository = $this->em->getRepository('OlegTranslationalResearchBundle:AntibodyList');
+        //$antibodies = $this->em->getRepository('AppTranslationalResearchBundle:AntibodyList')->findAll();
+        $repository = $this->em->getRepository('AppTranslationalResearchBundle:AntibodyList');
         $dql =  $repository->createQueryBuilder("antibody");
         $dql->select('antibody');
         $dql->where("antibody.exportId IS NOT NULL");

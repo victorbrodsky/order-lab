@@ -22,17 +22,17 @@
  * Time: 9:55 AM
  */
 
-namespace Oleg\UserdirectoryBundle\Services;
+namespace App\UserdirectoryBundle\Services;
 
 
 use Doctrine\ORM\EntityManager;
-use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
+use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 use Oneup\UploaderBundle\Event\PostPersistEvent;
 use Oneup\UploaderBundle\Event\PreUploadEvent;
 
-use Oleg\UserdirectoryBundle\Entity\Document;
+use App\UserdirectoryBundle\Entity\Document;
 
 
 
@@ -74,8 +74,8 @@ class UploadListener {
         $size = $file->getSize();
 
         //creator: subjectUser
-        $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->find($userid);
-        $authUser = $this->em->getRepository('OlegUserdirectoryBundle:User')->find($authUserId);
+        $user = $this->em->getRepository('AppUserdirectoryBundle:User')->find($userid);
+        $authUser = $this->em->getRepository('AppUserdirectoryBundle:User')->find($authUserId);
 
         $object = new Document($user);
         $object->setCleanOriginalname($originalfilename);
@@ -84,7 +84,7 @@ class UploadListener {
         $object->setSize($size);
 
         if( $documentType ) {
-            //$documentTypeObject = $this->em->getRepository('OlegUserdirectoryBundle:DocumentTypeList')->findOneByName($documentType);
+            //$documentTypeObject = $this->em->getRepository('AppUserdirectoryBundle:DocumentTypeList')->findOneByName($documentType);
             $transformer = new GenericTreeTransformer($this->em, $authUser, "DocumentTypeList", "UserdirectoryBundle");
             $documentType = trim($documentType);
             $documentTypeObject = $transformer->reverseTransform($documentType);

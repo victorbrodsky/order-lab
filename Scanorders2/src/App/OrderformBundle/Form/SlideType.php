@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Form;
+namespace App\OrderformBundle\Form;
 
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -29,7 +29,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
 
-use Oleg\OrderformBundle\Entity\Slide;
+use App\OrderformBundle\Entity\Slide;
 
 class SlideType extends AbstractType
 {
@@ -114,7 +114,7 @@ class SlideType extends AbstractType
 
         $attr = array('class' => 'combobox combobox-width slidetype-combobox');
         $builder->add('slidetype', EntityType::class, array(
-            'class' => 'OlegOrderformBundle:SlideType',
+            'class' => 'AppOrderformBundle:SlideType',
             'label'=>'Slide Type:',
             'required' => true,
             'attr' => $attr,
@@ -156,7 +156,7 @@ class SlideType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\Slide',
+            'data_class' => 'App\OrderformBundle\Entity\Slide',
             'form_custom_value' => null
 //            'empty_data' => function (FormInterface $form) {
 //                    return new Slide(true,'valid',null,'111');

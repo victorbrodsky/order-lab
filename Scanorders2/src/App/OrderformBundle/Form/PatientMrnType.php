@@ -15,9 +15,9 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Form;
+namespace App\OrderformBundle\Form;
 
-use Oleg\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
+use App\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -44,7 +44,7 @@ class PatientMrnType extends AbstractType
             //$gen_attr = array('label'=>false,'class'=>'App\OrderformBundle\Entity\AccessionAccession','type'=>null);
         } else {
             $mrnTypeLabel = false;
-            //$gen_attr = array('label'=>'Accession Number [or Label]','class'=>'Oleg\OrderformBundle\Entity\AccessionAccession','type'=>null);
+            //$gen_attr = array('label'=>'Accession Number [or Label]','class'=>'App\OrderformBundle\Entity\AccessionAccession','type'=>null);
         }
 
         $builder->add( 'field', TextType::class, array(
@@ -55,7 +55,7 @@ class PatientMrnType extends AbstractType
 
 //        $attr = array('class' => 'combobox combobox-width mrntype-combobox');
 //        $builder->add('keytype', 'entity', array(
-//            'class' => 'OlegOrderformBundle:MrnType',
+//            'class' => 'AppOrderformBundle:MrnType',
 //            'label'=>false, //'MRN Type',
 //            'required' => true,
 //            'attr' => $attr,
@@ -88,7 +88,7 @@ class PatientMrnType extends AbstractType
 
         //other fields from abstract
         $builder->add('others', ArrayFieldType::class, array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\PatientMrn',
+            'data_class' => 'App\OrderformBundle\Entity\PatientMrn',
             'form_custom_value' => $this->params,
             'label' => false,
 			'attr' => array('style'=>'display:none;')
@@ -99,7 +99,7 @@ class PatientMrnType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\PatientMrn',
+            'data_class' => 'App\OrderformBundle\Entity\PatientMrn',
             'form_custom_value' => null
         ));
     }

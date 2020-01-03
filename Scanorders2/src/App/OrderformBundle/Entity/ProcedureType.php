@@ -15,13 +15,13 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Entity;
+namespace App\OrderformBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-use Oleg\UserdirectoryBundle\Entity\ListAbstract;
+use App\UserdirectoryBundle\Entity\ListAbstract;
 
 /**
  * @ORM\Entity
@@ -54,7 +54,7 @@ class ProcedureType extends ListAbstract
 
 
 
-    public function addProcedurenumber(\Oleg\OrderformBundle\Entity\ProcedureNumber $procedurenumber)
+    public function addProcedurenumber(\App\OrderformBundle\Entity\ProcedureNumber $procedurenumber)
     {
         if( !$this->procedurenumber->contains($procedurenumber) ) {
             $this->procedurenumber->add($procedurenumber);
@@ -63,7 +63,7 @@ class ProcedureType extends ListAbstract
         return $this;
     }
 
-    public function removeProcedurenumber(\Oleg\OrderformBundle\Entity\ProcedureNumber $procedurenumber)
+    public function removeProcedurenumber(\App\OrderformBundle\Entity\ProcedureNumber $procedurenumber)
     {
         $this->procedurenumber->removeElement($procedurenumber);
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Oleg\TranslationalResearchBundle\Form;
+namespace App\TranslationalResearchBundle\Form;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -40,7 +40,7 @@ class DefaultReviewerType extends AbstractType
 
 
         $builder->add( 'reviewer', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:User',
+            'class' => 'AppUserdirectoryBundle:User',
             'label'=> "Reviewer:",
             'required'=> false,
             'multiple' => false,
@@ -49,7 +49,7 @@ class DefaultReviewerType extends AbstractType
         ));
 
         $builder->add( 'reviewerDelegate', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:User',
+            'class' => 'AppUserdirectoryBundle:User',
             'label'=> "Reviewer Delegate:",
             'required'=> false,
             'multiple' => false,
@@ -58,7 +58,7 @@ class DefaultReviewerType extends AbstractType
         ));
 
         $builder->add( 'projectSpecialty', EntityType::class, array(
-            'class' => 'OlegTranslationalResearchBundle:SpecialtyList',
+            'class' => 'AppTranslationalResearchBundle:SpecialtyList',
             'choice_label' => 'name',
             'label'=>'Project Specialty:',
             'disabled' => true, //($this->params['admin'] ? false : true),
@@ -83,7 +83,7 @@ class DefaultReviewerType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\TranslationalResearchBundle\Entity\DefaultReviewer',
+            'data_class' => 'App\TranslationalResearchBundle\Entity\DefaultReviewer',
             'form_custom_value' => null
         ));
     }

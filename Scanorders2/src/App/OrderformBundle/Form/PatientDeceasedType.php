@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Form;
+namespace App\OrderformBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -67,7 +67,7 @@ class PatientDeceasedType extends AbstractType
 
         //other fields from abstract
         $builder->add('others', ArrayFieldType::class, array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\PatientDeceased',
+            'data_class' => 'App\OrderformBundle\Entity\PatientDeceased',
             'form_custom_value' => $this->params,
             'label' => false,
 			'attr' => array('style'=>'display:none;')
@@ -78,7 +78,7 @@ class PatientDeceasedType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\PatientDeceased',
+            'data_class' => 'App\OrderformBundle\Entity\PatientDeceased',
             'form_custom_value' => null
         ));
     }

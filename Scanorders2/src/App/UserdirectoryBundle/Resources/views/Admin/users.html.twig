@@ -14,7 +14,7 @@
     limitations under the License.
 #}
 
-{% extends "OlegUserdirectoryBundle::Default/base.html.twig" %}
+{% extends "AppUserdirectoryBundle::Default/base.html.twig" %}
 
 {% block title %}
     {{ filter }}
@@ -22,7 +22,7 @@
 
 {% block content %}
 
-    {% include 'OlegUserdirectoryBundle::Admin/users-content.html.twig' with {'sitename':employees_sitename, 'knppagination':true} %}
+    {% include 'AppUserdirectoryBundle::Admin/users-content.html.twig' with {'sitename':employees_sitename, 'knppagination':true} %}
 
 {% endblock %}
 

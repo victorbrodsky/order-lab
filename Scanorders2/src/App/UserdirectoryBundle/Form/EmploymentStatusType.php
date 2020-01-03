@@ -15,11 +15,11 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Form;
+namespace App\UserdirectoryBundle\Form;
 
 
 
-use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
+use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -82,7 +82,7 @@ class EmploymentStatusType extends AbstractType
         }
         $builder->add( 'terminationType', EntityType::class, array(
             'disabled' => ($this->params['disabled'] ? true : false),
-            'class' => 'OlegUserdirectoryBundle:EmploymentTerminationType',
+            'class' => 'AppUserdirectoryBundle:EmploymentTerminationType',
             'choice_label' => 'name',
             'label'=>'Type of End of Employment:',
             'required'=> false,
@@ -144,11 +144,11 @@ class EmploymentStatusType extends AbstractType
                 $institution = $emplStatus->getInstitution();
                 //echo "emplStatus Inst=".$institution."<br>";
                 if( $institution ) {
-                    $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
+                    $label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
                 }
             }
             if( !$label ) {
-                $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
+                $label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
             }
             //echo "label=".$label."<br>";
 
@@ -172,7 +172,7 @@ class EmploymentStatusType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\EmploymentStatus',
+            'data_class' => 'App\UserdirectoryBundle\Entity\EmploymentStatus',
             'form_custom_value' => null
         ));
     }

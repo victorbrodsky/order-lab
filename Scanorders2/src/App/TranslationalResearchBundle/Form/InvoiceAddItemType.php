@@ -1,6 +1,6 @@
 <?php
 
-namespace Oleg\TranslationalResearchBundle\Form;
+namespace App\TranslationalResearchBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -48,7 +48,7 @@ class InvoiceAddItemType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\TranslationalResearchBundle\Entity\InvoiceAddItem',
+            'data_class' => 'App\TranslationalResearchBundle\Entity\InvoiceAddItem',
             'form_custom_value' => null
         ));
     }

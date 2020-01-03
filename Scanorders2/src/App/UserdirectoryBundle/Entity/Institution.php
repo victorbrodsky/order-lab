@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Entity;
+namespace App\UserdirectoryBundle\Entity;
 
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\Criteria;
@@ -33,7 +33,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Use Doctrine Extension Tree for tree manipulation.
  *
  * @Gedmo\Tree(type="nested")
- * @ORM\Entity(repositoryClass="Oleg\UserdirectoryBundle\Repository\TreeRepository")
+ * @ORM\Entity(repositoryClass="App\UserdirectoryBundle\Repository\TreeRepository")
  * @ORM\Table(
  *  name="user_institution",
  *  indexes={
@@ -238,7 +238,7 @@ class Institution extends BaseCompositeNode {
     public function getCollaborationInstitutions()
     {
         //fix for: Expected value of type \"Doctrine\\Common\\Collections\\Collection|array\" for association
-        // field \"Oleg\\UserdirectoryBundle\\Entity\\Institution#$collaborationInstitutions\", got \"NULL\" instead.
+        // field \"App\\UserdirectoryBundle\\Entity\\Institution#$collaborationInstitutions\", got \"NULL\" instead.
         //if( $this->collaborationInstitutions == NULL ) {
         //    $this->collaborationInstitutions = new ArrayCollection();
         //}

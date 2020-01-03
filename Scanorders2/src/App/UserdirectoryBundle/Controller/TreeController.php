@@ -15,10 +15,10 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Controller;
+namespace App\UserdirectoryBundle\Controller;
 
 
-use Oleg\UserdirectoryBundle\Form\HierarchyFilterType;
+use App\UserdirectoryBundle\Form\HierarchyFilterType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -27,9 +27,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
-use Oleg\UserdirectoryBundle\Util\UserUtil;
-use Oleg\OrderformBundle\Entity\Patient;
-use Oleg\OrderformBundle\Entity\PatientMrn;
+use App\UserdirectoryBundle\Util\UserUtil;
+use App\OrderformBundle\Entity\Patient;
+use App\OrderformBundle\Entity\PatientMrn;
 
 
 /**
@@ -518,7 +518,7 @@ class TreeController extends Controller {
                 }
                 //////////// EOF get max ordeinlist ////////////////////
 
-                $fullClassName = "Oleg\\".$mapper['bundleName']."\\Entity\\".$mapper['className'];
+                $fullClassName = "App\\".$mapper['bundleName']."\\Entity\\".$mapper['className'];
                 $node = new $fullClassName();
                 $userSecUtil = $this->get('user_security_utility');
                 $userSecUtil->setDefaultList($node,$orderinlist,$username,$nodetext);
@@ -587,7 +587,7 @@ class TreeController extends Controller {
         $mapper = $this->classMapper($bundleName,$className);
         //$treeRepository = $em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
 
-        $fullClassName = "Oleg\\".$mapper['bundleName']."\\Entity\\".$mapper['className'];
+        $fullClassName = "App\\".$mapper['bundleName']."\\Entity\\".$mapper['className'];
         $root = new $fullClassName();
         $userSecUtil = $this->get('user_security_utility');
         $userSecUtil->setDefaultList($root,1,$user,$rootNodeName);
@@ -664,7 +664,7 @@ class TreeController extends Controller {
 
     public function classMapper($bundleName,$className) {
 
-        $prefix = "Oleg";
+        $prefix = "App";
         //$bundleName = "UserdirectoryBundle";
         $organizationalGroupType = "OrganizationalGroupType";
         $addNodeClassName = null;

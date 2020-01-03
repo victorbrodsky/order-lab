@@ -7,7 +7,7 @@
  * Time: 3:31 PM
  */
 
-namespace Oleg\Migration;
+namespace App\Migration;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 //In VersionYYYYMMDDHHMM.php
-//1) Add "use Oleg\Migration\PostgresMigration;"
+//1) Add "use App\Migration\PostgresMigration;"
 //2) Rename after extends "AbstractMigration" to "PostgresMigration"
 //3) Rename [addSql] to [processSql] (sed -i -e "s/addSql/processSql/g" Version....php)
 class PostgresMigration extends AbstractMigration implements ContainerAwareInterface

@@ -1,8 +1,8 @@
 <?php
 
-namespace Oleg\TranslationalResearchBundle\Controller;
+namespace App\TranslationalResearchBundle\Controller;
 
-use Oleg\UserdirectoryBundle\Util\LargeFileDownloader;
+use App\UserdirectoryBundle\Util\LargeFileDownloader;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -14,7 +14,7 @@ class DefaultController extends Controller
 
     /**
      * @Route("/about", name="translationalresearch_about_page")
-     * @Template("OlegUserdirectoryBundle:Default:about.html.twig")
+     * @Template("AppUserdirectoryBundle:Default:about.html.twig")
      */
     public function aboutAction( Request $request ) {
 
@@ -27,7 +27,7 @@ class DefaultController extends Controller
 //        $transitionName = "pendingHistology_completedNotified";
 //        $statMachineType = "progress";
 //        $em = $this->getDoctrine()->getManager();
-//        $transresRequest = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest')->find(756);
+//        $transresRequest = $em->getRepository('AppTranslationalResearchBundle:TransResRequest')->find(756);
 //        echo "current state=".$transresRequest->getProgressState()."<br>";
 //        $transition = $transresRequestUtil->getTransitionByName($transresRequest,$transitionName,$statMachineType);
 //        if( !$transition ) {
@@ -41,7 +41,7 @@ class DefaultController extends Controller
 
     /**
      * @Route("/thanks-for-downloading/{id}/{sitename}", name="translationalresearch_thankfordownloading")
-     * @Template("OlegUserdirectoryBundle:Default:thanksfordownloading.html.twig")
+     * @Template("AppUserdirectoryBundle:Default:thanksfordownloading.html.twig")
      * @Method("GET")
      */
     public function thankfordownloadingAction(Request $request, $id, $sitename) {
@@ -54,7 +54,7 @@ class DefaultController extends Controller
 
 //    /**
 //     * @Route("/", name="translationalresearch_home")
-//     * @Template("OlegTranslationalResearchBundle:Default:index.html.twig")
+//     * @Template("AppTranslationalResearchBundle:Default:index.html.twig")
 //     * @Method("GET")
 //     */
 //    public function indexAction( Request $request ) {
@@ -211,7 +211,7 @@ class DefaultController extends Controller
         ///////////////////// AUX Functions ///////////////////////
         //edit requests without oid
         if(0) {
-            $repository = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
+            $repository = $em->getRepository('AppTranslationalResearchBundle:TransResRequest');
             $dql =  $repository->createQueryBuilder("request");
             $dql->select('request');
 
@@ -283,7 +283,7 @@ class DefaultController extends Controller
      * http://localhost/order/translational-research/barcode-demo
      *
      * @Route("/barcode-demo", name="translationalresearch_barcode-demo")
-     * @Template("OlegTranslationalResearchBundle:Request:barcodedemo.html.twig")
+     * @Template("AppTranslationalResearchBundle:Request:barcodedemo.html.twig")
      */
     public function barcodeDemoAction( Request $request ) {
         return array();
@@ -426,9 +426,9 @@ class DefaultController extends Controller
         exit("End of update invoice's paid and due: ".$count);
 
         $em = $this->getDoctrine()->getManager();
-        $projects = $em->getRepository('OlegTranslationalResearchBundle:Project')->findAll();
+        $projects = $em->getRepository('AppTranslationalResearchBundle:Project')->findAll();
 
-        //$project = $em->getRepository('OlegTranslationalResearchBundle:Project')->find(3294);
+        //$project = $em->getRepository('AppTranslationalResearchBundle:Project')->find(3294);
         //$projects = array($project);
 
         //$batchSize = 20;
@@ -467,7 +467,7 @@ class DefaultController extends Controller
         exit("updateInvoicePaidDue: Not allowed");
 
         $em = $this->getDoctrine()->getManager();
-        $invoices = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findByStatus('Paid in Full');
+        $invoices = $em->getRepository('AppTranslationalResearchBundle:Invoice')->findByStatus('Paid in Full');
         echo "Found invoices=".count($invoices)."<br>";
 
         $i = 1;
@@ -495,7 +495,7 @@ class DefaultController extends Controller
         }
 
         $em = $this->getDoctrine()->getManager();
-        $repository = $em->getRepository('OlegUserdirectoryBundle:FosComment');
+        $repository = $em->getRepository('AppUserdirectoryBundle:FosComment');
         $dql =  $repository->createQueryBuilder("foscomment");
         $dql->select('foscomment');
 
@@ -525,7 +525,7 @@ class DefaultController extends Controller
                             $threadEntityName = "TransResRequest";
                         }
 
-                        $entity = $em->getRepository('OlegTranslationalResearchBundle:'.$threadEntityName)->find($requestId);
+                        $entity = $em->getRepository('AppTranslationalResearchBundle:'.$threadEntityName)->find($requestId);
                         if( $entity ) {
                             $comment->setObject($entity);
                             echo $comment->getEntityId()." ";

@@ -256,7 +256,7 @@ function getComboboxSpecialStain(ids, preset, setId) {
 
     var targetid = "";
     if( cycle == "new" || (cycle == "amend" && preset) || (cycle == "edit" && preset) ) {
-        //oleg_orderformbundle_messagetype_patient_0_encounter_0_procedure_0_accession_0_part_0_block_0_specialStains_0_staintype
+        //app_orderformbundle_messagetype_patient_0_encounter_0_procedure_0_accession_0_part_0_block_0_specialStains_0_staintype
         var uid = 'patient_'+ids[0]+'_encounter_'+ids[1]+'_procedure_'+ids[2]+'_accession_'+ids[3]+'_part_'+ids[4]+'_block_'+ids[5];
         var id= "#oleg_orderformbundle_messagetype_"+uid+"_";
         targetid = id+"specialStains_"+ids[6]+"_staintype";
@@ -521,7 +521,7 @@ function getComboboxMrnType(holder,force) {
     }
 
     if( cycle == "new"  ) {
-        //oleg_orderformbundle_messagetype_patient_0_mrn_0_keytype
+        //app_orderformbundle_messagetype_patient_0_mrn_0_keytype
 //        var uid = 'patient_'+ids[0];
 //        var id= "#oleg_orderformbundle_messagetype_"+uid+"_";
 //        var targetid = id+"mrn_0_mrntype";
@@ -902,7 +902,7 @@ function initComboboxJs(ids, holder) {
 
 function slideType(ids) {    
     
-    //oleg_orderformbundle_messagetype_patient_0_procedure_0_accession_0_part_0_block_1_slide_0_slidetype
+    //app_orderformbundle_messagetype_patient_0_procedure_0_accession_0_part_0_block_1_slide_0_slidetype
     var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
     var id= "#oleg_orderformbundle_messagetype_"+uid+"_slidetype";
 

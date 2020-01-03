@@ -23,7 +23,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Oleg\UserdirectoryBundle\Repository;
+namespace App\UserdirectoryBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 

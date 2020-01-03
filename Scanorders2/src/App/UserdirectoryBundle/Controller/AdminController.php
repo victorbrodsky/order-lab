@@ -15,74 +15,74 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Controller;
+namespace App\UserdirectoryBundle\Controller;
 
 
-use Oleg\FellAppBundle\Entity\FellAppRank;
-use Oleg\FellAppBundle\Entity\FellAppStatus;
-use Oleg\FellAppBundle\Entity\LanguageProficiency;
-use Oleg\FellAppBundle\Entity\VisaStatus;
-use Oleg\OrderformBundle\Controller\ScanListController;
-use Oleg\TranslationalResearchBundle\Entity\BusinessPurposeList;
-use Oleg\TranslationalResearchBundle\Entity\IrbApprovalTypeList;
-use Oleg\TranslationalResearchBundle\Entity\OtherRequestedServiceList;
-use Oleg\TranslationalResearchBundle\Entity\ProjectTypeList;
-use Oleg\TranslationalResearchBundle\Entity\RequestCategoryTypeList;
-use Oleg\TranslationalResearchBundle\Entity\SpecialtyList;
-use Oleg\TranslationalResearchBundle\Entity\TissueProcessingServiceList;
-use Oleg\UserdirectoryBundle\Entity\AuthorshipRoles;
-use Oleg\UserdirectoryBundle\Entity\BloodProductTransfusedList;
-use Oleg\UserdirectoryBundle\Entity\BloodTypeList;
-use Oleg\UserdirectoryBundle\Entity\CCIPlateletTypeTransfusedList;
-use Oleg\UserdirectoryBundle\Entity\CCIUnitPlateletCountDefaultValueList;
-use Oleg\UserdirectoryBundle\Entity\CertifyingBoardOrganization;
-use Oleg\UserdirectoryBundle\Entity\CityList;
-use Oleg\UserdirectoryBundle\Entity\ClericalErrorList;
-use Oleg\UserdirectoryBundle\Entity\Collaboration;
-use Oleg\UserdirectoryBundle\Entity\CollaborationTypeList;
-use Oleg\UserdirectoryBundle\Entity\CommentGroupType;
-use Oleg\UserdirectoryBundle\Entity\ComplexPlateletSummaryAntibodiesList;
-use Oleg\UserdirectoryBundle\Entity\FormNode;
-use Oleg\UserdirectoryBundle\Entity\HealthcareProviderSpecialtiesList;
-use Oleg\UserdirectoryBundle\Entity\ImportanceList;
-use Oleg\UserdirectoryBundle\Entity\LabResultFlagList;
-use Oleg\UserdirectoryBundle\Entity\LabResultNameList;
-use Oleg\UserdirectoryBundle\Entity\LabResultUnitsMeasureList;
-use Oleg\UserdirectoryBundle\Entity\LifeFormList;
-use Oleg\UserdirectoryBundle\Entity\ListAbstract;
-use Oleg\UserdirectoryBundle\Entity\MedicalLicenseStatus;
-use Oleg\UserdirectoryBundle\Entity\EventObjectTypeList;
-use Oleg\UserdirectoryBundle\Entity\MonthsList;
-use Oleg\UserdirectoryBundle\Entity\ObjectTypeList;
-use Oleg\UserdirectoryBundle\Entity\OrganizationalGroupDefault;
-use Oleg\UserdirectoryBundle\Entity\OrganizationalGroupType;
-use Oleg\UserdirectoryBundle\Entity\LinkTypeList;
-use Oleg\UserdirectoryBundle\Entity\LocaleList;
-use Oleg\UserdirectoryBundle\Entity\PathologyResultSignatoriesList;
-use Oleg\UserdirectoryBundle\Entity\Permission;
-use Oleg\UserdirectoryBundle\Entity\PermissionActionList;
-use Oleg\UserdirectoryBundle\Entity\PermissionList;
-use Oleg\UserdirectoryBundle\Entity\PermissionObjectList;
-use Oleg\UserdirectoryBundle\Entity\PlateletTransfusionProductReceivingList;
-use Oleg\UserdirectoryBundle\Entity\PlatformListManagerRootList;
-use Oleg\UserdirectoryBundle\Entity\PositionTrackTypeList;
-use Oleg\UserdirectoryBundle\Entity\PositionTypeList;
-use Oleg\UserdirectoryBundle\Entity\SexList;
-use Oleg\UserdirectoryBundle\Entity\SiteList;
-use Oleg\UserdirectoryBundle\Entity\SpotPurpose;
-use Oleg\UserdirectoryBundle\Entity\TitlePositionType;
-use Oleg\UserdirectoryBundle\Entity\TrainingTypeList;
-use Oleg\UserdirectoryBundle\Entity\TransfusionAntibodyScreenResultsList;
-use Oleg\UserdirectoryBundle\Entity\TransfusionCrossmatchResultsList;
-use Oleg\UserdirectoryBundle\Entity\TransfusionDATResultsList;
-use Oleg\UserdirectoryBundle\Entity\TransfusionHemolysisCheckResultsList;
-use Oleg\UserdirectoryBundle\Entity\TransfusionProductStatusList;
-use Oleg\UserdirectoryBundle\Entity\TransfusionReactionTypeList;
-use Oleg\UserdirectoryBundle\Entity\WeekDaysList;
-use Oleg\UserdirectoryBundle\Form\DataTransformer\SingleUserWrapperTransformer;
-use Oleg\UserdirectoryBundle\Form\HierarchyFilterType;
-use Oleg\UserdirectoryBundle\Security\Util\UserSecurityUtil;
-use Oleg\VacReqBundle\Entity\VacReqRequestTypeList;
+use App\FellAppBundle\Entity\FellAppRank;
+use App\FellAppBundle\Entity\FellAppStatus;
+use App\FellAppBundle\Entity\LanguageProficiency;
+use App\FellAppBundle\Entity\VisaStatus;
+use App\OrderformBundle\Controller\ScanListController;
+use App\TranslationalResearchBundle\Entity\BusinessPurposeList;
+use App\TranslationalResearchBundle\Entity\IrbApprovalTypeList;
+use App\TranslationalResearchBundle\Entity\OtherRequestedServiceList;
+use App\TranslationalResearchBundle\Entity\ProjectTypeList;
+use App\TranslationalResearchBundle\Entity\RequestCategoryTypeList;
+use App\TranslationalResearchBundle\Entity\SpecialtyList;
+use App\TranslationalResearchBundle\Entity\TissueProcessingServiceList;
+use App\UserdirectoryBundle\Entity\AuthorshipRoles;
+use App\UserdirectoryBundle\Entity\BloodProductTransfusedList;
+use App\UserdirectoryBundle\Entity\BloodTypeList;
+use App\UserdirectoryBundle\Entity\CCIPlateletTypeTransfusedList;
+use App\UserdirectoryBundle\Entity\CCIUnitPlateletCountDefaultValueList;
+use App\UserdirectoryBundle\Entity\CertifyingBoardOrganization;
+use App\UserdirectoryBundle\Entity\CityList;
+use App\UserdirectoryBundle\Entity\ClericalErrorList;
+use App\UserdirectoryBundle\Entity\Collaboration;
+use App\UserdirectoryBundle\Entity\CollaborationTypeList;
+use App\UserdirectoryBundle\Entity\CommentGroupType;
+use App\UserdirectoryBundle\Entity\ComplexPlateletSummaryAntibodiesList;
+use App\UserdirectoryBundle\Entity\FormNode;
+use App\UserdirectoryBundle\Entity\HealthcareProviderSpecialtiesList;
+use App\UserdirectoryBundle\Entity\ImportanceList;
+use App\UserdirectoryBundle\Entity\LabResultFlagList;
+use App\UserdirectoryBundle\Entity\LabResultNameList;
+use App\UserdirectoryBundle\Entity\LabResultUnitsMeasureList;
+use App\UserdirectoryBundle\Entity\LifeFormList;
+use App\UserdirectoryBundle\Entity\ListAbstract;
+use App\UserdirectoryBundle\Entity\MedicalLicenseStatus;
+use App\UserdirectoryBundle\Entity\EventObjectTypeList;
+use App\UserdirectoryBundle\Entity\MonthsList;
+use App\UserdirectoryBundle\Entity\ObjectTypeList;
+use App\UserdirectoryBundle\Entity\OrganizationalGroupDefault;
+use App\UserdirectoryBundle\Entity\OrganizationalGroupType;
+use App\UserdirectoryBundle\Entity\LinkTypeList;
+use App\UserdirectoryBundle\Entity\LocaleList;
+use App\UserdirectoryBundle\Entity\PathologyResultSignatoriesList;
+use App\UserdirectoryBundle\Entity\Permission;
+use App\UserdirectoryBundle\Entity\PermissionActionList;
+use App\UserdirectoryBundle\Entity\PermissionList;
+use App\UserdirectoryBundle\Entity\PermissionObjectList;
+use App\UserdirectoryBundle\Entity\PlateletTransfusionProductReceivingList;
+use App\UserdirectoryBundle\Entity\PlatformListManagerRootList;
+use App\UserdirectoryBundle\Entity\PositionTrackTypeList;
+use App\UserdirectoryBundle\Entity\PositionTypeList;
+use App\UserdirectoryBundle\Entity\SexList;
+use App\UserdirectoryBundle\Entity\SiteList;
+use App\UserdirectoryBundle\Entity\SpotPurpose;
+use App\UserdirectoryBundle\Entity\TitlePositionType;
+use App\UserdirectoryBundle\Entity\TrainingTypeList;
+use App\UserdirectoryBundle\Entity\TransfusionAntibodyScreenResultsList;
+use App\UserdirectoryBundle\Entity\TransfusionCrossmatchResultsList;
+use App\UserdirectoryBundle\Entity\TransfusionDATResultsList;
+use App\UserdirectoryBundle\Entity\TransfusionHemolysisCheckResultsList;
+use App\UserdirectoryBundle\Entity\TransfusionProductStatusList;
+use App\UserdirectoryBundle\Entity\TransfusionReactionTypeList;
+use App\UserdirectoryBundle\Entity\WeekDaysList;
+use App\UserdirectoryBundle\Form\DataTransformer\SingleUserWrapperTransformer;
+use App\UserdirectoryBundle\Form\HierarchyFilterType;
+use App\UserdirectoryBundle\Security\Util\UserSecurityUtil;
+use App\VacReqBundle\Entity\VacReqRequestTypeList;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -101,48 +101,48 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Intl\Intl;
 
-use Oleg\UserdirectoryBundle\Entity\PerSiteSettings;
-use Oleg\UserdirectoryBundle\Entity\AdministrativeTitle;
-use Oleg\UserdirectoryBundle\Entity\BuildingList;
-use Oleg\UserdirectoryBundle\Entity\CompletionReasonList;
-use Oleg\UserdirectoryBundle\Entity\DocumentTypeList;
-use Oleg\UserdirectoryBundle\Entity\EmploymentType;
-use Oleg\UserdirectoryBundle\Entity\FellowshipSubspecialty;
-use Oleg\UserdirectoryBundle\Entity\FellowshipTitleList;
-use Oleg\UserdirectoryBundle\Entity\GeoLocation;
-use Oleg\UserdirectoryBundle\Entity\HonorTrainingList;
-use Oleg\UserdirectoryBundle\Entity\InstitutionType;
-use Oleg\UserdirectoryBundle\Entity\Location;
-use Oleg\UserdirectoryBundle\Entity\MedicalSpecialties;
-use Oleg\UserdirectoryBundle\Entity\MedicalTitleList;
-use Oleg\UserdirectoryBundle\Entity\ResearchLab;
-use Oleg\UserdirectoryBundle\Entity\ResidencySpecialty;
-use Oleg\UserdirectoryBundle\Entity\SourceOrganization;
-use Oleg\UserdirectoryBundle\Entity\SourceSystemList;
-use Oleg\UserdirectoryBundle\Entity\TrainingDegreeList;
-use Oleg\UserdirectoryBundle\Entity\User;
+use App\UserdirectoryBundle\Entity\PerSiteSettings;
+use App\UserdirectoryBundle\Entity\AdministrativeTitle;
+use App\UserdirectoryBundle\Entity\BuildingList;
+use App\UserdirectoryBundle\Entity\CompletionReasonList;
+use App\UserdirectoryBundle\Entity\DocumentTypeList;
+use App\UserdirectoryBundle\Entity\EmploymentType;
+use App\UserdirectoryBundle\Entity\FellowshipSubspecialty;
+use App\UserdirectoryBundle\Entity\FellowshipTitleList;
+use App\UserdirectoryBundle\Entity\GeoLocation;
+use App\UserdirectoryBundle\Entity\HonorTrainingList;
+use App\UserdirectoryBundle\Entity\InstitutionType;
+use App\UserdirectoryBundle\Entity\Location;
+use App\UserdirectoryBundle\Entity\MedicalSpecialties;
+use App\UserdirectoryBundle\Entity\MedicalTitleList;
+use App\UserdirectoryBundle\Entity\ResearchLab;
+use App\UserdirectoryBundle\Entity\ResidencySpecialty;
+use App\UserdirectoryBundle\Entity\SourceOrganization;
+use App\UserdirectoryBundle\Entity\SourceSystemList;
+use App\UserdirectoryBundle\Entity\TrainingDegreeList;
+use App\UserdirectoryBundle\Entity\User;
 
-use Oleg\UserdirectoryBundle\Entity\SiteParameters;
-use Oleg\UserdirectoryBundle\Util\UserUtil;
-use Oleg\UserdirectoryBundle\Entity\Roles;
-use Oleg\UserdirectoryBundle\Entity\Institution;
-use Oleg\UserdirectoryBundle\Entity\Department;
-use Oleg\UserdirectoryBundle\Entity\Division;
-use Oleg\UserdirectoryBundle\Entity\Service;
-use Oleg\UserdirectoryBundle\Entity\States;
-use Oleg\UserdirectoryBundle\Entity\BoardCertifiedSpecialties;
-use Oleg\UserdirectoryBundle\Entity\EmploymentTerminationType;
-use Oleg\UserdirectoryBundle\Entity\EventTypeList;
-use Oleg\UserdirectoryBundle\Entity\IdentifierTypeList;
-use Oleg\UserdirectoryBundle\Entity\FellowshipTypeList;
-use Oleg\UserdirectoryBundle\Entity\ResidencyTrackList;
-use Oleg\UserdirectoryBundle\Entity\LocationTypeList;
-use Oleg\UserdirectoryBundle\Entity\Countries;
-use Oleg\UserdirectoryBundle\Entity\Equipment;
-use Oleg\UserdirectoryBundle\Entity\EquipmentType;
-use Oleg\UserdirectoryBundle\Entity\LocationPrivacyList;
-use Oleg\UserdirectoryBundle\Entity\RoleAttributeList;
-use Oleg\UserdirectoryBundle\Entity\LanguageList;
+use App\UserdirectoryBundle\Entity\SiteParameters;
+use App\UserdirectoryBundle\Util\UserUtil;
+use App\UserdirectoryBundle\Entity\Roles;
+use App\UserdirectoryBundle\Entity\Institution;
+use App\UserdirectoryBundle\Entity\Department;
+use App\UserdirectoryBundle\Entity\Division;
+use App\UserdirectoryBundle\Entity\Service;
+use App\UserdirectoryBundle\Entity\States;
+use App\UserdirectoryBundle\Entity\BoardCertifiedSpecialties;
+use App\UserdirectoryBundle\Entity\EmploymentTerminationType;
+use App\UserdirectoryBundle\Entity\EventTypeList;
+use App\UserdirectoryBundle\Entity\IdentifierTypeList;
+use App\UserdirectoryBundle\Entity\FellowshipTypeList;
+use App\UserdirectoryBundle\Entity\ResidencyTrackList;
+use App\UserdirectoryBundle\Entity\LocationTypeList;
+use App\UserdirectoryBundle\Entity\Countries;
+use App\UserdirectoryBundle\Entity\Equipment;
+use App\UserdirectoryBundle\Entity\EquipmentType;
+use App\UserdirectoryBundle\Entity\LocationPrivacyList;
+use App\UserdirectoryBundle\Entity\RoleAttributeList;
+use App\UserdirectoryBundle\Entity\LanguageList;
 use Symfony\Component\Intl\Locale\Locale;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
@@ -168,7 +168,7 @@ class AdminController extends Controller
     {
         $logger = $this->container->get('logger');
         $em = $this->getDoctrine()->getManager();
-        $users = $roles = $em->getRepository('OlegUserdirectoryBundle:User')->findAll();
+        $users = $roles = $em->getRepository('AppUserdirectoryBundle:User')->findAll();
         $logger->notice('firstTimeLoginGenerationAction: users='.count($users));
 
         if (count($users) == 0) {
@@ -187,7 +187,7 @@ class AdminController extends Controller
 
                 $usetUtil = new UserUtil();
                 $usetUtil->generateUsernameTypes($em, null, false);
-                //$userkeytype = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findOneByAbbreviation("local-user");
+                //$userkeytype = $em->getRepository('AppUserdirectoryBundle:UsernameType')->findOneByAbbreviation("local-user");
 
                 $this->generateSitenameList(null);
 
@@ -231,11 +231,11 @@ class AdminController extends Controller
             //if( $channel && $channel == "https" ) {
             if( $request->get('_route') == "first-time-login-generation-init-https" ) {
                 //set channel in SiteParameters to https
-                $entities = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+                $entities = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
                 if (count($entities) != 1) {
                     $userServiceUtil = $this->get('user_service_utility');
                     $userServiceUtil->generateSiteParameters();
-                    $entities = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+                    $entities = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
                 }
                 if (count($entities) != 1) {
                     exit('Must have only one parameter object. Found ' . count($entities) . ' object(s)');
@@ -268,7 +268,7 @@ class AdminController extends Controller
         );
 
 //        //make sure sitesettings is initialized
-//        $siteParams = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+//        $siteParams = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
 //        if( count($siteParams) != 1 ) {
 //            $userServiceUtil = $this->get('user_service_utility');
 //            $userServiceUtil->generateSiteParameters();
@@ -625,7 +625,7 @@ class AdminController extends Controller
      *
      * @Route("/lists/", name="user_admin_index")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:Admin:index.html.twig")
+     * @Template("AppUserdirectoryBundle:Admin:index.html.twig")
      */
     public function indexAction()
     {
@@ -633,7 +633,7 @@ class AdminController extends Controller
         $environment = 'dev'; //default
 
         $em = $this->getDoctrine()->getManager();
-        $params = $roles = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+        $params = $roles = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
 
         if( count($params) > 1 ) {
             throw new \Exception( 'Must have only one parameter object. Found '.count($params).'object(s)' );
@@ -644,7 +644,7 @@ class AdminController extends Controller
             $environment = $param->getEnvironment();
         }
 
-        return $this->render('OlegUserdirectoryBundle:Admin:index.html.twig', array('environment'=>$environment));
+        return $this->render('AppUserdirectoryBundle:Admin:index.html.twig', array('environment'=>$environment));
     }
 
     /**
@@ -652,7 +652,7 @@ class AdminController extends Controller
      *
      * @Route("/hierarchies/", name="user_admin_hierarchy_index")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:Admin:hierarchy-index.html.twig")
+     * @Template("AppUserdirectoryBundle:Admin:hierarchy-index.html.twig")
      */
     public function indexHierarchyAction()
     {
@@ -660,7 +660,7 @@ class AdminController extends Controller
         $environment = 'dev'; //default
 
         $em = $this->getDoctrine()->getManager();
-        $params = $roles = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+        $params = $roles = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
 
         if( count($params) > 1 ) {
             throw new \Exception( 'Must have only one parameter object. Found '.count($params).'object(s)' );
@@ -673,7 +673,7 @@ class AdminController extends Controller
 
         $filters = $this->getDefaultHierarchyFilter();
 
-        return $this->render('OlegUserdirectoryBundle:Admin:hierarchy-index.html.twig', array('environment'=>$environment,'filters'=>$filters));
+        return $this->render('AppUserdirectoryBundle:Admin:hierarchy-index.html.twig', array('environment'=>$environment,'filters'=>$filters));
     }
     public function getDefaultHierarchyFilter() {
         $filterStr = array();
@@ -693,7 +693,7 @@ class AdminController extends Controller
      *
      * @Route("/populate-all-site-lists-with-default-values", name="user_generate_all_site")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:Admin:index.html.twig")
+     * @Template("AppUserdirectoryBundle:Admin:index.html.twig")
      */
     public function generateAllSiteAction()
     {
@@ -731,7 +731,7 @@ class AdminController extends Controller
      *
      * @Route("/populate-all-lists-with-default-values", name="user_generate_all")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:Admin:index.html.twig")
+     * @Template("AppUserdirectoryBundle:Admin:index.html.twig")
      */
     public function generateAllAction()
     {
@@ -1162,7 +1162,7 @@ class AdminController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         //generate role can update the role too
-//        $entities = $em->getRepository('OlegUserdirectoryBundle:Roles')->findAll();
+//        $entities = $em->getRepository('AppUserdirectoryBundle:Roles')->findAll();
 //        if( $entities ) {
 //            //return -1;
 //        }
@@ -1810,7 +1810,7 @@ class AdminController extends Controller
             $description = $aliasDescription[1];
             $level = $aliasDescription[2];
 
-            $entity = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName(trim($role));
+            $entity = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName(trim($role));
 
             if( $entity ) {
                 if( !$entity->getLevel() ) {
@@ -1849,7 +1849,7 @@ class AdminController extends Controller
             //set attributes for ROLE_SCANORDER_ONCALL_TRAINEE
             if( $role == "ROLE_SCANORDER_ONCALL_TRAINEE" ) {
                 $attrValue = "(111) 111-1111";
-                $attrs = $em->getRepository('OlegUserdirectoryBundle:RoleAttributeList')->findBy(array("name"=>$attrName,"value"=>$attrValue));
+                $attrs = $em->getRepository('AppUserdirectoryBundle:RoleAttributeList')->findBy(array("name"=>$attrName,"value"=>$attrValue));
                 if( count($attrs) == 0 ) {
                     $attr = new RoleAttributeList();
                     $this->setDefaultList($attr,1,$username,$attrName);
@@ -1860,7 +1860,7 @@ class AdminController extends Controller
             //set attributes for ROLE_SCANORDER_ONCALL_ATTENDING
             if( $role == "ROLE_SCANORDER_ONCALL_ATTENDING" ) {
                 $attrValue = "(222) 222-2222";
-                $attrs = $em->getRepository('OlegUserdirectoryBundle:RoleAttributeList')->findBy(array("name"=>$attrName,"value"=>$attrValue));
+                $attrs = $em->getRepository('AppUserdirectoryBundle:RoleAttributeList')->findBy(array("name"=>$attrName,"value"=>$attrValue));
                 if( count($attrs) == 0 ) {
                     $attr = new RoleAttributeList();
                     $this->setDefaultList($attr,10,$username,$attrName);
@@ -1872,7 +1872,7 @@ class AdminController extends Controller
             if( $role == "ROLE_PLATFORM_ADMIN" || $role == "ROLE_PLATFORM_DEPUTY_ADMIN" ) {
                 $nameAbbreviationSites = $this->getSiteList();
                 foreach( $nameAbbreviationSites as $name=>$abbreviation ) {
-                    $siteObject = $em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation($abbreviation);
+                    $siteObject = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation($abbreviation);
                     if( !$entity->getSites()->contains($siteObject) ) {
                         $entity->addSite($siteObject);
                     }
@@ -1902,41 +1902,41 @@ class AdminController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+        $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
         $entity->setInstitution($wcmc);
 
         if( strpos($role,'BREASTPATHOLOGY') !== false ) {
-            $BREASTPATHOLOGY = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Breast Pathology");
+            $BREASTPATHOLOGY = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Breast Pathology");
             $entity->setFellowshipSubspecialty($BREASTPATHOLOGY);
         }
 
         if( strpos($role,'CYTOPATHOLOGY') !== false ) {
-            $CYTOPATHOLOGY = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Cytopathology");
+            $CYTOPATHOLOGY = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Cytopathology");
             $entity->setFellowshipSubspecialty($CYTOPATHOLOGY);
         }
 
         if( strpos($role,'GYNECOLOGICPATHOLOGY') !== false ) {
-            $GYNECOLOGICPATHOLOGY = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Gynecologic Pathology");
+            $GYNECOLOGICPATHOLOGY = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Gynecologic Pathology");
             $entity->setFellowshipSubspecialty($GYNECOLOGICPATHOLOGY);
         }
 
         if( strpos($role,'GASTROINTESTINALPATHOLOGY') !== false ) {
-            $GASTROINTESTINALPATHOLOGY = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Gastrointestinal Pathology");
+            $GASTROINTESTINALPATHOLOGY = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Gastrointestinal Pathology");
             $entity->setFellowshipSubspecialty($GASTROINTESTINALPATHOLOGY);
         }
 
         if( strpos($role,'GENITOURINARYPATHOLOGY') !== false ) {
-            $GENITOURINARYPATHOLOGY = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Genitourinary Pathology");
+            $GENITOURINARYPATHOLOGY = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Genitourinary Pathology");
             $entity->setFellowshipSubspecialty($GENITOURINARYPATHOLOGY);
         }
 
         if( strpos($role,'HEMATOPATHOLOGY') !== false ) {
-            $HEMATOPATHOLOGY = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Hematopathology");
+            $HEMATOPATHOLOGY = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Hematopathology");
             $entity->setFellowshipSubspecialty($HEMATOPATHOLOGY);
         }
 
         if( strpos($role,'MOLECULARGENETICPATHOLOGY') !== false ) {
-            $MOLECULARGENETICPATHOLOGY = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Molecular Genetic Pathology");
+            $MOLECULARGENETICPATHOLOGY = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Molecular Genetic Pathology");
             $entity->setFellowshipSubspecialty($MOLECULARGENETICPATHOLOGY);
         }
 
@@ -1953,7 +1953,7 @@ class AdminController extends Controller
         }
 
         $em = $this->getDoctrine()->getManager();
-        $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+        $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
 
         //should be 8:
 
@@ -2003,7 +2003,7 @@ class AdminController extends Controller
         //echo "role=".$role."<br>";
         //DERMATOPATHOLOGY: ?
         if( strpos($role,$VacReqGroupStr) !== false ) {
-            $groupObject = $em->getRepository('OlegUserdirectoryBundle:Institution')->findNodeByNameAndRoot($root->getId(),$instName);
+            $groupObject = $em->getRepository('AppUserdirectoryBundle:Institution')->findNodeByNameAndRoot($root->getId(),$instName);
             if( !$groupObject ) {
                 echo "vacreqRoleSetSingleUserInstitution: ".$root." (ID ".$root->getId()."): no child found with name=".$instName."<br>";
                 exit();
@@ -2014,7 +2014,7 @@ class AdminController extends Controller
             //assign approver APPROVER
             //echo "cwid=".$cwid."<br>";
             if( $cwid && strpos($role,"ROLE_VACREQ_APPROVER") !== false ) {
-                $approver = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($cwid);
+                $approver = $em->getRepository('AppUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($cwid);
                 //echo "approver=".$approver."<br>";
                 if( $approver ) {
                     $approver->addRole($entity);
@@ -2027,7 +2027,7 @@ class AdminController extends Controller
 
             //assign SUPERVISOR
             if( $cwid && strpos($role,"ROLE_VACREQ_SUPERVISOR") !== false ) {
-                $supervisor = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($cwid);
+                $supervisor = $em->getRepository('AppUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($cwid);
                 //echo "supervisor=".$supervisor."<br>";
                 if( $supervisor ) {
                     $supervisor->addRole($entity);
@@ -2052,7 +2052,7 @@ class AdminController extends Controller
 //    public function generateSiteParameters_ORIG() {
 //
 //        $em = $this->getDoctrine()->getManager();
-//        $entities = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+//        $entities = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
 //
 //        if( count($entities) > 0 ) {
 //            return -1;
@@ -2080,7 +2080,7 @@ class AdminController extends Controller
 //            "aDLDAPServerOu" => "dc=example,dc=com",    //used for DC
 //            "aDLDAPServerAccountUserName" => "null",
 //            "aDLDAPServerAccountPassword" => "null",
-//            "ldapExePath" => "../src/Oleg/UserdirectoryBundle/Util/",
+//            "ldapExePath" => "../src/App/UserdirectoryBundle/Util/",
 //            "ldapExeFilename" => "LdapSaslCustom.exe",
 //
 //            "dbServerAddress" => "127.0.0.1",
@@ -2112,7 +2112,7 @@ class AdminController extends Controller
 //                                         "If You have any questions, please do not hesitate to contact me by phone or via email. ".
 //                                         "Sincerely, Jessica Misner Fellowship Program Coordinator Weill Cornell Medicine Pathology and Laboratory Medicine 1300 York Avenue, Room C-302 T 212.746.6464 F 212.746.8192",
 //            "clientEmailFellApp" => '',
-//            "p12KeyPathFellApp" => 'E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\src\Oleg\FellAppBundle\Util',
+//            "p12KeyPathFellApp" => 'E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\src\App\FellAppBundle\Util',
 //            "googleDriveApiUrlFellApp" => "https://www.googleapis.com/auth/drive https://spreadsheets.google.com/feeds",
 //            "userImpersonateEmailFellApp" => "olegivanov@pathologysystems.org",
 //            "templateIdFellApp" => "",
@@ -2182,15 +2182,15 @@ class AdminController extends Controller
 //                </p>
 //
 //                <p>
-//                    Designers: Victor Brodsky, Oleg Ivanov
+//                    Designers: Victor Brodsky, App Ivanov
 //                </p>
 //
 //                <p>
-//                    Developer: Oleg Ivanov
+//                    Developer: App Ivanov
 //                </p>
 //
 //                <p>
-//                    Quality Assurance Testers: Oleg Ivanov, Steven Bowe, Emilio Madrigal
+//                    Quality Assurance Testers: App Ivanov, Steven Bowe, Emilio Madrigal
 //                </p>
 //
 //                <p>
@@ -2409,7 +2409,7 @@ class AdminController extends Controller
 //
 //        //assign Institution
 //        $institutionName = 'Weill Cornell Medical College';
-//        $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName($institutionName);
+//        $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByName($institutionName);
 //        if( !$institution ) {
 //            throw new \Exception( 'Institution was not found for name='.$institutionName );
 //        }
@@ -2430,7 +2430,7 @@ class AdminController extends Controller
     public function generateDefaultOrgGroupSiteParameters() {
         $userSecUtil = $this->get('user_security_utility');
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+        $entities = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
 
         if( count($entities) != 1 ) {
             throw new \Exception( 'Must have only one parameter object. Found '.count($entities).'object(s)' );
@@ -2438,7 +2438,7 @@ class AdminController extends Controller
 
         $entity = $entities[0];
 
-        $nyp = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("NYP");
+        $nyp = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("NYP");
         if( !$nyp ) {
             exit('No Institution: "NYP"');
         }
@@ -2446,17 +2446,17 @@ class AdminController extends Controller
         $autoAssignInstitution = $userSecUtil->getAutoAssignInstitution();
 
         if( !$autoAssignInstitution ) {
-            $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+            $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
             if( !$wcmc ) {
                 exit('generateDefaultOrgGroupSiteParameters: No Institution: "WCM"');
             }
 
             $mapper = array(
-                'prefix' => 'Oleg',
+                'prefix' => 'App',
                 'bundleName' => 'UserdirectoryBundle',
                 'className' => 'Institution'
             );
-            $autoAssignInstitution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+            $autoAssignInstitution = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
                 "Pathology and Laboratory Medicine",
                 $wcmc,
                 $mapper
@@ -2488,9 +2488,9 @@ class AdminController extends Controller
         $pathDefaultGroup->setInstitution($autoAssignInstitution);
 
         //primaryPublicUserIdType (WCM CWID)
-        $primaryPublicUserIdType = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findOneByName("Active Directory (LDAP)");
+        $primaryPublicUserIdType = $em->getRepository('AppUserdirectoryBundle:UsernameType')->findOneByName("Active Directory (LDAP)");
         if( !$primaryPublicUserIdType ) {
-            $primaryPublicUserIdTypes = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findAll();
+            $primaryPublicUserIdTypes = $em->getRepository('AppUserdirectoryBundle:UsernameType')->findAll();
             if( count($primaryPublicUserIdTypes) > 0 ) {
                 $primaryPublicUserIdType = $primaryPublicUserIdTypes[0];
             }
@@ -2505,19 +2505,19 @@ class AdminController extends Controller
 
         //roles
         //ROLE_SCANORDER_SUBMITTER
-        $role = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName("ROLE_SCANORDER_SUBMITTER");
+        $role = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName("ROLE_SCANORDER_SUBMITTER");
         if( !$role ) {
             exit('No Role: "ROLE_SCANORDER_SUBMITTER"');
         }
         $pathDefaultGroup->addRole($role);
         //ROLE_USERDIRECTORY_OBSERVER
-        $role = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName("ROLE_USERDIRECTORY_OBSERVER");
+        $role = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName("ROLE_USERDIRECTORY_OBSERVER");
         if( !$role ) {
             exit('No Role: "ROLE_USERDIRECTORY_OBSERVER"');
         }
         $pathDefaultGroup->addRole($role);
         //ROLE_VACREQ_OBSERVER_WCM_PATHOLOGY
-        $role = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName("ROLE_VACREQ_OBSERVER_WCM_PATHOLOGY");
+        $role = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName("ROLE_VACREQ_OBSERVER_WCM_PATHOLOGY");
         if( !$role ) {
             exit('No Role: "ROLE_VACREQ_OBSERVER_WCM_PATHOLOGY"');
         }
@@ -2541,21 +2541,21 @@ class AdminController extends Controller
         $pathDefaultGroup->addPermittedInstitutionalPHIScope($autoAssignInstitution);
 
         //employmentType
-        $employmentType = $em->getRepository('OlegUserdirectoryBundle:EmploymentType')->findOneByName("Full Time");
+        $employmentType = $em->getRepository('AppUserdirectoryBundle:EmploymentType')->findOneByName("Full Time");
         if( !$employmentType ) {
             exit('No object: "Full Time"');
         }
         $pathDefaultGroup->setEmploymentType($employmentType);
 
         //locale: en_US - English (United States)
-        $locale = $em->getRepository('OlegUserdirectoryBundle:LocaleList')->findOneByName("en_US");
+        $locale = $em->getRepository('AppUserdirectoryBundle:LocaleList')->findOneByName("en_US");
         if( !$locale ) {
             exit('No object: "en_US"');
         }
         $pathDefaultGroup->setLocale($locale);
 
         //languages
-        $language = $em->getRepository('OlegUserdirectoryBundle:LanguageList')->findOneByName("American English");
+        $language = $em->getRepository('AppUserdirectoryBundle:LanguageList')->findOneByName("American English");
         if( !$language ) {
             exit('No object: "American English"');
         }
@@ -2571,7 +2571,7 @@ class AdminController extends Controller
         $pathDefaultGroup->setMedicalTitleInstitution($autoAssignInstitution);
 
         //locationTypes
-        $locationType = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Employee Office");
+        $locationType = $em->getRepository('AppUserdirectoryBundle:LocationTypeList')->findOneByName("Employee Office");
         if( !$locationType ) {
             exit('No object: "Employee Office"');
         }
@@ -2581,14 +2581,14 @@ class AdminController extends Controller
         $pathDefaultGroup->setLocationInstitution($autoAssignInstitution);
 
         //city
-        $city = $em->getRepository('OlegUserdirectoryBundle:CityList')->findOneByName("New York");
+        $city = $em->getRepository('AppUserdirectoryBundle:CityList')->findOneByName("New York");
         if( !$city ) {
             exit('No object: "New York"');
         }
         $pathDefaultGroup->setCity($city);
 
         //state
-        $state = $em->getRepository('OlegUserdirectoryBundle:States')->findOneByName("New York");
+        $state = $em->getRepository('AppUserdirectoryBundle:States')->findOneByName("New York");
         if( !$state ) {
             exit('No object: "New York"');
         }
@@ -2598,7 +2598,7 @@ class AdminController extends Controller
         $pathDefaultGroup->setZip("10065");
 
         //country
-        $country = $em->getRepository('OlegUserdirectoryBundle:Countries')->findOneByName("United States");
+        $country = $em->getRepository('AppUserdirectoryBundle:Countries')->findOneByName("United States");
         if( !$country ) {
             exit('No object: "United States"');
         }
@@ -2638,7 +2638,7 @@ class AdminController extends Controller
         $count = 10;
         foreach( $elements as $name => $abbreviation ) {
 
-            $entity = $em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByName($name);
+            $entity = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByName($name);
             if( $entity ) {
                 continue;
             }
@@ -2688,7 +2688,7 @@ class AdminController extends Controller
         $count = 10;
         foreach( $elements as $name ) {
 
-            $entity = $em->getRepository('OlegUserdirectoryBundle:InstitutionType')->findOneByName($name);
+            $entity = $em->getRepository('AppUserdirectoryBundle:InstitutionType')->findOneByName($name);
             if( $entity ) {
                 continue;
             }
@@ -2710,7 +2710,7 @@ class AdminController extends Controller
     public function generateOrganizationalGroupType() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:OrganizationalGroupType')->findAll();
+        $entities = $em->getRepository('AppUserdirectoryBundle:OrganizationalGroupType')->findAll();
 
         if( $entities ) {
             return -1;
@@ -2753,7 +2753,7 @@ class AdminController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('OlegUserdirectoryBundle:Institution')->findAll();
+        $entities = $em->getRepository('AppUserdirectoryBundle:Institution')->findAll();
 
         if( $entities ) {
             return -1;
@@ -2965,18 +2965,18 @@ class AdminController extends Controller
         );
 
 
-        $medicalType = $em->getRepository('OlegUserdirectoryBundle:InstitutionType')->findOneByName('Medical');
+        $medicalType = $em->getRepository('AppUserdirectoryBundle:InstitutionType')->findOneByName('Medical');
 
-        $levelInstitution = $em->getRepository('OlegUserdirectoryBundle:OrganizationalGroupType')->findOneByName('Institution');
-        $levelDepartment = $em->getRepository('OlegUserdirectoryBundle:OrganizationalGroupType')->findOneByName('Department');
-        $levelDivision = $em->getRepository('OlegUserdirectoryBundle:OrganizationalGroupType')->findOneByName('Division');
-        $levelService = $em->getRepository('OlegUserdirectoryBundle:OrganizationalGroupType')->findOneByName('Service');
+        $levelInstitution = $em->getRepository('AppUserdirectoryBundle:OrganizationalGroupType')->findOneByName('Institution');
+        $levelDepartment = $em->getRepository('AppUserdirectoryBundle:OrganizationalGroupType')->findOneByName('Department');
+        $levelDivision = $em->getRepository('AppUserdirectoryBundle:OrganizationalGroupType')->findOneByName('Division');
+        $levelService = $em->getRepository('AppUserdirectoryBundle:OrganizationalGroupType')->findOneByName('Service');
 
         $treeCount = 10;
 
         foreach( $institutions as $institutionname=>$infos ) {
 
-            if( $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName($institutionname) ) {
+            if( $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByName($institutionname) ) {
                 continue;
             }
 
@@ -2996,7 +2996,7 @@ class AdminController extends Controller
                         $departmentname = $infos['departments'][$departmentname];
                     }
 
-                    if( $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName($departmentname) ) {
+                    if( $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByName($departmentname) ) {
                         continue;
                     }
 
@@ -3022,7 +3022,7 @@ class AdminController extends Controller
                                 $divisionname = $divisions[$divisionname];
                             }
 
-                            if( $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName($divisionname) ) {
+                            if( $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByName($divisionname) ) {
                                 continue;
                             }
 
@@ -3040,7 +3040,7 @@ class AdminController extends Controller
                                         $servicename = $services[$servicename];
                                     }
 
-                                    if( $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName($servicename) ) {
+                                    if( $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByName($servicename) ) {
                                         continue;
                                     }
 
@@ -3079,12 +3079,12 @@ class AdminController extends Controller
 
         //All Institutions
         //echo 'All Institutions <br>';
-        $allInst = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("All Institutions");
+        $allInst = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("All Institutions");
         if( !$allInst ) {
             $allInst = new Institution();
             $this->setDefaultList($allInst,1,$username,"All Institutions");
             $allInst->setAbbreviation("All Institutions");
-            $medicalType = $em->getRepository('OlegUserdirectoryBundle:InstitutionType')->findOneByName('Medical');
+            $medicalType = $em->getRepository('AppUserdirectoryBundle:InstitutionType')->findOneByName('Medical');
             $allInst->addType($medicalType);
             //$allInst->setOrganizationalGroupType($levelInstitution);
 
@@ -3094,9 +3094,9 @@ class AdminController extends Controller
         }
 
         //All Collaborations
-        $collaborationType = $em->getRepository('OlegUserdirectoryBundle:InstitutionType')->findOneByName('Collaboration');
+        $collaborationType = $em->getRepository('AppUserdirectoryBundle:InstitutionType')->findOneByName('Collaboration');
         //echo 'All Collaborations <br>';
-        $allCollaborationInst = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("All Collaborations");
+        $allCollaborationInst = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("All Collaborations");
         if( !$allCollaborationInst ) {
             $allCollaborationInst = new Institution();
             $this->setDefaultList($allCollaborationInst,2,$username,"All Collaborations");
@@ -3109,7 +3109,7 @@ class AdminController extends Controller
         }
 
         //add 'WCM-NYP Collaboration'
-        $wcmcnypCollaborationInst = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName('WCM-NYP Collaboration');
+        $wcmcnypCollaborationInst = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByName('WCM-NYP Collaboration');
         if( !$wcmcnypCollaborationInst ) {
             $wcmcnypCollaborationInst = new Institution();
             $this->setDefaultList($wcmcnypCollaborationInst,3,$username,"WCM-NYP Collaboration");
@@ -3117,13 +3117,13 @@ class AdminController extends Controller
 
             $wcmcnypCollaborationInst->addType($collaborationType);
 
-            $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+            $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
             $wcmcnypCollaborationInst->addCollaborationInstitution($wcmc);
 
-            $nyp = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("NYP");
+            $nyp = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("NYP");
             $wcmcnypCollaborationInst->addCollaborationInstitution($nyp);
 
-            $unionCollaborationType = $em->getRepository('OlegUserdirectoryBundle:CollaborationTypeList')->findOneByName("Union");
+            $unionCollaborationType = $em->getRepository('AppUserdirectoryBundle:CollaborationTypeList')->findOneByName("Union");
             $wcmcnypCollaborationInst->setCollaborationType($unionCollaborationType);
 
             $allCollaborationInst->addChild($wcmcnypCollaborationInst);
@@ -3135,27 +3135,27 @@ class AdminController extends Controller
         }
 
 //            //add WCM-NYP collaboration object to this "WCM-NYP" institution above
-//            $wcmcnypCollaboration = $em->getRepository('OlegUserdirectoryBundle:Collaboration')->findOneByName("WCM-NYP");
+//            $wcmcnypCollaboration = $em->getRepository('AppUserdirectoryBundle:Collaboration')->findOneByName("WCM-NYP");
 //            if( !$wcmcnypCollaboration ) {
 //                $wcmcnypCollaboration = new Collaboration();
 //                $this->setDefaultList($wcmcnypCollaboration,10,$username,"WCM-NYP");
 //
 //                //add institutions
 //                //WCM
-//                $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName("WCM");
+//                $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByName("WCM");
 //                if( !$wcmc ) {
 //                    exit('No Institution: "WCM"');
 //                }
 //                $wcmcnypCollaboration->addInstitution($wcmc);
 //                //NYP
-//                $nyp = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName("NYP");
+//                $nyp = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByName("NYP");
 //                if( !$nyp ) {
 //                    exit('No Institution: "NYP"');
 //                }
 //                $wcmcnypCollaboration->addInstitution($nyp);
 //
 //                //set type
-//                $collaborationType = $em->getRepository('OlegUserdirectoryBundle:CollaborationTypeList')->findOneByName("Union");
+//                $collaborationType = $em->getRepository('AppUserdirectoryBundle:CollaborationTypeList')->findOneByName("Union");
 //                if( !$collaborationType ) {
 //                    exit('No CollaborationTypeList: "Union"');
 //                }
@@ -3174,7 +3174,7 @@ class AdminController extends Controller
     public function generateStates() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:States')->findAll();
+        $entities = $em->getRepository('AppUserdirectoryBundle:States')->findAll();
 
         if( $entities ) {
             return -1;
@@ -3259,7 +3259,7 @@ class AdminController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-//        $entities = $em->getRepository('OlegUserdirectoryBundle:Countries')->findAll();
+//        $entities = $em->getRepository('AppUserdirectoryBundle:Countries')->findAll();
 //        if( $entities ) {
 //            //return -1;
 //        }
@@ -3369,7 +3369,7 @@ class AdminController extends Controller
 
             //country
             //echo "country=".$country."<br>";
-            $countryDb = $em->getRepository('OlegUserdirectoryBundle:Countries')->findOneByName($country);
+            $countryDb = $em->getRepository('AppUserdirectoryBundle:Countries')->findOneByName($country);
 
             if( !$countryDb ) {
                 //echo "add country=".$country."<br>";
@@ -3387,7 +3387,7 @@ class AdminController extends Controller
 
             //city
             //echo "city=".$city."<br>";
-            $cityDb = $em->getRepository('OlegUserdirectoryBundle:CityList')->findOneByName($city);
+            $cityDb = $em->getRepository('AppUserdirectoryBundle:CityList')->findOneByName($city);
 
             if( !$cityDb ) {
                 //echo "add city=".$city."<br>";
@@ -3426,7 +3426,7 @@ class AdminController extends Controller
         $logger = $this->container->get('logger');
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('OlegUserdirectoryBundle:LanguageList')->findAll();
+        $entities = $em->getRepository('AppUserdirectoryBundle:LanguageList')->findAll();
         if( $entities ) {
             $logger->notice("Exit generateLanguages. LanguageList already generated. count=".count($entities));
             return -1;
@@ -3457,7 +3457,7 @@ class AdminController extends Controller
         $count = 10;
         foreach( $elements as $abbreviation=>$name ) {
 
-            //$entity = $em->getRepository('OlegUserdirectoryBundle:LanguageList')->findOneByAbbreviation($abbreviation);
+            //$entity = $em->getRepository('AppUserdirectoryBundle:LanguageList')->findOneByAbbreviation($abbreviation);
 
             //testing
 //            if( $entity ) {
@@ -3512,7 +3512,7 @@ class AdminController extends Controller
         $logger = $this->container->get('logger');
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('OlegUserdirectoryBundle:LocaleList')->findAll();
+        $entities = $em->getRepository('AppUserdirectoryBundle:LocaleList')->findAll();
         if( $entities ) {
             $logger->notice("Exit generateLocales. LocaleList already generated. count=".count($entities));
             return -1;
@@ -3542,7 +3542,7 @@ class AdminController extends Controller
         $count = 10;
         foreach( $elements as $locale=>$description ) {
 
-//            $entities = $em->getRepository('OlegUserdirectoryBundle:LocaleList')->findByName($locale);
+//            $entities = $em->getRepository('AppUserdirectoryBundle:LocaleList')->findByName($locale);
 //            foreach( $entities as $entity ) {
 //                $em->remove($entity);
 //                $em->flush();
@@ -3573,7 +3573,7 @@ class AdminController extends Controller
     public function generateBoardSpecialties() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:BoardCertifiedSpecialties')->findAll();
+        $entities = $em->getRepository('AppUserdirectoryBundle:BoardCertifiedSpecialties')->findAll();
 
         if( $entities ) {
             return -1;
@@ -3621,7 +3621,7 @@ class AdminController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        //$entities = $em->getRepository('OlegUserdirectoryBundle:SourceSystemList')->findAll();
+        //$entities = $em->getRepository('AppUserdirectoryBundle:SourceSystemList')->findAll();
         //if( $entities ) {
         //    return -1;
         //}
@@ -3648,7 +3648,7 @@ class AdminController extends Controller
         $count = 10;
         foreach( $elements as $value ) {
 
-            if( $em->getRepository('OlegUserdirectoryBundle:SourceSystemList')->findOneByName($value) ) {
+            if( $em->getRepository('AppUserdirectoryBundle:SourceSystemList')->findOneByName($value) ) {
                 continue;
             }
 
@@ -3671,7 +3671,7 @@ class AdminController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-//        $entities = $em->getRepository('OlegUserdirectoryBundle:DocumentTypeList')->findAll();
+//        $entities = $em->getRepository('AppUserdirectoryBundle:DocumentTypeList')->findAll();
 //        if( $entities ) {
 //            return -1;
 //        }
@@ -3718,7 +3718,7 @@ class AdminController extends Controller
         $count = 10;
         foreach( $elements as $value ) {
 
-            if( $em->getRepository('OlegUserdirectoryBundle:DocumentTypeList')->findOneByName($value) ) {
+            if( $em->getRepository('AppUserdirectoryBundle:DocumentTypeList')->findOneByName($value) ) {
                 continue;
             }
 
@@ -3740,7 +3740,7 @@ class AdminController extends Controller
     public function generateLinkTypes() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:LinkTypeList')->findAll();
+        $entities = $em->getRepository('AppUserdirectoryBundle:LinkTypeList')->findAll();
 
         if( $entities ) {
             return -1;
@@ -3776,7 +3776,7 @@ class AdminController extends Controller
     public function generateEmploymentTypes() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:EmploymentType')->findAll();
+        $entities = $em->getRepository('AppUserdirectoryBundle:EmploymentType')->findAll();
 
         if( $entities ) {
             return -1;
@@ -3811,7 +3811,7 @@ class AdminController extends Controller
     public function generateTerminationTypes() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:EmploymentTerminationType')->findAll();
+        $entities = $em->getRepository('AppUserdirectoryBundle:EmploymentTerminationType')->findAll();
 
         if( $entities ) {
             return -1;
@@ -3905,10 +3905,10 @@ class AdminController extends Controller
 
         $count = 10;
         foreach( $elements as $value ) {
-            if( $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findOneByName($value) ) {
+            if( $em->getRepository('AppUserdirectoryBundle:EventTypeList')->findOneByName($value) ) {
                 continue;
             }
-            //echo 'OlegUserdirectoryBundle:EventTypeList' . " name=" . $value . "<br>";
+            //echo 'AppUserdirectoryBundle:EventTypeList' . " name=" . $value . "<br>";
             $entity = new EventTypeList();
             $this->setDefaultList($entity,$count,$username,null);
             $entity->setName( trim($value) );
@@ -3917,7 +3917,7 @@ class AdminController extends Controller
             $em->flush();
 
             $count = $count + 10;
-            //echo 'EOF OlegUserdirectoryBundle:EventTypeList' . " name=" . $value . "<br>";
+            //echo 'EOF AppUserdirectoryBundle:EventTypeList' . " name=" . $value . "<br>";
         } //foreach
 
         return round($count/10);
@@ -3927,7 +3927,7 @@ class AdminController extends Controller
     public function generateIdentifierTypeList() {
         $em = $this->getDoctrine()->getManager();
 
-//        $entities = $em->getRepository('OlegUserdirectoryBundle:IdentifierTypeList')->findAll();
+//        $entities = $em->getRepository('AppUserdirectoryBundle:IdentifierTypeList')->findAll();
 //        if( $entities ) {
 //            return -1;
 //        }
@@ -3947,7 +3947,7 @@ class AdminController extends Controller
         $count = 10;
         foreach( $elements as $value ) {
 
-            if( $em->getRepository('OlegUserdirectoryBundle:IdentifierTypeList')->findOneByName($value) ) {
+            if( $em->getRepository('AppUserdirectoryBundle:IdentifierTypeList')->findOneByName($value) ) {
                 continue;
             }
 
@@ -3968,7 +3968,7 @@ class AdminController extends Controller
 
     public function generateFellowshipTypeList() {
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:FellowshipTypeList')->findAll();
+        $entities = $em->getRepository('AppUserdirectoryBundle:FellowshipTypeList')->findAll();
 
         if( $entities ) {
             return -1;
@@ -4018,7 +4018,7 @@ class AdminController extends Controller
 
     public function generateResidencyTrackList() {
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:ResidencyTrackList')->findAll();
+        $entities = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findAll();
 
         if( $entities ) {
             return -1;
@@ -4068,7 +4068,7 @@ class AdminController extends Controller
 
             $value = trim($value);
 
-            if( $em->getRepository('OlegUserdirectoryBundle:MedicalTitleList')->findOneByName($value) ) {
+            if( $em->getRepository('AppUserdirectoryBundle:MedicalTitleList')->findOneByName($value) ) {
                 continue;
             }
 
@@ -4120,7 +4120,7 @@ class AdminController extends Controller
 
             $value = trim($value);
 
-            if( $em->getRepository('OlegUserdirectoryBundle:MedicalSpecialties')->findOneByName($value) ) {
+            if( $em->getRepository('AppUserdirectoryBundle:MedicalSpecialties')->findOneByName($value) ) {
                 continue;
             }
 
@@ -4139,7 +4139,7 @@ class AdminController extends Controller
 
     public function generateLocationTypeList() {
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findAll();
+        $entities = $em->getRepository('AppUserdirectoryBundle:LocationTypeList')->findAll();
 
         if( $entities ) {
             return -1;
@@ -4200,7 +4200,7 @@ class AdminController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-//        $entities = $em->getRepository('OlegUserdirectoryBundle:EquipmentType')->findAll();
+//        $entities = $em->getRepository('AppUserdirectoryBundle:EquipmentType')->findAll();
 //
 //        if( $entities ) {
 //            return -1;
@@ -4223,7 +4223,7 @@ class AdminController extends Controller
         $count = 10;
         foreach( $types as $type ) {
 
-            if( $em->getRepository('OlegUserdirectoryBundle:EquipmentType')->findOneByName($type) ) {
+            if( $em->getRepository('AppUserdirectoryBundle:EquipmentType')->findOneByName($type) ) {
                 continue;
             }
 
@@ -4245,7 +4245,7 @@ class AdminController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-//        $entities = $em->getRepository('OlegUserdirectoryBundle:Equipment')->findAll();
+//        $entities = $em->getRepository('AppUserdirectoryBundle:Equipment')->findAll();
 //
 //        if( $entities ) {
 //            return -1;
@@ -4269,11 +4269,11 @@ class AdminController extends Controller
         $count = 10;
         foreach( $types as $device => $keytype ) {
 
-            if( $em->getRepository('OlegUserdirectoryBundle:Equipment')->findOneByName($device) ) {
+            if( $em->getRepository('AppUserdirectoryBundle:Equipment')->findOneByName($device) ) {
                 continue;
             }
 
-            $keytype = $em->getRepository('OlegUserdirectoryBundle:EquipmentType')->findOneByName($keytype);
+            $keytype = $em->getRepository('AppUserdirectoryBundle:EquipmentType')->findOneByName($keytype);
 
             if( !$keytype ) {
                 //continue;
@@ -4301,7 +4301,7 @@ class AdminController extends Controller
         $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:LocationPrivacyList')->findAll();
+        $entities = $em->getRepository('AppUserdirectoryBundle:LocationPrivacyList')->findAll();
 
         if( $entities ) {
             return -1;
@@ -4336,7 +4336,7 @@ class AdminController extends Controller
         $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:ResearchLab')->findAll();
+        $entities = $em->getRepository('AppUserdirectoryBundle:ResearchLab')->findAll();
 
         if( $entities ) {
             return -1;
@@ -4384,14 +4384,14 @@ class AdminController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $researchLabOrgGroup = $em->getRepository('OlegUserdirectoryBundle:OrganizationalGroupType')->findOneByName("Research Lab");
+        $researchLabOrgGroup = $em->getRepository('AppUserdirectoryBundle:OrganizationalGroupType')->findOneByName("Research Lab");
         if( !$researchLabOrgGroup ) {
             exit('No OrganizationalGroupType: "Research Lab"');
         }
         //echo "researchLabOrgGroup=".$researchLabOrgGroup."<br>";
 
         $mapper = array(
-            'prefix' => 'Oleg',
+            'prefix' => 'App',
             'bundleName' => 'UserdirectoryBundle',
             'className' => 'Institution'
         );
@@ -4400,18 +4400,18 @@ class AdminController extends Controller
         $pathology = $userSecUtil->getAutoAssignInstitution();
 
         if( !$pathology ) {
-            $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+            $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
             if( !$wcmc ) {
                 exit('generateResLabs: No Institution: "WCM"');
             }
-            $pathology = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+            $pathology = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
                 "Pathology and Laboratory Medicine",
                 $wcmc,
                 $mapper
             );
         }
 
-        $medicalType = $em->getRepository('OlegUserdirectoryBundle:InstitutionType')->findOneByName('Medical');
+        $medicalType = $em->getRepository('AppUserdirectoryBundle:InstitutionType')->findOneByName('Medical');
 
         $labs = array(
             "Prostate Cancer Research Group" => "Laboratory of Prostate Cancer Research Group",
@@ -4459,7 +4459,7 @@ class AdminController extends Controller
         foreach( $labs as $labName => $pageName ) {
 
             //1) create a new Research Institution with "Research Lab" OrganizationalGroupType under "WCM-Pathology"
-            $researchInstitution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+            $researchInstitution = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
                 $labName,
                 $pathology,
                 $mapper
@@ -4467,7 +4467,7 @@ class AdminController extends Controller
             if( $researchInstitution ) {
                 continue;
             }
-            $researchInstitution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+            $researchInstitution = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
                 $pageName,
                 $pathology,
                 $mapper
@@ -4490,7 +4490,7 @@ class AdminController extends Controller
 
 
             //2) create Research Lab object
-            $researchLab = $em->getRepository('OlegUserdirectoryBundle:ResearchLab')->findOneByName($labName);
+            $researchLab = $em->getRepository('AppUserdirectoryBundle:ResearchLab')->findOneByName($labName);
             if( $researchLab ) {
                 if( !$researchLab->getInstitution() ) {
                     $researchLab->setInstitution($researchInstitution);
@@ -4499,7 +4499,7 @@ class AdminController extends Controller
                 }
                 continue;
             }
-            $researchLab = $em->getRepository('OlegUserdirectoryBundle:ResearchLab')->findOneByName($pageName);
+            $researchLab = $em->getRepository('AppUserdirectoryBundle:ResearchLab')->findOneByName($pageName);
             if( $researchLab ) {
                 if( !$researchLab->getInstitution() ) {
                     $researchLab->setInstitution($researchInstitution);
@@ -4533,7 +4533,7 @@ class AdminController extends Controller
         $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:BuildingList')->findAll();
+        $entities = $em->getRepository('AppUserdirectoryBundle:BuildingList')->findAll();
 
         if( $entities ) {
             return -1;
@@ -4573,9 +4573,9 @@ class AdminController extends Controller
             array('name'=>"Greenberg Pavilion",'street1'=>'525 East 68th Street','abbr'=>null,'inst'=>'NYP'),
         );
 
-        $city = $em->getRepository('OlegUserdirectoryBundle:CityList')->findOneByName("New York");
-        $state = $em->getRepository('OlegUserdirectoryBundle:States')->findOneByName("New York");
-        $country = $em->getRepository('OlegUserdirectoryBundle:Countries')->findOneByName("United States");
+        $city = $em->getRepository('AppUserdirectoryBundle:CityList')->findOneByName("New York");
+        $state = $em->getRepository('AppUserdirectoryBundle:States')->findOneByName("New York");
+        $country = $em->getRepository('AppUserdirectoryBundle:Countries')->findOneByName("United States");
         if( !$country ) {
             //exit('ERROR: country null');
             $errorMsg = 'Failed to create Building List. Country is not found by name=' . 'United States.'.
@@ -4593,7 +4593,7 @@ class AdminController extends Controller
                 continue;
             }
 
-            if( $em->getRepository('OlegUserdirectoryBundle:BuildingList')->findOneByName($name) ) {
+            if( $em->getRepository('AppUserdirectoryBundle:BuildingList')->findOneByName($name) ) {
                 continue;
             }
 
@@ -4614,7 +4614,7 @@ class AdminController extends Controller
             $listEntity->setAbbreviation($buildingAbbr);
 
             $instAbbr = $building['inst'];
-            $inst = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation($instAbbr);
+            $inst = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation($instAbbr);
             if( $inst ) {
                 $listEntity->addInstitution($inst);
             }
@@ -4638,7 +4638,7 @@ class AdminController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-//        $entities = $em->getRepository('OlegUserdirectoryBundle:Location')->findAll();
+//        $entities = $em->getRepository('AppUserdirectoryBundle:Location')->findAll();
 //        if( $entities ) {
 //            return -1;
 //        }
@@ -4647,12 +4647,12 @@ class AdminController extends Controller
             "Surgical Pathology Filing Room" => array('street1'=>'520 East 70th Street','phone'=>'222-0059','room'=>'ST-1012','inst'=>'NYP'),
         );
 
-        $city = $em->getRepository('OlegUserdirectoryBundle:CityList')->findOneByName("New York");
-        $state = $em->getRepository('OlegUserdirectoryBundle:States')->findOneByName("New York");
-        $country = $em->getRepository('OlegUserdirectoryBundle:Countries')->findOneByName("United States");
-        $locationType = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Filing Room");
-        $locationPrivacy = $em->getRepository('OlegUserdirectoryBundle:LocationPrivacyList')->findOneByName("Anyone can see this contact information");
-        $building = $em->getRepository('OlegUserdirectoryBundle:BuildingList')->findOneByName("Starr Pavilion");
+        $city = $em->getRepository('AppUserdirectoryBundle:CityList')->findOneByName("New York");
+        $state = $em->getRepository('AppUserdirectoryBundle:States')->findOneByName("New York");
+        $country = $em->getRepository('AppUserdirectoryBundle:Countries')->findOneByName("United States");
+        $locationType = $em->getRepository('AppUserdirectoryBundle:LocationTypeList')->findOneByName("Filing Room");
+        $locationPrivacy = $em->getRepository('AppUserdirectoryBundle:LocationPrivacyList')->findOneByName("Anyone can see this contact information");
+        $building = $em->getRepository('AppUserdirectoryBundle:BuildingList')->findOneByName("Starr Pavilion");
 
         if( !$country ) {
             $errorMsg = 'Failed to create Building List. Country is not found by name=' . 'United States.'.
@@ -4664,7 +4664,7 @@ class AdminController extends Controller
         $count = 10;
         foreach( $locations as $location => $attr ) {
 
-            if( $em->getRepository('OlegUserdirectoryBundle:Location')->findOneByName($location) ) {
+            if( $em->getRepository('AppUserdirectoryBundle:Location')->findOneByName($location) ) {
                 continue;
             }
 
@@ -4677,7 +4677,7 @@ class AdminController extends Controller
             $room = $attr['room'];
             $instAbbr = $attr['inst'];
 
-            $inst = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation($instAbbr);
+            $inst = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation($instAbbr);
             if( $inst ) {
                 $listEntity->setInstitution($inst);
             }
@@ -4720,14 +4720,14 @@ class AdminController extends Controller
         $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
-//        $entities = $em->getRepository('OlegUserdirectoryBundle:Location')->findAll();
+//        $entities = $em->getRepository('AppUserdirectoryBundle:Location')->findAll();
 //        if( count($entities) > 3 ) {
 //            return -1;
 //        }
 
         $userSecUtil = $this->container->get('user_security_utility');
 
-        $locationPrivacy = $em->getRepository('OlegUserdirectoryBundle:LocationPrivacyList')->findOneByName("Anyone can see this contact information");
+        $locationPrivacy = $em->getRepository('AppUserdirectoryBundle:LocationPrivacyList')->findOneByName("Anyone can see this contact information");
         if( !$locationPrivacy ) {
             exit("Location privacy is not found by name "."'Anyone can see this contact information'");
         }
@@ -4775,7 +4775,7 @@ class AdminController extends Controller
                 exit("Location name is empty");
             }
 
-            $listEntity = $em->getRepository('OlegUserdirectoryBundle:Location')->findOneByName($name);
+            $listEntity = $em->getRepository('AppUserdirectoryBundle:Location')->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -4787,7 +4787,7 @@ class AdminController extends Controller
             $listEntity->setPrivacy($locationPrivacy);
 
             if( $locationTypeName ) {
-                $locationType = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName($locationTypeName);
+                $locationType = $em->getRepository('AppUserdirectoryBundle:LocationTypeList')->findOneByName($locationTypeName);
                 if (!$locationType) {
                     exit("No location found by name " . $locationTypeName);
                 }
@@ -4799,7 +4799,7 @@ class AdminController extends Controller
             }
 
             if( $locationRoom ) {
-                $room = $em->getRepository('OlegUserdirectoryBundle:RoomList')->findOneByName($locationRoom);
+                $room = $em->getRepository('AppUserdirectoryBundle:RoomList')->findOneByName($locationRoom);
                 if (!$room) {
                     exit("No room found by name " . $locationRoom);
                 }
@@ -4807,7 +4807,7 @@ class AdminController extends Controller
             }
 
             if( $locationSuite ) {
-                $suite = $em->getRepository('OlegUserdirectoryBundle:SuiteList')->findOneByName($locationSuite);
+                $suite = $em->getRepository('AppUserdirectoryBundle:SuiteList')->findOneByName($locationSuite);
                 if (!$suite) {
                     exit("No suite found by name " . $locationSuite);
                 }
@@ -4815,14 +4815,14 @@ class AdminController extends Controller
             }
 
             if( $locationFloor ) {
-                $floor = $em->getRepository('OlegUserdirectoryBundle:FloorList')->findOneByName($locationFloor);
+                $floor = $em->getRepository('AppUserdirectoryBundle:FloorList')->findOneByName($locationFloor);
                 if( !$floor ) {
                     //exit("No floor found by name " . $locationFloor);
                     $floor = $userSecUtil->getObjectByNameTransformer($username,$locationFloor,"UserdirectoryBundle","FloorList");
                     $em->persist($floor);
                     $em->flush($floor);
                 }
-                //$floor = $em->getRepository('OlegUserdirectoryBundle:FloorList')->findOneByName($locationFloor);
+                //$floor = $em->getRepository('AppUserdirectoryBundle:FloorList')->findOneByName($locationFloor);
                 if( !$floor ) {
                     exit("No floor found by name " . $locationFloor);
                 }
@@ -4837,7 +4837,7 @@ class AdminController extends Controller
                 if( $locationBuildingName == "Greenberg Pavillion" ) {
                     $locationBuildingName = "Greenberg Pavilion";
                 }
-                $building = $em->getRepository('OlegUserdirectoryBundle:BuildingList')->findOneByName($locationBuildingName);
+                $building = $em->getRepository('AppUserdirectoryBundle:BuildingList')->findOneByName($locationBuildingName);
                 if (!$building) {
                     continue;
                     exit("No building type found by name " . $locationBuildingName);
@@ -4882,7 +4882,7 @@ class AdminController extends Controller
         //echo "systemuser ".$systemuser.", id=".$systemuser->getId()."<br>";
 
 //        $em = $this->getDoctrine()->getManager();
-//        $entities = $em->getRepository('OlegUserdirectoryBundle:ResearchLab')->findAll();
+//        $entities = $em->getRepository('AppUserdirectoryBundle:ResearchLab')->findAll();
 //
 //        if( $entities ) {
 //            return -1;
@@ -4897,7 +4897,7 @@ class AdminController extends Controller
             $user->setPrimaryPublicUserId($testusername);
 
             //echo "username=".$user->getPrimaryPublicUserId()."<br>";
-            $found_user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByPrimaryPublicUserId( $user->getPrimaryPublicUserId() );
+            $found_user = $em->getRepository('AppUserdirectoryBundle:User')->findOneByPrimaryPublicUserId( $user->getPrimaryPublicUserId() );
             if( $found_user ) {
                 //add scanorder Roles
                 foreach( $roles as $role ) {
@@ -4955,12 +4955,12 @@ class AdminController extends Controller
             $userSettings = $user->getPerSiteSettings();
             if( !$userSettings ) {
                 //get user from DB to avoid An exception occurred while executing 'INSERT INTO scan_perSiteSettings ... Key (fosuser)=(8) already exists
-                $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($userId);
+                $user = $em->getRepository('AppUserdirectoryBundle:User')->find($userId);
                 //echo "create new PerSiteSettings for user " . $user . ", id=" . $user->getId() . "<br>";
                 $perSiteSettings = new PerSiteSettings($systemuser);
                 $perSiteSettings->setUser($user);
 
-//                $params = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+//                $params = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
 //                if (count($params) != 1) {
 //                    throw new \Exception('Must have only one parameter object. Found ' . count($params) . ' object(s)');
 //                }
@@ -4987,7 +4987,7 @@ class AdminController extends Controller
         $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:CompletionReasonList')->findAll();
+        $entities = $em->getRepository('AppUserdirectoryBundle:CompletionReasonList')->findAll();
 
         if( $entities ) {
             return -1;
@@ -5018,7 +5018,7 @@ class AdminController extends Controller
         $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:TrainingDegreeList')->findAll();
+        $entities = $em->getRepository('AppUserdirectoryBundle:TrainingDegreeList')->findAll();
 
         if( $entities ) {
             return -1;
@@ -5043,7 +5043,7 @@ class AdminController extends Controller
 
             //set "MBBS" and "DO" to be synonyms of "MD" in the List Manager for Degrees
             if( $type == "DO" || $type == "MBBS" ) {
-                $mdOriginal = $em->getRepository('OlegUserdirectoryBundle:TrainingDegreeList')->findOneByName("MD");
+                $mdOriginal = $em->getRepository('AppUserdirectoryBundle:TrainingDegreeList')->findOneByName("MD");
                 $listEntity->setOriginal($mdOriginal);
             }
 
@@ -5062,12 +5062,12 @@ class AdminController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-//        $entities = $em->getRepository('OlegUserdirectoryBundle:ResidencySpecialty')->findAll();
+//        $entities = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findAll();
 //        if( $entities ) {
             //return -1;
-//            $query = $em->createQuery('DELETE OlegUserdirectoryBundle:FellowshipSubspecialty c WHERE c.id > 0');
+//            $query = $em->createQuery('DELETE AppUserdirectoryBundle:FellowshipSubspecialty c WHERE c.id > 0');
 //            $query->execute();
-//            $query = $em->createQuery('DELETE OlegUserdirectoryBundle:ResidencySpecialty c WHERE c.id > 0');
+//            $query = $em->createQuery('DELETE AppUserdirectoryBundle:ResidencySpecialty c WHERE c.id > 0');
 //            $query->execute();
 //        }
 
@@ -5117,9 +5117,9 @@ class AdminController extends Controller
                 $residencySpecialty = trim($residencySpecialty);
                 //echo "residencySpecialty=".$residencySpecialty."<br>";
 
-                $residencySpecialtyEntity = $em->getRepository('OlegUserdirectoryBundle:ResidencySpecialty')->findOneByName($residencySpecialty."");
+                $residencySpecialtyEntity = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName($residencySpecialty."");
 
-                //if( $em->getRepository('OlegUserdirectoryBundle:ResidencySpecialty')->findOneByName($residencySpecialty."") ) {
+                //if( $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName($residencySpecialty."") ) {
                 //    continue;
                 //}
 
@@ -5144,7 +5144,7 @@ class AdminController extends Controller
 
                 $fellowshipSubspecialty = trim($fellowshipSubspecialty);
                 //echo "fellowshipSubspecialty=".$fellowshipSubspecialty."<br>";
-                $fellowshipSubspecialtyEntity = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->findOneByName($fellowshipSubspecialty."");
+                $fellowshipSubspecialtyEntity = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName($fellowshipSubspecialty."");
 
                 //if( $fellowshipSubspecialtyEntity ) {
                 //    continue;
@@ -5184,7 +5184,7 @@ class AdminController extends Controller
         $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:HonorTrainingList')->findAll();
+        $entities = $em->getRepository('AppUserdirectoryBundle:HonorTrainingList')->findAll();
 
         if( $entities ) {
             return -1;
@@ -5215,7 +5215,7 @@ class AdminController extends Controller
         $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:FellowshipTitleList')->findAll();
+        $entities = $em->getRepository('AppUserdirectoryBundle:FellowshipTitleList')->findAll();
 
         if( $entities ) {
             return -1;
@@ -5265,7 +5265,7 @@ class AdminController extends Controller
         $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:SourceOrganization')->findAll();
+        $entities = $em->getRepository('AppUserdirectoryBundle:SourceOrganization')->findAll();
 
         if( $entities ) {
             return -1;
@@ -5298,7 +5298,7 @@ class AdminController extends Controller
         $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:ImportanceList')->findAll();
+        $entities = $em->getRepository('AppUserdirectoryBundle:ImportanceList')->findAll();
 
         if( $entities ) {
             return -1;
@@ -5334,7 +5334,7 @@ class AdminController extends Controller
         $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:AuthorshipRoles')->findAll();
+        $entities = $em->getRepository('AppUserdirectoryBundle:AuthorshipRoles')->findAll();
 
         if( $entities ) {
             return -1;
@@ -5366,7 +5366,7 @@ class AdminController extends Controller
 //        $username = $this->get('security.token_storage')->getToken()->getUser();
 //
 //        $em = $this->getDoctrine()->getManager();
-//        $entities = $em->getRepository('OlegUserdirectoryBundle:TitlePositionType')->findAll();
+//        $entities = $em->getRepository('AppUserdirectoryBundle:TitlePositionType')->findAll();
 //
 //        if( $entities ) {
 //            return -1;
@@ -5419,7 +5419,7 @@ class AdminController extends Controller
         $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:SexList')->findAll();
+        $entities = $em->getRepository('AppUserdirectoryBundle:SexList')->findAll();
 
         if( $entities ) {
             return -1;
@@ -5454,7 +5454,7 @@ class AdminController extends Controller
         $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:PositionTypeList')->findAll();
+        $entities = $em->getRepository('AppUserdirectoryBundle:PositionTypeList')->findAll();
 
         if( $entities ) {
             return -1;
@@ -5501,7 +5501,7 @@ class AdminController extends Controller
     public function generateCommentGroupType() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:CommentGroupType')->findAll();
+        $entities = $em->getRepository('AppUserdirectoryBundle:CommentGroupType')->findAll();
 
         if( $entities ) {
             return -1;
@@ -5536,7 +5536,7 @@ class AdminController extends Controller
     public function generateSpotPurpose() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:SpotPurpose')->findAll();
+        $entities = $em->getRepository('AppUserdirectoryBundle:SpotPurpose')->findAll();
 
         if( $entities ) {
             return -1;
@@ -5574,7 +5574,7 @@ class AdminController extends Controller
     public function generateMedicalLicenseStatus() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:MedicalLicenseStatus')->findAll();
+        $entities = $em->getRepository('AppUserdirectoryBundle:MedicalLicenseStatus')->findAll();
 
         if( $entities ) {
             return -1;
@@ -5608,7 +5608,7 @@ class AdminController extends Controller
     public function generateCertifyingBoardOrganization() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:CertifyingBoardOrganization')->findAll();
+        $entities = $em->getRepository('AppUserdirectoryBundle:CertifyingBoardOrganization')->findAll();
 
         if( $entities ) {
             return -1;
@@ -5641,7 +5641,7 @@ class AdminController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        //$entities = $em->getRepository('OlegUserdirectoryBundle:TrainingTypeList')->findAll();
+        //$entities = $em->getRepository('AppUserdirectoryBundle:TrainingTypeList')->findAll();
         //if( $entities ) {
         //    return -1;
         //}
@@ -5661,7 +5661,7 @@ class AdminController extends Controller
         $count = 10;
         foreach( $elements as $name ) {
 
-            $entity = $em->getRepository('OlegUserdirectoryBundle:TrainingTypeList')->findOneByName($name);
+            $entity = $em->getRepository('AppUserdirectoryBundle:TrainingTypeList')->findOneByName($name);
             if( $entity ) {
                 continue;
             }
@@ -5684,7 +5684,7 @@ class AdminController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        //$entities = $em->getRepository('OlegUserdirectoryBundle:PositionTrackTypeList')->findAll();
+        //$entities = $em->getRepository('AppUserdirectoryBundle:PositionTrackTypeList')->findAll();
         //if( $entities ) {
         //    return -1;
         //}
@@ -5704,7 +5704,7 @@ class AdminController extends Controller
         $count = 10;
         foreach( $elements as $name ) {
 
-            $listEntity = $em->getRepository('OlegUserdirectoryBundle:PositionTrackTypeList')->findOneByName($name);
+            $listEntity = $em->getRepository('AppUserdirectoryBundle:PositionTrackTypeList')->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -5728,7 +5728,7 @@ class AdminController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        //$entities = $em->getRepository('OlegFellAppBundle:FellAppStatus')->findAll();
+        //$entities = $em->getRepository('AppFellAppBundle:FellAppStatus')->findAll();
         //if( $entities ) {
         //    return -1;
         //}
@@ -5753,7 +5753,7 @@ class AdminController extends Controller
         $count = 10;
         foreach( $elements as $name=>$action ) {
 
-            $listEntity = $em->getRepository('OlegFellAppBundle:FellAppStatus')->findOneByName($name);
+            $listEntity = $em->getRepository('AppFellAppBundle:FellAppStatus')->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -5776,7 +5776,7 @@ class AdminController extends Controller
     public function generateFellAppRank() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegFellAppBundle:FellAppRank')->findAll();
+        $entities = $em->getRepository('AppFellAppBundle:FellAppRank')->findAll();
 
         if( $entities ) {
             return -1;
@@ -5813,7 +5813,7 @@ class AdminController extends Controller
     public function generateFellAppVisaStatus() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegFellAppBundle:VisaStatus')->findAll();
+        $entities = $em->getRepository('AppFellAppBundle:VisaStatus')->findAll();
 
         if( $entities ) {
             return -1;
@@ -5850,7 +5850,7 @@ class AdminController extends Controller
     public function generateLanguageProficiency() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegFellAppBundle:LanguageProficiency')->findAll();
+        $entities = $em->getRepository('AppFellAppBundle:LanguageProficiency')->findAll();
 
         if( $entities ) {
             return -1;
@@ -5896,7 +5896,7 @@ class AdminController extends Controller
         $count = 10;
         foreach( $types as $name => $abbreviation ) {
 
-            $listEntity = $em->getRepository('OlegVacReqBundle:VacReqRequestTypeList')->findOneByName($name);
+            $listEntity = $em->getRepository('AppVacReqBundle:VacReqRequestTypeList')->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -5955,7 +5955,7 @@ class AdminController extends Controller
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('OlegUserdirectoryBundle:HealthcareProviderSpecialtiesList')->findOneByName($name);
+            $listEntity = $em->getRepository('AppUserdirectoryBundle:HealthcareProviderSpecialtiesList')->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -5975,7 +5975,7 @@ class AdminController extends Controller
     public function generateCollaborationtypes() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:CollaborationTypeList')->findAll();
+        $entities = $em->getRepository('AppUserdirectoryBundle:CollaborationTypeList')->findAll();
 
         if( $entities ) {
             return -1;
@@ -6021,7 +6021,7 @@ class AdminController extends Controller
         $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
-//        $entities = $em->getRepository('OlegUserdirectoryBundle:PermissionList')->findAll();
+//        $entities = $em->getRepository('AppUserdirectoryBundle:PermissionList')->findAll();
 //        if( $entities ) {
 //            return -1;
 //        }
@@ -6081,7 +6081,7 @@ class AdminController extends Controller
         $count = 10;
         foreach( $types as $type ) {
 
-            $listEntity = $em->getRepository('OlegUserdirectoryBundle:PermissionList')->findOneByName($type);
+            $listEntity = $em->getRepository('AppUserdirectoryBundle:PermissionList')->findOneByName($type);
             if( $listEntity ) {
                 continue;
             }
@@ -6104,7 +6104,7 @@ class AdminController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-//        $entities = $em->getRepository('OlegUserdirectoryBundle:PermissionObjectList')->findAll();
+//        $entities = $em->getRepository('AppUserdirectoryBundle:PermissionObjectList')->findAll();
 //        if( $entities ) {
 //            return -1;
 //        }
@@ -6145,7 +6145,7 @@ class AdminController extends Controller
                 continue;
             }
 
-            $listEntity = $em->getRepository('OlegUserdirectoryBundle:PermissionObjectList')->findOneByName($name);
+            $listEntity = $em->getRepository('AppUserdirectoryBundle:PermissionObjectList')->findOneByName($name);
             if( $listEntity ) {
 
                 $abbreviation = $abbreviationSiteArr[0];
@@ -6159,7 +6159,7 @@ class AdminController extends Controller
 
                 $sites = $abbreviationSiteArr[1];
                 foreach( $sites as $site ) {
-                    $siteObject = $em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation($site);
+                    $siteObject = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation($site);
                     if( !$listEntity->getSites()->contains($siteObject) ) {
                         $listEntity->addSite($siteObject);
                         $em->persist($listEntity);
@@ -6176,7 +6176,7 @@ class AdminController extends Controller
 
             $sites = $abbreviationSiteArr[1];
             foreach( $sites as $site ) {
-                $siteObject = $em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation($site);
+                $siteObject = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation($site);
                 if( !$listEntity->getSites()->contains($siteObject) ) {
                     $listEntity->addSite($siteObject);
                     //$em->persist($listEntity);
@@ -6198,7 +6198,7 @@ class AdminController extends Controller
         $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
-//        $entities = $em->getRepository('OlegUserdirectoryBundle:PermissionActionList')->findAll();
+//        $entities = $em->getRepository('AppUserdirectoryBundle:PermissionActionList')->findAll();
 //        if( $entities ) {
 //            return -1;
 //        }
@@ -6223,7 +6223,7 @@ class AdminController extends Controller
         $count = 10;
         foreach( $types as $type ) {
 
-            $listEntity = $em->getRepository('OlegUserdirectoryBundle:PermissionActionList')->findOneByName($type);
+            $listEntity = $em->getRepository('AppUserdirectoryBundle:PermissionActionList')->findOneByName($type);
             if( $listEntity ) {
                 continue;
             }
@@ -6245,7 +6245,7 @@ class AdminController extends Controller
         $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
-//        $entities = $em->getRepository('OlegUserdirectoryBundle:PermissionActionList')->findAll();
+//        $entities = $em->getRepository('AppUserdirectoryBundle:PermissionActionList')->findAll();
 //        if( $entities ) {
 //            return -1;
 //        }
@@ -6259,123 +6259,123 @@ class AdminController extends Controller
             //String
             array(
                 'name' => "Form Field - Free Text, Single Line",
-                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityNamespace' => 'App\UserdirectoryBundle\Entity',
                 'receivedValueEntityName' => 'ObjectTypeString'
             ),
             array(
                 'name' => "Form Field - Free Text, Single Line, Locked, Calculated, Stored",
-                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityNamespace' => 'App\UserdirectoryBundle\Entity',
                 'receivedValueEntityName' => 'ObjectTypeString'
             ),
             array(
                 'name' => "Form Field - Free Text, Single Line, Unlocked, Calculated, Stored",
-                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityNamespace' => 'App\UserdirectoryBundle\Entity',
                 'receivedValueEntityName' => 'ObjectTypeString'
             ),
             array(
                 'name' => "Form Field - Free Text, Single Line, Numeric, Unsigned Positive Integer",
-                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityNamespace' => 'App\UserdirectoryBundle\Entity',
                 'receivedValueEntityName' => 'ObjectTypeString'
             ),
             array(
                 'name' => "Form Field - Free Text, Single Line, Numeric, Signed Integer",
-                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityNamespace' => 'App\UserdirectoryBundle\Entity',
                 'receivedValueEntityName' => 'ObjectTypeString'
             ),
             array(
                 'name' => "Form Field - Free Text, Single Line, Numeric, Signed Float",
-                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityNamespace' => 'App\UserdirectoryBundle\Entity',
                 'receivedValueEntityName' => 'ObjectTypeString'
             ),
             array(
                 'name' => "Form Field - Free Text, Single Line, Locked, Calculated, Visual Aid",
-                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityNamespace' => 'App\UserdirectoryBundle\Entity',
                 'receivedValueEntityName' => 'ObjectTypeString'
             ),
 
             //Text
             array(
                 'name' => "Form Field - Free Text",
-                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityNamespace' => 'App\UserdirectoryBundle\Entity',
                 'receivedValueEntityName' => 'ObjectTypeText'
             ),
             array(
                 'name' => "Form Field - Free Text, RTF",
-                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityNamespace' => 'App\UserdirectoryBundle\Entity',
                 'receivedValueEntityName' => 'ObjectTypeText'
             ),
             array(
                 'name' => "Form Field - Free Text, HTML",
-                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityNamespace' => 'App\UserdirectoryBundle\Entity',
                 'receivedValueEntityName' => 'ObjectTypeText'
             ),
 
             //Dates
             array(
                 'name' => "Form Field - Full Date",
-                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityNamespace' => 'App\UserdirectoryBundle\Entity',
                 'receivedValueEntityName' => 'ObjectTypeDateTime'
             ),
             array(
                 'name' => "Form Field - Time",
-                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityNamespace' => 'App\UserdirectoryBundle\Entity',
                 'receivedValueEntityName' => 'ObjectTypeDateTime'
             ),
             array(
                 'name' => "Form Field - Full Date and Time",
-                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityNamespace' => 'App\UserdirectoryBundle\Entity',
                 'receivedValueEntityName' => 'ObjectTypeDateTime'
             ),
             array(
                 'name' => "Form Field - Year",
-                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityNamespace' => 'App\UserdirectoryBundle\Entity',
                 'receivedValueEntityName' => 'ObjectTypeDateTime'
             ),
             array(
                 'name' => "Form Field - Month",
-                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityNamespace' => 'App\UserdirectoryBundle\Entity',
                 'receivedValueEntityName' => 'ObjectTypeDateTime',
             ),
             array(
                 'name' => "Form Field - Date",
-                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityNamespace' => 'App\UserdirectoryBundle\Entity',
                 'receivedValueEntityName' => 'ObjectTypeDateTime'
             ),
             array(
                 'name' => "Form Field - Day of the Week",
-                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityNamespace' => 'App\UserdirectoryBundle\Entity',
                 'receivedValueEntityName' => 'ObjectTypeDateTime',
             ),
             array(
                 'name' => "Form Field - Time, with Time Zone",
-                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityNamespace' => 'App\UserdirectoryBundle\Entity',
                 'receivedValueEntityName' => 'ObjectTypeDateTime'
             ),
             array(
                 'name' => "Form Field - Full Date and Time, with Time Zone",
-                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityNamespace' => 'App\UserdirectoryBundle\Entity',
                 'receivedValueEntityName' => 'ObjectTypeDateTime'
             ),
 
             //Dropdown
             array(
                 'name' => "Form Field - Dropdown Menu",
-                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityNamespace' => 'App\UserdirectoryBundle\Entity',
                 'receivedValueEntityName' => 'ObjectTypeDropdown'
             ),
             array(
                 'name' => "Form Field - Dropdown Menu - Allow New Entries",
-                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityNamespace' => 'App\UserdirectoryBundle\Entity',
                 'receivedValueEntityName' => 'ObjectTypeDropdown'
             ),
             array(
                 'name' => "Form Field - Dropdown Menu - Allow Multiple Selections - Allow New Entries",
-                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityNamespace' => 'App\UserdirectoryBundle\Entity',
                 'receivedValueEntityName' => 'ObjectTypeDropdown'
             ),
             array(
                 'name' => "Form Field - Dropdown Menu - Allow Multiple Selections",
-                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityNamespace' => 'App\UserdirectoryBundle\Entity',
                 'receivedValueEntityName' => 'ObjectTypeDropdown'
             ),
             //"Dropdown Menu Value",
@@ -6383,33 +6383,33 @@ class AdminController extends Controller
             //Patient
             array(
                 'name' => "Linked Object - Patient",
-                'receivedValueEntityNamespace' => 'Oleg\OrderformBundle\Entity',
+                'receivedValueEntityNamespace' => 'App\OrderformBundle\Entity',
                 'receivedValueEntityName' => 'Patient'
             ),
 
             //Checkbox
             array(
                 'name' => "Form Field - Checkbox",
-                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityNamespace' => 'App\UserdirectoryBundle\Entity',
                 'receivedValueEntityName' => 'ObjectTypeCheckbox'
             ),
             array(
                 'name' => "Form Field - Checkboxes",
-                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityNamespace' => 'App\UserdirectoryBundle\Entity',
                 'receivedValueEntityName' => 'ObjectTypeCheckbox'
             ),
 
             //Radio
             array(
                 'name' => "Form Field - Radio Button",
-                'receivedValueEntityNamespace' => 'Oleg\UserdirectoryBundle\Entity',
+                'receivedValueEntityNamespace' => 'App\UserdirectoryBundle\Entity',
                 'receivedValueEntityName' => 'ObjectTypeRadioButton' //radio button is very similar to the dropdown menu
             ),
 
             //User
 //            array(
 //                'name' => "Linked Object - User",
-//                'receivedValueEntityNamespace' => 'Oleg\OrderformBundle\Entity',
+//                'receivedValueEntityNamespace' => 'App\OrderformBundle\Entity',
 //                'receivedValueEntityName' => 'PathologyResultSignatories'
 //            ),
 
@@ -6433,7 +6433,7 @@ class AdminController extends Controller
 
             //echo "name=".$name."<br>";
 
-            $listEntity = $em->getRepository('OlegUserdirectoryBundle:ObjectTypeList')->findOneByName($name);
+            $listEntity = $em->getRepository('AppUserdirectoryBundle:ObjectTypeList')->findOneByName($name);
             if( $listEntity ) {
                 $updated = false;
                 if( !$listEntity->getReceivedValueEntityNamespace() && $receivedValueEntityNamespace ) {
@@ -6511,7 +6511,7 @@ class AdminController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:Logger');
+        $repository = $this->getDoctrine()->getRepository('AppUserdirectoryBundle:Logger');
         $query = $repository->createQueryBuilder('logger')
             ->select('logger.entityName')
             ->distinct()
@@ -6543,7 +6543,7 @@ class AdminController extends Controller
             }
             //echo "entityName=".$entityName."<br>";
 
-            $listEntity = $em->getRepository('OlegUserdirectoryBundle:EventObjectTypeList')->findOneByName($entityName);
+            $listEntity = $em->getRepository('AppUserdirectoryBundle:EventObjectTypeList')->findOneByName($entityName);
             if( $listEntity ) {
                 continue;
             }
@@ -6572,7 +6572,7 @@ class AdminController extends Controller
         $em = $this->getDoctrine()->getManager();
         $userServiceUtil = $this->get('user_service_utility');
 
-        $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:Logger');
+        $repository = $this->getDoctrine()->getRepository('AppUserdirectoryBundle:Logger');
         $query = $repository->createQueryBuilder('logger')
             ->select('logger.entityName')
             ->distinct()
@@ -6588,7 +6588,7 @@ class AdminController extends Controller
                 continue;
             }
 
-            $listEntity = $em->getRepository('OlegUserdirectoryBundle:EventObjectTypeList')->findOneByName($entityName);
+            $listEntity = $em->getRepository('AppUserdirectoryBundle:EventObjectTypeList')->findOneByName($entityName);
             //echo "listEntity=".$listEntity."<br>";
             if( !$listEntity ) {
                 continue;
@@ -6599,7 +6599,7 @@ class AdminController extends Controller
 
             if( $entityName == "Patient" ) {
                 //add SiteList scan
-                $scanSite = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation('scan');
+                $scanSite = $this->getDoctrine()->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation('scan');
                 $listEntity->addExclusivelySite($scanSite);
             }
 
@@ -6931,7 +6931,7 @@ class AdminController extends Controller
                 //$className = $mapper['className'];
                 //$bundleName = $mapper['bundleName'];
                 //$displayName = $mapper['displayName'];
-                //$bundleName = str_replace("Oleg","",$bundleName);
+                //$bundleName = str_replace("App","",$bundleName);
 
                 $listName = $mapper['className'];
                 $listRootName = $listId.'-list';
@@ -6939,19 +6939,19 @@ class AdminController extends Controller
                 //exit('Get from ScanListController: listName='.$listName."; listRootName=".$listRootName."; nameClean=".$nameClean);
             }
 
-//            $listEntity = $em->getRepository('OlegUserdirectoryBundle:PlatformListManagerRootList')->findOneByListId($listId);
+//            $listEntity = $em->getRepository('AppUserdirectoryBundle:PlatformListManagerRootList')->findOneByListId($listId);
 //            if( $listEntity ) {
 //                echo 'exists listId='.$listId."<br>";
 //                continue;
 //            }
 
-            $listEntity = $em->getRepository('OlegUserdirectoryBundle:PlatformListManagerRootList')->findOneByListRootName($listRootName);
+            $listEntity = $em->getRepository('AppUserdirectoryBundle:PlatformListManagerRootList')->findOneByListRootName($listRootName);
             if( $listEntity ) {
                 //exit('exists listRootName='.$listRootName);
                 continue;
             }
 
-            $listEntity = $em->getRepository('OlegUserdirectoryBundle:PlatformListManagerRootList')->findOneByListName($listName);
+            $listEntity = $em->getRepository('AppUserdirectoryBundle:PlatformListManagerRootList')->findOneByListName($listName);
             if( $listEntity ) {
                 //exit('exists listName='.$listName);
                 continue;
@@ -7065,16 +7065,16 @@ class AdminController extends Controller
 
         $pathology = $userSecUtil->getAutoAssignInstitution();
         if( !$pathology ) {
-            $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+            $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
             if( !$wcmc ) {
                 exit('setInstitutionEmploymentPeriodAction: No Institution: "WCM"');
             }
             $mapper = array(
-                'prefix' => 'Oleg',
+                'prefix' => 'App',
                 'bundleName' => 'UserdirectoryBundle',
                 'className' => 'Institution'
             );
-            $pathology = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+            $pathology = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
                 "Pathology and Laboratory Medicine",
                 $wcmc,
                 $mapper
@@ -7085,7 +7085,7 @@ class AdminController extends Controller
             exit('No Institution: "Pathology and Laboratory Medicine"');
         }
 
-        $query = $em->createQuery('UPDATE OlegUserdirectoryBundle:EmploymentStatus p SET p.institution = '.$pathology->getId().' WHERE p.institution IS NULL');
+        $query = $em->createQuery('UPDATE AppUserdirectoryBundle:EmploymentStatus p SET p.institution = '.$pathology->getId().' WHERE p.institution IS NULL');
         $numUpdated = $query->execute();
 
         exit("set-institution-employment-period; numUpdated=".$numUpdated);
@@ -7108,16 +7108,16 @@ class AdminController extends Controller
 
         $pathology = $userSecUtil->getAutoAssignInstitution();
         if( !$pathology ) {
-            $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+            $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
             if (!$wcmc) {
                 exit('setDefaultOrgGroupAction: No Institution: "WCM"');
             }
             $mapper = array(
-                'prefix' => 'Oleg',
+                'prefix' => 'App',
                 'bundleName' => 'UserdirectoryBundle',
                 'className' => 'Institution'
             );
-            $pathology = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+            $pathology = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
                 "Pathology and Laboratory Medicine",
                 $wcmc,
                 $mapper
@@ -7127,7 +7127,7 @@ class AdminController extends Controller
             exit('No Institution: "Pathology and Laboratory Medicine"');
         }
 
-//        $repository = $em->getRepository('OlegUserdirectoryBundle:User');
+//        $repository = $em->getRepository('AppUserdirectoryBundle:User');
 //        $dql =  $repository->createQueryBuilder("user");
 //        $dql->select('user');
 //        $dql->leftJoin("user.perSiteSettings", "perSiteSettings");
@@ -7141,7 +7141,7 @@ class AdminController extends Controller
 //
 //        $users = $query->getResult();
 
-        $users = $em->getRepository('OlegUserdirectoryBundle:User')->findAll();
+        $users = $em->getRepository('AppUserdirectoryBundle:User')->findAll();
         echo "user count=".count($users)."<br>";
 
         $totalCount = 0;
@@ -7195,18 +7195,18 @@ class AdminController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        //$logger = $em->getRepository('OlegUserdirectoryBundle:Logger')->find(7789);
+        //$logger = $em->getRepository('AppUserdirectoryBundle:Logger')->find(7789);
         //$loggers = array($logger);
-        $loggers = $em->getRepository('OlegUserdirectoryBundle:Logger')->findAll();
+        $loggers = $em->getRepository('AppUserdirectoryBundle:Logger')->findAll();
 
         //map sitename to object
         $siteMap = array(
-            'employees' => $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation('employees'),
-            'scan' => $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation('scan'),
-            'fellapp' => $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation('fellapp'),
-            'deidentifier' => $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation('deidentifier'),
-            'vacreq' => $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation('vacreq'),
-            'calllog' => $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation('calllog'),
+            'employees' => $this->getDoctrine()->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation('employees'),
+            'scan' => $this->getDoctrine()->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation('scan'),
+            'fellapp' => $this->getDoctrine()->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation('fellapp'),
+            'deidentifier' => $this->getDoctrine()->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation('deidentifier'),
+            'vacreq' => $this->getDoctrine()->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation('vacreq'),
+            'calllog' => $this->getDoctrine()->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation('calllog'),
         );
 
         $count = 1;
@@ -7272,22 +7272,22 @@ class AdminController extends Controller
         $count = 0;
 
         //User Created -> New user record added
-        $count = $count + $this->singleSyncDb('OlegUserdirectoryBundle:EventTypeList',"User Created","New user record added");
+        $count = $count + $this->singleSyncDb('AppUserdirectoryBundle:EventTypeList',"User Created","New user record added");
 
         //User Updated -> User record updated
-        $count = $count + $this->singleSyncDb('OlegUserdirectoryBundle:EventTypeList',"User Updated","User record updated");
+        $count = $count + $this->singleSyncDb('AppUserdirectoryBundle:EventTypeList',"User Updated","User record updated");
 
         //Populate of Fellowship Applications -> Import of Fellowship Application data to DB
-        $count = $count + $this->singleSyncDb('OlegUserdirectoryBundle:EventTypeList',"Populate of Fellowship Applications","Import of Fellowship Application data to DB");
+        $count = $count + $this->singleSyncDb('AppUserdirectoryBundle:EventTypeList',"Populate of Fellowship Applications","Import of Fellowship Application data to DB");
 
         //Import of Fellowship Applications -> Import of Fellowship Applications Spreadsheet
-        $count = $count + $this->singleSyncDb('OlegUserdirectoryBundle:EventTypeList',"Import of Fellowship Applications","Import of Fellowship Applications Spreadsheet");
+        $count = $count + $this->singleSyncDb('AppUserdirectoryBundle:EventTypeList',"Import of Fellowship Applications","Import of Fellowship Applications Spreadsheet");
 
         //Fellowship Application Resend Emails -> Fellowship Application Rating Invitation Emails Resent
-        $count = $count + $this->singleSyncDb('OlegUserdirectoryBundle:EventTypeList',"Fellowship Application Resend Emails","Fellowship Application Rating Invitation Emails Resent");
+        $count = $count + $this->singleSyncDb('AppUserdirectoryBundle:EventTypeList',"Fellowship Application Resend Emails","Fellowship Application Rating Invitation Emails Resent");
 
         //Fellowship Applicant Page Viewed -> Fellowship Application Page Viewed
-        $count = $count + $this->singleSyncDb('OlegUserdirectoryBundle:EventTypeList',"Fellowship Applicant Page Viewed","Fellowship Application Page Viewed");
+        $count = $count + $this->singleSyncDb('AppUserdirectoryBundle:EventTypeList',"Fellowship Applicant Page Viewed","Fellowship Application Page Viewed");
 
         return $count;
     }
@@ -7309,14 +7309,14 @@ class AdminController extends Controller
     public function syncRolesDb() {
 
         $em = $this->getDoctrine()->getManager();
-        $roles = $em->getRepository('OlegUserdirectoryBundle:Roles')->findAll();
+        $roles = $em->getRepository('AppUserdirectoryBundle:Roles')->findAll();
 
         $count = 0;
 
         foreach( $roles as $role ) {
 
 //            if( strpos($role, '_DEIDENTIFICATOR_') !== false ) {
-//                $site = $em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByName('deidentifier');
+//                $site = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByName('deidentifier');
 //                if( $role->getSites() && !$role->getSites()->contains($site) ) {
 //                    $role->addSite($site);
 //                    $count++;
@@ -7377,7 +7377,7 @@ class AdminController extends Controller
         $count = 0;
         if( strpos($role, $roleStr) !== false ) {
             $em = $this->getDoctrine()->getManager();
-            $site = $em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByName($sitename);
+            $site = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByName($sitename);
             if( $role->getSites() && !$role->getSites()->contains($site) ) {
                 $role->addSite($site);
                 $count++;
@@ -7389,7 +7389,7 @@ class AdminController extends Controller
         $count = 0;
         if( strpos($role, $roleStr) !== false ) {
             $em = $this->getDoctrine()->getManager();
-            $site = $em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByName($sitename);
+            $site = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByName($sitename);
             if( !$role->getSites()->contains($site) ) {
                 $role->addSite($site);
                 $count++;
@@ -7456,7 +7456,7 @@ class AdminController extends Controller
 
         //check
         $em = $this->getDoctrine()->getManager();
-        $researchLabs = $em->getRepository('OlegUserdirectoryBundle:ResearchLab')->findBy(array(),array('name'=>'asc','id'=>'asc'));
+        $researchLabs = $em->getRepository('AppUserdirectoryBundle:ResearchLab')->findBy(array(),array('name'=>'asc','id'=>'asc'));
         //echo "researchLab count=".count($researchLabs)."<br>";
 
         $count = 0;
@@ -7577,7 +7577,7 @@ class AdminController extends Controller
 //            $dqlParameters['search'] = '%'.$search.'%';
 //        }
 
-        return $this->render('OlegUserdirectoryBundle:Tree:composition-tree.html.twig',
+        return $this->render('AppUserdirectoryBundle:Tree:composition-tree.html.twig',
             array(
                 'title' => $mapper['title'],
                 'bundleName' => $mapper['bundleName'],
@@ -7595,7 +7595,7 @@ class AdminController extends Controller
 
     public function getMapper($routeName) {
 
-        $bundlePreffix = "Oleg";
+        $bundlePreffix = "App";
         $bundleName = "UserdirectoryBundle";
         $className = null;
         $title = null;
@@ -7655,9 +7655,9 @@ class AdminController extends Controller
         $primaryPublicUserId = 'administrator';
         //$primaryPublicUserId = 'Administrator1';
 
-        $localUserType = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findOneByAbbreviation('local-user');
+        $localUserType = $em->getRepository('AppUserdirectoryBundle:UsernameType')->findOneByAbbreviation('local-user');
 
-        $administrators = $em->getRepository('OlegUserdirectoryBundle:User')->findBy(
+        $administrators = $em->getRepository('AppUserdirectoryBundle:User')->findBy(
             array(
                 'primaryPublicUserId' => $primaryPublicUserId,
                 'keytype' => $localUserType->getId()
@@ -7798,7 +7798,7 @@ class AdminController extends Controller
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('OlegUserdirectoryBundle:BloodProductTransfusedList')->findOneByName($name);
+            $listEntity = $em->getRepository('AppUserdirectoryBundle:BloodProductTransfusedList')->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -7830,7 +7830,7 @@ class AdminController extends Controller
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('OlegUserdirectoryBundle:ClericalErrorList')->findOneByName($name);
+            $listEntity = $em->getRepository('AppUserdirectoryBundle:ClericalErrorList')->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -7853,7 +7853,7 @@ class AdminController extends Controller
         $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('OlegUserdirectoryBundle:LabResultNameList')->findAll();
+        $entities = $em->getRepository('AppUserdirectoryBundle:LabResultNameList')->findAll();
         if( count($entities) > 3 ) {
             //return -1;
         }
@@ -7898,7 +7898,7 @@ class AdminController extends Controller
             //echo "name=$name, shortname=$shortname, abbreviation=$abbreviation <br>";
             //exit('1');
 
-            $listEntity = $em->getRepository('OlegUserdirectoryBundle:LabResultNameList')->findOneByName($name);
+            $listEntity = $em->getRepository('AppUserdirectoryBundle:LabResultNameList')->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -7941,7 +7941,7 @@ class AdminController extends Controller
         $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('OlegUserdirectoryBundle:LabResultUnitsMeasureList')->findAll();
+        $entities = $em->getRepository('AppUserdirectoryBundle:LabResultUnitsMeasureList')->findAll();
         if( count($entities) > 3 ) {
             return -1;
         }
@@ -7983,7 +7983,7 @@ class AdminController extends Controller
 //            print "</pre>";
 //            echo "name=$name, abbreviation=$abbreviation <br>";
 
-            $listEntity = $em->getRepository('OlegUserdirectoryBundle:LabResultUnitsMeasureList')->findOneByName($name);
+            $listEntity = $em->getRepository('AppUserdirectoryBundle:LabResultUnitsMeasureList')->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -8033,7 +8033,7 @@ class AdminController extends Controller
         $count = 10;
         foreach( $types as $name=>$abbreviation ) {
 
-            $listEntity = $em->getRepository('OlegUserdirectoryBundle:LabResultFlagList')->findOneByName($name);
+            $listEntity = $em->getRepository('AppUserdirectoryBundle:LabResultFlagList')->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -8066,7 +8066,7 @@ class AdminController extends Controller
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('OlegUserdirectoryBundle:PathologyResultSignatoriesList')->findOneByName($name);
+            $listEntity = $em->getRepository('AppUserdirectoryBundle:PathologyResultSignatoriesList')->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -8107,7 +8107,7 @@ class AdminController extends Controller
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('OlegUserdirectoryBundle:TransfusionReactionTypeList')->findOneByName($name);
+            $listEntity = $em->getRepository('AppUserdirectoryBundle:TransfusionReactionTypeList')->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -8145,7 +8145,7 @@ class AdminController extends Controller
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('OlegUserdirectoryBundle:BloodTypeList')->findOneByName($name);
+            $listEntity = $em->getRepository('AppUserdirectoryBundle:BloodTypeList')->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -8176,7 +8176,7 @@ class AdminController extends Controller
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('OlegUserdirectoryBundle:TransfusionAntibodyScreenResultsList')->findOneByName($name);
+            $listEntity = $em->getRepository('AppUserdirectoryBundle:TransfusionAntibodyScreenResultsList')->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -8207,7 +8207,7 @@ class AdminController extends Controller
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('OlegUserdirectoryBundle:TransfusionDATResultsList')->findOneByName($name);
+            $listEntity = $em->getRepository('AppUserdirectoryBundle:TransfusionDATResultsList')->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -8238,7 +8238,7 @@ class AdminController extends Controller
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('OlegUserdirectoryBundle:TransfusionCrossmatchResultsList')->findOneByName($name);
+            $listEntity = $em->getRepository('AppUserdirectoryBundle:TransfusionCrossmatchResultsList')->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -8269,7 +8269,7 @@ class AdminController extends Controller
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('OlegUserdirectoryBundle:TransfusionHemolysisCheckResultsList')->findOneByName($name);
+            $listEntity = $em->getRepository('AppUserdirectoryBundle:TransfusionHemolysisCheckResultsList')->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -8302,7 +8302,7 @@ class AdminController extends Controller
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('OlegUserdirectoryBundle:ComplexPlateletSummaryAntibodiesList')->findOneByName($name);
+            $listEntity = $em->getRepository('AppUserdirectoryBundle:ComplexPlateletSummaryAntibodiesList')->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -8333,7 +8333,7 @@ class AdminController extends Controller
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('OlegUserdirectoryBundle:CCIUnitPlateletCountDefaultValueList')->findOneByName($name);
+            $listEntity = $em->getRepository('AppUserdirectoryBundle:CCIUnitPlateletCountDefaultValueList')->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -8366,7 +8366,7 @@ class AdminController extends Controller
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('OlegUserdirectoryBundle:CCIPlateletTypeTransfusedList')->findOneByName($name);
+            $listEntity = $em->getRepository('AppUserdirectoryBundle:CCIPlateletTypeTransfusedList')->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -8399,7 +8399,7 @@ class AdminController extends Controller
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('OlegUserdirectoryBundle:PlateletTransfusionProductReceivingList')->findOneByName($name);
+            $listEntity = $em->getRepository('AppUserdirectoryBundle:PlateletTransfusionProductReceivingList')->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -8432,7 +8432,7 @@ class AdminController extends Controller
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('OlegUserdirectoryBundle:TransfusionProductStatusList')->findOneByName($name);
+            $listEntity = $em->getRepository('AppUserdirectoryBundle:TransfusionProductStatusList')->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -8469,7 +8469,7 @@ class AdminController extends Controller
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('OlegUserdirectoryBundle:WeekDaysList')->findOneByName($name);
+            $listEntity = $em->getRepository('AppUserdirectoryBundle:WeekDaysList')->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -8510,7 +8510,7 @@ class AdminController extends Controller
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('OlegUserdirectoryBundle:MonthsList')->findOneByName($name);
+            $listEntity = $em->getRepository('AppUserdirectoryBundle:MonthsList')->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -8541,7 +8541,7 @@ class AdminController extends Controller
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('OlegUserdirectoryBundle:LifeFormList')->findOneByName($name);
+            $listEntity = $em->getRepository('AppUserdirectoryBundle:LifeFormList')->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -8572,7 +8572,7 @@ class AdminController extends Controller
         $count = 10;
         foreach( $types as $name => $abbreviation ) {
 
-            $listEntity = $em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->findOneByName($name);
+            $listEntity = $em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -8609,7 +8609,7 @@ class AdminController extends Controller
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('OlegTranslationalResearchBundle:ProjectTypeList')->findOneByName($name);
+            $listEntity = $em->getRepository('AppTranslationalResearchBundle:ProjectTypeList')->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -8639,7 +8639,7 @@ class AdminController extends Controller
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('OlegTranslationalResearchBundle:IrbApprovalTypeList')->findOneByName($name);
+            $listEntity = $em->getRepository('AppTranslationalResearchBundle:IrbApprovalTypeList')->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -8670,7 +8670,7 @@ class AdminController extends Controller
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('OlegTranslationalResearchBundle:TissueProcessingServiceList')->findOneByName($name);
+            $listEntity = $em->getRepository('AppTranslationalResearchBundle:TissueProcessingServiceList')->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -8703,7 +8703,7 @@ class AdminController extends Controller
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('OlegTranslationalResearchBundle:OtherRequestedServiceList')->findOneByName($name);
+            $listEntity = $em->getRepository('AppTranslationalResearchBundle:OtherRequestedServiceList')->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -8737,7 +8737,7 @@ class AdminController extends Controller
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('OlegTranslationalResearchBundle:BusinessPurposeList')->findOneByName($name);
+            $listEntity = $em->getRepository('AppTranslationalResearchBundle:BusinessPurposeList')->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -8761,7 +8761,7 @@ class AdminController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         //disable all where productId is NULL
-        $query = $em->createQuery("UPDATE OlegTranslationalResearchBundle:RequestCategoryTypeList list SET list.type = 'disabled' WHERE list.productId IS NULL");
+        $query = $em->createQuery("UPDATE AppTranslationalResearchBundle:RequestCategoryTypeList list SET list.type = 'disabled' WHERE list.productId IS NULL");
         $numUpdated = $query->execute();
         echo "Disabled elements in RequestCategoryTypeList, where productId IS NULL = ".$numUpdated."<br>";
 
@@ -8849,7 +8849,7 @@ class AdminController extends Controller
                 continue;
             }
 
-            $listEntity = $em->getRepository('OlegTranslationalResearchBundle:RequestCategoryTypeList')->findOneByProductId($productId);
+            $listEntity = $em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList')->findOneByProductId($productId);
             if( $listEntity ) {
                 continue;
             }
@@ -8889,7 +8889,7 @@ class AdminController extends Controller
         $userSecUtil = $this->container->get('user_security_utility');
 
         //user_trainings_0_degree
-        $repository = $em->getRepository('OlegUserdirectoryBundle:User');
+        $repository = $em->getRepository('AppUserdirectoryBundle:User');
         $dql =  $repository->createQueryBuilder("user");
         $dql->select('user');
 
@@ -8921,7 +8921,7 @@ class AdminController extends Controller
             $name = $user->getUsernameOptimal();
             //echo "<br> $count User: ".$name."<br>";
 
-            $listEntity = $em->getRepository('OlegUserdirectoryBundle:PathologyResultSignatoriesList')->findOneByName($name);
+            $listEntity = $em->getRepository('AppUserdirectoryBundle:PathologyResultSignatoriesList')->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -8969,7 +8969,7 @@ class AdminController extends Controller
      */
     public function removeFellappMDUsersToPathologyResultSignatoriesList(Request $request) {
         $em = $this->getDoctrine()->getManager();
-        $pathologists = $em->getRepository('OlegUserdirectoryBundle:PathologyResultSignatoriesList')->findAll();
+        $pathologists = $em->getRepository('AppUserdirectoryBundle:PathologyResultSignatoriesList')->findAll();
         $count = 0;
 
         foreach( $pathologists as $pathologist ) {
@@ -9014,7 +9014,7 @@ class AdminController extends Controller
 
     public function setFormNodeVersion() {
         $em = $this->getDoctrine()->getManager();
-        $query = $em->createQuery("UPDATE OlegUserdirectoryBundle:FormNode node SET node.version = '1' WHERE node.version IS NULL");
+        $query = $em->createQuery("UPDATE AppUserdirectoryBundle:FormNode node SET node.version = '1' WHERE node.version IS NULL");
         $numUpdated = $query->execute();
         return "set formnode versions count ".$numUpdated;
     }
@@ -9032,7 +9032,7 @@ class AdminController extends Controller
         $userServiceUtil = $this->get('user_service_utility');
         $em = $this->getDoctrine()->getManager();
 
-        $repository = $em->getRepository('OlegOrderformBundle:Patient');
+        $repository = $em->getRepository('AppOrderformBundle:Patient');
         $dql = $repository->createQueryBuilder("patient");
         $dql->select("patient");
         $dql->leftJoin('patient.lastname','lastname');
@@ -9132,7 +9132,7 @@ class AdminController extends Controller
         );
 
         //1) get all users with TRANSRES roles
-        $users = $em->getRepository('OlegUserdirectoryBundle:User')->findUsersByRoles($roles);
+        $users = $em->getRepository('AppUserdirectoryBundle:User')->findUsersByRoles($roles);
 
         $msg = "Found ".count($users). " transres users <br>";
 
@@ -9221,7 +9221,7 @@ class AdminController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         //1) get all users with TRANSRES roles
-        $users = $em->getRepository('OlegUserdirectoryBundle:User')->findAll();
+        $users = $em->getRepository('AppUserdirectoryBundle:User')->findAll();
 
         $msg = "Found ".count($users). " users <br>";
         $count = 1;

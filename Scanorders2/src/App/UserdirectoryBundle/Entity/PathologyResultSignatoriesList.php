@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Entity;
+namespace App\UserdirectoryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -42,7 +42,7 @@ class PathologyResultSignatoriesList extends ListAbstract
     //user ID set by setObject($user)
 
 //    /**
-//     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\UserWrapper", cascade={"persist","remove"})
+//     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\UserWrapper", cascade={"persist","remove"})
 //     * @ORM\JoinTable(name="scan_pathologyResultSignatory_userWrapper",
 //     *      joinColumns={@ORM\JoinColumn(name="pathologyResultSignatory_id", referencedColumnName="id")},
 //     *      inverseJoinColumns={@ORM\JoinColumn(name="userWrapper_id", referencedColumnName="id")}
@@ -50,7 +50,7 @@ class PathologyResultSignatoriesList extends ListAbstract
 //     **/
 //    private $userWrappers;
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\UserWrapper",cascade={"persist","remove"})
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\UserWrapper",cascade={"persist","remove"})
      */
     private $userWrapper;
 

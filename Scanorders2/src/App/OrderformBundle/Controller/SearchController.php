@@ -22,7 +22,7 @@
  * Time: 12:22 PM
  */
 
-namespace Oleg\OrderformBundle\Controller;
+namespace App\OrderformBundle\Controller;
 
 
 use Symfony\Component\HttpFoundation\Request;
@@ -88,7 +88,7 @@ class SearchController extends Controller {
 
         //echo "entities count=".count($entities)."<br>";
 
-        return $this->render('OlegOrderformBundle:Patient:index.html.twig', array(
+        return $this->render('AppOrderformBundle:Patient:index.html.twig', array(
             'patientsearch' => $search,
             'patientsearchtype' => $searchtype,
             'patiententities' => $entities,

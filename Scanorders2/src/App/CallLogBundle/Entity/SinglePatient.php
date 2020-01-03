@@ -22,7 +22,7 @@
  * Time: 11:08 AM
  */
 
-namespace Oleg\CallLogBundle\Entity;
+namespace App\CallLogBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -31,7 +31,7 @@ use Doctrine\ORM\Mapping as ORM;
 class SinglePatient {
 
 //    /**
-//     * @ORM\ManyToOne(targetEntity="Oleg\OrderformBundle\Entity\MrnType")
+//     * @ORM\ManyToOne(targetEntity="App\OrderformBundle\Entity\MrnType")
 //     * @ORM\JoinColumn(name="keytype_id", referencedColumnName="id", nullable=true)
 //     */
 //    private $keytype;
@@ -66,7 +66,7 @@ class SinglePatient {
     private $suffix;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\SexList")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\SexList")
      * @ORM\JoinColumn(name="sex_id", referencedColumnName="id", nullable=true)
      */
     private $gender;

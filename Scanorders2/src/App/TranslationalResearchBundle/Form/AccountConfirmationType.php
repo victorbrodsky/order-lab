@@ -1,10 +1,10 @@
 <?php
 
-namespace Oleg\TranslationalResearchBundle\Form;
+namespace App\TranslationalResearchBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
-use Oleg\UserdirectoryBundle\Form\AdministrativeTitleType;
-use Oleg\UserdirectoryBundle\Form\UserInfoType;
+use App\UserdirectoryBundle\Form\AdministrativeTitleType;
+use App\UserdirectoryBundle\Form\UserInfoType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -57,7 +57,7 @@ class AccountConfirmationType extends AbstractType
         $params = array(
             'disabled'=>false,
             'label'=>'Administrative',
-            'fullClassName'=>'Oleg\UserdirectoryBundle\Entity\AdministrativeTitle',
+            'fullClassName'=>'App\UserdirectoryBundle\Entity\AdministrativeTitle',
             'formname'=>'administrativetitletype',
             'cycle'=>$this->cycle
         );
@@ -84,7 +84,7 @@ class AccountConfirmationType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\User',
+            'data_class' => 'App\UserdirectoryBundle\Entity\User',
             'form_custom_value' => null,
             'csrf_protection' => false,
         ));

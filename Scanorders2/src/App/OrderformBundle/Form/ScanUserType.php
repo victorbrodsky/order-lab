@@ -16,16 +16,16 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Form;
+namespace App\OrderformBundle\Form;
 
 
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-use Oleg\UserdirectoryBundle\Form\PerSiteSettingsType;
+use App\UserdirectoryBundle\Form\PerSiteSettingsType;
 
-use Oleg\UserdirectoryBundle\Form\UserType;
+use App\UserdirectoryBundle\Form\UserType;
 
 class ScanUserType extends UserType
 {

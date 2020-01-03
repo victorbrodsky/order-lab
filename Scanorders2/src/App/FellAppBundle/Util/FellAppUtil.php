@@ -22,7 +22,7 @@
  * Time: 4:21 PM
  */
 
-namespace Oleg\FellAppBundle\Util;
+namespace App\FellAppBundle\Util;
 
 
 use Box\Spout\Common\Type;
@@ -33,26 +33,26 @@ use Box\Spout\Writer\Style\StyleBuilder;
 use Box\Spout\Writer\WriterFactory;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityNotFoundException;
-use Oleg\FellAppBundle\Entity\DataFile;
-use Oleg\FellAppBundle\Entity\Interview;
-use Oleg\UserdirectoryBundle\Entity\AccessRequest;
-use Oleg\UserdirectoryBundle\Entity\BoardCertification;
-use Oleg\UserdirectoryBundle\Entity\Citizenship;
-use Oleg\UserdirectoryBundle\Entity\Document;
-use Oleg\UserdirectoryBundle\Entity\EmploymentStatus;
-use Oleg\UserdirectoryBundle\Entity\Examination;
-use Oleg\FellAppBundle\Entity\FellowshipApplication;
-use Oleg\UserdirectoryBundle\Entity\GeoLocation;
-use Oleg\UserdirectoryBundle\Entity\JobTitleList;
-use Oleg\UserdirectoryBundle\Entity\Location;
-use Oleg\FellAppBundle\Entity\Reference;
-use Oleg\UserdirectoryBundle\Entity\Roles;
-use Oleg\UserdirectoryBundle\Entity\StateLicense;
-use Oleg\UserdirectoryBundle\Entity\Training;
-use Oleg\UserdirectoryBundle\Entity\User;
-use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
-use Oleg\UserdirectoryBundle\Util\EmailUtil;
-use Oleg\UserdirectoryBundle\Util\UserUtil;
+use App\FellAppBundle\Entity\DataFile;
+use App\FellAppBundle\Entity\Interview;
+use App\UserdirectoryBundle\Entity\AccessRequest;
+use App\UserdirectoryBundle\Entity\BoardCertification;
+use App\UserdirectoryBundle\Entity\Citizenship;
+use App\UserdirectoryBundle\Entity\Document;
+use App\UserdirectoryBundle\Entity\EmploymentStatus;
+use App\UserdirectoryBundle\Entity\Examination;
+use App\FellAppBundle\Entity\FellowshipApplication;
+use App\UserdirectoryBundle\Entity\GeoLocation;
+use App\UserdirectoryBundle\Entity\JobTitleList;
+use App\UserdirectoryBundle\Entity\Location;
+use App\FellAppBundle\Entity\Reference;
+use App\UserdirectoryBundle\Entity\Roles;
+use App\UserdirectoryBundle\Entity\StateLicense;
+use App\UserdirectoryBundle\Entity\Training;
+use App\UserdirectoryBundle\Entity\User;
+use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
+use App\UserdirectoryBundle\Util\EmailUtil;
+use App\UserdirectoryBundle\Util\UserUtil;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
@@ -93,7 +93,7 @@ class FellAppUtil {
     public function getFellAppByStatusAndYear($status,$fellSubspecArg,$year=null,$interviewer=null) {
 
         //echo "year=$year<br>";
-        $repository = $this->em->getRepository('OlegFellAppBundle:FellowshipApplication');
+        $repository = $this->em->getRepository('AppFellAppBundle:FellowshipApplication');
         $dql =  $repository->createQueryBuilder("fellapp");
         $dql->select('fellapp');
         $dql->leftJoin("fellapp.appStatus", "appStatus");
@@ -171,7 +171,7 @@ class FellAppUtil {
 
 //    public function getFellAppByUserAndStatusAndYear($subjectUser, $status,$fellSubspecId,$year=null) {
 //
-//        $repository = $this->em->getRepository('OlegFellAppBundle:FellowshipApplication');
+//        $repository = $this->em->getRepository('AppFellAppBundle:FellowshipApplication');
 //        $dql =  $repository->createQueryBuilder("fellapp");
 //        $dql->select('fellapp');
 //        $dql->leftJoin("fellapp.appStatus", "appStatus");
@@ -212,7 +212,7 @@ class FellAppUtil {
         //$filterTypeIds = array();
 
         foreach( $user->getRoles() as $rolename ) {
-            $roleObject = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName($rolename);
+            $roleObject = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($rolename);
             if( $roleObject ) {
                 $fellowshipSubspecialty = $roleObject->getFellowshipSubspecialty();
                 if( $fellowshipSubspecialty ) {
@@ -241,16 +241,16 @@ class FellAppUtil {
             'className' => 'Institution'
         );
 
-        $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+        $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
         //exit("wcm=".$wcmc);
-        $pathology = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+        $pathology = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
             "Pathology and Laboratory Medicine",
             $wcmc,
             $mapper
         );
 
         //get list of fellowship type with extra "ALL"
-        $repository = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty');
+        $repository = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty');
         $dql = $repository->createQueryBuilder('list');
         $dql->leftJoin("list.institution","institution");
         $dql->where("institution.id = ".$pathology->getId());
@@ -278,7 +278,7 @@ class FellAppUtil {
     public function getFellowshipVisaStatuses( $asEntities=false ) {
         $em = $this->em;
 
-        $repository = $em->getRepository('OlegFellAppBundle:VisaStatus');
+        $repository = $em->getRepository('AppFellAppBundle:VisaStatus');
         $dql = $repository->createQueryBuilder('list');
 
         $dql->where("list.type = :typedef OR list.type = :typeadd");
@@ -311,7 +311,7 @@ class FellAppUtil {
 //        $em = $this->em;
 //
 //        //get list of fellowship type with extra "ALL"
-//        $repository = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty');
+//        $repository = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty');
 //        $dql = $repository->createQueryBuilder('list');
 //        //$dql->select("list.id as id, list.name as text")
 //        $dql->leftJoin("list.parent","parent");
@@ -396,13 +396,13 @@ class FellAppUtil {
         //echo "felltypeid=".$felltypeid."<br>";
 
         foreach( $user->getRoles() as $rolename ) {
-            $roleObject = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName($rolename);
+            $roleObject = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($rolename);
             if( $roleObject ) {
                 $fellowshipSubspecialty = $roleObject->getFellowshipSubspecialty();
                 if( $fellowshipSubspecialty ) {
                     if( $felltypeid == $fellowshipSubspecialty->getId() ) {
                         //it is safer to check also for fellowshipSubspecialty's institution is under roleObject's institution
-                        if( $em->getRepository('OlegUserdirectoryBundle:Institution')->isNodeUnderParentnode( $roleObject->getInstitution(), $fellowshipSubspecialty->getInstitution() ) ) {
+                        if( $em->getRepository('AppUserdirectoryBundle:Institution')->isNodeUnderParentnode( $roleObject->getInstitution(), $fellowshipSubspecialty->getInstitution() ) ) {
                             return true;
                         }
                     }
@@ -450,7 +450,7 @@ class FellAppUtil {
 
 //        $coordinatorFellTypeRole = null;
 //
-//        $roles = $em->getRepository('OlegUserdirectoryBundle:Roles')->findByFellowshipSubspecialty($fellowshipSubspecialty);
+//        $roles = $em->getRepository('AppUserdirectoryBundle:Roles')->findByFellowshipSubspecialty($fellowshipSubspecialty);
 //        foreach( $roles as $role ) {
 //            if( strpos($role,$roleName) !== false ) {
 //                $coordinatorFellTypeRole = $role;
@@ -458,7 +458,7 @@ class FellAppUtil {
 //            }
 //        }
 //
-//        $users = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($coordinatorFellTypeRole);
+//        $users = $em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($coordinatorFellTypeRole);
 //
 //        return $users;
     }
@@ -469,7 +469,7 @@ class FellAppUtil {
         }
 
 //        $coordinatorFellTypeRole = null;
-//        $roles = $this->em->getRepository('OlegUserdirectoryBundle:Roles')->findByFellowshipSubspecialty($fellowshipSubspecialty);
+//        $roles = $this->em->getRepository('AppUserdirectoryBundle:Roles')->findByFellowshipSubspecialty($fellowshipSubspecialty);
 //        foreach( $roles as $role ) {
 //            if( strpos($role,$roleName) !== false ) {
 //                $coordinatorFellTypeRole = $role;
@@ -478,12 +478,12 @@ class FellAppUtil {
 //        }
         $coordinatorFellTypeRole = $this->getRoleByFellowshipSubspecialtyAndRolename($fellowshipSubspecialty,$roleName );
 
-        $users = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($coordinatorFellTypeRole);
+        $users = $this->em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($coordinatorFellTypeRole);
 
         return $users;
     }
     public function getRoleByFellowshipSubspecialtyAndRolename( $fellowshipSubspecialty, $roleName ) {
-        $roles = $this->em->getRepository('OlegUserdirectoryBundle:Roles')->findByFellowshipSubspecialty($fellowshipSubspecialty);
+        $roles = $this->em->getRepository('AppUserdirectoryBundle:Roles')->findByFellowshipSubspecialty($fellowshipSubspecialty);
         foreach( $roles as $role ) {
             if( strpos($role,$roleName) !== false ) {
                 return $role;
@@ -650,7 +650,7 @@ class FellAppUtil {
         $author = $this->container->get('security.token_storage')->getToken()->getUser();
 
         //Pathology Fellowship Applicant in EmploymentStatus
-        $employmentType = $em->getRepository('OlegUserdirectoryBundle:EmploymentType')->findOneByName("Pathology Fellowship Applicant");
+        $employmentType = $em->getRepository('AppUserdirectoryBundle:EmploymentType')->findOneByName("Pathology Fellowship Applicant");
         if( !$employmentType ) {
             throw new EntityNotFoundException('Unable to find entity by name='."Pathology Fellowship Applicant");
         }
@@ -681,7 +681,7 @@ class FellAppUtil {
     }
 
 
-    //oleg_fellappbundle_fellowshipapplication_references_0_name
+    //app_fellappbundle_fellowshipapplication_references_0_name
     public function addEmptyReferences($fellowshipApplication) {
 
         $author = $this->container->get('security.token_storage')->getToken()->getUser();
@@ -716,7 +716,7 @@ class FellAppUtil {
 
     }
 
-    //oleg_fellappbundle_fellowshipapplication[stateLicenses][0][licenseNumber]
+    //app_fellappbundle_fellowshipapplication[stateLicenses][0][licenseNumber]
     public function addEmptyStateLicenses($fellowshipApplication) {
 
         $author = $this->container->get('security.token_storage')->getToken()->getUser();
@@ -774,7 +774,7 @@ class FellAppUtil {
 
         if( !$specificLocation ) {
 
-            $locationType = $this->em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName($typeName);
+            $locationType = $this->em->getRepository('AppUserdirectoryBundle:LocationTypeList')->findOneByName($typeName);
             if( !$locationType ) {
                 throw new EntityNotFoundException('Unable to find entity by name='.$typeName);
             }
@@ -838,7 +838,7 @@ class FellAppUtil {
         $training = new Training($author);
         $training->setOrderinlist($orderinlist);
 
-        $trainingType = $this->em->getRepository('OlegUserdirectoryBundle:TrainingTypeList')->findOneByName($typeName);
+        $trainingType = $this->em->getRepository('AppUserdirectoryBundle:TrainingTypeList')->findOneByName($typeName);
         $training->setTrainingType($trainingType);
 
         //s2id_oleg_fellappbundle_fellowshipapplication_trainings_1_jobTitle
@@ -908,7 +908,7 @@ class FellAppUtil {
         $row = 2;
         foreach( explode("-",$fellappids) as $fellappId ) {
         
-            $fellapp = $this->em->getRepository('OlegFellAppBundle:FellowshipApplication')->find($fellappId);
+            $fellapp = $this->em->getRepository('AppFellAppBundle:FellowshipApplication')->find($fellappId);
             if( !$fellapp ) {
                 continue;
             }
@@ -1107,7 +1107,7 @@ class FellAppUtil {
 
         foreach( explode("-",$fellappids) as $fellappId ) {
 
-            $fellapp = $this->em->getRepository('OlegFellAppBundle:FellowshipApplication')->find($fellappId);
+            $fellapp = $this->em->getRepository('AppFellAppBundle:FellowshipApplication')->find($fellappId);
             if( !$fellapp ) {
                 continue;
             }
@@ -1284,7 +1284,7 @@ class FellAppUtil {
 
         foreach( explode("-",$fellappids) as $fellappId ) {
 
-            $fellapp = $this->em->getRepository('OlegFellAppBundle:FellowshipApplication')->find($fellappId);
+            $fellapp = $this->em->getRepository('AppFellAppBundle:FellowshipApplication')->find($fellappId);
             if( !$fellapp ) {
                 continue;
             }
@@ -1320,7 +1320,7 @@ class FellAppUtil {
         $em = $this->em;
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $userSecUtil = $this->container->get('user_security_utility');
-        $site = $em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation('fellapp');
+        $site = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation('fellapp');
 
         $count = 0;
 
@@ -1333,7 +1333,7 @@ class FellAppUtil {
         //create Director role
         $roleName = "ROLE_FELLAPP_".$roleType."_WCM_".$roleNameBase;
         //echo "roleName=$roleName<br>";
-        $role = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName($roleName);
+        $role = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($roleName);
 
         if( !$role ) {
             $roleTypeStr = ucfirst(strtolower($roleType));
@@ -1701,7 +1701,7 @@ class FellAppUtil {
     }
 
     public function getRejectionEmailSent($fellapp) {
-        $repository = $this->em->getRepository('OlegUserdirectoryBundle:Logger');
+        $repository = $this->em->getRepository('AppUserdirectoryBundle:Logger');
         $dql = $repository->createQueryBuilder("logger");
 
         //$fellappIdInteger = $fellapp->getId()."";

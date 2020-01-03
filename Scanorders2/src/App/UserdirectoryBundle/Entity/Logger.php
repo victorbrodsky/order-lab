@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Entity;
+namespace App\UserdirectoryBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -449,9 +449,9 @@ class Logger
      */
     public function setEntityNamespace($entityNamespace)
     {
-        //remove "Proxies\__CG__\" in Proxies\__CG__\Oleg\UserdirectoryBundle\Entity
+        //remove "Proxies\__CG__\" in Proxies\__CG__\App\UserdirectoryBundle\Entity
         $proxyStr = "Proxies\__CG__\\";
-        //$proxyStr = "Oleg\UserdirectoryBundle\\";
+        //$proxyStr = "App\UserdirectoryBundle\\";
         //echo "proxyStr=".$proxyStr."<br>";
         if( strpos($entityNamespace, $proxyStr) !== false ) {
             //echo "remove=".$proxyStr."<br>";

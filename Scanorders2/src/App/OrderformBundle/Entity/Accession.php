@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Entity;
+namespace App\OrderformBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -171,10 +171,10 @@ class Accession extends ObjectAbstract {
     /**
      * Set procedure (parent)
      *
-     * @param \Oleg\OrderformBundle\Entity\Procedure $procedure
+     * @param \App\OrderformBundle\Entity\Procedure $procedure
      * @return Accession
      */
-    public function setProcedure(\Oleg\OrderformBundle\Entity\Procedure $procedure = null)
+    public function setProcedure(\App\OrderformBundle\Entity\Procedure $procedure = null)
     {
         $this->procedure = $procedure;
     
@@ -184,7 +184,7 @@ class Accession extends ObjectAbstract {
     /**
      * Get procedure
      *
-     * @return \Oleg\OrderformBundle\Entity\Procedure
+     * @return \App\OrderformBundle\Entity\Procedure
      */
     public function getProcedure()
     {
@@ -194,10 +194,10 @@ class Accession extends ObjectAbstract {
     /**
      * Add part (child)
      *
-     * @param \Oleg\OrderformBundle\Entity\Part $part
+     * @param \App\OrderformBundle\Entity\Part $part
      * @return Accession
      */
-    public function addPart(\Oleg\OrderformBundle\Entity\Part $part)
+    public function addPart(\App\OrderformBundle\Entity\Part $part)
     {
         if( !$this->part->contains($part) ) {
             $part->setAccession($this);
@@ -210,9 +210,9 @@ class Accession extends ObjectAbstract {
     /**
      * Remove part
      *
-     * @param \Oleg\OrderformBundle\Entity\Part $part
+     * @param \App\OrderformBundle\Entity\Part $part
      */
-    public function removePart(\Oleg\OrderformBundle\Entity\Part $part)
+    public function removePart(\App\OrderformBundle\Entity\Part $part)
     {
         $this->part->removeElement($part);
     }

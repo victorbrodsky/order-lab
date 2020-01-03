@@ -15,11 +15,11 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Controller;
+namespace App\OrderformBundle\Controller;
 
 
 
-use Oleg\UserdirectoryBundle\Entity\InstitutionWrapper;
+use App\UserdirectoryBundle\Entity\InstitutionWrapper;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -33,25 +33,25 @@ use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 
-use Oleg\OrderformBundle\Entity\Message;
-use Oleg\OrderformBundle\Form\MessageType;
-use Oleg\OrderformBundle\Entity\Patient;
-use Oleg\OrderformBundle\Entity\ClinicalHistory;
-use Oleg\OrderformBundle\Entity\Procedure;
-use Oleg\OrderformBundle\Entity\Accession;
-use Oleg\OrderformBundle\Entity\Part;
-use Oleg\OrderformBundle\Entity\Block;
-use Oleg\OrderformBundle\Entity\Slide;
-use Oleg\OrderformBundle\Entity\Educational;
-use Oleg\OrderformBundle\Entity\Research;
-use Oleg\OrderformBundle\Form\SlideMultiType;
-use Oleg\OrderformBundle\Entity\Encounter;
-use Oleg\OrderformBundle\Entity\Endpoint;
-use Oleg\OrderformBundle\Entity\ScanOrder;
-use Oleg\OrderformBundle\Helper\ErrorHelper;
-use Oleg\OrderformBundle\Helper\ScanEmailUtil;
-use Oleg\UserdirectoryBundle\Util\UserUtil;
-use Oleg\OrderformBundle\Security\Util\SecurityUtil;
+use App\OrderformBundle\Entity\Message;
+use App\OrderformBundle\Form\MessageType;
+use App\OrderformBundle\Entity\Patient;
+use App\OrderformBundle\Entity\ClinicalHistory;
+use App\OrderformBundle\Entity\Procedure;
+use App\OrderformBundle\Entity\Accession;
+use App\OrderformBundle\Entity\Part;
+use App\OrderformBundle\Entity\Block;
+use App\OrderformBundle\Entity\Slide;
+use App\OrderformBundle\Entity\Educational;
+use App\OrderformBundle\Entity\Research;
+use App\OrderformBundle\Form\SlideMultiType;
+use App\OrderformBundle\Entity\Encounter;
+use App\OrderformBundle\Entity\Endpoint;
+use App\OrderformBundle\Entity\ScanOrder;
+use App\OrderformBundle\Helper\ErrorHelper;
+use App\OrderformBundle\Helper\ScanEmailUtil;
+use App\UserdirectoryBundle\Util\UserUtil;
+use App\OrderformBundle\Security\Util\SecurityUtil;
 
 
 //ScanOrder joins Message + Scan
@@ -71,7 +71,7 @@ class MultiScanOrderController extends Controller {
      * @Route("/scan-order/one-slide/create", name="singleorder_create")
      * @Route("/scan-order/multi-slide/create", name="multi_create")
      * @Method("POST")
-     * @Template("OlegOrderformBundle:MultiScanOrder:new.html.twig")
+     * @Template("AppOrderformBundle:MultiScanOrder:new.html.twig")
      */
     public function multyCreateAction(Request $request)
     { 
@@ -120,7 +120,7 @@ class MultiScanOrderController extends Controller {
         }
 
         //set order category
-        $category = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName( $type );
+        $category = $em->getRepository('AppOrderformBundle:MessageCategory')->findOneByName( $type );
         $entity->setMessageCategory($category);
 
         //$scanOrderInstitutionScope = $userSiteSettings->getScanOrderInstitutionScope();
@@ -147,7 +147,7 @@ class MultiScanOrderController extends Controller {
         $form->handleRequest($request);
 
 //        echo "provider2=".$entity->getProvider()."<br>";
-        //oleg_orderformbundle_messagetype_patient_0_procedure_0_accession_0_accession_0_field
+        //app_orderformbundle_messagetype_patient_0_procedure_0_accession_0_accession_0_field
 //        $patient = $form["patient"][0]->getData();
 //        echo "patient=".$patient."<br>";
 //        $mrn = $patient->getMrn()->first()->getField();
@@ -158,7 +158,7 @@ class MultiScanOrderController extends Controller {
 //        $accession = $form["patient"][0]["procedure"][0]["accession"][0]->getData();
 //        $accessionNum = $accession->getAccession()->first()->getField();
 //        $accessionType = $accession->getAccession()->first()->getKeytype();
-//        //oleg_orderformbundle_messagetype_patient_0_procedure_0_accession_0_accession_0_keytype
+//        //app_orderformbundle_messagetype_patient_0_procedure_0_accession_0_accession_0_keytype
 //        echo "accessionNum=".$accessionNum.", accessionType=".$accessionType."<br>";
         //exit();
 
@@ -216,10 +216,10 @@ class MultiScanOrderController extends Controller {
             //echo "order patient=".$entity->getPatient()->first();
         }
 
-        //oleg_orderformbundle_messagetype_equipment
+        //app_orderformbundle_messagetype_equipment
         //echo "equipmentForm=".$form["equipment"]->getData()."<br>";
         //echo "Equipment=".$entity->getEquipment()->getId().":".$entity->getEquipment()->getName()."<br>";
-        //oleg_orderformbundle_messagetype_institution
+        //app_orderformbundle_messagetype_institution
         //$institutionForm = $form["institution"]->getData();
         //echo "institutionForm=".$institutionForm."<br>";
         //echo "permittedInstitution=".$entity->getInstitution()->getId().":".$entity->getInstitution()->getName()."<br>";
@@ -231,19 +231,19 @@ class MultiScanOrderController extends Controller {
 
             if( isset($_POST['btnSubmit']) ) {
                 $cycle = 'new';
-                $status = $em->getRepository('OlegOrderformBundle:Status')->findOneByName('Submitted');
+                $status = $em->getRepository('AppOrderformBundle:Status')->findOneByName('Submitted');
                 $entity->setStatus($status);
             }
 
             if( isset($_POST['btnAmend']) ) {
                 $cycle = 'amend';
-                $status = $em->getRepository('OlegOrderformBundle:Status')->findOneByName('Amended');
+                $status = $em->getRepository('AppOrderformBundle:Status')->findOneByName('Amended');
                 $entity->setStatus($status);
             }
 
             if( isset($_POST['btnSave']) || isset($_POST['btnSaveOnIdleTimeout']) ) {
                 $cycle = 'edit';
-                $status = $em->getRepository('OlegOrderformBundle:Status')->findOneByName('Not Submitted');
+                $status = $em->getRepository('AppOrderformBundle:Status')->findOneByName('Not Submitted');
                 $entity->setStatus($status);
             }
 
@@ -257,7 +257,7 @@ class MultiScanOrderController extends Controller {
 
 
             /////////////////// process and save form //////////////////////////////
-            $entity = $em->getRepository('OlegOrderformBundle:Message')->processMessageEntity( $entity, $user, $type, $this->get('router'), $this->container );
+            $entity = $em->getRepository('AppOrderformBundle:Message')->processMessageEntity( $entity, $user, $type, $this->get('router'), $this->container );
 
             if( isset($_POST['btnSubmit']) || isset($_POST['btnAmend']) || isset($_POST['btnSave']) || isset($_POST['btnSaveOnIdleTimeout']) ) {
 
@@ -325,7 +325,7 @@ class MultiScanOrderController extends Controller {
         $submittedData = $session->get('submittedData');
 
         //echo "conflicts=".$submittedData['conflicts']."<br>";
-        return $this->render('OlegOrderformBundle:ScanOrder:thanks.html.twig', array(
+        return $this->render('AppOrderformBundle:ScanOrder:thanks.html.twig', array(
             'oid' => $submittedData['oid'],
             'conflicts' => $submittedData['conflicts'],
             'cycle' => $submittedData['cycle'],
@@ -339,7 +339,7 @@ class MultiScanOrderController extends Controller {
      * @Route("/scan-order/one-slide/new", name="single_new")
      * @Route("/scan-order/multi-slide/new", name="multi_new")
      * @Method("GET")
-     * @Template("OlegOrderformBundle:MultiScanOrder:new.html.twig")
+     * @Template("AppOrderformBundle:MultiScanOrder:new.html.twig")
      */
     public function newMultyAction(Request $request)
     {
@@ -433,7 +433,7 @@ class MultiScanOrderController extends Controller {
         }
 
         //set order category
-        $category = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName( $type );
+        $category = $em->getRepository('AppOrderformBundle:MessageCategory')->findOneByName( $type );
         $entity->setMessageCategory($category);
 
         //set the default service (now institution)
@@ -449,7 +449,7 @@ class MultiScanOrderController extends Controller {
             //echo "find prev service <br>";
             $previousOrder = $orderUtil->getPreviousMessage('Scan Order');
             //echo $previousOrder;
-            //$this->getDoctrine()->getRepository('OlegOrderformBundle:Message')->findBy(array(), array('orderdate' => 'ASC'),1); //limit to one result
+            //$this->getDoctrine()->getRepository('AppOrderformBundle:Message')->findBy(array(), array('orderdate' => 'ASC'),1); //limit to one result
             if( $previousOrder ) {
                 if( $previousOrder->getScanOrder() ) {
                     //echo "prev service=".$previousOrder->getScanOrder()->getService()->getName()."<br>";
@@ -474,11 +474,11 @@ class MultiScanOrderController extends Controller {
         $orderUtil->setDefaultPerformingOrganization($entity);
 
         //set "Slide Delivery"
-        $defaultDelivery = $userSecUtil->getNotEmptyDefaultSiteParameter('defaultScanDelivery','OlegOrderformBundle:OrderDelivery');
+        $defaultDelivery = $userSecUtil->getNotEmptyDefaultSiteParameter('defaultScanDelivery','AppOrderformBundle:OrderDelivery');
         $scanOrder->setDelivery($defaultDelivery);
 
         //set "Scanner"
-        $defaultDelivery = $userSecUtil->getNotEmptyDefaultSiteParameter('defaultScanner','Oleg\UserdirectoryBundle\Entity\Equipment');
+        $defaultDelivery = $userSecUtil->getNotEmptyDefaultSiteParameter('defaultScanner','App\UserdirectoryBundle\Entity\Equipment');
         $entity->setEquipment($defaultDelivery);
 
         //set default department and division
@@ -507,7 +507,7 @@ class MultiScanOrderController extends Controller {
         ));
 
         if( $routeName != "single_new") {
-            return $this->render('OlegOrderformBundle:MultiScanOrder:new.html.twig', array(
+            return $this->render('AppOrderformBundle:MultiScanOrder:new.html.twig', array(
                 'form' => $form->createView(),
                 'type' => 'new',
                 'formtype' => $type,
@@ -515,7 +515,7 @@ class MultiScanOrderController extends Controller {
             ));
         } else {
             //echo "newsingle: <br>";
-            return $this->render('OlegOrderformBundle:MultiScanOrder:newsingle.html.twig', array(
+            return $this->render('AppOrderformBundle:MultiScanOrder:newsingle.html.twig', array(
                 'form' => $form->createView(),
                 'cycle' => 'new',
                 'formtype' => $type,
@@ -533,7 +533,7 @@ class MultiScanOrderController extends Controller {
      * @Route("/scan-order/{id}/show", name="multy_show", requirements={"id" = "\d+"})
      * @Route("/scan-order/data-structure/{id}/show", name="scan_datastructure", requirements={"id" = "\d+"})
      * @Method("GET")
-     * @Template("OlegOrderformBundle:MultiScanOrder:new.html.twig")
+     * @Template("AppOrderformBundle:MultiScanOrder:new.html.twig")
      */
     public function showMultyAction( Request $request, $id, $type = "show" )
     {
@@ -571,7 +571,7 @@ class MultiScanOrderController extends Controller {
 //        INNER JOIN message.slide slide
         $query = $em->createQuery('
             SELECT message
-            FROM OlegOrderformBundle:Message message
+            FROM AppOrderformBundle:Message message
             WHERE message.oid = :oid'
         )->setParameter('oid', $id);
 
@@ -865,8 +865,8 @@ class MultiScanOrderController extends Controller {
 
         if( $routeName == "multy_show") {
 
-            //$history = $em->getRepository('OlegOrderformBundle:History')->findByCurrentid( $entity->getOid(), array('changedate' => 'DESC') );
-            $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:History');
+            //$history = $em->getRepository('AppOrderformBundle:History')->findByCurrentid( $entity->getOid(), array('changedate' => 'DESC') );
+            $repository = $this->getDoctrine()->getRepository('AppOrderformBundle:History');
             $dql = $repository->createQueryBuilder("h");
             $dql->innerJoin("h.message", "message");
             $dql->innerJoin("h.eventtype", "eventtype");
@@ -910,7 +910,7 @@ class MultiScanOrderController extends Controller {
     public function downloadAction($id) {
 
         $em = $this->getDoctrine()->getManager();
-        $file = $em->getRepository('OlegUserdirectoryBundle:Document')->findOneById($id);
+        $file = $em->getRepository('AppUserdirectoryBundle:Document')->findOneById($id);
 
         $html =     //"header('Content-type: application/pdf');".
                     "header('Content-Disposition: attachment; filename=".$file->getName()."');".

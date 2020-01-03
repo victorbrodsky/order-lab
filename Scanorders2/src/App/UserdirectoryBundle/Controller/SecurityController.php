@@ -15,10 +15,10 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Controller;
+namespace App\UserdirectoryBundle\Controller;
 
 
-use Oleg\UserdirectoryBundle\Security\Authentication\AuthUtil;
+use App\UserdirectoryBundle\Security\Authentication\AuthUtil;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 //use Symfony\Component\Security\Core\Security;
@@ -30,7 +30,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\PhpBridgeSessionStorage;
 
-use Oleg\UserdirectoryBundle\Util\UserUtil;
+use App\UserdirectoryBundle\Util\UserUtil;
 
 class SecurityController extends Controller
 {
@@ -38,7 +38,7 @@ class SecurityController extends Controller
 //    /**
 //     * @Route("/login_check", name="employees_login_check")
 //     * @Method("POST")
-//     * @Template("OlegUserdirectoryBundle:Security:login.html.twig")
+//     * @Template("AppUserdirectoryBundle:Security:login.html.twig")
 //     */
 //    public function loginCheckAction( Request $request )
 //    {
@@ -104,7 +104,7 @@ class SecurityController extends Controller
         }
 
         $em = $this->getDoctrine()->getManager();
-        $usernametypes = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findBy(
+        $usernametypes = $em->getRepository('AppUserdirectoryBundle:UsernameType')->findBy(
             array(
                 'type' => array('default', 'user-added'),
                 //'abbreviation' => array('ldap-user','local-user')
@@ -157,7 +157,7 @@ class SecurityController extends Controller
         }
 
         return $this->render(
-            'OlegUserdirectoryBundle:Security:login.html.twig',
+            'AppUserdirectoryBundle:Security:login.html.twig',
             $formArr
         );
     }
@@ -196,7 +196,7 @@ class SecurityController extends Controller
         $lastUsername = $lastUsernameArr[0];
 
         $logoPath = null;
-        $siteObject = $em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation($sitename);
+        $siteObject = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation($sitename);
         if( $siteObject ) {
             $logos = $siteObject->getDocuments();
             if( count($logos) > 0 ) {
@@ -304,7 +304,7 @@ class SecurityController extends Controller
 
         //"Login Page Visit" - Object is Site name
         //echo "sitename=".$options['sitename']."<br>";
-        $siteObject = $em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation($options['sitename']);
+        $siteObject = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation($options['sitename']);
         //echo "siteObject=".$siteObject."<br>";
         //exit();
         if( $siteObject ) {
@@ -459,7 +459,7 @@ class SecurityController extends Controller
     /**
      * @Route("/no-permission", name="employees-nopermission")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:Security:nopermission.html.twig")
+     * @Template("AppUserdirectoryBundle:Security:nopermission.html.twig")
      */
     public function actionNoPermission( Request $request )
     {

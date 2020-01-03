@@ -23,7 +23,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Oleg\UserdirectoryBundle\Entity;
+namespace App\UserdirectoryBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -151,7 +151,7 @@ abstract class BaseComment extends BaseUserAttributes {
     /**
      * Add document
      *
-     * @param \Oleg\UserdirectoryBundle\Entity\Document $document
+     * @param \App\UserdirectoryBundle\Entity\Document $document
      * @return Comment
      */
     public function addDocument($document)
@@ -170,7 +170,7 @@ abstract class BaseComment extends BaseUserAttributes {
     /**
      * Remove document
      *
-     * @param \Oleg\UserdirectoryBundle\Entity\Document $document
+     * @param \App\UserdirectoryBundle\Entity\Document $document
      */
     public function removeDocument($document)
     {

@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Repository;
+namespace App\UserdirectoryBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
@@ -29,7 +29,7 @@ class UserWrapperRepository extends EntityRepository {
         $userWrapper = null;
 
         $query = $this->_em->createQueryBuilder()
-            ->from('OlegUserdirectoryBundle:UserWrapper', 'list')
+            ->from('AppUserdirectoryBundle:UserWrapper', 'list')
             ->select("list");
             //->leftJoin("list.user", "user")
 

@@ -15,16 +15,16 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Repository;
+namespace App\OrderformBundle\Repository;
 
 
-use Oleg\OrderformBundle\Security\Util\SecurityUtil;
-use Oleg\OrderformBundle\Entity\PatientLastName;
-use Oleg\OrderformBundle\Entity\PatientFirstName;
-use Oleg\OrderformBundle\Entity\PatientMiddleName;
-use Oleg\OrderformBundle\Entity\PatientSex;
-use Oleg\OrderformBundle\Entity\DataQualityAge;
-use Oleg\OrderformBundle\Entity\PatientSuffix;
+use App\OrderformBundle\Security\Util\SecurityUtil;
+use App\OrderformBundle\Entity\PatientLastName;
+use App\OrderformBundle\Entity\PatientFirstName;
+use App\OrderformBundle\Entity\PatientMiddleName;
+use App\OrderformBundle\Entity\PatientSex;
+use App\OrderformBundle\Entity\DataQualityAge;
+use App\OrderformBundle\Entity\PatientSuffix;
 
 
 /**
@@ -38,7 +38,7 @@ class EncounterRepository extends ArrayFieldAbstractRepository
 
     public function setEncounterKey($key, $entity, $provider=null, $message=null ) {
         $em = $this->_em;
-        $newkeytypeEntity = $em->getRepository('OlegOrderformBundle:EncounterType')->findOneByName("Auto-generated Encounter Number");
+        $newkeytypeEntity = $em->getRepository('AppOrderformBundle:EncounterType')->findOneByName("Auto-generated Encounter Number");
         $key->setKeytype($newkeytypeEntity);
 
         $nextKey = $this->getNextNonProvided($entity,null,$message);  //"NO".strtoupper($fieldName)."IDPROVIDED", $className, $fieldName);
@@ -202,7 +202,7 @@ class EncounterRepository extends ArrayFieldAbstractRepository
                 }
             } else {
                 $patient->setStatusAllFields($patient->$getterMethod(), $invalidStatus);
-                $entityClass = "Oleg\\OrderformBundle\\Entity\\".$classname;
+                $entityClass = "App\\OrderformBundle\\Entity\\".$classname;
                 $patientFieldObject = new $entityClass($validStatus, $user, $source); //PatientLastName
                 $patientFieldObject->setField($validField->getField());
                 $patient->$adderMethod($patientFieldObject); //addLastname
@@ -314,7 +314,7 @@ class EncounterRepository extends ArrayFieldAbstractRepository
         }
 
         $em = $this->_em;
-        $foundProcedure = $em->getRepository('OlegOrderformBundle:Procedure')->findUniqueByKey( $entity->getChildren()->first() );    //,"procedure","procedure");
+        $foundProcedure = $em->getRepository('AppOrderformBundle:Procedure')->findUniqueByKey( $entity->getChildren()->first() );    //,"procedure","procedure");
 
         if( $foundProcedure ) {
             //echo "This entity alsready exists in DB ".$foundProcedure."<br>";
@@ -334,13 +334,13 @@ class EncounterRepository extends ArrayFieldAbstractRepository
         if( !$key->getKeytype() || $key->getKeytype() == "" ) {
             //throw new \Exception( 'Encounter does not have a valid keytype. keytype=' . $key->getKeytype() );
             $em = $this->_em;
-            $newkeytypeEntity = $em->getRepository('OlegOrderformBundle:EncounterType')->findOneByName("Auto-generated Encounter Number");
+            $newkeytypeEntity = $em->getRepository('AppOrderformBundle:EncounterType')->findOneByName("Auto-generated Encounter Number");
             $key->setKeytype($newkeytypeEntity);
         }
 
         if( $key == "" || $key->getField() != "Auto-generated Encounter Number" ) {
             $em = $this->_em;
-            $newkeytypeEntity = $em->getRepository('OlegOrderformBundle:EncounterType')->findOneByName("Auto-generated Encounter Number");
+            $newkeytypeEntity = $em->getRepository('AppOrderformBundle:EncounterType')->findOneByName("Auto-generated Encounter Number");
             $key->setKeytype($newkeytypeEntity);
         }
 
@@ -439,7 +439,7 @@ class EncounterRepository extends ArrayFieldAbstractRepository
         $encounter->removeChildren($procedure);
 
         //process conflict if exists for procedure number. Replace conflicting procedure number by a new generated number.
-        $procedure = $this->_em->getRepository('OlegOrderformBundle:Procedure')->processDuplicationKeyField($procedure,$message);
+        $procedure = $this->_em->getRepository('AppOrderformBundle:Procedure')->processDuplicationKeyField($procedure,$message);
 
         $encounter->addChildren($procedure);
 
@@ -471,7 +471,7 @@ class EncounterRepository extends ArrayFieldAbstractRepository
 
     public function findEncountersByNumberAndType( $encounterTypeId, $encounterNumber, $status='valid', $encounterVersion=null ) {
 
-        $repository = $this->_em->getRepository('OlegOrderformBundle:Encounter');
+        $repository = $this->_em->getRepository('AppOrderformBundle:Encounter');
         $dql = $repository->createQueryBuilder("encounter");
         $dql->leftJoin("encounter.number", "number");
 
@@ -544,7 +544,7 @@ class EncounterRepository extends ArrayFieldAbstractRepository
         $encounterNumber = $key->getField();
         $encounterTypeId = $key->getKeytype();
 
-        $repository = $this->_em->getRepository('OlegOrderformBundle:Encounter');
+        $repository = $this->_em->getRepository('AppOrderformBundle:Encounter');
         $dql = $repository->createQueryBuilder("encounter");
         $dql->select("MAX(encounter.version) as maxVersion");
 
@@ -584,7 +584,7 @@ class EncounterRepository extends ArrayFieldAbstractRepository
         $encounterNumber = $key->getField();
         $encounterTypeId = $key->getKeytype();
 
-        $repository = $this->_em->getRepository('OlegOrderformBundle:Encounter');
+        $repository = $this->_em->getRepository('AppOrderformBundle:Encounter');
         $dql = $repository->createQueryBuilder("encounter");
         $dql->select("encounter");
 

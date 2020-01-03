@@ -1,10 +1,10 @@
 <?php
 
-namespace Oleg\TranslationalResearchBundle\Controller;
+namespace App\TranslationalResearchBundle\Controller;
 
 
-use Oleg\UserdirectoryBundle\Controller\SignUpController;
-use Oleg\UserdirectoryBundle\Entity\SignUp;
+use App\UserdirectoryBundle\Controller\SignUpController;
+use App\UserdirectoryBundle\Entity\SignUp;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;

@@ -15,10 +15,10 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Form;
+namespace App\UserdirectoryBundle\Form;
 
-use Oleg\UserdirectoryBundle\Entity\Identifier;
-use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
+use App\UserdirectoryBundle\Entity\Identifier;
+use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -103,7 +103,7 @@ class IdentifierType extends AbstractType
 
         //keytypemrn
         $builder->add('keytypemrn', EntityType::class, array(
-            'class' => 'OlegOrderformBundle:MrnType',
+            'class' => 'AppOrderformBundle:MrnType',
             'choice_label' => 'name',
             'label'=>'MRN Type:',
             'required'=> false,
@@ -125,7 +125,7 @@ class IdentifierType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\Identifier',
+            'data_class' => 'App\UserdirectoryBundle\Entity\Identifier',
             'form_custom_value' => null
         ));
     }

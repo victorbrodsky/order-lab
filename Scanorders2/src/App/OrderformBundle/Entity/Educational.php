@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Entity;
+namespace App\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -27,7 +27,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 // *  }
 
 /**
- * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\EducationalRepository")
+ * @ORM\Entity(repositoryClass="App\OrderformBundle\Repository\EducationalRepository")
  * @ORM\Table( name="scan_educational")
  */
 class Educational
@@ -53,7 +53,7 @@ class Educational
 
     //directors
     /**
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\UserWrapper", cascade={"persist","remove"})
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\UserWrapper", cascade={"persist","remove"})
      * @ORM\JoinTable(name="scan_educational_userWrapper",
      *      joinColumns={@ORM\JoinColumn(name="educational_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="userWrapper_id", referencedColumnName="id")}
@@ -69,7 +69,7 @@ class Educational
     /**
      * primaryDirector
      *
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\UserWrapper",cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\UserWrapper",cascade={"persist"})
      */
     private $primaryPrincipal;
 

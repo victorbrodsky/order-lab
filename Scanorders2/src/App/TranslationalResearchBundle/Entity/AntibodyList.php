@@ -15,13 +15,13 @@
  *  limitations under the License.
  */
 
-namespace Oleg\TranslationalResearchBundle\Entity;
+namespace App\TranslationalResearchBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-use Oleg\UserdirectoryBundle\Entity\ListAbstract;
+use App\UserdirectoryBundle\Entity\ListAbstract;
 
 /**
  * @ORM\Entity
@@ -173,7 +173,7 @@ class AntibodyList extends ListAbstract
     private $pdf;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
      * @ORM\JoinTable(name="transres_antibody_document",
      *      joinColumns={@ORM\JoinColumn(name="request_id", referencedColumnName="id", onDelete="CASCADE")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE")}

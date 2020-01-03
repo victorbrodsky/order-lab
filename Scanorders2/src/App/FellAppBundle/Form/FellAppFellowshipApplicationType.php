@@ -15,10 +15,10 @@
  *  limitations under the License.
  */
 
-namespace Oleg\FellAppBundle\Form;
+namespace App\FellAppBundle\Form;
 
 
-use Oleg\UserdirectoryBundle\Form\GeoLocationType;
+use App\UserdirectoryBundle\Form\GeoLocationType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -27,7 +27,7 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 
-use Oleg\UserdirectoryBundle\Entity\Training;
+use App\UserdirectoryBundle\Entity\Training;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class FellAppFellowshipApplicationType extends AbstractType
@@ -38,7 +38,7 @@ class FellAppFellowshipApplicationType extends AbstractType
     {
 
         $builder->add( 'fellowshipsubspecialtytype', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:FellowshipSubspecialty',
+            'class' => 'AppUserdirectoryBundle:FellowshipSubspecialty',
             'label'=> "Fellowship Subspecialty:",
             'required'=> false,
             //'multiple' => true,
@@ -66,7 +66,7 @@ class FellAppFellowshipApplicationType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            //'data_class' => 'Oleg\UserdirectoryBundle\Entity\Training',
+            //'data_class' => 'App\UserdirectoryBundle\Entity\Training',
         ));
     }
 

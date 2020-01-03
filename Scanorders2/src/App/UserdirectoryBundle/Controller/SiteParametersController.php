@@ -15,12 +15,12 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Controller;
+namespace App\UserdirectoryBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\PersistentCollection;
-use Oleg\UserdirectoryBundle\Entity\OrganizationalGroupDefault;
-use Oleg\UserdirectoryBundle\Form\InitialConfigurationType;
+use App\UserdirectoryBundle\Entity\OrganizationalGroupDefault;
+use App\UserdirectoryBundle\Form\InitialConfigurationType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,9 +30,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-use Oleg\UserdirectoryBundle\Entity\SiteParameters;
-use Oleg\UserdirectoryBundle\Form\SiteParametersType;
-use Oleg\UserdirectoryBundle\Util\UserUtil;
+use App\UserdirectoryBundle\Entity\SiteParameters;
+use App\UserdirectoryBundle\Form\SiteParametersType;
+use App\UserdirectoryBundle\Util\UserUtil;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -48,7 +48,7 @@ class SiteParametersController extends Controller
      *
      * @Route("/settings-id/{id}", name="employees_siteparameters_id")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:SiteParameters:index.html.twig")
+     * @Template("AppUserdirectoryBundle:SiteParameters:index.html.twig")
      */
     public function indexIdAction(Request $request, $id=null)
     {
@@ -66,7 +66,7 @@ class SiteParametersController extends Controller
      *
      * @Route("/", name="employees_siteparameters")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:SiteParameters:index.html.twig")
+     * @Template("AppUserdirectoryBundle:SiteParameters:index.html.twig")
      */
     public function indexAction(Request $request)
     {
@@ -101,13 +101,13 @@ class SiteParametersController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+        $entities = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
 
         //make sure sitesettings is initialized
         if( count($entities) != 1 ) {
             $userServiceUtil = $this->get('user_service_utility');
             $userServiceUtil->generateSiteParameters();
-            $entities = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+            $entities = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
         }
 
         if( count($entities) != 1 ) {
@@ -197,7 +197,7 @@ class SiteParametersController extends Controller
      *
      * @Route("/{id}/edit", name="employees_siteparameters_edit")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:SiteParameters:edit.html.twig")
+     * @Template("AppUserdirectoryBundle:SiteParameters:edit.html.twig")
      */
     public function editAction(Request $request,$id)
     {
@@ -225,7 +225,7 @@ class SiteParametersController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->find($id);
+        $entity = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find SiteParameters entity.');
@@ -249,7 +249,7 @@ class SiteParametersController extends Controller
      *
      * @Route("/{id}", name="employees_siteparameters_update")
      * @Method("PUT")
-     * @Template("OlegUserdirectoryBundle:SiteParameters:edit.html.twig")
+     * @Template("AppUserdirectoryBundle:SiteParameters:edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {
@@ -278,7 +278,7 @@ class SiteParametersController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->find($id);
+        $entity = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find SiteParameters entity.');
@@ -297,7 +297,7 @@ class SiteParametersController extends Controller
             $updatedParam = $entity->$getMethod();
 
             if( $param == 'platformLogos' ) {
-                $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($entity,"platformLogo");
+                $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($entity,"platformLogo");
                 if( $originalParam && count($originalParam)>0 ) {
                     $platformLogo = $originalParam->first();
                     $originalParam = $platformLogo->getAbsoluteUploadFullPath();
@@ -371,7 +371,7 @@ class SiteParametersController extends Controller
      *
      * @Route("/organizational-group-default-management/{id}", name="employees_management_organizationalgroupdefault")
      * @Method({"GET","POST"})
-     * @Template("OlegUserdirectoryBundle:SiteParameters:group-management-form.html.twig")
+     * @Template("AppUserdirectoryBundle:SiteParameters:group-management-form.html.twig")
      */
     public function manageOrgGroupDefaultAction(Request $request, $id)
     {
@@ -386,7 +386,7 @@ class SiteParametersController extends Controller
         $routeArr = explode("_", $routeName);
         $sitename = $routeArr[0];
 
-        $entity = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->find($id);
+        $entity = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find SiteParameters entity.');
@@ -554,7 +554,7 @@ class SiteParametersController extends Controller
     public function getUserRoles() {
         $rolesArr = array();
         $em = $this->getDoctrine()->getManager();
-        $roles = $em->getRepository('OlegUserdirectoryBundle:Roles')->findBy(
+        $roles = $em->getRepository('AppUserdirectoryBundle:Roles')->findBy(
             array('type' => array('default','user-added')),
             array('orderinlist' => 'ASC')
         );  //findAll();
@@ -572,7 +572,7 @@ class SiteParametersController extends Controller
      *
      * @Route("/initial-configuration", name="employees_initial_configuration")
      * @Method({"GET","POST"})
-     * @Template("OlegUserdirectoryBundle:SiteParameters:initial-configuration.html.twig")
+     * @Template("AppUserdirectoryBundle:SiteParameters:initial-configuration.html.twig")
      */
     public function initialConfigurationAction(Request $request)
     {
@@ -588,18 +588,18 @@ class SiteParametersController extends Controller
 
         $administratorUser = $this->get('security.token_storage')->getToken()->getUser();
         if( $administratorUser->getPrimaryPublicUserId() != "Administrator" ) {
-            $administratorUser = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByPrimaryPublicUserId("Administrator");
+            $administratorUser = $em->getRepository('AppUserdirectoryBundle:User')->findOneByPrimaryPublicUserId("Administrator");
             if( !$administratorUser ) {
                 throw new \Exception('Initial Configuration: Administrator user not found.');
             }
         }
 
-        $entities = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+        $entities = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
 
         if( count($entities) != 1 ) {
             $userServiceUtil = $this->get('user_service_utility');
             $userServiceUtil->generateSiteParameters();
-            $entities = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+            $entities = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
         }
 
         if( count($entities) != 1 ) {

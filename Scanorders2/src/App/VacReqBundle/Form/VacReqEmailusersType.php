@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\VacReqBundle\Form;
+namespace App\VacReqBundle\Form;
 
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -27,7 +27,7 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 
-use Oleg\VacReqBundle\Form\VacReqRequestBusinessType;
+use App\VacReqBundle\Form\VacReqRequestBusinessType;
 
 
 class VacReqEmailusersType extends AbstractType
@@ -45,7 +45,7 @@ class VacReqEmailusersType extends AbstractType
         $this->formConstructor($options['form_custom_value']);
 
         $builder->add('emailUsers', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:User',
+            'class' => 'AppUserdirectoryBundle:User',
             'label' => "E-Mail all requests and responses to:",
             'required' => false,
             'multiple' => true,
@@ -69,7 +69,7 @@ class VacReqEmailusersType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\VacReqBundle\Entity\VacReqSettings',
+            'data_class' => 'App\VacReqBundle\Entity\VacReqSettings',
             'form_custom_value' => null,
             'csrf_protection' => false,
         ));

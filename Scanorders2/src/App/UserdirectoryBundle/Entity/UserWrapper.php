@@ -23,13 +23,13 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Oleg\UserdirectoryBundle\Entity;
+namespace App\UserdirectoryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @ORM\Entity(repositoryClass="Oleg\UserdirectoryBundle\Repository\UserWrapperRepository")
+ * @ORM\Entity(repositoryClass="App\UserdirectoryBundle\Repository\UserWrapperRepository")
  * @ORM\Table(name="user_userWrapper")
  */
 class UserWrapper extends ListAbstract {
@@ -93,7 +93,7 @@ class UserWrapper extends ListAbstract {
     //Specialty: [link to the platform list manager's specialty list items here
     // http://collage.med.cornell.edu/order/directory/admin/list-manager/id/69 - allow more than one]
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\HealthcareProviderSpecialtiesList", cascade={"persist","remove"})
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\HealthcareProviderSpecialtiesList", cascade={"persist","remove"})
      */
     private $userWrapperSpecialty;
 

@@ -15,10 +15,10 @@
  *  limitations under the License.
  */
 
-namespace Oleg\VacReqBundle\Form;
+namespace App\VacReqBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
-use Oleg\UserdirectoryBundle\Entity\User;
+use App\UserdirectoryBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -79,7 +79,7 @@ class VacReqCalendarFilterType extends AbstractType
                         function ($submittedInstitutionObject) {
                             //echo "submittedInstitutionObject=" . $submittedInstitutionObject . "<br>";
                             if ($submittedInstitutionObject) { //id
-                                $institutionObject = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->find($submittedInstitutionObject);
+                                $institutionObject = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->find($submittedInstitutionObject);
                                 return $institutionObject;
                             }
                             return null;

@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\TranslationalResearchBundle\Controller;
+namespace App\TranslationalResearchBundle\Controller;
 
 
 use Symfony\Component\HttpFoundation\Request;
@@ -24,7 +24,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-use Oleg\UserdirectoryBundle\Controller\SiteParametersController;
+use App\UserdirectoryBundle\Controller\SiteParametersController;
 
 
 
@@ -41,7 +41,7 @@ class TranslationalResearchSiteParametersController extends SiteParametersContro
      *
      * @Route("/", name="translationalresearch_siteparameters")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:SiteParameters:index.html.twig")
+     * @Template("AppUserdirectoryBundle:SiteParameters:index.html.twig")
      */
     public function indexAction(Request $request)
     {
@@ -56,7 +56,7 @@ class TranslationalResearchSiteParametersController extends SiteParametersContro
      *
      * @Route("/{id}/edit", name="translationalresearch_siteparameters_edit")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:SiteParameters:edit.html.twig")
+     * @Template("AppUserdirectoryBundle:SiteParameters:edit.html.twig")
      */
     public function editAction(Request $request,$id)
     {
@@ -68,7 +68,7 @@ class TranslationalResearchSiteParametersController extends SiteParametersContro
      *
      * @Route("/{id}", name="translationalresearch_siteparameters_update")
      * @Method("PUT")
-     * @Template("OlegUserdirectoryBundle:SiteParameters:edit.html.twig")
+     * @Template("AppUserdirectoryBundle:SiteParameters:edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {

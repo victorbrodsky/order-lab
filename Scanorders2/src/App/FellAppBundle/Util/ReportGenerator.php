@@ -22,16 +22,16 @@
  * Time: 8:47 AM
  */
 
-namespace Oleg\FellAppBundle\Util;
+namespace App\FellAppBundle\Util;
 
 
 //use Clegginabox\PDFMerger\PDFMerger;
 use Doctrine\ORM\EntityNotFoundException;
-use Oleg\FellAppBundle\Controller\FellAppController;
-use Oleg\FellAppBundle\Form\FellowshipApplicationType;
-use Oleg\UserdirectoryBundle\Entity\Document;
-use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
-use Oleg\UserdirectoryBundle\Util\UserUtil;
+use App\FellAppBundle\Controller\FellAppController;
+use App\FellAppBundle\Form\FellowshipApplicationType;
+use App\UserdirectoryBundle\Entity\Document;
+use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
+use App\UserdirectoryBundle\Util\UserUtil;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Bundle\FrameworkBundle\Tests\Functional\WebTestCase;
 use Symfony\Component\BrowserKit\Cookie;
@@ -43,8 +43,8 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 //use Symfony\Component\Process\Exception\ProcessFailedException;
 //use Symfony\Component\Process\Process;
 
-use Oleg\FellAppBundle\Entity\ReportQueue;
-use Oleg\FellAppBundle\Entity\Process;
+use App\FellAppBundle\Entity\ReportQueue;
+use App\FellAppBundle\Entity\Process;
 
 
 //The last working commit before changing directory separator: 78518efa68a8d81070ea87755f40586f4534faae
@@ -89,11 +89,11 @@ class ReportGenerator {
         $this->resetQueue($queue);
 
         //remove all waiting processes
-        $query = $this->em->createQuery('DELETE FROM OlegFellAppBundle:Process p');
+        $query = $this->em->createQuery('DELETE FROM AppFellAppBundle:Process p');
         $numDeleted = $query->execute();
 
         //add all reports generation to queue
-        $fellapps = $this->em->getRepository('OlegFellAppBundle:FellowshipApplication')->findAll();
+        $fellapps = $this->em->getRepository('AppFellAppBundle:FellowshipApplication')->findAll();
         foreach( $fellapps as $fellapp ) {
             $this->addFellAppReportToQueue($fellapp->getId());
         }
@@ -112,12 +112,12 @@ class ReportGenerator {
         $numUpdated = $this->resetQueue($queue);
 
         //reset processes
-//        $repository = $this->em->getRepository('OlegFellAppBundle:Process');
+//        $repository = $this->em->getRepository('AppFellAppBundle:Process');
 //        $dql =  $repository->createQueryBuilder("process");
 //        $dql->select('process');
 //        $dql->where("process.startTimestamp IS NOT NULL");
 
-//        $query = $this->em->createQuery('UPDATE OlegFellAppBundle:Process p SET p.startTimestamp = NULL WHERE p.startTimestamp IS NOT NULL');
+//        $query = $this->em->createQuery('UPDATE AppFellAppBundle:Process p SET p.startTimestamp = NULL WHERE p.startTimestamp IS NOT NULL');
 //        $numUpdated = $query->execute();
 
         //$this->cmdRunAsync($this->generatereportrunCmd);
@@ -149,7 +149,7 @@ class ReportGenerator {
         $processesDb = null;
         if( $argument != 'overwrite' ) {
             //$argument == asap
-            $processesDb = $this->em->getRepository('OlegFellAppBundle:Process')->findOneByFellappId($id);
+            $processesDb = $this->em->getRepository('AppFellAppBundle:Process')->findOneByFellappId($id);
         }
 
         //add as a new process only if argument is 'overwrite' or process is not created yet
@@ -162,7 +162,7 @@ class ReportGenerator {
         }
 
         //move all reports to OldReports
-        $fellapp = $this->em->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
+        $fellapp = $this->em->getRepository('AppFellAppBundle:FellowshipApplication')->find($id);
         foreach( $fellapp->getReports() as $report ) {
             $fellapp->removeReport($report);
             $fellapp->addOldReport($report);
@@ -256,7 +256,7 @@ class ReportGenerator {
         }
 
         //get processes with asap flag
-        $processes = $this->em->getRepository('OlegFellAppBundle:Process')->findBy(
+        $processes = $this->em->getRepository('AppFellAppBundle:Process')->findBy(
             array(
                 'startTimestamp' => NULL,
                 'argument' => 'asap'
@@ -266,7 +266,7 @@ class ReportGenerator {
 
         //get processes with NULL timestamp
         if( count($processes) == 0 ) {
-            $processes = $this->em->getRepository('OlegFellAppBundle:Process')->findBy(
+            $processes = $this->em->getRepository('AppFellAppBundle:Process')->findBy(
                 array('startTimestamp' => NULL),
                 array('queueTimestamp' => 'ASC') //ASC => most recent will be the last
             );
@@ -274,7 +274,7 @@ class ReportGenerator {
 
         //get all other processes in queue
         if( count($processes) == 0 ) {
-            $processes = $this->em->getRepository('OlegFellAppBundle:Process')->findBy(
+            $processes = $this->em->getRepository('AppFellAppBundle:Process')->findBy(
                 array(),
                 array('queueTimestamp' => 'ASC') //ASC => most recent will be the last
             );
@@ -428,7 +428,7 @@ class ReportGenerator {
 
         $queue = null;
 
-        $queues = $this->em->getRepository('OlegFellAppBundle:ReportQueue')->findAll();
+        $queues = $this->em->getRepository('AppFellAppBundle:ReportQueue')->findAll();
         //$logger->notice("Current queue count=".count($queues));
 
         //must be only one
@@ -459,7 +459,7 @@ class ReportGenerator {
         $this->runningGenerationReport = false;
 
         //clear start timestamp for all processes
-        $query = $this->em->createQuery('UPDATE OlegFellAppBundle:Process p SET p.startTimestamp = NULL WHERE p.startTimestamp IS NOT NULL');
+        $query = $this->em->createQuery('UPDATE AppFellAppBundle:Process p SET p.startTimestamp = NULL WHERE p.startTimestamp IS NOT NULL');
         $numUpdated = $query->execute();
 
         return $numUpdated;
@@ -479,7 +479,7 @@ class ReportGenerator {
         $userSecUtil = $this->container->get('user_security_utility');
         $systemUser = $userSecUtil->findSystemUser();
 
-        $entity = $this->em->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
+        $entity = $this->em->getRepository('AppFellAppBundle:FellowshipApplication')->find($id);
         if( !$entity ) {
             throw new EntityNotFoundException('Unable to find Fellowship Application by id='.$id);
         }
@@ -1609,7 +1609,7 @@ class ReportGenerator {
     //test method for console command
     public function testCmd() {
 
-        $fellapp = $this->em->getRepository('OlegFellAppBundle:FellowshipApplication')->find(6);
+        $fellapp = $this->em->getRepository('AppFellAppBundle:FellowshipApplication')->find(6);
         $avatar = $fellapp->getAvatars()->last();
 
         //$serverPath = $avatar->getFullServerPath();
@@ -1641,7 +1641,7 @@ class ReportGenerator {
 //    protected function html2pdf($html) {
 //
 //        //$params = $this->getShowParameters($id,'fellapp_download');
-//        //$html = $this->renderView('OlegFellAppBundle:Form:download.html.twig',$params);
+//        //$html = $this->renderView('AppFellAppBundle:Form:download.html.twig',$params);
 //
 //        try {
 //

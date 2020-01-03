@@ -16,10 +16,10 @@
  *  limitations under the License.
  */
 
-namespace Oleg\VacReqBundle\Form;
+namespace App\VacReqBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
-use Oleg\UserdirectoryBundle\Form\UserType;
+use App\UserdirectoryBundle\Form\UserType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -57,7 +57,7 @@ class VacReqUserType extends UserType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\User',
+            'data_class' => 'App\UserdirectoryBundle\Entity\User',
             'form_custom_value' => null,
             'csrf_protection' => false,
         ));

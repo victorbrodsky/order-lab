@@ -22,7 +22,7 @@
  * Time: 11:49 AM
  */
 
-namespace Oleg\TranslationalResearchBundle\Entity;
+namespace App\TranslationalResearchBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -57,25 +57,25 @@ class DefaultReviewer
     private $updateDate;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
      */
     private $creator;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(name="updateUser", referencedColumnName="id", nullable=true)
      */
     private $updateUser;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
      */
     private $reviewer;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
      */
     private $reviewerDelegate;
@@ -101,7 +101,7 @@ class DefaultReviewer
 
     /**
      *
-     * @ORM\ManyToOne(targetEntity="Oleg\TranslationalResearchBundle\Entity\SpecialtyList", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\TranslationalResearchBundle\Entity\SpecialtyList", cascade={"persist"})
      */
     private $projectSpecialty;
 

@@ -1,5 +1,5 @@
 # Storage directory for certificates and keys.
-storage: C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\scanorder\Scanorders2\src\Oleg\UserdirectoryBundle\Cert
+storage: C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\scanorder\Scanorders2\src\App\UserdirectoryBundle\Cert
 
 # Server to use. URL to the ACME directory.
 # "letsencrypt" and "letsencrypt:staging" are valid shortcuts.

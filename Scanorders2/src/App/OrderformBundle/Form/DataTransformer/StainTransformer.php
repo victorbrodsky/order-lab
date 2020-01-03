@@ -23,12 +23,12 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Oleg\OrderformBundle\Form\DataTransformer;
+namespace App\OrderformBundle\Form\DataTransformer;
 
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Doctrine\Common\Persistence\ObjectManager;
-use Oleg\OrderformBundle\Entity\StainList;
+use App\OrderformBundle\Entity\StainList;
 
 class StainTransformer implements DataTransformerInterface
 {
@@ -65,7 +65,7 @@ class StainTransformer implements DataTransformerInterface
 
         if( is_int($stain) ) {
             //echo "transform stain by id=".$stain->getId()."<br>";
-            $stain = $this->em->getRepository('OlegOrderformBundle:StainList')->findOneById($stain);
+            $stain = $this->em->getRepository('AppOrderformBundle:StainList')->findOneById($stain);
             //echo "findOneById stain=".$stain."<br>";
         }
         
@@ -98,7 +98,7 @@ class StainTransformer implements DataTransformerInterface
 
         if( is_numeric ( $text ) ) {    //number => most probably it is id
 
-            $entity = $this->em->getRepository('OlegOrderformBundle:StainList')->findOneById($text);
+            $entity = $this->em->getRepository('AppOrderformBundle:StainList')->findOneById($text);
 
             if( null === $entity ) {
 
@@ -122,7 +122,7 @@ class StainTransformer implements DataTransformerInterface
     public function createNewStain($name) {
 
         //check if it is already exists in db
-        $entity = $this->em->getRepository('OlegOrderformBundle:StainList')->findOneByName($name);
+        $entity = $this->em->getRepository('AppOrderformBundle:StainList')->findOneByName($name);
         //echo "db entity=".$entity."<br>";
         if( null === $entity ) {
 
@@ -133,7 +133,7 @@ class StainTransformer implements DataTransformerInterface
             $stain->setCreator($this->user);
 
             //get max orderinlist
-            $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM OlegOrderformBundle:StainList c');           
+            $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM AppOrderformBundle:StainList c');           
             $nextorder = $query->getSingleResult()['maxorderinlist']+10;          
             $stain->setOrderinlist($nextorder);
             

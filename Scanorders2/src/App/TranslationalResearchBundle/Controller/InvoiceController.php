@@ -1,12 +1,12 @@
 <?php
 
-namespace Oleg\TranslationalResearchBundle\Controller;
+namespace App\TranslationalResearchBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Oleg\TranslationalResearchBundle\Entity\Invoice;
-use Oleg\TranslationalResearchBundle\Entity\TransResRequest;
-use Oleg\TranslationalResearchBundle\Form\FilterInvoiceType;
-use Oleg\TranslationalResearchBundle\Form\InvoiceType;
+use App\TranslationalResearchBundle\Entity\Invoice;
+use App\TranslationalResearchBundle\Entity\TransResRequest;
+use App\TranslationalResearchBundle\Form\FilterInvoiceType;
+use App\TranslationalResearchBundle\Form\InvoiceType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
-use Oleg\UserdirectoryBundle\Entity\User;
+use App\UserdirectoryBundle\Entity\User;
 
 /**
  * Invoice controller.
@@ -36,7 +36,7 @@ class InvoiceController extends Controller
      * @Route("/list-request/{id}", name="translationalresearch_invoice_index")
      * @Route("/list/", name="translationalresearch_invoice_index_filter")
      * @Route("/list/{invoicetype}", name="translationalresearch_invoice_index_type")
-     * @Template("OlegTranslationalResearchBundle:Invoice:index.html.twig")
+     * @Template("AppTranslationalResearchBundle:Invoice:index.html.twig")
      * @Method("GET")
      */
     public function indexAction(Request $request, TransResRequest $transresRequest=null, $invoicetype=null)
@@ -54,7 +54,7 @@ class InvoiceController extends Controller
         $title = "List of Invoices";
         $metaTitle = null;
 
-        $repository = $em->getRepository('OlegTranslationalResearchBundle:Invoice');
+        $repository = $em->getRepository('AppTranslationalResearchBundle:Invoice');
         $dql =  $repository->createQueryBuilder("invoice");
         $dql->select('invoice');
 
@@ -636,7 +636,7 @@ class InvoiceController extends Controller
             $metaTitle = $title;
         }
 
-        $eventObjectType = $em->getRepository('OlegUserdirectoryBundle:EventObjectTypeList')->findOneByName("Invoice");
+        $eventObjectType = $em->getRepository('AppUserdirectoryBundle:EventObjectTypeList')->findOneByName("Invoice");
         if( $eventObjectType ) {
             $eventObjectTypeId = $eventObjectType->getId();
         } else {
@@ -677,7 +677,7 @@ class InvoiceController extends Controller
      * Creates a new invoice entity.
      *
      * @Route("/new/{id}", name="translationalresearch_invoice_new")
-     * @Template("OlegTranslationalResearchBundle:Invoice:new.html.twig")
+     * @Template("AppTranslationalResearchBundle:Invoice:new.html.twig")
      * @Method({"GET", "POST"})
      */
     public function newAction(Request $request, TransResRequest $transresRequest)
@@ -760,7 +760,7 @@ class InvoiceController extends Controller
      * Finds and displays a invoice entity.
      *
      * @Route("/show/{oid}", name="translationalresearch_invoice_show")
-     * @Template("OlegTranslationalResearchBundle:Invoice:new.html.twig")
+     * @Template("AppTranslationalResearchBundle:Invoice:new.html.twig")
      * @Method("GET")
      */
     public function showAction(Request $request, $oid)
@@ -774,11 +774,11 @@ class InvoiceController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         //1) try to find by oid
-        $invoice = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findOneByOid($oid);
+        $invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->findOneByOid($oid);
 
         if( !$invoice ) {
             //2) try to find by id
-            $invoice = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->find($oid);
+            $invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->find($oid);
         }
         if( !$invoice ) {
             throw new \Exception("Invoice is not found by invoice number (oid) '" . $oid . "'");
@@ -829,7 +829,7 @@ class InvoiceController extends Controller
      * Displays a form to edit an existing invoice entity.
      *
      * @Route("/edit/{oid}", name="translationalresearch_invoice_edit")
-     * @Template("OlegTranslationalResearchBundle:Invoice:new.html.twig")
+     * @Template("AppTranslationalResearchBundle:Invoice:new.html.twig")
      * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, $oid)
@@ -843,7 +843,7 @@ class InvoiceController extends Controller
         $transresUtil = $this->get('transres_util');
         $transresRequestUtil = $this->get('transres_request_util');
 
-        $invoice = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findOneByOid($oid);
+        $invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->findOneByOid($oid);
         if( !$invoice ) {
             throw new \Exception("Invoice is not found by invoice number (oid) '" . $oid . "'");
         }
@@ -896,7 +896,7 @@ class InvoiceController extends Controller
 
         //$deleteForm = $this->createDeleteForm($invoice);
 
-        //$editForm = $this->createForm('Oleg\TranslationalResearchBundle\Form\InvoiceType', $invoice);
+        //$editForm = $this->createForm('App\TranslationalResearchBundle\Form\InvoiceType', $invoice);
         $editForm = $this->createInvoiceForm($invoice,$cycle); //edit
 
         $editForm->handleRequest($request);
@@ -966,7 +966,7 @@ class InvoiceController extends Controller
             $msg = "Invoice with ID ".$invoice->getOid()." has been updated.";
 
             //changes
-            //$invoiceUpdatedDb = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findOneByOid($invoice->getOid());
+            //$invoiceUpdatedDb = $em->getRepository('AppTranslationalResearchBundle:Invoice')->findOneByOid($invoice->getOid());
             $invoiceSerializedUpdatedStr = $invoice->getSerializeStr();
             if( $invoiceSerializedUpdatedStr != $invoiceSerializedOriginalStr ) {
                 $chanesStr =    "<strong>Original Invoice:</strong><br>" . $invoiceSerializedOriginalStr . "<br>" .
@@ -1042,8 +1042,8 @@ class InvoiceController extends Controller
         //$transresPermissionUtil = $this->get('transres_permission_util');
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
-        //$invoice = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findOneByOid($oid);
-        $invoice = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->find($id);
+        //$invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->findOneByOid($oid);
+        $invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->find($id);
         if( !$invoice ) {
             throw new \Exception("Invoice is not found by invoice number (id) '" . $id . "'");
         }
@@ -1100,7 +1100,7 @@ class InvoiceController extends Controller
      * Show PDF version of invoice
      *
      * @Route("/download-invoice-pdf/{id}", name="translationalresearch_invoice_download")
-     * @Template("OlegTranslationalResearchBundle:Invoice:pdf-show.html.twig")
+     * @Template("AppTranslationalResearchBundle:Invoice:pdf-show.html.twig")
      * @Method("GET")
      */
     public function downloadPdfAction(Request $request, Invoice $invoice)
@@ -1133,7 +1133,7 @@ class InvoiceController extends Controller
 //        }
 
         //$em = $this->getDoctrine()->getManager();
-        //$invoice = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findOneByOid($oid);
+        //$invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->findOneByOid($oid);
         //if( !$invoice ) {
         //    throw new \Exception("Invoice is not found by invoice number (oid) '" . $oid . "'");
         //}
@@ -1176,7 +1176,7 @@ class InvoiceController extends Controller
      * Show the most recent PDF version of invoice
      *
      * @Route("/download-recent-invoice-pdf/{id}", name="translationalresearch_invoice_download_recent")
-     * @Template("OlegTranslationalResearchBundle:Invoice:pdf-show.html.twig")
+     * @Template("AppTranslationalResearchBundle:Invoice:pdf-show.html.twig")
      * @Method("GET")
      */
     public function downloadRecentPdfAction(Request $request, Invoice $invoice)
@@ -1194,7 +1194,7 @@ class InvoiceController extends Controller
         //$transresUtil = $this->get('transres_util');
 
         //$em = $this->getDoctrine()->getManager();
-        //$invoice = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findOneByOid($oid);
+        //$invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->findOneByOid($oid);
         //if( !$invoice ) {
         //    throw new \Exception("Invoice is not found by invoice number (oid) '" . $oid . "'");
         //}
@@ -1343,7 +1343,7 @@ class InvoiceController extends Controller
         $res = "NotOK";
 
         $userId = trim( $request->get('userId') );
-        $billToUser = $em->getRepository('OlegUserdirectoryBundle:User')->find($userId);
+        $billToUser = $em->getRepository('AppUserdirectoryBundle:User')->find($userId);
 
         if( $billToUser ) {
             $res = $userDownloadUtil->getLabelSingleUser($billToUser,$newline,true);
@@ -1363,7 +1363,7 @@ class InvoiceController extends Controller
         $transresPermissionUtil = $this->get('transres_permission_util');
         $em = $this->getDoctrine()->getManager();
 
-        $invoice = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findOneByOid($oid);
+        $invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->findOneByOid($oid);
         if( !$invoice ) {
             throw new \Exception("Invoice is not found by invoice number (oid) '" . $oid . "'");
         }
@@ -1480,7 +1480,7 @@ class InvoiceController extends Controller
         $transresUtil = $this->get('transres_util');
         $em = $this->getDoctrine()->getManager();
 
-        $invoice = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findOneByOid($oid);
+        $invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->findOneByOid($oid);
         if( !$invoice ) {
             throw new \Exception("Invoice is not found by invoice number (oid) '" . $oid . "'");
         }
@@ -1572,7 +1572,7 @@ class InvoiceController extends Controller
         $comment = trim( $request->get('comment') );
         $status = trim( $request->get('status') );
 
-        $invoice = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->find($invoiceId);
+        $invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->find($invoiceId);
         if( !$invoice ) {
             throw new \Exception("Invoice is not found by invoice id '" . $invoiceId . "'");
         }
@@ -1666,7 +1666,7 @@ class InvoiceController extends Controller
             . " and status changed to '$status'";
 
         //changes
-        //$invoiceUpdatedDb = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findOneByOid($invoice->getOid());
+        //$invoiceUpdatedDb = $em->getRepository('AppTranslationalResearchBundle:Invoice')->findOneByOid($invoice->getOid());
         $invoiceSerializedUpdatedStr = $invoice->getSerializeStr();
         if( $invoiceSerializedUpdatedStr != $invoiceSerializedOriginalStr ) {
             $chanesStr =    "<strong>Original Invoice:</strong><br>" . $invoiceSerializedOriginalStr . "<br>" .
@@ -1741,7 +1741,7 @@ class InvoiceController extends Controller
 //                $invoiceCounter = $invoiceCounter + count($result);
 //            }
 //
-//            return $this->render("OlegTranslationalResearchBundle:Invoice:unpaid-invoice-index.html.twig",
+//            return $this->render("AppTranslationalResearchBundle:Invoice:unpaid-invoice-index.html.twig",
 //                array(
 //                    'title' => $invoiceCounter." Unpaid Invoices",
 //                    'invoiceGroups' => $results,

@@ -15,10 +15,10 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Form;
+namespace App\UserdirectoryBundle\Form;
 
 
-use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
+use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -30,7 +30,7 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 
-use Oleg\UserdirectoryBundle\Entity\Training;
+use App\UserdirectoryBundle\Entity\Training;
 
 class BookType extends AbstractType
 {
@@ -94,7 +94,7 @@ class BookType extends AbstractType
         ));
 
         $builder->add( 'authorshipRole', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:AuthorshipRoles',
+            'class' => 'AppUserdirectoryBundle:AuthorshipRoles',
             'label'=> "Authorship Role:",
             'required'=> false,
             'multiple' => false,
@@ -121,7 +121,7 @@ class BookType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\Book',
+            'data_class' => 'App\UserdirectoryBundle\Entity\Book',
             'form_custom_value' => null
         ));
     }

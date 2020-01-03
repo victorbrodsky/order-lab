@@ -15,16 +15,16 @@
  *  limitations under the License.
  */
 
-namespace Oleg\FellAppBundle\Form;
+namespace App\FellAppBundle\Form;
 
 
-use Oleg\UserdirectoryBundle\Form\BoardCertificationType;
-use Oleg\UserdirectoryBundle\Form\CitizenshipType;
-use Oleg\UserdirectoryBundle\Form\DataTransformer\StringToBooleanTransformer;
-use Oleg\UserdirectoryBundle\Form\DocumentType;
-use Oleg\UserdirectoryBundle\Form\ExaminationType;
-use Oleg\UserdirectoryBundle\Form\LocationType;
-use Oleg\UserdirectoryBundle\Form\StateLicenseType;
+use App\UserdirectoryBundle\Form\BoardCertificationType;
+use App\UserdirectoryBundle\Form\CitizenshipType;
+use App\UserdirectoryBundle\Form\DataTransformer\StringToBooleanTransformer;
+use App\UserdirectoryBundle\Form\DocumentType;
+use App\UserdirectoryBundle\Form\ExaminationType;
+use App\UserdirectoryBundle\Form\LocationType;
+use App\UserdirectoryBundle\Form\StateLicenseType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -65,7 +65,7 @@ class FellowshipApplicationType extends AbstractType
 //            'attr' => array('class' => 'combobox combobox-width fellapp-fellowshipSubspecialty'),
 //        ));
 //        $builder->add('fellowshipSubspecialty', 'entity', array(
-//            'class' => 'OlegUserdirectoryBundle:FellowshipSubspecialty',
+//            'class' => 'AppUserdirectoryBundle:FellowshipSubspecialty',
 //            'label'=> "* Fellowship Application Type:",
 //            'required'=> false,
 //            //'multiple' => true,
@@ -95,7 +95,7 @@ class FellowshipApplicationType extends AbstractType
         }
 
         $builder->add('fellowshipSubspecialty', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:FellowshipSubspecialty',
+            'class' => 'AppUserdirectoryBundle:FellowshipSubspecialty',
             'label' => "Fellowship Application Type:",
             //'required' => true,
             'required' => false,
@@ -147,7 +147,7 @@ class FellowshipApplicationType extends AbstractType
         //FellAppUserType($this->params)
         $builder->add('user', FellAppUserType::class, array(
             'form_custom_value' => $this->params,
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\User',
+            'data_class' => 'App\UserdirectoryBundle\Entity\User',
             'label' => false,
             'required' => false,
         ));
@@ -356,7 +356,7 @@ class FellowshipApplicationType extends AbstractType
         ));
 
         $builder->add('observers', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:User',
+            'class' => 'AppUserdirectoryBundle:User',
             'label' => "Observer(s):",
             'required' => false,
             'multiple' => true,
@@ -456,7 +456,7 @@ class FellowshipApplicationType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\FellAppBundle\Entity\FellowshipApplication',
+            'data_class' => 'App\FellAppBundle\Entity\FellowshipApplication',
             'form_custom_value' => null,
             'csrf_protection' => false
         ));

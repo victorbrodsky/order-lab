@@ -22,7 +22,7 @@
  * Time: 4:00 PM
  */
 
-namespace Oleg\UserdirectoryBundle\Entity;
+namespace App\UserdirectoryBundle\Entity;
 
 
 use Doctrine\ORM\Mapping as ORM;

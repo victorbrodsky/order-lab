@@ -6,7 +6,7 @@
  * Time: 3:12 PM
  */
 
-namespace Oleg\TranslationalResearchBundle\Entity;
+namespace App\TranslationalResearchBundle\Entity;
 
 
 use Doctrine\ORM\Mapping as ORM;
@@ -35,7 +35,7 @@ class Product {
     private $createDate;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
      */
     private $submitter;

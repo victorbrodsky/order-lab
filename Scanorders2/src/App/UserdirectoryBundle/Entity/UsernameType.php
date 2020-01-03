@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Entity;
+namespace App\UserdirectoryBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -55,7 +55,7 @@ class UsernameType extends ListAbstract
 
 
 
-    public function addUser(\Oleg\UserdirectoryBundle\Entity\User $user)
+    public function addUser(\App\UserdirectoryBundle\Entity\User $user)
     {
         if( !$this->users->contains($user) ) {
             $this->users->add($user);
@@ -63,7 +63,7 @@ class UsernameType extends ListAbstract
         return $this;
     }
 
-    public function removeUser(\Oleg\UserdirectoryBundle\Entity\User $user)
+    public function removeUser(\App\UserdirectoryBundle\Entity\User $user)
     {
         $this->users->removeElement($user);
     }

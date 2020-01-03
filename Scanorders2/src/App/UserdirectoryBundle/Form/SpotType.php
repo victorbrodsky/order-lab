@@ -15,9 +15,9 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Form;
+namespace App\UserdirectoryBundle\Form;
 
-use Oleg\UserdirectoryBundle\Form\LocationType;
+use App\UserdirectoryBundle\Form\LocationType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -75,13 +75,13 @@ class SpotType extends AbstractType
         //exit();
         $builder->add('currentLocation', LocationType::class, array(
             'form_custom_value' => $params,
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\Location',
+            'data_class' => 'App\UserdirectoryBundle\Entity\Location',
             'label' => false,
         ));
 
 
 //        $builder->add( 'mrnType', 'entity', array(
-//            'class' => 'OlegOrderformBundle:MrnType',
+//            'class' => 'AppOrderformBundle:MrnType',
 //            'choice_label' => 'name',
 //            'label' => "Patient's MRN Type:",
 //            'required'=> false,
@@ -109,7 +109,7 @@ class SpotType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\Spot',
+            'data_class' => 'App\UserdirectoryBundle\Entity\Spot',
             'form_custom_value' => null
         ));
     }

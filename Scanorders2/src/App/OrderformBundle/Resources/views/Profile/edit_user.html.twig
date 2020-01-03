@@ -15,19 +15,19 @@
 #}
 
 
-{#{% extends "OlegUserdirectoryBundle::Profile/edit_user.html.twig" %}#}
+{#{% extends "AppUserdirectoryBundle::Profile/edit_user.html.twig" %}#}
 
 
 
 
 {% block header %}
-    {% include 'OlegOrderformBundle:Default:navbar.html.twig' %}
+    {% include 'AppOrderformBundle:Default:navbar.html.twig' %}
 {% endblock %}
 
 
 {% block addcontent %}
 
-    {% import "OlegUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
+    {% import "AppUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
 
     {% if cycle == "show_user" %}
         {% set collapsein = "" %}
@@ -137,7 +137,7 @@
 {% block additionaljs %}
 
     {#{% javascripts#}
-        {#'@OlegOrderformBundle/Resources/public/form/js/selectAjax.js'#}
+        {#'@AppOrderformBundle/Resources/public/form/js/selectAjax.js'#}
     {#%}#}
         {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
     {#{% endjavascripts %}#}
@@ -155,5 +155,5 @@
 
 
 
-{% extends "OlegUserdirectoryBundle::Profile/edit_user.html.twig" %}
+{% extends "AppUserdirectoryBundle::Profile/edit_user.html.twig" %}
 

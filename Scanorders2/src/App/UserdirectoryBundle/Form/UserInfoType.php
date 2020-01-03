@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Form;
+namespace App\UserdirectoryBundle\Form;
 
 
 use Symfony\Component\Form\AbstractType;
@@ -75,7 +75,7 @@ class UserInfoType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\UserInfo',
+            'data_class' => 'App\UserdirectoryBundle\Entity\UserInfo',
         ));
     }
 

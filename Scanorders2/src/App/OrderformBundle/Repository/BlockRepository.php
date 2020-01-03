@@ -15,13 +15,13 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Repository;
+namespace App\OrderformBundle\Repository;
 
 //use Doctrine\ORM\EntityRepository;
 //use App\OrderformBundle\Helper\FormHelper;
 //use App\OrderformBundle\Entity\BlockBlockname;
 use Doctrine\Common\Reflection\StaticReflectionClass;
-use Oleg\OrderformBundle\Entity\Block;
+use App\OrderformBundle\Entity\Block;
 
 /**
  * BlockRepository
@@ -35,8 +35,8 @@ class BlockRepository extends ArrayFieldAbstractRepository
     public function cleanAndProcessEmptyArrayFields($entity) {
 
         $em = $this->_em;
-        //$staintype = $em->getRepository('OlegOrderformBundle:StainList')->find("Auto-generated Accession Number");
-        $repository = $em->getRepository('OlegOrderformBundle:StainList');
+        //$staintype = $em->getRepository('AppOrderformBundle:StainList')->find("Auto-generated Accession Number");
+        $repository = $em->getRepository('AppOrderformBundle:StainList');
         $dql =  $repository->createQueryBuilder("stain");
         $dql->select('MIN(stain.orderinlist) AS default_staintype');
         $query = $this->getEntityManager()->createQuery($dql);
@@ -160,8 +160,8 @@ class BlockRepository extends ArrayFieldAbstractRepository
             $count = 1;
             foreach( $institutions as $inst ) {
                 //$instStr .= "b.institution=".$inst."";
-                $permittedInstitution = $this->_em->getRepository('OlegUserdirectoryBundle:Institution')->find($inst);
-                $instStr .= $this->_em->getRepository('OlegUserdirectoryBundle:Institution')->
+                $permittedInstitution = $this->_em->getRepository('AppUserdirectoryBundle:Institution')->find($inst);
+                $instStr .= $this->_em->getRepository('AppUserdirectoryBundle:Institution')->
                     getCriterionStrForCollaborationsByNode($permittedInstitution,"institution",array("Union","Intersection"));
                 if( $count < count($institutions) ) {
                     $instStr .= " OR ";
@@ -174,7 +174,7 @@ class BlockRepository extends ArrayFieldAbstractRepository
 
         $query = $this->getEntityManager()
             ->createQuery('
-                SELECT b FROM OlegOrderformBundle:Block b
+                SELECT b FROM AppOrderformBundle:Block b
                 JOIN b.institution institution
                 JOIN b.blockname bfield
                 JOIN b.part p
@@ -200,14 +200,14 @@ class BlockRepository extends ArrayFieldAbstractRepository
 
     public function findOneByInstAccessionPartBlock($institution,$accessionTypeStr,$accessionStr,$partStr,$blockStr) {
 
-        $accessiontype = $this->_em->getRepository('OlegOrderformBundle:AccessionType')->findOneByName($accessionTypeStr);
+        $accessiontype = $this->_em->getRepository('AppOrderformBundle:AccessionType')->findOneByName($accessionTypeStr);
 
         $institutions = array();
         $institutions[] = $institution;
         $validity = array(self::STATUS_VALID,self::STATUS_RESERVED);
         $single = true;
 
-        $block = $this->_em->getRepository('OlegOrderformBundle:Block')->findOneBlockByJoinedToField(
+        $block = $this->_em->getRepository('AppOrderformBundle:Block')->findOneBlockByJoinedToField(
             $institutions,
             $accessionStr,
             $accessiontype->getId(),
@@ -245,29 +245,29 @@ class BlockRepository extends ArrayFieldAbstractRepository
         $em = $this->_em;
 
         //1a) Check accession
-        $accession = $em->getRepository('OlegOrderformBundle:Accession')->findOneByIdJoinedToField( $institutions,$accessionNumber,"Accession","accession", $validity, true, $extra );   //find reserved accession, because this method called only by "check" button
+        $accession = $em->getRepository('AppOrderformBundle:Accession')->findOneByIdJoinedToField( $institutions,$accessionNumber,"Accession","accession", $validity, true, $extra );   //find reserved accession, because this method called only by "check" button
         if( !$accession ) {
             //1) create Accession if not existed. We must create parent (accession), because we will create part object which must be linked to its parent
             //                                                                                      $status, $provider, $className, $fieldName, $parent, $fieldValue
-            $accession = $em->getRepository('OlegOrderformBundle:Accession')->createElement($institution,null,$provider,"Accession","accession",null,$accessionNumber,$extra,$withfields);
+            $accession = $em->getRepository('AppOrderformBundle:Accession')->createElement($institution,null,$provider,"Accession","accession",null,$accessionNumber,$extra,$withfields);
         }
 
         //1b) Check part by partname and accession number
-        $part = $em->getRepository('OlegOrderformBundle:Part')->findOnePartByJoinedToField( $institutions, $accessionNumber, $keytype, $partname, $validity );    //find reserved part,  because this method called only by "check" button
+        $part = $em->getRepository('AppOrderformBundle:Part')->findOnePartByJoinedToField( $institutions, $accessionNumber, $keytype, $partname, $validity );    //find reserved part,  because this method called only by "check" button
         if( !$part ) {
             //1) create Part if not existed. We must create parent , because we will create an object which must be linked to its parent
             //                                                               $status, $provider, $className, $fieldName, $parent, $fieldValue
-            $part = $em->getRepository('OlegOrderformBundle:Part')->createElement($institution,null,$provider,"Part","partname",$accession,$partname,$extra,$withfields);
+            $part = $em->getRepository('AppOrderformBundle:Part')->createElement($institution,null,$provider,"Part","partname",$accession,$partname,$extra,$withfields);
         }
 
         //2) find next available part name by accession number
-        $blockname = $em->getRepository('OlegOrderformBundle:Block')->findNextBlocknameByAccessionPartname($institution,$accessionNumber,$keytype,$partname);
+        $blockname = $em->getRepository('AppOrderformBundle:Block')->findNextBlocknameByAccessionPartname($institution,$accessionNumber,$keytype,$partname);
         //echo "next blockname generated=".$blockname."<br>";
         
         //3) before create: check if element with keys does not exists in DB. Blockname is a just generated field with status reserved.
         //TODO: If someone generated this name already (very low probability), so regenerate key field name (?)
         //echo "before create block: ".$accessionNumber." ". $keytype." ". $partname." ". $blockname."<br>\n";
-        $blockFound = $em->getRepository('OlegOrderformBundle:Block')->findOneBlockByJoinedToField($institutions,$accessionNumber, $keytype, $partname, $blockname, null);
+        $blockFound = $em->getRepository('AppOrderformBundle:Block')->findOneBlockByJoinedToField($institutions,$accessionNumber, $keytype, $partname, $blockname, null);
 
         if( $blockFound ) {            
             return $blockFound;
@@ -276,7 +276,7 @@ class BlockRepository extends ArrayFieldAbstractRepository
         //echo "#############Create block, partname=".$part->getPartname()->first().", partid=".$part->getId()."<br>";
 
         //4) create block object by blockname and link it to the parent
-        $block = $em->getRepository('OlegOrderformBundle:Block')->createElement($institution,null,$provider,"Block","blockname",$part,$blockname,$extra,$withfields);
+        $block = $em->getRepository('AppOrderformBundle:Block')->createElement($institution,null,$provider,"Block","blockname",$part,$blockname,$extra,$withfields);
 
         return $block;
     }
@@ -298,15 +298,15 @@ class BlockRepository extends ArrayFieldAbstractRepository
         //institution
         //TODO: change institution hierarchy and add collaboration
         //$inst = " AND p.institution=".$institution;
-        $permittedInstitution = $this->_em->getRepository('OlegUserdirectoryBundle:Institution')->find($institution);
+        $permittedInstitution = $this->_em->getRepository('AppUserdirectoryBundle:Institution')->find($institution);
         $inst = " AND (" .
-                $this->_em->getRepository('OlegUserdirectoryBundle:Institution')->
+                $this->_em->getRepository('AppUserdirectoryBundle:Institution')->
                     getCriterionStrForCollaborationsByNode($permittedInstitution,"institution",array("Union","Intersection")) .
                 ")";
 
         $query = $this->getEntityManager()
             ->createQuery('
-            SELECT MAX(bblockname.field) as max'.'blockname'.' FROM OlegOrderformBundle:Block b
+            SELECT MAX(bblockname.field) as max'.'blockname'.' FROM AppOrderformBundle:Block b
             JOIN b.institution institution
             JOIN b.blockname bblockname  
             JOIN b.part p

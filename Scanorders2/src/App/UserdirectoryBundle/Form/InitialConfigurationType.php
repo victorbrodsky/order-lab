@@ -15,12 +15,12 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Form;
+namespace App\UserdirectoryBundle\Form;
 
 
 
-use Oleg\UserdirectoryBundle\Entity\User;
-use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
+use App\UserdirectoryBundle\Entity\User;
+use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -178,7 +178,7 @@ class InitialConfigurationType extends AbstractType
             'attr' => array('class'=>'form-control')
         ));
         $builder->add('ldapExePath',null,array(
-            'label'=>'LDAP/AD Authenticator Path - relevant for Windows-based servers only (Default: "../src/Oleg/UserdirectoryBundle/Util/" ):',
+            'label'=>'LDAP/AD Authenticator Path - relevant for Windows-based servers only (Default: "../src/App/UserdirectoryBundle/Util/" ):',
             'attr' => array('class'=>'form-control')
         ));
         $builder->add('ldapExeFilename',null,array(
@@ -246,7 +246,7 @@ class InitialConfigurationType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\SiteParameters',
+            'data_class' => 'App\UserdirectoryBundle\Entity\SiteParameters',
         ));
     }
 

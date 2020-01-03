@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Util;
+namespace App\UserdirectoryBundle\Util;
 
 /** 
 * @author     Jack Mason 

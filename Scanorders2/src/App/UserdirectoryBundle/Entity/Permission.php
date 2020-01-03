@@ -23,7 +23,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Oleg\UserdirectoryBundle\Entity;
+namespace App\UserdirectoryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -161,14 +161,14 @@ class Permission
         return $this->institutions;
     }
 
-    public function addInstitution(\Oleg\UserdirectoryBundle\Entity\Institution $institution)
+    public function addInstitution(\App\UserdirectoryBundle\Entity\Institution $institution)
     {
         if( $institution && !$this->institutions->contains($institution) ) {
             $this->institutions->add($institution);
         }
     }
 
-    public function removeInstitution(\Oleg\UserdirectoryBundle\Entity\Institution $institution)
+    public function removeInstitution(\App\UserdirectoryBundle\Entity\Institution $institution)
     {
         $this->institutions->removeElement($institution);
     }

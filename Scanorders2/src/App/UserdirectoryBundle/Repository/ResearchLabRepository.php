@@ -15,11 +15,11 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Repository;
+namespace App\UserdirectoryBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Oleg\OrderformBundle\Entity\Research;
-use Oleg\UserdirectoryBundle\Entity\ResearchLab;
+use App\OrderformBundle\Entity\Research;
+use App\UserdirectoryBundle\Entity\ResearchLab;
 
 
 class ResearchLabRepository extends EntityRepository {
@@ -45,7 +45,7 @@ class ResearchLabRepository extends EntityRepository {
             //$formLabId = $lab->getId();
 
             //get lab from DB if exists
-            $labDb = $em->getRepository('OlegUserdirectoryBundle:ResearchLab')->findOneByName($lab->getName()."");
+            $labDb = $em->getRepository('AppUserdirectoryBundle:ResearchLab')->findOneByName($lab->getName()."");
 
             if( $labDb ) {
 
@@ -73,7 +73,7 @@ class ResearchLabRepository extends EntityRepository {
 
             //check if pi=$user for this lab already exists
             if( $user->getId() ) {
-                $piDb = $em->getRepository('OlegUserdirectoryBundle:ResearchLabPI')->findOneBy( array( 'pi'=>$user, 'researchLab'=>$labFinal->getId() ) );
+                $piDb = $em->getRepository('AppUserdirectoryBundle:ResearchLabPI')->findOneBy( array( 'pi'=>$user, 'researchLab'=>$labFinal->getId() ) );
             } else {
                 $piDb = null;
             }
@@ -105,7 +105,7 @@ class ResearchLabRepository extends EntityRepository {
 
             //check if comment authored by $user for this lab already exists
             if( $user->getId() ) {
-                $commentDb = $em->getRepository('OlegUserdirectoryBundle:ResearchLabComment')->findOneBy( array( 'author' => $user, 'researchLab'=>$labFinal->getId() ) );
+                $commentDb = $em->getRepository('AppUserdirectoryBundle:ResearchLabComment')->findOneBy( array( 'author' => $user, 'researchLab'=>$labFinal->getId() ) );
             } else {
                 $commentDb = null;
             }
@@ -136,7 +136,7 @@ class ResearchLabRepository extends EntityRepository {
         } //foreach
 
         //echo "labs final count=".count($user->getResearchLabs())."<br>";
-        //$labOrig = $em->getRepository('OlegUserdirectoryBundle:ResearchLab')->find(21);
+        //$labOrig = $em->getRepository('AppUserdirectoryBundle:ResearchLab')->find(21);
         //echo "original form labOrig id=21: name=".$labOrig->getName().", id=".$labOrig->getId()."<br>";
 
         //exit('process lab');
@@ -159,14 +159,14 @@ class ResearchLabRepository extends EntityRepository {
 
         $em = $this->_em;
 
-        $commentDb = $em->getRepository('OlegUserdirectoryBundle:ResearchLabComment')->findOneBy( array( 'author' => $subjectUser->getId(), 'researchLab'=>$lab->getId() ) );
+        $commentDb = $em->getRepository('AppUserdirectoryBundle:ResearchLabComment')->findOneBy( array( 'author' => $subjectUser->getId(), 'researchLab'=>$lab->getId() ) );
         if( $commentDb ) {
             //echo "remove comment=".$commentDb."<br>";
             $em->remove($commentDb);
             $em->flush();
         }
 
-        $piDb = $em->getRepository('OlegUserdirectoryBundle:ResearchLabPI')->findOneBy( array( 'pi'=>$subjectUser->getId(), 'researchLab'=>$lab->getId() ) );
+        $piDb = $em->getRepository('AppUserdirectoryBundle:ResearchLabPI')->findOneBy( array( 'pi'=>$subjectUser->getId(), 'researchLab'=>$lab->getId() ) );
         if( $piDb ) {
             //echo "remove pi=".$piDb."<br>";
             $em->remove($piDb);

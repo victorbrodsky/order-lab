@@ -16,10 +16,10 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Form;
+namespace App\UserdirectoryBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
-use Oleg\UserdirectoryBundle\Form\PerSiteSettingsType;
+use App\UserdirectoryBundle\Form\PerSiteSettingsType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -111,7 +111,7 @@ class GeneratedUserType extends AbstractType
         ));
 
         $builder->add('keytype', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:UsernameType',
+            'class' => 'AppUserdirectoryBundle:UsernameType',
             //'disabled' => ($this->cycle == 'create' ? false : true ), //it is not possible to edit keytype for existed user
             'choice_label' => 'name',
             'label' => "Primary Public User ID Type:",
@@ -143,7 +143,7 @@ class GeneratedUserType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\User',
+            'data_class' => 'App\UserdirectoryBundle\Entity\User',
             'form_custom_value' => null,
             'csrf_protection' => false,
         ));

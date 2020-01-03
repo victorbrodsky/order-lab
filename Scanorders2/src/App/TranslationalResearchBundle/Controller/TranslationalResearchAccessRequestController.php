@@ -15,21 +15,21 @@
  *  limitations under the License.
  */
 
-namespace Oleg\TranslationalResearchBundle\Controller;
+namespace App\TranslationalResearchBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Oleg\TranslationalResearchBundle\Form\AccountConfirmationType;
-use Oleg\UserdirectoryBundle\Controller\AuthorizedUserController;
-use Oleg\UserdirectoryBundle\Entity\AdministrativeTitle;
-use Oleg\UserdirectoryBundle\Entity\User;
+use App\TranslationalResearchBundle\Form\AccountConfirmationType;
+use App\UserdirectoryBundle\Controller\AuthorizedUserController;
+use App\UserdirectoryBundle\Entity\AdministrativeTitle;
+use App\UserdirectoryBundle\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-use Oleg\UserdirectoryBundle\Entity\AccessRequest;
-use Oleg\UserdirectoryBundle\Controller\AccessRequestController;
+use App\UserdirectoryBundle\Entity\AccessRequest;
+use App\UserdirectoryBundle\Controller\AccessRequestController;
 
 /**
  * AccessRequest controller.
@@ -50,7 +50,7 @@ class TranslationalResearchAccessRequestController extends AccessRequestControll
     /**
      * @Route("/access-requests/new/create", name="translationalresearch_access_request_new_plain")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:AccessRequest:access_request.html.twig")
+     * @Template("AppUserdirectoryBundle:AccessRequest:access_request.html.twig")
      */
     public function accessRequestCreatePlainAction(Request $request)
     {
@@ -61,7 +61,7 @@ class TranslationalResearchAccessRequestController extends AccessRequestControll
     /**
      * @Route("/access-requests/new", name="translationalresearch_access_request_new")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:AccessRequest:access_request.html.twig")
+     * @Template("AppUserdirectoryBundle:AccessRequest:access_request.html.twig")
      */
     public function accessRequestCreateAction()
     {
@@ -71,7 +71,7 @@ class TranslationalResearchAccessRequestController extends AccessRequestControll
     /**
      * @Route("/access-requests/new/pending", name="translationalresearch_access_request_create")
      * @Method("POST")
-     * @Template("OlegUserdirectoryBundle:AccessRequest:access_request.html.twig")
+     * @Template("AppUserdirectoryBundle:AccessRequest:access_request.html.twig")
      */
     public function accessRequestAction(Request $request)
     {
@@ -83,7 +83,7 @@ class TranslationalResearchAccessRequestController extends AccessRequestControll
      *
      * @Route("/access-requests", name="translationalresearch_accessrequest_list")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:AccessRequest:access_request_list.html.twig")
+     * @Template("AppUserdirectoryBundle:AccessRequest:access_request_list.html.twig")
      */
     public function accessRequestIndexAction(Request $request)
     {
@@ -103,7 +103,7 @@ class TranslationalResearchAccessRequestController extends AccessRequestControll
     /**
      * @Route("/access-requests/{id}", name="translationalresearch_accessrequest_management", requirements={"id" = "\d+"})
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
+     * @Template("AppUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
      */
     public function accessRequestManagementAction( Request $request, $id )
     {
@@ -113,7 +113,7 @@ class TranslationalResearchAccessRequestController extends AccessRequestControll
     /**
      * @Route("/access-requests/submit/{id}", name="translationalresearch_accessrequest_management_submit", requirements={"id" = "\d+"})
      * @Method("POST")
-     * @Template("OlegUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
+     * @Template("AppUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
      */
     public function accessRequestManagementSubmitAction(Request $request, $id )
     {
@@ -133,7 +133,7 @@ class TranslationalResearchAccessRequestController extends AccessRequestControll
     /**
      * @Route("/authorized-users/", name="translationalresearch_authorized_users")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:AccessRequest:authorized_users.html.twig")
+     * @Template("AppUserdirectoryBundle:AccessRequest:authorized_users.html.twig")
      */
     public function authorizedUsersAction(Request $request )
     {
@@ -143,7 +143,7 @@ class TranslationalResearchAccessRequestController extends AccessRequestControll
     /**
      * @Route("/authorization-user-manager/{id}", name="translationalresearch_authorization_user_management", requirements={"id" = "\d+"})
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
+     * @Template("AppUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
      */
     public function authorizationManagementAction( Request $request, $id )
     {
@@ -153,7 +153,7 @@ class TranslationalResearchAccessRequestController extends AccessRequestControll
     /**
      * @Route("/authorization-user-manager/submit/{id}", name="translationalresearch_authorization_user_management_submit", requirements={"id" = "\d+"})
      * @Method("POST")
-     * @Template("OlegUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
+     * @Template("AppUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
      */
     public function authorizationManagementSubmitAction( Request $request, $id )
     {
@@ -174,7 +174,7 @@ class TranslationalResearchAccessRequestController extends AccessRequestControll
     /**
      * @Route("/add-authorized-user/", name="translationalresearch_add_authorized_user")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:AccessRequest:add_authorized_user.html.twig")
+     * @Template("AppUserdirectoryBundle:AccessRequest:add_authorized_user.html.twig")
      */
     public function addAuthorizedUserAction( Request $request )
     {
@@ -184,7 +184,7 @@ class TranslationalResearchAccessRequestController extends AccessRequestControll
 //    /**
 //     * @Route("/add-authorized-user/submit/", name="translationalresearch_add_authorized_user_submit")
 //     * @Method("POST")
-//     * @Template("OlegUserdirectoryBundle:AccessRequest:add_authorized_user.html.twig")
+//     * @Template("AppUserdirectoryBundle:AccessRequest:add_authorized_user.html.twig")
 //     */
 //    public function addAuthorizedUserSubmitAction( Request $request )
 //    {
@@ -194,7 +194,7 @@ class TranslationalResearchAccessRequestController extends AccessRequestControll
     /**
      * @Route("/generated-users/", name="translationalresearch_generated_users")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:AccessRequest:generated_users.html.twig")
+     * @Template("AppUserdirectoryBundle:AccessRequest:generated_users.html.twig")
      */
     public function generatedUsersAction(Request $request)
     {
@@ -206,7 +206,7 @@ class TranslationalResearchAccessRequestController extends AccessRequestControll
     }
     /**
      * @Route("/generated-user/{id}", name="translationalresearch_generated_user_management")
-     * @Template("OlegUserdirectoryBundle:AccessRequest:generated_user_management.html.twig")
+     * @Template("AppUserdirectoryBundle:AccessRequest:generated_user_management.html.twig")
      * @Method({"GET", "POST"})
      */
     public function generatedUserManagementAction(Request $request, User $user)
@@ -227,7 +227,7 @@ class TranslationalResearchAccessRequestController extends AccessRequestControll
      * Example: http://localhost/order/translational-research/account-confirmation/translationalresearch_project_new/hematopathology
      *
      * @Route("/account-confirmation/{redirectPath}/{specialty}", name="translationalresearch_account_confirmation")
-     * @Template("OlegTranslationalResearchBundle:AccessRequest:account_confirmation.html.twig")
+     * @Template("AppTranslationalResearchBundle:AccessRequest:account_confirmation.html.twig")
      * @Method({"GET", "POST"})
      */
     public function accountConfirmationAction(Request $request, $redirectPath, $specialty=null)

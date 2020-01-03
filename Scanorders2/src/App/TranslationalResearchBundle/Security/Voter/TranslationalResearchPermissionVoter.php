@@ -22,18 +22,18 @@
  * Time: 9:27 AM
  */
 
-namespace Oleg\TranslationalResearchBundle\Security\Voter;
+namespace App\TranslationalResearchBundle\Security\Voter;
 
 
-//use Oleg\OrderformBundle\Security\Voter\PatientHierarchyVoter;
-use Oleg\UserdirectoryBundle\Security\Voter\BasePermissionVoter;
+//use App\OrderformBundle\Security\Voter\PatientHierarchyVoter;
+use App\UserdirectoryBundle\Security\Voter\BasePermissionVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 //use Symfony\Component\Security\Core\User\UserInterface;
 //use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 
-use Oleg\UserdirectoryBundle\Entity\User;
+use App\UserdirectoryBundle\Entity\User;
 
 
 

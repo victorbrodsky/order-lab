@@ -15,11 +15,11 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Repository;
+namespace App\OrderformBundle\Repository;
 
 //use Doctrine\ORM\EntityRepository;
 
-use Oleg\UserdirectoryBundle\Repository\ListAbstractRepository;
+use App\UserdirectoryBundle\Repository\ListAbstractRepository;
 
 class ResearchRepository extends ListAbstractRepository {
 
@@ -65,8 +65,8 @@ class ResearchRepository extends ListAbstractRepository {
 //        //process Project Title
 //        $objectParams = array(
 //            'className' => 'ProjectTitleList',
-//            'fullClassName' => "Oleg\\OrderformBundle\\Entity\\"."ProjectTitleList",
-//            'fullBundleName' => 'OlegOrderformBundle'
+//            'fullClassName' => "App\\OrderformBundle\\Entity\\"."ProjectTitleList",
+//            'fullBundleName' => 'AppOrderformBundle'
 //        );
 //        $projectTitle = $this->convertStrToObject( $research->getProjectTitleStr(), $objectParams, $user );
 //        $research->setProjectTitle($projectTitle);
@@ -77,8 +77,8 @@ class ResearchRepository extends ListAbstractRepository {
 //        //process Set Title
 //        $objectParams = array(
 //            'className' => 'SetTitleList',
-//            'fullClassName' => "Oleg\\OrderformBundle\\Entity\\"."SetTitleList",
-//            'fullBundleName' => 'OlegOrderformBundle'
+//            'fullClassName' => "App\\OrderformBundle\\Entity\\"."SetTitleList",
+//            'fullBundleName' => 'AppOrderformBundle'
 //        );
 //        $setTitle = $this->convertStrToObject( $research->getSetTitleStr(), $objectParams, $user, 'projectTitle', $projectTitle->getId() );
 //

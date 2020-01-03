@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Controller;
+namespace App\OrderformBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,9 +25,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
-use Oleg\OrderformBundle\Helper\ErrorHelper;
+use App\OrderformBundle\Helper\ErrorHelper;
 
-use Oleg\UserdirectoryBundle\Controller\ListController;
+use App\UserdirectoryBundle\Controller\ListController;
 
 /**
  * Common list controller
@@ -51,7 +51,7 @@ class ScanListController extends ListController
         $listArr = $this->getList($request,1000000);
 
 
-        $listExcelHtml = $this->container->get('templating')->render('OlegOrderformBundle:ListForm:list-excel.html.twig',
+        $listExcelHtml = $this->container->get('templating')->render('AppOrderformBundle:ListForm:list-excel.html.twig',
             $listArr
         );
 
@@ -92,7 +92,7 @@ class ScanListController extends ListController
         //exit();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegOrderformBundle:StainList')->findAll();
+        $entities = $em->getRepository('AppOrderformBundle:StainList')->findAll();
 
         //echo "count=".count($entities)."<br>";
         //exit();
@@ -183,7 +183,7 @@ class ScanListController extends ListController
      *
      *
      * @Method("GET")
-     * @Template("OlegOrderformBundle:ListForm:index.html.twig")
+     * @Template("AppOrderformBundle:ListForm:index.html.twig")
      */
     public function indexAction(Request $request)
     {
@@ -245,7 +245,7 @@ class ScanListController extends ListController
      * @Route("/calllog-task-types/", name="calllogtasktypes_create")
      *
      * @Method("POST")
-     * @Template("OlegOrderformBundle:ListForm:new.html.twig")
+     * @Template("AppOrderformBundle:ListForm:new.html.twig")
      */
     public function createAction(Request $request)
     {
@@ -307,7 +307,7 @@ class ScanListController extends ListController
      * @Route("/calllog-task-types/new", name="calllogtasktypes_new")
      *
      * @Method("GET")
-     * @Template("OlegOrderformBundle:ListForm:new.html.twig")
+     * @Template("AppOrderformBundle:ListForm:new.html.twig")
      */
     public function newAction(Request $request)
     {
@@ -369,7 +369,7 @@ class ScanListController extends ListController
      * @Route("/calllog-task-types/{id}", name="calllogtasktypes_show")
      *
      * @Method("GET")
-     * @Template("OlegOrderformBundle:ListForm:show.html.twig")
+     * @Template("AppOrderformBundle:ListForm:show.html.twig")
      */
     public function showAction(Request $request,$id)
     {
@@ -431,7 +431,7 @@ class ScanListController extends ListController
      * @Route("/calllog-task-types/{id}/edit", name="calllogtasktypes_edit")
      *
      * @Method("GET")
-     * @Template("OlegOrderformBundle:ListForm:edit.html.twig")
+     * @Template("AppOrderformBundle:ListForm:edit.html.twig")
      */
     public function editAction(Request $request,$id)
     {
@@ -493,7 +493,7 @@ class ScanListController extends ListController
      * @Route("/calllog-task-types/{id}", name="calllogtasktypes_update")
      *
      * @Method("PUT")
-     * @Template("OlegOrderformBundle:ListForm:edit.html.twig")
+     * @Template("AppOrderformBundle:ListForm:edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {
@@ -507,8 +507,8 @@ class ScanListController extends ListController
 
     public function classListMapper( $route, $request ) {
 
-        $classPath = "Oleg\\OrderformBundle\\Entity\\";
-        $bundleName = "OlegOrderformBundle";
+        $classPath = "App\\OrderformBundle\\Entity\\";
+        $bundleName = "AppOrderformBundle";
 
         switch( $route ) {
 
@@ -599,8 +599,8 @@ class ScanListController extends ListController
         case "scanloggereventtypes":
             $className = "EventTypeList";
             $displayName = "Event Log's Event Types";
-            $classPath = "Oleg\\UserdirectoryBundle\\Entity\\";
-            $bundleName = "OlegUserdirectoryBundle";
+            $classPath = "App\\UserdirectoryBundle\\Entity\\";
+            $bundleName = "AppUserdirectoryBundle";
             break;
         case "races":
             $className = "RaceList";
@@ -661,8 +661,8 @@ class ScanListController extends ListController
         case "pathologycallcomplexpatients":
             $className = "PathologyCallComplexPatients";
             $displayName = "Pathology Call Complex Patients";
-            $classPath = "Oleg\\CallLogBundle\\Entity\\";
-            $bundleName = "OlegCallLogBundle";
+            $classPath = "App\\CallLogBundle\\Entity\\";
+            $bundleName = "AppCallLogBundle";
             break;
         case "patientlisthierarchygrouptype":
             $className = "PatientListHierarchyGroupType";

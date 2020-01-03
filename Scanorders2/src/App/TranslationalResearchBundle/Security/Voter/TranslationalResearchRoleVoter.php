@@ -22,10 +22,10 @@
  * Time: 9:27 AM
  */
 
-namespace Oleg\TranslationalResearchBundle\Security\Voter;
+namespace App\TranslationalResearchBundle\Security\Voter;
 
 
-use Oleg\UserdirectoryBundle\Security\Voter\BaseRoleVoter;
+use App\UserdirectoryBundle\Security\Voter\BaseRoleVoter;
 //use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;

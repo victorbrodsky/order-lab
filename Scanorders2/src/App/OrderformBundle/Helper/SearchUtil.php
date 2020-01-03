@@ -22,7 +22,7 @@
  * Time: 11:20 AM
  */
 
-namespace Oleg\OrderformBundle\Helper;
+namespace App\OrderformBundle\Helper;
 
 
 class SearchUtil {
@@ -70,7 +70,7 @@ class SearchUtil {
             $sort = $postData['sort'];
         }
 
-        $repository = $this->em->getRepository('OlegOrderformBundle:'.$object);
+        $repository = $this->em->getRepository('AppOrderformBundle:'.$object);
         $dql =  $repository->createQueryBuilder($object);
         $dql->select($object);
         $dql->leftJoin($object.".institution", "institution");

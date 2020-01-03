@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Query;
+namespace App\UserdirectoryBundle\Query;
 
 
 use Doctrine\ORM\Query\AST\Functions\FunctionNode;

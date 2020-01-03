@@ -1,7 +1,7 @@
-{% extends "OlegTranslationalResearchBundle::Default/base.html.twig" %}
+{% extends "AppTranslationalResearchBundle::Default/base.html.twig" %}
 
-{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-{% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+{% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% import "AppTranslationalResearchBundle::Default/transres.html.twig" as transres %}
 
 
 {% block title %}
@@ -64,7 +64,7 @@
     {#</div>#}
 
     {#{% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': "3-9-committee_review"} %}#}
-    {#{{ render(controller('OlegTranslationalResearchBundle:Project:threadComments', { 'id': "3-9-committee_review" })) }}#}
+    {#{{ render(controller('AppTranslationalResearchBundle:Project:threadComments', { 'id': "3-9-committee_review" })) }}#}
 
     <div>
 
@@ -113,7 +113,7 @@
 {% block additionaljs %}
 
     {#{% javascripts#}
-    {#'@OlegTranslationalResearchBundle/Resources/public/form/js/comments.js'#}
+    {#'@AppTranslationalResearchBundle/Resources/public/form/js/comments.js'#}
     {#%}#}
     {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
     {#{% endjavascripts %}#}

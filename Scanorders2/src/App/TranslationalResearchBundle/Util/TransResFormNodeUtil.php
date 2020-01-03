@@ -22,7 +22,7 @@
  * Time: 11:05 AM
  */
 
-namespace Oleg\TranslationalResearchBundle\Util;
+namespace App\TranslationalResearchBundle\Util;
 
 
 //service: transres_formnode_util
@@ -67,7 +67,7 @@ class TransResFormNodeUtil
         );
         echo "addNestedsetNodeRecursevely: count=".$count."<br>";
 
-        $parentNode = $em->getRepository('OlegUserdirectoryBundle:FormNode')->findOneByName('HemePath Translational Research');
+        $parentNode = $em->getRepository('AppUserdirectoryBundle:FormNode')->findOneByName('HemePath Translational Research');
         echo "rootNode=".$parentNode."<br>";
 
         $this->createProjectFormNode($parentNode);
@@ -171,7 +171,7 @@ class TransResFormNodeUtil
             'parent' => $projectSection,
             'name' => "Project Type",
             'objectType' => $objectTypeDropDownAllowNewEntries,
-            'classNamespace' => "Oleg\\TranslationalResearchBundle\\Entity",
+            'classNamespace' => "App\\TranslationalResearchBundle\\Entity",
             'className' => "ProjectTypeList"
         );
         $formNodeUtil->createV2FormNode($formParams);
@@ -246,7 +246,7 @@ class TransResFormNodeUtil
         );
         echo "addNestedsetNodeRecursevely: count=".$count."<br>";
 
-        $parentNode = $em->getRepository('OlegUserdirectoryBundle:FormNode')->findOneByName('HemePath Translational Research');
+        $parentNode = $em->getRepository('AppUserdirectoryBundle:FormNode')->findOneByName('HemePath Translational Research');
         echo "rootNode=".$parentNode."<br>";
 
         $this->createRequestFormNode($parentNode);
@@ -310,7 +310,7 @@ class TransResFormNodeUtil
             'parent' => $productSectionArray,
             'name' => "Products/Services",
             'objectType' => $objectTypeDropDown,
-            'classNamespace' => "Oleg\\TranslationalResearchBundle\\Entity",
+            'classNamespace' => "App\\TranslationalResearchBundle\\Entity",
             'className' => "RequestCategoryTypeList"
         );
         $formNodeUtil->createV2FormNode($formParams);
@@ -321,7 +321,7 @@ class TransResFormNodeUtil
 //            'parent' => $projectSection,
 //            'name' => "Lab",
 //            'objectType' => $objectTypeCheckboxes,
-//            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+//            'classNamespace' => "App\\UserdirectoryBundle\\Entity",
 //            'className' => "ResearchLab"
 //        );
 //        $formNodeUtil->createV2FormNode($formParams);
@@ -359,7 +359,7 @@ class TransResFormNodeUtil
 //            'parent' => $projectSection,
 //            'name' => "Interpretation by Pathologist",
 //            'objectType' => $objectTypeRadio,
-//            'classNamespace' => "Oleg\\TranslationalResearchBundle\\Entity",
+//            'classNamespace' => "App\\TranslationalResearchBundle\\Entity",
 //            'className' => "InterpretationByPathologistList"
 //        );
 //        $formNodeUtil->createV2FormNode($formParams);
@@ -387,7 +387,7 @@ class TransResFormNodeUtil
 //            'parent' => $projectSection,
 //            'name' => "Contact",
 //            'objectType' => $objectTypeDropDown,
-//            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+//            'classNamespace' => "App\\UserdirectoryBundle\\Entity",
 //            'className' => "User"
 //        );
 //        $formNodeUtil->createV2FormNode($formParams);
@@ -426,7 +426,7 @@ class TransResFormNodeUtil
         $className = $class->getShortName();
         $classNamespace = $class->getNamespaceName();
         $entityMapper = array(
-            'entityNamespace' => $classNamespace,   //"Oleg\\TranslationalResearchBundle\\Entity",
+            'entityNamespace' => $classNamespace,   //"App\\TranslationalResearchBundle\\Entity",
             'entityName' => $className, //"Project",
             'entityId' => $entity->getId(),
         );
@@ -499,7 +499,7 @@ class TransResFormNodeUtil
         $className = $class->getShortName();
         $classNamespace = $class->getNamespaceName();
         $entityMapper = array(
-            'entityNamespace' => $classNamespace,   //"Oleg\\TranslationalResearchBundle\\Entity",
+            'entityNamespace' => $classNamespace,   //"App\\TranslationalResearchBundle\\Entity",
             'entityName' => $className, //"Project",
             'entityId' => $entity->getId(),
         );
@@ -558,31 +558,31 @@ class TransResFormNodeUtil
         $receivingEntity = null;
 
         $mapper = array(
-            'prefix' => "Oleg",
+            'prefix' => "App",
             'className' => "FormNode",
             'bundleName' => "UserdirectoryBundle"
         );
 
         //1) get FormNode by fieldName
         //$parentNameStr = "HemePath Translational Research"; //must be unique name
-        $parentNode = $this->em->getRepository('OlegUserdirectoryBundle:FormNode')->findOneByName($parentNameStr);
+        $parentNode = $this->em->getRepository('AppUserdirectoryBundle:FormNode')->findOneByName($parentNameStr);
         if( !$parentNode ) {
             throw new \Exception( "FormNode parent not found by '".$parentNameStr."'" );
         }
 
         //$formNameStr = "HemePath Translational Research Project"; //Project's form
-        $entityFormNode = $this->em->getRepository('OlegUserdirectoryBundle:FormNode')->findByChildnameAndParent($formNameStr,$parentNode,$mapper);
+        $entityFormNode = $this->em->getRepository('AppUserdirectoryBundle:FormNode')->findByChildnameAndParent($formNameStr,$parentNode,$mapper);
         if( !$entityFormNode ) {
             throw new \Exception( "FormNode project's form not found by '".$formNameStr."'" );
         }
 
         //$projectFormNodeSectionStr = "Project"; //Project's form section
-        $entityFormNodeSection = $this->em->getRepository('OlegUserdirectoryBundle:FormNode')->findByChildnameAndParent($entityFormNodeSectionStr,$entityFormNode,$mapper);
+        $entityFormNodeSection = $this->em->getRepository('AppUserdirectoryBundle:FormNode')->findByChildnameAndParent($entityFormNodeSectionStr,$entityFormNode,$mapper);
         if( !$entityFormNodeSection ) {
             throw new \Exception( "FormNode project's form section not found by '".$entityFormNodeSectionStr."'" );
         }
 
-        $fieldFormNode = $this->em->getRepository('OlegUserdirectoryBundle:FormNode')->findByChildnameAndParent($fieldName,$entityFormNodeSection,$mapper);
+        $fieldFormNode = $this->em->getRepository('AppUserdirectoryBundle:FormNode')->findByChildnameAndParent($fieldName,$entityFormNodeSection,$mapper);
         if( !$fieldFormNode ) {
             throw new \Exception( "FormNode field form not found by '".$fieldName."'" );
         }

@@ -1678,7 +1678,7 @@ var emailUsernametypeMap = [];
 function setKeytypeByEmailListener(modalHtml) {
     //console.log("setKeytypeByEmailListener");
 
-    //1) set map array "email extension" - "keytype id" (OlegUserdirectoryBundle:UsernameType)
+    //1) set map array "email extension" - "keytype id" (AppUserdirectoryBundle:UsernameType)
     if( emailUsernametypeMap.length == 0 ) {
         var url = Routing.generate('employees_get_map_email_usernametype');
         $.ajax({
@@ -1901,7 +1901,7 @@ function updateUserComboboxes(response,fieldId) {
 
 }
 
-//oleg_translationalresearchbundle_project_billingContact
+//app_translationalresearchbundle_project_billingContact
 function selectExistingUserComboboxes(clickedDomEl, userId, fieldId) {
     $('#'+fieldId).val(userId).trigger("change");
     var holder = $(clickedDomEl).closest(".modal");

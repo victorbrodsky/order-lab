@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\CallLogBundle\Form;
+namespace App\CallLogBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -74,9 +74,9 @@ class CalllogTaskType extends AbstractType
         $taskTypeDefault = null;
         if( $this->params['cycle'] == 'new' ) {
             $em = $this->params["em"];
-            $taskTypeDefault = $em->getRepository('OlegOrderformBundle:CalllogTaskTypeList')->findOneByName("Other");
+            $taskTypeDefault = $em->getRepository('AppOrderformBundle:CalllogTaskTypeList')->findOneByName("Other");
             //Testing: Order blood products
-            //$taskTypeDefault = $em->getRepository('OlegOrderformBundle:CalllogTaskTypeList')->findOneByName("Order blood products");
+            //$taskTypeDefault = $em->getRepository('AppOrderformBundle:CalllogTaskTypeList')->findOneByName("Order blood products");
         }
         if( $taskTypeDefault ) {
             $builder->add('calllogTaskType', null, array(
@@ -98,7 +98,7 @@ class CalllogTaskType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\CalllogTask',
+            'data_class' => 'App\OrderformBundle\Entity\CalllogTask',
             'form_custom_value' => null,
         ));
     }

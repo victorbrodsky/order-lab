@@ -1,9 +1,9 @@
-{% extends "OlegTranslationalResearchBundle::Default/base.html.twig" %}
+{% extends "AppTranslationalResearchBundle::Default/base.html.twig" %}
 
-{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-{% import "OlegTranslationalResearchBundle::Default/transresRequestMacros.html.twig" as transresRequestMacros %}
-{% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
-{% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+{% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% import "AppTranslationalResearchBundle::Default/transresRequestMacros.html.twig" as transresRequestMacros %}
+{% import "AppTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+{% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
 {% block title %}
     {{ title }}
@@ -208,20 +208,20 @@
 {% block additionalcss %}
 
     {#{% stylesheets#}
-    {#'bundles/oleguserdirectory/bootstrap/css/*' filter='cssrewrite'#}
-    {#'bundles/oleguserdirectory/form/css/form.css' filter='cssrewrite'#}
+    {#'bundles/appuserdirectory/bootstrap/css/*' filter='cssrewrite'#}
+    {#'bundles/appuserdirectory/form/css/form.css' filter='cssrewrite'#}
     {#%}#}
     {#<link rel="stylesheet" href="{{ asset_url }}" />#}
     {#{% endstylesheets %}#}
 
     {#{% stylesheets#}
-    {#'bundles/oleguserdirectory/form/css/action.css' filter='cssrewrite'#}
+    {#'bundles/appuserdirectory/form/css/action.css' filter='cssrewrite'#}
     {#%}#}
     {#<link rel="stylesheet" href="{{ asset_url }}" />#}
     {#{% endstylesheets %}#}
 
     {% stylesheets
-        'bundles/olegtranslationalresearch/form/css/pdf-show.css' filter='cssrewrite'
+        'bundles/apptranslationalresearch/form/css/pdf-show.css' filter='cssrewrite'
     %}
         <link rel="stylesheet" type="text/css" media="all" href="{{ asset_url }}" />
     {% endstylesheets %}
@@ -230,45 +230,45 @@
 
 {% block additionaljs %}
 
-    {#'@OlegUserdirectoryBundle/Resources/public/bwip-js/lib/jquery.js'#}
-    {#'@OlegUserdirectoryBundle/Resources/public/bwip-js/bwipp.js'#}
-    {#'@OlegUserdirectoryBundle/Resources/public/bwip-js/bwipjs.js'#}
-    {#'@OlegUserdirectoryBundle/Resources/public/bwip-js/lib/jquery-ui.min.js'#}
-    {#'@OlegUserdirectoryBundle/Resources/public/bwip-js/lib/xhr-fonts.js'#}
-    {#'@OlegUserdirectoryBundle/Resources/public/bwip-js/lib/bitmap.js'#}
-    {#'@OlegUserdirectoryBundle/Resources/public/bwip-js/lib/symdesc.js'#}
-    {#'@OlegUserdirectoryBundle/Resources/public/bwip-js/lib/canvas-toblob.js'#}
-    {#'@OlegUserdirectoryBundle/Resources/public/bwip-js/lib/filesaver.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/lib/jquery.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/bwipp.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/bwipjs.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/lib/jquery-ui.min.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/lib/xhr-fonts.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/lib/bitmap.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/lib/symdesc.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/lib/canvas-toblob.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/lib/filesaver.js'#}
 
     {#{% javascripts#}
-    {#'@OlegUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'#}
-    {#'@OlegUserdirectoryBundle/Resources/public/jquery-ui-1.11.2/jquery-ui.js'#}
-    {#'@OlegUserdirectoryBundle/Resources/public/bootstrap/js/*'#}
+    {#'@AppUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/jquery-ui-1.11.2/jquery-ui.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/bootstrap/js/*'#}
 
-    {#'@OlegUserdirectoryBundle/Resources/public/form/js/user-form.js'#}
-    {#'@OlegUserdirectoryBundle/Resources/public/form/js/user-common.js'#}
-    {#'@OlegUserdirectoryBundle/Resources/public/form/js/user-formReady.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/form/js/user-form.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/form/js/user-common.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/form/js/user-formReady.js'#}
     {#%}#}
     {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
     {#{% endjavascripts %}#}
 
     {% javascripts
-    '@OlegOrderformBundle/Resources/public/handsontable/jquery.handsontable.full.js'
-    '@OlegTranslationalResearchBundle/Resources/public/form/js/handsontable.js'
-    '@OlegUserdirectoryBundle/Resources/public/bwip-js/freetype.js'
-    '@OlegOrderformBundle/Resources/public/form/js/selectAjax.js'
-    '@OlegOrderformBundle/Resources/public/form/js/masking.js'
-    '@OlegTranslationalResearchBundle/Resources/public/form/js/barcode.js'
-    '@OlegUserdirectoryBundle/Resources/public/qrcode/qrcode.js'
-    '@OlegUserdirectoryBundle/Resources/public/jquery-qrcode/jquery.qrcode.min.js'
-    '@OlegUserdirectoryBundle/Resources/public/bwip-js/bwipp.js'
-    '@OlegUserdirectoryBundle/Resources/public/bwip-js/bwipjs.js'
-    '@OlegUserdirectoryBundle/Resources/public/bwip-js/lib/jquery-ui.min.js'
-    '@OlegUserdirectoryBundle/Resources/public/bwip-js/lib/xhr-fonts.js'
-    '@OlegUserdirectoryBundle/Resources/public/bwip-js/lib/bitmap.js'
-    '@OlegUserdirectoryBundle/Resources/public/bwip-js/lib/symdesc.js'
-    '@OlegUserdirectoryBundle/Resources/public/bwip-js/lib/canvas-toblob.js'
-    '@OlegUserdirectoryBundle/Resources/public/bwip-js/lib/filesaver.js'
+    '@AppOrderformBundle/Resources/public/handsontable/jquery.handsontable.full.js'
+    '@AppTranslationalResearchBundle/Resources/public/form/js/handsontable.js'
+    '@AppUserdirectoryBundle/Resources/public/bwip-js/freetype.js'
+    '@AppOrderformBundle/Resources/public/form/js/selectAjax.js'
+    '@AppOrderformBundle/Resources/public/form/js/masking.js'
+    '@AppTranslationalResearchBundle/Resources/public/form/js/barcode.js'
+    '@AppUserdirectoryBundle/Resources/public/qrcode/qrcode.js'
+    '@AppUserdirectoryBundle/Resources/public/jquery-qrcode/jquery.qrcode.min.js'
+    '@AppUserdirectoryBundle/Resources/public/bwip-js/bwipp.js'
+    '@AppUserdirectoryBundle/Resources/public/bwip-js/bwipjs.js'
+    '@AppUserdirectoryBundle/Resources/public/bwip-js/lib/jquery-ui.min.js'
+    '@AppUserdirectoryBundle/Resources/public/bwip-js/lib/xhr-fonts.js'
+    '@AppUserdirectoryBundle/Resources/public/bwip-js/lib/bitmap.js'
+    '@AppUserdirectoryBundle/Resources/public/bwip-js/lib/symdesc.js'
+    '@AppUserdirectoryBundle/Resources/public/bwip-js/lib/canvas-toblob.js'
+    '@AppUserdirectoryBundle/Resources/public/bwip-js/lib/filesaver.js'
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}

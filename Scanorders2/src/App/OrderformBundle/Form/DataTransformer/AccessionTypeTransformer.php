@@ -23,12 +23,12 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Oleg\OrderformBundle\Form\DataTransformer;
+namespace App\OrderformBundle\Form\DataTransformer;
 
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Doctrine\Common\Persistence\ObjectManager;
-use Oleg\OrderformBundle\Entity\AccessionType;
+use App\OrderformBundle\Entity\AccessionType;
 
 class AccessionTypeTransformer implements DataTransformerInterface
 {
@@ -67,7 +67,7 @@ class AccessionTypeTransformer implements DataTransformerInterface
         //echo "data transformer type=".$type."<br>";
 
         if( is_int($type) ) {
-            $type = $this->em->getRepository('OlegOrderformBundle:AccessionType')->findOneById($type);
+            $type = $this->em->getRepository('AppOrderformBundle:AccessionType')->findOneById($type);
             //echo "findOneById type=".$type."<br>";
         }
         
@@ -100,7 +100,7 @@ class AccessionTypeTransformer implements DataTransformerInterface
 
         if( is_numeric ( $text ) ) {    //number => most probably it is id
 
-            $entity = $this->em->getRepository('OlegOrderformBundle:AccessionType')->findOneById($text);
+            $entity = $this->em->getRepository('AppOrderformBundle:AccessionType')->findOneById($text);
 
             if( null === $entity ) {
 
@@ -126,10 +126,10 @@ class AccessionTypeTransformer implements DataTransformerInterface
         //echo "accession type name=".$name."<br>";
 
         //check if it is already exists in db
-        $entity = $this->em->getRepository('OlegOrderformBundle:AccessionType')->findOneByName($name);
+        $entity = $this->em->getRepository('AppOrderformBundle:AccessionType')->findOneByName($name);
 
         if( !$entity ) {
-            $entity = $this->em->getRepository('OlegOrderformBundle:AccessionType')->findOneByAbbreviation($name);
+            $entity = $this->em->getRepository('AppOrderformBundle:AccessionType')->findOneByAbbreviation($name);
         }
         
         if( null === $entity ) {
@@ -141,7 +141,7 @@ class AccessionTypeTransformer implements DataTransformerInterface
             $newEntity->setCreator($this->user);
             
             //get max orderinlist
-            $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM OlegOrderformBundle:AccessionType c');           
+            $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM AppOrderformBundle:AccessionType c');           
             $nextorder = $query->getSingleResult()['maxorderinlist']+10;          
             $newEntity->setOrderinlist($nextorder);
 

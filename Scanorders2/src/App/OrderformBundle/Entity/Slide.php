@@ -15,14 +15,14 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Entity;
+namespace App\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\SlideRepository")
+ * @ORM\Entity(repositoryClass="App\OrderformBundle\Repository\SlideRepository")
  * @ORM\Table(name="scan_slide")
  */
 class Slide extends ObjectAbstract
@@ -156,10 +156,10 @@ class Slide extends ObjectAbstract
 
     /**
      * Set block
-     * @param \Oleg\OrderformBundle\Entity\Block $block
+     * @param \App\OrderformBundle\Entity\Block $block
      * @return Slide
      */
-    public function setBlock(\Oleg\OrderformBundle\Entity\Block $block = null)
+    public function setBlock(\App\OrderformBundle\Entity\Block $block = null)
     {
         $this->block = $block;
     
@@ -174,7 +174,7 @@ class Slide extends ObjectAbstract
         return $this->block;
     }
 
-    public function setPart(\Oleg\OrderformBundle\Entity\Part $part = null)
+    public function setPart(\App\OrderformBundle\Entity\Part $part = null)
     {
         $this->part = $part;
 
@@ -236,10 +236,10 @@ class Slide extends ObjectAbstract
     /**
      * Add stain
      *
-     * @param \Oleg\OrderformBundle\Entity\Stain $stain
+     * @param \App\OrderformBundle\Entity\Stain $stain
      * @return Slide
      */
-    public function addStain(\Oleg\OrderformBundle\Entity\Stain $stain)
+    public function addStain(\App\OrderformBundle\Entity\Stain $stain)
     {
         if( !$this->stain->contains($stain) ) {
             $stain->setSlide($this);
@@ -252,9 +252,9 @@ class Slide extends ObjectAbstract
     /**
      * Remove stain
      *
-     * @param \Oleg\OrderformBundle\Entity\Stain $stain
+     * @param \App\OrderformBundle\Entity\Stain $stain
      */
-    public function removeStain(\Oleg\OrderformBundle\Entity\Stain $stain)
+    public function removeStain(\App\OrderformBundle\Entity\Stain $stain)
     {
         $this->stain->removeElement($stain);
     }
@@ -292,7 +292,7 @@ class Slide extends ObjectAbstract
     /**
      * Add relevantScans
      *
-     * @param \Oleg\OrderformBundle\Entity\RelevantScans $relevantScans
+     * @param \App\OrderformBundle\Entity\RelevantScans $relevantScans
      * @return Slide
      */
     public function addRelevantScan( $relevantScans )
@@ -314,9 +314,9 @@ class Slide extends ObjectAbstract
     /**
      * Remove relevantScans
      *
-     * @param \Oleg\OrderformBundle\Entity\RelevantScans $relevantScans
+     * @param \App\OrderformBundle\Entity\RelevantScans $relevantScans
      */
-    public function removeRelevantScan(\Oleg\OrderformBundle\Entity\RelevantScans $relevantScans)
+    public function removeRelevantScan(\App\OrderformBundle\Entity\RelevantScans $relevantScans)
     {
         $this->relevantScans->removeElement($relevantScans);
     }

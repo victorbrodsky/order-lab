@@ -15,10 +15,10 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Form;
+namespace App\OrderformBundle\Form;
 
-use Oleg\OrderformBundle\Form\ArrayFieldType;
-use Oleg\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
+use App\OrderformBundle\Form\ArrayFieldType;
+use App\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -50,7 +50,7 @@ class EncounterReferringProviderType extends AbstractType
 //        ));
 
 //        $builder->add('others', new ArrayFieldType($this->params), array(
-//            'data_class' => 'Oleg\OrderformBundle\Entity\EncounterReferringProvider',
+//            'data_class' => 'App\OrderformBundle\Entity\EncounterReferringProvider',
 //            'label' => false,
 //			'attr' => array('style'=>'display:none;')
 //        ));
@@ -98,7 +98,7 @@ class EncounterReferringProviderType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\EncounterReferringProvider',
+            'data_class' => 'App\OrderformBundle\Entity\EncounterReferringProvider',
             'form_custom_value' => null
         ));
     }

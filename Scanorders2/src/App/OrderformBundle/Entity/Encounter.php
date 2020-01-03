@@ -15,14 +15,14 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Entity;
+namespace App\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 
 /**
- * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\EncounterRepository")
+ * @ORM\Entity(repositoryClass="App\OrderformBundle\Repository\EncounterRepository")
  * @ORM\Table(name="scan_encounter")
  */
 class Encounter extends ObjectAbstract
@@ -595,10 +595,10 @@ class Encounter extends ObjectAbstract
     /**
      * Add procedure
      *
-     * @param \Oleg\OrderformBundle\Entity\Procedure $procedure
+     * @param \App\OrderformBundle\Entity\Procedure $procedure
      * @return Encounter
      */
-    public function addProcedure(\Oleg\OrderformBundle\Entity\Procedure $procedure)
+    public function addProcedure(\App\OrderformBundle\Entity\Procedure $procedure)
     {
         if( !$this->procedure->contains($procedure) ) {
             $this->procedure->add($procedure);
@@ -610,9 +610,9 @@ class Encounter extends ObjectAbstract
     /**
      * Remove procedure
      *
-     * @param \Oleg\OrderformBundle\Entity\Procedure $procedure
+     * @param \App\OrderformBundle\Entity\Procedure $procedure
      */
-    public function removeProcedure(\Oleg\OrderformBundle\Entity\Procedure $procedure)
+    public function removeProcedure(\App\OrderformBundle\Entity\Procedure $procedure)
     {
         $this->procedure->removeElement($procedure);
     }
@@ -636,10 +636,10 @@ class Encounter extends ObjectAbstract
     /**
      * Set patient
      *
-     * @param \Oleg\OrderformBundle\Entity\Patient $patient
+     * @param \App\OrderformBundle\Entity\Patient $patient
      * @return Encounter
      */
-    public function setPatient(\Oleg\OrderformBundle\Entity\Patient $patient = null)
+    public function setPatient(\App\OrderformBundle\Entity\Patient $patient = null)
     {
         $this->patient = $patient;
     
@@ -648,7 +648,7 @@ class Encounter extends ObjectAbstract
     /**
      * Get patient
      *
-     * @return \Oleg\OrderformBundle\Entity\Patient 
+     * @return \App\OrderformBundle\Entity\Patient 
      */
     public function getPatient()
     {
@@ -1104,7 +1104,7 @@ class Encounter extends ObjectAbstract
                 $addInfo = "(" . implode(", ",$addInfoArr) . ")";
             }
 
-            //Oleg Ivanov - username (Blood Bank Personnel, [Phone Number]/[ReferringProviderEmail])
+            //App Ivanov - username (Blood Bank Personnel, [Phone Number]/[ReferringProviderEmail])
             if( $addInfo ) {
                 $info = $info . " " . $addInfo;
             }

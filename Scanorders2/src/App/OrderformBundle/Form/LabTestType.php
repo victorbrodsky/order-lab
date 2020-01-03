@@ -15,12 +15,12 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Form;
+namespace App\OrderformBundle\Form;
 
-use Oleg\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
-use Oleg\UserdirectoryBundle\Form\DocumentContainerType;
-use Oleg\UserdirectoryBundle\Form\DocumentType;
-use Oleg\UserdirectoryBundle\Form\ListType;
+use App\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
+use App\UserdirectoryBundle\Form\DocumentContainerType;
+use App\UserdirectoryBundle\Form\DocumentType;
+use App\UserdirectoryBundle\Form\ListType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -77,13 +77,13 @@ class LabTestType extends AbstractType
             $params['cycle'] = $this->params['cycle'];
             $params['standalone'] = true;
             $mapper['className'] = "LabTest";
-            $mapper['bundleName'] = "OlegOrderformBundle";
+            $mapper['bundleName'] = "AppOrderformBundle";
 
             //ListType($params, $mapper)
             $builder->add('list', ListType::class, array(
                 'form_custom_value' => $params,
                 'form_custom_value_mapper' => $mapper,
-                'data_class' => 'Oleg\OrderformBundle\Entity\LabTest',
+                'data_class' => 'App\OrderformBundle\Entity\LabTest',
                 'label' => false
             ));
         }
@@ -94,7 +94,7 @@ class LabTestType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\LabTest',
+            'data_class' => 'App\OrderformBundle\Entity\LabTest',
             'form_custom_value' => null
         ));
     }

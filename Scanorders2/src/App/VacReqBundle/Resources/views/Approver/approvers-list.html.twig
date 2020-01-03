@@ -14,7 +14,7 @@
     limitations under the License.
 #}
 
-{% extends "OlegVacReqBundle::Default/base.html.twig" %}
+{% extends "AppVacReqBundle::Default/base.html.twig" %}
 
 {% block title %}
     Vacation & Business Travel Request Groups
@@ -39,7 +39,7 @@
     {% for organizationalInstitution in organizationalInstitutions %}
 
         <p>
-            {{ render(controller('OlegVacReqBundle:Approver:organizationalInstitution', { 'institutionId': organizationalInstitution.id })) }}
+            {{ render(controller('AppVacReqBundle:Approver:organizationalInstitution', { 'institutionId': organizationalInstitution.id })) }}
         </p>
 
     {% endfor %}
@@ -48,7 +48,7 @@
     {% for carryOverRequestGroup in carryOverRequestGroups %}
 
         <p>
-            {{ render(controller('OlegVacReqBundle:Approver:carryOverRequestGroup', { 'groupId': carryOverRequestGroup.id })) }}
+            {{ render(controller('AppVacReqBundle:Approver:carryOverRequestGroup', { 'groupId': carryOverRequestGroup.id })) }}
         </p>
 
     {% endfor %}

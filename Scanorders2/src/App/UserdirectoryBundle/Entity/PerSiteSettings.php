@@ -15,13 +15,13 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Entity;
+namespace App\UserdirectoryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
-use Oleg\UserdirectoryBundle\Entity\BaseUserAttributes;
+use App\UserdirectoryBundle\Entity\BaseUserAttributes;
 
 /**
  * @ORM\Entity
@@ -79,25 +79,25 @@ class PerSiteSettings extends BaseUserAttributes
 //    /**
 //     * defaultInstitution (ScanOrders Institution Scope)
 //     *
-//     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
+//     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Institution")
 //     * @ORM\JoinColumn(name="institution_id", referencedColumnName="id")
 //     **/
 //    private $scanOrderInstitutionsScope;
 
 //    /**
-//     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Department")
+//     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Department")
 //     * @ORM\JoinColumn(name="department_id", referencedColumnName="id")
 //     **/
 //    private $defaultDepartment;
 //
 //    /**
-//     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Division")
+//     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Division")
 //     * @ORM\JoinColumn(name="division_id", referencedColumnName="id")
 //     **/
 //    private $defaultDivision;
 //
 //    /**
-//     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Service")
+//     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Service")
 //     * @ORM\JoinColumn(name="service_id", referencedColumnName="id")
 //     **/
 //    private $defaultService;

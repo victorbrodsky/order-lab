@@ -6,7 +6,7 @@
  * Time: 11:46 AM
  */
 
-namespace Oleg\UserdirectoryBundle\Controller;
+namespace App\UserdirectoryBundle\Controller;
 
 
 use Doctrine\DBAL\Schema\PostgreSqlSchemaManager as PostgreSqlSchemaManagerBaseController;

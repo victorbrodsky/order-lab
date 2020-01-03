@@ -23,22 +23,22 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Oleg\UserdirectoryBundle\Util;
+namespace App\UserdirectoryBundle\Util;
 
 
 
 
-use Oleg\UserdirectoryBundle\Entity\Permission;
-use Oleg\UserdirectoryBundle\Entity\SiteParameters;
-use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
+use App\UserdirectoryBundle\Entity\Permission;
+use App\UserdirectoryBundle\Entity\SiteParameters;
+use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use Sinergi\BrowserDetector\Browser;
 use Sinergi\BrowserDetector\Os;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
-use Oleg\UserdirectoryBundle\Entity\User;
-use Oleg\UserdirectoryBundle\Util\UserUtil;
-use Oleg\UserdirectoryBundle\Entity\Logger;
+use App\UserdirectoryBundle\Entity\User;
+use App\UserdirectoryBundle\Util\UserUtil;
+use App\UserdirectoryBundle\Entity\Logger;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -505,7 +505,7 @@ class UserServiceUtil {
         //echo "registrationLinkId=$registrationLinkId<br>";
         $registrationLinkId = md5($registrationLinkId);
         //find if already exists
-        $existedSignup = $this->em->getRepository('OlegUserdirectoryBundle:'.$className)->findByRegistrationLinkID($registrationLinkId);
+        $existedSignup = $this->em->getRepository('AppUserdirectoryBundle:'.$className)->findByRegistrationLinkID($registrationLinkId);
         if( $existedSignup ) {
             $count++;
             //echo "try gen: existedLinkId=$registrationLinkId; count=$count<br>";
@@ -517,7 +517,7 @@ class UserServiceUtil {
 
     public function findOneCommentByThreadBodyAuthor($thread, $bodyText, $author)
     {
-        $repository = $this->em->getRepository('OlegUserdirectoryBundle:FosComment');
+        $repository = $this->em->getRepository('AppUserdirectoryBundle:FosComment');
         $dql =  $repository->createQueryBuilder("comment");
         $dql->select('comment');
 
@@ -712,7 +712,7 @@ class UserServiceUtil {
         $userSecUtil = $this->container->get('user_security_utility');
         $em = $this->em;
 
-        $entities = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+        $entities = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
 
         if( count($entities) > 0 ) {
             $logger->notice("Exit generateSiteParameters: SiteParameters has been already generated.");
@@ -781,7 +781,7 @@ class UserServiceUtil {
                 "If You have any questions, please do not hesitate to contact me by phone or via email. ".
                 "Sincerely, Jessica Misner Fellowship Program Coordinator Weill Cornell Medicine Pathology and Laboratory Medicine 1300 York Avenue, Room C-302 T 212.746.6464 F 212.746.8192",
             "clientEmailFellApp" => '',
-            "p12KeyPathFellApp" => 'E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\src\Oleg\FellAppBundle\Util',
+            "p12KeyPathFellApp" => 'E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\src\App\FellAppBundle\Util',
             "googleDriveApiUrlFellApp" => "https://www.googleapis.com/auth/drive https://spreadsheets.google.com/feeds",
             "userImpersonateEmailFellApp" => "olegivanov@pathologysystems.org",
             "templateIdFellApp" => "",
@@ -1120,13 +1120,13 @@ class UserServiceUtil {
             $logger->notice("Auto Assign Institution: $autoAssignInstitution");
         } else {
 //            $institutionName = 'Weill Cornell Medical College';
-//            $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName($institutionName);
+//            $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByName($institutionName);
 //            if (!$institution) {
 //                //throw new \Exception( 'Institution was not found for name='.$institutionName );
 //            } else {
 //                $params->setAutoAssignInstitution($institution);
 //            }
-            $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+            $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
             if( $wcmc ) {
                 //exit('generateSiteParameters: No Institution: "WCM"');
                 $mapper = array(
@@ -1134,7 +1134,7 @@ class UserServiceUtil {
                     'bundleName' => 'UserdirectoryBundle',
                     'className' => 'Institution'
                 );
-                $autoAssignInstitution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+                $autoAssignInstitution = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
                     "Pathology and Laboratory Medicine",
                     $wcmc,
                     $mapper
@@ -1368,7 +1368,7 @@ class UserServiceUtil {
     }
 
     public function getSiteNameByAbbreviation($abbreviation) {
-        $siteObject = $this->em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation($abbreviation);
+        $siteObject = $this->em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation($abbreviation);
         return $siteObject->getSiteName();
     }
 
@@ -1907,7 +1907,7 @@ class UserServiceUtil {
         }
 
         if(1) {
-            $repository = $em->getRepository('OlegOrderformBundle:PatientLastName');
+            $repository = $em->getRepository('AppOrderformBundle:PatientLastName');
             $dql = $repository->createQueryBuilder("list");
             $dql->select("list.id as id, LEVENSHTEIN(list.field, '".$search."') AS d");
             $dql->orderBy("d","ASC");
@@ -1930,7 +1930,7 @@ class UserServiceUtil {
                 echo "res=".$result['id'].": ".$result['d']."<br>";
             }
 
-//            $repository = $this->em->getRepository('OlegUserdirectoryBundle:PermissionObjectList');
+//            $repository = $this->em->getRepository('AppUserdirectoryBundle:PermissionObjectList');
 //            $dql =  $repository->createQueryBuilder("list");
 //            $dql->select('list');
 //            $dql->leftJoin('list.sites','sites');

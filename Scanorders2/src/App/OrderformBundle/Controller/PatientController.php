@@ -15,9 +15,9 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Controller;
+namespace App\OrderformBundle\Controller;
 
-use Oleg\OrderformBundle\Entity\ExternalId;
+use App\OrderformBundle\Entity\ExternalId;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -25,53 +25,53 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-use Oleg\OrderformBundle\Entity\ImageAnalysisAlgorithmList;
-use Oleg\OrderformBundle\Entity\ImageAnalysisOrder;
-use Oleg\OrderformBundle\Entity\ProcedureOrder;
-use Oleg\OrderformBundle\Entity\ReportBlock;
-use Oleg\UserdirectoryBundle\Entity\InstitutionWrapper;
-use Oleg\UserdirectoryBundle\Entity\Link;
-use Oleg\UserdirectoryBundle\Form\DataTransformer\UserWrapperTransformer;
-use Oleg\OrderformBundle\Helper\ErrorHelper;
+use App\OrderformBundle\Entity\ImageAnalysisAlgorithmList;
+use App\OrderformBundle\Entity\ImageAnalysisOrder;
+use App\OrderformBundle\Entity\ProcedureOrder;
+use App\OrderformBundle\Entity\ReportBlock;
+use App\UserdirectoryBundle\Entity\InstitutionWrapper;
+use App\UserdirectoryBundle\Entity\Link;
+use App\UserdirectoryBundle\Form\DataTransformer\UserWrapperTransformer;
+use App\OrderformBundle\Helper\ErrorHelper;
 
-use Oleg\OrderformBundle\Entity\Patient;
-use Oleg\OrderformBundle\Entity\Encounter;
-use Oleg\OrderformBundle\Form\PatientType;
-use Oleg\OrderformBundle\Entity\Procedure;
-use Oleg\OrderformBundle\Entity\Accession;
-use Oleg\OrderformBundle\Entity\Part;
-use Oleg\OrderformBundle\Entity\Block;
-use Oleg\OrderformBundle\Entity\Slide;
+use App\OrderformBundle\Entity\Patient;
+use App\OrderformBundle\Entity\Encounter;
+use App\OrderformBundle\Form\PatientType;
+use App\OrderformBundle\Entity\Procedure;
+use App\OrderformBundle\Entity\Accession;
+use App\OrderformBundle\Entity\Part;
+use App\OrderformBundle\Entity\Block;
+use App\OrderformBundle\Entity\Slide;
 
-use Oleg\OrderformBundle\Entity\LabOrder;
+use App\OrderformBundle\Entity\LabOrder;
 
-use Oleg\OrderformBundle\Entity\AccessionAccession;
-use Oleg\OrderformBundle\Entity\BlockOrder;
-use Oleg\OrderformBundle\Entity\EncounterDate;
-use Oleg\OrderformBundle\Entity\EncounterPatage;
-use Oleg\OrderformBundle\Entity\Endpoint;
-use Oleg\OrderformBundle\Entity\Instruction;
-use Oleg\OrderformBundle\Entity\Message;
-use Oleg\OrderformBundle\Entity\PatientClinicalHistory;
-use Oleg\OrderformBundle\Entity\PatientDob;
-use Oleg\OrderformBundle\Entity\PatientFirstName;
-use Oleg\OrderformBundle\Entity\PatientLastName;
-use Oleg\OrderformBundle\Entity\PatientMiddleName;
-use Oleg\OrderformBundle\Entity\PatientMrn;
-use Oleg\OrderformBundle\Entity\PatientSex;
-use Oleg\OrderformBundle\Entity\Report;
-use Oleg\OrderformBundle\Entity\Imaging;
-use Oleg\OrderformBundle\Entity\ScanOrder;
-use Oleg\OrderformBundle\Entity\SlideOrder;
-use Oleg\OrderformBundle\Entity\StainOrder;
-use Oleg\OrderformBundle\Form\DataTransformer\AccessionTypeTransformer;
-use Oleg\OrderformBundle\Form\DataTransformer\MrnTypeTransformer;
+use App\OrderformBundle\Entity\AccessionAccession;
+use App\OrderformBundle\Entity\BlockOrder;
+use App\OrderformBundle\Entity\EncounterDate;
+use App\OrderformBundle\Entity\EncounterPatage;
+use App\OrderformBundle\Entity\Endpoint;
+use App\OrderformBundle\Entity\Instruction;
+use App\OrderformBundle\Entity\Message;
+use App\OrderformBundle\Entity\PatientClinicalHistory;
+use App\OrderformBundle\Entity\PatientDob;
+use App\OrderformBundle\Entity\PatientFirstName;
+use App\OrderformBundle\Entity\PatientLastName;
+use App\OrderformBundle\Entity\PatientMiddleName;
+use App\OrderformBundle\Entity\PatientMrn;
+use App\OrderformBundle\Entity\PatientSex;
+use App\OrderformBundle\Entity\Report;
+use App\OrderformBundle\Entity\Imaging;
+use App\OrderformBundle\Entity\ScanOrder;
+use App\OrderformBundle\Entity\SlideOrder;
+use App\OrderformBundle\Entity\StainOrder;
+use App\OrderformBundle\Form\DataTransformer\AccessionTypeTransformer;
+use App\OrderformBundle\Form\DataTransformer\MrnTypeTransformer;
 
-use Oleg\UserdirectoryBundle\Entity\AttachmentContainer;
-use Oleg\UserdirectoryBundle\Entity\DocumentContainer;
-use Oleg\UserdirectoryBundle\Entity\Document;
-use Oleg\UserdirectoryBundle\Entity\Institution;
-use Oleg\UserdirectoryBundle\Entity\UserWrapper;
+use App\UserdirectoryBundle\Entity\AttachmentContainer;
+use App\UserdirectoryBundle\Entity\DocumentContainer;
+use App\UserdirectoryBundle\Entity\Document;
+use App\UserdirectoryBundle\Entity\Institution;
+use App\UserdirectoryBundle\Entity\UserWrapper;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -98,7 +98,7 @@ class PatientController extends Controller
         $res = $searchUtil->searchAction($params);
         $entities = $res[$object];
 
-        return $this->render('OlegOrderformBundle:Patient:index.html.twig', array(
+        return $this->render('AppOrderformBundle:Patient:index.html.twig', array(
             'patiententities' => $entities,
         ));
     }
@@ -108,7 +108,7 @@ class PatientController extends Controller
      *
      * @Route("/data-structure", name="scan-patient-new")
      * @Method("GET")
-     * @Template("OlegOrderformBundle:Patient:new.html.twig")
+     * @Template("AppOrderformBundle:Patient:new.html.twig")
      */
     public function newPatientAction()
     {
@@ -206,7 +206,7 @@ class PatientController extends Controller
      * @Route("/{id}", name="scan-patient-show")
      * @Route("/info/{id}", name="scan-patient-info-show")
      * @Method("GET")
-     * @Template("OlegOrderformBundle:Patient:new.html.twig")
+     * @Template("AppOrderformBundle:Patient:new.html.twig")
      */
     public function showAction( Request $request, $id )
     {
@@ -239,7 +239,7 @@ class PatientController extends Controller
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
-        $entity = $em->getRepository('OlegOrderformBundle:Patient')->find($id);
+        $entity = $em->getRepository('AppOrderformBundle:Patient')->find($id);
 
 //        $encounter = $entity->getEncounter()->first();
 //        $procedure = $encounter->getProcedure()->first();
@@ -355,7 +355,7 @@ class PatientController extends Controller
      *
      * @Route("/{id}/edit", name="scan-patient-edit")
      * @Method("GET")
-     * @Template("OlegOrderformBundle:Patient:new.html.twig")
+     * @Template("AppOrderformBundle:Patient:new.html.twig")
      */
     public function editAction( Request $request, $id )
     {
@@ -379,7 +379,7 @@ class PatientController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegOrderformBundle:Patient')->find($id);
+        $entity = $em->getRepository('AppOrderformBundle:Patient')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Patient entity.');
@@ -400,9 +400,9 @@ class PatientController extends Controller
         if( !$entity->getTracker() ) {
             //$entity->addContactinfoByTypeAndName($user, $system);
 
-            //$patientSpotPurpose = $em->getRepository('OlegUserdirectoryBundle:SpotPurpose')->findOneByName("Initial Patient Encounter - Address Entry");
-            //$spotEntityPatient = $em->getRepository('OlegUserdirectoryBundle:Spot')->findOneBySpotPurpose($patientSpotPurpose);
-            //$locationTypePrimary = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Patient's Primary Contact Information");
+            //$patientSpotPurpose = $em->getRepository('AppUserdirectoryBundle:SpotPurpose')->findOneByName("Initial Patient Encounter - Address Entry");
+            //$spotEntityPatient = $em->getRepository('AppUserdirectoryBundle:Spot')->findOneBySpotPurpose($patientSpotPurpose);
+            //$locationTypePrimary = $em->getRepository('AppUserdirectoryBundle:LocationTypeList')->findOneByName("Patient's Primary Contact Information");
 
             $locationTypePrimary = null;
             $spotEntityPatient = null;
@@ -489,7 +489,7 @@ class PatientController extends Controller
      *
      * @Route("/{id}/edit", name="scan_patient_update")
      * @Method("POST")
-     * @Template("OlegOrderformBundle:Patient:new.html.twig")
+     * @Template("AppOrderformBundle:Patient:new.html.twig")
      */
     public function updateAction( Request $request, $id )
     {
@@ -513,7 +513,7 @@ class PatientController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegOrderformBundle:Patient')->find($id);
+        $entity = $em->getRepository('AppOrderformBundle:Patient')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Patient entity.');
@@ -594,7 +594,7 @@ class PatientController extends Controller
         if( $form->isValid() ) {
 
             //set patient's name if does not exists
-            //$em->getRepository('OlegOrderformBundle:Patient')->copyCommonEncountersFieldsToPatient($entity,$user,$parameters['sitename']);
+            //$em->getRepository('AppOrderformBundle:Patient')->copyCommonEncountersFieldsToPatient($entity,$user,$parameters['sitename']);
             //echo "<br><br>";
             //foreach( $entity->getLastname() as $lastname ) {
             //    echo $lastname->getStatus()." ID#".$lastname->getId().": lastname=".$lastname."<br>";
@@ -631,13 +631,13 @@ class PatientController extends Controller
 
             //DO IT AFTER UPDATE DB: set patient's common fields (names, suffix and gender) for the latest modified encounter.
             // The latest encounter fields will be copy to the patient object. They can come from different encounters
-            $em->getRepository('OlegOrderformBundle:Patient')->copyCommonLatestEncounterFieldsToPatient($entity,$user,$parameters['sitename']);
+            $em->getRepository('AppOrderformBundle:Patient')->copyCommonLatestEncounterFieldsToPatient($entity,$user,$parameters['sitename']);
             $em->persist($entity); //entity is a patient object
             $em->flush();
 
             if( $changeSetStr ) {
                 $userSecUtil = $this->container->get('user_security_utility');
-                //$user = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId());
+                //$user = $em->getRepository('AppUserdirectoryBundle:User')->find($user->getId());
                 $event = "Patient with ID " . $entity->getId() . " has been updated by " . $user;
                 $event .= ". Changes:<br>".$changeSetStr;
                 $userSecUtil->createUserEditEvent($parameters['sitename'], $event, $user, $entity, $request, 'Patient Updated');
@@ -691,7 +691,7 @@ class PatientController extends Controller
     /**
      * @Route("/data-structure/new-test-patient", name="scan_testpatient_new")
      * @Method("GET")
-     * @Template("OlegOrderformBundle:Patient:new.html.twig")
+     * @Template("AppOrderformBundle:Patient:new.html.twig")
      */
     public function newTestPatientAction() {
 
@@ -741,7 +741,7 @@ class PatientController extends Controller
 
         ///////////////////// populate patient with mrn, mrntype, name etc. /////////////////////
         $mrntypeStr = 'Test Patient MRN';
-        $testpatients = $em->getRepository('OlegOrderformBundle:Patient')->findByMrntypeString($mrntypeStr);
+        $testpatients = $em->getRepository('AppOrderformBundle:Patient')->findByMrntypeString($mrntypeStr);
         $testpatientmrnIndex = count($testpatients)+1;
 
         //mrn
@@ -769,7 +769,7 @@ class PatientController extends Controller
 
         //sex
         $patientSex = new PatientSex($status,$user,$system);
-        $sex = $em->getRepository('OlegUserdirectoryBundle:SexList')->findOneByName('Female');
+        $sex = $em->getRepository('AppUserdirectoryBundle:SexList')->findOneByName('Female');
         $patientSex->setField($sex);
         $patient->addSex($patientSex);
 
@@ -810,7 +810,7 @@ class PatientController extends Controller
             $accession = $encounter->getProcedure()->first()->getAccession()->first();
             //echo $accession;
 
-            $testaccessions = $em->getRepository('OlegOrderformBundle:Accession')->findByAccessiontypeString($accessiontypeStr);
+            $testaccessions = $em->getRepository('AppOrderformBundle:Accession')->findByAccessiontypeString($accessiontypeStr);
             $testaccessionIndex = count($testaccessions)+$encounterCount;
 
             //$accessionNumber = new AccessionAccession($status,$user,$system);
@@ -828,7 +828,7 @@ class PatientController extends Controller
 //            $accessionDocContainer = $accessionAttachmentContainer->getdocumentContainers()->first();
 //            //add document to DocumentContainer
 //            $uniqueName = 'testimage_5522979c2e736.jpg';
-//            $autopsydocument = $em->getRepository('OlegUserdirectoryBundle:Document')->findOneByUniquename($uniqueName);
+//            $autopsydocument = $em->getRepository('AppUserdirectoryBundle:Document')->findOneByUniquename($uniqueName);
 //            $accessionDocContainer->addDocument($autopsydocument);
 
         }
@@ -838,7 +838,7 @@ class PatientController extends Controller
         //echo "multi-scan message count=".count($messageMultiSlideScanOrder)."<br>";
 
         //create scan order first; patient hierarchy will be created as well.
-        $MultiSlideScanOrder = $em->getRepository('OlegOrderformBundle:Message')->processMessageEntity( $MultiSlideScanOrder, $user, null, $this->get('router'), $this->container );
+        $MultiSlideScanOrder = $em->getRepository('AppOrderformBundle:Message')->processMessageEntity( $MultiSlideScanOrder, $user, null, $this->get('router'), $this->container );
 
         if( $patient->getId() ) {
             return $this->redirect( $this->generateUrl('scan-patient-show',array('id'=>$patient->getId())) );
@@ -1026,7 +1026,7 @@ class PatientController extends Controller
 
         //////////////////////////// get lists ////////////////////////////////////
         $uniqueName = 'testimage_5522979c2e736.jpg';
-        $document = $em->getRepository('OlegUserdirectoryBundle:Document')->findOneByUniquename($uniqueName);
+        $document = $em->getRepository('AppUserdirectoryBundle:Document')->findOneByUniquename($uniqueName);
         //echo "document=".$document."<br>";
 
         if( !$document ) {
@@ -1066,17 +1066,17 @@ class PatientController extends Controller
             }
         }
 
-        $staintype = $em->getRepository('OlegOrderformBundle:StainList')->find(1);
-        $organList = $em->getRepository('OlegOrderformBundle:OrganList')->findOneByName('Breast');
-        $slidetype = $em->getRepository('OlegOrderformBundle:SlideType')->findOneByName('Frozen Section');
+        $staintype = $em->getRepository('AppOrderformBundle:StainList')->find(1);
+        $organList = $em->getRepository('AppOrderformBundle:OrganList')->findOneByName('Breast');
+        $slidetype = $em->getRepository('AppOrderformBundle:SlideType')->findOneByName('Frozen Section');
 
         $sourceSystemName = 'PACS on C.MED.CORNELL.EDU';
-        $sourceSystemPacsvendor = $em->getRepository('OlegUserdirectoryBundle:SourceSystemList')->findOneByName($sourceSystemName);
+        $sourceSystemPacsvendor = $em->getRepository('AppUserdirectoryBundle:SourceSystemList')->findOneByName($sourceSystemName);
 
-        $maginification = $em->getRepository('OlegOrderformBundle:Magnification')->findOneByName('20X');
+        $maginification = $em->getRepository('AppOrderformBundle:Magnification')->findOneByName('20X');
 
-        $neoplasticType = $em->getRepository('OlegOrderformBundle:DiseaseTypeList')->findOneByName('Neoplastic');
-        $metastaticOrigin = $em->getRepository('OlegOrderformBundle:DiseaseOriginList')->findOneByName('Metastatic');
+        $neoplasticType = $em->getRepository('AppOrderformBundle:DiseaseTypeList')->findOneByName('Neoplastic');
+        $metastaticOrigin = $em->getRepository('AppOrderformBundle:DiseaseOriginList')->findOneByName('Metastatic');
 
         //Input: Slide Id from c.med: 42814
         $slideId = 42814;
@@ -1086,11 +1086,11 @@ class PatientController extends Controller
         $patient->addExtraFields($status,$user,$system);
 
         //add two contactinfo: "Test Patient's Primary Residence" and "Test Patient's Secondary Residence"
-        $patientSpotPurpose = $em->getRepository('OlegUserdirectoryBundle:SpotPurpose')->findOneByName("Initial Patient Encounter - Address Entry");
-        $spotEntityPatient = $em->getRepository('OlegUserdirectoryBundle:Spot')->findOneBySpotPurpose($patientSpotPurpose);
-        $locationTypePrimary = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Patient's Primary Contact Information");
+        $patientSpotPurpose = $em->getRepository('AppUserdirectoryBundle:SpotPurpose')->findOneByName("Initial Patient Encounter - Address Entry");
+        $spotEntityPatient = $em->getRepository('AppUserdirectoryBundle:Spot')->findOneBySpotPurpose($patientSpotPurpose);
+        $locationTypePrimary = $em->getRepository('AppUserdirectoryBundle:LocationTypeList')->findOneByName("Patient's Primary Contact Information");
         $patient->addContactinfoByTypeAndName($user,$system,$locationTypePrimary,"Test Patient's Primary Residence",$spotEntityPatient,true,$em);
-        $locationType = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Patient's Contact Information");
+        $locationType = $em->getRepository('AppUserdirectoryBundle:LocationTypeList')->findOneByName("Patient's Contact Information");
         $patient->addContactinfoByTypeAndName($user,$system,$locationType,"Test Patient's Secondary Residence",$spotEntityPatient,true,$em);
 
         if( $withscanorder ) {
@@ -1191,7 +1191,7 @@ class PatientController extends Controller
             }
 
 //            $em = $this->getDoctrine()->getManager();
-//            $Staintype = $em->getRepository('OlegOrderformBundle:StainList')->find(1);
+//            $Staintype = $em->getRepository('AppOrderformBundle:StainList')->find(1);
 //            $block->getSpecialStains()->first()->setStaintype($Staintype);
 //            echo $block;
 //            echo "staintype=".$block->getSpecialStains()->first()->getStaintype()->getId()."<br>";
@@ -1555,7 +1555,7 @@ class PatientController extends Controller
         $securityUtil = $this->get('order_security_utility');
 
         $userSecurity = $this->get('security.token_storage')->getToken()->getUser();
-        $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($userSecurity->getId());
+        $user = $em->getRepository('AppUserdirectoryBundle:User')->find($userSecurity->getId());
 
         $system = $securityUtil->getDefaultSourceSystem();
 
@@ -1588,7 +1588,7 @@ class PatientController extends Controller
         $message->addExternalId($externalId);
 
         //type
-        $category = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($messageCategoryStr);
+        $category = $em->getRepository('AppOrderformBundle:MessageCategory')->findOneByName($messageCategoryStr);
         //echo "category=".$category."<br>";
         if( !$category ) {
             throw $this->createNotFoundException('Unable to find MessageCategory bt name "' . $messageCategoryStr . '"');
@@ -1617,7 +1617,7 @@ class PatientController extends Controller
 //        $division = $defaultsDepDiv['division'];
 
         //set message status
-        $orderStatus = $em->getRepository('OlegOrderformBundle:Status')->findOneByName('Submitted');
+        $orderStatus = $em->getRepository('AppOrderformBundle:Status')->findOneByName('Submitted');
         $message->setStatus($orderStatus);
 
 
@@ -1660,7 +1660,7 @@ class PatientController extends Controller
             $message->addReportRecipient($UserWrappers[0]);
 
             //add a field for the "Recipient Organization" with a title "Laboratory:"
-            $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName("Molecular diagnostics");
+            $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByName("Molecular diagnostics");
             $organizationRecipient = new InstitutionWrapper();
             $organizationRecipient->setInstitution($institution);
             $message->addOrganizationRecipient($organizationRecipient);
@@ -1706,15 +1706,15 @@ class PatientController extends Controller
             $imageAnalysisOrder->setInstruction($instruction);
 
             //Image Analysis Software: Indica HALO (destination(endpoint) -> SourceSystemList "Indica HALO")
-            $indicaHALOSystem = $em->getRepository('OlegUserdirectoryBundle:SourceSystemList')->findOneByName('Indica HALO');
+            $indicaHALOSystem = $em->getRepository('AppUserdirectoryBundle:SourceSystemList')->findOneByName('Indica HALO');
             $destination->setSystem($indicaHALOSystem);
 
             //Image Analysis Algorithm:
-            $imageAnalysisAlgorithm = $em->getRepository('OlegOrderformBundle:ImageAnalysisAlgorithmList')->findOneByName('Break-Apart & Fusion FISH');
+            $imageAnalysisAlgorithm = $em->getRepository('AppOrderformBundle:ImageAnalysisAlgorithmList')->findOneByName('Break-Apart & Fusion FISH');
             $imageAnalysisOrder->setImageAnalysisAlgorithm($imageAnalysisAlgorithm);
 
             //Message Source: source(endpoint) -> SourceSystemList "ScanOrder": already set as default system
-            //$scanOrderSystem = $em->getRepository('OlegUserdirectoryBundle:SourceSystemList')->findOneByName('ScanOrder');
+            //$scanOrderSystem = $em->getRepository('AppUserdirectoryBundle:SourceSystemList')->findOneByName('ScanOrder');
             //$source->setSystem($scanOrderSystem);
 
         }
@@ -1767,7 +1767,7 @@ class PatientController extends Controller
             $message->addOrderRecipient($UserWrappers[0]);
 
             //add a field for the "Recipient Organization" with a title "Refer to Organization:"
-            $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName("New York Hospital");
+            $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByName("New York Hospital");
             $organizationRecipient = new InstitutionWrapper();
             $organizationRecipient->setInstitution($institution);
             $message->addOrganizationRecipient($organizationRecipient);
@@ -1790,8 +1790,8 @@ class PatientController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $userSecurity = $this->get('security.token_storage')->getToken()->getUser();
-        //$user = $em->getRepository('OlegUserdirectoryBundle:User')->find($userSecurity->getId());
-        $user = $em->getReference('OlegUserdirectoryBundle:User',$userSecurity->getId());
+        //$user = $em->getRepository('AppUserdirectoryBundle:User')->find($userSecurity->getId());
+        $user = $em->getReference('AppUserdirectoryBundle:User',$userSecurity->getId());
 
         //add 2 proxyusers
         $UserWrapperTransformer = new UserWrapperTransformer($em, $this->container);
@@ -1801,7 +1801,7 @@ class PatientController extends Controller
         $message->addProxyuser($UserWrappers[0]);
 
         //add second proxyuser
-        $userSystem = $em->getRepository('OlegUserdirectoryBundle:User')->find(1);
+        $userSystem = $em->getRepository('AppUserdirectoryBundle:User')->find(1);
         $UserWrappers = $UserWrapperTransformer->reverseTransform($userSystem."");
         $message->addProxyuser($UserWrappers[0]);
     }
@@ -1812,22 +1812,22 @@ class PatientController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $sourceSystemName = 'PACS on C.MED.CORNELL.EDU';
-        $sourceSystemPacsvendor = $em->getRepository('OlegUserdirectoryBundle:SourceSystemList')->findOneByName($sourceSystemName);
+        $sourceSystemPacsvendor = $em->getRepository('AppUserdirectoryBundle:SourceSystemList')->findOneByName($sourceSystemName);
         $sourceSystemPacsvendorClean = $sourceSystemPacsvendor->getName();
 
-        $linkTypeWebScope = $em->getRepository('OlegUserdirectoryBundle:LinkTypeList')->findOneByName("Via WebScope");
+        $linkTypeWebScope = $em->getRepository('AppUserdirectoryBundle:LinkTypeList')->findOneByName("Via WebScope");
         $linkTypeWebScopeClean = $linkTypeWebScope->getName();
 
-        $linkTypeImageScope = $em->getRepository('OlegUserdirectoryBundle:LinkTypeList')->findOneByName("Via ImageScope");
+        $linkTypeImageScope = $em->getRepository('AppUserdirectoryBundle:LinkTypeList')->findOneByName("Via ImageScope");
         $linkTypeImageScopeClean = $linkTypeImageScope->getName();
 
-        $linkTypeThumbnail = $em->getRepository('OlegUserdirectoryBundle:LinkTypeList')->findOneByName("Thumbnail");
+        $linkTypeThumbnail = $em->getRepository('AppUserdirectoryBundle:LinkTypeList')->findOneByName("Thumbnail");
         $linkTypeThumbnailClean = $linkTypeThumbnail->getName();
 
-        $linkTypeLabel = $em->getRepository('OlegUserdirectoryBundle:LinkTypeList')->findOneByName("Label");
+        $linkTypeLabel = $em->getRepository('AppUserdirectoryBundle:LinkTypeList')->findOneByName("Label");
         $linkTypeLabelClean = $linkTypeLabel->getName();
 
-        $linkTypeDownload = $em->getRepository('OlegUserdirectoryBundle:LinkTypeList')->findOneByName("Download");
+        $linkTypeDownload = $em->getRepository('AppUserdirectoryBundle:LinkTypeList')->findOneByName("Download");
         $linkTypeDownloadClean = $linkTypeDownload->getName();
 
         //$docContainer->setTitle('Image from ' . $sourceSystemPacsvendor);

@@ -15,11 +15,11 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Form;
+namespace App\OrderformBundle\Form;
 
-use Oleg\UserdirectoryBundle\Form\DocumentContainerType;
-use Oleg\UserdirectoryBundle\Form\DocumentType;
-use Oleg\UserdirectoryBundle\Form\UserWrapperType;
+use App\UserdirectoryBundle\Form\DocumentContainerType;
+use App\UserdirectoryBundle\Form\DocumentType;
+use App\UserdirectoryBundle\Form\UserWrapperType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -87,7 +87,7 @@ class ReportBlockType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\ReportBlock',
+            'data_class' => 'App\OrderformBundle\Entity\ReportBlock',
         ));
     }
 

@@ -15,14 +15,14 @@
  *  limitations under the License.
  */
 
-namespace Oleg\CallLogBundle\Form;
+namespace App\CallLogBundle\Form;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Oleg\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
-use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
-use Oleg\UserdirectoryBundle\Form\FormNode\FormNodeType;
-use Oleg\UserdirectoryBundle\Form\InstitutionType;
-use Oleg\UserdirectoryBundle\Form\FormNode\MessageCategoryFormNodeType;
+use App\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
+use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
+use App\UserdirectoryBundle\Form\FormNode\FormNodeType;
+use App\UserdirectoryBundle\Form\InstitutionType;
+use App\UserdirectoryBundle\Form\FormNode\MessageCategoryFormNodeType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -144,7 +144,7 @@ class CalllogMessageType extends AbstractType
                     'attr' => array('class' => 'form-control'),
                 ));
                 $builder->add('previousEncounters', EntityType::class, array(
-                    'class' => 'OlegOrderformBundle:Encounter',
+                    'class' => 'AppOrderformBundle:Encounter',
                     'label' => 'Encounter ID:',
                     'required' => true,
                     'mapped' => false,
@@ -162,7 +162,7 @@ class CalllogMessageType extends AbstractType
             }
             if (0) {
                 $builder->add('previousEncounters', ChoiceType::class, array(
-                    //'class' => 'OlegOrderformBundle:Encounter',
+                    //'class' => 'AppOrderformBundle:Encounter',
                     'label' => 'New or Previous Encounter:',
                     'required' => true,
                     'mapped' => false,
@@ -194,7 +194,7 @@ class CalllogMessageType extends AbstractType
 
             $label = null;
             $mapper = array(
-                'prefix' => "Oleg",
+                'prefix' => "App",
                 'className' => "MessageCategory",
                 'bundleName' => "OrderformBundle",
                 'organizationalGroupType' => "MessageTypeClassifiers"
@@ -202,11 +202,11 @@ class CalllogMessageType extends AbstractType
             if ($message) {
                 $messageCategory = $message->getMessageCategory();
                 if ($messageCategory) {
-                    $label = $this->params['em']->getRepository('OlegOrderformBundle:MessageCategory')->getLevelLabels($messageCategory, $mapper);
+                    $label = $this->params['em']->getRepository('AppOrderformBundle:MessageCategory')->getLevelLabels($messageCategory, $mapper);
                 }
             }
             if (!$label) {
-                $label = $this->params['em']->getRepository('OlegOrderformBundle:MessageCategory')->getLevelLabels(null, $mapper);
+                $label = $this->params['em']->getRepository('AppOrderformBundle:MessageCategory')->getLevelLabels(null, $mapper);
             }
 
             if( $label ) {
@@ -269,7 +269,7 @@ class CalllogMessageType extends AbstractType
 
         if( $this->params['cycle'] != "new" ) {
             $builder->add('messageStatus', EntityType::class, array(
-                'class' => 'OlegOrderformBundle:MessageStatusList',
+                'class' => 'AppOrderformBundle:MessageStatusList',
                 //'choice_label' => 'name',
                 'label' => 'Message Status:',
                 'required' => false,
@@ -290,7 +290,7 @@ class CalllogMessageType extends AbstractType
 
         ////////////////////////// Specific Orders //////////////////////////
         $builder->add('calllogEntryMessage', CalllogEntryMessageType::class, array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\CalllogEntryMessage',
+            'data_class' => 'App\OrderformBundle\Entity\CalllogEntryMessage',
             'form_custom_value' => $this->params,
             'form_custom_value_entity' => null,
             'label' => false,
@@ -311,7 +311,7 @@ class CalllogMessageType extends AbstractType
 //
 //            $label = 'List Title:';
 //
-//            $patientLists = $this->params['em']->getRepository('OlegOrderformBundle:PatientListHierarchy')->findAll();
+//            $patientLists = $this->params['em']->getRepository('AppOrderformBundle:PatientListHierarchy')->findAll();
 //            if( count($patientLists) > 0 ) {
 //                $patientListId = $patientLists[0]->getId();
 //            } else {
@@ -321,7 +321,7 @@ class CalllogMessageType extends AbstractType
 //            if( $this->params['cycle'] != "new" && $message ) {
 //                $calllogEntryMessage = $message->getCalllogEntryMessage();
 //                if( $message->getId() && $message->getCalllogEntryMessage() ) {
-//                    $patientListHierarchyNode = $this->params['em']->getRepository('OlegOrderformBundle:PatientListHierarchy')->findBy(array(
+//                    $patientListHierarchyNode = $this->params['em']->getRepository('AppOrderformBundle:PatientListHierarchy')->findBy(array(
 //                        'entityNamespace' => $calllogEntryMessage->getEntityNamespace(),
 //                        'entityName' => $calllogEntryMessage->getEntityName(),
 //                        'entityId' => $calllogEntryMessage->getEntityId(),
@@ -366,7 +366,7 @@ class CalllogMessageType extends AbstractType
 //                'required' => true,
 //                'multiple' => false,
 //                'empty_value' => false,
-//                'class' => 'OlegUserdirectoryBundle:Institution',
+//                'class' => 'AppUserdirectoryBundle:Institution',
 //                'choices' => $institutions,
 //                'attr' => array('class' => 'combobox combobox-width combobox-institution')
 //            ));
@@ -377,7 +377,7 @@ class CalllogMessageType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\Message',
+            'data_class' => 'App\OrderformBundle\Entity\Message',
             'form_custom_value' => null,
             'form_custom_value_entity' => null
         ));

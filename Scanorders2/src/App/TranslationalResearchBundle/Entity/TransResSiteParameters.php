@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\TranslationalResearchBundle\Entity;
+namespace App\TranslationalResearchBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -37,13 +37,13 @@ class TransResSiteParameters {
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
      */
     private $creator;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(name="updateUser", referencedColumnName="id", nullable=true)
      */
     private $updateUser;
@@ -63,7 +63,7 @@ class TransResSiteParameters {
     /**
      * Hematopathology or AP/CP
      *
-     * @ORM\ManyToOne(targetEntity="Oleg\TranslationalResearchBundle\Entity\SpecialtyList", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\TranslationalResearchBundle\Entity\SpecialtyList", cascade={"persist"})
      * @ORM\JoinColumn(name="projectSpecialty_id", referencedColumnName="id", nullable=false)
      */
     private $projectSpecialty;
@@ -85,7 +85,7 @@ class TransResSiteParameters {
     /**
      * Default Invoice Logos
      *
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
      * @ORM\JoinTable(name="transres_transResSiteParameters_transresLogo",
      *      joinColumns={@ORM\JoinColumn(name="transResSiteParameter_id", referencedColumnName="id", onDelete="CASCADE")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="transresLogo_id", referencedColumnName="id", onDelete="CASCADE")}
@@ -149,7 +149,7 @@ class TransResSiteParameters {
     /**
      * Invoice's invoiceSalesperson
      *
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(name="invoiceSalesperson", referencedColumnName="id", nullable=true)
      */
     private $invoiceSalesperson;
@@ -158,7 +158,7 @@ class TransResSiteParameters {
     /**
      * Default Accession Type used in the System column in the Work Request handsontable
      *
-     * @ORM\ManyToOne(targetEntity="Oleg\OrderformBundle\Entity\AccessionType")
+     * @ORM\ManyToOne(targetEntity="App\OrderformBundle\Entity\AccessionType")
      */
     private $accessionType;
 
@@ -167,7 +167,7 @@ class TransResSiteParameters {
     /**
      * Default Packing Slip Logos
      *
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
      * @ORM\JoinTable(name="transres_transResSiteParameters_transresPackingSlipLogo",
      *      joinColumns={@ORM\JoinColumn(name="transResSiteParameter_id", referencedColumnName="id", onDelete="CASCADE")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="transresPackingSlipLogo_id", referencedColumnName="id", onDelete="CASCADE")}
@@ -399,7 +399,7 @@ class TransResSiteParameters {
 
 
 //    /**
-//     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+//     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
 //     * @ORM\JoinColumn(name="testuser", referencedColumnName="id", nullable=true)
 //     */
 //    private $testuser;

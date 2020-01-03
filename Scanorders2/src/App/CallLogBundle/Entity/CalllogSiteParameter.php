@@ -22,7 +22,7 @@
  * Time: 3:39 PM
  */
 
-namespace Oleg\CallLogBundle\Entity;
+namespace App\CallLogBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -42,7 +42,7 @@ class CalllogSiteParameter
     private $id;
 
 //    /**
-//     * @ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\SiteParameters", inversedBy="callogSiteParameter")
+//     * @ORM\OneToOne(targetEntity="App\UserdirectoryBundle\Entity\SiteParameters", inversedBy="callogSiteParameter")
 //     */
 //    private $siteParameter;
 
@@ -53,12 +53,12 @@ class CalllogSiteParameter
 //    private $calllogResources;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\OrderformBundle\Entity\MrnType", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\OrderformBundle\Entity\MrnType", cascade={"persist"})
      */
     private $keytypemrn;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\OrderformBundle\Entity\MessageCategory", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\OrderformBundle\Entity\MessageCategory", cascade={"persist"})
      */
     private $messageCategory;
 
@@ -68,17 +68,17 @@ class CalllogSiteParameter
     private $timezone;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\CityList")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\CityList")
      */
     private $city;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\States")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\States")
      **/
     private $state;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Countries")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Countries")
      **/
     private $country;
 
@@ -93,7 +93,7 @@ class CalllogSiteParameter
     private $zip;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\OrderformBundle\Entity\PatientListHierarchy" )
+     * @ORM\ManyToOne(targetEntity="App\OrderformBundle\Entity\PatientListHierarchy" )
      **/
     private $patientList;
 
@@ -115,7 +115,7 @@ class CalllogSiteParameter
     private $useCache;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Institution")
      */
     private $institution;
 

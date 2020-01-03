@@ -23,7 +23,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Oleg\OrderformBundle\Entity;
+namespace App\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -36,7 +36,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 // *  }
 
 /**
- * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\ResearchRepository")
+ * @ORM\Entity(repositoryClass="App\OrderformBundle\Repository\ResearchRepository")
  * @ORM\Table(name="scan_research")
  */
 class Research
@@ -61,7 +61,7 @@ class Research
 
     //principal as entered by a user. Use a wrapper because research can have multiple PIs
     /**
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\UserWrapper", cascade={"persist","remove"})
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\UserWrapper", cascade={"persist","remove"})
      * @ORM\JoinTable(name="scan_research_userWrapper",
      *      joinColumns={@ORM\JoinColumn(name="research_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="userWrapper_id", referencedColumnName="id")}
@@ -82,7 +82,7 @@ class Research
     private $projectTitle;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\UserWrapper",cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\UserWrapper",cascade={"persist"})
      */
     private $primaryPrincipal;
 
@@ -128,10 +128,10 @@ class Research
     }
 
     /**
-     * @param \Oleg\OrderformBundle\Entity\Slide $slide
+     * @param \App\OrderformBundle\Entity\Slide $slide
      * @return Block
      */
-    public function addSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
+    public function addSlide(\App\OrderformBundle\Entity\Slide $slide)
     {
         if( !$this->slides->contains($slide) ) {
             $slide->setResearch($this);
@@ -144,9 +144,9 @@ class Research
     /**
      * Remove slide
      *
-     * @param \Oleg\OrderformBundle\Entity\Slide $slide
+     * @param \App\OrderformBundle\Entity\Slide $slide
      */
-    public function removeSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
+    public function removeSlide(\App\OrderformBundle\Entity\Slide $slide)
     {
         $this->slides->removeElement($slide);
     }

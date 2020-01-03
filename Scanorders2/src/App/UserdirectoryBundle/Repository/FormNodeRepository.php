@@ -15,12 +15,12 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Repository;
+namespace App\UserdirectoryBundle\Repository;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
-use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
+use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 
 class FormNodeRepository extends TreeRepository {
 

@@ -15,12 +15,12 @@
  *  limitations under the License.
  */
 
-namespace Oleg\FellAppBundle\Form;
+namespace App\FellAppBundle\Form;
 
 
-use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
-use Oleg\FellAppBundle\Form\FellAppGeoLocationType;
-use Oleg\UserdirectoryBundle\Form\GeoLocationType;
+use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
+use App\FellAppBundle\Form\FellAppGeoLocationType;
+use App\UserdirectoryBundle\Form\GeoLocationType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -31,7 +31,7 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 
-use Oleg\UserdirectoryBundle\Entity\Training;
+use App\UserdirectoryBundle\Entity\Training;
 
 class FellAppTrainingType extends AbstractType
 {
@@ -139,7 +139,7 @@ class FellAppTrainingType extends AbstractType
 //            ));
 
 //            $builder->add( 'jobTitle', EntityType::class, array(
-//                'class' => 'OlegUserdirectoryBundle:JobTitleList',
+//                'class' => 'AppUserdirectoryBundle:JobTitleList',
 //                'label'=> "Job or Experience Title:",
 //                'required'=> false,
 //                //'multiple' => true,
@@ -165,7 +165,7 @@ class FellAppTrainingType extends AbstractType
 
         $builder->add('geoLocation', FellAppGeoLocationType::class, array(
             'form_custom_value' => $this->params,
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\GeoLocation',
+            'data_class' => 'App\UserdirectoryBundle\Entity\GeoLocation',
             'label' => false,
             'required' => false
         ));
@@ -175,7 +175,7 @@ class FellAppTrainingType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\Training',
+            'data_class' => 'App\UserdirectoryBundle\Entity\Training',
             'form_custom_value' => null
         ));
     }

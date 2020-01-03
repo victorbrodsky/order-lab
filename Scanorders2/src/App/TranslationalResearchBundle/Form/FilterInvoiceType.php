@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\TranslationalResearchBundle\Form;
+namespace App\TranslationalResearchBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -62,7 +62,7 @@ class FilterInvoiceType extends AbstractType
         ));
 
         $builder->add('submitter', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:User',
+            'class' => 'AppUserdirectoryBundle:User',
             'label' => false,
             'required' => false,
             'multiple' => false,
@@ -79,7 +79,7 @@ class FilterInvoiceType extends AbstractType
         ));
 
         $builder->add('principalInvestigator', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:User',
+            'class' => 'AppUserdirectoryBundle:User',
             'label'=> false,
             'required'=> false,
             'multiple' => false,
@@ -96,7 +96,7 @@ class FilterInvoiceType extends AbstractType
         ));
 
         $builder->add('billingContact', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:User',
+            'class' => 'AppUserdirectoryBundle:User',
             'label'=> false,
             'required'=> false,
             'multiple' => false,
@@ -113,7 +113,7 @@ class FilterInvoiceType extends AbstractType
         ));
 
         $builder->add('salesperson', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:User',
+            'class' => 'AppUserdirectoryBundle:User',
             'label' => false,
             //'disabled' => true,
             'required' => false,

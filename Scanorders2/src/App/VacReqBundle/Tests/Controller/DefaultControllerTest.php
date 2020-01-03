@@ -1,6 +1,6 @@
 <?php
 
-namespace Oleg\VacReqBundle\Tests\Controller;
+namespace App\VacReqBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 

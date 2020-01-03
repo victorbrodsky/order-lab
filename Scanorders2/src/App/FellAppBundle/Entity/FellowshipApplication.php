@@ -22,12 +22,12 @@
  * Time: 11:08 AM
  */
 
-namespace Oleg\FellAppBundle\Entity;
+namespace App\FellAppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\ArrayCollection;
-use Oleg\UserdirectoryBundle\Entity\BaseUserAttributes;
+use App\UserdirectoryBundle\Entity\BaseUserAttributes;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
 /**
@@ -42,7 +42,7 @@ class FellowshipApplication extends BaseUserAttributes {
     private $googleFormId;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User", inversedBy="fellowshipApplications", cascade={"remove"})
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User", inversedBy="fellowshipApplications", cascade={"remove"})
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      */
     private $user;
@@ -58,19 +58,19 @@ class FellowshipApplication extends BaseUserAttributes {
     private $endDate;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\FellowshipSubspecialty", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\FellowshipSubspecialty", cascade={"persist"})
      */
     private $fellowshipSubspecialty;
 
     /**
      * This should be the link to WCMC's "Department of Pathology and Laboratory Medicine"
      *
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Institution")
      */
     private $institution;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
      * @ORM\JoinTable(name="fellapp_fellApp_coverLetter",
      *      joinColumns={@ORM\JoinColumn(name="fellApp_id", referencedColumnName="id", onDelete="CASCADE")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="coverLetter_id", referencedColumnName="id", onDelete="CASCADE")}
@@ -80,7 +80,7 @@ class FellowshipApplication extends BaseUserAttributes {
     private $coverLetters;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
      * @ORM\JoinTable(name="fellapp_fellApp_cv",
      *      joinColumns={@ORM\JoinColumn(name="fellApp_id", referencedColumnName="id", onDelete="CASCADE")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="cv_id", referencedColumnName="id", onDelete="CASCADE")}
@@ -97,7 +97,7 @@ class FellowshipApplication extends BaseUserAttributes {
     private $reprimand;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
      * @ORM\JoinTable(name="fellapp_fellApp_reprimandDocument",
      *      joinColumns={@ORM\JoinColumn(name="fellApp_id", referencedColumnName="id", onDelete="CASCADE")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="reprimandDocument_id", referencedColumnName="id", onDelete="CASCADE")}
@@ -113,7 +113,7 @@ class FellowshipApplication extends BaseUserAttributes {
     private $lawsuit;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
      * @ORM\JoinTable(name="fellapp_fellApp_lawsuitDocument",
      *      joinColumns={@ORM\JoinColumn(name="fellApp_id", referencedColumnName="id", onDelete="CASCADE")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="lawsuitDocument_id", referencedColumnName="id", onDelete="CASCADE")}
@@ -178,7 +178,7 @@ class FellowshipApplication extends BaseUserAttributes {
 
 
     /**
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
      * @ORM\JoinTable(name="fellapp_fellApp_report",
      *      joinColumns={@ORM\JoinColumn(name="fellApp_id", referencedColumnName="id", onDelete="CASCADE")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")}
@@ -188,7 +188,7 @@ class FellowshipApplication extends BaseUserAttributes {
     private $reports;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
      * @ORM\JoinTable(name="fellapp_fellApp_formReport",
      *      joinColumns={@ORM\JoinColumn(name="fellApp_id", referencedColumnName="id", onDelete="CASCADE")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="formReport_id", referencedColumnName="id", onDelete="CASCADE")}
@@ -198,7 +198,7 @@ class FellowshipApplication extends BaseUserAttributes {
     private $formReports;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
      * @ORM\JoinTable(name="fellapp_fellApp_oldReport",
      *      joinColumns={@ORM\JoinColumn(name="fellApp_id", referencedColumnName="id", onDelete="CASCADE")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="oldReport_id", referencedColumnName="id", onDelete="CASCADE")}
@@ -210,7 +210,7 @@ class FellowshipApplication extends BaseUserAttributes {
     /**
      * Other Documents
      *
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
      * @ORM\JoinTable(name="fellapp_fellApp_document",
      *      joinColumns={@ORM\JoinColumn(name="fellApp_id", referencedColumnName="id", onDelete="CASCADE")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE")}
@@ -222,7 +222,7 @@ class FellowshipApplication extends BaseUserAttributes {
     /**
      * Itinerarys
      *
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
      * @ORM\JoinTable(name="fellapp_fellApp_itinerary",
      *      joinColumns={@ORM\JoinColumn(name="fellApp_id", referencedColumnName="id", onDelete="CASCADE")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="itinerary_id", referencedColumnName="id", onDelete="CASCADE")}
@@ -242,7 +242,7 @@ class FellowshipApplication extends BaseUserAttributes {
     private $interviews;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\User")
      * @ORM\JoinTable(name="fellapp_fellApp_observer",
      *      joinColumns={@ORM\JoinColumn(name="fellApp_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="observer_id", referencedColumnName="id")}
@@ -270,7 +270,7 @@ class FellowshipApplication extends BaseUserAttributes {
     /**
      * Other Documents
      *
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
      * @ORM\JoinTable(name="fellapp_fellApp_avatar",
      *      joinColumns={@ORM\JoinColumn(name="fellApp_id", referencedColumnName="id", onDelete="CASCADE")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="avatar_id", referencedColumnName="id", onDelete="CASCADE")}
@@ -282,7 +282,7 @@ class FellowshipApplication extends BaseUserAttributes {
     /**
      * //"completionDate" = "DESC", "orderinlist" = "ASC"
      *
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Training", cascade={"persist","remove"})
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Training", cascade={"persist","remove"})
      * @ORM\JoinTable(name="fellapp_fellowshipApplication_training",
      *      joinColumns={@ORM\JoinColumn(name="fellowshipApplication_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="training_id", referencedColumnName="id")}
@@ -292,7 +292,7 @@ class FellowshipApplication extends BaseUserAttributes {
     private $trainings;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Examination", cascade={"persist","remove"})
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Examination", cascade={"persist","remove"})
      * @ORM\JoinTable(name="fellapp_fellowshipApplication_examination",
      *      joinColumns={@ORM\JoinColumn(name="fellowshipApplication_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="examination_id", referencedColumnName="id")}
@@ -301,7 +301,7 @@ class FellowshipApplication extends BaseUserAttributes {
     private $examinations;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Location", cascade={"persist","remove"})
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Location", cascade={"persist","remove"})
      * @ORM\JoinTable(name="fellapp_fellowshipApplication_location",
      *      joinColumns={@ORM\JoinColumn(name="fellowshipApplication_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="location_id", referencedColumnName="id")}
@@ -310,7 +310,7 @@ class FellowshipApplication extends BaseUserAttributes {
     private $locations;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Citizenship", cascade={"persist","remove"})
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Citizenship", cascade={"persist","remove"})
      * @ORM\JoinTable(name="fellapp_fellowshipApplication_citizenship",
      *      joinColumns={@ORM\JoinColumn(name="fellowshipApplication_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="citizenship_id", referencedColumnName="id")}
@@ -319,7 +319,7 @@ class FellowshipApplication extends BaseUserAttributes {
     private $citizenships;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\StateLicense", cascade={"persist","remove"})
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\StateLicense", cascade={"persist","remove"})
      * @ORM\JoinTable(name="fellapp_fellowshipApplication_stateLicense",
      *      joinColumns={@ORM\JoinColumn(name="fellowshipApplication_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="stateLicense_id", referencedColumnName="id")}
@@ -328,7 +328,7 @@ class FellowshipApplication extends BaseUserAttributes {
     private $stateLicenses;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\BoardCertification", cascade={"persist","remove"})
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\BoardCertification", cascade={"persist","remove"})
      * @ORM\JoinTable(name="fellapp_fellowshipApplication_boardCertification",
      *      joinColumns={@ORM\JoinColumn(name="fellowshipApplication_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="boardCertification_id", referencedColumnName="id")}

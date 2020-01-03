@@ -22,7 +22,7 @@
  * Time: 4:33 PM
  */
 
-namespace Oleg\TranslationalResearchBundle\Entity;
+namespace App\TranslationalResearchBundle\Entity;
 
 
 use Doctrine\ORM\Mapping as ORM;
@@ -45,31 +45,31 @@ class ReviewBase
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(name="reviewer", referencedColumnName="id")
      */
     protected $reviewer;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(name="reviewerDelegate", referencedColumnName="id", nullable=true)
      */
     protected $reviewerDelegate;
 
 //    /**
-//     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+//     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
 //     * @ORM\JoinColumn(name="reviewerAdmin", referencedColumnName="id", nullable=true)
 //     */
 //    protected $reviewerAdmin;
 
 //    /**
-//     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+//     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
 //     * @ORM\JoinColumn(name="reviewerPrimary", referencedColumnName="id", nullable=true)
 //     */
 //    protected $reviewerPrimary;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(name="reviewedBy", referencedColumnName="id", nullable=true)
      */
     protected $reviewedBy;

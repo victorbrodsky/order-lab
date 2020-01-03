@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Controller;
+namespace App\OrderformBundle\Controller;
 
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,19 +24,19 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-use Oleg\OrderformBundle\Entity\Message;
-use Oleg\OrderformBundle\Form\MessageType;
-use Oleg\OrderformBundle\Entity\Imaging;
-use Oleg\OrderformBundle\Form\ImagingType;
+use App\OrderformBundle\Entity\Message;
+use App\OrderformBundle\Form\MessageType;
+use App\OrderformBundle\Entity\Imaging;
+use App\OrderformBundle\Form\ImagingType;
 
-use Oleg\OrderformBundle\Helper\FormHelper;
-use Oleg\OrderformBundle\Entity\Block;
-//use Oleg\OrderformBundle\Form\BlockType;
+use App\OrderformBundle\Helper\FormHelper;
+use App\OrderformBundle\Entity\Block;
+//use App\OrderformBundle\Form\BlockType;
 
-use Oleg\OrderformBundle\Entity\Part;
-use Oleg\OrderformBundle\Form\PartType;
+use App\OrderformBundle\Entity\Part;
+use App\OrderformBundle\Form\PartType;
 
-use Oleg\OrderformBundle\Entity\Patient;
+use App\OrderformBundle\Entity\Patient;
 
 /**
  * Message controller.
@@ -56,7 +56,7 @@ class MessageController extends Controller {
         $em = $this->getDoctrine()->getManager();
         
         //findAll();
-        $entities = $em->getRepository('OlegOrderformBundle:Message')->
+        $entities = $em->getRepository('AppOrderformBundle:Message')->
                     findBy(array(), array('orderdate'=>'desc')); 
         
 //        echo "count=".count($entities);     
@@ -82,7 +82,7 @@ class MessageController extends Controller {
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegOrderformBundle:Message')->find($id);
+        $entity = $em->getRepository('AppOrderformBundle:Message')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Message entity.');
@@ -122,7 +122,7 @@ class MessageController extends Controller {
      *
      * @Route("/", name="message_create")
      * @Method("POST")
-     * @Template("OlegOrderformBundle:Message:new_orig.html.twig")
+     * @Template("AppOrderformBundle:Message:new_orig.html.twig")
      */
     public function createAction(Request $request)
     {       
@@ -171,7 +171,7 @@ class MessageController extends Controller {
      *
      * @Route("/new", name="message_new")
      * @Method("GET")
-     * @Template("OlegOrderformBundle:Message:new_orig.html.twig")
+     * @Template("AppOrderformBundle:Message:new_orig.html.twig")
      */
     public function newAction()
     {         
@@ -204,7 +204,7 @@ class MessageController extends Controller {
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegOrderformBundle:Message')->find($id);
+        $entity = $em->getRepository('AppOrderformBundle:Message')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Message entity.');
@@ -225,13 +225,13 @@ class MessageController extends Controller {
      *
      * @Route("/{id}", name="message_update")
      * @Method("PUT")
-     * @Template("OlegOrderformBundle:Message:edit.html.twig")
+     * @Template("AppOrderformBundle:Message:edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegOrderformBundle:Message')->find($id);
+        $entity = $em->getRepository('AppOrderformBundle:Message')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Message entity.');
@@ -267,7 +267,7 @@ class MessageController extends Controller {
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('OlegOrderformBundle:Message')->find($id);
+            $entity = $em->getRepository('AppOrderformBundle:Message')->find($id);
 
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find Message entity.');

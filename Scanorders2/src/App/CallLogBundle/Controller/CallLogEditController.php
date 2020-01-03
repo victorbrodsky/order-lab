@@ -15,14 +15,14 @@
  *  limitations under the License.
  */
 
-namespace Oleg\CallLogBundle\Controller;
+namespace App\CallLogBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Oleg\OrderformBundle\Entity\EncounterAttendingPhysician;
-use Oleg\OrderformBundle\Entity\EncounterReferringProvider;
-use Oleg\UserdirectoryBundle\Entity\ModifierInfo;
-use Oleg\UserdirectoryBundle\Entity\Spot;
-use Oleg\UserdirectoryBundle\Entity\Tracker;
+use App\OrderformBundle\Entity\EncounterAttendingPhysician;
+use App\OrderformBundle\Entity\EncounterReferringProvider;
+use App\UserdirectoryBundle\Entity\ModifierInfo;
+use App\UserdirectoryBundle\Entity\Spot;
+use App\UserdirectoryBundle\Entity\Tracker;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -38,7 +38,7 @@ class CallLogEditController extends CallEntryController
 
     /**
      * @Route("/delete/{messageOid}/{messageVersion}", name="calllog_delete")
-     * @Template("OlegUserdirectoryBundle:Default:about.html.twig")
+     * @Template("AppUserdirectoryBundle:Default:about.html.twig")
      * @Method("GET")
      */
     public function deleteMessageAction(Request $request, $messageOid, $messageVersion)
@@ -55,7 +55,7 @@ class CallLogEditController extends CallEntryController
         //$calllogUtil = $this->get('calllog_util');
         $em = $this->getDoctrine()->getManager();
 
-        $message = $em->getRepository('OlegOrderformBundle:Message')->findByOidAndVersion($messageOid,$messageVersion);
+        $message = $em->getRepository('AppOrderformBundle:Message')->findByOidAndVersion($messageOid,$messageVersion);
         if( !$message ) {
             throw new \Exception( "Message is not found by oid ".$messageOid." and version ".$messageVersion );
         }
@@ -73,7 +73,7 @@ class CallLogEditController extends CallEntryController
 
     /**
      * @Route("/un-delete/{messageOid}/{messageVersion}", name="calllog_undelete")
-     * @Template("OlegUserdirectoryBundle:Default:about.html.twig")
+     * @Template("AppUserdirectoryBundle:Default:about.html.twig")
      * @Method("GET")
      */
     public function unDeleteMessageAction(Request $request, $messageOid, $messageVersion)
@@ -87,7 +87,7 @@ class CallLogEditController extends CallEntryController
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $userSecUtil = $this->get('user_security_utility');
 
-        $message = $em->getRepository('OlegOrderformBundle:Message')->findByOidAndVersion($messageOid,$messageVersion);
+        $message = $em->getRepository('AppOrderformBundle:Message')->findByOidAndVersion($messageOid,$messageVersion);
         if( !$message ) {
             throw new \Exception( "Message is not found by oid ".$messageOid." and version ".$messageVersion );
         }
@@ -140,7 +140,7 @@ class CallLogEditController extends CallEntryController
             $message->setMessageStatusPrior($message->getMessageStatus());
         }
 
-        $messageStatus = $em->getRepository('OlegOrderformBundle:MessageStatusList')->findOneByName("Deleted");
+        $messageStatus = $em->getRepository('AppOrderformBundle:MessageStatusList')->findOneByName("Deleted");
         if( !$messageStatus ) {
             throw new \Exception( "Message Status is not found by name '"."Deleted"."'" );
         }
@@ -177,7 +177,7 @@ class CallLogEditController extends CallEntryController
      * @Route("/entry/edit-latest-encounter/{messageOid}/{messageVersion}", name="calllog_callentry_edit_latest_encounter")
      * @Route("/entry/amend-latest-encounter/{messageOid}/{messageVersion}", name="calllog_callentry_amend_latest_encounter")
      * @Method("GET")
-     * @Template("OlegCallLogBundle:CallLog:call-entry-edit.html.twig")
+     * @Template("AppCallLogBundle:CallLog:call-entry-edit.html.twig")
      */
     public function getCallLogEntryAction(Request $request, $messageOid, $messageVersion=null)
     {
@@ -214,11 +214,11 @@ class CallLogEditController extends CallEntryController
         //$messageId = 142; //154; //testing
 
         if( !is_numeric($messageVersion) || !$messageVersion ) {
-            $messageLatest = $em->getRepository('OlegOrderformBundle:Message')->findByOidAndVersion($messageOid);
+            $messageLatest = $em->getRepository('AppOrderformBundle:Message')->findByOidAndVersion($messageOid);
 
             if( !$messageLatest && !$messageVersion ) {
                 //handle case with th real DB id: http://localhost/order/call-log-book/entry/view/267
-                $messageLatest = $em->getRepository('OlegOrderformBundle:Message')->find($messageOid);
+                $messageLatest = $em->getRepository('AppOrderformBundle:Message')->find($messageOid);
             }
 
             if( $messageLatest ) {
@@ -231,7 +231,7 @@ class CallLogEditController extends CallEntryController
             throw new \Exception( "Latest Message is not found by oid ".$messageOid );
         }
 
-        $message = $em->getRepository('OlegOrderformBundle:Message')->findByOidAndVersion($messageOid,$messageVersion);
+        $message = $em->getRepository('AppOrderformBundle:Message')->findByOidAndVersion($messageOid,$messageVersion);
         if( !$message ) {
             throw new \Exception( "Message is not found by oid ".$messageOid." and version ".$messageVersion );
         }
@@ -241,7 +241,7 @@ class CallLogEditController extends CallEntryController
         if( strpos($route, "_latest_encounter") !== false ) {
             $encounter = $message->getEncounter()->first();
             if( !$calllogUtil->isLatestEncounterVersion($encounter) ) {
-                $latestEncounter = $em->getRepository('OlegOrderformBundle:Encounter')->findLatestVersionEncounter($encounter);
+                $latestEncounter = $em->getRepository('AppOrderformBundle:Encounter')->findLatestVersionEncounter($encounter);
                 if( $latestEncounter ) {
                     //echo "Original id=".$encounter->getId()."; version=".$encounter->getVersion()." => latestEncounter: id=".$latestEncounter->getId()."; version=".$latestEncounter->getVersion()."<br>";
                     //clear encounter
@@ -335,7 +335,7 @@ class CallLogEditController extends CallEntryController
         if( !$existingEncounter->getTracker() ) {
 //            $withdummyfields = true;
 //            //$locationTypePrimary = null;
-//            $encounterLocationType = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Encounter Location");
+//            $encounterLocationType = $em->getRepository('AppUserdirectoryBundle:LocationTypeList')->findOneByName("Encounter Location");
 //            if (!$encounterLocationType) {
 //                throw new \Exception('Location type is not found by name Encounter Location');
 //            }
@@ -372,19 +372,19 @@ class CallLogEditController extends CallEntryController
         //TODO: get buy default values in site settings
         $formnodeTopHolderId = null;
         //$categoryStr = "Pathology Call Log Entry";
-        //$messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($categoryStr);
+        //$messageCategory = $em->getRepository('AppOrderformBundle:MessageCategory')->findOneByName($categoryStr);
         $messageCategory = $calllogUtil->getDefaultMessageCategory();
         if( $messageCategory ) {
             $formnodeTopHolderId = $messageCategory->getId();
         }
 
         //View Previous Version(s)
-        $allMessages = $em->getRepository('OlegOrderformBundle:Message')->findAllMessagesByOid($messageOid); //$messageVersion=null => all messages ordered by latest version first
+        $allMessages = $em->getRepository('AppOrderformBundle:Message')->findAllMessagesByOid($messageOid); //$messageVersion=null => all messages ordered by latest version first
 
         //find current (latest) message status
         $latestMessageStatus = null;
         $latestMessageLabel = null;
-        $latestMessage = $em->getRepository('OlegOrderformBundle:Message')->findLatestMessageByOid(null,$allMessages);
+        $latestMessage = $em->getRepository('AppOrderformBundle:Message')->findLatestMessageByOid(null,$allMessages);
         $latestNextMessageVersion = intval($latestMessage->getVersion()) + 1;
         //echo "latestNextMessageVersion=".$latestNextMessageVersion."<br>";
         if( $latestMessage && intval($messageVersion) != intval($latestMessage->getVersion()) ) {
@@ -400,7 +400,7 @@ class CallLogEditController extends CallEntryController
             UrlGeneratorInterface::ABSOLUTE_URL // This guy right here
         );
 
-        $maxEncounterVersion = $em->getRepository('OlegOrderformBundle:Encounter')->getMaxEncounterVersion($existingEncounter);
+        $maxEncounterVersion = $em->getRepository('AppOrderformBundle:Encounter')->getMaxEncounterVersion($existingEncounter);
         $latestNextEncounterVersion = intval($maxEncounterVersion) + 1;
 
         //Event Log - User accessing “Edit Entry” page should be added to the event log as an event for that object/note (Event Type “Entry Edit Accessed”)
@@ -443,7 +443,7 @@ class CallLogEditController extends CallEntryController
     /**
      * Save/Update Call Log Entry
      * @Route("/entry/update/{messageId}/{cycle}", name="calllog_update_entry", options={"expose"=true})
-     * @Template("OlegCallLogBundle:CallLog:call-entry-edit.html.twig")
+     * @Template("AppCallLogBundle:CallLog:call-entry-edit.html.twig")
      * @Method("POST")
      */
     public function updateEntryAction(Request $request, $messageId, $cycle)
@@ -476,7 +476,7 @@ class CallLogEditController extends CallEntryController
             return $this->redirect( $this->generateUrl('calllog_home') );
         }
 
-        $originalMessage = $em->getRepository('OlegOrderformBundle:Message')->find($messageId);
+        $originalMessage = $em->getRepository('AppOrderformBundle:Message')->find($messageId);
         if (!$originalMessage) {
             throw new \Exception('Original Message not found by ID ' . $messageId);
         }
@@ -566,7 +566,7 @@ class CallLogEditController extends CallEntryController
                 //echo "2document: ID=".$document->getId()."; Size==".$document->getSizeStr()."; abspath=".$document->getAbsoluteUploadFullPath()."<br>";
                 $documentId = $document->getId();
                 if( $documentId ) {
-                    $documentEntity = $em->getRepository('OlegUserdirectoryBundle:Document')->find($documentId);
+                    $documentEntity = $em->getRepository('AppUserdirectoryBundle:Document')->find($documentId);
                     //echo "documentEntity: ID=".$documentEntity->getId()."; Size=".$documentEntity->getSizeStr()."; abspath=".$documentEntity->getAbsoluteUploadFullPath()."<br>";
                     if( $documentEntity ) {
                         //Create a new document (clone)
@@ -608,7 +608,7 @@ class CallLogEditController extends CallEntryController
             //////////// EOF Find and Add document by ID. The documents will be shared between original and amended calllog entries. //////////////
 
             //process Attached Documents
-            //$em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($message->getCalllogEntryMessage()); //save update
+            //$em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($message->getCalllogEntryMessage()); //save update
 
 //            $documents = $calllogEntryMessage->getDocuments();
 //            echo "3documents count=".count($documents)."<br>";
@@ -631,7 +631,7 @@ class CallLogEditController extends CallEntryController
                 //assign generated encounter number ID
                 //$key = $newEncounter->obtainAllKeyfield()->first();
                 //echo $newEncounter->getId().": key=".$key."<br>";
-                //$em->getRepository('OlegOrderformBundle:Encounter')->setEncounterKey($key, $newEncounter, $user);
+                //$em->getRepository('AppOrderformBundle:Encounter')->setEncounterKey($key, $newEncounter, $user);
 
                 //increment encounter version for current encounter (keep status valid for all encounters, use version instead of status)
                 $calllogUtil->incrementVersionEncounterFamily($newEncounter);
@@ -682,7 +682,7 @@ class CallLogEditController extends CallEntryController
                 $buttonStatusForm = $data['messageStatusJs'];
                 //echo "buttonStatusForm=".$buttonStatusForm."<br>";
                 if( $buttonStatusForm ) {
-                    $buttonStatusObj = $em->getRepository('OlegOrderformBundle:MessageStatusList')->findOneByName($buttonStatusForm);
+                    $buttonStatusObj = $em->getRepository('AppOrderformBundle:MessageStatusList')->findOneByName($buttonStatusForm);
                     if( $buttonStatusObj ) {
 
                         //if "Signed" set signed User, datetime, roles by signeeInfo
@@ -727,7 +727,7 @@ class CallLogEditController extends CallEntryController
                 //set OID from original message
                 $message->setOid($originalMessage->getOid());
                 //increment version: latest message + 1
-                $latestMessage = $em->getRepository('OlegOrderformBundle:Message')->findLatestMessageByOid($originalMessage->getOid());
+                $latestMessage = $em->getRepository('AppOrderformBundle:Message')->findLatestMessageByOid($originalMessage->getOid());
                 $incrementedVersion = intval($latestMessage->getVersion()) + 1;
                 //echo "incrementedVersion=".$incrementedVersion."<br>";
                 $message->setVersion($incrementedVersion);
@@ -751,7 +751,7 @@ class CallLogEditController extends CallEntryController
                     //                    echo "encounter referringProvider phone=".$referringProvider->getReferringProviderPhone()."<br>";
                     //                }
 
-                    $patient = $em->getRepository('OlegOrderformBundle:Patient')->find($patient->getId());
+                    $patient = $em->getRepository('AppOrderformBundle:Patient')->find($patient->getId());
                     $message->clearPatient();
                     $message->addPatient($patient);
 
@@ -778,7 +778,7 @@ class CallLogEditController extends CallEntryController
                 } else {
                     //CASE 2
                     echo "case 2: patient does not exists: create a new encounter to DB <br>";
-                    //oleg_calllogbundle_patienttype[encounter][0][referringProviders][0][referringProviderPhone]
+                    //app_calllogbundle_patienttype[encounter][0][referringProviders][0][referringProviderPhone]
 
                     $newEncounter->setPatient(null);
 
@@ -817,7 +817,7 @@ class CallLogEditController extends CallEntryController
 //                //set OID from original message
 //                $message->setOid($originalMessage->getOid());
 //                //increment version: latest message + 1
-//                $latestMessage = $em->getRepository('OlegOrderformBundle:Message')->findLatestMessageByOid($messageId);
+//                $latestMessage = $em->getRepository('AppOrderformBundle:Message')->findLatestMessageByOid($messageId);
 //                $incrementedVersion = intval($latestMessage->getVersion()) + 1;
 //                echo "incrementedVersion=".$incrementedVersion."<br>";
 //                $message->setVersion($incrementedVersion);
@@ -867,7 +867,7 @@ class CallLogEditController extends CallEntryController
             }//if $newEncounter
 
             //process Attached Documents
-            //$em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($message->getCalllogEntryMessage()); //save update
+            //$em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($message->getCalllogEntryMessage()); //save update
 
             //TODO: save call log entry short info to setShortInfo($shortInfo)
             //$calllogUtil->updateMessageShortInfo($message);
@@ -938,7 +938,7 @@ class CallLogEditController extends CallEntryController
         $encounterVersionOk = true;
         $result = "Not OK";
 
-        $message = $em->getRepository('OlegOrderformBundle:Message')->find($messageId);
+        $message = $em->getRepository('AppOrderformBundle:Message')->find($messageId);
         if( !$message ) {
             throw new \Exception( "Message is not found by id ".$messageId );
         }

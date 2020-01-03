@@ -15,13 +15,13 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Repository;
+namespace App\OrderformBundle\Repository;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
 
-use Oleg\OrderformBundle\Entity\Slide;
-use Oleg\OrderformBundle\Entity\History;
+use App\OrderformBundle\Entity\Slide;
+use App\OrderformBundle\Entity\History;
 
 /**
  * MessageRepository
@@ -50,7 +50,7 @@ class MessageRepository extends ArrayFieldAbstractRepository {
         $entity = $this->replaceDuplicateEntities( $entity, $entity );
 
         if( $type && !$entity->getMessageCategory() ) {
-            $category = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName( $type );
+            $category = $em->getRepository('AppOrderformBundle:MessageCategory')->findOneByName( $type );
             $entity->setMessageCategory($category);
         }
 
@@ -69,8 +69,8 @@ class MessageRepository extends ArrayFieldAbstractRepository {
         }
 
         //********** take care of educational and research director and principal investigator ***********//
-        $entity = $em->getRepository('OlegOrderformBundle:Educational')->processEntity( $entity, $this->user );
-        $entity = $em->getRepository('OlegOrderformBundle:Research')->processEntity( $entity, $this->user );
+        $entity = $em->getRepository('AppOrderformBundle:Educational')->processEntity( $entity, $this->user );
+        $entity = $em->getRepository('AppOrderformBundle:Research')->processEntity( $entity, $this->user );
         //********** end of educational and research processing ***********//
 
         //return $this->setMessageResultTopToBottom( $entity );
@@ -98,10 +98,10 @@ class MessageRepository extends ArrayFieldAbstractRepository {
             //echo "<br>###################### Process Slide:".$slide;
 
             //set correct accession in case of accession-mrn conflict
-            $em->getRepository('OlegOrderformBundle:Accession')->setCorrectAccessionIfConflict( $slide, $entity );
+            $em->getRepository('AppOrderformBundle:Accession')->setCorrectAccessionIfConflict( $slide, $entity );
 
             //process slide
-            $slide = $em->getRepository('OlegOrderformBundle:Slide')->processEntity( $slide, $entity );
+            $slide = $em->getRepository('AppOrderformBundle:Slide')->processEntity( $slide, $entity );
 
             //set block and part names if not set (block and part name auto generation requires accession number to be set)
             $this->postProcessing($entity);
@@ -121,7 +121,7 @@ class MessageRepository extends ArrayFieldAbstractRepository {
             $originalId = $entity->getOid();
 
             //find existing order in db
-            $originalOrder = $em->getRepository('OlegOrderformBundle:Message')->findOneByOid($originalId);
+            $originalOrder = $em->getRepository('AppOrderformBundle:Message')->findOneByOid($originalId);
             $originalOrderdate = $originalOrder->getOrderdate();
             $originalProvider = $originalOrder->getProvider();
 
@@ -199,7 +199,7 @@ class MessageRepository extends ArrayFieldAbstractRepository {
 //            //echo "insert oid <br>";
 //            $entity->setOid($entity->getId());
 //
-//            //if clear is used above => doctrine error: A new entity was found through the relationship 'Oleg\OrderformBundle\Entity\Message#patient' that was not configured to cascade persist operations
+//            //if clear is used above => doctrine error: A new entity was found through the relationship 'App\OrderformBundle\Entity\Message#patient' that was not configured to cascade persist operations
 //            //it is happened because all objects are not persisted anymore.
 //            $em->flush();
 //        }
@@ -212,7 +212,7 @@ class MessageRepository extends ArrayFieldAbstractRepository {
 
             $newId = $entity->getId();
 
-            $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneById($this->user->getId());
+            $user = $em->getRepository('AppUserdirectoryBundle:User')->findOneById($this->user->getId());
 
             //clone message object by id
             $orderUtil = $this->container->get('scanorder_utility');
@@ -232,8 +232,8 @@ class MessageRepository extends ArrayFieldAbstractRepository {
 
         //*********** record history ***********//
         //echo "before find entity=".$entity."<br>";
-        $entity = $em->getRepository('OlegOrderformBundle:Message')->findOneByOid($entity->getOid());
-        $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneById($this->user->getId());
+        $entity = $em->getRepository('AppOrderformBundle:Message')->findOneByOid($entity->getOid());
+        $user = $em->getRepository('AppUserdirectoryBundle:User')->findOneById($this->user->getId());
         $history = new History();
         $history->setMessage($entity);
         $history->setCurrentid($entity->getOid());
@@ -244,7 +244,7 @@ class MessageRepository extends ArrayFieldAbstractRepository {
 
         //record history
         if( $originalStatus == 'Amended' ) {
-            $eventtype = $em->getRepository('OlegOrderformBundle:ProgressCommentsEventTypeList')->findOneByName('Amended Order Submission');
+            $eventtype = $em->getRepository('AppOrderformBundle:ProgressCommentsEventTypeList')->findOneByName('Amended Order Submission');
             $history->setEventtype($eventtype);
             //get url link
             $supersedeId = $entity->getId(); //use id because superseded order and amended order have swaped ids
@@ -257,10 +257,10 @@ class MessageRepository extends ArrayFieldAbstractRepository {
             $systemUser = $userSecUtil->findSystemUser();
             $history->setProvider( $systemUser );
             $history->setNote('Auto-Saved Draft; Submit this order to Process');
-            $eventtype = $em->getRepository('OlegOrderformBundle:ProgressCommentsEventTypeList')->findOneByName('Auto-saved at the time of auto-logout');
+            $eventtype = $em->getRepository('AppOrderformBundle:ProgressCommentsEventTypeList')->findOneByName('Auto-saved at the time of auto-logout');
             $history->setEventtype($eventtype);
         } else {
-            $eventtype = $em->getRepository('OlegOrderformBundle:ProgressCommentsEventTypeList')->findOneByName('Initial Order Submission');
+            $eventtype = $em->getRepository('AppOrderformBundle:ProgressCommentsEventTypeList')->findOneByName('Initial Order Submission');
             $history->setEventtype($eventtype);
             //$history->setChangedate($entity->getOrderdate());
         }
@@ -341,7 +341,7 @@ class MessageRepository extends ArrayFieldAbstractRepository {
         $message = null;
         $parameters = array();
 
-        $repository = $this->_em->getRepository('OlegOrderformBundle:Message');
+        $repository = $this->_em->getRepository('AppOrderformBundle:Message');
         $dql = $repository->createQueryBuilder("message");
 
         $dql->where("message.oid = :oid");
@@ -369,7 +369,7 @@ class MessageRepository extends ArrayFieldAbstractRepository {
         $message = null;
         $parameters = array();
 
-        $repository = $this->_em->getRepository('OlegOrderformBundle:Message');
+        $repository = $this->_em->getRepository('AppOrderformBundle:Message');
         $dql = $repository->createQueryBuilder("message");
 
         $dql->where("message.oid = :oid");
@@ -411,7 +411,7 @@ class MessageRepository extends ArrayFieldAbstractRepository {
     public function findByOidAndStatus( $oid, $statusName="Signed" ) {
         $parameters = array();
 
-        $repository = $this->_em->getRepository('OlegOrderformBundle:Message');
+        $repository = $this->_em->getRepository('AppOrderformBundle:Message');
         $dql = $repository->createQueryBuilder("message");
 
         $dql->where("message.oid = :oid");
@@ -434,7 +434,7 @@ class MessageRepository extends ArrayFieldAbstractRepository {
     //get max message version using oid
     public function getMaxMessageVersion( $message ) {
 
-        $repository = $this->_em->getRepository('OlegOrderformBundle:Message');
+        $repository = $this->_em->getRepository('AppOrderformBundle:Message');
         $dql = $repository->createQueryBuilder("message");
         $dql->select("MAX(message.version) as maxVersion");
 

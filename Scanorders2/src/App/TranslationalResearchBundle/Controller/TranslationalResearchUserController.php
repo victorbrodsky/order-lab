@@ -15,9 +15,9 @@
  *  limitations under the License.
  */
 
-namespace Oleg\TranslationalResearchBundle\Controller;
+namespace App\TranslationalResearchBundle\Controller;
 
-use Oleg\UserdirectoryBundle\Controller\UserController;
+use App\UserdirectoryBundle\Controller\UserController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -30,7 +30,7 @@ class TranslationalResearchUserController extends UserController
      * Optimized show user
      * @Route("/user/{id}", name="translationalresearch_showuser", requirements={"id" = "\d+"}, options={"expose"=true})
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:Profile:show_user.html.twig")
+     * @Template("AppUserdirectoryBundle:Profile:show_user.html.twig")
      */
     public function showUserOptimizedAction( Request $request, $id ) {
         //exit("sitename=".$this->container->getParameter('translationalresearch.sitename')); //result:translationalresearch
@@ -41,7 +41,7 @@ class TranslationalResearchUserController extends UserController
     /**
      * @Route("/edit-user-profile/{id}", name="translationalresearch_user_edit", requirements={"id" = "\d+"})
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:Profile:edit_user.html.twig")
+     * @Template("AppUserdirectoryBundle:Profile:edit_user.html.twig")
      */
     public function editUserAction(Request $request, $id)
     {
@@ -62,7 +62,7 @@ class TranslationalResearchUserController extends UserController
     /**
      * @Route("/edit-user-profile/{id}", name="translationalresearch_user_update")
      * @Method("PUT")
-     * @Template("OlegUserdirectoryBundle:Profile:edit_user.html.twig")
+     * @Template("AppUserdirectoryBundle:Profile:edit_user.html.twig")
      */
     public function updateUserAction(Request $request, $id)
     {

@@ -22,7 +22,7 @@
  * Time: 12:34 PM
  */
 
-namespace Oleg\FellAppBundle\Entity;
+namespace App\FellAppBundle\Entity;
 
 
 use Doctrine\ORM\Mapping as ORM;
@@ -54,7 +54,7 @@ class Interview {
 
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(name="interviewer_id", referencedColumnName="id", nullable=true)
      */
     private $interviewer;
@@ -111,7 +111,7 @@ class Interview {
     private $languageProficiency;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Location")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Location")
      * @ORM\JoinColumn(name="location_id", referencedColumnName="id", nullable=true)
      */
     private $location;

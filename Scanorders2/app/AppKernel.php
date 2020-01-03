@@ -64,13 +64,13 @@ class AppKernel extends Kernel
             //password encoder
             //new Usu\ScryptPasswordEncoderBundle\UsuScryptPasswordEncoderBundle(),
             //new Acme\DemoBundle\AcmeDemoBundle(),
-            new Oleg\UserdirectoryBundle\OlegUserdirectoryBundle(),
-            new Oleg\OrderformBundle\OlegOrderformBundle(),
-            new Oleg\FellAppBundle\OlegFellAppBundle(),
-            new Oleg\DeidentifierBundle\OlegDeidentifierBundle(),
-            new Oleg\VacReqBundle\OlegVacReqBundle(),
-            new Oleg\CallLogBundle\OlegCallLogBundle(),
-            new Oleg\TranslationalResearchBundle\OlegTranslationalResearchBundle(),
+            new App\UserdirectoryBundle\AppUserdirectoryBundle(),
+            new App\OrderformBundle\AppOrderformBundle(),
+            new App\FellAppBundle\AppFellAppBundle(),
+            new App\DeidentifierBundle\AppDeidentifierBundle(),
+            new App\VacReqBundle\AppVacReqBundle(),
+            new App\CallLogBundle\AppCallLogBundle(),
+            new App\TranslationalResearchBundle\AppTranslationalResearchBundle(),
         );
         //$bundles = array();
 

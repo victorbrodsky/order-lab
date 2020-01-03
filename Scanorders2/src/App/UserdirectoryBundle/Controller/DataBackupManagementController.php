@@ -22,7 +22,7 @@
  * Time: 11:23 AM
  */
 
-namespace Oleg\UserdirectoryBundle\Controller;
+namespace App\UserdirectoryBundle\Controller;
 
 
 use Doctrine\DBAL\Configuration;
@@ -47,7 +47,7 @@ class DataBackupManagementController extends Controller
      * https://www.phpclasses.org/package/5761-PHP-Dump-a-Microsoft-SQL-server-database.html#view_files/files/29084
      *
      * @Route("/data-backup-management/", name="employees_data_backup_management")
-     * @Template("OlegUserdirectoryBundle:DataBackup:data_backup_management.html.twig")
+     * @Template("AppUserdirectoryBundle:DataBackup:data_backup_management.html.twig")
      * @Method("GET")
      */
     public function dataBackupManagementAction(Request $request) {
@@ -84,10 +84,10 @@ class DataBackupManagementController extends Controller
 
 
     /**
-     * //@Template("OlegUserdirectoryBundle:DataBackup:create_backup.html.twig")
+     * //@Template("AppUserdirectoryBundle:DataBackup:create_backup.html.twig")
      *
      * @Route("/create-backup/", name="employees_create_backup")
-     * @Template("OlegUserdirectoryBundle:DataBackup:data_backup_management.html.twig")
+     * @Template("AppUserdirectoryBundle:DataBackup:data_backup_management.html.twig")
      * @Method("GET")
      */
     public function createBackupAction(Request $request) {
@@ -146,7 +146,7 @@ class DataBackupManagementController extends Controller
 
     /**
      * @Route("/restore-backup/{backupFilePath}", name="employees_restore_backup", options={"expose"=true})
-     * @Template("OlegUserdirectoryBundle:DataBackup:data_backup_management.html.twig")
+     * @Template("AppUserdirectoryBundle:DataBackup:data_backup_management.html.twig")
      * @Method("GET")
      */
     public function restoreBackupAction( Request $request, $backupFilePath ) {

@@ -33,7 +33,7 @@
 
 {% block navbar %}
 
-    {% set pendingadminreview = render(controller("OlegUserdirectoryBundle:User:pendingAdminReview")) %}
+    {% set pendingadminreview = render(controller("AppUserdirectoryBundle:User:pendingAdminReview")) %}
 
     {% set hasRoleSimpleView = app.user.hasRole('ROLE_USERDIRECTORY_SIMPLEVIEW') %}
 
@@ -61,14 +61,14 @@
 
                 <ul class="nav navbar-nav navbar-left">
 
-                    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+                    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
                     {{ usermacros.siteSwitch() }}
 
                     {% if minimum is not defined %}
 
                         <li id="nav-bar-userhome" class="hidden-xs divider-vertical">
                             <a href="{{ path(employees_sitename~'_home') }}">
-                                <img src="{{ asset('bundles/oleguserdirectory/form/img/users-1-64x64.png') }}" alt="Employee Directory" height="18" width="18">
+                                <img src="{{ asset('bundles/appuserdirectory/form/img/users-1-64x64.png') }}" alt="Employee Directory" height="18" width="18">
                                 Home
                             </a>
                         </li>

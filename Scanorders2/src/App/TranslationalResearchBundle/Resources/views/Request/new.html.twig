@@ -1,9 +1,9 @@
-{% extends "OlegTranslationalResearchBundle::Default/base.html.twig" %}
+{% extends "AppTranslationalResearchBundle::Default/base.html.twig" %}
 
-{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-{% import "OlegTranslationalResearchBundle::Default/transresRequestMacros.html.twig" as transresRequestMacros %}
-{% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
-{% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+{% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% import "AppTranslationalResearchBundle::Default/transresRequestMacros.html.twig" as transresRequestMacros %}
+{% import "AppTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+{% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
 
 {% block title %}
@@ -13,7 +13,7 @@
 
 {% block content %}
 
-    {% set bwipjsSrcpath = "/order/bundles/oleguserdirectory/bwip-js/" %}
+    {% set bwipjsSrcpath = "/order/bundles/appuserdirectory/bwip-js/" %}
     <input type="hidden" id="bwipjs-srcpath" value="{{ bwipjsSrcpath }}" />
 
     {#<input type="hidden" id="formnodetrigger" value="{{ formnodetrigger }}" />#}
@@ -225,21 +225,21 @@
     {% endstylesheets %}
 
     {% stylesheets
-    'bundles/olegtranslationalresearch/form/css/comments.css' filter='cssrewrite'
+    'bundles/apptranslationalresearch/form/css/comments.css' filter='cssrewrite'
     %}
     <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
 
     {% stylesheets
-    'bundles/oleguserdirectory/handsontable-5/dist/handsontable.full.css' filter='cssrewrite'
-    'bundles/olegorderform/form/css/handsontable.css' filter='cssrewrite'
+    'bundles/appuserdirectory/handsontable-5/dist/handsontable.full.css' filter='cssrewrite'
+    'bundles/apporderform/form/css/handsontable.css' filter='cssrewrite'
     %}
     <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
 
     {#{% stylesheets#}
-    {#'bundles/oleguserdirectory/bwip-js/lib/demo.css' filter='cssrewrite'#}
-    {#'bundles/oleguserdirectory/bwip-js/lib/jquery-ui.min.css' filter='cssrewrite'#}
+    {#'bundles/appuserdirectory/bwip-js/lib/demo.css' filter='cssrewrite'#}
+    {#'bundles/appuserdirectory/bwip-js/lib/jquery-ui.min.css' filter='cssrewrite'#}
     {#%}#}
     {#<link rel="stylesheet" href="{{ asset_url }}" />#}
     {#{% endstylesheets %}#}
@@ -249,44 +249,44 @@
 
 {% block additionaljs %}
 
-    {#'@OlegUserdirectoryBundle/Resources/public/bwip-js/lib/jquery.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/lib/jquery.js'#}
 
     {#{% javascripts#}
-    {#'@OlegOrderformBundle/Resources/public/handsontable/jquery.handsontable.full.js'#}
-    {#'@OlegTranslationalResearchBundle/Resources/public/form/js/handsontable.js'#}
-    {#'@OlegUserdirectoryBundle/Resources/public/bwip-js/freetype.js'#}
-    {#'@OlegOrderformBundle/Resources/public/form/js/selectAjax.js'#}
-    {#'@OlegOrderformBundle/Resources/public/form/js/masking.js'#}
-    {#'@OlegTranslationalResearchBundle/Resources/public/form/js/barcode.js'#}
-    {#'@OlegUserdirectoryBundle/Resources/public/qrcode/qrcode.js'#}
-    {#'@OlegUserdirectoryBundle/Resources/public/bwip-js/bwipp.js'#}
-    {#'@OlegUserdirectoryBundle/Resources/public/bwip-js/bwipjs.js'#}
-    {#'@OlegUserdirectoryBundle/Resources/public/bwip-js/lib/jquery-ui.min.js'#}
-    {#'@OlegUserdirectoryBundle/Resources/public/bwip-js/lib/xhr-fonts.js'#}
-    {#'@OlegUserdirectoryBundle/Resources/public/bwip-js/lib/bitmap.js'#}
-    {#'@OlegUserdirectoryBundle/Resources/public/bwip-js/lib/symdesc.js'#}
-    {#'@OlegUserdirectoryBundle/Resources/public/bwip-js/lib/canvas-toblob.js'#}
-    {#'@OlegUserdirectoryBundle/Resources/public/bwip-js/lib/filesaver.js'#}
+    {#'@AppOrderformBundle/Resources/public/handsontable/jquery.handsontable.full.js'#}
+    {#'@AppTranslationalResearchBundle/Resources/public/form/js/handsontable.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/freetype.js'#}
+    {#'@AppOrderformBundle/Resources/public/form/js/selectAjax.js'#}
+    {#'@AppOrderformBundle/Resources/public/form/js/masking.js'#}
+    {#'@AppTranslationalResearchBundle/Resources/public/form/js/barcode.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/qrcode/qrcode.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/bwipp.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/bwipjs.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/lib/jquery-ui.min.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/lib/xhr-fonts.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/lib/bitmap.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/lib/symdesc.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/lib/canvas-toblob.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/lib/filesaver.js'#}
     {#%}#}
     {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
     {#{% endjavascripts %}#}
-    {#'@OlegOrderformBundle/Resources/public/handsontable/jquery.handsontable.full.js'#}
+    {#'@AppOrderformBundle/Resources/public/handsontable/jquery.handsontable.full.js'#}
 
     {% javascripts
-    '@OlegUserdirectoryBundle/Resources/public/handsontable-5/dist/handsontable.full.js'
+    '@AppUserdirectoryBundle/Resources/public/handsontable-5/dist/handsontable.full.js'
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
 
     {% javascripts
-    '@OlegTranslationalResearchBundle/Resources/public/form/js/handsontable.js'
-    '@OlegUserdirectoryBundle/Resources/public/bwip-js/freetype.js'
-    '@OlegOrderformBundle/Resources/public/form/js/selectAjax.js'
-    '@OlegOrderformBundle/Resources/public/form/js/masking.js'
-    '@OlegUserdirectoryBundle/Resources/public/form/js/user-masking.js'
-    '@OlegTranslationalResearchBundle/Resources/public/form/js/barcode.js'
-    '@OlegUserdirectoryBundle/Resources/public/qrcode/qrcode.js'
-    '@OlegUserdirectoryBundle/Resources/public/jquery-qrcode/jquery.qrcode.min.js'
+    '@AppTranslationalResearchBundle/Resources/public/form/js/handsontable.js'
+    '@AppUserdirectoryBundle/Resources/public/bwip-js/freetype.js'
+    '@AppOrderformBundle/Resources/public/form/js/selectAjax.js'
+    '@AppOrderformBundle/Resources/public/form/js/masking.js'
+    '@AppUserdirectoryBundle/Resources/public/form/js/user-masking.js'
+    '@AppTranslationalResearchBundle/Resources/public/form/js/barcode.js'
+    '@AppUserdirectoryBundle/Resources/public/qrcode/qrcode.js'
+    '@AppUserdirectoryBundle/Resources/public/jquery-qrcode/jquery.qrcode.min.js'
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}

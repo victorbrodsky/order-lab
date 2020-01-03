@@ -22,7 +22,7 @@
  * Time: 11:35 AM
  */
 
-namespace Oleg\VacReqBundle\Entity;
+namespace App\VacReqBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -55,19 +55,19 @@ class VacReqRequest
     private $exportId;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
      */
     private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
      */
     private $submitter;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(name="updateAuthor", referencedColumnName="id", nullable=true)
      */
     private $updateUser;
@@ -91,7 +91,7 @@ class VacReqRequest
 
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Institution")
      */
     private $institution;
 
@@ -111,7 +111,7 @@ class VacReqRequest
 
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
      */
     private $approver;
@@ -239,7 +239,7 @@ class VacReqRequest
     private $carryOverDays;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Institution")
      */
     private $tentativeInstitution;
 
@@ -250,7 +250,7 @@ class VacReqRequest
     private $tentativeStatus;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
      */
     private $tentativeApprover;

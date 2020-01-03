@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Controller;
+namespace App\OrderformBundle\Controller;
 
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,10 +24,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Oleg\OrderformBundle\Entity\History;
-use Oleg\OrderformBundle\Form\HistoryType;
-use Oleg\OrderformBundle\Helper\OrderUtil;
-use Oleg\UserdirectoryBundle\Util\UserUtil;
+use App\OrderformBundle\Entity\History;
+use App\OrderformBundle\Form\HistoryType;
+use App\OrderformBundle\Helper\OrderUtil;
+use App\UserdirectoryBundle\Util\UserUtil;
 
 /**
  * History controller.
@@ -51,8 +51,8 @@ class HistoryController extends Controller
 //
 //        $em = $this->getDoctrine()->getManager();
 //
-//        //$entities = $em->getRepository('OlegOrderformBundle:History')->findAll();
-//        $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:History');
+//        //$entities = $em->getRepository('AppOrderformBundle:History')->findAll();
+//        $repository = $this->getDoctrine()->getRepository('AppOrderformBundle:History');
 //        $dql =  $repository->createQueryBuilder("hist");
 //        $dql->innerJoin("hist.message", "message");
 //
@@ -77,7 +77,7 @@ class HistoryController extends Controller
 //        $entities = $query->getResult();
 //
 //        if( count($entities) > 0 ) {
-//            $roles = $em->getRepository('OlegUserdirectoryBundle:Roles')->findAll();
+//            $roles = $em->getRepository('AppUserdirectoryBundle:Roles')->findAll();
 //            $rolesArr = array();
 //            foreach( $roles as $role ) {
 //                $rolesArr[$role->getName()] = $role->getAlias();
@@ -97,7 +97,7 @@ class HistoryController extends Controller
      *
      * @Route("/scan-order/progress-and-comments/new", name="history_create")
      * @Method("POST")
-     * @Template("OlegOrderformBundle:History:new.html.twig")
+     * @Template("AppOrderformBundle:History:new.html.twig")
      */
     public function createAction(Request $request)
     {
@@ -167,7 +167,7 @@ class HistoryController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegOrderformBundle:History')->find($id);
+        $entity = $em->getRepository('AppOrderformBundle:History')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find History entity.');
@@ -198,7 +198,7 @@ class HistoryController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegOrderformBundle:History')->find($id);
+        $entity = $em->getRepository('AppOrderformBundle:History')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find History entity.');
@@ -243,13 +243,13 @@ class HistoryController extends Controller
      *
      * @Route("/scan-order/progress-and-comments/{id}", name="history_update", requirements={"id" = "\d+"})
      * @Method("PUT")
-     * @Template("OlegOrderformBundle:History:edit.html.twig")
+     * @Template("AppOrderformBundle:History:edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegOrderformBundle:History')->find($id);
+        $entity = $em->getRepository('AppOrderformBundle:History')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find History entity.');
@@ -290,7 +290,7 @@ class HistoryController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('OlegOrderformBundle:History')->find($id);
+            $entity = $em->getRepository('AppOrderformBundle:History')->find($id);
 
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find History entity.');
@@ -329,7 +329,7 @@ class HistoryController extends Controller
      *
      * @Route("/scan-order/{id}/progress-and-comments", name="history_message_show", requirements={"id" = "\d+"})
      * @Method("GET")
-     * @Template("OlegOrderformBundle:History:index.html.twig")
+     * @Template("AppOrderformBundle:History:index.html.twig")
      */
     public function showHistoryMessageAction($id)
     {
@@ -344,7 +344,7 @@ class HistoryController extends Controller
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
-        $entities = $em->getRepository('OlegOrderformBundle:History')->findByCurrentid($id,array('changedate'=>'DESC'));
+        $entities = $em->getRepository('AppOrderformBundle:History')->findByCurrentid($id,array('changedate'=>'DESC'));
         //echo "hist count=".count($entities)."<br>";
 
         $securityUtil = $this->get('order_security_utility');
@@ -436,7 +436,7 @@ class HistoryController extends Controller
 //            throw $this->createNotFoundException('Unable to find History entity.');
 //        }
 
-        $message = $em->getRepository('OlegOrderformBundle:Message')->findOneByOid($id);
+        $message = $em->getRepository('AppOrderformBundle:Message')->findOneByOid($id);
 
         //if( $viewcount > 0 && $message->getProvider()->getId() != $user->getId()) {
         if( 1 ) {
@@ -454,7 +454,7 @@ class HistoryController extends Controller
             //$history->setViewed($user);
             //$history->setVieweddate( new \DateTime() );
 
-            $eventtype = $em->getRepository('OlegOrderformBundle:ProgressCommentsEventTypeList')->findOneByName('Progress & Comments Viewed');
+            $eventtype = $em->getRepository('AppOrderformBundle:ProgressCommentsEventTypeList')->findOneByName('Progress & Comments Viewed');
             $history->setEventtype($eventtype);
 
             $em->persist($history);
@@ -465,7 +465,7 @@ class HistoryController extends Controller
         }
 
         if( count($entities) > 0 ) {
-            $roles = $em->getRepository('OlegUserdirectoryBundle:Roles')->findAll();
+            $roles = $em->getRepository('AppUserdirectoryBundle:Roles')->findAll();
             $rolesArr = array();
             foreach( $roles as $role ) {
                 $rolesArr[$role->getName()] = $role->getAlias();
@@ -474,7 +474,7 @@ class HistoryController extends Controller
             $rolesArr = '';
         }
 
-        $processorComments = $em->getRepository('OlegOrderformBundle:ProcessorComments')->findAll();
+        $processorComments = $em->getRepository('AppOrderformBundle:ProcessorComments')->findAll();
 
         $curdatetime = new \DateTime();
 
@@ -492,7 +492,7 @@ class HistoryController extends Controller
      *
      * @Route("/scan-order/progress-and-comments/create", name="history_message_new")
      * @Method("POST")
-     * @Template("OlegOrderformBundle:History:index.html.twig")
+     * @Template("AppOrderformBundle:History:index.html.twig")
      */
     public function createHistoryMessageAction(Request $request)
     {
@@ -510,7 +510,7 @@ class HistoryController extends Controller
 
             $em = $this->getDoctrine()->getManager();
             $user = $this->get('security.token_storage')->getToken()->getUser();
-            $message = $em->getRepository('OlegOrderformBundle:Message')->findOneByOid($id);
+            $message = $em->getRepository('AppOrderformBundle:Message')->findOneByOid($id);
 
             $history = new History();
             $history->setMessage($message);
@@ -523,7 +523,7 @@ class HistoryController extends Controller
             $history->setSelectednote($selectednote);
             $history->setRoles($user->getRoles());
 
-            $eventtype = $em->getRepository('OlegOrderformBundle:ProgressCommentsEventTypeList')->findOneByName('Comment Added');
+            $eventtype = $em->getRepository('AppOrderformBundle:ProgressCommentsEventTypeList')->findOneByName('Comment Added');
             $history->setEventtype($eventtype);
 
             //echo "ok";
@@ -544,7 +544,7 @@ class HistoryController extends Controller
      *
      * @Route("/scan-order/progress-and-comments/notviewedcomments", name="history_not_viewed_comments")
      * @Method("GET")
-     * @Template("OlegOrderformBundle:History:index.html.twig")
+     * @Template("AppOrderformBundle:History:index.html.twig")
      */
     public function notViewedCommentsAction()
     {
@@ -570,7 +570,7 @@ class HistoryController extends Controller
      *
      * @Route("/scan-order/progress-and-comments/notviewedadmincomments", name="history_not_viewed_admincomments")
      * @Method("GET")
-     * @Template("OlegOrderformBundle:History:index.html.twig")
+     * @Template("AppOrderformBundle:History:index.html.twig")
      */
     public function notViewedAdminCommentsAction()
     {

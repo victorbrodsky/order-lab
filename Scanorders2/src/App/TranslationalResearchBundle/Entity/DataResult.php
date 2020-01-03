@@ -6,7 +6,7 @@
  * Time: 3:12 PM
  */
 
-namespace Oleg\TranslationalResearchBundle\Entity;
+namespace App\TranslationalResearchBundle\Entity;
 
 
 use Doctrine\ORM\Mapping as ORM;
@@ -35,7 +35,7 @@ class DataResult {
     private $createDate;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
      */
     private $submitter;
@@ -52,7 +52,7 @@ class DataResult {
 //     */
 //    private $system;
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\OrderformBundle\Entity\AccessionType")
+     * @ORM\ManyToOne(targetEntity="App\OrderformBundle\Entity\AccessionType")
      * @ORM\JoinColumn(name="system_id", referencedColumnName="id", nullable=true)
      */
     private $system;
@@ -106,7 +106,7 @@ class DataResult {
     private $otherId;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\TranslationalResearchBundle\Entity\AntibodyList")
+     * @ORM\ManyToOne(targetEntity="App\TranslationalResearchBundle\Entity\AntibodyList")
      * @ORM\JoinColumn(name="antibody_id", referencedColumnName="id", nullable=true)
      */
     private $antibody;

@@ -15,22 +15,22 @@
  *  limitations under the License.
  */
 
-namespace Oleg\FellAppBundle\Controller;
+namespace App\FellAppBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityNotFoundException;
-use Oleg\FellAppBundle\Entity\FellowshipApplication;
-use Oleg\FellAppBundle\Entity\Interview;
-use Oleg\FellAppBundle\Entity\Rank;
-use Oleg\FellAppBundle\Form\InterviewType;
-use Oleg\FellAppBundle\Form\RankType;
-use Oleg\UserdirectoryBundle\Entity\User;
-use Oleg\OrderformBundle\Helper\ErrorHelper;
-use Oleg\UserdirectoryBundle\Entity\AccessRequest;
-use Oleg\UserdirectoryBundle\Entity\Reference;
-use Oleg\FellAppBundle\Form\FellAppFilterType;
-use Oleg\FellAppBundle\Form\FellowshipApplicationType;
-use Oleg\UserdirectoryBundle\Util\UserUtil;
+use App\FellAppBundle\Entity\FellowshipApplication;
+use App\FellAppBundle\Entity\Interview;
+use App\FellAppBundle\Entity\Rank;
+use App\FellAppBundle\Form\InterviewType;
+use App\FellAppBundle\Form\RankType;
+use App\UserdirectoryBundle\Entity\User;
+use App\OrderformBundle\Helper\ErrorHelper;
+use App\UserdirectoryBundle\Entity\AccessRequest;
+use App\UserdirectoryBundle\Entity\Reference;
+use App\FellAppBundle\Form\FellAppFilterType;
+use App\FellAppBundle\Form\FellowshipApplicationType;
+use App\UserdirectoryBundle\Util\UserUtil;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Filesystem\Exception\IOException;
@@ -49,7 +49,7 @@ class FellAppRankController extends Controller {
     /**
      * @Route("/rank/edit/{fellappid}", name="fellapp_rank_edit")
      * @Method("GET")
-     * @Template("OlegFellAppBundle:Rank:rank_modal.html.twig")
+     * @Template("AppFellAppBundle:Rank:rank_modal.html.twig")
      */
     public function rankEditAction(Request $request, $fellappid) {
 
@@ -59,7 +59,7 @@ class FellAppRankController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        $fellApp = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find($fellappid);
+        $fellApp = $this->getDoctrine()->getRepository('AppFellAppBundle:FellowshipApplication')->find($fellappid);
         if( !$fellApp ) {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$fellappid);
         }
@@ -104,7 +104,7 @@ class FellAppRankController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        $fellApp = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find($fellappid);
+        $fellApp = $this->getDoctrine()->getRepository('AppFellAppBundle:FellowshipApplication')->find($fellappid);
         if( !$fellApp ) {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$fellappid);
         }
@@ -168,7 +168,7 @@ class FellAppRankController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        $fellApp = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find($fellappid);
+        $fellApp = $this->getDoctrine()->getRepository('AppFellAppBundle:FellowshipApplication')->find($fellappid);
         if( !$fellApp ) {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$fellappid);
         }

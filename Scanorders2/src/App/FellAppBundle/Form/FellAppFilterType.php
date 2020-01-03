@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\FellAppBundle\Form;
+namespace App\FellAppBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
@@ -63,7 +63,7 @@ class FellAppFilterType extends AbstractType
         ));
 
 //        $builder->add('filter', 'entity', array(
-//            'class' => 'OlegUserdirectoryBundle:FellowshipSubspecialty',
+//            'class' => 'AppUserdirectoryBundle:FellowshipSubspecialty',
 //            //'placeholder' => 'Fellowship Type',
 //            'choice_label' => 'name',
 //            'label' => false,

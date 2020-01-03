@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Helper;
+namespace App\OrderformBundle\Helper;
 
 /**
  * Description of ErrorHelper

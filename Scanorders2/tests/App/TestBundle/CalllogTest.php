@@ -1,8 +1,8 @@
 <?php
 
-namespace Tests\Oleg\TestBundle;
+namespace Tests\App\TestBundle;
 
-use Tests\Oleg\TestBundle\WebTestBase;
+use Tests\App\TestBundle\WebTestBase;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\HttpFoundation\Response;
@@ -60,11 +60,11 @@ class CalllogTest extends WebTestBase
 
         $mapper = array(
             'entityName' => 'Message',
-            'entityNamespace' => 'Oleg\OrderformBundle\Entity',
+            'entityNamespace' => 'App\OrderformBundle\Entity',
         );
 
         //get non empty formnode and use getFormNodeValueByFormnodeAndReceivingmapper to find value
-        $treeRepository = $this->em->getRepository("OlegUserdirectoryBundle:ObjectTypeText");
+        $treeRepository = $this->em->getRepository("AppUserdirectoryBundle:ObjectTypeText");
         $dql =  $treeRepository->createQueryBuilder("list");
         $dql->select('list');
         $dql->where("list.entityName = :entityName AND list.entityNamespace = :entityNamespace");
@@ -95,7 +95,7 @@ class CalllogTest extends WebTestBase
 
             $mapper = array(
                 'entityName' => 'Message',
-                'entityNamespace' => 'Oleg\OrderformBundle\Entity',
+                'entityNamespace' => 'App\OrderformBundle\Entity',
                 'entityId' => $objectTypeText->getEntityId()
             );
 

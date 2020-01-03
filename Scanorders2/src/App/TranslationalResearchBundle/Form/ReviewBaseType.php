@@ -1,6 +1,6 @@
 <?php
 
-namespace Oleg\TranslationalResearchBundle\Form;
+namespace App\TranslationalResearchBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -105,7 +105,7 @@ class ReviewBaseType extends AbstractType
 //                ));
 
                 $form->add( 'reviewer', EntityType::class, array(
-                    'class' => 'OlegUserdirectoryBundle:User',
+                    'class' => 'AppUserdirectoryBundle:User',
                     'label'=> "Reviewer:",
                     'required'=> false,
                     'multiple' => false,
@@ -122,7 +122,7 @@ class ReviewBaseType extends AbstractType
                 ));
 
                 $form->add( 'reviewerDelegate', EntityType::class, array(
-                    'class' => 'OlegUserdirectoryBundle:User',
+                    'class' => 'AppUserdirectoryBundle:User',
                     'label'=> "Reviewer Delegate:",
                     'required'=> false,
                     'multiple' => false,
@@ -293,8 +293,8 @@ class ReviewBaseType extends AbstractType
 
             //if( $this->params["stateStr"] == "irb_review" || $this->params["stateStr"] == "admin_review" ) {
             if(
-                $this->data_class == 'Oleg\\TranslationalResearchBundle\\Entity\\IrbReview' ||
-                $this->data_class == 'Oleg\\TranslationalResearchBundle\\Entity\\AdminReview'
+                $this->data_class == 'App\\TranslationalResearchBundle\\Entity\\IrbReview' ||
+                $this->data_class == 'App\\TranslationalResearchBundle\\Entity\\AdminReview'
             ) {
                 $decisions = array(
                     'Approved' => 'approved',
@@ -304,7 +304,7 @@ class ReviewBaseType extends AbstractType
                 );
             }
             //if( $this->params["stateStr"] == "committee_review" ) {
-            if( $this->data_class == 'Oleg\\TranslationalResearchBundle\\Entity\\CommitteeReview' ) {
+            if( $this->data_class == 'App\\TranslationalResearchBundle\\Entity\\CommitteeReview' ) {
                 //echo "primaryReview=".$this->params["review"]."<br>";//TODO: review is null?
                 if( isset($this->params["review"]) && $this->params["review"]->getPrimaryReview() === true ) {
                     $decisions = array(
@@ -321,7 +321,7 @@ class ReviewBaseType extends AbstractType
                 }
             }
             //if( $this->params["stateStr"] == "final_review" ) {
-            if( $this->data_class == 'Oleg\\TranslationalResearchBundle\\Entity\\FinalReview' ) {
+            if( $this->data_class == 'App\\TranslationalResearchBundle\\Entity\\FinalReview' ) {
                 $decisions = array(
                     'Approved' => 'approved',
                     'Rejected' => 'rejected',
@@ -360,7 +360,7 @@ class ReviewBaseType extends AbstractType
 //            $builder->add('comments', CollectionType::class, array(
 //                'entry_type' => FosCommentType::class,
 //                'entry_options' => array(
-//                    'data_class' => 'Oleg\UserdirectoryBundle\Entity\FosComment',
+//                    'data_class' => 'App\UserdirectoryBundle\Entity\FosComment',
 //                    'form_custom_value' => $this->params
 //                ),
 //                'label' => false,

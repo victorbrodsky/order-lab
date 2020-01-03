@@ -2,15 +2,15 @@ imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
     - { resource: doctrine_migrations.yml }
-    - { resource: "@OlegUserdirectoryBundle/Resources/config/services.yml" }
-    - { resource: "@OlegOrderformBundle/Resources/config/services.yml" }
-    - { resource: "@OlegFellAppBundle/Resources/config/services.yml" }
-    - { resource: "@OlegVacReqBundle/Resources/config/services.yml" }
-    - { resource: "@OlegDeidentifierBundle/Resources/config/services.yml" }
-    - { resource: "@OlegCallLogBundle/Resources/config/services.yml" }
-    - { resource: "@OlegTranslationalResearchBundle/Resources/config/services.yml" }
-#    - { resource: "@OlegTranslationalResearchBundle/Resources/config/validation.yml" }
-    - { resource: "@OlegUserdirectoryBundle/Resources/config/setparameters.php" }   #must run after importing services
+    - { resource: "@AppUserdirectoryBundle/Resources/config/services.yml" }
+    - { resource: "@AppOrderformBundle/Resources/config/services.yml" }
+    - { resource: "@AppFellAppBundle/Resources/config/services.yml" }
+    - { resource: "@AppVacReqBundle/Resources/config/services.yml" }
+    - { resource: "@AppDeidentifierBundle/Resources/config/services.yml" }
+    - { resource: "@AppCallLogBundle/Resources/config/services.yml" }
+    - { resource: "@AppTranslationalResearchBundle/Resources/config/services.yml" }
+#    - { resource: "@AppTranslationalResearchBundle/Resources/config/validation.yml" }
+    - { resource: "@AppUserdirectoryBundle/Resources/config/setparameters.php" }   #must run after importing services
 
 
 services:
@@ -112,7 +112,7 @@ twig:
 assetic:
     debug:          '%kernel.debug%'
     use_controller: false
-    bundles:        ["FOSCommentBundle",'OlegUserdirectoryBundle','OlegOrderformBundle','OlegFellAppBundle','OlegDeidentifierBundle','OlegVacReqBundle','OlegCallLogBundle','OlegTranslationalResearchBundle']
+    bundles:        ["FOSCommentBundle",'AppUserdirectoryBundle','AppOrderformBundle','AppFellAppBundle','AppDeidentifierBundle','AppVacReqBundle','AppCallLogBundle','AppTranslationalResearchBundle']
     filters:
          cssrewrite: ~
 
@@ -152,13 +152,13 @@ doctrine:
                 query_cache_driver: array
                 connection: default
                 mappings:
-                    OlegOrderformBundle: ~
-                    OlegUserdirectoryBundle: ~
-                    OlegFellAppBundle: ~
-                    OlegDeidentifierBundle: ~
-                    OlegVacReqBundle: ~
-                    OlegCallLogBundle: ~
-                    OlegTranslationalResearchBundle: ~
+                    AppOrderformBundle: ~
+                    AppUserdirectoryBundle: ~
+                    AppFellAppBundle: ~
+                    AppDeidentifierBundle: ~
+                    AppVacReqBundle: ~
+                    AppCallLogBundle: ~
+                    AppTranslationalResearchBundle: ~
                     FOSCommentBundle: ~
                     gedmo_tree:
                         type: annotation
@@ -167,17 +167,17 @@ doctrine:
                         alias: GedmoTree # this one is optional and will default to the name set for the mapping
                         is_bundle: false
                 hydrators:
-                     SimpleHydrator: \Oleg\UserdirectoryBundle\Hydrator\SimpleHydrator
-                     StainHydrator: \Oleg\OrderformBundle\Hydrator\StainHydrator
+                     SimpleHydrator: \App\UserdirectoryBundle\Hydrator\SimpleHydrator
+                     StainHydrator: \App\OrderformBundle\Hydrator\StainHydrator
                 dql:
                      string_functions:
-                        CAST: Oleg\UserdirectoryBundle\Query\CastFunction
-                        #GROUP_CONCAT: Oleg\UserdirectoryBundle\Query\GroupConcat
+                        CAST: App\UserdirectoryBundle\Query\CastFunction
+                        #GROUP_CONCAT: App\UserdirectoryBundle\Query\GroupConcat
             external:
                 connection: external
 #                mappings:
-#                    OlegOrderformBundle: ~
-#                    OlegUserdirectoryBundle: ~
+#                    AppOrderformBundle: ~
+#                    AppUserdirectoryBundle: ~
 
 #doctrine_cache:
 #    providers:
@@ -318,8 +318,8 @@ knp_snappy:
 #    db_driver: orm
 #    class:
 #        model:
-#            comment: Oleg\UserdirectoryBundle\Entity\FosComment
-#            thread: Oleg\UserdirectoryBundle\Entity\FosThread
+#            comment: App\UserdirectoryBundle\Entity\FosComment
+#            thread: App\UserdirectoryBundle\Entity\FosThread
 
 
 ##https://github.com/nodesha88/LetsEncryptBundle

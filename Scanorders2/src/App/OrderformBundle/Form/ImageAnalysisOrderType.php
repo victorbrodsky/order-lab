@@ -15,11 +15,11 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Form;
+namespace App\OrderformBundle\Form;
 
-use Oleg\UserdirectoryBundle\Form\DocumentContainerType;
-use Oleg\UserdirectoryBundle\Form\DocumentType;
-use Oleg\UserdirectoryBundle\Form\UserWrapperType;
+use App\UserdirectoryBundle\Form\DocumentContainerType;
+use App\UserdirectoryBundle\Form\DocumentType;
+use App\UserdirectoryBundle\Form\UserWrapperType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -41,7 +41,7 @@ class ImageAnalysisOrderType extends AbstractType
         $this->formConstructor($options['form_custom_value']);
 
         $builder->add('imageAnalysisAlgorithm', EntityType::class, array(
-            'class' => 'OlegOrderformBundle:ImageAnalysisAlgorithmList',
+            'class' => 'AppOrderformBundle:ImageAnalysisAlgorithmList',
             'choice_label' => 'name',
             'label' => 'Image Analysis Algorithm:',
             'required'=> true,
@@ -60,7 +60,7 @@ class ImageAnalysisOrderType extends AbstractType
 
         $params = array('labelPrefix'=>'');
         $builder->add('instruction', InstructionType::class, array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\Instruction',
+            'data_class' => 'App\OrderformBundle\Entity\Instruction',
             'form_custom_value' => $params,
             'label' => false
         ));
@@ -70,7 +70,7 @@ class ImageAnalysisOrderType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\ImageAnalysisOrder',
+            'data_class' => 'App\OrderformBundle\Entity\ImageAnalysisOrder',
             'form_custom_value' => null
         ));
     }

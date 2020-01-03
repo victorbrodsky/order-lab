@@ -22,12 +22,12 @@
  * Time: 4:49 PM
  */
 
-namespace Oleg\TranslationalResearchBundle\Controller;
+namespace App\TranslationalResearchBundle\Controller;
 
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Oleg\TranslationalResearchBundle\Entity\Project;
-use Oleg\TranslationalResearchBundle\Entity\SpecialtyList;
+use App\TranslationalResearchBundle\Entity\Project;
+use App\TranslationalResearchBundle\Entity\SpecialtyList;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -45,7 +45,7 @@ class ProjectFormNodeController extends ProjectController
      * Creates a new project entity with formnode.
      *
      * @Route("/project/new", name="translationalresearch_project_new_selector")
-     * @Template("OlegTranslationalResearchBundle:Project:new-project-selector.html.twig")
+     * @Template("AppTranslationalResearchBundle:Project:new-project-selector.html.twig")
      * @Method({"GET", "POST"})
      */
     public function newProjectSelectorAction(Request $request)
@@ -71,7 +71,7 @@ class ProjectFormNodeController extends ProjectController
      * Creates a new project entity with formnode.
      *
      * @Route("/project/formnode/new/{specialtyStr}", name="translationalresearch_project_formnode_new")
-     * @Template("OlegTranslationalResearchBundle:Project:new.html.twig")
+     * @Template("AppTranslationalResearchBundle:Project:new.html.twig")
      * @Method({"GET", "POST"})
      */
     public function newFormNodeAction(Request $request, $specialtyStr)
@@ -134,7 +134,7 @@ class ProjectFormNodeController extends ProjectController
         //top message category id
         $formnodeTopHolderId = null;
         //$categoryStr = "Pathology Call Log Entry";
-        //$messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($categoryStr);
+        //$messageCategory = $em->getRepository('AppOrderformBundle:MessageCategory')->findOneByName($categoryStr);
         $messageCategory = $project->getMessageCategory();
         if( $messageCategory ) {
             $formnodeTopHolderId = $messageCategory->getId();
@@ -163,9 +163,9 @@ class ProjectFormNodeController extends ProjectController
                 $startProjectReview = true;
             }
 
-            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($project,"document");
-            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($project,"irbApprovalLetter");
-            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($project,"humanTissueForm");
+            $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($project,"document");
+            $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($project,"irbApprovalLetter");
+            $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($project,"humanTissueForm");
 
             if( !$testing ) {
                 $em->persist($project);
@@ -269,7 +269,7 @@ class ProjectFormNodeController extends ProjectController
      * Originally edit form generates a new entity Project with new id and same oid.
      *
      * @Route("/project/formnode/edit/{id}", name="translationalresearch_project_formnode_edit")
-     * @Template("OlegTranslationalResearchBundle:Project:edit.html.twig")
+     * @Template("AppTranslationalResearchBundle:Project:edit.html.twig")
      * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, Project $project)
@@ -306,7 +306,7 @@ class ProjectFormNodeController extends ProjectController
 
         $class = new \ReflectionClass($project);
         $className = $class->getShortName();          //ObjectTypeText
-        $classNamespace = $class->getNamespaceName(); //Oleg\UserdirectoryBundle\Entity
+        $classNamespace = $class->getNamespaceName(); //App\UserdirectoryBundle\Entity
 
         $testing = false;
         //$testing = true;
@@ -403,9 +403,9 @@ class ProjectFormNodeController extends ProjectController
                 }
             }
 
-            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($project,"document");
-            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($project,"irbApprovalLetter");
-            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($project,"humanTissueForm");
+            $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($project,"document");
+            $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($project,"irbApprovalLetter");
+            $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($project,"humanTissueForm");
 
             //Change review's decision according to the state (if state has been changed manually)
             $eventResetMsg = null;
@@ -500,7 +500,7 @@ class ProjectFormNodeController extends ProjectController
 //        }
 //
 //        if( !$project->getInstitution() ) {
-//            $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
+//            $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
 //            $project->setInstitution($institution);
 //        }
 //
@@ -508,7 +508,7 @@ class ProjectFormNodeController extends ProjectController
 //        if( !$project->getMessageCategory() ) {
 //            $categoryStr = "HemePath Translational Research Project";  //"Pathology Call Log Entry";
 //            //$categoryStr = "Nesting Test"; //testing
-//            $messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($categoryStr);
+//            $messageCategory = $em->getRepository('AppOrderformBundle:MessageCategory')->findOneByName($categoryStr);
 //
 //            if (!$messageCategory) {
 //                throw new \Exception("Message category is not found by name '" . $categoryStr . "'");

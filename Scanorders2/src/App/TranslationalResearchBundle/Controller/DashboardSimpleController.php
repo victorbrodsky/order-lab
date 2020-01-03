@@ -1,9 +1,9 @@
 <?php
 
-namespace Oleg\TranslationalResearchBundle\Controller;
+namespace App\TranslationalResearchBundle\Controller;
 
-use Oleg\TranslationalResearchBundle\Form\FilterDashboardType;
-use Oleg\UserdirectoryBundle\Util\LargeFileDownloader;
+use App\TranslationalResearchBundle\Form\FilterDashboardType;
+use App\UserdirectoryBundle\Util\LargeFileDownloader;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -26,7 +26,7 @@ class DashboardSimpleController extends Controller
 
     /**
      * @Route("/pi-project-statistics/", name="translationalresearch_dashboard_project")
-     * @Template("OlegTranslationalResearchBundle:Dashboard:dashboard.html.twig")
+     * @Template("AppTranslationalResearchBundle:Dashboard:dashboard.html.twig")
      */
     public function projectStatisticsAction( Request $request )
     {
@@ -52,7 +52,7 @@ class DashboardSimpleController extends Controller
         $endDate = $filterform['endDate']->getData();
         $projectSpecialty = $filterform['projectSpecialty']->getData();
         if( $projectSpecialty != 0 ) {
-            $projectSpecialtyObject = $em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->find($projectSpecialty);
+            $projectSpecialtyObject = $em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->find($projectSpecialty);
             $projectSpecialtyObjects[] = $projectSpecialtyObject;
         }
 
@@ -277,7 +277,7 @@ class DashboardSimpleController extends Controller
 
     /**
      * @Route("/work-request-statistics/", name="translationalresearch_dashboard_request")
-     * @Template("OlegTranslationalResearchBundle:Dashboard:dashboard.html.twig")
+     * @Template("AppTranslationalResearchBundle:Dashboard:dashboard.html.twig")
      */
     public function requestStatisticsAction( Request $request )
     {
@@ -301,7 +301,7 @@ class DashboardSimpleController extends Controller
 
         $projectSpecialty = $filterform['projectSpecialty']->getData();
         if( $projectSpecialty != 0 ) {
-            $projectSpecialtyObject = $em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->find($projectSpecialty);
+            $projectSpecialtyObject = $em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->find($projectSpecialty);
             $projectSpecialtyObjects[] = $projectSpecialtyObject;
         }
 
@@ -553,7 +553,7 @@ class DashboardSimpleController extends Controller
 
     /**
      * @Route("/productivity-statistics-based-on-work-requests/", name="translationalresearch_dashboard_financial_request")
-     * @Template("OlegTranslationalResearchBundle:Dashboard:dashboard.html.twig")
+     * @Template("AppTranslationalResearchBundle:Dashboard:dashboard.html.twig")
      */
     public function requestFinancialStatisticsAction( Request $request )
     {
@@ -583,7 +583,7 @@ class DashboardSimpleController extends Controller
 
         $projectSpecialty = $filterform['projectSpecialty']->getData();
         if ($projectSpecialty != 0) {
-            $projectSpecialtyObject = $em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->find($projectSpecialty);
+            $projectSpecialtyObject = $em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->find($projectSpecialty);
             $projectSpecialtyObjects[] = $projectSpecialtyObject;
         }
 
@@ -793,7 +793,7 @@ class DashboardSimpleController extends Controller
 
     /**
      * @Route("/financial-statistics-based-on-invoices/", name="translationalresearch_dashboard_financial_invoice")
-     * @Template("OlegTranslationalResearchBundle:Dashboard:dashboard.html.twig")
+     * @Template("AppTranslationalResearchBundle:Dashboard:dashboard.html.twig")
      */
     public function invoiceFinancialStatisticsAction( Request $request )
     {
@@ -823,7 +823,7 @@ class DashboardSimpleController extends Controller
 
         $projectSpecialty = $filterform['projectSpecialty']->getData();
         if ($projectSpecialty != 0) {
-            $projectSpecialtyObject = $em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->find($projectSpecialty);
+            $projectSpecialtyObject = $em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->find($projectSpecialty);
             $projectSpecialtyObjects[] = $projectSpecialtyObject;
         }
 
@@ -1099,7 +1099,7 @@ class DashboardSimpleController extends Controller
      * @Route("/pi-statistics/", name="translationalresearch_dashboard_pilevel")
      * @Route("/project-statistics/", name="translationalresearch_dashboard_projectlevel")
      * @Route("/invoice-statistics/", name="translationalresearch_dashboard_invoicelevel")
-     * @Template("OlegTranslationalResearchBundle:Dashboard:dashboard.html.twig")
+     * @Template("AppTranslationalResearchBundle:Dashboard:dashboard.html.twig")
      */
     public function piStatisticsAction( Request $request ) {
 
@@ -1315,7 +1315,7 @@ class DashboardSimpleController extends Controller
 
     /**
      * @Route("/comparison-statistics/", name="translationalresearch_dashboard_compare")
-     * @Template("OlegTranslationalResearchBundle:Dashboard:dashboard.html.twig")
+     * @Template("AppTranslationalResearchBundle:Dashboard:dashboard.html.twig")
      */
     public function compareStatisticsAction( Request $request )
     {
@@ -2037,7 +2037,7 @@ class DashboardSimpleController extends Controller
 
 //    /**
 //     * @Route("/funded-level/", name="translationalresearch_dashboard_fundedlevel")
-//     * @Template("OlegTranslationalResearchBundle:Dashboard:pilevel.html.twig")
+//     * @Template("AppTranslationalResearchBundle:Dashboard:pilevel.html.twig")
 //     */
 //    public function fundedLevelAction( Request $request ) {
 //
@@ -2076,7 +2076,7 @@ class DashboardSimpleController extends Controller
         $em = $this->getDoctrine()->getManager();
         //$transresUtil = $this->container->get('transres_util');
 
-        $repository = $em->getRepository('OlegTranslationalResearchBundle:Project');
+        $repository = $em->getRepository('AppTranslationalResearchBundle:Project');
         $dql =  $repository->createQueryBuilder("project");
         $dql->select('project');
 
@@ -2168,7 +2168,7 @@ class DashboardSimpleController extends Controller
         $institutions = $user->getInstitutions();
 
         foreach($institutions as $institution) {
-            if( $em->getRepository('OlegUserdirectoryBundle:Institution')->isNodeUnderParentnode($parentInstitution,$institution) ) {
+            if( $em->getRepository('AppUserdirectoryBundle:Institution')->isNodeUnderParentnode($parentInstitution,$institution) ) {
                 return true;
             }
         }
@@ -2180,7 +2180,7 @@ class DashboardSimpleController extends Controller
         $em = $this->getDoctrine()->getManager();
         //$transresUtil = $this->container->get('transres_util');
 
-        $repository = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
+        $repository = $em->getRepository('AppTranslationalResearchBundle:TransResRequest');
         $dql =  $repository->createQueryBuilder("request");
         $dql->select('request');
 
@@ -2233,7 +2233,7 @@ class DashboardSimpleController extends Controller
         $em = $this->getDoctrine()->getManager();
         //$transresUtil = $this->container->get('transres_util');
 
-        $repository = $em->getRepository('OlegTranslationalResearchBundle:Invoice');
+        $repository = $em->getRepository('AppTranslationalResearchBundle:Invoice');
         $dql =  $repository->createQueryBuilder("invoice");
         $dql->select('invoice');
         $dql->leftJoin('invoice.transresRequest','request');

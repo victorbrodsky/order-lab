@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\CallLogBundle\Form;
+namespace App\CallLogBundle\Form;
 
 
 use Symfony\Component\Form\AbstractType;

@@ -17,7 +17,7 @@
 {#macros for tree#}
 
 {% macro jstreemacros( jstreeid, bundleName, entityName, nodeshowpath, search, filterform, routename ) %}
-    {#{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
+    {#{% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
 
     {% if filterform is defined and filterform and routename is defined and routename %}
         <p>
@@ -71,7 +71,7 @@
 
 {% macro compositeTreeNode( node, cycle, prototype ) %}
     {% import _self as treemacros %}
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     <p>
     {{ form_errors(node) }}
     <div class="composite-tree-holder">

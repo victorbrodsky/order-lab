@@ -22,7 +22,7 @@
  * Time: 2:33 PM
  */
 
-namespace Oleg\UserdirectoryBundle\Command;
+namespace App\UserdirectoryBundle\Command;
 
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -58,7 +58,7 @@ class UtilCommand extends ContainerAwareCommand {
         if(0) {
             $oid = "APCP3296-REQ13549-V1"; //dev
             $oid = "APCP2173-REQ15079-V2"; //collage
-            $invoice = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findOneByOid($oid);
+            $invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->findOneByOid($oid);
             if (!$invoice) {
                 throw new \Exception("Invoice is not found by invoice number (oid) '" . $oid . "'");
             }
@@ -69,7 +69,7 @@ class UtilCommand extends ContainerAwareCommand {
         if(0) {
             ///// rec letter ////////
             $fellappRecLetterUtil = $this->getContainer()->get('fellapp_rec_letter_util');
-            $fellapp = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->find(1414); //8-testing, 1414-collage, 1439-live
+            $fellapp = $em->getRepository('AppFellAppBundle:FellowshipApplication')->find(1414); //8-testing, 1414-collage, 1439-live
             $references = $fellapp->getReferences();
             $reference = $references->first();
             $letters = $reference->getDocuments();

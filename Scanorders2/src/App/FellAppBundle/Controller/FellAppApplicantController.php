@@ -22,7 +22,7 @@
  * Time: 3:42 PM
  */
 
-namespace Oleg\FellAppBundle\Controller;
+namespace App\FellAppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Config\Definition\Exception\Exception;
@@ -33,8 +33,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-use Oleg\FellAppBundle\Entity\FellowshipApplication;
-use Oleg\UserdirectoryBundle\Entity\User;
+use App\FellAppBundle\Entity\FellowshipApplication;
+use App\UserdirectoryBundle\Entity\User;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
@@ -45,7 +45,7 @@ class FellAppApplicantController extends Controller {
     /**
      * @Route("/interview-modal/{id}", name="fellapp_interview_modal")
      * @Method("GET")
-     * @Template("OlegFellAppBundle:Interview:modal.html.twig")
+     * @Template("AppFellAppBundle:Interview:modal.html.twig")
      */
     public function interviewModalAction(Request $request, $id) {
 
@@ -61,7 +61,7 @@ class FellAppApplicantController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
+        $entity = $em->getRepository('AppFellAppBundle:FellowshipApplication')->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
@@ -97,7 +97,7 @@ class FellAppApplicantController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
+        $entity = $em->getRepository('AppFellAppBundle:FellowshipApplication')->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
@@ -115,8 +115,8 @@ class FellAppApplicantController extends Controller {
         //$transformer = new DateTimeToStringTransformer(null,null,'d/m/Y');
         //$startDateStr = $transformer->transform($startDate);
 
-//        $applicants = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
-        $repository = $em->getRepository('OlegFellAppBundle:FellowshipApplication');
+//        $applicants = $em->getRepository('AppFellAppBundle:FellowshipApplication')->find($id);
+        $repository = $em->getRepository('AppFellAppBundle:FellowshipApplication');
         $dql = $repository->createQueryBuilder("fellapp");
         //TODO: optimize this by a single query without foreach loop
 //        ->select('((SELECT COUNT(1) AS num FROM stats  WHERE stats.marks  > s.marks ) + 1)  AS rank')
@@ -199,7 +199,7 @@ class FellAppApplicantController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
+        $entity = $em->getRepository('AppFellAppBundle:FellowshipApplication')->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
@@ -247,7 +247,7 @@ class FellAppApplicantController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        $interview = $em->getRepository('OlegFellAppBundle:Interview')->find($interviewId);
+        $interview = $em->getRepository('AppFellAppBundle:Interview')->find($interviewId);
 
         if( !$interviewId ) {
             throw $this->createNotFoundException('Interviewer can not be found: interviewId='.$interviewId);
@@ -471,7 +471,7 @@ class FellAppApplicantController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
+        $entity = $em->getRepository('AppFellAppBundle:FellowshipApplication')->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
@@ -571,7 +571,7 @@ class FellAppApplicantController extends Controller {
         $institutionNameFellappName = "";
 
         if( $fellappTypeId && $fellappTypeId > 0 ) {
-            $fellowshipSubspecialty = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->find($fellappTypeId);
+            $fellowshipSubspecialty = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->find($fellappTypeId);
         }
 
         if( $fellowshipSubspecialty ) {
@@ -613,7 +613,7 @@ class FellAppApplicantController extends Controller {
 
         $html = "";
         foreach( $entities as $fellapp ) {
-            $interviewModalHtml = $this->container->get('templating')->render('OlegFellAppBundle:Interview:applicant-interview-info.html.twig',
+            $interviewModalHtml = $this->container->get('templating')->render('AppFellAppBundle:Interview:applicant-interview-info.html.twig',
                 array(
                     'entity' => $fellapp,
                     'pathbase' => 'fellapp',
@@ -666,7 +666,7 @@ class FellAppApplicantController extends Controller {
         $institutionNameFellappName = "";
 
         if( $fellappTypeId && $fellappTypeId > 0 ) {
-            $fellowshipSubspecialty = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->find($fellappTypeId);
+            $fellowshipSubspecialty = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->find($fellappTypeId);
         }
 
         if( $fellowshipSubspecialty ) {
@@ -685,7 +685,7 @@ class FellAppApplicantController extends Controller {
         $fellappUtil = $this->container->get('fellapp_util');
         $entities = $fellappUtil->createInterviewApplicantList( $fellappIds );
 
-        $interviewsDocHtml = $this->container->get('templating')->render('OlegFellAppBundle:Interview:applicants-interview-info-doc.html.twig',
+        $interviewsDocHtml = $this->container->get('templating')->render('AppFellAppBundle:Interview:applicants-interview-info-doc.html.twig',
             array(
                 'entities' => $entities,
                 'pathbase' => 'fellapp',
@@ -710,7 +710,7 @@ class FellAppApplicantController extends Controller {
     /**
      * @Route("/interview-applicants-list/{fellappIds}", name="fellapp_interview_applicants_list")
      * @Method("GET")
-     * @Template("OlegFellAppBundle:Interview:applicants-interview-info.html.twig")
+     * @Template("AppFellAppBundle:Interview:applicants-interview-info.html.twig")
      */
     public function showInterviewApplicantsListAction(Request $request, $fellappIds) {
 

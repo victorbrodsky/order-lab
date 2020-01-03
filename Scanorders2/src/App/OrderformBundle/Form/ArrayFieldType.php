@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Form;
+namespace App\OrderformBundle\Form;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -108,7 +108,7 @@ class ArrayFieldType extends AbstractType
                                     return $submittedData;
                                 }
                                 if ($submittedData) { //id
-                                    $submittedObject = $this->params['em']->getRepository('OlegUserdirectoryBundle:User')->find($submittedData);
+                                    $submittedObject = $this->params['em']->getRepository('AppUserdirectoryBundle:User')->find($submittedData);
                                     return $submittedObject;
                                 }
                                 return null;
@@ -133,7 +133,7 @@ class ArrayFieldType extends AbstractType
                                     return $submittedData;
                                 }
                                 if ($submittedData) { //id
-                                    $submittedObject = $this->params['em']->getRepository('OlegUserdirectoryBundle:SourceSystemList')->find($submittedData);
+                                    $submittedObject = $this->params['em']->getRepository('AppUserdirectoryBundle:SourceSystemList')->find($submittedData);
                                     return $submittedObject;
                                 }
                                 return null;
@@ -179,7 +179,7 @@ class ArrayFieldType extends AbstractType
 //                        'empty_data' => $provider
 //                    ));
                     $form->add('provider', EntityType::class, array(
-                        'class'       => 'OlegUserdirectoryBundle:User',    //'AppBundle:Position',
+                        'class'       => 'AppUserdirectoryBundle:User',    //'AppBundle:Position',
                         'data'     => $provider->getId(),
                         'empty_data' => $provider->getId()
                     ));

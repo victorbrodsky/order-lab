@@ -1,10 +1,10 @@
 <?php
 
-namespace Oleg\TranslationalResearchBundle\Controller;
+namespace App\TranslationalResearchBundle\Controller;
 
-use Oleg\TranslationalResearchBundle\Entity\IrbReview;
-use Oleg\TranslationalResearchBundle\Entity\Project;
-use Oleg\TranslationalResearchBundle\Form\ReviewBaseType;
+use App\TranslationalResearchBundle\Entity\IrbReview;
+use App\TranslationalResearchBundle\Entity\Project;
+use App\TranslationalResearchBundle\Form\ReviewBaseType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -22,14 +22,14 @@ class ReviewBaseController extends Controller
      * Lists all irbReview entities.
      *
      * @Route("/{stateStr}", name="translationalresearch_review_index")
-     * @Template("OlegTranslationalResearchBundle:Review:index.html.twig")
+     * @Template("AppTranslationalResearchBundle:Review:index.html.twig")
      * @Method("GET")
      */
     public function indexAction(Request $request, $stateStr)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $irbReviews = $em->getRepository('OlegTranslationalResearchBundle:IrbReview')->findAll();
+        $irbReviews = $em->getRepository('AppTranslationalResearchBundle:IrbReview')->findAll();
 
         return array(
             'irbReviews' => $irbReviews,
@@ -40,13 +40,13 @@ class ReviewBaseController extends Controller
      * Creates a new irbReview entity.
      *
      * @Route("/new", name="translationalresearch_review_new")
-     * @Template("OlegTranslationalResearchBundle:Review:new.html.twig")
+     * @Template("AppTranslationalResearchBundle:Review:new.html.twig")
      * @Method({"GET", "POST"})
      */
     public function newAction(Request $request)
     {
         $irbReview = new Irbreview();
-        $form = $this->createForm('Oleg\TranslationalResearchBundle\Form\IrbReviewType', $irbReview);
+        $form = $this->createForm('App\TranslationalResearchBundle\Form\IrbReviewType', $irbReview);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -67,7 +67,7 @@ class ReviewBaseController extends Controller
      * Finds and displays a Review entity.
      *
      * @Route("/{stateStr}/{reviewId}/show", name="translationalresearch_review_show")
-     * @Template("OlegTranslationalResearchBundle:Review:edit.html.twig")
+     * @Template("AppTranslationalResearchBundle:Review:edit.html.twig")
      * @Method("GET")
      */
     public function showAction(Request $request, $stateStr, $reviewId)
@@ -82,7 +82,7 @@ class ReviewBaseController extends Controller
         if( !$reviewEntityName ) {
             throw $this->createNotFoundException('Unable to find Review Entity Name by state='.$stateStr);
         }
-        $review = $em->getRepository('OlegTranslationalResearchBundle:'.$reviewEntityName)->find($reviewId);
+        $review = $em->getRepository('AppTranslationalResearchBundle:'.$reviewEntityName)->find($reviewId);
         if( !$review ) {
             throw $this->createNotFoundException('Unable to find '.$reviewEntityName.' by id='.$reviewId);
         }
@@ -107,7 +107,7 @@ class ReviewBaseController extends Controller
      * Displays a form to edit an existing irbReview entity.
      *
      * @Route("/{stateStr}/{reviewId}/submit", name="translationalresearch_review_edit")
-     * @Template("OlegTranslationalResearchBundle:Review:edit.html.twig")
+     * @Template("AppTranslationalResearchBundle:Review:edit.html.twig")
      * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, $stateStr, $reviewId)
@@ -128,7 +128,7 @@ class ReviewBaseController extends Controller
 //        if( !$reviewEntityName ) {
 //            throw $this->createNotFoundException('Unable to find Review Entity Name by state='.$stateStr);
 //        }
-//        $review = $em->getRepository('OlegTranslationalResearchBundle:'.$reviewEntityName)->find($reviewId);
+//        $review = $em->getRepository('AppTranslationalResearchBundle:'.$reviewEntityName)->find($reviewId);
 //        if( !$review ) {
 //            throw $this->createNotFoundException('Unable to find '.$reviewEntityName.' by id='.$reviewId);
 //        }
@@ -153,7 +153,7 @@ class ReviewBaseController extends Controller
 //            $disabled = false;
 //        }
         //$deleteForm = $this->createDeleteForm($review);
-//        $form = $this->createForm('Oleg\TranslationalResearchBundle\Form\ReviewBaseType', $review, array(
+//        $form = $this->createForm('App\TranslationalResearchBundle\Form\ReviewBaseType', $review, array(
 //            'disabled' => $disabled
 //        ));
         $form = $this->createReviewForm($request, $review, $cycle, $stateStr);
@@ -272,7 +272,7 @@ class ReviewBaseController extends Controller
 //        }
 
         $form = $this->createForm(ReviewBaseType::class, $review, array(
-            'data_class' => 'Oleg\\TranslationalResearchBundle\\Entity\\'.$reviewEntityName,
+            'data_class' => 'App\\TranslationalResearchBundle\\Entity\\'.$reviewEntityName,
             'form_custom_value' => $params,
             'disabled' => $disabled,
         ));

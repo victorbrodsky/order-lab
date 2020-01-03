@@ -23,23 +23,23 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Oleg\UserdirectoryBundle\Form\CustomType;
+namespace App\UserdirectoryBundle\Form\CustomType;
 
 
-use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericUserTransformer;
+use App\UserdirectoryBundle\Form\DataTransformer\GenericUserTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericSelectTransformer;
-use Oleg\UserdirectoryBundle\Form\DataTransformer\IntegerCheckboxTransformer;
-use Oleg\UserdirectoryBundle\Form\DataTransformer\MonthYearDateTransformer;
-use Oleg\UserdirectoryBundle\Form\DataTransformer\ResearchLabTransformer;
-use Oleg\UserdirectoryBundle\Form\DataTransformer\StringTransformer;
-use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
-use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericManyToManyTransformer;
+use App\UserdirectoryBundle\Form\DataTransformer\GenericSelectTransformer;
+use App\UserdirectoryBundle\Form\DataTransformer\IntegerCheckboxTransformer;
+use App\UserdirectoryBundle\Form\DataTransformer\MonthYearDateTransformer;
+use App\UserdirectoryBundle\Form\DataTransformer\ResearchLabTransformer;
+use App\UserdirectoryBundle\Form\DataTransformer\StringTransformer;
+use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
+use App\UserdirectoryBundle\Form\DataTransformer\GenericManyToManyTransformer;
 
 class CustomSelectorType extends AbstractType {
 

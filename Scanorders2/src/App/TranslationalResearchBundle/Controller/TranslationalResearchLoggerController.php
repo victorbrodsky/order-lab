@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\TranslationalResearchBundle\Controller;
+namespace App\TranslationalResearchBundle\Controller;
 
 
 use Symfony\Component\HttpFoundation\Request;
@@ -23,10 +23,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Oleg\UserdirectoryBundle\Entity\Logger;
-use Oleg\UserdirectoryBundle\Form\LoggerType;
+use App\UserdirectoryBundle\Entity\Logger;
+use App\UserdirectoryBundle\Form\LoggerType;
 
-use Oleg\UserdirectoryBundle\Controller\LoggerController;
+use App\UserdirectoryBundle\Controller\LoggerController;
 
 /**
  * Logger controller.
@@ -41,7 +41,7 @@ class TranslationalResearchLoggerController extends LoggerController
      *
      * @Route("/", name="translationalresearch_logger")
      * @Method("GET")
-     * @Template("OlegTranslationalResearchBundle:Logger:index.html.twig")
+     * @Template("AppTranslationalResearchBundle:Logger:index.html.twig")
      */
     public function indexAction(Request $request)
     {
@@ -59,7 +59,7 @@ class TranslationalResearchLoggerController extends LoggerController
     /**
      * @Route("/user/{id}/all", name="translationalresearch_logger_user_all")
      * @Method("GET")
-     * @Template("OlegTranslationalResearchBundle:Logger:index.html.twig")
+     * @Template("AppTranslationalResearchBundle:Logger:index.html.twig")
      */
     public function getAuditLogAllAction(Request $request)
     {
@@ -70,7 +70,7 @@ class TranslationalResearchLoggerController extends LoggerController
 
         $params = array(
             'sitename'=>$this->container->getParameter('translationalresearch.sitename'),
-            'entityNamespace'=>'Oleg\UserdirectoryBundle\Entity',
+            'entityNamespace'=>'App\UserdirectoryBundle\Entity',
             'entityName'=>$entityName,
             'entityId'=>$userid,
             'postData'=>$postData,
@@ -89,7 +89,7 @@ class TranslationalResearchLoggerController extends LoggerController
 //     *
 //     * @Route("/generation-log/", name="translationalresearch_generation_log")
 //     * @Method("GET")
-//     * @Template("OlegTranslationalResearchBundle:Logger:index.html.twig")
+//     * @Template("AppTranslationalResearchBundle:Logger:index.html.twig")
 //     */
 //    public function generationLogAction(Request $request)
 //    {
@@ -102,7 +102,7 @@ class TranslationalResearchLoggerController extends LoggerController
 //     *
 //     * @Route("/event-log-per-user-per-event-type/", name="translationalresearch_my_generation_log")
 //     * @Method("GET")
-//     * @Template("OlegTranslationalResearchBundle:Logger:index.html.twig")
+//     * @Template("AppTranslationalResearchBundle:Logger:index.html.twig")
 //     */
 //    public function myGenerationLogAction(Request $request)
 //    {
@@ -113,7 +113,7 @@ class TranslationalResearchLoggerController extends LoggerController
      *
      * @Route("/event-log-per-object/", name="translationalresearch_event-log-per-object_log")
      * @Method("GET")
-     * @Template("OlegTranslationalResearchBundle:Logger:index.html.twig")
+     * @Template("AppTranslationalResearchBundle:Logger:index.html.twig")
      */
     public function transresEventLogPerObjectAction(Request $request)
     {
@@ -150,13 +150,13 @@ class TranslationalResearchLoggerController extends LoggerController
         //permission: check if user has permission to view the specified object
         $em = $this->getDoctrine()->getManager();
 
-        $objectNamespace = "Oleg\\TranslationalResearchBundle\\Entity";
+        $objectNamespace = "App\\TranslationalResearchBundle\\Entity";
 
-        //Oleg\UserdirectoryBundle\Entity
+        //App\UserdirectoryBundle\Entity
         $objectNamespaceArr = explode("\\",$objectNamespace);
         $objectNamespaceClean = $objectNamespaceArr[0].$objectNamespaceArr[1];
 
-        $objectName = $em->getRepository('OlegUserdirectoryBundle:EventObjectTypeList')->find($objectType);
+        $objectName = $em->getRepository('AppUserdirectoryBundle:EventObjectTypeList')->find($objectType);
         if( !$objectName ) {
             throw $this->createNotFoundException('Unable to find EventObjectTypeList by objectType id='.$objectType);
         }

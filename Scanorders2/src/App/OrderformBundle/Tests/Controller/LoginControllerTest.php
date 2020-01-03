@@ -6,7 +6,7 @@
  * Time: 12:25 PM
  */
 
-namespace Oleg\OrderformBundle\Tests\Controller;
+namespace App\OrderformBundle\Tests\Controller;
 
 
 class LoginControllerTest {

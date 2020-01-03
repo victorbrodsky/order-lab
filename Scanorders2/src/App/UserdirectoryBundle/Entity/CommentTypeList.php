@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Entity;
+namespace App\UserdirectoryBundle\Entity;
 
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
@@ -36,7 +36,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * Use Doctrine Extension Tree for tree manipulation.
  *
  * @Gedmo\Tree(type="nested")
- * @ORM\Entity(repositoryClass="Oleg\UserdirectoryBundle\Repository\TreeRepository")
+ * @ORM\Entity(repositoryClass="App\UserdirectoryBundle\Repository\TreeRepository")
  * @ORM\Table(
  *  name="user_commentTypeList",
  *  indexes={

@@ -16,7 +16,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\FellAppBundle\Form;
+namespace App\FellAppBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -58,7 +58,7 @@ class FellAppCredentialsType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\Credentials',
+            'data_class' => 'App\UserdirectoryBundle\Entity\Credentials',
             'form_custom_value' => null
         ));
     }

@@ -22,11 +22,11 @@
  * Time: 9:27 AM
  */
 
-namespace Oleg\CallLogBundle\Security\Voter;
+namespace App\CallLogBundle\Security\Voter;
 
 
-use Oleg\UserdirectoryBundle\Entity\User;
-use Oleg\UserdirectoryBundle\Security\Voter\BasePermissionVoter;
+use App\UserdirectoryBundle\Entity\User;
+use App\UserdirectoryBundle\Security\Voter\BasePermissionVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;

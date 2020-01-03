@@ -15,11 +15,11 @@
  *  limitations under the License.
  */
 
-namespace Oleg\VacReqBundle\Entity;
+namespace App\VacReqBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Oleg\UserdirectoryBundle\Entity\ListAbstract;
+use App\UserdirectoryBundle\Entity\ListAbstract;
 use Symfony\Component\Validator\Constraints as Assert;
 
 

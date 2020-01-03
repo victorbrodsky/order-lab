@@ -22,7 +22,7 @@
  * Time: 9:40 AM
  */
 
-namespace Oleg\UserdirectoryBundle\Query;
+namespace App\UserdirectoryBundle\Query;
 
 
 use Doctrine\ORM\Query\AST\Functions\FunctionNode;

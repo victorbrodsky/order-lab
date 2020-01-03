@@ -22,7 +22,7 @@
  * Time: 4:20 PM
  */
 
-namespace Oleg\UserdirectoryBundle\Services;
+namespace App\UserdirectoryBundle\Services;
 
 
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -33,7 +33,7 @@ use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
-use Oleg\UserdirectoryBundle\Util\UserUtil;
+use App\UserdirectoryBundle\Util\UserUtil;
 
 class MaintenanceListener {
 
@@ -90,7 +90,7 @@ class MaintenanceListener {
         ) {
             $sitename = $this->getSiteName($controller);
             if( $sitename && $userSecUtil->isSiteAccessible($sitename) === false ) {
-                $siteObject = $this->em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation($sitename);
+                $siteObject = $this->em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation($sitename);
                 if( $siteObject ) {
                     $systemEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
 
@@ -109,13 +109,13 @@ class MaintenanceListener {
 
 
         if( 
-                strpos($controller,'Oleg\UserdirectoryBundle') !== false || 
-                strpos($controller,'Oleg\OrderformBundle') !== false ||
-                strpos($controller,'Oleg\FellAppBundle') !== false ||
-                strpos($controller,'Oleg\DeidentifierBundle') !== false ||
-                strpos($controller,'Oleg\VacReqBundle') !== false ||
-                strpos($controller,'Oleg\CallLogBundle') !== false ||
-                strpos($controller,'Oleg\TranslationalResearchBundle') !== false
+                strpos($controller,'App\UserdirectoryBundle') !== false || 
+                strpos($controller,'App\OrderformBundle') !== false ||
+                strpos($controller,'App\FellAppBundle') !== false ||
+                strpos($controller,'App\DeidentifierBundle') !== false ||
+                strpos($controller,'App\VacReqBundle') !== false ||
+                strpos($controller,'App\CallLogBundle') !== false ||
+                strpos($controller,'App\TranslationalResearchBundle') !== false
         ) {
             // fire custom event e.g. My.db.lookup
             //echo "Sites controller! <br>";
@@ -220,25 +220,25 @@ class MaintenanceListener {
     }
 
     public function getSiteName($controller) {
-        if( strpos($controller,'Oleg\UserdirectoryBundle') !== false ) {
+        if( strpos($controller,'App\UserdirectoryBundle') !== false ) {
             return "employees";
         }
-        if( strpos($controller,'Oleg\OrderformBundle') !== false ) {
+        if( strpos($controller,'App\OrderformBundle') !== false ) {
             return "scan";
         }
-        if( strpos($controller,'Oleg\FellAppBundle') !== false ) {
+        if( strpos($controller,'App\FellAppBundle') !== false ) {
             return "fellapp";
         }
-        if( strpos($controller,'Oleg\DeidentifierBundle') !== false ) {
+        if( strpos($controller,'App\DeidentifierBundle') !== false ) {
             return "deidentifier";
         }
-        if( strpos($controller,'Oleg\VacReqBundle') !== false ) {
+        if( strpos($controller,'App\VacReqBundle') !== false ) {
             return "vacreq";
         }
-        if( strpos($controller,'Oleg\CallLogBundle') !== false ) {
+        if( strpos($controller,'App\CallLogBundle') !== false ) {
             return "calllog";
         }
-        if( strpos($controller,'Oleg\TranslationalResearchBundle') !== false ) {
+        if( strpos($controller,'App\TranslationalResearchBundle') !== false ) {
             return "translationalresearch";
         }
 

@@ -15,21 +15,21 @@
  *  limitations under the License.
  */
 
-namespace Oleg\CallLogBundle\Form;
+namespace App\CallLogBundle\Form;
 
-use Oleg\OrderformBundle\Form\EncounterAttendingPhysicianType;
-use Oleg\OrderformBundle\Form\EncounterInfoTypeType;
-use Oleg\OrderformBundle\Form\EncounterLocationType;
-use Oleg\OrderformBundle\Form\EncounterPatfirstnameType;
-use Oleg\OrderformBundle\Form\EncounterPatlastnameType;
-use Oleg\OrderformBundle\Form\EncounterPatmiddlenameType;
-use Oleg\OrderformBundle\Form\EncounterPatsexType;
-use Oleg\OrderformBundle\Form\EncounterPatsuffixType;
-use Oleg\OrderformBundle\Form\EncounterReferringProviderType;
-use Oleg\OrderformBundle\Form\GenericFieldType;
+use App\OrderformBundle\Form\EncounterAttendingPhysicianType;
+use App\OrderformBundle\Form\EncounterInfoTypeType;
+use App\OrderformBundle\Form\EncounterLocationType;
+use App\OrderformBundle\Form\EncounterPatfirstnameType;
+use App\OrderformBundle\Form\EncounterPatlastnameType;
+use App\OrderformBundle\Form\EncounterPatmiddlenameType;
+use App\OrderformBundle\Form\EncounterPatsexType;
+use App\OrderformBundle\Form\EncounterPatsuffixType;
+use App\OrderformBundle\Form\EncounterReferringProviderType;
+use App\OrderformBundle\Form\GenericFieldType;
 
-use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
-//use Oleg\UserdirectoryBundle\Form\TrackerType;
+use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
+//use App\UserdirectoryBundle\Form\TrackerType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -175,7 +175,7 @@ class CalllogEncounterType extends AbstractType
         });
 
 //        $attr = array('class'=>'form-control encounterage-field patientage-mask');
-//        $gen_attr = array('label'=>"Patient's Age (at the time of encounter):",'class'=>'Oleg\OrderformBundle\Entity\EncounterPatage','type'=>'text');
+//        $gen_attr = array('label'=>"Patient's Age (at the time of encounter):",'class'=>'App\OrderformBundle\Entity\EncounterPatage','type'=>'text');
 //        $builder->add('patage', CollectionType::class, array(
 //            'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
 //            'allow_add' => true,
@@ -189,7 +189,7 @@ class CalllogEncounterType extends AbstractType
 
         //pathistory'
 //        $attr = array('class'=>'textarea form-control encounterhistory-field');
-//        $gen_attr = array('label'=>"Clinical History (at the time of encounter):",'class'=>'Oleg\OrderformBundle\Entity\EncounterPathistory','type'=>null);
+//        $gen_attr = array('label'=>"Clinical History (at the time of encounter):",'class'=>'App\OrderformBundle\Entity\EncounterPathistory','type'=>null);
 //        $builder->add('pathistory', CollectionType::class, array(
 //            'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
 //            'allow_add' => true,
@@ -227,7 +227,7 @@ class CalllogEncounterType extends AbstractType
 //        ));
         if(0) {
             $builder->add('previousEncounters', EntityType::class, array(
-                'class' => 'OlegOrderformBundle:Encounter',
+                'class' => 'AppOrderformBundle:Encounter',
                 'label' => 'New or Previous Encounter:',
                 'required' => false,
                 'mapped' => false,
@@ -250,7 +250,7 @@ class CalllogEncounterType extends AbstractType
 //        ));
 
 //            $sources = array('WCM Epic Ambulatory EMR','Written or oral referral');
-//            $params = array('name'=>'Encounter','dataClass'=>'Oleg\OrderformBundle\Entity\EncounterOrder','typename'=>'encounterorder','sources'=>$sources);
+//            $params = array('name'=>'Encounter','dataClass'=>'App\OrderformBundle\Entity\EncounterOrder','typename'=>'encounterorder','sources'=>$sources);
 //            $builder->add('order', CollectionType::class, array(
 //                'type' => new GeneralOrderType($params, null),
 //                'allow_add' => true,
@@ -284,7 +284,7 @@ class CalllogEncounterType extends AbstractType
             $providerAttr['readonly'] = true;
         }
         $builder->add('provider', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:User',
+            'class' => 'AppUserdirectoryBundle:User',
             'label' => 'Provider:',
             'required' => false,
             //'disabled' => $this->params['readonlyEncounter'],
@@ -404,7 +404,7 @@ class CalllogEncounterType extends AbstractType
         //TrackerType($this->params)
         $builder->add('tracker', CalllogTrackerType::class, array(
             'form_custom_value' => $this->params,
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\Tracker',
+            'data_class' => 'App\UserdirectoryBundle\Entity\Tracker',
             //'disabled' => $this->params['readonlyEncounter'],
             'attr' => array('readonly' => $this->params['readonlyEncounter']),
             'label' => false,
@@ -426,7 +426,7 @@ class CalllogEncounterType extends AbstractType
 //        });
 
         $builder->add( 'encounterStatus', EntityType::class, array(
-            'class' => 'OlegOrderformBundle:EncounterStatusList',
+            'class' => 'AppOrderformBundle:EncounterStatusList',
             //'choice_label' => 'name',
             'label'=>'Encounter Status:',
             'required'=> false,
@@ -449,7 +449,7 @@ class CalllogEncounterType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\Encounter',
+            'data_class' => 'App\OrderformBundle\Entity\Encounter',
             'form_custom_value' => null,
             'form_custom_value_entity' => null
             //'csrf_protection' => false

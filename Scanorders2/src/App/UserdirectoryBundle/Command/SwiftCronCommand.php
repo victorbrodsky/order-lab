@@ -22,7 +22,7 @@
  * Time: 2:33 PM
  */
 
-namespace Oleg\UserdirectoryBundle\Command;
+namespace App\UserdirectoryBundle\Command;
 
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;

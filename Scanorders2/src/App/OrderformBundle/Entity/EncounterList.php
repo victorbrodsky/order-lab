@@ -15,13 +15,13 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Entity;
+namespace App\OrderformBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-use Oleg\UserdirectoryBundle\Entity\ListAbstract;
+use App\UserdirectoryBundle\Entity\ListAbstract;
 
 /**
  * @ORM\Entity
@@ -58,10 +58,10 @@ class EncounterList extends ListAbstract
     /**
      * Add EncounterName
      *
-     * @param \Oleg\OrderformBundle\Entity\EncounterName $encountername
+     * @param \App\OrderformBundle\Entity\EncounterName $encountername
      * @return EncounterList
      */
-    public function addEncountername(\Oleg\OrderformBundle\Entity\EncounterName $encountername)
+    public function addEncountername(\App\OrderformBundle\Entity\EncounterName $encountername)
     {
         if( $encountername && !$this->encountername->contains($encountername) ) {
             $this->encountername->add($encountername);
@@ -74,9 +74,9 @@ class EncounterList extends ListAbstract
     /**
      * Remove encountername
      *
-     * @param \Oleg\OrderformBundle\Entity\EncounterName $encountername
+     * @param \App\OrderformBundle\Entity\EncounterName $encountername
      */
-    public function removeEncounterName(\Oleg\OrderformBundle\Entity\EncounterName $encountername)
+    public function removeEncounterName(\App\OrderformBundle\Entity\EncounterName $encountername)
     {
         $this->encountername->removeElement($encountername);
     }

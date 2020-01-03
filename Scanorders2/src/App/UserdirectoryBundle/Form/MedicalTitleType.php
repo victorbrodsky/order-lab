@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Form;
+namespace App\UserdirectoryBundle\Form;
 
 
 use Symfony\Component\Form\AbstractType;
@@ -34,7 +34,7 @@ class MedicalTitleType extends BaseTitleType
     {
 
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\MedicalTitle',
+            'data_class' => 'App\UserdirectoryBundle\Entity\MedicalTitle',
             'allow_extra_fields' => true,
             'form_custom_value' => null
         ));

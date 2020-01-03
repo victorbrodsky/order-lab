@@ -15,10 +15,10 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Form;
+namespace App\OrderformBundle\Form;
 
-use Oleg\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
-use Oleg\UserdirectoryBundle\Form\UserWrapperType;
+use App\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
+use App\UserdirectoryBundle\Form\UserWrapperType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -106,7 +106,7 @@ class ResearchType extends AbstractType
                 }
 
                 $form->add( 'primaryPrincipal', EntityType::class, array(
-                    'class' => 'OlegUserdirectoryBundle:UserWrapper',
+                    'class' => 'AppUserdirectoryBundle:UserWrapper',
                     'label'=>'Primary Principal Investigator (as entered by user'.$comment.'):',
                     'required'=> false,
                     'multiple' => false,
@@ -127,7 +127,7 @@ class ResearchType extends AbstractType
 
                 $label = null;
                 $mapper = array(
-                    'prefix' => "Oleg",
+                    'prefix' => "App",
                     'className' => "ProjectTitleTree",
                     'bundleName' => "OrderformBundle",
                     'organizationalGroupType' => "ResearchGroupType"
@@ -135,11 +135,11 @@ class ResearchType extends AbstractType
                 if( $title ) {
                     $projectTitle = $title->getProjectTitle();
                     if( $projectTitle ) {
-                        $label = $this->params['em']->getRepository('OlegOrderformBundle:ProjectTitleTree')->getLevelLabels($projectTitle,$mapper) . ":";
+                        $label = $this->params['em']->getRepository('AppOrderformBundle:ProjectTitleTree')->getLevelLabels($projectTitle,$mapper) . ":";
                     }
                 }
                 if( !$label ) {
-                    $label = $this->params['em']->getRepository('OlegOrderformBundle:ProjectTitleTree')->getLevelLabels(null,$mapper) . ":";
+                    $label = $this->params['em']->getRepository('AppOrderformBundle:ProjectTitleTree')->getLevelLabels(null,$mapper) . ":";
                 }
                 //echo "label=".$label."<br>";
 
@@ -174,7 +174,7 @@ class ResearchType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\Research',
+            'data_class' => 'App\OrderformBundle\Entity\Research',
             'form_custom_value' => null
         ));
     }

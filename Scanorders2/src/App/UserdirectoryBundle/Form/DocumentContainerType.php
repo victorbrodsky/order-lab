@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Form;
+namespace App\UserdirectoryBundle\Form;
 
 
 
@@ -160,7 +160,7 @@ class DocumentContainerType extends AbstractType
             if( $this->params['document.device'] ) {
                 if( array_key_exists('device.types', $this->params) && is_array($this->params['device.types']) && $this->params['device.types'] != false ) {
                     $builder->add( 'device', EntityType::class, array(
-                        'class' => 'OlegUserdirectoryBundle:Equipment',
+                        'class' => 'AppUserdirectoryBundle:Equipment',
                         'choice_label' => 'name',
                         'label' => $this->params['document.device.label'],
                         'required'=> true,
@@ -259,7 +259,7 @@ class DocumentContainerType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\DocumentContainer',
+            'data_class' => 'App\UserdirectoryBundle\Entity\DocumentContainer',
             'form_custom_value' => null
         ));
     }

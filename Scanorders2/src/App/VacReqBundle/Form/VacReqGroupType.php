@@ -15,10 +15,10 @@
  *  limitations under the License.
  */
 
-namespace Oleg\VacReqBundle\Form;
+namespace App\VacReqBundle\Form;
 
 
-use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
+use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -27,7 +27,7 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 
-use Oleg\VacReqBundle\Form\VacReqRequestBusinessType;
+use App\VacReqBundle\Form\VacReqRequestBusinessType;
 
 
 class VacReqGroupType extends AbstractType
@@ -53,11 +53,11 @@ class VacReqGroupType extends AbstractType
             if( $title ) {
                 $institution = $title->getInstitution();
                 if( $institution ) {
-                    $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
+                    $label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
                 }
             }
             if( !$label ) {
-                $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
+                $label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
             }
             //echo "label=".$label."<br>";
 
@@ -82,7 +82,7 @@ class VacReqGroupType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            //'data_class' => 'Oleg\UserdirectoryBundle\Entity\Institution',
+            //'data_class' => 'App\UserdirectoryBundle\Entity\Institution',
             'csrf_protection' => false,
             'form_custom_value' => null
         ));

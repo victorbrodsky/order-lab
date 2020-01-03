@@ -1,6 +1,6 @@
 <?php
 
-namespace Oleg\OrderformBundle\Tests\Controller;
+namespace App\OrderformBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 

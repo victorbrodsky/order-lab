@@ -22,7 +22,7 @@
  * Time: 12:34 PM
  */
 
-namespace Oleg\FellAppBundle\Entity;
+namespace App\FellAppBundle\Entity;
 
 
 use Doctrine\ORM\Mapping as ORM;
@@ -60,7 +60,7 @@ class Rank {
 
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true)
      */
     private $user;
@@ -78,7 +78,7 @@ class Rank {
     private $creationdate;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(name="updateuser_id", referencedColumnName="id", nullable=true)
      */
     private $updateuser;

@@ -15,9 +15,9 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Form;
+namespace App\OrderformBundle\Form;
 
-use Oleg\UserdirectoryBundle\Form\AttachmentContainerType;
+use App\UserdirectoryBundle\Form\AttachmentContainerType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -25,7 +25,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 
-use Oleg\OrderformBundle\Helper\FormHelper;
+use App\OrderformBundle\Helper\FormHelper;
 
 class BlockType extends AbstractType
 {
@@ -60,7 +60,7 @@ class BlockType extends AbstractType
             'prototype_name' => '__blockblockname__',
         ));
 
-        $gen_attr = array('label'=>'Section Source:','class'=>'Oleg\OrderformBundle\Entity\BlockSectionsource','type'=>null);    //type=null => auto type
+        $gen_attr = array('label'=>'Section Source:','class'=>'App\OrderformBundle\Entity\BlockSectionsource','type'=>null);    //type=null => auto type
         $builder->add('sectionsource', CollectionType::class, array(
             //'type' => new GenericFieldType($this->params, null, $gen_attr),
             'entry_type' => GenericFieldType::class,
@@ -145,7 +145,7 @@ class BlockType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\Block',
+            'data_class' => 'App\OrderformBundle\Entity\Block',
             'form_custom_value' => null
         ));
     }

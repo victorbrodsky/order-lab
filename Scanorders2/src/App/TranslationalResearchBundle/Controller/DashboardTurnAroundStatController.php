@@ -1,9 +1,9 @@
 <?php
 
-namespace Oleg\TranslationalResearchBundle\Controller;
+namespace App\TranslationalResearchBundle\Controller;
 
-use Oleg\TranslationalResearchBundle\Form\FilterDashboardType;
-use Oleg\UserdirectoryBundle\Util\LargeFileDownloader;
+use App\TranslationalResearchBundle\Form\FilterDashboardType;
+use App\UserdirectoryBundle\Util\LargeFileDownloader;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -27,7 +27,7 @@ class DashboardTurnAroundStatController extends DashboardController
 
     /**
      * @Route("/graphs/turn-around-statistics", name="translationalresearch_dashboard_turn_around_stat")
-     * @Template("OlegTranslationalResearchBundle:Dashboard:dashboard-turn-around-stat.html.twig")
+     * @Template("AppTranslationalResearchBundle:Dashboard:dashboard-turn-around-stat.html.twig")
      */
     public function dashboardChoicesAction( Request $request )
     {
@@ -59,7 +59,7 @@ class DashboardTurnAroundStatController extends DashboardController
         $endDate = $filterform['endDate']->getData();
         $projectSpecialty = $filterform['projectSpecialty']->getData();
         if( $projectSpecialty != 0 ) {
-            $projectSpecialtyObject = $em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->find($projectSpecialty);
+            $projectSpecialtyObject = $em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->find($projectSpecialty);
             $projectSpecialtyObjects[] = $projectSpecialtyObject;
         }
 
@@ -157,7 +157,7 @@ class DashboardTurnAroundStatController extends DashboardController
         }
 
         //$categories (Product or Service)
-//        $repository = $em->getRepository('OlegTranslationalResearchBundle:RequestCategoryTypeList');
+//        $repository = $em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList');
 //        $dql =  $repository->createQueryBuilder("project");
 //        $dql->select('project');
 //
@@ -202,7 +202,7 @@ class DashboardTurnAroundStatController extends DashboardController
 //        $em = $this->getDoctrine()->getManager();
 //        //$transresUtil = $this->container->get('transres_util');
 //
-//        $repository = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
+//        $repository = $em->getRepository('AppTranslationalResearchBundle:TransResRequest');
 //        $dql =  $repository->createQueryBuilder("request");
 //        $dql->select('request');
 //

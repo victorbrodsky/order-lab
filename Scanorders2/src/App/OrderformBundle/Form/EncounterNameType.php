@@ -15,14 +15,14 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Form;
+namespace App\OrderformBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
-use Oleg\OrderformBundle\Entity\ProcedureList;
+use App\OrderformBundle\Entity\ProcedureList;
 
 //NOT USED
 class EncounterNameType extends AbstractType
@@ -43,7 +43,7 @@ class EncounterNameType extends AbstractType
         $builder->add('field', HiddenType::class, array('label'=>false));
 
         $builder->add('others', ArrayFieldType::class, array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\EncounterName',
+            'data_class' => 'App\OrderformBundle\Entity\EncounterName',
             'form_custom_value' => $this->params,
             'label' => false,
 			'attr' => array('style'=>'display:none;')
@@ -54,7 +54,7 @@ class EncounterNameType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\EncounterName',
+            'data_class' => 'App\OrderformBundle\Entity\EncounterName',
             'form_custom_value' => null
         ));
     }

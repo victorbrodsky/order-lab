@@ -1,6 +1,6 @@
 <?php
 
-namespace Oleg\CallLogBundle\DependencyInjection;
+namespace App\CallLogBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;

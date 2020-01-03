@@ -23,10 +23,10 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Oleg\OrderformBundle\Entity;
+namespace App\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Oleg\OrderformBundle\Entity\ArrayFieldAbstract;
+use App\OrderformBundle\Entity\ArrayFieldAbstract;
 
 /**
  * @ORM\MappedSuperclass
@@ -36,10 +36,10 @@ abstract class PatientArrayFieldAbstract extends ArrayFieldAbstract {
     /**
      * Set patient
      *
-     * @param \Oleg\OrderformBundle\Entity\Patient $patient
+     * @param \App\OrderformBundle\Entity\Patient $patient
      * @return PatientArrayFieldAbstract
      */
-    public function setPatient(\Oleg\OrderformBundle\Entity\Patient $patient = null)
+    public function setPatient(\App\OrderformBundle\Entity\Patient $patient = null)
     {
         $this->patient = $patient;
 
@@ -49,7 +49,7 @@ abstract class PatientArrayFieldAbstract extends ArrayFieldAbstract {
     /**
      * Get patient
      *
-     * @return \Oleg\OrderformBundle\Entity\Patient
+     * @return \App\OrderformBundle\Entity\Patient
      */
     public function getPatient()
     {

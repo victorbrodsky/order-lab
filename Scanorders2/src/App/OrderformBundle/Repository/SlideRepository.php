@@ -17,7 +17,7 @@
 
 //use to create some complex queries
 
-namespace Oleg\OrderformBundle\Repository;
+namespace App\OrderformBundle\Repository;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
@@ -55,12 +55,12 @@ class SlideRepository extends ArrayFieldAbstractRepository {
             $slide->setProvider($message->getProvider());
         }
 
-        $slide = $em->getRepository('OlegOrderformBundle:Slide')->processFieldArrays($slide,$message,$original);
+        $slide = $em->getRepository('AppOrderformBundle:Slide')->processFieldArrays($slide,$message,$original);
 
         $scans = $slide->getScan();
         foreach( $scans as $scan ) {
             $scan->setProvider($message->getProvider());
-            $scan = $em->getRepository('OlegOrderformBundle:Slide')->processFieldArrays($scan,$message,$original);
+            $scan = $em->getRepository('AppOrderformBundle:Slide')->processFieldArrays($scan,$message,$original);
             $scan->setInstitution($message->getInstitution());
             $message->addImaging($scan);
         } //scan
@@ -68,7 +68,7 @@ class SlideRepository extends ArrayFieldAbstractRepository {
         $stains = $slide->getStain();
         foreach( $stains as $stain ) {
             $stain->setProvider($message->getProvider());
-            $stain = $em->getRepository('OlegOrderformBundle:Slide')->processFieldArrays($stain,$message,$original);
+            $stain = $em->getRepository('AppOrderformBundle:Slide')->processFieldArrays($stain,$message,$original);
         } //stain
 
         unset($original);
@@ -111,7 +111,7 @@ class SlideRepository extends ArrayFieldAbstractRepository {
         $parent = $slide->getParent();
         $class = new \ReflectionClass($parent);
         $className = $class->getShortName();
-        $processedParent = $em->getRepository('OlegOrderformBundle:'.$className)->processEntity($parent, $message, null);
+        $processedParent = $em->getRepository('AppOrderformBundle:'.$className)->processEntity($parent, $message, null);
         $slide->setParent($processedParent);
         ////////////// EOF process parent //////////////
 
@@ -123,7 +123,7 @@ class SlideRepository extends ArrayFieldAbstractRepository {
 
         $slides = new ArrayCollection();
 
-        $block = $this->_em->getRepository('OlegOrderformBundle:Block')->findOneByInstAccessionPartBlock($institution,$accessionTypeStr,$accessionStr,$partStr,$blockStr);
+        $block = $this->_em->getRepository('AppOrderformBundle:Block')->findOneByInstAccessionPartBlock($institution,$accessionTypeStr,$accessionStr,$partStr,$blockStr);
 
         if( $block ) {
             foreach( $block->getSlide() as $slide ) {
@@ -135,7 +135,7 @@ class SlideRepository extends ArrayFieldAbstractRepository {
 
         //echo "bloc's slide count=".count($slides)."<br>";
 
-        $part = $this->_em->getRepository('OlegOrderformBundle:Part')->findOneByInstAccessionPart($institution,$accessionTypeStr,$accessionStr,$partStr);
+        $part = $this->_em->getRepository('AppOrderformBundle:Part')->findOneByInstAccessionPart($institution,$accessionTypeStr,$accessionStr,$partStr);
 
         if( $part ) {
             foreach( $part->getSlide() as $slide ) {
@@ -154,7 +154,7 @@ class SlideRepository extends ArrayFieldAbstractRepository {
 
         $slides = new ArrayCollection();
 
-        $accessiontype = $this->_em->getRepository('OlegOrderformBundle:AccessionType')->findOneByName($accessionTypeStr);
+        $accessiontype = $this->_em->getRepository('AppOrderformBundle:AccessionType')->findOneByName($accessionTypeStr);
 
         $extra = array();
         $extra["keytype"] = $accessiontype->getId();
@@ -164,7 +164,7 @@ class SlideRepository extends ArrayFieldAbstractRepository {
         $validity = array(self::STATUS_VALID,self::STATUS_RESERVED);
         $single = true;
 
-        $accession = $this->_em->getRepository('OlegOrderformBundle:Accession')->findOneByIdJoinedToField(
+        $accession = $this->_em->getRepository('AppOrderformBundle:Accession')->findOneByIdJoinedToField(
             $institutions,
             $accessionStr,
             "Accession",

@@ -22,30 +22,30 @@
  * Time: 12:00 PM
  */
 
-namespace Oleg\UserdirectoryBundle\Util;
+namespace App\UserdirectoryBundle\Util;
 
 
-use Oleg\OrderformBundle\Entity\Educational;
-use Oleg\UserdirectoryBundle\Entity\GeoLocation;
-use Oleg\UserdirectoryBundle\Entity\Institution;
-use Oleg\UserdirectoryBundle\Entity\PerSiteSettings;
-use Oleg\OrderformBundle\Security\Util\PacsvendorUtil;
-use Oleg\UserdirectoryBundle\Entity\AdminComment;
-use Oleg\UserdirectoryBundle\Entity\AdministrativeTitle;
-use Oleg\UserdirectoryBundle\Entity\AppointmentTitle;
-use Oleg\UserdirectoryBundle\Entity\BoardCertification;
-use Oleg\UserdirectoryBundle\Entity\CodeNYPH;
-use Oleg\UserdirectoryBundle\Entity\Credentials;
-use Oleg\UserdirectoryBundle\Entity\EmploymentStatus;
-use Oleg\UserdirectoryBundle\Entity\Identifier;
-use Oleg\UserdirectoryBundle\Entity\Location;
-use Oleg\UserdirectoryBundle\Entity\MedicalTitle;
-use Oleg\UserdirectoryBundle\Entity\ResearchLab;
-use Oleg\UserdirectoryBundle\Entity\StateLicense;
-use Oleg\UserdirectoryBundle\Entity\Training;
-use Oleg\UserdirectoryBundle\Entity\User;
-use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericSelectTransformer;
-use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
+use App\OrderformBundle\Entity\Educational;
+use App\UserdirectoryBundle\Entity\GeoLocation;
+use App\UserdirectoryBundle\Entity\Institution;
+use App\UserdirectoryBundle\Entity\PerSiteSettings;
+use App\OrderformBundle\Security\Util\PacsvendorUtil;
+use App\UserdirectoryBundle\Entity\AdminComment;
+use App\UserdirectoryBundle\Entity\AdministrativeTitle;
+use App\UserdirectoryBundle\Entity\AppointmentTitle;
+use App\UserdirectoryBundle\Entity\BoardCertification;
+use App\UserdirectoryBundle\Entity\CodeNYPH;
+use App\UserdirectoryBundle\Entity\Credentials;
+use App\UserdirectoryBundle\Entity\EmploymentStatus;
+use App\UserdirectoryBundle\Entity\Identifier;
+use App\UserdirectoryBundle\Entity\Location;
+use App\UserdirectoryBundle\Entity\MedicalTitle;
+use App\UserdirectoryBundle\Entity\ResearchLab;
+use App\UserdirectoryBundle\Entity\StateLicense;
+use App\UserdirectoryBundle\Entity\Training;
+use App\UserdirectoryBundle\Entity\User;
+use App\UserdirectoryBundle\Form\DataTransformer\GenericSelectTransformer;
+use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 
 class UserGenerator {
 
@@ -155,7 +155,7 @@ class UserGenerator {
             $usernamePrefix = null;
             $userTypeName = $this->getValueBySectionHeaderName("Primary Public User ID Type",$rowData,$headers,$sectionNameContactInfoRange);
             //echo "userTypeName=".$userTypeName."<br>";
-            $userType = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findOneByName($userTypeName);
+            $userType = $em->getRepository('AppUserdirectoryBundle:UsernameType')->findOneByName($userTypeName);
             if( $userType ) {
                 $usernamePrefix = $userType->getAbbreviation();
             }
@@ -178,7 +178,7 @@ class UserGenerator {
             $fillUsername = $username."_@_". $usernamePrefix;
             //echo "fillUsername=".$fillUsername."<br>";
 
-            $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername($fillUsername);
+            $user = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByUsername($fillUsername);
             //echo "DB user=".$user."<br>";
 
             if( $user ) {
@@ -626,7 +626,7 @@ class UserGenerator {
             ) {
 
                 //find reseach lab by name $researchLabOtherTitle
-                $researchLab = $em->getRepository('OlegUserdirectoryBundle:ResearchLab')->findOneByName($researchLabOtherTitle);
+                $researchLab = $em->getRepository('AppUserdirectoryBundle:ResearchLab')->findOneByName($researchLabOtherTitle);
                 if( !$researchLab ) {
                     $researchLab = new ResearchLab($systemuser);
                     $user->addResearchLab($researchLab);
@@ -930,7 +930,7 @@ class UserGenerator {
                 $perSiteSettings = new PerSiteSettings($systemuser);
                 $perSiteSettings->setUser($user);
             }
-//            $params = $this->em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+//            $params = $this->em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
 //            if( count($params) != 1 ) {
 //                throw new \Exception( 'Must have only one parameter object. Found '.count($params).' object(s)' );
 //            }
@@ -995,7 +995,7 @@ class UserGenerator {
 
     public function getEntityByInstitutionDepartmentDivisionService( $institution, $department, $division, $service ) {
         $mapper = array(
-            'prefix' => "Oleg",
+            'prefix' => "App",
             'className' => "Institution",
             'bundleName' => "UserdirectoryBundle"
         );
@@ -1240,7 +1240,7 @@ class UserGenerator {
             //print_r($services);
 
             //username: oli2002_@_ldap-user
-            $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername( $username."_@_". $this->usernamePrefix);
+            $user = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByUsername( $username."_@_". $this->usernamePrefix);
             //echo "DB user=".$user."<br>";
 
             if( $user ) {
@@ -1339,7 +1339,7 @@ class UserGenerator {
                 $location->setStatus($location::STATUS_VERIFIED);
                 $location->setRemovable(true);
                 $location->setName('Other Location');
-                $otherLocType = $this->em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Employee Office");
+                $otherLocType = $this->em->getRepository('AppUserdirectoryBundle:LocationTypeList')->findOneByName("Employee Office");
                 $location->addLocationType($otherLocType);
                 $location->setPhone($BusinessPhone);
                 $user->addLocation($location);
@@ -1467,25 +1467,25 @@ class UserGenerator {
                 if( !$researchLab->getInstitution() ) {
                     //$params = array('type'=>'Medical','organizationalGroupType'=>'Research Lab');
                     //$researchLabInstitutionObj = $this->getObjectByNameTransformer('Institution',$researchLabTitleStr,$systemuser,$params);
-                    $researchWcmc = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+                    $researchWcmc = $this->em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
                     $researchMapper = array(
-                        'prefix' => 'Oleg',
+                        'prefix' => 'App',
                         'bundleName' => 'UserdirectoryBundle',
                         'className' => 'Institution'
                     );
-                    $researchPathology = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+                    $researchPathology = $this->em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
                         "Pathology and Laboratory Medicine",
                         $researchWcmc,
                         $researchMapper
                     );
-                    $researchInstitution = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+                    $researchInstitution = $this->em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
                         $researchLabTitleStr,
                         $researchPathology,
                         $researchMapper
                     );
                     if (!$researchInstitution) {
-                        $medicalType = $this->em->getRepository('OlegUserdirectoryBundle:InstitutionType')->findOneByName('Medical');
-                        $researchLabOrgGroup = $this->em->getRepository('OlegUserdirectoryBundle:OrganizationalGroupType')->findOneByName("Research Lab");
+                        $medicalType = $this->em->getRepository('AppUserdirectoryBundle:InstitutionType')->findOneByName('Medical');
+                        $researchLabOrgGroup = $this->em->getRepository('AppUserdirectoryBundle:OrganizationalGroupType')->findOneByName("Research Lab");
                         $researchInstitution = new Institution();
                         $userSecUtil->setDefaultList($researchInstitution, null, $user, $researchLabTitleStr);
                         $researchInstitution->setOrganizationalGroupType($researchLabOrgGroup);
@@ -1566,14 +1566,14 @@ class UserGenerator {
 
                 //check if Category exists (root)
                 $transformer = new GenericTreeTransformer($this->em, $systemuser, 'CommentTypeList', 'UserdirectoryBundle');
-                $mapper = array('prefix'=>'Oleg','bundleName'=>'UserdirectoryBundle','className'=>'CommentTypeList','organizationalGroupType'=>'CommentGroupType');
+                $mapper = array('prefix'=>'App','bundleName'=>'UserdirectoryBundle','className'=>'CommentTypeList','organizationalGroupType'=>'CommentGroupType');
                 $AdministrativeCommentCategoryObj = $this->getObjectByNameTransformer('CommentTypeList',$AdministrativeCommentCategory,$systemuser);
                 //$AdministrativeCommentCategoryObj = $transformer->createNewEntity($AdministrativeCommentCategory,$mapper['className'],$systemuser);
                 $this->em->persist($AdministrativeCommentCategoryObj);
 
                 $AdministrativeCommentNameObj = null;
                 if( $AdministrativeCommentCategoryObj ) {
-                    $AdministrativeCommentNameObj = $this->em->getRepository('OlegUserdirectoryBundle:CommentTypeList')->findByChildnameAndParent($AdministrativeCommentName,$AdministrativeCommentCategoryObj,$mapper);
+                    $AdministrativeCommentNameObj = $this->em->getRepository('AppUserdirectoryBundle:CommentTypeList')->findByChildnameAndParent($AdministrativeCommentName,$AdministrativeCommentCategoryObj,$mapper);
                 }
 
                 if( !$AdministrativeCommentNameObj ) {
@@ -1581,7 +1581,7 @@ class UserGenerator {
 
                     if( !$AdministrativeCommentNameObj->getParent() ) {
                         $AdministrativeCommentCategoryObj->addChild($AdministrativeCommentNameObj);
-                        $organizationalGroupType = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->getDefaultLevelEntity($mapper, 1);
+                        $organizationalGroupType = $this->em->getRepository('AppUserdirectoryBundle:Institution')->getDefaultLevelEntity($mapper, 1);
                         $AdministrativeCommentNameObj->setOrganizationalGroupType($organizationalGroupType);
                         $this->em->persist($AdministrativeCommentNameObj);
                     } else {
@@ -1591,7 +1591,7 @@ class UserGenerator {
                     }
 
 //                    $AdministrativeCommentCategoryObj->addChild($AdministrativeCommentNameObj);
-//                    $organizationalGroupType = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->getDefaultLevelEntity($mapper, 1);
+//                    $organizationalGroupType = $this->em->getRepository('AppUserdirectoryBundle:Institution')->getDefaultLevelEntity($mapper, 1);
 //                    $AdministrativeCommentNameObj->setOrganizationalGroupType($organizationalGroupType);
 //                    $this->em->persist($AdministrativeCommentNameObj);
                 }
@@ -1829,7 +1829,7 @@ class UserGenerator {
             //$user->setLocked(false);
             //$user->setExpired(false);
 
-//            $found_user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername( $user->getUsername() );
+//            $found_user = $em->getRepository('AppUserdirectoryBundle:User')->findOneByUsername( $user->getUsername() );
 //            if( $found_user ) {
 //                //
 //            } else {
@@ -1855,7 +1855,7 @@ class UserGenerator {
                 $perSiteSettings->setUser($user);
             }
             
-//            $params = $this->em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+//            $params = $this->em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
 //            if( count($params) != 1 ) {
 //                throw new \Exception( 'Must have only one parameter object. Found '.count($params).' object(s)' );
 //            }
@@ -1885,15 +1885,15 @@ class UserGenerator {
             foreach( $assistantsArr as $userid => $assistants ) {
 
                 echo "userid=".$userid."assistants=".$assistants."<br>";
-                $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->find($userid);
+                $user = $this->em->getRepository('AppUserdirectoryBundle:User')->find($userid);
                 $assistantsStrArr = explode(";",$assistants);
 
                 foreach( $assistantsStrArr as $assistantsStr ) {
                     if( strtolower($assistantsStr) != 'null' ) {
-                        $assistant = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByNameStr($assistantsStr,"AND");
+                        $assistant = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByNameStr($assistantsStr,"AND");
                         if( !$assistant ) {
                             //try again with "last name OR first name"
-                            $assistant = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByNameStr($assistantsStr,"OR");
+                            $assistant = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByNameStr($assistantsStr,"OR");
                         }
                         echo "found assistant=".$assistant."<br>";
                         if( $assistant ) {
@@ -2062,7 +2062,7 @@ class UserGenerator {
         $mainLocation = new Location($creator);
         $mainLocation->setName('Main Office');
         $mainLocation->setRemovable(false);
-        $mainLocType = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Employee Office");
+        $mainLocType = $em->getRepository('AppUserdirectoryBundle:LocationTypeList')->findOneByName("Employee Office");
         $mainLocation->addLocationType($mainLocType);
         $subjectUser->addLocation($mainLocation);
 
@@ -2070,7 +2070,7 @@ class UserGenerator {
         $homeLocation = new Location($creator);
         $homeLocation->setName('Home');
         $homeLocation->setRemovable(false);
-        $homeLocType = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Employee Home");
+        $homeLocType = $em->getRepository('AppUserdirectoryBundle:LocationTypeList')->findOneByName("Employee Home");
         $homeLocation->addLocationType($homeLocType);
         $subjectUser->addLocation($homeLocation);
 
@@ -2236,7 +2236,7 @@ class UserGenerator {
 
             //echo "holders < leadArr=".count($holders)." < ".count($leadArr)."<br>";
             if( !$holder && count($holders) < count($titleArr)-1 ) {
-                $entityClass = "Oleg\\UserdirectoryBundle\\Entity\\".$holderClassName;
+                $entityClass = "App\\UserdirectoryBundle\\Entity\\".$holderClassName;
                 $holder = new $entityClass($systemuser);
                 $holder->setStatus($holder::STATUS_VERIFIED);
             }
@@ -2301,7 +2301,7 @@ class UserGenerator {
         $DivisionObj = null;
         $ServiceObj = null;
 
-        $mapper = array('prefix'=>'Oleg','bundleName'=>'UserdirectoryBundle','className'=>'Institution','organizationalGroupType'=>'OrganizationalGroupType');
+        $mapper = array('prefix'=>'App','bundleName'=>'UserdirectoryBundle','className'=>'Institution','organizationalGroupType'=>'OrganizationalGroupType');
 
         $params = array('type'=>'Medical');
 
@@ -2309,13 +2309,13 @@ class UserGenerator {
 
         if( $Institution && strtolower($Institution) != 'null' ) {
 
-            $entityClass = "Oleg\\UserdirectoryBundle\\Entity\\".$holderClassName;
+            $entityClass = "App\\UserdirectoryBundle\\Entity\\".$holderClassName;
             $holder = new $entityClass($systemuser);
             $holder->setStatus($holder::STATUS_VERIFIED);
 
             $InstitutionObj = $this->getObjectByNameTransformer('Institution',$Institution,$systemuser,$params);
             //$InstitutionObj = $transformer->createNewEntity($Institution,$mapper['className'],$systemuser);
-            //$levelInstitution = $this->em->getRepository('OlegUserdirectoryBundle:OrganizationalGroupType')->findOneByName('Institution');
+            //$levelInstitution = $this->em->getRepository('AppUserdirectoryBundle:OrganizationalGroupType')->findOneByName('Institution');
             //$InstitutionObj->setOrganizationalGroupType($levelInstitution);
 
             if( $InstitutionObj ) {
@@ -2327,14 +2327,14 @@ class UserGenerator {
         //department
         if( $Institution && $Department && strtolower($Department) != 'null' && $InstitutionObj ) {
 
-            $DepartmentObj = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent($Department,$InstitutionObj,$mapper);
+            $DepartmentObj = $this->em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent($Department,$InstitutionObj,$mapper);
             if( !$DepartmentObj ) {
                 //$DepartmentObj = $this->getObjectByNameTransformer('Institution',$Department,$systemuser,$params);
                 $DepartmentObj = $transformer->createNewEntity($Department,$mapper['className'],$systemuser);
 
                 if( !$DepartmentObj->getParent() ) {
                     $InstitutionObj->addChild($DepartmentObj);
-                    $organizationalGroupType = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->getDefaultLevelEntity($mapper, 1);
+                    $organizationalGroupType = $this->em->getRepository('AppUserdirectoryBundle:Institution')->getDefaultLevelEntity($mapper, 1);
                     $DepartmentObj->setOrganizationalGroupType($organizationalGroupType);
                     $this->em->persist($DepartmentObj);
                 } else {
@@ -2359,14 +2359,14 @@ class UserGenerator {
         //division
         if( $Institution && $Department && $Division && strtolower($Division) != 'null' && $DepartmentObj ) {
 
-            $DivisionObj = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent($Division,$DepartmentObj,$mapper);
+            $DivisionObj = $this->em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent($Division,$DepartmentObj,$mapper);
             if( !$DivisionObj ) {
                 //$DivisionObj = $this->getObjectByNameTransformer('Institution',$Division,$systemuser,$params);
                 $DivisionObj = $transformer->createNewEntity($Division,$mapper['className'],$systemuser);
 
                 if( !$DivisionObj->getParent() ) {
                     $DepartmentObj->addChild($DivisionObj);
-                    $organizationalGroupType = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->getDefaultLevelEntity($mapper, 2);
+                    $organizationalGroupType = $this->em->getRepository('AppUserdirectoryBundle:Institution')->getDefaultLevelEntity($mapper, 2);
                     $DivisionObj->setOrganizationalGroupType($organizationalGroupType);
                     $this->em->persist($DivisionObj);
                 } else {
@@ -2391,14 +2391,14 @@ class UserGenerator {
         //service
         if( $Institution && $Department && $Division && $Service && strtolower($Service) != 'null' && $DivisionObj ) {
 
-            $ServiceObj = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent($Service,$DivisionObj,$mapper);
+            $ServiceObj = $this->em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent($Service,$DivisionObj,$mapper);
             if( !$ServiceObj ) {
                 //$ServiceObj = $this->getObjectByNameTransformer('Institution',$Service,$systemuser,$params);
                 $ServiceObj = $transformer->createNewEntity($Service,$mapper['className'],$systemuser);
 
                 if( !$ServiceObj->getParent() ) {
                     $DivisionObj->addChild($ServiceObj);
-                    $organizationalGroupType = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->getDefaultLevelEntity($mapper, 3);
+                    $organizationalGroupType = $this->em->getRepository('AppUserdirectoryBundle:Institution')->getDefaultLevelEntity($mapper, 3);
                     $ServiceObj->setOrganizationalGroupType($organizationalGroupType);
                     $this->em->persist($ServiceObj);
                 } else {

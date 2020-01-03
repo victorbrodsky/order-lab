@@ -14,7 +14,7 @@
     limitations under the License.
 #}
 
-{% extends "OlegFellAppBundle::Default/base.html.twig" %}
+{% extends "AppFellAppBundle::Default/base.html.twig" %}
 
 {#{% block browsercheck %}{% endblock %}#}
 {#{% block header %}{% endblock %}#}
@@ -37,7 +37,7 @@
         {% endif %}
     {% endif %}
 
-    {% include 'OlegFellAppBundle:Form:applicant-content.html.twig' %}
+    {% include 'AppFellAppBundle:Form:applicant-content.html.twig' %}
 
     {#{{ form_start(form,{'attr': {'id': 'fellapp-applicant-form'}}) }}#}
     {#{{ form_errors(form) }}#}
@@ -53,7 +53,7 @@
 
 
 {% block additionaljs %}
-    {% include 'OlegFellAppBundle:Form:applicant-content-js.html.twig' %}
+    {% include 'AppFellAppBundle:Form:applicant-content-js.html.twig' %}
 {% endblock %}
 
 

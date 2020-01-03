@@ -15,9 +15,9 @@
  *  limitations under the License.
  */
 
-namespace Oleg\FellAppBundle\Controller;
+namespace App\FellAppBundle\Controller;
 
-use Oleg\FellAppBundle\Entity\FellowshipApplication;
+use App\FellAppBundle\Entity\FellowshipApplication;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -40,7 +40,7 @@ class DefaultController extends Controller
 
     /**
      * @Route("/thanks-for-downloading/{id}/{sitename}", name="fellapp_thankfordownloading")
-     * @Template("OlegUserdirectoryBundle:Default:thanksfordownloading.html.twig")
+     * @Template("AppUserdirectoryBundle:Default:thanksfordownloading.html.twig")
      * @Method("GET")
      */
     public function thankfordownloadingAction(Request $request, $id, $sitename) {
@@ -53,7 +53,7 @@ class DefaultController extends Controller
 
     /**
      * @Route("/about", name="fellapp_about_page")
-     * @Template("OlegUserdirectoryBundle:Default:about.html.twig")
+     * @Template("AppUserdirectoryBundle:Default:about.html.twig")
      */
     public function aboutAction( Request $request ) {
         return array('sitename'=>$this->container->getParameter('fellapp.sitename'));
@@ -84,7 +84,7 @@ class DefaultController extends Controller
 
         //test 1) sendRefLetterReceivedNotificationEmail
         $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
-        $fellapp = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find(1414); //8-testing, 1414-collage, 1439-live
+        $fellapp = $this->getDoctrine()->getRepository('AppFellAppBundle:FellowshipApplication')->find(1414); //8-testing, 1414-collage, 1439-live
         $references = $fellapp->getReferences();
         $reference = $references->first();
         $letters = $reference->getDocuments();
@@ -115,12 +115,12 @@ class DefaultController extends Controller
 
         //testing checkAndSendCompleteEmail
         //$fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
-        //$fellapp = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find(8);
+        //$fellapp = $this->getDoctrine()->getRepository('AppFellAppBundle:FellowshipApplication')->find(8);
         //$fellappRecLetterUtil->checkAndSendCompleteEmail($fellapp);
 
         //testing checkReferenceAlreadyHasLetter
         //$fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
-        //$fellapp = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find(1414); //8-test,1414-collage
+        //$fellapp = $this->getDoctrine()->getRepository('AppFellAppBundle:FellowshipApplication')->find(1414); //8-test,1414-collage
         //$reference = $fellapp->getReferences()->first();
         //$fellappRecLetterUtil->checkReferenceAlreadyHasLetter($fellapp,$reference);
 
@@ -133,7 +133,7 @@ class DefaultController extends Controller
         $em = $this->getDoctrine()->getManager();
         $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
 
-        $repository = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication');
+        $repository = $this->getDoctrine()->getRepository('AppFellAppBundle:FellowshipApplication');
         $dql =  $repository->createQueryBuilder("fellapp");
         $dql->select('fellapp');
         $dql->leftJoin("fellapp.references", "references");
@@ -162,7 +162,7 @@ class DefaultController extends Controller
 
     /**
      * @Route("/confirmation/{id}", name="fellapp_simple_confirmation")
-     * @Template("OlegFellAppBundle:Default:simple-confirmation.html.twig")
+     * @Template("AppFellAppBundle:Default:simple-confirmation.html.twig")
      */
     public function confirmationAction( Request $request, FellowshipApplication $fellapp ) {
 
@@ -188,7 +188,7 @@ class DefaultController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         //get spreadsheets older than X year
-        $repository = $em->getRepository('OlegUserdirectoryBundle:Document');
+        $repository = $em->getRepository('AppUserdirectoryBundle:Document');
         $dql =  $repository->createQueryBuilder("document");
         $dql->select('document');
         $dql->leftJoin('document.type','documentType');

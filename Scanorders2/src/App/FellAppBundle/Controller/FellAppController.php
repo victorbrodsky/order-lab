@@ -15,20 +15,20 @@
  *  limitations under the License.
  */
 
-namespace Oleg\FellAppBundle\Controller;
+namespace App\FellAppBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityNotFoundException;
-use Oleg\FellAppBundle\Entity\FellowshipApplication;
-use Oleg\FellAppBundle\Entity\Interview;
-use Oleg\FellAppBundle\Form\InterviewType;
-use Oleg\UserdirectoryBundle\Entity\User;
-use Oleg\OrderformBundle\Helper\ErrorHelper;
-use Oleg\UserdirectoryBundle\Entity\AccessRequest;
-use Oleg\UserdirectoryBundle\Entity\Reference;
-use Oleg\FellAppBundle\Form\FellAppFilterType;
-use Oleg\FellAppBundle\Form\FellowshipApplicationType;
-use Oleg\UserdirectoryBundle\Util\UserUtil;
+use App\FellAppBundle\Entity\FellowshipApplication;
+use App\FellAppBundle\Entity\Interview;
+use App\FellAppBundle\Form\InterviewType;
+use App\UserdirectoryBundle\Entity\User;
+use App\OrderformBundle\Helper\ErrorHelper;
+use App\UserdirectoryBundle\Entity\AccessRequest;
+use App\UserdirectoryBundle\Entity\Reference;
+use App\FellAppBundle\Form\FellAppFilterType;
+use App\FellAppBundle\Form\FellowshipApplicationType;
+use App\UserdirectoryBundle\Util\UserUtil;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Filesystem\Exception\IOException;
@@ -54,7 +54,7 @@ class FellAppController extends Controller {
      * @Route("/send-rejection-emails", name="fellapp_send_rejection_emails")
      * @Route("/accepted-fellows", name="fellapp_accepted_fellows")
      *
-     * @Template("OlegFellAppBundle:Default:home.html.twig")
+     * @Template("AppFellAppBundle:Default:home.html.twig")
      */
     public function indexAction(Request $request) {
         //echo "fellapp home <br>";
@@ -298,8 +298,8 @@ class FellAppController extends Controller {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
-        //$fellApps = $em->getRepository('OlegUserdirectoryBundle:FellowshipApplication')->findAll();
-        $repository = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication');
+        //$fellApps = $em->getRepository('AppUserdirectoryBundle:FellowshipApplication')->findAll();
+        $repository = $this->getDoctrine()->getRepository('AppFellAppBundle:FellowshipApplication');
         $dql =  $repository->createQueryBuilder("fellapp");
         $dql->select('fellapp');
         //$dql->groupBy('fellapp');
@@ -467,8 +467,8 @@ class FellAppController extends Controller {
         );
 
 
-        $eventtype = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findOneByName("Import of Fellowship Applications Spreadsheet");
-        $lastImportTimestamps = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:Logger')->findBy(array('eventType'=>$eventtype),array('creationdate'=>'DESC'),1);
+        $eventtype = $em->getRepository('AppUserdirectoryBundle:EventTypeList')->findOneByName("Import of Fellowship Applications Spreadsheet");
+        $lastImportTimestamps = $this->getDoctrine()->getRepository('AppUserdirectoryBundle:Logger')->findBy(array('eventType'=>$eventtype),array('creationdate'=>'DESC'),1);
         if( count($lastImportTimestamps) != 1 ) {
             $lastImportTimestamp = null;
         } else {
@@ -629,7 +629,7 @@ class FellAppController extends Controller {
     /**
      * @Route("/show/{id}", name="fellapp_show")
      * @Route("/download/{id}", name="fellapp_download")
-     * @Template("OlegFellAppBundle:Form:new.html.twig")
+     * @Template("AppFellAppBundle:Form:new.html.twig")
      */
     public function showAction(Request $request, $id) {
 
@@ -681,7 +681,7 @@ class FellAppController extends Controller {
         
         //echo "fellapp download!!!!!!!!!!!!!!! <br>";       
 
-        $entity = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
+        $entity = $em->getRepository('AppFellAppBundle:FellowshipApplication')->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
@@ -721,20 +721,20 @@ class FellAppController extends Controller {
         $args = $this->getShowParameters($routeName,$entity);
 
         if( $routeName == 'fellapp_download' ) {
-            return $this->render('OlegFellAppBundle:Form:download.html.twig', $args);
+            return $this->render('AppFellAppBundle:Form:download.html.twig', $args);
         }
 
         //event log
         //$event = "Fellowship Application with ID".$id." has been ".$actionStr." by ".$user;
         //$userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$entity,$request,$eventType);
         
-        return $this->render('OlegFellAppBundle:Form:new.html.twig', $args);
+        return $this->render('AppFellAppBundle:Form:new.html.twig', $args);
     }
 
     /**
      * @Route("/new/", name="fellapp_new")
      *
-     * @Template("OlegFellAppBundle:Form:new.html.twig")
+     * @Template("AppFellAppBundle:Form:new.html.twig")
      */
     public function newAction(Request $request) {
 
@@ -781,7 +781,7 @@ class FellAppController extends Controller {
             return $this->redirect( $this->generateUrl('fellapp-nopermission',array('empty'=>true)) );
         }
 
-        return $this->render('OlegFellAppBundle:Form:new.html.twig', $args);
+        return $this->render('AppFellAppBundle:Form:new.html.twig', $args);
     }
 
 
@@ -799,8 +799,8 @@ class FellAppController extends Controller {
         $em = $this->getDoctrine()->getManager();
 
 //        if( $id ) {
-//            //$fellApps = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->findAll();
-//            $entity = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
+//            //$fellApps = $em->getRepository('AppFellAppBundle:FellowshipApplication')->findAll();
+//            $entity = $this->getDoctrine()->getRepository('AppFellAppBundle:FellowshipApplication')->find($id);
 //
 //            if( !$entity ) {
 //                throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
@@ -919,7 +919,7 @@ class FellAppController extends Controller {
      * -NOT-USED
      * @Route("/update-NOT-USED/{id}", name="fellapp_update-NOT-USED")
      * @Method("PUT")
-     * @Template("OlegFellAppBundle:Form:new.html.twig")
+     * @Template("AppFellAppBundle:Form:new.html.twig")
      */
     public function updateNotUsedAction(Request $request, $id) {
 
@@ -938,7 +938,7 @@ class FellAppController extends Controller {
         $userSecUtil = $this->get('user_security_utility');
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
-        $entity = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
+        $entity = $this->getDoctrine()->getRepository('AppFellAppBundle:FellowshipApplication')->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
@@ -1093,7 +1093,7 @@ class FellAppController extends Controller {
             //$logger = $this->container->get('logger');
             //$logger->notice("update: timezone=".date_default_timezone_get());
             //$userSecUtil = $this->container->get('user_security_utility');
-            //$user = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId()); //fetch user from DB otherwise keytype is null
+            //$user = $em->getRepository('AppUserdirectoryBundle:User')->find($user->getId()); //fetch user from DB otherwise keytype is null
             $event = "Fellowship Application with ID " . $id . " has been updated by " . $user;
             $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$entity,$request,'Fellowship Application Updated');
             //exit('event='.$event);
@@ -1132,7 +1132,7 @@ class FellAppController extends Controller {
      *
      * @Route("/edit/{id}", name="fellapp_edit")
      * @Route("/edit-with-default-interviewers/{id}", name="fellapp_edit_default_interviewers")
-     * @Template("OlegFellAppBundle:Form:edit.html.twig")
+     * @Template("AppFellAppBundle:Form:edit.html.twig")
      * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, FellowshipApplication $entity)
@@ -1254,7 +1254,7 @@ class FellAppController extends Controller {
             //exit('report regen');
 
             //set logger for update
-            //$user = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId()); //fetch user from DB otherwise keytype is null
+            //$user = $em->getRepository('AppUserdirectoryBundle:User')->find($user->getId()); //fetch user from DB otherwise keytype is null
             $event = "Fellowship Application with ID " . $id . " has been updated by " . $user;
             $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$entity,$request,'Fellowship Application Updated');
             //exit('event='.$event);
@@ -1287,7 +1287,7 @@ class FellAppController extends Controller {
             $em = $this->getDoctrine()->getManager();
             $actionStr = "viewed on edit page";
             $eventType = 'Fellowship Application Page Viewed';
-            //$user = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId()); //fetch user from DB otherwise keytype is null
+            //$user = $em->getRepository('AppUserdirectoryBundle:User')->find($user->getId()); //fetch user from DB otherwise keytype is null
             $event = "Fellowship Application with ID".$id." has been ".$actionStr." by ".$user;
 
             $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$entity,$request,$eventType);
@@ -1468,7 +1468,7 @@ class FellAppController extends Controller {
     /**
      * @Route("/applicant/new", name="fellapp_create_applicant")
      * @Method("POST")
-     * @Template("OlegFellAppBundle:Form:new.html.twig")
+     * @Template("AppFellAppBundle:Form:new.html.twig")
      */
     public function createApplicantAction( Request $request )
     {
@@ -1483,7 +1483,7 @@ class FellAppController extends Controller {
 
         $fellowshipApplication = new FellowshipApplication($user);
 
-        $activeStatus = $em->getRepository('OlegFellAppBundle:FellAppStatus')->findOneByName("active");
+        $activeStatus = $em->getRepository('AppFellAppBundle:FellAppStatus')->findOneByName("active");
         if( !$activeStatus ) {
             throw new EntityNotFoundException('Unable to find FellAppStatus by name='."active");
         }
@@ -1634,7 +1634,7 @@ class FellAppController extends Controller {
 
         //////////////////////// INTERVIEWER ///////////////////////////
         $interviewerRoleFellType = null;
-        $interviewerFellTypeRoles = $em->getRepository('OlegUserdirectoryBundle:Roles')->findByFellowshipSubspecialty($fellowshipSubspecialty);
+        $interviewerFellTypeRoles = $em->getRepository('AppUserdirectoryBundle:Roles')->findByFellowshipSubspecialty($fellowshipSubspecialty);
         foreach( $interviewerFellTypeRoles as $role ) {
             if( strpos($role,'INTERVIEWER') !== false ) {
                 $interviewerRoleFellType = $role;
@@ -1683,35 +1683,35 @@ class FellAppController extends Controller {
         $em = $this->getDoctrine()->getManager();
 
         //Avatar
-        $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $application, 'avatar' );
+        $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $application, 'avatar' );
 
         //CurriculumVitae
-        $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $application, 'cv' );
+        $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $application, 'cv' );
 
         //FellowshipApplication(coverLetters)
-        $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $application, 'coverLetter' );
-        $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $application, 'lawsuitDocument');
-        $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $application, 'reprimandDocument' );
+        $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $application, 'coverLetter' );
+        $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $application, 'lawsuitDocument');
+        $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $application, 'reprimandDocument' );
 
         //Examination
         foreach( $application->getExaminations() as $examination ) {
-            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $examination );
+            $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $examination );
         }
 
         //Reference .documents
         foreach( $application->getReferences() as $reference ) {
-            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $reference );
+            $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $reference );
         }
 
         //Other .documents
-        $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $application );
+        $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $application );
 
         //.itinerarys
-        $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $application, 'itinerary' );
+        $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $application, 'itinerary' );
 
-        $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $application, 'report' );
-        $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $application, 'formReport' );
-        $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $application, 'oldReport' );
+        $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $application, 'report' );
+        $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $application, 'formReport' );
+        $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $application, 'oldReport' );
     }
 
 
@@ -1725,7 +1725,7 @@ class FellAppController extends Controller {
         //$logger = $this->container->get('logger');
         //$logger->notice('statusAction: status='.$status);
 
-        $entity = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
+        $entity = $this->getDoctrine()->getRepository('AppFellAppBundle:FellowshipApplication')->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
@@ -1771,7 +1771,7 @@ class FellAppController extends Controller {
         }
 
         //get status object
-        $statusObj = $em->getRepository('OlegFellAppBundle:FellAppStatus')->findOneByName($status);
+        $statusObj = $em->getRepository('AppFellAppBundle:FellAppStatus')->findOneByName($status);
         if( !$statusObj ) {
             $logger->error('statusAction: Unable to find FellAppStatus by name='.$status);
             throw new EntityNotFoundException('Unable to find FellAppStatus by name='.$status);           
@@ -1853,11 +1853,11 @@ class FellAppController extends Controller {
 //    public function syncStatusAction( Request $request ) {
 //
 //        $em = $this->getDoctrine()->getManager();
-//        $applications = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->findAll();
+//        $applications = $this->getDoctrine()->getRepository('AppFellAppBundle:FellowshipApplication')->findAll();
 //
 //        foreach( $applications as $application ) {
 //            $status = $application->getApplicationStatus();
-//            $statusObj = $em->getRepository('OlegFellAppBundle:FellAppStatus')->findOneByName($status);
+//            $statusObj = $em->getRepository('AppFellAppBundle:FellAppStatus')->findOneByName($status);
 //            if( !$statusObj ) {
 //                throw new EntityNotFoundException('Unable to find FellAppStatus by name='.$status);
 //            }
@@ -1874,7 +1874,7 @@ class FellAppController extends Controller {
      * @Route("/application-evaluation/show/{id}", name="fellapp_application_show")
      * @Route("/application-evaluation/{id}", name="fellapp_application_edit")
      * @Method("GET")
-     * @Template("OlegFellAppBundle:Interview:interview_selector.html.twig")
+     * @Template("AppFellAppBundle:Interview:interview_selector.html.twig")
      */
     public function applicationAction( Request $request, FellowshipApplication $fellapp )
     {
@@ -1940,7 +1940,7 @@ class FellAppController extends Controller {
      * @Route("/interview-evaluation/show/{id}", name="fellapp_interview_show")
      * @Route("/interview-evaluation/{id}", name="fellapp_interview_edit")
      * @Method("GET")
-     * @Template("OlegFellAppBundle:Interview:new.html.twig")
+     * @Template("AppFellAppBundle:Interview:new.html.twig")
      */
     public function interviewAction( Request $request, $id ) {
 
@@ -1956,7 +1956,7 @@ class FellAppController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $routeName = $request->get('_route');
 
-        $interview = $em->getRepository('OlegFellAppBundle:Interview')->find($id);
+        $interview = $em->getRepository('AppFellAppBundle:Interview')->find($id);
 
         if( !$interview ) {
             throw $this->createNotFoundException('Unable to find Fellowship Application Interview by id='.$id);
@@ -2038,7 +2038,7 @@ class FellAppController extends Controller {
     /**
      * @Route("/interview/update/{id}", name="fellapp_interview_update")
      * @Method("POST")
-     * @Template("OlegFellAppBundle:Interview:new.html.twig")
+     * @Template("AppFellAppBundle:Interview:new.html.twig")
      */
     public function interviewUpdateAction( Request $request, $id ) {
 
@@ -2053,7 +2053,7 @@ class FellAppController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        $interview = $em->getRepository('OlegFellAppBundle:Interview')->find($id);
+        $interview = $em->getRepository('AppFellAppBundle:Interview')->find($id);
 
         if( !$interview ) {
             throw $this->createNotFoundException('Unable to find Fellowship Application Interview by id='.$id);
@@ -2153,7 +2153,7 @@ class FellAppController extends Controller {
 //     * @Route("/interview/new/{fellappid}/{interviewid}", name="fellapp_interview_new")
 //     * @Route("/interview/new/{fellappid}/{interviewid}", name="fellapp_interview_new")
 //     * @Method("GET")
-//     * @Template("OlegFellAppBundle:Interview:new.html.twig")
+//     * @Template("AppFellAppBundle:Interview:new.html.twig")
 //     */
 //    public function createInterviewAction( Request $request ) {
 //
@@ -2165,7 +2165,7 @@ class FellAppController extends Controller {
 //
 //        $em = $this->getDoctrine()->getManager();
 //
-//        $interview = $this->getDoctrine()->getRepository('OlegFellAppBundle:Interview')->find($id);
+//        $interview = $this->getDoctrine()->getRepository('AppFellAppBundle:Interview')->find($id);
 //
 //        if( !$interview ) {
 //            throw $this->createNotFoundException('Unable to find Fellowship Application Interview by id='.$id);
@@ -2427,7 +2427,7 @@ class FellAppController extends Controller {
 //        $id = $request->get('id');
 //
 //        $em = $this->getDoctrine()->getManager();
-//        $entity = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
+//        $entity = $em->getRepository('AppFellAppBundle:FellowshipApplication')->find($id);
 //
 //        if( !$entity ) {
 //            throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
@@ -2469,7 +2469,7 @@ class FellAppController extends Controller {
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
+        $entity = $em->getRepository('AppFellAppBundle:FellowshipApplication')->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
@@ -2537,7 +2537,7 @@ class FellAppController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
+        $entity = $em->getRepository('AppFellAppBundle:FellowshipApplication')->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
@@ -2554,7 +2554,7 @@ class FellAppController extends Controller {
     /**
      * @Route("/regenerate-all-complete-application-pdfs/", name="fellapp_regenerate_reports")
      *
-     * @Template("OlegFellAppBundle:Form:new.html.twig")
+     * @Template("AppFellAppBundle:Form:new.html.twig")
      */
     public function regenerateAllReportsAction(Request $request) {
 
@@ -2568,7 +2568,7 @@ class FellAppController extends Controller {
         $numDeleted = $fellappRepGen->regenerateAllReports();
 
         $em = $this->getDoctrine()->getManager();
-        $fellapps = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->findAll();
+        $fellapps = $em->getRepository('AppFellAppBundle:FellowshipApplication')->findAll();
         $estimatedTime = count($fellapps)*5; //5 min for each report
         $this->get('session')->getFlashBag()->add(
             'notice',
@@ -2581,7 +2581,7 @@ class FellAppController extends Controller {
     /**
      * @Route("/reset-queue-and-run/", name="fellapp_reset_queue_run")
      *
-     * @Template("OlegFellAppBundle:Form:new.html.twig")
+     * @Template("AppFellAppBundle:Form:new.html.twig")
      */
     public function resetQueueRunAction(Request $request) {
 
@@ -2610,7 +2610,7 @@ class FellAppController extends Controller {
         $numUpdated = $fellappRepGen->resetQueueRun();
 
         $em = $this->getDoctrine()->getManager();
-        $processes = $em->getRepository('OlegFellAppBundle:Process')->findAll();
+        $processes = $em->getRepository('AppFellAppBundle:Process')->findAll();
         $estimatedTime = count($processes)*5; //5 min for each report
         $this->get('session')->getFlashBag()->add(
             'notice',
@@ -2644,7 +2644,7 @@ class FellAppController extends Controller {
         $institutionNameFellappName = "";
         
         if( $fellappTypeId && $fellappTypeId > 0 ) {
-            $fellowshipSubspecialty = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->find($fellappTypeId);
+            $fellowshipSubspecialty = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->find($fellappTypeId);
         }
         
         if( $fellowshipSubspecialty ) {
@@ -2695,7 +2695,7 @@ class FellAppController extends Controller {
     /**
      * @Route("/send-rejection-emails-action/", name="fellapp_send_rejection_emails_action", options={"expose"=true})
      * @Method("POST")
-     * @Template("OlegFellAppBundle:Form:send-notification-emails.html.twig")
+     * @Template("AppFellAppBundle:Form:send-notification-emails.html.twig")
      */
     public function sendRejectionEmailsAction(Request $request) {
 
@@ -2717,7 +2717,7 @@ class FellAppController extends Controller {
 
         foreach($ids as $id) {
             //$logger->notice("Rejection id=".$id);
-            $fellapp = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
+            $fellapp = $em->getRepository('AppFellAppBundle:FellowshipApplication')->find($id);
             if( $fellapp ) {
                 $logger->notice("Rejection email id=".$id);
                 //set status to Rejected and Notified
@@ -2866,7 +2866,7 @@ class FellAppController extends Controller {
         //test url on console
 //        $fellappUtil = $this->container->get('fellapp_util');
 //        $em = $this->getDoctrine()->getManager();
-//        $fellowshipApplication = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->find(162);
+//        $fellowshipApplication = $em->getRepository('AppFellAppBundle:FellowshipApplication')->find(162);
 //        $fellappUtil->sendConfirmationEmailsOnApplicationPopulation($fellowshipApplication,$fellowshipApplication->getUser());
 //        return new Response("OK Test");
 //        exit('email test');

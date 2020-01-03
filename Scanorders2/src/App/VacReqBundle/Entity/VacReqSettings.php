@@ -22,7 +22,7 @@
  * Time: 11:35 AM
  */
 
-namespace Oleg\VacReqBundle\Entity;
+namespace App\VacReqBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -47,13 +47,13 @@ class VacReqSettings
 
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Institution")
      */
     private $institution;
 
 
     /**
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\User", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\User", cascade={"persist"})
      * @ORM\JoinTable(name="vacreq_settings_user",
      *      joinColumns={@ORM\JoinColumn(name="settings_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="emailuser_id", referencedColumnName="id")}

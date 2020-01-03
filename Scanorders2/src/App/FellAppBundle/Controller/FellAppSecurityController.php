@@ -15,10 +15,10 @@
  *  limitations under the License.
  */
 
-namespace Oleg\FellAppBundle\Controller;
+namespace App\FellAppBundle\Controller;
 
 
-use Oleg\UserdirectoryBundle\Controller\SecurityController;
+use App\UserdirectoryBundle\Controller\SecurityController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -28,7 +28,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\PhpBridgeSessionStorage;
 
-use Oleg\UserdirectoryBundle\Util\UserUtil;
+use App\UserdirectoryBundle\Util\UserUtil;
 
 class FellAppSecurityController extends SecurityController
 {
@@ -58,7 +58,7 @@ class FellAppSecurityController extends SecurityController
     /**
      * @Route("/no-permission", name="fellapp-nopermission")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:Security:nopermission.html.twig")
+     * @Template("AppUserdirectoryBundle:Security:nopermission.html.twig")
      */
     public function actionNoPermission( Request $request )
     {

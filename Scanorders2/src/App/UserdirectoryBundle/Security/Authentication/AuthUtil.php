@@ -22,10 +22,10 @@
  * Time: 1:37 PM
  */
 
-namespace Oleg\UserdirectoryBundle\Security\Authentication;
+namespace App\UserdirectoryBundle\Security\Authentication;
 
 
-use Oleg\OrderformBundle\Security\Util\PacsvendorUtil;
+use App\OrderformBundle\Security\Util\PacsvendorUtil;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Validator\Constraints\DateTime;
@@ -339,10 +339,10 @@ class AuthUtil {
 
         //try all matching identifier with primary user identifier type
         //1) get identifier types from Identifier Types (IdentifierTypeList)
-        $identifiers = $this->em->getRepository('OlegUserdirectoryBundle:IdentifierTypeList')->findBy(array('type' => array('default','user-added')));
+        $identifiers = $this->em->getRepository('AppUserdirectoryBundle:IdentifierTypeList')->findBy(array('type' => array('default','user-added')));
 
         //2) get current Primary Public User ID Type (i.e. "Local User")
-        $identifierKeytype = $this->em->getRepository('OlegUserdirectoryBundle:UsernameType')->findOneByAbbreviation($identifierKeytype);
+        $identifierKeytype = $this->em->getRepository('AppUserdirectoryBundle:UsernameType')->findOneByAbbreviation($identifierKeytype);
         if( !$identifierKeytype ) {
             $this->logger->warning("Identifier not found by abbreviation=".$identifierKeytype);
             return NULL;
@@ -378,7 +378,7 @@ class AuthUtil {
     //find a user by user's identifier
     public function authenticateUserByIdentifierType( $username, $credentials, $identifierKeytypeName ) {
 
-        $identifierKeytype = $this->em->getRepository('OlegUserdirectoryBundle:IdentifierTypeList')->findOneByName($identifierKeytypeName);
+        $identifierKeytype = $this->em->getRepository('AppUserdirectoryBundle:IdentifierTypeList')->findOneByName($identifierKeytypeName);
         if( !$identifierKeytype ) {
             $this->logger->notice('identifierKeytype not found by name='.$identifierKeytypeName);
             return NULL;
@@ -394,7 +394,7 @@ class AuthUtil {
         //"External ID":  oleg_userdirectorybundle_user_credentials_identifiers_1_field
         //Status:         oleg_userdirectorybundle_user_credentials_identifiers_1_status
         //Enabled:        oleg_userdirectorybundle_user_credentials_identifiers_1_enableAccess
-        $repository = $this->em->getRepository('OlegUserdirectoryBundle:User');
+        $repository = $this->em->getRepository('AppUserdirectoryBundle:User');
         $dql =  $repository->createQueryBuilder("user");
         $dql->select('user');
 
@@ -525,7 +525,7 @@ class AuthUtil {
         //$LDAPPort = $this->container->getParameter('ldapport');
         $LDAPPort = $userSecUtil->getSiteSettingParameter('aDLDAPServerPort'.$postfix);
 
-        //$exePath = "../src/Oleg/UserdirectoryBundle/Util/";
+        //$exePath = "../src/App/UserdirectoryBundle/Util/";
         //$exePath = $this->container->getParameter('ldapexepath');
         $exePath = $userSecUtil->getSiteSettingParameter('ldapExePath'.$postfix);
 
@@ -646,7 +646,7 @@ class AuthUtil {
     // AD/LDAP Server OU: dc=example,dc=com
     // AD/LDAP Server Account User Name: null (must be null for no ldap search)
     // AD/LDAP Server Account Password: null (must be null for no ldap search)
-    // LDAP/AD Authenticator Relative Path (Default: "../src/Oleg/UserdirectoryBundle/Util/" ): null (doesn't matter for simpleLdap)
+    // LDAP/AD Authenticator Relative Path (Default: "../src/App/UserdirectoryBundle/Util/" ): null (doesn't matter for simpleLdap)
     // LDAP/AD Authenticator File Name (Default: "LdapSaslCustom.exe" ): null (doesn't matter for simpleLdap)
     //
     // tested by public ldap server: https://www.zflexldapadministrator.com/index.php/blog/82-free-online-ldap

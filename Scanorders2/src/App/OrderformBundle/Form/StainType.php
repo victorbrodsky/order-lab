@@ -15,17 +15,17 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Form;
+namespace App\OrderformBundle\Form;
 
-use Oleg\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
+use App\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 
-use Oleg\OrderformBundle\Helper\FormHelper;
-use Oleg\OrderformBundle\Form\DataTransformer\StainTransformer;
+use App\OrderformBundle\Helper\FormHelper;
+use App\OrderformBundle\Form\DataTransformer\StainTransformer;
 
 class StainType extends AbstractType
 {
@@ -56,7 +56,7 @@ class StainType extends AbstractType
         $builder->add('field', ScanCustomSelectorType::class, $options);
 
         $builder->add('others', ArrayFieldType::class, array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\Stain',
+            'data_class' => 'App\OrderformBundle\Entity\Stain',
             'form_custom_value' => $this->params,
             'label' => false,
 			'attr' => array('style'=>'display:none;')
@@ -67,7 +67,7 @@ class StainType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\Stain',
+            'data_class' => 'App\OrderformBundle\Entity\Stain',
             'form_custom_value' => null
         ));
     }

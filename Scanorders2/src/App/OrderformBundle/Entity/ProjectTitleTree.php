@@ -15,13 +15,13 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Entity;
+namespace App\OrderformBundle\Entity;
 
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Oleg\UserdirectoryBundle\Entity\BaseCompositeNode;
-use Oleg\UserdirectoryBundle\Entity\CompositeNodeInterface;
+use App\UserdirectoryBundle\Entity\BaseCompositeNode;
+use App\UserdirectoryBundle\Entity\CompositeNodeInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
@@ -34,7 +34,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Use Doctrine Extension Tree for tree manipulation.
  *
  * @Gedmo\Tree(type="nested")
- * @ORM\Entity(repositoryClass="Oleg\UserdirectoryBundle\Repository\TreeRepository")
+ * @ORM\Entity(repositoryClass="App\UserdirectoryBundle\Repository\TreeRepository")
  * @ORM\Table(
  *  name="scan_projectTitleTree",
  *  indexes={
@@ -86,7 +86,7 @@ class ProjectTitleTree extends BaseCompositeNode {
     /**
      * keep copy of all users: userWrappers in Research are subset of this userWrappers
      *
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\UserWrapper", cascade={"persist","remove"})
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\UserWrapper", cascade={"persist","remove"})
      * @ORM\JoinTable(name="scan_projectTitleTree_userWrapper",
      *      joinColumns={@ORM\JoinColumn(name="projectTitleTree_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="userWrapper_id", referencedColumnName="id")}

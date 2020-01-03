@@ -26,15 +26,15 @@
 
 
     {% stylesheets
-        'bundles/oleguserdirectory/bootstrap/css/*' filter='cssrewrite'
-        'bundles/oleguserdirectory/form/css/form.css' filter='cssrewrite'
+        'bundles/appuserdirectory/bootstrap/css/*' filter='cssrewrite'
+        'bundles/appuserdirectory/form/css/form.css' filter='cssrewrite'
     %}
         <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
 
     {% block errorwatchjs %}
         {% javascripts
-            '@OlegUserdirectoryBundle/Resources/public/form/js/errorwatch.js'
+            '@AppUserdirectoryBundle/Resources/public/form/js/errorwatch.js'
         %}
             <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}
@@ -45,30 +45,30 @@
         {#jasny is used for clickable rows#}
 
         {% stylesheets
-        'bundles/oleguserdirectory/select2/select2.css' filter='cssrewrite'
-        'bundles/oleguserdirectory/jasny/css/jasny-bootstrap.min.css' filter='cssrewrite'
-        'bundles/oleguserdirectory/ladda/ladda-themeless.css' filter='cssrewrite'
-        'bundles/oleguserdirectory/form/css/action.css' filter='cssrewrite'
-        'bundles/oleguserdirectory/pnotify/pnotify.custom.min.css' filter='cssrewrite'
+        'bundles/appuserdirectory/select2/select2.css' filter='cssrewrite'
+        'bundles/appuserdirectory/jasny/css/jasny-bootstrap.min.css' filter='cssrewrite'
+        'bundles/appuserdirectory/ladda/ladda-themeless.css' filter='cssrewrite'
+        'bundles/appuserdirectory/form/css/action.css' filter='cssrewrite'
+        'bundles/appuserdirectory/pnotify/pnotify.custom.min.css' filter='cssrewrite'
         %}
         <link rel="stylesheet" href="{{ asset_url }}" />
         {% endstylesheets %}
 
         {% stylesheets
-        'bundles/oleguserdirectory/dropzone/css/dropzone.css' filter='cssrewrite'
+        'bundles/appuserdirectory/dropzone/css/dropzone.css' filter='cssrewrite'
         %}
         <link rel="stylesheet" href="{{ asset_url }}" />
         {% endstylesheets %}
 
         {% stylesheets
-        'bundles/oleguserdirectory/datepicker/css/bootstrap-datepicker3.css' filter='cssrewrite'
+        'bundles/appuserdirectory/datepicker/css/bootstrap-datepicker3.css' filter='cssrewrite'
         %}
         <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
         {% endstylesheets %}
 
 
         {% stylesheets
-        'bundles/oleguserdirectory/jquery-ui-1.11.2/themes/smoothness/jquery-ui.css' filter='cssrewrite'
+        'bundles/appuserdirectory/jquery-ui-1.11.2/themes/smoothness/jquery-ui.css' filter='cssrewrite'
         %}
         <link rel="stylesheet" href="{{ asset_url }}" />
         {% endstylesheets %}
@@ -76,20 +76,20 @@
 
 
         {% stylesheets
-        'bundles/oleguserdirectory/form/css/typeahead.css' filter='cssrewrite'
+        'bundles/appuserdirectory/form/css/typeahead.css' filter='cssrewrite'
         %}
         <link rel="stylesheet" href="{{ asset_url }}" />
         {% endstylesheets %}
 
         {% stylesheets
-        'bundles/oleguserdirectory/fengyuanchen-image-cropper/cropper.min.css' filter='cssrewrite'
-        'bundles/oleguserdirectory/form/css/crop-avatar.css' filter='cssrewrite'
+        'bundles/appuserdirectory/fengyuanchen-image-cropper/cropper.min.css' filter='cssrewrite'
+        'bundles/appuserdirectory/form/css/crop-avatar.css' filter='cssrewrite'
         %}
         <link rel="stylesheet" href="{{ asset_url }}" />
         {% endstylesheets %}
 
         {% stylesheets
-        'bundles/oleguserdirectory/vakata-jstree/themes/default/style.min.css' filter='cssrewrite'
+        'bundles/appuserdirectory/vakata-jstree/themes/default/style.min.css' filter='cssrewrite'
         %}
         <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
         {% endstylesheets %}
@@ -104,8 +104,8 @@
         <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!--[if lt IE 9]>
         {% javascripts
-        '@OlegUserdirectoryBundle/Resources/public/html5-bootstrap-fix/html5shiv.min.js'
-        '@OlegUserdirectoryBundle/Resources/public/html5-bootstrap-fix/respond.min.js'
+        '@AppUserdirectoryBundle/Resources/public/html5-bootstrap-fix/html5shiv.min.js'
+        '@AppUserdirectoryBundle/Resources/public/html5-bootstrap-fix/respond.min.js'
         %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}
@@ -125,14 +125,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
     {{ usermacros.nonLiveSiteRedirect() }}
 
     <!-- we want to force people to click a button, so hide the close link in the toolbar -->
     {#<style type="text/css">a.ui-dialog-titlebar-close { display:none }</style>#}
 
     {% block favicon %}
-        <link rel="icon" type="image/x-icon" href="{{ asset('bundles/oleguserdirectory/form/img/users-1-64x64.png') }}" />
+        <link rel="icon" type="image/x-icon" href="{{ asset('bundles/appuserdirectory/form/img/users-1-64x64.png') }}" />
     {% endblock %}
 
 </head>
@@ -155,14 +155,14 @@
 
             {% block header %}
                 {# <img src="{{ asset('/../../images/slide1.jpg') }}" alt="Slide">#}
-                {% include 'OlegUserdirectoryBundle:Default:navbar.html.twig' %}
+                {% include 'AppUserdirectoryBundle:Default:navbar.html.twig' %}
             {% endblock %}
 
         </div>
 
         <div class="text-center col-xs-12">
 
-            {% include 'OlegUserdirectoryBundle::Security/idle_timeout.html.twig' %}
+            {% include 'AppUserdirectoryBundle::Security/idle_timeout.html.twig' %}
             
             <div class="browser-notice alert alert-warning center-block" align="middle" style="width: 70%; display:none;"></div>
 
@@ -210,55 +210,55 @@
         {% block footer %}
         <div class="order-content text-center col-xs-12">
             <!-- footer -->
-            {% include 'OlegUserdirectoryBundle::Default/footer.html.twig' %}
+            {% include 'AppUserdirectoryBundle::Default/footer.html.twig' %}
         </div>
         {% endblock %}
 
 
         {% block mainjs %}
 
-            {#'@OlegUserdirectoryBundle/Resources/public/form/js/form.js'#}
-            {#'@OlegUserdirectoryBundle/Resources/public/form/js/tooltips.js'#}
-            {#'@OlegUserdirectoryBundle/Resources/public/idletimer/idle-timer.min.js'#}
-            {#'@OlegUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'#}
+            {#'@AppUserdirectoryBundle/Resources/public/form/js/form.js'#}
+            {#'@AppUserdirectoryBundle/Resources/public/form/js/tooltips.js'#}
+            {#'@AppUserdirectoryBundle/Resources/public/idletimer/idle-timer.min.js'#}
+            {#'@AppUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'#}
 
             {% javascripts
-                '@OlegUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'
-                '@OlegUserdirectoryBundle/Resources/public/jquery-ui-1.11.2/jquery-ui.js'
-                '@OlegUserdirectoryBundle/Resources/public/bootstrap/js/*'
-                '@OlegUserdirectoryBundle/Resources/public/ladda/spin.min.js'
-                '@OlegUserdirectoryBundle/Resources/public/ladda/ladda.min.js'
-                '@OlegUserdirectoryBundle/Resources/public/datepicker/js/bootstrap-datepicker.js'
-                '@OlegUserdirectoryBundle/Resources/public/select2/select2.js'
-                '@OlegUserdirectoryBundle/Resources/public/inputmask/jquery.inputmask.bundle.js'
-                '@OlegUserdirectoryBundle/Resources/public/pnotify/pnotify.custom.min.js'
+                '@AppUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'
+                '@AppUserdirectoryBundle/Resources/public/jquery-ui-1.11.2/jquery-ui.js'
+                '@AppUserdirectoryBundle/Resources/public/bootstrap/js/*'
+                '@AppUserdirectoryBundle/Resources/public/ladda/spin.min.js'
+                '@AppUserdirectoryBundle/Resources/public/ladda/ladda.min.js'
+                '@AppUserdirectoryBundle/Resources/public/datepicker/js/bootstrap-datepicker.js'
+                '@AppUserdirectoryBundle/Resources/public/select2/select2.js'
+                '@AppUserdirectoryBundle/Resources/public/inputmask/jquery.inputmask.bundle.js'
+                '@AppUserdirectoryBundle/Resources/public/pnotify/pnotify.custom.min.js'
 
-                '@OlegUserdirectoryBundle/Resources/public/form/js/user-form.js'
-                '@OlegUserdirectoryBundle/Resources/public/form/js/user-common.js'
-                '@OlegUserdirectoryBundle/Resources/public/form/js/user-selectAjax.js'
-                '@OlegUserdirectoryBundle/Resources/public/form/js/user-masking.js'
-                '@OlegUserdirectoryBundle/Resources/public/form/js/user-formReady.js'
-                '@OlegUserdirectoryBundle/Resources/public/form/js/user-basetitles.js'
-                '@OlegUserdirectoryBundle/Resources/public/form/js/user-treeSelectAjax.js'
-                '@OlegUserdirectoryBundle/Resources/public/form/js/user-validation.js'
-                '@OlegUserdirectoryBundle/Resources/public/form/js/user-fileuploads.js'
-                '@OlegUserdirectoryBundle/Resources/public/form/js/user-navbar.js'
+                '@AppUserdirectoryBundle/Resources/public/form/js/user-form.js'
+                '@AppUserdirectoryBundle/Resources/public/form/js/user-common.js'
+                '@AppUserdirectoryBundle/Resources/public/form/js/user-selectAjax.js'
+                '@AppUserdirectoryBundle/Resources/public/form/js/user-masking.js'
+                '@AppUserdirectoryBundle/Resources/public/form/js/user-formReady.js'
+                '@AppUserdirectoryBundle/Resources/public/form/js/user-basetitles.js'
+                '@AppUserdirectoryBundle/Resources/public/form/js/user-treeSelectAjax.js'
+                '@AppUserdirectoryBundle/Resources/public/form/js/user-validation.js'
+                '@AppUserdirectoryBundle/Resources/public/form/js/user-fileuploads.js'
+                '@AppUserdirectoryBundle/Resources/public/form/js/user-navbar.js'
 
-                '@OlegUserdirectoryBundle/Resources/public/vakata-jstree/jstree.min.js'
-                '@OlegUserdirectoryBundle/Resources/public/form/js/user-jstree.js'
+                '@AppUserdirectoryBundle/Resources/public/vakata-jstree/jstree.min.js'
+                '@AppUserdirectoryBundle/Resources/public/form/js/user-jstree.js'
 
-                '@OlegUserdirectoryBundle/Resources/public/typeahead/typeahead.bundle.js'
-                '@OlegUserdirectoryBundle/Resources/public/form/js/user-typeahead.js'
+                '@AppUserdirectoryBundle/Resources/public/typeahead/typeahead.bundle.js'
+                '@AppUserdirectoryBundle/Resources/public/form/js/user-typeahead.js'
 
-                '@OlegUserdirectoryBundle/Resources/public/fengyuanchen-image-cropper/cropper.min.js'
-                '@OlegUserdirectoryBundle/Resources/public/form/js/user-crop-avatar.js'
+                '@AppUserdirectoryBundle/Resources/public/fengyuanchen-image-cropper/cropper.min.js'
+                '@AppUserdirectoryBundle/Resources/public/form/js/user-crop-avatar.js'
 
-                '@OlegUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimeout.js'
-                '@OlegUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimer.js'
+                '@AppUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimeout.js'
+                '@AppUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimer.js'
                 
-                '@OlegUserdirectoryBundle/Resources/public/form/js/user-idleTimeout.js'
-                '@OlegUserdirectoryBundle/Resources/public/jasny/js/rowlink.js'
-                '@OlegUserdirectoryBundle/Resources/public/q-1/q.js'              
+                '@AppUserdirectoryBundle/Resources/public/form/js/user-idleTimeout.js'
+                '@AppUserdirectoryBundle/Resources/public/jasny/js/rowlink.js'
+                '@AppUserdirectoryBundle/Resources/public/q-1/q.js'
 
             %}
                 <script type="text/javascript" src="{{ asset_url }}"></script>
@@ -267,7 +267,7 @@
 
             {#dropzone#}
             {% javascripts
-                '@OlegUserdirectoryBundle/Resources/public/dropzone/dropzone.js'
+                '@AppUserdirectoryBundle/Resources/public/dropzone/dropzone.js'
             %}
             <script type="text/javascript" src="{{ asset_url }}"></script>
             {% endjavascripts %}

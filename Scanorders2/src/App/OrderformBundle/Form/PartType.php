@@ -15,10 +15,10 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Form;
+namespace App\OrderformBundle\Form;
 
-use Oleg\UserdirectoryBundle\Form\AttachmentContainerType;
-use Oleg\UserdirectoryBundle\Form\DocumentContainerType;
+use App\UserdirectoryBundle\Form\AttachmentContainerType;
+use App\UserdirectoryBundle\Form\DocumentContainerType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -26,7 +26,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 
-use Oleg\OrderformBundle\Helper\FormHelper;
+use App\OrderformBundle\Helper\FormHelper;
 
 class PartType extends AbstractType
 {
@@ -130,7 +130,7 @@ class PartType extends AbstractType
 
         //description
         $attr = array('class'=>'textarea form-control');
-        $gen_attr = array('label'=>'Gross Description:','class'=>'Oleg\OrderformBundle\Entity\PartDescription','type'=>null);    //type=null => auto type
+        $gen_attr = array('label'=>'Gross Description:','class'=>'App\OrderformBundle\Entity\PartDescription','type'=>null);    //type=null => auto type
         $builder->add('description', CollectionType::class, array(
             //GenericFieldType($this->params, null, $gen_attr, $attr),
             'entry_type' => GenericFieldType::class,
@@ -151,7 +151,7 @@ class PartType extends AbstractType
 
         //diagnosis
         //$attr = array('class'=>'textarea form-control', 'style'=>'height:35px');
-        $gen_attr = array('label'=>'Diagnosis:','class'=>'Oleg\OrderformBundle\Entity\PartDisident','type'=>null);    //type=null => auto type
+        $gen_attr = array('label'=>'Diagnosis:','class'=>'App\OrderformBundle\Entity\PartDisident','type'=>null);    //type=null => auto type
         $builder->add('disident', CollectionType::class, array(
             //GenericFieldType($this->params, null, $gen_attr, $attr),
             'entry_type' => GenericFieldType::class,
@@ -186,7 +186,7 @@ class PartType extends AbstractType
         ));
 
         //diffDiagnoses
-        $gen_attr = array('label'=>'Differential Diagnoses:','class'=>'Oleg\OrderformBundle\Entity\PartDiffDisident','type'=>'text');
+        $gen_attr = array('label'=>'Differential Diagnoses:','class'=>'App\OrderformBundle\Entity\PartDiffDisident','type'=>'text');
         $attr = array('class'=>'form-control partdiffdisident-field');
         $builder->add('diffDisident', CollectionType::class, array(
             //GenericFieldType($this->params, null, $gen_attr, $attr),
@@ -207,7 +207,7 @@ class PartType extends AbstractType
         ));
 
         //diseaseType
-        //$gen_attr = array('label'=>'Type of Disease:','class'=>'Oleg\OrderformBundle\Entity\PartDiseaseType','type'=>null);    //type=null => auto type
+        //$gen_attr = array('label'=>'Type of Disease:','class'=>'App\OrderformBundle\Entity\PartDiseaseType','type'=>null);    //type=null => auto type
         $builder->add('diseaseType', CollectionType::class, array(
             //PartDiseaseTypeType($this->params, null, $gen_attr),
             'entry_type' => PartDiseaseTypeType::class,
@@ -262,7 +262,7 @@ class PartType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\Part',
+            'data_class' => 'App\OrderformBundle\Entity\Part',
             'form_custom_value' => null
         ));
     }

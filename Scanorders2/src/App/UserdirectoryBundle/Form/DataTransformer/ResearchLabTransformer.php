@@ -23,7 +23,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Oleg\UserdirectoryBundle\Form\DataTransformer;
+namespace App\UserdirectoryBundle\Form\DataTransformer;
 
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
@@ -61,12 +61,12 @@ class ResearchLabTransformer implements DataTransformerInterface
 
         if( is_int($entity) ) {
             //echo "transform by name=".$entity." !!!<br>";
-            $entity = $this->em->getRepository('OlegUserdirectoryBundle:'.$this->className)->find($entity);
+            $entity = $this->em->getRepository('AppUserdirectoryBundle:'.$this->className)->find($entity);
             //echo "findOneById entity=".$entity."<br>";
         }
         else {
             //echo "transform by name=".$entity." ????????????????<br>";
-            $entity = $this->em->getRepository('OlegUserdirectoryBundle:'.$this->className)->findOneByName($entity);
+            $entity = $this->em->getRepository('AppUserdirectoryBundle:'.$this->className)->findOneByName($entity);
         }
 
         if( null === $entity ) {
@@ -94,7 +94,7 @@ class ResearchLabTransformer implements DataTransformerInterface
 
         if( is_numeric ( $text ) ) {    //number => most probably it is id
             //echo 'text is id <br>';
-            $entity = $this->em->getRepository('OlegUserdirectoryBundle:'.$this->className)->findOneById($text);
+            $entity = $this->em->getRepository('AppUserdirectoryBundle:'.$this->className)->findOneById($text);
 
             if( $entity ) {
                 return $entity->getName();

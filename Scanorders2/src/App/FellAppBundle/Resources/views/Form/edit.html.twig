@@ -14,7 +14,7 @@
     limitations under the License.
 #}
 
-{% extends "OlegFellAppBundle::Default/base.html.twig" %}
+{% extends "AppFellAppBundle::Default/base.html.twig" %}
 
 {% block title %}
     Fellowship Application {{ entity.id }}, created on {{ entity.timestamp|date('m/d/Y H:i') }}
@@ -27,6 +27,6 @@
         {% set collapsein = "" %}
     {% endif %}
 
-    {% include 'OlegFellAppBundle:Form:applicant-content.html.twig' %}
+    {% include 'AppFellAppBundle:Form:applicant-content.html.twig' %}
 
 {% endblock %}

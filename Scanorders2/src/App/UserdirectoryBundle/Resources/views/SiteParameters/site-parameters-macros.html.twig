@@ -17,8 +17,8 @@
 
 {% macro organizationalGroupDefault( field, cycle, classname, prototype ) %}
 
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-    {% import "OlegUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
 
     {% if prototype == "prototype" %}
         {% set formfield = field.vars.prototype %}

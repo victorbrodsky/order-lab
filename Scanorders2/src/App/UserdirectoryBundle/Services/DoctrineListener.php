@@ -22,17 +22,17 @@
  * Time: 9:55 AM
  */
 
-namespace Oleg\UserdirectoryBundle\Services;
+namespace App\UserdirectoryBundle\Services;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
-use Oleg\FellAppBundle\Entity\FellowshipApplication;
-use Oleg\OrderformBundle\Entity\Message;
-use Oleg\OrderformBundle\Entity\PatientLastName;
-use Oleg\UserdirectoryBundle\Entity\AdministrativeTitle;
-use Oleg\UserdirectoryBundle\Entity\CompositeNodeInterface;
+use App\FellAppBundle\Entity\FellowshipApplication;
+use App\OrderformBundle\Entity\Message;
+use App\OrderformBundle\Entity\PatientLastName;
+use App\UserdirectoryBundle\Entity\AdministrativeTitle;
+use App\UserdirectoryBundle\Entity\CompositeNodeInterface;
 
 class DoctrineListener {
 

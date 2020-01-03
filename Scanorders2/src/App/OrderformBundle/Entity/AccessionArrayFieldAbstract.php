@@ -23,10 +23,10 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Oleg\OrderformBundle\Entity;
+namespace App\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Oleg\OrderformBundle\Entity\ArrayFieldAbstract;
+use App\OrderformBundle\Entity\ArrayFieldAbstract;
 
 /**
  * @ORM\MappedSuperclass
@@ -38,10 +38,10 @@ abstract class AccessionArrayFieldAbstract extends ArrayFieldAbstract {
     /**
      * Set accession
      *
-     * @param \Oleg\OrderformBundle\Entity\Accession $accession
+     * @param \App\OrderformBundle\Entity\Accession $accession
      * @return Accession Field
      */
-    public function setAccession(\Oleg\OrderformBundle\Entity\Accession $accession = null)
+    public function setAccession(\App\OrderformBundle\Entity\Accession $accession = null)
     {
         $this->accession = $accession;
 
@@ -51,7 +51,7 @@ abstract class AccessionArrayFieldAbstract extends ArrayFieldAbstract {
     /**
      * Get accession
      *
-     * @return \Oleg\OrderformBundle\Entity\Accession
+     * @return \App\OrderformBundle\Entity\Accession
      */
     public function getAccession()
     {

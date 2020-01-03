@@ -1,9 +1,9 @@
 <?php
 
-namespace Oleg\CallLogBundle;
+namespace App\CallLogBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class OlegCallLogBundle extends Bundle
+class AppCallLogBundle extends Bundle
 {
 }

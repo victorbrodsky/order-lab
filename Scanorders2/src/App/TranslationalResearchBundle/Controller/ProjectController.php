@@ -15,14 +15,14 @@
  *  limitations under the License.
  */
 
-namespace Oleg\TranslationalResearchBundle\Controller;
+namespace App\TranslationalResearchBundle\Controller;
 
 //use Graphp\GraphViz\GraphViz;
 use Doctrine\Common\Collections\ArrayCollection;
-use Oleg\TranslationalResearchBundle\Entity\Project;
-use Oleg\TranslationalResearchBundle\Form\FilterType;
-use Oleg\TranslationalResearchBundle\Form\ProjectStateType;
-use Oleg\TranslationalResearchBundle\Form\ProjectType;
+use App\TranslationalResearchBundle\Entity\Project;
+use App\TranslationalResearchBundle\Form\FilterType;
+use App\TranslationalResearchBundle\Form\ProjectStateType;
+use App\TranslationalResearchBundle\Form\ProjectType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -81,7 +81,7 @@ class ProjectController extends Controller
      * @Route("/active-project-requests-with-expired-approval/", name="translationalresearch_active_expired_project_index")
      * @Route("/active-project-requests-with-approval-expiring-soon/", name="translationalresearch_active_expired_soon_project_index")
      *
-     * @Template("OlegTranslationalResearchBundle:Project:index.html.twig")
+     * @Template("AppTranslationalResearchBundle:Project:index.html.twig")
      * @Method("GET")
      */
     public function indexAction(Request $request)
@@ -126,9 +126,9 @@ class ProjectController extends Controller
 //            );
 //        }
 
-        //$projects = $em->getRepository('OlegTranslationalResearchBundle:Project')->findAll();
+        //$projects = $em->getRepository('AppTranslationalResearchBundle:Project')->findAll();
 
-        $repository = $em->getRepository('OlegTranslationalResearchBundle:Project');
+        $repository = $em->getRepository('AppTranslationalResearchBundle:Project');
         $dql =  $repository->createQueryBuilder("project");
         $dql->select('project');
 
@@ -790,7 +790,7 @@ class ProjectController extends Controller
         $allProjectIdsArr = array();
         //if( $withMatching ) {
             //$allProjects = $query2->getResult();
-            //$allGlobalProjects = $em->getRepository('OlegTranslationalResearchBundle:Project')->findAll();
+            //$allGlobalProjects = $em->getRepository('AppTranslationalResearchBundle:Project')->findAll();
             //$title = $title . " (Matching " . count($allProjects) . ", Total " . count($allGlobalProjects) . ")";
             $allProjectIdsArr = $transresUtil->getProjectIdsArrByDqlParameters($dql,$dqlParameters);
             $allGlobalProjects = $transresUtil->getTotalProjectCount();
@@ -810,7 +810,7 @@ class ProjectController extends Controller
 
         //return array('filterError' => true,'title' => "Test Performance",); //test 18(295ms) queries vs 800(431ms)
 
-        $eventObjectType = $em->getRepository('OlegUserdirectoryBundle:EventObjectTypeList')->findOneByName("Project");
+        $eventObjectType = $em->getRepository('AppUserdirectoryBundle:EventObjectTypeList')->findOneByName("Project");
         if( $eventObjectType ) {
             $eventObjectTypeId = $eventObjectType->getId();
         } else {
@@ -872,7 +872,7 @@ class ProjectController extends Controller
      * Select new project specialty
      *
      * @Route("/project/new", name="translationalresearch_project_new_selector")
-     * @Template("OlegTranslationalResearchBundle:Project:new-project-selector.html.twig")
+     * @Template("AppTranslationalResearchBundle:Project:new-project-selector.html.twig")
      * @Method({"GET", "POST"})
      */
     public function newProjectSelectorAction(Request $request)
@@ -897,7 +897,7 @@ class ProjectController extends Controller
      * Select new project specialty
      *
      * @Route("/project/new/{specialtyStr}", name="translationalresearch_project_new")
-     * @Template("OlegTranslationalResearchBundle:Project:new.html.twig")
+     * @Template("AppTranslationalResearchBundle:Project:new.html.twig")
      * @Method({"GET", "POST"})
      */
     public function newProjectAction(Request $request, $specialtyStr)
@@ -938,9 +938,9 @@ class ProjectController extends Controller
         $project->setProjectSpecialty($specialty);
 
         //set default exempt
-        $exemptIrbApproval = $em->getRepository('OlegTranslationalResearchBundle:IrbApprovalTypeList')->findOneByName("Not Exempt");
+        $exemptIrbApproval = $em->getRepository('AppTranslationalResearchBundle:IrbApprovalTypeList')->findOneByName("Not Exempt");
         $project->setExemptIrbApproval($exemptIrbApproval);
-        $exemptIACUCApproval = $em->getRepository('OlegTranslationalResearchBundle:IrbApprovalTypeList')->findOneByName("Exempt");
+        $exemptIACUCApproval = $em->getRepository('AppTranslationalResearchBundle:IrbApprovalTypeList')->findOneByName("Exempt");
         $project->setExemptIACUCApproval($exemptIACUCApproval);
 
         //new: add all default reviewers
@@ -957,7 +957,7 @@ class ProjectController extends Controller
         //top message category id
         $formnodeTopHolderId = null;
         //$categoryStr = "Pathology Call Log Entry";
-        //$messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($categoryStr);
+        //$messageCategory = $em->getRepository('AppOrderformBundle:MessageCategory')->findOneByName($categoryStr);
         $messageCategory = $project->getMessageCategory();
         if( $messageCategory ) {
             $formnodeTopHolderId = $messageCategory->getId();
@@ -993,9 +993,9 @@ class ProjectController extends Controller
 
             $project->calculateAndSetImplicitExpirationDate();
 
-            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($project,"document");
-            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($project,"irbApprovalLetter");
-            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($project,"humanTissueForm");
+            $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($project,"document");
+            $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($project,"irbApprovalLetter");
+            $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($project,"humanTissueForm");
 
             if( !$testing ) {
                 $em->persist($project);
@@ -1097,7 +1097,7 @@ class ProjectController extends Controller
      * Originally edit form generates a new entity Project with new id and same oid.
      *
      * @Route("/project/edit/{id}", name="translationalresearch_project_edit")
-     * @Template("OlegTranslationalResearchBundle:Project:edit.html.twig")
+     * @Template("AppTranslationalResearchBundle:Project:edit.html.twig")
      * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, Project $project)
@@ -1120,7 +1120,7 @@ class ProjectController extends Controller
 
         $class = new \ReflectionClass($project);
         $className = $class->getShortName();          //ObjectTypeText
-        $classNamespace = $class->getNamespaceName(); //Oleg\UserdirectoryBundle\Entity
+        $classNamespace = $class->getNamespaceName(); //App\UserdirectoryBundle\Entity
 
         $testing = false;
         //$testing = true;
@@ -1210,9 +1210,9 @@ class ProjectController extends Controller
 
             $transresUtil->assignMinimumProjectRoles($project); //edit
 
-            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($project, "document");
-            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($project, "irbApprovalLetter");
-            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($project, "humanTissueForm");
+            $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($project, "document");
+            $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($project, "irbApprovalLetter");
+            $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($project, "humanTissueForm");
 
             //Change review's decision according to the state (if state has been changed manually)
             $eventResetMsg = null;
@@ -1380,7 +1380,7 @@ class ProjectController extends Controller
      * Finds and displays a project entity.
      *
      * @Route("/project/show/{id}", name="translationalresearch_project_show")
-     * @Template("OlegTranslationalResearchBundle:Project:show.html.twig")
+     * @Template("AppTranslationalResearchBundle:Project:show.html.twig")
      * @Method("GET")
      */
     public function showAction(Request $request, Project $project)
@@ -1434,7 +1434,7 @@ class ProjectController extends Controller
 
         $transresUtil->setEventLog($project,$eventType,$msg);
 
-        $eventObjectType = $em->getRepository('OlegUserdirectoryBundle:EventObjectTypeList')->findOneByName("Project");
+        $eventObjectType = $em->getRepository('AppUserdirectoryBundle:EventObjectTypeList')->findOneByName("Project");
         if( $eventObjectType ) {
             $eventObjectTypeId = $eventObjectType->getId();
         } else {
@@ -1463,7 +1463,7 @@ class ProjectController extends Controller
      * Finds and displays a review form for this project entity.
      *
      * @Route("/project/review/{id}", name="translationalresearch_project_review")
-     * @Template("OlegTranslationalResearchBundle:Project:review.html.twig")
+     * @Template("AppTranslationalResearchBundle:Project:review.html.twig")
      * @Method("GET")
      */
     public function reviewAction(Request $request, Project $project)
@@ -1567,7 +1567,7 @@ class ProjectController extends Controller
      * Finds and displays a resubmit form for this project entity.
      *
      * @Route("/project/resubmit/{id}", name="translationalresearch_project_resubmit")
-     * @Template("OlegTranslationalResearchBundle:Project:review.html.twig")
+     * @Template("AppTranslationalResearchBundle:Project:review.html.twig")
      * @Method("GET")
      */
     public function resubmitAction(Request $request, Project $project)
@@ -1608,7 +1608,7 @@ class ProjectController extends Controller
 //     * Displays a form to edit an existing project entity.
 //     *
 //     * @Route("/project/{id}/simple/edit", name="translationalresearch_project_simple_edit")
-//     * @Template("OlegTranslationalResearchBundle:Project:edit.html.twig")
+//     * @Template("AppTranslationalResearchBundle:Project:edit.html.twig")
 //     * @Method({"GET", "POST"})
 //     */
 //    public function editAction(Request $request, Project $project)
@@ -2011,7 +2011,7 @@ class ProjectController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $repository = $em->getRepository('OlegTranslationalResearchBundle:Project');
+        $repository = $em->getRepository('AppTranslationalResearchBundle:Project');
         $dql =  $repository->createQueryBuilder("project");
         $dql->select('project');
 
@@ -2073,7 +2073,7 @@ class ProjectController extends Controller
         if( !$project->getInstitution() ) {
             $autoAssignInstitution = $userSecUtil->getAutoAssignInstitution();
             if( !$autoAssignInstitution ) {
-                $autoAssignInstitution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
+                $autoAssignInstitution = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
             }
             $project->setInstitution($autoAssignInstitution);
         }
@@ -2082,7 +2082,7 @@ class ProjectController extends Controller
         if( $formnode && !$project->getMessageCategory() ) {
             $categoryStr = "HemePath Translational Research Project";  //"Pathology Call Log Entry";
             //$categoryStr = "Nesting Test"; //testing
-            $messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($categoryStr);
+            $messageCategory = $em->getRepository('AppOrderformBundle:MessageCategory')->findOneByName($categoryStr);
 
             if (!$messageCategory) {
                 throw new \Exception("Message category is not found by name '" . $categoryStr . "'");
@@ -2262,7 +2262,7 @@ class ProjectController extends Controller
 
     /**
      * @Route("/project/set-state/{id}", name="translationalresearch_project_set_state")
-     * @Template("OlegTranslationalResearchBundle:Project:set-state.html.twig")
+     * @Template("AppTranslationalResearchBundle:Project:set-state.html.twig")
      * @Method({"GET","POST"})
      */
     public function setStateAction(Request $request, Project $project)
@@ -2313,7 +2313,7 @@ class ProjectController extends Controller
 
     /**
      * @Route("/project/thread-comments/{id}", name="translationalresearch_project_thread_comments")
-     * @Template("OlegTranslationalResearchBundle:Project:thread-comments.html.twig")
+     * @Template("AppTranslationalResearchBundle:Project:thread-comments.html.twig")
      * @Method({"GET"})
      */
     public function threadCommentsAction(Request $request, $id)
@@ -2345,7 +2345,7 @@ class ProjectController extends Controller
 
     /**
      * @Route("/project/thread-comments/show/{id}", name="translationalresearch_project_thread_comments_show")
-     * @Template("OlegTranslationalResearchBundle:Project:thread-comments.html.twig")
+     * @Template("AppTranslationalResearchBundle:Project:thread-comments.html.twig")
      * @Method({"GET"})
      */
     public function threadCommentsShowAction(Request $request, $id)
@@ -2391,7 +2391,7 @@ class ProjectController extends Controller
      * Finds and displays a resubmit form for this project entity.
      *
      * @Route("/project/ajax/{id}", name="translationalresearch_get_project_ajax", options={"expose"=true})
-     * @Template("OlegTranslationalResearchBundle:Project:review.html.twig")
+     * @Template("AppTranslationalResearchBundle:Project:review.html.twig")
      * @Method("GET")
      */
     public function getProjectAction(Request $request, Project $project)
@@ -2434,7 +2434,7 @@ class ProjectController extends Controller
         //if project type = "USCAP Submission", set the default value for the Business Purpose of the new Work Request as "USCAP-related"
         $businessPurposesArr = array();
         if( $project->getProjectType() && $project->getProjectType()->getName() == "USCAP Submission" ) {
-            $businessPurpose = $em->getRepository('OlegTranslationalResearchBundle:BusinessPurposeList')->findOneByName("USCAP-related");
+            $businessPurpose = $em->getRepository('AppTranslationalResearchBundle:BusinessPurposeList')->findOneByName("USCAP-related");
             //echo "businessPurpose=".$businessPurpose."<br>";
             if( $businessPurpose ) {
                 $businessPurposesArr[] = $businessPurpose->getId();
@@ -2488,7 +2488,7 @@ class ProjectController extends Controller
         //$fileName = "Projects";
         //exit("filename=".$fileName);
 
-        //$projects = $em->getRepository('OlegTranslationalResearchBundle:Project')->findAll();
+        //$projects = $em->getRepository('AppTranslationalResearchBundle:Project')->findAll();
 
         $projectIdsArr = explode(',', $ids);
 

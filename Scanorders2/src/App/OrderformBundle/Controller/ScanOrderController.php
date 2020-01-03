@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Controller;
+namespace App\OrderformBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -28,11 +28,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 
-use Oleg\OrderformBundle\Form\FilterType;
-use Oleg\OrderformBundle\Entity\Document;
+use App\OrderformBundle\Form\FilterType;
+use App\OrderformBundle\Entity\Document;
 
-use Oleg\UserdirectoryBundle\Entity\Logger;
-use Oleg\UserdirectoryBundle\Entity\AccessRequest;
+use App\UserdirectoryBundle\Entity\Logger;
+use App\UserdirectoryBundle\Entity\AccessRequest;
 
 //ScanOrder joins Message + Scan
 /**
@@ -46,7 +46,7 @@ class ScanOrderController extends Controller {
 
     /**
      * @Route("/about", name="scan_about_page")
-     * @Template("OlegUserdirectoryBundle:Default:about.html.twig")
+     * @Template("AppUserdirectoryBundle:Default:about.html.twig")
      */
     public function aboutAction( Request $request ) {
         return array('sitename'=>$this->container->getParameter('scan.sitename'));
@@ -57,7 +57,7 @@ class ScanOrderController extends Controller {
      *
      * @Route("/", name="scan_home")
      * @Method("GET")
-     * @Template("OlegOrderformBundle:Default:home.html.twig")
+     * @Template("AppOrderformBundle:Default:home.html.twig")
      */
     public function indexAction( Request $request ) {
 
@@ -94,7 +94,7 @@ class ScanOrderController extends Controller {
      * @Route("/my-scan-orders", name="my-scan-orders")
      * @Route("/incoming-scan-orders", name="incoming-scan-orders")
      * @Method("GET")
-     * @Template("OlegOrderformBundle:ScanOrder:index.html.twig")
+     * @Template("AppOrderformBundle:ScanOrder:index.html.twig")
      */
     public function orderListAction( Request $request ) {
 
@@ -153,7 +153,7 @@ class ScanOrderController extends Controller {
             return $this->createComplexSearchPage( $form, $routeName, $service, $filter, $search, $page );
         }
 
-        $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:Message');
+        $repository = $this->getDoctrine()->getRepository('AppOrderformBundle:Message');
 
         $withSearch = true;
         $res = $this->getDQL( $repository, $service, $filter, $search, $routeName, $withSearch );
@@ -236,7 +236,7 @@ class ScanOrderController extends Controller {
         //check for active access requests
         $accessreqs = $this->getActiveAccessReq();
 
-        $processorComments = $em->getRepository('OlegOrderformBundle:ProcessorComments')->findAll();
+        $processorComments = $em->getRepository('AppOrderformBundle:ProcessorComments')->findAll();
 
         if( $increaseMaxExecTime ) {
             ini_set('max_execution_time', $max_exec_time); //set back to the original value
@@ -245,7 +245,7 @@ class ScanOrderController extends Controller {
         ////////////////// Testing pagination //////////////////
 //        $em    = $this->get('doctrine.orm.entity_manager');
 //        $postData = $request->query->all();
-//        $dql1   = "SELECT message, COUNT(slides.id) AS slidecount FROM OlegOrderformBundle:Message message INNER JOIN message.slide slides GROUP BY message ORDER BY $postData[sort] $postData[direction]";
+//        $dql1   = "SELECT message, COUNT(slides.id) AS slidecount FROM AppOrderformBundle:Message message INNER JOIN message.slide slides GROUP BY message ORDER BY $postData[sort] $postData[direction]";
 //        $query1 = $em->createQuery($dql1);
 //        echo "dql=".$dql1."<br>";
 //        $paginator  = $this->get('knp_paginator');
@@ -298,16 +298,16 @@ class ScanOrderController extends Controller {
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('OlegOrderformBundle:Message')->findOneByOid($id);
+            $entity = $em->getRepository('AppOrderformBundle:Message')->findOneByOid($id);
 
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find Message entity.');
             }
 
-//            $scan_entities = $em->getRepository('OlegOrderformBundle:Imaging')->
+//            $scan_entities = $em->getRepository('AppOrderformBundle:Imaging')->
 //                    findBy(array('scanorder_id'=>$id));
 
-//            $scan_entities = $em->getRepository('OlegOrderformBundle:Imaging')->findBy(
+//            $scan_entities = $em->getRepository('AppOrderformBundle:Imaging')->findBy(
 //                array('scanorder' => $id)
 //            );
             $entity->removeAllChildren();
@@ -379,12 +379,12 @@ class ScanOrderController extends Controller {
     /**   
      * @Route("/thanks", name="thanks")
      * 
-     * @Template("OlegOrderformBundle:ScanOrder:thanks.html.twig")
+     * @Template("AppOrderformBundle:ScanOrder:thanks.html.twig")
      */
     public function thanksAction( $oid = '' )
     {    
         
-        return $this->render('OlegOrderformBundle:ScanOrder:thanks.html.twig',
+        return $this->render('AppOrderformBundle:ScanOrder:thanks.html.twig',
             array(
                 'oid' => $oid
             ));
@@ -395,9 +395,9 @@ class ScanOrderController extends Controller {
 
 //        if( $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
         if( $routeName == "incoming-scan-orders" ) {
-            $statuses = $em->getRepository('OlegOrderformBundle:Status')->findAll();
+            $statuses = $em->getRepository('AppOrderformBundle:Status')->findAll();
         } else {
-            $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:Status');
+            $repository = $this->getDoctrine()->getRepository('AppOrderformBundle:Status');
             $dql = $repository->createQueryBuilder("status");
             //$dql->where('status.action IS NOT NULL');
             $dql->where("status.name != 'Superseded'");
@@ -470,7 +470,7 @@ class ScanOrderController extends Controller {
         $em = $this->getDoctrine()->getManager();
 
         if( $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
-            $statuses = $em->getRepository('OlegUserdirectoryBundle:Institution')->findAll(); //filter by Level = 4?
+            $statuses = $em->getRepository('AppUserdirectoryBundle:Institution')->findAll(); //filter by Level = 4?
         } 
 
         //add special cases
@@ -546,7 +546,7 @@ class ScanOrderController extends Controller {
 
             if( is_numeric($service)  ) {
 
-                $siteUserService = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($service);
+                $siteUserService = $em->getRepository('AppUserdirectoryBundle:Institution')->find($service);
 
                 if( !$siteUserService ) {
                     throw new \Exception( 'Unable to find Service '.$service );
@@ -619,7 +619,7 @@ class ScanOrderController extends Controller {
 //
 //            if( is_numeric($service)  ) {
 //
-//                $siteUserService = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($service);
+//                $siteUserService = $em->getRepository('AppUserdirectoryBundle:Institution')->find($service);
 //
 //                if( !$siteUserService ) {
 //                    throw new \Exception( 'Unable to find Service by id '.$service );
@@ -671,7 +671,7 @@ class ScanOrderController extends Controller {
         //echo "instStr=".$instStr."<br>";
         /////////// EOF institution ///////////
 
-        $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:Message');
+        $repository = $this->getDoctrine()->getRepository('AppOrderformBundle:Message');
         $dql =  $repository->createQueryBuilder("message");
         $dql->innerJoin("message.status", "status");
         $dql->leftJoin("message.institution", "institution");
@@ -698,7 +698,7 @@ class ScanOrderController extends Controller {
         $unprocessed = 0;
         $em = $this->getDoctrine()->getManager();
 
-        //$slideReturnRequest = $em->getRepository('OlegOrderformBundle:SlideReturnRequest')->findByStatus('active');
+        //$slideReturnRequest = $em->getRepository('AppOrderformBundle:SlideReturnRequest')->findByStatus('active');
 
         /////////// institution ///////////
         $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -720,7 +720,7 @@ class ScanOrderController extends Controller {
         //echo "instStr=".$instStr."<br>";
         /////////// EOF institution ///////////
 
-        $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:SlideReturnRequest');
+        $repository = $this->getDoctrine()->getRepository('AppOrderformBundle:SlideReturnRequest');
         $dql =  $repository->createQueryBuilder("req");
         $dql->innerJoin("req.message", "message");
         $dql->leftJoin("message.institution", "institution");
@@ -741,8 +741,8 @@ class ScanOrderController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $accountreqs = array();
         if( $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
-            //$accountreqs = $em->getRepository('OlegUserdirectoryBundle:UserRequest')->findByStatus("active");
-            $accountreqs = $em->getRepository('OlegUserdirectoryBundle:UserRequest')->findBy(
+            //$accountreqs = $em->getRepository('AppUserdirectoryBundle:UserRequest')->findByStatus("active");
+            $accountreqs = $em->getRepository('AppUserdirectoryBundle:UserRequest')->findBy(
                 array(
                     "status"=>"active",
                     "siteName"=>$this->container->getParameter('scan.sitename')
@@ -790,7 +790,7 @@ class ScanOrderController extends Controller {
             'clinicalHistory.field'
         ];
 
-        return $this->render('OlegOrderformBundle:ScanOrder:index-search.html.twig', array(
+        return $this->render('AppOrderformBundle:ScanOrder:index-search.html.twig', array(
             'form' => $form->createView(),
 //            'showprovider' => $showprovider,
 //            'showproxyuser' => $showproxyuser,
@@ -853,7 +853,7 @@ class ScanOrderController extends Controller {
             $logger->setHeight($request->get('display_height'));
             $logger->setEvent( 'Search for "' . $search . '" in ' . $viewArr['searchObjectName'] . '. ' . $count . ' results found.' );
 
-            $eventtype = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findOneByName('Search');
+            $eventtype = $em->getRepository('AppUserdirectoryBundle:EventTypeList')->findOneByName('Search');
             $logger->setEventType($eventtype);
 
             $em->persist($logger);
@@ -861,7 +861,7 @@ class ScanOrderController extends Controller {
         }
         //////// EOF EventLog ////////
 
-        return $this->render('OlegOrderformBundle:ScanOrder:one-search-result.html.twig', $viewArr);
+        return $this->render('AppOrderformBundle:ScanOrder:one-search-result.html.twig', $viewArr);
     }
 
 
@@ -875,8 +875,8 @@ class ScanOrderController extends Controller {
         foreach( $searchObjects as $searchObject ) {
             $viewArr = $this->getSearchViewArray( $request, $routeName, $service, $filter, $search, $searchObject, $page );
 
-            //$renderedView = $this->render('OlegOrderformBundle:ScanOrder:one-search-result.html.twig', $viewArr);
-            $renderedView = $this->renderView('OlegOrderformBundle:ScanOrder:one-search-result.html.twig', $viewArr);
+            //$renderedView = $this->render('AppOrderformBundle:ScanOrder:one-search-result.html.twig', $viewArr);
+            $renderedView = $this->renderView('AppOrderformBundle:ScanOrder:one-search-result.html.twig', $viewArr);
 
             $renderedViewArr[] = $renderedView;
             $resArr[] = 'Search for "' . $viewArr['search'] . '" in ' . $viewArr['searchObjectName'] . '. ' . count($viewArr['pagination']) . ' results found.';
@@ -908,7 +908,7 @@ class ScanOrderController extends Controller {
             //$logger->setEvent( 'Search for "' . $search . '" in ' . $viewArr['searchObjectName'] . '. ' . $count . ' results found.' );
             $logger->setEvent( implode("<br>",$resArr) );
 
-            $eventtype = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findOneByName('Search');
+            $eventtype = $em->getRepository('AppUserdirectoryBundle:EventTypeList')->findOneByName('Search');
             $logger->setEventType($eventtype);
 
             $em->persist($logger);
@@ -916,7 +916,7 @@ class ScanOrderController extends Controller {
         }
         //////// EOF EventLog ////////
 
-        return $this->render('OlegOrderformBundle:ScanOrder:all-search-result.html.twig', array('views'=>$renderedViewArr));
+        return $this->render('AppOrderformBundle:ScanOrder:all-search-result.html.twig', array('views'=>$renderedViewArr));
     }
 
     public function getSearchViewArray( $request, $routeName, $service, $filter, $search, $searchObject, $page ) {
@@ -935,7 +935,7 @@ class ScanOrderController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:Message');
+        $repository = $this->getDoctrine()->getRepository('AppOrderformBundle:Message');
 
         $withSearch = false;
         $res = $this->getDQL( $repository, $service, $filter, $search, $routeName, $withSearch );
@@ -1178,7 +1178,7 @@ class ScanOrderController extends Controller {
         //check for active access requests
         $accessreqs = $this->getActiveAccessReq();
 
-        $processorComments = $em->getRepository('OlegOrderformBundle:ProcessorComments')->findAll();
+        $processorComments = $em->getRepository('AppOrderformBundle:ProcessorComments')->findAll();
 
         if( $increaseMaxExecTime ) {
             ini_set('max_execution_time', $max_exec_time); //set back to the original value
@@ -1204,7 +1204,7 @@ class ScanOrderController extends Controller {
             'limit' => $limit
         );
 
-//        return $this->render('OlegOrderformBundle:ScanOrder:one-search-result.html.twig', array(
+//        return $this->render('AppOrderformBundle:ScanOrder:one-search-result.html.twig', array(
 //            //'form' => $form->createView(),
 //            'showprovider' => $showprovider,
 //            'showproxyuser' => $showproxyuser,
@@ -1387,7 +1387,7 @@ class ScanOrderController extends Controller {
 
         //***************** Superseded filter ***************************//
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
-            //$superseded_status = $em->getRepository('OlegOrderformBundle:Status')->findOneByName('Superseded');
+            //$superseded_status = $em->getRepository('AppOrderformBundle:Status')->findOneByName('Superseded');
             if( $criteriastr != "" ) {
                 $criteriastr .= " AND ";
             }
@@ -1484,25 +1484,25 @@ class ScanOrderController extends Controller {
                 //echo "collaboration institutionId=".$institutionId."<br>";
 
                 $em = $this->getDoctrine()->getManager();
-                $node = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($institutionId);
+                $node = $em->getRepository('AppUserdirectoryBundle:Institution')->find($institutionId);
                 //echo "inst=".$node."<br>";
 
-                $institutionalCriteriaStr = $em->getRepository('OlegUserdirectoryBundle:Institution')->selectNodesUnderParentNode( $node, "institution", false );
+                $institutionalCriteriaStr = $em->getRepository('AppUserdirectoryBundle:Institution')->selectNodesUnderParentNode( $node, "institution", false );
 
 
                 //add collaboration inst
-                $rootNode = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($node->getRoot());
+                $rootNode = $em->getRepository('AppUserdirectoryBundle:Institution')->find($node->getRoot());
                 //echo "rootNode=".$rootNode."<br>";
 
                 //All Collaboration => get all children and their institutions
                 $allInstitutionalCriteriaArr = array();
                 if( $rootNode->getName()."" == "All Collaborations" ) {
-                    $childrenNodes = $em->getRepository('OlegUserdirectoryBundle:Institution')->getChildren($rootNode);
+                    $childrenNodes = $em->getRepository('AppUserdirectoryBundle:Institution')->getChildren($rootNode);
                     //echo "childrenNodes count=".count($childrenNodes)."<br>";
                     foreach( $childrenNodes as $childrenNode ) {
                         foreach( $childrenNode->getCollaborationInstitutions() as $collInst ) {
                             //echo "collInst=".$collInst."<br>";
-                            $allInstitutionalCriteriaArr[] = $em->getRepository('OlegUserdirectoryBundle:Institution')->selectNodesUnderParentNode( $collInst, "institution", false );
+                            $allInstitutionalCriteriaArr[] = $em->getRepository('AppUserdirectoryBundle:Institution')->selectNodesUnderParentNode( $collInst, "institution", false );
                         }
                     }
                 }

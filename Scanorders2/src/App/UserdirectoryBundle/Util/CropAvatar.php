@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Util;
+namespace App\UserdirectoryBundle\Util;
 
 
 use Symfony\Component\Filesystem\Filesystem;

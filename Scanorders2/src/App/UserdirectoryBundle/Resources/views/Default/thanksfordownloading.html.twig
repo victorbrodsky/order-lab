@@ -14,37 +14,37 @@
     limitations under the License.
 #}
 
-{% extends "OlegUserdirectoryBundle::Default/base.html.twig" %}
+{% extends "AppUserdirectoryBundle::Default/base.html.twig" %}
 
 
 {% block header %}
 
     {% if sitename == 'fellapp' %}
-        {% include 'OlegFellAppBundle:Default:navbar.html.twig' %}
+        {% include 'AppFellAppBundle:Default:navbar.html.twig' %}
     {% endif %}
 
     {% if sitename == 'scan' %}
-        {% include 'OlegOrderformBundle:Default:navbar.html.twig' %}
+        {% include 'AppOrderformBundle:Default:navbar.html.twig' %}
     {% endif %}
 
     {% if sitename == 'employees' %}
-        {% include 'OlegUserdirectoryBundle:Default:navbar.html.twig' %}
+        {% include 'AppUserdirectoryBundle:Default:navbar.html.twig' %}
     {% endif %}
 
     {% if sitename == 'deidentifier' %}
-        {% include 'OlegDeidentifierBundle:Default:navbar.html.twig' %}
+        {% include 'AppDeidentifierBundle:Default:navbar.html.twig' %}
     {% endif %}
 
     {% if sitename == 'vacreq' %}
-        {% include 'OlegVacReqBundle:Default:navbar.html.twig' %}
+        {% include 'AppVacReqBundle:Default:navbar.html.twig' %}
     {% endif %}
 
     {% if sitename == 'calllog' %}
-        {% include 'OlegCallLogBundle:Default:navbar.html.twig' %}
+        {% include 'AppCallLogBundle:Default:navbar.html.twig' %}
     {% endif %}
 
     {% if sitename == 'translationalresearch' %}
-        {% include 'OlegTranslationalResearchBundle:Default:navbar.html.twig' %}
+        {% include 'AppTranslationalResearchBundle:Default:navbar.html.twig' %}
     {% endif %}
 
 {% endblock %}

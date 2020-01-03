@@ -15,13 +15,13 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Entity;
+namespace App\UserdirectoryBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="Oleg\UserdirectoryBundle\Repository\ResearchLabRepository")
+ * @ORM\Entity(repositoryClass="App\UserdirectoryBundle\Repository\ResearchLabRepository")
  * @ORM\Table(name="user_researchLab")
  */
 class ResearchLab extends ListAbstract  //extends BaseUserAttributes
@@ -39,7 +39,7 @@ class ResearchLab extends ListAbstract  //extends BaseUserAttributes
     protected $original;
 
     /**
-     * @ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
+     * @ORM\OneToOne(targetEntity="App\UserdirectoryBundle\Entity\Institution")
      * @ORM\JoinColumn(name="institution_id", referencedColumnName="id")
      */
     private $institution;

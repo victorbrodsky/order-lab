@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\FellAppBundle\Entity;
+namespace App\FellAppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -42,7 +42,7 @@ class GoogleFormConfig {
     private $updateDate;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
      */
     private $updatedBy;
@@ -53,7 +53,7 @@ class GoogleFormConfig {
     private $acceptingSubmission;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\FellowshipSubspecialty", cascade={"persist","remove"})
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\FellowshipSubspecialty", cascade={"persist","remove"})
      * @ORM\JoinTable(name="fellapp_googleformconfig_fellowshipsubspecialty",
      *      joinColumns={@ORM\JoinColumn(name="googleformconfig_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="fellowshipsubspecialty_id", referencedColumnName="id")}
@@ -117,7 +117,7 @@ class GoogleFormConfig {
     private $letterExceptionAccount;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Oleg\FellAppBundle\Entity\VisaStatus", cascade={"persist","remove"})
+     * @ORM\ManyToMany(targetEntity="App\FellAppBundle\Entity\VisaStatus", cascade={"persist","remove"})
      * @ORM\JoinTable(name="fellapp_googleformconfig_visastatus",
      *      joinColumns={@ORM\JoinColumn(name="googleformconfig_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="visastatus_id", referencedColumnName="id")}

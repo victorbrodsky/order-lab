@@ -22,7 +22,7 @@
  * Time: 9:55 AM
  */
 
-namespace Oleg\UserdirectoryBundle\Services;
+namespace App\UserdirectoryBundle\Services;
 
 use FOS\CommentBundle\Events;
 use FOS\CommentBundle\Event\CommentEvent;
@@ -453,7 +453,7 @@ class FosCommentListener implements EventSubscriberInterface {
         }
 
         if( $entitySitename == "transres" ) {
-            $bundleName = 'OlegTranslationalResearchBundle';
+            $bundleName = 'AppTranslationalResearchBundle';
         }
 
         if( $entityName == "Request" ) {

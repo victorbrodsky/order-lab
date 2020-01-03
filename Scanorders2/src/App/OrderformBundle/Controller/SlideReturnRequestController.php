@@ -15,11 +15,11 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Controller;
+namespace App\OrderformBundle\Controller;
 
-use Oleg\OrderformBundle\Entity\Endpoint;
-use Oleg\OrderformBundle\Entity\Message;
-use Oleg\OrderformBundle\Form\MessageType;
+use App\OrderformBundle\Entity\Endpoint;
+use App\OrderformBundle\Entity\Message;
+use App\OrderformBundle\Form\MessageType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -28,13 +28,13 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
-use Oleg\OrderformBundle\Form\SlideReturnRequestType;
-use Oleg\OrderformBundle\Form\FilterSlideReturnRequestType;
-use Oleg\OrderformBundle\Entity\SlideReturnRequest;
-use Oleg\OrderformBundle\Security\Util\SecurityUtil;
-use Oleg\OrderformBundle\Entity\History;
-use Oleg\OrderformBundle\Entity\SlideText;
-use Oleg\UserdirectoryBundle\Util\UserUtil;
+use App\OrderformBundle\Form\SlideReturnRequestType;
+use App\OrderformBundle\Form\FilterSlideReturnRequestType;
+use App\OrderformBundle\Entity\SlideReturnRequest;
+use App\OrderformBundle\Security\Util\SecurityUtil;
+use App\OrderformBundle\Entity\History;
+use App\OrderformBundle\Entity\SlideText;
+use App\UserdirectoryBundle\Util\UserUtil;
 
 
 /**
@@ -48,7 +48,7 @@ class SlideReturnRequestController extends Controller
      *
      * @Route("/slide-return-request/new", name="slide-return-request-table")
      * @Method("GET")
-     * @Template("OlegOrderformBundle:SlideReturnRequest:create-table.html.twig")
+     * @Template("AppOrderformBundle:SlideReturnRequest:create-table.html.twig")
      */
     public function newRequestSlideReturnTableAction(Request $request)
     {
@@ -84,7 +84,7 @@ class SlideReturnRequestController extends Controller
     /**
      * @Route("/slide-return-request/submit", name="slide-return-request-table-submit")
      * @Method("POST")
-     * @Template("OlegOrderformBundle:SlideReturnRequest:create-table.html.twig")
+     * @Template("AppOrderformBundle:SlideReturnRequest:create-table.html.twig")
      */
     public function submitRequestSlideReturnTableAction(Request $request)
     {
@@ -153,9 +153,9 @@ class SlideReturnRequestController extends Controller
 
 
                 if( $slideReturnRequest->getReturnoption() ) {
-                    $slides = $em->getRepository('OlegOrderformBundle:Slide')->findSlidesByInstAccession($institution,$accessionTypeStr,$accessionStr);
+                    $slides = $em->getRepository('AppOrderformBundle:Slide')->findSlidesByInstAccession($institution,$accessionTypeStr,$accessionStr);
                 } else {
-                    $slides = $em->getRepository('OlegOrderformBundle:Slide')->findSlidesByInstAccessionPartBlock($institution,$accessionTypeStr,$accessionStr,$partStr,$blockStr);
+                    $slides = $em->getRepository('AppOrderformBundle:Slide')->findSlidesByInstAccessionPartBlock($institution,$accessionTypeStr,$accessionStr,$partStr,$blockStr);
                 }
 
                 //echo "slides count=".count($slides)."<br>";
@@ -198,7 +198,7 @@ class SlideReturnRequestController extends Controller
      *
      * @Route("/slide-return-request/{id}", name="slide-return-request", requirements={"id" = "\d+"})
      * @Method("GET")
-     * @Template("OlegOrderformBundle:SlideReturnRequest:create.html.twig")
+     * @Template("AppOrderformBundle:SlideReturnRequest:create.html.twig")
      */
     public function indexAction( $id ) {
 
@@ -225,7 +225,7 @@ class SlideReturnRequestController extends Controller
      *
      * @Route("/slide-return-request/{id}", name="slide-return-request_create", requirements={"id" = "\d+"})
      * @Method("POST")
-     * @Template("OlegOrderformBundle:SlideReturnRequest:create.html.twig")
+     * @Template("AppOrderformBundle:SlideReturnRequest:create.html.twig")
      */
     public function createSlideReturnRequestAction(Request $request, $id)
     {
@@ -248,7 +248,7 @@ class SlideReturnRequestController extends Controller
             $em = $this->getDoctrine()->getManager();
 
             //add message with specified id to associated objects to message
-            $associationMessage = $em->getRepository('OlegOrderformBundle:Message')->findOneByOid($id);
+            $associationMessage = $em->getRepository('AppOrderformBundle:Message')->findOneByOid($id);
             $slideReturnRequest->getMessage()->addAssociation($associationMessage);
 
             $slides = $associationMessage->getSlide();
@@ -259,7 +259,7 @@ class SlideReturnRequestController extends Controller
 
                 //add slide to slide return request order (however, we have these slides in $associationMessage)
                 $slideReturnRequest->getMessage()->removeSlide($slide);
-                $slideDb =  $em->getRepository('OlegOrderformBundle:Slide')->findOneById($slide->getId());
+                $slideDb =  $em->getRepository('AppOrderformBundle:Slide')->findOneById($slide->getId());
                 $slideReturnRequest->getMessage()->addSlide($slideDb);
 
                 //set this slide as order input
@@ -274,7 +274,7 @@ class SlideReturnRequestController extends Controller
             }
 
             //record history
-            $message = $em->getRepository('OlegOrderformBundle:Message')->findOneByOid($id);
+            $message = $em->getRepository('AppOrderformBundle:Message')->findOneByOid($id);
             $history = new History();
             $history->setMessage($message);
             $history->setCurrentid($message->getOid());
@@ -285,7 +285,7 @@ class SlideReturnRequestController extends Controller
             $notemsg = 'Slide Return Request has been made for '.count($slides) . ' slide(s):<br>'.implode("<br>",$slideReturnRequest->getSlideDescription($user));
             $history->setNote($notemsg);
 
-            $eventtype = $em->getRepository('OlegOrderformBundle:ProgressCommentsEventTypeList')->findOneByName('Initial Slide Return Request Submission');
+            $eventtype = $em->getRepository('AppOrderformBundle:ProgressCommentsEventTypeList')->findOneByName('Initial Slide Return Request Submission');
             $history->setEventtype($eventtype);
 
             $em->persist($history);
@@ -310,7 +310,7 @@ class SlideReturnRequestController extends Controller
 
         if( $scanorderId ) {
 
-            $message = $em->getRepository('OlegOrderformBundle:Message')->findOneByOid($scanorderId);
+            $message = $em->getRepository('AppOrderformBundle:Message')->findOneByOid($scanorderId);
 
             if( !$message ) {
                 throw $this->createNotFoundException('Unable to find Message (Scan Order) entity with id='.$scanorderId);
@@ -324,7 +324,7 @@ class SlideReturnRequestController extends Controller
             $message = new Message();
 
             //set category
-            $category = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName("Slide Return Request");
+            $category = $em->getRepository('AppOrderformBundle:MessageCategory')->findOneByName("Slide Return Request");
             $message->setMessageCategory($category);
 
             //set destination
@@ -372,7 +372,7 @@ class SlideReturnRequestController extends Controller
      *
      * @Route("/incoming-slide-return-requests", name="incoming-slide-return-requests")
      * @Method("GET")
-     * @Template("OlegOrderformBundle:SlideReturnRequest:index.html.twig")
+     * @Template("AppOrderformBundle:SlideReturnRequest:index.html.twig")
      */
     public function allRequestedSlidesAction( Request $request ) {
 
@@ -386,7 +386,7 @@ class SlideReturnRequestController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:SlideReturnRequest');
+        $repository = $this->getDoctrine()->getRepository('AppOrderformBundle:SlideReturnRequest');
         $dql =  $repository->createQueryBuilder("list");
         $dql->select('list, COUNT(slides) as slidecount');
 
@@ -494,7 +494,7 @@ class SlideReturnRequestController extends Controller
      *
      * @Route("/my-slide-return-requests", name="my-slide-return-requests")
      * @Method("GET")
-     * @Template("OlegOrderformBundle:SlideReturnRequest:index.html.twig")
+     * @Template("AppOrderformBundle:SlideReturnRequest:index.html.twig")
      */
     public function userRequestedSlidesAction( Request $request ) {
 
@@ -510,7 +510,7 @@ class SlideReturnRequestController extends Controller
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
-        $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:SlideReturnRequest');
+        $repository = $this->getDoctrine()->getRepository('AppOrderformBundle:SlideReturnRequest');
         $dql =  $repository->createQueryBuilder("list");
         $dql->select('list, COUNT(slides) as slidecount');
 
@@ -579,7 +579,7 @@ class SlideReturnRequestController extends Controller
      * Change status
      * @Route("/slide-return-request/{id}/{status}/status", name="sliderequest_status", requirements={"id" = "\d+"})
      * @Method("GET")
-     * @Template("OlegOrderformBundle:SlideReturnRequest:index.html.twig")
+     * @Template("AppOrderformBundle:SlideReturnRequest:index.html.twig")
      */
     public function statusAction( Request $request, $id, $status )
     {
@@ -597,7 +597,7 @@ class SlideReturnRequestController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegOrderformBundle:SlideReturnRequest')->find($id);
+        $entity = $em->getRepository('AppOrderformBundle:SlideReturnRequest')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find SlideReturnRequest entity.');
@@ -630,7 +630,7 @@ class SlideReturnRequestController extends Controller
                         $entity->getId() . ' for '.count($slides) . ' slide(s):<br>'.
                         implode("<br>", $entity->getSlideDescription($user));
             $history->setNote($notemsg);
-            $eventtype = $em->getRepository('OlegOrderformBundle:ProgressCommentsEventTypeList')->findOneByName('Slide Return Request Status Changed');
+            $eventtype = $em->getRepository('AppOrderformBundle:ProgressCommentsEventTypeList')->findOneByName('Slide Return Request Status Changed');
             $history->setEventtype($eventtype);
             $em->persist($history);
             $em->flush();
@@ -675,7 +675,7 @@ class SlideReturnRequestController extends Controller
 //        } else {
 //
 //            $em = $this->getDoctrine()->getManager();
-//            $slideReturnRequest = $em->getRepository('OlegOrderformBundle:SlideReturnRequest')->find($id);
+//            $slideReturnRequest = $em->getRepository('AppOrderformBundle:SlideReturnRequest')->find($id);
 //
 //            if( !$slideReturnRequest ) {
 //                throw $this->createNotFoundException('Unable to find SlideReturnRequest entity.');
@@ -715,7 +715,7 @@ class SlideReturnRequestController extends Controller
 //    }
 
 
-    //@Template("OlegOrderformBundle:SlideReturnRequest:index.html.twig")
+    //@Template("AppOrderformBundle:SlideReturnRequest:index.html.twig")
     /**
      * @Route("/slide-return-request/comment/create", name="slide-return-request-comment-create")
      * @Method("POST")
@@ -736,7 +736,7 @@ class SlideReturnRequestController extends Controller
             $em = $this->getDoctrine()->getManager();
             $user = $this->get('security.token_storage')->getToken()->getUser();
 
-            $slideReturnRequest = $em->getRepository('OlegOrderformBundle:SlideReturnRequest')->find($id);
+            $slideReturnRequest = $em->getRepository('AppOrderformBundle:SlideReturnRequest')->find($id);
 
             $slideReturnRequest->addComment($text_value, $user);
 
@@ -764,7 +764,7 @@ class SlideReturnRequestController extends Controller
                             ' slide(s):<br>'.implode("<br>", $slideReturnRequest->getSlideDescription($user));
                 $history->setNote($notemsg."<br>".$commentFull);
 
-                $eventtype = $em->getRepository('OlegOrderformBundle:ProgressCommentsEventTypeList')->findOneByName('Slide Return Request Comment Added');
+                $eventtype = $em->getRepository('AppOrderformBundle:ProgressCommentsEventTypeList')->findOneByName('Slide Return Request Comment Added');
                 $history->setEventtype($eventtype);
 
                 $em->persist($history);

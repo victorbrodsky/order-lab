@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Helper;
+namespace App\UserdirectoryBundle\Helper;
 
 /**
  * Description of ErrorHelper

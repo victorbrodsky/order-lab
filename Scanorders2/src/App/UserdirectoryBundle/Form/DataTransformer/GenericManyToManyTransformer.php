@@ -15,13 +15,13 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Form\DataTransformer;
+namespace App\UserdirectoryBundle\Form\DataTransformer;
 
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Doctrine\Common\Persistence\ObjectManager;
-use Oleg\UserdirectoryBundle\Entity\User;
-use Oleg\UserdirectoryBundle\Security\Util\UserSecurityUtil;
+use App\UserdirectoryBundle\Entity\User;
+use App\UserdirectoryBundle\Security\Util\UserSecurityUtil;
 
 
 class GenericManyToManyTransformer implements DataTransformerInterface
@@ -140,7 +140,7 @@ class GenericManyToManyTransformer implements DataTransformerInterface
 
             //echo "principal=".$username." => numeric => most probably it is id<br>";
 
-            $entity = $this->em->getRepository('Oleg'.$this->bundleName.':'.$this->className)->findOneById($entity);
+            $entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->findOneById($entity);
 
             if( null === $entity ) {
 
@@ -186,7 +186,7 @@ class GenericManyToManyTransformer implements DataTransformerInterface
         }
 
         //check if it is already exists in db
-        $entity = $this->em->getRepository('Oleg'.$this->bundleName.':'.$this->className)->findOneByName($name."");
+        $entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->findOneByName($name."");
         
         if( null === $entity ) {
 
@@ -227,7 +227,7 @@ class GenericManyToManyTransformer implements DataTransformerInterface
             return null;
         }
 
-        $fullClassName = "Oleg\\".$this->bundleName."\\Entity\\".$className;
+        $fullClassName = "App\\".$this->bundleName."\\Entity\\".$className;
         $newEntity = new $fullClassName();
 
         //add default type
@@ -252,7 +252,7 @@ class GenericManyToManyTransformer implements DataTransformerInterface
         $className = $fullClassName->getShortName();
 
         //get max orderinlist
-        $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM Oleg'.$this->bundleName.':'.$className.' c');
+        $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM App'.$this->bundleName.':'.$className.' c');
         $nextorder = $query->getSingleResult()['maxorderinlist']+10;
         $entity->setOrderinlist($nextorder);
 

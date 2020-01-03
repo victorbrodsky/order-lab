@@ -15,10 +15,10 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Form;
+namespace App\OrderformBundle\Form;
 
-use Oleg\UserdirectoryBundle\Form\DocumentContainerType;
-use Oleg\UserdirectoryBundle\Form\DocumentType;
+use App\UserdirectoryBundle\Form\DocumentContainerType;
+use App\UserdirectoryBundle\Form\DocumentType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -61,7 +61,7 @@ class InstructionType extends AbstractType
 
 
 //        $builder->add('others', new ArrayFieldType(), array(
-//            'data_class' => 'Oleg\OrderformBundle\Entity\Instruction',
+//            'data_class' => 'App\OrderformBundle\Entity\Instruction',
 //            'label' => false,
 //			'attr' => array('style'=>'display:none;')
 //        ));
@@ -72,7 +72,7 @@ class InstructionType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\Instruction',
+            'data_class' => 'App\OrderformBundle\Entity\Instruction',
             'form_custom_value' => null
         ));
     }

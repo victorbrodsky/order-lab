@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\FellAppBundle\Entity;
+namespace App\FellAppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -49,7 +49,7 @@ class Reference
     private $creationDate;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
      */
     private $createdBy;
@@ -76,19 +76,19 @@ class Reference
     private $title;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Institution")
      */
     private $institution;
 
     /**
-     * @ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\GeoLocation", cascade={"persist","remove"})
+     * @ORM\OneToOne(targetEntity="App\UserdirectoryBundle\Entity\GeoLocation", cascade={"persist","remove"})
      **/
     private $geoLocation;
 
     /**
      * Reference Letters
      *
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
      * @ORM\JoinTable(name="fellapp_reference_document",
      *      joinColumns={@ORM\JoinColumn(name="reference_id", referencedColumnName="id", onDelete="CASCADE")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE", unique=true)}

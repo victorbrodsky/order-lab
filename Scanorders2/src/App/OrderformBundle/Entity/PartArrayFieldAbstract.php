@@ -23,10 +23,10 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Oleg\OrderformBundle\Entity;
+namespace App\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Oleg\OrderformBundle\Entity\ArrayFieldAbstract;
+use App\OrderformBundle\Entity\ArrayFieldAbstract;
 
 /**
  * @ORM\MappedSuperclass
@@ -37,10 +37,10 @@ abstract class PartArrayFieldAbstract extends ArrayFieldAbstract {
     /**
      * Set part
      *
-     * @param \Oleg\OrderformBundle\Entity\Part $part
+     * @param \App\OrderformBundle\Entity\Part $part
      * @return PartArrayFieldAbstract
      */
-    public function setPart(\Oleg\OrderformBundle\Entity\Part $part = null)
+    public function setPart(\App\OrderformBundle\Entity\Part $part = null)
     {
         $this->part = $part;
 
@@ -50,7 +50,7 @@ abstract class PartArrayFieldAbstract extends ArrayFieldAbstract {
     /**
      * Get part
      *
-     * @return \Oleg\OrderformBundle\Entity\Part
+     * @return \App\OrderformBundle\Entity\Part
      */
     public function getPart()
     {

@@ -22,9 +22,9 @@
 <head>
 
     {% stylesheets
-    'bundles/oleguserdirectory/bootstrap/css/*' filter='cssrewrite'
-    'bundles/oleguserdirectory/select2/select2.css' filter='cssrewrite'
-    'bundles/oleguserdirectory/form/css/form.css' filter='cssrewrite'
+    'bundles/appuserdirectory/bootstrap/css/*' filter='cssrewrite'
+    'bundles/appuserdirectory/select2/select2.css' filter='cssrewrite'
+    'bundles/appuserdirectory/form/css/form.css' filter='cssrewrite'
     %}
     <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
     {% endstylesheets %}
@@ -33,7 +33,7 @@
 
     {#http://www.telegraphicsinc.com/2013/10/using-bootstrap-3-with-internet-explorer-8-ie8/#}
     {% javascripts
-    '@OlegUserdirectoryBundle/Resources/public/html5-bootstrap-fix/css3-mediaqueries.js'
+    '@AppUserdirectoryBundle/Resources/public/html5-bootstrap-fix/css3-mediaqueries.js'
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
@@ -41,8 +41,8 @@
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
     {% javascripts
-    '@OlegUserdirectoryBundle/Resources/public/html5-bootstrap-fix/html5shiv.min.js'
-    '@OlegUserdirectoryBundle/Resources/public/html5-bootstrap-fix/respond.min.js'
+    '@AppUserdirectoryBundle/Resources/public/html5-bootstrap-fix/html5shiv.min.js'
+    '@AppUserdirectoryBundle/Resources/public/html5-bootstrap-fix/respond.min.js'
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
@@ -69,7 +69,7 @@
 
 <body>
 
-{% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+{% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
 <div class="container text-center">
 
@@ -104,15 +104,15 @@
         </div>
     {% endif %}
 
-    {% include 'OlegUserdirectoryBundle::Default/footer.html.twig' %}
+    {% include 'AppUserdirectoryBundle::Default/footer.html.twig' %}
 
 </div> <!-- /container -->
 
 <!-- send width and height info to the server -->
 {% javascripts
-'@OlegUserdirectoryBundle/Resources/public/form/js/errorwatch.js'
-'@OlegUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'
-'@OlegUserdirectoryBundle/Resources/public/bootstrap/js/*'
+'@AppUserdirectoryBundle/Resources/public/form/js/errorwatch.js'
+'@AppUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'
+'@AppUserdirectoryBundle/Resources/public/bootstrap/js/*'
 %}
 <script type="text/javascript" src="{{ asset_url }}"></script>
 {% endjavascripts %}

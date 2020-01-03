@@ -15,10 +15,10 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Form;
+namespace App\UserdirectoryBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
-use Oleg\UserdirectoryBundle\Entity\User;
+use App\UserdirectoryBundle\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
@@ -86,7 +86,7 @@ class LoggerFilterType extends AbstractType
         $this->formConstructor($options['form_custom_value']);
 
         $builder->add('user', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:User',
+            'class' => 'AppUserdirectoryBundle:User',
             //'disabled' => $this->hideUser,
             'choice_label' => 'getUserNameStr',
             'label' => false,
@@ -98,7 +98,7 @@ class LoggerFilterType extends AbstractType
 
         //Event Type
         $builder->add('eventType', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:EventTypeList',
+            'class' => 'AppUserdirectoryBundle:EventTypeList',
             //'placeholder' => 'Fellowship Type',
             //'disabled' => $this->hideEventType,
             'choice_label' => 'name',
@@ -158,7 +158,7 @@ class LoggerFilterType extends AbstractType
         ));
 
         $builder->add('roles', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:Roles',
+            'class' => 'AppUserdirectoryBundle:Roles',
             'choice_label' => 'alias',
             'label' => false,
             'required' => false,
@@ -183,7 +183,7 @@ class LoggerFilterType extends AbstractType
 
         //objectType
         $builder->add('objectType', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:EventObjectTypeList',
+            'class' => 'AppUserdirectoryBundle:EventObjectTypeList',
             //'disabled' => $this->hideObjectType,
             //'disabled' => true,
             //'placeholder' => 'Fellowship Type',
@@ -213,7 +213,7 @@ class LoggerFilterType extends AbstractType
 
         if( !isset($this->params['sitename']) ) {
             $builder->add('sites', EntityType::class, array(
-                'class' => 'OlegUserdirectoryBundle:SiteList',
+                'class' => 'AppUserdirectoryBundle:SiteList',
                 'choice_label' => 'abbreviation',
                 'label' => false,
                 'required' => false,

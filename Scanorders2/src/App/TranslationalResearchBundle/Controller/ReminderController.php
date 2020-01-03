@@ -1,12 +1,12 @@
 <?php
 
-namespace Oleg\TranslationalResearchBundle\Controller;
+namespace App\TranslationalResearchBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Oleg\TranslationalResearchBundle\Entity\Invoice;
-use Oleg\TranslationalResearchBundle\Entity\TransResRequest;
-use Oleg\TranslationalResearchBundle\Form\FilterInvoiceType;
-use Oleg\TranslationalResearchBundle\Form\InvoiceType;
+use App\TranslationalResearchBundle\Entity\Invoice;
+use App\TranslationalResearchBundle\Entity\TransResRequest;
+use App\TranslationalResearchBundle\Form\FilterInvoiceType;
+use App\TranslationalResearchBundle\Form\InvoiceType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
-use Oleg\UserdirectoryBundle\Entity\User;
+use App\UserdirectoryBundle\Entity\User;
 
 
 class ReminderController extends Controller
@@ -80,7 +80,7 @@ class ReminderController extends Controller
             //21 invoices have remained unpaid.
             $title = "$invoiceCounter invoices have remained unpaid. ".$criterions;
 
-            return $this->render("OlegTranslationalResearchBundle:Reminder:unpaid-invoice-index.html.twig",
+            return $this->render("AppTranslationalResearchBundle:Reminder:unpaid-invoice-index.html.twig",
                 array(
                     'title' => $title, //$invoiceCounter." Unpaid Invoices corresponding to the reminder schedule"."".$criterions,
                     'invoiceGroups' => $results,
@@ -187,7 +187,7 @@ class ReminderController extends Controller
             $title = "$projectCounter project requests are pending review.<br>" . implode("<br>",$titleInfoArr);
 
 
-            return $this->render("OlegTranslationalResearchBundle:Reminder:project-request-reminder-index.html.twig",
+            return $this->render("AppTranslationalResearchBundle:Reminder:project-request-reminder-index.html.twig",
                 array(
                     'title' => $title,
                     'finalResults' => $finalResults,
@@ -385,7 +385,7 @@ class ReminderController extends Controller
 
             $titleNew = implode("<br>",$titleInfo);
 
-            return $this->render("OlegTranslationalResearchBundle:Reminder:project-request-reminder-index.html.twig",
+            return $this->render("AppTranslationalResearchBundle:Reminder:project-request-reminder-index.html.twig",
                 array(
                     'title' => $titleNew,
                     'finalResults' => $finalResults,

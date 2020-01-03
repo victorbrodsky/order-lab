@@ -15,11 +15,11 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Entity;
+namespace App\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Oleg\UserdirectoryBundle\Entity\DocumentContainer;
+use App\UserdirectoryBundle\Entity\DocumentContainer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -72,7 +72,7 @@ class CalllogEntryMessage extends OrderBase {
 //    private $entityId;
 //    /**
 //     * Used to make a link to other lists in the list manager.
-//     * i.e. "Oleg\OrderformBundle\Entity"
+//     * i.e. "App\OrderformBundle\Entity"
 //     * @ORM\Column(type="string", nullable=true)
 //     */
 //    private $entityNamespace;
@@ -153,7 +153,7 @@ class CalllogEntryMessage extends OrderBase {
     //Form Version Backup
     
     /**
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
      * @ORM\JoinTable(name="calllog_calllogentrymessage_document",
      *      joinColumns={@ORM\JoinColumn(name="message_id", referencedColumnName="id", onDelete="CASCADE")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE", unique=true)}

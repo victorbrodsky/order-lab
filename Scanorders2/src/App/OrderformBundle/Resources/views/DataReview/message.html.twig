@@ -14,7 +14,7 @@
     limitations under the License.
 #}
 
-{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
     {{ myform.simplefield( "Order ID:", entity.message.id, "input", "disabled" ) }}
     {{ myform.simplefield( "Date:", entity.message.orderdate|date('Y-m-d, H:i:s'), "input", "disabled" ) }}

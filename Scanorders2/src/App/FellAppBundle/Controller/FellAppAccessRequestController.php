@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\FellAppBundle\Controller;
+namespace App\FellAppBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,8 +24,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-use Oleg\UserdirectoryBundle\Entity\AccessRequest;
-use Oleg\UserdirectoryBundle\Controller\AccessRequestController;
+use App\UserdirectoryBundle\Entity\AccessRequest;
+use App\UserdirectoryBundle\Controller\AccessRequestController;
 
 /**
  * AccessRequest controller.
@@ -46,7 +46,7 @@ class FellAppAccessRequestController extends AccessRequestController
     /**
      * @Route("/access-requests/new/create", name="fellapp_access_request_new_plain")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:AccessRequest:access_request.html.twig")
+     * @Template("AppUserdirectoryBundle:AccessRequest:access_request.html.twig")
      */
     public function accessRequestCreatePlainAction(Request $request)
     {
@@ -56,7 +56,7 @@ class FellAppAccessRequestController extends AccessRequestController
     /**
      * @Route("/access-requests/new", name="scan_access_request_new")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:AccessRequest:access_request.html.twig")
+     * @Template("AppUserdirectoryBundle:AccessRequest:access_request.html.twig")
      */
     public function accessRequestCreateAction()
     {
@@ -66,7 +66,7 @@ class FellAppAccessRequestController extends AccessRequestController
     /**
      * @Route("/access-requests/new/pending", name="fellapp_access_request_create")
      * @Method("POST")
-     * @Template("OlegUserdirectoryBundle:AccessRequest:access_request.html.twig")
+     * @Template("AppUserdirectoryBundle:AccessRequest:access_request.html.twig")
      */
     public function accessRequestAction(Request $request)
     {
@@ -78,7 +78,7 @@ class FellAppAccessRequestController extends AccessRequestController
      *
      * @Route("/access-requests", name="fellapp_accessrequest_list")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:AccessRequest:access_request_list.html.twig")
+     * @Template("AppUserdirectoryBundle:AccessRequest:access_request_list.html.twig")
      */
     public function accessRequestIndexAction(Request $request)
     {
@@ -98,7 +98,7 @@ class FellAppAccessRequestController extends AccessRequestController
     /**
      * @Route("/access-requests/{id}", name="fellapp_accessrequest_management", requirements={"id" = "\d+"})
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
+     * @Template("AppUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
      */
     public function accessRequestManagementAction(Request $request, $id )
     {
@@ -108,7 +108,7 @@ class FellAppAccessRequestController extends AccessRequestController
     /**
      * @Route("/access-requests/submit/{id}", name="fellapp_accessrequest_management_submit", requirements={"id" = "\d+"})
      * @Method("POST")
-     * @Template("OlegUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
+     * @Template("AppUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
      */
     public function accessRequestManagementSubmitAction(Request $request, $id )
     {
@@ -128,7 +128,7 @@ class FellAppAccessRequestController extends AccessRequestController
     /**
      * @Route("/authorized-users/", name="fellapp_authorized_users")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:AccessRequest:authorized_users.html.twig")
+     * @Template("AppUserdirectoryBundle:AccessRequest:authorized_users.html.twig")
      */
     public function authorizedUsersAction(Request $request )
     {
@@ -138,7 +138,7 @@ class FellAppAccessRequestController extends AccessRequestController
     /**
      * @Route("/authorization-user-manager/{id}", name="fellapp_authorization_user_management", requirements={"id" = "\d+"})
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
+     * @Template("AppUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
      */
     public function authorizationManagementAction( Request $request, $id )
     {
@@ -148,7 +148,7 @@ class FellAppAccessRequestController extends AccessRequestController
     /**
      * @Route("/authorization-user-manager/submit/{id}", name="fellapp_authorization_user_management_submit", requirements={"id" = "\d+"})
      * @Method("POST")
-     * @Template("OlegUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
+     * @Template("AppUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
      */
     public function authorizationManagementSubmitAction( Request $request, $id )
     {
@@ -168,7 +168,7 @@ class FellAppAccessRequestController extends AccessRequestController
     /**
      * @Route("/add-authorized-user/", name="fellapp_add_authorized_user")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:AccessRequest:add_authorized_user.html.twig")
+     * @Template("AppUserdirectoryBundle:AccessRequest:add_authorized_user.html.twig")
      */
     public function addAuthorizedUserAction( Request $request )
     {
@@ -178,7 +178,7 @@ class FellAppAccessRequestController extends AccessRequestController
 //    /**
 //     * @Route("/add-authorized-user/submit/", name="fellapp_add_authorized_user_submit")
 //     * @Method("POST")
-//     * @Template("OlegUserdirectoryBundle:AccessRequest:add_authorized_user.html.twig")
+//     * @Template("AppUserdirectoryBundle:AccessRequest:add_authorized_user.html.twig")
 //     */
 //    public function addAuthorizedUserSubmitAction( Request $request )
 //    {

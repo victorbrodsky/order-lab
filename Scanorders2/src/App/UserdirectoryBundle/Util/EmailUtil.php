@@ -15,10 +15,10 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Util;
+namespace App\UserdirectoryBundle\Util;
 use Crontab\Crontab;
 use Crontab\Job;
-use Oleg\FellAppBundle\Controller\FellAppApplicantController;
+use App\FellAppBundle\Controller\FellAppApplicantController;
 
 
 /**
@@ -662,7 +662,7 @@ class EmailUtil {
 
         ///// Test 1) new reference letter ////////
         $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
-        $fellapp = $this->em->getRepository('OlegFellAppBundle:FellowshipApplication')->find(1414); //8-testing, 1414-collage, 1439-live
+        $fellapp = $this->em->getRepository('AppFellAppBundle:FellowshipApplication')->find(1414); //8-testing, 1414-collage, 1439-live
         $references = $fellapp->getReferences();
         $reference = $references->first();
         $letters = $reference->getDocuments();
@@ -678,7 +678,7 @@ class EmailUtil {
         ////// Test 2) send invoice sendInvoicePDFByEmail /////////
         $transresRequestUtil = $this->container->get('transres_request_util');
         $oid = "APCP2173-REQ15079-V2"; //collage
-        $invoice = $this->em->getRepository('OlegTranslationalResearchBundle:Invoice')->findOneByOid($oid); //8-testing, 1414-collage, 1439-live
+        $invoice = $this->em->getRepository('AppTranslationalResearchBundle:Invoice')->findOneByOid($oid); //8-testing, 1414-collage, 1439-live
         if( !$invoice ) {
             exit("Invoice not found by oid=$oid");
         }
@@ -691,7 +691,7 @@ class EmailUtil {
         $subject = "Test packing slip pdf by email";
         $body = "Test packing slip pdf by email";
         $id = "15079";
-        $transresRequest = $this->em->getRepository('OlegTranslationalResearchBundle:TransResRequest')->find($id);
+        $transresRequest = $this->em->getRepository('AppTranslationalResearchBundle:TransResRequest')->find($id);
         if( !$transresRequest ) {
             exit("TransResRequest not found by id=$id");
         }
@@ -714,7 +714,7 @@ class EmailUtil {
             /////// Test 5) /invite-interviewer-to-rate/{interviewId} //////////////
             $fellAppApplicantController = new FellAppApplicantController();
             $interviewId = 1414;
-            $interview = $this->em->getRepository('OlegFellAppBundle:Interview')->find($interviewId);
+            $interview = $this->em->getRepository('AppFellAppBundle:Interview')->find($interviewId);
             if (!$interviewId) {
                 exit('Interviewer can not be found: interviewId=' . $interviewId);
             }

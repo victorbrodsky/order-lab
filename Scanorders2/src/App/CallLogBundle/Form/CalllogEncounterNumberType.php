@@ -15,9 +15,9 @@
  *  limitations under the License.
  */
 
-namespace Oleg\CallLogBundle\Form;
+namespace App\CallLogBundle\Form;
 
-use Oleg\OrderformBundle\Form\ArrayFieldType;
+use App\OrderformBundle\Form\ArrayFieldType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -39,7 +39,7 @@ class CalllogEncounterNumberType extends AbstractType
         $this->formConstructor($options['form_custom_value']);
 
         $builder->add('keytype', EntityType::class, array(
-            'class' => 'OlegOrderformBundle:EncounterType',
+            'class' => 'AppOrderformBundle:EncounterType',
             'label' => 'Encounter Type:',
             'required' => true,
             //'disabled' => true,
@@ -53,7 +53,7 @@ class CalllogEncounterNumberType extends AbstractType
         ));
 
 //        $builder->add('source', 'entity', array(
-//            'class' => 'OlegUserdirectoryBundle:SourceSystemList',
+//            'class' => 'AppUserdirectoryBundle:SourceSystemList',
 //            'label' => 'Encounter Number Source:',
 //            'required' => false,
 //            'attr' => array('class' => 'combobox combobox-width'),
@@ -73,7 +73,7 @@ class CalllogEncounterNumberType extends AbstractType
 
 
         $builder->add('others', ArrayFieldType::class, array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\EncounterNumber',
+            'data_class' => 'App\OrderformBundle\Entity\EncounterNumber',
             'form_custom_value' => $this->params,
             'label' => false,
             'attr' => array('style'=>'display:none;')
@@ -84,7 +84,7 @@ class CalllogEncounterNumberType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\EncounterNumber',
+            'data_class' => 'App\OrderformBundle\Entity\EncounterNumber',
             'form_custom_value' => null
         ));
     }

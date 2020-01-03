@@ -22,7 +22,7 @@
  * Time: 9:27 AM
  */
 
-namespace Oleg\FellAppBundle\Util;
+namespace App\FellAppBundle\Util;
 
 //Singleton
 use Symfony\Component\Process\Exception\ProcessFailedException;

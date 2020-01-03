@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Controller;
+namespace App\OrderformBundle\Controller;
 
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -28,9 +28,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\PhpBridgeSessionStorage;
 
-use Oleg\OrderformBundle\Security\Util\PacsvendorUtil;
+use App\OrderformBundle\Security\Util\PacsvendorUtil;
 
-use Oleg\UserdirectoryBundle\Controller\SecurityController;
+use App\UserdirectoryBundle\Controller\SecurityController;
 
 class ScanSecurityController extends SecurityController
 {
@@ -87,7 +87,7 @@ class ScanSecurityController extends SecurityController
     /**
      * @Route("/scan-order/no-permission", name="scan-nopermission")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:Security:nopermission.html.twig")
+     * @Template("AppUserdirectoryBundle:Security:nopermission.html.twig")
      */
     public function actionNoPermission( Request $request )
     {
@@ -103,7 +103,7 @@ class ScanSecurityController extends SecurityController
 //    /**
 //     * @Route("/login_check", name="login_check")
 //     * @Method("POST")
-//     * @Template("OlegOrderformBundle:ScanOrder:new_orig.html.twig")
+//     * @Template("AppOrderformBundle:ScanOrder:new_orig.html.twig")
 //     */
 //    public function loginCheckAction( Request $request )
 //    {
@@ -130,7 +130,7 @@ class ScanSecurityController extends SecurityController
     /**
      * @Route("/admin/load-roles-from-pacsvendor", name="load-roles-from-pacsvendor")
      * @Method("GET")
-     * @Template("OlegOrderformBundle:Security:load-roles-from-pacsvendor.html.twig")
+     * @Template("AppOrderformBundle:Security:load-roles-from-pacsvendor.html.twig")
      */
     public function loadRolesFromPacsvendorAction()
     {
@@ -147,7 +147,7 @@ class ScanSecurityController extends SecurityController
         $results = array();
         $em = $this->getDoctrine()->getManager();
 
-        $users = $em->getRepository('OlegUserdirectoryBundle:User')->findAll();
+        $users = $em->getRepository('AppUserdirectoryBundle:User')->findAll();
 
         //echo "count=".count($users)."<br>";
 

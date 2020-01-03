@@ -15,14 +15,14 @@
  *  limitations under the License.
  */
 
-namespace Oleg\CallLogBundle\Form;
+namespace App\CallLogBundle\Form;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
-use Oleg\UserdirectoryBundle\Form\DocumentType;
-use Oleg\UserdirectoryBundle\Form\FormNode\FormNodeType;
-use Oleg\UserdirectoryBundle\Form\InstitutionType;
-use Oleg\UserdirectoryBundle\Form\FormNode\MessageCategoryFormNodeType;
+use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
+use App\UserdirectoryBundle\Form\DocumentType;
+use App\UserdirectoryBundle\Form\FormNode\FormNodeType;
+use App\UserdirectoryBundle\Form\InstitutionType;
+use App\UserdirectoryBundle\Form\FormNode\MessageCategoryFormNodeType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -105,7 +105,7 @@ class CalllogEntryMessageType extends AbstractType
 
 
         $builder->add('entryTags', null, array(
-            //'class' => 'OlegOrderformBundle:CalllogEntryTagsList',
+            //'class' => 'AppOrderformBundle:CalllogEntryTagsList',
             'label' => "Call Log Entry Tag(s):",
             'required' => false,
             'multiple' => true,
@@ -143,7 +143,7 @@ class CalllogEntryMessageType extends AbstractType
 //            'attr' => array('class' => 'combobox', 'placeholder' => "Attachment Type"),
 //        ));
             $builder->add('calllogAttachmentType', EntityType::class, array(
-                'class' => 'OlegOrderformBundle:CalllogAttachmentTypeList',
+                'class' => 'AppOrderformBundle:CalllogAttachmentTypeList',
                 //'choice_label' => 'name',
                 'label' => 'Attachment Type:',
                 'required' => false,
@@ -182,7 +182,7 @@ class CalllogEntryMessageType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\CalllogEntryMessage',
+            'data_class' => 'App\OrderformBundle\Entity\CalllogEntryMessage',
             'form_custom_value' => null,
             'form_custom_value_entity' => null
         ));
@@ -330,7 +330,7 @@ class CalllogEntryMessageType extends AbstractType
 //        $parent = null;
 //        if (count($newPatientListsIds) > 0) {
 //            $firstPatientListId = $newPatientListsIds[0];
-//            $firstPatientList = $this->params['em']->getRepository('OlegOrderformBundle:PatientListHierarchy')->find($firstPatientListId);
+//            $firstPatientList = $this->params['em']->getRepository('AppOrderformBundle:PatientListHierarchy')->find($firstPatientListId);
 //            if ($firstPatientList) {
 //                $level = $firstPatientList->getLevel();
 //                $orgGroupType = $firstPatientList->getOrganizationalGroupType();

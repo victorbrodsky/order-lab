@@ -14,19 +14,19 @@
     limitations under the License.
 #}
 
-{% extends "OlegOrderformBundle::Default/base.html.twig" %}
+{% extends "AppOrderformBundle::Default/base.html.twig" %}
 
 {% block mainjs %}
 
     {% javascripts
-    '@OlegUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'
-    '@OlegUserdirectoryBundle/Resources/public/bootstrap/js/*'
-    '@OlegUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimeout.js'
-    '@OlegUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimer.js'	
+    '@AppUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'
+    '@AppUserdirectoryBundle/Resources/public/bootstrap/js/*'
+    '@AppUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimeout.js'
+    '@AppUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimer.js'
 
-    '@OlegUserdirectoryBundle/Resources/public/form/js/user-idleTimeout.js'
-    '@OlegUserdirectoryBundle/Resources/public/form/js/user-common.js'
-    '@OlegUserdirectoryBundle/Resources/public/form/js/user-navbar.js'
+    '@AppUserdirectoryBundle/Resources/public/form/js/user-idleTimeout.js'
+    '@AppUserdirectoryBundle/Resources/public/form/js/user-common.js'
+    '@AppUserdirectoryBundle/Resources/public/form/js/user-navbar.js'
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}    

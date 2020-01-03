@@ -22,11 +22,11 @@
  * Time: 9:27 AM
  */
 
-namespace Oleg\VacReqBundle\Security\Voter;
+namespace App\VacReqBundle\Security\Voter;
 
 
-use Oleg\UserdirectoryBundle\Entity\User;
-use Oleg\UserdirectoryBundle\Security\Voter\BasePermissionVoter;
+use App\UserdirectoryBundle\Entity\User;
+use App\UserdirectoryBundle\Security\Voter\BasePermissionVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
@@ -171,7 +171,7 @@ class VacReqPermissionVoter extends BasePermissionVoter //BasePermissionVoter   
             $user = $token->getUser();
             //ROLE_VACREQ_SUPERVISOR_WCM_PATHOLOGY
             $roleName = "ROLE_VACREQ_SUPERVISOR";
-            $hasSupervisorRole = $this->em->getRepository('OlegUserdirectoryBundle:User')->
+            $hasSupervisorRole = $this->em->getRepository('AppUserdirectoryBundle:User')->
                 isUserHasSiteAndPartialRoleName($user, $this->getSitename(), $roleName);
             if( $hasSupervisorRole ) {
                 return true;

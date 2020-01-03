@@ -15,13 +15,13 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Entity;
+namespace App\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Oleg\UserdirectoryBundle\Entity\GeoLocation;
-use Oleg\UserdirectoryBundle\Entity\Location;
-use Oleg\UserdirectoryBundle\Entity\Spot;
-use Oleg\UserdirectoryBundle\Entity\Tracker;
+use App\UserdirectoryBundle\Entity\GeoLocation;
+use App\UserdirectoryBundle\Entity\Location;
+use App\UserdirectoryBundle\Entity\Spot;
+use App\UserdirectoryBundle\Entity\Tracker;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -29,7 +29,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 //UniqueEntity({"mrn"})
 
 /**
- * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\PatientRepository")
+ * @ORM\Entity(repositoryClass="App\OrderformBundle\Repository\PatientRepository")
  * @ORM\Table(name="scan_patient")
  * @ORM\HasLifecycleCallbacks
  */
@@ -133,7 +133,7 @@ class Patient extends ObjectAbstract
     private $patientRecordStatus;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\LifeFormList")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\LifeFormList")
      **/
     private $lifeForm;
 
@@ -417,10 +417,10 @@ class Patient extends ObjectAbstract
     /**
      * Add encounter
      *
-     * @param \Oleg\OrderformBundle\Entity\Encounter $Encounter
+     * @param \App\OrderformBundle\Entity\Encounter $Encounter
      * @return Patient
      */
-    public function addEncounter(\Oleg\OrderformBundle\Entity\Encounter $encounter)
+    public function addEncounter(\App\OrderformBundle\Entity\Encounter $encounter)
     {
         //echo "add encounter: ".$encounter."<br>";
         if( !$this->encounter->contains($encounter) ) {
@@ -433,9 +433,9 @@ class Patient extends ObjectAbstract
     /**
      * Remove encounter
      *
-     * @param \Oleg\OrderformBundle\Entity\Encounter $encounter
+     * @param \App\OrderformBundle\Entity\Encounter $encounter
      */
-    public function removeEncounter(\Oleg\OrderformBundle\Entity\Encounter $encounter)
+    public function removeEncounter(\App\OrderformBundle\Entity\Encounter $encounter)
     {
         $this->encounter->removeElement($encounter);
     }
@@ -459,7 +459,7 @@ class Patient extends ObjectAbstract
     /**
      * Add clinicalHistory
      *
-     * @param \Oleg\OrderformBundle\Entity\PatientClinicalHistory $clinicalHistory
+     * @param \App\OrderformBundle\Entity\PatientClinicalHistory $clinicalHistory
      * @return Patient
      */
     public function addClinicalHistory($clinicalHistory)
@@ -480,7 +480,7 @@ class Patient extends ObjectAbstract
     /**
      * Remove clinicalHistory
      *
-     * @param \Oleg\OrderformBundle\Entity\PatientClinicalHistory $clinicalHistory
+     * @param \App\OrderformBundle\Entity\PatientClinicalHistory $clinicalHistory
      */
     public function removeClinicalHistory($clinicalHistory)
     {
@@ -519,7 +519,7 @@ class Patient extends ObjectAbstract
     /**
      * Add lastname
      *
-     * @param \Oleg\OrderformBundle\Entity\PatientLastname $lastname
+     * @param \App\OrderformBundle\Entity\PatientLastname $lastname
      * @return Patient
      */
     public function addLastname($lastname,$force=false)
@@ -545,7 +545,7 @@ class Patient extends ObjectAbstract
     /**
      * Remove lastname
      *
-     * @param \Oleg\OrderformBundle\Entity\PatientLastname $lastname
+     * @param \App\OrderformBundle\Entity\PatientLastname $lastname
      */
     public function removeLastname($lastname)
     {
@@ -579,7 +579,7 @@ class Patient extends ObjectAbstract
     /**
      * Add firstname
      *
-     * @param \Oleg\OrderformBundle\Entity\PatientFirstname $firstname
+     * @param \App\OrderformBundle\Entity\PatientFirstname $firstname
      * @return Patient
      */
     public function addFirstname($firstname,$force=false)
@@ -602,7 +602,7 @@ class Patient extends ObjectAbstract
     /**
      * Remove firstname
      *
-     * @param \Oleg\OrderformBundle\Entity\PatientFirstname $firstname
+     * @param \App\OrderformBundle\Entity\PatientFirstname $firstname
      */
     public function removeFirstname($firstname)
     {
@@ -636,7 +636,7 @@ class Patient extends ObjectAbstract
     /**
      * Add middlename
      *
-     * @param \Oleg\OrderformBundle\Entity\PatientMiddlename $middlename
+     * @param \App\OrderformBundle\Entity\PatientMiddlename $middlename
      * @return Patient
      */
     public function addMiddlename($middlename,$force=false)
@@ -659,7 +659,7 @@ class Patient extends ObjectAbstract
     /**
      * Remove middlename
      *
-     * @param \Oleg\OrderformBundle\Entity\PatientMiddlename $middlename
+     * @param \App\OrderformBundle\Entity\PatientMiddlename $middlename
      */
     public function removeMiddlename($middlename)
     {
@@ -693,7 +693,7 @@ class Patient extends ObjectAbstract
     /**
      * Add sex
      *
-     * @param \Oleg\OrderformBundle\Entity\PatientSex $sex
+     * @param \App\OrderformBundle\Entity\PatientSex $sex
      * @param boolean $force
      * @return Patient
      */
@@ -710,7 +710,7 @@ class Patient extends ObjectAbstract
     /**
      * Remove sex
      *
-     * @param \Oleg\OrderformBundle\Entity\PatientSex $sex
+     * @param \App\OrderformBundle\Entity\PatientSex $sex
      */
     public function removeSex($sex)
     {
@@ -720,7 +720,7 @@ class Patient extends ObjectAbstract
     /**
      * Add dob
      *
-     * @param \Oleg\OrderformBundle\Entity\PatientDob $dob
+     * @param \App\OrderformBundle\Entity\PatientDob $dob
      * @return Patient
      */
     public function addDob($dob)
@@ -742,7 +742,7 @@ class Patient extends ObjectAbstract
     /**
      * Remove dob
      *
-     * @param \Oleg\OrderformBundle\Entity\PatientDob $dob
+     * @param \App\OrderformBundle\Entity\PatientDob $dob
      */
     public function removeDob($dob)
     {
@@ -943,10 +943,10 @@ class Patient extends ObjectAbstract
 //            //$patientLocation->setGeoLocation($geoLocation);
 //
 //            if( $em ) {
-//                $city = $em->getRepository('OlegUserdirectoryBundle:CityList')->findOneByName('New York');
+//                $city = $em->getRepository('AppUserdirectoryBundle:CityList')->findOneByName('New York');
 //                $geoLocation->setCity($city);
 //
-//                $country = $em->getRepository('OlegUserdirectoryBundle:Countries')->findOneByName('United States');
+//                $country = $em->getRepository('AppUserdirectoryBundle:Countries')->findOneByName('United States');
 //                $geoLocation->setCountry($country);
 //            }
 //        }

@@ -15,9 +15,9 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Form;
+namespace App\OrderformBundle\Form;
 
-use Oleg\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
+use App\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -64,7 +64,7 @@ class SpecialStainsType extends AbstractType
 
         //stainothers
         $builder->add('others', ArrayFieldType::class, array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\BlockSpecialStains',
+            'data_class' => 'App\OrderformBundle\Entity\BlockSpecialStains',
             'form_custom_value' => $this->params,
             'label' => false,
 			'attr' => array('style'=>'display:none;')
@@ -75,7 +75,7 @@ class SpecialStainsType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\BlockSpecialStains',
+            'data_class' => 'App\OrderformBundle\Entity\BlockSpecialStains',
             'form_custom_value' => null
         ));
     }

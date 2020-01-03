@@ -15,14 +15,14 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Form;
+namespace App\UserdirectoryBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
-use Oleg\TranslationalResearchBundle\Entity\RequestCategoryTypeList;
-use Oleg\UserdirectoryBundle\Entity\CompositeNodeInterface;
-use Oleg\UserdirectoryBundle\Entity\FormNode;
-use Oleg\UserdirectoryBundle\Entity\Institution;
-use Oleg\UserdirectoryBundle\Entity\PlatformListManagerRootList;
+use App\TranslationalResearchBundle\Entity\RequestCategoryTypeList;
+use App\UserdirectoryBundle\Entity\CompositeNodeInterface;
+use App\UserdirectoryBundle\Entity\FormNode;
+use App\UserdirectoryBundle\Entity\Institution;
+use App\UserdirectoryBundle\Entity\PlatformListManagerRootList;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -99,7 +99,7 @@ class GenericListType extends AbstractType
             //echo "show institution<br>";
 
 //            $builder->add('institution',EntityType::class,array(
-//                'class' => 'OlegUserdirectoryBundle:Institution',
+//                'class' => 'AppUserdirectoryBundle:Institution',
 //                'label' => "Institution:",
 //                'choice_label' => "getTreeName",
 //                'multiple' => false,
@@ -108,7 +108,7 @@ class GenericListType extends AbstractType
 //            ));
 
             $builder->add( 'institution', EntityType::class, array(
-                'class' => 'OlegUserdirectoryBundle:Institution',
+                'class' => 'AppUserdirectoryBundle:Institution',
                 'choice_label' => 'getTreeName',
                 'label'=>'Institution:',
                 'required'=> false,
@@ -138,11 +138,11 @@ class GenericListType extends AbstractType
 //                if( $title ) {
 //                    $institution = $title->getInstitution();
 //                    if( $institution ) {
-//                        $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
+//                        $label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
 //                    }
 //                }
 //                if( !$label ) {
-//                    $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
+//                    $label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
 //                }
 //                echo "label=".$label."<br>";
 //
@@ -189,7 +189,7 @@ class GenericListType extends AbstractType
         if( method_exists($this->params['entity'],'getInstitutions') ) {
             //echo "add institutions <br>";
             $builder->add( 'institutions', EntityType::class, array(
-                'class' => 'OlegUserdirectoryBundle:Institution',
+                'class' => 'AppUserdirectoryBundle:Institution',
                 'choice_label' => 'getTreeName',
                 'label'=>'Institutions:',
                 'required'=> false,
@@ -218,7 +218,7 @@ class GenericListType extends AbstractType
                 $form = $event->getForm();
 
                 //check if this Institution is under "All Collaborations" tree
-                $allCollaborationInst = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("All Collaborations");
+                $allCollaborationInst = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("All Collaborations");
                 if( $title->getRoot() != $allCollaborationInst->getRoot() ) {
                     return;
                 }
@@ -226,7 +226,7 @@ class GenericListType extends AbstractType
                 //echo "show Collaboration institutions<br>";
 
                 $form->add( 'collaborationInstitutions', EntityType::class, array(
-                    'class' => 'OlegUserdirectoryBundle:Institution',
+                    'class' => 'AppUserdirectoryBundle:Institution',
                     'choice_label' => 'getTreeName',
                     'label'=>'Institutions:',
                     'required'=> false,
@@ -245,7 +245,7 @@ class GenericListType extends AbstractType
                 ));
 
                 $form->add( 'collaborationType', EntityType::class, array(
-                    'class' => 'OlegUserdirectoryBundle:CollaborationTypeList',
+                    'class' => 'AppUserdirectoryBundle:CollaborationTypeList',
                     'choice_label' => 'name',
                     'label'=>'Collaboration Type:',
                     'required'=> false,
@@ -266,7 +266,7 @@ class GenericListType extends AbstractType
             ///////////////////////// EOF tree node /////////////////////////
 
 //            $builder->add( 'collaborations', EntityType::class, array(
-//                'class' => 'OlegUserdirectoryBundle:Collaboration',
+//                'class' => 'AppUserdirectoryBundle:Collaboration',
 //                //'disabled' => true,
 //                //'choice_label' => 'getTreeName',
 //                'label'=>'Collaborations:',
@@ -290,7 +290,7 @@ class GenericListType extends AbstractType
 //        if( method_exists($this->params['entity'],'getCollaborationType') ) {
 //            //echo "add institutions <br>";
 //            $builder->add( 'collaborationType', EntityType::class, array(
-//                'class' => 'OlegUserdirectoryBundle:CollaborationTypeList',
+//                'class' => 'AppUserdirectoryBundle:CollaborationTypeList',
 //                'choice_label' => 'name',
 //                'label'=>'Collaboration Type:',
 //                'required'=> false,
@@ -339,7 +339,7 @@ class GenericListType extends AbstractType
         }
         if( method_exists($this->params['entity'],'getExclusivelySites') ) {
             $builder->add('exclusivelySites',EntityType::class,array(
-                'class' => 'OlegUserdirectoryBundle:SiteList',
+                'class' => 'AppUserdirectoryBundle:SiteList',
                 'label' => 'Apply Url exclusively to Site(s):',
                 'multiple' => true,
                 'attr' => array('class'=>'combobox combobox-width'),
@@ -350,14 +350,14 @@ class GenericListType extends AbstractType
         //PermissionList
         if( strtolower($this->mapper['className']) == strtolower("PermissionList") ) {
             $builder->add('permissionObjectList',EntityType::class,array(
-                'class' => 'OlegUserdirectoryBundle:PermissionObjectList',
+                'class' => 'AppUserdirectoryBundle:PermissionObjectList',
                 'label' => "Object:",
                 'multiple' => false,
                 'required' => false,
                 'attr' => array('class'=>'combobox'),
             ));
             $builder->add('permissionActionList',EntityType::class,array(
-                'class' => 'OlegUserdirectoryBundle:PermissionActionList',
+                'class' => 'AppUserdirectoryBundle:PermissionActionList',
                 'label' => "Action:",
                 'multiple' => false,
                 'required' => false,
@@ -373,7 +373,7 @@ class GenericListType extends AbstractType
                 'attr' => array('class' => 'form-control')
             ));
             $builder->add('attributes',EntityType::class,array(
-                'class' => 'OlegUserdirectoryBundle:RoleAttributeList',
+                'class' => 'AppUserdirectoryBundle:RoleAttributeList',
                 'label' => "Attribute(s):",
                 'multiple' => true,
                 'attr' => array('class'=>'combobox combobox-width'),
@@ -393,7 +393,7 @@ class GenericListType extends AbstractType
             ));
 
 //            $builder->add('sites',EntityType::class,array(
-//                'class' => 'OlegUserdirectoryBundle:SiteList',
+//                'class' => 'AppUserdirectoryBundle:SiteList',
 //                'label' => "Site(s):",
 //                'multiple' => true,
 //                'attr' => array('class'=>'combobox combobox-width'),
@@ -407,7 +407,7 @@ class GenericListType extends AbstractType
             ));
 
             $builder->add('fellowshipSubspecialty',EntityType::class,array(
-                'class' => 'OlegUserdirectoryBundle:FellowshipSubspecialty',
+                'class' => 'AppUserdirectoryBundle:FellowshipSubspecialty',
                 'label' => "FellowshipSubspecialty:",
                 'multiple' => false,
                 'required' => false,
@@ -417,7 +417,7 @@ class GenericListType extends AbstractType
 
         if( method_exists($this->params['entity'],'getSites') ) {
             $builder->add('sites',EntityType::class,array(
-                'class' => 'OlegUserdirectoryBundle:SiteList',
+                'class' => 'AppUserdirectoryBundle:SiteList',
                 'label' => "Site(s):",
                 'multiple' => true,
                 'attr' => array('class'=>'combobox combobox-width'),
@@ -488,7 +488,7 @@ class GenericListType extends AbstractType
         //FormNode Holder
         if( method_exists($this->params['entity'],'getFormNodes') ) {
             $builder->add( 'formNodes', EntityType::class, array(
-                'class' => 'OlegUserdirectoryBundle:FormNode',
+                'class' => 'AppUserdirectoryBundle:FormNode',
                 'choice_label' => 'getTreeNameObjectType',
                 'label'=>'Form Node(s):',
                 'required'=> false,
@@ -551,7 +551,7 @@ class GenericListType extends AbstractType
 
         if( strtolower($this->mapper['className']) == strtolower("UserWrapper") ) {
             $builder->add( 'user', EntityType::class, array(
-                'class' => 'OlegUserdirectoryBundle:User',
+                'class' => 'AppUserdirectoryBundle:User',
                 'label'=>'Linked User:',
                 'required'=> false,
                 'multiple' => false,
@@ -662,7 +662,7 @@ class GenericListType extends AbstractType
         //not editable: suites, rooms
         if( strtolower($this->mapper['className']) == strtolower("Department") ) {
             $builder->add('suites', EntityType::class, array(
-                'class' => 'OlegUserdirectoryBundle:SuiteList',
+                'class' => 'AppUserdirectoryBundle:SuiteList',
                 'choice_label' => 'FullName',
                 'label'=>'Suite(s):',
                 'required'=> false,
@@ -672,7 +672,7 @@ class GenericListType extends AbstractType
             ));
 
             $builder->add('rooms', EntityType::class, array(
-                'class' => 'OlegUserdirectoryBundle:RoomList',
+                'class' => 'AppUserdirectoryBundle:RoomList',
                 'choice_label' => 'FullName',
                 'label'=>'Room(s):',
                 'required'=> false,
@@ -686,7 +686,7 @@ class GenericListType extends AbstractType
         //not editable: suites, rooms
         if( strtolower($this->mapper['className']) == strtolower("FloorList") ) {
             $builder->add('suites', EntityType::class, array(
-                'class' => 'OlegUserdirectoryBundle:SuiteList',
+                'class' => 'AppUserdirectoryBundle:SuiteList',
                 'choice_label' => 'FullName',
                 'label'=>'Suite(s):',
                 'required'=> false,
@@ -696,7 +696,7 @@ class GenericListType extends AbstractType
             ));
 
             $builder->add('rooms', EntityType::class, array(
-                'class' => 'OlegUserdirectoryBundle:RoomList',
+                'class' => 'AppUserdirectoryBundle:RoomList',
                 'choice_label' => 'FullName',
                 'label'=>'Room(s):',
                 'required'=> false,
@@ -710,7 +710,7 @@ class GenericListType extends AbstractType
         //Suite: buildings, floors
         if( strtolower($this->mapper['className']) == strtolower("SuiteList") ) {
             $builder->add('buildings', EntityType::class, array(
-                'class' => 'OlegUserdirectoryBundle:BuildingList',
+                'class' => 'AppUserdirectoryBundle:BuildingList',
                 'label'=>'Building(s):',
                 'required'=> false,
                 'multiple' => true,
@@ -718,7 +718,7 @@ class GenericListType extends AbstractType
             ));
 
 //            $builder->add('departments', EntityType::class, array(
-//                'class' => 'OlegUserdirectoryBundle:Department',
+//                'class' => 'AppUserdirectoryBundle:Department',
 //                'label'=>'Department(s):',
 //                'required'=> false,
 //                'multiple' => true,
@@ -727,7 +727,7 @@ class GenericListType extends AbstractType
 //            ));
 
             $builder->add('floors', EntityType::class, array(
-                'class' => 'OlegUserdirectoryBundle:FloorList',
+                'class' => 'AppUserdirectoryBundle:FloorList',
                 'label'=>'Floor(s):',
                 'required'=> false,
                 'multiple' => true,
@@ -738,7 +738,7 @@ class GenericListType extends AbstractType
         //Room: buildings, suite
         if( strtolower($this->mapper['className']) == strtolower("RoomList") ) {
             $builder->add('buildings', EntityType::class, array(
-                'class' => 'OlegUserdirectoryBundle:BuildingList',
+                'class' => 'AppUserdirectoryBundle:BuildingList',
                 'label'=>'Building(s):',
                 'required'=> false,
                 'multiple' => true,
@@ -747,7 +747,7 @@ class GenericListType extends AbstractType
             ));
 
 //            $builder->add('departments', EntityType::class, array(
-//                'class' => 'OlegUserdirectoryBundle:Department',
+//                'class' => 'AppUserdirectoryBundle:Department',
 //                'label'=>'Department(s):',
 //                'required'=> false,
 //                'multiple' => true,
@@ -755,7 +755,7 @@ class GenericListType extends AbstractType
 //            ));
 
             $builder->add('suites', EntityType::class, array(
-                'class' => 'OlegUserdirectoryBundle:SuiteList',
+                'class' => 'AppUserdirectoryBundle:SuiteList',
                 'choice_label' => 'FullName',
                 'label'=>'Suite(s):',
                 'required'=> false,
@@ -764,7 +764,7 @@ class GenericListType extends AbstractType
             ));
 
             $builder->add('floors', EntityType::class, array(
-                'class' => 'OlegUserdirectoryBundle:FloorList',
+                'class' => 'AppUserdirectoryBundle:FloorList',
                 'label'=>'Floor(s):',
                 'required'=> false,
                 'multiple' => true,

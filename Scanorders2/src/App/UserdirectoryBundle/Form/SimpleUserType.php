@@ -22,7 +22,7 @@
  * Time: 1:06 PM
  */
 
-namespace Oleg\UserdirectoryBundle\Form;
+namespace App\UserdirectoryBundle\Form;
 
 
 use Doctrine\ORM\EntityRepository;
@@ -59,7 +59,7 @@ class SimpleUserType extends UserType {
         //$this->addKeytype($builder,'Primary Public User ID Type:','combobox combobox-width',$defaultPrimaryPublicUserIdType);
 
 //        $builder->add('keytype', EntityType::class, array(
-//            'class' => 'OlegUserdirectoryBundle:UsernameType',
+//            'class' => 'AppUserdirectoryBundle:UsernameType',
 //            //'disabled' => ($this->cycle == 'create' ? false : true ), //it is not possible to edit keytype for existed user
 //            'choice_label' => 'name',
 //            'label' => "Primary Public User ID Type:",
@@ -109,7 +109,7 @@ class SimpleUserType extends UserType {
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\User',
+            'data_class' => 'App\UserdirectoryBundle\Entity\User',
             'form_custom_value' => null,
             'csrf_protection' => false,
         ));

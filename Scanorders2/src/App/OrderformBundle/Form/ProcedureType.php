@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Form;
+namespace App\OrderformBundle\Form;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -139,7 +139,7 @@ class ProcedureType extends AbstractType
             ));
 
             $builder->add('provider', EntityType::class, array(
-                'class' => 'OlegUserdirectoryBundle:User',
+                'class' => 'AppUserdirectoryBundle:User',
                 //'disabled' => $readonly,
                 'label' => 'Provider:',
                 'required' => false,
@@ -152,7 +152,7 @@ class ProcedureType extends AbstractType
             ));
 
 //            $sources = array('WCM Epic Ambulatory EMR','Written or oral referral');
-//            $params = array('name'=>'Procedure','dataClass'=>'Oleg\OrderformBundle\Entity\ProcedureOrder','typename'=>'procedureorder','sources'=>$sources);
+//            $params = array('name'=>'Procedure','dataClass'=>'App\OrderformBundle\Entity\ProcedureOrder','typename'=>'procedureorder','sources'=>$sources);
 //            $builder->add('order', CollectionType::class, array(
 //                'type' => new GeneralOrderType($params, null),
 //                'allow_add' => true,
@@ -206,7 +206,7 @@ class ProcedureType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\Procedure',
+            'data_class' => 'App\OrderformBundle\Entity\Procedure',
             'form_custom_value' => null
         ));
     }

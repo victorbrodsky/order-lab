@@ -1,6 +1,6 @@
-{% extends "OlegTranslationalResearchBundle::Default/base.html.twig" %}
+{% extends "AppTranslationalResearchBundle::Default/base.html.twig" %}
 
-{% import "OlegTranslationalResearchBundle::Default/transresRequestMacros.html.twig" as transresRequestMacros %}
+{% import "AppTranslationalResearchBundle::Default/transresRequestMacros.html.twig" as transresRequestMacros %}
 
 {% block title %}
     {{ metaTitle }}
@@ -288,7 +288,7 @@
 {#{% block additionaljs %}#}
 
 {#{% javascripts#}
-{#'@OlegTranslationalResearchBundle/Resources/public/form/js/transres-filterbtn.js'#}
+{#'@AppTranslationalResearchBundle/Resources/public/form/js/transres-filterbtn.js'#}
 {#%}#}
 {#<script type="text/javascript" src="{{ asset_url }}">#}
 
@@ -334,8 +334,8 @@
 {% block additionaljs %}
 
     {% javascripts
-        '@OlegTranslationalResearchBundle/Resources/public/form/js/transres-filterbtn.js'
-        '@OlegTranslationalResearchBundle/Resources/public/form/js/invoice.js'
+        '@AppTranslationalResearchBundle/Resources/public/form/js/transres-filterbtn.js'
+        '@AppTranslationalResearchBundle/Resources/public/form/js/invoice.js'
     %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}

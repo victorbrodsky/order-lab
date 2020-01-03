@@ -23,12 +23,12 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Oleg\OrderformBundle\Entity;
+namespace App\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-use Oleg\UserdirectoryBundle\Entity\Document;
+use App\UserdirectoryBundle\Entity\Document;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -48,7 +48,7 @@ class PartPaper extends PartArrayFieldAbstract
     protected $part;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document")
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document")
      * @ORM\JoinTable(name="scan_partpaper_document",
      *      joinColumns={@ORM\JoinColumn(name="partpaper_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="document_id", referencedColumnName="id")}
@@ -66,7 +66,7 @@ class PartPaper extends PartArrayFieldAbstract
     /**
      * Add document
      *
-     * @param \Oleg\OrderformBundle\Entity\Document $document
+     * @param \App\OrderformBundle\Entity\Document $document
      * @return PartPaper
      */
     public function addDocument($document)
@@ -85,7 +85,7 @@ class PartPaper extends PartArrayFieldAbstract
     /**
      * Remove document
      *
-     * @param \Oleg\OrderformBundle\Entity\Document $document
+     * @param \App\OrderformBundle\Entity\Document $document
      */
     public function removeDocument($document)
     {

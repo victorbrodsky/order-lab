@@ -22,7 +22,7 @@
  * Time: 3:23 PM
  */
 
-namespace Oleg\UserdirectoryBundle\Entity;
+namespace App\UserdirectoryBundle\Entity;
 
 
 interface CompositeNodeInterface {

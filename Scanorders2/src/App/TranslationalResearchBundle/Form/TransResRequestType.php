@@ -15,11 +15,11 @@
  *  limitations under the License.
  */
 
-namespace Oleg\TranslationalResearchBundle\Form;
+namespace App\TranslationalResearchBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
-use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
-use Oleg\UserdirectoryBundle\Form\DocumentType;
+use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
+use App\UserdirectoryBundle\Form\DocumentType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -133,7 +133,7 @@ class TransResRequestType extends AbstractType
         if( $this->params['availableProjects'] && count($this->params['availableProjects']) > 0 ) {
             //echo "2availableProjects count=".count($this->params['availableProjects'])."<br>";
             $builder->add('project', EntityType::class, array(
-                'class' => 'OlegTranslationalResearchBundle:Project',
+                'class' => 'AppTranslationalResearchBundle:Project',
                 'choice_label' => 'getProjectInfoNameWithPIsChoice',
                 'choices' => $this->params['availableProjects'],
                 'label' => 'Project:',
@@ -155,7 +155,7 @@ class TransResRequestType extends AbstractType
 
                     $label = null;
                     $mapper = array(
-                        'prefix' => "Oleg",
+                        'prefix' => "App",
                         'className' => "MessageCategory",
                         'bundleName' => "OrderformBundle",
                         'organizationalGroupType' => "MessageTypeClassifiers"
@@ -163,11 +163,11 @@ class TransResRequestType extends AbstractType
                     if ($message) {
                         $messageCategory = $message->getMessageCategory();
                         if ($messageCategory) {
-                            $label = $this->params['em']->getRepository('OlegOrderformBundle:MessageCategory')->getLevelLabels($messageCategory, $mapper);
+                            $label = $this->params['em']->getRepository('AppOrderformBundle:MessageCategory')->getLevelLabels($messageCategory, $mapper);
                         }
                     }
                     if (!$label) {
-                        $label = $this->params['em']->getRepository('OlegOrderformBundle:MessageCategory')->getLevelLabels(null, $mapper);
+                        $label = $this->params['em']->getRepository('AppOrderformBundle:MessageCategory')->getLevelLabels(null, $mapper);
                     }
 
                     if ($label) {
@@ -243,7 +243,7 @@ class TransResRequestType extends AbstractType
         }
 
         $builder->add('contact', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:User',
+            'class' => 'AppUserdirectoryBundle:User',
             'label'=> "Billing Contact:",
             'required'=> false,
             'multiple' => false,
@@ -274,7 +274,7 @@ class TransResRequestType extends AbstractType
         //print_r($attrArr);
 
         $builder->add('principalInvestigators', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:User',
+            'class' => 'AppUserdirectoryBundle:User',
             'label' => "Principal Investigator(s) for the project:",
             'required' => false,
             //'disabled' => $disabledPi,
@@ -294,7 +294,7 @@ class TransResRequestType extends AbstractType
         $builder->add('products', CollectionType::class, array(
             'entry_type' => ProductType::class,
             'entry_options' => array(
-                //'data_class' => 'Oleg\TranslationalResearchBundle\Entity\Product',
+                //'data_class' => 'App\TranslationalResearchBundle\Entity\Product',
                 'form_custom_value' => $this->params
             ),
             'label' => false,
@@ -353,7 +353,7 @@ class TransResRequestType extends AbstractType
         }
 
         $builder->add('businessPurposes', EntityType::class, array(
-            'class' => 'OlegTranslationalResearchBundle:BusinessPurposeList',
+            'class' => 'AppTranslationalResearchBundle:BusinessPurposeList',
             'label'=> "Business Purpose(s):",
             'required'=> true,
             'multiple' => true,
@@ -430,7 +430,7 @@ class TransResRequestType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\TranslationalResearchBundle\Entity\TransResRequest',
+            'data_class' => 'App\TranslationalResearchBundle\Entity\TransResRequest',
             'form_custom_value' => null
         ));
     }

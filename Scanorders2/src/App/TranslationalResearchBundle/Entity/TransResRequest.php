@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\TranslationalResearchBundle\Entity;
+namespace App\TranslationalResearchBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -50,13 +50,13 @@ class TransResRequest {
     private $exportId;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
      */
     private $submitter;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(name="updateUser", referencedColumnName="id", nullable=true)
      */
     private $updateUser;
@@ -90,7 +90,7 @@ class TransResRequest {
     private $completedDate;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
      */
     private $completedBy;
@@ -105,7 +105,7 @@ class TransResRequest {
     /**
      * Institutional PHI Scope: users with the same Institutional PHI Scope can view the data of this order
      *
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Institution")
      */
     private $institution;
 
@@ -118,7 +118,7 @@ class TransResRequest {
     /**
      * MessageCategory with subcategory (parent-children hierarchy)
      *
-     * @ORM\ManyToOne(targetEntity="Oleg\OrderformBundle\Entity\MessageCategory", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\OrderformBundle\Entity\MessageCategory", cascade={"persist"})
      */
     private $messageCategory;
 
@@ -173,7 +173,7 @@ class TransResRequest {
     private $invoices;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\User")
      * @ORM\JoinTable(name="transres_request_principalinvestigator",
      *      joinColumns={@ORM\JoinColumn(name="request_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="principalinvestigator_id", referencedColumnName="id")}
@@ -201,7 +201,7 @@ class TransResRequest {
     /**
      * Billing contact is populated from Project's $billingContact
      *
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(name="contact", referencedColumnName="id", nullable=true)
      */
     private $contact;
@@ -227,7 +227,7 @@ class TransResRequest {
     /**
      * Request Documents
      *
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
      * @ORM\JoinTable(name="transres_request_document",
      *      joinColumns={@ORM\JoinColumn(name="request_id", referencedColumnName="id", onDelete="CASCADE")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE")}
@@ -239,7 +239,7 @@ class TransResRequest {
     /**
      * Packing Slip PDFs
      *
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
      * @ORM\JoinTable(name="transres_request_packingSlipPdf",
      *      joinColumns={@ORM\JoinColumn(name="request_id", referencedColumnName="id", onDelete="CASCADE")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="packingSlipPdf_id", referencedColumnName="id", onDelete="CASCADE")}
@@ -251,7 +251,7 @@ class TransResRequest {
     /**
      * Old Packing Slip PDFs
      *
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
      * @ORM\JoinTable(name="transres_request_oldPackingSlipPdf",
      *      joinColumns={@ORM\JoinColumn(name="request_id", referencedColumnName="id", onDelete="CASCADE")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="oldPackingSlipPdf_id", referencedColumnName="id", onDelete="CASCADE")}
@@ -263,7 +263,7 @@ class TransResRequest {
     /**
      * Reference antibody
      *
-     * @ORM\ManyToMany(targetEntity="Oleg\TranslationalResearchBundle\Entity\AntibodyList", cascade={"persist","remove"})
+     * @ORM\ManyToMany(targetEntity="App\TranslationalResearchBundle\Entity\AntibodyList", cascade={"persist","remove"})
      * @ORM\JoinTable(name="transres_request_antibody",
      *      joinColumns={@ORM\JoinColumn(name="request_id", referencedColumnName="id", onDelete="CASCADE")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="antibody_id", referencedColumnName="id", onDelete="CASCADE")}
@@ -275,7 +275,7 @@ class TransResRequest {
     /**
      * Translational Research Work Request Business Purposes
      *
-     * @ORM\ManyToMany(targetEntity="Oleg\TranslationalResearchBundle\Entity\BusinessPurposeList", cascade={"persist","remove"})
+     * @ORM\ManyToMany(targetEntity="App\TranslationalResearchBundle\Entity\BusinessPurposeList", cascade={"persist","remove"})
      * @ORM\JoinTable(name="transres_request_businessPurpose",
      *      joinColumns={@ORM\JoinColumn(name="request_id", referencedColumnName="id", onDelete="CASCADE")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="businessPurpose_id", referencedColumnName="id", onDelete="CASCADE")}

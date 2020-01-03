@@ -15,11 +15,11 @@
  *  limitations under the License.
  */
 
-namespace Oleg\FellAppBundle\Controller;
+namespace App\FellAppBundle\Controller;
 
-use Oleg\FellAppBundle\Entity\FellappSiteParameter;
-use Oleg\FellAppBundle\Form\FellappSiteParameterType;
-use Oleg\UserdirectoryBundle\Controller\SiteParametersController;
+use App\FellAppBundle\Entity\FellappSiteParameter;
+use App\FellAppBundle\Form\FellappSiteParameterType;
+use App\UserdirectoryBundle\Controller\SiteParametersController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -27,9 +27,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-use Oleg\UserdirectoryBundle\Entity\SiteParameters;
-use Oleg\UserdirectoryBundle\Form\SiteParametersType;
-use Oleg\UserdirectoryBundle\Util\UserUtil;
+use App\UserdirectoryBundle\Entity\SiteParameters;
+use App\UserdirectoryBundle\Form\SiteParametersType;
+use App\UserdirectoryBundle\Util\UserUtil;
 
 /**
  * SiteParameters controller.
@@ -44,7 +44,7 @@ class FellAppSiteParametersController extends SiteParametersController
      *
      * @Route("/site-settings/", name="fellapp_sitesettings_siteparameters")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:SiteParameters:site-index.html.twig")
+     * @Template("AppUserdirectoryBundle:SiteParameters:site-index.html.twig")
      */
     public function indexSiteSettingsAction(Request $request)
     {
@@ -59,7 +59,7 @@ class FellAppSiteParametersController extends SiteParametersController
      *
      * @Route("/", name="fellapp_siteparameters")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:SiteParameters:index.html.twig")
+     * @Template("AppUserdirectoryBundle:SiteParameters:index.html.twig")
      */
     public function indexAction(Request $request)
     {
@@ -74,7 +74,7 @@ class FellAppSiteParametersController extends SiteParametersController
      *
      * @Route("/{id}/edit", name="fellapp_siteparameters_edit")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:SiteParameters:edit.html.twig")
+     * @Template("AppUserdirectoryBundle:SiteParameters:edit.html.twig")
      */
     public function editAction(Request $request,$id)
     {
@@ -86,7 +86,7 @@ class FellAppSiteParametersController extends SiteParametersController
      *
      * @Route("/{id}", name="fellapp_siteparameters_update")
      * @Method("PUT")
-     * @Template("OlegUserdirectoryBundle:SiteParameters:edit.html.twig")
+     * @Template("AppUserdirectoryBundle:SiteParameters:edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {
@@ -99,7 +99,7 @@ class FellAppSiteParametersController extends SiteParametersController
      *
      * @Route("/specific-site-parameters/edit/", name="fellapp_siteparameters_edit_specific_site_parameters")
      * @Method({"GET", "POST"})
-     * @Template("OlegFellAppBundle:SiteParameter:edit.html.twig")
+     * @Template("AppFellAppBundle:SiteParameter:edit.html.twig")
      */
     public function fellappSiteParameterEditAction( Request $request ) {
 
@@ -137,7 +137,7 @@ class FellAppSiteParametersController extends SiteParametersController
      *
      * @Route("/specific-site-parameters/show/", name="fellapp_siteparameters_show_specific_site_parameters")
      * @Method("GET")
-     * @Template("OlegFellAppBundle:SiteParameter:edit-content.html.twig")
+     * @Template("AppFellAppBundle:SiteParameter:edit-content.html.twig")
      */
     public function fellappSiteParameterShowAction( Request $request ) {
 
@@ -187,7 +187,7 @@ class FellAppSiteParametersController extends SiteParametersController
     //Get or Create a new FellAppSiteParameter
     public function getOrCreateNewFellAppParameters() {
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+        $entities = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
         if( count($entities) != 1 ) {
             throw new \Exception( 'Must have only one parameter object. Found '.count($entities).'object(s)' );
         }

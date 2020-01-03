@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Form;
+namespace App\UserdirectoryBundle\Form;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -85,7 +85,7 @@ class AccessRequestType extends AbstractType
             'required' => false,
             'multiple' => false,
             'choice_label' => 'getNodeNameWithRoot',
-            'class' => 'OlegUserdirectoryBundle:Institution',
+            'class' => 'AppUserdirectoryBundle:Institution',
             'choices' => $requestedScanOrderInstitutionScope,
             'invalid_message' => 'organizationalGroup invalid value',
             'attr' => array('class' => 'combobox combobox-width combobox-institution')
@@ -106,7 +106,7 @@ class AccessRequestType extends AbstractType
 //            'multiple' => false,
 //            //'empty_value' => false,
 //            'choice_label' => 'getNodeNameWithRoot',
-//            'class' => 'OlegUserdirectoryBundle:Institution',
+//            'class' => 'AppUserdirectoryBundle:Institution',
 //            'choices' => $requestedScanOrderInstitutionScope,
 //            'attr' => array('class' => 'combobox combobox-width combobox-institution')
 //        ));
@@ -120,11 +120,11 @@ class AccessRequestType extends AbstractType
 //            if( $title ) {
 //                $institution = $title->getOrganizationalGroup();
 //                if( $institution ) {
-//                    $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
+//                    $label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
 //                }
 //            }
 //            if( !$label ) {
-//                $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
+//                $label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
 //            }
 //
 //            $form->add('organizationalGroup', 'employees_custom_selector', array(
@@ -182,7 +182,7 @@ class AccessRequestType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\AccessRequest',
+            'data_class' => 'App\UserdirectoryBundle\Entity\AccessRequest',
             'form_custom_value' => null
         ));
     }

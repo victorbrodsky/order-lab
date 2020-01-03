@@ -15,10 +15,10 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Form;
+namespace App\OrderformBundle\Form;
 
-use Oleg\UserdirectoryBundle\Form\DocumentContainerType;
-use Oleg\UserdirectoryBundle\Form\DocumentType;
+use App\UserdirectoryBundle\Form\DocumentContainerType;
+use App\UserdirectoryBundle\Form\DocumentType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -39,7 +39,7 @@ class LabOrderType extends AbstractType
         $this->formConstructor($options['form_custom_value']);
 
         $builder->add('labTest', LabTestType::class, array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\LabTest',
+            'data_class' => 'App\OrderformBundle\Entity\LabTest',
             'form_custom_value' => $this->params,
             'label' => false
         ));
@@ -49,7 +49,7 @@ class LabOrderType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\LabOrder',
+            'data_class' => 'App\OrderformBundle\Entity\LabOrder',
             'form_custom_value' => null
         ));
     }

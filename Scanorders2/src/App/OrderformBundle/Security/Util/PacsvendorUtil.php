@@ -23,16 +23,16 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Oleg\OrderformBundle\Security\Util;
+namespace App\OrderformBundle\Security\Util;
 
-use Oleg\UserdirectoryBundle\Util\UserUtil;
+use App\UserdirectoryBundle\Util\UserUtil;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 
-use Oleg\UserdirectoryBundle\Entity\PerSiteSettings;
+use App\UserdirectoryBundle\Entity\PerSiteSettings;
 
-use Oleg\UserdirectoryBundle\Entity\User;
+use App\UserdirectoryBundle\Entity\User;
 
 include_once '..\DatabaseRoutines.php';
 
@@ -75,7 +75,7 @@ class PacsvendorUtil {
                 ////////// assign Institution //////////
                 $perSiteSettings = null;
 
-//                $params = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+//                $params = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
 //                if( count($params) > 0 ) { //if zero found => initial admin login after DB clean
 //                    if( count($params) != 1 ) {
 //                        throw new \Exception( 'Must have only one parameter object. Found '.count($params).' object(s)' );
@@ -109,7 +109,7 @@ class PacsvendorUtil {
                 ////////// EOF assign Institution //////////
 
                 ////////// check if pacsvendor username was set in UserRequest for this user (identification by email). //////////
-                $userRequest = $em->getRepository('OlegUserdirectoryBundle:UserRequest')->findOneByEmail($AuthResult['E_Mail']);
+                $userRequest = $em->getRepository('AppUserdirectoryBundle:UserRequest')->findOneByEmail($AuthResult['E_Mail']);
                 if( $userRequest ) {
                     if( $userRequest->getStatus() != 'approved' ) {
                         throw new AuthenticationException('The pacsvendor authentication failed. User Account Request was not approved, status='.$userRequest->getStatus());

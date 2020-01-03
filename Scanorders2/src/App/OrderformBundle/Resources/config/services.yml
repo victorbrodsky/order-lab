@@ -15,33 +15,33 @@ services:
 
     #Custom selector fields
     order_form.type.scan_custom_selector:
-        class: Oleg\OrderformBundle\Form\CustomType\ScanCustomSelectorType
+        class: App\OrderformBundle\Form\CustomType\ScanCustomSelectorType
         arguments: ["@doctrine.orm.entity_manager","@security.token_storage", "@service_container"]
         tags:
             - { name: form.type, alias: scan_custom_selector }
 
     #Redirect admin to index
     authentication_handler:
-        class: Oleg\OrderformBundle\Security\Authentication\ScanLoginSuccessHandler
+        class: App\OrderformBundle\Security\Authentication\ScanLoginSuccessHandler
         arguments:  ["@service_container", "@doctrine.orm.entity_manager"]
 
     #security utility
     order_security_utility:
-        class: Oleg\OrderformBundle\Security\Util\SecurityUtil
+        class: App\OrderformBundle\Security\Util\SecurityUtil
         arguments: ["@doctrine.orm.entity_manager", "@security.token_storage", "@security.authorization_checker", "@service_container"]
 
     #scanorder utility
     scanorder_utility:
-        class: Oleg\OrderformBundle\Helper\OrderUtil
+        class: App\OrderformBundle\Helper\OrderUtil
         arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
     #patient utility
     search_utility:
-        class: Oleg\OrderformBundle\Helper\SearchUtil
+        class: App\OrderformBundle\Helper\SearchUtil
         arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
     scan_role_voter:
-        class: Oleg\OrderformBundle\Security\Voter\ScanRoleVoter
+        class: App\OrderformBundle\Security\Voter\ScanRoleVoter
         arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
         tags:
             - { name: security.voter }
@@ -49,7 +49,7 @@ services:
         public: false
 
     scan_permission_voter:
-            class: Oleg\OrderformBundle\Security\Voter\ScanPermissionVoter
+            class: App\OrderformBundle\Security\Voter\ScanPermissionVoter
             arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
             tags:
                 - { name: security.voter }

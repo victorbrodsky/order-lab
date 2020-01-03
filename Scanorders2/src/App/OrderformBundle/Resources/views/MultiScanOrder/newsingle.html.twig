@@ -14,9 +14,9 @@
     limitations under the License.
 #}
 
-{% extends "OlegOrderformBundle::Default/base.html.twig" %}
+{% extends "AppOrderformBundle::Default/base.html.twig" %}
 
-{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
 {% block title %}
     {{ formtype }}
@@ -53,7 +53,7 @@
         {% set specialStainsWidget = formmacros.fieldSpecialStainsWidget(specialStainsField) %}
         {% set specialStainsHtml = formmacros.inputField(specialStainsField,cycle,"blockspecialStains","prototype",specialStainsWidget,"buttonbottom","") %}
 
-        {% set imgLoading = "http://collage.med.cornell.edu/order/bundles/olegorderform/form/img/select2-spinner.gif" %}
+        {% set imgLoading = "http://collage.med.cornell.edu/order/bundles/apporderform/form/img/select2-spinner.gif" %}
     {% endif %}
 
 
@@ -189,7 +189,7 @@
 
             <div id="message_param" class="collapse">
 
-                {% include 'OlegOrderformBundle::MultiScanOrder/edu_res.html.twig' %}
+                {% include 'AppOrderformBundle::MultiScanOrder/edu_res.html.twig' %}
 
                 {{ formmacros.message_panel(form,"Order Info") }}
 
@@ -198,7 +198,7 @@
 
                 {#        The optional parameter    #}
                 <div class="row" style="padding-bottom: 2%">
-                    {% set imgLoading = asset('bundles/olegorderform/form/img/select2-spinner.gif') %}
+                    {% set imgLoading = asset('bundles/apporderform/form/img/select2-spinner.gif') %}
                     <p>
 
                         <button id="optional_button" onclick="checkFormSingle(this)" class="btn btn-default ladda-button singleform-optional-button"

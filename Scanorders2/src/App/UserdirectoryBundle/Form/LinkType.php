@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Form;
+namespace App\UserdirectoryBundle\Form;
 
 
 
@@ -28,7 +28,7 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 
-use Oleg\UserdirectoryBundle\Entity\Location;
+use App\UserdirectoryBundle\Entity\Location;
 
 class LinkType extends AbstractType
 {
@@ -42,7 +42,7 @@ class LinkType extends AbstractType
         ));
 
         $builder->add( 'linktype', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:LinkTypeList',
+            'class' => 'AppUserdirectoryBundle:LinkTypeList',
             'choice_label' => 'name',
             'label'=>'Image Link Type:',
             'required'=> false,
@@ -64,7 +64,7 @@ class LinkType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\Link',
+            'data_class' => 'App\UserdirectoryBundle\Entity\Link',
         ));
     }
 

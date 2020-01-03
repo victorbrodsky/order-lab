@@ -15,13 +15,13 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Entity;
+namespace App\OrderformBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\PartRepository")
+ * @ORM\Entity(repositoryClass="App\OrderformBundle\Repository\PartRepository")
  * @ORM\Table(name="scan_part")
  */
 class Part extends ObjectAbstract
@@ -206,7 +206,7 @@ class Part extends ObjectAbstract
         $this->diseaseType->removeElement($diseaseType);
     }
 
-    public function setAccession(\Oleg\OrderformBundle\Entity\Accession $accession = null) {
+    public function setAccession(\App\OrderformBundle\Entity\Accession $accession = null) {
         $this->accession = $accession;
         return $this;
     }
@@ -300,10 +300,10 @@ class Part extends ObjectAbstract
     /**
      * Add block
      *
-     * @param \Oleg\OrderformBundle\Entity\Block $block
+     * @param \App\OrderformBundle\Entity\Block $block
      * @return Part
      */
-    public function addBlock(\Oleg\OrderformBundle\Entity\Block $block)
+    public function addBlock(\App\OrderformBundle\Entity\Block $block)
     {
         //echo "block count1=".count($this->getBlock())."<br>";
         if( !$this->block->contains($block) ) {
@@ -321,9 +321,9 @@ class Part extends ObjectAbstract
     /**
      * Remove block
      *
-     * @param \Oleg\OrderformBundle\Entity\Block $block
+     * @param \App\OrderformBundle\Entity\Block $block
      */
-    public function removeBlock(\Oleg\OrderformBundle\Entity\Block $block)
+    public function removeBlock(\App\OrderformBundle\Entity\Block $block)
     {
         $this->block->removeElement($block);
     }
@@ -405,7 +405,7 @@ class Part extends ObjectAbstract
     /**
      * Add paper
      *
-     * @param \Oleg\OrderformBundle\Entity\PartPaper $paper
+     * @param \App\OrderformBundle\Entity\PartPaper $paper
      * @return Part
      */
     public function addPaper($paper)
@@ -424,7 +424,7 @@ class Part extends ObjectAbstract
     /**
      * Remove paper
      *
-     * @param \Oleg\OrderformBundle\Entity\PartPaper $paper
+     * @param \App\OrderformBundle\Entity\PartPaper $paper
      */
     public function removePaper($paper)
     {
@@ -466,10 +466,10 @@ class Part extends ObjectAbstract
     }
 
     /**
-     * @param \Oleg\OrderformBundle\Entity\Slide $slide
+     * @param \App\OrderformBundle\Entity\Slide $slide
      * @return Part
      */
-    public function addSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
+    public function addSlide(\App\OrderformBundle\Entity\Slide $slide)
     {
         if( !$this->slide->contains($slide) ) {
             $slide->setPart($this);
@@ -482,9 +482,9 @@ class Part extends ObjectAbstract
     /**
      * Remove slide
      *
-     * @param \Oleg\OrderformBundle\Entity\Slide $slide
+     * @param \App\OrderformBundle\Entity\Slide $slide
      */
-    public function removeSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
+    public function removeSlide(\App\OrderformBundle\Entity\Slide $slide)
     {
         $this->slide->removeElement($slide);
     }

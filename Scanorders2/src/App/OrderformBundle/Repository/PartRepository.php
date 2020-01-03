@@ -15,8 +15,8 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Repository;
-use Oleg\OrderformBundle\Entity\Part;
+namespace App\OrderformBundle\Repository;
+use App\OrderformBundle\Entity\Part;
 
 /**
  * PartRepository
@@ -145,15 +145,15 @@ class PartRepository extends ArrayFieldAbstractRepository
         //institution
         //TODO: change institution hierarchy and add collaboration
         //$inst = " AND p.institution=".$institution;
-        $permittedInstitution = $this->_em->getRepository('OlegUserdirectoryBundle:Institution')->find($institution);
+        $permittedInstitution = $this->_em->getRepository('AppUserdirectoryBundle:Institution')->find($institution);
         $inst = " AND (" .
-                $this->_em->getRepository('OlegUserdirectoryBundle:Institution')->
+                $this->_em->getRepository('AppUserdirectoryBundle:Institution')->
                     getCriterionStrForCollaborationsByNode($permittedInstitution,"institution",array("Union","Intersection")) .
                 ")";
 
         $query = $this->getEntityManager()
             ->createQuery('
-            SELECT MAX(ppartname.field) as max'.'partname'.' FROM OlegOrderformBundle:Part p
+            SELECT MAX(ppartname.field) as max'.'partname'.' FROM AppOrderformBundle:Part p
             JOIN p.institution institution
             JOIN p.partname ppartname
             JOIN p.accession a
@@ -213,17 +213,17 @@ class PartRepository extends ArrayFieldAbstractRepository
         $em = $this->_em;
 
         //1a) Check accession
-        $accession = $em->getRepository('OlegOrderformBundle:Accession')->findOneByIdJoinedToField($institutions, $accessionNumber,"Accession","accession",$validity,true,$extra); //find multi: all accessions with given $accessionNumber
+        $accession = $em->getRepository('AppOrderformBundle:Accession')->findOneByIdJoinedToField($institutions, $accessionNumber,"Accession","accession",$validity,true,$extra); //find multi: all accessions with given $accessionNumber
 
         if( !$accession ) {
             //echo "accession is not found in DB, accessionNumber=".$accessionNumber."<br>";
             //1) create Accession if not existed. We must create parent (accession), because we will create part object which must be linked to its parent
             //                                                                         $status, $provider, $className, $fieldName, $parent, $fieldValue
-            $accession = $em->getRepository('OlegOrderformBundle:Accession')->createElement($institution, null,$provider,"Accession","accession",null,$accessionNumber,$extra,$withfields);
+            $accession = $em->getRepository('AppOrderformBundle:Accession')->createElement($institution, null,$provider,"Accession","accession",null,$accessionNumber,$extra,$withfields);
         }
 
         //2) find next available part name by accession number
-        $partname = $em->getRepository('OlegOrderformBundle:Part')->findNextPartnameByAccession($institution,$accessionNumber,$keytype);
+        $partname = $em->getRepository('AppOrderformBundle:Part')->findNextPartnameByAccession($institution,$accessionNumber,$keytype);
 
         //3) before part create: check if part with $partname does not exists in DB
         $partFound = $this->findOnePartByJoinedToField( $institutions, $accessionNumber, $keytype, $partname, null );    //validity=null - it was called by check button
@@ -237,7 +237,7 @@ class PartRepository extends ArrayFieldAbstractRepository
 
         //echo "create part <br>";
         //4) create part object by partname and link it to the parent
-        $part = $em->getRepository('OlegOrderformBundle:Part')->createElement($institution,null,$provider,"Part","partname",$accession,$partname,$extra,$withfields);
+        $part = $em->getRepository('AppOrderformBundle:Part')->createElement($institution,null,$provider,"Part","partname",$accession,$partname,$extra,$withfields);
 
         return $part;
     }
@@ -319,8 +319,8 @@ class PartRepository extends ArrayFieldAbstractRepository
             $count = 1;
             foreach( $institutions as $inst ) {
                 //$instStr .= "p.institution=".$inst."";
-                $permittedInstitution = $this->_em->getRepository('OlegUserdirectoryBundle:Institution')->find($inst);
-                $instStr .= $this->_em->getRepository('OlegUserdirectoryBundle:Institution')->
+                $permittedInstitution = $this->_em->getRepository('AppUserdirectoryBundle:Institution')->find($inst);
+                $instStr .= $this->_em->getRepository('AppUserdirectoryBundle:Institution')->
                     getCriterionStrForCollaborationsByNode($permittedInstitution,"institution",array("Union","Intersection"));
                 if( $count < count($institutions) ) {
                     $instStr .= " OR ";
@@ -332,7 +332,7 @@ class PartRepository extends ArrayFieldAbstractRepository
         //echo "instStr=".$instStr." <br> ";
 
         $dql = '
-                SELECT p FROM OlegOrderformBundle:Part p
+                SELECT p FROM AppOrderformBundle:Part p
                 JOIN p.institution institution
                 JOIN p.partname pfield
                 JOIN p.accession a
@@ -368,7 +368,7 @@ class PartRepository extends ArrayFieldAbstractRepository
 
     public function findOneByInstAccessionPart($institution,$accessionTypeStr,$accessionStr,$partStr) {
 
-        $accessiontype = $this->_em->getRepository('OlegOrderformBundle:AccessionType')->findOneByName($accessionTypeStr);
+        $accessiontype = $this->_em->getRepository('AppOrderformBundle:AccessionType')->findOneByName($accessionTypeStr);
 
         $institutions = array();
         $institutions[] = $institution;
@@ -376,7 +376,7 @@ class PartRepository extends ArrayFieldAbstractRepository
         $single = true;
 
         //$institutions, $accession, $keytype, $partname, $validities=null, $single=true
-        $part = $this->_em->getRepository('OlegOrderformBundle:Part')->findOnePartByJoinedToField(
+        $part = $this->_em->getRepository('AppOrderformBundle:Part')->findOnePartByJoinedToField(
             $institutions,
             $accessionStr,
             $accessiontype->getId(),

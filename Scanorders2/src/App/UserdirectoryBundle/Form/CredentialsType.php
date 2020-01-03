@@ -16,7 +16,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Form;
+namespace App\UserdirectoryBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -57,7 +57,7 @@ class CredentialsType extends AbstractType
         ));
 
         $builder->add('sex', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:SexList',
+            'class' => 'AppUserdirectoryBundle:SexList',
             'choice_label' => 'name',
             'label' => "Gender:",
             'required'=> false,
@@ -233,7 +233,7 @@ class CredentialsType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\Credentials',
+            'data_class' => 'App\UserdirectoryBundle\Entity\Credentials',
             'form_custom_value' => null
         ));
     }

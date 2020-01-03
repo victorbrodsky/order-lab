@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Form;
+namespace App\UserdirectoryBundle\Form;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -30,7 +30,7 @@ class BoardCertificationType extends AbstractType
     {
 
         $builder->add( 'certifyingBoardOrganization', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:CertifyingBoardOrganization',
+            'class' => 'AppUserdirectoryBundle:CertifyingBoardOrganization',
             'choice_label' => 'name',
             'label'=>'Certifying Board Organization:',
             'required'=> false,
@@ -49,7 +49,7 @@ class BoardCertificationType extends AbstractType
 
 
         $builder->add( 'specialty', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:BoardCertifiedSpecialties',
+            'class' => 'AppUserdirectoryBundle:BoardCertifiedSpecialties',
             'choice_label' => 'name',
             'label'=>'Specialty:',
             'required'=> false,
@@ -107,7 +107,7 @@ class BoardCertificationType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\BoardCertification',
+            'data_class' => 'App\UserdirectoryBundle\Entity\BoardCertification',
         ));
     }
 

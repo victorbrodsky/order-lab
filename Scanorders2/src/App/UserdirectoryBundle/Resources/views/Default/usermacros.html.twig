@@ -91,10 +91,10 @@
         </a>
         <ul class="dropdown-menu">
 
-            {% set iconScan = '<img src="'~asset('bundles/oleguserdirectory/form/img/favicon.ico')~'" alt="Glass Slide Scan Orders" height="18" width="18">' %}
+            {% set iconScan = '<img src="'~asset('bundles/appuserdirectory/form/img/favicon.ico')~'" alt="Glass Slide Scan Orders" height="18" width="18">' %}
             {{ usermacros.siteSingleSwitchElement(scan_sitename,iconScan,'Glass Slide Scan Orders') }}
 
-            {% set iconEmployees = '<img src="'~asset('bundles/oleguserdirectory/form/img/users-1-64x64.png')~'" alt="Employee Directory" height="18" width="18">' %}
+            {% set iconEmployees = '<img src="'~asset('bundles/appuserdirectory/form/img/users-1-64x64.png')~'" alt="Employee Directory" height="18" width="18">' %}
             {{ usermacros.siteSingleSwitchElement(employees_sitename,iconEmployees,'Employee Directory') }}
 
             {{ usermacros.siteSingleSwitchElement(fellapp_sitename,'<span class="glyphicon glyphicon-file"></span>','Fellowship Applications') }}
@@ -127,7 +127,7 @@
 {% macro fileuploadLabelField( container, documents, cycle, classname, prototype ) %}
 
     {% import _self as usermacros %}
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
     <p>
     {#style="height: 50px"#}
@@ -150,7 +150,7 @@
 {#dropzoneInit = 'default':     inactive if show or active otherwise#}
 {% macro documentsContainer(container,documents,cycle,prototype,documentspercontainer,dropzoneInit,documentType,asFormOrEntity,formRest) %}
 
-    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
     {% if formRest is not defined %}
         {% set formRest = true %}
@@ -253,8 +253,8 @@
 {% endmacro %}
 
 {% macro document( documents, cycle, prototype, addRemoveLink, asFormOrEntity, asDocumentArray ) %}
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
     {#get sitename#}
     {% set sitename = employees_sitename %} {#default sitename#}
@@ -370,7 +370,7 @@
 
 {% macro singleDocumentContainer(container,document,cycle,prototype,dropzoneInit,documentType,asFormOrEntity,formRest) %}
 
-    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
     {% if formRest is not defined %}
         {% set formRest = true %}
@@ -552,8 +552,8 @@
     
 {% if field %}
     
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-    {% import "OlegUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
     {% import _self as usermacros %}
 
     {% if prototype == "prototype" %}
@@ -576,7 +576,7 @@
         {% set homeLocation = true %}
     {% endif %}
 
-    {% if formfield.vars.value and formfield.vars.value.status == constant('Oleg\\UserdirectoryBundle\\Entity\\BaseUserAttributes::STATUS_UNVERIFIED') or prototype == 'prototype' %}
+    {% if formfield.vars.value and formfield.vars.value.status == constant('App\\UserdirectoryBundle\\Entity\\BaseUserAttributes::STATUS_UNVERIFIED') or prototype == 'prototype' %}
         {% set wellclass = "user-alert-warning" %}
     {% else %}
         {% set wellclass = "" %}
@@ -848,7 +848,7 @@
 
 {#entity is a location object#}
 {% macro geoLocation( entity, cycle, prototype ) %}
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
     {% if prototype == "prototype" %}
         {% set formfield = entity.vars.prototype.geoLocation %}
@@ -896,8 +896,8 @@
             {% set showFlag = false %}
         {% endif %}
 
-        {% if not showFlag or statusValue != constant('Oleg\\UserdirectoryBundle\\Entity\\BaseUserAttributes::STATUS_VERIFIED') %}
-            {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+        {% if not showFlag or statusValue != constant('App\\UserdirectoryBundle\\Entity\\BaseUserAttributes::STATUS_VERIFIED') %}
+            {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
             {% if isEntity %}
                 {{ formmacros.simplefield( "Status:", entity.getStatusStr, "", "disabled" ) }}
             {% else %}
@@ -915,7 +915,7 @@
 
 
 {% macro checkbox_notempty(field,value,cycle) %}
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
     {% if "show" in cycle %}
         {% set showFlag = true %}
@@ -947,7 +947,7 @@
 {% endmacro %}
 
 {% macro emailPhoneField(field,cycle,type,label) %}
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import _self as usermacros %}
 
     {% if label == "" %}
@@ -1008,7 +1008,7 @@
 {% endmacro %}
 
 {% macro personInfo( person, cycle, sitename, wellLabel ) %}
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import _self as usermacros %}
     <p>
     <div class="well well-sm user-margin-block">
@@ -1030,7 +1030,7 @@
 
 
 {% macro listProperties(formfield) %}
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     <div class="well well-sm">
         <p>
         <h4 class="text-muted" align="center">List properties:</h4>
@@ -1084,7 +1084,7 @@
 {% endmacro %}
 
 {% macro buildingObject( field, cycle, classname, prototype, sitename, entity ) %}
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import _self as usermacros %}
 
     {% if prototype == "prototype" %}
@@ -1121,7 +1121,7 @@
 
 
 {% macro researchlabObject( field, cycle, classname, prototype, sitename, user ) %}
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import _self as usermacros %}
 
     {% if prototype == "prototype" %}
@@ -1199,7 +1199,7 @@
 
 
 {% macro grantObject( field, cycle, classname, prototype, sitename, user ) %}
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import _self as usermacros %}
 
     {% if prototype == "prototype" %}
@@ -1300,7 +1300,7 @@
 {% endmacro %}
 
 {% macro publicationObject( field, cycle, classname, prototype, sitename, entity ) %}
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import _self as usermacros %}
 
     {% if prototype == "prototype" %}
@@ -1356,7 +1356,7 @@
 
 
 {% macro bookObject( field, cycle, classname, prototype, sitename, entity ) %}
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import _self as usermacros %}
 
     {% if prototype == "prototype" %}
@@ -1413,7 +1413,7 @@
 {% endmacro %}
 
 {% macro lectureObject( field, cycle, classname, prototype, sitename, entity ) %}
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import _self as usermacros %}
 
     {% if prototype == "prototype" %}
@@ -1457,7 +1457,7 @@
 {% endmacro %}
 
 {% macro fellowshipApplicationObject( field, cycle, classname, prototype, sitename, entity ) %}
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import _self as usermacros %}
 
     {% if prototype == "prototype" %}
@@ -1499,7 +1499,7 @@
 
 
 {% macro htmlLink(linkvalue,label) %}
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% set scheme = app.request.scheme %}
     {% if scheme in linkvalue %}
         {% set href = linkvalue %}
@@ -1542,7 +1542,7 @@
 {% endmacro %}
 {% macro userTeam( user, type, sitename, postData, collapsein ) %}
 
-    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
     {#postData:{{ dump(postData) }}#}
 
@@ -1563,13 +1563,13 @@
     {% set myassistancesShow = false %}
 
     {#Reports#}
-    {% set myreports = controller( 'OlegUserdirectoryBundle:User:myObjects', {'postData':postData,'subjectUserId':user.id,'tablename':'myreports','id':null,'name':null} ) %}
+    {% set myreports = controller( 'AppUserdirectoryBundle:User:myObjects', {'postData':postData,'subjectUserId':user.id,'tablename':'myreports','id':null,'name':null} ) %}
     {% if render(myreports)|length > threshold %}
         {% set myreportsShow = true %}     
     {% endif %}
 
     {#Assistants#}
-    {% set myassistants = controller( 'OlegUserdirectoryBundle:User:myObjects', {'postData':postData,'subjectUserId':user.id,'tablename':'assistances','id':null,'name':null} ) %}
+    {% set myassistants = controller( 'AppUserdirectoryBundle:User:myObjects', {'postData':postData,'subjectUserId':user.id,'tablename':'assistances','id':null,'name':null} ) %}
     {% if render(myassistants)|length > threshold %}
         {% set myassistancesShow = true %} 
     {% endif %}
@@ -1581,7 +1581,7 @@
     {% for title in titleBosses %}
         {% for myboss in title['bosses'] %}
             {% if myboss and myboss.getId() %}
-                {% set table = controller( 'OlegUserdirectoryBundle:User:myObjects', {'postData':postData,'subjectUserId':user.id,'tablename':'myboss','id':myboss.getId(),'name':myboss} ) %}
+                {% set table = controller( 'AppUserdirectoryBundle:User:myObjects', {'postData':postData,'subjectUserId':user.id,'tablename':'myboss','id':myboss.getId(),'name':myboss} ) %}
                 {% set element = {'table': table, 'element':myboss} %}
                 {% set mygroupsArr = mygroupsArr|merge({ (loop.index0): element}) %}
                 {% if render(table)|length > threshold %}
@@ -1598,7 +1598,7 @@
     {#{% set myservicesArr = {} %}#}
     {#{% for service in services %}#}
         {#{% if service and service.getId() %}#}
-            {#{% set table = controller( 'OlegUserdirectoryBundle:User:myObjects', {'postData':postData,'tablename':'service','id':service.getId(),'name':service} ) %}#}
+            {#{% set table = controller( 'AppUserdirectoryBundle:User:myObjects', {'postData':postData,'tablename':'service','id':service.getId(),'name':service} ) %}#}
             {#&#123;&#35;table:{{ dump(render(table)) }}&#35;&#125;#}
             {#&#123;&#35;{% set rowArr = render(table)|split('<tr>') %}&#35;&#125;#}
             {#&#123;&#35;rowArr length:{{ rowArr|length }}&#35;&#125;#}
@@ -1615,7 +1615,7 @@
     {% set mylabsArr = {} %}
     {% for lab in labs %}
         {% if lab and lab.getId() %}
-            {% set table = controller( 'OlegUserdirectoryBundle:User:myObjects', {'postData':postData,'tablename':'researchlabs','id':lab.getId(),'name':lab} ) %}
+            {% set table = controller( 'AppUserdirectoryBundle:User:myObjects', {'postData':postData,'tablename':'researchlabs','id':lab.getId(),'name':lab} ) %}
             {% set element = {'table': table, 'element':lab} %}
             {% set mylabsArr = mylabsArr|merge({ (loop.index0): element}) %}
             {% if render(table)|length > threshold %}
@@ -1724,7 +1724,7 @@
                             {% set bossidsArr = bossidsArr|merge([boss.getId]) %}
                         {% endfor %}
 
-                        {% set mybosses = controller( 'OlegUserdirectoryBundle:User:myObjects', {'postData':postData,'tablename':'mybosses','id':bossidsArr,'name':null} ) %}
+                        {% set mybosses = controller( 'AppUserdirectoryBundle:User:myObjects', {'postData':postData,'tablename':'mybosses','id':bossidsArr,'name':null} ) %}
 
                         {% if render( mybosses )|length > threshold  %}
 
@@ -1909,7 +1909,7 @@
 
 {% macro auditLog( user, type, sitename, postData, collapsein ) %}
 
-    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
     {#{{ dump(postData) }}#}
     {% if postData and postData['sort'] is defined %}
@@ -1918,7 +1918,7 @@
         {% endif %}
     {% endif %}
 
-    {% set auditlog = controller( 'OlegUserdirectoryBundle:Logger:getAuditLog', {'postData':postData,'id':user.id, 'onlyheader':true} ) %}
+    {% set auditlog = controller( 'AppUserdirectoryBundle:Logger:getAuditLog', {'postData':postData,'id':user.id, 'onlyheader':true} ) %}
 
     {#Audit Log#}
     {#{% set auditlog = true %}#}
@@ -1951,7 +1951,7 @@
 
 {% macro getLoggerTreeByType( logger, treeType, loggeraction ) %}
 
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
     {% for tree in logger.getInstitutionTreesByType(treeType) %}
         <div class="well well-sm">
@@ -1986,7 +1986,7 @@
 
 {% macro avatarForm(user,cycle) %}
 
-    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
     {% if "show" in cycle %}
         {% set showFlag = true %}
@@ -2000,7 +2000,7 @@
             {% if user.avatar %}
                 {{ usermacros.showDocumentAsImage(user.avatar,'Avatar','') }}
             {% else %}
-                {% set avatarImage = asset('bundles/oleguserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
+                {% set avatarImage = asset('bundles/appuserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
                 <img src="{{ avatarImage }}" alt="Avatar" height="126" width="116">
             {% endif %}
 
@@ -2016,7 +2016,7 @@
                 {% if user.avatar %}
                     {{ usermacros.showDocumentAsImage(user.avatar,'Avatar','','objectFull') }}
                 {% else %}
-                    {% set avatarImage = asset('bundles/oleguserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
+                    {% set avatarImage = asset('bundles/appuserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
                     <img src="{{ avatarImage }}" alt="Avatar" height="126" width="116">
                 {% endif %}
             </div>
@@ -2077,7 +2077,7 @@
 
 {% macro showAssistantes( user, sitename ) %}
 
-    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
     {% for location in user.locations %}
         {% if location.assistant %}
@@ -2113,7 +2113,7 @@
 
 
 {% macro trainingObject( field, cycle, classname, prototype, sitename, entity ) %}
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import _self as usermacros %}
 
     {% if prototype == "prototype" %}
@@ -2122,7 +2122,7 @@
         {% set formfield = field %}
     {% endif %}
 
-    {% if formfield.vars.value and formfield.vars.value.status == constant('Oleg\\UserdirectoryBundle\\Entity\\BaseUserAttributes::STATUS_UNVERIFIED') or prototype == 'prototype' %}
+    {% if formfield.vars.value and formfield.vars.value.status == constant('App\\UserdirectoryBundle\\Entity\\BaseUserAttributes::STATUS_UNVERIFIED') or prototype == 'prototype' %}
         {% set wellclass = "user-alert-warning" %}
     {% else %}
         {% set wellclass = "" %}
@@ -2358,22 +2358,22 @@
 {#Cannot extend from a block.#}
 {#{% macro extendBase( sitename ) %}#}
     {#default is user base#}
-    {#{% set extendStr = "OlegUserdirectoryBundle::Default/base.html.twig" %}#}
+    {#{% set extendStr = "AppUserdirectoryBundle::Default/base.html.twig" %}#}
 
     {#{% if sitename == 'employees' %}#}
-        {#{% set extendStr = "OlegUserdirectoryBundle::Default/base.html.twig" %}#}
+        {#{% set extendStr = "AppUserdirectoryBundle::Default/base.html.twig" %}#}
     {#{% elseif sitename == 'fellapp' %}#}
-        {#{% set extendStr = "OlegFellAppBundle::Default/base.html.twig" %}#}
+        {#{% set extendStr = "AppFellAppBundle::Default/base.html.twig" %}#}
     {#{% elseif sitename == 'deidentifier' %}#}
-        {#{% set extendStr = "OlegDeidentifierBundle::Default/base.html.twig" %}#}
+        {#{% set extendStr = "AppDeidentifierBundle::Default/base.html.twig" %}#}
     {#{% elseif sitename == 'scan' %}#}
-        {#{% set extendStr = "OlegOrderformBundle::Default/base.html.twig" %}#}
+        {#{% set extendStr = "AppOrderformBundle::Default/base.html.twig" %}#}
     {#{% elseif sitename == 'vacreq' %}#}
-        {#{% set extendStr = "OlegVacReqBundle::Default/base.html.twig" %}#}
+        {#{% set extendStr = "AppVacReqBundle::Default/base.html.twig" %}#}
     {#{% elseif sitename == 'calllog' %}#}
-        {#{% set extendStr = "OlegCallLogBundle::Default/base.html.twig" %}#}
+        {#{% set extendStr = "AppCallLogBundle::Default/base.html.twig" %}#}
     {#{% elseif sitename == 'translationalresearch' %}#}
-        {#{% set extendStr = "OlegTranslationalResearchBundle::Default/base.html.twig" %}#}
+        {#{% set extendStr = "AppTranslationalResearchBundle::Default/base.html.twig" %}#}
     {#{% endif %}#}
 
     {#{% extends extendStr%}#}

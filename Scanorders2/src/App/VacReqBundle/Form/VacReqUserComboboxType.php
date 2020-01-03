@@ -16,10 +16,10 @@
  *  limitations under the License.
  */
 
-namespace Oleg\VacReqBundle\Form;
+namespace App\VacReqBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
-use Oleg\UserdirectoryBundle\Form\UserType;
+use App\UserdirectoryBundle\Form\UserType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -42,7 +42,7 @@ class VacReqUserComboboxType extends UserType
         $this->formConstructor($options['form_custom_value']);
 
         $builder->add('users', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:User',
+            'class' => 'AppUserdirectoryBundle:User',
             'label' => $this->params['btnName'].":",    //"New Submitters:",
             'required' => false,
             'multiple' => true,
@@ -68,7 +68,7 @@ class VacReqUserComboboxType extends UserType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            //'data_class' => 'Oleg\UserdirectoryBundle\Entity\User',
+            //'data_class' => 'App\UserdirectoryBundle\Entity\User',
             'csrf_protection' => false,
             'form_custom_value' => null
         ));

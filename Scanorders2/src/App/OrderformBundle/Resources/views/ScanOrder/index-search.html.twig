@@ -14,7 +14,7 @@
     limitations under the License.
 #}
 
-{% extends "OlegOrderformBundle::Default/base.html.twig" %}
+{% extends "AppOrderformBundle::Default/base.html.twig" %}
 
 {% block title %}
     My Orders
@@ -22,7 +22,7 @@
 
 {% block additionaljs %}
     {% javascripts
-    '@OlegOrderformBundle/Resources/public/form/js/index-search.js'
+    '@AppOrderformBundle/Resources/public/form/js/index-search.js'
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
@@ -88,10 +88,10 @@
     <div class="scanorder-search"></div>
 
     {#{% for searchObject in searchObjects %}#}
-        {#{{ render( controller( 'OlegOrderformBundle:ScanOrder:getSearchView', { 'routeName':routename, 'service':service, 'filter':filter, 'search':search, 'searchObject':searchObject, 'page':page } ) ) }}#}
+        {#{{ render( controller( 'AppOrderformBundle:ScanOrder:getSearchView', { 'routeName':routename, 'service':service, 'filter':filter, 'search':search, 'searchObject':searchObject, 'page':page } ) ) }}#}
     {#{% endfor %}#}
 
-    {{ render( controller( 'OlegOrderformBundle:ScanOrder:getSearchAllView', { 'routeName':routename, 'service':service, 'filter':filter, 'search':search, 'searchObjects':searchObjects, 'page':page } ) ) }}
+    {{ render( controller( 'AppOrderformBundle:ScanOrder:getSearchAllView', { 'routeName':routename, 'service':service, 'filter':filter, 'search':search, 'searchObjects':searchObjects, 'page':page } ) ) }}
 
 
 {% endblock %}

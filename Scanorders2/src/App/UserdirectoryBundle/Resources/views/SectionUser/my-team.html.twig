@@ -15,9 +15,9 @@
 #}
 
 
-{#{% extends "OlegUserdirectoryBundle::Default/base.html.twig" %}#}
+{#{% extends "AppUserdirectoryBundle::Default/base.html.twig" %}#}
 
-{% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+{% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
 {% block header %}{% endblock %}
 
@@ -35,8 +35,8 @@
     
  {% block additionaljs %}
      {% javascripts
-     '@OlegUserdirectoryBundle/Resources/public/bootstrap-sortable/js/bootstrap-sortable.js'
-     '@OlegUserdirectoryBundle/Resources/public/bootstrap-sortable/js/moment.min.js'
+     '@AppUserdirectoryBundle/Resources/public/bootstrap-sortable/js/bootstrap-sortable.js'
+     '@AppUserdirectoryBundle/Resources/public/bootstrap-sortable/js/moment.min.js'
      %}
      <script type="text/javascript" src="{{ asset_url }}"></script>
      {% endjavascripts %}
@@ -44,7 +44,7 @@
 
 {% block additionalcss %}
     {% stylesheets
-    'bundles/oleguserdirectory/bootstrap-sortable/css/bootstrap-sortable.css' filter='cssrewrite'
+    'bundles/appuserdirectory/bootstrap-sortable/css/bootstrap-sortable.css' filter='cssrewrite'
     %}
     <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}

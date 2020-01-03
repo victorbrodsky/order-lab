@@ -1,9 +1,9 @@
 <?php
 
-namespace Oleg\TranslationalResearchBundle\Form;
+namespace App\TranslationalResearchBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
-use Oleg\UserdirectoryBundle\Form\DocumentType;
+use App\UserdirectoryBundle\Form\DocumentType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -39,7 +39,7 @@ class ProductType extends AbstractType
 
 
         $builder->add('category', EntityType::class, array(
-            'class' => 'OlegTranslationalResearchBundle:RequestCategoryTypeList',
+            'class' => 'AppTranslationalResearchBundle:RequestCategoryTypeList',
             'choice_label' => 'getOptimalAbbreviationName',
             'label'=>"Product or Service".$this->params['categoryListLink'].":",
             'required'=> false,
@@ -102,7 +102,7 @@ class ProductType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\TranslationalResearchBundle\Entity\Product',
+            'data_class' => 'App\TranslationalResearchBundle\Entity\Product',
             'form_custom_value' => null
         ));
     }

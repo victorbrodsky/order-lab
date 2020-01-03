@@ -15,11 +15,11 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Repository;
+namespace App\OrderformBundle\Repository;
 
 //use Doctrine\ORM\EntityRepository;
 
-use Oleg\UserdirectoryBundle\Repository\ListAbstractRepository;
+use App\UserdirectoryBundle\Repository\ListAbstractRepository;
 
 class EducationalRepository extends ListAbstractRepository {
 

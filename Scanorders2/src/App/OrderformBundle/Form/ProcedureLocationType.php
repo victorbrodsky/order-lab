@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Form;
+namespace App\OrderformBundle\Form;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -39,7 +39,7 @@ class ProcedureLocationType extends AbstractType
 
         //Location Source System - array field location source
         $builder->add('source', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:SourceSystemList',
+            'class' => 'AppUserdirectoryBundle:SourceSystemList',
             'label' => 'Location Source System:',
             'required' => false,
             'data' => null,
@@ -55,7 +55,7 @@ class ProcedureLocationType extends AbstractType
         //Location Role - property of location object (use as a filter)
 
         $builder->add('field', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:Location',
+            'class' => 'AppUserdirectoryBundle:Location',
             'label' => 'Procedure Location',
             'required' => false,
             'attr' => array('class' => 'combobox combobox-width'),
@@ -69,7 +69,7 @@ class ProcedureLocationType extends AbstractType
 
 
         $builder->add('others', ArrayFieldType::class, array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\ProcedureLocation',
+            'data_class' => 'App\OrderformBundle\Entity\ProcedureLocation',
             'form_custom_value' => $this->params,
             'label' => false,
 			'attr' => array('style'=>'display:none;')
@@ -81,7 +81,7 @@ class ProcedureLocationType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\ProcedureLocation',
+            'data_class' => 'App\OrderformBundle\Entity\ProcedureLocation',
             'form_custom_value' => null
         ));
     }

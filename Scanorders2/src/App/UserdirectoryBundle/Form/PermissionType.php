@@ -16,7 +16,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Form;
+namespace App\UserdirectoryBundle\Form;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -25,7 +25,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
 
-use Oleg\UserdirectoryBundle\Util\TimeZoneUtil;
+use App\UserdirectoryBundle\Util\TimeZoneUtil;
 
 class PermissionType extends AbstractType
 {
@@ -39,7 +39,7 @@ class PermissionType extends AbstractType
         ));
 
         $builder->add( 'permission', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:PermissionList',
+            'class' => 'AppUserdirectoryBundle:PermissionList',
             'label'=> "Permission:",
             'required'=> false,
             'multiple' => false,
@@ -58,7 +58,7 @@ class PermissionType extends AbstractType
 
 
         $builder->add( 'institutions', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:Institution',
+            'class' => 'AppUserdirectoryBundle:Institution',
             'choice_label' => 'getTreeName',
             'label'=>'Institution(s):',
             'required'=> false,
@@ -86,7 +86,7 @@ class PermissionType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\Permission'
+            'data_class' => 'App\UserdirectoryBundle\Entity\Permission'
         ));
     }
 

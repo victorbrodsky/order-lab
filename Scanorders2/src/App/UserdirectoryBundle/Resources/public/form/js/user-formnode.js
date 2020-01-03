@@ -18,7 +18,7 @@
  * Created by ch3 on 12/16/2016.
  */
 
-var _holderNamespace = "Oleg\\OrderformBundle\\Entity";
+var _holderNamespace = "App\\OrderformBundle\\Entity";
 var _holderName = "MessageCategory";
 var _formnode = [];
 var _saprefix = "fffsa"; //section array prefix flag. Must be the same as in getArraySectionPrefix()
@@ -80,7 +80,7 @@ function treeSelectAdditionalJsAction(comboboxEl) {
     //    return;
     //}
 
-    //var holderNamespace = "Oleg\\OrderformBundle\\Entity";
+    //var holderNamespace = "App\\OrderformBundle\\Entity";
     //var holderName = "MessageCategory";
 
     var identifier = _holderName+"-"+messageCategoryId;
@@ -99,7 +99,7 @@ function treeSelectAdditionalJsAction(comboboxEl) {
     }
 
     var _formcycle = $('#formcycle').val();
-    var _entityNamespace = $('#entityNamespace').val();   //"Oleg\\OrderformBundle\\Entity";
+    var _entityNamespace = $('#entityNamespace').val();   //"App\\OrderformBundle\\Entity";
     var _entityName = $('#entityName').val();             //"Message";
     var _entityId = $('#entityId').val();                 //"Message ID";
     //console.log("_entityNamespace="+_entityNamespace);

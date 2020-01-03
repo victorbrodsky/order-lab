@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\FellAppBundle\Form;
+namespace App\FellAppBundle\Form;
 
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -70,7 +70,7 @@ class GoogleFormConfigType extends AbstractType
         ));
 
         $builder->add('fellowshipSubspecialties', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:FellowshipSubspecialty',
+            'class' => 'AppUserdirectoryBundle:FellowshipSubspecialty',
             'label' => "Fellowship Application Types".$this->params['fellappTypesListLink'].":",
             'required' => false,
             'multiple' => true,
@@ -131,7 +131,7 @@ class GoogleFormConfigType extends AbstractType
         ));
 
         $builder->add('fellowshipVisaStatuses', EntityType::class, array(
-            'class' => 'OlegFellAppBundle:VisaStatus',
+            'class' => 'AppFellAppBundle:VisaStatus',
             'label' => "Fellowship Visa Status".$this->params['fellappVisaStatusesListLink'].":",
             'required' => false,
             'multiple' => true,
@@ -188,7 +188,7 @@ class GoogleFormConfigType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\FellAppBundle\Entity\GoogleFormConfig',
+            'data_class' => 'App\FellAppBundle\Entity\GoogleFormConfig',
             'form_custom_value' => null
             //'csrf_protection' => false,
         ));

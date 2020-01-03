@@ -22,11 +22,11 @@
  * Time: 11:28 AM
  */
 
-namespace Oleg\OrderformBundle\Security\Voter;
+namespace App\OrderformBundle\Security\Voter;
 
 
-use Oleg\OrderformBundle\Entity\Message;
-use Oleg\UserdirectoryBundle\Entity\User;
+use App\OrderformBundle\Entity\Message;
+use App\UserdirectoryBundle\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
@@ -112,7 +112,7 @@ abstract class BaseVoter extends Voter {
             //TODO: we need to define what is "Order", "Patient" and "Patient Data" permissions. Patient has a Procedure, Encounter, Accession etc.
 
             //check if the user has role with a permission $subject class name (i.e. "Patient") and "read"
-            if( $this->em->getRepository('OlegUserdirectoryBundle:User')->isUserHasPermissionObjectAction( $user, $className, "read" ) ) {
+            if( $this->em->getRepository('AppUserdirectoryBundle:User')->isUserHasPermissionObjectAction( $user, $className, "read" ) ) {
                 //exit('can View! exit');
                 return true;
             } else {
@@ -170,7 +170,7 @@ abstract class BaseVoter extends Voter {
         //service chief can perform any actions if the objects under his/her service scope
         $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
         $userChiefServices = $userSiteSettings->getChiefServices();
-        if( $this->em->getRepository('OlegUserdirectoryBundle:Institution')->isNodeUnderParentnodes( $userChiefServices, $subjectInstitution ) ) {
+        if( $this->em->getRepository('AppUserdirectoryBundle:Institution')->isNodeUnderParentnodes( $userChiefServices, $subjectInstitution ) ) {
             return true;
         }
 

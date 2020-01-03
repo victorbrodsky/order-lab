@@ -15,9 +15,9 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Controller;
+namespace App\OrderformBundle\Controller;
 
-use Oleg\UserdirectoryBundle\Controller\UtilController;
+use App\UserdirectoryBundle\Controller\UtilController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -25,7 +25,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-use Oleg\OrderformBundle\Helper\FormHelper;
+use App\OrderformBundle\Helper\FormHelper;
 
 //TODO: optimise by removing foreach loops
 
@@ -102,7 +102,7 @@ class ScanUtilController extends UtilController {
 //        }
 
         $query = $em->createQueryBuilder()
-            ->from('OlegOrderformBundle:StainList', 'list')
+            ->from('AppOrderformBundle:StainList', 'list')
             ->select("list.id as id, list.fulltitle as text")
             ->leftJoin("list.original","original")
             ->where("original.id IS NULL")
@@ -139,7 +139,7 @@ class ScanUtilController extends UtilController {
 
 //        $query = $em->createQuery(
 //            'SELECT proc.id as id, proc.name as text
-//            FROM OlegOrderformBundle:ProcedureList proc WHERE proc.type = :type'
+//            FROM AppOrderformBundle:ProcedureList proc WHERE proc.type = :type'
 //        )->setParameter('type', 'default');
 //
 //        //$empty = array("id"=>0,"text"=>"");
@@ -149,7 +149,7 @@ class ScanUtilController extends UtilController {
         $opt = trim( $request->get('opt') );
 
         $query = $em->createQueryBuilder()
-            ->from('OlegOrderformBundle:ProcedureList', 'list')
+            ->from('AppOrderformBundle:ProcedureList', 'list')
             ->select("list.id as id, list.name as text")
             //->where("list.creator = ".$user)
             ->orderBy("list.orderinlist","ASC");
@@ -179,7 +179,7 @@ class ScanUtilController extends UtilController {
 
 //        $query = $em->createQuery(
 //            'SELECT proc.id as id, proc.name as text
-//            FROM OlegOrderformBundle:OrganList proc WHERE proc.type = :type'
+//            FROM AppOrderformBundle:OrganList proc WHERE proc.type = :type'
 //        )->setParameter('type', 'default');
 //
 //        //$empty = array("id"=>0,"text"=>"");
@@ -189,7 +189,7 @@ class ScanUtilController extends UtilController {
         $opt = trim( $request->get('opt') );
 
         $query = $em->createQueryBuilder()
-            ->from('OlegOrderformBundle:OrganList', 'list')
+            ->from('AppOrderformBundle:OrganList', 'list')
             ->select("list.id as id, list.name as text")
             ->orderBy("list.orderinlist","ASC");
 
@@ -215,7 +215,7 @@ class ScanUtilController extends UtilController {
 
 //        $em = $this->getDoctrine()->getManager();
 //        $query = $em->createQuery(
-//            'SELECT obj.name FROM OlegOrderformBundle:RegionToScan obj'
+//            'SELECT obj.name FROM AppOrderformBundle:RegionToScan obj'
 //        );
 //        $res = $query->getResult();
 
@@ -224,11 +224,11 @@ class ScanUtilController extends UtilController {
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        //$entities = $em->getRepository('OlegOrderformBundle:RegionToScan')->findByType('default');
+        //$entities = $em->getRepository('AppOrderformBundle:RegionToScan')->findByType('default');
 
         //////////////////////////////////// 1) get all default list ////////////////////////////////////
         $query = $em->createQueryBuilder()
-            ->from('OlegOrderformBundle:RegionToScan', 'list')
+            ->from('AppOrderformBundle:RegionToScan', 'list')
             ->select("list.name")
             ->where("list.type = 'default' OR ( list.type = 'user-added' AND list.creator = :user)")->setParameter('user',$user)
             ->groupBy('list')
@@ -261,7 +261,7 @@ class ScanUtilController extends UtilController {
 //        //add custom added values
 //        //TODO: add custom values, added by ordering provider
 //        $user = $this->get('security.token_storage')->getToken()->getUser();
-//        $entities = $this->getDoctrine()->getRepository('OlegOrderformBundle:Imaging')->findByProvider($user);
+//        $entities = $this->getDoctrine()->getRepository('AppOrderformBundle:Imaging')->findByProvider($user);
 //        foreach( $entities as $entity ) {
 //            $arr[] = $entity->getScanregion();
 //        }
@@ -270,7 +270,7 @@ class ScanUtilController extends UtilController {
         $id = trim( $request->get('opt') );
 
         if( $id && $id != "undefined" ) {
-            $message = $this->getDoctrine()->getRepository('OlegOrderformBundle:Message')->findOneByOid($id);
+            $message = $this->getDoctrine()->getRepository('AppOrderformBundle:Message')->findOneByOid($id);
             if( $message ) {
                 $slides = $message->getSlide();
                 foreach( $slides as $slide ) {
@@ -285,7 +285,7 @@ class ScanUtilController extends UtilController {
         $parametersArr['user'] = $user;
 
         $query = $em->createQueryBuilder()
-            ->from('OlegOrderformBundle:Message', 'list')
+            ->from('AppOrderformBundle:Message', 'list')
             ->select("scan.scanregion")
             ->innerJoin("list.slide","slide")
             ->innerJoin("slide.scan","scan")
@@ -333,11 +333,11 @@ class ScanUtilController extends UtilController {
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        //$entities = $em->getRepository('OlegOrderformBundle:OrderDelivery')->findByType('default');
+        //$entities = $em->getRepository('AppOrderformBundle:OrderDelivery')->findByType('default');
 
         //////////////////////////////////// 1) get all default list ////////////////////////////////////
         $query = $em->createQueryBuilder()
-            ->from('OlegOrderformBundle:OrderDelivery', 'list')
+            ->from('AppOrderformBundle:OrderDelivery', 'list')
             ->select("list.name")
             ->where("list.type = 'default' OR ( list.type = 'user-added' AND list.creator = :user)")->setParameter('user',$user)
             ->groupBy('list')
@@ -371,7 +371,7 @@ class ScanUtilController extends UtilController {
         $id = trim( $request->get('opt') );
 
         if( $id && $id != "undefined" ) {
-            $message = $this->getDoctrine()->getRepository('OlegOrderformBundle:Message')->findOneByOid($id);
+            $message = $this->getDoctrine()->getRepository('AppOrderformBundle:Message')->findOneByOid($id);
             if( $message ) {
                 $arr[] = $message->getScanorder()->getDelivery();
             }
@@ -382,7 +382,7 @@ class ScanUtilController extends UtilController {
         $parametersArr['user'] = $user;
 
         $query = $em->createQueryBuilder()
-            ->from('OlegOrderformBundle:Message', 'list')
+            ->from('AppOrderformBundle:Message', 'list')
             ->select("scanorder.delivery")
             ->innerJoin("list.provider","provider")
             ->innerJoin("list.scanorder","scanorder")
@@ -429,7 +429,7 @@ class ScanUtilController extends UtilController {
         $id = trim( $request->get('opt') );
 
         if( $id && $id != "undefined" ) {
-            $message = $this->getDoctrine()->getRepository('OlegOrderformBundle:Message')->findOneByOid($id);
+            $message = $this->getDoctrine()->getRepository('AppOrderformBundle:Message')->findOneByOid($id);
             if( $message ) {
                 $parts = $message->getPart();
                 foreach( $parts as $part ) {
@@ -466,7 +466,7 @@ class ScanUtilController extends UtilController {
         $id = trim( $request->get('opt') );
 
         if( $id && $id != "undefined" ) {
-            $message = $this->getDoctrine()->getRepository('OlegOrderformBundle:Message')->findOneByOid($id);
+            $message = $this->getDoctrine()->getRepository('AppOrderformBundle:Message')->findOneByOid($id);
             if( $message ) {
                 $blocks = $message->getBlock();
                 foreach( $blocks as $block ) {
@@ -504,7 +504,7 @@ class ScanUtilController extends UtilController {
         //echo "opt=".$opt."<br>";
 
         $query = $em->createQueryBuilder()
-            ->from('OlegOrderformBundle:AccessionType', 'list')
+            ->from('AppOrderformBundle:AccessionType', 'list')
             ->select("list.id as id, list.name as text, list.abbreviation as abbreviation")
             ->orderBy("list.orderinlist","ASC");
 
@@ -549,7 +549,7 @@ class ScanUtilController extends UtilController {
 
         //echo "opt=".$opt."<br>";
 
-        $query = $em->createQueryBuilder()->from('OlegOrderformBundle:MrnType', 'list');
+        $query = $em->createQueryBuilder()->from('AppOrderformBundle:MrnType', 'list');
             //->select("list.id as id, list.name as text")
             //->select("list")
 
@@ -604,7 +604,7 @@ class ScanUtilController extends UtilController {
         $em = $this->getDoctrine()->getManager();
 
         $query = $em->createQueryBuilder()
-            ->from('OlegOrderformBundle:SlideType', 'list')
+            ->from('AppOrderformBundle:SlideType', 'list')
             ->select("list.name as text")
             ->where("list.type='default' OR list.type='user-added' OR list.type='TMA'")
             ->orderBy("list.orderinlist","ASC");
@@ -635,13 +635,13 @@ class ScanUtilController extends UtilController {
 
         if( $routeName == "get-optionalusereducational" ) {
             $role = "ROLE_SCANORDER_COURSE_DIRECTOR";
-            $prefix = 'Oleg';
+            $prefix = 'App';
             $bundleName = 'OrderformBundle';
             $className = 'CourseTitleTree';
         }
         if( $routeName == "get-optionaluserresearch" ) {
             $role = "ROLE_SCANORDER_PRINCIPAL_INVESTIGATOR";
-            $prefix = 'Oleg';
+            $prefix = 'App';
             $bundleName = 'OrderformBundle';
             $className = 'ProjectTitleTree';
         }
@@ -676,7 +676,7 @@ class ScanUtilController extends UtilController {
 
         //2) add users with ROLE_SCANORDER_COURSE_DIRECTOR and ROLE_SCANORDER_PRINCIPAL_INVESTIGATOR
         $query = $em->createQueryBuilder()
-            ->from('OlegUserdirectoryBundle:User', 'list')
+            ->from('AppUserdirectoryBundle:User', 'list')
             //->select("list.id as id, list.username as text")
             ->select("list")
             ->where("list.roles LIKE :role")
@@ -720,7 +720,7 @@ class ScanUtilController extends UtilController {
         $opt = trim( $request->get('opt') );
 
         $query = $em->createQueryBuilder()
-            ->from('OlegOrderformBundle:Account', 'list')
+            ->from('AppOrderformBundle:Account', 'list')
             ->select("list.id as id, list.name as text")
             ->orderBy("list.orderinlist","ASC");
 
@@ -753,7 +753,7 @@ class ScanUtilController extends UtilController {
         $opt = trim( $request->get('opt') );
 
         $query = $em->createQueryBuilder()
-            ->from('OlegOrderformBundle:Urgency', 'list')
+            ->from('AppOrderformBundle:Urgency', 'list')
             ->select("list.id as id, list.name as text")
             ->orderBy("list.orderinlist","ASC");
 
@@ -802,7 +802,7 @@ class ScanUtilController extends UtilController {
         $em = $this->getDoctrine()->getManager();
 
         $query = $em->createQueryBuilder()
-            ->from('OlegUserdirectoryBundle:Location', 'list')
+            ->from('AppUserdirectoryBundle:Location', 'list')
             ->select("list")
             ->orderBy("user.username","ASC")
             ->addOrderBy("list.name","ASC");
@@ -889,7 +889,7 @@ class ScanUtilController extends UtilController {
         ///////////// 1) get all real users /////////////
         if(0) {
             $query = $em->createQueryBuilder()
-                ->from('OlegUserdirectoryBundle:User', 'list')
+                ->from('AppUserdirectoryBundle:User', 'list')
                 ->select("list")
                 //->groupBy('list.id')
                 ->leftJoin("list.infos", "infos")
@@ -916,7 +916,7 @@ class ScanUtilController extends UtilController {
             //Optimising (lighter) version without loop.
             // Using infos.displayName - "displayName" instead of user's toString (getUserNameStr) - "displayName - cwid (keytype)"
             $query = $em->createQueryBuilder()
-                ->from('OlegUserdirectoryBundle:User', 'list')
+                ->from('AppUserdirectoryBundle:User', 'list')
                 ->select("infos.displayName as id, infos.displayName as text")
                 //->groupBy('list.id')
                 ->leftJoin("list.infos", "infos")
@@ -941,7 +941,7 @@ class ScanUtilController extends UtilController {
         ///////////// 3) user-added user wrappers created by logged in user for this source ///////////////
         if(1) {
             $query = $em->createQueryBuilder()
-                ->from('OlegUserdirectoryBundle:UserWrapper', 'list')
+                ->from('AppUserdirectoryBundle:UserWrapper', 'list')
                 ->select("list")
                 ->leftJoin("list.user", "user")
                 ->leftJoin("user.infos", "infos")
@@ -1006,7 +1006,7 @@ class ScanUtilController extends UtilController {
 
         ///////////// 2) get all wrapper users /////////////
 //        $query = $em->createQueryBuilder()
-//            ->from('OlegUserdirectoryBundle:UserWrapper', 'list')
+//            ->from('AppUserdirectoryBundle:UserWrapper', 'list')
 //            ->select("list")
 //            ->leftJoin("list.user", "user")
 //            ->leftJoin("user.infos", "infos")
@@ -1076,7 +1076,7 @@ class ScanUtilController extends UtilController {
         //echo 'compare: '.strval($providerId).' ?= '.strval(intval($providerId))."<br>";
         if( strval($providerId) == strval(intval($providerId)) ) {
             //echo "Case1: providerId is integer=$providerId => providerID is wrapperId => find EncounterReferringProvider by field<br>";
-            $provider = $em->getRepository('OlegOrderformBundle:EncounterReferringProvider')->findOneByField($providerId);
+            $provider = $em->getRepository('AppOrderformBundle:EncounterReferringProvider')->findOneByField($providerId);
 
             if( $provider ) {
                 //echo "provider=".$provider."<br>";
@@ -1117,9 +1117,9 @@ class ScanUtilController extends UtilController {
 
             if( strpos($providerId, '_@_') !== false ) {
                 //cwid_@_ldap-user
-                $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername($providerId);
+                $user = $em->getRepository('AppUserdirectoryBundle:User')->findOneByUsername($providerId);
             } else {
-                //$user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername($providerId);
+                //$user = $em->getRepository('AppUserdirectoryBundle:User')->findOneByUsername($providerId);
                 $userSecUtil = $this->get('user_security_utility');
                 $user = $userSecUtil->getUserByUserstr($providerId);
             }

@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Form;
+namespace App\OrderformBundle\Form;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -38,7 +38,7 @@ class PatientTypeType extends AbstractType
         $this->formConstructor($options['form_custom_value']);
 
         $builder->add('field', EntityType::class, array(
-            'class' => 'OlegOrderformBundle:PatientTypeList',
+            'class' => 'AppOrderformBundle:PatientTypeList',
             'label' => 'Patient Type',
             'required' => false,
             'attr' => array('class' => 'combobox combobox-width'),
@@ -58,7 +58,7 @@ class PatientTypeType extends AbstractType
 
         //other fields from abstract
         $builder->add('others', ArrayFieldType::class, array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\PatientType',
+            'data_class' => 'App\OrderformBundle\Entity\PatientType',
             'form_custom_value' => $this->params,
             'label' => false,
 			'attr' => array('style'=>'display:none;')
@@ -69,7 +69,7 @@ class PatientTypeType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\PatientType',
+            'data_class' => 'App\OrderformBundle\Entity\PatientType',
             'form_custom_value' => null
         ));
     }

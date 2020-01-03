@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Controller;
+namespace App\OrderformBundle\Controller;
 
 
 use Symfony\Component\HttpFoundation\Request;
@@ -23,10 +23,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Oleg\UserdirectoryBundle\Entity\Logger;
-use Oleg\UserdirectoryBundle\Form\LoggerType;
+use App\UserdirectoryBundle\Entity\Logger;
+use App\UserdirectoryBundle\Form\LoggerType;
 
-use Oleg\UserdirectoryBundle\Controller\LoggerController;
+use App\UserdirectoryBundle\Controller\LoggerController;
 
 /**
  * Logger controller.
@@ -41,7 +41,7 @@ class ScanLoggerController extends LoggerController
      *
      * @Route("/", name="scan_logger")
      * @Method("GET")
-     * @Template("OlegOrderformBundle:Logger:index.html.twig")
+     * @Template("AppOrderformBundle:Logger:index.html.twig")
      */
     public function indexAction(Request $request)
     {
@@ -53,7 +53,7 @@ class ScanLoggerController extends LoggerController
     /**
      * @Route("/user/{id}/all", name="scan_logger_user_all")
      * @Method("GET")
-     * @Template("OlegOrderformBundle:Logger:index.html.twig")
+     * @Template("AppOrderformBundle:Logger:index.html.twig")
      */
     public function getAuditLogAllAction(Request $request)
     {
@@ -68,7 +68,7 @@ class ScanLoggerController extends LoggerController
 
         $params = array(
             'sitename'=>$this->container->getParameter('scan.sitename'),
-            'entityNamespace'=>'Oleg\UserdirectoryBundle\Entity',
+            'entityNamespace'=>'App\UserdirectoryBundle\Entity',
             'entityName'=>$entityName,
             'entityId'=>$userid,
             'postData'=>$postData,

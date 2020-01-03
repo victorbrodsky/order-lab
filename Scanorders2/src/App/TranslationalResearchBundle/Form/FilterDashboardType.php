@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\TranslationalResearchBundle\Form;
+namespace App\TranslationalResearchBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -44,7 +44,7 @@ class FilterDashboardType extends AbstractType
 
         if( $this->params["projectSpecialty"] ) {
 //            $builder->add('projectSpecialty', EntityType::class, array(
-//                'class' => 'OlegTranslationalResearchBundle:SpecialtyList',
+//                'class' => 'AppTranslationalResearchBundle:SpecialtyList',
 //                //'choice_label' => 'name',
 //                'label' => false,   //'Project Specialty',
 //                //'disabled' => ($this->params['admin'] ? false : true),
@@ -154,7 +154,7 @@ class FilterDashboardType extends AbstractType
         if( isset($this->params['category']) && $this->params['category'] ) {
             //productservice
             $builder->add('category', EntityType::class, array(
-                'class' => 'OlegTranslationalResearchBundle:RequestCategoryTypeList',
+                'class' => 'AppTranslationalResearchBundle:RequestCategoryTypeList',
                 'label' => "Products/Services", //false,
                 'choice_label' => "getOptimalAbbreviationName",
                 'required' => false,

@@ -1,9 +1,9 @@
 <?php
 
-namespace Oleg\TranslationalResearchBundle\Form;
+namespace App\TranslationalResearchBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
-use Oleg\UserdirectoryBundle\Form\DocumentType;
+use App\UserdirectoryBundle\Form\DocumentType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -55,7 +55,7 @@ class SiteParameterType extends AbstractType
         ));
 
         $builder->add('invoiceSalesperson', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:User',
+            'class' => 'AppUserdirectoryBundle:User',
             'label' => "Invoice Salesperson:",
             //'disabled' => true,
             'required' => false,
@@ -124,7 +124,7 @@ class SiteParameterType extends AbstractType
         ));
 
         $builder->add('accessionType', EntityType::class, array(
-            'class' => 'OlegOrderformBundle:AccessionType',
+            'class' => 'AppOrderformBundle:AccessionType',
             'label' => "Default Source System for Work Request Deliverables:",
             'required' => false,
             'multiple' => false,
@@ -379,7 +379,7 @@ class SiteParameterType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\TranslationalResearchBundle\Entity\TransResSiteParameters',
+            'data_class' => 'App\TranslationalResearchBundle\Entity\TransResSiteParameters',
             'form_custom_value' => null
         ));
     }

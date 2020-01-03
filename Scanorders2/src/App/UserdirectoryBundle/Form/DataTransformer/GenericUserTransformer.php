@@ -15,13 +15,13 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Form\DataTransformer;
+namespace App\UserdirectoryBundle\Form\DataTransformer;
 
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Doctrine\Common\Persistence\ObjectManager;
-use Oleg\UserdirectoryBundle\Entity\User;
-use Oleg\UserdirectoryBundle\Security\Util\UserSecurityUtil;
+use App\UserdirectoryBundle\Entity\User;
+use App\UserdirectoryBundle\Security\Util\UserSecurityUtil;
 
 
 class GenericUserTransformer implements DataTransformerInterface
@@ -147,7 +147,7 @@ class GenericUserTransformer implements DataTransformerInterface
             //echo "reverseTransform: return count:".count($newListArr)."<br>";
             return $newListArr;
         } else {
-            $entity = $this->em->getRepository('Oleg'.$this->bundleName.':'.$this->className)->findOneById($text);
+            $entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->findOneById($text);
             return $entity;
         }
     }
@@ -158,7 +158,7 @@ class GenericUserTransformer implements DataTransformerInterface
 
             //echo "principal=".$username." => numeric => most probably it is id<br>";
 
-            $entity = $this->em->getRepository('Oleg'.$this->bundleName.':'.$this->className)->findOneById($entity);
+            $entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->findOneById($entity);
 
             if( null === $entity ) {
 

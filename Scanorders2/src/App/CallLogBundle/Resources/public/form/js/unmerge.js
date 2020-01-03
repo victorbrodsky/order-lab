@@ -15,7 +15,7 @@
  */
 
 /**
- * Created by Oleg Ivanov on 8/26/2016.
+ * Created by App Ivanov on 8/26/2016.
  */
 
 //overwrite function

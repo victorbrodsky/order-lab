@@ -15,13 +15,13 @@
  *  limitations under the License.
  */
 
-namespace Oleg\FellAppBundle\Form;
+namespace App\FellAppBundle\Form;
 
 
 
-use Oleg\UserdirectoryBundle\Entity\User;
-use Oleg\FellAppBundle\Form\FellAppGeoLocationType;
-use Oleg\UserdirectoryBundle\Form\GeoLocationType;
+use App\UserdirectoryBundle\Entity\User;
+use App\FellAppBundle\Form\FellAppGeoLocationType;
+use App\UserdirectoryBundle\Form\GeoLocationType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\CallbackTransformer;
@@ -31,7 +31,7 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 
-use Oleg\UserdirectoryBundle\Entity\Location;
+use App\UserdirectoryBundle\Entity\Location;
 
 class FellAppLocationType extends AbstractType
 {
@@ -66,7 +66,7 @@ class FellAppLocationType extends AbstractType
         //GeoLocationType($this->params)
         $builder->add('geoLocation', FellAppGeoLocationType::class, array(
             'form_custom_value' => $this->params,
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\GeoLocation',
+            'data_class' => 'App\UserdirectoryBundle\Entity\GeoLocation',
             'label' => false,
             'required' => false
         ));
@@ -76,7 +76,7 @@ class FellAppLocationType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\Location',
+            'data_class' => 'App\UserdirectoryBundle\Entity\Location',
             'form_custom_value' => null
         ));
     }

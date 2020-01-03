@@ -34,7 +34,7 @@
 /vendor/*
 #/bin/
 /composer.phar
-/src/Oleg/OrderformBundle/Entity/*.php~
+/src/App/OrderformBundle/Entity/*.php~
 /.idea/
 /nbproject/
 ###
@@ -50,22 +50,22 @@ Scanorders2/web/uploads/documents/*.txt
 #2c) FellAppBundle/Util/*.json - required for google authentication (new )
 #3) /vendor/olegutil - required for fellapp pdf processing (ghostscript, LibreOffice, PDFTK)
 #4a) /vendor/aperio for aperio authentication (optional)
-#4b) /src/Oleg/OrderformBundle/Security/AperioLdap/DatabaseRoutines.php (optional)
+#4b) /src/App/OrderformBundle/Security/AperioLdap/DatabaseRoutines.php (optional)
 ######################
-/src/Oleg/UserdirectoryBundle/Util/Users*.xlsx
-/src/Oleg/UserdirectoryBundle/Util/users.xlsx
-/src/Oleg/VacReqBundle/Util/*.xls
-/src/Oleg/FellAppBundle/Util/*.p12
-/src/Oleg/FellAppBundle/Util/*.json
-/src/Oleg/FellAppBundle/Util/*.xml
-/src/Oleg/OrderformBundle/Security/AperioLdap
-/src/Oleg/OrderformBundle/SDK
-/src/Oleg/TranslationalResearchBundle/Util/*.xlsx
+/src/App/UserdirectoryBundle/Util/Users*.xlsx
+/src/App/UserdirectoryBundle/Util/users.xlsx
+/src/App/VacReqBundle/Util/*.xls
+/src/App/FellAppBundle/Util/*.p12
+/src/App/FellAppBundle/Util/*.json
+/src/App/FellAppBundle/Util/*.xml
+/src/App/OrderformBundle/Security/AperioLdap
+/src/App/OrderformBundle/SDK
+/src/App/TranslationalResearchBundle/Util/*.xlsx
 ### add manually to the source code: /vendor/aperio and /vendor/olegutil
 ### ignore aperio and  olegutil for pdf processing (ghostscript, LibreOffice, PDFTK)
 #!/vendor/aperio
 #!/vendor/olegutil
 
 ### Certificate ###
-/src/Oleg/UserdirectoryBundle/Cert/*
-!/src/Oleg/UserdirectoryBundle/Cert/acme-client*
+/src/App/UserdirectoryBundle/Cert/*
+!/src/App/UserdirectoryBundle/Cert/acme-client*

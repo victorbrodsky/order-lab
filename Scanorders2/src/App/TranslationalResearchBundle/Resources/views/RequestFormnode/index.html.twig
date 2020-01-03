@@ -1,4 +1,4 @@
-{% extends "OlegTranslationalResearchBundle::Default/base.html.twig" %}
+{% extends "AppTranslationalResearchBundle::Default/base.html.twig" %}
 
 {% block title %}
     {{ title }}
@@ -195,7 +195,7 @@
         </tbody>
     </table>
 
-    {#{{ render(controller('OlegTranslationalResearchBundle:Project:threadComments', { 'id': "3-9-committee_review" })) }}#}
+    {#{{ render(controller('AppTranslationalResearchBundle:Project:threadComments', { 'id': "3-9-committee_review" })) }}#}
     {#{% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': "3-9-committee_review"} %}#}
 
     {% if transres_request_util.isRequestCanBeCreated(project) == 1 %}

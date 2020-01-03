@@ -23,12 +23,12 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Oleg\OrderformBundle\Form\DataTransformer;
+namespace App\OrderformBundle\Form\DataTransformer;
 
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Doctrine\Common\Persistence\ObjectManager;
-use Oleg\OrderformBundle\Entity\ProcedureList;
+use App\OrderformBundle\Entity\ProcedureList;
 
 class ProcedureTransformer implements DataTransformerInterface
 {
@@ -60,7 +60,7 @@ class ProcedureTransformer implements DataTransformerInterface
         //if entity is string then find entity
 //        if( !is_object($input) && is_string($input) ) {
 //            $text = $input;
-//            $entity = $this->em->getRepository('OlegOrderformBundle:ProcedureList')->findOneByName($text);
+//            $entity = $this->em->getRepository('AppOrderformBundle:ProcedureList')->findOneByName($text);
 //            //echo "string => get entity=".$entity."<br>";
 //        } else {
 //            $entity = $input;
@@ -100,7 +100,7 @@ class ProcedureTransformer implements DataTransformerInterface
 
         if( is_numeric ( $text ) ) {    //number => most probably it is id
 
-            $entity = $this->em->getRepository('OlegOrderformBundle:ProcedureList')->findOneById($text);
+            $entity = $this->em->getRepository('AppOrderformBundle:ProcedureList')->findOneById($text);
 
             if( null === $entity ) {
 
@@ -123,7 +123,7 @@ class ProcedureTransformer implements DataTransformerInterface
     public function createNew($name) {
 
         //check if it is already exists in db
-        $entity = $this->em->getRepository('OlegOrderformBundle:ProcedureList')->findOneByName($name);
+        $entity = $this->em->getRepository('AppOrderformBundle:ProcedureList')->findOneByName($name);
         
         if( null === $entity ) {
 
@@ -134,7 +134,7 @@ class ProcedureTransformer implements DataTransformerInterface
             $newEntity->setCreator($this->user);
 
             //get max orderinlist
-            $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM OlegOrderformBundle:ProcedureList c');           
+            $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM AppOrderformBundle:ProcedureList c');           
             $nextorder = $query->getSingleResult()['maxorderinlist']+10;          
             $newEntity->setOrderinlist($nextorder);
             

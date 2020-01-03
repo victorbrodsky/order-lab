@@ -23,12 +23,12 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Oleg\OrderformBundle\Form\DataTransformer;
+namespace App\OrderformBundle\Form\DataTransformer;
 
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Doctrine\Common\Persistence\ObjectManager;
-use Oleg\OrderformBundle\Entity\OrganList;
+use App\OrderformBundle\Entity\OrganList;
 
 class SourceOrganTransformer implements DataTransformerInterface
 {
@@ -84,7 +84,7 @@ class SourceOrganTransformer implements DataTransformerInterface
 
         if( is_numeric ( $text ) ) {    //number => most probably it is id
 
-            $entity = $this->em->getRepository('OlegOrderformBundle:OrganList')->findOneById($text);
+            $entity = $this->em->getRepository('AppOrderformBundle:OrganList')->findOneById($text);
 
             if( null === $entity ) {
 
@@ -107,7 +107,7 @@ class SourceOrganTransformer implements DataTransformerInterface
     public function createNew($name) {
 
         //check if it is already exists in db
-        $entity = $this->em->getRepository('OlegOrderformBundle:OrganList')->findOneByName($name);
+        $entity = $this->em->getRepository('AppOrderformBundle:OrganList')->findOneByName($name);
         
         if( null === $entity ) {
 
@@ -118,7 +118,7 @@ class SourceOrganTransformer implements DataTransformerInterface
             $newEntity->setCreator($this->user);
 
             //get max orderinlist
-            $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM OlegOrderformBundle:OrganList c');           
+            $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM AppOrderformBundle:OrganList c');           
             $nextorder = $query->getSingleResult()['maxorderinlist']+10;
             //echo "nextorder=".$nextorder;        
             $newEntity->setOrderinlist($nextorder);

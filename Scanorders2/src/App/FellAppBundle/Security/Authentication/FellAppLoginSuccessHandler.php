@@ -23,9 +23,9 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Oleg\FellAppBundle\Security\Authentication;
+namespace App\FellAppBundle\Security\Authentication;
 
-use Oleg\UserdirectoryBundle\Security\Authentication\LoginSuccessHandler;
+use App\UserdirectoryBundle\Security\Authentication\LoginSuccessHandler;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
@@ -85,7 +85,7 @@ class FellAppLoginSuccessHandler extends LoginSuccessHandler {
     public function isFellowshipInterviewerHighestRole($user) {
 
         //1) check if the user has role "Fellowship Interviewer" with permission: object="Interview", action="create"
-        $fellappRoles = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserRolesByObjectAction( $user, "Interview", "create" );
+        $fellappRoles = $this->em->getRepository('AppUserdirectoryBundle:User')->findUserRolesByObjectAction( $user, "Interview", "create" );
 
         $level = 0;
         foreach( $fellappRoles as $fellappRole ) {
@@ -107,7 +107,7 @@ class FellAppLoginSuccessHandler extends LoginSuccessHandler {
     public function getHighestRoleLevel($user) {
         $level = 0;
         foreach( $user->getRoles() as $roleName ) {
-            $role = $this->em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName($roleName);
+            $role = $this->em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($roleName);
             //echo "role=".$role."<br>";
             if( $role && $role->getLevel() > $level ) {
                 $level = $role->getLevel();

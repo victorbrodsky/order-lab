@@ -1,8 +1,8 @@
-{% extends "OlegTranslationalResearchBundle::Default/base.html.twig" %}
+{% extends "AppTranslationalResearchBundle::Default/base.html.twig" %}
 
-{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-{% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
-{% import "OlegTranslationalResearchBundle::Default/transresRequestMacros.html.twig" as transresRequestMacros %}
+{% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% import "AppTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+{% import "AppTranslationalResearchBundle::Default/transresRequestMacros.html.twig" as transresRequestMacros %}
 
 
 {% block title %}
@@ -88,14 +88,14 @@
     {% endstylesheets %}
 
     {% stylesheets
-    'bundles/olegtranslationalresearch/form/css/comments.css' filter='cssrewrite'
+    'bundles/apptranslationalresearch/form/css/comments.css' filter='cssrewrite'
     %}
     <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
 
     {% stylesheets
-    'bundles/olegorderform/handsontable/jquery.handsontable.full.css' filter='cssrewrite'
-    'bundles/olegorderform/form/css/handsontable.css' filter='cssrewrite'
+    'bundles/apporderform/handsontable/jquery.handsontable.full.css' filter='cssrewrite'
+    'bundles/apporderform/form/css/handsontable.css' filter='cssrewrite'
     %}
     <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
@@ -105,26 +105,26 @@
 
 {% block additionaljs %}
 
-    {#'@OlegTranslationalResearchBundle/Resources/public/form/js/handsontable.js'#}
-    {#'@OlegUserdirectoryBundle/Resources/public/bwip-js/bwipjs.js'#}
-    {#'@OlegUserdirectoryBundle/Resources/public/bwip-js/bwipp-min.js'#}
-    {#'@OlegUserdirectoryBundle/Resources/public/bwip-js/freetype.js'#}
-    {#'@OlegOrderformBundle/Resources/public/form/js/selectAjax.js'#}
-    {#'@OlegOrderformBundle/Resources/public/form/js/masking.js'#}
+    {#'@AppTranslationalResearchBundle/Resources/public/form/js/handsontable.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/bwipjs.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/bwipp-min.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/freetype.js'#}
+    {#'@AppOrderformBundle/Resources/public/form/js/selectAjax.js'#}
+    {#'@AppOrderformBundle/Resources/public/form/js/masking.js'#}
     {% javascripts
-        '@OlegOrderformBundle/Resources/public/handsontable/jquery.handsontable.full.js'
+        '@AppOrderformBundle/Resources/public/handsontable/jquery.handsontable.full.js'
     %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
 
     {% javascripts
-    '@OlegTranslationalResearchBundle/Resources/public/form/js/handsontable.js'
-    '@OlegUserdirectoryBundle/Resources/public/bwip-js/freetype.js'
-    '@OlegOrderformBundle/Resources/public/form/js/selectAjax.js'
-    '@OlegOrderformBundle/Resources/public/form/js/masking.js'
-    '@OlegTranslationalResearchBundle/Resources/public/form/js/barcode.js'
-    '@OlegUserdirectoryBundle/Resources/public/qrcode/qrcode.js'
-    '@OlegUserdirectoryBundle/Resources/public/jquery-qrcode/jquery.qrcode.min.js'
+    '@AppTranslationalResearchBundle/Resources/public/form/js/handsontable.js'
+    '@AppUserdirectoryBundle/Resources/public/bwip-js/freetype.js'
+    '@AppOrderformBundle/Resources/public/form/js/selectAjax.js'
+    '@AppOrderformBundle/Resources/public/form/js/masking.js'
+    '@AppTranslationalResearchBundle/Resources/public/form/js/barcode.js'
+    '@AppUserdirectoryBundle/Resources/public/qrcode/qrcode.js'
+    '@AppUserdirectoryBundle/Resources/public/jquery-qrcode/jquery.qrcode.min.js'
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}

@@ -15,11 +15,11 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Entity;
+namespace App\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Oleg\UserdirectoryBundle\Entity\GeneralEntity;
-use Oleg\UserdirectoryBundle\Entity\UserWrapper;
+use App\UserdirectoryBundle\Entity\GeneralEntity;
+use App\UserdirectoryBundle\Entity\UserWrapper;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -1376,10 +1376,10 @@ class Message {
     /**
      * Add patient
      *
-     * @param \Oleg\OrderformBundle\Entity\Patient $patient
+     * @param \App\OrderformBundle\Entity\Patient $patient
      * @return Message
      */
-    public function addPatient(\Oleg\OrderformBundle\Entity\Patient $patient)
+    public function addPatient(\App\OrderformBundle\Entity\Patient $patient)
     {
         //echo "############### Message addPatient=".$patient."<br>";
         if( !$this->patient->contains($patient) ) {            
@@ -1390,9 +1390,9 @@ class Message {
     /**
      * Remove patient
      *
-     * @param \Oleg\OrderformBundle\Entity\Patient $patient
+     * @param \App\OrderformBundle\Entity\Patient $patient
      */
-    public function removePatient(\Oleg\OrderformBundle\Entity\Patient $patient)
+    public function removePatient(\App\OrderformBundle\Entity\Patient $patient)
     {      
         $this->patient->removeElement($patient);
     }
@@ -1434,10 +1434,10 @@ class Message {
     /**
      * Add slide
      *
-     * @param \Oleg\OrderformBundle\Entity\Slide $slide
+     * @param \App\OrderformBundle\Entity\Slide $slide
      * @return Message
      */
-    public function addSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
+    public function addSlide(\App\OrderformBundle\Entity\Slide $slide)
     {
         if( !$this->slide->contains($slide) ) {
             $this->slide->add($slide);
@@ -1447,9 +1447,9 @@ class Message {
     /**
      * Remove slide
      *
-     * @param \Oleg\OrderformBundle\Entity\Slide $slide
+     * @param \App\OrderformBundle\Entity\Slide $slide
      */
-    public function removeSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
+    public function removeSlide(\App\OrderformBundle\Entity\Slide $slide)
     {
         $this->slide->removeElement($slide);
     }
@@ -1464,13 +1464,13 @@ class Message {
         return $this->slide;
     }
 
-    public function addEncounter(\Oleg\OrderformBundle\Entity\Encounter $encounter)
+    public function addEncounter(\App\OrderformBundle\Entity\Encounter $encounter)
     {
         if( !$this->encounter->contains($encounter) ) {
             $this->encounter->add($encounter);
         }
     }
-    public function removeEncounter(\Oleg\OrderformBundle\Entity\Encounter $encounter)
+    public function removeEncounter(\App\OrderformBundle\Entity\Encounter $encounter)
     {
         $this->encounter->removeElement($encounter);
     }
@@ -1482,10 +1482,10 @@ class Message {
     /**
      * Add procedure
      *
-     * @param \Oleg\OrderformBundle\Entity\procedure $procedure
+     * @param \App\OrderformBundle\Entity\procedure $procedure
      * @return Message
      */
-    public function addProcedure(\Oleg\OrderformBundle\Entity\Procedure $procedure)
+    public function addProcedure(\App\OrderformBundle\Entity\Procedure $procedure)
     {         
         if( !$this->procedure->contains($procedure) ) {            
             $this->procedure->add($procedure);
@@ -1495,9 +1495,9 @@ class Message {
     /**
      * Remove procedure
      *
-     * @param \Oleg\OrderformBundle\Entity\Procedure $procedure
+     * @param \App\OrderformBundle\Entity\Procedure $procedure
      */
-    public function removeProcedure(\Oleg\OrderformBundle\Entity\Procedure $procedure)
+    public function removeProcedure(\App\OrderformBundle\Entity\Procedure $procedure)
     {
         $this->procedure->removeElement($procedure);
     }
@@ -1515,10 +1515,10 @@ class Message {
     /**
      * Add accession
      *
-     * @param \Oleg\OrderformBundle\Entity\Accession $accession
+     * @param \App\OrderformBundle\Entity\Accession $accession
      * @return Message
      */
-    public function addAccession(\Oleg\OrderformBundle\Entity\Accession $accession)
+    public function addAccession(\App\OrderformBundle\Entity\Accession $accession)
     {
         if( !$this->accession->contains($accession) ) {            
             $this->accession->add($accession);
@@ -1528,9 +1528,9 @@ class Message {
     /**
      * Remove accession
      *
-     * @param \Oleg\OrderformBundle\Entity\Accession $accession
+     * @param \App\OrderformBundle\Entity\Accession $accession
      */
-    public function removeAccession(\Oleg\OrderformBundle\Entity\Accession $accession)
+    public function removeAccession(\App\OrderformBundle\Entity\Accession $accession)
     {
         $this->accession->removeElement($accession);
     }
@@ -1548,10 +1548,10 @@ class Message {
     /**
      * Add part
      *
-     * @param \Oleg\OrderformBundle\Entity\Part $part
+     * @param \App\OrderformBundle\Entity\Part $part
      * @return Message
      */
-    public function addPart(\Oleg\OrderformBundle\Entity\Part $part)
+    public function addPart(\App\OrderformBundle\Entity\Part $part)
     {     
         if( !$this->part->contains($part) ) {            
             $this->part->add($part);
@@ -1561,9 +1561,9 @@ class Message {
     /**
      * Remove part
      *
-     * @param \Oleg\OrderformBundle\Entity\Part $part
+     * @param \App\OrderformBundle\Entity\Part $part
      */
-    public function removePart(\Oleg\OrderformBundle\Entity\Part $part)
+    public function removePart(\App\OrderformBundle\Entity\Part $part)
     {
         $this->part->removeElement($part);
     }
@@ -1581,10 +1581,10 @@ class Message {
     /**
      * Add block
      *
-     * @param \Oleg\OrderformBundle\Entity\Block $block
+     * @param \App\OrderformBundle\Entity\Block $block
      * @return Message
      */
-    public function addBlock(\Oleg\OrderformBundle\Entity\Block $block)
+    public function addBlock(\App\OrderformBundle\Entity\Block $block)
     {      
         if( !$this->block->contains($block) ) {            
             $this->block->add($block);
@@ -1594,9 +1594,9 @@ class Message {
     /**
      * Remove block
      *
-     * @param \Oleg\OrderformBundle\Entity\Block $block
+     * @param \App\OrderformBundle\Entity\Block $block
      */
-    public function removeBlock(\Oleg\OrderformBundle\Entity\Block $block)
+    public function removeBlock(\App\OrderformBundle\Entity\Block $block)
     {
         $this->block->removeElement($block);
     }

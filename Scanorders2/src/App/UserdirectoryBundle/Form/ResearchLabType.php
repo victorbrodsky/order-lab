@@ -15,10 +15,10 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Form;
+namespace App\UserdirectoryBundle\Form;
 
 
-use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
+use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -115,13 +115,13 @@ class ResearchLabType extends AbstractType
             $params['cycle'] = $this->params['cycle'];
             $params['standalone'] = true;
             $mapper['className'] = "ResearchLab";
-            $mapper['bundleName'] = "OlegUserdirectoryBundle";
+            $mapper['bundleName'] = "AppUserdirectoryBundle";
 
             //new ListType($params, $mapper)
             $builder->add('list', ListType::class, array(
                 'form_custom_value' => $params,
                 'form_custom_value_mapper' => $mapper,
-                'data_class' => 'Oleg\UserdirectoryBundle\Entity\ResearchLab',
+                'data_class' => 'App\UserdirectoryBundle\Entity\ResearchLab',
                 'label' => false
             ));
         }
@@ -129,7 +129,7 @@ class ResearchLabType extends AbstractType
         //echo "subjectUser=".$this->params['subjectUser']."<br>";
 
         $builder->add( 'institution', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:Institution',
+            'class' => 'AppUserdirectoryBundle:Institution',
             'label'=> "Research Lab Title:",
             'required'=> false,
             'multiple' => false,
@@ -223,7 +223,7 @@ class ResearchLabType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\ResearchLab',
+            'data_class' => 'App\UserdirectoryBundle\Entity\ResearchLab',
             'form_custom_value' => null
             //'csrf_protection' => false,
         ));

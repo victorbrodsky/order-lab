@@ -15,13 +15,13 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Entity;
+namespace App\OrderformBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-use Oleg\UserdirectoryBundle\Entity\ListAbstract;
+use App\UserdirectoryBundle\Entity\ListAbstract;
 
 /**
  * @ORM\Entity
@@ -54,7 +54,7 @@ class AccessionType extends ListAbstract
 
 
 
-    public function addAccessionaccession(\Oleg\OrderformBundle\Entity\AccessionAccession $accessionaccession)
+    public function addAccessionaccession(\App\OrderformBundle\Entity\AccessionAccession $accessionaccession)
     {
         if( !$this->accessionaccession->contains($accessionaccession) ) {
             $this->accessionaccession->add($accessionaccession);
@@ -62,7 +62,7 @@ class AccessionType extends ListAbstract
         return $this;
     }
 
-    public function removeAccessionaccession(\Oleg\OrderformBundle\Entity\AccessionAccession $accessionaccession)
+    public function removeAccessionaccession(\App\OrderformBundle\Entity\AccessionAccession $accessionaccession)
     {
         $this->accessionaccession->removeElement($accessionaccession);
     }

@@ -15,13 +15,13 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Entity;
+namespace App\OrderformBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-use Oleg\UserdirectoryBundle\Entity\ListAbstract;
+use App\UserdirectoryBundle\Entity\ListAbstract;
 
 /**
  * @ORM\Entity
@@ -58,10 +58,10 @@ class ProcedureList extends ListAbstract
 //    /**
 //     * Add procedurename
 //     *
-//     * @param \Oleg\OrderformBundle\Entity\ProcedureName $procedurename
+//     * @param \App\OrderformBundle\Entity\ProcedureName $procedurename
 //     * @return ProcedureList
 //     */
-//    public function addProcedurename(\Oleg\OrderformBundle\Entity\ProcedureName $procedurename)
+//    public function addProcedurename(\App\OrderformBundle\Entity\ProcedureName $procedurename)
 //    {
 //        if( $procedurename && !$this->procedurename->contains($procedurename) ) {
 //            $this->procedurename->add($procedurename);
@@ -74,9 +74,9 @@ class ProcedureList extends ListAbstract
 //    /**
 //     * Remove procedurename
 //     *
-//     * @param \Oleg\OrderformBundle\Entity\ProcedureName $procedurename
+//     * @param \App\OrderformBundle\Entity\ProcedureName $procedurename
 //     */
-//    public function removeProcedurename(\Oleg\OrderformBundle\Entity\ProcedureName $procedurename)
+//    public function removeProcedurename(\App\OrderformBundle\Entity\ProcedureName $procedurename)
 //    {
 //        $this->procedurename->removeElement($procedurename);
 //    }

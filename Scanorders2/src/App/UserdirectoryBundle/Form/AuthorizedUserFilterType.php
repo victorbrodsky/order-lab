@@ -16,10 +16,10 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Form;
+namespace App\UserdirectoryBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
-use Oleg\UserdirectoryBundle\Form\PerSiteSettingsType;
+use App\UserdirectoryBundle\Form\PerSiteSettingsType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -46,7 +46,7 @@ class AuthorizedUserFilterType extends AbstractType
         $this->formConstructor($options['form_custom_value']);
 
         $builder->add('roles', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:Roles',
+            'class' => 'AppUserdirectoryBundle:Roles',
             'label'=>false,
             'choice_label' => 'alias',
             'required'=> false,

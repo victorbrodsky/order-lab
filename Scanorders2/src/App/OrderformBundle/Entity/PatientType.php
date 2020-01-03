@@ -15,13 +15,13 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Entity;
+namespace App\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
-use Oleg\OrderformBundle\Entity\PatientArrayFieldAbstract;
+use App\OrderformBundle\Entity\PatientArrayFieldAbstract;
 
 
 /**
@@ -46,7 +46,7 @@ class PatientType extends PatientArrayFieldAbstract
 
     //The values of the PatientType hierarchy should be attached to Systems (multiple systems). Many PatientTypes to Many Systems.
     /**
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\SourceSystemList")
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\SourceSystemList")
      * @ORM\JoinTable(name="scan_patientType_system",
      *      joinColumns={@ORM\JoinColumn(name="patientType_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="system_id", referencedColumnName="id")}

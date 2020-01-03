@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Entity;
+namespace App\UserdirectoryBundle\Entity;
 
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -43,7 +43,7 @@ use FOS\UserBundle\Model\User as BaseUser;
 // *      @ORM\Index( name="username_idx", columns={"username"} )
 
 /**
- * @ORM\Entity(repositoryClass="Oleg\UserdirectoryBundle\Repository\UserRepository")
+ * @ORM\Entity(repositoryClass="App\UserdirectoryBundle\Repository\UserRepository")
  * @UniqueEntity(
  *     fields={"keytype", "primaryPublicUserId"},
  *     errorPath="primaryPublicUserId",
@@ -155,7 +155,7 @@ class User extends BaseUser {
     private $trainings;
 
     /**
-     * @ORM\OneToMany(targetEntity="Oleg\FellAppBundle\Entity\FellowshipApplication", mappedBy="user", cascade={"persist","remove"})
+     * @ORM\OneToMany(targetEntity="App\FellAppBundle\Entity\FellowshipApplication", mappedBy="user", cascade={"persist","remove"})
      * @ORM\OrderBy({"orderinlist" = "ASC"})
      */
     private $fellowshipApplications;
@@ -1977,7 +1977,7 @@ class User extends BaseUser {
         }
 
 //        foreach( $this->getRoles() as $role ) {
-//            $roleObject = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName($role);
+//            $roleObject = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($role);
 //            if( $roleObject && $roleObject->hasSite( $this->siteName ) ) {
 //                $originalRoles[] = $role;
 //            }

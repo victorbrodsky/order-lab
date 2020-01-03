@@ -473,8 +473,8 @@ function getComboboxTreeByPid( parentElement, fieldClass, parentId, clearFlag ) 
 
 //    if( clearFlag ) {
 //        //clear combobox
-//        //oleg_userdirectorybundle_user_administrativeTitles_0_service
-//        //oleg_userdirectorybundle_user_administrativeTitles_0_service
+//        //app_userdirectorybundle_user_administrativeTitles_0_service
+//        //app_userdirectorybundle_user_administrativeTitles_0_service
 //        console.log( "clear combobox, targetId="+targetId);
 //        populateSelectCombobox( targetId, null, "Select an option or type in a new value" );
 //        setElementToId( targetId );

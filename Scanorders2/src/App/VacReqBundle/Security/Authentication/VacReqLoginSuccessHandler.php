@@ -23,9 +23,9 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Oleg\VacReqBundle\Security\Authentication;
+namespace App\VacReqBundle\Security\Authentication;
 
-use Oleg\UserdirectoryBundle\Security\Authentication\LoginSuccessHandler;
+use App\UserdirectoryBundle\Security\Authentication\LoginSuccessHandler;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
@@ -69,7 +69,7 @@ class VacReqLoginSuccessHandler extends LoginSuccessHandler {
         //check other user's vacreq roles
         //$user, $sitename, $rolePartialName, $institutionId=null
         $institutionId = null;
-        $roles = $em->getRepository('OlegUserdirectoryBundle:User')->
+        $roles = $em->getRepository('AppUserdirectoryBundle:User')->
             findUserRolesBySiteAndPartialRoleName($user,'vacreq',"ROLE_VACREQ",$institutionId);
         //echo "roles count=".count($roles)."<br>";
 

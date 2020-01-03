@@ -217,7 +217,7 @@
 {#entity - request#}
 {% macro vacreq_action( entity, vacreq_sitename ) %}
 
-    {% import "OlegVacReqBundle::Default/vacreqmacros.html.twig" as vacreqmacros %}
+    {% import "AppVacReqBundle::Default/vacreqmacros.html.twig" as vacreqmacros %}
 
     {% set carryOver = false %}
     {% if entity.getRequestType() and entity.getRequestType().getAbbreviation() == "carryover" %}
@@ -419,7 +419,7 @@
 {% endmacro %}
 
 {% macro personAwayInfo( user, phone, vacreq_sitename ) %}
-    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
     <a href="{{ path(vacreq_sitename~'_showuser', { 'id': user.id }) }}">{{ user.displayName() }}</a>
 
@@ -436,13 +436,13 @@
 
     <div style="height: 60px; width: 60px;">
         {% if is_granted('ROLE_PLATFORM_DEMO') %}
-            {% set avatarImage = asset('bundles/oleguserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
+            {% set avatarImage = asset('bundles/appuserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
             <img src="{{ avatarImage }}" alt="Avatar" style="max-width:100%; max-height:100%;">
         {% else %}
             {% if user.avatar %}
                 {{ usermacros.showDocumentAsImage(user.avatar,'Avatar','','',vacreq_sitename,'snapshot-small') }}
             {% else %}
-                {% set avatarImage = asset('bundles/oleguserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
+                {% set avatarImage = asset('bundles/appuserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
                 <img src="{{ avatarImage }}" alt="Avatar" style="max-width:100%; max-height:100%;">
             {% endif %}
         {% endif %}
@@ -451,7 +451,7 @@
 {% endmacro %}
 
 {% macro incomingRequestHref( days, user, yearRange, groupId, approved, requestType, vacreq_sitename ) %}
-    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
     {#{% if days > 0 %}#}
 
         {% if requestType == "businessRequest" %}
@@ -538,7 +538,7 @@
 {% endmacro %}
 
 {% macro incomingRequestsFilter( vacreqfilter, routename, requestTypeAbbreviation ) %}
-    {% import "OlegVacReqBundle::Default/vacreqmacros.html.twig" as vacreqmacros %}
+    {% import "AppVacReqBundle::Default/vacreqmacros.html.twig" as vacreqmacros %}
     <form action="{{ path(routename) }}" method="get" class="well form-search">
 
         <p>
@@ -607,7 +607,7 @@
 {% endmacro %}
 
 {% macro myRequestsFilter( vacreqfilter, routename, requestTypeAbbreviation ) %}
-    {% import "OlegVacReqBundle::Default/vacreqmacros.html.twig" as vacreqmacros %}
+    {% import "AppVacReqBundle::Default/vacreqmacros.html.twig" as vacreqmacros %}
     <form action="{{ path(routename) }}" method="get" class="well form-search">
 
         <p>
@@ -662,7 +662,7 @@
 {% endmacro %}
 
 {% macro commonCheckboxFilter( vacreqfilter, routename, requestTypeAbbreviation ) %}
-    {% import "OlegVacReqBundle::Default/vacreqmacros.html.twig" as vacreqmacros %}
+    {% import "AppVacReqBundle::Default/vacreqmacros.html.twig" as vacreqmacros %}
 
         <p>
         <div class="row">

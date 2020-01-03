@@ -23,20 +23,20 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Oleg\UserdirectoryBundle\Util;
+namespace App\UserdirectoryBundle\Util;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
-use Oleg\UserdirectoryBundle\Entity\Credentials;
-use Oleg\UserdirectoryBundle\Entity\GeoLocation;
-use Oleg\UserdirectoryBundle\Entity\PerSiteSettings;
-use Oleg\UserdirectoryBundle\Entity\Location;
-use Oleg\UserdirectoryBundle\Entity\User;
-use Oleg\UserdirectoryBundle\Entity\AdministrativeTitle;
-use Oleg\UserdirectoryBundle\Entity\Logger;
-use Oleg\UserdirectoryBundle\Entity\UsernameType;
-use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
-use Oleg\UserdirectoryBundle\Security\Util\UserSecurityUtil;
+use App\UserdirectoryBundle\Entity\Credentials;
+use App\UserdirectoryBundle\Entity\GeoLocation;
+use App\UserdirectoryBundle\Entity\PerSiteSettings;
+use App\UserdirectoryBundle\Entity\Location;
+use App\UserdirectoryBundle\Entity\User;
+use App\UserdirectoryBundle\Entity\AdministrativeTitle;
+use App\UserdirectoryBundle\Entity\Logger;
+use App\UserdirectoryBundle\Entity\UsernameType;
+use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
+use App\UserdirectoryBundle\Security\Util\UserSecurityUtil;
 use Sinergi\BrowserDetector\Browser;
 use Sinergi\BrowserDetector\Os;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -60,7 +60,7 @@ class UserUtil {
         }
 
         //find site object by sitename
-        $site = $em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation($options['sitename']);
+        $site = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation($options['sitename']);
         if( !$site ) {
             //throw new NotFoundHttpException('Unable to find SiteList entity by abbreviation='.$options['sitename']);
         }
@@ -86,7 +86,7 @@ class UserUtil {
 
             $username = $request->get('_username');
 
-            $userDb = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername($username);
+            $userDb = $em->getRepository('AppUserdirectoryBundle:User')->findOneByUsername($username);
             $user = $userDb;
 
             $logger->setUser($userDb);
@@ -125,7 +125,7 @@ class UserUtil {
         $logger->setUseragent($userAgent);
 
         //set Event Type
-        $eventtype = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findOneByName($options['eventtype']);
+        $eventtype = $em->getRepository('AppUserdirectoryBundle:EventTypeList')->findOneByName($options['eventtype']);
         $logger->setEventType($eventtype);
 
         //set eventEntity
@@ -165,7 +165,7 @@ class UserUtil {
 
     public function getMaxIdleTime($em) {
 
-        $params = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+        $params = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
 
         if( !$params ) {
             //new DB does not have SiteParameters object
@@ -188,7 +188,7 @@ class UserUtil {
 
     public function getMaxIdleTimeAndMaintenance($em, $secAuth, $container) {
 
-        $params = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+        $params = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
 
         if( !$params ) {
             //new DB does not have SiteParameters object
@@ -232,7 +232,7 @@ class UserUtil {
     //return parameter specified by $setting. If the first time login when site parameter does not exist yet, return -1.
     public function getSiteSetting($em,$setting) {
 
-        $params = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+        $params = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
 
 //        if( !$params ) {
 //            //throw new \Exception( 'Parameter object is not found' );
@@ -267,7 +267,7 @@ class UserUtil {
             $user = $this->createSystemUser($em,null,null);
         }
 
-        $entities = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findAll();
+        $entities = $em->getRepository('AppUserdirectoryBundle:UsernameType')->findAll();
 
         if( $entities ) {
             return -1;
@@ -355,7 +355,7 @@ class UserUtil {
 
     public function getDefaultUsernameType($em) {
         $userkeytype = null;
-        $userkeytypes = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findBy(array(),array('orderinlist' => 'ASC'),1);   //limit result by 1
+        $userkeytypes = $em->getRepository('AppUserdirectoryBundle:UsernameType')->findBy(array(),array('orderinlist' => 'ASC'),1);   //limit result by 1
         //echo "userkeytypes=".$userkeytypes."<br>";
         //print_r($userkeytypes);
         if( $userkeytypes && count($userkeytypes) > 0 ) {
@@ -468,7 +468,7 @@ class UserUtil {
 
     public function indexLocation( $search, $request, $container, $doctrine ) {
 
-        $repository = $doctrine->getRepository('OlegUserdirectoryBundle:Location');
+        $repository = $doctrine->getRepository('AppUserdirectoryBundle:Location');
         $dql =  $repository->createQueryBuilder("location");
         $dql->addSelect('location');
         //$dql->addSelect('COUNT(administrativeTitles) as administrativeTitlesCount');
@@ -609,7 +609,7 @@ class UserUtil {
         $user = $secTokenStorage->getToken()->getUser();
 
         //use Institution tree set parent method for residency specialty-subspecialty because it's the same logic
-        $fellowshipSubspecialty = $em->getRepository('OlegUserdirectoryBundle:Institution')->checkAndSetParent($user,$treeholder,$residencySpecialty,$fellowshipSubspecialty);
+        $fellowshipSubspecialty = $em->getRepository('AppUserdirectoryBundle:Institution')->checkAndSetParent($user,$treeholder,$residencySpecialty,$fellowshipSubspecialty);
 
         //set author if not set
         $this->setUpdateInfo($treeholder,$em,$secTokenStorage);
@@ -634,8 +634,8 @@ class UserUtil {
         if( $institution ) {
             echo "echo orig=".$institution."<br>";
             echo "echo orig parent=".$institution->getParent()."<br>";
-            //$institutionDb = $em->getReference('OlegUserdirectoryBundle:Institution', $institution->getId());
-            $institutionDb = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($institution->getId());
+            //$institutionDb = $em->getReference('AppUserdirectoryBundle:Institution', $institution->getId());
+            $institutionDb = $em->getRepository('AppUserdirectoryBundle:Institution')->find($institution->getId());
             echo "echo id=".$institutionDb->getId()."<br>";
             echo "echo parent=".$institutionDb->getParent()."<br>";
 
@@ -687,7 +687,7 @@ class UserUtil {
 
         foreach( $instArr as $instId => $newPositions ) {
 
-            $nodeUserPositions = $em->getRepository('OlegUserdirectoryBundle:UserPosition')->findBy(
+            $nodeUserPositions = $em->getRepository('AppUserdirectoryBundle:UserPosition')->findBy(
                 array(
                     'user' => $subjectUser->getId(),
                     'institution' => $instId
@@ -708,14 +708,14 @@ class UserUtil {
                 //echo 'create new UserPosition<br>';
                 $nodeUserPosition = new UserPosition();
                 $nodeUserPosition->setUser($subjectUser);
-                $instRef = $em->getReference('OlegUserdirectoryBundle:Institution', $instId);
+                $instRef = $em->getReference('AppUserdirectoryBundle:Institution', $instId);
                 $nodeUserPosition->setInstitution($instRef);
             }
 
             $nodeUserPosition->clearPositionTypes();
 
             foreach( $newPositions as $positionId ) {
-                $positionRef = $em->getReference('OlegUserdirectoryBundle:PositionTypeList', $positionId);
+                $positionRef = $em->getReference('AppUserdirectoryBundle:PositionTypeList', $positionId);
                 $nodeUserPosition->addPositionType($positionRef);
             }
 
@@ -726,7 +726,7 @@ class UserUtil {
         $newIdBreadcrumbs = $institutionDb->getIdBreadcrumbs();
 
         $originalInstitutionId = $treeholder->getInstitution()->getId();
-        $originalInstitution = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($originalInstitutionId);
+        $originalInstitution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($originalInstitutionId);
         $originalIdBreadcrumbs = $originalInstitution->getIdBreadcrumbs();
 
         $this->removeUserPositionFromInstitution($subjectUser->getId(),$originalIdBreadcrumbs,$newIdBreadcrumbs,$em);
@@ -764,9 +764,9 @@ class UserUtil {
     }
     public function removeUserPositionFromSingleInstitution( $userid, $instid, $em ) {
 
-        $originalInstitution = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($instid);
+        $originalInstitution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($instid);
 
-        $originalUserPositions = $em->getRepository('OlegUserdirectoryBundle:UserPosition')->findBy(
+        $originalUserPositions = $em->getRepository('AppUserdirectoryBundle:UserPosition')->findBy(
             array(
                 'user' => $userid,
                 'institution' => $instid
@@ -798,7 +798,7 @@ class UserUtil {
 
         $user = $secTokenStorage->getToken()->getUser();
 
-        $author = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId());
+        $author = $em->getRepository('AppUserdirectoryBundle:User')->find($user->getId());
 
         //set author and roles if not set
         if( !$entity->getAuthor() ) {
@@ -831,7 +831,7 @@ class UserUtil {
 //        $mainLocation = new Location($creator);
 //        $mainLocation->setName('Main Office');
 //        $mainLocation->setRemovable(false);
-//        $mainLocType = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Employee Office");
+//        $mainLocType = $em->getRepository('AppUserdirectoryBundle:LocationTypeList')->findOneByName("Employee Office");
 //        $mainLocation->addLocationType($mainLocType);
 //        $entity->addLocation($mainLocation);
 //
@@ -839,7 +839,7 @@ class UserUtil {
 //        $homeLocation = new Location($creator);
 //        $homeLocation->setName('Home');
 //        $homeLocation->setRemovable(false);
-//        $homeLocType = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Employee Home");
+//        $homeLocType = $em->getRepository('AppUserdirectoryBundle:LocationTypeList')->findOneByName("Employee Home");
 //        $homeLocation->addLocationType($homeLocType);
 //        $entity->addLocation($homeLocation);
 //
@@ -869,7 +869,7 @@ class UserUtil {
             return;
         }
 
-//        $adminTitleNameObject = $em->getRepository('OlegUserdirectoryBundle:AdminTitleList')->findOneByName($adminTitleName);
+//        $adminTitleNameObject = $em->getRepository('AppUserdirectoryBundle:AdminTitleList')->findOneByName($adminTitleName);
 //
 //        if( !$adminTitleNameObject ) {
 //
@@ -893,7 +893,7 @@ class UserUtil {
             return null;
         }
 
-        $nameObject = $em->getRepository('OlegUserdirectoryBundle:'.$className)->findOneByName($name);
+        $nameObject = $em->getRepository('AppUserdirectoryBundle:'.$className)->findOneByName($name);
 
         if( !$nameObject ) {
 
@@ -980,7 +980,7 @@ class UserUtil {
             return $duser;
         }
 
-        $siteParameters = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+        $siteParameters = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
 
         if( count($siteParameters) != 1 ) {
             throw new \Exception( 'Must have only one parameter object. Found '.count($siteParameters).'object(s)' );

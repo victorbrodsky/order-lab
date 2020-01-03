@@ -1,9 +1,9 @@
 <?php
 
-namespace Oleg\TranslationalResearchBundle\Controller;
+namespace App\TranslationalResearchBundle\Controller;
 
-use Oleg\TranslationalResearchBundle\Entity\DefaultReviewer;
-use Oleg\TranslationalResearchBundle\Entity\SpecialtyList;
+use App\TranslationalResearchBundle\Entity\DefaultReviewer;
+use App\TranslationalResearchBundle\Entity\SpecialtyList;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -20,7 +20,7 @@ class DefaultReviewerController extends Controller
      * Lists defaultReviewer states: irb_review, committee_review, final_review
      *
      * @Route("/default-reviewers/{specialtyStr}", name="translationalresearch_default-reviewer_index")
-     * @Template("OlegTranslationalResearchBundle:DefaultReviewer:index.html.twig")
+     * @Template("AppTranslationalResearchBundle:DefaultReviewer:index.html.twig")
      * @Method("GET")
      */
     public function indexAction(Request $request, $specialtyStr)
@@ -37,7 +37,7 @@ class DefaultReviewerController extends Controller
 //        if( !$specialtyAbbreviation ) {
 //            throw new \Exception( "Project specialty abbreviation is not found by name '".$specialty."'" );
 //        }
-//        $specialty = $em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation($specialtyAbbreviation);
+//        $specialty = $em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation($specialtyAbbreviation);
 //        if( !$specialty ) {
 //            throw new \Exception( "Project specialty is not found by name '".$specialtyAbbreviation."'" );
 //        }
@@ -62,7 +62,7 @@ class DefaultReviewerController extends Controller
      * Lists all defaultReviewer entities for a particular state.
      *
      * @Route("/default-reviewers/stage/{stateStr}/{specialtyStr}", name="translationalresearch_state-default-reviewer_index")
-     * @Template("OlegTranslationalResearchBundle:DefaultReviewer:state-default-reviewer-index.html.twig")
+     * @Template("AppTranslationalResearchBundle:DefaultReviewer:state-default-reviewer-index.html.twig")
      * @Method("GET")
      */
     public function stateDefaultReviewerIndexAction(Request $request, $stateStr, $specialtyStr)
@@ -77,9 +77,9 @@ class DefaultReviewerController extends Controller
         //$specialty is a url prefix (i.e. "new-ap-cp-project")
         $specialty = $transresUtil->getSpecialtyObject($specialtyStr);
 
-        //$defaultReviewers = $em->getRepository('OlegTranslationalResearchBundle:DefaultReviewer')->findAll();
+        //$defaultReviewers = $em->getRepository('AppTranslationalResearchBundle:DefaultReviewer')->findAll();
 
-        $repository = $em->getRepository('OlegTranslationalResearchBundle:DefaultReviewer');
+        $repository = $em->getRepository('AppTranslationalResearchBundle:DefaultReviewer');
         $dql =  $repository->createQueryBuilder("defaultReviewer");
         $dql->select('defaultReviewer');
 
@@ -129,7 +129,7 @@ class DefaultReviewerController extends Controller
      * Creates a new defaultReviewer entity.
      *
      * @Route("/default-reviewers/new/{stateStr}/{specialtyStr}", name="translationalresearch_default-reviewer_new")
-     * @Template("OlegTranslationalResearchBundle:DefaultReviewer:new.html.twig")
+     * @Template("AppTranslationalResearchBundle:DefaultReviewer:new.html.twig")
      * @Method({"GET", "POST"})
      */
     public function newAction(Request $request, $stateStr, $specialtyStr)
@@ -148,7 +148,7 @@ class DefaultReviewerController extends Controller
         $defaultReviewer->setState($stateStr);
         $defaultReviewer->setProjectSpecialty($specialty);
 
-        //$form = $this->createForm('Oleg\TranslationalResearchBundle\Form\DefaultReviewerType', $defaultReviewer);
+        //$form = $this->createForm('App\TranslationalResearchBundle\Form\DefaultReviewerType', $defaultReviewer);
         $form = $this->createDefaultReviewForm($cycle,$defaultReviewer);
         $form->handleRequest($request);
 
@@ -188,7 +188,7 @@ class DefaultReviewerController extends Controller
      * Finds and displays a defaultReviewer entity.
      *
      * @Route("/default-reviewers/show/{id}", name="translationalresearch_default-reviewer_show")
-     * @Template("OlegTranslationalResearchBundle:DefaultReviewer:new.html.twig")
+     * @Template("AppTranslationalResearchBundle:DefaultReviewer:new.html.twig")
      * @Method("GET")
      */
     public function showAction(DefaultReviewer $defaultReviewer)
@@ -221,7 +221,7 @@ class DefaultReviewerController extends Controller
      * Displays a form to edit an existing defaultReviewer entity.
      *
      * @Route("/default-reviewers/edit/{id}", name="translationalresearch_default-reviewer_edit")
-     * @Template("OlegTranslationalResearchBundle:DefaultReviewer:new.html.twig")
+     * @Template("AppTranslationalResearchBundle:DefaultReviewer:new.html.twig")
      * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, DefaultReviewer $defaultReviewer)
@@ -242,7 +242,7 @@ class DefaultReviewerController extends Controller
         $originalReviewerDelegate = $defaultReviewer->getReviewerDelegate();
 
         $deleteForm = $this->createDeleteForm($defaultReviewer);
-        //$editForm = $this->createForm('Oleg\TranslationalResearchBundle\Form\DefaultReviewerType', $defaultReviewer);
+        //$editForm = $this->createForm('App\TranslationalResearchBundle\Form\DefaultReviewerType', $defaultReviewer);
         $form = $this->createDefaultReviewForm($cycle,$defaultReviewer);
         $form->handleRequest($request);
 
@@ -368,7 +368,7 @@ class DefaultReviewerController extends Controller
             $params['showPrimaryReview'] = true;
         }
 
-        $form = $this->createForm('Oleg\TranslationalResearchBundle\Form\DefaultReviewerType', $defaultReviewer, array(
+        $form = $this->createForm('App\TranslationalResearchBundle\Form\DefaultReviewerType', $defaultReviewer, array(
             'disabled' => $disabled,
             'form_custom_value' => $params
         ));
@@ -382,7 +382,7 @@ class DefaultReviewerController extends Controller
      * Substitute user
      *
      * @Route("/substitute-user/", name="translationalresearch_substitute_user")
-     * @Template("OlegTranslationalResearchBundle:DefaultReviewer:substitute-user.html.twig")
+     * @Template("AppTranslationalResearchBundle:DefaultReviewer:substitute-user.html.twig")
      * @Method({"GET", "POST"})
      */
     public function substituteUserAction(Request $request)
@@ -403,7 +403,7 @@ class DefaultReviewerController extends Controller
             'showPrimaryReview'=>false,
             'transresUtil' => $transresUtil
         );
-        $form = $this->createForm('Oleg\TranslationalResearchBundle\Form\SubstituteUserType', null, array(
+        $form = $this->createForm('App\TranslationalResearchBundle\Form\SubstituteUserType', null, array(
             'form_custom_value' => $params
         ));
 
@@ -508,7 +508,7 @@ class DefaultReviewerController extends Controller
 
 
         ///////////// Filter Projects //////////////////
-        $repository = $em->getRepository('OlegTranslationalResearchBundle:Project');
+        $repository = $em->getRepository('AppTranslationalResearchBundle:Project');
         $dql =  $repository->createQueryBuilder("project");
         $dql->select('project');
 
@@ -896,7 +896,7 @@ class DefaultReviewerController extends Controller
         $requestBillingContact = $form->get('requestBillingContact')->getData();
 
         ///////////// Filter Requests //////////////////
-        $repository = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
+        $repository = $em->getRepository('AppTranslationalResearchBundle:TransResRequest');
         $dql = $repository->createQueryBuilder("request");
         $dql->select('request');
 
@@ -1068,7 +1068,7 @@ class DefaultReviewerController extends Controller
         $invoiceSalesperson = $form->get('invoiceSalesperson')->getData();
 
         ///////////// Filter Invoices //////////////////
-        $repository = $em->getRepository('OlegTranslationalResearchBundle:Invoice');
+        $repository = $em->getRepository('AppTranslationalResearchBundle:Invoice');
         $dql = $repository->createQueryBuilder("invoice");
         $dql->select('invoice');
 

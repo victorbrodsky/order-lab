@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Repository;
+namespace App\UserdirectoryBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 

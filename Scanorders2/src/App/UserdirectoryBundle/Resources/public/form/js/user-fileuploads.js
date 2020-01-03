@@ -313,33 +313,33 @@ function removeUploadedFileByHolder( previewElement, dropzone, confirmFlag ) {
 
 //    var commenttype = null;
 //    if( holderTop.hasClass('user-publiccomments') ) {
-//        commenttype = "OlegUserdirectoryBundle:PublicComment";
+//        commenttype = "AppUserdirectoryBundle:PublicComment";
 //    }
 //    if( holderTop.hasClass('user-privatecomments') ) {
-//        commenttype = "OlegUserdirectoryBundle:PrivateComment";
+//        commenttype = "AppUserdirectoryBundle:PrivateComment";
 //    }
 //    if( holderTop.hasClass('user-admincomments') ) {
-//        commenttype = "OlegUserdirectoryBundle:AdminComment";
+//        commenttype = "AppUserdirectoryBundle:AdminComment";
 //    }
 //    if( holderTop.hasClass('user-confidentialcomment') ) {
-//        commenttype = "OlegUserdirectoryBundle:ConfidentialComment";
+//        commenttype = "AppUserdirectoryBundle:ConfidentialComment";
 //    }
 //
 //    if( holderTop.hasClass('user-CurriculumVitae') ) {
-//        commenttype = "OlegUserdirectoryBundle:CurriculumVitae";
+//        commenttype = "AppUserdirectoryBundle:CurriculumVitae";
 //    }
 //    if( holderTop.hasClass('user-FellowshipApplication') ) {
-//        commenttype = "OlegUserdirectoryBundle:FellowshipApplication";
+//        commenttype = "AppUserdirectoryBundle:FellowshipApplication";
 //    }
 //    if( holderTop.hasClass('user-Examination') ) {
-//        commenttype = "OlegUserdirectoryBundle:Examination";
+//        commenttype = "AppUserdirectoryBundle:Examination";
 //    }
 
     var commenttype = mapperHolderDocument(holderTop);
 
 //    //for scan orders don't delete from DB. Just remove from form
 //    if( holderTop.hasClass('scan-partpaper') ) {
-//        //commenttype = "OlegOrderformBundle:PartPaper";
+//        //commenttype = "AppOrderformBundle:PartPaper";
 //
 //        var _ref;
 //        if( previewElement ) {
@@ -433,28 +433,28 @@ function mapperHolderDocument(holderTop) {
     var holdertype = null;
     var fieldname = 'documents';
     if( holderTop.hasClass('user-publiccomments') ) {
-        holdertype = "OlegUserdirectoryBundle:PublicComment";
+        holdertype = "AppUserdirectoryBundle:PublicComment";
         fieldname = 'documents';
     }
     if( holderTop.hasClass('user-privatecomments') ) {
-        holdertype = "OlegUserdirectoryBundle:PrivateComment";
+        holdertype = "AppUserdirectoryBundle:PrivateComment";
         fieldname = 'documents';
     }
     if( holderTop.hasClass('user-admincomments') ) {
-        holdertype = "OlegUserdirectoryBundle:AdminComment";
+        holdertype = "AppUserdirectoryBundle:AdminComment";
         fieldname = 'documents';
     }
     if( holderTop.hasClass('user-confidentialcomment') ) {
-        holdertype = "OlegUserdirectoryBundle:ConfidentialComment";
+        holdertype = "AppUserdirectoryBundle:ConfidentialComment";
         fieldname = 'documents';
     }
 
     if( holderTop.hasClass('user-FellowshipApplication') ) {
-        holdertype = "OlegFellAppBundle:FellowshipApplication";
+        holdertype = "AppFellAppBundle:FellowshipApplication";
         fieldname = ['avatars','cvs','coverLetters','lawsuitDocuments','reprimandDocuments'];
     }
     if( holderTop.hasClass('user-Examination') ) {
-        holdertype = "OlegUserdirectoryBundle:Examination";
+        holdertype = "AppUserdirectoryBundle:Examination";
         fieldname = 'scores';
     }
 
@@ -770,7 +770,7 @@ function getDocumentIndexById(id) {
 //    //                                                        _accession_0_part_0_documents_0_id
 //
 //    //  0           1           2           3    4    5      6      7    8   9  10   11     12   13     14  15
-//    //oleg_orderformbundle_messagetype_patient_0_procedure_0_accession_0_part_0_paper_0_documents_0_id
+//    //app_orderformbundle_messagetype_patient_0_procedure_0_accession_0_part_0_paper_0_documents_0_id
 //
 //    //var documentCount = 0;
 //    var beginIdStr = null;
@@ -1061,7 +1061,7 @@ function createDropzoneHolder_Paper(existingDropzoneHolder) {
     var idArr = id.split("_");
 
     //  0       1               2           3    4     5     6     7     8      9   10  11  12  13  14  15
-    //oleg_orderformbundle_messagetype_patient_0_encounter_0_procedure_0_accession_0_part_0_paper_0_others
+    //app_orderformbundle_messagetype_patient_0_encounter_0_procedure_0_accession_0_part_0_paper_0_others
     var patientid = idArr[4];
     var encounterid = idArr[6];
     var procedureid = idArr[8];
@@ -1114,7 +1114,7 @@ function createDropzoneHolder_Other(existingDropzoneHolder) {
     var idArr = id.split("_");
 
     //  0       1               2     3    4          5                  6          7  8
-    //oleg_userdirectorybundle_user_grants_0_attachmentContainer_documentContainers_0_id
+    //app_userdirectorybundle_user_grants_0_attachmentContainer_documentContainers_0_id
     var grantid = idArr[4];
     var documentContainerid = idArr[7];
     var documentid = 0;

@@ -14,7 +14,7 @@
     limitations under the License.
 #}
 
-{% extends "OlegVacReqBundle::Default/base.html.twig" %}
+{% extends "AppVacReqBundle::Default/base.html.twig" %}
 
 
 {% block title %}
@@ -23,14 +23,14 @@
 
 
 {% block content %}
-    {% include 'OlegUserdirectoryBundle::Logger/logger_common.html.twig' %}
+    {% include 'AppUserdirectoryBundle::Logger/logger_common.html.twig' %}
 {% endblock %}
 
 
 {% block additionalcss %}
 
     {% stylesheets
-    'bundles/oleguserdirectory/datetimepicker/css/bootstrap-datetimepicker.min.css'
+    'bundles/appuserdirectory/datetimepicker/css/bootstrap-datetimepicker.min.css'
     %}
     <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
@@ -42,7 +42,7 @@
 {% block additionaljs %}
 
     {% javascripts
-    '@OlegUserdirectoryBundle/Resources/public/datetimepicker/js/bootstrap-datetimepicker.min.js'
+    '@AppUserdirectoryBundle/Resources/public/datetimepicker/js/bootstrap-datetimepicker.min.js'
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}

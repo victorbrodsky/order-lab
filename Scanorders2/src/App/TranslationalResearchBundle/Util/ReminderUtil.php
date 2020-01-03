@@ -15,14 +15,14 @@
  *  limitations under the License.
  */
 
-namespace Oleg\TranslationalResearchBundle\Util;
+namespace App\TranslationalResearchBundle\Util;
 
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Oleg\TranslationalResearchBundle\Entity\Invoice;
-use Oleg\TranslationalResearchBundle\Entity\InvoiceItem;
-use Oleg\TranslationalResearchBundle\Entity\ReminderEmail;
-use Oleg\TranslationalResearchBundle\Entity\TransResSiteParameters;
+use App\TranslationalResearchBundle\Entity\Invoice;
+use App\TranslationalResearchBundle\Entity\InvoiceItem;
+use App\TranslationalResearchBundle\Entity\ReminderEmail;
+use App\TranslationalResearchBundle\Entity\TransResSiteParameters;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
@@ -151,7 +151,7 @@ class ReminderUtil
         //3. (invoiceReminderCount < maxReminderCount)
         //When email sent, set invoiceLastReminderSentDate=currentDate, invoiceReminderCount++
 
-        $repository = $this->em->getRepository('OlegTranslationalResearchBundle:Invoice');
+        $repository = $this->em->getRepository('AppTranslationalResearchBundle:Invoice');
         $dql =  $repository->createQueryBuilder("invoice");
         $dql->select('invoice');
 
@@ -430,7 +430,7 @@ class ReminderUtil
 
         $reminderEmail = $transresUtil->getTransresSiteProjectParameter('invoiceReminderEmail',null,$projectSpecialty);
 
-        $repository = $this->em->getRepository('OlegTranslationalResearchBundle:Project');
+        $repository = $this->em->getRepository('AppTranslationalResearchBundle:Project');
         $dql =  $repository->createQueryBuilder("project");
         $dql->select('project');
 
@@ -587,14 +587,14 @@ class ReminderUtil
         $dqlParameters = array();
 
         //get the date from event log
-        $repository = $this->em->getRepository('OlegUserdirectoryBundle:Logger');
+        $repository = $this->em->getRepository('AppUserdirectoryBundle:Logger');
         $dql = $repository->createQueryBuilder("logger");
         $dql->innerJoin('logger.eventType', 'eventType');
         //$dql->leftJoin('logger.objectType', 'objectType');
         //$dql->leftJoin('logger.site', 'site');
 
         //$dql->where("logger.siteName = 'translationalresearch' AND logger.entityName = 'Invoice' AND logger.entityId = ".$invoice->getId());
-        $dql->where("logger.entityNamespace = 'Oleg\TranslationalResearchBundle\Entity' AND logger.entityName = 'Project' AND logger.entityId = '".$project->getId()."'");
+        $dql->where("logger.entityNamespace = 'App\TranslationalResearchBundle\Entity' AND logger.entityName = 'Project' AND logger.entityId = '".$project->getId()."'");
 
         $dql->andWhere("eventType.name = :eventTypeName");
         $dqlParameters['eventTypeName'] = "Project Reminder Email";
@@ -760,7 +760,7 @@ class ReminderUtil
 
         $params = array();
 
-        $repository = $this->em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
+        $repository = $this->em->getRepository('AppTranslationalResearchBundle:TransResRequest');
         $dql =  $repository->createQueryBuilder("request");
         $dql->select('request');
 
@@ -886,12 +886,12 @@ class ReminderUtil
         $dqlParameters = array();
 
         //get the date from event log
-        $repository = $this->em->getRepository('OlegUserdirectoryBundle:Logger');
+        $repository = $this->em->getRepository('AppUserdirectoryBundle:Logger');
         $dql = $repository->createQueryBuilder("logger");
         $dql->innerJoin('logger.eventType', 'eventType');
 
         //$dql->where("logger.siteName = 'translationalresearch' AND logger.entityName = 'Invoice' AND logger.entityId = ".$invoice->getId());
-        $dql->where("logger.entityNamespace = 'Oleg\TranslationalResearchBundle\Entity' AND logger.entityName = 'TransResRequest' AND logger.entityId = '".$request->getId()."'");
+        $dql->where("logger.entityNamespace = 'App\TranslationalResearchBundle\Entity' AND logger.entityName = 'TransResRequest' AND logger.entityId = '".$request->getId()."'");
 
         $dql->andWhere("eventType.name = :eventTypeName");
         $dqlParameters['eventTypeName'] = "Work Request Reminder Email";

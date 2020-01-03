@@ -15,13 +15,13 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Entity;
+namespace App\UserdirectoryBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="Oleg\UserdirectoryBundle\Repository\GrantRepository")
+ * @ORM\Entity(repositoryClass="App\UserdirectoryBundle\Repository\GrantRepository")
  * @ORM\Table(name="user_grant")
  */
 class Grant extends ListAbstract

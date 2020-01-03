@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\TranslationalResearchBundle\Form;
+namespace App\TranslationalResearchBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -58,7 +58,7 @@ class FilterType extends AbstractType
         }
 
         $builder->add('projectSpecialty', EntityType::class, array(
-            'class' => 'OlegTranslationalResearchBundle:SpecialtyList',
+            'class' => 'AppTranslationalResearchBundle:SpecialtyList',
             //'choice_label' => 'name',
             'label' => false,
             'disabled' => $disabled,
@@ -88,7 +88,7 @@ class FilterType extends AbstractType
         ));
 
         $builder->add('principalInvestigators', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:User',
+            'class' => 'AppUserdirectoryBundle:User',
             'label'=> false,    //"Principal Investigator(s):",
             'required'=> false,
             'multiple' => true,
@@ -105,7 +105,7 @@ class FilterType extends AbstractType
         ));
 
         $builder->add('submitter', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:User',
+            'class' => 'AppUserdirectoryBundle:User',
             'label'=> false,
             'required'=> false,
             'multiple' => false,
@@ -171,7 +171,7 @@ class FilterType extends AbstractType
         ));
 
         $builder->add('searchProjectType', EntityType::class, array(
-            'class' => 'OlegTranslationalResearchBundle:ProjectTypeList',
+            'class' => 'AppTranslationalResearchBundle:ProjectTypeList',
             'label'=> false,
             'required'=> false,
             'multiple' => false,
@@ -194,7 +194,7 @@ class FilterType extends AbstractType
         ));
 
         $builder->add('reviewers', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:User',
+            'class' => 'AppUserdirectoryBundle:User',
             'label'=> false,    //"Principal Investigator(s):",
             'required'=> false,
             'multiple' => true,

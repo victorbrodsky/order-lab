@@ -15,10 +15,10 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Controller;
+namespace App\UserdirectoryBundle\Controller;
 
-use Oleg\UserdirectoryBundle\Entity\User;
-use Oleg\UserdirectoryBundle\Form\LoggerFilterType;
+use App\UserdirectoryBundle\Entity\User;
+use App\UserdirectoryBundle\Form\LoggerFilterType;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,8 +26,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Oleg\UserdirectoryBundle\Entity\Logger;
-use Oleg\UserdirectoryBundle\Form\LoggerType;
+use App\UserdirectoryBundle\Entity\Logger;
+use App\UserdirectoryBundle\Form\LoggerType;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -43,7 +43,7 @@ class LoggerController extends Controller
      *
      * @Route("/", name="employees_logger")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:Logger:index.html.twig")
+     * @Template("AppUserdirectoryBundle:Logger:index.html.twig")
      */
     public function indexAction(Request $request)
     {
@@ -58,7 +58,7 @@ class LoggerController extends Controller
      *
      * @Route("/all-sites/", name="employees_logger_allsites")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:Logger:index.html.twig")
+     * @Template("AppUserdirectoryBundle:Logger:index.html.twig")
      */
     public function indexAllAction(Request $request)
     {
@@ -74,7 +74,7 @@ class LoggerController extends Controller
      * @Route("/user/{id}", name="employees_logger_user_with_id")
      * @Route("/user", name="employees_logger_user")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:Logger:logger_object.html.twig")
+     * @Template("AppUserdirectoryBundle:Logger:logger_object.html.twig")
      */
     public function getAuditLogAction(Request $request)
     {
@@ -95,7 +95,7 @@ class LoggerController extends Controller
 
         $params = array(
             'sitename'=>$this->container->getParameter('employees.sitename'),
-            'entityNamespace'=>'Oleg\UserdirectoryBundle\Entity',
+            'entityNamespace'=>'App\UserdirectoryBundle\Entity',
             'entityName'=>$entityName,
             'entityId'=>$userid,
             'eventStr'=>$eventStr,
@@ -111,7 +111,7 @@ class LoggerController extends Controller
     /**
      * @Route("/user/{id}/all", name="employees_logger_user_all")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:Logger:index.html.twig")
+     * @Template("AppUserdirectoryBundle:Logger:index.html.twig")
      */
     public function getAuditLogAllAction(Request $request)
     {
@@ -132,7 +132,7 @@ class LoggerController extends Controller
 
         $params = array(
             'sitename'=>$this->container->getParameter('employees.sitename'),
-            'entityNamespace'=>'Oleg\UserdirectoryBundle\Entity',
+            'entityNamespace'=>'App\UserdirectoryBundle\Entity',
             'entityName'=>$entityName,
             'entityId'=>$userid,
             'eventStr'=>$eventStr,
@@ -148,7 +148,7 @@ class LoggerController extends Controller
 
     public function getEventStrByUserid( $userid ) {
         $em = $this->getDoctrine()->getManager();
-        $subjectUser = $em->getRepository('OlegUserdirectoryBundle:User')->find($userid);
+        $subjectUser = $em->getRepository('AppUserdirectoryBundle:User')->find($userid);
         if( $subjectUser ) {
             $cwid = $subjectUser->getPrimaryPublicUserId();
             return $cwid;
@@ -181,7 +181,7 @@ class LoggerController extends Controller
             $sitenameFull = "All Sites";
         }
 
-        $roles = $em->getRepository('OlegUserdirectoryBundle:Roles')->findAll();
+        $roles = $em->getRepository('AppUserdirectoryBundle:Roles')->findAll();
         $rolesArr = array();
         //if( $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_ADMIN') ) {
             foreach( $roles as $role ) {
@@ -189,7 +189,7 @@ class LoggerController extends Controller
             }
         //}
 
-        $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:Logger');
+        $repository = $this->getDoctrine()->getRepository('AppUserdirectoryBundle:Logger');
         $dql = $repository->createQueryBuilder("logger");
 
         $dql->innerJoin('logger.eventType', 'eventType');
@@ -220,7 +220,7 @@ class LoggerController extends Controller
 
         //get only specific object log
         if( $entityNamespace && $entityName && $entityId ) {
-            //'Oleg\UserdirectoryBundle\Entity'
+            //'App\UserdirectoryBundle\Entity'
             //$namepartsArr = explode("\\", $entityNamespace);
             //$repName = $namepartsArr[0].$namepartsArr[1];
             //echo "entityNamespace=".$entityNamespace."<br>";
@@ -397,7 +397,7 @@ class LoggerController extends Controller
 
         //////////////////// get list of users with "unknown" user ////////////////////
         $em = $this->getDoctrine()->getManager();
-        $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:User');
+        $repository = $this->getDoctrine()->getRepository('AppUserdirectoryBundle:User');
         $dqlFilterUser = $repository->createQueryBuilder('user');
         $dqlFilterUser->select('user');
         $dqlFilterUser->leftJoin("user.infos","infos");
@@ -668,11 +668,11 @@ class LoggerController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        //Oleg\UserdirectoryBundle\Entity
+        //App\UserdirectoryBundle\Entity
         $objectNamespaceArr = explode("\\",$objectNamespace);
         $objectNamespaceClean = $objectNamespaceArr[0].$objectNamespaceArr[1];
 
-        $objectName = $em->getRepository('OlegUserdirectoryBundle:EventObjectTypeList')->find($objectType);
+        $objectName = $em->getRepository('AppUserdirectoryBundle:EventObjectTypeList')->find($objectType);
         if( !$objectName ) {
             throw $this->createNotFoundException('Unable to find EventObjectTypeList by objectType id='.$objectType);
         }
@@ -695,7 +695,7 @@ class LoggerController extends Controller
      *
      * @Route("/warning-message/", name="logger_warning_message")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:Logger:warning.html.twig")
+     * @Template("AppUserdirectoryBundle:Logger:warning.html.twig")
      */
     public function warningLoggerAction(Request $request)
     {
@@ -715,7 +715,7 @@ class LoggerController extends Controller
      *
      * @Route("/", name="employees_logger_create")
      * @Method("POST")
-     * @Template("OlegUserdirectoryBundle:Logger:new.html.twig")
+     * @Template("AppUserdirectoryBundle:Logger:new.html.twig")
      */
     public function createAction(Request $request)
     {
@@ -801,7 +801,7 @@ class LoggerController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegUserdirectoryBundle:Logger')->find($id);
+        $entity = $em->getRepository('AppUserdirectoryBundle:Logger')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Logger entity.');
@@ -826,7 +826,7 @@ class LoggerController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegUserdirectoryBundle:Logger')->find($id);
+        $entity = $em->getRepository('AppUserdirectoryBundle:Logger')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Logger entity.');
@@ -865,13 +865,13 @@ class LoggerController extends Controller
      *
      * @Route("/{id}", name="logger_update")
      * @Method("PUT")
-     * @Template("OlegUserdirectoryBundle:Logger:edit.html.twig")
+     * @Template("AppUserdirectoryBundle:Logger:edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegUserdirectoryBundle:Logger')->find($id);
+        $entity = $em->getRepository('AppUserdirectoryBundle:Logger')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Logger entity.');
@@ -906,7 +906,7 @@ class LoggerController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('OlegUserdirectoryBundle:Logger')->find($id);
+            $entity = $em->getRepository('AppUserdirectoryBundle:Logger')->find($id);
 
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find Logger entity.');

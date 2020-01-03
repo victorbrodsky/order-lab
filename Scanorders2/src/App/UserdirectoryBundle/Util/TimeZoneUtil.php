@@ -23,10 +23,10 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Oleg\UserdirectoryBundle\Util;
+namespace App\UserdirectoryBundle\Util;
 
 
-//Note: Timezone for twig is set in Oleg\UserdirectoryBundle\Services/TwigDateRequestListener
+//Note: Timezone for twig is set in App\UserdirectoryBundle\Services/TwigDateRequestListener
 
 class TimeZoneUtil {
 

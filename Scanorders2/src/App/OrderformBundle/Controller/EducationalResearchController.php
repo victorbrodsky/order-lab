@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Controller;
+namespace App\OrderformBundle\Controller;
 
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,11 +24,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-use Oleg\OrderformBundle\Entity\Educational;
-use Oleg\OrderformBundle\Form\EducationalType;
-use Oleg\OrderformBundle\Entity\Research;
-use Oleg\OrderformBundle\Form\ResearchType;
-use Oleg\OrderformBundle\Entity\History;
+use App\OrderformBundle\Entity\Educational;
+use App\OrderformBundle\Form\EducationalType;
+use App\OrderformBundle\Entity\Research;
+use App\OrderformBundle\Form\ResearchType;
+use App\OrderformBundle\Entity\History;
 
 /**
  * Educational and Research controller.
@@ -55,7 +55,7 @@ class EducationalResearchController extends Controller {
         //echo "type=".$type."<br>";
         //exit();
 
-        $entity = $em->getRepository('OlegOrderformBundle:'.$type)->find($id);
+        $entity = $em->getRepository('AppOrderformBundle:'.$type)->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find '.$type.' entity.');
@@ -64,7 +64,7 @@ class EducationalResearchController extends Controller {
         $editForm = $this->createEditForm($entity);
         //$deleteForm = $this->createDeleteForm($id);
 
-        return $this->render('OlegOrderformBundle:'.$type.':edit.html.twig', array(
+        return $this->render('AppOrderformBundle:'.$type.':edit.html.twig', array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
             //'cycle' => 'show'
@@ -86,14 +86,14 @@ class EducationalResearchController extends Controller {
         $pieces = explode("_", $routeName);
         $type = $pieces[0];
 
-        //$entity = $em->getRepository('OlegOrderformBundle:'.$type)->find($id);
-        $entity = $em->getRepository('OlegOrderformBundle:'.$type)->find($id);
+        //$entity = $em->getRepository('AppOrderformBundle:'.$type)->find($id);
+        $entity = $em->getRepository('AppOrderformBundle:'.$type)->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find '.$type.' entity.');
         }
 
-        $entityHolder = $em->getRepository('OlegOrderformBundle:'.$type)->find($id);
+        $entityHolder = $em->getRepository('AppOrderformBundle:'.$type)->find($id);
         $editForm = $this->createEditForm($entityHolder);
 
         $editForm->handleRequest($request);
@@ -164,7 +164,7 @@ class EducationalResearchController extends Controller {
             $user = $this->get('security.token_storage')->getToken()->getUser();
             $history = new History();
 
-            $eventtype = $em->getRepository('OlegOrderformBundle:ProgressCommentsEventTypeList')->findOneByName('Data Reviewed');
+            $eventtype = $em->getRepository('AppOrderformBundle:ProgressCommentsEventTypeList')->findOneByName('Data Reviewed');
             $history->setEventtype($eventtype);
 
             $history->setMessage($entity->getMessage());
@@ -183,7 +183,7 @@ class EducationalResearchController extends Controller {
             //exit("form is not valid ???");
         }
 
-        return $this->render('OlegOrderformBundle:'.$type.':edit.html.twig', array(
+        return $this->render('AppOrderformBundle:'.$type.':edit.html.twig', array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
             //'cycle' => 'show'

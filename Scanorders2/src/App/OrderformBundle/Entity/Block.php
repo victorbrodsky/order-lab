@@ -15,13 +15,13 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Entity;
+namespace App\OrderformBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\BlockRepository")
+ * @ORM\Entity(repositoryClass="App\OrderformBundle\Repository\BlockRepository")
  * @ORM\Table(name="scan_block")
  */
 class Block extends ObjectAbstract
@@ -155,10 +155,10 @@ class Block extends ObjectAbstract
     /**
      * Add slide
      *
-     * @param \Oleg\OrderformBundle\Entity\Slide $slide
+     * @param \App\OrderformBundle\Entity\Slide $slide
      * @return Block
      */
-    public function addSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
+    public function addSlide(\App\OrderformBundle\Entity\Slide $slide)
     {
         if( !$this->slide->contains($slide) ) {
             $slide->setBlock($this);
@@ -171,9 +171,9 @@ class Block extends ObjectAbstract
     /**
      * Remove slide
      *
-     * @param \Oleg\OrderformBundle\Entity\Slide $slide
+     * @param \App\OrderformBundle\Entity\Slide $slide
      */
-    public function removeSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
+    public function removeSlide(\App\OrderformBundle\Entity\Slide $slide)
     {
         $this->slide->removeElement($slide);
     }
@@ -199,10 +199,10 @@ class Block extends ObjectAbstract
     /**
      * Set part
      *
-     * @param \Oleg\OrderformBundle\Entity\Part $part
+     * @param \App\OrderformBundle\Entity\Part $part
      * @return Block
      */
-    public function setPart(\Oleg\OrderformBundle\Entity\Part $part = null)
+    public function setPart(\App\OrderformBundle\Entity\Part $part = null)
     {
         $this->part = $part;   
         return $this;
@@ -211,7 +211,7 @@ class Block extends ObjectAbstract
     /**
      * Get part
      *
-     * @return \Oleg\OrderformBundle\Entity\Part 
+     * @return \App\OrderformBundle\Entity\Part 
      */
     public function getPart()
     {

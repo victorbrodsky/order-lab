@@ -15,10 +15,10 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Form;
+namespace App\UserdirectoryBundle\Form;
 
 
-use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
+use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -160,13 +160,13 @@ class GrantType extends AbstractType
             $params['cycle'] = $this->params['cycle'];
             $params['standalone'] = true;
             $mapper['className'] = "Grant";
-            $mapper['bundleName'] = "OlegUserdirectoryBundle";
+            $mapper['bundleName'] = "AppUserdirectoryBundle";
 
             //ListType($params, $mapper)
             $builder->add('list', ListType::class, array(
                 'form_custom_value' => $params,
                 'form_custom_value_mapper' => $mapper,
-                'data_class' => 'Oleg\UserdirectoryBundle\Entity\Grant',
+                'data_class' => 'App\UserdirectoryBundle\Entity\Grant',
                 'label' => false
             ));
         }
@@ -196,7 +196,7 @@ class GrantType extends AbstractType
                 if( $grant && $grant->getId() && $this->params['subjectUser'] ) {
 
                     //comment
-                    $comment = $this->params['em']->getRepository('OlegUserdirectoryBundle:GrantComment')->findOneBy(
+                    $comment = $this->params['em']->getRepository('AppUserdirectoryBundle:GrantComment')->findOneBy(
                         array(
                             'grant' => $grant,
                             'author' => $this->params['subjectUser']
@@ -209,7 +209,7 @@ class GrantType extends AbstractType
                     }
 
                     //effort
-                    $effort = $this->params['em']->getRepository('OlegUserdirectoryBundle:GrantEffort')->findOneBy(
+                    $effort = $this->params['em']->getRepository('AppUserdirectoryBundle:GrantEffort')->findOneBy(
                         array(
                             'grant' => $grant,
                             'author' => $this->params['subjectUser']
@@ -260,7 +260,7 @@ class GrantType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\Grant',
+            'data_class' => 'App\UserdirectoryBundle\Entity\Grant',
             'form_custom_value' => null
             //'csrf_protection' => false,
         ));

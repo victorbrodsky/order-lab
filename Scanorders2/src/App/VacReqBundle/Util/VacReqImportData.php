@@ -22,13 +22,13 @@
  * Time: 11:35 AM
  */
 
-namespace Oleg\VacReqBundle\Util;
+namespace App\VacReqBundle\Util;
 
 
-use Oleg\UserdirectoryBundle\Util\UserUtil;
-use Oleg\VacReqBundle\Entity\VacReqRequest;
-use Oleg\VacReqBundle\Entity\VacReqRequestBusiness;
-use Oleg\VacReqBundle\Entity\VacReqRequestVacation;
+use App\UserdirectoryBundle\Util\UserUtil;
+use App\VacReqBundle\Entity\VacReqRequest;
+use App\VacReqBundle\Entity\VacReqRequestBusiness;
+use App\VacReqBundle\Entity\VacReqRequestVacation;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
 class VacReqImportData
@@ -79,11 +79,11 @@ class VacReqImportData
         ////////////// end of add system user /////////////////
 
         //VacReqAvailabilityList
-//        $emailAvailable = $this->em->getRepository('OlegVacReqBundle:VacReqAvailabilityList')->findOneByAbbreviation('email');
-//        $phoneAvailable = $this->em->getRepository('OlegVacReqBundle:VacReqAvailabilityList')->findOneByAbbreviation('phone');
-//        $otherAvailable = $this->em->getRepository('OlegVacReqBundle:VacReqAvailabilityList')->findOneByAbbreviation('other');
-//        $noneAvailable = $this->em->getRepository('OlegVacReqBundle:VacReqAvailabilityList')->findOneByAbbreviation('none');
-        $requestType = $this->em->getRepository('OlegVacReqBundle:VacReqRequestTypeList')->findOneByAbbreviation("business-vacation");
+//        $emailAvailable = $this->em->getRepository('AppVacReqBundle:VacReqAvailabilityList')->findOneByAbbreviation('email');
+//        $phoneAvailable = $this->em->getRepository('AppVacReqBundle:VacReqAvailabilityList')->findOneByAbbreviation('phone');
+//        $otherAvailable = $this->em->getRepository('AppVacReqBundle:VacReqAvailabilityList')->findOneByAbbreviation('other');
+//        $noneAvailable = $this->em->getRepository('AppVacReqBundle:VacReqAvailabilityList')->findOneByAbbreviation('none');
+        $requestType = $this->em->getRepository('AppVacReqBundle:VacReqRequestTypeList')->findOneByAbbreviation("business-vacation");
         if( !$requestType ) {
             exit('No request type found with abbreviation "business-vacation"');
         }
@@ -133,7 +133,7 @@ class VacReqImportData
 
             //if( $exportId != 1840 ) {continue;} //testing
 
-            $request = $this->em->getRepository('OlegVacReqBundle:VacReqRequest')->findOneByExportId($exportId);
+            $request = $this->em->getRepository('AppVacReqBundle:VacReqRequest')->findOneByExportId($exportId);
             if( $request ) {
                 continue; //ignore existing request to prevent overwrite
             }
@@ -162,7 +162,7 @@ class VacReqImportData
             $VAC_FIRST_DAY_AWAY_Date = $this->transformDatestrToDate($VAC_FIRST_DAY_AWAY);
 
             $username = $cwid."_@_". $this->usernamePrefix;
-            $submitter = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername($username);
+            $submitter = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByUsername($username);
             if( !$submitter ) {
 
                 //get newest date
@@ -317,7 +317,7 @@ class VacReqImportData
 
                 //set organizational group
                 $institution = null;
-                $roles = $em->getRepository('OlegUserdirectoryBundle:User')->findUserRolesBySiteAndPartialRoleName($approver,"vacreq","ROLE_VACREQ_APPROVER");
+                $roles = $em->getRepository('AppUserdirectoryBundle:User')->findUserRolesBySiteAndPartialRoleName($approver,"vacreq","ROLE_VACREQ_APPROVER");
                 if( count($roles) > 0 ) {
                     $role = $roles[0];
                     //$note = 'ROLE_VACREQ_APPROVER role='.$role;
@@ -331,7 +331,7 @@ class VacReqImportData
                     $request->setInstitution($institution);
 
                     //assign submitter organizational group the same as approver
-                    $roles = $em->getRepository('OlegUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName("vacreq","ROLE_VACREQ_SUBMITTER",$institution);
+                    $roles = $em->getRepository('AppUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName("vacreq","ROLE_VACREQ_SUBMITTER",$institution);
                     if( count($roles) > 0 ) {
                         $role = $roles[0];
                         $roleName = $role->getName();
@@ -491,7 +491,7 @@ class VacReqImportData
     public function getApproverByUserId($userId) {
         $cwid = $this->userMapper($userId);
         $username = $cwid."_@_". $this->usernamePrefix;
-        $approver = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername($username);
+        $approver = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByUsername($username);
         if( !$approver ) {
             $logger = $this->container->get('logger');
             $logger->error("Can not find user by username=".$username);

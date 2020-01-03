@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Form;
+namespace App\UserdirectoryBundle\Form;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -65,7 +65,7 @@ class UserRequestApproveType extends AbstractType
             'multiple' => false,
             //'empty_value' => false,
             'choice_label' => 'getNodeNameWithRoot',
-            'class' => 'OlegUserdirectoryBundle:Institution',
+            'class' => 'AppUserdirectoryBundle:Institution',
             //'choices' => $requestedScanOrderInstitutionScope,
             'attr' => array('class' => 'combobox combobox-width combobox-institution')
         ));
@@ -83,7 +83,7 @@ class UserRequestApproveType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\UserRequest',
+            'data_class' => 'App\UserdirectoryBundle\Entity\UserRequest',
             'form_custom_value' => null
         ));
     }

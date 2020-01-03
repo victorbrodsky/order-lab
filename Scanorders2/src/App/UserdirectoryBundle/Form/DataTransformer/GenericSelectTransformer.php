@@ -23,7 +23,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Oleg\UserdirectoryBundle\Form\DataTransformer;
+namespace App\UserdirectoryBundle\Form\DataTransformer;
 
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
@@ -71,12 +71,12 @@ class GenericSelectTransformer implements DataTransformerInterface
 
         if( is_int($entity) ) {
             //echo "transform by name=".$entity." !!!<br>";
-            $entity = $this->em->getRepository('Oleg'.$this->bundleName.':'.$this->className)->findOneById($entity);
+            $entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->findOneById($entity);
             //echo "findOneById entity=".$entity."<br>";
         }
         else {
             //echo "transform by name=".$entity." ????????????????<br>";
-            //$entity = $this->em->getRepository('Oleg'.$this->bundleName.':'.$this->className)->findOneByName($entity);
+            //$entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->findOneByName($entity);
             $entity = $this->findEntityByString($entity);
         }
 
@@ -105,7 +105,7 @@ class GenericSelectTransformer implements DataTransformerInterface
 
         if( is_numeric ( $text ) ) {    //number => most probably it is id
             //echo 'text is id <br>';
-            $entity = $this->em->getRepository('Oleg'.$this->bundleName.':'.$this->className)->findOneById($text);
+            $entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->findOneById($text);
 
             if( $entity ) {
                 //return $entity->getBlockPrefix();
@@ -122,16 +122,16 @@ class GenericSelectTransformer implements DataTransformerInterface
 
 
     public function findEntityByString($string) {
-        $entity = $this->em->getRepository('Oleg'.$this->bundleName.':'.$this->className)->findOneByName($string."");
+        $entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->findOneByName($string."");
 
         if( null === $entity ) {
-            $entity = $this->em->getRepository('Oleg'.$this->bundleName.':'.$this->className)->findOneByAbbreviation($string."");
+            $entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->findOneByAbbreviation($string."");
         }
 
         return $entity;
     }
     public function findEntityById($id) {
-        $entity = $this->em->getRepository('Oleg'.$this->bundleName.':'.$this->className)->find($id);
+        $entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->find($id);
         return $entity;
     }
 }

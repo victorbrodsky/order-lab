@@ -23,10 +23,10 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Oleg\OrderformBundle\Entity;
+namespace App\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Oleg\OrderformBundle\Entity\ArrayFieldAbstract;
+use App\OrderformBundle\Entity\ArrayFieldAbstract;
 
 /**
  * @ORM\MappedSuperclass
@@ -42,10 +42,10 @@ abstract class EncounterArrayFieldAbstract extends ArrayFieldAbstract {
     /**
      * Set Encounter
      *
-     * @param \Oleg\OrderformBundle\Entity\Encounter $Encounter
+     * @param \App\OrderformBundle\Entity\Encounter $Encounter
      * @return EncounterArrayFieldAbstract
      */
-    public function setEncounter(\Oleg\OrderformBundle\Entity\Encounter $encounter = null)
+    public function setEncounter(\App\OrderformBundle\Entity\Encounter $encounter = null)
     {
         $this->encounter = $encounter;
 
@@ -55,7 +55,7 @@ abstract class EncounterArrayFieldAbstract extends ArrayFieldAbstract {
     /**
      * Get encounter
      *
-     * @return \Oleg\OrderformBundle\Entity\Encounter
+     * @return \App\OrderformBundle\Entity\Encounter
      */
     public function getEncounter()
     {

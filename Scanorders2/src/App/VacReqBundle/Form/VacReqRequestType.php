@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\VacReqBundle\Form;
+namespace App\VacReqBundle\Form;
 
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -30,7 +30,7 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 
-use Oleg\VacReqBundle\Form\VacReqRequestBusinessType;
+use App\VacReqBundle\Form\VacReqRequestBusinessType;
 
 
 class VacReqRequestType extends AbstractType
@@ -139,7 +139,7 @@ class VacReqRequestType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\VacReqBundle\Entity\VacReqRequest',
+            'data_class' => 'App\VacReqBundle\Entity\VacReqRequest',
             'form_custom_value' => null,
             'csrf_protection' => false,
         ));
@@ -159,7 +159,7 @@ class VacReqRequestType extends AbstractType
 
         //Business Travel
         $builder->add('requestBusiness', VacReqRequestBusinessType::class, array(
-            'data_class' => 'Oleg\VacReqBundle\Entity\VacReqRequestBusiness',
+            'data_class' => 'App\VacReqBundle\Entity\VacReqRequestBusiness',
             'form_custom_value' => $this->params,
             'label' => false,
             'required' => false,
@@ -167,7 +167,7 @@ class VacReqRequestType extends AbstractType
 
         //Business Travel
         $builder->add('requestVacation', VacReqRequestVacationType::class, array(
-            'data_class' => 'Oleg\VacReqBundle\Entity\VacReqRequestVacation',
+            'data_class' => 'App\VacReqBundle\Entity\VacReqRequestVacation',
             'form_custom_value' => $this->params,
             'label' => false,
             'required' => false,
@@ -183,7 +183,7 @@ class VacReqRequestType extends AbstractType
             }
 
             $builder->add('submitter', EntityType::class, array(
-                'class' => 'OlegUserdirectoryBundle:User',
+                'class' => 'AppUserdirectoryBundle:User',
                 'label' => "Request Submitter:",
                 'required' => true,
                 'multiple' => false,
@@ -295,7 +295,7 @@ class VacReqRequestType extends AbstractType
         if( $this->params['cycle'] == 'show' ) {
             //approver
             $builder->add('approver', EntityType::class, array(
-                'class' => 'OlegUserdirectoryBundle:User',
+                'class' => 'AppUserdirectoryBundle:User',
                 'label' => "Approver:",
                 'required' => false,
                 //'disabled' => true,
@@ -309,7 +309,7 @@ class VacReqRequestType extends AbstractType
                 $userAttr['readonly'] = true;
             }
             $builder->add('user', EntityType::class, array(
-                'class' => 'OlegUserdirectoryBundle:User',
+                'class' => 'AppUserdirectoryBundle:User',
                 'label' => "Person Away:",
                 'required' => true,
                 'multiple' => false,
@@ -368,7 +368,7 @@ class VacReqRequestType extends AbstractType
                     function($submittedInstitutionObject) {
                         //echo "submittedInstitutionObject=".$submittedInstitutionObject."<br>";
                         if( $submittedInstitutionObject ) { //id
-                            $institutionObject = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->find($submittedInstitutionObject);
+                            $institutionObject = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->find($submittedInstitutionObject);
                             return $institutionObject;
                         }
                         return null;
@@ -415,7 +415,7 @@ class VacReqRequestType extends AbstractType
                         function ($submittedInstitutionObject) {
                             //echo "submittedInstitutionObject=".$submittedInstitutionObject."<br>";
                             if ($submittedInstitutionObject) { //id
-                                $institutionObject = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->find($submittedInstitutionObject);
+                                $institutionObject = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->find($submittedInstitutionObject);
                                 return $institutionObject;
                             }
                             return null;

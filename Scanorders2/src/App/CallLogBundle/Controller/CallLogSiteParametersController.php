@@ -15,19 +15,19 @@
  *  limitations under the License.
  */
 
-namespace Oleg\CallLogBundle\Controller;
+namespace App\CallLogBundle\Controller;
 
 
-use Oleg\CallLogBundle\Entity\CalllogSiteParameter;
-use Oleg\CallLogBundle\Form\CalllogSiteParameterType;
-use Oleg\UserdirectoryBundle\Entity\SiteParameters;
+use App\CallLogBundle\Entity\CalllogSiteParameter;
+use App\CallLogBundle\Form\CalllogSiteParameterType;
+use App\UserdirectoryBundle\Entity\SiteParameters;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-use Oleg\UserdirectoryBundle\Controller\SiteParametersController;
+use App\UserdirectoryBundle\Controller\SiteParametersController;
 
 
 
@@ -44,7 +44,7 @@ class CallLogSiteParametersController extends SiteParametersController
      *
      * @Route("/", name="calllog_siteparameters")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:SiteParameters:index.html.twig")
+     * @Template("AppUserdirectoryBundle:SiteParameters:index.html.twig")
      */
     public function indexAction(Request $request)
     {
@@ -62,7 +62,7 @@ class CallLogSiteParametersController extends SiteParametersController
      *
      * @Route("/{id}/edit", name="calllog_siteparameters_edit")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:SiteParameters:edit.html.twig")
+     * @Template("AppUserdirectoryBundle:SiteParameters:edit.html.twig")
      */
     public function editAction(Request $request,$id)
     {
@@ -74,7 +74,7 @@ class CallLogSiteParametersController extends SiteParametersController
      *
      * @Route("/{id}", name="calllog_siteparameters_update")
      * @Method("PUT")
-     * @Template("OlegUserdirectoryBundle:SiteParameters:edit.html.twig")
+     * @Template("AppUserdirectoryBundle:SiteParameters:edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {
@@ -87,7 +87,7 @@ class CallLogSiteParametersController extends SiteParametersController
      *
      * @Route("/edit-resources/", name="calllog_siteparameters_resources_edit")
      * @Method("GET")
-     * @Template("OlegCallLogBundle:SiteParameters:edit.html.twig")
+     * @Template("AppCallLogBundle:SiteParameters:edit.html.twig")
      */
     public function editResourcesAction( Request $request )
     {
@@ -98,7 +98,7 @@ class CallLogSiteParametersController extends SiteParametersController
 
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+        $entities = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
 
         if( count($entities) != 1 ) {
             throw new \Exception( 'Must have only one parameter object. Found '.count($entities).'object(s)' );
@@ -115,7 +115,7 @@ class CallLogSiteParametersController extends SiteParametersController
      *
      * @Route("/specific-site-parameters/edit/", name="calllog_siteparameters_edit_specific_site_parameters")
      * @Method({"GET", "POST"})
-     * @Template("OlegCallLogBundle:SiteParameter:edit.html.twig")
+     * @Template("AppCallLogBundle:SiteParameter:edit.html.twig")
      */
     public function calllogSiteParameterEditAction( Request $request ) {
 
@@ -154,7 +154,7 @@ class CallLogSiteParametersController extends SiteParametersController
      *
      * @Route("/specific-site-parameters/show/", name="calllog_siteparameters_show_specific_site_parameters")
      * @Method("GET")
-     * @Template("OlegCallLogBundle:SiteParameter:edit-content.html.twig")
+     * @Template("AppCallLogBundle:SiteParameter:edit-content.html.twig")
      */
     public function calllogSiteParameterShowAction( Request $request ) {
 
@@ -204,7 +204,7 @@ class CallLogSiteParametersController extends SiteParametersController
     //Get or Create a new CalllogSiteParameter
     public function getOrCreateNewCallLogParameters() {
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+        $entities = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
         if( count($entities) != 1 ) {
             throw new \Exception( 'Must have only one parameter object. Found '.count($entities).'object(s)' );
         }

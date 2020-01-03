@@ -15,11 +15,11 @@
 #}
 
 
-{% extends "OlegUserdirectoryBundle::Default/base.html.twig" %}
+{% extends "AppUserdirectoryBundle::Default/base.html.twig" %}
 
 {% block header %}
 
-    {% include 'OlegUserdirectoryBundle:Default:navbar.html.twig' %}
+    {% include 'AppUserdirectoryBundle:Default:navbar.html.twig' %}
 
 {% endblock %}
 
@@ -30,7 +30,7 @@
 
 {% block content %}
 
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
     <h4 class="text-info" align="center">{{ title }}</h4>
 

@@ -27,12 +27,12 @@
 //9) add permissions to ROLE_DEIDENTIFICATOR_WCM_NYP_HONEST_BROKER: Generate new Deidentifier ID (WCMC,NYP) and Search by Deidentifier ID (WCMC,NYP)
 
 
-namespace Oleg\DeidentifierBundle\Controller;
+namespace App\DeidentifierBundle\Controller;
 
-use Oleg\DeidentifierBundle\Form\DeidentifierSearchType;
-use Oleg\OrderformBundle\Entity\Accession;
-use Oleg\OrderformBundle\Entity\AccessionAccession;
-use Oleg\UserdirectoryBundle\Entity\AccessRequest;
+use App\DeidentifierBundle\Form\DeidentifierSearchType;
+use App\OrderformBundle\Entity\Accession;
+use App\OrderformBundle\Entity\AccessionAccession;
+use App\UserdirectoryBundle\Entity\AccessRequest;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -47,7 +47,7 @@ class DefaultController extends Controller
 
     /**
      * @Route("/about", name="deidentifier_about_page")
-     * @Template("OlegUserdirectoryBundle:Default:about.html.twig")
+     * @Template("AppUserdirectoryBundle:Default:about.html.twig")
      */
     public function aboutAction( Request $request ) {
         return array('sitename'=>$this->container->getParameter('deidentifier.sitename'));
@@ -55,7 +55,7 @@ class DefaultController extends Controller
 
     /**
      * @Route("/navbar/{accessionTypeStr}/{accessionTypeId}/{accessionNumber}", name="deidentifier_navbar")
-     * @Template("OlegDeidentifierBundle:Default:navbar.html.twig")
+     * @Template("AppDeidentifierBundle:Default:navbar.html.twig")
      * @Method("GET")
      */
     public function deidentifierNavbarAction( Request $request, $accessionTypeStr, $accessionTypeId, $accessionNumber ) {
@@ -65,7 +65,7 @@ class DefaultController extends Controller
         }
 
         $em = $this->getDoctrine()->getManager();
-        $accessionTypes = $em->getRepository('OlegOrderformBundle:AccessionType')->findBy( array('type'=>array('default','user-added')) );
+        $accessionTypes = $em->getRepository('AppOrderformBundle:AccessionType')->findBy( array('type'=>array('default','user-added')) );
 
 
         $accessionTypeStr = trim($accessionTypeStr);
@@ -77,7 +77,7 @@ class DefaultController extends Controller
         //echo "accessionTypeId=".$accessionTypeId."<br>";
 
 //        if( $accessionTypeId ) {
-//            $accessionTypeObj = $em->getRepository('OlegOrderformBundle:AccessionType')->find($accessionTypeId);
+//            $accessionTypeObj = $em->getRepository('AppOrderformBundle:AccessionType')->find($accessionTypeId);
 //        }
 
         return array(
@@ -90,7 +90,7 @@ class DefaultController extends Controller
 
     /**
      * @Route("/", name="deidentifier_home")
-     * @Template("OlegDeidentifierBundle:Default:index.html.twig")
+     * @Template("AppDeidentifierBundle:Default:index.html.twig")
      * @Method("GET")
      */
     public function indexAction( Request $request ) {
@@ -110,7 +110,7 @@ class DefaultController extends Controller
 
         $form = $this->createGenerateForm();
 
-        //$accessionTypes = $em->getRepository('OlegOrderformBundle:AccessionType')->findBy( array('type'=>array('default','user-added')) );
+        //$accessionTypes = $em->getRepository('AppOrderformBundle:AccessionType')->findBy( array('type'=>array('default','user-added')) );
 
         return array(
             //'accessiontypes' => $accessionTypes,
@@ -162,7 +162,7 @@ class DefaultController extends Controller
 
 //    public function getAccessionTypesAction() {
 //        $em = $this->getDoctrine()->getManager();
-//        $accessionTypes = $em->getRepository('OlegOrderformBundle:AccessionType')->findBy( array('type'=>array('default','user-added')) );
+//        $accessionTypes = $em->getRepository('AppOrderformBundle:AccessionType')->findBy( array('type'=>array('default','user-added')) );
 //
 //        $accessionTypeArr = array();
 //        foreach( $accessionTypes as $accessionType) {
@@ -182,7 +182,7 @@ class DefaultController extends Controller
      * Search for Accession Number
      *
      * @Route("/re-identify/", name="deidentifier_search")
-     * @Template("OlegDeidentifierBundle:Search:search.html.twig")
+     * @Template("AppDeidentifierBundle:Search:search.html.twig")
      * @Method("GET")
      */
     public function searchAction( Request $request ) {
@@ -243,9 +243,9 @@ class DefaultController extends Controller
             //echo "pagination count=" . count($pagination) . "<br>";
         }
 
-        //$accessionTypes = $em->getRepository('OlegOrderformBundle:AccessionType')->findBy( array('type'=>array('default','user-added')) );
+        //$accessionTypes = $em->getRepository('AppOrderformBundle:AccessionType')->findBy( array('type'=>array('default','user-added')) );
 
-        $accessionTypeObj = $em->getRepository('OlegOrderformBundle:AccessionType')->find($accessionType);
+        $accessionTypeObj = $em->getRepository('AppOrderformBundle:AccessionType')->find($accessionType);
 
         //Event Log
         $event = "Deidentifier Search with Accession Type " . $accessionTypeObj ." and  Accession Number " . $accessionNumber;
@@ -273,7 +273,7 @@ class DefaultController extends Controller
         //$institutions[] = $inst->getId();
 
         //findOneByIdJoinedToField already include collaboration based on the provided permitted $institutions
-        $accessions = $em->getRepository('OlegOrderformBundle:Accession')->findOneByIdJoinedToField($institutions,$accessionNumber,"Accession","accession",$validity,$single,$extra);
+        $accessions = $em->getRepository('AppOrderformBundle:Accession')->findOneByIdJoinedToField($institutions,$accessionNumber,"Accession","accession",$validity,$single,$extra);
 
         return $accessions;
     }
@@ -284,7 +284,7 @@ class DefaultController extends Controller
 
     /**
      * @Route("/generate/", name="deidentifier_generate")
-     * @Template("OlegDeidentifierBundle:Default:index.html.twig")
+     * @Template("AppDeidentifierBundle:Default:index.html.twig")
      * @Method("GET")
      */
     public function generateAction( Request $request ) {
@@ -313,7 +313,7 @@ class DefaultController extends Controller
         //echo "accessionType=".$accessionTypeId."<br>";
         //exit();
 
-        $accessionTypeObj = $em->getRepository('OlegOrderformBundle:AccessionType')->find($accessionTypeId);
+        $accessionTypeObj = $em->getRepository('AppOrderformBundle:AccessionType')->find($accessionTypeId);
 
         if( !$accessionNumber ) {
             $this->get('session')->getFlashBag()->add(
@@ -402,11 +402,11 @@ class DefaultController extends Controller
         //return $this->redirect( $this->generateUrl('deidentifier_home',$pathParams) );
 
         $form = $this->createGenerateForm();
-        //$accessionTypes = $em->getRepository('OlegOrderformBundle:AccessionType')->findBy( array('type'=>array('default','user-added')) );
+        //$accessionTypes = $em->getRepository('AppOrderformBundle:AccessionType')->findBy( array('type'=>array('default','user-added')) );
 
         //Event Log
-        $accessionTypeObj = $em->getRepository('OlegOrderformBundle:AccessionType')->find($accessionTypeId);
-        $institutionObj = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($institution);
+        $accessionTypeObj = $em->getRepository('AppOrderformBundle:AccessionType')->find($accessionTypeId);
+        $institutionObj = $em->getRepository('AppUserdirectoryBundle:Institution')->find($institution);
         //$event = "Deidentifier Generate with Accession Type " . $accessionTypeObj .",  Accession Number " . $accessionNumber . " and Institution " . $institutionObj;
         $event = "Deidentifier ID ".$deidentifier." generated for ".$accessionTypeObj." ".$accessionNumber." (Institution: ".$institutionObj.")";
         $userSecUtil = $this->container->get('user_security_utility');
@@ -453,7 +453,7 @@ class DefaultController extends Controller
 
         //create a new accession object
         //$status, $provider, $className, $fieldName, $parent = null, $fieldValue = null, $extra = null, $withfields = true, $flush=true
-        $accession = $em->getRepository('OlegOrderformBundle:Accession')->createElement(
+        $accession = $em->getRepository('AppOrderformBundle:Accession')->createElement(
             $institution,       //institution
             "valid",            //status. if null => STATUS_RESERVED
             $user,              //provider
@@ -516,7 +516,7 @@ class DefaultController extends Controller
         //echo "accession count=".count($accessions)."<br>";
         //echo "accessionTypeId=".$accessionTypeId."<br>";
 
-        $repository = $em->getRepository('OlegOrderformBundle:AccessionAccession');
+        $repository = $em->getRepository('AppOrderformBundle:AccessionAccession');
         $dql =  $repository->createQueryBuilder("accessionAccession");
         $dql->select('accessionAccession');
         $dql->leftJoin("accessionAccession.accession", "accession");
@@ -560,7 +560,7 @@ class DefaultController extends Controller
 
 //    public function get_AccessionQuery_ORIG_ACCESSION($accessionType,$accessionNumber,$institution,$request) {
 //        $em = $this->getDoctrine()->getManager();
-//        $repository = $em->getRepository('OlegOrderformBundle:Accession');
+//        $repository = $em->getRepository('AppOrderformBundle:Accession');
 //        $dql =  $repository->createQueryBuilder("accession");
 //        $dql->select('accession');
 //        $dql->leftJoin("accession.accession", "accessionAccession");
@@ -607,13 +607,13 @@ class DefaultController extends Controller
 
         $deidentifier = null;
 
-        $deidentifierType = $em->getRepository('OlegOrderformBundle:AccessionType')->findOneByName("Deidentifier ID");
+        $deidentifierType = $em->getRepository('AppOrderformBundle:AccessionType')->findOneByName("Deidentifier ID");
         if( !$deidentifierType ) {
             throw $this->createNotFoundException('Unable to find Deidentifier ID AccessionType entity.');
         }
 
         /////////////////////// get maxDeidentifier /////////////////////////
-        $repository = $em->getRepository('OlegOrderformBundle:AccessionAccession');
+        $repository = $em->getRepository('AppOrderformBundle:AccessionAccession');
         $dql =  $repository->createQueryBuilder("accessionAccession");
 
         //use something like: SELECT MAX(CAST(SUBSTRING(invoice_number, 4, length(invoice_number)-3) AS UNSIGNED))
@@ -679,7 +679,7 @@ class DefaultController extends Controller
         }
 
         $em = $this->getDoctrine()->getManager();
-        $accession = $em->getRepository('OlegOrderformBundle:Accession')->find($accessionId);
+        $accession = $em->getRepository('AppOrderformBundle:Accession')->find($accessionId);
 
         if( !$accession ) {
             throw $this->createNotFoundException('Accession is not found by ID ' . $accessionId);
@@ -696,7 +696,7 @@ class DefaultController extends Controller
 
         $accessionAccession = new AccessionAccession($status,$user,$source);
 
-        $deidentifierType = $em->getRepository('OlegOrderformBundle:AccessionType')->findOneByName("Deidentifier ID");
+        $deidentifierType = $em->getRepository('AppOrderformBundle:AccessionType')->findOneByName("Deidentifier ID");
         if( !$deidentifierType ) {
             throw $this->createNotFoundException('Unable to find Deidentifier ID AccessionType entity.');
         }

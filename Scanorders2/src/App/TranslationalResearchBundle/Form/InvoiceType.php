@@ -1,9 +1,9 @@
 <?php
 
-namespace Oleg\TranslationalResearchBundle\Form;
+namespace App\TranslationalResearchBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
-use Oleg\UserdirectoryBundle\Form\DocumentType;
+use App\UserdirectoryBundle\Form\DocumentType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -56,7 +56,7 @@ class InvoiceType extends AbstractType
         if( $this->params['principalInvestigators'] && count($this->params['principalInvestigators']) > 0 ) {
             //show only request's the first PI user
             $builder->add('principalInvestigator', EntityType::class, array(
-                'class' => 'OlegUserdirectoryBundle:User',
+                'class' => 'AppUserdirectoryBundle:User',
                 'label' => "Principal Investigator for the project:",
                 'required' => true,
                 'multiple' => false,
@@ -66,7 +66,7 @@ class InvoiceType extends AbstractType
         } else {
             //show all users with set invoice's PI
             $builder->add('principalInvestigator', EntityType::class, array(
-                'class' => 'OlegUserdirectoryBundle:User',
+                'class' => 'AppUserdirectoryBundle:User',
                 'label' => "Principal Investigator for the project:",
                 'required' => true,
                 'multiple' => false,
@@ -84,7 +84,7 @@ class InvoiceType extends AbstractType
         }
 
         $builder->add('billingContact', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:User',
+            'class' => 'AppUserdirectoryBundle:User',
             'label'=> "PI's Billing Contact:",
             'required'=> false,
             'multiple' => false,
@@ -101,7 +101,7 @@ class InvoiceType extends AbstractType
         ));
 
         $builder->add('salesperson', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:User',
+            'class' => 'AppUserdirectoryBundle:User',
             'label' => "Salesperson:",
             //'disabled' => true,
             'required' => false,
@@ -120,7 +120,7 @@ class InvoiceType extends AbstractType
 
         if(1) {
             $builder->add('submitter', EntityType::class, array(
-                'class' => 'OlegUserdirectoryBundle:User',
+                'class' => 'AppUserdirectoryBundle:User',
                 //'label' => "Submitter (will be shown in the invoice PDF as Requester):",
                 'label' => "Invoice's Submitter:",
                 'disabled' => true,
@@ -220,7 +220,7 @@ class InvoiceType extends AbstractType
         $builder->add('invoiceItems', CollectionType::class, array(
             'entry_type' => InvoiceItemType::class,
             'entry_options' => array(
-                //'data_class' => 'Oleg\TranslationalResearchBundle\Entity\AdminReview',
+                //'data_class' => 'App\TranslationalResearchBundle\Entity\AdminReview',
                 'form_custom_value' => $this->params
             ),
             'label' => false,
@@ -374,7 +374,7 @@ class InvoiceType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\TranslationalResearchBundle\Entity\Invoice',
+            'data_class' => 'App\TranslationalResearchBundle\Entity\Invoice',
             'form_custom_value' => null
         ));
     }

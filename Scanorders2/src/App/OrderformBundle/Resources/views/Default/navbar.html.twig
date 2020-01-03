@@ -41,7 +41,7 @@
 
 {% block navbar %}
 
-    {% set comments = render(controller("OlegOrderformBundle:History:notViewedComments")) %}
+    {% set comments = render(controller("AppOrderformBundle:History:notViewedComments")) %}
 
     <nav class="navbar navbar-default" role="navigation">
 
@@ -63,13 +63,13 @@
 
                 <ul class="nav navbar-nav">
 
-                    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+                    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
                     {{ usermacros.siteSwitch() }}
 
                     <li id="nav-bar-scanorderhome" class="hidden-xs divider-vertical">
                         <a href="{{ path('scan_home') }}">
                             {#<img src="{{ asset('favicon.ico') }}" alt="Glass Slide Scan Orders" height="18" width="18">#}
-                            <img src="{{ asset('bundles/oleguserdirectory/form/img/favicon.ico') }}" alt="Employee Directory" height="18" width="18">
+                            <img src="{{ asset('bundles/appuserdirectory/form/img/favicon.ico') }}" alt="Employee Directory" height="18" width="18">
                             Home
                         </a>
                     </li>
@@ -199,7 +199,7 @@
                 {% if is_granted('ROLE_SCANORDER_PROCESSOR') %}
 
                     {#admincomments - comments addressed to this processor only#}
-                    {% set admincomments = render(controller("OlegOrderformBundle:History:notViewedAdminComments")) %}
+                    {% set admincomments = render(controller("AppOrderformBundle:History:notViewedAdminComments")) %}
 
                     <li id="nav-bar-admin" class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin<b class="caret"></b></a>

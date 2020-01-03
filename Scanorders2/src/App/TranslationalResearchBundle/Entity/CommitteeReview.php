@@ -22,7 +22,7 @@
  * Time: 4:43 PM
  */
 
-namespace Oleg\TranslationalResearchBundle\Entity;
+namespace App\TranslationalResearchBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -46,7 +46,7 @@ class CommitteeReview extends ReviewBase
     private $primaryReview;
 
 //    /**
-//     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\FosComment")
+//     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\FosComment")
 //     * @ORM\JoinTable(name="transres_committeereview_comment",
 //     *      joinColumns={@ORM\JoinColumn(name="review_id", referencedColumnName="id")},
 //     *      inverseJoinColumns={@ORM\JoinColumn(name="comment_id", referencedColumnName="id")}

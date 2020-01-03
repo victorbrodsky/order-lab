@@ -16,35 +16,35 @@
  *  limitations under the License.
  */
 
-namespace Oleg\CallLogBundle\Controller;
+namespace App\CallLogBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Oleg\CallLogBundle\Form\CalllogFilterType;
-use Oleg\CallLogBundle\Form\CalllogMessageType;
-use Oleg\CallLogBundle\Form\CalllogNavbarFilterType;
-use Oleg\OrderformBundle\Entity\CalllogEntryMessage;
-use Oleg\OrderformBundle\Entity\Encounter;
-use Oleg\OrderformBundle\Entity\EncounterAttendingPhysician;
-use Oleg\OrderformBundle\Entity\EncounterPatfirstname;
-use Oleg\OrderformBundle\Entity\EncounterPatlastname;
-use Oleg\OrderformBundle\Entity\EncounterPatmiddlename;
-use Oleg\OrderformBundle\Entity\EncounterPatsex;
-use Oleg\OrderformBundle\Entity\EncounterPatsuffix;
-use Oleg\OrderformBundle\Entity\EncounterReferringProvider;
-use Oleg\OrderformBundle\Entity\EncounterReferringProviderSpecialty;
-use Oleg\OrderformBundle\Entity\Endpoint;
-use Oleg\OrderformBundle\Entity\Message;
-use Oleg\OrderformBundle\Entity\Patient;
-use Oleg\OrderformBundle\Entity\PatientDob;
-use Oleg\OrderformBundle\Entity\PatientFirstName;
-use Oleg\OrderformBundle\Entity\PatientLastName;
-use Oleg\OrderformBundle\Entity\PatientMiddleName;
-use Oleg\OrderformBundle\Entity\PatientMrn;
-use Oleg\OrderformBundle\Entity\PatientSex;
-use Oleg\OrderformBundle\Entity\PatientSuffix;
-use Oleg\OrderformBundle\Helper\ErrorHelper;
-use Oleg\UserdirectoryBundle\Entity\ModifierInfo;
-use Oleg\UserdirectoryBundle\Entity\Spot;
+use App\CallLogBundle\Form\CalllogFilterType;
+use App\CallLogBundle\Form\CalllogMessageType;
+use App\CallLogBundle\Form\CalllogNavbarFilterType;
+use App\OrderformBundle\Entity\CalllogEntryMessage;
+use App\OrderformBundle\Entity\Encounter;
+use App\OrderformBundle\Entity\EncounterAttendingPhysician;
+use App\OrderformBundle\Entity\EncounterPatfirstname;
+use App\OrderformBundle\Entity\EncounterPatlastname;
+use App\OrderformBundle\Entity\EncounterPatmiddlename;
+use App\OrderformBundle\Entity\EncounterPatsex;
+use App\OrderformBundle\Entity\EncounterPatsuffix;
+use App\OrderformBundle\Entity\EncounterReferringProvider;
+use App\OrderformBundle\Entity\EncounterReferringProviderSpecialty;
+use App\OrderformBundle\Entity\Endpoint;
+use App\OrderformBundle\Entity\Message;
+use App\OrderformBundle\Entity\Patient;
+use App\OrderformBundle\Entity\PatientDob;
+use App\OrderformBundle\Entity\PatientFirstName;
+use App\OrderformBundle\Entity\PatientLastName;
+use App\OrderformBundle\Entity\PatientMiddleName;
+use App\OrderformBundle\Entity\PatientMrn;
+use App\OrderformBundle\Entity\PatientSex;
+use App\OrderformBundle\Entity\PatientSuffix;
+use App\OrderformBundle\Helper\ErrorHelper;
+use App\UserdirectoryBundle\Entity\ModifierInfo;
+use App\UserdirectoryBundle\Entity\Spot;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -61,7 +61,7 @@ class CallEntrySamePatientController extends CallEntryController
      * Call Entry New Page Same Patient
      *
      * @Route("/entry/same-patient/new", name="calllog_callentry_same_patient")
-     * @Template("OlegCallLogBundle:CallLog:call-entry-same-patient.html.twig")
+     * @Template("AppCallLogBundle:CallLog:call-entry-same-patient.html.twig")
      */
     public function callEntrySamePatientAction(Request $request)
     {
@@ -114,7 +114,7 @@ class CallEntrySamePatientController extends CallEntryController
             $extra = array();
             $extra["keytype"] = $mrntype;
 
-            $patient = $em->getRepository('OlegOrderformBundle:Patient')->createElement(
+            $patient = $em->getRepository('AppOrderformBundle:Patient')->createElement(
                 $institution,
                 'valid',            //status
                 $user,              //provider
@@ -137,7 +137,7 @@ class CallEntrySamePatientController extends CallEntryController
             $readonlyPatient = true;
         }
 
-        $encounter2 = $em->getRepository('OlegOrderformBundle:Encounter')->findOneEncounterByNumberAndType($encounterTypeId,$encounterNumber);
+        $encounter2 = $em->getRepository('AppOrderformBundle:Encounter')->findOneEncounterByNumberAndType($encounterTypeId,$encounterNumber);
         //echo "Found encounter=".$encounter2->getId()."; version=".$encounter2->getVersion()."<br>";
         //exit();
 
@@ -146,10 +146,10 @@ class CallEntrySamePatientController extends CallEntryController
         // Encounter "1111" of type "blah" is not with patient whose MRN of type "whatever" is "1111"
         if( $mrn && $mrntype && $encounter2 ) {
 
-            if( !$em->getRepository('OlegOrderformBundle:Encounter')->isPatientEncounterMatch($mrn,$mrntype,$encounter2) ) {
+            if( !$em->getRepository('AppOrderformBundle:Encounter')->isPatientEncounterMatch($mrn,$mrntype,$encounter2) ) {
 
                 $mrntypeStr = "";
-                $mrntypeEntity = $em->getRepository('OlegOrderformBundle:MrnType')->find($mrntype);
+                $mrntypeEntity = $em->getRepository('AppOrderformBundle:MrnType')->find($mrntype);
                 if( $mrntypeEntity ) {
                     $mrntypeStr = $mrntypeEntity->getName()."";
                 }
@@ -189,7 +189,7 @@ class CallEntrySamePatientController extends CallEntryController
 
             //set encounter generated id
             $key = $encounter2->obtainAllKeyfield()->first();
-            $encounter2 = $em->getRepository('OlegOrderformBundle:Encounter')->setEncounterKey($key, $encounter2, $user);
+            $encounter2 = $em->getRepository('AppOrderformBundle:Encounter')->setEncounterKey($key, $encounter2, $user);
 
             //set encounter date and time
             $date = $encounter2->getDate()->first();
@@ -199,13 +199,13 @@ class CallEntrySamePatientController extends CallEntryController
             $date->setTime($nowDate);
 
             //set encounter status "Open"
-            $encounterOpenStatus = $em->getRepository('OlegOrderformBundle:EncounterStatusList')->findOneByName("Open");
+            $encounterOpenStatus = $em->getRepository('AppOrderformBundle:EncounterStatusList')->findOneByName("Open");
             if ($encounterOpenStatus) {
                 $encounter2->setEncounterStatus($encounterOpenStatus);
             }
 
             //set encounter info type to "Call to Pathology"
-            $encounterInfoType = $em->getRepository('OlegOrderformBundle:EncounterInfoTypeList')->findOneByName("Call to Pathology");
+            $encounterInfoType = $em->getRepository('AppOrderformBundle:EncounterInfoTypeList')->findOneByName("Call to Pathology");
             if ($encounterInfoType) {
                 if (count($encounter2->getEncounterInfoTypes()) > 0) {
                     $encounter2->getEncounterInfoTypes()->first()->setField($encounterInfoType);
@@ -217,7 +217,7 @@ class CallEntrySamePatientController extends CallEntryController
             //$calllogUtil->checkNextEncounterGeneratedId();
             //testing
             //$userFormNodeUtil = $this->get('user_formnode_utility');
-            //$formNodeTest = $em->getRepository('OlegUserdirectoryBundle:FormNode')->findOneByName("Blood Product Transfused");
+            //$formNodeTest = $em->getRepository('AppUserdirectoryBundle:FormNode')->findOneByName("Blood Product Transfused");
             //$values = $userFormNodeUtil->getDropdownValue($formNodeTest);
             //print_r($values);
             //exit('1');
@@ -225,7 +225,7 @@ class CallEntrySamePatientController extends CallEntryController
             //create a new spot and add it to the encounter's tracker
 //            $withdummyfields = true;
 //            //$locationTypePrimary = null;
-//            $encounterLocationType = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Encounter Location");
+//            $encounterLocationType = $em->getRepository('AppUserdirectoryBundle:LocationTypeList')->findOneByName("Encounter Location");
 //            if (!$encounterLocationType) {
 //                throw new \Exception('Location type is not found by name Encounter Location');
 //            }
@@ -265,7 +265,7 @@ class CallEntrySamePatientController extends CallEntryController
         //top message category id
         $formnodeTopHolderId = null;
         //$categoryStr = "Pathology Call Log Entry";
-        //$messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($categoryStr);
+        //$messageCategory = $em->getRepository('AppOrderformBundle:MessageCategory')->findOneByName($categoryStr);
         $messageCategory = $calllogUtil->getDefaultMessageCategory();
         if( $messageCategory ) {
             $formnodeTopHolderId = $messageCategory->getId();
@@ -292,7 +292,7 @@ class CallEntrySamePatientController extends CallEntryController
     /**
      * Save Call Log Entry Same Patient
      * @Route("/entry/same-patient/save", name="calllog_save_entry_same_patient", options={"expose"=true})
-     * @Template("OlegCallLogBundle:CallLog:call-entry-same-patient.html.twig")
+     * @Template("AppCallLogBundle:CallLog:call-entry-same-patient.html.twig")
      * @Method("POST")
      */
     public function saveEntrySamePatientAction(Request $request)
@@ -369,7 +369,7 @@ class CallEntrySamePatientController extends CallEntryController
             //it should work for mysql, mssql, but in postgres DB's id is already pre-genarated even when object is in the pre-persisting stage with "new" (new Patient)
             if( $patient->getId() ) {
                 //get existing patient from DB to prevent creating a new one
-                $patient = $em->getRepository('OlegOrderformBundle:Patient')->find($patient->getId());
+                $patient = $em->getRepository('AppOrderformBundle:Patient')->find($patient->getId());
                 if( $patient ) {
                     $existingPatientDB = true;
                 }
@@ -394,7 +394,7 @@ class CallEntrySamePatientController extends CallEntryController
             $existingEncounterDB = false;
             if( $newEncounter->getId() ) {
                 //get existing encounter from DB to prevent creating a new one
-                $encounterDB = $em->getRepository('OlegOrderformBundle:Encounter')->find($newEncounter->getId());
+                $encounterDB = $em->getRepository('AppOrderformBundle:Encounter')->find($newEncounter->getId());
                 if( $encounterDB ) {
                     $existingEncounterDB = $encounterDB;
                     $newEncounter = $encounterDB;
@@ -405,7 +405,7 @@ class CallEntrySamePatientController extends CallEntryController
             $taskUpdateStr = $calllogUtil->processCalllogTask($message,$originalTasks); //Save New Call Log Entry
 
             //process Attached Documents
-            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($message->getCalllogEntryMessage()); //Save Call Log Entry Same Patient
+            $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($message->getCalllogEntryMessage()); //Save Call Log Entry Same Patient
 
             //set system source and user's default institution
             if( $newEncounter ) {
@@ -418,7 +418,7 @@ class CallEntrySamePatientController extends CallEntryController
 
                     //assign generated encounter number ID
                     $key = $newEncounter->obtainAllKeyfield()->first();
-                    $em->getRepository('OlegOrderformBundle:Encounter')->setEncounterKey($key, $newEncounter, $user);
+                    $em->getRepository('AppOrderformBundle:Encounter')->setEncounterKey($key, $newEncounter, $user);
 
                     //Remove tracker if spots/location is empty
                     $tracker = $newEncounter->getTracker();
@@ -460,7 +460,7 @@ class CallEntrySamePatientController extends CallEntryController
                 $messageStatusForm = $data['messageStatusJs'];
                 //echo "messageStatusForm=".$messageStatusForm."<br>";
                 if( $messageStatusForm ) {
-                    $messageStatusObj = $em->getRepository('OlegOrderformBundle:MessageStatusList')->findOneByName($messageStatusForm);
+                    $messageStatusObj = $em->getRepository('AppOrderformBundle:MessageStatusList')->findOneByName($messageStatusForm);
                     if( $messageStatusObj ) {
                         //echo "set message status to ".$messageStatusObj."<br>";
                         $message->setMessageStatus($messageStatusObj);
@@ -508,7 +508,7 @@ class CallEntrySamePatientController extends CallEntryController
                 if( $existingPatientDB ) {
 
                     //get existing patient from DB to prevent creating a new one
-                    //$patient = $em->getRepository('OlegOrderformBundle:Patient')->find($patient->getId());
+                    //$patient = $em->getRepository('AppOrderformBundle:Patient')->find($patient->getId());
 
                     if( $existingEncounterDB ) {
                         //CASE 1A
@@ -579,7 +579,7 @@ class CallEntrySamePatientController extends CallEntryController
                 } else {
                     //CASE 2
                     echo "case 2: patient does not exists: create a new encounter to DB <br>";
-                    //oleg_calllogbundle_patienttype[encounter][0][referringProviders][0][referringProviderPhone]
+                    //app_calllogbundle_patienttype[encounter][0][referringProviders][0][referringProviderPhone]
 
                     throw new \Exception( "For this controller patient must exists. encounterId=".$newEncounter->getId() );
                 }

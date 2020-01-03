@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Controller;
+namespace App\UserdirectoryBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -27,9 +27,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
-use Oleg\UserdirectoryBundle\Entity\UserRequest;
-use Oleg\UserdirectoryBundle\Form\UserRequestType;
-use Oleg\UserdirectoryBundle\Form\UserRequestApproveType;
+use App\UserdirectoryBundle\Entity\UserRequest;
+use App\UserdirectoryBundle\Form\UserRequestType;
+use App\UserdirectoryBundle\Form\UserRequestApproveType;
 
 /**
  * UserRequest controller.
@@ -55,7 +55,7 @@ class UserRequestController extends Controller
      *
      * @Route("/account-requests", name="employees_accountrequest")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:UserRequest:index.html.twig")
+     * @Template("AppUserdirectoryBundle:UserRequest:index.html.twig")
      */
     public function indexAction( Request $request )
     {
@@ -65,9 +65,9 @@ class UserRequestController extends Controller
         
         $em = $this->getDoctrine()->getManager();
 
-        //$entities = $em->getRepository('OlegUserdirectoryBundle:UserRequest')->findAll();
+        //$entities = $em->getRepository('AppUserdirectoryBundle:UserRequest')->findAll();
 
-        $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:UserRequest');
+        $repository = $this->getDoctrine()->getRepository('AppUserdirectoryBundle:UserRequest');
         $dql =  $repository->createQueryBuilder("accreq");
         $dql->select('accreq');
         $dql->leftJoin("accreq.systemAccountRequest", "systemAccountRequest");
@@ -125,7 +125,7 @@ class UserRequestController extends Controller
      *
      * @Route("/account-requests/new", name="employees_accountrequest_create")
      * @Method("POST")
-     * @Template("OlegUserdirectoryBundle:UserRequest:account_request.html.twig")
+     * @Template("AppUserdirectoryBundle:UserRequest:account_request.html.twig")
      */
     public function createAction(Request $request)
     {
@@ -184,7 +184,7 @@ class UserRequestController extends Controller
      *
      * @Route("/account-requests/new", name="employees_accountrequest_new")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:UserRequest:account_request.html.twig")
+     * @Template("AppUserdirectoryBundle:UserRequest:account_request.html.twig")
      */
     public function newAction()
     {
@@ -192,7 +192,7 @@ class UserRequestController extends Controller
         $entity->setSiteName($this->siteName);
 
         $em = $this->getDoctrine()->getManager();
-        $usernametypes = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findBy(
+        $usernametypes = $em->getRepository('AppUserdirectoryBundle:UsernameType')->findBy(
             array(
                 'type' => array('default', 'user-added'),
                 'abbreviation' => array('ldap-user','local-user')
@@ -229,7 +229,7 @@ class UserRequestController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegUserdirectoryBundle:UserRequest')->find($id);
+        $entity = $em->getRepository('AppUserdirectoryBundle:UserRequest')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find UserRequest entity.');
@@ -250,7 +250,7 @@ class UserRequestController extends Controller
     /**
      * @Route("/account-requests/{id}/{status}/status", name="employees_accountrequest_status", requirements={"id" = "\d+"})
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:UserRequest:index.html.twig")
+     * @Template("AppUserdirectoryBundle:UserRequest:index.html.twig")
      */
     public function statusAction($id, $status)
     {
@@ -261,7 +261,7 @@ class UserRequestController extends Controller
         
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegUserdirectoryBundle:UserRequest')->find($id);
+        $entity = $em->getRepository('AppUserdirectoryBundle:UserRequest')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find UserRequest entity.');
@@ -279,7 +279,7 @@ class UserRequestController extends Controller
      *
      * @Route("/account-requests-approve", name="employees_accountrequest_approve")
      * @Method("POST")
-     * @Template("OlegUserdirectoryBundle:UserRequest:index.html.twig")
+     * @Template("AppUserdirectoryBundle:UserRequest:index.html.twig")
      */
     public function approveUserAccountRequestAction(Request $request)
     {
@@ -311,7 +311,7 @@ class UserRequestController extends Controller
 //            echo "getRequestedScanOrderInstitutionScope=".$entity->getRequestedScanOrderInstitutionScope();
 //            exit();
 
-                $entityDb = $em->getRepository('OlegUserdirectoryBundle:UserRequest')->findOneById($entity->getId());
+                $entityDb = $em->getRepository('AppUserdirectoryBundle:UserRequest')->findOneById($entity->getId());
                 if (!$entityDb) {
                     throw $this->createNotFoundException('Unable to find UserRequest entity with ID:' . $entity->getId());
                 }
@@ -362,7 +362,7 @@ class UserRequestController extends Controller
             ) {
                 //exit('Approve ');
 
-                $entityDb = $em->getRepository('OlegUserdirectoryBundle:UserRequest')->findOneById($entity->getId());
+                $entityDb = $em->getRepository('AppUserdirectoryBundle:UserRequest')->findOneById($entity->getId());
                 if (!$entityDb) {
                     throw $this->createNotFoundException('Unable to find UserRequest entity with ID:' . $entity->getId());
                 }
@@ -423,15 +423,15 @@ class UserRequestController extends Controller
         //departments
         $department = $userSecUtil->getAutoAssignInstitution();
         if( !$department ) {
-            $department = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
+            $department = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
         }
 
         $params['institution'] = $department;
         $params['sitename'] = $sitename;
 
         //Institution
-        //$requestedScanOrderInstitutionScope = $em->getRepository('OlegUserdirectoryBundle:Institution')->findBy(array('level'=>0));
-        $repository = $em->getRepository('OlegUserdirectoryBundle:Institution');
+        //$requestedScanOrderInstitutionScope = $em->getRepository('AppUserdirectoryBundle:Institution')->findBy(array('level'=>0));
+        $repository = $em->getRepository('AppUserdirectoryBundle:Institution');
         $dql =  $repository->createQueryBuilder("institution");
         $dql->select('institution');
         $dql->leftJoin("institution.types", "types");
@@ -459,7 +459,7 @@ class UserRequestController extends Controller
 //        $em = $this->getDoctrine()->getManager();
 //
 //        //departments
-//        $department = $em->getRepository('OlegUserdirectoryBundle:Department')->findOneByName('Pathology and Laboratory Medicine');
+//        $department = $em->getRepository('AppUserdirectoryBundle:Department')->findOneByName('Pathology and Laboratory Medicine');
 //        $departments = new ArrayCollection();
 //        $departments->add($department);
 //
@@ -477,7 +477,7 @@ class UserRequestController extends Controller
 //            }
 //
 //        }
-//        //$services = $em->getRepository('OlegUserdirectoryBundle:Service')->findByDepartment($department);
+//        //$services = $em->getRepository('AppUserdirectoryBundle:Service')->findByDepartment($department);
 //
 //        //foreach( $departments as $dep ) {
 //        //    echo "dep=".$dep->getName()."<br>";
@@ -516,7 +516,7 @@ class UserRequestController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegUserdirectoryBundle:UserRequest')->find($id);
+        $entity = $em->getRepository('AppUserdirectoryBundle:UserRequest')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find UserRequest entity.');
@@ -541,7 +541,7 @@ class UserRequestController extends Controller
      *
      * @Route("/account-requests/{id}", name="employees_accountrequest_update", requirements={"id" = "\d+"})
      * @Method("PUT")
-     * @Template("OlegUserdirectoryBundle:UserRequest:edit.html.twig")
+     * @Template("AppUserdirectoryBundle:UserRequest:edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {
@@ -552,7 +552,7 @@ class UserRequestController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegUserdirectoryBundle:UserRequest')->find($id);
+        $entity = $em->getRepository('AppUserdirectoryBundle:UserRequest')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find UserRequest entity.');
@@ -601,7 +601,7 @@ class UserRequestController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('OlegUserdirectoryBundle:UserRequest')->find($id);
+            $entity = $em->getRepository('AppUserdirectoryBundle:UserRequest')->find($id);
 
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find UserRequest entity.');

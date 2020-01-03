@@ -22,20 +22,20 @@
  * Time: 4:49 PM
  */
 
-namespace Oleg\TranslationalResearchBundle\Controller;
+namespace App\TranslationalResearchBundle\Controller;
 
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query;
-use Oleg\OrderformBundle\Form\DataTransformer\AccessionTypeTransformer;
-use Oleg\TranslationalResearchBundle\Entity\DataResult;
-use Oleg\TranslationalResearchBundle\Entity\Product;
-use Oleg\TranslationalResearchBundle\Entity\Project;
-use Oleg\TranslationalResearchBundle\Entity\TransResRequest;
-use Oleg\TranslationalResearchBundle\Form\FilterRequestType;
-use Oleg\TranslationalResearchBundle\Form\TransResRequestType;
-use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
-use Oleg\UserdirectoryBundle\Form\ListFilterType;
+use App\OrderformBundle\Form\DataTransformer\AccessionTypeTransformer;
+use App\TranslationalResearchBundle\Entity\DataResult;
+use App\TranslationalResearchBundle\Entity\Product;
+use App\TranslationalResearchBundle\Entity\Project;
+use App\TranslationalResearchBundle\Entity\TransResRequest;
+use App\TranslationalResearchBundle\Form\FilterRequestType;
+use App\TranslationalResearchBundle\Form\TransResRequestType;
+use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
+use App\UserdirectoryBundle\Form\ListFilterType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -57,7 +57,7 @@ class RequestController extends Controller
      *
      * @Route("/project/{id}/work-request/new/", name="translationalresearch_request_new")
      * @Route("/work-request/new/", name="translationalresearch_new_standalone_request")
-     * @Template("OlegTranslationalResearchBundle:Request:new.html.twig")
+     * @Template("AppTranslationalResearchBundle:Request:new.html.twig")
      * @Method({"GET", "POST"})
      */
     public function newFormNodeAction(Request $request, Project $project=null)
@@ -130,7 +130,7 @@ class RequestController extends Controller
             //pre-populate "Business Purpose(s)" by Project's Type:
             //if project type = "USCAP Submission", set the default value for the Business Purpose of the new Work Request as "USCAP-related"
             if( $project->getProjectType() && $project->getProjectType()->getName() == "USCAP Submission" ) {
-                $businessPurpose = $em->getRepository('OlegTranslationalResearchBundle:BusinessPurposeList')->findOneByName("USCAP-related");
+                $businessPurpose = $em->getRepository('AppTranslationalResearchBundle:BusinessPurposeList')->findOneByName("USCAP-related");
                 //echo "businessPurpose=".$businessPurpose."<br>";
                 if( $businessPurpose ) {
                     $transresRequest->addBusinessPurpose($businessPurpose);
@@ -196,9 +196,9 @@ class RequestController extends Controller
 
             $transresUtil->assignMinimumRequestRoles($transresRequest);
 
-            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($transresRequest,"document");
-            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($transresRequest,"packingSlipPdf");
-            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($transresRequest,"oldPackingSlipPdf");
+            $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($transresRequest,"document");
+            $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($transresRequest,"packingSlipPdf");
+            $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($transresRequest,"oldPackingSlipPdf");
 
             $this->processTableData($transresRequest,$form,$user); //new
 
@@ -302,7 +302,7 @@ class RequestController extends Controller
      * Get TransResRequest Edit page
      *
      * @Route("/work-request/edit/{id}", name="translationalresearch_request_edit")
-     * @Template("OlegTranslationalResearchBundle:Request:new.html.twig")
+     * @Template("AppTranslationalResearchBundle:Request:new.html.twig")
      * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, TransResRequest $transresRequest)
@@ -320,7 +320,7 @@ class RequestController extends Controller
 
         $class = new \ReflectionClass($transresRequest);
         $className = $class->getShortName();          //ObjectTypeText
-        $classNamespace = $class->getNamespaceName(); //Oleg\UserdirectoryBundle\Entity
+        $classNamespace = $class->getNamespaceName(); //App\UserdirectoryBundle\Entity
 
         $testing = false;
         //$testing = true;
@@ -464,9 +464,9 @@ class RequestController extends Controller
 
             $transresUtil->assignMinimumRequestRoles($transresRequest);
 
-            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($transresRequest,"document");
-            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($transresRequest,"packingSlipPdf");
-            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($transresRequest,"oldPackingSlipPdf");
+            $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($transresRequest,"document");
+            $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($transresRequest,"packingSlipPdf");
+            $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($transresRequest,"oldPackingSlipPdf");
 
             $updatedDataResults = $this->processTableData($transresRequest,$form,$user); //edit
 
@@ -751,7 +751,7 @@ class RequestController extends Controller
                 }
 
                 if( $objectId ) {
-                    $dataResult = $em->getRepository('OlegTranslationalResearchBundle:DataResult')->find($objectId);
+                    $dataResult = $em->getRepository('AppTranslationalResearchBundle:DataResult')->find($objectId);
                     //echo "dataResult found=".$dataResult->getSystem()."<br>";
                 }
                 //exit();
@@ -887,7 +887,7 @@ class RequestController extends Controller
      *
      * @Route("/work-request/show/{id}", name="translationalresearch_request_show")
      * @Route("/work-request/show-with-packingslip/{id}", name="translationalresearch_request_show_with_packingslip")
-     * @Template("OlegTranslationalResearchBundle:Request:new.html.twig")
+     * @Template("AppTranslationalResearchBundle:Request:new.html.twig")
      * @Method("GET")
      */
     public function showAction(Request $request, TransResRequest $transresRequest)
@@ -977,7 +977,7 @@ class RequestController extends Controller
      * Finds and displays all requests for the given project
      *
      * @Route("/project/{id}/requests", name="translationalresearch_request_index")
-     * @Template("OlegTranslationalResearchBundle:Request:index.html.twig")
+     * @Template("AppTranslationalResearchBundle:Request:index.html.twig")
      * @Method("GET")
      */
     public function indexAction(Request $request, Project $project)
@@ -1022,7 +1022,7 @@ class RequestController extends Controller
      * Finds and displays the filtered requests lists
      *
      * @Route("/work-requests/list/", name="translationalresearch_request_index_filter")
-     * @Template("OlegTranslationalResearchBundle:Request:index.html.twig")
+     * @Template("AppTranslationalResearchBundle:Request:index.html.twig")
      * @Method("GET")
      */
     public function myRequestsAction(Request $request)
@@ -1131,7 +1131,7 @@ class RequestController extends Controller
         //$transresUsers = $transresUtil->getAppropriatedUsers();
         $transresUsers = array(); //testing users (removing users from the filter) //TODO: reduces loading time from 25 sec to 20 sec
 
-        //$transresUsers = $em->getRepository('OlegUserdirectoryBundle:User')->findNotFellowshipUsers();
+        //$transresUsers = $em->getRepository('AppUserdirectoryBundle:User')->findNotFellowshipUsers();
         //TESTING
         //return $this->testingReturn($request,$stopwatch);
 
@@ -1626,7 +1626,7 @@ class RequestController extends Controller
 //            $stopwatch->start('createQueryBuilder');
 //        }
 
-        $repository = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
+        $repository = $em->getRepository('AppTranslationalResearchBundle:TransResRequest');
         $dql =  $repository->createQueryBuilder("transresRequest");
         $dql->select('transresRequest');
 
@@ -1988,7 +1988,7 @@ class RequestController extends Controller
 
             //$allFilteredTransresRequests = $query2->getResult();
             //echo "allFilteredTransresRequests=".count($allFilteredTransresRequests)."<br>";
-            //$allGlobalRequests = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest')->findAll();
+            //$allGlobalRequests = $em->getRepository('AppTranslationalResearchBundle:TransResRequest')->findAll();
             //$title = $title . " (Matching " . count($allTransresRequests) . ", Total " . count($allGlobalRequests) . ")";
             $allTransresRequests = $transresUtil->getTotalRequestCountByDqlParameters($dql,$dqlParameters);
             $allGlobalRequests = $transresUtil->getTotalRequestCount();
@@ -2006,7 +2006,7 @@ class RequestController extends Controller
 //            echo "myRequestsAction memory: ".($event->getMemory()/1000000)." MB<br>";
 //        }
 
-        $eventObjectType = $em->getRepository('OlegUserdirectoryBundle:EventObjectTypeList')->findOneByName("TransResRequest");
+        $eventObjectType = $em->getRepository('AppUserdirectoryBundle:EventObjectTypeList')->findOneByName("TransResRequest");
         if( $eventObjectType ) {
             $eventObjectTypeId = $eventObjectType->getId();
         } else {
@@ -2020,7 +2020,7 @@ class RequestController extends Controller
             //$filterDisable = false;
         }
 
-        //Template: OlegTranslationalResearchBundle:Request:index.html.twig
+        //Template: AppTranslationalResearchBundle:Request:index.html.twig
         $formArray = array(
             'transresRequests' => $transresRequests,
             'filterform' => $filterformView,
@@ -2044,7 +2044,7 @@ class RequestController extends Controller
 //        //TESTING
 //        $em = $this->getDoctrine()->getManager();
 //        $title = "Work Requests";
-//        $repository = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
+//        $repository = $em->getRepository('AppTranslationalResearchBundle:TransResRequest');
 //        $dql =  $repository->createQueryBuilder("transresRequest");
 //        $dql->select('transresRequest');
 //        $dql->where("transresRequest.id=2");
@@ -2095,7 +2095,7 @@ class RequestController extends Controller
         if( !$transresRequest->getInstitution() ) {
             $autoAssignInstitution = $userSecUtil->getAutoAssignInstitution();
             if( !$autoAssignInstitution ) {
-                $autoAssignInstitution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
+                $autoAssignInstitution = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
             }
             $transresRequest->setInstitution($autoAssignInstitution);
         }
@@ -2104,7 +2104,7 @@ class RequestController extends Controller
         if( $formnode && !$transresRequest->getMessageCategory() ) {
             $categoryStr = "HemePath Translational Research Request";  //"Pathology Call Log Entry";
             //$categoryStr = "Nesting Test"; //testing
-            $messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($categoryStr);
+            $messageCategory = $em->getRepository('AppOrderformBundle:MessageCategory')->findOneByName($categoryStr);
             if (!$messageCategory) {
                 throw new \Exception("Message category is not found by name '" . $categoryStr . "'");
             }
@@ -2266,7 +2266,7 @@ class RequestController extends Controller
      * Finds and displays a progress review form for this request entity.
      *
      * @Route("/work-request/progress/review/{id}", name="translationalresearch_request_review_progress_state")
-     * @Template("OlegTranslationalResearchBundle:Request:review.html.twig")
+     * @Template("AppTranslationalResearchBundle:Request:review.html.twig")
      * @Method("GET")
      */
     public function reviewProgressAction(Request $request, TransResRequest $transresRequest)
@@ -2318,7 +2318,7 @@ class RequestController extends Controller
      * Finds and displays a billing review form for this request entity.
      *
      * @Route("/work-request/billing/review/{id}", name="translationalresearch_request_review_billing_state")
-     * @Template("OlegTranslationalResearchBundle:Request:review.html.twig")
+     * @Template("AppTranslationalResearchBundle:Request:review.html.twig")
      * @Method("GET")
      */
     public function reviewBillingAction(Request $request, TransResRequest $transresRequest)
@@ -2378,7 +2378,7 @@ class RequestController extends Controller
         //$userServiceUtil = $this->container->get('user_service_utility');
 
         $projectId = trim( $request->get('projectId') );
-        $project = $em->getRepository('OlegTranslationalResearchBundle:Project')->find($projectId);
+        $project = $em->getRepository('AppTranslationalResearchBundle:Project')->find($projectId);
 
         if( $transresUtil->isAdminOrPrimaryReviewer($project->getProjectSpecialty()) || $transresUtil->isProjectEditableByRequester($project) ) {
             //ok
@@ -2442,7 +2442,7 @@ class RequestController extends Controller
 
     /**
      * @Route("/request/fee-schedule", name="translationalresearchfeesschedule-list")
-     * @Template("OlegTranslationalResearchBundle:Request:fee-schedule.html.twig")
+     * @Template("AppTranslationalResearchBundle:Request:fee-schedule.html.twig")
      * @Method("GET")
      */
     public function feeScheduleAction(Request $request)
@@ -2459,7 +2459,7 @@ class RequestController extends Controller
         $filterform->handleRequest($request);
         $search = $filterform['search']->getData();
 
-        $repository = $em->getRepository('OlegTranslationalResearchBundle:RequestCategoryTypeList');
+        $repository = $em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList');
         $dql =  $repository->createQueryBuilder("list");
         $dql->select('list');
 
@@ -2545,7 +2545,7 @@ class RequestController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $repository = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
+        $repository = $em->getRepository('AppTranslationalResearchBundle:TransResRequest');
         $dql =  $repository->createQueryBuilder("request");
         $dql->select('request');
 

@@ -22,13 +22,13 @@
  * Time: 4:49 PM
  */
 
-namespace Oleg\TranslationalResearchBundle\Controller;
+namespace App\TranslationalResearchBundle\Controller;
 
 
-use Oleg\TranslationalResearchBundle\Entity\Project;
-use Oleg\TranslationalResearchBundle\Entity\TransResRequest;
-use Oleg\TranslationalResearchBundle\Form\FilterRequestType;
-use Oleg\TranslationalResearchBundle\Form\TransResRequestType;
+use App\TranslationalResearchBundle\Entity\Project;
+use App\TranslationalResearchBundle\Entity\TransResRequest;
+use App\TranslationalResearchBundle\Form\FilterRequestType;
+use App\TranslationalResearchBundle\Form\TransResRequestType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -50,7 +50,7 @@ class RequestFormNodeController extends Controller
      *
      * @Route("/project/{id}/request/new/", name="translationalresearch_request_formnode_new")
      * @Route("/request/new/", name="translationalresearch_new_standalone_request_formnode")
-     * @Template("OlegTranslationalResearchBundle:RequestFormnode:new.html.twig")
+     * @Template("AppTranslationalResearchBundle:RequestFormnode:new.html.twig")
      * @Method({"GET", "POST"})
      */
     public function newFormNodeAction(Request $request, Project $project=null)
@@ -95,7 +95,7 @@ class RequestFormNodeController extends Controller
         //top message category id
         $formnodeTopHolderId = null;
         //$categoryStr = "Pathology Call Log Entry";
-        //$messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($categoryStr);
+        //$messageCategory = $em->getRepository('AppOrderformBundle:MessageCategory')->findOneByName($categoryStr);
         $messageCategory = $transresRequest->getMessageCategory();
         if( $messageCategory ) {
             $formnodeTopHolderId = $messageCategory->getId();
@@ -179,7 +179,7 @@ class RequestFormNodeController extends Controller
      * Get TransResRequest Edit page
      *
      * @Route("/work-request/edit/{id}", name="translationalresearch_request_formnode_edit")
-     * @Template("OlegTranslationalResearchBundle:RequestFormnode:edit.html.twig")
+     * @Template("AppTranslationalResearchBundle:RequestFormnode:edit.html.twig")
      * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, TransResRequest $transresRequest)
@@ -200,7 +200,7 @@ class RequestFormNodeController extends Controller
 
         $class = new \ReflectionClass($transresRequest);
         $className = $class->getShortName();          //ObjectTypeText
-        $classNamespace = $class->getNamespaceName(); //Oleg\UserdirectoryBundle\Entity
+        $classNamespace = $class->getNamespaceName(); //App\UserdirectoryBundle\Entity
 
         $testing = false;
         //$testing = true;
@@ -319,7 +319,7 @@ class RequestFormNodeController extends Controller
      * Finds and displays a request entity.
      *
      * @Route("/work-request/show/{id}", name="translationalresearch_request_formnode_show")
-     * @Template("OlegTranslationalResearchBundle:RequestFormnode:show.html.twig")
+     * @Template("AppTranslationalResearchBundle:RequestFormnode:show.html.twig")
      * @Method("GET")
      */
     public function showAction(Request $request, TransResRequest $transresRequest)
@@ -376,7 +376,7 @@ class RequestFormNodeController extends Controller
      * Finds and displays all project's requests
      *
      * @Route("/project/{id}/requests", name="translationalresearch_request_formnode_index")
-     * @Template("OlegTranslationalResearchBundle:RequestFormnode:index.html.twig")
+     * @Template("AppTranslationalResearchBundle:RequestFormnode:index.html.twig")
      * @Method("GET")
      */
     public function indexAction(Request $request, Project $project)
@@ -426,7 +426,7 @@ class RequestFormNodeController extends Controller
         }
         //////////////// EOF get Requests IDs with the form node filter ////////////////
 
-        $repository = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
+        $repository = $em->getRepository('AppTranslationalResearchBundle:TransResRequest');
         $dql =  $repository->createQueryBuilder("transresRequest");
         $dql->select('transresRequest');
 
@@ -506,7 +506,7 @@ class RequestFormNodeController extends Controller
      *
      * @Route("/my-requests", name="translationalresearch_my_requests_formnode")
      * @Route("/all-requests", name="translationalresearch_all_requests_formnode")
-     * @Template("OlegTranslationalResearchBundle:RequestFormnode:all-requests.html.twig")
+     * @Template("AppTranslationalResearchBundle:RequestFormnode:all-requests.html.twig")
      * @Method("GET")
      */
     public function myRequestsAction(Request $request)
@@ -562,7 +562,7 @@ class RequestFormNodeController extends Controller
         }
         //////////////// EOF get Requests IDs with the form node filter ////////////////
 
-        $repository = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
+        $repository = $em->getRepository('AppTranslationalResearchBundle:TransResRequest');
         $dql =  $repository->createQueryBuilder("transresRequest");
         $dql->select('transresRequest');
 
@@ -652,7 +652,7 @@ class RequestFormNodeController extends Controller
         }
 
         if( !$transresRequest->getInstitution() ) {
-            $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
+            $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
             $transresRequest->setInstitution($institution);
         }
 
@@ -660,7 +660,7 @@ class RequestFormNodeController extends Controller
         if( !$transresRequest->getMessageCategory() ) {
             $categoryStr = "HemePath Translational Research Request";  //"Pathology Call Log Entry";
             //$categoryStr = "Nesting Test"; //testing
-            $messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($categoryStr);
+            $messageCategory = $em->getRepository('AppOrderformBundle:MessageCategory')->findOneByName($categoryStr);
             if (!$messageCategory) {
                 throw new \Exception("Message category is not found by name '" . $categoryStr . "'");
             }
@@ -763,7 +763,7 @@ class RequestFormNodeController extends Controller
      * Finds and displays a progress review form for this request entity.
      *
      * @Route("/request/progress/review/{id}", name="translationalresearch_request_formnode_review_progress_state")
-     * @Template("OlegTranslationalResearchBundle:RequestFormnode:review.html.twig")
+     * @Template("AppTranslationalResearchBundle:RequestFormnode:review.html.twig")
      * @Method("GET")
      */
     public function reviewProgressAction(Request $request, TransResRequest $transresRequest)
@@ -801,7 +801,7 @@ class RequestFormNodeController extends Controller
      * Finds and displays a billing review form for this request entity.
      *
      * @Route("/request/billing/review/{id}", name="translationalresearch_request_formnode_review_billing_state")
-     * @Template("OlegTranslationalResearchBundle:RequestFormnode:review.html.twig")
+     * @Template("AppTranslationalResearchBundle:RequestFormnode:review.html.twig")
      * @Method("GET")
      */
     public function reviewBillingAction(Request $request, TransResRequest $transresRequest)
@@ -854,7 +854,7 @@ class RequestFormNodeController extends Controller
         $res = "NotOK";
 
         $projectId = trim( $request->get('projectId') );
-        $project = $em->getRepository('OlegTranslationalResearchBundle:Project')->find($projectId);
+        $project = $em->getRepository('AppTranslationalResearchBundle:Project')->find($projectId);
 
         if(
             $transresUtil->isAdminOrPrimaryReviewer() ||

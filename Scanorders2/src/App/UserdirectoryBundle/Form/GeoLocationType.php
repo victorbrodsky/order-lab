@@ -15,11 +15,11 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Form;
+namespace App\UserdirectoryBundle\Form;
 
 
 
-use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
+use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -69,7 +69,7 @@ class GeoLocationType extends AbstractType
 
         //state
         $stateArray = array(
-            'class' => 'OlegUserdirectoryBundle:States',
+            'class' => 'AppUserdirectoryBundle:States',
             //'choice_label' => 'name',
             'label'=>'State:',
             'required'=> false,
@@ -86,13 +86,13 @@ class GeoLocationType extends AbstractType
                 },
         );
         if( $this->params['cycle'] == 'new_standalone' ) {
-            $stateArray['data'] = $this->params['em']->getRepository('OlegUserdirectoryBundle:States')->findOneByName('New York');
+            $stateArray['data'] = $this->params['em']->getRepository('AppUserdirectoryBundle:States')->findOneByName('New York');
         }
         $builder->add( 'state', EntityType::class, $stateArray);
 
         //country
         $countryArray = array(
-            'class' => 'OlegUserdirectoryBundle:Countries',
+            'class' => 'AppUserdirectoryBundle:Countries',
             'choice_label' => 'name',
             'label'=>'Country:',
             'required'=> false,
@@ -109,9 +109,9 @@ class GeoLocationType extends AbstractType
                         ));
                 },
         );
-        $countryArray['preferred_choices'] = $this->params['em']->getRepository('OlegUserdirectoryBundle:Countries')->findByName(array('United States'));
+        $countryArray['preferred_choices'] = $this->params['em']->getRepository('AppUserdirectoryBundle:Countries')->findByName(array('United States'));
         if( $this->params['cycle'] == 'new_standalone' ) {
-            $countryArray['data'] = $this->params['em']->getRepository('OlegUserdirectoryBundle:Countries')->findOneByName('United States');
+            $countryArray['data'] = $this->params['em']->getRepository('AppUserdirectoryBundle:Countries')->findOneByName('United States');
         }
         $builder->add( 'country', EntityType::class, $countryArray);
 
@@ -132,7 +132,7 @@ class GeoLocationType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\GeoLocation',
+            'data_class' => 'App\UserdirectoryBundle\Entity\GeoLocation',
             'form_custom_value' => null
             //'csrf_protection' => false,
         ));

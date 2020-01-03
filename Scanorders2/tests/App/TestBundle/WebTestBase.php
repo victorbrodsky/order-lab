@@ -2,12 +2,12 @@
 
 /**
  * Created by PhpStorm.
- * User: Oleg Ivanov
+ * User: App Ivanov
  * Date: 12/12/2019
  * Time: 8:23 AM
  */
 
-namespace Tests\Oleg\TestBundle;
+namespace Tests\App\TestBundle;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -138,7 +138,7 @@ class WebTestBase extends WebTestCase
         $firewallName = 'ldap_fellapp_firewall';
 
         $systemUser = $this->getUser();
-        //$systemUser = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername('administrator');
+        //$systemUser = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByUsername('administrator');
 
         $token = new UsernamePasswordToken($systemUser, null, $firewallName, $systemUser->getRoles());
         $this->container->get('security.token_storage')->setToken($token);
@@ -199,11 +199,11 @@ class WebTestBase extends WebTestCase
         $systemUser = $userSecUtil->findSystemUser();
 
         if( !$systemUser ) {
-            $systemUser = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByPrimaryPublicUserId('Administrator');
+            $systemUser = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByPrimaryPublicUserId('Administrator');
         }
 
         if( !$systemUser ) {
-            $systemUser = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByPrimaryPublicUserId('administrator');
+            $systemUser = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByPrimaryPublicUserId('administrator');
         }
 
         return $systemUser;

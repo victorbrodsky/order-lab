@@ -16,9 +16,9 @@
 
 {#list all slide requests for admin or user's slide requests for other users#}
 
-{% extends "OlegOrderformBundle::Default/base.html.twig" %}
+{% extends "AppOrderformBundle::Default/base.html.twig" %}
 
-{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
 
 {% if routename == 'incoming-slide-return-requests' %}
@@ -36,8 +36,8 @@
 {% block maincss %}
 
     {% stylesheets
-    'bundles/oleguserdirectory/select2/select2.css' filter='cssrewrite'
-    'bundles/oleguserdirectory/form/css/action.css' filter='cssrewrite'
+    'bundles/appuserdirectory/select2/select2.css' filter='cssrewrite'
+    'bundles/appuserdirectory/form/css/action.css' filter='cssrewrite'
     %}
     <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
@@ -48,20 +48,20 @@
 {% block mainjs %}
 
     {% javascripts
-    '@OlegUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'
-    '@OlegUserdirectoryBundle/Resources/public/bootstrap/js/*'
-    '@OlegUserdirectoryBundle/Resources/public/select2/select2.js'	
+    '@AppUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'
+    '@AppUserdirectoryBundle/Resources/public/bootstrap/js/*'
+    '@AppUserdirectoryBundle/Resources/public/select2/select2.js'
     
-	'@OlegUserdirectoryBundle/Resources/public/form/js/user-common.js'
-    '@OlegUserdirectoryBundle/Resources/public/form/js/user-navbar.js'
+	'@AppUserdirectoryBundle/Resources/public/form/js/user-common.js'
+    '@AppUserdirectoryBundle/Resources/public/form/js/user-navbar.js'
 	
-	'@OlegUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimeout.js'
-    '@OlegUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimer.js'	
-	'@OlegUserdirectoryBundle/Resources/public/form/js/user-idleTimeout.js'
+	'@AppUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimeout.js'
+    '@AppUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimer.js'
+	'@AppUserdirectoryBundle/Resources/public/form/js/user-idleTimeout.js'
 	
-	'@OlegOrderformBundle/Resources/public/form/js/selectAjax.js'
-    '@OlegOrderformBundle/Resources/public/form/js/modal.js'
-    '@OlegOrderformBundle/Resources/public/form/js/form.js'
+	'@AppOrderformBundle/Resources/public/form/js/selectAjax.js'
+    '@AppOrderformBundle/Resources/public/form/js/modal.js'
+    '@AppOrderformBundle/Resources/public/form/js/form.js'
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
@@ -140,7 +140,7 @@
             {% set returned = "Returned" in sliderequest.status %}
 
             {% if is_granted('ROLE_SCANORDER_PROCESSOR') and routename == 'incoming-slide-return-requests' %}
-                {% include 'OlegOrderformBundle::SlideReturnRequest/add_comment.html.twig' with {'orderid': sliderequest.id}  %}
+                {% include 'AppOrderformBundle::SlideReturnRequest/add_comment.html.twig' with {'orderid': sliderequest.id}  %}
             {% endif %}
 
             {% if sliderequest.status == 'active' %}

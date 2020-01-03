@@ -23,7 +23,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Oleg\UserdirectoryBundle\Entity;
+namespace App\UserdirectoryBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -73,7 +73,7 @@ abstract class ListAbstract
     protected $type;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(name="creator_id", referencedColumnName="id")
      * @Assert\NotBlank
      */
@@ -87,7 +87,7 @@ abstract class ListAbstract
     protected $createdate;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(name="updatedby_id", referencedColumnName="id",nullable=true)
      */
     protected $updatedby;
@@ -127,7 +127,7 @@ abstract class ListAbstract
      * for all items/rows "Object Type"="Dropdown Menu Value"
      * Platform List Manager List where all items should have "Object Type"="Form Field - Dropdown Menu"
      * For not form nodes, object type can be "User"
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\ObjectTypeList")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\ObjectTypeList")
      * @ORM\JoinColumn(name="objectType_id", referencedColumnName="id",nullable=true)
      */
     protected $objectType;
@@ -140,7 +140,7 @@ abstract class ListAbstract
     protected $entityId;
     /**
      * Used to make a link to other lists in the list manager.
-     * i.e. "Oleg\OrderformBundle\Entity"
+     * i.e. "App\OrderformBundle\Entity"
      * @ORM\Column(type="string", nullable=true)
      */
     protected $entityNamespace;
@@ -379,10 +379,10 @@ abstract class ListAbstract
     /**
      * Set creator
      *
-     * @param \Oleg\UserdirectoryBundle\Entity\User $creator
+     * @param \App\UserdirectoryBundle\Entity\User $creator
      * @return List
      */
-    public function setCreator(\Oleg\UserdirectoryBundle\Entity\User $creator=null)
+    public function setCreator(\App\UserdirectoryBundle\Entity\User $creator=null)
     {
         $this->creator = $creator;
 
@@ -392,7 +392,7 @@ abstract class ListAbstract
     /**
      * Get creator
      *
-     * @return \Oleg\UserdirectoryBundle\Entity\User $creator
+     * @return \App\UserdirectoryBundle\Entity\User $creator
      */
     public function getCreator()
     {
@@ -482,7 +482,7 @@ abstract class ListAbstract
      */
     public function setEntityNamespace($entityNamespace)
     {
-        //remove "Proxies\__CG__\" if $entityNamespace="Proxies\__CG__\Oleg\UserdirectoryBundle\Entity"
+        //remove "Proxies\__CG__\" if $entityNamespace="Proxies\__CG__\App\UserdirectoryBundle\Entity"
         $proxyStr = "Proxies\__CG__\\";
         if( strpos($entityNamespace, $proxyStr) !== false ) {
             //echo "remove=".$proxyStr."<br>";
@@ -822,7 +822,7 @@ abstract class ListAbstract
         //$className = get_class($this);
         //echo "className=".$className."<br>";
         //exit('1');
-        //return get_class($this); //Oleg\TranslationalResearchBundle\Entity\AntibodyList
+        //return get_class($this); //App\TranslationalResearchBundle\Entity\AntibodyList
 
         $reflect = new \ReflectionClass($this);
         return $reflect->getShortName();

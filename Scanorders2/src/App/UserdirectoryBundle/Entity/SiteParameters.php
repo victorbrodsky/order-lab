@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Entity;
+namespace App\UserdirectoryBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -210,7 +210,7 @@ class SiteParameters {
     /**
      * Default Primary Public User ID Type
      *
-     * @ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\UsernameType")
+     * @ORM\OneToOne(targetEntity="App\UserdirectoryBundle\Entity\UsernameType")
      */
     private $defaultPrimaryPublicUserIdType;
 
@@ -220,7 +220,7 @@ class SiteParameters {
     private $ldapMapperEmail;
 
     /**
-     * @ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\UsernameType")
+     * @ORM\OneToOne(targetEntity="App\UserdirectoryBundle\Entity\UsernameType")
      */
     private $ldapMapperPrimaryPublicUserIdType;
     /////////////// EOF LDAP Server 1 ////////////////////
@@ -273,7 +273,7 @@ class SiteParameters {
     private $ldapMapperEmail2;
 
     /**
-     * @ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\UsernameType")
+     * @ORM\OneToOne(targetEntity="App\UserdirectoryBundle\Entity\UsernameType")
      */
     private $ldapMapperPrimaryPublicUserIdType2;
 
@@ -293,7 +293,7 @@ class SiteParameters {
     private $enableAutoAssignmentInstitutionalScope;
 
     /**
-     * @ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
+     * @ORM\OneToOne(targetEntity="App\UserdirectoryBundle\Entity\Institution")
      */
     private $autoAssignInstitution;
 
@@ -456,16 +456,16 @@ class SiteParameters {
 
     ///////////////////// FELLAPP /////////////////////
 //    /**
-//     * @ORM\OneToOne(targetEntity="Oleg\FellAppBundle\Entity\FellAppSiteParameter", cascade={"persist","remove"})
+//     * @ORM\OneToOne(targetEntity="App\FellAppBundle\Entity\FellAppSiteParameter", cascade={"persist","remove"})
 //     */
 //    private $fellappSiteParameter;
 //    /**
-//     * @ORM\OneToOne(targetEntity="Oleg\FellAppBundle\Entity\FellAppSiteParameter", cascade={"persist","remove"})
+//     * @ORM\OneToOne(targetEntity="App\FellAppBundle\Entity\FellAppSiteParameter", cascade={"persist","remove"})
 //     */
 //    private $fellappSiteParameter;
 
     /**
-     * @ORM\OneToOne(targetEntity="Oleg\FellAppBundle\Entity\FellappSiteParameter", cascade={"persist","remove"})
+     * @ORM\OneToOne(targetEntity="App\FellAppBundle\Entity\FellappSiteParameter", cascade={"persist","remove"})
      */
     private $fellappSiteParameter;
 
@@ -520,7 +520,7 @@ class SiteParameters {
 
     /**
      * Path to p12 key file: i.e. /../Util/FellowshipApplication-f1d9f98353e5.p12
-     * E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\src\Oleg\FellAppBundle\Util\FellowshipApplication-f1d9f98353e5.p12
+     * E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\src\App\FellAppBundle\Util\FellowshipApplication-f1d9f98353e5.p12
      *
      * @ORM\Column(type="text", nullable=true)
      */
@@ -1042,7 +1042,7 @@ class SiteParameters {
 
     /**
      * Defaults for an Organizational Group
-     * @ORM\OneToOne(targetEntity="Oleg\CallLogBundle\Entity\CalllogSiteParameter", cascade={"persist","remove"})
+     * @ORM\OneToOne(targetEntity="App\CallLogBundle\Entity\CalllogSiteParameter", cascade={"persist","remove"})
      */
     private $calllogSiteParameter;
 
@@ -1068,49 +1068,49 @@ class SiteParameters {
     /**
      * Default Accession Type for Deidentifier Defaults
      *
-     * @ORM\ManyToOne(targetEntity="Oleg\OrderformBundle\Entity\AccessionType")
+     * @ORM\ManyToOne(targetEntity="App\OrderformBundle\Entity\AccessionType")
      */
     private $defaultDeidentifierAccessionType;
 
     /**
      * Default Accession Type for ScanOrder Type
      *
-     * @ORM\ManyToOne(targetEntity="Oleg\OrderformBundle\Entity\AccessionType")
+     * @ORM\ManyToOne(targetEntity="App\OrderformBundle\Entity\AccessionType")
      */
     private $defaultScanAccessionType;
 
     /**
      * Default Mrn Type for ScanOrder Type
      *
-     * @ORM\ManyToOne(targetEntity="Oleg\OrderformBundle\Entity\MrnType")
+     * @ORM\ManyToOne(targetEntity="App\OrderformBundle\Entity\MrnType")
      */
     private $defaultScanMrnType;
 
     /**
      * Default Slide Delivery
      *
-     * @ORM\ManyToOne(targetEntity="Oleg\OrderformBundle\Entity\OrderDelivery")
+     * @ORM\ManyToOne(targetEntity="App\OrderformBundle\Entity\OrderDelivery")
      */
     private $defaultScanDelivery;
 
 //    /**
 //     * Default Institutional PHI Scope
 //     *
-//     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
+//     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Institution")
 //     */
 //    private $defaultInstitutionalPHIScope;
 
     /**
      * Default Organization Recipient
      *
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Institution")
      */
     private $defaultOrganizationRecipient;
 
     /**
      * Default Scanner
      *
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Equipment")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Equipment")
      */
     private $defaultScanner;
 
@@ -1123,7 +1123,7 @@ class SiteParameters {
 //     **/
 //    protected $platformLogos;
     /**
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
      * @ORM\JoinTable(name="user_siteparameter_platformLogo",
      *      joinColumns={@ORM\JoinColumn(name="siteParameter_id", referencedColumnName="id", onDelete="CASCADE")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="platformLogo_id", referencedColumnName="id", onDelete="CASCADE")}
@@ -1149,7 +1149,7 @@ class SiteParameters {
     /**
      * Pathology Department for Translational Research Dashboard
      *
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Institution")
      */
     private $transresDashboardInstitution;
 
@@ -1175,7 +1175,7 @@ class SiteParameters {
     private $emailCriticalError;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\User")
      * @ORM\JoinTable(name="user_siteparameter_emailcriticalerrorexceptionuser",
      *      joinColumns={@ORM\JoinColumn(name="siteparameter_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="exceptionuser_id", referencedColumnName="id")}

@@ -15,14 +15,14 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Form;
+namespace App\OrderformBundle\Form;
 
-use Oleg\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
+use App\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Oleg\OrderformBundle\Helper\FormHelper;
+use App\OrderformBundle\Helper\FormHelper;
 
 class PartDiseaseTypeType extends AbstractType
 {
@@ -40,7 +40,7 @@ class PartDiseaseTypeType extends AbstractType
 
         //New in Symfony 2.8: choices is array
         //get array of diseaseTypes
-        $repository = $this->params['em']->getRepository('OlegOrderformBundle:DiseaseTypeList');
+        $repository = $this->params['em']->getRepository('AppOrderformBundle:DiseaseTypeList');
         $dql = $repository->createQueryBuilder("list")->orderBy("list.orderinlist","ASC");
         $query = $this->params['em']->createQuery($dql);
         $items = $query->getResult();
@@ -52,7 +52,7 @@ class PartDiseaseTypeType extends AbstractType
         //exit();
 
         $builder->add( 'diseaseTypes', EntityType::class, array(
-            'class' => 'OlegOrderformBundle:DiseaseTypeList',
+            'class' => 'AppOrderformBundle:DiseaseTypeList',
             'label'=>'Type of Disease:',
             'required'=>false,
             'multiple' => true,
@@ -76,7 +76,7 @@ class PartDiseaseTypeType extends AbstractType
         ));
 
         //get array of diseaseTypes
-        $repository = $this->params['em']->getRepository('OlegOrderformBundle:DiseaseOriginList');
+        $repository = $this->params['em']->getRepository('AppOrderformBundle:DiseaseOriginList');
         $dql = $repository->createQueryBuilder("list")->orderBy("list.orderinlist","ASC");
         $query = $this->params['em']->createQuery($dql);
         $items = $query->getResult();
@@ -86,7 +86,7 @@ class PartDiseaseTypeType extends AbstractType
         }
 
         $builder->add( 'diseaseOrigins', EntityType::class, array(
-            'class' => 'OlegOrderformBundle:DiseaseOriginList',
+            'class' => 'AppOrderformBundle:DiseaseOriginList',
             'label'=>'Origin:',
             'required'=>false,
             'multiple' => true,
@@ -107,7 +107,7 @@ class PartDiseaseTypeType extends AbstractType
         ));
 
         $builder->add('others', ArrayFieldType::class, array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\PartDiseaseType',
+            'data_class' => 'App\OrderformBundle\Entity\PartDiseaseType',
             'form_custom_value' => $this->params,
             'label' => false,
 			'attr' => array('style'=>'display:none;')
@@ -118,7 +118,7 @@ class PartDiseaseTypeType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\PartDiseaseType',
+            'data_class' => 'App\OrderformBundle\Entity\PartDiseaseType',
             'form_custom_value' => null
         ));
     }

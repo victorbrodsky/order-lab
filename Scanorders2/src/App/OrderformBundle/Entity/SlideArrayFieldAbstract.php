@@ -23,10 +23,10 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Oleg\OrderformBundle\Entity;
+namespace App\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Oleg\OrderformBundle\Entity\ArrayFieldAbstract;
+use App\OrderformBundle\Entity\ArrayFieldAbstract;
 
 /**
  * @ORM\MappedSuperclass
@@ -36,10 +36,10 @@ abstract class SlideArrayFieldAbstract extends ArrayFieldAbstract {
     /**
      * Set slide
      *
-     * @param \Oleg\OrderformBundle\Entity\Slide $part
+     * @param \App\OrderformBundle\Entity\Slide $part
      * @return PartArrayFieldAbstract
      */
-    public function setSlide(\Oleg\OrderformBundle\Entity\Slide $slide = null)
+    public function setSlide(\App\OrderformBundle\Entity\Slide $slide = null)
     {
         $this->slide = $slide;
 
@@ -49,7 +49,7 @@ abstract class SlideArrayFieldAbstract extends ArrayFieldAbstract {
     /**
      * Get slide
      *
-     * @return \Oleg\OrderformBundle\Entity\Slide
+     * @return \App\OrderformBundle\Entity\Slide
      */
     public function getSlide()
     {

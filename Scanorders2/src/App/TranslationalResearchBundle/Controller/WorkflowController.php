@@ -22,11 +22,11 @@
  * Time: 4:41 PM
  */
 
-namespace Oleg\TranslationalResearchBundle\Controller;
+namespace App\TranslationalResearchBundle\Controller;
 
 
-use Oleg\TranslationalResearchBundle\Entity\Project;
-use Oleg\TranslationalResearchBundle\Entity\TransResRequest;
+use App\TranslationalResearchBundle\Entity\Project;
+use App\TranslationalResearchBundle\Entity\TransResRequest;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -41,7 +41,7 @@ class WorkflowController extends Controller
      * Dump Workflows
      *
      * @Route("/workflow/{type}", name="translationalresearch_workflow_show")
-     * @Template("OlegTranslationalResearchBundle:Workflow:workflow.html.twig")
+     * @Template("AppTranslationalResearchBundle:Workflow:workflow.html.twig")
      */
     public function dumpWorkflowAction(Request $request, $type)
     {
@@ -70,7 +70,7 @@ class WorkflowController extends Controller
         //php bin/console workflow:dump transres_project | "C:\Program Files (x86)\Graphviz2.38\bin\dot.exe" -Tpng -o project.png
         //php bin/console workflow:dump transres_request_billing | "C:\Program Files (x86)\Graphviz2.38\bin\dot.exe" -Tpng -o request_billing.png
         //php bin/console workflow:dump transres_request_progress | "C:\Program Files (x86)\Graphviz2.38\bin\dot.exe" -Tpng -o request_progress.png
-        //place the rsulting pngs to scanorder\Scanorders2\src\Oleg\TranslationalResearchBundle\Resources\public\images
+        //place the rsulting pngs to scanorder\Scanorders2\src\App\TranslationalResearchBundle\Resources\public\images
 
         $filename = null;
 
@@ -109,12 +109,12 @@ class WorkflowController extends Controller
 //        $webpath = $this->get('kernel')->getRootDir();
         //echo "webPath=$webpath<br>";
         //exit();
-//        $file = $webpath."/../src/Oleg/TranslationalResearchBundle/Resources/public/images/".$filename;
+//        $file = $webpath."/../src/App/TranslationalResearchBundle/Resources/public/images/".$filename;
 //        if (!file_exists($file)) {
 //            exit("File does not exist filename=".$filename);
 //        }
 
-        //$bundleFileName = '@OlegTranslationalResearchBundle/Resources/public/images/'.$filename;
+        //$bundleFileName = '@AppTranslationalResearchBundle/Resources/public/images/'.$filename;
         $bundleFileName = "bundles\\olegtranslationalresearch\\images\\".$filename;
 
 //        $imagename = "Project Workflow";

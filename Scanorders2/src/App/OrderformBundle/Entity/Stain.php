@@ -15,12 +15,12 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Entity;
+namespace App\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-//(repositoryClass="Oleg\OrderformBundle\Repository\StainRepository")
+//(repositoryClass="App\OrderformBundle\Repository\StainRepository")
 /**
  * @ORM\Entity
  * @ORM\Table(name="scan_stain")

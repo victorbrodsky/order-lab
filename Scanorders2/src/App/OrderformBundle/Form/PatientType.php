@@ -15,10 +15,10 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Form;
+namespace App\OrderformBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
-use Oleg\UserdirectoryBundle\Form\TrackerType;
+use App\UserdirectoryBundle\Form\TrackerType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -91,7 +91,7 @@ class PatientType extends AbstractType
 
 
         $attr = array('class'=>'textarea form-control patient-clinicalhistory-field');
-        $gen_attr = array('label'=>'Clinical Summary:','class'=>'Oleg\OrderformBundle\Entity\PatientClinicalHistory','type'=>null);
+        $gen_attr = array('label'=>'Clinical Summary:','class'=>'App\OrderformBundle\Entity\PatientClinicalHistory','type'=>null);
         $builder->add('clinicalHistory', CollectionType::class, array(
             //GenericFieldType($this->params, null, $gen_attr, $attr),
             'entry_type' => GenericFieldType::class,
@@ -131,7 +131,7 @@ class PatientType extends AbstractType
         if( 0 ) {
 
             $attr = array('class'=>'form-control patientname-field', 'disabled' => 'disabled');
-            $gen_attr = array('label'=>'Name','class'=>'Oleg\OrderformBundle\Entity\PatientName','type'=>null);
+            $gen_attr = array('label'=>'Name','class'=>'App\OrderformBundle\Entity\PatientName','type'=>null);
             $builder->add('lastname', CollectionType::class, array(
                 //GenericFieldType($this->params, null, $gen_attr, $attr),
                 'entry_type' => GenericFieldType::class,
@@ -218,7 +218,7 @@ class PatientType extends AbstractType
 //            ));
             $builder->add('tracker', TrackerType::class, array(
                 'form_custom_value' => $this->params,
-                'data_class' => 'Oleg\UserdirectoryBundle\Entity\Tracker',
+                'data_class' => 'App\UserdirectoryBundle\Entity\Tracker',
                 'label' => false,
             ));
 
@@ -243,7 +243,7 @@ class PatientType extends AbstractType
             //echo "add tracker <br>";
             $builder->add('tracker', TrackerType::class, array(
                 'form_custom_value' => $this->params,
-                'data_class' => 'Oleg\UserdirectoryBundle\Entity\Tracker',
+                'data_class' => 'App\UserdirectoryBundle\Entity\Tracker',
                 'label' => false,
             ));
         }
@@ -269,7 +269,7 @@ class PatientType extends AbstractType
 
         if( array_key_exists('datastructure',$this->params) && $this->params['datastructure'] == 'datastructure-patient' ) {
 //            $builder->add('patientRecordStatus', 'entity', array(
-//                'class' => 'OlegOrderformBundle:PatientRecordStatusList',
+//                'class' => 'AppOrderformBundle:PatientRecordStatusList',
 //                //'choice_label' => 'name',
 //                'label' => 'Patient Record Status:',
 //                'required' => false,
@@ -287,7 +287,7 @@ class PatientType extends AbstractType
 //            ));
 
             $builder->add('lifeForm', EntityType::class, array(
-                'class' => 'OlegUserdirectoryBundle:LifeFormList',
+                'class' => 'AppUserdirectoryBundle:LifeFormList',
                 'choice_label' => 'name',
                 'label' => "Life Form:",
                 'required'=> false,
@@ -310,7 +310,7 @@ class PatientType extends AbstractType
                 $form = $event->getForm();
 
                 $statusParams = array(
-                    'class' => 'OlegOrderformBundle:PatientRecordStatusList',
+                    'class' => 'AppOrderformBundle:PatientRecordStatusList',
                     //'choice_label' => 'name',
                     'label' => 'Patient Record Status:',
                     'required' => false,
@@ -332,7 +332,7 @@ class PatientType extends AbstractType
                 if( $patient ) {
                     $patientRecordStatus = $patient->getPatientRecordStatus();
                     if( !$patientRecordStatus ) {
-                        $defaultStatus = $this->params['em']->getRepository('OlegOrderformBundle:PatientRecordStatusList')->findOneByName("Active");
+                        $defaultStatus = $this->params['em']->getRepository('AppOrderformBundle:PatientRecordStatusList')->findOneByName("Active");
                         if( $defaultStatus ) {
                             //echo "show default status=".$defaultStatus."<br>";
                             $statusParams['data'] = $defaultStatus;
@@ -351,7 +351,7 @@ class PatientType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\Patient',
+            'data_class' => 'App\OrderformBundle\Entity\Patient',
             'form_custom_value' => null,
             'form_custom_value_entity' => null
         ));

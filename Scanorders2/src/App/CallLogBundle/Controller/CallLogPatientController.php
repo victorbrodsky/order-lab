@@ -22,22 +22,22 @@
  * Time: 12:19 PM
  */
 
-namespace Oleg\CallLogBundle\Controller;
+namespace App\CallLogBundle\Controller;
 
 
-use Oleg\CallLogBundle\Entity\SinglePatient;
-use Oleg\CallLogBundle\Form\CalllogListPreviousEntriesFilterType;
-use Oleg\CallLogBundle\Form\CalllogPatientType;
-use Oleg\CallLogBundle\Form\CalllogSinglePatientType;
-use Oleg\OrderformBundle\Entity\Encounter;
-use Oleg\OrderformBundle\Entity\Patient;
-use Oleg\OrderformBundle\Entity\PatientDob;
-use Oleg\OrderformBundle\Entity\PatientFirstName;
-use Oleg\OrderformBundle\Entity\PatientLastName;
-use Oleg\OrderformBundle\Entity\PatientMiddleName;
-use Oleg\OrderformBundle\Entity\PatientMrn;
-use Oleg\OrderformBundle\Entity\PatientSex;
-use Oleg\OrderformBundle\Entity\PatientSuffix;
+use App\CallLogBundle\Entity\SinglePatient;
+use App\CallLogBundle\Form\CalllogListPreviousEntriesFilterType;
+use App\CallLogBundle\Form\CalllogPatientType;
+use App\CallLogBundle\Form\CalllogSinglePatientType;
+use App\OrderformBundle\Entity\Encounter;
+use App\OrderformBundle\Entity\Patient;
+use App\OrderformBundle\Entity\PatientDob;
+use App\OrderformBundle\Entity\PatientFirstName;
+use App\OrderformBundle\Entity\PatientLastName;
+use App\OrderformBundle\Entity\PatientMiddleName;
+use App\OrderformBundle\Entity\PatientMrn;
+use App\OrderformBundle\Entity\PatientSex;
+use App\OrderformBundle\Entity\PatientSuffix;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -45,7 +45,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-use Oleg\OrderformBundle\Controller\PatientController;
+use App\OrderformBundle\Controller\PatientController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -62,7 +62,7 @@ class CallLogPatientController extends PatientController {
      *
      * @Route("/patient/info/{id}", name="calllog_patient_show", options={"expose"=true})
      * @Method("GET")
-     * @Template("OlegOrderformBundle:Patient:new.html.twig")
+     * @Template("AppOrderformBundle:Patient:new.html.twig")
      */
     public function showAction( Request $request, $id )
     {
@@ -92,7 +92,7 @@ class CallLogPatientController extends PatientController {
      *
      * @Route("/patient/view-patient-record", name="calllog_patient_view_by_mrn", options={"expose"=true})
      * @Method("GET")
-     * @Template("OlegOrderformBundle:Patient:new.html.twig")
+     * @Template("AppOrderformBundle:Patient:new.html.twig")
      */
     public function viewPatientByMrnAction( Request $request )
     {
@@ -120,7 +120,7 @@ class CallLogPatientController extends PatientController {
         $institutions = array();
         $institutions[] = $institution->getId();
 
-        $patients = $em->getRepository('OlegOrderformBundle:Patient')->findOneByIdJoinedToField($institutions,$mrn,"Patient","mrn",$validity,$single,$extra);
+        $patients = $em->getRepository('AppOrderformBundle:Patient')->findOneByIdJoinedToField($institutions,$mrn,"Patient","mrn",$validity,$single,$extra);
 
         if( count($patients) > 1 ) {
             $patient = null;
@@ -177,7 +177,7 @@ class CallLogPatientController extends PatientController {
      *
      * @Route("/patient/{id}/edit", name="calllog_patient_edit", options={"expose"=true})
      * @Method("GET")
-     * @Template("OlegOrderformBundle:Patient:new.html.twig")
+     * @Template("AppOrderformBundle:Patient:new.html.twig")
      */
     public function editAction( Request $request, $id )
     {
@@ -210,7 +210,7 @@ class CallLogPatientController extends PatientController {
      *
      * @Route("/patient/edit-patient-record", name="calllog_patient_edit_by_mrn", options={"expose"=true})
      * @Method("GET")
-     * @Template("OlegOrderformBundle:Patient:new.html.twig")
+     * @Template("AppOrderformBundle:Patient:new.html.twig")
      */
     public function editPatientByMrnAction( Request $request )
     {
@@ -235,17 +235,17 @@ class CallLogPatientController extends PatientController {
         $validity = array('valid','reserved');
         $single = false;
 
-        //$institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName("All Institutions");
-        //$institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName("Weill Cornell Medical College");
-        //$institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName("New York Presbyterian Hospital");
+        //$institution = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByName("All Institutions");
+        //$institution = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByName("Weill Cornell Medical College");
+        //$institution = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByName("New York Presbyterian Hospital");
         $institution = $userSecUtil->getCurrentUserInstitution($user);
         $institutions = array();
         $institutions[] = $institution->getId();
 
-        $patients = $em->getRepository('OlegOrderformBundle:Patient')->findOneByIdJoinedToField($institutions,$mrn,"Patient","mrn",$validity,$single,$extra);
+        $patients = $em->getRepository('AppOrderformBundle:Patient')->findOneByIdJoinedToField($institutions,$mrn,"Patient","mrn",$validity,$single,$extra);
         //echo "found patient=".$entity."<br>";
         //exit("edit patient by mrn $mrn $mrntype");
-        //$patients = $em->getRepository('OlegOrderformBundle:Patient')->findAll(); //testing
+        //$patients = $em->getRepository('AppOrderformBundle:Patient')->findAll(); //testing
 
         if( count($patients) > 1 ) {
             $patient = null;
@@ -305,7 +305,7 @@ class CallLogPatientController extends PatientController {
      *
      * @Route("/patient/{id}/edit", name="calllog_patient_update", options={"expose"=true})
      * @Method("POST")
-     * @Template("OlegOrderformBundle:Patient:new.html.twig")
+     * @Template("AppOrderformBundle:Patient:new.html.twig")
      */
     public function updateAction( Request $request, $id )
     {
@@ -328,7 +328,7 @@ class CallLogPatientController extends PatientController {
      * Displays a form to edit patient info only (not encounters)
      *
      * @Route("/patient-demographics/{id}", name="calllog_single_patient_view")
-     * @Template("OlegCallLogBundle:DataQuality:single-patient-edit.html.twig")
+     * @Template("AppCallLogBundle:DataQuality:single-patient-edit.html.twig")
      * @Method("GET")
      */
     public function patientSingleViewAction(Request $request, Patient $patient)
@@ -358,7 +358,7 @@ class CallLogPatientController extends PatientController {
      * Displays a form to edit patient info only (not encounters)
      *
      * @Route("/patient-demographics/edit/{id}", name="calllog_single_patient_edit")
-     * @Template("OlegCallLogBundle:DataQuality:single-patient-edit.html.twig")
+     * @Template("AppCallLogBundle:DataQuality:single-patient-edit.html.twig")
      * @Method({"GET", "POST"})
      */
     public function patientSingleEditAction(Request $request, Patient $patient)
@@ -436,7 +436,7 @@ class CallLogPatientController extends PatientController {
                 //check mrn type
                 if( $newMrntype ) {
                     if( $newMrntype != $mrnTypeId ) {
-                        $mrntypeObject = $em->getRepository('OlegOrderformBundle:MrnType')->find($newMrntype);
+                        $mrntypeObject = $em->getRepository('AppOrderformBundle:MrnType')->find($newMrntype);
                         if ($mrntypeObject) {
                             //$newMrnObject->setKeytype($mrntypeObject);
                             $createNewMrn = true;
@@ -477,7 +477,7 @@ class CallLogPatientController extends PatientController {
                     //echo "create new sex <br>";
                     $patient->setStatusAllFields($patient->getSex(), $invalidStatus);
                     $newSexObject = new PatientSex('valid', $user, null);
-                    $sexObject = $em->getRepository('OlegUserdirectoryBundle:SexList')->find($newGender);
+                    $sexObject = $em->getRepository('AppUserdirectoryBundle:SexList')->find($newGender);
                     $newSexObject->setField($sexObject);
                     $patient->addSex($newSexObject, true);
                 }
@@ -560,7 +560,7 @@ class CallLogPatientController extends PatientController {
             //$formNodeUtil = $this->get('user_formnode_utility');
             $em = $this->getDoctrine()->getManager();
 
-            $repository = $em->getRepository('OlegOrderformBundle:Message');
+            $repository = $em->getRepository('AppOrderformBundle:Message');
 
             $dql =  $repository->createQueryBuilder("message");
             $dql->select('message');
@@ -689,7 +689,7 @@ class CallLogPatientController extends PatientController {
 
         $sex = $patient->obtainValidField('sex');
         if( $sex ) {
-            $sexObject = $sex->getField(); //Oleg\UserdirectoryBundle\Entity\SexList
+            $sexObject = $sex->getField(); //App\UserdirectoryBundle\Entity\SexList
             //echo "sexObject=".$sexObject->getId().": ".$sexObject->getName()."<br>";
             $singlePatient->setGender($sexObject->getId());
         }
@@ -706,7 +706,7 @@ class CallLogPatientController extends PatientController {
 
         //get mrntypes
         $mrntypeChoices = array();
-        $mrntypeChoicesArr = $em->getRepository('OlegOrderformBundle:MrnType')->findBy(
+        $mrntypeChoicesArr = $em->getRepository('AppOrderformBundle:MrnType')->findBy(
             array(
                 'type'=>array('default','user-added')
             ),
@@ -718,7 +718,7 @@ class CallLogPatientController extends PatientController {
 
         //get genders
         $genderChoices = array();
-        $genderChoicesArr = $em->getRepository('OlegUserdirectoryBundle:SexList')->findBy(array('type'=>array('default','user-added')));
+        $genderChoicesArr = $em->getRepository('AppUserdirectoryBundle:SexList')->findBy(array('type'=>array('default','user-added')));
         foreach( $genderChoicesArr as $thisGender ) {
             $genderChoices[$thisGender->getName()] = $thisGender->getId();
         }
@@ -758,7 +758,7 @@ class CallLogPatientController extends PatientController {
 
         //perform search
         $em = $this->getDoctrine()->getManager();
-        $repository = $em->getRepository('OlegOrderformBundle:Message');
+        $repository = $em->getRepository('AppOrderformBundle:Message');
         $dql = $repository->createQueryBuilder('message');
         $dql->leftJoin("message.patient","patient");
         $dql->leftJoin("message.messageStatus","messageStatus");
@@ -783,7 +783,7 @@ class CallLogPatientController extends PatientController {
     /**
      * Complex Patient List
      * @Route("/patient-list/{listid}/{listname}", name="calllog_complex_patient_list")
-     * @Template("OlegCallLogBundle:PatientList:complex-patient-list.html.twig")
+     * @Template("AppCallLogBundle:PatientList:complex-patient-list.html.twig")
      */
     public function complexPatientListAction(Request $request, $listid, $listname)
     {
@@ -805,14 +805,14 @@ class CallLogPatientController extends PatientController {
         //for now use the mock page complex-patient-list.html.twig
 
         //get list by id
-        //$patientList = $em->getRepository('OlegOrderformBundle:PatientListHierarchy')->find($listid);
+        //$patientList = $em->getRepository('AppOrderformBundle:PatientListHierarchy')->find($listid);
         //$patients = $patientList->getChildren();
 
-        $patientGroup = $em->getRepository('OlegOrderformBundle:PatientListHierarchyGroupType')->findOneByName('Patient');
+        $patientGroup = $em->getRepository('AppOrderformBundle:PatientListHierarchyGroupType')->findOneByName('Patient');
 
         $parameters = array();
 
-        $repository = $em->getRepository('OlegOrderformBundle:PatientListHierarchy');
+        $repository = $em->getRepository('AppOrderformBundle:PatientListHierarchy');
         $dql = $repository->createQueryBuilder("list");
 
         $dql->leftJoin("list.patient", "patient");
@@ -847,7 +847,7 @@ class CallLogPatientController extends PatientController {
 
         //echo "patients=".count($patients)."<br>";
 
-        $patientListHierarchyObject = $em->getRepository('OlegUserdirectoryBundle:PlatformListManagerRootList')->findOneByName('Patient List Hierarchy');
+        $patientListHierarchyObject = $em->getRepository('AppUserdirectoryBundle:PlatformListManagerRootList')->findOneByName('Patient List Hierarchy');
 
         //create patient form for "Add Patient" section
         $status = 'invalid';
@@ -857,7 +857,7 @@ class CallLogPatientController extends PatientController {
         $newPatient->addEncounter($newEncounter);
         $patientForm = $this->createPatientForm($newPatient);
 
-        //src/Oleg/CallLogBundle/Resources/views/PatientList/complex-patient-list.html.twig
+        //src/App/CallLogBundle/Resources/views/PatientList/complex-patient-list.html.twig
         return array(
             'patientListId' => $listid,
             'patientNodes' => $patients,
@@ -876,7 +876,7 @@ class CallLogPatientController extends PatientController {
      * Listing patients whose notes have been updated in the last 96 hours (4 days)
      *
      * @Route("/recent-patients", name="calllog_recent_patients")
-     * @Template("OlegCallLogBundle:PatientList:recent-patients.html.twig")
+     * @Template("AppCallLogBundle:PatientList:recent-patients.html.twig")
      */
     public function recentPatientsAction(Request $request)
     {
@@ -892,7 +892,7 @@ class CallLogPatientController extends PatientController {
 
         $parameters = array();
 
-        $repository = $em->getRepository('OlegOrderformBundle:Patient');
+        $repository = $em->getRepository('AppOrderformBundle:Patient');
         $dql = $repository->createQueryBuilder("patient");
 
         $dql->leftJoin("patient.message", "message");
@@ -950,7 +950,7 @@ class CallLogPatientController extends PatientController {
 //        $newPatient->addEncounter($newEncounter);
 //        $patientForm = $this->createPatientForm($newPatient);
 
-        //src/Oleg/CallLogBundle/Resources/views/PatientList/complex-patient-list.html.twig
+        //src/App/CallLogBundle/Resources/views/PatientList/complex-patient-list.html.twig
         return array(
             'patients' => $patients,
             'title' => "Recent Patients (96 hours)",
@@ -968,13 +968,13 @@ class CallLogPatientController extends PatientController {
 
         $em = $this->getDoctrine()->getManager();
 
-        $patientList = $em->getRepository('OlegOrderformBundle:PatientListHierarchy')->find($patientListId);
+        $patientList = $em->getRepository('AppOrderformBundle:PatientListHierarchy')->find($patientListId);
         if( !$patientList ) {
             throw new \Exception( "PatientListHierarchy not found by id $patientListId" );
         }
 
         //remove patient from the list
-        $repository = $em->getRepository('OlegOrderformBundle:PatientListHierarchy');
+        $repository = $em->getRepository('AppOrderformBundle:PatientListHierarchy');
         $dql = $repository->createQueryBuilder("list");
 
         $dql->leftJoin("list.patient", "patient");
@@ -1017,7 +1017,7 @@ class CallLogPatientController extends PatientController {
      * @Route("/patient/add-patient-to-list/{patientListId}/{patientId}", name="calllog_add_patient_to_list")
      * @Route("/patient/add-patient-to-list-ajax/{patientListId}/{patientId}", name="calllog_add_patient_to_list_ajax", options={"expose"=true})
      *
-     * @Template("OlegCallLogBundle:PatientList:complex-patient-list.html.twig")
+     * @Template("AppCallLogBundle:PatientList:complex-patient-list.html.twig")
      */
     public function addPatientToListAction(Request $request, $patientListId, $patientId) {
         if( false == $this->get('security.authorization_checker')->isGranted('ROLE_CALLLOG_USER') ){
@@ -1027,13 +1027,13 @@ class CallLogPatientController extends PatientController {
         $calllogUtil = $this->get('calllog_util');
         $em = $this->getDoctrine()->getManager();
 
-        $patientList = $em->getRepository('OlegOrderformBundle:PatientListHierarchy')->find($patientListId);
+        $patientList = $em->getRepository('AppOrderformBundle:PatientListHierarchy')->find($patientListId);
         if( !$patientList ) {
             throw new \Exception( "PatientListHierarchy not found by id $patientListId" );
         }
 
         //add patient from the list
-        $patient = $em->getRepository('OlegOrderformBundle:Patient')->find($patientId);
+        $patient = $em->getRepository('AppOrderformBundle:Patient')->find($patientId);
         if( !$patient ) {
             throw new \Exception( "Patient not found by id $patientId" );
         }
@@ -1095,7 +1095,7 @@ class CallLogPatientController extends PatientController {
         $patientid = $request->query->get('patientid');
         //echo "patientid=".$patientid."<br>";
 
-        $patient = $em->getRepository('OlegOrderformBundle:Patient')->find($patientid);
+        $patient = $em->getRepository('AppOrderformBundle:Patient')->find($patientid);
         if( !$patient ) {
             throw new \Exception( "Patient not found by id $patientid" );
         }
@@ -1131,7 +1131,7 @@ class CallLogPatientController extends PatientController {
             //echo "Your variable is not an integer";
             //$messageCategoryId = null;
         //} else {
-            //$filterMessageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->find($messageCategoryId);
+            //$filterMessageCategory = $em->getRepository('AppOrderformBundle:MessageCategory')->find($messageCategoryId);
             //echo "filter=".$filterMessageCategory."<br>";
         //}
         if( !$messageCategoryId || $messageCategoryId == "null" || $messageCategoryId == "undefined" ) {
@@ -1144,10 +1144,10 @@ class CallLogPatientController extends PatientController {
         $testing = $request->query->get('testing');
 
         //$showUserArr = $this->showUser($userid,$this->container->getParameter('employees.sitename'),false);
-        //$template = $this->render('OlegUserdirectoryBundle:Profile:edit_user_only.html.twig',$showUserArr)->getContent();
+        //$template = $this->render('AppUserdirectoryBundle:Profile:edit_user_only.html.twig',$showUserArr)->getContent();
 
         //child nodes of "Pathology Call Log Entry"
-        //$messageCategoriePathCall = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName("Pathology Call Log Entry");
+        //$messageCategoriePathCall = $em->getRepository('AppOrderformBundle:MessageCategory')->findOneByName("Pathology Call Log Entry");
         $messageCategoriePathCall = $calllogUtil->getDefaultMessageCategory();
         $messageCategories = array();
         if( $messageCategoriePathCall ) {
@@ -1178,7 +1178,7 @@ class CallLogPatientController extends PatientController {
         //$this->testSelectMessagesWithMaxVersion($patientid);
 
         $queryParameters = array();
-        $repository = $em->getRepository('OlegOrderformBundle:Message');
+        $repository = $em->getRepository('AppOrderformBundle:Message');
         $dql = $repository->createQueryBuilder('message');
         $dql->select('message');
 
@@ -1210,7 +1210,7 @@ class CallLogPatientController extends PatientController {
         $dql->where('patient.id IN (:patientIds)');
         $queryParameters['patientIds'] = $patientIds;
 
-        //$dql->andWhere("(SELECT messages, MAX(messages.version) AS maxversion FROM OlegOrderformBundle:Message WHERE messages.id=message.id)");
+        //$dql->andWhere("(SELECT messages, MAX(messages.version) AS maxversion FROM AppOrderformBundle:Message WHERE messages.id=message.id)");
 
         //We can use the fact that latest version messages have status not "Deleted"
         $dql->andWhere("messageStatus.name != :deletedMessageStatus");
@@ -1297,7 +1297,7 @@ class CallLogPatientController extends PatientController {
             'messageid' => $messageId
             //'testing' => true
         );
-        $htmlPage = $this->render('OlegCallLogBundle:PatientList:patient_entries.html.twig',$params);
+        $htmlPage = $this->render('AppCallLogBundle:PatientList:patient_entries.html.twig',$params);
 
         //testing
         if( $testing ) {
@@ -1314,7 +1314,7 @@ class CallLogPatientController extends PatientController {
     //NOT USED
     public function testSelectMessagesWithMaxVersion( $patientid ) {
         $em = $this->getDoctrine()->getManager();
-        $repository = $em->getRepository('OlegOrderformBundle:Message');
+        $repository = $em->getRepository('AppOrderformBundle:Message');
         $query = $repository->createQueryBuilder('s');
         $query->select('s, MAX(s.version)');
         $query->leftJoin("s.patient","patient");
@@ -1343,9 +1343,9 @@ class CallLogPatientController extends PatientController {
 
         $query = $em->createQuery('
             SELECT message, message.version AS HIDDEN
-            FROM OlegOrderformBundle:Message message
+            FROM AppOrderformBundle:Message message
             INNER JOIN message.patient patient'.
-            ' LEFT OUTER JOIN OlegOrderformBundle:Message b ON message.id = b.id AND message.version < b.version'.
+            ' LEFT OUTER JOIN AppOrderformBundle:Message b ON message.id = b.id AND message.version < b.version'.
             ' WHERE patient.id = :patient
             ORDER BY message.oid ASC'
         )->setParameter('patient', $patientid);
@@ -1387,7 +1387,7 @@ class CallLogPatientController extends PatientController {
 
         $cycle = $request->query->get('cycle');
 
-        $patient = $em->getRepository('OlegOrderformBundle:Patient')->find($patientid);
+        $patient = $em->getRepository('AppOrderformBundle:Patient')->find($patientid);
         if( !$patient ) {
             throw new \Exception( "Patient not found by id $patientid" );
         }
@@ -1423,7 +1423,7 @@ class CallLogPatientController extends PatientController {
         //echo "Your variable is not an integer";
         //$messageCategoryId = null;
         //} else {
-        //$filterMessageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->find($messageCategoryId);
+        //$filterMessageCategory = $em->getRepository('AppOrderformBundle:MessageCategory')->find($messageCategoryId);
         //echo "filter=".$filterMessageCategory."<br>";
         //}
         if( !$messageCategoryId || $messageCategoryId == "null" || $messageCategoryId == "undefined" ) {
@@ -1436,10 +1436,10 @@ class CallLogPatientController extends PatientController {
         $testing = $request->query->get('testing');
 
         //$showUserArr = $this->showUser($userid,$this->container->getParameter('employees.sitename'),false);
-        //$template = $this->render('OlegUserdirectoryBundle:Profile:edit_user_only.html.twig',$showUserArr)->getContent();
+        //$template = $this->render('AppUserdirectoryBundle:Profile:edit_user_only.html.twig',$showUserArr)->getContent();
 
         //child nodes of "Pathology Call Log Entry"
-        //$messageCategoriePathCall = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName("Pathology Call Log Entry");
+        //$messageCategoriePathCall = $em->getRepository('AppOrderformBundle:MessageCategory')->findOneByName("Pathology Call Log Entry");
         $messageCategoriePathCall = $calllogUtil->getDefaultMessageCategory();
         $messageCategories = array();
         if( $messageCategoriePathCall ) {
@@ -1454,7 +1454,7 @@ class CallLogPatientController extends PatientController {
         //////////////// find previous pending tasks ////////////////
 
         $queryParameters = array();
-        $repository = $em->getRepository('OlegOrderformBundle:CalllogTask');
+        $repository = $em->getRepository('AppOrderformBundle:CalllogTask');
         $dql = $repository->createQueryBuilder('task');
         $dql->select('task');
 
@@ -1547,7 +1547,7 @@ class CallLogPatientController extends PatientController {
             'messageid' => $messageId
             //'testing' => true
         );
-        $htmlPage = $this->render('OlegCallLogBundle:PatientList:patient_tasks.html.twig',$params);
+        $htmlPage = $this->render('AppCallLogBundle:PatientList:patient_tasks.html.twig',$params);
 
         //testing
         if( $testing ) {
@@ -1621,7 +1621,7 @@ class CallLogPatientController extends PatientController {
         $patientId = trim($request->get('patientId'));
         //echo "patientId=$patientId<br>";
 
-        $patient = $em->getRepository('OlegOrderformBundle:Patient')->find($patientId);
+        $patient = $em->getRepository('AppOrderformBundle:Patient')->find($patientId);
         if( !$patient ) {
             $response = new Response();
             $response->headers->set('Content-Type', 'application/json');
@@ -1661,7 +1661,7 @@ class CallLogPatientController extends PatientController {
         $encounterId = trim($request->get('encounterId'));
         //echo "encounterId=$encounterId<br>";
 
-        $encounter = $em->getRepository('OlegOrderformBundle:Encounter')->find($encounterId);
+        $encounter = $em->getRepository('AppOrderformBundle:Encounter')->find($encounterId);
         if( !$encounter ) {
             $response = new Response();
             $response->headers->set('Content-Type', 'application/json');
@@ -1694,7 +1694,7 @@ class CallLogPatientController extends PatientController {
             //'messageid' => $messageId
             //'testing' => true
         );
-        $htmlPage = $this->render('OlegCallLogBundle:PatientList:encounter_show.html.twig',$params);
+        $htmlPage = $this->render('AppCallLogBundle:PatientList:encounter_show.html.twig',$params);
 
         //testing
         //$response = new Response($htmlPage);

@@ -15,11 +15,11 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Form;
+namespace App\OrderformBundle\Form;
 
-use Oleg\CallLogBundle\Form\CalllogEncounterNumberType;
-use Oleg\OrderformBundle\Form\EncounterAttendingPhysicianType;
-use Oleg\OrderformBundle\Form\EncounterReferringProviderType;
+use App\CallLogBundle\Form\CalllogEncounterNumberType;
+use App\OrderformBundle\Form\EncounterAttendingPhysicianType;
+use App\OrderformBundle\Form\EncounterReferringProviderType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -167,7 +167,7 @@ class EncounterType extends AbstractType
         );
         $gen_attr = array(
             'label'=>"Patient's Age (at the time of encounter):",
-            'class'=>'Oleg\OrderformBundle\Entity\EncounterPatage',
+            'class'=>'App\OrderformBundle\Entity\EncounterPatage',
             'type'=>'text');
         $builder->add('patage', CollectionType::class, array(
             //GenericFieldType($this->params, null, $gen_attr, $attr),
@@ -189,7 +189,7 @@ class EncounterType extends AbstractType
 
         //pathistory'
         $attr = array('class'=>'textarea form-control encounterhistory-field');
-        $gen_attr = array('label'=>"Clinical History (at the time of encounter):",'class'=>'Oleg\OrderformBundle\Entity\EncounterPathistory','type'=>null);
+        $gen_attr = array('label'=>"Clinical History (at the time of encounter):",'class'=>'App\OrderformBundle\Entity\EncounterPathistory','type'=>null);
         $builder->add('pathistory', CollectionType::class, array(
             //GenericFieldType($this->params, null, $gen_attr, $attr),
             'entry_type' => GenericFieldType::class,
@@ -216,7 +216,7 @@ class EncounterType extends AbstractType
             //echo "flag datastructure=".$this->params['datastructure']."<br>";
 
 //            $builder->add('keytype', EntityType::class, array(
-//                'class' => 'OlegOrderformBundle:EncounterType',
+//                'class' => 'AppOrderformBundle:EncounterType',
 //                'label' => 'Encounter Type:',
 //                'required' => true,
 //                'data' => 1,
@@ -258,7 +258,7 @@ class EncounterType extends AbstractType
             ));
 
 //            $sources = array('WCM Epic Ambulatory EMR','Written or oral referral');
-//            $params = array('name'=>'Encounter','dataClass'=>'Oleg\OrderformBundle\Entity\EncounterOrder','typename'=>'encounterorder','sources'=>$sources);
+//            $params = array('name'=>'Encounter','dataClass'=>'App\OrderformBundle\Entity\EncounterOrder','typename'=>'encounterorder','sources'=>$sources);
 //            $builder->add('order', CollectionType::class, array(
 //                'type' => new GeneralOrderType($params, null),
 //                'allow_add' => true,
@@ -283,7 +283,7 @@ class EncounterType extends AbstractType
             ));
 
             $builder->add('provider', EntityType::class, array(
-                'class' => 'OlegUserdirectoryBundle:User',
+                'class' => 'AppUserdirectoryBundle:User',
                 'label' => 'Provider:',
                 'required' => false,
                 'attr' => array('class' => 'combobox combobox-width'),
@@ -311,7 +311,7 @@ class EncounterType extends AbstractType
             //echo "flag datastructure=".$this->params['datastructure']."<br>";
 
             $builder->add('provider', EntityType::class, array(
-                'class' => 'OlegUserdirectoryBundle:User',
+                'class' => 'AppUserdirectoryBundle:User',
                 'label' => 'Provider:',
                 'required' => false,
                 'attr' => array('class' => 'combobox combobox-width'),
@@ -331,7 +331,7 @@ class EncounterType extends AbstractType
             ));
 
             $builder->add( 'encounterStatus', EntityType::class, array(
-                'class' => 'OlegOrderformBundle:EncounterStatusList',
+                'class' => 'AppOrderformBundle:EncounterStatusList',
                 //'choice_label' => 'name',
                 'label'=>'Encounter Status:',
                 'required'=> false,
@@ -414,7 +414,7 @@ class EncounterType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\Encounter',
+            'data_class' => 'App\OrderformBundle\Entity\Encounter',
             'form_custom_value' => null
         ));
     }

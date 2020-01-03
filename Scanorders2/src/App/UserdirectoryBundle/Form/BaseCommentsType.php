@@ -15,11 +15,11 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Form;
+namespace App\UserdirectoryBundle\Form;
 
 
-use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
-use Oleg\UserdirectoryBundle\Entity\PrivateComment;
+use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
+use App\UserdirectoryBundle\Entity\PrivateComment;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -60,7 +60,7 @@ class BaseCommentsType extends AbstractType
             'attr' => array('class' => 'textarea form-control')
         ));
 
-        if( $this->params['fullClassName'] == "Oleg\UserdirectoryBundle\Entity\PrivateComment" ) {
+        if( $this->params['fullClassName'] == "App\UserdirectoryBundle\Entity\PrivateComment" ) {
             $baseAttr = new PrivateComment();
             $builder->add('status', ChoiceType::class, array(
                 'disabled' => ($this->params['roleAdmin'] ? false : true),
@@ -116,7 +116,7 @@ class BaseCommentsType extends AbstractType
 
             $label = null;
 			$mapper = array(
-                        'prefix' => "Oleg",
+                        'prefix' => "App",
                         'className' => "CommentTypeList",
                         'bundleName' => "UserdirectoryBundle",
                         'organizationalGroupType' => "CommentGroupType"
@@ -124,11 +124,11 @@ class BaseCommentsType extends AbstractType
             if( $title ) {
                 $commentType = $title->getCommentType();
                 if( $commentType ) {                  
-                    $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:CommentTypeList')->getLevelLabels($commentType,$mapper) . ":";
+                    $label = $this->params['em']->getRepository('AppUserdirectoryBundle:CommentTypeList')->getLevelLabels($commentType,$mapper) . ":";
                 }
             }
 			if( !$label ) {
-                $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:CommentTypeList')->getLevelLabels(null,$mapper) . ":";
+                $label = $this->params['em']->getRepository('AppUserdirectoryBundle:CommentTypeList')->getLevelLabels(null,$mapper) . ":";
             }
 
             $form->add('commentType', CustomSelectorType::class, array( //'employees_custom_selector'

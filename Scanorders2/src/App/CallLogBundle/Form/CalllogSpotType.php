@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\CallLogBundle\Form;
+namespace App\CallLogBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -41,7 +41,7 @@ class CalllogSpotType extends AbstractType
         //exit();
         $builder->add('currentLocation', CalllogLocationType::class, array(
             'form_custom_value' => $this->params,
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\Location',
+            'data_class' => 'App\UserdirectoryBundle\Entity\Location',
             'label' => false,
         ));
 
@@ -50,7 +50,7 @@ class CalllogSpotType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\Spot',
+            'data_class' => 'App\UserdirectoryBundle\Entity\Spot',
             'form_custom_value' => null
         ));
     }

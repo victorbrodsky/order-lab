@@ -84,7 +84,7 @@ UPDATE public.user_siteparameters
 
 UPDATE public.user_siteparameters SET connectionchannel='http';
 UPDATE public.user_siteparameters SET emailcriticalerror=false;
-UPDATE public.user_siteparameters SET p12keypathfellapp='/opt/order-lab/Scanorders2/src/Oleg/FellAppBundle/Util/FellowshipApplication-f1d9f98353e5.p12';
+UPDATE public.user_siteparameters SET p12keypathfellapp='/opt/order-lab/Scanorders2/src/App/FellAppBundle/Util/FellowshipApplication-f1d9f98353e5.p12';
 
 UPDATE public.user_siteparameters SET pdftkfilenamefellapp='/usr/bin';
 UPDATE public.user_siteparameters SET libreofficeconverttopdffilenamefellapplinux='soffice';

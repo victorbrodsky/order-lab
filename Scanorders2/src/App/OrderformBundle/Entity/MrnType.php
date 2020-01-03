@@ -15,16 +15,16 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Entity;
+namespace App\OrderformBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-use Oleg\UserdirectoryBundle\Entity\ListAbstract;
+use App\UserdirectoryBundle\Entity\ListAbstract;
 
 /**
- * Note: this file is used in Oleg\UserdirectoryBundle\Entity\Identifier. Do not change!
+ * Note: this file is used in App\UserdirectoryBundle\Entity\Identifier. Do not change!
  *
  * @ORM\Entity
  * @ORM\Table(name="scan_mrntype")
@@ -54,7 +54,7 @@ class MrnType extends ListAbstract
         $this->patientmrn = new ArrayCollection();
     }
 
-    public function addPatientmrn(\Oleg\OrderformBundle\Entity\PatientMrn $patientmrn)
+    public function addPatientmrn(\App\OrderformBundle\Entity\PatientMrn $patientmrn)
     {
         if( !$this->patientmrn->contains($patientmrn) ) {
             $this->patientmrn->add($patientmrn);
@@ -62,7 +62,7 @@ class MrnType extends ListAbstract
         return $this;
     }
 
-    public function removePatientmrn(\Oleg\OrderformBundle\Entity\PatientMrn $patientmrn)
+    public function removePatientmrn(\App\OrderformBundle\Entity\PatientMrn $patientmrn)
     {
         $this->patientmrn->removeElement($patientmrn);
     }

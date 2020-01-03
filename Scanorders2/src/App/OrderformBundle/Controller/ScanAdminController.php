@@ -15,33 +15,33 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Controller;
+namespace App\OrderformBundle\Controller;
 
 
 
 
 
 
-use Oleg\OrderformBundle\Entity\AmendmentReasonList;
-use Oleg\OrderformBundle\Entity\CalllogAttachmentTypeList;
-use Oleg\OrderformBundle\Entity\CalllogEntryTagsList;
-use Oleg\OrderformBundle\Entity\CalllogTaskTypeList;
-use Oleg\OrderformBundle\Entity\CourseGroupType;
-use Oleg\OrderformBundle\Entity\DiseaseOriginList;
-use Oleg\OrderformBundle\Entity\DiseaseTypeList;
-use Oleg\OrderformBundle\Entity\EmbedderInstructionList;
-use Oleg\OrderformBundle\Entity\EncounterInfoType;
-use Oleg\OrderformBundle\Entity\EncounterInfoTypeList;
-use Oleg\OrderformBundle\Entity\EncounterStatusList;
-use Oleg\OrderformBundle\Entity\ImageAnalysisAlgorithmList;
-use Oleg\OrderformBundle\Entity\Magnification;
-use Oleg\OrderformBundle\Entity\MessageStatusList;
-use Oleg\OrderformBundle\Entity\MessageTypeClassifiers;
-use Oleg\OrderformBundle\Entity\PatientListHierarchy;
-use Oleg\OrderformBundle\Entity\PatientListHierarchyGroupType;
-use Oleg\OrderformBundle\Entity\PatientRecordStatusList;
-use Oleg\OrderformBundle\Entity\ResearchGroupType;
-//use Oleg\OrderformBundle\Entity\SystemAccountRequestType;
+use App\OrderformBundle\Entity\AmendmentReasonList;
+use App\OrderformBundle\Entity\CalllogAttachmentTypeList;
+use App\OrderformBundle\Entity\CalllogEntryTagsList;
+use App\OrderformBundle\Entity\CalllogTaskTypeList;
+use App\OrderformBundle\Entity\CourseGroupType;
+use App\OrderformBundle\Entity\DiseaseOriginList;
+use App\OrderformBundle\Entity\DiseaseTypeList;
+use App\OrderformBundle\Entity\EmbedderInstructionList;
+use App\OrderformBundle\Entity\EncounterInfoType;
+use App\OrderformBundle\Entity\EncounterInfoTypeList;
+use App\OrderformBundle\Entity\EncounterStatusList;
+use App\OrderformBundle\Entity\ImageAnalysisAlgorithmList;
+use App\OrderformBundle\Entity\Magnification;
+use App\OrderformBundle\Entity\MessageStatusList;
+use App\OrderformBundle\Entity\MessageTypeClassifiers;
+use App\OrderformBundle\Entity\PatientListHierarchy;
+use App\OrderformBundle\Entity\PatientListHierarchyGroupType;
+use App\OrderformBundle\Entity\PatientRecordStatusList;
+use App\OrderformBundle\Entity\ResearchGroupType;
+//use App\OrderformBundle\Entity\SystemAccountRequestType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -50,29 +50,29 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 
-use Oleg\OrderformBundle\Entity\AccessionType;
-use Oleg\OrderformBundle\Entity\EncounterType;
-use Oleg\OrderformBundle\Entity\ProcedureType;
-use Oleg\OrderformBundle\Entity\StainList;
-use Oleg\OrderformBundle\Entity\OrganList;
-use Oleg\OrderformBundle\Entity\ProcedureList;
-use Oleg\OrderformBundle\Entity\Status;
-use Oleg\OrderformBundle\Entity\SlideType;
-use Oleg\OrderformBundle\Entity\MrnType;
-use Oleg\OrderformBundle\Helper\FormHelper;
-use Oleg\OrderformBundle\Entity\RegionToScan;
-use Oleg\OrderformBundle\Entity\ProcessorComments;
-use Oleg\OrderformBundle\Entity\Urgency;
-use Oleg\OrderformBundle\Entity\ProgressCommentsEventTypeList;
-use Oleg\OrderformBundle\Entity\RaceList;
-use Oleg\OrderformBundle\Entity\OrderDelivery;
-use Oleg\OrderformBundle\Entity\MessageCategory;
-use Oleg\OrderformBundle\Entity\PatientTypeList;
+use App\OrderformBundle\Entity\AccessionType;
+use App\OrderformBundle\Entity\EncounterType;
+use App\OrderformBundle\Entity\ProcedureType;
+use App\OrderformBundle\Entity\StainList;
+use App\OrderformBundle\Entity\OrganList;
+use App\OrderformBundle\Entity\ProcedureList;
+use App\OrderformBundle\Entity\Status;
+use App\OrderformBundle\Entity\SlideType;
+use App\OrderformBundle\Entity\MrnType;
+use App\OrderformBundle\Helper\FormHelper;
+use App\OrderformBundle\Entity\RegionToScan;
+use App\OrderformBundle\Entity\ProcessorComments;
+use App\OrderformBundle\Entity\Urgency;
+use App\OrderformBundle\Entity\ProgressCommentsEventTypeList;
+use App\OrderformBundle\Entity\RaceList;
+use App\OrderformBundle\Entity\OrderDelivery;
+use App\OrderformBundle\Entity\MessageCategory;
+use App\OrderformBundle\Entity\PatientTypeList;
 
 
-use Oleg\UserdirectoryBundle\Util\UserUtil;
-use Oleg\UserdirectoryBundle\Controller\AdminController;
-use Oleg\UserdirectoryBundle\Entity\SiteParameters;
+use App\UserdirectoryBundle\Util\UserUtil;
+use App\UserdirectoryBundle\Controller\AdminController;
+use App\UserdirectoryBundle\Entity\SiteParameters;
 
 
 /**
@@ -85,7 +85,7 @@ class ScanAdminController extends AdminController
      *
      * @Route("/lists/", name="admin_index")
      * @Method("GET")
-     * @Template("OlegOrderformBundle:Admin:index.html.twig")
+     * @Template("AppOrderformBundle:Admin:index.html.twig")
      */
     public function indexAction()
     {
@@ -93,7 +93,7 @@ class ScanAdminController extends AdminController
         $environment = 'dev'; //default
 
         $em = $this->getDoctrine()->getManager();
-        $params = $roles = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+        $params = $roles = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
 
         if( count($params) > 1 ) {
             throw new \Exception( 'Must have only one parameter object. Found '.count($params).'object(s)' );
@@ -104,7 +104,7 @@ class ScanAdminController extends AdminController
             $environment = $param->getEnvironment();
         }
 
-        return $this->render('OlegOrderformBundle:Admin:index.html.twig', array('environment'=>$environment));
+        return $this->render('AppOrderformBundle:Admin:index.html.twig', array('environment'=>$environment));
     }
 
     /**
@@ -112,7 +112,7 @@ class ScanAdminController extends AdminController
      *
      * @Route("/hierarchies/", name="scan_admin_hierarchy_index")
      * @Method("GET")
-     * @Template("OlegOrderformBundle:Admin:hierarchy-index.html.twig")
+     * @Template("AppOrderformBundle:Admin:hierarchy-index.html.twig")
      */
     public function indexHierarchyAction()
     {
@@ -120,7 +120,7 @@ class ScanAdminController extends AdminController
         $environment = 'dev'; //default
 
         $em = $this->getDoctrine()->getManager();
-        $params = $roles = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+        $params = $roles = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
 
         if( count($params) > 1 ) {
             throw new \Exception( 'Must have only one parameter object. Found '.count($params).'object(s)' );
@@ -133,7 +133,7 @@ class ScanAdminController extends AdminController
 
         $filters = $this->getDefaultHierarchyFilter();
 
-        return $this->render('OlegOrderformBundle:Admin:hierarchy-index.html.twig', array('environment'=>$environment,'filters'=>$filters));
+        return $this->render('AppOrderformBundle:Admin:hierarchy-index.html.twig', array('environment'=>$environment,'filters'=>$filters));
     }
 
 
@@ -349,7 +349,7 @@ class ScanAdminController extends AdminController
     {
 
 //        $em = $this->getDoctrine()->getManager();
-//        $entities = $em->getRepository('OlegOrderformBundle:ProcedureList')->findAll();
+//        $entities = $em->getRepository('AppOrderformBundle:ProcedureList')->findAll();
 
         $count = $this->generateProcedures();
 
@@ -484,7 +484,7 @@ class ScanAdminController extends AdminController
 //        $username = $this->get('security.token_storage')->getToken()->getUser();
 //
 //        $em = $this->getDoctrine()->getManager();
-//        $entities = $em->getRepository('OlegOrderformBundle:StainList')->findAll();
+//        $entities = $em->getRepository('AppOrderformBundle:StainList')->findAll();
 //
 //        if( $entities ) {
 //
@@ -585,14 +585,14 @@ class ScanAdminController extends AdminController
             //    continue;
             //}
 
-            //if( $em->getRepository('OlegOrderformBundle:StainList')->findOneByName($stainName) ) {
+            //if( $em->getRepository('AppOrderformBundle:StainList')->findOneByName($stainName) ) {
             //    continue;
             //}
 
             //exit('stain exit');
 
             if( $stainName ) {
-                $entity = $em->getRepository('OlegOrderformBundle:StainList')->findOneByName($stainName);
+                $entity = $em->getRepository('AppOrderformBundle:StainList')->findOneByName($stainName);
             }
 
             if( !$entity ) {
@@ -624,7 +624,7 @@ class ScanAdminController extends AdminController
 
             if( $synonym ) {
                 //echo "synonym=".$synonym."<br>";
-                $synonymEntity = $em->getRepository('OlegOrderformBundle:StainList')->findOneByName($synonym);
+                $synonymEntity = $em->getRepository('AppOrderformBundle:StainList')->findOneByName($synonym);
                 if( !$synonymEntity ) {
                     //exit("Synonim not found!!!!!!!!!!!!!! Name=".$synonym);
                     //$count = $count + 10;
@@ -672,7 +672,7 @@ class ScanAdminController extends AdminController
 //        }
 //
 //        $em = $this->getDoctrine()->getManager();
-//        $stains = $em->getRepository('OlegOrderformBundle:StainList')->findAll();
+//        $stains = $em->getRepository('AppOrderformBundle:StainList')->findAll();
 //
 //        $count = 0;
 //
@@ -791,7 +791,7 @@ class ScanAdminController extends AdminController
                 continue;
             }
 
-            if( $em->getRepository('OlegOrderformBundle:StainList')->findOneByName($stainName) ) {
+            if( $em->getRepository('AppOrderformBundle:StainList')->findOneByName($stainName) ) {
                 continue;
             }
 
@@ -819,7 +819,7 @@ class ScanAdminController extends AdminController
                     continue;
                 }
 
-                $synonymEntity = $em->getRepository('OlegOrderformBundle:StainList')->findOneByName($synonym);
+                $synonymEntity = $em->getRepository('AppOrderformBundle:StainList')->findOneByName($synonym);
                 if( !$synonymEntity ) {
 
                     $count = $count + 10;
@@ -851,7 +851,7 @@ class ScanAdminController extends AdminController
     public function generateOrgans() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegOrderformBundle:OrganList')->findAll();
+        $entities = $em->getRepository('AppOrderformBundle:OrganList')->findAll();
 
         if( $entities ) {
 
@@ -882,7 +882,7 @@ class ScanAdminController extends AdminController
     public function generateProcedures() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegOrderformBundle:ProcedureList')->findAll();
+        $entities = $em->getRepository('AppOrderformBundle:ProcedureList')->findAll();
 
         if( $entities ) {
 
@@ -914,7 +914,7 @@ class ScanAdminController extends AdminController
         $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegOrderformBundle:Status')->findAll();
+        $entities = $em->getRepository('AppOrderformBundle:Status')->findAll();
 
         if( $entities ) {
             return -1;
@@ -997,7 +997,7 @@ class ScanAdminController extends AdminController
         $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegOrderformBundle:SlideType')->findAll();
+        $entities = $em->getRepository('AppOrderformBundle:SlideType')->findAll();
 
         if( $entities ) {
 
@@ -1028,7 +1028,7 @@ class ScanAdminController extends AdminController
         $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
-//        $entities = $em->getRepository('OlegOrderformBundle:MrnType')->findAll();
+//        $entities = $em->getRepository('AppOrderformBundle:MrnType')->findAll();
 //        if( $entities ) {
 //            return -1;
 //        }
@@ -1054,7 +1054,7 @@ class ScanAdminController extends AdminController
         $count = 10;
         foreach( $types as $type ) {
 
-            $mrnType = $em->getRepository('OlegOrderformBundle:MrnType')->findOneByName($type);
+            $mrnType = $em->getRepository('AppOrderformBundle:MrnType')->findOneByName($type);
             if( $mrnType ) {
                 continue;
             }
@@ -1090,7 +1090,7 @@ class ScanAdminController extends AdminController
         $count = 10;
         foreach( $types as $name=>$level ) {
 
-            $messageTypeClassifier = $em->getRepository('OlegOrderformBundle:MessageTypeClassifiers')->findOneByName($name);
+            $messageTypeClassifier = $em->getRepository('AppOrderformBundle:MessageTypeClassifiers')->findOneByName($name);
             if( $messageTypeClassifier ) {
                 continue;
             } else {
@@ -1238,13 +1238,13 @@ class ScanAdminController extends AdminController
             //find by name and by parent ($parentCategory) if exists
             if( $parentCategory ) {
                 $mapper = array(
-                    'prefix' => "Oleg",
+                    'prefix' => "App",
                     'className' => "MessageCategory",
                     'bundleName' => "OrderformBundle"
                 );
-                $messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findByChildnameAndParent($name,$parentCategory,$mapper);
+                $messageCategory = $em->getRepository('AppOrderformBundle:MessageCategory')->findByChildnameAndParent($name,$parentCategory,$mapper);
             } else {
-                $messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($name);
+                $messageCategory = $em->getRepository('AppOrderformBundle:MessageCategory')->findOneByName($name);
             }
 
             if( !$messageCategory ) {
@@ -1257,7 +1257,7 @@ class ScanAdminController extends AdminController
                 //try to get default group by level
                 if( !$messageCategory->getOrganizationalGroupType() ) {
                     if( $messageCategory->getLevel() ) {
-                        $messageTypeClassifier = $em->getRepository('OlegOrderformBundle:MessageTypeClassifiers')->findOneByLevel($messageCategory->getLevel());
+                        $messageTypeClassifier = $em->getRepository('AppOrderformBundle:MessageTypeClassifiers')->findOneByLevel($messageCategory->getLevel());
                         if ($messageTypeClassifier) {
                             $messageCategory->setOrganizationalGroupType($messageTypeClassifier);
                         }
@@ -1311,7 +1311,7 @@ class ScanAdminController extends AdminController
     public function generatePatientType() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegOrderformBundle:PatientType')->findAll();
+        $entities = $em->getRepository('AppOrderformBundle:PatientType')->findAll();
 
         if( $entities ) {
             return -1;
@@ -1368,7 +1368,7 @@ class ScanAdminController extends AdminController
     public function generateAccessionType() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegOrderformBundle:AccessionType')->findAll();
+        $entities = $em->getRepository('AppOrderformBundle:AccessionType')->findAll();
 
         if( $entities ) {
             return -1;
@@ -1417,7 +1417,7 @@ class ScanAdminController extends AdminController
     public function generateEncounterType() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegOrderformBundle:EncounterType')->findAll();
+        $entities = $em->getRepository('AppOrderformBundle:EncounterType')->findAll();
 
         if( $entities ) {
             return -1;
@@ -1449,7 +1449,7 @@ class ScanAdminController extends AdminController
     public function generateEncounterInfoType() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegOrderformBundle:EncounterInfoTypeList')->findAll();
+        $entities = $em->getRepository('AppOrderformBundle:EncounterInfoTypeList')->findAll();
 
         if( $entities ) {
             return -1;
@@ -1480,7 +1480,7 @@ class ScanAdminController extends AdminController
     public function generateProcedureType() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegOrderformBundle:ProcedureType')->findAll();
+        $entities = $em->getRepository('AppOrderformBundle:ProcedureType')->findAll();
 
         if( $entities ) {
             return -1;
@@ -1516,7 +1516,7 @@ class ScanAdminController extends AdminController
         $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegOrderformBundle:OrderDelivery')->findAll();
+        $entities = $em->getRepository('AppOrderformBundle:OrderDelivery')->findAll();
 
         if( $entities ) {
             return -1;
@@ -1557,7 +1557,7 @@ class ScanAdminController extends AdminController
         $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegOrderformBundle:RegionToScan')->findAll();
+        $entities = $em->getRepository('AppOrderformBundle:RegionToScan')->findAll();
 
         if( $entities ) {
             return -1;
@@ -1590,7 +1590,7 @@ class ScanAdminController extends AdminController
         $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegOrderformBundle:ProcessorComments')->findAll();
+        $entities = $em->getRepository('AppOrderformBundle:ProcessorComments')->findAll();
 
         if( $entities ) {
             return -1;
@@ -1623,7 +1623,7 @@ class ScanAdminController extends AdminController
         $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegOrderformBundle:Urgency')->findAll();
+        $entities = $em->getRepository('AppOrderformBundle:Urgency')->findAll();
 
         if( $entities ) {
             return -1;
@@ -1652,7 +1652,7 @@ class ScanAdminController extends AdminController
         $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegOrderformBundle:ProgressCommentsEventTypeList')->findAll();
+        $entities = $em->getRepository('AppOrderformBundle:ProgressCommentsEventTypeList')->findAll();
 
         if( $entities ) {
             return -1;
@@ -1691,7 +1691,7 @@ class ScanAdminController extends AdminController
         $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegOrderformBundle:Magnification')->findAll();
+        $entities = $em->getRepository('AppOrderformBundle:Magnification')->findAll();
 
         if( $entities ) {
             return -1;
@@ -1722,7 +1722,7 @@ class ScanAdminController extends AdminController
         $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegOrderformBundle:ImageAnalysisAlgorithmList')->findAll();
+        $entities = $em->getRepository('AppOrderformBundle:ImageAnalysisAlgorithmList')->findAll();
 
         if( $entities ) {
             return -1;
@@ -1790,7 +1790,7 @@ class ScanAdminController extends AdminController
         $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegOrderformBundle:RaceList')->findAll();
+        $entities = $em->getRepository('AppOrderformBundle:RaceList')->findAll();
 
         if( $entities ) {
             return -1;
@@ -1827,7 +1827,7 @@ class ScanAdminController extends AdminController
         $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegOrderformBundle:DiseaseTypeList')->findAll();
+        $entities = $em->getRepository('AppOrderformBundle:DiseaseTypeList')->findAll();
 
         if( $entities ) {
             return -1;
@@ -1860,7 +1860,7 @@ class ScanAdminController extends AdminController
         $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegOrderformBundle:DiseaseOriginList')->findAll();
+        $entities = $em->getRepository('AppOrderformBundle:DiseaseOriginList')->findAll();
 
         if( $entities ) {
             return -1;
@@ -1893,7 +1893,7 @@ class ScanAdminController extends AdminController
         $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegOrderformBundle:EmbedderInstructionList')->findAll();
+        $entities = $em->getRepository('AppOrderformBundle:EmbedderInstructionList')->findAll();
 
         if( $entities ) {
             return -1;
@@ -1922,7 +1922,7 @@ class ScanAdminController extends AdminController
     public function generateResearchGroupType() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegOrderformBundle:ResearchGroupType')->findAll();
+        $entities = $em->getRepository('AppOrderformBundle:ResearchGroupType')->findAll();
 
         if( $entities ) {
             return -1;
@@ -1958,7 +1958,7 @@ class ScanAdminController extends AdminController
     public function generateCourseGroupType() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegOrderformBundle:CourseGroupType')->findAll();
+        $entities = $em->getRepository('AppOrderformBundle:CourseGroupType')->findAll();
 
         if( $entities ) {
             return -1;
@@ -1993,7 +1993,7 @@ class ScanAdminController extends AdminController
     public function generateAmendmentReason() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegOrderformBundle:AmendmentReasonList')->findAll();
+        $entities = $em->getRepository('AppOrderformBundle:AmendmentReasonList')->findAll();
 
         if( $entities ) {
             return -1;
@@ -2027,7 +2027,7 @@ class ScanAdminController extends AdminController
     public function generateEncounterStatus() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegOrderformBundle:EncounterStatusList')->findAll();
+        $entities = $em->getRepository('AppOrderformBundle:EncounterStatusList')->findAll();
 
         if( $entities ) {
             return -1;
@@ -2061,7 +2061,7 @@ class ScanAdminController extends AdminController
     public function generatePatientRecordStatus() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegOrderformBundle:PatientRecordStatusList')->findAll();
+        $entities = $em->getRepository('AppOrderformBundle:PatientRecordStatusList')->findAll();
 
         if( $entities ) {
             return -1;
@@ -2114,7 +2114,7 @@ class ScanAdminController extends AdminController
         $count = 10;
         foreach( $elements as $name ) {
 
-            $entity = $em->getRepository('OlegOrderformBundle:MessageStatusList')->findOneByName($name);
+            $entity = $em->getRepository('AppOrderformBundle:MessageStatusList')->findOneByName($name);
             if( $entity ) {
                 continue;
             }
@@ -2148,7 +2148,7 @@ class ScanAdminController extends AdminController
         $count = 10;
         foreach( $elements as $name ) {
 
-            $entity = $em->getRepository('OlegOrderformBundle:CalllogEntryTagsList')->findOneByName($name);
+            $entity = $em->getRepository('AppOrderformBundle:CalllogEntryTagsList')->findOneByName($name);
             if( $entity ) {
                 continue;
             }
@@ -2184,7 +2184,7 @@ class ScanAdminController extends AdminController
         $count = 10;
         foreach( $elements as $name ) {
 
-            $entity = $em->getRepository('OlegOrderformBundle:CalllogAttachmentTypeList')->findOneByName($name);
+            $entity = $em->getRepository('AppOrderformBundle:CalllogAttachmentTypeList')->findOneByName($name);
             if( $entity ) {
                 continue;
             }
@@ -2220,7 +2220,7 @@ class ScanAdminController extends AdminController
         $count = 10;
         foreach( $elements as $name ) {
 
-            $entity = $em->getRepository('OlegOrderformBundle:CalllogTaskTypeList')->findOneByName($name);
+            $entity = $em->getRepository('AppOrderformBundle:CalllogTaskTypeList')->findOneByName($name);
             if( $entity ) {
                 continue;
             }
@@ -2243,7 +2243,7 @@ class ScanAdminController extends AdminController
 
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('OlegOrderformBundle:PatientListHierarchyGroupType')->findAll();
+        $entities = $em->getRepository('AppOrderformBundle:PatientListHierarchyGroupType')->findAll();
         if( $entities ) {
             return -1;
         }
@@ -2261,7 +2261,7 @@ class ScanAdminController extends AdminController
         $count = 10;
         foreach( $elements as $level=>$name ) {
 
-//            $entity = $em->getRepository('OlegOrderformBundle:PatientListHierarchyGroupType')->findOneByName($name);
+//            $entity = $em->getRepository('AppOrderformBundle:PatientListHierarchyGroupType')->findOneByName($name);
 //            if( $entity ) {
 //                continue;
 //            }
@@ -2288,7 +2288,7 @@ class ScanAdminController extends AdminController
         $em = $this->getDoctrine()->getManager();
         $username = $this->get('security.token_storage')->getToken()->getUser();
 
-        //$levelGroup = $em->getRepository('OlegOrderformBundle:PatientListHierarchyGroupType')->findOneByName('Patient List');
+        //$levelGroup = $em->getRepository('AppOrderformBundle:PatientListHierarchyGroupType')->findOneByName('Patient List');
 
         $items = array(
             "Patient Lists",                    //level 0
@@ -2307,13 +2307,13 @@ class ScanAdminController extends AdminController
 
             if( $parentItem ) {
                 $mapper = array(
-                    'prefix' => "Oleg",
+                    'prefix' => "App",
                     'className' => "PatientListHierarchy",
                     'bundleName' => "OrderformBundle"
                 );
-                $item = $em->getRepository('OlegOrderformBundle:PatientListHierarchy')->findByChildnameAndParent($name,$parentItem,$mapper);
+                $item = $em->getRepository('AppOrderformBundle:PatientListHierarchy')->findByChildnameAndParent($name,$parentItem,$mapper);
             } else {
-                $item = $em->getRepository('OlegOrderformBundle:PatientListHierarchy')->findOneByName($name);
+                $item = $em->getRepository('AppOrderformBundle:PatientListHierarchy')->findOneByName($name);
             }
 
             if( $item ) {
@@ -2327,7 +2327,7 @@ class ScanAdminController extends AdminController
             $item->setLevel($level);
 
             //find org group level
-            $levelGroup = $em->getRepository('OlegOrderformBundle:PatientListHierarchyGroupType')->findOneByLevel($level);
+            $levelGroup = $em->getRepository('AppOrderformBundle:PatientListHierarchyGroupType')->findOneByLevel($level);
             if( !$levelGroup ) {
                 exit("PatientListHierarchyGroupType not found by level ".$level);
             }
@@ -2369,13 +2369,13 @@ class ScanAdminController extends AdminController
 //            //find by name and by parent ($parentItem) if exists
 //            if( $parentItem ) {
 //                $mapper = array(
-//                    'prefix' => "Oleg",
+//                    'prefix' => "App",
 //                    'className' => "PatientListHierarchy",
 //                    'bundleName' => "OrderformBundle"
 //                );
-//                $item = $em->getRepository('OlegOrderformBundle:PatientListHierarchy')->findByChildnameAndParent($name,$parentItem,$mapper);
+//                $item = $em->getRepository('AppOrderformBundle:PatientListHierarchy')->findByChildnameAndParent($name,$parentItem,$mapper);
 //            } else {
-//                $item = $em->getRepository('OlegOrderformBundle:PatientListHierarchy')->findOneByName($name);
+//                $item = $em->getRepository('AppOrderformBundle:PatientListHierarchy')->findOneByName($name);
 //            }
 //
 //            if( !$item ) {
@@ -2444,7 +2444,7 @@ class ScanAdminController extends AdminController
 
     public function getMapper($routeName) {
 
-        $bundlePreffix = "Oleg";
+        $bundlePreffix = "App";
         $bundleName = "OrderformBundle";
         $className = null;
         $title = null;
@@ -2518,8 +2518,8 @@ class ScanAdminController extends AdminController
     }
     public function findAndReplaceOldByNew( $entityName, $fieldName, $oldNumberId, $newNumberId ) {
         $em = $this->getDoctrine()->getManager();
-        //$encounterNumbers = $em->getRepository('OlegOrderformBundle:EncounterNumber')->findOneByName("Auto-generated Encounter Number");
-        $repository = $em->getRepository('OlegOrderformBundle:'.$entityName);
+        //$encounterNumbers = $em->getRepository('AppOrderformBundle:EncounterNumber')->findOneByName("Auto-generated Encounter Number");
+        $repository = $em->getRepository('AppOrderformBundle:'.$entityName);
         $dql = $repository->createQueryBuilder("numberid");
         //$dql->leftJoin("numberid.number", "number");
         $dql->where("numberid.".$fieldName." LIKE :oldNumberId");

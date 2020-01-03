@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Form;
+namespace App\OrderformBundle\Form;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -38,7 +38,7 @@ class EncounterLocationType extends AbstractType
         $this->formConstructor($options['form_custom_value']);
 
         $builder->add('field', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:Location',
+            'class' => 'AppUserdirectoryBundle:Location',
             'label' => 'Encounter Location:',
             'required' => false,
             'attr' => array('class' => 'combobox combobox-width'),
@@ -52,7 +52,7 @@ class EncounterLocationType extends AbstractType
 
 
         $builder->add('others', ArrayFieldType::class, array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\EncounterLocation',
+            'data_class' => 'App\OrderformBundle\Entity\EncounterLocation',
             'form_custom_value' => $this->params,
             'label' => false,
 			'attr' => array('style'=>'display:none;')
@@ -64,7 +64,7 @@ class EncounterLocationType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\EncounterLocation',
+            'data_class' => 'App\OrderformBundle\Entity\EncounterLocation',
             'form_custom_value' => null
         ));
     }

@@ -15,13 +15,13 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Entity;
+namespace App\OrderformBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-use Oleg\UserdirectoryBundle\Entity\ListAbstract;
+use App\UserdirectoryBundle\Entity\ListAbstract;
 
 /**
  * @ORM\Entity
@@ -66,10 +66,10 @@ class OrganList extends ListAbstract
     /**
      * Add part
      *
-     * @param \Oleg\OrderformBundle\Entity\OrganList $part
+     * @param \App\OrderformBundle\Entity\OrganList $part
      * @return OrganList
      */
-    public function addPart(\Oleg\OrderformBundle\Entity\OrganList $part)
+    public function addPart(\App\OrderformBundle\Entity\OrganList $part)
     {
         $this->part[] = $part;
     
@@ -79,9 +79,9 @@ class OrganList extends ListAbstract
     /**
      * Remove part
      *
-     * @param \Oleg\OrderformBundle\Entity\OrganList $part
+     * @param \App\OrderformBundle\Entity\OrganList $part
      */
-    public function removePart(\Oleg\OrderformBundle\Entity\OrganList $part)
+    public function removePart(\App\OrderformBundle\Entity\OrganList $part)
     {
         $this->part->removeElement($part);
     }

@@ -23,22 +23,22 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Oleg\UserdirectoryBundle\Form\DataTransformer;
+namespace App\UserdirectoryBundle\Form\DataTransformer;
 
 
 
-use Oleg\OrderformBundle\Entity\MessageCategory;
-use Oleg\OrderformBundle\Entity\PatientListHierarchy;
-use Oleg\UserdirectoryBundle\Entity\BaseCompositeNode;
-use Oleg\UserdirectoryBundle\Entity\CommentTypeList;
-use Oleg\UserdirectoryBundle\Entity\FormNode;
-use Oleg\UserdirectoryBundle\Entity\Institution;
+use App\OrderformBundle\Entity\MessageCategory;
+use App\OrderformBundle\Entity\PatientListHierarchy;
+use App\UserdirectoryBundle\Entity\BaseCompositeNode;
+use App\UserdirectoryBundle\Entity\CommentTypeList;
+use App\UserdirectoryBundle\Entity\FormNode;
+use App\UserdirectoryBundle\Entity\Institution;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Doctrine\Common\Persistence\ObjectManager;
 
-use Oleg\UserdirectoryBundle\Entity\User;
-use Oleg\UserdirectoryBundle\Security\Util\UserSecurityUtil;
+use App\UserdirectoryBundle\Entity\User;
+use App\UserdirectoryBundle\Security\Util\UserSecurityUtil;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
 class GenericTreeTransformer implements DataTransformerInterface
@@ -98,12 +98,12 @@ class GenericTreeTransformer implements DataTransformerInterface
 
         if( is_int($entity) ) {
             //echo "transform by id=".$entity." !!!<br>";
-            $entity = $this->em->getRepository('Oleg'.$this->bundleName.':'.$this->className)->findOneById($entity);
+            $entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->findOneById($entity);
             //echo "findOneById entity=".$entity."<br>";
         }
 //        else {
 //            //echo "transform by name=".$entity." ????????????????<br>";
-//            $entity = $this->em->getRepository('Oleg'.$this->bundleName.':'.$this->className)->findOneByName($entity);
+//            $entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->findOneByName($entity);
 //        }
 
         if( null === $entity ) {
@@ -142,7 +142,7 @@ class GenericTreeTransformer implements DataTransformerInterface
 
             //echo 'text is id <br>';
 
-            $entity = $this->em->getRepository('Oleg'.$this->bundleName.':'.$this->className)->findOneById($text);
+            $entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->findOneById($text);
 
             if( null === $entity ) {
 
@@ -190,10 +190,10 @@ class GenericTreeTransformer implements DataTransformerInterface
 //            //User does not have field "name"
 //            $entity = null;
 //        } else {
-//            $entity = $this->em->getRepository('Oleg'.$this->bundleName.':'.$this->className)->findOneByName($name."");
+//            $entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->findOneByName($name."");
 //        }
 //        if( null === $entity ) {
-//            $entity = $this->em->getRepository('Oleg'.$this->bundleName.':'.$this->className)->findOneByAbbreviation($name."");
+//            $entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->findOneByAbbreviation($name."");
 //        }
         $entity = $this->findEntityByString($name."");
         
@@ -242,7 +242,7 @@ class GenericTreeTransformer implements DataTransformerInterface
             return null;
         }
 
-        $fullClassName = "Oleg\\".$this->bundleName."\\Entity\\".$className;
+        $fullClassName = "App\\".$this->bundleName."\\Entity\\".$className;
         $newEntity = new $fullClassName();
 
         //add default type
@@ -267,7 +267,7 @@ class GenericTreeTransformer implements DataTransformerInterface
         $className = $fullClassName->getShortName();
 
         //get max orderinlist
-        $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM Oleg'.$this->bundleName.':'.$className.' c');
+        $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM App'.$this->bundleName.':'.$className.' c');
         $nextorder = $query->getSingleResult()['maxorderinlist']+10;
         $entity->setOrderinlist($nextorder);
 
@@ -275,7 +275,7 @@ class GenericTreeTransformer implements DataTransformerInterface
         if( method_exists($entity,'setOrganizationalGroupType') ) {
             if( $entity instanceof Institution ) {
                 $mapper = array(
-                    'prefix' => "Oleg",
+                    'prefix' => "App",
                     'organizationalGroupType' => "OrganizationalGroupType",
                     'bundleName' => "UserdirectoryBundle"
                 );
@@ -283,7 +283,7 @@ class GenericTreeTransformer implements DataTransformerInterface
 
             if( $entity instanceof CommentTypeList ) {
                 $mapper = array(
-                    'prefix' => "Oleg",
+                    'prefix' => "App",
                     'organizationalGroupType' => "CommentGroupType",
                     'bundleName' => "UserdirectoryBundle"
                 );
@@ -291,7 +291,7 @@ class GenericTreeTransformer implements DataTransformerInterface
 
             if( $entity instanceof MessageCategory ) {
                 $mapper = array(
-                    'prefix' => "Oleg",
+                    'prefix' => "App",
                     'organizationalGroupType' => "MessageTypeClassifiers",
                     'bundleName' => "OrderformBundle"
                 );
@@ -299,7 +299,7 @@ class GenericTreeTransformer implements DataTransformerInterface
 
             if( $entity instanceof PatientListHierarchy ) {
                 $mapper = array(
-                    'prefix' => "Oleg",
+                    'prefix' => "App",
                     'organizationalGroupType' => "PatientListHierarchyGroupType",
                     'bundleName' => "OrderformBundle"
                 );
@@ -307,7 +307,7 @@ class GenericTreeTransformer implements DataTransformerInterface
 
             if( $entity instanceof FormNode ) {
                 $mapper = array(
-                    'prefix' => "Oleg",
+                    'prefix' => "App",
                     'organizationalGroupType' => NULL,
                     'bundleName' => "OrderformBundle"
                 );
@@ -351,17 +351,17 @@ class GenericTreeTransformer implements DataTransformerInterface
             //User does not have field "name"
             $entity = null;
         } else {
-            $entity = $this->em->getRepository('Oleg'.$this->bundleName.':'.$this->className)->findOneByName($string."");
+            $entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->findOneByName($string."");
         }
 
         if( null === $entity ) {
-            $entity = $this->em->getRepository('Oleg'.$this->bundleName.':'.$this->className)->findOneByAbbreviation($string."");
+            $entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->findOneByAbbreviation($string."");
         }
 
         return $entity;
     }
     public function findEntityById($id) {
-        $entity = $this->em->getRepository('Oleg'.$this->bundleName.':'.$this->className)->find($id);
+        $entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->find($id);
         return $entity;
     }
 }

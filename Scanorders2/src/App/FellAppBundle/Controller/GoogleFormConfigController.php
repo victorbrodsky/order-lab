@@ -15,10 +15,10 @@
  *  limitations under the License.
  */
 
-namespace Oleg\FellAppBundle\Controller;
+namespace App\FellAppBundle\Controller;
 
-use Oleg\FellAppBundle\Entity\GoogleFormConfig;
-use Oleg\FellAppBundle\Form\GoogleFormConfigType;
+use App\FellAppBundle\Entity\GoogleFormConfig;
+use App\FellAppBundle\Form\GoogleFormConfigType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -33,7 +33,7 @@ class GoogleFormConfigController extends Controller
     /**
      * @Route("/form-status-and-appearance/edit", name="fellapp_google_form_config_edit")
      * @Route("/form-status-and-appearance/show", name="fellapp_google_form_config_show")
-     * @Template("OlegFellAppBundle:GoogleFormConfig:google-form-config.html.twig")
+     * @Template("AppFellAppBundle:GoogleFormConfig:google-form-config.html.twig")
      * @Method({"GET", "PUT"})
      */
     public function GoogleFormConfigAction(Request $request) {
@@ -53,7 +53,7 @@ class GoogleFormConfigController extends Controller
             $cycle = "edit";
         }
 
-        $configs = $em->getRepository("OlegFellAppBundle:GoogleFormConfig")->findAll();
+        $configs = $em->getRepository("AppFellAppBundle:GoogleFormConfig")->findAll();
         if( count($configs) > 0 ) {
             $entity = $configs[0];
         } else {
@@ -171,7 +171,7 @@ class GoogleFormConfigController extends Controller
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
-        $configs = $em->getRepository("OlegFellAppBundle:GoogleFormConfig")->findAll();
+        $configs = $em->getRepository("AppFellAppBundle:GoogleFormConfig")->findAll();
         if( count($configs) > 0 ) {
             $entity = $configs[0];
         } else {
@@ -366,7 +366,7 @@ class GoogleFormConfigController extends Controller
             $file->setMimeType($newMimeType);
 
             // File's new content.
-            //$newFileName = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\scanorder\\Scanorders2\\src\Oleg\\FellAppBundle\\Util\\GoogleForm\\"."config.json";
+            //$newFileName = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\scanorder\\Scanorders2\\src\App\\FellAppBundle\\Util\\GoogleForm\\"."config.json";
             //$data = file_get_contents($newFileName);
             //print_r($data);
             //$data = $content;

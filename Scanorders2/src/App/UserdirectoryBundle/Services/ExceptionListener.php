@@ -22,7 +22,7 @@
  * Time: 4:20 PM
  */
 
-namespace Oleg\UserdirectoryBundle\Services;
+namespace App\UserdirectoryBundle\Services;
 
 
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -35,7 +35,7 @@ use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
-use Oleg\UserdirectoryBundle\Util\UserUtil;
+use App\UserdirectoryBundle\Util\UserUtil;
 
 class ExceptionListener {
 
@@ -209,25 +209,25 @@ class ExceptionListener {
     }
 
     public function getSiteName($controller) {
-        if( strpos($controller,'Oleg\UserdirectoryBundle') !== false ) {
+        if( strpos($controller,'App\UserdirectoryBundle') !== false ) {
             return "employees";
         }
-        if( strpos($controller,'Oleg\OrderformBundle') !== false ) {
+        if( strpos($controller,'App\OrderformBundle') !== false ) {
             return "scan";
         }
-        if( strpos($controller,'Oleg\FellAppBundle') !== false ) {
+        if( strpos($controller,'App\FellAppBundle') !== false ) {
             return "fellapp";
         }
-        if( strpos($controller,'Oleg\DeidentifierBundle') !== false ) {
+        if( strpos($controller,'App\DeidentifierBundle') !== false ) {
             return "deidentifier";
         }
-        if( strpos($controller,'Oleg\VacReqBundle') !== false ) {
+        if( strpos($controller,'App\VacReqBundle') !== false ) {
             return "vacreq";
         }
-        if( strpos($controller,'Oleg\CallLogBundle') !== false ) {
+        if( strpos($controller,'App\CallLogBundle') !== false ) {
             return "calllog";
         }
-        if( strpos($controller,'Oleg\TranslationalResearchBundle') !== false ) {
+        if( strpos($controller,'App\TranslationalResearchBundle') !== false ) {
             return "translationalresearch";
         }
 
@@ -244,12 +244,12 @@ class ExceptionListener {
         $dqlParameters = array();
 
         //get the date from event log
-        $repository = $this->em->getRepository('OlegUserdirectoryBundle:Logger');
+        $repository = $this->em->getRepository('AppUserdirectoryBundle:Logger');
         $dql = $repository->createQueryBuilder("logger");
         $dql->innerJoin('logger.eventType', 'eventType');
 
         //$dql->where("logger.siteName = 'translationalresearch' AND logger.entityName = 'Invoice' AND logger.entityId = ".$invoice->getId());
-        //$dql->where("logger.entityNamespace = 'Oleg\TranslationalResearchBundle\Entity' AND logger.entityName = 'TransResRequest' AND logger.entityId = ".$request->getId());
+        //$dql->where("logger.entityNamespace = 'App\TranslationalResearchBundle\Entity' AND logger.entityName = 'TransResRequest' AND logger.entityId = ".$request->getId());
 
         $dql->where("eventType.name = :eventTypeName");
         $dqlParameters['eventTypeName'] = $eventType;

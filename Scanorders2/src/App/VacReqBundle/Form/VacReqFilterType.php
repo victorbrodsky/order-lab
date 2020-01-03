@@ -15,10 +15,10 @@
  *  limitations under the License.
  */
 
-namespace Oleg\VacReqBundle\Form;
+namespace App\VacReqBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
-use Oleg\UserdirectoryBundle\Entity\User;
+use App\UserdirectoryBundle\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
@@ -48,7 +48,7 @@ class VacReqFilterType extends AbstractType
         //visible only for my request and incoming requests for SUPERVISOR users
         if( $this->params['routeName'] == 'vacreq_myrequests' || $this->params['supervisor'] || $this->params['approverRole'] ) {
             $builder->add('requestType', EntityType::class, array(
-                'class' => 'OlegVacReqBundle:VacReqRequestTypeList',
+                'class' => 'AppVacReqBundle:VacReqRequestTypeList',
                 'choice_label' => 'name',
                 'label' => false,
                 'required' => true,
@@ -60,7 +60,7 @@ class VacReqFilterType extends AbstractType
 
         if ($this->params['filterShowUser']) {
             $builder->add('user', EntityType::class, array(
-                'class' => 'OlegUserdirectoryBundle:User',
+                'class' => 'AppUserdirectoryBundle:User',
                 'choice_label' => 'getUserNameStr',
                 'label' => false,
                 'required' => false,
@@ -70,7 +70,7 @@ class VacReqFilterType extends AbstractType
             ));
 
             $builder->add('submitter', EntityType::class, array(
-                'class' => 'OlegUserdirectoryBundle:User',
+                'class' => 'AppUserdirectoryBundle:User',
                 'choice_label' => 'getUserNameStr',
                 'label' => false,
                 'required' => false,
@@ -225,7 +225,7 @@ class VacReqFilterType extends AbstractType
                         function ($submittedInstitutionObject) {
                             //echo "submittedInstitutionObject=".$submittedInstitutionObject."<br>";
                             if ($submittedInstitutionObject) { //id
-                                $institutionObject = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->find($submittedInstitutionObject);
+                                $institutionObject = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->find($submittedInstitutionObject);
                                 return $institutionObject;
                             }
                             return null;

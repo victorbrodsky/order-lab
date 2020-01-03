@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Form;
+namespace App\UserdirectoryBundle\Form;
 
 
 use Symfony\Component\Form\AbstractType;
@@ -33,7 +33,7 @@ class ConfidentialCommentType extends BaseCommentsType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\ConfidentialComment',
+            'data_class' => 'App\UserdirectoryBundle\Entity\ConfidentialComment',
             'form_custom_value' => null
         ));
     }

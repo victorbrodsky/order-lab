@@ -15,12 +15,12 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Entity;
+namespace App\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-use Oleg\OrderformBundle\Entity\PatientArrayFieldAbstract;
+use App\OrderformBundle\Entity\PatientArrayFieldAbstract;
 
 
 /**

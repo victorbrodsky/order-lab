@@ -16,7 +16,7 @@
  */
 
 
-namespace Oleg\FellAppBundle\Entity;
+namespace App\FellAppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 

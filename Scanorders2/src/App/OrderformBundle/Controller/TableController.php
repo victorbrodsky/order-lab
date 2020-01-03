@@ -23,11 +23,11 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Oleg\OrderformBundle\Controller;
+namespace App\OrderformBundle\Controller;
 
 
-use Oleg\OrderformBundle\Entity\PartParttitle;
-use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
+use App\OrderformBundle\Entity\PartParttitle;
+use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -36,82 +36,82 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
-use Oleg\OrderformBundle\Entity\Message;
-use Oleg\OrderformBundle\Form\MessageType;
+use App\OrderformBundle\Entity\Message;
+use App\OrderformBundle\Form\MessageType;
 
-use Oleg\OrderformBundle\Entity\Patient;
-use Oleg\OrderformBundle\Entity\ClinicalHistory;
-use Oleg\OrderformBundle\Entity\PatientMrn;
-use Oleg\OrderformBundle\Entity\PatientDob;
-use Oleg\OrderformBundle\Entity\PatientClinicalHistory;
+use App\OrderformBundle\Entity\Patient;
+use App\OrderformBundle\Entity\ClinicalHistory;
+use App\OrderformBundle\Entity\PatientMrn;
+use App\OrderformBundle\Entity\PatientDob;
+use App\OrderformBundle\Entity\PatientClinicalHistory;
 
-use Oleg\OrderformBundle\Entity\Procedure;
-use Oleg\OrderformBundle\Entity\ProcedureEncounter;
-use Oleg\OrderformBundle\Entity\ProcedureName;
+use App\OrderformBundle\Entity\Procedure;
+use App\OrderformBundle\Entity\ProcedureEncounter;
+use App\OrderformBundle\Entity\ProcedureName;
 
-//use Oleg\OrderformBundle\Entity\ProcedurePatsuffix;
-//use Oleg\OrderformBundle\Entity\ProcedurePatlastname;
-//use Oleg\OrderformBundle\Entity\ProcedurePatfirstname;
-//use Oleg\OrderformBundle\Entity\ProcedurePatmiddlename;
-//use Oleg\OrderformBundle\Entity\ProcedurePatsex;
-//use Oleg\OrderformBundle\Entity\ProcedurePatage;
-//use Oleg\OrderformBundle\Entity\ProcedurePathistory;
-//use Oleg\OrderformBundle\Entity\ProcedureEncounterDate;
+//use App\OrderformBundle\Entity\ProcedurePatsuffix;
+//use App\OrderformBundle\Entity\ProcedurePatlastname;
+//use App\OrderformBundle\Entity\ProcedurePatfirstname;
+//use App\OrderformBundle\Entity\ProcedurePatmiddlename;
+//use App\OrderformBundle\Entity\ProcedurePatsex;
+//use App\OrderformBundle\Entity\ProcedurePatage;
+//use App\OrderformBundle\Entity\ProcedurePathistory;
+//use App\OrderformBundle\Entity\ProcedureEncounterDate;
 
-use Oleg\OrderformBundle\Entity\Accession;
-use Oleg\OrderformBundle\Entity\AccessionAccession;
-use Oleg\OrderformBundle\Entity\AccessionAccessionDate;
+use App\OrderformBundle\Entity\Accession;
+use App\OrderformBundle\Entity\AccessionAccession;
+use App\OrderformBundle\Entity\AccessionAccessionDate;
 
-use Oleg\OrderformBundle\Entity\Part;
-use Oleg\OrderformBundle\Entity\PartPartname;
-use Oleg\OrderformBundle\Entity\PartSourceOrgan;
-use Oleg\OrderformBundle\Entity\PartDescription;
-use Oleg\OrderformBundle\Entity\PartDisident;
-use Oleg\OrderformBundle\Entity\PartDiffDisident;
-use Oleg\OrderformBundle\Entity\PartDiseaseType;
-use Oleg\OrderformBundle\Entity\PartPaper;
+use App\OrderformBundle\Entity\Part;
+use App\OrderformBundle\Entity\PartPartname;
+use App\OrderformBundle\Entity\PartSourceOrgan;
+use App\OrderformBundle\Entity\PartDescription;
+use App\OrderformBundle\Entity\PartDisident;
+use App\OrderformBundle\Entity\PartDiffDisident;
+use App\OrderformBundle\Entity\PartDiseaseType;
+use App\OrderformBundle\Entity\PartPaper;
 
-use Oleg\OrderformBundle\Entity\Block;
-use Oleg\OrderformBundle\Entity\BlockBlockname;
-use Oleg\OrderformBundle\Entity\BlockSectionsource;
+use App\OrderformBundle\Entity\Block;
+use App\OrderformBundle\Entity\BlockBlockname;
+use App\OrderformBundle\Entity\BlockSectionsource;
 
-use Oleg\OrderformBundle\Entity\RelevantScans;
-use Oleg\OrderformBundle\Entity\BlockSpecialStains;
-use Oleg\OrderformBundle\Entity\Slide;
-use Oleg\OrderformBundle\Entity\Stain;
+use App\OrderformBundle\Entity\RelevantScans;
+use App\OrderformBundle\Entity\BlockSpecialStains;
+use App\OrderformBundle\Entity\Slide;
+use App\OrderformBundle\Entity\Stain;
 
-use Oleg\OrderformBundle\Entity\Educational;
-use Oleg\OrderformBundle\Entity\Research;
+use App\OrderformBundle\Entity\Educational;
+use App\OrderformBundle\Entity\Research;
 
-use Oleg\OrderformBundle\Form\SlideMultiType;
+use App\OrderformBundle\Form\SlideMultiType;
 
-use Oleg\OrderformBundle\Helper\ErrorHelper;
-use Oleg\OrderformBundle\Helper\ScanEmailUtil;
-use Oleg\OrderformBundle\Security\Util\SecurityUtil;
-use Oleg\UserdirectoryBundle\Util\UserUtil;
+use App\OrderformBundle\Helper\ErrorHelper;
+use App\OrderformBundle\Helper\ScanEmailUtil;
+use App\OrderformBundle\Security\Util\SecurityUtil;
+use App\UserdirectoryBundle\Util\UserUtil;
 
-use Oleg\OrderformBundle\Form\DataTransformer\ProcedureTransformer;
-use Oleg\OrderformBundle\Form\DataTransformer\MrnTypeTransformer;
-use Oleg\OrderformBundle\Form\DataTransformer\AccessionTypeTransformer;
-use Oleg\OrderformBundle\Form\DataTransformer\SourceOrganTransformer;
-use Oleg\OrderformBundle\Form\DataTransformer\StainTransformer;
+use App\OrderformBundle\Form\DataTransformer\ProcedureTransformer;
+use App\OrderformBundle\Form\DataTransformer\MrnTypeTransformer;
+use App\OrderformBundle\Form\DataTransformer\AccessionTypeTransformer;
+use App\OrderformBundle\Form\DataTransformer\SourceOrganTransformer;
+use App\OrderformBundle\Form\DataTransformer\StainTransformer;
 
-use Oleg\UserdirectoryBundle\Form\DataTransformer\StringTransformer;
+use App\UserdirectoryBundle\Form\DataTransformer\StringTransformer;
 
-use Oleg\OrderformBundle\Entity\Encounter;
-use Oleg\OrderformBundle\Entity\EncounterDate;
-use Oleg\OrderformBundle\Entity\EncounterPatfirstname;
-use Oleg\OrderformBundle\Entity\EncounterPathistory;
-use Oleg\OrderformBundle\Entity\EncounterPatlastname;
-use Oleg\OrderformBundle\Entity\EncounterPatmiddlename;
-use Oleg\OrderformBundle\Entity\EncounterPatsex;
-use Oleg\OrderformBundle\Entity\EncounterPatsuffix;
-use Oleg\OrderformBundle\Entity\Endpoint;
-use Oleg\OrderformBundle\Entity\Imaging;
-use Oleg\OrderformBundle\Entity\ProcedureDate;
-use Oleg\OrderformBundle\Entity\ProcedureNumber;
-use Oleg\OrderformBundle\Entity\EncounterPatage;
-use Oleg\OrderformBundle\Entity\ScanOrder;
+use App\OrderformBundle\Entity\Encounter;
+use App\OrderformBundle\Entity\EncounterDate;
+use App\OrderformBundle\Entity\EncounterPatfirstname;
+use App\OrderformBundle\Entity\EncounterPathistory;
+use App\OrderformBundle\Entity\EncounterPatlastname;
+use App\OrderformBundle\Entity\EncounterPatmiddlename;
+use App\OrderformBundle\Entity\EncounterPatsex;
+use App\OrderformBundle\Entity\EncounterPatsuffix;
+use App\OrderformBundle\Entity\Endpoint;
+use App\OrderformBundle\Entity\Imaging;
+use App\OrderformBundle\Entity\ProcedureDate;
+use App\OrderformBundle\Entity\ProcedureNumber;
+use App\OrderformBundle\Entity\EncounterPatage;
+use App\OrderformBundle\Entity\ScanOrder;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
@@ -121,7 +121,7 @@ class TableController extends Controller {
      * @Route("/scan-order/multi-slide-table-view/{id}/amend", name="table_amend", requirements={"id" = "\d+"})
      * @Route("/scan-order/multi-slide-table-view/{id}/show", name="table_show", requirements={"id" = "\d+"})
      * @Route("/scan-order/multi-slide-table-view/{id}/edit", name="table_edit", requirements={"id" = "\d+"})
-     * @Template("OlegOrderformBundle:MultiScanOrder:newtable.html.twig")
+     * @Template("AppOrderformBundle:MultiScanOrder:newtable.html.twig")
      */
     public function multiTableShowAction( Request $request, $id ) {
 
@@ -152,7 +152,7 @@ class TableController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        $message = $em->getRepository('OlegOrderformBundle:Message')->findOneByOid($id);
+        $message = $em->getRepository('AppOrderformBundle:Message')->findOneByOid($id);
 
         if( $routeName == "table_show") {
             $actions = array('show');
@@ -235,7 +235,7 @@ class TableController extends Controller {
         //$slides = $message->getSlide();
         $query = $em->createQuery('
             SELECT slide
-            FROM OlegOrderformBundle:Slide slide
+            FROM AppOrderformBundle:Slide slide
             INNER JOIN slide.message message
             WHERE message.oid = :id
             ORDER BY slide.sequence ASC'
@@ -454,8 +454,8 @@ class TableController extends Controller {
 
         if( $routeName == "table_show") {
 
-            //$history = $em->getRepository('OlegOrderformBundle:History')->findByCurrentid( $entity->getOid(), array('changedate' => 'DESC') );
-            $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:History');
+            //$history = $em->getRepository('AppOrderformBundle:History')->findByCurrentid( $entity->getOid(), array('changedate' => 'DESC') );
+            $repository = $this->getDoctrine()->getRepository('AppOrderformBundle:History');
             $dql = $repository->createQueryBuilder("h");
             $dql->innerJoin("h.message", "message");
             $dql->leftJoin("h.eventtype", "eventtype");
@@ -466,7 +466,7 @@ class TableController extends Controller {
 
         }
 
-        return $this->render('OlegOrderformBundle:MultiScanOrder:newtable.html.twig', array(
+        return $this->render('AppOrderformBundle:MultiScanOrder:newtable.html.twig', array(
             'orderdata' => json_encode($jsonData),
             'entity' => $message,
             'form' => $form->createView(),
@@ -482,7 +482,7 @@ class TableController extends Controller {
 
     /**
      * @Route("/scan-order/multi-slide-table-view/new", name="table_create")
-     * @Template("OlegOrderformBundle:MultiScanOrder:newtable.html.twig")
+     * @Template("AppOrderformBundle:MultiScanOrder:newtable.html.twig")
      */
     public function multiTableCreationAction()
     {
@@ -560,7 +560,7 @@ class TableController extends Controller {
         $type = "Table-View Scan Order";
 
         //set order category
-        $category = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName( $type );
+        $category = $em->getRepository('AppOrderformBundle:MessageCategory')->findOneByName( $type );
         $entity->setMessageCategory($category);
 
         //$permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
@@ -574,11 +574,11 @@ class TableController extends Controller {
         $orderUtil->setDefaultPerformingOrganization($entity);
 
         //set "Slide Delivery"
-        $defaultDelivery = $userSecUtil->getNotEmptyDefaultSiteParameter('defaultScanDelivery','OlegOrderformBundle:OrderDelivery');
+        $defaultDelivery = $userSecUtil->getNotEmptyDefaultSiteParameter('defaultScanDelivery','AppOrderformBundle:OrderDelivery');
         $scanOrder->setDelivery($defaultDelivery);
 
         //set "Scanner"
-        $defaultDelivery = $userSecUtil->getNotEmptyDefaultSiteParameter('defaultScanner','Oleg\UserdirectoryBundle\Entity\Equipment');
+        $defaultDelivery = $userSecUtil->getNotEmptyDefaultSiteParameter('defaultScanner','App\UserdirectoryBundle\Entity\Equipment');
         $entity->setEquipment($defaultDelivery);
 
         //set $defaultAccessionType
@@ -611,7 +611,7 @@ class TableController extends Controller {
             'form_custom_value_entity' => $entity
         ));
 
-        return $this->render('OlegOrderformBundle:MultiScanOrder:newtable.html.twig', array(
+        return $this->render('AppOrderformBundle:MultiScanOrder:newtable.html.twig', array(
             'form' => $form->createView(),
             'cycle' => 'new',
             'formtype' => $type,
@@ -627,7 +627,7 @@ class TableController extends Controller {
 
      * @Route("/scan-order/multi-slide-table-view/submit", name="table_create_submit")
      * @Method("POST")
-     * @Template("OlegOrderformBundle:MultiScanOrder:newtable.html.twig")
+     * @Template("AppOrderformBundle:MultiScanOrder:newtable.html.twig")
      */
     public function multyCreateAction(Request $request)
     {
@@ -648,7 +648,7 @@ class TableController extends Controller {
         $type = "Table-View Scan Order";
 
         //set order category
-        $category = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName( $type );
+        $category = $em->getRepository('AppOrderformBundle:MessageCategory')->findOneByName( $type );
         $entity->setMessageCategory($category);
 
         $params = array('type'=>$type, 'cycle'=>'new', 'service'=>null, 'user'=>$user, 'em' => $em);
@@ -673,19 +673,19 @@ class TableController extends Controller {
 
         if( $clickedbtn == 'btnSubmit' ) {
             $cycle = 'new';
-            $status = $em->getRepository('OlegOrderformBundle:Status')->findOneByName('Submitted');
+            $status = $em->getRepository('AppOrderformBundle:Status')->findOneByName('Submitted');
             $entity->setStatus($status);
         }
 
         if( $clickedbtn == 'btnAmend' ) {
             $cycle = 'amend';
-            $status = $em->getRepository('OlegOrderformBundle:Status')->findOneByName('Amended');
+            $status = $em->getRepository('AppOrderformBundle:Status')->findOneByName('Amended');
             $entity->setStatus($status);
         }
 
         if( $clickedbtn == 'btnSaveOnIdleTimeout' ) {
             $cycle = 'edit';
-            $status = $em->getRepository('OlegOrderformBundle:Status')->findOneByName('Not Submitted');
+            $status = $em->getRepository('AppOrderformBundle:Status')->findOneByName('Not Submitted');
             $entity->setStatus($status);
         }
 
@@ -749,7 +749,7 @@ class TableController extends Controller {
         $orderUtil = $this->get('scanorder_utility');
         $orderUtil->setDataQualityAccMrn($entity,$dataqualities);
 
-        $entity = $em->getRepository('OlegOrderformBundle:Message')->processMessageEntity( $entity, $user, $type, $this->get('router'), $this->container );
+        $entity = $em->getRepository('AppOrderformBundle:Message')->processMessageEntity( $entity, $user, $type, $this->get('router'), $this->container );
 
 //        $response = new Response();
 //        $response->headers->set('Content-Type', 'application/json');
@@ -912,7 +912,7 @@ class TableController extends Controller {
         $patsexArr = $this->getValueByHeaderName('Patient Sex',$row,$columnData);
         if( $force || $patsexArr['val'] && $patsexArr['val'] != '' ) {
             $patsexObj = new EncounterPatsex($status,$provider,$system);
-            $sexlist = $em->getRepository('OlegUserdirectoryBundle:SexList')->findOneByName($patsexArr['val']);
+            $sexlist = $em->getRepository('AppUserdirectoryBundle:SexList')->findOneByName($patsexArr['val']);
             $patsexObj->setField($sexlist);
             $patsexObj->setId($patsexArr['id']);
             $encounter->addPatsex($patsexObj);
@@ -1057,12 +1057,12 @@ class TableController extends Controller {
 
             //addDiseaseType
             //echo "<br>DiseaseType=".$partdistypeArr['val']."<br>";
-            $diseaseType = $em->getRepository('OlegOrderformBundle:DiseaseTypeList')->findOneByName($partdistypeArr['val']);
+            $diseaseType = $em->getRepository('AppOrderformBundle:DiseaseTypeList')->findOneByName($partdistypeArr['val']);
             $partDiseaseType->addDiseaseType($diseaseType);
             //exit();
 
             //Origin of Disease
-            $diseaseOrigin = $em->getRepository('OlegOrderformBundle:DiseaseOriginList')->findOneByName($this->getValueByHeaderName('Origin of Disease',$row,$columnData)['val']);
+            $diseaseOrigin = $em->getRepository('AppOrderformBundle:DiseaseOriginList')->findOneByName($this->getValueByHeaderName('Origin of Disease',$row,$columnData)['val']);
             $partDiseaseType->addDiseaseOrigin($diseaseOrigin);
 
             //Primary Site of Disease Origin
@@ -1105,7 +1105,7 @@ class TableController extends Controller {
             //special stain type might be null in table, so get one from StainList with smallest 'orderinlist'
             $specialstainList = $stainTransformer->reverseTransform($this->getValueByHeaderName('Associated Special Stain Name',$row,$columnData)['val']); //list
             if( $specialstainList == null ) {
-                $stainList = $em->getRepository('OlegOrderformBundle:StainList')->findBy(array(), array('orderinlist'=>'ASC'));
+                $stainList = $em->getRepository('AppOrderformBundle:StainList')->findBy(array(), array('orderinlist'=>'ASC'));
                 $specialstainList = $stainList[0];
             }
 
@@ -1133,7 +1133,7 @@ class TableController extends Controller {
         $slide->setMicroscopicdescr($this->getValueByHeaderName('Microscopic Description',$row,$columnData)['val']);
 
         //Slide Type
-        $slidetype = $em->getRepository('OlegOrderformBundle:SlideType')->findOneByName($this->getValueByHeaderName('Slide Type',$row,$columnData)['val']);
+        $slidetype = $em->getRepository('AppOrderformBundle:SlideType')->findOneByName($this->getValueByHeaderName('Slide Type',$row,$columnData)['val']);
         $slide->setSlidetype($slidetype);
 
         //Stain
@@ -1157,7 +1157,7 @@ class TableController extends Controller {
         //echo "<br>mag=".$magArr['id']."<br>";
 
         //setMagnification
-        $mag = $em->getRepository('OlegOrderformBundle:Magnification')->findOneByName($magArr['val']);
+        $mag = $em->getRepository('AppOrderformBundle:Magnification')->findOneByName($magArr['val']);
         $scan->setMagnification($mag);
         $scan->setId($magArr['id']);
 

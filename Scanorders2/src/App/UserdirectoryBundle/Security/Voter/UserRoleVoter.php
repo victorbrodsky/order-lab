@@ -22,7 +22,7 @@
  * Time: 11:28 AM
  */
 
-namespace Oleg\UserdirectoryBundle\Security\Voter;
+namespace App\UserdirectoryBundle\Security\Voter;
 
 
 //use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;

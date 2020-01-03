@@ -23,18 +23,18 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Oleg\OrderformBundle\Helper;
+namespace App\OrderformBundle\Helper;
 
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Oleg\UserdirectoryBundle\Entity\InstitutionWrapper;
-use Oleg\UserdirectoryBundle\Entity\PerSiteSettings;
+use App\UserdirectoryBundle\Entity\InstitutionWrapper;
+use App\UserdirectoryBundle\Entity\PerSiteSettings;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
-use Oleg\OrderformBundle\Entity\History;
-use Oleg\OrderformBundle\Entity\DataQualityMrnAcc;
+use App\OrderformBundle\Entity\History;
+use App\OrderformBundle\Entity\DataQualityMrnAcc;
 
-use Oleg\UserdirectoryBundle\Entity\User;
+use App\UserdirectoryBundle\Entity\User;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
@@ -106,7 +106,7 @@ class OrderUtil {
 
         $em = $this->em;
 
-        $entity = $em->getRepository('OlegOrderformBundle:Message')->findOneByOid($id);
+        $entity = $em->getRepository('AppOrderformBundle:Message')->findOneByOid($id);
 
         if (!$entity) {
             throw new \Exception( 'Unable to find Message entity by id'.$id );
@@ -126,7 +126,7 @@ class OrderUtil {
         }
 
         //echo "status=".$status."<br>";
-        $status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByAction($statusSearch);
+        $status_entity = $em->getRepository('AppOrderformBundle:Status')->findOneByAction($statusSearch);
         //echo "status_entity=".$status_entity->getName()."<br>";
         //exit();
 
@@ -136,7 +136,7 @@ class OrderUtil {
 
         //record history
         $history = new History();
-        $eventtype = $em->getRepository('OlegOrderformBundle:ProgressCommentsEventTypeList')->findOneByName('Status Changed');
+        $eventtype = $em->getRepository('AppOrderformBundle:ProgressCommentsEventTypeList')->findOneByName('Status Changed');
         $history->setEventtype($eventtype);
         $history->setMessage($entity);
         $history->setCurrentid($entity->getOid());
@@ -154,12 +154,12 @@ class OrderUtil {
             $fieldStatusStr = "deleted-by-canceled-order";
 
             if( $entity->getProvider() == $user || $this->secAuthChecker->isGranted("ROLE_SCANORDER_ORDERING_PROVIDER") ) {
-                $status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByName("Canceled by Submitter");
+                $status_entity = $em->getRepository('AppOrderformBundle:Status')->findOneByName("Canceled by Submitter");
             } else
             if( $this->secAuthChecker->isGranted("ROLE_SCANORDER_ADMIN") || $this->secAuthChecker->isGranted("ROLE_SCANORDER_PROCESSOR") ) {
-                $status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByName("Canceled by Processor");
+                $status_entity = $em->getRepository('AppOrderformBundle:Status')->findOneByName("Canceled by Processor");
             } else {
-                $status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByName("Canceled by Submitter");
+                $status_entity = $em->getRepository('AppOrderformBundle:Status')->findOneByName("Canceled by Submitter");
             }
 
             if( $status_entity == null ) {
@@ -182,7 +182,7 @@ class OrderUtil {
 
             //exit('case Supersede');
 
-            //$status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByName("Superseded");
+            //$status_entity = $em->getRepository('AppOrderformBundle:Status')->findOneByName("Superseded");
             $fieldStatusStr = "deleted-by-amended-order";
             $entity->setStatus($status_entity);
             $message = $this->processObjects( $entity, $status_entity, $fieldStatusStr );
@@ -220,7 +220,7 @@ class OrderUtil {
 //            echo $entity;
 //            foreach( $entity->getPatient() as $patient ) {
 //                echo "<br>--------------------------<br>";
-//                $em->getRepository('OlegOrderformBundle:Message')->printTree( $patient );
+//                $em->getRepository('AppOrderformBundle:Message')->printTree( $patient );
 //                echo "--------------------------<br>";
 //            }
             //exit();
@@ -244,7 +244,7 @@ class OrderUtil {
                 }
 
                 //echo "accessionKey=".$accessionKey."<br>";
-                $accessionDb = $em->getRepository('OlegOrderformBundle:Accession')->findOneByIdJoinedToField(array($accession->getInstitution()->getId()),$accessionKey,"Accession","accession",$validity, true); //validity was true
+                $accessionDb = $em->getRepository('AppOrderformBundle:Accession')->findOneByIdJoinedToField(array($accession->getInstitution()->getId()),$accessionKey,"Accession","accession",$validity, true); //validity was true
 
                 $mrn = $patientKey; //mrn
                 $mrnTypeId = $patientKey->getKeytype()->getId();
@@ -332,7 +332,7 @@ class OrderUtil {
 //        $em = $this->em;
 //
 //        if( !$status_entity  ) {
-//            $status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByAction('Submit');
+//            $status_entity = $em->getRepository('AppOrderformBundle:Status')->findOneByAction('Submit');
 //        }
 //
 //        //CLONING
@@ -429,7 +429,7 @@ class OrderUtil {
             if( $noOtherMessage ) {
                 //echo "change status to (".$statusStr.") <br>";
                 $child->setStatus($statusStr);
-                $em->getRepository('OlegOrderformBundle:'.$className)->processFieldArrays($child,null,null,$statusStr);
+                $em->getRepository('AppOrderformBundle:'.$className)->processFieldArrays($child,null,null,$statusStr);
                 $count++;
             } else {
                 //this entity (i.e. accession object) is used by another order
@@ -447,7 +447,7 @@ class OrderUtil {
     //$flag = 'admin'-show only comments from users to admin or null-show only comments to the orders belonging to admin
     public function getNotViewedComments($flag=null)
     {
-        $repository = $this->em->getRepository('OlegOrderformBundle:History');
+        $repository = $this->em->getRepository('AppOrderformBundle:History');
         $dql =  $repository->createQueryBuilder('history');
         //$dql->select('COUNT(history) as historycount');
         $dql->select('history');
@@ -562,7 +562,7 @@ class OrderUtil {
 
             foreach( $permittedInstitutions as $permittedInstitution ) {
 
-                $institutionAndCollaborationStr = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->
+                $institutionAndCollaborationStr = $this->em->getRepository('AppUserdirectoryBundle:Institution')->
                     getCriterionStrForCollaborationsByNode($permittedInstitution,"institution",$collaborationTypesStrArr, $instComparatorDefault, $collComparatorDefault );
 
                 if( $instStr != "" ) {
@@ -598,7 +598,7 @@ class OrderUtil {
 //            //1) find collaboration for each user's permitted institution
 //            //2) if collaboration exists, check if message's institution belongs to any institution of this collaboration
 //            foreach( $permittedInstitutions as $permittedInstitution ) {
-//                $collaborations = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->
+//                $collaborations = $this->em->getRepository('AppUserdirectoryBundle:Institution')->
 //                    findCollaborationsByNode( $permittedInstitution, array("Union","Intersection") );
 //                foreach( $collaborations as $collaboration ) {
 //                    foreach( $collaboration->getInstitutions() as $collaborationInstitution ) {
@@ -671,10 +671,10 @@ class OrderUtil {
 //            echo "dataquality mrntype= ".$dataquality['mrntype']."<br>";
 
             //set correct mrntype (convert text keytype to the object)
-            $mrntype = $em->getRepository('OlegOrderformBundle:MrnType')->findOneById( $dataquality['mrntype'] );
+            $mrntype = $em->getRepository('AppOrderformBundle:MrnType')->findOneById( $dataquality['mrntype'] );
 
             //set correct accessiontype
-            $accessiontype = $em->getRepository('OlegOrderformBundle:AccessionType')->findOneById( $dataquality['accessiontype'] );
+            $accessiontype = $em->getRepository('AppOrderformBundle:AccessionType')->findOneById( $dataquality['accessiontype'] );
 
             $dataqualityObj = new DataQualityMrnAcc();
             $dataqualityObj->setDescription($dataquality['description']);
@@ -847,7 +847,7 @@ class OrderUtil {
             $permittedInstitutions = $securityUtil->getUserPermittedInstitutions($user);
             foreach( $permittedInstitutions as $permittedInstitution ) {
 
-                $collaborations = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->
+                $collaborations = $this->em->getRepository('AppUserdirectoryBundle:Institution')->
                     findCollaborationsByNode( $permittedInstitution, array("Union","Intersection") );
 
                 foreach( $collaborations as $collaborationInstitution ) {
@@ -883,13 +883,13 @@ class OrderUtil {
 
         $user = $this->secTokenStorage->getToken()->getUser();
 
-//        $previousOrders = $this->em->getRepository('OlegOrderformBundle:Message')->findBy(
+//        $previousOrders = $this->em->getRepository('AppOrderformBundle:Message')->findBy(
 //            array('provider'=>$user),
 //            array('orderdate' => 'DESC'),
 //            1                                   //limit to one result
 //        );
 
-        $repository = $this->em->getRepository('OlegOrderformBundle:Message');
+        $repository = $this->em->getRepository('AppOrderformBundle:Message');
         $dql =  $repository->createQueryBuilder("message");
         $dql->leftJoin('message.provider','provider');
         $dql->leftJoin('message.messageCategory','category');
@@ -931,10 +931,10 @@ class OrderUtil {
             }
         } else {
             if( $providerid && $providerid != "" ) {
-                $provider = $this->em->getRepository('OlegUserdirectoryBundle:User')->find($providerid);
+                $provider = $this->em->getRepository('AppUserdirectoryBundle:User')->find($providerid);
             }
             if( $proxyid && $proxyid != "" && $proxyid != $providerid ) {
-                $proxy = $this->em->getRepository('OlegUserdirectoryBundle:User')->find($proxyid);
+                $proxy = $this->em->getRepository('AppUserdirectoryBundle:User')->find($proxyid);
             }
         }
 
@@ -953,7 +953,7 @@ class OrderUtil {
         }
 
         //2) get "Filing Room" location
-        $repository = $this->em->getRepository('OlegUserdirectoryBundle:Location');
+        $repository = $this->em->getRepository('AppUserdirectoryBundle:Location');
         $dql =  $repository->createQueryBuilder("location");
         $dql->select('location');
         $dql->leftJoin("location.locationTypes", "locationTypes");
@@ -1006,7 +1006,7 @@ class OrderUtil {
 
     //get ordering provider from the most recent order
     public function setLastOrderWithProxyuser($user,$message=null) {
-        $repository = $this->em->getRepository('OlegOrderformBundle:Message');
+        $repository = $this->em->getRepository('AppOrderformBundle:Message');
         $dql =  $repository->createQueryBuilder("message");
         $dql->select('message');
         $dql->innerJoin("message.provider", "provider");
@@ -1057,7 +1057,7 @@ class OrderUtil {
         $em = $this->em;
 
         //find slides using this stain: slide(1)->(n)stain(n)->(1)stainList
-//        $repository = $em->getRepository('OlegOrderformBundle:Message');
+//        $repository = $em->getRepository('AppOrderformBundle:Message');
 //        $dql =  $repository->createQueryBuilder("message");
 //        $dql->select('message');
 //        $dql->leftJoin("message.slide","slide");
@@ -1068,14 +1068,14 @@ class OrderUtil {
 //        $messages = $query->getResult();
 
         if(1) {
-            $patientTypes = $this->em->getRepository('OlegOrderformBundle:PatientType')->findAll();
+            $patientTypes = $this->em->getRepository('AppOrderformBundle:PatientType')->findAll();
             foreach( $patientTypes as $patientType ) {
                 $em->remove($patientType);
             }
             $em->flush();
         }
 
-        $messages = $this->em->getRepository('OlegOrderformBundle:Message')->findAll();
+        $messages = $this->em->getRepository('AppOrderformBundle:Message')->findAll();
 
         foreach( $messages as $message ) {
 
@@ -1189,7 +1189,7 @@ class OrderUtil {
     public function removeAllStains() {
 
         $em = $this->em;
-        $stains = $em->getRepository('OlegOrderformBundle:StainList')->findAll();
+        $stains = $em->getRepository('AppOrderformBundle:StainList')->findAll();
 
         $count = 0;
 
@@ -1286,7 +1286,7 @@ class OrderUtil {
             //echo "### permittedInstitution=".$originalPermittedInstitution->getId().":".$originalPermittedInstitution->getName()."<br>";
 
             //get all collaboration to show them in the Order's Institutional PHI Scope
-            $collaborationInstitutions = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->
+            $collaborationInstitutions = $this->em->getRepository('AppUserdirectoryBundle:Institution')->
                                 findCollaborationsByNode( $originalPermittedInstitution, $collaborationTypesStrArr );
 
             foreach( $collaborationInstitutions as $collaborationInstitution ) {
@@ -1321,22 +1321,22 @@ class OrderUtil {
     //"Weill Cornell Medical College > Department of Pathology and Laboratory Medicine > Pathology Informatics > Scanning Service"
     public function setDefaultPerformingOrganization($message) {
 //        $mapper = array(
-//            'prefix' => 'Oleg',
+//            'prefix' => 'App',
 //            'bundleName' => 'UserdirectoryBundle',
 //            'className' => 'Institution'
 //        );
-//        $wcmc = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
-//        $pathology = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+//        $wcmc = $this->em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+//        $pathology = $this->em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
 //            "Pathology and Laboratory Medicine",
 //            $wcmc,
 //            $mapper
 //        );
-//        $pathologyInformatcs = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+//        $pathologyInformatcs = $this->em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
 //            "Pathology Informatics",
 //            $pathology,
 //            $mapper
 //        );
-//        $scanningService = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+//        $scanningService = $this->em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
 //            "Scanning Service",
 //            $pathologyInformatcs,
 //            $mapper

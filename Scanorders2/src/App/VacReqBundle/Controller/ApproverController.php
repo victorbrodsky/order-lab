@@ -15,22 +15,22 @@
  *  limitations under the License.
  */
 
-namespace Oleg\VacReqBundle\Controller;
+namespace App\VacReqBundle\Controller;
 
 use Doctrine\ORM\EntityRepository;
-use Oleg\UserdirectoryBundle\Entity\Roles;
-use Oleg\UserdirectoryBundle\Form\SimpleUserType;
-use Oleg\UserdirectoryBundle\Util\UserUtil;
-use Oleg\VacReqBundle\Entity\VacReqCarryOver;
-use Oleg\VacReqBundle\Entity\VacReqRequest;
-use Oleg\VacReqBundle\Entity\VacReqSettings;
-use Oleg\VacReqBundle\Entity\VacReqUserCarryOver;
-use Oleg\VacReqBundle\Form\VacReqEmailusersType;
-use Oleg\VacReqBundle\Form\VacReqGroupType;
-use Oleg\VacReqBundle\Form\VacReqRequestType;
-use Oleg\VacReqBundle\Form\VacReqUserCarryOverType;
-use Oleg\VacReqBundle\Form\VacReqUserComboboxType;
-use Oleg\VacReqBundle\Form\VacReqUserType;
+use App\UserdirectoryBundle\Entity\Roles;
+use App\UserdirectoryBundle\Form\SimpleUserType;
+use App\UserdirectoryBundle\Util\UserUtil;
+use App\VacReqBundle\Entity\VacReqCarryOver;
+use App\VacReqBundle\Entity\VacReqRequest;
+use App\VacReqBundle\Entity\VacReqSettings;
+use App\VacReqBundle\Entity\VacReqUserCarryOver;
+use App\VacReqBundle\Form\VacReqEmailusersType;
+use App\VacReqBundle\Form\VacReqGroupType;
+use App\VacReqBundle\Form\VacReqRequestType;
+use App\VacReqBundle\Form\VacReqUserCarryOverType;
+use App\VacReqBundle\Form\VacReqUserComboboxType;
+use App\VacReqBundle\Form\VacReqUserType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -49,7 +49,7 @@ class ApproverController extends Controller
     /**
      * @Route("/groups/", name="vacreq_approvers")
      * @Method({"GET", "POST"})
-     * @Template("OlegVacReqBundle:Approver:approvers-list.html.twig")
+     * @Template("AppVacReqBundle:Approver:approvers-list.html.twig")
      */
     public function myRequestsAction(Request $request)
     {
@@ -63,7 +63,7 @@ class ApproverController extends Controller
         //$em = $this->getDoctrine()->getManager();
 
         //list all organizational group (institution)
-//        $roles = $em->getRepository('OlegUserdirectoryBundle:User')->findRolesByObjectAction("VacReqRequest", "changestatus");
+//        $roles = $em->getRepository('AppUserdirectoryBundle:User')->findRolesByObjectAction("VacReqRequest", "changestatus");
 //        $organizationalInstitutions = array();
 //        foreach( $roles as $role ) {
 //            $organizationalInstitutions[] = $role->getInstitution();
@@ -101,7 +101,7 @@ class ApproverController extends Controller
      *
      * @Route("/carry-over-request-group/{groupId}", name="vacreq_carry_over_request_group_list")
      * @Method({"GET", "POST"})
-     * @Template("OlegVacReqBundle:Approver:carry-over-request-group-list.html.twig")
+     * @Template("AppVacReqBundle:Approver:carry-over-request-group-list.html.twig")
      */
     public function carryOverRequestGroupAction(Request $request, $groupId)
     {
@@ -117,25 +117,25 @@ class ApproverController extends Controller
 
         //find role approvers by institution
         $approvers = array();
-        $roleApprovers = $em->getRepository('OlegUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName( "vacreq", 'ROLE_VACREQ_SUPERVISOR', $groupId);
+        $roleApprovers = $em->getRepository('AppUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName( "vacreq", 'ROLE_VACREQ_SUPERVISOR', $groupId);
         $roleApprover = $roleApprovers[0];
         //echo "roleApprover=".$roleApprover."<br>";
         if( $roleApprover ) {
-            $approvers = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($roleApprover->getName(),"infos.lastName",true);
+            $approvers = $em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($roleApprover->getName(),"infos.lastName",true);
         }
         //echo "approvers=".count($approvers)."<br>";
 
         //find role submitters by institution
 //        $submitters = array();
-//        $roleSubmitters = $em->getRepository('OlegUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName( "vacreq", 'ROLE_VACREQ_SUBMITTER', $groupId);
+//        $roleSubmitters = $em->getRepository('AppUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName( "vacreq", 'ROLE_VACREQ_SUBMITTER', $groupId);
 //        $roleSubmitter = $roleSubmitters[0];
 //        //echo "roleSubmitter=".$roleSubmitter."<br>";
 //        if( $roleSubmitter ) {
-//            $submitters = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($roleSubmitter->getName(),"infos.lastName",true);
+//            $submitters = $em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($roleSubmitter->getName(),"infos.lastName",true);
 //        }s
-        $submitters = $em->getRepository('OlegUserdirectoryBundle:User')->findUsersBySitePermissionObjectActionInstitution("vacreq","VacReqRequest","create",$groupId,true);
+        $submitters = $em->getRepository('AppUserdirectoryBundle:User')->findUsersBySitePermissionObjectActionInstitution("vacreq","VacReqRequest","create",$groupId,true);
 
-        $organizationalGroupInstitution = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($groupId);
+        $organizationalGroupInstitution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($groupId);
 
         //vacreq_util
         $vacreqUtil = $this->get('vacreq_util');
@@ -157,7 +157,7 @@ class ApproverController extends Controller
      *
      * @Route("/organizational-institutions/{institutionId}", name="vacreq_orginst_list")
      * @Method({"GET", "POST"})
-     * @Template("OlegVacReqBundle:Approver:orginst-list.html.twig")
+     * @Template("AppVacReqBundle:Approver:orginst-list.html.twig")
      */
     public function organizationalInstitutionAction(Request $request, $institutionId)
     {
@@ -175,24 +175,24 @@ class ApproverController extends Controller
 
         //find role approvers by institution
         $approvers = array();
-        $roleApprovers = $em->getRepository('OlegUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName( "vacreq", 'ROLE_VACREQ_APPROVER', $institutionId);
+        $roleApprovers = $em->getRepository('AppUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName( "vacreq", 'ROLE_VACREQ_APPROVER', $institutionId);
         $roleApprover = $roleApprovers[0];
         //echo "roleApprover=".$roleApprover."<br>";
         if( $roleApprover ) {
-            $approvers = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($roleApprover->getName(),"infos.lastName",true);
+            $approvers = $em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($roleApprover->getName(),"infos.lastName",true);
         }
         //echo "approvers=".count($approvers)."<br>";
 
         //find role submitters by institution
         $submitters = array();
-        $roleSubmitters = $em->getRepository('OlegUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName( "vacreq", 'ROLE_VACREQ_SUBMITTER', $institutionId);
+        $roleSubmitters = $em->getRepository('AppUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName( "vacreq", 'ROLE_VACREQ_SUBMITTER', $institutionId);
         $roleSubmitter = $roleSubmitters[0];
         //echo "roleSubmitter=".$roleSubmitter."<br>";
         if( $roleSubmitter ) {
-            $submitters = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($roleSubmitter->getName(),"infos.lastName",true);
+            $submitters = $em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($roleSubmitter->getName(),"infos.lastName",true);
         }
 
-        $organizationalGroupInstitution = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($institutionId);
+        $organizationalGroupInstitution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($institutionId);
 
         //vacreq_util
         $vacreqUtil = $this->get('vacreq_util');
@@ -214,7 +214,7 @@ class ApproverController extends Controller
      *
      * @Route("/manage-group/{institutionId}", name="vacreq_orginst_management")
      * @Method({"GET", "POST"})
-     * @Template("OlegVacReqBundle:Approver:orginst-management.html.twig")
+     * @Template("AppVacReqBundle:Approver:orginst-management.html.twig")
      */
     public function orgInstManagementAction(Request $request, $institutionId)
     {
@@ -235,11 +235,11 @@ class ApproverController extends Controller
 
         //find role approvers by institution
         $approvers = array();
-        $roleApprovers = $em->getRepository('OlegUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName( "vacreq", 'ROLE_VACREQ_APPROVER', $institutionId);
+        $roleApprovers = $em->getRepository('AppUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName( "vacreq", 'ROLE_VACREQ_APPROVER', $institutionId);
         $roleApprover = $roleApprovers[0];
         //echo "roleApprover=".$roleApprover."<br>";
         if( $roleApprover ) {
-            $approvers = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($roleApprover->getName(),"infos.lastName",true);
+            $approvers = $em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($roleApprover->getName(),"infos.lastName",true);
         }
         //echo "approvers=".count($approvers)."<br>";
 
@@ -251,14 +251,14 @@ class ApproverController extends Controller
 
         //find role submitters by institution
         $submitters = array();
-        $roleSubmitters = $em->getRepository('OlegUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName( "vacreq", 'ROLE_VACREQ_SUBMITTER', $institutionId);
+        $roleSubmitters = $em->getRepository('AppUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName( "vacreq", 'ROLE_VACREQ_SUBMITTER', $institutionId);
         $roleSubmitter = $roleSubmitters[0];
         //echo "roleSubmitter=".$roleSubmitter."<br>";
         if( $roleSubmitter ) {
-            $submitters = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($roleSubmitter->getName(),"infos.lastName",true);
+            $submitters = $em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($roleSubmitter->getName(),"infos.lastName",true);
         }
 
-        $organizationalGroupInstitution = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($institutionId);
+        $organizationalGroupInstitution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($institutionId);
 
         $roleApproverId = null;
         if( $roleApprover ) {
@@ -290,7 +290,7 @@ class ApproverController extends Controller
      *
      * @Route("/organizational-institution-user-management/{userid}/{instid}/{roleId}", name="vacreq_orginst_user_management")
      * @Method({"GET", "POST"})
-     * @Template("OlegVacReqBundle:Approver:orginst-user-management.html.twig")
+     * @Template("AppVacReqBundle:Approver:orginst-user-management.html.twig")
      */
     public function userManagementAction(Request $request, $userid, $instid, $roleId )
     {
@@ -314,13 +314,13 @@ class ApproverController extends Controller
             return $this->redirect($this->generateUrl('vacreq-nopermission'));
         }
 
-        $subjectUser = $em->getRepository('OlegUserdirectoryBundle:User')->find($userid);
+        $subjectUser = $em->getRepository('AppUserdirectoryBundle:User')->find($userid);
 
         if( !$subjectUser ) {
             throw $this->createNotFoundException('Unable to find Vacation Request user by id='.$userid);
         }
 
-        $organizationalGroupInstitution = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($instid);
+        $organizationalGroupInstitution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($instid);
 
         if( !$organizationalGroupInstitution ) {
             throw $this->createNotFoundException('Unable to find Vacation Request Institution by id='.$instid);
@@ -334,7 +334,7 @@ class ApproverController extends Controller
         //$securityUtil = $this->get('order_security_utility');
         //$rolesArr = $securityUtil->getSiteRolesKeyValue('vacreq');
 
-        $roles = $em->getRepository('OlegUserdirectoryBundle:Roles')->findById($roleId);
+        $roles = $em->getRepository('AppUserdirectoryBundle:Roles')->findById($roleId);
         $rolesArr = array();
         foreach( $roles as $role ) {
             //$rolesArr[$role->getName()] = $role->getAlias();
@@ -368,7 +368,7 @@ class ApproverController extends Controller
      *
      * @Route("/organizational-institution-user-update/{userid}/{instid}/{roleIds}", name="vacreq_orginst_user_update", options={"expose"=true})
      * @Method({"GET", "POST"})
-     * @Template("OlegVacReqBundle:Approver:orginst-user-management.html.twig")
+     * @Template("AppVacReqBundle:Approver:orginst-user-management.html.twig")
      */
     public function userManagementUpdateAction(Request $request, $userid, $instid, $roleIds )
     {
@@ -394,12 +394,12 @@ class ApproverController extends Controller
             return $this->redirect($this->generateUrl('vacreq-nopermission'));
         }
 
-        $subjectUser = $em->getRepository('OlegUserdirectoryBundle:User')->find($userid);
+        $subjectUser = $em->getRepository('AppUserdirectoryBundle:User')->find($userid);
         if( !$subjectUser ) {
             throw $this->createNotFoundException('Unable to find Vacation Request user by id='.$userid);
         }
 
-        $organizationalGroupInstitution = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($instid);
+        $organizationalGroupInstitution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($instid);
         if( !$organizationalGroupInstitution ) {
             throw $this->createNotFoundException('Unable to find Vacation Request Institution by id='.$instid);
         }
@@ -450,7 +450,7 @@ class ApproverController extends Controller
     /**
      * @Route("/organizational-institution-user-remove/{userid}/{instid}/{roleId}", name="vacreq_orginst_user_remove")
      * @Method({"GET", "POST"})
-     * @Template("OlegVacReqBundle:Approver:orginst-user-management.html.twig")
+     * @Template("AppVacReqBundle:Approver:orginst-user-management.html.twig")
      */
     public function removeUserAction(Request $request, $userid, $instid, $roleId )
     {
@@ -475,18 +475,18 @@ class ApproverController extends Controller
             return $this->redirect($this->generateUrl('vacreq-nopermission'));
         }
 
-        $subjectUser = $em->getRepository('OlegUserdirectoryBundle:User')->find($userid);
+        $subjectUser = $em->getRepository('AppUserdirectoryBundle:User')->find($userid);
         if( !$subjectUser ) {
             throw $this->createNotFoundException('Unable to find Vacation Request user by id='.$userid);
         }
 
-        $organizationalGroupInstitution = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($instid);
+        $organizationalGroupInstitution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($instid);
         if( !$organizationalGroupInstitution ) {
             throw $this->createNotFoundException('Unable to find Vacation Request Institution by id='.$instid);
         }
 
         //get role by roletype
-        $role = $em->getRepository('OlegUserdirectoryBundle:Roles')->find( $roleId );
+        $role = $em->getRepository('AppUserdirectoryBundle:Roles')->find( $roleId );
         if( $role ) {
 //            echo "subjectUser=".$subjectUser."<br>";
 //            echo "role=".$role."<br><br>";
@@ -527,7 +527,7 @@ class ApproverController extends Controller
     /**
      * @Route("/organizational-institution-user-add/{instid}/{roleId}/{btnName}", name="vacreq_orginst_add_user")
      * @Method({"GET", "POST"})
-     * @Template("OlegVacReqBundle:Approver:orginst-user-add.html.twig")
+     * @Template("AppVacReqBundle:Approver:orginst-user-add.html.twig")
      */
     public function addUserAction(Request $request, $instid, $roleId, $btnName )
     {
@@ -550,7 +550,7 @@ class ApproverController extends Controller
             return $this->redirect($this->generateUrl('vacreq-nopermission'));
         }
 
-        $role = $em->getRepository('OlegUserdirectoryBundle:Roles')->find($roleId);
+        $role = $em->getRepository('AppUserdirectoryBundle:Roles')->find($roleId);
 
         if( !$role ) {
             throw $this->createNotFoundException('Unable to find Vacation Request Role by id='.$roleId);
@@ -599,12 +599,12 @@ class ApproverController extends Controller
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
-        $role = $em->getRepository('OlegUserdirectoryBundle:Roles')->find($roleId);
+        $role = $em->getRepository('AppUserdirectoryBundle:Roles')->find($roleId);
         if( !$role ) {
             throw $this->createNotFoundException('Unable to find Vacation Request Role by id='.$roleId);
         }
 
-        $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($instid);
+        $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($instid);
         if( !$institution ) {
             throw $this->createNotFoundException('Unable to find Vacation Request Institution by id='.$instid);
         }
@@ -640,7 +640,7 @@ class ApproverController extends Controller
 
         foreach( $users as $userObject ) {
 
-            //$subjectUser = $em->getRepository('OlegUserdirectoryBundle:User')->find($userObject->getId());
+            //$subjectUser = $em->getRepository('AppUserdirectoryBundle:User')->find($userObject->getId());
             $globalEventArr[] = $userObject."";
             $event = $institution . ": user has been added as " . $role->getAlias() . ": " . $userObject;
             $eventType = "Business/Vacation Group Updated";
@@ -665,7 +665,7 @@ class ApproverController extends Controller
     /**
      * @Route("/add-group", name="vacreq_group_add")
      * @Method({"GET", "POST"})
-     * @Template("OlegVacReqBundle:Approver:orginst-add.html.twig")
+     * @Template("AppVacReqBundle:Approver:orginst-add.html.twig")
      */
     public function addGroupAction(Request $request )
     {
@@ -679,7 +679,7 @@ class ApproverController extends Controller
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
-//        $role = $em->getRepository('OlegUserdirectoryBundle:Roles')->find($roleId);
+//        $role = $em->getRepository('AppUserdirectoryBundle:Roles')->find($roleId);
 //
 //        if( !$role ) {
 //            throw $this->createNotFoundException('Unable to find Vacation Request Role by id='.$roleId);
@@ -699,7 +699,7 @@ class ApproverController extends Controller
         if( $form->isSubmitted() && $form->isValid() ) {
 
             $userSecUtil = $this->container->get('user_security_utility');
-            $site = $em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation('vacreq');
+            $site = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation('vacreq');
 
             //add group
             //$instid = null;
@@ -716,7 +716,7 @@ class ApproverController extends Controller
 
             //create approver role
             $roleName = "ROLE_VACREQ_APPROVER_".$roleNameBase;
-            $approverRole = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName($roleName);
+            $approverRole = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($roleName);
             if( !$approverRole ) {
                 $approverRole = new Roles();
                 $approverRole = $userSecUtil->setDefaultList($approverRole, null, $user, $roleName);
@@ -743,7 +743,7 @@ class ApproverController extends Controller
 
             //create submitter role
             $roleName = "ROLE_VACREQ_SUBMITTER_".$roleNameBase;
-            $submitterRole = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName($roleName);
+            $submitterRole = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($roleName);
             if( !$submitterRole ) {
                 $submitterRole = new Roles();
                 $submitterRole = $userSecUtil->setDefaultList($submitterRole, null, $user, $roleName);
@@ -799,7 +799,7 @@ class ApproverController extends Controller
      *
      * @Route("/organizational-institution-remove/{instid}", name="vacreq_group_remove")
      * @Method({"GET", "POST"})
-     * @Template("OlegVacReqBundle:Approver:orginst-user-add.html.twig")
+     * @Template("AppVacReqBundle:Approver:orginst-user-add.html.twig")
      */
     public function removeGroupAction(Request $request, $instid )
     {
@@ -813,7 +813,7 @@ class ApproverController extends Controller
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
-        $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($instid);
+        $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($instid);
         if( !$institution ) {
             throw $this->createNotFoundException('Unable to find Vacation Request Institution by id='.$instid);
         }
@@ -851,7 +851,7 @@ class ApproverController extends Controller
 
         //1) find approver roles with institution
         $role = null;
-        $roles = $em->getRepository('OlegUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName("vacreq",$rolePartialName,$instid);
+        $roles = $em->getRepository('AppUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName("vacreq",$rolePartialName,$instid);
         if( count($roles)>0 ) {
             $role = $roles[0];
             $roleName = $role->getName();
@@ -866,7 +866,7 @@ class ApproverController extends Controller
 
         //2) remove approver role from all users
         if( $role ) {
-            $users = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($roleName,"infos.lastName",true);
+            $users = $em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($roleName,"infos.lastName",true);
             foreach( $users as $user ) {
                 $user->removeRole($roleName);
                 $userNamesArr[] = $user."";
@@ -880,7 +880,7 @@ class ApproverController extends Controller
 
         //Event Log
         if( $role && count($userNamesArr) > 0 ) {
-            $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($instid);
+            $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($instid);
             $institutionTreeName = null;
             if( $institution ) {
                 $institutionTreeName = $institution->getTreeName();
@@ -914,7 +914,7 @@ class ApproverController extends Controller
     /**
      * @Route("/organizational-institution-emailusers/{instid}", name="vacreq_orginst_emailusers")
      * @Method({"GET", "POST"})
-     * @Template("OlegVacReqBundle:Approver:orginst-emailusers.html.twig")
+     * @Template("AppVacReqBundle:Approver:orginst-emailusers.html.twig")
      */
     public function emailUsersAction(Request $request, $instid)
     {
@@ -926,7 +926,7 @@ class ApproverController extends Controller
         $vacreqUtil = $this->get('vacreq_util');
         $entity = $vacreqUtil->getSettingsByInstitution($instid);
 
-        $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($instid);
+        $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($instid);
         if( !$institution ) {
             throw $this->createNotFoundException('Unable to find Vacation Request Institution by id='.$instid);
         }
@@ -984,7 +984,7 @@ class ApproverController extends Controller
 //        $keytype = $request->query->get('keytype');
 //        $keytype = trim($keytype);
 
-        $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($instid);
+        $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($instid);
         if( !$institution ) {
             throw $this->createNotFoundException('Unable to find Vacation Request Institution by id='.$instid);
         }
@@ -1002,7 +1002,7 @@ class ApproverController extends Controller
 //        foreach( explode(",",$users) as $emailUserStr ) {
 //
 //            echo "emailUserStr=".$emailUserStr."<br>";
-//            $emailUser = $em->getRepository('OlegUserdirectoryBundle:User')->find($emailUserStr);
+//            $emailUser = $em->getRepository('AppUserdirectoryBundle:User')->find($emailUserStr);
 //            $entity->addEmailUser($emailUser);
 
         if( $res ) {
@@ -1041,7 +1041,7 @@ class ApproverController extends Controller
     /**
      * @Route("/my-group/", name="vacreq_mygroup")
      * @Method({"GET", "POST"})
-     * @Template("OlegVacReqBundle:Group:mygroup.html.twig")
+     * @Template("AppVacReqBundle:Group:mygroup.html.twig")
      */
     public function myGroupAction(Request $request)
     {
@@ -1088,7 +1088,7 @@ class ApproverController extends Controller
         /////////////// users filter form ///////////////////
         $filterform = $this->createFormBuilder()
             ->add('filterusers', EntityType::class, array(
-                'class' => 'OlegUserdirectoryBundle:User',
+                'class' => 'AppUserdirectoryBundle:User',
                 'label' => false,
                 'required' => false,
                 'multiple' => true,
@@ -1136,7 +1136,7 @@ class ApproverController extends Controller
     /**
      * @Route("/my-single-group/{groupId}/{userids}", name="vacreq_mysinglegroup")
      * @Method({"GET", "POST"})
-     * @Template("OlegVacReqBundle:Group:my-single-group.html.twig")
+     * @Template("AppVacReqBundle:Group:my-single-group.html.twig")
      */
     public function mySingleGroupAction( Request $request, $groupId, $userids )
     {
@@ -1169,7 +1169,7 @@ class ApproverController extends Controller
             $submitters = $newSubmitters;
         }
 
-        $group = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($groupId);
+        $group = $em->getRepository('AppUserdirectoryBundle:Institution')->find($groupId);
 
         $yearRanges = array();
         //Current Academic Year

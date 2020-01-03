@@ -6,7 +6,7 @@
  * Time: 12:25 PM
  */
 
-namespace Oleg\OrderformBundle\Tests;
+namespace App\OrderformBundle\Tests;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 //use Symfony\Bundle\FrameworkBundle\Tests\Functional\WebTestCase;

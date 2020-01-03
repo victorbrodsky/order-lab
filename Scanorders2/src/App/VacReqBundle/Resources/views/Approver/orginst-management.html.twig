@@ -14,7 +14,7 @@
     limitations under the License.
 #}
 
-{% extends "OlegVacReqBundle::Default/base.html.twig" %}
+{% extends "AppVacReqBundle::Default/base.html.twig" %}
 
 
 
@@ -50,7 +50,7 @@
                         {#approver.id={{ approver.id }}#}
                         {#organizationalGroupId={{ organizationalGroupId }}#}
                         {#approverRoleId={{ approverRoleId }}#}
-                        {{ render(controller('OlegVacReqBundle:Approver:userManagement', { 'userid': approver.id, 'instid':organizationalGroupId, 'roleId':approverRoleId})) }}
+                        {{ render(controller('AppVacReqBundle:Approver:userManagement', { 'userid': approver.id, 'instid':organizationalGroupId, 'roleId':approverRoleId})) }}
                     </div>
                 {% endfor %}
 
@@ -91,8 +91,8 @@
                     <div class="well">
                         {#{{ submitter }}#}
                         {#({{ approver.getSiteRoles('SUBMITTER')|join(', ') }})#}
-                        {#the same as render(controller('OlegVacReqBundle:Approver:userManagement'#}
-                        {{ render( url('vacreq_orginst_user_management',{'userid':submitter.id,'instid':organizationalGroupId, 'roleId':submitterRoleId}), {'default': 'OlegUserdirectoryBundle:Default:default-hinclude-content.html.twig'} ) }}
+                        {#the same as render(controller('AppVacReqBundle:Approver:userManagement'#}
+                        {{ render( url('vacreq_orginst_user_management',{'userid':submitter.id,'instid':organizationalGroupId, 'roleId':submitterRoleId}), {'default': 'AppUserdirectoryBundle:Default:default-hinclude-content.html.twig'} ) }}
                     </div>
                 {% endfor %}
 

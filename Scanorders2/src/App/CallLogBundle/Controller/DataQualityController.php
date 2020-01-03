@@ -15,24 +15,24 @@
  *  limitations under the License.
  */
 
-namespace Oleg\CallLogBundle\Controller;
+namespace App\CallLogBundle\Controller;
 
-use Oleg\CallLogBundle\Form\CalllogPatientType;
-use Oleg\OrderformBundle\Entity\Encounter;
-use Oleg\OrderformBundle\Entity\EncounterPatfirstname;
-use Oleg\OrderformBundle\Entity\EncounterPatlastname;
-use Oleg\OrderformBundle\Entity\EncounterPatmiddlename;
-use Oleg\OrderformBundle\Entity\EncounterPatsex;
-use Oleg\OrderformBundle\Entity\EncounterPatsuffix;
-use Oleg\OrderformBundle\Entity\MrnType;
-use Oleg\OrderformBundle\Entity\Patient;
-use Oleg\OrderformBundle\Entity\PatientDob;
-use Oleg\OrderformBundle\Entity\PatientFirstName;
-use Oleg\OrderformBundle\Entity\PatientLastName;
-use Oleg\OrderformBundle\Entity\PatientMiddleName;
-use Oleg\OrderformBundle\Entity\PatientMrn;
-use Oleg\OrderformBundle\Entity\PatientSex;
-use Oleg\OrderformBundle\Entity\PatientSuffix;
+use App\CallLogBundle\Form\CalllogPatientType;
+use App\OrderformBundle\Entity\Encounter;
+use App\OrderformBundle\Entity\EncounterPatfirstname;
+use App\OrderformBundle\Entity\EncounterPatlastname;
+use App\OrderformBundle\Entity\EncounterPatmiddlename;
+use App\OrderformBundle\Entity\EncounterPatsex;
+use App\OrderformBundle\Entity\EncounterPatsuffix;
+use App\OrderformBundle\Entity\MrnType;
+use App\OrderformBundle\Entity\Patient;
+use App\OrderformBundle\Entity\PatientDob;
+use App\OrderformBundle\Entity\PatientFirstName;
+use App\OrderformBundle\Entity\PatientLastName;
+use App\OrderformBundle\Entity\PatientMiddleName;
+use App\OrderformBundle\Entity\PatientMrn;
+use App\OrderformBundle\Entity\PatientSex;
+use App\OrderformBundle\Entity\PatientSuffix;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -48,7 +48,7 @@ class DataQualityController extends CallEntryController
 
     /**
      * @Route("/merge-patient-records", name="calllog_merge_patient_records", options={"expose"=true})
-     * @Template("OlegCallLogBundle:DataQuality:merge-records.html.twig")
+     * @Template("AppCallLogBundle:DataQuality:merge-records.html.twig")
      */
     public function mergePatientAction(Request $request)
     {
@@ -129,7 +129,7 @@ class DataQualityController extends CallEntryController
         $status = 'valid';
 
         if( $id1 ) {
-            $patient1 = $this->getDoctrine()->getRepository('OlegOrderformBundle:Patient')->find($id1);
+            $patient1 = $this->getDoctrine()->getRepository('AppOrderformBundle:Patient')->find($id1);
             if( !$patient1 ) {
                 $msg .= "Patient 1 not found by id=".$id1;
                 $error = true;
@@ -141,7 +141,7 @@ class DataQualityController extends CallEntryController
         }
 
         if( $id2 ) {
-            $patient2 = $this->getDoctrine()->getRepository('OlegOrderformBundle:Patient')->find($id2);
+            $patient2 = $this->getDoctrine()->getRepository('AppOrderformBundle:Patient')->find($id2);
             if( !$patient2 ) {
                 $msg .= "Patient 2 not found by id=".$id2;
                 $error = true;
@@ -277,7 +277,7 @@ class DataQualityController extends CallEntryController
                 //testing
                 $patientInfoArr = array();
                 foreach( $ids as $patientId ) {
-                    $thisPatient = $this->getDoctrine()->getRepository('OlegOrderformBundle:Patient')->find($patientId);
+                    $thisPatient = $this->getDoctrine()->getRepository('AppOrderformBundle:Patient')->find($patientId);
                     //foreach( $patient->getMrn() as $mrn ) {
                         //$msg .= $patient->getId().": after MRNID=".$mrn->getID()." mrn=".$mrn->obtainOptimalName()."; status=".$mrn->getStatus()."<br>";
                     //}
@@ -333,7 +333,7 @@ class DataQualityController extends CallEntryController
      * @Route("/un-merge-patient-records", name="calllog_unmerge_patient_records", options={"expose"=true})
      * @Route("/set-master-patient-record", name="calllog_set_master_patient_record", options={"expose"=true})
      *
-     * @Template("OlegCallLogBundle:DataQuality:un-merge-records.html.twig")
+     * @Template("AppCallLogBundle:DataQuality:un-merge-records.html.twig")
      */
     public function unmergePatientAction(Request $request)
     {
@@ -415,7 +415,7 @@ class DataQualityController extends CallEntryController
 
         //set master patient
         if( $patientId ) {
-            $patientObject = $this->getDoctrine()->getRepository('OlegOrderformBundle:Patient')->find($patientId);
+            $patientObject = $this->getDoctrine()->getRepository('AppOrderformBundle:Patient')->find($patientId);
             $patients = $calllogUtil->getAllMergedPatients(array($patientObject));
             $ids = $calllogUtil->setMasterPatientRecord($patients, $patientId, $user);
             $em->flush();
@@ -473,7 +473,7 @@ class DataQualityController extends CallEntryController
             //continue;
 
             //find patient object
-            $patient = $this->getDoctrine()->getRepository('OlegOrderformBundle:Patient')->find($patientId);
+            $patient = $this->getDoctrine()->getRepository('AppOrderformBundle:Patient')->find($patientId);
             if( !$patient ) {
                 $error = true;
                 $msg .= ' Patient not found by ID# '.$patientId.'<br>';
@@ -533,7 +533,7 @@ class DataQualityController extends CallEntryController
      * This form also used in new entry page, when "Edit patient record" action menu, for a specific patient, is clicked.
      *
      * @Route("/find-and-edit-patient-record", name="calllog_find_and_edit_patient_record", options={"expose"=true})
-     * @Template("OlegCallLogBundle:DataQuality:edit-patient-record.html.twig")
+     * @Template("AppCallLogBundle:DataQuality:edit-patient-record.html.twig")
      */
     public function findAndEditPatientAction(Request $request) {
 
@@ -621,7 +621,7 @@ class DataQualityController extends CallEntryController
 
     /**
      * @Route("/merge-patient-records-todel", name="calllog_merge_patient_records_todel", options={"expose"=true})
-     * @Template("OlegCallLogBundle:DataQuality:merge-records.html.twig")
+     * @Template("AppCallLogBundle:DataQuality:merge-records.html.twig")
      */
     public function addNewPatientToListAction_TODEL(Request $request)
     {
@@ -682,7 +682,7 @@ class DataQualityController extends CallEntryController
 
         ////////////////////////
 //        $query = $em->createQueryBuilder()
-//            ->from('OlegOrderformBundle:MrnType', 'list')
+//            ->from('AppOrderformBundle:MrnType', 'list')
 //            ->select("list.id as id, list.name as text")
 //            ->orderBy("list.orderinlist","ASC");
 //        $query->where("list.type = :type OR ( list.type = 'user-added' AND list.name != :autogen)");
@@ -747,7 +747,7 @@ class DataQualityController extends CallEntryController
         //exit("status=".$status);
 
         if( $taskId && $status ) {
-            $task = $this->getDoctrine()->getRepository('OlegOrderformBundle:CalllogTask')->find($taskId);
+            $task = $this->getDoctrine()->getRepository('AppOrderformBundle:CalllogTask')->find($taskId);
             //echo "$task=".$task."<br>";
 
             //Convert status to boolean

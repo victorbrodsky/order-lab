@@ -16,31 +16,31 @@
 
 
 {% if sitename == 'employees' %}
-    {% set extendStr = "OlegUserdirectoryBundle::Default/base.html.twig" %}
+    {% set extendStr = "AppUserdirectoryBundle::Default/base.html.twig" %}
 {% endif %}
 
 {% if sitename == 'fellapp' %}
-    {% set extendStr = "OlegFellAppBundle::Default/base.html.twig" %}
+    {% set extendStr = "AppFellAppBundle::Default/base.html.twig" %}
 {% endif %}
 
 {% if sitename == 'scan' %}
-    {% set extendStr = "OlegOrderformBundle::Default/base.html.twig" %}
+    {% set extendStr = "AppOrderformBundle::Default/base.html.twig" %}
 {% endif %}
 
 {% if sitename == 'deidentifier' %}
-    {% set extendStr = "OlegDeidentifierBundle::Default/base.html.twig" %}
+    {% set extendStr = "AppDeidentifierBundle::Default/base.html.twig" %}
 {% endif %}
 
 {% if sitename == 'vacreq' %}
-    {% set extendStr = "OlegVacReqBundle::Default/base.html.twig" %}
+    {% set extendStr = "AppVacReqBundle::Default/base.html.twig" %}
 {% endif %}
 
 {% if sitename == 'calllog' %}
-    {% set extendStr = "OlegCallLogBundle::Default/base.html.twig" %}
+    {% set extendStr = "AppCallLogBundle::Default/base.html.twig" %}
 {% endif %}
 
 {% if sitename == 'translationalresearch' %}
-    {% set extendStr = 'OlegTranslationalResearchBundle::Default/base.html.twig' %}
+    {% set extendStr = 'AppTranslationalResearchBundle::Default/base.html.twig' %}
 {% endif %}
 
 {% extends extendStr%}
@@ -53,7 +53,7 @@
 {% block content %}
 
     {% if sitename == 'fellapp' %}
-        {% include 'OlegUserdirectoryBundle:SiteParameters:fellapp-content.html.twig' %}
+        {% include 'AppUserdirectoryBundle:SiteParameters:fellapp-content.html.twig' %}
     {% endif %}
 
 {% endblock %}

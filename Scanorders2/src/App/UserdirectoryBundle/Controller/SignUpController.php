@@ -1,30 +1,30 @@
 <?php
 
-namespace Oleg\UserdirectoryBundle\Controller;
+namespace App\UserdirectoryBundle\Controller;
 
-use Oleg\UserdirectoryBundle\Entity\AdminComment;
-use Oleg\UserdirectoryBundle\Entity\AdministrativeTitle;
-use Oleg\UserdirectoryBundle\Entity\AppointmentTitle;
-use Oleg\UserdirectoryBundle\Entity\BoardCertification;
-use Oleg\UserdirectoryBundle\Entity\Book;
-use Oleg\UserdirectoryBundle\Entity\ConfidentialComment;
-use Oleg\UserdirectoryBundle\Entity\EmploymentStatus;
-use Oleg\UserdirectoryBundle\Entity\Grant;
-use Oleg\UserdirectoryBundle\Entity\Lecture;
-use Oleg\UserdirectoryBundle\Entity\MedicalTitle;
-use Oleg\UserdirectoryBundle\Entity\PrivateComment;
-use Oleg\UserdirectoryBundle\Entity\Publication;
-use Oleg\UserdirectoryBundle\Entity\PublicComment;
-use Oleg\UserdirectoryBundle\Entity\ResearchLab;
-use Oleg\UserdirectoryBundle\Entity\ResetPassword;
-use Oleg\UserdirectoryBundle\Entity\SignUp;
-use Oleg\UserdirectoryBundle\Entity\StateLicense;
-use Oleg\UserdirectoryBundle\Entity\Training;
-use Oleg\UserdirectoryBundle\Entity\User;
-use Oleg\UserdirectoryBundle\Entity\UserInfo;
-use Oleg\UserdirectoryBundle\Form\ResetPasswordType;
-use Oleg\UserdirectoryBundle\Form\UserSimpleType;
-use Oleg\UserdirectoryBundle\Util\UserUtil;
+use App\UserdirectoryBundle\Entity\AdminComment;
+use App\UserdirectoryBundle\Entity\AdministrativeTitle;
+use App\UserdirectoryBundle\Entity\AppointmentTitle;
+use App\UserdirectoryBundle\Entity\BoardCertification;
+use App\UserdirectoryBundle\Entity\Book;
+use App\UserdirectoryBundle\Entity\ConfidentialComment;
+use App\UserdirectoryBundle\Entity\EmploymentStatus;
+use App\UserdirectoryBundle\Entity\Grant;
+use App\UserdirectoryBundle\Entity\Lecture;
+use App\UserdirectoryBundle\Entity\MedicalTitle;
+use App\UserdirectoryBundle\Entity\PrivateComment;
+use App\UserdirectoryBundle\Entity\Publication;
+use App\UserdirectoryBundle\Entity\PublicComment;
+use App\UserdirectoryBundle\Entity\ResearchLab;
+use App\UserdirectoryBundle\Entity\ResetPassword;
+use App\UserdirectoryBundle\Entity\SignUp;
+use App\UserdirectoryBundle\Entity\StateLicense;
+use App\UserdirectoryBundle\Entity\Training;
+use App\UserdirectoryBundle\Entity\User;
+use App\UserdirectoryBundle\Entity\UserInfo;
+use App\UserdirectoryBundle\Form\ResetPasswordType;
+use App\UserdirectoryBundle\Form\UserSimpleType;
+use App\UserdirectoryBundle\Util\UserUtil;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -64,9 +64,9 @@ class SignUpController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $signUps = $em->getRepository('OlegUserdirectoryBundle:SignUp')->findAll();
+        $signUps = $em->getRepository('AppUserdirectoryBundle:SignUp')->findAll();
 
-        return $this->render('OlegUserdirectoryBundle:SignUp:index.html.twig', array(
+        return $this->render('AppUserdirectoryBundle:SignUp:index.html.twig', array(
             'signUps' => $signUps,
             'title' => "Sign Up for ".$this->siteNameStr,
             'sitenamefull' => $this->siteNameStr,
@@ -152,7 +152,7 @@ class SignUpController extends Controller
 
                 //check if still active request and email or username existed in SignUp DB
                 if( !$emailHasError ) {
-                    $signUpDbs = $em->getRepository('OlegUserdirectoryBundle:SignUp')->findByEmail($signUp->getEmail());
+                    $signUpDbs = $em->getRepository('AppUserdirectoryBundle:SignUp')->findByEmail($signUp->getEmail());
                     if (count($signUpDbs) > 0) {
                         $signUpDb = $signUpDbs[0];
                         if ($signUpDb->getRegistrationStatus() == "Activation Email Sent") {
@@ -171,7 +171,7 @@ class SignUpController extends Controller
                                         "An email was re-sent to the email address you provided " . $signUpDb->getEmail() .
                                         " with an activation link.<br>" .
                                         "Please click the link emailed to you to activate your account.";
-                                    return $this->render('OlegUserdirectoryBundle:SignUp:confirmation.html.twig',
+                                    return $this->render('AppUserdirectoryBundle:SignUp:confirmation.html.twig',
                                         array(
                                             'title' => "Registration Confirmation",
                                             'messageSuccess' => $confirmation)
@@ -192,7 +192,7 @@ class SignUpController extends Controller
 
                 //check if user with provided email existed in SignUp DB
                 if( !$emailHasError ) {
-                    $userDbs = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByUserInfoEmail($signUp->getEmail());
+                    $userDbs = $em->getRepository('AppUserdirectoryBundle:User')->findUserByUserInfoEmail($signUp->getEmail());
                     //echo "usersDb=".count($userDbs)."<br>";
                     if (count($userDbs) > 0) {
                         $userDb = $userDbs[0];
@@ -231,7 +231,7 @@ class SignUpController extends Controller
                 //When the user clicks “Sign Up”, search for matching existing user names
                 // in the user table; if the user name is taken, show a red well stating
                 // “This user name appears to be taken. Please choose another one.”
-                $userDb = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($signUp->getUserName());
+                $userDb = $em->getRepository('AppUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($signUp->getUserName());
                 if( $userDb ) {
                     $form->get('userName')->addError(new FormError('This user name appears to be taken. Please choose another one.'));
                 }
@@ -270,7 +270,7 @@ class SignUpController extends Controller
             $signUp->setRegistrationLinkID($registrationLinkId);
 
             //sitename
-            $siteObject = $em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation($this->siteName);
+            $siteObject = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation($this->siteName);
             if( $siteObject ) {
                 $signUp->setSite($siteObject);
             }
@@ -303,7 +303,7 @@ class SignUpController extends Controller
                 Please click the link emailed to you to activate your account.";
 
             //return $this->redirectToRoute('employees_signup_show', array('id' => $signUp->getId()));
-            return $this->render('OlegUserdirectoryBundle:SignUp:confirmation.html.twig',
+            return $this->render('AppUserdirectoryBundle:SignUp:confirmation.html.twig',
                 array(
                     'title'=>"Registration Confirmation",
                     'messageSuccess'=>$confirmation)
@@ -318,7 +318,7 @@ class SignUpController extends Controller
         }
         //echo "captchaSiteKey=[".$captchaSiteKey."]<br>";
 
-        return $this->render('OlegUserdirectoryBundle:SignUp:new.html.twig', array(
+        return $this->render('AppUserdirectoryBundle:SignUp:new.html.twig', array(
             'signUp' => $signUp,
             'form' => $form->createView(),
             'title' => "Sign Up for ".$this->siteNameStr,
@@ -425,14 +425,14 @@ class SignUpController extends Controller
         $userSecUtil = $this->get('user_security_utility');
         $em = $this->getDoctrine()->getManager();
 
-        $signUp = $em->getRepository('OlegUserdirectoryBundle:SignUp')->findOneByRegistrationLinkID($registrationLinkID);
+        $signUp = $em->getRepository('AppUserdirectoryBundle:SignUp')->findOneByRegistrationLinkID($registrationLinkID);
         if( !$signUp ) {
             $confirmation = "This activation link is invalid. Please make sure you have copied it from your email message correctly.";
 //            $this->get('session')->getFlashBag()->add(
 //                'notice',
 //                $confirmation
 //            );
-            return $this->render('OlegUserdirectoryBundle:SignUp:confirmation.html.twig',
+            return $this->render('AppUserdirectoryBundle:SignUp:confirmation.html.twig',
                 array(
                     'title'=>"Invalid Activation Link",
                     'messageDanger'=>$confirmation
@@ -457,7 +457,7 @@ class SignUpController extends Controller
             );
             $signupUrl = ' <a href="'.$signupUrl.'">sign up</a> ';
             $confirmation = "This activation link has expired. Please ".$signupUrl." again.";
-            return $this->render('OlegUserdirectoryBundle:SignUp:confirmation.html.twig',
+            return $this->render('AppUserdirectoryBundle:SignUp:confirmation.html.twig',
                 array(
                     'title'=>"Invalid Activation Link",
                     'messageDanger'=>$confirmation
@@ -475,7 +475,7 @@ class SignUpController extends Controller
             );
             $orderUrl = ' <a href="'.$orderUrl.'">log in</a> ';
             $confirmation = "This activation link has already been used. Please ".$orderUrl." using your account.";
-            return $this->render('OlegUserdirectoryBundle:SignUp:confirmation.html.twig',
+            return $this->render('AppUserdirectoryBundle:SignUp:confirmation.html.twig',
                 array(
                     'title'=>"Invalid Activation Link",
                     'messageDanger'=>$confirmation
@@ -498,7 +498,7 @@ class SignUpController extends Controller
 
 
         //1) only if not created yet: search by $signUp->getUserName() and if $signUp->getUser() is NULL
-        $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($signUp->getUserName());
+        $user = $em->getRepository('AppUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($signUp->getUserName());
         //if( !$user ) { //&& !$signUp->getUser()
         if( $user && $signUp->getUser() ) {
             //user exists: don't create a new user
@@ -526,7 +526,7 @@ class SignUpController extends Controller
             $user->setLocked(true);
 
             //add site minimum role
-            $siteObject = $em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation($this->siteName);
+            $siteObject = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation($this->siteName);
             $lowestRoles = $siteObject->getLowestRoles();
             if( count($lowestRoles) == 0 ) {
                 $lowestRoles = $this->minimumRoles;
@@ -571,8 +571,8 @@ class SignUpController extends Controller
             $em->flush();
             ///////////// EOF create a new user ///////////////
 
-            //$user = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId());
-            //$signUp = $em->getRepository('OlegUserdirectoryBundle:SignUp')->findOneByRegistrationLinkID($registrationLinkID);
+            //$user = $em->getRepository('AppUserdirectoryBundle:User')->find($user->getId());
+            //$signUp = $em->getRepository('AppUserdirectoryBundle:SignUp')->findOneByRegistrationLinkID($registrationLinkID);
 
 //            ////////////////////// auth /////////////////////////
 //            // Authenticating user
@@ -691,7 +691,7 @@ class SignUpController extends Controller
         }
         //exit('new');
 
-        return $this->render('OlegUserdirectoryBundle:SignUp:activation.html.twig', array(
+        return $this->render('AppUserdirectoryBundle:SignUp:activation.html.twig', array(
             'signUp' => $signUp,
             'user' => $user,
             'cycle' => $cycle,
@@ -720,7 +720,7 @@ class SignUpController extends Controller
         ));
         //$form->handleRequest($request);
 
-        return $this->render('OlegUserdirectoryBundle:SignUp:new.html.twig', array(
+        return $this->render('AppUserdirectoryBundle:SignUp:new.html.twig', array(
             'signUp' => $signUp,
             'title' => "Sign Up for ".$this->siteNameStr,
             'sitenamefull' => $this->siteNameStr,
@@ -750,7 +750,7 @@ class SignUpController extends Controller
             return $this->redirectToRoute($this->siteName.'_signup_edit', array('id' => $signUp->getId()));
         }
 
-        return $this->render('OlegUserdirectoryBundle:SignUp:new.html.twig', array(
+        return $this->render('AppUserdirectoryBundle:SignUp:new.html.twig', array(
             'signUp' => $signUp,
             'title' => "Sign Up for ".$this->siteNameStr,
             'sitenamefull' => $this->siteNameStr,
@@ -847,7 +847,7 @@ class SignUpController extends Controller
 
         $pathology = $userSecUtil->getAutoAssignInstitution();
         if( !$pathology ) {
-            $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+            $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
             if (!$wcmc) {
                 //exit('No Institution: "WCM"');
                 throw $this->createNotFoundException('No Institution: "WCM"');
@@ -857,7 +857,7 @@ class SignUpController extends Controller
                 'bundleName' => 'UserdirectoryBundle',
                 'className' => 'Institution'
             );
-            $pathology = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+            $pathology = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
                 "Pathology and Laboratory Medicine",
                 $wcmc,
                 $mapper
@@ -990,7 +990,7 @@ class SignUpController extends Controller
                 }
 
                 //check if still active request and email or username existed in ResetPassword DB
-                $resetPasswordDbs = $em->getRepository('OlegUserdirectoryBundle:ResetPassword')->findByEmail($resetPassword->getEmail());
+                $resetPasswordDbs = $em->getRepository('AppUserdirectoryBundle:ResetPassword')->findByEmail($resetPassword->getEmail());
                 if( count($resetPasswordDbs) > 0 ) {
                     $resetPasswordDb = $resetPasswordDbs[0];
                     if ($resetPasswordDb->getRegistrationStatus() == "Password Reset Email Sent") {
@@ -1009,7 +1009,7 @@ class SignUpController extends Controller
                                     "An email was re-sent to the email address you provided ".$resetPasswordDb->getEmail().
                                     " with a password reset link.<br>".
                                     "Please click the link emailed to you to reset your password.";
-                                return $this->render('OlegUserdirectoryBundle:SignUp:confirmation.html.twig',
+                                return $this->render('AppUserdirectoryBundle:SignUp:confirmation.html.twig',
                                     array(
                                         'title'=>"Password Reset Confirmation",
                                         'messageSuccess'=>$confirmation)
@@ -1027,7 +1027,7 @@ class SignUpController extends Controller
                 }
 
                 //check if user with provided email existed in resetPassword DB
-                $userDbs = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByUserInfoEmail($resetPassword->getEmail());
+                $userDbs = $em->getRepository('AppUserdirectoryBundle:User')->findUserByUserInfoEmail($resetPassword->getEmail());
                 //echo "usersDb=".count($userDbs)."<br>";
                 if( count($userDbs) > 0 ) {
                     $userDb = $userDbs[0];
@@ -1059,7 +1059,7 @@ class SignUpController extends Controller
             $resetPassword->setRegistrationLinkID($resetPasswordLinkID);
 
             //sitename
-            $siteObject = $em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation($this->siteName);
+            $siteObject = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation($this->siteName);
             if( $siteObject ) {
                 $resetPassword->setSite($siteObject);
             }
@@ -1093,7 +1093,7 @@ class SignUpController extends Controller
             //    "An email was sent to the email address you provided ".$resetPassword->getEmail()." with a password reset link.<br>
             //    Please click the link emailed to you to reset your password.";
             $confirmation = $this->confirmationForgotPassword();
-            return $this->render('OlegUserdirectoryBundle:SignUp:confirmation.html.twig',
+            return $this->render('AppUserdirectoryBundle:SignUp:confirmation.html.twig',
                 array(
                     'title'=>"Password Reset Confirmation",
                     'messageSuccess'=>$confirmation)
@@ -1101,7 +1101,7 @@ class SignUpController extends Controller
         }
         //exit('new');
 
-        return $this->render('OlegUserdirectoryBundle:SignUp:forgot-password.html.twig', array(
+        return $this->render('AppUserdirectoryBundle:SignUp:forgot-password.html.twig', array(
             'resetPassword' => $resetPassword,
             'form' => $form->createView(),
             'title' => "ORDER Password Reset",
@@ -1190,11 +1190,11 @@ class SignUpController extends Controller
         $userSecUtil = $this->get('user_security_utility');
         $em = $this->getDoctrine()->getManager();
 
-        $resetPassword = $em->getRepository('OlegUserdirectoryBundle:ResetPassword')->findOneByRegistrationLinkID($resetPasswordLinkID);
+        $resetPassword = $em->getRepository('AppUserdirectoryBundle:ResetPassword')->findOneByRegistrationLinkID($resetPasswordLinkID);
         if( !$resetPassword ) {
             $confirmation = "This reset password link is invalid. Please make sure you have copied it from your email message correctly.";
             //exit($confirmation);
-            return $this->render('OlegUserdirectoryBundle:SignUp:confirmation.html.twig',
+            return $this->render('AppUserdirectoryBundle:SignUp:confirmation.html.twig',
                 array(
                     'title'=>"Invalid Reset Password Link",
                     'messageDanger'=>$confirmation
@@ -1220,7 +1220,7 @@ class SignUpController extends Controller
             $resetPasswordUrl = ' <a href="'.$resetPasswordUrl.'">reset password</a> ';
             $confirmation = "This reset password link has expired. Please ".$resetPasswordUrl." again.";
             //exit($confirmation);
-            return $this->render('OlegUserdirectoryBundle:SignUp:confirmation.html.twig',
+            return $this->render('AppUserdirectoryBundle:SignUp:confirmation.html.twig',
                 array(
                     'title'=>"Invalid Reset Password Link",
                     'messageDanger'=>$confirmation
@@ -1240,7 +1240,7 @@ class SignUpController extends Controller
             $confirmation = "This password reset link has already been used.".
                 " Please ".$orderUrl." using your new password.";
             //exit($confirmation);
-            return $this->render('OlegUserdirectoryBundle:SignUp:confirmation.html.twig',
+            return $this->render('AppUserdirectoryBundle:SignUp:confirmation.html.twig',
                 array(
                     'title'=>"Invalid Reset Password Link",
                     'messageDanger'=>$confirmation
@@ -1250,11 +1250,11 @@ class SignUpController extends Controller
         //exit('ok');s
 
         //1) only if not created yet: search by $signUp->getUserName() and if $signUp->getUser() is NULL
-        $users = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByUserInfoEmail($resetPassword->getEmail());
+        $users = $em->getRepository('AppUserdirectoryBundle:User')->findUserByUserInfoEmail($resetPassword->getEmail());
         if( count($users) == 0 ) {
             $confirmation = "The email address you have entered is not associated with any active accounts."; //keep this for reset password by linkID
             //exit($confirmation);
-            return $this->render('OlegUserdirectoryBundle:SignUp:confirmation.html.twig',
+            return $this->render('AppUserdirectoryBundle:SignUp:confirmation.html.twig',
                 array(
                     'title'=>"Invalid Reset Password Link",
                     'messageDanger'=>$confirmation
@@ -1268,7 +1268,7 @@ class SignUpController extends Controller
         } else {
             $confirmation = "Logical Error: User not found by email ".$resetPassword->getEmail();
             //exit($confirmation);
-            return $this->render('OlegUserdirectoryBundle:SignUp:confirmation.html.twig',
+            return $this->render('AppUserdirectoryBundle:SignUp:confirmation.html.twig',
                 array(
                     'title'=>"Invalid Reset Password Link",
                     'messageDanger'=>$confirmation
@@ -1368,7 +1368,7 @@ class SignUpController extends Controller
         }
         //exit('reset form');
 
-        return $this->render('OlegUserdirectoryBundle:SignUp:reset-password-action.html.twig', array(
+        return $this->render('AppUserdirectoryBundle:SignUp:reset-password-action.html.twig', array(
             'resetPassword' => $resetPassword,
             'user' => $user,
             'cycle' => $cycle,

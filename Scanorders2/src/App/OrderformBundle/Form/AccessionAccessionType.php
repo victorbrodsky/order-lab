@@ -15,9 +15,9 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Form;
+namespace App\OrderformBundle\Form;
 
-use Oleg\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
+use App\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -47,10 +47,10 @@ class AccessionAccessionType extends AbstractType
         if( $this->params['type'] == 'One-Slide Scan Order') {
             $attr['style'] = 'width:100%; height:27px';
             $accTypeLabel = "Accession Type:";
-            //$gen_attr = array('label'=>false,'class'=>'Oleg\OrderformBundle\Entity\AccessionAccession','type'=>null);
+            //$gen_attr = array('label'=>false,'class'=>'App\OrderformBundle\Entity\AccessionAccession','type'=>null);
         } else {
             $accTypeLabel = false;
-            //$gen_attr = array('label'=>'Accession Number [or Label]','class'=>'Oleg\OrderformBundle\Entity\AccessionAccession','type'=>null);
+            //$gen_attr = array('label'=>'Accession Number [or Label]','class'=>'App\OrderformBundle\Entity\AccessionAccession','type'=>null);
         }
 
         $builder->add( 'field', TextType::class, array(
@@ -83,7 +83,7 @@ class AccessionAccessionType extends AbstractType
 
 
         $builder->add('others', ArrayFieldType::class, array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\AccessionAccession',
+            'data_class' => 'App\OrderformBundle\Entity\AccessionAccession',
             'form_custom_value' => $this->params,
             'label' => false,
 			'attr' => array('style'=>'display:none;')
@@ -96,7 +96,7 @@ class AccessionAccessionType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\AccessionAccession',
+            'data_class' => 'App\OrderformBundle\Entity\AccessionAccession',
             'form_custom_value' => null
         ));
     }

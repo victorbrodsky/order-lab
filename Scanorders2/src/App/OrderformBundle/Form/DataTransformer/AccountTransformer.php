@@ -23,16 +23,16 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Oleg\OrderformBundle\Form\DataTransformer;
+namespace App\OrderformBundle\Form\DataTransformer;
 
 
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Doctrine\Common\Persistence\ObjectManager;
 
-use Oleg\OrderformBundle\Entity\Account;
-use Oleg\UserdirectoryBundle\Entity\User;
-use Oleg\UserdirectoryBundle\Security\Util\UserSecurityUtil;
+use App\OrderformBundle\Entity\Account;
+use App\UserdirectoryBundle\Entity\User;
+use App\UserdirectoryBundle\Security\Util\UserSecurityUtil;
 
 class AccountTransformer implements DataTransformerInterface
 {
@@ -91,7 +91,7 @@ class AccountTransformer implements DataTransformerInterface
 
         if( is_numeric ( $text ) ) {    //number => most probably it is id
 
-            $entity = $this->em->getRepository('OlegOrderformBundle:Account')->findOneById($text);
+            $entity = $this->em->getRepository('AppOrderformBundle:Account')->findOneById($text);
 
             if( null === $entity ) {
 
@@ -114,7 +114,7 @@ class AccountTransformer implements DataTransformerInterface
     public function createNew($name) {
 
         //check if it is already exists in db
-        $entity = $this->em->getRepository('OlegOrderformBundle:Account')->findOneByName($name);
+        $entity = $this->em->getRepository('AppOrderformBundle:Account')->findOneByName($name);
         
         if( null === $entity ) {
 
@@ -133,7 +133,7 @@ class AccountTransformer implements DataTransformerInterface
             $newEntity->setCreator($this->user);
 
             //get max orderinlist
-            $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM OlegOrderformBundle:Account c');
+            $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM AppOrderformBundle:Account c');
             $nextorder = $query->getSingleResult()['maxorderinlist']+10;          
             $newEntity->setOrderinlist($nextorder);
             

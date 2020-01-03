@@ -1,8 +1,8 @@
 <?php
 
-namespace Tests\Oleg\TestBundle;
+namespace Tests\App\TestBundle;
 
-use Tests\Oleg\TestBundle\WebTestBase;
+use Tests\App\TestBundle\WebTestBase;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\HttpFoundation\Response;
@@ -226,7 +226,7 @@ class FellappTest extends WebTestBase
     public function testShowApplication() {
         $this->logIn();
 
-        $fellapps = $this->em->getRepository('OlegFellAppBundle:FellowshipApplication')->findAll();
+        $fellapps = $this->em->getRepository('AppFellAppBundle:FellowshipApplication')->findAll();
 
         if( count($fellapps) > 0 ) {
             $fellapp = end($fellapps);

@@ -22,7 +22,7 @@
  * Time: 11:23 AM
  */
 
-namespace Oleg\OrderformBundle\Entity;
+namespace App\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -42,12 +42,12 @@ class Endpoint {
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\SourceSystemList")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\SourceSystemList")
      */
     private $system;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Location")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Location")
      */
     private $location;
 

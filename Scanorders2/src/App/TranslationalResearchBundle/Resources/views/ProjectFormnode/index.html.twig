@@ -1,6 +1,6 @@
-{% extends "OlegTranslationalResearchBundle::Default/base.html.twig" %}
+{% extends "AppTranslationalResearchBundle::Default/base.html.twig" %}
 
-{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
 {% block title %}
     {{ title }}
@@ -394,7 +394,7 @@
         {{ knp_pagination_render(projects) }}
     </div>
 
-    {#{{ render(controller('OlegTranslationalResearchBundle:Project:threadComments', { 'id': "3-9-committee_review" })) }}#}
+    {#{{ render(controller('AppTranslationalResearchBundle:Project:threadComments', { 'id': "3-9-committee_review" })) }}#}
     {#{% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': "3-9-committee_review"} %}#}
 
     {% if is_granted('ROLE_TRANSRES_REQUESTER') %}
@@ -414,7 +414,7 @@
 
 {% block additionaljs %}
     {% javascripts
-        '@OlegTranslationalResearchBundle/Resources/public/form/js/transres-filterbtn.js'
+        '@AppTranslationalResearchBundle/Resources/public/form/js/transres-filterbtn.js'
     %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}

@@ -22,7 +22,7 @@
  * Time: 11:08 AM
  */
 
-namespace Oleg\CallLogBundle\Entity;
+namespace App\CallLogBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Criteria;

@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Entity;
+namespace App\UserdirectoryBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -58,7 +58,7 @@ class EquipmentType extends ListAbstract
 
 
 
-    public function addEquipment(\Oleg\UserdirectoryBundle\Entity\Equipment $equipment)
+    public function addEquipment(\App\UserdirectoryBundle\Entity\Equipment $equipment)
     {
         if( !$this->equipments->contains($equipment) ) {
             $this->equipments->add($equipment);
@@ -67,7 +67,7 @@ class EquipmentType extends ListAbstract
         return $this;
     }
 
-    public function removeEquipment(\Oleg\UserdirectoryBundle\Entity\Equipment $equipment)
+    public function removeEquipment(\App\UserdirectoryBundle\Entity\Equipment $equipment)
     {
         $this->equipments->removeElement($equipment);
     }

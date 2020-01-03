@@ -1,6 +1,6 @@
 <?php
 
-namespace Oleg\FellAppBundle\DependencyInjection;
+namespace App\FellAppBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;

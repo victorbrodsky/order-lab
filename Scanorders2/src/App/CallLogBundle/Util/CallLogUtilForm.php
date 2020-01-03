@@ -22,7 +22,7 @@
  * Time: 2:10 PM
  */
 
-namespace Oleg\CallLogBundle\Util;
+namespace App\CallLogBundle\Util;
 
 
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;

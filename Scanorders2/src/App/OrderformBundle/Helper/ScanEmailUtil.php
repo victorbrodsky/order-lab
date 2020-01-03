@@ -15,10 +15,10 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Helper;
+namespace App\OrderformBundle\Helper;
 
-use Oleg\UserdirectoryBundle\Util\EmailUtil;
-use Oleg\UserdirectoryBundle\Util\UserUtil;
+use App\UserdirectoryBundle\Util\EmailUtil;
+use App\UserdirectoryBundle\Util\UserUtil;
 
 /**
  * Description of EmailUtil

@@ -6,10 +6,10 @@
  * Time: 11:31 AM
  */
 
-namespace Oleg\FellAppBundle\Util;
+namespace App\FellAppBundle\Util;
 
 
-use Oleg\UserdirectoryBundle\Entity\User;
+use App\UserdirectoryBundle\Entity\User;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -122,7 +122,7 @@ class RecLetterUtil {
 
         //check for uniqueness
         if( $hash ) {
-            $references = $this->em->getRepository('OlegFellAppBundle:Reference')->findByRecLetterHashId($hash);
+            $references = $this->em->getRepository('AppFellAppBundle:Reference')->findByRecLetterHashId($hash);
             if( count($references) > 0 ) {
                 $count = $count + 1;
                 $hash = $this->generateRecLetterId( $fellapp, $reference, $request, $count );
@@ -699,7 +699,7 @@ class RecLetterUtil {
         }
 
         //check if file already exists by file id
-        $documentDb = $this->em->getRepository('OlegUserdirectoryBundle:Document')->findOneByUniqueid($file->getId());
+        $documentDb = $this->em->getRepository('AppUserdirectoryBundle:Document')->findOneByUniqueid($file->getId());
         if( $documentDb && $documentType != 'Fellowship Application Backup Spreadsheet' ) {
             //echo "letter already exists with document ID=".$documentDb->getId()."<br>";
             //$logger = $this->container->get('logger');
@@ -765,7 +765,7 @@ class RecLetterUtil {
 
         //find application and reference by reference ID
         //echo "search by ref ID=".$refId."<br>";
-        $references = $this->em->getRepository('OlegFellAppBundle:Reference')->findByRecLetterHashId($refId);
+        $references = $this->em->getRepository('AppFellAppBundle:Reference')->findByRecLetterHashId($refId);
         //echo "references count=".count($references)."<br>";
 
         //not found
@@ -1203,7 +1203,7 @@ class RecLetterUtil {
 
             //set Status to "Complete"
             if( $originalStatusStr != "Complete" ) {
-                $completeStatus = $this->em->getRepository('OlegFellAppBundle:FellAppStatus')->findOneByName("complete");
+                $completeStatus = $this->em->getRepository('AppFellAppBundle:FellAppStatus')->findOneByName("complete");
                 if (!$completeStatus) {
                     throw new EntityNotFoundException('Unable to find FellAppStatus by name=' . "complete");
                 }
@@ -1299,7 +1299,7 @@ class RecLetterUtil {
             }
 
             $duplicates = false;
-            $repository = $this->em->getRepository('OlegFellAppBundle:FellowshipApplication');
+            $repository = $this->em->getRepository('AppFellAppBundle:FellowshipApplication');
             $dql = $repository->createQueryBuilder("fellapp");
             $dql->select('fellapp');
             $dql->leftJoin("fellapp.fellowshipSubspecialty", "fellowshipSubspecialty");

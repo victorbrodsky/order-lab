@@ -15,10 +15,10 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Form;
+namespace App\OrderformBundle\Form;
 
-use Oleg\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
-use Oleg\UserdirectoryBundle\Form\UserWrapperType;
+use App\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
+use App\UserdirectoryBundle\Form\UserWrapperType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -106,7 +106,7 @@ class EducationalType extends AbstractType
                 }
 
                 $form->add( 'primaryPrincipal', EntityType::class, array(
-                    'class' => 'OlegUserdirectoryBundle:UserWrapper',
+                    'class' => 'AppUserdirectoryBundle:UserWrapper',
                     'label'=>'Primary Course Director (as entered by user'.$comment.'):',
                     'required'=> false,
                     'multiple' => false,
@@ -127,7 +127,7 @@ class EducationalType extends AbstractType
 
                 $label = null;
                 $mapper = array(
-                    'prefix' => "Oleg",
+                    'prefix' => "App",
                     'className' => "CourseTitleTree",
                     'bundleName' => "OrderformBundle",
                     'organizationalGroupType' => "CourseGroupType"
@@ -135,11 +135,11 @@ class EducationalType extends AbstractType
                 if( $title ) {
                     $educationalTitle = $title->getCourseTitle();
                     if( $educationalTitle ) {
-                        $label = $this->params['em']->getRepository('OlegOrderformBundle:CourseTitleTree')->getLevelLabels($educationalTitle,$mapper) . ":";
+                        $label = $this->params['em']->getRepository('AppOrderformBundle:CourseTitleTree')->getLevelLabels($educationalTitle,$mapper) . ":";
                     }
                 }
                 if( !$label ) {
-                    $label = $this->params['em']->getRepository('OlegOrderformBundle:CourseTitleTree')->getLevelLabels(null,$mapper) . ":";
+                    $label = $this->params['em']->getRepository('AppOrderformBundle:CourseTitleTree')->getLevelLabels(null,$mapper) . ":";
                 }
                 //echo "label=".$label."<br>";
 
@@ -175,7 +175,7 @@ class EducationalType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\Educational',
+            'data_class' => 'App\OrderformBundle\Entity\Educational',
             'form_custom_value' => null
         ));
     }

@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Entity;
+namespace App\UserdirectoryBundle\Entity;
 
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\Criteria;
@@ -33,7 +33,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Use Doctrine Extension Tree for tree manipulation.
  *
  * @Gedmo\Tree(type="nested")
- * @ORM\Entity(repositoryClass="Oleg\UserdirectoryBundle\Repository\FormNodeRepository")
+ * @ORM\Entity(repositoryClass="App\UserdirectoryBundle\Repository\FormNodeRepository")
  * @ORM\Table(name="user_formNode")
  */
 class FormNode extends BaseCompositeNode {
@@ -110,7 +110,7 @@ class FormNode extends BaseCompositeNode {
     
     //Received Form Field Value Entity. Used to overwrite the same values in the formnode's ObjectType
     /**
-     * i.e. "Oleg\OlegUserdirectoryBundle\Entity"
+     * i.e. "App\AppUserdirectoryBundle\Entity"
      * @ORM\Column(type="string", nullable=true)
      */
     private $receivedValueEntityNamespace;
@@ -130,7 +130,7 @@ class FormNode extends BaseCompositeNode {
     //textValue
     //TODO: choose the best way to link to the list holder:
     //1) "hard" link using FK to ObjectTypeText
-    //2) "soft" link using entityNamespace="Oleg\UserdirectoryBundle\Entity" and entityName="ObjectTypeText"
+    //2) "soft" link using entityNamespace="App\UserdirectoryBundle\Entity" and entityName="ObjectTypeText"
 //    /**
 //     * @ORM\ManyToOne(targetEntity="ObjectTypeText", inversedBy="formNodes", cascade={"persist"})
 //     * @ORM\JoinColumn(name="objectTypeText_id", referencedColumnName="id")

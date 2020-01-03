@@ -14,7 +14,7 @@
     limitations under the License.
 #}
 
-{% import "OlegTranslationalResearchBundle::Default/navbar.html.twig" as navbarmacros %}
+{% import "AppTranslationalResearchBundle::Default/navbar.html.twig" as navbarmacros %}
 
 {% macro createFilterRequestType( filterTypes ) %}
     {% for filterType in filterTypes %}
@@ -58,7 +58,7 @@
 
                 <ul class="nav navbar-nav">
 
-                    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+                    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
                     {{ usermacros.siteSwitch() }}
 
                     <li id="nav-bar-translationalresearch-home" class="hidden-xs divider-vertical">

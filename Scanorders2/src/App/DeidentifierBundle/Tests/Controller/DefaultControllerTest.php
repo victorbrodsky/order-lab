@@ -1,6 +1,6 @@
 <?php
 
-namespace Oleg\DeidentifierBundle\Tests\Controller;
+namespace App\DeidentifierBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 

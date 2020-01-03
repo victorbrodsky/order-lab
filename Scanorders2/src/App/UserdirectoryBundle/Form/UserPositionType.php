@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Form;
+namespace App\UserdirectoryBundle\Form;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\FormEvents;
@@ -58,7 +58,7 @@ class UserPositionType extends AbstractType
 //            $this->params['nodeid'] = $this->params['treenode']->getId();
 //        }
 //        $builder->add( 'institution', 'entity', array(
-//            'class' => 'OlegUserdirectoryBundle:Institution',
+//            'class' => 'AppUserdirectoryBundle:Institution',
 //            'label' => 'Institution:',
 //            'required'=> true,
 //            'multiple' => false,
@@ -104,7 +104,7 @@ class UserPositionType extends AbstractType
 //            'data' => $this->params['user']
 //        ));
         $builder->add( 'user', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:User',
+            'class' => 'AppUserdirectoryBundle:User',
             'label' => false,
             'required'=> true,
             'multiple' => false,
@@ -125,7 +125,7 @@ class UserPositionType extends AbstractType
 
         //visible as positionType combobox attached to an institution node
         $builder->add( 'positionTypes', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:PositionTypeList',
+            'class' => 'AppUserdirectoryBundle:PositionTypeList',
             'choice_label' => 'name',
             'label' => false,
             'required'=> false,
@@ -168,7 +168,7 @@ class UserPositionType extends AbstractType
 //                $attr['readonly'] = 'readonly';
 //            }
 //            $form->add( 'positionTypes', 'entity', array(
-//                'class' => 'OlegUserdirectoryBundle:PositionTypeList',
+//                'class' => 'AppUserdirectoryBundle:PositionTypeList',
 //                'choice_label' => 'name',
 //                'label'=>'Position Type:',
 //                'required'=> false,
@@ -215,7 +215,7 @@ class UserPositionType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\UserPosition',
+            'data_class' => 'App\UserdirectoryBundle\Entity\UserPosition',
         ));
     }
 

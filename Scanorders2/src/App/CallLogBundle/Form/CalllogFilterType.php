@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\CallLogBundle\Form;
+namespace App\CallLogBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -58,7 +58,7 @@ class CalllogFilterType extends AbstractType
         ));
 
         $builder->add('entryTags', EntityType::class, array(
-            'class' => 'OlegOrderformBundle:CalllogEntryTagsList',
+            'class' => 'AppOrderformBundle:CalllogEntryTagsList',
             'label' => false,
             'required' => false,
             'multiple' => true,
@@ -87,7 +87,7 @@ class CalllogFilterType extends AbstractType
 //        ));
         //echo "form mrntype=".$this->params['mrntype']."<br>";
 //        $builder->add('mrntype', EntityType::class, array(
-//            'class' => 'OlegOrderformBundle:MrnType',
+//            'class' => 'AppOrderformBundle:MrnType',
 //            'label' => false,
 //            //'required' => true,
 //            'required' => false,
@@ -122,7 +122,7 @@ class CalllogFilterType extends AbstractType
         ));
 
         $builder->add('author', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:User',
+            'class' => 'AppUserdirectoryBundle:User',
             'label' => false,
             'required' => false,
             'choice_label' => 'getUsernameOptimal',
@@ -142,7 +142,7 @@ class CalllogFilterType extends AbstractType
         ));
 
 //        $builder->add('referringProvider', EntityType::class, array(
-//            'class' => 'OlegUserdirectoryBundle:User',
+//            'class' => 'AppUserdirectoryBundle:User',
 //            'label' => false,
 //            'required' => false,
 //            'choice_label' => 'getUsernameOptimal',
@@ -176,7 +176,7 @@ class CalllogFilterType extends AbstractType
         ));
 
         $builder->add('referringProviderSpecialty', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:HealthcareProviderSpecialtiesList',
+            'class' => 'AppUserdirectoryBundle:HealthcareProviderSpecialtiesList',
             'label' => false,
             'required' => false,
             'attr' => array('class' => 'combobox', 'placeholder' => "Specialty"),
@@ -187,7 +187,7 @@ class CalllogFilterType extends AbstractType
         ));
 
         $builder->add('encounterLocation', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:Location',
+            'class' => 'AppUserdirectoryBundle:Location',
             'label' => false,
             'required' => false,
             'attr' => array('class' => 'combobox', 'placeholder' => "Location"),
@@ -201,7 +201,7 @@ class CalllogFilterType extends AbstractType
 
         //Institution or Collaboration
         $builder->add('institution', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:Institution',
+            'class' => 'AppUserdirectoryBundle:Institution',
             'label' => false,
             'required' => false,
             'choice_label' => 'getNameShortName',
@@ -226,7 +226,7 @@ class CalllogFilterType extends AbstractType
 
         //Patient List
         $builder->add('patientListTitle', EntityType::class, array(
-            'class' => 'OlegOrderformBundle:PatientListHierarchy',
+            'class' => 'AppOrderformBundle:PatientListHierarchy',
             'label' => false,
             'required' => false,
             'choice_label' => 'name',    //'getNodeNameWithParent',
@@ -253,7 +253,7 @@ class CalllogFilterType extends AbstractType
 
         //Attending
         $builder->add('attending', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:User',
+            'class' => 'AppUserdirectoryBundle:User',
             'label' => false,
             'required' => false,
             'choice_label' => 'getUsernameOptimal',
@@ -317,7 +317,7 @@ class CalllogFilterType extends AbstractType
             //'choices_as_values' => true,
         ));
         $builder->add('taskType', EntityType::class, array(
-            'class' => 'OlegOrderformBundle:CalllogTaskTypeList',
+            'class' => 'AppOrderformBundle:CalllogTaskTypeList',
             'label' => false,
             'required' => false,
             //'choice_label' => 'name',
@@ -333,7 +333,7 @@ class CalllogFilterType extends AbstractType
             },
         ));
         $builder->add('taskUpdatedBy', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:User',
+            'class' => 'AppUserdirectoryBundle:User',
             'label' => false,
             'required' => false,
             'choice_label' => 'getUsernameOptimal',
@@ -350,7 +350,7 @@ class CalllogFilterType extends AbstractType
             },
         ));
         $builder->add('taskAddedBy', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:User',
+            'class' => 'AppUserdirectoryBundle:User',
             'label' => false,
             'required' => false,
             'choice_label' => 'getUsernameOptimal',
@@ -367,7 +367,7 @@ class CalllogFilterType extends AbstractType
             },
         ));
 
-        //Use OlegOrderformBundle:CalllogAttachmentTypeList
+        //Use AppOrderformBundle:CalllogAttachmentTypeList
 //        $attachmentTypes = array(
 //            'With attachments' => 'With attachments',
 //            'Without attachments' => 'Without attachments',

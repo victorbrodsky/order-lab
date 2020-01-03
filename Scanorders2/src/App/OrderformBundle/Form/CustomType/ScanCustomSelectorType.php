@@ -23,26 +23,26 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Oleg\OrderformBundle\Form\CustomType;
+namespace App\OrderformBundle\Form\CustomType;
 
 
-use Oleg\UserdirectoryBundle\Form\DataTransformer\SingleUserWrapperTransformer;
-use Oleg\UserdirectoryBundle\Form\DataTransformer\UserWrapperTransformer;
+use App\UserdirectoryBundle\Form\DataTransformer\SingleUserWrapperTransformer;
+use App\UserdirectoryBundle\Form\DataTransformer\UserWrapperTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-use Oleg\OrderformBundle\Form\DataTransformer\ProcedureTransformer;
-use Oleg\OrderformBundle\Form\DataTransformer\SourceOrganTransformer;
-use Oleg\OrderformBundle\Form\DataTransformer\AccessionTypeTransformer;
-use Oleg\OrderformBundle\Form\DataTransformer\MrnTypeTransformer;
-use Oleg\OrderformBundle\Form\DataTransformer\AccountTransformer;
-use Oleg\OrderformBundle\Form\DataTransformer\StainTransformer;
+use App\OrderformBundle\Form\DataTransformer\ProcedureTransformer;
+use App\OrderformBundle\Form\DataTransformer\SourceOrganTransformer;
+use App\OrderformBundle\Form\DataTransformer\AccessionTypeTransformer;
+use App\OrderformBundle\Form\DataTransformer\MrnTypeTransformer;
+use App\OrderformBundle\Form\DataTransformer\AccountTransformer;
+use App\OrderformBundle\Form\DataTransformer\StainTransformer;
 
-use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
-use Oleg\UserdirectoryBundle\Form\DataTransformer\StringTransformer;
+use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
+use App\UserdirectoryBundle\Form\DataTransformer\StringTransformer;
 
 class ScanCustomSelectorType extends AbstractType {
 

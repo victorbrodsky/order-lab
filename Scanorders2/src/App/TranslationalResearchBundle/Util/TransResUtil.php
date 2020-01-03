@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\TranslationalResearchBundle\Util;
+namespace App\TranslationalResearchBundle\Util;
 
 
 use Box\Spout\Common\Type;
@@ -27,12 +27,12 @@ use Box\Spout\Writer\WriterFactory;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
-use Oleg\TranslationalResearchBundle\Entity\AdminReview;
-use Oleg\TranslationalResearchBundle\Entity\CommitteeReview;
-use Oleg\TranslationalResearchBundle\Entity\FinalReview;
-use Oleg\TranslationalResearchBundle\Entity\IrbReview;
-use Oleg\TranslationalResearchBundle\Entity\SpecialtyList;
-use Oleg\TranslationalResearchBundle\Entity\TransResSiteParameters;
+use App\TranslationalResearchBundle\Entity\AdminReview;
+use App\TranslationalResearchBundle\Entity\CommitteeReview;
+use App\TranslationalResearchBundle\Entity\FinalReview;
+use App\TranslationalResearchBundle\Entity\IrbReview;
+use App\TranslationalResearchBundle\Entity\SpecialtyList;
+use App\TranslationalResearchBundle\Entity\TransResSiteParameters;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Symfony\Component\Cache\Simple\ApcuCache;
 use Symfony\Component\Cache\Simple\FilesystemCache;
@@ -690,7 +690,7 @@ class TransResUtil
 
         $irbReviewState = "irb_review";
         if( $currentState == $irbReviewState || $addForAllStates === true || $addForAllStates === $irbReviewState ) {
-            $defaultReviewers = $this->em->getRepository('OlegTranslationalResearchBundle:DefaultReviewer')->findBy(
+            $defaultReviewers = $this->em->getRepository('AppTranslationalResearchBundle:DefaultReviewer')->findBy(
                 array(
                     "state" => $irbReviewState,
                     "projectSpecialty" => $project->getProjectSpecialty()
@@ -717,8 +717,8 @@ class TransResUtil
 
         $adminReviewState = "admin_review";
         if( $currentState == $adminReviewState || $addForAllStates === true || $addForAllStates === $irbReviewState ) {
-            //$defaultReviewers = $this->em->getRepository('OlegTranslationalResearchBundle:DefaultReviewer')->findByState($adminReviewState);
-            $defaultReviewers = $this->em->getRepository('OlegTranslationalResearchBundle:DefaultReviewer')->findBy(
+            //$defaultReviewers = $this->em->getRepository('AppTranslationalResearchBundle:DefaultReviewer')->findByState($adminReviewState);
+            $defaultReviewers = $this->em->getRepository('AppTranslationalResearchBundle:DefaultReviewer')->findBy(
                 array(
                     "state" => $adminReviewState,
                     "projectSpecialty" => $project->getProjectSpecialty()
@@ -744,8 +744,8 @@ class TransResUtil
         $committeeReviewState = "committee_review";
         if( $currentState == $committeeReviewState || $addForAllStates === true || $addForAllStates === $irbReviewState ) {
 
-            //$defaultReviewers = $this->em->getRepository('OlegTranslationalResearchBundle:DefaultReviewer')->findByState($committeeReviewState,array("primaryReview"=>"DESC"));
-            $defaultReviewers = $this->em->getRepository('OlegTranslationalResearchBundle:DefaultReviewer')->findBy(
+            //$defaultReviewers = $this->em->getRepository('AppTranslationalResearchBundle:DefaultReviewer')->findByState($committeeReviewState,array("primaryReview"=>"DESC"));
+            $defaultReviewers = $this->em->getRepository('AppTranslationalResearchBundle:DefaultReviewer')->findBy(
                 array(
                     "state" => $committeeReviewState,
                     "projectSpecialty" => $project->getProjectSpecialty()
@@ -776,8 +776,8 @@ class TransResUtil
         $finalReviewState = "final_review";
         if( $currentState == $finalReviewState || $addForAllStates === true || $addForAllStates === $irbReviewState ) {
 
-            //$defaultReviewers = $this->em->getRepository('OlegTranslationalResearchBundle:DefaultReviewer')->findByState($finalReviewState);
-            $defaultReviewers = $this->em->getRepository('OlegTranslationalResearchBundle:DefaultReviewer')->findBy(
+            //$defaultReviewers = $this->em->getRepository('AppTranslationalResearchBundle:DefaultReviewer')->findByState($finalReviewState);
+            $defaultReviewers = $this->em->getRepository('AppTranslationalResearchBundle:DefaultReviewer')->findBy(
                 array(
                     "state" => $finalReviewState,
                     "projectSpecialty" => $project->getProjectSpecialty()
@@ -808,8 +808,8 @@ class TransResUtil
     public function getDefaultReviewerInfo( $state, $specialty, $asObjects=false ) {
         $infos = array();
 
-        //$defaultReviewers = $this->em->getRepository('OlegTranslationalResearchBundle:DefaultReviewer')->findByState($state,array('primaryReview' => 'DESC'));
-        $defaultReviewers = $this->em->getRepository('OlegTranslationalResearchBundle:DefaultReviewer')->findBy(
+        //$defaultReviewers = $this->em->getRepository('AppTranslationalResearchBundle:DefaultReviewer')->findByState($state,array('primaryReview' => 'DESC'));
+        $defaultReviewers = $this->em->getRepository('AppTranslationalResearchBundle:DefaultReviewer')->findBy(
             array(
                 'state'=>$state,
                 'projectSpecialty'=>$specialty->getId()
@@ -1105,10 +1105,10 @@ class TransResUtil
 //                    }
 //                    $reviewForm = $this->createForm(ReviewBaseType::class, $reviewObject, array(
 //                        //'form_custom_value' => $params,
-//                        'data_class' => 'Oleg\\TranslationalResearchBundle\\Entity\\'.$reviewEntityName,
+//                        'data_class' => 'App\\TranslationalResearchBundle\\Entity\\'.$reviewEntityName,
 //                        'disabled' => $disabled
 //                    ));
-//                    //$reviewHtml = $this->render('OlegTranslationalResearchBundle:ReviewBaseController:Some.html.twig', array())->getContent();
+//                    //$reviewHtml = $this->render('AppTranslationalResearchBundle:ReviewBaseController:Some.html.twig', array())->getContent();
 //                    //$reviewHtml = $this->redirectToRoute('translationalresearch_project_show', array('id' => $project->getId()));
 //                    //TODO: use include form translationalresearch_review_edit in twig
 //                }
@@ -1120,7 +1120,7 @@ class TransResUtil
 ////                foreach($reviewObjects as $reviewObject) {
 ////                    $reviewForm = $this->createForm(ReviewBaseType::class, $reviewObject, array(
 ////                        //'form_custom_value' => $params,
-////                        'data_class' => 'Oleg\\TranslationalResearchBundle\\Entity\\'.$reviewEntityName
+////                        'data_class' => 'App\\TranslationalResearchBundle\\Entity\\'.$reviewEntityName
 ////                    ));
 ////                }
 ////                break;
@@ -1131,7 +1131,7 @@ class TransResUtil
 ////                foreach($reviewObjects as $reviewObject) {
 ////                    $reviewForm = $this->createForm(ReviewBaseType::class, $reviewObject, array(
 ////                        //'form_custom_value' => $params,
-////                        'data_class' => 'Oleg\\TranslationalResearchBundle\\Entity\\'.$reviewEntityName
+////                        'data_class' => 'App\\TranslationalResearchBundle\\Entity\\'.$reviewEntityName
 ////                    ));
 ////                }
 ////                break;
@@ -1142,7 +1142,7 @@ class TransResUtil
 ////                foreach($reviewObjects as $reviewObject) {
 ////                    $reviewForm = $this->createForm(ReviewBaseType::class, $reviewObject, array(
 ////                        //'form_custom_value' => $params,
-////                        'data_class' => 'Oleg\\TranslationalResearchBundle\\Entity\\'.$reviewEntityName
+////                        'data_class' => 'App\\TranslationalResearchBundle\\Entity\\'.$reviewEntityName
 ////                    ));
 ////                }
 ////                break;
@@ -1661,7 +1661,7 @@ class TransResUtil
         }
         //echo "reviewEntityName=".$reviewEntityName."<br>";
 
-        $reviewObject = $this->em->getRepository('OlegTranslationalResearchBundle:'.$reviewEntityName)->find($reviewId);
+        $reviewObject = $this->em->getRepository('AppTranslationalResearchBundle:'.$reviewEntityName)->find($reviewId);
         if( !$reviewObject ) {
             throw new \Exception('Unable to find '.$reviewEntityName.' by id='.$reviewId);
         }
@@ -1710,7 +1710,7 @@ class TransResUtil
 //        //echo "reviewEntityName=".$reviewEntityName."<br>";
 //
 //        if(1) {
-//            $reviewObject = $this->em->getRepository('OlegTranslationalResearchBundle:'.$reviewEntityName)->find($reviewId);
+//            $reviewObject = $this->em->getRepository('AppTranslationalResearchBundle:'.$reviewEntityName)->find($reviewId);
 //            if( !$reviewObject ) {
 //                throw new \Exception('Unable to find '.$reviewEntityName.' by id='.$reviewId);
 //            }
@@ -1750,7 +1750,7 @@ class TransResUtil
                 if( count($reviewObjects) > 0 ) {
                     $reviewForm = $this->createForm(ReviewBaseType::class, $reviewObjects[0], array(
                         //'form_custom_value' => $params,
-                        'data_class' => 'Oleg\\TranslationalResearchBundle\\Entity\\'.$reviewEntityName
+                        'data_class' => 'App\\TranslationalResearchBundle\\Entity\\'.$reviewEntityName
                     ));
                 }
                 break;
@@ -1761,7 +1761,7 @@ class TransResUtil
                 if( count($reviewObjects) > 0 ) {
                     $reviewForm = $this->createForm(ReviewBaseType::class, $reviewObjects[0], array(
                         //'form_custom_value' => $params,
-                        'data_class' => 'Oleg\\TranslationalResearchBundle\\Entity\\'.$reviewEntityName
+                        'data_class' => 'App\\TranslationalResearchBundle\\Entity\\'.$reviewEntityName
                     ));
                 }
                 break;
@@ -1772,7 +1772,7 @@ class TransResUtil
                 if( count($reviewObjects) > 0 ) {
                     $reviewForm = $this->createForm(ReviewBaseType::class, $reviewObjects[0], array(
                         //'form_custom_value' => $params,
-                        'data_class' => 'Oleg\\TranslationalResearchBundle\\Entity\\'.$reviewEntityName
+                        'data_class' => 'App\\TranslationalResearchBundle\\Entity\\'.$reviewEntityName
                     ));
                 }
                 break;
@@ -1783,7 +1783,7 @@ class TransResUtil
                 if( count($reviewObjects) > 0 ) {
                     $reviewForm = $this->createForm(ReviewBaseType::class, $reviewObjects[0], array(
                         //'form_custom_value' => $params,
-                        'data_class' => 'Oleg\\TranslationalResearchBundle\\Entity\\'.$reviewEntityName
+                        'data_class' => 'App\\TranslationalResearchBundle\\Entity\\'.$reviewEntityName
                     ));
                 }
                 break;
@@ -1798,15 +1798,15 @@ class TransResUtil
     public function findReviewObjectsByProjectAndAnyReviewers( $reviewObjectClassName, $project, $reviewer=null, $reviewId=null ) {
 //        $reviewObject = null;
 //        if( $reviewObjectClassName && $reviewer ) {
-//            $reviewObject = $this->em->getRepository('OlegTranslationalResearchBundle:' . $reviewObjectClassName)->findBy(array(
+//            $reviewObject = $this->em->getRepository('AppTranslationalResearchBundle:' . $reviewObjectClassName)->findBy(array(
 //                'reviewer' => $reviewer->getId(),
 //                'project' => $project->getId()
 //            ));
 //            if (!$reviewObject) {
-//                $reviewObject = $this->em->getRepository('OlegTranslationalResearchBundle:' . $reviewObjectClassName)->findByReviewerDelegate($reviewer);
+//                $reviewObject = $this->em->getRepository('AppTranslationalResearchBundle:' . $reviewObjectClassName)->findByReviewerDelegate($reviewer);
 //            }
 //        }
-        $repository = $this->em->getRepository('OlegTranslationalResearchBundle:' . $reviewObjectClassName);
+        $repository = $this->em->getRepository('AppTranslationalResearchBundle:' . $reviewObjectClassName);
         $dql =  $repository->createQueryBuilder("review");
         $dql->select('review');
         $dql->GroupBy('review');
@@ -1869,7 +1869,7 @@ class TransResUtil
             $role = "_FINAL_REVIEW_";
         }
 
-        if( $role && $this->em->getRepository('OlegUserdirectoryBundle:User')->isUserHasSiteAndPartialRoleName($user,$sitename,$role) ) {
+        if( $role && $this->em->getRepository('AppUserdirectoryBundle:User')->isUserHasSiteAndPartialRoleName($user,$sitename,$role) ) {
             return true;
         }
 
@@ -2627,7 +2627,7 @@ class TransResUtil
             $specialtyPostfix = null;
         }
 
-        $admins = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUsersByRoles(array("ROLE_TRANSRES_ADMIN".$specialtyPostfix));
+        $admins = $this->em->getRepository('AppUserdirectoryBundle:User')->findUsersByRoles(array("ROLE_TRANSRES_ADMIN".$specialtyPostfix));
         foreach( $admins as $user ) {
             if( $user ) {
                 if( $asEmail ) {
@@ -2642,7 +2642,7 @@ class TransResUtil
             return $users;
         }
 
-        $primarys = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUsersByRoles(array("ROLE_TRANSRES_PRIMARY_REVIEWER".$specialtyPostfix));
+        $primarys = $this->em->getRepository('AppUserdirectoryBundle:User')->findUsersByRoles(array("ROLE_TRANSRES_PRIMARY_REVIEWER".$specialtyPostfix));
         foreach( $primarys as $user ) {
             if( $user ) {
                 if( $asEmail ) {
@@ -2869,7 +2869,7 @@ class TransResUtil
             $user = null;
         }
 
-        $specialties = $this->em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->findBy(
+        $specialties = $this->em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findBy(
             array(
                 'type' => array("default","user-added")
             ),
@@ -2937,7 +2937,7 @@ class TransResUtil
         $reviewState = $this->getReviewClassNameByState($state,false);
         //$reviewStateLabel = $this->getStateLabelByName($reviewState);
 
-        //{{ render(controller('OlegTranslationalResearchBundle:Project:threadCommentsShow', { 'id': threadId })) }}
+        //{{ render(controller('AppTranslationalResearchBundle:Project:threadCommentsShow', { 'id': threadId })) }}
         $threadId = "transres-" . $project->getEntityName() . "-" . $project->getId() . "-" . $reviewState;
         //echo "thread=[$threadId] <br>";
 
@@ -3270,7 +3270,7 @@ class TransResUtil
     //$specialtyStr: hematopathology, ap-cp
     public function getSpecialtyObject($specialtyAbbreviation) {
         //echo "specialtyStr=".$specialtyStr."<br>";
-        $specialty = $this->em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation($specialtyAbbreviation);
+        $specialty = $this->em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation($specialtyAbbreviation);
         if( !$specialty ) {
             throw new \Exception( "Project specialty is not found by name '".$specialtyAbbreviation."'" );
         }
@@ -3301,7 +3301,7 @@ class TransResUtil
         //$transresRequestUtil = $this->container->get('transres_request_util');
 
         $user = $this->secTokenStorage->getToken()->getUser();
-        $repository = $this->em->getRepository('OlegTranslationalResearchBundle:Project');
+        $repository = $this->em->getRepository('AppTranslationalResearchBundle:Project');
         $dql =  $repository->createQueryBuilder("project");
         $dql->select('project');
 
@@ -3436,7 +3436,7 @@ class TransResUtil
     //logged in user requester or reviewer or submitter
     public function getAvailableRequesterOrReviewerProjects( $type=null, $limit=null, $search=null ) {
         $user = $this->secTokenStorage->getToken()->getUser();
-        $repository = $this->em->getRepository('OlegTranslationalResearchBundle:Project');
+        $repository = $this->em->getRepository('AppTranslationalResearchBundle:Project');
         $dql =  $repository->createQueryBuilder("project");
 
         //$dql->select('project');
@@ -3446,7 +3446,7 @@ class TransResUtil
                 " project.oid as oid,".
                 "principalInvestigatorsInfos.displayName as pis,".
                 //" GROUP_CONCAT(DISTINCT principalInvestigatorsInfos.displayName) as pis,".
-                //" (SELECT infos.displayName FROM OlegUserdirectoryBundle:UserInfo as infos LEFT JOIN infos.user userinfos WHERE userinfos.id = principalInvestigators.id) as pis,".
+                //" (SELECT infos.displayName FROM AppUserdirectoryBundle:UserInfo as infos LEFT JOIN infos.user userinfos WHERE userinfos.id = principalInvestigators.id) as pis,".
                 " project.title as title"
                 );
         } else {
@@ -3636,10 +3636,10 @@ class TransResUtil
         }
 
         //2) get objectTypeDropdowns by:
-        // value=$categoryType->getId(), entityNamespace="Oleg\TranslationalResearchBundle\Entity" , entityName="TransResRequest"
+        // value=$categoryType->getId(), entityNamespace="App\TranslationalResearchBundle\Entity" , entityName="TransResRequest"
         $mapper = array(
             "entityName" => "Project",
-            "entityNamespace" => "Oleg\\TranslationalResearchBundle\\Entity",
+            "entityNamespace" => "App\\TranslationalResearchBundle\\Entity",
         );
         $objectTypeDropdowns = $formNodeUtil->getFormNodeListRecordsByReceivingObjectValue($fieldFormNode,$search,$mapper,$compareType);
         //echo "objectTypeDropdowns=".count($objectTypeDropdowns)."<br>";
@@ -3920,7 +3920,7 @@ class TransResUtil
                 break;
             }
 
-            $project = $this->em->getRepository('OlegTranslationalResearchBundle:Project')->find($projectId);
+            $project = $this->em->getRepository('AppTranslationalResearchBundle:Project')->find($projectId);
             if( !$project ) {
                 continue;
             }
@@ -4218,7 +4218,7 @@ class TransResUtil
                 break;
             }
 
-            $project = $this->em->getRepository('OlegTranslationalResearchBundle:Project')->find($projectId);
+            $project = $this->em->getRepository('AppTranslationalResearchBundle:Project')->find($projectId);
             if( !$project ) {
                 continue;
             }
@@ -4527,7 +4527,7 @@ class TransResUtil
                 break;
             }
 
-            $project = $this->em->getRepository('OlegTranslationalResearchBundle:Project')->find($projectId);
+            $project = $this->em->getRepository('AppTranslationalResearchBundle:Project')->find($projectId);
             if( !$project ) {
                 continue;
             }
@@ -5124,7 +5124,7 @@ class TransResUtil
     }
 
     public function getNumberOfFundedRequests( $project ) {
-        $repository = $this->em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
+        $repository = $this->em->getRepository('AppTranslationalResearchBundle:TransResRequest');
         $dql =  $repository->createQueryBuilder("request");
         $dql->select('request');
         $dql->leftJoin("request.project", "project");
@@ -5194,7 +5194,7 @@ class TransResUtil
     }
 
     public function getTotalProjectCount() {
-        $repository = $this->em->getRepository('OlegTranslationalResearchBundle:Project');
+        $repository = $this->em->getRepository('AppTranslationalResearchBundle:Project');
         $dql = $repository->createQueryBuilder("project");
         $dql->select('COUNT(project)');
 
@@ -5228,7 +5228,7 @@ class TransResUtil
     }
 
     public function getTotalRequests() {
-        $repository = $this->em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
+        $repository = $this->em->getRepository('AppTranslationalResearchBundle:TransResRequest');
         $dql = $repository->createQueryBuilder("transresRequest");
         $dql->select('transresRequest');
 
@@ -5239,7 +5239,7 @@ class TransResUtil
         return $requests;
     }
     public function getTotalRequestCount() {
-        $repository = $this->em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
+        $repository = $this->em->getRepository('AppTranslationalResearchBundle:TransResRequest');
         $dql = $repository->createQueryBuilder("transresRequest");
         $dql->select('COUNT(transresRequest)');
 
@@ -5277,13 +5277,13 @@ class TransResUtil
     }
 
     public function getAppropriatedUsers() {
-        //$users = $this->em->getRepository('OlegUserdirectoryBundle:User')->findAll();
+        //$users = $this->em->getRepository('AppUserdirectoryBundle:User')->findAll();
 
-        //$users = $this->em->getRepository('OlegUserdirectoryBundle:User')->findBy(array('createdby'=>array('googleapi')));
+        //$users = $this->em->getRepository('AppUserdirectoryBundle:User')->findBy(array('createdby'=>array('googleapi')));
         //return $users;
 
         //Multiple (384 - all users in DB) FROM scan_perSiteSettings t0 WHERE t0.fosuser = ?
-        $repository = $this->em->getRepository('OlegUserdirectoryBundle:User');
+        $repository = $this->em->getRepository('AppUserdirectoryBundle:User');
         $dql = $repository->createQueryBuilder("list");
         $dql->select('list');
 
@@ -5375,7 +5375,7 @@ class TransResUtil
                 $projectSpecialty = $project->getProjectSpecialty();
             } else {
                 //use the first project specialty as default
-                $specialties = $this->em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->findBy(
+                $specialties = $this->em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findBy(
                     array(
                         'type' => array("default","user-added")
                     ),
@@ -5406,9 +5406,9 @@ class TransResUtil
     public function findCreateSiteParameterEntity($specialtyStr) {
         $em = $this->em;
 
-        //$entity = $em->getRepository('OlegTranslationalResearchBundle:TransResSiteParameters')->findOneByOid($specialtyStr);
+        //$entity = $em->getRepository('AppTranslationalResearchBundle:TransResSiteParameters')->findOneByOid($specialtyStr);
 
-        $repository = $em->getRepository('OlegTranslationalResearchBundle:TransResSiteParameters');
+        $repository = $em->getRepository('AppTranslationalResearchBundle:TransResSiteParameters');
         $dql = $repository->createQueryBuilder("siteParameter");
         $dql->select('siteParameter');
         $dql->leftJoin('siteParameter.projectSpecialty','projectSpecialty');
@@ -5433,7 +5433,7 @@ class TransResUtil
         }
 
         //Create New
-        $specialty = $em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation($specialtyStr);
+        $specialty = $em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation($specialtyStr);
         if( !$specialty ) {
             throw new \Exception("SpecialtyList is not found by specialty abbreviation '" . $specialtyStr . "'");
         } else {
@@ -5535,7 +5535,7 @@ class TransResUtil
         $dqlParameters = array();
 
         //get the date from event log
-        $repository = $this->em->getRepository('OlegUserdirectoryBundle:Logger');
+        $repository = $this->em->getRepository('AppUserdirectoryBundle:Logger');
         $dql = $repository->createQueryBuilder("logger");
         $dql->innerJoin('logger.eventType', 'eventType');
         //$dql->leftJoin('logger.objectType', 'objectType');
@@ -5545,7 +5545,7 @@ class TransResUtil
         //$dql->where("logger.entityName = 'Invoice' AND logger.entityId = ".$invoice->getId());
 
         //Work Request ID APCP843-REQ16216 billing state has been changed to Invoiced, triggered by invoice status change to Unpaid/Issued
-        $dql->where("logger.entityNamespace = 'Oleg\TranslationalResearchBundle\Entity' AND logger.entityName = 'Invoice'");
+        $dql->where("logger.entityNamespace = 'App\TranslationalResearchBundle\Entity' AND logger.entityName = 'Invoice'");
         //$dql->where("logger.entityName = 'Invoice'");
 
         $dql->andWhere("eventType.name = :eventTypeName");
@@ -5590,7 +5590,7 @@ class TransResUtil
         $dqlParameters = array();
 
         //get the date from event log
-        $repository = $this->em->getRepository('OlegUserdirectoryBundle:Logger');
+        $repository = $this->em->getRepository('AppUserdirectoryBundle:Logger');
         $dql = $repository->createQueryBuilder("logger");
         $dql->innerJoin('logger.eventType', 'eventType');
 
@@ -5598,7 +5598,7 @@ class TransResUtil
         //$dql->where("logger.entityName = 'Invoice' AND logger.entityId = ".$invoice->getId());
 
         //Work Request ID APCP843-REQ16216 billing state has been changed to Invoiced, triggered by invoice status change to Unpaid/Issued
-        $dql->where("logger.entityNamespace = 'Oleg\TranslationalResearchBundle\Entity' AND logger.entityName = 'Project'");
+        $dql->where("logger.entityNamespace = 'App\TranslationalResearchBundle\Entity' AND logger.entityName = 'Project'");
         //$dql->where("logger.entityName = 'Invoice'");
 
         $dql->andWhere("eventType.name = :eventTypeName");
@@ -5644,14 +5644,14 @@ class TransResUtil
         $dqlParameters = array();
 
         //get the date from event log
-        $repository = $this->em->getRepository('OlegUserdirectoryBundle:Logger');
+        $repository = $this->em->getRepository('AppUserdirectoryBundle:Logger');
         $dql = $repository->createQueryBuilder("logger");
         $dql->innerJoin('logger.eventType', 'eventType');
 
         //$dql->where("logger.siteName = 'translationalresearch' AND logger.entityName = 'Invoice' AND logger.entityId = ".$invoice->getId());
 
         //Work Request ID APCP843-REQ16216 billing state has been changed to Invoiced, triggered by invoice status change to Unpaid/Issued
-        $dql->where("logger.entityNamespace = 'Oleg\TranslationalResearchBundle\Entity' AND logger.entityName = 'TransResRequest'");
+        $dql->where("logger.entityNamespace = 'App\TranslationalResearchBundle\Entity' AND logger.entityName = 'TransResRequest'");
         //$dql->where("logger.entityName = 'Invoice'");
 
         $dql->andWhere("eventType.name = :eventTypeName");
@@ -5704,7 +5704,7 @@ class TransResUtil
         $dqlParameters = array();
 
         //get the date from event log
-        $repository = $this->em->getRepository('OlegUserdirectoryBundle:Logger');
+        $repository = $this->em->getRepository('AppUserdirectoryBundle:Logger');
         $dql = $repository->createQueryBuilder("logger");
 
         $dql->select("user.id");
@@ -5749,7 +5749,7 @@ class TransResUtil
         $dqlParameters = array();
 
         //get the date from event log
-        $repository = $this->em->getRepository('OlegUserdirectoryBundle:Logger');
+        $repository = $this->em->getRepository('AppUserdirectoryBundle:Logger');
         $dql = $repository->createQueryBuilder("logger");
         //$dql->select("logger");
         //$dql->select("logger.user as user");

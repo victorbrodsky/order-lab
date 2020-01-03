@@ -57,7 +57,7 @@
                                 {#<a href="{{ path(translationalresearch_sitename~'_standalone_siteparameters_edit',{'specialtyStr':specialty.getAbbreviation()}) }}"#}
                                 {#>Default Site Settings for {{ specialty.getName() }}</a>#}
                             {#</p>#}
-                            {{ render(controller('OlegTranslationalResearchBundle:TransResSiteParameters:showContent', {'specialtyStr':specialty.getAbbreviation()})) }}
+                            {{ render(controller('AppTranslationalResearchBundle:TransResSiteParameters:showContent', {'specialtyStr':specialty.getAbbreviation()})) }}
                             {#{% endfor %}#}
 
                         </div>
@@ -72,10 +72,10 @@
 
 {#{% block headeradditionaljs %}#}
     {#{% javascripts#}
-    {#'@OlegUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'#}
-    {#'@OlegUserdirectoryBundle/Resources/public/jquery-ui-1.11.2/jquery-ui.js'#}
-    {#'@OlegUserdirectoryBundle/Resources/public/bootstrap/js/*'#}
-    {#'@OlegUserdirectoryBundle/Resources/public/select2/select2.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/jquery-ui-1.11.2/jquery-ui.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/bootstrap/js/*'#}
+    {#'@AppUserdirectoryBundle/Resources/public/select2/select2.js'#}
     {#%}#}
     {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
     {#{% endjavascripts %}#}

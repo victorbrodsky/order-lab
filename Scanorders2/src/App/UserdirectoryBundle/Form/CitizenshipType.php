@@ -15,9 +15,9 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Form;
+namespace App\UserdirectoryBundle\Form;
 
-use Oleg\UserdirectoryBundle\Entity\Identifier;
+use App\UserdirectoryBundle\Entity\Identifier;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -31,7 +31,7 @@ class CitizenshipType extends AbstractType
     {
 
         $builder->add( 'country', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:Countries',
+            'class' => 'AppUserdirectoryBundle:Countries',
             'choice_label' => 'name',
             'label'=>'Country of Citizenship:',
             'required'=> false,
@@ -59,7 +59,7 @@ class CitizenshipType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\Citizenship',
+            'data_class' => 'App\UserdirectoryBundle\Entity\Citizenship',
         ));
     }
 

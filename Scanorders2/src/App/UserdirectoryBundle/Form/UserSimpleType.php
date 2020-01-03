@@ -16,7 +16,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Form;
+namespace App\UserdirectoryBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -29,7 +29,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 
-//use Oleg\UserdirectoryBundle\Form\PerSiteSettingsType;
+//use App\UserdirectoryBundle\Form\PerSiteSettingsType;
 
 class UserSimpleType extends AbstractType
 {
@@ -96,7 +96,7 @@ class UserSimpleType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\User',
+            'data_class' => 'App\UserdirectoryBundle\Entity\User',
             'csrf_protection' => false,
             'form_custom_value' => null,
         ));
@@ -177,7 +177,7 @@ class UserSimpleType extends AbstractType
         $attr = array('class'=>$class);
 
         $paramArr = array(
-            'class' => 'OlegUserdirectoryBundle:UsernameType',
+            'class' => 'AppUserdirectoryBundle:UsernameType',
             'choice_label' => 'name',
             'label' => $label,
             'required' => false,

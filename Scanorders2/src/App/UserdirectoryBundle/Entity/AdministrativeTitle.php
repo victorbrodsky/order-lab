@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Entity;
+namespace App\UserdirectoryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -111,7 +111,7 @@ class AdministrativeTitle extends BaseTitle
     /**
      * Add boss
      *
-     * @param \Oleg\OrderformBundle\Entity\User $boss
+     * @param \App\OrderformBundle\Entity\User $boss
      * @return User
      */
     public function addBoss($boss)
@@ -129,7 +129,7 @@ class AdministrativeTitle extends BaseTitle
     /**
      * Remove boss
      *
-     * @param \Oleg\OrderformBundle\Entity\User $boss
+     * @param \App\OrderformBundle\Entity\User $boss
      */
     public function removeBoss($boss)
     {

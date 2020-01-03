@@ -15,13 +15,13 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Entity;
+namespace App\OrderformBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-use Oleg\UserdirectoryBundle\Entity\ListAbstract;
+use App\UserdirectoryBundle\Entity\ListAbstract;
 
 /**
  * @ORM\Entity
@@ -54,7 +54,7 @@ class EncounterType extends ListAbstract
 
 
 
-    public function addEncounternumber(\Oleg\OrderformBundle\Entity\EncounterNumber $encounternumber)
+    public function addEncounternumber(\App\OrderformBundle\Entity\EncounterNumber $encounternumber)
     {
         if( !$this->encounternumber->contains($encounternumber) ) {
             $this->encounternumber->add($encounternumber);
@@ -63,7 +63,7 @@ class EncounterType extends ListAbstract
         return $this;
     }
 
-    public function removeEncounternumber(\Oleg\OrderformBundle\Entity\EncounterNumber $encounternumber)
+    public function removeEncounternumber(\App\OrderformBundle\Entity\EncounterNumber $encounternumber)
     {
         $this->encounternumber->removeElement($encounternumber);
     }

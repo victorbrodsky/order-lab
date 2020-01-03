@@ -27,14 +27,14 @@
 // * Single document implementation:
 // * 1) add interface method removeDocument
 // * 2) modify setter method (i.e. setTransresLogo): add $transresLogo->createUseObject($this);
-// * 3) add in setHolderDocumentsDql: case "OlegTranslationalResearchBundle:TransResSiteParameters" => "comment.transresLogo";
+// * 3) add in setHolderDocumentsDql: case "AppTranslationalResearchBundle:TransResSiteParameters" => "comment.transresLogo";
 // *
-// * @ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
+// * @ORM\OneToOne(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
 // * @ORM\JoinColumn(name="transresLogo_id", referencedColumnName="id", nullable=true)
 // **/
 //private $transresLogo;
 
-namespace Oleg\UserdirectoryBundle\Entity;
+namespace App\UserdirectoryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -42,7 +42,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 
 /**
- * @ORM\Entity(repositoryClass="Oleg\UserdirectoryBundle\Repository\DocumentRepository")
+ * @ORM\Entity(repositoryClass="App\UserdirectoryBundle\Repository\DocumentRepository")
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="user_document")
  */
@@ -172,7 +172,7 @@ class Document {
     }
 
     /**
-     * @param \Oleg\UserdirectoryBundle\Entity\File $file
+     * @param \App\UserdirectoryBundle\Entity\File $file
      */
     public function setFile($file)
     {
@@ -180,7 +180,7 @@ class Document {
     }
 
     /**
-     * @return \Oleg\UserdirectoryBundle\Entity\File
+     * @return \App\UserdirectoryBundle\Entity\File
      */
     public function getFile()
     {

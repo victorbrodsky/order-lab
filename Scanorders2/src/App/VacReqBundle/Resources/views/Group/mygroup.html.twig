@@ -14,7 +14,7 @@
     limitations under the License.
 #}
 
-{% extends "OlegVacReqBundle::Default/base.html.twig" %}
+{% extends "AppVacReqBundle::Default/base.html.twig" %}
 
 {% block title %}
     My Group
@@ -50,7 +50,7 @@
     {#<br>#}
 
     {% for group in groups %}
-        {{ render(controller('OlegVacReqBundle:Approver:mySingleGroup', { 'groupId': group.id, 'userids': userids })) }}
+        {{ render(controller('AppVacReqBundle:Approver:mySingleGroup', { 'groupId': group.id, 'userids': userids })) }}
     {% endfor %}
 
 
@@ -60,8 +60,8 @@
 {% block additionaljs %}
 
     {% javascripts
-        '@OlegUserdirectoryBundle/Resources/public/bootstrap-sortable/js/bootstrap-sortable.js'
-        '@OlegUserdirectoryBundle/Resources/public/bootstrap-sortable/js/moment.min.js'
+        '@AppUserdirectoryBundle/Resources/public/bootstrap-sortable/js/bootstrap-sortable.js'
+        '@AppUserdirectoryBundle/Resources/public/bootstrap-sortable/js/moment.min.js'
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
@@ -89,7 +89,7 @@
 
 {% block additionalcss %}
     {% stylesheets
-        'bundles/oleguserdirectory/bootstrap-sortable/css/bootstrap-sortable.css' filter='cssrewrite'
+        'bundles/appuserdirectory/bootstrap-sortable/css/bootstrap-sortable.css' filter='cssrewrite'
     %}
         <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}

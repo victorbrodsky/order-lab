@@ -22,11 +22,11 @@
  * Time: 11:57 AM
  */
 
-namespace Oleg\UserdirectoryBundle\Controller;
+namespace App\UserdirectoryBundle\Controller;
 
 
-use Oleg\UserdirectoryBundle\Form\ImportUsersType;
-use Oleg\UserdirectoryBundle\Util\LargeFileDownloader;
+use App\UserdirectoryBundle\Form\ImportUsersType;
+use App\UserdirectoryBundle\Util\LargeFileDownloader;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -72,7 +72,7 @@ class UploadController extends Controller {
 
         //find document with id
         $em = $this->getDoctrine()->getManager();
-        $document = $em->getRepository('OlegUserdirectoryBundle:Document')->find($documentid);
+        $document = $em->getRepository('AppUserdirectoryBundle:Document')->find($documentid);
         //echo "document=".$document." => ";
         //$logger->notice("deleteFileMethod: documentDob=".$document);
 
@@ -86,19 +86,19 @@ class UploadController extends Controller {
             //$logger->notice("documentPath=".$documentPath);
 
             //find object where document is belongs
-            //$comment = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:'.$commentclass)->findOneBy(array('id'=>$commentid,'documents'=>$document));
+            //$comment = $this->getDoctrine()->getRepository('AppUserdirectoryBundle:'.$commentclass)->findOneBy(array('id'=>$commentid,'documents'=>$document));
 
 //            //set $commentid and $commentclass to the document entity name
-//            //example: entityNamespace="Oleg\TranslationalResearchBundle\Entity", entityName="TransResSiteParameters", entityId=111)
+//            //example: entityNamespace="App\TranslationalResearchBundle\Entity", entityName="TransResSiteParameters", entityId=111)
 //            if( !$commentid or $commentid == 'undefined' ) {
 //                $entityId = $document->getEntityId();           //TransResSiteParameters
 //                $commentid = $entityId;
 //            }
 //            if( !$commentclass or $commentclass == 'undefined' ) {
 //                $entityName = $document->getEntityName();           //TransResSiteParameters
-//                $entityNamespace = $document->getEntityNamespace(); //Oleg\TranslationalResearchBundle\Entity
+//                $entityNamespace = $document->getEntityNamespace(); //App\TranslationalResearchBundle\Entity
 //                if( $entityName && $entityNamespace ) {
-//                    //OlegTranslationalResearchBundle:TransResSiteParameters
+//                    //AppTranslationalResearchBundle:TransResSiteParameters
 //                    $entityNamespace = str_replace("\\","",$entityNamespace);
 //                    $entityNamespace = str_replace("Entity","",$entityNamespace);
 //                    $commentclass = $entityNamespace.":".$entityName;
@@ -175,13 +175,13 @@ class UploadController extends Controller {
     public function setHolderDocumentsDql($dql,$commentclass) {
 
         switch( $commentclass ) {
-            case "OlegFellAppBundle:FellowshipApplication":
+            case "AppFellAppBundle:FellowshipApplication":
                 $str = "comment.coverLetters";
                 break;
-            case "OlegUserdirectoryBundle:Examination":
+            case "AppUserdirectoryBundle:Examination":
                 $str = "comment.scores";
                 break;
-//            case "OlegTranslationalResearchBundle:TransResSiteParameters":
+//            case "AppTranslationalResearchBundle:TransResSiteParameters":
 //                $str = "comment.transresLogo";
 //                break;
             default:
@@ -216,7 +216,7 @@ class UploadController extends Controller {
         $em = $this->getDoctrine()->getManager();
         //$logger = $this->container->get('logger');
 
-        $document = $em->getRepository('OlegUserdirectoryBundle:Document')->find($id);
+        $document = $em->getRepository('AppUserdirectoryBundle:Document')->find($id);
 
         //$response = new Response();
 
@@ -287,7 +287,7 @@ class UploadController extends Controller {
         }
 
         $em = $this->getDoctrine()->getManager();
-        $document = $em->getRepository('OlegUserdirectoryBundle:Document')->find($id);
+        $document = $em->getRepository('AppUserdirectoryBundle:Document')->find($id);
 
         $response = new Response();
 
@@ -426,7 +426,7 @@ class UploadController extends Controller {
      *
      * @Route("/import-users/spreadsheet ", name="employees_import_users_excel")
      * @Method({"GET","POST"})
-     * @Template("OlegUserdirectoryBundle:Admin:import-users.html.twig")
+     * @Template("AppUserdirectoryBundle:Admin:import-users.html.twig")
      */
     public function importExcelUsersFileAction( Request $request )
     {

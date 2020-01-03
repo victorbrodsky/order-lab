@@ -22,7 +22,7 @@
  * Time: 2:33 PM
  */
 
-namespace Oleg\FellAppBundle\Command;
+namespace App\FellAppBundle\Command;
 
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;

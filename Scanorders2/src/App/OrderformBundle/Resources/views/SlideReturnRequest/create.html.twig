@@ -14,7 +14,7 @@
     limitations under the License.
 #}
 
-{% extends "OlegOrderformBundle::Default/base.html.twig" %}
+{% extends "AppOrderformBundle::Default/base.html.twig" %}
 
 {% block title %}
     Slide Return Request for Order# {{ form.vars.value.message.oid }}
@@ -25,7 +25,7 @@
 {% block maincss %}
 
     {% stylesheets
-    'bundles/oleguserdirectory/select2/select2.css' filter='cssrewrite'
+    'bundles/appuserdirectory/select2/select2.css' filter='cssrewrite'
     %}
     <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
@@ -36,20 +36,20 @@
 {% block mainjs %}
 
     {% javascripts
-    '@OlegUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'
-    '@OlegUserdirectoryBundle/Resources/public/bootstrap/js/*'
-    '@OlegUserdirectoryBundle/Resources/public/select2/select2.js'	   
+    '@AppUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'
+    '@AppUserdirectoryBundle/Resources/public/bootstrap/js/*'
+    '@AppUserdirectoryBundle/Resources/public/select2/select2.js'
 	
-	'@OlegUserdirectoryBundle/Resources/public/form/js/user-common.js'
-    '@OlegUserdirectoryBundle/Resources/public/form/js/user-navbar.js'
+	'@AppUserdirectoryBundle/Resources/public/form/js/user-common.js'
+    '@AppUserdirectoryBundle/Resources/public/form/js/user-navbar.js'
 
-	'@OlegUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimeout.js'
-    '@OlegUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimer.js'	
-	'@OlegUserdirectoryBundle/Resources/public/form/js/user-idleTimeout.js'
-    '@OlegOrderformBundle/Resources/public/form/js/idleTimeout.js'
+	'@AppUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimeout.js'
+    '@AppUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimer.js'
+	'@AppUserdirectoryBundle/Resources/public/form/js/user-idleTimeout.js'
+    '@AppOrderformBundle/Resources/public/form/js/idleTimeout.js'
 	
-    '@OlegOrderformBundle/Resources/public/form/js/selectAjax.js'
-    '@OlegOrderformBundle/Resources/public/form/js/commonCheckForm.js'
+    '@AppOrderformBundle/Resources/public/form/js/selectAjax.js'
+    '@AppOrderformBundle/Resources/public/form/js/commonCheckForm.js'
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
@@ -108,7 +108,7 @@
 
 {% block content %}
 
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
     <input type="hidden" id="formcycle" value="{{ cycle }}" />   
 

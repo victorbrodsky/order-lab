@@ -15,13 +15,13 @@
  *  limitations under the License.
  */
 
-namespace Oleg\TranslationalResearchBundle\Util;
+namespace App\TranslationalResearchBundle\Util;
 
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Oleg\TranslationalResearchBundle\Entity\Invoice;
-use Oleg\TranslationalResearchBundle\Entity\InvoiceItem;
-use Oleg\TranslationalResearchBundle\Entity\TransResSiteParameters;
+use App\TranslationalResearchBundle\Entity\Invoice;
+use App\TranslationalResearchBundle\Entity\InvoiceItem;
+use App\TranslationalResearchBundle\Entity\TransResSiteParameters;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 use Box\Spout\Common\Type;
@@ -57,7 +57,7 @@ class TransResRequestUtil
     public function getTransResRequestTotalFeeHtml( $project ) {
 
         //$transResFormNodeUtil = $this->container->get('transres_formnode_util');
-        $repository = $this->em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
+        $repository = $this->em->getRepository('AppTranslationalResearchBundle:TransResRequest');
         $dql =  $repository->createQueryBuilder("transresRequest");
         $dql->select('transresRequest');
 
@@ -246,7 +246,7 @@ class TransResRequestUtil
         $className = $class->getShortName();
         $classNamespace = $class->getNamespaceName();
         $entityMapper = array(
-            'entityNamespace' => $classNamespace,   //"Oleg\\TranslationalResearchBundle\\Entity",
+            'entityNamespace' => $classNamespace,   //"App\\TranslationalResearchBundle\\Entity",
             'entityName' => $className, //"Project",
             'entityId' => $entity->getId(),
         );
@@ -262,7 +262,7 @@ class TransResRequestUtil
                 //echo "formNodeValue= $formNodeValue <br>";
                 //$dropdownObject = $formNodeUtil->getReceivingObject($fieldFormNode,$result->getId());
                 //echo "dropdownObject ID= ".$dropdownObject->getId()." <br>";
-                $dropdownObject = $this->em->getRepository('OlegTranslationalResearchBundle:RequestCategoryTypeList')->find($result->getValue());
+                $dropdownObject = $this->em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList')->find($result->getValue());
                 //echo "category=".$dropdownObject."<br>";
                 $thisRes = array(
                     'arraySectionIndex' => $arraySectionIndex,
@@ -630,10 +630,10 @@ class TransResRequestUtil
         }
 
         //2) get objectTypeDropdowns by:
-        // value=$categoryType->getId(), entityNamespace="Oleg\TranslationalResearchBundle\Entity" , entityName="TransResRequest"
+        // value=$categoryType->getId(), entityNamespace="App\TranslationalResearchBundle\Entity" , entityName="TransResRequest"
         $mapper = array(
             "entityName" => "TransResRequest",
-            "entityNamespace" => "Oleg\\TranslationalResearchBundle\\Entity",
+            "entityNamespace" => "App\\TranslationalResearchBundle\\Entity",
         );
         $objectTypeDropdowns = $formNodeUtil->getFormNodeListRecordsByReceivingObjectValue($fieldFormNode,$categoryType->getId(),$mapper,"exact");
         //echo "objectTypeDropdowns=".count($objectTypeDropdowns)."<br>";
@@ -681,10 +681,10 @@ class TransResRequestUtil
         }
 
         //2) get objectTypeDropdowns by:
-        // value=$categoryType->getId(), entityNamespace="Oleg\TranslationalResearchBundle\Entity" , entityName="TransResRequest"
+        // value=$categoryType->getId(), entityNamespace="App\TranslationalResearchBundle\Entity" , entityName="TransResRequest"
         $mapper = array(
             "entityName" => "TransResRequest",
-            "entityNamespace" => "Oleg\\TranslationalResearchBundle\\Entity",
+            "entityNamespace" => "App\\TranslationalResearchBundle\\Entity",
         );
         $objectTypeDropdowns = $formNodeUtil->getFormNodeListRecordsByReceivingObjectValue($fieldFormNode,$commentStr,$mapper,"like");
         //echo "objectTypeDropdowns=".count($objectTypeDropdowns)."<br>";
@@ -1425,7 +1425,7 @@ class TransResRequestUtil
         //2) get objectTypeDropdowns by:
         $mapper = array(
             "entityName" => "Project",
-            "entityNamespace" => "Oleg\\TranslationalResearchBundle\\Entity",
+            "entityNamespace" => "App\\TranslationalResearchBundle\\Entity",
             "entityId" => $project->getId(),
         );
         $receivingValue = null;
@@ -1724,7 +1724,7 @@ class TransResRequestUtil
         $emails = array_merge($emails,$admins);
 
         // 2) Technicians
-        $technicians = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUsersByRoles(array("ROLE_TRANSRES_TECHNICIAN".$specialtyPostfix));
+        $technicians = $this->em->getRepository('AppUserdirectoryBundle:User')->findUsersByRoles(array("ROLE_TRANSRES_TECHNICIAN".$specialtyPostfix));
         foreach( $technicians as $technician ) {
             if( $technician ) {
                 if( $asEmail ) {
@@ -1752,7 +1752,7 @@ class TransResRequestUtil
         }
 
         //Technicians
-        $technicians = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUsersByRoles(array("ROLE_TRANSRES_TECHNICIAN".$specialtyPostfix));
+        $technicians = $this->em->getRepository('AppUserdirectoryBundle:User')->findUsersByRoles(array("ROLE_TRANSRES_TECHNICIAN".$specialtyPostfix));
         foreach( $technicians as $technician ) {
             if( $technician ) {
                 if( $asEmail ) {
@@ -1825,7 +1825,7 @@ class TransResRequestUtil
         
 //        $emails = array();
 //        //0) get ROLE_TRANSRES_ADMIN
-//        $adminUsers = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole("ROLE_TRANSRES_ADMIN".$specialtyPostfix);
+//        $adminUsers = $this->em->getRepository('AppUserdirectoryBundle:User')->findUserByRole("ROLE_TRANSRES_ADMIN".$specialtyPostfix);
 //        foreach( $adminUsers as $user ) {
 //            if( $user ) {
 //                $emails[] = $user->getSingleEmail(false);
@@ -1836,7 +1836,7 @@ class TransResRequestUtil
         $emails = $this->getRequestAdminTechEmails($transresRequest); //admins, technicians
 
         //1) get ROLE_TRANSRES_BILLING_ADMIN
-        $billingUsers = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole("ROLE_TRANSRES_BILLING_ADMIN".$specialtyPostfix);
+        $billingUsers = $this->em->getRepository('AppUserdirectoryBundle:User')->findUserByRole("ROLE_TRANSRES_BILLING_ADMIN".$specialtyPostfix);
         foreach( $billingUsers as $user ) {
             if( $user ) {
                 $emails[] = $user->getSingleEmail(false);
@@ -1963,7 +1963,7 @@ class TransResRequestUtil
         }
 
         //1) get ROLE_TRANSRES_BILLING_ADMIN
-        //$adminUsers = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole("ROLE_TRANSRES_ADMIN".$specialtyPostfix);
+        //$adminUsers = $this->em->getRepository('AppUserdirectoryBundle:User')->findUserByRole("ROLE_TRANSRES_ADMIN".$specialtyPostfix);
         $adminUsers = $this->getRequestAdminTechEmails($transresRequest,false); //admins, technicians
         foreach( $adminUsers as $user ) {
             if( $user ) {
@@ -2354,7 +2354,7 @@ class TransResRequestUtil
     //return version if exists, null if not exists
     public function getLatestInvoiceVersion( $transresRequest ) {
         //1) Find all invoices for the given $transresRequest
-        $repository = $this->em->getRepository('OlegTranslationalResearchBundle:Invoice');
+        $repository = $this->em->getRepository('AppTranslationalResearchBundle:Invoice');
         $dql = $repository->createQueryBuilder("invoice");
         $dql->select('invoice');
         $dql->leftJoin('invoice.transresRequest','transresRequest');
@@ -2712,7 +2712,7 @@ class TransResRequestUtil
 
         //Billing Admin as CC
         $ccs = array();
-        $billingUsers = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole("ROLE_TRANSRES_BILLING_ADMIN".$specialtyPostfix);
+        $billingUsers = $this->em->getRepository('AppUserdirectoryBundle:User')->findUserByRole("ROLE_TRANSRES_BILLING_ADMIN".$specialtyPostfix);
         foreach( $billingUsers as $billingUser ) {
             if( $billingUser ) {
                 $ccs[] = $billingUser->getSingleEmail(false);
@@ -3070,7 +3070,7 @@ class TransResRequestUtil
     }
 
     public function getLatestInvoice( $transresRequest, $transresRequestId=null ) {
-        $repository = $this->em->getRepository('OlegTranslationalResearchBundle:Invoice');
+        $repository = $this->em->getRepository('AppTranslationalResearchBundle:Invoice');
         $dql =  $repository->createQueryBuilder("invoice");
         $dql->select('invoice');
 
@@ -3332,7 +3332,7 @@ class TransResRequestUtil
 
     //search fos bundle comments user_fosComment: 'thread_id = transres-Request-13541-billing'
     public function getRequestIdsByFosComment( $searchStr ) {
-        $repository = $this->em->getRepository('OlegUserdirectoryBundle:FosComment');
+        $repository = $this->em->getRepository('AppUserdirectoryBundle:FosComment');
         $dql =  $repository->createQueryBuilder("foscomment");
         $dql->select('foscomment');
 
@@ -3476,7 +3476,7 @@ class TransResRequestUtil
 //        //3. (invoiceReminderCount < maxReminderCount)
 //        //When email sent, set invoiceLastReminderSentDate=currentDate, invoiceReminderCount++
 //
-//        $repository = $this->em->getRepository('OlegTranslationalResearchBundle:Invoice');
+//        $repository = $this->em->getRepository('AppTranslationalResearchBundle:Invoice');
 //        $dql =  $repository->createQueryBuilder("invoice");
 //        $dql->select('invoice');
 //
@@ -3635,7 +3635,7 @@ class TransResRequestUtil
 
     //Not Used. Where used in DashboardUtil
     public function getOverdueInvoices($projectSpecialty=null) {
-        $repository = $this->em->getRepository('OlegTranslationalResearchBundle:Invoice');
+        $repository = $this->em->getRepository('AppTranslationalResearchBundle:Invoice');
         $dql =  $repository->createQueryBuilder("invoice");
         $dql->select('invoice');
 
@@ -3841,7 +3841,7 @@ class TransResRequestUtil
     }
     //NOT USED
     public function getTotalStrInvoice() {
-        $repository = $this->em->getRepository('OlegTranslationalResearchBundle:Invoice');
+        $repository = $this->em->getRepository('AppTranslationalResearchBundle:Invoice');
         $dql = $repository->createQueryBuilder("invoice");
         //$dql->select('COUNT(invoice)');
         $dql->select('invoice.total');
@@ -3870,7 +3870,7 @@ class TransResRequestUtil
     }
 
     public function getProjectMiniRequests($projectId) {
-        $repository = $this->em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
+        $repository = $this->em->getRepository('AppTranslationalResearchBundle:TransResRequest');
         $dql =  $repository->createQueryBuilder("transresRequest");
         $dql->select('transresRequest.id,transresRequest.oid,transresRequest.fundedAccountNumber,transresRequest.progressState');
 
@@ -3958,7 +3958,7 @@ class TransResRequestUtil
                 break;
             }
 
-            $invoice = $this->em->getRepository('OlegTranslationalResearchBundle:Invoice')->find($invoiceId);
+            $invoice = $this->em->getRepository('AppTranslationalResearchBundle:Invoice')->find($invoiceId);
             if( !$invoice ) {
                 continue;
             }

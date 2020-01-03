@@ -15,12 +15,12 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Form;
+namespace App\OrderformBundle\Form;
 
-use Oleg\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
-use Oleg\UserdirectoryBundle\Form\DocumentContainerType;
-use Oleg\UserdirectoryBundle\Form\DocumentType;
-use Oleg\UserdirectoryBundle\Form\UserWrapperType;
+use App\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
+use App\UserdirectoryBundle\Form\DocumentContainerType;
+use App\UserdirectoryBundle\Form\DocumentType;
+use App\UserdirectoryBundle\Form\UserWrapperType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -50,13 +50,13 @@ class BlockOrderType extends AbstractType
         //Block Image container
 //        $params = array('labelPrefix'=>'Block Image');
 //        $builder->add('documentContainer', new DocumentContainerType($params), array(
-//            'data_class' => 'Oleg\UserdirectoryBundle\Entity\DocumentContainer',
+//            'data_class' => 'App\UserdirectoryBundle\Entity\DocumentContainer',
 //            'label' => false
 //        ));
 
 //        $params = array('labelPrefix'=>' for Embedder');
 //        $builder->add('instruction', new InstructionType($params), array(
-//            'data_class' => 'Oleg\OrderformBundle\Entity\InstructionList',
+//            'data_class' => 'App\OrderformBundle\Entity\InstructionList',
 //            'label' => false
 //        ));
 
@@ -73,7 +73,7 @@ class BlockOrderType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\BlockOrder',
+            'data_class' => 'App\OrderformBundle\Entity\BlockOrder',
         ));
     }
 

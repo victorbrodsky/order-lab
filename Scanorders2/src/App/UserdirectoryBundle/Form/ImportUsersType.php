@@ -16,7 +16,7 @@
  */
 
 
-namespace Oleg\UserdirectoryBundle\Form;
+namespace App\UserdirectoryBundle\Form;
 
 
 use Symfony\Component\Form\AbstractType;

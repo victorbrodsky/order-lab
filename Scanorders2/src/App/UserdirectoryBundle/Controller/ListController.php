@@ -15,13 +15,13 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Controller;
+namespace App\UserdirectoryBundle\Controller;
 
-use Oleg\OrderformBundle\Controller\ScanListController;
-use Oleg\UserdirectoryBundle\Entity\CompositeNodeInterface;
-use Oleg\UserdirectoryBundle\Entity\Permission;
-use Oleg\UserdirectoryBundle\Entity\UsernameType;
-use Oleg\UserdirectoryBundle\Form\ListFilterType;
+use App\OrderformBundle\Controller\ScanListController;
+use App\UserdirectoryBundle\Entity\CompositeNodeInterface;
+use App\UserdirectoryBundle\Entity\Permission;
+use App\UserdirectoryBundle\Entity\UsernameType;
+use App\UserdirectoryBundle\Form\ListFilterType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -30,8 +30,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
-use Oleg\UserdirectoryBundle\Form\GenericListType;
-use Oleg\UserdirectoryBundle\Util\ErrorHelper;
+use App\UserdirectoryBundle\Form\GenericListType;
+use App\UserdirectoryBundle\Util\ErrorHelper;
 
 
 /**
@@ -261,7 +261,7 @@ class ListController extends Controller
      *
      *
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:ListForm:index.html.twig")
+     * @Template("AppUserdirectoryBundle:ListForm:index.html.twig")
      */
     public function indexAction(Request $request)
     {
@@ -737,7 +737,7 @@ class ListController extends Controller
      * @Route("/list/visastatus/", name="visastatus_create")
      *
      * @Method("POST")
-     * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
+     * @Template("AppUserdirectoryBundle:ListForm:new.html.twig")
      */
     public function createAction(Request $request)
     {
@@ -777,7 +777,7 @@ class ListController extends Controller
             }
 
             if( method_exists($entity, "getDocuments") ) {
-                $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($entity, "document");
+                $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($entity, "document");
             }
 
             $em->persist($entity);
@@ -1043,7 +1043,7 @@ class ListController extends Controller
      *
      *
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
+     * @Template("AppUserdirectoryBundle:ListForm:new.html.twig")
      */
     public function newAction(Request $request)
     {
@@ -1311,7 +1311,7 @@ class ListController extends Controller
      * @Route("/list/visastatus/{id}", name="visastatus_show")
      *
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:ListForm:show.html.twig")
+     * @Template("AppUserdirectoryBundle:ListForm:show.html.twig")
      */
     public function showAction(Request $request,$id)
     {
@@ -1575,7 +1575,7 @@ class ListController extends Controller
      * @Route("/list/visastatus/{id}/edit", name="visastatus_edit")
      *
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
+     * @Template("AppUserdirectoryBundle:ListForm:edit.html.twig")
      */
     public function editAction(Request $request,$id)
     {
@@ -1876,7 +1876,7 @@ class ListController extends Controller
      * @Route("/list/visastatus/{id}", name="visastatus_update")
      *
      * @Method("PUT")
-     * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
+     * @Template("AppUserdirectoryBundle:ListForm:edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {
@@ -2003,7 +2003,7 @@ class ListController extends Controller
             $entity->setVersion($newVersion);
 
             if( method_exists($entity, "getDocuments") ) {
-                $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($entity, "document");
+                $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($entity, "document");
             }
 
             $em->flush();
@@ -2149,7 +2149,7 @@ class ListController extends Controller
 //     * @Route("/service/new/parent/{pid}", name="services_new_with_parent")
 //     * @Route("/service/new/parent/{pid}", name="services_new_with_parent")
 //     * @Method("GET")
-//     * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
+//     * @Template("AppUserdirectoryBundle:ListForm:new.html.twig")
 //     */
 //    public function newNodeWithParentAction(Request $request,$pid)
 //    {
@@ -2181,7 +2181,7 @@ class ListController extends Controller
         $res = array();
         $res['className'] = $parentClassName;
         $res['fullClassName'] = "App\\UserdirectoryBundle\\Entity\\".$className;
-        $res['bundleName'] = "OlegUserdirectoryBundle";
+        $res['bundleName'] = "AppUserdirectoryBundle";
 
         return $res;
     }
@@ -3119,9 +3119,9 @@ class ListController extends Controller
         if( $className ) {
             //$routeName = $request->get('_route');
             $em = $this->getDoctrine()->getManager();
-            //$rootList = $em->getRepository('OlegUserdirectoryBundle:PlatformListManagerRootList')->findOneByListId($listId);
-            //$rootList = $em->getRepository('OlegUserdirectoryBundle:PlatformListManagerRootList')->findOneByListRootName($routeName);
-            $rootList = $em->getRepository('OlegUserdirectoryBundle:PlatformListManagerRootList')->findOneByListName($className);
+            //$rootList = $em->getRepository('AppUserdirectoryBundle:PlatformListManagerRootList')->findOneByListId($listId);
+            //$rootList = $em->getRepository('AppUserdirectoryBundle:PlatformListManagerRootList')->findOneByListRootName($routeName);
+            $rootList = $em->getRepository('AppUserdirectoryBundle:PlatformListManagerRootList')->findOneByListName($className);
 //            if( !$rootList ) {
 //                throw $this->createNotFoundException('Unable to find PlatformListManagerRootList by listName=' . $className);
 //            }
@@ -3420,14 +3420,14 @@ class ListController extends Controller
      *
      * @Route("/list-manager/id/{listId}", name="platform_list_manager")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:ListForm:platform_list_manager.html.twig")
+     * @Template("AppUserdirectoryBundle:ListForm:platform_list_manager.html.twig")
      */
     public function platformListManagerAction(Request $request, $listId)
     {
 
         $em = $this->getDoctrine()->getManager();
-        //$rootList = $em->getRepository('OlegUserdirectoryBundle:PlatformListManagerRootList')->findOneByListId($listId);
-        $rootList = $em->getRepository('OlegUserdirectoryBundle:PlatformListManagerRootList')->findOneByLinkToListId($listId);
+        //$rootList = $em->getRepository('AppUserdirectoryBundle:PlatformListManagerRootList')->findOneByListId($listId);
+        $rootList = $em->getRepository('AppUserdirectoryBundle:PlatformListManagerRootList')->findOneByLinkToListId($listId);
         if( !$rootList ) {
             throw $this->createNotFoundException('Unable to find PlatformListManagerRootList by linkToListId='.$listId);
         }
@@ -3442,9 +3442,9 @@ class ListController extends Controller
             $request->attributes->set('_route',$listRootName);
 
             if( strpos($listRootName, "_pathaction") === false ) {
-                return $this->forward('OlegUserdirectoryBundle:List:index', array('request' => $request));
+                return $this->forward('AppUserdirectoryBundle:List:index', array('request' => $request));
             } else {
-                return $this->forward('OlegUserdirectoryBundle:ComplexList:index', array('request' => $request));
+                return $this->forward('AppUserdirectoryBundle:ComplexList:index', array('request' => $request));
             }
 
         }
@@ -3461,13 +3461,13 @@ class ListController extends Controller
      *
      * @Route("/list-manager/id/{linkToListId}/{entityId}", name="platform_list_manager_element")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:ListForm:platform_list_manager.html.twig")
+     * @Template("AppUserdirectoryBundle:ListForm:platform_list_manager.html.twig")
      */
     public function platformElementManagerRootElementAction( Request $request, $linkToListId, $entityId ) {
 
         $em = $this->getDoctrine()->getManager();
-        //$rootList = $em->getRepository('OlegUserdirectoryBundle:PlatformListManagerRootList')->findOneByListId($listId);
-        $rootList = $em->getRepository('OlegUserdirectoryBundle:PlatformListManagerRootList')->findOneByLinkToListId($linkToListId);
+        //$rootList = $em->getRepository('AppUserdirectoryBundle:PlatformListManagerRootList')->findOneByListId($listId);
+        $rootList = $em->getRepository('AppUserdirectoryBundle:PlatformListManagerRootList')->findOneByLinkToListId($linkToListId);
         if( !$rootList ) {
             throw $this->createNotFoundException('Unable to find PlatformListManagerRootList by linkToListId='.$linkToListId);
         }
@@ -3488,7 +3488,7 @@ class ListController extends Controller
             $request->attributes->set('_route',$newRootName);
 
             //exit('1');
-            return $this->forward('OlegUserdirectoryBundle:List:show', array('request' => $request, 'id' => $entityId));
+            return $this->forward('AppUserdirectoryBundle:List:show', array('request' => $request, 'id' => $entityId));
         }
 
         //exit('2');

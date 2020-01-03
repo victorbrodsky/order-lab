@@ -15,10 +15,10 @@
  *  limitations under the License.
  */
 
-namespace Oleg\CallLogBundle\Form;
+namespace App\CallLogBundle\Form;
 
-use Oleg\OrderformBundle\Form\ArrayFieldType;
-use Oleg\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
+use App\OrderformBundle\Form\ArrayFieldType;
+use App\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -54,7 +54,7 @@ class CalllogPatientMrnType extends AbstractType
 //        $builder->add('keytype', 'entity', array(
 //            'label'=>'MRN Type:',
 //            'attr' => array('class' => 'combobox mrntype-combobox111'),
-//            'class' => 'OlegOrderformBundle:MrnType',
+//            'class' => 'AppOrderformBundle:MrnType',
 //            'query_builder' => function (EntityRepository $er) {
 //                return $er->createQueryBuilder('list')
 //                    //->select("list.id as id, list.name as text")
@@ -73,7 +73,7 @@ class CalllogPatientMrnType extends AbstractType
 
 //        //other fields from abstract
 //        $builder->add('others', new ArrayFieldType(), array(
-//            'data_class' => 'Oleg\OrderformBundle\Entity\PatientMrn',
+//            'data_class' => 'App\OrderformBundle\Entity\PatientMrn',
 //            'label' => false,
 //			'attr' => array('style'=>'display:none;')
 //        ));
@@ -83,7 +83,7 @@ class CalllogPatientMrnType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\PatientMrn',
+            'data_class' => 'App\OrderformBundle\Entity\PatientMrn',
             'form_custom_value' => null
         ));
     }

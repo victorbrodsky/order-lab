@@ -15,10 +15,10 @@
  *  limitations under the License.
  */
 
-namespace Oleg\VacReqBundle\Controller;
+namespace App\VacReqBundle\Controller;
 
 
-use Oleg\VacReqBundle\Form\VacReqCalendarFilterType;
+use App\VacReqBundle\Form\VacReqCalendarFilterType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -40,7 +40,7 @@ class CalendarController extends Controller
      *
      * @Route("/away-calendar/", name="vacreq_awaycalendar")
      * @Method({"GET"})
-     * @Template("OlegVacReqBundle:Calendar:calendar.html.twig")
+     * @Template("AppVacReqBundle:Calendar:calendar.html.twig")
      */
     public function awayCalendarAction(Request $request) {
 

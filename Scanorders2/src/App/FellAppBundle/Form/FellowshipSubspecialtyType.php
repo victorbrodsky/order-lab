@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\FellAppBundle\Form;
+namespace App\FellAppBundle\Form;
 
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -33,7 +33,7 @@ class FellowshipSubspecialtyType extends AbstractType
     {
 
         $builder->add('coordinators', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:User',
+            'class' => 'AppUserdirectoryBundle:User',
             'label' => "Coordinator(s):",
             'required' => false,
             'multiple' => true,
@@ -50,7 +50,7 @@ class FellowshipSubspecialtyType extends AbstractType
 
 
         $builder->add('directors', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:User',
+            'class' => 'AppUserdirectoryBundle:User',
             'label' => "Director(s):",
             'required' => false,
             'multiple' => true,
@@ -66,7 +66,7 @@ class FellowshipSubspecialtyType extends AbstractType
         ));
 
         $builder->add('interviewers', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:User',
+            'class' => 'AppUserdirectoryBundle:User',
             'label' => "Default Interviewer(s):",
             'required' => false,
             'multiple' => true,
@@ -87,7 +87,7 @@ class FellowshipSubspecialtyType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\FellowshipSubspecialty',
+            'data_class' => 'App\UserdirectoryBundle\Entity\FellowshipSubspecialty',
             //'csrf_protection' => false,
         ));
     }

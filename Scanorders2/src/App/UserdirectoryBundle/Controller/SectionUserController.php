@@ -22,7 +22,7 @@
  * Time: 10:32 AM
  */
 
-namespace Oleg\UserdirectoryBundle\Controller;
+namespace App\UserdirectoryBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -37,7 +37,7 @@ class SectionUserController extends UserController
 
     /**
      * @Route("/my-team-ajax/", name="employees_my_team")
-     * @Template("OlegUserdirectoryBundle:SectionUser:my-team.html.twig")
+     * @Template("AppUserdirectoryBundle:SectionUser:my-team.html.twig")
      * @Method({"GET", "POST"})
      */
     public function myTeamAction( Request $request ) {
@@ -59,7 +59,7 @@ class SectionUserController extends UserController
 
         //echo "userid=".$userid."<br>";
 
-        $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($userid);
+        $user = $em->getRepository('AppUserdirectoryBundle:User')->find($userid);
 
         return array(
             'user' => $user,
@@ -71,7 +71,7 @@ class SectionUserController extends UserController
 
 //        $showUserArr = $this->showUser($userid,$this->container->getParameter('employees.sitename'),false);
 //
-//        $template = $this->render('OlegUserdirectoryBundle:Profile:edit_user_only.html.twig',$showUserArr)->getContent();
+//        $template = $this->render('AppUserdirectoryBundle:Profile:edit_user_only.html.twig',$showUserArr)->getContent();
 //
 //        $json = json_encode($template);
 //        $response = new Response($json);
@@ -83,7 +83,7 @@ class SectionUserController extends UserController
 
     /**
      * @Route("/user-wrapper-ajax", name="employees_user_wrapper_ajax", options={"expose"=true})
-     * @Template("OlegUserdirectoryBundle:SectionUser:user-wrapper.html.twig")
+     * @Template("AppUserdirectoryBundle:SectionUser:user-wrapper.html.twig")
      * @Method({"GET", "POST"})
      */
     public function userWrapperAction( Request $request ) {
@@ -99,10 +99,10 @@ class SectionUserController extends UserController
         //echo "userid=".$userid."<br>";
 
         if( strpos($cycle, 'show') !== false ) {
-            $userWrappers = $em->getRepository('OlegUserdirectoryBundle:UserWrapper')->findByUser($userid);
+            $userWrappers = $em->getRepository('AppUserdirectoryBundle:UserWrapper')->findByUser($userid);
 
             //find patients by patient's encounter's provider: patient->encounters->provider
-            $repository = $em->getRepository('OlegOrderformBundle:Patient');
+            $repository = $em->getRepository('AppOrderformBundle:Patient');
             $dql = $repository->createQueryBuilder("patient");
             $dql->leftJoin("patient.encounter", "encounter");
             $dql->where("encounter.provider = :userId");
@@ -116,8 +116,8 @@ class SectionUserController extends UserController
             //$patients = array();
         } else {
             //show all wrappers where user is this user or null
-            //$userWrappers = $em->getRepository('OlegUserdirectoryBundle:UserWrapper')->findAll();
-            $repository = $em->getRepository('OlegUserdirectoryBundle:UserWrapper');
+            //$userWrappers = $em->getRepository('AppUserdirectoryBundle:UserWrapper')->findAll();
+            $repository = $em->getRepository('AppUserdirectoryBundle:UserWrapper');
             $dql = $repository->createQueryBuilder("wrapper");
             $dql->leftJoin("wrapper.user", "user");
             $dql->where("user = :userId OR user.id IS NULL");
@@ -141,7 +141,7 @@ class SectionUserController extends UserController
 
 //        $showUserArr = $this->showUser($userid,$this->container->getParameter('employees.sitename'),false);
 //
-//        $template = $this->render('OlegUserdirectoryBundle:Profile:edit_user_only.html.twig',$showUserArr)->getContent();
+//        $template = $this->render('AppUserdirectoryBundle:Profile:edit_user_only.html.twig',$showUserArr)->getContent();
 //
 //        $json = json_encode($template);
 //        $response = new Response($json);

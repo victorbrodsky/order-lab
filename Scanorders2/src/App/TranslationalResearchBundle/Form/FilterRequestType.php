@@ -15,10 +15,10 @@
  *  limitations under the License.
  */
 
-namespace Oleg\TranslationalResearchBundle\Form;
+namespace App\TranslationalResearchBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
-use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
+use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -54,7 +54,7 @@ class FilterRequestType extends AbstractType
         if (count($this->params['transresUsers']) > 0) {
 
             $builder->add('submitter', EntityType::class, array(
-                'class' => 'OlegUserdirectoryBundle:User',
+                'class' => 'AppUserdirectoryBundle:User',
                 'label' => "Reviewer Delegate:",
                 'required' => false,
                 'multiple' => false,
@@ -64,7 +64,7 @@ class FilterRequestType extends AbstractType
             ));
 
             $builder->add('billingContact', EntityType::class, array(
-                'class' => 'OlegUserdirectoryBundle:User',
+                'class' => 'AppUserdirectoryBundle:User',
                 'label' => false,
                 'required' => false,
                 'multiple' => false,
@@ -74,7 +74,7 @@ class FilterRequestType extends AbstractType
             ));
 
             $builder->add('principalInvestigators', EntityType::class, array(
-                'class' => 'OlegUserdirectoryBundle:User',
+                'class' => 'AppUserdirectoryBundle:User',
                 'label' => false,
                 'required' => false,
                 'multiple' => true,
@@ -134,7 +134,7 @@ class FilterRequestType extends AbstractType
 
         if(1) {
             $builder->add('categories', EntityType::class, array(
-                'class' => 'OlegTranslationalResearchBundle:RequestCategoryTypeList',
+                'class' => 'AppTranslationalResearchBundle:RequestCategoryTypeList',
                 'label' => false,
                 'choice_label' => $categoriesChoiceLabel, //"getOptimalAbbreviationName",
                 'required' => false,
@@ -203,7 +203,7 @@ class FilterRequestType extends AbstractType
         }
 
         $builder->add('projectSpecialty', EntityType::class, array(
-            'class' => 'OlegTranslationalResearchBundle:SpecialtyList',
+            'class' => 'AppTranslationalResearchBundle:SpecialtyList',
             'label' => false,   //'Project Specialty',
             'required'=> false,
             'multiple' => true,
@@ -272,7 +272,7 @@ class FilterRequestType extends AbstractType
             if ($this->params['routeName'] == "translationalresearch_request_index") {
                 //echo "Use data projects <br>";
                 $builder->add('project', EntityType::class, array(
-                    'class' => 'OlegTranslationalResearchBundle:Project',
+                    'class' => 'AppTranslationalResearchBundle:Project',
                     //'choice_label' => "getProjectInfoNameChoice",          //Without PIs
                     'choice_label' => $projectChoiceLabel, //"getProjectInfoNameWithPIsChoice",     //With PIs
                     'required' => false,
@@ -282,7 +282,7 @@ class FilterRequestType extends AbstractType
                 ));
             } else {
 //            $builder->add('project', EntityType::class, array(
-//                'class' => 'OlegTranslationalResearchBundle:Project',
+//                'class' => 'AppTranslationalResearchBundle:Project',
 //                'choice_label' => "getProjectInfoName",
 //                'required' => false,
 //                'label' => false,
@@ -290,7 +290,7 @@ class FilterRequestType extends AbstractType
 //            ));
                 //echo "Use all projects <br>";
                 $builder->add('project', EntityType::class, array(
-                    'class' => 'OlegTranslationalResearchBundle:Project',
+                    'class' => 'AppTranslationalResearchBundle:Project',
                     //'choice_label' => "getProjectInfoNameChoice",        //Without PIs
                     'choice_label' => $projectChoiceLabel, //"getProjectInfoNameWithPIsChoice",   //With PIs - this option causes ~135 additional DB queries (~number of existing projects)
                     'choices' => $this->params['availableProjects'],

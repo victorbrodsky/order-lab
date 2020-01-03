@@ -1,9 +1,9 @@
 <?php
 
-namespace Oleg\DeidentifierBundle;
+namespace App\DeidentifierBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class OlegDeidentifierBundle extends Bundle
+class AppDeidentifierBundle extends Bundle
 {
 }

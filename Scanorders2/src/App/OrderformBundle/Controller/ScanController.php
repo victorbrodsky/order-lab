@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Controller;
+namespace App\OrderformBundle\Controller;
 
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,10 +24,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-use Oleg\OrderformBundle\Entity\Imaging;
-use Oleg\OrderformBundle\Entity\Slide;
-use Oleg\OrderformBundle\Form\ImagingType;
-use Oleg\OrderformBundle\Helper\FormHelper;
+use App\OrderformBundle\Entity\Imaging;
+use App\OrderformBundle\Entity\Slide;
+use App\OrderformBundle\Form\ImagingType;
+use App\OrderformBundle\Helper\FormHelper;
 
 /**
  * Scan controller.
@@ -48,7 +48,7 @@ class ScanController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('OlegOrderformBundle:Imaging')->findAll();
+        $entities = $em->getRepository('AppOrderformBundle:Imaging')->findAll();
 
         return array(
             'entities' => $entities,
@@ -59,7 +59,7 @@ class ScanController extends Controller
      *
      * @Route("/", name="scan_create")
      * @Method("POST")
-     * @Template("OlegOrderformBundle:Imaging:new_orig.html.twig")
+     * @Template("AppOrderformBundle:Imaging:new_orig.html.twig")
      */
     public function createAction(Request $request)
     {
@@ -83,18 +83,18 @@ class ScanController extends Controller
             //get Accession, Part and Block. Create if they are not exist, or return them if they are exist.
             //process accession. If not exists - create and return new object, if exists - return object          
             $accession = $entity->getSlide()->getAccession();
-            $accession = $em->getRepository('OlegOrderformBundle:Accession')->processAccession( $accession );                         
+            $accession = $em->getRepository('AppOrderformBundle:Accession')->processAccession( $accession );                         
             $entity->getSlide()->setAccession($accession);          
             
             $part = $entity->getSlide()->getPart();
             $part->setAccession($accession);
-            $part = $em->getRepository('OlegOrderformBundle:Part')->processPart( $part ); 
+            $part = $em->getRepository('AppOrderformBundle:Part')->processPart( $part ); 
             $entity->getSlide()->setPart($part);         
             
             $block = $entity->getSlide()->getBlock();
             $block->setAccession($accession);
             $block->setPart($part);
-            $block = $em->getRepository('OlegOrderformBundle:Block')->processBlock( $block );                         
+            $block = $em->getRepository('AppOrderformBundle:Block')->processBlock( $block );                         
             $entity->getSlide()->setBlock($block);    
                     
             $em->persist($entity);
@@ -145,7 +145,7 @@ class ScanController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegOrderformBundle:Imaging')->find($id);
+        $entity = $em->getRepository('AppOrderformBundle:Imaging')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Imaging entity.');
@@ -170,7 +170,7 @@ class ScanController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegOrderformBundle:Imaging')->find($id);
+        $entity = $em->getRepository('AppOrderformBundle:Imaging')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Imaging entity.');
@@ -191,13 +191,13 @@ class ScanController extends Controller
      *
      * @Route("/{id}", name="scan_update")
      * @Method("PUT")
-     * @Template("OlegOrderformBundle:Imaging:edit.html.twig")
+     * @Template("AppOrderformBundle:Imaging:edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegOrderformBundle:Imaging')->find($id);
+        $entity = $em->getRepository('AppOrderformBundle:Imaging')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Imaging entity.');
@@ -233,7 +233,7 @@ class ScanController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('OlegOrderformBundle:Imaging')->find($id);
+            $entity = $em->getRepository('AppOrderformBundle:Imaging')->find($id);
 
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find Imaging entity.');

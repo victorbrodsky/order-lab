@@ -43,8 +43,8 @@
 
 
 {% macro complexPatient(ID,Active,lastName,firstName,MRN,InOut,HLAA,HLAB,RogosinDate,RogosinPRA,NYBCDate,ProductStatus,Expires) %}
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-    {% import "OlegCallLogBundle::Default/calllogmacros.html.twig" as calllogmacros %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppCallLogBundle::Default/calllogmacros.html.twig" as calllogmacros %}
 
     <tr class="">
         <td> <a href="#">{{ ID }}</a> </td>
@@ -125,7 +125,7 @@
 
 {% macro patientInfoSectionView(form,encounterPatientInfo,cycle,holderId,title,formtype) %}
 
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
     <div id="{{holderId}}" class="calllog-patient-holder">
 
@@ -161,7 +161,7 @@
 {#form - patient form#}
 {% macro patientInfoSection(form,cycle,holderId,title,formtype) %}
 
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
     <div id="{{holderId}}" class="calllog-patient-holder">
 
@@ -349,8 +349,8 @@
     {% endif %}
 
     {% if entity.tracker.spots is defined and entity.tracker.spots|length > 0 %}
-        {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
-        {% import "OlegCallLogBundle::Default/calllogmacros.html.twig" as calllogmacros %}
+        {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+        {% import "AppCallLogBundle::Default/calllogmacros.html.twig" as calllogmacros %}
 
         {% set sitename = 'scan' %}
         {% set currentUser = app.user %}
@@ -421,7 +421,7 @@
     {#encounter.vars.value.id={{ encounter.vars.value.id }}<br>#}
     {#{% if cycle != "show" and not encounter.vars.value.id %}#}
     {% if cycle != "show" %}
-        {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+        {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4 class="panel-title">
@@ -448,9 +448,9 @@
 {% endmacro %}
 
 {% macro locationSimpleObject( encounter, field, cycle, classname, prototype, sitename, entity, editable ) %}
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
-    {% import "OlegUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "AppUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
 
     {% if prototype == "prototype" %}
         {% set formfield = field.vars.prototype %}
@@ -509,7 +509,7 @@
 
     {% if encounter and encounter.referringProviders is defined and encounter.referringProviders|length > 0 %}
 
-        {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+        {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -542,7 +542,7 @@
 {#message is an entity#}
 {% macro calllogAuthors( message, cycle, sitename, mainPanelClass ) %}
 
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
     <div class="panel {{ mainPanelClass }}">
         <div class="panel-heading">
@@ -857,8 +857,8 @@
 
 {#Patient List#}
 {% macro calllogPatientList( message, cycle ) %}
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-    {% import "OlegUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
     <div class="panel panel-default">
         <div class="panel-heading">
             <h4 class="panel-title">
@@ -886,8 +886,8 @@
 
 
 {% macro calllogEntryTags( message, cycle ) %}
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-    {% import "OlegUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
     <div class="panel panel-default">
         <div class="panel-heading">
             <h4 class="panel-title">
@@ -909,8 +909,8 @@
 
 {#message - form for cycle new/edit and object for view#}
 {% macro calllogEntryDocuments( message, cycle ) %}
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
     {% if message.calllogEntryMessage.documents is defined %}
 
@@ -994,9 +994,9 @@
 
 {#message - form for cycle new/edit and object for view#}
 {% macro calllogTaskList( message, cycle ) %}
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
-    {% import "OlegCallLogBundle::Default/calllogmacros.html.twig" as calllogmacros %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "AppCallLogBundle::Default/calllogmacros.html.twig" as calllogmacros %}
 
     {% set sitename = calllog_sitename %}
 
@@ -1102,7 +1102,7 @@
 {% endmacro %}
 {% macro taskForm( calllogTask, cycle, classname, prototype, sitename, showAddDeleteBtn ) %}
 
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
     {% if showAddDeleteBtn is not defined %}
         {% set showAddDeleteBtn = 0 %}
@@ -1194,8 +1194,8 @@
 
 {% endmacro %}
 {% macro taskPrototype(form,cycle) %}
-    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
-    {% import "OlegCallLogBundle::Default/calllogmacros.html.twig" as calllogmacros %}
+    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "AppCallLogBundle::Default/calllogmacros.html.twig" as calllogmacros %}
     {#prototype must be defined after form tag#}
     {% set sitename = calllog_sitename %}
     <div id="form-prototype-data"
@@ -1262,7 +1262,7 @@
 {% endmacro %}
 
 {% macro calllogEntriesTable( messages, eventObjectTypeId, patientListId, headFlag ) %}
-    {% import "OlegCallLogBundle::Default/calllogmacros.html.twig" as calllogmacros %}
+    {% import "AppCallLogBundle::Default/calllogmacros.html.twig" as calllogmacros %}
 
     {% if headFlag is not defined or not headFlag %}
         {% set headFlag = "sortable" %}
@@ -1540,7 +1540,7 @@
 {% endmacro %}
 
 {% macro encounterDateTimeWithTimezone( dates, cycle ) %}
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% for date in dates|reverse %}
         <p>
         <div class="row">
@@ -1566,7 +1566,7 @@
 
 {% macro calllogEntryCache( message, cycle ) %}
     {#show cache!<br>#}
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
     <div class="panel panel-primary">
         <div class="panel-heading">
@@ -1593,7 +1593,7 @@
 
 {% macro calllogInputArray( label, arrayValues ) %}
     {#show cache!<br>#}
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
     {% for value in arrayValues %}
         {% if value.status == 'valid' %}

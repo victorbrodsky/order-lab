@@ -15,9 +15,9 @@
  *  limitations under the License.
  */
 
-namespace Oleg\FellAppBundle\Controller;
+namespace App\FellAppBundle\Controller;
 
-use Oleg\UserdirectoryBundle\Controller\ListController;
+use App\UserdirectoryBundle\Controller\ListController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -32,7 +32,7 @@ class FellAppListController extends ListController
      * @Route("/list/visa-status/", name="visastatus-list_fellapp")
      *
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:ListForm:index.html.twig")
+     * @Template("AppUserdirectoryBundle:ListForm:index.html.twig")
      */
     public function indexVisaStatusesAction(Request $request)
     {
@@ -47,7 +47,7 @@ class FellAppListController extends ListController
      * @Route("/list/visa-status/", name="visastatus_create_fellapp")
      *
      * @Method("POST")
-     * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
+     * @Template("AppUserdirectoryBundle:ListForm:new.html.twig")
      */
     public function createAction(Request $request)
     {
@@ -62,7 +62,7 @@ class FellAppListController extends ListController
      * @Route("/list/visa-status/new", name="visastatus_new_fellapp")
      *
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
+     * @Template("AppUserdirectoryBundle:ListForm:new.html.twig")
      */
     public function newAction(Request $request)
     {
@@ -77,7 +77,7 @@ class FellAppListController extends ListController
      * @Route("/list/visa-status/{id}", name="visastatus_show_fellapp")
      *
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:ListForm:show.html.twig")
+     * @Template("AppUserdirectoryBundle:ListForm:show.html.twig")
      */
     public function showAction(Request $request,$id)
     {
@@ -93,7 +93,7 @@ class FellAppListController extends ListController
      * @Route("/list/visa-status/{id}/edit", name="visastatus_edit_fellapp")
      *
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
+     * @Template("AppUserdirectoryBundle:ListForm:edit.html.twig")
      */
     public function editAction(Request $request,$id)
     {
@@ -108,7 +108,7 @@ class FellAppListController extends ListController
      * @Route("/list/visa-status/{id}", name="visastatus_update_fellapp")
      *
      * @Method("PUT")
-     * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
+     * @Template("AppUserdirectoryBundle:ListForm:edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {

@@ -1,13 +1,13 @@
 <?php
 
-namespace Oleg\OrderformBundle;
+namespace App\OrderformBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-use Oleg\OrderformBundle\Helper\Parameters;
+use App\OrderformBundle\Helper\Parameters;
 
-class OlegOrderformBundle extends Bundle
+class AppOrderformBundle extends Bundle
 {
     
 }

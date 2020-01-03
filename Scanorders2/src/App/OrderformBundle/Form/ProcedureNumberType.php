@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Form;
+namespace App\OrderformBundle\Form;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -44,7 +44,7 @@ class ProcedureNumberType extends AbstractType
         ));
 
         $builder->add('keytype', EntityType::class, array(
-            'class' => 'OlegOrderformBundle:ProcedureType',
+            'class' => 'AppOrderformBundle:ProcedureType',
             'label'=>false,
             'required' => true,
             //'data' => 1,
@@ -58,7 +58,7 @@ class ProcedureNumberType extends AbstractType
 
 
         $builder->add('others', ArrayFieldType::class, array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\ProcedureNumber',
+            'data_class' => 'App\OrderformBundle\Entity\ProcedureNumber',
             'form_custom_value' => $this->params,
             'label' => false,
 			'attr' => array('style'=>'display:none;')
@@ -70,7 +70,7 @@ class ProcedureNumberType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\ProcedureNumber',
+            'data_class' => 'App\OrderformBundle\Entity\ProcedureNumber',
             'form_custom_value' => null
         ));
     }

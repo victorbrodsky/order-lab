@@ -15,10 +15,10 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Form;
+namespace App\OrderformBundle\Form;
 
-use Oleg\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
-use Oleg\UserdirectoryBundle\Form\DocumentContainerType;
+use App\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
+use App\UserdirectoryBundle\Form\DocumentContainerType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -30,7 +30,7 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 use Doctrine\ORM\EntityRepository;
 
-use Oleg\OrderformBundle\Helper\FormHelper;
+use App\OrderformBundle\Helper\FormHelper;
 
 class ImagingType extends AbstractType
 {
@@ -75,7 +75,7 @@ class ImagingType extends AbstractType
             "We will do our best to expedite the process.";
 
         $builder->add('magnification', EntityType::class, array(
-            'class' => 'OlegOrderformBundle:Magnification',
+            'class' => 'AppOrderformBundle:Magnification',
             'choice_label' => 'name',
             'label'=>'Magnification:',
             'required'=> true,
@@ -118,7 +118,7 @@ class ImagingType extends AbstractType
             $params['document.provider.label'] = 'Image Acquired By:';
             $params['document.link.label'] = 'Image Link:';
             $builder->add('documentContainer', DocumentContainerType::class, array(
-                'data_class' => 'Oleg\UserdirectoryBundle\Entity\DocumentContainer',
+                'data_class' => 'App\UserdirectoryBundle\Entity\DocumentContainer',
                 'form_custom_value' => $params,
                 'label' => false
             ));
@@ -154,7 +154,7 @@ class ImagingType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\Imaging',
+            'data_class' => 'App\OrderformBundle\Entity\Imaging',
             'form_custom_value' => null
         ));
     }

@@ -1,13 +1,13 @@
 <?php
 
-namespace Oleg\UserdirectoryBundle;
+namespace App\UserdirectoryBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 
-class OlegUserdirectoryBundle extends Bundle
+class AppUserdirectoryBundle extends Bundle
 {
 
 }

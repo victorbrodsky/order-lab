@@ -1,6 +1,6 @@
 <?php
 
-namespace Oleg\TranslationalResearchBundle\Tests\Controller;
+namespace App\TranslationalResearchBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 

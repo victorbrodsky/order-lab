@@ -15,11 +15,11 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Entity;
+namespace App\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-//(repositoryClass="Oleg\OrderformBundle\Repository\ImagingRepository")
+//(repositoryClass="App\OrderformBundle\Repository\ImagingRepository")
 /**
  * Slide Imaging: Scan, Microscopic Image, Whole Slide Image
  *
@@ -83,7 +83,7 @@ class Imaging extends ObjectAbstract
 //    private $imageLink;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Equipment")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Equipment")
      */
     private $equipment;
 
@@ -91,7 +91,7 @@ class Imaging extends ObjectAbstract
     /**
      * Microscopic Image
      * device: Microscopic Image Device: [select2, one choice for now - "Olympus Camera" - link to Equipment table, filter by Type="Microscope Camera"]
-     * @ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\DocumentContainer", cascade={"persist","remove"})
+     * @ORM\OneToOne(targetEntity="App\UserdirectoryBundle\Entity\DocumentContainer", cascade={"persist","remove"})
      **/
     private $documentContainer;
 
@@ -116,7 +116,7 @@ class Imaging extends ObjectAbstract
 
 
 
-    public function setSlide(\Oleg\OrderformBundle\Entity\Slide $slide = null)
+    public function setSlide(\App\OrderformBundle\Entity\Slide $slide = null)
     {
         $this->slide = $slide;
         return $this;

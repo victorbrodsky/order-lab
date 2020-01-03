@@ -15,13 +15,13 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Util;
+namespace App\UserdirectoryBundle\Util;
 
-use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
-use Oleg\UserdirectoryBundle\Form\DataTransformer\SingleUserWrapperTransformer;
+use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
+use App\UserdirectoryBundle\Form\DataTransformer\SingleUserWrapperTransformer;
 use Symfony\Component\HttpFoundation\Response;
-use Oleg\UserdirectoryBundle\Entity\FormNode;
-use Oleg\UserdirectoryBundle\Entity\ObjectTypeText;
+use App\UserdirectoryBundle\Entity\FormNode;
+use App\UserdirectoryBundle\Entity\ObjectTypeText;
 
 
 /**
@@ -123,7 +123,7 @@ class FormNodeUtil
                     echo "<br>############ formNodeId=" . $formNodeId . ": " . $formValue . " ############<br>";
                 }
                 // do whatever you need to with $formNodeId...
-                $thisFormNode = $this->em->getRepository("OlegUserdirectoryBundle:FormNode")->find($formNodeId);
+                $thisFormNode = $this->em->getRepository("AppUserdirectoryBundle:FormNode")->find($formNodeId);
                 if( !$thisFormNode ) {
                     //exit("No Root of the node id=".$formNodeId."<br>");
                     continue;
@@ -215,7 +215,7 @@ class FormNodeUtil
                     'arraySectionIndex' => $arraysectioncount,
                     'arraySectionId' => $formNode->getId(),
                 );
-                $sectionFormnode = $this->em->getRepository("OlegUserdirectoryBundle:FormNode")->find($sectionFormnodeId);
+                $sectionFormnode = $this->em->getRepository("AppUserdirectoryBundle:FormNode")->find($sectionFormnodeId);
                 $this->createFormNodeListRecord($sectionFormnode, $thisThisFormValue, $holderEntity, $testing, $params);
             }
         }
@@ -304,7 +304,7 @@ class FormNodeUtil
 
             if( $className && $classNamespace ) {
 
-                //$classNamespace: Oleg\UserdirectoryBundle\Entity => UserdirectoryBundle
+                //$classNamespace: App\UserdirectoryBundle\Entity => UserdirectoryBundle
                 $bundleNameArr = explode("\\",$classNamespace);
                 $bundleName = null;
                 if( count($bundleNameArr) > 2 ) {
@@ -593,7 +593,7 @@ class FormNodeUtil
 
     //get unique list object for recording the form's value
     public function getUniqueFormNodeListRecord($formNode,$holderEntity) {
-        $treeRepository = $this->getFormNodeReceivedListRepository($formNode); ////Oleg\UserdirectoryBundle\Entity:ObjectTypeDropdown
+        $treeRepository = $this->getFormNodeReceivedListRepository($formNode); ////App\UserdirectoryBundle\Entity:ObjectTypeDropdown
 
         $dql =  $treeRepository->createQueryBuilder("list");
         $dql->select('list');
@@ -611,7 +611,7 @@ class FormNodeUtil
         $query->setParameters(
             array(
                 'entityName' => $mapper['entityName'],              //Project
-                'entityNamespace' => $mapper['entityNamespace'],    //Oleg\TranslationalResearchBundle\Entity
+                'entityNamespace' => $mapper['entityNamespace'],    //App\TranslationalResearchBundle\Entity
                 //'entityId' => "'".$mapper['entityId']."'",                  //project ID
                 'entityId' => $mapper['entityId']."",
                 'formNodeId' => $formNode->getId()
@@ -638,7 +638,7 @@ class FormNodeUtil
     //Used by getRequestIdsFormNodeByCategory to get ids of the receiving (i.e. objectTypeText, objectTypeDropdown) objects for the given value
     public function getFormNodeListRecordsByReceivingObjectValue($formNode,$value,$mapper,$compareType="exact") {
         //get objectTypeDropdowns by:
-        // value=$categoryType->getId(), entityNamespace="Oleg\TranslationalResearchBundle\Entity" , entityName="TransResRequest"
+        // value=$categoryType->getId(), entityNamespace="App\TranslationalResearchBundle\Entity" , entityName="TransResRequest"
         //echo "get objectTypeDropdown repo <br>";
         $treeRepository = $this->getFormNodeReceivedListRepository($formNode);
         $dql =  $treeRepository->createQueryBuilder("list");
@@ -649,7 +649,7 @@ class FormNodeUtil
         //echo "value=[".$value."]: entityNamespace=".$mapper['entityNamespace']."; entityName=".$mapper['entityName']."; formNodeId=".$formNode->getId()."<br>";
         $queryParameters = array(
             'entityName' => $mapper['entityName'],  //"TransResRequest",
-            'entityNamespace' => $mapper['entityNamespace'],    //"Oleg\\TranslationalResearchBundle\\Entity",
+            'entityNamespace' => $mapper['entityNamespace'],    //"App\\TranslationalResearchBundle\\Entity",
             'formNodeId' => $formNode->getId(),
         );
 
@@ -690,7 +690,7 @@ class FormNodeUtil
 //        $query->setParameters(
 //            array(
 //                'entityName' => $mapper['entityName'],  //"TransResRequest",
-//                'entityNamespace' => $mapper['entityNamespace'],    //"Oleg\\TranslationalResearchBundle\\Entity",
+//                'entityNamespace' => $mapper['entityNamespace'],    //"App\\TranslationalResearchBundle\\Entity",
 //                'formNodeId' => $formNode->getId(),
 //                'value' => $parameterValue,  //$holderEntity->getId()
 //            )
@@ -826,7 +826,7 @@ class FormNodeUtil
         $classNamespace = $formNode->getEntityNamespace();
         //echo "@@@ thisFormValue:".$thisValue."; className:".$className."; classNamespace:".$classNamespace."<br>";
         if( $className && $classNamespace ) {
-            //$classNamespace: Oleg\UserdirectoryBundle\Entity => UserdirectoryBundle
+            //$classNamespace: App\UserdirectoryBundle\Entity => UserdirectoryBundle
             $bundleNameArr = explode("\\", $classNamespace);
             $bundleName = null;
             if (count($bundleNameArr) > 2) {
@@ -891,8 +891,8 @@ class FormNodeUtil
             return null;
         }
 
-        //Oleg\UserdirectoryBundle\Entity:ObjectTypeText
-        //"OlegUserdirectoryBundle:ObjectTypeText"
+        //App\UserdirectoryBundle\Entity:ObjectTypeText
+        //"AppUserdirectoryBundle:ObjectTypeText"
 //        $entityNamespaceArr = explode("\\",$entityNamespace);
 //        if( count($entityNamespaceArr) > 2 ) {
 //            $entityNamespaceShort = $entityNamespaceArr[0] . $entityNamespaceArr[1];
@@ -966,8 +966,8 @@ class FormNodeUtil
     }
 
     //testing case:
-    // http://localhost/order/directory/formnode-fields/?holderNamespace=Oleg\OrderformBundle\Entity&holderName=MessageCategory&holderId=32&cycle=new&testing=true
-    // http://localhost/order/directory/formnode-fields/?holderNamespace=Oleg\OrderformBundle\Entity&holderName=MessageCategory&holderId=34&cycle=new&testing=true
+    // http://localhost/order/directory/formnode-fields/?holderNamespace=App\OrderformBundle\Entity&holderName=MessageCategory&holderId=32&cycle=new&testing=true
+    // http://localhost/order/directory/formnode-fields/?holderNamespace=App\OrderformBundle\Entity&holderName=MessageCategory&holderId=34&cycle=new&testing=true
     //get the same top form section by name and objectTypeId
     public function getTopFormSectionByHolderTreeRecursion( $formNodeHolder, $formNodeName, $objectTypeId, $testing=false ) {
         if( $testing ) {
@@ -1419,7 +1419,7 @@ class FormNodeUtil
         $classNamespace = $class->getNamespaceName();
         $classNamespace = str_replace("Proxies\\__CG__\\","",$classNamespace);
         $mapper = array(
-            'entityNamespace' => $classNamespace,   //"Oleg\\OrderformBundle\\Entity",
+            'entityNamespace' => $classNamespace,   //"App\\OrderformBundle\\Entity",
             'entityName' => $className, //"Message",
             'entityId' => $holderEntity->getId(),
         );
@@ -2005,14 +2005,14 @@ class FormNodeUtil
         //find by name and by parent ($parent) if exists
         if( $parent ) {
             $mapper = array(
-                'prefix' => "Oleg",
+                'prefix' => "App",
                 'className' => "FormNode",
                 'bundleName' => "UserdirectoryBundle"
             );
-            $node = $em->getRepository('OlegUserdirectoryBundle:FormNode')->findByChildnameAndParent($name,$parent,$mapper);
+            $node = $em->getRepository('AppUserdirectoryBundle:FormNode')->findByChildnameAndParent($name,$parent,$mapper);
         } else {
             exit("Parent must exist!");
-            $node = $em->getRepository('OlegUserdirectoryBundle:FormNode')->findOneByName($name);
+            $node = $em->getRepository('AppUserdirectoryBundle:FormNode')->findOneByName($name);
         }
 
         if( $node ) {
@@ -2150,13 +2150,13 @@ class FormNodeUtil
             //find by name and by parent ($parentCategory) if exists
             if( $parentCategory ) {
                 $mapper = array(
-                    'prefix' => "Oleg",
+                    'prefix' => "App",
                     'className' => "FormNode",
                     'bundleName' => "UserdirectoryBundle"
                 );
-                $node = $em->getRepository('OlegUserdirectoryBundle:FormNode')->findByChildnameAndParent($name,$parentCategory,$mapper);
+                $node = $em->getRepository('AppUserdirectoryBundle:FormNode')->findByChildnameAndParent($name,$parentCategory,$mapper);
             } else {
-                $node = $em->getRepository('OlegUserdirectoryBundle:FormNode')->findOneByName($name);
+                $node = $em->getRepository('AppUserdirectoryBundle:FormNode')->findOneByName($name);
             }
 
             if( !$node ) {
@@ -2169,7 +2169,7 @@ class FormNodeUtil
 //                //try to get default group by level
 //                if( !$node->getOrganizationalGroupType() ) {
 //                    if( $node->getLevel() ) {
-//                        $messageTypeClassifier = $em->getRepository('OlegOrderformBundle:MessageTypeClassifiers')->findOneByLevel($node->getLevel());
+//                        $messageTypeClassifier = $em->getRepository('AppOrderformBundle:MessageTypeClassifiers')->findOneByLevel($node->getLevel());
 //                        if ($messageTypeClassifier) {
 //                            $node->setOrganizationalGroupType($messageTypeClassifier);
 //                        }
@@ -2222,7 +2222,7 @@ class FormNodeUtil
     }
     public function getObjectTypeByName($objectTypeName) {
         $em = $this->em;
-        $objectType = $em->getRepository('OlegUserdirectoryBundle:ObjectTypeList')->findOneByName($objectTypeName);
+        $objectType = $em->getRepository('AppUserdirectoryBundle:ObjectTypeList')->findOneByName($objectTypeName);
         if( !$objectType ) {
             throw new \Exception( "ObjectType not found by ".$objectTypeName );
         }
@@ -2234,7 +2234,7 @@ class FormNodeUtil
         $em = $this->em;
         $messageCategory = null;
 
-        $messageCategories = $em->getRepository('OlegOrderformBundle:MessageCategory')->findByName($messageCategoryName);
+        $messageCategories = $em->getRepository('AppOrderformBundle:MessageCategory')->findByName($messageCategoryName);
         if( count($messageCategories) == 0 ) {
             exit("Message categories not found by name=".$messageCategoryName);
         }
@@ -2310,7 +2310,7 @@ class FormNodeUtil
 //            return $output;
 //        }
 
-        $entityNamespace = $formNode->getEntityNamespace(); //"Oleg\OrderformBundle\Entity"
+        $entityNamespace = $formNode->getEntityNamespace(); //"App\OrderformBundle\Entity"
         $entityName = $formNode->getEntityName();           //"BloodProductTransfusedList"
         //echo "entityName=$entityName ($formNodeId)<br>";
 
@@ -2392,7 +2392,7 @@ class FormNodeUtil
 
     public function getDefaultValue( $formNode ) {
         $em = $this->em;
-        $entityNamespace = $formNode->getEntityNamespace(); //"Oleg\OrderformBundle\Entity"
+        $entityNamespace = $formNode->getEntityNamespace(); //"App\OrderformBundle\Entity"
         $entityName = $formNode->getEntityName();           //"CCIUnitPlateletCountDefaultValueList"
         $entityId = $formNode->getEntityId();
 
@@ -2415,7 +2415,7 @@ class FormNodeUtil
         if( !$formNodeType ) {
             return null;
         }
-        $receivedValueEntityNamespace = $formNodeType->getReceivedValueEntityNamespace(); //Oleg\UserdirectoryBundle\Entity
+        $receivedValueEntityNamespace = $formNodeType->getReceivedValueEntityNamespace(); //App\UserdirectoryBundle\Entity
         $receivedValueEntityName = $formNodeType->getReceivedValueEntityName(); //ObjectTypeText
         //echo "entity: $receivedValueEntityNamespace:$receivedValueEntityName <br>";
         if( !$receivedValueEntityNamespace || !$receivedValueEntityName ) {
@@ -2456,13 +2456,13 @@ class FormNodeUtil
 //        echo "formNode=".$formNode."; ID=".$formNode->getId()."<br>";
 //        $class = new \ReflectionClass($object);
 //        $className = $class->getShortName();          //ObjectTypeText
-//        $classNamespace = $class->getNamespaceName(); //Oleg\UserdirectoryBundle\Entity
+//        $classNamespace = $class->getNamespaceName(); //App\UserdirectoryBundle\Entity
 //        echo "classNamespace=".$classNamespace."<br>";
 //        echo "className=".$className."<br>";
 //        echo "entityId=".$object->getId()."<br>";
 //        print_r($mapper);
 
-        $treeRepository = $this->getFormNodeReceivedListRepository($formNode); ////Oleg\UserdirectoryBundle\Entity:ObjectTypeDropdown
+        $treeRepository = $this->getFormNodeReceivedListRepository($formNode); ////App\UserdirectoryBundle\Entity:ObjectTypeDropdown
         //$treeRepository = $this->em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
 
         $dql =  $treeRepository->createQueryBuilder("list");
@@ -2643,7 +2643,7 @@ class FormNodeUtil
         $className = $class->getShortName();
         $classNamespace = $class->getNamespaceName();
         $mapper = array(
-            'entityNamespace' => $classNamespace,   //"Oleg\\OrderformBundle\\Entity",
+            'entityNamespace' => $classNamespace,   //"App\\OrderformBundle\\Entity",
             'entityName' => $className,             //"Message",
             'entityId' => $entity->getId(),
         );
@@ -2669,7 +2669,7 @@ class FormNodeUtil
         $count = 10;
         $level = 0;
         $count = $this->addNestedsetNodeRecursevely(null,$categories,$level,$username,$count);
-        $parentNode = $em->getRepository('OlegUserdirectoryBundle:FormNode')->findOneByName('Pathology Call Log Book');
+        $parentNode = $em->getRepository('AppUserdirectoryBundle:FormNode')->findOneByName('Pathology Call Log Book');
         //echo "rootNode=".$parentNode."<br>";
 
         //create Pathology Call Log Book
@@ -2739,7 +2739,7 @@ class FormNodeUtil
             }
 
             if( array_key_exists('sectionParentName', $section) ) {
-                $thisParentForm = $this->em->getRepository('OlegUserdirectoryBundle:FormNode')->findOneByName($section['sectionParentName']);
+                $thisParentForm = $this->em->getRepository('AppUserdirectoryBundle:FormNode')->findOneByName($section['sectionParentName']);
                 if( !$thisParentForm ) {
                     exit('Parent form not found by name='.$section['sectionParentName']);
                 }
@@ -2761,7 +2761,7 @@ class FormNodeUtil
             $fields = $section['fields'];
             foreach( $fields as $fieldName=>$objectTypeNameParam ) {
                 if( is_array($objectTypeNameParam) ) {
-                    //'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+                    //'classNamespace' => "App\\UserdirectoryBundle\\Entity",
                     //'className' => "BloodTypeList"
                     $objectTypeName = $objectTypeNameParam[0];
                     $classNamespace = $objectTypeNameParam[1];
@@ -2927,8 +2927,8 @@ class FormNodeUtil
             array(
                 'sectionName' => "Miscellaneous",
                 'fields' => array(
-                    'Blood Type of Unit'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","BloodTypeList"),
-                    'Blood Type of Patient'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","BloodTypeList"),
+                    'Blood Type of Unit'=>array('Form Field - Dropdown Menu',"App\\UserdirectoryBundle\\Entity","BloodTypeList"),
+                    'Blood Type of Patient'=>array('Form Field - Dropdown Menu',"App\\UserdirectoryBundle\\Entity","BloodTypeList"),
                 )
             ),
         );
@@ -2948,8 +2948,8 @@ class FormNodeUtil
             array(
                 'sectionName' => "Miscellaneous",
                 'fields' => array(
-                    'Blood Type of Unit'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","BloodTypeList"),
-                    'Blood Type of Patient'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","BloodTypeList"),
+                    'Blood Type of Unit'=>array('Form Field - Dropdown Menu',"App\\UserdirectoryBundle\\Entity","BloodTypeList"),
+                    'Blood Type of Patient'=>array('Form Field - Dropdown Menu',"App\\UserdirectoryBundle\\Entity","BloodTypeList"),
                     'Antibodies'=>'Form Field - Free Text, Single Line',
                     'Phenotype'=>'Form Field - Free Text, Single Line',
                     'Incompatibility'=>'Form Field - Free Text, Single Line',
@@ -2966,8 +2966,8 @@ class FormNodeUtil
             array(
                 'sectionName' => "Miscellaneous",
                 'fields' => array(
-                    'Blood Product Transfused'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","BloodProductTransfusedList"),
-                    'Transfusion Reaction Type'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","TransfusionReactionTypeList"),
+                    'Blood Product Transfused'=>array('Form Field - Dropdown Menu',"App\\UserdirectoryBundle\\Entity","BloodProductTransfusedList"),
+                    'Transfusion Reaction Type'=>array('Form Field - Dropdown Menu',"App\\UserdirectoryBundle\\Entity","TransfusionReactionTypeList"),
                 )
             ),
             //        Vitals [Form Section]
@@ -3015,18 +3015,18 @@ class FormNodeUtil
                 'sectionName' => "Transfusion Reaction Workup",
                 'fields' => array(
                     'Transfusion Reaction Workup Description'=>'Form Field - Free Text, Single Line',
-                    'Clerical error'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","ClericalErrorList"),
-                    'Blood Type of Unit'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","BloodProductTransfusedList"),
-                    'Blood type of pre-transfusion specimen'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","BloodTypeList"),
-                    'Blood type of post-transfusion specimen'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","BloodTypeList"),
-                    'Pre-transfusion antibody screen'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","TransfusionAntibodyScreenResultsList"),
-                    'Post-transfusion antibody screen'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","TransfusionAntibodyScreenResultsList"),
-                    'Pre-transfusion DAT'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","TransfusionDATResultsList"),
-                    'Post-transfusion DAT'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","TransfusionDATResultsList"),
-                    'Pre-transfusion crossmatch'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","TransfusionCrossmatchResultsList"),
-                    'Post-transfusion crossmatch'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","TransfusionCrossmatchResultsList"),
-                    'Pre-transfusion hemolysis check'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","TransfusionHemolysisCheckResultsList"),
-                    'Post-transfusion hemolysis check'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","TransfusionHemolysisCheckResultsList"),
+                    'Clerical error'=>array('Form Field - Dropdown Menu',"App\\UserdirectoryBundle\\Entity","ClericalErrorList"),
+                    'Blood Type of Unit'=>array('Form Field - Dropdown Menu',"App\\UserdirectoryBundle\\Entity","BloodProductTransfusedList"),
+                    'Blood type of pre-transfusion specimen'=>array('Form Field - Dropdown Menu',"App\\UserdirectoryBundle\\Entity","BloodTypeList"),
+                    'Blood type of post-transfusion specimen'=>array('Form Field - Dropdown Menu',"App\\UserdirectoryBundle\\Entity","BloodTypeList"),
+                    'Pre-transfusion antibody screen'=>array('Form Field - Dropdown Menu',"App\\UserdirectoryBundle\\Entity","TransfusionAntibodyScreenResultsList"),
+                    'Post-transfusion antibody screen'=>array('Form Field - Dropdown Menu',"App\\UserdirectoryBundle\\Entity","TransfusionAntibodyScreenResultsList"),
+                    'Pre-transfusion DAT'=>array('Form Field - Dropdown Menu',"App\\UserdirectoryBundle\\Entity","TransfusionDATResultsList"),
+                    'Post-transfusion DAT'=>array('Form Field - Dropdown Menu',"App\\UserdirectoryBundle\\Entity","TransfusionDATResultsList"),
+                    'Pre-transfusion crossmatch'=>array('Form Field - Dropdown Menu',"App\\UserdirectoryBundle\\Entity","TransfusionCrossmatchResultsList"),
+                    'Post-transfusion crossmatch'=>array('Form Field - Dropdown Menu',"App\\UserdirectoryBundle\\Entity","TransfusionCrossmatchResultsList"),
+                    'Pre-transfusion hemolysis check'=>array('Form Field - Dropdown Menu',"App\\UserdirectoryBundle\\Entity","TransfusionHemolysisCheckResultsList"),
+                    'Post-transfusion hemolysis check'=>array('Form Field - Dropdown Menu',"App\\UserdirectoryBundle\\Entity","TransfusionHemolysisCheckResultsList"),
                     'Microbiology'=>'Form Field - Free Text, Single Line',
                 )
             ),
@@ -3050,7 +3050,7 @@ class FormNodeUtil
                     'HLA B'=>'Form Field - Free Text, Single Line',
                     'Rogosin PRA'=>'Form Field - Free Text, Single Line',
                     'Rogosin date'=>'Form Field - Full Date',
-                    'Antibodies'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","ComplexPlateletSummaryAntibodiesList"),
+                    'Antibodies'=>array('Form Field - Dropdown Menu',"App\\UserdirectoryBundle\\Entity","ComplexPlateletSummaryAntibodiesList"),
                     'NYBC date'=>'Form Field - Full Date',
                 )
             ),
@@ -3078,7 +3078,7 @@ class FormNodeUtil
                 'sectionParentName' => 'CCI (Corrected Count Increment) Calculations',
                 'fields' => array(
                     'CCI date'=>'Form Field - Full Date and Time',
-                    'CCI Platelet Type Transfused'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","CCIPlateletTypeTransfusedList"),
+                    'CCI Platelet Type Transfused'=>array('Form Field - Dropdown Menu',"App\\UserdirectoryBundle\\Entity","CCIPlateletTypeTransfusedList"),
                     'Pre-transfusion Platelet Count'=>'Form Field - Free Text, Single Line',
                     'Post-transfusion Platelet Count'=>'Form Field - Free Text, Single Line',
                     //'CCI'=>'Form Field - Free Text, Single Line',
@@ -3094,9 +3094,9 @@ class FormNodeUtil
             array(
                 'sectionName' => "Miscellaneous",
                 'fields' => array(
-                    'Product Currently Receiving'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","PlateletTransfusionProductReceivingList"),
-                    'Product Should Be Receiving'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","PlateletTransfusionProductReceivingList"),
-                    'Product Status'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","TransfusionProductStatusList"),
+                    'Product Currently Receiving'=>array('Form Field - Dropdown Menu',"App\\UserdirectoryBundle\\Entity","PlateletTransfusionProductReceivingList"),
+                    'Product Should Be Receiving'=>array('Form Field - Dropdown Menu',"App\\UserdirectoryBundle\\Entity","PlateletTransfusionProductReceivingList"),
+                    'Product Status'=>array('Form Field - Dropdown Menu',"App\\UserdirectoryBundle\\Entity","TransfusionProductStatusList"),
                     'Expiration Date'=>'Form Field - Full Date',
                     'Date'=>'Form Field - Full Date',
                 )
@@ -3106,22 +3106,22 @@ class FormNodeUtil
         $ComplexplateletsummaryForm = $this->addFormToHolder($parent,"Complex platelet summary",$sections);
 
         ///////////////// Set CCI Unit Platelet Count Default Value: 3 [Free Text Field Default Value] /////////////////
-        //$UnitPlateletCount = $this->em->getRepository("OlegUserdirectoryBundle:FormNode")->findOneByName("Unit Platelet Count");
+        //$UnitPlateletCount = $this->em->getRepository("AppUserdirectoryBundle:FormNode")->findOneByName("Unit Platelet Count");
         $mapper = array(
-            'prefix' => "Oleg",
+            'prefix' => "App",
             'className' => "FormNode",
             'bundleName' => "UserdirectoryBundle"
         );
         //CCI (Corrected Count Increment) Calculations
-        $CCISection = $this->em->getRepository('OlegUserdirectoryBundle:FormNode')->findByChildnameAndParent("CCI (Corrected Count Increment) Calculations",$ComplexplateletsummaryForm,$mapper);
+        $CCISection = $this->em->getRepository('AppUserdirectoryBundle:FormNode')->findByChildnameAndParent("CCI (Corrected Count Increment) Calculations",$ComplexplateletsummaryForm,$mapper);
         if( !$CCISection ) {
             exit('FormNode not found by name "CCI (Corrected Count Increment) Calculations"');
         }
-        $UnitPlateletCount = $this->em->getRepository('OlegUserdirectoryBundle:FormNode')->findByChildnameAndParent("Unit Platelet Count",$CCISection,$mapper);
+        $UnitPlateletCount = $this->em->getRepository('AppUserdirectoryBundle:FormNode')->findByChildnameAndParent("Unit Platelet Count",$CCISection,$mapper);
         if( !$UnitPlateletCount ) {
             exit('FormNode not found by name "Unit Platelet Count"');
         }
-        $CCIUnitPlateletCountDefaultValueList = $this->em->getRepository("OlegUserdirectoryBundle:CCIUnitPlateletCountDefaultValueList")->findOneByName("3");
+        $CCIUnitPlateletCountDefaultValueList = $this->em->getRepository("AppUserdirectoryBundle:CCIUnitPlateletCountDefaultValueList")->findOneByName("3");
         if( !$CCIUnitPlateletCountDefaultValueList ) {
             exit('CCIUnitPlateletCountDefaultValueList not found by name "3"');
         }
@@ -3150,21 +3150,21 @@ class FormNodeUtil
 //                'sectionName' => "Relevant Laboratory Values",
 //                'sectionObjectTypeName' => "Form Section Array",
 //                'fields' => array(
-//                    'Lab Result Name'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","LabResultNameList"),
+//                    'Lab Result Name'=>array('Form Field - Dropdown Menu',"App\\UserdirectoryBundle\\Entity","LabResultNameList"),
 //                    'Lab Result Value'=>'Form Field - Free Text, Single Line',
-//                    'Lab Result Units of Measure'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","LabResultUnitsMeasureList"),
+//                    'Lab Result Units of Measure'=>array('Form Field - Dropdown Menu',"App\\UserdirectoryBundle\\Entity","LabResultUnitsMeasureList"),
 //                    'Lab Result Interpretation'=>'Form Field - Free Text',
 //                    'Lab Result Date'=>'Form Field - Full Date and Time',
-//                    'Lab Result Flag'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","LabResultFlagList"),
+//                    'Lab Result Flag'=>array('Form Field - Dropdown Menu',"App\\UserdirectoryBundle\\Entity","LabResultFlagList"),
 //                    'Lab Result Comment'=>'Form Field - Free Text',
-//                    'Lab Result Signatory'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","PathologyResultSignatoriesList"),
+//                    'Lab Result Signatory'=>array('Form Field - Dropdown Menu',"App\\UserdirectoryBundle\\Entity","PathologyResultSignatoriesList"),
 //                )
 //            ),
 //            array(
 //                'sectionName' => "Miscellaneous",
 //                'fields' => array(
 //                    'Product receiving'=>'Form Field - Free Text, Single Line',
-//                    'Transfusion Product Status'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","TransfusionProductStatusList"),
+//                    'Transfusion Product Status'=>array('Form Field - Dropdown Menu',"App\\UserdirectoryBundle\\Entity","TransfusionProductStatusList"),
 //                )
 //            ),
 //        );
@@ -3366,14 +3366,14 @@ class FormNodeUtil
                 'sectionName' => "Relevant Laboratory Values",
                 'sectionObjectTypeName' => "Form Section Array",
                 'fields' => array(
-                    'Lab Result Name'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","LabResultNameList"),
+                    'Lab Result Name'=>array('Form Field - Dropdown Menu',"App\\UserdirectoryBundle\\Entity","LabResultNameList"),
                     'Lab Result Value'=>'Form Field - Free Text, Single Line',
-                    'Lab Result Units of Measure'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","LabResultUnitsMeasureList"),
+                    'Lab Result Units of Measure'=>array('Form Field - Dropdown Menu',"App\\UserdirectoryBundle\\Entity","LabResultUnitsMeasureList"),
                     'Lab Result Interpretation'=>'Form Field - Free Text',
                     'Lab Result Date'=>'Form Field - Full Date and Time',
-                    'Lab Result Flag'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","LabResultFlagList"),
+                    'Lab Result Flag'=>array('Form Field - Dropdown Menu',"App\\UserdirectoryBundle\\Entity","LabResultFlagList"),
                     'Lab Result Comment'=>'Form Field - Free Text',
-                    'Lab Result Signatory'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","PathologyResultSignatoriesList"),
+                    'Lab Result Signatory'=>array('Form Field - Dropdown Menu',"App\\UserdirectoryBundle\\Entity","PathologyResultSignatoriesList"),
                 )
             )
         );
@@ -3383,7 +3383,7 @@ class FormNodeUtil
                 'sectionName' => "Miscellaneous",
                 'fields' => array(
                     'Product receiving'=>'Form Field - Free Text, Single Line',
-                    'Transfusion Product Status'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","TransfusionProductStatusList"),
+                    'Transfusion Product Status'=>array('Form Field - Dropdown Menu',"App\\UserdirectoryBundle\\Entity","TransfusionProductStatusList"),
                 )
             );
 //            $sections[] = array(
@@ -3391,7 +3391,7 @@ class FormNodeUtil
 //                'fields' => array(
 //                    'What would you call this issue category?'=>array(
 //                        'Form Field - Dropdown Menu - Allow Multiple Selections - Allow New Entries',
-//                        "Oleg\\OrderformBundle\\Entity",
+//                        "App\\OrderformBundle\\Entity",
 //                        "SuggestedMessageCategoriesList"
 //                    ),
 //                )
@@ -3407,7 +3407,7 @@ class FormNodeUtil
 //                'fields' => array(
 //                    'What would you call this service?'=>array(
 //                        'Form Field - Dropdown Menu - Allow Multiple Selections - Allow New Entries',
-//                        "Oleg\\OrderformBundle\\Entity",
+//                        "App\\OrderformBundle\\Entity",
 //                        "SuggestedMessageCategoriesList"
 //                    ),
 //                )
@@ -3429,7 +3429,7 @@ class FormNodeUtil
             'fields' => array(
                 $fieldName=>array(
                     'Form Field - Dropdown Menu - Allow Multiple Selections - Allow New Entries',
-                    "Oleg\\OrderformBundle\\Entity",
+                    "App\\OrderformBundle\\Entity",
                     "SuggestedMessageCategoriesList"
                 ),
             )
@@ -3462,7 +3462,7 @@ class FormNodeUtil
             'fields' => array(
                 "What would you call this issue?"=>array(
                     'Form Field - Dropdown Menu - Allow Multiple Selections - Allow New Entries',
-                    "Oleg\\OrderformBundle\\Entity",
+                    "App\\OrderformBundle\\Entity",
                     "SuggestedMessageCategoriesList"
                 ),
             )
@@ -3502,7 +3502,7 @@ class FormNodeUtil
 //        );
 //        $testFormSection = $this->addFormToHolder($parent,"Test",$sections);
 
-        $parentNode = $this->em->getRepository('OlegUserdirectoryBundle:FormNode')->findOneByName('Pathology Call Log Book');
+        $parentNode = $this->em->getRepository('AppUserdirectoryBundle:FormNode')->findOneByName('Pathology Call Log Book');
 
         //Test Section 1 (Form Section)
         //Test Field 01: Form Field - Free Text, Single Line
@@ -3540,15 +3540,15 @@ class FormNodeUtil
                 'sectionName' => "Test Section 2",
                 'sectionObjectTypeName' => "Form Section Array",
                 'fields' => array(
-                    'Test Field 09'=>array('Form Field - Month',"Oleg\\UserdirectoryBundle\\Entity","MonthsList"), //'Form Field - Month',
+                    'Test Field 09'=>array('Form Field - Month',"App\\UserdirectoryBundle\\Entity","MonthsList"), //'Form Field - Month',
                     'Test Field 10'=>'Form Field - Date',
-                    'Test Field 11'=>array('Form Field - Day of the Week',"Oleg\\UserdirectoryBundle\\Entity","WeekDaysList"),  //'Form Field - Day of the Week',
-                    'Test Field 12'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","TransfusionProductStatusList"),
-                    'Test Field 13'=>array('Form Field - Checkbox',"Oleg\\UserdirectoryBundle\\Entity","BloodTypeList"),
-                    'Test Field 14'=>array('Form Field - Radio Button',"Oleg\\UserdirectoryBundle\\Entity","BloodTypeList"),
-                    'Test Field 15'=>array('Form Field - Dropdown Menu - Allow Multiple Selections',"Oleg\\UserdirectoryBundle\\Entity","BloodTypeList"),
-                    'Test Field 16'=>array('Form Field - Dropdown Menu',"Oleg\\OrderformBundle\\Entity","PatientListHierarchy"),
-                    'Test Field 17'=>array('Form Field - Checkboxes',"Oleg\\UserdirectoryBundle\\Entity","BloodTypeList"),
+                    'Test Field 11'=>array('Form Field - Day of the Week',"App\\UserdirectoryBundle\\Entity","WeekDaysList"),  //'Form Field - Day of the Week',
+                    'Test Field 12'=>array('Form Field - Dropdown Menu',"App\\UserdirectoryBundle\\Entity","TransfusionProductStatusList"),
+                    'Test Field 13'=>array('Form Field - Checkbox',"App\\UserdirectoryBundle\\Entity","BloodTypeList"),
+                    'Test Field 14'=>array('Form Field - Radio Button',"App\\UserdirectoryBundle\\Entity","BloodTypeList"),
+                    'Test Field 15'=>array('Form Field - Dropdown Menu - Allow Multiple Selections',"App\\UserdirectoryBundle\\Entity","BloodTypeList"),
+                    'Test Field 16'=>array('Form Field - Dropdown Menu',"App\\OrderformBundle\\Entity","PatientListHierarchy"),
+                    'Test Field 17'=>array('Form Field - Checkboxes',"App\\UserdirectoryBundle\\Entity","BloodTypeList"),
                 ),
             ),
             array(
@@ -3556,16 +3556,16 @@ class FormNodeUtil
                 'fields' => array(
                     'Test Field 18'=>'Form Field - Time, with Time Zone',
                     'Test Field 19'=>'Form Field - Full Date and Time, with Time Zone',
-                    'Test Field 20'=>array('Form Field - Dropdown Menu - Allow New Entries',"Oleg\\UserdirectoryBundle\\Entity","BloodTypeList"),
-                    'Test Field 21'=>array('Form Field - Dropdown Menu - Allow Multiple Selections - Allow New Entries',"Oleg\\UserdirectoryBundle\\Entity","BloodTypeList"),
+                    'Test Field 20'=>array('Form Field - Dropdown Menu - Allow New Entries',"App\\UserdirectoryBundle\\Entity","BloodTypeList"),
+                    'Test Field 21'=>array('Form Field - Dropdown Menu - Allow Multiple Selections - Allow New Entries',"App\\UserdirectoryBundle\\Entity","BloodTypeList"),
                     'Test Field 22'=>'Form Field - Free Text, Single Line, Numeric, Unsigned Positive Integer',
                     'Test Field 23'=>'Form Field - Free Text, Single Line, Numeric, Signed Integer',
                     'Test Field 24'=>'Form Field - Free Text, Single Line, Numeric, Signed Float',
                     'Test Field 25'=>'Form Field - Free Text, Single Line, Locked, Calculated, Stored',
                     'Test Field 26'=>'Form Field - Free Text, Single Line, Unlocked, Calculated, Stored',
                     'Test Field 27'=>'Form Field - Free Text, Single Line, Locked, Calculated, Visual Aid',
-                    'Test Field 28'=>array('Form Field - Dropdown Menu - Allow New Entries',"Oleg\\UserdirectoryBundle\\Entity","PathologyResultSignatoriesList"),
-                    'Test Field 29'=>array('Form Field - Dropdown Menu - Allow Multiple Selections - Allow New Entries',"Oleg\\UserdirectoryBundle\\Entity","PathologyResultSignatoriesList"),
+                    'Test Field 28'=>array('Form Field - Dropdown Menu - Allow New Entries',"App\\UserdirectoryBundle\\Entity","PathologyResultSignatoriesList"),
+                    'Test Field 29'=>array('Form Field - Dropdown Menu - Allow Multiple Selections - Allow New Entries',"App\\UserdirectoryBundle\\Entity","PathologyResultSignatoriesList"),
                 ),
             ),
 
@@ -3622,7 +3622,7 @@ class FormNodeUtil
 //        $count = 10;
 //        $level = 0;
 //        $count = $this->addNestedsetNodeRecursevely(null,$categories,$level,$username,$count);
-//        $rootNode = $em->getRepository('OlegUserdirectoryBundle:FormNode')->findOneByName('Root Form');
+//        $rootNode = $em->getRepository('AppUserdirectoryBundle:FormNode')->findOneByName('Root Form');
 //        //echo "rootNode=".$rootNode."<br>";
 //
 //
@@ -3788,7 +3788,7 @@ class FormNodeUtil
 //            'objectType' => $objectType,
 //            'showLabel' => true,
 //            'visible' => true,
-//            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+//            'classNamespace' => "App\\UserdirectoryBundle\\Entity",
 //            'className' => "MonthsList"
 //        );
 //        $formNode = $this->createFormNode($formParams);
@@ -3816,7 +3816,7 @@ class FormNodeUtil
 //            'objectType' => $objectType,
 //            'showLabel' => true,
 //            'visible' => true,
-//            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+//            'classNamespace' => "App\\UserdirectoryBundle\\Entity",
 //            'className' => "WeekDaysList"
 //        );
 //        $formNode = $this->createFormNode($formParams);
@@ -3831,7 +3831,7 @@ class FormNodeUtil
 //            'objectType' => $objectType,
 //            'showLabel' => true,
 //            'visible' => true,
-//            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+//            'classNamespace' => "App\\UserdirectoryBundle\\Entity",
 //            'className' => "BloodTypeList"
 //        );
 //        $formNode = $this->createFormNode($formParams);
@@ -3859,7 +3859,7 @@ class FormNodeUtil
 //            'objectType' => $objectType,
 //            'showLabel' => true,
 //            'visible' => true,
-//            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+//            'classNamespace' => "App\\UserdirectoryBundle\\Entity",
 //            'className' => "BloodTypeList"
 //        );
 //        $formNode = $this->createFormNode($formParams);
@@ -3874,7 +3874,7 @@ class FormNodeUtil
 //            'objectType' => $objectType,
 //            'showLabel' => true,
 //            'visible' => true,
-//            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+//            'classNamespace' => "App\\UserdirectoryBundle\\Entity",
 //            'className' => "BloodTypeList"
 //        );
 //        $formNode = $this->createFormNode($formParams);
@@ -3893,7 +3893,7 @@ class FormNodeUtil
 //            'objectType' => $objectType,
 //            'showLabel' => true,
 //            'visible' => true,
-//            'classNamespace' => "Oleg\\CallLogBundle\\Entity",
+//            'classNamespace' => "App\\CallLogBundle\\Entity",
 //            'className' => "PathologyCallComplexPatients"
 //        );
 //        $formNode = $this->createFormNode($formParams);
@@ -4208,7 +4208,7 @@ class FormNodeUtil
 //            'objectType' => $objectTypeDropdown,
 //            'showLabel' => true,
 //            'visible' => true,
-//            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+//            'classNamespace' => "App\\UserdirectoryBundle\\Entity",
 //            'className' => "BloodTypeList"
 //        );
 //        $formNode = $this->createFormNode($formParams);
@@ -4222,7 +4222,7 @@ class FormNodeUtil
 //            'objectType' => $objectTypeDropdown,
 //            'showLabel' => true,
 //            'visible' => true,
-//            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+//            'classNamespace' => "App\\UserdirectoryBundle\\Entity",
 //            'className' => "BloodTypeList"
 //        );
 //        $formNode = $this->createFormNode($formParams);
@@ -4245,7 +4245,7 @@ class FormNodeUtil
 //            'objectType' => $objectTypeDropdown,
 //            'showLabel' => true,
 //            'visible' => true,
-//            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+//            'classNamespace' => "App\\UserdirectoryBundle\\Entity",
 //            'className' => "BloodTypeList"
 //        );
 //        $BloodtypeofunitDropdowm = $this->createFormNode($formParams);
@@ -4259,7 +4259,7 @@ class FormNodeUtil
 //            'objectType' => $objectTypeDropdown,
 //            'showLabel' => true,
 //            'visible' => true,
-//            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+//            'classNamespace' => "App\\UserdirectoryBundle\\Entity",
 //            'className' => "BloodTypeList"
 //        );
 //        $BloodtypeofunitDropdowm = $this->createFormNode($formParams);
@@ -4325,7 +4325,7 @@ class FormNodeUtil
 //            'objectType' => $objectTypeDropdown,
 //            'showLabel' => true,
 //            'visible' => true,
-//            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+//            'classNamespace' => "App\\UserdirectoryBundle\\Entity",
 //            'className' => "TransfusionReactionTypeList"
 //        );
 //        $TransfusionReactionType = $this->createFormNode($formParams);
@@ -4488,7 +4488,7 @@ class FormNodeUtil
 //            'objectType' => $objectTypeDropdown,
 //            'showLabel' => true,
 //            'visible' => true,
-//            //'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+//            //'classNamespace' => "App\\UserdirectoryBundle\\Entity",
 //            //'className' => "ClericalErrorList"
 //        );
 //        $ClericalerrorDropdowm = $this->createFormNode($formParams);
@@ -4531,7 +4531,7 @@ class FormNodeUtil
 //            'objectType' => $objectTypeDropdown,
 //            'showLabel' => true,
 //            'visible' => true,
-//            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+//            'classNamespace' => "App\\UserdirectoryBundle\\Entity",
 //            'className' => "BloodTypeList"
 //        );
 //        $BloodtypeofunitDropdowm = $this->createFormNode($formParams);
@@ -4547,7 +4547,7 @@ class FormNodeUtil
 //            'objectType' => $objectTypeDropdown,
 //            'showLabel' => true,
 //            'visible' => true,
-//            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+//            'classNamespace' => "App\\UserdirectoryBundle\\Entity",
 //            'className' => "BloodTypeList"
 //        );
 //        $BloodtypeofunitSpecimenDropdowm = $this->createFormNode($formParams);
@@ -4563,7 +4563,7 @@ class FormNodeUtil
 //            'objectType' => $objectTypeDropdown,
 //            'showLabel' => true,
 //            'visible' => true,
-//            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+//            'classNamespace' => "App\\UserdirectoryBundle\\Entity",
 //            'className' => "BloodTypeList"
 //        );
 //        $BloodtypeofunitPostTransfusionSpecimenDropdowm = $this->createFormNode($formParams);
@@ -4581,7 +4581,7 @@ class FormNodeUtil
 //            'objectType' => $objectTypeDropdown,
 //            'showLabel' => true,
 //            'visible' => true,
-//            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+//            'classNamespace' => "App\\UserdirectoryBundle\\Entity",
 //            'className' => "TransfusionAntibodyScreenResultsList"
 //        );
 //        $PretransfusionAntibodyScreenDropdowm = $this->createFormNode($formParams);
@@ -4596,7 +4596,7 @@ class FormNodeUtil
 //            'objectType' => $objectTypeDropdown,
 //            'showLabel' => true,
 //            'visible' => true,
-//            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+//            'classNamespace' => "App\\UserdirectoryBundle\\Entity",
 //            'className' => "TransfusionAntibodyScreenResultsList"
 //        );
 //        $PosttransfusionAntibodyScreenDropdowm = $this->createFormNode($formParams);
@@ -4614,7 +4614,7 @@ class FormNodeUtil
 //            'objectType' => $objectTypeDropdown,
 //            'showLabel' => true,
 //            'visible' => true,
-//            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+//            'classNamespace' => "App\\UserdirectoryBundle\\Entity",
 //            'className' => "TransfusionDATResultsList"
 //        );
 //        $TransfusionDATDropdowm = $this->createFormNode($formParams);
@@ -4629,7 +4629,7 @@ class FormNodeUtil
 //            'objectType' => $objectTypeDropdown,
 //            'showLabel' => true,
 //            'visible' => true,
-//            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+//            'classNamespace' => "App\\UserdirectoryBundle\\Entity",
 //            'className' => "TransfusionDATResultsList"
 //        );
 //        $PostTransfusionDATDropdowm = $this->createFormNode($formParams);
@@ -4644,7 +4644,7 @@ class FormNodeUtil
 //            'objectType' => $objectTypeDropdown,
 //            'showLabel' => true,
 //            'visible' => true,
-//            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+//            'classNamespace' => "App\\UserdirectoryBundle\\Entity",
 //            'className' => "TransfusionCrossmatchResultsList"
 //        );
 //        $PreTransfusionCrossmatchDropdowm = $this->createFormNode($formParams);
@@ -4659,7 +4659,7 @@ class FormNodeUtil
 //            'objectType' => $objectTypeDropdown,
 //            'showLabel' => true,
 //            'visible' => true,
-//            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+//            'classNamespace' => "App\\UserdirectoryBundle\\Entity",
 //            'className' => "TransfusionCrossmatchResultsList"
 //        );
 //        $PostTransfusionCrossmatchDropdowm = $this->createFormNode($formParams);
@@ -4677,7 +4677,7 @@ class FormNodeUtil
 //            'objectType' => $objectTypeDropdown,
 //            'showLabel' => true,
 //            'visible' => true,
-//            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+//            'classNamespace' => "App\\UserdirectoryBundle\\Entity",
 //            'className' => "TransfusionHemolysisCheckResultsList"
 //        );
 //        $PreTransfusionHemolysisCheckDropdowm = $this->createFormNode($formParams);
@@ -4695,7 +4695,7 @@ class FormNodeUtil
 //            'objectType' => $objectTypeDropdown,
 //            'showLabel' => true,
 //            'visible' => true,
-//            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+//            'classNamespace' => "App\\UserdirectoryBundle\\Entity",
 //            'className' => "TransfusionHemolysisCheckResultsList"
 //        );
 //        $PostTransfusionHemolysisCheckDropdowm = $this->createFormNode($formParams);
@@ -4775,7 +4775,7 @@ class FormNodeUtil
 //            'objectType' => $objectTypeDropdown,
 //            'showLabel' => true,
 //            'visible' => true,
-//            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+//            'classNamespace' => "App\\UserdirectoryBundle\\Entity",
 //            'className' => "ComplexPlateletSummaryAntibodiesList"
 //        );
 //        $PostTransfusionHemolysisCheckDropdowm = $this->createFormNode($formParams);
@@ -4822,7 +4822,7 @@ class FormNodeUtil
 //        //    Unit Platelet Count [Form Field - Free Text, Single Line] : USE "Link To List ID" to link to a new list titled "CCI Unit Platelet Count Default Value" with one list item with "3" in the name column, load "3" via this link into this field on load. This mechanism will allow multiple possible default values for a given field depending on rules (once rules are implemented, until then your logic should grab the first value on the list).
 //        //        CCI Unit Platelet Count Default Value [Free Text Field Default Value List]
 //        //            3 [Free Text Field Default Value]
-//        $CCIUnitPlateletCountDefaultValueList = $this->em->getRepository("OlegUserdirectoryBundle:CCIUnitPlateletCountDefaultValueList")->findOneByName("3");
+//        $CCIUnitPlateletCountDefaultValueList = $this->em->getRepository("AppUserdirectoryBundle:CCIUnitPlateletCountDefaultValueList")->findOneByName("3");
 //        $formParams = array(
 //            'parent' => $CCISection,
 //            'name' => "Unit Platelet Count",
@@ -4871,7 +4871,7 @@ class FormNodeUtil
 //            'objectType' => $objectTypeDropdown,
 //            'showLabel' => true,
 //            'visible' => true,
-//            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+//            'classNamespace' => "App\\UserdirectoryBundle\\Entity",
 //            'className' => "CCIPlateletTypeTransfusedList"
 //        );
 //        $formNode = $this->createFormNode($formParams);
@@ -4928,7 +4928,7 @@ class FormNodeUtil
 //            'objectType' => $objectTypeDropdown,
 //            'showLabel' => true,
 //            'visible' => true,
-//            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+//            'classNamespace' => "App\\UserdirectoryBundle\\Entity",
 //            'className' => "PlateletTransfusionProductReceivingList"
 //        );
 //        $formNode = $this->createFormNode($formParams);
@@ -4944,7 +4944,7 @@ class FormNodeUtil
 //            'objectType' => $objectTypeDropdown,
 //            'showLabel' => true,
 //            'visible' => true,
-//            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+//            'classNamespace' => "App\\UserdirectoryBundle\\Entity",
 //            'className' => "PlateletTransfusionProductReceivingList"
 //        );
 //        $formNode = $this->createFormNode($formParams);
@@ -4963,7 +4963,7 @@ class FormNodeUtil
 //            'objectType' => $objectTypeDropdown,
 //            'showLabel' => true,
 //            'visible' => true,
-//            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+//            'classNamespace' => "App\\UserdirectoryBundle\\Entity",
 //            'className' => "TransfusionProductStatusList"
 //        );
 //        $formNode = $this->createFormNode($formParams);
@@ -5169,7 +5169,7 @@ class FormNodeUtil
 //            'objectType' => $objectTypeDropdown,
 //            'showLabel' => true,
 //            'visible' => true,
-//            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+//            'classNamespace' => "App\\UserdirectoryBundle\\Entity",
 //            'className' => "PlateletTransfusionProductReceivingList"
 //        );
 //        $formNode = $this->createFormNode($formParams);
@@ -5194,7 +5194,7 @@ class FormNodeUtil
 //        $em = $this->em;
 //        $messageCategory = null;
 //
-//        $messageCategories = $em->getRepository('OlegOrderformBundle:MessageCategory')->findByName($messageCategoryName);
+//        $messageCategories = $em->getRepository('AppOrderformBundle:MessageCategory')->findByName($messageCategoryName);
 //        if( count($messageCategories) == 0 ) {
 //            exit("Message categories not found by name=".$messageCategoryName);
 //        }
@@ -5305,17 +5305,17 @@ class FormNodeUtil
 //        //find by name and by parent ($parent) if exists
 //        if( $parent ) {
 //            $mapper = array(
-//                'prefix' => "Oleg",
+//                'prefix' => "App",
 //                'className' => "FormNode",
 //                'bundleName' => "UserdirectoryBundle"
 //            );
 //            //$types = array('default','user-added');
-//            $node = $em->getRepository('OlegUserdirectoryBundle:FormNode')->findByChildnameAndParent($name,$parent,$mapper);
+//            $node = $em->getRepository('AppUserdirectoryBundle:FormNode')->findByChildnameAndParent($name,$parent,$mapper);
 //        } else {
-//            $node = $em->getRepository('OlegUserdirectoryBundle:FormNode')->findOneByName($name);
-//            //$nodes = $em->getRepository('OlegUserdirectoryBundle:FormNode')->findBy(array("name"=>$name,"type"=>"default"));
+//            $node = $em->getRepository('AppUserdirectoryBundle:FormNode')->findOneByName($name);
+//            //$nodes = $em->getRepository('AppUserdirectoryBundle:FormNode')->findBy(array("name"=>$name,"type"=>"default"));
 //            //$types = array('default','user-added');
-//            //$node = $em->getRepository('OlegUserdirectoryBundle:FormNode')->findNodeByName($name,$types);
+//            //$node = $em->getRepository('AppUserdirectoryBundle:FormNode')->findNodeByName($name,$types);
 //        }
 //
 //        if( $node ) {

@@ -15,13 +15,13 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Form;
+namespace App\OrderformBundle\Form;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Oleg\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
-use Oleg\UserdirectoryBundle\Form\DataTransformer\UserWrapperTransformer;
-use Oleg\UserdirectoryBundle\Form\InstitutionalWrapperType;
-use Oleg\UserdirectoryBundle\Form\InstitutionType;
+use App\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
+use App\UserdirectoryBundle\Form\DataTransformer\UserWrapperTransformer;
+use App\UserdirectoryBundle\Form\InstitutionalWrapperType;
+use App\UserdirectoryBundle\Form\InstitutionType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -35,7 +35,7 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 use Doctrine\ORM\EntityRepository;
 
-//use Oleg\OrderformBundle\Helper\FormHelper;
+//use App\OrderformBundle\Helper\FormHelper;
 
 
 //This form type is used strictly only for scan order: message (message) form has scan order
@@ -191,7 +191,7 @@ class MessageType extends AbstractType
 
         if( array_key_exists('message.provider', $this->params) &&  $this->params['message.provider'] == true ) {
             $builder->add('provider', EntityType::class, array(
-                'class' => 'OlegUserdirectoryBundle:User',
+                'class' => 'AppUserdirectoryBundle:User',
                 'label' => 'Submitter:',
                 'required' => false,
                 'attr' => array('class' => 'combobox combobox-width'),
@@ -213,7 +213,7 @@ class MessageType extends AbstractType
 
 
 //        $builder->add('proxyuser', EntityType::class, array(
-//            'class' => 'OlegUserdirectoryBundle:User',
+//            'class' => 'AppUserdirectoryBundle:User',
 //            'label'=>'Ordering Provider:',
 //            'required' => false,
 //            //'multiple' => true,
@@ -243,7 +243,7 @@ class MessageType extends AbstractType
 //        );
 //        $builder->add(
 //            $builder->create('proxyuser', EntityType::class, array(
-//                'class' => 'OlegUserdirectoryBundle:UserWrapper',
+//                'class' => 'AppUserdirectoryBundle:UserWrapper',
 //                //'choices' => array(1,2,3),
 //                'multiple' => true,
 //                'expanded' => true,
@@ -259,7 +259,7 @@ class MessageType extends AbstractType
             //$builder->add( 'proxyuser', null);
 
             $builder->add( 'proxyuser', EntityType::class, array(
-                'class' => 'OlegUserdirectoryBundle:UserWrapper',
+                'class' => 'AppUserdirectoryBundle:UserWrapper',
                 //'choice_label' => 'getEntity',
                 'label' => $this->params['message.proxyuser.label'],
                 'required' => false,
@@ -281,7 +281,7 @@ class MessageType extends AbstractType
 
 
         $builder->add( 'equipment', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:Equipment',
+            'class' => 'AppUserdirectoryBundle:Equipment',
             'choice_label' => 'name',
             'label' => 'Scanner:',
             'required'=> true,
@@ -354,7 +354,7 @@ class MessageType extends AbstractType
             'required' => true,
             'multiple' => false,
             //'empty_value' => false,
-            'class' => 'OlegUserdirectoryBundle:Institution',
+            'class' => 'AppUserdirectoryBundle:Institution',
             'choices' => $institutions,
             'attr' => array('class' => 'combobox combobox-width combobox-institution')
         ));
@@ -380,19 +380,19 @@ class MessageType extends AbstractType
         //Exception for scan order form, to avoid complications of changing html twig view
         if( $this->hasSpecificOrders($this->entity,'Scan Order') ) {
             $builder->add('scanorder', ScanOrderType::class, array(
-                'data_class' => 'Oleg\OrderformBundle\Entity\ScanOrder',
+                'data_class' => 'App\OrderformBundle\Entity\ScanOrder',
                 'form_custom_value' => $this->params,
                 'label' => false
             ));
         }
 
 //        $builder->add('laborder', new LabOrderType($this->params), array(
-//            'data_class' => 'Oleg\OrderformBundle\Entity\LabOrder',
+//            'data_class' => 'App\OrderformBundle\Entity\LabOrder',
 //            'label' => false
 //        ));
 //
 //        $builder->add('slideReturnRequest', new SlideReturnRequestType($this->params), array(
-//            'data_class' => 'Oleg\OrderformBundle\Entity\SlideReturnRequest',
+//            'data_class' => 'App\OrderformBundle\Entity\SlideReturnRequest',
 //            'label' => false
 //        ));
 
@@ -403,7 +403,7 @@ class MessageType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\Message',
+            'data_class' => 'App\OrderformBundle\Entity\Message',
             'form_custom_value' => null,
             'form_custom_value_entity' => null
         ));

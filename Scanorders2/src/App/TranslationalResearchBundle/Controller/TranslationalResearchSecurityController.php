@@ -15,10 +15,10 @@
  *  limitations under the License.
  */
 
-namespace Oleg\TranslationalResearchBundle\Controller;
+namespace App\TranslationalResearchBundle\Controller;
 
 
-use Oleg\UserdirectoryBundle\Controller\SecurityController;
+use App\UserdirectoryBundle\Controller\SecurityController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\SecurityContext;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -29,7 +29,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\PhpBridgeSessionStorage;
 
-use Oleg\UserdirectoryBundle\Util\UserUtil;
+use App\UserdirectoryBundle\Util\UserUtil;
 
 class TranslationalResearchSecurityController extends SecurityController
 {
@@ -61,7 +61,7 @@ class TranslationalResearchSecurityController extends SecurityController
     /**
      * @Route("/no-permission", name="translationalresearch-nopermission")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:Security:nopermission.html.twig")
+     * @Template("AppUserdirectoryBundle:Security:nopermission.html.twig")
      */
     public function actionNoPermission( Request $request )
     {

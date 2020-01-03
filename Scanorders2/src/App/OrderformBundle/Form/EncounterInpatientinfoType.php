@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Form;
+namespace App\OrderformBundle\Form;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -40,7 +40,7 @@ class EncounterInpatientinfoType extends AbstractType
         $this->formConstructor($options['form_custom_value']);
 
         $builder->add('source', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:SourceSystemList',
+            'class' => 'AppUserdirectoryBundle:SourceSystemList',
             'label' => 'Inpatient Info Source System:',
             'required' => false,
             'data'  => null,
@@ -96,7 +96,7 @@ class EncounterInpatientinfoType extends AbstractType
 
 
         $builder->add('others', ArrayFieldType::class, array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\EncounterInpatientinfo',
+            'data_class' => 'App\OrderformBundle\Entity\EncounterInpatientinfo',
             'form_custom_value' => $this->params,
             'label' => false,
 			'attr' => array('style'=>'display:none;')
@@ -108,7 +108,7 @@ class EncounterInpatientinfoType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\EncounterInpatientinfo',
+            'data_class' => 'App\OrderformBundle\Entity\EncounterInpatientinfo',
             'form_custom_value' => null
         ));
     }

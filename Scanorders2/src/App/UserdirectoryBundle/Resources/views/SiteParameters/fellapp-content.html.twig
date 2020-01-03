@@ -124,7 +124,7 @@
                     </tr>
 
                     <tr>
-                        <td>Full Path to p12 key or service account credentials.json file for accessing the Google Drive API (E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\src\Oleg\FellAppBundle\Util\FellowshipApplication-f1d9f98353e5.p12)</td>
+                        <td>Full Path to p12 key or service account credentials.json file for accessing the Google Drive API (E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\src\App\FellAppBundle\Util\FellowshipApplication-f1d9f98353e5.p12)</td>
                         <td class="rowlink-skip">{{ entity.p12KeyPathFellApp }}</td>
                         <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'p12KeyPathFellApp'}) }}">Edit</a></td>
                     </tr>
@@ -253,7 +253,7 @@
 
 
             <p>
-                {{ render(controller('OlegFellAppBundle:FellAppSiteParameters:fellappSiteParameterShow')) }}
+                {{ render(controller('AppFellAppBundle:FellAppSiteParameters:fellappSiteParameterShow')) }}
             </p>
 
         </div>

@@ -23,9 +23,9 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Oleg\TranslationalResearchBundle\Security\Authentication;
+namespace App\TranslationalResearchBundle\Security\Authentication;
 
-use Oleg\UserdirectoryBundle\Security\Authentication\LoginSuccessHandler;
+use App\UserdirectoryBundle\Security\Authentication\LoginSuccessHandler;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;

@@ -23,14 +23,14 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Oleg\OrderformBundle\Entity;
+namespace App\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Oleg\UserdirectoryBundle\Entity\GeoLocation;
-use Oleg\UserdirectoryBundle\Entity\Location;
-use Oleg\UserdirectoryBundle\Entity\Spot;
-use Oleg\UserdirectoryBundle\Entity\Tracker;
+use App\UserdirectoryBundle\Entity\GeoLocation;
+use App\UserdirectoryBundle\Entity\Location;
+use App\UserdirectoryBundle\Entity\Spot;
+use App\UserdirectoryBundle\Entity\Tracker;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
 
@@ -61,37 +61,37 @@ abstract class ObjectAbstract
     protected $creationdate;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(name="provider", referencedColumnName="id")
      */
     protected $provider;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\SourceSystemList")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\SourceSystemList")
      * @ORM\JoinColumn(name="source_id", referencedColumnName="id", nullable=true)
      */
     protected $source;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Institution")
      * @ORM\JoinColumn(name="institution_id", referencedColumnName="id")
      */
     protected $institution;
 
 //    /**
 //     * DocumentContainer can have many Documents; each Document has document type (DocumentTypeList)
-//     * @ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\DocumentContainer", cascade={"persist","remove"})
+//     * @ORM\OneToOne(targetEntity="App\UserdirectoryBundle\Entity\DocumentContainer", cascade={"persist","remove"})
 //     **/
 //    protected $documentContainer;
 
     /**
      * Attachment can have many DocumentContainers; each DocumentContainers can have many Documents; each DocumentContainers has document type (DocumentTypeList)
-     * @ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\AttachmentContainer", cascade={"persist","remove"})
+     * @ORM\OneToOne(targetEntity="App\UserdirectoryBundle\Entity\AttachmentContainer", cascade={"persist","remove"})
      **/
     protected $attachmentContainer;
 
     /**
-     * @ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Tracker", cascade={"persist","remove"})
+     * @ORM\OneToOne(targetEntity="App\UserdirectoryBundle\Entity\Tracker", cascade={"persist","remove"})
      **/
     protected $tracker;
 
@@ -211,9 +211,9 @@ abstract class ObjectAbstract
     /**
      * Add message
      *
-     * @param \Oleg\OrderformBundle\Entity\Message $message
+     * @param \App\OrderformBundle\Entity\Message $message
      */
-    public function addMessage(\Oleg\OrderformBundle\Entity\Message $message=null)
+    public function addMessage(\App\OrderformBundle\Entity\Message $message=null)
     {
         //echo "ObjectAbstract add message=".$message."<br>";
         if( !$this->message->contains($message) ) {
@@ -224,9 +224,9 @@ abstract class ObjectAbstract
     /**
      * Remove message
      *
-     * @param \Oleg\OrderformBundle\Entity\Message $message
+     * @param \App\OrderformBundle\Entity\Message $message
      */
-    public function removeMessage(\Oleg\OrderformBundle\Entity\Message $message)
+    public function removeMessage(\App\OrderformBundle\Entity\Message $message)
     {
         $this->message->removeElement($message);
     }
@@ -954,13 +954,13 @@ abstract class ObjectAbstract
             $geoLocation->setCounty('New York County');
 
             if( $em ) {
-                $city = $em->getRepository('OlegUserdirectoryBundle:CityList')->findOneByName('New York');
+                $city = $em->getRepository('AppUserdirectoryBundle:CityList')->findOneByName('New York');
                 $geoLocation->setCity($city);
 
-                $state = $em->getRepository('OlegUserdirectoryBundle:States')->findOneByName('New York');
+                $state = $em->getRepository('AppUserdirectoryBundle:States')->findOneByName('New York');
                 $geoLocation->setState($state);
 
-                $country = $em->getRepository('OlegUserdirectoryBundle:Countries')->findOneByName('United States');
+                $country = $em->getRepository('AppUserdirectoryBundle:Countries')->findOneByName('United States');
                 $geoLocation->setCountry($country);
             }
         }

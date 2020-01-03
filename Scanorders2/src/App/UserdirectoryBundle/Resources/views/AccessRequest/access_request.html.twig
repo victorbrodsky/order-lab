@@ -21,9 +21,9 @@
 <head>
 
     {% stylesheets
-        'bundles/oleguserdirectory/bootstrap/css/*' filter='cssrewrite'
-        'bundles/oleguserdirectory/select2/select2.css' filter='cssrewrite'
-        'bundles/oleguserdirectory/form/css/form.css' filter='cssrewrite'
+        'bundles/appuserdirectory/bootstrap/css/*' filter='cssrewrite'
+        'bundles/appuserdirectory/select2/select2.css' filter='cssrewrite'
+        'bundles/appuserdirectory/form/css/form.css' filter='cssrewrite'
     %}
         <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
     {% endstylesheets %}
@@ -40,13 +40,13 @@
 
 <body>
 
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
     <div class="container">
 
         <div class="text-center">
 
-            {% include 'OlegUserdirectoryBundle:Default:navbar.html.twig' with {'minimum': true} %}
+            {% include 'AppUserdirectoryBundle:Default:navbar.html.twig' with {'minimum': true} %}
 
             <h2 class="alert alert-info well-lg safary-fix" align="center">{{ sitenamefull }} Access Request</h2>
 
@@ -137,7 +137,7 @@
             {#</form>#}
             {{ form_end(form) }}
 
-            {% include 'OlegUserdirectoryBundle::Default/footer.html.twig' %}
+            {% include 'AppUserdirectoryBundle::Default/footer.html.twig' %}
 
         </div> <!-- /text-center -->
 
@@ -145,15 +145,15 @@
 
 
     {% javascripts
-        '@OlegUserdirectoryBundle/Resources/public/form/js/errorwatch.js'
-        '@OlegUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'
-        '@OlegUserdirectoryBundle/Resources/public/bootstrap/js/*'
-        '@OlegUserdirectoryBundle/Resources/public/select2/select2.js'
-        '@OlegUserdirectoryBundle/Resources/public/inputmask/jquery.inputmask.bundle.js'
+        '@AppUserdirectoryBundle/Resources/public/form/js/errorwatch.js'
+        '@AppUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'
+        '@AppUserdirectoryBundle/Resources/public/bootstrap/js/*'
+        '@AppUserdirectoryBundle/Resources/public/select2/select2.js'
+        '@AppUserdirectoryBundle/Resources/public/inputmask/jquery.inputmask.bundle.js'
 
-        '@OlegUserdirectoryBundle/Resources/public/form/js/user-common.js'
+        '@AppUserdirectoryBundle/Resources/public/form/js/user-common.js'
 
-        '@OlegOrderformBundle/Resources/public/form/js/masking.js'
+        '@AppOrderformBundle/Resources/public/form/js/masking.js'
     %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}

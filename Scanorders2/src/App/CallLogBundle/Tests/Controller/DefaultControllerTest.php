@@ -1,6 +1,6 @@
 <?php
 
-namespace Oleg\CallLogBundle\Tests\Controller;
+namespace App\CallLogBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 

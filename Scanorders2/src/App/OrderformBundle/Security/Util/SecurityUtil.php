@@ -23,17 +23,17 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Oleg\OrderformBundle\Security\Util;
+namespace App\OrderformBundle\Security\Util;
 
 //All user roles are checked by security context, not $user->hasRole() function. hasRole function will not work for global roles set by security.uml
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Oleg\UserdirectoryBundle\Entity\User;
+use App\UserdirectoryBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
-use Oleg\UserdirectoryBundle\Security\Util\UserSecurityUtil;
-use Oleg\UserdirectoryBundle\Entity\PerSiteSettings;
+use App\UserdirectoryBundle\Security\Util\UserSecurityUtil;
+use App\UserdirectoryBundle\Entity\PerSiteSettings;
 
 
 // Note for institution permissions:
@@ -44,7 +44,7 @@ use Oleg\UserdirectoryBundle\Entity\PerSiteSettings;
 //     1) User's PermittedInstitutions
 //        $permittedInstitutions = $securityUtil->getUserPermittedInstitutions($user);
 //     2) Collaboration check
-//        $collaborations = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findCollaborationsByNode($permittedInstitution);
+//        $collaborations = $this->em->getRepository('AppUserdirectoryBundle:Institution')->findCollaborationsByNode($permittedInstitution);
 //        foreach( $collaborations as $collaboration ) {
 //          foreach( $collaboration->getInstitutions() as $collaborationInstitution ) {
 //          }
@@ -56,10 +56,10 @@ use Oleg\UserdirectoryBundle\Entity\PerSiteSettings;
 //    1) check if the user belongs to the same institution
 //        $permittedInstitutions = $this->getUserPermittedInstitutions($user);
 //    2) Check for collaboration
-//        $collaborations = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findCollaborationsByNode($permittedInstitution);
+//        $collaborations = $this->em->getRepository('AppUserdirectoryBundle:Institution')->findCollaborationsByNode($permittedInstitution);
 //        foreach( $collaborations as $collaboration ) {
 //            foreach( $collaboration->getInstitutions() as $collaborationInstitution ) {
-//                if(getRepository('OlegUserdirectoryBundle:Institution')->isNodeUnderParentnode($collaborationInstitution,$entity->getInstitution()) ) {
+//                if(getRepository('AppUserdirectoryBundle:Institution')->isNodeUnderParentnode($collaborationInstitution,$entity->getInstitution()) ) {
 //                    $hasCollaborationInst = true;
 //                    break;
 //                }
@@ -128,7 +128,7 @@ class SecurityUtil extends UserSecurityUtil {
         $permittedInstitutions = $this->getUserPermittedInstitutions($user);
 
         //a) check permitted institutions
-        if( $this->em->getRepository('OlegUserdirectoryBundle:Institution')->isNodeUnderParentnodes($permittedInstitutions,$entity->getInstitution()) ) {
+        if( $this->em->getRepository('AppUserdirectoryBundle:Institution')->isNodeUnderParentnodes($permittedInstitutions,$entity->getInstitution()) ) {
             return true;
         }
 
@@ -141,7 +141,7 @@ class SecurityUtil extends UserSecurityUtil {
             //echo "collaborationInstitution=".$collaborationInstitution."<br>";
         //}
 
-        if( $this->em->getRepository('OlegUserdirectoryBundle:Institution')->isNodeUnderParentnodes($collaborationInstitutions,$entity->getInstitution()) ) {
+        if( $this->em->getRepository('AppUserdirectoryBundle:Institution')->isNodeUnderParentnodes($collaborationInstitutions,$entity->getInstitution()) ) {
             return true;
         }
         //exit("no collaboration institutions");
@@ -214,7 +214,7 @@ class SecurityUtil extends UserSecurityUtil {
 
         //service chief can perform any actions for all orders under his/her service scope
         foreach( $userChiefServices as $userChiefService ) {
-            if( $this->em->getRepository('OlegUserdirectoryBundle:Institution')->isNodeUnderParentnode($userChiefService, $orderInstitution) ) {
+            if( $this->em->getRepository('AppUserdirectoryBundle:Institution')->isNodeUnderParentnode($userChiefService, $orderInstitution) ) {
                 return true;
             }
         }
@@ -250,7 +250,7 @@ class SecurityUtil extends UserSecurityUtil {
                 //show action is allowed to all users which passed hasUserPermission and reached this point, so disable the code below.
 //                $userServices = $userSiteSettings->getScanOrderInstitutionScope();
 //                foreach( $userServices as $userService ) {
-//                    if( $this->em->getRepository('OlegUserdirectoryBundle:Institution')->isNodeUnderParentnode($userService, $orderInstitution) ) {
+//                    if( $this->em->getRepository('AppUserdirectoryBundle:Institution')->isNodeUnderParentnode($userService, $orderInstitution) ) {
 //                        return true;
 //                    }
 //                }
@@ -327,7 +327,7 @@ class SecurityUtil extends UserSecurityUtil {
         } else {
             return null;
         }
-        //$entity = $this->em->getRepository('OlegOrderformBundle:PerSiteSettings')->findOneByUser($user);
+        //$entity = $this->em->getRepository('AppOrderformBundle:PerSiteSettings')->findOneByUser($user);
         //return $entity;
     }
 
@@ -341,7 +341,7 @@ class SecurityUtil extends UserSecurityUtil {
 //            $department = $userSiteSettings->getDefaultDepartment();
 //            if( !$department ) {
 //                //set default department to Pathology and Laboratory Medicine
-//                $department = $this->em->getRepository('OlegUserdirectoryBundle:Department')->findOneByName('Pathology and Laboratory Medicine');
+//                $department = $this->em->getRepository('AppUserdirectoryBundle:Department')->findOneByName('Pathology and Laboratory Medicine');
 //
 //            }
 //            if( $message->getInstitution() == null || ($message->getInstitution() && $department->getParent()->getId() != $message->getInstitution()->getId()) ) {
@@ -351,7 +351,7 @@ class SecurityUtil extends UserSecurityUtil {
 //            $division = $userSiteSettings->getDefaultDivision();
 //            if( !$division ) {
 //                //set default division to Anatomic Pathology
-//                $division = $this->em->getRepository('OlegUserdirectoryBundle:Division')->findOneByName('Anatomic Pathology');
+//                $division = $this->em->getRepository('AppUserdirectoryBundle:Division')->findOneByName('Anatomic Pathology');
 //            }
 //            if( $department == null || ($department && $division && $division->getParent()->getId() != $department->getId()) ) {
 //                $division = null;
@@ -369,7 +369,7 @@ class SecurityUtil extends UserSecurityUtil {
 //    }
 
     public function addInstitutionalPhiScopeWCMC($user,$creator) {
-        $inst = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation('WCM');
+        $inst = $this->em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation('WCM');
         $persitesettings = $this->getUserPerSiteSettings($user);
         if( !$persitesettings ) {
             //set institution to per site settings

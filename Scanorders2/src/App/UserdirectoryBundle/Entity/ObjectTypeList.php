@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Entity;
+namespace App\UserdirectoryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -43,7 +43,7 @@ class ObjectTypeList extends ListAbstract
     // a specific object type implementation (i.e. ObjectTypeFormText), where the values will be stored.
     //Received Form Field Value Entity.
     /**
-     * i.e. "Oleg\OlegUserdirectoryBundle\Entity"
+     * i.e. "App\AppUserdirectoryBundle\Entity"
      * @ORM\Column(type="string", nullable=true)
      */
     private $receivedValueEntityNamespace;
@@ -136,9 +136,9 @@ class ObjectTypeList extends ListAbstract
 //     */
 //    public function setEntityNamespace($entityNamespace)
 //    {
-//        //remove "Proxies\__CG__\" if $entityNamespace="Proxies\__CG__\Oleg\UserdirectoryBundle\Entity"
+//        //remove "Proxies\__CG__\" if $entityNamespace="Proxies\__CG__\App\UserdirectoryBundle\Entity"
 //        $proxyStr = "Proxies\__CG__\\";
-//        //$proxyStr = "Oleg\UserdirectoryBundle\\";
+//        //$proxyStr = "App\UserdirectoryBundle\\";
 //        //echo "proxyStr=".$proxyStr."<br>";
 //        if( strpos($entityNamespace, $proxyStr) !== false ) {
 //            //echo "remove=".$proxyStr."<br>";

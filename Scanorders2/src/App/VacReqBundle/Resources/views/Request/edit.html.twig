@@ -14,13 +14,13 @@
     limitations under the License.
 #}
 
-{% extends "OlegVacReqBundle::Default/base.html.twig" %}
+{% extends "AppVacReqBundle::Default/base.html.twig" %}
 
-{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-{% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
-{% import "OlegUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
-{% import "OlegVacReqBundle::Default/vacreqmacros.html.twig" as vacreqmacros %}
-{% import "OlegUserdirectoryBundle::Default/userformmacros.html.twig" as userform %}
+{% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+{% import "AppUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
+{% import "AppVacReqBundle::Default/vacreqmacros.html.twig" as vacreqmacros %}
+{% import "AppUserdirectoryBundle::Default/userformmacros.html.twig" as userform %}
 
 
 {% if "show" in cycle %}
@@ -957,7 +957,7 @@
 {#Snapshot css#}
 {% block additionalcss %}
     {% stylesheets
-        'bundles/oleguserdirectory/form/css/steve-snapshot.css' filter='cssrewrite'
+        'bundles/appuserdirectory/form/css/steve-snapshot.css' filter='cssrewrite'
     %}
     <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}

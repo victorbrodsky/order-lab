@@ -15,13 +15,13 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Repository;
+namespace App\UserdirectoryBundle\Repository;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
-use Oleg\UserdirectoryBundle\Entity\Institution;
-use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
+use App\UserdirectoryBundle\Entity\Institution;
+use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 
 class TreeRepository extends NestedTreeRepository {
 
@@ -144,7 +144,7 @@ class TreeRepository extends NestedTreeRepository {
 //
 //        $res = false;
 //
-//        $repository = $this->_em->getRepository('OlegUserdirectoryBundle:Collaboration');
+//        $repository = $this->_em->getRepository('AppUserdirectoryBundle:Collaboration');
 //        $dql = $repository->createQueryBuilder("collaboration");
 //        $dql->select("collaboration");
 //        $dql->leftJoin("collaboration.institutions","institutions");
@@ -230,7 +230,7 @@ class TreeRepository extends NestedTreeRepository {
             return array();
         }
 
-        $repository = $this->_em->getRepository('OlegUserdirectoryBundle:Institution');
+        $repository = $this->_em->getRepository('AppUserdirectoryBundle:Institution');
         $dql = $repository->createQueryBuilder("institution");
         $dql->select("institution");
         $dql->leftJoin("institution.collaborationInstitutions","collaborationInstitutions");
@@ -398,7 +398,7 @@ class TreeRepository extends NestedTreeRepository {
 
         if( !$mapper ) {
             $mapper = array(
-                'prefix' => "Oleg",
+                'prefix' => "App",
                 'className' => "Institution",
                 'bundleName' => "UserdirectoryBundle"
             );
@@ -502,7 +502,7 @@ class TreeRepository extends NestedTreeRepository {
 
         if( !$mapper ) {
             $mapper = array(
-                'prefix' => "Oleg",
+                'prefix' => "App",
                 'className' => "Institution",
                 'bundleName' => "UserdirectoryBundle"
             );
@@ -564,7 +564,7 @@ class TreeRepository extends NestedTreeRepository {
         //print_r($searchArr);
         //echo "<br>";
 
-        $foundCategory = $this->_em->getRepository('OlegUserdirectoryBundle:'.$className)->findOneBy($searchArr);
+        $foundCategory = $this->_em->getRepository('AppUserdirectoryBundle:'.$className)->findOneBy($searchArr);
 
         return $foundCategory;
     }
@@ -724,7 +724,7 @@ class TreeRepository extends NestedTreeRepository {
 
         if( !$mapper ) {
             $mapper = array(
-                'prefix' => "Oleg",
+                'prefix' => "App",
                 'className' => "Institution",
                 'bundleName' => "UserdirectoryBundle",
                 'organizationalGroupType' => "OrganizationalGroupType"
@@ -760,7 +760,7 @@ class TreeRepository extends NestedTreeRepository {
 
         if( !$mapper ) {
             $mapper = array(
-                'prefix' => "Oleg",
+                'prefix' => "App",
                 'className' => "Institution",
                 'bundleName' => "UserdirectoryBundle",
                 'organizationalGroupType' => "OrganizationalGroupType"

@@ -14,24 +14,24 @@
     limitations under the License.
 #}
 
-{% extends "OlegUserdirectoryBundle::Default/base.html.twig" %}
+{% extends "AppUserdirectoryBundle::Default/base.html.twig" %}
 
 {% block header %}
 
     {% if sitename == 'fellapp' %}
-        {% include 'OlegFellAppBundle:Default:navbar.html.twig' %}
+        {% include 'AppFellAppBundle:Default:navbar.html.twig' %}
     {% endif %}
 
     {% if sitename == 'scan' %}
-        {% include 'OlegOrderformBundle:Default:navbar.html.twig' %}
+        {% include 'AppOrderformBundle:Default:navbar.html.twig' %}
     {% endif %}
 
     {% if sitename == 'employees' %}
-        {% include 'OlegUserdirectoryBundle:Default:navbar.html.twig' %}
+        {% include 'AppUserdirectoryBundle:Default:navbar.html.twig' %}
     {% endif %}
 
     {% if sitename == 'deidentifier' %}
-        {% include 'OlegDeidentifierBundle:Default:navbar.html.twig' %}
+        {% include 'AppDeidentifierBundle:Default:navbar.html.twig' %}
         {#{% if accessionTypeStr is not defined %}#}
             {#{% set accessionTypeStr = null %}#}
         {#{% endif %}#}
@@ -41,29 +41,29 @@
         {#{% if accessionNumber is not defined %}#}
             {#{% set accessionNumber = null %}#}
         {#{% endif %}#}
-        {#{{ render(controller('OlegDeidentifierBundle:Default:deidentifierNavbar', {'accessionTypeStr': accessionTypeStr, 'accessionTypeId': accessionTypeId, 'accessionNumber': accessionNumber})) }}#}
+        {#{{ render(controller('AppDeidentifierBundle:Default:deidentifierNavbar', {'accessionTypeStr': accessionTypeStr, 'accessionTypeId': accessionTypeId, 'accessionNumber': accessionNumber})) }}#}
     {% endif %}
 
     {% if sitename == 'vacreq' %}
-        {% include 'OlegVacReqBundle:Default:navbar.html.twig' %}
+        {% include 'AppVacReqBundle:Default:navbar.html.twig' %}
     {% endif %}
 
     {% if sitename == 'calllog' %}
-        {% include 'OlegCallLogBundle:Default:navbar.html.twig' %}
+        {% include 'AppCallLogBundle:Default:navbar.html.twig' %}
     {% endif %}
 
     {% if sitename == 'translationalresearch' %}
-        {% include 'OlegTranslationalResearchBundle:Default:navbar.html.twig' %}
+        {% include 'AppTranslationalResearchBundle:Default:navbar.html.twig' %}
     {% endif %}
 
 {% endblock %}
 
-{% import "OlegUserdirectoryBundle::Default/userformmacros.html.twig" as userform %}
+{% import "AppUserdirectoryBundle::Default/userformmacros.html.twig" as userform %}
 
 {#Snapshot css#}
 {% block additionalcss %}
     {% stylesheets
-        'bundles/oleguserdirectory/form/css/steve-snapshot.css' filter='cssrewrite'
+        'bundles/appuserdirectory/form/css/steve-snapshot.css' filter='cssrewrite'
     %}
         <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}       
@@ -101,7 +101,7 @@
     <br>
 
     {# use hinclude as in http://symfony.com/doc/current/book/templating.html #}
-    {#{{ render_hinclude( url('employees_showuser_only',{'id':user_id}), {'default': 'OlegUserdirectoryBundle:Default:default-hinclude-content.html.twig'} ) }}#}
+    {#{{ render_hinclude( url('employees_showuser_only',{'id':user_id}), {'default': 'AppUserdirectoryBundle:Default:default-hinclude-content.html.twig'} ) }}#}
 
     <button id="btnShowUserOnly" class="btn btn-primary" name="btnShowUserOnly" type="button" onclick="showUserDetailsAjax({{ user_id }})">View Details</button>
 
@@ -122,9 +122,9 @@
     
 {% block additionaljs %}
 
-{#        '@OlegUserdirectoryBundle/Resources/public/webcomponents/webcomponents.js'#}
+{#        '@AppUserdirectoryBundle/Resources/public/webcomponents/webcomponents.js'#}
     {% javascripts
-        '@OlegUserdirectoryBundle/Resources/public/hinclude/hinclude.js'      
+        '@AppUserdirectoryBundle/Resources/public/hinclude/hinclude.js'
     %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
@@ -282,7 +282,7 @@
 {#testing custom hydration#}
 {% macro snapshotcustomh( user, sitename, cycle, getOriginalname, getAbsoluteUploadFullPath, getUsernameOptimal, getHeadInfo ) %}
 
-    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
     <div align="center">
 
@@ -307,7 +307,7 @@
                         />
                         </a>
                     {% else %}
-                        {% set avatarImage = asset('bundles/oleguserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
+                        {% set avatarImage = asset('bundles/appuserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
                         <img src="{{ avatarImage }}" alt="Avatar" style="max-width:100%; max-height:100%;">
                     {% endif %}
                     {#<img src="{{ avatarImage }}" alt="Avatar">#}

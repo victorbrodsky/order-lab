@@ -16,10 +16,10 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Form;
+namespace App\UserdirectoryBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
-use Oleg\UserdirectoryBundle\Form\PerSiteSettingsType;
+use App\UserdirectoryBundle\Form\PerSiteSettingsType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -57,7 +57,7 @@ class AuthorizitaionUserType extends AbstractType
             'form_custom_value_user' => null,
             'form_custom_value_roleAdmin' => true,
             'form_custom_value' => $this->params,
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\PerSiteSettings',
+            'data_class' => 'App\UserdirectoryBundle\Entity\PerSiteSettings',
             'label' => false,
             'required' => false,
         ));
@@ -78,7 +78,7 @@ class AuthorizitaionUserType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\User',
+            'data_class' => 'App\UserdirectoryBundle\Entity\User',
             'form_custom_value' => null,
             'csrf_protection' => false,
         ));

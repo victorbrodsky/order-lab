@@ -23,7 +23,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Oleg\OrderformBundle\Entity;
+namespace App\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
@@ -43,7 +43,7 @@ abstract class ArrayFieldAbstract {
     protected $id;
 
      /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(name="provider", referencedColumnName="id")
      */
     protected $provider;
@@ -56,7 +56,7 @@ abstract class ArrayFieldAbstract {
 
     //default: 'scanorder'. Other values (old): "import_from_Epic", "import_from_LIS"
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\SourceSystemList")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\SourceSystemList")
      * @ORM\JoinColumn(name="source_id", referencedColumnName="id", nullable=true)
      */
     protected $source;
@@ -80,13 +80,13 @@ abstract class ArrayFieldAbstract {
     protected $updateDate;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\SourceSystemList")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\SourceSystemList")
      * @ORM\JoinColumn(name="updateSource", referencedColumnName="id", nullable=true)
      */
     protected $updateSource;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(name="updateAuthor", referencedColumnName="id", nullable=true)
      */
     protected $updateAuthor;
@@ -208,7 +208,7 @@ abstract class ArrayFieldAbstract {
     }
 
     /**
-     * @param \Oleg\OrderformBundle\Entity\DataQualityEventLog $dqeventlog
+     * @param \App\OrderformBundle\Entity\DataQualityEventLog $dqeventlog
      */
     public function setDqeventlog(DataQualityEventLog $dqeventlog)
     {

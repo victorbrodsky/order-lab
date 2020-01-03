@@ -364,9 +364,9 @@ function getElementCounter( element ) {
     //console.log("ok id="+id);
 
     //  0           1           2       3          4
-    //oleg_userdirectorybundle_user_publicComments_0
-    //oleg_userdirectorybundle_user_credentials_identifiers_1_link
-    //oleg_userdirectorybundle_roles_permissions_1_id
+    //app_userdirectorybundle_user_publicComments_0
+    //app_userdirectorybundle_user_credentials_identifiers_1_link
+    //app_userdirectorybundle_roles_permissions_1_id
 
     var idArr = id.split("_");
 

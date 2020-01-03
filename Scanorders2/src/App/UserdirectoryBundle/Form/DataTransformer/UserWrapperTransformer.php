@@ -23,9 +23,9 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Oleg\UserdirectoryBundle\Form\DataTransformer;
+namespace App\UserdirectoryBundle\Form\DataTransformer;
 
-use Oleg\UserdirectoryBundle\Entity\UserWrapper;
+use App\UserdirectoryBundle\Entity\UserWrapper;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -194,7 +194,7 @@ class UserWrapperTransformer implements DataTransformerInterface
             //echo "principal=".$username." => numeric => most probably it is a UserWrapper id<br>";
 
             if( $usernameType == 'UserWrapper' ) {
-                $userWrapper = $this->em->getRepository('OlegUserdirectoryBundle:UserWrapper')->find($username);
+                $userWrapper = $this->em->getRepository('AppUserdirectoryBundle:UserWrapper')->find($username);
             } else {
                 $userWrapper = null;
             }
@@ -237,10 +237,10 @@ class UserWrapperTransformer implements DataTransformerInterface
         $userWrapper = null;
 
         //find user by id
-        $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->find($userid);
+        $user = $this->em->getRepository('AppUserdirectoryBundle:User')->find($userid);
         //echo "found user by id=".$userid."<br>";
 
-        $userWrapper = $this->em->getRepository('OlegUserdirectoryBundle:UserWrapper')->findSimilarEntity($user,null);
+        $userWrapper = $this->em->getRepository('AppUserdirectoryBundle:UserWrapper')->findSimilarEntity($user,null);
         //echo "found userWrapper by wrapper id=".$userWrapper."<br>";
 
         if( $userWrapper ) {
@@ -273,7 +273,7 @@ class UserWrapperTransformer implements DataTransformerInterface
         $user = $userSecUtil->getUserByUserstr( $userStr );
         //echo "found user=".$user."<br>";
 
-        $userWrapper = $this->em->getRepository('OlegUserdirectoryBundle:UserWrapper')->findSimilarEntity($user,$userStr);
+        $userWrapper = $this->em->getRepository('AppUserdirectoryBundle:UserWrapper')->findSimilarEntity($user,$userStr);
         //echo "found userWrapper=".$userWrapper."<br>";
 
         //exit('1');

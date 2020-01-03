@@ -1,6 +1,6 @@
 <?php
 
-namespace Oleg\TranslationalResearchBundle\Form;
+namespace App\TranslationalResearchBundle\Form;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -40,7 +40,7 @@ class SubstituteUserType extends AbstractType
 //        }
 
         $builder->add( 'projectSpecialty', EntityType::class, array(
-            'class' => 'OlegTranslationalResearchBundle:SpecialtyList',
+            'class' => 'AppTranslationalResearchBundle:SpecialtyList',
             'choice_label' => 'name',
             'label'=>'Project Specialty:',
             'required'=> false,
@@ -58,7 +58,7 @@ class SubstituteUserType extends AbstractType
         ));
 
         $builder->add( 'substituteUser', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:User',
+            'class' => 'AppUserdirectoryBundle:User',
             'label'=> "The user name to be substituted:",
             'required'=> false,
             'multiple' => false,
@@ -71,7 +71,7 @@ class SubstituteUserType extends AbstractType
         $otherUserParam = "'hematopathology_ap-cp'";
         $addUserOnFly = ' (<a href="javascript:void(0)" onclick="constructNewUserModal(this,' . $sitename . ','.$otherUserParam.');">Add New</a>)';
         $builder->add( 'replaceUser', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:User',
+            'class' => 'AppUserdirectoryBundle:User',
             //'label'=> "Replace with the following user name (Add New):",
             'label'=> "Replace with the following user name$addUserOnFly:",
             //'label'=> "Replace with the following user name:",

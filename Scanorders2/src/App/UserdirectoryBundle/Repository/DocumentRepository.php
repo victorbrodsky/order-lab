@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Repository;
+namespace App\UserdirectoryBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
@@ -88,7 +88,7 @@ class DocumentRepository extends EntityRepository {
 
             if( $doc->getId() ) {
 
-                $docDb = $this->_em->getRepository('OlegUserdirectoryBundle:Document')->find($doc->getId());
+                $docDb = $this->_em->getRepository('AppUserdirectoryBundle:Document')->find($doc->getId());
                 if( $docDb ) {
 
                     //echo "docDb id=".$docDb->getId()."<br>";
@@ -163,7 +163,7 @@ class DocumentRepository extends EntityRepository {
 
             if( $documentId ) {
 
-                $docDb = $this->_em->getRepository('OlegUserdirectoryBundle:Document')->find($documentId);
+                $docDb = $this->_em->getRepository('AppUserdirectoryBundle:Document')->find($documentId);
                 if ($docDb) {
 
                     //echo "docDb id=".$docDb->getId()."<br>";
@@ -234,7 +234,7 @@ class DocumentRepository extends EntityRepository {
         }
 
         if( $doctypeStr ) {
-            $documentType = $this->_em->getRepository('OlegUserdirectoryBundle:DocumentTypeList')->findOneByName($doctypeStr);
+            $documentType = $this->_em->getRepository('AppUserdirectoryBundle:DocumentTypeList')->findOneByName($doctypeStr);
         }
 
         //echo "documentType=".$documentType."<br>";

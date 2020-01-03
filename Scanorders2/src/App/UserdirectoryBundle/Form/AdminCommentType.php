@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Form;
+namespace App\UserdirectoryBundle\Form;
 
 
 use Symfony\Component\Form\AbstractType;
@@ -34,7 +34,7 @@ class AdminCommentType extends BaseCommentsType
     {
 
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\AdminComment',
+            'data_class' => 'App\UserdirectoryBundle\Entity\AdminComment',
             'form_custom_value' => null
         ));
     }

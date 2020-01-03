@@ -1,10 +1,10 @@
 <?php
 
-namespace Oleg\TranslationalResearchBundle\Form;
+namespace App\TranslationalResearchBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
-use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
-use Oleg\UserdirectoryBundle\Form\DocumentType;
+use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
+use App\UserdirectoryBundle\Form\DocumentType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -109,7 +109,7 @@ class ProjectType extends AbstractType
 
 
             $builder->add('projectSpecialty', EntityType::class, array(
-                'class' => 'OlegTranslationalResearchBundle:SpecialtyList',
+                'class' => 'AppTranslationalResearchBundle:SpecialtyList',
                 'choice_label' => 'name',
                 'label' => 'Project Specialty:',
                 'disabled' => ($this->params['admin'] ? false : true),
@@ -199,7 +199,7 @@ class ProjectType extends AbstractType
         ));
 
         $builder->add('exemptIrbApproval', EntityType::class, array(
-            'class' => 'OlegTranslationalResearchBundle:IrbApprovalTypeList',
+            'class' => 'AppTranslationalResearchBundle:IrbApprovalTypeList',
             'label' => 'Is this project exempt from '.$this->params['transresUtil']->getHumanName().' approval?:',
             'required' => true,
             'attr' => array('class' => 'combobox transres-project-exemptIrbApproval'),
@@ -216,7 +216,7 @@ class ProjectType extends AbstractType
 
 
         $builder->add('exemptIACUCApproval', EntityType::class, array(
-            'class' => 'OlegTranslationalResearchBundle:IrbApprovalTypeList',
+            'class' => 'AppTranslationalResearchBundle:IrbApprovalTypeList',
             'label' => 'Is this project exempt from '.$this->params['transresUtil']->getHumanName().' approval?:',
             'required' => true,
             'attr' => array('class' => 'combobox transres-project-exemptIACUCApproval'),
@@ -302,7 +302,7 @@ class ProjectType extends AbstractType
         }
 
         $builder->add( 'principalInvestigators', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:User',
+            'class' => 'AppUserdirectoryBundle:User',
             'label'=> "Principal Investigator(s) for the project$addUserOnFly:",
             'required'=> true,
             'multiple' => true,
@@ -311,7 +311,7 @@ class ProjectType extends AbstractType
         ));
 
         $builder->add( 'principalIrbInvestigator', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:User',
+            'class' => 'AppUserdirectoryBundle:User',
             'label'=> "Principal Investigator listed on the ".$this->params['transresUtil']->getHumanName()." application$addUserOnFly:",
             'required'=> false,
             'multiple' => false,
@@ -320,7 +320,7 @@ class ProjectType extends AbstractType
         ));
 
         $builder->add( 'coInvestigators', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:User',
+            'class' => 'AppUserdirectoryBundle:User',
             'label'=> "Co-Investigator(s)$addUserOnFly:",
             'required'=> false,
             'multiple' => true,
@@ -329,7 +329,7 @@ class ProjectType extends AbstractType
         ));
 
         $builder->add( 'pathologists', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:User',
+            'class' => 'AppUserdirectoryBundle:User',
             'label'=> $this->params['institutionName']." Pathologist(s) Involved$addUserOnFly:",
             'required'=> false,
             'multiple' => true,
@@ -338,7 +338,7 @@ class ProjectType extends AbstractType
         ));
 
         $builder->add( 'contacts', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:User',
+            'class' => 'AppUserdirectoryBundle:User',
             'label'=> "Contact(s)$addUserOnFly:",
             'required'=> true,
             'multiple' => true,
@@ -357,7 +357,7 @@ class ProjectType extends AbstractType
         ));
 
         $builder->add( 'billingContact', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:User',
+            'class' => 'AppUserdirectoryBundle:User',
             'label'=> "Billing Contact$addUserOnFly:",
             'required'=> false,
             'multiple' => false,
@@ -394,7 +394,7 @@ class ProjectType extends AbstractType
             $builder->add('adminReviews', CollectionType::class, array(
                 'entry_type' => ReviewBaseType::class,
                 'entry_options' => array(
-                    'data_class' => 'Oleg\TranslationalResearchBundle\Entity\AdminReview',
+                    'data_class' => 'App\TranslationalResearchBundle\Entity\AdminReview',
                     'form_custom_value' => $this->params
                 ),
                 'label' => false,
@@ -414,7 +414,7 @@ class ProjectType extends AbstractType
             $builder->add('committeeReviews', CollectionType::class, array(
                 'entry_type' => ReviewBaseType::class,
                 'entry_options' => array(
-                    'data_class' => 'Oleg\TranslationalResearchBundle\Entity\CommitteeReview',
+                    'data_class' => 'App\TranslationalResearchBundle\Entity\CommitteeReview',
                     'form_custom_value' => $this->params
                 ),
                 'label' => false,
@@ -434,7 +434,7 @@ class ProjectType extends AbstractType
             $builder->add('finalReviews', CollectionType::class, array(
                 'entry_type' => ReviewBaseType::class,
                 'entry_options' => array(
-                    'data_class' => 'Oleg\TranslationalResearchBundle\Entity\FinalReview',
+                    'data_class' => 'App\TranslationalResearchBundle\Entity\FinalReview',
                     'form_custom_value' => $this->params
                 ),
                 'label' => false,
@@ -457,7 +457,7 @@ class ProjectType extends AbstractType
 
                 $label = null;
                 $mapper = array(
-                    'prefix' => "Oleg",
+                    'prefix' => "App",
                     'className' => "MessageCategory",
                     'bundleName' => "OrderformBundle",
                     'organizationalGroupType' => "MessageTypeClassifiers"
@@ -465,11 +465,11 @@ class ProjectType extends AbstractType
                 if ($message) {
                     $messageCategory = $message->getMessageCategory();
                     if ($messageCategory) {
-                        $label = $this->params['em']->getRepository('OlegOrderformBundle:MessageCategory')->getLevelLabels($messageCategory, $mapper);
+                        $label = $this->params['em']->getRepository('AppOrderformBundle:MessageCategory')->getLevelLabels($messageCategory, $mapper);
                     }
                 }
                 if (!$label) {
-                    $label = $this->params['em']->getRepository('OlegOrderformBundle:MessageCategory')->getLevelLabels(null, $mapper);
+                    $label = $this->params['em']->getRepository('AppOrderformBundle:MessageCategory')->getLevelLabels(null, $mapper);
                 }
 
                 if ($label) {
@@ -579,7 +579,7 @@ class ProjectType extends AbstractType
             'attr' => array('class'=>'form-control digit-mask mask-text-align-left')
         ));
         $builder->add( 'tissueProcessingServices', EntityType::class, array(
-            'class' => 'OlegTranslationalResearchBundle:TissueProcessingServiceList',
+            'class' => 'AppTranslationalResearchBundle:TissueProcessingServiceList',
             'label'=>'Services:',
             'required'=>false,
             'multiple' => true,
@@ -651,7 +651,7 @@ class ProjectType extends AbstractType
             'attr' => array('class'=>'form-control digit-mask mask-text-align-left')
         ));
         $builder->add( 'restrictedServices', EntityType::class, array(
-            'class' => 'OlegTranslationalResearchBundle:OtherRequestedServiceList',
+            'class' => 'AppTranslationalResearchBundle:OtherRequestedServiceList',
             'label'=>'Other Requested Services:',
             'required'=>false,
             'multiple' => true,
@@ -724,7 +724,7 @@ class ProjectType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\TranslationalResearchBundle\Entity\Project',
+            'data_class' => 'App\TranslationalResearchBundle\Entity\Project',
             'form_custom_value' => null
         ));
     }

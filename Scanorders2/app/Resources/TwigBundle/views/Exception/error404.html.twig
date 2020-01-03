@@ -15,7 +15,7 @@
 #}
 
 
-{% extends "OlegOrderformBundle::Default/base.html.twig" %}
+{% extends "AppOrderformBundle::Default/base.html.twig" %}
 
 {% block maincss %}{% endblock %}
 {% block header %}{% endblock %}
@@ -32,7 +32,7 @@
         <div class="span12">
             <div class="hero-unit center">
 
-                {#{% set admin_email = render(controller("OlegOrderformBundle:SiteParameters:getAdminEmail")) %}#}
+                {#{% set admin_email = render(controller("AppOrderformBundle:SiteParameters:getAdminEmail")) %}#}
 
                 <h1><font face="Tahoma" color="red">{{ status_code }}</font></h1>
                 {#<h1>The server returned a "<font face="Tahoma" color="red">{{ status_code }} {{ status_text }}</font></small>".</h1>#}

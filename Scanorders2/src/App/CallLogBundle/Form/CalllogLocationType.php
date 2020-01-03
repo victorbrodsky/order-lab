@@ -15,13 +15,13 @@
  *  limitations under the License.
  */
 
-namespace Oleg\CallLogBundle\Form;
+namespace App\CallLogBundle\Form;
 
 
 
-use Oleg\UserdirectoryBundle\Entity\User;
-use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
-use Oleg\UserdirectoryBundle\Form\GeoLocationType;
+use App\UserdirectoryBundle\Entity\User;
+use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
+use App\UserdirectoryBundle\Form\GeoLocationType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -36,7 +36,7 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 
-use Oleg\UserdirectoryBundle\Entity\Location;
+use App\UserdirectoryBundle\Entity\Location;
 
 class CalllogLocationType extends AbstractType
 {
@@ -118,7 +118,7 @@ class CalllogLocationType extends AbstractType
         $locationTypesAttr['readonly'] = true;
 
         $builder->add('locationTypes', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:LocationTypeList',
+            'class' => 'AppUserdirectoryBundle:LocationTypeList',
             'label' => "Location Type:",
             //'disabled' => $this->params['readonlyLocationType'],
             'multiple' => true,
@@ -136,7 +136,7 @@ class CalllogLocationType extends AbstractType
         //GeoLocationType($this->params)
         $builder->add('geoLocation', GeoLocationType::class, array(
             'form_custom_value' => $this->params,
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\GeoLocation',
+            'data_class' => 'App\UserdirectoryBundle\Entity\GeoLocation',
             'label' => false,
             'required' => false
         ));
@@ -153,11 +153,11 @@ class CalllogLocationType extends AbstractType
                     if ($title) {
                         $institution = $title->getInstitution();
                         if ($institution) {
-                            $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
+                            $label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
                         }
                     }
                     if (!$label) {
-                        $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
+                        $label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
                     }
 
                     $form->add('institution', CustomSelectorType::class, array(
@@ -180,7 +180,7 @@ class CalllogLocationType extends AbstractType
         //Institution or Collaboration
         if( 0 && $this->params['defaultInstitution'] ) {
             $builder->add('institution', EntityType::class, array(
-                'class' => 'OlegUserdirectoryBundle:Institution',
+                'class' => 'AppUserdirectoryBundle:Institution',
                 'label' => "Institution or Collaboration:",
                 'required' => false,
                 'data' => $this->params['defaultInstitution'],
@@ -194,7 +194,7 @@ class CalllogLocationType extends AbstractType
             ));
         } else {
             $builder->add('institution', EntityType::class, array(
-                'class' => 'OlegUserdirectoryBundle:Institution',
+                'class' => 'AppUserdirectoryBundle:Institution',
                 'label' => "Institution or Collaboration:",
                 'required' => false,
                 'choice_label' => 'getNameShortName',
@@ -215,7 +215,7 @@ class CalllogLocationType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\Location',
+            'data_class' => 'App\UserdirectoryBundle\Entity\Location',
             'form_custom_value' => null,
             //'csrf_protection' => false,
         ));

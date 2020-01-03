@@ -1594,7 +1594,7 @@ function setPaperDocuments( btnEl, parent, data ) {
 //    var idArr = id.split("_");
 //
 //    //  0       1               2           3    4     5     6     7     8      9   10  11  12  13  14  15
-//    //oleg_orderformbundle_messagetype_patient_0_encounter_0_procedure_0_accession_0_part_0_paper_0_others
+//    //app_orderformbundle_messagetype_patient_0_encounter_0_procedure_0_accession_0_part_0_paper_0_others
 //    var patientid = idArr[4];
 //    var encounterid = idArr[6];
 //    var procedureid = idArr[8];
@@ -1672,7 +1672,7 @@ function disableInElementBlock( element, disabled, all, flagKey, flagArrayField 
 
         //console.log("\n\nDisable element.id=" + elements.eq(i).attr("id")+", class="+elements.eq(i).attr("class"));
         //  0         1              2           3   4  5
-        //oleg_orderformbundle_messagetype_patient_0_mrn  //length=6
+        //app_orderformbundle_messagetype_patient_0_mrn  //length=6
         var id = elements.eq(i).attr("id");
         var type = elements.eq(i).attr("type");
 
@@ -1921,7 +1921,7 @@ function setElementBlock( element, data, cleanall, key ) {
         //console.log('\n\n'+"Set Element.id=" + elements.eq(i).attr("id")+", class="+elements.eq(i).attr("class"));
 
         //  0         1              2           3   4  5
-        //oleg_orderformbundle_messagetype_patient_0_mrn  //length=6
+        //app_orderformbundle_messagetype_patient_0_mrn  //length=6
         var id = elements.eq(i).attr("id");
         var type = elements.eq(i).attr("type");
         var classs = elements.eq(i).attr("class");
@@ -2536,7 +2536,7 @@ function cleanPartDiffDisident( element, field, single ) {
     });
 
     //construct new 0 special stain group
-    //oleg_orderformbundle_messagetype_patient_0_encounter_0_procedure_0_accession_0_part_0_diffDisident_1_field
+    //app_orderformbundle_messagetype_patient_0_encounter_0_procedure_0_accession_0_part_0_diffDisident_1_field
     var patient = idsArr[4];
     var encounter = idsArr[6];
     var procedure = idsArr[8];

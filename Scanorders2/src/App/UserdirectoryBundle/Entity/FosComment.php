@@ -22,7 +22,7 @@
  * Time: 1:46 PM
  */
 
-namespace Oleg\UserdirectoryBundle\Entity;
+namespace App\UserdirectoryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use FOS\CommentBundle\Entity\Comment as FosBaseComment;
@@ -50,7 +50,7 @@ class FosComment extends FosBaseComment implements SignedCommentInterface
      * Thread of this comment
      *
      * @var Thread
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\FosThread")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\FosThread")
      */
     protected $thread;
 
@@ -58,7 +58,7 @@ class FosComment extends FosBaseComment implements SignedCommentInterface
      * Author of the comment
      *
      * @var User
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
      */
     protected $author;
 

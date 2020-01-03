@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Form;
+namespace App\OrderformBundle\Form;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -33,7 +33,7 @@ class ExternalIdType extends AbstractType
             'label' => "External ID Source System:",
             'required'=> false,
             'multiple' => false,
-            'class' => 'OlegUserdirectoryBundle:SourceSystemList',
+            'class' => 'AppUserdirectoryBundle:SourceSystemList',
             'attr' => array('class' => 'combobox combobox-width')
         ));
 
@@ -49,7 +49,7 @@ class ExternalIdType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\ExternalId'
+            'data_class' => 'App\OrderformBundle\Entity\ExternalId'
         ));
     }
 

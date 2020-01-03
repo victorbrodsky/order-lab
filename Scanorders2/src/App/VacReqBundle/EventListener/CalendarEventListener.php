@@ -22,7 +22,7 @@
  * Time: 4:25 PM
  */
 
-namespace Oleg\VacReqBundle\EventListener;
+namespace App\VacReqBundle\EventListener;
 
 
 use ADesigns\CalendarBundle\Event\CalendarEvent;
@@ -74,7 +74,7 @@ class CalendarEventListener
 
         $groupId = $filter['groupId'];
 
-        $repository = $this->em->getRepository('OlegVacReqBundle:VacReqRequest');
+        $repository = $this->em->getRepository('AppVacReqBundle:VacReqRequest');
         $dql = $repository->createQueryBuilder('request');
 
         $dql->select('request');
@@ -98,8 +98,8 @@ class CalendarEventListener
         //$dql->andWhere('request.institution = :groupId');
         if( $groupId ) {
             $dql->leftJoin("request.institution","institution");
-            $institution = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->find($groupId);
-            $instStr = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->selectNodesUnderParentNode($institution,"institution",false);
+            $institution = $this->em->getRepository('AppUserdirectoryBundle:Institution')->find($groupId);
+            $instStr = $this->em->getRepository('AppUserdirectoryBundle:Institution')->selectNodesUnderParentNode($institution,"institution",false);
             //echo "instStr=".$instStr."<br>";
             $dql->andWhere($instStr);
         }

@@ -15,10 +15,10 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Form;
+namespace App\OrderformBundle\Form;
 
-use Oleg\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
-use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
+use App\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
+use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -47,7 +47,7 @@ class ScanOrderType extends AbstractType
 //                'label' => 'Service:',
 //                'required'=> false,
 //                'multiple' => false,
-//                'class' => 'OlegUserdirectoryBundle:Service',
+//                'class' => 'AppUserdirectoryBundle:Service',
 //                //'choices' => $this->params['services'],
 //                'attr' => array('class' => 'combobox combobox-width')
 //            ));
@@ -70,11 +70,11 @@ class ScanOrderType extends AbstractType
             if( $title ) {
                 $institution = $title->getScanOrderInstitutionScope();
                 if( $institution ) {
-                    $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
+                    $label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
                 }
             }
 			if( !$label ) {
-                $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
+                $label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
             }
 
             $form->add('scanOrderInstitutionScope', CustomSelectorType::class, array(
@@ -111,7 +111,7 @@ class ScanOrderType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\ScanOrder',
+            'data_class' => 'App\OrderformBundle\Entity\ScanOrder',
             'form_custom_value' => null
         ));
     }

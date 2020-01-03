@@ -15,9 +15,9 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Form;
+namespace App\OrderformBundle\Form;
 
-use Oleg\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
+use App\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -52,7 +52,7 @@ class SlideReturnRequestType extends AbstractType
         $builder->add('message', MessageObjectType::class, array(
             'form_custom_value' => $this->params,
             'form_custom_value_entity' => null,
-            'data_class' => 'Oleg\OrderformBundle\Entity\Message',
+            'data_class' => 'App\OrderformBundle\Entity\Message',
             'label' => false
         ));
 
@@ -90,7 +90,7 @@ class SlideReturnRequestType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\SlideReturnRequest',
+            'data_class' => 'App\OrderformBundle\Entity\SlideReturnRequest',
             'form_custom_value' => null
         ));
     }

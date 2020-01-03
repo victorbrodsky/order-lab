@@ -15,11 +15,11 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Form;
+namespace App\OrderformBundle\Form;
 
-use Oleg\UserdirectoryBundle\Form\DocumentContainerType;
-use Oleg\UserdirectoryBundle\Form\DocumentType;
-use Oleg\UserdirectoryBundle\Form\UserWrapperType;
+use App\UserdirectoryBundle\Form\DocumentContainerType;
+use App\UserdirectoryBundle\Form\DocumentType;
+use App\UserdirectoryBundle\Form\UserWrapperType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -33,7 +33,7 @@ class SlideOrderType extends AbstractType
 
         $params = array('labelPrefix'=>' for Histotechnologist');
         $builder->add('instruction', InstructionType::class, array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\Instruction',
+            'data_class' => 'App\OrderformBundle\Entity\Instruction',
             'form_custom_value' => $params,
             'label' => false
         ));
@@ -43,7 +43,7 @@ class SlideOrderType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\SlideOrder',
+            'data_class' => 'App\OrderformBundle\Entity\SlideOrder',
         ));
     }
 

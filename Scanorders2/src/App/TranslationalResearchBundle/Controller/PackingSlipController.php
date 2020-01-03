@@ -22,17 +22,17 @@
  * Time: 4:49 PM
  */
 
-namespace Oleg\TranslationalResearchBundle\Controller;
+namespace App\TranslationalResearchBundle\Controller;
 
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Oleg\TranslationalResearchBundle\Entity\DataResult;
-use Oleg\TranslationalResearchBundle\Entity\Product;
-use Oleg\TranslationalResearchBundle\Entity\Project;
-use Oleg\TranslationalResearchBundle\Entity\TransResRequest;
-use Oleg\TranslationalResearchBundle\Form\FilterRequestType;
-use Oleg\TranslationalResearchBundle\Form\TransResRequestType;
-use Oleg\UserdirectoryBundle\Entity\User;
+use App\TranslationalResearchBundle\Entity\DataResult;
+use App\TranslationalResearchBundle\Entity\Product;
+use App\TranslationalResearchBundle\Entity\Project;
+use App\TranslationalResearchBundle\Entity\TransResRequest;
+use App\TranslationalResearchBundle\Form\FilterRequestType;
+use App\TranslationalResearchBundle\Form\TransResRequestType;
+use App\UserdirectoryBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -54,7 +54,7 @@ class PackingSlipController extends Controller
      * Generate Packing Slip
      *
      * @Route("/generate-packing-slip/{id}", name="translationalresearch_generate_packing_slip")
-     * @Template("OlegTranslationalResearchBundle:Request:new.html.twig")
+     * @Template("AppTranslationalResearchBundle:Request:new.html.twig")
      * @Method("GET")
      */
     public function generatePackingSlipAction(Request $request, TransResRequest $transresRequest)
@@ -286,7 +286,7 @@ class PackingSlipController extends Controller
      * http://localhost/order/translational-research/work-request/download-packing-slip-pdf/3
      *
      * @Route("/download-packing-slip-pdf/{id}", name="translationalresearch_packing_slip_download")
-     * @Template("OlegTranslationalResearchBundle:Request:packing-slip-pdf-show.html.twig")
+     * @Template("AppTranslationalResearchBundle:Request:packing-slip-pdf-show.html.twig")
      * @Method("GET")
      */
     public function showPackingSlipAsPdfAction(Request $request, TransResRequest $transresRequest)

@@ -15,25 +15,25 @@
  *  limitations under the License.
  */
 
-namespace Oleg\FellAppBundle\Controller;
+namespace App\FellAppBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityNotFoundException;
-use Oleg\FellAppBundle\Entity\FellowshipApplication;
-use Oleg\FellAppBundle\Entity\Interview;
-use Oleg\FellAppBundle\Form\FellAppCreateFellowshipType;
-use Oleg\FellAppBundle\Form\FellAppFellowshipApplicationType;
-use Oleg\FellAppBundle\Form\FellAppManagementType;
-use Oleg\FellAppBundle\Form\FellowshipSubspecialtyType;
-use Oleg\FellAppBundle\Form\InterviewType;
-use Oleg\UserdirectoryBundle\Entity\User;
-use Oleg\OrderformBundle\Helper\ErrorHelper;
-use Oleg\UserdirectoryBundle\Entity\AccessRequest;
-use Oleg\UserdirectoryBundle\Entity\Reference;
-use Oleg\FellAppBundle\Form\FellAppFilterType;
-use Oleg\FellAppBundle\Form\FellowshipApplicationType;
-use Oleg\UserdirectoryBundle\Util\EmailUtil;
-use Oleg\UserdirectoryBundle\Util\UserUtil;
+use App\FellAppBundle\Entity\FellowshipApplication;
+use App\FellAppBundle\Entity\Interview;
+use App\FellAppBundle\Form\FellAppCreateFellowshipType;
+use App\FellAppBundle\Form\FellAppFellowshipApplicationType;
+use App\FellAppBundle\Form\FellAppManagementType;
+use App\FellAppBundle\Form\FellowshipSubspecialtyType;
+use App\FellAppBundle\Form\InterviewType;
+use App\UserdirectoryBundle\Entity\User;
+use App\OrderformBundle\Helper\ErrorHelper;
+use App\UserdirectoryBundle\Entity\AccessRequest;
+use App\UserdirectoryBundle\Entity\Reference;
+use App\FellAppBundle\Form\FellAppFilterType;
+use App\FellAppBundle\Form\FellowshipApplicationType;
+use App\UserdirectoryBundle\Util\EmailUtil;
+use App\UserdirectoryBundle\Util\UserUtil;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Filesystem\Exception\IOException;
@@ -54,7 +54,7 @@ class FellAppManagement extends Controller {
     /**
      * @Route("/fellowship-types-settings", name="fellapp_fellowshiptype_settings")
      * @Method("GET")
-     * @Template("OlegFellAppBundle:Management:management.html.twig")
+     * @Template("AppFellAppBundle:Management:management.html.twig")
      */
     public function felltypeSettingsAction(Request $request) {
 
@@ -98,7 +98,7 @@ class FellAppManagement extends Controller {
     /**
      * @Route("/add-fellowship-application-type", name="fellapp_fellowship_application_type_add")
      * @Method({"GET", "POST"})
-     * @Template("OlegFellAppBundle:Management:new-fellowship-application-type.html.twig")
+     * @Template("AppFellAppBundle:Management:new-fellowship-application-type.html.twig")
      */
     public function addFellowshipApplicationTypeAction(Request $request )
     {
@@ -114,7 +114,7 @@ class FellAppManagement extends Controller {
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
-//        $role = $em->getRepository('OlegUserdirectoryBundle:Roles')->find($roleId);
+//        $role = $em->getRepository('AppUserdirectoryBundle:Roles')->find($roleId);
 //
 //        if( !$role ) {
 //            throw $this->createNotFoundException('Unable to find Vacation Request Role by id='.$roleId);
@@ -134,7 +134,7 @@ class FellAppManagement extends Controller {
             //exit("addFellowshipTypeAction submit");
 
             //$userSecUtil = $this->container->get('user_security_utility');
-            //$site = $em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation('fellapp');
+            //$site = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation('fellapp');
 
             $subspecialtyType = $form["fellowshipsubspecialtytype"]->getData();
             if( !$subspecialtyType ) {
@@ -154,13 +154,13 @@ class FellAppManagement extends Controller {
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             //////// 1) link subspecialty with institution 'Weill Cornell Medical College => Pathology and Laboratory Medicine' ////////
             $mapper = array(
-                'prefix' => 'Oleg',
+                'prefix' => 'App',
                 'bundleName' => 'UserdirectoryBundle',
                 'className' => 'Institution'
             );
 
-            $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
-            $pathology = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+            $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+            $pathology = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
                 "Pathology and Laboratory Medicine",
                 $wcmc,
                 $mapper
@@ -267,7 +267,7 @@ class FellAppManagement extends Controller {
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
-        $subspecialtyType = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->find($fellaptypeid);
+        $subspecialtyType = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->find($fellaptypeid);
         if( !$subspecialtyType ) {
             throw $this->createNotFoundException('Unable to find FellowshipSubspecialty by id='.$fellaptypeid);
         }
@@ -282,7 +282,7 @@ class FellAppManagement extends Controller {
 
         //2) set roles to disabled
         $removedRoles = array();
-        $roles = $em->getRepository('OlegUserdirectoryBundle:Roles')->findByFellowshipSubspecialty($subspecialtyType);
+        $roles = $em->getRepository('AppUserdirectoryBundle:Roles')->findByFellowshipSubspecialty($subspecialtyType);
         foreach( $roles as $role ) {
             $role->setType('disabled');
             $em->persist($role);
@@ -311,7 +311,7 @@ class FellAppManagement extends Controller {
     /**
      * @Route("/fellowship-type/show/{id}", name="fellapp_fellowshiptype_setting_show")
      * @Method("GET")
-     * @Template("OlegFellAppBundle:Management:new.html.twig")
+     * @Template("AppFellAppBundle:Management:new.html.twig")
      */
     public function showAction(Request $request, $id) {
 
@@ -323,7 +323,7 @@ class FellAppManagement extends Controller {
         $em = $this->getDoctrine()->getManager();
         $cycle = "show";
 
-        $felltype = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->find($id);
+        $felltype = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->find($id);
 
         if( !$felltype ) {
             throw $this->createNotFoundException('Unable to find Fellowship Subspecialty Type by id='.$id);
@@ -335,7 +335,7 @@ class FellAppManagement extends Controller {
 
         //$routeName = $request->get('_route');
         //$args = $this->getFellappSpecialtyForm($routeName,$felltype);
-        //return $this->render('OlegFellAppBundle:Management:new.html.twig', $args);
+        //return $this->render('AppFellAppBundle:Management:new.html.twig', $args);
 
         $form = $this->getFellappSpecialtyForm($felltype,$cycle);
 
@@ -349,7 +349,7 @@ class FellAppManagement extends Controller {
     /**
      * @Route("/fellowship-type/edit/{id}", name="fellapp_fellowshiptype_setting_edit")
      * @Method({"GET", "POST"})
-     * @Template("OlegFellAppBundle:Management:new.html.twig")
+     * @Template("AppFellAppBundle:Management:new.html.twig")
      */
     public function editAction(Request $request, $id) {
 
@@ -361,7 +361,7 @@ class FellAppManagement extends Controller {
         $em = $this->getDoctrine()->getManager();
         $cycle = "edit";
 
-        $felltype = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->find($id);
+        $felltype = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->find($id);
 
         if( !$felltype ) {
             throw $this->createNotFoundException('Unable to find Fellowship Subspecialty Type by id='.$id);
@@ -473,7 +473,7 @@ class FellAppManagement extends Controller {
         $em = $this->getDoctrine()->getManager();
 
         $interviewerRoleFellType = null;
-        $interviewerFellTypeRoles = $em->getRepository('OlegUserdirectoryBundle:Roles')->findByFellowshipSubspecialty($fellowshipSubspecialty);
+        $interviewerFellTypeRoles = $em->getRepository('AppUserdirectoryBundle:Roles')->findByFellowshipSubspecialty($fellowshipSubspecialty);
         foreach( $interviewerFellTypeRoles as $role ) {
             //echo "assignFellAppAccessRoles: $role ?= $roleSubstr <br>";
             if( strpos($role,$roleSubstr) !== false ) {
@@ -510,7 +510,7 @@ class FellAppManagement extends Controller {
     /**
      * @Route("/populate-default", name="fellapp_populate_default")
      * @Method("GET")
-     * @Template("OlegFellAppBundle:Management:management.html.twig")
+     * @Template("AppFellAppBundle:Management:management.html.twig")
      */
     public function populateDefaultAction(Request $request) {
 
@@ -526,7 +526,7 @@ class FellAppManagement extends Controller {
         //populate default directors, coordinators, interviewers
 
         //BREASTPATHOLOGY
-        $BREASTPATHOLOGY = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Breast Pathology");
+        $BREASTPATHOLOGY = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Breast Pathology");
         $users = array(
             'cwid',
             'cwid',
@@ -542,7 +542,7 @@ class FellAppManagement extends Controller {
 
 
         //CYTOPATHOLOGY
-        $Cytopathology = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Cytopathology");
+        $Cytopathology = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Cytopathology");
         $users = array(
             'cwid',
             'cwid',
@@ -560,7 +560,7 @@ class FellAppManagement extends Controller {
         $this->addUsersToFellowshipSubspecialty( $Cytopathology, array('cwid'), "CYTOPATHOLOGY", "DIRECTOR" );
 
         //GASTROINTESTINALPATHOLOGY
-        $Cytopathology = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Gastrointestinal Pathology");
+        $Cytopathology = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Gastrointestinal Pathology");
         $users = array(
             'cwid',
             'cwid',
@@ -577,7 +577,7 @@ class FellAppManagement extends Controller {
 
 
         //GENITOURINARYPATHOLOGY
-        $Cytopathology = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Genitourinary Pathology");
+        $Cytopathology = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Genitourinary Pathology");
         $users = array(
             'cwid',
             'cwid',
@@ -595,7 +595,7 @@ class FellAppManagement extends Controller {
         $this->addUsersToFellowshipSubspecialty( $Cytopathology, array('cwid'), "GENITOURINARYPATHOLOGY", "DIRECTOR" );
 
         //GYNECOLOGICPATHOLOGY
-        $Cytopathology = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Gynecologic Pathology");
+        $Cytopathology = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Gynecologic Pathology");
         $users = array(
             'cwid',
             'cwid',
@@ -610,7 +610,7 @@ class FellAppManagement extends Controller {
         $this->addUsersToFellowshipSubspecialty( $Cytopathology, array('cwid'), "GYNECOLOGICPATHOLOGY", "DIRECTOR" );
 
         //HEMATOPATHOLOGY
-        $Cytopathology = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Hematopathology");
+        $Cytopathology = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Hematopathology");
         $users = array(
             'cwid',
             'cwid',
@@ -631,7 +631,7 @@ class FellAppManagement extends Controller {
 
 
         //MOLECULARGENETICPATHOLOGY
-        $Cytopathology = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Molecular Genetic Pathology");
+        $Cytopathology = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Molecular Genetic Pathology");
         $users = array(
             'cwid',
             'cwid',
@@ -671,7 +671,7 @@ class FellAppManagement extends Controller {
         //$roleStr = ROLE_FELLAPP_INTERVIEWER_WCM_BREASTPATHOLOGY
         $roleStr = "ROLE_FELLAPP_".$bossType."_WCM_".$roleName;
 
-        $role = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName($roleStr);
+        $role = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($roleStr);
         if( !$role ) {
             exit('no role found by name='.$roleStr);
         }
@@ -683,7 +683,7 @@ class FellAppManagement extends Controller {
             //cwidstr_@_ldap-user
             $username = $userCwid."_@_ldap-user";
 
-            $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername($username);
+            $user = $em->getRepository('AppUserdirectoryBundle:User')->findOneByUsername($username);
             if( !$user ) {
                 exit('no user found by username='.$username);
             }
@@ -743,7 +743,7 @@ class FellAppManagement extends Controller {
 
         //1) Change roles
         if(1) {
-            $repository = $em->getRepository('OlegUserdirectoryBundle:Roles');
+            $repository = $em->getRepository('AppUserdirectoryBundle:Roles');
             $dql = $repository->createQueryBuilder("list");
             $dql->select('list');
             $dql->where("list.name LIKE :name");
@@ -775,10 +775,10 @@ class FellAppManagement extends Controller {
 
         if(1) {
             //$roleArr = array('WCMC');
-            //$users = $em->getRepository('OlegUserdirectoryBundle:User')->findUsersByRoles($roleArr);
+            //$users = $em->getRepository('AppUserdirectoryBundle:User')->findUsersByRoles($roleArr);
 
             //$whereArr[] = 'u.roles LIKE '."'%\"" . $role . "\"%'";
-            $repository = $em->getRepository('OlegUserdirectoryBundle:User');
+            $repository = $em->getRepository('AppUserdirectoryBundle:User');
             $dql = $repository->createQueryBuilder("user");
             $dql->select('user');
             $dql->where("user.roles LIKE :name");

@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Entity;
+namespace App\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -34,7 +34,7 @@ class EncounterPatsex extends EncounterArrayFieldAbstract
     protected $encounter;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\SexList", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\SexList", cascade={"persist"})
      * @ORM\JoinColumn(name="sex_id", referencedColumnName="id", nullable=true)
      */
     protected $field;

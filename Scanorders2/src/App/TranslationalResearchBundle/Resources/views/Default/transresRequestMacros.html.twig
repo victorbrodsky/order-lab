@@ -1,6 +1,6 @@
 {% macro transresRequestInfo( form, transresRequest, cycle ) %}
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-    {% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppTranslationalResearchBundle::Default/transres.html.twig" as transres %}
 
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         <div class="panel panel-info">
@@ -65,8 +65,8 @@
 {% endmacro %}
 
 {% macro transresRequestBody( form, transresRequest, cycle, sitename ) %}
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-    {% import "OlegTranslationalResearchBundle::Default/transresRequestMacros.html.twig" as transresRequestMacros %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppTranslationalResearchBundle::Default/transresRequestMacros.html.twig" as transresRequestMacros %}
     {#Request#}
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         <div class="panel panel-info">
@@ -92,8 +92,8 @@
 {% endmacro %}
 
 {% macro transresRequestDetails( form, transresRequest, cycle, sitename ) %}
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-    {% import "OlegTranslationalResearchBundle::Default/transresRequestMacros.html.twig" as transresRequestMacros %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppTranslationalResearchBundle::Default/transresRequestMacros.html.twig" as transresRequestMacros %}
     {#Request Details#}
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         <div class="panel panel-info">
@@ -140,8 +140,8 @@
 
 {% macro transresRequestFormEdit( form, transresRequest, cycle ) %}
 
-    {% import "OlegUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
-    {#{% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}#}
+    {% import "AppUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
+    {#{% import "AppTranslationalResearchBundle::Default/transres.html.twig" as transres %}#}
 
     <div style="display: none">
         {% if form.messageCategory is defined %}
@@ -156,7 +156,7 @@
 
 {% macro transresRequestFormShow( form, transresRequest, cycle ) %}
 
-    {#{% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}#}
+    {#{% import "AppTranslationalResearchBundle::Default/transres.html.twig" as transres %}#}
 
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         <div class="panel panel-default">
@@ -184,9 +184,9 @@
 
 
 {% macro getActionRequestReviewCommentsSection(transresRequest, cycle, sitename, statMachineType) %}
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
-    {% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "AppTranslationalResearchBundle::Default/transres.html.twig" as transres %}
 
     {% if cycle == "show" %}
         {% set actionReviewLinks = transres_request_util.getReviewEnabledLinkActions(transresRequest,statMachineType) %}
@@ -228,15 +228,15 @@
 {% macro getShowRequestReviewCommentsSection(transresRequest, cycle, statMachineType, showComments) %}
     {% set threadId = "transres-" ~ transresRequest.getEntityName() ~ "-" ~ transresRequest.id ~ "-" ~ statMachineType %}
     {% if showComments == 1 %}
-        {{ render(controller('OlegTranslationalResearchBundle:Project:threadCommentsShow', { 'id': threadId })) }}
+        {{ render(controller('AppTranslationalResearchBundle:Project:threadCommentsShow', { 'id': threadId })) }}
     {% endif %}
 {% endmacro %}
 
 {% macro invoiceItemSections(form, cycle, sitename) %}
 
-    {% import "OlegFellAppBundle::Default/fellappmacros.html.twig" as fellappmacros %}
-    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
-    {% import "OlegTranslationalResearchBundle::Default/transresRequestMacros.html.twig" as transresRequestMacros %}
+    {% import "AppFellAppBundle::Default/fellappmacros.html.twig" as fellappmacros %}
+    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "AppTranslationalResearchBundle::Default/transresRequestMacros.html.twig" as transresRequestMacros %}
 
     {#{% if form.invoiceItems is defined and form.invoiceItems|length > 0 %}#}
     <div class="panel panel-default">
@@ -298,7 +298,7 @@
 {% endmacro %}
 {% macro invoiceItemForm( invoiceItem, cycle, classname, prototype, sitename, showAddDeleteBtn ) %}
 
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
     {% if showAddDeleteBtn is not defined %}
         {% set showAddDeleteBtn = 0 %}
@@ -344,9 +344,9 @@
 
 {% macro productSections(form, cycle, sitename) %}
 
-    {% import "OlegFellAppBundle::Default/fellappmacros.html.twig" as fellappmacros %}
-    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
-    {% import "OlegTranslationalResearchBundle::Default/transresRequestMacros.html.twig" as transresRequestMacros %}
+    {% import "AppFellAppBundle::Default/fellappmacros.html.twig" as fellappmacros %}
+    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "AppTranslationalResearchBundle::Default/transresRequestMacros.html.twig" as transresRequestMacros %}
 
     <div class="panel panel-default">
 
@@ -388,7 +388,7 @@
 
 {% macro productForm( product, cycle, classname, prototype, sitename, showAddDeleteBtn ) %}
 
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
     {% if showAddDeleteBtn is not defined %}
         {% set showAddDeleteBtn = 0 %}
@@ -442,7 +442,7 @@
 {% endmacro %}
 
 {% macro transresRequestsFilter( filterform, advancedFilter ) %}
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
     <div id="transres-filter-request" class="well form-search">
         {{ form_start(filterform) }}
@@ -617,7 +617,7 @@
 
 
 {% macro transresInvoiceFilter( filterform, advancedFilter ) %}
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
     <div class="well form-search">
         {{ form_start(filterform) }}
@@ -947,7 +947,7 @@
 
 {% macro transresRequestHandsontable( form, transresRequest, cycle ) %}
 
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         <div class="panel panel-info">
@@ -974,7 +974,7 @@
 
 {% macro transresRequestPackingSlip( form, transresRequest, cycle, showPackingSlip ) %}
 
-    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
     {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') %}
 
@@ -1068,9 +1068,9 @@
 {% endmacro %}
 
 {% macro transresRequestComment( form, transresRequest, cycle, showFosComment ) %}
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
-    {% import "OlegTranslationalResearchBundle::Default/transresRequestMacros.html.twig" as transresRequestMacros %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "AppTranslationalResearchBundle::Default/transresRequestMacros.html.twig" as transresRequestMacros %}
 
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         <div class="panel panel-info">

@@ -15,12 +15,12 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Form;
+namespace App\UserdirectoryBundle\Form;
 
 
 
-use Oleg\UserdirectoryBundle\Entity\User;
-use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
+use App\UserdirectoryBundle\Entity\User;
+use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -35,7 +35,7 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 
-use Oleg\UserdirectoryBundle\Entity\Location;
+use App\UserdirectoryBundle\Entity\Location;
 
 class LocationType extends AbstractType
 {
@@ -142,7 +142,7 @@ class LocationType extends AbstractType
             $locationTypesAttr['readonly'] = true;
         }
         $builder->add('locationTypes', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:LocationTypeList',
+            'class' => 'AppUserdirectoryBundle:LocationTypeList',
             'label' => "Location Type:",
             //'disabled' => $this->params['readonlyLocationType'],
             'multiple' => true,
@@ -160,7 +160,7 @@ class LocationType extends AbstractType
         //GeoLocationType($this->params)
         $builder->add('geoLocation', GeoLocationType::class, array(
             'form_custom_value' => $this->params,
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\GeoLocation',
+            'data_class' => 'App\UserdirectoryBundle\Entity\GeoLocation',
             'label' => false,
             'required' => false
         ));
@@ -259,7 +259,7 @@ class LocationType extends AbstractType
             //assistant
             if( $this->params['cycle'] != "new_standalone" ) {
                 $builder->add( 'assistant', EntityType::class, array(
-                    'class' => 'OlegUserdirectoryBundle:User',
+                    'class' => 'AppUserdirectoryBundle:User',
                     'label'=> "Assistant(s):",
                     'required'=> false,
                     'multiple' => true,
@@ -295,11 +295,11 @@ class LocationType extends AbstractType
                 if( $title ) {
                     $institution = $title->getInstitution();
                     if( $institution ) {
-                        $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
+                        $label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
                     }
                 }
 				if( !$label ) {
-					$label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
+					$label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
 				}
 
                 $form->add('institution', CustomSelectorType::class, array(
@@ -320,7 +320,7 @@ class LocationType extends AbstractType
 
         //Privacy
         $arrayOptions = array(
-            'class' => 'OlegUserdirectoryBundle:LocationPrivacyList',
+            'class' => 'AppUserdirectoryBundle:LocationPrivacyList',
             'label' => "Location Privacy (who can see this contact info):",
             'multiple' => false,
             'attr' => array('class'=>'combobox combobox-width'),
@@ -329,7 +329,7 @@ class LocationType extends AbstractType
 
         //get default privacy
         if( $this->params['cycle'] == "new_standalone" ) {
-            $defaultPrivacy = $this->params['em']->getRepository('OlegUserdirectoryBundle:LocationPrivacyList')->findOneByName("Anyone can see this contact information");
+            $defaultPrivacy = $this->params['em']->getRepository('AppUserdirectoryBundle:LocationPrivacyList')->findOneByName("Anyone can see this contact information");
             $arrayOptions['data'] = $defaultPrivacy;
         }
 
@@ -347,7 +347,7 @@ class LocationType extends AbstractType
                 'classtype' => 'locationusers'
             ));
 //            $builder->add( 'user', 'entity', array(
-//                'class' => 'OlegUserdirectoryBundle:User',
+//                'class' => 'AppUserdirectoryBundle:User',
 //                'label'=> "Inhabitant / Contact:",
 //                'required'=> false,
 //                'multiple' => false,
@@ -375,13 +375,13 @@ class LocationType extends AbstractType
             $params['cycle'] = $this->params['cycle'];
             $params['standalone'] = true;
             $mapper['className'] = "Location";
-            $mapper['bundleName'] = "OlegUserdirectoryBundle";
+            $mapper['bundleName'] = "AppUserdirectoryBundle";
 
             //ListType($params, $mapper)
             $builder->add('list', ListType::class, array(
                 'form_custom_value' => $params,
                 'form_custom_value_mapper' => $mapper,
-                'data_class' => 'Oleg\UserdirectoryBundle\Entity\Location',
+                'data_class' => 'App\UserdirectoryBundle\Entity\Location',
                 'label' => false
             ));
         }
@@ -392,7 +392,7 @@ class LocationType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\Location',
+            'data_class' => 'App\UserdirectoryBundle\Entity\Location',
             'form_custom_value' => null,
             //'csrf_protection' => false,
         ));

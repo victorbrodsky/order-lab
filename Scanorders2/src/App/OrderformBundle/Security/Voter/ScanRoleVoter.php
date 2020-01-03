@@ -22,12 +22,12 @@
  * Time: 11:28 AM
  */
 
-namespace Oleg\OrderformBundle\Security\Voter;
+namespace App\OrderformBundle\Security\Voter;
 
 
-use Oleg\OrderformBundle\Entity\Message;
-use Oleg\UserdirectoryBundle\Entity\User;
-use Oleg\UserdirectoryBundle\Security\Voter\BaseRoleVoter;
+use App\OrderformBundle\Entity\Message;
+use App\UserdirectoryBundle\Entity\User;
+use App\UserdirectoryBundle\Security\Voter\BaseRoleVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;

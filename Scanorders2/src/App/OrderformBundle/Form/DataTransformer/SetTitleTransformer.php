@@ -23,7 +23,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Oleg\OrderformBundle\Form\DataTransformer;
+namespace App\OrderformBundle\Form\DataTransformer;
 
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
@@ -72,11 +72,11 @@ class SetTitleTransformer implements DataTransformerInterface
         //echo $this->className.":data transformer type=".$type."<br>";
 
         if( is_int($type) ) {
-            $type = $this->em->getRepository('OlegOrderformBundle:'.$this->className)->findOneById($type);
+            $type = $this->em->getRepository('AppOrderformBundle:'.$this->className)->findOneById($type);
             //echo "findOneById type=".$type."<br>";
         } else {
             //echo "not int <br>";
-            $type = $this->em->getRepository('OlegOrderformBundle:'.$this->className)->findOneByName($type."");
+            $type = $this->em->getRepository('AppOrderformBundle:'.$this->className)->findOneByName($type."");
         }
         
         if( null === $type ) {
@@ -113,7 +113,7 @@ class SetTitleTransformer implements DataTransformerInterface
 
         if( is_numeric ( $text ) ) {    //number => most probably it is id
 
-            $entity = $this->em->getRepository('OlegOrderformBundle:'.$this->className)->findOneById($text);
+            $entity = $this->em->getRepository('AppOrderformBundle:'.$this->className)->findOneById($text);
 
             if( null === $entity ) {
 
@@ -139,10 +139,10 @@ class SetTitleTransformer implements DataTransformerInterface
         //echo "new: name=".$name."<br>";
 
         //check if it is already exists in db
-        $entity = $this->em->getRepository('OlegOrderformBundle:'.$this->className)->findOneByName($name);
+        $entity = $this->em->getRepository('AppOrderformBundle:'.$this->className)->findOneByName($name);
         
         if( null === $entity ) {
-            $entityClass = "Oleg\\OrderformBundle\\Entity\\".$this->className;
+            $entityClass = "App\\OrderformBundle\\Entity\\".$this->className;
             $newEntity = new $entityClass();
             $newEntity->setName($name);
             $newEntity->setCreatedate(new \DateTime());
@@ -150,7 +150,7 @@ class SetTitleTransformer implements DataTransformerInterface
             $newEntity->setCreator($this->user);
             
             //get max orderinlist
-            $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM OlegOrderformBundle:'.$this->className.' c');
+            $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM AppOrderformBundle:'.$this->className.' c');
             $nextorder = $query->getSingleResult()['maxorderinlist']+10;          
             $newEntity->setOrderinlist($nextorder);
 

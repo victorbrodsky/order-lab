@@ -8,22 +8,22 @@ twig:
 services:
     _defaults: { public: true }
 #    oleg_deidentifier.example:
-#        class: Oleg\DeidentifierBundle\Example
+#        class: App\DeidentifierBundle\Example
 #        arguments: [@service_id, "plain_value", %parameter%]
 
     deidentifier_authentication_handler:
-        class: Oleg\DeidentifierBundle\Security\Authentication\DeidentifierLoginSuccessHandler
+        class: App\DeidentifierBundle\Security\Authentication\DeidentifierLoginSuccessHandler
         arguments: ["@service_container", "@doctrine.orm.entity_manager"]
 
     deidentifier_role_voter:
-        class: Oleg\DeidentifierBundle\Security\Voter\DeidentifierRoleVoter
+        class: App\DeidentifierBundle\Security\Voter\DeidentifierRoleVoter
         public: false
         arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
         tags:
             - { name: security.voter }
 
     deidentifier_permission_voter:
-        class: Oleg\DeidentifierBundle\Security\Voter\DeidentifierPermissionVoter
+        class: App\DeidentifierBundle\Security\Voter\DeidentifierPermissionVoter
         public: false
         arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
         tags:

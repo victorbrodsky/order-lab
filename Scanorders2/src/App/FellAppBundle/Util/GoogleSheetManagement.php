@@ -22,7 +22,7 @@
  * Time: 10:43 AM
  */
 
-namespace Oleg\FellAppBundle\Util;
+namespace App\FellAppBundle\Util;
 
 //use https://github.com/asimlqt/php-google-spreadsheet-client/blob/master/README.md
 //install:
@@ -39,8 +39,8 @@ use Google\Spreadsheet\DefaultServiceRequest;
 use Google\Spreadsheet\ServiceRequestFactory;
 use Google\Spreadsheet\Spreadsheet;
 use Google\Spreadsheet\SpreadsheetService;
-use Oleg\UserdirectoryBundle\Entity\Document;
-use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
+use App\UserdirectoryBundle\Entity\Document;
+use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Filesystem\Exception\IOException;
 
@@ -287,7 +287,7 @@ class GoogleSheetManagement {
             $documentType = trim($documentType);
 
             //check if file already exists by file id
-            $documentDb = $this->em->getRepository('OlegUserdirectoryBundle:Document')->findOneByUniqueid($file->getId());
+            $documentDb = $this->em->getRepository('AppUserdirectoryBundle:Document')->findOneByUniqueid($file->getId());
             if( $documentDb && $documentType != 'Fellowship Application Backup Spreadsheet' ) {
                 //$event = "Document already exists with uniqueid=".$file->getId()."; fileId=".$fileId;
                 //$logger->notice($event);
@@ -339,9 +339,9 @@ class GoogleSheetManagement {
             $object->setCleanOriginalname($file->getTitle());
 
 //            if( $type && $type == 'excel' ) {
-//                $fellappSpreadsheetType = $this->em->getRepository('OlegUserdirectoryBundle:DocumentTypeList')->findOneByName('Fellowship Application Spreadsheet');
+//                $fellappSpreadsheetType = $this->em->getRepository('AppUserdirectoryBundle:DocumentTypeList')->findOneByName('Fellowship Application Spreadsheet');
 //            } else {
-//                $fellappSpreadsheetType = $this->em->getRepository('OlegUserdirectoryBundle:DocumentTypeList')->findOneByName('Fellowship Application Document');
+//                $fellappSpreadsheetType = $this->em->getRepository('AppUserdirectoryBundle:DocumentTypeList')->findOneByName('Fellowship Application Document');
 //            }
             $transformer = new GenericTreeTransformer($this->em, $author, "DocumentTypeList", "UserdirectoryBundle");
             //$documentType = trim($documentType);

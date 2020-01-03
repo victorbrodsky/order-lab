@@ -1,9 +1,9 @@
 <?php
 
-namespace Oleg\TranslationalResearchBundle;
+namespace App\TranslationalResearchBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class OlegTranslationalResearchBundle extends Bundle
+class AppTranslationalResearchBundle extends Bundle
 {
 }

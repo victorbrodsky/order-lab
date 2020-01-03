@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\VacReqBundle\Form;
+namespace App\VacReqBundle\Form;
 
 
 use Symfony\Component\Form\CallbackTransformer;
@@ -58,7 +58,7 @@ class VacReqCarryOverType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\VacReqBundle\Entity\VacReqCarryOver',
+            'data_class' => 'App\VacReqBundle\Entity\VacReqCarryOver',
             'form_custom_value' => null
             //'csrf_protection' => false,
         ));

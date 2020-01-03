@@ -15,21 +15,21 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Controller;
+namespace App\UserdirectoryBundle\Controller;
 
 
-use Oleg\UserdirectoryBundle\Entity\Book;
-use Oleg\UserdirectoryBundle\Entity\Lecture;
-use Oleg\UserdirectoryBundle\Entity\Logger;
-use Oleg\UserdirectoryBundle\Entity\PerSiteSettings;
-use Oleg\UserdirectoryBundle\Entity\Publication;
+use App\UserdirectoryBundle\Entity\Book;
+use App\UserdirectoryBundle\Entity\Lecture;
+use App\UserdirectoryBundle\Entity\Logger;
+use App\UserdirectoryBundle\Entity\PerSiteSettings;
+use App\UserdirectoryBundle\Entity\Publication;
 //use Symfony\Component\Translation\Translator;
 //use Symfony\Component\Translation\Loader\ArrayLoader;
-use Oleg\UserdirectoryBundle\Entity\UserInfo;
-use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericSelectTransformer;
-use Oleg\UserdirectoryBundle\Form\LabelType;
-use Oleg\UserdirectoryBundle\Form\UserSimpleType;
-use Oleg\UserdirectoryBundle\Security\Authentication\AuthUtil;
+use App\UserdirectoryBundle\Entity\UserInfo;
+use App\UserdirectoryBundle\Form\DataTransformer\GenericSelectTransformer;
+use App\UserdirectoryBundle\Form\LabelType;
+use App\UserdirectoryBundle\Form\UserSimpleType;
+use App\UserdirectoryBundle\Security\Authentication\AuthUtil;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -51,29 +51,29 @@ use FOS\UserBundle\Event\FormEvent;
 use FOS\UserBundle\Event\GetResponseUserEvent;
 use FOS\UserBundle\Event\UserEvent;
 
-use Oleg\UserdirectoryBundle\Entity\User;
-use Oleg\UserdirectoryBundle\Util\UserUtil;
-use Oleg\UserdirectoryBundle\Form\UserType;
-use Oleg\UserdirectoryBundle\Entity\AdministrativeTitle;
-use Oleg\UserdirectoryBundle\Entity\AppointmentTitle;
-use Oleg\UserdirectoryBundle\Entity\MedicalTitle;
-use Oleg\UserdirectoryBundle\Entity\StateLicense;
-use Oleg\UserdirectoryBundle\Entity\BoardCertification;
-use Oleg\UserdirectoryBundle\Entity\EmploymentStatus;
-use Oleg\UserdirectoryBundle\Entity\AdminComment;
-use Oleg\UserdirectoryBundle\Entity\Identifier;
-use Oleg\UserdirectoryBundle\Entity\PrivateComment;
-use Oleg\UserdirectoryBundle\Entity\PublicComment;
-use Oleg\UserdirectoryBundle\Entity\AccessRequest;
-use Oleg\UserdirectoryBundle\Entity\BaseUserAttributes;
-use Oleg\UserdirectoryBundle\Entity\ConfidentialComment;
-use Oleg\UserdirectoryBundle\Entity\ResearchLab;
-use Oleg\UserdirectoryBundle\Entity\Document;
-use Oleg\UserdirectoryBundle\Entity\Location;
-use Oleg\UserdirectoryBundle\Entity\Training;
-use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
-use Oleg\UserdirectoryBundle\Util\CropAvatar;
-use Oleg\UserdirectoryBundle\Entity\Grant;
+use App\UserdirectoryBundle\Entity\User;
+use App\UserdirectoryBundle\Util\UserUtil;
+use App\UserdirectoryBundle\Form\UserType;
+use App\UserdirectoryBundle\Entity\AdministrativeTitle;
+use App\UserdirectoryBundle\Entity\AppointmentTitle;
+use App\UserdirectoryBundle\Entity\MedicalTitle;
+use App\UserdirectoryBundle\Entity\StateLicense;
+use App\UserdirectoryBundle\Entity\BoardCertification;
+use App\UserdirectoryBundle\Entity\EmploymentStatus;
+use App\UserdirectoryBundle\Entity\AdminComment;
+use App\UserdirectoryBundle\Entity\Identifier;
+use App\UserdirectoryBundle\Entity\PrivateComment;
+use App\UserdirectoryBundle\Entity\PublicComment;
+use App\UserdirectoryBundle\Entity\AccessRequest;
+use App\UserdirectoryBundle\Entity\BaseUserAttributes;
+use App\UserdirectoryBundle\Entity\ConfidentialComment;
+use App\UserdirectoryBundle\Entity\ResearchLab;
+use App\UserdirectoryBundle\Entity\Document;
+use App\UserdirectoryBundle\Entity\Location;
+use App\UserdirectoryBundle\Entity\Training;
+use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
+use App\UserdirectoryBundle\Util\CropAvatar;
+use App\UserdirectoryBundle\Entity\Grant;
 
 
 class UserController extends Controller
@@ -81,7 +81,7 @@ class UserController extends Controller
 
     /**
      * @Route("/about", name="employees_about_page")
-     * @Template("OlegUserdirectoryBundle:Default:about.html.twig")
+     * @Template("AppUserdirectoryBundle:Default:about.html.twig")
      */
     public function aboutAction( Request $request ) {
 
@@ -132,7 +132,7 @@ class UserController extends Controller
 //        $res = $this->indexUser($request,$params);
 //        $pagination = $res['entities'];
 //
-//        return $this->render('OlegUserdirectoryBundle::Admin/users-content.html.twig',
+//        return $this->render('AppUserdirectoryBundle::Admin/users-content.html.twig',
 //            array(
 //                'entities' => $pagination,
 //                'sitename' => $this->container->getParameter('employees.sitename')
@@ -170,7 +170,7 @@ class UserController extends Controller
             return $response;
         }
 
-        $render = $this->render('OlegUserdirectoryBundle::Admin/users-content.html.twig',
+        $render = $this->render('AppUserdirectoryBundle::Admin/users-content.html.twig',
             array(
                 'entities' => $pagination,
                 'sitename' => $this->container->getParameter('employees.sitename'),
@@ -198,7 +198,7 @@ class UserController extends Controller
      * In the "List Current" menu, add the top choice called "Common Locations". CLicking it should list all "orphan" locations that are not attached to any users.
      *
      * @Route("/common-locations", name="employees_list_common_locations")
-     * @Template("OlegUserdirectoryBundle:Location:common-locations.html.twig")
+     * @Template("AppUserdirectoryBundle:Location:common-locations.html.twig")
      */
     public function listCommonLocationsAction(Request $request) {
 
@@ -268,14 +268,14 @@ class UserController extends Controller
 //        }
 
         if( $tablename == "Institution" ) {
-            $node = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($objectid);
+            $node = $em->getRepository('AppUserdirectoryBundle:Institution')->find($objectid);
             if( $node ) {
                 $title = $title . " (".$node->getRootName($node).")";
             }
         }
 
         return $this->render(
-            'OlegUserdirectoryBundle:Default:home.html.twig',
+            'AppUserdirectoryBundle:Default:home.html.twig',
             array(
                 'accessreqs' => null,
                 'locations' => null,
@@ -296,7 +296,7 @@ class UserController extends Controller
      * Show home page
      *
      * @Route("/", name="employees_home")
-     * @Template("OlegUserdirectoryBundle:Default:home.html.twig")
+     * @Template("AppUserdirectoryBundle:Default:home.html.twig")
      */
     public function indexAction( Request $request ) {
 
@@ -383,7 +383,7 @@ class UserController extends Controller
      * @Route("/users", name="employees_listusers")
      * @Route("/users/previous", name="employees_listusers_previous")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:Admin:users.html.twig")
+     * @Template("AppUserdirectoryBundle:Admin:users.html.twig")
      */
     public function indexUserAction(Request $request)
     {
@@ -453,7 +453,7 @@ class UserController extends Controller
             }
         }
 
-        $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:User');
+        $repository = $this->getDoctrine()->getRepository('AppUserdirectoryBundle:User');
         $dql =  $repository->createQueryBuilder("user");
         $dql->select('user');
 
@@ -760,11 +760,11 @@ class UserController extends Controller
         );
 
         //$wcmcpathology
-        //$wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+        //$wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
         //navbarFilterInstitution1
         $wcmc = $userSecUtil->getSiteSettingParameter('navbarFilterInstitution1');
         if( $wcmc ) {
-            $wcmcpathology = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+            $wcmcpathology = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
                 "Pathology and Laboratory Medicine",
                 $wcmc,
                 $mapper
@@ -773,10 +773,10 @@ class UserController extends Controller
         }
 
         //$nyppathology
-        //$nyp = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("NYP");
+        //$nyp = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("NYP");
         $nyp = $userSecUtil->getSiteSettingParameter('navbarFilterInstitution2');
         if( $nyp ) {
-            $nyppathology = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+            $nyppathology = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
                 "Pathology and Laboratory Medicine",
                 $nyp,
                 $mapper
@@ -921,7 +921,7 @@ class UserController extends Controller
 
         //Academic Appointment Title exists + division=Anatomic Pathology
         if( $filter && $inst1 && $filter == $inst1." Anatomic Pathology Faculty" ) {
-            $wcmcAnatomicPathology = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+            $wcmcAnatomicPathology = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
                 "Anatomic Pathology",
                 $wcmcpathology,
                 $mapper
@@ -933,7 +933,7 @@ class UserController extends Controller
 
         //Academic Appointment Title exists + division=Laboratory Medicine
         if( $filter && $inst1 && $filter == $inst1." Laboratory Medicine Faculty" ) {
-            $wcmcLaboratoryMedicinePathology = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+            $wcmcLaboratoryMedicinePathology = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
                 "Laboratory Medicine",
                 $wcmcpathology,
                 $mapper
@@ -1210,7 +1210,7 @@ class UserController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         if( $subjectUserId ) {
-            $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($subjectUserId);
+            $user = $em->getRepository('AppUserdirectoryBundle:User')->find($subjectUserId);
         } else {
             $user = $this->get('security.token_storage')->getToken()->getUser();
         }
@@ -1225,7 +1225,7 @@ class UserController extends Controller
 //                $criteriastr .= " OR ";
 //                $criteriastr .= "medicalInstitution.id = " . $objectid;
               
-                $node = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($objectid);
+                $node = $em->getRepository('AppUserdirectoryBundle:Institution')->find($objectid);
 
                 //administrativeInstitution
                 $criteriastr .= " ( ";
@@ -1454,7 +1454,7 @@ class UserController extends Controller
         //$totalcriteriastr = "user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system' AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL) AND (((administrativeTitles.status = 0 OR appointmentTitles.status = 0 OR medicalTitles.status = 0 OR locations.status = 0)) AND (((employmentStatus.id IS NULL) OR employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '2015-11-05')))";
         
         $em = $this->getDoctrine()->getManager();  
-        $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:User');
+        $repository = $this->getDoctrine()->getRepository('AppUserdirectoryBundle:User');
         $dql = $repository->createQueryBuilder('user');
         $dql->select('COUNT(DISTINCT user.id)');
         //$dql->select('COUNT(user.id)');
@@ -1470,7 +1470,7 @@ class UserController extends Controller
         
 //        $qb = $em->createQueryBuilder();
 //        $qb->select($qb->expr()->countDistinct('user.id'));
-//        $qb->from('OlegUserdirectoryBundle:User','user');
+//        $qb->from('AppUserdirectoryBundle:User','user');
 //        $qb->where($totalcriteriastr);
 //        //$qb->groupBy('user');
 //        $qb->leftJoin("user.administrativeTitles", "administrativeTitles");
@@ -1508,7 +1508,7 @@ class UserController extends Controller
      * @Route("/user/new", name="employees_new_user")
      * @Route("/user/new/clone/{id}", name="employees_new_user_clone", requirements={"id" = "\d+"})
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:Profile:edit_user.html.twig")
+     * @Template("AppUserdirectoryBundle:Profile:edit_user.html.twig")
      */
     public function newUserAction(Request $request,$id=null)
     {
@@ -1539,7 +1539,7 @@ class UserController extends Controller
         //set optional user-type and user-name
         $userType = $request->query->get('user-type');
         if( $userType ) {
-            $keytypeObj = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->find($userType);
+            $keytypeObj = $em->getRepository('AppUserdirectoryBundle:UsernameType')->find($userType);
             $user->setKeytype($keytypeObj);
         }
 
@@ -1549,8 +1549,8 @@ class UserController extends Controller
         }
 
         //Only show this profile to members of the following institution(s): default preset choices WCM, NYP
-        $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
-        $nyp = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("NYP");
+        $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+        $nyp = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("NYP");
         //echo "add inst:".$wcmc."; ".$nyp."<br>";
         $user->getPreferences()->addShowToInstitution($wcmc);
         $user->getPreferences()->addShowToInstitution($nyp);
@@ -1561,7 +1561,7 @@ class UserController extends Controller
         //clone user
         $subjectUser = null;
         if( $id && $id != "" ) {
-            $subjectUser = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
+            $subjectUser = $em->getRepository('AppUserdirectoryBundle:User')->find($id);
             $userUtil = new UserUtil();
             $user = $userUtil->makeUserClone($subjectUser,$user);
         } else {
@@ -1573,7 +1573,7 @@ class UserController extends Controller
 
         //add EIN identifier to credentials
         $identEin = new Identifier();
-        $identKeytypeEin = $em->getRepository('OlegUserdirectoryBundle:IdentifierTypeList')->findOneByName("Employee Identification Number (EIN)");
+        $identKeytypeEin = $em->getRepository('AppUserdirectoryBundle:IdentifierTypeList')->findOneByName("Employee Identification Number (EIN)");
         if( $identKeytypeEin ) {
             $identEin->setKeytype($identKeytypeEin);
         }
@@ -1581,7 +1581,7 @@ class UserController extends Controller
 
         //add NPI identifier to credentials
         $identNpi = new Identifier();
-        $identKeytypeNpi = $em->getRepository('OlegUserdirectoryBundle:IdentifierTypeList')->findOneByName("National Provider Identifier (NPI)");
+        $identKeytypeNpi = $em->getRepository('AppUserdirectoryBundle:IdentifierTypeList')->findOneByName("National Provider Identifier (NPI)");
         if( $identKeytypeNpi ) {
             $identNpi->setKeytype($identKeytypeNpi);
         }
@@ -1630,7 +1630,7 @@ class UserController extends Controller
      *
      * @Route("/user/new/simple-ajax-form/", name="employees_new_simple_user", options={"expose"=true})
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:Profile:new_simple_user.html.twig")
+     * @Template("AppUserdirectoryBundle:Profile:new_simple_user.html.twig")
      */
     public function newSimpleUserAction(Request $request)
     {
@@ -1675,7 +1675,7 @@ class UserController extends Controller
         //set optional user-type and user-name
         $userType = $request->query->get('user-type');
         if( $userType ) {
-            $keytypeObj = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->find($userType);
+            $keytypeObj = $em->getRepository('AppUserdirectoryBundle:UsernameType')->find($userType);
             $user->setKeytype($keytypeObj);
         }
 
@@ -1685,8 +1685,8 @@ class UserController extends Controller
         }
 
         //Only show this profile to members of the following institution(s): default preset choices WCM, NYP
-        $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
-        $nyp = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("NYP");
+        $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+        $nyp = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("NYP");
         //echo "add inst:".$wcmc."; ".$nyp."<br>";
         $user->getPreferences()->addShowToInstitution($wcmc);
         $user->getPreferences()->addShowToInstitution($nyp);
@@ -1716,8 +1716,8 @@ class UserController extends Controller
 
         $primaryPublicUserIdLabel = $userSecUtil->getSiteSettingParameter('noticeLdapName');
 
-        //set default to local user OlegUserdirectoryBundle:UsernameType
-        $defaultPrimaryPublicUserIdType = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findOneByAbbreviation("local-user");
+        //set default to local user AppUserdirectoryBundle:UsernameType
+        $defaultPrimaryPublicUserIdType = $em->getRepository('AppUserdirectoryBundle:UsernameType')->findOneByAbbreviation("local-user");
 
         $params = array(
             'cycle' => 'create',
@@ -2013,12 +2013,12 @@ class UserController extends Controller
         //echo "publicUserId=$publicUserId<br>";
 
         if( $publicUserId ) {
-            $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($publicUserId);
+            $user = $em->getRepository('AppUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($publicUserId);
             if (!$user) {
-                $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByEmailCanonical($email);
+                $user = $em->getRepository('AppUserdirectoryBundle:User')->findOneByEmailCanonical($email);
             }
             if (!$user) {
-                $users = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByUserInfoEmail($email);
+                $users = $em->getRepository('AppUserdirectoryBundle:User')->findUserByUserInfoEmail($email);
                 if (count($users) > 0) {
                     $user = $users[0];
                 }
@@ -2107,7 +2107,7 @@ class UserController extends Controller
         //Additional check if the user email extension corresponds to the keytype (Authentication field)
         //check only for two ldap settings (ldapMapperEmail and ldapMapperEmail2)
         if( $keytype ) {
-            $keytypeEntity = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->find($keytype);
+            $keytypeEntity = $em->getRepository('AppUserdirectoryBundle:UsernameType')->find($keytype);
             if( $keytypeEntity ) {
                 $authError = null;
                 //ldapMapperPrimaryPublicUserIdType and ldapMapperPrimaryPublicUserIdType2
@@ -2291,7 +2291,7 @@ class UserController extends Controller
     /**
      * @Route("/user/new", name="employees_create_user")
      * @Method("POST")
-     * @Template("OlegUserdirectoryBundle:Profile:edit_user.html.twig")
+     * @Template("AppUserdirectoryBundle:Profile:edit_user.html.twig")
      */
     public function createUserAction( Request $request )
     {
@@ -2391,10 +2391,10 @@ class UserController extends Controller
             //set avatar
             $this->processSetAvatar($user);
 
-            $user = $em->getRepository('OlegUserdirectoryBundle:ResearchLab')->processResearchLab( $user );
+            $user = $em->getRepository('AppUserdirectoryBundle:ResearchLab')->processResearchLab( $user );
 
             //process grants
-            $em->getRepository('OlegUserdirectoryBundle:Grant')->processGrant($user);
+            $em->getRepository('AppUserdirectoryBundle:Grant')->processGrant($user);
 
             //process employmentstatus attachments
             $this->processEmploymentStatus($user);
@@ -2413,7 +2413,7 @@ class UserController extends Controller
             foreach( $user->getRoles() as $role ) {
                 if( $role ) {
                     //echo "check role=".$role."<br>";
-                    $roleEntity = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName($role);
+                    $roleEntity = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($role);
                     if( $roleEntity && $roleEntity->hasSite("fellapp") && $roleEntity->getFellowshipSubspecialty() ) {
                         $fellappUtil->synchroniseFellowshipSubspecialtyAndProfileRoles( array($roleEntity->getFellowshipSubspecialty()) );
                     }
@@ -2446,7 +2446,7 @@ class UserController extends Controller
      * Optimized show user
      * @Route("/user/{id}", name="employees_showuser", requirements={"id" = "\d+"}, options={"expose"=true})
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:Profile:show_user.html.twig")
+     * @Template("AppUserdirectoryBundle:Profile:show_user.html.twig")
      */
     public function showUserOptimizedAction( Request $request, $id )
     {
@@ -2462,8 +2462,8 @@ class UserController extends Controller
 //
 //        $em = $this->getDoctrine()->getManager();
 //
-//        //$entity = $em->getRepository('OlegUserdirectoryBundle:User')->find($id,\Doctrine\ORM\Query::HYDRATE_ARRAY);
-//        $entity = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
+//        //$entity = $em->getRepository('AppUserdirectoryBundle:User')->find($id,\Doctrine\ORM\Query::HYDRATE_ARRAY);
+//        $entity = $em->getRepository('AppUserdirectoryBundle:User')->find($id);
 //
 //        if( !$entity ) {
 //            throw $this->createNotFoundException('Unable to find User entity.');
@@ -2505,8 +2505,8 @@ class UserController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        //$entity = $em->getRepository('OlegUserdirectoryBundle:User')->find($id,\Doctrine\ORM\Query::HYDRATE_ARRAY);
-        $entity = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
+        //$entity = $em->getRepository('AppUserdirectoryBundle:User')->find($id,\Doctrine\ORM\Query::HYDRATE_ARRAY);
+        $entity = $em->getRepository('AppUserdirectoryBundle:User')->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find User entity.');
@@ -2543,7 +2543,7 @@ class UserController extends Controller
      * 
      * @Route("/user/optimized/customh/{id}", name="employees_showuser_optimized_customh", requirements={"id" = "\d+"}, options={"expose"=true})
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:Profile:show_user.html.twig")
+     * @Template("AppUserdirectoryBundle:Profile:show_user.html.twig")
      */
     public function showUserOptimizedCustomhAction(Request $request, $id)
     {
@@ -2561,10 +2561,10 @@ class UserController extends Controller
 //            'user_id' => 1           
 //        );
         
-        //$entity = $em->getRepository('OlegUserdirectoryBundle:User')->find($id,\Doctrine\ORM\Query::HYDRATE_ARRAY);
+        //$entity = $em->getRepository('AppUserdirectoryBundle:User')->find($id,\Doctrine\ORM\Query::HYDRATE_ARRAY);
                
         
-        $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:User');
+        $repository = $this->getDoctrine()->getRepository('AppUserdirectoryBundle:User');
         $dql =  $repository->createQueryBuilder("user");
         $dql->select('user','infos','avatar');
         $dql->leftJoin("user.infos", "infos");
@@ -2578,7 +2578,7 @@ class UserController extends Controller
         
         $entity = $query->getSingleResult('SimpleHydrator');
         
-        //$entity = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
+        //$entity = $em->getRepository('AppUserdirectoryBundle:User')->find($id);
         
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find User entity.');
@@ -2625,7 +2625,7 @@ class UserController extends Controller
      * 
      * @Route("/user/only/{id}", name="employees_showuser_only")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:Profile:edit_user_only.html.twig")
+     * @Template("AppUserdirectoryBundle:Profile:edit_user_only.html.twig")
      */
     public function showOnlyUserAction(Request $request, $id)
     {
@@ -2661,7 +2661,7 @@ class UserController extends Controller
 
         $showUserArr = $this->showUser($request,$userid,$this->container->getParameter('employees.sitename'),false);
 
-        $template = $this->render('OlegUserdirectoryBundle:Profile:edit_user_only.html.twig',$showUserArr)->getContent();
+        $template = $this->render('AppUserdirectoryBundle:Profile:edit_user_only.html.twig',$showUserArr)->getContent();
 
         $json = json_encode($template);
         $response = new Response($json);
@@ -2675,7 +2675,7 @@ class UserController extends Controller
      * @Route("/user/show/{id}", name="employees_showuser_notstrict")
      * @Route("/user/object/{id}", name="employees_showuser_object", requirements={"id" = "\d+"}, options={"expose"=true})
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:Profile:edit_user.html.twig")
+     * @Template("AppUserdirectoryBundle:Profile:edit_user.html.twig")
      */
     public function showUserAction(Request $request, $id)
     {
@@ -2705,7 +2705,7 @@ class UserController extends Controller
         if( $id == 0 || $id == '' || $id == '' ) {
             $entity = new User();
         } else {
-            $entity = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
+            $entity = $em->getRepository('AppUserdirectoryBundle:User')->find($id);
 
             //check if this subject user is visible according to the subject user's preferences
             $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -2748,7 +2748,7 @@ class UserController extends Controller
         //get roles objects for this user
         $roleobjects = array();
         foreach( $entity->getRoles() as $role ) {
-            $roleEntity = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName($role);
+            $roleEntity = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($role);
             if( $roleEntity ) {
                 $roleobjects[] = $roleEntity;
             }
@@ -2776,7 +2776,7 @@ class UserController extends Controller
     /**
      * @Route("/edit-user-profile/{id}", name="employees_user_edit", requirements={"id" = "\d+"})
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:Profile:edit_user.html.twig")
+     * @Template("AppUserdirectoryBundle:Profile:edit_user.html.twig")
      */
     public function editUserAction(Request $request, $id)
     {
@@ -2801,7 +2801,7 @@ class UserController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
+        $entity = $em->getRepository('AppUserdirectoryBundle:User')->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find User entity.');
@@ -2907,7 +2907,7 @@ class UserController extends Controller
 
         $pathology = $userSecUtil->getAutoAssignInstitution();
         if( !$pathology ) {
-            $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+            $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
             if( !$wcmc ) {
                 //exit('No Institution: "WCM"');
                 throw $this->createNotFoundException('No Institution: "WCM"');
@@ -2917,7 +2917,7 @@ class UserController extends Controller
                 'bundleName' => 'UserdirectoryBundle',
                 'className' => 'Institution'
             );
-            $pathology = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+            $pathology = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
                 "Pathology and Laboratory Medicine",
                 $wcmc,
                 $mapper
@@ -3006,7 +3006,7 @@ class UserController extends Controller
     /**
      * @Route("/edit-user-profile/{id}", name="employees_user_update")
      * @Method("PUT")
-     * @Template("OlegUserdirectoryBundle:Profile:edit_user.html.twig")
+     * @Template("AppUserdirectoryBundle:Profile:edit_user.html.twig")
      */
     public function updateUserAction(Request $request, $id)
     {
@@ -3027,7 +3027,7 @@ class UserController extends Controller
         $logger = $this->container->get('logger');
         $loggedUser = $this->get('security.token_storage')->getToken()->getUser();
 
-        $entity = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
+        $entity = $em->getRepository('AppUserdirectoryBundle:User')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find User entity.');
@@ -3358,10 +3358,10 @@ class UserController extends Controller
             $this->processSetAvatar($entity);
 
             //process research labs
-            $entity = $em->getRepository('OlegUserdirectoryBundle:ResearchLab')->processResearchLab( $entity );
+            $entity = $em->getRepository('AppUserdirectoryBundle:ResearchLab')->processResearchLab( $entity );
 
             //process grants
-            $em->getRepository('OlegUserdirectoryBundle:Grant')->processGrant($entity); //update user
+            $em->getRepository('AppUserdirectoryBundle:Grant')->processGrant($entity); //update user
 
             //process employmentstatus attachments
             $this->processEmploymentStatus($entity);
@@ -3530,7 +3530,7 @@ class UserController extends Controller
             foreach( $resultRoles as $role ) {
                 if( $role ) {
                     //echo "check role=".$role."<br>";
-                    $roleEntity = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName($role);
+                    $roleEntity = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($role);
                     if( $roleEntity && $roleEntity->hasSite("fellapp") && $roleEntity->getFellowshipSubspecialty() ) {
                         $fellappUtil->synchroniseFellowshipSubspecialtyAndProfileRoles( array($roleEntity->getFellowshipSubspecialty()) );
                     }
@@ -3594,7 +3594,7 @@ class UserController extends Controller
 //
 //        //set Event Type
 //        $em = $this->getDoctrine()->getManager();
-//        $eventtype = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findOneByName($action);
+//        $eventtype = $em->getRepository('AppUserdirectoryBundle:EventTypeList')->findOneByName($action);
 //        $eventLog->setEventType($eventtype);
 //
 //        //get classname, entity name and id of subject entity
@@ -3628,7 +3628,7 @@ class UserController extends Controller
             //set Educational type for training Institution
             $institution = $training->getInstitution();
             if( $institution && $educationalType == null ) {
-                $educationalType = $em->getRepository('OlegUserdirectoryBundle:InstitutionType')->findOneByName("Educational");
+                $educationalType = $em->getRepository('AppUserdirectoryBundle:InstitutionType')->findOneByName("Educational");
             }
             if( $institution && $educationalType) {
                 $institution->addType($educationalType);
@@ -3670,7 +3670,7 @@ class UserController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         // process documents
-        $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $comment );
+        $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $comment );
 
         if( $comment == null ) {
             return;
@@ -3691,7 +3691,7 @@ class UserController extends Controller
 
             foreach( $employmentStatus->getAttachmentContainer()->getDocumentContainers() as $documentContainer) {
 
-                $documentContainer = $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $documentContainer );
+                $documentContainer = $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $documentContainer );
 
                 if( $documentContainer ) {
                     //$userUtil = new UserUtil();
@@ -3723,7 +3723,7 @@ class UserController extends Controller
         }
         $documentCoqType = $userSecUtil->getObjectByNameTransformer($user,"Certificate of Qualification Document",'UserdirectoryBundle','DocumentTypeList');
         foreach( $coqAttachmentContainer->getDocumentContainers() as $documentContainer) {
-            $documentContainer = $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $documentContainer,null,$documentCoqType );
+            $documentContainer = $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $documentContainer,null,$documentCoqType );
         }
 
         //Credentials's cliaAttachmentContainer
@@ -3733,7 +3733,7 @@ class UserController extends Controller
         }
         $documentCliaType = $userSecUtil->getObjectByNameTransformer($user,"CLIA Document",'UserdirectoryBundle','DocumentTypeList');
         foreach( $cliaAttachmentContainer->getDocumentContainers() as $documentContainer) {
-            $documentContainer = $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $documentContainer,null,$documentCliaType );
+            $documentContainer = $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $documentContainer,null,$documentCliaType );
         }
 
         //StateLicense's attachmentContainer
@@ -3742,7 +3742,7 @@ class UserController extends Controller
             $attachmentContainer = $stateLicense->getAttachmentContainer();
             if( $attachmentContainer ) {
                 foreach( $attachmentContainer->getDocumentContainers() as $documentContainer ) {
-                    $documentContainer = $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($documentContainer,null,$documentCredType);
+                    $documentContainer = $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($documentContainer,null,$documentCredType);
                 }
             }
         }
@@ -3753,7 +3753,7 @@ class UserController extends Controller
             $attachmentContainer = $boardCertification->getAttachmentContainer();
             if( $attachmentContainer ) {
                 foreach( $attachmentContainer->getDocumentContainers() as $documentContainer ) {
-                    $documentContainer = $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($documentContainer,null,$documentBoardcertType);
+                    $documentContainer = $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($documentContainer,null,$documentBoardcertType);
                 }
             }
         }
@@ -3791,7 +3791,7 @@ class UserController extends Controller
         if( $userwrappers && count($userwrappers) > 0 ) {
 
             //1) get all wrappers with this user
-            $userWrappers = $em->getRepository('OlegUserdirectoryBundle:UserWrapper')->findByUser($user->getId());
+            $userWrappers = $em->getRepository('AppUserdirectoryBundle:UserWrapper')->findByUser($user->getId());
 
             //2) remove this user from all wrappers except in $userwrappers array.
             foreach( $userWrappers as $userWrapper ) {
@@ -3809,7 +3809,7 @@ class UserController extends Controller
 
             //3) add user to the wrappers in array $userwrappers
             foreach( $userwrappers as $userWrapperId ) {
-                $userWrapper = $em->getRepository('OlegUserdirectoryBundle:UserWrapper')->find($userWrapperId);
+                $userWrapper = $em->getRepository('AppUserdirectoryBundle:UserWrapper')->find($userWrapperId);
                 if( $userWrapper ) {
                     if( !$userWrapper->getUser() ) {
                         $userWrapper->setUser($user);
@@ -3891,7 +3891,7 @@ class UserController extends Controller
             if( $avatarid && $avatarid != "" ) {
                 //echo "avatarid=".$avatarid."<br>";
                 $em = $this->getDoctrine()->getManager();
-                $avatar = $em->getRepository('OlegUserdirectoryBundle:Document')->find($avatarid);
+                $avatar = $em->getRepository('AppUserdirectoryBundle:Document')->find($avatarid);
                 $subjectUser->setAvatar($avatar);
             } else {
                 //echo "null avatarid=".$avatarid."<br>";
@@ -3918,7 +3918,7 @@ class UserController extends Controller
         $em->clear();
 
         //echo "1 oldAvatarId=".$oldAvatarId."<br>";
-        $oldAvatar = $em->getRepository('OlegUserdirectoryBundle:Document')->find($oldAvatarId);
+        $oldAvatar = $em->getRepository('AppUserdirectoryBundle:Document')->find($oldAvatarId);
 
         if( $oldAvatar ) {
 
@@ -3980,10 +3980,10 @@ class UserController extends Controller
 
                         if( $title instanceof ResearchLab ) {
                             //remove dependents: remove comments and id from lab
-                            $em->getRepository('OlegUserdirectoryBundle:ResearchLab')->removeDependents( $subjectUser, $title );
+                            $em->getRepository('AppUserdirectoryBundle:ResearchLab')->removeDependents( $subjectUser, $title );
                         } elseif ( $title instanceof Grant ) {
                             //remove dependents: remove documents
-                            $em->getRepository('OlegUserdirectoryBundle:Grant')->removeDependents( $subjectUser, $title );
+                            $em->getRepository('AppUserdirectoryBundle:Grant')->removeDependents( $subjectUser, $title );
                         } else {
                             if( method_exists($title,'removeUser') ) {
                                 $title->removeUser($subjectUser);
@@ -4041,7 +4041,7 @@ class UserController extends Controller
      *
      * @Route("/user/generate", name="generate_users")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:Admin:users.html.twig")
+     * @Template("AppUserdirectoryBundle:Admin:users.html.twig")
      */
     public function generateUsersAction()
     {
@@ -4082,7 +4082,7 @@ class UserController extends Controller
     public function getUserRoles( $asLabelValue=true ) {
         $rolesArr = array();
         $em = $this->getDoctrine()->getManager();
-        $roles = $em->getRepository('OlegUserdirectoryBundle:Roles')->findBy(
+        $roles = $em->getRepository('AppUserdirectoryBundle:Roles')->findBy(
             array('type' => array('default','user-added')),
             array('orderinlist' => 'ASC')
         );  //findAll();
@@ -4117,7 +4117,7 @@ class UserController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
+        $user = $em->getRepository('AppUserdirectoryBundle:User')->find($id);
 
         if (!$user) {
             throw $this->createNotFoundException('Unable to find User entity.');
@@ -4430,7 +4430,7 @@ class UserController extends Controller
     /**
      * @Route("/user/save-avatar", name="employees_save_avatar")
      * @Method("POST")
-     * @Template("OlegUserdirectoryBundle:Admin:users.html.twig")
+     * @Template("AppUserdirectoryBundle:Admin:users.html.twig")
      */
     public function saveAvatarAction(Request $request)
     {
@@ -4491,7 +4491,7 @@ class UserController extends Controller
             $object->setSize($size);
 
             //document's type
-            $documentType = $em->getRepository('OlegUserdirectoryBundle:DocumentTypeList')->findOneByName('Avatar Image');
+            $documentType = $em->getRepository('AppUserdirectoryBundle:DocumentTypeList')->findOneByName('Avatar Image');
             $object->setType($documentType);
 
             $em->persist($object);
@@ -4526,7 +4526,7 @@ class UserController extends Controller
     /**
      * @Route("/user/impersonate/{id}", name="employees_user_impersonate")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:Profile:show_user.html.twig")
+     * @Template("AppUserdirectoryBundle:Profile:show_user.html.twig")
      */
     public function impersonateUserAction(Request $request, $id)
     {
@@ -4537,7 +4537,7 @@ class UserController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         //get username
-        $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
+        $user = $em->getRepository('AppUserdirectoryBundle:User')->find($id);
         $username = $user->getUsername();
 
         //http://example.com/somewhere?_switch_user=thomas
@@ -4550,7 +4550,7 @@ class UserController extends Controller
     /**
      * @Route("/user/employment-terminate/{id}", name="employees_user_employment_terminate")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:Profile:show_user.html.twig")
+     * @Template("AppUserdirectoryBundle:Profile:show_user.html.twig")
      */
     public function employmentTerminateAction(Request $request, $id)
     {
@@ -4562,7 +4562,7 @@ class UserController extends Controller
         $userAdmin = $this->get('security.token_storage')->getToken()->getUser();
 
         //get username
-        $subjectUser = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
+        $subjectUser = $em->getRepository('AppUserdirectoryBundle:User')->find($id);
 
         $todayDate = new \DateTime();
         //$todayDateStr = $todayDate->format("m/d/Y");
@@ -4582,7 +4582,7 @@ class UserController extends Controller
 //            $employmentStatus->createAttachmentDocument();
 //            //echo "employ inst=".$employmentStatus->getInstitution()."<br>";
 //            if( !$employmentStatus->getInstitution() ) {
-//                $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+//                $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
 //                if( !$wcmc ) {
 //                    //exit('No Institution: "WCM"');
 //                    throw $this->createNotFoundException('No Institution: "WCM"');
@@ -4592,7 +4592,7 @@ class UserController extends Controller
 //                    'bundleName' => 'UserdirectoryBundle',
 //                    'className' => 'Institution'
 //                );
-//                $pathology = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+//                $pathology = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
 //                    "Pathology and Laboratory Medicine",
 //                    $wcmc,
 //                    $mapper
@@ -4671,7 +4671,7 @@ class UserController extends Controller
 
         //testing
 //        $em = $this->getDoctrine()->getManager();
-//        $user = $em->getRepository('OlegUserdirectoryBundle:User')->find(158);//"Melissa"
+//        $user = $em->getRepository('AppUserdirectoryBundle:User')->find(158);//"Melissa"
 //        echo "<br>live user=".$user.":<br>";
 //        $instResArr = $user->getDeduplicatedInstitutions();
 //        foreach( $instResArr as $instRes ) {
@@ -4679,7 +4679,7 @@ class UserController extends Controller
 //            $instName = strtoupper($instName);
 //            echo "add instName=".$instName."<br>";
 //        }
-//        $user = $em->getRepository('OlegUserdirectoryBundle:User')->find(71);//"Melissa"
+//        $user = $em->getRepository('AppUserdirectoryBundle:User')->find(71);//"Melissa"
 //        echo "<br>test user=".$user.":<br>";
 //        $instResArr = $user->getDeduplicatedInstitutions();
 //        foreach( $instResArr as $instRes ) {
@@ -4705,11 +4705,11 @@ class UserController extends Controller
         );
 
         //$wcmcpathology
-        //$wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+        //$wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
         //navbarFilterInstitution1
         $wcmc = $userSecUtil->getSiteSettingParameter('navbarFilterInstitution1');
         if( $wcmc ) {
-            $wcmcpathology = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+            $wcmcpathology = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
                 "Pathology and Laboratory Medicine",
                 $wcmc,
                 $mapper
@@ -4718,10 +4718,10 @@ class UserController extends Controller
         }
 
         //$nyppathology
-        //$nyp = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("NYP");
+        //$nyp = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("NYP");
         $nyp = $userSecUtil->getSiteSettingParameter('navbarFilterInstitution2');
         if( $nyp ) {
-            $nyppathology = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+            $nyppathology = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
                 "Pathology and Laboratory Medicine",
                 $nyp,
                 $mapper
@@ -4884,7 +4884,7 @@ class UserController extends Controller
     /**
      * @Route("/label/user/preview/{id}", name="employees_user_label_preview")
      * @Method({"GET","POST"})
-     * @Template("OlegUserdirectoryBundle:Labels:label_user_preview.html.twig")
+     * @Template("AppUserdirectoryBundle:Labels:label_user_preview.html.twig")
      */
     public function averySingleUserPrintAction(Request $request, $id) {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
@@ -4895,7 +4895,7 @@ class UserController extends Controller
         $userDownloadUtil = $this->container->get('user_download_utility');
 
         //get user label
-        $subjectUser = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
+        $subjectUser = $em->getRepository('AppUserdirectoryBundle:User')->find($id);
         $userElStr = $userDownloadUtil->getLabelSingleUser($subjectUser);
 
         $params = array('label'=>$userElStr,'singleUser'=>true);
@@ -4948,7 +4948,7 @@ class UserController extends Controller
                 $labelCount++;
             }
 
-            return $this->render('OlegUserdirectoryBundle:Labels:avery_5160.html.twig', array(
+            return $this->render('AppUserdirectoryBundle:Labels:avery_5160.html.twig', array(
                 'userlabels' => $usersArr,
                 'labelperpage' => 30,    //30
                 'dotborders' => $dotborders,
@@ -4966,7 +4966,7 @@ class UserController extends Controller
     /**
      * @Route("/label/users/preview/", name="employees_users_label_preview")
      * @Method({"GET","POST"})
-     * @Template("OlegUserdirectoryBundle:Labels:label_user_preview.html.twig")
+     * @Template("AppUserdirectoryBundle:Labels:label_user_preview.html.twig")
      */
     public function averyMultipleUsersPrintAction(Request $request) {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
@@ -4987,11 +4987,11 @@ class UserController extends Controller
         );
 
         //$wcmcpathology
-        //$wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+        //$wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
         //navbarFilterInstitution1
         $wcmc = $userSecUtil->getSiteSettingParameter('navbarFilterInstitution1');
         if( $wcmc ) {
-            $wcmcpathology = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+            $wcmcpathology = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
                 "Pathology and Laboratory Medicine",
                 $wcmc,
                 $mapper
@@ -5000,10 +5000,10 @@ class UserController extends Controller
         }
 
         //$nyppathology
-        //$nyp = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("NYP");
+        //$nyp = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("NYP");
         $nyp = $userSecUtil->getSiteSettingParameter('navbarFilterInstitution2');
         if( $nyp ) {
-            $nyppathology = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+            $nyppathology = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
                 "Pathology and Laboratory Medicine",
                 $nyp,
                 $mapper
@@ -5012,7 +5012,7 @@ class UserController extends Controller
         }
 
         //get users
-        //$users = $em->getRepository('OlegUserdirectoryBundle:User')->findAll();
+        //$users = $em->getRepository('AppUserdirectoryBundle:User')->findAll();
         ////////////// WCM Pathology Employees Download Faculty //////////////
         $filterFaculty = "$inst1 Pathology Employees Download Faculty";
         $paramsFaculty = array('filter'=>$filterFaculty,'time'=>'current_only','limitFlag'=>null);
@@ -5085,7 +5085,7 @@ class UserController extends Controller
                 $labelCount++;
             }
 
-            return $this->render('OlegUserdirectoryBundle:Labels:avery_5160.html.twig', array(
+            return $this->render('AppUserdirectoryBundle:Labels:avery_5160.html.twig', array(
                 'userlabels' => $usersArr,
                 'labelperpage' => 30,    //30
                 'dotborders' => $dotborders,
@@ -5104,7 +5104,7 @@ class UserController extends Controller
 
 //    /**
 //     * @Route("/account-creation/", name="employees_account_creation")
-//     * @Template("OlegTranslationalResearchBundle:AccessRequest:account_confirmation.html.twig")
+//     * @Template("AppTranslationalResearchBundle:AccessRequest:account_confirmation.html.twig")
 //     * @Method({"GET", "POST"})
 //     */
 //    public function accountConfirmationAction(Request $request)

@@ -15,10 +15,10 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Form;
+namespace App\UserdirectoryBundle\Form;
 
 
-use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
+use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -132,11 +132,11 @@ class BaseTitleType extends AbstractType
                 $institution = $title->getInstitution();
                 //echo "inst=".$institution."<br>";
                 if( $institution ) {
-                    $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
+                    $label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
                 }
             }
             if( !$label ) {
-                $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
+                $label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
             }
             //echo "label=".$label."<br>";
 
@@ -163,14 +163,14 @@ class BaseTitleType extends AbstractType
                 $userSecUtil = $this->params['container']->get('user_security_utility');
                 $newInstitution = $userSecUtil->getAutoAssignInstitution();
                 if( !$newInstitution ) {
-                    $wcmc = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+                    $wcmc = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
                     if( $wcmc ) {
                         $mapper = array(
-                            'prefix' => "Oleg",
+                            'prefix' => "App",
                             'className' => "Institution",
                             'bundleName' => "UserdirectoryBundle"
                         );
-                        $newInstitution = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+                        $newInstitution = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
                             "Pathology and Laboratory Medicine",
                             $wcmc,
                             $mapper
@@ -180,11 +180,11 @@ class BaseTitleType extends AbstractType
                 //echo "newInstitution=".$newInstitution."<br>";
 
 //                //preset default institution for AdministrativeTitle - Weill Cornell or New York Presbyterian Hospital
-//                if ($this->params['fullClassName'] == "Oleg\UserdirectoryBundle\Entity\AdministrativeTitle") {
+//                if ($this->params['fullClassName'] == "App\UserdirectoryBundle\Entity\AdministrativeTitle") {
 //                    //echo "AdministrativeTitle<br>"; //$treeParams = "entityIds=1,106";
-//                    $wcmc = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+//                    $wcmc = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
 //                    if( $wcmc ) {
-//                        $newInstitution = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+//                        $newInstitution = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
 //                            "Pathology and Laboratory Medicine",
 //                            $wcmc,
 //                            $mapper
@@ -192,11 +192,11 @@ class BaseTitleType extends AbstractType
 //                    }
 //                }
 //                //preset default institution for AppointmentTitle (Academic Title) - Weill Cornell
-//                if ($this->params['fullClassName'] == "Oleg\UserdirectoryBundle\Entity\AppointmentTitle") {
+//                if ($this->params['fullClassName'] == "App\UserdirectoryBundle\Entity\AppointmentTitle") {
 //                    //echo "AppointmentTitle<br>"; //$treeParams = "entityIds=1";
-//                    $wcmc = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+//                    $wcmc = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
 //                    if( $wcmc ) {
-//                        $newInstitution = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+//                        $newInstitution = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
 //                            "Pathology and Laboratory Medicine",
 //                            $wcmc,
 //                            $mapper
@@ -204,11 +204,11 @@ class BaseTitleType extends AbstractType
 //                    }
 //                }
 //                //preset default institution for MedicalTitle (Academic Title) - New York Presbyterian Hospital
-//                if ($this->params['fullClassName'] == "Oleg\UserdirectoryBundle\Entity\MedicalTitle") {
+//                if ($this->params['fullClassName'] == "App\UserdirectoryBundle\Entity\MedicalTitle") {
 //                    //echo "MedicalTitle<br>"; //$treeParams = "entityIds=106";
-//                    $nyp = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("NYP");
+//                    $nyp = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("NYP");
 //                    if ($nyp) {
-//                        $newInstitution = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+//                        $newInstitution = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
 //                            "Pathology and Laboratory Medicine",
 //                            $nyp,
 //                            $mapper
@@ -218,7 +218,7 @@ class BaseTitleType extends AbstractType
 
                 if( $newInstitution ) {
                     $treeFieldArray['data'] = $newInstitution->getId();
-                    $treeFieldArray['label'] = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels($newInstitution) . ":";
+                    $treeFieldArray['label'] = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels($newInstitution) . ":";
                 }
                 //if( $treeParams ) {
                     //$attrArray['data-compositetree-params'] = $treeParams;
@@ -251,7 +251,7 @@ class BaseTitleType extends AbstractType
         }
 
         //position, residencyTrack, fellowshipType, pgy for AppointmentTitle (Academic Appointment Title)
-        if( $this->params['fullClassName'] == "Oleg\UserdirectoryBundle\Entity\AppointmentTitle" ) {
+        if( $this->params['fullClassName'] == "App\UserdirectoryBundle\Entity\AppointmentTitle" ) {
 //            $builder->add('position', 'choice', array(
 //                'choices'   => array(
 //                    'Resident'   => 'Resident',
@@ -265,7 +265,7 @@ class BaseTitleType extends AbstractType
 //                'attr' => array('class' => 'combobox combobox-width appointmenttitle-position-field', 'onchange'=>'positionTypeAction(this)'),
 //            ));
             $builder->add( 'positions', EntityType::class, array(
-                'class' => 'OlegUserdirectoryBundle:PositionTrackTypeList',
+                'class' => 'AppUserdirectoryBundle:PositionTrackTypeList',
                 'choice_label' => 'name',
                 'label'=>'Position Track Type(s):',
                 'required'=> false,
@@ -283,7 +283,7 @@ class BaseTitleType extends AbstractType
             ));
 
             $builder->add( 'residencyTrack', EntityType::class, array(
-                'class' => 'OlegUserdirectoryBundle:ResidencyTrackList',
+                'class' => 'AppUserdirectoryBundle:ResidencyTrackList',
                 'choice_label' => 'name',
                 'label'=>'Residency Track:',
                 'required'=> false,
@@ -333,17 +333,17 @@ class BaseTitleType extends AbstractType
 
 
         //boss
-        if( $this->params['fullClassName'] == "Oleg\UserdirectoryBundle\Entity\AdministrativeTitle" ) {
+        if( $this->params['fullClassName'] == "App\UserdirectoryBundle\Entity\AdministrativeTitle" ) {
 
 //            $builder->add('boss','entity',array(
-//                'class' => 'OlegUserdirectoryBundle:User',
+//                'class' => 'AppUserdirectoryBundle:User',
 //                'label' => "Reports to:",
 //                'multiple' => true,
 //                'attr' => array('class'=>'combobox combobox-width'),
 //                'required' => false
 //            ));
             $builder->add( 'boss', EntityType::class, array(
-                'class' => 'OlegUserdirectoryBundle:User',
+                'class' => 'AppUserdirectoryBundle:User',
                 'label'=>'Reports to:',
                 'required'=> false,
                 'multiple' => true,
@@ -359,7 +359,7 @@ class BaseTitleType extends AbstractType
             ));
 
             $builder->add('userPositions',EntityType::class,array(
-                'class' => 'OlegUserdirectoryBundle:PositionTypeList',
+                'class' => 'AppUserdirectoryBundle:PositionTypeList',
                 'label' => "Position Type:",
                 'multiple' => true,
                 'attr' => array('class'=>'combobox combobox-width'),
@@ -394,10 +394,10 @@ class BaseTitleType extends AbstractType
 
 
         //specialties for Medical Appointment Title)
-        if( $this->params['fullClassName'] == "Oleg\UserdirectoryBundle\Entity\MedicalTitle" ) {
+        if( $this->params['fullClassName'] == "App\UserdirectoryBundle\Entity\MedicalTitle" ) {
 
             $builder->add( 'specialties', EntityType::class, array(
-                'class' => 'OlegUserdirectoryBundle:MedicalSpecialties',
+                'class' => 'AppUserdirectoryBundle:MedicalSpecialties',
                 'choice_label' => 'name',
                 'label'=>'Specialty(s):',
                 'required'=> false,
@@ -415,7 +415,7 @@ class BaseTitleType extends AbstractType
             ));
 
             $builder->add('userPositions', EntityType::class, array(
-                'class' => 'OlegUserdirectoryBundle:PositionTypeList',
+                'class' => 'AppUserdirectoryBundle:PositionTypeList',
                 'label' => "Position Type:",
                 'multiple' => true,
                 'attr' => array('class'=>'combobox combobox-width'),
@@ -434,7 +434,7 @@ class BaseTitleType extends AbstractType
 
         $resolver->setDefaults(array(
             'data_class' => null,   //$this->params['fullClassName'],
-            //'data_class' => 'Oleg\UserdirectoryBundle\Entity\AdministrativeTitle',
+            //'data_class' => 'App\UserdirectoryBundle\Entity\AdministrativeTitle',
             //'csrf_protection' => false,
             'allow_extra_fields' => true,
             'form_custom_value' => null

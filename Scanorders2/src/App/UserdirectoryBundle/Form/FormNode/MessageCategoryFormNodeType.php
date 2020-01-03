@@ -22,11 +22,11 @@
  * Time: 9:58 AM
  */
 
-namespace Oleg\UserdirectoryBundle\Form;
+namespace App\UserdirectoryBundle\Form;
 
 
-use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
-use Oleg\UserdirectoryBundle\Form\FormNode\FormNodeType;
+use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
+use App\UserdirectoryBundle\Form\FormNode\FormNodeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -53,18 +53,18 @@ class MessageCategoryFormNodeType extends FormNodeType
 
             $label = null;
             $mapper = array(
-                'prefix' => "Oleg",
+                'prefix' => "App",
                 'className' => "MessageCategory",
                 'bundleName' => "OrderformBundle",
                 'organizationalGroupType' => "MessageTypeClassifiers"
             );
 
             if ($messageCategory) {
-                $label = $this->params['em']->getRepository('OlegOrderformBundle:MessageCategory')->getLevelLabels($messageCategory, $mapper);
+                $label = $this->params['em']->getRepository('AppOrderformBundle:MessageCategory')->getLevelLabels($messageCategory, $mapper);
             }
 
             if (!$label) {
-                $label = $this->params['em']->getRepository('OlegOrderformBundle:MessageCategory')->getLevelLabels(null, $mapper) . ":";
+                $label = $this->params['em']->getRepository('AppOrderformBundle:MessageCategory')->getLevelLabels(null, $mapper) . ":";
             }
 
             //echo "show defaultInstitution label=".$label."<br>";
@@ -99,7 +99,7 @@ class MessageCategoryFormNodeType extends FormNodeType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\MessageCategory',
+            'data_class' => 'App\UserdirectoryBundle\Entity\MessageCategory',
             //'csrf_protection' => false
             //'allow_extra_fields' => true
         ));

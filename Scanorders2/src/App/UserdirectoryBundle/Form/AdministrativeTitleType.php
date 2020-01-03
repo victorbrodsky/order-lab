@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Form;
+namespace App\UserdirectoryBundle\Form;
 
 
 use Symfony\Component\Form\AbstractType;
@@ -34,7 +34,7 @@ class AdministrativeTitleType extends BaseTitleType
     {
 
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\AdministrativeTitle',
+            'data_class' => 'App\UserdirectoryBundle\Entity\AdministrativeTitle',
             'allow_extra_fields' => true,
             'form_custom_value' => null
         ));

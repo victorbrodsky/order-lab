@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Controller;
+namespace App\UserdirectoryBundle\Controller;
 
 
 
@@ -32,7 +32,7 @@ class DefaultController extends Controller
 
     /**
      * @Route("/thanks-for-downloading/{id}/{sitename}", name="common_thankfordownloading")
-     * @Template("OlegUserdirectoryBundle:Default:thanksfordownloading.html.twig")
+     * @Template("AppUserdirectoryBundle:Default:thanksfordownloading.html.twig")
      * @Method("GET")
      */
     public function thankfordownloadingAction(Request $request, $id, $sitename) {
@@ -45,7 +45,7 @@ class DefaultController extends Controller
 
     /**
      * @Route("/show-system-log", name="employees_show_system_log")
-     * @Template("OlegUserdirectoryBundle:Default:show-system-log.html.twig")
+     * @Template("AppUserdirectoryBundle:Default:show-system-log.html.twig")
      * @Method("GET")
      */
     public function showSystemLogAction(Request $request) {
@@ -78,7 +78,7 @@ class DefaultController extends Controller
 
     /**
      * @Route("/show-system-test-error-log", name="employees_show_system_test_error_log")
-     * @Template("OlegUserdirectoryBundle:Default:show-system-log.html.twig")
+     * @Template("AppUserdirectoryBundle:Default:show-system-log.html.twig")
      * @Method("GET")
      */
     public function showSystemTestLogAction(Request $request) {
@@ -112,7 +112,7 @@ class DefaultController extends Controller
 
 //    /**
 //     * @Route("/", name="employees_home")
-//     * @Template("OlegUserdirectoryBundle:Default:home.html.twig")
+//     * @Template("AppUserdirectoryBundle:Default:home.html.twig")
 //     */
 //    public function indexAction()
 //    {
@@ -152,7 +152,7 @@ class DefaultController extends Controller
 
 //    /**
 //     * @Route("/admin", name="employees_admin")
-//     * @Template("OlegUserdirectoryBundle:Default:index.html.twig")
+//     * @Template("AppUserdirectoryBundle:Default:index.html.twig")
 //     */
 //    public function adminAction()
 //    {
@@ -188,7 +188,7 @@ class DefaultController extends Controller
 
         //get generated users by createdby
         //$createdBy = "manual-".$sitename;
-        $repository = $em->getRepository('OlegUserdirectoryBundle:User');
+        $repository = $em->getRepository('AppUserdirectoryBundle:User');
         $dql = $repository->createQueryBuilder("user");
         $dql->where("user.createdby LIKE '%manual-%'");
         $query = $em->createQuery($dql);
@@ -214,7 +214,7 @@ class DefaultController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         //get the date from event log
-        $repository = $em->getRepository('OlegUserdirectoryBundle:Logger');
+        $repository = $em->getRepository('AppUserdirectoryBundle:Logger');
         $dql = $repository->createQueryBuilder("logger");
 
 
@@ -265,9 +265,9 @@ class DefaultController extends Controller
         //Test 1
         $em = $this->getDoctrine()->getManager();
         $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
-        $letterOne = $em->getRepository('OlegUserdirectoryBundle:Document')->findOneById(877);
+        $letterOne = $em->getRepository('AppUserdirectoryBundle:Document')->findOneById(877);
         $letterOnePath = $letterOne->getServerPath();
-        $letterTwo = $em->getRepository('OlegUserdirectoryBundle:Document')->findOneById(875);
+        $letterTwo = $em->getRepository('AppUserdirectoryBundle:Document')->findOneById(875);
         $letterTwoPath = $letterTwo->getServerPath();
         $identical = $fellappRecLetterUtil->checkIfFilesIdentical($letterOnePath,$letterTwoPath,$fileTwoHash=null);
         if( $identical ) {

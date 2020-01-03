@@ -22,18 +22,18 @@
  * Time: 9:27 AM
  */
 
-namespace Oleg\DeidentifierBundle\Security\Voter;
+namespace App\DeidentifierBundle\Security\Voter;
 
 
-//use Oleg\OrderformBundle\Security\Voter\PatientHierarchyVoter;
-use Oleg\UserdirectoryBundle\Security\Voter\BasePermissionVoter;
+//use App\OrderformBundle\Security\Voter\PatientHierarchyVoter;
+use App\UserdirectoryBundle\Security\Voter\BasePermissionVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 //use Symfony\Component\Security\Core\User\UserInterface;
 //use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 
-use Oleg\UserdirectoryBundle\Entity\User;
+use App\UserdirectoryBundle\Entity\User;
 
 
 
@@ -116,7 +116,7 @@ class DeidentifierPermissionVoter extends BasePermissionVoter //BasePermissionVo
 //        //echo "className=".$className."<br>";
 //
 //        //check if the user has role with a permission $subject class name (i.e. "Patient") and "read"
-//        if( $this->em->getRepository('OlegUserdirectoryBundle:User')->isUserHasPermissionObjectAction( $user, $className, "read" ) ) {
+//        if( $this->em->getRepository('AppUserdirectoryBundle:User')->isUserHasPermissionObjectAction( $user, $className, "read" ) ) {
 //            //exit('can View! exit');
 //            return true;
 //        } else {
@@ -157,7 +157,7 @@ class DeidentifierPermissionVoter extends BasePermissionVoter //BasePermissionVo
 //        //echo "className=".$className."<br>";
 //
 //        //check if the user has role with a permission $subject class name (i.e. "Patient") and "read"
-//        if( $this->em->getRepository('OlegUserdirectoryBundle:User')->isUserHasPermissionObjectAction( $user, $className, "create" ) ) {
+//        if( $this->em->getRepository('AppUserdirectoryBundle:User')->isUserHasPermissionObjectAction( $user, $className, "create" ) ) {
 //            //exit('can View! exit');
 //            return true;
 //        } else {

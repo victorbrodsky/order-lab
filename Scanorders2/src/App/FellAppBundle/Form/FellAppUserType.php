@@ -16,10 +16,10 @@
  *  limitations under the License.
  */
 
-namespace Oleg\FellAppBundle\Form;
+namespace App\FellAppBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
-use Oleg\UserdirectoryBundle\Form\UserType;
+use App\UserdirectoryBundle\Form\UserType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -50,7 +50,7 @@ class FellAppUserType extends UserType
 
         //DOB
         $builder->add('credentials', FellAppCredentialsType::class, array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\Credentials',
+            'data_class' => 'App\UserdirectoryBundle\Entity\Credentials',
             'label' => false,
             'required' => false,
         ));

@@ -15,10 +15,10 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Controller;
+namespace App\OrderformBundle\Controller;
 
 
-use Oleg\UserdirectoryBundle\Controller\ComplexListController;
+use App\UserdirectoryBundle\Controller\ComplexListController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -31,10 +31,10 @@ use Symfony\Component\HttpFoundation\Session;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Config\Definition\Exception\ForbiddenOverwriteException;
 
-use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
-use Oleg\UserdirectoryBundle\Form\LocationType;
-use Oleg\UserdirectoryBundle\Util\UserUtil;
-use Oleg\UserdirectoryBundle\Entity\Location;
+use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
+use App\UserdirectoryBundle\Form\LocationType;
+use App\UserdirectoryBundle\Util\UserUtil;
+use App\UserdirectoryBundle\Entity\Location;
 
 
 class ScanComplexListController extends ComplexListController
@@ -45,7 +45,7 @@ class ScanComplexListController extends ComplexListController
      * @Route("/list/laboratoty-tests/", name="scan_labtests_pathaction_list")
      *
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:ComplexList:index.html.twig")
+     * @Template("AppUserdirectoryBundle:ComplexList:index.html.twig")
      */
     public function indexAction(Request $request)
     {
@@ -65,7 +65,7 @@ class ScanComplexListController extends ComplexListController
      *
      *
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:ComplexList:new.html.twig")
+     * @Template("AppUserdirectoryBundle:ComplexList:new.html.twig")
      */
     public function showListAction(Request $request, $id)
     {
@@ -88,7 +88,7 @@ class ScanComplexListController extends ComplexListController
      * @Route("/admin/laboratory-tests/new", name="scan_labtests_pathaction_new_standalone")
      *
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:ComplexList:new.html.twig")
+     * @Template("AppUserdirectoryBundle:ComplexList:new.html.twig")
      */
     public function newListAction(Request $request)
     {
@@ -105,7 +105,7 @@ class ScanComplexListController extends ComplexListController
      * @Route("/admin/laboratory-tests/new", name="scan_labtests_pathaction_new_post_standalone")
      *
      * @Method("POST")
-     * @Template("OlegUserdirectoryBundle:ComplexList:new.html.twig")
+     * @Template("AppUserdirectoryBundle:ComplexList:new.html.twig")
      */
     public function createListAction( Request $request )
     {
@@ -122,7 +122,7 @@ class ScanComplexListController extends ComplexListController
      * @Route("/admin/laboratory-tests/{id}", name="scan_labtests_pathaction_edit_put_standalone",requirements={"id" = "\d+"})
      *
      * @Method("PUT")
-     * @Template("OlegUserdirectoryBundle:ComplexList:new.html.twig")
+     * @Template("AppUserdirectoryBundle:ComplexList:new.html.twig")
      */
     public function updateListAction( Request $request, $id )
     {
@@ -144,7 +144,7 @@ class ScanComplexListController extends ComplexListController
         $pieces = explode("_pathaction_", $route);
         $name = str_replace("scan_","",$pieces[0]);
         $cycle = $pieces[1];
-        $bundlePrefix = "Oleg";
+        $bundlePrefix = "App";
         $bundleName = "UserdirectoryBundle";
 
         switch( $name ) {

@@ -15,9 +15,9 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Form;
+namespace App\UserdirectoryBundle\Form;
 
-use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
+use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -123,7 +123,7 @@ class UserRequestType extends AbstractType
             'multiple' => false,
             //'empty_value' => false,
             'choice_label' => 'getNodeNameWithRoot',
-            'class' => 'OlegUserdirectoryBundle:Institution',
+            'class' => 'AppUserdirectoryBundle:Institution',
             'choices' => $requestedScanOrderInstitutionScope,
             'attr' => array('class' => 'combobox combobox-width combobox-institution')
         ));
@@ -137,11 +137,11 @@ class UserRequestType extends AbstractType
             if( $title ) {
                 $institution = $title->getRequestedScanOrderInstitutionScope();
                 if( $institution ) {
-                    $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
+                    $label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
                 }
             }
             if( !$label ) {
-                $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
+                $label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
             }
 
             $form->add('requestedScanOrderInstitutionScope', CustomSelectorType::class, array(
@@ -198,11 +198,11 @@ class UserRequestType extends AbstractType
             'required'=> true,
             //'multiple' => true,
             //'empty_value' => false,
-            'class' => 'OlegUserdirectoryBundle:SourceSystemList',
+            'class' => 'AppUserdirectoryBundle:SourceSystemList',
             'attr' => array('class' => 'combobox combobox-width')
         ));
         $builder->add( 'systemAccountRequest', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:SourceSystemList',
+            'class' => 'AppUserdirectoryBundle:SourceSystemList',
             //'choice_label' => 'name',
             'label' => 'System for which the account is being requested:',
             'required'=> false,
@@ -224,7 +224,7 @@ class UserRequestType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\UserRequest',
+            'data_class' => 'App\UserdirectoryBundle\Entity\UserRequest',
             'form_custom_value' => null
         ));
     }

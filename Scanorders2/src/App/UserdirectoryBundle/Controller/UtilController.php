@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Controller;
+namespace App\UserdirectoryBundle\Controller;
 
 
 
@@ -27,8 +27,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
-use Oleg\UserdirectoryBundle\Util\UserUtil;
-use Oleg\UserdirectoryBundle\Security\Authentication\AuthUtil;
+use App\UserdirectoryBundle\Util\UserUtil;
+use App\UserdirectoryBundle\Security\Authentication\AuthUtil;
 
 //TODO: optimise by removing foreach loops:
 //create optimalShortName: return abbr, or return short, or return name
@@ -81,7 +81,7 @@ class UtilController extends Controller {
                         $optionArr = array('default','user-added');
                     }
 
-                    $entities = $em->getRepository('Oleg'.$bundleName.':'.$className)->findBy(
+                    $entities = $em->getRepository('App'.$bundleName.':'.$className)->findBy(
                         array('type' => $optionArr)
                     );
                     foreach( $entities as $entity ) {
@@ -92,7 +92,7 @@ class UtilController extends Controller {
 
 
                 default:
-                    $query = $em->createQueryBuilder()->from('Oleg'.$bundleName.':'.$className, 'list')
+                    $query = $em->createQueryBuilder()->from('App'.$bundleName.':'.$className, 'list')
                         ->select("list.id as id, list.name as text")
                         ->orderBy("list.orderinlist","ASC");
 
@@ -145,7 +145,7 @@ class UtilController extends Controller {
         if( $className && is_numeric($pid) ) {
             //echo "className=".$className."<br>";
             $query = $em->createQueryBuilder()
-                ->from('Oleg'.$bundleName.':'.$className, 'list')
+                ->from('App'.$bundleName.':'.$className, 'list')
                 ->innerJoin("list.parent", "parent")
                 ->select("list.id as id, list.name as text, parent.id as parentid")
                 //->select("list.name as id, list.name as text")
@@ -161,7 +161,7 @@ class UtilController extends Controller {
 
         //add current element by id
         if( $id ) {
-            $entity = $this->getDoctrine()->getRepository('Oleg'.$bundleName.':'.$className)->findOneById($id);
+            $entity = $this->getDoctrine()->getRepository('App'.$bundleName.':'.$className)->findOneById($id);
             if( $entity ) {
                 if( array_key_exists($entity->getId(), $output) === false ) {
                     $element = array('id'=>$entity->getId(), 'text'=>$entity->getName()."");
@@ -195,7 +195,7 @@ class UtilController extends Controller {
         //echo "cycle=".$cycle." => newCycle=".$newCycle."<br>";
 
         $query = $em->createQueryBuilder()
-            ->from('OlegUserdirectoryBundle:Institution', 'list')
+            ->from('AppUserdirectoryBundle:Institution', 'list')
             ->select("list.id as id, list.name as text")
             ->leftJoin("list.types","types")
             ->groupBy("list")
@@ -235,7 +235,7 @@ class UtilController extends Controller {
         $em = $this->getDoctrine()->getManager();
 
         $query = $em->createQueryBuilder()
-            ->from('OlegUserdirectoryBundle:Institution', 'list')
+            ->from('AppUserdirectoryBundle:Institution', 'list')
             ->select("list.id as id, list.name as text")
             ->orderBy("list.orderinlist","ASC");
 
@@ -259,7 +259,7 @@ class UtilController extends Controller {
         $em = $this->getDoctrine()->getManager();
 
         $query = $em->createQueryBuilder()
-            ->from('OlegUserdirectoryBundle:Institution', 'list')
+            ->from('AppUserdirectoryBundle:Institution', 'list')
             ->select("list.id as id, list.name as text")
             //->select("list.name as id, list.name as text")
             ->orderBy("list.orderinlist","ASC");
@@ -270,7 +270,7 @@ class UtilController extends Controller {
 
         //add current element by id
         if( $id ) {
-            $entity = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:Institution')->findOneById($id);
+            $entity = $this->getDoctrine()->getRepository('AppUserdirectoryBundle:Institution')->findOneById($id);
             if( $entity ) {
                 if( array_key_exists($entity->getId(), $output) === false ) {
                     $element = array('id'=>$entity->getId(), 'text'=>$entity->getName()."");
@@ -318,7 +318,7 @@ class UtilController extends Controller {
 //        $em = $this->getDoctrine()->getManager();
 //
 //        $query = $em->createQueryBuilder()
-//            ->from('OlegUserdirectoryBundle:CommentTypeList', 'list')
+//            ->from('AppUserdirectoryBundle:CommentTypeList', 'list')
 //            ->select("list.id as id, list.name as text")
 //            ->orderBy("list.orderinlist","ASC");
 //
@@ -343,7 +343,7 @@ class UtilController extends Controller {
         $em = $this->getDoctrine()->getManager();
 
         $query = $em->createQueryBuilder()
-            ->from('OlegUserdirectoryBundle:User', 'list')
+            ->from('AppUserdirectoryBundle:User', 'list')
             ->select("list")
             //->select("list.id as id, infos.displayName as text")
             ->leftJoin("list.infos", "infos")
@@ -385,7 +385,7 @@ class UtilController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        $repository = $em->getRepository('OlegUserdirectoryBundle:User');
+        $repository = $em->getRepository('AppUserdirectoryBundle:User');
         $dql = $repository->createQueryBuilder("user");
         $dql->select('user.id as id, infos.displayName as text');
         $dql->leftJoin("user.infos", "infos");
@@ -428,7 +428,7 @@ class UtilController extends Controller {
         }
 
         $query = $em->createQueryBuilder()
-            ->from('OlegUserdirectoryBundle:BuildingList', 'list')
+            ->from('AppUserdirectoryBundle:BuildingList', 'list')
             ->select("list")
             ->orderBy("list.orderinlist","ASC");
 
@@ -488,7 +488,7 @@ class UtilController extends Controller {
         $em = $this->getDoctrine()->getManager();
 
         $query = $em->createQueryBuilder()
-            ->from('OlegUserdirectoryBundle:Location', 'list')
+            ->from('AppUserdirectoryBundle:Location', 'list')
             ->select("list")
             ->orderBy("list.id","ASC");
 
@@ -543,7 +543,7 @@ class UtilController extends Controller {
         $em = $this->getDoctrine()->getManager();
 
         $query = $em->createQueryBuilder()
-            ->from('OlegUserdirectoryBundle:Location', 'list')
+            ->from('AppUserdirectoryBundle:Location', 'list')
             ->select("list")
             ->orderBy("list.id","ASC");
 
@@ -592,7 +592,7 @@ class UtilController extends Controller {
 
         if( strval($locationId) == strval(intval($locationId)) ) {
             //echo "locationId is integer<br>";
-            $location = $em->getRepository('OlegUserdirectoryBundle:Location')->find($locationId);
+            $location = $em->getRepository('AppUserdirectoryBundle:Location')->find($locationId);
         } else {
             //echo "locationId is string<br>";
             $location = null;
@@ -722,8 +722,8 @@ class UtilController extends Controller {
      */
     public function getLocationCheckDeleteAction($id) {
         $em = $this->getDoctrine()->getManager();
-        $location = $em->getRepository('OlegUserdirectoryBundle:Location')->find($id);
-        $resLabs = $em->getRepository('OlegUserdirectoryBundle:ResearchLab')->findByLocation($location);
+        $location = $em->getRepository('AppUserdirectoryBundle:Location')->find($id);
+        $resLabs = $em->getRepository('AppUserdirectoryBundle:ResearchLab')->findByLocation($location);
         if( count($resLabs) > 0 ) {
             $output = 'not ok';
         } else {
@@ -765,8 +765,8 @@ class UtilController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        //$subjectUserDB = $em->getRepository('OlegUserdirectoryBundle:User')->find($subjectUser);
-//        $researchLabDB = $em->getRepository('OlegUserdirectoryBundle:ResearchLab')->find($id);
+        //$subjectUserDB = $em->getRepository('AppUserdirectoryBundle:User')->find($subjectUser);
+//        $researchLabDB = $em->getRepository('AppUserdirectoryBundle:ResearchLab')->find($id);
 //        if( !$researchLabDB ) {
 //            $response = new Response();
 //            $response->headers->set('Content-Type', 'application/json');
@@ -775,7 +775,7 @@ class UtilController extends Controller {
 //        }
 
         $query = $em->createQueryBuilder()
-            ->from('OlegUserdirectoryBundle:ResearchLab', 'list')
+            ->from('AppUserdirectoryBundle:ResearchLab', 'list')
             ->leftJoin('list.institution','institution')
             ->leftJoin('list.location','location')
             ->leftJoin('list.comments','comments')
@@ -797,13 +797,13 @@ class UtilController extends Controller {
         foreach( $labs as $lab ) {
 
 //            if( $subjectUser && is_numeric($subjectUser) ) {
-//                $subjectUserDB = $em->getRepository('OlegUserdirectoryBundle:User')->find($subjectUser);
+//                $subjectUserDB = $em->getRepository('AppUserdirectoryBundle:User')->find($subjectUser);
 //            } else {
 //                $subjectUserDB = null;
 //            }
             
-            //$commentDb = $em->getRepository('OlegUserdirectoryBundle:ResearchLabComment')->findOneBy( array( 'author' => $subjectUserDB, 'researchLab'=>$researchLabDB ) );
-            //$piDb = $em->getRepository('OlegUserdirectoryBundle:ResearchLabPI')->findOneBy( array( 'pi'=>$subjectUserDB, 'researchLab'=>$researchLabDB ) );
+            //$commentDb = $em->getRepository('AppUserdirectoryBundle:ResearchLabComment')->findOneBy( array( 'author' => $subjectUserDB, 'researchLab'=>$researchLabDB ) );
+            //$piDb = $em->getRepository('AppUserdirectoryBundle:ResearchLabPI')->findOneBy( array( 'pi'=>$subjectUserDB, 'researchLab'=>$researchLabDB ) );
 
             $transformer = new DateTimeToStringTransformer(null,null,'MM/dd/yyyy');
 
@@ -842,15 +842,15 @@ class UtilController extends Controller {
         }
 
         $em = $this->getDoctrine()->getManager();
-        $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($subjectUser);
-        $lab = $em->getRepository('OlegUserdirectoryBundle:ResearchLab')->find($id);
+        $user = $em->getRepository('AppUserdirectoryBundle:User')->find($subjectUser);
+        $lab = $em->getRepository('AppUserdirectoryBundle:ResearchLab')->find($id);
 
         $output = 'not ok';
 
         //more effificient than looping (?)
         if( $user && $lab ) {
 
-            $em->getRepository('OlegUserdirectoryBundle:ResearchLab')->removeDependents( $user, $lab );
+            $em->getRepository('AppUserdirectoryBundle:ResearchLab')->removeDependents( $user, $lab );
 
             $user->removeResearchLab($lab);
             $em->persist($user);
@@ -893,7 +893,7 @@ class UtilController extends Controller {
         $em = $this->getDoctrine()->getManager();       
 
         $query = $em->createQueryBuilder()
-            ->from('OlegUserdirectoryBundle:Grant', 'list')
+            ->from('AppUserdirectoryBundle:Grant', 'list')
             ->leftJoin('list.sourceOrganization','sourceOrganization')
             ->leftJoin('list.attachmentContainer','attachmentContainer')
             ->leftJoin('list.comments','comments')
@@ -922,13 +922,13 @@ class UtilController extends Controller {
         if( $grant ) {
             
             if( $subjectUser && is_numeric($subjectUser) ) {
-                $subjectUserDB = $em->getRepository('OlegUserdirectoryBundle:User')->find($subjectUser);
+                $subjectUserDB = $em->getRepository('AppUserdirectoryBundle:User')->find($subjectUser);
             } else {
                 $subjectUserDB = null;
             }
 
-            $userComment = $em->getRepository('OlegUserdirectoryBundle:GrantComment')->findOneBy( array( 'author' => $subjectUserDB, 'grant'=>$grant ) );
-            $userEffort = $em->getRepository('OlegUserdirectoryBundle:GrantEffort')->findOneBy( array( 'author'=>$subjectUserDB, 'grant'=>$grant ) );
+            $userComment = $em->getRepository('AppUserdirectoryBundle:GrantComment')->findOneBy( array( 'author' => $subjectUserDB, 'grant'=>$grant ) );
+            $userEffort = $em->getRepository('AppUserdirectoryBundle:GrantEffort')->findOneBy( array( 'author'=>$subjectUserDB, 'grant'=>$grant ) );
 
             $transformer = new DateTimeToStringTransformer(null,null,'MM/dd/yyyy');
 
@@ -1000,15 +1000,15 @@ class UtilController extends Controller {
         }
 
         $em = $this->getDoctrine()->getManager();
-        $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($subjectUser);
-        $grant = $em->getRepository('OlegUserdirectoryBundle:Grant')->find($id);
+        $user = $em->getRepository('AppUserdirectoryBundle:User')->find($subjectUser);
+        $grant = $em->getRepository('AppUserdirectoryBundle:Grant')->find($id);
 
         $output = 'not ok';
 
         //more effificient than looping (?)
         if( $user && $grant ) {
 
-            $em->getRepository('OlegUserdirectoryBundle:Grant')->removeDependents( $user, $grant );
+            $em->getRepository('AppUserdirectoryBundle:Grant')->removeDependents( $user, $grant );
 
             $user->removeGrant($grant);
             $em->persist($user);
@@ -1036,7 +1036,7 @@ class UtilController extends Controller {
         $cwid = trim( $request->get('number') );
         $em = $this->getDoctrine()->getManager();
 
-        $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername($cwid);
+        $user = $em->getRepository('AppUserdirectoryBundle:User')->findOneByUsername($cwid);
 
         $output = array();
         if( $user ) {
@@ -1069,7 +1069,7 @@ class UtilController extends Controller {
 
         if( $ssn != "" ) {
             $query = $em->createQueryBuilder()
-                ->from('OlegUserdirectoryBundle:User', 'user')
+                ->from('AppUserdirectoryBundle:User', 'user')
                 ->select("user")
                 ->leftJoin("user.credentials", "credentials")
                 ->where("credentials.ssn = :ssn")
@@ -1111,7 +1111,7 @@ class UtilController extends Controller {
 
         if( $ein != "" ) {
             $query = $em->createQueryBuilder()
-                ->from('OlegUserdirectoryBundle:User', 'user')
+                ->from('AppUserdirectoryBundle:User', 'user')
                 ->select("user")
                 ->leftJoin("user.credentials", "credentials")
                 ->where("credentials.employeeId = :employeeId")
@@ -1150,7 +1150,7 @@ class UtilController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneBy(array('keytype'=>$userType,'primaryPublicUserId'=>$userId));
+        $user = $em->getRepository('AppUserdirectoryBundle:User')->findOneBy(array('keytype'=>$userType,'primaryPublicUserId'=>$userId));
 
         $output = array();
         if( $user ) {
@@ -1224,7 +1224,7 @@ class UtilController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $userutil = new UserUtil();
 
-        $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:User');
+        $repository = $this->getDoctrine()->getRepository('AppUserdirectoryBundle:User');
         $dql =  $repository->createQueryBuilder("user");
         $dql->select("user.id as id, infos.displayName as text, user.username as username, keytype.id as keytypeid");
         $dql->leftJoin("user.keytype", "keytype");
@@ -1408,7 +1408,7 @@ class UtilController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-//        $keytype = $em->getRepository('OlegOrderformBundle:MrnType')->find($mrntype);
+//        $keytype = $em->getRepository('AppOrderformBundle:MrnType')->find($mrntype);
 //        //construct patient
 //        $patientMrn = new PatientMrn();
 //        $patient = new Patient();
@@ -1417,11 +1417,11 @@ class UtilController extends Controller {
 //        $patientMrn->setKeytype($keytype);
 //        $patient->addMrn($patientMrn);
 //
-//        $patientDb = $em->getRepository('OlegOrderformBundle:Patient')->findUniqueByKey($patient);
+//        $patientDb = $em->getRepository('AppOrderformBundle:Patient')->findUniqueByKey($patient);
 
 
         $query = $em->createQueryBuilder()
-            ->from('OlegOrderformBundle:Patient', 'patient')
+            ->from('AppOrderformBundle:Patient', 'patient')
             ->select("patient")
             ->leftJoin("patient.mrn", "mrn")
             ->where("mrn.keytype = :keytype AND mrn.field = :field")
@@ -1465,7 +1465,7 @@ class UtilController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        $subjectUser = $em->getRepository('OlegUserdirectoryBundle:User')->find($userid);
+        $subjectUser = $em->getRepository('AppUserdirectoryBundle:User')->find($userid);
 
         //$encoder = $this->container->get('security.password_encoder');
         //$encoded = $encoder->encodePassword($subjectUser, $userpassword);

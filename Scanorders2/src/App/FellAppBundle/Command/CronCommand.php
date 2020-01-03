@@ -22,7 +22,7 @@
  * Time: 2:33 PM
  */
 
-namespace Oleg\FellAppBundle\Command;
+namespace App\FellAppBundle\Command;
 
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -50,13 +50,13 @@ class CronCommand extends ContainerAwareCommand {
         //testing
 //        $fellappUtil = $this->getContainer()->get('fellapp_util');
 //        $em = $this->getContainer()->get('doctrine')->getEntityManager();
-//        $fellowshipApplication = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->find(162); //162
+//        $fellowshipApplication = $em->getRepository('AppFellAppBundle:FellowshipApplication')->find(162); //162
 //        $fellappUtil->sendConfirmationEmailsOnApplicationPopulation($fellowshipApplication,$fellowshipApplication->getUser());
 //        exit('email test');
         //testing checkAndSendCompleteEmail
 //        $em = $this->getContainer()->get('doctrine')->getManager();
 //        $fellappRecLetterUtil = $this->getContainer()->get('fellapp_rec_letter_util');
-//        $fellapp = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->find(1414); //8-test,1414-collage
+//        $fellapp = $em->getRepository('AppFellAppBundle:FellowshipApplication')->find(1414); //8-test,1414-collage
 //        $reference = $fellapp->getReferences()->first();
 //        $fellappRecLetterUtil->checkReferenceAlreadyHasLetter($fellapp,$reference);
 //        exit('eof test');

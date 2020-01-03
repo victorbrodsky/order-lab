@@ -15,14 +15,14 @@
  *  limitations under the License.
  */
 
-namespace Oleg\CallLogBundle\Form;
+namespace App\CallLogBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
-//use Oleg\CallLogBundle\Form\EncounterType;
-use Oleg\OrderformBundle\Form\GenericFieldType;
-use Oleg\OrderformBundle\Form\PatientDobType;
-use Oleg\OrderformBundle\Form\PatientSexType;
-use Oleg\UserdirectoryBundle\Form\TrackerType;
+//use App\CallLogBundle\Form\EncounterType;
+use App\OrderformBundle\Form\GenericFieldType;
+use App\OrderformBundle\Form\PatientDobType;
+use App\OrderformBundle\Form\PatientSexType;
+use App\UserdirectoryBundle\Form\TrackerType;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -88,7 +88,7 @@ class CalllogPatientType extends AbstractType
         ));
 
 //        $builder->add( 'patientRecordStatus', 'entity', array(
-//            'class' => 'OlegOrderformBundle:PatientRecordStatusList',
+//            'class' => 'AppOrderformBundle:PatientRecordStatusList',
 //            //'choice_label' => 'name',
 //            'label'=>'Patient Record Status:',
 //            'required'=> false,
@@ -197,14 +197,14 @@ class CalllogPatientType extends AbstractType
 //    public function configureOptions(OptionsResolver $resolver)
 //    {
 //        $resolver->setDefaults(array(
-//            'data_class' => 'Oleg\OrderformBundle\Entity\Patient',
+//            'data_class' => 'App\OrderformBundle\Entity\Patient',
 //            'csrf_protection' => false
 //        ));
 //    }
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\Patient',
+            'data_class' => 'App\OrderformBundle\Entity\Patient',
             'form_custom_value' => null,
             'form_custom_value_entity' => null,
             //'csrf_protection' => false

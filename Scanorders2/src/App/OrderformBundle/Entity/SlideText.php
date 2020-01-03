@@ -23,7 +23,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Oleg\OrderformBundle\Entity;
+namespace App\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -94,10 +94,10 @@ class SlideText extends ArrayFieldAbstract
     /**
      * Set slideReturnRequest
      *
-     * @param \Oleg\OrderformBundle\Entity\SlideReturnRequest $slideReturnRequest
+     * @param \App\OrderformBundle\Entity\SlideReturnRequest $slideReturnRequest
      * @return SlideReturnRequest Field
      */
-    public function setSlideReturnRequest(\Oleg\OrderformBundle\Entity\SlideReturnRequest $slideReturnRequest = null)
+    public function setSlideReturnRequest(\App\OrderformBundle\Entity\SlideReturnRequest $slideReturnRequest = null)
     {
         $this->slideReturnRequest = $slideReturnRequest;
 
@@ -107,7 +107,7 @@ class SlideText extends ArrayFieldAbstract
     /**
      * Get slideReturnRequest
      *
-     * @return \Oleg\OrderformBundle\Entity\SlideReturnRequest
+     * @return \App\OrderformBundle\Entity\SlideReturnRequest
      */
     public function getSlideReturnRequest()
     {

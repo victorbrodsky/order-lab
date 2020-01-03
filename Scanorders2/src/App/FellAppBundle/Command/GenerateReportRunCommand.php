@@ -22,10 +22,10 @@
  * Time: 2:33 PM
  */
 
-namespace Oleg\FellAppBundle\Command;
+namespace App\FellAppBundle\Command;
 
 
-use Oleg\FellAppBundle\Util\ReportGeneratorManager;
+use App\FellAppBundle\Util\ReportGeneratorManager;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;

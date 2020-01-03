@@ -1,9 +1,9 @@
 <?php
 
-namespace Oleg\FellAppBundle;
+namespace App\FellAppBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class OlegFellAppBundle extends Bundle
+class AppFellAppBundle extends Bundle
 {
 }

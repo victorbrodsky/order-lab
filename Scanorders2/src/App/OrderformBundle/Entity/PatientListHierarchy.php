@@ -15,14 +15,14 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Entity;
+namespace App\OrderformBundle\Entity;
 
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Oleg\UserdirectoryBundle\Entity\BaseCompositeNode;
-use Oleg\UserdirectoryBundle\Entity\ComponentCategoryInterface;
-use Oleg\UserdirectoryBundle\Entity\CompositeNodeInterface;
+use App\UserdirectoryBundle\Entity\BaseCompositeNode;
+use App\UserdirectoryBundle\Entity\ComponentCategoryInterface;
+use App\UserdirectoryBundle\Entity\CompositeNodeInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
@@ -42,7 +42,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Use Doctrine Extension Tree for tree manipulation.
  *
  * @Gedmo\Tree(type="nested")
- * @ORM\Entity(repositoryClass="Oleg\UserdirectoryBundle\Repository\TreeRepository")
+ * @ORM\Entity(repositoryClass="App\UserdirectoryBundle\Repository\TreeRepository")
  * @ORM\Table(
  *  name="scan_patientListHierarchy"
  * )
@@ -90,7 +90,7 @@ class PatientListHierarchy extends BaseCompositeNode {
     private $calllogEntryMessages;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\OrderformBundle\Entity\Patient", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\OrderformBundle\Entity\Patient", cascade={"persist"})
      */
     private $patient;
 

@@ -15,9 +15,9 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Form;
+namespace App\UserdirectoryBundle\Form;
 
-use Oleg\UserdirectoryBundle\Form\LocationType;
+use App\UserdirectoryBundle\Form\LocationType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -61,7 +61,7 @@ class TrackerType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\Tracker',
+            'data_class' => 'App\UserdirectoryBundle\Entity\Tracker',
             'form_custom_value' => null
         ));
     }

@@ -14,10 +14,10 @@
     limitations under the License.
 #}
 
-{% extends "OlegCallLogBundle::Default/base.html.twig" %}
+{% extends "AppCallLogBundle::Default/base.html.twig" %}
 
-{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-{% import "OlegCallLogBundle::Default/calllogmacros.html.twig" as calllogmacros %}
+{% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% import "AppCallLogBundle::Default/calllogmacros.html.twig" as calllogmacros %}
 
 
 {% block title %}
@@ -35,7 +35,7 @@
     </h4>
 
 
-    {#{% import "OlegUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}#}
+    {#{% import "AppUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}#}
     {#<a role="button" data-toggle="collapse" href="#collapseInstitutionUserTree" onclick="displayInstitutionUserTree('default');">Organizational Tree</a>#}
     {#<div id="collapseInstitutionUserTree" class="panel-collapse collapse">#}
         {#{{ treemacros.jstreemacros('composite-tree','UserdirectoryBundle','Institution_User','employees_showuser','nosearch') }}#}

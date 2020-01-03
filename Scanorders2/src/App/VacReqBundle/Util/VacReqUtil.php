@@ -15,15 +15,15 @@
  *  limitations under the License.
  */
 
-namespace Oleg\VacReqBundle\Util;
+namespace App\VacReqBundle\Util;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\PersistentCollection;
-use Oleg\VacReqBundle\Entity\VacReqCarryOver;
-use Oleg\VacReqBundle\Entity\VacReqUserCarryOver;
+use App\VacReqBundle\Entity\VacReqCarryOver;
+use App\VacReqBundle\Entity\VacReqUserCarryOver;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -62,13 +62,13 @@ class VacReqUtil
 
 
     public function getSettingsByInstitution($instid) {
-        $setting = $this->em->getRepository('OlegVacReqBundle:VacReqSettings')->findOneByInstitution($instid);
+        $setting = $this->em->getRepository('AppVacReqBundle:VacReqSettings')->findOneByInstitution($instid);
         return $setting;
     }
 
 
     public function getInstitutionSettingArray() {
-        $settings = $this->em->getRepository('OlegVacReqBundle:VacReqSettings')->findAll();
+        $settings = $this->em->getRepository('AppVacReqBundle:VacReqSettings')->findAll();
 
         $arraySettings = array();
 
@@ -90,7 +90,7 @@ class VacReqUtil
         $newUsers = new ArrayCollection();
         foreach( explode(",",$userIds) as $userId ) {
             //echo "userId=" . $userId . "<br>";
-            $emailUser = $this->em->getRepository('OlegUserdirectoryBundle:User')->find($userId);
+            $emailUser = $this->em->getRepository('AppUserdirectoryBundle:User')->find($userId);
             if( $emailUser ) {
                 $newUsers->add($emailUser);
             }
@@ -166,14 +166,14 @@ class VacReqUtil
         //echo "institution=".$institution."<br>";
 
         $approvers = array();
-        $roleApprovers = $this->em->getRepository('OlegUserdirectoryBundle:User')->
+        $roleApprovers = $this->em->getRepository('AppUserdirectoryBundle:User')->
             findRolesBySiteAndPartialRoleName( "vacreq", $approverRole, $institution->getId());
         //echo "roleApprovers count=".count($roleApprovers)."<br>";
 
         $roleApprover = $roleApprovers[0];
 
         if( $roleApprover ) {
-            $approvers = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($roleApprover->getName(),"infos.lastName",true);
+            $approvers = $this->em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($roleApprover->getName(),"infos.lastName",true);
         }
 
         return $approvers;
@@ -184,14 +184,14 @@ class VacReqUtil
     public function getUsersByGroupId( $groupId, $rolePartialName="ROLE_VACREQ_SUBMITTER" ) {
         $users = array();
 
-        $roles = $this->em->getRepository('OlegUserdirectoryBundle:User')->
+        $roles = $this->em->getRepository('AppUserdirectoryBundle:User')->
                             findRolesBySiteAndPartialRoleName( "vacreq", $rolePartialName, $groupId);
 
         $role = $roles[0];
 
         //echo "role=".$role."<br>";
         if( $role ) {
-            $users = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($role->getName(),"infos.lastName",true);
+            $users = $this->em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($role->getName(),"infos.lastName",true);
         }
 
         return $users;
@@ -538,7 +538,7 @@ class VacReqUtil
     // if X = 0, show "During the current academic year, you have received no approved vacation days."
     public function getApprovedDaysString( $user, $bruteForce=false ) {
 
-        $requestType = $this->em->getRepository('OlegVacReqBundle:VacReqRequestTypeList')->findOneByAbbreviation("business-vacation");
+        $requestType = $this->em->getRepository('AppVacReqBundle:VacReqRequestTypeList')->findOneByAbbreviation("business-vacation");
 
         $yearRange = $this->getCurrentAcademicYearRange();
 
@@ -653,7 +653,7 @@ class VacReqUtil
         $startYearArr = $this->getYearsFromYearRangeStr($yearRange);
         $startYear = $startYearArr[0];
 
-        $repository = $this->em->getRepository('OlegVacReqBundle:VacReqCarryOver');
+        $repository = $this->em->getRepository('AppVacReqBundle:VacReqCarryOver');
         $dql = $repository->createQueryBuilder('carryOver');
 
         $dql->leftJoin("carryOver.userCarryOver", "userCarryOver");
@@ -696,7 +696,7 @@ class VacReqUtil
         $subjectUser = $entity->getUser();
 
         //get userCarryOver. TODO: This does not distinguish between approved, rejected or pending requests.
-        $userCarryOver = $this->em->getRepository('OlegVacReqBundle:VacReqUserCarryOver')->findOneByUser($subjectUser->getId());
+        $userCarryOver = $this->em->getRepository('AppVacReqBundle:VacReqUserCarryOver')->findOneByUser($subjectUser->getId());
         //echo "found userCarryOverID=".$userCarryOver->getId()."<br>";
 
         if( !$userCarryOver ) {
@@ -800,7 +800,7 @@ class VacReqUtil
         $subjectUser = $entity->getUser();
 
         //get userCarryOver
-        $userCarryOver = $this->em->getRepository('OlegVacReqBundle:VacReqUserCarryOver')->findOneByUser($subjectUser->getId());
+        $userCarryOver = $this->em->getRepository('AppVacReqBundle:VacReqUserCarryOver')->findOneByUser($subjectUser->getId());
 
         if (!$userCarryOver) {
             //$logger->notice("VacReqUserCarryOver not found by userid=".$subjectUser->getId());
@@ -1188,10 +1188,10 @@ class VacReqUtil
         $query = $this->em->createQuery(
             "SELECT
               SUM(requestType.numberOfDays) as numberOfDays, COUNT(request) as totalCount
-            FROM OlegVacReqBundle:VacReqRequest request
+            FROM AppVacReqBundle:VacReqRequest request
             INNER JOIN request.user user
             INNER JOIN request.requestVacation requestType
-            INNER JOIN OlegVacReqBundle:VacReqRequest request2
+            INNER JOIN AppVacReqBundle:VacReqRequest request2
               WITH  request.id <> request2.id AND request.user = request2.user AND user.id = ".$user->getId()." AND requestType.status='$status'
                     AND request.firstDayAway < request2.firstDayAway AND request.firstDayBackInOffice < request2.firstDayBackInOffice
             WHERE requestType.startDate > '$startStr' AND requestType.endDate < '$endStr'
@@ -1201,10 +1201,10 @@ class VacReqUtil
 
         $query = $this->em->createQuery(
             "SELECT request1
-            FROM OlegVacReqBundle:VacReqRequest request1
+            FROM AppVacReqBundle:VacReqRequest request1
             INNER JOIN request1.user user
             INNER JOIN request1.requestVacation requestType
-            INNER JOIN OlegVacReqBundle:VacReqRequest request2
+            INNER JOIN AppVacReqBundle:VacReqRequest request2
               WITH
               (request1.id <> request2.id)
               AND ( request1.firstDayAway <> request2.firstDayAway )
@@ -1262,7 +1262,7 @@ class VacReqUtil
         return $numberOfDays;
 
 
-        $repository = $this->em->getRepository('OlegVacReqBundle:VacReqRequest');
+        $repository = $this->em->getRepository('AppVacReqBundle:VacReqRequest');
         $dql =  $repository->createQueryBuilder("request");
 
         if( $asObject ) {
@@ -1274,7 +1274,7 @@ class VacReqUtil
         }
 
 //        $dql->innerJoin(
-//            "OlegVacReqBundle:VacReqRequest",
+//            "AppVacReqBundle:VacReqRequest",
 //            "request2",
 //            "WITH",
 //            "request2.id <> request.id AND request2.user = request.user"
@@ -1321,7 +1321,7 @@ class VacReqUtil
 
         //if( !$asObject ) {
 //                $dql->innerJoin(
-//                    "OlegVacReqBundle:VacReqRequest",
+//                    "AppVacReqBundle:VacReqRequest",
 //                    "request2",
 //                    "WITH",
 //                    //"request2.firstDayAway > request.firstDayAway AND request2.firstDayBackInOffice > request.firstDayBackInOffice"
@@ -1332,7 +1332,7 @@ class VacReqUtil
 //                );
 
 //            $dql->innerJoin(
-//                "OlegVacReqBundle:VacReqRequest",
+//                "AppVacReqBundle:VacReqRequest",
 //                "request2",
 //                "WITH",
 //                "request2.id <> request.id AND request2.user = request.user"
@@ -1362,7 +1362,7 @@ class VacReqUtil
 //        );
 
 //        $dql->andWhere( "EXISTS (SELECT 1".
-//            " FROM OlegVacReqBundle:VacReqRequest as request2 ".$joinStr
+//            " FROM AppVacReqBundle:VacReqRequest as request2 ".$joinStr
 //            ." WHERE request2.user = request.user AND request2.id <> request.id"
 //            //." AND NOT (requestType.startDate >= requestType2.endDate OR requestType.endDate <= requestType2.startDate)"  //detect overlap
 //            ." AND (requestType.startDate < requestType2.startDate AND requestType.endDate < requestType2.startDate)"     //no overlap
@@ -1435,7 +1435,7 @@ class VacReqUtil
         //echo $type.": requestTypeStr=".$requestTypeStr."<br>";
         $numberOfDays = 0;
 
-        $repository = $this->em->getRepository('OlegVacReqBundle:VacReqRequest');
+        $repository = $this->em->getRepository('AppVacReqBundle:VacReqRequest');
         $dql =  $repository->createQueryBuilder("request");
 
         if( $bruteForce == true ) {
@@ -1450,7 +1450,7 @@ class VacReqUtil
         }
 
 //        $dql->innerJoin(
-//            "OlegVacReqBundle:VacReqRequest",
+//            "AppVacReqBundle:VacReqRequest",
 //            "request2",
 //            "WITH",
 //            "request2.id <> request.id AND request2.user = request.user"
@@ -1640,7 +1640,7 @@ class VacReqUtil
     public function getOverlappedUserRequests( $user, $currentYear=true, $log=false ) {
 
         //1) get all user approved vacation requests
-        $repository = $this->em->getRepository('OlegVacReqBundle:VacReqRequest');
+        $repository = $this->em->getRepository('AppVacReqBundle:VacReqRequest');
 
         $dql =  $repository->createQueryBuilder("request");
         $dql->select('request');
@@ -1746,7 +1746,7 @@ class VacReqUtil
         //get all user approved vacation requests
         $requestTypeStr = "requestVacation";
 
-        $repository = $this->em->getRepository('OlegVacReqBundle:VacReqRequest');
+        $repository = $this->em->getRepository('AppVacReqBundle:VacReqRequest');
 
         $dql =  $repository->createQueryBuilder("request");
         $dql->select('request');
@@ -2208,7 +2208,7 @@ class VacReqUtil
 
     public function getApprovedRequestStartedBetweenDates( $requestTypeStr, $startDate, $endDate ) {
 
-        $repository = $this->em->getRepository('OlegVacReqBundle:VacReqRequest');
+        $repository = $this->em->getRepository('AppVacReqBundle:VacReqRequest');
         $dql = $repository->createQueryBuilder('request');
 
         if( $requestTypeStr == 'business' || $requestTypeStr == 'requestBusiness' ) {
@@ -2304,7 +2304,7 @@ class VacReqUtil
         $today = new \DateTime();
         $todayStr = $today->format('Y-m-d');
 
-        $repository = $this->em->getRepository('OlegVacReqBundle:VacReqRequest');
+        $repository = $this->em->getRepository('AppVacReqBundle:VacReqRequest');
         $dql = $repository->createQueryBuilder('request');
         $dql->leftJoin("request.user", "user");
 
@@ -2350,7 +2350,7 @@ class VacReqUtil
         foreach( $supervisorRoles as $supervisorRole ) {
             //echo "supervisorRole=".$supervisorRole."<br>";
 //            //find users with this role
-            $supervisors = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($supervisorRole->getName(),"infos.lastName",true);
+            $supervisors = $this->em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($supervisorRole->getName(),"infos.lastName",true);
             foreach( $supervisors as $supervisor ) {
                 $supervisorsArr[] = $supervisor;
             }
@@ -2438,7 +2438,7 @@ class VacReqUtil
             if( count($roles)==0 && $this->secAuth->isGranted('ROLE_VACREQ_ADMIN') ) {
                 //echo "roles try 1<br>";
                 if( !$asUser ) {
-                    $roles = $this->em->getRepository('OlegUserdirectoryBundle:User')->
+                    $roles = $this->em->getRepository('AppUserdirectoryBundle:User')->
                     findRolesByObjectActionInstitutionSite($objectStr, $actionStr, null, 'vacreq', null);
                 }
             }
@@ -2446,13 +2446,13 @@ class VacReqUtil
                 //echo "roles for ROLE_VACREQ_SUPERVISOR<br>";
                 //echo "roles try 2<br>";
                 if( !$asUser ) {
-                    $roles = $this->em->getRepository('OlegUserdirectoryBundle:User')->
+                    $roles = $this->em->getRepository('AppUserdirectoryBundle:User')->
                     findUserChildRolesBySitePermissionObjectAction($user, 'vacreq', $objectStr, $actionStr);
                 }
             }
             if( count($roles)==0 ) {
                 //echo "roles try 3<br>";
-                $roles = $this->em->getRepository('OlegUserdirectoryBundle:User')->
+                $roles = $this->em->getRepository('AppUserdirectoryBundle:User')->
                     findUserRolesBySitePermissionObjectAction($user,'vacreq',$objectStr,$actionStr);
             }
 
@@ -2462,14 +2462,14 @@ class VacReqUtil
                 //get all changestatus-carryover roles: changestatus-carryover and create
                 $childObjectStr = $objectStr;
                 $childActionStr = "create";
-                $roles = $this->em->getRepository('OlegUserdirectoryBundle:User')->
+                $roles = $this->em->getRepository('AppUserdirectoryBundle:User')->
                     findUserParentRolesBySitePermissionObjectAction($user,'vacreq',$objectStr,$actionStr,$childObjectStr,$childActionStr);
                 //echo "1 role count=".count($roles)."<br>"; //testing this role count is 1 for wcmc pathology
 
                 if( count($roles)==0 ) {
                     //echo "another try 5 for view-away-calendar action for role ROLE_VACREQ_OBSERVER_WCM_PATHOLOGY<br>";
                     $childActionStr = "view-away-calendar";
-                    $roles = $this->em->getRepository('OlegUserdirectoryBundle:User')->
+                    $roles = $this->em->getRepository('AppUserdirectoryBundle:User')->
                     findUserParentRolesBySitePermissionObjectAction($user,'vacreq',$objectStr,$actionStr,$childObjectStr,$childActionStr);
                 }
                 //echo "2 role count=".count($roles)."<br>";
@@ -2585,7 +2585,7 @@ class VacReqUtil
 
         //get this user institutions associated with this site
         $partialRoleName = "ROLE_VACREQ_";
-        $userRoles = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserRolesBySiteAndPartialRoleName($user, "vacreq", $partialRoleName, null, false);
+        $userRoles = $this->em->getRepository('AppUserdirectoryBundle:User')->findUserRolesBySiteAndPartialRoleName($user, "vacreq", $partialRoleName, null, false);
         $userInsts = new ArrayCollection();
         foreach( $userRoles as $userRole ) {
             $roleInst = $userRole->getInstitution();
@@ -2600,10 +2600,10 @@ class VacReqUtil
         foreach( $roleSubStrArr as $roleSubStr ) {
             if( $this->secAuth->isGranted('ROLE_VACREQ_ADMIN') || $this->secAuth->isGranted('ROLE_VACREQ_SUPERVISOR') ) {
                 //find all submitter role's institution
-                $submitterSubRoles = $this->em->getRepository('OlegUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName("vacreq",$roleSubStr);
+                $submitterSubRoles = $this->em->getRepository('AppUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName("vacreq",$roleSubStr);
             } else {
                 //echo "roleSubStr=".$roleSubStr."<br>";
-                $submitterSubRoles = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserRolesBySiteAndPartialRoleName($user, "vacreq", $roleSubStr, null, false);
+                $submitterSubRoles = $this->em->getRepository('AppUserdirectoryBundle:User')->findUserRolesBySiteAndPartialRoleName($user, "vacreq", $roleSubStr, null, false);
             }
 
             foreach( $submitterSubRoles as $submitterSubRole ) {
@@ -2616,7 +2616,7 @@ class VacReqUtil
 
 //        if( count($submitterRoles) == 0 ) {
 //            //find all submitter role's institution
-//            $submitterRoles = $this->em->getRepository('OlegUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName("vacreq",$requestRoleSubStr);
+//            $submitterRoles = $this->em->getRepository('AppUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName("vacreq",$requestRoleSubStr);
 //        }
 //        echo "roles count=".count($submitterRoles)."<br>";
 
@@ -2636,7 +2636,7 @@ class VacReqUtil
                 //  if submitter has CYTOPATHOLOGY submitter role, then the each resulting institution should be equal or be a parent of CYTOPATHOLOGY
                 //check if this institution is equal or under user's site institution
                 if( $this->secAuth->isGranted('ROLE_VACREQ_ADMIN') == false ) {
-                    if( $this->em->getRepository('OlegUserdirectoryBundle:Institution')->isNodeUnderParentnodes($userInsts, $institution) == false ) {
+                    if( $this->em->getRepository('AppUserdirectoryBundle:Institution')->isNodeUnderParentnodes($userInsts, $institution) == false ) {
                         //echo "remove institution=".$institution."<br>";
                         continue;
                     }
@@ -2674,7 +2674,7 @@ class VacReqUtil
     //$role - string; for example "ROLE_VACREQ_APPROVER_CYTOPATHOLOGY"
     public function getApproversBySubmitterRole( $role ) {
         $roleApprover = str_replace("SUBMITTER","APPROVER",$role);
-        $approvers = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($roleApprover,"infos.lastName",true);
+        $approvers = $this->em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($roleApprover,"infos.lastName",true);
 
         $approversArr = array();
         foreach( $approvers as $approver ) {
@@ -2687,7 +2687,7 @@ class VacReqUtil
     public function getSubmittersFromSubmittedRequestsByGroup( $groupId ) {
 
         //TODO: this might optimized to get user objects in one query. groupBy does not work in MSSQL.
-        $repository = $this->em->getRepository('OlegVacReqBundle:VacReqRequest');
+        $repository = $this->em->getRepository('AppVacReqBundle:VacReqRequest');
         $dql =  $repository->createQueryBuilder("request");
         //$dql->select('request');
         $dql->select('DISTINCT (user) as submitter');
@@ -2721,7 +2721,7 @@ class VacReqUtil
         $submitters = array();
         foreach( $results as $result ) {
             //$submitters[] = $result->getUser();
-            $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->find($result['submitter']);
+            $user = $this->em->getRepository('AppUserdirectoryBundle:User')->find($result['submitter']);
             if( $user ) {
                 $submitters[] = $user;
             } else {
@@ -2778,8 +2778,8 @@ class VacReqUtil
         }
 
         //(b) prepopulate from previous approved request (if there is one) for this user (person away)
-        //$requests = $this->em->getRepository('OlegVacReqBundle:VacReqRequest')->findByUser($user,array('ORDER'=>'approvedRejectDate'));
-        $repository = $this->em->getRepository('OlegVacReqBundle:VacReqRequest');
+        //$requests = $this->em->getRepository('AppVacReqBundle:VacReqRequest')->findByUser($user,array('ORDER'=>'approvedRejectDate'));
+        $repository = $this->em->getRepository('AppVacReqBundle:VacReqRequest');
         $dql =  $repository->createQueryBuilder("request");
         $dql->select('request');
 
@@ -2865,7 +2865,7 @@ class VacReqUtil
 
         //(2a) prepopulate mobile from previous approved request (if there is one) for this user (person away)
         if( $res['mobile'] == null ) {
-            $repository = $this->em->getRepository('OlegVacReqBundle:VacReqRequest');
+            $repository = $this->em->getRepository('AppVacReqBundle:VacReqRequest');
             $dql = $repository->createQueryBuilder("request");
             $dql->select('request');
             $dql->leftJoin("request.user", "user");
@@ -2890,7 +2890,7 @@ class VacReqUtil
         }
         //(2b) prepopulate email from previous approved request (if there is one) for this user (person away)
         if( $res['email'] == null ) {
-            $repository = $this->em->getRepository('OlegVacReqBundle:VacReqRequest');
+            $repository = $this->em->getRepository('AppVacReqBundle:VacReqRequest');
             $dql = $repository->createQueryBuilder("request");
             $dql->select('request');
             $dql->leftJoin("request.user", "user");
@@ -3242,7 +3242,7 @@ class VacReqUtil
         }
 
         //1) get user's supervisor group
-        //$userRoles = $this->em->getRepository('OlegUserdirectoryBundle:User')->
+        //$userRoles = $this->em->getRepository('AppUserdirectoryBundle:User')->
             //findUserChildRolesBySitePermissionObjectAction($user,'vacreq',"vacReqRequest","changestatus-carryover");
 
         $groupParams = array('asObject'=>true);
@@ -3254,7 +3254,7 @@ class VacReqUtil
             $idArr[] = $group->getId();
         }
 
-        $repository = $this->em->getRepository('OlegVacReqBundle:VacReqRequest');
+        $repository = $this->em->getRepository('AppVacReqBundle:VacReqRequest');
         $dql =  $repository->createQueryBuilder("request");
         $dql->leftJoin("request.institution", "institution");
         $dql->leftJoin("request.requestType", "requestType");
@@ -3608,7 +3608,7 @@ class VacReqUtil
     //$yearOffset: 0=>current year, -1=>previous year
     public function getCarryOverRequests( $user, $yearOffset=null, $finalStatus=null, $tentativeStatus=null ) {
 
-        $repository = $this->em->getRepository('OlegVacReqBundle:VacReqRequest');
+        $repository = $this->em->getRepository('AppVacReqBundle:VacReqRequest');
         $dql = $repository->createQueryBuilder('request');
 
         $dql->leftJoin("request.user", "user");
@@ -3713,7 +3713,7 @@ class VacReqUtil
     }
     public function getTotalStatusTypeRequests( $approver, $requestTypeStr, $groupId=null, $asObject=true, $status = "pending" ) {
 
-        $repository = $this->em->getRepository('OlegVacReqBundle:VacReqRequest');
+        $repository = $this->em->getRepository('AppVacReqBundle:VacReqRequest');
         $dql =  $repository->createQueryBuilder("request");
 
         if( $asObject ) {
@@ -4118,7 +4118,7 @@ class VacReqUtil
         $row = 2;
         foreach( explode("-",$ids) as $vacreqId ) {
 
-            $vacreq = $this->em->getRepository('OlegVacReqBundle:VacReqRequest')->find($vacreqId);
+            $vacreq = $this->em->getRepository('AppVacReqBundle:VacReqRequest')->find($vacreqId);
             if( !$vacreq ) {
                 continue;
             }
@@ -4339,7 +4339,7 @@ class VacReqUtil
         $row = 2;
         foreach( explode("-",$ids) as $vacreqId ) {
 
-            $vacreq = $this->em->getRepository('OlegVacReqBundle:VacReqRequest')->find($vacreqId);
+            $vacreq = $this->em->getRepository('AppVacReqBundle:VacReqRequest')->find($vacreqId);
             if( !$vacreq ) {
                 continue;
             }

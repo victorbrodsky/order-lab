@@ -15,10 +15,10 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Form;
+namespace App\UserdirectoryBundle\Form;
 
 
-use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
+use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -61,7 +61,7 @@ class LectureType extends AbstractType
 
 
         $builder->add( 'importance', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:ImportanceList',
+            'class' => 'AppUserdirectoryBundle:ImportanceList',
             'label'=> "Importance:",
             'required'=> false,
             'multiple' => false,
@@ -99,9 +99,9 @@ class LectureType extends AbstractType
 
         //state
         //$defaultState = null;
-        //$defaultState = $this->params['em']->getRepository('OlegUserdirectoryBundle:States')->findOneByName('New York');
+        //$defaultState = $this->params['em']->getRepository('AppUserdirectoryBundle:States')->findOneByName('New York');
         $builder->add( 'state', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:States',
+            'class' => 'AppUserdirectoryBundle:States',
             //'choice_label' => 'name',
             'label'=>'Lecture State:',
             'required'=> false,
@@ -121,10 +121,10 @@ class LectureType extends AbstractType
 
         //country
         //$defaultCountry = null;
-        //$defaultCountry = $this->params['em']->getRepository('OlegUserdirectoryBundle:Countries')->findOneByName('United States');
-        $preferredCountries = $this->params['em']->getRepository('OlegUserdirectoryBundle:Countries')->findByName(array('United States'));
+        //$defaultCountry = $this->params['em']->getRepository('AppUserdirectoryBundle:Countries')->findOneByName('United States');
+        $preferredCountries = $this->params['em']->getRepository('AppUserdirectoryBundle:Countries')->findByName(array('United States'));
         $builder->add( 'country', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:Countries',
+            'class' => 'AppUserdirectoryBundle:Countries',
             'choice_label' => 'name',
             'label'=>'Lecture Country:',
             'required'=> false,
@@ -151,7 +151,7 @@ class LectureType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\Lecture',
+            'data_class' => 'App\UserdirectoryBundle\Entity\Lecture',
             'form_custom_value' => null
         ));
     }

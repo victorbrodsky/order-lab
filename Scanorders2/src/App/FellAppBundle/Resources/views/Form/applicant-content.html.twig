@@ -14,9 +14,9 @@
     limitations under the License.
 #}
 
-{% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
-{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-{% import "OlegFellAppBundle::Default/fellappmacros.html.twig" as fellappmacros %}
+{% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+{% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% import "AppFellAppBundle::Default/fellappmacros.html.twig" as fellappmacros %}
 {% import _self as fellapp %}
 
 
@@ -136,67 +136,67 @@
 
 <div class="fellapp-application-holder">
 
-{% include 'OlegFellAppBundle:Form:AdminData.html.twig' %}
+{% include 'AppFellAppBundle:Form:AdminData.html.twig' %}
 
 <!-- Fellowship Type, Training period, Applicant Name -->
-{#{% include 'OlegFellAppBundle:Form:FellowshipType.html.twig' %}#}
+{#{% include 'AppFellAppBundle:Form:FellowshipType.html.twig' %}#}
 
 <!-- Personal Data -->
-{#{% include 'OlegFellAppBundle:Form:PersonalData.html.twig' %}#}
+{#{% include 'AppFellAppBundle:Form:PersonalData.html.twig' %}#}
 
 <!-- Fellowship Application Admin Data -->
-{% include 'OlegFellAppBundle:Form:ApplicantData.html.twig' %}
+{% include 'AppFellAppBundle:Form:ApplicantData.html.twig' %}
 
 {% if not testing %}
 
 <!-- Education -->
-{% include 'OlegFellAppBundle:Form:Education.html.twig' %}
+{% include 'AppFellAppBundle:Form:Education.html.twig' %}
 
 <!-- National Boards -->
-{% include 'OlegFellAppBundle:Form:NationalBoards.html.twig' %}
+{% include 'AppFellAppBundle:Form:NationalBoards.html.twig' %}
 
 <!-- MedicalLicensure -->
-{% include 'OlegFellAppBundle:Form:MedicalLicensure.html.twig' %}
+{% include 'AppFellAppBundle:Form:MedicalLicensure.html.twig' %}
 
 <!-- Board Certification -->
-{% include 'OlegFellAppBundle:Form:BoardCertification.html.twig' %}
+{% include 'AppFellAppBundle:Form:BoardCertification.html.twig' %}
 
 <!-- Recommendations -->
-{% include 'OlegFellAppBundle:Form:Recommendations.html.twig' %}
+{% include 'AppFellAppBundle:Form:Recommendations.html.twig' %}
 
 {#testing#}
 {#{% set cycle = "download" %}#}
 
 <!-- Uploads -->
 {% if cycle != "download" %}
-    {% include 'OlegFellAppBundle:Form:Uploads.html.twig' %}
+    {% include 'AppFellAppBundle:Form:Uploads.html.twig' %}
 {% endif %}
 
 <!-- Honors and Awards -->
-{% include 'OlegFellAppBundle:Form:Honors.html.twig' %}
+{% include 'AppFellAppBundle:Form:Honors.html.twig' %}
 
 <!-- PDF Reports -->
 {#and cycle != "new"#}
 {% if cycle != "download" %}
-    {% include 'OlegFellAppBundle:Form:reportsPDF.html.twig' %}
+    {% include 'AppFellAppBundle:Form:reportsPDF.html.twig' %}
 {% endif %}
 
 <!-- Itinerary -->
 {% if cycle != "download" %}
-    {% include 'OlegFellAppBundle:Form:Itinerary.html.twig' %}
+    {% include 'AppFellAppBundle:Form:Itinerary.html.twig' %}
 {% endif %}
 
 <!-- Interviews -->
 {% if cycle != "download" %}
     {% if is_granted('ROLE_FELLAPP_COORDINATOR') or is_granted('ROLE_FELLAPP_DIRECTOR') or is_granted('ROLE_FELLAPP_INTERVIEWER') %}
-        {% include 'OlegFellAppBundle:Form:Interviews.html.twig' %}
+        {% include 'AppFellAppBundle:Form:Interviews.html.twig' %}
     {% endif %}
 {% endif %}
 
 {% endif %}
 
 <!-- Signature -->
-{% include 'OlegFellAppBundle:Form:Signature.html.twig' %}
+{% include 'AppFellAppBundle:Form:Signature.html.twig' %}
 
 
 </div>

@@ -23,10 +23,10 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Oleg\OrderformBundle\Entity;
+namespace App\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Oleg\OrderformBundle\Entity\ArrayFieldAbstract;
+use App\OrderformBundle\Entity\ArrayFieldAbstract;
 
 /**
  * @ORM\MappedSuperclass
@@ -42,10 +42,10 @@ abstract class ProcedureArrayFieldAbstract extends ArrayFieldAbstract {
     /**
      * Set Procedure
      *
-     * @param \Oleg\OrderformBundle\Entity\Procedure $Procedure
+     * @param \App\OrderformBundle\Entity\Procedure $Procedure
      * @return ProcedureArrayFieldAbstract
      */
-    public function setProcedure(\Oleg\OrderformBundle\Entity\Procedure $procedure = null)
+    public function setProcedure(\App\OrderformBundle\Entity\Procedure $procedure = null)
     {
         $this->procedure = $procedure;
 
@@ -55,7 +55,7 @@ abstract class ProcedureArrayFieldAbstract extends ArrayFieldAbstract {
     /**
      * Get procedure
      *
-     * @return \Oleg\OrderformBundle\Entity\Procedure
+     * @return \App\OrderformBundle\Entity\Procedure
      */
     public function getProcedure()
     {

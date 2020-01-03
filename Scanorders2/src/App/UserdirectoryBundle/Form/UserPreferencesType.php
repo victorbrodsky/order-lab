@@ -16,7 +16,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Form;
+namespace App\UserdirectoryBundle\Form;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -26,7 +26,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
 
-use Oleg\UserdirectoryBundle\Util\TimeZoneUtil;
+use App\UserdirectoryBundle\Util\TimeZoneUtil;
 
 class UserPreferencesType extends AbstractType
 {
@@ -80,7 +80,7 @@ class UserPreferencesType extends AbstractType
             ));
 
             $builder->add('languages', EntityType::class, array(
-                'class' => 'OlegUserdirectoryBundle:LanguageList',
+                'class' => 'AppUserdirectoryBundle:LanguageList',
                 'label' => "Language(s):",
                 'required' => false,
                 'multiple' => true,
@@ -98,7 +98,7 @@ class UserPreferencesType extends AbstractType
             ));
 
             $builder->add('locale', EntityType::class, array(
-                'class' => 'OlegUserdirectoryBundle:LocaleList',
+                'class' => 'AppUserdirectoryBundle:LocaleList',
                 'label' => "Locale:",
                 'required' => false,
                 'multiple' => false,
@@ -116,7 +116,7 @@ class UserPreferencesType extends AbstractType
             ));
 
             $builder->add( 'showToInstitutions', EntityType::class, array(
-                'class' => 'OlegUserdirectoryBundle:Institution',
+                'class' => 'AppUserdirectoryBundle:Institution',
                 //'choice_label' => 'name',
                 'choice_label' => 'getTreeName',
                 'label'=>'Only show this profile to members of the following institution(s):',
@@ -158,7 +158,7 @@ class UserPreferencesType extends AbstractType
             ));
 
             $builder->add('lifeForm', EntityType::class, array(
-                'class' => 'OlegUserdirectoryBundle:LifeFormList',
+                'class' => 'AppUserdirectoryBundle:LifeFormList',
                 'choice_label' => 'name',
                 'label' => "Life Form:",
                 'required'=> false,
@@ -191,7 +191,7 @@ class UserPreferencesType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\UserPreferences',
+            'data_class' => 'App\UserdirectoryBundle\Entity\UserPreferences',
             'form_custom_value' => null
         ));
     }

@@ -15,17 +15,17 @@
  *  limitations under the License.
  */
 
-namespace Oleg\FellAppBundle\Controller;
+namespace App\FellAppBundle\Controller;
 
 use Doctrine\ORM\Query\ResultSetMapping;
-use Oleg\UserdirectoryBundle\Controller\LoggerController;
+use App\UserdirectoryBundle\Controller\LoggerController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Oleg\UserdirectoryBundle\Entity\Logger;
-use Oleg\UserdirectoryBundle\Form\LoggerType;
+use App\UserdirectoryBundle\Entity\Logger;
+use App\UserdirectoryBundle\Form\LoggerType;
 
 /**
  * Logger controller.
@@ -40,7 +40,7 @@ class FellAppLoggerController extends LoggerController
      *
      * @Route("/", name="fellapp_logger")
      * @Method("GET")
-     * @Template("OlegFellAppBundle:Logger:index.html.twig")
+     * @Template("AppFellAppBundle:Logger:index.html.twig")
      */
     public function indexAction(Request $request)
     {
@@ -71,7 +71,7 @@ class FellAppLoggerController extends LoggerController
      *
      * @Route("/application-log/{id}", name="fellapp_application_log")
      * @Method("GET")
-     * @Template("OlegFellAppBundle:Logger:index.html.twig")
+     * @Template("AppFellAppBundle:Logger:index.html.twig")
      */
     public function applicationLogAction(Request $request,$id) {
 
@@ -89,7 +89,7 @@ class FellAppLoggerController extends LoggerController
 
         $em = $this->getDoctrine()->getManager();
 
-        $fellApp = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
+        $fellApp = $em->getRepository('AppFellAppBundle:FellowshipApplication')->find($id);
         if( !$fellApp ) {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
         }
@@ -98,7 +98,7 @@ class FellAppLoggerController extends LoggerController
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
-        $objectType = $em->getRepository('OlegUserdirectoryBundle:EventObjectTypeList')->findOneByName("FellowshipApplication");
+        $objectType = $em->getRepository('AppUserdirectoryBundle:EventObjectTypeList')->findOneByName("FellowshipApplication");
         if( !$objectType ) {
             throw $this->createNotFoundException('Unable to find EventObjectTypeList by name='."FellowshipApplication");
         }
@@ -117,7 +117,7 @@ class FellAppLoggerController extends LoggerController
      *
      * @Route("/event-log-per-object/", name="fellapp_event-log-per-object_log")
      * @Method("GET")
-     * @Template("OlegFellAppBundle:Logger:index.html.twig")
+     * @Template("AppFellAppBundle:Logger:index.html.twig")
      */
     public function applicationPerObjectLogAction(Request $request) {
 
@@ -149,7 +149,7 @@ class FellAppLoggerController extends LoggerController
         }
 
         if( count($objectTypes) == 0 ) {
-            $objectType = $em->getRepository('OlegUserdirectoryBundle:EventObjectTypeList')->findOneByName("FellowshipApplication");
+            $objectType = $em->getRepository('AppUserdirectoryBundle:EventObjectTypeList')->findOneByName("FellowshipApplication");
             if( !$objectType ) {
                 throw $this->createNotFoundException('Unable to find EventObjectTypeList by name='."FellowshipApplication");
             }
@@ -164,7 +164,7 @@ class FellAppLoggerController extends LoggerController
         ///////////// EOF make sure eventTypes and users are set /////////////
 
 
-        $fellApp = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->find($objectId);
+        $fellApp = $em->getRepository('AppFellAppBundle:FellowshipApplication')->find($objectId);
         if( !$fellApp ) {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$objectId);
         }
@@ -191,7 +191,7 @@ class FellAppLoggerController extends LoggerController
         $objectId = $filterform['objectId']->getData();
 
         $em = $this->getDoctrine()->getManager();
-        $objectType = $em->getRepository('OlegUserdirectoryBundle:EventObjectTypeList')->find($objectTypes[0]);
+        $objectType = $em->getRepository('AppUserdirectoryBundle:EventObjectTypeList')->find($objectTypes[0]);
 
         //Camel Case
         $objectTypeArr = preg_split('/(?=[A-Z])/',$objectType);
@@ -224,7 +224,7 @@ class FellAppLoggerController extends LoggerController
 //
 //        //1) get user's role's fellowship types
 //        $user = $this->get('security.token_storage')->getToken()->getUser();
-//        $roleObjects = $em->getRepository('OlegUserdirectoryBundle:User')->findUserRolesBySiteAndPartialRoleName($user, 'fellapp', "ROLE_FELLAPP_");
+//        $roleObjects = $em->getRepository('AppUserdirectoryBundle:User')->findUserRolesBySiteAndPartialRoleName($user, 'fellapp', "ROLE_FELLAPP_");
 //        $fellowshipTypes = array();
 //        foreach ($roleObjects as $roleObject) {
 //            if ($roleObject->getFellowshipSubspecialty()) {
@@ -237,7 +237,7 @@ class FellAppLoggerController extends LoggerController
 //        //2) subquery to get a fellowship application object with logger.entityId and fellowshipSubspecialty in the $fellowshipTypes array
 //        $subquery = $em->createQueryBuilder()
 //            ->select('fellapp.id')
-//            ->from('OlegFellAppBundle:FellowshipApplication', 'fellapp')
+//            ->from('AppFellAppBundle:FellowshipApplication', 'fellapp')
 //            ->leftJoin('fellapp.fellowshipSubspecialty','fellowshipSubspecialty')
 //            ->where('CAST(fellapp.id AS TEXT) = logger.entityId AND fellowshipSubspecialty.id IN('.implode(",", $fellowshipTypes).')') //AND fellowshipSubspecialty.id IN(37)
 //            ->getDQL();
@@ -245,7 +245,7 @@ class FellAppLoggerController extends LoggerController
 //
 //        //3) main query to get logger objects, where use $subquery (fellowship application object)
 //        //$query = $em->createQueryBuilder();
-//        //$dql->from('OlegUserdirectoryBundle:Logger', 'logger');
+//        //$dql->from('AppUserdirectoryBundle:Logger', 'logger');
 //
 //        $dql->select('logger');
 //        $entityName = 'FellowshipApplication';

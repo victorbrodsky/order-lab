@@ -22,7 +22,7 @@
  * Time: 4:03 PM
  */
 
-namespace Oleg\UserdirectoryBundle\Controller;
+namespace App\UserdirectoryBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -44,7 +44,7 @@ class FormNodeController extends Controller {
      *
      * @Route("/formnode-fields/", name="employees_formnode_fields", options={"expose"=true})
      * @Method({"GET", "POST"})
-     * @Template("OlegUserdirectoryBundle:FormNode:formnode_fields.html.twig")
+     * @Template("AppUserdirectoryBundle:FormNode:formnode_fields.html.twig")
      */
     public function getFormNodeFieldsAction( Request $request )
     {
@@ -63,7 +63,7 @@ class FormNodeController extends Controller {
         $holderId = $request->query->get('holderId');
 
         //receiving list's entityName (Message)
-        $entityNamespace = $request->query->get('entityNamespace'); //"Oleg\\OrderformBundle\\Entity"
+        $entityNamespace = $request->query->get('entityNamespace'); //"App\\OrderformBundle\\Entity"
         $entityName = $request->query->get('entityName'); //"Message";
         $entityId = $request->query->get('entityId'); //"Message ID";
 
@@ -82,8 +82,8 @@ class FormNodeController extends Controller {
             return null;
         }
 
-        //Oleg\UserdirectoryBundle\Entity:ObjectTypeText
-        //"OlegUserdirectoryBundle:ObjectTypeText"
+        //App\UserdirectoryBundle\Entity:ObjectTypeText
+        //"AppUserdirectoryBundle:ObjectTypeText"
         $holderNamespaceArr = explode("\\",$holderNamespace);
         if( count($holderNamespaceArr) > 2 ) {
             $holderNamespaceShort = $holderNamespaceArr[0] . $holderNamespaceArr[1];
@@ -111,7 +111,7 @@ class FormNodeController extends Controller {
         //reverse array to show the fields backwards for show and edit, otherwise the order of submitted form fields is reversed.
         //if( $cycle != "new" ) {
             //test by link (Test: MessageCategory&holderId=70):
-            // http://localhost/order/directory/formnode-fields/?holderNamespace=Oleg\OrderformBundle\Entity&holderName=MessageCategory&holderId=70&entityNamespace=Oleg\OrderformBundle\Entity&entityName=Message&entityId=222&cycle=show&testing=true
+            // http://localhost/order/directory/formnode-fields/?holderNamespace=App\OrderformBundle\Entity&holderName=MessageCategory&holderId=70&entityNamespace=App\OrderformBundle\Entity&entityName=Message&entityId=222&cycle=show&testing=true
             //One way to solve it: for show and edit - start calling "formnode-fields" from top to bottom. On show page, this done in opposite way - from bottom to top.
             //for show use reverse array (don't use it for top to bottom combobox  processing)
             //$formNodes = array_reverse($formNodes);
@@ -242,7 +242,7 @@ class FormNodeController extends Controller {
                         //'arraySectionIndex' => null
                     );
 
-                    $template = $this->render('OlegUserdirectoryBundle:FormNode:formnode_fields.html.twig', $formNodeArr)->getContent();
+                    $template = $this->render('AppUserdirectoryBundle:FormNode:formnode_fields.html.twig', $formNodeArr)->getContent();
 
                     //form form node array element
                     if( $parentFormNodeId ) {
@@ -304,7 +304,7 @@ class FormNodeController extends Controller {
                     //'arraySectionIndex' => null
                 );
 
-                $template = $this->render('OlegUserdirectoryBundle:FormNode:formnode_fields.html.twig', $formNodeArr)->getContent();
+                $template = $this->render('AppUserdirectoryBundle:FormNode:formnode_fields.html.twig', $formNodeArr)->getContent();
 
                 //form form node array element
                 if( $parentFormNodeId ) {
@@ -355,7 +355,7 @@ class FormNodeController extends Controller {
 //        $template = "OK";
         //$showUserArr = $this->showUser($userid,$this->container->getParameter('employees.sitename'),false);
 
-        //$template = $this->render('OlegUserdirectoryBundle:Profile:edit_user_only.html.twig',$showUserArr)->getContent();
+        //$template = $this->render('AppUserdirectoryBundle:Profile:edit_user_only.html.twig',$showUserArr)->getContent();
 
 //        $json = json_encode($template);
 //        $response = new Response($json);
@@ -425,7 +425,7 @@ class FormNodeController extends Controller {
                 //'arraySectionIndex' => $arraySectionIndex
             );
 
-            $template = $this->render('OlegUserdirectoryBundle:FormNode:formnode_fields.html.twig', $formNodeArr)->getContent();
+            $template = $this->render('AppUserdirectoryBundle:FormNode:formnode_fields.html.twig', $formNodeArr)->getContent();
 
             $grandParentFormNode = $this->getParentFormNodeSection($formNodeHolderEntity,$parentFormNode);
             if( $grandParentFormNode ) {
@@ -552,12 +552,12 @@ class FormNodeController extends Controller {
         $em = $this->getDoctrine()->getManager();
 
         $mapper = array(
-            'prefix' => "Oleg",
+            'prefix' => "App",
             'className' => "FormNode",
             'bundleName' => "UserdirectoryBundle"
         );
 
-        $repo = $em->getRepository('OlegUserdirectoryBundle:FormNode');
+        $repo = $em->getRepository('AppUserdirectoryBundle:FormNode');
 
         //verify
         $verify = $repo->verify(); // can return TRUE if tree is valid, or array of errors found on tree

@@ -21,8 +21,8 @@
 <head>
 
     {% stylesheets
-        'bundles/oleguserdirectory/bootstrap/css/*' filter='cssrewrite'
-        'bundles/oleguserdirectory/form/css/form.css' filter='cssrewrite'
+        'bundles/appuserdirectory/bootstrap/css/*' filter='cssrewrite'
+        'bundles/appuserdirectory/form/css/form.css' filter='cssrewrite'
     %}
         <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
     {% endstylesheets %}
@@ -43,7 +43,7 @@
 
         <div class="text-center">
 
-            {% include 'OlegUserdirectoryBundle:Default:navbar.html.twig' with {'minimum': true} %}
+            {% include 'AppUserdirectoryBundle:Default:navbar.html.twig' with {'minimum': true} %}
 
             <h2 class="alert alert-info well-lg safary-fix" align="center">{{ app.user.getUserNameStr() }}: Access Request Confirmation</h2>
 
@@ -71,15 +71,15 @@
             {#{% endif %}#}
 
 
-            {% include 'OlegUserdirectoryBundle::Default/footer.html.twig' %}
+            {% include 'AppUserdirectoryBundle::Default/footer.html.twig' %}
 
         </div> <!-- /text-center -->
     </div> <!-- /container -->
 
 
     {% javascripts
-    '@OlegUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'
-    '@OlegUserdirectoryBundle/Resources/public/bootstrap/js/*'
+    '@AppUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'
+    '@AppUserdirectoryBundle/Resources/public/bootstrap/js/*'
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}

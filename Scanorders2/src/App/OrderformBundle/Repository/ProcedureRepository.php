@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Repository;
+namespace App\OrderformBundle\Repository;
 
 
 /**
@@ -37,7 +37,7 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         }
 
         $em = $this->_em;
-        $foundAccession = $em->getRepository('OlegOrderformBundle:Accession')->findUniqueByKey( $entity->getChildren()->first() );    //,"Accession","accession");
+        $foundAccession = $em->getRepository('AppOrderformBundle:Accession')->findUniqueByKey( $entity->getChildren()->first() );    //,"Accession","accession");
 
         if( $foundAccession ) {
             //echo "This entity alsready exists in DB ".$foundAccession."<br>";
@@ -57,13 +57,13 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         if( !$key->getKeytype() || $key->getKeytype() == "" ) {
             //throw new \Exception( 'Procedure does not have a valid keytype. keytype=' . $key->getKeytype() );
             $em = $this->_em;
-            $newkeytypeEntity = $em->getRepository('OlegOrderformBundle:ProcedureType')->findOneByName("Auto-generated Procedure Number");
+            $newkeytypeEntity = $em->getRepository('AppOrderformBundle:ProcedureType')->findOneByName("Auto-generated Procedure Number");
             $key->setKeytype($newkeytypeEntity);
         }
 
         if( $key == "" || $key->getField() != "Auto-generated Procedure Number" ) {
             $em = $this->_em;
-            $newkeytypeEntity = $em->getRepository('OlegOrderformBundle:ProcedureType')->findOneByName("Auto-generated Procedure Number");
+            $newkeytypeEntity = $em->getRepository('AppOrderformBundle:ProcedureType')->findOneByName("Auto-generated Procedure Number");
             $key->setKeytype($newkeytypeEntity);
         }
 
@@ -101,7 +101,7 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         $procedure->removeChildren($accession);
 
         //process conflict if exists for accession number. Replace conflicting accession number by a new generated number.
-        $accession = $this->_em->getRepository('OlegOrderformBundle:Accession')->processDuplicationKeyField($accession,$message);
+        $accession = $this->_em->getRepository('AppOrderformBundle:Accession')->processDuplicationKeyField($accession,$message);
 
         $procedure->addChildren($accession);
 

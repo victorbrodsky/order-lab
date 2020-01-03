@@ -1,7 +1,7 @@
-{% extends "OlegTranslationalResearchBundle::Default/base.html.twig" %}
+{% extends "AppTranslationalResearchBundle::Default/base.html.twig" %}
 
-{#{% import "OlegTranslationalResearchBundle::Default/transresRequestMacros.html.twig" as transresRequestMacros %}#}
-{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{#{% import "AppTranslationalResearchBundle::Default/transresRequestMacros.html.twig" as transresRequestMacros %}#}
+{% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
 {% block title %}
     {{ title }}
@@ -99,8 +99,8 @@
 {% block additionaljs %}
 
     {% javascripts
-    '@OlegUserdirectoryBundle/Resources/public/charts/plotly/plotly.js'
-    '@OlegTranslationalResearchBundle/Resources/public/form/js/transres-plotly.js'
+    '@AppUserdirectoryBundle/Resources/public/charts/plotly/plotly.js'
+    '@AppTranslationalResearchBundle/Resources/public/form/js/transres-plotly.js'
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}

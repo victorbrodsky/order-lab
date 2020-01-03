@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Controller;
+namespace App\OrderformBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -27,10 +27,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Config\Definition\Exception\ForbiddenOverwriteException;
 
-use Oleg\UserdirectoryBundle\Entity\PerSiteSettings;
-use Oleg\UserdirectoryBundle\Form\PerSiteSettingsType;
+use App\UserdirectoryBundle\Entity\PerSiteSettings;
+use App\UserdirectoryBundle\Form\PerSiteSettingsType;
 
-use Oleg\UserdirectoryBundle\Controller\UserController;
+use App\UserdirectoryBundle\Controller\UserController;
 
 
 
@@ -41,7 +41,7 @@ class ScanUserController extends UserController
      * @Route("/users", name="scan_listusers")
      * @Route("/users/previous", name="scan_listusers_previous")
      * @Method("GET")
-     * @Template("OlegOrderformBundle:Admin:users.html.twig")
+     * @Template("AppOrderformBundle:Admin:users.html.twig")
      */
     public function indexUserAction(Request $request)
     {
@@ -68,7 +68,7 @@ class ScanUserController extends UserController
     /**
      * @Route("/user/{id}", name="scan_showuser", requirements={"id" = "\d+"})
      * @Method("GET")
-     * @Template("OlegOrderformBundle:Profile:edit_user.html.twig")
+     * @Template("AppOrderformBundle:Profile:edit_user.html.twig")
      */
     public function showUserAction(Request $request, $id)
     {
@@ -102,7 +102,7 @@ class ScanUserController extends UserController
     /**
      * @Route("/edit-user-profile/{id}", name="scan_user_edit", requirements={"id" = "\d+"})
      * @Method("GET")
-     * @Template("OlegOrderformBundle:Profile:edit_user.html.twig")
+     * @Template("AppOrderformBundle:Profile:edit_user.html.twig")
      */
     public function editUserAction(Request $request, $id)
     {
@@ -136,7 +136,7 @@ class ScanUserController extends UserController
     /**
      * @Route("/edit-user-profile/{id}", name="scan_user_update")
      * @Method("PUT")
-     * @Template("OlegOrderformBundle:Profile:edit_user.html.twig")
+     * @Template("AppOrderformBundle:Profile:edit_user.html.twig")
      */
     public function updateUserAction(Request $request, $id)
     {
@@ -311,7 +311,7 @@ class ScanUserController extends UserController
     /**
      * @Route("/site-settings/show/user/{id}", name="scan_order_settings_show", requirements={"id" = "\d+"})
      * @Method("GET")
-     * @Template("OlegOrderformBundle:Admin:site-settings.html.twig")
+     * @Template("AppOrderformBundle:Admin:site-settings.html.twig")
      */
     public function showScanSettingsAction($id)
     {
@@ -326,7 +326,7 @@ class ScanUserController extends UserController
     /**
      * @Route("/site-settings/edit/user/{id}", name="scan_order_settings_edit", requirements={"id" = "\d+"})
      * @Method("GET")
-     * @Template("OlegOrderformBundle:Admin:site-settings.html.twig")
+     * @Template("AppOrderformBundle:Admin:site-settings.html.twig")
      */
     public function editScanSettingsAction($id)
     {
@@ -358,7 +358,7 @@ class ScanUserController extends UserController
 
         $em = $this->getDoctrine()->getManager();
 
-        $subjectuser = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
+        $subjectuser = $em->getRepository('AppUserdirectoryBundle:User')->find($id);
         if (!$subjectuser) {
             throw $this->createNotFoundException('Unable to find User entity.');
         }
@@ -401,7 +401,7 @@ class ScanUserController extends UserController
     /**
      * @Route("/site-settings/edit/user/{id}", name="scan_order_settings_update", requirements={"id" = "\d+"})
      * @Method("PUT")
-     * @Template("OlegOrderformBundle:Admin:site-settings.html.twig")
+     * @Template("AppOrderformBundle:Admin:site-settings.html.twig")
      */
     public function updateScanSettingsAction(Request $request, $id)
     {
@@ -429,7 +429,7 @@ class ScanUserController extends UserController
 
         if( !$entity ) {
 
-            $subjectuser = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
+            $subjectuser = $em->getRepository('AppUserdirectoryBundle:User')->find($id);
             if (!$subjectuser) {
                 throw $this->createNotFoundException('Unable to find User entity.');
             }
@@ -486,7 +486,7 @@ class ScanUserController extends UserController
 
         $em = $this->getDoctrine()->getManager();
 
-        $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:ProjectTitleTree');
+        $repository = $this->getDoctrine()->getRepository('AppOrderformBundle:ProjectTitleTree');
         $dql =  $repository->createQueryBuilder("project");
         $dql->select('project');
         $dql->groupBy("project");
@@ -509,7 +509,7 @@ class ScanUserController extends UserController
 
         $em = $this->getDoctrine()->getManager();
 
-        $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:CourseTitleTree');
+        $repository = $this->getDoctrine()->getRepository('AppOrderformBundle:CourseTitleTree');
         $dql =  $repository->createQueryBuilder("course");
         $dql->select('course');
         $dql->groupBy("course");

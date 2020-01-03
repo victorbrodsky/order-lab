@@ -15,15 +15,15 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Controller;
+namespace App\OrderformBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Oleg\OrderformBundle\Entity\Status;
-use Oleg\OrderformBundle\Form\StatusType;
+use App\OrderformBundle\Entity\Status;
+use App\OrderformBundle\Form\StatusType;
 
 /**
  * Status controller.
@@ -44,7 +44,7 @@ class StatusController extends Controller
 //    {
 //        $em = $this->getDoctrine()->getManager();
 //
-//        $entities = $em->getRepository('OlegOrderformBundle:Status')->findAll();
+//        $entities = $em->getRepository('AppOrderformBundle:Status')->findAll();
 //
 //        return array(
 //            'entities' => $entities,
@@ -55,7 +55,7 @@ class StatusController extends Controller
 //     *
 //     * @Route("/", name="status_create")
 //     * @Method("POST")
-//     * @Template("OlegOrderformBundle:Status:new.html.twig")
+//     * @Template("AppOrderformBundle:Status:new.html.twig")
 //     */
 //    public function createAction(Request $request)
 //    {
@@ -125,7 +125,7 @@ class StatusController extends Controller
 //    {
 //        $em = $this->getDoctrine()->getManager();
 //
-//        $entity = $em->getRepository('OlegOrderformBundle:Status')->find($id);
+//        $entity = $em->getRepository('AppOrderformBundle:Status')->find($id);
 //
 //        if (!$entity) {
 //            throw $this->createNotFoundException('Unable to find Status entity.');
@@ -150,7 +150,7 @@ class StatusController extends Controller
 //    {
 //        $em = $this->getDoctrine()->getManager();
 //
-//        $entity = $em->getRepository('OlegOrderformBundle:Status')->find($id);
+//        $entity = $em->getRepository('AppOrderformBundle:Status')->find($id);
 //
 //        if (!$entity) {
 //            throw $this->createNotFoundException('Unable to find Status entity.');
@@ -189,13 +189,13 @@ class StatusController extends Controller
 //     *
 //     * @Route("/{id}", name="status_update")
 //     * @Method("PUT")
-//     * @Template("OlegOrderformBundle:Status:edit.html.twig")
+//     * @Template("AppOrderformBundle:Status:edit.html.twig")
 //     */
 //    public function updateAction(Request $request, $id)
 //    {
 //        $em = $this->getDoctrine()->getManager();
 //
-//        $entity = $em->getRepository('OlegOrderformBundle:Status')->find($id);
+//        $entity = $em->getRepository('AppOrderformBundle:Status')->find($id);
 //
 //        if (!$entity) {
 //            throw $this->createNotFoundException('Unable to find Status entity.');
@@ -230,7 +230,7 @@ class StatusController extends Controller
 //
 //        if ($form->isValid()) {
 //            $em = $this->getDoctrine()->getManager();
-//            $entity = $em->getRepository('OlegOrderformBundle:Status')->find($id);
+//            $entity = $em->getRepository('AppOrderformBundle:Status')->find($id);
 //
 //            if (!$entity) {
 //                throw $this->createNotFoundException('Unable to find Status entity.');

@@ -1,9 +1,9 @@
 <?php
 
-namespace Oleg\VacReqBundle;
+namespace App\VacReqBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class OlegVacReqBundle extends Bundle
+class AppVacReqBundle extends Bundle
 {
 }

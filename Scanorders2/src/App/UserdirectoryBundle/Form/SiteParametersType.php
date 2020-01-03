@@ -15,10 +15,10 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Form;
+namespace App\UserdirectoryBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
-use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
+use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -231,7 +231,7 @@ class SiteParametersType extends AbstractType
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'ldapExePath' )
             $builder->add('ldapExePath',null,array(
-                'label'=>'LDAP/AD Authenticator Path - relevant for Windows-based servers only (Default: "../src/Oleg/UserdirectoryBundle/Util/" ):',
+                'label'=>'LDAP/AD Authenticator Path - relevant for Windows-based servers only (Default: "../src/App/UserdirectoryBundle/Util/" ):',
                 'attr' => array('class'=>'form-control')
             ));
 
@@ -288,7 +288,7 @@ class SiteParametersType extends AbstractType
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'ldapExePath2' )
             $builder->add('ldapExePath2',null,array(
-                'label'=>'LDAP/AD Authenticator Path - relevant for Windows-based servers only (Default: "../src/Oleg/UserdirectoryBundle/Util/" ):',
+                'label'=>'LDAP/AD Authenticator Path - relevant for Windows-based servers only (Default: "../src/App/UserdirectoryBundle/Util/" ):',
                 'attr' => array('class'=>'form-control')
             ));
 
@@ -336,10 +336,10 @@ class SiteParametersType extends AbstractType
 
                 $label = null;
                 if( $institution ) {
-                    $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
+                    $label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
                 }
                 if( !$label ) {
-                    $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
+                    $label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
                 }
 
                 $form->add('autoAssignInstitution', CustomSelectorType::class, array(
@@ -589,7 +589,7 @@ class SiteParametersType extends AbstractType
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'p12KeyPathFellApp' )
             $builder->add('p12KeyPathFellApp',null,array(
-                'label'=>'Full Path to p12 key or service account credentials.json file for accessing the Google Drive API (E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\src\Oleg\FellAppBundle\Util\FellowshipApplication-f1d9f98353e5.p12):',
+                'label'=>'Full Path to p12 key or service account credentials.json file for accessing the Google Drive API (E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\src\App\FellAppBundle\Util\FellowshipApplication-f1d9f98353e5.p12):',
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
 
@@ -771,7 +771,7 @@ class SiteParametersType extends AbstractType
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'defaultDeidentifierAccessionType' ) {
             $builder->add('defaultDeidentifierAccessionType', EntityType::class, array(
-                'class' => 'OlegOrderformBundle:AccessionType',
+                'class' => 'AppOrderformBundle:AccessionType',
                 //'choice_label' => 'name',
                 //'choice_label' => 'getTreeName',
                 'label' => 'Default Deidentifier Accession Type:',
@@ -793,7 +793,7 @@ class SiteParametersType extends AbstractType
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'defaultScanAccessionType' ) {
             $builder->add('defaultScanAccessionType', EntityType::class, array(
-                'class' => 'OlegOrderformBundle:AccessionType',
+                'class' => 'AppOrderformBundle:AccessionType',
                 //'choice_label' => 'name',
                 //'choice_label' => 'getTreeName',
                 'label' => 'Default Scan Order Accession Type:',
@@ -815,7 +815,7 @@ class SiteParametersType extends AbstractType
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'defaultScanMrnType' ) {
             $builder->add('defaultScanMrnType', EntityType::class, array(
-                'class' => 'OlegOrderformBundle:MrnType',
+                'class' => 'AppOrderformBundle:MrnType',
                 //'choice_label' => 'name',
                 //'choice_label' => 'getTreeName',
                 'label' => 'Default Scan Order Mrn Type:',
@@ -837,7 +837,7 @@ class SiteParametersType extends AbstractType
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'defaultScanDelivery' ) {
             $builder->add('defaultScanDelivery', EntityType::class, array(
-                'class' => 'OlegOrderformBundle:OrderDelivery',
+                'class' => 'AppOrderformBundle:OrderDelivery',
                 'label' => 'Default Slide Delivery:',
                 'required' => true,
                 'multiple' => false,
@@ -860,10 +860,10 @@ class SiteParametersType extends AbstractType
 //
 //                $label = null;
 //                if ($institution) {
-//                    $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
+//                    $label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
 //                }
 //                if (!$label) {
-//                    $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
+//                    $label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
 //                }
 //
 //                $form->add('defaultInstitutionalPHIScope', CustomSelectorType::class, array(
@@ -888,10 +888,10 @@ class SiteParametersType extends AbstractType
 
                 $label = null;
                 if( $institution ) {
-                    $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
+                    $label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
                 }
                 if( !$label ) {
-                    $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
+                    $label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
                 }
 
                 $form->add('defaultOrganizationRecipient', CustomSelectorType::class, array(
@@ -911,7 +911,7 @@ class SiteParametersType extends AbstractType
         }
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'defaultScanner' ) {
             $builder->add('defaultScanner', EntityType::class, array(
-                'class' => 'Oleg\UserdirectoryBundle\Entity\Equipment',
+                'class' => 'App\UserdirectoryBundle\Entity\Equipment',
                 'label' => 'Default Scanner:',
                 'required' => true,
                 'multiple' => false,
@@ -994,7 +994,7 @@ class SiteParametersType extends AbstractType
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'navbarFilterInstitution1' ) {
             $builder->add('navbarFilterInstitution1', EntityType::class, array(
-                'class' => 'OlegUserdirectoryBundle:Institution',
+                'class' => 'AppUserdirectoryBundle:Institution',
                 //'choice_label' => 'name',
                 'choice_label' => 'getTreeName',
                 'label' => 'Navbar Employee List Filter Institution #1:',
@@ -1019,7 +1019,7 @@ class SiteParametersType extends AbstractType
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'navbarFilterInstitution2' ) {
             $builder->add('navbarFilterInstitution2', EntityType::class, array(
-                'class' => 'OlegUserdirectoryBundle:Institution',
+                'class' => 'AppUserdirectoryBundle:Institution',
                 //'choice_label' => 'name',
                 'choice_label' => 'getTreeName',
                 'label' => 'Navbar Employee List Filter Institution #2:',
@@ -1086,10 +1086,10 @@ class SiteParametersType extends AbstractType
 
                 $label = null;
                 if( $institution ) {
-                    $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
+                    $label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
                 }
                 if( !$label ) {
-                    $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
+                    $label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
                 }
 
                 $form->add('transresDashboardInstitution', CustomSelectorType::class, array(
@@ -1127,7 +1127,7 @@ class SiteParametersType extends AbstractType
 //            ));
 
             $builder->add( 'emailCriticalErrorExceptionUsers', EntityType::class, array(
-                'class' => 'OlegUserdirectoryBundle:User',
+                'class' => 'AppUserdirectoryBundle:User',
                 'label'=>'Do not send critical error notifications to the following users:',
                 'required'=> false,
                 'multiple' => true,
@@ -1149,7 +1149,7 @@ class SiteParametersType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\SiteParameters',
+            'data_class' => 'App\UserdirectoryBundle\Entity\SiteParameters',
             'form_custom_value' => null
         ));
     }

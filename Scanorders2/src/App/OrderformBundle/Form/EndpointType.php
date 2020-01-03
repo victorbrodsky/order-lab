@@ -15,9 +15,9 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Form;
+namespace App\OrderformBundle\Form;
 
-use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
+use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -78,7 +78,7 @@ class EndpointType extends AbstractType
                     'label' => $this->params['endpoint.location.label'],
                     'required'=> false,
                     'multiple' => false,
-                    'class' => 'OlegUserdirectoryBundle:Location',
+                    'class' => 'AppUserdirectoryBundle:Location',
                     'attr' => array('class' => 'combobox combobox-width')
                 ));
             } else {
@@ -96,7 +96,7 @@ class EndpointType extends AbstractType
                 'label' => $this->params['endpoint.system.label'],
                 'required'=> false,
                 'multiple' => false,
-                'class' => 'OlegUserdirectoryBundle:SourceSystemList',
+                'class' => 'AppUserdirectoryBundle:SourceSystemList',
                 'attr' => array('class' => 'combobox combobox-width')
             ));
         }
@@ -107,7 +107,7 @@ class EndpointType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\Endpoint',
+            'data_class' => 'App\OrderformBundle\Entity\Endpoint',
             'form_custom_value' => null
         ));
     }

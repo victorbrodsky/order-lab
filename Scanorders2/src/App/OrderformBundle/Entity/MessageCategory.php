@@ -15,14 +15,14 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Entity;
+namespace App\OrderformBundle\Entity;
 
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Oleg\UserdirectoryBundle\Entity\BaseCompositeNode;
-use Oleg\UserdirectoryBundle\Entity\ComponentCategoryInterface;
-use Oleg\UserdirectoryBundle\Entity\CompositeNodeInterface;
+use App\UserdirectoryBundle\Entity\BaseCompositeNode;
+use App\UserdirectoryBundle\Entity\ComponentCategoryInterface;
+use App\UserdirectoryBundle\Entity\CompositeNodeInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
@@ -35,7 +35,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Use Doctrine Extension Tree for tree manipulation.
  *
  * @Gedmo\Tree(type="nested")
- * @ORM\Entity(repositoryClass="Oleg\UserdirectoryBundle\Repository\TreeRepository")
+ * @ORM\Entity(repositoryClass="App\UserdirectoryBundle\Repository\TreeRepository")
  * @ORM\Table(
  *  name="scan_messageCategory",
  *  indexes={
@@ -81,10 +81,10 @@ class MessageCategory extends BaseCompositeNode {
 
 //    /**
 //     * a single form node can be used only by one message category
-//     * @ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\FormNode", cascade={"persist"})
+//     * @ORM\OneToOne(targetEntity="App\UserdirectoryBundle\Entity\FormNode", cascade={"persist"})
 //     */
     /**
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\FormNode")
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\FormNode")
      * @ORM\JoinTable(name="scan_messageCategory_formNode",
      *      joinColumns={@ORM\JoinColumn(name="messageCategory_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="formNode_id", referencedColumnName="id")}

@@ -22,14 +22,14 @@
  * Time: 11:57 AM
  */
 
-namespace Oleg\DeidentifierBundle\Controller;
+namespace App\DeidentifierBundle\Controller;
 
-use Oleg\UserdirectoryBundle\Util\LargeFileDownloader;
+use App\UserdirectoryBundle\Util\LargeFileDownloader;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
-use Oleg\UserdirectoryBundle\Controller\UploadController;
+use App\UserdirectoryBundle\Controller\UploadController;
 use Symfony\Component\HttpFoundation\Response;
 
 

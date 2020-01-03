@@ -15,17 +15,17 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Controller;
+namespace App\UserdirectoryBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Oleg\UserdirectoryBundle\Entity\PerSiteSettings;
-use Oleg\UserdirectoryBundle\Form\AccessRequestType;
-use Oleg\UserdirectoryBundle\Form\AuthorizedUserFilterType;
-use Oleg\UserdirectoryBundle\Form\GeneratedUserType;
-use Oleg\UserdirectoryBundle\Form\PerSiteSettingsType;
-use Oleg\UserdirectoryBundle\Entity\User;
-use Oleg\UserdirectoryBundle\Form\AuthorizitaionUserType;
-use Oleg\UserdirectoryBundle\Form\SimpleUserType;
+use App\UserdirectoryBundle\Entity\PerSiteSettings;
+use App\UserdirectoryBundle\Form\AccessRequestType;
+use App\UserdirectoryBundle\Form\AuthorizedUserFilterType;
+use App\UserdirectoryBundle\Form\GeneratedUserType;
+use App\UserdirectoryBundle\Form\PerSiteSettingsType;
+use App\UserdirectoryBundle\Entity\User;
+use App\UserdirectoryBundle\Form\AuthorizitaionUserType;
+use App\UserdirectoryBundle\Form\SimpleUserType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -34,8 +34,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
-use Oleg\UserdirectoryBundle\Entity\AccessRequest;
-use Oleg\UserdirectoryBundle\Util\EmailUtil;
+use App\UserdirectoryBundle\Entity\AccessRequest;
+use App\UserdirectoryBundle\Util\EmailUtil;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
@@ -70,7 +70,7 @@ class AccessRequestController extends Controller
      *
      * @Route("/access-requests/new/create", name="employees_access_request_new_plain")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:AccessRequest:access_request.html.twig")
+     * @Template("AppUserdirectoryBundle:AccessRequest:access_request.html.twig")
      */
     public function accessRequestCreatePlainAction(Request $request)
     {
@@ -108,7 +108,7 @@ class AccessRequestController extends Controller
             if( $userSecUtil->isSiteAccessible($this->siteName) ) {
                 //echo "site is Live<br>";
 
-                $siteObject = $em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation($this->siteName);
+                $siteObject = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation($this->siteName);
                 $lowestRoles = $siteObject->getLowestRoles();
                 //1) Add Minimum Roles for this site
                 if( count($lowestRoles) == 0 ) {
@@ -218,7 +218,7 @@ class AccessRequestController extends Controller
      *
      * @Route("/access-requests/new", name="employees_access_request_new")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:AccessRequest:access_request.html.twig")
+     * @Template("AppUserdirectoryBundle:AccessRequest:access_request.html.twig")
      */
     public function accessRequestCreateAction()
     {
@@ -252,7 +252,7 @@ class AccessRequestController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
+        $user = $em->getRepository('AppUserdirectoryBundle:User')->find($id);
 
         if (!$user) {
             return $this->redirect($this->generateUrl($sitename.'_login'));
@@ -275,7 +275,7 @@ class AccessRequestController extends Controller
             //$this->get('security.context')->setToken(null);
             //$this->get('request')->getSession()->invalidate();
 
-            return $this->render('OlegUserdirectoryBundle:AccessRequest:request_confirmation.html.twig',array('text'=>$text,'sitename'=>$sitename,'pendinguser'=>true));
+            return $this->render('AppUserdirectoryBundle:AccessRequest:request_confirmation.html.twig',array('text'=>$text,'sitename'=>$sitename,'pendinguser'=>true));
         }
 
         // Case 2: user has accreq but it was declined
@@ -285,7 +285,7 @@ class AccessRequestController extends Controller
             $dateStr = $transformer->transform($userAccessReq->getCreatedate());
             $text = 'You have requested access to '.$sitenameFull.' on '.$dateStr.'. Your request has been declined. Please contact the system administrator by emailing '.$this->container->getParameter('default_system_email').' if you have any questions.';
 
-            return $this->render('OlegUserdirectoryBundle:AccessRequest:request_confirmation.html.twig',array('text'=>$text,'sitename'=>$sitename,'pendinguser'=>true));
+            return $this->render('AppUserdirectoryBundle:AccessRequest:request_confirmation.html.twig',array('text'=>$text,'sitename'=>$sitename,'pendinguser'=>true));
         }
 
         // Case 3: user has role banned
@@ -364,13 +364,13 @@ class AccessRequestController extends Controller
 
         //departments
         $department = $userSecUtil->getAutoAssignInstitution();
-        //$department = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
+        //$department = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
 
         $params['institution'] = $department;
 
-        //$requestedInstitutionalPHIScope = $em->getRepository('OlegUserdirectoryBundle:Institution')->findBy(array('level'=>0));
+        //$requestedInstitutionalPHIScope = $em->getRepository('AppUserdirectoryBundle:Institution')->findBy(array('level'=>0));
 
-        $repository = $em->getRepository('OlegUserdirectoryBundle:Institution');
+        $repository = $em->getRepository('AppUserdirectoryBundle:Institution');
         $dql =  $repository->createQueryBuilder("institution");
         $dql->select('institution');
         $dql->leftJoin("institution.types", "types");
@@ -398,7 +398,7 @@ class AccessRequestController extends Controller
 //     *
 //     * @Route("/access-requests/details/new", name="employees_access_request_details_new")
 //     * @Method("GET")
-//     * @Template("OlegUserdirectoryBundle:AccessRequest:access_request.html.twig")
+//     * @Template("AppUserdirectoryBundle:AccessRequest:access_request.html.twig")
 //     */
 //    public function accessRequestDetailsAction()
 //    {
@@ -415,7 +415,7 @@ class AccessRequestController extends Controller
       *
       * @Route("/access-requests/new/pending", name="employees_access_request_create")
       * @Method("POST")
-      * @Template("OlegUserdirectoryBundle:AccessRequest:access_request.html.twig")
+      * @Template("AppUserdirectoryBundle:AccessRequest:access_request.html.twig")
       */
     public function accessRequestAction(Request $request)
     {
@@ -432,7 +432,7 @@ class AccessRequestController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
+        $user = $em->getRepository('AppUserdirectoryBundle:User')->find($id);
 
         if (!$user) {
             throw $this->createNotFoundException('Unable to find User.');
@@ -467,7 +467,7 @@ class AccessRequestController extends Controller
                 "The status of your request is " . $userAccessReq->getStatusStr() . "." .
                 "Please contact the system administrator by emailing ".$this->container->getParameter('default_system_email')." if you have any questions.";
 
-            return $this->render('OlegUserdirectoryBundle:AccessRequest:request_confirmation.html.twig',array('text'=>$text,'sitename'=>$sitename,'pendinguser'=>true));
+            return $this->render('AppUserdirectoryBundle:AccessRequest:request_confirmation.html.twig',array('text'=>$text,'sitename'=>$sitename,'pendinguser'=>true));
         }
 
         //Create a new active AccessRequest
@@ -583,7 +583,7 @@ class AccessRequestController extends Controller
             $this->get('security.token_storage')->setToken(null);
             return $this->redirect($this->generateUrl($sitename . '_login'));
         } else {
-            return $this->render('OlegUserdirectoryBundle:AccessRequest:request_confirmation.html.twig', array('text' => $text, 'sitename' => $sitename, 'pendinguser' => true));
+            return $this->render('AppUserdirectoryBundle:AccessRequest:request_confirmation.html.twig', array('text' => $text, 'sitename' => $sitename, 'pendinguser' => true));
         }
     }
 
@@ -619,7 +619,7 @@ class AccessRequestController extends Controller
      *
      * @Route("/access-requests", name="employees_accessrequest_list")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:AccessRequest:access_request_list.html.twig")
+     * @Template("AppUserdirectoryBundle:AccessRequest:access_request_list.html.twig")
      */
     public function accessRequestIndexAction(Request $request)
     {
@@ -633,13 +633,13 @@ class AccessRequestController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $roles = $em->getRepository('OlegUserdirectoryBundle:Roles')->findAll();
+        $roles = $em->getRepository('AppUserdirectoryBundle:Roles')->findAll();
         $rolesArr = array();
         foreach( $roles as $role ) {
             $rolesArr[$role->getName()] = $role->getAlias();
         }
 
-        $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:AccessRequest');
+        $repository = $this->getDoctrine()->getRepository('AppUserdirectoryBundle:AccessRequest');
         $dql =  $repository->createQueryBuilder("accreq");
         $dql->select('accreq');
         $dql->leftJoin('accreq.user','user');
@@ -703,7 +703,7 @@ class AccessRequestController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
+        $entity = $em->getRepository('AppUserdirectoryBundle:User')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find User entity.');
@@ -744,7 +744,7 @@ class AccessRequestController extends Controller
             $entity->removeRole($this->roleUnapproved);
             $entity->removeRole($this->roleBanned);
 
-            if( $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName($this->roleUser) ) {
+            if( $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($this->roleUser) ) {
                 $entity->addRole($this->roleUser);
             }
 
@@ -877,7 +877,7 @@ class AccessRequestController extends Controller
     /**
      * @Route("/access-requests/{id}", name="employees_accessrequest_management", requirements={"id" = "\d+"})
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
+     * @Template("AppUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
      */
     public function accessRequestManagementAction( Request $request, $id )
     {
@@ -888,8 +888,8 @@ class AccessRequestController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        //$entity = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
-        $accReq = $em->getRepository('OlegUserdirectoryBundle:AccessRequest')->find($id);
+        //$entity = $em->getRepository('AppUserdirectoryBundle:User')->find($id);
+        $accReq = $em->getRepository('AppUserdirectoryBundle:AccessRequest')->find($id);
 
         if (!$accReq) {
             throw $this->createNotFoundException('Unable to find Access Request entity with ID ' . $id);
@@ -948,7 +948,7 @@ class AccessRequestController extends Controller
     /**
      * @Route("/access-requests/submit/{id}", name="employees_accessrequest_management_submit", requirements={"id" = "\d+"})
      * @Method("POST")
-     * @Template("OlegUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
+     * @Template("AppUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
      */
     public function accessRequestManagementSubmitAction( Request $request, $id )
     {
@@ -959,7 +959,7 @@ class AccessRequestController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $accReq = $em->getRepository('OlegUserdirectoryBundle:AccessRequest')->find($id);
+        $accReq = $em->getRepository('AppUserdirectoryBundle:AccessRequest')->find($id);
 
         if (!$accReq) {
             throw $this->createNotFoundException('Unable to find Access Request entity with ID ' . $id);
@@ -1096,14 +1096,14 @@ class AccessRequestController extends Controller
     public function authorizationRemove($request,$userId) {
         $em = $this->getDoctrine()->getManager();
 
-        $subjectuser = $em->getRepository('OlegUserdirectoryBundle:User')->find($userId);
+        $subjectuser = $em->getRepository('AppUserdirectoryBundle:User')->find($userId);
         if (!$subjectuser) {
             throw $this->createNotFoundException('Unable to find User entity.');
         }
 
 //        //find all user's roles with sitename only and remove them from the user
 //        foreach( $subjectuser->getRoles() as $role ) {
-//            $roleObject = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName($role);
+//            $roleObject = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($role);
 //            if( $roleObject && $roleObject->hasSite( $this->siteName ) ) {
 //                $subjectuser->removeRole($role);
 //            }
@@ -1130,7 +1130,7 @@ class AccessRequestController extends Controller
     /**
      * @Route("/authorization-user-manager/{id}", name="employees_authorization_user_management", requirements={"id" = "\d+"})
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
+     * @Template("AppUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
      */
     public function authorizationManagementAction( Request $request, $id )
     {
@@ -1141,7 +1141,7 @@ class AccessRequestController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
+        $entity = $em->getRepository('AppUserdirectoryBundle:User')->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Usert entity with ID ' . $id);
@@ -1187,7 +1187,7 @@ class AccessRequestController extends Controller
     /**
      * @Route("/authorization-user-manager/submit/{id}", name="employees_authorization_user_management_submit", requirements={"id" = "\d+"})
      * @Method("POST")
-     * @Template("OlegUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
+     * @Template("AppUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
      */
     public function authorizationManagementSubmitAction( Request $request, $id )
     {
@@ -1198,7 +1198,7 @@ class AccessRequestController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
+        $entity = $em->getRepository('AppUserdirectoryBundle:User')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find User entity with ID ' . $id);
@@ -1264,7 +1264,7 @@ class AccessRequestController extends Controller
     /**
      * @Route("/authorized-users/", name="employees_authorized_users")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:AccessRequest:authorized_users.html.twig")
+     * @Template("AppUserdirectoryBundle:AccessRequest:authorized_users.html.twig")
      */
     public function authorizedUsersAction( Request $request )
     {
@@ -1278,7 +1278,7 @@ class AccessRequestController extends Controller
         //echo "sitename=".$this->siteName."<br>";
 
         /////////// Filter ////////////
-        $siteRoles = $em->getRepository('OlegUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName($this->siteName,"");
+        $siteRoles = $em->getRepository('AppUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName($this->siteName,"");
         $params = array(
             'roles'=>$siteRoles,
         );
@@ -1299,7 +1299,7 @@ class AccessRequestController extends Controller
         if( $defaultPrimaryPublicUserIdType ) {
             $defaultPrimaryPublicUserIdTypeId = $defaultPrimaryPublicUserIdType->getId();
         }
-        $keytypeChoicesArr = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findBy(
+        $keytypeChoicesArr = $em->getRepository('AppUserdirectoryBundle:UsernameType')->findBy(
             array('type' => array('default','user-added')),
             array('orderinlist' => 'ASC')
         );
@@ -1375,7 +1375,7 @@ class AccessRequestController extends Controller
     /**
      * @Route("/add-authorized-user/", name="employees_add_authorized_user")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:AccessRequest:add_authorized_user.html.twig")
+     * @Template("AppUserdirectoryBundle:AccessRequest:add_authorized_user.html.twig")
      */
     public function addAuthorizedUserAction( Request $request )
     {
@@ -1400,7 +1400,7 @@ class AccessRequestController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         //find user in DB
-        $users = $em->getRepository('OlegUserdirectoryBundle:User')->findBy(array('keytype'=>$keytype,'primaryPublicUserId'=>$primaryPublicUserId));
+        $users = $em->getRepository('AppUserdirectoryBundle:User')->findBy(array('keytype'=>$keytype,'primaryPublicUserId'=>$primaryPublicUserId));
 
         if( count($users) > 1 ) {
             throw $this->createNotFoundException('Unable to find a Single User. Found users ' . count($users) );
@@ -1411,7 +1411,7 @@ class AccessRequestController extends Controller
         }
 
         if( count($users) == 0 ) {
-            $keytypeObj = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->find($keytype);
+            $keytypeObj = $em->getRepository('AppUserdirectoryBundle:UsernameType')->find($keytype);
             $this->get('session')->getFlashBag()->set(
                 'notice',
                 'User ' . $primaryPublicUserId . ' (' . $keytypeObj . ')' . ' not found.'." ".
@@ -1495,7 +1495,7 @@ class AccessRequestController extends Controller
 //    /**
 //     * @Route("/add-authorized-user/submit/", name="employees_add_authorized_user_submit")
 //     * @Method("POST")
-//     * @Template("OlegUserdirectoryBundle:AccessRequest:add_authorized_user.html.twig")
+//     * @Template("AppUserdirectoryBundle:AccessRequest:add_authorized_user.html.twig")
 //     */
 //    public function addAuthorizedUserSubmitAction( Request $request )
 //    {
@@ -1514,7 +1514,7 @@ class AccessRequestController extends Controller
     /**
      * @Route("/generated-users/", name="employees_generated_users")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:AccessRequest:generated_users.html.twig")
+     * @Template("AppUserdirectoryBundle:AccessRequest:generated_users.html.twig")
      */
     public function generatedUsersAction(Request $request)
     {
@@ -1533,7 +1533,7 @@ class AccessRequestController extends Controller
 
         $createdby = "manual-".$this->siteName;
 
-        $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:User');
+        $repository = $this->getDoctrine()->getRepository('AppUserdirectoryBundle:User');
         $dql =  $repository->createQueryBuilder("user");
         $dql->select('user');
         $dql->leftJoin('user.infos','infos');
@@ -1582,7 +1582,7 @@ class AccessRequestController extends Controller
 
     /**
      * @Route("/generated-user/{id}", name="employees_generated_user_management")
-     * @Template("OlegUserdirectoryBundle:AccessRequest:generated_user_management.html.twig")
+     * @Template("AppUserdirectoryBundle:AccessRequest:generated_user_management.html.twig")
      * @Method({"GET", "POST"})
      */
     public function generatedUserManagementAction(Request $request, User $user)

@@ -21,7 +21,7 @@
  * and open the template in the editor.
  */
 
-namespace Oleg\OrderformBundle\Hydrator;
+namespace App\OrderformBundle\Hydrator;
 
 use Doctrine\ORM\Internal\Hydration\AbstractHydrator;
 use PDO;

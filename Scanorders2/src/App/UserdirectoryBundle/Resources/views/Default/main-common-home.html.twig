@@ -21,22 +21,22 @@
 <head>
 
     {#{% stylesheets#}
-    {#'bundles/oleguserdirectory/bootstrap/css/*' filter='cssrewrite'#}
-    {#'bundles/oleguserdirectory/form/css/form.css' filter='cssrewrite'#}
+    {#'bundles/appuserdirectory/bootstrap/css/*' filter='cssrewrite'#}
+    {#'bundles/appuserdirectory/form/css/form.css' filter='cssrewrite'#}
     {#%}#}
     {#<link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />#}
     {#{% endstylesheets %}#}
 
     {#{% stylesheets#}
-        {#'bundles/oleguserdirectory/bootstrap/css/*'#}
-        {#'bundles/oleguserdirectory/form/css/form.css'#}
+        {#'bundles/appuserdirectory/bootstrap/css/*'#}
+        {#'bundles/appuserdirectory/form/css/form.css'#}
     {#%}#}
         {#<link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />#}
     {#{% endstylesheets %}#}
-    {#<link rel="stylesheet" type="text/css" href="{{ asset('bundles/oleguserdirectory/bootstrap/css/*') }}" />#}
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/oleguserdirectory/bootstrap/css/bootstrap.min.css') }}" />
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/oleguserdirectory/bootstrap/css/bootstrap-theme.min.css') }}" />
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/oleguserdirectory/form/css/form.css') }}" />
+    {#<link rel="stylesheet" type="text/css" href="{{ asset('bundles/appuserdirectory/bootstrap/css/*') }}" />#}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/appuserdirectory/bootstrap/css/bootstrap.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/appuserdirectory/bootstrap/css/bootstrap-theme.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/appuserdirectory/form/css/form.css') }}" />
 
 
     <title>O R D E R</title>
@@ -44,7 +44,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
     {{ usermacros.nonLiveSiteRedirect() }}
 
     <link rel="icon" type="image/x-icon" href="{{ asset('glyphicons-157-show-thumbnails.png') }}" />
@@ -118,7 +118,7 @@
         {% endif %}
 
 
-        {% include 'OlegUserdirectoryBundle::Default/footer.html.twig' %}
+        {% include 'AppUserdirectoryBundle::Default/footer.html.twig' %}
 
     </div> <!-- /text-center -->
 

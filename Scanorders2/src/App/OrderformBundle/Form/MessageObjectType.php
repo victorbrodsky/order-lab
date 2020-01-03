@@ -15,11 +15,11 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Form;
+namespace App\OrderformBundle\Form;
 
-use Oleg\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
-use Oleg\UserdirectoryBundle\Form\InstitutionalWrapperType;
-use Oleg\UserdirectoryBundle\Form\InstitutionType;
+use App\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
+use App\UserdirectoryBundle\Form\InstitutionalWrapperType;
+use App\UserdirectoryBundle\Form\InstitutionType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -33,9 +33,9 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 use Doctrine\ORM\EntityRepository;
 
-use Oleg\OrderformBundle\Entity\Message;
-use Oleg\UserdirectoryBundle\Form\AttachmentContainerType;
-//use Oleg\OrderformBundle\Helper\FormHelper;
+use App\OrderformBundle\Entity\Message;
+use App\UserdirectoryBundle\Form\AttachmentContainerType;
+//use App\OrderformBundle\Helper\FormHelper;
 
 //This form includes only message object
 class MessageObjectType extends AbstractType
@@ -161,7 +161,7 @@ class MessageObjectType extends AbstractType
         //exit("formtype after orderdate");
 
         $builder->add('provider', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:User',
+            'class' => 'AppUserdirectoryBundle:User',
             'label' => $this->labels['provider'],
             'required' => false,
             'attr' => array('class' => 'combobox combobox-width'),
@@ -271,7 +271,7 @@ class MessageObjectType extends AbstractType
 
             //Message Status
             $builder->add('messageStatus', EntityType::class, array(
-                'class' => 'OlegOrderformBundle:MessageStatusList',
+                'class' => 'AppOrderformBundle:MessageStatusList',
                 //'choice_label' => 'name',
                 'label'=>'Message Status:',
                 'required'=> false,
@@ -322,7 +322,7 @@ class MessageObjectType extends AbstractType
             'required'=> true,
             'multiple' => false,
             //'empty_value' => false,
-            'class' => 'OlegUserdirectoryBundle:Institution',
+            'class' => 'AppUserdirectoryBundle:Institution',
             'choices' => $institutions,
             'attr' => array('class' => 'combobox combobox-width combobox-institution')
         ));
@@ -346,7 +346,7 @@ class MessageObjectType extends AbstractType
         //Associations
         if(  $this->keyInArrayAndTrue($this->params,'message.associations') ) {
             $builder->add('associations', EntityType::class, array(
-                'class' => 'OlegOrderformBundle:Message',
+                'class' => 'AppOrderformBundle:Message',
                 'choice_label' => 'getFullName',
                 'label' => "Association(s):",
                 'attr' => array('class' => 'combobox combobox-width'),
@@ -356,7 +356,7 @@ class MessageObjectType extends AbstractType
         }
         if( $this->keyInArrayAndTrue($this->params,'message.backAssociations') ) {
             $builder->add('backAssociations', EntityType::class, array(
-                'class' => 'OlegOrderformBundle:Message',
+                'class' => 'AppOrderformBundle:Message',
                 'choice_label' => 'getFullName',
                 'label' => "Reciprocal Association(s):",
                 'attr' => array('class' => 'combobox combobox-width'),
@@ -559,7 +559,7 @@ if( 1 ) {
                     ));
 
                     $form->add('equipment', EntityType::class, array(
-                        'class' => 'OlegUserdirectoryBundle:Equipment',
+                        'class' => 'AppUserdirectoryBundle:Equipment',
                         'choice_label' => 'name',
                         'label' => 'Microtome Device:',
                         'required'=> true,
@@ -590,7 +590,7 @@ if( 1 ) {
                     ));
 
                     $form->add('equipment', EntityType::class, array(
-                        'class' => 'OlegUserdirectoryBundle:Equipment',
+                        'class' => 'AppUserdirectoryBundle:Equipment',
                         'choice_label' => 'name',
                         'label' => 'Slide Stainer Device:',
                         'required'=> true,
@@ -677,7 +677,7 @@ if( 1 ) {
 //
 //        //echo "provider show=".$this->params['message.provider']."<br>";
 //        $builder->add('provider', EntityType::class, array(
-//            'class' => 'OlegUserdirectoryBundle:User',
+//            'class' => 'AppUserdirectoryBundle:User',
 //            'label' => $this->labels['provider'],
 //            'required' => false,
 //            'attr' => array('class' => 'combobox combobox-width'),
@@ -790,7 +790,7 @@ if( 1 ) {
 //            'required'=> true,
 //            'multiple' => false,
 //            'empty_value' => false,
-//            'class' => 'OlegUserdirectoryBundle:Institution',
+//            'class' => 'AppUserdirectoryBundle:Institution',
 //            'choices' => $institutions,
 //            'attr' => array('class' => 'combobox combobox-width combobox-institution ajax-combobox-institution-preset')
 //        ));
@@ -813,7 +813,7 @@ if( 1 ) {
 //        //Associations
 //        if( array_key_exists('message.associations', $this->params) && $this->params['message.associations'] == true ) {
 //            $builder->add('associations', EntityType::class, array(
-//                'class' => 'OlegOrderformBundle:Message',
+//                'class' => 'AppOrderformBundle:Message',
 //                'choice_label' => 'getFullName',
 //                'label' => "Association(s):",
 //                'attr' => array('class' => 'combobox combobox-width'),
@@ -823,7 +823,7 @@ if( 1 ) {
 //        }
 //        if( array_key_exists('message.backAssociations', $this->params) && $this->params['message.backAssociations'] == true ) {
 //            $builder->add('backAssociations', EntityType::class, array(
-//                'class' => 'OlegOrderformBundle:Message',
+//                'class' => 'AppOrderformBundle:Message',
 //                'choice_label' => 'getFullName',
 //                'label' => "Reciprocal Association(s):",
 //                'attr' => array('class' => 'combobox combobox-width'),
@@ -959,7 +959,7 @@ if( 1 ) {
 //                    ));
 //
 //                    $form->add('equipment', EntityType::class, array(
-//                        'class' => 'OlegUserdirectoryBundle:Equipment',
+//                        'class' => 'AppUserdirectoryBundle:Equipment',
 //                        'choice_label' => 'name',
 //                        'label' => 'Microtome Device:',
 //                        'required'=> true,
@@ -990,7 +990,7 @@ if( 1 ) {
 //                    ));
 //
 //                    $form->add('equipment', EntityType::class, array(
-//                        'class' => 'OlegUserdirectoryBundle:Equipment',
+//                        'class' => 'AppUserdirectoryBundle:Equipment',
 //                        'choice_label' => 'name',
 //                        'label' => 'Slide Stainer Device:',
 //                        'required'=> true,
@@ -1048,7 +1048,7 @@ if( 1 ) {
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\Message',
+            'data_class' => 'App\OrderformBundle\Entity\Message',
             'form_custom_value' => null,
             'form_custom_value_entity' => null,
         ));

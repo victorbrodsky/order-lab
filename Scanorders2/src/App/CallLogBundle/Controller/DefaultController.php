@@ -15,11 +15,11 @@
  *  limitations under the License.
  */
 
-namespace Oleg\CallLogBundle\Controller;
+namespace App\CallLogBundle\Controller;
 
-use Oleg\CallLogBundle\Form\CalllogMessageCacheType;
-use Oleg\OrderformBundle\Entity\Message;
-use Oleg\UserdirectoryBundle\Entity\ObjectTypeText;
+use App\CallLogBundle\Form\CalllogMessageCacheType;
+use App\OrderformBundle\Entity\Message;
+use App\UserdirectoryBundle\Entity\ObjectTypeText;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -34,7 +34,7 @@ class DefaultController extends Controller
 
     /**
      * @Route("/about", name="calllog_about_page")
-     * @Template("OlegUserdirectoryBundle:Default:about.html.twig")
+     * @Template("AppUserdirectoryBundle:Default:about.html.twig")
      */
     public function aboutAction(Request $request)
     {
@@ -46,7 +46,7 @@ class DefaultController extends Controller
 //    /**
 //     * Alerts
 //     * @Route("/alerts/", name="calllog_alerts")
-//     * @Template("OlegCallLogBundle:Default:under_construction.html.twig")
+//     * @Template("AppCallLogBundle:Default:under_construction.html.twig")
 //     */
 //    public function alertsAction(Request $request)
 //    {
@@ -57,7 +57,7 @@ class DefaultController extends Controller
     /**
      * Resources
      * @Route("/resources/", name="calllog_resources")
-     * @Template("OlegCallLogBundle:CallLog:resources.html.twig")
+     * @Template("AppCallLogBundle:CallLog:resources.html.twig")
      */
     public function resourcesAction(Request $request)
     {
@@ -83,7 +83,7 @@ class DefaultController extends Controller
 //            );
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+        $entities = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
 
         if( count($entities) != 1 ) {
             throw new \Exception( 'Must have only one parameter object. Found '.count($entities).'object(s)' );
@@ -200,7 +200,7 @@ class DefaultController extends Controller
 
             if( $attendingUser ) {
                 $em = $this->getDoctrine()->getManager();
-                $role = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName($roleStr);
+                $role = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($roleStr);
                 if ($role) {
                     if (!$attendingUser->hasRole($roleStr)) {
                         $attendingUser->addRole($roleStr);
@@ -234,7 +234,7 @@ class DefaultController extends Controller
     }
     public function getUserByDisplayName( $userStr ) {
         $em = $this->getDoctrine()->getManager();
-        $repository = $em->getRepository('OlegUserdirectoryBundle:User');
+        $repository = $em->getRepository('AppUserdirectoryBundle:User');
         $dql =  $repository->createQueryBuilder("user");
         $dql->select('user');
         $dql->leftJoin("user.infos", "infos");
@@ -255,7 +255,7 @@ class DefaultController extends Controller
         //echo "Trying to find by cwid [$cwid] <br>";
         $usernamePrefix = 'ldap-user';
         $em = $this->getDoctrine()->getManager();
-        $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername( $cwid."_@_". $usernamePrefix);
+        $user = $em->getRepository('AppUserdirectoryBundle:User')->findOneByUsername( $cwid."_@_". $usernamePrefix);
 
         return $user;
     }
@@ -287,7 +287,7 @@ class DefaultController extends Controller
         $forceUpdate = true;
         //$forceUpdate = false;
 
-        $repository = $em->getRepository('OlegOrderformBundle:Message');
+        $repository = $em->getRepository('AppOrderformBundle:Message');
 
         $dql =  $repository->createQueryBuilder("message");
         $dql->select('message');
@@ -338,7 +338,7 @@ class DefaultController extends Controller
 
     /**
      * @Route("/update-cache-manually/{id}", name="calllog_update_cache_manually")
-     * @Template("OlegCallLogBundle:CallLog:update-cache-manually.html.twig")
+     * @Template("AppCallLogBundle:CallLog:update-cache-manually.html.twig")
      */
     public function updateCacheManuallyAction(Request $request, Message $message)
     {
@@ -436,10 +436,10 @@ class DefaultController extends Controller
 //        }
 //        $impressionDestinationFormNodeId = $impressionDestinationFormNode->getId();
 //
-//        //$formNodeHtml = $em->getRepository('OlegUserdirectoryBundle:ObjectTypeText')->findAll();
+//        //$formNodeHtml = $em->getRepository('AppUserdirectoryBundle:ObjectTypeText')->findAll();
 //
-//        //$sourceTextObjects = $em->getRepository('OlegUserdirectoryBundle:FormNode')->findOneByName("History/Findings");
-//        $repository = $em->getRepository('OlegUserdirectoryBundle:ObjectTypeText');
+//        //$sourceTextObjects = $em->getRepository('AppUserdirectoryBundle:FormNode')->findOneByName("History/Findings");
+//        $repository = $em->getRepository('AppUserdirectoryBundle:ObjectTypeText');
 //        $dql = $repository->createQueryBuilder("list");;
 //        $dql->select('list');
 //        $dql->leftJoin("list.formNode", "formNode");
@@ -588,7 +588,7 @@ class DefaultController extends Controller
 //                if( $updateCache ) {
 //                    $message = null;
 //                    if ($entityId) {
-//                        $message = $em->getRepository('OlegOrderformBundle:Message')->find($entityId);
+//                        $message = $em->getRepository('AppOrderformBundle:Message')->find($entityId);
 //                        if (!$message) {
 //                            throw new \Exception("Message is not found by id " . $entityId);
 //                        }
@@ -634,7 +634,7 @@ class DefaultController extends Controller
 //
 //        $em = $this->getDoctrine()->getManager();
 //
-//        $repository = $em->getRepository('OlegUserdirectoryBundle:ObjectTypeText');
+//        $repository = $em->getRepository('AppUserdirectoryBundle:ObjectTypeText');
 //        $dql = $repository->createQueryBuilder("list");;
 //        $dql->select('list');
 //        $dql->leftJoin("list.formNode", "formNode");
@@ -670,7 +670,7 @@ class DefaultController extends Controller
 //
 //        $objectTypeText = $formNodeUtil->getObjectTypeByName('Form Field - Free Text');
 //
-//        $repository = $em->getRepository('OlegUserdirectoryBundle:FormNode');
+//        $repository = $em->getRepository('AppUserdirectoryBundle:FormNode');
 //        $dql = $repository->createQueryBuilder("list");;
 //        $dql->select('list');
 //        $dql->leftJoin("list.objectType", "objectType");
@@ -695,7 +695,7 @@ class DefaultController extends Controller
 //
 //        $objectTypeText = $formNodeUtil->getObjectTypeByName('Form Field - Free Text, HTML');
 //
-//        $repository = $em->getRepository('OlegUserdirectoryBundle:FormNode');
+//        $repository = $em->getRepository('AppUserdirectoryBundle:FormNode');
 //        $dql = $repository->createQueryBuilder("list");;
 //        $dql->select('list');
 //        $dql->leftJoin("list.objectType", "objectType");

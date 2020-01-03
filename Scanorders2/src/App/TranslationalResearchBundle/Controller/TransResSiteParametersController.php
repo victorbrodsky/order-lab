@@ -1,10 +1,10 @@
 <?php
 
-namespace Oleg\TranslationalResearchBundle\Controller;
+namespace App\TranslationalResearchBundle\Controller;
 
-use Oleg\TranslationalResearchBundle\Entity\TransResSiteParameters;
+use App\TranslationalResearchBundle\Entity\TransResSiteParameters;
 
-use Oleg\TranslationalResearchBundle\Form\SiteParameterType;
+use App\TranslationalResearchBundle\Form\SiteParameterType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -25,7 +25,7 @@ class TransResSiteParametersController extends Controller
 //     * Lists all SiteParameters entities.
 //     *
 //     * @Route("/list/{specialtyStr}", name="translationalresearch_standalone_siteparameters_index")
-//     * @Template("OlegTranslationalResearchBundle:SiteParameters:index.html.twig")
+//     * @Template("AppTranslationalResearchBundle:SiteParameters:index.html.twig")
 //     * @Method("GET")
 //     */
 //    public function indexAction(Request $request, $specialtyStr)
@@ -45,7 +45,7 @@ class TransResSiteParametersController extends Controller
 //     * Creates a new SiteParameters entity.
 //     *
 //     * @Route("/new/{specialtyStr}", name="translationalresearch_standalone_siteparameters_new")
-//     * @Template("OlegTranslationalResearchBundle:SiteParameters:new.html.twig")
+//     * @Template("AppTranslationalResearchBundle:SiteParameters:new.html.twig")
 //     * @Method({"GET", "POST"})
 //     */
 //    public function newAction(Request $request, $specialtyStr)
@@ -99,7 +99,7 @@ class TransResSiteParametersController extends Controller
      * Finds and displays site parameters entity.
      *
      * @Route("/show/{specialtyStr}", name="translationalresearch_standalone_siteparameters_show")
-     * @Template("OlegTranslationalResearchBundle:SiteParameters:new.html.twig")
+     * @Template("AppTranslationalResearchBundle:SiteParameters:new.html.twig")
      * @Method("GET")
      */
     public function showAction(Request $request, $specialtyStr)
@@ -132,7 +132,7 @@ class TransResSiteParametersController extends Controller
      * Finds and displays site parameters entity.
      *
      * @Route("/show-content/{specialtyStr}", name="translationalresearch_standalone_siteparameters_show_content")
-     * @Template("OlegTranslationalResearchBundle:SiteParameters:show-content.html.twig")
+     * @Template("AppTranslationalResearchBundle:SiteParameters:show-content.html.twig")
      * @Method("GET")
      */
     public function showContentAction(Request $request, $specialtyStr)
@@ -164,7 +164,7 @@ class TransResSiteParametersController extends Controller
      * Displays a form to edit an existing entity.
      *
      * @Route("/edit/{specialtyStr}", name="translationalresearch_standalone_siteparameters_edit")
-     * @Template("OlegTranslationalResearchBundle:SiteParameters:new.html.twig")
+     * @Template("AppTranslationalResearchBundle:SiteParameters:new.html.twig")
      * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, $specialtyStr)
@@ -195,10 +195,10 @@ class TransResSiteParametersController extends Controller
             $siteParameter->setUpdateUser($user);
 
             //process document
-            //$em->getRepository('OlegUserdirectoryBundle:Document')->processSingleDocument($form,$siteParameter,"transresLogo");
-            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($siteParameter,"transresLogo");
+            //$em->getRepository('AppUserdirectoryBundle:Document')->processSingleDocument($form,$siteParameter,"transresLogo");
+            $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($siteParameter,"transresLogo");
 
-            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($siteParameter,"transresPackingSlipLogo");
+            $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($siteParameter,"transresPackingSlipLogo");
 
             $em->flush();
 
@@ -265,9 +265,9 @@ class TransResSiteParametersController extends Controller
 //        $em = $this->getDoctrine()->getManager();
 //        $user = $this->get('security.token_storage')->getToken()->getUser();
 //
-//        //$entity = $em->getRepository('OlegTranslationalResearchBundle:TransResSiteParameters')->findOneByOid($specialtyStr);
+//        //$entity = $em->getRepository('AppTranslationalResearchBundle:TransResSiteParameters')->findOneByOid($specialtyStr);
 //
-//        $repository = $em->getRepository('OlegTranslationalResearchBundle:TransResSiteParameters');
+//        $repository = $em->getRepository('AppTranslationalResearchBundle:TransResSiteParameters');
 //        $dql = $repository->createQueryBuilder("siteParameter");
 //        $dql->select('siteParameter');
 //        $dql->leftJoin('siteParameter.projectSpecialty','projectSpecialty');
@@ -292,7 +292,7 @@ class TransResSiteParametersController extends Controller
 //        }
 //
 //        //Create New
-//        $specialty = $em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation($specialtyStr);
+//        $specialty = $em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation($specialtyStr);
 //        if( !$specialty ) {
 //            throw new \Exception("SpecialtyList is not found by specialty abbreviation '" . $specialtyStr . "'");
 //        } else {
