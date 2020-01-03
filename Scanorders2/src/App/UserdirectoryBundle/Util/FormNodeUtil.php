@@ -2426,6 +2426,7 @@ class FormNodeUtil
         $bundleName = $receivedValueEntityNamespaceArr[0] . $receivedValueEntityNamespaceArr[1];
         $repoNameStr = $bundleName.':'.$receivedValueEntityName;
         //echo "repoNameStr=".$repoNameStr."<br>";
+        //exit('111');
         $repo = $this->em->getRepository($repoNameStr);
 
         return $repo;

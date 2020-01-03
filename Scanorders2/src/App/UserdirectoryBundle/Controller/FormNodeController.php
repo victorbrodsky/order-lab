@@ -427,6 +427,7 @@ class FormNodeController extends Controller {
 
             $template = $this->render('AppUserdirectoryBundle:FormNode:formnode_fields.html.twig', $formNodeArr)->getContent();
 
+            $parentArraySectionCount = 0;
             $grandParentFormNode = $this->getParentFormNodeSection($formNodeHolderEntity,$parentFormNode);
             if( $grandParentFormNode ) {
 
