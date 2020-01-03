@@ -167,4 +167,7 @@ UPDATE scan_patientmrn SET original = field;
 
 composer.phar dump-autoload --optimize
 
-
+"oneup/uploader-bundle": "^2.1",
+"post-install-cmd": [
+            "@auto-scripts"
+        ],
