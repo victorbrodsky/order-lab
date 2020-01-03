@@ -83,8 +83,12 @@ class EmailController extends Controller
         //$user = $this->get('security.token_storage')->getToken()->getUser();
         //$toEmail = $user->getSingleEmail();
 
-        $emails = $_POST['email'];
-        $ccs = $_POST['emailcc'];
+        if( isset($_POST['email']) ) {
+            $emails = $_POST['email'];
+        }
+        if( isset($_POST['emailcc']) ) {
+            $ccs = $_POST['emailcc'];
+        }
 
         if( isset($emails) ) {
             //$toEmail = "cinava@yahoo.com,cinava10@gmail.com";

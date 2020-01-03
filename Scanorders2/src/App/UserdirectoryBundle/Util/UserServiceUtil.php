@@ -350,6 +350,15 @@ class UserServiceUtil {
         //$pathMetaphone = "'".$pathMetaphone."'";
         //$pathMetaphone = '"'.$pathMetaphone.'"';
         //$pathMetaphone = str_replace(" ", "\\ ", $pathMetaphone);
+
+        if( file_exists($pathMetaphone) ) {
+            //echo "The file $pathMetaphone exists";
+        } else {
+            //echo "The file $pathMetaphone does not exist";
+            $this->m3 = null;
+            return null;
+        }
+
         require_once($pathMetaphone);
 
         $m3 = new \Metaphone3();

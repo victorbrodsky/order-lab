@@ -445,6 +445,14 @@ class CalllogTest extends WebTestBase
             0,
             $crawler->filter('html:contains("Find Patient")')->count()
         );
+//        $this->assertGreaterThan(
+//            0,
+//            $crawler->filter('html:contains("History/Findings")')->count()
+//        );
+//        $this->assertGreaterThan(
+//            0,
+//            $crawler->filter('html:contains("Impression/Outcome")')->count()
+//        );
     }
 
     public function testSiteSettingsAction() {
