@@ -1,0 +1,131 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{% import "AppFellAppBundle::Default/fellappmacros.html.twig" as fellappmacros %}
+{% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+
+{% if collapsein is not defined %}
+    {% set collapsein = "in" %}
+{% endif %}
+
+<div class="panel panel-info">
+
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <a data-toggle="collapse" href="#interviews" name="interviews">
+                Interviews
+            </a>
+            {% if cycle == "edit" %}
+                &nbsp;&nbsp;
+                <a href="{{ path('employees_new_user') }}" target="_blank">Add new Interviewer if unlisted</a>
+                &nbsp;&nbsp;
+                <a href="{{ path('employees_locations_pathaction_new_standalone') }}" target="_blank">Add new Location if unlisted</a>
+
+
+                {#default interviewers#}
+                {#data-toggle="tooltip" tooltip="{{ entity.fellowshipSubspecialty.interviewers|join(',') }}"#}
+
+                {#It's too dangerous to have this button here, because it will reload existing page without saving the changes. Move to the menu action#}
+                {#<div id="add-default-interviewers" style="float: right;">#}
+                    {#<a#}
+                       {#href="{{ path('fellapp_edit_default_interviewers',{'id':entity.id}) }}"#}
+                       {#onclick="return confirm('All changes will not be saved. Please save your changes before adding default interviewers! Are you sure?')"#}
+                    {#>#}
+                            {#Add Default Interviewers#}
+                    {#</a>#}
+                {#</div>#}
+
+            {% endif %}
+        </h4>
+    </div>
+
+
+    <div id="interviews" class="panel-collapse collapse {{ collapsein }}">
+        <div class="panel-body">
+
+            {#<div tooltip="test tooltip" data-toggle="tooltip">#}
+                {#Test#}
+            {#</div>#}
+
+            {#form.interviews:{{ form.interviews|length }}#}
+            <div class="fellapp-interviews-holder">
+                {% for interview in form.interviews %}
+
+                    {% set showInterview = false %}
+                    {% if interview.interviewer and interview.vars.value.interviewer.id %}
+                        {#interview.interviewer.id=({{ interview.vars.value.interviewer.id }}) ?=#}
+                        {#app.user.id=({{ app.user.id }})<br>#}
+                        {% if interview.vars.value.interviewer.id == app.user.id %}
+                            {% set showInterview = true %}
+                        {% endif %}
+                    {% else %}
+                        {% set showInterview = true %}
+                    {% endif %}
+
+                    {% if is_granted('ROLE_FELLAPP_COORDINATOR') or is_granted('ROLE_FELLAPP_DIRECTOR') or showInterview  %}
+
+                        {{ fellappmacros.interviewForm(interview, cycle, 'fellapp-interviews', 'noprototype', sitename, 1) }}
+
+                    {% endif %}
+
+                {% endfor %}
+
+                {% if cycle != "show" %}
+                    {% if is_granted('ROLE_FELLAPP_COORDINATOR') or is_granted('ROLE_FELLAPP_DIRECTOR') %}
+                        {{ usermacros.addNewObjectBtn(cycle,'fellapp-interviews','Add Interviewer') }}
+                    {% endif %}
+                {% endif %}
+            </div>
+
+
+        </div> <!-- panel-body -->
+    </div> <!-- panel-collapse -->
+
+</div> <!-- panel panel-info -->
+
+
+{% if is_granted('ROLE_FELLAPP_COORDINATOR') or is_granted('ROLE_FELLAPP_DIRECTOR') %}
+
+{#observers#}
+<div class="panel panel-info">
+
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <a data-toggle="collapse" href="#observers" name="observers">
+                Administrative Observers (can't evaluate; add via typing last name)
+            </a>
+            {% if cycle == "edit" %}
+                &nbsp;&nbsp;
+                <a href="{{ path('employees_new_user') }}" target="_blank">Add new Observer if unlisted</a>
+            {% endif %}
+        </h4>
+    </div>
+
+    <div id="observers" class="panel-collapse collapse {{ collapsein }}">
+        <div class="panel-body">
+
+            <div class="fellapp-observers-holder">
+                {#{{ formmacros.field(form.observers) }}#}
+                {{ form_widget(form.observers) }}
+            </div>
+
+        </div> <!-- panel-body -->
+    </div> <!-- panel-collapse -->
+
+</div> <!-- panel panel-info -->
+
+{% endif %}
+

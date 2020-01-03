@@ -1,0 +1,155 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{% extends "AppCallLogBundle::Default/base.html.twig" %}
+
+{% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% import "AppCallLogBundle::Default/calllogmacros.html.twig" as calllogmacros %}
+
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+{% block content %}
+
+    <h4 class="text-info" align="center">
+        {{ title|raw }}
+    </h4>
+
+    {% set holderId = "patient-holder-1" %}
+
+    {#<input type="hidden" id="formcycle" value="{{ cycle }}" />#}
+    {#<input type="hidden" id="orderformtype" value="calllog" />#}
+    {#<input type="hidden" id="formtype" value="{{ formtype }}" />#}
+    {#<input type="hidden" id="mrn" value="{{ mrn }}" />#}
+    {#<input type="hidden" id="mrntype" value="{{ mrntype }}" />#}
+
+
+    {#<input type="hidden" id="patientListId" value="{{ patientListId }}" />#}
+
+
+    <table class="records_list table table-hover table-condensed text-left">
+        <thead>
+        <tr>
+            <th>{{ knp_pagination_sortable(patients, 'Last Name', 'lastname.field') }}</th>
+            <th>{{ knp_pagination_sortable(patients, 'First Name', 'firstname.field') }}</th>
+            <th>{{ knp_pagination_sortable(patients, 'MRN', 'mrn.field') }}</th>
+            <th>Date of Last Entry</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody data-link="row" class="rowlink">
+
+        {% for patient in patients %}
+
+            {% set mrn = patient.obtainValidField('mrn') %}
+            {% if mrn and mrn.field and mrn.keytype %}
+                {% set mrnNumber = mrn.field %}
+                {% set mrnTypeId = mrn.keytype.id %}
+            {% else %}
+                {% set mrnNumber = null %}
+                {% set mrnTypeId = null %}
+            {% endif %}
+
+            {% set trclassname = "" %}
+
+            <tr class="{{ trclassname }}">
+
+                <td style="display: none;">
+                    {#<a href="{{ path(calllog_sitename~'_patient_show', { 'id': patient.id }) }}" target="_blank">{{ patient.id }}</a>#}
+                    <a href="{{ path('calllog_home', { 'filter[search]': mrnNumber, 'filter[mrntype]': mrnTypeId, 'filter[messageStatus]': "All except deleted" }) }}" target="_blank">Show all entries</a>
+                </td>
+
+                {#Last Name#}
+                <td>
+                    {#should we use obtainStatusFieldArray('lastname','valid') to show all valid fields?#}
+                    {% set displayLastnameStatus = false %}
+                    {% set patientLastnames = patient.obtainStatusFieldArrayOrAll('lastname','valid') %}
+                    {% if patientLastnames|length > 1 %}
+                        {% set displayLastnameStatus = false %}
+                    {% endif %}
+                    {% for lastname in patientLastnames %}
+                        {{  lastname }} {% if displayLastnameStatus %}({{ lastname.status }}){% endif %}
+                        <br>
+                    {% endfor %}
+                </td>
+
+                {#First Name#}
+                <td>
+                    {#should we use obtainStatusFieldArray('firstname','valid') to show all valid fields?#}
+                    {% set displayFirstnameStatus = false %}
+                    {% set patientFirstnames = patient.obtainStatusFieldArrayOrAll('firstname','valid') %}
+                    {% if patientFirstnames|length > 1 %}
+                        {% set displayFirstnameStatus = false %}
+                    {% endif %}
+                    {% for firstname in patientFirstnames %}
+                        {{  firstname }} {% if displayFirstnameStatus %}({{ firstname.status }}){% endif %}
+                        <br>
+                    {% endfor %}
+                </td>
+
+                {#MRN#}
+                <td>
+                    {{ patient.obtainFullValidKeyName }}
+                </td>
+
+                {#Date of Last Entry#}
+                <td>
+                    {{ calllog_util.getLastEntryDate(patient) }}
+                </td>
+
+                <td class="rowlink-skip">
+                    {{ calllogmacros.patientListAction(patient) }}
+                </td>
+
+            </tr>
+
+        {% endfor %}
+
+        </tbody>
+    </table>
+
+    {# display navigation #}
+    <div class="navigation">
+        {{ knp_pagination_render(patients) }}
+    </div>
+
+    <br>
+
+    <br><br>
+
+{% endblock %}
+
+{#{% block additionaljs %}#}
+    {#<script language="Javascript">#}
+
+
+
+        {#$(document).ready(function() {#}
+
+            {#//init#}
+            {#initCallLogPage();#}
+
+            {#//preset mrn and mrn-type#}
+            {#calllogPresetMrnMrntype('patient-holder-1');#}
+
+        {#});#}
+
+
+    {#</script>#}
+{#{% endblock %}#}

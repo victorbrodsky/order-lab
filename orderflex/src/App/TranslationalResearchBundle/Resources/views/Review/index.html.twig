@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Irbreviews list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Assignment</th>
+                <th>Id</th>
+                <th>Type</th>
+                <th>Createdate</th>
+                <th>Updatedate</th>
+                <th>Decision</th>
+                <th>Comment</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for irbReview in irbReviews %}
+            <tr>
+                <td><a href="{{ path('translationalresearch_review_show', { 'id': irbReview.id }) }}">{{ irbReview.assignment }}</a></td>
+                <td>{{ irbReview.id }}</td>
+                <td>{{ irbReview.type }}</td>
+                <td>{% if irbReview.createdate %}{{ irbReview.createdate|date('m/d/Y H:i:s') }}{% endif %}</td>
+                <td>{% if irbReview.updatedate %}{{ irbReview.updatedate|date('m/d/Y H:i:s') }}{% endif %}</td>
+                <td>{{ irbReview.decision }}</td>
+                <td>{{ irbReview.comment }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('translationalresearch_review_show', { 'id': irbReview.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('translationalresearch_review_edit', { 'id': irbReview.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('translationalresearch_review_new') }}">Create a new irbReview</a>
+        </li>
+    </ul>
+{% endblock %}

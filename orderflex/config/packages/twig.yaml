@@ -1,0 +1,51 @@
+#twig:
+#    default_path: '%kernel.project_dir%/templates'
+#    debug: '%kernel.debug%'
+#    strict_variables: '%kernel.debug%'
+twig:
+#    form:
+#        resources: ['form_div_layout.html.twig']
+        #resources: ['bootstrap_3_horizontal_layout.html.twig']
+    form_themes:
+        - 'form_div_layout.html.twig'
+        #- 'form/form_errors.html.twig'
+    debug:            '%kernel.debug%'
+    strict_variables: '%kernel.debug%'
+    globals:
+        institution_url: '%institution_url%'
+        institution_name: '%institution_name%'
+        subinstitution_url: '%subinstitution_url%'
+        subinstitution_name: '%subinstitution_name%'
+        department_url: '%department_url%'
+        department_name: '%department_name%'
+        showcopyrightonfooter: '%showcopyrightonfooter%'
+        employees_sitename: '%employees.sitename%'
+        default_system_email: '%default_system_email%'
+
+        #titles and messages
+        mainhome_title: '%mainhome_title%'
+        listmanager_title: '%listmanager_title%'
+        eventlog_title: '%eventlog_title%'
+        sitesettings_title: '%sitesettings_title%'
+        contentabout_page: '%contentabout_page%'
+#        underlogin_msg_user: %underlogin_msg_user%
+#        underlogin_msg_scan: %underlogin_msg_scan%
+
+        #relative upload folder
+        employees_uploadpath: 'Uploaded/%employees.uploadpath%'
+        scan_uploadpath: 'Uploaded/%scan.uploadpath%'
+        fellapp_uploadpath: 'Uploaded/%fellapp.uploadpath%'
+        vacreq_uploadpath: 'Uploaded/%vacreq.uploadpath%'
+        transres_uploadpath: 'Uploaded/%transres.uploadpath%'
+        calllog_uploadpath: 'Uploaded/%calllog.uploadpath%'
+
+        #service
+        user_security_utility: "@user_security_utility"
+        user_formnode_utility: "@user_formnode_utility"
+        user_service_utility: "@user_service_utility"
+        calllog_util_form: "@calllog_util_form"
+        transres_util: "@transres_util"
+        transres_request_util: "@transres_request_util"
+        transres_permission_util: "@transres_permission_util"
+        transres_formnode_util: "@transres_formnode_util"
+        user_mailer_utility: "@user_mailer_utility"

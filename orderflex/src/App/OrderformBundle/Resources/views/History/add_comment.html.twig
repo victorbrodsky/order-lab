@@ -1,0 +1,77 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+
+{% block addcomment %}
+
+<!-- Modal -->
+<div class="modal fade" id="addComment_{{ orderid }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close comment_modal_close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title text-center" id="myModalLabel">Add Comment for Order {{ orderid }}</h4>
+            </div>
+            <div class="modal-body">
+
+                <div id="modal_error_{{ orderid }}" class="modal_error_div"></div>
+
+                {#<form id="addcomment" action="{{ path('history_message_new',{ 'id': orderid }) }}" method="post">#}
+                {#<form id="addcomment" onsubmit="submitNewComment( {{ orderid }} )">#}
+                <form id="addcomment_form" >
+
+                    {% if is_granted('ROLE_SCANORDER_PROCESSOR') %}
+
+                        <select id="modal-processor-comment" class="combobox">
+                            <option></option>
+                            {% for comment in comments %}
+                                <option value="{{ comment }}">{{ comment }}</option>
+                            {% endfor %}
+                        </select>
+
+                        <br><br>
+
+                    {% endif %}
+
+                    <div class="row">
+                        <div class="col-xs-12">
+
+                            <p>
+                                {#<textarea  type="textarea" class="textarea form-control">#}                              
+								<input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
+                                <textarea id="addcomment_text" name="addcomment" type="textarea" class="textarea form-control" maxlength="5000" required></textarea>
+                            </p>
+
+                        </div>
+                    </div>
+
+                    <div class="center-block">
+                        <input id="AddNewComment" class="btn btn-primary center-block" type="button" value="Add Comment" onclick="submitNewComment({{ orderid }});" />
+                    </div>
+
+                </form>
+
+            </div>
+            {#<div class="modal-footer">#}
+                {#<button type="button" class="btn btn-default comment_modal_close" data-dismiss="modal">Close</button>#}
+                {#&#123;&#35;<button type="button" class="btn btn-primary">Add Comment</button>&#35;&#125;#}
+            {#</div>#}
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

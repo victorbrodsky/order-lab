@@ -1,0 +1,83 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{% extends "AppOrderformBundle::Default/base.html.twig" %}
+
+{% block mainjs %}
+
+    {% javascripts
+    '@AppUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'
+    '@AppUserdirectoryBundle/Resources/public/bootstrap/js/*'
+    '@AppUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimeout.js'
+    '@AppUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimer.js'
+
+    '@AppUserdirectoryBundle/Resources/public/form/js/user-idleTimeout.js'
+    '@AppUserdirectoryBundle/Resources/public/form/js/user-common.js'
+    '@AppUserdirectoryBundle/Resources/public/form/js/user-navbar.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}    
+
+{% endblock %}
+
+{% block content %}
+
+    {% if cycle == 'new' %}
+        {% set cycleStr = 'Submitted' %}
+    {% elseif cycle == 'edit' %}
+        {% set cycleStr = 'Saved' %}
+    {% else %}
+        {% set cycleStr = 'Amended' %}
+    {% endif %}
+
+    {% set emailconf = "" %}
+    {% if app.user.getEmail != "" %}
+        {% set emailconf = " and a confirmation email was sent to "~app.user.getEmail %}
+    {% endif %}
+
+    <div class="alert alert-info well-lg">
+        <p><h1>Thank you for your order!</h1></p>
+        <p><h3>
+            <a href="{{ path('multy_show', { 'id': oid }) }}">Order {{ oid }}</a> has been successfully {{ cycleStr|lower }}{{ emailconf }}.
+        </h3></p>
+
+        {% if app.user.getEmail == null or app.user.getEmail == "" %}
+            <p><h3>
+                If you would like to receive email notifications regarding this and future orders, please update
+                <a href="{{ path(scan_sitename~'_showuser', { 'id': app.user.getId }) }}">your profile</a>
+                by adding your email account.
+            </h3></p>
+        {% endif %}
+
+        <p><a class="btn btn-info btn-large btn_margin_top" href="{{ path(neworder) }}">
+                Submit Another Scan Order
+            </a>
+        </p>
+
+    </div>
+
+    {% if conflicts is defined and conflicts != "" and conflicts != "noconflicts" %}
+        <div class="alert alert-danger">
+            {{ conflicts|raw }}
+        </div>
+    {% endif %}
+    {#{% for conflict in conflicts %}#}
+        {#<div class="alert alert-danger">#}
+            {#{{ conflict }}#}
+        {#</div>#}
+    {#{% endfor %}#}
+
+{% endblock %}

@@ -1,0 +1,54 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+
+{% import "AppOrderformBundle::Default/formmacros.html.twig" as myform %}
+
+<h3 class="text-info">Educational</h3>
+
+{{ form_start(edit_form) }}
+
+    {% include 'AppOrderformBundle::DataReview/message.html.twig' %}
+
+
+    <br>
+
+    {% if entity.courseTitle %}
+        {% set projectName = entity.courseTitle.__toString() %}
+    {% else %}
+        {% set projectName = 'Unknown Course' %}
+    {% endif %}
+
+    {#The goal of this page: user can change primary PI and link PI to a User#}
+    <h4 class="text-info">Associated Educational Course Title ID {{ entity.id }}: {{ projectName }}</h4>
+
+    {{ myform.field(edit_form.primaryPrincipal) }}
+    <hr>
+
+
+    {% for userWrapper in edit_form.userWrappers %}
+        {{ myform.field(userWrapper.name) }}
+        {{ myform.field(userWrapper.user) }}
+        <hr>
+    {% endfor %}
+
+    <br/>
+
+
+    {{ form(edit_form) }}
+    {{ form_rest(edit_form) }}
+
+{{ form_end(edit_form) }}

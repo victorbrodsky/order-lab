@@ -1,0 +1,94 @@
+{% extends "AppTranslationalResearchBundle::Default/base.html.twig" %}
+
+{% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% import "AppTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+{% import "AppTranslationalResearchBundle::Default/transresRequestMacros.html.twig" as transresRequestMacros %}
+
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+{% block content %}
+
+    <input type="hidden" id="formcycle" value="{{ cycle }}" />
+
+    <h4 class="text-info" align="center">
+        {{ title }}
+    </h4>
+    <br>
+
+    {% set sitename = translationalresearch_sitename %}
+
+    {{ transresRequestMacros.getActionRequestReviewCommentsSection(transresRequest,cycle,sitename,statMachineType) }}
+
+    <p>
+        <button type="button" class="btn btn-default btn-sm" onClick="collapseAll()" >Collapse All</button>
+        <button type="button" class="btn btn-default btn-sm" onClick="extendAll()" >Expand All</button>
+    </p>
+
+    {{ form_start(form) }}
+
+    {% if form.project is defined %}
+        {{ formmacros.field(form.project) }}
+    {% endif %}
+
+    {% if form.fundedAccountNumber is defined %}
+        {#{% if project.getFundedAccountNumber() %}#}
+            {#<p>Current project's funded account number: {{ project.getFundedAccountNumber() }}</p>#}
+        {#{% endif %}#}
+        {{ formmacros.field(form.fundedAccountNumber) }}
+    {% endif %}
+
+    {{ transresRequestMacros.transresRequestInfo(form,transresRequest,cycle) }}
+
+    {{ transresRequestMacros.transresRequestFormShow(form,transresRequest,cycle) }}
+
+    {{ form_end(form) }}
+
+    <div>
+
+        <br>
+        <br>
+        <p>
+            <a href="{{ path(translationalresearch_sitename~'_request_formnode_index',{'id':project.id}) }}">Back to the request list</a>
+        </p>
+
+    </div>
+
+{% endblock %}
+
+
+
+{% block additionaljs %}
+
+<script type="text/javascript">
+
+    $(document).ready(function() {
+
+        //transres-review-submit
+        $('.transres-review-submit').click(function(event) {
+            //console.log("btn click:");
+            //console.log($(this));
+            var reviewHolder = $(this).closest('.transres-review-holder');
+
+            var comment = reviewHolder.find('.fos_comment_comment_new_form').find('textarea').val();
+            console.log("comment="+comment);
+
+            if( comment ) {
+                reviewHolder.find('.fos_comment_comment_new_form').find('input[type="submit"]').click();
+            }
+
+            console.log("done review");
+
+            //return false;
+        });
+
+    });
+
+</script>
+
+{% endblock %}
+
+

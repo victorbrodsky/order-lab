@@ -1,0 +1,84 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+
+{% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{#{% import "AppUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}#}
+
+{#<h4 class="text-info calllog-title" align="center">#}
+    {#{{ title|raw }}#}
+{#</h4>#}
+{#<br>#}
+
+<input type="hidden" id="formcycle" value="{{ cycle }}" />
+
+{{ form_start(form) }}
+
+    {{ form_errors(form) }}
+
+    {# Defaults #}
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" href="#calllog-Defaults">
+                    Defaults
+                </a>
+            </h4>
+        </div>
+        <div id="calllog-Defaults" class="panel-collapse collapse in">
+            <div class="panel-body">
+
+                {#{% if form.messageCategory is defined %}#}
+                    {#{{ treemacros.compositeTreeNode(form.messageCategory,cycle,"noprototype") }}#}
+                {#{% endif %}#}
+                {{ formmacros.field(form.messageCategory) }}
+
+                {{ formmacros.field(form.keytypemrn) }}
+
+                {{ formmacros.field(form.institution) }}
+
+                {{ formmacros.field(form.timezone) }}
+
+                {{ formmacros.field(form.city) }}
+
+                {{ formmacros.field(form.county) }}
+
+                {{ formmacros.field(form.state) }}
+
+                {{ formmacros.field(form.country) }}
+
+                {{ formmacros.field(form.zip) }}
+
+                {{ formmacros.field(form.patientList) }}
+
+                {{ formmacros.checkbox(form.useCache) }}
+
+                {{ formmacros.checkbox(form.enableDocumentUpload) }}
+
+                {% if cycle == "show" %}
+                    <p>
+                        <a class="btn btn-primary" href="{{ path('calllog_siteparameters_edit_specific_site_parameters') }}">Edit</a>
+                    </p>
+                {% endif %}
+
+        </div> <!-- panel-body -->
+      </div> <!-- panel-collapse -->
+    </div> <!-- panel panel-primary -->
+    {# EOF Entry #}
+
+{{ form_end(form) }}
+
+

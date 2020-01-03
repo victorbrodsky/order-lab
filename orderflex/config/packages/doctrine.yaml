@@ -1,0 +1,80 @@
+#doctrine:
+#    dbal:
+#        url: '%env(resolve:DATABASE_URL)%'
+
+        # IMPORTANT: You MUST configure your server version,
+        # either here or in the DATABASE_URL env var (see .env file)
+        #server_version: '5.7'
+
+        # only needed for MySQL
+#        charset: utf8mb4
+#        default_table_options:
+#            collate: utf8mb4_unicode_ci
+#    orm:
+#        auto_generate_proxy_classes: true
+#        naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
+#        auto_mapping: true
+#        mappings:
+#            App:
+#                is_bundle: false
+#                type: annotation
+#                dir: '%kernel.project_dir%/src/Entity'
+#                prefix: 'App\Entity'
+#                alias: App
+doctrine:
+    dbal:
+        default_connection: default
+        connections:
+            default:
+                driver:   '%database_driver%'
+                host:     '%database_host%'
+                port:     '%database_port%'
+                dbname:   '%database_name%'
+                user:     '%database_user%'
+                password: '%database_password%'
+                charset:  UTF8
+                # if using pdo_sqlite as your database driver, add the path in parameters.yml
+                # e.g. database_path: %kernel.root_dir%/data/data.db3
+                # path:     %database_path%
+            external:
+                driver:   '%database_driver_external%'
+                host:     '%database_host_external%'
+                port:     '%database_port_external%'
+                dbname:   '%database_name_external%'
+                user:     '%database_user_external%'
+                password: '%database_password_external%'
+                charset:  UTF8			
+    orm:
+        auto_generate_proxy_classes: '%kernel.debug%'
+#        auto_mapping: true
+        default_entity_manager: default
+        entity_managers:
+            default:
+                metadata_cache_driver: array
+                result_cache_driver: array
+                query_cache_driver: array
+                connection: default
+                mappings:
+                    AppOrderformBundle: ~
+                    AppUserdirectoryBundle: ~
+                    AppFellAppBundle: ~
+                    AppDeidentifierBundle: ~
+                    AppVacReqBundle: ~
+                    AppCallLogBundle: ~
+                    AppTranslationalResearchBundle: ~
+                    FOSCommentBundle: ~
+                    gedmo_tree:
+                        type: annotation
+                        prefix: Gedmo\Tree\Entity
+                        dir: "%kernel.project_dir%/vendor/gedmo/doctrine-extensions/lib/Gedmo/Tree/Entity"
+                        alias: GedmoTree # this one is optional and will default to the name set for the mapping
+                        is_bundle: false
+                hydrators:
+                     SimpleHydrator: \App\UserdirectoryBundle\Hydrator\SimpleHydrator
+                     StainHydrator: \App\OrderformBundle\Hydrator\StainHydrator
+                dql:
+                     string_functions:
+                        CAST: App\UserdirectoryBundle\Query\CastFunction
+                        #GROUP_CONCAT: App\UserdirectoryBundle\Query\GroupConcat
+            external:
+                connection: external						

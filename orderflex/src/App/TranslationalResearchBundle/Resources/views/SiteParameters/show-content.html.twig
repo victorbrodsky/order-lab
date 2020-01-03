@@ -1,0 +1,10 @@
+
+{% import "AppTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+
+<input type="hidden" id="formcycle" value="{{ cycle }}" />
+
+{% set sitename = translationalresearch_sitename %}
+
+{{ transres.siteSettings(form,cycle,sitename,siteParameter.getProjectSpecialty()) }}
+
+

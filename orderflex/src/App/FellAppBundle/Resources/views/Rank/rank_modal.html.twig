@@ -1,0 +1,64 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{% import "AppFellAppBundle::Default/fellappmacros.html.twig" as fellappmacros %}
+{% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+<!-- Modal -->
+<div class="modal fade" id="fellapp_rank_{{ entity.id }}" tabindex="-1" role="dialog" aria-labelledby="myRankModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close fellapp_rank_modal_close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title text-center" id="myRankModalLabel">Fellowship Application ID {{ entity.id }}</h4>
+                {#applicant's snapshot#}
+                {{ fellappmacros.snapshot(entity,'fellapp','edit') }}
+            </div>
+
+            <br>
+
+            <div class="modal-body">
+
+                <div id="modal_error_{{ entity.id }}" class="modal_error_div"></div>
+
+                {#{{ form_start(form,{'attr': {'id': 'fellapp-rank-form'}}) }}#}
+                {{ form_start(form) }}
+
+                    {{ form_errors(form) }}
+
+                    {#{{ form_row(form.rank) }}#}
+                    {{ formmacros.field(form.rank)}}
+
+                    <br>
+                    <div style="text-align:center;">
+                    <p>
+                        <div class="center-block">
+                            {#<button id="fellapp_rank_save" type="submit" class="btn btn-primary">Save</button>#}
+                            <button id="fellapp_rank_save" type="button" class="btn btn-primary" onclick="submitRank(this,{{ entity.id }})">Save</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </p>
+                    </div>
+
+                {{ form_end(form, {'render_rest': false}) }}
+
+            </div>
+
+        </div>
+    </div>
+</div>
+

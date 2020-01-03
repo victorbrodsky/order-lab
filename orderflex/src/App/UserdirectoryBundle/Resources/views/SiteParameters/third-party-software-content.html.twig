@@ -1,0 +1,227 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h4 class="panel-title text-left">
+            <a data-toggle="collapse" href="#third-party-software-content">
+                Third-Party Software Dependencies
+            </a>
+        </h4>
+    </div>
+    <div id="third-party-software-content" class="panel-collapse collapse">
+        <div class="panel-body">
+
+            <table class="table table-striped table-bordered table-hover table-condensed text-left">
+                <thead>
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Value</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody data-link="row" class="rowlink">
+
+                    {# WINDOWS #}
+                    <tr>
+                        <td class="rowlink-skip" colspan="3" align="center">
+                            <h3>Windows:</h3>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>Path to LibreOffice for converting a file to pdf (C:\Program Files (x86)\LibreOffice 5\program)</td>
+                        <td>{{ entity.libreOfficeConvertToPDFPathFellApp }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'libreOfficeConvertToPDFPathFellApp'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>LibreOffice executable file (soffice)</td>
+                        <td>{{ entity.libreOfficeConvertToPDFFilenameFellApp }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'libreOfficeConvertToPDFFilenameFellApp'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>LibreOffice arguments (--headless -convert-to pdf -outdir)</td>
+                        <td>{{ entity.libreOfficeConvertToPDFArgumentsdFellApp }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'libreOfficeConvertToPDFArgumentsdFellApp'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Path to pdftk for PDF concatenation (E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder)</td>
+                        <td>{{ entity.pdftkPathFellApp }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'pdftkPathFellApp'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>pdftk executable file (pdftk)</td>
+                        <td>{{ entity.pdftkFilenameFellApp }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'pdftkFilenameFellApp'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>pdftk arguments (###inputFiles### cat output ###outputFile### dont_ask)</td>
+                        <td>{{ entity.pdftkArgumentsFellApp }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'pdftkArgumentsFellApp'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Path to Ghostscript for stripping PDF password protection (E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin)</td>
+                        <td>{{ entity.gsPathFellApp }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'gsPathFellApp'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Ghostscript executable file (gswin64c.exe)</td>
+                        <td>{{ entity.gsFilenameFellApp }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'gsFilenameFellApp'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Ghostscript arguments (-q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=###outputFile###  -c .setpdfwrite -f ###inputFiles###)</td>
+                        <td>{{ entity.gsArgumentsFellApp }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'gsArgumentsFellApp'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Path to wkhtmltopdf.exe (with double quotation marks for path with space i.e. "C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe", update system cache is required)</td>
+                        <td>{{ entity.wkhtmltopdfpath }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'wkhtmltopdfpath'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Path to phantomjs.exe (i.e. C:\Program Files\phantomjs\bin\phantomjs.exe)</td>
+                        <td>{{ entity.phantomjs }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'phantomjs'}) }}">Edit</a></td>
+                    </tr>
+                    <tr>
+                        <td>Path to rasterize.js (i.e. C:\Program Files\rasterize\example\rasterize.js)</td>
+                        <td>{{ entity.rasterize }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'rasterize'}) }}">Edit</a></td>
+                    </tr>
+                    {# EOF WINDOWS #}
+
+                    {# LINUX #}
+                    <tr>
+                        <td class="rowlink-skip" colspan="3" align="center">
+                            <h3>Linux:</h3>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>Path to LibreOffice for converting a file to pdf (path\LibreOffice 5\program) - Linux</td>
+                        <td>{{ entity.libreOfficeConvertToPDFPathFellAppLinux }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'libreOfficeConvertToPDFPathFellAppLinux'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>LibreOffice executable file (soffice) - Linux</td>
+                        <td>{{ entity.libreOfficeConvertToPDFFilenameFellAppLinux }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'libreOfficeConvertToPDFFilenameFellAppLinux'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>LibreOffice arguments (--headless -convert-to pdf -outdir) - Linux</td>
+                        <td>{{ entity.libreOfficeConvertToPDFArgumentsdFellAppLinux }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'libreOfficeConvertToPDFArgumentsdFellAppLinux'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Path to pdftk for PDF concatenation (path\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder) - Linux</td>
+                        <td>{{ entity.pdftkPathFellAppLinux }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'pdftkPathFellAppLinux'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>pdftk executable file (pdftk) - Linux</td>
+                        <td>{{ entity.pdftkFilenameFellAppLinux }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'pdftkFilenameFellAppLinux'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>pdftk arguments (###inputFiles### cat output ###outputFile### dont_ask) - Linux</td>
+                        <td>{{ entity.pdftkArgumentsFellAppLinux }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'pdftkArgumentsFellAppLinux'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Path to Ghostscript for stripping PDF password protection (path\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin) - Linux</td>
+                        <td>{{ entity.gsPathFellAppLinux }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'gsPathFellAppLinux'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Ghostscript executable file (gswin64c.exe) - Linux</td>
+                        <td>{{ entity.gsFilenameFellAppLinux }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'gsFilenameFellAppLinux'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Ghostscript arguments (-q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=###outputFile###  -c .setpdfwrite -f ###inputFiles###) - Linux</td>
+                        <td>{{ entity.gsArgumentsFellAppLinux }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'gsArgumentsFellAppLinux'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Path to wkhtmltopdf binary - Linux (update system cache is required)</td>
+                        <td>{{ entity.wkhtmltopdfpathLinux }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'wkhtmltopdfpathLinux'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Path to phantomjsLinux</td>
+                        <td>{{ entity.phantomjsLinux }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'phantomjsLinux'}) }}">Edit</a></td>
+                    </tr>
+                    <tr>
+                        <td>Path to rasterizeLinux.js</td>
+                        <td>{{ entity.rasterizeLinux }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'rasterizeLinux'}) }}">Edit</a></td>
+                    </tr>
+                    {# EOF LINUX #}
+
+                    <tr>
+                        <td class="rowlink-skip" colspan="3" align="center">
+                            <h3>Metaphone:</h3>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>Enable use of Metaphone:</td>
+                        <td>
+                            {% set enableMetaphoneStr = 'No' %}
+                            {% if entity.enableMetaphone == true %}
+                                {% set enableMetaphoneStr = 'Yes' %}
+                            {% endif %}
+                            {{ enableMetaphoneStr }}
+                        </td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'enableMetaphone'}) }}">Edit</a></td>
+                    </tr>
+                    <tr>
+                        <td>Path to Metaphone:</td>
+                        <td>{{ entity.pathMetaphone }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'pathMetaphone'}) }}">Edit</a></td>
+                    </tr>
+
+
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+

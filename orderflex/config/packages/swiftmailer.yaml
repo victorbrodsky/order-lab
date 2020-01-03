@@ -1,0 +1,18 @@
+#swiftmailer:
+#    url: '%env(MAILER_URL)%'
+#    spool: { type: 'memory' }
+swiftmailer:
+    transport: '%mailer_transport%'
+    host:      '%mailer_host%'
+    username:  '%mailer_user%'
+    password:  '%mailer_password%'
+    auth_mode: '%mailer_auth_mode%'
+    port:      '%mailer_port%'
+    encryption: '%mailer_encryption%'
+    #swift spool settings
+    delivery_addresses: '%swift_delivery_addresses%' #disable it for production
+    #disable_delivery: %swift_disable_delivery%
+    logging: '%kernel.debug%'
+    spool:
+          type: file
+          path: '%kernel.project_dir%/app/spool'

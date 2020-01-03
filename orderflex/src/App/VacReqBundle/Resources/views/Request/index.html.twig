@@ -1,0 +1,426 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{% extends "AppVacReqBundle::Default/base.html.twig" %}
+
+{% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+{% import "AppVacReqBundle::Default/vacreqmacros.html.twig" as vacreqmacros %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+{% block content %}
+
+    {#{% if totalApprovedDaysString is defined and totalApprovedDaysString %}#}
+        {#<div class="alert alert-success">#}
+            {#<p>{{ totalApprovedDaysString|raw }}</p>#}
+        {#</div>#}
+    {#{% endif %}#}
+    {#{% if totalApprovedDaysString is defined and totalApprovedDaysString %}#}
+        {#<div class="alert alert-success">#}
+            {#<p>{{ totalApprovedDaysString|raw }}</p>#}
+            {#<p>{{ accruedDaysString }}</p>#}
+            {#{% if carriedOverDaysString %}#}
+                {#<p>{{ carriedOverDaysString }}</p>#}
+            {#{% endif %}#}
+            {#<p>{{ remainingDaysString }}</p>#}
+        {#</div>#}
+    {#{% endif %}#}
+
+    <h4 class="text-info" align="center">
+        {#Pathology Faculty Vacation/Business Travel Requests#}
+        {{ pageTitle|raw }}
+    </h4>
+
+
+    {#filter form#}
+    {% if routename == 'vacreq_incomingrequests' %}
+        {{ vacreqmacros.incomingRequestsFilter( vacreqfilter, routename, requestTypeAbbreviation ) }}
+    {% else %}
+        {{ vacreqmacros.myRequestsFilter( vacreqfilter, routename, requestTypeAbbreviation ) }}
+    {% endif %}
+
+    {% if routename == 'vacreq_incomingrequests' %}
+        {% if requestTypeAbbreviation == 'carryover' %}
+            {% set colspanRequestInfo = 5 %}
+        {% else %}
+            {% set colspanRequestInfo = 9 %}
+        {% endif %}
+        {% set showUserInfo = true %}
+    {% else %}
+        {% if requestTypeAbbreviation == 'carryover' %}
+            {% set colspanRequestInfo = 3 %}
+        {% else %}
+            {% set colspanRequestInfo = 6 %} {#2 fields less#}
+        {% endif %}
+        {% set showUserInfo = false %}
+    {% endif %}
+
+    {#requestTypeAbbreviation={{ requestTypeAbbreviation }}#}
+
+    <table class="records_list table table-hover table-condensed text-left table-bordered">
+        <thead>
+        <tr>
+            <th colspan="{{ colspanRequestInfo }}" class="text-center table-header-grey-gradient">
+                Request Info
+            </th>
+
+            {% if requestTypeAbbreviation != 'carryover' %}
+                {% if showUserInfo %}
+                    <th colspan="2" class="text-center table-header-grey-gradient" style="border-left: 2px solid gray;">
+                        Total prior approved away days in corresponding academic year
+                    </th>
+                {% endif %}
+            {% endif %}
+
+            {% if requestTypeAbbreviation == 'carryover' %}
+                <th colspan="5" class="text-center table-header-grey-gradient" style="border-left: 2px solid gray;">
+                    Carry Over
+                </th>
+            {% else %}
+                <th colspan="5" class="text-center table-header-grey-gradient" style="border-left: 2px solid gray;">
+                    Business Travel
+                </th>
+                <th colspan="4" class="text-center table-header-grey-gradient" style="border-left: 2px solid gray;">
+                    Vacation
+                </th>
+            {% endif %}
+
+            <th rowspan="1" class="text-center table-header-grey-gradient" style="border-left: 2px solid gray;">
+                Action
+            </th>
+        </tr>
+
+        <tr>
+            <th>{{ knp_pagination_sortable(pagination, 'Request ID', 'request.id') }}</th>
+
+            {% if requestTypeAbbreviation != 'carryover' %}
+                <th>{{ knp_pagination_sortable(pagination, 'Academic Year', 'request.createDate') }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'Total Days', 'thisRequestTotalDays') }}</th>
+            {% endif %}
+
+            <th>{{ knp_pagination_sortable(pagination, 'Date Submitted', 'request.createDate') }}</th>
+
+            {% if showUserInfo %}
+                <th>
+                    {{ knp_pagination_sortable(pagination, 'Person Away', 'infos.displayName') }}
+                </th>
+            {% endif %}
+
+            <th>{{ knp_pagination_sortable(pagination, 'Group', 'institution.name') }}</th>
+
+            {% if requestTypeAbbreviation == 'carryover' %}
+                <th>{{ knp_pagination_sortable(pagination, 'Tentative Group', 'tentativeInstitution.name') }}</th>
+            {% endif %}
+
+            {% if showUserInfo %}
+                <th>{{ knp_pagination_sortable(pagination, 'Date Status Changed', 'request.approvedRejectDate') }}</th>
+            {% endif %}
+
+            {% if requestTypeAbbreviation != 'carryover' %}
+                <th>{{ knp_pagination_sortable(pagination, 'First Day Back in Office', 'request.firstDayBackInOffice') }}</th>
+                <th>Remaining Vacation Days in Corresponding Academic Year</th>
+            {% endif %}
+
+            {% if requestTypeAbbreviation != 'carryover' %}
+                {% if showUserInfo %}
+                    {#Total prior approved away days this academic year#}
+                    <th style="border-left: 2px solid gray;">
+                        Business Travel
+                    </th>
+                    <th>
+                        Vacation
+                    </th>
+                {% endif %}
+            {% endif %}
+
+            {% if requestTypeAbbreviation == 'carryover' %}
+                {{ vacreqmacros.request_carryover_base_header( pagination, 'request' ) }}
+            {% else %}
+                {{ vacreqmacros.request_base_header( pagination, 'requestBusiness' ) }}
+                {{ vacreqmacros.request_base_header( pagination, 'requestVacation' ) }}
+            {% endif %}
+
+            <th style="border-left: 2px solid gray;">
+                {#Actions#}
+            </th>
+        </tr>
+        </thead>
+        <tbody data-link="row" class="rowlink">
+
+        {% for object in pagination %}
+
+            {% set entity = object['object'] %}
+
+            <tr>
+
+                <td>
+                    <a href="{{ path(vacreq_sitename~'_show', { 'id': entity.id }) }}">{{ entity.id }}</a>
+                    {% if entity.getUser().getId() != entity.getSubmitter().getId() and entity.getSubmitter().getId() == app.user.getId() %}
+                        S
+                    {% endif %}
+                </td>
+
+                {% if requestTypeAbbreviation != 'carryover' %}
+                    <td>
+                        {#2014-2015, 2015-2016#}
+                        {% for academicYear in vacreq_util.getRequestAcademicYears(entity) %}
+                            {{ academicYear }}
+                            {% if not loop.last %}<br>{% endif %}
+                        {% endfor %}
+                    </td>
+
+                    <td>
+                        {{ object['thisRequestTotalDays'] }}
+                    </td>
+                {% endif %}
+
+                <td>{% if entity.createDate %}{{ entity.createDate|date('m/d/Y H:i:s') }}{% endif %}</td>
+
+                {% if showUserInfo %}
+                    <td class="rowlink-skip">
+                        {% if entity.user %}
+                            {{ vacreqmacros.personAwayInfo(entity.user,entity.phone,vacreq_sitename) }}
+                        {% endif %}
+                    </td>
+                {% endif %}
+
+                <td>
+                    {% if entity.institution %}
+                        {{ entity.institution }}
+                    {% endif %}
+                </td>
+
+                {% if requestTypeAbbreviation == 'carryover' %}
+                    <td>
+                        {% if entity.tentativeInstitution %}
+                            {{ entity.tentativeInstitution }}
+                        {% endif %}
+                    </td>
+                {% endif %}
+
+                {% if showUserInfo %}
+                    <td>
+                        {% if entity.approvedRejectDate %}
+                            {{ entity.approvedRejectDate|date('m/d/Y H:i:s') }}
+                        {% endif %}
+                    </td>
+                {% endif %}
+
+                {% if requestTypeAbbreviation != 'carryover' %}
+                    <td>
+                        {% if entity.firstDayBackInOffice %}
+                            {#The php.ini timezone should be set to UTC: date.timezone="UTC"#}
+                            {{ entity.firstDayBackInOffice|date('m/d/Y','UTC') }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {#remaining vacation days#}
+                        {#TODO: 24 + carry over days from previous year - carry over to next year = total days; Then, total days - prior days #}
+                        {% set totalRemainingDaysRes = vacreq_util.totalVacationRemainingDays(entity.user) %}
+                        {{ totalRemainingDaysRes['numberOfDays'] }}
+                        {% if not totalRemainingDaysRes['accurate'] %}
+                            {% set inaccuracyMessage = vacreq_util.getInaccuracyMessage() %}
+                            <span data-toggle="tooltip" title="{{ inaccuracyMessage }}">*</span>
+                        {% endif %}
+                    </td>
+                {% endif %}
+
+                {% if requestTypeAbbreviation != 'carryover' %}
+                    {% if showUserInfo %}
+                        {#Total prior approved away days this academic year#}
+                        <td style="border-left: 2px solid gray;">
+                            {% if entity.requestBusiness %}
+                                {#{{ entity.requestBusiness.numberOfDays }}#}
+                                {{ vacreq_util.getPriorApprovedDays(entity,'requestBusiness') }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if entity.requestVacation %}
+                                {#{{ entity.requestVacation.numberOfDays }}#}
+                                {{ vacreq_util.getPriorApprovedDays(entity,'requestVacation') }}
+                            {% endif %}
+                        </td>
+                    {% endif %}
+                {% endif %}
+
+                {% if requestTypeAbbreviation == 'carryover' %}
+                    {{ vacreqmacros.request_carryover_base_body( entity, 'request' ) }}
+                {% else %}
+                    {{ vacreqmacros.request_base_body( entity, entity.requestBusiness, 'requestBusiness' )  }}
+                    {{ vacreqmacros.request_base_body( entity, entity.requestVacation, 'requestVacation' )  }}
+                {% endif %}
+
+                {#Action#}
+                <td class="rowlink-skip" style="border-left: 2px solid gray;">
+
+                    {#<p>#}
+                        {#<a class="btn-sm btn-default" href="{{ path(vacreq_sitename~'_showuser', { 'id': entity.user.id }) }}">User Details</a>#}
+                    {#</p>#}
+
+                    {% if routename == 'vacreq_incomingrequests' %}
+
+                        {{ vacreqmacros.vacreq_action( entity, vacreq_sitename ) }}
+
+                    {% else %}
+                        {#<p>#}
+                            {#<a class="btn-sm btn-info" href="{{ path(vacreq_sitename~'_show', { 'id': entity.id }) }}">View</a>#}
+                        {#</p>#}
+
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                Action <span class="caret"></span>
+                            </button>
+
+                            <ul class="dropdown-menu dropdown-menu-right">
+
+                                <li>
+                                    <a href="{{ path(vacreq_sitename~'_show', { 'id': entity.id }) }}">View</a>
+                                </li>
+
+                                {% if requestTypeAbbreviation != 'carryover' %}
+
+                                    {#{% if entity.status == 'pending' or entity.getOverallStatus() == 'pending' %}#}
+                                        {#<li class="divider">#}
+                                        {#<li>#}
+                                            {#<a#}
+                                                {#general-data-confirm="Are you sure you would like to send a reminder email to your division approvers to process this request with ID #{{ entity.id }}?"#}
+                                                {#href="{{ path(vacreq_sitename~'_send_reminder_email', { 'id': entity.id }) }}">#}
+                                                {#Send Reminder Email to Approvers#}
+                                            {#</a>#}
+                                        {#</li>#}
+                                        {#<li>#}
+                                            {#<a#}
+                                            {#general-data-confirm="Are you sure you would like to Cancel this entire request with ID #{{ entity.id }}?"#}
+                                            {#href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id,  'requestName':'entire', 'status': 'canceled' }) }}">#}
+                                                {#Cancel (withdraw entire request)#}
+                                            {#</a>#}
+                                        {#</li>#}
+                                    {#{% endif %}#}
+
+                                    {#{% if entity.status == 'canceled' %}#}
+                                        {#<li class="divider">#}
+                                        {#<li>#}
+                                            {#<a#}
+                                            {#general-data-confirm="Are you sure you would like to Re-Submit this entire request with ID #{{ entity.id }}?"#}
+                                            {#href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id,  'requestName':'entire', 'status': 'pending' }) }}">#}
+                                                {#Re-Submit#}
+                                            {#</a>#}
+                                        {#</li>#}
+                                    {#{% endif %}#}
+
+                                    {#The change of status from Approved should only be allowable to a new status "Cancelation Requested" by submitter#}
+                                    {% if entity.isOverallStatus('approved') and not entity.extraStatus %}
+                                        <li class="divider">
+                                        <li>
+                                            <a
+                                                general-data-confirm="Are you sure you would like to Request cancellation for this entire, already approved request with ID #{{ entity.id }}? Your division approver will get an notification email and will approve or reject this cancellation request."
+                                                href="{{ path(vacreq_sitename~'_status_cancellation-request', { 'id': entity.id, 'status': 'cancellation-request' }) }}">
+                                                Request cancellation
+                                            </a>
+                                        </li>
+                                    {% endif %}
+
+                                {% endif %}
+
+
+                                {% if not entity.isOverallStatus('canceled') and (entity.status == 'pending' or entity.getOverallStatus() == 'pending') %}
+                                    <li class="divider">
+                                    <li>
+                                        <a
+                                            general-data-confirm="Are you sure you would like to Cancel this entire request with ID #{{ entity.id }}?"
+                                            href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id,  'requestName':'entire', 'status': 'canceled' }) }}">
+                                                Cancel (withdraw entire request)
+                                        </a>
+                                    </li>
+                                    {#<li class="divider">#}
+                                    <li>
+                                        <a
+                                                general-data-confirm="Are you sure you would like to send a reminder email to your division approvers to process this request with ID #{{ entity.id }}?"
+                                                href="{{ path(vacreq_sitename~'_send_reminder_email', { 'id': entity.id }) }}">
+                                            Send Reminder Email to Approvers
+                                        </a>
+                                    </li>
+                                {% endif %}
+
+                                {% if entity.status == 'canceled' %}
+                                    <li class="divider">
+                                    <li>
+                                        <a
+                                            general-data-confirm="Are you sure you would like to Re-Submit this entire request with ID #{{ entity.id }}?"
+                                            href="{{ path(vacreq_sitename~'_status_change', { 'id': entity.id,  'requestName':'entire', 'status': 'pending' }) }}">
+                                                Re-Submit
+                                        </a>
+                                    </li>
+                                {% endif %}
+
+                            </ul>
+
+                        </div>
+
+                    {% endif %}
+
+
+
+                </td>
+
+            </tr>
+
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="navigation">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+
+
+
+{% endblock %}
+
+
+
+{% block additionaljs %}
+
+    {#{% javascripts#}
+    {#'@AppFellAppBundle/Resources/public/form/js/interview-modal.js'#}
+    {#'@AppFellAppBundle/Resources/public/form/js/rank-modal.js'#}
+    {#%}#}
+    {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
+
+    <script language="Javascript">
+
+        $(document).ready(function() {
+
+            $('[data-toggle="tooltip"]').tooltip({html: true});
+
+            var target = ".datepicker-only-year";
+            var datefilter = $(target).datepicker( {
+                autoclose: true,
+                format: " yyyy",
+                viewMode: "years",
+                minViewMode: "years",
+                orientation: 'auto'
+            });
+
+        });
+
+    </script>
+
+{% endblock %}

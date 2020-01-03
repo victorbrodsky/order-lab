@@ -1,0 +1,208 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{#   navigation menu   #}
+
+{% block navbar %}
+
+    <nav class="navbar navbar-default" role="navigation">
+
+    <div class="container-fluid">
+
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            {% if is_granted('ROLE_DEIDENTIFICATOR_USER') %}
+                <a class="navbar-brand visible-xs visible-sm" href="{{ path(deidentifier_sitename~'_home') }}">Home</a> <!-- this is for mobile devices - top menu -->
+            {% endif %}
+        </div>
+
+
+        <div class="collapse navbar-collapse navbar-ex1-collapse" style="max-height:none;">
+
+
+            {% if is_granted('ROLE_DEIDENTIFICATOR_USER') %}
+
+                <ul class="nav navbar-nav navbar-left">
+
+                    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+                    {{ usermacros.siteSwitch() }}
+
+                    <li id="nav-bar-deidentifierhome" class="hidden-xs divider-vertical">
+                        <a href="{{ path(deidentifier_sitename~'_home') }}">
+                            <span class="glyphicon glyphicon-retweet"></span> Home
+                        </a>
+                    </li>
+
+                    {% if is_granted('ROLE_DEIDENTIFICATOR_ADMIN') %}
+                        <li>
+                            <a href="{{ path(deidentifier_sitename~'_generation_log') }}">Generation Log</a>
+                        </li>
+                    {% endif %}
+
+                    <li>
+                        <a href="{{ path(deidentifier_sitename~'_my_generation_log') }}">My Generation Log</a>
+                    </li>
+
+                </ul>
+
+            {% endif %}
+
+           
+
+            <ul class="nav navbar-nav navbar-right">
+
+
+                {#Search in navbar available for WCMC-NYP Deidentifier Enquirer#}
+                {#{% if is_granted('ROLE_DEIDENTIFICATOR_USER') %}#}
+                {% if is_granted("read", "Accession") and accessiontypes is defined and accessiontypes|length > 0 %}
+
+                    {#{% set accessiontypes = render(controller("AppDeidentifierBundle:Default:getAccessionTypes")) %}#}
+                    {#{% set accessiontypes = controller("AppDeidentifierBundle:Default:getAccessionTypes") %}#}
+
+                    {% if accessionTypeStr is defined and accessionTypeStr %}
+                        {% set accessionTypeIdBtn = accessionTypeId %}
+                        {% set accessionTypeStrBtn = accessionTypeStr %}
+                    {% else %}
+
+                        {#Deidentifier ID should be the default selected choice #}
+                        {% set defaultAccessiontypeId = accessiontypes|first.id %}
+                        {% set defaultAccessiontypeStr = accessiontypes|first.name %}
+                        {% for accessiontype in accessiontypes %}
+                            {% if accessiontype.name == "Deidentifier ID" %}
+                                {% set defaultAccessiontypeId = accessiontype.id %}
+                                {% set defaultAccessiontypeStr = accessiontype.name %}
+                            {% endif %}
+                        {% endfor %}
+
+                        {% set accessionTypeIdBtn = defaultAccessiontypeId %}
+                        {% set accessionTypeStrBtn = defaultAccessiontypeStr %}
+
+                    {% endif %}
+
+                    {% if accessionNumber is not defined %}
+                        {% set accessionNumber = "" %}
+                    {% endif %}
+
+                    <li id="nav-bar-ordersearch">
+
+                        <form class="navbar-form navbar-left" role="search" id="deidentifiersearchform" name="deidentifiersearchform" action="{{ path(deidentifier_sitename~'_search') }}" method="get">
+
+                            <input type="hidden" id="accessionTypeId" name="accessionType" value="{{ accessionTypeIdBtn }}">
+
+                            <div class="form-group accession-holder">
+
+                            <div class="input-group">
+                                <div class="input-group-btn">
+
+                                    <button id="deidentifier-searchtype-button"
+                                            data-id="{{accessionTypeIdBtn}}"
+                                            data-str="{{accessionTypeStrBtn}}"
+                                            type="button"
+                                            class="btn btn-default dropdown-toggle"
+                                            data-toggle="dropdown" aria-expanded="false"
+                                    >
+                                        {{accessionTypeStrBtn}} <span class="caret"></span>
+                                    </button>
+
+                                    <ul class="dropdown-menu" role="menu">
+                                    {% for accessiontype in accessiontypes %}
+                                        <li>
+                                            <a
+                                                href="#" onclick="setDeidentifierNavbarSearchtypeAction({{accessiontype.id}},'{{accessiontype}}'); return false;">{{accessiontype}}
+                                            </a>
+                                        </li>
+                                    {% endfor %}
+                                    </ul>
+                                </div><!-- /btn-group -->
+                                <div class="form-group has-feedback">
+                                    {#no accession mask by removing class "accession-mask" from input#}
+                                    <input type="text" id="deidentifiersearchform-searchtype" class="form-control" aria-label="" name="accessionNumber" data-accessionNumber="{{accessionNumber}}" value="{{ accessionNumber }}" placeholder="">
+                                    <span style="top:0;" class="glyphicon glyphicon-search form-control-feedback btn" aria-hidden="true" onclick="$('#deidentifiersearchform').submit();"></span>
+                                </div>
+                            </div><!-- /input-group -->
+
+                            </div>
+                        </form>
+
+
+
+                    </li>
+                {% endif %}
+
+
+                {% if is_granted('ROLE_DEIDENTIFICATOR_ADMIN') %}
+
+                    <li id="nav-bar-admin" class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+
+                            <li><a href="{{ path(deidentifier_sitename~'_accessrequest_list') }}">Access Requests</a></li>
+                            <li><a href="{{ path(deidentifier_sitename~'_accountrequest') }}">Account Requests</a></li>
+                            <li><a href="{{ path(deidentifier_sitename~'_authorized_users') }}">Authorized Users</a></li>
+
+                            {% if is_granted('ROLE_DEIDENTIFICATOR_ADMIN') %}
+                                <li class="divider"></li>
+                                <li><a href="{{ path(deidentifier_sitename~'_logger') }}">Event Log</a></li>
+                            {% endif %}
+
+                            {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
+                                {#<li><a href="{{ path('user_admin_index') }}">List Manager</a></li>#}
+                                <li><a href="{{ path('platformlistmanager-list') }}">Platform List Manager</a></li>
+                                <li><a href="{{ path(deidentifier_sitename~'_siteparameters') }}">Site Settings</a></li>
+                            {% endif %}
+
+                        </ul>
+                    </li>
+
+                {% endif %}
+
+                {% if is_granted('ROLE_DEIDENTIFICATOR_USER') %}
+
+                    <li id="nav-bar-user" class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span><b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+
+                            {% if pendinguser is not defined %}
+                                <li><a href="{{ path(deidentifier_sitename~'_showuser', {id:app.user.getId()}) }}">My Profile ({{ app.user.getUserNameShortStr() }})</a></li>
+                            {% endif %}
+
+                            {% if pendinguser is not defined %}
+                                <li><a href="{{ path(deidentifier_sitename~'_about_page') }}">About</a></li>
+                            {% endif %}
+
+                            <li><a href="{{ path(deidentifier_sitename~'_logout') }}">Log Out</a></li>
+
+                        </ul>
+                    </li>
+
+                {% endif %}
+
+            </ul>
+
+
+        </div><!-- /.navbar-collapse -->
+
+    </div><!-- /.container-fluid -->
+
+    </nav>
+    
+{% endblock %}
+

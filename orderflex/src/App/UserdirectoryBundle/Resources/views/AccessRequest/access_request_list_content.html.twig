@@ -1,0 +1,156 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+
+<h3 class="text-info">Access Requests for the {{ sitenamefull }} site</h3>
+
+<table class="table table-hover table-condensed text-left">
+    <thead>
+        <tr>
+            <th>{{ knp_pagination_sortable(entities, 'Request ID', 'accreq.id') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Request Date', 'accreq.createdate') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Request Status', 'accreq.status') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Full Name', 'infos.displayName') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'User ID Type', 'keytype.name') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'User ID', 'user.primaryPublicUserId') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Email', 'infos.email') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Phone Number', 'infos.preferredPhone') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Role(s)', 'user.roles') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Last Login', 'user.lastLogin') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Status Updated On', 'accreq.updatedate') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Status Updated By', 'updatedbyinfos.displayName') }}</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody data-link="row" class="rowlink">
+    {% for entity in entities %}
+
+        {% if entity.getStatusStr|lower == 'active' %}
+            <tr class="order-urgent-status">
+        {% elseif entity.getStatusStr|lower == 'declined' %}
+            <tr class="order-neutral-status">
+        {% elseif entity.getStatusStr|lower == 'approved' %}
+            <tr>
+        {% elseif entity.getStatusStr|lower == 'uncompleted' %}
+            <tr class="order-someattention-status">
+        {% else %}
+            <tr>
+        {% endif %}
+
+        {#{% set userTimezone = app.user.preferences.timezone %}#}
+
+            {#hidden clickable link#}
+            <td style="display: none">
+                <a href="{{ path(sitename~'_accessrequest_management', { 'id': entity.id }) }}" target="_blank">Review and approve access request</a>
+            </td>
+
+            <td class="rowlink-skip">
+                <a href="{{ path(sitenameshowuser~'_showuser', { 'id': entity.user.id }) }}">{{ entity.id }}</a>
+            </td>
+            <td>{{ entity.createdate|date('Y-m-d h:i A T') }}</td>
+            <td>{{ entity.getStatusStr|capitalize }}</td>
+            <td>{{ entity.user }}</td>
+            <td>{{ entity.user.keytype }}</td>
+            <td>{{ entity.user.primaryPublicUserId }}</td>
+            <td>{{ entity.user.email }}</td>
+            <td>{{ entity.user.preferredPhone }}</td>
+            <td>
+                {% for role in user_security_utility.getUserRolesBySite(entity.user, sitename, true) %}
+                    {% if role.name != "ROLE_USER" %}
+                        "{{ role.alias }}"
+                    {% endif %}
+                {% endfor %}
+            </td>
+            <td>
+                {% if entity.user and entity.user.lastLogin %}
+                    {{ entity.user.lastLogin|date('Y-m-d h:i A T') }}
+                {% endif %}
+            </td>
+
+            <td>
+                {% if entity.updatedate %}
+                    {{ entity.updatedate|date('Y-m-d h:i A T') }}
+                {% endif %}
+            </td>
+
+            <td class="rowlink-skip">
+                {% if entity.updatedby %}
+                    <a href="{{ path(sitenameshowuser~'_showuser', { 'id': entity.updatedby.id }) }}">{{ entity.updatedby }}</a>
+                {% endif %}
+            </td>
+
+
+            <td class="rowlink-skip">
+
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                      Action <span class="caret"></span>
+                    </button>
+
+                    <ul class="dropdown-menu dropdown-menu-right">
+
+                        <li><a href="{{ path(sitenameshowuser~'_showuser', { 'id': entity.user.id }) }}">View User Details</a></li>
+
+                        <li class="divider"></li>
+
+                        {#{% if entity.getStatusStr|lower != 'declined' %}#}
+                            {#<li><a general-data-confirm="Are you sure you want to decline?"#}
+                                   {#href="{{ path(sitename~'_accessrequest_change', { 'id': entity.user.id, 'status': 'declined' }) }}">Decline</a>#}
+                            {#</li>#}
+                        {#{% endif %}#}
+
+                        {#{% if entity.getStatusStr|lower == 'declined' or entity.getStatusStr|lower == 'active' %}#}
+                            {#<li><a general-data-confirm="Are you sure you want to approve?"#}
+                                   {#href="{{ path(sitename~'_accessrequest_change', { 'id': entity.user.id, 'status': 'approved' }) }}">Approve</a>#}
+                            {#</li>#}
+                        {#{% endif %}#}
+
+                        {#{% if entity.getStatusStr|lower != 'active' %}#}
+                            {#<li><a general-data-confirm="Are you sure you want to Revert status to Active?"#}
+                                   {#href="{{ path(sitename~'_accessrequest_change', { 'id': entity.user.id, 'status': 'active' }) }}">Revert status to Active</a>#}
+                            {#</li>#}
+                        {#{% endif %}#}
+
+
+                        <li>
+                            <a href="{{ path(sitename~'_accessrequest_management', { 'id': entity.id }) }}">Review and approve access request</a>
+                        </li>
+
+                        {% if entity.getStatusStr|lower != 'declined' %}
+                            <li>
+                                <a
+                                    general-data-confirm="Are you sure you would like to stop {{ entity.user }} from being able to access {{ sitenamefull }}?"
+                                    href="{{ path(sitename~'_accessrequest_remove', { 'userId': entity.user.id }) }}">Deny access request
+                                </a>
+                            </li>
+                        {% endif %}
+
+
+                    </ul>
+
+                </div>
+
+
+            </td>
+
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<div class="navigation">
+    {{ knp_pagination_render(entities) }}
+</div>

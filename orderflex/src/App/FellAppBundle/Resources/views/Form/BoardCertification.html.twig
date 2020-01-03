@@ -1,0 +1,78 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+{% if collapsein is not defined %}
+    {% set collapsein = "in" %}
+{% endif %}
+
+<div class="panel panel-info">
+
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <a data-toggle="collapse" href="#boardCertification">
+                Board Certification
+            </a>
+        </h4>
+    </div>
+
+    <div id="boardCertification" class="panel-collapse collapse {{ collapsein }}">
+        <div class="panel-body">
+
+            <p>
+                Please indicate any areas of board certification.
+            </p>
+
+
+            {% for boardCertification in form.boardCertifications %}
+
+
+            <div class="well">
+                <div class="row withpaddingtop">
+
+                    {#<div class="col-xs-4">#}
+                        {#<label for="boardCertification1Board" class="control-label">Board</label>#}
+                        {#<input type="text" class="form-control" id="boardCertification1Board" name="boardCertification1Board" placeholder="Board">#}
+                        {#{{ form_row(boardCertification.certifyingBoardOrganization) }}#}
+                        {{ formmacros.field(boardCertification.certifyingBoardOrganization) }}
+                    {#</div>#}
+
+                    {#<div class="col-xs-4">#}
+                        {#<label for="boardCertification1Area" class="control-label">Area of Certification</label>#}
+                        {#<input type="text" class="form-control" id="boardCertification1Area" name="boardCertification1Area" placeholder="Area of Certification">#}
+                        {#{{ form_row(boardCertification.specialty) }}#}
+                        {{ formmacros.field(boardCertification.specialty) }}
+                    {#</div>#}
+
+                    {#<div class="col-xs-4">#}
+                        {#<label for="boardCertification1Date" class="control-label">Date of Certification</label>#}
+                        {#<input type="text" class="datepicker form-control allow-future-date" id="boardCertification1Date" name="boardCertification1Date" placeholder="Date of Certification">#}
+                        {#{{ form_row(boardCertification.issueDate) }}#}
+                        {{ formmacros.fieldDateLabel(boardCertification.issueDate,'allow-future-date') }}
+                    {#</div>#}
+
+                </div>
+            </div>
+
+
+            {% endfor %}
+
+
+        </div> <!-- panel-body -->
+    </div> <!-- panel-collapse -->
+
+</div> <!-- panel panel-info -->

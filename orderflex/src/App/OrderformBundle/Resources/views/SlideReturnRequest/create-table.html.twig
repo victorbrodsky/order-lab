@@ -1,0 +1,214 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{% extends "AppOrderformBundle::Default/base.html.twig" %}
+
+{% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+{% block title %}
+    Request Slide Return
+{% endblock %}
+
+
+
+{% block maincss %}
+
+    {% stylesheets
+    'bundles/apporderform/handsontable/jquery.handsontable.full.css' filter='cssrewrite'
+    'bundles/apporderform/form/css/handsontable.css' filter='cssrewrite'
+
+    'bundles/appuserdirectory/select2/select2.css' filter='cssrewrite'
+    'bundles/appuserdirectory/ladda/ladda-themeless.css' filter='cssrewrite'
+
+    'bundles/appuserdirectory/form/css/action.css' filter='cssrewrite'
+    'bundles/apporderform/handsontable/lib/jquery-ui/css/ui-bootstrap/jquery-ui.custom.css' filter='cssrewrite'
+
+    'bundles/appuserdirectory/datepicker/css/bootstrap-datepicker3.css' filter='cssrewrite'
+    %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+
+{% endblock %}
+
+
+{% block mainjs %}
+
+    {% javascripts
+    '@AppUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'
+
+    '@AppOrderformBundle/Resources/public/handsontable/lib/jquery-ui/js/jquery-ui.custom.min.js'
+    '@AppOrderformBundle/Resources/public/handsontable/jquery.handsontable.full.js'
+
+    '@AppUserdirectoryBundle/Resources/public/bootstrap/js/*'
+    '@AppUserdirectoryBundle/Resources/public/ladda/spin.min.js'
+    '@AppUserdirectoryBundle/Resources/public/ladda/ladda.min.js'
+    '@AppUserdirectoryBundle/Resources/public/datepicker/js/bootstrap-datepicker.js'
+    '@AppUserdirectoryBundle/Resources/public/select2/select2.js'
+    '@AppUserdirectoryBundle/Resources/public/inputmask/jquery.inputmask.bundle.js'
+	
+	'@AppUserdirectoryBundle/Resources/public/form/js/user-common.js'
+    '@AppUserdirectoryBundle/Resources/public/form/js/user-navbar.js'
+
+    '@AppOrderformBundle/Resources/public/form/js/checkSingleForm.js'
+    '@AppOrderformBundle/Resources/public/form/js/slideColl.js'
+    '@AppOrderformBundle/Resources/public/form/js/partRadios.js'
+    '@AppOrderformBundle/Resources/public/form/js/selectAjax.js'
+    '@AppOrderformBundle/Resources/public/form/js/commonCheckForm.js'
+    '@AppOrderformBundle/Resources/public/form/js/checkForm.js'
+    '@AppOrderformBundle/Resources/public/form/js/masking.js'
+    '@AppOrderformBundle/Resources/public/form/js/form.js'
+    '@AppOrderformBundle/Resources/public/form/js/modal.js'
+    '@AppOrderformBundle/Resources/public/form/js/tooltips.js'
+	
+	'@AppUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimeout.js'
+    '@AppUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimer.js'
+	'@AppUserdirectoryBundle/Resources/public/form/js/user-idleTimeout.js'
+    '@AppOrderformBundle/Resources/public/form/js/idleTimeout.js'
+
+    '@AppUserdirectoryBundle/Resources/public/jasny/js/rowlink.js'
+    '@AppUserdirectoryBundle/Resources/public/q-1/q.js'
+
+    '@AppOrderformBundle/Resources/public/form/js/slide-return-request-table.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    <script language="Javascript">
+
+        $(document).ready(function() {
+
+            getComboboxReturnLocations();
+            getUrgency();
+            regularCombobox();
+			setResearchEducational();
+            windowCloseAlert();
+            getComboboxGeneric(null,'proxyuser',_proxyuser,true,'','scan');
+
+        });
+
+        function toggleSelectAllObjects(source) {
+            $("[type=checkbox]").each(function() {
+                $(this).prop('checked', source.checked);
+            });
+        }
+
+        function toggleSelectAllCheckbox(source) {
+            //console.log("source.checked="+source.checked);
+            if( !source.checked ) {
+
+                $('#selectUnselectAll').prop('checked', false);
+
+            } else {
+
+                //check if all checkboxes are checked => check selectUnselectAll
+                var allchecked = true;
+
+                $("[type=checkbox]").each(function() {
+                    //console.log("check="+$(this).prop('checked')+", id="+$(this).attr("id"));
+                    if( $(this).attr('id') != 'selectUnselectAll' && !$(this).prop('checked') ) {
+                        allchecked = false;
+                        return;
+                    }
+                });
+
+                if( allchecked ) {
+                    $('#selectUnselectAll').prop('checked', true);
+                }
+
+            } //else
+        }
+
+    </script>
+
+{% endblock %}
+
+
+
+
+{% block content %}
+
+    <input type="hidden" id="formcycle" value="{{ cycle }}" />
+
+    {{ formmacros.hiddenInputFieldsForJS(form.message) }}
+
+    <h3 class="text-info">Please enter the information about the slides you would like to be returned</h3>
+
+    <br>
+
+    {############ START FORM ##############}
+    <form id="table-slidereturnrequests" action="{{ path('slide-return-request-table-submit') }}" method="post">
+    {#{{ form_start(form) }}#}
+
+        <!-- handsontable -->
+        <br>
+
+        <p>
+        <div id="multi-dataTable" class="text-center" align="middle" style="overflow: scroll"></div>
+        </p>
+
+        <br>
+
+        <div id="validationerror" style="padding-top: 2%"></div>
+
+
+            <div  class="panel panel-primary">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <h4 class="panel-title">Slide Return Request</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body collapse in">
+
+                    {{ formmacros.field(form.returnoption) }}
+                    {#{{ formmacros.field(form.provider) }}#}
+                    {#{{ formmacros.simplefield( "Submitter:", form.message.vars.value.provider.getUserNameStr(), "", "disabled" ) }}#}
+                    {{ formmacros.field(form.message.provider,null,'readonly') }}
+
+                    {% if form.message.proxyuser is defined %}
+                        {{ formmacros.field(form.message.proxyuser) }}
+                    {% endif %}
+
+                    {{ formmacros.field(form.message.institution) }}
+
+                    {% if form.message.destinations is defined %}
+                        {% for destination in form.message.destinations %}
+                            {{ formmacros.field(destination.location) }}
+                        {% endfor %}
+                    {% endif %}
+
+                    {{ formmacros.field(form.urgency) }}
+
+                    {#hidden, not mapped holder for table data#}
+                    {{ formmacros.field(form.datalocker) }}
+
+                    {% do form.setRendered %}
+                    {{ form_row(form._token) }}
+                    {#{{ form_rest(form) }}#}
+                </div>
+            </div>
+
+            <p>
+                <button class="btn btn-success" type="submit">Submit</button>
+            </p>
+
+    </form>
+    {#{{ form_end(form) }}#}
+    {############ END FORM ##############}
+
+{% endblock %}
+

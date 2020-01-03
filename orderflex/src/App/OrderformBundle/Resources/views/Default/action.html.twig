@@ -1,0 +1,171 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{% block action %}
+
+
+    {% include 'AppOrderformBundle::History/add_comment.html.twig' with {'orderid': entity.oid,'comments': comments}  %}
+
+
+    <div class="btn-group">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+          Action <span class="caret"></span>
+        </button>
+
+        {#set status. used to show action buttons#}
+        {% set statusname = entity.status.name %}
+        {% set Filled = "Filled" in statusname %}
+        {% set Amended = "Amended" in statusname %}
+        {% set Canceled = "Canceled" in statusname %}
+        {% set OnHold = "On Hold" in statusname %}
+        {% set Superseded = "Superseded" in statusname %}
+
+        {% if "Submitted" == statusname %}
+            {% set Submitted = 1 %}
+        {% else %}
+            {% set Submitted = 0 %}
+        {% endif %}
+
+        {#style="left: -230%;"#}
+        <ul class="dropdown-menu dropdown-menu-right">
+            
+            <li><a href="{{ path('multy_show', { 'id': entity.oid }) }}">View Order Content</a></li>
+            <li><a href="{{ path('history_message_show', { 'id': entity.oid }) }}">View Progress & Comments</a></li>
+
+            {#<li><a href="{{ path('history_message_show', { 'id': entity.oid }) }}">Add Comment</a></li>#}
+            <li>
+                <a href="#" data-toggle="modal" data-target="#addComment_{{ entity.oid }}">Add Comment</a>
+            </li>
+
+            {% if not Superseded and not Filled and not Submitted and not Amended and not Filled and not OnHold %}
+                <li class="divider"></li>
+            {% endif %}
+
+            {###############  USER ACTIONS #################}
+            {% if not Canceled and not Superseded and not Filled %}
+                <li><a data-confirm="Are you sure you want to cancel order {{ entity.oid }}?" data-ok="Cancel the order" data-cancel="Do not cancel"
+                       class="action-cancel-status"
+                       href="{{ path('scanorder_status', { 'id': entity.oid, 'status': 'cancel' }) }}">Cancel</a>
+                </li>                  
+            {% endif %}
+
+            {% if not Submitted %}
+                <li><a
+                       href="{{ path('multy_show', { 'id': entity.oid, 'status': 'submit' }) }}">Review</a>
+                </li>
+            {% else %}
+                {% if not Submitted and not Canceled and not Superseded and not Amended and not Filled and not OnHold %}
+                    <li><a data-confirm="Are you sure you want to change status to Submit?"
+                           href="{{ path('scanorder_status', { 'id': entity.oid, 'status': 'submit' }) }}">Submit</a>
+                    </li>
+                {% endif %}
+            {% endif %}
+
+            {% if Submitted or Amended and not Superseded and not Canceled and not Filled %}
+                <li><a data-confirm="Are you sure you want to amend order {{ entity.oid }}?" data-ok="Amend the order" data-cancel="Do not amend"
+                       class="action-amend-status"
+                       href="{{ path('order_amend', { 'id': entity.oid }) }}">Amend</a>
+                </li>
+            {% endif %}
+
+
+            {% if Canceled %}
+                <li><a  data-confirm="Are you sure you want to un-cancel order {{ entity.oid }}?" data-ok="Un-cancel the order" data-cancel="Do not un-cancel"
+                        href="{{ path('scanorder_status', { 'id': entity.oid, 'status': 'Un-Cancel' }) }}">Un-Cancel</a>
+                </li>
+            {% endif %}
+
+            <li>
+                <a href="{{ path('slide-return-request', { 'id': entity.oid }) }}">Request slide return</a>
+            </li>
+
+            {###############  ADMIN ACTIONS #################}
+            {% if ( is_granted('ROLE_SCANORDER_ADMIN') or is_granted('ROLE_SCANORDER_PROCESSOR') ) and not Superseded and not Canceled %}
+
+                <li class="divider"></li>
+                
+                {% if statusname != 'Filled: Scanned' %}
+                    <li><a data-confirm="Are you sure you want to change status to Filled: Scanned?"
+                           href="{{ path('scanorder_status', { 'id': entity.oid, 'status': 'Filled: Scanned' }) }}">Filled: Scanned</a>
+                    </li>                  
+                {% endif %}
+                
+                {% if statusname != 'Filled: Not Scanned' %}
+                    <li><a data-confirm="Are you sure you want to change status to Filled: Not Scanned?"
+                           href="{{ path('scanorder_status', { 'id': entity.oid, 'status': 'Filled: Not Scanned' }) }}">Filled: Not Scanned</a>
+                    </li>                  
+                {% endif %}
+                
+                {% if statusname != 'Filled: Some Scanned' %}
+                    <li><a data-confirm="Are you sure you want to change status to Filled: Some Scanned?"
+                           href="{{ path('scanorder_status', { 'id': entity.oid, 'status': 'Filled: Some Scanned' }) }}">Filled: Some Scanned</a>
+                    </li>                  
+                {% endif %}
+
+                {% if statusname != 'Filled: Scanned & Returned' %}
+                    <li><a data-confirm="Are you sure you want to change status to Filled: Scanned & Returned?"
+                           href="{{ path('scanorder_status', { 'id': entity.oid, 'status': 'Filled: Scanned & Returned' }) }}">Filled: Scanned & Returned</a>
+                    </li>
+                {% endif %}
+
+                {% if statusname != 'Filled: Not Scanned & Returned' %}
+                    <li><a data-confirm="Are you sure you want to change status to Filled: Not Scanned & Returned?"
+                           href="{{ path('scanorder_status', { 'id': entity.oid, 'status': 'Filled: Not Scanned & Returned' }) }}">Filled: Not Scanned & Returned</a>
+                    </li>
+                {% endif %}
+
+                {% if statusname != 'Filled: Some Scanned & Returned' %}
+                    <li><a data-confirm="Are you sure you want to change status to Filled: Some Scanned & Returned?"
+                           href="{{ path('scanorder_status', { 'id': entity.oid, 'status': 'Filled: Some Scanned & Returned' }) }}">Filled: Some Scanned & Returned</a>
+                    </li>
+                {% endif %}
+
+                <li class="divider"></li>
+
+                {% if statusname != 'On Hold: Slides Received' %}
+                    <li><a data-confirm="Are you sure you want to change status to On Hold: Slides Received?"
+                           href="{{ path('scanorder_status', { 'id': entity.oid, 'status': 'On Hold: Slides Received' }) }}">On Hold: Slides Received</a>
+                    </li>
+                {% endif %}
+
+                {% if statusname != 'On Hold: Awaiting Slides' %}
+                    <li><a data-confirm="Are you sure you want to change status to On Hold: Awaiting Slides?"
+                           href="{{ path('scanorder_status', { 'id': entity.oid, 'status': 'On Hold: Awaiting Slides' }) }}">On Hold: Awaiting Slides</a>
+                    </li>
+                {% endif %}
+
+                {% if entity.educational or entity.research %}
+                    <li class="divider"></li>
+                    <li><a
+                        href="{{ path('scan-order-data-review-full', { 'id': entity.oid }) }}">Data Review</a>
+                    </li>
+                {% endif %}
+
+                {% if is_granted('ROLE_SCANORDER_ADMIN') %}
+                    <li class="divider"></li>
+                    <li>
+                        <a href="{{ path('scan_datastructure', { 'id': entity.oid }) }}">Data Structure View</a>
+                    </li>
+                {% endif %}
+
+           {% endif %} {#admin#}
+
+        </ul>
+
+      </div>
+
+{% endblock %}
+

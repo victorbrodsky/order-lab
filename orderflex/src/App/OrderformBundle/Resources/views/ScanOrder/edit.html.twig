@@ -1,0 +1,44 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{#{% extends '::base.html.twig' %}#}
+
+{% extends "AppOrderformBundle::Default/base.html.twig" %}
+
+{% block content %} 
+{% block body -%}
+    <h1>Order Info Edit</h1>
+
+    <form action="{{ path('scanorder_update', { 'id': entity.id }) }}" method="post">
+        <input type="hidden" name="_method" value="PUT" />
+        {{ form_widget(edit_form) }}
+        <p>
+            <button class="btn btn-small btn-warning btn_margin" type="submit">Edit</button>
+        </p>
+    </form>
+    
+{#    
+    {% if is_granted('ROLE_SCANORDER_ADMIN') %}
+        <form action="{{ path('message_delete', { 'id': entity.id }) }}" method="post">
+            <input type="hidden" name="_method" value="DELETE" />
+            {{ form_widget(delete_form) }}
+            <button onclick="return confirm('Are you sure?');" class="btn btn-small btn-danger" type="submit">Delete</button>
+        </form>   
+    {% endif %}  
+ #}   
+    
+{% endblock %}
+{% endblock %}

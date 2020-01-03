@@ -1,0 +1,86 @@
+{% extends "AppTranslationalResearchBundle::Default/base.html.twig" %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block content %}
+
+    {% import "AppTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+
+    <h4 class="text-info" align="center">
+        {{ title }}
+    </h4>
+
+    <table class="table table-hover table-condensed text-left table-bordered">
+        <thead>
+            <tr>
+                <th>{{ knp_pagination_sortable(defaultReviewers, 'Reviewer', 'reviewerInfos.displayName') }}</th>
+                <th>{{ knp_pagination_sortable(defaultReviewers, 'Reviewer Delegate', 'reviewerDelegateInfos.displayName') }}</th>
+                <th>{{ knp_pagination_sortable(defaultReviewers, 'Created', 'defaultReviewer.createDate') }}</th>
+                {% if stateStr == "committee_review" %}
+                    <th>{{ knp_pagination_sortable(defaultReviewers, 'Primary Review', 'defaultReviewer.primaryReview') }}</th>
+                {% endif %}
+                {#<th>{{ knp_pagination_sortable(defaultReviewers, 'Review Stage', 'defaultReviewer.state') }}</th>#}
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for defaultReviewer in defaultReviewers %}
+            <tr>
+                {#<td style="display: none"><a href="{{ path(translationalresearch_sitename~'_default-reviewer_show', { 'id': defaultReviewer.id }) }}">{{ defaultReviewer.id }}</a></td>#}
+                <td>
+                    {#{{ defaultReviewer.reviewer }}#}
+                    {{ transres.userHtml(defaultReviewer.reviewer) }}
+                </td>
+
+                <td>
+                    {#{{ defaultReviewer.reviewerDelegate }}#}
+                    {{ transres.userHtml(defaultReviewer.reviewerDelegate) }}
+                </td>
+
+                <td>
+                    {% if defaultReviewer.createDate %}
+                        {{ defaultReviewer.createDate|date('m/d/Y H:i:s') }}
+                    {% endif %}
+                </td>
+                {#<td>{{ transres_util.getStateSimpleLabelByName(defaultReviewer.state) }}</td>#}
+
+                {% if stateStr == "committee_review" %}
+                    <td>
+                        {% if defaultReviewer.primaryReview == true %}
+                            Yes
+                        {% else %}
+                            No
+                        {% endif %}
+                    </td>
+                {% endif %}
+
+                <td class="rowlink-skip">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            Action <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <li>
+                                <a href="{{ path(translationalresearch_sitename~'_default-reviewer_show', { 'id': defaultReviewer.id }) }}" target="_blank">Show</a>
+                            </li>
+                            <li>
+                                <a href="{{ path(translationalresearch_sitename~'_default-reviewer_edit', { 'id': defaultReviewer.id }) }}">Edit</a>
+                            </li>
+                            {#<li>#}
+                                {#<a href="{{ path(translationalresearch_sitename~'_default-reviewer_delete', { 'id': defaultReviewer.id }) }}">Delete</a>#}
+                            {#</li>#}
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a class="btn btn-primary"
+       href="{{ path(translationalresearch_sitename~'_default-reviewer_new',{'stateStr':stateStr,'specialtyStr':specialty.getAbbreviation()}) }}"
+    >Create a new Default Reviewer</a>
+
+{% endblock %}

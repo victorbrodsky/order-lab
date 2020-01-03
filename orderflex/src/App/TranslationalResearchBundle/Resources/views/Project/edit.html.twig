@@ -1,0 +1,141 @@
+{% extends "AppTranslationalResearchBundle::Default/base.html.twig" %}
+
+{% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% import "AppTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+{% block content %}
+
+    <input type="hidden" id="formcycle" value="{{ cycle }}" />
+    <input type="hidden" id="orderformtype" value="transres" />
+    <input type="hidden" id="formtype" value="{{ formtype }}" />
+    <input type="hidden" id="triggerSearch" value="{{ triggerSearch }}" />
+
+    <input type="hidden" id="entityNamespace" value="{{ entityNamespace }}" />
+    <input type="hidden" id="entityName" value="{{ entityName }}" />
+    <input type="hidden" id="entityId" value="{{ entityId }}" />
+
+    <input type="hidden" id="formnodetrigger" value="{{ formnodetrigger }}" />
+    <input type="hidden" id="formnodeTopHolderId" value="{{ formnodeTopHolderId }}" />
+
+    <div id="add-new-user-modal-prototype"></div>
+
+    <h4 class="text-info" align="center">
+        {{ title }}
+    </h4>
+
+    <p>
+        <i>
+            Please make sure to update your Project Request prior leaving this page.
+        </i>
+    </p>
+
+    {% set sitename = translationalresearch_sitename %}
+
+    {#{{ transres.projectHeader(project) }}#}
+
+    <p>
+        <button type="button" class="btn btn-default btn-sm" onClick="collapseAll()" >Collapse All</button>
+        <button type="button" class="btn btn-default btn-sm" onClick="extendAll()" >Expand All</button>
+    </p>
+
+    {#{{ form_start(edit_form) }}#}
+    {#{{ form_start(edit_form,{'attr':{'id':'transresProjectForm', 'onsubmit':'transresValidateProjectForm();'}}) }}#}
+    {{ form_start(edit_form,{'attr':{'onsubmit':'return transresValidateProjectForm();', novalidate: 'novalidate'}}) }}
+
+        {{ transres.getProjectReviewPrototypeFormData(edit_form,cycle,sitename) }}
+
+        {{ transres.projectRequesters(edit_form,project,cycle) }}
+
+        {{ transres.projectBodyFormFields(edit_form,project,cycle) }}
+
+        {{ transres.projectInfo(edit_form,project,cycle) }}
+
+        {{ transres.projectReviews(edit_form,cycle,sitename,1) }}
+
+        <br>
+
+        {% if edit_form.saveAsDraft is defined %}
+            {{ form_widget(edit_form.saveAsDraft) }}
+        {% endif %}
+        {#{% if edit_form.saveAsComplete is defined %}#}
+            {#{{ form_widget(edit_form.saveAsComplete) }}#}
+        {#{% endif %}#}
+
+        {#{% set showComment = false %}#}
+        {% if edit_form.submitIrbReview is defined %}
+            {#{% set showComment = true %}#}
+            {{ form_widget(edit_form.submitIrbReview) }}
+        {% endif %}
+
+        {% if edit_form.reSubmitReview is defined %}
+            {#{% set showComment = true %}#}
+            {#comment:<br>#}
+            {#transres-Project-3371-irb_review#}
+            {#{% set threadId = "transres-" ~ project.getEntityName() ~ "-" ~ project.id ~ "-" ~ "irb_review" %}#}
+            {% set threadId = transres_util.getProjectThreadIdByCurrentState(project) %}
+            {#threadId={{ threadId }}<br>#}
+            {#{% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': threadId} %}#}
+
+            <div class="well">
+                {{ form_widget(edit_form.reSubmitReview) }}
+                <br>
+
+                {#{{ formmacros.field(edit_form.reSubmitReviewComment) }}#}
+                <p>
+                {{ form_row(edit_form.reSubmitReviewComment) }}
+                </p>
+
+                <hr>
+                {#All previous comments:<br>#}
+                {#{{ transres_util.getReviewComments(project)|raw }}#}
+                {#<br>#}
+                {{ render(controller('AppTranslationalResearchBundle:Project:threadCommentsShow', { 'id': threadId })) }}
+                {#<hr>#}
+            </div>
+        {% endif %}
+
+        {% if edit_form.updateProject is defined %}
+            {{ form_widget(edit_form.updateProject) }}
+        {% endif %}
+
+        <div id="please-wait" style="display: none;">Please Wait ...</div>
+
+    {{ form_end(edit_form) }}
+
+    {#{% if showComment %}#}
+        {#{% set reviewState = transres_util.getReviewClassNameByState(project.getState(),false) %}#}
+        {#{% set threadId = "transres-" ~ project.getEntityName() ~ "-" ~ project.id ~ "-" ~ reviewState %}#}
+        {#threadId={{ threadId }}<br>#}
+        {#{% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': threadId} %}#}
+    {#{% endif %}#}
+
+    <br>
+
+    <div id="projectError" class="alert alert-danger" style="display: none;"></div>
+
+    <br>
+    <p>
+        <a class="btn btn-default" href="{{ path(translationalresearch_sitename~'_project_show',{ 'id': project.id }) }}">Cancel</a>
+    </p>
+    <br>
+    <p>
+        <a href="{{ path(translationalresearch_sitename~'_project_index') }}">Back to the list</a>
+    </p>
+    {#{{ form_start(delete_form) }}#}
+        {#<input class="btn btn-danger" type="submit" value="Delete">#}
+    {#{{ form_end(delete_form) }}#}
+
+{% endblock %}
+
+{% block additionaljs %}
+    {% javascripts
+    '@AppTranslationalResearchBundle/Resources/public/form/js/transres.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}

@@ -1,0 +1,71 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{#{% extends '::base.html.twig' %}#}
+
+{#use accession and message views for this slide#}
+
+{% extends "AppOrderformBundle::Default/base.html.twig" %}
+
+{% block content %} 
+    
+    <h1>All Slide List</h1>
+
+    <div class="btn_margin_top">
+        <form method="get" action="{{ path('order_new') }}">
+            <button type="submit" class="btn btn-primary btn-success">New Order</button>
+        </form>
+    </div>
+
+    <table class="table table-hover table-condensed">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Accession</th>
+                <th>Stain</th>
+                <th>Mag</th>
+                <th>Diagnosis</th>
+{#                <th>Order Date</th>#}
+{#                <th>Status</th>#}
+            </tr>
+        </thead>
+        <tbody>
+        {% for slide in slides %}
+            <tr>
+                <td><a href="{{ path('order_show', { 'id': slide.id }) }}">{{ slide.id }}</a></td>               
+                <td>{{ slide.accession }}</td>
+                <td>{{ slide.stain }}</td>
+                <td>{{ slide.mag }}</td>
+{#                <td>{{ slide.diagnosis }}</td>#}
+                <td>
+                {% block textarea_widget %}
+                {% spaceless %}
+                    <div class="textarea_widget">
+                        <textarea {{ block('widget_attributes') }}>{{ slide.diagnosis }}</textarea>
+                    </div>
+                {% endspaceless %}
+                {% endblock textarea_widget %}
+                </td>
+                              
+                <td>
+                    <a class="btn btn-small btn-info" href="{{ path('order_show', { 'id': slide.id }) }}">Show</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

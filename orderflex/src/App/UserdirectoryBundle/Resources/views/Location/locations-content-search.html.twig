@@ -1,0 +1,108 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+
+{% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+
+{% if search is defined and search != "" %}
+    <h3 class="text-info">
+        {#Results of Location search for: "{{ search }}" of the#}
+        Common Locations
+    </h3>
+{% endif %}
+
+<table class="records_list table table-hover table-condensed text-left">
+    <thead>
+    <tr>
+        {#<th style="display:none">{{ knp_pagination_sortable(locations, 'ID', 'location.id') }}</th>#}
+        <th>{{ knp_pagination_sortable(locations, 'Name', 'location.name') }}</th>
+        <th>{{ knp_pagination_sortable(locations, 'Phone', 'location.phone') }}</th>
+        <th>{{ knp_pagination_sortable(locations, 'IC', 'location.ic') }}</th>
+        <th>{{ knp_pagination_sortable(locations, 'Fax', 'location.fax') }}</th>
+        <th>{{ knp_pagination_sortable(locations, 'Room', 'locationroom.name') }}</th>
+        <th>{{ knp_pagination_sortable(locations, 'Supervisor', 'administrativeTitleUserInfos.displayName') }}</th>
+    </tr>
+    </thead>
+    <tbody data-link="row" class="rowlink">
+    {% for entity in locations %}
+        <tr>
+            {#<td style="display:none"><a href="{{ path(sitename~'_locations_pathaction_show_standalone', { 'id': entity.id }) }}">{{ entity.id }}</a></td>#}
+            <td>
+                <a href="{{ path(sitename~'_locations_pathaction_show_standalone', { 'id': entity.id }) }}">{{ entity.getNameFull(true)|raw }}</a>
+            </td>
+            <td class="rowlink-skip">
+                {{ usermacros.phoneHref(entity.phone) }}
+            </td>
+            <td>{{ entity.ic }}</td>
+            <td>{{ entity.fax }}</td>
+            <td class="rowlink-skip">
+                {% if entity.room %}
+                    <a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'room','id': entity.room.id, 'name': entity.room.name }) }}">{{ entity.room }}</a>
+                {% endif %}
+            </td>
+            <td class="rowlink-skip">
+                {#{% if entity.service %}#}
+                    {#{% for head in entity.service.heads %}#}
+                        {#<p><a href="{{ path(sitename~'_showuser', { 'id': head.id }) }}">{{ head.getUsernameShortest() }}</a></p>#}
+                    {#{% endfor %}#}
+                {#{% endif %}#}
+
+                {#TODO: implement this: show supervisers of this location#}
+                {% if entity.institution %}
+                    {% for administrativeTitle in entity.institution.administrativeTitles %}
+
+                        {% set showUserPosition = false %}
+                        {% set headUserPosition = false %}
+                        {% set pcUserPosition = false %}
+                        {% set managerUserPosition = false %}
+
+                        {% for userPosition in administrativeTitle.userPositions %}
+                            {% if "Head" in userPosition.getName() %}
+                                {% set headUserPosition = userPosition.getName() %}
+                            {% endif %}
+                            {% if "Primary Contact" in userPosition.getName() %}
+                                {% set pcUserPosition = userPosition.getName() %}
+                            {% endif %}
+                            {% if "Manager" in userPosition.getName() %}
+                                {% set managerUserPosition = userPosition.getName() %}
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if managerUserPosition %}
+                            {% set showUserPosition = managerUserPosition %}
+                        {% elseif pcUserPosition %}
+                            {% set showUserPosition = pcUserPosition %}
+                        {% elseif headUserPosition %}
+                            {% set showUserPosition = headUserPosition %}
+                        {% endif %}
+
+                        {% if showUserPosition %}
+                            <p><a href="{{ path(sitename~'_showuser', { 'id': administrativeTitle.user.id }) }}">{{ administrativeTitle.user.getUsernameShortest() }}</a> ({{ showUserPosition }})</p>
+                        {% endif %}
+
+                    {% endfor %}
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+
+<div class="navigation">
+    {{ knp_pagination_render(locations) }}
+</div>
+

@@ -1,0 +1,257 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{% extends "AppOrderformBundle::Default/base.html.twig" %}
+
+{% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+{% block title %}
+    Scan Order
+{% endblock %}
+
+
+{% block content %}
+    
+    <h3 class="text-info">Scan Order</h3>
+
+    {#    {% include 'AppOrderformBundle:ScanOrder:table.html.twig' %}       #}
+{#    EMAIL:{{ app.security.getToken().getAttribute('email') }}#}
+
+    {% set diffDiagnosesField = form_part.diffDisident %}
+    {% set diffDiagnosesWidget = formmacros.fieldWidget(diffDiagnosesField) %}
+    {#{% set diffDiagnosesHtml = formmacros.inputField(diffDiagnosesField,'new',"partdiffDisident","prototype",diffDiagnosesWidget,"") %}#}
+
+    <input type="hidden" id="formtype" value="single" />
+    
+    <form action="{{ path('singleorder_create') }}" method="post">
+    {{ form_start(form) }}
+        
+        {{ form_errors(form) }}
+        {{ form_errors(form_patient) }}
+        {{ form_errors(form_procedure) }}
+        {{ form_errors(form_accession) }}
+        {{ form_errors(form_part) }}
+        {{ form_errors(form_block) }}
+        {{ form_errors(form_slide) }}
+        {#{{ form_errors(form_scan) }}#}
+        {#{{ form_errors(form_stain) }}#}
+
+
+        <div id="form-prototype-data"
+             {#data-prototype-diffdiagnoses="{{ form_widget(form_part.diffDisident.vars.prototype.field)|e }}"#}
+             data-prototype-addorderformbundlediffdisident="{{ formmacros.inputField(diffDiagnosesField,'new',"partdiffDisident","prototype",diffDiagnosesWidget,"","")|e }}"
+             data-prototype-orderformbundlediffdisident="{{ formmacros.inputField(diffDiagnosesField,'new',"partdiffDisident","prototype",diffDiagnosesWidget,"nobtn","")|e }}"
+
+             data-prototype-relevantscans="{{ form_widget(form_slide.relevantScans.vars.prototype.field)|e }}"
+             data-prototype-specialstains="{{ form_widget(form_slide.specialStains.vars.prototype.field)|e }}"
+        >
+        </div>  
+        
+        <div  class="panel panel-patient">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <h4>Slide Info</h4>
+                    </div>
+                </div>
+            </div>
+            <div id="main" class="panel-body collapse in">
+
+                {{ formmacros.field(form_slide.title) }}
+
+                <div class="row">
+                    <div class="col-xs-6" align="right">
+                        {{ form_label(form_accession.accession, "* Accession Number [or Label], Part, Block:") }}
+                    </div>
+                    <div class="col-xs-6" align="left">
+                        <div style="float:left; width:100%">
+                            <div style="float:left; width:50%">
+                                {{ form_widget(form_accession.accession) }}
+                            </div>
+                            <div style="float:left; width:25%">
+                            {{ form_widget(form_part.partname) }}
+                            </div>
+                            <div style="float:left; width:25%">
+                            {{ form_widget(form_block.blockname) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{ formmacros.field(form_slide.stain|first.field) }}
+                {{ formmacros.field(form_slide.stain|first.others) }}
+
+                {{ formmacros.field(form_slide.scan|first.field) }}
+                {{ formmacros.field(form_slide.scan|first.others) }}
+
+                {#{{ formmacros.field(form_part.disident) }}#}
+                {{ formmacros.inputArrayField(form_part.disident,'new',"partdisident") }}
+
+                {{ formmacros.field(form_slide.scan|first.note) }}
+
+            </div>
+        </div>
+
+        <button id="next_button" type="button" class="btn btn-success" 
+                data-toggle="collapse" data-target="#message_param">Next
+        </button>
+
+
+        <div id="message_param" class="collapse">
+            {{ formmacros.message_panel(form,"Order Info") }}
+
+            <div class="row">
+                <p>
+                    <button class="btn btn-primary btn-success" type="submit">Submit</button>
+                </p>
+            </div> 
+        
+      
+        {#        The optional parameter    #}
+        <div class="row">
+        <p>
+            <button id="optional_button" type="button" class="btn btn-default" data-toggle="collapse" data-target="#optional_param">
+                Add Optional Info
+            </button>
+        </p>
+        </div>
+  
+            
+        <div id="optional_param" class="collapse">  
+            
+<div  class="panel panel-patient">
+    <div class="panel-heading">
+        <div class="row">
+            <div class="col-xs-12">
+                <h4>Optional Info</h4>
+            </div>
+        </div>
+    </div>
+            
+    <div class="panel-body collapse in">    
+              
+            <div class="row">
+{#            <div class="span12">#}
+            <ul class="nav nav-tabs" id="optional_param_tab">
+                <li class="active"><a href="#patient">Patient</a></li>
+                <li><a href="#procedure">Procedure</a></li>
+                {#<li><a href="#accession">Accession</a></li>#}
+                <li><a href="#part">Part</a></li>
+                <li><a href="#block">Block</a></li>
+{#                <li><a href="#stain">Stain</a></li>#}
+
+                <li><a href="#slide">Slide</a></li>
+                <li><a href="#scan">Scan</a></li>
+
+            </ul>
+
+            <div class="tab-content option_info_panel">
+              <div class="tab-pane active" id="patient">
+
+                  {{ formmacros.patientForm(form_patient,"check") }}
+
+              </div>
+              <div class="tab-pane" id="procedure">
+                  {#{{ formmacros.field(form_procedure.name) }}#}
+                  {{ formmacros.inputArrayField(form_procedure.name,'new',"procedurename") }}
+              </div>
+              {#<div class="tab-pane" id="accession">#}
+                  {#{{ formmacros.field(form_accession.date) }}#}
+              {#</div>#}
+              <div class="tab-pane" id="part">
+                  {#{{ formmacros.field(form_part.sourceOrgan) }}#}
+                  {{ formmacros.inputArrayField(form_part.sourceOrgan,'new',"partsourceorgan") }}
+
+                  {#{{ formmacros.field(form_part.paper.file) }}#}
+                  {#{{ formmacros.paperInput(form_part.paper,'new') }}#}
+                  {{ formmacros.inputArrayField(form_part.paper,'new',"partpaper","paper") }}
+
+                  {#{{ formmacros.field(form_part.description) }}#}
+                  {{ formmacros.inputArrayField(form_part.description,'new',"partdescription") }}
+
+                  {#{{ formmacros.field(form_part.diffDiagnoses) }}#}               
+                  {#{% if form_part.diffDisident|length > 0 %}#}
+                        {#{{ formmacros.collectionInput(form_part.diffDisident, 'diffDiagnoses', 'new', 'single', 0, 0, 0, 0, 0, 0) }}#}
+                  {#{% endif %}#}
+                  {{ formmacros.inputArrayField(form_part.diffDisident,'new',"partdiffdisident","partdiffDisident") }}
+                  
+                  {#{{ formmacros.field(form_part.diseaseType) }}#}
+                  {{ formmacros.inputArrayField(form_part.diseaseType,'new',"partdiseasetype","diseaseType") }}
+              </div>
+
+              <div class="tab-pane" id="block">
+                  {#{{ form_rest(form_block) }}#}
+                  {{ formmacros.inputArrayField(form_block.sectionsource,'new',"blocksectionsource","blocksectionsource") }}
+              </div>
+{#              <div class="tab-pane" id="stain"> {{ form_rest(form_stain) }} </div>#}
+
+              {#<div class="tab-pane" id="scan">#}
+                  {#{{ formmacros.field(form_scan.scanregion) }}#}
+              {#</div>#}
+
+              <div class="tab-pane" id="slide">
+
+                  {{ formmacros.field(form_slide.slidetype) }}
+
+                  {#{{ formmacros.field(form_slide.diagnosis) }}#}
+                  {{ formmacros.field(form_slide.microscopicdescr) }}
+                  {#{{ formmacros.field(form_slide.specialStains) }}#}
+                  {#{% if form_slide.specialStains|length > 0 %}#}
+                      {#{{ formmacros.collInput(form_slide.specialStains, 'new', 'single', 'specialStains', 0, 0, 0, 0, 0, 0) }}#}
+                  {#{% endif %}#}
+                  {{ formmacros.inputArrayField(form_slide.specialStains,'new',"slidespecialstains","slidespecialStains","buttonbottom","") }}
+
+                  {#{{ formmacros.field(form_slide.relevantScans) }}#}
+                  {#{% if form_slide.relevantScans|length > 0 %}#}
+                      {#&#123;&#35;{{ formmacros.collInput(form_slide.relevantScans, 'new', 'single', 'relevantScans', 0, 0, 0, 0, 0, 0) }}&#35;&#125;#}
+                      {#{{ formmacros.collectionInput(form_slide.relevantScans, 'relevantScans', 'new', 'single', 0, 0, 0, 0, 0, 0) }}#}
+                  {#{% endif %}#}
+                  {{ formmacros.inputArrayField(form_slide.relevantScans,'new',"sliderelevantscans","sliderelevantScans") }}
+
+                  {#{{ formmacros.slideForm(form_slide, "check", "0_0_0_0_0_0_0_0", 'new') }}#}
+
+              </div>
+
+                <div class="tab-pane" id="scan">
+                    {{ formmacros.field(form_slide.scan|first.scanregion) }}
+                </div>
+
+            </div>
+                
+{#            </div>#}
+            </div>
+        </div>
+    </div>
+                 
+            {# Just in case display rest of the form to prevent CRF error #}
+            {{ form_rest(form) }}
+            {{ form_rest(form_patient) }}
+            {{ form_rest(form_procedure) }}
+            {{ form_rest(form_accession) }}
+            {{ form_rest(form_part) }}
+            {{ form_rest(form_block) }}
+            {{ form_rest(form_slide) }}
+            {#{{ form_rest(form_scan) }}#}
+            {#{{ form_rest(form_stain) }}#}
+            
+        </div>     
+       </div>      
+{#        <a class='btn_margin_top btn btn-primary' href="{{ path('message') }}">Back to the list</a>#}
+
+    {{ form_end(form) }}
+    </form>
+
+{% endblock %}

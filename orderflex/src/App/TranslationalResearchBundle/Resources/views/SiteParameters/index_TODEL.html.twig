@@ -1,0 +1,130 @@
+{% extends "AppTranslationalResearchBundle::Default/base.html.twig" %}
+
+{% import "AppTranslationalResearchBundle::Default/transresRequestMacros.html.twig" as transresRequestMacros %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block content %}
+    <h4 class="text-info" align="center">
+        {{ title }}
+    </h4>
+    <br>
+
+    {{ transresRequestMacros.transresInvoiceFilter(filterform,advancedFilter) }}
+    <br>
+
+    <table class="records_list table table-condensed text-left">
+        <thead>
+            <tr>
+                <th>{{ knp_pagination_sortable(invoices, 'Invoice Number', 'invoice.oid') }}</th>
+                <th>{{ knp_pagination_sortable(invoices, 'Salesperson', 'salesperson.displayName') }}</th>
+                <th>{{ knp_pagination_sortable(invoices, 'Version', 'invoice.version') }}</th>
+                <th>{{ knp_pagination_sortable(invoices, 'Create Date', 'invoice.createDate') }}</th>
+                <th>{{ knp_pagination_sortable(invoices, 'Update Date', 'invoice.updateDate') }}</th>
+                <th>{{ knp_pagination_sortable(invoices, 'Due Date', 'invoice.dueDate') }}</th>
+                <th>{{ knp_pagination_sortable(invoices, 'Status', 'invoice.status') }}</th>
+                <th>{{ knp_pagination_sortable(invoices, 'Bill To', 'invoice.invoiceTo') }}</th>
+                <th>{{ knp_pagination_sortable(invoices, 'Total', 'invoice.total') }}</th>
+                <th>PDFs</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody data-link="row">
+        {% for invoice in invoices %}
+            <tr>
+                <td>
+                    <a href="{{ path('translationalresearch_invoice_show', {'oid': invoice.oid }) }}">{{ invoice.oid }}</a>
+                </td>
+                <td>{{ invoice.salesperson }}</td>
+                <td>
+                    {{ invoice.version }}
+                    {% if invoice.latestVersion %}
+                        (Latest)
+                    {% endif %}
+                </td>
+                <td>{% if invoice.createDate %}{{ invoice.createDate|date('m/d/Y H:i:s') }}{% endif %}</td>
+                <td>{% if invoice.updateDate %}{{ invoice.updateDate|date('m/d/Y H:i:s') }}{% endif %}</td>
+                <td>{% if invoice.dueDate %}{{ invoice.dueDate|date('m/d/Y H:i:s') }}{% endif %}</td>
+                <td>{{ invoice.status }}</td>
+                <td>
+                    {#{{ invoice.invoiceTo }}#}
+                    {{ invoice.invoiceTo|length > 25 ? invoice.invoiceTo|slice(0, 25) ~ '...' : invoice.invoiceTo  }}
+                </td>
+                <td>
+                    {% if invoice.total %}
+                        ${{ invoice.total }}
+                    {% endif %}
+                </td>
+                <td>
+                    {#{{ invoice.documents|length }}#}
+                    {% if invoice.documents|length > 0 %}
+                        <a  data-toggle="tooltip" title="Show the most recent PDF"
+                            target="_blank"
+                            href="{{ path('translationalresearch_invoice_download_recent', {'id': invoice.id }) }}"
+                        >{{ invoice.documents|length }}</a>
+                    {% endif %}
+                </td>
+
+                {#Actions#}
+                <td class="rowlink-skip">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            Action <span class="caret"></span>
+                        </button>
+
+                        <ul class="dropdown-menu dropdown-menu-right">
+
+                            <li>
+                                <a href="{{ path('translationalresearch_invoice_show', {'oid': invoice.oid }) }}">Show invoice</a>
+                            </li>
+                            {% if invoice.latestVersion %}
+                                <li>
+                                    <a href="{{ path('translationalresearch_invoice_edit', {'oid': invoice.oid }) }}">Edit invoice</a>
+                                </li>
+
+                            {#<li>#}
+                                {#<a#}
+                                    {#general-data-confirm="Are you sure you want to delete this invoice?"#}
+                                    {#href="{{ path('translationalresearch_invoice_delete', {'id': invoice.id}) }}"#}
+                                {#>Delete</a>#}
+                            {#</li>#}
+
+                            {#{% if is_granted('ROLE_TRANSRES_ADMIN') %}#}
+                                <li>
+                                    <a href="{{ path('translationalresearch_invoice_download', {'id': invoice.id }) }}"
+                                    >PDF Invoice Preview</a>
+                                </li>
+
+                                <li>
+                                    <a href="{{ path('translationalresearch_invoice_generate_pdf', {'id': invoice.id }) }}"
+                                    >Generate PDF Invoice</a>
+                                </li>
+                            {% endif %}
+
+                            {% if invoice.documents|length > 0 %}
+                                <li>
+                                    <a target="_blank"
+                                       href="{{ path('translationalresearch_invoice_download_recent', {'id': invoice.id }) }}"
+                                    >Show most recent invoice PDF</a>
+                                </li>
+                            {% endif %}
+
+                            {#{% endif %}#}
+
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% if transresRequest %}
+        <br>
+        <p>
+            <a class="btn btn-primary" href="{{ path('translationalresearch_invoice_new', {'id': transresRequest.id}) }}">Create a new invoice</a>
+        </p>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,102 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{% extends "AppUserdirectoryBundle::Default/base.html.twig" %}
+
+
+{% block header %}
+    {#{% stopwatch "### TransRes navbar ###" %}#}
+    {% include 'AppTranslationalResearchBundle:Default:navbar.html.twig' %}
+    {#{% endstopwatch %}#}
+{% endblock %}
+
+{% block favicon %}
+    <link rel="icon" type="image/x-icon" href="{{ asset('glyphicons-342-briefcase.png') }}" />
+{% endblock %}
+
+
+{% block mainjs %}
+
+    {#'@FOSCommentBundle/Resources/public/js/comments.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/jquery/jquery-3.2.1.min.js'#}
+
+    {% javascripts
+    '@AppUserdirectoryBundle/Resources/public/bootstrap/js/*'
+    '@AppUserdirectoryBundle/Resources/public/ladda/spin.min.js'
+    '@AppUserdirectoryBundle/Resources/public/ladda/ladda.min.js'
+    '@AppUserdirectoryBundle/Resources/public/datepicker/js/bootstrap-datepicker.js'
+    '@AppUserdirectoryBundle/Resources/public/select2/select2.js'
+    '@AppUserdirectoryBundle/Resources/public/inputmask/jquery.inputmask.bundle.js'
+    '@AppUserdirectoryBundle/Resources/public/jasny/js/rowlink.js'
+    '@AppUserdirectoryBundle/Resources/public/q-1/q.js'
+    '@AppUserdirectoryBundle/Resources/public/pnotify/pnotify.custom.min.js'
+
+    '@AppUserdirectoryBundle/Resources/public/dropzone/dropzone.js'
+    '@AppUserdirectoryBundle/Resources/public/form/js/user-fileuploads.js'
+    '@AppUserdirectoryBundle/Resources/public/form/js/user-navbar.js'
+
+    '@AppUserdirectoryBundle/Resources/public/form/js/user-common.js'
+    '@AppUserdirectoryBundle/Resources/public/form/js/user-form.js'
+
+    '@AppUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimeout.js'
+    '@AppUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimer.js'
+    '@AppUserdirectoryBundle/Resources/public/form/js/user-idleTimeout.js'
+
+    '@AppUserdirectoryBundle/Resources/public/form/js/user-selectAjax.js'
+    '@AppUserdirectoryBundle/Resources/public/form/js/user-treeSelectAjax.js'
+    '@AppUserdirectoryBundle/Resources/public/vakata-jstree/jstree.min.js'
+    '@AppUserdirectoryBundle/Resources/public/form/js/user-jstree.js'
+    '@AppUserdirectoryBundle/Resources/public/form/js/user-formnode.js'
+    '@AppUserdirectoryBundle/Resources/public/form/js/user-formReady.js'
+    '@AppUserdirectoryBundle/Resources/public/form/js/user-masking.js'
+    '@AppUserdirectoryBundle/Resources/public/form/js/user-basetitles.js'
+
+    '@AppOrderformBundle/Resources/public/form/js/modal.js'
+    '@AppOrderformBundle/Resources/public/form/js/tooltips.js'
+
+    '@AppUserdirectoryBundle/Resources/public/typeahead/typeahead.bundle.js'
+    '@AppUserdirectoryBundle/Resources/public/form/js/user-typeahead.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
+    {% endjavascripts %}
+
+{% endblock %}
+
+{% block additionalcss %}
+    {% stylesheets '@FOSCommentBundle/Resources/public/css/comments.css' %}
+        <link rel="stylesheet" href="{{ asset_url }}" type="text/css" />
+    {% endstylesheets %}
+
+    {% stylesheets
+        'bundles/apptranslationalresearch/form/css/comments.css' filter='cssrewrite'
+    %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+
+{% endblock %}
+
+{% block headeradditionaljs %}
+    {#jquery is required before {% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': threadId} %}#}
+    {% javascripts
+        '@AppUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}
+
