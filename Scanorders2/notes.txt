@@ -171,3 +171,17 @@ composer.phar dump-autoload --optimize
 "post-install-cmd": [
             "@auto-scripts"
         ],
+
+Reorganize Symfony:
+https://symfonycasts.com/screencast/symfony-bundle/extracting-bundle
+https://stackoverflow.com/questions/47594542/symfony-4-how-to-organize-folder-structure-namely-your-business-logic
+https://symfonycasts.com/blog/AppBundle
+https://laraveldaily.com/moving-controllers-to-sub-folders-in-a-correct-way/
+
+Commented out include_once '..\DatabaseRoutines.php';
+Changed SimpleHydrator and Changed StainHydrator
+//TODO:  GoogleSheetManagement: Cannot autowire service "App\FellAppBundle\Util\CustomDefaultServiceRequest": argument "$accessToken" of method "__construct()" is type-hinted "string", you should configure its value explicitly.
+$serviceRequest = new DefaultServiceRequest($accessToken,"OAuth");
+https://symfonycasts.com/screencast/symfony-fundamentals/create-service
+https://stackoverflow.com/questions/54825231/symfony-4-argument-has-no-type-hint-you-should-configure-its-value-explicitly
+TODO: Test GoogleSheetManagement->getSheetByFileId($fileId);
