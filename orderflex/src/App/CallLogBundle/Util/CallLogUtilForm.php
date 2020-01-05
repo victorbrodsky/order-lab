@@ -25,6 +25,8 @@
 namespace App\CallLogBundle\Util;
 
 
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class CallLogUtilForm
@@ -32,7 +34,7 @@ class CallLogUtilForm
     protected $em;
     protected $container;
 
-    public function __construct( $em, $container ) {
+    public function __construct( EntityManagerInterface $em, ContainerInterface $container ) {
         $this->em = $em;
         $this->container = $container;
     }

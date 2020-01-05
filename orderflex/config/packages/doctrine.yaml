@@ -50,18 +50,61 @@ doctrine:
         default_entity_manager: default
         entity_managers:
             default:
+                auto_mapping: true
                 metadata_cache_driver: array
                 result_cache_driver: array
                 query_cache_driver: array
                 connection: default
                 mappings:
-                    AppOrderformBundle: ~
-                    AppUserdirectoryBundle: ~
-                    AppFellAppBundle: ~
-                    AppDeidentifierBundle: ~
-                    AppVacReqBundle: ~
-                    AppCallLogBundle: ~
-                    AppTranslationalResearchBundle: ~
+                    App\OrderformBundle:
+                        is_bundle: false
+                        type: annotation
+                        dir: '%kernel.project_dir%/src/App/OrderformBundle/Entity'
+                        prefix: 'App\OrderformBundle\Entity'
+                        alias: 'AppOrderformBundle'
+                    App\UserdirectoryBundle:
+                        is_bundle: false
+                        type: annotation
+                        dir: '%kernel.project_dir%/src/App/UserdirectoryBundle/Entity'
+                        prefix: 'App\UserdirectoryBundle\Entity'
+                        alias: 'AppUserdirectoryBundle'
+                    App\FellAppBundle:
+                        is_bundle: false
+                        type: annotation
+                        dir: '%kernel.project_dir%/src/App/FellAppBundle/Entity'
+                        prefix: 'App\FellAppBundle\Entity'
+                        alias: 'AppFellAppBundle'
+                    App\DeidentifierBundle:
+                        is_bundle: false
+                        type: annotation
+                        dir: '%kernel.project_dir%/src/App/DeidentifierBundle/Entity'
+                        prefix: 'App\DeidentifierBundle\Entity'
+                        alias: 'AppDeidentifierBundle'
+                    App\VacReqBundle:
+                        is_bundle: false
+                        type: annotation
+                        dir: '%kernel.project_dir%/src/App/VacReqBundle/Entity'
+                        prefix: 'App\VacReqBundle\Entity'
+                        alias: 'AppVacReqBundle'
+                    App\CallLogBundle:
+                        is_bundle: false
+                        type: annotation
+                        dir: '%kernel.project_dir%/src/App/CallLogBundle/Entity'
+                        prefix: 'App\CallLogBundle\Entity'
+                        alias: 'AppCallLogBundle'
+                    App\TranslationalResearchBundle:
+                        is_bundle: false
+                        type: annotation
+                        dir: '%kernel.project_dir%/src/App/TranslationalResearchBundle/Entity'
+                        prefix: 'App\TranslationalResearchBundle\Entity'
+                        alias: 'AppTranslationalResearchBundle'
+#                    AppOrderformBundle: ~
+#                    AppUserdirectoryBundle: ~
+#                    AppFellAppBundle: ~
+#                    AppDeidentifierBundle: ~
+#                    AppVacReqBundle: ~
+#                    AppCallLogBundle: ~
+#                    AppTranslationalResearchBundle: ~
                     FOSCommentBundle: ~
                     gedmo_tree:
                         type: annotation

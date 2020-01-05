@@ -12,7 +12,12 @@ twig:
 
 
 services:
-    _defaults: { public: true }
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        public: true       # Allows optimizing the container by removing unused services; this also means
+                                    # fetching services directly from the container via $container->get() won't work.
+                                    # The best practice is to be explicit about your dependencies anyway.
 
     calllog_authentication_handler:
         class: App\CallLogBundle\Security\Authentication\CallLogLoginSuccessHandler
@@ -37,7 +42,8 @@ services:
         arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
     calllog_util_form:
-            class: App\CallLogBundle\Util\CallLogUtilForm
-            arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+        public: true
+        class: App\CallLogBundle\Util\CallLogUtilForm
+        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
 

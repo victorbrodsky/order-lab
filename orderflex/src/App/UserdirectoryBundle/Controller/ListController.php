@@ -31,7 +31,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
 use App\UserdirectoryBundle\Form\GenericListType;
-use App\UserdirectoryBundle\Util\ErrorHelper;
+//use App\UserdirectoryBundle\Util\ErrorHelperUser as ErrorHelper;
 
 
 /**

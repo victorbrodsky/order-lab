@@ -43,6 +43,7 @@ use App\UserdirectoryBundle\Entity\Document;
 use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Filesystem\Exception\IOException;
+use App\FellAppBundle\Util\CustomDefaultServiceRequest;
 
 class GoogleSheetManagement {
 
@@ -177,7 +178,15 @@ class GoogleSheetManagement {
         }
 
         //0 initialize ServiceRequestFactory
+        //$accessToken = $accessToken."";
+        //return null;
         $serviceRequest = new CustomDefaultServiceRequest($accessToken); //use my custom class to set CURLOPT_SSL_VERIFYPEER to false in DefaultServiceRequest
+//        $serviceRequest = $this->container->get('fellapp_customd_defaultservicerequest');
+//        $serviceRequest->setAccessRequest($accessToken);
+
+        //TODO:  Cannot autowire service "App\FellAppBundle\Util\CustomDefaultServiceRequest": argument "$accessToken" of method "__construct()" is type-hinted "string", you should configure its value explicitly.
+//        $serviceRequest = new DefaultServiceRequest($accessToken,"OAuth");
+//        $serviceRequest::CURLOPT_SSL_VERIFYPEER = false;
         ServiceRequestFactory::setInstance($serviceRequest);
         $spreadsheetService = new SpreadsheetService();
 

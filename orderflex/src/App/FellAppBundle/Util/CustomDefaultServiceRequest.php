@@ -33,6 +33,22 @@ class CustomDefaultServiceRequest extends DefaultServiceRequest
 {
 
     /**
+     * Initializes the service request object.
+     *
+     * @param string $accessToken
+     * @param string $tokenType
+     */
+    public function __construct(string $accessToken, string $tokenType = "OAuth")
+    {
+        parent::__construct($accessToken,$tokenType);
+    }
+//
+//    public function setAccessRequest(string $accessToken)
+//    {
+//        $this->accessToken = $accessToken;
+//    }
+
+    /**
      * Overwrite: Initialize the curl session
      *
      * @param string $url

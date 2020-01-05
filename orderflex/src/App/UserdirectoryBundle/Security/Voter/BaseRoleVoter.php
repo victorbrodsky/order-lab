@@ -25,6 +25,8 @@
 namespace App\UserdirectoryBundle\Security\Voter;
 
 
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
@@ -43,7 +45,7 @@ abstract class BaseRoleVoter extends Voter {
     protected $em;
     protected $container;
 
-    public function __construct(AccessDecisionManagerInterface $decisionManager, $em, $container)
+    public function __construct(AccessDecisionManagerInterface $decisionManager, EntityManagerInterface $em, ContainerInterface $container)
     {
         $this->decisionManager = $decisionManager;
         $this->em = $em;

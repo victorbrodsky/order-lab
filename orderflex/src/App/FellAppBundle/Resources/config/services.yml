@@ -10,7 +10,12 @@ twig:
         fellapp_util: "@fellapp_util"
 
 services:
-    _defaults: { public: true }
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        public: true       # Allows optimizing the container by removing unused services; this also means
+                                    # fetching services directly from the container via $container->get() won't work.
+                                    # The best practice is to be explicit about your dependencies anyway.
 
     fellapp_authentication_handler:
         class: App\FellAppBundle\Security\Authentication\FellAppLoginSuccessHandler
@@ -29,6 +34,9 @@ services:
         arguments: ["@doctrine.orm.entity_manager", "@service_container", "@templating"]
 
     fellapp_googlesheetmanagement:
+        autowire: true
+        autoconfigure: true
+        public: true
         class: App\FellAppBundle\Util\GoogleSheetManagement
         arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
@@ -50,3 +58,19 @@ services:
         arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
         tags:
             - { name: security.voter }
+
+#    string $accessToken, string $tokenType = "OAuth"
+#    fellapp_customd_defaultservicerequest:
+#        autowire: true
+#        autoconfigure: true
+#        public: true
+#        class: App\FellAppBundle\Util\CustomDefaultServiceRequest
+##        arguments: ['@app.controller', "OAuth"]
+#        arguments:
+#            $accessToken: "accessToken"
+#            $tokenType: "OAuth"
+#    App\FellAppBundle\Util\CustomDefaultServiceRequest:
+#        autowire: true
+#        arguments:
+#            $accessToken: 'accessToken'
+#            $tokenType: 'OAuth'

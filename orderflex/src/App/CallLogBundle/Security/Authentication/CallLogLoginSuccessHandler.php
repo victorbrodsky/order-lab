@@ -26,6 +26,10 @@
 namespace App\CallLogBundle\Security\Authentication;
 
 use App\UserdirectoryBundle\Security\Authentication\LoginSuccessHandler;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
@@ -39,7 +43,7 @@ use Symfony\Component\Routing\Router;
 class CallLogLoginSuccessHandler extends LoginSuccessHandler {
 
 
-    public function __construct( $container, $em )
+    public function __construct( ContainerInterface $container, EntityManagerInterface $em )
     {
         parent::__construct($container,$em);
 

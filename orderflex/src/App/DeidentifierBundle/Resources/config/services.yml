@@ -6,7 +6,12 @@ twig:
         deidentifier_sitename: '%deidentifier.sitename%'
 
 services:
-    _defaults: { public: true }
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        public: true       # Allows optimizing the container by removing unused services; this also means
+                                    # fetching services directly from the container via $container->get() won't work.
+                                    # The best practice is to be explicit about your dependencies anyway.
 #    oleg_deidentifier.example:
 #        class: App\DeidentifierBundle\Example
 #        arguments: [@service_id, "plain_value", %parameter%]

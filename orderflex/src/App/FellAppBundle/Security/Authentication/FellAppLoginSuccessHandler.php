@@ -25,6 +25,8 @@
 
 namespace App\FellAppBundle\Security\Authentication;
 
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use App\UserdirectoryBundle\Security\Authentication\LoginSuccessHandler;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
@@ -37,7 +39,7 @@ use Symfony\Component\Routing\Router;
 
 class FellAppLoginSuccessHandler extends LoginSuccessHandler {
 
-    public function __construct( $container, $em )
+    public function __construct( ContainerInterface $container, EntityManagerInterface $em )
     {
         parent::__construct($container,$em);
 

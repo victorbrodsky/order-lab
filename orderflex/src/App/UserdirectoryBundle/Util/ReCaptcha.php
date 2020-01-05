@@ -32,11 +32,11 @@
 /**
  * A ReCaptchaResponse is returned from checkAnswer().
  */
-class ReCaptchaResponse
-{
-    public $success;
-    public $errorCodes;
-}
+
+namespace App\UserdirectoryBundle\Util;
+
+
+
 class ReCaptcha
 {
     private static $_signupUrl = "https://www.google.com/recaptcha/admin";
@@ -98,9 +98,10 @@ class ReCaptcha
      */
     public function verifyResponse($remoteIp, $response)
     {
+        $recaptchaResponse = new ReCaptchaResponse();
         // Discard empty solution submissions
         if ($response == null || strlen($response) == 0) {
-            $recaptchaResponse = new ReCaptchaResponse();
+            //$recaptchaResponse = new ReCaptchaResponse();
             $recaptchaResponse->success = false;
             $recaptchaResponse->errorCodes = 'missing-input';
             return $recaptchaResponse;
@@ -115,7 +116,7 @@ class ReCaptcha
             )
         );
         $answers = json_decode($getResponse, true);
-        $recaptchaResponse = new ReCaptchaResponse();
+        //$recaptchaResponse = new ReCaptchaResponse();
         if (trim($answers ['success']) == true) {
             $recaptchaResponse->success = true;
         } else {

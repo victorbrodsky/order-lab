@@ -17,6 +17,7 @@
 
 namespace App\CallLogBundle\Util;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\ResultSetMapping;
 use App\CallLogBundle\Form\CalllogNavbarFilterType;
 use App\OrderformBundle\Entity\Accession;
@@ -47,6 +48,7 @@ use App\UserdirectoryBundle\Entity\Location;
 use App\UserdirectoryBundle\Entity\ObjectTypeText;
 use App\UserdirectoryBundle\Entity\Spot;
 use App\UserdirectoryBundle\Entity\Tracker;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -61,7 +63,7 @@ class CallLogUtil
     protected $em;
     protected $container;
 
-    public function __construct( $em, $container ) {
+    public function __construct( EntityManagerInterface $em, ContainerInterface $container ) {
         $this->em = $em;
         $this->container = $container;
     }

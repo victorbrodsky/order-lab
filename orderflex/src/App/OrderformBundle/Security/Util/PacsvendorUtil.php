@@ -34,7 +34,7 @@ use App\UserdirectoryBundle\Entity\PerSiteSettings;
 
 use App\UserdirectoryBundle\Entity\User;
 
-include_once '..\DatabaseRoutines.php';
+//include_once '..\DatabaseRoutines.php';
 
 class PacsvendorUtil {
 

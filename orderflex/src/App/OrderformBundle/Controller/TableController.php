@@ -773,7 +773,7 @@ class TableController extends Controller {
 
         //email
         $scanEmailUtil = new ScanEmailUtil($em,$this->container);
-        $scanEmailUtil->sendEmail( $user->getEmail(), $entity, $orderurl, null, $conflictStr, $submitStatusStr );
+        $scanEmailUtil->sendScanEmail( $user->getEmail(), $entity, $orderurl, null, $conflictStr, $submitStatusStr );
 
         if( isset($_POST['btnSaveOnIdleTimeout']) ) {
             return $this->redirect($this->generateUrl('scan_idlelogout-saveorder',array('flag'=>'saveorder')));

@@ -50,17 +50,20 @@ class StainHydrator extends AbstractHydrator
     protected function hydrateAllData()     
     {         
         $result = array();         
-        $cache  = array();         
+        //$cache  = array();
         foreach($this->_stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
             print_r($row);
             echo "<br>";
-            $this->hydrateRowData($row, $cache, $result);
+            //$this->hydrateRowData($row, $cache, $result); //Changed StainHydrator
+            $this->hydrateRowData($row, $result);
         }
 
         return $result;
     }
 
-    protected function hydrateRowData(array $row, array &$cache, array &$result)
+    //array $data, array &$result
+    //protected function hydrateRowData(array $row, array &$cache, array &$result) //Changed StainHydrator
+    protected function hydrateRowData(array $row, array &$result)
     {
         if(count($row) == 0) {
             return false;

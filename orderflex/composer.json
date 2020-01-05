@@ -19,6 +19,7 @@
         "friendsofsymfony/jsrouting-bundle": "^2.5",
         "friendsofsymfony/user-bundle": "^2.1",
         "google/apiclient": "1.0.*@beta",
+        "asimlqt/php-google-spreadsheet-client": "^3",
         "knplabs/knp-paginator-bundle": "^4.1",
         "knplabs/knp-snappy-bundle": "^1.6",
         "oneup/uploader-bundle": "^2.1",
@@ -54,12 +55,12 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "src/"
+            "App\\": "src/App/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "App\\Tests\\": "tests/"
+            "App\\Tests\\": "tests/App/"
         }
     },
     "replace": {

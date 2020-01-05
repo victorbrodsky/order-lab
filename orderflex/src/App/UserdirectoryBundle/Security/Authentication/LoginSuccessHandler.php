@@ -25,6 +25,8 @@
 
 namespace App\UserdirectoryBundle\Security\Authentication;
 
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Security;
@@ -52,7 +54,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
     protected $roleUnapproved;
     protected $firewallName;
 
-    public function __construct( $container, $em )
+    public function __construct( ContainerInterface $container, EntityManagerInterface $em )
     {
         $this->container = $container;
         $this->router = $container->get('router');

@@ -389,10 +389,13 @@ class SignUpController extends Controller
     //https://www.google.com/recaptcha/admin#site/341068506
     function captchaValidate($recaptcha) {
 
+        return false; //Fatal error: Cannot declare class App\UserdirectoryBundle\Util\ReCaptchaResponse, because the name is already in use
+
         //$dir = $this->container->getParameter('kernel.root_dir'); //app
         //echo "dir=".$dir."<br>";
         //current dir is "C:\bla\bla\ORDER\scanorder\Scanorders2\app"
-        require_once "../src/App/UserdirectoryBundle/Util/RecaptchaLib.php";
+        //require_once "../src/App/UserdirectoryBundle/Util/RecaptchaLib.php";
+        //include_once "../src/App/UserdirectoryBundle/Util/RecaptchaLib.php";
 
         $userSecUtil = $this->container->get('user_security_utility');
         $captchaSecretKey = $userSecUtil->getSiteSettingParameter('captchaSecretKey');

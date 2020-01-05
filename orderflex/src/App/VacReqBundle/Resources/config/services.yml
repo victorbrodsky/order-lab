@@ -12,7 +12,12 @@ twig:
 
 
 services:
-    _defaults: { public: true }
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        public: true       # Allows optimizing the container by removing unused services; this also means
+                                    # fetching services directly from the container via $container->get() won't work.
+                                    # The best practice is to be explicit about your dependencies anyway.
 
     vacreq_authentication_handler:
         class: App\VacReqBundle\Security\Authentication\VacReqLoginSuccessHandler
@@ -38,7 +43,7 @@ services:
 
     vacreq_import_data:
         class: App\VacReqBundle\Util\VacReqImportData
-        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+        arguments: ["@doctrine.orm.entity_manager", "@security.token_storage", "@service_container"]
 
     vacreq_awaycalendar_listener:
         class: App\VacReqBundle\EventListener\CalendarEventListener

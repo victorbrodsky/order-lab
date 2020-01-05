@@ -1,3 +1,31 @@
 controllers:
-    resource: ../../src/Controller/
+    resource: ../../src/App/*/Controller/
     type: annotation
+
+#OrderformBundle_controllers:
+#    resource: ../../src/App/OrderformBundle/Controller/
+#    type: annotation
+#
+#UserdirectoryBundle_controllers:
+#    resource: ../../src/App/UserdirectoryBundle/Controller/
+#    type: annotation
+#
+#FellAppBundle_controllers:
+#    resource: ../../src/App/FellAppBundle/Controller/
+#    type: annotation
+#
+#DeidentifierBundle_controllers:
+#    resource: ../../src/App/DeidentifierBundle/Controller/
+#    type: annotation
+#
+#VacReqBundle_controllers:
+#    resource: ../../src/App/VacReqBundle/Controller/
+#    type: annotation
+#
+#CallLogBundle_controllers:
+#    resource: ../../src/App/CallLogBundle/Controller/
+#    type: annotation
+#
+#TranslationalResearchBundle_controllers:
+#    resource: ../../src/App/TranslationalResearchBundle/Controller/
+#    type: annotation

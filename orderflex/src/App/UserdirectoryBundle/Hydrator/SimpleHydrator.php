@@ -50,15 +50,17 @@ class SimpleHydrator extends AbstractHydrator
     protected function hydrateAllData()     
     {         
         $result = array();         
-        $cache  = array();         
+        //$cache  = array();
         foreach($this->_stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
-            $this->hydrateRowData($row, $cache, $result);           
+            //$this->hydrateRowData($row, $cache, $result);
+            $this->hydrateRowData($row, $result); //Changed SimpleHydrator
         }
 
         return $result;
     }
 
-    protected function hydrateRowData(array $row, array &$cache, array &$result)
+    //protected function hydrateRowData(array $row, array &$cache, array &$result) //Changed SimpleHydrator
+    protected function hydrateRowData(array $row, array &$result)
     {
         if(count($row) == 0) {
             return false;

@@ -26,8 +26,13 @@ use App\UserdirectoryBundle\Util\UserUtil;
  * @author Cina
  */
 class ScanEmailUtil extends EmailUtil {
-    
-    public function sendEmail( $email, $entity, $orderurl, $text = null, $conflict=null, $submitStatusStr=null ) {
+
+    //$emails, $subject, $body, $ccs=null, $fromEmail=null, $attachmentPath=null, $attachmentFilename=null
+//    public function sendEmail( $emails, $subject, $body, $ccs=null, $fromEmail=null, $attachmentPath=null, $attachmentFilename=null ) {
+//        return $this->sendScanEmail($emails,$subject,'orderurl',$body);
+//    }
+
+    public function sendScanEmail( $email, $entity, $orderurl, $text = null, $conflict=null, $submitStatusStr=null ) {
 
         if( !$email || $email == "" ) {
             return false;

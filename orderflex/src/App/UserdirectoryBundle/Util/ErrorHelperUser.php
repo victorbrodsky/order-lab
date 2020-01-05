@@ -15,14 +15,14 @@
  *  limitations under the License.
  */
 
-namespace App\UserdirectoryBundle\Helper;
+namespace App\UserdirectoryBundle\Util;
 
 /**
- * Description of ErrorHelper
+ * Description of ErrorHelperUser
  *
  * @author Cina
  */
-class ErrorHelper {
+class ErrorHelperUser {
     
     public function getErrorMessages(\Symfony\Component\Form\Form $form)
     {
