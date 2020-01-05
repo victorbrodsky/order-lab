@@ -34,7 +34,8 @@ namespace App\FellAppBundle\Util;
 // "deletion of rows from the spreadsheet on Google Drive upon successful import"
 // "Automatically delete downloaded applications that are older than [X] year(s)".
 
-
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Google\Spreadsheet\DefaultServiceRequest;
 use Google\Spreadsheet\ServiceRequestFactory;
 use Google\Spreadsheet\Spreadsheet;
@@ -50,7 +51,7 @@ class GoogleSheetManagement {
     protected $em;
     protected $container;
 
-    public function __construct( $em, $container ) {
+    public function __construct( EntityManagerInterface $em, ContainerInterface $container ) {
 
         $this->em = $em;
         $this->container = $container;
@@ -178,15 +179,21 @@ class GoogleSheetManagement {
         }
 
         //0 initialize ServiceRequestFactory
-        //$accessToken = $accessToken."";
-        //return null;
-        $serviceRequest = new CustomDefaultServiceRequest($accessToken); //use my custom class to set CURLOPT_SSL_VERIFYPEER to false in DefaultServiceRequest
+
+        //$serviceRequest = new CustomDefaultServiceRequest($accessToken); //use my custom class to set CURLOPT_SSL_VERIFYPEER to false in DefaultServiceRequest
 //        $serviceRequest = $this->container->get('fellapp_customd_defaultservicerequest');
 //        $serviceRequest->setAccessRequest($accessToken);
 
         //TODO:  Cannot autowire service "App\FellAppBundle\Util\CustomDefaultServiceRequest": argument "$accessToken" of method "__construct()" is type-hinted "string", you should configure its value explicitly.
 //        $serviceRequest = new DefaultServiceRequest($accessToken,"OAuth");
 //        $serviceRequest::CURLOPT_SSL_VERIFYPEER = false;
+
+        //1) Use CustomDefaultServiceRequest which extends DefaultServiceRequest with CURLOPT_SSL_VERIFYPEER = false;
+        //$serviceRequest = new CustomDefaultServiceRequest($accessToken); //use my custom class to set CURLOPT_SSL_VERIFYPEER to false in DefaultServiceRequest
+        //2) Use DefaultServiceRequest and setSslVerifyPeer to false => TODO: test it!
+        $serviceRequest = new DefaultServiceRequest($accessToken);
+        $serviceRequest->setSslVerifyPeer(false);
+
         ServiceRequestFactory::setInstance($serviceRequest);
         $spreadsheetService = new SpreadsheetService();
 

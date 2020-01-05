@@ -25,6 +25,8 @@
 
 namespace App\OrderformBundle\Helper;
 
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use App\UserdirectoryBundle\Entity\InstitutionWrapper;
@@ -45,7 +47,7 @@ class OrderUtil {
     private $secTokenStorage;
     private $secAuthChecker;
 
-    public function __construct( $em, $container ) {
+    public function __construct( EntityManagerInterface $em, ContainerInterface $container ) {
         $this->em = $em;
 
         $this->container = $container;

@@ -24,7 +24,8 @@
 
 namespace App\FellAppBundle\Util;
 
-
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Box\Spout\Common\Type;
 use Box\Spout\Writer\Style\Border;
 use Box\Spout\Writer\Style\BorderBuilder;
@@ -67,7 +68,7 @@ class FellAppUtil {
     protected $systemEmail;
 
 
-    public function __construct( $em, $container ) {
+    public function __construct( EntityManagerInterface $em, ContainerInterface $container ) {
         $this->em = $em;
         $this->container = $container;
     }

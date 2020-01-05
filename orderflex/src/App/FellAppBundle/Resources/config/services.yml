@@ -30,8 +30,12 @@ services:
         arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
     fellapp_reportgenerator:
+        autowire: true
+        autoconfigure: true
+        public: true
         class: App\FellAppBundle\Util\ReportGenerator
-        arguments: ["@doctrine.orm.entity_manager", "@service_container", "@templating"]
+#        arguments: ["@doctrine.orm.entity_manager", "@service_container", "@templating"]
+        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
     fellapp_googlesheetmanagement:
         autowire: true
@@ -69,8 +73,9 @@ services:
 #        arguments:
 #            $accessToken: "accessToken"
 #            $tokenType: "OAuth"
-#    App\FellAppBundle\Util\CustomDefaultServiceRequest:
-#        autowire: true
+    App\FellAppBundle\Util\CustomDefaultServiceRequest:
+        autowire: true
+        autoconfigure: true
 #        arguments:
-#            $accessToken: 'accessToken'
+#            $accessToken: '@accessToken'
 #            $tokenType: 'OAuth'

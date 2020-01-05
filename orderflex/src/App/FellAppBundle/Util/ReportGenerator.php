@@ -26,6 +26,8 @@ namespace App\FellAppBundle\Util;
 
 
 //use Clegginabox\PDFMerger\PDFMerger;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\ORM\EntityNotFoundException;
 use App\FellAppBundle\Controller\FellAppController;
 use App\FellAppBundle\Form\FellowshipApplicationType;
@@ -54,7 +56,7 @@ class ReportGenerator {
 
     protected $em;
     protected $container;
-    protected $templating;
+    //protected $templating;
     protected $uploadDir;
     protected $processes;
     
@@ -63,10 +65,10 @@ class ReportGenerator {
     protected $runningGenerationReport;
     //protected $env;
 
-    public function __construct( $em, $container, $templating ) {
+    public function __construct( EntityManagerInterface $em, ContainerInterface $container ) {
         $this->em = $em;
         $this->container = $container;
-        $this->templating = $templating;
+        //$this->templating = $templating;
 
         $this->uploadDir = 'Uploaded';
 

@@ -28,6 +28,7 @@ namespace App\OrderformBundle\Form\CustomType;
 
 use App\UserdirectoryBundle\Form\DataTransformer\SingleUserWrapperTransformer;
 use App\UserdirectoryBundle\Form\DataTransformer\UserWrapperTransformer;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -43,6 +44,7 @@ use App\OrderformBundle\Form\DataTransformer\StainTransformer;
 
 use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use App\UserdirectoryBundle\Form\DataTransformer\StringTransformer;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class ScanCustomSelectorType extends AbstractType {
 
@@ -54,10 +56,12 @@ class ScanCustomSelectorType extends AbstractType {
     private $serviceContainer;
 
      /**
+      * "@doctrine.orm.entity_manager","@security.token_storage", "@service_container"
+      *
      * @param ObjectManager $om
      * @param ObjectManager $om
      */
-    public function __construct(ObjectManager $om, $secTokenStorage, $serviceContainer = null)
+    public function __construct(ObjectManager $om, TokenStorageInterface $secTokenStorage, ContainerInterface $serviceContainer = null)
     {
         $this->om = $om;
         $this->secTokenStorage = $secTokenStorage;

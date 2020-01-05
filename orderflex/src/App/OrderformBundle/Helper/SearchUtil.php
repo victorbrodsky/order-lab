@@ -24,13 +24,15 @@
 
 namespace App\OrderformBundle\Helper;
 
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class SearchUtil {
 
     private $em;
     private $container;
 
-    public function __construct( $em, $container ) {
+    public function __construct( EntityManagerInterface $em, ContainerInterface $container ) {
         $this->em = $em;
         $this->container = $container;
     }

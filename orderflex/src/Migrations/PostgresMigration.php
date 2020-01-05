@@ -7,14 +7,17 @@
  * Time: 3:31 PM
  */
 
-namespace App\Migration;
+namespace App\Migrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration;
+//use Doctrine\DBAL\Migrations\AbstractMigration;
+use Doctrine\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+
+//use Doctrine\Migrations\Version\Version;
 
 //In VersionYYYYMMDDHHMM.php
 //1) Add "use App\Migration\PostgresMigration;"
@@ -28,13 +31,18 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
     private $foreignkeyArr = array();
     private $counter = 0;
 
+//    public function __construct(Version $version)
+//    {
+//        parent::__construct($version);
+//    }
+
     public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;
     }
 
-    public function up(Schema $schema){}
-    public function down(Schema $schema){}
+    public function up(Schema $schema): void{}
+    public function down(Schema $schema): void{}
 
     //TODO: check if index exists in schema
     //https://www.doctrine-project.org/projects/doctrine-dbal/en/2.9/reference/schema-manager.html

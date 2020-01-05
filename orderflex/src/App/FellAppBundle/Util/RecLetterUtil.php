@@ -8,7 +8,8 @@
 
 namespace App\FellAppBundle\Util;
 
-
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use App\UserdirectoryBundle\Entity\User;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -19,7 +20,7 @@ class RecLetterUtil {
     protected $container;
     protected $uploadDir;
 
-    public function __construct( $em, $container ) {
+    public function __construct( EntityManagerInterface $em, ContainerInterface $container ) {
         $this->em = $em;
         $this->container = $container;
         $this->uploadDir = 'Uploaded';

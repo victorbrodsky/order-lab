@@ -27,6 +27,7 @@ namespace App\UserdirectoryBundle\Security\Authentication;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Security;

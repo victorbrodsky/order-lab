@@ -16,6 +16,9 @@
  */
 
 namespace App\UserdirectoryBundle\Util;
+
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Crontab\Crontab;
 use Crontab\Job;
 use App\FellAppBundle\Controller\FellAppApplicantController;
@@ -31,7 +34,7 @@ class EmailUtil {
     protected $em;
     protected $container;
 
-    public function __construct( $em, $container ) {
+    public function __construct( EntityManagerInterface $em, ContainerInterface $container ) {
         $this->em = $em;
         $this->container = $container;
     }

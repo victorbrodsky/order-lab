@@ -29,19 +29,22 @@ use Google\Spreadsheet\DefaultServiceRequest;
 
 //This class is needed just to set CURLOPT_SSL_VERIFYPEER to false in Google\Spreadsheet\DefaultServiceRequest
 
-class CustomDefaultServiceRequest extends DefaultServiceRequest
+//class CustomDefaultServiceRequest extends DefaultServiceRequest
+class CustomDefaultServiceRequest //extends DefaultServiceRequest
 {
 
-    /**
-     * Initializes the service request object.
-     *
-     * @param string $accessToken
-     * @param string $tokenType
-     */
-    public function __construct(string $accessToken, string $tokenType = "OAuth")
-    {
-        parent::__construct($accessToken,$tokenType);
-    }
+    //protected $accessToken;
+
+//    /**
+//     * Initializes the service request object.
+//     *
+//     * @param string $accessToken
+//     * @param string $tokenType
+//     */
+//    public function __construct(string $accessToken, string $tokenType = "OAuth")
+//    {
+//        parent::__construct($accessToken,$tokenType);
+//    }
 //
 //    public function setAccessRequest(string $accessToken)
 //    {

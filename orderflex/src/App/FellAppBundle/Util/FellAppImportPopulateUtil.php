@@ -26,6 +26,7 @@ namespace App\FellAppBundle\Util;
 
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
 use App\FellAppBundle\Entity\DataFile;
 use App\FellAppBundle\Entity\Interview;
@@ -46,6 +47,7 @@ use App\UserdirectoryBundle\Entity\User;
 use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use App\UserdirectoryBundle\Util\EmailUtil;
 use App\UserdirectoryBundle\Util\UserUtil;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -61,7 +63,7 @@ class FellAppImportPopulateUtil {
     protected $systemEmail;
 
 
-    public function __construct( $em, $container ) {
+    public function __construct( EntityManagerInterface $em, ContainerInterface $container ) {
 
         $this->em = $em;
         $this->container = $container;
