@@ -24,7 +24,8 @@
 
 namespace App\TranslationalResearchBundle\Util;
 
-
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use App\TranslationalResearchBundle\Entity\AntibodyList;
 use App\TranslationalResearchBundle\Entity\CommitteeReview;
 use App\TranslationalResearchBundle\Entity\Project;
@@ -46,7 +47,7 @@ class TransResImportData
     private $usernamePrefix = 'ldap-user';
     private $headerMapArr = null;
 
-    public function __construct( $em, $container ) {
+    public function __construct( EntityManagerInterface $em, ContainerInterface $container ) {
         $this->container = $container;
         $this->em = $em;
 

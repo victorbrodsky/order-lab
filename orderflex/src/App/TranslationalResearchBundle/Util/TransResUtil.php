@@ -17,13 +17,8 @@
 
 namespace App\TranslationalResearchBundle\Util;
 
-
-use Box\Spout\Common\Type;
-use Box\Spout\Writer\Style\Border;
-use Box\Spout\Writer\Style\BorderBuilder;
-use Box\Spout\Writer\Style\Color;
-use Box\Spout\Writer\Style\StyleBuilder;
-use Box\Spout\Writer\WriterFactory;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
@@ -37,8 +32,14 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Symfony\Component\Cache\Simple\ApcuCache;
 use Symfony\Component\Cache\Simple\FilesystemCache;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Zend\Cache\StorageFactory;
+//use Zend\Cache\StorageFactory;
 
+use Box\Spout\Common\Type;
+use Box\Spout\Writer\WriterFactory;
+use Box\Spout\Writer\Common\Creator\Style\BorderBuilder;
+use Box\Spout\Common\Entity\Style\Border;
+use Box\Spout\Common\Entity\Style\Color;
+use Box\Spout\Writer\Common\Creator\Style\StyleBuilder;
 
 /**
  * Created by PhpStorm.
@@ -55,7 +56,7 @@ class TransResUtil
     protected $secTokenStorage;
     protected $secAuth;
 
-    public function __construct( $em, $container ) {
+    public function __construct( EntityManagerInterface $em, ContainerInterface $container ) {
         $this->container = $container;
         $this->em = $em;
         $this->secAuth = $container->get('security.authorization_checker'); //$this->secAuth->isGranted("ROLE_USER")

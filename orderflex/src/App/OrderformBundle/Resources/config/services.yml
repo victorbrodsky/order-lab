@@ -64,3 +64,5 @@ services:
             # small performance boost
             public: false
 
+#    Doctrine\ORM\Mapping\ClassMetadata:
+#      autowire: false

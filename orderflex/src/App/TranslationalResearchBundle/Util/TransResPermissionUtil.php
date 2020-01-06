@@ -17,7 +17,8 @@
 
 namespace App\TranslationalResearchBundle\Util;
 
-
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\TranslationalResearchBundle\Entity\Invoice;
 use App\TranslationalResearchBundle\Entity\InvoiceItem;
@@ -39,7 +40,7 @@ class TransResPermissionUtil
     protected $secTokenStorage;
     protected $secAuth;
 
-    public function __construct( $em, $container ) {
+    public function __construct( EntityManagerInterface $em, ContainerInterface $container ) {
         $this->container = $container;
         $this->em = $em;
         $this->secAuth = $container->get('security.authorization_checker'); //$this->secAuth->isGranted("ROLE_USER")

@@ -1,0 +1,147 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h4 class="panel-title text-left">
+            <a data-toggle="collapse" href="#miscellaneous">
+                Miscellaneous
+            </a>
+        </h4>
+    </div>
+    <div id="miscellaneous" class="panel-collapse collapse">
+        <div class="panel-body">
+
+                <h4 class="text-info">Populate Lists</h4>
+
+                <p>
+                    <a general-data-confirm="Are you sure?"
+                       href="{{ path('generate_country_city') }}">
+                        1) Populate Country and City Lists
+                    </a>
+                </p>
+
+                <p>
+                    <a  general-data-confirm="Are you sure? This action will overwrite all values on all lists with defaults."
+                        href="{{ path('user_generate_all') }}">2) Populate All Lists with Default Values (Part A)</a>
+                </p>
+
+                <p>
+                    <a  general-data-confirm="Are you sure? This action will overwrite all values on all Patients and Scan Orders lists with defaults."
+                        href="{{ path('generate_all') }}">3) Populate All Lists with Default Values (Part B)</a>
+                </p>
+
+                <p>
+                    <a general-data-confirm="Are you sure? This action will populate new Antibody list from SQL file."
+                       href="{{ path('translationalresearch_generate_antibody_list',{'filename':'ihc_antibody_mysql.sql'}) }}">4a) Import Antibodies for the MySQL database
+                    </a>
+                </p>
+                <p>
+                    <a general-data-confirm="Are you sure? This action will populate new Antibody list from SQL file."
+                       href="{{ path('translationalresearch_generate_antibody_list',{'filename':'ihc_antibody_mssql.sql'}) }}">4b) Import Antibodies for the MS SQL database
+                    </a>
+                </p>
+                <p>
+                    <a general-data-confirm="Are you sure? This action will populate new Antibody list from SQL file."
+                       href="{{ path('translationalresearch_generate_antibody_list',{'filename':'ihc_antibody_postgresql.sql'}) }}">4c) Import Antibodies for the Postgres database
+                    </a>
+                </p>
+
+                <p>
+                    <a  general-data-confirm="Are you sure? This action will pre-generate from node fields for Call Log Book system."
+                        href="{{ path('employees_generate_form_node_tree') }}">5) Pre-generate form node tree fields for Call Log Book</a>
+                </p>
+
+                <p>
+                    <a  general-data-confirm="Are you sure? This action will pre-generate empty custom lists."
+                        href="{{ path('user_populate_platform_list_manager',{'withcustom': 'withcustomlist'}) }}">6) Pre-generate empty custom lists</a>
+                </p>
+
+                <hr>
+
+                {#<p>#}
+                    {#Populate Antibody List from SQL file:<br>#}
+                    {#<a general-data-confirm="Are you sure? This action will populate new Antibody list from SQL file."#}
+                       {#href="{{ path('translationalresearch_generate_antibody_list',{'filename':'ihc_antibody_mysql.sql'}) }}">a) MySql#}
+                    {#</a>#}
+                    {#<br>#}
+                    {#<a general-data-confirm="Are you sure? This action will populate new Antibody list from SQL file."#}
+                       {#href="{{ path('translationalresearch_generate_antibody_list',{'filename':'ihc_antibody_mssql.sql'}) }}">b) Microsoft SQL (MSSql)#}
+                    {#</a>#}
+                    {#<br>#}
+                    {#<a general-data-confirm="Are you sure? This action will populate new Antibody list from SQL file."#}
+                       {#href="{{ path('translationalresearch_generate_antibody_list',{'filename':'ihc_antibody_postgresql.sql'}) }}">c) PostgreSql#}
+                    {#</a>#}
+                {#</p>#}
+
+                {#<hr>#}
+
+                <p>
+                    <a general-data-confirm="Are you sure? This action will populate new users from spreadsheet."
+                       href="{{ path('generate_users') }}">Populate Users From Spreadsheet (this is optional and should only be run once upon system initialization).
+                    </a>
+                </p>
+
+                <hr>
+
+                <p>
+                    <a general-data-confirm="Are you sure? This action will generate metaphone key for all empty patients last, first, middle names."
+                       href="{{ path('user_generate-patient-metaphone-name') }}">Generate Metaphone Keys for all empty first, last, and middle name fields for patients (if Metaphone was enabled after some patient records were added).
+                    </a>
+                </p>
+
+                <hr>
+
+                <p><a  data-confirm="Are you sure? This action will create a Test Patient in Database."
+                       href="{{ path('scan_testpatient_new') }}">Create a Test Patient</a>
+                </p>
+
+                <hr>
+
+                <a href="{{ path('generate_residencyspecialties') }}">
+                    Populate Residency Specialties List with Default Values
+                </a>
+
+                <hr>
+                <h4 class="text-info">Preset Form Node Tree</h4>
+                <p>
+                    <a general-data-confirm="Are you sure?" href="{{ path('employees_generate_form_node_tree') }}">Preset Form Node Tree</a>
+                </p>
+                <p>
+                    <a general-data-confirm="Are you sure?" href="{{ path('employees_generate_test_form_node_tree') }}">Preset Test Form Node Tree</a>
+                </p>
+
+                <hr>
+                <h4 class="text-info">Stains</h4>
+                <p>
+                    <a href="{{ path('generate_stain') }}">Populate Stain List with Default Values</a>
+                </p>
+
+                <p>
+                    <a href="{{ path('stain-list-excel',{'sort':'ent.type','direction':'asc'}) }}">Download Stains in Spreadsheet</a>
+                </p>
+
+                <p>
+                    <a href="{{ path('stain_update_fulltitle') }}">Update Stain Titles</a>
+                </p>
+
+        </div>
+    </div>
+</div>
+
+{% endif %}

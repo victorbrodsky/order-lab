@@ -41,6 +41,9 @@ use App\UserdirectoryBundle\Form\DataTransformer\StringTransformer;
 use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use App\UserdirectoryBundle\Form\DataTransformer\GenericManyToManyTransformer;
 
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+
 class CustomSelectorType extends AbstractType {
 
     /**
@@ -54,7 +57,7 @@ class CustomSelectorType extends AbstractType {
      * @param ObjectManager $om
      * @param ObjectManager $om
      */
-    public function __construct(ObjectManager $om, $secTokenStorage, $serviceContainer)
+    public function __construct(ObjectManager $om, TokenStorageInterface $secTokenStorage, ContainerInterface $serviceContainer)
     {
         $this->om = $om;
         $this->secTokenStorage = $secTokenStorage;

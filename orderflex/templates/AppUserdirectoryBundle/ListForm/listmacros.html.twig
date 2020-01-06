@@ -1,0 +1,1045 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{#macro for list#}
+
+
+{% macro listIndex( entities, pathbase, withCreateNewEntityLink, linkToListId, postPath ) %}
+
+    {% import _self as listmacros %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+
+    <table class="records_list table table-hover table-condensed text-left">
+        <thead>
+        <tr>
+            <th>{{ knp_pagination_sortable(entities, 'ID', 'ent.id') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Name', 'ent.name') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Short Name', 'ent.shortname') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Abbreviation', 'ent.abbreviation') }}</th>
+
+            {% if entities|first.institution is defined %}
+                <th>{{ knp_pagination_sortable(entities, 'Institution', 'institution.name') }}</th>
+            {% endif %}
+
+            {% if entities|first.institutions is defined %}
+                <th>{{ knp_pagination_sortable(entities, 'Institutions', 'institutions.name') }}</th>
+            {% endif %}
+
+            {% if entities|first.collaborationType is defined %}
+                <th>{{ knp_pagination_sortable(entities, 'Collaboration Type', 'collaborationType.name') }}</th>
+            {% endif %}
+
+            {% if entities|first.level is defined %}
+                <th>{{ knp_pagination_sortable(entities, 'Level', 'ent.level') }}</th>
+            {% endif %}
+
+            {% if entities|first.fellowshipSubspecialty is defined %}
+                <th>{{ knp_pagination_sortable(entities, 'Fellowship Subspecialty', 'fellowshipSubspecialty.name') }}</th>
+            {% endif %}
+
+            {% if entities|first.organizationalGroupType is defined %}
+                <th>{{ knp_pagination_sortable(entities, 'Organizational Group Type', 'organizationalGroupType.name') }}</th>
+            {% endif %}
+
+            {% if entities|first.nativeName is defined %}
+                <th>{{ knp_pagination_sortable(entities, 'Native Name', 'ent.nativeName') }}</th>
+            {% endif %}
+
+            {% if entities|first.researchlab is defined %}
+                <th>{{ knp_pagination_sortable(entities, 'Principal Investigator(s)', 'usercount') }}</th>
+            {% endif %}
+
+            {% if entities|first.parent is defined %}
+                <th>
+                    {{ knp_pagination_sortable(entities, 'Parent(s)', 'parent.name') }}
+                </th>
+            {% endif %}
+
+            {% if entities|first.attributes is defined %}
+                <th>{{ knp_pagination_sortable(entities, 'Attribute(s)', 'attributes.value') }}</th>
+            {% endif %}
+
+            {#role attributes#}
+            {% if entities|first.value is defined %}
+                <th>{{ knp_pagination_sortable(entities, 'Value', 'ent.value') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Roles', 'roles.name') }}</th>
+            {% endif %}
+
+            {% if entities|first.action is defined %}
+                <th>{{ knp_pagination_sortable(entities, 'Action', 'ent.action') }}</th>
+            {% endif %}
+
+            {% if entities|first.permissionObjectList is defined %}
+                <th>{{ knp_pagination_sortable(entities, 'Object', 'permissionObjectList.name') }}</th>
+            {% endif %}
+            {% if entities|first.permissionActionList is defined %}
+                <th>{{ knp_pagination_sortable(entities, 'Action', 'permissionActionList.name') }}</th>
+            {% endif %}
+
+            {% if entities|first.alias is defined %}
+                <th>{{ knp_pagination_sortable(entities, 'Alias', 'ent.alias') }}</th>
+            {% endif %}
+
+            {% if entities|first.description is defined %}
+                <th>{{ knp_pagination_sortable(entities, 'Description', 'ent.description') }}</th>
+            {% endif %}
+
+            {% if entities|first.original is defined %}
+                <th>{{ knp_pagination_sortable(entities, 'Canonical', 'original.name') }}</th>
+            {% endif %}
+
+            {% if entities|first.synonyms is defined %}
+                <th>{{ knp_pagination_sortable(entities, 'Synonyms', 'synonyms.name') }}</th>
+            {% endif %}
+
+            {% if entities|first.selfSignUp is defined %}
+                <th>{{ knp_pagination_sortable(entities, 'Show Link On Home Page', 'ent.showLinkHomePage') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Show Link On Navbar', 'ent.showLinkNavbar') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Accessibility', 'ent.accessibility') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Self Sign Up', 'ent.selfSignUp') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Lowest Roles', 'ent.lowestRoles') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'From Email', 'ent.fromEmail') }}</th>
+            {% endif %}
+
+            {% if entities|first.section is defined and entities|first.productId is defined and entities|first.feeUnit is defined %}
+                <th>{{ knp_pagination_sortable(entities, 'Section', 'ent.section') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Product ID', 'ent.productId') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Fee', 'ent.fee') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Fee Unit', 'ent.feeUnit') }}</th>
+            {% endif %}
+
+            {% if entities|first.url is defined %}
+                <th>{{ knp_pagination_sortable(entities, 'URL', 'ent.url') }}</th>
+            {% endif %}
+
+            {#{% if entities|first.listId is defined and entities|first.listName is defined %}#}
+                {#<th>{{ knp_pagination_sortable(entities, 'List ID', 'ent.listId') }}</th>#}
+                {#<th>{{ knp_pagination_sortable(entities, 'List Name', 'ent.listName') }}</th>#}
+                {#<th>{{ knp_pagination_sortable(entities, 'List Root Name', 'ent.listRootName') }}</th>#}
+            {#{% endif %}#}
+
+            {% if entities|first.sites is defined %}
+                <th>{{ knp_pagination_sortable(entities, 'Site', 'sites.name') }}</th>
+            {% endif %}
+
+            <th>{{ knp_pagination_sortable(entities, 'Type', 'ent.type') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Display Order', 'ent.orderinlist') }}</th>
+
+            <th>{{ knp_pagination_sortable(entities, 'Object Type', 'objectType.name') }}</th>
+            {#<th>{{ knp_pagination_sortable(entities, 'Object Namespace', 'ent.entityNamespace') }}</th>#}
+            <th>{{ knp_pagination_sortable(entities, 'List Object Name', 'ent.entityName') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'List Object ID', 'ent.entityId') }}</th>
+
+            <th>{{ knp_pagination_sortable(entities, 'Link to List ID', 'ent.linkToListId') }}</th>
+
+            {#{% if entities|first.listName is defined and entities|first.listRootName is defined %}#}
+                {#<th>{{ knp_pagination_sortable(entities, 'Database Entity Name', 'ent.listName') }}</th>#}
+                {#<th>{{ knp_pagination_sortable(entities, 'Root Name', 'ent.listRootName') }}</th>#}
+            {#{% endif %}#}
+
+            <th>{{ knp_pagination_sortable(entities, 'Creator', 'creator.username') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Creation Date', 'ent.createdate') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Updated By', 'updatedby.username') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Updated On', 'ent.updatedon') }}</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody data-link="row" class="rowlink" data-target="a.list-row-mainlink">
+
+        {% for entity in entities %}
+            <tr>
+                <td>
+                    {% if linkToListId and not postPath %}
+                        <a class="list-row-mainlink" href="{{ path('platform_list_manager_element', { 'linkToListId':linkToListId,'entityId': entity.id }) }}">{{ entity.id }}</a>
+                    {% else %}
+                        <a class="list-row-mainlink" href="{{ path(pathbase~'_show'~postPath, { 'id': entity.id }) }}">{{ entity.id }}</a>
+                    {% endif %}
+                </td>
+                <td>{{ entity.name }}</td>
+                <td>{{ entity.shortname }}</td>
+                <td>{{ entity.abbreviation }}</td>
+
+
+                {% if entity.institution is defined %}
+                    <td>
+                        {{ entity.institution }}
+                    </td>
+                {% endif %}
+
+                {% if entity.institutions is defined %}
+                    <td>
+                        {% for institution in entity.institutions %}
+                            {{ institution }}
+                        {% endfor %}
+                    </td>
+                {% endif %}
+
+                {% if entity.collaborationType is defined %}
+                    <td>
+                        {{ entity.collaborationType }}
+                    </td>
+                {% endif %}
+
+                {% if entity.level is defined %}
+                    <td>
+                        {{ entity.level }}
+                    </td>
+                {% endif %}
+
+                {% if entity.fellowshipSubspecialty is defined %}
+                    <td>
+                        {{ entity.fellowshipSubspecialty }}
+                    </td>
+                {% endif %}
+
+                {% if entity.organizationalGroupType is defined %}
+                    <td>
+                        {{ entity.organizationalGroupType }}
+                    </td>
+                {% endif %}
+
+                {% if entity.nativeName is defined %}
+                    <td>
+                        {{ entity.nativeName }}
+                    </td>
+                {% endif %}
+
+                {% if entity.researchlab is defined %}
+                    <td>
+                        {{ listmacros.showResearchLabPi( entity.researchlab ) }}
+                    </td>
+                {% endif %}
+
+                {% if entity.parent is defined %}
+                    <td class="rowlink-skip">
+                        {% if entity.level is defined %}
+                            {{ usermacros.getNestedTree(entity.parent,'nodelink') }}
+                        {% else %}
+                            {{ usermacros.getInstitutionalTree(entity.parent,'nodelink') }}
+                        {% endif %}
+                    </td>
+                {% endif %}
+
+                {% if entity.attributes is defined %}
+                    <td>
+                        {% for attribute in entity.attributes %}
+                            {{ attribute }}
+                        {% endfor %}
+                    </td>
+                {% endif %}
+
+                {% if entity.value is defined %}
+                    <td>{{ entity.value }}</td>
+                {% endif %}
+                {% if entity.roles is defined %}
+                    <td>
+                        {% for role in entity.roles %}
+                            {{ role }}
+                        {% endfor %}
+                    </td>
+                {% endif %}
+
+                {% if entity.action is defined %}
+                    <td>{{ entity.action }}</td>
+                {% endif %}
+
+                {% if entity.permissionObjectList is defined %}
+                    <td>{{ entity.permissionObjectList }}</td>
+                {% endif %}
+                {% if entity.permissionActionList is defined %}
+                    <td>{{ entity.permissionActionList }}</td>
+                {% endif %}
+
+                {% if entity.alias is defined %}
+                    <td>{{ entity.alias }}</td>
+                {% endif %}
+
+                {% if entity.description is defined %}
+                    <td>{{ entity.description }}</td>
+                {% endif %}
+
+                {% if entity.original is defined %}
+                    <td>{{ entity.original }}</td>
+                {% endif %}
+
+                {% if entity.synonyms is defined %}
+                    <td>
+                        {% for synonym in entity.synonyms %}
+                            <p>{{ synonym }}</p>
+                        {% endfor %}
+                    </td>
+                {% endif %}
+
+                {% if entity.selfSignUp is defined %}
+                    <td>
+                        {% if entity.showLinkHomePage == 1 %}
+                            Yes
+                        {% else %}
+                            No
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if entity.showLinkNavbar == 1 %}
+                            Yes
+                        {% else %}
+                            No
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {% if entity.abbreviation == "employees" %}
+                            Yes
+                        {% else %}
+                            {% if entity.accessibility == 1 %}
+                                Yes
+                            {% else %}
+                                No
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if entity.selfSignUp == 1 %}
+                            Yes
+                        {% else %}
+                            No
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% for lowestRole in entity.lowestRoles %}
+                            "{{ lowestRole.getAlias() }}"<br>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {{ entity.fromEmail }}
+                    </td>
+                {% endif %}
+
+                {% if entity.section is defined and entity.productId is defined and entity.feeUnit is defined and entity.fee is defined %}
+                    <td>{{ entity.section }}</td>
+                    <td>{{ entity.productId }}</td>
+                    <td>{{ entity.fee }}</td>
+                    <td>{{ entity.feeUnit }}</td>
+                {% endif %}
+
+                {% if entity.url is defined %}
+                    <td>{{ entity.url }}</td>
+                {% endif %}
+
+                {#{% if entity.listId is defined and entity.listName is defined %}#}
+                    {#<td class="rowlink-skip">#}
+                        {#{{ entity.listId }}#}
+                        {#<a href="{{ path('platform_list_manager', { 'listId': entity.listId }) }}">{{ entity.listId }}</a>#}
+                    {#</td>#}
+                    {#<td>{{ entity.listName }}</td>#}
+                    {#<td>{{ entity.listRootName }}</td>#}
+                {#{% endif %}#}
+
+                {% if entity.sites is defined %}
+                    <td>
+                        {% for site in entity.sites %}
+                            <p>{{ site.name }}</p>
+                        {% endfor %}
+                    </td>
+                {% endif %}
+
+
+                <td>{{ entity.type }}</td>
+                <td>{{ entity.orderinlist }}</td>
+
+                <td>{{ entity.objectType }}</td>
+                {#<td>{{ entity.entityNamespace }}</td>#}
+                <td>{{ entity.entityName }}</td>
+
+                {#<td>{{ entity.entityId }}</td>#}
+                {% set fullUrl = user_security_utility.getAbsoluetFullListUrl(entity,app.request) %}
+                {% if entity.entityId and fullUrl %}
+                    <td class="rowlink-skip">
+                        <a href="{{ fullUrl }}" target="_blank">{{ entity.entityId }}</a>
+                    </td>
+                {% else %}
+                    <td>
+                        {{ entity.entityId }}
+                    </td>
+                {% endif %}
+
+                {#<td>{{ entity.linkToListId }}</td>#}
+                {#{% if entity.linkToListId is defined and entity.listRootName is defined %}#}
+                {% if entity.linkToListId %}
+                    <td class="rowlink-skip">
+                        <a href="{{ path('platform_list_manager', { 'listId': entity.linkToListId }) }}" target="_blank">{{ entity.linkToListId }}</a>
+                    </td>
+                {% else %}
+                    <td>{{ entity.linkToListId }}</td>
+                {% endif %}
+
+                {#{% if entity.listName is defined and entity.listRootName is defined %}#}
+                    {#<td>{{ entity.listName }}</td>#}
+                    {#<td>{{ entity.listRootName }}</td>#}
+                {#{% endif %}#}
+
+                <td>{{ entity.creator }}</td>
+                <td>{% if entity.createdate %}{{ entity.createdate|date('Y-m-d H:i:s') }}{% endif %}</td>
+
+                <td>
+                    {% if entity.updatedby %}
+                        {{ entity.updatedby }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if entity.updatedon %}
+                        {{ entity.updatedon|date('Y-m-d H:i:s') }}
+                    {% endif %}
+                </td>
+
+
+                {#<td class="rowlink-skip">#}
+                    {#<a class="btn btn-xs btn-default" href="{{ path(pathbase~'_edit', { 'id': entity.id }) }}">Edit</a>#}
+                {#</td>#}
+                <td class="rowlink-skip">
+
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            Action <span class="caret"></span>
+                        </button>
+
+                        <ul class="dropdown-menu dropdown-menu-right">
+
+                            <li>
+                                {#{% if linkToListId and not postPath %}#}
+                                    {#<a class="list-row-mainlink" href="{{ path('platform_list_manager_element', { 'linkToListId':linkToListId,'entityId': entity.id }) }}">Show</a>#}
+                                {#{% else %}#}
+                                    {#<a class="list-row-mainlink" href="{{ path(pathbase~'_edit'~postPath, { 'id': entity.id }) }}">Edit</a>#}
+                                {#{% endif %}#}
+                                <a class="list-row-mainlink" href="{{ path(pathbase~'_edit'~postPath, { 'id': entity.id }) }}">Edit</a>
+                            </li>
+
+                            {% if entity.getType()|lower != 'disabled' %}
+                                <li>
+                                    <a
+                                        general-data-confirm="Are you sure you would like to disable this entry?"
+                                        href="{{ path('platform_list_manager_element_change_type', { 'pathbase':pathbase, 'entityId':entity.id, 'type':'disabled' }) }}">Disable
+                                    </a>
+                                </li>
+                            {% endif %}
+                            {% if entity.getType()|lower != 'default' and entity.getType()|lower != 'user-added' %}
+                                <li>
+                                    <a
+                                        general-data-confirm="Are you sure you would like to enable and set this entry's type to 'Default'?"
+                                        href="{{ path('platform_list_manager_element_change_type', { 'pathbase':pathbase, 'entityId':entity.id, 'type':'default' }) }}">Enable
+                                    </a>
+                                </li>
+                            {% endif %}
+
+                        </ul>
+
+                    </div>
+
+
+                </td>
+
+            </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+
+    <div class="navigation">
+        {#entities len={{ entities|length }}#}
+        {{ knp_pagination_render(entities) }}
+    </div>
+
+    {% if withCreateNewEntityLink == true %}
+        <a href="{{ path(pathbase~'_new'~postPath) }}">
+            Create a new entry
+        </a>
+    {% endif %}
+
+{% endmacro %}
+
+
+{% macro showResearchLabPi( labs, simplefield ) %}
+    {% if labs is defined %}
+        {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+        {% for lab in labs %}
+            {% if lab.researchPI == true %}
+
+                {% if lab.user|length > 0 and simplefield is defined and simplefield == true %}
+                    <strong>Principal Investigator(s):</strong><br>
+                {% endif %}
+
+                {% for user in lab.user %}
+                    {{ user.getUserNameStr() }}
+                    <br>
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+{% endmacro %}
+
+
+{% macro listNew( form, pathbase, postPath ) %}
+
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import _self as listmacros %}
+
+    {#{{ form(form) }}#}
+    {{ form_start(form) }}
+
+    {% if form.types is defined and form.vars.value.types is defined %}
+        {{ formmacros.field(form.types) }}
+    {% endif %}
+
+    {{ formmacros.field(form.list.name) }}
+    {{ formmacros.field(form.list.shortname) }}
+    {{ formmacros.field(form.list.abbreviation) }}
+
+    {#{% if form.institution is defined %}#}
+        {#{{ formmacros.field(form.institution) }}#}
+        {#&#123;&#35;{{ treemacros.compositeTreeNode(form.institution,'','') }}&#35;&#125;#}
+    {#{% endif %}#}
+
+    {#{% if form.institutions is defined %}#}
+        {#{{ formmacros.field(form.institutions) }}#}
+    {#{% endif %}#}
+
+    {% if form.level is defined %}
+        {{ formmacros.field(form.level) }}
+    {% endif %}
+
+    {% if form.organizationalGroupType is defined %}
+        {{ formmacros.field(form.organizationalGroupType) }}
+    {% endif %}
+
+    {% if form.nativeName is defined %}
+        {{ formmacros.field(form.nativeName) }}
+    {% endif %}
+
+    {% if form.parent is defined and entity.level is not defined and form.vars.value.parent is defined %}
+        {{ formmacros.field(form.parent) }}
+    {% endif %}
+
+    {% if form.attributes is defined and form.vars.value.attributes is defined %}
+        {{ formmacros.field(form.attributes) }}
+    {% endif %}
+
+    {% if form.value is defined %}
+        {{ formmacros.field(form.value) }}
+    {% endif %}
+
+    {% if form.list.original is defined %}
+        {{ formmacros.field(form.list.original) }}
+    {% endif %}
+
+    {% if form.list.synonyms is defined %}
+        {{ formmacros.field(form.list.synonyms) }}
+    {% endif %}
+
+    {% if form.action is defined %}
+        {{ formmacros.field(form.action) }}
+    {% endif %}
+
+    {% if form.alias is defined %}
+        {{ formmacros.field(form.alias) }}
+    {% endif %}
+
+    {% if form.list.description is defined %}
+        {{ formmacros.field(form.list.description) }}
+    {% endif %}
+
+    {{ formmacros.field(form.list.type) }}
+
+    {{ formmacros.field(form.list.creator) }}
+
+    {% if form.list.createdate is defined %}
+        {{ formmacros.field(form.list.createdate) }}
+    {% endif %}
+
+    {% if form.list.version is defined %}
+        {{ formmacros.field(form.list.version) }}
+    {% endif %}
+
+    {{ formmacros.field(form.list.orderinlist) }}
+
+    {{ formmacros.field(form.list.objectType) }}
+    {{ formmacros.field(form.list.entityNamespace) }}
+    {{ formmacros.field(form.list.entityName) }}
+    {{ formmacros.field(form.list.entityId) }}
+
+    {{ formmacros.field(form.list.linkToListId) }}
+
+    {#{% if form.list.updatedby is defined %}#}
+        {#{{ formmacros.field(form.list.updatedby) }}#}
+    {#{% endif %}#}
+
+    {#{% if form.list.updatedon is defined %}#}
+        {#{{ formmacros.field(form.list.updatedon) }}#}
+    {#{% endif %}#}
+
+
+    {#additional attributes#}
+    {{ listmacros.additionalRelationships(form,entity) }}
+
+    {#permissionList attributes#}
+    {{ listmacros.permissionListAttributes( form ) }}
+
+    {#role's permissions#}
+    {% if form.permissions is defined %}
+        {% import "AppUserdirectoryBundle::Default/userformmacros.html.twig" as userform %}
+        {{ userform.permissionSection(form.permissions, 'new', employees_sitename, "in", "Permission(s)",true) }}
+    {% endif %}
+
+    {{ form_widget(form.submit) }}
+    <a class="btn btn-info" type="button" href="{{ path(pathbase~'-list'~postPath) }}">Cancel</a>
+
+    {{ form(form) }}
+
+    {{ form_end(form) }}
+
+    <br>
+    <p>
+        <a href="{{ path(pathbase~'-list'~postPath) }}">
+            Back to the list
+        </a>
+    </p>
+
+{% endmacro %}
+
+
+
+
+{% macro listEdit( entity, edit_form, delete_form, pathbase, cycle, postPath, showEditBtn ) %}
+
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import _self as listmacros %}
+
+    <input type="hidden" id="formcycle" value="{{ cycle }}" />
+
+    {{ form_start(edit_form) }}
+
+    {% if edit_form.parent is defined and entity.parent is defined and entity.level is not defined %}
+        {{ formmacros.field(edit_form.parent) }}
+    {% endif %}
+
+    {% if edit_form.types is defined and edit_form.vars.value.types is defined %}
+        {{ formmacros.field(edit_form.types) }}
+    {% endif %}
+
+    {{ formmacros.field(edit_form.list.name) }}
+    {{ formmacros.field(edit_form.list.shortname) }}
+    {{ formmacros.field(edit_form.list.abbreviation) }}
+
+    {% if edit_form.level is defined %}
+        {{ formmacros.field(edit_form.level) }}
+    {% endif %}
+
+    {% if edit_form.organizationalGroupType is defined %}
+        {{ formmacros.field(edit_form.organizationalGroupType) }}
+    {% endif %}
+
+    {% if edit_form.nativeName is defined %}
+        {{ formmacros.field(edit_form.nativeName) }}
+    {% endif %}
+
+    {% if edit_form.value is defined %}
+        {{ formmacros.field(edit_form.value) }}
+    {% endif %}
+
+    {% if edit_form.list.original is defined %}
+        {{ formmacros.field(edit_form.list.original) }}
+    {% endif %}
+
+    {% if edit_form.list.synonyms is defined %}
+        {{ formmacros.field_notempty(edit_form.list.synonyms,cycle) }}
+    {% endif %}
+
+    {% if edit_form.action is defined %}
+        {{ formmacros.field(edit_form.action) }}
+    {% endif %}
+
+    {% if edit_form.alias is defined %}
+        {{ formmacros.field(edit_form.alias) }}
+    {% endif %}
+
+    {% if edit_form.list.description is defined %}
+        {{ formmacros.field(edit_form.list.description) }}
+    {% endif %}
+
+    {% if edit_form.attributes is defined and entity.attributes is defined %}
+        {{ formmacros.field(edit_form.attributes) }}
+    {% endif %}
+
+    {{ formmacros.field(edit_form.list.type) }}
+
+    {{ formmacros.field(edit_form.list.orderinlist) }}
+
+    {{ formmacros.field(edit_form.list.objectType) }}
+    {{ formmacros.field(edit_form.list.entityNamespace) }}
+    {{ formmacros.field(edit_form.list.entityName) }}
+    {{ formmacros.field(edit_form.list.entityId) }}
+
+    {{ formmacros.field(edit_form.list.linkToListId) }}
+
+    {{ formmacros.field(edit_form.list.creator) }}
+
+    {% if edit_form.list.createdate is defined %}
+        {{ formmacros.field(edit_form.list.createdate) }}
+    {% endif %}
+
+    {% if edit_form.list.version is defined %}
+        {{ formmacros.field(edit_form.list.version) }}
+    {% endif %}
+
+    {% if entity.updatedby %}
+        {#{{ formmacros.field(edit_form.list.updatedby) }}#}
+        {{ formmacros.simplefield("Updated by:",entity.updatedby,"","disabled") }}
+    {% endif %}
+
+    {#{% if edit_form.list.updatedon is defined %}#}
+        {#{{ formmacros.field(edit_form.list.updatedon) }}#}
+    {#{% endif %}#}
+    {% if entity.updatedon %}
+        {#{{ entity.updatedon|date('Y-m-d H:i:s') }}#}
+        {{ formmacros.simplefield("Updated on:",entity.updatedon|date('Y-m-d H:i:s'),"","disabled") }}
+    {% endif %}
+
+    {% if entity.researchlab is defined %}
+        <br>
+        <p>
+        {{ listmacros.showResearchLabPi( entity.researchlab, true ) }}
+        </p>
+    {% endif %}
+
+
+    {#additional attributes#}
+    {{ listmacros.additionalRelationships(edit_form,entity) }}
+
+    {#permissionList attributes#}
+    {{ listmacros.permissionListAttributes( edit_form ) }}
+
+    {#role's permissions#}
+    {% if edit_form.permissions is defined %}
+        {% import "AppUserdirectoryBundle::Default/userformmacros.html.twig" as userform %}
+        {{ userform.permissionSection(edit_form.permissions, cycle, employees_sitename, "in", "Permission(s)",true) }}
+    {% endif %}
+
+    {% if edit_form.submit is defined %}
+        <br />
+        <p>
+            {{ form_widget(edit_form.submit) }}
+            <a class="btn btn-info" type="button" href="{{ path(pathbase~'_show'~postPath, { 'id': entity.id }) }}">Cancel</a>
+            {#<a href="{{ path('platform_list_manager_element', { 'linkToListId':linkToListId,'id': entity.id }) }}">Cancel</a>#}
+        </p>
+    {% endif %}
+
+    {{ form(edit_form) }}
+
+    {{ form_end(edit_form) }}
+
+    {#{% if cycle is defined and cycle == 'edit' %}#}
+        {#<div class="record_actions">#}
+            {#{{ form(delete_form) }}#}
+        {#</div>#}
+    {#{% endif %}#}
+
+    <br>
+
+    {% if cycle == 'show' %}
+        {% set showEdit = false %}
+        {#{% if is_granted('ROLE_USERDIRECTORY_EDITOR') or is_granted('ROLE_SCANORDER_PROCESSOR') %}#}
+            {#{% set showEdit = true %}#}
+        {#{% endif %}#}
+        {% if showEditBtn is defined and showEditBtn %}
+            {% set showEdit = true %}
+        {% endif %}
+        {% if showEdit %}
+            <p>
+                <a class="btn btn-success" href="{{ path(pathbase~'_edit'~postPath, { 'id': entity.id }) }}">Edit</a>
+            </p>
+        {% endif %}
+    {% endif %}
+
+    <br />
+
+    <p>
+        <a href="{{ path(pathbase~'-list'~postPath) }}">Back to the list</a>
+    </p>
+
+{% endmacro %}
+
+
+{#additional attributes#}
+{% macro additionalRelationships( form, entity ) %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+
+    <hr>
+
+    {% if form.url is defined %}
+        {{ formmacros.field(form.url) }}
+    {% endif %}
+    {% if form.exclusivelySites is defined %}
+        {{ formmacros.field(form.exclusivelySites) }}
+    {% endif %}
+
+    {% if form.listName is defined and form.listRootName is defined %}
+        {#{{ formmacros.field(form.linkToListId) }}#}
+        {{ formmacros.field(form.listName) }}
+        {{ formmacros.field(form.listRootName) }}
+    {% endif %}
+
+    {% if form.sites is defined %}
+        {{ formmacros.field(form.sites) }}
+    {% endif %}
+
+
+    {#floors display for: suites, rooms#}
+    {% if form.floors is defined %}
+        {{ formmacros.field(form.floors) }}
+    {% endif %}
+
+    {% if form.floorSide is defined %}
+        {{ formmacros.field(form.floorSide) }}
+    {% endif %}
+
+    {#suites display for: floor, rooms#}
+    {% if form.suites is defined %}
+        {{ formmacros.field(form.suites) }}
+    {% endif %}
+
+    {#rooms display for: floor#}
+    {% if form.rooms is defined %}
+        {{ formmacros.field(form.rooms) }}
+    {% endif %}
+
+    {#buildings display for: suite, room#}
+    {% if form.buildings is defined %}
+        {{ formmacros.field(form.buildings) }}
+    {% endif %}
+
+    {#departments display for: suite, room#}
+    {% if form.departments is defined %}
+        {{ formmacros.field(form.departments) }}
+    {% endif %}
+
+
+    {% if form.institution is defined %}
+        {{ formmacros.field(form.institution) }}
+        {#{{ treemacros.compositeTreeNode(form.institution,'','') }}#}
+    {% endif %}
+
+    {% if form.institutions is defined %}
+        {{ formmacros.field(form.institutions) }}
+    {% endif %}
+
+    {% if form.root is defined %}
+        {{ formmacros.field(form.root) }}
+    {% endif %}
+    {% if form.lft is defined %}
+        {{ formmacros.field(form.lft) }}
+    {% endif %}
+    {% if form.rgt is defined %}
+        {{ formmacros.field(form.rgt) }}
+    {% endif %}
+
+    <hr>
+    {% if form.collaborationType is defined %}
+        {{ formmacros.field(form.collaborationType) }}
+    {% endif %}
+    {% if form.collaborationInstitutions is defined %}
+        {{ formmacros.field(form.collaborationInstitutions) }}
+    {% endif %}
+
+    {% if form.fellowshipSubspecialty is defined %}
+        {{ formmacros.field(form.fellowshipSubspecialty) }}
+    {% endif %}
+
+    {% if form.formNodes is defined %}
+        {{ formmacros.field(form.formNodes) }}
+    {% endif %}
+
+    {% if form.showLabel is defined %}
+        {{ formmacros.checkbox(form.showLabel) }}
+    {% endif %}
+
+    {% if form.placeholder is defined %}
+        {{ formmacros.field(form.placeholder) }}
+    {% endif %}
+
+    {% if form.visible is defined %}
+        {{ formmacros.checkbox(form.visible) }}
+    {% endif %}
+
+    {% if form.required is defined %}
+        {{ formmacros.checkbox(form.required) }}
+    {% endif %}
+
+    {% if form.receivedValueEntityNamespace is defined %}
+        {{ formmacros.field(form.receivedValueEntityNamespace) }}
+    {% endif %}
+    {% if form.receivedValueEntityName is defined %}
+        {{ formmacros.field(form.receivedValueEntityName) }}
+    {% endif %}
+    {% if form.receivedValueEntityId is defined %}
+        {{ formmacros.field(form.receivedValueEntityId) }}
+    {% endif %}
+
+    {#UserWrapper#}
+    {% if form.user is defined %}
+        {{ formmacros.field(form.user) }}
+    {% endif %}
+    {% if form.userWrapperSpecialty is defined %}
+        {{ formmacros.field(form.userWrapperSpecialty) }}
+    {% endif %}
+    {% if form.userWrapperPhone is defined %}
+        {{ formmacros.field(form.userWrapperPhone) }}
+    {% endif %}
+    {% if form.userWrapperEmail is defined %}
+        {{ formmacros.field(form.userWrapperEmail) }}
+    {% endif %}
+
+    {#RequestCategoryTypeList#}
+    {% if form.section is defined %}
+        {{ formmacros.field(form.section) }}
+    {% endif %}
+    {% if form.productId is defined %}
+        {{ formmacros.field(form.productId) }}
+    {% endif %}
+    {% if form.fee is defined %}
+        {{ formmacros.field(form.fee) }}
+    {% endif %}
+    {% if form.feeUnit is defined %}
+        {{ formmacros.field(form.feeUnit) }}
+    {% endif %}
+
+    {% if form.showLinkHomePage is defined %}
+        {{ formmacros.checkbox(form.showLinkHomePage) }}
+    {% endif %}
+    {% if form.showLinkNavbar is defined %}
+        {{ formmacros.checkbox(form.showLinkNavbar) }}
+    {% endif %}
+    {% if form.accessibility is defined %}
+        {% if entity.abbreviation == "employees" %}
+            {{ formmacros.checkbox(form.accessibility,"disabled") }}
+        {% else %}
+            {{ formmacros.checkbox(form.accessibility) }}
+        {% endif %}
+    {% endif %}
+    {% if form.selfSignUp is defined %}
+        {{ formmacros.checkbox(form.selfSignUp) }}
+    {% endif %}
+    {% if form.lowestRoles is defined %}
+        {{ formmacros.field(form.lowestRoles) }}
+    {% endif %}
+    {% if form.fromEmail is defined %}
+        {{ formmacros.field(form.fromEmail) }}
+    {% endif %}
+
+    {#AntibodyList#}
+    {% if form.igconcentration is defined %}
+        <div id="form-prototype-data"
+             data-userurllink = "{{ usermacros.userUrlLink()|e }}"
+             data-uploadurl = "{{ oneup_uploader_endpoint('transres_gallery') }}"
+             data-userid = "{{ app.user.id }}"
+        ></div>
+
+        {{ formmacros.field(form.category) }}
+        {{ formmacros.field(form.altname) }}
+        {{ formmacros.field(form.company) }}
+        {{ formmacros.field(form.catalog) }}
+        {{ formmacros.field(form.lot) }}
+        {{ formmacros.field(form.igconcentration) }}
+        {{ formmacros.field(form.clone) }}
+        {{ formmacros.field(form.host) }}
+        {{ formmacros.field(form.reactivity) }}
+        {{ formmacros.field(form.control) }}
+        {{ formmacros.field(form.protocol) }}
+        {{ formmacros.field(form.retrieval) }}
+        {{ formmacros.field(form.dilution) }}
+        {{ formmacros.field(form.storage) }}
+
+        {{ formmacros.field(form.comment) }}
+        {{ formmacros.field(form.comment1) }}
+        {{ formmacros.field(form.comment2) }}
+        {{ formmacros.field(form.datasheet) }}
+
+        {#{{ formmacros.field(form.pdf) }}#}
+        {#{{ formmacros.field(form.documents) }}#}
+        {#{{ usermacros.documentsContainer(form,form.documents,cycle,'noprototype',8,'default','Document(s)','asForm',false) }}#}
+        {#<p>#}
+        {#<div class="well form-element-holder user-documents">#}
+            {#<label class="col-xs-12 control-label">Document(s)</label>#}
+            {#<div class="row withpaddingtop">#}
+                {#<div class="col-xs-12">#}
+                    {#{{ usermacros.documentsContainer(form,form.documents,cycle,'noprototype',8,'default','AntiBody Document','asForm',false) }}#}
+                {#</div>#}
+            {#</div>#}
+        {#</div>#}
+        {#</p>#}
+
+    {% endif %}
+
+    {% if form.documents is defined %}
+        <div id="form-prototype-data"
+             data-userurllink = "{{ usermacros.userUrlLink()|e }}"
+             data-uploadurl = "{{ oneup_uploader_endpoint('transres_gallery') }}"
+             data-userid = "{{ app.user.id }}"
+        ></div>
+
+        {% set docLabel = "Document(s)" %}
+        {% set docObjectType = "Document" %}
+        {% if entity.getEntityClassName() == "AntibodyList" %}
+            {% set docLabel = "Document(s)" %}
+            {% set docObjectType = "AntiBody Document" %}
+        {% endif %}
+        {% if entity.getEntityClassName() == "SiteList" %}
+            {% set docLabel = "Logo(s)" %}
+            {% set docObjectType = "Logo Document" %}
+        {% endif %}
+        <p>
+        <div class="well form-element-holder user-documents">
+            <label class="col-xs-12 control-label">{{ docLabel }}</label>
+            <div class="row withpaddingtop">
+                <div class="col-xs-12">
+                    {{ usermacros.documentsContainer(form,form.documents,cycle,'noprototype',8,'default',docObjectType,'asForm',false) }}
+                </div>
+            </div>
+        </div>
+        </p>
+
+    {% endif %}
+
+
+
+{% endmacro %}
+
+{#permissionList attributes#}
+{% macro permissionListAttributes( form ) %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+    <hr>
+
+    {% if form.permissionObjectList is defined %}
+        {{ formmacros.field(form.permissionObjectList) }}
+    {% endif %}
+
+    {% if form.permissionActionList is defined %}
+        {{ formmacros.field(form.permissionActionList) }}
+    {% endif %}
+
+{% endmacro %}
+
+

@@ -1,0 +1,551 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{% extends "AppUserdirectoryBundle::Default/base.html.twig" %}
+
+
+{% block title %}
+    {{ listmanager_title }}
+{% endblock %}
+
+{% block content %}
+
+    <h3 class="text-info">{{ listmanager_title }}</h3>
+
+    <br><br>
+
+    <p>
+        <a href="{{ path('platformlistmanager-list') }}">Platform List Manager Root List</a>
+    </p>
+
+    <p>
+        <a href="{{ path('sites-list') }}">Sites</a>
+    </p>
+
+    <p>
+        <a href="{{ path('sourcesystems-list') }}">Source Systems</a>
+    </p>
+
+    <p>
+        <a href="{{ path('role-list') }}">Roles</a>
+    </p>
+
+    <p>
+        <a href="{{ path('roleattributes-list') }}">Role Attributes</a>
+    </p>
+
+    <p>
+        <a href="{{ path('permission-list') }}">Permissions List</a>
+    </p>
+
+    <p>
+        <a href="{{ path('permissionobject-list') }}">Permission Objects List</a>
+    </p>
+
+    <p>
+        <a href="{{ path('permissionaction-list') }}">Permission Actions List</a>
+    </p>
+
+    {#<p>#}
+        {#<a href="{{ path('institutions-tree-management') }}">Institution Tree Management (Old)</a>#}
+    {#</p>#}
+
+    <hr>
+    <h4 class="text-info">Institution Hierarchy</h4>
+    <p>
+        <a href="{{ path('institutiontypes-list') }}">Institution Types</a>
+    </p>
+    <p>
+        <a href="{{ path('positiontypes-list') }}">Position Types</a>
+    </p>
+    <p>
+        <a href="{{ path('organizationalgrouptypes-list') }}">Organizational Group Types</a>
+    </p>
+    {#<p>#}
+        {#<a href="{{ path('employees_tree_institutiontree_list') }}">Institution Tree Management</a>#}
+    {#</p>#}
+    <p>
+        <a href="{{ path('institutions-list') }}">Flat Institution Tree</a>
+    </p>
+    {#<p>#}
+        {#<a href="{{ path('collaborations-list') }}">Collaborations</a>#}
+    {#</p>#}
+    <p>
+        <a href="{{ path('collaborationtypes-list') }}">Collaboration Types</a>
+    </p>
+
+
+    <hr>
+    <h4 class="text-info">Comment Type Hierarchy</h4>
+    <p>
+        <a href="{{ path('commentgrouptypes-list') }}">Profile Comment Group Types</a>
+    </p>
+    {#<p>#}
+        {#<a href="{{ path('employees_tree_commenttree_list') }}">Comment Types Tree Management</a>#}
+    {#</p>#}
+    <p>
+        <a href="{{ path('commenttypes-list') }}">Flat Comment Types Tree</a>
+    </p>
+
+    <hr>
+    <h4 class="text-info">Form Hierarchy</h4>
+    <p>
+        <a href="{{ path('formnodes-list') }}">Flat Form Tree</a>
+    </p>
+    <p>
+        <a href="{{ path('objecttypes-list') }}">Object Types</a>
+    </p>
+    <p>
+        <a href="{{ path('objecttypetexts-list') }}">Object Type Texts</a>
+    </p>
+    <p>
+        <a href="{{ path('objecttypestrings-list') }}">Object Type String</a>
+    </p>
+    <p>
+        <a href="{{ path('objecttypedropdowns-list') }}">Object Type Dropdown</a>
+    </p>
+    <p>
+        <a href="{{ path('objecttypedatetimes-list') }}">Object Type DateTime</a>
+    </p>
+    <p>
+        <a href="{{ path('objecttypecheckboxs-list') }}">Object Type Checkbox</a>
+    </p>
+    <p>
+        <a href="{{ path('objecttyperadiobuttons-list') }}">Object Type Radio Button</a>
+    </p>
+
+    <hr>
+
+    <p>
+        <a href="{{ path('weekdays-list') }}">Days of the Week</a>
+    </p>
+    <p>
+        <a href="{{ path('months-list') }}">Months</a>
+    </p>
+    <p>
+        <a href="{{ path('sexes-list') }}">Genders</a>
+    </p>
+    <p>
+        <a href="{{ path('lifeforms-list') }}">Life Forms</a>
+    </p>
+
+    <p>
+        <a href="{{ path('languages-list') }}">Languages</a>
+    </p>
+
+    <p>
+        <a href="{{ path('locales-list') }}">Locales</a>
+    </p>
+
+    <p>
+        <a href="{{ path('cities-list') }}">Cities</a>
+    </p>
+
+    <p>
+        <a href="{{ path('countries-list') }}">Countries</a>
+    </p>
+
+    <p>
+        <a href="{{ path('states-list') }}">States</a>
+    </p>
+
+    <p>
+        <a href="{{ path('boardcertifications-list') }}">Board Certified Specialties</a>
+    </p>
+    <p>
+        <a href="{{ path('certifyingboardorganizations-list') }}">Certifying Board Organizations</a>
+    </p>
+
+
+    <p>
+        <a href="{{ path('employmenttypes-list') }}">Employment Types</a>
+    </p>
+
+    <p>
+        <a href="{{ path('employmentterminations-list') }}">Employment Termination Reasons</a>
+    </p>
+
+    <p>
+        <a href="{{ path('loggereventtypes-list') }}">Event Log Types</a>
+    </p>
+
+    <p>
+        <a href="{{ path('eventobjecttypes-list') }}">Event Log Object Types</a>
+    </p>
+
+    <p>
+        <a href="{{ path('usernametypes-list') }}">Primary Public User ID Types</a>
+    </p>
+
+    <p>
+        <a href="{{ path('userwrappers-list') }}">User Wrappers</a>
+    </p>
+
+    <p>
+        <a href="{{ path('documenttypes-list') }}">Document Types</a>
+    </p>
+
+    <p>
+        <a href="{{ path('linktypes-list') }}">Link Types</a>
+    </p>
+
+    <p>
+        <a href="{{ path('identifiers-list') }}">Identifier Types</a>
+    </p>
+
+    <p>
+        <a href="{{ path('residencytracks-list') }}">Residency Tracks</a>
+    </p>
+
+    <p>
+        <a href="{{ path('fellowshiptypes-list') }}">Fellowship Types</a>
+    </p>
+
+    <p>
+        <a href="{{ path('employees_researchlabs_pathaction_list') }}">Research Labs</a>
+    </p>
+
+    <p>
+        <a href="{{ path('employees_buildings_pathaction_list') }}">Buildings</a>
+    </p>
+
+    <p>
+        <a href="{{ path('locationtypes-list') }}">Location Types</a>
+    </p>
+
+    <p>
+        <a href="{{ path('locationprivacy-list') }}">Location Privacy Types</a>
+    </p>
+
+    <p>
+        <a href="{{ path('employees_locations_pathaction_list') }}">Locations</a>
+    </p>
+
+    <p>
+        <a href="{{ path('spotpurposes-list') }}">Location Spot Purposes</a>
+    </p>
+
+    <p>
+        <a href="{{ path('equipmenttypes-list') }}">Equipment Types</a>
+    </p>
+
+    <p>
+        <a href="{{ path('equipments-list') }}">Equipment</a>
+    </p>
+
+    <p>
+        <a href="{{ path('rooms-list') }}">Rooms</a>
+    </p>
+
+    <p>
+        <a href="{{ path('suites-list') }}">Suites</a>
+    </p>
+
+    <p>
+        <a href="{{ path('floors-list') }}">Floors</a>
+    </p>
+
+    <p>
+        <a href="{{ path('mailboxes-list') }}">Mailboxes</a>
+    </p>
+
+    <p>
+        <a href="{{ path('efforts-list') }}">Percent Effort</a>
+    </p>
+
+    <p>
+        <a href="{{ path('admintitles-list') }}">Administrative Titles</a>
+    </p>
+
+    <p>
+        <a href="{{ path('apptitles-list') }}">Academic Appointment Titles</a>
+    </p>
+    <p>
+        <a href="{{ path('positiontracktypes-list') }}">Academic Position Track Type List</a>
+    </p>
+
+    <p>
+        <a href="{{ path('medicaltitles-list') }}">Medical Titles</a>
+    </p>
+
+    <p>
+        <a href="{{ path('medicalspecialties-list') }}">Medical Specialties</a>
+    </p>
+
+    <p>
+        <a href="{{ path('medicalstatuses-list') }}">Medical License Statuses</a>
+    </p>
+
+
+    <p>
+        <a href="{{ path('importances-list') }}">Ranks of Importance</a>
+    </p>
+
+    <p>
+        <a href="{{ path('authorshiproles-list') }}">Authorship Roles</a>
+    </p>
+
+    <p>
+        <a href="{{ path('organizations-list') }}">Lecture Venues</a>
+    </p>
+
+    <p>
+        <a href="{{ path('fellappstatuses-list') }}">Fellowship Application Statuses</a>
+    </p>
+
+    <p>
+        <a href="{{ path('fellappranks-list') }}">Fellowship Application Interview Ranks</a>
+    </p>
+
+    <p>
+        <a href="{{ path('fellapplanguageproficiency-list') }}">Fellowship Application Language Proficiencies</a>
+    </p>
+
+    <p>
+        <a href="{{ path('healthcareproviderspecialty-list') }}">Healthcare Provider Specialties</a>
+    </p>
+
+    <hr>
+    <h4 class="text-info">Transfusion Medicine</h4>
+    <p>
+        <a href="{{ path('bloodproducttransfusions-list') }}">Blood Product Transfused List</a>
+    </p>
+    <p>
+        <a href="{{ path('transfusionreactiontypes-list') }}">Transfusion Reaction Type</a>
+    </p>
+    <p>
+        <a href="{{ path('bloodtypes-list') }}">Blood Type List</a>
+    </p>
+    <p>
+        <a href="{{ path('transfusionantibodyscreenresults-list') }}">Transfusion Antibody Screen Results List</a>
+    </p>
+    <p>
+        <a href="{{ path('transfusioncrossmatchresults-list') }}">Transfusion Crossmatch Results List</a>
+    </p>
+    <p>
+        <a href="{{ path('transfusiondatresults-list') }}">Transfusion DAT Results List</a>
+    </p>
+    <p>
+        <a href="{{ path('transfusionhemolysischeckresults-list') }}">Transfusion Hemolysis Check Results List</a>
+    </p>
+    <p>
+        <a href="{{ path('complexplateletsummaryantibodies-list') }}">Complex Platelet Summary Antibodies List</a>
+    </p>
+    <p>
+        <a href="{{ path('cciunitplateletcountdefaultvalues-list') }}">CCI Unit Platelet Count Default Value List</a>
+    </p>
+    <p>
+        <a href="{{ path('cciplatelettypetransfuseds-list') }}">CCI Platelet Type Transfused List</a>
+    </p>
+    <p>
+        <a href="{{ path('platelettransfusionproductreceivings-list') }}">Platelet Transfusion Product Receiving List</a>
+    </p>
+    <p>
+        <a href="{{ path('transfusionproductstatus-list') }}">Transfusion Product Status List</a>
+    </p>
+    <p>
+        <a href="{{ path('clericalerrors-list') }}">Clerical Error List</a>
+    </p>
+    <p>
+        <a href="{{ path('labresultnames-list') }}">Lab Result Names</a>
+    </p>
+    <p>
+        <a href="{{ path('labresultunitsmeasures-list') }}">Lab Result Units of Measure List</a>
+    </p>
+    <p>
+        <a href="{{ path('labresultflags-list') }}">Lab Result Flag List</a>
+    </p>
+    <p>
+        <a href="{{ path('pathologyresultsignatories-list') }}">Pathology Result Signatories List</a>
+    </p>
+
+
+    {#training#}
+    <hr>
+    <h4 class="text-info">Education</h4>
+    <p>
+        <a href="{{ path('trainingtypes-list') }}">Training Types</a>
+    </p>
+    <p>
+        <a href="{{ path('completionreasons-list') }}">Training Completion Reasons</a>
+    </p>
+
+    <p>
+        <a href="{{ path('trainingdegrees-list') }}">Academic Degrees</a>
+    </p>
+
+    <p>
+        <a href="{{ path('trainingmajors-list') }}">Academic Majors</a>
+    </p>
+
+    <p>
+        <a href="{{ path('trainingminors-list') }}">Academic Minors</a>
+    </p>
+
+    <p>
+        <a href="{{ path('traininghonors-list') }}">Academic Honors</a>
+    </p>
+    <hr>
+
+    <p>
+        <a href="{{ path('fellowshiptitles-list') }}">Professional Fellowship Titles</a>
+    </p>
+
+    <p>
+        <a href="{{ path('residencyspecialtys-list') }}">Residency Specialties</a>
+        <a href="{{ path('generate_residencyspecialties') }}" style="margin-left: 5px;">
+            <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>
+        </a>
+    </p>
+
+    <p>
+        <a href="{{ path('fellowshipsubspecialtys-list') }}">Fellowship Subspecialties</a>
+    </p>
+
+    <p>
+        <a href="{{ path('joblists-list') }}">Job or Experience Titles</a>
+    </p>
+
+    {#grant#}
+    <hr>
+    <h4 class="text-info">Grants</h4>
+    <p>
+        <a href="{{ path('employees_grants_pathaction_list') }}">Grants</a>
+    </p>
+    <p>
+        <a href="{{ path('sourceorganizations-list') }}">Grant Source Organizations (Sponsors)</a>
+    </p>
+
+    <hr>
+    <h4 class="text-info">Business/Vacation Request</h4>
+    <p>
+        <a href="{{ path('vacreqrequesttypes-list') }}">Business/Vacation Request Types</a>
+    </p>
+
+
+    <hr>
+    <h4 class="text-info">Translational Research</h4>
+    <p>
+        <a href="{{ path('transresprojectspecialties-list') }}">Translational Research Project Specialty List</a>
+    </p>
+    <p>
+        <a href="{{ path('transresprojecttypes-list') }}">Translational Research Project Type List</a>
+    </p>
+    <p>
+        <a href="{{ path('transresrequestcategorytypes-list') }}">Translational Research Request Products/Services (Fee Schedule) List</a>
+    </p>
+    <p>
+        <a href="{{ path('transresirbapprovaltypes-list') }}">Translational Research Irb Approval Type List</a>
+    </p>
+
+    <br>
+    <hr>
+    <h4 class="text-info">Preset Form Node Tree</h4>
+    <p>
+        <a general-data-confirm="Are you sure?" href="{{ path('employees_generate_form_node_tree') }}">Preset Form Node Tree</a>
+    </p>
+    <p>
+        <a general-data-confirm="Are you sure?" href="{{ path('employees_generate_test_form_node_tree') }}">Preset Test Form Node Tree</a>
+    </p>
+
+    <br>
+    <hr>
+    <h4 class="text-info">Populate Lists</h4>
+
+    {#<p>#}
+        {#<a general-data-confirm="Are you sure?"#}
+            {#href="{{ path('generate_country_city') }}">#}
+            {#Populate Country and City Lists#}
+        {#</a>#}
+    {#</p>#}
+
+
+    {% if environment is not defined %}
+        {% set environment = 'dev' %}
+    {% endif %}
+
+    <!--show this only for dev. Don't show for live-->
+    {#and environment == 'dev'#}
+    {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
+
+        {#<p>#}
+            {#<a  general-data-confirm="Are you sure? This action will overwrite all values on all lists for all sites with defaults."#}
+                {#href="{{ path('user_generate_all_site') }}">Populate all lists in one step for all sites with default values:</a>#}
+        {#</p>#}
+
+        <p>
+            <a general-data-confirm="Are you sure?"
+               href="{{ path('generate_country_city') }}">
+                1) Populate Country and City Lists
+            </a>
+        </p>
+
+        <p>
+            <a  general-data-confirm="Are you sure? This action will overwrite all values on all lists with defaults."
+                href="{{ path('user_generate_all') }}">2) Populate All Lists With Default Values</a>
+        </p>
+
+        <p>
+            <a  general-data-confirm="Are you sure? This action will overwrite all values on all Scan Orders lists with defaults."
+                href="{{ path('generate_all') }}">3) Populate All Scan Orders Lists With Default Values</a>
+        </p>
+
+        <p>
+            <a  general-data-confirm="Are you sure? This action will pre-generate from node fields for Call Log Book system."
+                href="{{ path('employees_generate_form_node_tree') }}">4) Pre-generate form node tree fields for Call Log Book</a>
+        </p>
+
+        {#<p>#}
+            {#<a general-data-confirm="Are you sure? This action will try to synchronise DB with the source code changes."#}
+               {#href="{{ path('user_sync_db') }}">3) Synchronise DB with the source code changes (optional)#}
+            {#</a>#}
+        {#</p>#}
+
+        {#<p>#}
+            {#<a general-data-confirm="Are you sure?"#}
+               {#href="{{ path('generate_country_city') }}">#}
+                {#1) Populate Country and City Lists (optional)#}
+            {#</a>#}
+        {#</p>#}
+
+        <hr>
+
+        <p>
+            <a general-data-confirm="Are you sure? This action will populate new users from excel sheet."
+               href="{{ path('generate_users') }}">Populate Users From Excel (optional). <strong>This should be run only once on the system initialization.</strong>
+            </a>
+        </p>
+
+        <hr>
+        {#<p>#}
+            {#<a general-data-confirm="Are you sure? This action will create Levenshtein function in Database."#}
+               {#href="{{ path('user_init_fuzzy') }}">5) Create fuzzy functions in Database for fuzzy search#}
+            {#</a>#}
+        {#</p>#}
+        <p>
+            <a general-data-confirm="Are you sure? This action will generate metaphone key for all empty patients last, first, middle names."
+               href="{{ path('user_generate-patient-metaphone-name') }}">Generate metaphone keys for all empty patients last, first, middle names (optional).
+            </a>
+        </p>
+
+    {% endif %}
+
+    <br>
+
+    <br>
+
+{% endblock %}
+

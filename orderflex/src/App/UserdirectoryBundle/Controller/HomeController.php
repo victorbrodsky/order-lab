@@ -47,13 +47,45 @@ class HomeController extends Controller {
             $platformLogoPath = $platformLogo->getAbsoluteUploadFullPath();
         }
 
-        return $this->render('AppUserdirectoryBundle:Default:main-common-home.html.twig',
+
+//        return $this->render('AppUserdirectoryBundle:Default:main-common-home.html.twig',
+//            array(
+//                'platformLogo' => $platformLogoPath,
+//                'width' => $width,
+//                'height' => $height
+//            )
+//        );
+        return $this->render('AppUserdirectoryBundle/Default/main-common-home.html.twig',
             array(
                 'platformLogo' => $platformLogoPath,
                 'width' => $width,
                 'height' => $height
             )
         );
+//        //Unable to find template "AppUserdirectoryBundle::Default/usermacros.html.twig"
+//        $this->container->get('twig.loader')->addPath('src/App/UserdirectoryBundle/Resources/views/Default/');
+//        return $this->render('main-common-home.html.twig',
+//            array(
+//                'platformLogo' => $platformLogoPath,
+//                'width' => $width,
+//                'height' => $height
+//            )
+//        );
+        //https://github.com/symfony/symfony/issues/1912
+//        return $this->render('App/UserdirectoryBundle/Resources/views/Default/main-common-home.html.twig',
+//            array(
+//                'platformLogo' => $platformLogoPath,
+//                'width' => $width,
+//                'height' => $height
+//            )
+//        );
+//        return $this->render('main-common-home.html.twig',
+//            array(
+//                'platformLogo' => $platformLogoPath,
+//                'width' => $width,
+//                'height' => $height
+//            )
+//        );
     }
 
     /**

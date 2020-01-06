@@ -7,9 +7,13 @@
 
 
 
+#main_common_home:
+#    path:      /
+#    defaults:  { _controller: AppUserdirectoryBundle:Home:mainCommonHome }
 main_common_home:
     path:      /
-    defaults:  { _controller: AppUserdirectoryBundle:Home:mainCommonHome }
+#    defaults:  { _controller: AppUserdirectoryBundle:Home:mainCommonHome }
+    controller: App\UserdirectoryBundle\Controller\HomeController::mainCommonHomeAction
 
 main_under_construction:
     path:      /under-construction
@@ -17,44 +21,46 @@ main_under_construction:
     schemes:  ['%connection_channel%']
 
 #order is important: base bundle userdirectory must be the last one
+#    resource: "@AppDeidentifierBundle/Controller/"
 app_deidentifier:
-    resource: "@AppDeidentifierBundle/Controller/"
+    resource: "App/DeidentifierBundle/Controller/"
     type:     annotation
     prefix:   /deidentifier
     schemes:  ['%connection_channel%']
 
 app_fellapp:
-    resource: "@AppFellAppBundle/Controller/"
+#    resource: "@AppFellAppBundle/Controller/"
+    resource: "App/FellAppBundle/Controller/"
     type:     annotation
     prefix:   /fellowship-applications
     schemes:  ['%connection_channel%']
 
 app_vacreq:
-    resource: "@AppVacReqBundle/Controller/"
+    resource: "App/VacReqBundle/Controller/"
     type:     annotation
     prefix:   /vacation-request
     schemes:  ['%connection_channel%']
 
 App_calllog:
-    resource: "@AppCallLogBundle/Controller/"
+    resource: "App/CallLogBundle/Controller/"
     type:     annotation
     prefix:   /call-log-book
     schemes:  ['%connection_channel%']
 
 app_orderform:
-    resource: "@AppOrderformBundle/Controller/"
+    resource: "App/OrderformBundle/Controller/"
     type:     annotation
     prefix:   /scan
     schemes:  ['%connection_channel%']
 
 app_translationalresearch:
-    resource: "@AppTranslationalResearchBundle/Controller/"
+    resource: "App/TranslationalResearchBundle/Controller/"
     type:     annotation
     prefix:   /translational-research
     schemes:  ['%connection_channel%']
 
 app_userdirectory:
-    resource: "@AppUserdirectoryBundle/Controller/"
+    resource: "App/UserdirectoryBundle/Controller/"
     type:     annotation
     prefix:   /directory
     schemes:  ['%connection_channel%']

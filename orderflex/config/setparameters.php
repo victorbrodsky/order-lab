@@ -104,7 +104,7 @@ $connectionParams = array(
     'driver' => $driver,
     //'port' => 3306
 );
- 
+
 //upload paths can't be NULL
 $employeesuploadpath = "directory/documents";
 $employeesavataruploadpath = "directory/avatars";

@@ -18,12 +18,7 @@
 
 namespace App\CallLogBundle\Controller;
 
-use Box\Spout\Common\Type;
-use Box\Spout\Writer\Style\Border;
-use Box\Spout\Writer\Style\BorderBuilder;
-use Box\Spout\Writer\Style\Color;
-use Box\Spout\Writer\Style\StyleBuilder;
-use Box\Spout\Writer\WriterFactory;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use App\CallLogBundle\Form\CalllogFilterType;
 use App\CallLogBundle\Form\CalllogMessageType;
@@ -62,6 +57,17 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+
+//use Box\Spout\Writer\Style\Border;
+//use Box\Spout\Writer\Style\BorderBuilder;
+//use Box\Spout\Writer\Style\Color;
+//use Box\Spout\Writer\Style\StyleBuilder;
+use Box\Spout\Common\Type;
+use Box\Spout\Writer\WriterFactory;
+use Box\Spout\Writer\Common\Creator\Style\BorderBuilder;
+use Box\Spout\Common\Entity\Style\Border;
+use Box\Spout\Common\Entity\Style\Color;
+use Box\Spout\Writer\Common\Creator\Style\StyleBuilder;
 
 //TODO: implement WYSIWYG editor to textarea-reach fields
 // https://github.com/summernote/summernote

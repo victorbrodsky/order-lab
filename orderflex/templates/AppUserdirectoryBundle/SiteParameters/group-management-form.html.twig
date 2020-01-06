@@ -1,0 +1,83 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+
+{% if sitename == 'employees' %}
+    {% set extendStr = "AppUserdirectoryBundle::Default/base.html.twig" %}
+{% else %}
+    {% set extendStr = "AppOrderformBundle::Default/base.html.twig" %}
+{% endif %}
+{% extends extendStr%}
+
+
+{% block title %}
+    Defaults for an Organizational Group Management
+{% endblock %}
+
+
+{% block content %}
+
+    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "AppUserdirectoryBundle::SiteParameters/site-parameters-macros.html.twig" as siteparametersmacros %}
+
+
+    {% set organizationalGroupDefaultPrototype = null %}
+    {% if form.organizationalGroupDefaults is defined %}
+        {% set organizationalGroupDefaultPrototype = siteparametersmacros.organizationalGroupDefault(form.organizationalGroupDefaults,cycle,'user-organizationalgroupdefaults','prototype') %}
+    {% endif %}
+
+    <div id="form-prototype-data"
+         data-prototype-user-organizationalgroupdefaults = "{{ organizationalGroupDefaultPrototype|e }}"
+         data-userid = "{{ entity.id }}"
+    ></div>
+
+
+    <h3 class="text-info">Defaults for an Organizational Group Management</h3>
+
+    <br>
+
+    {{ form_start(form) }}
+
+        {{ form_errors(form) }}
+
+        <div class="user-organizationalgroupdefaults-holder">
+
+            {% for groupDefault in form.organizationalGroupDefaults %}
+                {{ siteparametersmacros.organizationalGroupDefault(groupDefault,cycle,'user-organizationalgroupdefaults','noprototype') }}
+            {% endfor %}
+
+            {{ usermacros.addNewObjectBtn("edit",'user-organizationalgroupdefaults','Add defaults for another Organizational Group') }}
+
+        </div>
+
+        <p>
+            {{ form_rest(form) }}
+        </p>
+
+        {#{{ form(form) }}#}
+
+    {{ form_end(form) }}
+
+    <br>
+    <br>
+
+    <p>
+    <a href="{{ path(sitename~'_siteparameters') }}">
+        Back to the Site Settings
+    </a>
+    </p>
+
+{% endblock %}

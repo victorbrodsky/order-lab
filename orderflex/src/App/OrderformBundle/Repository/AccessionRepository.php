@@ -34,11 +34,6 @@ use App\OrderformBundle\Security\Util\SecurityUtil;
  */
 class AccessionRepository extends ArrayFieldAbstractRepository {
 
-//    public function __construct(EntityManagerInterface $em, ClassMetadata $class)
-//    {
-//        parent::__construct($em, $class);
-//    }
-
     public function changeKeytype($entity) {
 
         $em = $this->_em;

@@ -1,0 +1,1168 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{# empty Twig template #}
+
+
+{% macro baseTitle( field, cycle, classname, prototype, sitename ) %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "AppUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
+    {% if prototype == "prototype" %}
+        {% set formfield = field.vars.prototype %}
+    {% else %}
+        {% set formfield = field %}
+    {% endif %}
+
+    {% if formfield.vars.value and formfield.vars.value.status == 0 or prototype == 'prototype' %}
+        {% set wellclass = "user-alert-warning" %}
+    {% else %}
+        {% set wellclass = "" %}
+    {% endif %}
+
+    {#hide the titles/objects that have a non-empty "Title End Date:"#}
+    {% set endDateClass = '' %}
+    {% set displayNone = '' %}
+    {% if formfield.endDate is defined and formfield.vars.value and formfield.vars.value.endDate %}
+        {% set endDateClass = 'collapse-non-empty-enddate' %}
+        {% set displayNone = 'style=display:none' %}
+    {% endif %}
+
+    <div class="user-collection-holder alert {{ classname }} {{ wellclass }} {{ endDateClass }}" {{ displayNone }}>
+        {% if cycle != 'show_user' %}
+            <div class="text-right">
+                <button type="button" class="btn btn-default btn-sm confirm-delete-with-expired" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+            </div>
+        {% endif %}
+
+        {{ formmacros.field(formfield.id) }}
+        {#{{ formmacros.field(formfield.status) }}#}
+        {{ usermacros.statusVerifiedField(formfield,cycle) }}
+
+        {% if formfield.orderinlist is defined %}
+            {{ formmacros.field(formfield.orderinlist) }}
+        {% endif %}
+
+        {% if formfield.priority is defined %}
+            {{ formmacros.field_notempty(formfield.priority,cycle) }}
+        {% endif %}
+
+        {{ formmacros.field(formfield.name) }}
+
+        {% if formfield.specialties is defined %}
+            {{ formmacros.field(formfield.specialties) }}
+        {% endif %}
+
+        {#boss field#}
+        {% if formfield.boss is defined %}
+            {% if cycle != 'show_user' %}
+                {{ formmacros.field(formfield.boss) }}
+            {% else %}
+                {% if formfield.vars.value.boss is defined and formfield.vars.value.boss != NULL and formfield.vars.value.boss|length > 0 %}
+                    <p>
+                        <strong>Reports to:</strong>
+                    </p>
+                    {% for boss in formfield.vars.value.boss %}
+                        {{ usermacros.personInfo(boss,cycle,sitename) }}
+                    {% endfor %}
+                {% endif %}
+                {% do formfield.boss.setRendered %}
+            {% endif %}
+        {% endif %}
+
+        {#position type#}
+        <p>
+        {% if formfield.positions is defined %}
+            {{ formmacros.field(formfield.positions) }}
+        {% endif %}
+
+        {#residencyTrack, fellowshiptype, pgy fields are shown or hidden by JS positionTypeAction if "Position Track Type(s):" is Resident or Fellow#}
+        {% if formfield.residencyTrack is defined %}
+            <p>
+            <div class="well appointmenttitle-residencytrack-field" style="display:none; margin-top: 20px;">
+                {{ formmacros.field(formfield.residencyTrack) }}
+            </div>
+            </p>
+        {% endif %}
+
+        {% if formfield.fellowshipType is defined %}
+            <p>
+            <div class="well appointmenttitle-fellowshiptype-field" style="display:none; margin-top: 20px;">
+                {{ formmacros.field(formfield.fellowshipType) }}
+            </div>
+            </p>
+        {% endif %}
+
+        {% set ResidentOrFellowPosition = false %}
+        {% if formfield.positions is defined %}
+            {% for position in formfield.positions %}
+                {% if position.name == "Resident" or position.name == "Fellow" %}
+                    {% set ResidentOrFellowPosition = true %}
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+        {#pgy#}
+        {% if formfield.pgystart is defined and formfield.pgylevel is defined %}
+            {#On the user profile page, always hide the entire PGY well if the Position Type is not equal to either Resident or Fellow#}
+            {% if formfield.positions is defined and formfield.vars.value and ResidentOrFellowPosition or cycle == 'create_user' or cycle == 'edit_user' %}
+                <p>
+                <div class="well appointmenttitle-pgy-field" style="display:none">
+                    {{ formmacros.fieldDateLabel(formfield.pgystart,'allow-future-date') }}
+                    {{ formmacros.field(formfield.pgylevel) }}
+                    {{ formmacros.field(formfield.pgylevelexpected) }}
+                    <div class="row">
+                        <div class="col-xs-6" align="right">
+                            <strong></strong>
+                        </div>
+                        {% if cycle != 'show_user' %}
+                            <div class="col-xs-6" align="left">
+                                <button type="button" class="update-pgy-btn" onclick="updatePgy(this)">Update the academic year and PGY level to current</button>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                </p>
+            {% else %}
+                {% do formfield.pgystart.setRendered %}
+                {% do formfield.pgylevel.setRendered %}
+                {% do formfield.pgylevelexpected.setRendered %}
+            {% endif %}
+        {% endif %}
+
+        </p>
+
+
+        {{ formmacros.fieldDateLabel(formfield.startDate,'allow-future-date') }}
+        {{ formmacros.fieldDateLabel_notempty(formfield.endDate,cycle,'allow-future-date') }}
+
+        {#On the user profile page, always hide "Percent Effort:" in both Academic and Administrative titles if they are empty#}
+        {% if formfield.effort is defined and (cycle != 'show_user' or (formfield.vars.value and formfield.vars.value.effort)) %}
+            {{ formmacros.field(formfield.effort) }}
+        {% else %}
+            {% if formfield.effort is defined %}
+                {% do formfield.effort.setRendered %}
+            {% endif %}
+        {% endif %}
+
+        {% if formfield.institution is defined %}
+            {{ treemacros.compositeTreeNode(formfield.institution,cycle,prototype) }}
+        {% endif %}
+
+        {% if formfield.userPositions is defined %}
+            {{ formmacros.field(formfield.userPositions) }}
+        {% endif %}
+
+    </div>
+{% endmacro %}
+
+
+
+
+{% macro stateLicenses( field, cycle, classname, prototype ) %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+    {% if prototype == "prototype" %}
+        {% set formfield = field.vars.prototype %}
+    {% else %}
+        {% set formfield = field %}
+    {% endif %}
+
+    <div class="user-collection-holder well {{ classname }}">
+
+        {% if cycle != 'show_user' %}
+            <div class="text-right">
+                <button type="button" class="btn btn-default btn-sm" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+            </div>
+        {% endif %}
+
+        {{ formmacros.field_notempty(formfield.country,cycle) }}
+        {{ formmacros.field(formfield.state) }}
+        {{ formmacros.field(formfield.licenseNumber) }}
+        {{ formmacros.fieldDateLabel(formfield.licenseIssuedDate,'allow-future-date') }}
+        {{ formmacros.fieldDateLabel(formfield.licenseExpirationDate,'allow-future-date') }}
+        {{ formmacros.field(formfield.active) }}
+
+        {% if formfield.attachmentContainer is defined %}
+
+            {% set dropzoneInit = 'default' %}
+            {#{% if formfield.vars.value and formfield.vars.value.id == app.user.getId() %}#}
+                {#{% set dropzoneInit = 'inactive' %}#}
+            {#{% endif %}#}
+
+            {% set count = 0 %}
+            {% for documentContainer in formfield.attachmentContainer.documentContainers %}
+                {#documentContainers|length:{{ formfield.attachmentContainer.documentContainers|length }}#}
+                {% set count = count + 1 %}
+                {% set uniqueId = count~"-"~"now"|date("mdYHisu") %}
+                {{ formmacros.fieldDocumentContainer(documentContainer,cycle,'statelicense'~uniqueId,"",20,dropzoneInit) }}
+            {% endfor %}
+
+            {% if prototype == "prototype" %}
+                {% set uniqueId = "1-"~"now"|date("mdYHisu") %}
+                {{ formmacros.fieldDocumentContainer(formfield.attachmentContainer.documentContainers.vars.prototype,cycle,'statelicense'~uniqueId,"",20,dropzoneInit) }}
+            {% endif %}
+
+        {% endif %}
+
+    </div>
+{% endmacro %}
+
+
+{% macro boardCertifications( field, cycle, classname, prototype ) %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+    {% if prototype == "prototype" %}
+        {% set formfield = field.vars.prototype %}
+    {% else %}
+        {% set formfield = field %}
+    {% endif %}
+
+    <div class="user-collection-holder well {{ classname }}">
+
+        {% if cycle != 'show_user' %}
+            <div class="text-right">
+                <button type="button" class="btn btn-default btn-sm" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+            </div>
+        {% endif %}
+
+        {{ formmacros.field(formfield.certifyingBoardOrganization) }}
+        {{ formmacros.field(formfield.specialty) }}
+        {{ formmacros.fieldDateLabel(formfield.issueDate,'allow-future-date') }}
+        {{ formmacros.fieldDateLabel(formfield.expirationDate,'allow-future-date') }}
+        {{ formmacros.fieldDateLabel(formfield.recertificationDate,'allow-future-date') }}
+
+        {% if formfield.attachmentContainer is defined %}
+
+            {% set dropzoneInit = 'default' %}
+            {% set count = 0 %}
+            {% for documentContainer in formfield.attachmentContainer.documentContainers %}
+                {% set count = count + 1 %}
+                {% set uniqueId = count~"-"~"now"|date("mdYHisu") %}
+                {{ formmacros.fieldDocumentContainer(documentContainer,cycle,'boardcertification'~uniqueId,"",20,dropzoneInit) }}
+            {% endfor %}
+
+            {% if prototype == "prototype" %}
+                {% set uniqueId = "1-"~"now"|date("mdYHisu") %}
+                {{ formmacros.fieldDocumentContainer(formfield.attachmentContainer.documentContainers.vars.prototype,cycle,'boardcertification'~uniqueId,"",20,dropzoneInit) }}
+            {% endif %}
+
+        {% endif %}
+
+    </div>
+{% endmacro %}
+
+
+{% macro codenyphs( field, cycle, classname, prototype ) %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+    {% if prototype == "prototype" %}
+        {% set formfield = field.vars.prototype %}
+    {% else %}
+        {% set formfield = field %}
+    {% endif %}
+
+    <div class="well {{ classname }}">
+
+        {% if cycle != 'show_user' %}
+            <div class="text-right">
+                <button type="button" class="btn btn-default btn-sm" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+            </div>
+        {% endif %}
+
+        {{ formmacros.field_notempty(formfield.field,cycle) }}
+        {{ formmacros.fieldDateLabel_notempty(formfield.startDate,cycle,'allow-future-date') }}
+        {{ formmacros.fieldDateLabel_notempty(formfield.endDate,cycle,'allow-future-date') }}
+
+    </div>
+{% endmacro %}
+
+{% macro employmentStatuses( field, cycle, classname, prototype ) %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
+
+    {% if prototype == "prototype" %}
+        {% set formfield = field.vars.prototype %}
+    {% else %}
+        {% set formfield = field %}
+    {% endif %}
+
+    <div class="user-collection-holder well {{ classname }}">
+
+        {% if cycle != 'show_user' %}
+            {% if not formfield.vars.value or formfield.vars.value and formfield.vars.value.id != app.user.getId() %}
+                <div class="text-right">
+                    <button type="button" class="btn btn-default btn-sm btn-remove-minimumone-collection confirm-delete-with-expired"
+                            onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+                </div>
+            {% endif %}
+        {% endif %}
+
+        {{ formmacros.fieldDateLabel(formfield.hireDate,'allow-future-date') }}
+        {{ formmacros.field(formfield.employmentType) }}
+        {{ formmacros.field(formfield.jobDescriptionSummary) }}
+        {{ formmacros.field(formfield.jobDescription) }}
+
+        {% if formfield.institution is defined %}
+            {{ treemacros.compositeTreeNode(formfield.institution,cycle,prototype) }}
+        {% endif %}
+
+        {{ formmacros.fieldDateLabel_notempty(formfield.terminationDate,cycle,'allow-future-date') }}
+        {{ formmacros.field_notempty(formfield.terminationType,cycle) }}
+
+        {#{% if formfield.terminationReason is defined or (prototype == "prototype" and field.vars.value.terminationReason ) %}#}
+        {% if formfield.terminationReason is defined %}
+            {{ formmacros.field_notempty(formfield.terminationReason,cycle) }}
+        {% endif %}
+
+
+        {% if formfield.attachmentContainer is defined %}
+
+            {% set dropzoneInit = 'default' %}
+            {% if formfield.vars.value and formfield.vars.value.id == app.user.getId() %}
+                {% set dropzoneInit = 'inactive' %}
+            {% endif %}
+
+            {% set count = 0 %}
+            {% for documentContainer in formfield.attachmentContainer.documentContainers %}
+                {#documentContainers|length:{{ formfield.attachmentContainer.documentContainers|length }}#}
+                {% set count = count + 1 %}
+                {% set uniqueId = count~"-"~"now"|date("mdYHisu") %}
+                {{ formmacros.fieldDocumentContainer(documentContainer,cycle,'employment'~uniqueId,"",20,dropzoneInit) }}
+            {% endfor %}
+
+            {% if prototype == "prototype" %}
+                {% set uniqueId = "1-"~"now"|date("mdYHisu") %}
+                {{ formmacros.fieldDocumentContainer(formfield.attachmentContainer.documentContainers.vars.prototype,cycle,'employment'~uniqueId,"",20,dropzoneInit) }}
+            {% endif %}
+
+        {% endif %}
+
+
+    </div>
+{% endmacro %}
+
+
+
+
+{#isEntity inidcates if the fields should be render not as form but as pure entity object (object's shadow)#}
+{% macro identifier( field, cycle, classname, prototype, isEntity ) %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+
+    {% if isEntity is not defined %}
+        {% set isEntity = false %}
+    {% endif %}
+
+    {% if prototype == "prototype" %}
+        {% set formfield = field.vars.prototype %}
+    {% else %}
+        {% set formfield = field %}
+    {% endif %}
+
+    {% if isEntity %}
+        {% set formfieldValue = field %}
+    {% else %}
+        {% set formfieldValue = formfield.vars.value %}
+    {% endif %}
+
+    {% if formfieldValue and formfieldValue.status == 0 or prototype == 'prototype' %}
+        {% set wellclass = "user-alert-warning" %}
+    {% else %}
+        {% set wellclass = "" %}
+    {% endif %}
+
+    {% set showThis = false %}
+    {% if isEntity %}
+        {% if formfieldValue.publiclyVisible == true %}
+            {% set showThis = true %}
+        {% endif %}
+    {% else %}
+        {% set showThis = true %}
+    {% endif %}
+
+    {% if showThis %}
+        <div class="alert {{ classname }} {{ wellclass }}">
+
+            {% if cycle != 'show_user' and not isEntity %}
+                <div class="text-right" style="padding-bottom: 10px">
+                    <button type="button" class="btn btn-default btn-sm"
+                            onClick="removeExistingObject(this,'{{ classname }}')" >
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </button>
+                </div>
+            {% endif %}
+
+            {% if not isEntity and formfield.publiclyVisible is defined %}
+                {{ formmacros.field(formfield.publiclyVisible) }}
+            {% endif %}
+
+            {{ usermacros.statusVerifiedField(formfield,cycle,isEntity) }}
+
+            {% if isEntity %}
+                {{ formmacros.simplefield( "Identifier Type:", formfieldValue.keytype, "", "disabled" ) }}
+            {% else %}
+                {{ formmacros.field(formfield.keytype) }}
+            {% endif %}
+
+            {% if formfield.keytypemrn is defined %}
+                {#{% set displayNone = "display:none;" %}#}
+                {#{% set hideClass = "hideComplex" %}#}
+                {% if formfieldValue and formfieldValue.keytypemrn and formfieldValue.keytypemrn.id %}
+                    {% set displayNone = "" %}
+                    {#{% set hideClass = "" %}#}
+                {% else %}
+                    <p></p>
+                    {% set displayNone = "display:none;" %}
+                {% endif %}
+
+                <div class="identifier-keytypemrn-field-holder" style="{{ displayNone }}">
+                    {% if isEntity %}
+                        {{ formmacros.simplefield( "MRN Type:", formfieldValue.keytype, "", "disabled" ) }}
+                    {% else %}
+                        {{ formmacros.field(formfield.keytypemrn) }}
+                    {% endif %}
+                </div>
+            {% endif %}
+
+            {% if cycle == 'show_user' %}
+
+                {% if (isEntity or formfield.link is defined) and (formfieldValue and formfieldValue.link != '') %}
+
+                    {% set scheme = app.request.scheme %}
+                    {% if scheme in formfieldValue.link %}
+                        {% set href = formfieldValue.link %}
+                    {% else %}
+                        {% set href = scheme~"://"~formfieldValue.link %}
+                    {% endif %}
+
+                    {% if isEntity %}
+                        {% set hreflink = '<a href="'~href|raw~'">'~formfield.field~'</a>' %}
+                    {% else %}
+                        {% set hreflink = '<a href="'~href|raw~'">'~formfield.field.vars.value~'</a>' %}
+                    {% endif %}
+
+                    {{ formmacros.simplefield( "Identifier:", hreflink, "", "disabled" ) }}
+
+                {% else %}
+
+                    {#identifier number field#}
+                    {% if isEntity %}
+                        {{ formmacros.simplefield( "Identifier:", formfieldValue.field, "", "disabled" ) }}
+                     {% else %}
+                        {{ formmacros.field(formfield.field) }}
+                    {% endif %}
+
+                {% endif %}
+
+            {% else %}
+                {{ formmacros.field(formfield.field) }}
+            {% endif %}
+
+            {% if isEntity %}
+                {{ formmacros.simplefield_checkbox( "Identifier enables system/service access:", formfield.enableAccess, "", "disabled" ) }}
+            {% else %}
+                {{ formmacros.field(formfield.enableAccess) }}
+            {% endif %}
+
+            {% if formfield.link is defined and cycle != 'show_user' %}
+                {{ formmacros.field(formfield.link) }}
+            {% endif %}
+
+        </div>
+    {% endif %}
+
+    {% if not isEntity %}
+        {% do field.setRendered %}
+    {% endif %}
+{% endmacro %}
+
+{#{% macro researchLabs( field, cycle, classname, prototype ) %}#}
+    {#{% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
+    {#{% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}#}
+
+    {#{% if prototype == "prototype" %}#}
+        {#{% set formfield = field.vars.prototype %}#}
+    {#{% else %}#}
+        {#{% set formfield = field %}#}
+    {#{% endif %}#}
+
+    {#<div class="user-collection-holder well {{ classname }}">#}
+
+        {#{% if cycle != 'show_user' %}#}
+            {#<div class="text-right">#}
+                {#<button type="button" class="btn btn-default btn-sm btn-remove-minimumone-collection confirm-delete-with-expired" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>#}
+            {#</div>#}
+        {#{% endif %}#}
+
+        {#&#123;&#35;{{ formmacros.field(formfield.researchLabTitle) }}&#35;&#125;#}
+        {#{{ formmacros.field(formfield.name) }}#}
+        {#{{ formmacros.checkbox(formfield.researchPI) }}#}
+        {#{{ formmacros.fieldDateLabel(formfield.foundedDate,'allow-future-date') }}#}
+        {#{{ formmacros.fieldDateLabel_notempty(formfield.dissolvedDate,cycle,'allow-future-date') }}#}
+        {#{{ formmacros.field_notempty(formfield.comment,cycle) }}#}
+        {#{{ formmacros.field(formfield.location) }}#}
+        {#{{ usermacros.emailPhoneField_notempty(formfield.weblink,cycle,'link',"") }}#}
+
+    {#</div>#}
+{#{% endmacro %}#}
+
+{% macro comments( field, cycle, classname, prototype ) %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "AppUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
+
+    {% if prototype == "prototype" %}
+        {% set formfield = field.vars.prototype %}
+    {% else %}
+        {% set formfield = field %}
+    {% endif %}
+
+    {% if "show" in cycle %}
+        {% set showFlag = true %}
+    {% else %}
+        {% set showFlag = false %}
+    {% endif %}
+
+    {% if formfield.comment.vars.value != "" or not showFlag %}
+
+        {% if classname == 'user-privatecomments' and (formfield.vars.value and formfield.vars.value.status == 0 or prototype == 'prototype') %}
+            {% set wellclass = "user-alert-warning" %}
+        {% else %}
+            {% set wellclass = "" %}
+        {% endif %}
+
+        {#alert style="padding-bottom:120px;"#}
+        <div class="user-collection-holder alert {{classname}} {{wellclass}}">
+
+            {% if cycle != 'show_user' %}
+                <div class="text-right" style="padding-bottom: 10px">
+                    <button type="button" class="btn btn-default btn-sm" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+                </div>
+            {% endif %}
+
+            {{ formmacros.field(formfield.id) }}
+
+            {% if formfield.status is defined %}
+                {{ usermacros.statusVerifiedField(formfield,cycle) }}
+            {% endif %}
+
+            {% if formfield.commentType is defined %}
+                {{ treemacros.compositeTreeNode(formfield.commentType,cycle,prototype) }}
+            {% endif %}
+
+            {{ formmacros.field(formfield.comment) }}
+
+            {% if formfield.documents is defined or prototype == 'prototype' %}
+                {{ usermacros.fileuploadLabelField( formfield, formfield.documents, cycle, classname, prototype ) }}
+            {% endif %}
+
+            {% if showFlag and formfield.vars.value and formfield.vars.value.updateAuthor %}
+                {% set authorHref = path(employees_sitename~'_showuser',{'id':formfield.vars.value.updateAuthor.getId()}) %}
+                {% set authorAndDate =
+                    "Updated by <a href=\"" ~ authorHref ~ "\">" ~
+                    formfield.vars.value.updateAuthor.getUsernameOptimal()~"</a> on " ~
+                    formfield.vars.value.updatedate|date('Y-m-d') ~ " at " ~ formfield.vars.value.updatedate|date('h:i a')
+                %}
+                {{ formmacros.simplefield("",authorAndDate,"simple-field", "disabled") }}
+            {% endif %}
+
+        </div>
+
+    {% else %}
+
+        {% do formfield.commentType.setRendered %}
+        {#{% do formfield.commentSubType.setRendered %}#}
+        {% do formfield.comment.setRendered %}
+
+        {% if formfield.status is defined %}
+            {% do formfield.status.setRendered %}
+        {% endif %}
+
+    {% endif %}
+
+{% endmacro %}
+
+
+{% macro snapshot_orig( user, sitename, cycle ) %}
+
+    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+
+    {#check if assistants exist#}
+    {% set assistExist = false %}
+    {% if user.locations is defined %}
+        {% for location in user.locations %}
+            {% if location.assistant|length > 0 %}
+                {% set assistExist = true %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+    {#Academic Title#}
+    {% set showAcademicTitle = false %}
+    {% if user.appointmentTitles|length > 0 %}
+        {% for appointmentTitles in user.appointmentTitles %}
+            {% if appointmentTitles.name %}
+                {% set showAcademicTitle = true %}
+            {% endif %}
+        {% endfor %}
+
+    {% endif %}
+
+    {#IC#}
+    {% set showIc = false %}
+    {% for location in user.locations %}
+        {% if location.ic %}
+            {% set showIc = true %}
+        {% endif %}
+    {% endfor %}
+
+    <table class="table table-condensed text-left">
+    <thead>
+        <tr>
+            <th>Service(s)</th>
+            <th>Name</th>
+            <th>Administrative Title(s)</th>
+
+            {% if showAcademicTitle %}
+                <th>Academic Title(s)</th>
+            {% endif %}
+
+            <th>Email</th>
+            <th>Phone Number</th>
+
+            {% if showIc %}
+                <th>IC</th>
+            {% endif %}
+
+            <th>Room Number(s)</th>
+
+            {% if assistExist %}
+                <th>Assistant(s)</th>
+            {% endif %}
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                {#{% for service in user.getServices %}#}
+                    {#{% if service is defined and service != "" %}#}
+                        {#{{ usermacros.getInstitutionalTree(service,'userlink') }}#}
+                    {#{% endif %}#}
+                {#{% endfor %}#}
+            </td>
+            <td>{{ user.displayName }}</td>
+            <td>
+                {% for administrativeTitle in user.administrativeTitles %}
+                    {% if administrativeTitle.name %}
+                        <p>
+                        {% if is_granted('ROLE_USERDIRECTORY_OBSERVER') %}
+                            <a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'administrativeTitle','id': administrativeTitle.name.id, 'name': administrativeTitle.name.name }) }}">{{ administrativeTitle.name }}</a>
+                        {% else %}
+                            {{ administrativeTitle.name }}
+                        {% endif %}
+                        </p>
+                    {% endif %}
+                {% endfor %}
+            </td>
+
+            {#Academic Title#}
+            {% if showAcademicTitle %}
+                <td>
+                    {% for appointmentTitles in user.appointmentTitles %}
+                        {% if appointmentTitles.name %}
+                            <p>
+                            {% if is_granted('ROLE_USERDIRECTORY_OBSERVER') %}
+                                <a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'appointmentTitle','id': appointmentTitles.name.id, 'name': appointmentTitles.name.name }) }}">{{ appointmentTitles.name }}</a>
+                            {% else %}
+                                {{ appointmentTitles.name }}
+                            {% endif %}
+                            </p>
+                        {% endif %}
+                    {% endfor %}
+                </td>
+            {% endif %}
+
+            <td>
+                {% for email in user.getAllEmail() %}
+                    <p>
+                        {{ email['prefix'] }}<a href="mailto:{{ email['email'] }}" target="_top">{{ email['email'] }}</a>
+                    </p>
+                {% endfor %}
+            </td>
+            <td>
+                {% for phone in user.getAllPhones() %}
+                    <p>{{ phone['prefix'] }}{{ usermacros.phoneHref(phone['phone']) }}</p>
+                {% endfor %}
+            </td>
+
+
+            {% if showIc %}
+                <td>
+                    {% for location in user.locations %}
+                        {% if location.ic %}
+                            {{ location.ic }}<br>
+                        {% endif %}
+                    {% endfor %}
+                </td>
+            {% endif %}
+
+            <td>
+                {% for location in user.locations %}
+                    {% if location.room %}
+                        <p>
+                        {% if is_granted('ROLE_USERDIRECTORY_OBSERVER') %}
+                            <a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'room','id': location.room.id, 'name': location.room.name }) }}">{{ location.room }}</a>
+                        {% else %}
+                            {{ location.name }}
+                        {% endif %}
+                        </p>
+                    {% endif %}
+                {% endfor %}
+            </td>
+
+            {% if assistExist %}
+                <td>
+                    {{ usermacros.showAssistantes( user, sitename ) }}
+                </td>
+            {% endif %}
+
+        </tr>
+    </tbody>
+    </table>
+
+{% endmacro %}
+
+{#stevesnapshot#}
+{% macro snapshot_steve( user, sitename, cycle ) %}
+
+    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+
+    <div align="center">
+
+    <div class="snapshot-all">
+
+        {#clearfix#}
+        <div class="snapshot">
+
+            <div class="left">
+
+                <div class="image-box">
+                    {#avatar form modal#}
+                    {#{{ usermacros.avatarForm(user,cycle) }}#}
+                    {% if user.avatar %}
+                        {#{% set avatarImage = user.avatar.getAbsoluteUploadFullPath %}#}
+                        {{ usermacros.showDocumentAsImage(user.avatar,'Avatar','') }}
+                    {% else %}
+                        {% set avatarImage = asset('bundles/appuserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
+                        <img src="{{ avatarImage }}" alt="Avatar" style="max-width:100%; max-height:100%;">
+                    {% endif %}
+                    {#<img src="{{ avatarImage }}" alt="Avatar">#}
+                </div>
+
+                <!--<img src="profile-pic.jpg"> -->
+
+                <div class="left-text">
+
+                    {% set termStr = user.getEmploymentTerminatedStr %}
+                    {% if termStr %}
+                        {% set termStyle = "background-color: gray;" %}
+                    {% else %}
+                        {% set termStyle = "" %}
+                    {% endif %}
+
+                    <h2 style="{{ termStyle }}">
+                        {#Shivakumar Test Testing Subramaniyam, MD, PhD#}
+                        {{ user.getUsernameOptimal }}
+                    </h2>
+
+                    {#head/cheaf#}
+                    {#Chief, Eyebrow Pathology, Assistant Professor of Pathology and Laboratory Medicine#}
+                    {#{% set headInfos = user.getHeadInfo %}#}
+                    {% set headInfos = user_security_utility.getHeadInfo(user) %}
+                    {% if headInfos|length > 0 %}
+                        <h4>
+                        {% for headInfoArr in headInfos %}
+
+                            {% if headInfoArr.old is defined and headInfoArr.old %}
+                                {#it's not used: old!<br>#}
+                                {#Institutions#}
+                                {% for titleInfo in headInfoArr.titleInfo if titleInfo.name is defined %}
+                                    <a href="{{
+                                        path( employees_sitename~'_search_same_object',{
+                                            'tablename':titleInfo['tablename'],
+                                            'id': titleInfo['id'],
+                                            'name': titleInfo['name']
+                                        })
+                                        }}">{{ titleInfo['name']|raw }}
+                                    </a>
+                                    <br>
+                                {% endfor %}
+
+                                {#Titles#}
+                                {% for titleInfo in headInfoArr.instInfo if titleInfo|length > 0 %}
+                                    <a href="{{
+                                        path( employees_sitename~'_search_same_object',{
+                                            'tablename':titleInfo['tablename'],
+                                            'id': titleInfo['id'],
+                                            'name': titleInfo['name']
+                                        })
+                                        }}"><small>{{ titleInfo['name']|raw }}</small>
+                                    </a>
+                                    <br>
+                                {% endfor %}
+                                <br>
+
+                            {% else %}
+                                {#Institutions#}
+                                {% if headInfoArr.titleInfo is defined %}
+                                    {% for titleInfo in headInfoArr.titleInfo %}
+                                        {{ titleInfo|raw }}
+                                        <br>
+                                    {% endfor %}
+                                {% endif %}
+
+                                {#Titles#}
+                                {% if headInfoArr.instInfo is defined %}
+                                    {% for instInfo in headInfoArr.instInfo %}
+                                        {{ instInfo|raw }}
+                                        <br>
+                                    {% endfor %}
+                                {% endif %}
+                                <br>
+
+                            {% endif %}
+
+                        {% endfor %}
+                        </h4>
+                    {% endif %}
+                    {#EOF headInfos#}
+
+                </div>
+            </div>
+
+            <div class="right">
+                <div class="right-text">
+
+                    {% if termStr %}
+                        <h4>{{ termStr }}</h4>
+                    {% endif %}
+
+                    {#preffered phone and email#}
+                    {% if user.getEmail or user.getPreferredPhone %}
+
+                        <div class="prefferedinfo">
+                            {{ vacreq_util.getUserAwayInfo(user)|raw }}
+                            <h4>Preferred Contact Info:</h4>
+                            <table>
+                                {% if user.getEmail %}
+                                    <tr class="row-withspace">
+                                        <td class="left-column">email:</td>
+                                        <td>
+                                            {#{{ user.getEmail }}#}
+                                            <a href="mailto:{{ user.getEmail }}" target="_top">{{ user.getEmail }}</a>
+                                        </td>
+                                    </tr>
+                                {% endif %}
+
+                                {% set criticalEmail = user.getSingleEmail() %}
+                                {% set notificationEmail = user.getSingleEmail(false) %}
+                                {% if notificationEmail != criticalEmail %}
+                                    <tr class="row-withspace">
+                                        <td class="left-column">notification email:</td>
+                                        <td>
+                                            <a href="mailto:{{ notificationEmail }}" target="_top">{{ notificationEmail }}</a>
+                                        </td>
+                                    </tr>
+                                {% endif %}
+
+                                {% if user.getPreferredPhone %}
+                                    <tr>
+                                        <td class="left-column">ph:</td>
+                                        <td>
+                                            {#{{ user.getPreferredPhone }}#}
+                                            {{ usermacros.phoneHref(user.getPreferredPhone) }}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            </table>
+                        </div>
+
+                    {% endif %}
+
+
+                    {% for location in user.getLocations %}
+
+                        {% if location.hasLocationTypeName("Employee Home") == false %}
+
+                            <div class="contact">
+                                <h4>{{ location.getLocationTypesStr }}:</h4>
+                                <table>
+                                    {% if location.room %}
+                                        <tr>
+                                            <td class="left-column">room:</td>
+                                            <td>
+                                                {#{{ location.room }}#}
+                                                <a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'room','id': location.room.id, 'name': location.room.name }) }}">{{ location.room }}</a>
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+
+                                    {% if location.phone %}
+                                        <tr>
+                                            <td class="left-column">ph:</td>
+                                            <td>
+                                                {#{{ location.phone }}#}
+                                                {{ usermacros.phoneHref(location.phone) }}
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+
+                                    {% if location.pager %}
+                                        <tr>
+                                            <td class="left-column">pager:</td>
+                                            <td>{{ location.pager }}</td>
+                                        </tr>
+                                    {% endif %}
+
+                                    {% if location.ic %}
+                                        <tr>
+                                            <td class="left-column">i/c:</td>
+                                            <td>{{ location.ic }}</td>
+                                        </tr>
+                                    {% endif %}
+
+                                    {% if location.fax %}
+                                        <tr>
+                                            <td class="left-column">fax:</td>
+                                            <td>{{ location.fax }}</td>
+                                        </tr>
+                                    {% endif %}
+
+                                    {% if location.email %}
+                                        <tr>
+                                            <td class="left-column">email:</td>
+                                            <td>
+                                                {#<a href="mailto:name123@med.cornell.edu">name123@med.cornell.edu</a>#}
+                                                <a href="mailto:{{ location.email }}" target="_top">{{ location.email }}</a>
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+
+                                </table>
+                            </div>
+
+
+                            {% if location.getAssistant|length > 0 %}
+                                <div class="assistant">
+                                    <h4>Assistant:</h4>
+
+                                    {% for assistant in location.getAssistant %}
+
+                                        <table style="padding-bottom: 10px;">
+                                            <tr>
+                                                <td class="left-column">name:</td>
+                                                <td>
+                                                    {#{{ assistant.getUsernameOptimal }}#}
+                                                    <a href="{{ path(sitename~'_showuser', { 'id': assistant.id }) }}">{{ assistant.getUsernameOptimal() }}</a>
+                                                </td>
+                                            </tr>
+                                            {#<tr>phone(s):</tr>#}
+                                            <tr>
+                                                <td class="left-column" valign="top">ph:</td>
+                                                <td>
+                                                    {% for phone in assistant.getAllPhones() %}
+                                                        {{ phone['prefix'] }}{{ usermacros.phoneHref(phone['phone']) }}<br>
+                                                    {% endfor %}
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="left-column" valign="top">email:</td>
+                                                <td>
+                                                    {#<a href="mailto:name123@med.cornell.edu">name123@med.cornell.edu</a>#}
+                                                    {#<a href="mailto:{{ assistant.email }}" target="_top">{{ assistant.email }}</a>#}
+                                                    {% for email in assistant.getAllEmail() %}
+                                                        <a href="mailto:{{ email['email'] }}" target="_top">{{ email['email'] }}</a><br>
+                                                    {% endfor %}
+                                                </td>
+                                            </tr>
+
+                                        </table>
+
+                                    {% endfor %}
+
+                                </div>
+                            {% endif %}
+
+                        {% endif %} {#main locations only#}
+
+                    {% endfor %}
+
+                    {#edit button glyphicon#}
+                    {% if is_granted('ROLE_USERDIRECTORY_EDITOR') or is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
+                        {% set userEditor = true %}
+                    {% else %}
+                        {% set userEditor = false %}
+                    {% endif %}
+                    {% if userEditor == true or user.id == app.user.getId() %}
+                        <p>
+
+                        {% if userEditor == true %}
+                            <a data-toggle="tooltip" title="Print Preview Internal Mailing Label"
+                               style="color:black;" target="_blank"
+                               href="{{ path('employees_user_label_preview',{'id':user.id}) }}"
+                            >
+                                <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
+                            </a>
+                        {% endif %}
+
+                        <a data-toggle="tooltip" title="Edit" style="margin-left: 10px; color:black;" href="{{ path(sitename~'_user_edit',{'id':user.id}) }}">
+                            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                        </a>
+
+                        {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
+                            <a data-toggle="tooltip" title="Impersonate" style="margin-left: 10px; color:black;" href="{{ path(employees_sitename~'_user_impersonate',{'id':user.id}) }}">
+                                <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
+                            </a>
+                        {% endif %}
+
+                        {% if user.id != app.user.getId() %}
+                            <a
+                                general-data-confirm="Are you sure you want to mark user as no longer working here as of yesterday and prevent them from logging in?"
+                                data-toggle="tooltip"
+                                title="Mark user as no longer working here as of yesterday and prevent them from logging in"
+                                style="margin-left: 10px; color:black;"
+                                href="{{ path(employees_sitename~'_user_employment_terminate',{'id':user.id}) }}">
+                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                            </a>
+                        {% endif %}
+
+                        </p>
+                    {% endif %}
+
+                </div>{#right-text#}
+            </div> {#right#}
+        </div>
+    </div>
+
+    </div>
+
+{% endmacro %}
+
+{% macro snapshot( user, sitename, cycle ) %}
+
+    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+
+    <h1>{{ user.getUsernameOptimal }}</h1>
+
+    {#avatar#}
+    <div align="center" style="height: 160px;">
+        {#avatar form modal#}
+        {% if user.avatar %}
+            {{ usermacros.showDocumentAsImage(user.avatar,'Avatar','') }}
+        {% else %}
+            {% set avatarImage = asset('bundles/appuserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
+            <img src="{{ avatarImage }}" alt="Avatar" style="max-width:100%; max-height:100%;">
+        {% endif %}
+    </div>
+
+
+{% endmacro %}
+
+
+{% macro roleAttributes( roleobjects ) %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% for role in roleobjects %}
+        {% for attribute in role.getAttributes() %}
+            {{ formmacros.simplefield( attribute.getName()~":", attribute.getValue(), "input", "disabled" ) }}
+        {% endfor %}
+    {% endfor %}
+{% endmacro %}
+
+
+
+
+{% macro permissionSection( permissions, cycle, sitename, collapsein, title, usedata ) %}
+
+    {% import "AppUserdirectoryBundle::Default/userformmacros.html.twig" as userform %}
+    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+
+    {% if usedata %}
+        <div id="form-prototype-data"
+             data-prototype-user-permissions = "{{ userform.permissions(permissions,cycle,'user-permissions','prototype', sitename)|e }}"
+        ></div>
+    {% endif %}
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h4 class="panel-title text-left">
+                <a data-toggle="collapse" href="#permissions">
+                    {{ title }}
+                </a>
+            </h4>
+        </div>
+        <div id="permissions" class="panel-collapse collapse {{ collapsein }}">
+            <div class="panel-body">
+
+                <div class="user-permissions-holder">
+                    {% if permissions|length > 0 %}
+                        {% for permission in permissions %}
+                            {{ userform.permissions( permission, cycle, 'user-permissions', 'noprototype' ) }}
+                        {% endfor %}
+                    {% else %}
+                        No specific user permissions are defined for this user.<br>
+                    {% endif %}
+                    {{ usermacros.addNewObjectBtn(cycle,'user-permissions','Add Permission') }}
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro permissions( field, cycle, classname, prototype ) %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+    {% if "show" in cycle %}
+        {% set showFlag = true %}
+    {% else %}
+        {% set showFlag = false %}
+    {% endif %}
+
+    {% if prototype == "prototype" %}
+        {% set formfield = field.vars.prototype %}
+    {% else %}
+        {% set formfield = field %}
+    {% endif %}
+
+    <div class="well {{ classname }}">
+
+        {% if not showFlag %}
+            <div class="text-right">
+                <button type="button" class="btn btn-default btn-sm" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+            </div>
+        {% endif %}
+
+        {#{{ formmacros.field_notempty(formfield.country,cycle) }}#}
+        {{ formmacros.field(formfield.id) }}
+        {{ formmacros.field(formfield.permission) }}
+        {{ formmacros.field(formfield.institutions) }}
+
+    </div>
+{% endmacro %}
+
+

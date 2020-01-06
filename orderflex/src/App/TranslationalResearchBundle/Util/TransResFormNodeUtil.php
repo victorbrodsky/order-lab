@@ -24,6 +24,8 @@
 
 namespace App\TranslationalResearchBundle\Util;
 
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 //service: transres_formnode_util
 
@@ -35,7 +37,7 @@ class TransResFormNodeUtil
     protected $secTokenStorage;
     protected $secAuth;
 
-    public function __construct( $em, $container ) {
+    public function __construct( EntityManagerInterface $em, ContainerInterface $container ) {
         $this->container = $container;
         $this->em = $em;
         $this->secAuth = $container->get('security.authorization_checker'); //$this->secAuth->isGranted("ROLE_USER")

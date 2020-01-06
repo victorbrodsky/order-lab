@@ -37,6 +37,10 @@ class CastFunction extends FunctionNode {
     public $firstDateExpression = null;
     public $unit = null;
 
+//    public function __construct($name = '') {
+//        parent::__construct($name);
+//    }
+
     public function parse(\Doctrine\ORM\Query\Parser $parser)
     {
         $parser->match(Lexer::T_IDENTIFIER);

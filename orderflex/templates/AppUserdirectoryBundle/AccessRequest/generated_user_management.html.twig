@@ -1,0 +1,132 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{#{% extends "AppUserdirectoryBundle::Default/base.html.twig" %}#}
+
+{% if sitename == 'employees' %}
+    {% set extendStr = "AppUserdirectoryBundle::Default/base.html.twig" %}
+{% elseif sitename == 'fellapp' %}
+    {% set extendStr = "AppFellAppBundle::Default/base.html.twig" %}
+{% elseif sitename == 'deidentifier' %}
+    {% set extendStr = "AppDeidentifierBundle::Default/base.html.twig" %}
+{% elseif sitename == 'scan' %}
+    {% set extendStr = "AppOrderformBundle::Default/base.html.twig" %}
+{% elseif sitename == 'vacreq' %}
+    {% set extendStr = "AppVacReqBundle::Default/base.html.twig" %}
+{% elseif sitename == 'calllog' %}
+    {% set extendStr = "AppCallLogBundle::Default/base.html.twig" %}
+{% elseif sitename == 'translationalresearch' %}
+    {% set extendStr = "AppTranslationalResearchBundle::Default/base.html.twig" %}
+{% endif %}
+
+{% extends extendStr%}
+
+{#This form is used for access request and authorization management#}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+{% block content %}
+
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppUserdirectoryBundle::Default/userformmacros.html.twig" as userform %}
+
+    <h3 class="text-info">
+        {{ title }}
+    </h3>
+
+    <br>
+
+    {{ userform.snapshot_steve(user,sitenameshowuser,'edit') }}
+
+    <br>
+
+
+    {#<form id="accessrequest_management" action="{{ actionPath }}" method="POST">#}
+    {{ form_start(form) }}
+
+        {{ formmacros.field(form.author) }}
+        {{ formmacros.fieldDateLabel(form.createDate,'regular-datepicker') }}
+        {{ formmacros.field(form.otherUserParam) }}
+
+        <hr>
+
+        {{ formmacros.field(form.keytype) }}
+        {{ formmacros.field(form.primaryPublicUserId) }}
+
+        {% for info in form.infos %}
+            {{ formmacros.field(info.displayName) }}
+
+            {#{{ formmacros.field(info.salutation) }}#}
+            {% do info.salutation.setRendered %}
+
+            {{ formmacros.field(info.firstName) }}
+            {{ formmacros.field_notempty(info.middleName,cycle) }}
+            {{ formmacros.field(info.lastName) }}
+
+            {#{{ formmacros.field_notempty(info.suffix,cycle) }}#}
+            {% do info.suffix.setRendered %}
+
+            {{ usermacros.emailPhoneField(info.email,cycle,'email',"") }}
+            {{ usermacros.emailPhoneField(info.preferredPhone,cycle,'phone',"") }}
+
+            {#{{ formmacros.field_notempty(info.initials,cycle) }}#}
+            {% do info.initials.setRendered %}
+
+        {% endfor %}
+
+        {{ formmacros.checkbox(form.locked) }}
+
+        {#<div id="user-password-box" style="display:none;">#}
+            {#{{ formmacros.field(form.password.first) }}#}
+            {#{{ formmacros.field(form.password.second) }}#}
+        {#</div>#}
+
+        {{ formmacros.field(form.roles) }}
+
+        {{ formmacros.checkbox(form.emailNotification) }}
+
+
+        <br>
+
+        <div class="row">
+
+            <div class="col-xs-6" align="right">
+                <button type='submit' class="btn btn-info btn-sm">Update</button>
+            </div>
+
+            <div class="col-xs-6" align="left">
+                <a class="btn btn-danger btn-sm" href="{{ path(sitename~'_generated_users') }}">Cancel</a>
+            </div>
+
+        </div>
+
+    {#</form>#}
+    {{ form_end(form) }}
+
+
+{% endblock %}
+
+{#Snapshot css#}
+{% block additionalcss %}
+    {% stylesheets
+        'bundles/appuserdirectory/form/css/steve-snapshot.css' filter='cssrewrite'
+    %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}

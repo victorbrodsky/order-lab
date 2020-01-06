@@ -27,6 +27,11 @@ namespace App\UserdirectoryBundle\Security\Util;
 
 
 
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+
 use App\UserdirectoryBundle\Entity\Permission;
 use App\UserdirectoryBundle\Entity\PerSiteSettings;
 use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
@@ -45,7 +50,7 @@ class UserSecurityUtil {
     protected $secAuth;
     protected $container;
 
-    public function __construct( $em, $secToken, $secAuth, $container ) {
+    public function __construct( EntityManagerInterface $em, TokenStorageInterface $secToken, AuthorizationCheckerInterface $secAuth, ContainerInterface $container ) {
         $this->em = $em;
         $this->secToken = $secToken;
         $this->secAuth = $secAuth;

@@ -19,6 +19,7 @@ return [
     FOS\RestBundle\FOSRestBundle::class => ['all' => true],
     FOS\CommentBundle\FOSCommentBundle::class => ['all' => true],
     Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle::class => ['all' => true],
+    FOS\JsRoutingBundle\FOSJsRoutingBundle::class => ['all' => true],
 
 //    App\UserdirectoryBundle\AppUserdirectoryBundle::class => ['all' => true],
 //    App\OrderformBundle\AppOrderformBundle::class => ['all' => true],

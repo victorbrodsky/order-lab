@@ -197,3 +197,17 @@ services:
 #            class: Symfony\Bundle\FrameworkBundle\Command\AssetsInstallCommand
 #            calls:
 #                - [setContainer, ["@service_container"] ]
+
+#    Doctrine\ORM\Query\AST\Functions\FunctionNode:
+#        autowire: false
+#        autoconfigure: false
+##        public: false
+#        arguments:
+#          $name: '@name'
+
+#    App\UserdirectoryBundle\Query\CastFunction:
+#        autowire: false
+#        autoconfigure: false
+#        public: false
+#        arguments:
+#            $name: '@name'

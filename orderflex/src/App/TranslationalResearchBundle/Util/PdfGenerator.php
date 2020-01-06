@@ -8,7 +8,8 @@
 
 namespace App\TranslationalResearchBundle\Util;
 
-
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use App\UserdirectoryBundle\Entity\Document;
 use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -23,7 +24,7 @@ class PdfGenerator
 
     protected $uploadDir;
 
-    public function __construct( $em, $container ) {
+    public function __construct( EntityManagerInterface $em, ContainerInterface $container ) {
         $this->container = $container;
         $this->em = $em;
         $this->secAuth = $container->get('security.authorization_checker'); //$this->secAuth->isGranted("ROLE_USER")
