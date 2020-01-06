@@ -184,4 +184,14 @@ Changed SimpleHydrator and Changed StainHydrator
 $serviceRequest = new DefaultServiceRequest($accessToken,"OAuth");
 https://symfonycasts.com/screencast/symfony-fundamentals/create-service
 https://stackoverflow.com/questions/54825231/symfony-4-argument-has-no-type-hint-you-should-configure-its-value-explicitly
+https://symfony.com/doc/3.4/service_container.html#services-manually-wire-args - manually wiring non-object arguments
 TODO: Test GoogleSheetManagement->getSheetByFileId($fileId);
+
+use Box\Spout\Writer\Style\Border;
+php bin/console debug:autowiring
+https://github.com/symfony/symfony/issues/23174
+https://symfony.com/blog/new-in-symfony-3-3-psr-4-based-service-discovery
+php bin/console debug:router
+php bin/console assets:install --symlink public
+
+
