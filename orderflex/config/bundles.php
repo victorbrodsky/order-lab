@@ -19,5 +19,5 @@ return [
     FOS\CommentBundle\FOSCommentBundle::class => ['all' => true],
     FOS\JsRoutingBundle\FOSJsRoutingBundle::class => ['all' => true],
     Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle::class => ['all' => true],
-    Symfony\Bundle\MonologBundle\MonologBundle::class => ['all' => true],
+//    Symfony\Bundle\MonologBundle\MonologBundle::class => ['all' => true],
 ];
