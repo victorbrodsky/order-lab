@@ -27,8 +27,8 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-use ADesigns\CalendarBundle\Event\CalendarEvent;
-use ADesigns\CalendarBundle\Entity\EventEntity;
+//use ADesigns\CalendarBundle\Event\CalendarEvent;
+//use ADesigns\CalendarBundle\Entity\EventEntity;
 
 //vacreq site
 

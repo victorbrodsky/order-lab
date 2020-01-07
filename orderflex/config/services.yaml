@@ -87,6 +87,23 @@ services:
 #    App\UserdirectoryBundle\Query\GroupConcat:
 #        autowire: false
 
+#    App\Log\CustomLogger:
+#        arguments: ['@logger']
+#        tags:
+#            - { name: monolog.logger, channel: app }
+
+    logger:
+        alias: 'monolog.logger'
+        public: true
+
+#    Monolog\Logger:
+#        autowire: false
+
+    oleg.twig.extension.date:
+        class: Twig_Extensions_Extension_Date
+        tags:
+             - { name: 'twig.extension' }
+
 oneup_uploader:
     mappings:
         employees_gallery:

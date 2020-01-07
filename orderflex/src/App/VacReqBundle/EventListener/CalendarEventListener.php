@@ -26,10 +26,10 @@ namespace App\VacReqBundle\EventListener;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use ADesigns\CalendarBundle\Event\CalendarEvent;
-use ADesigns\CalendarBundle\Entity\EventEntity;
 use Doctrine\ORM\EntityManager;
 
+//use ADesigns\CalendarBundle\Event\CalendarEvent;
+//use ADesigns\CalendarBundle\Entity\EventEntity;
 
 
 class CalendarEventListener
@@ -44,6 +44,12 @@ class CalendarEventListener
     }
 
     public function loadEvents(CalendarEvent $calendarEvent)
+    {
+        //ADesigns\CalendarBundle is not compatible with Symfony 4
+        return;
+    }
+
+    public function loadEventsOrig(CalendarEvent $calendarEvent)
     {
         //$vacreqUtil = $this->container->get('vacreq_util');
         //$dateformat = 'M d Y';

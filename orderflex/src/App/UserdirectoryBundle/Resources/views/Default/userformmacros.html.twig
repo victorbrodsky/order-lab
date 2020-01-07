@@ -767,7 +767,7 @@
                         {#{% set avatarImage = user.avatar.getAbsoluteUploadFullPath %}#}
                         {{ usermacros.showDocumentAsImage(user.avatar,'Avatar','') }}
                     {% else %}
-                        {% set avatarImage = asset('bundles/appuserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
+                        {% set avatarImage = asset('orderassets/appuserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
                         <img src="{{ avatarImage }}" alt="Avatar" style="max-width:100%; max-height:100%;">
                     {% endif %}
                     {#<img src="{{ avatarImage }}" alt="Avatar">#}
@@ -1075,7 +1075,7 @@
         {% if user.avatar %}
             {{ usermacros.showDocumentAsImage(user.avatar,'Avatar','') }}
         {% else %}
-            {% set avatarImage = asset('bundles/appuserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
+            {% set avatarImage = asset('orderassets/appuserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
             <img src="{{ avatarImage }}" alt="Avatar" style="max-width:100%; max-height:100%;">
         {% endif %}
     </div>

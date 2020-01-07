@@ -108,6 +108,9 @@
     "doctrine/reflection": {
         "version": "v1.0.0"
     },
+    "egulias/email-validator": {
+        "version": "2.1.13"
+    },
     "friendsofsymfony/comment-bundle": {
         "version": "v2.3.3"
     },
@@ -325,7 +328,7 @@
         ]
     },
     "swiftmailer/swiftmailer": {
-        "version": "v5.4.12"
+        "version": "v6.2.3"
     },
     "symfony/asset": {
         "version": "v3.4.36"
@@ -335,6 +338,9 @@
     },
     "symfony/cache": {
         "version": "v3.4.36"
+    },
+    "symfony/cache-contracts": {
+        "version": "v2.0.1"
     },
     "symfony/class-loader": {
         "version": "v3.4.36"
@@ -367,11 +373,17 @@
     "symfony/dotenv": {
         "version": "v3.4.36"
     },
+    "symfony/error-handler": {
+        "version": "v4.4.2"
+    },
     "symfony/event-dispatcher": {
         "version": "v3.4.36"
     },
+    "symfony/event-dispatcher-contracts": {
+        "version": "v1.1.7"
+    },
     "symfony/expression-language": {
-        "version": "v3.4.36"
+        "version": "v4.4.2"
     },
     "symfony/filesystem": {
         "version": "v3.4.36"
@@ -522,6 +534,18 @@
             "./config/packages/security.yaml"
         ]
     },
+    "symfony/security-core": {
+        "version": "v4.4.2"
+    },
+    "symfony/security-csrf": {
+        "version": "v5.0.2"
+    },
+    "symfony/security-guard": {
+        "version": "v4.4.2"
+    },
+    "symfony/security-http": {
+        "version": "v4.4.2"
+    },
     "symfony/serializer": {
         "version": "v3.4.36"
     },
@@ -561,6 +585,9 @@
             "./translations/.gitignore"
         ]
     },
+    "symfony/translation-contracts": {
+        "version": "v2.0.1"
+    },
     "symfony/twig-bridge": {
         "version": "v3.4.36"
     },
@@ -581,6 +608,12 @@
     },
     "symfony/validator": {
         "version": "v3.4.36"
+    },
+    "symfony/var-dumper": {
+        "version": "v5.0.2"
+    },
+    "symfony/var-exporter": {
+        "version": "v5.0.2"
     },
     "symfony/workflow": {
         "version": "3.3",

@@ -5,7 +5,6 @@ return [
     Symfony\Bundle\TwigBundle\TwigBundle::class => ['all' => true],
     Knp\Bundle\PaginatorBundle\KnpPaginatorBundle::class => ['all' => true],
     Knp\Bundle\SnappyBundle\KnpSnappyBundle::class => ['all' => true],
-    ADesigns\CalendarBundle\ADesignsCalendarBundle::class => ['all' => true],
     Oneup\UploaderBundle\OneupUploaderBundle::class => ['all' => true],
     Bmatzner\FontAwesomeBundle\BmatznerFontAwesomeBundle::class => ['all' => true],
     Symfony\Bundle\SecurityBundle\SecurityBundle::class => ['all' => true],
@@ -18,14 +17,7 @@ return [
     JMS\SerializerBundle\JMSSerializerBundle::class => ['all' => true],
     FOS\RestBundle\FOSRestBundle::class => ['all' => true],
     FOS\CommentBundle\FOSCommentBundle::class => ['all' => true],
-    Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle::class => ['all' => true],
     FOS\JsRoutingBundle\FOSJsRoutingBundle::class => ['all' => true],
-
-//    App\UserdirectoryBundle\AppUserdirectoryBundle::class => ['all' => true],
-//    App\OrderformBundle\AppOrderformBundle::class => ['all' => true],
-//    App\FellAppBundle\AppFellAppBundle::class => ['all' => true],
-//    App\DeidentifierBundle\AppDeidentifierBundle::class => ['all' => true],
-//    App\VacReqBundle\AppVacReqBundle::class => ['all' => true],
-//    App\CallLogBundle\AppCallLogBundle::class => ['all' => true],
-//    App\TranslationalResearchBundle\AppTranslationalResearchBundle::class => ['all' => true]
+    Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle::class => ['all' => true],
+    Symfony\Bundle\MonologBundle\MonologBundle::class => ['all' => true],
 ];

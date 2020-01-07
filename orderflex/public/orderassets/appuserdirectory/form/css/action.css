@@ -1,0 +1,136 @@
+/*
+ * Copyright (c) 2017 Cornell University
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+
+/*action buttons*/
+.action-cancel-status {
+    /*background-color: rgb(242, 222, 222);*/
+    background:  linear-gradient( rgb(242, 222, 222), rgb(233, 199, 210) );
+}
+
+.action-amend-status {
+    background:  linear-gradient( rgb(241, 215, 179), rgb(233, 196, 143) );
+}
+
+/*lists*/
+.order-neutral-status {
+    background: rgb(247, 247, 247);
+}
+
+.order-urgent-status {
+    background: rgb(245, 229, 229);
+}
+
+.order-someattention-status {
+    background: rgb(252, 245, 229);
+}
+
+
+.order-interviewee-status {
+    background: rgba(217, 247, 218, 0.38);
+}
+
+.order-reject-status {
+    background: #D0D0D0;
+}
+
+.order-complete-status {
+    background: #E8E8E8;
+}
+
+.order-onhold-status {
+    background: #ffffe6;
+}
+
+/*.order-delete-status {*/
+    /*background: white;*/
+    /*background-image: linear-gradient(45deg, lightgray 25%, transparent 25%, transparent 50%, darkgray 50%, gray 75%, transparent 75%, transparent);*/
+    /*background-size: 1px 1px;*/
+/*}*/
+
+
+.fell-app-status-legend {
+    border-radius: 3px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: black;
+    width: auto;
+    display: inline;
+}
+
+.fell-app-status-legend-active {
+    background: white;
+}
+
+.fell-app-status-legend-reject {
+    background: #D0D0D0;
+}
+
+.fell-app-status-legend-onhold {
+    background: #ffffe6;
+}
+
+.fell-app-status-legend-hidden {
+    background: #ebcccc;
+}
+
+.fell-app-status-legend-archived {
+    background: #BEBEBE;
+    /*background: #c4e3f3;*/
+}
+
+.fell-app-status-legend-interviewee {
+    background: rgba(217, 247, 218, 0.38);
+}
+
+.fell-app-status-legend-complete {
+    /*background: rgb(247, 247, 247);*/
+    background: #e6f2ff;
+}
+
+.fell-app-status-legend-priority {
+    background: #c0e3fa;
+}
+
+.fell-app-status-legend-accepted {
+    background: #3c89bd;
+}
+.fell-app-status-legend-acceptedandnotified {
+    background: #1971ad;
+}
+.fell-app-status-legend-rejectedandnotified {
+    background: #7C7C7C;
+}
+
+.table-row-separator-white {
+    background: linear-gradient(to bottom,#FFFFFF 0,#FFFFFF 100%);
+}
+.table-row-separator-gray {
+    /*background: linear-gradient(to bottom,#e8e8e8 0,#e8e8e8 100%);*/
+    background: linear-gradient(to bottom,#f5f5f5 0,#f5f5f5 100%);
+}
+.table-tbody-hover:hover {
+    background: transparent;
+    background-color: #A9B2BC;
+    /*background-color: #C6C9CD;*/
+}
+
+.table-row-lightred {
+    background: #ffcccc;
+}
+.table-row-lightyellow {
+    background: #FFFACD;
+}

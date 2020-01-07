@@ -66,10 +66,10 @@ app_userdirectory:
     schemes:  ['%connection_channel%']
 
 
-adesigns_calendar:
-    resource: "@ADesignsCalendarBundle/Resources/config/routing.xml"
-    prefix:   /vacation-request
-    schemes:  ['%connection_channel%']
+#adesigns_calendar:
+#    resource: "@ADesignsCalendarBundle/Resources/config/routing.xml"
+#    prefix:   /vacation-request
+#    schemes:  ['%connection_channel%']
 
 
 #acme_demo:

@@ -91,10 +91,10 @@
         </a>
         <ul class="dropdown-menu">
 
-            {% set iconScan = '<img src="'~asset('bundles/appuserdirectory/form/img/favicon.ico')~'" alt="Glass Slide Scan Orders" height="18" width="18">' %}
+            {% set iconScan = '<img src="'~asset('orderassets/appuserdirectory/form/img/favicon.ico')~'" alt="Glass Slide Scan Orders" height="18" width="18">' %}
             {{ usermacros.siteSingleSwitchElement(scan_sitename,iconScan,'Glass Slide Scan Orders') }}
 
-            {% set iconEmployees = '<img src="'~asset('bundles/appuserdirectory/form/img/users-1-64x64.png')~'" alt="Employee Directory" height="18" width="18">' %}
+            {% set iconEmployees = '<img src="'~asset('orderassets/appuserdirectory/form/img/users-1-64x64.png')~'" alt="Employee Directory" height="18" width="18">' %}
             {{ usermacros.siteSingleSwitchElement(employees_sitename,iconEmployees,'Employee Directory') }}
 
             {{ usermacros.siteSingleSwitchElement(fellapp_sitename,'<span class="glyphicon glyphicon-file"></span>','Fellowship Applications') }}
@@ -2000,7 +2000,7 @@
             {% if user.avatar %}
                 {{ usermacros.showDocumentAsImage(user.avatar,'Avatar','') }}
             {% else %}
-                {% set avatarImage = asset('bundles/appuserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
+                {% set avatarImage = asset('orderassets/appuserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
                 <img src="{{ avatarImage }}" alt="Avatar" height="126" width="116">
             {% endif %}
 
@@ -2016,7 +2016,7 @@
                 {% if user.avatar %}
                     {{ usermacros.showDocumentAsImage(user.avatar,'Avatar','','objectFull') }}
                 {% else %}
-                    {% set avatarImage = asset('bundles/appuserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
+                    {% set avatarImage = asset('orderassets/appuserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
                     <img src="{{ avatarImage }}" alt="Avatar" height="126" width="116">
                 {% endif %}
             </div>

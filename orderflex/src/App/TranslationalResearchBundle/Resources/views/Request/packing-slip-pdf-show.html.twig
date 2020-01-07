@@ -208,20 +208,20 @@
 {% block additionalcss %}
 
     {#{% stylesheets#}
-    {#'bundles/appuserdirectory/bootstrap/css/*' filter='cssrewrite'#}
-    {#'bundles/appuserdirectory/form/css/form.css' filter='cssrewrite'#}
+    {#'orderassets/appuserdirectory/bootstrap/css/*' filter='cssrewrite'#}
+    {#'orderassets/appuserdirectory/form/css/form.css' filter='cssrewrite'#}
     {#%}#}
     {#<link rel="stylesheet" href="{{ asset_url }}" />#}
     {#{% endstylesheets %}#}
 
     {#{% stylesheets#}
-    {#'bundles/appuserdirectory/form/css/action.css' filter='cssrewrite'#}
+    {#'orderassets/appuserdirectory/form/css/action.css' filter='cssrewrite'#}
     {#%}#}
     {#<link rel="stylesheet" href="{{ asset_url }}" />#}
     {#{% endstylesheets %}#}
 
     {% stylesheets
-        'bundles/apptranslationalresearch/form/css/pdf-show.css' filter='cssrewrite'
+        'orderassets/apptranslationalresearch/form/css/pdf-show.css' filter='cssrewrite'
     %}
         <link rel="stylesheet" type="text/css" media="all" href="{{ asset_url }}" />
     {% endstylesheets %}
