@@ -26,7 +26,10 @@ namespace App\UserdirectoryBundle\Security\Authentication;
 
 
 use App\OrderformBundle\Security\Util\PacsvendorUtil;
+use App\UserdirectoryBundle\Entity\User;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Security\Core\Encoder\EncoderFactory;
+use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Validator\Constraints\DateTime;
 
@@ -96,16 +99,37 @@ class AuthUtil {
 //                return NULL;
 //            }
 
-            $encoderService = $this->container->get('security.encoder_factory');
-            $encoder = $encoderService->getEncoder($user);
-            if( $encoder->isPasswordValid($user->getPassword(), $token->getCredentials(), $user->getSalt()) ) {
-                //exit('password invalid ['.$token->getCredentials().']');
-                return $user;
+            if(0) {
+                $encoderService = $this->container->get('security.encoder_factory');
+                $encoder = $encoderService->getEncoder($user);
+
+                if ($encoder->isPasswordValid($user->getPassword(), $token->getCredentials(), $user->getSalt())) {
+                    //exit('password invalid ['.$token->getCredentials().']');
+                    return $user;
+                } else {
+                    $this->validateFailedAttempts($user);
+                    $this->logger->notice("Local Authentication: password is invalid");
+                    return NULL;
+                }
             } else {
-                $this->validateFailedAttempts($user);
-                $this->logger->notice("Local Authentication: password is invalid");
-                return NULL;
+                $defaultEncoder = new MessageDigestPasswordEncoder('sha512', true, 5000);
+                $encoders = [
+                    User::class => $defaultEncoder, // Your user class. This line specify you ant sha512 encoder for this user class
+                ];
+
+                $encoderFactory = new EncoderFactory($encoders);
+                $encoder = $encoderFactory->getEncoder($user);
+                if ($encoder->isPasswordValid($user->getPassword(), $token->getCredentials(), $user->getSalt())) {
+                    //exit('password invalid ['.$token->getCredentials().']');
+                    return $user;
+                } else {
+                    $this->validateFailedAttempts($user);
+                    $this->logger->notice("Local Authentication: password is invalid");
+                    return NULL;
+                }
             }
+
+
 
         }
 

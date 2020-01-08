@@ -4,8 +4,17 @@
 /.env.local.php
 /.env.*.local
 /public/bundles/
+
+/public/css/
+/public/js/
+/public/log/
+/public/test/
+/public/Uploaded/
+/public/.well-known/
+
 /var/
 /vendor/
+
 /config/parameters.yml
 ###< symfony/framework-bundle ###
 
@@ -14,3 +23,22 @@
 .phpunit.result.cache
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
+
+/src/App/UserdirectoryBundle/Util/Users*.xlsx
+/src/App/UserdirectoryBundle/Util/users.xlsx
+/src/App/VacReqBundle/Util/*.xls
+/src/App/FellAppBundle/Util/*.p12
+/src/App/FellAppBundle/Util/*.json
+/src/App/FellAppBundle/Util/*.xml
+/src/App/OrderformBundle/Security/AperioLdap
+/src/App/OrderformBundle/SDK
+/src/App/TranslationalResearchBundle/Util/*.xlsx
+
+/src/App/*/Util/*.xlsx
+/src/App/*/Util/*.xls
+/src/App/*/Util/*.xml
+/src/App/*/Util/*.p12
+
+### Certificate ###
+/src/App/UserdirectoryBundle/Cert/*
+

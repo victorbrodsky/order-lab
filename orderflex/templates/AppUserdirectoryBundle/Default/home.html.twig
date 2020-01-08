@@ -16,9 +16,9 @@
 
 {% set urltype = "home" %}
 
-{% extends "AppUserdirectoryBundle::Default/base.html.twig" %}
+{% extends "AppUserdirectoryBundle/Default/base.html.twig" %}
 
-{% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+{% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
 
 
 {% block title %}
@@ -55,7 +55,7 @@
 
         <br>
 
-        {% import "AppUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
+        {% import "AppUserdirectoryBundle/Tree/treemacros.html.twig" as treemacros %}
         <a role="button" data-toggle="collapse" href="#collapseInstitutionUserTree" onclick="displayInstitutionUserTree('default');">Organizational Tree</a>
         <div id="collapseInstitutionUserTree" class="panel-collapse collapse">
             {{ treemacros.jstreemacros('composite-tree','UserdirectoryBundle','Institution_User','employees_showuser','nosearch') }}
@@ -67,7 +67,7 @@
         {% set locationShowed = false %}
         {% if locations %}
             {% if locations|length > 0 %}
-                {% include 'AppUserdirectoryBundle::Location/locations-content-search.html.twig' with {'sitename': employees_sitename} %}
+                {% include 'AppUserdirectoryBundle/Location/locations-content-search.html.twig' with {'sitename': employees_sitename} %}
                 <br>
                 {% set locationShowed = true %}
             {% endif %}
@@ -76,7 +76,7 @@
         {#display search result for users #}
         {% set userShowed = false %}
         {% if (entities and entities|length > 0) or (sameusers is defined and sameusers) %}
-            {% include 'AppUserdirectoryBundle::Admin/users-content.html.twig' with {'sitename': employees_sitename} %}
+            {% include 'AppUserdirectoryBundle/Admin/users-content.html.twig' with {'sitename': employees_sitename} %}
             {% set userShowed = true %}
         {% endif %}
 

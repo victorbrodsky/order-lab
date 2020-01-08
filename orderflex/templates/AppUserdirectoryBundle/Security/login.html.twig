@@ -20,14 +20,20 @@
 
     <head>
 
-        {% stylesheets
-            'bundles/appuserdirectory/pnotify/pnotify.custom.min.css'
-            'bundles/appuserdirectory/bootstrap/css/*'
-            'bundles/appuserdirectory/form/css/form.css'
-            'bundles/appuserdirectory/select2/select2.css'
-        %}
-            <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
-        {% endstylesheets %}
+        {#{% stylesheets#}
+            {#'bundles/appuserdirectory/pnotify/pnotify.custom.min.css'#}
+            {#'bundles/appuserdirectory/bootstrap/css/*'#}
+            {#'bundles/appuserdirectory/form/css/form.css'#}
+            {#'bundles/appuserdirectory/select2/select2.css'#}
+        {#%}#}
+            {#<link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />#}
+        {#{% endstylesheets %}#}
+
+        <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/pnotify/pnotify.custom.min.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap/css/bootstrap.min.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap/css/bootstrap-theme.min.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/form/css/form.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/select2/select2.css') }}" />
 
 
         {#glyphicons-39-plane.png#}
@@ -79,7 +85,8 @@
         {#<meta name = "viewport" content = "user-scalable=no, initial-scale=1.0, maximum-scale=1.0, width=device-width"/>#}
         {#<meta name="apple-mobile-web-app-capable" content="yes"/>#}
 
-        {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+        {#{% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}#}
+        {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
         {{ usermacros.nonLiveSiteRedirect() }}
 
         <link rel="icon" type="image/x-icon" href="{{ asset(favicon) }}" />
@@ -92,21 +99,27 @@
 
             <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
 
-            {% include 'AppUserdirectoryBundle::Security/login_content.html.twig' with {'sitename': sitename, 'title': title} %}
+            {% include 'AppUserdirectoryBundle/Security/login_content.html.twig' with {'sitename': sitename, 'title': title} %}
 
-            {% include 'AppUserdirectoryBundle::Default/footer.html.twig' %}
+            {% include 'AppUserdirectoryBundle/Default/footer.html.twig' %}
 
         </div> <!-- /container -->
 
-        {% javascripts
-        '@AppUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'
-        '@AppUserdirectoryBundle/Resources/public/bootstrap/js/*'
-        '@AppUserdirectoryBundle/Resources/public/select2/select2.js'
-        '@AppUserdirectoryBundle/Resources/public/pnotify/pnotify.custom.min.js'
-        '@AppUserdirectoryBundle/Resources/public/form/js/user-common.js'
-        %}
-        <script type="text/javascript" src="{{ asset_url }}"></script>
-        {% endjavascripts %}
+        {#{% javascripts#}
+            {#'@AppUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'#}
+            {#'@AppUserdirectoryBundle/Resources/public/bootstrap/js/*'#}
+            {#'@AppUserdirectoryBundle/Resources/public/select2/select2.js'#}
+            {#'@AppUserdirectoryBundle/Resources/public/pnotify/pnotify.custom.min.js'#}
+            {#'@AppUserdirectoryBundle/Resources/public/form/js/user-common.js'#}
+        {#%}#}
+            {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+        {#{% endjavascripts %}#}
+
+        <script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery/jquery-1.11.0.min.js') }}"></script>
+        <script src="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap/js/bootstrap.min.js') }}"></script>
+        <script src="{{ asset('orderassets/AppUserdirectoryBundle/select2/select2.js') }}"></script>
+        <script src="{{ asset('orderassets/AppUserdirectoryBundle/pnotify/pnotify.custom.min.js') }}"></script>
+        <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-common.js') }}"></script>
 
 
         <script type="text/javascript">

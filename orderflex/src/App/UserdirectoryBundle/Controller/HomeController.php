@@ -47,7 +47,6 @@ class HomeController extends Controller {
             $platformLogoPath = $platformLogo->getAbsoluteUploadFullPath();
         }
 
-
 //        return $this->render('AppUserdirectoryBundle:Default:main-common-home.html.twig',
 //            array(
 //                'platformLogo' => $platformLogoPath,
@@ -55,6 +54,10 @@ class HomeController extends Controller {
 //                'height' => $height
 //            )
 //        );
+        //path to twig is relative to templates/ folder
+        //Replace ':' to '/'    sf3: 'AppUserdirectoryBundle:Default:main-common-home.html.twig'
+        //                 sf4_flex: 'AppUserdirectoryBundle/Default/main-common-home.html.twig'
+        //Move AppUserdirectoryBundle/Resources/views to templates AppUserdirectoryBundle
         return $this->render('AppUserdirectoryBundle/Default/main-common-home.html.twig',
             array(
                 'platformLogo' => $platformLogoPath,
@@ -62,6 +65,7 @@ class HomeController extends Controller {
                 'height' => $height
             )
         );
+
 //        //Unable to find template "AppUserdirectoryBundle::Default/usermacros.html.twig"
 //        $this->container->get('twig.loader')->addPath('src/App/UserdirectoryBundle/Resources/views/Default/');
 //        return $this->render('main-common-home.html.twig',

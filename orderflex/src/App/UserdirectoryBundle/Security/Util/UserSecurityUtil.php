@@ -50,7 +50,7 @@ class UserSecurityUtil {
     protected $secAuth;
     protected $container;
 
-    public function __construct( EntityManagerInterface $em, TokenStorageInterface $secToken, AuthorizationCheckerInterface $secAuth, ContainerInterface $container ) {
+    public function __construct( EntityManagerInterface $em, TokenStorageInterface $secToken=null, AuthorizationCheckerInterface $secAuth=null, ContainerInterface $container=null ) {
         $this->em = $em;
         $this->secToken = $secToken;
         $this->secAuth = $secAuth;

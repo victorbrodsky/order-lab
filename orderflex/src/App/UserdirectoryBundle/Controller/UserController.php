@@ -296,9 +296,11 @@ class UserController extends Controller
      * Show home page
      *
      * @Route("/", name="employees_home")
-     * @Template("AppUserdirectoryBundle:Default:home.html.twig")
+     * @Template("AppUserdirectoryBundle/Default/home.html.twig")
      */
     public function indexAction( Request $request ) {
+
+        //exit("employees_home");
 
         if(
             false == $this->get('security.authorization_checker')->isGranted('ROLE_USER') ||              // authenticated (might be anonymous)

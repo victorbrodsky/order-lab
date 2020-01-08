@@ -157,9 +157,10 @@ class SecurityController extends Controller
         }
 
         return $this->render(
-            'AppUserdirectoryBundle:Security:login.html.twig',
+            'AppUserdirectoryBundle/Security/login.html.twig',
             $formArr
         );
+
     }
 
     public function loginPage($sitename) {
