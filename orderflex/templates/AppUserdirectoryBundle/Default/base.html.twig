@@ -20,9 +20,15 @@
 
 <head>
 
-    {% if security is not defined %}
-        {% set security = 'true' %}
-    {% endif %}
+    {#{% extends "AppUserdirectoryBundle/Default/base-main.html.twig" %}#}
+    {#{% block javascripts %}#}
+        {#{{ parent() }}#}
+        {#{{ encore_entry_script_tags('entry') }}#}
+    {#{% endblock %}#}
+    {#{% block stylesheets %}#}
+        {#{{ parent() }}#}
+        {#{{ encore_entry_link_tags('entry') }}#}
+    {#{% endblock %}#}
 
 
     {% stylesheets
@@ -39,6 +45,10 @@
             <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}
     {% endblock %}
+
+    {% if security is not defined %}
+        {% set security = 'true' %}
+    {% endif %}
 
     {% block maincss %}
 
