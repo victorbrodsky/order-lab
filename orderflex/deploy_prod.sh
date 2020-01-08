@@ -100,6 +100,7 @@ function prep(){
     #php $PROJECT_LOCAL_PATH/app/console jrk:levenshtein:install
 
     echo "*** Install assets ***"
+    #php bin/console assets:install public
     php $PROJECT_LOCAL_PATH/bin/console assets:install
 
     echo "*** Clear cache ***"

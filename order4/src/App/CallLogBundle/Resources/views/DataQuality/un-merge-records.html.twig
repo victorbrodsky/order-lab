@@ -1,0 +1,185 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{% extends "AppCallLogBundle::Default/base.html.twig" %}
+
+{% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+{% import "AppCallLogBundle::Default/calllogmacros.html.twig" as calllogmacros %}
+
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+{% block content %}
+
+    <h4 class="text-info calllog-title" align="center">
+        {{ title|raw }}
+    </h4>
+    <br>
+
+
+    <input type="hidden" id="formcycle" value="{{ cycle }}" />
+    <input type="hidden" id="orderformtype" value="calllog" />
+    <input type="hidden" id="formtype" value="{{ formtype }}" />
+    <input type="hidden" id="triggerSearch" value="{{ triggerSearch }}" />
+    <input type="hidden" id="mrntype" value="{{ mrntype }}" />
+    <input type="hidden" id="mrn" value="{{ mrn }}" />
+
+    <div id="calllog-patient-list">
+
+    {% if form1 is defined %}
+        {{ calllogmacros.patientInfoSection(form1,cycle,'patient-holder-1','Patient Info',formtype) }}
+    {% endif %}
+
+    {% if form2 is defined %}
+        {{ calllogmacros.patientInfoSection(form2,cycle,'patient-holder-2','Second Patient Info',formtype) }}
+    {% endif %}
+
+    </div>
+
+    <div id="calllog-msg-danger-box" class="alert alert-danger" style="display: none; margin-top: 5px; margin-bottom: 5px;"></div>
+    <div id="calllog-msg-success-box" class="alert alert-success" style="display: none; margin-top: 5px; margin-bottom: 5px;"></div>
+
+    {#<button#}
+            {#id="unmerge_patient_button" type="button"#}
+            {#class="btn btn-lg btn-success" align="center"#}
+            {#onclick="unmergePatientBtn()"#}
+            {#style="display:none;"#}
+    {#>#}
+    {#{% if formtype == "unmerge" %}#}
+        {#Unmerge#}
+    {#{% else %}#}
+        {#Set Master Record#}
+    {#{% endif %}#}
+    {#</button>#}
+
+
+{% endblock %}
+
+
+{% block additionaljs %}
+    <script language="Javascript">
+        $(document).ready(function() {
+            //hide all alias
+            //calllogHideAllAlias(true,true);
+            showHideUnMergeButton();
+            calllogTriggerSearch('patient-holder-1','unmerge');
+        });
+
+        //triggered by class calllog-patient-id
+        function showHideUnMergeButton() {
+            $('.calllog-patient-id').on('change', function() {
+                //console.log('calllog-patient-id changed; value='+$(this).val());
+                var counter = 0;
+                var totalCounter = 0;
+                $('.calllog-patient-id').each(function() {
+                    if( $(this).val() ) {
+                        counter++;
+                    }
+                    totalCounter++;
+                });
+                //console.log("counter="+counter+" ?= "+totalCounter);
+                if( counter > 0 && counter == totalCounter ) {
+                    $('#unmerge_patient_button').show();
+                } else {
+                    $('#unmerge_patient_button').hide();
+                }
+            });
+        }
+
+        function unmergePatientBtn() {
+
+            var lbtn = Ladda.create( document.getElementById("unmerge_patient_button") );
+            lbtn.start();
+
+            $('#calllog-msg-success-box').html("");
+            $('#calllog-msg-success-box').hide();
+            $('#calllog-msg-danger-box').html("");
+            $('#calllog-msg-danger-box').hide();
+
+            var patientIds = [];
+
+            var formtype = $('#formtype').val();
+            //console.log('formtype='+formtype);
+
+            //console.log('calllog-patient-master-record length='+$("input[name=calllog-patient-master-record]").length);
+            var masterMergeRecordId = $("input[name=calllog-patient-master-record]:checked").val();
+            //console.log('masterMergeRecordId='+masterMergeRecordId);
+
+            if( formtype == 'unmerge' ) {
+                var error = false;
+                var msg = "";
+                $('input[name="un-merge-patients"]:checked').each(function() {
+
+                    if( this.value == masterMergeRecordId ) {
+                        msg += "You are going to un-merge a Master Patient Record with ID # "+masterMergeRecordId+".";
+                        msg += " Please choose an alternative Master Patient Record to continue.";
+                        $('#calllog-msg-danger-box').html(msg);
+                        $('#calllog-msg-danger-box').show();
+                        error = true;
+                    }
+
+                    //use only patient ids from calllog-patient-id-
+                    patientIds.push(this.value);
+                });
+                if( error ) {
+                    lbtn.stop();
+                    return;
+                }
+                var url = Routing.generate('calllog_unmerge_patient_records_ajax');
+            } else {
+                var url = Routing.generate('calllog_set_master_patient_record_ajax');
+            }
+            //console.log('patientIds:');
+            //console.log(patientIds);
+
+            $.ajax({
+                url: url,
+                timeout: _ajaxTimeout,
+                async: true,
+                data: {masterId: masterMergeRecordId, patientIds: patientIds.join(",")},
+            }).success(function(data) {
+                //console.log("output="+data);
+                if( data.error == false ) {
+                    //console.log("unmerged OK; data="+data.msg);
+                    $('#calllog-msg-success-box').html(data.msg);
+                    $('#calllog-msg-success-box').show();
+                    //remove all buttons
+                    $("button").hide();
+                } else {
+                    console.log("unmerged failed; data="+data.msg);
+                    $('#calllog-msg-danger-box').html(data.msg);
+                    $('#calllog-msg-danger-box').show();
+                }
+            }).done(function() {
+                lbtn.stop();
+            });
+
+        }
+
+        //overwrite function
+        matchingPatientBtnClick = function(holderId) {
+            //console.log('un-merged holderId='+holderId);
+            matchingPatientUnmergeBtnClick(holderId);
+            calllogScrollToTop();
+        }
+
+
+    </script>
+{% endblock %}

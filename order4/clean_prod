@@ -1,0 +1,44 @@
+#!/bin/bash
+
+# Source: https://github.com/ZermattChris/Symfony2-SimpleDeployScripts
+# Docs: see the accompanying README.md file.
+
+# cd /path/to/simple
+# ./deploy1
+
+
+##### Constants #####
+
+PROJECT_NAME='ScanOrder Symfony2 Project'
+
+# The location of the Symfony2 project you want to Deploy.
+PROJECT_LOCAL_PATH=.
+
+
+##### Functions #####
+function prep()
+{
+
+    echo "*** Install assets ***"
+    php $PROJECT_LOCAL_PATH/app/console assets:install --env=prod --no-debug
+
+    echo "*** Clear cache ***"
+    php $PROJECT_LOCAL_PATH/app/console cache:clear --env=prod --no-debug
+
+    echo "*** Clean Assetic ***"
+    php $PROJECT_LOCAL_PATH/app/console assetic:dump --env=prod --no-debug
+
+}
+
+
+######## Run ########
+echo
+echo "************* Clean Assetic for $PROJECT_NAME *************"
+echo
+
+# Prepare for dumping assetic assets.
+prep
+
+echo "Clean assetic complete."
+echo
+exit 0

@@ -1,0 +1,113 @@
+{% extends "AppTranslationalResearchBundle::Default/base.html.twig" %}
+
+{% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% import "AppTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+{% block content %}
+
+    <input type="hidden" id="formnodetrigger" value="{{ formnodetrigger }}" />
+    <input type="hidden" id="formnodeTopHolderId" value="{{ formnodeTopHolderId }}" />
+    <input type="hidden" id="formcycle" value="{{ cycle }}" />
+
+    <div id="add-new-user-modal-prototype"></div>
+
+    <h4 class="text-info" align="center">
+        {{ title }}
+    </h4>
+
+    <p>
+        <i>
+            Please make sure to save your Project Request as a draft or submit it for review prior leaving this page.
+        </i>
+    </p>
+
+    {#<p>#}
+        {#<a href="{{ path('employees_new_simple_user') }}">Add a New User</a>#}
+    {#</p>#}
+    {#<br>#}
+
+    {% set sitename = translationalresearch_sitename %}
+
+    {#{{ form_start(form,{'attr':{'id':'transresProjectForm', 'onsubmit':'return transresValidateProjectForm();'}}) }}#}
+    {#{{ form_start(form) }}#}
+    {{ form_start(form,{'attr':{'onsubmit':'return transresValidateProjectForm();', novalidate: 'novalidate'}}) }}
+
+        {{ transres.getProjectReviewPrototypeFormData(form,cycle,sitename) }}
+
+        {{ transres.projectRequesters(form,project,cycle) }}
+
+        {{ transres.projectBodyFormFields(form,project,cycle) }}
+
+        {#show it only to: System Administrator, TRP Technician, Platform Administrator, Deputy Platform Administrator roles#}
+        {#{% if#}
+            {#is_granted('ROLE_TRANSRES_ADMIN') or#}
+            {#is_granted('ROLE_TRANSRES_PRIMARY_REVIEWER') or#}
+            {#is_granted('ROLE_TRANSRES_TECHNICIAN')#}
+        {#%}#}
+        {% if transres_permission_util.hasProjectPermission('review',project) %}
+            {#{{ transres.projectInfo(form,project,cycle) }}#}
+            {{ transres.projectReviews(form,cycle,sitename) }}
+        {% endif %}
+
+
+        {% if form.updateDate is defined or form.updateUser is defined  %}
+            <div class="well well-sm">
+                {% if form.updateDate is defined %}
+                    {{ formmacros.field(form.updateDate) }}
+                {% endif %}
+                {% if form.updateUser is defined %}
+                    {{ formmacros.field(form.updateUser) }}
+                {% endif %}
+            </div>
+        {% endif %}
+
+
+        {#{{ transres.projectFormEdit(form,null,cycle) }}#}
+
+        {#{{ formmacros.checkbox(form.readyForReview) }}#}
+
+        {#{% if form.primaryReviewerComment is defined %}#}
+            {#{{ formmacros.field(form.primaryReviewerComment) }}#}
+        {#{% endif %}#}
+
+
+        {#<input class="btn btn-primary" type="submit" value="Create New Project" />#}
+
+        {% if form.saveAsDraft is defined %}
+            {{ form_widget(form.saveAsDraft) }}
+        {% endif %}
+        {% if form.submitIrbReview is defined %}
+            {{ form_widget(form.submitIrbReview) }}
+        {% endif %}
+        {#{% if form.saveAsComplete is defined %}#}
+            {#{{ form_widget(form.saveAsComplete) }}#}
+        {#{% endif %}#}
+
+        <div id="please-wait" style="display: none;">Please Wait ...</div>
+
+    {{ form_end(form) }}
+
+    <br>
+
+    <div id="projectError" class="alert alert-danger" style="display: none;"></div>
+
+    <p>
+        <a href="{{ path(translationalresearch_sitename~'_project_index') }}">Back to the project list</a>
+    </p>
+
+{% endblock %}
+
+
+{% block additionaljs %}
+    {% javascripts
+        '@AppTranslationalResearchBundle/Resources/public/form/js/transres.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}
+

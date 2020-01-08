@@ -1,0 +1,249 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+<script language="Javascript">
+
+
+    $(document).ready(function() {
+
+        showHideWell('.fellapp-ecfmgcertificate-field');
+        showHideWell('.fellapp-reprimand-field');
+        showHideWell('.fellapp-lawsuit-field');
+
+        $('.textarea').bind('keydown keyup keypress cut copy past blur change', function(){
+            copy_to_print_helper(this); // consider debouncing this to avoid slowdowns!
+        });
+
+        $('textarea').each(function(){
+            copy_to_print_helper(this); // on initial page load
+        });
+
+
+        //Pre-set training period for which applying only for new form
+        if( cycle == "new" ) {
+            var now = new Date();
+            $(".fellapp-startDate").datepicker().datepicker("setDate", new Date(now.getFullYear() + 2, 6, 1));
+            $(".fellapp-endDate").datepicker().datepicker("setDate", new Date(now.getFullYear() + 3, 5, 30));
+        }
+
+        //add listener on rank change
+        listenerFellAppRank(null);
+
+        //$('[data-toggle="tooltip"]').tooltip();
+        
+        setUploadItineraryAndListener();
+
+
+    });
+
+
+
+
+
+    //http://stackoverflow.com/questions/4435906/print-when-textarea-has-overflow
+    function copy_to_print_helper(element){
+        var print_helper = $(element).closest('.well').find('.print_helper');
+        if( print_helper ) {
+            print_helper.text($(element).val());
+        }
+    }
+
+    function hideWell(element) {
+        var delaytime = 500;
+        if( cycle == 'download' ) {
+            delaytime = 0;
+        }
+        $(element).closest('.form-element-holder').find('.wellcollapsable').hide(delaytime); //500
+        $(element).closest('.form-element-holder').find('.wellcollapsable').find('input,textarea').val('');
+        //resetUploadBtn($(element).closest('.form-element-holder').find('.wellcollapsable'));
+    }
+
+    function showWell(element) {
+        var delaytime = 500;
+        if( cycle == 'download' ) {
+            delaytime = 0;
+        }
+        $(element).closest('.form-element-holder').find('.wellcollapsable').show(delaytime); //500
+    }
+
+    function showHideWell(element) {
+
+        //console.log('showHideWell');
+
+        if( $(element).is(':checked') ) {
+            //console.log('checked');
+            showWell(element);
+        } else {
+            //console.log('not checked');
+            hideWell(element);
+        }
+
+        //listener
+        $(element).click( function() {
+            showHideWell(this);
+        });
+    }
+
+
+    function validateFellapp() {
+
+        $('#error-box').hide();
+
+        var error = null;
+
+        //required: fellowshipSubspecialty
+        var fellowshipSubspecialty = $('.fellapp-fellowshipSubspecialty').first().select2('val');
+        //console.log('fellowshipSubspecialty=('+fellowshipSubspecialty+')');
+        if( !error && !fellowshipSubspecialty ) {
+            error = "Please select in the Fellowship Type before uploading";
+        }
+
+        var startDate = $('.fellapp-startDate').first().val();
+        //console.log('startDate=('+startDate+')');
+        if( !error && !startDate ) {
+            error = "Please fill in the Start Date before uploading";
+        }
+
+        //required: user-firstName
+        var endDate = $('.fellapp-endDate').first().val();
+        if( !error && !endDate ) {
+            error = "Please fill in the End Date before uploading";
+        }
+
+        //required: user-firstName
+        var firstName = $('.user-firstName').first().val();
+        if( !error && !firstName ) {
+            error = "Please fill in the First Name before uploading";
+        }
+
+        //required: user-lastName
+        var lastName = $('.user-lastName').first().val();
+        if( !error && !lastName ) {
+            error = "Please fill in the Last Name before uploading";
+        }
+
+        //required: user-email
+        var email = $('.user-email').first().val();
+        if( !error && !email ) {
+            error = "Please fill in the email before uploading";
+        }
+
+        //console.log('error='+error);
+
+        if( error ) {
+            $('#error-box').html(error);
+            $('#error-box').show();
+            return false;
+        }
+
+        $('#fellapp-applicant-form').submit();
+    }
+
+
+    //disable upload itinerary if interview date is not set
+    function setUploadItineraryAndListener() {
+        
+        if( cycle == 'show' ) {
+            return;
+        }
+        
+        var itineraryPanel = $('#Itinerary');
+        var dropzone = itineraryPanel.find('.file-upload-dropzone');
+
+        if( !dropzone || dropzone.length == 0 ) {
+            return;
+        }
+        
+        //make inactive if interview date is not set
+        var dateField = itineraryPanel.find('.datepicker');
+        var dateValue = dateField.val();
+        //console.log('dateValue='+dateValue);
+              
+        setItineraryUploadFile( dropzone,dateValue );     
+        
+        //add listener to date field
+        dateField.change(function() {
+            //console.log( "new date=" + $(this).val() );
+            setItineraryUploadFile( dropzone, $(this).val() );
+        });
+        
+    }
+    
+    function setItineraryUploadFile( dropzone, dateValue ) {
+        //console.log('set itinerary: dateValue='+dateValue);      
+        
+         var dropzoneDom = dropzone.get(0);
+        //console.log('disable/enable dropzone className='+dropzoneDom.className);
+        var myDropzone = dropzoneDom.dropzone;
+        
+        if( !dateValue ) {
+            //console.log('in active dropzone');
+            //disable
+            dropzone.removeClass('dz-clickable'); // remove cursor
+            if( myDropzone.listeners[1] ) {
+                dropzoneDom.removeEventListener('click', myDropzone.listeners[1].events.click);   
+            }
+            
+            dropzone.parent().tooltip({
+                title: function() {
+                    var titleText = "Please enter the interview date in order to upload the itinerary file";
+                    return titleText;
+                }
+            });
+            
+        } else {
+            //console.log('active dropzone');
+            //enable
+            dropzone.addClass('dz-clickable'); // add cursor
+            dropzoneDom.addEventListener('click', myDropzone.listeners[1].events.click);
+            dropzone.parent().tooltip('destroy');
+        }
+        
+    }
+
+//    function updateFellapp(fellappId) {
+//
+//        //first update report
+//        //TODO: use messaging
+//        updateFellAppReport(fellappId);
+//
+//        //submit form
+//        $('#fellapp-applicant-form').submit();
+//    }
+//
+//    //TODO: use messaging
+//    function updateFellAppReport(fellappId) {
+//        var url = Routing.generate('fellapp_update_report');
+//
+//        //var fellappId = $('#fellapp_id').val();
+//        //console.log('fellappId='+fellappId);
+//
+//        $.ajax({
+//            type: "POST",
+//            url: url,
+//            timeout: _ajaxTimeout,
+//            async: true,
+//            data: {id: fellappId}
+//        }).success(function(data) {
+//            //console.log('data='+data);
+//        }).fail(function(data) {
+//            console.log('fellapp update report failed: '+data);
+//        });
+//    }
+
+</script>
+
+

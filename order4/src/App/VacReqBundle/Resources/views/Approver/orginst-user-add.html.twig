@@ -1,0 +1,33 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+{#<h3 class="text-info">Authorized Users for {{ sitenamefull }}</h3>#}
+{#<hr>#}
+
+{#<form id="add_authorized_user_form" action="{{ path(sitename~'_add_authorized_user') }}" method="GET">#}
+<form action="{{ path('vacreq_orginst_add_action_user',{'instid':instid,'roleId':roleId}) }}" method="POST">
+
+    {#{{ formmacros.field(form.keytype) }}#}
+    {#{{ formmacros.field(form.primaryPublicUserId) }}#}
+
+    {{ formmacros.field(form.users) }}
+
+    <p>
+        <button type='submit' class="btn btn-warning btn-sm">{{ btnName }}</button>
+    </p>
+</form>

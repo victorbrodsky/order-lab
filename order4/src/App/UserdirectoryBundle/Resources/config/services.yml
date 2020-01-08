@@ -1,0 +1,213 @@
+parameters:
+
+  employees.sitename: employees
+  employees.uploadpath:
+  employees.avataruploadpath:
+
+  default_time_zone: America/New_York
+  default_system_email: your_value
+  institution_url: your_value
+  institution_name: your_value
+  subinstitution_url: your_value
+  subinstitution_name: your_value
+  department_url: your_value
+  department_name: your_value
+  showcopyrightonfooter: your_value
+
+  wkhtmltopdfpath:
+
+  #ldap
+#  ldaphost: your_value
+#  ldapport: your_value
+#  ldapou: your_value
+#  ldapusername: your_value
+#  ldappassword: your_value
+#  ldapexepath: ../src/App/UserdirectoryBundle/Util/
+#  ldapexefilename: LdapSaslCustom.exe
+
+  #titles
+  mainhome_title:
+  listmanager_title:
+  eventlog_title:
+  sitesettings_title:
+  contentabout_page:
+
+  #swiftmailer default [] - use originals emails in live
+#  swift_delivery_addresses: []
+
+
+#  maintenance:
+#  maintenanceenddate:
+#  maintenanceloginmsg:
+#  maintenancelogoutmsg:
+
+#framework:
+#    session:
+#        cookie_lifetime: 20
+#        gc_maxlifetime: 10
+
+
+#fos user bundle
+fos_user:
+    db_driver: orm
+#    model_manager_name: default
+    firewall_name: main
+    user_class: App\UserdirectoryBundle\Entity\User
+    from_email:
+        address: oli2002@med.cornell.edu
+        sender_name: App Ivanov
+
+fos_comment:
+    db_driver: orm
+    class:
+        model:
+            comment: App\UserdirectoryBundle\Entity\FosComment
+            thread: App\UserdirectoryBundle\Entity\FosThread
+
+services:
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        public: true       # Allows optimizing the container by removing unused services; this also means
+                                # fetching services directly from the container via $container->get() won't work.
+                                # The best practice is to be explicit about your dependencies anyway.
+
+    custom_authenticator:
+        class:     App\UserdirectoryBundle\Security\Authentication\CustomAuthenticator
+        arguments: ["@security.password_encoder","@service_container","@doctrine.orm.entity_manager"]
+
+    authenticator_utility:
+            class:     App\UserdirectoryBundle\Security\Authentication\AuthUtil
+            arguments: ["@service_container","@doctrine.orm.entity_manager"]
+
+    oleg.listener.maintenance:
+        class: App\UserdirectoryBundle\Services\MaintenanceListener
+        arguments: ["@service_container","@doctrine.orm.entity_manager"]
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+#            - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate }
+
+    oleg.listener.exception:
+        class: App\UserdirectoryBundle\Services\ExceptionListener
+        arguments: ["@service_container","@doctrine.orm.entity_manager"]
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception }
+
+    #Custom selector fields
+    oleg.type.employees_custom_selector:
+        class: App\UserdirectoryBundle\Form\CustomType\CustomSelectorType
+        arguments: ["@doctrine.orm.entity_manager","@security.token_storage","@service_container"]
+        tags:
+            - { name: form.type, alias: employees_custom_selector }
+
+    #idle time out handler (can pass %session_max_idle_time%. Now use DB)
+    oleg.handler.session_idle:
+        class: App\UserdirectoryBundle\Services\SessionIdleHandler
+        arguments: ["@service_container", "@session", "@router", "@doctrine.orm.entity_manager"]
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+    #Override Ldap Manager
+#    oleg.security.ldap_manager:
+#        class: App\UserdirectoryBundle\Security\Authentication\LdapManager
+#        arguments: [@fr3d_ldap.ldap_driver, @fr3d_ldap.user_manager, %fr3d_ldap.ldap_manager.parameters%, @service_container, @doctrine.orm.entity_manager ]
+
+    #Redirect admin to index
+    employees_authentication_handler:
+        class: App\UserdirectoryBundle\Security\Authentication\LoginSuccessHandler
+        arguments:  ["@service_container", "@doctrine.orm.entity_manager"]
+
+    #twig listener
+    twigdate.listener.request:
+        class: App\UserdirectoryBundle\Services\TwigDateRequestListener
+        arguments: ["@twig", "@security.token_storage", '%default_time_zone%']
+        tags:
+              - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+    #user security util
+    user_security_utility:
+        class: App\UserdirectoryBundle\Security\Util\UserSecurityUtil
+        arguments: ["@doctrine.orm.entity_manager", "@security.token_storage", "@security.authorization_checker", "@service_container"]
+
+    #user generator util
+    user_generator:
+        class: App\UserdirectoryBundle\Util\UserGenerator
+        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+
+    #user download util
+    user_download_utility:
+        class: App\UserdirectoryBundle\Util\UserDownloadUtil
+        arguments: ["@doctrine.orm.entity_manager", "@security.token_storage", "@service_container"]
+
+    #OneupUploaderBundle upload listener
+    oleg.upload_listener:
+        class: App\UserdirectoryBundle\Services\UploadListener
+        arguments: ["@service_container", "@doctrine.orm.entity_manager"]
+        tags:
+            - { name: kernel.event_listener, event: oneup_uploader.post_persist, method: onUpload }
+#            - { name: kernel.event_listener, event: oneup_uploader.pre_upload, method: preUpload }
+
+    #Doctrine listener for postPersist
+    doctrine.listener:
+        class: App\UserdirectoryBundle\Services\DoctrineListener
+        arguments: ["@service_container"]
+        tags:
+            - { name: doctrine.event_listener, event: postPersist, connection: default }
+            - { name: doctrine.event_listener, event: preUpdate, connection: default }
+
+    foscomment.listener:
+        class: App\UserdirectoryBundle\Services\FosCommentListener
+        arguments: ["@service_container", "@security.token_storage", "@doctrine.orm.entity_manager"]
+        tags:
+            - { name: "kernel.event_listener", event: "fos_comment.comment.pre_persist", method: onCommentPrePersist }
+            - { name: "kernel.event_listener", event: "fos_comment.comment.post_persist", method: onCommentPostPersist }
+
+    #user mailer util
+    user_mailer_utility:
+        class: App\UserdirectoryBundle\Util\EmailUtil
+        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+
+    user_role_voter:
+        class: App\UserdirectoryBundle\Security\Voter\UserRoleVoter
+        public: false
+        arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
+        tags:
+            - { name: security.voter }
+
+    user_permission_voter:
+        class: App\UserdirectoryBundle\Security\Voter\UserPermissionVoter
+        public: false
+        arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
+        tags:
+            - { name: security.voter }
+
+    user_formnode_utility:
+        class: App\UserdirectoryBundle\Util\FormNodeUtil
+        arguments: ["@doctrine.orm.entity_manager", "@security.token_storage", "@service_container"]
+
+    user_service_utility:
+        class: App\UserdirectoryBundle\Util\UserServiceUtil
+        arguments: ["@doctrine.orm.entity_manager", "@security.token_storage", "@service_container"]
+
+#    user_cache_clear:
+#        class: Symfony\Bundle\FrameworkBundle\Command\CacheClearCommand
+#        calls:
+#            - [setContainer, ["@service_container"] ]
+#    user_install_assets:
+#            class: Symfony\Bundle\FrameworkBundle\Command\AssetsInstallCommand
+#            calls:
+#                - [setContainer, ["@service_container"] ]
+
+#    Doctrine\ORM\Query\AST\Functions\FunctionNode:
+#        autowire: false
+#        autoconfigure: false
+##        public: false
+#        arguments:
+#          $name: '@name'
+
+#    App\UserdirectoryBundle\Query\CastFunction:
+#        autowire: false
+#        autoconfigure: false
+#        public: false
+#        arguments:
+#            $name: '@name'

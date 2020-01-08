@@ -1,0 +1,132 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+
+{% extends "AppUserdirectoryBundle::Default/base.html.twig" %}
+
+{% block header %}
+
+    {% if sitename == 'fellapp' %}
+        {% include 'AppFellAppBundle:Default:navbar.html.twig' %}
+    {% endif %}
+
+    {% if sitename == 'scan' %}
+        {% include 'AppOrderformBundle:Default:navbar.html.twig' %}
+    {% endif %}
+
+    {% if sitename == 'employees' %}
+        {% include 'AppUserdirectoryBundle:Default:navbar.html.twig' %}
+    {% endif %}
+
+    {% if sitename == 'deidentifier' %}
+        {% include 'AppDeidentifierBundle:Default:navbar.html.twig' %}
+    {% endif %}
+
+    {% if sitename == 'vacreq' %}
+        {% include 'AppVacReqBundle:Default:navbar.html.twig' %}
+    {% endif %}
+
+    {% if sitename == 'calllog' %}
+        {% include 'AppCallLogBundle:Default:navbar.html.twig' %}
+    {% endif %}
+
+    {% if sitename == 'translationalresearch' %}
+        {% include 'AppTranslationalResearchBundle:Default:navbar.html.twig' %}
+    {% endif %}
+
+{% endblock %}
+
+
+
+
+{% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% import "AppUserdirectoryBundle::Default/userformmacros.html.twig" as userform %}
+{% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+{#{% import "AppUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}#}
+
+
+{#Snapshot css#}
+{% block additionalcss %}
+    {% stylesheets
+        'orderassets/appuserdirectory/form/css/steve-snapshot.css' filter='cssrewrite'
+    %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block additionaljs %}
+    {% javascripts
+        '@AppUserdirectoryBundle/Resources/public/password-generator/password-generator.min.js'
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}
+        
+{% if "show" in cycle %}
+    {% set showFlag = true %}
+{% else %}
+    {% set showFlag = false %}
+{% endif %}
+
+
+
+{#{% if cycle == "create_user" %}#}
+    {#{% set title = "Add New Employee" %}#}
+{#{% else %}#}
+    {#&#123;&#35;{% set title = "Profile: "~form.vars.value.getUserNameStr() %}&#35;&#125;#}
+{#{% endif %}#}
+
+{% if title is not defined %}
+    {% set title = "Profile" %}
+{% endif %}
+
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block content %}
+
+    {% if not showFlag %}
+        <h4 class="text-info" align="center">{{ title }}</h4>
+    {% endif %}
+
+    {% if form.userclone is defined %}
+        <div style="margin-bottom: 20px; margin-top: 20px">
+        {{ formmacros.field(form.userclone) }}
+        </div>
+    {% endif %}
+
+
+    {#user's snapshot#}
+    {% if showFlag %}
+        {{ userform.snapshot_steve(entity,sitename,cycle) }}
+    {% else %}
+        {#avatar form modal#}
+        {{ usermacros.avatarForm(entity,cycle) }}
+    {% endif %}
+
+    <br>
+
+    {% if block('addcontent') is defined %}
+        {% include 'AppUserdirectoryBundle:Profile:edit_user_form.html.twig' with {addcontent: block('addcontent')} %}
+    {% else %}
+        {% include 'AppUserdirectoryBundle:Profile:edit_user_form.html.twig' %}
+    {% endif %}
+
+
+{% endblock %}
+

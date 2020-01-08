@@ -1,0 +1,1284 @@
+{% macro transresRequestInfo( form, transresRequest, cycle ) %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-info">
+            <div class="panel-heading" role="tab" id="transresRequestInfoHeading">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#transresRequestInfo" aria-expanded="true">
+                        Work Request Info
+                    </a>
+                </h4>
+            </div>
+            <div id="transresRequestInfo" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="transresRequestInfoHeading">
+                <div class="panel-body">
+
+                    {% if transresRequest.exportId %}
+                        {{ formmacros.simplefield("Request External ID:", transresRequest.exportId, "input", "disabled") }}
+                        {% if transresRequest.project.exportId %}
+                            {{ formmacros.simplefield("Project External ID:", transresRequest.project.exportId, "input", "disabled") }}
+                        {% endif %}
+                    {% endif %}
+
+                    {% if form.state is defined %}
+                        {{ formmacros.field(form.state) }}
+                    {% endif %}
+
+                    {% if form.oid is defined %}
+                        {{ formmacros.field(form.oid) }}
+                    {% endif %}
+
+                    {% if form.approvalDate is defined %}
+                        {{ formmacros.field(form.approvalDate) }}
+                    {% endif %}
+
+                    {% if form.createDate is defined or form.submitter is defined %}
+                        {#<div class="well well-sm">#}
+                        {% if form.createDate is defined %}
+                            {{ formmacros.field(form.createDate) }}
+                        {% endif %}
+                        {% if form.submitter is defined %}
+                            {{ formmacros.field(form.submitter) }}
+                        {% endif %}
+                        {#</div>#}
+                    {% endif %}
+
+                    {% if form.savedAsDraftDate is defined %}
+                        {{ formmacros.field(form.savedAsDraftDate) }}
+                    {% endif %}
+
+                    {{ transres.updateInfo(form,cycle) }}
+
+                    {% if transresRequest.completedDate %}
+                        {{ formmacros.simplefield("Completion Date:", transresRequest.completedDate|date("m/d/Y",false), "input", "disabled") }}
+                    {% endif %}
+                    {% if transresRequest.completedBy %}
+                        {{ formmacros.simplefield("Completed By:", transresRequest.completedBy, "input", "disabled") }}
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endmacro %}
+
+{% macro transresRequestBody( form, transresRequest, cycle, sitename ) %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppTranslationalResearchBundle::Default/transresRequestMacros.html.twig" as transresRequestMacros %}
+    {#Request#}
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-info">
+            <div class="panel-heading" role="tab" id="transresRequestHeading">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#transresRequest" aria-expanded="true">
+                        Request
+                    </a>
+                </h4>
+            </div>
+            <div id="transresRequest" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="transresRequestHeading">
+                <div class="panel-body">
+
+                    {#Product or Service Panel +/-#}
+                    {{ transresRequestMacros.productSections(form,cycle,sitename) }}
+
+                    {#{{ transresRequestMacros.transresRequestFormEdit(form,null,cycle) }}#}
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro transresRequestDetails( form, transresRequest, cycle, sitename ) %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppTranslationalResearchBundle::Default/transresRequestMacros.html.twig" as transresRequestMacros %}
+    {#Request Details#}
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-info">
+            <div class="panel-heading" role="tab" id="transresRequestHeading">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#transresRequestDetails" aria-expanded="true">
+                        Request Details
+                    </a>
+                </h4>
+            </div>
+            <div id="transresRequestDetails" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="transresRequestHeading">
+                <div class="panel-body">
+
+                    {% if form.billingState is defined %}
+                        {{ formmacros.field(form.billingState) }}
+                    {% endif %}
+                    {% if form.progressState is defined %}
+                        {{ formmacros.field(form.progressState) }}
+                    {% endif %}
+                    {% if form.fundedAccountNumber is defined %}
+                        {#simplefield( label, value, type, disabled, tooltip, id )#}
+                        {{ formmacros.simplefield("Funding:",null,"input","disabled",null,"transer-funded") }}
+                        {{ formmacros.field(form.fundedAccountNumber) }}
+                    {% endif %}
+                    {% if form.supportStartDate is defined %}
+                        {{ formmacros.fieldDateLabel(form.supportStartDate,'allow-future-date') }}
+                    {% endif %}
+                    {% if form.supportEndDate is defined %}
+                        {{ formmacros.fieldDateLabel(form.supportEndDate,'allow-future-date') }}
+                    {% endif %}
+
+                    {{ formmacros.field(form.principalInvestigators) }}
+                    {{ formmacros.field(form.contact) }}
+
+                    {{ formmacros.field(form.businessPurposes) }}
+
+                    {#{{ transresRequestMacros.transresRequestFormEdit(form,null,cycle) }}#}
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro transresRequestFormEdit( form, transresRequest, cycle ) %}
+
+    {% import "AppUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
+    {#{% import "AppTranslationalResearchBundle::Default/transres.html.twig" as transres %}#}
+
+    <div style="display: none">
+        {% if form.messageCategory is defined %}
+            {{ treemacros.compositeTreeNode(form.messageCategory,cycle,"noprototype") }}
+        {% endif %}
+    </div>
+
+    <div id="form-node-holder"></div>
+
+{% endmacro %}
+
+
+{% macro transresRequestFormShow( form, transresRequest, cycle ) %}
+
+    {#{% import "AppTranslationalResearchBundle::Default/transres.html.twig" as transres %}#}
+
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="transresRequestContentHeading">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#transresRequestContent" aria-expanded="true">
+                        Request
+                    </a>
+                </h4>
+            </div>
+            <div id="transresRequestContent" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="transresRequestContentHeading">
+                <div class="panel-body">
+
+                    {% set callLogViewClass = "order-white-background" %}
+                    <div class="text-left {{ callLogViewClass }}">
+                        {{ user_formnode_utility.getFormNodeHolderShortInfoForView(transresRequest,transresRequest.messageCategory,false)|raw }}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endmacro %}
+
+
+{% macro getActionRequestReviewCommentsSection(transresRequest, cycle, sitename, statMachineType) %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "AppTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+
+    {% if cycle == "show" %}
+        {% set actionReviewLinks = transres_request_util.getReviewEnabledLinkActions(transresRequest,statMachineType) %}
+        {#{% set actionLinks = actionLinks|merge({ (loop.index0): actionReviewLinks}) %}#}
+
+        {% set threadId = "transres-" ~ transresRequest.getEntityName() ~ "-" ~ transresRequest.id ~ "-" ~ statMachineType %}
+    {% else %}
+        {#no getReviewEnabledLinkActions<br>#}
+    {% endif %}
+
+    {% if threadId and actionReviewLinks|length > 0 %}
+
+        {% if transres_request_util.isRequestStateReviewer(transresRequest,statMachineType) %}
+            <p>
+                <strong>
+                    {{ transres_request_util.getRequestReviewStrByStateMachineType(transresRequest,statMachineType) }}
+                </strong>
+            </p>
+        {% endif %}
+
+        <div class="well transres-review-holder text-center col-xs-12">
+            {% for actionReviewLink in actionReviewLinks %}
+                {{ actionReviewLink|raw }}
+                {#<p>#}
+                    {#{% for actionLinkSet in actionLink %}#}
+                        {#{{ actionLinkSet|raw }}#}
+                    {#{% endfor %}#}
+                {#</p>#}
+            {% endfor %}
+
+            <p>
+            {% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': threadId} %}
+            </p>
+        </div>
+    {% endif %}
+
+{% endmacro %}
+
+{% macro getShowRequestReviewCommentsSection(transresRequest, cycle, statMachineType, showComments) %}
+    {% set threadId = "transres-" ~ transresRequest.getEntityName() ~ "-" ~ transresRequest.id ~ "-" ~ statMachineType %}
+    {% if showComments == 1 %}
+        {{ render(controller('AppTranslationalResearchBundle:Project:threadCommentsShow', { 'id': threadId })) }}
+    {% endif %}
+{% endmacro %}
+
+{% macro invoiceItemSections(form, cycle, sitename) %}
+
+    {% import "AppFellAppBundle::Default/fellappmacros.html.twig" as fellappmacros %}
+    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "AppTranslationalResearchBundle::Default/transresRequestMacros.html.twig" as transresRequestMacros %}
+
+    {#{% if form.invoiceItems is defined and form.invoiceItems|length > 0 %}#}
+    <div class="panel panel-default">
+
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" href="#invoiceItems" name="invoiceItems">
+                    Invoice Items
+                </a>
+            </h4>
+        </div>
+
+        <div id="invoiceItems" class="panel-collapse collapse in">
+            <div class="panel-body">
+
+                {% if form.invoiceItems|length > 0 %}
+                    <div class="row">
+                        <div class="col-xs-2">
+                            {{ form_label(form.invoiceItems|first.quantity) }}
+                        </div>
+                        <div class="col-xs-2">
+                            {{ form_label(form.invoiceItems|first.itemCode) }}
+                        </div>
+                        <div class="col-xs-3">
+                            {{ form_label(form.invoiceItems|first.description) }}
+                        </div>
+                        <div class="col-xs-2">
+                            {{ form_label(form.invoiceItems|first.unitPrice) }}
+                        </div>
+                        <div class="col-xs-2">
+                            {{ form_label(form.invoiceItems|first.total) }}
+                        </div>
+                        <div class="col-xs-1">
+
+                        </div>
+                    </div>
+                {% else %}
+                    <p>There are no Invoice Items</p>
+                {% endif %}
+
+                <div class="transres-invoiceItems-holder">
+                    {% for invoiceItem in form.invoiceItems %}
+                        {{ transresRequestMacros.invoiceItemForm(invoiceItem, cycle, 'transres-invoiceItems', 'noprototype', sitename, 1) }}
+                    {% endfor %}
+
+                    {% if cycle != "show" and cycle != "download" %}
+                        {{ usermacros.addNewObjectBtn(cycle,'transres-invoiceItems','Add New Item',null,'transresInvoiceItemListeneres') }}
+                    {% endif %}
+                </div>
+
+            </div> <!-- panel-body -->
+        </div> <!-- panel-collapse -->
+    </div> <!-- panel panel-info -->
+
+    {#{% else %}#}
+        {#<p>There are no invoice items</p>#}
+    {#{% endif %}#}
+
+{% endmacro %}
+{% macro invoiceItemForm( invoiceItem, cycle, classname, prototype, sitename, showAddDeleteBtn ) %}
+
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+    {% if showAddDeleteBtn is not defined %}
+        {% set showAddDeleteBtn = 0 %}
+    {% endif %}
+
+    {% if prototype == "prototype" %}
+        {% set forminvoiceItem = invoiceItem.vars.prototype %}
+    {% else %}
+        {% set forminvoiceItem = invoiceItem %}
+    {% endif %}
+
+    {% set wellclass = "alert-default well well-sm" %}
+
+    <div class="user-collection-holder alert {{ classname }} {{ wellclass }}">
+
+        <div class="row">
+            <div class="col-xs-2">
+                {{ form_widget(forminvoiceItem.quantity) }}
+            </div>
+            <div class="col-xs-2">
+                {{ form_widget(forminvoiceItem.itemCode) }}
+            </div>
+            <div class="col-xs-3">
+                {{ form_widget(forminvoiceItem.description) }}
+            </div>
+            <div class="col-xs-2">
+                {{ form_widget(forminvoiceItem.unitPrice) }}
+            </div>
+            <div class="col-xs-2">
+                {{ form_widget(forminvoiceItem.total) }}
+            </div>
+            <div class="col-xs-1">
+                {% if cycle != "show" and showAddDeleteBtn %}
+                    <button type="button" class="btn btn-default btn-sm"
+                            onClick="removeExistingObject(this,'{{ classname }}')" >
+                        <span class="glyphicon glyphicon-remove"></span></button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+{% endmacro %}
+
+{% macro productSections(form, cycle, sitename) %}
+
+    {% import "AppFellAppBundle::Default/fellappmacros.html.twig" as fellappmacros %}
+    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "AppTranslationalResearchBundle::Default/transresRequestMacros.html.twig" as transresRequestMacros %}
+
+    <div class="panel panel-default">
+
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" href="#products" name="products">
+                    Product or Service
+                </a>
+            </h4>
+        </div>
+
+
+        <div id="products" class="panel-collapse collapse in">
+            <div class="panel-body">
+
+                <div class="transres-products-holder">
+                    {% for product in form.products %}
+
+                        {#{{ formmacros.field(form.category) }}#}
+                        {#{{ formmacros.field(form.requested) }}#}
+                        {#{{ formmacros.field(form.completed) }}#}
+                        {#{{ formmacros.field(form.comment) }}#}
+
+                        {{ transresRequestMacros.productForm(product, cycle, 'transres-products', 'noprototype', sitename, 1) }}
+
+                    {% endfor %}
+
+                    {% if cycle != "show" %}
+                        {{ usermacros.addNewObjectBtn(cycle,'transres-products','Add Product or Service',null,null) }}
+                    {% endif %}
+                </div>
+
+
+            </div> <!-- panel-body -->
+        </div> <!-- panel-collapse -->
+
+    </div> <!-- panel panel-info -->
+{% endmacro %}
+
+{% macro productForm( product, cycle, classname, prototype, sitename, showAddDeleteBtn ) %}
+
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+    {% if showAddDeleteBtn is not defined %}
+        {% set showAddDeleteBtn = 0 %}
+    {% endif %}
+
+    {% if prototype == "prototype" %}
+        {% set formproduct = product.vars.prototype %}
+    {% else %}
+        {% set formproduct = product %}
+    {% endif %}
+
+    {% set wellclass = "alert-default well well-sm" %}
+
+    <div class="user-collection-holder alert {{ classname }} {{ wellclass }}">
+        {% if cycle != "show" and showAddDeleteBtn %}
+            <div class="text-right">
+                <button type="button" class="btn btn-default btn-sm" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+            </div>
+            <br>
+        {% else %}
+        {% endif %}
+
+        {#{{ formmacros.field(formproduct.id) }}#}
+        {{ form_widget(formproduct.id) }}
+
+        {#{{ formmacros.field(formproduct.category) }}#}
+        <p>
+        <div class="row">
+            <div class="col-xs-6" align="right">
+                <label>{{ formproduct.category.vars.label|raw }}</label>
+            </div>
+            <div class="col-xs-6" align="left">
+                {{ form_widget(formproduct.category) }}
+            </div>
+        </div>
+        </p>
+
+        {{ formmacros.field(formproduct.requested) }}
+
+        {% if formproduct.completed is defined %}
+            {{ formmacros.field(formproduct.completed) }}
+        {% endif %}
+
+        {{ formmacros.field(formproduct.comment) }}
+
+        {% if formproduct.note is defined %}
+            {{ formmacros.field(formproduct.note) }}
+        {% endif %}
+    </div>
+
+{% endmacro %}
+
+{% macro transresRequestsFilter( filterform, advancedFilter ) %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+    <div id="transres-filter-request" class="well form-search">
+        {{ form_start(filterform) }}
+
+            {#"Category", "Project Specialty" [AP/CP or Hematopathology], "Project", "Work Progress Status", "Billing Progress Status", and "Submitter"#}
+            <div class="row">
+                <div class="col-xs-4">
+                    {% if filterform.categories is defined %}
+                        {{ form_widget(filterform.categories,{'attr': {'placeholder': 'Products/Services'}}) }}
+                    {% endif %}
+                </div>
+                <div class="col-xs-2">
+                    {{ form_widget(filterform.projectSpecialty, {'attr': {'placeholder': 'Project Specialty'}}) }}
+                </div>
+                <div class="col-xs-2">
+                    {{ form_widget(filterform.requestId) }}
+                </div>
+                <div class="col-xs-3">
+                    {% if filterform.project is defined %}
+                        {{ form_widget(filterform.project) }}
+                    {% endif %}
+                    {% if filterform.projectSearch is defined %}
+                        <div id="multiple-datasets-typeahead-search-project" class="multiple-datasets-typeahead-search-project">
+                            {{ form_widget(filterform.projectSearch) }}
+                        </div>
+                    {% endif %}
+                    {#<div id="multiple-datasets-typeahead-search-project" class="multiple-datasets-typeahead-search-project">#}
+                        {#<input type="checkbox" name="all" value="all" {{ checked }}> Include all employees and fellowship applicants &nbsp;&nbsp;#}
+                        {#<input#}
+                                {#style="width: 460px;"#}
+                                {#type="text"#}
+                                {#class="typeahead submit-on-enter-field"#}
+                                {#class="typeahead"#}
+                                {#name="projectSearch" value="{{ projectSearch }}"#}
+                                {#placeholder="Project"#}
+                        {#>#}
+                    {#</div>#}
+
+                </div>
+                <div class="col-xs-1">
+                    {#<a data-toggle="collapse" href="#transres-AdvancedSearch">#}
+                        {#Advanced Search#}
+                        {#<span class="glyphicon glyphicon-wrench"></span>#}
+                    {#</a>#}
+                    {#<button id="filter-btn" type="submit" class="btn btn-default">Filter</button>#}
+                    <div class="btn-group btn-group-sm">
+                        <span data-toggle="buttons-checkbox">
+                            <button
+                                    data-toggle="collapse"
+                                    href="#transres-AdvancedSearch"
+                                    class="btn btn-default btn-sm toggle-btn-state"
+                                    data-active-class="advance-search-wrench"
+                            >
+                                <span class="glyphicon glyphicon-wrench"></span>
+                            </button>
+                        </span>
+                        <button id="filter-btn" type="submit" class="btn btn-default btn-sm">Filter</button>
+                    </div>
+                </div>
+            </div> {#row#}
+
+            <br>
+            <div class="row">
+                <div class="col-xs-4">
+                    {{ form_widget(filterform.progressState, {'attr': {'placeholder': 'Work Completion Status'}}) }}
+                </div>
+                <div class="col-xs-4">
+                    {{ form_widget(filterform.billingState, {'attr': {'placeholder': 'Billing Progress Status'}}) }}
+                </div>
+                <div class="col-xs-4">
+                    {% if filterform.submitter is defined %}
+                        {{ form_widget(filterform.submitter, {'attr': {'placeholder': 'Submitter'}}) }}
+                    {% endif %}
+                </div>
+            </div>
+            {#<br>#}
+            {#<div class="row">#}
+                {#<div class="col-xs-12">#}
+                    {#<button id="filter-btn" type="submit" class="btn btn-default">Filter</button>#}
+                {#</div>#}
+            {#</div>#}
+
+            {#advanced search#}
+            {% if advancedFilter %}
+                {% set advacedCollapse = 'in' %}
+            {% else %}
+                {% set advacedCollapse = '' %}
+            {% endif %}
+            {#<br>#}
+            {#<div class="row">#}
+                {#<a data-toggle="collapse" href="#transres-AdvancedSearch">Advanced Search</a>#}
+            {#</div>#}
+            <div id="transres-AdvancedSearch" class="panel-collapse collapse {{ advacedCollapse }}">
+                <div class="panel-body">
+
+                    <div class="row">
+                        <div class="col-xs-4">
+                            {% if filterform.principalInvestigators is defined %}
+                                {{ form_widget(filterform.principalInvestigators,{'attr': {'placeholder': 'Principal Investigators for the project'}}) }}
+                            {% endif %}
+                        </div>
+                        <div class="col-xs-4">
+                            {{ formmacros.fielddate(filterform.startDate,'allow-future-date') }}
+                        </div>
+                        <div class="col-xs-4">
+                            {{ formmacros.fielddate(filterform.endDate,'allow-future-date') }}
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <div class="row">
+                        <div class="col-xs-4">
+                            {% if filterform.billingContact is defined %}
+                                {{ form_widget(filterform.billingContact, {'attr': {'placeholder': 'Billing Contact'}}) }}
+                            {% endif %}
+                        </div>
+                        <div class="col-xs-4">
+                            {{ form_widget(filterform.fundingNumber) }}
+                        </div>
+                        <div class="col-xs-4">
+                            {{ form_widget(filterform.fundingType) }}
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <div class="row">
+                        <div class="col-xs-4">
+                            {{ form_widget(filterform.comment) }}
+                        </div>
+                        <div class="col-xs-4">
+                            {{ form_widget(filterform.externalId) }}
+                        </div>
+                        <div class="col-xs-4">
+                            {{ form_widget(filterform.sampleName) }}
+                            {#{% if filterform.showMatchingAndTotal is defined %}#}
+                                {#{{ form_widget(filterform.showMatchingAndTotal) }}#}
+                            {#{% endif %}#}
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <div class="row">
+                        <div class="col-xs-4">
+                            {% if filterform.completedBy is defined %}
+                                {{ form_widget(filterform.completedBy, {'attr': {'placeholder': 'Completed by'}}) }}
+                            {% endif %}
+                        </div>
+                        <div class="col-xs-4">
+                        </div>
+                        <div class="col-xs-4">
+                        </div>
+                    </div>
+
+                    {#<div class="row">#}
+                        {#<div class="col-xs-4">#}
+                        {#</div>#}
+                        {#<div class="col-xs-4">#}
+                        {#</div>#}
+                        {#<div class="col-xs-4">#}
+                        {#</div>#}
+                    {#</div>#}
+
+                </div> <!-- panel-body -->
+            </div> <!-- panel-collapse -->
+
+        {{ form_end(filterform) }}
+    </div>
+{% endmacro %}
+
+
+{% macro transresInvoiceFilter( filterform, advancedFilter ) %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+    <div class="well form-search">
+        {{ form_start(filterform) }}
+
+            <div class="row">
+                <div class="col-xs-4">
+                    {{ form_widget(filterform.status) }}
+                </div>
+                <div class="col-xs-3">
+                    {{ form_widget(filterform.idSearch) }}
+                </div>
+                <div class="col-xs-4">
+                    {#{% if filterform.submitter is defined %}#}
+                        {#{{ form_widget(filterform.submitter) }}#}
+                    {#{% endif %}#}
+                    {{ form_widget(filterform.principalInvestigator) }}
+                </div>
+                <div class="col-xs-1">
+
+                    {#<div class="btn-group btn-group-sm">#}
+                    {#<a data-toggle="collapse" href="#transres-AdvancedSearch" data-toggle="button" aria-pressed="false" autocomplete="off">#}
+                        {#Advanced Search#}
+                        {#<span class="glyphicon glyphicon-wrench"></span>#}
+                    {#</a>#}
+                    {#<button data-toggle="collapse" href="#transres-AdvancedSearch" class="btn btn-default btn-sm toggle-btn-state"><span class="glyphicon glyphicon-wrench"></span></button>#}
+                    {#<button id="filter-btn" type="submit" class="btn btn-default btn-sm">Filter</button>#}
+                    {#</div>#}
+
+
+                    <div class="btn-group btn-group-sm">
+                        <span data-toggle="buttons-checkbox">
+                            <button
+                                    data-toggle="collapse"
+                                    href="#transres-AdvancedSearch"
+                                    class="btn btn-default btn-sm toggle-btn-state"
+                                    data-active-class="advance-search-wrench"
+                            >
+                                <span class="glyphicon glyphicon-wrench"></span>
+                            </button>
+                        </span>
+                        <button id="filter-btn" type="submit" class="btn btn-default btn-sm">Filter</button>
+                    </div>
+
+                </div>
+            </div>
+            {#<br>#}
+            {#<div class="row">#}
+                {#<div class="col-xs-12">#}
+                    {#<button id="filter-btn" type="submit" class="btn btn-default">Filter</button>#}
+                {#</div>#}
+            {#</div>#}
+
+            {#advanced search#}
+            {% if advancedFilter %}
+                {% set advacedCollapse = 'in' %}
+            {% else %}
+                {% set advacedCollapse = '' %}
+            {% endif %}
+            {#<br>#}
+            {#<div class="row">#}
+                {#<a data-toggle="collapse" href="#transres-AdvancedSearch">Advanced Search</a>#}
+            {#</div>#}
+            <div id="transres-AdvancedSearch" class="panel-collapse collapse {{ advacedCollapse }}">
+                <div class="panel-body">
+
+                    <br>
+                    <div class="row">
+                        <div class="col-xs-4">
+                            {{ form_widget(filterform.totalMin) }}
+                        </div>
+                        <div class="col-xs-4">
+                            {{ form_widget(filterform.totalMax) }}
+                        </div>
+                        <div class="col-xs-4">
+                            {{ form_widget(filterform.irbNumber) }}
+                        </div>
+                    </div>
+                    <br>
+
+                    <div class="row">
+                        {#<div class="col-xs-4">#}
+                            {#{{ form_widget(filterform.salesperson) }}#}
+                        {#</div>#}
+                        <div class="col-xs-6">
+                            {{ formmacros.fielddate(filterform.startDate,'allow-future-date') }}
+                        </div>
+                        <div class="col-xs-6">
+                            {{ formmacros.fielddate(filterform.endDate,'allow-future-date') }}
+                        </div>
+                    </div>
+                    <br>
+
+                    <div class="row">
+                        <div class="col-xs-6">
+                            {{ formmacros.fielddate(filterform.startCreateDate,'allow-future-date') }}
+                        </div>
+                        <div class="col-xs-6">
+                            {{ formmacros.fielddate(filterform.endCreateDate,'allow-future-date') }}
+                        </div>
+                    </div>
+                    <br>
+
+                    <div class="row">
+                        <div class="col-xs-4">
+                            {#{{ form_widget(filterform.principalInvestigator) }}#}
+                            {% if filterform.submitter is defined %}
+                                {{ form_widget(filterform.submitter) }}
+                            {% endif %}
+                        </div>
+                        <div class="col-xs-4">
+                            {{ form_widget(filterform.salesperson) }}
+                        </div>
+                        <div class="col-xs-4">
+                            {{ form_widget(filterform.billingContact) }}
+                        </div>
+                    </div>
+                    <br>
+
+                    <div class="row">
+                        <div class="col-xs-4">
+                            {{ form_widget(filterform.version) }}
+                        </div>
+                        <div class="col-xs-4">
+                            {{ form_widget(filterform.fundingNumber) }}
+                        </div>
+                        <div class="col-xs-4">
+                            {{ form_widget(filterform.fundingType) }}
+                        </div>
+                    </div>
+
+                </div> <!-- panel-body -->
+            </div> <!-- panel-collapse -->
+
+        {{ form_end(filterform) }}
+    </div>
+{% endmacro %}
+
+
+{% macro unpaidModal( invoice ) %}
+    <!-- Modal -->
+    <div class="modal fade" id="modal_update_invoice_{{ invoice.id }}" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <button type="button" class="close invoice_modal_close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    {#<h4 class="modal-title text-center">Change invoice {{ invoice.oid }} status to 'Paid Partially'</h4>#}
+                    <h4 class="modal-title text-center">Update Invoice {{ invoice.oid }} Status</h4>
+                </div>
+
+                <div class="modal-body invoice-financial-fields">
+
+                    <div id="modal_error_{{ invoice.id }}" class="modal_error_div"></div>
+
+
+                    <div class="row">
+                        <div class="col-xs-12">
+
+                            {#<p>#}
+                                {#<input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />#}
+                                {#<input id="invoice-paid-{{ invoice.id }}" class="invoice-paid" name="invoice-paid" class="form-control" placeholder="Paid" type="text" required>#}
+                            {#</p>#}
+
+                            {#{{ formmacros.simplefield( "Paid ($):", invoice.paid, "", "disabled" ) }}#}
+
+                            <p>
+                            <div class="row">
+                                <div class="col-xs-6" align="right">
+                                    <strong>Current Status:</strong>
+                                </div>
+                                <div class="col-xs-6" align="left">
+                                    <input class="form-control invoice-status-{{ invoice.id }}" type="text" value="{{ invoice.status }}" disabled>
+                                </div>
+                            </div>
+                            </p>
+
+                            <p>
+                            <div class="row">
+                                <div class="col-xs-6" align="right">
+                                    <strong>Subtotal ($):</strong>
+                                </div>
+                                <div class="col-xs-6" align="left">
+                                    <input
+                                            class="form-control invoice-subTotal invoice-subtotal-{{ invoice.id }}"
+                                            type="text" value="{{ invoice.subTotal }}" readonly>
+                                </div>
+                            </div>
+                            </p>
+
+                            {#{% if invoice.discountNumeric %}#}
+                                <p>
+                                <div class="row">
+                                    <div class="col-xs-6" align="right">
+                                        <strong>Discount ($):</strong>
+                                    </div>
+                                    <div class="col-xs-6" align="left">
+                                        <input
+                                                id="invoice-discountNumeric-{{ invoice.id }}"
+                                                class="form-control invoice-discountNumeric"
+                                                type="text"
+                                                oninput="transresDiscountNumericUpdate(this);"
+                                                value="{{ invoice.discountNumeric }}">
+                                    </div>
+                                </div>
+                                </p>
+                            {#{% endif %}#}
+
+                            {#{% if invoice.discountPercent %}#}
+                                <p>
+                                <div class="row">
+                                    <div class="col-xs-6" align="right">
+                                        <strong>Discount (%):</strong>
+                                    </div>
+                                    <div class="col-xs-6" align="left">
+                                        <input
+                                                id="invoice-discountPercent-{{ invoice.id }}"
+                                                class="form-control invoice-discountPercent"
+                                                type="text"
+                                                oninput="transresDiscountPercentUpdate(this);"
+                                                value="{{ invoice.discountPercent }}">
+                                    </div>
+                                </div>
+                                </p>
+                            {#{% endif %}#}
+
+                            <p>
+                            <div class="row">
+                                <div class="col-xs-6" align="right">
+                                    <strong>Total ($):</strong>
+                                </div>
+                                <div class="col-xs-6" align="left">
+                                    <input id="invoice-total-{{ invoice.id }}"
+                                           class="form-control invoice-total"
+                                           type="text" value="{{ invoice.total }}" readonly>
+                                </div>
+                            </div>
+                            </p>
+
+                            <p>
+                                <div class="row">
+                                    <div class="col-xs-6" align="right">
+                                        <strong>Paid ($):</strong>
+                                    </div>
+                                    <div class="col-xs-6" align="left">
+                                        <input
+                                            id="invoice-paid-{{ invoice.id }}"
+                                            class="form-control invoice-paid"
+                                            type="text"
+                                            oninput="transresUpdateDue(this);"
+                                            value="{{ invoice.paid }}">
+                                    </div>
+                                </div>
+                            </p>
+
+                            <p>
+                                <div class="row">
+                                    <div class="col-xs-6" align="right">
+                                        <strong>Balance Due ($):</strong>
+                                    </div>
+                                    <div class="col-xs-6" align="left">
+                                        <input
+                                                id="invoice-due-{{ invoice.id }}"
+                                                class="form-control invoice-due"
+                                                type="text"
+                                                value="{{ invoice.due }}">
+                                    </div>
+                                </div>
+                            </p>
+
+                            <p>
+                            <div class="row">
+                                <div class="col-xs-6" align="right">
+                                    <strong>Comment:</strong>
+                                </div>
+                                <div class="col-xs-6" align="left">
+                                    {#<textarea#}
+                                            {#id="invoice-comment-{{ invoice.id }}"#}
+                                            {#class="textarea form-control invoice-comment"#}
+                                            {#type="text"#}
+                                            {#value="{{ invoice.comment }}" required>#}
+
+                                     <textarea
+                                        id="invoice-comment-{{ invoice.id }}"
+                                        class="textarea form-control invoice-comment">{{ invoice.comment }}</textarea>
+                                </div>
+                            </div>
+                            </p>
+
+                        </div>
+                    </div>
+
+                    {#<div class="center-block">#}
+                        {#<button class="btn btn-primary"#}
+                                {#type="button"#}
+                                {#onclick="transresUpdateInvoice('{{ invoice.oid }}');"#}
+                        {#>Update Invoice 'Paid' value and Status to 'Paid Partially'</button>#}
+                    {#</div>#}
+
+                    <p>
+                        <div id="modal-invoice-error-{{ invoice.id }}" class="alert alert-danger" style="display: none;"></div>
+                    </p>
+
+                    {% set statuses = transres_request_util.getInvoiceStatuses(false) %}
+                    <div id="updateInvoiceBtnHolder-{{ invoice.id }}" class="center-block updateInvoiceBtnHolder">
+                    {% for status in statuses %}
+                        {% set btnType = "primary" %}
+                        {% if status == "Paid in Full" %}
+                            {% set btnType = "success" %}
+                        {% endif %}
+                        {#{% if status != invoice.status %}#}
+                            <p>
+                            <button class="btn btn-{{ btnType }} updateInvoiceBtn"
+                                    type="button"
+                                    onclick="transresUpdateInvoiceStatus('{{ invoice.id }}','{{ status }}');"
+                            >Update invoice status to '{{ status }}'</button>
+                            </p>
+                        {#{% endif %}#}
+                    {% endfor %}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+
+{% macro transresRequestHandsontable( form, transresRequest, cycle ) %}
+
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-info">
+            <div class="panel-heading" role="tab" id="transresRequestTableHeading">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#transresRequestTable" aria-expanded="true">
+                        List of Deliverables
+                    </a>
+                </h4>
+            </div>
+            <div id="transresRequestTable" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="transresRequestTableHeading">
+                <div class="panel-body">
+
+                    {{ formmacros.field(form.antibodyReferences) }}
+                    <br>
+
+                    <div id="transresDataTable" class="text-center" align="middle" style="overflow: scroll"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endmacro %}
+
+{% macro transresRequestPackingSlip( form, transresRequest, cycle, showPackingSlip ) %}
+
+    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+
+    {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') %}
+
+    <div class="panel-group" id="accordiontransresPackingSlip" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-info">
+            <div class="panel-heading" role="tab" id="transresPackingSlipHeading">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordiontransresPackingSlip" href="#transresPackingSlip" aria-expanded="true">
+                        Packing Slip
+                    </a>
+                </h4>
+            </div>
+            <div id="transresPackingSlip" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="transresPackingSlipHeading">
+                <div class="panel-body">
+
+                    {#Packing Slip Actions#}
+                    {% if cycle != "new" and cycle != "edit" %}
+                        <a  class="btn btn-primary"
+                            href="{{ path(translationalresearch_sitename~'_generate_packing_slip', { 'id': transresRequest.id }) }}"
+                            >Generate and view packing slip PDF</a>
+
+                        <a class="btn btn-success"
+                           href="{{ path(translationalresearch_sitename~'_email_packing_slip', { 'id': transresRequest.id }) }}"
+                           >E-mail packing slip PDF to PIs and submitter for review</a>
+
+                        <a class="btn btn-warning"
+                           href="{{ path(translationalresearch_sitename~'_email_packing_slip_change_status_pending_investigator', { 'id': transresRequest.id }) }}"
+                           >E-Mail packing slip PDF to PIs and submitter for confirmation + Change request status to 'Pending Investigator'</a>
+                    {% endif %}
+
+                    {% if form.packingSlipPdfs is defined %}
+
+                        <p>
+                        <div class="well form-element-holder user-documents">
+                            <label class="col-xs-12 control-label">Packing Slip Pdf(s)</label>
+                            {% if form.packingSlipPdfs|length > 0 and showPackingSlip is defined and showPackingSlip %}
+                                {#<div style="display: none;">#}
+                                <a
+                                    id="latest-packing-slip-pdf-view"
+                                    target="_blank"
+                                    href="{{ path(translationalresearch_sitename~'_file_view', { 'id': transresRequest.packingSlipPdfs[0].id }) }}"
+                                >Show packing slip PDF</a>
+                                {#</div>#}
+                            {% endif %}
+                            <div class="row withpaddingtop">
+                                <div class="col-xs-12">
+                                    {{ usermacros.documentsContainer(form,form.packingSlipPdfs,cycle,'noprototype',8,'default','Packing Slip Pdf','asForm',false) }}
+                                </div>
+                            </div>
+                        </div>
+                        </p>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel-group" id="accordiontransresOldPackingSlip" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-info">
+            <div class="panel-heading" role="tab" id="transresOldPackingSlipHeading">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordiontransresOldPackingSlip" href="#transresOldPackingSlip" aria-expanded="true">
+                        Old Packing Slip
+                    </a>
+                </h4>
+            </div>
+            <div id="transresOldPackingSlip" class="panel-collapse collapse" role="tabpanel" aria-labelledby="transresOldPackingSlipHeading">
+                <div class="panel-body">
+
+                    {% if form.oldPackingSlipPdfs is defined %}
+                        <p>
+                        <div class="well form-element-holder user-documents">
+                            <label class="col-xs-12 control-label">Packing Slip Pdf(s)</label>
+                            <div class="row withpaddingtop">
+                                <div class="col-xs-12">
+                                    {{ usermacros.documentsContainer(form,form.oldPackingSlipPdfs,cycle,'noprototype',8,'default','Old Packing Slip Pdf','asForm',false) }}
+                                </div>
+                            </div>
+                        </div>
+                        </p>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% endif %}
+
+{% endmacro %}
+
+{% macro transresRequestComment( form, transresRequest, cycle, showFosComment ) %}
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "AppTranslationalResearchBundle::Default/transresRequestMacros.html.twig" as transresRequestMacros %}
+
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-info">
+            <div class="panel-heading" role="tab" id="transresRequestCommentHeading">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#transresRequestComment" aria-expanded="true">
+                        Work Request Documents and Comments
+                    </a>
+                </h4>
+            </div>
+            <div id="transresRequestComment" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="transresRequestCommentHeading">
+                <div class="panel-body">
+
+                    <p>
+                    <div class="well form-element-holder user-documents">
+                        <label class="col-xs-12 control-label">Request Document(s)</label>
+                        <div class="row withpaddingtop">
+                            <div class="col-xs-12">
+                                {{ usermacros.documentsContainer(form,form.documents,cycle,'noprototype',8,'default','Request Document','asForm',false) }}
+                            </div>
+                        </div>
+                    </div>
+                    </p>
+
+                    {{ formmacros.field(form.comment) }}
+
+                    {% if showFosComment is defined and showFosComment == "showFosComment" %}
+                        <div class="panel panel-default">
+                            <div class="panel-heading">Work Request Billing Progress Comments</div>
+                            <div class="panel-body">
+                                <p>
+                                    {{ transresRequestMacros.getShowRequestReviewCommentsSection(transresRequest, cycle, 'billing', 1) }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading">Work Request Work Progress Comments</div>
+                            <div class="panel-body">
+                                <p>
+                                    {{ transresRequestMacros.getShowRequestReviewCommentsSection(transresRequest, cycle, 'progress', 1) }}
+                                </p>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endmacro %}
+
+{% macro barcodedemo() %}
+<div id="header">
+    <div id="bwipjs">bwip-js // Barcode Writer in Pure JavaScript</div>
+    <div id="versions"></div>
+</div>
+<div id="params">
+    <table border=0 cellpading=0 cellspacing=0><tr>
+            <td style="vertical-align:top">
+                <table border=0 cellpading=0 cellspacing=0>
+                    <tr><th>Barcode Type:
+                            <!-- Do not change the `select id="symbol"` - see develop/mkdesc -->
+                        <td><select id="symbol" style="width:63.5ex">
+                                <!-- Barcode Writer in Pure PostScript - Version 2017-07-10 -->
+                                <option value="auspost">AusPost 4 State Customer Code</option>
+                                <option value="azteccode">Aztec Code</option>
+                                <option value="aztecrune">Aztec Runes</option>
+                                <option value="bc412">BC412</option>
+                                <option value="coop2of5">COOP 2 of 5</option>
+                                <option value="channelcode">Channel Code</option>
+                                <option value="rationalizedCodabar">Codabar</option>
+                                <option value="codablockf">Codablock F</option>
+                                <option value="code11">Code 11</option>
+                                <option value="code128">Code 128</option>
+                                <option value="code16k">Code 16K</option>
+                                <option value="code2of5">Code 25</option>
+                                <option value="code39">Code 39</option>
+                                <option value="code39ext">Code 39 Extended</option>
+                                <option value="code49">Code 49</option>
+                                <option value="code93">Code 93</option>
+                                <option value="code93ext">Code 93 Extended</option>
+                                <option value="codeone">Code One</option>
+                                <option value="azteccodecompact">Compact Aztec Code</option>
+                                <option value="pdf417compact">Compact PDF417</option>
+                                <option value="raw">Custom 1D symbology</option>
+                                <option value="daft">Custom 4 state symbology</option>
+                                <option value="datamatrix">Data Matrix</option>
+                                <option value="datamatrixrectangular">Data Matrix Rectangular</option>
+                                <option value="datalogic2of5">Datalogic 2 of 5</option>
+                                <option value="identcode">Deutsche Post Identcode</option>
+                                <option value="leitcode">Deutsche Post Leitcode</option>
+                                <option value="dotcode">DotCode</option>
+                                <option value="ean13">EAN-13</option>
+                                <option value="ean13composite">EAN-13 Composite</option>
+                                <option value="ean2">EAN-2 (2 digit addon)</option>
+                                <option value="ean5">EAN-5 (5 digit addon)</option>
+                                <option value="ean8">EAN-8</option>
+                                <option value="ean8composite">EAN-8 Composite</option>
+                                <option value="flattermarken">Flattermarken</option>
+                                <option value="gs1-cc">GS1 Composite 2D Component</option>
+                                <option value="gs1datamatrix">GS1 Data Matrix</option>
+                                <option value="gs1datamatrixrectangular">GS1 Data Matrix Rectangular</option>
+                                <option value="databarexpanded">GS1 DataBar Expanded</option>
+                                <option value="databarexpandedcomposite">GS1 DataBar Expanded Composite</option>
+                                <option value="databarexpandedstacked">GS1 DataBar Expanded Stacked</option>
+                                <option value="databarexpandedstackedcomposite">GS1 DataBar Expanded Stacked Composite</option>
+                                <option value="databarlimited">GS1 DataBar Limited</option>
+                                <option value="databarlimitedcomposite">GS1 DataBar Limited Composite</option>
+                                <option value="databaromni">GS1 DataBar Omnidirectional</option>
+                                <option value="databaromnicomposite">GS1 DataBar Omnidirectional Composite</option>
+                                <option value="databarstacked">GS1 DataBar Stacked</option>
+                                <option value="databarstackedcomposite">GS1 DataBar Stacked Composite</option>
+                                <option value="databarstackedomni">GS1 DataBar Stacked Omnidirectional</option>
+                                <option value="databarstackedomnicomposite">GS1 DataBar Stacked Omnidirectional Composite</option>
+                                <option value="databartruncated">GS1 DataBar Truncated</option>
+                                <option value="databartruncatedcomposite">GS1 DataBar Truncated Composite</option>
+                                <option value="gs1northamericancoupon">GS1 North American Coupon</option>
+                                <option value="gs1qrcode">GS1 QR Code</option>
+                                <option value="gs1-128">GS1-128</option>
+                                <option value="gs1-128composite">GS1-128 Composite</option>
+                                <option value="ean14">GS1-14</option>
+                                <option value="hibcazteccode">HIBC Aztec Code</option>
+                                <option value="hibccodablockf">HIBC Codablock F</option>
+                                <option value="hibccode128">HIBC Code 128</option>
+                                <option value="hibccode39">HIBC Code 39</option>
+                                <option value="hibcdatamatrix">HIBC Data Matrix</option>
+                                <option value="hibcdatamatrixrectangular">HIBC Data Matrix Rectangular</option>
+                                <option value="hibcmicropdf417">HIBC MicroPDF417</option>
+                                <option value="hibcpdf417">HIBC PDF417</option>
+                                <option value="hibcqrcode">HIBC QR Code</option>
+                                <option value="hanxin">Han Xin Code</option>
+                                <option value="iata2of5">IATA 2 of 5</option>
+                                <option value="isbn">ISBN</option>
+                                <option value="ismn">ISMN</option>
+                                <option value="issn">ISSN</option>
+                                <option value="itf14">ITF-14</option>
+                                <option value="industrial2of5">Industrial 2 of 5</option>
+                                <option value="interleaved2of5">Interleaved 2 of 5 (ITF)</option>
+                                <option value="code32">Italian Pharmacode</option>
+                                <option value="japanpost">Japan Post 4 State Customer Code</option>
+                                <option value="msi">MSI Modified Plessey</option>
+                                <option value="matrix2of5">Matrix 2 of 5</option>
+                                <option value="maxicode">MaxiCode</option>
+                                <option value="microqrcode">Micro QR Code</option>
+                                <option value="micropdf417">MicroPDF417</option>
+                                <option value="symbol">Miscellaneous symbols</option>
+                                <option value="pdf417">PDF417</option>
+                                <option value="pharmacode">Pharmaceutical Binary Code</option>
+                                <option value="pzn">Pharmazentralnummer (PZN)</option>
+                                <option value="plessey">Plessey UK</option>
+                                <option value="posicode">PosiCode</option>
+                                <option value="qrcode">QR Code</option>
+                                <option value="kix">Royal Dutch TPG Post KIX</option>
+                                <option value="royalmail">Royal Mail 4 State Customer Code</option>
+                                <option value="sscc18">SSCC-18</option>
+                                <option value="telepen">Telepen</option>
+                                <option value="telepennumeric">Telepen Numeric</option>
+                                <option value="pharmacode2">Two-track Pharmacode</option>
+                                <option value="upca">UPC-A</option>
+                                <option value="upcacomposite">UPC-A Composite</option>
+                                <option value="upce">UPC-E</option>
+                                <option value="upcecomposite">UPC-E Composite</option>
+                                <option value="onecode">USPS Intelligent Mail</option>
+                                <option value="planet">USPS PLANET</option>
+                                <option value="postnet">USPS POSTNET</option>
+                            </select>
+                    <tr><th>Bar Text:<td><input id="symtext" type="text" style="width:63ex">
+                    <tr><th>Alt Text:<td><input id="symaltx" type="text" style="width:63ex">
+                    <tr><th>Options:<td><input id="symopts" type="text" style="width:63ex">
+                    <tr><td><td>
+                            <a class="saveas" href="javascript:saveCanvas('image/png','.png')">Save As PNG</a>
+                            &nbsp;&nbsp;
+                            <a class="saveas" href="javascript:saveCanvas('image/jpeg','.jpg')">Save As JPEG</a>
+                            &nbsp;&nbsp;
+                            <a class="saveas" id="apiurl" href="">Goto URL</a>
+                            &nbsp;&nbsp;
+                            <br>
+                            <div id="stats"></div>
+                </table>
+            <td style="padding-left:10mm;vertical-align:top">
+                <table border=0 cellpading=0 cellspacing=5>
+                    <tr><th>Scale X,Y:<td>
+                            <input type="text" id="scaleX" value=2>
+                            <input type="text" id="scaleY" value=2>
+                    <tr><th>Image Rotation:<td>
+                            <label for="rotN"><input type="radio" name="rot" value="N"
+                                                     id="rotN" checked>Normal</label>
+                            <label for="rotR"><input type="radio" name="rot" value="R"
+                                                     id="rotR">Right</label>
+                            <label for="rotL"><input type="radio" name="rot" value="L"
+                                                     id="rotL">Left</label>
+                            <label for="rotI"><input type="radio" name="rot" value="I"
+                                                     id="rotI">Invert</label>
+                    <tr><th>Font Rendering:<td>
+                            <label for="fontAnti"><input type="radio" name="font" value="A"
+                                                         id="fontAnti" checked>Anti-Aliased</label>
+                            <label for="fontMono"><input type="radio" name="font" value="M"
+                                                         id="fontMono">Monochrome</label>
+                    <tr><td><td><button id="render">Show Barcode</button>
+                </table>
+        <tr><td><br>
+    </table>
+</div>
+<div id="content">
+    <canvas id="canvas" width=1 height=1 style="border:1px solid #fff;visibility:hidden"></canvas>
+    <div id="proof" style="position:relative;border:1px solid #fff"></div>
+    <div id="output" style="white-space:pre"></div>
+</div>
+{% endmacro %}

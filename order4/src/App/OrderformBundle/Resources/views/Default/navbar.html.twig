@@ -1,0 +1,271 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{#   navigation menu   #}
+
+{% import _self as navbarmacros %}
+
+{% macro searchBoxContent(  patientsearchtype ) %}
+    <li>
+        <a
+            {#href="{{ path(scan_sitename~'_home',{'searchtype':searchtype}) }}">{{ searchtype }}#}
+            href="#" onclick="setSearchtypeAction('{{ patientsearchtype}}');return false;">{{ patientsearchtype}}
+        </a>
+    </li>
+{% endmacro %}
+
+{% macro searchSelect2BoxContent() %}
+    <select id="ordersearch-searchtype-combobox" class="ordersearch-searchtype-combobox">
+        <option value="MRN">MRN</option>
+        <option value="Patient Name">Patient Name</option>
+        <option value="Accession Number">Accession Number</option>
+        <option value="Organ Source for Part">Organ Source for Part</option>
+        <option value="Neoplastic Tumor Source">Neoplastic Tumor Source</option>
+        <option value="Part Type">Part Type</option>
+        <option value="Procedure Type">Procedure Type</option>
+    </select>
+{% endmacro %}
+
+{% block navbar %}
+
+    {% set comments = render(controller("AppOrderformBundle:History:notViewedComments")) %}
+
+    <nav class="navbar navbar-default" role="navigation">
+
+    <div class="container-fluid">
+
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand visible-xs" href="{{ path('scan_home') }}">Home</a> <!-- this is for mobile devices - top menu -->
+        </div>
+
+        <div class="collapse navbar-collapse navbar-ex1-collapse" style="max-height:none;">
+
+            {% if is_granted('ROLE_SCANORDER_SUBMITTER') %}
+
+                <ul class="nav navbar-nav">
+
+                    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+                    {{ usermacros.siteSwitch() }}
+
+                    <li id="nav-bar-scanorderhome" class="hidden-xs divider-vertical">
+                        <a href="{{ path('scan_home') }}">
+                            {#<img src="{{ asset('favicon.ico') }}" alt="Glass Slide Scan Orders" height="18" width="18">#}
+                            <img src="{{ asset('orderassets/appuserdirectory/form/img/favicon.ico') }}" alt="Employee Directory" height="18" width="18">
+                            Home
+                        </a>
+                    </li>
+
+                    <li id="nav-bar-placescanorder" class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Submit Request<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li id="nav-bar-single" class="divider-vertical"><a href="{{ path('single_new') }}">One-Slide Scan Order</a></li>
+                            <li id="nav-bar-multi" class="divider-vertical"><a href="{{ path('multi_new') }}">Multi-Slide Scan Order</a></li>
+                            <li id="nav-bar-table" class="divider-vertical"><a href="{{ path('table_create') }}">Table-View Scan Order</a></li>
+                            <li id="nav-bar-requestslidereturn" class="divider-vertical"><a href="{{ path('slide-return-request-table') }}">Request Slide Return</a></li>
+                        </ul>
+                    </li>
+
+
+                    <li id="nav-bar-myrequesthistory" class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">My Request History<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li id="nav-bar-myscanorders" class="divider-vertical">
+                                {% if comments is defined and comments > 0 %}
+                                    <a id="incoming-orders-menu-title" href="{{ path('my-scan-orders') }}">My Scan Orders</a><!--
+                                    --><a id="incoming-orders-menu-badge" class="element-with-tooltip-always" title="New Comments" data-toggle="tooltip" data-placement="bottom" href="{{ path('my-scan-orders',{'filter_search_box[filter]': 'With New Comments'}) }}"><span class="badge">{{ comments }}</span></a>
+                                {% else %}
+                                    <a href="{{ path('my-scan-orders') }}" >My Scan Orders</a>
+                                {% endif %}
+                            </li>
+                            <li id="nav-bar-mysliderequests" class="divider-vertical">
+                                <a href="{{ path('my-slide-return-requests') }}" >My Slide Return Requests</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    {#<li id="nav-bar-patients" class="hidden-xs divider-vertical">#}
+                        {#<a href="{{ path('scan-patient-list') }}">#}
+                            {#Patients#}
+                        {#</a>#}
+                    {#</li>#}
+
+                </ul>
+
+            {% endif %}
+
+
+            <ul class="nav navbar-nav navbar-right">
+
+                {#Search in navbar#}
+                {% if is_granted('ROLE_SCANORDER_SUBMITTER') %}
+
+                    <li id="nav-bar-ordersearch">
+                        {#Search for a name, service, division, etc#}
+                        {% if  patientsearch is not defined %}
+                            {% set  patientsearch = "" %}
+                        {% endif %}
+                        {% if  patientsearchtype is not defined %}
+                            {% set  patientsearchtype = 'MRN' %}
+                        {% endif %}
+                        <form class="navbar-form navbar-left" role="search" id="ordersearchform" name="ordersearchform" action="{{ path(scan_sitename~'_search_patients') }}" method="get">
+                            <input type="hidden" id="ordersearchform-searchtype" class="form-control" name="searchtype" value="{{ patientsearchtype }}">
+                            <div class="form-group">
+
+
+                                <div class="input-group">
+                                    <div class="input-group-btn">
+                                        <button id="ordersearch-searchtype-button" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                            {{  patientsearchtype }} <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu" role="menu">
+                                            {{ navbarmacros.searchBoxContent('MRN') }}
+                                            {{ navbarmacros.searchBoxContent('Patient Name') }}
+                                            {{ navbarmacros.searchBoxContent('Accession Number') }}
+                                            {{ navbarmacros.searchBoxContent('Organ Source for Part') }}
+                                            {{ navbarmacros.searchBoxContent('Neoplastic Tumor Source') }}
+                                            {{ navbarmacros.searchBoxContent('Part Type') }}
+                                            {{ navbarmacros.searchBoxContent('Procedure Type') }}
+                                            {#<li class="divider"></li>#}
+                                        </ul>
+                                    </div><!-- /btn-group -->
+                                    <div class="form-group has-feedback">
+                                        <input type="text" id="ordersearchform-search" class="form-control" aria-label="" name="search" value="{{  patientsearch }}" placeholder="">
+                                        <span style="top:0;" class="glyphicon glyphicon-search form-control-feedback btn" onclick="setSearchtypeAction();" aria-hidden="true"></span>
+                                    </div>
+                                </div><!-- /input-group -->
+
+                                {#<div id="multiple-datasets-typeahead-ordersearch">#}
+                                    {#&#123;&#35;version 3: input field has inside button&#35;&#125;#}
+                                    {#<div class="form-group has-feedback">#}
+                                        {#<input#}
+                                                {#type="text"#}
+                                                {#class="typeahead submit-on-enter-field form-control"#}
+                                                {#name="search" value="{{ search }}"#}
+                                                {#placeholder="Search"#}
+                                                {#style="font-size: 14px !important;"#}
+                                                {#aria-describedby="inputSuccess2Status">#}
+                                        {#<span class="glyphicon glyphicon-search form-control-feedback btn" onclick="document.usertypeahead-ordersearch-form.submit();" aria-hidden="true"></span>#}
+                                        {#<span id="inputSuccess2Status" class="sr-only">(success)</span>#}
+                                    {#</div>#}
+                                {#</div>#}
+
+                                {#<div id="ordersearch-fields-group" class="input-group ordersearch-fields-group">#}
+
+                                    {#<div class="input-group-btn">#}
+                                        {#<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Search <span class="caret"></span></button>#}
+                                        {#<ul class="dropdown-menu" role="menu">#}
+                                            {#{{ navbarmacros.searchBoxContent('MRN') }}#}
+                                            {#{{ navbarmacros.searchBoxContent('Patient Name') }}#}
+                                            {#{{ navbarmacros.searchBoxContent('Accession Number') }}#}
+                                            {#{{ navbarmacros.searchBoxContent('Organ Source for Part') }}#}
+                                            {#{{ navbarmacros.searchBoxContent('Neoplastic Tumor Source') }}#}
+                                            {#{{ navbarmacros.searchBoxContent('Part Type') }}#}
+                                            {#{{ navbarmacros.searchBoxContent('Procedure Type') }}#}
+                                            {#<li class="divider"></li>#}
+                                        {#</ul>#}
+                                    {#</div><!-- /btn-group -->#}
+                                    {#<div class="form-group has-feedback">#}
+                                        {#{{ navbarmacros.searchSelect2BoxContent() }}#}
+                                        {#<input style="border-bottom-left-radius: 0; border-top-left-radius:0" type="text" id="ordersearchform-search" class="form-control" aria-label="" name="search" value="{{ search }}" placeholder="">#}
+                                        {#<span class="glyphicon glyphicon-search form-control-feedback btn" onclick="setSearchtypeAction();" aria-hidden="true"></span>#}
+                                    {#</div>#}
+                                {#</div>#}
+
+                            </div>
+                        </form>
+                    </li>
+
+                {% endif %}
+
+                {% if is_granted('ROLE_SCANORDER_PROCESSOR') %}
+
+                    {#admincomments - comments addressed to this processor only#}
+                    {% set admincomments = render(controller("AppOrderformBundle:History:notViewedAdminComments")) %}
+
+                    <li id="nav-bar-admin" class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li id="nav-bar-incomingscanorders">
+                                {% if admincomments is defined and admincomments > 0 %}
+                                    <a id="incoming-orders-menu-title" href="{{ path('incoming-scan-orders') }}">Incoming Scan Orders</a><!--
+                                    --><a id="incoming-orders-menu-badge" class="element-with-tooltip-always" title="New Comments" data-toggle="tooltip" data-placement="bottom" href="{{ path('incoming-scan-orders',{'filter_search_box[filter]': 'With New Comments'}) }}"><span class="badge">{{ admincomments }}</span></a>
+                                {% else %}
+                                    <a href="{{ path('incoming-scan-orders') }}" >Incoming Scan Orders</a>
+                                {% endif %}
+                            </li>
+                            <li><a href="{{ path('incoming-slide-return-requests') }}">Incoming Slide Return Requests</a></li>
+
+                            {% if is_granted('ROLE_SCANORDER_ADMIN') %}
+                                <li class="divider"></li>
+                                <li><a href="{{ path(scan_sitename~'_accessrequest_list') }}">Access Requests</a></li>
+                                <li><a href="{{ path(scan_sitename~'_accountrequest') }}">Account Requests</a></li>
+                                <li><a href="{{ path(scan_sitename~'_authorized_users') }}">Authorized Users</a></li>
+                                {#<li><a href="{{ path(scan_sitename~'_listusers') }}">Users</a></li>#}
+                                {#<li><a href="{{ path('admin_index') }}">ScanOrder List Manager</a></li>#}
+                                <li class="divider"></li>
+                                <li><a href="{{ path('scan_admin_hierarchy_index') }}">Hierarchy Manager</a></li>
+                                <li><a href="{{ path(scan_sitename~'_logger') }}">Event Log</a></li>
+                            {% endif %}
+
+                            {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
+                                {#<li><a href="{{ path('user_admin_index') }}">List Manager</a></li>#}
+                                <li><a href="{{ path('platformlistmanager-list') }}">Platform List Manager</a></li>
+                                <li><a href="{{ path(scan_sitename~'_siteparameters') }}">Site Settings</a></li>
+                            {% endif %}
+
+                        </ul>
+                    </li>
+
+                {% endif %}
+
+                {% if is_granted('ROLE_SCANORDER_SUBMITTER') %}
+
+                    <li id="nav-bar-user" class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span><b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+
+                            {% if pendinguser is not defined %}
+                                <li><a href="{{ path(scan_sitename~'_showuser', {id:app.user.getId()}) }}">My Profile ({{ app.user.getUserNameShortStr() }})</a></li>
+                            {% endif %}
+
+                            {% if pendinguser is not defined %}
+                                <li><a href="{{ path(scan_sitename~'_about_page') }}">About</a></li>
+                            {% endif %}
+
+                            <li><a href="{{ path(scan_sitename~'_logout') }}">Log Out</a></li>
+
+                        </ul>
+                    </li>
+
+                {% endif %}
+
+            </ul>
+
+
+        </div><!-- /.navbar-collapse -->
+
+    </div><!-- /.container-fluid -->
+
+    </nav>
+    
+{% endblock %}
+

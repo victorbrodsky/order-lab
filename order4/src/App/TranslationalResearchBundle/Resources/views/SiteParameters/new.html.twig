@@ -1,0 +1,46 @@
+{% extends "AppTranslationalResearchBundle::Default/base.html.twig" %}
+
+{% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% import "AppTranslationalResearchBundle::Default/transresRequestMacros.html.twig" as transresRequestMacros %}
+{% import "AppTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+{% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+{% block content %}
+
+    <input type="hidden" id="formcycle" value="{{ cycle }}" />
+
+    {#<div id="form-prototype-data"#}
+         {#data-userurllink = "{{ usermacros.userUrlLink()|e }}"#}
+         {#data-uploadurl = "{{ oneup_uploader_endpoint('transres_gallery') }}"#}
+         {#data-userid = "{{ app.user.id }}"#}
+    {#></div>#}
+
+    <h4 class="text-info" align="center">
+        {{ title }}
+    </h4>
+
+    <br>
+
+    {% set sitename = translationalresearch_sitename %}
+
+    {{ transres.siteSettings(form,cycle,sitename,siteParameter.getProjectSpecialty()) }}
+
+    {% if cycle == "show" %}
+        <p>
+            <a class="btn btn-warning" href="{{ path(translationalresearch_sitename~'_standalone_siteparameters_edit',{'specialtyStr':siteParameter.getProjectSpecialty().getAbbreviation()}) }}">Edit Site Parameters</a>
+        </p>
+    {% endif %}
+
+    {% if cycle == "edit" %}
+        <p>
+            <a class="btn btn-default" href="{{ path(translationalresearch_sitename~'_standalone_siteparameters_show',{'specialtyStr':siteParameter.getProjectSpecialty().getAbbreviation() }) }}">Cancel</a>
+        </p>
+    {% endif %}
+
+
+{% endblock %}

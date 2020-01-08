@@ -1,0 +1,25 @@
+
+{#{% javascripts#}
+    {#'@AppUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'#}
+{#%}#}
+    {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+{#{% endjavascripts %}#}
+
+<script type="text/javascript">
+    var fos_comment_thread_container = $('.fos_comment_thread');
+</script>
+
+{% if thread and comments|length > 0 %}
+    <div id="fos_comment_thread" data-thread="{{ thread.id }}">
+
+        {% include 'FOSCommentBundle:Thread:comments.html.twig' with {
+            'comments': comments,
+            'thread': thread
+        } %}
+
+    </div>
+{% else %}
+    <h3>No comments</h3>
+{% endif %}
+
+

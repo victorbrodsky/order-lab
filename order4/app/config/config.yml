@@ -1,0 +1,361 @@
+imports:
+    - { resource: parameters.yml }
+    - { resource: security.yml }
+    - { resource: doctrine_migrations.yml }
+#    - { resource: "@AppUserdirectoryBundle/Resources/config/services.yml" }
+#    - { resource: "@AppOrderformBundle/Resources/config/services.yml" }
+#    - { resource: "@AppFellAppBundle/Resources/config/services.yml" }
+#    - { resource: "@AppVacReqBundle/Resources/config/services.yml" }
+#    - { resource: "@AppDeidentifierBundle/Resources/config/services.yml" }
+#    - { resource: "@AppCallLogBundle/Resources/config/services.yml" }
+#    - { resource: "@AppTranslationalResearchBundle/Resources/config/services.yml" }
+#    - { resource: "@AppTranslationalResearchBundle/Resources/config/validation.yml" }
+#    - { resource: "@AppUserdirectoryBundle/Resources/config/setparameters.php" }   #must run after importing services
+    - { resource: "../../src/App/UserdirectoryBundle/Resources/config/services.yml" }
+    - { resource: "../../src/App/FellAppBundle/Resources/config/services.yml" }
+    - { resource: "../../src/App/OrderformBundle/Resources/config/services.yml" }
+    - { resource: "../../src/App/FellAppBundle/Resources/config/services.yml" }
+    - { resource: "../../src/App/VacReqBundle/Resources/config/services.yml" }
+    - { resource: "../../src/App/DeidentifierBundle/Resources/config/services.yml" }
+    - { resource: "../../src/App/CallLogBundle/Resources/config/services.yml" }
+    - { resource: "../../src/App/TranslationalResearchBundle/Resources/config/services.yml" }
+    - { resource: "setparameters.php" }   #must run after importing services
+
+
+services:
+    _defaults:
+        # automatically injects dependencies in your services
+        autowire: true
+        # automatically registers your services as commands, event subscribers, etc.
+        autoconfigure: true
+        # this means you cannot fetch services directly from the container via $container->get()
+        # if you need to do this, you can override this setting on individual services
+        public: true
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    #Remove autowire for Classes using extends vendor Classes: cna be done here, for example adding folder 'Query' (App\UserdirectoryBundle\Query) to exclude
+    App\:
+        resource: '../../src/App/*'
+        # you can exclude directories or files
+        # but if a service is unused, it's removed anyway
+        exclude: '../../src/App/*/{DependencyInjection,Entity,Migrations,Tests,Kernel.php,Query,Repository,Security,Services,Form,Util,EventListener}'
+
+    # controllers are imported separately to make sure services can be injected
+    # as action arguments even if you don't extend any base controller class
+    App\Controller\:
+        resource: '../../src/App/*/*/Controller'
+        tags: ['controller.service_arguments']
+
+
+    logger:
+        alias: 'monolog.logger'
+        public: true
+
+    oleg.twig.extension.date:
+        class: Twig_Extensions_Extension_Date
+        tags:
+             - { name: 'twig.extension' }
+
+framework:
+    #esi:             ~
+#    translator:      { fallback: %locale% }
+#    translator: ~
+    translator:
+      enabled: false
+    secret:          '%secret%'
+    router:
+        resource: "%kernel.project_dir%/app/config/routing.yml"
+        strict_requirements: ~
+    form: 
+    csrf_protection: ~
+    validation:      { enable_annotations: true }
+    templating:
+        engines: ['twig']        
+#        assets_version: SomeVersionScheme
+    default_locale:  "%locale%"
+#    trusted_proxies: ~
+#    session:         ~
+#        save_path: ~
+    session:
+        cookie_lifetime: 0 #Setting a cookie_lifetime to 0 will cause the cookie to live only as long as the browser remains open
+        save_path: '%kernel.project_dir%/var/sessions/%kernel.environment%'
+        #http://blog.jmoz.co.uk/symfony2-warning-sessionstart-the-session-id/
+        #storage_id: session.storage.filesystem
+    fragments:       ~
+#    fragments: { path: /_fragment }
+    http_method_override: true
+    profiler:
+        collect: false
+
+# Twig Configuration
+twig:
+#    form:
+#        resources: ['form_div_layout.html.twig']
+        #resources: ['bootstrap_3_horizontal_layout.html.twig']
+    form_themes:
+        - 'form_div_layout.html.twig'
+        #- 'form/form_errors.html.twig'
+    debug:            '%kernel.debug%'
+    strict_variables: '%kernel.debug%'
+    globals:
+        institution_url: '%institution_url%'
+        institution_name: '%institution_name%'
+        subinstitution_url: '%subinstitution_url%'
+        subinstitution_name: '%subinstitution_name%'
+        department_url: '%department_url%'
+        department_name: '%department_name%'
+        showcopyrightonfooter: '%showcopyrightonfooter%'
+        employees_sitename: '%employees.sitename%'
+        default_system_email: '%default_system_email%'
+
+        #titles and messages
+        mainhome_title: '%mainhome_title%'
+        listmanager_title: '%listmanager_title%'
+        eventlog_title: '%eventlog_title%'
+        sitesettings_title: '%sitesettings_title%'
+        contentabout_page: '%contentabout_page%'
+#        underlogin_msg_user: %underlogin_msg_user%
+#        underlogin_msg_scan: %underlogin_msg_scan%
+
+        #relative upload folder
+        employees_uploadpath: 'Uploaded/%employees.uploadpath%'
+        scan_uploadpath: 'Uploaded/%scan.uploadpath%'
+        fellapp_uploadpath: 'Uploaded/%fellapp.uploadpath%'
+        vacreq_uploadpath: 'Uploaded/%vacreq.uploadpath%'
+        transres_uploadpath: 'Uploaded/%transres.uploadpath%'
+        calllog_uploadpath: 'Uploaded/%calllog.uploadpath%'
+
+        #service
+        user_security_utility: "@user_security_utility"
+        user_formnode_utility: "@user_formnode_utility"
+        user_service_utility: "@user_service_utility"
+        calllog_util_form: "@calllog_util_form"
+        transres_util: "@transres_util"
+        transres_request_util: "@transres_request_util"
+        transres_permission_util: "@transres_permission_util"
+        transres_formnode_util: "@transres_formnode_util"
+        user_mailer_utility: "@user_mailer_utility"
+
+#    form:
+#      resources: ['form_table_layout.html.twig']
+
+# Assetic Configuration
+#assetic:
+#    debug:          '%kernel.debug%'
+#    use_controller: false
+#    bundles:        ["FOSCommentBundle",'AppUserdirectoryBundle','AppOrderformBundle','AppFellAppBundle','AppDeidentifierBundle','AppVacReqBundle','AppCallLogBundle','AppTranslationalResearchBundle']
+#    filters:
+#         cssrewrite: ~
+
+# Doctrine Configuration
+doctrine:
+    dbal:
+        default_connection: default
+        connections:
+            default:
+                driver:   '%database_driver%'
+                host:     '%database_host%'
+                port:     '%database_port%'
+                dbname:   '%database_name%'
+                user:     '%database_user%'
+                password: '%database_password%'
+                charset:  UTF8
+                # if using pdo_sqlite as your database driver, add the path in parameters.yml
+                # e.g. database_path: %kernel.root_dir%/data/data.db3
+                # path:     %database_path%
+            external:
+                driver:   '%database_driver_external%'
+                host:     '%database_host_external%'
+                port:     '%database_port_external%'
+                dbname:   '%database_name_external%'
+                user:     '%database_user_external%'
+                password: '%database_password_external%'
+                charset:  UTF8
+
+    orm:
+        auto_generate_proxy_classes: '%kernel.debug%'
+#        auto_mapping: true
+        default_entity_manager: default
+        entity_managers:
+            default:
+                metadata_cache_driver: array
+                result_cache_driver: array
+                query_cache_driver: array
+                connection: default
+                mappings:
+                    AppOrderformBundle: ~
+                    AppUserdirectoryBundle: ~
+                    AppFellAppBundle: ~
+                    AppDeidentifierBundle: ~
+                    AppVacReqBundle: ~
+                    AppCallLogBundle: ~
+                    AppTranslationalResearchBundle: ~
+                    FOSCommentBundle: ~
+                    gedmo_tree:
+                        type: annotation
+                        prefix: Gedmo\Tree\Entity
+                        dir: "%kernel.project_dir%/vendor/gedmo/doctrine-extensions/lib/Gedmo/Tree/Entity"
+                        alias: GedmoTree # this one is optional and will default to the name set for the mapping
+                        is_bundle: false
+                hydrators:
+                     SimpleHydrator: \App\UserdirectoryBundle\Hydrator\SimpleHydrator
+                     StainHydrator: \App\OrderformBundle\Hydrator\StainHydrator
+                dql:
+                     string_functions:
+                        CAST: App\UserdirectoryBundle\Query\CastFunction
+                        #GROUP_CONCAT: App\UserdirectoryBundle\Query\GroupConcat
+            external:
+                connection: external
+#                mappings:
+#                    AppOrderformBundle: ~
+#                    AppUserdirectoryBundle: ~
+
+#doctrine_cache:
+#    providers:
+#        my_apc_metadata_cache:
+#            type: apc
+#            namespace: metadata_cache_ns
+#        my_apc_query_cache:
+#            namespace: query_cache_ns
+#            apc: ~
+
+#https://symfony.com/doc/3.4/logging.html
+monolog:
+    handlers:
+        main:
+            type: rotating_file
+            path: '%kernel.logs_dir%/%kernel.environment%.log'
+            max_files: 0
+            level: notice
+        nested_error:
+            type: stream
+            path: '%kernel.logs_dir%/%kernel.environment%_ERROR.log'
+            level: error
+
+
+# Swiftmailer Configuration
+# Not Used. Swiftmailer's send and spool flush overwritten by getSwiftMailer and sendSpooledEmails
+swiftmailer:
+    transport: '%mailer_transport%'
+    host:      '%mailer_host%'
+    username:  '%mailer_user%'
+    password:  '%mailer_password%'
+    auth_mode: '%mailer_auth_mode%'
+    port:      '%mailer_port%'
+    encryption: '%mailer_encryption%'
+    #swift spool settings
+    delivery_addresses: '%swift_delivery_addresses%' #disable it for production
+    #disable_delivery: %swift_disable_delivery%
+    logging: '%kernel.debug%'
+    spool:
+          type: file
+          path: '%kernel.project_dir%/app/spool'
+#    spool: { type: memory }
+
+
+knp_paginator:
+    page_range: 5                      # default page range used in pagination control
+    default_options:
+        page_name: page                # page query parameter name
+        sort_field_name: sort          # sort field query parameter name
+        sort_direction_name: direction # sort direction query parameter name
+        distinct: true                 # ensure distinct results, useful when ORM queries are using GROUP BY statements
+    template:
+        pagination: KnpPaginatorBundle:Pagination:sliding.html.twig     # sliding pagination controls template
+        sortable: KnpPaginatorBundle:Pagination:sortable_link.html.twig # sort link template
+
+##OneupUploaderBundle  file uploader
+oneup_uploader:
+    mappings:
+        employees_gallery:
+            frontend: dropzone
+            storage:
+                directory: 'Uploaded/%employees.uploadpath%'
+        scan_gallery:
+            frontend: dropzone
+            storage:
+                directory: 'Uploaded/%scan.uploadpath%'
+        fellapp_gallery:
+            frontend: dropzone
+            storage:
+                directory: 'Uploaded/%fellapp.uploadpath%'
+        vacreq_gallery:
+            frontend: dropzone
+            storage:
+                directory: 'Uploaded/%vacreq.uploadpath%'
+        transres_gallery:
+            frontend: dropzone
+            storage:
+                directory: 'Uploaded/%transres.uploadpath%'
+        calllog_gallery:
+            frontend: dropzone
+            storage:
+                directory: 'Uploaded/%calllog.uploadpath%'
+#    orphanage:
+#        maxage: 86400
+#        directory: Uploaded/orphanage
+
+stof_doctrine_extensions:
+    default_locale: en_US
+    orm:
+                              default:
+                                  tree: true
+
+#Available options as in configure(): https://github.com/KnpLabs/snappy/blob/master/src/Knp/Snappy/Pdf.php
+knp_snappy:
+    pdf:
+        enabled:    true
+        binary:     '%wkhtmltopdfpath%' #/usr/bin/xvfb-run /usr/bin/wkhtmltopdf #'%wkhtmltopdfpath%'   #"\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\""
+        options:
+            javascript-delay: 9000    #Wait some milliseconds for javascript finish (default 200)
+            load-error-handling: ignore
+#            disable-smart-shrinking: true
+#            load-error-handling: abort
+            #load-media-error-handling: ignore
+#            enable-forms: true       #Turn HTML form fields into pdf form fields
+#            no-stop-slow-scripts: true
+#            enable-javascript: true
+#            debug-javascript: true
+
+#    image:
+#        enabled:    true
+#        binary:     "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltoimage.exe\""
+#        options:
+#            javascript-delay: 7000
+
+#fos_comment:
+#    db_driver: orm
+#    class:
+#        model:
+#            comment: App\UserdirectoryBundle\Entity\FosComment
+#            thread: App\UserdirectoryBundle\Entity\FosThread
+
+
+##https://github.com/nodesha88/LetsEncryptBundle
+#cert_lets_encrypt:
+#
+#    # Path to the Let's Encrypt executable (usually your letsencrypt-auto binary)
+#    letsencrypt: "%kernel.root_dir%/../bin/letsencrypt/letsencrypt-auto"
+#
+#    # Recovery email used by Let's Encrypt for registration and recovery contact
+#    recovery_email: "oli2002@med.cornell.edu"
+#
+#    # Logs directory (if not specified, the application logs directory will be used)
+#    logs_directory: null
+#
+#    # Domains to get certificates for (this application should response to these domains)
+#    domains:
+#        - collage.med.cornell.edu
+#        - tincry.com
+#
+#    # Monitorings to be warned if an error occured during the renewal of one of your certificates
+#    monitoring:
+#
+#        # Email monitoring
+#        email:
+#            enabled: true
+#
+#            # If an error occured, emails where a warning should be sent
+#            to: [ "oli2002@med.cornell.edu" ]
+

@@ -1,0 +1,262 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h4 class="panel-title text-left">
+            <a data-toggle="collapse" href="#fellowship-site-settings">
+                Fellowship Applications Site Settings
+            </a>
+        </h4>
+    </div>
+    <div id="fellowship-site-settings" class="panel-collapse collapse">
+        <div class="panel-body">
+
+            {#<p>#}
+                {#<a href="{{ path('fellapp_google_form_config_show') }}">Google Form Configuration</a>#}
+            {#</p>#}
+
+            <table class="table table-striped table-bordered table-hover table-condensed text-left">
+                <thead>
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Value</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody data-link="row" class="rowlink">
+
+                    {#AllowPopulateFellApp#}
+                    <tr>
+                        <td class="rowlink-skip">
+                            Path to the remote published copy of the fellowship application form's Code.gs file
+                        </td>
+                        <td>{{ entity.codeGoogleFormFellApp }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'codeGoogleFormFellApp'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td class="rowlink-skip">
+                            Google Drive Folder ID where config file is located
+                            <p class="rowlink-skip">
+                                <a href="{{ path('fellapp_google_form_config_show') }}">Google Form Configuration</a>
+                            </p>
+                        </td>
+                        <td>{{ entity.configFileFolderIdFellApp }}</td>
+                        <td class="rowlink-skip"><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'configFileFolderIdFellApp'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td class="rowlink-skip">
+                            Periodically import fellowship applications submitted via the Google form
+                            <a style="color:#428bca" href="{{ path('fellapp_instructions') }}" target="_blank">View instructions to change the interval</a>
+                        </td>
+                        <td class="rowlink-skip">
+                            {% set allowPopulateFellAppStr = 'No' %}
+                            {% if entity.allowPopulateFellApp == true %}
+                                {% set allowPopulateFellAppStr = 'Yes' %}
+                            {% endif %}
+                            {{ allowPopulateFellAppStr }}
+                        </td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'allowPopulateFellApp'}) }}">Edit</a></td>
+
+                    </tr>
+
+                    <tr>
+                        <td class="rowlink-skip">
+                            Automatically send invitation emails to upload recommendation letters
+                        </td>
+                        <td class="rowlink-skip">
+                            {% set sendEmailUploadLetterFellAppStr = 'No' %}
+                            {% if entity.sendEmailUploadLetterFellApp == true %}
+                                {% set sendEmailUploadLetterFellAppStr = 'Yes' %}
+                            {% endif %}
+                            {{ sendEmailUploadLetterFellAppStr }}
+                        </td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'sendEmailUploadLetterFellApp'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Email address for confirmation of application submission</td>
+                        <td>{{ entity.confirmationEmailFellApp }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'confirmationEmailFellApp'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Email subject for confirmation of application submission</td>
+                        <td>{{ entity.confirmationSubjectFellApp }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'confirmationSubjectFellApp'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Email body for confirmation of application submission</td>
+                        <td>{{ entity.confirmationBodyFellApp }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'confirmationBodyFellApp'}) }}">Edit</a></td>
+                    </tr>
+
+
+                    <tr>
+                        <td>Link to the Application Page</td>
+                        <td class="rowlink-skip">
+                            <a href="{{ entity.applicationPageLinkFellApp }}" target="_blank">{{ entity.applicationPageLinkFellApp }}</a>
+                        </td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'applicationPageLinkFellApp'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Client Email for accessing the Google Drive API (1040591934373-1sjcosdt66bmani0kdrr5qmc5fibmvk5@developer.gserviceaccount.com)</td>
+                        <td>{{ entity.clientEmailFellApp }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'clientEmailFellApp'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Full Path to p12 key or service account credentials.json file for accessing the Google Drive API (E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\src\App\FellAppBundle\Util\FellowshipApplication-f1d9f98353e5.p12)</td>
+                        <td class="rowlink-skip">{{ entity.p12KeyPathFellApp }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'p12KeyPathFellApp'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Google Drive API URL (https://www.googleapis.com/auth/drive https://spreadsheets.google.com/feeds)</td>
+                        <td class="rowlink-skip">{{ entity.googleDriveApiUrlFellApp }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'googleDriveApiUrlFellApp'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Impersonate the following user email address for accessing the Google Drive API (olegivanov@pathologysystems.org)</td>
+                        <td>{{ entity.userImpersonateEmailFellApp }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'userImpersonateEmailFellApp'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Template Google Spreadsheet ID (1ITacytsUV2yChbfOSVjuBoW4aObSr_xBfpt6m_vab48)</td>
+                        <td>{{ entity.templateIdFellApp }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'templateIdFellApp'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Backup Google Spreadsheet ID (19KlO1oCC88M436JzCa89xGO08MJ1txQNgLeJI0BpNGo)</td>
+                        <td>{{ entity.backupFileIdFellApp }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'backupFileIdFellApp'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Application Google Drive Folder ID (where the response spreadsheets are saved)</td>
+                        <td>{{ entity.folderIdFellApp }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'folderIdFellApp'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Backup Sheet Last Modified Date</td>
+                        <td class="rowlink-skip">
+                            {% if entity.backupUpdateDatetimeFellApp %}
+                                {{ entity.backupUpdateDatetimeFellApp|date('m/d/Y H:i') }}
+                            {% endif %}
+                        </td>
+                        {#<td>{{ entity.backupUpdateDatetimeFellApp }}</td>#}
+                        {#<td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'backupUpdateDatetimeFellApp'}) }}">Edit</a></td>#}
+                    </tr>
+
+                    <tr>
+                        <td>Local Organizational Group for imported fellowship applications (Pathology Fellowship Programs (WCM))</td>
+                        <td>{{ entity.localInstitutionFellApp }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'localInstitutionFellApp'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Fellowship identification string to download recommendation letters (55555)</td>
+                        <td>{{ entity.identificationUploadLetterFellApp }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'identificationUploadLetterFellApp'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Delete successfully imported applications from Google Drive</td>
+                        <td>
+                            {#{{ entity.deleteImportedAplicationsFellApp }}#}
+                            {% set deleteImportedAplicationsFellAppStr = 'No' %}
+                            {% if entity.deleteImportedAplicationsFellApp == true %}
+                                {% set deleteImportedAplicationsFellAppStr = 'Yes' %}
+                            {% endif %}
+                            {{ deleteImportedAplicationsFellAppStr }}
+                        </td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'deleteImportedAplicationsFellApp'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Delete downloaded spreadsheets with fellowship applications after successful import into the database</td>
+                        <td>
+                            {#{{ entity.deleteOldAplicationsFellApp }}#}
+                            {% set deleteOldAplicationsFellAppStr = 'No' %}
+                            {% if entity.deleteOldAplicationsFellApp == true %}
+                                {% set deleteOldAplicationsFellAppStr = 'Yes' %}
+                            {% endif %}
+                            {{ deleteOldAplicationsFellAppStr }}
+                        </td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'deleteOldAplicationsFellApp'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Number of years to keep downloaded spreadsheets with fellowship applications as backup</td>
+                        <td>{{ entity.yearsOldAplicationsFellApp }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'yearsOldAplicationsFellApp'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            Path to the downloaded spreadsheets with fellowship applications (fellapp/Spreadsheets).
+                            <br>
+                            Resulting Path: {{ uploadPath ~ 'Uploaded\\' ~ entity.spreadsheetsPathFellApp }}
+                        </td>
+                        <td>{{ entity.spreadsheetsPathFellApp }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'spreadsheetsPathFellApp'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            Path to the downloaded attached documents (fellapp/FellowshipApplicantUploads).
+                            <br>Resulting Path: {{ uploadPath ~ 'Uploaded\\' ~  entity.applicantsUploadPathFellApp }}
+                        </td>
+                        <td>{{ entity.applicantsUploadPathFellApp }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'applicantsUploadPathFellApp'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            Path to the generated fellowship applications in PDF format (fellapp/Reports).
+                            <br>Resulting Path: {{ uploadPath ~ 'Uploaded\\' ~ entity.reportsUploadPathFellApp }}
+                        </td>
+                        <td>{{ entity.reportsUploadPathFellApp }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'reportsUploadPathFellApp'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Recommendation Letter Salt</td>
+                        <td>{{ entity.recLetterSaltFellApp }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'recLetterSaltFellApp'}) }}">Edit</a></td>
+                    </tr>
+
+                </tbody>
+            </table>
+
+
+            <p>
+                {{ render(controller('AppFellAppBundle:FellAppSiteParameters:fellappSiteParameterShow')) }}
+            </p>
+
+        </div>
+    </div>
+</div>
+

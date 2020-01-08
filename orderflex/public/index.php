@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 require dirname(__DIR__).'/config/bootstrap.php';
 
 if ($_SERVER['APP_DEBUG']) {
+    //exit('111');
     umask(0000);
 
     Debug::enable();
@@ -21,6 +22,8 @@ if ($trustedHosts = $_SERVER['TRUSTED_HOSTS'] ?? $_ENV['TRUSTED_HOSTS'] ?? false
 }
 
 $kernel = new Kernel($_SERVER['APP_ENV'], (bool) $_SERVER['APP_DEBUG']);
+//$kernel = new Kernel('dev',true);
+
 $request = Request::createFromGlobals();
 $response = $kernel->handle($request);
 $response->send();

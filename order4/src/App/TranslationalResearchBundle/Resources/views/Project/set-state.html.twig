@@ -1,0 +1,62 @@
+{% extends "AppTranslationalResearchBundle::Default/base.html.twig" %}
+
+{% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% import "AppTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+{% block content %}
+
+    <input type="hidden" id="formcycle" value="{{ cycle }}" />
+    <input type="hidden" id="orderformtype" value="transres" />
+    <input type="hidden" id="formtype" value="{{ formtype }}" />
+    <input type="hidden" id="triggerSearch" value="{{ triggerSearch }}" />
+
+    <input type="hidden" id="entityNamespace" value="{{ entityNamespace }}" />
+    <input type="hidden" id="entityName" value="{{ entityName }}" />
+    <input type="hidden" id="entityId" value="{{ entityId }}" />
+
+    <input type="hidden" id="formnodetrigger" value="{{ formnodetrigger }}" />
+    <input type="hidden" id="formnodeTopHolderId" value="{{ formnodeTopHolderId }}" />
+
+    <h4 class="text-info" align="center">
+        {{ title }}
+    </h4>
+
+    {% set sitename = translationalresearch_sitename %}
+
+    {#{{ transres.projectHeader(project) }}#}
+
+    {{ form_start(form) }}
+
+        {% if form.state is defined %}
+            {{ formmacros.field(form.state) }}
+        {% endif %}
+
+        <br>
+        <p>
+            <input class="btn btn-warning" type="submit" value="Set State" />
+        </p>
+
+    {{ form_end(form) }}
+
+    {% set callLogViewClass = "order-white-background" %}
+    <div class="text-left {{ callLogViewClass }}">
+        {{ user_formnode_utility.getFormNodeHolderShortInfoForView(project,project.messageCategory,false)|raw }}
+    </div>
+
+
+    <br>
+    <br>
+    <p>
+        <a class="btn btn-default" href="{{ path(translationalresearch_sitename~'_project_show',{ 'id': project.id }) }}">Cancel</a>
+    </p>
+    <br>
+    <p>
+        <a href="{{ path(translationalresearch_sitename~'_project_index') }}">Back to the list</a>
+    </p>
+
+{% endblock %}

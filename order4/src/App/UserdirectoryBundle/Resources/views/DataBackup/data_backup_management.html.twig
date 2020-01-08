@@ -1,0 +1,123 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{% set extendStr = "AppUserdirectoryBundle::Default/base.html.twig" %}
+{% extends extendStr %}
+
+
+{% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+
+{% block content %}
+
+    <input type="hidden" id="formcycle" value="{{ cycle }}" />
+    <input type="hidden" id="fileId" value="" />
+
+    <h4 class="text-info" align="center">{{ title }}</h4>
+
+    <br>
+    <br>
+
+    <p>
+        <div class="well">Current Network Drive Path: {{ networkDrivePath }}</div>
+    </p>
+
+    <br>
+    <br>
+
+    {% if backupFiles %}
+
+        <div class="row">
+            <div class="col-xs-3"></div>
+            <div class="col-xs-6">
+                {#{{ formmacros.field(backupFiles) }}#}
+                <p>
+                    <select id="backup-file-id" class="combobox" style="width: 30%;">
+                        {% for  backupFile in backupFiles %}
+                            <option value="{{ backupFile.id }}">{{ backupFile.name }}</option>
+                        {% endfor %}
+                    </select>
+                </p>
+            </div>
+            <div class="col-xs-3"></div>
+        </div>
+
+        <br>
+
+        <p>
+            <a href="{{ path(employees_sitename~'_create_backup') }}">Create Backup</a>
+        </p>
+
+        <p>
+            <a
+                    {#general-data-confirm="Are you sure you want to load backup DB? This action will overwrite all existing data."#}
+                    {#href="{{ path(employees_sitename~'_restore_backup',{'backupFilePath': document.getElementById("fileId").val()}) }}"#}
+                    href="#"
+                    onclick="return restoreBackup();"
+            >Load Backup</a>
+        </p>
+
+    {% else %}
+        <div class="alert alert-danger">Backup folder does not exists</div>
+    {% endif %}
+
+
+{% endblock %}
+
+
+{% block additionaljs %}
+
+    <script>
+        $(document).ready(function () {
+
+            $('#backup-file-id').on("change", function(e) {
+                var fileId = $(this).select2('val');
+                console.log('fileId='+fileId);
+                $('#fileId').val(fileId);
+            });
+
+        });
+
+        function restoreBackup() {
+
+            var result = confirm("Are you sure you want to load backup DB? This action will overwrite all existing data.");
+            if (result) {
+                //Logic to delete the item
+            } else {
+                return;
+            }
+
+            var file = $('#backup-file-id').select2('data');
+            if( file ) {
+                var fileId = file.id;
+                console.log("fileId=" + fileId);
+
+                var url = Routing.generate('employees_restore_backup');
+                url = url + "/" + fileId;
+                console.log("url=" + url);
+
+                window.location.replace(url);
+            }
+        }
+    </script>
+
+{% endblock %}

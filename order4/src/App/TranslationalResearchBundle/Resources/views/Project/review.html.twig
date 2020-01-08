@@ -1,0 +1,273 @@
+{% extends "AppTranslationalResearchBundle::Default/base.html.twig" %}
+
+{% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% import "AppTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+{% block content %}
+
+    <input type="hidden" id="formcycle" value="{{ cycle }}" />
+    <input type="hidden" id="projectid" value="{{ project.id }}" />
+    <input type="hidden" id="project-irbExpirationDate" value="{{ project.irbExpirationDate|date("m/d/Y",false) }}" />
+
+    <h4 class="text-info" align="center">
+        {{ title }}
+    </h4>
+    <br>
+
+    <div class="transres-alert" style="display: none">
+        <p class="alert alert-info center-block" align="middle" style="width: 70%;"></p>
+    </div>
+
+    {% set sitename = translationalresearch_sitename %}
+
+
+    {{ transres.getActionReviewCommentsSection(project,cycle,sitename,1) }}
+    {#{% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': "3-9-committee_review"} %}#}
+
+    <p>
+        <button type="button" class="btn btn-default btn-sm" onClick="collapseAll()" >Collapse All</button>
+        <button type="button" class="btn btn-default btn-sm" onClick="extendAll()" >Expand All</button>
+    </p>
+
+    {#{{ form_start(form,{'attr': {'onsubmit':'transresUpdateIrbExpDate(this);'}}) }}#}
+    {{ form_start(form) }}
+
+    {{ transres.getProjectShowPrototypeFormData(form,cycle,sitename) }}
+
+    {{ transres.projectRequesters(form,project,cycle) }}
+
+    {{ transres.projectReviews(form,cycle,sitename,0) }}
+
+    {{ transres.projectInfo(form,project,cycle) }}
+
+    {{ transres.projectBodyFormFields(form,project,cycle) }}
+
+    {{ form_end(form) }}
+
+    {#{% set threadId = project.id %}#}
+    {#{% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': threadId} %}#}
+
+    {#{% set callLogViewClass = "order-white-background" %}#}
+    {#<div class="text-left {{ callLogViewClass }}">#}
+        {#{{ user_formnode_utility.getFormNodeHolderShortInfoForView(project,project.messageCategory,false)|raw }}#}
+    {#</div>#}
+
+    {#{% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': "3-9-committee_review"} %}#}
+    {#{{ render(controller('AppTranslationalResearchBundle:Project:threadComments', { 'id': "3-9-committee_review" })) }}#}
+
+    <div>
+
+        {#{% if is_granted('ROLE_TRANSRES_ADMIN') %}#}
+            {#<br>#}
+            {#<p>#}
+                {#<a class="btn btn-warning" href="{{ path(translationalresearch_sitename~'_project_edit', { 'id': project.id }) }}">Edit project</a>#}
+            {#</p>#}
+        {#{% endif %}#}
+        {#{{ transres.projectHeader(project) }}#}
+
+        <br>
+        <br>
+        <p>
+            <a href="{{ path(translationalresearch_sitename~'_project_index') }}">Back to the list</a>
+        </p>
+
+    </div>
+
+{% endblock %}
+
+
+
+{#{% block headeradditionaljs %}#}
+
+    {#<script type="text/javascript">#}
+        {#// thread id#}
+        {#var fos_comment_thread_id = 'test';#}
+
+        {#// api base url to use for initial requests#}
+        {#var fos_comment_thread_api_base_url = '/sf2.1.2/web/app.php/api/threads';#}
+
+        {#// Snippet for asynchronously loading the comments#}
+        {#(function() {#}
+            {#var fos_comment_script = document.createElement('script');#}
+            {#fos_comment_script.async = true;#}
+            {#fos_comment_script.src = '/sf2.1.2/web/js/35a8e64.js';#}
+            {#fos_comment_script.type = 'text/javascript';#}
+
+            {#(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(fos_comment_script);#}
+        {#})();#}
+    {#</script>#}
+
+{#{% endblock %}#}
+
+{% block additionaljs %}
+
+    {#{% javascripts#}
+    {#'@AppTranslationalResearchBundle/Resources/public/form/js/comments.js'#}
+    {#%}#}
+    {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
+
+    {% javascripts
+    '@AppTranslationalResearchBundle/Resources/public/form/js/transres.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+<script type="text/javascript">
+
+    $(document).ready(function() {
+
+        //transres-review-submit
+        $('.transres-review-submit').click(function(event) {
+            //console.log("btn click:");
+            //console.log($(this));
+
+            //var submitLaddaBtn = Ladda.create(this);
+            //submitLaddaBtn.start();
+
+            event.stopPropagation();
+            window.onbeforeunload = null;
+
+            var reviewHolder = $(this).closest('.transres-review-holder');
+
+            var comment = reviewHolder.find('.fos_comment_comment_new_form').find('textarea').val();
+            console.log("comment="+comment);
+
+            if( comment ) {
+                reviewHolder.find('.fos_comment_comment_new_form').find('input[type="submit"]').click();
+            }
+
+            //get alert if the additional info button clicked and no comment is provided
+//            if( $(this).hasClass('transres-missinginfo') && !comment ) {
+//                //below the button and then press this 'Request...' button again
+//                alert("Please specify what additional information you would like the submitter to provide in the comment field.");
+//                return false;
+//            }
+
+            ////////// Update IRB Expiration Date by transres-irb_review //////////
+            if( $(this).hasClass('transres-irb_review') ) {
+                transresUpdateIrbExpDate();
+            }
+            ////////// EOF Update IRB Expiration Date //////////
+
+            console.log("done review");
+
+            //return false;
+        });
+
+        //transres-update-irbexpirationdate
+        $('.transres-update-irbexpirationdate').click(function(event) {
+            transresUpdateIrbExpDate();
+        });
+
+        //addCommentButtonClickListener();
+
+    });
+
+
+    function transresUpdateIrbExpDate() {
+
+        $(".transres-alert").find(".alert").html("");
+        $(".transres-alert").hide();
+
+        var projectId = null;
+        var irbExpDate = null;
+        var irbExpDateEl = $('#transres_irbExpirationDate');
+        if( irbExpDateEl && irbExpDateEl.length > 0 ) {
+            irbExpDate = irbExpDateEl.val();
+            console.log("transres-review-submit: irbExpDate=" + irbExpDate);
+            if( !irbExpDate ) {
+                return false;
+            }
+
+            projectId = $("#projectid").val();
+            var irbExpirationDate = $("#project-irbExpirationDate").val(); //MM/dd/yyyy
+            console.log("transres-review-submit: irbExpDate=" + irbExpDate + "; irbExpirationDate="+irbExpirationDate);
+            if( irbExpDate == irbExpirationDate ) {
+                return false;
+            }
+            //return false;
+            //alert("Working on Update IRB expiration date by JS (Not implemented yet)");
+        }
+
+        console.log("transresUpdateIrbExpDate: irbExpDate="+irbExpDate+"; projectId="+projectId);
+
+        if( projectId == null || irbExpDate == null ) {
+            console.log("return false: projectId or irbExpDate is null");
+            return false;
+        }
+
+        var url = Routing.generate('translationalresearch_update_irb_exp_date');
+        //url = url + "/" + projectId + "/" + irbExpDate
+
+        $.ajax({
+            url: url,
+            timeout: _ajaxTimeout,
+            //type: "GET",
+            type: "POST",
+            data: {projectId: projectId, value: irbExpDate },
+            //dataType: 'json',
+            //async: asyncflag
+            async: false
+        }).success(function(response) {
+            console.log(response);
+            if( response != "NotOK" ) { //if( response == "NotOK" ) ???
+                $(".transres-alert").find(".alert").html(response);
+                $(".transres-alert").show();
+                $(".transres-project-irbExpirationDate").val(irbExpDate);
+            }
+        }).done(function() {
+            //lbtn.stop();
+        }).error(function(jqXHR, textStatus, errorThrown) {
+            console.log('Error : ' + errorThrown);
+        });
+
+        return false;
+    }
+
+//    function addCommentButtonClickListener() {
+//        //fos_comment_submit_btn
+//        $('.fos_comment_submit_btn').on('submit', function(event){
+//            console.log("fos_comment_submit_btn");
+//            var addSubmitBtn = $(this).get(0);
+//            var submitLaddaBtn = Ladda.create( addSubmitBtn );
+//            submitLaddaBtn.start();
+//        });
+//
+//        $('form').on('submit', function(event) {
+//            console.log("form submit");
+//        });
+//
+//        $("#fos_comment_comment_new_form_oleg").on('submit', function(event) {
+//            console.log("fos_comment_comment_new_form_oleg submit");
+//        });
+//
+//        $("#fos_comment_submit_btn_oleg").on('click', function(event){
+//            console.log("fos_comment_submit_btn_oleg click");
+//        });
+//
+//        $('#fos_comment_submit_btn_oleg').click(function(event) {
+//            console.log("fos_comment_submit_btn_oleg click 2");
+//        });
+//
+//
+//        $('#fos_comment_comment_new_form_oleg').on('DOMNodeInserted', 'div', function () {
+//            console.log("DOMNodeInserted div");
+//            //var addSubmitBtn = $(this).get(0);
+//            //var submitLaddaBtn = Ladda.create( addSubmitBtn );
+//            //submitLaddaBtn.stop();
+//        });
+//
+//    }
+
+</script>
+
+{% endblock %}
+
+

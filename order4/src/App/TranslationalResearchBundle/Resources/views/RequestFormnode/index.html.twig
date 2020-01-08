@@ -1,0 +1,209 @@
+{% extends "AppTranslationalResearchBundle::Default/base.html.twig" %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+{% block content %}
+
+    <h4 class="text-info" align="center">
+        {{ title }}
+    </h4>
+
+    <p>
+        {{ requestTotalFeeHtml|raw }}
+    </p>
+
+    <div class="well form-search">
+        {{ form_start(filterform) }}
+        <p>
+        <div class="row">
+            <div class="col-xs-4">
+                {% if filterform.submitter is defined %}
+                    {{ form_widget(filterform.submitter, {'attr': {'placeholder': 'Submitter'}}) }}
+                {% endif %}
+            </div>
+            <div class="col-xs-4">
+                {{ form_widget(filterform.progressState, {'attr': {'placeholder': 'Completion Status'}}) }}
+            </div>
+            <div class="col-xs-4">
+                {{ form_widget(filterform.billingState, {'attr': {'placeholder': 'Billing Status'}}) }}
+            </div>
+            {#<div class="col-xs-4">#}
+                {#{{ form_widget(filterform.category,{'attr': {'placeholder': 'Category'}}) }}#}
+            {#</div>#}
+            {#<div class="col-xs-4">#}
+                {#{{ form_widget(filterform.category,{'attr': {'placeholder': 'Category'}}) }}#}
+            {#</div>#}
+
+            {#<div class="col-xs-2">#}
+                {#<button type="submit" id="filter-btn" class="btn btn-sm btn-default">Filter</button>#}
+            {#</div>#}
+        </div>
+        </p>
+        <p>
+        <div class="row">
+            <div class="col-xs-4">
+                {{ form_widget(filterform.category,{'attr': {'placeholder': 'Category'}}) }}
+            </div>
+            <div class="col-xs-4">
+                {{ form_widget(filterform.comment,{'attr': {'placeholder': 'Comment text'}}) }}
+            </div>
+        </div>
+        </p>
+        <div class="row">
+            <div class="col-xs-12">
+                <button type="submit" id="filter-btn" class="btn btn-sm btn-default">Filter</button>
+            </div>
+        </div>
+        {{ form_end(filterform) }}
+    </div>
+    <br>
+
+    {% if transres_request_util.isRequestCanBeCreated(project) == 1 %}
+        <br>
+        <p>
+            <a class="btn btn-primary" href="{{ path(translationalresearch_sitename~'_request_formnode_new', {'id':project.id}) }}"
+            >New Work Request</a>
+        </p>
+        <br>
+    {% endif %}
+
+    {#<table class="table table-hover table-condensed text-left table-bordered">#}
+    <table class="records_list table table-condensed text-left my-table-class">
+        <thead>
+            <tr>
+                {#<th>Id</th>#}
+                <th>{{ knp_pagination_sortable(transresRequests, 'ID', 'transresRequest.oid') }}</th>
+                <th>{{ knp_pagination_sortable(transresRequests, 'Submitter', 'submitterInfos.displayName') }}</th>
+                <th>{{ knp_pagination_sortable(transresRequests, 'Creation Date', 'transresRequest.createDate') }}</th>
+                <th>{{ knp_pagination_sortable(transresRequests, 'Completion Status', 'transresRequest.progressState') }}</th>
+                <th>{{ knp_pagination_sortable(transresRequests, 'Billing Status', 'transresRequest.billingState') }}</th>
+                {#<th>{{ knp_pagination_sortable(projects, 'Expiration Date', 'project.expirationDate') }}</th>#}
+                <th>Fee</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        {% set count = 0 %}
+        {% for transresRequest in transresRequests %}
+
+            {% if count is odd %}
+                {% set trclassname = "table-row-separator-gray" %}
+            {% else %}
+                {% set trclassname = "table-row-separator-white" %}
+            {% endif %}
+            {% set count = count + 1 %}
+
+            {#add if state has "_rejected"?#}
+            {#{% if project.state == 'not_approved' or project.state == 'closed' %}#}
+                {#{% set trclassname = "order-reject-status" %}#}
+            {#{% endif %}#}
+
+            <tbody data-link="row" class="rowlink table-tbody-hover" {{ trclassname }}>
+            <tr style="border-bottom: 1px solid #C6C6C6;">
+                <td>
+                    <a href="{{ path(translationalresearch_sitename~'_request_formnode_show', { 'id': transresRequest.id }) }}" target="_blank">{{ transresRequest.oid }}</a>
+                </td>
+
+                <td class="rowlink-skip">
+                    {#{{ principalInvestigator }}<br>#}
+                    {% set personurl = path(translationalresearch_sitename~'_showuser',{'id':transresRequest.submitter.id}) %}
+                    {% set personlink = '<a href="'~personurl~'" target="_blank">'~transresRequest.submitter.getUsernameOptimal()~'</a>'  %}
+                    {{ personlink|raw }}<br>
+                </td>
+
+                <td>
+                    {% if transresRequest.createDate %}
+                        {{ transresRequest.createDate|date('m/d/Y H:i:s') }}
+                    {% endif %}
+                </td>
+
+                <td>
+                    {{ transres_request_util.getProgressStateLabelByName(transresRequest.progressState) }}
+                </td>
+
+                <td>
+                    {{ transres_request_util.getBillingStateLabelByName(transresRequest.billingState) }}
+                </td>
+
+                <td>
+                    {#{{ principalInvestigator }}<br>#}
+                    {% set fee = transres_request_util.getTransResRequestFeeHtml(transresRequest) %}
+                    {% if fee %}
+                        ${{ fee|raw }}
+                    {% endif %}
+                </td>
+
+                <td class="rowlink-skip">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            Action <span class="caret"></span>
+                        </button>
+
+                        <ul class="dropdown-menu dropdown-menu-right">
+
+                            <li>
+                                <a href="{{ path(translationalresearch_sitename~'_request_formnode_show', { 'id': transresRequest.id }) }}" target="_blank">Show work request details</a>
+                            </li>
+
+
+                            {% if is_granted('ROLE_TRANSRES_ADMIN') or transresRequest.submitter.id == app.user.id %}
+                                <li>
+                                    <a href="{{ path(translationalresearch_sitename~'_request_formnode_edit', { 'id': transresRequest.id }) }}" target="_blank">Edit work request</a>
+                                </li>
+                            {% endif %}
+
+                            {% if transres_request_util.isRequestProgressReviewable(transresRequest) %}
+                            {% if transres_util.isAdminOrPrimaryReviewer() or transres_request_util.isRequestProgressReviewer(transresRequest) %}
+                                <li>
+                                    <a href="{{ path(translationalresearch_sitename~'_request_formnode_review_progress_state', { 'id': transresRequest.id }) }} " target="_blank">Change work progress status</a>
+                                </li>
+                            {% endif %}
+                            {% endif %}
+
+                            {% if transres_request_util.isRequestBillingReviewable(transresRequest) %}
+                            {% if transres_util.isAdminOrPrimaryReviewer() or transres_request_util.isRequestBillingReviewer(transresRequest) %}
+                                <li>
+                                    <a href="{{ path(translationalresearch_sitename~'_request_formnode_review_billing_state', { 'id': transresRequest.id }) }} " target="_blank">Change billing status</a>
+                                </li>
+                            {% endif %}
+                            {% endif %}
+
+
+                            <li class="divider"></li>
+                            <li>
+                                <a href="{{ path(translationalresearch_sitename~'_invoice_index', { 'id': transresRequest.id }) }} " target="_blank">Show associated invoices</a>
+                            </li>
+                            <li>
+                                <a href="{{ path(translationalresearch_sitename~'_invoice_new', { 'id': transresRequest.id }) }} " target="_blank">Create new invoices</a>
+                            </li>
+
+                        </ul>
+
+                    </div>
+                </td>
+            </tr>
+            <tr class="table-no-border">
+                <td style="display: none">
+                    <a href="{{ path(translationalresearch_sitename~'_request_formnode_show', { 'id': transresRequest.id }) }}" target="_blank">Show work request details</a>
+                </td>
+                {{ user_formnode_utility.getFormNodeHolderShortInfo(transresRequest,transresRequest.messageCategory,1,trclassname)|raw }}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {#{{ render(controller('AppTranslationalResearchBundle:Project:threadComments', { 'id': "3-9-committee_review" })) }}#}
+    {#{% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': "3-9-committee_review"} %}#}
+
+    {% if transres_request_util.isRequestCanBeCreated(project) == 1 %}
+        <br>
+        <p>
+            <a class="btn btn-primary" href="{{ path(translationalresearch_sitename~'_request_formnode_new', {'id':project.id}) }}"
+            >New Work Request</a>
+        </p>
+    {% endif %}
+
+{% endblock %}

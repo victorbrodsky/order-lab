@@ -1,0 +1,687 @@
+/*
+ * Copyright (c) 2017 Cornell University
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+/*
+    Created on : Jul 17, 2013, 1:12:10 PM
+    Author     : oli2002
+*/
+
+.radio_newline {
+    float: left;
+    width: 100%;
+    padding-top: 7px;
+}
+.radio_newline LABEL, .radio_newline INPUT {
+    display: inline;
+    padding-right: 5px;
+}
+
+.horizontal_type LABEL, .horizontal_type INPUT {
+    display: inline;
+    padding-right: 10px;
+    padding-left: 5px;
+}
+.radio_inline{
+    float:left;
+    /*min-width:70px;*/
+    /*width: auto !important;*/
+    width: auto;
+    /*width: 70px;*/
+    margin-right:3%;
+}
+.horizontal_type_wide LABEL, .horizontal_type_wide INPUT {
+    display: inline;
+    padding-right: 20px;
+    padding-left: 3px;
+}
+
+
+.flash-notice {
+  color: #FF6600;
+  font-size: 200%;
+  margin-top: 3%;
+}
+
+/*.page-content-top {*/
+   /*padding-top: 10%; */
+/*}*/
+
+/*sign in login*/
+.form-signin {
+    max-width: 250px;
+    /*max-width: 100%;*/
+    padding: 15px;
+    margin: 0 auto;
+}
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+    margin-bottom: 10px;
+}
+.form-signin .checkbox {
+    font-weight: normal;
+}
+/*.form-signin .form-control {*/
+    /*position: relative;*/
+    /*font-size: 16px;*/
+    /*//height: auto;*/
+    /*padding: 10px;*/
+    /*-webkit-box-sizing: border-box;*/
+    /*-moz-box-sizing: border-box;*/
+    /*box-sizing: border-box;*/
+/*}*/
+/*.form-signin .form-control:focus {*/
+    /*z-index: 2;*/
+/*}*/
+.form-signin input[type="text"] {
+    margin-bottom: -1px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+.form-signin input[type="password"] {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+/*end of sign in*/
+
+
+/*make text larger*/
+/*.form-control {*/
+    /*font-size: 18px;*/
+    /*color: #313030;*/
+/*}*/
+
+/*.select2-container .select2-choice {*/
+    /*font-size: 18px;*/
+    /*color: #313030;*/
+/*}*/
+
+/*.select2-container .select2-choices {*/
+    /*font-size: 18px;*/
+    /*color: #313030;*/
+/*}*/
+
+/*.form-control-modif {*/
+    /*margin: 0;*/
+    /*display: inline;*/
+    /*height: 36px; //keep the same as combobox*/
+/*}*/
+
+
+/*change the color to Bootstrap default "black" #333333 and bold for form field content on that page only (fellowship form)*/
+div.fellapp-application-holder input {
+    color: #333333;
+    font-weight: bold;
+}
+div.fellapp-application-holder .select2-container .select2-choice {
+    color: #333333;
+    font-weight: bold;
+}
+/*hide trainingmajors placeholder for fellowship application form. Otherwise, it caused an partially obscured letter in PDF*/
+div.fellapp-application-holder .ajax-combobox-trainingmajors .select2-default {
+    display: none !important;
+}
+
+
+/*Zooming issue*/
+/*input-group-reg to make input and button aligned horizontally*/
+/*http://stackoverflow.com/questions/18077945/twitter-bootstrap-input-group-addon-and-btn-group-not-aligning-nicely*/
+/*.input-group-reg > .form-control {*/
+    /*height: 38px;*/
+/*}*/
+/* Sizing the button */
+/*.input-group-reg > .input-group-btn > .btn, .input-group-btn > .input-group-addon, .input-group-reg > .input-group-btn:last-child > .dropdown-toggle{*/
+    /*height: 38px;*/
+/*}*/
+/*.input-group-reg > .input-group-addon {*/
+    /*height: 38px;*/
+/*}*/
+/*EOF input-group-reg to make input and button aligned horizontally*/
+
+
+.header {
+    float: left;
+    width: 100%;
+}
+
+.footer {
+    margin-top: 100px;
+    margin-bottom: 50px;
+    /*float: left;*/
+    /*width: 100%;*/
+}
+
+.withpaddingtop {
+    padding-top: 20px;
+}
+
+.form_label_input {
+    float: left;
+    width: 100%;
+    margin-top: 2%;
+}
+
+.btn_margin {
+    margin-top: 2%;
+    margin-bottom: 2%;
+}
+
+#form_menu {
+    float: left;
+    width: 100%;
+}
+
+.option_info_panel {
+    padding-right: 1%;
+    padding-left: 1%;
+}
+
+#next_button {
+    margin-top: 2%; 
+}
+
+.buttons-full-bar {
+    margin-bottom: 2%;
+    margin-top: 2%;
+    float: left;
+    width: 100%;
+}
+
+.form_edit {
+    float: left;
+    width: 100%;
+}
+
+.oleg-form-nomargin-bottom {
+    margin-bottom: 0;
+}
+
+.objectMaxFull {
+    display:block;
+    max-width:100%;
+    max-height:100%;
+}
+
+.objectFull {
+    display:block;
+    width:100%;
+    height:100%;
+}
+
+
+.panel-heading > .element-title-extended-width {
+    width: 85%;
+}
+
+/*.panel .panel-success {*/
+    /*margin-bottom: 0px;*/
+/*}*/
+.panel .panel-scan {
+    margin-bottom: 0px;
+}
+
+/*.activetr {*/
+    /*background-color: rgb(217, 237, 247);*/
+/*}*/
+
+/*.canceltr {*/
+    /*background-color: rgb(242, 222, 222);*/
+/*}*/
+
+/*.completedtr {*/
+    /*background-color: rgb(223, 240, 216);*/
+/*}*/
+
+/*.uncompletedtr {*/
+    /*//background-color: rgb(252, 248, 227);*/
+    /*background-color: white;*/
+/*}*/
+
+/*.panel*/
+.panel-message {
+    border-color: #d6e9c6;
+}
+.panel-message .panel-heading-message {
+    color: #777;    /*#3c763d;*/
+    background-color: #d6e9c6;
+    border-color: #d6e9c6;
+    border-top-left-radius: 0px;
+}
+
+.panel-shadow-message {
+    border-color: #EEF6E8;
+}
+.panel-shadow-message .panel-heading-message {
+    color: #777;
+    background-color: #EEF6E8;
+    border-color: #EEF6E8;
+    border-top-left-radius: 0px;
+}
+
+.panel-multi-form {
+    border-left: 7px solid;
+    margin-top: 10px;
+    margin-bottom: 0px;
+}
+
+.panel-body-multi-form {
+    padding-top: 0px;
+    padding-bottom: 5px;
+}
+
+.panel-patient {
+    border-color: #90BEE4;
+}
+.panel-patient .panel-heading-hierarchy {
+    color: #ffffff;
+    background-color: #90BEE4;
+    border-color: #90BEE4;
+    border-top-left-radius: 0px;
+}
+
+.panel-encounter {
+    border-color: #71B0E4;
+}
+.panel-encounter .panel-heading-hierarchy {
+    color: #ffffff;
+    background-color: #71B0E4;
+    border-color: #71B0E4;
+    border-top-left-radius: 0px;
+}
+
+.panel-procedure {
+    border-color: #71B0E4;
+}
+.panel-procedure .panel-heading-hierarchy {
+    color: #ffffff;
+    background-color: #71B0E4;
+    border-color: #71B0E4;
+    border-top-left-radius: 0px;
+}
+
+.panel-accession {
+    border-color: #3F98C8;
+}
+.panel-accession .panel-heading-hierarchy {
+    color: #ffffff;
+    background-color: #3F98C8;
+    border-color: #3F98C8;
+    border-top-left-radius: 0px;
+}
+
+.panel-part {
+     border-color: #428CCA;
+ }
+.panel-part .panel-heading-hierarchy {
+    color: #ffffff;
+    background-color: #428CCA;
+    border-color: #428CCA;
+    border-top-left-radius: 0px;
+}
+
+.panel-block {
+    border-color: #1268B3;
+}
+.panel-block .panel-heading-hierarchy {
+    color: #ffffff;
+    background-color: #1268B3;
+    border-color: #1268B3;
+    border-top-left-radius: 0px;
+}
+
+.panel-slide {
+    border-color: #FF9933;
+}
+.panel-slide .panel-heading-hierarchy {
+    color: #ffffff;
+    background-color: #FF9933;
+    border-color: #FF9933;
+    border-top-left-radius: 0px;
+}
+
+.panel-stain {
+    border-color: #155183; //35478C
+}
+.panel-stain .panel-heading-hierarchy {
+    color: #ffffff;
+    background-color: #155183;
+    border-color: #155183;
+    border-top-left-radius: 0px;
+}
+
+.panel-scan {
+    border-color: #ffb770;
+}
+.panel-scan .panel-heading-hierarchy {
+    color: #ffffff;
+    background-color: #ffb770;
+    border-color: #ffb770;
+    border-top-left-radius: 0px;
+}
+
+.panel-imaging {
+    border-color: #ddd3ee;
+}
+.panel-imaging > .panel-heading {
+    color: #777;
+    background-color: #ddd3ee;
+    border-color: #ddd3ee;
+    border-top-left-radius: 0px;
+}
+
+
+.user-alert-warning {
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-bottom: 5px;
+    background-color: #F8ECE0;
+}
+
+/*.user-alert-success {*/
+    /*color: #3c763d;*/
+    /*background-color: #7cc198;*/
+    /*border-color: #d6e9c6;*/
+/*}*/
+
+.user-margin-block {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+
+/*shift left the buttons on the each form menu*/
+.element-title {
+    float: left;
+    padding-left: 1%;
+}
+
+.panel-heading-min-height {
+    min-height: 45px;
+}
+
+.safary-fix {
+    overflow: hidden;
+}
+
+.combobox-width {
+    width: 100%;
+}
+
+/* ordersearch */
+#ordersearchform-search, #deidentifiersearchform-searchtype {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+/*.ordersearch, .ordersearch .select2-choice {*/
+    /*height: 34px;*/
+    /*border-top-right-radius: 0;*/
+    /*border-bottom-right-radius: 0;*/
+    /*padding-top: 3px;*/
+/*}*/
+/*.ordersearch .select2-arrow {*/
+    /*border-radius: 0;*/
+/*}*/
+/*.ordersearch-fields-group > a {*/
+    /*height: 34px;*/
+    /*border-top-right-radius: 0;*/
+    /*border-bottom-right-radius: 0;*/
+    /*padding-top: 3px;*/
+/*}*/
+/*.ordersearch.select2-container .select2-results {height: 200px;}*/
+/*.ordersearch .select2-results {height: 200px;}*/
+/*.ordersearch .select2-choices {height: 200px;}*/
+
+.textarea {
+    /*min-height: 75px;*/
+    min-height: 40px;
+}
+
+.print_helper {
+    display: block;
+    overflow: visible;
+    white-space: pre;
+    white-space: pre-wrap;
+    text-align: left;
+}
+
+
+
+/*Comment counter*/
+#incoming-orders-menu-title, #incoming-orders-menu-badge {
+    display: inline-block !important;
+}
+
+#incoming-orders-menu-title {
+    padding-right: 3px !important;
+    box-shadow: none;
+}
+
+#incoming-orders-menu-badge {
+    padding-left: 3px !important;
+    box-shadow: none;
+}
+
+/*Table-View Scan Order nav bar*/
+
+/*align tabs to center*/
+.nav-tabs > li, .nav-pills > li {
+    float:none;
+    display:inline-block;
+    *display:inline; /* ie7 fix */
+    zoom:1; /* hasLayout ie7 trigger */
+}
+.nav-tabs, .nav-pills {
+    text-align:center;
+}
+
+/*make border*/
+.tab-content {
+    border-left: 1px solid #428bca;
+    border-right: 1px solid #428bca;
+    border-bottom: 1px solid #428bca;
+    padding: 10px;
+}
+
+.nav-tabs {
+    margin-bottom: 0;
+}
+
+.tabbable>.nav-tabs>.active>a, .tabbable>.nav-tabs>.active>a:hover, .tabbable>.nav-tabs>.active>a:focus {
+    border: 1px solid #428bca;
+    border-bottom-color: transparent;
+}
+
+.nav-tabs {
+    border-bottom: 1px solid #428bca;
+}
+
+.nav-tabs > li > a {
+    color: #428bca
+}
+
+.nav-tabs > li > a:hover {
+    background-color: #428bca;
+    border: 1px solid #428bca;
+    border-bottom-color: transparent;
+    color: #ffffff
+}
+
+/*
+how to avoid bootstrap 3 nav bar collapsing into two rows.
+Bootstrap NavBar not collapsing as expected - separating onto two lines.
+*/
+/*http://stackoverflow.com/questions/30968571/bootstrap-navbar-not-collapsing-as-expected-separating-onto-two-lines*/
+@media (max-width: 992px) {
+    .navbar-header {
+        float: none;
+    }
+    .navbar-left,.navbar-right {
+        float: none !important;
+    }
+    .navbar-toggle {
+        display: block;
+    }
+    .navbar-collapse {
+        border-top: 1px solid transparent;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+    .navbar-fixed-top {
+        top: 0;
+        border-width: 0 0 1px;
+    }
+    .navbar-collapse.collapse {
+        display: none!important;
+    }
+    .navbar-nav {
+        float: none!important;
+        margin-top: 7.5px;
+    }
+    .navbar-nav>li {
+        float: none;
+    }
+    .navbar-nav>li>a {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+    .collapse.in{
+        display:block !important;
+    }
+}
+/*end of nav bar*/
+
+/*16px in CSSvia command below - that is the threshold to prevent the iPhone / iPad from auto-zooming in the whole page on the form field when you try to type something in*/
+.limit-font-size {
+    font-size: 16px;
+}
+.limit-font-size > .select2-choice {
+    font-size: 16px;
+}
+
+/*use this instead of display:none;*/
+/*.hideComplex {*/
+    /*position: absolute;*/
+    /*overflow: hidden;*/
+    /*clip: rect(0 0 0 0);*/
+    /*height: 1px; width: 1px;*/
+    /*margin: -1px; padding: 0; border: 0;*/
+/*}*/
+
+.table-header-grey-gradient {
+    background: -webkit-linear-gradient(left, #b9b9b9, #e8e8e8, #b9b9b9); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(left, #b9b9b9, #e8e8e8, #b9b9b9); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(left, #b9b9b9, #e8e8e8, #b9b9b9); /* For Fx 3.6 to 15 */
+    background: linear-gradient(to right, #b9b9b9, #e8e8e8, #b9b9b9); /* Standard syntax (must be last) */
+}
+
+.table-no-border td, .table-no-border th {
+    border-top: none !important;
+}
+
+/*header: show when scroll down*/
+/*body {*/
+    /*min-height: 1200px;*/
+/*}*/
+#user-headroom-header {
+    /*background: #444;*/
+    position: fixed;
+    left: 0;
+    width: 100%;
+    /*height: 80px;*/
+    transition: all 0.3s linear;
+    -moz-transition: all 0.3s linear;
+    -webkit-transition: all 0.3s linear;
+    z-index:1000;
+    border-color: #ffffff;
+    background-image: linear-gradient(to bottom,#ffffff 0,#ffffff 100%);
+}
+.headroom-shown {
+    top: 0;
+}
+.headroom-hidden {
+    top: -80px;
+}
+
+.nav-bar-checkbox {
+    position: relative;
+    display: block;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+/*.watermark-text {*/
+    /*position: absolute;*/
+    /*opacity: 0.25;*/
+    /*font-size: 3em;*/
+    /*width: 100%;*/
+    /*text-align: center;*/
+    /*z-index: 1000;*/
+    /*color:#FA8072;*/
+    /*transform:rotate(300deg);*/
+    /*-webkit-transform:rotate(300deg);*/
+/*}*/
+.order-white-background {
+    background-color: white;
+}
+/* https://jsfiddle.net/yg0xgm9t/224/ */
+.watermark-image-old-version::after {
+    content: "";
+    /*background:url(https://www.google.co.in/images/srpr/logo11w.png);*/
+    background: url("../img/old_version.png");
+    opacity: 0.1;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    position: absolute;
+    z-index: -1;
+    /*transform:rotate(300deg);*/
+    /*-webkit-transform:rotate(300deg);*/
+}
+
+.mask-text-align-left {
+    text-align: left !important;
+}
+
+.required:after {
+    content: "*";
+    color: red;
+}
+
+.btn-orange {
+    color: #fff;
+    background-color: #FF6600;
+    border-color: #FF6600;
+}
+
+.toggle-btn-state-active {
+    background-color: #A0A0A0;
+    /*#e6e6e6;*/
+}
+.toggle-btn-state-inactive {
+    background-color: #fff;
+}
+/*https://stackoverflow.com/questions/11267137/toggle-twitter-bootstrap-button-class-when-active*/
+.btn.active[data-active-class="advance-search-wrench"] {
+    /*background-color: #31b0d5;*/
+    /*border-color: #269abc;*/
+    background-color: #A0A0A0;
+    border-color: #7a7a7a;
+}
+

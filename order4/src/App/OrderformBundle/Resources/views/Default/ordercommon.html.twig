@@ -1,0 +1,102 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+
+{% macro ordertitle( form, formtype ) %}
+    <h3 class="text-info">
+        {{ formtype }}
+        {% if form.vars.value.oid != "" %}
+            {{ form.vars.value.oid }}
+            ({{ form.vars.value.status }})
+        {% endif %}
+    </h3>
+{% endmacro %}
+
+{% macro orderheader( form, formtype, type, showpath, amendpath, amendable, changestatus ) %}
+
+    {% import _self as ordercommon %}
+    {#<h3 class="text-info">#}
+        {#{{ formtype }}#}
+        {#{% if form.vars.value.oid != "" %}#}
+            {#{{ form.vars.value.oid }}#}
+            {#({{ form.vars.value.status }})#}
+        {#{% endif %}#}
+    {#</h3>#}
+    {{ ordercommon.ordertitle(form, formtype) }}
+
+    {#set status. used to show action buttons#}
+    {% if type != 'new' %}
+        {% set statusname = form.vars.value.status.name %}
+        {% set Filled = "Filled" in statusname %}
+        {% set Amended = "Amended" in statusname %}
+        {% set Canceled = "Canceled" in statusname %}
+        {% set OnHold = "On Hold" in statusname %}
+        {% set Superseded = "Superseded" in statusname %}
+        {% if "Submitted" == statusname %}
+            {% set Submitted = 1 %}
+        {% else %}
+            {% set Submitted = 0 %}
+        {% endif %}
+    {% endif %}
+
+    {% if type != 'new' %}
+        <div class="well well-sm">
+
+            {#action buttons#}
+            {% if (type == 'edit' or type == 'show') and (not Superseded and not Canceled ) %}
+
+                {###############  USER ACTIONS #################}
+                {% if changestatus and not Canceled and not Filled %}
+                    <a class="btn btn-danger" data-confirm="Are you sure you want to cancel order {{ form.vars.value.oid }}?" data-ok="Cancel the order" data-cancel="Do not cancel"
+                       href="{{ path('scanorder_status', { 'id': form.vars.value.oid , 'status': 'Cancel' }) }}">Cancel</a>
+                {% endif %}
+
+                {% if changestatus and not Submitted and not Canceled and not Amended and not Filled and not OnHold %}
+                    <a class="btn btn-info" data-confirm="Are you sure you want to Submit?"
+                       href="{{ path('scanorder_status', { 'id': form.vars.value.oid, 'status': 'Submit' }) }}">Submit</a>
+                {% endif %}
+
+                {% if amendable and (Submitted or Amended) %}
+                    <a class="btn btn-warning" data-confirm="Are you sure you want to amend order {{ form.vars.value.oid }}?" data-ok="Amend the order" data-cancel="Do not amend"
+                       href="{{ path(amendpath, { 'id': form.vars.value.oid }) }}">Amend</a>
+                {% endif %}
+
+            {% endif %}
+
+            {% if changestatus and (type == 'edit' or type == 'show') and Canceled %}
+                {#{% if not Submitted and not Amended and not Filled and not OnHold %}#}
+                <a class="btn btn-info" data-confirm="Are you sure you want to un-cancel order {{ form.vars.value.oid }}?" data-ok="Un-cancel the order" data-cancel="Do not un-cancel"
+                   href="{{ path('scanorder_status', { 'id': form.vars.value.oid, 'status': 'Submit' }) }}">Un-Cancel</a>
+                {#{% endif %}#}
+            {% endif %}
+
+            {% if changestatus and type == 'amend' and (Submitted or Amended) %}
+                <a class="btn btn-danger" href="{{ path(showpath, { 'id': form.vars.value.oid }) }}">Cancel amendment process</a>
+            {% endif %}
+
+            {% if type == 'amend' and Canceled %}
+                <a class="btn btn-info" href="{{ path(showpath, { 'id': form.vars.value.oid }) }}">Cancel Un-Canceling</a>
+            {% endif %}
+
+            <a class="btn btn-info" href="{{ path('slide-return-request', { 'id': form.vars.value.oid }) }}">Request Slide Return</a>
+
+            <a class="btn btn-info" href="{{ path('history_message_show', { 'id': form.vars.value.oid }) }}">View Progress & Comments</a>
+
+        </div>
+
+    {% endif %}
+
+{% endmacro %}

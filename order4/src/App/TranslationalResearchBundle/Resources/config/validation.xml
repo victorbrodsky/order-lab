@@ -1,0 +1,77 @@
+<?xml version="1.0" ?>
+
+<!--
+  ~ Copyright (c) 2017 Cornell University
+  ~
+  ~  Licensed under the Apache License, Version 2.0 (the "License");
+  ~  you may not use this file except in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~  http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing, software
+  ~  distributed under the License is distributed on an "AS IS" BASIS,
+  ~  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~  See the License for the specific language governing permissions and
+  ~  limitations under the License.
+  -->
+
+<!--
+ This file is part of the FOSCommentBundle package.
+
+ (c) FriendsOfSymfony <http://friendsofsymfony.github.com/>
+
+ This source file is subject to the MIT license that is bundled
+ with this source code in the file LICENSE.
+-->
+
+<constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping
+        http://symfony.com/schema/dic/services/constraint-mapping-1.0.xsd">
+
+    <class name="FOS\CommentBundle\Model\Comment">
+
+        <property name="body">
+            <constraint name="NotBlank">
+                <option name="message">Please enter a message</option>
+            </constraint>
+            <constraint name="Length">
+                <option name="min">1</option>
+                <option name="minMessage">The message is too short|The message is too short</option>
+            </constraint>
+        </property>
+    </class>
+
+    <class name="FOS\CommentBundle\Model\Vote">
+        <constraint name="Callback">isVoteValid</constraint>
+    </class>
+
+    <class name="FOS\CommentBundle\Model\Thread">
+
+        <property name="id">
+            <constraint name="NotBlank">
+                <option name="message">Please enter an id</option>
+                <option name="groups">
+                    <value>NewThread</value>
+                </option>
+            </constraint>
+        </property>
+
+        <property name="permalink">
+            <constraint name="NotBlank">
+                <option name="message">Please enter a permalink</option>
+                <option name="groups">
+                    <value>NewThread</value>
+                </option>
+            </constraint>
+            <constraint name="Url">
+                <option name="message">Please provide a valid url</option>
+                <option name="groups">
+                    <value>NewThread</value>
+                </option>
+            </constraint>
+        </property>
+    </class>
+
+</constraint-mapping>

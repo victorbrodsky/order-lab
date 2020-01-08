@@ -1,0 +1,614 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+
+{% macro displayPatient( patient, patientCount, status, showPlus, datastructure, type, formtype ) %}
+
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+
+        {############# patient #############}
+
+        {% set uid = patientCount~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0 %}
+        <div id="formpanel_patient_{{ uid }}" class="panel panel-patient panel-multi-form">
+
+            {{ formmacros.message_panel_header(
+                patient,'patient', datastructure, type, formtype, patientCount, uid,
+                patientCount, 0, 0, 0, 0, 0, 0, 0, 0)
+            }}
+
+
+            <div id="form_body_patient_{{ uid }}" class="panel-body panel-body-multi-form collapse in">
+
+                {#patient form#}
+                {{ formmacros.patientForm(
+                    patient,
+                    datastructure,
+                    uid,
+                    type,
+                    status,
+                    showPlus,
+                    formtype
+                ) }}
+
+                {############# encounter #############}
+                {% set encounterCount = 0 %}
+                {% for encounter in patient.encounter %}
+
+                    {#encounter panel#}
+                    {% set uid = patientCount~'_'~encounterCount~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0 %}
+                    <div id="formpanel_encounter_{{ uid }}" class="panel panel-encounter panel-multi-form">
+
+                    {#encounter header#}
+                    {{ formmacros.message_panel_header(
+                    encounter,'encounter', datastructure, type, formtype, encounterCount, uid,
+                    patientCount, encounterCount, 0, 0, 0, 0, 0, 0, 0)
+                    }}
+
+                    {#encounter body#}
+                    <div id="form_body_encounter_{{ uid }}" class="panel-body panel-body-multi-form collapse in">
+
+                        {#encounter form#}
+                        {% if datastructure and (datastructure == "datastructure" or datastructure == "datastructure-patient") %}
+                            {{ formmacros.encounterForm(encounter,datastructure,uid,type,status,showPlus) }}
+                        {% endif %}
+
+                        {############# procedure #############}
+                        {% set procedureCount = 0 %}
+                        {% if encounter.procedure is defined %}
+                        {% for procedure in encounter.procedure %}
+
+                            {#procedure header#}
+                            {% set uid = patientCount~'_'~encounterCount~'_'~procedureCount~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0 %}
+                            {% if datastructure and (datastructure == "datastructure" or datastructure == "datastructure-patient") %}
+                                <div id="formpanel_procedure_{{ uid }}" class="panel panel-procedure panel-multi-form">
+                                    {#procedure header#}
+                                    {{ formmacros.message_panel_header(
+                                    procedure,'procedure', datastructure, type, formtype, encounterCount, uid,
+                                    patientCount, encounterCount, procedureCount, 0, 0, 0, 0, 0, 0)
+                                    }}
+
+                                    {#procedure body#}
+                                    <div id="form_body_procedure_{{ uid }}" class="panel-body panel-body-multi-form collapse in">
+                                        {{ formmacros.procedureForm(procedure,datastructure,uid,type,status,showPlus) }}
+                            {% endif %}
+
+
+                            {############# accession #############}
+                            {% set accessionCount = 0 %}
+                            {% if procedure.accession is defined %}
+                            {% for accession in procedure.accession %}
+                                {% set uid = patientCount~'_'~encounterCount~'_'~procedureCount~'_'~accessionCount~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0 %}
+
+                                {% if datastructure and (datastructure == "datastructure" or datastructure == "datastructure-patient") %}
+                                        <div id="formpanel_accession_{{ uid }}" class="panel panel-accession panel-multi-form">
+                                        {{ formmacros.message_panel_header(
+                                        accession,'accession', datastructure, type, formtype, accessionCount, uid,
+                                        patientCount, encounterCount, procedureCount, accessionCount, 0, 0, 0, 0, 0)
+                                        }}
+
+                                        <div id="form_body_accession_{{ uid }}" class="panel-body panel-body-multi-form collapse in">
+                                {% endif %}
+
+                                {#accession form#}
+                                {{ formmacros.accessionForm(encounter,procedure,accession,datastructure,uid,type,status,showPlus) }}
+
+                                {#############  part    #############}
+                                {% set partCount = 0 %}
+                                {% if accession.part is defined %}
+                                {% for part in accession.part %}
+                                    {% set uid = patientCount~'_'~encounterCount~'_'~procedureCount~'_'~accessionCount~'_'~partCount~'_'~0~'_'~0~'_'~0~'_'~0 %}
+                                    <div id="formpanel_part_{{ uid }}" class="panel panel-part panel-multi-form">
+
+                                        {{ formmacros.message_panel_header(
+                                        part,'part', datastructure, type, formtype, partCount, uid,
+                                        patientCount, encounterCount, procedureCount, accessionCount, partCount, 0, 0, 0, 0)
+                                        }}
+
+                                        <div id="form_body_part_{{ uid }}" class="panel-body panel-body-multi-form collapse in">
+
+                                            {{ formmacros.partForm( part, datastructure, uid, type, status, showPlus, "","","","","","","") }}
+
+
+                                            {#block#}
+                                            {% set blockCount = 0 %}
+                                            {% if part.block is defined %}
+                                            {% for block in part.block %}
+                                                {#block id={{ block.vars.value.id }}#}
+                                                {% set uid = patientCount~'_'~encounterCount~'_'~procedureCount~'_'~accessionCount~'_'~partCount~'_'~blockCount~'_'~0~'_'~0~'_'~0 %}
+                                                <div id="formpanel_block_{{ uid }}" class="panel panel-block panel-multi-form">
+                                                    {{ formmacros.message_panel_header(
+                                                    block,'block', datastructure, type, formtype, blockCount, uid,
+                                                    patientCount, encounterCount, procedureCount, accessionCount, partCount, blockCount, 0, 0, 0)
+                                                    }}
+
+                                                    <div id="form_body_block_{{ uid }}" class="panel-body panel-body-multi-form collapse in">
+                                                        {#{{ formmacros.field(block.name) }}#}
+                                                        {{ formmacros.blockForm( block, datastructure, uid, type, status, showPlus) }}
+
+
+                                                        {#slide#}
+                                                        {% set slideCount = 0 %}
+                                                        {% if block.slide is defined %}
+                                                        {% for slide in block.slide %}
+                                                            {#slide id={{ slide.vars.value.id }}#}
+                                                            {% set uid = patientCount~'_'~encounterCount~'_'~procedureCount~'_'~accessionCount~'_'~partCount~'_'~blockCount~'_'~slideCount~'_'~0~'_'~0 %}
+                                                            <div id="formpanel_slide_{{ uid }}" class="panel panel-slide panel-multi-form">
+                                                                {{ formmacros.message_panel_header(
+                                                                slide,'slide', datastructure, type, formtype, slideCount, uid,
+                                                                patientCount, encounterCount, procedureCount, accessionCount, partCount, blockCount, slideCount, 0, 0)
+                                                                }}
+
+                                                                <div id="form_body_slide_{{ uid }}" class="panel-body panel-body-multi-form collapse in">
+
+                                                                    {{ formmacros.slideForm( slide, datastructure, uid, type ) }}
+
+                                                                </div>
+                                                            </div> {#end of slide#}
+                                                            {% set slideCount = slideCount + 1 %}
+                                                        {% endfor %} {# block slide loop #}
+                                                        {% endif %}
+
+
+                                                    </div>
+                                                    {% set blockCount = blockCount + 1 %}
+                                                </div> {#end of block#}
+                                            {% endfor %} {# part loop #}
+                                            {% endif %}
+
+                                            {#part's slide#}
+                                            {% set slideCount = 0 %}
+                                            {% if part.slide is defined %}
+                                            {% for slide in part.slide %}
+                                                {% set uid = patientCount~'_'~encounterCount~'_'~procedureCount~'_'~accessionCount~'_'~partCount~'_'~blockCount~'_'~slideCount~'_'~0~'_'~0 %}
+                                                <div id="formpanel_slide_{{ uid }}" class="panel panel-slide panel-multi-form">
+                                                    {{ formmacros.message_panel_header(
+                                                    slide,'slide', datastructure, type, formtype, slideCount, uid,
+                                                    patientCount, encounterCount, procedureCount, accessionCount, partCount, blockCount, slideCount, 0, 0)
+                                                    }}
+
+                                                    <div id="form_body_slide_{{ uid }}" class="panel-body panel-body-multi-form collapse in">
+
+                                                        {{ formmacros.slideForm( slide, datastructure, uid, type ) }}
+
+                                                    </div>
+                                                </div> {#end of slide#}
+                                                {% set slideCount = slideCount + 1 %}
+                                            {% endfor %} {# part slide loop #}
+                                            {% endif %}
+
+                                        </div>
+                                    </div> {#end of part#}
+                                    {% set partCount = partCount + 1 %}
+                                {% endfor %} {# part loop #}
+                                {% endif %}
+
+                                {% if datastructure and (datastructure == "datastructure" or datastructure == "datastructure-patient") %}
+                                        </div>
+                                    </div> {#end of accession#}
+                                {% endif %}
+                                {% set accessionCount = accessionCount + 1 %}
+                            {% endfor %} {# accession loop #}
+                            {% endif %}
+
+
+                            {% if datastructure and (datastructure == "datastructure" or datastructure == "datastructure-patient") %}
+                                    </div>
+                                </div> {#end of procedure#}
+                            {% endif %}
+                            {% set procedureCount = procedureCount + 1 %}
+                        {% endfor %} {# procedure loop #}
+                        {% endif %}
+
+                        </div>
+
+                    </div>{#end of encounter #}
+                    {% set encounterCount = encounterCount + 1 %}
+                {% endfor %} {# encounter loop #}
+
+
+            </div>{# end of form_body_patient_ #}
+
+        </div> {#end of patient #}
+
+        {#{% set patientCount = patientCount + 1 %}#}
+    {#{% endfor %} &#123;&#35; patient loop &#35;&#125;#}
+
+
+{% endmacro %}
+
+
+
+{#Macros to display a patient form #}
+{#patient - is patient form; type == cycle#}
+{% macro displayFullPatientForm( formPatient, status, showPlus, datastructure, type, formtype, patientParentForm, dataqualityPrototype ) %}
+
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppOrderformBundle::Default/patientmacros.html.twig" as patientmacros %}
+    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+
+    {#{{ formmacros.testSpotShow(formPatient) }}#}
+
+    {% if type != 'show' %}
+        {#{% set mrnHtml = formmacros.inputField(formPatient.vars.prototype.mrn,type,"key","prototype","","","","patientmrn","") %}#}
+        {% if formPatient.vars.prototype is defined and formPatient.vars.prototype %}
+            {% set patientPrototype = formPatient.vars.prototype %}
+            {% set patientMrn = formPatient.vars.prototype.mrn %}
+            {% set patientDob = formPatient.vars.prototype.dob %}
+            {% set patientClinicalHistory = formPatient.vars.prototype.clinicalHistory %}
+            {% set patientEncounter = formPatient.vars.prototype.encounter %}
+            {#{% set patientSpotField = formPatient.tracker.spots %}#}
+        {% else %}
+            {% set patientPrototype = formPatient %}
+            {% set patientMrn = formPatient.mrn %}
+            {% set patientDob = formPatient.dob %}
+            {% set patientClinicalHistory = formPatient.clinicalHistory %}
+            {% set patientEncounter = formPatient.encounter %}
+            {#{% set patientSpotField = formPatient.tracker.spots %}#}
+        {% endif %}
+
+        {% set mrnHtml = formmacros.inputField(patientMrn,type,"key","prototype","","","","patientmrn","") %}
+        {% set dobHtml = formmacros.inputField(patientDob,type,"date","prototype") %}
+        {% set clinicalhistoryHtml = formmacros.inputField(patientClinicalHistory,type,"","prototype") %}
+
+        {% if formPatient.tracker is defined %}
+            {% set patientSpotField = formPatient.tracker.spots %}
+            {#{% set patienttrackerHtml = formmacros.inputField(patientTracker,type,"","prototype") %}#}
+            {% set patientspotWidget = formmacros.fieldPatientSpotWidget(patientSpotField,type,"employees","prototype","patienttrackerspot") %}
+            {% set spotHtml = formmacros.inputField(patientSpotField,type,"patienttrackerspot","prototype",patientspotWidget) %}
+        {% else %}
+            {% set patientspotWidget = "" %}
+            {% set spotHtml = "" %}
+        {% endif %}
+
+
+        {#{% set encounterHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.name,type,"","prototype") %}#}
+        {#{% set encounternumberHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.number,type,"","prototype","","","nolabel") %}#}
+        {% set encounterdateHtml = formmacros.inputField(patientEncounter.vars.prototype.date,type,"date","prototype","","","","encounterdate") %}
+        {% set patsuffixHtml = formmacros.inputField(patientEncounter.vars.prototype.patsuffix,type,"","prototype","","","","encounterpatsuffix") %}
+        {% set patlastnameHtml = formmacros.inputField(patientEncounter.vars.prototype.patlastname,type,"","prototype","","","","encounterpatlastname") %}
+        {% set patfirstnameHtml = formmacros.inputField(patientEncounter.vars.prototype.patfirstname,type,"","prototype","","","","encounterpatfirstname") %}
+        {% set patmiddlenameHtml = formmacros.inputField(patientEncounter.vars.prototype.patmiddlename,type,"","prototype","","","","encounterpatmiddlename") %}
+
+        {% set patageHtml = formmacros.inputField(patientEncounter.vars.prototype.patage,type,"","prototype") %}
+        {% set patsexHtml = formmacros.inputField(patientEncounter.vars.prototype.patsex,type,"","prototype") %}
+        {% set patpathistoryHtml = formmacros.inputField(patientEncounter.vars.prototype.pathistory,type,"","prototype","","","","encounterpathistory") %}
+
+        {#default tree depth#}
+        {#procedure#}
+        {% set procedurePrototype = null %}
+        {% set procedurenameHtml = "" %}
+        {% set proceduredateHtml = "" %}
+        {#accession#}
+        {% set accessionPrototype = null %}
+        {% set accessionHtml = "" %}
+        {% set accessiondateHtml = "" %}
+        {#part#}
+        {% set partPrototype = null %}
+        {% set partnameHtml = "" %}
+        {% set sourceorganHtml = "" %}
+        {% set parttitleHtml = "" %}
+        {% set paperHtml = "" %}
+        {% set descriptionHtml = "" %}
+        {% set diagnosisHtml = "" %}
+        {% set diseaseTypeHtml = "" %}
+            {#diffDiagnoses#}
+            {% set diffDiagnosesField = "" %}
+            {% set diffDiagnosesWidget = "" %}
+            {% set diffDiagnosesHtml = "" %}
+        {#block#}
+        {% set blockPrototype = null %}
+        {% set blocknameHtml = "" %}
+        {% set sectionsourceHtml = "" %}
+            {#specialStains#}
+            {% set specialStainsField = "" %}
+            {% set specialStainsWidget = "" %}
+            {% set specialStainsHtml = "" %}
+        {#slide#}
+        {% set slidePrototype = null %}
+        {% set relevantScansField = "" %}
+        {% set relevantScansWidget = "" %}
+        {% set relevantScansHtml = "" %}
+        {% set slideSlidetype = null %}
+        {% set slideMicroscopicdescrFormField = null %}
+        {#scan#}
+        {% set scanPrototype = null %}
+        {% set scanMagnificationPrototypeFormField = null %}
+        {% set scanScanregionPrototypeFormField = null %}
+        {% set scanNotePrototypeFormField = null %}
+        {% set stainPrototypeFormField = null %}
+
+        {#procedure#}
+        {% if patientEncounter.vars.prototype.procedure is defined %}
+
+            {% set procedurePrototype = patientEncounter.vars.prototype.procedure.vars.prototype %}
+
+            {% set procedurenameHtml = formmacros.inputField(patientEncounter.vars.prototype.procedure.vars.prototype.name,type,"","prototype","","","","procedurename") %}
+            {#{% set procedurenumberHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.number,type,"","prototype","","","nolabel") %}#}
+
+            {% if patientEncounter.vars.prototype.procedure.vars.prototype.date is defined %}
+                {% set proceduredateHtml = formmacros.inputField(patientEncounter.vars.prototype.procedure.vars.prototype.date,type,"date","prototype","","","","proceduredate") %}
+            {% endif %}
+
+            {#accession#}
+            {% if patientEncounter.vars.prototype.procedure.vars.prototype.accession is defined %}
+
+                {%  set accessionPrototype = patientEncounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype %}
+
+                {% set accessionHtml = formmacros.inputField(patientEncounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.accession,type,"key","prototype","","","","accessionaccession","") %}
+                {#{% set accessionHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.accession,type,"key","prototype","","","","accessionaccession","") %}#}
+
+                {% set accessiondateHtml = formmacros.inputField(patientEncounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.accessionDate,type,"date","prototype") %}
+
+                {#part#}
+                {% if patientEncounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part is defined %}
+
+                    {% set partPrototype = patientEncounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype %}
+
+                    {% set partnameHtml = formmacros.inputField(patientEncounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.partname,type,"key","prototype") %}
+                    {% set sourceorganHtml = formmacros.inputField(patientEncounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.sourceOrgan,type,"","prototype") %}
+                    {% set parttitleHtml = formmacros.inputField(patientEncounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.parttitle,type,"","prototype") %}
+                    {% set paperHtml = formmacros.inputField(patientEncounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.paper,type,"paper","prototype") %}
+                    {% set descriptionHtml = formmacros.inputField(patientEncounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.description,type,"","prototype") %}
+                    {% set diagnosisHtml = formmacros.inputField(patientEncounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.disident,type,"","prototype") %}
+
+                    {% set diffDiagnosesField = patientEncounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.diffDisident %}
+                    {% set diffDiagnosesWidget = formmacros.fieldWidget(diffDiagnosesField) %}
+                    {% set diffDiagnosesHtml = formmacros.inputField(diffDiagnosesField,type,"partdiffDisident","prototype",diffDiagnosesWidget,"") %}
+
+                    {% set diseaseTypeHtml = formmacros.inputField(patientEncounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.diseaseType,type,"diseaseType","prototype") %}
+
+                    {#block#}
+                    {% if patientEncounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block is defined %}
+
+                        {% set blockPrototype = patientEncounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype %}
+                        {% set blocknameHtml = formmacros.inputField(blockPrototype.blockname,type,"key","prototype") %}
+                        {% set sectionsourceHtml = formmacros.inputField(blockPrototype.sectionsource,type,"","prototype") %}
+
+                        {% set specialStainsField = blockPrototype.specialStains %}
+                        {% set specialStainsWidget = formmacros.fieldSpecialStainsWidget(specialStainsField) %}
+                        {% set specialStainsHtml = formmacros.inputField(specialStainsField,type,"blockspecialStains","prototype",specialStainsWidget,"buttonbottom","") %}
+
+                        {#slide#}
+                        {% if blockPrototype.slide is defined %}
+                            {% set slidePrototype = blockPrototype.slide.vars.prototype %}
+                            {% set relevantScansField = slidePrototype.relevantScans %}
+                            {% set relevantScansWidget = formmacros.fieldWidgetNoOther(relevantScansField) %}
+                            {% set relevantScansHtml = formmacros.inputField(relevantScansField,type,"sliderelevantScans","prototype",relevantScansWidget,"") %}
+
+                            {% if slidePrototype.slidetype %}
+                                {% set slideSlidetype = slidePrototype.slidetype %}
+                            {% endif %}
+
+                            {% if slidePrototype.microscopicdescr %}
+                                {% set slideMicroscopicdescrFormField = formmacros.field(slidePrototype.microscopicdescr) %}
+                            {% endif %}
+
+                            {#scan#}
+                            {% if slidePrototype.scan is defined %}
+                                {% set scanPrototype = slidePrototype.scan %}
+                                {% if slidePrototype.vars.prototype is defined %}
+                                    {% set scanMagnificationPrototypeFormField = formmacros.field(slidePrototype.vars.prototype.magnification) %}
+                                    {% set scanScanregionPrototypeFormField = formmacros.field(slidePrototype.vars.prototype.scanregion) %}
+                                    {% set scanNotePrototypeFormField = formmacros.field(slidePrototype.vars.prototype.note) %}
+                                {% endif %}
+                            {% endif %}
+
+                            {#stain#}
+                            {% if slidePrototype.stain is defined and slidePrototype.stain.vars.prototype is defined %}
+                                {% set stainPrototypeFormField = formmacros.field(slidePrototype.stain.vars.prototype.field) %}
+                            {% endif %}
+
+                        {% endif %}
+
+                    {% endif %}
+
+                {% endif %}
+
+            {% endif %}
+
+        {% endif %}
+
+    {% endif %}
+
+    {% set uid = '__patient_____encounter_____procedure_____accession_____part_____block_____slide_____scan_____stain__' %}
+
+    {#type:{{ type }}<br>#}
+    {#{{ formmacros.testSpotShow(formPatient) }}#}
+
+    <div id="form-prototype-data"
+
+            {% if type != 'show' %}
+
+                {#data-prototype-dataquality = "{{ formmacros.dataQualityWidgetNotMapped(form.conflicts.vars.prototype)|e }}"#}
+                {% if dataqualityPrototype is defined and dataqualityPrototype %}
+                    data-prototype-dataquality = "{{ formmacros.dataQualityWidgetNotMapped(dataqualityPrototype)|e }}"
+                {% endif %}
+
+                data-prototype-patient=
+                "{{ formmacros.patientForm(
+                    patientPrototype,
+                    "check",
+                    uid,
+                    type,
+                    status,
+                    showPlus,
+                    formtype,
+                    mrnHtml,
+                    dobHtml,
+                    clinicalhistoryHtml,
+                    spotHtml
+                )|e }}"
+
+                data-prototype-patientmrn=               "{{ mrnHtml|e }}"
+                data-prototype-patientdob=               "{{ dobHtml|e }}"
+                data-prototype-patientclinicalhistory=   "{{ clinicalhistoryHtml|e }}"
+                data-prototype-patienttrackerspot=       "{{ patientspotWidget|e }}"
+
+                {% if accessionPrototype %}
+                    data-prototype-encounter=
+                     "{{ formmacros.accessionForm(
+                        patientEncounter.vars.prototype,
+                        procedurePrototype,
+                        accessionPrototype,
+                        "check",uid,type,status,showPlus,
+                        procedurenameHtml,
+                        accessionHtml,
+                        accessiondateHtml,
+                        encounterdateHtml,
+                        patsuffixHtml,
+                        patlastnameHtml,
+                        patfirstnameHtml,
+                        patmiddlenameHtml,
+                        patageHtml,
+                        patsexHtml,
+                        patpathistoryHtml
+                        )|e }}"
+                 {% endif %}
+
+                data-prototype-accessionaccession= "{{ accessionHtml|e }}"
+                data-prototype-accessionaccessiondate= "{{ accessiondateHtml|e }}"
+                {#data-prototype-encounternumber= "{{ encounternumberHtml|e }}"#}
+                data-prototype-procedurename= "{{ procedurenameHtml|e }}"
+                {#data-prototype-procedurenumber= "{{ procedurenumberHtml|e }}"#}
+                data-prototype-proceduredate= "{{ proceduredateHtml|e }}"
+
+                data-prototype-encounterdate= "{{ encounterdateHtml|e }}"
+                data-prototype-encounterpatsuffix= "{{ patsuffixHtml|e }}"
+                data-prototype-encounterpatlastname= "{{ patlastnameHtml|e }}"
+                data-prototype-encounterpatfirstname= "{{ patfirstnameHtml|e }}"
+                data-prototype-encounterpatmiddlename= "{{ patmiddlenameHtml|e }}"
+
+                data-prototype-encounterpatage= "{{ patageHtml|e }}"
+                data-prototype-encounterpatsex= "{{ patsexHtml|e }}"
+                data-prototype-encounterpathistory= "{{ patpathistoryHtml|e }}"
+
+                {% if partPrototype %}
+                    data-prototype-part=
+                    "{{ formmacros.partForm(
+                        partPrototype,
+                        "check", uid, type, status, showPlus,
+                        partnameHtml,
+                        sourceorganHtml,
+                        parttitleHtml,
+                        paperHtml,
+                        descriptionHtml,
+                        diagnosisHtml,
+                        diffDiagnosesHtml,
+                        diseaseTypeHtml
+                        )|e }}"
+                {% endif %}
+
+                {% if diffDiagnosesField %}
+                    {#requires for adding field by pressing +; to remove label replace the last "" by "nolabel"; withspace=""#}
+                    data-prototype-addpartdiffDisident="{{ formmacros.inputField(diffDiagnosesField,type,"partdiffDisident","prototype",diffDiagnosesWidget,"","","","","minusplusbtn")|e }}"
+                    {#requires for check form to populate fields by AJAX (no '+' buttons)#}
+                    data-prototype-partdiffDisident="{{ formmacros.inputField(diffDiagnosesField,type,"partdiffDisident","prototype",diffDiagnosesWidget,"","","","","plusbtn")|e }}"
+                {% endif %}
+
+                data-prototype-partpaper= "{{ paperHtml|e }}"
+
+                {% if blockPrototype %}
+                    data-prototype-block=
+                        "{{ formmacros.blockForm(
+                            blockPrototype,
+                            "check", uid, type, status, showPlus,
+                            blocknameHtml, sectionsourceHtml, specialStainsHtml
+                            )|e }}"
+                {% endif %}
+
+                {% if slidePrototype %}
+                    data-prototype-slide=
+                        "{{ formmacros.slideForm( slidePrototype, "", uid, type,
+                            formmacros.field(slideSlidetype),
+                            stainPrototypeFormField,
+                            scanMagnificationPrototypeFormField,
+                            scanScanregionPrototypeFormField,
+                            scanNotePrototypeFormField,
+                            slideMicroscopicdescrFormField,
+                            relevantScansHtml
+                            )|e }}"
+                {% endif %}
+
+                {% if relevantScansField %}
+                    {#requires for adding field by pressing +; to remove label replace the last "" by "nolabel"#}
+                    data-prototype-addsliderelevantScans="{{ formmacros.inputField(relevantScansField,type,"sliderelevantScans","prototype",relevantScansWidget,"","","","","minusplusbtn")|e }}"
+                    {#requires for check form to populate fields by AJAX (no '+' buttons)#}
+                    data-prototype-sliderelevantScans="{{ formmacros.inputField(relevantScansField,type,"sliderelevantScans","prototype",relevantScansWidget,"","","","","plusbtn")|e }}"
+                {% endif %}
+
+                {% if specialStainsField %}
+                    {#requires for adding field by pressing +; to remove label replace the last "" by "nolabel"#}
+                    data-prototype-addblockspecialStains="{{ formmacros.inputField(specialStainsField,type,"blockspecialStains","prototype",specialStainsWidget,"","","","withspace","minusplusbtn")|e }}"
+                    {#requires for check form to populate fields by AJAX (no '+' buttons)#}
+                    data-prototype-blockspecialStains="{{ formmacros.inputField(specialStainsField,type,"blockspecialStains","prototype",specialStainsWidget,"","","","","plusbtn")|e }}"
+                {% endif %}
+
+            {% endif %}
+
+         data-uploadurl = "{{ oneup_uploader_endpoint('scan_gallery') }}"
+         data-userid = "{{ app.user.getId() }}"
+
+    ></div>
+    {#Note: addSameForm button pass variables - object name and 6 counts for: 1-patient, 2-proceudre, 3-accession, 4-part, 5-block, 6-slide#}
+
+    {#{{ formmacros.testSpotShow(formPatient) }}#}
+
+    {% set patientCount = 0 %}
+
+    {% if patientParentForm is defined and patientParentForm %}
+
+        {#patient; form - is order form#}
+        {% for thisFormPatient in patientParentForm %}
+
+            {#{% set patientCount = 0 %}#}
+
+            {#Patient hierarchy form#}
+            {{ patientmacros.displayPatient(
+                thisFormPatient,
+                patientCount,
+                status,
+                showPlus,
+                datastructure,
+                type,
+                formtype
+            ) }}
+
+            {% set patientCount = patientCount + 1 %}
+
+        {% endfor %} {# patient loop #}
+
+    {% else %}
+
+        {#status: 'Submitted'#}
+        {{ patientmacros.displayPatient(
+            formPatient,
+            patientCount,
+            status,
+            showPlus,
+            datastructure,
+            type,
+            formtype
+        ) }}
+
+    {% endif %}
+
+
+{% endmacro %}
+
+
+
+

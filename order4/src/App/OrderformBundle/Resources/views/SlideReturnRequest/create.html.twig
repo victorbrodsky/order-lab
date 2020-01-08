@@ -1,0 +1,235 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{% extends "AppOrderformBundle::Default/base.html.twig" %}
+
+{% block title %}
+    Slide Return Request for Order# {{ form.vars.value.message.oid }}
+{% endblock %}
+
+
+
+{% block maincss %}
+
+    {% stylesheets
+    'orderassets/appuserdirectory/select2/select2.css' filter='cssrewrite'
+    %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+
+{% endblock %}
+
+
+{% block mainjs %}
+
+    {% javascripts
+    '@AppUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'
+    '@AppUserdirectoryBundle/Resources/public/bootstrap/js/*'
+    '@AppUserdirectoryBundle/Resources/public/select2/select2.js'
+	
+	'@AppUserdirectoryBundle/Resources/public/form/js/user-common.js'
+    '@AppUserdirectoryBundle/Resources/public/form/js/user-navbar.js'
+
+	'@AppUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimeout.js'
+    '@AppUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimer.js'
+	'@AppUserdirectoryBundle/Resources/public/form/js/user-idleTimeout.js'
+    '@AppOrderformBundle/Resources/public/form/js/idleTimeout.js'
+	
+    '@AppOrderformBundle/Resources/public/form/js/selectAjax.js'
+    '@AppOrderformBundle/Resources/public/form/js/commonCheckForm.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    <script language="Javascript">
+
+        $(document).ready(function() {
+
+            getComboboxReturnLocations();
+            getUrgency();
+            regularCombobox();
+			setResearchEducational();
+            initConvertEnterToTab();
+            getComboboxGeneric(null,'proxyuser',_proxyuser,true,'','scan');
+
+        });
+
+        function toggleSelectAllObjects(source) {
+            $("[type=checkbox]").each(function() {
+                $(this).prop('checked', source.checked);
+            });
+        }
+
+        function toggleSelectAllCheckbox(source) {
+            //console.log("source.checked="+source.checked);
+            if( !source.checked ) {
+
+                $('#selectUnselectAll').prop('checked', false);
+
+            } else {
+
+                //check if all checkboxes are checked => check selectUnselectAll
+                var allchecked = true;
+
+                $("[type=checkbox]").each(function() {
+                    //console.log("check="+$(this).prop('checked')+", id="+$(this).attr("id"));
+                    if( $(this).attr('id') != 'selectUnselectAll' && !$(this).prop('checked') ) {
+                        allchecked = false;
+                        return;
+                    }
+                });
+
+                if( allchecked ) {
+                    $('#selectUnselectAll').prop('checked', true);
+                }
+
+            } //else
+        }
+
+    </script>
+
+{% endblock %}
+
+
+
+
+{% block content %}
+
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+    <input type="hidden" id="formcycle" value="{{ cycle }}" />   
+
+    {{ formmacros.hiddenInputFieldsForJS(form.message) }}
+
+    <h3 class="text-info">Please select the slides you would like to be returned</h3>
+
+    <br>
+
+{{ form_start(form) }}
+
+    <table class="records_list table table-hover table-condensed text-left">
+        <thead>
+            <tr>
+                <th>
+                    <input id="selectUnselectAll" type="checkbox" name="checkmark" value="allslides" checked onClick="toggleSelectAllObjects(this)">
+                </th>
+                <th>Patient MRN</th>
+                <th>Patient Name</th>
+                <th>Accession Number</th>
+                <th>Part</th>
+                <th>Block</th>
+                <th>Stain</th>
+            </tr>
+        </thead>
+        <tbody>
+
+
+        {% for slide in form.vars.value.message.slide %}
+
+            {% set patient =  slide.obtainPatient %}
+            {% set patientkey =  patient.obtainValidKeyfield %}
+            {% set accession =  slide.obtainAccession %}
+            {% set accessionkey =  accession.obtainValidKeyfield %}
+            {% set part =  slide.obtainPart %}
+            {% set partkey =  part.obtainValidKeyfield %}
+            {% set block =  slide.obtainBlock %}
+            {% if block is defined and block != null %}
+                {% set blockkey =  block.obtainValidKeyfield %}
+            {% endif %}
+
+            {#{% set patientName = '<b>'~ patient.getName.first.field ~'</b> <i>'~ patient.getName.first.middleName ~'</i> '~ patient.getName.first.firstName %}#}
+            {% set patientFullName = patient.getFullPatientName %}
+
+            <tr>
+
+                <td>
+                    <input type="checkbox" value="{{ slide.id }}"
+                           name="oleg_orderformbundle_messagetype[slide][{{ slide.id }}][id]"
+                           id="oleg_orderformbundle_messagetype_slide_{{ slide.id }}_id"
+                           checked onClick="toggleSelectAllCheckbox(this)"/>
+                </td>
+
+                <td>
+                    {{ patientkey.field }}, {{ patientkey.keytype }}
+                </td>
+
+                <td>
+                    {{ patientFullName|raw }}
+                </td>
+
+                <td>
+                    {{ accessionkey.field }}, {{ accessionkey.keytype }}
+                </td>
+
+                <td>
+                    {{ partkey.field }}
+                </td>
+
+                <td>
+                    {{ blockkey.field }}
+                </td>
+
+                <td>
+                    {% for stain in slide.stain %}
+                        {{ stain }}
+                    {% endfor %}
+                </td>
+
+            </tr>
+
+        {% endfor %}
+
+        </tbody>
+    </table>
+
+
+    <div  class="panel panel-primary">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-xs-12">
+                    <h4 class="panel-title">Slide Return Request</h4>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body collapse in">
+            {#{{ formmacros.field(form.provider) }}#}
+            {#{{ formmacros.simplefield( "Submitter:", form.message.vars.value.provider.getUserNameStr(), "", "disabled" ) }}#}
+            {{ formmacros.field(form.message.provider,null,'readonly') }}
+
+            {{ formmacros.field(form.message.proxyuser) }}
+            {{ formmacros.field(form.message.institution) }}
+
+            {% for destination in form.message.destinations %}
+                {{ formmacros.field(destination.location) }}
+            {% endfor %}
+
+            {{ formmacros.field(form.urgency) }}
+
+            {% do form.message.setRendered %}
+            {% do form.setRendered %}
+            {{ form_row(form._token) }}
+            {#{{ form_rest(form) }}#}
+        </div>
+    </div>
+
+    <p>
+        <button class="btn btn-success" type="submit">Submit</button>
+    </p>
+
+{{ form_end(form) }}
+
+{% endblock %}
+

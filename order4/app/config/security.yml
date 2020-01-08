@@ -1,0 +1,501 @@
+security:
+
+    # affirmative (default) - This grants access as soon as there is one voter granting access;
+    # unanimous - This only grants access once all voters grant access. affirmative, consensus or unanimous
+    access_decision_manager:
+        strategy: affirmative
+
+    encoders:
+        FOS\UserBundle\Model\UserInterface: sha512
+#        FOS\UserBundle\Model\UserInterface:
+#            id: security.encoder.scrypt
+#        FOS\UserBundle\Model\UserInterface: bcrypt
+#        Symfony\Component\Security\Core\User\User: plaintext
+#        FOS\UserBundle\Model\UserInterface: sha512
+
+    role_hierarchy:
+
+        # Scan order roles
+        ROLE_SCANORDER_ALL_PATHOLOGY: [ROLE_SCANORDER_PATHOLOGY_RESIDENT, ROLE_SCANORDER_PATHOLOGY_FELLOW, ROLE_SCANORDER_PATHOLOGY_FACULTY]
+
+        ROLE_SCANORDER_PATHOLOGY_RESIDENT: [ROLE_SCANORDER_SUBMITTER, ROLE_SCANORDER_ORDERING_PROVIDER]
+        ROLE_SCANORDER_PATHOLOGY_FELLOW: [ROLE_SCANORDER_SUBMITTER, ROLE_SCANORDER_ORDERING_PROVIDER]
+        ROLE_SCANORDER_PATHOLOGY_FACULTY: [ROLE_SCANORDER_SUBMITTER, ROLE_SCANORDER_ORDERING_PROVIDER]
+        ROLE_SCANORDER_SUBMITTER: [ROLE_USER]
+        ROLE_SCANORDER_ORDERING_PROVIDER: [ROLE_USER]
+
+        ROLE_SCANORDER_PROCESSOR:   [ROLE_USER, ROLE_SCANORDER_SUBMITTER, ROLE_SCANORDER_ORDERING_PROVIDER, ROLE_SCANORDER_ALL_PATHOLOGY, ROLE_EDITOR]
+        ROLE_SCANORDER_ADMIN:       [ROLE_USER, ROLE_SCANORDER_PROCESSOR, ROLE_SCANORDER_SUBMITTER, ROLE_SCANORDER_ORDERING_PROVIDER, ROLE_SCANORDER_ALL_PATHOLOGY, ROLE_EDITOR]
+
+        # Userdirectory roles
+        ROLE_USERDIRECTORY_EDITOR: [ROLE_EDITOR, ROLE_USER, ROLE_USERDIRECTORY_OBSERVER]
+        ROLE_USERDIRECTORY_ADMIN: [ROLE_USER, ROLE_USERDIRECTORY_OBSERVER, ROLE_USERDIRECTORY_EDITOR]
+
+        # FellApp roles
+        ROLE_FELLAPP_ADMIN: [ROLE_USER, ROLE_FELLAPP_OBSERVER, ROLE_USERDIRECTORY_EDITOR]
+#        ROLE_FELLAPP_COORDINATOR: [ROLE_FELLAPP_USER, ROLE_FELLAPP_INTERVIEWER, ROLE_FELLAPP_OBSERVER]
+#        ROLE_FELLAPP_DIRECTOR: [ROLE_FELLAPP_USER, ROLE_FELLAPP_INTERVIEWER, ROLE_FELLAPP_OBSERVER]
+#        ROLE_FELLAPP_INTERVIEWER: [ROLE_FELLAPP_USER]
+        ROLE_FELLAPP_OBSERVER: [ROLE_FELLAPP_USER]
+#        ROLE_FELLAPP_USER: [ROLE_USER, ROLE_USERDIRECTORY_OBSERVER]
+#        ROLE_FELLAPP_ADMIN: [ROLE_USER, ROLE_FELLAPP_USER, ROLE_FELLAPP_INTERVIEWER, ROLE_FELLAPP_OBSERVER, ROLE_FELLAPP_COORDINATOR, ROLE_FELLAPP_DIRECTOR, ROLE_USERDIRECTORY_EDITOR]
+#        ROLE_FELLAPP_COORDINATOR: [ROLE_FELLAPP_USER, ROLE_FELLAPP_INTERVIEWER, ROLE_FELLAPP_OBSERVER]
+#        ROLE_FELLAPP_DIRECTOR: [ROLE_FELLAPP_USER, ROLE_FELLAPP_INTERVIEWER, ROLE_FELLAPP_OBSERVER]
+#        ROLE_FELLAPP_INTERVIEWER: [ROLE_FELLAPP_USER]
+#        ROLE_FELLAPP_OBSERVER: [ROLE_FELLAPP_USER]
+#        ROLE_FELLAPP_USER: [ROLE_USER, ROLE_USERDIRECTORY_OBSERVER]
+
+        # Deidentifier roles
+#        ROLE_DEIDENTIFICATOR_ADMIN: [ROLE_DEIDENTIFICATOR_USER]
+#        ROLE_DEIDENTIFICATOR_USER: [ROLE_USER, ROLE_USERDIRECTORY_OBSERVER]
+
+        # General roles
+#        ROLE_BANNED: [ROLE_SCANORDER_BANNED, ROLE_USERDIRECTORY_BANNED]
+#        ROLE_UNAPPROVED: [ROLE_USERDIRECTORY_UNAPPROVED, ROLE_SCANORDER_UNAPPROVED]
+#        ROLE_EDITOR: [ROLE_SCANORDER_PROCESSOR, ROLE_USERDIRECTORY_EDITOR]  #permission to edit the content of DB such as change access request status
+#        ROLE_SCANORDER_PROCESSOR: [ROLE_EDITOR]
+#        ROLE_USERDIRECTORY_EDITOR: [ROLE_EDITOR]
+
+        #Calllog
+        ROLE_CALLLOG_PATHOLOGY_ATTENDING: [ROLE_CALLLOG_USER]
+        ROLE_CALLLOG_PATHOLOGY_RESIDENT: [ROLE_CALLLOG_USER]
+        ROLE_CALLLOG_PATHOLOGY_FELLOW: [ROLE_CALLLOG_USER]
+        ROLE_CALLLOG_DATA_QUALITY: [ROLE_CALLLOG_USER]
+        ROLE_CALLLOG_ADMIN: [ROLE_CALLLOG_USER, ROLE_CALLLOG_PATHOLOGY_ATTENDING, ROLE_CALLLOG_PATHOLOGY_RESIDENT, ROLE_CALLLOG_PATHOLOGY_FELLOW, ROLE_CALLLOG_DATA_QUALITY, ROLE_EDITOR]
+
+        # Translational Research
+        ROLE_TRANSRES_TECHNICIAN_APCP: [ROLE_TRANSRES_USER, ROLE_TRANSRES_TECHNICIAN]
+        ROLE_TRANSRES_TECHNICIAN_HEMATOPATHOLOGY: [ROLE_TRANSRES_USER, ROLE_TRANSRES_TECHNICIAN]
+#        ROLE_TRANSRES_TECHNICIAN: [ROLE_TRANSRES_TECHNICIAN_APCP, ROLE_TRANSRES_TECHNICIAN_HEMATOPATHOLOGY]
+
+        ROLE_TRANSRES_REQUESTER_APCP: [ROLE_TRANSRES_USER]
+        ROLE_TRANSRES_REQUESTER_HEMATOPATHOLOGY: [ROLE_TRANSRES_USER]
+#        ROLE_TRANSRES_REQUESTER: [ROLE_TRANSRES_REQUESTER_APCP, ROLE_TRANSRES_REQUESTER_HEMATOPATHOLOGY]
+
+        ROLE_TRANSRES_IRB_REVIEWER_APCP: [ROLE_TRANSRES_USER, ROLE_TRANSRES_IRB_REVIEWER]
+        ROLE_TRANSRES_IRB_REVIEWER_HEMATOPATHOLOGY: [ROLE_TRANSRES_USER, ROLE_TRANSRES_IRB_REVIEWER]
+#        ROLE_TRANSRES_IRB_REVIEWER: [ROLE_TRANSRES_IRB_REVIEWER_APCP, ROLE_TRANSRES_IRB_REVIEWER_HEMATOPATHOLOGY]
+
+        ROLE_TRANSRES_COMMITTEE_REVIEWER_APCP: [ROLE_TRANSRES_USER, ROLE_TRANSRES_COMMITTEE_REVIEWER]
+        ROLE_TRANSRES_COMMITTEE_REVIEWER_HEMATOPATHOLOGY: [ROLE_TRANSRES_USER, ROLE_TRANSRES_COMMITTEE_REVIEWER]
+#        ROLE_TRANSRES_COMMITTEE_REVIEWER: [ROLE_TRANSRES_COMMITTEE_REVIEWER_APCP, ROLE_TRANSRES_COMMITTEE_REVIEWER_HEMATOPATHOLOGY]
+
+        ROLE_TRANSRES_PRIMARY_COMMITTEE_REVIEWER_APCP: [ROLE_TRANSRES_USER, ROLE_TRANSRES_PRIMARY_COMMITTEE_REVIEWER]
+        ROLE_TRANSRES_PRIMARY_COMMITTEE_REVIEWER_HEMATOPATHOLOGY: [ROLE_TRANSRES_USER, ROLE_TRANSRES_PRIMARY_COMMITTEE_REVIEWER]
+#        ROLE_TRANSRES_PRIMARY_COMMITTEE_REVIEWER: [ROLE_TRANSRES_PRIMARY_COMMITTEE_REVIEWER_APCP, ROLE_TRANSRES_PRIMARY_COMMITTEE_REVIEWER_HEMATOPATHOLOGY]
+
+        ROLE_TRANSRES_PRIMARY_REVIEWER_APCP: [ROLE_TRANSRES_USER, ROLE_TRANSRES_PRIMARY_REVIEWER]
+        ROLE_TRANSRES_PRIMARY_REVIEWER_HEMATOPATHOLOGY: [ROLE_TRANSRES_USER, ROLE_TRANSRES_PRIMARY_REVIEWER]
+#        ROLE_TRANSRES_PRIMARY_REVIEWER: [ROLE_TRANSRES_PRIMARY_REVIEWER_APCP, ROLE_TRANSRES_PRIMARY_REVIEWER_HEMATOPATHOLOGY]
+
+        ROLE_TRANSRES_BILLING_ADMIN_APCP: [ROLE_TRANSRES_USER, ROLE_TRANSRES_BILLING_ADMIN]
+        ROLE_TRANSRES_BILLING_ADMIN_HEMATOPATHOLOGY: [ROLE_TRANSRES_USER, ROLE_TRANSRES_BILLING_ADMIN]
+#        ROLE_TRANSRES_BILLING_ADMIN: [ROLE_TRANSRES_BILLING_ADMIN_APCP, ROLE_TRANSRES_BILLING_ADMIN_HEMATOPATHOLOGY]
+
+        ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY: [ROLE_TRANSRES_USER, ROLE_TRANSRES_EXECUTIVE]
+        ROLE_TRANSRES_EXECUTIVE_APCP: [ROLE_TRANSRES_USER, ROLE_TRANSRES_EXECUTIVE]
+#        ROLE_TRANSRES_EXECUTIVE: [ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY, ROLE_TRANSRES_EXECUTIVE_APCP]
+
+        ROLE_TRANSRES_ADMIN_APCP: [ROLE_TRANSRES_USER, ROLE_TRANSRES_ADMIN,
+                                  ROLE_TRANSRES_TECHNICIAN_APCP, ROLE_TRANSRES_REQUESTER_APCP,
+                                  ROLE_TRANSRES_IRB_REVIEWER_APCP, ROLE_TRANSRES_COMMITTEE_REVIEWER_APCP, ROLE_TRANSRES_PRIMARY_REVIEWER_APCP,
+                                  ROLE_TRANSRES_BILLING_ADMIN_APCP, ROLE_TRANSRES_EXECUTIVE_APCP, ROLE_TRANSRES_PRIMARY_COMMITTEE_REVIEWER_APCP]
+        ROLE_TRANSRES_ADMIN_HEMATOPATHOLOGY: [ROLE_TRANSRES_USER, ROLE_TRANSRES_ADMIN,
+                                             ROLE_TRANSRES_TECHNICIAN_HEMATOPATHOLOGY, ROLE_TRANSRES_REQUESTER_HEMATOPATHOLOGY,
+                                             ROLE_TRANSRES_IRB_REVIEWER_HEMATOPATHOLOGY, ROLE_TRANSRES_COMMITTEE_REVIEWER_HEMATOPATHOLOGY, ROLE_TRANSRES_PRIMARY_REVIEWER_HEMATOPATHOLOGY,
+                                             ROLE_TRANSRES_BILLING_ADMIN_HEMATOPATHOLOGY, ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY, ROLE_TRANSRES_PRIMARY_COMMITTEE_REVIEWER_HEMATOPATHOLOGY]
+#        ROLE_TRANSRES_ADMIN: [ROLE_TRANSRES_ADMIN_APCP, ROLE_TRANSRES_ADMIN_HEMATOPATHOLOGY]
+
+#        ROLE_ROLEEDITOR: [ROLE_SCANORDER_ADMIN, ROLE_USERDIRECTORY_EDITOR]
+        #impersonate user: ?_switch_user=thomas
+        ROLE_PLATFORM_DEPUTY_ADMIN: [ROLE_TESTER, ROLE_ALLOWED_TO_SWITCH,
+                                    ROLE_USERDIRECTORY_ADMIN, ROLE_SCANORDER_ADMIN,
+                                    ROLE_FELLAPP_ADMIN, ROLE_DEIDENTIFICATOR_ADMIN,
+                                    ROLE_VACREQ_ADMIN, ROLE_CALLLOG_ADMIN,
+                                    ROLE_TRANSRES_ADMIN, ROLE_TRANSRES_ADMIN_APCP, ROLE_TRANSRES_ADMIN_HEMATOPATHOLOGY]
+        ROLE_PLATFORM_ADMIN: [ROLE_PLATFORM_DEPUTY_ADMIN]
+
+
+    providers:
+
+#        chain_provider:
+#            chain:
+#                providers: [fos_userbundle, fr3d_ldapbundle]
+
+        fos_userbundle:
+            id: fos_user.user_provider.username
+
+#        fr3d_ldapbundle:
+#            id: fr3d_ldap.security.user.provider
+
+#        in_memory:
+#            memory:
+#                users:
+#                    systemuser:  { password: systempassword, roles: [ 'ROLE_PLATFORM_DEPUTY_ADMIN' ] }
+#                   admin: { password: adminpass123, roles: [ 'ROLE_PLATFORM_DEPUTY_ADMIN' ] }
+
+    firewalls:
+
+        #this firewall name must be the same as in the bundle's service.yml.
+        external_ldap_firewall:
+            pattern: ^/scan
+            logout_on_user_change: true
+            #external: true
+            #fr3d_ldap:  ~
+            context: scan_auth
+            switch_user: true
+            simple_form:
+                 authenticator: custom_authenticator
+#                 always_use_default_target_path: false
+                 use_referer: true
+                 success_handler: authentication_handler
+                 failure_handler: authentication_handler
+                 check_path: /scan/login_check
+                 login_path: /scan/login
+            logout:
+                path:   /scan/logout
+                target: /scan/login
+            anonymous:  true
+            access_denied_url: /scan/access-requests/new/create  #/scan/scan-order/no-permission
+            remember_me:
+                secret:      "%secret%"
+                lifetime: 28800 # 8 hours in seconds
+                path:     /scan
+#                always_remember_me: true
+
+        ldap_employees_firewall:
+            pattern: ^/directory
+            logout_on_user_change: true
+            #fr3d_ldap:  ~
+            #ldap_authenticator: true
+            context: scan_auth
+            switch_user: true
+            simple_form:
+                authenticator: custom_authenticator
+#                always_use_default_target_path: true
+                use_referer: true
+                success_handler: employees_authentication_handler
+                failure_handler: employees_authentication_handler
+                check_path: /directory/login_check
+                login_path: /directory/login
+                # login success redirecting options (read further below)
+#                default_target_path: /directory/
+#                target_path_parameter: _target_path
+            logout:
+                path:   /directory/logout
+                target: /directory/login
+            anonymous:  true
+            access_denied_url: /directory/access-requests/new/create
+            remember_me:
+                secret:      "%secret%"
+                lifetime: 28800 # 8 hours in seconds
+                path:     /directory
+#                always_remember_me: true
+
+        ldap_fellapp_firewall:
+            pattern: ^/fellowship-applications
+            logout_on_user_change: true
+            context: scan_auth
+#            http_basic: ~
+            switch_user: true
+            simple_form:
+                authenticator: custom_authenticator
+                use_referer: true
+                success_handler: fellapp_authentication_handler
+                failure_handler: fellapp_authentication_handler
+                check_path: /fellowship-applications/login_check
+                login_path: /fellowship-applications/login
+            logout:
+                path:   /fellowship-applications/logout
+                target: /fellowship-applications/login
+            anonymous:  true
+            access_denied_url: /fellowship-applications/access-requests/new/create
+            remember_me:
+                secret:      "%secret%"
+                lifetime: 28800 # 8 hours in seconds
+                path:     /fellowship-applications
+#                always_remember_me: true
+
+        ldap_deidentifier_firewall:
+            pattern: ^/deidentifier
+            logout_on_user_change: true
+            context: scan_auth
+            switch_user: true
+            simple_form:
+                authenticator: custom_authenticator
+                use_referer: true
+                success_handler: deidentifier_authentication_handler
+                failure_handler: deidentifier_authentication_handler
+                check_path: /deidentifier/login_check
+                login_path: /deidentifier/login
+            logout:
+                path:   /deidentifier/logout
+                target: /deidentifier/login
+            anonymous:  true
+            access_denied_url: /deidentifier/access-requests/new/create
+            remember_me:
+                secret:      "%secret%"
+                lifetime: 28800 # 8 hours in seconds
+                path:     /deidentifier
+#                always_remember_me: true
+
+        ldap_vacreq_firewall:
+            pattern: ^/vacation-request
+            logout_on_user_change: true
+            context: scan_auth
+            switch_user: true
+            simple_form:
+                authenticator: custom_authenticator
+                use_referer: true
+                success_handler: vacreq_authentication_handler
+                failure_handler: vacreq_authentication_handler
+                check_path: /vacation-request/login_check
+                login_path: /vacation-request/login
+            logout:
+                path:   /vacation-request/logout
+                target: /vacation-request/login
+            anonymous:  true
+            access_denied_url: /vacation-request/access-requests/new/create
+            remember_me:
+                secret:      "%secret%"
+                lifetime: 28800 # 8 hours in seconds
+                path:     /vacation-request
+#                always_remember_me: true
+
+        ldap_calllog_firewall:
+            pattern: ^/call-log-book
+            logout_on_user_change: true
+            context: scan_auth
+            switch_user: true
+            simple_form:
+                authenticator: custom_authenticator
+                use_referer: true
+                success_handler: calllog_authentication_handler
+                failure_handler: calllog_authentication_handler
+                check_path: /call-log-book/login_check
+                login_path: /call-log-book/login
+            logout:
+                path:   /call-log-book/logout
+                target: /call-log-book/login
+            anonymous:  true
+            access_denied_url: /call-log-book/access-requests/new/create
+            remember_me:
+                secret:      "%secret%"
+                lifetime: 28800 # 8 hours in seconds
+                path:     /call-log-book
+#                always_remember_me: true
+
+        ldap_translationalresearch_firewall:
+            pattern: ^/translational-research
+            logout_on_user_change: true
+            context: scan_auth
+            switch_user: true
+            simple_form:
+                authenticator: custom_authenticator
+                use_referer: true
+                success_handler: translationalresearch_authentication_handler
+                failure_handler: translationalresearch_authentication_handler
+                check_path: /translational-research/login_check
+                login_path: /translational-research/login
+            logout:
+                path:   /translational-research/logout
+                target: /translational-research/login
+            anonymous:  true
+            access_denied_url: /translational-research/access-requests/new/create
+            remember_me:
+                secret:      "%secret%"
+                lifetime: 28800 # 8 hours in seconds
+                path:     /translational-research
+#                always_remember_me: true
+
+        foscomment_api_firewall:
+            pattern: ^/api
+            logout_on_user_change: true
+            context: scan_auth
+            anonymous:  true
+#            remember_me:
+#                secret:      "%secret%"
+#                lifetime: 604800 # 1 week in seconds
+#                path:     /api
+#                always_remember_me: true
+
+    #Note: first match is used, the later would be ignored
+    access_control:
+
+       ##################### Uncomment this line to use https for all pages ##########################
+#       - { path: ^/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+#       - { path: ^/, role: [IS_AUTHENTICATED_ANONYMOUSLY], requires_channel: '%connection_channel%' }
+#       - path: ^/
+#         roles: [IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER,
+#                ROLE_TRANSRES_USER,
+#                ROLE_CALLLOG_USER,
+#                ROLE_SCANORDER_SUBMITTER,ROLE_SCANORDER_ALL_PATHOLOGY,ROLE_SCANORDER_PROCESSOR,ROLE_SCANORDER_ADMIN
+#                ROLE_DEIDENTIFICATOR_USER,
+#                ROLE_FELLAPP_USER,
+#                ROLE_USERDIRECTORY_OBSERVER,ROLE_USERDIRECTORY_EDITOR,ROLE_USERDIRECTORY_ADMIN,
+#                ROLE_PLATFORM_DEPUTY_ADMIN,ROLE_PLATFORM_ADMIN]
+#         requires_channel: '%connection_channel%'
+
+       ############################## local system user init ##############################
+       - { path: ^/directory/admin/first-time-login-generation-init/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/first-time-user-generation-init/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/directory/first-time-user-generation-init/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+
+       - { path: ^/access-requests/change-status/, role: ROLE_EDITOR }
+
+       ############################## common idle time out logic ##############################
+       - { path: ^/directory/common/, role: ROLE_USER }
+       ############################## common institution tree ##############################
+       - { path: ^/directory/util/common/, role: ROLE_USER }
+       ################################# common download file ####################################
+       - { path: ^/directory/file-download/, role: ROLE_USER }
+       - { path: ^/directory/file-delete/, role: ROLE_USER }
+       - { path: ^/directory/user/only-ajax/, role: ROLE_USER }
+       - { path: ^/directory/formnode-fields/, role: ROLE_USER }
+       ################################# common fos comment ####################################
+       - { path: ^/api/threads/, role: ROLE_USER }
+
+       ############################## EMPLOYEES SITE SETTINGS ##############################
+       - { path: ^/directory/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/directory/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
+#       - { path: ^/directory/login, role: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
+       - { path: ^/directory/setloginvisit, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/directory/account-requests/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/directory/sign-up, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/directory/activate-account, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/directory/forgot-password, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/directory/reset-password, role: IS_AUTHENTICATED_ANONYMOUSLY }
+
+       - { path: ^/directory/event-log, role: ROLE_USERDIRECTORY_EDITOR }
+       - { path: ^/directory/users/previous, role: ROLE_USERDIRECTORY_EDITOR }
+       - { path: ^/directory/users/generate, role: ROLE_USERDIRECTORY_EDITOR }
+       - { path: ^/directory/event-log, role: ROLE_USERDIRECTORY_EDITOR }
+       - { path: ^/directory/admin/populate-all-lists-with-default-values, role: ROLE_USERDIRECTORY_ADMIN }
+       - { path: ^/directory/admin/change-list-element-type/, role: [ROLE_PLATFORM_DEPUTY_ADMIN,ROLE_TRANSRES_ADMIN,ROLE_TRANSRES_TECHNICIAN] }
+       - { path: ^/directory/admin/, role: ROLE_USERDIRECTORY_ADMIN }
+       - { path: ^/directory/settings/, role: ROLE_PLATFORM_DEPUTY_ADMIN }
+
+      #tree hierarchy: need for all users for public user access request page
+       - { path: ^/directory/tree-util/common/composition-tree/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+
+       #All other urls: make all /employees accessible only limited special roles
+  #     - { path: ^/directory/, allow_if: "has_role('ROLE_USERDIRECTORY_OBSERVER') and !has_role('ROLE_USERDIRECTORY_UNAPPROVED') and !has_role('ROLE_USERDIRECTORY_BANNED')" }
+       - { path: ^/directory/, role: ROLE_USERDIRECTORY_OBSERVER }
+
+       ############################## SCAN SITE SETTINGS ##############################
+       - { path: ^/scan/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/scan/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/scan/setloginvisit, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/scan/account-requests/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/scan/sign-up, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/scan/activate-account, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/scan/forgot-password, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/scan/reset-password, role: IS_AUTHENTICATED_ANONYMOUSLY }
+
+       - { path: ^/scan/admin/populate-all-lists-with-default-values, role: ROLE_SCANORDER_ADMIN }
+       - { path: ^/scan/users/generate, role: ROLE_SCANORDER_ADMIN }
+  #     - { path: ^/scan/users/new, role: ROLE_SCANORDER_ADMIN }
+  #     - { path: ^/scan/settings/, role: ROLE_PLATFORM_DEPUTY_ADMIN }
+
+       - { path: ^/scan/users/previous, role: ROLE_SCANORDER_ADMIN }
+       - { path: ^/scan/admin/, role: ROLE_SCANORDER_PROCESSOR }
+       - { path: ^/scan/incoming-scan-orders, role: ROLE_SCANORDER_PROCESSOR }
+       - { path: ^/scan/settings/, role: ROLE_PLATFORM_DEPUTY_ADMIN }
+       - { path: ^/scan/incoming-scan-orders, role: ROLE_SCANORDER_PROCESSOR }
+#       - { path: ^/scan/account-requests, role: ROLE_SCANORDER_PROCESSOR }
+       - { path: ^/scan/event-log, role: ROLE_SCANORDER_PROCESSOR }
+       - { path: ^/scan/incoming-slide-return-requests, role: [ROLE_SCANORDER_PROCESSOR]}
+
+#       - { path: ^/scan/util/, role: [ROLE_SCANORDER_SUBMITTER] }
+       - { path: ^/scan/util/, role: [ROLE_USER] }
+       - { path: ^/scan/check/, role: [ROLE_SCANORDER_SUBMITTER] }
+
+       - { path: ^/scan/scan-order, role: [ROLE_SCANORDER_SUBMITTER, ROLE_SCANORDER_ORDERING_PROVIDER]}
+       - { path: ^/scan/my-scan-orders, role: [ROLE_SCANORDER_SUBMITTER, ROLE_SCANORDER_ORDERING_PROVIDER]}
+
+       - { path: ^/scan/slide-return-request, role: [ROLE_SCANORDER_SUBMITTER, ROLE_SCANORDER_ORDERING_PROVIDER]}
+       - { path: ^/scan/my-slide-return-requests, role: [ROLE_SCANORDER_SUBMITTER, ROLE_SCANORDER_ORDERING_PROVIDER]}
+
+       - { path: ^/scan/image-viewer/, role: [ROLE_SCANORDER_SUBMITTER] }
+
+       #All other urls: make all sure /scan is protected from accessing the users with not sufficient roles
+       - { path: ^/scan/, allow_if: "has_role('ROLE_SCANORDER_SUBMITTER') and !has_role('ROLE_SCANORDER_UNAPPROVED') and !has_role('ROLE_SCANORDER_BANNED')" }
+
+
+      ############################## Fellowship Applications SITE SETTINGS ##############################
+       - { path: ^/fellowship-applications/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/fellowship-applications/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/fellowship-applications/setloginvisit, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/fellowship-applications/account-requests/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/fellowship-applications/sign-up, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/fellowship-applications/activate-account, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/fellowship-applications/forgot-password, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/fellowship-applications/reset-password, role: IS_AUTHENTICATED_ANONYMOUSLY }
+  #     - { path: ^/fellowship-applications/download/, allow_if: "'::1' == request.getClientIp() or has_role('ROLE_FELLAPP_USER')" }
+
+       - { path: ^/fellowship-applications/download/, roles: IS_AUTHENTICATED_ANONYMOUSLY, ips: [127.0.0.1, ::1] }
+       - { path: ^/fellowship-applications/download/, roles: ROLE_FELLAPP_USER }
+
+       - { path: ^/fellowship-applications/, role: ROLE_FELLAPP_USER }
+
+
+       ############################## Deidentifier SITE SETTINGS ##############################
+       - { path: ^/deidentifier/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/deidentifier/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/deidentifier/setloginvisit, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/deidentifier/account-requests/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/deidentifier/sign-up, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/deidentifier/activate-account, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/deidentifier/forgot-password, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/deidentifier/reset-password, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/deidentifier/, role: ROLE_DEIDENTIFICATOR_USER }
+#       - { path: ^/deidentifier/, allow_if: "has_role('ROLE_DEIDENTIFICATOR_USER') and !has_role('ROLE_DEIDENTIFICATOR_UNAPPROVED') and !has_role('ROLE_DEIDENTIFICATOR_BANNED')" }
+  #    - { path: ^/deidentifier/, allow_if: "is_granted('ROLE_DEIDENTIFICATOR_USER')" }
+
+
+       ############################## VacReq SITE SETTINGS ##############################
+       - { path: ^/vacation-request/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/vacation-request/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/vacation-request/setloginvisit, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/vacation-request/account-requests/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/vacation-request/sign-up, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/vacation-request/activate-account, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/vacation-request/forgot-password, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/vacation-request/reset-password, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/vacation-request/, role: ROLE_VACREQ_USER }
+
+      ############################## CallLog SITE SETTINGS ##############################
+       - { path: ^/call-log-book/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/call-log-book/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/call-log-book/setloginvisit, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/call-log-book/account-requests/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/call-log-book/sign-up, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/call-log-book/activate-account, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/call-log-book/forgot-password, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/call-log-book/reset-password, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/call-log-book/, role: ROLE_CALLLOG_USER }
+#       - { path: ^/call-log-book/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+
+      ############################## TranslationalResearch SITE SETTINGS ##############################
+       - { path: ^/translational-research/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/translational-research/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/translational-research/setloginvisit, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/translational-research/account-requests/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/translational-research/sign-up, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/translational-research/activate-account, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/translational-research/forgot-password, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/translational-research/reset-password, role: IS_AUTHENTICATED_ANONYMOUSLY }
+
+#       - { path: ^/translational-research/project/new/hematopathology, role: ROLE_USER }
+#       - { path: ^/translational-research/project/new/ap-cp, role: ROLE_USER }
+       - { path: ^/translational-research/project/new, role: ROLE_TRANSRES_USER }
+#       - { path: ^/translational-research/account-confirmation/, role: ROLE_USER }
+
+       - { path: ^/translational-research/invoice/download-invoice-pdf/, roles: IS_AUTHENTICATED_ANONYMOUSLY, ips: [127.0.0.1, ::1] }
+       - { path: ^/translational-research/invoice/download-invoice-pdf/, roles: ROLE_TRANSRES_USER }
+
+       - { path: ^/translational-research/work-request/download-packing-slip-pdf/, roles: IS_AUTHENTICATED_ANONYMOUSLY, ips: [127.0.0.1, ::1] }
+       - { path: ^/translational-research/work-request/download-packing-slip-pdf/, roles: ROLE_TRANSRES_USER }
+
+       - { path: ^/translational-research/, role: ROLE_TRANSRES_USER }
+

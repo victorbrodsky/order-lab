@@ -1,0 +1,236 @@
+https://symfony.com/doc/3.4/setup/flex.html
+https://symfonycasts.com/screencast/symfony4-upgrade/sf34-deprecations
+
+Branches: https://nvie.com/posts/a-successful-git-branching-model/
+### Migrating to 3.4, adapt the source code: ###
+1)Rename namespaces and DB's entityNameSpace to App
+2) Replace entitynamespace Oleg to App in Document.php, FosComment.php, GeneralEntity.php, Logger.php and all lists
+UPDATE public.user_logger SET entitynamespace = REPLACE(entitynamespace,'Oleg','App');
+UPDATE public.user_foscomment SET entitynamespace = REPLACE(entitynamespace,'Oleg','App');
+UPDATE public.user_generalentity SET entitynamespace = REPLACE(entitynamespace,'Oleg','App');
+UPDATE public.user_document SET entitynamespace = REPLACE(entitynamespace,'Oleg','App');
+UPDATE * SET entitynamespace = REPLACE(entitynamespace,'Oleg','App') WHERE entitynamespace IS NOT NULL AND entitynamespace LIKE '%Oleg%';
+#Update all tables with column='entitynamespace'
+SELECT * FROM   INFORMATION_SCHEMA.columns WHERE  COLUMN_NAME = 'entitynamespace';
+SELECT * FROM   INFORMATION_SCHEMA.columns WHERE  COLUMN_NAME = 'entitynamespace' AND entitynamespace IS NOT NULL AND entitynamespace LIKE '%Oleg%';
+############## Update all tables with column='entitynamespace' ################
+DO
+$do$
+DECLARE
+    rec record;
+BEGIN
+    FOR rec IN
+        SELECT table_schema, table_name, column_name
+        FROM information_schema.columns
+        WHERE column_name = 'entitynamespace'
+    LOOP
+        EXECUTE FORMAT(
+          $$
+            UPDATE %I.%I SET entitynamespace = replace(entitynamespace,'Oleg','App') WHERE entitynamespace IS NOT NULL;
+          $$,
+          rec.table_schema, rec.table_name
+        );
+    END LOOP;
+END;
+$do$;
+LANGUAGE plpgsql; --optional
+############# Update all tables with column='receivedvalueentitynamespace' #################
+DO
+$do$
+DECLARE
+    rec record;
+BEGIN
+    FOR rec IN
+        SELECT table_schema, table_name, column_name
+        FROM information_schema.columns
+        WHERE column_name = 'receivedvalueentitynamespace'
+    LOOP
+        EXECUTE FORMAT(
+          $$
+            UPDATE %I.%I SET receivedvalueentitynamespace = replace(receivedvalueentitynamespace,'Oleg','App') WHERE receivedvalueentitynamespace IS NOT NULL;
+          $$,
+          rec.table_schema, rec.table_name
+        );
+    END LOOP;
+END;
+$do$;
+##############################
+
+
+
+### Migrating to 3.4 Flex: ###
+#use branch v3.4.flex: git push -u origin v3.4.flex
+1) create new Symfony skeleton
+2) Merge yaml config
+3) Move original templates from app/Resources/views/ to templates/
+4) Merge app_*.php
+### Migrating to 4: ###
+1) Remove Assetic:
+{% stylesheets
+   'bundles/oleguserdirectory/bootstrap/css/*'
+   'bundles/oleguserdirectory/form/css/form.css'
+%}
+   <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
+{% endstylesheets %}
+Replace stylesheets by
+<link href="{{ asset('bootstrap/css/*') }}" rel="stylesheet" />
+<link href="{{ asset('form/css/form.css') }}" rel="stylesheet" />
+2) {% for titleInfo in headInfoArr.titleInfo if titleInfo.name is defined %}
+
+
+Use 64-bit from xampp:
+/c/xampp/php/php /c/php/Composer/composer.phar update
+
+To add later:
+Under "auto-scripts":
+"cache:clear": "symfony-cmd", "assets:install %PUBLIC_DIR%": "symfony-cmd",
+
+To require later:
+
+"yzalis/crontab": "^1.0",
+
+Doctrine installed by Flex: composer require doctrine/mongodb-odm-bundle
+"doctrine/doctrine-migrations-bundle": "^1.3",
+"doctrine/doctrine-bundle": "^1.1",
+"doctrine/orm": "^2.7",
+"doctrine/doctrine-cache-bundle" : "^1.3",
+"doctrine/doctrine-fixtures-bundle" : "^2.2",
+"stof/doctrine-extensions-bundle": "~1.1@dev",
+
+"phpoffice/phpexcel": "v1.8.0",
+"phpoffice/phpspreadsheet": "1.2.1", (security check)
+
+Recipe no, reinstall these packages:
+"friendsofsymfony/user-bundle": "v2.0.1",
+composer require friendsofsymfony/user-bundle "~2.0"
+
+"friendsofsymfony/jsrouting-bundle": "^2.5",
+"sensio/framework-extra-bundle": "^3.0",
+
+"symfony/phpunit-bridge": "^5.0"
+"symfony/browser-kit": "^3.4",
+        "symfony/css-selector": "^3.4"
+
+
+TODO:
+1) Make old symfony source code to original working state (composer.json, Kernel and vendor)
+2) Move the original source code from src/{App,...}Bundle/ to src/ and update the namespaces of every PHP file to be App\... (advanced IDEs can do this automatically).
+3) Copy App to src
+
+### Symfony 3.4 Standard Edition: ###
+composer.phar require symfony/symfony "^3.4" doctrine/doctrine-bundle "^1.1" symfony/monolog-bundle symfony/swiftmailer-bundle "^2.6"
+symfony/assetic-bundle
+sensio/framework-extra-bundle "^4.0"
+knplabs/knp-paginator-bundle "^4.1"
+paragonie/random_compat "^2"
+friendsofsymfony/user-bundle "~2.0" "v2.0.1" (requires paragonie/random_compat "^2" "v2.0.18")
+oneup/uploader-bundle
+friendsofsymfony/jsrouting-bundle
+stof/doctrine-extensions-bundle
+knplabs/knp-snappy-bundle
+doctrine/doctrine-migrations-bundle
+bmatzner/fontawesome-bundle
+google/apiclient
+yzalis/crontab "1.0.x-dev"
+box/spout
+sinergi/browser-detector
+doctrine/orm
+require-dev sensio/generator-bundle "^3.1" (#sensio/distribution-bundle)
+twig/extensions
+phpoffice/phpspreadsheet
+phpoffice/phpexcel
+
+doctrine/common
+
+creof/doctrine2-spatial "~1" ?
+doctrine/lexer (^1.2)
+
+#doctrine-fixtures-bundle (for testing )
+
+
+
+[2019-12-22 18:20:30] request.CRITICAL: Uncaught PHP Exception Symfony\Component\Debug\Exception\FatalThrowableError: "Type error: preg_split() expects parameter 2 to be string, object given" at
+C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\Scanorders2\vendor\doctrine\lexer\lib\Doctrine\Common\Lexer\AbstractLexer.php line 255
+{"exception":"[object] (Symfony\\Component\\Debug\\Exception\\FatalThrowableError(code: 0): Type error: preg_split() expects parameter 2 to be string, object given
+php.CRITICAL: preg_split() expects parameter 2 to be string, float given doctrine/lexer#31
+Problem with version of 1.1.0 doctrine/lexer #204
+creof/doctrine2-spatial => creof/geo-parser => doctrine/lexer
+Fix: convert input to string (AbstractLexer.php adding line $input = $input."";)
+$input = $input."";
+$matches = preg_split($this->regex, $input, -1, $flags);
+
+UPDATE scan_patientlastname SET field = array_to_string(ARRAY(SELECT chr((65 + round(random() * 25)) :: integer) FROM generate_series(1,12)), '');
+array_to_string(ARRAY(SELECT chr((65 + round(random() * 25)) :: integer) FROM generate_series(1,12)), '');
+UPDATE scan_patientmrn SET field = CAST (field AS INTEGER) + 100 WHERE field ~ '^[0-9]*$';
+UPDATE scan_patientmrn SET field = CAST (field AS INTEGER) + 1000 WHERE field ~ '^[0-9]*$';
+UPDATE scan_patientmrn SET original = field;
+
+composer.phar dump-autoload --optimize
+
+"oneup/uploader-bundle": "^2.1",
+"post-install-cmd": [
+            "@auto-scripts"
+        ],
+
+Reorganize Symfony:
+https://symfonycasts.com/screencast/symfony-bundle/extracting-bundle
+https://stackoverflow.com/questions/47594542/symfony-4-how-to-organize-folder-structure-namely-your-business-logic
+https://symfonycasts.com/blog/AppBundle
+https://laraveldaily.com/moving-controllers-to-sub-folders-in-a-correct-way/
+
+Commented out include_once '..\DatabaseRoutines.php';
+Changed SimpleHydrator and Changed StainHydrator
+//TODO:  GoogleSheetManagement: Cannot autowire service "App\FellAppBundle\Util\CustomDefaultServiceRequest": argument "$accessToken" of method "__construct()" is type-hinted "string", you should configure its value explicitly.
+$serviceRequest = new DefaultServiceRequest($accessToken,"OAuth");
+https://symfonycasts.com/screencast/symfony-fundamentals/create-service
+https://stackoverflow.com/questions/54825231/symfony-4-argument-has-no-type-hint-you-should-configure-its-value-explicitly
+https://symfony.com/doc/3.4/service_container.html#services-manually-wire-args - manually wiring non-object arguments
+TODO: Test GoogleSheetManagement->getSheetByFileId($fileId);
+
+use Box\Spout\Writer\Style\Border;
+php bin/console debug:autowiring
+https://github.com/symfony/symfony/issues/23174
+https://symfony.com/blog/new-in-symfony-3-3-psr-4-based-service-discovery
+php bin/console debug:router
+php bin/console assets:install --symlink public
+
+
+"symfony/assetic-bundle": "^2.8",
+"symfony/console": "3.4.*",
+"symfony/dotenv": "3.4.*",
+"symfony/expression-language": "^3.4",
+"symfony/flex": "^1.3.1",
+"symfony/framework-bundle": "3.4.*",
+"symfony/monolog-bundle": "^3.5",
+"symfony/swiftmailer-bundle": "^2.6",
+"symfony/workflow": "3.4.*",
+"symfony/yaml": "3.4.*",
+
+"symfony/swiftmailer-bundle": "^2.6",
+"symfony/console": "^4.3",
+"symfony/expression-language": "^4.3",
+"symfony/flex": "^1.3.1",
+"symfony/framework-bundle": "^4.3",
+"symfony/monolog-bundle": "^3.5",
+"symfony/workflow": "^4.3",
+"symfony/yaml": "^4.3",
+
+"symfony/swiftmailer-bundle": "^2.6",
+"symfony/console": "^4.3",
+"symfony/flex": "^1.3.1",
+"symfony/framework-bundle": "^4.3",
+"symfony/monolog-bundle": "^3.5",
+"symfony/yaml": "^4.3",
+
+Bundles non-compatible with Symfony 4:
+"adesigns/calendar-bundle": "^1.1", (use composer require tattali/calendar-bundle)
+"sensio/distribution-bundle": "^5.0",
+"sensio/generator-bundle": "^3.1",
+"security-checker security:check": "script"
+
+Logger problem:
+https://github.com/symfony/symfony/issues/28296
+
+Try this to upgrade Symfony 3 to 4 (3->4->flex):
+https://codereviewvideos.com/course/upgrade-symfony-3-to-symfony-4/video/fixing-third-party-bundle-deprecations
+https://symfonycasts.com/screencast/symfony4-upgrade/sf34-deprecations

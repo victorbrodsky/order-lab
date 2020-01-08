@@ -1,0 +1,242 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{#   navigation menu   #}
+
+{% block navbar %}
+
+    {#{% set pendingadminreview = render(controller("AppUserdirectoryBundle:User:pendingAdminReview")) %}#}
+
+    <nav class="navbar navbar-default" role="navigation">
+
+    <div class="container-fluid">
+
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            {% if is_granted('ROLE_FELLAPP_USER') %}
+                <!-- this is for mobile devices - top menu -->
+                <a class="navbar-brand visible-xs visible-sm" href="{{ path(fellapp_sitename~'_home') }}">Home</a>
+            {% endif %}
+        </div>
+
+
+        <div class="collapse navbar-collapse navbar-ex1-collapse" style="max-height:none;">
+
+
+            {% if is_granted('ROLE_FELLAPP_USER') %}
+
+                <ul class="nav navbar-nav">
+
+                    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+                    {{ usermacros.siteSwitch() }}
+
+                    <li id="nav-bar-fellapphome" class="hidden-xs divider-vertical">
+                        <a href="{{ path(fellapp_sitename~'_home') }}">
+                            <span class="glyphicon glyphicon-file"></span> Home
+                        </a>
+                    </li>
+
+
+                    {% if is_granted('ROLE_FELLAPP_COORDINATOR') or is_granted('ROLE_FELLAPP_DIRECTOR') %}
+                        <li id="nav-bar-fellappnew" class="divider-vertical">
+                            <a href="{{ path('fellapp_new') }}">Add Application</a>
+                        </li>
+                    {% endif %}
+
+                    {% if is_granted('ROLE_FELLAPP_INTERVIEWER') or is_granted('ROLE_FELLAPP_COORDINATOR') or is_granted('ROLE_FELLAPP_DIRECTOR') %}
+                        <li id="nav-bar-myinterviewees" class="divider-vertical">
+                            <a href="{{ path('fellapp_myinterviewees') }}">
+                                My Interviewees
+                            </a>
+                        </li>
+                    {% endif %}
+
+                    {% if is_granted('ROLE_FELLAPP_COORDINATOR') or is_granted('ROLE_FELLAPP_DIRECTOR') %}
+                        <li id="nav-bar-fellappaccepted" class="divider-vertical">
+                            <a href="{{ path('fellapp_accepted_fellows') }}">
+                                Accepted Fellows
+                            </a>
+                        </li>
+                    {% endif %}
+
+                    {% if is_granted('ROLE_FELLAPP_COORDINATOR') or is_granted('ROLE_FELLAPP_DIRECTOR') %}
+                        <li id="nav-bar-fellapprejectionemails" class="divider-vertical">
+                            {#Show all except "Hidden", "Archived", "Rejected and Notified", "Accepted", "Accepted and Notified"#}
+                            {#Show only "Active", "Priority", "Complete", "Interviewee", "Rejected"#}
+                            <a href="{{ path('fellapp_send_rejection_emails') }}">
+                                Send Rejection Emails
+                            </a>
+                        </li>
+                    {% endif %}
+
+                    {% if is_granted('ROLE_FELLAPP_COORDINATOR') or is_granted('ROLE_FELLAPP_DIRECTOR') %}
+                        <li id="nav-bar-fellappsettings" class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Configuration<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="{{ path('fellapp_fellowshiptype_settings') }}">
+                                        Fellowship Types, Directors, and Default Interviewers
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('fellapp_google_form_config_edit') }}">
+                                        Application Form Status and Appearance
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    {% endif %}
+
+                    {#Downloads menu#}
+                    {% set fellappTypeId = -1 %}
+                    {% if filter is defined and filter %}
+                        {% set fellappTypeId = filter %}
+                    {% endif %}
+                    {% if currentYear is not defined or not currentYear %}
+                        {% set currentYear = "now"|date("Y") %}
+                        {% set currentYear = currentYear + 3 %}
+                    {% endif %}
+                    {#fellappids: {{ fellappids }}<br>#}
+                    {#currentYear: {{ currentYear }}<br>#}
+                    {#fellappTypeId: {{ fellappTypeId }}<br>#}
+
+                    {% if fellappids is defined and currentYear is defined and fellappTypeId is defined and fellappids %}
+                        <li id="nav-bar-fellappdownload" class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Download<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+
+                                <li>
+                                    <a href="{{ path('fellapp_download_applicants_list_excel', { 'fellappIds': fellappids, 'currentYear': currentYear, 'fellappTypeId': fellappTypeId }, true) }}">
+                                       <i class="fa fa-file-excel-o"></i> Displayed Application Summaries in Excel
+                                    </a>
+                                </li>
+
+                                <li>
+                                    {#<a href="{{ path('fellapp_download_interview_applicants_list_doc', { 'fellappIds': fellappids, 'currentYear': currentYear, 'fellappTypeId': fellappTypeId }, true) }}">Displayed Interviewee Summaries in Word</a>#}
+                                    <a href="{{ path('fellapp_download_interview_applicants_list_doc', { 'fellappIds': fellappids, 'currentYear': currentYear, 'fellappTypeId': fellappTypeId }, true) }}">
+                                        <i class="fa fa-file-word-o"></i> Displayed Interviewee Summaries in Word
+                                    </a>
+                                </li>
+
+                                <li>
+                                    {#<a href="{{ path('fellapp_download_interview_applicants_list_pdf', { 'fellappIds': fellappids, 'currentYear': currentYear, 'fellappTypeId': fellappTypeId }, true) }}">Displayed Interviewee Summaries in PDF</a>#}
+                                    <a href="{{ path('fellapp_download_interview_applicants_list_pdf', { 'fellappIds': fellappids, 'currentYear': currentYear, 'fellappTypeId': fellappTypeId }, true) }}">
+                                        <i class="fa fa-file-pdf-o"></i> Displayed Interviewee Summaries in PDF
+                                    </a>
+                                </li>
+
+                            </ul>
+                        </li>
+                    {% endif %}
+
+                </ul>
+
+            {% endif %}
+
+           
+
+            <ul class="nav navbar-nav navbar-right">
+
+                {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') or is_granted('ROLE_FELLAPP_DIRECTOR') or is_granted('ROLE_FELLAPP_COORDINATOR') %}
+
+                    <li id="nav-bar-admin" class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+
+                            {#<li><a href="{{ path('accountrequest') }}">Account Requests</a></li>#}
+
+                            {#{% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}#}
+                                {#<li><a href="{{ path('user_admin_index') }}">List Manager</a></li>#}
+                                {#<li><a href="{{ path('user_admin_hierarchy_index') }}">Hierarchy Manager</a></li>#}
+                                {#<li><a href="{{ path(fellapp_sitename~'_siteparameters') }}">Site Settings</a></li>#}
+                                {#<li class="divider"></li>#}
+                                {#<li><a href="{{ path('fellapp_import') }}">Import from Google</a></li>#}
+                                {#<li><a href="{{ path('fellapp_populate') }}">Populate the Spreadsheet</a></li>#}
+                            {#{% endif %}#}
+
+                            {% if is_granted('ROLE_FELLAPP_DIRECTOR') or is_granted('ROLE_FELLAPP_COORDINATOR') %}
+                                <li><a href="{{ path(fellapp_sitename~'_accessrequest_list') }}">Access Requests</a></li>
+                                {#<li><a href="{{ path(fellapp_sitename~'_accountrequest') }}">Account Requests</a></li>#}
+                                <li><a href="{{ path(fellapp_sitename~'_authorized_users') }}">Authorized Users</a></li>
+                                <li><a href="{{ path(fellapp_sitename~'_import_populate') }}">Check for new applications now</a></li>
+                                <li><a href="{{ path(fellapp_sitename~'_import_populate_letters') }}">Check for new recommendation letters now</a></li>
+                                <li><a href="{{ path(fellapp_sitename~'_logger') }}">Event Log</a></li>
+
+                                <li class="divider"></li>
+                                <li><a
+                                        general-data-confirm="Are you sure you want to Reset Queue and Re-run?"
+                                        href="{{ path('fellapp_reset_queue_run') }}">Reset Queue and Run (if some PDFs are not generated)
+                                    </a>
+                                </li>
+                            {% endif %}
+
+                            {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
+                                {#<li><a href="{{ path('user_admin_index') }}">List Manager</a></li>#}
+                                <li><a href="{{ path('platformlistmanager-list') }}">Platform List Manager</a></li>
+                                <li><a href="{{ path('user_admin_hierarchy_index') }}">Hierarchy Manager</a></li>
+                                <li><a href="{{ path(fellapp_sitename~'_siteparameters') }}">Site Settings</a></li>
+
+                                {#<li><a#}
+                                            {#general-data-confirm="Are you sure you want to regenerate all Complete Fellowship Application PDFs? All reports will be replaced by new reports."#}
+                                            {#href="{{ path('fellapp_regenerate_reports') }}">Regenerate all Complete Application PDFs#}
+                                    {#</a>#}
+                                {#</li>#}
+                            {% endif %}
+
+                        </ul>
+                    </li>
+
+                {% endif %}
+
+
+
+                {% if is_granted('ROLE_FELLAPP_USER') %}
+
+                    <li id="nav-bar-user" class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span><b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+
+                            {% if pendinguser is not defined %}
+                                <li><a href="{{ path(fellapp_sitename~'_showuser', {id:app.user.getId()}) }}">My Profile ({{ app.user.getUserNameShortStr() }})</a></li>
+                            {% endif %}
+
+                            {% if pendinguser is not defined %}
+                                <li><a href="{{ path(fellapp_sitename~'_about_page') }}">About</a></li>
+                            {% endif %}
+
+                            <li><a href="{{ path(fellapp_sitename~'_logout') }}">Log Out</a></li>
+
+                        </ul>
+                    </li>
+
+                {% endif %}
+
+            </ul>
+
+
+        </div><!-- /.navbar-collapse -->
+
+    </div><!-- /.container-fluid -->
+
+    </nav>
+    
+{% endblock %}
+

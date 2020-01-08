@@ -1,0 +1,294 @@
+{% extends "AppTranslationalResearchBundle::Default/base.html.twig" %}
+
+{% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% import "AppTranslationalResearchBundle::Default/transresRequestMacros.html.twig" as transresRequestMacros %}
+{% import "AppTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+{% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+{% block header %}
+    {#<div class="text-center col-xs-12">#}
+        {#<h1 style="color:#ff633b;"><b>{{ invoice.status|upper }}</b></h1>#}
+    {#</div>#}
+{% endblock %}
+
+{% block footer %}
+    {#empty#}
+{% endblock %}
+
+{% block contentleft %}
+
+    <input type="hidden" id="formcycle" value="{{ cycle }}" />
+    <input type="hidden" id="barcode_image_size" value="{{ barcodeImageSize }}" />
+
+    {% if packingSlipFontSize is defined and packingSlipFontSize %}
+        <div style="font-size: {{ packingSlipFontSize }}px;">
+    {% endif %}
+
+    {#<h4 class="text-info" align="center">#}
+        {#{{ title }}#}
+    {#</h4>#}
+    {#<br>#}
+
+    {#{% set bundleFileName = transres_request_util.getDefaultFile("transresPackingSlipLogos",transresRequest)|raw %}#}
+    {#{% if bundleFileName %}#}
+
+    {% set headlineColor = transres_request_util.getTransresSiteParameter('transresPackingSlipHighlightedColor',transresRequest)~" !important;" %}
+
+    <div style="opacity: {{ opacity }} !important;">
+    <div class="row">
+        {#<div class="col-xs-1"></div>#}
+        <div class="col-xs-5" align="left">
+            <img src="{{ asset(packingSlipLogoFileName) }}" alt="Packing Slip Logo"/>
+            <br>
+            <br>
+            <div style="color: {{ transres_request_util.getTransresSiteParameter('transresPackingSlipHeadlineColor',transresRequest) }} !important;">
+            {{ transres_request_util.getTransresSiteParameter('transresPackingSlipHeadline1',transresRequest) }}
+            <br>
+            {{ transres_request_util.getTransresSiteParameter('transresPackingSlipHeadline2',transresRequest) }}
+            </div>
+        </div>
+        <div class="col-xs-7" align="right">
+            <p><h2><b>
+                {#Packing Slip#}
+                {{ transres_request_util.getTransresSiteParameter('transresPackingSlipTitle',transresRequest) }}
+            </b></h2></p>
+            <p>
+                Work Request ID: <span id="work-request-id" style="color: {{ headlineColor }}">{{ transresRequest.oid }}</span>
+            </p>
+            <p>
+                {#barcode#}
+                {#<div id="id-barcode-div">#}
+                    <canvas id="id-barcode"></canvas>
+                {#</div>#}
+            </p>
+            <p>
+                <b>Submission Date:</b> <span style="color: {{ headlineColor }}">{{ transresRequest.createDate|date("m/d/Y") }}</span>
+            </p>
+            {#<p>#}
+                {#<b>Account number (if funded): {{ invoice.fundedAccountNumber }}</b>#}
+            {#</p>#}
+            <p>
+                Printed: Date & Time: <span style="color: {{ headlineColor }}">{{ "now"|date("m/d/Y H:i") }}</span>
+            </p>
+            <p>
+                <b>Submitter:</b> <span style="color: {{ headlineColor }}">{{ transresRequest.submitter.getUsernameOptimal() }}</span>
+                {#<b>Submitter:</b> <span style="color: #FF1800">{{ app.user.getUsernameOptimal() }}</span>#}
+            </p>
+            <p>
+                Work Progress Status: <span style="color: {{ headlineColor }}">{{ transres_request_util.getProgressStateLabelByName(transresRequest.progressState) }}</span>
+            </p>
+        </div>
+        {#<div class="col-xs-1"></div>#}
+    </div>
+    </div>
+
+    {#{% endif %}#}
+
+    <hr>
+
+    <p>
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead style="background-color: #BEBEBE !important;">
+            <tr>
+                <th>Item</th>
+                <th>Product or Service</th>
+                <th>Requested Quantity</th>
+                <th>Completed Quantity</th>
+                <th>Comment</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for product in transresRequest.products %}
+                <tr>
+                    {#<td>{{ product.category.productId }} ({{ product.category.section }})</td>#}
+                    <td style="color:{{ headlineColor }}">{{ product.category.getShortInfo }}</td>
+                    <td style="color:{{ headlineColor }}">{{ product.category.name }}</td>
+
+                    <td style="color:{{ headlineColor }}">{{ product.requested }}</td>
+                    <td style="color:{{ headlineColor }}">{{ product.completed }}</td>
+
+                    <td style="color:{{ headlineColor }}">{{ product.comment }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    </p>
+
+    <hr>
+
+    <p>
+        <b>
+            {#COMMENT FOR REQUEST#}
+            {{ transres_request_util.getTransresSiteParameter('transresPackingSlipSubHeading1',transresRequest) }}
+        </b>
+        <br>
+        <span style="color: {{ headlineColor }}">{{ transresRequest.comment }}</span>
+    </p>
+
+    <hr>
+
+    <p>
+        <b>
+            {#LIST OF DELIVERABLE(S)#}
+            {{ transres_request_util.getTransresSiteParameter('transresPackingSlipSubHeading2',transresRequest) }}
+        </b>
+    </p>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead style="background-color: #BEBEBE !important;">
+                <tr>
+                    <th></th>
+                    {#colspan="2"#}
+                    <th>SOURCE</th>
+                    <th>SAMPLE NAME</th>
+                    <th>BARCODE</th>
+                    <th>COMMENT</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for dataResult in transresRequest.dataResults %}
+                <tr>
+                    <td>
+                        {{ loop.index }}
+                    </td>
+                    <td style="color: {{ headlineColor }}">
+                        {{ dataResult.system.getOptimalName() }}
+                    </td>
+                    <td class="barcode-value" style="color: {{ headlineColor }}">
+                        {{ dataResult.barcode }}
+                    </td>
+                    {#style="width: 50px; height: 50px; padding: 5px;"#}
+                    <td width="{{ barcodeTdSize }}">
+                        {% if loop.index is even %}
+                            {% set alignBarcode = "left" %}
+                        {% else %}
+                            {% set alignBarcode = "right" %}
+                        {% endif %}
+                       <div class="barcode-image" align="{{ alignBarcode }}"></div>
+                    </td>
+                    <td style="color: {{ headlineColor }}">
+                        {{ dataResult.comment }}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <br>
+    <hr>
+
+    <div align="left" style="opacity: {{ opacity }};">
+        <h6>
+            {#Please contact us for more information about this slip.#}
+            {{ transres_request_util.getTransresSiteParameter('transresPackingSlipFooter1',transresRequest) }}
+        </h6>
+        <h6>
+            {#Translational Research Program • 1300 York Ave., F512, New York, NY 10065 • Tel: (212) 746-6255#}
+            {{ transres_request_util.getTransresSiteParameter('transresPackingSlipFooter2',transresRequest) }}
+        </h6>
+    </div>
+
+    {% if packingSlipFontSize is defined and packingSlipFontSize %}
+        </div> {#packingSlipFontSize#}
+    {% endif %}
+
+{% endblock %}
+
+
+
+{% block additionalcss %}
+
+    {#{% stylesheets#}
+    {#'bundles/appuserdirectory/bootstrap/css/*' filter='cssrewrite'#}
+    {#'bundles/appuserdirectory/form/css/form.css' filter='cssrewrite'#}
+    {#%}#}
+    {#<link rel="stylesheet" href="{{ asset_url }}" />#}
+    {#{% endstylesheets %}#}
+
+    {#{% stylesheets#}
+    {#'bundles/appuserdirectory/form/css/action.css' filter='cssrewrite'#}
+    {#%}#}
+    {#<link rel="stylesheet" href="{{ asset_url }}" />#}
+    {#{% endstylesheets %}#}
+
+    {% stylesheets
+        'bundles/apptranslationalresearch/form/css/pdf-show.css' filter='cssrewrite'
+    %}
+        <link rel="stylesheet" type="text/css" media="all" href="{{ asset_url }}" />
+    {% endstylesheets %}
+
+{% endblock %}
+
+{% block additionaljs %}
+
+    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/lib/jquery.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/bwipp.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/bwipjs.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/lib/jquery-ui.min.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/lib/xhr-fonts.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/lib/bitmap.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/lib/symdesc.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/lib/canvas-toblob.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/lib/filesaver.js'#}
+
+    {#{% javascripts#}
+    {#'@AppUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/jquery-ui-1.11.2/jquery-ui.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/bootstrap/js/*'#}
+
+    {#'@AppUserdirectoryBundle/Resources/public/form/js/user-form.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/form/js/user-common.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/form/js/user-formReady.js'#}
+    {#%}#}
+    {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
+
+    {% javascripts
+    '@AppOrderformBundle/Resources/public/handsontable/jquery.handsontable.full.js'
+    '@AppTranslationalResearchBundle/Resources/public/form/js/handsontable.js'
+    '@AppUserdirectoryBundle/Resources/public/bwip-js/freetype.js'
+    '@AppOrderformBundle/Resources/public/form/js/selectAjax.js'
+    '@AppOrderformBundle/Resources/public/form/js/masking.js'
+    '@AppTranslationalResearchBundle/Resources/public/form/js/barcode.js'
+    '@AppUserdirectoryBundle/Resources/public/qrcode/qrcode.js'
+    '@AppUserdirectoryBundle/Resources/public/jquery-qrcode/jquery.qrcode.min.js'
+    '@AppUserdirectoryBundle/Resources/public/bwip-js/bwipp.js'
+    '@AppUserdirectoryBundle/Resources/public/bwip-js/bwipjs.js'
+    '@AppUserdirectoryBundle/Resources/public/bwip-js/lib/jquery-ui.min.js'
+    '@AppUserdirectoryBundle/Resources/public/bwip-js/lib/xhr-fonts.js'
+    '@AppUserdirectoryBundle/Resources/public/bwip-js/lib/bitmap.js'
+    '@AppUserdirectoryBundle/Resources/public/bwip-js/lib/symdesc.js'
+    '@AppUserdirectoryBundle/Resources/public/bwip-js/lib/canvas-toblob.js'
+    '@AppUserdirectoryBundle/Resources/public/bwip-js/lib/filesaver.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+
+            $('textarea').each(function () {
+                this.setAttribute('style', 'height:' + (this.scrollHeight) + 'px;overflow-y:hidden;');
+            }).on('input', function () {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+            });
+
+            drawBarcodeImages();
+
+        });
+
+    </script>
+
+{% endblock %}
+

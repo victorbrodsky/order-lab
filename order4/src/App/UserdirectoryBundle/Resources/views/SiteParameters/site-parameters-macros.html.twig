@@ -1,0 +1,75 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+
+{% macro organizationalGroupDefault( field, cycle, classname, prototype ) %}
+
+    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
+
+    {% if prototype == "prototype" %}
+        {% set formfield = field.vars.prototype %}
+    {% else %}
+        {% set formfield = field %}
+    {% endif %}
+
+    <div class="user-collection-holder well {{ classname }}">
+
+        {% if cycle != 'show' %}
+            <div class="text-right">
+                <button type="button" class="btn btn-default btn-sm" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+            </div>
+        {% endif %}
+
+        {{ form_errors(formfield) }}
+
+        {{ formmacros.field(formfield.id) }}
+
+        {{ treemacros.compositeTreeNode(formfield.institution,cycle,prototype) }}
+
+        {{ formmacros.field(formfield.primaryPublicUserIdType) }}
+        {{ formmacros.field(formfield.email) }}
+        {{ formmacros.field(formfield.roles) }}
+        {{ formmacros.field(formfield.timezone) }}
+        {{ formmacros.field(formfield.languages) }}
+        {{ formmacros.field(formfield.locale) }}
+        {{ formmacros.field(formfield.showToInstitutions) }}
+        {{ treemacros.compositeTreeNode(formfield.defaultInstitution,cycle,prototype) }}
+        {{ formmacros.checkbox(formfield.tooltip) }}
+        {{ formmacros.field(formfield.permittedInstitutionalPHIScope) }}
+        {{ formmacros.field(formfield.employmentType) }}
+        {{ treemacros.compositeTreeNode(formfield.employmentInstitution,cycle,prototype) }}
+
+        <hr>
+        {{ treemacros.compositeTreeNode(formfield.administrativeTitleInstitution,cycle,prototype) }}
+        {{ treemacros.compositeTreeNode(formfield.academicTitleInstitution,cycle,prototype) }}
+        {{ treemacros.compositeTreeNode(formfield.medicalTitleInstitution,cycle,prototype) }}
+
+        <hr>
+        {{ formmacros.field(formfield.locationTypes) }}
+        {{ treemacros.compositeTreeNode(formfield.locationInstitution,cycle,prototype) }}
+        {{ formmacros.field(formfield.city) }}
+        {{ formmacros.field(formfield.state) }}
+        {{ formmacros.field(formfield.zip) }}
+        {{ formmacros.field(formfield.country) }}
+
+        <hr>
+        {{ formmacros.field(formfield.medicalLicenseCountry) }}
+        {{ formmacros.field(formfield.medicalLicenseState) }}
+
+    </div>
+{% endmacro %}
+

@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Defaultreviewer</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ defaultReviewer.id }}</td>
+            </tr>
+            <tr>
+                <th>Createdate</th>
+                <td>{% if defaultReviewer.createDate %}{{ defaultReviewer.createDate|date('m/d/Y H:i:s') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Updatedate</th>
+                <td>{% if defaultReviewer.updateDate %}{{ defaultReviewer.updateDate|date('m/d/Y H:i:s') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>State</th>
+                <td>{{ defaultReviewer.state }}</td>
+            </tr>
+            <tr>
+                <th>State</th>
+                <td>{{ defaultReviewer.projectSpecialty }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('translationalresearch_default-reviewer_index',{'specialtyStr':defaultReviewer.getProjectSpecialty().getAbbreviation()}) }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('translationalresearch_default-reviewer_edit', { 'id': defaultReviewer.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}

@@ -234,3 +234,15 @@ https://github.com/symfony/symfony/issues/28296
 Try this to upgrade Symfony 3 to 4 (3->4->flex):
 https://codereviewvideos.com/course/upgrade-symfony-3-to-symfony-4/video/fixing-third-party-bundle-deprecations
 https://symfonycasts.com/screencast/symfony4-upgrade/sf34-deprecations
+
+Blank page:
+add ThreadStackSize 8388608 (https://www.drupal.org/forum/support/installing-drupal/2012-09-06/the-connection-was-reset-on-localhost)
+<IfModule mpm_winnt_module>
+	ThreadStackSize 8388608
+    ThreadsPerChild        150
+    MaxConnectionsPerChild   0
+</IfModule>
+
+stylesheets:
+https://symfony.com/blog/encore-0-21-0-webpack-4-support-copy-files-support-webpackencorebundle
+

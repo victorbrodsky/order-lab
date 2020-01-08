@@ -1,0 +1,47 @@
+parameters:
+
+    vacreq.sitename: vacreq
+    vacreq.uploadpath:
+
+
+twig:
+    globals:
+        vacreq_sitename: '%vacreq.sitename%'
+        #service
+        vacreq_util: "@vacreq_util"
+
+
+services:
+    _defaults: { public: true }
+
+    vacreq_authentication_handler:
+        class: App\VacReqBundle\Security\Authentication\VacReqLoginSuccessHandler
+        arguments:  ["@service_container", "@doctrine.orm.entity_manager"]
+
+    vacreq_role_voter:
+        class: App\VacReqBundle\Security\Voter\VacReqRoleVoter
+        public: false
+        arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
+        tags:
+            - { name: security.voter }
+
+    vacreq_permission_voter:
+        class: App\VacReqBundle\Security\Voter\VacReqPermissionVoter
+        public: false
+        arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
+        tags:
+            - { name: security.voter }
+
+    vacreq_util:
+        class: App\VacReqBundle\Util\VacReqUtil
+        arguments: ["@doctrine.orm.entity_manager", "@security.token_storage", "@security.authorization_checker", "@service_container"]
+
+    vacreq_import_data:
+        class: App\VacReqBundle\Util\VacReqImportData
+        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+
+    vacreq_awaycalendar_listener:
+        class: App\VacReqBundle\EventListener\CalendarEventListener
+        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+        tags:
+            - { name: kernel.event_listener, event: calendar.load_events, method: loadEvents }

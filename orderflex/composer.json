@@ -41,7 +41,8 @@
         "yzalis/crontab": "1.0.x-dev"
     },
     "require-dev": {
-        "symfony/phpunit-bridge": "^4"
+        "symfony/phpunit-bridge": "^4",
+        "symfony/profiler-pack": "^1.0"
     },
     "config": {
         "preferred-install": {

@@ -1,0 +1,151 @@
+{% extends "AppTranslationalResearchBundle::Default/base.html.twig" %}
+
+{% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% import "AppTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+{% block content %}
+
+    <input type="hidden" id="formcycle" value="{{ cycle }}" />
+
+    <div id="add-new-user-modal-prototype"></div>
+
+    <h4 class="text-info" align="center">
+        {{ title }}
+    </h4>
+
+    <br>
+
+    {{ form_start(form) }}
+        {#{{ form_widget(form) }}#}
+
+        {% if form.projectSpecialty is defined %}
+            {{ formmacros.field(form.projectSpecialty) }}
+        {% endif %}
+
+        {% if form.substituteUser is defined %}
+            {{ formmacros.field(form.substituteUser) }}
+        {% endif %}
+
+        {% if form.replaceUser is defined %}
+            {#{{ formmacros.field(form.replaceUser) }}#}
+
+            <p>
+            <div class="row">
+                <div class="col-xs-6" align="right">
+                    <label>{{ form.replaceUser.vars.label|raw }}</label>
+                </div>
+                <div class="col-xs-6" align="left">
+                    {{ form_widget(form.replaceUser) }}
+                </div>
+            </div>
+            </p>
+
+        {% endif %}
+
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                Exclude
+            </div>
+            <div class="panel-body">
+                <div class="well">
+                {{ formmacros.checkbox(form.excludedProjectCompleted) }}
+                {{ formmacros.checkbox(form.excludedProjectCanceled) }}
+                {{ formmacros.checkbox(form.excludedProjectDraft) }}
+                </div>
+                <div class="well">
+                {{ formmacros.checkbox(form.excludedRequestCompleted) }}
+                {{ formmacros.checkbox(form.excludedRequestCanceled) }}
+                </div>
+                <div class="well">
+                {{ formmacros.checkbox(form.excludedInvoicePaid) }}
+                {{ formmacros.checkbox(form.excludedInvoicePartiallyPaid) }}
+                {{ formmacros.checkbox(form.excludedInvoiceCanceled) }}
+                </div>
+            </div>
+        </div>
+
+
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                Perform substitution in the following project request fields
+            </div>
+            <div class="panel-body">
+                {{ formmacros.checkbox(form.projectPis) }}
+                {{ formmacros.checkbox(form.projectPisIrb) }}
+                {{ formmacros.checkbox(form.projectPathologists) }}
+                {{ formmacros.checkbox(form.projectCoInvestigators) }}
+                {{ formmacros.checkbox(form.projectContacts) }}
+                {{ formmacros.checkbox(form.projectBillingContact) }}
+
+                <div class="well">
+                {{ formmacros.checkbox(form.projectReviewerIrb) }}
+                {{ formmacros.checkbox(form.projectReviewerIrbDelegate) }}
+                </div>
+                <div class="well">
+                {{ formmacros.checkbox(form.projectReviewerAdmin) }}
+                {{ formmacros.checkbox(form.projectReviewerAdminDelegate) }}
+                </div>
+                <div class="well">
+                {{ formmacros.checkbox(form.projectReviewerCommittee) }}
+                {{ formmacros.checkbox(form.projectReviewerCommitteeDelegate) }}
+                </div>
+                <div class="well">
+                {{ formmacros.checkbox(form.projectReviewerPrimaryCommittee) }}
+                {{ formmacros.checkbox(form.projectReviewerPrimaryCommitteeDelegate) }}
+                </div>
+                <div class="well">
+                {{ formmacros.checkbox(form.projectReviewerFinal) }}
+                {{ formmacros.checkbox(form.projectReviewerFinalDelegate) }}
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                Perform substitution in the following work request fields
+            </div>
+            <div class="panel-body">
+                {{ formmacros.checkbox(form.requestPis) }}
+                {{ formmacros.checkbox(form.requestBillingContact) }}
+            </div>
+        </div>
+
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                Perform substitution in the following invoice fields
+            </div>
+            <div class="panel-body">
+                {% if form.invoicePi is defined %}
+                    {{ formmacros.checkbox(form.invoicePi) }}
+                {% endif %}
+                {{ formmacros.checkbox(form.invoiceBillingContact) }}
+                {{ formmacros.checkbox(form.invoiceSalesperson) }}
+            </div>
+        </div>
+
+
+        <br>
+        {% if form.substitute is defined %}
+            <p>
+                {#{{ form_widget(form.substitute) }}#}
+                {{ form_row(form.substitute) }}
+            </p>
+        {% endif %}
+
+    {{ form_end(form) }}
+
+{% endblock %}
+
+{% block additionaljs %}
+    {% javascripts
+    '@AppTranslationalResearchBundle/Resources/public/form/js/transres.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}

@@ -1,0 +1,44 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+
+{% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+{#{{ entity }}#}
+<a href="{{ path(vacreq_sitename~'_showuser', { 'id': entity.id }) }}">{{ entity }}</a>
+
+<form id="vacreq_orginst_user_management_{{ entity.id }}_{{ roleId }}" method="POST">
+
+    {{ formmacros.field(form.roles) }}
+
+    {#We don't need to update the roles from the Group Management page. We need only add or remove user.#}
+    {#<button type='button' class="btn btn-info btn-sm" onclick="updateVacReqGroupUser(this,{{ entity.id }},{{ institution.id }},{{ roleId }})">Update</button>#}
+
+    <a
+        general-data-confirm="Are you sure you want to change user's role?"
+        class="btn btn-danger btn-sm" href="{{ path('vacreq_orginst_user_remove',{'userid': entity.id, 'instid':institution.id, 'roleId':roleId}) }}">
+        Remove</a>
+
+</form>
+
+
+{#<br>#}
+{#<p>#}
+    {#<a class="btn-sm btn-danger" href="#">Update</a>#}
+{#</p>#}
+{#<p>#}
+    {#<a class="btn-sm btn-danger" href="#">Delete Group</a>#}
+{#</p>#}

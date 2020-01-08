@@ -1,0 +1,1146 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+
+{#add a single form node#}
+{% macro addSingleFormNode( formNodeHolder, formNode, formNodeId, formNodeValue, receivingEntity, cycle, prototype, count ) %}
+    {% import "AppUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+
+    {% set formType = null %}
+    {% if formNode.objectType %}
+        {% set formType = formNode.getObjectType().getName() %}
+    {% endif %}
+
+    {% set sectionClass = "" %}
+    {% if formType == "Form" or formType == "Form Section" or formType == "Form Section Array" %}
+        {% set sectionClass = "formnode-formtype-section" %}
+    {% endif %}
+
+    <div id="formnode-{{ formNodeId }}"
+         class="formnode-holder formnode-{{ formNodeId }} formnode-holder-{{ formNodeHolder.id }} {{ sectionClass }}"
+         data-formnodeholderid="{{ formNodeHolder.id }}"
+         data-formnodeid="{{ formNodeId }}"
+         data-sectionid="{{ count }}"
+    >
+        {{ formnodemacros.addFormNodeByType(formNodeHolder,formNode,formNodeId,cycle,prototype,count,"single",formNodeValue,receivingEntity) }}
+    </div>
+
+{% endmacro %}
+
+
+{#NOT USED: this macro will render formnodes from top to bottom#}
+{#{% macro addFormNodes( formNodeHolder, formNode, cycle, prototype ) %}#}
+    {#{% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
+    {#{% import "AppUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}#}
+
+    {#{% if prototype == "prototype" %}#}
+        {#{% set formNodeHolder = formNodeFieldHolder.vars.prototype %}#}
+    {#{% else %}#}formNodeAddSameSection
+        {#{% set formNodeHolder = formNodeFieldHolder %}#}
+    {#{% endif %}#}
+
+    {#{% for formNode in formNodeHolder.formNodes %}#}
+    {#{% if formNodeHolder.formNode is defined and formNodeHolder.formNode %}#}
+
+        {#{% set rootFormNode = formNodeHolder.formNode %}#}
+        {#rootFormNode={{ rootFormNode.name }}<br>#}
+
+        {#<div id="formnode-{{ formNode.id }}"#}
+             {#class="formnode-holder formnode-{{ formNode.id }} formnode-holder-{{ formNodeHolder.id }}"#}
+             {#data-formnodeholderid="{{ formNodeHolder.id }}"#}
+             {#data-formnodeid="{{ formNode.id }}"#}
+        {#>#}
+            {#{{ formnodemacros.addFormNodeRecursively(formNodeHolder,formNode,cycle,prototype) }}#}
+        {#</div>#}
+
+    {#{% endif %}#}
+    {#{% endfor %}#}
+{#{% endmacro %}#}
+
+{#{% macro addFormNodeRecursively( formNodeHolder, formNode, cycle, prototype ) %}#}
+    {#{% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
+    {#{% import "AppUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}#}
+
+    {#{% set children = formNode.children %}#}
+    {#children:{{ children|length }}<br>#}
+
+    {#{% if children %}#}
+        {#{% for childFormNode in children %}#}
+            {#childFormNode={{ childFormNode.name }}<br>#}
+
+            {#{{ formnodemacros.addFormNodeByType(formNodeHolder,childFormNode,cycle,prototype) }}#}
+
+            {#{% set addRecursion = true %}#}
+            {#{% set formType = childFormNode.getObjectType() ~ "" %}#}
+            {#{% if formType == "Form Group" %}#}
+                {#{% set addRecursion = false %}#}
+            {#{% endif %}#}
+            {#{% if formType == "Form" %}#}
+                {#{% set addRecursion = false %}#}
+            {#{% endif %}#}
+            {#{% if formType == "Form Section" %}#}
+                {#{% set addRecursion = false %}#}
+            {#{% endif %}#}
+            {#{% if formType == "Form Section Array" %}#}
+                {#{% set addRecursion = false %}#}
+            {#{% endif %}#}
+            {#{% if addRecursion %}#}
+                {#{{ formnodemacros.addFormNodeRecursively(formNodeHolder,childFormNode,cycle,prototype) }}#}
+            {#{% endif %}#}
+
+        {#{% endfor %}#}
+    {#{% else %}#}
+        {#$this->addFormNodeByType($form,$formNode,$params);#}
+        {#{{ formnodemacros.addFormNodeByType(formNodeHolder,formNode,cycle,prototype) }}#}
+    {#{% endif %}#}
+
+{#{% endmacro %}#}
+
+
+
+{% macro addFormNodeWithChildren( formNodeHolder, formNode, formNodeValue, receivingEntity, cycle, prototype ) %}
+    {% import "AppUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+
+    {#render form group, form, section ect as single form element (single='single') or as section with all children fields inside (single=null) #}
+    {% set single = null %}
+
+    <div id="formnode-{{ formNode.id }}"
+         class="formnode-holder formnode-{{ formNode.id }} formnode-holder-{{ formNodeHolder.id }}"
+         data-formnodeholderid="{{ formNodeHolder.id }}"
+         data-formnodeid="{{ formNode.id }}"
+         data-sectionid="0"
+    >
+        {{ formnodemacros.addFormNodeRecursively(formNodeHolder,formNode,cycle,prototype,0,single) }}
+    </div>
+{% endmacro %}
+{% macro addFormNodeRecursively( formNodeHolder, formNode, cycle, prototype, count, single ) %}
+    {#{% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
+    {% import "AppUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+
+    {% set children = formNode.children %}
+    {#children:{{ children|length }}<br>#}
+
+    {% if children %}
+        {% for childFormNode in children %}
+            {#childFormNode={{ childFormNode.name }}<br>#}
+
+            {{ formnodemacros.addFormNodeByType(formNodeHolder,childFormNode,cycle,prototype,count,single) }}
+
+            {% set addRecursion = true %}
+            {% set formType = childFormNode.getObjectType() ~ "" %}
+
+            {% if formType == "Form Group" %}
+                {% set addRecursion = false %}
+            {% endif %}
+            {% if formType == "Form" %}
+                {% set addRecursion = false %}
+            {% endif %}
+            {% if formType == "Form Section" %}
+                {% set addRecursion = false %}
+            {% endif %}
+            {% if formType == "Form Section Array" %}
+                {% set addRecursion = false %}
+            {% endif %}
+            {% if addRecursion %}
+                {{ formnodemacros.addFormNodeRecursively(formNodeHolder,childFormNode,cycle,prototype,count,single) }}
+            {% endif %}
+
+        {% endfor %}
+    {% else %}
+        {#$this->addFormNodeByType($form,$formNode,$params);#}
+        {{ formnodemacros.addFormNodeByType(formNodeHolder,formNode,cycle,prototype,count,single) }}
+    {% endif %}
+
+{% endmacro %}
+
+                            {#formNodeHolder, formNode, cycle, prototype,"single",0,formNodeValue#}
+{% macro addFormNodeByType( formNodeHolder, formNode, formNodeId, cycle, prototype, count, single, formNodeValue, receivingEntity ) %}
+    {% import "AppUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+
+    {#{% if formNode.type == "default" or formNode.type == "user-added" or (formNode.type == "hidden" and formNodeValue) %}#}
+    {% if user_formnode_utility.showFromNodeByTypeCycleValue(formNode,cycle,formNodeValue) %}
+
+        {% set formType = null %}
+        {% if formNode.objectType %}
+            {% set formType = formNode.getObjectType().getName() %}
+        {% endif %}
+        {#formType={{ formType }}<br>#}
+
+        {#{% if formType %}#}
+            {#<p>{{ formNodeHolder.name }}</p>#}
+        {#{% endif %}#}
+
+        {% if formType == "Form" %}
+            {% if single is defined and single == 'single' %}
+                {{ formnodemacros.formForm(formNodeHolder,formNode,formNodeId,cycle,prototype,single) }}
+            {% else %}
+                {{ formnodemacros.addFormNodeRecursively(formNodeHolder,formNode,formNodeId,cycle,prototype) }}
+            {% endif %}
+        {% endif %}
+
+        {% if formType == "Form Section" %}
+            {{ formnodemacros.sectionForm(formNodeHolder,formNode,formNodeId,cycle,prototype,single) }}
+        {% endif %}
+
+        {% if formType == "Form Section Array" %}
+            {{ formnodemacros.sectionArrayForm(formNodeHolder,formNode,formNodeId,count,cycle,prototype,single) }}
+        {% endif %}
+
+        {% if formType == "Form Field - Free Text" %}
+            {{ formnodemacros.textareaForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) }}
+        {% endif %}
+        {% if formType == "Form Field - Free Text, RTF" %}
+            {{ formnodemacros.textareaForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype,"RTF") }}
+        {% endif %}
+        {% if formType == "Form Field - Free Text, HTML" %}
+            {{ formnodemacros.textareaForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype,"HTML") }}
+        {% endif %}
+
+        {% if formType == "Form Field - Free Text, Single Line" %}
+            {{ formnodemacros.stringForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) }}
+        {% endif %}
+        {% if formType == "Form Field - Free Text, Single Line, Numeric, Unsigned Positive Integer" %}
+            {{ formnodemacros.stringForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype,'Unsigned Positive Integer') }}
+        {% endif %}
+        {% if formType == "Form Field - Free Text, Single Line, Numeric, Signed Integer" %}
+            {{ formnodemacros.stringForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype,'Signed Integer') }}
+        {% endif %}
+        {% if formType == "Form Field - Free Text, Single Line, Numeric, Signed Float" %}
+            {{ formnodemacros.stringForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype, 'Signed Float') }}
+        {% endif %}
+        {% if formType == "Form Field - Free Text, Single Line, Locked, Calculated, Stored" %}
+            {{ formnodemacros.stringForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) }}
+        {% endif %}
+        {% if formType == "Form Field - Free Text, Single Line, Unlocked, Calculated, Stored" %}
+            {{ formnodemacros.stringForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) }}
+        {% endif %}
+        {% if formType == "Form Field - Free Text, Single Line, Locked, Calculated, Visual Aid" %}
+            {{ formnodemacros.stringForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype,'Single Line, Locked, Calculated, Visual Aid') }}
+        {% endif %}
+
+        {% if formType == "Form Field - Dropdown Menu" %}
+            {{ formnodemacros.dropdownForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) }}
+        {% endif %}
+        {% if formType == "Form Field - Dropdown Menu - Allow Multiple Selections" %}
+            {{ formnodemacros.dropdownForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype,"multiple") }}
+        {% endif %}
+        {% if formType == "Form Field - Dropdown Menu - Allow New Entries" %}
+            {{ formnodemacros.dropdownForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype,"single","allownew") }}
+        {% endif %}
+        {% if formType == "Form Field - Dropdown Menu - Allow Multiple Selections - Allow New Entries" %}
+            {{ formnodemacros.dropdownForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype,"multiple","allownew") }}
+        {% endif %}
+
+        {#date#}
+        {% if formType == "Form Field - Date" %}
+            {#day of the month#}
+            {{ formnodemacros.dayForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) }}
+        {% endif %}
+        {% if formType == "Form Field - Full Date" %}
+            {{ formnodemacros.dateForm(formNodeHolder,formNode,formNodeId,formNodeValue,receivingEntity,count,cycle,prototype,'m/d/Y') }}
+        {% endif %}
+        {% if formType == "Form Field - Year" %}
+            {{ formnodemacros.dateForm(formNodeHolder,formNode,formNodeId,formNodeValue,receivingEntity,count,cycle,prototype,'Y') }}
+        {% endif %}
+
+        {#date and time#}
+        {% if formType == "Form Field - Full Date and Time" %}
+            {{ formnodemacros.datetimeForm(formNodeHolder,formNode,formNodeId,formNodeValue,receivingEntity,count,cycle,prototype,'m/d/Y') }}
+        {% endif %}
+        {% if formType == "Form Field - Full Date and Time, with Time Zone" %}
+            {{ formnodemacros.datetimeForm(formNodeHolder,formNode,formNodeId,formNodeValue,receivingEntity,count,cycle,prototype,'m/d/Y','timezone') }}
+        {% endif %}
+
+        {#time#}
+        {% if formType == "Form Field - Time, with Time Zone" %}
+            {{ formnodemacros.timeForm(formNodeHolder,formNode,formNodeId,formNodeValue,receivingEntity,count,cycle,prototype,'timezone') }}
+        {% endif %}
+        {% if formType == "Form Field - Time" %}
+            {{ formnodemacros.timeForm(formNodeHolder,formNode,formNodeId,formNodeValue,receivingEntity,count,cycle,prototype) }}
+        {% endif %}
+
+        {#the same as dropdown menu#}
+        {% if formType == "Form Field - Month" %}
+            {{ formnodemacros.dropdownForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) }}
+        {% endif %}
+        {% if formType == "Form Field - Day of the Week" %}
+            {{ formnodemacros.dropdownForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) }}
+        {% endif %}
+
+        {% if formType == "Form Field - Checkbox" %}
+            {{ formnodemacros.checkboxForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) }}
+        {% endif %}
+        {% if formType == "Form Field - Checkboxes" %}
+            {{ formnodemacros.checkboxesForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) }}
+        {% endif %}
+
+        {% if formType == "Form Field - Radio Button" %}
+            {{ formnodemacros.radioForm(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) }}
+        {% endif %}
+
+
+
+
+
+    {% else %}
+        {#<br>#}
+    {% endif %}
+
+{% endmacro %}
+
+{% macro formForm( formNodeHolder, formNode, formNodeId, cycle, prototype, single ) %}
+    {% import "AppUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" href="#formnode-section-{{ formNodeId }}">
+                    {{ formNode.name }}
+                </a>
+            </h4>
+        </div>
+        <div id="formnode-section-{{ formNodeId }}" class="panel-collapse collapse in">
+            <div class="panel-body form-nodes-holder">
+                <div class="row">
+                    <div class="col-xs-12" align="left">
+
+                        {#render children of this section#}
+                        {% if single is defined and single == 'single' %}
+
+                        {% else %}
+                            {{ formnodemacros.addFormNodeRecursively(formNodeHolder,formNode,cycle,prototype) }}
+                        {% endif %}
+
+                    </div>
+                </div>
+            </div> <!-- panel-body -->
+        </div> <!-- panel-collapse -->
+    </div> <!-- panel panel-default -->
+{% endmacro %}
+
+{% macro sectionForm( formNodeHolder, formNode, formNodeId, cycle, prototype, single ) %}
+    {#{% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
+    {% import "AppUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+
+    {#History/Findings    #}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" href="#formnode-section-{{ formNodeId }}">
+                    {{ formNode.name }}
+                </a>
+            </h4>
+        </div>
+        <div id="formnode-section-{{ formNodeId }}" class="panel-collapse collapse in">
+            <div class="panel-body form-nodes-holder">
+                <div class="row">
+                    <div class="col-xs-12" align="left">
+
+                        {#render children of this section#}
+                        {% if single is defined and single == 'single' %}
+
+                        {% else %}
+                            {{ formnodemacros.addFormNodeRecursively(formNodeHolder,formNode,cycle,prototype) }}
+                        {% endif %}
+
+                    </div>
+                </div>
+            </div> <!-- panel-body -->
+        </div> <!-- panel-collapse -->
+    </div> <!-- panel panel-default -->
+
+{% endmacro %}
+
+
+{% macro sectionArrayForm( formNodeHolder, formNode, formNodeId, count, cycle, prototype, single ) %}
+    {#{% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
+    {% import "AppUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+    {% set panelId = "formnode_"~formNode.id~"_section_arraysectioncount_"~count~"_node_"~formNode.id %}
+
+    <div id="formnode-arraysection-holder-{{ formNodeId }}"
+         class="formnode-arraysection-holder formnode-arraysection-holder-{{ formNodeId }} formnode-arraysection-holder-id-{{ formNode.id }}"
+         data-sectionid="{{ count }}"
+    >
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" href="#{{ panelId }}">
+                    {{ formNode.name }}
+                    {#(ID: {{ formNode.id }}, saID: {{ formNodeId }})#}
+                </a>
+
+                {% if cycle != "show" %}
+                    <div class="pull-right">
+                    <button id="formnode-add-section-{{ formNodeId }}" type="button"
+                            class="btn btn-default btn-xs formnode-add-section formnode-add-section-{{ formNodeId }}"
+                            onclick="formNodeAddSameSection(this,'{{ formNode.id }}','{{ formNodeId }}')">+</button>
+
+                    <button id="formnode-remove-section-{{ formNodeId }}" type="button"
+                            class="btn btn-default btn-xs formnode-remove-section formnode-remove-section-{{ formNodeId }} formnode-remove-section-id-{{ formNode.id }}"
+                            style="display: none;"
+                            onclick="formNodeRemoveSection(this,'{{ formNodeId }}')">-</button>
+                    </div>
+                {% endif %}
+            </h4>
+        </div>
+        <div id="{{ panelId }}" class="panel-collapse collapse in">
+            <div class="panel-body form-nodes-holder">
+                <div class="row">
+                    <div class="col-xs-12" align="left">
+
+                        {#render children of this section#}
+                        {% if single is defined and single == 'single' %}
+
+                        {% else %}
+                            {{ formnodemacros.addFormNodeRecursively(formNodeHolder,formNode,cycle,prototype) }}
+                        {% endif %}
+
+                    </div>
+                </div>
+            </div> <!-- panel-body -->
+        </div> <!-- panel-collapse -->
+    </div> <!-- panel panel-default -->
+    </div>
+
+{% endmacro %}
+
+{# getFieldName array section #}
+{#Not Used: use in service#}
+{% macro getFieldName( formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype ) %}
+    {% set fieldname = "formnode["~formNode.id~"]" %}
+    {% set parentFormType = null %}
+    {% if formNode.parent and formNode.parent.objectType %}
+        {% set parentFormType = formNode.parent.getObjectType().getName() %}
+        {% if parentFormType == "Form Section Array" %}
+            {% set fieldname = "formnode["~formNode.parent.id~"][arraysectioncount]["~count~"][node]["~formNode.id~"]" %}
+        {% endif %}{% endif %}{{fieldname}}{% endmacro %}
+{# EOF getFieldName array section #}
+
+{% macro textareaForm( formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype, type ) %}
+    {#{% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
+    {% import "AppUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+    {% if formNode.required %}
+        {% set requiredClass = "required" %}
+    {% else %}
+        {% set requiredClass = "" %}
+    {% endif %}
+    <p>
+    {% if formNode.showLabel %}
+        <div class="row">
+            <div class="col-xs-6 {{ requiredClass }}" align="right">
+                <label>{{ formNode.name }}:</label>
+            </div>
+            <div class="col-xs-6" align="left">
+                {{ formnodemacros.textareaField(formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype, type) }}
+            </div>
+        </div>
+    {% else %}
+        {{ formnodemacros.textareaField(formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype, type) }}
+    {% endif %}
+    </p>
+{% endmacro %}
+{% macro textareaField( formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype, type ) %}
+    {% import "AppUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+    {#{% set fieldname = formnodemacros.getFieldName(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) %}#}
+    {% set fieldname = user_formnode_utility.getFieldName(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) %}
+
+
+    {#"oleg_userdirectorybundle_formnode[{{ formNode.id }}]"#}
+    {% if formNodeValue is not empty %}
+        {% set fieldValue = formNodeValue %}
+    {% else %}
+        {% set fieldValue = '' %}
+    {% endif %}
+    {#cycle={{ cycle }}<br>#}
+    {% if cycle != 'show' %}
+        {% set disabled = "" %}
+    {% else %}
+        {% set disabled = "disabled" %}
+    {% endif %}
+    {#disabled={{ disabled }}<br>#}
+
+    {% set specialTypeClass = "" %}
+    {% if type == "HTML" %}
+        {#{{ summernote_init() }}#}
+        {% set specialTypeClass = "summernote" %}
+        {% set fieldValue = fieldValue|raw %}
+    {% endif %}
+    {% if type == "RTF" %}
+        {#{% set fieldValue = fieldValue|raw %}#}
+    {% endif %}
+
+    <textarea
+            id="oleg_userdirectorybundle_formnode_{{ formNodeId }}"
+            name="{{ fieldname }}"
+            class="textarea form-control {{ specialTypeClass }}"
+            {#rows="10"#}
+            {{ disabled }}
+    >{{fieldValue}}</textarea>
+{% endmacro %}
+
+{% macro stringForm( formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype, inputType ) %}
+    {#{% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
+    {% import "AppUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+    {% if formNode.required %}
+        {% set requiredClass = "required" %}
+    {% else %}
+        {% set requiredClass = "" %}
+    {% endif %}
+    <p>
+    {% if formNode.showLabel %}
+        <div class="row">
+            <div class="col-xs-6 {{ requiredClass }}" align="right">
+                <label>{{ formNode.name }}:</label>
+            </div>
+            <div class="col-xs-6" align="left">
+                {{ formnodemacros.stringField(formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype, inputType) }}
+            </div>
+        </div>
+    {% else %}
+        {{ formnodemacros.stringField(formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype, inputType) }}
+    {% endif %}
+    </p>
+{% endmacro %}
+{% macro stringField( formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype, inputType ) %}
+    {% import "AppUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+    {% set fieldname = user_formnode_utility.getFieldName(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) %}
+
+    {% if formNodeValue is not empty %}
+        {% set fieldValue = formNodeValue %}
+    {% else %}
+        {% set fieldValue = user_formnode_utility.getDefaultValue(formNode) %}
+    {% endif %}
+    {#cycle={{ cycle }}<br>#}
+    {% if cycle != 'show' %}
+        {% set disabled = "" %}
+        {% set placeholder = formNode.placeholder %}
+    {% else %}
+        {% set disabled = "disabled" %}
+        {% set placeholder = " " %}
+    {% endif %}
+
+    {% set inputTypeStr = '' %}
+    {% if inputType is defined %}
+        {% if inputType == 'Single Line, Locked, Calculated, Visual Aid'  %}
+            {% set inputTypeStr = "readonly" %}
+        {% endif %}
+    {% endif %}
+
+    {#CCI classes for new and edit#}
+    {% set addCalss = "" %}
+    {% if cycle != 'show' %}
+        {% if formNode.name == "CCI" %}
+            {% set addCalss = "cci-result" %}
+        {% endif %}
+        {% if formNode.name == "Pre-transfusion Platelet Count" %}
+            {% set addCalss = "cci-pre-transfusion-platelet-count" %}
+        {% endif %}
+        {% if formNode.name == "Post-transfusion Platelet Count" %}
+            {% set addCalss = "cci-post-transfusion-platelet-count" %}
+        {% endif %}
+        {% if formNode.name == "BSA" %}
+            {% set addCalss = "cci-bsa" %}
+        {% endif %}
+        {% if formNode.name == "Unit Platelet Count" %}
+            {% set addCalss = "cci-unit-platelet-count" %}
+        {% endif %}
+    {% endif %}
+
+    <input
+        id="oleg_userdirectorybundle_formnode_{{ formNodeId }}"
+        name="{{ fieldname }}"
+        class="form-control {{ addCalss }}"
+        value="{{ fieldValue }}"
+        placeholder="{{ placeholder }}"
+        {{ disabled }}
+        {{ inputTypeStr }}
+    >
+    </input>
+{% endmacro %}
+
+
+{% macro dropdownForm( formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype, multiple, allownew ) %}
+    {#{% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
+    {% import "AppUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+    {% if formNode.required %}
+        {% set requiredClass = "required" %}
+    {% else %}
+        {% set requiredClass = "" %}
+    {% endif %}
+    <p>
+    {% if formNode.showLabel %}
+        <div class="row">
+            <div class="col-xs-6 {{ requiredClass }}" align="right">
+                <label>{{ formNode.name }}:</label>
+            </div>
+            <div class="col-xs-6" align="left">
+                {{ formnodemacros.dropdownField(formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype, multiple, allownew) }}
+            </div>
+        </div>
+    {% else %}
+        {{ formnodemacros.dropdownField(formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype, multiple, allownew) }}
+    {% endif %}
+    </p>
+{% endmacro %}
+{% macro dropdownField( formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype, multiple, allownew ) %}
+    {% import "AppUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+    {% set fieldname = user_formnode_utility.getFieldName(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) %}
+
+    {#get dropdown values by getDropdownValue (user_formnode_utility)#}
+
+    {% if cycle != 'show' %}
+        {% set disabled = "" %}
+        {% set placeholder = formNode.placeholder %}
+    {% else %}
+        {% set disabled = "disabled" %}
+        {% set placeholder = " " %}
+    {% endif %}
+
+    {% if multiple == 'multiple' %}
+        {#multiple="multiple"#}
+        {% set multipleOption = 'multiple=multiple' %}
+        {% set selectName = fieldname~'[]' %}
+    {% else %}
+        {% set multipleOption = '' %}
+        {% set selectName = fieldname %}
+    {% endif %}
+
+    {% if allownew == 'allownew' %}
+
+        {% if formNodeValue %}
+            {% set fieldValue = formNodeValue %}
+        {% else %}
+            {% set fieldValue = null %}
+        {% endif %}
+
+        {#http://jsfiddle.net/fyhsz9ra/941/#}
+        {% set dropdownValues = user_formnode_utility.getDropdownValue(formNode,'json') %}
+        <input
+                id="oleg_userdirectorybundle_formnode_{{ formNodeId }}"
+                name="{{ selectName }}"
+                class="combobox"
+                type="hidden"
+                data-placeholder="{{ placeholder }}"
+                data-options="{{ dropdownValues }}"
+                {{ disabled }}
+                {{ multipleOption }}
+                value="{{ fieldValue }}"
+        >
+        </input>
+
+    {% else %}
+
+        {% set dropdownValues = user_formnode_utility.getDropdownValue(formNode) %}
+        <select
+                id="oleg_userdirectorybundle_formnode_{{ formNodeId }}"
+                name="{{ selectName }}"
+                class="combobox"
+                data-placeholder="{{ placeholder }}"
+                {{ disabled }}
+                {{ multipleOption }}
+        >
+            <option value=""></option>
+            {% for dropdownValue in dropdownValues %}
+                {% set selected = false %}
+                {% if multiple == 'multiple' %}
+                    {% if formNodeValue and dropdownValue.id in formNodeValue %}
+                        {% set selected = true %}
+                    {% endif %}
+                {% else %}
+                    {% if formNodeValue and dropdownValue.id == formNodeValue %}
+                        {% set selected = true %}
+                    {% endif %}
+                {% endif %}
+                {% if selected %}
+                    <option value="{{ dropdownValue.id }}" selected>{{ dropdownValue.text|raw }}</option>
+                {% else %}
+                    <option value="{{ dropdownValue.id }}">{{ dropdownValue.text|raw }}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+
+    {% endif %}
+
+{% endmacro %}
+
+
+{% macro dateForm( formNodeHolder, formNode, formNodeId, formNodeValue, receivingEntity, count, cycle, prototype, dateFormat ) %}
+    {#{% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
+    {% import "AppUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+    {% if formNode.required %}
+        {% set requiredClass = "required" %}
+    {% else %}
+        {% set requiredClass = "" %}
+    {% endif %}
+    <p>
+    {% if formNode.showLabel %}
+        <div class="row">
+            <div class="col-xs-6 {{ requiredClass }}" align="right">
+                <label>{{ formNode.name }}:</label>
+            </div>
+            <div class="col-xs-6" align="left">
+                {{ formnodemacros.dateField(formNodeHolder, formNode, formNodeId, formNodeValue, receivingEntity, count, cycle, prototype, dateFormat) }}
+            </div>
+        </div>
+    {% else %}
+        {{ formnodemacros.dateField(formNodeHolder, formNode, formNodeId, formNodeValue, receivingEntity, count, cycle, prototype, dateFormat) }}
+    {% endif %}
+    </p>
+{% endmacro %}
+{% macro dateField( formNodeHolder, formNode, formNodeId, formNodeValue, receivingEntity, count, cycle, prototype, dateFormat, fieldNamePostfix, timezone ) %}
+    {% import "AppUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+    {% set fieldname = user_formnode_utility.getFieldName(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) %}
+
+    {% if formNodeValue %}
+        {% if dateFormat is defined and dateFormat %}
+            {% if timezone is defined and timezone %}
+                {% set fieldValue = formNodeValue|date(dateFormat,false) %}
+            {% else %}
+                {% set fieldValue = formNodeValue|date(dateFormat) %}
+            {% endif %}
+        {% else %}
+            {% set fieldValue = formNodeValue %}
+        {% endif %}
+    {% else %}
+        {% if cycle != 'show' %}
+            {% set fieldValue = "now"|date("m/d/Y") %}
+        {% else %}
+            {% set fieldValue = null %}
+        {% endif %}
+    {% endif %}
+    {% if cycle != 'show' %}
+        {% set disabled = "" %}
+        {% set placeholder = formNode.placeholder %}
+    {% else %}
+        {% set disabled = "disabled" %}
+        {% set placeholder = " " %}
+    {% endif %}
+
+    {% if fieldNamePostfix is not defined %}
+        {% set fieldNamePostfix = '' %}
+    {% endif %}
+
+    {% set addClass = '' %}
+    {% if dateFormat is defined and dateFormat == 'Y' %}
+        {% set addClass = 'datepicker-only-year' %}
+    {% endif %}
+
+    <div class="input-group input-group-reg date allow-future-date {{ addClass }}">
+        <input
+                type="text"
+                id="oleg_userdirectorybundle_formnode_{{ formNodeId }}"
+                name="{{ fieldname }}{{ fieldNamePostfix }}"
+                class="datepicker form-control with-default-datetime"
+                value="{{ fieldValue }}"
+                placeholder="{{ placeholder }}"
+                {{ disabled }}
+        >
+        <span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>
+    </div>
+{% endmacro %}
+
+
+{% macro checkboxForm( formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype ) %}
+    {% import "AppUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+    {% if formNode.required %}
+        {% set requiredClass = "required" %}
+    {% else %}
+        {% set requiredClass = "" %}
+    {% endif %}
+    <p>
+    {% if formNode.showLabel %}
+        <div class="row">
+            <div class="col-xs-6 {{ requiredClass }}" align="right">
+                <label>{{ formNode.name }}:</label>
+            </div>
+            <div class="col-xs-6 text-center" align="left" style="width: 50px;">
+                {{ formnodemacros.checkboxField(formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype) }}
+            </div>
+        </div>
+    {% else %}
+        {{ formnodemacros.checkboxField(formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype) }}
+    {% endif %}
+    </p>
+{% endmacro %}
+{% macro checkboxField( formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype ) %}
+    {% import "AppUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+    {% set fieldname = user_formnode_utility.getFieldName(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) %}
+
+    {% if formNodeValue %}
+        {% set fieldValue = "checked" %}
+    {% else %}
+        {% set fieldValue = null %}
+    {% endif %}
+    {% if cycle != 'show' %}
+        {% set disabled = "" %}
+    {% else %}
+        {% set disabled = "disabled" %}
+    {% endif %}
+
+    <input type='hidden' value='0' name="{{ fieldname }}">
+    <input
+            type="checkbox"
+            id="oleg_userdirectorybundle_formnode_{{ formNodeId }}"
+            name="{{ fieldname }}"
+            class="form-control"
+            {{ disabled }}
+            {{ fieldValue }}
+            value="1"
+    >
+{% endmacro %}
+
+{% macro checkboxesForm( formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype ) %}
+    {% import "AppUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+    {% if formNode.required %}
+        {% set requiredClass = "required" %}
+    {% else %}
+        {% set requiredClass = "" %}
+    {% endif %}
+    <p>
+    {% if formNode.showLabel %}
+        <div class="row">
+            <div class="col-xs-6 {{ requiredClass }}" align="right">
+                <label>{{ formNode.name }}:</label>
+            </div>
+            <div class="col-xs-6 text-center" align="left">
+                {{ formnodemacros.checkboxesField(formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype) }}
+            </div>
+        </div>
+    {% else %}
+        {{ formnodemacros.checkboxesField(formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype) }}
+    {% endif %}
+    </p>
+{% endmacro %}
+{% macro checkboxesField( formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype ) %}
+    {% import "AppUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+    {% set fieldname = user_formnode_utility.getFieldName(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) %}
+
+    {% if cycle != 'show' %}
+        {% set disabled = "" %}
+    {% else %}
+        {% set disabled = "disabled" %}
+    {% endif %}
+
+    {% set dropdownValues = user_formnode_utility.getDropdownValue(formNode) %}
+
+    <div class="radio_inline">
+    {% for dropdownValue in dropdownValues %}
+        {% if formNodeValue and dropdownValue.id in formNodeValue %}
+            {% set checked = 'checked="checked"' %}
+        {% else %}
+            {% set checked = '' %}
+        {% endif %}
+            <input type='hidden' value='0' name="{{ fieldname }}[{{ dropdownValue.id }}]">
+            <input
+                    type="checkbox"
+                    id="oleg_userdirectorybundle_formnode_{{ formNodeId }}"
+                    name="{{ fieldname }}[{{ dropdownValue.id }}]"
+                    {#value="{{ dropdownValue.id }}"#}
+                    {{ checked }}
+                    {{ disabled }}
+                    value="1"
+            >
+            <label class="required" style="margin-right: 10px;">
+                {{ dropdownValue.text }}
+            </label>
+
+    {% endfor %}
+    </div>
+
+{% endmacro %}
+
+
+{% macro radioForm( formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype ) %}
+    {% import "AppUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+    {% if formNode.required %}
+        {% set requiredClass = "required" %}
+    {% else %}
+        {% set requiredClass = "" %}
+    {% endif %}
+    <p>
+    {% if formNode.showLabel %}
+        <div class="row">
+            <div class="col-xs-6 {{ requiredClass }}" align="right">
+                <label>{{ formNode.name }}:</label>
+            </div>
+            <div class="col-xs-6" align="left">
+                {{ formnodemacros.radioField(formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype) }}
+            </div>
+        </div>
+    {% else %}
+        {{ formnodemacros.radioField(formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype) }}
+    {% endif %}
+    </p>
+{% endmacro %}
+{% macro radioField( formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype ) %}
+    {% import "AppUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+    {% set fieldname = user_formnode_utility.getFieldName(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) %}
+
+    {#get dropdown values by getDropdownValue (user_formnode_utility)#}
+    {% set dropdownValues = user_formnode_utility.getDropdownValue(formNode) %}
+
+    {% if cycle != 'show' %}
+        {% set disabled = "" %}
+    {% else %}
+        {% set disabled = "disabled" %}
+    {% endif %}
+
+    <div id="oleg_orderformbundle_messagetype_purpose" class="horizontal_type">
+        {% for dropdownValue in dropdownValues %}
+            {% if formNodeValue and dropdownValue.id == formNodeValue %}
+                {% set checked = 'checked="checked"' %}
+            {% else %}
+                {% set checked = '' %}
+            {% endif %}
+            <div class="radio_inline">
+                <input
+                    type="radio"
+                    id="oleg_userdirectorybundle_formnode_{{ formNodeId }}"
+                    name="{{ fieldname }}"
+                    value="{{ dropdownValue.id }}"
+                    {{ checked }}
+                    {{ disabled }}
+                >
+                <label class="required">
+                    {{ dropdownValue.text }}
+                </label>
+            </div>
+        {% endfor %}
+    </div>
+
+{% endmacro %}
+
+{% macro timeForm( formNodeHolder, formNode, formNodeId, formNodeValue, receivingEntity, count, cycle, prototype, timezone ) %}
+    {% import "AppUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+    {% if formNode.required %}
+        {% set requiredClass = "required" %}
+    {% else %}
+        {% set requiredClass = "" %}
+    {% endif %}
+    <p>
+    {% if formNode.showLabel %}
+        <div class="row">
+            <div class="col-xs-6 {{ requiredClass }}" align="right">
+                <label>{{ formNode.name }}:</label>
+            </div>
+            <div class="col-xs-6" align="left">
+                {{ formnodemacros.timeField(formNodeHolder, formNode, formNodeId, formNodeValue, receivingEntity, count, cycle, prototype, timezone) }}
+            </div>
+        </div>
+    {% else %}
+        {{ formnodemacros.timeField(formNodeHolder, formNode, formNodeId, formNodeValue, receivingEntity, count, cycle, prototype, timezone) }}
+    {% endif %}
+    </p>
+{% endmacro %}
+{% macro timeField( formNodeHolder, formNode, formNodeId, formNodeValue, receivingEntity, count, cycle, prototype, timezone ) %}
+    {% import "AppUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+    {% set fieldname = user_formnode_utility.getFieldName(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) %}
+
+    {#get dropdown values by getDropdownValue (user_formnode_utility)#}
+    {% set dropdownValues = user_formnode_utility.getDropdownValue(formNode) %}
+
+    {% if cycle != 'show' %}
+        {% set disabled = "" %}
+    {% else %}
+        {% set disabled = "disabled" %}
+    {% endif %}
+
+    {% set hour = null %}
+    {% set minute = null %}
+    {% if formNodeValue %}
+        {% if timezone is defined and timezone %}
+            {% set hour = formNodeValue|date('H',false) %}
+            {% set minute = formNodeValue|date('i',false) %}
+        {% else %}
+            {% set hour = formNodeValue|date('H') %}
+            {% set minute = formNodeValue|date('i') %}
+        {% endif %}
+    {% else %}
+        {% if cycle != 'show' %}
+            {% set hour = "now"|date("H") %}
+            {% set minute = "now"|date("i") %}
+        {% endif %}
+    {% endif %}
+    {#hour={{ hour }} : minute={{ minute }}<br>#}
+
+    <div>
+        <select
+            id="oleg_userdirectorybundle_formnode_{{ formNodeId }}_time_hour"
+            name="{{ fieldname }}[time][hour]"
+            class="with-default-datetime"
+            {{ disabled }}
+        >
+            {#<option value="0">00</option>#}
+            {#<option value="1">23</option>#}
+            <option value=""></option>
+            {% for i in 0..23 %}
+                {% set selected = "" %}
+                {% if hour and hour == i %}
+                    {% set selected = "selected" %}
+                {% endif %}
+                <option value="{{ i }}" {{ selected }}>{{ "%02d"|format(i) }}</option>
+            {% endfor %}
+        </select>:<select
+            id="oleg_userdirectorybundle_formnode_{{ formNodeId }}_time_minute"
+            name="{{ fieldname }}[time][minute]"
+            class="with-default-datetime"
+            {{ disabled }}
+        >
+            {#<option value="0">00</option>#}Integer
+            {#<option value="1">59</option>#}
+            <option value=""></option>
+            {% for i in 0..59 %}
+                {% set selected = "" %}
+                {% if minute and minute == i %}
+                    {% set selected = "selected" %}
+                {% endif %}
+                <option value="{{ i }}" {{ selected }}>{{ "%02d"|format(i) }}</option>
+            {% endfor %}
+        </select>
+        {% if timezone is defined and timezone %}
+            {{ formnodemacros.timezoneField(formNodeHolder, formNode, formNodeId, formNodeValue, receivingEntity, count, cycle, prototype) }}
+        {% endif %}
+    </div>
+
+{% endmacro %}
+{% macro timezoneField( formNodeHolder, formNode, formNodeId, formNodeValue, receivingEntity, count, cycle, prototype ) %}
+    {% import "AppUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+    {% set fieldname = user_formnode_utility.getFieldName(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) %}
+
+    {#get dropdown values by getDropdownValue (user_formnode_utility)#}
+    {% set timezones = user_formnode_utility.getTimezones() %}
+
+    {% if cycle != 'show' %}
+        {% set disabled = "" %}
+        {% set placeholder = formNode.placeholder %}
+    {% else %}
+        {% set disabled = "disabled" %}
+        {% set placeholder = " " %}
+    {% endif %}
+
+    {% set timezoneValue = receivingEntity.getTimezone() %}
+
+    <div>
+        <select
+                id="oleg_userdirectorybundle_formnode_{{ formNodeId }}"
+                class="combobox"
+                data-placeholder="{{ placeholder }}"
+                name="{{ fieldname }}[time][timezone]"
+                {{ disabled }}
+        >
+            <option value=""></option>
+            {% for key, timezone in timezones %}
+                {% set selected = "" %}
+                {% if timezoneValue and timezoneValue == key %}
+                    {% set selected = "selected" %}
+                {% endif %}
+                <option value="{{ key }}" {{ selected }}>{{ timezone }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+{% endmacro %}
+
+
+{% macro dayForm( formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype ) %}
+    {% import "AppUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+    {% if formNode.required %}
+        {% set requiredClass = "required" %}
+    {% else %}
+        {% set requiredClass = "" %}
+    {% endif %}
+    <p>
+    {% if formNode.showLabel %}
+        <div class="row">
+            <div class="col-xs-6 {{ requiredClass }}" align="right">
+                <label>{{ formNode.name }}:</label>
+            </div>
+            <div class="col-xs-6" align="left">
+                {{ formnodemacros.dayField(formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype) }}
+            </div>
+        </div>
+    {% else %}
+        {{ formnodemacros.dayField(formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype) }}
+    {% endif %}
+    </p>
+{% endmacro %}
+{% macro dayField( formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype ) %}
+    {% import "AppUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+    {% set fieldname = user_formnode_utility.getFieldName(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) %}
+
+    {#get dropdown values by getDropdownValue (user_formnode_utility)#}
+    {% set dropdownValues = user_formnode_utility.getDropdownValue(formNode) %}
+
+    {% if cycle != 'show' %}
+        {% set disabled = "" %}
+        {% set placeholder = formNode.placeholder %}
+    {% else %}
+        {% set disabled = "disabled" %}
+        {% set placeholder = " " %}
+    {% endif %}
+
+    {% set day = null %}
+    {% if formNodeValue %}
+        {% set day = formNodeValue %}
+    {% endif %}
+
+    <div>
+        <select
+                id="oleg_userdirectorybundle_formnode_{{ formNodeId }}"
+                class="combobox"
+                data-placeholder="{{ placeholder }}"
+                name="{{ fieldname }}"
+                {{ disabled }}
+        >
+            <option value=""></option>
+            {% for i in 1..31 %}
+                {% set selected = "" %}
+                {% if day and day == i %}
+                    {% set selected = "selected" %}
+                {% endif %}
+                <option value="{{ i }}" {{ selected }}>{{ i }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+{% endmacro %}
+
+
+{% macro datetimeForm( formNodeHolder, formNode, formNodeId, formNodeValue, receivingEntity, count, cycle, prototype, dateFormat, timezone ) %}
+    {% import "AppUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+    {% if formNode.required %}
+        {% set requiredClass = "required" %}
+    {% else %}
+        {% set requiredClass = "" %}
+    {% endif %}
+    <p>
+    {% if formNode.showLabel %}
+        <div class="row">
+            <div class="col-xs-6 {{ requiredClass }}" align="right">
+                <label>{{ formNode.name }}:</label>
+            </div>
+            <div class="col-xs-6" align="left">
+                {{ formnodemacros.dateField(formNodeHolder, formNode, formNodeId, formNodeValue, receivingEntity, count, cycle, prototype, dateFormat,'[time][date]',timezone) }}
+                {{ formnodemacros.timeField(formNodeHolder, formNode, formNodeId, formNodeValue, receivingEntity, count, cycle, prototype, timezone) }}
+            </div>
+        </div>
+    {% else %}
+        {{ formnodemacros.dateField(formNodeHolder, formNode, formNodeId, formNodeValue, receivingEntity, count, cycle, prototype, dateFormat,'[time][date]',timezone) }}
+        {{ formnodemacros.timeField(formNodeHolder, formNode, formNodeId, formNodeValue, receivingEntity, count, cycle, prototype, timezone) }}
+    {% endif %}
+    </p>
+{% endmacro %}
+
+

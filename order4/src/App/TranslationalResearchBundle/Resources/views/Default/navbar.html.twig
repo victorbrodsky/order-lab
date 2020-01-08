@@ -1,0 +1,687 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{% import "AppTranslationalResearchBundle::Default/navbar.html.twig" as navbarmacros %}
+
+{% macro createFilterRequestType( filterTypes ) %}
+    {% for filterType in filterTypes %}
+        {% if filterType == "[[hr]]" %}
+            <hr style="margin-top: 10px; margin-bottom: 10px;">
+        {% else %}
+            {% set filterTypeUrl = filterType|replace({' ':'-'}) %}
+            <li>
+                <a href="{{ path(translationalresearch_sitename~'_request_index_filter',{'type':filterTypeUrl}) }}">{{ filterType }}</a>
+            </li>
+        {% endif %}
+    {% endfor %}
+{% endmacro %}
+
+{% block navbar %}
+
+    <nav class="navbar navbar-default" role="navigation">
+
+    <div class="container-fluid">
+
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            {% if is_granted('ROLE_TRANSRES_USER') %}
+                <!-- this is for mobile devices - top menu -->
+                <a class="navbar-brand visible-xs visible-sm" href="{{ path(translationalresearch_sitename~'_home') }}">Home</a>
+            {% endif %}
+        </div>
+
+
+        <div class="collapse navbar-collapse navbar-ex1-collapse" style="max-height:none;">
+
+
+            {% if is_granted('ROLE_TRANSRES_USER') %}
+
+                {% set specialties = transres_util.getTransResProjectSpecialties() %}
+
+                <ul class="nav navbar-nav">
+
+                    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+                    {{ usermacros.siteSwitch() }}
+
+                    <li id="nav-bar-translationalresearch-home" class="hidden-xs divider-vertical">
+                        <a href="{{ path(translationalresearch_sitename~'_project_index') }}">
+                            <span class="glyphicon glyphicon-briefcase"></span> Home
+                        </a>
+                    </li>
+
+                    {#{% if is_granted('ROLE_TRANSRES_REQUESTER') %}#}
+
+                        {#{% if specialties|length > 0 %}#}
+                            {#<li id="nav-bar-translationalresearch-new-project" class="dropdown">#}
+                                {#<a href="#" class="dropdown-toggle" data-toggle="dropdown">New Project<b class="caret"></b></a>#}
+                                {#<ul class="dropdown-menu">#}
+
+                                {#{% for specialty in specialties %}#}
+                                    {#<li>#}
+                                        {#<a href="{{ path(translationalresearch_sitename~'_project_new',{'specialtyStr':specialty.getAbbreviation()}) }}"#}
+                                        {#>{{ specialty.getName() }}</a>#}
+                                    {#</li>#}
+                                {#{% endfor %}#}
+
+                                {#</ul>#}
+                            {#</li>#}
+                        {#{% endif %}#}
+
+
+                        <li id="nav-bar-translationalresearch-projects" class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Project Requests<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+
+                                {#new projects#}
+                                {% if is_granted('ROLE_TRANSRES_REQUESTER') %}
+                                    {% if specialties|length > 0 %}
+                                        {% for specialty in specialties %}
+                                            <li>
+                                                <a href="{{ path(translationalresearch_sitename~'_project_new',{'specialtyStr':specialty.getAbbreviation()}) }}"
+                                                >New {{ specialty.getName() }} Project</a>
+                                            </li>
+                                        {% endfor %}
+                                        {#<hr>#}
+                                        <hr style="margin-top: 10px; margin-bottom: 10px;">
+                                    {% endif %}
+                                {% endif %}
+                                {#EOF new projects#}
+
+                                {#my projects#}
+                                <li id="nav-bar-translationalresearch-my-projects">
+                                    <a href="{{ path(translationalresearch_sitename~'_my_project_index') }}"
+                                    >My Projects</a>
+                                </li>
+
+                                <li id="nav-bar-translationalresearch-my-review-projects">
+                                    <a href="{{ path(translationalresearch_sitename~'_my_request_project_index') }}">Projects I Personally Requested</a>
+                                </li>
+
+                                <li id="nav-bar-translationalresearch-my-review-projects">
+                                    <a href="{{ path(translationalresearch_sitename~'_my_request_project_draft_index') }}">My Draft Project Requests</a>
+                                </li>
+
+                                {#{% if transres_util.hasReviewerRoles() %}#}
+                                <li id="nav-bar-translationalresearch-my-review-projects">
+                                    <a href="{{ path(translationalresearch_sitename~'_my_reviewed_project_index') }}">Projects I Have Reviewed (History)</a>
+                                </li>
+
+                                {#<li id="nav-bar-translationalresearch-my-review-projects">#}
+                                    {#<a href="{{ path(translationalresearch_sitename~'_my_review_project_index',{#}
+                                        {#'filter[state][0]':'irb_review',#}
+                                        {#'filter[state][1]':'admin_review',#}
+                                        {#'filter[state][2]':'committee_review',#}
+                                        {#'filter[state][3]':'final_review'} ) }}"#}
+                                    {#>Projects Pending My Review</a>#}
+                                {#</li>#}
+                                <li id="nav-bar-translationalresearch-my-review-projects">
+                                    <a href="{{ path(translationalresearch_sitename~'_my_pending_review_project_index') }}">Projects Pending My Review</a>
+                                </li>
+                                <li id="nav-bar-translationalresearch-my-review-projects">
+                                    <a href="{{ path(translationalresearch_sitename~'_my_missinginfo_review_project_index') }}">Projects Awaiting Additional Info To Be Reviewed</a>
+                                </li>
+
+                                <hr style="margin-top: 10px; margin-bottom: 10px;">
+                                <li id="nav-bar-translationalresearch-my-review-projects">
+                                    <a href="{{ path(translationalresearch_sitename~'_active_expired_project_index') }}">Active Projects with Expired {{ transres_util.getHumanName() }}</a>
+                                </li>
+                                <li id="nav-bar-translationalresearch-my-review-projects">
+                                    <a href="{{ path(translationalresearch_sitename~'_active_expired_soon_project_index') }}">Active Projects with {{ transres_util.getHumanName() }} Expiring Soon</a>
+                                </li>
+                                {#EOF my projects#}
+
+                                {#all projects#}
+                                {#show it only to admin, primary reviewers and executives#}
+                                {% if transres_util.isAdminOrPrimaryReviewerOrExecutive() or is_granted('ROLE_TRANSRES_TECHNICIAN') %}
+                                    <hr style="margin-top: 10px; margin-bottom: 10px;">
+                                    <li id="nav-bar-translationalresearch-home" class="hidden-xs divider-vertical">
+                                        <a href="{{ path(translationalresearch_sitename~'_project_index') }}"
+                                        >All Projects</a>
+                                    </li>
+
+                                    {% if specialties|length > 0 %}
+                                        {% for specialty in specialties %}
+                                            <li>
+                                                <a href="{{ path(translationalresearch_sitename~'_project_index',{'filter[projectSpecialty][]':specialty.id}) }}"
+                                                >All {{ specialty.getName() }} Projects</a>
+                                            </li>
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endif %}
+                                {#EOF all projects#}
+
+                            </ul>
+                        </li>
+
+
+                    {#{% endif %}#}
+
+                    {#{% if is_granted('ROLE_TRANSRES_REQUESTER') %}#}
+                        {#<li id="nav-bar-translationalresearch-my-projects"><a href="{{ path(translationalresearch_sitename~'_my_project_index') }}">My Projects</a></li>#}
+                    {#{% endif %}#}
+
+                    {#{% if transres_util.hasReviewerRoles() %}#}
+                        {#<li id="nav-bar-translationalresearch-my-review-projects">#}
+                            {#<a href="{{ path(translationalresearch_sitename~'_my_review_project_index') }}">Projects Assigned To Me For Review</a>#}
+                        {#</li>#}
+                    {#{% endif %}#}
+
+                    {#{% if is_granted('ROLE_TRANSRES_REQUESTER') %}#}
+                        <li id="nav-bar-translationalresearch-allmenu-requests" class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Work Requests<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+
+                            {% if is_granted('ROLE_TRANSRES_REQUESTER') %}
+                                <li id="nav-bar-translationalresearch-new-standalone-request">
+                                    <a href="{{ path(translationalresearch_sitename~'_new_standalone_request') }}">New Request</a>
+                                </li>
+                            {% endif %}
+
+                            {#<li id="nav-bar-translationalresearch-my-requests">#}
+                                {#<a href="{{ path(translationalresearch_sitename~'_my_requests') }}">My Requests</a>#}
+                            {#</li>#}
+
+                            {#<li id="nav-bar-translationalresearch-all-requests">#}
+                                {#<a href="{{ path(translationalresearch_sitename~'_all_requests') }}">All Requests</a>#}
+                            {#</li>#}
+
+                            <hr style="margin-top: 10px; margin-bottom: 10px;">
+
+                            {% set filterRequestTypes = transres_request_util.getRequestFilterPresetType() %}
+                            {{ navbarmacros.createFilterRequestType(filterRequestTypes) }}
+
+                            </ul>
+                        </li>
+                    {#{% endif %}#}
+
+                    {#{% if#}
+                        {#is_granted('ROLE_TRANSRES_REQUESTER') or#}
+                        {#is_granted('ROLE_TRANSRES_BILLING_ADMIN') or#}
+                        {#is_granted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') or#}
+                        {#is_granted('ROLE_TRANSRES_EXECUTIVE_APCP')#}
+                    {#%}#}
+                        {% macro createFilterType( filterTypes ) %}
+                            {% for filterType in filterTypes %}
+                                {% if filterType == "[[hr]]" %}
+                                    <hr style="margin-top: 10px; margin-bottom: 10px;">
+                                {% else %}
+                                    {% set filterTypeUrl = filterType|replace({' ':'-'}) %}
+                                    <li id="nav-bar-translationalresearch-all-invoices-my">
+                                        <a href="{{ path(translationalresearch_sitename~'_invoice_index_type',{'invoicetype':filterTypeUrl}) }}">{{ filterType }}</a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                        {% endmacro %}
+                        <li id="nav-bar-translationalresearch-allmenu-invoices" class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Invoices<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                {% set filterTypes = transres_request_util.getInvoiceFilterPresetType() %}
+                                {{ navbarmacros.createFilterType(filterTypes) }}
+                            </ul>
+                        </li>
+                    {#{% endif %}#}
+
+                    {% if is_granted('ROLE_TRANSRES_ADMIN') %}
+                        {#<li id="nav-bar-translationalresearch-default-reviewers"><a href="{{ path(translationalresearch_sitename~'_default-reviewer_index') }}">Default Reviewers</a></li>#}
+
+                        {% if specialties|length > 0 %}
+                            <li id="nav-bar-translationalresearch-default-reviewers" class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Default Reviewers<b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+
+                                {% for specialty in specialties %}
+                                    <li>
+                                        <a href="{{ path(translationalresearch_sitename~'_default-reviewer_index',{'specialtyStr':specialty.getAbbreviation()}) }}"
+                                        >Default Reviewers for {{ specialty.getName() }}</a>
+                                    </li>
+                                {% endfor %}
+
+                                    <li>
+                                        <a href="{{ path(translationalresearch_sitename~'_substitute_user') }}">Substitute user</a>
+                                    </li>
+
+                                </ul>
+                            </li>
+
+                            {#<li id="nav-bar-translationalresearch-default-siteparameters" class="dropdown">#}
+                                {#<a href="#" class="dropdown-toggle" data-toggle="dropdown">Default Site Settings<b class="caret"></b></a>#}
+                                {#<ul class="dropdown-menu">#}
+
+                                    {#{% for specialty in specialties %}#}
+                                        {#<li>#}
+                                            {#<a href="{{ path(translationalresearch_sitename~'_standalone_siteparameters_show',{'specialtyStr':specialty.getAbbreviation()}) }}"#}
+                                            {#>Default Site Settings for {{ specialty.getName() }}</a>#}
+                                        {#</li>#}
+                                    {#{% endfor %}#}
+
+                                {#</ul>#}
+                            {#</li>#}
+                        {% endif %}
+
+                    {% endif %}
+
+                    {#<li id="nav-bar-translationalresearch-project-workflow"><a href="{{ path(translationalresearch_sitename~'_workflow_show') }}" target="_blank">Workflow</a></li>#}
+                    <li id="nav-bar-translationalresearch-project-workflow" class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">References<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+
+                            <li>
+                                <a href="{{ path(translationalresearch_sitename~'_workflow_show',{'type':'project-requests'}) }}">Project Request Approval Status Progress</a>
+                            </li>
+
+                            <li>
+                                <a href="{{ path(translationalresearch_sitename~'_workflow_show',{'type':'work-requests-billing'}) }}">Work Request Billing Progress</a>
+                            </li>
+
+                            <li>
+                                <a href="{{ path(translationalresearch_sitename~'_workflow_show',{'type':'work-requests-completion-progress'}) }}">Work Request Completion Progress</a>
+                            </li>
+
+                            <hr style="margin-top: 10px; margin-bottom: 10px;">
+
+                            <li>
+                                <a href="{{ path(translationalresearch_sitename~'feesschedule-list') }}">Fee Schedule</a>
+                            </li>
+
+                            {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') or is_granted('ROLE_TRANSRES_EXECUTIVE') %}
+                                <hr style="margin-top: 10px; margin-bottom: 10px;">
+                                <li>
+                                    <a href="{{ path('transresrequestcategorytypes-list_translationalresearch') }}">Product/Service (Fee Schedule) List Management</a>
+                                </li>
+
+                                <li>
+                                    <a href="{{ path('antibodies-list_translationalresearch') }}">Antibody List Management</a>
+                                </li>
+                            {% endif %}
+
+                        </ul>
+                    </li>
+
+
+                    {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_EXECUTIVE') %}
+
+                        {% set startDate = "now"|date_modify("-1 year")|date("m/d/Y") %}
+                        {% set endDate = "now"|date("m/d/Y") %}
+
+                        <li id="nav-bar-translationalresearch-dashboard" class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dashboards<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+
+                                <li>
+                                    <a href="{{ path(translationalresearch_sitename~'_dashboard_choices',
+                                    {
+                                        'filter[startDate]':startDate,
+                                        'filter[endDate]':endDate,
+                                        'filter[projectSpecialty][]':0
+                                    }) }}"
+                                    >All statistics</a>
+                                </li>
+
+                                {#<hr>#}
+                                {#<li>#}
+                                    {#<a href="{{ path(translationalresearch_sitename~'_dashboard_pilevel',{'filter[startDate]':startDate,'filter[endDate]':endDate}) }}"#}
+                                    {#>PI statistics</a>#}
+                                {#</li>#}
+
+                                {#<li>#}
+                                    {#<a href="{{ path(translationalresearch_sitename~'_dashboard_projectlevel',{'filter[startDate]':startDate,'filter[endDate]':endDate}) }}"#}
+                                    {#>Project statistics</a>#}
+                                {#</li>#}
+
+                                {#<li>#}
+                                    {#<a href="{{ path(translationalresearch_sitename~'_dashboard_invoicelevel',{'filter[startDate]':startDate,'filter[endDate]':endDate}) }}"#}
+                                    {#>Invoice statistics</a>#}
+                                {#</li>#}
+
+                                {#<li>#}
+                                    {#<a href="{{ path(translationalresearch_sitename~'_dashboard_compare',{'filter[startDate]':startDate,'filter[endDate]':endDate}) }}"#}
+                                    {#>Comparison statistics</a>#}
+                                {#</li>#}
+
+                                <li>
+                                    <a href="{{ path(translationalresearch_sitename~'_dashboard_choices',
+                                    {
+                                        'filter[startDate]':startDate,
+                                        'filter[endDate]':endDate,
+                                        'filter[projectSpecialty][]':0,
+                                        'filter[chartType][0]':'compare-projectspecialty-pis',
+                                        'filter[chartType][1]':'compare-projectspecialty-projects',
+                                        'filter[chartType][2]':'compare-projectspecialty-projects-stack',
+                                        'filter[chartType][3]':'compare-projectspecialty-requests',
+                                        'filter[chartType][4]':'compare-projectspecialty-invoices',
+                                    }) }}"
+                                    >Comparison statistics</a>
+                                </li>
+
+                                <li>
+                                    <a href="{{ path(translationalresearch_sitename~'_dashboard_choices',
+                                        {
+                                            'filter[startDate]':startDate,
+                                            'filter[endDate]':endDate,
+                                            'filter[projectSpecialty][]':0,
+                                            'filter[chartType][0]':'pi-by-affiliation',
+                                            'filter[chartType][1]':'projects-per-pi',
+                                            'filter[chartType][2]':'funded-projects-per-pi',
+                                            'filter[chartType][3]':'nonfunded-projects-per-pi',
+                                            'filter[chartType][4]':'projects-per-pathologist-involved',
+                                            'filter[chartType][5]':'funded-projects-per-pathologist-involved',
+                                            'filter[chartType][6]':'nonfunded-projects-per-pathologist-involved',
+                                            'filter[chartType][7]':'projects-per-type'
+                                        }) }}"
+                                    >PI/Project statistics</a>
+                                </li>
+                                <li>
+                                    <a href="{{ path(translationalresearch_sitename~'_dashboard_choices',
+                                    {
+                                        'filter[startDate]':startDate,
+                                        'filter[endDate]':endDate,
+                                        'filter[projectSpecialty][]':0,
+                                        'filter[chartType][1]':'requests-by-funding-source',
+                                        'filter[chartType][2]':'requests-per-project',
+                                        'filter[chartType][3]':'requests-per-funded-projects',
+                                        'filter[chartType][4]':'requests-per-nonfunded-projects',
+                                        'filter[chartType][5]':'service-productivity-by-service',
+                                        'filter[chartType][6]':'service-productivity-by-service-per-funded-projects',
+                                        'filter[chartType][7]':'service-productivity-by-service-per-nonfunded-projects',
+                                        'filter[chartType][8]':'service-productivity-by-service-compare-funded-vs-nonfunded-projects',
+                                        'filter[chartType][9]':'requests-per-business-purpose'
+                                    }) }}"
+                                    >Work request statistics</a>
+                                </li>
+                                <li>
+                                    <a href="{{ path(translationalresearch_sitename~'_dashboard_choices',
+                                    {
+                                        'filter[startDate]':startDate,
+                                        'filter[endDate]':endDate,
+                                        'filter[projectSpecialty][]':0,
+                                        'filter[chartType][1]':'fees-by-requests',
+                                        'filter[chartType][2]':'fees-by-requests-per-funded-projects',
+                                        'filter[chartType][3]':'fees-by-requests-per-nonfunded-projects',
+                                        'filter[chartType][4]':'fees-by-investigators',
+                                        'filter[chartType][5]':'fees-by-investigators-per-funded-projects',
+                                        'filter[chartType][6]':'fees-by-investigators-per-nonfunded-projects',
+                                        'filter[chartType][7]':'fees-per-nonfunded-projects-per-pathologist-involved',
+                                        'filter[chartType][8]':'projects-fees-per-type',
+                                        'filter[chartType][9]':'projects-funded-fees-per-type',
+                                        'filter[chartType][10]':'projects-unfunded-fees-per-type',
+                                        'filter[chartType][11]':'requests-fees-per-business-purpose',
+                                        'filter[chartType][12]':'requests-funded-fees-per-business-purpose',
+                                        'filter[chartType][13]':'requests-unfunded-fees-per-business-purpose'
+                                    }) }}"
+                                    >Productivity statistics based on work requests</a>
+                                </li>
+                                <li>
+                                    <a href="{{ path(translationalresearch_sitename~'_dashboard_choices',
+                                    {
+                                        'filter[startDate]':startDate,
+                                        'filter[endDate]':endDate,
+                                        'filter[projectSpecialty][]':0,
+                                        'filter[chartType][0]':'fees-by-invoices-paid-per-month',
+                                        'filter[chartType][1]':'fees-by-invoices-per-funded-projects',
+                                        'filter[chartType][2]':'fees-by-invoices-per-nonfunded-projects',
+                                        'filter[chartType][3]':'fees-by-invoices-per-pi',
+                                        'filter[chartType][4]':'fees-by-invoices-per-projects-per-pathologist-involved',
+                                        'filter[chartType][5]':'fees-by-invoices-per-funded-projects-per-pathologist-involved',
+                                        'filter[chartType][6]':'fees-by-invoices-per-nonfunded-projects-per-pathologist-involved',
+                                    }) }}"
+                                    >Financial statistics based on invoices</a>
+                                </li>
+                                <li>
+                                    <a href="{{ path(translationalresearch_sitename~'_dashboard_choices',
+                                    {
+                                        'filter[startDate]':startDate,
+                                        'filter[endDate]':endDate,
+                                        'filter[projectSpecialty][]':0,
+                                        'filter[chartType][1]':'turn-around-statistics-days-complete-request',
+                                        'filter[chartType][2]':'turn-around-statistics-days-complete-per-request',
+                                        'filter[chartType][3]':'turn-around-statistics-days-complete-per-request-with-product',
+                                        'filter[chartType][4]':'turn-around-statistics-days-project-state',
+                                        'filter[chartType][5]':'turn-around-statistics-days-per-project-state',
+                                        'filter[chartType][6]':'turn-around-statistics-days-paid-invoice',
+                                        'filter[chartType][7]':'turn-around-statistics-days-per-paid-invoice',
+                                        'filter[chartType][8]':'turn-around-statistics-pis-with-delayed-unpaid-invoices',
+                                        'filter[chartType][9]':'turn-around-statistics-pis-with-highest-total-unpaid-invoices',
+                                        'filter[chartType][10]':'turn-around-statistics-pis-combining-total-delayed-unpaid-invoices',
+                                        'filter[chartType][11]':'turn-around-statistics-days-complete-per-request-with-user',
+                                        'filter[chartType][12]':'turn-around-statistics-delayed-unpaid-invoices-by-days',
+                                        'filter[chartType][13]':'reminder-emails-per-month'
+                                    }) }}"
+                                    >Turn-around statistics</a>
+                                </li>
+                                <li>
+                                    <a href="{{ path(translationalresearch_sitename~'_dashboard_choices',
+                                    {
+                                        'filter[startDate]':startDate,
+                                        'filter[endDate]':endDate,
+                                        'filter[projectSpecialty][]':0,
+                                        'filter[chartType][1]':'reminder-emails-per-month',
+                                        'filter[chartType][2]':'successful-logins-trp',
+                                        'filter[chartType][3]':'successful-logins-site',
+                                        'filter[chartType][4]':'successful-unique-logins-site-month',
+                                        'filter[chartType][5]':'successful-unique-logins-site-week',
+                                    }) }}"
+                                    >Site Utilization Statistics</a>
+                                </li>
+                                <li>
+                                    <a href="{{ path(translationalresearch_sitename~'_dashboard_choices',
+                                    {
+                                        'filter[startDate]':startDate,
+                                        'filter[endDate]':endDate,
+                                        'filter[projectSpecialty][]':0,
+                                        'filter[chartType][1]':'projects-per-pathologist-involved',
+                                        'filter[chartType][2]':'funded-projects-per-pathologist-involved',
+                                        'filter[chartType][3]':'nonfunded-projects-per-pathologist-involved',
+                                        'filter[chartType][4]':'fees-by-invoices-per-projects-per-pathologist-involved',
+                                        'filter[chartType][5]':'fees-by-invoices-per-funded-projects-per-pathologist-involved',
+                                        'filter[chartType][6]':'fees-by-invoices-per-nonfunded-projects-per-pathologist-involved',
+                                        'filter[chartType][7]':'fees-per-nonfunded-projects-per-pathologist-involved',
+                                        'filter[chartType][8]':'turn-around-statistics-days-project-state',
+                                        'filter[chartType][9]':'turn-around-statistics-days-per-project-state'
+                                    }) }}"
+                                    >Pathologist Statistics</a>
+                                </li>
+                                <li>
+                                    <a href="{{ path(translationalresearch_sitename~'_dashboard_choices',
+                                    {
+                                        'filter[startDate]':startDate,
+                                        'filter[endDate]':endDate,
+                                        'filter[projectSpecialty][]':0,
+                                        'filter[chartType][1]':'pi-by-affiliation',
+                                        'filter[chartType][2]':'projects-per-pi',
+                                        'filter[chartType][3]':'funded-projects-per-pi',
+                                        'filter[chartType][4]':'requests-per-project',
+                                        'filter[chartType][5]':'requests-per-funded-projects',
+                                        'filter[chartType][6]':'requests-per-nonfunded-projects',
+                                        'filter[chartType][7]':'fees-by-requests-per-funded-projects',
+                                        'filter[chartType][8]':'fees-by-requests-per-nonfunded-projects',
+                                        'filter[chartType][9]':'fees-by-investigators',
+                                        'filter[chartType][10]':'fees-by-investigators-per-funded-projects',
+                                        'filter[chartType][11]':'fees-by-investigators-per-nonfunded-projects',
+                                        'filter[chartType][12]':'turn-around-statistics-pis-with-delayed-unpaid-invoices',
+                                        'filter[chartType][13]':'turn-around-statistics-pis-with-highest-total-unpaid-invoices',
+                                        'filter[chartType][14]':'turn-around-statistics-pis-combining-total-delayed-unpaid-invoices',
+                                        'filter[chartType][15]':'compare-projectspecialty-pis',
+                                        'filter[chartType][16]':'turn-around-statistics-delayed-unpaid-invoices-by-days',
+                                    }) }}"
+                                    >Investigator Statistics</a>
+                                </li>
+
+                                {% if allProjectIdsArr is defined %}
+                                    <hr style="margin-top: 10px; margin-bottom: 10px;">
+                                    <li>
+                                        {#<a href="{{ path('translationalresearch_download_projects_excel',{'ids':allProjectIdsArr|join(','),'limit':500}) }}">#}
+                                            {#<i class="fa fa-file-excel-o"></i> Export the first 500 matching project summaries to spreadsheet</a>#}
+                                        <a href="{{ path('translationalresearch_download_projects_excel',{'ids':allProjectIdsArr|join(',')}) }}">
+                                            <i class="fa fa-file-excel-o"></i> Export all matching project summaries to a spreadsheet</a>
+                                    </li>
+                                {% endif %}
+
+                                {#<hr>#}
+                                {#<hr style="margin-top: 10px; margin-bottom: 10px;">#}
+                                {#<li>#}
+                                    {#<a href="javascript:;" style="color:red">All dashboards bellow will be removed</a>#}
+                                {#</li>#}
+
+                                {#<li>#}
+                                    {#<a href="{{ path(translationalresearch_sitename~'_dashboard_project',{'filter[startDate]':startDate,'filter[endDate]':endDate,'filter[projectSpecialty][]':0}) }}"#}
+                                    {#>PI/Project statistics</a>#}
+                                {#</li>#}
+
+                                {#<li>#}
+                                    {#<a href="{{ path(translationalresearch_sitename~'_dashboard_request',{'filter[startDate]':startDate,'filter[endDate]':endDate,'filter[projectSpecialty][]':0}) }}"#}
+                                    {#>Work request statistics</a>#}
+                                {#</li>#}
+
+                                {#<li>#}
+                                    {#<a href="{{ path(translationalresearch_sitename~'_dashboard_financial_request',{'filter[startDate]':startDate,'filter[endDate]':endDate,'filter[projectSpecialty][]':0, 'filter[compareType]':'work request submission date'}) }}"#}
+                                    {#>Productivity statistics based on work requests</a>#}
+                                {#</li>#}
+
+                                {#<li>#}
+                                    {#<a href="{{ path(translationalresearch_sitename~'_dashboard_financial_invoice',{'filter[startDate]':startDate,'filter[endDate]':endDate,'filter[projectSpecialty][]':0, 'filter[compareType]':'work request submission date'}) }}"#}
+                                    {#>Financial statistics based on invoices</a>#}
+                                {#</li>#}
+
+                            </ul>
+                        </li>
+
+                    {% endif %}
+
+                </ul>
+
+            {% endif %}
+
+           
+
+            <ul class="nav navbar-nav navbar-right">
+
+                {% if is_granted('ROLE_TRANSRES_ADMIN') %}
+
+                    <li id="nav-bar-admin" class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+
+                            <li><a href="{{ path(translationalresearch_sitename~'_accessrequest_list') }}">Access Requests</a></li>
+                            <li><a href="{{ path(translationalresearch_sitename~'_accountrequest') }}">Account Requests</a></li>
+                            <li><a href="{{ path(translationalresearch_sitename~'_authorized_users') }}">Authorized Users</a></li>
+
+                            <li><a href="{{ path(translationalresearch_sitename~'_generated_users') }}">Generated Accounts</a></li>
+
+                            <li class="divider"></li>
+                            <li><a href="{{ path(translationalresearch_sitename~'_logger') }}">Event Log</a></li>
+
+                            {#{% if is_granted('ROLE_TRANSRES_ADMIN') %}#}
+                                {#<li><a href="{{ path(translationalresearch_sitename~'_siteparameters') }}">Site Settings</a></li>#}
+                                {#<hr style="margin-top: 10px; margin-bottom: 10px;">#}
+                                {#{% for specialty in specialties %}#}
+                                    {#<li>#}
+                                        {#<a href="{{ path(translationalresearch_sitename~'_standalone_siteparameters_show',{'specialtyStr':specialty.getAbbreviation()}) }}"#}
+                                        {#>Default Site Settings for {{ specialty.getName() }}</a>#}
+                                    {#</li>#}
+                                {#{% endfor %}#}
+                            {#{% endif %}#}
+
+                            {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
+                                <hr style="margin-top: 10px; margin-bottom: 10px;">
+                                {#<li><a href="{{ path('user_admin_index') }}">List Manager</a></li>#}
+                                <li><a href="{{ path('platformlistmanager-list') }}">Platform List Manager</a></li>
+                                <li><a href="{{ path('user_admin_hierarchy_index') }}">Hierarchy Manager</a></li>
+                                {#<li><a href="{{ path(translationalresearch_sitename~'_siteparameters') }}">Site Settings</a></li>#}
+                            {% endif %}
+
+                            {% if is_granted('ROLE_TRANSRES_ADMIN') %}
+                                <hr style="margin-top: 10px; margin-bottom: 10px;">
+                                <li><a href="{{ path(translationalresearch_sitename~'_siteparameters') }}">Site Settings</a></li>
+                            {% endif %}
+
+                            {% if is_granted('ROLE_TRANSRES_ADMIN') %}
+                                <hr style="margin-top: 10px; margin-bottom: 10px;">
+                                <li><a
+                                        target="_blank"
+                                        href="{{ path(translationalresearch_sitename~'_unpaid_invoice_reminder_show') }}"
+                                    >Send e-mail reminders for unpaid invoices</a>
+                                </li>
+                                <li><a
+                                        target="_blank"
+                                        href="{{ path(translationalresearch_sitename~'_project_reminder_show') }}"
+                                    >Send e-mail reminders for project requests pending review</a>
+                                </li>
+                                <li><a
+                                        target="_blank"
+                                        href="{{ path(translationalresearch_sitename~'_request_pending_reminder_show') }}"
+                                    >Send e-mail reminders for work requests pending completion</a>
+                                </li>
+                                <li><a
+                                        target="_blank"
+                                        href="{{ path(translationalresearch_sitename~'_request_completed_reminder_show') }}"
+                                    >Send e-mail reminders for completed work requests without submitter notification</a>
+                                </li>
+                                <li><a
+                                        target="_blank"
+                                        href="{{ path(translationalresearch_sitename~'_request_completed_no_invoice_issued_reminder_show') }}"
+                                    >Send e-mail reminders for completed work requests without invoices</a>
+                                </li>
+                            {% endif %}
+
+                            {#{% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}#}
+                                {#<hr style="margin-top: 10px; margin-bottom: 10px;">#}
+                                {#<li><a href="{{ path('translationalresearch_import_old_data') }}">Import Old Data</a></li>#}
+                            {#{% endif %}#}
+
+                        </ul>
+                    </li>
+
+                {% endif %}
+
+
+
+                {% if is_granted('ROLE_TRANSRES_USER') %}
+
+                    <li id="nav-bar-user" class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span><b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+
+                            {% if pendinguser is not defined %}
+                                <li><a href="{{ path(translationalresearch_sitename~'_showuser', {id:app.user.getId()}) }}">My Profile ({{ app.user.getUserNameShortStr() }})</a></li>
+                            {% endif %}
+
+                            {% if pendinguser is not defined %}
+                                <li><a href="{{ path(translationalresearch_sitename~'_about_page') }}">About</a></li>
+                            {% endif %}
+
+                            <li><a href="{{ path(translationalresearch_sitename~'_logout') }}">Log Out</a></li>
+
+                        </ul>
+                    </li>
+
+                {% endif %}
+
+            </ul>
+
+
+        </div><!-- /.navbar-collapse -->
+
+    </div><!-- /.container-fluid -->
+
+    </nav>
+    
+{% endblock %}
+
