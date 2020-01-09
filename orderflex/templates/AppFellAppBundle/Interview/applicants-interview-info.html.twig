@@ -53,11 +53,14 @@
 
 {% endblock %}
 
-{% javascripts
-'@AppUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'
-'@AppUserdirectoryBundle/Resources/public/jquery-ui-1.11.2/jquery-ui.js'
-'@AppUserdirectoryBundle/Resources/public/bootstrap/js/*'
-%}
-<script type="text/javascript" src="{{ asset_url }}"></script>
-{% endjavascripts %}
+{#{% javascripts#}
+{#'@AppUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'#}
+{#'@AppUserdirectoryBundle/Resources/public/jquery-ui-1.11.2/jquery-ui.js'#}
+{#'@AppUserdirectoryBundle/Resources/public/bootstrap/js/*'#}
+{#%}#}
+{#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+{#{% endjavascripts %}#}
 
+<script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery/jquery-1.11.0.min.js') }}"></script>
+<script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery-ui-1.11.2/jquery-ui.js') }}"></script>
+<script src="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap/js/bootstrap.min.js') }}"></script>

@@ -808,7 +808,7 @@
             {% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': threadId} %}
             {#{{ render(controller('AppTranslationalResearchBundle:Project:threadComments', { 'id': threadId })) }}#}
         {% else %}
-            {{ render(controller('AppTranslationalResearchBundle:Project:threadCommentsShow', { 'id': threadId })) }}
+            {{ render(controller('App\\TranslationalResearchBundle\\Controller\\ProjectController\\threadCommentsShow', { 'id': threadId })) }}
         {% endif %}
     {% endif %}
 
@@ -1044,7 +1044,7 @@
                                 {% set thisState = "irb_review" %}
                                 {#{% set thisState = project.vars.value.irbReviews|first.getStateStr() %}#}
                                 {% set threadId = "transres-" ~ project.vars.value.getEntityName() ~ "-" ~ project.vars.value.id ~ "-" ~ thisState %}
-                                {{ render(controller('AppTranslationalResearchBundle:Project:threadCommentsShow', { 'id': threadId })) }}
+                                {{ render(controller('App\\TranslationalResearchBundle\\Controller\\ProjectController\\threadCommentsShow', { 'id': threadId })) }}
                             {% endif %}
 
                             {% if cycle != "show" and cycle != "review" %}
@@ -1082,7 +1082,7 @@
                                 {% set thisState = "admin_review" %}
                                 {#{% set thisState = project.vars.value.adminReviews|first.getStateStr() %}#}
                                 {% set threadId = "transres-" ~ project.vars.value.getEntityName() ~ "-" ~ project.vars.value.id ~ "-" ~ thisState %}
-                                {{ render(controller('AppTranslationalResearchBundle:Project:threadCommentsShow', { 'id': threadId })) }}
+                                {{ render(controller('App\\TranslationalResearchBundle\\Controller\\ProjectController\\threadCommentsShow', { 'id': threadId })) }}
                             {% endif %}
 
                             {% if cycle != "show" and cycle != "review" %}
@@ -1119,7 +1119,7 @@
                             {% if showComments == 1 %}
                                 {% set thisState = "committee_review" %}
                                 {% set threadId = "transres-" ~ project.vars.value.getEntityName() ~ "-" ~ project.vars.value.id ~ "-" ~ thisState %}
-                                {{ render(controller('AppTranslationalResearchBundle:Project:threadCommentsShow', { 'id': threadId })) }}
+                                {{ render(controller('App\\TranslationalResearchBundle\\Controller\\ProjectController\\threadCommentsShow', { 'id': threadId })) }}
                             {% endif %}
 
                             {% if cycle != "show" and cycle != "review" %}
@@ -1156,7 +1156,7 @@
                             {% if showComments == 1 %}
                                 {% set thisState = "final_review" %}
                                 {% set threadId = "transres-" ~ project.vars.value.getEntityName() ~ "-" ~ project.vars.value.id ~ "-" ~ thisState %}
-                                {{ render(controller('AppTranslationalResearchBundle:Project:threadCommentsShow', { 'id': threadId })) }}
+                                {{ render(controller('App\\TranslationalResearchBundle\\Controller\\ProjectController\\threadCommentsShow', { 'id': threadId })) }}
                             {% endif %}
 
                             {% if cycle != "show" and cycle != "review" %}

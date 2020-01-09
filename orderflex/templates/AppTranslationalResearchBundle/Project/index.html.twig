@@ -579,11 +579,12 @@
 {% endblock %}
 
 {% block additionaljs %}
-    {% javascripts
-        '@AppTranslationalResearchBundle/Resources/public/form/js/transres-filterbtn.js'
-    %}
-        <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
+    {#{% javascripts#}
+        {#'@AppTranslationalResearchBundle/Resources/public/form/js/transres-filterbtn.js'#}
+    {#%}#}
+        {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
+    <script src="{{ asset('orderassets/AppTranslationalResearchBundle/form/js/transres-filterbtn.js') }}"></script>
 
     <script language="Javascript">
         $(document).ready(function() {

@@ -20,31 +20,31 @@
 {% block header %}
 
     {% if sitename == 'fellapp' %}
-        {% include 'AppFellAppBundle:Default:navbar.html.twig' %}
+        {% include 'AppFellAppBundle/Default/navbar.html.twig' %}
     {% endif %}
 
     {% if sitename == 'scan' %}
-        {% include 'AppOrderformBundle:Default:navbar.html.twig' %}
+        {% include 'AppOrderformBundle/Default/navbar.html.twig' %}
     {% endif %}
 
     {% if sitename == 'employees' %}
-        {% include 'AppUserdirectoryBundle:Default:navbar.html.twig' %}
+        {% include 'AppUserdirectoryBundle/Default/navbar.html.twig' %}
     {% endif %}
 
     {% if sitename == 'deidentifier' %}
-        {% include 'AppDeidentifierBundle:Default:navbar.html.twig' %}
+        {% include 'AppDeidentifierBundle/Default/navbar.html.twig' %}
     {% endif %}
 
     {% if sitename == 'vacreq' %}
-        {% include 'AppVacReqBundle:Default:navbar.html.twig' %}
+        {% include 'AppVacReqBundle/Default/navbar.html.twig' %}
     {% endif %}
 
     {% if sitename == 'calllog' %}
-        {% include 'AppCallLogBundle:Default:navbar.html.twig' %}
+        {% include 'AppCallLogBundle/Default/navbar.html.twig' %}
     {% endif %}
 
     {% if sitename == 'translationalresearch' %}
-        {% include 'AppTranslationalResearchBundle:Default:navbar.html.twig' %}
+        {% include 'AppTranslationalResearchBundle/Default/navbar.html.twig' %}
     {% endif %}
 
 {% endblock %}

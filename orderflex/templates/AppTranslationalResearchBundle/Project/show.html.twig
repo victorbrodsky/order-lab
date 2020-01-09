@@ -120,9 +120,10 @@
 {% endblock %}
 
 {% block additionaljs %}
-    {% javascripts
-    '@AppTranslationalResearchBundle/Resources/public/form/js/transres.js'
-    %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
+    {#{% javascripts#}
+    {#'@AppTranslationalResearchBundle/Resources/public/form/js/transres.js'#}
+    {#%}#}
+    {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
+    <script src="{{ asset('orderassets/AppTranslationalResearchBundle/form/js/transres.js') }}"></script>
 {% endblock %}

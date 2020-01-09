@@ -94,7 +94,7 @@
                 {#All previous comments:<br>#}
                 {#{{ transres_util.getReviewComments(project)|raw }}#}
                 {#<br>#}
-                {{ render(controller('AppTranslationalResearchBundle:Project:threadCommentsShow', { 'id': threadId })) }}
+                {{ render(controller('App\\TranslationalResearchBundle\\Controller\\ProjectController\\threadCommentsShowAction', { 'id': threadId })) }}
                 {#<hr>#}
             </div>
         {% endif %}

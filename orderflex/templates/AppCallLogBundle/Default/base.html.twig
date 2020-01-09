@@ -18,7 +18,7 @@
 
 
 {% block header %}
-    {% include 'AppCallLogBundle:Default:navbar.html.twig' %}
+    {% include 'AppCallLogBundle/Default/navbar.html.twig' %}
 {% endblock %}
 
 {% block favicon %}
@@ -39,56 +39,105 @@
     {#<link href="summernote.css" rel="stylesheet">#}
     {#<script src="summernote.js"></script>#}
 
-    {% javascripts
-    '@AppUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'
-    '@AppUserdirectoryBundle/Resources/public/bootstrap/js/*'
-    '@AppUserdirectoryBundle/Resources/public/ladda/spin.min.js'
-    '@AppUserdirectoryBundle/Resources/public/ladda/ladda.min.js'
-    '@AppUserdirectoryBundle/Resources/public/datepicker/js/bootstrap-datepicker.js'
-    '@AppUserdirectoryBundle/Resources/public/select2/select2.js'
-    '@AppUserdirectoryBundle/Resources/public/inputmask/jquery.inputmask.bundle.js'
-    '@AppUserdirectoryBundle/Resources/public/jasny/js/rowlink.js'
-    '@AppUserdirectoryBundle/Resources/public/q-1/q.js'
-    '@AppUserdirectoryBundle/Resources/public/pnotify/pnotify.custom.min.js'
+    {#{% javascripts#}
+    {#'@AppUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/bootstrap/js/*'#}
+    {#'@AppUserdirectoryBundle/Resources/public/ladda/spin.min.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/ladda/ladda.min.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/datepicker/js/bootstrap-datepicker.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/select2/select2.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/inputmask/jquery.inputmask.bundle.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/jasny/js/rowlink.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/q-1/q.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/pnotify/pnotify.custom.min.js'#}
 
-    '@AppUserdirectoryBundle/Resources/public/dropzone/dropzone.js'
-    '@AppUserdirectoryBundle/Resources/public/form/js/user-fileuploads.js'
-    '@AppUserdirectoryBundle/Resources/public/form/js/user-navbar.js'
+    {#'@AppUserdirectoryBundle/Resources/public/dropzone/dropzone.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/form/js/user-fileuploads.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/form/js/user-navbar.js'#}
 
-    '@AppUserdirectoryBundle/Resources/public/form/js/user-common.js'
-    '@AppUserdirectoryBundle/Resources/public/form/js/user-form.js'
+    {#'@AppUserdirectoryBundle/Resources/public/form/js/user-common.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/form/js/user-form.js'#}
 
-    '@AppUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimeout.js'
-    '@AppUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimer.js'
-    '@AppUserdirectoryBundle/Resources/public/form/js/user-idleTimeout.js'
+    {#'@AppUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimeout.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimer.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/form/js/user-idleTimeout.js'#}
 
-    '@AppUserdirectoryBundle/Resources/public/form/js/user-selectAjax.js'
-    '@AppUserdirectoryBundle/Resources/public/form/js/user-treeSelectAjax.js'
-    '@AppUserdirectoryBundle/Resources/public/vakata-jstree/jstree.min.js'
-    '@AppUserdirectoryBundle/Resources/public/form/js/user-jstree.js'
-    '@AppUserdirectoryBundle/Resources/public/form/js/user-formnode.js'
-    '@AppUserdirectoryBundle/Resources/public/form/js/user-basetitles.js'
+    {#'@AppUserdirectoryBundle/Resources/public/form/js/user-selectAjax.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/form/js/user-treeSelectAjax.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/vakata-jstree/jstree.min.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/form/js/user-jstree.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/form/js/user-formnode.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/form/js/user-basetitles.js'#}
 
-    '@AppUserdirectoryBundle/Resources/public/summernote/summernote.min.js'
+    {#'@AppUserdirectoryBundle/Resources/public/summernote/summernote.min.js'#}
 
-    '@AppOrderformBundle/Resources/public/form/js/checkSingleForm.js'
-    '@AppOrderformBundle/Resources/public/form/js/slideColl.js'
-    '@AppOrderformBundle/Resources/public/form/js/partCheckboxes.js'
-    '@AppOrderformBundle/Resources/public/form/js/selectAjax.js'
-    '@AppOrderformBundle/Resources/public/form/js/commonCheckForm.js'
-    '@AppOrderformBundle/Resources/public/form/js/checkForm.js'
-    '@AppOrderformBundle/Resources/public/form/js/masking.js'
-    '@AppOrderformBundle/Resources/public/form/js/form.js'
-    '@AppOrderformBundle/Resources/public/form/js/formReady.js'
-    '@AppOrderformBundle/Resources/public/form/js/tooltips.js'
+    {#'@AppOrderformBundle/Resources/public/form/js/checkSingleForm.js'#}
+    {#'@AppOrderformBundle/Resources/public/form/js/slideColl.js'#}
+    {#'@AppOrderformBundle/Resources/public/form/js/partCheckboxes.js'#}
+    {#'@AppOrderformBundle/Resources/public/form/js/selectAjax.js'#}
+    {#'@AppOrderformBundle/Resources/public/form/js/commonCheckForm.js'#}
+    {#'@AppOrderformBundle/Resources/public/form/js/checkForm.js'#}
+    {#'@AppOrderformBundle/Resources/public/form/js/masking.js'#}
+    {#'@AppOrderformBundle/Resources/public/form/js/form.js'#}
+    {#'@AppOrderformBundle/Resources/public/form/js/formReady.js'#}
+    {#'@AppOrderformBundle/Resources/public/form/js/tooltips.js'#}
 
-    '@AppCallLogBundle/Resources/public/form/js/call-entry.js'
-    '@AppCallLogBundle/Resources/public/form/js/unmerge.js'
-    '@AppCallLogBundle/Resources/public/form/js/edit.js'
+    {#'@AppCallLogBundle/Resources/public/form/js/call-entry.js'#}
+    {#'@AppCallLogBundle/Resources/public/form/js/unmerge.js'#}
+    {#'@AppCallLogBundle/Resources/public/form/js/edit.js'#}
 
-    %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
+    {#%}#}
+    {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
+
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery/jquery-1.11.0.min.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery-ui-1.11.2/jquery-ui.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/ladda/spin.min.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/ladda/ladda.min.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/datepicker/js/bootstrap-datepicker.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/select2/select2.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/inputmask/jquery.inputmask.bundle.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/jasny/js/rowlink.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/q-1/q.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/pnotify/pnotify.custom.min.js') }}"></script>
+
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/dropzone/dropzone.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-fileuploads.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-navbar.js') }}"></script>
+
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-common.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-form.js') }}"></script>
+
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/idletimeout/jquery.idletimeout.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/idletimeout/jquery.idletimer.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-idleTimeout.js') }}"></script>
+
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-selectAjax.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-treeSelectAjax.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/vakata-jstree/jstree.min.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-jstree.js') }}"></script>
+
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-formnode.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-basetitles.js') }}"></script>
+
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/summernote/summernote.min.js') }}"></script>
+
+    <script src="{{ asset('orderassets/AppOrderformBundle/form/js/checkSingleForm.js') }}"></script>
+    <script src="{{ asset('orderassets/AppOrderformBundle/form/js/slideColl.js') }}"></script>
+    <script src="{{ asset('orderassets/AppOrderformBundle/form/js/partCheckboxes.js') }}"></script>
+    <script src="{{ asset('orderassets/AppOrderformBundle/form/js/selectAjax.js') }}"></script>
+    <script src="{{ asset('orderassets/AppOrderformBundle/form/js/commonCheckForm.js') }}"></script>
+    <script src="{{ asset('orderassets/AppOrderformBundle/form/js/checkForm.js') }}"></script>
+    <script src="{{ asset('orderassets/AppOrderformBundle/form/js/masking.js') }}"></script>
+    <script src="{{ asset('orderassets/AppOrderformBundle/form/js/form.js') }}"></script>
+    <script src="{{ asset('orderassets/AppOrderformBundle/form/js/modal.js') }}"></script>
+    <script src="{{ asset('orderassets/AppOrderformBundle/form/js/formReady.js') }}"></script>
+    <script src="{{ asset('orderassets/AppOrderformBundle/form/js/tooltips.js') }}"></script>
+
+    <script src="{{ asset('orderassets/AppCallLogBundle/form/js/call-entry.js') }}"></script>
+    <script src="{{ asset('orderassets/AppCallLogBundle/form/js/unmerge.js') }}"></script>
+    <script src="{{ asset('orderassets/AppCallLogBundle/form/js/edit.js') }}"></script>
 
     {#FOSJsRoutingBundle#}
     <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
@@ -98,10 +147,11 @@
 
 {% block additionalcss %}
     {#<link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote.css" rel="stylesheet">#}
-    {% stylesheets
-        'orderassets/appuserdirectory/summernote/summernote.css' filter='cssrewrite'
-    %}
-    <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
-    {% endstylesheets %}
+    {#{% stylesheets#}
+        {#'orderassets/appuserdirectory/summernote/summernote.css' filter='cssrewrite'#}
+    {#%}#}
+    {#<link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />#}
+    {#{% endstylesheets %}#}
+    <link rel="stylesheet" type="text/css" media="screen" href="{{ asset('orderassets/AppUserdirectoryBundle/summernote/summernote.css') }}" />
 
 {% endblock %}

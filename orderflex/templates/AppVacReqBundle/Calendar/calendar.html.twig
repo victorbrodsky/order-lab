@@ -66,22 +66,21 @@
 
 
 {% block additionalcss %}
-    {% stylesheets
-        'bundles/adesignscalendar/css/fullcalendar/fullcalendar.css' filter='cssrewrite'
-    %}
-        <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
-    {% endstylesheets %}
+    {#{% stylesheets#}
+        {#'bundles/adesignscalendar/css/fullcalendar/fullcalendar.css' filter='cssrewrite'#}
+    {#%}#}
+        {#<link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />#}
+    {#{% endstylesheets %}#}
+    <link rel="stylesheet" type="text/css" href="{{ asset('@ADesignsCalendarBundle/css/fullcalendar/fullcalendar.css') }}" />
 {% endblock %}
 
 {% block additionaljs %}
-    {#'bundles/adesignscalendar/js/calendar-settings.js'#}
-    {#'@AppVacReqBundle/Resources/public/fullCalendarBundle/js/calendar-settings.js'#}
-    {% javascripts
-        'bundles/adesignscalendar/js/fullcalendar/jquery.fullcalendar.min.js'
-    %}
-        <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-
+    {#{% javascripts#}
+        {#'bundles/adesignscalendar/js/fullcalendar/jquery.fullcalendar.min.js'#}
+    {#%}#}
+        {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
+    <script src="{{ asset('@ADesignsCalendarBundle/js/fullcalendar/jquery.fullcalendar.min.js') }}"></script>
 
     <script language="Javascript">
 

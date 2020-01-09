@@ -74,8 +74,8 @@
                 {#{% if is_granted('ROLE_DEIDENTIFICATOR_USER') %}#}
                 {% if is_granted("read", "Accession") and accessiontypes is defined and accessiontypes|length > 0 %}
 
-                    {#{% set accessiontypes = render(controller("AppDeidentifierBundle:Default:getAccessionTypes")) %}#}
-                    {#{% set accessiontypes = controller("AppDeidentifierBundle:Default:getAccessionTypes") %}#}
+                    {#{% set accessiontypes = render(controller("AppDeidentifierBundle/Default/getAccessionTypes")) %}#}
+                    {#{% set accessiontypes = controller("AppDeidentifierBundle/Default/getAccessionTypes") %}#}
 
                     {% if accessionTypeStr is defined and accessionTypeStr %}
                         {% set accessionTypeIdBtn = accessionTypeId %}

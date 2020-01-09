@@ -92,7 +92,7 @@
                         {#{{ submitter }}#}
                         {#({{ approver.getSiteRoles('SUBMITTER')|join(', ') }})#}
                         {#the same as render(controller('AppVacReqBundle:Approver:userManagement'#}
-                        {{ render( url('vacreq_orginst_user_management',{'userid':submitter.id,'instid':organizationalGroupId, 'roleId':submitterRoleId}), {'default': 'AppUserdirectoryBundle:Default:default-hinclude-content.html.twig'} ) }}
+                        {{ render( url('vacreq_orginst_user_management',{'userid':submitter.id,'instid':organizationalGroupId, 'roleId':submitterRoleId}), {'default': 'AppUserdirectoryBundle/Default/default-hinclude-content.html.twig'} ) }}
                     </div>
                 {% endfor %}
 

@@ -19,7 +19,7 @@
 
 {% block header %}
     {#{% stopwatch "### TransRes navbar ###" %}#}
-    {% include 'AppTranslationalResearchBundle:Default:navbar.html.twig' %}
+    {% include 'AppTranslationalResearchBundle/Default/navbar.html.twig' %}
     {#{% endstopwatch %}#}
 {% endblock %}
 
@@ -34,69 +34,115 @@
     {#'@AppUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'#}
     {#'@AppUserdirectoryBundle/Resources/public/jquery/jquery-3.2.1.min.js'#}
 
-    {% javascripts
-    '@AppUserdirectoryBundle/Resources/public/bootstrap/js/*'
-    '@AppUserdirectoryBundle/Resources/public/ladda/spin.min.js'
-    '@AppUserdirectoryBundle/Resources/public/ladda/ladda.min.js'
-    '@AppUserdirectoryBundle/Resources/public/datepicker/js/bootstrap-datepicker.js'
-    '@AppUserdirectoryBundle/Resources/public/select2/select2.js'
-    '@AppUserdirectoryBundle/Resources/public/inputmask/jquery.inputmask.bundle.js'
-    '@AppUserdirectoryBundle/Resources/public/jasny/js/rowlink.js'
-    '@AppUserdirectoryBundle/Resources/public/q-1/q.js'
-    '@AppUserdirectoryBundle/Resources/public/pnotify/pnotify.custom.min.js'
+    {#{% javascripts#}
+    {#'@AppUserdirectoryBundle/Resources/public/bootstrap/js/*'#}
+    {#'@AppUserdirectoryBundle/Resources/public/ladda/spin.min.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/ladda/ladda.min.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/datepicker/js/bootstrap-datepicker.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/select2/select2.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/inputmask/jquery.inputmask.bundle.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/jasny/js/rowlink.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/q-1/q.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/pnotify/pnotify.custom.min.js'#}
 
-    '@AppUserdirectoryBundle/Resources/public/dropzone/dropzone.js'
-    '@AppUserdirectoryBundle/Resources/public/form/js/user-fileuploads.js'
-    '@AppUserdirectoryBundle/Resources/public/form/js/user-navbar.js'
+    {#'@AppUserdirectoryBundle/Resources/public/dropzone/dropzone.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/form/js/user-fileuploads.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/form/js/user-navbar.js'#}
 
-    '@AppUserdirectoryBundle/Resources/public/form/js/user-common.js'
-    '@AppUserdirectoryBundle/Resources/public/form/js/user-form.js'
+    {#'@AppUserdirectoryBundle/Resources/public/form/js/user-common.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/form/js/user-form.js'#}
 
-    '@AppUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimeout.js'
-    '@AppUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimer.js'
-    '@AppUserdirectoryBundle/Resources/public/form/js/user-idleTimeout.js'
 
-    '@AppUserdirectoryBundle/Resources/public/form/js/user-selectAjax.js'
-    '@AppUserdirectoryBundle/Resources/public/form/js/user-treeSelectAjax.js'
-    '@AppUserdirectoryBundle/Resources/public/vakata-jstree/jstree.min.js'
-    '@AppUserdirectoryBundle/Resources/public/form/js/user-jstree.js'
-    '@AppUserdirectoryBundle/Resources/public/form/js/user-formnode.js'
-    '@AppUserdirectoryBundle/Resources/public/form/js/user-formReady.js'
-    '@AppUserdirectoryBundle/Resources/public/form/js/user-masking.js'
-    '@AppUserdirectoryBundle/Resources/public/form/js/user-basetitles.js'
+    {#'@AppUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimeout.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimer.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/form/js/user-idleTimeout.js'#}
 
-    '@AppOrderformBundle/Resources/public/form/js/modal.js'
-    '@AppOrderformBundle/Resources/public/form/js/tooltips.js'
+    {#'@AppUserdirectoryBundle/Resources/public/form/js/user-selectAjax.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/form/js/user-treeSelectAjax.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/vakata-jstree/jstree.min.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/form/js/user-jstree.js'#}
 
-    '@AppUserdirectoryBundle/Resources/public/typeahead/typeahead.bundle.js'
-    '@AppUserdirectoryBundle/Resources/public/form/js/user-typeahead.js'
-    %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {#'@AppUserdirectoryBundle/Resources/public/form/js/user-formnode.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/form/js/user-formReady.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/form/js/user-masking.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/form/js/user-basetitles.js'#}
+
+    {#'@AppOrderformBundle/Resources/public/form/js/modal.js'#}
+    {#'@AppOrderformBundle/Resources/public/form/js/tooltips.js'#}
+
+    {#'@AppUserdirectoryBundle/Resources/public/typeahead/typeahead.bundle.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/form/js/user-typeahead.js'#}
+    {#%}#}
+    {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+    {#<script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>#}
+    {#<script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>#}
+    {#{% endjavascripts %}#}
+
+
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/ladda/spin.min.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/ladda/ladda.min.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/datepicker/js/bootstrap-datepicker.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/select2/select2.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/inputmask/jquery.inputmask.bundle.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/jasny/js/rowlink.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/q-1/q.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/pnotify/pnotify.custom.min.js') }}"></script>
+
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/dropzone/dropzone.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-fileuploads.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-navbar.js') }}"></script>
+
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-common.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-form.js') }}"></script>
+
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/idletimeout/jquery.idletimeout.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/idletimeout/jquery.idletimer.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-idleTimeout.js') }}"></script>
+
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-selectAjax.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-treeSelectAjax.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/vakata-jstree/jstree.min.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-jstree.js') }}"></script>
+
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-formnode.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-formReady.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-masking.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-basetitles.js') }}"></script>
+
+    <script src="{{ asset('orderassets/AppOrderformBundle/form/js/modal.js') }}"></script>
+    <script src="{{ asset('orderassets/AppOrderformBundle/form/js/tooltips.js') }}"></script>
+
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/typeahead/typeahead.bundle.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-typeahead.js') }}"></script>
+
     <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
     <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
-    {% endjavascripts %}
 
 {% endblock %}
 
 {% block additionalcss %}
-    {% stylesheets '@FOSCommentBundle/Resources/public/css/comments.css' %}
-        <link rel="stylesheet" href="{{ asset_url }}" type="text/css" />
-    {% endstylesheets %}
+    {#{% stylesheets '@FOSCommentBundle/Resources/public/css/comments.css' %}#}
+        {#<link rel="stylesheet" href="{{ asset_url }}" type="text/css" />#}
+    {#{% endstylesheets %}#}
+    <link rel="stylesheet" type="text/css" href="{{ asset('@FOSCommentBundle/Resources/public/css/comments.css') }}" />
 
-    {% stylesheets
-        'orderassets/apptranslationalresearch/form/css/comments.css' filter='cssrewrite'
-    %}
-        <link rel="stylesheet" href="{{ asset_url }}" />
-    {% endstylesheets %}
+    {#{% stylesheets#}
+        {#'orderassets/apptranslationalresearch/form/css/comments.css' filter='cssrewrite'#}
+    {#%}#}
+        {#<link rel="stylesheet" href="{{ asset_url }}" />#}
+    {#{% endstylesheets %}#}
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppTranslationalResearchBundle/form/css/comments.css') }}" />
 
 {% endblock %}
 
 {% block headeradditionaljs %}
     {#jquery is required before {% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': threadId} %}#}
-    {% javascripts
-        '@AppUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'
-    %}
-        <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
+    {#{% javascripts#}
+        {#'@AppUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'#}
+    {#%}#}
+        {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery/jquery-1.11.0.min.js') }}"></script>
 {% endblock %}
 
