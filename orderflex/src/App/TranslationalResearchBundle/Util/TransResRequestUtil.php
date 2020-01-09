@@ -27,6 +27,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use App\TranslationalResearchBundle\Entity\Invoice;
 use App\TranslationalResearchBundle\Entity\InvoiceItem;
 use App\TranslationalResearchBundle\Entity\TransResSiteParameters;
+use Symfony\Component\Intl\NumberFormatter\NumberFormatter;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 //use Box\Spout\Common\Type;
@@ -3836,7 +3837,8 @@ class TransResRequestUtil
         return $this->toMoney($number,'');
         //return number_format($number,$digits);
     }
-    function toMoney($val,$symbol='$',$r=2) {
+    function toMoneyOld($val,$symbol='$',$r=2) {
+        //https://stackoverflow.com/questions/6369887/alternative-to-money-format-function-in-php-on-windows-platform
         //echo "val=".$val."<br>";
         if( !$val ) {
             $val = 0;
@@ -3848,10 +3850,18 @@ class TransResRequestUtil
         $t = ',';
         $sign = ($n < 0) ? '-' : '';
         $i = $n=number_format(abs($n),$r);
-        $j = (($j = $i.length) > 3) ? $j % 3 : 0;
+        //$j = (($j = $i.length) > 3) ? $j % 3 : 0;
+        $j = (($j = strlen($i)) > 3) ? $j % 3 : 0;
 
         return  $symbol.$sign .($j ? substr($i,0, $j) + $t : '').preg_replace('/(\d{3})(?=\d)/',"$1" + $t,substr($i,$j)) ;
     }
+    function toMoney($val,$symbol='$',$r=2)
+    {
+        $fmt = new \NumberFormatter( 'en_US', \NumberFormatter::CURRENCY );
+        return $fmt->formatCurrency($val, "USD")."\n";
+
+    }
+
     //NOT USED
     public function getTotalStrInvoice() {
         $repository = $this->em->getRepository('AppTranslationalResearchBundle:Invoice');

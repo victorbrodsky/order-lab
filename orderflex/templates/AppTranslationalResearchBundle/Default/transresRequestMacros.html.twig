@@ -228,7 +228,7 @@
 {% macro getShowRequestReviewCommentsSection(transresRequest, cycle, statMachineType, showComments) %}
     {% set threadId = "transres-" ~ transresRequest.getEntityName() ~ "-" ~ transresRequest.id ~ "-" ~ statMachineType %}
     {% if showComments == 1 %}
-        {{ render(controller('App\\TranslationalResearchBundle\\Controller\\ProjectController\\threadCommentsShow', { 'id': threadId })) }}
+        {{ render(controller('App\\TranslationalResearchBundle\\Controller\\ProjectController::threadCommentsShow', { 'id': threadId })) }}
     {% endif %}
 {% endmacro %}
 
