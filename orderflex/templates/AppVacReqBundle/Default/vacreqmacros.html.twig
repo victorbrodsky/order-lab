@@ -217,7 +217,7 @@
 {#entity - request#}
 {% macro vacreq_action( entity, vacreq_sitename ) %}
 
-    {% import "AppVacReqBundle::Default/vacreqmacros.html.twig" as vacreqmacros %}
+    {% import "AppVacReqBundle/Default/vacreqmacros.html.twig" as vacreqmacros %}
 
     {% set carryOver = false %}
     {% if entity.getRequestType() and entity.getRequestType().getAbbreviation() == "carryover" %}
@@ -419,7 +419,7 @@
 {% endmacro %}
 
 {% macro personAwayInfo( user, phone, vacreq_sitename ) %}
-    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
 
     <a href="{{ path(vacreq_sitename~'_showuser', { 'id': user.id }) }}">{{ user.displayName() }}</a>
 
@@ -451,7 +451,7 @@
 {% endmacro %}
 
 {% macro incomingRequestHref( days, user, yearRange, groupId, approved, requestType, vacreq_sitename ) %}
-    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
     {#{% if days > 0 %}#}
 
         {% if requestType == "businessRequest" %}
@@ -538,7 +538,7 @@
 {% endmacro %}
 
 {% macro incomingRequestsFilter( vacreqfilter, routename, requestTypeAbbreviation ) %}
-    {% import "AppVacReqBundle::Default/vacreqmacros.html.twig" as vacreqmacros %}
+    {% import "AppVacReqBundle/Default/vacreqmacros.html.twig" as vacreqmacros %}
     <form action="{{ path(routename) }}" method="get" class="well form-search">
 
         <p>
@@ -607,7 +607,7 @@
 {% endmacro %}
 
 {% macro myRequestsFilter( vacreqfilter, routename, requestTypeAbbreviation ) %}
-    {% import "AppVacReqBundle::Default/vacreqmacros.html.twig" as vacreqmacros %}
+    {% import "AppVacReqBundle/Default/vacreqmacros.html.twig" as vacreqmacros %}
     <form action="{{ path(routename) }}" method="get" class="well form-search">
 
         <p>
@@ -662,7 +662,7 @@
 {% endmacro %}
 
 {% macro commonCheckboxFilter( vacreqfilter, routename, requestTypeAbbreviation ) %}
-    {% import "AppVacReqBundle::Default/vacreqmacros.html.twig" as vacreqmacros %}
+    {% import "AppVacReqBundle/Default/vacreqmacros.html.twig" as vacreqmacros %}
 
         <p>
         <div class="row">

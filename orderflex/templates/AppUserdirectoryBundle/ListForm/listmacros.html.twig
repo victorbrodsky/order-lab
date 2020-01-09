@@ -20,8 +20,8 @@
 {% macro listIndex( entities, pathbase, withCreateNewEntityLink, linkToListId, postPath ) %}
 
     {% import _self as listmacros %}
-    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
 
     <table class="records_list table table-hover table-condensed text-left">
         <thead>
@@ -473,7 +473,7 @@
 
 {% macro showResearchLabPi( labs, simplefield ) %}
     {% if labs is defined %}
-        {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+        {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
         {% for lab in labs %}
             {% if lab.researchPI == true %}
 
@@ -493,7 +493,7 @@
 
 {% macro listNew( form, pathbase, postPath ) %}
 
-    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
     {% import _self as listmacros %}
 
     {#{{ form(form) }}#}
@@ -598,7 +598,7 @@
 
     {#role's permissions#}
     {% if form.permissions is defined %}
-        {% import "AppUserdirectoryBundle::Default/userformmacros.html.twig" as userform %}
+        {% import "AppUserdirectoryBundle/Default/userformmacros.html.twig" as userform %}
         {{ userform.permissionSection(form.permissions, 'new', employees_sitename, "in", "Permission(s)",true) }}
     {% endif %}
 
@@ -623,7 +623,7 @@
 
 {% macro listEdit( entity, edit_form, delete_form, pathbase, cycle, postPath, showEditBtn ) %}
 
-    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
     {% import _self as listmacros %}
 
     <input type="hidden" id="formcycle" value="{{ cycle }}" />
@@ -732,7 +732,7 @@
 
     {#role's permissions#}
     {% if edit_form.permissions is defined %}
-        {% import "AppUserdirectoryBundle::Default/userformmacros.html.twig" as userform %}
+        {% import "AppUserdirectoryBundle/Default/userformmacros.html.twig" as userform %}
         {{ userform.permissionSection(edit_form.permissions, cycle, employees_sitename, "in", "Permission(s)",true) }}
     {% endif %}
 
@@ -783,8 +783,8 @@
 
 {#additional attributes#}
 {% macro additionalRelationships( form, entity ) %}
-    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
 
     <hr>
 
@@ -1028,7 +1028,7 @@
 
 {#permissionList attributes#}
 {% macro permissionListAttributes( form ) %}
-    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
 
     <hr>
 

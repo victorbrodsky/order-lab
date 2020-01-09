@@ -15,15 +15,15 @@
 #}
 
 {% if sitename == 'employees' %}
-    {% set extendStr = "AppUserdirectoryBundle::Default/base.html.twig" %}
+    {% set extendStr = "AppUserdirectoryBundle/Default/base.html.twig" %}
 {% else %}
-    {% set extendStr = "AppOrderformBundle::Default/base.html.twig" %}
+    {% set extendStr = "AppOrderformBundle/Default/base.html.twig" %}
 {% endif %}
 {% extends extendStr%}
 
 
-{% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-{% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+{% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
 
 
 {% set title = singleName %}

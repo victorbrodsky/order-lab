@@ -1,6 +1,6 @@
 {% macro projectInfo( form, project, cycle ) %}
-    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-    {% import "AppTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+    {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
 
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         <div class="panel panel-default">
@@ -59,8 +59,8 @@
 {% endmacro %}
 
 {% macro projectObjInfo( project, cycle ) %}
-    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-    {#{% import "AppTranslationalResearchBundle::Default/transres.html.twig" as transres %}#}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+    {#{% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}#}
 
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         <div class="panel panel-default">
@@ -132,7 +132,7 @@
 
 {% endmacro %}
 {% macro projectObjFullInfo( project, cycle ) %}
-    {% import "AppTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+    {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         <div class="panel panel-default">
             <div class="panel-heading" role="tab" id="projectFullInfoHeading">
@@ -154,8 +154,8 @@
 
 {% macro projectFormEdit( form, project, cycle ) %}
 
-    {% import "AppUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
-    {% import "AppTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+    {% import "AppUserdirectoryBundle/Tree/treemacros.html.twig" as treemacros %}
+    {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
 
     <div style="display: none">
         {% if form.messageCategory is defined %}
@@ -173,8 +173,8 @@
 
 {% macro projectBodyFormFields( form, project, cycle ) %}
 
-    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-    {% import "AppTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+    {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
 
     {{ transres.projectIrbInfo(form,project,cycle) }}
 
@@ -234,9 +234,9 @@
 
 {% macro projectIrbInfo( form, project, cycle ) %}
 
-    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-    {% import "AppTranslationalResearchBundle::Default/transres.html.twig" as transres %}
-    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+    {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
 
     {#{% if cycle == "new" || cycle == "edit" %}#}
     {% if form.irbApprovalLetters is defined %}
@@ -292,8 +292,8 @@
 
 {% macro projectIACUCInfo( form, project, cycle ) %}
 
-    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-    {% import "AppTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+    {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
 
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         <div class="panel panel-default">
@@ -328,7 +328,7 @@
 
 {% macro projectFormShow( form, project, cycle ) %}
 
-    {% import "AppTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+    {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
 
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         <div class="panel panel-default">
@@ -376,8 +376,8 @@
 
 
 {% macro projectDocument( form, project, cycle ) %}
-    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
-    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
 
     {% if cycle == "review" %}
         {% set cycle = "show" %}
@@ -429,9 +429,9 @@
 
 
 {% macro tissueRequestDetails( form, project, cycle ) %}
-    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
-    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-    {% import "AppTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+    {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
 
     {% if cycle == "review" %}
         {% set cycle = "show" %}
@@ -508,7 +508,7 @@
 {% endmacro %}
 {% macro tissueProcurement( form, project, cycle ) %}
 
-    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
 
     {#Will this project require tissue procurement/processing?#}
     {% set panelStyle = "" %}
@@ -537,7 +537,7 @@
 {% endmacro %}
 {% macro archivalSpecimens( form, project, cycle ) %}
 
-    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
 
     {#Will this project require archival specimens?#}
     {% set panelStyle = "" %}
@@ -571,9 +571,9 @@
 {% endmacro %}
 
 {% macro projectRequesters( form, project, cycle ) %}
-    {% import "AppTranslationalResearchBundle::Default/transres.html.twig" as transres %}
-    {#{% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
-    {#{% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}#}
+    {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
+    {#{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}#}
+    {#{% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}#}
 
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         <div class="panel panel-default">
@@ -666,7 +666,7 @@
 
 
 {% macro updateInfo( form, cycle ) %}
-    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
     {% if form.vars.value.updateDate or form.vars.value.updateUser %}
         {#<div class="well well-sm">#}
         {{ formmacros.simplefield("Update Date:", form.vars.value.updateDate|date("m/d/Y",false), "input", "disabled") }}
@@ -676,8 +676,8 @@
 {% endmacro %}
 
 {% macro usersInfo( usersForm, usersEntity, cycle, required ) %}
-    {#{% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
-    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {#{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}#}
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
     {% if cycle == "show" %}
         <div class="well well-sm">
             <div style="text-align: center;">
@@ -727,8 +727,8 @@
 {% endmacro %}
 
 {% macro userInfo( userForm, userEntity, cycle, fieldType ) %}
-    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
     {% if cycle == "show" or cycle == "review" %}
         <div class="row">
             <div class="col-xs-2" align="right">
@@ -816,7 +816,7 @@
 
 {#show allowed transition to links#}
 {% macro projectReviewsEnabledLinkActions(project,reviews,cycle) %}
-    {% import "AppTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+    {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
     {% set actionLinks = [] %}
     {% set threadId = null %}
 
@@ -890,9 +890,9 @@
 
 
 {% macro getActionReviewCommentsSection(project, cycle, sitename, addReviewButtons) %}
-    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
-    {% import "AppTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+    {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
 
     {% if addReviewButtons is not defined %}
         {% set addReviewButtons = 0 %}
@@ -961,9 +961,9 @@
 
 
 {% macro projectReviews(project, cycle, sitename, showComments) %}
-    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
-    {% import "AppTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+    {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
 
     {#{% if showAddDeleteBtn is not defined %}#}
         {#{% set showAddDeleteBtn = 0 %}#}
@@ -1181,8 +1181,8 @@
 {% endmacro %}
 
 {% macro projectSingleReview( project, review, cycle, classname, prototype, sitename, showAddDeleteBtn ) %}
-    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-    {% import "AppTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+    {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
 
     {% if showAddDeleteBtn is not defined %}
         {% set showAddDeleteBtn = 0 %}
@@ -1362,8 +1362,8 @@
 {% endmacro %}
 
 {% macro getProjectReviewPrototypeFormData(form, cycle, sitename) %}
-    {% import "AppTranslationalResearchBundle::Default/transres.html.twig" as transres %}
-    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
 
     <div id="form-prototype-data"
             data-userurllink = "{{ usermacros.userUrlLink()|e }}"
@@ -1389,7 +1389,7 @@
 {% endmacro %}
 
 {% macro getProjectShowPrototypeFormData(form, cycle, sitename) %}
-    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
 
     <div id="form-prototype-data"
          data-userurllink = "{{ usermacros.userUrlLink()|e }}"
@@ -1431,8 +1431,8 @@
 
 {% macro siteSettings(form, cycle, sitename, specialty) %}
 
-    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
 
     {{ form_start(form) }}
 

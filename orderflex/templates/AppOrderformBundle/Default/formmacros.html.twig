@@ -170,7 +170,7 @@
 
 {% macro field( field, label, attr ) %}
     {% if field is defined %}
-        {% form_theme field 'AppOrderformBundle::Default/collection_widget.html.twig' %}
+        {% form_theme field 'AppOrderformBundle/Default/collection_widget.html.twig' %}
         <p>
         <div class="row">
             {{ form_errors(field) }}
@@ -197,7 +197,7 @@
 
 {% macro field_left( field, label, attr ) %}
     {% if field is defined %}
-        {% form_theme field 'AppOrderformBundle::Default/collection_widget.html.twig' %}
+        {% form_theme field 'AppOrderformBundle/Default/collection_widget.html.twig' %}
         <p>
         <div class="row">
             {{ form_errors(field) }}
@@ -558,7 +558,7 @@
 {% macro message(form) %}
 
     {% import _self as formmacros %}
-    {% import "AppUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
+    {% import "AppUserdirectoryBundle/Tree/treemacros.html.twig" as treemacros %}
 
     {{ formmacros.hiddenInputFieldsForJS(form) }}
 
@@ -649,7 +649,7 @@
 {#wrapper for message_panel_header#}
 {% macro message_panel_header_object(formObject, object, objects, datastructure, type, formtype, uidArr) %}
 
-    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
 
     {% set name = object['object'] %}
     {% set count = object['count'] %}
@@ -787,7 +787,7 @@
 {% macro renderMessages( object, datastructure, uid, cycle ) %}
 
     {% import _self as formmacros %}
-    {% import "AppUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
+    {% import "AppUserdirectoryBundle/Tree/treemacros.html.twig" as treemacros %}
 
     {% if datastructure and (datastructure == "datastructure" or datastructure == "datastructure-patient") and object.message is defined %}
 
@@ -1533,7 +1533,7 @@
 {#input array field with separate label#}
 {% macro inputField(field,cycle,fieldtype,prototype,widget,nobtn,nolabel,classname,withspace,btntype,norest,showPlus,count) %}
     {% import _self as formmacros %}
-    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
 
     {% if prototype == "prototype" %}
         {% if field %}
@@ -1805,7 +1805,7 @@
 {% macro fieldPatientSpotWidget(spot,cycle,sitename,prototype,classname,count) %}
 
     {% import _self as formmacros %}
-    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
 
     {% if count is not defined %}
         {% set count = 0 %}
@@ -2059,7 +2059,7 @@
 
 {#{% macro dataQualityWidgetExisting( field, cycle ) %}#}
     {#{% import _self as formmacros %}#}
-    {#&#123;&#35;{% form_theme field 'AppOrderformBundle::Default/dataquality_widget.html.twig' %}&#35;&#125;#}
+    {#&#123;&#35;{% form_theme field 'AppOrderformBundle/Default/dataquality_widget.html.twig' %}&#35;&#125;#}
 
     {#<div class="validationerror-added alert alert-danger">#}
         {#{{ form_errors(field) }}#}
@@ -2075,7 +2075,7 @@
 {% macro dataQualityWidgetNotMapped( field ) %}
 
     {% import _self as formmacros %}
-    {% form_theme field 'AppOrderformBundle::Default/dataquality_widget.html.twig' %}
+    {% form_theme field 'AppOrderformBundle/Default/dataquality_widget.html.twig' %}
 
     <div class="validationerror-added alert alert-danger" style="height: 210px;">
     {#<div class="validationerror-added alert alert-danger">#}
@@ -2182,7 +2182,7 @@
 {% endmacro %}
 {% macro fieldDocumentContainerPlain(container,cycle,documentspercontainer,dropzoneInit) %}
     {% import _self as formmacros %}
-    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
 
     {% if "show" in cycle %}
         {% set showFlag = true %}
@@ -2873,7 +2873,7 @@
 
     {% if datastructure and datastructure == "datastructure" %}
 
-        {#{% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}#}
+        {#{% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}#}
 
         {#<h5>Extra data structure fields:</h5>#}
 
@@ -2903,7 +2903,7 @@
 
         {% if patient.tracker.spots is defined and patient.tracker.spots|length > 0 %}
 
-            {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+            {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
 
             {% set sitename = 'scan' %}
             {% set entity = app.user %}
@@ -3297,8 +3297,8 @@
 
 
 {% macro labtestObject( field, cycle, classname, prototype ) %}
-    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
 
     {% if prototype == "prototype" %}
         {% set formfield = field.vars.prototype %}

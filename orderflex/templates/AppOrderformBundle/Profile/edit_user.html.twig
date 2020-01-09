@@ -15,7 +15,7 @@
 #}
 
 
-{#{% extends "AppUserdirectoryBundle::Profile/edit_user.html.twig" %}#}
+{#{% extends "AppUserdirectoryBundle/Profile/edit_user.html.twig" %}#}
 
 
 
@@ -27,7 +27,7 @@
 
 {% block addcontent %}
 
-    {% import "AppUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
+    {% import "AppUserdirectoryBundle/Tree/treemacros.html.twig" as treemacros %}
 
     {% if cycle == "show_user" %}
         {% set collapsein = "" %}
@@ -155,5 +155,5 @@
 
 
 
-{% extends "AppUserdirectoryBundle::Profile/edit_user.html.twig" %}
+{% extends "AppUserdirectoryBundle/Profile/edit_user.html.twig" %}
 

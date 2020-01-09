@@ -14,16 +14,16 @@
     limitations under the License.
 #}
 
-{% extends "AppOrderformBundle::Default/base.html.twig" %}
+{% extends "AppOrderformBundle/Default/base.html.twig" %}
 
-{% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
 
-{% import "AppOrderformBundle::Default/patientmacros.html.twig" as patientmacros %}
+{% import "AppOrderformBundle/Default/patientmacros.html.twig" as patientmacros %}
 
-{% import "AppOrderformBundle::Default/ordercommon.html.twig" as order %}
+{% import "AppOrderformBundle/Default/ordercommon.html.twig" as order %}
 
-{% form_theme form 'AppOrderformBundle::Default/common_widget.html.twig' %}
-{#{% form_theme form 'AppOrderformBundle::Default/collection_widget.html.twig' %}#}
+{% form_theme form 'AppOrderformBundle/Default/common_widget.html.twig' %}
+{#{% form_theme form 'AppOrderformBundle/Default/collection_widget.html.twig' %}#}
 
 {% set formpath = 'multi_create' %}
 
@@ -94,7 +94,7 @@
 
     <br />
 
-    {% include 'AppOrderformBundle::MultiScanOrder/edu_res.html.twig' with {"type": type} %}
+    {% include 'AppOrderformBundle/MultiScanOrder/edu_res.html.twig' with {"type": type} %}
 
 {#{% if 0 %}#}
     {#{% if type != 'show' %}#}

@@ -14,7 +14,7 @@
     limitations under the License.
 #}
 
-{% extends "AppUserdirectoryBundle::Default/base.html.twig" %}
+{% extends "AppUserdirectoryBundle/Default/base.html.twig" %}
 
 {% block header %}
 
@@ -48,7 +48,7 @@
 
 {% endblock %}
 
-{% import "AppUserdirectoryBundle::ListForm/listmacros.html.twig" as listmacros %}
+{% import "AppUserdirectoryBundle/ListForm/listmacros.html.twig" as listmacros %}
 
 {% block title %}
     {{ displayName }}: ID {{ entity.id }} | Edit
@@ -64,7 +64,7 @@
         {% set cycle = "show" %}
     {% endif %}
     <input type="hidden" id="formcycle" value="{{ cycle }}" />
-    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
     <div id="form-prototype-data"
          data-userurllink = "{{ usermacros.userUrlLink()|e }}"
          data-uploadurl = "{{ oneup_uploader_endpoint('employees_gallery') }}"

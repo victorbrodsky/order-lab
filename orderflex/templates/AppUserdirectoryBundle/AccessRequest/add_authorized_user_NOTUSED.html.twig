@@ -16,15 +16,15 @@
 
 
 {% if sitename == 'employees' %}
-    {% set extendStr = "AppUserdirectoryBundle::Default/base.html.twig" %}
+    {% set extendStr = "AppUserdirectoryBundle/Default/base.html.twig" %}
 {% elseif sitename == 'fellapp' %}
-    {% set extendStr = "AppFellAppBundle::Default/base.html.twig" %}
+    {% set extendStr = "AppFellAppBundle/Default/base.html.twig" %}
 {% elseif sitename == 'deidentifier' %}
-    {% set extendStr = "AppDeidentifierBundle::Default/base.html.twig" %}
+    {% set extendStr = "AppDeidentifierBundle/Default/base.html.twig" %}
 {% elseif sitename == 'scan' %}
-    {% set extendStr = "AppOrderformBundle::Default/base.html.twig" %}
+    {% set extendStr = "AppOrderformBundle/Default/base.html.twig" %}
 {% elseif sitename == 'vacreq' %}
-    {% set extendStr = "AppVacReqBundle::Default/base.html.twig" %}
+    {% set extendStr = "AppVacReqBundle/Default/base.html.twig" %}
 {% endif %}
 
 {% extends extendStr%}
@@ -39,7 +39,7 @@
 
 {% block content %}
 
-    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
 
     <h3 class="text-info">
         Add a New Authorized User for {{ sitenamefull }}

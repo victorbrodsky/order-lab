@@ -14,7 +14,7 @@
     limitations under the License.
 #}
 
-{% extends "AppOrderformBundle::Default/base.html.twig" %}
+{% extends "AppOrderformBundle/Default/base.html.twig" %}
 
     {% if routename == 'incoming-scan-orders' %}
         {% set title = 'Incoming Scan Orders' %}
@@ -249,7 +249,7 @@
                     
             {% endif %}
                 <td class="rowlink-skip">
-                    {% include 'AppOrderformBundle::Default/action.html.twig' %}
+                    {% include 'AppOrderformBundle/Default/action.html.twig' %}
                 </td>
             </tr>
         {% endfor %}

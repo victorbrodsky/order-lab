@@ -14,7 +14,7 @@
     limitations under the License.
 #}
 
-{% extends "AppUserdirectoryBundle::Default/base.html.twig" %}
+{% extends "AppUserdirectoryBundle/Default/base.html.twig" %}
 
 {% block header %}
 
@@ -58,7 +58,7 @@
 
 {% endblock %}
 
-{% import "AppUserdirectoryBundle::Default/userformmacros.html.twig" as userform %}
+{% import "AppUserdirectoryBundle/Default/userformmacros.html.twig" as userform %}
 
 {#Snapshot css#}
 {% block additionalcss %}
@@ -282,7 +282,7 @@
 {#testing custom hydration#}
 {% macro snapshotcustomh( user, sitename, cycle, getOriginalname, getAbsoluteUploadFullPath, getUsernameOptimal, getHeadInfo ) %}
 
-    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
 
     <div align="center">
 

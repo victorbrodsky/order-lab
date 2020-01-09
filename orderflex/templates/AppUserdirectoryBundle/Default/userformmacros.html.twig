@@ -18,9 +18,9 @@
 
 
 {% macro baseTitle( field, cycle, classname, prototype, sitename ) %}
-    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
-    {% import "AppUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+    {% import "AppUserdirectoryBundle/Tree/treemacros.html.twig" as treemacros %}
     {% if prototype == "prototype" %}
         {% set formfield = field.vars.prototype %}
     {% else %}
@@ -173,7 +173,7 @@
 
 
 {% macro stateLicenses( field, cycle, classname, prototype ) %}
-    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
 
     {% if prototype == "prototype" %}
         {% set formfield = field.vars.prototype %}
@@ -223,7 +223,7 @@
 
 
 {% macro boardCertifications( field, cycle, classname, prototype ) %}
-    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
 
     {% if prototype == "prototype" %}
         {% set formfield = field.vars.prototype %}
@@ -267,7 +267,7 @@
 
 
 {% macro codenyphs( field, cycle, classname, prototype ) %}
-    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
 
     {% if prototype == "prototype" %}
         {% set formfield = field.vars.prototype %}
@@ -291,8 +291,8 @@
 {% endmacro %}
 
 {% macro employmentStatuses( field, cycle, classname, prototype ) %}
-    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-    {% import "AppUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+    {% import "AppUserdirectoryBundle/Tree/treemacros.html.twig" as treemacros %}
 
     {% if prototype == "prototype" %}
         {% set formfield = field.vars.prototype %}
@@ -360,8 +360,8 @@
 
 {#isEntity inidcates if the fields should be render not as form but as pure entity object (object's shadow)#}
 {% macro identifier( field, cycle, classname, prototype, isEntity ) %}
-    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
 
     {% if isEntity is not defined %}
         {% set isEntity = false %}
@@ -491,8 +491,8 @@
 {% endmacro %}
 
 {#{% macro researchLabs( field, cycle, classname, prototype ) %}#}
-    {#{% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
-    {#{% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}#}
+    {#{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}#}
+    {#{% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}#}
 
     {#{% if prototype == "prototype" %}#}
         {#{% set formfield = field.vars.prototype %}#}
@@ -521,9 +521,9 @@
 {#{% endmacro %}#}
 
 {% macro comments( field, cycle, classname, prototype ) %}
-    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
-    {% import "AppUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+    {% import "AppUserdirectoryBundle/Tree/treemacros.html.twig" as treemacros %}
 
     {% if prototype == "prototype" %}
         {% set formfield = field.vars.prototype %}
@@ -599,7 +599,7 @@
 
 {% macro snapshot_orig( user, sitename, cycle ) %}
 
-    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
 
     {#check if assistants exist#}
     {% set assistExist = false %}
@@ -749,7 +749,7 @@
 {#stevesnapshot#}
 {% macro snapshot_steve( user, sitename, cycle ) %}
 
-    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
 
     <div align="center">
 
@@ -1065,7 +1065,7 @@
 
 {% macro snapshot( user, sitename, cycle ) %}
 
-    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
 
     <h1>{{ user.getUsernameOptimal }}</h1>
 
@@ -1085,7 +1085,7 @@
 
 
 {% macro roleAttributes( roleobjects ) %}
-    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
     {% for role in roleobjects %}
         {% for attribute in role.getAttributes() %}
             {{ formmacros.simplefield( attribute.getName()~":", attribute.getValue(), "input", "disabled" ) }}
@@ -1098,8 +1098,8 @@
 
 {% macro permissionSection( permissions, cycle, sitename, collapsein, title, usedata ) %}
 
-    {% import "AppUserdirectoryBundle::Default/userformmacros.html.twig" as userform %}
-    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "AppUserdirectoryBundle/Default/userformmacros.html.twig" as userform %}
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
 
     {% if usedata %}
         <div id="form-prototype-data"
@@ -1135,7 +1135,7 @@
 {% endmacro %}
 
 {% macro permissions( field, cycle, classname, prototype ) %}
-    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
 
     {% if "show" in cycle %}
         {% set showFlag = true %}

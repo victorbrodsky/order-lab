@@ -14,8 +14,8 @@
     limitations under the License.
 #}
 
-{% extends "AppOrderformBundle::Default/base.html.twig" %}
-{#{% extends "AppUserdirectoryBundle::Default/base.html.twig" %}#}
+{% extends "AppOrderformBundle/Default/base.html.twig" %}
+{#{% extends "AppUserdirectoryBundle/Default/base.html.twig" %}#}
 
 {% block title %}
     Scan Order System
@@ -33,7 +33,7 @@
         {#&#123;&#35;display search result for patients &#35;&#125;#}
         {#{% set patientShowed = false %}#}
         {#{% if (entities and entities|length > 0) or (sameusers is defined and sameusers) %}#}
-            {#{% include 'AppOrderformBundle::Patient/patients-content.html.twig' with {'sitename': scan_sitename} %}#}
+            {#{% include 'AppOrderformBundle/Patient/patients-content.html.twig' with {'sitename': scan_sitename} %}#}
             {#{% set patientShowed = true %}#}
         {#{% endif %}#}
 

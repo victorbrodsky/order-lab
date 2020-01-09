@@ -16,9 +16,9 @@
 
 {#list all slide requests for admin or user's slide requests for other users#}
 
-{% extends "AppOrderformBundle::Default/base.html.twig" %}
+{% extends "AppOrderformBundle/Default/base.html.twig" %}
 
-{% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
 
 
 {% if routename == 'incoming-slide-return-requests' %}
@@ -140,7 +140,7 @@
             {% set returned = "Returned" in sliderequest.status %}
 
             {% if is_granted('ROLE_SCANORDER_PROCESSOR') and routename == 'incoming-slide-return-requests' %}
-                {% include 'AppOrderformBundle::SlideReturnRequest/add_comment.html.twig' with {'orderid': sliderequest.id}  %}
+                {% include 'AppOrderformBundle/SlideReturnRequest/add_comment.html.twig' with {'orderid': sliderequest.id}  %}
             {% endif %}
 
             {% if sliderequest.status == 'active' %}

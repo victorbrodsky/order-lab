@@ -16,8 +16,8 @@
 
 {% macro interviewForm( interview, cycle, classname, prototype, sitename, showAddDeleteBtn ) %}
 
-    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-    {% import "AppFellAppBundle::Default/fellappmacros.html.twig" as fellappmacros %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+    {% import "AppFellAppBundle/Default/fellappmacros.html.twig" as fellappmacros %}
 
     {% if showAddDeleteBtn is not defined %}
         {% set showAddDeleteBtn = 0 %}
@@ -73,7 +73,7 @@
 
 {% macro interviewMainForm( forminterview ) %}
 
-    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
 
     {{ formmacros.field(forminterview.academicRank) }}
 
@@ -92,7 +92,7 @@
 
 {% macro snapshot( fellapp, sitename, cycle ) %}
 
-    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
 
     <div style="text-align:center;">
 
@@ -184,8 +184,8 @@
 {#used for interview's modal#}
 {% macro addInterviewsModal(fellapp) %}
     
-    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
-    {% import "AppFellAppBundle::Default/fellappmacros.html.twig" as fellappmacros %}
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+    {% import "AppFellAppBundle/Default/fellappmacros.html.twig" as fellappmacros %}
 
 
     <!-- Modal -->
@@ -218,7 +218,7 @@
 {#used for interview's modal and download in excel/word. noGlyphicon is used when it is called for generation a download pdf/doc#}
 {% macro applicantInterviewsInfo(fellapp,noGlyphicon) %}
 
-    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
 
     {% if noGlyphicon is not defined %}
         {% set noGlyphicon = false %}

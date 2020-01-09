@@ -105,7 +105,7 @@
     <!-- we want to force people to click a button, so hide the close link in the toolbar -->
     {#<style type="text/css">a.ui-dialog-titlebar-close { display:none }</style>#}
 
-    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
     {{ usermacros.nonLiveSiteRedirect() }}
 
     {% block favicon %}
@@ -145,7 +145,7 @@
 
         <div class="text-center col-xs-12">
 
-            {% include 'AppUserdirectoryBundle::Security/idle_timeout.html.twig' %}
+            {% include 'AppUserdirectoryBundle/Security/idle_timeout.html.twig' %}
             
             <div class="browser-notice alert alert-warning center-block" align="middle" style="width: 70%; display:none;"></div>
 
@@ -182,7 +182,7 @@
             {% block content %}{% endblock %}
 
             <!-- footer -->
-            {% include 'AppUserdirectoryBundle::Default/footer.html.twig' %}
+            {% include 'AppUserdirectoryBundle/Default/footer.html.twig' %}
         </div>
 
 

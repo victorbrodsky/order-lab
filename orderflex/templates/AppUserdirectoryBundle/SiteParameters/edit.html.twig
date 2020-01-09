@@ -16,19 +16,19 @@
 
 
 {% if sitename == 'employees' %}
-    {% set extendStr = "AppUserdirectoryBundle::Default/base.html.twig" %}
+    {% set extendStr = "AppUserdirectoryBundle/Default/base.html.twig" %}
 {% elseif sitename == 'fellapp' %}
-    {% set extendStr = "AppFellAppBundle::Default/base.html.twig" %}
+    {% set extendStr = "AppFellAppBundle/Default/base.html.twig" %}
 {% elseif sitename == 'deidentifier' %}
-    {% set extendStr = "AppDeidentifierBundle::Default/base.html.twig" %}
+    {% set extendStr = "AppDeidentifierBundle/Default/base.html.twig" %}
 {% elseif sitename == 'scan' %}
-    {% set extendStr = "AppOrderformBundle::Default/base.html.twig" %}
+    {% set extendStr = "AppOrderformBundle/Default/base.html.twig" %}
 {% elseif sitename == 'vacreq' %}
-    {% set extendStr = "AppVacReqBundle::Default/base.html.twig" %}
+    {% set extendStr = "AppVacReqBundle/Default/base.html.twig" %}
 {% elseif sitename == 'calllog' %}
-    {% set extendStr = "AppCallLogBundle::Default/base.html.twig" %}
+    {% set extendStr = "AppCallLogBundle/Default/base.html.twig" %}
 {% elseif sitename == 'translationalresearch' %}
-    {% set extendStr = "AppTranslationalResearchBundle::Default/base.html.twig" %}
+    {% set extendStr = "AppTranslationalResearchBundle/Default/base.html.twig" %}
 {% endif %}
 
 {% extends extendStr%}
@@ -64,9 +64,9 @@
 
 {% block content %}
 
-    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-    {% import "AppUserdirectoryBundle::Default/userformmacros.html.twig" as userform %}
-    {% import "AppUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+    {% import "AppUserdirectoryBundle/Default/userformmacros.html.twig" as userform %}
+    {% import "AppUserdirectoryBundle/Tree/treemacros.html.twig" as treemacros %}
 
     <h3 class="text-info">Update {{ sitesettings_title }}: {{ param }}</h3>
 
@@ -139,7 +139,7 @@
 
         {% if edit_form.platformLogos is defined %}
 
-            {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+            {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
 
             <input type="hidden" id="formcycle" value="{{ cycle }}" />
             <div id="form-prototype-data"

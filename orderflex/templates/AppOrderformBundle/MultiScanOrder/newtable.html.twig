@@ -14,11 +14,11 @@
     limitations under the License.
 #}
 
-{% extends "AppOrderformBundle::Default/base.html.twig" %}
+{% extends "AppOrderformBundle/Default/base.html.twig" %}
 
-{% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
 
-{% import "AppOrderformBundle::Default/ordercommon.html.twig" as order %}
+{% import "AppOrderformBundle/Default/ordercommon.html.twig" as order %}
 
 {% block title %}
     {{ formtype }}
@@ -154,7 +154,7 @@
     {############ START FORM ##############}
     <form id="table-scanorderform" action="{{ path('table_create_submit') }}" method="post">
 
-        {% include 'AppOrderformBundle::MultiScanOrder/edu_res.html.twig' %}
+        {% include 'AppOrderformBundle/MultiScanOrder/edu_res.html.twig' %}
 
         {{ form_widget(form.oid) }}
 

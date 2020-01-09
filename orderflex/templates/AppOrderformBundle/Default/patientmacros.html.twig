@@ -17,7 +17,7 @@
 
 {% macro displayPatient( patient, patientCount, status, showPlus, datastructure, type, formtype ) %}
 
-    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
 
 
         {############# patient #############}
@@ -236,9 +236,9 @@
 {#patient - is patient form; type == cycle#}
 {% macro displayFullPatientForm( formPatient, status, showPlus, datastructure, type, formtype, patientParentForm, dataqualityPrototype ) %}
 
-    {% import "AppOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-    {% import "AppOrderformBundle::Default/patientmacros.html.twig" as patientmacros %}
-    {% import "AppUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+    {% import "AppOrderformBundle/Default/patientmacros.html.twig" as patientmacros %}
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
 
     {#{{ formmacros.testSpotShow(formPatient) }}#}
 
