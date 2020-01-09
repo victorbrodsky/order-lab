@@ -17,6 +17,7 @@
 {% set urltype = "home" %}
 
 {% extends "AppUserdirectoryBundle/Default/base.html.twig" %}
+{#{% extends "base.html.twig" %}#}
 
 {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
 
@@ -123,7 +124,7 @@
 
                 {% if is_granted('ROLE_USERDIRECTORY_EDITOR') %}
 
-                    {% set pendingadminreview = render(controller("AppUserdirectoryBundle:User:pendingAdminReview")) %}
+                    {% set pendingadminreview = render(controller("App\\UserdirectoryBundle\\Controller\\UserController::pendingAdminReviewAction")) %}
 
                     There are:
 

@@ -24,7 +24,7 @@ framework:
         save_path: '%kernel.project_dir%/var/sessions/%kernel.environment%'
         #http://blog.jmoz.co.uk/symfony2-warning-sessionstart-the-session-id/
         #storage_id: session.storage.filesystem
-    fragments:       ~
+    fragments: ~
 #    fragments: { path: /_fragment }
     http_method_override: true
     profiler:

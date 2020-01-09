@@ -20,7 +20,7 @@ namespace App\UserdirectoryBundle\Controller;
 
 use App\UserdirectoryBundle\Entity\Book;
 use App\UserdirectoryBundle\Entity\Lecture;
-use App\UserdirectoryBundle\Entity\Logger;
+//use App\UserdirectoryBundle\Entity\Logger;
 use App\UserdirectoryBundle\Entity\PerSiteSettings;
 use App\UserdirectoryBundle\Entity\Publication;
 //use Symfony\Component\Translation\Translator;
@@ -33,6 +33,7 @@ use App\UserdirectoryBundle\Security\Authentication\AuthUtil;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+//use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
@@ -77,6 +78,7 @@ use App\UserdirectoryBundle\Entity\Grant;
 
 
 class UserController extends Controller
+//class UserController extends AbstractController
 {
 
     /**
@@ -353,6 +355,21 @@ class UserController extends Controller
             $pagination = $res['entities'];
             $roles = $res['roles'];
         }
+
+        //dump($roles, $this);
+
+//        return $this->render(
+//            'AppUserdirectoryBundle/Default/home.html.twig',
+//            array(
+//                'accessreqs' => count($accessreqs),
+//                'locations' => $locations,
+//                'entities' => $pagination,
+//                'roles' => $roles,
+//                'search' => $search,
+//                'all' => $all,
+//                'postData' => $request->query->all()
+//            )
+//        );
 
         return array(
             'accessreqs' => count($accessreqs),

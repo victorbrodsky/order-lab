@@ -66,7 +66,8 @@ services:
     #Remove autowire for Classes using extends vendor Classes: cna be done here, for example adding folder 'Query' (App\UserdirectoryBundle\Query) to exclude
     App\:
 #        resource: '../src/App/*/*'
-        resource: '../src/App/*'
+#        resource: '../src/App/*'
+        resource: '../src/App/*/Util'
         # you can exclude directories or files
         # but if a service is unused, it's removed anyway
         exclude: '../src/App/*/{DependencyInjection,Entity,Migrations,Tests,Kernel.php,Query,Repository,Security,Services,Util}'
@@ -77,6 +78,8 @@ services:
 #        namespace: App\
         resource: '../src/App/*/*/Controller'
         tags: ['controller.service_arguments']
+
+#    App\UserdirectoryBundle\Controller\UserController: ~
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
@@ -130,3 +133,13 @@ oneup_uploader:
             frontend: dropzone
             storage:
                 directory: 'Uploaded/%calllog.uploadpath%'
+
+sensio_framework_extra:
+    router:      { annotations: true } # Deprecated; use routing annotations of Symfony core instead
+    request:     { converters: true, auto_convert: true }
+    view:        { annotations: true }
+    cache:       { annotations: true }
+    security:    { annotations: true }
+    psr_message: { enabled: false } # Defaults to true if the PSR-7 bridge is installed
+
+

@@ -44,7 +44,8 @@
     },
     "require-dev": {
         "symfony/phpunit-bridge": "^4",
-        "symfony/profiler-pack": "^1.0"
+        "symfony/profiler-pack": "^1.0",
+        "symfony/web-profiler-bundle": "^3.4|^4.3"
     },
     "config": {
         "preferred-install": {
