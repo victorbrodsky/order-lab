@@ -87,7 +87,7 @@ class ScanSecurityController extends SecurityController
     /**
      * @Route("/scan-order/no-permission", name="scan-nopermission")
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:Security:nopermission.html.twig")
+     * @Template("AppUserdirectoryBundle/Security/nopermission.html.twig")
      */
     public function actionNoPermission( Request $request )
     {
@@ -103,7 +103,7 @@ class ScanSecurityController extends SecurityController
 //    /**
 //     * @Route("/login_check", name="login_check")
 //     * @Method("POST")
-//     * @Template("AppOrderformBundle:ScanOrder:new_orig.html.twig")
+//     * @Template("AppOrderformBundle/ScanOrder/new_orig.html.twig")
 //     */
 //    public function loginCheckAction( Request $request )
 //    {
@@ -130,7 +130,7 @@ class ScanSecurityController extends SecurityController
     /**
      * @Route("/admin/load-roles-from-pacsvendor", name="load-roles-from-pacsvendor")
      * @Method("GET")
-     * @Template("AppOrderformBundle:Security:load-roles-from-pacsvendor.html.twig")
+     * @Template("AppOrderformBundle/Security/load-roles-from-pacsvendor.html.twig")
      */
     public function loadRolesFromPacsvendorAction()
     {

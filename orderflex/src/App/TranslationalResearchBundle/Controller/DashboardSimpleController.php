@@ -26,7 +26,7 @@ class DashboardSimpleController extends Controller
 
     /**
      * @Route("/pi-project-statistics/", name="translationalresearch_dashboard_project")
-     * @Template("AppTranslationalResearchBundle:Dashboard:dashboard.html.twig")
+     * @Template("AppTranslationalResearchBundle/Dashboard/dashboard.html.twig")
      */
     public function projectStatisticsAction( Request $request )
     {
@@ -277,7 +277,7 @@ class DashboardSimpleController extends Controller
 
     /**
      * @Route("/work-request-statistics/", name="translationalresearch_dashboard_request")
-     * @Template("AppTranslationalResearchBundle:Dashboard:dashboard.html.twig")
+     * @Template("AppTranslationalResearchBundle/Dashboard/dashboard.html.twig")
      */
     public function requestStatisticsAction( Request $request )
     {
@@ -553,7 +553,7 @@ class DashboardSimpleController extends Controller
 
     /**
      * @Route("/productivity-statistics-based-on-work-requests/", name="translationalresearch_dashboard_financial_request")
-     * @Template("AppTranslationalResearchBundle:Dashboard:dashboard.html.twig")
+     * @Template("AppTranslationalResearchBundle/Dashboard/dashboard.html.twig")
      */
     public function requestFinancialStatisticsAction( Request $request )
     {
@@ -793,7 +793,7 @@ class DashboardSimpleController extends Controller
 
     /**
      * @Route("/financial-statistics-based-on-invoices/", name="translationalresearch_dashboard_financial_invoice")
-     * @Template("AppTranslationalResearchBundle:Dashboard:dashboard.html.twig")
+     * @Template("AppTranslationalResearchBundle/Dashboard/dashboard.html.twig")
      */
     public function invoiceFinancialStatisticsAction( Request $request )
     {
@@ -1099,7 +1099,7 @@ class DashboardSimpleController extends Controller
      * @Route("/pi-statistics/", name="translationalresearch_dashboard_pilevel")
      * @Route("/project-statistics/", name="translationalresearch_dashboard_projectlevel")
      * @Route("/invoice-statistics/", name="translationalresearch_dashboard_invoicelevel")
-     * @Template("AppTranslationalResearchBundle:Dashboard:dashboard.html.twig")
+     * @Template("AppTranslationalResearchBundle/Dashboard/dashboard.html.twig")
      */
     public function piStatisticsAction( Request $request ) {
 
@@ -1315,7 +1315,7 @@ class DashboardSimpleController extends Controller
 
     /**
      * @Route("/comparison-statistics/", name="translationalresearch_dashboard_compare")
-     * @Template("AppTranslationalResearchBundle:Dashboard:dashboard.html.twig")
+     * @Template("AppTranslationalResearchBundle/Dashboard/dashboard.html.twig")
      */
     public function compareStatisticsAction( Request $request )
     {
@@ -2037,7 +2037,7 @@ class DashboardSimpleController extends Controller
 
 //    /**
 //     * @Route("/funded-level/", name="translationalresearch_dashboard_fundedlevel")
-//     * @Template("AppTranslationalResearchBundle:Dashboard:pilevel.html.twig")
+//     * @Template("AppTranslationalResearchBundle/Dashboard/pilevel.html.twig")
 //     */
 //    public function fundedLevelAction( Request $request ) {
 //

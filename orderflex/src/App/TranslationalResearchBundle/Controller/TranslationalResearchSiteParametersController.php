@@ -41,7 +41,7 @@ class TranslationalResearchSiteParametersController extends SiteParametersContro
      *
      * @Route("/", name="translationalresearch_siteparameters")
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:SiteParameters:index.html.twig")
+     * @Template("AppUserdirectoryBundle/SiteParameters/index.html.twig")
      */
     public function indexAction(Request $request)
     {
@@ -56,7 +56,7 @@ class TranslationalResearchSiteParametersController extends SiteParametersContro
      *
      * @Route("/{id}/edit", name="translationalresearch_siteparameters_edit")
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:SiteParameters:edit.html.twig")
+     * @Template("AppUserdirectoryBundle/SiteParameters/edit.html.twig")
      */
     public function editAction(Request $request,$id)
     {
@@ -68,7 +68,7 @@ class TranslationalResearchSiteParametersController extends SiteParametersContro
      *
      * @Route("/{id}", name="translationalresearch_siteparameters_update")
      * @Method("PUT")
-     * @Template("AppUserdirectoryBundle:SiteParameters:edit.html.twig")
+     * @Template("AppUserdirectoryBundle/SiteParameters/edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {

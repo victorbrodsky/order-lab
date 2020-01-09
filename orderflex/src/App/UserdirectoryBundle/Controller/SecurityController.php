@@ -38,7 +38,7 @@ class SecurityController extends Controller
 //    /**
 //     * @Route("/login_check", name="employees_login_check")
 //     * @Method("POST")
-//     * @Template("AppUserdirectoryBundle:Security:login.html.twig")
+//     * @Template("AppUserdirectoryBundle/Security/login.html.twig")
 //     */
 //    public function loginCheckAction( Request $request )
 //    {
@@ -460,7 +460,7 @@ class SecurityController extends Controller
     /**
      * @Route("/no-permission", name="employees-nopermission")
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:Security:nopermission.html.twig")
+     * @Template("AppUserdirectoryBundle/Security/nopermission.html.twig")
      */
     public function actionNoPermission( Request $request )
     {

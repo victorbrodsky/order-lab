@@ -51,7 +51,7 @@ class ScanListController extends ListController
         $listArr = $this->getList($request,1000000);
 
 
-        $listExcelHtml = $this->container->get('templating')->render('AppOrderformBundle:ListForm:list-excel.html.twig',
+        $listExcelHtml = $this->container->get('templating')->render('AppOrderformBundle/ListForm/list-excel.html.twig',
             $listArr
         );
 
@@ -183,7 +183,7 @@ class ScanListController extends ListController
      *
      *
      * @Method("GET")
-     * @Template("AppOrderformBundle:ListForm:index.html.twig")
+     * @Template("AppOrderformBundle/ListForm/index.html.twig")
      */
     public function indexAction(Request $request)
     {
@@ -245,7 +245,7 @@ class ScanListController extends ListController
      * @Route("/calllog-task-types/", name="calllogtasktypes_create")
      *
      * @Method("POST")
-     * @Template("AppOrderformBundle:ListForm:new.html.twig")
+     * @Template("AppOrderformBundle/ListForm/new.html.twig")
      */
     public function createAction(Request $request)
     {
@@ -307,7 +307,7 @@ class ScanListController extends ListController
      * @Route("/calllog-task-types/new", name="calllogtasktypes_new")
      *
      * @Method("GET")
-     * @Template("AppOrderformBundle:ListForm:new.html.twig")
+     * @Template("AppOrderformBundle/ListForm/new.html.twig")
      */
     public function newAction(Request $request)
     {
@@ -369,7 +369,7 @@ class ScanListController extends ListController
      * @Route("/calllog-task-types/{id}", name="calllogtasktypes_show")
      *
      * @Method("GET")
-     * @Template("AppOrderformBundle:ListForm:show.html.twig")
+     * @Template("AppOrderformBundle/ListForm/show.html.twig")
      */
     public function showAction(Request $request,$id)
     {
@@ -431,7 +431,7 @@ class ScanListController extends ListController
      * @Route("/calllog-task-types/{id}/edit", name="calllogtasktypes_edit")
      *
      * @Method("GET")
-     * @Template("AppOrderformBundle:ListForm:edit.html.twig")
+     * @Template("AppOrderformBundle/ListForm/edit.html.twig")
      */
     public function editAction(Request $request,$id)
     {
@@ -493,7 +493,7 @@ class ScanListController extends ListController
      * @Route("/calllog-task-types/{id}", name="calllogtasktypes_update")
      *
      * @Method("PUT")
-     * @Template("AppOrderformBundle:ListForm:edit.html.twig")
+     * @Template("AppOrderformBundle/ListForm/edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {

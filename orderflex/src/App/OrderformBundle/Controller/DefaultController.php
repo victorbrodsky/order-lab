@@ -29,7 +29,7 @@ class DefaultController extends Controller
 
     /**
      * @Route("/thanks-for-downloading/{id}/{sitename}", name="scan_thankfordownloading")
-     * @Template("AppUserdirectoryBundle:Default:thanksfordownloading.html.twig")
+     * @Template("AppUserdirectoryBundle/Default/thanksfordownloading.html.twig")
      * @Method("GET")
      */
     public function thankfordownloadingAction(Request $request, $id, $sitename) {

@@ -50,7 +50,7 @@ class RequestFormNodeController extends Controller
      *
      * @Route("/project/{id}/request/new/", name="translationalresearch_request_formnode_new")
      * @Route("/request/new/", name="translationalresearch_new_standalone_request_formnode")
-     * @Template("AppTranslationalResearchBundle:RequestFormnode:new.html.twig")
+     * @Template("AppTranslationalResearchBundle/RequestFormnode/new.html.twig")
      * @Method({"GET", "POST"})
      */
     public function newFormNodeAction(Request $request, Project $project=null)
@@ -179,7 +179,7 @@ class RequestFormNodeController extends Controller
      * Get TransResRequest Edit page
      *
      * @Route("/work-request/edit/{id}", name="translationalresearch_request_formnode_edit")
-     * @Template("AppTranslationalResearchBundle:RequestFormnode:edit.html.twig")
+     * @Template("AppTranslationalResearchBundle/RequestFormnode/edit.html.twig")
      * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, TransResRequest $transresRequest)
@@ -319,7 +319,7 @@ class RequestFormNodeController extends Controller
      * Finds and displays a request entity.
      *
      * @Route("/work-request/show/{id}", name="translationalresearch_request_formnode_show")
-     * @Template("AppTranslationalResearchBundle:RequestFormnode:show.html.twig")
+     * @Template("AppTranslationalResearchBundle/RequestFormnode/show.html.twig")
      * @Method("GET")
      */
     public function showAction(Request $request, TransResRequest $transresRequest)
@@ -376,7 +376,7 @@ class RequestFormNodeController extends Controller
      * Finds and displays all project's requests
      *
      * @Route("/project/{id}/requests", name="translationalresearch_request_formnode_index")
-     * @Template("AppTranslationalResearchBundle:RequestFormnode:index.html.twig")
+     * @Template("AppTranslationalResearchBundle/RequestFormnode/index.html.twig")
      * @Method("GET")
      */
     public function indexAction(Request $request, Project $project)
@@ -506,7 +506,7 @@ class RequestFormNodeController extends Controller
      *
      * @Route("/my-requests", name="translationalresearch_my_requests_formnode")
      * @Route("/all-requests", name="translationalresearch_all_requests_formnode")
-     * @Template("AppTranslationalResearchBundle:RequestFormnode:all-requests.html.twig")
+     * @Template("AppTranslationalResearchBundle/RequestFormnode/all-requests.html.twig")
      * @Method("GET")
      */
     public function myRequestsAction(Request $request)
@@ -763,7 +763,7 @@ class RequestFormNodeController extends Controller
      * Finds and displays a progress review form for this request entity.
      *
      * @Route("/request/progress/review/{id}", name="translationalresearch_request_formnode_review_progress_state")
-     * @Template("AppTranslationalResearchBundle:RequestFormnode:review.html.twig")
+     * @Template("AppTranslationalResearchBundle/RequestFormnode/review.html.twig")
      * @Method("GET")
      */
     public function reviewProgressAction(Request $request, TransResRequest $transresRequest)
@@ -801,7 +801,7 @@ class RequestFormNodeController extends Controller
      * Finds and displays a billing review form for this request entity.
      *
      * @Route("/request/billing/review/{id}", name="translationalresearch_request_formnode_review_billing_state")
-     * @Template("AppTranslationalResearchBundle:RequestFormnode:review.html.twig")
+     * @Template("AppTranslationalResearchBundle/RequestFormnode/review.html.twig")
      * @Method("GET")
      */
     public function reviewBillingAction(Request $request, TransResRequest $transresRequest)

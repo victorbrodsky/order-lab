@@ -41,7 +41,7 @@ class ScanLoggerController extends LoggerController
      *
      * @Route("/", name="scan_logger")
      * @Method("GET")
-     * @Template("AppOrderformBundle:Logger:index.html.twig")
+     * @Template("AppOrderformBundle/Logger/index.html.twig")
      */
     public function indexAction(Request $request)
     {
@@ -53,7 +53,7 @@ class ScanLoggerController extends LoggerController
     /**
      * @Route("/user/{id}/all", name="scan_logger_user_all")
      * @Method("GET")
-     * @Template("AppOrderformBundle:Logger:index.html.twig")
+     * @Template("AppOrderformBundle/Logger/index.html.twig")
      */
     public function getAuditLogAllAction(Request $request)
     {

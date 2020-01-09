@@ -32,7 +32,7 @@ class DefaultController extends Controller
 
     /**
      * @Route("/thanks-for-downloading/{id}/{sitename}", name="common_thankfordownloading")
-     * @Template("AppUserdirectoryBundle:Default:thanksfordownloading.html.twig")
+     * @Template("AppUserdirectoryBundle/Default/thanksfordownloading.html.twig")
      * @Method("GET")
      */
     public function thankfordownloadingAction(Request $request, $id, $sitename) {
@@ -45,7 +45,7 @@ class DefaultController extends Controller
 
     /**
      * @Route("/show-system-log", name="employees_show_system_log")
-     * @Template("AppUserdirectoryBundle:Default:show-system-log.html.twig")
+     * @Template("AppUserdirectoryBundle/Default/show-system-log.html.twig")
      * @Method("GET")
      */
     public function showSystemLogAction(Request $request) {
@@ -78,7 +78,7 @@ class DefaultController extends Controller
 
     /**
      * @Route("/show-system-test-error-log", name="employees_show_system_test_error_log")
-     * @Template("AppUserdirectoryBundle:Default:show-system-log.html.twig")
+     * @Template("AppUserdirectoryBundle/Default/show-system-log.html.twig")
      * @Method("GET")
      */
     public function showSystemTestLogAction(Request $request) {
@@ -112,7 +112,7 @@ class DefaultController extends Controller
 
 //    /**
 //     * @Route("/", name="employees_home")
-//     * @Template("AppUserdirectoryBundle:Default:home.html.twig")
+//     * @Template("AppUserdirectoryBundle/Default/home.html.twig")
 //     */
 //    public function indexAction()
 //    {
@@ -152,7 +152,7 @@ class DefaultController extends Controller
 
 //    /**
 //     * @Route("/admin", name="employees_admin")
-//     * @Template("AppUserdirectoryBundle:Default:index.html.twig")
+//     * @Template("AppUserdirectoryBundle/Default/index.html.twig")
 //     */
 //    public function adminAction()
 //    {

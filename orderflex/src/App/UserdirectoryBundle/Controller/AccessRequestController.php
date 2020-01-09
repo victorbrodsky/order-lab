@@ -70,7 +70,7 @@ class AccessRequestController extends Controller
      *
      * @Route("/access-requests/new/create", name="employees_access_request_new_plain")
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:AccessRequest:access_request.html.twig")
+     * @Template("AppUserdirectoryBundle/AccessRequest/access_request.html.twig")
      */
     public function accessRequestCreatePlainAction(Request $request)
     {
@@ -218,7 +218,7 @@ class AccessRequestController extends Controller
      *
      * @Route("/access-requests/new", name="employees_access_request_new")
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:AccessRequest:access_request.html.twig")
+     * @Template("AppUserdirectoryBundle/AccessRequest/access_request.html.twig")
      */
     public function accessRequestCreateAction()
     {
@@ -275,7 +275,7 @@ class AccessRequestController extends Controller
             //$this->get('security.context')->setToken(null);
             //$this->get('request')->getSession()->invalidate();
 
-            return $this->render('AppUserdirectoryBundle:AccessRequest:request_confirmation.html.twig',array('text'=>$text,'sitename'=>$sitename,'pendinguser'=>true));
+            return $this->render('AppUserdirectoryBundle/AccessRequest/request_confirmation.html.twig',array('text'=>$text,'sitename'=>$sitename,'pendinguser'=>true));
         }
 
         // Case 2: user has accreq but it was declined
@@ -285,7 +285,7 @@ class AccessRequestController extends Controller
             $dateStr = $transformer->transform($userAccessReq->getCreatedate());
             $text = 'You have requested access to '.$sitenameFull.' on '.$dateStr.'. Your request has been declined. Please contact the system administrator by emailing '.$this->container->getParameter('default_system_email').' if you have any questions.';
 
-            return $this->render('AppUserdirectoryBundle:AccessRequest:request_confirmation.html.twig',array('text'=>$text,'sitename'=>$sitename,'pendinguser'=>true));
+            return $this->render('AppUserdirectoryBundle/AccessRequest/request_confirmation.html.twig',array('text'=>$text,'sitename'=>$sitename,'pendinguser'=>true));
         }
 
         // Case 3: user has role banned
@@ -398,7 +398,7 @@ class AccessRequestController extends Controller
 //     *
 //     * @Route("/access-requests/details/new", name="employees_access_request_details_new")
 //     * @Method("GET")
-//     * @Template("AppUserdirectoryBundle:AccessRequest:access_request.html.twig")
+//     * @Template("AppUserdirectoryBundle/AccessRequest/access_request.html.twig")
 //     */
 //    public function accessRequestDetailsAction()
 //    {
@@ -415,7 +415,7 @@ class AccessRequestController extends Controller
       *
       * @Route("/access-requests/new/pending", name="employees_access_request_create")
       * @Method("POST")
-      * @Template("AppUserdirectoryBundle:AccessRequest:access_request.html.twig")
+      * @Template("AppUserdirectoryBundle/AccessRequest/access_request.html.twig")
       */
     public function accessRequestAction(Request $request)
     {
@@ -467,7 +467,7 @@ class AccessRequestController extends Controller
                 "The status of your request is " . $userAccessReq->getStatusStr() . "." .
                 "Please contact the system administrator by emailing ".$this->container->getParameter('default_system_email')." if you have any questions.";
 
-            return $this->render('AppUserdirectoryBundle:AccessRequest:request_confirmation.html.twig',array('text'=>$text,'sitename'=>$sitename,'pendinguser'=>true));
+            return $this->render('AppUserdirectoryBundle/AccessRequest/request_confirmation.html.twig',array('text'=>$text,'sitename'=>$sitename,'pendinguser'=>true));
         }
 
         //Create a new active AccessRequest
@@ -583,7 +583,7 @@ class AccessRequestController extends Controller
             $this->get('security.token_storage')->setToken(null);
             return $this->redirect($this->generateUrl($sitename . '_login'));
         } else {
-            return $this->render('AppUserdirectoryBundle:AccessRequest:request_confirmation.html.twig', array('text' => $text, 'sitename' => $sitename, 'pendinguser' => true));
+            return $this->render('AppUserdirectoryBundle/AccessRequest/request_confirmation.html.twig', array('text' => $text, 'sitename' => $sitename, 'pendinguser' => true));
         }
     }
 
@@ -619,7 +619,7 @@ class AccessRequestController extends Controller
      *
      * @Route("/access-requests", name="employees_accessrequest_list")
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:AccessRequest:access_request_list.html.twig")
+     * @Template("AppUserdirectoryBundle/AccessRequest/access_request_list.html.twig")
      */
     public function accessRequestIndexAction(Request $request)
     {
@@ -877,7 +877,7 @@ class AccessRequestController extends Controller
     /**
      * @Route("/access-requests/{id}", name="employees_accessrequest_management", requirements={"id" = "\d+"})
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
+     * @Template("AppUserdirectoryBundle/AccessRequest/access_request_management.html.twig")
      */
     public function accessRequestManagementAction( Request $request, $id )
     {
@@ -948,7 +948,7 @@ class AccessRequestController extends Controller
     /**
      * @Route("/access-requests/submit/{id}", name="employees_accessrequest_management_submit", requirements={"id" = "\d+"})
      * @Method("POST")
-     * @Template("AppUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
+     * @Template("AppUserdirectoryBundle/AccessRequest/access_request_management.html.twig")
      */
     public function accessRequestManagementSubmitAction( Request $request, $id )
     {
@@ -1130,7 +1130,7 @@ class AccessRequestController extends Controller
     /**
      * @Route("/authorization-user-manager/{id}", name="employees_authorization_user_management", requirements={"id" = "\d+"})
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
+     * @Template("AppUserdirectoryBundle/AccessRequest/access_request_management.html.twig")
      */
     public function authorizationManagementAction( Request $request, $id )
     {
@@ -1187,7 +1187,7 @@ class AccessRequestController extends Controller
     /**
      * @Route("/authorization-user-manager/submit/{id}", name="employees_authorization_user_management_submit", requirements={"id" = "\d+"})
      * @Method("POST")
-     * @Template("AppUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
+     * @Template("AppUserdirectoryBundle/AccessRequest/access_request_management.html.twig")
      */
     public function authorizationManagementSubmitAction( Request $request, $id )
     {
@@ -1264,7 +1264,7 @@ class AccessRequestController extends Controller
     /**
      * @Route("/authorized-users/", name="employees_authorized_users")
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:AccessRequest:authorized_users.html.twig")
+     * @Template("AppUserdirectoryBundle/AccessRequest/authorized_users.html.twig")
      */
     public function authorizedUsersAction( Request $request )
     {
@@ -1375,7 +1375,7 @@ class AccessRequestController extends Controller
     /**
      * @Route("/add-authorized-user/", name="employees_add_authorized_user")
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:AccessRequest:add_authorized_user.html.twig")
+     * @Template("AppUserdirectoryBundle/AccessRequest/add_authorized_user.html.twig")
      */
     public function addAuthorizedUserAction( Request $request )
     {
@@ -1495,7 +1495,7 @@ class AccessRequestController extends Controller
 //    /**
 //     * @Route("/add-authorized-user/submit/", name="employees_add_authorized_user_submit")
 //     * @Method("POST")
-//     * @Template("AppUserdirectoryBundle:AccessRequest:add_authorized_user.html.twig")
+//     * @Template("AppUserdirectoryBundle/AccessRequest/add_authorized_user.html.twig")
 //     */
 //    public function addAuthorizedUserSubmitAction( Request $request )
 //    {
@@ -1514,7 +1514,7 @@ class AccessRequestController extends Controller
     /**
      * @Route("/generated-users/", name="employees_generated_users")
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:AccessRequest:generated_users.html.twig")
+     * @Template("AppUserdirectoryBundle/AccessRequest/generated_users.html.twig")
      */
     public function generatedUsersAction(Request $request)
     {
@@ -1582,7 +1582,7 @@ class AccessRequestController extends Controller
 
     /**
      * @Route("/generated-user/{id}", name="employees_generated_user_management")
-     * @Template("AppUserdirectoryBundle:AccessRequest:generated_user_management.html.twig")
+     * @Template("AppUserdirectoryBundle/AccessRequest/generated_user_management.html.twig")
      * @Method({"GET", "POST"})
      */
     public function generatedUserManagementAction(Request $request, User $user)

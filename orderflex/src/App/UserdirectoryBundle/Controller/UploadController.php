@@ -426,7 +426,7 @@ class UploadController extends Controller {
      *
      * @Route("/import-users/spreadsheet ", name="employees_import_users_excel")
      * @Method({"GET","POST"})
-     * @Template("AppUserdirectoryBundle:Admin:import-users.html.twig")
+     * @Template("AppUserdirectoryBundle/Admin/import-users.html.twig")
      */
     public function importExcelUsersFileAction( Request $request )
     {
@@ -474,7 +474,7 @@ class UploadController extends Controller {
 
 
 
-        //return $this->container->get('templating')->renderResponse('FOSUserBundle:Profile:show.html.'.$this->container->getParameter('fos_user.template.engine'), array('user' => $user));
+        //return $this->container->get('templating')->renderResponse('FOSUserBundle/Profile/show.html.'.$this->container->getParameter('fos_user.template.engine'), array('user' => $user));
         return array(
             'form' => $form->createView(),
             'sitename' => $this->container->getParameter('employees.sitename'),

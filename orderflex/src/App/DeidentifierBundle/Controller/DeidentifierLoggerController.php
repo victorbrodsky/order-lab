@@ -41,7 +41,7 @@ class DeidentifierLoggerController extends LoggerController
      *
      * @Route("/", name="deidentifier_logger")
      * @Method("GET")
-     * @Template("AppDeidentifierBundle:Logger:index.html.twig")
+     * @Template("AppDeidentifierBundle/Logger/index.html.twig")
      */
     public function indexAction(Request $request)
     {
@@ -59,7 +59,7 @@ class DeidentifierLoggerController extends LoggerController
     /**
      * @Route("/user/{id}/all", name="deidentifier_logger_user_all")
      * @Method("GET")
-     * @Template("AppDeidentifierBundle:Logger:index.html.twig")
+     * @Template("AppDeidentifierBundle/Logger/index.html.twig")
      */
     public function getAuditLogAllAction(Request $request)
     {
@@ -93,7 +93,7 @@ class DeidentifierLoggerController extends LoggerController
      *
      * @Route("/generation-log/", name="deidentifier_generation_log")
      * @Method("GET")
-     * @Template("AppDeidentifierBundle:Logger:index.html.twig")
+     * @Template("AppDeidentifierBundle/Logger/index.html.twig")
      */
     public function generationLogAction(Request $request)
     {
@@ -155,7 +155,7 @@ class DeidentifierLoggerController extends LoggerController
      *
      * @Route("/event-log-per-user-per-event-type/", name="deidentifier_my_generation_log")
      * @Method("GET")
-     * @Template("AppDeidentifierBundle:Logger:index.html.twig")
+     * @Template("AppDeidentifierBundle/Logger/index.html.twig")
      */
     public function myGenerationLogAction(Request $request)
     {

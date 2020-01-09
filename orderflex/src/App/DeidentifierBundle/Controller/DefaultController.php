@@ -47,7 +47,7 @@ class DefaultController extends Controller
 
     /**
      * @Route("/about", name="deidentifier_about_page")
-     * @Template("AppUserdirectoryBundle:Default:about.html.twig")
+     * @Template("AppUserdirectoryBundle/Default/about.html.twig")
      */
     public function aboutAction( Request $request ) {
         return array('sitename'=>$this->container->getParameter('deidentifier.sitename'));
@@ -55,7 +55,7 @@ class DefaultController extends Controller
 
     /**
      * @Route("/navbar/{accessionTypeStr}/{accessionTypeId}/{accessionNumber}", name="deidentifier_navbar")
-     * @Template("AppDeidentifierBundle:Default:navbar.html.twig")
+     * @Template("AppDeidentifierBundle/Default/navbar.html.twig")
      * @Method("GET")
      */
     public function deidentifierNavbarAction( Request $request, $accessionTypeStr, $accessionTypeId, $accessionNumber ) {
@@ -90,7 +90,7 @@ class DefaultController extends Controller
 
     /**
      * @Route("/", name="deidentifier_home")
-     * @Template("AppDeidentifierBundle:Default:index.html.twig")
+     * @Template("AppDeidentifierBundle/Default/index.html.twig")
      * @Method("GET")
      */
     public function indexAction( Request $request ) {
@@ -284,7 +284,7 @@ class DefaultController extends Controller
 
     /**
      * @Route("/generate/", name="deidentifier_generate")
-     * @Template("AppDeidentifierBundle:Default:index.html.twig")
+     * @Template("AppDeidentifierBundle/Default/index.html.twig")
      * @Method("GET")
      */
     public function generateAction( Request $request ) {

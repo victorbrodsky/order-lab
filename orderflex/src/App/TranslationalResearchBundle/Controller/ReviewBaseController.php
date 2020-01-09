@@ -22,7 +22,7 @@ class ReviewBaseController extends Controller
      * Lists all irbReview entities.
      *
      * @Route("/{stateStr}", name="translationalresearch_review_index")
-     * @Template("AppTranslationalResearchBundle:Review:index.html.twig")
+     * @Template("AppTranslationalResearchBundle/Review/index.html.twig")
      * @Method("GET")
      */
     public function indexAction(Request $request, $stateStr)
@@ -40,7 +40,7 @@ class ReviewBaseController extends Controller
      * Creates a new irbReview entity.
      *
      * @Route("/new", name="translationalresearch_review_new")
-     * @Template("AppTranslationalResearchBundle:Review:new.html.twig")
+     * @Template("AppTranslationalResearchBundle/Review/new.html.twig")
      * @Method({"GET", "POST"})
      */
     public function newAction(Request $request)
@@ -67,7 +67,7 @@ class ReviewBaseController extends Controller
      * Finds and displays a Review entity.
      *
      * @Route("/{stateStr}/{reviewId}/show", name="translationalresearch_review_show")
-     * @Template("AppTranslationalResearchBundle:Review:edit.html.twig")
+     * @Template("AppTranslationalResearchBundle/Review/edit.html.twig")
      * @Method("GET")
      */
     public function showAction(Request $request, $stateStr, $reviewId)
@@ -107,7 +107,7 @@ class ReviewBaseController extends Controller
      * Displays a form to edit an existing irbReview entity.
      *
      * @Route("/{stateStr}/{reviewId}/submit", name="translationalresearch_review_edit")
-     * @Template("AppTranslationalResearchBundle:Review:edit.html.twig")
+     * @Template("AppTranslationalResearchBundle/Review/edit.html.twig")
      * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, $stateStr, $reviewId)

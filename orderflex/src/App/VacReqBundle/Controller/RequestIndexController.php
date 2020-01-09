@@ -40,7 +40,7 @@ class RequestIndexController extends Controller
      *
      * @Route("/my-requests/", name="vacreq_myrequests")
      * @Method({"GET", "POST"})
-     * @Template("AppVacReqBundle:Request:index.html.twig")
+     * @Template("AppVacReqBundle/Request/index.html.twig")
      */
     public function myRequestsAction(Request $request)
     {
@@ -78,7 +78,7 @@ class RequestIndexController extends Controller
      *
      * @Route("/incoming-requests/", name="vacreq_incomingrequests")
      * @Method({"GET", "POST"})
-     * @Template("AppVacReqBundle:Request:index.html.twig")
+     * @Template("AppVacReqBundle/Request/index.html.twig")
      */
     public function incomingRequestsAction(Request $request)
     {

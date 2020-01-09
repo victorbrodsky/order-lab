@@ -47,7 +47,7 @@ class HomeController extends Controller {
             $platformLogoPath = $platformLogo->getAbsoluteUploadFullPath();
         }
 
-//        return $this->render('AppUserdirectoryBundle:Default:main-common-home.html.twig',
+//        return $this->render('AppUserdirectoryBundle/Default/main-common-home.html.twig',
 //            array(
 //                'platformLogo' => $platformLogoPath,
 //                'width' => $width,
@@ -55,7 +55,7 @@ class HomeController extends Controller {
 //            )
 //        );
         //path to twig is relative to templates/ folder
-        //Replace ':' to '/'    sf3: 'AppUserdirectoryBundle:Default:main-common-home.html.twig'
+        //Replace ':' to '/'    sf3: 'AppUserdirectoryBundle/Default/main-common-home.html.twig'
         //                 sf4_flex: 'AppUserdirectoryBundle/Default/main-common-home.html.twig'
         //Move AppUserdirectoryBundle/Resources/views to templates AppUserdirectoryBundle
         return $this->render('AppUserdirectoryBundle/Default/main-common-home.html.twig',
@@ -112,7 +112,7 @@ class HomeController extends Controller {
         //$maintenance = $param->getMaintenance();
         //echo "maintenance=".$maintenance."<br>";
 
-        return $this->render('AppUserdirectoryBundle:Default:maintenance.html.twig',
+        return $this->render('AppUserdirectoryBundle/Default/maintenance.html.twig',
             array(
                 'param' => $param
             )
@@ -123,7 +123,7 @@ class HomeController extends Controller {
      * @Route("/under-construction", name="under_construction")
      */
     public function underConstructionAction() {
-        return $this->render('AppUserdirectoryBundle:Default:under_construction.html.twig');
+        return $this->render('AppUserdirectoryBundle/Default/under_construction.html.twig');
     }
 
 
@@ -146,7 +146,7 @@ class HomeController extends Controller {
      */
     public function firstTimeUserGenerationAction() {
         exit("not used");
-//        return $this->render('AppUserdirectoryBundle:Default:under_construction.html.twig');
+//        return $this->render('AppUserdirectoryBundle/Default/under_construction.html.twig');
 
         //exit("firstTimeUserGenerationAction");
 

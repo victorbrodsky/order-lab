@@ -25,7 +25,7 @@ class TransResSiteParametersController extends Controller
 //     * Lists all SiteParameters entities.
 //     *
 //     * @Route("/list/{specialtyStr}", name="translationalresearch_standalone_siteparameters_index")
-//     * @Template("AppTranslationalResearchBundle:SiteParameters:index.html.twig")
+//     * @Template("AppTranslationalResearchBundle/SiteParameters/index.html.twig")
 //     * @Method("GET")
 //     */
 //    public function indexAction(Request $request, $specialtyStr)
@@ -45,7 +45,7 @@ class TransResSiteParametersController extends Controller
 //     * Creates a new SiteParameters entity.
 //     *
 //     * @Route("/new/{specialtyStr}", name="translationalresearch_standalone_siteparameters_new")
-//     * @Template("AppTranslationalResearchBundle:SiteParameters:new.html.twig")
+//     * @Template("AppTranslationalResearchBundle/SiteParameters/new.html.twig")
 //     * @Method({"GET", "POST"})
 //     */
 //    public function newAction(Request $request, $specialtyStr)
@@ -99,7 +99,7 @@ class TransResSiteParametersController extends Controller
      * Finds and displays site parameters entity.
      *
      * @Route("/show/{specialtyStr}", name="translationalresearch_standalone_siteparameters_show")
-     * @Template("AppTranslationalResearchBundle:SiteParameters:new.html.twig")
+     * @Template("AppTranslationalResearchBundle/SiteParameters/new.html.twig")
      * @Method("GET")
      */
     public function showAction(Request $request, $specialtyStr)
@@ -132,7 +132,7 @@ class TransResSiteParametersController extends Controller
      * Finds and displays site parameters entity.
      *
      * @Route("/show-content/{specialtyStr}", name="translationalresearch_standalone_siteparameters_show_content")
-     * @Template("AppTranslationalResearchBundle:SiteParameters:show-content.html.twig")
+     * @Template("AppTranslationalResearchBundle/SiteParameters/show-content.html.twig")
      * @Method("GET")
      */
     public function showContentAction(Request $request, $specialtyStr)
@@ -164,7 +164,7 @@ class TransResSiteParametersController extends Controller
      * Displays a form to edit an existing entity.
      *
      * @Route("/edit/{specialtyStr}", name="translationalresearch_standalone_siteparameters_edit")
-     * @Template("AppTranslationalResearchBundle:SiteParameters:new.html.twig")
+     * @Template("AppTranslationalResearchBundle/SiteParameters/new.html.twig")
      * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, $specialtyStr)

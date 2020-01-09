@@ -85,7 +85,7 @@ class CallEntryController extends Controller
      * Alerts: filtered case list
      * @Route("/alerts/", name="calllog_alerts")
      *
-     * @Template("AppCallLogBundle:CallLog:home.html.twig")
+     * @Template("AppCallLogBundle/CallLog/home.html.twig")
      */
     public function homeAction(Request $request)
     {
@@ -1145,7 +1145,7 @@ class CallEntryController extends Controller
      * http://localhost/order/call-log-book/entry/new?mrn-type=4&mrn=3
      *
      * @Route("/entry/new", name="calllog_callentry")
-     * @Template("AppCallLogBundle:CallLog:call-entry.html.twig")
+     * @Template("AppCallLogBundle/CallLog/call-entry.html.twig")
      */
     public function callEntryAction(Request $request)
     {
@@ -1409,7 +1409,7 @@ class CallEntryController extends Controller
     /**
      * Save Call Log Entry
      * @Route("/entry/save", name="calllog_save_entry", options={"expose"=true})
-     * @Template("AppCallLogBundle:CallLog:call-entry.html.twig")
+     * @Template("AppCallLogBundle/CallLog/call-entry.html.twig")
      * @Method("POST")
      */
     public function saveEntryAction(Request $request)
@@ -2106,7 +2106,7 @@ class CallEntryController extends Controller
 
         //echo "entities count=".count($entities)."<br>";
 
-        return $this->render('AppCallLogBundle:CallLog:home.html.twig', array(
+        return $this->render('AppCallLogBundle/CallLog/home.html.twig', array(
             'patientsearch' => $search,
             'patientsearchtype' => $searchtype,
             'patiententities' => $entities,
@@ -3211,7 +3211,7 @@ class CallEntryController extends Controller
      * @Route("/entry/view/{messageOid}/{messageVersion}", name="calllog_callentry_view")
      * @Route("/entry/view-latest-encounter/{messageOid}/{messageVersion}", name="calllog_callentry_view_latest_encounter")
      * @Method("GET")
-     * @Template("AppCallLogBundle:CallLog:call-entry-view.html.twig")
+     * @Template("AppCallLogBundle/CallLog/call-entry-view.html.twig")
      */
     public function getCallLogEntryAction(Request $request, $messageOid, $messageVersion=null)
     {
@@ -3468,7 +3468,7 @@ class CallEntryController extends Controller
 
     /**
      * @Route("/single-export-csv/{messageOid}/{messageVersion}", name="calllog_single_export_csv")
-     * @Template("AppCallLogBundle:Export:call-entry-export-csv.html.twig")
+     * @Template("AppCallLogBundle/Export/call-entry-export-csv.html.twig")
      */
     public function exportSingleCsvAction(Request $request, $messageOid, $messageVersion=null)
     {
@@ -3522,7 +3522,7 @@ class CallEntryController extends Controller
     /**
      * @Route("/export_csv/", name="calllog_export_csv")
      * @Route("/export_csv/all/", name="calllog_export_csv_all")
-     * @Template("AppCallLogBundle:Export:call-entry-export-csv.html.twig")
+     * @Template("AppCallLogBundle/Export/call-entry-export-csv.html.twig")
      */
     public function exportCsvAction(Request $request)
     {

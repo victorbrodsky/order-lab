@@ -44,7 +44,7 @@ class FormNodeController extends Controller {
      *
      * @Route("/formnode-fields/", name="employees_formnode_fields", options={"expose"=true})
      * @Method({"GET", "POST"})
-     * @Template("AppUserdirectoryBundle:FormNode:formnode_fields.html.twig")
+     * @Template("AppUserdirectoryBundle/FormNode/formnode_fields.html.twig")
      */
     public function getFormNodeFieldsAction( Request $request )
     {
@@ -355,7 +355,7 @@ class FormNodeController extends Controller {
 //        $template = "OK";
         //$showUserArr = $this->showUser($userid,$this->container->getParameter('employees.sitename'),false);
 
-        //$template = $this->render('AppUserdirectoryBundle:Profile:edit_user_only.html.twig',$showUserArr)->getContent();
+        //$template = $this->render('AppUserdirectoryBundle/Profile/edit_user_only.html.twig',$showUserArr)->getContent();
 
 //        $json = json_encode($template);
 //        $response = new Response($json);

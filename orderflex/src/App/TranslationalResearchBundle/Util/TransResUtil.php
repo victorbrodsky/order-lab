@@ -2938,7 +2938,7 @@ class TransResUtil
         $reviewState = $this->getReviewClassNameByState($state,false);
         //$reviewStateLabel = $this->getStateLabelByName($reviewState);
 
-        //{{ render(controller('AppTranslationalResearchBundle:Project:threadCommentsShow', { 'id': threadId })) }}
+        //{{ render(controller('AppTranslationalResearchBundle/Project/threadCommentsShow', { 'id': threadId })) }}
         $threadId = "transres-" . $project->getEntityName() . "-" . $project->getId() . "-" . $reviewState;
         //echo "thread=[$threadId] <br>";
 

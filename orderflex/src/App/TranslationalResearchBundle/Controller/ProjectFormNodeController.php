@@ -45,7 +45,7 @@ class ProjectFormNodeController extends ProjectController
      * Creates a new project entity with formnode.
      *
      * @Route("/project/new", name="translationalresearch_project_new_selector")
-     * @Template("AppTranslationalResearchBundle:Project:new-project-selector.html.twig")
+     * @Template("AppTranslationalResearchBundle/Project/new-project-selector.html.twig")
      * @Method({"GET", "POST"})
      */
     public function newProjectSelectorAction(Request $request)
@@ -71,7 +71,7 @@ class ProjectFormNodeController extends ProjectController
      * Creates a new project entity with formnode.
      *
      * @Route("/project/formnode/new/{specialtyStr}", name="translationalresearch_project_formnode_new")
-     * @Template("AppTranslationalResearchBundle:Project:new.html.twig")
+     * @Template("AppTranslationalResearchBundle/Project/new.html.twig")
      * @Method({"GET", "POST"})
      */
     public function newFormNodeAction(Request $request, $specialtyStr)
@@ -269,7 +269,7 @@ class ProjectFormNodeController extends ProjectController
      * Originally edit form generates a new entity Project with new id and same oid.
      *
      * @Route("/project/formnode/edit/{id}", name="translationalresearch_project_formnode_edit")
-     * @Template("AppTranslationalResearchBundle:Project:edit.html.twig")
+     * @Template("AppTranslationalResearchBundle/Project/edit.html.twig")
      * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, Project $project)

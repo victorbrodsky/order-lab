@@ -46,7 +46,7 @@ class ScanAccessRequestController extends AccessRequestController
     /**
      * @Route("/access-requests/new/create", name="scan_access_request_new_plain")
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:AccessRequest:access_request.html.twig")
+     * @Template("AppUserdirectoryBundle/AccessRequest/access_request.html.twig")
      */
     public function accessRequestCreatePlainAction(Request $request)
     {
@@ -91,7 +91,7 @@ class ScanAccessRequestController extends AccessRequestController
     /**
      * @Route("/access-requests/new", name="scan_access_request_new")
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:AccessRequest:access_request.html.twig")
+     * @Template("AppUserdirectoryBundle/AccessRequest/access_request.html.twig")
      */
     public function accessRequestCreateAction()
     {
@@ -116,7 +116,7 @@ class ScanAccessRequestController extends AccessRequestController
     /**
      * @Route("/access-requests/new/pending", name="scan_access_request_create")
      * @Method("POST")
-     * @Template("AppUserdirectoryBundle:AccessRequest:access_request.html.twig")
+     * @Template("AppUserdirectoryBundle/AccessRequest/access_request.html.twig")
      */
     public function accessRequestAction(Request $request)
     {
@@ -134,7 +134,7 @@ class ScanAccessRequestController extends AccessRequestController
      *
      * @Route("/access-requests", name="scan_accessrequest_list")
      * @Method("GET")
-     * @Template("AppOrderformBundle:AccessRequest:access_request_list.html.twig")
+     * @Template("AppOrderformBundle/AccessRequest/access_request_list.html.twig")
      */
     public function accessRequestIndexAction(Request $request)
     {
@@ -173,7 +173,7 @@ class ScanAccessRequestController extends AccessRequestController
     /**
      * @Route("/access-requests/{id}", name="scan_accessrequest_management", requirements={"id" = "\d+"})
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
+     * @Template("AppUserdirectoryBundle/AccessRequest/access_request_management.html.twig")
      */
     public function accessRequestManagementAction(Request $request, $id )
     {
@@ -183,7 +183,7 @@ class ScanAccessRequestController extends AccessRequestController
     /**
      * @Route("/access-requests/submit/{id}", name="scan_accessrequest_management_submit", requirements={"id" = "\d+"})
      * @Method("POST")
-     * @Template("AppUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
+     * @Template("AppUserdirectoryBundle/AccessRequest/access_request_management.html.twig")
      */
     public function accessRequestManagementSubmitAction(Request $request, $id )
     {
@@ -203,7 +203,7 @@ class ScanAccessRequestController extends AccessRequestController
     /**
      * @Route("/authorized-users/", name="scan_authorized_users")
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:AccessRequest:authorized_users.html.twig")
+     * @Template("AppUserdirectoryBundle/AccessRequest/authorized_users.html.twig")
      */
     public function authorizedUsersAction(Request $request )
     {
@@ -213,7 +213,7 @@ class ScanAccessRequestController extends AccessRequestController
     /**
      * @Route("/authorization-user-manager/{id}", name="scan_authorization_user_management", requirements={"id" = "\d+"})
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
+     * @Template("AppUserdirectoryBundle/AccessRequest/access_request_management.html.twig")
      */
     public function authorizationManagementAction( Request $request, $id )
     {
@@ -223,7 +223,7 @@ class ScanAccessRequestController extends AccessRequestController
     /**
      * @Route("/authorization-user-manager/submit/{id}", name="scan_authorization_user_management_submit", requirements={"id" = "\d+"})
      * @Method("POST")
-     * @Template("AppUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
+     * @Template("AppUserdirectoryBundle/AccessRequest/access_request_management.html.twig")
      */
     public function authorizationManagementSubmitAction( Request $request, $id )
     {
@@ -243,7 +243,7 @@ class ScanAccessRequestController extends AccessRequestController
     /**
      * @Route("/add-authorized-user/", name="scan_add_authorized_user")
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:AccessRequest:add_authorized_user.html.twig")
+     * @Template("AppUserdirectoryBundle/AccessRequest/add_authorized_user.html.twig")
      */
     public function addAuthorizedUserAction( Request $request )
     {
@@ -253,7 +253,7 @@ class ScanAccessRequestController extends AccessRequestController
 //    /**
 //     * @Route("/add-authorized-user/submit/", name="scan_add_authorized_user_submit")
 //     * @Method("POST")
-//     * @Template("AppUserdirectoryBundle:AccessRequest:add_authorized_user.html.twig")
+//     * @Template("AppUserdirectoryBundle/AccessRequest/add_authorized_user.html.twig")
 //     */
 //    public function addAuthorizedUserSubmitAction( Request $request )
 //    {

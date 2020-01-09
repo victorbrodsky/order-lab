@@ -82,8 +82,11 @@ class UserController extends Controller
 {
 
     /**
+     * Template("AppUserdirectoryBundle/Default/about.html.twig")
+     *
+     *
      * @Route("/about", name="employees_about_page")
-     * @Template("AppUserdirectoryBundle:Default:about.html.twig")
+     * @Template("AppUserdirectoryBundle/Default/about.html.twig")
      */
     public function aboutAction( Request $request ) {
 
@@ -200,7 +203,7 @@ class UserController extends Controller
      * In the "List Current" menu, add the top choice called "Common Locations". CLicking it should list all "orphan" locations that are not attached to any users.
      *
      * @Route("/common-locations", name="employees_list_common_locations")
-     * @Template("AppUserdirectoryBundle:Location:common-locations.html.twig")
+     * @Template("AppUserdirectoryBundle/Location/common-locations.html.twig")
      */
     public function listCommonLocationsAction(Request $request) {
 
@@ -277,7 +280,7 @@ class UserController extends Controller
         }
 
         return $this->render(
-            'AppUserdirectoryBundle:Default:home.html.twig',
+            'AppUserdirectoryBundle/Default/home.html.twig',
             array(
                 'accessreqs' => null,
                 'locations' => null,
@@ -402,7 +405,7 @@ class UserController extends Controller
      * @Route("/users", name="employees_listusers")
      * @Route("/users/previous", name="employees_listusers_previous")
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:Admin:users.html.twig")
+     * @Template("AppUserdirectoryBundle/Admin/users.html.twig")
      */
     public function indexUserAction(Request $request)
     {
@@ -1527,7 +1530,7 @@ class UserController extends Controller
      * @Route("/user/new", name="employees_new_user")
      * @Route("/user/new/clone/{id}", name="employees_new_user_clone", requirements={"id" = "\d+"})
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:Profile:edit_user.html.twig")
+     * @Template("AppUserdirectoryBundle/Profile/edit_user.html.twig")
      */
     public function newUserAction(Request $request,$id=null)
     {
@@ -1630,7 +1633,7 @@ class UserController extends Controller
             'form_custom_value' => $params,
         ));
 
-        //return $this->container->get('templating')->renderResponse('FOSUserBundle:Profile:show.html.'.$this->container->getParameter('fos_user.template.engine'), array('user' => $user));
+        //return $this->container->get('templating')->renderResponse('FOSUserBundle/Profile/show.html.'.$this->container->getParameter('fos_user.template.engine'), array('user' => $user));
         return array(
             'entity' => $user,
             'form' => $form->createView(),
@@ -1649,7 +1652,7 @@ class UserController extends Controller
      *
      * @Route("/user/new/simple-ajax-form/", name="employees_new_simple_user", options={"expose"=true})
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:Profile:new_simple_user.html.twig")
+     * @Template("AppUserdirectoryBundle/Profile/new_simple_user.html.twig")
      */
     public function newSimpleUserAction(Request $request)
     {
@@ -1761,7 +1764,7 @@ class UserController extends Controller
             'form_custom_value' => $params,
         ));
 
-        //return $this->container->get('templating')->renderResponse('FOSUserBundle:Profile:show.html.'.$this->container->getParameter('fos_user.template.engine'), array('user' => $user));
+        //return $this->container->get('templating')->renderResponse('FOSUserBundle/Profile/show.html.'.$this->container->getParameter('fos_user.template.engine'), array('user' => $user));
         return array(
             'entity' => $user,
             'form' => $form->createView(),
@@ -2310,7 +2313,7 @@ class UserController extends Controller
     /**
      * @Route("/user/new", name="employees_create_user")
      * @Method("POST")
-     * @Template("AppUserdirectoryBundle:Profile:edit_user.html.twig")
+     * @Template("AppUserdirectoryBundle/Profile/edit_user.html.twig")
      */
     public function createUserAction( Request $request )
     {
@@ -2465,7 +2468,7 @@ class UserController extends Controller
      * Optimized show user
      * @Route("/user/{id}", name="employees_showuser", requirements={"id" = "\d+"}, options={"expose"=true})
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:Profile:show_user.html.twig")
+     * @Template("AppUserdirectoryBundle/Profile/show_user.html.twig")
      */
     public function showUserOptimizedAction( Request $request, $id )
     {
@@ -2562,7 +2565,7 @@ class UserController extends Controller
      * 
      * @Route("/user/optimized/customh/{id}", name="employees_showuser_optimized_customh", requirements={"id" = "\d+"}, options={"expose"=true})
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:Profile:show_user.html.twig")
+     * @Template("AppUserdirectoryBundle/Profile/show_user.html.twig")
      */
     public function showUserOptimizedCustomhAction(Request $request, $id)
     {
@@ -2644,7 +2647,7 @@ class UserController extends Controller
      * 
      * @Route("/user/only/{id}", name="employees_showuser_only")
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:Profile:edit_user_only.html.twig")
+     * @Template("AppUserdirectoryBundle/Profile/edit_user_only.html.twig")
      */
     public function showOnlyUserAction(Request $request, $id)
     {
@@ -2680,7 +2683,7 @@ class UserController extends Controller
 
         $showUserArr = $this->showUser($request,$userid,$this->container->getParameter('employees.sitename'),false);
 
-        $template = $this->render('AppUserdirectoryBundle:Profile:edit_user_only.html.twig',$showUserArr)->getContent();
+        $template = $this->render('AppUserdirectoryBundle/Profile/edit_user_only.html.twig',$showUserArr)->getContent();
 
         $json = json_encode($template);
         $response = new Response($json);
@@ -2694,7 +2697,7 @@ class UserController extends Controller
      * @Route("/user/show/{id}", name="employees_showuser_notstrict")
      * @Route("/user/object/{id}", name="employees_showuser_object", requirements={"id" = "\d+"}, options={"expose"=true})
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:Profile:edit_user.html.twig")
+     * @Template("AppUserdirectoryBundle/Profile/edit_user.html.twig")
      */
     public function showUserAction(Request $request, $id)
     {
@@ -2778,7 +2781,7 @@ class UserController extends Controller
 //        var_dump($request->query);
 //        echo "</pre>";
 
-        //return $this->container->get('templating')->renderResponse('FOSUserBundle:Profile:show.html.'.$this->container->getParameter('fos_user.template.engine'), array('user' => $user));
+        //return $this->container->get('templating')->renderResponse('FOSUserBundle/Profile/show.html.'.$this->container->getParameter('fos_user.template.engine'), array('user' => $user));
         return array(
             'entity' => $entity,
             'form' => $form->createView(),
@@ -2795,7 +2798,7 @@ class UserController extends Controller
     /**
      * @Route("/edit-user-profile/{id}", name="employees_user_edit", requirements={"id" = "\d+"})
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:Profile:edit_user.html.twig")
+     * @Template("AppUserdirectoryBundle/Profile/edit_user.html.twig")
      */
     public function editUserAction(Request $request, $id)
     {
@@ -3025,7 +3028,7 @@ class UserController extends Controller
     /**
      * @Route("/edit-user-profile/{id}", name="employees_user_update")
      * @Method("PUT")
-     * @Template("AppUserdirectoryBundle:Profile:edit_user.html.twig")
+     * @Template("AppUserdirectoryBundle/Profile/edit_user.html.twig")
      */
     public function updateUserAction(Request $request, $id)
     {
@@ -4060,7 +4063,7 @@ class UserController extends Controller
      *
      * @Route("/user/generate", name="generate_users")
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:Admin:users.html.twig")
+     * @Template("AppUserdirectoryBundle/Admin/users.html.twig")
      */
     public function generateUsersAction()
     {
@@ -4449,7 +4452,7 @@ class UserController extends Controller
     /**
      * @Route("/user/save-avatar", name="employees_save_avatar")
      * @Method("POST")
-     * @Template("AppUserdirectoryBundle:Admin:users.html.twig")
+     * @Template("AppUserdirectoryBundle/Admin/users.html.twig")
      */
     public function saveAvatarAction(Request $request)
     {
@@ -4545,7 +4548,7 @@ class UserController extends Controller
     /**
      * @Route("/user/impersonate/{id}", name="employees_user_impersonate")
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:Profile:show_user.html.twig")
+     * @Template("AppUserdirectoryBundle/Profile/show_user.html.twig")
      */
     public function impersonateUserAction(Request $request, $id)
     {
@@ -4569,7 +4572,7 @@ class UserController extends Controller
     /**
      * @Route("/user/employment-terminate/{id}", name="employees_user_employment_terminate")
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:Profile:show_user.html.twig")
+     * @Template("AppUserdirectoryBundle/Profile/show_user.html.twig")
      */
     public function employmentTerminateAction(Request $request, $id)
     {
@@ -4903,7 +4906,7 @@ class UserController extends Controller
     /**
      * @Route("/label/user/preview/{id}", name="employees_user_label_preview")
      * @Method({"GET","POST"})
-     * @Template("AppUserdirectoryBundle:Labels:label_user_preview.html.twig")
+     * @Template("AppUserdirectoryBundle/Labels/label_user_preview.html.twig")
      */
     public function averySingleUserPrintAction(Request $request, $id) {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
@@ -4985,7 +4988,7 @@ class UserController extends Controller
     /**
      * @Route("/label/users/preview/", name="employees_users_label_preview")
      * @Method({"GET","POST"})
-     * @Template("AppUserdirectoryBundle:Labels:label_user_preview.html.twig")
+     * @Template("AppUserdirectoryBundle/Labels/label_user_preview.html.twig")
      */
     public function averyMultipleUsersPrintAction(Request $request) {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
@@ -5123,7 +5126,7 @@ class UserController extends Controller
 
 //    /**
 //     * @Route("/account-creation/", name="employees_account_creation")
-//     * @Template("AppTranslationalResearchBundle:AccessRequest:account_confirmation.html.twig")
+//     * @Template("AppTranslationalResearchBundle/AccessRequest/account_confirmation.html.twig")
 //     * @Method({"GET", "POST"})
 //     */
 //    public function accountConfirmationAction(Request $request)

@@ -88,7 +88,7 @@ class SearchController extends Controller {
 
         //echo "entities count=".count($entities)."<br>";
 
-        return $this->render('AppOrderformBundle:Patient:index.html.twig', array(
+        return $this->render('AppOrderformBundle/Patient/index.html.twig', array(
             'patientsearch' => $search,
             'patientsearchtype' => $searchtype,
             'patiententities' => $entities,

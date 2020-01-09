@@ -48,7 +48,7 @@ class ComplexListController extends Controller
      * @Route("/list/research-labs/", name="employees_researchlabs_pathaction_list")
      * @Route("/list/grants/", name="employees_grants_pathaction_list")
      *
-     * @Template("AppUserdirectoryBundle:ComplexList:index.html.twig")
+     * @Template("AppUserdirectoryBundle/ComplexList/index.html.twig")
      */
     public function indexAction(Request $request)
     {
@@ -204,7 +204,7 @@ class ComplexListController extends Controller
      *
      *
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:ComplexList:new.html.twig")
+     * @Template("AppUserdirectoryBundle/ComplexList/new.html.twig")
      */
     public function showListAction(Request $request, $id)
     {
@@ -265,7 +265,7 @@ class ComplexListController extends Controller
      * @Route("/admin/grants/new", name="employees_grants_pathaction_new_standalone")
      *
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:ComplexList:new.html.twig")
+     * @Template("AppUserdirectoryBundle/ComplexList/new.html.twig")
      */
     public function newListAction(Request $request)
     {
@@ -313,7 +313,7 @@ class ComplexListController extends Controller
      * @Route("/admin/grants/new", name="employees_grants_pathaction_new_post_standalone")
      *
      * @Method("POST")
-     * @Template("AppUserdirectoryBundle:ComplexList:new.html.twig")
+     * @Template("AppUserdirectoryBundle/ComplexList/new.html.twig")
      */
     public function createListAction( Request $request )
     {
@@ -429,7 +429,7 @@ class ComplexListController extends Controller
      * @Route("/admin/grants/update/{id}", name="employees_grants_pathaction_edit_put_standalone",requirements={"id" = "\d+"})
      *
      * @Method("PUT")
-     * @Template("AppUserdirectoryBundle:ComplexList:new.html.twig")
+     * @Template("AppUserdirectoryBundle/ComplexList/new.html.twig")
      */
     public function updateListAction( Request $request, $id )
     {

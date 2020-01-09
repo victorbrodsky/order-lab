@@ -48,7 +48,7 @@ class VacReqUserRequestController extends UserRequestController
      *
      * @Route("/account-requests/new", name="vacreq_accountrequest_new")
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:UserRequest:account_request.html.twig")
+     * @Template("AppUserdirectoryBundle/UserRequest/account_request.html.twig")
      */
     public function newAction()
     {
@@ -60,7 +60,7 @@ class VacReqUserRequestController extends UserRequestController
      *
      * @Route("/account-requests/new", name="vacreq_accountrequest_create")
      * @Method("POST")
-     * @Template("AppUserdirectoryBundle:UserRequest:account_request.html.twig")
+     * @Template("AppUserdirectoryBundle/UserRequest/account_request.html.twig")
      */
     public function createAction(Request $request)
     {
@@ -73,7 +73,7 @@ class VacReqUserRequestController extends UserRequestController
      *
      * @Route("/account-requests", name="vacreq_accountrequest")
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:UserRequest:index.html.twig")
+     * @Template("AppUserdirectoryBundle/UserRequest/index.html.twig")
      */
     public function indexAction( Request $request )
     {
@@ -84,7 +84,7 @@ class VacReqUserRequestController extends UserRequestController
     /**
      * @Route("/account-requests/{id}/{status}/status", name="vacreq_accountrequest_status", requirements={"id" = "\d+"})
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:UserRequest:index.html.twig")
+     * @Template("AppUserdirectoryBundle/UserRequest/index.html.twig")
      */
     public function statusAction($id, $status)
     {
@@ -96,7 +96,7 @@ class VacReqUserRequestController extends UserRequestController
      *
      * @Route("/account-requests-approve", name="vacreq_accountrequest_approve")
      * @Method("POST")
-     * @Template("AppUserdirectoryBundle:UserRequest:index.html.twig")
+     * @Template("AppUserdirectoryBundle/UserRequest/index.html.twig")
      */
     public function approveUserAccountRequestAction(Request $request)
     {

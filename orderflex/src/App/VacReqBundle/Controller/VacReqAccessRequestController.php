@@ -47,7 +47,7 @@ class VacReqAccessRequestController extends AccessRequestController
     /**
      * @Route("/access-requests/new/create", name="vacreq_access_request_new_plain")
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:AccessRequest:access_request.html.twig")
+     * @Template("AppUserdirectoryBundle/AccessRequest/access_request.html.twig")
      */
     public function accessRequestCreatePlainAction(Request $request)
     {
@@ -58,7 +58,7 @@ class VacReqAccessRequestController extends AccessRequestController
     /**
      * @Route("/access-requests/new", name="vacreq_access_request_new")
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:AccessRequest:access_request.html.twig")
+     * @Template("AppUserdirectoryBundle/AccessRequest/access_request.html.twig")
      */
     public function accessRequestCreateAction()
     {
@@ -68,7 +68,7 @@ class VacReqAccessRequestController extends AccessRequestController
     /**
      * @Route("/access-requests/new/pending", name="vacreq_access_request_create")
      * @Method("POST")
-     * @Template("AppUserdirectoryBundle:AccessRequest:access_request.html.twig")
+     * @Template("AppUserdirectoryBundle/AccessRequest/access_request.html.twig")
      */
     public function accessRequestAction(Request $request)
     {
@@ -80,7 +80,7 @@ class VacReqAccessRequestController extends AccessRequestController
      *
      * @Route("/access-requests", name="vacreq_accessrequest_list")
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:AccessRequest:access_request_list.html.twig")
+     * @Template("AppUserdirectoryBundle/AccessRequest/access_request_list.html.twig")
      */
     public function accessRequestIndexAction(Request $request)
     {
@@ -100,7 +100,7 @@ class VacReqAccessRequestController extends AccessRequestController
     /**
      * @Route("/access-requests/{id}", name="vacreq_accessrequest_management", requirements={"id" = "\d+"})
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
+     * @Template("AppUserdirectoryBundle/AccessRequest/access_request_management.html.twig")
      */
     public function accessRequestManagementAction(Request $request, $id )
     {
@@ -110,7 +110,7 @@ class VacReqAccessRequestController extends AccessRequestController
     /**
      * @Route("/access-requests/submit/{id}", name="vacreq_accessrequest_management_submit", requirements={"id" = "\d+"})
      * @Method("POST")
-     * @Template("AppUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
+     * @Template("AppUserdirectoryBundle/AccessRequest/access_request_management.html.twig")
      */
     public function accessRequestManagementSubmitAction(Request $request, $id )
     {
@@ -130,7 +130,7 @@ class VacReqAccessRequestController extends AccessRequestController
     /**
      * @Route("/authorized-users/", name="vacreq_authorized_users")
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:AccessRequest:authorized_users.html.twig")
+     * @Template("AppUserdirectoryBundle/AccessRequest/authorized_users.html.twig")
      */
     public function authorizedUsersAction(Request $request )
     {
@@ -140,7 +140,7 @@ class VacReqAccessRequestController extends AccessRequestController
     /**
      * @Route("/authorization-user-manager/{id}", name="vacreq_authorization_user_management", requirements={"id" = "\d+"})
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
+     * @Template("AppUserdirectoryBundle/AccessRequest/access_request_management.html.twig")
      */
     public function authorizationManagementAction( Request $request, $id )
     {
@@ -150,7 +150,7 @@ class VacReqAccessRequestController extends AccessRequestController
     /**
      * @Route("/authorization-user-manager/submit/{id}", name="vacreq_authorization_user_management_submit", requirements={"id" = "\d+"})
      * @Method("POST")
-     * @Template("AppUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
+     * @Template("AppUserdirectoryBundle/AccessRequest/access_request_management.html.twig")
      */
     public function authorizationManagementSubmitAction( Request $request, $id )
     {
@@ -171,7 +171,7 @@ class VacReqAccessRequestController extends AccessRequestController
     /**
      * @Route("/add-authorized-user/", name="vacreq_add_authorized_user")
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:AccessRequest:add_authorized_user.html.twig")
+     * @Template("AppUserdirectoryBundle/AccessRequest/add_authorized_user.html.twig")
      */
     public function addAuthorizedUserAction( Request $request )
     {
@@ -181,7 +181,7 @@ class VacReqAccessRequestController extends AccessRequestController
 //    /**
 //     * @Route("/add-authorized-user/submit/", name="vacreq_add_authorized_user_submit")
 //     * @Method("POST")
-//     * @Template("AppUserdirectoryBundle:AccessRequest:add_authorized_user.html.twig")
+//     * @Template("AppUserdirectoryBundle/AccessRequest/add_authorized_user.html.twig")
 //     */
 //    public function addAuthorizedUserSubmitAction( Request $request )
 //    {

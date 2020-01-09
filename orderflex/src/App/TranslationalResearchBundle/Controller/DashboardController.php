@@ -27,7 +27,7 @@ class DashboardController extends Controller
 
     /**
      * @Route("/graphs/", name="translationalresearch_dashboard_choices")
-     * @Template("AppTranslationalResearchBundle:Dashboard:dashboard-choices.html.twig")
+     * @Template("AppTranslationalResearchBundle/Dashboard/dashboard-choices.html.twig")
      */
     public function dashboardChoicesAction( Request $request )
     {
@@ -687,7 +687,7 @@ class DashboardController extends Controller
 
 //    /**
 //     * @Route("/funded-level/", name="translationalresearch_dashboard_fundedlevel")
-//     * @Template("AppTranslationalResearchBundle:Dashboard:pilevel.html.twig")
+//     * @Template("AppTranslationalResearchBundle/Dashboard/pilevel.html.twig")
 //     */
 //    public function fundedLevelAction( Request $request ) {
 //

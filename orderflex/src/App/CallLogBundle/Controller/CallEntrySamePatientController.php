@@ -61,7 +61,7 @@ class CallEntrySamePatientController extends CallEntryController
      * Call Entry New Page Same Patient
      *
      * @Route("/entry/same-patient/new", name="calllog_callentry_same_patient")
-     * @Template("AppCallLogBundle:CallLog:call-entry-same-patient.html.twig")
+     * @Template("AppCallLogBundle/CallLog/call-entry-same-patient.html.twig")
      */
     public function callEntrySamePatientAction(Request $request)
     {
@@ -292,7 +292,7 @@ class CallEntrySamePatientController extends CallEntryController
     /**
      * Save Call Log Entry Same Patient
      * @Route("/entry/same-patient/save", name="calllog_save_entry_same_patient", options={"expose"=true})
-     * @Template("AppCallLogBundle:CallLog:call-entry-same-patient.html.twig")
+     * @Template("AppCallLogBundle/CallLog/call-entry-same-patient.html.twig")
      * @Method("POST")
      */
     public function saveEntrySamePatientAction(Request $request)

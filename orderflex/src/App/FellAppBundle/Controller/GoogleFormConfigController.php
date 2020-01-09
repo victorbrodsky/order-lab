@@ -33,7 +33,7 @@ class GoogleFormConfigController extends Controller
     /**
      * @Route("/form-status-and-appearance/edit", name="fellapp_google_form_config_edit")
      * @Route("/form-status-and-appearance/show", name="fellapp_google_form_config_show")
-     * @Template("AppFellAppBundle:GoogleFormConfig:google-form-config.html.twig")
+     * @Template("AppFellAppBundle/GoogleFormConfig/google-form-config.html.twig")
      * @Method({"GET", "PUT"})
      */
     public function GoogleFormConfigAction(Request $request) {

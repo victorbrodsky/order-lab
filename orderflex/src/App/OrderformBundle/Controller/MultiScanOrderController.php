@@ -71,7 +71,7 @@ class MultiScanOrderController extends Controller {
      * @Route("/scan-order/one-slide/create", name="singleorder_create")
      * @Route("/scan-order/multi-slide/create", name="multi_create")
      * @Method("POST")
-     * @Template("AppOrderformBundle:MultiScanOrder:new.html.twig")
+     * @Template("AppOrderformBundle/MultiScanOrder/new.html.twig")
      */
     public function multyCreateAction(Request $request)
     { 
@@ -325,7 +325,7 @@ class MultiScanOrderController extends Controller {
         $submittedData = $session->get('submittedData');
 
         //echo "conflicts=".$submittedData['conflicts']."<br>";
-        return $this->render('AppOrderformBundle:ScanOrder:thanks.html.twig', array(
+        return $this->render('AppOrderformBundle/ScanOrder/thanks.html.twig', array(
             'oid' => $submittedData['oid'],
             'conflicts' => $submittedData['conflicts'],
             'cycle' => $submittedData['cycle'],
@@ -339,7 +339,7 @@ class MultiScanOrderController extends Controller {
      * @Route("/scan-order/one-slide/new", name="single_new")
      * @Route("/scan-order/multi-slide/new", name="multi_new")
      * @Method("GET")
-     * @Template("AppOrderformBundle:MultiScanOrder:new.html.twig")
+     * @Template("AppOrderformBundle/MultiScanOrder/new.html.twig")
      */
     public function newMultyAction(Request $request)
     {
@@ -507,7 +507,7 @@ class MultiScanOrderController extends Controller {
         ));
 
         if( $routeName != "single_new") {
-            return $this->render('AppOrderformBundle:MultiScanOrder:new.html.twig', array(
+            return $this->render('AppOrderformBundle/MultiScanOrder/new.html.twig', array(
                 'form' => $form->createView(),
                 'type' => 'new',
                 'formtype' => $type,
@@ -515,7 +515,7 @@ class MultiScanOrderController extends Controller {
             ));
         } else {
             //echo "newsingle: <br>";
-            return $this->render('AppOrderformBundle:MultiScanOrder:newsingle.html.twig', array(
+            return $this->render('AppOrderformBundle/MultiScanOrder/newsingle.html.twig', array(
                 'form' => $form->createView(),
                 'cycle' => 'new',
                 'formtype' => $type,
@@ -533,7 +533,7 @@ class MultiScanOrderController extends Controller {
      * @Route("/scan-order/{id}/show", name="multy_show", requirements={"id" = "\d+"})
      * @Route("/scan-order/data-structure/{id}/show", name="scan_datastructure", requirements={"id" = "\d+"})
      * @Method("GET")
-     * @Template("AppOrderformBundle:MultiScanOrder:new.html.twig")
+     * @Template("AppOrderformBundle/MultiScanOrder/new.html.twig")
      */
     public function showMultyAction( Request $request, $id, $type = "show" )
     {

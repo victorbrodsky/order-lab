@@ -85,7 +85,7 @@ class ScanAdminController extends AdminController
      *
      * @Route("/lists/", name="admin_index")
      * @Method("GET")
-     * @Template("AppOrderformBundle:Admin:index.html.twig")
+     * @Template("AppOrderformBundle/Admin/index.html.twig")
      */
     public function indexAction()
     {
@@ -104,7 +104,7 @@ class ScanAdminController extends AdminController
             $environment = $param->getEnvironment();
         }
 
-        return $this->render('AppOrderformBundle:Admin:index.html.twig', array('environment'=>$environment));
+        return $this->render('AppOrderformBundle/Admin/index.html.twig', array('environment'=>$environment));
     }
 
     /**
@@ -112,7 +112,7 @@ class ScanAdminController extends AdminController
      *
      * @Route("/hierarchies/", name="scan_admin_hierarchy_index")
      * @Method("GET")
-     * @Template("AppOrderformBundle:Admin:hierarchy-index.html.twig")
+     * @Template("AppOrderformBundle/Admin/hierarchy-index.html.twig")
      */
     public function indexHierarchyAction()
     {
@@ -133,7 +133,7 @@ class ScanAdminController extends AdminController
 
         $filters = $this->getDefaultHierarchyFilter();
 
-        return $this->render('AppOrderformBundle:Admin:hierarchy-index.html.twig', array('environment'=>$environment,'filters'=>$filters));
+        return $this->render('AppOrderformBundle/Admin/hierarchy-index.html.twig', array('environment'=>$environment,'filters'=>$filters));
     }
 
 

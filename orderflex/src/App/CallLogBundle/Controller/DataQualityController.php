@@ -48,7 +48,7 @@ class DataQualityController extends CallEntryController
 
     /**
      * @Route("/merge-patient-records", name="calllog_merge_patient_records", options={"expose"=true})
-     * @Template("AppCallLogBundle:DataQuality:merge-records.html.twig")
+     * @Template("AppCallLogBundle/DataQuality/merge-records.html.twig")
      */
     public function mergePatientAction(Request $request)
     {
@@ -333,7 +333,7 @@ class DataQualityController extends CallEntryController
      * @Route("/un-merge-patient-records", name="calllog_unmerge_patient_records", options={"expose"=true})
      * @Route("/set-master-patient-record", name="calllog_set_master_patient_record", options={"expose"=true})
      *
-     * @Template("AppCallLogBundle:DataQuality:un-merge-records.html.twig")
+     * @Template("AppCallLogBundle/DataQuality/un-merge-records.html.twig")
      */
     public function unmergePatientAction(Request $request)
     {
@@ -533,7 +533,7 @@ class DataQualityController extends CallEntryController
      * This form also used in new entry page, when "Edit patient record" action menu, for a specific patient, is clicked.
      *
      * @Route("/find-and-edit-patient-record", name="calllog_find_and_edit_patient_record", options={"expose"=true})
-     * @Template("AppCallLogBundle:DataQuality:edit-patient-record.html.twig")
+     * @Template("AppCallLogBundle/DataQuality/edit-patient-record.html.twig")
      */
     public function findAndEditPatientAction(Request $request) {
 
@@ -621,7 +621,7 @@ class DataQualityController extends CallEntryController
 
     /**
      * @Route("/merge-patient-records-todel", name="calllog_merge_patient_records_todel", options={"expose"=true})
-     * @Template("AppCallLogBundle:DataQuality:merge-records.html.twig")
+     * @Template("AppCallLogBundle/DataQuality/merge-records.html.twig")
      */
     public function addNewPatientToListAction_TODEL(Request $request)
     {

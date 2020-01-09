@@ -67,7 +67,7 @@ class EmailController extends Controller
     
     /**
      * @Route("/send-a-test-email/", name="employees_emailtest")
-     * @Template("AppUserdirectoryBundle:Email:email-test.html.twig")
+     * @Template("AppUserdirectoryBundle/Email/email-test.html.twig")
      * @Method({"GET","POST"})
      */
     public function emailTestAction(Request $request)

@@ -98,7 +98,7 @@ class PatientController extends Controller
         $res = $searchUtil->searchAction($params);
         $entities = $res[$object];
 
-        return $this->render('AppOrderformBundle:Patient:index.html.twig', array(
+        return $this->render('AppOrderformBundle/Patient/index.html.twig', array(
             'patiententities' => $entities,
         ));
     }
@@ -108,7 +108,7 @@ class PatientController extends Controller
      *
      * @Route("/data-structure", name="scan-patient-new")
      * @Method("GET")
-     * @Template("AppOrderformBundle:Patient:new.html.twig")
+     * @Template("AppOrderformBundle/Patient/new.html.twig")
      */
     public function newPatientAction()
     {
@@ -206,7 +206,7 @@ class PatientController extends Controller
      * @Route("/{id}", name="scan-patient-show")
      * @Route("/info/{id}", name="scan-patient-info-show")
      * @Method("GET")
-     * @Template("AppOrderformBundle:Patient:new.html.twig")
+     * @Template("AppOrderformBundle/Patient/new.html.twig")
      */
     public function showAction( Request $request, $id )
     {
@@ -355,7 +355,7 @@ class PatientController extends Controller
      *
      * @Route("/{id}/edit", name="scan-patient-edit")
      * @Method("GET")
-     * @Template("AppOrderformBundle:Patient:new.html.twig")
+     * @Template("AppOrderformBundle/Patient/new.html.twig")
      */
     public function editAction( Request $request, $id )
     {
@@ -489,7 +489,7 @@ class PatientController extends Controller
      *
      * @Route("/{id}/edit", name="scan_patient_update")
      * @Method("POST")
-     * @Template("AppOrderformBundle:Patient:new.html.twig")
+     * @Template("AppOrderformBundle/Patient/new.html.twig")
      */
     public function updateAction( Request $request, $id )
     {
@@ -691,7 +691,7 @@ class PatientController extends Controller
     /**
      * @Route("/data-structure/new-test-patient", name="scan_testpatient_new")
      * @Method("GET")
-     * @Template("AppOrderformBundle:Patient:new.html.twig")
+     * @Template("AppOrderformBundle/Patient/new.html.twig")
      */
     public function newTestPatientAction() {
 

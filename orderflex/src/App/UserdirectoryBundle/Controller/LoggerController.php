@@ -43,7 +43,7 @@ class LoggerController extends Controller
      *
      * @Route("/", name="employees_logger")
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:Logger:index.html.twig")
+     * @Template("AppUserdirectoryBundle/Logger/index.html.twig")
      */
     public function indexAction(Request $request)
     {
@@ -58,7 +58,7 @@ class LoggerController extends Controller
      *
      * @Route("/all-sites/", name="employees_logger_allsites")
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:Logger:index.html.twig")
+     * @Template("AppUserdirectoryBundle/Logger/index.html.twig")
      */
     public function indexAllAction(Request $request)
     {
@@ -74,7 +74,7 @@ class LoggerController extends Controller
      * @Route("/user/{id}", name="employees_logger_user_with_id")
      * @Route("/user", name="employees_logger_user")
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:Logger:logger_object.html.twig")
+     * @Template("AppUserdirectoryBundle/Logger/logger_object.html.twig")
      */
     public function getAuditLogAction(Request $request)
     {
@@ -111,7 +111,7 @@ class LoggerController extends Controller
     /**
      * @Route("/user/{id}/all", name="employees_logger_user_all")
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:Logger:index.html.twig")
+     * @Template("AppUserdirectoryBundle/Logger/index.html.twig")
      */
     public function getAuditLogAllAction(Request $request)
     {
@@ -695,7 +695,7 @@ class LoggerController extends Controller
      *
      * @Route("/warning-message/", name="logger_warning_message")
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:Logger:warning.html.twig")
+     * @Template("AppUserdirectoryBundle/Logger/warning.html.twig")
      */
     public function warningLoggerAction(Request $request)
     {
@@ -715,7 +715,7 @@ class LoggerController extends Controller
      *
      * @Route("/", name="employees_logger_create")
      * @Method("POST")
-     * @Template("AppUserdirectoryBundle:Logger:new.html.twig")
+     * @Template("AppUserdirectoryBundle/Logger/new.html.twig")
      */
     public function createAction(Request $request)
     {
@@ -865,7 +865,7 @@ class LoggerController extends Controller
      *
      * @Route("/{id}", name="logger_update")
      * @Method("PUT")
-     * @Template("AppUserdirectoryBundle:Logger:edit.html.twig")
+     * @Template("AppUserdirectoryBundle/Logger/edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {

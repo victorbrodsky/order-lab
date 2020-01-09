@@ -49,7 +49,7 @@ class ApproverController extends Controller
     /**
      * @Route("/groups/", name="vacreq_approvers")
      * @Method({"GET", "POST"})
-     * @Template("AppVacReqBundle:Approver:approvers-list.html.twig")
+     * @Template("AppVacReqBundle/Approver/approvers-list.html.twig")
      */
     public function myRequestsAction(Request $request)
     {
@@ -101,7 +101,7 @@ class ApproverController extends Controller
      *
      * @Route("/carry-over-request-group/{groupId}", name="vacreq_carry_over_request_group_list")
      * @Method({"GET", "POST"})
-     * @Template("AppVacReqBundle:Approver:carry-over-request-group-list.html.twig")
+     * @Template("AppVacReqBundle/Approver/carry-over-request-group-list.html.twig")
      */
     public function carryOverRequestGroupAction(Request $request, $groupId)
     {
@@ -157,7 +157,7 @@ class ApproverController extends Controller
      *
      * @Route("/organizational-institutions/{institutionId}", name="vacreq_orginst_list")
      * @Method({"GET", "POST"})
-     * @Template("AppVacReqBundle:Approver:orginst-list.html.twig")
+     * @Template("AppVacReqBundle/Approver/orginst-list.html.twig")
      */
     public function organizationalInstitutionAction(Request $request, $institutionId)
     {
@@ -214,7 +214,7 @@ class ApproverController extends Controller
      *
      * @Route("/manage-group/{institutionId}", name="vacreq_orginst_management")
      * @Method({"GET", "POST"})
-     * @Template("AppVacReqBundle:Approver:orginst-management.html.twig")
+     * @Template("AppVacReqBundle/Approver/orginst-management.html.twig")
      */
     public function orgInstManagementAction(Request $request, $institutionId)
     {
@@ -290,7 +290,7 @@ class ApproverController extends Controller
      *
      * @Route("/organizational-institution-user-management/{userid}/{instid}/{roleId}", name="vacreq_orginst_user_management")
      * @Method({"GET", "POST"})
-     * @Template("AppVacReqBundle:Approver:orginst-user-management.html.twig")
+     * @Template("AppVacReqBundle/Approver/orginst-user-management.html.twig")
      */
     public function userManagementAction(Request $request, $userid, $instid, $roleId )
     {
@@ -368,7 +368,7 @@ class ApproverController extends Controller
      *
      * @Route("/organizational-institution-user-update/{userid}/{instid}/{roleIds}", name="vacreq_orginst_user_update", options={"expose"=true})
      * @Method({"GET", "POST"})
-     * @Template("AppVacReqBundle:Approver:orginst-user-management.html.twig")
+     * @Template("AppVacReqBundle/Approver/orginst-user-management.html.twig")
      */
     public function userManagementUpdateAction(Request $request, $userid, $instid, $roleIds )
     {
@@ -450,7 +450,7 @@ class ApproverController extends Controller
     /**
      * @Route("/organizational-institution-user-remove/{userid}/{instid}/{roleId}", name="vacreq_orginst_user_remove")
      * @Method({"GET", "POST"})
-     * @Template("AppVacReqBundle:Approver:orginst-user-management.html.twig")
+     * @Template("AppVacReqBundle/Approver/orginst-user-management.html.twig")
      */
     public function removeUserAction(Request $request, $userid, $instid, $roleId )
     {
@@ -527,7 +527,7 @@ class ApproverController extends Controller
     /**
      * @Route("/organizational-institution-user-add/{instid}/{roleId}/{btnName}", name="vacreq_orginst_add_user")
      * @Method({"GET", "POST"})
-     * @Template("AppVacReqBundle:Approver:orginst-user-add.html.twig")
+     * @Template("AppVacReqBundle/Approver/orginst-user-add.html.twig")
      */
     public function addUserAction(Request $request, $instid, $roleId, $btnName )
     {
@@ -665,7 +665,7 @@ class ApproverController extends Controller
     /**
      * @Route("/add-group", name="vacreq_group_add")
      * @Method({"GET", "POST"})
-     * @Template("AppVacReqBundle:Approver:orginst-add.html.twig")
+     * @Template("AppVacReqBundle/Approver/orginst-add.html.twig")
      */
     public function addGroupAction(Request $request )
     {
@@ -799,7 +799,7 @@ class ApproverController extends Controller
      *
      * @Route("/organizational-institution-remove/{instid}", name="vacreq_group_remove")
      * @Method({"GET", "POST"})
-     * @Template("AppVacReqBundle:Approver:orginst-user-add.html.twig")
+     * @Template("AppVacReqBundle/Approver/orginst-user-add.html.twig")
      */
     public function removeGroupAction(Request $request, $instid )
     {
@@ -914,7 +914,7 @@ class ApproverController extends Controller
     /**
      * @Route("/organizational-institution-emailusers/{instid}", name="vacreq_orginst_emailusers")
      * @Method({"GET", "POST"})
-     * @Template("AppVacReqBundle:Approver:orginst-emailusers.html.twig")
+     * @Template("AppVacReqBundle/Approver/orginst-emailusers.html.twig")
      */
     public function emailUsersAction(Request $request, $instid)
     {
@@ -1041,7 +1041,7 @@ class ApproverController extends Controller
     /**
      * @Route("/my-group/", name="vacreq_mygroup")
      * @Method({"GET", "POST"})
-     * @Template("AppVacReqBundle:Group:mygroup.html.twig")
+     * @Template("AppVacReqBundle/Group/mygroup.html.twig")
      */
     public function myGroupAction(Request $request)
     {
@@ -1136,7 +1136,7 @@ class ApproverController extends Controller
     /**
      * @Route("/my-single-group/{groupId}/{userids}", name="vacreq_mysinglegroup")
      * @Method({"GET", "POST"})
-     * @Template("AppVacReqBundle:Group:my-single-group.html.twig")
+     * @Template("AppVacReqBundle/Group/my-single-group.html.twig")
      */
     public function mySingleGroupAction( Request $request, $groupId, $userids )
     {

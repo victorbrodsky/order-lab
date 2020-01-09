@@ -59,7 +59,7 @@ class ScanController extends Controller
      *
      * @Route("/", name="scan_create")
      * @Method("POST")
-     * @Template("AppOrderformBundle:Imaging:new_orig.html.twig")
+     * @Template("AppOrderformBundle/Imaging/new_orig.html.twig")
      */
     public function createAction(Request $request)
     {
@@ -191,7 +191,7 @@ class ScanController extends Controller
      *
      * @Route("/{id}", name="scan_update")
      * @Method("PUT")
-     * @Template("AppOrderformBundle:Imaging:edit.html.twig")
+     * @Template("AppOrderformBundle/Imaging/edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {

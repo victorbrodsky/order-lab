@@ -48,7 +48,7 @@ class SiteParametersController extends Controller
      *
      * @Route("/settings-id/{id}", name="employees_siteparameters_id")
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:SiteParameters:index.html.twig")
+     * @Template("AppUserdirectoryBundle/SiteParameters/index.html.twig")
      */
     public function indexIdAction(Request $request, $id=null)
     {
@@ -66,7 +66,7 @@ class SiteParametersController extends Controller
      *
      * @Route("/", name="employees_siteparameters")
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:SiteParameters:index.html.twig")
+     * @Template("AppUserdirectoryBundle/SiteParameters/index.html.twig")
      */
     public function indexAction(Request $request)
     {
@@ -197,7 +197,7 @@ class SiteParametersController extends Controller
      *
      * @Route("/{id}/edit", name="employees_siteparameters_edit")
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:SiteParameters:edit.html.twig")
+     * @Template("AppUserdirectoryBundle/SiteParameters/edit.html.twig")
      */
     public function editAction(Request $request,$id)
     {
@@ -249,7 +249,7 @@ class SiteParametersController extends Controller
      *
      * @Route("/{id}", name="employees_siteparameters_update")
      * @Method("PUT")
-     * @Template("AppUserdirectoryBundle:SiteParameters:edit.html.twig")
+     * @Template("AppUserdirectoryBundle/SiteParameters/edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {
@@ -371,7 +371,7 @@ class SiteParametersController extends Controller
      *
      * @Route("/organizational-group-default-management/{id}", name="employees_management_organizationalgroupdefault")
      * @Method({"GET","POST"})
-     * @Template("AppUserdirectoryBundle:SiteParameters:group-management-form.html.twig")
+     * @Template("AppUserdirectoryBundle/SiteParameters/group-management-form.html.twig")
      */
     public function manageOrgGroupDefaultAction(Request $request, $id)
     {
@@ -572,7 +572,7 @@ class SiteParametersController extends Controller
      *
      * @Route("/initial-configuration", name="employees_initial_configuration")
      * @Method({"GET","POST"})
-     * @Template("AppUserdirectoryBundle:SiteParameters:initial-configuration.html.twig")
+     * @Template("AppUserdirectoryBundle/SiteParameters/initial-configuration.html.twig")
      */
     public function initialConfigurationAction(Request $request)
     {

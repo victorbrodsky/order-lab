@@ -261,7 +261,7 @@ class ListController extends Controller
      *
      *
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:ListForm:index.html.twig")
+     * @Template("AppUserdirectoryBundle/ListForm/index.html.twig")
      */
     public function indexAction(Request $request)
     {
@@ -737,7 +737,7 @@ class ListController extends Controller
      * @Route("/list/visastatus/", name="visastatus_create")
      *
      * @Method("POST")
-     * @Template("AppUserdirectoryBundle:ListForm:new.html.twig")
+     * @Template("AppUserdirectoryBundle/ListForm/new.html.twig")
      */
     public function createAction(Request $request)
     {
@@ -1043,7 +1043,7 @@ class ListController extends Controller
      *
      *
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:ListForm:new.html.twig")
+     * @Template("AppUserdirectoryBundle/ListForm/new.html.twig")
      */
     public function newAction(Request $request)
     {
@@ -1311,7 +1311,7 @@ class ListController extends Controller
      * @Route("/list/visastatus/{id}", name="visastatus_show")
      *
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:ListForm:show.html.twig")
+     * @Template("AppUserdirectoryBundle/ListForm/show.html.twig")
      */
     public function showAction(Request $request,$id)
     {
@@ -1575,7 +1575,7 @@ class ListController extends Controller
      * @Route("/list/visastatus/{id}/edit", name="visastatus_edit")
      *
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:ListForm:edit.html.twig")
+     * @Template("AppUserdirectoryBundle/ListForm/edit.html.twig")
      */
     public function editAction(Request $request,$id)
     {
@@ -1876,7 +1876,7 @@ class ListController extends Controller
      * @Route("/list/visastatus/{id}", name="visastatus_update")
      *
      * @Method("PUT")
-     * @Template("AppUserdirectoryBundle:ListForm:edit.html.twig")
+     * @Template("AppUserdirectoryBundle/ListForm/edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {
@@ -2149,7 +2149,7 @@ class ListController extends Controller
 //     * @Route("/service/new/parent/{pid}", name="services_new_with_parent")
 //     * @Route("/service/new/parent/{pid}", name="services_new_with_parent")
 //     * @Method("GET")
-//     * @Template("AppUserdirectoryBundle:ListForm:new.html.twig")
+//     * @Template("AppUserdirectoryBundle/ListForm/new.html.twig")
 //     */
 //    public function newNodeWithParentAction(Request $request,$pid)
 //    {
@@ -3420,7 +3420,7 @@ class ListController extends Controller
      *
      * @Route("/list-manager/id/{listId}", name="platform_list_manager")
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:ListForm:platform_list_manager.html.twig")
+     * @Template("AppUserdirectoryBundle/ListForm/platform_list_manager.html.twig")
      */
     public function platformListManagerAction(Request $request, $listId)
     {
@@ -3444,7 +3444,7 @@ class ListController extends Controller
             if( strpos($listRootName, "_pathaction") === false ) {
                 return $this->forward('AppUserdirectoryBundle:List:index', array('request' => $request));
             } else {
-                return $this->forward('AppUserdirectoryBundle:ComplexList:index', array('request' => $request));
+                return $this->forward('AppUserdirectoryBundle/ComplexList/index', array('request' => $request));
             }
 
         }
@@ -3461,7 +3461,7 @@ class ListController extends Controller
      *
      * @Route("/list-manager/id/{linkToListId}/{entityId}", name="platform_list_manager_element")
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:ListForm:platform_list_manager.html.twig")
+     * @Template("AppUserdirectoryBundle/ListForm/platform_list_manager.html.twig")
      */
     public function platformElementManagerRootElementAction( Request $request, $linkToListId, $entityId ) {
 

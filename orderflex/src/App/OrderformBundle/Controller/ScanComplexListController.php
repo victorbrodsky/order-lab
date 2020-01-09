@@ -45,7 +45,7 @@ class ScanComplexListController extends ComplexListController
      * @Route("/list/laboratoty-tests/", name="scan_labtests_pathaction_list")
      *
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:ComplexList:index.html.twig")
+     * @Template("AppUserdirectoryBundle/ComplexList/index.html.twig")
      */
     public function indexAction(Request $request)
     {
@@ -65,7 +65,7 @@ class ScanComplexListController extends ComplexListController
      *
      *
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:ComplexList:new.html.twig")
+     * @Template("AppUserdirectoryBundle/ComplexList/new.html.twig")
      */
     public function showListAction(Request $request, $id)
     {
@@ -88,7 +88,7 @@ class ScanComplexListController extends ComplexListController
      * @Route("/admin/laboratory-tests/new", name="scan_labtests_pathaction_new_standalone")
      *
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:ComplexList:new.html.twig")
+     * @Template("AppUserdirectoryBundle/ComplexList/new.html.twig")
      */
     public function newListAction(Request $request)
     {
@@ -105,7 +105,7 @@ class ScanComplexListController extends ComplexListController
      * @Route("/admin/laboratory-tests/new", name="scan_labtests_pathaction_new_post_standalone")
      *
      * @Method("POST")
-     * @Template("AppUserdirectoryBundle:ComplexList:new.html.twig")
+     * @Template("AppUserdirectoryBundle/ComplexList/new.html.twig")
      */
     public function createListAction( Request $request )
     {
@@ -122,7 +122,7 @@ class ScanComplexListController extends ComplexListController
      * @Route("/admin/laboratory-tests/{id}", name="scan_labtests_pathaction_edit_put_standalone",requirements={"id" = "\d+"})
      *
      * @Method("PUT")
-     * @Template("AppUserdirectoryBundle:ComplexList:new.html.twig")
+     * @Template("AppUserdirectoryBundle/ComplexList/new.html.twig")
      */
     public function updateListAction( Request $request, $id )
     {

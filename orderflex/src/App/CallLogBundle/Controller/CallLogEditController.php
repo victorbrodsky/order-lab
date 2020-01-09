@@ -38,7 +38,7 @@ class CallLogEditController extends CallEntryController
 
     /**
      * @Route("/delete/{messageOid}/{messageVersion}", name="calllog_delete")
-     * @Template("AppUserdirectoryBundle:Default:about.html.twig")
+     * @Template("AppUserdirectoryBundle/Default/about.html.twig")
      * @Method("GET")
      */
     public function deleteMessageAction(Request $request, $messageOid, $messageVersion)
@@ -73,7 +73,7 @@ class CallLogEditController extends CallEntryController
 
     /**
      * @Route("/un-delete/{messageOid}/{messageVersion}", name="calllog_undelete")
-     * @Template("AppUserdirectoryBundle:Default:about.html.twig")
+     * @Template("AppUserdirectoryBundle/Default/about.html.twig")
      * @Method("GET")
      */
     public function unDeleteMessageAction(Request $request, $messageOid, $messageVersion)
@@ -177,7 +177,7 @@ class CallLogEditController extends CallEntryController
      * @Route("/entry/edit-latest-encounter/{messageOid}/{messageVersion}", name="calllog_callentry_edit_latest_encounter")
      * @Route("/entry/amend-latest-encounter/{messageOid}/{messageVersion}", name="calllog_callentry_amend_latest_encounter")
      * @Method("GET")
-     * @Template("AppCallLogBundle:CallLog:call-entry-edit.html.twig")
+     * @Template("AppCallLogBundle/CallLog/call-entry-edit.html.twig")
      */
     public function getCallLogEntryAction(Request $request, $messageOid, $messageVersion=null)
     {
@@ -443,7 +443,7 @@ class CallLogEditController extends CallEntryController
     /**
      * Save/Update Call Log Entry
      * @Route("/entry/update/{messageId}/{cycle}", name="calllog_update_entry", options={"expose"=true})
-     * @Template("AppCallLogBundle:CallLog:call-entry-edit.html.twig")
+     * @Template("AppCallLogBundle/CallLog/call-entry-edit.html.twig")
      * @Method("POST")
      */
     public function updateEntryAction(Request $request, $messageId, $cycle)

@@ -55,7 +55,7 @@ class UserRequestController extends Controller
      *
      * @Route("/account-requests", name="employees_accountrequest")
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:UserRequest:index.html.twig")
+     * @Template("AppUserdirectoryBundle/UserRequest/index.html.twig")
      */
     public function indexAction( Request $request )
     {
@@ -125,7 +125,7 @@ class UserRequestController extends Controller
      *
      * @Route("/account-requests/new", name="employees_accountrequest_create")
      * @Method("POST")
-     * @Template("AppUserdirectoryBundle:UserRequest:account_request.html.twig")
+     * @Template("AppUserdirectoryBundle/UserRequest/account_request.html.twig")
      */
     public function createAction(Request $request)
     {
@@ -184,7 +184,7 @@ class UserRequestController extends Controller
      *
      * @Route("/account-requests/new", name="employees_accountrequest_new")
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:UserRequest:account_request.html.twig")
+     * @Template("AppUserdirectoryBundle/UserRequest/account_request.html.twig")
      */
     public function newAction()
     {
@@ -250,7 +250,7 @@ class UserRequestController extends Controller
     /**
      * @Route("/account-requests/{id}/{status}/status", name="employees_accountrequest_status", requirements={"id" = "\d+"})
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:UserRequest:index.html.twig")
+     * @Template("AppUserdirectoryBundle/UserRequest/index.html.twig")
      */
     public function statusAction($id, $status)
     {
@@ -279,7 +279,7 @@ class UserRequestController extends Controller
      *
      * @Route("/account-requests-approve", name="employees_accountrequest_approve")
      * @Method("POST")
-     * @Template("AppUserdirectoryBundle:UserRequest:index.html.twig")
+     * @Template("AppUserdirectoryBundle/UserRequest/index.html.twig")
      */
     public function approveUserAccountRequestAction(Request $request)
     {
@@ -541,7 +541,7 @@ class UserRequestController extends Controller
      *
      * @Route("/account-requests/{id}", name="employees_accountrequest_update", requirements={"id" = "\d+"})
      * @Method("PUT")
-     * @Template("AppUserdirectoryBundle:UserRequest:edit.html.twig")
+     * @Template("AppUserdirectoryBundle/UserRequest/edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {

@@ -46,7 +46,7 @@ class RequestController extends Controller
      * @Route("/carry-over-request/new", name="vacreq_carryoverrequest")
      *
      * @Method({"GET", "POST"})
-     * @Template("AppVacReqBundle:Request:edit.html.twig")
+     * @Template("AppVacReqBundle/Request/edit.html.twig")
      */
     public function newAction(Request $request)
     {
@@ -321,7 +321,7 @@ class RequestController extends Controller
      * @Route("/show/{id}", name="vacreq_show")
      *
      * @Method("GET")
-     * @Template("AppVacReqBundle:Request:edit.html.twig")
+     * @Template("AppVacReqBundle/Request/edit.html.twig")
      */
     public function showAction(Request $request, $id)
     {
@@ -374,7 +374,7 @@ class RequestController extends Controller
      * @Route("/review/{id}", name="vacreq_review")
      *
      * @Method({"GET", "POST"})
-     * @Template("AppVacReqBundle:Request:edit.html.twig")
+     * @Template("AppVacReqBundle/Request/edit.html.twig")
      */
     public function editAction(Request $request, $id)
     {
@@ -695,7 +695,7 @@ class RequestController extends Controller
      * @Route("/status/{id}/{requestName}/{status}", name="vacreq_status_change")
      * @Route("/estatus/{id}/{requestName}/{status}", name="vacreq_status_email_change")
      * @Method({"GET"})
-     * @Template("AppVacReqBundle:Request:edit.html.twig")
+     * @Template("AppVacReqBundle/Request/edit.html.twig")
      */
     public function statusAction(Request $request, $id, $requestName, $status) {
 

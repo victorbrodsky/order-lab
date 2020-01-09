@@ -40,7 +40,7 @@ class DefaultController extends Controller
 
     /**
      * @Route("/thanks-for-downloading/{id}/{sitename}", name="fellapp_thankfordownloading")
-     * @Template("AppUserdirectoryBundle:Default:thanksfordownloading.html.twig")
+     * @Template("AppUserdirectoryBundle/Default/thanksfordownloading.html.twig")
      * @Method("GET")
      */
     public function thankfordownloadingAction(Request $request, $id, $sitename) {
@@ -53,7 +53,7 @@ class DefaultController extends Controller
 
     /**
      * @Route("/about", name="fellapp_about_page")
-     * @Template("AppUserdirectoryBundle:Default:about.html.twig")
+     * @Template("AppUserdirectoryBundle/Default/about.html.twig")
      */
     public function aboutAction( Request $request ) {
         return array('sitename'=>$this->container->getParameter('fellapp.sitename'));
@@ -162,7 +162,7 @@ class DefaultController extends Controller
 
     /**
      * @Route("/confirmation/{id}", name="fellapp_simple_confirmation")
-     * @Template("AppFellAppBundle:Default:simple-confirmation.html.twig")
+     * @Template("AppFellAppBundle/Default/simple-confirmation.html.twig")
      */
     public function confirmationAction( Request $request, FellowshipApplication $fellapp ) {
 

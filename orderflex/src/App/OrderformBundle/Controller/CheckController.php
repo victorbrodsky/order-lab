@@ -36,7 +36,7 @@ use App\UserdirectoryBundle\Util\UserUtil;
  * Message controller.
  *
  * @Route("/check")
- * @Template("AppOrderformBundle:Patient:edit_single.html.twig")
+ * @Template("AppOrderformBundle/Patient/edit_single.html.twig")
  */
 class CheckController extends Controller {
 
@@ -212,7 +212,7 @@ class CheckController extends Controller {
     public function createPatientAction(Request $request) {
 
 //        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
-//            return $this->render('AppOrderformBundle:Security:login.html.twig');
+//            return $this->render('AppOrderformBundle/Security/login.html.twig');
 //        }
 
         $inst = trim( $request->get('inst') );
@@ -467,7 +467,7 @@ class CheckController extends Controller {
     public function createAccessionAction(Request $request) {
 
 //        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
-//            return $this->render('AppOrderformBundle:Security:login.html.twig');
+//            return $this->render('AppOrderformBundle/Security/login.html.twig');
 //        }
 
         $inst = trim( $request->get('inst') );

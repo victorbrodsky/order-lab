@@ -41,7 +41,7 @@ class WorkflowController extends Controller
      * Dump Workflows
      *
      * @Route("/workflow/{type}", name="translationalresearch_workflow_show")
-     * @Template("AppTranslationalResearchBundle:Workflow:workflow.html.twig")
+     * @Template("AppTranslationalResearchBundle/Workflow/workflow.html.twig")
      */
     public function dumpWorkflowAction(Request $request, $type)
     {

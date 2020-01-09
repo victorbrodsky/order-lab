@@ -97,7 +97,7 @@ class HistoryController extends Controller
      *
      * @Route("/scan-order/progress-and-comments/new", name="history_create")
      * @Method("POST")
-     * @Template("AppOrderformBundle:History:new.html.twig")
+     * @Template("AppOrderformBundle/History/new.html.twig")
      */
     public function createAction(Request $request)
     {
@@ -243,7 +243,7 @@ class HistoryController extends Controller
      *
      * @Route("/scan-order/progress-and-comments/{id}", name="history_update", requirements={"id" = "\d+"})
      * @Method("PUT")
-     * @Template("AppOrderformBundle:History:edit.html.twig")
+     * @Template("AppOrderformBundle/History/edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {
@@ -329,7 +329,7 @@ class HistoryController extends Controller
      *
      * @Route("/scan-order/{id}/progress-and-comments", name="history_message_show", requirements={"id" = "\d+"})
      * @Method("GET")
-     * @Template("AppOrderformBundle:History:index.html.twig")
+     * @Template("AppOrderformBundle/History/index.html.twig")
      */
     public function showHistoryMessageAction($id)
     {
@@ -492,7 +492,7 @@ class HistoryController extends Controller
      *
      * @Route("/scan-order/progress-and-comments/create", name="history_message_new")
      * @Method("POST")
-     * @Template("AppOrderformBundle:History:index.html.twig")
+     * @Template("AppOrderformBundle/History/index.html.twig")
      */
     public function createHistoryMessageAction(Request $request)
     {
@@ -544,7 +544,7 @@ class HistoryController extends Controller
      *
      * @Route("/scan-order/progress-and-comments/notviewedcomments", name="history_not_viewed_comments")
      * @Method("GET")
-     * @Template("AppOrderformBundle:History:index.html.twig")
+     * @Template("AppOrderformBundle/History/index.html.twig")
      */
     public function notViewedCommentsAction()
     {
@@ -570,7 +570,7 @@ class HistoryController extends Controller
      *
      * @Route("/scan-order/progress-and-comments/notviewedadmincomments", name="history_not_viewed_admincomments")
      * @Method("GET")
-     * @Template("AppOrderformBundle:History:index.html.twig")
+     * @Template("AppOrderformBundle/History/index.html.twig")
      */
     public function notViewedAdminCommentsAction()
     {

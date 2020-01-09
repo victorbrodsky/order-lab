@@ -625,7 +625,7 @@ class AdminController extends Controller
      *
      * @Route("/lists/", name="user_admin_index")
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:Admin:index.html.twig")
+     * @Template("AppUserdirectoryBundle/Admin/index.html.twig")
      */
     public function indexAction()
     {
@@ -644,7 +644,7 @@ class AdminController extends Controller
             $environment = $param->getEnvironment();
         }
 
-        return $this->render('AppUserdirectoryBundle:Admin:index.html.twig', array('environment'=>$environment));
+        return $this->render('AppUserdirectoryBundle/Admin/index.html.twig', array('environment'=>$environment));
     }
 
     /**
@@ -652,7 +652,7 @@ class AdminController extends Controller
      *
      * @Route("/hierarchies/", name="user_admin_hierarchy_index")
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:Admin:hierarchy-index.html.twig")
+     * @Template("AppUserdirectoryBundle/Admin/hierarchy-index.html.twig")
      */
     public function indexHierarchyAction()
     {
@@ -673,7 +673,7 @@ class AdminController extends Controller
 
         $filters = $this->getDefaultHierarchyFilter();
 
-        return $this->render('AppUserdirectoryBundle:Admin:hierarchy-index.html.twig', array('environment'=>$environment,'filters'=>$filters));
+        return $this->render('AppUserdirectoryBundle/Admin/hierarchy-index.html.twig', array('environment'=>$environment,'filters'=>$filters));
     }
     public function getDefaultHierarchyFilter() {
         $filterStr = array();
@@ -693,7 +693,7 @@ class AdminController extends Controller
      *
      * @Route("/populate-all-site-lists-with-default-values", name="user_generate_all_site")
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:Admin:index.html.twig")
+     * @Template("AppUserdirectoryBundle/Admin/index.html.twig")
      */
     public function generateAllSiteAction()
     {
@@ -731,7 +731,7 @@ class AdminController extends Controller
      *
      * @Route("/populate-all-lists-with-default-values", name="user_generate_all")
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:Admin:index.html.twig")
+     * @Template("AppUserdirectoryBundle/Admin/index.html.twig")
      */
     public function generateAllAction()
     {

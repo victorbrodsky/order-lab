@@ -30,7 +30,7 @@ class FellAppUserController extends UserController
      * Optimized show user
      * @Route("/user/{id}", name="fellapp_showuser", requirements={"id" = "\d+"}, options={"expose"=true})
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:Profile:show_user.html.twig")
+     * @Template("AppUserdirectoryBundle/Profile/show_user.html.twig")
      */
     public function showUserOptimizedAction( Request $request, $id ) {
         return $this->showUserOptimized($request, $id, $this->container->getParameter('fellapp.sitename'));
@@ -39,7 +39,7 @@ class FellAppUserController extends UserController
     /**
      * @Route("/edit-user-profile/{id}", name="fellapp_user_edit", requirements={"id" = "\d+"})
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:Profile:edit_user.html.twig")
+     * @Template("AppUserdirectoryBundle/Profile/edit_user.html.twig")
      */
     public function editUserAction(Request $request, $id)
     {
@@ -60,7 +60,7 @@ class FellAppUserController extends UserController
     /**
      * @Route("/edit-user-profile/{id}", name="fellapp_user_update")
      * @Method("PUT")
-     * @Template("AppUserdirectoryBundle:Profile:edit_user.html.twig")
+     * @Template("AppUserdirectoryBundle/Profile/edit_user.html.twig")
      */
     public function updateUserAction(Request $request, $id)
     {

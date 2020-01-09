@@ -14,7 +14,7 @@ class DefaultController extends Controller
 
     /**
      * @Route("/about", name="translationalresearch_about_page")
-     * @Template("AppUserdirectoryBundle:Default:about.html.twig")
+     * @Template("AppUserdirectoryBundle/Default/about.html.twig")
      */
     public function aboutAction( Request $request ) {
 
@@ -41,7 +41,7 @@ class DefaultController extends Controller
 
     /**
      * @Route("/thanks-for-downloading/{id}/{sitename}", name="translationalresearch_thankfordownloading")
-     * @Template("AppUserdirectoryBundle:Default:thanksfordownloading.html.twig")
+     * @Template("AppUserdirectoryBundle/Default/thanksfordownloading.html.twig")
      * @Method("GET")
      */
     public function thankfordownloadingAction(Request $request, $id, $sitename) {
@@ -54,7 +54,7 @@ class DefaultController extends Controller
 
 //    /**
 //     * @Route("/", name="translationalresearch_home")
-//     * @Template("AppTranslationalResearchBundle:Default:index.html.twig")
+//     * @Template("AppTranslationalResearchBundle/Default/index.html.twig")
 //     * @Method("GET")
 //     */
 //    public function indexAction( Request $request ) {
@@ -283,7 +283,7 @@ class DefaultController extends Controller
      * http://localhost/order/translational-research/barcode-demo
      *
      * @Route("/barcode-demo", name="translationalresearch_barcode-demo")
-     * @Template("AppTranslationalResearchBundle:Request:barcodedemo.html.twig")
+     * @Template("AppTranslationalResearchBundle/Request/barcodedemo.html.twig")
      */
     public function barcodeDemoAction( Request $request ) {
         return array();

@@ -34,7 +34,7 @@ class DefaultController extends Controller
 
     /**
      * @Route("/about", name="calllog_about_page")
-     * @Template("AppUserdirectoryBundle:Default:about.html.twig")
+     * @Template("AppUserdirectoryBundle/Default/about.html.twig")
      */
     public function aboutAction(Request $request)
     {
@@ -46,7 +46,7 @@ class DefaultController extends Controller
 //    /**
 //     * Alerts
 //     * @Route("/alerts/", name="calllog_alerts")
-//     * @Template("AppCallLogBundle:Default:under_construction.html.twig")
+//     * @Template("AppCallLogBundle/Default/under_construction.html.twig")
 //     */
 //    public function alertsAction(Request $request)
 //    {
@@ -57,7 +57,7 @@ class DefaultController extends Controller
     /**
      * Resources
      * @Route("/resources/", name="calllog_resources")
-     * @Template("AppCallLogBundle:CallLog:resources.html.twig")
+     * @Template("AppCallLogBundle/CallLog/resources.html.twig")
      */
     public function resourcesAction(Request $request)
     {
@@ -338,7 +338,7 @@ class DefaultController extends Controller
 
     /**
      * @Route("/update-cache-manually/{id}", name="calllog_update_cache_manually")
-     * @Template("AppCallLogBundle:CallLog:update-cache-manually.html.twig")
+     * @Template("AppCallLogBundle/CallLog/update-cache-manually.html.twig")
      */
     public function updateCacheManuallyAction(Request $request, Message $message)
     {

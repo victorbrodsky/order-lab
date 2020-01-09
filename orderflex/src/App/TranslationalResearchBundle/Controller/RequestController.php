@@ -57,7 +57,7 @@ class RequestController extends Controller
      *
      * @Route("/project/{id}/work-request/new/", name="translationalresearch_request_new")
      * @Route("/work-request/new/", name="translationalresearch_new_standalone_request")
-     * @Template("AppTranslationalResearchBundle:Request:new.html.twig")
+     * @Template("AppTranslationalResearchBundle/Request/new.html.twig")
      * @Method({"GET", "POST"})
      */
     public function newFormNodeAction(Request $request, Project $project=null)
@@ -302,7 +302,7 @@ class RequestController extends Controller
      * Get TransResRequest Edit page
      *
      * @Route("/work-request/edit/{id}", name="translationalresearch_request_edit")
-     * @Template("AppTranslationalResearchBundle:Request:new.html.twig")
+     * @Template("AppTranslationalResearchBundle/Request/new.html.twig")
      * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, TransResRequest $transresRequest)
@@ -887,7 +887,7 @@ class RequestController extends Controller
      *
      * @Route("/work-request/show/{id}", name="translationalresearch_request_show")
      * @Route("/work-request/show-with-packingslip/{id}", name="translationalresearch_request_show_with_packingslip")
-     * @Template("AppTranslationalResearchBundle:Request:new.html.twig")
+     * @Template("AppTranslationalResearchBundle/Request/new.html.twig")
      * @Method("GET")
      */
     public function showAction(Request $request, TransResRequest $transresRequest)
@@ -977,7 +977,7 @@ class RequestController extends Controller
      * Finds and displays all requests for the given project
      *
      * @Route("/project/{id}/requests", name="translationalresearch_request_index")
-     * @Template("AppTranslationalResearchBundle:Request:index.html.twig")
+     * @Template("AppTranslationalResearchBundle/Request/index.html.twig")
      * @Method("GET")
      */
     public function indexAction(Request $request, Project $project)
@@ -1022,7 +1022,7 @@ class RequestController extends Controller
      * Finds and displays the filtered requests lists
      *
      * @Route("/work-requests/list/", name="translationalresearch_request_index_filter")
-     * @Template("AppTranslationalResearchBundle:Request:index.html.twig")
+     * @Template("AppTranslationalResearchBundle/Request/index.html.twig")
      * @Method("GET")
      */
     public function myRequestsAction(Request $request)
@@ -2020,7 +2020,7 @@ class RequestController extends Controller
             //$filterDisable = false;
         }
 
-        //Template: AppTranslationalResearchBundle:Request:index.html.twig
+        //Template: AppTranslationalResearchBundle/Request/index.html.twig
         $formArray = array(
             'transresRequests' => $transresRequests,
             'filterform' => $filterformView,
@@ -2266,7 +2266,7 @@ class RequestController extends Controller
      * Finds and displays a progress review form for this request entity.
      *
      * @Route("/work-request/progress/review/{id}", name="translationalresearch_request_review_progress_state")
-     * @Template("AppTranslationalResearchBundle:Request:review.html.twig")
+     * @Template("AppTranslationalResearchBundle/Request/review.html.twig")
      * @Method("GET")
      */
     public function reviewProgressAction(Request $request, TransResRequest $transresRequest)
@@ -2318,7 +2318,7 @@ class RequestController extends Controller
      * Finds and displays a billing review form for this request entity.
      *
      * @Route("/work-request/billing/review/{id}", name="translationalresearch_request_review_billing_state")
-     * @Template("AppTranslationalResearchBundle:Request:review.html.twig")
+     * @Template("AppTranslationalResearchBundle/Request/review.html.twig")
      * @Method("GET")
      */
     public function reviewBillingAction(Request $request, TransResRequest $transresRequest)
@@ -2442,7 +2442,7 @@ class RequestController extends Controller
 
     /**
      * @Route("/request/fee-schedule", name="translationalresearchfeesschedule-list")
-     * @Template("AppTranslationalResearchBundle:Request:fee-schedule.html.twig")
+     * @Template("AppTranslationalResearchBundle/Request/fee-schedule.html.twig")
      * @Method("GET")
      */
     public function feeScheduleAction(Request $request)

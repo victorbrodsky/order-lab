@@ -48,7 +48,7 @@ class SlideReturnRequestController extends Controller
      *
      * @Route("/slide-return-request/new", name="slide-return-request-table")
      * @Method("GET")
-     * @Template("AppOrderformBundle:SlideReturnRequest:create-table.html.twig")
+     * @Template("AppOrderformBundle/SlideReturnRequest/create-table.html.twig")
      */
     public function newRequestSlideReturnTableAction(Request $request)
     {
@@ -84,7 +84,7 @@ class SlideReturnRequestController extends Controller
     /**
      * @Route("/slide-return-request/submit", name="slide-return-request-table-submit")
      * @Method("POST")
-     * @Template("AppOrderformBundle:SlideReturnRequest:create-table.html.twig")
+     * @Template("AppOrderformBundle/SlideReturnRequest/create-table.html.twig")
      */
     public function submitRequestSlideReturnTableAction(Request $request)
     {
@@ -198,7 +198,7 @@ class SlideReturnRequestController extends Controller
      *
      * @Route("/slide-return-request/{id}", name="slide-return-request", requirements={"id" = "\d+"})
      * @Method("GET")
-     * @Template("AppOrderformBundle:SlideReturnRequest:create.html.twig")
+     * @Template("AppOrderformBundle/SlideReturnRequest/create.html.twig")
      */
     public function indexAction( $id ) {
 
@@ -225,7 +225,7 @@ class SlideReturnRequestController extends Controller
      *
      * @Route("/slide-return-request/{id}", name="slide-return-request_create", requirements={"id" = "\d+"})
      * @Method("POST")
-     * @Template("AppOrderformBundle:SlideReturnRequest:create.html.twig")
+     * @Template("AppOrderformBundle/SlideReturnRequest/create.html.twig")
      */
     public function createSlideReturnRequestAction(Request $request, $id)
     {
@@ -372,7 +372,7 @@ class SlideReturnRequestController extends Controller
      *
      * @Route("/incoming-slide-return-requests", name="incoming-slide-return-requests")
      * @Method("GET")
-     * @Template("AppOrderformBundle:SlideReturnRequest:index.html.twig")
+     * @Template("AppOrderformBundle/SlideReturnRequest/index.html.twig")
      */
     public function allRequestedSlidesAction( Request $request ) {
 
@@ -494,7 +494,7 @@ class SlideReturnRequestController extends Controller
      *
      * @Route("/my-slide-return-requests", name="my-slide-return-requests")
      * @Method("GET")
-     * @Template("AppOrderformBundle:SlideReturnRequest:index.html.twig")
+     * @Template("AppOrderformBundle/SlideReturnRequest/index.html.twig")
      */
     public function userRequestedSlidesAction( Request $request ) {
 
@@ -579,7 +579,7 @@ class SlideReturnRequestController extends Controller
      * Change status
      * @Route("/slide-return-request/{id}/{status}/status", name="sliderequest_status", requirements={"id" = "\d+"})
      * @Method("GET")
-     * @Template("AppOrderformBundle:SlideReturnRequest:index.html.twig")
+     * @Template("AppOrderformBundle/SlideReturnRequest/index.html.twig")
      */
     public function statusAction( Request $request, $id, $status )
     {
@@ -715,7 +715,7 @@ class SlideReturnRequestController extends Controller
 //    }
 
 
-    //@Template("AppOrderformBundle:SlideReturnRequest:index.html.twig")
+    //@Template("AppOrderformBundle/SlideReturnRequest/index.html.twig")
     /**
      * @Route("/slide-return-request/comment/create", name="slide-return-request-comment-create")
      * @Method("POST")

@@ -42,7 +42,7 @@ class CallLogLoggerController extends LoggerController
      *
      * @Route("/", name="calllog_logger")
      * @Method("GET")
-     * @Template("AppCallLogBundle:Logger:index.html.twig")
+     * @Template("AppCallLogBundle/Logger/index.html.twig")
      */
     public function indexAction(Request $request)
     {
@@ -60,7 +60,7 @@ class CallLogLoggerController extends LoggerController
     /**
      * @Route("/user/{id}/all", name="calllog_logger_user_all")
      * @Method("GET")
-     * @Template("AppCallLogBundle:Logger:index.html.twig")
+     * @Template("AppCallLogBundle/Logger/index.html.twig")
      */
     public function getAuditLogAllAction(Request $request)
     {
@@ -90,7 +90,7 @@ class CallLogLoggerController extends LoggerController
 //     *
 //     * @Route("/generation-log/", name="calllog_generation_log")
 //     * @Method("GET")
-//     * @Template("AppCallLogBundle:Logger:index.html.twig")
+//     * @Template("AppCallLogBundle/Logger/index.html.twig")
 //     */
 //    public function generationLogAction(Request $request)
 //    {
@@ -103,7 +103,7 @@ class CallLogLoggerController extends LoggerController
      *
      * @Route("/event-log-per-user-per-event-type/", name="calllog_my_generation_log")
      * @Method("GET")
-     * @Template("AppCallLogBundle:Logger:index.html.twig")
+     * @Template("AppCallLogBundle/Logger/index.html.twig")
      */
     public function myGenerationLogAction(Request $request) {
         if( false == $this->get('security.authorization_checker')->isGranted("ROLE_CALLLOG_USER") ){
@@ -325,7 +325,7 @@ class CallLogLoggerController extends LoggerController
      *
      * @Route("/event-log-per-object/", name="calllog_event-log-per-object_log")
      * @Method("GET")
-     * @Template("AppCallLogBundle:Logger:index.html.twig")
+     * @Template("AppCallLogBundle/Logger/index.html.twig")
      */
     public function calllogEventLogPerObjectAction(Request $request)
     {

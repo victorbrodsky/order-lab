@@ -20,7 +20,7 @@ class DefaultReviewerController extends Controller
      * Lists defaultReviewer states: irb_review, committee_review, final_review
      *
      * @Route("/default-reviewers/{specialtyStr}", name="translationalresearch_default-reviewer_index")
-     * @Template("AppTranslationalResearchBundle:DefaultReviewer:index.html.twig")
+     * @Template("AppTranslationalResearchBundle/DefaultReviewer/index.html.twig")
      * @Method("GET")
      */
     public function indexAction(Request $request, $specialtyStr)
@@ -62,7 +62,7 @@ class DefaultReviewerController extends Controller
      * Lists all defaultReviewer entities for a particular state.
      *
      * @Route("/default-reviewers/stage/{stateStr}/{specialtyStr}", name="translationalresearch_state-default-reviewer_index")
-     * @Template("AppTranslationalResearchBundle:DefaultReviewer:state-default-reviewer-index.html.twig")
+     * @Template("AppTranslationalResearchBundle/DefaultReviewer/state-default-reviewer-index.html.twig")
      * @Method("GET")
      */
     public function stateDefaultReviewerIndexAction(Request $request, $stateStr, $specialtyStr)
@@ -129,7 +129,7 @@ class DefaultReviewerController extends Controller
      * Creates a new defaultReviewer entity.
      *
      * @Route("/default-reviewers/new/{stateStr}/{specialtyStr}", name="translationalresearch_default-reviewer_new")
-     * @Template("AppTranslationalResearchBundle:DefaultReviewer:new.html.twig")
+     * @Template("AppTranslationalResearchBundle/DefaultReviewer/new.html.twig")
      * @Method({"GET", "POST"})
      */
     public function newAction(Request $request, $stateStr, $specialtyStr)
@@ -188,7 +188,7 @@ class DefaultReviewerController extends Controller
      * Finds and displays a defaultReviewer entity.
      *
      * @Route("/default-reviewers/show/{id}", name="translationalresearch_default-reviewer_show")
-     * @Template("AppTranslationalResearchBundle:DefaultReviewer:new.html.twig")
+     * @Template("AppTranslationalResearchBundle/DefaultReviewer/new.html.twig")
      * @Method("GET")
      */
     public function showAction(DefaultReviewer $defaultReviewer)
@@ -221,7 +221,7 @@ class DefaultReviewerController extends Controller
      * Displays a form to edit an existing defaultReviewer entity.
      *
      * @Route("/default-reviewers/edit/{id}", name="translationalresearch_default-reviewer_edit")
-     * @Template("AppTranslationalResearchBundle:DefaultReviewer:new.html.twig")
+     * @Template("AppTranslationalResearchBundle/DefaultReviewer/new.html.twig")
      * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, DefaultReviewer $defaultReviewer)
@@ -382,7 +382,7 @@ class DefaultReviewerController extends Controller
      * Substitute user
      *
      * @Route("/substitute-user/", name="translationalresearch_substitute_user")
-     * @Template("AppTranslationalResearchBundle:DefaultReviewer:substitute-user.html.twig")
+     * @Template("AppTranslationalResearchBundle/DefaultReviewer/substitute-user.html.twig")
      * @Method({"GET", "POST"})
      */
     public function substituteUserAction(Request $request)

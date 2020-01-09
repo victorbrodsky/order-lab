@@ -54,7 +54,7 @@ class FellAppManagement extends Controller {
     /**
      * @Route("/fellowship-types-settings", name="fellapp_fellowshiptype_settings")
      * @Method("GET")
-     * @Template("AppFellAppBundle:Management:management.html.twig")
+     * @Template("AppFellAppBundle/Management/management.html.twig")
      */
     public function felltypeSettingsAction(Request $request) {
 
@@ -98,7 +98,7 @@ class FellAppManagement extends Controller {
     /**
      * @Route("/add-fellowship-application-type", name="fellapp_fellowship_application_type_add")
      * @Method({"GET", "POST"})
-     * @Template("AppFellAppBundle:Management:new-fellowship-application-type.html.twig")
+     * @Template("AppFellAppBundle/Management/new-fellowship-application-type.html.twig")
      */
     public function addFellowshipApplicationTypeAction(Request $request )
     {
@@ -311,7 +311,7 @@ class FellAppManagement extends Controller {
     /**
      * @Route("/fellowship-type/show/{id}", name="fellapp_fellowshiptype_setting_show")
      * @Method("GET")
-     * @Template("AppFellAppBundle:Management:new.html.twig")
+     * @Template("AppFellAppBundle/Management/new.html.twig")
      */
     public function showAction(Request $request, $id) {
 
@@ -335,7 +335,7 @@ class FellAppManagement extends Controller {
 
         //$routeName = $request->get('_route');
         //$args = $this->getFellappSpecialtyForm($routeName,$felltype);
-        //return $this->render('AppFellAppBundle:Management:new.html.twig', $args);
+        //return $this->render('AppFellAppBundle/Management/new.html.twig', $args);
 
         $form = $this->getFellappSpecialtyForm($felltype,$cycle);
 
@@ -349,7 +349,7 @@ class FellAppManagement extends Controller {
     /**
      * @Route("/fellowship-type/edit/{id}", name="fellapp_fellowshiptype_setting_edit")
      * @Method({"GET", "POST"})
-     * @Template("AppFellAppBundle:Management:new.html.twig")
+     * @Template("AppFellAppBundle/Management/new.html.twig")
      */
     public function editAction(Request $request, $id) {
 
@@ -510,7 +510,7 @@ class FellAppManagement extends Controller {
     /**
      * @Route("/populate-default", name="fellapp_populate_default")
      * @Method("GET")
-     * @Template("AppFellAppBundle:Management:management.html.twig")
+     * @Template("AppFellAppBundle/Management/management.html.twig")
      */
     public function populateDefaultAction(Request $request) {
 

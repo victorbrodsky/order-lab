@@ -62,7 +62,7 @@ class CallLogPatientController extends PatientController {
      *
      * @Route("/patient/info/{id}", name="calllog_patient_show", options={"expose"=true})
      * @Method("GET")
-     * @Template("AppOrderformBundle:Patient:new.html.twig")
+     * @Template("AppOrderformBundle/Patient/new.html.twig")
      */
     public function showAction( Request $request, $id )
     {
@@ -92,7 +92,7 @@ class CallLogPatientController extends PatientController {
      *
      * @Route("/patient/view-patient-record", name="calllog_patient_view_by_mrn", options={"expose"=true})
      * @Method("GET")
-     * @Template("AppOrderformBundle:Patient:new.html.twig")
+     * @Template("AppOrderformBundle/Patient/new.html.twig")
      */
     public function viewPatientByMrnAction( Request $request )
     {
@@ -177,7 +177,7 @@ class CallLogPatientController extends PatientController {
      *
      * @Route("/patient/{id}/edit", name="calllog_patient_edit", options={"expose"=true})
      * @Method("GET")
-     * @Template("AppOrderformBundle:Patient:new.html.twig")
+     * @Template("AppOrderformBundle/Patient/new.html.twig")
      */
     public function editAction( Request $request, $id )
     {
@@ -210,7 +210,7 @@ class CallLogPatientController extends PatientController {
      *
      * @Route("/patient/edit-patient-record", name="calllog_patient_edit_by_mrn", options={"expose"=true})
      * @Method("GET")
-     * @Template("AppOrderformBundle:Patient:new.html.twig")
+     * @Template("AppOrderformBundle/Patient/new.html.twig")
      */
     public function editPatientByMrnAction( Request $request )
     {
@@ -305,7 +305,7 @@ class CallLogPatientController extends PatientController {
      *
      * @Route("/patient/{id}/edit", name="calllog_patient_update", options={"expose"=true})
      * @Method("POST")
-     * @Template("AppOrderformBundle:Patient:new.html.twig")
+     * @Template("AppOrderformBundle/Patient/new.html.twig")
      */
     public function updateAction( Request $request, $id )
     {
@@ -328,7 +328,7 @@ class CallLogPatientController extends PatientController {
      * Displays a form to edit patient info only (not encounters)
      *
      * @Route("/patient-demographics/{id}", name="calllog_single_patient_view")
-     * @Template("AppCallLogBundle:DataQuality:single-patient-edit.html.twig")
+     * @Template("AppCallLogBundle/DataQuality/single-patient-edit.html.twig")
      * @Method("GET")
      */
     public function patientSingleViewAction(Request $request, Patient $patient)
@@ -358,7 +358,7 @@ class CallLogPatientController extends PatientController {
      * Displays a form to edit patient info only (not encounters)
      *
      * @Route("/patient-demographics/edit/{id}", name="calllog_single_patient_edit")
-     * @Template("AppCallLogBundle:DataQuality:single-patient-edit.html.twig")
+     * @Template("AppCallLogBundle/DataQuality/single-patient-edit.html.twig")
      * @Method({"GET", "POST"})
      */
     public function patientSingleEditAction(Request $request, Patient $patient)
@@ -783,7 +783,7 @@ class CallLogPatientController extends PatientController {
     /**
      * Complex Patient List
      * @Route("/patient-list/{listid}/{listname}", name="calllog_complex_patient_list")
-     * @Template("AppCallLogBundle:PatientList:complex-patient-list.html.twig")
+     * @Template("AppCallLogBundle/PatientList/complex-patient-list.html.twig")
      */
     public function complexPatientListAction(Request $request, $listid, $listname)
     {
@@ -876,7 +876,7 @@ class CallLogPatientController extends PatientController {
      * Listing patients whose notes have been updated in the last 96 hours (4 days)
      *
      * @Route("/recent-patients", name="calllog_recent_patients")
-     * @Template("AppCallLogBundle:PatientList:recent-patients.html.twig")
+     * @Template("AppCallLogBundle/PatientList/recent-patients.html.twig")
      */
     public function recentPatientsAction(Request $request)
     {
@@ -1017,7 +1017,7 @@ class CallLogPatientController extends PatientController {
      * @Route("/patient/add-patient-to-list/{patientListId}/{patientId}", name="calllog_add_patient_to_list")
      * @Route("/patient/add-patient-to-list-ajax/{patientListId}/{patientId}", name="calllog_add_patient_to_list_ajax", options={"expose"=true})
      *
-     * @Template("AppCallLogBundle:PatientList:complex-patient-list.html.twig")
+     * @Template("AppCallLogBundle/PatientList/complex-patient-list.html.twig")
      */
     public function addPatientToListAction(Request $request, $patientListId, $patientId) {
         if( false == $this->get('security.authorization_checker')->isGranted('ROLE_CALLLOG_USER') ){
@@ -1144,7 +1144,7 @@ class CallLogPatientController extends PatientController {
         $testing = $request->query->get('testing');
 
         //$showUserArr = $this->showUser($userid,$this->container->getParameter('employees.sitename'),false);
-        //$template = $this->render('AppUserdirectoryBundle:Profile:edit_user_only.html.twig',$showUserArr)->getContent();
+        //$template = $this->render('AppUserdirectoryBundle/Profile/edit_user_only.html.twig',$showUserArr)->getContent();
 
         //child nodes of "Pathology Call Log Entry"
         //$messageCategoriePathCall = $em->getRepository('AppOrderformBundle:MessageCategory')->findOneByName("Pathology Call Log Entry");
@@ -1297,7 +1297,7 @@ class CallLogPatientController extends PatientController {
             'messageid' => $messageId
             //'testing' => true
         );
-        $htmlPage = $this->render('AppCallLogBundle:PatientList:patient_entries.html.twig',$params);
+        $htmlPage = $this->render('AppCallLogBundle/PatientList/patient_entries.html.twig',$params);
 
         //testing
         if( $testing ) {
@@ -1436,7 +1436,7 @@ class CallLogPatientController extends PatientController {
         $testing = $request->query->get('testing');
 
         //$showUserArr = $this->showUser($userid,$this->container->getParameter('employees.sitename'),false);
-        //$template = $this->render('AppUserdirectoryBundle:Profile:edit_user_only.html.twig',$showUserArr)->getContent();
+        //$template = $this->render('AppUserdirectoryBundle/Profile/edit_user_only.html.twig',$showUserArr)->getContent();
 
         //child nodes of "Pathology Call Log Entry"
         //$messageCategoriePathCall = $em->getRepository('AppOrderformBundle:MessageCategory')->findOneByName("Pathology Call Log Entry");
@@ -1547,7 +1547,7 @@ class CallLogPatientController extends PatientController {
             'messageid' => $messageId
             //'testing' => true
         );
-        $htmlPage = $this->render('AppCallLogBundle:PatientList:patient_tasks.html.twig',$params);
+        $htmlPage = $this->render('AppCallLogBundle/PatientList/patient_tasks.html.twig',$params);
 
         //testing
         if( $testing ) {
@@ -1694,7 +1694,7 @@ class CallLogPatientController extends PatientController {
             //'messageid' => $messageId
             //'testing' => true
         );
-        $htmlPage = $this->render('AppCallLogBundle:PatientList:encounter_show.html.twig',$params);
+        $htmlPage = $this->render('AppCallLogBundle/PatientList/encounter_show.html.twig',$params);
 
         //testing
         //$response = new Response($htmlPage);

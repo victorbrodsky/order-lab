@@ -36,7 +36,7 @@ class InvoiceController extends Controller
      * @Route("/list-request/{id}", name="translationalresearch_invoice_index")
      * @Route("/list/", name="translationalresearch_invoice_index_filter")
      * @Route("/list/{invoicetype}", name="translationalresearch_invoice_index_type")
-     * @Template("AppTranslationalResearchBundle:Invoice:index.html.twig")
+     * @Template("AppTranslationalResearchBundle/Invoice/index.html.twig")
      * @Method("GET")
      */
     public function indexAction(Request $request, TransResRequest $transresRequest=null, $invoicetype=null)
@@ -677,7 +677,7 @@ class InvoiceController extends Controller
      * Creates a new invoice entity.
      *
      * @Route("/new/{id}", name="translationalresearch_invoice_new")
-     * @Template("AppTranslationalResearchBundle:Invoice:new.html.twig")
+     * @Template("AppTranslationalResearchBundle/Invoice/new.html.twig")
      * @Method({"GET", "POST"})
      */
     public function newAction(Request $request, TransResRequest $transresRequest)
@@ -760,7 +760,7 @@ class InvoiceController extends Controller
      * Finds and displays a invoice entity.
      *
      * @Route("/show/{oid}", name="translationalresearch_invoice_show")
-     * @Template("AppTranslationalResearchBundle:Invoice:new.html.twig")
+     * @Template("AppTranslationalResearchBundle/Invoice/new.html.twig")
      * @Method("GET")
      */
     public function showAction(Request $request, $oid)
@@ -829,7 +829,7 @@ class InvoiceController extends Controller
      * Displays a form to edit an existing invoice entity.
      *
      * @Route("/edit/{oid}", name="translationalresearch_invoice_edit")
-     * @Template("AppTranslationalResearchBundle:Invoice:new.html.twig")
+     * @Template("AppTranslationalResearchBundle/Invoice/new.html.twig")
      * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, $oid)
@@ -1100,7 +1100,7 @@ class InvoiceController extends Controller
      * Show PDF version of invoice
      *
      * @Route("/download-invoice-pdf/{id}", name="translationalresearch_invoice_download")
-     * @Template("AppTranslationalResearchBundle:Invoice:pdf-show.html.twig")
+     * @Template("AppTranslationalResearchBundle/Invoice/pdf-show.html.twig")
      * @Method("GET")
      */
     public function downloadPdfAction(Request $request, Invoice $invoice)
@@ -1176,7 +1176,7 @@ class InvoiceController extends Controller
      * Show the most recent PDF version of invoice
      *
      * @Route("/download-recent-invoice-pdf/{id}", name="translationalresearch_invoice_download_recent")
-     * @Template("AppTranslationalResearchBundle:Invoice:pdf-show.html.twig")
+     * @Template("AppTranslationalResearchBundle/Invoice/pdf-show.html.twig")
      * @Method("GET")
      */
     public function downloadRecentPdfAction(Request $request, Invoice $invoice)
@@ -1741,7 +1741,7 @@ class InvoiceController extends Controller
 //                $invoiceCounter = $invoiceCounter + count($result);
 //            }
 //
-//            return $this->render("AppTranslationalResearchBundle:Invoice:unpaid-invoice-index.html.twig",
+//            return $this->render("AppTranslationalResearchBundle/Invoice/unpaid-invoice-index.html.twig",
 //                array(
 //                    'title' => $invoiceCounter." Unpaid Invoices",
 //                    'invoiceGroups' => $results,

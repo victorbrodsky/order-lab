@@ -55,7 +55,7 @@ class StatusController extends Controller
 //     *
 //     * @Route("/", name="status_create")
 //     * @Method("POST")
-//     * @Template("AppOrderformBundle:Status:new.html.twig")
+//     * @Template("AppOrderformBundle/Status/new.html.twig")
 //     */
 //    public function createAction(Request $request)
 //    {
@@ -189,7 +189,7 @@ class StatusController extends Controller
 //     *
 //     * @Route("/{id}", name="status_update")
 //     * @Method("PUT")
-//     * @Template("AppOrderformBundle:Status:edit.html.twig")
+//     * @Template("AppOrderformBundle/Status/edit.html.twig")
 //     */
 //    public function updateAction(Request $request, $id)
 //    {

@@ -40,7 +40,7 @@ class FellAppLoggerController extends LoggerController
      *
      * @Route("/", name="fellapp_logger")
      * @Method("GET")
-     * @Template("AppFellAppBundle:Logger:index.html.twig")
+     * @Template("AppFellAppBundle/Logger/index.html.twig")
      */
     public function indexAction(Request $request)
     {
@@ -71,7 +71,7 @@ class FellAppLoggerController extends LoggerController
      *
      * @Route("/application-log/{id}", name="fellapp_application_log")
      * @Method("GET")
-     * @Template("AppFellAppBundle:Logger:index.html.twig")
+     * @Template("AppFellAppBundle/Logger/index.html.twig")
      */
     public function applicationLogAction(Request $request,$id) {
 
@@ -117,7 +117,7 @@ class FellAppLoggerController extends LoggerController
      *
      * @Route("/event-log-per-object/", name="fellapp_event-log-per-object_log")
      * @Method("GET")
-     * @Template("AppFellAppBundle:Logger:index.html.twig")
+     * @Template("AppFellAppBundle/Logger/index.html.twig")
      */
     public function applicationPerObjectLogAction(Request $request) {
 

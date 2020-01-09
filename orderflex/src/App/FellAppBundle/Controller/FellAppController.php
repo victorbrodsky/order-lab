@@ -54,7 +54,7 @@ class FellAppController extends Controller {
      * @Route("/send-rejection-emails", name="fellapp_send_rejection_emails")
      * @Route("/accepted-fellows", name="fellapp_accepted_fellows")
      *
-     * @Template("AppFellAppBundle:Default:home.html.twig")
+     * @Template("AppFellAppBundle/Default/home.html.twig")
      */
     public function indexAction(Request $request) {
         //echo "fellapp home <br>";
@@ -629,7 +629,7 @@ class FellAppController extends Controller {
     /**
      * @Route("/show/{id}", name="fellapp_show")
      * @Route("/download/{id}", name="fellapp_download")
-     * @Template("AppFellAppBundle:Form:new.html.twig")
+     * @Template("AppFellAppBundle/Form/new.html.twig")
      */
     public function showAction(Request $request, $id) {
 
@@ -721,20 +721,20 @@ class FellAppController extends Controller {
         $args = $this->getShowParameters($routeName,$entity);
 
         if( $routeName == 'fellapp_download' ) {
-            return $this->render('AppFellAppBundle:Form:download.html.twig', $args);
+            return $this->render('AppFellAppBundle/Form/download.html.twig', $args);
         }
 
         //event log
         //$event = "Fellowship Application with ID".$id." has been ".$actionStr." by ".$user;
         //$userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$entity,$request,$eventType);
         
-        return $this->render('AppFellAppBundle:Form:new.html.twig', $args);
+        return $this->render('AppFellAppBundle/Form/new.html.twig', $args);
     }
 
     /**
      * @Route("/new/", name="fellapp_new")
      *
-     * @Template("AppFellAppBundle:Form:new.html.twig")
+     * @Template("AppFellAppBundle/Form/new.html.twig")
      */
     public function newAction(Request $request) {
 
@@ -781,7 +781,7 @@ class FellAppController extends Controller {
             return $this->redirect( $this->generateUrl('fellapp-nopermission',array('empty'=>true)) );
         }
 
-        return $this->render('AppFellAppBundle:Form:new.html.twig', $args);
+        return $this->render('AppFellAppBundle/Form/new.html.twig', $args);
     }
 
 
@@ -919,7 +919,7 @@ class FellAppController extends Controller {
      * -NOT-USED
      * @Route("/update-NOT-USED/{id}", name="fellapp_update-NOT-USED")
      * @Method("PUT")
-     * @Template("AppFellAppBundle:Form:new.html.twig")
+     * @Template("AppFellAppBundle/Form/new.html.twig")
      */
     public function updateNotUsedAction(Request $request, $id) {
 
@@ -1132,7 +1132,7 @@ class FellAppController extends Controller {
      *
      * @Route("/edit/{id}", name="fellapp_edit")
      * @Route("/edit-with-default-interviewers/{id}", name="fellapp_edit_default_interviewers")
-     * @Template("AppFellAppBundle:Form:edit.html.twig")
+     * @Template("AppFellAppBundle/Form/edit.html.twig")
      * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, FellowshipApplication $entity)
@@ -1468,7 +1468,7 @@ class FellAppController extends Controller {
     /**
      * @Route("/applicant/new", name="fellapp_create_applicant")
      * @Method("POST")
-     * @Template("AppFellAppBundle:Form:new.html.twig")
+     * @Template("AppFellAppBundle/Form/new.html.twig")
      */
     public function createApplicantAction( Request $request )
     {
@@ -1874,7 +1874,7 @@ class FellAppController extends Controller {
      * @Route("/application-evaluation/show/{id}", name="fellapp_application_show")
      * @Route("/application-evaluation/{id}", name="fellapp_application_edit")
      * @Method("GET")
-     * @Template("AppFellAppBundle:Interview:interview_selector.html.twig")
+     * @Template("AppFellAppBundle/Interview/interview_selector.html.twig")
      */
     public function applicationAction( Request $request, FellowshipApplication $fellapp )
     {
@@ -1940,7 +1940,7 @@ class FellAppController extends Controller {
      * @Route("/interview-evaluation/show/{id}", name="fellapp_interview_show")
      * @Route("/interview-evaluation/{id}", name="fellapp_interview_edit")
      * @Method("GET")
-     * @Template("AppFellAppBundle:Interview:new.html.twig")
+     * @Template("AppFellAppBundle/Interview/new.html.twig")
      */
     public function interviewAction( Request $request, $id ) {
 
@@ -2038,7 +2038,7 @@ class FellAppController extends Controller {
     /**
      * @Route("/interview/update/{id}", name="fellapp_interview_update")
      * @Method("POST")
-     * @Template("AppFellAppBundle:Interview:new.html.twig")
+     * @Template("AppFellAppBundle/Interview/new.html.twig")
      */
     public function interviewUpdateAction( Request $request, $id ) {
 
@@ -2153,7 +2153,7 @@ class FellAppController extends Controller {
 //     * @Route("/interview/new/{fellappid}/{interviewid}", name="fellapp_interview_new")
 //     * @Route("/interview/new/{fellappid}/{interviewid}", name="fellapp_interview_new")
 //     * @Method("GET")
-//     * @Template("AppFellAppBundle:Interview:new.html.twig")
+//     * @Template("AppFellAppBundle/Interview/new.html.twig")
 //     */
 //    public function createInterviewAction( Request $request ) {
 //
@@ -2554,7 +2554,7 @@ class FellAppController extends Controller {
     /**
      * @Route("/regenerate-all-complete-application-pdfs/", name="fellapp_regenerate_reports")
      *
-     * @Template("AppFellAppBundle:Form:new.html.twig")
+     * @Template("AppFellAppBundle/Form/new.html.twig")
      */
     public function regenerateAllReportsAction(Request $request) {
 
@@ -2581,7 +2581,7 @@ class FellAppController extends Controller {
     /**
      * @Route("/reset-queue-and-run/", name="fellapp_reset_queue_run")
      *
-     * @Template("AppFellAppBundle:Form:new.html.twig")
+     * @Template("AppFellAppBundle/Form/new.html.twig")
      */
     public function resetQueueRunAction(Request $request) {
 
@@ -2695,7 +2695,7 @@ class FellAppController extends Controller {
     /**
      * @Route("/send-rejection-emails-action/", name="fellapp_send_rejection_emails_action", options={"expose"=true})
      * @Method("POST")
-     * @Template("AppFellAppBundle:Form:send-notification-emails.html.twig")
+     * @Template("AppFellAppBundle/Form/send-notification-emails.html.twig")
      */
     public function sendRejectionEmailsAction(Request $request) {
 

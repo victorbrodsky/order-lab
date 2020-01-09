@@ -32,7 +32,7 @@ class DefaultController extends Controller
 
     /**
      * @Route("/about", name="vacreq_about_page")
-     * @Template("AppUserdirectoryBundle:Default:about.html.twig")
+     * @Template("AppUserdirectoryBundle/Default/about.html.twig")
      */
     public function aboutAction( Request $request ) {
         return array('sitename'=>$this->container->getParameter('vacreq.sitename'));
@@ -40,7 +40,7 @@ class DefaultController extends Controller
 
 //    /**
 //     * @Route("/", name="vacreq_home")
-//     * @Template("AppVacReqBundle:Request:index.html.twig")
+//     * @Template("AppVacReqBundle/Request/index.html.twig")
 //     * @Method("GET")
 //     */
 //    public function indexAction()

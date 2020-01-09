@@ -45,7 +45,7 @@ class FellAppApplicantController extends Controller {
     /**
      * @Route("/interview-modal/{id}", name="fellapp_interview_modal")
      * @Method("GET")
-     * @Template("AppFellAppBundle:Interview:modal.html.twig")
+     * @Template("AppFellAppBundle/Interview/modal.html.twig")
      */
     public function interviewModalAction(Request $request, $id) {
 
@@ -613,7 +613,7 @@ class FellAppApplicantController extends Controller {
 
         $html = "";
         foreach( $entities as $fellapp ) {
-            $interviewModalHtml = $this->container->get('templating')->render('AppFellAppBundle:Interview:applicant-interview-info.html.twig',
+            $interviewModalHtml = $this->container->get('templating')->render('AppFellAppBundle/Interview/applicant-interview-info.html.twig',
                 array(
                     'entity' => $fellapp,
                     'pathbase' => 'fellapp',
@@ -685,7 +685,7 @@ class FellAppApplicantController extends Controller {
         $fellappUtil = $this->container->get('fellapp_util');
         $entities = $fellappUtil->createInterviewApplicantList( $fellappIds );
 
-        $interviewsDocHtml = $this->container->get('templating')->render('AppFellAppBundle:Interview:applicants-interview-info-doc.html.twig',
+        $interviewsDocHtml = $this->container->get('templating')->render('AppFellAppBundle/Interview/applicants-interview-info-doc.html.twig',
             array(
                 'entities' => $entities,
                 'pathbase' => 'fellapp',
@@ -710,7 +710,7 @@ class FellAppApplicantController extends Controller {
     /**
      * @Route("/interview-applicants-list/{fellappIds}", name="fellapp_interview_applicants_list")
      * @Method("GET")
-     * @Template("AppFellAppBundle:Interview:applicants-interview-info.html.twig")
+     * @Template("AppFellAppBundle/Interview/applicants-interview-info.html.twig")
      */
     public function showInterviewApplicantsListAction(Request $request, $fellappIds) {
 

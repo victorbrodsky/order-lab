@@ -46,7 +46,7 @@ class ScanOrderController extends Controller {
 
     /**
      * @Route("/about", name="scan_about_page")
-     * @Template("AppUserdirectoryBundle:Default:about.html.twig")
+     * @Template("AppUserdirectoryBundle/Default/about.html.twig")
      */
     public function aboutAction( Request $request ) {
         return array('sitename'=>$this->container->getParameter('scan.sitename'));
@@ -57,7 +57,7 @@ class ScanOrderController extends Controller {
      *
      * @Route("/", name="scan_home")
      * @Method("GET")
-     * @Template("AppOrderformBundle:Default:home.html.twig")
+     * @Template("AppOrderformBundle/Default/home.html.twig")
      */
     public function indexAction( Request $request ) {
 
@@ -94,7 +94,7 @@ class ScanOrderController extends Controller {
      * @Route("/my-scan-orders", name="my-scan-orders")
      * @Route("/incoming-scan-orders", name="incoming-scan-orders")
      * @Method("GET")
-     * @Template("AppOrderformBundle:ScanOrder:index.html.twig")
+     * @Template("AppOrderformBundle/ScanOrder/index.html.twig")
      */
     public function orderListAction( Request $request ) {
 
@@ -379,12 +379,12 @@ class ScanOrderController extends Controller {
     /**   
      * @Route("/thanks", name="thanks")
      * 
-     * @Template("AppOrderformBundle:ScanOrder:thanks.html.twig")
+     * @Template("AppOrderformBundle/ScanOrder/thanks.html.twig")
      */
     public function thanksAction( $oid = '' )
     {    
         
-        return $this->render('AppOrderformBundle:ScanOrder:thanks.html.twig',
+        return $this->render('AppOrderformBundle/ScanOrder/thanks.html.twig',
             array(
                 'oid' => $oid
             ));
@@ -790,7 +790,7 @@ class ScanOrderController extends Controller {
             'clinicalHistory.field'
         ];
 
-        return $this->render('AppOrderformBundle:ScanOrder:index-search.html.twig', array(
+        return $this->render('AppOrderformBundle/ScanOrder/index-search.html.twig', array(
             'form' => $form->createView(),
 //            'showprovider' => $showprovider,
 //            'showproxyuser' => $showproxyuser,
@@ -861,7 +861,7 @@ class ScanOrderController extends Controller {
         }
         //////// EOF EventLog ////////
 
-        return $this->render('AppOrderformBundle:ScanOrder:one-search-result.html.twig', $viewArr);
+        return $this->render('AppOrderformBundle/ScanOrder/one-search-result.html.twig', $viewArr);
     }
 
 
@@ -875,8 +875,8 @@ class ScanOrderController extends Controller {
         foreach( $searchObjects as $searchObject ) {
             $viewArr = $this->getSearchViewArray( $request, $routeName, $service, $filter, $search, $searchObject, $page );
 
-            //$renderedView = $this->render('AppOrderformBundle:ScanOrder:one-search-result.html.twig', $viewArr);
-            $renderedView = $this->renderView('AppOrderformBundle:ScanOrder:one-search-result.html.twig', $viewArr);
+            //$renderedView = $this->render('AppOrderformBundle/ScanOrder/one-search-result.html.twig', $viewArr);
+            $renderedView = $this->renderView('AppOrderformBundle/ScanOrder/one-search-result.html.twig', $viewArr);
 
             $renderedViewArr[] = $renderedView;
             $resArr[] = 'Search for "' . $viewArr['search'] . '" in ' . $viewArr['searchObjectName'] . '. ' . count($viewArr['pagination']) . ' results found.';
@@ -916,7 +916,7 @@ class ScanOrderController extends Controller {
         }
         //////// EOF EventLog ////////
 
-        return $this->render('AppOrderformBundle:ScanOrder:all-search-result.html.twig', array('views'=>$renderedViewArr));
+        return $this->render('AppOrderformBundle/ScanOrder/all-search-result.html.twig', array('views'=>$renderedViewArr));
     }
 
     public function getSearchViewArray( $request, $routeName, $service, $filter, $search, $searchObject, $page ) {
@@ -1204,7 +1204,7 @@ class ScanOrderController extends Controller {
             'limit' => $limit
         );
 
-//        return $this->render('AppOrderformBundle:ScanOrder:one-search-result.html.twig', array(
+//        return $this->render('AppOrderformBundle/ScanOrder/one-search-result.html.twig', array(
 //            //'form' => $form->createView(),
 //            'showprovider' => $showprovider,
 //            'showproxyuser' => $showproxyuser,

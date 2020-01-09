@@ -40,7 +40,7 @@ class CalendarController extends Controller
      *
      * @Route("/away-calendar/", name="vacreq_awaycalendar")
      * @Method({"GET"})
-     * @Template("AppVacReqBundle:Calendar:calendar.html.twig")
+     * @Template("AppVacReqBundle/Calendar/calendar.html.twig")
      */
     public function awayCalendarAction(Request $request) {
 

@@ -27,7 +27,7 @@ class DashboardTurnAroundStatController extends DashboardController
 
     /**
      * @Route("/graphs/turn-around-statistics", name="translationalresearch_dashboard_turn_around_stat")
-     * @Template("AppTranslationalResearchBundle:Dashboard:dashboard-turn-around-stat.html.twig")
+     * @Template("AppTranslationalResearchBundle/Dashboard/dashboard-turn-around-stat.html.twig")
      */
     public function dashboardChoicesAction( Request $request )
     {

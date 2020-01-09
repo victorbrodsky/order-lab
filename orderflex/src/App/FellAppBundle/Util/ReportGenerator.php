@@ -1643,7 +1643,7 @@ class ReportGenerator {
 //    protected function html2pdf($html) {
 //
 //        //$params = $this->getShowParameters($id,'fellapp_download');
-//        //$html = $this->renderView('AppFellAppBundle:Form:download.html.twig',$params);
+//        //$html = $this->renderView('AppFellAppBundle/Form/download.html.twig',$params);
 //
 //        try {
 //

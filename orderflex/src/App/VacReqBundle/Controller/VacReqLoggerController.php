@@ -41,7 +41,7 @@ class VacReqLoggerController extends LoggerController
      *
      * @Route("/", name="vacreq_logger")
      * @Method("GET")
-     * @Template("AppVacReqBundle:Logger:index.html.twig")
+     * @Template("AppVacReqBundle/Logger/index.html.twig")
      */
     public function indexAction(Request $request)
     {
@@ -59,7 +59,7 @@ class VacReqLoggerController extends LoggerController
     /**
      * @Route("/user/{id}/all", name="vacreq_logger_user_all")
      * @Method("GET")
-     * @Template("AppVacReqBundle:Logger:index.html.twig")
+     * @Template("AppVacReqBundle/Logger/index.html.twig")
      */
     public function getAuditLogAllAction(Request $request)
     {
@@ -89,7 +89,7 @@ class VacReqLoggerController extends LoggerController
 //     *
 //     * @Route("/generation-log/", name="vacreq_generation_log")
 //     * @Method("GET")
-//     * @Template("AppVacReqBundle:Logger:index.html.twig")
+//     * @Template("AppVacReqBundle/Logger/index.html.twig")
 //     */
 //    public function generationLogAction(Request $request)
 //    {
@@ -102,7 +102,7 @@ class VacReqLoggerController extends LoggerController
 //     *
 //     * @Route("/event-log-per-user-per-event-type/", name="vacreq_my_generation_log")
 //     * @Method("GET")
-//     * @Template("AppVacReqBundle:Logger:index.html.twig")
+//     * @Template("AppVacReqBundle/Logger/index.html.twig")
 //     */
 //    public function myGenerationLogAction(Request $request)
 //    {

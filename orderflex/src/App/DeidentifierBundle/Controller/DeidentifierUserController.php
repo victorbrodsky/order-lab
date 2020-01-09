@@ -30,7 +30,7 @@ class DeidentifierUserController extends UserController
      * Optimized show user
      * @Route("/user/{id}", name="deidentifier_showuser", requirements={"id" = "\d+"}, options={"expose"=true})
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:Profile:show_user.html.twig")
+     * @Template("AppUserdirectoryBundle/Profile/show_user.html.twig")
      */
     public function showUserOptimizedAction( Request $request, $id ) {
         return $this->showUserOptimized($request, $id, $this->container->getParameter('deidentifier.sitename'));
@@ -40,7 +40,7 @@ class DeidentifierUserController extends UserController
     /**
      * @Route("/edit-user-profile/{id}", name="deidentifier_user_edit", requirements={"id" = "\d+"})
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:Profile:edit_user.html.twig")
+     * @Template("AppUserdirectoryBundle/Profile/edit_user.html.twig")
      */
     public function editUserAction(Request $request, $id)
     {
@@ -61,7 +61,7 @@ class DeidentifierUserController extends UserController
     /**
      * @Route("/edit-user-profile/{id}", name="deidentifier_user_update")
      * @Method("PUT")
-     * @Template("AppUserdirectoryBundle:Profile:edit_user.html.twig")
+     * @Template("AppUserdirectoryBundle/Profile/edit_user.html.twig")
      */
     public function updateUserAction(Request $request, $id)
     {

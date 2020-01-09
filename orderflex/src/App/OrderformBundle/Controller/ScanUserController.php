@@ -41,7 +41,7 @@ class ScanUserController extends UserController
      * @Route("/users", name="scan_listusers")
      * @Route("/users/previous", name="scan_listusers_previous")
      * @Method("GET")
-     * @Template("AppOrderformBundle:Admin:users.html.twig")
+     * @Template("AppOrderformBundle/Admin/users.html.twig")
      */
     public function indexUserAction(Request $request)
     {
@@ -68,7 +68,7 @@ class ScanUserController extends UserController
     /**
      * @Route("/user/{id}", name="scan_showuser", requirements={"id" = "\d+"})
      * @Method("GET")
-     * @Template("AppOrderformBundle:Profile:edit_user.html.twig")
+     * @Template("AppOrderformBundle/Profile/edit_user.html.twig")
      */
     public function showUserAction(Request $request, $id)
     {
@@ -102,7 +102,7 @@ class ScanUserController extends UserController
     /**
      * @Route("/edit-user-profile/{id}", name="scan_user_edit", requirements={"id" = "\d+"})
      * @Method("GET")
-     * @Template("AppOrderformBundle:Profile:edit_user.html.twig")
+     * @Template("AppOrderformBundle/Profile/edit_user.html.twig")
      */
     public function editUserAction(Request $request, $id)
     {
@@ -136,7 +136,7 @@ class ScanUserController extends UserController
     /**
      * @Route("/edit-user-profile/{id}", name="scan_user_update")
      * @Method("PUT")
-     * @Template("AppOrderformBundle:Profile:edit_user.html.twig")
+     * @Template("AppOrderformBundle/Profile/edit_user.html.twig")
      */
     public function updateUserAction(Request $request, $id)
     {
@@ -311,7 +311,7 @@ class ScanUserController extends UserController
     /**
      * @Route("/site-settings/show/user/{id}", name="scan_order_settings_show", requirements={"id" = "\d+"})
      * @Method("GET")
-     * @Template("AppOrderformBundle:Admin:site-settings.html.twig")
+     * @Template("AppOrderformBundle/Admin/site-settings.html.twig")
      */
     public function showScanSettingsAction($id)
     {
@@ -326,7 +326,7 @@ class ScanUserController extends UserController
     /**
      * @Route("/site-settings/edit/user/{id}", name="scan_order_settings_edit", requirements={"id" = "\d+"})
      * @Method("GET")
-     * @Template("AppOrderformBundle:Admin:site-settings.html.twig")
+     * @Template("AppOrderformBundle/Admin/site-settings.html.twig")
      */
     public function editScanSettingsAction($id)
     {
@@ -401,7 +401,7 @@ class ScanUserController extends UserController
     /**
      * @Route("/site-settings/edit/user/{id}", name="scan_order_settings_update", requirements={"id" = "\d+"})
      * @Method("PUT")
-     * @Template("AppOrderformBundle:Admin:site-settings.html.twig")
+     * @Template("AppOrderformBundle/Admin/site-settings.html.twig")
      */
     public function updateScanSettingsAction(Request $request, $id)
     {

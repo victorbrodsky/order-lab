@@ -81,7 +81,7 @@ class ProjectController extends Controller
      * @Route("/active-project-requests-with-expired-approval/", name="translationalresearch_active_expired_project_index")
      * @Route("/active-project-requests-with-approval-expiring-soon/", name="translationalresearch_active_expired_soon_project_index")
      *
-     * @Template("AppTranslationalResearchBundle:Project:index.html.twig")
+     * @Template("AppTranslationalResearchBundle/Project/index.html.twig")
      * @Method("GET")
      */
     public function indexAction(Request $request)
@@ -872,7 +872,7 @@ class ProjectController extends Controller
      * Select new project specialty
      *
      * @Route("/project/new", name="translationalresearch_project_new_selector")
-     * @Template("AppTranslationalResearchBundle:Project:new-project-selector.html.twig")
+     * @Template("AppTranslationalResearchBundle/Project/new-project-selector.html.twig")
      * @Method({"GET", "POST"})
      */
     public function newProjectSelectorAction(Request $request)
@@ -897,7 +897,7 @@ class ProjectController extends Controller
      * Select new project specialty
      *
      * @Route("/project/new/{specialtyStr}", name="translationalresearch_project_new")
-     * @Template("AppTranslationalResearchBundle:Project:new.html.twig")
+     * @Template("AppTranslationalResearchBundle/Project/new.html.twig")
      * @Method({"GET", "POST"})
      */
     public function newProjectAction(Request $request, $specialtyStr)
@@ -1097,7 +1097,7 @@ class ProjectController extends Controller
      * Originally edit form generates a new entity Project with new id and same oid.
      *
      * @Route("/project/edit/{id}", name="translationalresearch_project_edit")
-     * @Template("AppTranslationalResearchBundle:Project:edit.html.twig")
+     * @Template("AppTranslationalResearchBundle/Project/edit.html.twig")
      * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, Project $project)
@@ -1380,7 +1380,7 @@ class ProjectController extends Controller
      * Finds and displays a project entity.
      *
      * @Route("/project/show/{id}", name="translationalresearch_project_show")
-     * @Template("AppTranslationalResearchBundle:Project:show.html.twig")
+     * @Template("AppTranslationalResearchBundle/Project/show.html.twig")
      * @Method("GET")
      */
     public function showAction(Request $request, Project $project)
@@ -1463,7 +1463,7 @@ class ProjectController extends Controller
      * Finds and displays a review form for this project entity.
      *
      * @Route("/project/review/{id}", name="translationalresearch_project_review")
-     * @Template("AppTranslationalResearchBundle:Project:review.html.twig")
+     * @Template("AppTranslationalResearchBundle/Project/review.html.twig")
      * @Method("GET")
      */
     public function reviewAction(Request $request, Project $project)
@@ -1567,7 +1567,7 @@ class ProjectController extends Controller
      * Finds and displays a resubmit form for this project entity.
      *
      * @Route("/project/resubmit/{id}", name="translationalresearch_project_resubmit")
-     * @Template("AppTranslationalResearchBundle:Project:review.html.twig")
+     * @Template("AppTranslationalResearchBundle/Project/review.html.twig")
      * @Method("GET")
      */
     public function resubmitAction(Request $request, Project $project)
@@ -1608,7 +1608,7 @@ class ProjectController extends Controller
 //     * Displays a form to edit an existing project entity.
 //     *
 //     * @Route("/project/{id}/simple/edit", name="translationalresearch_project_simple_edit")
-//     * @Template("AppTranslationalResearchBundle:Project:edit.html.twig")
+//     * @Template("AppTranslationalResearchBundle/Project/edit.html.twig")
 //     * @Method({"GET", "POST"})
 //     */
 //    public function editAction(Request $request, Project $project)
@@ -2262,7 +2262,7 @@ class ProjectController extends Controller
 
     /**
      * @Route("/project/set-state/{id}", name="translationalresearch_project_set_state")
-     * @Template("AppTranslationalResearchBundle:Project:set-state.html.twig")
+     * @Template("AppTranslationalResearchBundle/Project/set-state.html.twig")
      * @Method({"GET","POST"})
      */
     public function setStateAction(Request $request, Project $project)
@@ -2313,7 +2313,7 @@ class ProjectController extends Controller
 
     /**
      * @Route("/project/thread-comments/{id}", name="translationalresearch_project_thread_comments")
-     * @Template("AppTranslationalResearchBundle:Project:thread-comments.html.twig")
+     * @Template("AppTranslationalResearchBundle/Project/thread-comments.html.twig")
      * @Method({"GET"})
      */
     public function threadCommentsAction(Request $request, $id)
@@ -2345,7 +2345,7 @@ class ProjectController extends Controller
 
     /**
      * @Route("/project/thread-comments/show/{id}", name="translationalresearch_project_thread_comments_show")
-     * @Template("AppTranslationalResearchBundle:Project:thread-comments.html.twig")
+     * @Template("AppTranslationalResearchBundle/Project/thread-comments.html.twig")
      * @Method({"GET"})
      */
     public function threadCommentsShowAction(Request $request, $id)
@@ -2391,7 +2391,7 @@ class ProjectController extends Controller
      * Finds and displays a resubmit form for this project entity.
      *
      * @Route("/project/ajax/{id}", name="translationalresearch_get_project_ajax", options={"expose"=true})
-     * @Template("AppTranslationalResearchBundle:Project:review.html.twig")
+     * @Template("AppTranslationalResearchBundle/Project/review.html.twig")
      * @Method("GET")
      */
     public function getProjectAction(Request $request, Project $project)

@@ -49,7 +49,7 @@ class FellAppRankController extends Controller {
     /**
      * @Route("/rank/edit/{fellappid}", name="fellapp_rank_edit")
      * @Method("GET")
-     * @Template("AppFellAppBundle:Rank:rank_modal.html.twig")
+     * @Template("AppFellAppBundle/Rank/rank_modal.html.twig")
      */
     public function rankEditAction(Request $request, $fellappid) {
 

@@ -47,7 +47,7 @@ class CarryOverController extends Controller
 //    /**
 //     * @Route("/carry-over-request/review/{id}", name="vacreq_carryoverrequest_review")
 //     * @Method({"GET", "POST"})
-//     * @Template("AppVacReqBundle:CarryOver:carryoverrequest.html.twig")
+//     * @Template("AppVacReqBundle/CarryOver/carryoverrequest.html.twig")
 //     */
 //    public function carryOverRequestReviewAction(Request $request, $id)
 //    {
@@ -110,7 +110,7 @@ class CarryOverController extends Controller
     /**
      * @Route("/carry-over-vacation-days/{userId}", name="vacreq_carryover")
      * @Method({"GET", "POST"})
-     * @Template("AppVacReqBundle:Group:carryover.html.twig")
+     * @Template("AppVacReqBundle/Group/carryover.html.twig")
      */
     public function carryOverAction(Request $request, $userId)
     {
@@ -252,7 +252,7 @@ class CarryOverController extends Controller
      * @Route("/carry-over-vacation-days/status/{id}/{requestName}/{status}", name="vacreq_status_change_carryover")
      * @Route("/carry-over-vacation-days/estatus/{id}/{requestName}/{status}", name="vacreq_status_email_change_carryover")
      * @Method({"GET"})
-     * @Template("AppVacReqBundle:Request:edit.html.twig")
+     * @Template("AppVacReqBundle/Request/edit.html.twig")
      */
     public function statusAction(Request $request, $id, $requestName, $status) {
 

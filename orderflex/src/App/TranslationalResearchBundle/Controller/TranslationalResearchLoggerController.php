@@ -41,7 +41,7 @@ class TranslationalResearchLoggerController extends LoggerController
      *
      * @Route("/", name="translationalresearch_logger")
      * @Method("GET")
-     * @Template("AppTranslationalResearchBundle:Logger:index.html.twig")
+     * @Template("AppTranslationalResearchBundle/Logger/index.html.twig")
      */
     public function indexAction(Request $request)
     {
@@ -59,7 +59,7 @@ class TranslationalResearchLoggerController extends LoggerController
     /**
      * @Route("/user/{id}/all", name="translationalresearch_logger_user_all")
      * @Method("GET")
-     * @Template("AppTranslationalResearchBundle:Logger:index.html.twig")
+     * @Template("AppTranslationalResearchBundle/Logger/index.html.twig")
      */
     public function getAuditLogAllAction(Request $request)
     {
@@ -89,7 +89,7 @@ class TranslationalResearchLoggerController extends LoggerController
 //     *
 //     * @Route("/generation-log/", name="translationalresearch_generation_log")
 //     * @Method("GET")
-//     * @Template("AppTranslationalResearchBundle:Logger:index.html.twig")
+//     * @Template("AppTranslationalResearchBundle/Logger/index.html.twig")
 //     */
 //    public function generationLogAction(Request $request)
 //    {
@@ -102,7 +102,7 @@ class TranslationalResearchLoggerController extends LoggerController
 //     *
 //     * @Route("/event-log-per-user-per-event-type/", name="translationalresearch_my_generation_log")
 //     * @Method("GET")
-//     * @Template("AppTranslationalResearchBundle:Logger:index.html.twig")
+//     * @Template("AppTranslationalResearchBundle/Logger/index.html.twig")
 //     */
 //    public function myGenerationLogAction(Request $request)
 //    {
@@ -113,7 +113,7 @@ class TranslationalResearchLoggerController extends LoggerController
      *
      * @Route("/event-log-per-object/", name="translationalresearch_event-log-per-object_log")
      * @Method("GET")
-     * @Template("AppTranslationalResearchBundle:Logger:index.html.twig")
+     * @Template("AppTranslationalResearchBundle/Logger/index.html.twig")
      */
     public function transresEventLogPerObjectAction(Request $request)
     {

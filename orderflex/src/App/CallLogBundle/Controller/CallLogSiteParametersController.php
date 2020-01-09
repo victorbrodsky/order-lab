@@ -44,7 +44,7 @@ class CallLogSiteParametersController extends SiteParametersController
      *
      * @Route("/", name="calllog_siteparameters")
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:SiteParameters:index.html.twig")
+     * @Template("AppUserdirectoryBundle/SiteParameters/index.html.twig")
      */
     public function indexAction(Request $request)
     {
@@ -62,7 +62,7 @@ class CallLogSiteParametersController extends SiteParametersController
      *
      * @Route("/{id}/edit", name="calllog_siteparameters_edit")
      * @Method("GET")
-     * @Template("AppUserdirectoryBundle:SiteParameters:edit.html.twig")
+     * @Template("AppUserdirectoryBundle/SiteParameters/edit.html.twig")
      */
     public function editAction(Request $request,$id)
     {
@@ -74,7 +74,7 @@ class CallLogSiteParametersController extends SiteParametersController
      *
      * @Route("/{id}", name="calllog_siteparameters_update")
      * @Method("PUT")
-     * @Template("AppUserdirectoryBundle:SiteParameters:edit.html.twig")
+     * @Template("AppUserdirectoryBundle/SiteParameters/edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {
@@ -87,7 +87,7 @@ class CallLogSiteParametersController extends SiteParametersController
      *
      * @Route("/edit-resources/", name="calllog_siteparameters_resources_edit")
      * @Method("GET")
-     * @Template("AppCallLogBundle:SiteParameters:edit.html.twig")
+     * @Template("AppCallLogBundle/SiteParameters/edit.html.twig")
      */
     public function editResourcesAction( Request $request )
     {
@@ -115,7 +115,7 @@ class CallLogSiteParametersController extends SiteParametersController
      *
      * @Route("/specific-site-parameters/edit/", name="calllog_siteparameters_edit_specific_site_parameters")
      * @Method({"GET", "POST"})
-     * @Template("AppCallLogBundle:SiteParameter:edit.html.twig")
+     * @Template("AppCallLogBundle/SiteParameter/edit.html.twig")
      */
     public function calllogSiteParameterEditAction( Request $request ) {
 
@@ -154,7 +154,7 @@ class CallLogSiteParametersController extends SiteParametersController
      *
      * @Route("/specific-site-parameters/show/", name="calllog_siteparameters_show_specific_site_parameters")
      * @Method("GET")
-     * @Template("AppCallLogBundle:SiteParameter:edit-content.html.twig")
+     * @Template("AppCallLogBundle/SiteParameter/edit-content.html.twig")
      */
     public function calllogSiteParameterShowAction( Request $request ) {
 

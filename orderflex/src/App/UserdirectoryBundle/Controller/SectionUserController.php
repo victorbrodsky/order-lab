@@ -37,7 +37,7 @@ class SectionUserController extends UserController
 
     /**
      * @Route("/my-team-ajax/", name="employees_my_team")
-     * @Template("AppUserdirectoryBundle:SectionUser:my-team.html.twig")
+     * @Template("AppUserdirectoryBundle/SectionUser/my-team.html.twig")
      * @Method({"GET", "POST"})
      */
     public function myTeamAction( Request $request ) {
@@ -71,7 +71,7 @@ class SectionUserController extends UserController
 
 //        $showUserArr = $this->showUser($userid,$this->container->getParameter('employees.sitename'),false);
 //
-//        $template = $this->render('AppUserdirectoryBundle:Profile:edit_user_only.html.twig',$showUserArr)->getContent();
+//        $template = $this->render('AppUserdirectoryBundle/Profile/edit_user_only.html.twig',$showUserArr)->getContent();
 //
 //        $json = json_encode($template);
 //        $response = new Response($json);
@@ -83,7 +83,7 @@ class SectionUserController extends UserController
 
     /**
      * @Route("/user-wrapper-ajax", name="employees_user_wrapper_ajax", options={"expose"=true})
-     * @Template("AppUserdirectoryBundle:SectionUser:user-wrapper.html.twig")
+     * @Template("AppUserdirectoryBundle/SectionUser/user-wrapper.html.twig")
      * @Method({"GET", "POST"})
      */
     public function userWrapperAction( Request $request ) {
@@ -141,7 +141,7 @@ class SectionUserController extends UserController
 
 //        $showUserArr = $this->showUser($userid,$this->container->getParameter('employees.sitename'),false);
 //
-//        $template = $this->render('AppUserdirectoryBundle:Profile:edit_user_only.html.twig',$showUserArr)->getContent();
+//        $template = $this->render('AppUserdirectoryBundle/Profile/edit_user_only.html.twig',$showUserArr)->getContent();
 //
 //        $json = json_encode($template);
 //        $response = new Response($json);

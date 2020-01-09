@@ -122,7 +122,7 @@ class MessageController extends Controller {
      *
      * @Route("/", name="message_create")
      * @Method("POST")
-     * @Template("AppOrderformBundle:Message:new_orig.html.twig")
+     * @Template("AppOrderformBundle/Message/new_orig.html.twig")
      */
     public function createAction(Request $request)
     {       
@@ -171,7 +171,7 @@ class MessageController extends Controller {
      *
      * @Route("/new", name="message_new")
      * @Method("GET")
-     * @Template("AppOrderformBundle:Message:new_orig.html.twig")
+     * @Template("AppOrderformBundle/Message/new_orig.html.twig")
      */
     public function newAction()
     {         
@@ -225,7 +225,7 @@ class MessageController extends Controller {
      *
      * @Route("/{id}", name="message_update")
      * @Method("PUT")
-     * @Template("AppOrderformBundle:Message:edit.html.twig")
+     * @Template("AppOrderformBundle/Message/edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {
