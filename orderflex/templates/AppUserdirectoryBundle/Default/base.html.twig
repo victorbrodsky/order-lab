@@ -288,6 +288,10 @@
                 {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
             {#{% endjavascripts %}#}
 
+            {#{% block javascripts %}#}
+                {#{{ encore_entry_script_tags('user') }}#}
+            {#{% endblock %}#}
+
             <script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery/jquery-1.11.0.min.js') }}"></script>
             <script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery-ui-1.11.2/jquery-ui.js') }}"></script>
             <script src="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap/js/bootstrap.min.js') }}"></script>
@@ -319,6 +323,7 @@
             <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-idleTimeout.js') }}"></script>
             <script src="{{ asset('orderassets/AppUserdirectoryBundle/jasny/js/rowlink.js') }}"></script>
             <script src="{{ asset('orderassets/AppUserdirectoryBundle/q-1/q.js') }}"></script>
+
 
 
 
