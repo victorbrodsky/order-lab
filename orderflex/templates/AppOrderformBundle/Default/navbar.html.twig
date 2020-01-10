@@ -41,7 +41,7 @@
 
 {% block navbar %}
 
-    {% set comments = render(controller("AppOrderformBundle:History:notViewedComments")) %}
+    {% set comments = render(controller("App\\OrderformBundle\\Controller\\HistoryController::notViewedCommentsAction")) %}
 
     <nav class="navbar navbar-default" role="navigation">
 
@@ -199,7 +199,7 @@
                 {% if is_granted('ROLE_SCANORDER_PROCESSOR') %}
 
                     {#admincomments - comments addressed to this processor only#}
-                    {% set admincomments = render(controller("AppOrderformBundle:History:notViewedAdminComments")) %}
+                    {% set admincomments = render(controller("App\\OrderformBundle\\Controller\\HistoryController::notViewedAdminCommentsAction")) %}
 
                     <li id="nav-bar-admin" class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin<b class="caret"></b></a>

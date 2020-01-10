@@ -1233,14 +1233,19 @@
 
 {% block additionaljs %}
 
-    {% javascripts
-        '@AppFellAppBundle/Resources/public/form/js/interview-modal.js'
-        '@AppFellAppBundle/Resources/public/form/js/rank-modal.js'
-        '@AppFellAppBundle/Resources/public/form/js/status-notification-modal.js'
-        '@AppFellAppBundle/Resources/public/form/js/send-notification-emails.js'
-    %}
-        <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
+    {#{% javascripts#}
+        {#'@AppFellAppBundle/Resources/public/form/js/interview-modal.js'#}
+        {#'@AppFellAppBundle/Resources/public/form/js/rank-modal.js'#}
+        {#'@AppFellAppBundle/Resources/public/form/js/status-notification-modal.js'#}
+        {#'@AppFellAppBundle/Resources/public/form/js/send-notification-emails.js'#}
+    {#%}#}
+        {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
+
+    <script src="{{ asset('orderassets/AppFellAppBundle/form/js/interview-modal.js') }}"></script>
+    <script src="{{ asset('orderassets/AppFellAppBundle/form/js/rank-modal.js') }}"></script>
+    <script src="{{ asset('orderassets/AppFellAppBundle/form/js/status-notification-modal.js') }}"></script>
+    <script src="{{ asset('orderassets/AppFellAppBundle/form/js/send-notification-emails.js') }}"></script>
 
     <script language="Javascript">
 

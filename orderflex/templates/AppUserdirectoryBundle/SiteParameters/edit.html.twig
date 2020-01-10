@@ -41,11 +41,13 @@
 
 {% block additionalcss %}
 
-    {% stylesheets
-        'bundles/appuserdirectory/datetimepicker/css/bootstrap-datetimepicker.min.css'
-    %}
-        <link rel="stylesheet" href="{{ asset_url }}" />
-    {% endstylesheets %}
+    {#{% stylesheets#}
+        {#'bundles/appuserdirectory/datetimepicker/css/bootstrap-datetimepicker.min.css'#}
+    {#%}#}
+        {#<link rel="stylesheet" href="{{ asset_url }}" />#}
+    {#{% endstylesheets %}#}
+
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/datetimepicker/css/bootstrap-datetimepicker.min.css') }}" />
 
     {#<link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap-combined.min.css" rel="stylesheet">#}
 
@@ -53,11 +55,13 @@
 
 {% block additionaljs %}
 
-    {% javascripts
-        '@AppUserdirectoryBundle/Resources/public/datetimepicker/js/bootstrap-datetimepicker.min.js'
-    %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
+    {#{% javascripts#}
+        {#'@AppUserdirectoryBundle/Resources/public/datetimepicker/js/bootstrap-datetimepicker.min.js'#}
+    {#%}#}
+    {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
+
+    <script type="text/javascript" src="{{ asset('orderassets/AppUserdirectoryBundle/datetimepicker/js/bootstrap-datetimepicker.min.js') }}" ></script>
 
 {% endblock %}
 

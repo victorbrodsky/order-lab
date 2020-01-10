@@ -62,11 +62,14 @@
 
 {#Snapshot css#}
 {% block additionalcss %}
-    {% stylesheets
-        'bundles/appuserdirectory/form/css/steve-snapshot.css' filter='cssrewrite'
-    %}
-        <link rel="stylesheet" href="{{ asset_url }}" />
-    {% endstylesheets %}       
+    {#{% stylesheets#}
+        {#'bundles/appuserdirectory/form/css/steve-snapshot.css' filter='cssrewrite'#}
+    {#%}#}
+        {#<link rel="stylesheet" href="{{ asset_url }}" />#}
+    {#{% endstylesheets %}#}
+
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/form/css/steve-snapshot.css') }}" />
+
 {% endblock %}
         
 {% block title %}
@@ -123,12 +126,14 @@
 {% block additionaljs %}
 
 {#        '@AppUserdirectoryBundle/Resources/public/webcomponents/webcomponents.js'#}
-    {% javascripts
-        '@AppUserdirectoryBundle/Resources/public/hinclude/hinclude.js'
-    %}
-        <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-        
+    {#{% javascripts#}
+        {#'@AppUserdirectoryBundle/Resources/public/hinclude/hinclude.js'#}
+    {#%}#}
+        {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
+
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/hinclude/hinclude.js') }}"></script>
+
     <script>
     
         var cycle = 'show';

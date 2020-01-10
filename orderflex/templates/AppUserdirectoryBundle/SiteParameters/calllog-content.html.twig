@@ -47,7 +47,7 @@
 
             {#Defaults#}
             <p>
-                {{ render(controller('AppCallLogBundle:CallLogSiteParameters:calllogSiteParameterShow')) }}
+                {{ render(controller('App\\CallLogBundle\\Controller\\CallLogSiteParametersController::calllogSiteParameterShowAction')) }}
                 {#{{ render(url('calllog_siteparameters_show_specific_site_parameters')) }}#}
                 {#<a href="{{ path('calllog_siteparameters_show_specific_site_parameters') }}">Edit Defaults</a>#}
             </p>

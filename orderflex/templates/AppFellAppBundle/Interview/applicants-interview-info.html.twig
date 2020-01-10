@@ -16,12 +16,16 @@
 
 {#{% extends "AppFellAppBundle/Default/base.html.twig" %}#}
 
-{% stylesheets
-'orderassets/appuserdirectory/bootstrap/css/*' filter='cssrewrite'
-'orderassets/appuserdirectory/form/css/form.css' filter='cssrewrite'
-%}
-<link rel="stylesheet" href="{{ asset_url }}" />
-{% endstylesheets %}
+{#{% stylesheets#}
+{#'orderassets/appuserdirectory/bootstrap/css/*' filter='cssrewrite'#}
+{#'orderassets/appuserdirectory/form/css/form.css' filter='cssrewrite'#}
+{#%}#}
+{#<link rel="stylesheet" href="{{ asset_url }}" />#}
+{#{% endstylesheets %}#}
+
+<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap/css/bootstrap.min.css') }}" />
+<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap/css/bootstrap-theme.min.css') }}" />
+<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/form/css/form.css') }}" />
 
 {% block header %}{% endblock %}
 

@@ -24,35 +24,52 @@
 
 {% block maincss %}
 
-    {% stylesheets
-    'orderassets/appuserdirectory/select2/select2.css' filter='cssrewrite'
-    %}
-    <link rel="stylesheet" href="{{ asset_url }}" />
-    {% endstylesheets %}
+    {#{% stylesheets#}
+    {#'orderassets/appuserdirectory/select2/select2.css' filter='cssrewrite'#}
+    {#%}#}
+    {#<link rel="stylesheet" href="{{ asset_url }}" />#}
+    {#{% endstylesheets %}#}
+
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/select2/select2.css') }}" />
 
 {% endblock %}
 
 
 {% block mainjs %}
 
-    {% javascripts
-    '@AppUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'
-    '@AppUserdirectoryBundle/Resources/public/bootstrap/js/*'
-    '@AppUserdirectoryBundle/Resources/public/select2/select2.js'
-	
-	'@AppUserdirectoryBundle/Resources/public/form/js/user-common.js'
-    '@AppUserdirectoryBundle/Resources/public/form/js/user-navbar.js'
+    {#{% javascripts#}
+    {#'@AppUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/bootstrap/js/*'#}
+    {#'@AppUserdirectoryBundle/Resources/public/select2/select2.js'#}
+	{##}
+	{#'@AppUserdirectoryBundle/Resources/public/form/js/user-common.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/form/js/user-navbar.js'#}
 
-	'@AppUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimeout.js'
-    '@AppUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimer.js'
-	'@AppUserdirectoryBundle/Resources/public/form/js/user-idleTimeout.js'
-    '@AppOrderformBundle/Resources/public/form/js/idleTimeout.js'
-	
-    '@AppOrderformBundle/Resources/public/form/js/selectAjax.js'
-    '@AppOrderformBundle/Resources/public/form/js/commonCheckForm.js'
-    %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
+	{#'@AppUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimeout.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimer.js'#}
+	{#'@AppUserdirectoryBundle/Resources/public/form/js/user-idleTimeout.js'#}
+    {#'@AppOrderformBundle/Resources/public/form/js/idleTimeout.js'#}
+	{##}
+    {#'@AppOrderformBundle/Resources/public/form/js/selectAjax.js'#}
+    {#'@AppOrderformBundle/Resources/public/form/js/commonCheckForm.js'#}
+    {#%}#}
+    {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
+
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery/jquery-1.11.0.min.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery-ui-1.11.2/jquery-ui.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap/js/bootstrap.min.js') }}"></script>
+
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-common.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-navbar.js') }}"></script>
+
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/idletimeout/jquery.idletimeout.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/idletimeout/jquery.idletimer.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-idleTimeout.js') }}"></script>
+    <script src="{{ asset('orderassets/AppOrderformBundle/form/js/idleTimeout.js') }}"></script>
+
+    <script src="{{ asset('orderassets/AppOrderformBundle/form/js/selectAjax.js') }}"></script>
+    <script src="{{ asset('orderassets/AppOrderformBundle/form/js/commonCheckForm.js') }}"></script>
 
     <script language="Javascript">
 

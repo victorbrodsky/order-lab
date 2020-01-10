@@ -53,7 +53,7 @@
 {% block contentleft %}
 
 
-    {% set comments = render(controller("AppOrderformBundle:History:notViewedComments")) %}
+    {% set comments = render(controller("App\\OrderformBundle\\Controller\\HistoryController::notViewedCommentsAction")) %}
 
 
     <div style="margin-top: 150px;">
@@ -100,7 +100,7 @@
 
             {% if is_granted('ROLE_SCANORDER_PROCESSOR') %}
 
-                {% set admincomments = render(controller("AppOrderformBundle:History:notViewedAdminComments")) %}
+                {% set admincomments = render(controller("App\\OrderformBundle\\Controller\\HistoryController::notViewedAdminCommentsAction")) %}
 
                 View <a href="{{ path('incoming-scan-orders') }}">Incoming Scan Orders</a>. There are:
 

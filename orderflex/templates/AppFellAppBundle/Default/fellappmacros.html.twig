@@ -382,7 +382,7 @@
 
         <p>
             {#<div class="interview-score-rank">Calculating score rank...</div>#}
-            {{ render(controller('AppFellAppBundle:FellAppApplicant:intervieweScoreRank', { 'id': fellapp.id })) }}
+            {{ render(controller('App\\FellAppBundle\\Controller\\FellAppApplicantController::intervieweScoreRankAction', { 'id': fellapp.id })) }}
         </p>
 
     {% endif %}

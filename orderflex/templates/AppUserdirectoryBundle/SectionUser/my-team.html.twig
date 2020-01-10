@@ -34,20 +34,27 @@
 
     
  {% block additionaljs %}
-     {% javascripts
-     '@AppUserdirectoryBundle/Resources/public/bootstrap-sortable/js/bootstrap-sortable.js'
-     '@AppUserdirectoryBundle/Resources/public/bootstrap-sortable/js/moment.min.js'
-     %}
-     <script type="text/javascript" src="{{ asset_url }}"></script>
-     {% endjavascripts %}
+     {#{% javascripts#}
+     {#'@AppUserdirectoryBundle/Resources/public/bootstrap-sortable/js/bootstrap-sortable.js'#}
+     {#'@AppUserdirectoryBundle/Resources/public/bootstrap-sortable/js/moment.min.js'#}
+     {#%}#}
+     {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+     {#{% endjavascripts %}#}
+
+     <script src="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap-sortable/js/bootstrap-sortable.js') }}"></script>
+     <script src="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap-sortable/js/moment.min.js') }}"></script>
+
  {% endblock %}
 
 {% block additionalcss %}
-    {% stylesheets
-    'bundles/appuserdirectory/bootstrap-sortable/css/bootstrap-sortable.css' filter='cssrewrite'
-    %}
-    <link rel="stylesheet" href="{{ asset_url }}" />
-    {% endstylesheets %}
+    {#{% stylesheets#}
+    {#'bundles/appuserdirectory/bootstrap-sortable/css/bootstrap-sortable.css' filter='cssrewrite'#}
+    {#%}#}
+    {#<link rel="stylesheet" href="{{ asset_url }}" />#}
+    {#{% endstylesheets %}#}
+
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap-sortable/css/bootstrap-sortable.css') }}" />
+
 {% endblock %}
     
    

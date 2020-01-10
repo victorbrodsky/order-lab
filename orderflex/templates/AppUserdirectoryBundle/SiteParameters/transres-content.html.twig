@@ -57,7 +57,7 @@
                                 {#<a href="{{ path(translationalresearch_sitename~'_standalone_siteparameters_edit',{'specialtyStr':specialty.getAbbreviation()}) }}"#}
                                 {#>Default Site Settings for {{ specialty.getName() }}</a>#}
                             {#</p>#}
-                            {{ render(controller('AppTranslationalResearchBundle:TransResSiteParameters:showContent', {'specialtyStr':specialty.getAbbreviation()})) }}
+                            {{ render(controller('App\\TranslationalResearchBundle\\Controller\\TransResSiteParametersController::showContentAction', {'specialtyStr':specialty.getAbbreviation()})) }}
                             {#{% endfor %}#}
 
                         </div>

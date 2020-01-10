@@ -50,7 +50,7 @@
     {#<br>#}
 
     {% for group in groups %}
-        {{ render(controller('AppVacReqBundle:Approver:mySingleGroup', { 'groupId': group.id, 'userids': userids })) }}
+        {{ render(controller('App\\VacReqBundle\\Controller\\ApproverController::mySingleGroupAction', { 'groupId': group.id, 'userids': userids })) }}
     {% endfor %}
 
 
@@ -59,12 +59,15 @@
 
 {% block additionaljs %}
 
-    {% javascripts
-        '@AppUserdirectoryBundle/Resources/public/bootstrap-sortable/js/bootstrap-sortable.js'
-        '@AppUserdirectoryBundle/Resources/public/bootstrap-sortable/js/moment.min.js'
-    %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
+    {#{% javascripts#}
+        {#'@AppUserdirectoryBundle/Resources/public/bootstrap-sortable/js/bootstrap-sortable.js'#}
+        {#'@AppUserdirectoryBundle/Resources/public/bootstrap-sortable/js/moment.min.js'#}
+    {#%}#}
+    {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
+
+    <script type="text/javascript" src="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap-sortable/js/bootstrap-sortable.js') }}" ></script>
+    <script type="text/javascript" src="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap-sortable/js/moment.min.js') }}" ></script>
 
     <script language="Javascript">
 
@@ -88,10 +91,13 @@
 {% endblock %}
 
 {% block additionalcss %}
-    {% stylesheets
-        'orderassets/appuserdirectory/bootstrap-sortable/css/bootstrap-sortable.css' filter='cssrewrite'
-    %}
-        <link rel="stylesheet" href="{{ asset_url }}" />
-    {% endstylesheets %}
+    {#{% stylesheets#}
+        {#'orderassets/appuserdirectory/bootstrap-sortable/css/bootstrap-sortable.css' filter='cssrewrite'#}
+    {#%}#}
+        {#<link rel="stylesheet" href="{{ asset_url }}" />#}
+    {#{% endstylesheets %}#}
+
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap-sortable/css/bootstrap-sortable.css') }}" />
+
 {% endblock %}
 

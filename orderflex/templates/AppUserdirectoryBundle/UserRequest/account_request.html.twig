@@ -20,21 +20,23 @@
 
 <head>
 
-    {% stylesheets
-        'bundles/appuserdirectory/bootstrap/css/*' filter='cssrewrite'
-        'bundles/appuserdirectory/select2/select2.css' filter='cssrewrite'
-        'bundles/appuserdirectory/form/css/form.css' filter='cssrewrite'
-    %}
-        <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
-    {% endstylesheets %}
+    {#{% stylesheets#}
+        {#'bundles/appuserdirectory/bootstrap/css/*' filter='cssrewrite'#}
+        {#'bundles/appuserdirectory/select2/select2.css' filter='cssrewrite'#}
+        {#'bundles/appuserdirectory/form/css/form.css' filter='cssrewrite'#}
+    {#%}#}
+        {#<link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />#}
+    {#{% endstylesheets %}#}
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap/css/bootstrap.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap/css/bootstrap-theme.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/form/css/form.css') }}" />
 
-    {% stylesheets
-        'bundles/appuserdirectory/datepicker/css/bootstrap-datepicker3.css' filter='cssrewrite'
-    %}
-        <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
-    {% endstylesheets %}
-
-
+    {#{% stylesheets#}
+        {#'bundles/appuserdirectory/datepicker/css/bootstrap-datepicker3.css' filter='cssrewrite'#}
+    {#%}#}
+        {#<link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />#}
+    {#{% endstylesheets %}#}
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/datepicker/css/bootstrap-datepicker3.css') }}" />
 
     {#http://www.telegraphicsinc.com/2013/10/using-bootstrap-3-with-internet-explorer-8-ie8/#}
     {#{% javascripts#}

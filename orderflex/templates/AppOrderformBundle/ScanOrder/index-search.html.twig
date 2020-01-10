@@ -21,11 +21,14 @@
 {% endblock %}
 
 {% block additionaljs %}
-    {% javascripts
-    '@AppOrderformBundle/Resources/public/form/js/index-search.js'
-    %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
+    {#{% javascripts#}
+    {#'@AppOrderformBundle/Resources/public/form/js/index-search.js'#}
+    {#%}#}
+    {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
+
+    <script src="{{ asset('orderassets/AppOrderformBundle/form/js/index-search.js') }}"></script>
+
 {% endblock %}
 
 {% block content %}

@@ -20,12 +20,16 @@
 
 <head>
 
-    {% stylesheets
-        'bundles/appuserdirectory/bootstrap/css/*' filter='cssrewrite'
-        'bundles/appuserdirectory/form/css/form.css' filter='cssrewrite'
-    %}
-        <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
-    {% endstylesheets %}
+    {#{% stylesheets#}
+        {#'bundles/appuserdirectory/bootstrap/css/*' filter='cssrewrite'#}
+        {#'bundles/appuserdirectory/form/css/form.css' filter='cssrewrite'#}
+    {#%}#}
+        {#<link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />#}
+    {#{% endstylesheets %}#}
+
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap/css/bootstrap.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap/css/bootstrap-theme.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/form/css/form.css') }}" />
 
     <title>Access Request Confirmation</title>
 
@@ -77,12 +81,15 @@
     </div> <!-- /container -->
 
 
-    {% javascripts
-    '@AppUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'
-    '@AppUserdirectoryBundle/Resources/public/bootstrap/js/*'
-    %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
+    {#{% javascripts#}
+    {#'@AppUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/bootstrap/js/*'#}
+    {#%}#}
+    {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
+
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery/jquery-1.11.0.min.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap/js/bootstrap.min.js') }}"></script>
 
 </body>
 

@@ -39,7 +39,7 @@
     {% for organizationalInstitution in organizationalInstitutions %}
 
         <p>
-            {{ render(controller('AppVacReqBundle:Approver:organizationalInstitution', { 'institutionId': organizationalInstitution.id })) }}
+            {{ render(controller('App\\VacReqBundle\\Controller\\ApproverController::organizationalInstitutionAction', { 'institutionId': organizationalInstitution.id })) }}
         </p>
 
     {% endfor %}
@@ -48,7 +48,7 @@
     {% for carryOverRequestGroup in carryOverRequestGroups %}
 
         <p>
-            {{ render(controller('AppVacReqBundle:Approver:carryOverRequestGroup', { 'groupId': carryOverRequestGroup.id })) }}
+            {{ render(controller('App\\VacReqBundle\\Controller\\ApproverController::carryOverRequestGroupAction', { 'groupId': carryOverRequestGroup.id })) }}
         </p>
 
     {% endfor %}

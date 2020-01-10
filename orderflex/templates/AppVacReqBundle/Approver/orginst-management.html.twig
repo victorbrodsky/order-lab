@@ -50,7 +50,7 @@
                         {#approver.id={{ approver.id }}#}
                         {#organizationalGroupId={{ organizationalGroupId }}#}
                         {#approverRoleId={{ approverRoleId }}#}
-                        {{ render(controller('AppVacReqBundle:Approver:userManagement', { 'userid': approver.id, 'instid':organizationalGroupId, 'roleId':approverRoleId})) }}
+                        {{ render(controller('App\\VacReqBundle\\Controller\\ApproverController::userManagementAction', { 'userid': approver.id, 'instid':organizationalGroupId, 'roleId':approverRoleId})) }}
                     </div>
                 {% endfor %}
 

@@ -34,9 +34,12 @@
 
 
 {% block additionaljs %}
-    {% javascripts
-    '@AppUserdirectoryBundle/Resources/public/form/js/user-listForm.js'
-    %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
+    {#{% javascripts#}
+    {#'@AppUserdirectoryBundle/Resources/public/form/js/user-listForm.js'#}
+    {#%}#}
+    {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
+
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-listForm.js') }}"></script>
+
 {% endblock %}

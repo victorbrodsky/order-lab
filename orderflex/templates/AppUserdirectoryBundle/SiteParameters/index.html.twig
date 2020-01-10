@@ -981,34 +981,34 @@
 
     {#Defaults for an Organizational Group#}
     {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
-        {% include 'AppUserdirectoryBundle:SiteParameters:organizational-group-defaults.html.twig' %}
+        {% include 'AppUserdirectoryBundle/SiteParameters/organizational-group-defaults.html.twig' %}
     {% endif %}
 
     {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
-        {% include 'AppUserdirectoryBundle:SiteParameters:third-party-software-content.html.twig' %}
+        {% include 'AppUserdirectoryBundle/SiteParameters/third-party-software-content.html.twig' %}
     {% endif %}
 
     {% if (sitename == "employees" or sitename == "fellapp") and is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
-        {% include 'AppUserdirectoryBundle:SiteParameters:fellapp-content.html.twig' %}
+        {% include 'AppUserdirectoryBundle/SiteParameters/fellapp-content.html.twig' %}
     {% endif %}
 
     {% if (sitename == "employees" or sitename == "calllog") and is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
-        {% include 'AppUserdirectoryBundle:SiteParameters:calllog-content.html.twig' %}
+        {% include 'AppUserdirectoryBundle/SiteParameters/calllog-content.html.twig' %}
     {% endif %}
 
     {% if (sitename == "employees" or sitename == "translationalresearch") and is_granted('ROLE_TRANSRES_ADMIN') %}
-        {% include 'AppUserdirectoryBundle:SiteParameters:transres-content.html.twig' %}
+        {% include 'AppUserdirectoryBundle/SiteParameters/transres-content.html.twig' %}
     {% endif %}
 
     {% if (sitename == "employees" or sitename == "deidentifier") and is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
-        {% include 'AppUserdirectoryBundle:SiteParameters:deidentifier-content.html.twig' %}
+        {% include 'AppUserdirectoryBundle/SiteParameters/deidentifier-content.html.twig' %}
     {% endif %}
 
     {% if (sitename == "employees" or sitename == "scan") and is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
-        {% include 'AppUserdirectoryBundle:SiteParameters:scan-content.html.twig' %}
+        {% include 'AppUserdirectoryBundle/SiteParameters/scan-content.html.twig' %}
     {% endif %}
 
-    {% include 'AppUserdirectoryBundle:SiteParameters:miscellaneous.html.twig' %}
+    {% include 'AppUserdirectoryBundle/SiteParameters/miscellaneous.html.twig' %}
 
     {#<br>#}
     {#<p>#}
