@@ -220,11 +220,13 @@
     {#<link rel="stylesheet" href="{{ asset_url }}" />#}
     {#{% endstylesheets %}#}
 
-    {% stylesheets
-        'orderassets/apptranslationalresearch/form/css/pdf-show.css' filter='cssrewrite'
-    %}
-        <link rel="stylesheet" type="text/css" media="all" href="{{ asset_url }}" />
-    {% endstylesheets %}
+    {#{% stylesheets#}
+        {#'orderassets/apptranslationalresearch/form/css/pdf-show.css' filter='cssrewrite'#}
+    {#%}#}
+        {#<link rel="stylesheet" type="text/css" media="all" href="{{ asset_url }}" />#}
+    {#{% endstylesheets %}#}
+
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppTranslationalResearchBundle/form/css/pdf-show.css') }}" />
 
 {% endblock %}
 
@@ -252,26 +254,44 @@
     {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
     {#{% endjavascripts %}#}
 
-    {% javascripts
-    '@AppOrderformBundle/Resources/public/handsontable/jquery.handsontable.full.js'
-    '@AppTranslationalResearchBundle/Resources/public/form/js/handsontable.js'
-    '@AppUserdirectoryBundle/Resources/public/bwip-js/freetype.js'
-    '@AppOrderformBundle/Resources/public/form/js/selectAjax.js'
-    '@AppOrderformBundle/Resources/public/form/js/masking.js'
-    '@AppTranslationalResearchBundle/Resources/public/form/js/barcode.js'
-    '@AppUserdirectoryBundle/Resources/public/qrcode/qrcode.js'
-    '@AppUserdirectoryBundle/Resources/public/jquery-qrcode/jquery.qrcode.min.js'
-    '@AppUserdirectoryBundle/Resources/public/bwip-js/bwipp.js'
-    '@AppUserdirectoryBundle/Resources/public/bwip-js/bwipjs.js'
-    '@AppUserdirectoryBundle/Resources/public/bwip-js/lib/jquery-ui.min.js'
-    '@AppUserdirectoryBundle/Resources/public/bwip-js/lib/xhr-fonts.js'
-    '@AppUserdirectoryBundle/Resources/public/bwip-js/lib/bitmap.js'
-    '@AppUserdirectoryBundle/Resources/public/bwip-js/lib/symdesc.js'
-    '@AppUserdirectoryBundle/Resources/public/bwip-js/lib/canvas-toblob.js'
-    '@AppUserdirectoryBundle/Resources/public/bwip-js/lib/filesaver.js'
-    %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
+    {#{% javascripts#}
+    {#'@AppOrderformBundle/Resources/public/handsontable/jquery.handsontable.full.js'#}
+    {#'@AppTranslationalResearchBundle/Resources/public/form/js/handsontable.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/freetype.js'#}
+    {#'@AppOrderformBundle/Resources/public/form/js/selectAjax.js'#}
+    {#'@AppOrderformBundle/Resources/public/form/js/masking.js'#}
+    {#'@AppTranslationalResearchBundle/Resources/public/form/js/barcode.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/qrcode/qrcode.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/jquery-qrcode/jquery.qrcode.min.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/bwipp.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/bwipjs.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/lib/jquery-ui.min.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/lib/xhr-fonts.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/lib/bitmap.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/lib/symdesc.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/lib/canvas-toblob.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/lib/filesaver.js'#}
+    {#%}#}
+    {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
+
+
+    <script src="{{ asset('orderassets/AppOrderformBundle/handsontable/jquery.handsontable.full.js') }}"></script>
+    <script src="{{ asset('orderassets/AppTranslationalResearchBundle/form/js/handsontable.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/bwip-js/freetype.js') }}"></script>
+    <script src="{{ asset('orderassets/AppOrderformBundle/form/js/selectAjax.js') }}"></script>
+    <script src="{{ asset('orderassets/AppOrderformBundle/form/js/masking.js') }}"></script>
+    <script src="{{ asset('orderassets/AppTranslationalResearchBundle/form/js/barcode.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/qrcode/qrcode.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery-qrcode/jquery.qrcode.min.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/bwip-js/bwipp.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/bwip-js/bwipjs.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/bwip-js/lib/jquery-ui.min.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/bwip-js/lib/xhr-fonts.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/bwip-js/lib/bitmap.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/bwip-js/lib/symdesc.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/bwip-js/lib/canvas-toblob.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/bwip-js/lib/filesaver.js') }}"></script>
 
     <script type="text/javascript">
 

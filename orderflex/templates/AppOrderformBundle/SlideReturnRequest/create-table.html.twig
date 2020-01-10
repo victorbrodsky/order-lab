@@ -26,65 +26,106 @@
 
 {% block maincss %}
 
-    {% stylesheets
-    'orderassets/apporderform/handsontable/jquery.handsontable.full.css' filter='cssrewrite'
-    'orderassets/apporderform/form/css/handsontable.css' filter='cssrewrite'
+    {#{% stylesheets#}
+    {#'orderassets/apporderform/handsontable/jquery.handsontable.full.css' filter='cssrewrite'#}
+    {#'orderassets/apporderform/form/css/handsontable.css' filter='cssrewrite'#}
 
-    'orderassets/appuserdirectory/select2/select2.css' filter='cssrewrite'
-    'orderassets/appuserdirectory/ladda/ladda-themeless.css' filter='cssrewrite'
+    {#'orderassets/appuserdirectory/select2/select2.css' filter='cssrewrite'#}
+    {#'orderassets/appuserdirectory/ladda/ladda-themeless.css' filter='cssrewrite'#}
 
-    'orderassets/appuserdirectory/form/css/action.css' filter='cssrewrite'
-    'orderassets/apporderform/handsontable/lib/jquery-ui/css/ui-bootstrap/jquery-ui.custom.css' filter='cssrewrite'
+    {#'orderassets/appuserdirectory/form/css/action.css' filter='cssrewrite'#}
+    {#'orderassets/apporderform/handsontable/lib/jquery-ui/css/ui-bootstrap/jquery-ui.custom.css' filter='cssrewrite'#}
 
-    'orderassets/appuserdirectory/datepicker/css/bootstrap-datepicker3.css' filter='cssrewrite'
-    %}
-    <link rel="stylesheet" href="{{ asset_url }}" />
-    {% endstylesheets %}
+    {#'orderassets/appuserdirectory/datepicker/css/bootstrap-datepicker3.css' filter='cssrewrite'#}
+    {#%}#}
+    {#<link rel="stylesheet" href="{{ asset_url }}" />#}
+    {#{% endstylesheets %}#}
 
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppOrderformBundle/handsontable/jquery.handsontable.full.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppOrderformBundle/form/css/handsontable.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/select2/select2.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/ladda/ladda-themeless.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/form/css/action.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppOrderformBundle/handsontable/lib/jquery-ui/css/ui-bootstrap/jquery-ui.custom.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/datepicker/css/bootstrap-datepicker3.css') }}" />
 {% endblock %}
 
 
 {% block mainjs %}
 
-    {% javascripts
-    '@AppUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'
+    {#{% javascripts#}
+    {#'@AppUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'#}
 
-    '@AppOrderformBundle/Resources/public/handsontable/lib/jquery-ui/js/jquery-ui.custom.min.js'
-    '@AppOrderformBundle/Resources/public/handsontable/jquery.handsontable.full.js'
+    {#'@AppOrderformBundle/Resources/public/handsontable/lib/jquery-ui/js/jquery-ui.custom.min.js'#}
+    {#'@AppOrderformBundle/Resources/public/handsontable/jquery.handsontable.full.js'#}
 
-    '@AppUserdirectoryBundle/Resources/public/bootstrap/js/*'
-    '@AppUserdirectoryBundle/Resources/public/ladda/spin.min.js'
-    '@AppUserdirectoryBundle/Resources/public/ladda/ladda.min.js'
-    '@AppUserdirectoryBundle/Resources/public/datepicker/js/bootstrap-datepicker.js'
-    '@AppUserdirectoryBundle/Resources/public/select2/select2.js'
-    '@AppUserdirectoryBundle/Resources/public/inputmask/jquery.inputmask.bundle.js'
+    {#'@AppUserdirectoryBundle/Resources/public/bootstrap/js/*'#}
+    {#'@AppUserdirectoryBundle/Resources/public/ladda/spin.min.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/ladda/ladda.min.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/datepicker/js/bootstrap-datepicker.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/select2/select2.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/inputmask/jquery.inputmask.bundle.js'#}
 	
-	'@AppUserdirectoryBundle/Resources/public/form/js/user-common.js'
-    '@AppUserdirectoryBundle/Resources/public/form/js/user-navbar.js'
+	{#'@AppUserdirectoryBundle/Resources/public/form/js/user-common.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/form/js/user-navbar.js'#}
 
-    '@AppOrderformBundle/Resources/public/form/js/checkSingleForm.js'
-    '@AppOrderformBundle/Resources/public/form/js/slideColl.js'
-    '@AppOrderformBundle/Resources/public/form/js/partRadios.js'
-    '@AppOrderformBundle/Resources/public/form/js/selectAjax.js'
-    '@AppOrderformBundle/Resources/public/form/js/commonCheckForm.js'
-    '@AppOrderformBundle/Resources/public/form/js/checkForm.js'
-    '@AppOrderformBundle/Resources/public/form/js/masking.js'
-    '@AppOrderformBundle/Resources/public/form/js/form.js'
-    '@AppOrderformBundle/Resources/public/form/js/modal.js'
-    '@AppOrderformBundle/Resources/public/form/js/tooltips.js'
+    {#'@AppOrderformBundle/Resources/public/form/js/checkSingleForm.js'#}
+    {#'@AppOrderformBundle/Resources/public/form/js/slideColl.js'#}
+    {#'@AppOrderformBundle/Resources/public/form/js/partRadios.js'#}
+    {#'@AppOrderformBundle/Resources/public/form/js/selectAjax.js'#}
+    {#'@AppOrderformBundle/Resources/public/form/js/commonCheckForm.js'#}
+    {#'@AppOrderformBundle/Resources/public/form/js/checkForm.js'#}
+    {#'@AppOrderformBundle/Resources/public/form/js/masking.js'#}
+    {#'@AppOrderformBundle/Resources/public/form/js/form.js'#}
+    {#'@AppOrderformBundle/Resources/public/form/js/modal.js'#}
+    {#'@AppOrderformBundle/Resources/public/form/js/tooltips.js'#}
 	
-	'@AppUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimeout.js'
-    '@AppUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimer.js'
-	'@AppUserdirectoryBundle/Resources/public/form/js/user-idleTimeout.js'
-    '@AppOrderformBundle/Resources/public/form/js/idleTimeout.js'
+	{#'@AppUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimeout.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimer.js'#}
+	{#'@AppUserdirectoryBundle/Resources/public/form/js/user-idleTimeout.js'#}
+    {#'@AppOrderformBundle/Resources/public/form/js/idleTimeout.js'#}
 
-    '@AppUserdirectoryBundle/Resources/public/jasny/js/rowlink.js'
-    '@AppUserdirectoryBundle/Resources/public/q-1/q.js'
+    {#'@AppUserdirectoryBundle/Resources/public/jasny/js/rowlink.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/q-1/q.js'#}
 
-    '@AppOrderformBundle/Resources/public/form/js/slide-return-request-table.js'
-    %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
+    {#'@AppOrderformBundle/Resources/public/form/js/slide-return-request-table.js'#}
+    {#%}#}
+    {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
+
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery/jquery-1.11.0.min.js') }}"></script>
+    <script src="{{ asset('orderassets/AppOrderformBundle/handsontable/lib/jquery-ui/js/jquery-ui.custom.min.js') }}"></script>
+    <script src="{{ asset('orderassets/AppOrderformBundle/handsontable/jquery.handsontable.full.js') }}"></script>
+
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/ladda/spin.min.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/ladda/ladda.min.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/datepicker/js/bootstrap-datepicker.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/select2/select2.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/inputmask/jquery.inputmask.bundle.js') }}"></script>
+
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-common.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-navbar.js') }}"></script>
+
+    <script src="{{ asset('orderassets/AppOrderformBundle/form/js/checkSingleForm.js') }}"></script>
+    <script src="{{ asset('orderassets/AppOrderformBundle/form/js/slideColl.js') }}"></script>
+    <script src="{{ asset('orderassets/AppOrderformBundle/form/js/partRadios.js') }}"></script>
+    <script src="{{ asset('orderassets/AppOrderformBundle/form/js/selectAjax.js') }}"></script>
+    <script src="{{ asset('orderassets/AppOrderformBundle/form/js/commonCheckForm.js') }}"></script>
+    <script src="{{ asset('orderassets/AppOrderformBundle/form/js/checkForm.js') }}"></script>
+    <script src="{{ asset('orderassets/AppOrderformBundle/form/js/masking.js') }}"></script>
+    <script src="{{ asset('orderassets/AppOrderformBundle/form/js/form.js') }}"></script>
+
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/idletimeout/jquery.idletimeout.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/idletimeout/jquery.idletimer.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-idleTimeout.js') }}"></script>
+    <script src="{{ asset('orderassets/AppOrderformBundle/form/js/idleTimeout.js') }}"></script>
+
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/jasny/js/rowlink.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/q-1/q.js') }}"></script>
+
+    <script src="{{ asset('orderassets/AppOrderformBundle/form/js/slide-return-request-table.js') }}"></script>
+
 
     <script language="Javascript">
 

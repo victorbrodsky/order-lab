@@ -125,7 +125,8 @@
     {#{% stylesheets '@FOSCommentBundle/Resources/public/css/comments.css' %}#}
         {#<link rel="stylesheet" href="{{ asset_url }}" type="text/css" />#}
     {#{% endstylesheets %}#}
-    <link rel="stylesheet" type="text/css" href="{{ asset('@FOSCommentBundle/Resources/public/css/comments.css') }}" />
+    {#<link rel="stylesheet" type="text/css" href="{{ asset('@FOSCommentBundle/Resources/public/css/comments.css') }}" />#}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/foscomment/css/comments.css') }}" />
 
     {#{% stylesheets#}
         {#'orderassets/apptranslationalresearch/form/css/comments.css' filter='cssrewrite'#}

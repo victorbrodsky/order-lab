@@ -102,12 +102,15 @@
 
 {% block additionaljs %}
 
-    {% javascripts
-    '@AppUserdirectoryBundle/Resources/public/charts/plotly/plotly.js'
-    '@AppTranslationalResearchBundle/Resources/public/form/js/transres-plotly.js'
-    %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
+    {#{% javascripts#}
+    {#'@AppUserdirectoryBundle/Resources/public/charts/plotly/plotly.js'#}
+    {#'@AppTranslationalResearchBundle/Resources/public/form/js/transres-plotly.js'#}
+    {#%}#}
+    {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
+
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/charts/plotly/plotly.js') }}"></script>
+    <script src="{{ asset('orderassets/AppTranslationalResearchBundle/form/js/transres-choices-plotly.js') }}"></script>
 
     {#<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>#}
     {#<script src="https://cdnjs.cloudflare.com/ajax/libs/numeric/1.2.6/numeric.min.js"></script>#}

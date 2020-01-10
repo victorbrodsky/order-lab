@@ -23,12 +23,20 @@
         {{ ver|raw }}
         </p>
     {% endif %}
+
     {% set soft = user_service_utility.getInstalledSoftware() %}
     {% if soft %}
         <p>
             {{ soft|raw }}
         </p>
         <br>
+    {% endif %}
+
+    {% set framework = user_service_utility.getFrameworkInfo() %}
+    {% if framework %}
+        <p>
+            {{ framework|raw }}
+        </p>
     {% endif %}
 
     {% set contentabout_page = user_security_utility.getSiteSettingParameter("contentAboutPage") %}

@@ -3,6 +3,7 @@
 {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
 {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
 {% import "AppTranslationalResearchBundle/Default/transresRequestMacros.html.twig" as transresRequestMacros %}
+{% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
 
 
 {% block title %}
@@ -83,51 +84,61 @@
 
 {% block additionalcss %}
 
-    {% stylesheets '@FOSCommentBundle/Resources/public/css/comments.css' %}
-    <link rel="stylesheet" href="{{ asset_url }}" type="text/css" />
-    {% endstylesheets %}
+    {#{% stylesheets '@FOSCommentBundle/Resources/public/css/comments.css' %}#}
+    {#<link rel="stylesheet" href="{{ asset_url }}" type="text/css" />#}
+    {#{% endstylesheets %}#}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/foscomment/css/comments.css') }}" />
 
-    {% stylesheets
-    'orderassets/apptranslationalresearch/form/css/comments.css' filter='cssrewrite'
-    %}
-    <link rel="stylesheet" href="{{ asset_url }}" />
-    {% endstylesheets %}
+    {#{% stylesheets#}
+    {#'orderassets/apptranslationalresearch/form/css/comments.css' filter='cssrewrite'#}
+    {#%}#}
+    {#<link rel="stylesheet" href="{{ asset_url }}" />#}
+    {#{% endstylesheets %}#}
 
-    {% stylesheets
-    'orderassets/apporderform/handsontable/jquery.handsontable.full.css' filter='cssrewrite'
-    'orderassets/apporderform/form/css/handsontable.css' filter='cssrewrite'
-    %}
-    <link rel="stylesheet" href="{{ asset_url }}" />
-    {% endstylesheets %}
+    {#{% stylesheets#}
+    {#'orderassets/apporderform/handsontable/jquery.handsontable.full.css' filter='cssrewrite'#}
+    {#'orderassets/apporderform/form/css/handsontable.css' filter='cssrewrite'#}
+    {#%}#}
+    {#<link rel="stylesheet" href="{{ asset_url }}" />#}
+    {#{% endstylesheets %}#}
+
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppTranslationalResearchBundle/form/css/comments.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppOrderformBundle/handsontable/jquery.handsontable.full.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppOrderformBundle/form/css/handsontable.css') }}" />
 
 {% endblock %}
 
 
 {% block additionaljs %}
 
+    {#{% javascripts#}
+        {#'@AppOrderformBundle/Resources/public/handsontable/jquery.handsontable.full.js'#}
+    {#%}#}
+        {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
+
+    {#{% javascripts#}
     {#'@AppTranslationalResearchBundle/Resources/public/form/js/handsontable.js'#}
-    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/bwipjs.js'#}
-    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/bwipp-min.js'#}
+
     {#'@AppUserdirectoryBundle/Resources/public/bwip-js/freetype.js'#}
     {#'@AppOrderformBundle/Resources/public/form/js/selectAjax.js'#}
     {#'@AppOrderformBundle/Resources/public/form/js/masking.js'#}
-    {% javascripts
-        '@AppOrderformBundle/Resources/public/handsontable/jquery.handsontable.full.js'
-    %}
-        <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
+    {#'@AppTranslationalResearchBundle/Resources/public/form/js/barcode.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/qrcode/qrcode.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/jquery-qrcode/jquery.qrcode.min.js'#}
+    {#%}#}
+    {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
 
-    {% javascripts
-    '@AppTranslationalResearchBundle/Resources/public/form/js/handsontable.js'
-    '@AppUserdirectoryBundle/Resources/public/bwip-js/freetype.js'
-    '@AppOrderformBundle/Resources/public/form/js/selectAjax.js'
-    '@AppOrderformBundle/Resources/public/form/js/masking.js'
-    '@AppTranslationalResearchBundle/Resources/public/form/js/barcode.js'
-    '@AppUserdirectoryBundle/Resources/public/qrcode/qrcode.js'
-    '@AppUserdirectoryBundle/Resources/public/jquery-qrcode/jquery.qrcode.min.js'
-    %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
+    <script src="{{ asset('orderassets/AppOrderformBundle/handsontable/jquery.handsontable.full.js') }}"></script>
+    <script src="{{ asset('orderassets/AppTranslationalResearchBundle/form/js/handsontable.js') }}"></script>
+
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/bwip-js/freetype.js') }}"></script>
+    <script src="{{ asset('orderassets/AppOrderformBundle/form/js/selectAjax.js') }}"></script>
+    <script src="{{ asset('orderassets/AppOrderformBundle/form/js/masking.js') }}"></script>
+    <script src="{{ asset('orderassets/AppTranslationalResearchBundle/form/js/barcode.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/qrcode/qrcode.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery-qrcode/jquery.qrcode.min.js') }}"></script>
 
 <script type="text/javascript">
 

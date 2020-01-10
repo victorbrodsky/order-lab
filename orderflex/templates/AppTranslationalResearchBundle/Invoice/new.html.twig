@@ -433,11 +433,13 @@
 
 {% block additionaljs %}
 
-    {% javascripts
-    '@AppTranslationalResearchBundle/Resources/public/form/js/invoice.js'
-    %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
+    {#{% javascripts#}
+    {#'@AppTranslationalResearchBundle/Resources/public/form/js/invoice.js'#}
+    {#%}#}
+    {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
+
+    <script src="{{ asset('orderassets/AppTranslationalResearchBundle/form/js/invoice.js') }}"></script>
 
     <script type="text/javascript">
 

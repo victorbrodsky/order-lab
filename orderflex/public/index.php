@@ -4,6 +4,11 @@ use App\Kernel;
 use Symfony\Component\Debug\Debug;
 use Symfony\Component\HttpFoundation\Request;
 
+// Report all errors except E_NOTICE
+//error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
+//error_reporting(0);
+//ini_set('display_errors', 0);
+
 require dirname(__DIR__).'/config/bootstrap.php';
 
 if ($_SERVER['APP_DEBUG']) {

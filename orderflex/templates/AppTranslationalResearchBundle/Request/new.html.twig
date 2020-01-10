@@ -220,22 +220,29 @@
 
 {% block additionalcss %}
 
-    {% stylesheets '@FOSCommentBundle/Resources/public/css/comments.css' %}
-    <link rel="stylesheet" href="{{ asset_url }}" type="text/css" />
-    {% endstylesheets %}
+    {#{% stylesheets '@FOSCommentBundle/Resources/public/css/comments.css' %}#}
+    {#<link rel="stylesheet" href="{{ asset_url }}" type="text/css" />#}
+    {#{% endstylesheets %}#}
 
-    {% stylesheets
-    'orderassets/apptranslationalresearch/form/css/comments.css' filter='cssrewrite'
-    %}
-    <link rel="stylesheet" href="{{ asset_url }}" />
-    {% endstylesheets %}
+    {#{% stylesheets#}
+    {#'orderassets/apptranslationalresearch/form/css/comments.css' filter='cssrewrite'#}
+    {#%}#}
+    {#<link rel="stylesheet" href="{{ asset_url }}" />#}
+    {#{% endstylesheets %}#}
 
-    {% stylesheets
-    'orderassets/appuserdirectory/handsontable-5/dist/handsontable.full.css' filter='cssrewrite'
-    'orderassets/apporderform/form/css/handsontable.css' filter='cssrewrite'
-    %}
-    <link rel="stylesheet" href="{{ asset_url }}" />
-    {% endstylesheets %}
+    {#{% stylesheets#}
+    {#'orderassets/appuserdirectory/handsontable-5/dist/handsontable.full.css' filter='cssrewrite'#}
+    {#'orderassets/apporderform/form/css/handsontable.css' filter='cssrewrite'#}
+    {#%}#}
+    {#<link rel="stylesheet" href="{{ asset_url }}" />#}
+    {#{% endstylesheets %}#}
+
+    {#<link rel="stylesheet" type="text/css" href="{{ asset('@FOSCommentBundle/Resources/public/css/comments.css') }}" />#}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/foscomment/css/comments.css') }}" />
+
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppTranslationalResearchBundle/form/css/comments.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/handsontable-5/dist/handsontable.full.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppOrderformBundle/form/css/handsontable.css') }}" />
 
     {#{% stylesheets#}
     {#'orderassets/appuserdirectory/bwip-js/lib/demo.css' filter='cssrewrite'#}
@@ -272,24 +279,34 @@
     {#{% endjavascripts %}#}
     {#'@AppOrderformBundle/Resources/public/handsontable/jquery.handsontable.full.js'#}
 
-    {% javascripts
-    '@AppUserdirectoryBundle/Resources/public/handsontable-5/dist/handsontable.full.js'
-    %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
+    {#{% javascripts#}
+    {#'@AppUserdirectoryBundle/Resources/public/handsontable-5/dist/handsontable.full.js'#}
+    {#%}#}
+    {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
 
-    {% javascripts
-    '@AppTranslationalResearchBundle/Resources/public/form/js/handsontable.js'
-    '@AppUserdirectoryBundle/Resources/public/bwip-js/freetype.js'
-    '@AppOrderformBundle/Resources/public/form/js/selectAjax.js'
-    '@AppOrderformBundle/Resources/public/form/js/masking.js'
-    '@AppUserdirectoryBundle/Resources/public/form/js/user-masking.js'
-    '@AppTranslationalResearchBundle/Resources/public/form/js/barcode.js'
-    '@AppUserdirectoryBundle/Resources/public/qrcode/qrcode.js'
-    '@AppUserdirectoryBundle/Resources/public/jquery-qrcode/jquery.qrcode.min.js'
-    %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
+    {#{% javascripts#}
+    {#'@AppTranslationalResearchBundle/Resources/public/form/js/handsontable.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/freetype.js'#}
+    {#'@AppOrderformBundle/Resources/public/form/js/selectAjax.js'#}
+    {#'@AppOrderformBundle/Resources/public/form/js/masking.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/form/js/user-masking.js'#}
+    {#'@AppTranslationalResearchBundle/Resources/public/form/js/barcode.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/qrcode/qrcode.js'#}
+    {#'@AppUserdirectoryBundle/Resources/public/jquery-qrcode/jquery.qrcode.min.js'#}
+    {#%}#}
+    {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
+
+    <script type="text/javascript" src="{{ asset('orderassets/AppUserdirectoryBundle/handsontable-5/dist/handsontable.full.js') }}" ></script>
+    <script type="text/javascript" src="{{ asset('orderassets/AppTranslationalResearchBundle/form/js/handsontable.js') }}" ></script>
+    <script type="text/javascript" src="{{ asset('orderassets/AppUserdirectoryBundle/bwip-js/freetype.js') }}" ></script>
+    <script type="text/javascript" src="{{ asset('orderassets/AppOrderformBundle/form/js/selectAjax.js') }}" ></script>
+    <script type="text/javascript" src="{{ asset('orderassets/AppOrderformBundle/form/js/masking.js') }}" ></script>
+    <script type="text/javascript" src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-masking.js') }}" ></script>
+    <script type="text/javascript" src="{{ asset('orderassets/AppTranslationalResearchBundle/form/js/barcode.js') }}" ></script>
+    <script type="text/javascript" src="{{ asset('orderassets/AppUserdirectoryBundle/qrcode/qrcode.js') }}" ></script>
+    <script type="text/javascript" src="{{ asset('orderassets/AppUserdirectoryBundle/jquery-qrcode/jquery.qrcode.min.js') }}" ></script>
 
     <script type="text/javascript">
 
@@ -316,9 +333,8 @@
 
             if( tableFormCycle != "new" ) {
 
-                getComboboxAccessionType(null,true);
-
-                getAntobodies(null,true);
+                getComboboxAccessionType(null,true); //TODO: test why it's fail and if it is needed
+                getAntobodies(null,true); //TODO: test why it's fail and if it is needed
 
                 var _handsometableDataArr = {{ handsometableData|json_encode|raw }};
                 //console.log('init _handsometableDataArr:');

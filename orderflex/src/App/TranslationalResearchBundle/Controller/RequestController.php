@@ -803,7 +803,12 @@ class RequestController extends Controller
 
         $key = array_search($header, $headers);
 
-        $res['val'] = $row[$key]['value'];
+        //$res['val'] = $row[$key]['value'];
+        if( array_key_exists('value',$row[$key]) ) {
+            $res['val'] = $row[$key]['value'];
+        } else {
+            $res['val'] = null;
+        }
 
         $id = null;
 

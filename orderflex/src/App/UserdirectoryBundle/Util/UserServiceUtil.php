@@ -1291,6 +1291,33 @@ class UserServiceUtil {
         return $res;
     }
 
+    function getFrameworkInfo() {
+        $res = null;
+
+        $projectRoot = $this->container->get('kernel')->getProjectDir();
+
+        $command = "php " . $projectRoot . "/bin/console about";
+
+        $process = new Process($command);
+        $process->setTimeout(1800); //sec; 1800 sec => 30 min
+        $process->run();
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+        $info = $process->getOutput();
+
+        //$divider = "-------------------- ---------------------------------------------------------------------------------------";
+        $divider = "\n";
+
+        $replace = "$divider<br>";
+
+        $info = str_replace($divider, $replace, $info);
+
+        $res = $res . $info;
+
+        return $res;
+    }
+
 //    public function gitVersion() {
 //        //exec('git describe --always',$version_mini_hash);
 //        $version_mini_hash = $this->runProcess('git describe --always');

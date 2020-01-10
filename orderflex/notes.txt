@@ -246,3 +246,4 @@ add ThreadStackSize 8388608 (https://www.drupal.org/forum/support/installing-dru
 stylesheets:
 https://symfony.com/blog/encore-0-21-0-webpack-4-support-copy-files-support-webpackencorebundle
 philetaylor/assetic-bundle - The AsseticBundle provides integration of the Assetic library into the Symfony 4 framework.
+php bin/console about

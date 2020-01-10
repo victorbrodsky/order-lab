@@ -274,7 +274,10 @@ class DashboardUtil
                     $descrColor = $descriptionSingleArr['descrColor'];
                     $descrType = $descriptionSingleArr['descrType'];
                     $descrValueArr = $descriptionSingleArr['descrValueArr'];
-                    $descrValue = $descrValueArr[$index];
+
+                    if( array_key_exists($index,$descrValueArr) ) {
+                        $descrValue = $descrValueArr[$index];
+                    }
 
                     if( $index == $otherId ) {
                         $descrValue = 0;
@@ -426,7 +429,24 @@ class DashboardUtil
         if( $maxLen ) {
             $piProjectCountTopShortArr = array();
             foreach($piProjectCountTopArr as $id=>$arr) {
-                $value = $arr['value'];
+
+                $value = null;
+                if( array_key_exists("value",$arr) ) {
+                    $value = $arr['value'];
+                } else {
+                    continue;
+                }
+
+//                $label = null;
+//                if( array_key_exists("label",$arr) ) {
+//                    $label = $arr['label'];
+//                }
+//
+//                $showPath = null;
+//                if( array_key_exists("show-path",$arr) ) {
+//                    $showPath = $arr['show-path'];
+//                }
+
                 $label = $arr['label'];
                 $showPath = $arr['show-path'];
                 $link = $arr['link'];
@@ -1450,6 +1470,7 @@ class DashboardUtil
 //        return $exitDate;
 //    }
     public function getPreviousStateEnterDate($project,$state) {
+        $date = null;
         if( $state == "irb_review" ) {
             $date = $project->getStartReviewDate();
             if( !$date ) {
@@ -2602,8 +2623,14 @@ class DashboardUtil
             $unfundedSortedArr = array();
             foreach($stackDataSumArray as $categoryIndex=>$count) {
                 //echo $categoryIndex."=".$count."<br>";
-                $fundedSortedArr[$categoryIndex] = $fundedQuantityCountByCategoryArr[$categoryIndex];
-                $unfundedSortedArr[$categoryIndex] = $unFundedQuantityCountByCategoryArr[$categoryIndex];
+
+                if( array_key_exists($categoryIndex,$fundedQuantityCountByCategoryArr) ) {
+                    $fundedSortedArr[$categoryIndex] = $fundedQuantityCountByCategoryArr[$categoryIndex];
+                }
+
+                if( array_key_exists($categoryIndex,$unFundedQuantityCountByCategoryArr) ) {
+                    $unfundedSortedArr[$categoryIndex] = $unFundedQuantityCountByCategoryArr[$categoryIndex];
+                }
             }
 
             $chartName = $this->getTitleWithTotal($chartName,$titleCount,null,"items total");
@@ -3588,7 +3615,9 @@ class DashboardUtil
                 //$thisEndDate->modify( 'first day of next month' );
                 $thisEndDate->modify('last day of this month');
                 //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y").": ";
+
                 $transRequests = $this->getRequestsByAdvanceFilter($startDate,$thisEndDate,$projectSpecialtyObjects,$productservice,$statuses);
+
                 $startDate->modify( 'first day of next month' );
 
                 //echo "<br>";
@@ -3665,6 +3694,10 @@ class DashboardUtil
         if( $chartType == "turn-around-statistics-days-complete-per-request" ) {
             $averageDays = array();
 
+            $thisEndDate = clone $startDate;
+            //$thisEndDate->modify( 'first day of next month' );
+            $thisEndDate->modify('last day of this month');
+
             //$statuses = array("completed","completedNotified");
             $statuses = array("completedNotified");
             $transRequests = $this->getRequestsByAdvanceFilter($startDate,$thisEndDate,$projectSpecialtyObjects,$productservice,$statuses);
@@ -3735,6 +3768,9 @@ class DashboardUtil
         //"34. Turn-around Statistics: Number of days to complete each Work Request by products/services (based on 'Completed and Notified' requests)" => "turn-around-statistics-days-complete-per-request-with-product",
         if( $chartType == "turn-around-statistics-days-complete-per-request-with-product" ) {
             $averageDays = array();
+
+            $thisEndDate = clone $startDate;
+            $thisEndDate->modify('last day of this month');
 
             $statuses = array("completedNotified");
             $transRequests = $this->getRequestsByAdvanceFilter($startDate, $thisEndDate, $projectSpecialtyObjects, $productservice, $statuses);
@@ -5317,6 +5353,9 @@ class DashboardUtil
         //"53. Turn-around Statistics: Number of Days each “Completed and Notified” Work Request took with the Name of who marked it as completed" => "turn-around-statistics-days-complete-per-request-with-product-by-user",
         if( $chartType == "turn-around-statistics-days-complete-per-request-with-user" ) {
             $averageDays = array();
+
+            $thisEndDate = clone $startDate;
+            $thisEndDate->modify('last day of this month');
 
             $statuses = array("completedNotified");
             $transRequests = $this->getRequestsByAdvanceFilter($startDate, $thisEndDate, $projectSpecialtyObjects, $productservice, $statuses);

@@ -2422,6 +2422,7 @@ class ProjectController extends Controller
             $billingContactId = $project->getBillingContact()->getId();
         }
 
+        $implicitExpirationDate = null;
         if( $project->getImplicitExpirationDate() ) {
             $implicitExpirationDate = $project->getImplicitExpirationDate()->format("m/d/Y");
         }
