@@ -136,67 +136,67 @@
 
 <div class="fellapp-application-holder">
 
-{% include 'AppFellAppBundle:Form:AdminData.html.twig' %}
+{% include 'AppFellAppBundle/Form/AdminData.html.twig' %}
 
 <!-- Fellowship Type, Training period, Applicant Name -->
-{#{% include 'AppFellAppBundle:Form:FellowshipType.html.twig' %}#}
+{#{% include 'AppFellAppBundle/Form/FellowshipType.html.twig' %}#}
 
 <!-- Personal Data -->
-{#{% include 'AppFellAppBundle:Form:PersonalData.html.twig' %}#}
+{#{% include 'AppFellAppBundle/Form/PersonalData.html.twig' %}#}
 
 <!-- Fellowship Application Admin Data -->
-{% include 'AppFellAppBundle:Form:ApplicantData.html.twig' %}
+{% include 'AppFellAppBundle/Form/ApplicantData.html.twig' %}
 
 {% if not testing %}
 
 <!-- Education -->
-{% include 'AppFellAppBundle:Form:Education.html.twig' %}
+{% include 'AppFellAppBundle/Form/Education.html.twig' %}
 
 <!-- National Boards -->
-{% include 'AppFellAppBundle:Form:NationalBoards.html.twig' %}
+{% include 'AppFellAppBundle/Form/NationalBoards.html.twig' %}
 
 <!-- MedicalLicensure -->
-{% include 'AppFellAppBundle:Form:MedicalLicensure.html.twig' %}
+{% include 'AppFellAppBundle/Form/MedicalLicensure.html.twig' %}
 
 <!-- Board Certification -->
-{% include 'AppFellAppBundle:Form:BoardCertification.html.twig' %}
+{% include 'AppFellAppBundle/Form/BoardCertification.html.twig' %}
 
 <!-- Recommendations -->
-{% include 'AppFellAppBundle:Form:Recommendations.html.twig' %}
+{% include 'AppFellAppBundle/Form/Recommendations.html.twig' %}
 
 {#testing#}
 {#{% set cycle = "download" %}#}
 
 <!-- Uploads -->
 {% if cycle != "download" %}
-    {% include 'AppFellAppBundle:Form:Uploads.html.twig' %}
+    {% include 'AppFellAppBundle/Form/Uploads.html.twig' %}
 {% endif %}
 
 <!-- Honors and Awards -->
-{% include 'AppFellAppBundle:Form:Honors.html.twig' %}
+{% include 'AppFellAppBundle/Form/Honors.html.twig' %}
 
 <!-- PDF Reports -->
 {#and cycle != "new"#}
 {% if cycle != "download" %}
-    {% include 'AppFellAppBundle:Form:reportsPDF.html.twig' %}
+    {% include 'AppFellAppBundle/Form/reportsPDF.html.twig' %}
 {% endif %}
 
 <!-- Itinerary -->
 {% if cycle != "download" %}
-    {% include 'AppFellAppBundle:Form:Itinerary.html.twig' %}
+    {% include 'AppFellAppBundle/Form/Itinerary.html.twig' %}
 {% endif %}
 
 <!-- Interviews -->
 {% if cycle != "download" %}
     {% if is_granted('ROLE_FELLAPP_COORDINATOR') or is_granted('ROLE_FELLAPP_DIRECTOR') or is_granted('ROLE_FELLAPP_INTERVIEWER') %}
-        {% include 'AppFellAppBundle:Form:Interviews.html.twig' %}
+        {% include 'AppFellAppBundle/Form/Interviews.html.twig' %}
     {% endif %}
 {% endif %}
 
 {% endif %}
 
 <!-- Signature -->
-{% include 'AppFellAppBundle:Form:Signature.html.twig' %}
+{% include 'AppFellAppBundle/Form/Signature.html.twig' %}
 
 
 </div>

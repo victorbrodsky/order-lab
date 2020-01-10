@@ -530,7 +530,7 @@ class CallLogEditController extends CallEntryController
 
             //For edit page we have only one encounter with patient info => use first encounter.
             //Another dummy encounter used to search patient does not exists on the edit page.
-            if( $message->getEncounter() == 1 ) {
+            if( count($message->getEncounter()) == 1 ) {
                 $newEncounter = $message->getEncounter()->first();
             } else {
                 throw new \Exception('Edit/Amend message must contain only one encounter. Encounters count=' . count($message->getEncounter()));

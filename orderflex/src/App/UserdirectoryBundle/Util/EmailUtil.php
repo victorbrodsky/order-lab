@@ -173,7 +173,8 @@ class EmailUtil {
 //            $message = \Swift_Message::newInstance();
 //        }
 
-        $message = \Swift_Message::newInstance();
+//        $message = \Swift_Message::newInstance();
+        $message = new \Swift_Message();
 
         $message->setSubject($subject);
         $message->setFrom($fromEmail);
@@ -322,7 +323,8 @@ class EmailUtil {
                 DIRECTORY_SEPARATOR . "spool".
                 DIRECTORY_SEPARATOR . "default";
             $spool = new \Swift_FileSpool($spoolPath);
-            $transport = \Swift_SpoolTransport::newInstance($spool);
+            //$transport = \Swift_SpoolTransport::newInstance($spool);
+            $transport = \Swift_SpoolTransport($spool);
         } else {
             $transport = $this->getSmtpTransport();
             if( !$transport ) {
@@ -330,7 +332,8 @@ class EmailUtil {
             }
         }
 
-        $mailer = \Swift_Mailer::newInstance($transport);
+        //$mailer = \Swift_Mailer::newInstance($transport);
+        $mailer = new \Swift_Mailer($transport);
 
         return $mailer;
     }
@@ -354,7 +357,8 @@ class EmailUtil {
         //$trans = $userSecUtil->getSiteSettingParameter('mailerTransport');
 
         //echo "before transport newInstance <br>";
-        $transport = \Swift_SmtpTransport::newInstance();
+        //$transport = \Swift_SmtpTransport::newInstance();
+        $transport = new \Swift_SmtpTransport();
         //echo "after transport newInstance <br>";
         if( !$transport ) {
             return null;

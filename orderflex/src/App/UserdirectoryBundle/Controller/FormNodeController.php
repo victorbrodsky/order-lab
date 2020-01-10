@@ -242,7 +242,7 @@ class FormNodeController extends Controller {
                         //'arraySectionIndex' => null
                     );
 
-                    $template = $this->render('AppUserdirectoryBundle:FormNode:formnode_fields.html.twig', $formNodeArr)->getContent();
+                    $template = $this->render('AppUserdirectoryBundle/FormNode/formnode_fields.html.twig', $formNodeArr)->getContent();
 
                     //form form node array element
                     if( $parentFormNodeId ) {
@@ -304,7 +304,7 @@ class FormNodeController extends Controller {
                     //'arraySectionIndex' => null
                 );
 
-                $template = $this->render('AppUserdirectoryBundle:FormNode:formnode_fields.html.twig', $formNodeArr)->getContent();
+                $template = $this->render('AppUserdirectoryBundle/FormNode/formnode_fields.html.twig', $formNodeArr)->getContent();
 
                 //form form node array element
                 if( $parentFormNodeId ) {
@@ -425,7 +425,7 @@ class FormNodeController extends Controller {
                 //'arraySectionIndex' => $arraySectionIndex
             );
 
-            $template = $this->render('AppUserdirectoryBundle:FormNode:formnode_fields.html.twig', $formNodeArr)->getContent();
+            $template = $this->render('AppUserdirectoryBundle/FormNode/formnode_fields.html.twig', $formNodeArr)->getContent();
 
             $parentArraySectionCount = 0;
             $grandParentFormNode = $this->getParentFormNodeSection($formNodeHolderEntity,$parentFormNode);

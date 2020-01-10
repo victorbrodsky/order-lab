@@ -8,6 +8,8 @@ use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
+//use Tests\App\TestBundle\WebTestBase;
+
 
 class CalllogShortTest extends WebTestBase
 {
@@ -17,7 +19,7 @@ class CalllogShortTest extends WebTestBase
         $phpVersion = phpversion();
         echo "[PHP=".$phpVersion."]";
         
-        $this->getClient();
+        $this->getTestClient();
         $crawler = $this->client->request('GET', '/call-log-book/login');
 
         //$content = $this->client->getResponse()->getContent();

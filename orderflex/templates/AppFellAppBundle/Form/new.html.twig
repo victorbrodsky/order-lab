@@ -37,7 +37,7 @@
         {% endif %}
     {% endif %}
 
-    {% include 'AppFellAppBundle:Form:applicant-content.html.twig' %}
+    {% include 'AppFellAppBundle/Form/applicant-content.html.twig' %}
 
     {#{{ form_start(form,{'attr': {'id': 'fellapp-applicant-form'}}) }}#}
     {#{{ form_errors(form) }}#}
@@ -53,7 +53,7 @@
 
 
 {% block additionaljs %}
-    {% include 'AppFellAppBundle:Form:applicant-content-js.html.twig' %}
+    {% include 'AppFellAppBundle/Form/applicant-content-js.html.twig' %}
 {% endblock %}
 
 

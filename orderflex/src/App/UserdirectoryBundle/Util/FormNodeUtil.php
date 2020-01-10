@@ -1255,7 +1255,7 @@ class FormNodeUtil
         }
         //////////////// EOF Update XML cache ////////////////
 
-        if( count($populated) == 1 ) {
+        if( $populated == 1 ) {
             if( !$testing ) {
                 $this->em->flush($message);
             }

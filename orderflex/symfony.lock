@@ -348,6 +348,9 @@
     "symfony/assetic-bundle": {
         "version": "v2.8.2"
     },
+    "symfony/browser-kit": {
+        "version": "v4.4.2"
+    },
     "symfony/cache": {
         "version": "v3.4.36"
     },
@@ -373,6 +376,9 @@
             "./config/bootstrap.php"
         ]
     },
+    "symfony/css-selector": {
+        "version": "v4.4.2"
+    },
     "symfony/debug": {
         "version": "v3.4.36"
     },
@@ -381,6 +387,9 @@
     },
     "symfony/doctrine-bridge": {
         "version": "v3.4.36"
+    },
+    "symfony/dom-crawler": {
+        "version": "v5.0.2"
     },
     "symfony/dotenv": {
         "version": "v3.4.36"

@@ -8,9 +8,10 @@
  */
 
 namespace Tests\App\TestBundle;
+//namespace App\CallLogBundle\Controller;
 
-use PHPUnit\Framework\TestCase;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+//use PHPUnit\Framework\TestCase;
+use App\UserdirectoryBundle\Security\Util\UserSecurityUtil;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\HttpFoundation\Response;
@@ -36,7 +37,7 @@ class WebTestBase extends WebTestCase
      * @var \Doctrine\ORM\EntityManager
      */
     protected $em;
-    protected $container;
+    protected static $container;
     protected $client = null;
     protected $user = null;
     protected $environment = null;
@@ -73,34 +74,13 @@ class WebTestBase extends WebTestCase
 //        }
     }
 
-    protected function setUp(): void
-    {
-//        $kernel = self::bootKernel();
-//
-//        $this->container = $kernel->getContainer();
-//
-//        $this->em = $this->container
-//            ->get('doctrine')
-//            ->getManager();
-//
-//        $this->client = static::createClient([], [
-//            'HTTP_HOST'       => '127.0.0.1',
-//            'HTTP_USER_AGENT' => 'MySuperBrowser/1.0',
-//        ]);
+    protected function setUp(): void {
+        $this->getTestClient();
 
-        //$httpChanel = true;
-        //$httpChanel = false;
-//        $this->client = static::createClient([], [
-//            'HTTP_HOST'       => '127.0.0.1',
-//            'HTTP_USER_AGENT' => 'MySuperBrowser/1.0',
-//            //'HTTPS' => $httpChanel
-//        ]);
-        //$this->client->followRedirects();
-        $this->getClient();
+//        $this->container = $this->client->getContainer();
+        self::$container = $this->client->getContainer();
 
-        $this->container = $this->client->getContainer();
-
-        $this->em = $this->container->get('doctrine.orm.entity_manager');
+        $this->em = self::$container->get('doctrine.orm.entity_manager');
 
         $this->user = $this->getUser();
 
@@ -150,25 +130,31 @@ class WebTestBase extends WebTestCase
         $this->client->getCookieJar()->set($cookie);
     }
 
-    public function getClient() {
+    public function getTestClient(array $options = array(), array $server = array()) {
 
         //Set HTTPS if required
-        $client = static::createClient([], [
-            'HTTP_HOST'       => '127.0.0.1',
-            'HTTP_USER_AGENT' => 'MySuperBrowser/1.0',
-        ]);
-        $userSecUtil = $client->getContainer()->get('user_security_utility');
-        $connectionChannel = $userSecUtil->getSiteSettingParameter('connectionChannel');
-        $httpsChannel = false;
-        if( $connectionChannel == 'https' ) {
-            $httpsChannel = true;
-        }
+//        $client = static::createClient([], [
+//            'HTTP_HOST'       => '127.0.0.1',
+//            'HTTP_USER_AGENT' => 'MySuperBrowser/1.0',
+//        ]);
 
-        $this->client = static::createClient([], [
+        //$kernel = static::bootKernel($options);
+        //$client = $kernel->getContainer()->get('test.client');
+
+        //$userSecUtil = $client->getContainer()->get('user_security_utility');
+        //$connectionChannel = $userSecUtil->getSiteSettingParameter('connectionChannel');
+        $httpsChannel = false;
+        //if( $connectionChannel == 'https' ) {
+        //    $httpsChannel = true;
+        //}
+
+        $client = static::createClient([], [
             'HTTP_HOST' => '127.0.0.1',
             'HTTP_USER_AGENT' => 'MySuperBrowser/1.0',
             'HTTPS' => $httpsChannel
         ]);
+
+        $this->client = $client;
 
         //Alternative of setting HTTPS: When running on https this will follow redirect from http://127.0.0.1 to https://127.0.0.1
         //$this->client->followRedirects();
@@ -193,9 +179,9 @@ class WebTestBase extends WebTestCase
 //        $this->client->getCookieJar()->set($cookie);
 //    }
 
-    public function getUser()
+    public function getUser( UserSecurityUtil $userSecUtil )
     {
-        $userSecUtil = $this->container->get('user_security_utility');
+        //$userSecUtil = $this->container->get('user_security_utility');
         $systemUser = $userSecUtil->findSystemUser();
 
         if( !$systemUser ) {

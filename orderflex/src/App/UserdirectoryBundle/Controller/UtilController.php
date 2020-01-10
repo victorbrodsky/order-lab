@@ -61,7 +61,12 @@ class UtilController extends Controller {
         $res = $this->getClassBundleByName($name);
         $className = $res['className'];
         $bundleName = $res['bundleName'];
-        $filterType = $res['filterType'];
+
+        if( array_key_exists('filterType',$res) ) {
+            $filterType = $res['filterType'];
+        } else {
+            $filterType = NULL;
+        }
 
         //echo "className=".$className."<br>";
 
