@@ -13,7 +13,7 @@ class VacationTest extends WebTestBase
 {
 
     public function testLoginPageAction() {
-        $this->getClient();
+        $this->getTestClient();
         $crawler = $this->client->request('GET', '/vacation-request/login');
 
         //$content = $this->client->getResponse()->getContent();

@@ -124,9 +124,9 @@
     <br>
 
     {% if block('addcontent') is defined %}
-        {% include 'AppUserdirectoryBundle:Profile:edit_user_form.html.twig' with {addcontent: block('addcontent')} %}
+        {% include 'AppUserdirectoryBundle/Profile/edit_user_form.html.twig' with {addcontent: block('addcontent')} %}
     {% else %}
-        {% include 'AppUserdirectoryBundle:Profile:edit_user_form.html.twig' %}
+        {% include 'AppUserdirectoryBundle/Profile/edit_user_form.html.twig' %}
     {% endif %}
 
 

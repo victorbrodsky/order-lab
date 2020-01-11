@@ -1,0 +1,16 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: true # here you are setting all service per default to be private
+
+#    doctrine.orm.object_manager:
+#        class: use Doctrine\Common\Persistence\ObjectManager;
+
+#    user_download_utility:
+#            class: App\UserdirectoryBundle\Util\UserDownloadUtil
+#            arguments: ["@doctrine.orm.entity_manager", "@security.token_storage", "@service_container"]
+
+#    user_service_utility:
+#            class: App\UserdirectoryBundle\Util\UserServiceUtil
+#            arguments: ["@doctrine.orm.entity_manager", "@security.token_storage", "@service_container"]

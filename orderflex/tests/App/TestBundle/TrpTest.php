@@ -18,7 +18,7 @@ class TrpTest extends WebTestBase
         $phpVersion = phpversion();
         echo "[PHP=".$phpVersion."]";
 
-        $this->getClient();
+        $this->getTestClient();
         $crawler = $this->client->request('GET', '/translational-research/login');
         $this->assertGreaterThan(
             0,
@@ -99,7 +99,7 @@ class TrpTest extends WebTestBase
 
         $this->logIn();
 
-        $transresUtil = $this->container->get('transres_util');
+        $transresUtil = $this->testContainer->get('transres_util');
         $requests = $transresUtil->getTotalRequests();
         if( count($requests) > 0 ) {
             $transRequest = end($requests);
@@ -395,7 +395,7 @@ class TrpTest extends WebTestBase
     public function testPackingSlip() {
         $this->logIn();
 
-        $transresUtil = $this->container->get('transres_util');
+        $transresUtil = $this->testContainer->get('transres_util');
         $requests = $transresUtil->getTotalRequests();
         if( count($requests) > 0 ) {
 
@@ -508,7 +508,7 @@ class TrpTest extends WebTestBase
         $this->logIn();
         //$this->client->followRedirects();
 
-        $transresUtil = $this->container->get('transres_util');
+        $transresUtil = $this->testContainer->get('transres_util');
         $requests = $transresUtil->getTotalRequests();
         if( count($requests) > 0 ) {
             $request = end($requests);

@@ -6,5 +6,8 @@
 .idea/
 Scanorders2/web/uploads/
 importUserLists
+importLists
 Certificate
 Vendorutil
+/*/.idea/
+orderflex_orig

@@ -116,9 +116,11 @@ class User extends BaseUser {
     /**
      * includes 7+2 fields: suffix, firstName, middleName, lastName, displayName, initials, preferredPhone, email/emailCanonical (used instead of extended user's email)
      *
-     * @ORM\OneToMany(targetEntity="UserInfo", mappedBy="user", cascade={"persist","remove"},
+     * //OneToMany(targetEntity="UserInfo", mappedBy="user", cascade={"persist","remove"},
      *  indexBy="firstName,middleName,lastName,displayName,email"
      * )
+     *
+     * @ORM\OneToMany(targetEntity="UserInfo", mappedBy="user", cascade={"persist","remove"})
      * @ORM\OrderBy({"displayName" = "ASC"})
      */
     private $infos;

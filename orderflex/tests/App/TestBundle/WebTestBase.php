@@ -30,6 +30,13 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 //},
 //2) Run composer.phar dumpautoload
 
+//fresh install
+//"autoload-dev": {
+//    "psr-4": {
+//        "App\\Tests\\": "tests/"
+//        }
+//    },
+
 class WebTestBase extends WebTestCase
 {
 
@@ -37,7 +44,7 @@ class WebTestBase extends WebTestCase
      * @var \Doctrine\ORM\EntityManager
      */
     protected $em;
-    protected static $container;
+    protected $testContainer;
     protected $client = null;
     protected $user = null;
     protected $environment = null;
@@ -74,18 +81,61 @@ class WebTestBase extends WebTestCase
 //        }
     }
 
+//    public function getService(string $service)
+//    {
+//        self::bootKernel();
+//
+//        $container = self::$kernel->getContainer();
+//
+//        // gets the special container that allows fetching private services
+//        //$container = self::$container;
+//
+//        return $container->get($service);
+//        //return self::$container->get($service);
+//    }
+
+//    /**
+//     * {@inheritDoc}
+//     */
+//    public function setUp2()
+//    {
+//        $this->client = static::createClient();
+//        //$this->container = $this->client->getContainer();
+//        $this->entityManager = $this->getService('doctrine.orm.entity_manager');
+//
+//        parent::setUp();
+//    }
+
+
     protected function setUp(): void {
+
         $this->getTestClient();
 
-//        $this->container = $this->client->getContainer();
-        self::$container = $this->client->getContainer();
+        //testing
+        //$logger = $this->getService('user_download_utility');
+        //$container = self::$container;
+        //$em = $container->get('doctrine.orm.object_manager');
+
+        $this->testContainer = self::$container;
+        //$test = $container->get('user_service_utility');
+        //$realContainer = $container->get('test.service_container');
+        //$this->em = $realContainer->get('doctrine.orm.entity_manager');
+
+        //$this->container = $this->client->getContainer();
+        //self::$container = $this->client->getContainer();
+
+
 
         $this->em = self::$container->get('doctrine.orm.entity_manager');
+        //$this->em = $this->getService('doctrine.orm.entity_manager');
+        //$this->em = $this->getService('user_security_utility');
 
         $this->user = $this->getUser();
 
         $this->getParam();
         //exit("environment=".$this->environment);
+
+        parent::setUp();
     }
 
     /**
@@ -100,7 +150,7 @@ class WebTestBase extends WebTestCase
             $this->em = null; // avoid memory leaks
         }
 
-        $this->container = null; // avoid memory leaks
+        $this->testContainer = null; // avoid memory leaks
 
         $this->client = null;
 
@@ -121,7 +171,7 @@ class WebTestBase extends WebTestCase
         //$systemUser = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByUsername('administrator');
 
         $token = new UsernamePasswordToken($systemUser, null, $firewallName, $systemUser->getRoles());
-        $this->container->get('security.token_storage')->setToken($token);
+        $this->testContainer->get('security.token_storage')->setToken($token);
 
         $session->set('_security_'.$firewallContext, serialize($token));
         $session->save();
@@ -141,12 +191,14 @@ class WebTestBase extends WebTestCase
         //$kernel = static::bootKernel($options);
         //$client = $kernel->getContainer()->get('test.client');
 
-        //$userSecUtil = $client->getContainer()->get('user_security_utility');
-        //$connectionChannel = $userSecUtil->getSiteSettingParameter('connectionChannel');
+        //$userSecUtil = $this->testContainer->get('user_security_utility');
+        //$userSecUtil = $this->getService('user_security_utility');
+
+//        $connectionChannel = $userSecUtil->getSiteSettingParameter('connectionChannel');
         $httpsChannel = false;
-        //if( $connectionChannel == 'https' ) {
-        //    $httpsChannel = true;
-        //}
+//        if( $connectionChannel == 'https' ) {
+//            $httpsChannel = true;
+//        }
 
         $client = static::createClient([], [
             'HTTP_HOST' => '127.0.0.1',
@@ -179,9 +231,9 @@ class WebTestBase extends WebTestCase
 //        $this->client->getCookieJar()->set($cookie);
 //    }
 
-    public function getUser( UserSecurityUtil $userSecUtil )
+    public function getUser()
     {
-        //$userSecUtil = $this->container->get('user_security_utility');
+        $userSecUtil = $this->testContainer->get('user_security_utility');
         $systemUser = $userSecUtil->findSystemUser();
 
         if( !$systemUser ) {
