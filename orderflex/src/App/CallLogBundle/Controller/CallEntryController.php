@@ -19,6 +19,8 @@
 namespace App\CallLogBundle\Controller;
 
 
+
+
 use Doctrine\Common\Collections\ArrayCollection;
 use App\CallLogBundle\Form\CalllogFilterType;
 use App\CallLogBundle\Form\CalllogMessageType;
@@ -62,12 +64,12 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 //use Box\Spout\Writer\Style\BorderBuilder;
 //use Box\Spout\Writer\Style\Color;
 //use Box\Spout\Writer\Style\StyleBuilder;
-use Box\Spout\Common\Type;
-use Box\Spout\Writer\WriterFactory;
-use Box\Spout\Writer\Common\Creator\Style\BorderBuilder;
+//use Box\Spout\Common\Type;
 use Box\Spout\Common\Entity\Style\Border;
 use Box\Spout\Common\Entity\Style\Color;
 use Box\Spout\Writer\Common\Creator\Style\StyleBuilder;
+use Box\Spout\Writer\Common\Creator\Style\BorderBuilder;
+use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
 
 //TODO: implement WYSIWYG editor to textarea-reach fields
 // https://github.com/summernote/summernote
@@ -3611,7 +3613,7 @@ class CallEntryController extends Controller
 
         //testing: render in html with excel header
         if(0) {
-            return $this->render('AppCallLogBundle:Export:call-entry-export-csv.html.twig', array(
+            return $this->render('AppCallLogBundle/Export/call-entry-export-csv.html.twig', array(
                 'messages' => $entries,
                 'title' => "Call Log Book data",
                 'filename' => $fileName
@@ -3806,7 +3808,7 @@ class CallEntryController extends Controller
             $ews->setCellValue('H'.$row, $author);
 
             //////// subsection with message snapshot info ////////
-            $row = $row + 1;
+            $rowCount = $rowCount + 1;
             $trclassname = "";
             $snapshotArr = $formNodeUtil->getFormNodeHolderShortInfo($message,$message->getMessageCategory(),false,$trclassname);
             //$snapshotArr = $formNodeUtil->getFormNodeHolderShortInfo($message,$message->getMessageCategory(),true,$trclassname);
@@ -3819,7 +3821,7 @@ class CallEntryController extends Controller
             $snapshotArrChunks = array_chunk($snapshotArr, 21);
 //            echo "snapshotArrChunks count=".count($snapshotArrChunks)."<br>";
 
-            $originalRow = $row;
+            //$originalRow = $row;
             $numItems = count($snapshotArrChunks);
             $i = 0;
             foreach( $snapshotArrChunks as $snapshotArrChunk ) {
@@ -3847,7 +3849,7 @@ class CallEntryController extends Controller
 //                }
 
                 if( ++$i < $numItems ) {
-                    $row = $row + 1;
+                    $rowCount = $rowCount + 1;
                 }
             }
             //$aRowMerged = 'A' . $originalRow . ':' . 'A' . $row; //merge is not working
@@ -3869,7 +3871,7 @@ class CallEntryController extends Controller
             //////// EOF subsection with message snapshot info ////////
 
             //increment row index
-            $row = $row + 1;
+            $rowCount = $rowCount + 1;
 
         }//foreach
 
@@ -3913,10 +3915,12 @@ class CallEntryController extends Controller
 
         if( $ext == "XLSX" ) {
             $fileName = $fileName . ".xlsx";
-            $writer = WriterFactory::create(Type::XLSX);
+            //$writer = WriterFactory::create(Type::XLSX);
+            $writer = WriterEntityFactory::createXLSXWriter();
         } else {
             $fileName = $fileName . ".csv";
-            $writer = WriterFactory::create(Type::CSV);
+            //$writer = WriterFactory::create(Type::CSV);
+            $writer = WriterEntityFactory::createCSVWriter();
         }
         $writer->openToBrowser($fileName);
 
@@ -3949,7 +3953,20 @@ class CallEntryController extends Controller
             ->setBorder($border)
             ->build();
 
-        $writer->addRowWithStyle(
+//        $writer->addRowWithStyle(
+//            [
+//                'ID',                   //0 - A
+//                'Last Modified',        //1 - B
+//                'Patient Name',         //2 - C
+//                'MRN',                  //3 - D
+//                'Location',             //4 - E
+//                'Referring Provider',   //5 - F
+//                'Call Issue',           //6 - G
+//                'Author'                //7 - H
+//            ],
+//            $headerStyle
+//        );
+        $spoutRow = WriterEntityFactory::createRowFromArray(
             [
                 'ID',                   //0 - A
                 'Last Modified',        //1 - B
@@ -3962,10 +3979,11 @@ class CallEntryController extends Controller
             ],
             $headerStyle
         );
+        $writer->addRow($spoutRow);
 
         //$entryIds = array();
         $count = 0;
-        $row = 2;
+        $rowCount = 2;
         foreach( $entryIds as $message ) {
         //foreach( $entryIds as $entryId ) {
 
@@ -4113,25 +4131,29 @@ class CallEntryController extends Controller
                 $data[7] = $author;
             }
 
-            $writer->addRowWithStyle($data,$rowStyle);
+            //$writer->addRowWithStyle($data,$rowStyle);
+            $spoutRow = WriterEntityFactory::createRowFromArray($data, $rowStyle);
+            $writer->addRow($spoutRow);
 
             //////// subsection with message snapshot info ////////
             if(0) {
-                $row = $row + 1;
+                $rowCount = $rowCount + 1;
                 $trclassname = "";
 
                 if( $table=true ) {
                     $snapshotRow = $formNodeUtil->getFormNodeHolderShortInfo($message, $message->getMessageCategory(), true, $trclassname);
                     $data = array();
                     $data[0] = $snapshotRow;
-                    $writer->addRowWithStyle($data, $rowStyle);
+                    //$writer->addRowWithStyle($data, $rowStyle);
+                    $spoutRow = WriterEntityFactory::createRowFromArray($data, $rowStyle);
+                    $writer->addRow($spoutRow);
                 } else {
                     $snapshotArr = $formNodeUtil->getFormNodeHolderShortInfo($message, $message->getMessageCategory(), false, $trclassname);
 
                     //divide results by chunks of 21 rows in order to fit them in the excel row max height
                     $snapshotArrChunks = array_chunk($snapshotArr, 21);
 
-                    $originalRow = $row;
+                    //$originalRow = $row;
                     $numItems = count($snapshotArrChunks);
                     $i = 0;
                     foreach ($snapshotArrChunks as $snapshotArrChunk) {
@@ -4150,14 +4172,16 @@ class CallEntryController extends Controller
                         //$ews->setCellValue($aRow, $objRichText);
                         $data = array();
                         $data[0] = $snapshotRow;
-                        $writer->addRowWithStyle($data, $rowStyle);
+                        //$writer->addRowWithStyle($data, $rowStyle);
+                        $spoutRow = WriterEntityFactory::createRowFromArray($data, $rowStyle);
+                        $writer->addRow($spoutRow);
 
 //                if( strpos($snapshot, '[Form Section]') !== false ) {
 //                    $ews->getStyle($aRow)->getFont()->setItalic(true);
 //                }
 
                         if (++$i < $numItems) {
-                            $row = $row + 1;
+                            $rowCount = $rowCount + 1;
                         }
                     }
                 }
@@ -4199,7 +4223,9 @@ class CallEntryController extends Controller
                     foreach( $snapshotArrChunks as $snapshotChunkRow ) {
                         $data = array();
                         $data[0] = $snapshotChunkRow;
-                        $writer->addRowWithStyle($data, $rowStyle);
+                        //$writer->addRowWithStyle($data, $rowStyle);
+                        $spoutRow = WriterEntityFactory::createRowFromArray($data, $rowStyle);
+                        $writer->addRow($spoutRow);
                     }
                 } else {
                     $data = array();
@@ -4208,13 +4234,15 @@ class CallEntryController extends Controller
                     //Entry in XML
                     $data[1] = $formnodesCache;
 
-                    $writer->addRowWithStyle($data, $rowStyle);
+                    //$writer->addRowWithStyle($data, $rowStyle);
+                    $spoutRow = WriterEntityFactory::createRowFromArray($data, $rowStyle);
+                    $writer->addRow($spoutRow);
                 }
             }
             //////// EOF subsection with message snapshot info ////////
 
             //increment row index
-            $row = $row + 1;
+            $rowCount = $rowCount + 1;
 
             $message = null;
             $em->clear();

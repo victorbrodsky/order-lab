@@ -2,8 +2,8 @@ framework:
     #esi:             ~
 #    translator:      { fallback: %locale% }
 #    translator: ~
-    translator:
-      enabled: false
+    #translator:
+      #enabled: false
 #    secret: '%secret%'
     secret: '%env(APP_SECRET)%'
 #    router:

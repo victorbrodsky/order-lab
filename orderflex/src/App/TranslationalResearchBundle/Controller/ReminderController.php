@@ -80,7 +80,7 @@ class ReminderController extends Controller
             //21 invoices have remained unpaid.
             $title = "$invoiceCounter invoices have remained unpaid. ".$criterions;
 
-            return $this->render("AppTranslationalResearchBundle:Reminder:unpaid-invoice-index.html.twig",
+            return $this->render("AppTranslationalResearchBundle/Reminder/unpaid-invoice-index.html.twig",
                 array(
                     'title' => $title, //$invoiceCounter." Unpaid Invoices corresponding to the reminder schedule"."".$criterions,
                     'invoiceGroups' => $results,
@@ -187,7 +187,7 @@ class ReminderController extends Controller
             $title = "$projectCounter project requests are pending review.<br>" . implode("<br>",$titleInfoArr);
 
 
-            return $this->render("AppTranslationalResearchBundle:Reminder:project-request-reminder-index.html.twig",
+            return $this->render("AppTranslationalResearchBundle/Reminder/project-request-reminder-index.html.twig",
                 array(
                     'title' => $title,
                     'finalResults' => $finalResults,
@@ -342,7 +342,14 @@ class ReminderController extends Controller
                     foreach($reminderDelayArr as $projectSpecialtyShortName=>$reminderDays) {
                         foreach($transResRequests as $transResRequest) {
                             if (strpos($transResRequest->getOid(), $projectSpecialtyShortName) !== false) {
-                                $projectSpecialtyCounter[$projectSpecialtyShortName]++;
+                                //echo "index=".$projectSpecialtyShortName."<br>";
+                                if( array_key_exists($projectSpecialtyShortName,$projectSpecialtyCounter) ) {
+                                    //echo "Array Key exists...";
+                                    $projectSpecialtyCounter[$projectSpecialtyShortName]++;
+                                } else {
+
+                                }
+
                             }
                         }
                     }
@@ -385,7 +392,7 @@ class ReminderController extends Controller
 
             $titleNew = implode("<br>",$titleInfo);
 
-            return $this->render("AppTranslationalResearchBundle:Reminder:project-request-reminder-index.html.twig",
+            return $this->render("AppTranslationalResearchBundle/Reminder/project-request-reminder-index.html.twig",
                 array(
                     'title' => $titleNew,
                     'finalResults' => $finalResults,

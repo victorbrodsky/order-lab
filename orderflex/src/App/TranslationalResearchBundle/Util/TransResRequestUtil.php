@@ -36,12 +36,12 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 //use Box\Spout\Writer\Style\Color;
 //use Box\Spout\Writer\Style\StyleBuilder;
 //use Box\Spout\Writer\WriterFactory;
-use Box\Spout\Common\Type;
-use Box\Spout\Writer\WriterFactory;
-use Box\Spout\Writer\Common\Creator\Style\BorderBuilder;
+
 use Box\Spout\Common\Entity\Style\Border;
 use Box\Spout\Common\Entity\Style\Color;
 use Box\Spout\Writer\Common\Creator\Style\StyleBuilder;
+use Box\Spout\Writer\Common\Creator\Style\BorderBuilder;
+use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
 
 
 
@@ -3920,7 +3920,8 @@ class TransResRequestUtil
 
     public function createtInvoicesCsvSpout( $ids, $fileName, $limit=null ) {
         //$writer = WriterFactory::create(Type::XLSX); //cell type can not be set in xlsx 
-        $writer = WriterFactory::create(Type::CSV);
+        //$writer = WriterFactory::create(Type::CSV);
+        $writer = WriterEntityFactory::createCSVWriter();
         $writer->openToBrowser($fileName);
 
         $headerStyle = (new StyleBuilder())
@@ -3950,7 +3951,25 @@ class TransResRequestUtil
             ->setBorder($border)
             ->build();
 
-        $writer->addRowWithStyle(
+//        $writer->addRowWithStyle(
+//            [
+//                'Invoice Number',               //0 - A
+//                'Fund Number',                  //1 - B
+//                'IRB (IACUC) Number',           //2 - C
+//                'Salesperson',                  //3 - D
+//                'Generated',                    //4 - E
+//                'Updated',                      //5 - F
+//                'Version',                      //6 - G
+//                'Due Date',                     //7 - H
+//                'Status',                       //8 - I
+//                'Bill To',                      //9 - J
+//                'Total $',                        //10 - K
+//                'Paid $',                         //11 - L
+//                'Due $',                          //12 - M
+//            ],
+//            $headerStyle
+//        );
+        $spoutRow = WriterEntityFactory::createRowFromArray(
             [
                 'Invoice Number',               //0 - A
                 'Fund Number',                  //1 - B
@@ -3968,6 +3987,7 @@ class TransResRequestUtil
             ],
             $headerStyle
         );
+        $writer->addRow($spoutRow);
 
         $count = 0;
         $totalInvoices = 0;
@@ -4046,7 +4066,9 @@ class TransResRequestUtil
             $dueTotal = $dueTotal + $due;
             $data[12] = $due;
 
-            $writer->addRowWithStyle($data,$regularStyle);
+            //$writer->addRowWithStyle($data,$regularStyle);
+            $spoutRow = WriterEntityFactory::createRowFromArray($data, $regularStyle);
+            $writer->addRow($spoutRow);
 
         }//invoices
 
@@ -4064,7 +4086,9 @@ class TransResRequestUtil
         $data[10] = $totalTotal;
         $data[11] = $paidTotal;
         $data[12] = $dueTotal;
-        $writer->addRowWithStyle($data,$footerStyle);
+        //$writer->addRowWithStyle($data,$footerStyle);
+        $spoutRow = WriterEntityFactory::createRowFromArray($data, $footerStyle);
+        $writer->addRow($spoutRow);
 
         $writer->close();
     }

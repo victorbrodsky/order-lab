@@ -29,12 +29,18 @@ use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransf
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\Constraints\Date;
 
-use Box\Spout\Common\Type;
-use Box\Spout\Writer\WriterFactory;
-use Box\Spout\Writer\Common\Creator\Style\BorderBuilder;
+//use Box\Spout\Common\Type;
+//use Box\Spout\Writer\WriterFactory;
+//use Box\Spout\Writer\Common\Creator\Style\BorderBuilder;
+//use Box\Spout\Common\Entity\Style\Border;
+//use Box\Spout\Common\Entity\Style\Color;
+//use Box\Spout\Writer\Common\Creator\Style\StyleBuilder;
+
 use Box\Spout\Common\Entity\Style\Border;
 use Box\Spout\Common\Entity\Style\Color;
 use Box\Spout\Writer\Common\Creator\Style\StyleBuilder;
+use Box\Spout\Writer\Common\Creator\Style\BorderBuilder;
+use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
 
 /**
  * Created by PhpStorm.
@@ -4261,7 +4267,8 @@ class VacReqUtil
         $author = $this->container->get('security.token_storage')->getToken()->getUser();
         //$transformer = new DateTimeToStringTransformer(null,null,'d/m/Y');
 
-        $writer = WriterFactory::create(Type::XLSX);
+        //$writer = WriterFactory::create(Type::XLSX);
+        $writer = WriterEntityFactory::createXLSXWriter();
         $writer->openToBrowser($fileName);
 
         $headerStyle = (new StyleBuilder())
@@ -4311,7 +4318,27 @@ class VacReqUtil
 //        $ews->setCellValue('K1', 'End Date');
 //        $ews->setCellValue('L1', 'Status');
 
-        $writer->addRowWithStyle(
+//        $writer->addRowWithStyle(
+//            [
+//                'ID',                  //0 - A
+//                'Person',              //1 - B
+//                'Academic Year',       //2 - C
+//                'Group',               //3 - D
+//
+//                'Business Days',       //4 - E
+//                'Start Date',          //5 - F
+//                'End Date',            //6 - G
+//                'Status',              //7 - H
+//
+//                'Vacation Days',       //8 - I
+//                'Start Date',          //9 - J
+//                'End Date',            //10 - K
+//                'Status',              //11 - L
+//
+//            ],
+//            $headerStyle
+//        );
+        $spoutRow = WriterEntityFactory::createRowFromArray(
             [
                 'ID',                  //0 - A
                 'Person',              //1 - B
@@ -4331,6 +4358,7 @@ class VacReqUtil
             ],
             $headerStyle
         );
+        $writer->addRow($spoutRow);
 
 
         $totalNumberBusinessDays = 0;
@@ -4402,7 +4430,9 @@ class VacReqUtil
             //print_r($data);
             //exit('111');
 
-            $writer->addRowWithStyle($data,$requestStyle);
+            //$writer->addRowWithStyle($data,$requestStyle);
+            $spoutRow = WriterEntityFactory::createRowFromArray($data, $requestStyle);
+            $writer->addRow($spoutRow);
             //$row = $row + 1;
         }//foreach
 
@@ -4420,7 +4450,9 @@ class VacReqUtil
         $data[4] = $totalNumberBusinessDays;
         //$ews->setCellValue('I'.$row, $totalNumberVacationDays); //8
         $data[8] = $totalNumberVacationDays;
-        $writer->addRowWithStyle($data,$footerStyle);
+        //$writer->addRowWithStyle($data,$footerStyle);
+        $spoutRow = WriterEntityFactory::createRowFromArray($data, $footerStyle);
+        $writer->addRow($spoutRow);
 
         //set color light green to the last Total row
         //$ews->getStyle('A'.$row.':'.'L'.$row)->applyFromArray($styleLastRow);

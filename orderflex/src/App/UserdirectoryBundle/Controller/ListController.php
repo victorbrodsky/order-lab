@@ -3442,9 +3442,9 @@ class ListController extends Controller
             $request->attributes->set('_route',$listRootName);
 
             if( strpos($listRootName, "_pathaction") === false ) {
-                return $this->forward('AppUserdirectoryBundle:List:index', array('request' => $request));
+                return $this->forward('App\UserdirectoryBundle\Controller\ListController::index', array('request' => $request));
             } else {
-                return $this->forward('AppUserdirectoryBundle/ComplexList/index', array('request' => $request));
+                return $this->forward('App\UserdirectoryBundle\Controller\ComplexListController::index', array('request' => $request));
             }
 
         }
@@ -3488,7 +3488,7 @@ class ListController extends Controller
             $request->attributes->set('_route',$newRootName);
 
             //exit('1');
-            return $this->forward('AppUserdirectoryBundle:List:show', array('request' => $request, 'id' => $entityId));
+            return $this->forward('App\UserdirectoryBundle\Controller\ListController::showAction', array('request' => $request, 'id' => $entityId));
         }
 
         //exit('2');

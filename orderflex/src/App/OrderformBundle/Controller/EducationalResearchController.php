@@ -64,7 +64,7 @@ class EducationalResearchController extends Controller {
         $editForm = $this->createEditForm($entity);
         //$deleteForm = $this->createDeleteForm($id);
 
-        return $this->render('AppOrderformBundle:'.$type.':edit.html.twig', array(
+        return $this->render('AppOrderformBundle/'.$type.'/edit.html.twig', array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
             //'cycle' => 'show'
@@ -183,7 +183,7 @@ class EducationalResearchController extends Controller {
             //exit("form is not valid ???");
         }
 
-        return $this->render('AppOrderformBundle:'.$type.':edit.html.twig', array(
+        return $this->render('AppOrderformBundle/'.$type.'/edit.html.twig', array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
             //'cycle' => 'show'

@@ -1563,13 +1563,13 @@
     {% set myassistancesShow = false %}
 
     {#Reports#}
-    {% set myreports = controller( 'AppUserdirectoryBundle:User:myObjects', {'postData':postData,'subjectUserId':user.id,'tablename':'myreports','id':null,'name':null} ) %}
+    {% set myreports = controller( 'App\\UserdirectoryBundle\\Controller\\UserController::myObjectsAction', {'postData':postData,'subjectUserId':user.id,'tablename':'myreports','id':null,'name':null} ) %}
     {% if render(myreports)|length > threshold %}
         {% set myreportsShow = true %}     
     {% endif %}
 
     {#Assistants#}
-    {% set myassistants = controller( 'AppUserdirectoryBundle:User:myObjects', {'postData':postData,'subjectUserId':user.id,'tablename':'assistances','id':null,'name':null} ) %}
+    {% set myassistants = controller( 'App\\UserdirectoryBundle\\Controller\\UserController::myObjectsAction', {'postData':postData,'subjectUserId':user.id,'tablename':'assistances','id':null,'name':null} ) %}
     {% if render(myassistants)|length > threshold %}
         {% set myassistancesShow = true %} 
     {% endif %}
@@ -1581,7 +1581,7 @@
     {% for title in titleBosses %}
         {% for myboss in title['bosses'] %}
             {% if myboss and myboss.getId() %}
-                {% set table = controller( 'AppUserdirectoryBundle:User:myObjects', {'postData':postData,'subjectUserId':user.id,'tablename':'myboss','id':myboss.getId(),'name':myboss} ) %}
+                {% set table = controller( 'App\\UserdirectoryBundle\\Controller\\UserController::myObjectsAction', {'postData':postData,'subjectUserId':user.id,'tablename':'myboss','id':myboss.getId(),'name':myboss} ) %}
                 {% set element = {'table': table, 'element':myboss} %}
                 {% set mygroupsArr = mygroupsArr|merge({ (loop.index0): element}) %}
                 {% if render(table)|length > threshold %}
@@ -1615,7 +1615,7 @@
     {% set mylabsArr = {} %}
     {% for lab in labs %}
         {% if lab and lab.getId() %}
-            {% set table = controller( 'AppUserdirectoryBundle:User:myObjects', {'postData':postData,'tablename':'researchlabs','id':lab.getId(),'name':lab} ) %}
+            {% set table = controller( 'App\\UserdirectoryBundle\\Controller\\UserController::myObjectsAction', {'postData':postData,'tablename':'researchlabs','id':lab.getId(),'name':lab} ) %}
             {% set element = {'table': table, 'element':lab} %}
             {% set mylabsArr = mylabsArr|merge({ (loop.index0): element}) %}
             {% if render(table)|length > threshold %}
@@ -1724,7 +1724,7 @@
                             {% set bossidsArr = bossidsArr|merge([boss.getId]) %}
                         {% endfor %}
 
-                        {% set mybosses = controller( 'AppUserdirectoryBundle:User:myObjects', {'postData':postData,'tablename':'mybosses','id':bossidsArr,'name':null} ) %}
+                        {% set mybosses = controller( 'App\\UserdirectoryBundle\\Controller\\UserController::myObjectsAction', {'postData':postData,'tablename':'mybosses','id':bossidsArr,'name':null} ) %}
 
                         {% if render( mybosses )|length > threshold  %}
 
@@ -1918,7 +1918,7 @@
         {% endif %}
     {% endif %}
 
-    {% set auditlog = controller( 'AppUserdirectoryBundle:Logger:getAuditLog', {'postData':postData,'id':user.id, 'onlyheader':true} ) %}
+    {% set auditlog = controller( 'App\\UserdirectoryBundle\\Controller\\LoggerController::getAuditLogAction', {'postData':postData,'id':user.id, 'onlyheader':true} ) %}
 
     {#Audit Log#}
     {#{% set auditlog = true %}#}

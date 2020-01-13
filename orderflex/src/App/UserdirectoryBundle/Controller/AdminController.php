@@ -7577,7 +7577,7 @@ class AdminController extends Controller
 //            $dqlParameters['search'] = '%'.$search.'%';
 //        }
 
-        return $this->render('AppUserdirectoryBundle:Tree:composition-tree.html.twig',
+        return $this->render('AppUserdirectoryBundle/Tree/composition-tree.html.twig',
             array(
                 'title' => $mapper['title'],
                 'bundleName' => $mapper['bundleName'],

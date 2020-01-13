@@ -66,7 +66,7 @@ class SignUpController extends Controller
 
         $signUps = $em->getRepository('AppUserdirectoryBundle:SignUp')->findAll();
 
-        return $this->render('AppUserdirectoryBundle:SignUp:index.html.twig', array(
+        return $this->render('AppUserdirectoryBundle/SignUp/index.html.twig', array(
             'signUps' => $signUps,
             'title' => "Sign Up for ".$this->siteNameStr,
             'sitenamefull' => $this->siteNameStr,
@@ -171,7 +171,7 @@ class SignUpController extends Controller
                                         "An email was re-sent to the email address you provided " . $signUpDb->getEmail() .
                                         " with an activation link.<br>" .
                                         "Please click the link emailed to you to activate your account.";
-                                    return $this->render('AppUserdirectoryBundle:SignUp:confirmation.html.twig',
+                                    return $this->render('AppUserdirectoryBundle/SignUp/confirmation.html.twig',
                                         array(
                                             'title' => "Registration Confirmation",
                                             'messageSuccess' => $confirmation)
@@ -303,7 +303,7 @@ class SignUpController extends Controller
                 Please click the link emailed to you to activate your account.";
 
             //return $this->redirectToRoute('employees_signup_show', array('id' => $signUp->getId()));
-            return $this->render('AppUserdirectoryBundle:SignUp:confirmation.html.twig',
+            return $this->render('AppUserdirectoryBundle/SignUp/confirmation.html.twig',
                 array(
                     'title'=>"Registration Confirmation",
                     'messageSuccess'=>$confirmation)
@@ -318,7 +318,7 @@ class SignUpController extends Controller
         }
         //echo "captchaSiteKey=[".$captchaSiteKey."]<br>";
 
-        return $this->render('AppUserdirectoryBundle:SignUp:new.html.twig', array(
+        return $this->render('AppUserdirectoryBundle/SignUp/new.html.twig', array(
             'signUp' => $signUp,
             'form' => $form->createView(),
             'title' => "Sign Up for ".$this->siteNameStr,
@@ -435,7 +435,7 @@ class SignUpController extends Controller
 //                'notice',
 //                $confirmation
 //            );
-            return $this->render('AppUserdirectoryBundle:SignUp:confirmation.html.twig',
+            return $this->render('AppUserdirectoryBundle/SignUp/confirmation.html.twig',
                 array(
                     'title'=>"Invalid Activation Link",
                     'messageDanger'=>$confirmation
@@ -460,7 +460,7 @@ class SignUpController extends Controller
             );
             $signupUrl = ' <a href="'.$signupUrl.'">sign up</a> ';
             $confirmation = "This activation link has expired. Please ".$signupUrl." again.";
-            return $this->render('AppUserdirectoryBundle:SignUp:confirmation.html.twig',
+            return $this->render('AppUserdirectoryBundle/SignUp/confirmation.html.twig',
                 array(
                     'title'=>"Invalid Activation Link",
                     'messageDanger'=>$confirmation
@@ -478,7 +478,7 @@ class SignUpController extends Controller
             );
             $orderUrl = ' <a href="'.$orderUrl.'">log in</a> ';
             $confirmation = "This activation link has already been used. Please ".$orderUrl." using your account.";
-            return $this->render('AppUserdirectoryBundle:SignUp:confirmation.html.twig',
+            return $this->render('AppUserdirectoryBundle/SignUp/confirmation.html.twig',
                 array(
                     'title'=>"Invalid Activation Link",
                     'messageDanger'=>$confirmation
@@ -694,7 +694,7 @@ class SignUpController extends Controller
         }
         //exit('new');
 
-        return $this->render('AppUserdirectoryBundle:SignUp:activation.html.twig', array(
+        return $this->render('AppUserdirectoryBundle/SignUp/activation.html.twig', array(
             'signUp' => $signUp,
             'user' => $user,
             'cycle' => $cycle,
@@ -723,7 +723,7 @@ class SignUpController extends Controller
         ));
         //$form->handleRequest($request);
 
-        return $this->render('AppUserdirectoryBundle:SignUp:new.html.twig', array(
+        return $this->render('AppUserdirectoryBundle/SignUp/new.html.twig', array(
             'signUp' => $signUp,
             'title' => "Sign Up for ".$this->siteNameStr,
             'sitenamefull' => $this->siteNameStr,
@@ -753,7 +753,7 @@ class SignUpController extends Controller
             return $this->redirectToRoute($this->siteName.'_signup_edit', array('id' => $signUp->getId()));
         }
 
-        return $this->render('AppUserdirectoryBundle:SignUp:new.html.twig', array(
+        return $this->render('AppUserdirectoryBundle/SignUp/new.html.twig', array(
             'signUp' => $signUp,
             'title' => "Sign Up for ".$this->siteNameStr,
             'sitenamefull' => $this->siteNameStr,
@@ -1012,7 +1012,7 @@ class SignUpController extends Controller
                                     "An email was re-sent to the email address you provided ".$resetPasswordDb->getEmail().
                                     " with a password reset link.<br>".
                                     "Please click the link emailed to you to reset your password.";
-                                return $this->render('AppUserdirectoryBundle:SignUp:confirmation.html.twig',
+                                return $this->render('AppUserdirectoryBundle/SignUp/confirmation.html.twig',
                                     array(
                                         'title'=>"Password Reset Confirmation",
                                         'messageSuccess'=>$confirmation)
@@ -1096,7 +1096,7 @@ class SignUpController extends Controller
             //    "An email was sent to the email address you provided ".$resetPassword->getEmail()." with a password reset link.<br>
             //    Please click the link emailed to you to reset your password.";
             $confirmation = $this->confirmationForgotPassword();
-            return $this->render('AppUserdirectoryBundle:SignUp:confirmation.html.twig',
+            return $this->render('AppUserdirectoryBundle/SignUp/confirmation.html.twig',
                 array(
                     'title'=>"Password Reset Confirmation",
                     'messageSuccess'=>$confirmation)
@@ -1104,7 +1104,7 @@ class SignUpController extends Controller
         }
         //exit('new');
 
-        return $this->render('AppUserdirectoryBundle:SignUp:forgot-password.html.twig', array(
+        return $this->render('AppUserdirectoryBundle/SignUp/forgot-password.html.twig', array(
             'resetPassword' => $resetPassword,
             'form' => $form->createView(),
             'title' => "ORDER Password Reset",
@@ -1197,7 +1197,7 @@ class SignUpController extends Controller
         if( !$resetPassword ) {
             $confirmation = "This reset password link is invalid. Please make sure you have copied it from your email message correctly.";
             //exit($confirmation);
-            return $this->render('AppUserdirectoryBundle:SignUp:confirmation.html.twig',
+            return $this->render('AppUserdirectoryBundle/SignUp/confirmation.html.twig',
                 array(
                     'title'=>"Invalid Reset Password Link",
                     'messageDanger'=>$confirmation
@@ -1223,7 +1223,7 @@ class SignUpController extends Controller
             $resetPasswordUrl = ' <a href="'.$resetPasswordUrl.'">reset password</a> ';
             $confirmation = "This reset password link has expired. Please ".$resetPasswordUrl." again.";
             //exit($confirmation);
-            return $this->render('AppUserdirectoryBundle:SignUp:confirmation.html.twig',
+            return $this->render('AppUserdirectoryBundle/SignUp/confirmation.html.twig',
                 array(
                     'title'=>"Invalid Reset Password Link",
                     'messageDanger'=>$confirmation
@@ -1243,7 +1243,7 @@ class SignUpController extends Controller
             $confirmation = "This password reset link has already been used.".
                 " Please ".$orderUrl." using your new password.";
             //exit($confirmation);
-            return $this->render('AppUserdirectoryBundle:SignUp:confirmation.html.twig',
+            return $this->render('AppUserdirectoryBundle/SignUp/confirmation.html.twig',
                 array(
                     'title'=>"Invalid Reset Password Link",
                     'messageDanger'=>$confirmation
@@ -1257,7 +1257,7 @@ class SignUpController extends Controller
         if( count($users) == 0 ) {
             $confirmation = "The email address you have entered is not associated with any active accounts."; //keep this for reset password by linkID
             //exit($confirmation);
-            return $this->render('AppUserdirectoryBundle:SignUp:confirmation.html.twig',
+            return $this->render('AppUserdirectoryBundle/SignUp/confirmation.html.twig',
                 array(
                     'title'=>"Invalid Reset Password Link",
                     'messageDanger'=>$confirmation
@@ -1271,7 +1271,7 @@ class SignUpController extends Controller
         } else {
             $confirmation = "Logical Error: User not found by email ".$resetPassword->getEmail();
             //exit($confirmation);
-            return $this->render('AppUserdirectoryBundle:SignUp:confirmation.html.twig',
+            return $this->render('AppUserdirectoryBundle/SignUp/confirmation.html.twig',
                 array(
                     'title'=>"Invalid Reset Password Link",
                     'messageDanger'=>$confirmation
@@ -1371,7 +1371,7 @@ class SignUpController extends Controller
         }
         //exit('reset form');
 
-        return $this->render('AppUserdirectoryBundle:SignUp:reset-password-action.html.twig', array(
+        return $this->render('AppUserdirectoryBundle/SignUp/reset-password-action.html.twig', array(
             'resetPassword' => $resetPassword,
             'user' => $user,
             'cycle' => $cycle,

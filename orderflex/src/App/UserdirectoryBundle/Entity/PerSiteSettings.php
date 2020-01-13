@@ -24,6 +24,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use App\UserdirectoryBundle\Entity\BaseUserAttributes;
 
 /**
+ * Rename to "user_perSiteSettings"
+ *
  * @ORM\Entity
  * @ORM\Table(
  *  name="scan_perSiteSettings",

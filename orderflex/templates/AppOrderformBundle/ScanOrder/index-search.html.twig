@@ -94,7 +94,7 @@
         {#{{ render( controller( 'AppOrderformBundle:ScanOrder:getSearchView', { 'routeName':routename, 'service':service, 'filter':filter, 'search':search, 'searchObject':searchObject, 'page':page } ) ) }}#}
     {#{% endfor %}#}
 
-    {{ render( controller( 'AppOrderformBundle:ScanOrder:getSearchAllView', { 'routeName':routename, 'service':service, 'filter':filter, 'search':search, 'searchObjects':searchObjects, 'page':page } ) ) }}
+    {{ render( controller( 'App\\OrderformBundle\\Controller\\ScanOrderController:getSearchAllViewAction', { 'routeName':routename, 'service':service, 'filter':filter, 'search':search, 'searchObjects':searchObjects, 'page':page } ) ) }}
 
 
 {% endblock %}

@@ -182,7 +182,7 @@ class DefaultController extends Controller
      * Search for Accession Number
      *
      * @Route("/re-identify/", name="deidentifier_search")
-     * @Template("AppDeidentifierBundle:Search:search.html.twig")
+     * @Template("AppDeidentifierBundle/Search/search.html.twig")
      * @Method("GET")
      */
     public function searchAction( Request $request ) {

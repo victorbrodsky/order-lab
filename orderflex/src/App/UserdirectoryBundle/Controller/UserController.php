@@ -137,7 +137,7 @@ class UserController extends Controller
 //        $res = $this->indexUser($request,$params);
 //        $pagination = $res['entities'];
 //
-//        return $this->render('AppUserdirectoryBundle::Admin/users-content.html.twig',
+//        return $this->render('AppUserdirectoryBundle/Admin/users-content.html.twig',
 //            array(
 //                'entities' => $pagination,
 //                'sitename' => $this->container->getParameter('employees.sitename')
@@ -175,7 +175,7 @@ class UserController extends Controller
             return $response;
         }
 
-        $render = $this->render('AppUserdirectoryBundle::Admin/users-content.html.twig',
+        $render = $this->render('AppUserdirectoryBundle/Admin/users-content.html.twig',
             array(
                 'entities' => $pagination,
                 'sitename' => $this->container->getParameter('employees.sitename'),
@@ -4970,7 +4970,7 @@ class UserController extends Controller
                 $labelCount++;
             }
 
-            return $this->render('AppUserdirectoryBundle:Labels:avery_5160.html.twig', array(
+            return $this->render('AppUserdirectoryBundle/Labels/avery_5160.html.twig', array(
                 'userlabels' => $usersArr,
                 'labelperpage' => 30,    //30
                 'dotborders' => $dotborders,
@@ -5107,7 +5107,7 @@ class UserController extends Controller
                 $labelCount++;
             }
 
-            return $this->render('AppUserdirectoryBundle:Labels:avery_5160.html.twig', array(
+            return $this->render('AppUserdirectoryBundle/Labels/avery_5160.html.twig', array(
                 'userlabels' => $usersArr,
                 'labelperpage' => 30,    //30
                 'dotborders' => $dotborders,

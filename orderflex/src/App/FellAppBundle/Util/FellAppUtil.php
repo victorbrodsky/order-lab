@@ -52,12 +52,13 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Box\Spout\Common\Type;
-use Box\Spout\Writer\WriterFactory;
-use Box\Spout\Writer\Common\Creator\Style\BorderBuilder;
+
 use Box\Spout\Common\Entity\Style\Border;
 use Box\Spout\Common\Entity\Style\Color;
 use Box\Spout\Writer\Common\Creator\Style\StyleBuilder;
+use Box\Spout\Writer\Common\Creator\Style\BorderBuilder;
+use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
+
 
 class FellAppUtil {
 
@@ -1031,7 +1032,8 @@ class FellAppUtil {
         $author = $this->container->get('security.token_storage')->getToken()->getUser();
         $transformer = new DateTimeToStringTransformer(null,null,'d/m/Y');
 
-        $writer = WriterFactory::create(Type::XLSX);
+        //$writer = WriterFactory::create(Type::XLSX);
+        $writer = WriterEntityFactory::createXLSXWriter();
         $writer->openToBrowser($fileName);
 
         $headerStyle = (new StyleBuilder())
@@ -1079,7 +1081,30 @@ class FellAppUtil {
 //        $ews->setCellValue('O1', 'Total Rank');
 //        $ews->setCellValue('P1', 'Language Proficiency');
 //        $ews->setCellValue('Q1', 'Comments');
-        $writer->addRowWithStyle(
+//        $writer->addRowWithStyle(
+//            [
+//                'ID',                           //0 - A
+//                'First Name',                   //1 - B
+//                'Last Name',                    //2 - C
+//                'Start Year',                   //3 - D
+//                'Medical Degree',               //4 - E
+//                'Medical School',               //5 - F
+//                'Residency Institution',        //6 - G
+//                'References',                   //7 - H
+//                'Interview Score',              //8 - I
+//                'Interview Date',               //9 - J
+//                'Interviewer',                  //10 - K
+//                'Date',                         //11 - L
+//                'Academic Rank',                //12 - M
+//                'Personality Rank',             //13 - N
+//                'Potential Rank',               //14 - O
+//                'Total Rank',                   //15 - P
+//                'Language Proficiency',         //16 - Q
+//                'Comments',                     //17 - R
+//            ],
+//            $headerStyle
+//        );
+        $spoutRow = WriterEntityFactory::createRowFromArray(
             [
                 'ID',                           //0 - A
                 'First Name',                   //1 - B
@@ -1102,6 +1127,7 @@ class FellAppUtil {
             ],
             $headerStyle
         );
+        $writer->addRow($spoutRow);
 
         //$row = 2;
 
@@ -1162,7 +1188,9 @@ class FellAppUtil {
             //$ews->setCellValue('I'.$row, $transformer->transform($fellapp->getInterviewDate()));
             $data[9] = $transformer->transform($fellapp->getInterviewDate());
 
-            $writer->addRowWithStyle($data,$requestStyle);
+            //$writer->addRowWithStyle($data,$requestStyle);
+            $spoutRow = WriterEntityFactory::createRowFromArray($data, $requestStyle);
+            $writer->addRow($spoutRow);
 
             $allTotalRanks = 0;
             $interviewers = $fellapp->getInterviews();
@@ -1234,7 +1262,9 @@ class FellAppUtil {
                 //$ews->setCellValue('Q'.$row, $interview->getComment());
                 $data[17] = $interview->getComment();
 
-                $writer->addRowWithStyle($data,$requestStyle);
+                //$writer->addRowWithStyle($data,$requestStyle);
+                $spoutRow = WriterEntityFactory::createRowFromArray($data, $requestStyle);
+                $writer->addRow($spoutRow);
 
             } //for each interview
 
@@ -1257,7 +1287,9 @@ class FellAppUtil {
             //$ews->setCellValue('B'.$row, $allTotalRanks);
             $data[1] = $allTotalRanks;
 
-            $writer->addRowWithStyle($data, $footerStyle);
+            //$writer->addRowWithStyle($data, $footerStyle);
+            $spoutRow = WriterEntityFactory::createRowFromArray($data, $footerStyle);
+            $writer->addRow($spoutRow);
 
             //Avg Rank:
             $data = array();
@@ -1266,7 +1298,9 @@ class FellAppUtil {
             $data[0] = "Avg Rank:";
             //$ews->setCellValue('B'.$row, $totalScore);
             $data[1] = $totalScore;
-            $writer->addRowWithStyle($data, $footerStyle);
+            //$writer->addRowWithStyle($data, $footerStyle);
+            $spoutRow = WriterEntityFactory::createRowFromArray($data, $footerStyle);
+            $writer->addRow($spoutRow);
 
 
             //$row = $row + 2;
