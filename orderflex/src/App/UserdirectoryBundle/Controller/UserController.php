@@ -20,7 +20,7 @@ namespace App\UserdirectoryBundle\Controller;
 
 use App\UserdirectoryBundle\Entity\Book;
 use App\UserdirectoryBundle\Entity\Lecture;
-//use App\UserdirectoryBundle\Entity\Logger;
+use App\UserdirectoryBundle\Entity\Logger;
 use App\UserdirectoryBundle\Entity\PerSiteSettings;
 use App\UserdirectoryBundle\Entity\Publication;
 //use Symfony\Component\Translation\Translator;
@@ -76,10 +76,14 @@ use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use App\UserdirectoryBundle\Util\CropAvatar;
 use App\UserdirectoryBundle\Entity\Grant;
 
-
+//abstract class UserController extends AbstractController
 class UserController extends Controller
-//class UserController extends AbstractController
 {
+
+//    public static function getSubscribedServices()
+//    {
+//        return parent::getSubscribedServices();
+//    }
 
     /**
      * Template("AppUserdirectoryBundle/Default/about.html.twig")
