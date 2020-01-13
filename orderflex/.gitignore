@@ -16,6 +16,8 @@
 /vendor/
 
 /config/parameters.yml
+
+/config/parameters.yml
 ###< symfony/framework-bundle ###
 
 ###> symfony/phpunit-bridge ###
