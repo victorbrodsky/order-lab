@@ -77,6 +77,15 @@ yum install rh-php56-dom
 #/opt/rh/rh-php56/root/usr/bin/php -v
 #ln -s /opt/rh/rh-php56/root/usr/bin/php /usr/bin/php	
 
+########### Upgrade to PHP 7.4 #################
+Follow f_install_php74
+list installed php packages: yum list installed | grep -i php
+remove all php56 packages: yum remove php56...
+Set new PHP path: 
+export PATH=/opt/remi/php74/root/bin:$PATH
+yum -y install php74-php-mcrypt php74-php-cli php74-php-gd php74-curl php74-php-ldap php74-php-zip php74-php-fileinfo php74-php-opcache php74-php-fpm php74-php-mbstring php74-php-xml php74-php-json
+sudo yum -y install php74-php-pgsql php74-php-xmlreader php74-php-pdo php74-php-dom
+################################################
 	
 #Install everything in this funstion	
 f_install_util ()	
