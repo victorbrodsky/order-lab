@@ -1313,13 +1313,14 @@ class UserServiceUtil {
         if( $windows ) {
             $phpPath = "php";
         } else {
-            $process = new Process("which php");
-            $process->setTimeout(1800); //sec; 1800 sec => 30 min
-            $process->run();
-            if (!$process->isSuccessful()) {
-                throw new ProcessFailedException($process);
-            }
-            $phpPath = $process->getOutput();
+//            $process = new Process("which php");
+//            $process->setTimeout(1800); //sec; 1800 sec => 30 min
+//            $process->run();
+//            if (!$process->isSuccessful()) {
+//                throw new ProcessFailedException($process);
+//            }
+//            $phpPath = $process->getOutput();
+            $phpPath = "/opt/remi/php74/root/usr/bin/php";
         }
 
         $command = $phpPath . " " . $projectRoot . "/bin/console about";
