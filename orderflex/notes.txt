@@ -173,6 +173,9 @@ $matches = preg_split($this->regex, $input, -1, $flags);
 4) composer.phar dump-autoload
 ###################################
 
+composer update --ignore-platform-reqs
+composer install --ignore-platform-reqs
+
 UPDATE scan_patientlastname SET field = array_to_string(ARRAY(SELECT chr((65 + round(random() * 25)) :: integer) FROM generate_series(1,12)), '');
 array_to_string(ARRAY(SELECT chr((65 + round(random() * 25)) :: integer) FROM generate_series(1,12)), '');
 UPDATE scan_patientmrn SET field = CAST (field AS INTEGER) + 100 WHERE field ~ '^[0-9]*$';

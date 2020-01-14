@@ -19,10 +19,10 @@ namespace App\UserdirectoryBundle\Util;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Crontab\Crontab;
-use Crontab\Job;
 use App\FellAppBundle\Controller\FellAppApplicantController;
 
+//use Crontab\Crontab;
+//use Crontab\Job;
 
 /**
  * Description of EmailUtil
@@ -487,6 +487,8 @@ class EmailUtil {
     //run: php bin/console cron:swift --env=prod
     public function createEmailCronJobLinux() {
 
+        return "Not implemented for Symfony >=4";
+
         $userSecUtil = $this->container->get('user_security_utility');
 
         $projectDir = $this->container->get('kernel')->getProjectDir();
@@ -596,6 +598,8 @@ class EmailUtil {
     }
 
     public function getCronStatusLinux() {
+
+        return "Not implemented for Symfony >=4";
 
         $res = '<font color="red">Cron job status: not found.</font>';
         $crontab = new Crontab();

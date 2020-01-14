@@ -43,8 +43,8 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-use Crontab\Crontab;
-use Crontab\Job;
+//use Crontab\Crontab;
+//use Crontab\Job;
 
 class UserServiceUtil {
 
@@ -1605,6 +1605,8 @@ class UserServiceUtil {
     //3) UnpaidInvoiceReminder (at 6 am every Monday)
     public function createCronsLinux() {
 
+        return "Not implemented for Symfony >=4";
+
         $logger = $this->container->get('logger');
         $logger->notice("Creating cron jobs for Linux");
 
@@ -1740,6 +1742,8 @@ class UserServiceUtil {
         }
     }
     public function getCronStatusLinux($cronJobName) {
+
+        return "Not implemented for Symfony >=4";
 
         $crontab = new Crontab();
         $crontabRender = $crontab->render();
