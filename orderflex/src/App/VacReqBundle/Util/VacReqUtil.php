@@ -1783,12 +1783,6 @@ class VacReqUtil
             //$msg = "";
             //overlap condition: (StartA <= EndB) and (EndA >= StartB)
             if( ($thisDateRange['startDate'] <= $subjectDateRange['endDate']) && ($thisDateRange['endDate'] >= $subjectDateRange['startDate']) ) {
-                //$startDateStr = $thisDateRange['startDate']->format('Y/m/d');
-                //$endDateStr = $thisDateRange['endDate']->format('Y/m/d');
-                //$msg .= $subjectRequest->getId() . ": overlap dates ID=" . $request->getId() . "; status=" . $request->getStatus() . "; dates=" . $startDateStr . "-" . $endDateStr;
-                //echo $msg . "<br>";
-                //$logger->error($msg);
-                //$overlappedIds[] = $request->getId();
                 $overlappedRequests[] = $request;
             }
 
@@ -1800,7 +1794,23 @@ class VacReqUtil
         $subjectDateRange = $subjectRequest->getFinalStartEndDates($requestTypeStr);
         foreach( $overlappedRequests as $overlappedRequest ) {
             $thisDateRange = $overlappedRequest->getFinalStartEndDates($requestTypeStr);
-            if( ($thisDateRange['startDate'] == $subjectDateRange['startDate']) && ($thisDateRange['endDate'] == $subjectDateRange['endDate']) ) {
+            $thisStartDate = $thisDateRange['startDate'];
+            $subjectStartDate = $subjectDateRange['startDate'];
+            $thisEndDate = $thisDateRange['endDate'];
+            $subjectEndDate = $subjectDateRange['endDate'];
+//            if(
+//                ($thisDateRange['startDate'] == $subjectDateRange['startDate'])
+//                &&
+//                ($thisDateRange['endDate'] == $subjectDateRange['endDate']) )
+//            {
+//                return true;
+//            }
+            if(
+                ($thisStartDate == $subjectStartDate)
+                &&
+                ($thisEndDate == $subjectEndDate)
+            )
+            {
                 return true;
             }
         }

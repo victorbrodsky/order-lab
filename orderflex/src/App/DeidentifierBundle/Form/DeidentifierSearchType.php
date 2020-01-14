@@ -82,9 +82,12 @@ class DeidentifierSearchType extends AbstractType
         }
 
         $institutionAttr = array('class' => 'combobox combobox-width combobox-institution');
-        if( $this->params['attendingPhysicians-readonly'] ) {
-            $institutionAttr['readonly'] = true;
+        if( array_key_exists('attendingPhysicians-readonly',$this->params) ) {
+            if( $this->params['attendingPhysicians-readonly'] ) {
+                $institutionAttr['readonly'] = true;
+            }
         }
+
         $builder->add('institution', EntityType::class, array(
             'label' => 'Organizational Group (Institutional PHI Scope):',
             'class' => 'AppUserdirectoryBundle:Institution',

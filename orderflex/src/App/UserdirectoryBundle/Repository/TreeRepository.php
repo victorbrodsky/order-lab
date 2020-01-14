@@ -261,8 +261,11 @@ class TreeRepository extends NestedTreeRepository {
         //i.e. "WCM_NYP Collaboration" node has "Collaboration" type and has two collaboration institutions - WCM and NYP
         //collaborations
         foreach( $node->getCollaborationInstitutions() as $collaborationNode ) {
-            if( !in_array($collaborationNode, $collaborations) ) {
-                //echo "collaborationNode=".$collaborationNode."<br>";
+//            if( !in_array($collaborationNode, $collaborations) ) {
+//                //echo "collaborationNode=".$collaborationNode."<br>";
+//                $collaborations[] = $collaborationNode;
+//            }
+            if( array_search($collaborationNode, $collaborations, true) !== false ) {
                 $collaborations[] = $collaborationNode;
             }
         }
