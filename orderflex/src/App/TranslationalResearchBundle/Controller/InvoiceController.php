@@ -103,7 +103,7 @@ class InvoiceController extends Controller
         //$filterType = trim( $request->get('type') );
         $invoicetype = str_replace("-"," ",$invoicetype);
         $invoicetypeLowerCase = strtolower($invoicetype);
-        echo "invoicetype=$invoicetype<br>";
+        //echo "invoicetype=$invoicetype<br>";
 
         if( $invoicetype && $invoicetypeLowerCase == strtolower("All Invoices") ) {
             //filter nothing
@@ -609,7 +609,7 @@ class InvoiceController extends Controller
             $query->setParameters($dqlParameters);
         }
 
-        echo "query=".$query->getSql()."<br>";
+        //echo "query=".$query->getSql()."<br>";
 
         $paginationParams = array(
             'defaultSortFieldName' => 'invoice.id',
