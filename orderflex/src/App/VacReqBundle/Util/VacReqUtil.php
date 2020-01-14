@@ -1772,9 +1772,17 @@ class VacReqUtil
         $requests = $query->getResult();
         //EOF get all user approved vacation requests
 
-        $subjectDateRange = $subjectRequest->getFinalStartEndDates($requestTypeStr);
-
         $overlappedRequests = array();
+
+        $subjectDateRange = $subjectRequest->getFinalStartEndDates($requestTypeStr);
+        //dump($subjectDateRange);
+        if( !$subjectDateRange ) {
+            return $overlappedRequests;
+        }
+        if( is_array($subjectDateRange) && count($subjectDateRange) == 0 ) {
+            return $overlappedRequests;
+        }
+
         //$overlappedIds = array();
         foreach( $requests as $request ) {
             //echo 'check reqid='.$request->getId()."<br>";
@@ -1782,7 +1790,7 @@ class VacReqUtil
 
             $thisStartDate = $thisDateRange['startDate'];
             $subjectStartDate = $subjectDateRange['startDate'];
-            echo "subjectStartDate=$subjectStartDate <br>";
+            //echo "subjectStartDate=$subjectStartDate <br>";
             $thisEndDate = $thisDateRange['endDate'];
             $subjectEndDate = $subjectDateRange['endDate'];
             if(
@@ -1791,7 +1799,7 @@ class VacReqUtil
                 ($thisEndDate >= $subjectEndDate)
             )
             {
-                return true;
+                $overlappedRequests[] = $request;
             }
 
             //$msg = "";
