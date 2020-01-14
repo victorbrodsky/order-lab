@@ -1296,7 +1296,11 @@ class UserServiceUtil {
 
         $projectRoot = $this->container->get('kernel')->getProjectDir();
 
-        $command = "php " . $projectRoot . "/bin/console about";
+        //$phpPath = "php";
+        //$phpPath = "/opt/remi/php74/root/usr/bin/php";
+        $phpPath = exec("which php");
+
+        $command = $phpPath . " " . $projectRoot . "/bin/console about";
 
         $process = new Process($command);
         $process->setTimeout(1800); //sec; 1800 sec => 30 min
