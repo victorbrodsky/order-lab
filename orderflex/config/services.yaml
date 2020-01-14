@@ -61,6 +61,13 @@ services:
                             # fetching services directly from the container via $container->get() won't work.
                             # The best practice is to be explicit about your dependencies anyway.
 
+    #Doctrine\Common\Lexer\AbstractLexer: ~
+    #Doctrine\Common\Lexer\AbstractLexer:
+    #    class: App\Doctrine\Common\Lexer\AbstractLexer
+
+        #App\UserdirectoryBundle\Services\AbstractLexer:
+            #decorates: Doctrine\Common\Lexer\AbstractLexer
+
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
     #Remove autowire for Classes using extends vendor Classes: cna be done here, for example adding folder 'Query' (App\UserdirectoryBundle\Query) to exclude

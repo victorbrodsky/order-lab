@@ -158,6 +158,21 @@ creof/doctrine2-spatial => creof/geo-parser => doctrine/lexer
 Fix: convert input to string (AbstractLexer.php adding line $input = $input."";)
 $input = $input."";
 $matches = preg_split($this->regex, $input, -1, $flags);
+######### Solution: ##############
+1) Copy AbstractLexer to src/App/Doctrine\Common\Lexer\AbstractLexer
+2) make sure namespace is the original: "namespace Doctrine\Common\Lexer;"
+3) Modify composer (we have only one file in Doctrine\\Common\\Lexer\\):
+"autoload": {
+        "psr-4": {
+            "App\\": "src/App/",
+            "Doctrine\\Common\\Lexer\\": "src/App/UserdirectoryBundle/Services/"
+        },
+		"classmap": [
+            "src/Kernel.php"
+        ]
+    },
+4) composer.phar dump-autoload
+###################################
 
 UPDATE scan_patientlastname SET field = array_to_string(ARRAY(SELECT chr((65 + round(random() * 25)) :: integer) FROM generate_series(1,12)), '');
 array_to_string(ARRAY(SELECT chr((65 + round(random() * 25)) :: integer) FROM generate_series(1,12)), '');
