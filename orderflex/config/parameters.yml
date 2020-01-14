@@ -12,7 +12,7 @@ parameters:
     database_name_external: Aperio
     database_user_external: symfony2_aperio
     database_password_external: Symfony!2
-    locale: en
+    locale: en_US
     secret: 563fd817cf2c4f1f692d90650b6fba50f782ccc9
     delivery_strategy: realtime
     swift_delivery_addresses:
