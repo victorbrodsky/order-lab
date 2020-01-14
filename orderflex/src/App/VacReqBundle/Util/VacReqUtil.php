@@ -1782,6 +1782,7 @@ class VacReqUtil
 
             $thisStartDate = $thisDateRange['startDate'];
             $subjectStartDate = $subjectDateRange['startDate'];
+            echo "subjectStartDate=$subjectStartDate <br>";
             $thisEndDate = $thisDateRange['endDate'];
             $subjectEndDate = $subjectDateRange['endDate'];
             if(
