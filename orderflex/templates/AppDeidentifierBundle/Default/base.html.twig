@@ -152,7 +152,7 @@
                 {% if accessionNumber is not defined %}
                     {% set accessionNumber = null %}
                 {% endif %}
-                {{ render(controller('App\\DeidentifierBundle\\Controller\\DefaultController\\deidentifierNavbar', {'accessionTypeStr': accessionTypeStr, 'accessionTypeId': accessionTypeId, 'accessionNumber': accessionNumber})) }}
+                {{ render(controller('App\\DeidentifierBundle\\Controller\\DefaultController::deidentifierNavbarAction', {'accessionTypeStr': accessionTypeStr, 'accessionTypeId': accessionTypeId, 'accessionNumber': accessionNumber})) }}
             {% endblock %}
 
         </div>
