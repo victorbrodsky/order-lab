@@ -1,14 +1,14 @@
 monolog:
     handlers:
-#        main:
-#            type: rotating_file
-#            path: '%kernel.logs_dir%/%kernel.environment%.log'
-#            max_files: 0
-#            level: notice
-#        nested_error:
-#            type: stream
-#            path: '%kernel.logs_dir%/%kernel.environment%_ERROR.log'
-#            level: error
+        main:
+            type: rotating_file
+            path: '%kernel.logs_dir%/%kernel.environment%.log'
+            max_files: 0
+            level: notice
+        nested_error:
+            type: stream
+            path: '%kernel.logs_dir%/%kernel.environment%_ERROR.log'
+            level: error
 #        deprecation:
 #            type: stream
 #            path: "%kernel.logs_dir%/%kernel.environment%.deprecations.log"
@@ -17,15 +17,15 @@ monolog:
 #            handler: deprecation
 #            max_level: info
 #            channels: ["php"]
-        main:
-            type: fingers_crossed
-            action_level: error
-            handler: nested
-            excluded_http_codes: [404, 405]
-        nested:
-            type: stream
-            path: "%kernel.logs_dir%/%kernel.environment%.log"
-            level: debug
+#        main:
+#            type: fingers_crossed
+#            action_level: error
+#            handler: nested
+#            excluded_http_codes: [404, 405]
+#        nested:
+#            type: stream
+#            path: "%kernel.logs_dir%/%kernel.environment%.log"
+#            level: debug
         console:
             type: console
             process_psr_3_messages: false
