@@ -1298,7 +1298,29 @@ class UserServiceUtil {
 
         //$phpPath = "php";
         //$phpPath = "/opt/remi/php74/root/usr/bin/php";
-        $phpPath = exec("which php");
+        //$phpPath = exec("which php");
+
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            //echo 'This is a server using Windows!';
+            $windows = true;
+            $linux = false;
+        } else {
+            //echo 'This is a server not using Windows! Assume Linux';
+            $windows = false;
+            $linux = true;
+        }
+
+        if( $windows ) {
+            $phpPath = "php";
+        } else {
+            $process = new Process("which php");
+            $process->setTimeout(1800); //sec; 1800 sec => 30 min
+            $process->run();
+            if (!$process->isSuccessful()) {
+                throw new ProcessFailedException($process);
+            }
+            $phpPath = $process->getOutput();
+        }
 
         $command = $phpPath . " " . $projectRoot . "/bin/console about";
 
