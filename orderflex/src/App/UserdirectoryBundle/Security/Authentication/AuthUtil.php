@@ -161,8 +161,108 @@ class AuthUtil {
     }
 
 
-
     public function LdapAuthentication($token, $userProvider, $ldapType=1) {
+
+        //get clean username
+        $userSecUtil = $this->container->get('user_security_utility');
+        $usernameClean = $userSecUtil->createCleanUsername($token->getUsername());
+
+        $usernamePrefix = $userSecUtil->getUsernamePrefix($token->getUsername());
+
+        $searchRes = null;
+
+        //if user exists in ldap, try bind this user and password
+        $ldapRes = $this->ldapBind($usernameClean,$token->getCredentials(),$ldapType);
+        if( $ldapRes == NULL ) {
+            //exit('ldap failed');
+            //$this->logger->error("LdapAuthentication: can not bind user by usernameClean=[".$usernameClean."]; token=[".$token->getCredentials()."]");
+            $this->logger->error("LdapAuthentication: can not bind user by usernameClean=[".$usernameClean."];");
+
+            $user = $this->findUserByUsername($token->getUsername());
+            $this->validateFailedAttempts($user);
+
+            return NULL;
+        }
+        //exit('ldap success');
+
+        //check if user already exists in DB
+        $user = $this->findUserByUsername($token->getUsername());
+        //echo "Ldap user =".$user."<br>";
+
+        if( $user ) {
+            //echo "DB user found=".$user->getUsername()."<br>";
+            //exit();
+
+            $this->logger->notice("findUserByUsername: existing user found in DB by token->getUsername()=".$token->getUsername());
+
+            if( $this->canLogin($user) === false ) {
+                $this->logger->warning("LdapAuthentication: User cannot login ".$user);
+                return NULL;
+            }
+
+            return $user;
+        } else {
+            $this->logger->warning("findUserByUsername: Can not find existing user in DB by token->getUsername()=".$token->getUsername());
+        }
+
+        //echo "1<br>";
+
+        //////////////////// constract a new user ////////////////////
+
+        $searchRes = $this->searchLdap($usernameClean,$ldapType);
+
+        //$userSearchRequired = true;
+        $userSearchRequired = false; //auth without required user search is more flexible if admin bind failed
+        if( $searchRes == NULL || count($searchRes) == 0 ) {
+            $this->logger->error("LdapAuthentication: can not find user by usernameClean=" . $usernameClean);
+            return NULL;
+        } else {
+            $this->logger->notice("LdapAuthentication: user found by  usernameClean=" . $usernameClean);
+        }
+
+        $this->logger->notice("LdapAuthentication: create a new user found by token->getUsername()=".$token->getUsername());
+        $user = $userSecUtil->constractNewUser($token->getUsername());
+        //echo "user=".$user->getUsername()."<br>";
+
+        $user->setCreatedby('ldap');
+
+        //modify user: set keytype and primary public user id
+        $userkeytype = $userSecUtil->getUsernameType($usernamePrefix);
+
+        if( !$userkeytype ) {
+            $userUtil = new UserUtil();
+            $count_usernameTypeList = $userUtil->generateUsernameTypes($this->em);
+            $userkeytype = $userSecUtil->getUsernameType($this->usernamePrefix);
+            //echo "userkeytype=".$userkeytype."<br>";
+        }
+
+        $user->setKeytype($userkeytype);
+        $user->setPrimaryPublicUserId($usernameClean);
+
+        if( $searchRes ) {
+            $user->setEmail($searchRes['mail']);
+            $user->setFirstName($searchRes['givenName']);
+            $user->setLastName($searchRes['lastName']);
+            $user->setDisplayName($searchRes['displayName']);
+            $user->setPreferredPhone($searchRes['telephoneNumber']);
+        }
+
+        //cwid is admin cwid
+        //if( $user->getUsername() == "cwid1_@_ldap-user" || $user->getUsername() == "cwid2_@_ldap-user" ) {
+        //    $user->addRole('ROLE_PLATFORM_ADMIN');
+        //}
+
+        //exit('ldap ok');
+
+        //////////////////// save user to DB ////////////////////
+        $userManager = $this->container->get('fos_user.user_manager');
+        $userManager->updateUser($user);
+
+        return $user;
+    }
+
+    //Do not use search before bind. Search might take a long time
+    public function LdapAuthenticationWithSearch($token, $userProvider, $ldapType=1) {
 
         //$this->logger->notice("LdapAuthentication: LDAP authenticate user by token->getUsername()=".$token->getUsername());
         //echo "LdapAuthentication<br>";
@@ -185,9 +285,11 @@ class AuthUtil {
         //$userSearchRequired = true;
         $userSearchRequired = false; //auth without required user search is more flexible if admin bind failed
         if( $withNewUserPrePopulation ) {
+
             //////////////// first search this user if exists in ldap directory ////////////////
             $searchRes = $this->searchLdap($usernameClean,$ldapType);
             //////////////// EOF first search this user if exists in ldap directory ////////////////
+
             if( $searchRes == NULL || count($searchRes) == 0 ) {
                 $this->logger->error("LdapAuthentication: can not find user by usernameClean=" . $usernameClean);
                 //$this->logger->error("LdapAuthentication: can not find user by usernameClean=[" . $usernameClean . "]; token=[" . $token->getCredentials() . "]");
