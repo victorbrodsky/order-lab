@@ -4,16 +4,15 @@ https://symfonycasts.com/screencast/symfony4-upgrade/sf34-deprecations
 Branches: https://nvie.com/posts/a-successful-git-branching-model/
 ### Migrating to 3.4, adapt the source code: ###
 1)Rename namespaces and DB's entityNameSpace to App
-2) Replace entitynamespace Oleg to App in Document.php, FosComment.php, GeneralEntity.php, Logger.php and all lists
+2) Replace entitynamespace Oleg to App in Document.php, FosComment.php, GeneralEntity.php, Logger.php and all lists (enough to execute SQL1 and SQL2))
 UPDATE public.user_logger SET entitynamespace = REPLACE(entitynamespace,'Oleg','App');
 UPDATE public.user_foscomment SET entitynamespace = REPLACE(entitynamespace,'Oleg','App');
 UPDATE public.user_generalentity SET entitynamespace = REPLACE(entitynamespace,'Oleg','App');
 UPDATE public.user_document SET entitynamespace = REPLACE(entitynamespace,'Oleg','App');
 UPDATE * SET entitynamespace = REPLACE(entitynamespace,'Oleg','App') WHERE entitynamespace IS NOT NULL AND entitynamespace LIKE '%Oleg%';
 #Update all tables with column='entitynamespace'
-SELECT * FROM   INFORMATION_SCHEMA.columns WHERE  COLUMN_NAME = 'entitynamespace';
-SELECT * FROM   INFORMATION_SCHEMA.columns WHERE  COLUMN_NAME = 'entitynamespace' AND entitynamespace IS NOT NULL AND entitynamespace LIKE '%Oleg%';
-############## Update all tables with column='entitynamespace' ################
+#Get all tables with entitynamespace: SELECT * FROM   INFORMATION_SCHEMA.columns WHERE  COLUMN_NAME = 'entitynamespace';
+############## SQL1) Update all tables with column='entitynamespace' ################
 DO
 $do$
 DECLARE
@@ -34,7 +33,7 @@ BEGIN
 END;
 $do$;
 LANGUAGE plpgsql; --optional
-############# Update all tables with column='receivedvalueentitynamespace' #################
+############# SQL2) Update all tables with column='receivedvalueentitynamespace' #################
 DO
 $do$
 DECLARE
