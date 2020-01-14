@@ -1780,11 +1780,24 @@ class VacReqUtil
             //echo 'check reqid='.$request->getId()."<br>";
             $thisDateRange = $request->getFinalStartEndDates($requestTypeStr);
 
+            $thisStartDate = $thisDateRange['startDate'];
+            $subjectStartDate = $subjectDateRange['startDate'];
+            $thisEndDate = $thisDateRange['endDate'];
+            $subjectEndDate = $subjectDateRange['endDate'];
+            if(
+                ($thisStartDate <= $subjectStartDate)
+                &&
+                ($thisEndDate >= $subjectEndDate)
+            )
+            {
+                return true;
+            }
+
             //$msg = "";
             //overlap condition: (StartA <= EndB) and (EndA >= StartB)
-            if( ($thisDateRange['startDate'] <= $subjectDateRange['endDate']) && ($thisDateRange['endDate'] >= $subjectDateRange['startDate']) ) {
-                $overlappedRequests[] = $request;
-            }
+//            if( ($thisDateRange['startDate'] <= $subjectDateRange['endDate']) && ($thisDateRange['endDate'] >= $subjectDateRange['startDate']) ) {
+//                $overlappedRequests[] = $request;
+//            }
 
         }//foreach requests
         return $overlappedRequests;
@@ -1798,13 +1811,6 @@ class VacReqUtil
             $subjectStartDate = $subjectDateRange['startDate'];
             $thisEndDate = $thisDateRange['endDate'];
             $subjectEndDate = $subjectDateRange['endDate'];
-//            if(
-//                ($thisDateRange['startDate'] == $subjectDateRange['startDate'])
-//                &&
-//                ($thisDateRange['endDate'] == $subjectDateRange['endDate']) )
-//            {
-//                return true;
-//            }
             if(
                 ($thisStartDate == $subjectStartDate)
                 &&
@@ -1813,6 +1819,14 @@ class VacReqUtil
             {
                 return true;
             }
+//            if(
+//                ($thisDateRange['startDate'] == $subjectDateRange['startDate'])
+//                &&
+//                ($thisDateRange['endDate'] == $subjectDateRange['endDate']) )
+//            {
+//                return true;
+//            }
+
         }
         return false;
     }
