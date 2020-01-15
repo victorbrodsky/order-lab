@@ -56,6 +56,7 @@ class ReportGenerator {
 
     protected $em;
     protected $container;
+    protected $session;
     //protected $templating;
     protected $uploadDir;
     protected $processes;
@@ -65,9 +66,10 @@ class ReportGenerator {
     protected $runningGenerationReport;
     //protected $env;
 
-    public function __construct( EntityManagerInterface $em, ContainerInterface $container ) {
+    public function __construct( EntityManagerInterface $em, ContainerInterface $container, Session $session ) {
         $this->em = $em;
         $this->container = $container;
+        $this->session = $session;
         //$this->templating = $templating;
 
         $this->uploadDir = 'Uploaded';
@@ -821,7 +823,8 @@ class ReportGenerator {
         //$logger->notice("before knp_snappy generate: pageUrl=".$pageUrl);
 
         //take care of authentication
-        $session = $this->container->get('session');
+        //$session = $this->container->get('session');
+        $session = $this->session;
         $session->save();
         session_write_close();
         $PHPSESSID = $session->getId();

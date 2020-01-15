@@ -26,16 +26,29 @@ namespace App\FellAppBundle\Command;
 
 
 use App\FellAppBundle\Util\ReportGeneratorManager;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+//use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 
-class GenerateReportRunCommand extends ContainerAwareCommand {
+class GenerateReportRunCommand extends Command {
 
+    protected static $defaultName = 'fellapp:generatereportrun';
+    private $container;
+    private $em;
+
+    public function __construct(ContainerInterface $container, EntityManagerInterface $em)
+    {
+        parent::__construct();
+
+        $this->container = $container;
+        $this->em = $em;
+    }
 
     protected function configure() {
         $this
@@ -52,7 +65,7 @@ class GenerateReportRunCommand extends ContainerAwareCommand {
     //php bin/console fellapp:generatereportrun
     protected function execute(InputInterface $input, OutputInterface $output) {
 
-        $logger = $this->getContainer()->get('logger');
+        $logger = $this->container->get('logger');
         $logger->notice("Run Command: try run");
         //echo "testing Run Command: try run<br>"; //testing
         
@@ -61,7 +74,7 @@ class GenerateReportRunCommand extends ContainerAwareCommand {
         //$argument = $input->getArgument('argument');
         //echo "argument=".$argument."<br>";
 
-        $fellappRepGen = $this->getContainer()->get('fellapp_reportgenerator');
+        $fellappRepGen = $this->container->get('fellapp_reportgenerator');
 
         ///////// testing /////////
         //$result = $fellappRepGen->testCmd();

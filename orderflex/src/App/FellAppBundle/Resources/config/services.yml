@@ -35,7 +35,7 @@ services:
         public: true
         class: App\FellAppBundle\Util\ReportGenerator
 #        arguments: ["@doctrine.orm.entity_manager", "@service_container", "@templating"]
-        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+        arguments: ["@doctrine.orm.entity_manager", "@service_container", "@session"]
 
     fellapp_googlesheetmanagement:
         autowire: true

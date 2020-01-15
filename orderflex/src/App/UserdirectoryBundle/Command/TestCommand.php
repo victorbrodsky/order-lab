@@ -25,28 +25,42 @@
 namespace App\UserdirectoryBundle\Command;
 
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+//use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 
-class TestCommand extends ContainerAwareCommand
+//class TestCommand extends ContainerAwareCommand
+class TestCommand extends Command
 {
+    protected static $defaultName = 'app:simple-tests';
+    private $container;
+    private $em;
+
+    public function __construct(ContainerInterface $container, EntityManagerInterface $em)
+    {
+        parent::__construct();
+
+        $this->container = $container;
+        $this->em = $em;
+    }
 
     protected function configure() {
         $this
-            ->setName('cron:simple-tests')
+            //->setName('app:simple-tests')
             ->setDescription('Run simple tests');
     }
 
-    //php app/console cron:simple-tests --env=prod
+    //php bin/console app:simple-tests --env=prod
     protected function execute(InputInterface $input, OutputInterface $output) {
 
-        $logger = $this->getContainer()->get('logger');
+        $logger = $this->container->get('logger');
 
-        $fellappRepGen = $this->getContainer()->get('fellapp_reportgenerator');
-        $transresPdfUtil = $this->getContainer()->get('transres_pdf_generator');
+        $fellappRepGen = $this->container->get('fellapp_reportgenerator');
+        $transresPdfUtil = $this->container->get('transres_pdf_generator');
         $fellappApplicationId = 1;
 
         //$reportsUploadPathFellApp = "Reports";
@@ -55,7 +69,7 @@ class TestCommand extends ContainerAwareCommand
         $uploadReportPath = "Uploaded/fellapp/Reports";
 
         ///usr/local/bin/order-lab/Scanorders2/web/Uploaded/fellapp/Reports
-        $reportPath = $this->getContainer()->get('kernel')->getRootDir() . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $uploadReportPath. DIRECTORY_SEPARATOR;
+        $reportPath = $this->container->get('kernel')->getRootDir() . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $uploadReportPath. DIRECTORY_SEPARATOR;
 
         $outdir = $reportPath . 'temp_' . $fellappApplicationId . DIRECTORY_SEPARATOR;
 
@@ -81,6 +95,8 @@ class TestCommand extends ContainerAwareCommand
 
         $resultTotal = implode("\r\n",$resultArr);
         $output->writeln($resultTotal);
+
+        return 0;
     }
 
 

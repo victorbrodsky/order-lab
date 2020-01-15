@@ -102,6 +102,17 @@ services:
 #        tags:
 #            - { name: monolog.logger, channel: app }
 
+    ################## Commands ##################
+    App\UserdirectoryBundle\Command\TestCommand:
+        tags:
+            - { name: 'console.command', command: 'app:simple-tests' }
+
+    App\FellAppBundle\Command\GenerateReportRunCommand:
+        tags:
+            - { name: 'console.command', command: 'fellapp:generatereportrun' }
+
+    ################## EOF Commands ##################
+
     logger:
         alias: 'monolog.logger'
         public: true
