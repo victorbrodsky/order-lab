@@ -49,8 +49,12 @@ class ListFilterType extends AbstractType
             'attr' => array('class' => 'form-control form-control-modif limit-font-size submit-on-enter-field'),
         ));
 
-        $className = $this->params['className'];
-        
+        if( isset($this->params['className']) ) {
+            $className = $this->params['className'];
+        } else {
+            $className = NULL;
+        }
+
         if( $className && $className == "AntibodyList" ) {
             $types = array(
                 "default" => "default",
