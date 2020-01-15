@@ -1056,13 +1056,13 @@ class PatientController extends Controller
                     //throw new \Exception( 'There is no dir '.$dir );
                 }
                 if( !copy($originalFile,$filename) ) {
-                    throw new \Exception( 'Copy Failed: the file '.$filename.' does not exist. Please copy this file to web/'.$dir );
+                    throw new \Exception( 'Copy Failed: the file '.$filename.' does not exist. Please copy this file to public/'.$dir );
                 }
 
             }
 
             if( !file_exists($filename) ) {
-                throw new \Exception( 'The file '.$filename.' does not exist. Please copy this file to web/'.$dir );
+                throw new \Exception( 'The file '.$filename.' does not exist. Please copy this file to public/'.$dir );
             }
         }
 

@@ -552,7 +552,7 @@ class RecLetterUtil {
         }
 
         $root = $this->container->get('kernel')->getRootDir();
-        $fullpath = $root . '/../web/'.$path;
+        $fullpath = $root . '/../public/'.$path;
         $target_file = $fullpath . "/" . $file->getTitle() . $fileExtStr;
 
         //check if file already exists by file path

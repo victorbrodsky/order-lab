@@ -1370,7 +1370,7 @@ class UserServiceUtil {
         $old_path = getcwd();
         //echo "webPath=$old_path<br>";
 
-        $deploy_path = str_replace("web","",$old_path);
+        $deploy_path = str_replace("public","",$old_path);
         //echo "deploy_path=$deploy_path<br>";
         //exit('111');
 
@@ -1907,7 +1907,11 @@ class UserServiceUtil {
         return $oExec;
     }
 
+    public function getPublicFolderName() {
+        $projectDir = $this->container->getParameter('kernel.project_dir');
 
+        exit("projectDir=$projectDir");
+    }
 
 
 

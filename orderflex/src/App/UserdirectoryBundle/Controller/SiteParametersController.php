@@ -179,7 +179,7 @@ class SiteParametersController extends Controller
         //get absolute path prefix for Upload folder
         $rootDir = $this->container->get('kernel')->getRootDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\scanorder\Scanorders2\app
         $rootDir = str_replace('app','',$rootDir);
-        $uploadPath = $rootDir . 'web'.DIRECTORY_SEPARATOR;
+        $uploadPath = $rootDir . 'public' . DIRECTORY_SEPARATOR;
 
         return array(
             'entity'      => $entity,

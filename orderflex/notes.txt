@@ -265,3 +265,6 @@ stylesheets:
 https://symfony.com/blog/encore-0-21-0-webpack-4-support-copy-files-support-webpackencorebundle
 philetaylor/assetic-bundle - The AsseticBundle provides integration of the Assetic library into the Symfony 4 framework.
 php bin/console about
+
+
+/opt/phantomjs-2.1.1-linux-x86_64/bin/phantomjs --disk-cache=true /opt/order-lab/orderflex/src/App/UserdirectoryBundle/Util/rasterize.js http://localhost/order/translational-research/work-request/download-packing-slip-pdf/15079 /opt/order-lab/orderflex/src/../web/Uploaded/transres/PackingSlipPDF/PackingSlip-PDF-APCP2173-REQ15079-Ivanov-01-15-2020.pdf "A4"

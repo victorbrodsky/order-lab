@@ -504,11 +504,11 @@ class Document {
         //From console getcwd()=C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2
         $fullPath = getcwd();
 
-        if( strpos($fullPath, 'web') !== false ) {
+        if( strpos($fullPath, 'public') !== false ) {
             //web exists
         } else {
             //web does not exist
-            $fullPath = $fullPath.DIRECTORY_SEPARATOR."web";
+            $fullPath = $fullPath.DIRECTORY_SEPARATOR."public";
         }
 
         $fullPath = $fullPath . DIRECTORY_SEPARATOR . $this->getUploadDirectory() . DIRECTORY_SEPARATOR . $this->getUniquename();

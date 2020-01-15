@@ -503,7 +503,7 @@ class ReportGenerator {
         //$logger->notice("uploadReportPath=".$uploadReportPath);
 
         //$reportPath = $this->container->get('kernel')->getRootDir() . '/../web/' . $uploadReportPath;
-        $reportPath = $this->container->get('kernel')->getRootDir() . DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'web'.DIRECTORY_SEPARATOR. $uploadReportPath;
+        $reportPath = $this->container->get('kernel')->getRootDir() . DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'public'.DIRECTORY_SEPARATOR. $uploadReportPath;
 
         //$logger->notice("reportPath(before realpath)=".$reportPath);
         //$reportPath = realpath($reportPath);
@@ -1618,7 +1618,7 @@ class ReportGenerator {
         //echo "serverPath=".$serverPath." ";
 
         //$applicationOutputFilePath = getcwd() . "/web/" . $avatar->getUploadDirectory() . "/test/test.pdf";
-        $applicationOutputFilePath = getcwd() . DIRECTORY_SEPARATOR . "web" . DIRECTORY_SEPARATOR . $avatar->getUploadDirectory() . DIRECTORY_SEPARATOR. "test".DIRECTORY_SEPARATOR."test.pdf";
+        $applicationOutputFilePath = getcwd() . DIRECTORY_SEPARATOR . "public" . DIRECTORY_SEPARATOR . $avatar->getUploadDirectory() . DIRECTORY_SEPARATOR. "test".DIRECTORY_SEPARATOR."test.pdf";
         echo "path=".$applicationOutputFilePath." ";
 
         $this->generateApplicationPdf($fellapp->getId(),$applicationOutputFilePath);

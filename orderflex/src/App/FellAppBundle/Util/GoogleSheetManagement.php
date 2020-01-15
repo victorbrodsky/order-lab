@@ -371,7 +371,7 @@ class GoogleSheetManagement {
             $root = $this->container->get('kernel')->getRootDir();
             //echo "root=".$root."<br>";
             //$fullpath = $this->get('kernel')->getRootDir() . '/../web/'.$path;
-            $fullpath = $root . '/../web/'.$path;
+            $fullpath = $root . '/../public/'.$path;
             $target_file = $fullpath . "/" . $fileUniqueName;
 
             //$target_file = $fullpath . 'uploadtestfile.jpg';

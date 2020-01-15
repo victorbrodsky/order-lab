@@ -1202,7 +1202,7 @@ class UserSecurityUtil {
 
             //document absolute path
             //$documentPath = $document->getAbsoluteUploadFullPath();
-            $documentPath = $this->container->get('kernel')->getRootDir() . '/../web/' . $document->getUploadDirectory().'/'.$document->getUniquename();
+            $documentPath = $this->container->get('kernel')->getRootDir() . '/../public/' . $document->getUploadDirectory().'/'.$document->getUniquename();
             //$documentPath = "Uploaded/scan-order/documents/test.jpeg";
             //echo "documentPath=".$documentPath."<br>";
 
@@ -1370,7 +1370,7 @@ class UserSecurityUtil {
 
     //return absolute file name on the server which will work for web and command
     public function getAbsoluteServerFilePath( $document ) {
-        return realpath($this->container->get('kernel')->getRootDir() . "/../web/" . $document->getServerPath());
+        return realpath($this->container->get('kernel')->getRootDir() . "/../public/" . $document->getServerPath());
     }
 
     //checkAndAddPermissionToRole($role,"Submit a Vacation Request","VacReqRequest","create")

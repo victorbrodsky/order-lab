@@ -61,7 +61,7 @@ class PdfGenerator
         }
         $uploadReportPath = $this->uploadDir.'/'.$reportsUploadPath;
 
-        $reportPath = $this->container->get('kernel')->getRootDir() . '/../web/' . $uploadReportPath;
+        $reportPath = $this->container->get('kernel')->getRootDir() . '/../public/' . $uploadReportPath;
         //echo "reportPath=".$reportPath."<br>";
         //$reportPath = realpath($reportPath);
         //echo "reportPath=".$reportPath."<br>";
@@ -366,7 +366,7 @@ class PdfGenerator
         }
         $uploadReportPath = $this->uploadDir.'/'.$reportsUploadPath;
 
-        $reportPath = $this->container->get('kernel')->getRootDir() . '/../web/' . $uploadReportPath;
+        $reportPath = $this->container->get('kernel')->getRootDir() . '/../public/' . $uploadReportPath;
         //echo "reportPath=".$reportPath."<br>";
         //$reportPath = realpath($reportPath);
         //echo "reportPath=".$reportPath."<br>";

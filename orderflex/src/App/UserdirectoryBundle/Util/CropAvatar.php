@@ -37,7 +37,7 @@ class CropAvatar {
     function __construct($src, $data, $file, $uploadPath) {
 
         //echo "__DIR__=".__DIR__." ";
-        $webPath = __DIR__.'/../../../../web/';
+        $webPath = __DIR__.'/../../../../public/';
         //$webPath = __DIR__."\..\..\..\..\..\web\"";
         //echo "webPath=".$webPath." ";
 

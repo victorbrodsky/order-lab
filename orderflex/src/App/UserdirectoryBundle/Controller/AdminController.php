@@ -374,7 +374,7 @@ class AdminController extends Controller
         $old_path = getcwd();
         //echo "webPath=$old_path<br>";
 
-        $deploy_path = str_replace("web","",$old_path);
+        $deploy_path = str_replace("public","",$old_path);
         echo "deploy_path=$deploy_path<br>";
         //exit('111');
 

@@ -55,7 +55,7 @@ class TestCommand extends ContainerAwareCommand
         $uploadReportPath = "Uploaded/fellapp/Reports";
 
         ///usr/local/bin/order-lab/Scanorders2/web/Uploaded/fellapp/Reports
-        $reportPath = $this->getContainer()->get('kernel')->getRootDir() . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'web' . DIRECTORY_SEPARATOR . $uploadReportPath. DIRECTORY_SEPARATOR;
+        $reportPath = $this->getContainer()->get('kernel')->getRootDir() . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $uploadReportPath. DIRECTORY_SEPARATOR;
 
         $outdir = $reportPath . 'temp_' . $fellappApplicationId . DIRECTORY_SEPARATOR;
 
