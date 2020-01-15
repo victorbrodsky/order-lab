@@ -865,7 +865,7 @@ class GoogleSheetManagement {
             $logger->warning('$credentialsJsonFile is not defined in Site Parameters. $credentialsJsonFile='.$credentialsJsonFile);
         }
 
-        $client_email = $userSecUtil->getSiteSettingParameter('clientEmailFellApp');
+        //$client_email = $userSecUtil->getSiteSettingParameter('clientEmailFellApp');
 
 
         $client = new \Google_Client();
