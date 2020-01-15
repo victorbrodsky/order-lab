@@ -160,7 +160,9 @@
                         {{ loop.index }}
                     </td>
                     <td style="color: {{ headlineColor }}">
-                        {{ dataResult.system.getOptimalName() }}
+                        {% if dataResult.system %}
+                            {{ dataResult.system.getOptimalName() }}
+                        {% endif %}
                     </td>
                     <td class="barcode-value" style="color: {{ headlineColor }}">
                         {{ dataResult.barcode }}
