@@ -104,7 +104,7 @@ class CalllogTest extends WebTestBase
             $this->assertNotEmpty(
                 $originalFormnodeValue,
                 "Original formNode value is empty: 
-                objectTypeText=".$objectTypeText.
+                objectTypeTextId=".$objectTypeText->getId().
                 "; formNode=".$formNode
             );
 
