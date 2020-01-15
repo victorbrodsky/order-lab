@@ -101,7 +101,12 @@ class CalllogTest extends WebTestBase
 
             $originalFormnodeValue = $objectTypeText->getValue();
             $originalFormnodeValue = trim($originalFormnodeValue);
-            $this->assertNotEmpty($originalFormnodeValue,"Original formNode value is empty");
+            $this->assertNotEmpty(
+                $originalFormnodeValue,
+                "Original formNode value is empty: 
+                objectTypeText=".$objectTypeText.
+                "; formNode=".$formNode
+            );
 
             $formNodeUtil = $this->testContainer->get('user_formnode_utility');
             $complexRes = $formNodeUtil->getFormNodeValueByFormnodeAndReceivingmapper($formNode,$mapper);
