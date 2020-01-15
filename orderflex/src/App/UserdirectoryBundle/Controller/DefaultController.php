@@ -87,7 +87,7 @@ class DefaultController extends Controller
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
-        $logDir = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . "var" . DIRECTORY_SEPARATOR . "logs";
+        $logDir = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . "var" . DIRECTORY_SEPARATOR . "log";
 
         $systemLogFile = $logDir . DIRECTORY_SEPARATOR . "test_ERROR.log";
 
