@@ -68,7 +68,7 @@ class CalllogTest extends WebTestBase
         $dql =  $treeRepository->createQueryBuilder("list");
         $dql->select('list');
         $dql->where("list.entityName = :entityName AND list.entityNamespace = :entityNamespace");
-        $dql->andWhere('list.value IS NOT NULL');
+        $dql->andWhere("list.value IS NOT NULL AND list.value <> ''");
         $dql->andWhere('list.entityId IS NOT NULL');
         $dql->andWhere('list.formNode IS NOT NULL');
 
@@ -86,7 +86,7 @@ class CalllogTest extends WebTestBase
         $objectTypeTexts = $query->getResult();
 
         if( count($objectTypeTexts) > 0 ) {
-            $objectTypeText = $objectTypeTexts[0];
+            $objectTypeText = end($objectTypeTexts);
             $formNode = $objectTypeText->getFormNode();
 
             if( !$formNode ) {
