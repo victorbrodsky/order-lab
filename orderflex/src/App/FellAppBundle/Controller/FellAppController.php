@@ -1304,6 +1304,12 @@ class FellAppController extends Controller {
     private function createFellAppEditForm( FellowshipApplication $entity, $cycle )
     {
         $user = $this->get('security.token_storage')->getToken()->getUser();
+        $fellappUtil = $this->container->get('fellapp_util');
+
+        $fellTypes = $fellappUtil->getFellowshipTypesByInstitution(true);
+        if( count($fellTypes) == 0 ) {
+            return array();
+        }
 
         $params = array(
             'cycle' => $cycle,
@@ -1312,7 +1318,8 @@ class FellAppController extends Controller {
             'cloneuser' => null,
             'roles' => $user->getRoles(),
             'container' => $this->container,
-            'cycle_type' => "update"
+            'cycle_type' => "update",
+            'fellappTypes' => $fellTypes
         );
         //Edit Form
         $form = $this->createForm( FellowshipApplicationType::class, $entity, array(

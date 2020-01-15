@@ -122,8 +122,8 @@ class UserController extends Controller
 //        exit('eof id test');
 
         //testing public dir
-        $userServiceUtil = $this->get('user_service_utility');
-        $userServiceUtil->getPublicFolderName();
+        //$userServiceUtil = $this->get('user_service_utility');
+        //$userServiceUtil->getPublicFolderName();
 
         //$session = $request->getSession();
         //echo $session->get('_security_scan_auth');
