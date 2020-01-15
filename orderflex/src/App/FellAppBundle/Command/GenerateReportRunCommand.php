@@ -52,7 +52,7 @@ class GenerateReportRunCommand extends Command {
 
     protected function configure() {
         $this
-            ->setName('fellapp:generatereportrun')
+            //->setName('fellapp:generatereportrun')
             ->setDescription('Try to generate fellowship application report')
 //            ->addArgument(
 //                'argument',
