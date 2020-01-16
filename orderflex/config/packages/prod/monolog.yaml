@@ -1,9 +1,13 @@
 monolog:
     handlers:
+#        main:
+#            type: rotating_file
+#            path: '%kernel.logs_dir%/%kernel.environment%.log'
+#            max_files: 0
+#            level: notice
         main:
-            type: rotating_file
+            type: stream
             path: '%kernel.logs_dir%/%kernel.environment%.log'
-            max_files: 0
             level: notice
         nested_error:
             type: stream
