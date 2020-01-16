@@ -62,7 +62,10 @@ class PdfGenerator
         $uploadReportPath = $this->uploadDir . DIRECTORY_SEPARATOR . $reportsUploadPath;
 
         //$reportPath = $this->container->get('kernel')->getRootDir() . '/../public/' . $uploadReportPath;
+        //$logger->notice("1reportPath=".$reportPath);
+
         $reportPath = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $uploadReportPath;
+        //$logger->notice("2reportPath=".$reportPath);
 
         //echo "reportPath=".$reportPath."<br>";
         //$reportPath = realpath($reportPath);

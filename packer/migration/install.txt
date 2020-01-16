@@ -84,7 +84,23 @@ remove all php56 packages: yum remove php56...
 Set new PHP path: 
 export PATH=/opt/remi/php74/root/bin:$PATH
 yum -y install php74-php-mcrypt php74-php-cli php74-php-gd php74-curl php74-php-ldap php74-php-zip php74-php-fileinfo php74-php-opcache php74-php-fpm php74-php-mbstring php74-php-xml php74-php-json
-sudo yum -y install php74-php-pgsql php74-php-xmlreader php74-php-pdo php74-php-dom
+sudo yum -y install php74-php-pgsql php74-php-xmlreader php74-php-pdo php74-php-dom php74-php-intl
+sudo systemctl enable php72-php-fpm.service
+sudo systemctl start php72-php-fpm.service
+
+#Use https://github.com/owncloud/documentation/issues/3149
+#Enable PHP 7.4 system-wide:
+cp /opt/remi/php74/enable /etc/profile.d/rh-php74.sh
+source /opt/rh/rh-php74/enable
+
+#Disable loading the old PHP 5.4 Apache modules by changing their names:
+mv /etc/httpd/conf.d/rh-php56-php.conf /etc/httpd/conf.d/rh-php56-php.off
+mv /etc/httpd/conf.modules.d/10-rh-php56-php.conf /etc/httpd/conf.modules.d/10-rh-php56-php.off
+
+#Copy the PHP 7.4 Apache modules into place:
+
+
+systemctl restart httpd.service
 ################################################
 	
 #Install everything in this funstion	
@@ -121,4 +137,15 @@ f_install_prepare()
 Multiple PHP: https://stackoverflow.com/questions/50004406/multiple-php-version-with-apache-on-centos-7
 https://computingforgeeks.com/how-to-install-php-7-4-on-centos-7/	
 	
+LDAP:
+CN=Users,DC=a,DC=wcmc-ad,DC=net;
+ou=NYP Users,ou=External,dc=a,dc=wcmc-ad,dc=net;
+ou=Qatar Users,ou=External,dc=a,dc=wcmc-ad,dc=net;
+
+	
+Generate Certificate Signing Request:
+view-test.med.cornell.edu:
+openssl req -new -newkey rsa:2048 -nodes -keyout view-test.key -out view-test.csr	
+view.med.cornell.edu:
+openssl req -new -newkey rsa:2048 -nodes -keyout view.key -out view.csr
 	
