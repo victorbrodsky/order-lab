@@ -508,8 +508,8 @@ class ReportGenerator {
         //$reportPath = $this->container->get('kernel')->getRootDir() . '/../web/' . $uploadReportPath;
         //$reportPath = $this->container->get('kernel')->getRootDir() . DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'public'.DIRECTORY_SEPARATOR. $uploadReportPath;
         $reportPath = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $uploadReportPath;
-
-        $logger->notice("reportPath(before realpath)=".$reportPath);
+        
+        //$logger->notice("reportPath(before realpath)=".$reportPath);
         //$reportPath = realpath($reportPath);
         //$reportPath = $userServiceUtil->normalizePath($reportPath);
         //$logger->notice("reportPath(after realpath)=".$reportPath);
@@ -822,7 +822,7 @@ class ReportGenerator {
         //$session->save();
         //session_write_close();
         //echo "seesion name=".$session->getName().", id=".$session->getId()."<br>";
-        $logger->notice("before knp_snappy generate: pageUrl=".$pageUrl);
+        //$logger->notice("before knp_snappy generate: pageUrl=".$pageUrl);
 
         //take care of authentication
         $PHPSESSID = NULL;
@@ -830,18 +830,18 @@ class ReportGenerator {
         if( $request && $request->hasSession() ) {
             $session = $request->getSession();
             if( $session && $session->getId() ) {
-                $logger->notice("1before session save: ".dump($session));
+                //$logger->notice("1before session save: ".dump($session));
                 $session->save();
-                $logger->notice("after save session");
+                //$logger->notice("after save session");
                 session_write_close();
-                $logger->notice("after session_write_close");
+                //$logger->notice("after session_write_close");
                 $PHPSESSID = $session->getId();
             }
         } else {
             //take care of authentication
             $session = $this->container->get('session');
             if( $session && $session->getId() ) {
-                $logger->notice("2before session save: ".dump($session));
+                //$logger->notice("2before session save: ".dump($session));
                 $session->save();
                 session_write_close();
                 $PHPSESSID = $session->getId();

@@ -368,11 +368,13 @@ class GoogleSheetManagement {
 
             $this->em->persist($object);
 
-            $root = $this->container->get('kernel')->getRootDir();
+            //$root = $this->container->get('kernel')->getRootDir();
             //echo "root=".$root."<br>";
             //$fullpath = $this->get('kernel')->getRootDir() . '/../web/'.$path;
-            $fullpath = $root . '/../public/'.$path;
-            $target_file = $fullpath . "/" . $fileUniqueName;
+            //$fullpath = $root . '/../public/'.$path;
+            $fullpath = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $path;
+
+            $target_file = $fullpath . DIRECTORY_SEPARATOR . $fileUniqueName;
 
             //$target_file = $fullpath . 'uploadtestfile.jpg';
             //echo "target_file=".$target_file."<br>";

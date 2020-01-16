@@ -144,8 +144,8 @@ class WorkflowController extends Controller
 
         echo "cmd=".$cmd."<br>";
 
-        $dir = $this->get('kernel')->getRootDir();
-        echo "dir=".$dir."<br>";
+        //$dir = $this->get('kernel')->getRootDir();
+        //echo "dir=".$dir."<br>";
 
         $oExec = null;
         //$WshShell = new \COM("WScript.Shell");

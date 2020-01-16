@@ -54,14 +54,16 @@ class PdfGenerator
         $logger->notice("Start to generate PDF invoice ID=".$invoice->getOid()."; filename=".$fileFullReportUniqueName);
 
         //check and create Report and temp folders
-        $reportsUploadPath = "transres/InvoicePDF";  //$userSecUtil->getSiteSettingParameter('reportsUploadPathFellApp');
+        $reportsUploadPath = "transres" . DIRECTORY_SEPARATOR . "InvoicePDF";  //$userSecUtil->getSiteSettingParameter('reportsUploadPathFellApp');
         if( !$reportsUploadPath ) {
             $reportsUploadPath = "InvoicePDF";
             $logger->warning('InvoicePDFUploadPath is not defined in Site Parameters. Use default "'.$reportsUploadPath.'" folder.');
         }
-        $uploadReportPath = $this->uploadDir.'/'.$reportsUploadPath;
+        $uploadReportPath = $this->uploadDir . DIRECTORY_SEPARATOR . $reportsUploadPath;
 
-        $reportPath = $this->container->get('kernel')->getRootDir() . '/../public/' . $uploadReportPath;
+        //$reportPath = $this->container->get('kernel')->getRootDir() . '/../public/' . $uploadReportPath;
+        $reportPath = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $uploadReportPath;
+
         //echo "reportPath=".$reportPath."<br>";
         //$reportPath = realpath($reportPath);
         //echo "reportPath=".$reportPath."<br>";
@@ -73,7 +75,7 @@ class PdfGenerator
 
         //$outdir = $reportPath.'/temp_'.$invoice->getOid().'/';
         //$outdir = $reportPath.'/'.$invoice->getOid().'/';
-        $outdir = $reportPath.'/';
+        $outdir = $reportPath . DIRECTORY_SEPARATOR;
 
         //echo "before generateApplicationPdf id=".$id."; outdir=".$outdir."<br>";
         //0) generate application pdf
@@ -366,7 +368,9 @@ class PdfGenerator
         }
         $uploadReportPath = $this->uploadDir.'/'.$reportsUploadPath;
 
-        $reportPath = $this->container->get('kernel')->getRootDir() . '/../public/' . $uploadReportPath;
+        //$reportPath = $this->container->get('kernel')->getRootDir() . '/../public/' . $uploadReportPath;
+        $reportPath = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $uploadReportPath;
+
         //echo "reportPath=".$reportPath."<br>";
         //$reportPath = realpath($reportPath);
         //echo "reportPath=".$reportPath."<br>";

@@ -177,9 +177,10 @@ class SiteParametersController extends Controller
         //echo "link=".$link."<br>";
 
         //get absolute path prefix for Upload folder
-        $rootDir = $this->container->get('kernel')->getRootDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\scanorder\Scanorders2\app
-        $rootDir = str_replace('app','',$rootDir);
-        $uploadPath = $rootDir . 'public' . DIRECTORY_SEPARATOR;
+        //$rootDir = $this->container->get('kernel')->getRootDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\scanorder\Scanorders2\app
+        //$rootDir = str_replace('app','',$rootDir);
+        //$uploadPath = $rootDir . 'public' . DIRECTORY_SEPARATOR;
+        $uploadPath = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR;
 
         return array(
             'entity'      => $entity,
