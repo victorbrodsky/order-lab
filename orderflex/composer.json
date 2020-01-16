@@ -11,7 +11,7 @@
         "friendsofsymfony/comment-bundle": "^3",
         "friendsofsymfony/jsrouting-bundle": "^2.5",
         "friendsofsymfony/user-bundle": "^2.1",
-        "google/apiclient": "^2.4",
+        "google/apiclient": "1.0.*@beta",
         "knplabs/knp-paginator-bundle": "^4.1",
         "knplabs/knp-snappy-bundle": "^1.6",
         "oneup/uploader-bundle": "^2.1",

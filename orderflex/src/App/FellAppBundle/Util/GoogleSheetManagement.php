@@ -713,6 +713,14 @@ class GoogleSheetManagement {
         //return $this->authenticationGoogleOAuth();
     }
 
+    //https://github.com/googleapis/google-api-php-client/blob/master/UPGRADING.md
+//    public function authenticationGoogleV2() {
+//        // OR use environment variables (recommended)
+//        putenv('GOOGLE_APPLICATION_CREDENTIALS=/path/to/service-account.json');
+//        $client = $this->getClient();
+//        $client->useApplicationDefaultCredentials();
+//    }
+
     //Probably, it's better to use Server to Server authentication by using P12 key
     //Depreciated in google/apiclient v2.0 https://github.com/googleapis/google-api-php-client/blob/master/UPGRADING.mds
     //Using OAuth 2.0 for Server to Server Applications: using PKCS12 certificate file
