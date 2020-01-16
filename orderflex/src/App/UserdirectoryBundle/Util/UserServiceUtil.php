@@ -1897,7 +1897,8 @@ class UserServiceUtil {
             } else {
                 $phppath = "/opt/rh/rh-php56/root/usr/bin/php";
                 $cmd = str_replace("php ", $phppath . " ", $cmd);
-                //$logger->notice("execInBackground cmd=" . $cmd);
+                $logger = $this->container->get('logger');
+                $logger->notice("execInBackground cmd=" . $cmd);
                 //echo exec($cmd, $oExec);
                 $oExec = exec($cmd . " > /dev/null &");
             }
