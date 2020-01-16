@@ -35,8 +35,8 @@ class FellappTest extends WebTestBase
         $this->logIn();
 
         // /fellowship-applications/?filter%5BstartDates%5D=2022&filter%5Bactive%5D=1&filter%5Bcomplete%5D=1&filter%5Binterviewee%5D=1&filter%5Bpriority%5D=1&filter%5Baccepted%5D=1&filter%5Bacceptedandnotified%5D=1
-        //$crawler = $this->client->request('GET', '/fellowship-applications/?filter[startDates]=2022&filter[active]=1&filter[complete]=1&filter[interviewee]=1&filter[priority]=1&filter[accepted]=1&filter[acceptedandnotified]=1');
-        $crawler = $this->client->request('GET', '/fellowship-applications/?filter[startDates]=2022');
+        $crawler = $this->client->request('GET', '/fellowship-applications/?filter[startDates]=2022&filter[active]=1&filter[complete]=1&filter[interviewee]=1&filter[priority]=1&filter[accepted]=1&filter[acceptedandnotified]=1');
+        //$crawler = $this->client->request('GET', '/fellowship-applications/?filter[startDates]=2022');
 
 
         //$this->client->followRedirects();
