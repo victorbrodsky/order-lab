@@ -1979,6 +1979,28 @@ class UserController extends Controller
         $firstEmailPart = null;
         $secondEmailPart = null;
 
+        //Check provided $publicUserId (cwid) that might be cwid or email if a user exists
+        if( !$user && $publicUserId ) {
+            $user = $em->getRepository('AppUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($publicUserId);
+            if (!$user) {
+                $user = $em->getRepository('AppUserdirectoryBundle:User')->findOneByEmailCanonical($email);
+            }
+            if (!$user) {
+                $users = $em->getRepository('AppUserdirectoryBundle:User')->findUserByUserInfoEmail($email);
+                if (count($users) > 0) {
+                    $user = $users[0];
+                }
+            }
+            if (!$user) {
+                //Check if username is email
+                $user = $userSecUtil->findUserByUsernameAsEmail($username);
+            }
+            if( !$user ) {
+                $user = $userSecUtil->getUserByUserstr($username);
+            }
+        }
+
+
         if( !$email ) {
             $resArr["error"] = "Email is not provided";
             $json = json_encode($resArr);
@@ -2042,7 +2064,7 @@ class UserController extends Controller
 
         //echo "publicUserId=$publicUserId<br>";
 
-        if( $publicUserId ) {
+        if( !$user && $publicUserId ) {
             $user = $em->getRepository('AppUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($publicUserId);
             if (!$user) {
                 $user = $em->getRepository('AppUserdirectoryBundle:User')->findOneByEmailCanonical($email);
@@ -2052,6 +2074,13 @@ class UserController extends Controller
                 if (count($users) > 0) {
                     $user = $users[0];
                 }
+            }
+            if (!$user) {
+                //Check if username is email
+                $user = $userSecUtil->findUserByUsernameAsEmail($username);
+            }
+            if( !$user ) {
+                $user = $userSecUtil->getUserByUserstr($username);
             }
         }
 
@@ -2172,7 +2201,9 @@ class UserController extends Controller
         //$emailMapperPostfix2 = $userSecUtil->getSiteSettingParameter("ldapMapperEmail2");
         //echo "ldapMapperPrimaryPublicUserIdType1=$ldapMapperPrimaryPublicUserIdType1; ldapMapperPrimaryPublicUserIdType2=$ldapMapperPrimaryPublicUserIdType2 <br>";
         //exit("keytype=$keytype; keytypeEntity=$keytypeEntity; emailMapperPostfix1=$emailMapperPostfix1; emailMapperPostfix2=$emailMapperPostfix2");
-        //exit("username=$username");
+        //$logger = $this->get('logger');
+        //$logger->notice("new user with username=$username");
+        //exit("new user with username=$username");
 
         //ldap-user and ldap2-user must be created in the user type (Primary Public User ID Types)
         //https://directory.weill.cornell.edu/person/profile/dis9070
@@ -2382,6 +2413,20 @@ class UserController extends Controller
             $error = new FormError("Primary Public User ID is empty");
             $form->get('primaryPublicUserId')->addError($error);
         }
+
+        //Check if username is email
+        $thisUsername = $user->getPrimaryPublicUserId();
+        $user = $this->findUserByUsernameAsEmail($thisUsername);
+        if( $user ) {
+            $error = new FormError("User [$user] already exists with ID=".$user->getId());
+            $form->get('primaryPublicUserId')->addError($error);
+        }
+        $user = $this->getUserByUserstr($thisUsername);
+        if( $user ) {
+            $error = new FormError("User [$user] already exists with ID=".$user->getId());
+            $form->get('primaryPublicUserId')->addError($error);
+        }
+
 
 //        echo "loc errors:<br>";or NYP 
 //        print_r($form->getErrors());

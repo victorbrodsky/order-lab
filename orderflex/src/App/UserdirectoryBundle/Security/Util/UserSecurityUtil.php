@@ -394,6 +394,7 @@ class UserSecurityUtil {
         return null;
     }
 
+    //Get CWID
     public function createCleanUsername($username) {
         return User::createCleanUsername($username);
         //$user = new User();
@@ -757,6 +758,18 @@ class UserSecurityUtil {
 
         $serviceContainer = $this->container;
 
+        //Check if username is email
+        $user = $this->findUserByUsernameAsEmail($username);
+        if( $user ) {
+            throw new \Exception("User [$user] already exists with ID=".$user->getId());
+            return $user;
+        }
+        $user = $this->getUserByUserstr($username);
+        if( $user ) {
+            throw new \Exception("User [$user] already exists with ID=".$user->getId());
+            return $user;
+        }
+
         $userManager = $serviceContainer->get('fos_user.user_manager');
         $userSecUtil = $serviceContainer->get('user_security_utility');
 
@@ -811,6 +824,44 @@ class UserSecurityUtil {
         return $user;
     }
 
+    public function findUserByUsernameAsEmail($username) {
+
+        $cwid = NULL;
+
+        if( strpos($username, '@') !== false ) {
+            $cwidArr = explode("@",$username);
+            if( count($cwidArr) > 1 ) {
+                $cwid = $cwidArr[0];
+                if( $cwid ) {
+                    $cwid = trim($cwid);
+                }
+            }
+        }
+        //exit("cwid=[$cwid]");
+
+        if( !$cwid ) {
+            return NULL;
+        }
+
+        $query = $this->em->createQueryBuilder()
+            ->from('AppUserdirectoryBundle:User', 'user')
+            ->select("user")
+            ->leftJoin("user.infos", "infos")
+            ->where("infos.email LIKE :cwid OR infos.displayName LIKE :cwid")
+            ->setParameters( array(
+                'cwid' => $cwid
+            ));
+
+        $users = $query->getQuery()->getResult();
+
+        if( count($users) > 0 ) {
+            $user = $users[0];
+            return $user;
+        }
+
+        return NULL;
+    }
+
 
     //$name is entered by a user username. $name can be a guessed username
     //Use primaryPublicUserId as cwid
@@ -820,6 +871,14 @@ class UserSecurityUtil {
 
         $user = null;
         $cwid = null;
+
+        if( $name ) {
+            $name = trim($name);
+        }
+
+        if( !$name ) {
+            return NULL;
+        }
 
         //get cwid
         $strArr = explode(" ",$name);
@@ -860,6 +919,10 @@ class UserSecurityUtil {
         }
 
         //4) try username cwid_@_ldap-user
+//        if( !$user ) {
+//            $userManager = $this->container->get('fos_user.user_manager');
+//            $user = $userManager->findUserByUsername($name);
+//        }
         if( !$user ) {
             $user = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByUsername($name);
         }

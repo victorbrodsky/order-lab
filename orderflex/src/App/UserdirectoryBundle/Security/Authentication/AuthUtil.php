@@ -354,6 +354,13 @@ class AuthUtil {
 
         //////////////////// constract a new user ////////////////////
 
+
+//        $user = $this->findUserByUsernameAsEmail($token->getUsername());
+//        if( $user ) {
+//            $this->logger->notice("Ldap Authentication: Exit: Username is not cwid. User found in DB by token->getUsername()=".$token->getUsername());
+//            return NULL;
+//        }
+
         //testing!!!
         //if( $usernameClean == "oli2002" ) {
             //exit("attempt generate new admin user");
@@ -595,16 +602,44 @@ class AuthUtil {
 
 
     public function findUserByUsername($username) {
-
         $userManager = $this->container->get('fos_user.user_manager');
-
         $username = trim($username);
         $username = strtolower($username);
-        
         $user = $userManager->findUserByUsername($username);
-
         return $user;
     }
+
+//    public function findUserByUsernameAsEmail($username) {
+//
+//        if( strpos($username, '@') !== false ) {
+//            $cwidArr = explode("@",$username);
+//            if( count($cwidArr) > 1 ) {
+//                $cwid = $cwidArr[0];
+//                if( $cwid ) {
+//                    $cwid = trim($cwid);
+//                }
+//            }
+//        }
+//        //exit("cwid=[$cwid]");
+//
+//        $query = $this->em->createQueryBuilder()
+//            ->from('AppUserdirectoryBundle:User', 'user')
+//            ->select("user")
+//            ->leftJoin("user.infos", "infos")
+//            ->where("infos.email LIKE :cwid OR infos.displayName LIKE :cwid")
+//            ->setParameters( array(
+//                'cwid' => $cwid
+//            ));
+//
+//        $users = $query->getQuery()->getResult();
+//
+//        if( count($users) > 0 ) {
+//            $user = $users[0];
+//            return $user;
+//        }
+//
+//        return NULL;
+//    }
 
     //return 1 if bind successful
     //return NULL if failed

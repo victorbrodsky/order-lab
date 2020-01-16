@@ -1132,6 +1132,7 @@ class User extends BaseUser {
         return $usernamestr;
     }
 
+    //Get CWID
     public function createCleanUsername($username) {
         if( $username ) {
             $username = trim($username);

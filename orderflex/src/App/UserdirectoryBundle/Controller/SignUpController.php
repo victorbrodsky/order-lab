@@ -123,12 +123,12 @@ class SignUpController extends Controller
             if( !$signUp->getUserName() ) {
                 $usernameErrorCount++;
             } else {
-                if( strlen($signUp->getUserName()) < '8' || strlen($signUp->getUserName()) > '25' ) {
+                if( strlen($signUp->getUserName()) < '4' || strlen($signUp->getUserName()) > '25' ) {
                     $usernameErrorCount++;
                 }
             }
             if( $usernameErrorCount > 0 ) {
-                $usernameError = "Please make sure your user name contains at least 8 and at most 25 characters.";
+                $usernameError = "Please make sure your user name contains at least 4 and at most 25 characters.";
                 $form->get('userName')->addError(new FormError($usernameError));
             }
 
@@ -424,7 +424,7 @@ class SignUpController extends Controller
     {
         //exit('1');
         $emailUtil = $this->container->get('user_mailer_utility');
-        $userServiceUtil = $this->get('user_service_utility');
+        //$userServiceUtil = $this->get('user_service_utility');
         $userSecUtil = $this->get('user_security_utility');
         $em = $this->getDoctrine()->getManager();
 
@@ -610,7 +610,7 @@ class SignUpController extends Controller
             'user' => $user,
             'cloneuser' => null,
             'roles' => $rolesArr,
-            //'container' => null,    //$this->container,
+            'container' => $this->container,
             'em' => $em,
             'hidePrimaryPublicUserId' => true,
             'activateBtn' => true

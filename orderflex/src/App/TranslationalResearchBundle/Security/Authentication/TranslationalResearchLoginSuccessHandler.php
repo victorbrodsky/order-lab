@@ -55,8 +55,8 @@ class TranslationalResearchLoginSuccessHandler extends LoginSuccessHandler {
     public function onAuthenticationSuccess(Request $request, TokenInterface $token) {
 
         //exit("onAuthenticationSuccess");
-        $em = $this->em;
-        $user = $token->getUser();
+        //$em = $this->em;
+        //$user = $token->getUser();
 
         //get original target path
         $indexLastRoute = '_security.'.$this->firewallName.'.target_path';
