@@ -1872,7 +1872,7 @@ class UserServiceUtil {
                 //php: /opt/rh/rh-php56/root/usr/bin/php
                 //$phppath = str_replace("php:","",$phppath);
                 //$phppath = str_replace(" ","",$phppath);
-                $phppath = "/opt/rh/rh-php56/root/usr/bin/php";
+                $phppath = "/opt/remi/php74/root/usr/bin/php";
 
                 $cmd = str_replace("php ", $phppath . " ", $cmd);
                 $logger->notice("execInBackground cmd=" . $cmd);
@@ -1895,7 +1895,7 @@ class UserServiceUtil {
 
                 //exit("exit");
             } else {
-                $phppath = "/opt/rh/rh-php56/root/usr/bin/php";
+                $phppath = "/opt/remi/php74/root/usr/bin/php";
                 $cmd = str_replace("php ", $phppath . " ", $cmd);
                 $logger = $this->container->get('logger');
                 $logger->notice("execInBackground cmd=" . $cmd);
