@@ -34,10 +34,10 @@ class FellappTest extends WebTestBase
     public function testHomeAction() {
         $this->logIn();
 
-        //$crawler = $this->client->request('GET', '/fellowship-applications/?filter[startDates]=2021&filter[active]=1&filter[complete]=1&filter[interviewee]=1&filter[priority]=1&filter[accepted]=1&filter[acceptedandnotified]=1');
+        $crawler = $this->client->request('GET', '/fellowship-applications/?filter[startDates]=2022&filter[active]=1&filter[complete]=1&filter[interviewee]=1&filter[priority]=1&filter[accepted]=1&filter[acceptedandnotified]=1');
 
-        $this->client->followRedirects();
-        $crawler = $this->client->request('GET', '/fellowship-applications/');
+        //$this->client->followRedirects();
+        //$crawler = $this->client->request('GET', '/fellowship-applications/');
 
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
