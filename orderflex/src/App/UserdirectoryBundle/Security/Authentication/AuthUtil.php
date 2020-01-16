@@ -163,11 +163,13 @@ class AuthUtil {
 
     public function LdapAuthentication($token, $userProvider, $ldapType=1) {
 
+        $this->logger->notice("Ldap Authentication: ldapType=[$ldapType]");
+
         //get clean username
         $userSecUtil = $this->container->get('user_security_utility');
         $usernameClean = $userSecUtil->createCleanUsername($token->getUsername());
-
         $usernamePrefix = $userSecUtil->getUsernamePrefix($token->getUsername());
+        //exit("usernameClean=[$usernameClean], susernamePrefix=[$usernamePrefix]");
 
         $searchRes = null;
 
@@ -176,7 +178,7 @@ class AuthUtil {
         if( $ldapRes == NULL ) {
             //exit('ldap failed');
             //$this->logger->error("LdapAuthentication: can not bind user by usernameClean=[".$usernameClean."]; token=[".$token->getCredentials()."]");
-            $this->logger->error("LdapAuthentication: can not bind user by usernameClean=[".$usernameClean."];");
+            $this->logger->error("Ldap Authentication: can not bind user by usernameClean=[".$usernameClean."];");
 
             $user = $this->findUserByUsername($token->getUsername());
             $this->validateFailedAttempts($user);
@@ -196,7 +198,7 @@ class AuthUtil {
             $this->logger->notice("findUserByUsername: existing user found in DB by token->getUsername()=".$token->getUsername());
 
             if( $this->canLogin($user) === false ) {
-                $this->logger->warning("LdapAuthentication: User cannot login ".$user);
+                $this->logger->warning("Ldap Authentication: User cannot login ".$user);
                 return NULL;
             }
 
@@ -207,17 +209,15 @@ class AuthUtil {
 
         //echo "1<br>";
 
-        //////////////////// constract a new user ////////////////////
+        //////////////////// Construct a new user ////////////////////
 
         $searchRes = $this->searchLdap($usernameClean,$ldapType);
 
-        //$userSearchRequired = true;
-        $userSearchRequired = false; //auth without required user search is more flexible if admin bind failed
         if( $searchRes == NULL || count($searchRes) == 0 ) {
-            $this->logger->error("LdapAuthentication: can not find user by usernameClean=" . $usernameClean);
+            $this->logger->error("Ldap Authentication: can not find user by usernameClean=" . $usernameClean);
             return NULL;
         } else {
-            $this->logger->notice("LdapAuthentication: user found by  usernameClean=" . $usernameClean);
+            $this->logger->notice("Ldap Authentication: user found by  usernameClean=" . $usernameClean);
         }
 
         $this->logger->notice("LdapAuthentication: create a new user found by token->getUsername()=".$token->getUsername());
@@ -618,11 +618,11 @@ class AuthUtil {
 //        }
 
         //step 1
-        if( $this->simpleLdap($username,$password,"uid",$ldapType) ) {
+        if( $this->simpleLdap($username,$password,"cn",$ldapType) ) {
             return 1;
         }
 
-        if( $this->simpleLdap($username,$password,"cn",$ldapType) ) {
+        if( $this->simpleLdap($username,$password,"uid",$ldapType) ) {
             return 1;
         }
 

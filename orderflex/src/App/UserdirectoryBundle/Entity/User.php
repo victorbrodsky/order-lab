@@ -1157,6 +1157,7 @@ class User extends BaseUser {
         } else {
             $prefix = "";
         }
+        
         return $prefix;
     }
 

@@ -79,23 +79,6 @@ class CustomAuthenticator implements SimpleFormAuthenticatorInterface {
         //exit("usernamePrefix=".$usernamePrefix);
 
         switch( $usernamePrefix ) {
-            case "local-user":
-                //////////////////////////////////////////////////////////////////////
-                //                       1) local authentication                   //
-                //////////////////////////////////////////////////////////////////////
-                $user = $authUtil->LocalAuthentication($token, $userProvider);
-                ////////////////////EOF first local authentication //////////////////
-                break;
-
-
-            case "external":
-                //////////////////////////////////////////////////////////////////////
-                //                       2) pacsvendor authentication                   //
-                //////////////////////////////////////////////////////////////////////
-                $user = $authUtil->PacsvendorAuthentication($token, $userProvider);
-                ////////////////////EOF pacsvendor authentication //////////////////
-                break;
-
 
             //case "wcmc-cwid": //use for auth transition. Remove after transition.
             case "ldap-user":
@@ -122,8 +105,24 @@ class CustomAuthenticator implements SimpleFormAuthenticatorInterface {
                 ////////////////////EOF ldap authentication ////////////////////
                 break;
 
-
             case "local-user":
+                //////////////////////////////////////////////////////////////////////
+                //                       1) local authentication                   //
+                //////////////////////////////////////////////////////////////////////
+                $user = $authUtil->LocalAuthentication($token, $userProvider);
+                ////////////////////EOF first local authentication //////////////////
+                break;
+
+
+            case "external":
+                //////////////////////////////////////////////////////////////////////
+                //                       2) pacsvendor authentication                   //
+                //////////////////////////////////////////////////////////////////////
+                $user = $authUtil->PacsvendorAuthentication($token, $userProvider);
+                ////////////////////EOF pacsvendor authentication //////////////////
+                break;
+
+            case "local2-user":
                 //////////////////////////////////////////////////////////////////////
                 //                       4) External IDs                            //
                 //////////////////////////////////////////////////////////////////////
