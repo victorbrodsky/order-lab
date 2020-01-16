@@ -147,6 +147,7 @@ doctrine/lexer (^1.2)
 #doctrine-fixtures-bundle (for testing )
 
 "google/apiclient": "1.0.*@beta", - original
+"google/apiclient": "^2.4",s - new
 
 
 [2019-12-22 18:20:30] request.CRITICAL: Uncaught PHP Exception Symfony\Component\Debug\Exception\FatalThrowableError: "Type error: preg_split() expects parameter 2 to be string, object given" at
