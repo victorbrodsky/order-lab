@@ -141,8 +141,8 @@ LDAP:
 CN=Users,DC=a,DC=wcmc-ad,DC=net;
 ou=NYP Users,ou=External,dc=a,dc=wcmc-ad,dc=net;
 ou=Qatar Users,ou=External,dc=a,dc=wcmc-ad,dc=net;
+Optional Script: ./LdapSaslCustom.exe a.wcmc-ad.net 389 cwid 'password'
 
-	
 Generate Certificate Signing Request:
 view-test.med.cornell.edu:
 openssl req -new -newkey rsa:2048 -nodes -keyout view-test.key -out view-test.csr	
