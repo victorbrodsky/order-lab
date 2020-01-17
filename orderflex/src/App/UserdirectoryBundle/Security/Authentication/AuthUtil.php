@@ -748,7 +748,7 @@ class AuthUtil {
         //$LDAPHost = $this->container->getParameter('ldaphost');
         $LDAPHost = $userSecUtil->getSiteSettingParameter('aDLDAPServerAddress'.$postfix);
         $mech = "GSSAPI";
-        $mech = "DIGEST-MD5";
+        //$mech = "DIGEST-MD5";
         //$mech = "LDAP_AUTH_NEGOTIATE";
         $cnx = $this->connectToLdap($LDAPHost);
 
@@ -772,7 +772,7 @@ class AuthUtil {
         //$ldapBindDN = "CN=nyptestuser1,OU=NYP Users,OU=External,DC=a,DC=wcmc-ad,DC=net";
         //$password = "nyptestuser1";
 
-        echo "ldapBindDN=".$ldapBindDN."<br>";
+        echo "mech=$mech, ldapBindDN=".$ldapBindDN."<br>";
         $res = ldap_sasl_bind(
             $cnx,       //1 resource link
             NULL,       //2 binddn
@@ -780,7 +780,7 @@ class AuthUtil {
             $mech,      //4 sals mech
             NULL,       //5 sals realm
             $username,  //6 auth id
-            $ldapBindDN //7 props: 'dn:uid=tommy,ou=people,dc=example,dc=com'
+            NULL //$ldapBindDN //7 props: 'dn:uid=tommy,ou=people,dc=example,dc=com'
         );
         echo "res=".$res."<br>";
         if( $res ) {
