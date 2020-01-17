@@ -542,8 +542,9 @@ class FellAppController extends Controller {
 
         //At the top of the homepage, show either "Now accepting applications" if the
         // "accepting applications" status from json is enabled, or show "Not accepting applications now."
-        $acceptingApplication = "Not accepting applications now";
-        if(1) {
+        $acceptingApplication = NULL;
+        if( $route == "fellapp_home" ) {
+            $acceptingApplication = "Not accepting applications now";
             $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
             $configFileContent = $googlesheetmanagement->getConfigOnGoogleDrive();
             if ($configFileContent) {
@@ -556,6 +557,7 @@ class FellAppController extends Controller {
                 //print_r($configFileContent);
                 //echo "</pre>";
             }
+            $acceptingApplication = "- ".$acceptingApplication;
         }
 
         //emailAcceptSubject emailAcceptBody

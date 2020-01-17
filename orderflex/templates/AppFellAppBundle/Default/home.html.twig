@@ -50,7 +50,7 @@
     {% endif %}
 
     <p>
-        <i>Last successful import: {{ lastImportTimestamp|date('m/d/Y h:i A') }} {{ serverTimeZone }} ({{ lastImportTimestamp|time_diff }}) - {{ acceptingApplication }}</i>
+        <i>Last successful import: {{ lastImportTimestamp|date('m/d/Y h:i A') }} {{ serverTimeZone }} ({{ lastImportTimestamp|time_diff }}) {{ acceptingApplication }}</i>
     </p>
 
     {% set fellappTypeId = -1 %}
