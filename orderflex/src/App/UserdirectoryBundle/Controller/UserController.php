@@ -382,8 +382,14 @@ class UserController extends Controller
 //            )
 //        );
 
+        if( is_array($accessreqs) && count($accessreqs) > 0 ) {
+            $accessreqsCount = count($accessreqs);
+        } else {
+            $accessreqsCount = 0;
+        }
+
         return array(
-            'accessreqs' => count($accessreqs),
+            'accessreqs' => $accessreqsCount,
             'locations' => $locations,
             'entities' => $pagination,
             'roles' => $roles,

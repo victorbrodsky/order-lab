@@ -646,14 +646,14 @@ class AuthUtil {
     public function ldapBind( $username, $password, $ldapType=1 ) {
 
         //testing
-        if( $username == "oli2002" ) {
-            $saslBindRes = $this->ldapBindUnix($username, $password, $ldapType);
-            $this->logger->notice("saslBindRes: $saslBindRes");
-            if ($saslBindRes) {
-                //return 1;
-            }
-            exit('End of Sasl ldap Bind: saslBindRes=' . $saslBindRes);
-        }
+//        if( $username == "oli2002" ) {
+//            $saslBindRes = $this->ldapBindUnix($username, $password, $ldapType);
+//            $this->logger->notice("saslBindRes: $saslBindRes");
+//            if ($saslBindRes) {
+//                //return 1;
+//            }
+//            exit('End of Sasl ldap Bind: saslBindRes=' . $saslBindRes);
+//        }
 
         //step 1
         if( $this->simpleLdap($username,$password,"cn",$ldapType) ) {
@@ -739,6 +739,7 @@ class AuthUtil {
     }
 
     //TODO: must be tested on unix environment
+    //PHP ldap_sasl_bind is not documented. It's better to use LdapSaslCustom.cpp
     public function ldapBindUnix( $username, $password, $ldapType=1 ) {
         $userSecUtil = $this->container->get('user_security_utility');
         $this->logger->warning("Unix system detected. Must be tested!");
@@ -752,45 +753,6 @@ class AuthUtil {
         //$mech = "LDAP_AUTH_NEGOTIATE";
         $cnx = $this->connectToLdap($LDAPHost);
 
-        //////// Testing ////////
-        $returnCode = ldap_set_option($cnx, LDAP_OPT_SIZELIMIT, 1);
-        if( $returnCode ) {
-            echo "ldap_set_option succeeded - limit set to 1 <br>";
-        } else {
-            echo("SetOption Error=".$returnCode);
-        }
-
-        //ldap_set_option($cnx, PHP_FCGI_MAX_REQUESTS, 1);
-        //ldapBindDN=ou=NYP Users,ou=External,dc=a,dc=wcmc-ad,dc=net
-        //cn=Users,dc=a,dc=wcmc-ad,dc=net
-        //cn=oli2002,CN=Users,DC=a,DC=wcmc-ad,DC=net
-        //CN=cwid,OU=NYP Users,OU=External,DC=a,DC=wcmc-ad,DC=net
-        //CN=nyptestuser1,OU=NYP Users,DC=a,DC=wcmc-ad,DC=net
-        //CN=nyptestuser1,ou=NYP Users,ou=External,dc=a,dc=wcmc-ad,dc=net
-        //distinguishedName: CN=oli2002,CN=Users,DC=a,DC=wcmc-ad,DC=net
-        $ldapBindDN = "CN=oli2002,CN=Users,DC=a,DC=wcmc-ad,DC=net";
-        //$ldapBindDN = "CN=nyptestuser1,OU=NYP Users,OU=External,DC=a,DC=wcmc-ad,DC=net";
-        //$password = "nyptestuser1";
-
-        echo "mech=$mech, ldapBindDN=".$ldapBindDN."<br>";
-        $res = ldap_sasl_bind(
-            $cnx,       //1 resource link
-            NULL,       //2 binddn
-            $password,  //3 password
-            $mech,      //4 sals mech
-            NULL,       //5 sals realm
-            $username,  //6 auth id
-            NULL //$ldapBindDN //7 props: 'dn:uid=tommy,ou=people,dc=example,dc=com'
-        );
-        echo "res=".$res."<br>";
-        if( $res ) {
-            echo "OK!!! <br>";
-        } else {
-            echo "Failed <br>";
-        }
-        exit('End of test');
-        /////////////////////////
-
         //testing
         ldap_set_option($cnx, LDAP_OPT_PROTOCOL_VERSION, 3);
         ldap_set_option($cnx, LDAP_OPT_REFERRALS, 0);
@@ -798,11 +760,11 @@ class AuthUtil {
         $ldapBindDN = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu'.$postfix); //scientists,dc=example,dc=com
         $res = null;
         $ldapBindDNArr = explode(";",$ldapBindDN);
-        echo "count=".count($ldapBindDNArr)."<br>";
+        //echo "count=".count($ldapBindDNArr)."<br>";
         foreach( $ldapBindDNArr as $ldapBindDN) {
             //$ldapBindDN = $userPrefix."=".$username.",".$ldapBindDN;
             $this->logger->notice("ldap Bind Unix: ldapBindDN=".$ldapBindDN);
-            echo "ldapBindDN=".$ldapBindDN."<br>";
+            //echo "ldapBindDN=".$ldapBindDN."<br>";
             $res = ldap_sasl_bind(
                 $cnx,       //1 resource link
                 NULL,       //2 binddn
@@ -1126,11 +1088,11 @@ class AuthUtil {
             return NULL;
         }
 
-        if( !ldap_set_option($cnx, LDAP_OPT_REFERRALS, 0) ) {
-            $this->logger->warning("Ldap: Could not disable referrals");
-            ldap_unbind($cnx);
-            return NULL;
-        }
+//        if( !ldap_set_option($cnx, LDAP_OPT_REFERRALS, 0) ) {
+//            $this->logger->warning("Ldap: Could not disable referrals");
+//            ldap_unbind($cnx);
+//            return NULL;
+//        }
 
         if( !ldap_set_option($cnx, LDAP_OPT_SIZELIMIT, 1) ) {
             $this->logger->warning("Ldap: Could not set limit to 1");
