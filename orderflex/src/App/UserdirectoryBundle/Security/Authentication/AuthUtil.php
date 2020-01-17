@@ -645,24 +645,14 @@ class AuthUtil {
     //return NULL if failed
     public function ldapBind( $username, $password, $ldapType=1 ) {
 
-        //testing
-//        if( $username == "oli2002" ) {
-//            $saslBindRes = $this->ldapBindUnix($username, $password, $ldapType);
-//            $this->logger->notice("saslBindRes: $saslBindRes");
-//            if ($saslBindRes) {
-//                //return 1;
-//            }
-//            exit('End of Sasl ldap Bind: saslBindRes=' . $saslBindRes);
-//        }
-
         //step 1
         if( $this->simpleLdap($username,$password,"cn",$ldapType) ) {
             return 1;
         }
 
-        if( $this->simpleLdap($username,$password,"uid",$ldapType) ) {
-            return 1;
-        }
+//        if( $this->simpleLdap($username,$password,"uid",$ldapType) ) {
+//            return 1;
+//        }
 
         //step 2
         if( substr(php_uname(), 0, 7) == "Windows" ){
@@ -671,6 +661,8 @@ class AuthUtil {
         else {
             return $this->ldapBindUnix($username,$password,$ldapType);
         }
+
+        return NULL;
     }
 
     //return 1 if bind successful
