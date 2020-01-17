@@ -650,9 +650,9 @@ class AuthUtil {
             return 1;
         }
 
-//        if( $this->simpleLdap($username,$password,"uid",$ldapType) ) {
-//            return 1;
-//        }
+        if( $this->simpleLdap($username,$password,"uid",$ldapType) ) {
+            return 1;
+        }
 
         //step 2
         if( substr(php_uname(), 0, 7) == "Windows" ){
