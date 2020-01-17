@@ -8,6 +8,7 @@
         "asimlqt/php-google-spreadsheet-client": "^3.0",
         "bmatzner/fontawesome-bundle": "^4.7",
         "box/spout": "^3.1",
+        "doctrine/doctrine-migrations-bundle": "^2.1",
         "friendsofsymfony/comment-bundle": "^3",
         "friendsofsymfony/jsrouting-bundle": "^2.5",
         "friendsofsymfony/user-bundle": "^2.1",
