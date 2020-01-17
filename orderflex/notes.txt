@@ -269,3 +269,6 @@ php bin/console about
 
 
 /opt/phantomjs-2.1.1-linux-x86_64/bin/phantomjs --disk-cache=true /opt/order-lab/orderflex/src/App/UserdirectoryBundle/Util/rasterize.js http://localhost/order/translational-research/work-request/download-packing-slip-pdf/15079 /opt/order-lab/orderflex/src/../web/Uploaded/transres/PackingSlipPDF/PackingSlip-PDF-APCP2173-REQ15079-Ivanov-01-15-2020.pdf "A4"
+
+Add tag locally: git tag -a -m "symfony v 4.4.2 and php 7.4.1 without calendar bundle" sf4.4-php7.4
+Push tag to remote: git push origin sf4.4-php7.4

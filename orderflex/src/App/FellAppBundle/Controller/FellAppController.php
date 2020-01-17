@@ -121,6 +121,7 @@ class FellAppController extends Controller {
         }
 
         $em = $this->getDoctrine()->getManager();
+        $userSecUtil = $this->get('user_security_utility');
 
         //echo "fellapp user ok <br>";
 
@@ -535,27 +536,29 @@ class FellAppController extends Controller {
         }
 
         //allowPopulateFellApp
-        $userUtil = new UserUtil();
-        $allowPopulateFellApp = $userUtil->getSiteSetting($em,'AllowPopulateFellApp');
+        //$userUtil = new UserUtil();
+        //$allowPopulateFellApp = $userUtil->getSiteSetting($em,'AllowPopulateFellApp');
+        $allowPopulateFellApp = $userSecUtil->getSiteSettingParameter('AllowPopulateFellApp');
 
         //At the top of the homepage, show either "Now accepting applications" if the
         // "accepting applications" status from json is enabled, or show "Not accepting applications now."
         $acceptingApplication = "Not accepting applications now";
-        $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
-        $configFileContent = $googlesheetmanagement->getConfigOnGoogleDrive();
-        if( $configFileContent ) {
-            $configFileContent = json_decode($configFileContent, true);
-            $acceptingSubmissions = $configFileContent['acceptingSubmissions'];
-            if( $acceptingSubmissions || $acceptingSubmissions == 'true' ) {
-                $acceptingApplication = "Now accepting applications";
+        if(0) {
+            $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
+            $configFileContent = $googlesheetmanagement->getConfigOnGoogleDrive();
+            if ($configFileContent) {
+                $configFileContent = json_decode($configFileContent, true);
+                $acceptingSubmissions = $configFileContent['acceptingSubmissions'];
+                if ($acceptingSubmissions || $acceptingSubmissions == 'true') {
+                    $acceptingApplication = "Now accepting applications";
+                }
+                //echo "<pre>";
+                //print_r($configFileContent);
+                //echo "</pre>";
             }
-            //echo "<pre>";
-            //print_r($configFileContent);
-            //echo "</pre>";
         }
 
         //emailAcceptSubject emailAcceptBody
-        $userSecUtil = $this->get('user_security_utility');
         $acceptedEmailSubject = $userSecUtil->getSiteSettingParameter('acceptedEmailSubject',$this->container->getParameter('fellapp.sitename'));
         $acceptedEmailBody = $userSecUtil->getSiteSettingParameter('acceptedEmailBody',$this->container->getParameter('fellapp.sitename'));
         $rejectedEmailSubject = $userSecUtil->getSiteSettingParameter('rejectedEmailSubject',$this->container->getParameter('fellapp.sitename'));
