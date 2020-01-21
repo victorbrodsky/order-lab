@@ -11,3 +11,7 @@ Certificate
 Vendorutil
 /*/.idea/
 orderflex_orig
+/orderflex/public/Uploaded/
+/orderflex/config/parameters.yml
+/orderflex/.env*
+/orderflex/var/
