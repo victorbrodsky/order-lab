@@ -399,7 +399,7 @@ class AdminController extends Controller
                 //$this->runProcess("sudo chown -R www-data:www-data ".$old_path);
                 $this->runProcess("php bin" . $dirSep . "console assets:install");
                 $this->runProcess("php bin" . $dirSep . "console cache:clear --env=prod --no-debug");
-                $this->runProcess("php bin" . $dirSep . "console assetic:dump --env=prod --no-debug");
+                //$this->runProcess("php bin" . $dirSep . "console assetic:dump --env=prod --no-debug");
             }
             
             if( $update ) {
@@ -420,7 +420,7 @@ class AdminController extends Controller
             if( $cache ) {
                 echo "assets:install=" . exec("php bin" . $dirSep . "console assets:install") . "<br>";
                 echo "cache:clear=" . exec("php bin" . $dirSep . "console cache:clear --env=prod --no-debug") . "<br>";
-                echo "assetic:dump=" . exec("php bin" . $dirSep . "console assetic:dump --env=prod --no-debug") . "<br>";
+                //echo "assetic:dump=" . exec("php bin" . $dirSep . "console assetic:dump --env=prod --no-debug") . "<br>";
 
                 //remove var/cache/prod
                 $cachePathOld = "var" . $dirSep . "cache" . $dirSep . "prod";
