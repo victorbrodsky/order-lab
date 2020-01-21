@@ -1327,6 +1327,13 @@ class UserServiceUtil {
 //            }
 //            $phpPath = $process->getOutput();
             $phpPath = "/opt/remi/php74/root/usr/bin/php";
+            if( !file_exists($phpPath) ) {
+                $phpPath = "/bin/php";
+            }
+
+            if( !file_exists($phpPath) ) {
+                $phpPath = "php";
+            }
         }
 
         $command = $phpPath . " " . $projectRoot . "/bin/console about";
