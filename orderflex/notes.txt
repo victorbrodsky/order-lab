@@ -272,3 +272,17 @@ php bin/console about
 
 Add tag locally: git tag -a -m "symfony v 4.4.2 and php 7.4.1 without calendar bundle" sf4.4-php7.4
 Push tag to remote: git push origin sf4.4-php7.4
+
+Rename master to sf3.4-php5.6 and create a new master from sf4-php7:
+https://stackoverflow.com/questions/2862590/how-to-replace-master-branch-in-git-entirely-from-another-branch
+
+git branch -m master master-old  # rename master on local (master-old is sf3.4-php5.6)
+git push origin :master          # delete master on remote (git push -f origin :master)
+git push origin master-old       # create master-old on remote
+git checkout -b master seotweaks # create a new local master on top of seotweaks
+git push origin master           # create master on remote
+
+Clone specific branch:
+git clone --single-branch --branch <branchname> <remote-repo>
+git clone --single-branch --branch sf4-php7 https://github.com/victorbrodsky/order-lab.git
+
