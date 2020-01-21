@@ -524,7 +524,7 @@
                                     >Investigator Statistics</a>
                                 </li>
 
-                                {% if allProjectIdsArr is defined %}
+                                {% if allProjectIdsArr is defined and allProjectIdsArr|length > 0 %}
                                     <hr style="margin-top: 10px; margin-bottom: 10px;">
                                     <li>
                                         {#<a href="{{ path('translationalresearch_download_projects_excel',{'ids':allProjectIdsArr|join(','),'limit':500}) }}">#}

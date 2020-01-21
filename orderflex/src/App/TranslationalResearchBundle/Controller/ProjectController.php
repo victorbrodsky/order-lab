@@ -2460,7 +2460,7 @@ class ProjectController extends Controller
     /**
      * @Route("/download-projects-spreadsheet/{ids}/{limit}", name="translationalresearch_download_projects_excel")
      */
-    public function downloadApplicantListExcelAction(Request $request, $ids, $limit=null) {
+    public function downloadApplicantListExcelAction(Request $request, $ids=null, $limit=null) {
 
         if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER')) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
@@ -2471,6 +2471,10 @@ class ProjectController extends Controller
         //exit("limit=".$limit);
 
         if( count($ids) == 0 ) {
+            exit("No Projects to Export to Excel");
+        }
+
+        if( !$ids ) {
             exit("No Projects to Export to Excel");
         }
 
