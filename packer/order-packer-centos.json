@@ -50,14 +50,14 @@
 	{
         "type": "shell",
         "inline": [ 
-           "echo @### Copy parameters file [parameters_bash_file] to [/usr/local/bin/order-lab/Scanorders2/app/config/parameters_bash_file] ###"
+           "echo @### Copy parameters file [parameters_bash_file] to [/usr/local/bin/order-lab/orderflex/config/parameters_bash_file] ###"
          ]    
 	},
 	
 	{
 		"type": "file",
 		"source": "parameters_bash_file",
-		"destination": "/usr/local/bin/order-lab/Scanorders2/app/config/parameters_bash_file"         
+		"destination": "/usr/local/bin/order-lab/orderflex/config/parameters_bash_file"         
 	},
 	
 	{
@@ -92,7 +92,7 @@
         "type": "shell",
         "inline": [ 		   
 		   "echo @### Composer and deploy ###",
-           "cd /usr/local/bin/order-lab/Scanorders2",		  
+           "cd /usr/local/bin/order-lab/orderflex",		  
 		   "composer self-update",
 		   "echo @### PostgreSQL Version after composer self-update ###",		
 		   "psql --version",
@@ -103,8 +103,8 @@
 		   "psql --version",
 		   "git pull",
            "git rev-parse HEAD",		   
-	       "sudo chmod +x /usr/local/bin/order-lab/Scanorders2/deploy_prod.sh",
-	       "bash /usr/local/bin/order-lab/Scanorders2/deploy_prod.sh",
+	       "sudo chmod +x /usr/local/bin/order-lab/orderflex/deploy_prod.sh",
+	       "bash /usr/local/bin/order-lab/orderflex/deploy_prod.sh",
 	       "sudo chown -R apache:apache /usr/local/bin/order-lab",		           
            "sudo chown -R apache:apache /usr/local/bin/order-lab/.git/",
 		   "echo @### PostgreSQL Version end of installation ###",		

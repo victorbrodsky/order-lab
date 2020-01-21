@@ -273,16 +273,38 @@ php bin/console about
 Add tag locally: git tag -a -m "symfony v 4.4.2 and php 7.4.1 without calendar bundle" sf4.4-php7.4
 Push tag to remote: git push origin sf4.4-php7.4
 
-Rename master to sf3.4-php5.6 and create a new master from sf4-php7:
-https://stackoverflow.com/questions/2862590/how-to-replace-master-branch-in-git-entirely-from-another-branch
+I) Rename master to sf3.4-php5.6 and create a new master from sf4-php7
+(https://stackoverflow.com/questions/2862590/how-to-replace-master-branch-in-git-entirely-from-another-branch):
+1) git branch -m master master-old  # rename master on local (master-old is sf3.4-php5.6)
+2) git push origin :master          # delete master on remote (git push -f origin :master)
+3) git push origin master-old       # create master-old on remote
+4) git checkout -b master seotweaks # create a new local master on top of seotweaks
+5) git push origin master           # create master on remote
 
-git branch -m master master-old  # rename master on local (master-old is sf3.4-php5.6)
-git push origin :master          # delete master on remote (git push -f origin :master)
-git push origin master-old       # create master-old on remote
-git checkout -b master seotweaks # create a new local master on top of seotweaks
-git push origin master           # create master on remote
+II) Error: failed to push some refs to ... (https://matthew-brett.github.io/pydagogue/gh_delete_master.html):
+1) First you delete master in your local clone. To do this we first make a new branch called placeholder or similar, and delete master from there:
+git branch placeholder
+git checkout placeholder
+2) push up the placeholder branch:
+git checkout placeholder # if not on placeholder already
+git push origin placeholder
+3) Then set placeholder to be the github default branch.
+Go to the main github page for your forked repository, and click on the “Admin” button.
+There’s a “Default branch” dropdown list near the top of the screen.
+From there, select placeholder.
+On the interface I’m looking at, a green tick appears above the dropdown list. Now you can do (from the command line):
+4) Delete master
+git push origin :master
+5) Continue on I(3)
+
 
 Clone specific branch:
-git clone --single-branch --branch <branchname> <remote-repo>
+git clone --single-branch --branch <branchname> <remote-repo-url>
+git clone --single-branch --branch <tag_name> <remote-repo-url>
 git clone --single-branch --branch sf4-php7 https://github.com/victorbrodsky/order-lab.git
 
+Generate DigitalOcean:
+1) Create a new folder Test1
+2) git clone --single-branch --branch sf4-php7 https://github.com/victorbrodsky/order-lab.git
+3) cd order-lab/packer
+4) bash deploy-order-digital-ocean.sh --token yourapitoken --os centos --parameters parameters.yml

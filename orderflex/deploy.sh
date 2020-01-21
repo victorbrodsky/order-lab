@@ -35,8 +35,8 @@ function prep()
     echo "Preparing for Deploy..."
 
     #try to set permission
-    chown -R www-data:www-data $PROJECT_LOCAL_PATH/web
-    chown -R apache:apache $PROJECT_LOCAL_PATH/web
+    chown -R www-data:www-data $PROJECT_LOCAL_PATH/public
+    chown -R apache:apache $PROJECT_LOCAL_PATH/public
 
     #for production: git remote update, git pull
     #echo "*** Pull code from git repository ***"
@@ -81,11 +81,11 @@ function prep()
     echo "*** Set permissions ***"
     chown -R www-data:www-data $PROJECT_LOCAL_PATH/var/cache
     chown -R www-data:www-data $PROJECT_LOCAL_PATH/var/logs
-    chown -R www-data:www-data $PROJECT_LOCAL_PATH/web
+    chown -R www-data:www-data $PROJECT_LOCAL_PATH/public
 
     chown -R apache:apache $PROJECT_LOCAL_PATH/var/cache
     chown -R apache:apache $PROJECT_LOCAL_PATH/var/logs
-    chown -R apache:apache $PROJECT_LOCAL_PATH/web
+    chown -R apache:apache $PROJECT_LOCAL_PATH/public
 }
 
 
