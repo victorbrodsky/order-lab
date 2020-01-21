@@ -24,3 +24,4 @@ parameters:
     delivery_strategy: realtime
     swift_delivery_addresses:
         - oli2002@med.cornell.edu
+    connection_channel: http	
