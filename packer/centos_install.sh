@@ -113,96 +113,6 @@ f_install_postgresql12 () {
     sleep 1
 }
 
-#https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-centos-7
-f_install_postgresql_9.2_12 () {
-	echo -e "${COLOR} Installing Postgresql (9.2?) ... ${NC}"
-    sleep 1
-
-	#echo -e ${COLOR} Install the repository RPM, client and server packages ${NC}		
-	#sudo yum install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm -y
-	
-	sudo yum install -y postgresql-server postgresql-contrib
-	
-	sudo yum install -y oidentd
-	
-	echo -e ${COLOR} Optionally initialize the database and enable automatic start ${NC}
-	sudo postgresql-setup initdb
-	
-	echo -e ${COLOR} Start and enable postgresql ${NC}
-	sudo systemctl start postgresql
-	sudo systemctl enable postgresql
-	sudo systemctl status postgresql
-	
-	echo @### Create DB and create user $bashdbuser with password $bashdbpass###
-	sudo -Hiu postgres createdb scanorder
-	#sudo -Hiu postgres psql -c "CREATE USER symfony WITH PASSWORD 'symfony'"
-	sudo -Hiu postgres psql -c "CREATE USER $bashdbuser WITH PASSWORD '$bashdbpass'"
-	sudo -Hiu postgres psql -c "ALTER USER $bashdbuser WITH SUPERUSER"
-	sudo -Hiu postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE scanorder to $bashdbuser"
-	
-	echo -e ${COLOR} Modify pg_hba.conf in /var/lib/pgsql/12/data to replace "ident" to "md5" ${NC}
-	#Modify pg_hba.conf in /var/lib/pgsql/12/data to replace "ident" to "md5"
-	sed -i -e "s/ident/md5/g" /var/lib/pgsql/12/data/pg_hba.conf
-	sed -i -e "\$aTEXTTOEND" /var/lib/pgsql/12/data/pg_hba.conf
-	sed -i -e "s/TEXTTOEND/host all all 0.0.0.0/0 md5/g" /var/lib/pgsql/12/data/pg_hba.conf
-	
-	echo -e ${COLOR} postgresql.conf to listen all addresses on specified port ${NC}
-	sed -i -e "s/#listen_addresses/listen_addresses='*' #listen_addresses/g" /var/lib/pgsql/12/data/postgresql.conf
-	sed -i -e "s/#port/port = 5432 #port/g" /var/lib/pgsql/12/data/postgresql.conf
-	
-	sudo systemctl restart postgresql-12
-	
-	echo -e ${COLOR} Check Postgresql version: psql --version ${NC}
-	psql --version
-	
-	echo ""
-    sleep 1
-}
-#https://www.linode.com/docs/databases/postgresql/how-to-install-postgresql-relational-databases-on-centos-7/
-f_install_postgresql () {
-	echo -e "${COLOR} Installing Postgresql (9.2.24) ... ${NC}"
-    sleep 1
-
-	#echo -e ${COLOR} Install the repository RPM, client and server packages ${NC}		
-	#sudo yum install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm -y
-	
-	sudo yum install -y postgresql-server postgresql-contrib
-	
-	echo -e ${COLOR} Optionally initialize the database and enable automatic start ${NC}
-	sudo postgresql-setup initdb
-	
-	echo -e ${COLOR} Start and enable postgresql ${NC}
-	sudo systemctl start postgresql
-	sudo systemctl enable postgresql
-	sudo systemctl status postgresql
-	
-	echo @### Create DB and create user $bashdbuser with password $bashdbpass###
-	sudo -Hiu postgres createdb scanorder
-	#sudo -Hiu postgres psql -c "CREATE USER symfony WITH PASSWORD 'symfony'"
-	sudo -Hiu postgres psql -c "CREATE USER $bashdbuser WITH PASSWORD '$bashdbpass'"
-	sudo -Hiu postgres psql -c "ALTER USER $bashdbuser WITH SUPERUSER"
-	sudo -Hiu postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE scanorder to $bashdbuser"
-	
-	echo -e ${COLOR} Modify pg_hba.conf in /var/lib/pgsql/data to replace "ident" to "md5" ${NC}
-	#Modify pg_hba.conf in /var/lib/pgsql/data to replace "ident" and "peer" to "md5"
-	sed -i -e "s/peer/md5/g" /var/lib/pgsql/data/pg_hba.conf
-	sed -i -e "s/ident/md5/g" /var/lib/pgsql/data/pg_hba.conf
-	sed -i -e "\$aTEXTTOEND" /var/lib/pgsql/data/pg_hba.conf
-	sed -i -e "s/TEXTTOEND/host all all 0.0.0.0/0 md5/g" /var/lib/pgsql/data/pg_hba.conf
-	
-	echo -e ${COLOR} postgresql.conf to listen all addresses on specified port ${NC}
-	sed -i -e "s/#listen_addresses/listen_addresses='*' #listen_addresses/g" /var/lib/pgsql/data/postgresql.conf
-	sed -i -e "s/#port/port = 5432 #port/g" /var/lib/pgsql/data/postgresql.conf
-	
-	sudo systemctl restart postgresql
-	
-	echo -e ${COLOR} Check Postgresql version: psql --version ${NC}
-	psql --version
-	
-	echo ""
-    sleep 1
-}
-
 f_install_php74 () {
     ########## INSTALL APACHE 7.4 ##########
     echo "Installing apache 7.4 ..."
@@ -429,6 +339,95 @@ f_install_pgloader () {
 	cd /usr/local/bin/
 }
 
+#https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-centos-7
+f_install_postgresql_9.2_12 () {
+	echo -e "${COLOR} Installing Postgresql (9.2?) ... ${NC}"
+    sleep 1
+
+	#echo -e ${COLOR} Install the repository RPM, client and server packages ${NC}		
+	#sudo yum install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm -y
+	
+	sudo yum install -y postgresql-server postgresql-contrib
+	
+	sudo yum install -y oidentd
+	
+	echo -e ${COLOR} Optionally initialize the database and enable automatic start ${NC}
+	sudo postgresql-setup initdb
+	
+	echo -e ${COLOR} Start and enable postgresql ${NC}
+	sudo systemctl start postgresql
+	sudo systemctl enable postgresql
+	sudo systemctl status postgresql
+	
+	echo @### Create DB and create user $bashdbuser with password $bashdbpass###
+	sudo -Hiu postgres createdb scanorder
+	#sudo -Hiu postgres psql -c "CREATE USER symfony WITH PASSWORD 'symfony'"
+	sudo -Hiu postgres psql -c "CREATE USER $bashdbuser WITH PASSWORD '$bashdbpass'"
+	sudo -Hiu postgres psql -c "ALTER USER $bashdbuser WITH SUPERUSER"
+	sudo -Hiu postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE scanorder to $bashdbuser"
+	
+	echo -e ${COLOR} Modify pg_hba.conf in /var/lib/pgsql/12/data to replace "ident" to "md5" ${NC}
+	#Modify pg_hba.conf in /var/lib/pgsql/12/data to replace "ident" to "md5"
+	sed -i -e "s/ident/md5/g" /var/lib/pgsql/12/data/pg_hba.conf
+	sed -i -e "\$aTEXTTOEND" /var/lib/pgsql/12/data/pg_hba.conf
+	sed -i -e "s/TEXTTOEND/host all all 0.0.0.0/0 md5/g" /var/lib/pgsql/12/data/pg_hba.conf
+	
+	echo -e ${COLOR} postgresql.conf to listen all addresses on specified port ${NC}
+	sed -i -e "s/#listen_addresses/listen_addresses='*' #listen_addresses/g" /var/lib/pgsql/12/data/postgresql.conf
+	sed -i -e "s/#port/port = 5432 #port/g" /var/lib/pgsql/12/data/postgresql.conf
+	
+	sudo systemctl restart postgresql-12
+	
+	echo -e ${COLOR} Check Postgresql version: psql --version ${NC}
+	psql --version
+	
+	echo ""
+    sleep 1
+}
+#https://www.linode.com/docs/databases/postgresql/how-to-install-postgresql-relational-databases-on-centos-7/
+f_install_postgresql () {
+	echo -e "${COLOR} Installing Postgresql (9.2.24) ... ${NC}"
+    sleep 1
+
+	#echo -e ${COLOR} Install the repository RPM, client and server packages ${NC}		
+	#sudo yum install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm -y
+	
+	sudo yum install -y postgresql-server postgresql-contrib
+	
+	echo -e ${COLOR} Optionally initialize the database and enable automatic start ${NC}
+	sudo postgresql-setup initdb
+	
+	echo -e ${COLOR} Start and enable postgresql ${NC}
+	sudo systemctl start postgresql
+	sudo systemctl enable postgresql
+	sudo systemctl status postgresql
+	
+	echo @### Create DB and create user $bashdbuser with password $bashdbpass###
+	sudo -Hiu postgres createdb scanorder
+	#sudo -Hiu postgres psql -c "CREATE USER symfony WITH PASSWORD 'symfony'"
+	sudo -Hiu postgres psql -c "CREATE USER $bashdbuser WITH PASSWORD '$bashdbpass'"
+	sudo -Hiu postgres psql -c "ALTER USER $bashdbuser WITH SUPERUSER"
+	sudo -Hiu postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE scanorder to $bashdbuser"
+	
+	echo -e ${COLOR} Modify pg_hba.conf in /var/lib/pgsql/data to replace "ident" to "md5" ${NC}
+	#Modify pg_hba.conf in /var/lib/pgsql/data to replace "ident" and "peer" to "md5"
+	sed -i -e "s/peer/md5/g" /var/lib/pgsql/data/pg_hba.conf
+	sed -i -e "s/ident/md5/g" /var/lib/pgsql/data/pg_hba.conf
+	sed -i -e "\$aTEXTTOEND" /var/lib/pgsql/data/pg_hba.conf
+	sed -i -e "s/TEXTTOEND/host all all 0.0.0.0/0 md5/g" /var/lib/pgsql/data/pg_hba.conf
+	
+	echo -e ${COLOR} postgresql.conf to listen all addresses on specified port ${NC}
+	sed -i -e "s/#listen_addresses/listen_addresses='*' #listen_addresses/g" /var/lib/pgsql/data/postgresql.conf
+	sed -i -e "s/#port/port = 5432 #port/g" /var/lib/pgsql/data/postgresql.conf
+	
+	sudo systemctl restart postgresql
+	
+	echo -e ${COLOR} Check Postgresql version: psql --version ${NC}
+	psql --version
+	
+	echo ""
+    sleep 1
+}
 
 f_install_php72_ORIG () {
     ########## INSTALL APACHE 7.2 ##########
