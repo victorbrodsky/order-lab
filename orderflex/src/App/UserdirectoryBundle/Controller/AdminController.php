@@ -2557,7 +2557,10 @@ class AdminController extends Controller
         //languages
         $language = $em->getRepository('AppUserdirectoryBundle:LanguageList')->findOneByName("American English");
         if( !$language ) {
-            exit('No object: "American English"');
+            $language = $em->getRepository('AppUserdirectoryBundle:LanguageList')->findOneByName("English");
+        }
+        if( !$language ) {
+            exit('No object: "American English or English"');
         }
         $pathDefaultGroup->addLanguage($language);
 
