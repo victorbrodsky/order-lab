@@ -299,3 +299,6 @@ Accept connection from localhost?
 "knplabs/knp-paginator-bundle": "~2.5",
 "knplabs/knp-snappy-bundle": "v1.4",		
 Seacrh why knp-snappy-bundle does not show generated barcodes
+
+DigitalOcean:
+git clone --single-branch --branch <branchname> <remote-repo>
