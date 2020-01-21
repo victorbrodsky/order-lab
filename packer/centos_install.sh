@@ -273,6 +273,9 @@ f_install_prepare () {
 	echo -e ${COLOR} Copy 000-default.conf to /etc/httpd/conf.d ${NC}
 	cp /usr/local/bin/order-lab/packer/000-default.conf /etc/httpd/conf.d
 	
+	echo -e ${COLOR} Copy env ${NC}
+	cp /usr/local/bin/order-lab/packer/.env /usr/local/bin/order-lab/orderflex/
+	
 	#echo @### Copy php.ini to /etc/opt/remi/php72/ ###
 	#/etc/opt/remi/php72/ or /etc/
 	#cp /etc/opt/remi/php72/php.ini /etc/opt/remi/php72/php_ORIG.ini
