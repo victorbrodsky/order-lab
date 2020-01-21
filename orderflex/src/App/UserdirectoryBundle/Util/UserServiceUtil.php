@@ -1227,6 +1227,12 @@ class UserServiceUtil {
             "refs".DIRECTORY_SEPARATOR."heads".DIRECTORY_SEPARATOR.$branch;
         //echo $filename."<br>";
 
+        if( file_exists($filename) ) {
+            //OK
+        } else {
+            return false;
+        }
+
         //$filename = sprintf('.git/refs/heads/%s',$branch);
         $hash = file_get_contents($filename);
         $hash = trim($hash);
