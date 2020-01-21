@@ -3427,7 +3427,7 @@ class AdminController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $entities = $em->getRepository('AppUserdirectoryBundle:LanguageList')->findAll();
-        if( $entities ) {
+        if( count($entities) > 0 ) {
             $logger->notice("Exit generateLanguages. LanguageList already generated. count=".count($entities));
             return -1;
         }
@@ -3513,7 +3513,7 @@ class AdminController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $entities = $em->getRepository('AppUserdirectoryBundle:LocaleList')->findAll();
-        if( $entities ) {
+        if( count($entities) > 0 ) {
             $logger->notice("Exit generateLocales. LocaleList already generated. count=".count($entities));
             return -1;
         }

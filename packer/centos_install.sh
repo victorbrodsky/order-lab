@@ -141,7 +141,7 @@ f_install_php74 () {
 	echo @### PHP4: Install PHP packages ###
 	#sudo yum -y install php72-php-fpm php72-php-gd php72-php-json php72-php-mbstring php72-php-mysqlnd php72-php-xml php72-php-xmlrpc php72-php-opcache
 	sudo yum -y install php php-mcrypt php-cli php-gd php-curl php-ldap php-zip php-fileinfo php-opcache php-fpm php-mbstring php-xml php-json
-	sudo yum -y install php-pgsql php-xmlreader php-pdo php-dom
+	sudo yum -y install php-pgsql php-xmlreader php-pdo php-dom php-intl
 	
 	# Config to fix error Apache not load PHP file
     #chown -R apache:apache /var/www
