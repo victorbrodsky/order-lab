@@ -2713,6 +2713,7 @@ class FormNodeUtil
     public function addFormToHolder( $parent, $holderName, $sections, $parentMessageCategoryName=null ) {
         $objectTypeForm = $this->getObjectTypeByName('Form');
         $objectTypeFormSection = $this->getObjectTypeByName('Form Section');
+        $thisParentForm = NULL;
 
         if( $holderName ) {
             //Create form: i.e. Transfusion Medicine -> Third+ dose platelets [Message Category]
