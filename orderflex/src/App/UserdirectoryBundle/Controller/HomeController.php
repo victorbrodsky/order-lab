@@ -42,7 +42,7 @@ class HomeController extends Controller {
 
         $platformLogoPath = null;
         $platformLogos = $userSecUtil->getSiteSettingParameter('platformLogos');
-        if( count($platformLogos) > 0 ) {
+        if( is_array($platformLogos) && count($platformLogos) > 0 ) {
             $platformLogo = $platformLogos->first();
             $platformLogoPath = $platformLogo->getAbsoluteUploadFullPath();
         }
