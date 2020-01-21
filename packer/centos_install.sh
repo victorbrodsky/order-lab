@@ -471,8 +471,8 @@ f_install_apache
 f_install_postgresql12
 #f_install_postgresql
 #f_install_php72
-#f_install_php56
-f_install_php74
+f_install_php56
+#f_install_php74
 f_install_util
 f_install_order
 f_install_prepare
