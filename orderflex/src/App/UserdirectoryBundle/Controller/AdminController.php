@@ -7671,6 +7671,8 @@ class AdminController extends Controller
 
         if( count($administrators) == 1 ) {
             $administrator = $administrators[0];
+        } else {
+            $administrator = NULL;
         }
 
         $encoder = $this->container->get('security.password_encoder');

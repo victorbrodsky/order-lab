@@ -304,7 +304,15 @@ git clone --single-branch --branch <tag_name> <remote-repo-url>
 git clone --single-branch --branch sf4-php7 https://github.com/victorbrodsky/order-lab.git
 
 Generate DigitalOcean:
+Symfony 4.4 with PHP 7.4:
 1) Create a new folder Test1
 2) git clone --single-branch --branch sf4-php7 https://github.com/victorbrodsky/order-lab.git
 3) cd order-lab/packer
 4) bash deploy-order-digital-ocean.sh --token yourapitoken --os centos
+
+Symfony 3.4 with PHP 7.4:
+1) Create a new folder Test1
+2) git clone --single-branch --branch sf3.4-php5.6-windows https://github.com/victorbrodsky/order-lab.git
+3) cd order-lab/packer
+4) bash deploy-order-digital-ocean.sh --token yourapitoken --os centos
+
