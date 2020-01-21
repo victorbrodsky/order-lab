@@ -267,6 +267,7 @@ class FellAppUtil {
         }
 
         //add statuses
+        $filterType = array();
         foreach( $fellTypes as $type ) {
             //echo "type: id=".$type->getId().", name=".$type->getName()."<br>";
             $filterType[$type->getId()] = $type->getName();
