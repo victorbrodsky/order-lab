@@ -514,6 +514,10 @@ class ScanAdminController extends AdminController
 
         $inputFileName = __DIR__ . '/../Resources/Stains.xlsm';
 
+        if( !file_exists($inputFileName) ) {
+            return 0;
+        }
+
         try {
             $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
             $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
