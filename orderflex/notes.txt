@@ -307,4 +307,4 @@ Generate DigitalOcean:
 1) Create a new folder Test1
 2) git clone --single-branch --branch sf4-php7 https://github.com/victorbrodsky/order-lab.git
 3) cd order-lab/packer
-4) bash deploy-order-digital-ocean.sh --token yourapitoken --os centos --parameters parameters.yml
+4) bash deploy-order-digital-ocean.sh --token yourapitoken --os centos

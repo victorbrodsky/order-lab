@@ -87,6 +87,9 @@ $user = $container->getParameter('database_user');
 $password = $container->getParameter('database_password');
 
 $connection_channel = $container->getParameter('connection_channel');
+if( !$connection_channel ) {
+    $connection_channel = 'http';
+}
 
 //echo "driver=".$driver."<br>";
 //echo "host=".$host."<br>";
