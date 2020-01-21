@@ -310,7 +310,7 @@ Symfony 4.4 with PHP 7.4:
 3) cd order-lab/packer
 4) bash deploy-order-digital-ocean.sh --token yourapitoken --os centos
 
-Symfony 3.4 with PHP 7.4:
+Symfony 3.4 with PHP 5.6:
 1) Create a new folder Test1
 2) git clone --single-branch --branch sf3.4-php5.6-windows https://github.com/victorbrodsky/order-lab.git
 3) cd order-lab/packer
