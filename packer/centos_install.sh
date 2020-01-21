@@ -203,70 +203,6 @@ f_install_postgresql () {
     sleep 1
 }
 
-#https://www.svnlabs.com/blogs/install-apache-mysql-php-5-6-on-centos-7/
-f_install_php56 () {
-    ########## INSTALL PHP 5.6 ##########
-    echo -e "${COLOR} Installing php 5.6 ... ${NC}"
-    sleep 1
-	
-	#Install EPEL repository
-	#sudo rpm -Uvh http://vault.centos.org/7.0.1406/extras/x86_64/Packages/epel-release-7-5.noarch.rpm
-	#Install remi repository
-	#sudo rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-7.rpm	
-	
-	#https://www.tecmint.com/install-php-5-6-on-centos-7/
-	echo -e ${COLOR} Install: noarch and remi ${NC}	
-	sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-	sudo yum install -y http://rpms.remirepo.net/enterprise/remi-release-7.rpm
-	
-	echo -e ${COLOR} Install: yum install -y yum-utils ${NC}		
-	sudo yum install -y yum-utils
-	
-	#Enable remi
-	#echo "Enable remi"
-	#yum -y --enablerepo=remi,remi-php56 install php php-common
-	
-	echo -e  ${COLOR} Enable remi-php56 ${NC}
-	yum-config-manager --enable remi-php56
-	
-	echo -e ${COLOR} Install php 5.6: install -y php ${NC}	
-	sudo yum install -y php php-mcrypt php-cli php-gd php-curl php-mysql php-ldap php-zip php-fileinfo php-pear php-pdo php-pgsql php-xml php-simplexml php-zip php-mbstring php-intl
-	
-	#echo -e ${COLOR} Install php 5.6: install -y php ${NC}	
-	#sudo yum install -y php php-mcrypt php-cli php-gd php-curl php-mysql php-ldap 
-
-	#echo -e ${COLOR} Install php extensions ${NC}	
-	#sudo yum install -y php-zip php-fileinfo php-pear php-pdo php-pgsql php-xml php-simplexml php-zip php-mbstring
-
-	#Install php 5.6 on Centos 7
-	#echo "Enable remi and Install php 5.6 on Centos 7"
-	#sudo yum -y --enablerepo=remi,remi-php56 install php-cli php-pear php-pdo php-mysql php-mysqlnd php-pgsql php-sqlite php-gd php-mbstring php-mcrypt php-xml php-simplexml php-curl php-zip
-	
-	#Install php 5.6 on Rhel 7
-	#https://docs.nextcloud.com/server/13.0.0/admin_manual/installation/php_56_installation.html
-	#1) subscription-manager repos --enable rhel-server-rhscl-7-eus-rpms
-	#2) yum install rh-php56 rh-php56-php rh-php56-php-gd rh-php56-php-mbstring
-	#3) sudo yum install rh-php56-php-pgsql
-	#4) cp /opt/rh/httpd24/root/etc/httpd/conf.d/rh-php56-php.conf /etc/httpd/conf.d/
-	#   cp /opt/rh/httpd24/root/etc/httpd/conf.modules.d/10-rh-php56-php.conf /etc/httpd/conf.modules.d/
-	#   cp /opt/rh/httpd24/root/etc/httpd/modules/librh-php56-php5.so /etc/httpd/modules/
-	#yum install php56-php-cli
-	
-	#/opt/rh/rh-php56/root/usr/bin/php -v
-	#ln -s /usr/bin/php56 /usr/bin/php
-	
-	# Restart Apache
-    sudo systemctl restart httpd.service
-	
-	#chown -R apache:apache /var/www/html/
-	#chmod -R 775 /var/www/
-
-	echo -e  ${COLOR} php -v ${NC}
-	php -v
-	
-	echo ""
-    sleep 1
-}
 f_install_php74 () {
     ########## INSTALL APACHE 7.4 ##########
     echo "Installing apache 7.4 ..."
@@ -284,8 +220,8 @@ f_install_php74 () {
 	sudo yum -y update
 
 	#echo @### PHP3: Search for PHP 7.4 packages ###
-	#sudo yum search php72 | more
-	#sudo yum search php72 | egrep 'fpm|gd|mysql|memcache'
+	#sudo yum search php74 | more
+	#sudo yum search php74 | egrep 'fpm|gd|mysql|memcache'
 	
 	echo @### PHP3: Install PHP 7.4 ###
 	#sudo yum -y install php72
@@ -470,9 +406,6 @@ f_install_prepare () {
 f_update_os
 f_install_apache
 f_install_postgresql12
-#f_install_postgresql
-#f_install_php72
-#f_install_php56
 f_install_php74
 f_install_util
 f_install_order
@@ -590,6 +523,70 @@ f_install_php72 () {
 	
 	# Restart Apache
     sudo systemctl restart httpd.service
+	
+	echo ""
+    sleep 1
+}
+#https://www.svnlabs.com/blogs/install-apache-mysql-php-5-6-on-centos-7/
+f_install_php56 () {
+    ########## INSTALL PHP 5.6 ##########
+    echo -e "${COLOR} Installing php 5.6 ... ${NC}"
+    sleep 1
+	
+	#Install EPEL repository
+	#sudo rpm -Uvh http://vault.centos.org/7.0.1406/extras/x86_64/Packages/epel-release-7-5.noarch.rpm
+	#Install remi repository
+	#sudo rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-7.rpm	
+	
+	#https://www.tecmint.com/install-php-5-6-on-centos-7/
+	echo -e ${COLOR} Install: noarch and remi ${NC}	
+	sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+	sudo yum install -y http://rpms.remirepo.net/enterprise/remi-release-7.rpm
+	
+	echo -e ${COLOR} Install: yum install -y yum-utils ${NC}		
+	sudo yum install -y yum-utils
+	
+	#Enable remi
+	#echo "Enable remi"
+	#yum -y --enablerepo=remi,remi-php56 install php php-common
+	
+	echo -e  ${COLOR} Enable remi-php56 ${NC}
+	yum-config-manager --enable remi-php56
+	
+	echo -e ${COLOR} Install php 5.6: install -y php ${NC}	
+	sudo yum install -y php php-mcrypt php-cli php-gd php-curl php-mysql php-ldap php-zip php-fileinfo php-pear php-pdo php-pgsql php-xml php-simplexml php-zip php-mbstring php-intl
+	
+	#echo -e ${COLOR} Install php 5.6: install -y php ${NC}	
+	#sudo yum install -y php php-mcrypt php-cli php-gd php-curl php-mysql php-ldap 
+
+	#echo -e ${COLOR} Install php extensions ${NC}	
+	#sudo yum install -y php-zip php-fileinfo php-pear php-pdo php-pgsql php-xml php-simplexml php-zip php-mbstring
+
+	#Install php 5.6 on Centos 7
+	#echo "Enable remi and Install php 5.6 on Centos 7"
+	#sudo yum -y --enablerepo=remi,remi-php56 install php-cli php-pear php-pdo php-mysql php-mysqlnd php-pgsql php-sqlite php-gd php-mbstring php-mcrypt php-xml php-simplexml php-curl php-zip
+	
+	#Install php 5.6 on Rhel 7
+	#https://docs.nextcloud.com/server/13.0.0/admin_manual/installation/php_56_installation.html
+	#1) subscription-manager repos --enable rhel-server-rhscl-7-eus-rpms
+	#2) yum install rh-php56 rh-php56-php rh-php56-php-gd rh-php56-php-mbstring
+	#3) sudo yum install rh-php56-php-pgsql
+	#4) cp /opt/rh/httpd24/root/etc/httpd/conf.d/rh-php56-php.conf /etc/httpd/conf.d/
+	#   cp /opt/rh/httpd24/root/etc/httpd/conf.modules.d/10-rh-php56-php.conf /etc/httpd/conf.modules.d/
+	#   cp /opt/rh/httpd24/root/etc/httpd/modules/librh-php56-php5.so /etc/httpd/modules/
+	#yum install php56-php-cli
+	
+	#/opt/rh/rh-php56/root/usr/bin/php -v
+	#ln -s /usr/bin/php56 /usr/bin/php
+	
+	# Restart Apache
+    sudo systemctl restart httpd.service
+	
+	#chown -R apache:apache /var/www/html/
+	#chmod -R 775 /var/www/
+
+	echo -e  ${COLOR} php -v ${NC}
+	php -v
 	
 	echo ""
     sleep 1
