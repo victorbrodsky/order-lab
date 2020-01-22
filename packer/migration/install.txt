@@ -121,6 +121,9 @@ sudo chown -R apache:apache /opt/order-lab
 cp /opt/order-lab/packer/000-default.conf /etc/httpd/conf.d
 f_install_prepare()	
 
+SSL:
+sudo yum install mod_ssl
+
 
 
 

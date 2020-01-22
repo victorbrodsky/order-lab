@@ -319,3 +319,10 @@ Symfony 3.4 with PHP 5.6:
 3) cd order-lab/packer
 4) bash deploy-order-digital-ocean.sh --token yourapitoken --os centos
 
+
+Redirect:
+#.htaccess: Redirect only http://collage.med.cornell.edu/order/* to http://157.139.226.86/order/* keeping all url parameters
+###Options +FollowSymLinks
+###RewriteEngine on
+RewriteRule (.*) http://157.139.226.86/order/$1 [R=301,L]
+RewriteRule (.*) http://view-test.med.cornell.edu/order/$1 [R=301,L] 
