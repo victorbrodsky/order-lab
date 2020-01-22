@@ -272,6 +272,19 @@ Note: If you choose to use MySQL database on Linux instead of Postgres, you will
 
 Note: If you choose to use MySQL database on Linux instead of Postgres, you will need to increase the size of the sort buffer by setting "sort_buffer_size" to 512K in /etc/mysql/my.cnf.
 
+## Installation Instructions for deploying different versions of Symfony and PHP on Linux (Digital Ocean)
+
+Symfony 4.4 with PHP 7.4:
+1) git clone --single-branch --branch sf4-php7 https://github.com/victorbrodsky/order-lab.git
+2) cd order-lab/packer
+3) bash deploy-order-digital-ocean.sh --token yourapitoken --os centos
+
+Symfony 3.4 with PHP 5.6:
+1) git clone --single-branch --branch sf3.4-php5.6-windows https://github.com/victorbrodsky/order-lab.git
+2) cd order-lab/packer
+3) bash deploy-order-digital-ocean.sh --token yourapitoken --os centos
+
+
 ## Installation Instructions for deploying a Windows-based server directly
 
 > Tested on Windows 10 and Windows 7
@@ -532,13 +545,13 @@ Note: If you choose to use MySQL database on Linux instead of Postgres, you will
 
 ### To include assets located in your bundles' Resources/public folder (target is by default "web"):
 
-	 php app/console assets:install
+	 php bin/console assets:install
 
 ### Note: For production mode execute the following command to clean cache and fix assetic links to js and css
 (read: Dumping Asset Files in the dev environment [http://symfony.com/doc/current/cookbook/assetic/asset_management.html](http://symfony.com/doc/current/cookbook/assetic/asset_management.html)):
 
-	 php app/console cache:clear --env=prod --no-debug or (php app/console cache:clear --env=prod --no-debug --no-warmup)
-	 php app/console assetic:dump --env=prod --no-debug
+	 php bin/console cache:clear --env=prod --no-debug or (php bin/console cache:clear --env=prod --no-debug --no-warmup)
+	 php bin/console assetic:dump --env=prod --no-debug
 
 ### After modification of html, js or css files, run this single console script to clear cache and dump assets in /Scanorders2 folder:
 
@@ -559,24 +572,24 @@ Note: If you choose to use MySQL database on Linux instead of Postgres, you will
 
 1) Generate only getters/setters:
 
-	 php app/console doctrine:generate:entities Oleg/OrderformBundle/Entity/Slide
+	 php bin/console doctrine:generate:entities Oleg/OrderformBundle/Entity/Slide
 
 2) Generate CRUD:
 
-	 php app/console generate:doctrine:crud --entity=OlegOrderformBundle:Accession --format=annotation --with-write
+	 php bin/console generate:doctrine:crud --entity=OlegOrderformBundle:Accession --format=annotation --with-write
 
 3) Create database according to Entity
 
-	 php app/console doctrine:database:create
+	 php bin/console doctrine:database:create
 
 4) Create tables:
 
-	 php app/console doctrine:schema:update --force
+	 php bin/console doctrine:schema:update --force
 
 5) Recreate DB:
 
-	 php app/console doctrine:database:drop --force
-	 php app/console doctrine:database:create
+	 php bin/console doctrine:database:drop --force
+	 php bin/console doctrine:database:create
 
 ### Create Symfony project (cd to htdocs/order)
 
@@ -590,7 +603,7 @@ Note: If you choose to use MySQL database on Linux instead of Postgres, you will
 
 3) create bundle: 
 
-	php app/console generate:bundle --namespace=Acme/HelloBundle --format=yml
+	php bin/console generate:bundle --namespace=Acme/HelloBundle --format=yml
 
 4) Run command:
 
