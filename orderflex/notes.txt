@@ -297,6 +297,9 @@ On the interface I’m looking at, a green tick appears above the dropdown list.
 git push origin :master
 5) Continue on I(3)
 
+After renaming remote branch, git pull to local:
+git fetch --all
+git reset --hard origin/{{your branch name}}
 
 Clone specific branch:
 git clone --single-branch --branch <branchname> <remote-repo-url>
