@@ -17,10 +17,10 @@ DirectoryIndex index.php
     Options -MultiViews
 </IfModule>
 
-Require all granted
-
 <IfModule mod_rewrite.c>
     RewriteEngine On
+
+    RewriteRule ^(.*)$ index.php/$1 [L]
 
     # Determine the RewriteBase automatically and set it as environment variable.
     # If you are using Apache aliases to do mass virtual hosting or installed the
