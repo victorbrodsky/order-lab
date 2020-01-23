@@ -25,7 +25,7 @@ main_under_construction:
 app_deidentifier:
     resource: "App/DeidentifierBundle/Controller/"
     type:     annotation
-    prefix:   /deidentifier
+    prefix:   /order/deidentifier
     schemes:  ['%connection_channel%']
 
 app_fellapp:
