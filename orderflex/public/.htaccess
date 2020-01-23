@@ -17,6 +17,8 @@ DirectoryIndex index.php
     Options -MultiViews
 </IfModule>
 
+Require all granted
+
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
