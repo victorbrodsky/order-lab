@@ -494,14 +494,32 @@ function getSitename() {
     //if( typeof _sitename != 'undefined' && _sitename != "" )
     //    return;
 
-    var holder = '/order/';
-    var sitename = '';
-    var url = document.URL;
+    // var holder = '/order/';
+    // var sitename = '';
+    // var url = document.URL;
     //console.log("url="+url);
-    var urlArr = url.split(holder);
+    // if( url.indexOf(holder) !== -1 ) {
+    //     var urlArr = url.split(holder);
+    //     var urlSite = urlArr[1];
+    // } else {
+    //     //https://css-tricks.com/example/index.html?s=flexbox
+    //     //window.location.host = "css-tricks.com"
+    //     //window.location.pathname = "example/index.html"
+    //     var urlArr = window.location.pathname.split('/');
+    //     var urlSite = urlArr[0];
+    // }
+
+    //https://css-tricks.com/example/index.html?s=flexbox
+    //window.location.host = "css-tricks.com"
+    //window.location.pathname = "example/index.html"
+    var urlArr = window.location.pathname.split('/');
+    var urlSite = urlArr[0];
+
     //get rid of app_dev.php
-    var urlfullClean = urlArr[1].replace("app_dev.php/", "");
+    var urlfullClean = urlSite.replace("app_dev.php/", "");
+    var urlfullClean = urlSite.replace("index.php/", "");
     //console.log("urlfullClean="+urlfullClean);
+
     var urlCleanArr =  urlfullClean.split("/");
     sitename =  urlCleanArr[0];
 
