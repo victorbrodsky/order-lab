@@ -778,7 +778,7 @@ class ReportGenerator {
             //http://192.168.37.128/order/app_dev.php/fellowship-applications/download-pdf/49
             $context->setHost('localhost');
             $context->setScheme($connectionChannel);
-            $context->setBaseUrl('/order');
+            //$context->setBaseUrl('/order');
 
 //        if( $env == 'dev' ) {
 //            //$context->setHost('localhost');
