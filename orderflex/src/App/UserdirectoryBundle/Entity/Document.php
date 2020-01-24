@@ -148,6 +148,7 @@ class Document {
     private $entityId;
 
 
+    private $prefix = 'order'; //accommodate 'order' prefix in view.med.cornell.edu/order/, however it should be independent on the url
 
     public function __construct($creator=null) {
         $this->setCreator($creator);
@@ -550,7 +551,7 @@ class Document {
             $uniquename = $size . "-" . $uniquename;
         }
 
-        $path = $scheme . "://" . $serverName . "/order/" . $this->getUploadDirectory() . '/' . $uniquename;
+        $path = $scheme . "://" . $serverName . DIRECTORY_SEPARATOR . $this->prefix . DIRECTORY_SEPARATOR . $this->getUploadDirectory() . DIRECTORY_SEPARATOR . $uniquename;
 
         if ($onlyResize == false) {
             if ($size) {
@@ -593,11 +594,12 @@ class Document {
 
     public function getRelativeUploadFullPath()
     {
-        return $this->getPrefixPath().$this->getUploadDirectory().'/'.$this->getUniquename();
+        return $this->getPrefixPath().$this->getUploadDirectory().DIRECTORY_SEPARATOR.$this->getUniquename();
     }
 
     protected function getPrefixPath() {
-        return '../../../../order/';
+        //return '../../../../order/';
+        return '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . $this->prefix . DIRECTORY_SEPARATOR;
     }
 
     public function getFileSystemPath() {
