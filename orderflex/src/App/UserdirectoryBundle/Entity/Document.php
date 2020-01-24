@@ -148,8 +148,8 @@ class Document {
     private $entityId;
 
 
-    //private $prefix = 'order'; //accommodate 'order' prefix in view.med.cornell.edu/order/, however it should be independent on the url
-    private $prefix = '';
+    //private $subdomain = 'order'; //accommodate 'order' subdomain in view.med.cornell.edu/order/, however it should be independent on the url
+    private $subdomain = '';
 
     public function __construct($creator=null) {
         $this->setCreator($creator);
@@ -552,13 +552,13 @@ class Document {
             $uniquename = $size . "-" . $uniquename;
         }
 
-        if( $this->prefix ) {
-            $prefix = $this->prefix . DIRECTORY_SEPARATOR;
+        if( $this->subdomain ) {
+            $subdomain = $this->subdomain . DIRECTORY_SEPARATOR;
         } else {
-            $prefix = '';
+            $subdomain = '';
         }
 
-        $path = $scheme . "://" . $serverName . DIRECTORY_SEPARATOR . $prefix . $this->getUploadDirectory() . DIRECTORY_SEPARATOR . $uniquename;
+        $path = $scheme . "://" . $serverName . DIRECTORY_SEPARATOR . $subdomain . $this->getUploadDirectory() . DIRECTORY_SEPARATOR . $uniquename;
 
         if ($onlyResize == false) {
             if ($size) {
@@ -607,13 +607,13 @@ class Document {
     protected function getPrefixPath() {
         //return '../../../../order/';
 
-        if( $this->prefix ) {
-            $prefix = $this->prefix . DIRECTORY_SEPARATOR;
+        if( $this->subdomain ) {
+            $subdomain = $this->subdomain . DIRECTORY_SEPARATOR;
         } else {
-            $prefix = '';
+            $subdomain = '';
         }
 
-        return '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . $prefix;
+        return '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . $subdomain;
     }
 
     public function getFileSystemPath() {
