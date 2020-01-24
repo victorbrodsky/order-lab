@@ -196,11 +196,23 @@ class WebTestBase extends WebTestCase
 
 //        $connectionChannel = NULL;
 //        //$connectionChannel = $userSecUtil->getSiteSettingParameter('connectionChannel');
-        $httpsChannel = false;
-        $httpsChannel = true;
+        //$httpsChannel = false;
+        //$httpsChannel = true;
 //        if( $connectionChannel == 'https' ) {
 //            $httpsChannel = true;
 //        }
+
+        //To specify http channel run it as: HTTP=1 ./bin/phpunit
+        //To specify https channel (default) run it as: ./bin/phpunit
+        $channel = getenv('HTTP');
+        //echo "channel=[".$httpsChannel."]<br>";
+        if( $channel ) {
+            //echo "HTTP";
+            $httpsChannel = false;
+        } else {
+            //echo "HTTPS";
+            $httpsChannel = true;
+        }
 
         $client = static::createClient([], [
             'HTTP_HOST' => '127.0.0.1',
