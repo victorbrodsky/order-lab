@@ -71,7 +71,9 @@ class TranslationalResearchLoginSuccessHandler extends LoginSuccessHandler {
         //THEN: assign minimum role for new project page "ROLE_TRANSRES_REQUESTER"
         //THEN: redirect to confirmation page
         //THEN: from confirmation page redirect to new project page
-        if( $targetUrl == $url && strpos($url,"order/translational-research/project/new") !== false ) {
+        //$subdomain = "order/";
+        $subdomain = "";
+        if( $targetUrl == $url && strpos($url,$subdomain."translational-research/project/new") !== false ) {
 
             //get specialty
             $transresUtil = $this->container->get('transres_util');
@@ -118,7 +120,9 @@ class TranslationalResearchLoginSuccessHandler extends LoginSuccessHandler {
 
     //overwrite parent basic user check for minimum role
     public function checkBasicRole($user,$targetUrl=null) {
-        if( strpos($targetUrl,"order/translational-research/project/new") !== false ) {
+        //$subdomain = "order/";
+        $subdomain = "";
+        if( strpos($targetUrl,$subdomain."translational-research/project/new") !== false ) {
             //allow new users to continue to the new project page
             return;
         }

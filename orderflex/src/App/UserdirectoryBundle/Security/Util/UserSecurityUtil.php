@@ -706,7 +706,9 @@ class UserSecurityUtil {
     public function getDefaultSourceSystemByRequest( $request )
     {
         $sitename = $request->query->get('sitename');
-        $sitename = '/order/'.$sitename.'/';
+        //$subdomain = "/order";
+        $subdomain = "";
+        $sitename = $subdomain.'/'.$sitename.'/';
         //echo "sitenamel=".$sitename."<br>";
         return $this->getDefaultSourceSystemByRequestUrl($sitename);
     }
@@ -721,13 +723,19 @@ class UserSecurityUtil {
 
         $defaultSourceSystemName = null;    //'ORDER Scan Order';
 
-        if( strpos($url, '/order/call-log-book/') !== false ) {
+        //$subdomain = "/order";
+        $subdomain = "";
+
+        if( strpos($url, $subdomain.'/call-log-book/') !== false ) {
             $defaultSourceSystemName = 'ORDER Call Log Book';
         }
-        if( strpos($url, '/order/deidentifier/') !== false ) {
+//        if( strpos($url, '/order/deidentifier/') !== false ) {
+//            $defaultSourceSystemName = 'ORDER Deidentifier';
+//        }
+        if( strpos($url, $subdomain.'/deidentifier/') !== false ) {
             $defaultSourceSystemName = 'ORDER Deidentifier';
         }
-        if( strpos($url, '/order/scan/') !== false ) {
+        if( strpos($url, $subdomain.'/scan/') !== false ) {
             $defaultSourceSystemName = 'ORDER Scan Order';  //'Scan Order';
         }
 
@@ -2327,7 +2335,7 @@ class UserSecurityUtil {
             $context = $this->container->get('router')->getContext();
             $context->setHost($liveSiteHost);
             $context->setScheme($connectionChannel);
-            $context->setBaseUrl('/order');
+            //$context->setBaseUrl('/order');
         }
         return $this->container->get('router');
     }

@@ -543,7 +543,7 @@ class FellAppUtil {
         $context = $this->container->get('router')->getContext();
         $context->setHost($liveSiteHost);
         $context->setScheme($connectionChannel);
-        $context->setBaseUrl('/order');
+        //$context->setBaseUrl('/order');
         /////////////// EOF Configuring the Request Context per Command ///////////////
 
         //FirstNameOfApplicant LastNameOfApplicant has submitted a new application to your FellowshipType StartDate'sYear(suchAs2018) fellowship

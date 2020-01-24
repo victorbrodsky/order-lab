@@ -2676,8 +2676,11 @@ class UserController extends Controller
         
         $uploadDirectory = $entity['uploadDirectory39'];
         if( $getUniquename && $uploadDirectory ) {
+            //$subdomain = "/order";
+            $subdomain = "";
             $scheme = $request->getScheme();
-            $getAbsoluteUploadFullPath = $scheme."://" . $_SERVER['SERVER_NAME'] . "/order/" . $uploadDirectory.'/'.$getUniquename;
+            //$getAbsoluteUploadFullPath = $scheme."://" . $_SERVER['SERVER_NAME'] . "/order/" . $uploadDirectory.'/'.$getUniquename;
+            $getAbsoluteUploadFullPath = $scheme."://" . $_SERVER['SERVER_NAME'] . $subdomain . "/" . $uploadDirectory.'/'.$getUniquename;
         }
 
         $getUsernameOptimal = $entity['displayName23'];

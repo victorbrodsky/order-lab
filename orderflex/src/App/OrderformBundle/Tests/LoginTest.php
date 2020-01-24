@@ -24,28 +24,28 @@ class LoginTest extends WebTestCase {
 //        $this->client = static::createClient();
 //    }
 
-    public function testLoginPage()
-    {
-        $client = static::createClient();
-        $client->followRedirects();
-
-        $crawler = $client->request('GET', '/order/');
-        $this->assertGreaterThan(
-            0,
-            $crawler->filter('html:contains("O R D E R")')->count()
-        );
-
-        $crawler = $client->request('GET', '/scan/login');
-        //print_r($crawler);
-//        foreach ($crawler as $domElement) {
-//            print $domElement->nodeName;
-//        }
-        $this->assertGreaterThan(
-            0,
-            $crawler->filter('html:contains("Scan Orders")')->count()
-        );
-
-    }
+//    public function testLoginPage()
+//    {
+//        $client = static::createClient();
+//        $client->followRedirects();
+//
+//        $crawler = $client->request('GET', '/order/');
+//        $this->assertGreaterThan(
+//            0,
+//            $crawler->filter('html:contains("O R D E R")')->count()
+//        );
+//
+//        $crawler = $client->request('GET', '/scan/login');
+//        //print_r($crawler);
+////        foreach ($crawler as $domElement) {
+////            print $domElement->nodeName;
+////        }
+//        $this->assertGreaterThan(
+//            0,
+//            $crawler->filter('html:contains("Scan Orders")')->count()
+//        );
+//
+//    }
 
 
     //TODO: login failed for pacsvendor users:
