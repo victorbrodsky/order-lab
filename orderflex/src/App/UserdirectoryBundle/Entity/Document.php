@@ -551,7 +551,13 @@ class Document {
             $uniquename = $size . "-" . $uniquename;
         }
 
-        $path = $scheme . "://" . $serverName . DIRECTORY_SEPARATOR . $this->prefix . DIRECTORY_SEPARATOR . $this->getUploadDirectory() . DIRECTORY_SEPARATOR . $uniquename;
+        if( $this->prefix ) {
+            $prefix = $this->prefix . DIRECTORY_SEPARATOR;
+        } else {
+            $prefix = '';
+        }
+
+        $path = $scheme . "://" . $serverName . DIRECTORY_SEPARATOR . $prefix . $this->getUploadDirectory() . DIRECTORY_SEPARATOR . $uniquename;
 
         if ($onlyResize == false) {
             if ($size) {
@@ -599,7 +605,14 @@ class Document {
 
     protected function getPrefixPath() {
         //return '../../../../order/';
-        return '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . $this->prefix . DIRECTORY_SEPARATOR;
+
+        if( $this->prefix ) {
+            $prefix = $this->prefix . DIRECTORY_SEPARATOR;
+        } else {
+            $prefix = '';
+        }
+        
+        return '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . $prefix;
     }
 
     public function getFileSystemPath() {
