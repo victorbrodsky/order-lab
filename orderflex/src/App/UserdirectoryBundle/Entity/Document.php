@@ -148,7 +148,8 @@ class Document {
     private $entityId;
 
 
-    private $prefix = 'order'; //accommodate 'order' prefix in view.med.cornell.edu/order/, however it should be independent on the url
+    //private $prefix = 'order'; //accommodate 'order' prefix in view.med.cornell.edu/order/, however it should be independent on the url
+    private $prefix = '';
 
     public function __construct($creator=null) {
         $this->setCreator($creator);
@@ -611,7 +612,7 @@ class Document {
         } else {
             $prefix = '';
         }
-        
+
         return '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . $prefix;
     }
 
