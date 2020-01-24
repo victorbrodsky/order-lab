@@ -20,6 +20,14 @@ DirectoryIndex index.php
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
+    #RewriteCond %{REQUEST_URI} /order/
+	#RewriteRule (.*) http://view-test.med.cornell.edu/$1 [R=301,L]
+    #RewriteRule (.*) http://127.0.0.1/$1 [R=301,L]
+    #RewriteRule ^([^/]+)/order/?(.*)$ /$1/$2 [R=301,L]
+    #RewriteRule ^/order/(.*)$ /$1 [L,R=301]
+    #RewriteBase /
+    #RewriteRule ^order/(.*) /$1 [R=302,L]
+
     # Determine the RewriteBase automatically and set it as environment variable.
     # If you are using Apache aliases to do mass virtual hosting or installed the
     # project in a subdirectory, the base path will be prepended to allow proper

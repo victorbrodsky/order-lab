@@ -124,7 +124,7 @@ class WebTestBase extends WebTestCase
         //$this->container = $this->client->getContainer();
         //self::$container = $this->client->getContainer();
 
-
+        //$this->getTestClient();
 
         $this->em = self::$container->get('doctrine.orm.entity_manager');
         //$this->em = $this->getService('doctrine.orm.entity_manager');
@@ -194,8 +194,9 @@ class WebTestBase extends WebTestCase
         //$userSecUtil = $this->testContainer->get('user_security_utility');
         //$userSecUtil = $this->getService('user_security_utility');
 
-//        $connectionChannel = $userSecUtil->getSiteSettingParameter('connectionChannel');
-        $httpsChannel = false;
+//        $connectionChannel = NULL;
+//        //$connectionChannel = $userSecUtil->getSiteSettingParameter('connectionChannel');
+//        $httpsChannel = false;
 //        if( $connectionChannel == 'https' ) {
 //            $httpsChannel = true;
 //        }
@@ -203,7 +204,7 @@ class WebTestBase extends WebTestCase
         $client = static::createClient([], [
             'HTTP_HOST' => '127.0.0.1',
             'HTTP_USER_AGENT' => 'MySuperBrowser/1.0',
-            'HTTPS' => $httpsChannel
+            //'HTTPS' => $httpsChannel
         ]);
 
         $this->client = $client;
