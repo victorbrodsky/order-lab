@@ -83,10 +83,11 @@ list installed php packages: yum list installed | grep -i php
 remove all php56 packages: yum remove php56...
 Set new PHP path: 
 export PATH=/opt/remi/php74/root/bin:$PATH
-yum -y install php74-php-mcrypt php74-php-cli php74-php-gd php74-curl php74-php-ldap php74-php-zip php74-php-fileinfo php74-php-opcache php74-php-fpm php74-php-mbstring php74-php-xml php74-php-json
+sudo yum -y install php74-php php74-php-mcrypt php74-php-cli php74-php-gd php74-curl php74-php-ldap php74-php-zip 
+php74-php-fileinfo php74-php-opcache php74-php-fpm php74-php-mbstring php74-php-xml php74-php-json
 sudo yum -y install php74-php-pgsql php74-php-xmlreader php74-php-pdo php74-php-dom php74-php-intl
-sudo systemctl enable php72-php-fpm.service
-sudo systemctl start php72-php-fpm.service
+sudo systemctl enable php74-php-fpm.service
+sudo systemctl start php74-php-fpm.service
 
 #Use https://github.com/owncloud/documentation/issues/3149
 #Enable PHP 7.4 system-wide:
@@ -99,8 +100,14 @@ mv /etc/httpd/conf.modules.d/10-rh-php56-php.conf /etc/httpd/conf.modules.d/10-r
 
 #Copy the PHP 7.4 Apache modules into place:
 
+#update php.ini
+/etc/opt/remi/php74/php.ini
 
 systemctl restart httpd.service
+
+Install 7.4
+https://blog.remirepo.net/post/2019/12/03/Install-PHP-7.4-on-CentOS-RHEL-or-Fedora
+
 ################################################
 	
 #Install everything in this funstion	
