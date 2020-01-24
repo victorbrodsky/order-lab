@@ -67,7 +67,8 @@ function bwipjsGetFontDit() {
 		}
 	}
 	if( !fontDir ) {
-		var srcpath = "/order/bundles/appuserdirectory/bwip-js/";
+		//var srcpath = "/order/bundles/appuserdirectory/bwip-js/";
+		var srcpath = "orderassets/AppUserdirectoryBundle/bwip-js/";
 		fontDir = srcpath + "fonts/";
 	}
 	console.log("fontDir="+fontDir);

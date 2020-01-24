@@ -326,3 +326,5 @@ Redirect:
 ###RewriteEngine on
 RewriteRule (.*) http://157.139.226.86/order/$1 [R=301,L]
 RewriteRule (.*) http://view-test.med.cornell.edu/order/$1 [R=301,L]
+
+view.med.cornell.edu/order/
