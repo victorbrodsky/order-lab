@@ -1922,11 +1922,13 @@ class UserServiceUtil {
         $crontab = new Crontab();
         $jobs = $crontab->getJobs();
 
+        dump($jobs);
+
         if( isset($jobs) && is_array($jobs) ) {
 
             foreach ($jobs as $job) {
                 if (strpos($job, $cronJobName) !== false) {
-                    return $job;
+                    return $job."";
                     break;
                 }
             }
