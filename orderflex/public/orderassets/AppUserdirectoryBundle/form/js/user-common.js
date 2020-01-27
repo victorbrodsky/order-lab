@@ -470,6 +470,15 @@ function getCommonBaseUrl(link,sitename) {
         sitename = "directory";
     }
 
+    if( typeof sitename === 'undefined' ) {
+        sitename = "directory";
+    }
+    if( sitename ) {
+        //OK
+    } else {
+        sitename = "directory";
+    }
+
     //console.log('sitename='+sitename);
 
     var scheme = "http:";
@@ -521,7 +530,9 @@ function getSitename() {
     //console.log("urlfullClean="+urlfullClean);
 
     var urlCleanArr =  urlfullClean.split("/");
-    sitename =  urlCleanArr[0];
+    var sitename =  urlCleanArr[0];
+
+    sitename = sitename.replace("/", "");
 
     _sitename = sitename;
 
