@@ -58,8 +58,10 @@ class Crontab {
         echo "1jobs: <br>";
         dump($jobs);
         if (in_array($job, $jobs)) {
+            echo "$job exists!!!<br>";
             return true;
         } else {
+            echo "$job does not exists???<br>";
             return false;
         }
     }
