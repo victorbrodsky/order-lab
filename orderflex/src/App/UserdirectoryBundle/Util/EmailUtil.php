@@ -508,14 +508,14 @@ class EmailUtil {
         //create cron job
         if( $useSpool && $mailerFlushQueueFrequency ) {
 
-            echo "create crontab commandJobName=cron:swift <br>";
+            //echo "create crontab commandJobName=cron:swift <br>";
             $res = $userServiceUtil->createEmailCronLinux($mailerFlushQueueFrequency);
 
             return $res;
         } else {
             //remove cron job
             $commandJobName = "cron:swift";
-            echo "remove crontab commandJobName=".$commandJobName."<br>";
+            //echo "remove crontab commandJobName=".$commandJobName."<br>";
             $res = $userServiceUtil->removeCronJobLinuxByCommandName($commandJobName);
             if( $res ) {
                 $session = $this->container->get('session');
@@ -526,7 +526,7 @@ class EmailUtil {
             }
         }
 
-        exit('111');
+        //exit('111');
 
         return null;
     }
