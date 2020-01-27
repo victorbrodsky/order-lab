@@ -34,6 +34,7 @@ class Crontab {
 
     static public function getJobs() {
         $output = shell_exec('crontab -l');
+        dump($output);
         return self::stringToArray($output);
     }
 
