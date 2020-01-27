@@ -1842,28 +1842,50 @@ class UserServiceUtil {
 
         if( isset($crontab) && is_array($crontab) ) {
 
-            $crontab = array_flip($crontab);
+//            $crontab = array_flip($crontab);
+//
+//            if( isset($crontab[$cronJobName]) ) {
+//                if( $asBoolean ) {
+//                    $res = true;
+//                } else {
+//                    //$res = "Cron job status: " . $crontab->render();
+//                    $res = '<font color="green">Cron job status: '.$execRes.'.</font>';
+//                }
+//            } else {
+//                if( $asBoolean ) {
+//                    $res = false;
+//                } else {
+//                    //$res = "Cron job status: " . $crontab->render();
+//                    $res = '<font color="red">Cron job status: not found.</font>';
+//                }
+//            }
 
-            if( isset($crontab[$cronJobName]) ) {
-                if( $asBoolean ) {
+            $existedCronJob = "";
+            $res = false;
+            foreach( $crontab as $cronjob ) {
+                if( strpos($cronjob, $cronJobName) !== false ) {
                     $res = true;
-                } else {
-                    //$res = "Cron job status: " . $crontab->render();
-                    $res = '<font color="green">Cron job status: '.$execRes.'.</font>';
+                    $existedCronJob = $cronjob;
+                    break;
                 }
+            }
+
+
+            if( $asBoolean ) {
+                //$res = true;
             } else {
-                if( $asBoolean ) {
-                    $res = false;
+                if( $res ) {
+                    $res = '<font color="green">Cron job status: '.$existedCronJob.'.</font>';
                 } else {
-                    //$res = "Cron job status: " . $crontab->render();
                     $res = '<font color="red">Cron job status: not found.</font>';
                 }
+
             }
 
         }
 
         echo "res=$res <br>";
-        echo "execRes=$execRes <br>";
+        echo "existedCronJob=$existedCronJob <br>";
         //exit("111");
 
         return $res;
