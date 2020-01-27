@@ -1646,10 +1646,12 @@ class UserServiceUtil {
         if( $this->getCronStatusLinux($cronJobName,true) === false ) {
 
             //*/10 * * * * /usr/bin/php /opt/test.php
-            $res = exec($emailCronJob, $crontab);
+            //$res = exec($emailCronJob, $crontab);
+            //$res = exec('echo -e "`crontab -l`\n30 9 * * * /path/to/script" | crontab -');
+            $res = $this->addCronJobLinux($emailCronJob);
 
             //echo "crontab=$res <br>";
-            dump($crontab);
+            dump($res);
 
             $logger->notice("Created $cronJobName cron job");
         }
@@ -1659,6 +1661,32 @@ class UserServiceUtil {
         $logger->notice("Created email cron job: ".$emailCronJob);
 
         exit($res);
+
+        return $res;
+    }
+
+    public function addCronJobLinux( $command, $cronFile = 'order-cron' ) {
+        //$cron_file = 'cron_filename';
+
+        $projectDir = $this->container->get('kernel')->getProjectDir();
+
+        $cronFile = $projectDir . DIRECTORY_SEPARATOR . "var" . DIRECTORY_SEPARATOR  .$cronFile;
+
+        if (file_exists($cronFile)) {
+            echo "The file $cronFile exists";
+        } else {
+            echo "The file $cronFile does not exist";
+            // Create the file
+            touch($cronFile);
+            // Make it writable
+            chmod($cronFile, 0755);
+        }
+
+        // Save the cron
+        file_put_contents($cronFile, $command);
+
+        // Install the cron
+        $res = exec('crontab '.$cronFile);
 
         return $res;
     }
