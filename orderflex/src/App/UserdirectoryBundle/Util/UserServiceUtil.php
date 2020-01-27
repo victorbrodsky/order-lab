@@ -1839,7 +1839,7 @@ class UserServiceUtil {
         dump($execRes);
         dump($crontab);
 
-        if( isset($crontab)&&is_array($crontab) ) {
+        if( isset($crontab) && is_array($crontab) ) {
 
             $crontab = array_flip($crontab);
 
