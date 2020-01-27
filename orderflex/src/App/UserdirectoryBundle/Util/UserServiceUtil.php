@@ -1920,7 +1920,7 @@ class UserServiceUtil {
 
     public function getCronJobFullNameLinux($cronJobName) {
         $crontab = new Crontab();
-        $jobs = $crontab->getJobs();
+        $jobs = $crontab->getJobsAsSimpleArray();
 
         //dump($jobs);
 

@@ -33,13 +33,13 @@ class Crontab {
         return $string;
     }
 
-    static public function getJobsOrig() {
+    static public function getJobs() {
         $output = shell_exec('crontab -l');
         //dump($output);
         return self::stringToArray($output);
     }
 
-    static public function getJobs() {
+    static public function getJobsAsSimpleArray() {
         exec('crontab -l', $output); //output is array
         //dump($output);
         return $output;
