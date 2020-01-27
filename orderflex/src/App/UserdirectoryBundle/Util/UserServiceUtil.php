@@ -1654,9 +1654,9 @@ class UserServiceUtil {
             $logger->notice("Created $cronJobName cron job");
         }
 
-        $res = "Created email cron job: ".$emailCronJobCommand;
+        $res = "Created email cron job: ".$emailCronJob;
 
-        $logger->notice("Created email cron job: ".$emailCronJobCommand);
+        $logger->notice("Created email cron job: ".$emailCronJob);
 
         exit($res);
 
