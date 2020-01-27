@@ -126,9 +126,9 @@ class UserController extends Controller
         //$userServiceUtil->getPublicFolderName();
 
         //testing cron
-        $userServiceUtil = $this->get('user_service_utility');
-        $res = $userServiceUtil->getCronJobFullNameLinux("cron:swift");
-        echo "getCronJobFullNameLinux=$res<br>";
+        //$userServiceUtil = $this->get('user_service_utility');
+        //$res = $userServiceUtil->getCronJobFullNameLinux("cron:swift");
+        //echo "getCronJobFullNameLinux=$res<br>";
 
         //$session = $request->getSession();
         //echo $session->get('_security_scan_auth');
