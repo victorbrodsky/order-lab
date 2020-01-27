@@ -75,14 +75,14 @@ class Crontab {
 
     static public function doesJobExist($job = '') {
         $jobs = self::getJobs();
-        echo "1job=$job <br>";
-        echo "1jobs: <br>";
-        dump($jobs);
+        //echo "1job=$job <br>";
+        //echo "1jobs: <br>";
+        //dump($jobs);
         if (in_array($job, $jobs)) {
-            echo "$job exists!!!<br>";
+            //echo "$job exists!!!<br>";
             return true;
         } else {
-            echo "$job does not exists???<br>";
+            //echo "$job does not exists???<br>";
             return false;
         }
     }
@@ -102,20 +102,20 @@ class Crontab {
 
             $jobs = self::getJobs();
 
-            echo "removeJob=$job <br>";
-            echo "All jobs: <br>";
-            dump($jobs);
+            //echo "removeJob=$job <br>";
+            //echo "All jobs: <br>";
+            //dump($jobs);
 
-            $key = array_search($job, $jobs);
-            echo "key=$key <br>";
-            unset($jobs[$key]);
+            //$key = array_search($job, $jobs);
+            //echo "key=$key <br>";
+            //unset($jobs[$key]);
 
-            //unset($jobs[array_search($job, $jobs)]);
+            unset($jobs[array_search($job, $jobs)]);
 
             $jobs = self::getJobs();
             //echo "1job=$job <br>";
-            echo "1jobs: <br>";
-            dump($jobs);
+            //echo "1jobs: <br>";
+            //dump($jobs);
 
             return self::saveJobs($jobs);
         } else {
