@@ -737,6 +737,18 @@
     "symfony/yaml": {
         "version": "v4.4.2"
     },
+    "tattali/calendar-bundle": {
+        "version": "1.1",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "1.1",
+            "ref": "0c643e17b5340747b35c2c75e11727fa31bfa9bb"
+        },
+        "files": [
+            "./config/routes/calendar.yaml"
+        ]
+    },
     "twig/extensions": {
         "version": "1.0",
         "recipe": {

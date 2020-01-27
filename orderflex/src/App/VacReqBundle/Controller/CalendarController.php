@@ -48,8 +48,7 @@ class CalendarController extends Controller
             false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_OBSERVER') &&
             false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_SUBMITTER') &&
             false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_APPROVER') &&
-            false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_SUPERVISOR') &&
-            false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_OBSERVER')
+            false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_SUPERVISOR')
         ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }

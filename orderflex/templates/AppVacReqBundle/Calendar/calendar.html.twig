@@ -59,7 +59,10 @@
     </p>
 
 
-    {% include 'ADesignsCalendarBundle::calendar.html.twig' %}
+    {#{% include 'ADesignsCalendarBundle::calendar.html.twig' %}#}
+
+    {#https://github.com/tattali/CalendarBundle#}
+    {% include '@Calendar/calendar.html' %}
 
 {% endblock %}
 
@@ -71,7 +74,12 @@
     {#%}#}
         {#<link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />#}
     {#{% endstylesheets %}#}
-    <link rel="stylesheet" type="text/css" href="{{ asset('@ADesignsCalendarBundle/css/fullcalendar/fullcalendar.css') }}" />
+    {#<link rel="stylesheet" type="text/css" href="{{ asset('@ADesignsCalendarBundle/css/fullcalendar/fullcalendar.css') }}" />#}
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/core@4.1.0/main.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@4.1.0/main.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@4.1.0/main.min.css">
+
 {% endblock %}
 
 {% block additionaljs %}
@@ -80,7 +88,12 @@
     {#%}#}
         {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
     {#{% endjavascripts %}#}
-    <script src="{{ asset('@ADesignsCalendarBundle/js/fullcalendar/jquery.fullcalendar.min.js') }}"></script>
+    {#<script src="{{ asset('@ADesignsCalendarBundle/js/fullcalendar/jquery.fullcalendar.min.js') }}"></script>#}
+
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@4.1.0/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@4.1.0/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@4.1.0/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@4.1.0/main.min.js"></script>
 
     <script language="Javascript">
 
@@ -89,7 +102,9 @@
         $(document).ready(function() {
 
             var groupId = $('#groupId').val();
-            constractCalendar(groupId);
+            //constractCalendar(groupId);
+
+            //addCalendarEventListener(groupId);
 
             //listener for calendar-filter
             $('.organizationalInstitutions').change(function(){
@@ -97,6 +112,12 @@
             });
 
         });
+
+        function addCalendarEventListener( groupId ) {
+
+
+
+        }
 
         function constractCalendar( groupId ) {
             var date = new Date();

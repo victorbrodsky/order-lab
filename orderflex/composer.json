@@ -46,6 +46,7 @@
         "symfony/webpack-encore-bundle": "^1.7",
         "symfony/workflow": "^4.4",
         "symfony/yaml": "^4.4",
+        "tattali/calendar-bundle": "^1.1",
         "twig/extensions": "^1.5"
     },
     "require-dev": {

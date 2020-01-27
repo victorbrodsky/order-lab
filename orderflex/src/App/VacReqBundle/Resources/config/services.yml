@@ -45,8 +45,11 @@ services:
         class: App\VacReqBundle\Util\VacReqImportData
         arguments: ["@doctrine.orm.entity_manager", "@security.token_storage", "@service_container"]
 
-    vacreq_awaycalendar_listener:
-        class: App\VacReqBundle\EventListener\CalendarEventListener
+#    vacreq_awaycalendar_listener:
+#        class: App\VacReqBundle\EventListener\CalendarEventListener
+#        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+#        tags:
+#            - { name: kernel.event_listener, event: calendar.load_events, method: loadEvents }
+
+    App\EventSubscriber\CalendarSubscriber:
         arguments: ["@doctrine.orm.entity_manager", "@service_container"]
-        tags:
-            - { name: kernel.event_listener, event: calendar.load_events, method: loadEvents }
