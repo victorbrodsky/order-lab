@@ -1762,13 +1762,11 @@ class UserServiceUtil {
         return $res;
     }
     public function removeCronJobLinuxByCommandName( $commandName ) {
-
         $res = false;
-
-        $crontab = new Crontab();
-        $cronJobFullName = $crontab->getCronJobFullNameLinux($commandName);
+        $cronJobFullName = $this->getCronJobFullNameLinux($commandName);
 
         if( $cronJobFullName ) {
+            $crontab = new Crontab();
             $res = $crontab->removeJob($cronJobFullName);
         }
 
@@ -1937,10 +1935,8 @@ class UserServiceUtil {
         return false;
     }
     public function getCronStatusLinux($cronJobName, $asBoolean=false) {
-
-        $crontab = new Crontab();
-
-        $cronJobFullName = $crontab->getCronJobFullNameLinux($cronJobName);
+        //$crontab = new Crontab();
+        $cronJobFullName = $this->getCronJobFullNameLinux($cronJobName);
 
         if( $asBoolean ) {
             return $cronJobFullName;
