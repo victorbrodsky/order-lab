@@ -490,7 +490,7 @@ class EmailUtil {
         //return "Not implemented for Symfony >=4";
 
         $userSecUtil = $this->container->get('user_security_utility');
-        $userServiceUtil = $this->get('user_service_utility');
+        $userServiceUtil = $this->container->get('user_service_utility');
 
         //$projectDir = $this->container->get('kernel')->getProjectDir();
         //$cronJobName = "php ".$projectDir.DIRECTORY_SEPARATOR."bin/console cron:swift --env=prod";
