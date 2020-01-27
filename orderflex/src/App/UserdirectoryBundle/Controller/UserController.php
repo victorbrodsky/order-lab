@@ -127,7 +127,7 @@ class UserController extends Controller
 
         //testing cron
         $userServiceUtil = $this->get('user_service_utility');
-        $userServiceUtil->createEmailCronLinux();
+        $userServiceUtil->createCronsLinux();
 
         //$session = $request->getSession();
         //echo $session->get('_security_scan_auth');

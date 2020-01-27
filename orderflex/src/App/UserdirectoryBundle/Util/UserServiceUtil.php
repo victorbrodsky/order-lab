@@ -1620,6 +1620,58 @@ class UserServiceUtil {
         $this->createEmailCronLinux();
         //////////////////// EOF 1) swiftMailer (implemented on email util (EmailUtil->createEmailCronJob)) ////////////////////
 
+        //////////////////// 2) ImportFellowshipApplications (every hour) ////////////////////
+
+        //first delete existing cron job
+        //$this->removeCronJob($crontab,$fellappCronJobCommand);
+
+        $cronJobName = "cron:importfellapp --env=prod";
+
+        $phpPath = $this->getPhpPath();
+        $fellappCronJobCommand = $phpPath." ".$projectDir.DIRECTORY_SEPARATOR."bin/console $cronJobName";
+
+        $fellappCronJob = "0 * * * *" . " " . $fellappCronJobCommand; //0 minutes - every hour
+
+        if( $this->getCronStatusLinux($cronJobName,true) === false ) {
+
+            $res = $this->addCronJobLinux($fellappCronJob);
+
+            $res = "Created $cronJobName cron job";
+            //echo "$res <br>";
+            //$logger->notice($res);
+        } else {
+            $res = "$cronJobName already exists";
+            //echo "$res <br>";
+        }
+
+        $logger->notice($res);
+        //////////////////// EOF ImportFellowshipApplications ////////////////////
+
+
+        //////////////////// 3) UnpaidInvoiceReminder (at 6 am every Monday) ////////////////////
+        $cronJobName = "cron:invoice-reminder-emails --env=prod";
+
+        $phpPath = $this->getPhpPath();
+        $trpCronJobCommand = $phpPath." ".$projectDir.DIRECTORY_SEPARATOR."bin/console $cronJobName";
+
+        $trpCronJob = "00 06 * * Mon" . " " . $trpCronJobCommand; //every monday (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat
+
+        if( $this->getCronStatusLinux($cronJobName,true) === false ) {
+
+            $res = $this->addCronJobLinux($trpCronJob);
+
+            $res = "Created $cronJobName cron job";
+            //echo "$res <br>";
+            //$logger->notice($res);
+        } else {
+            $res = "$cronJobName already exists";
+            //echo "$res <br>";
+        }
+
+        $logger->notice($res);
+        //////////////////// EOF 3) UnpaidInvoiceReminder (at 6 am every Monday) ////////////////////
+
+        return $res;
     }
     public function createEmailCronLinux() {
         $logger = $this->container->get('logger');
