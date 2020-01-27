@@ -1302,39 +1302,7 @@ class UserServiceUtil {
 
         $projectRoot = $this->container->get('kernel')->getProjectDir();
 
-        //$phpPath = "php";
-        //$phpPath = "/opt/remi/php74/root/usr/bin/php";
-        //$phpPath = exec("which php");
-
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            //echo 'This is a server using Windows!';
-            $windows = true;
-            $linux = false;
-        } else {
-            //echo 'This is a server not using Windows! Assume Linux';
-            $windows = false;
-            $linux = true;
-        }
-
-        if( $windows ) {
-            $phpPath = "php";
-        } else {
-//            $process = new Process("which php");
-//            $process->setTimeout(1800); //sec; 1800 sec => 30 min
-//            $process->run();
-//            if (!$process->isSuccessful()) {
-//                throw new ProcessFailedException($process);
-//            }
-//            $phpPath = $process->getOutput();
-            $phpPath = "/opt/remi/php74/root/usr/bin/php";
-            if( !file_exists($phpPath) ) {
-                $phpPath = "/bin/php";
-            }
-
-            if( !file_exists($phpPath) ) {
-                $phpPath = "php";
-            }
-        }
+        $phpPath = $this->getPhpPath();
 
         $command = $phpPath . " " . $projectRoot . "/bin/console about";
 
@@ -1356,6 +1324,32 @@ class UserServiceUtil {
         $res = $res . $info;
 
         return $res;
+    }
+
+    public function getPhpPath() {
+        $phpPath = "php";
+
+        if( $this->isWinOs() ) {
+            $phpPath = "php";
+        } else {
+//            $process = new Process("which php");
+//            $process->setTimeout(1800); //sec; 1800 sec => 30 min
+//            $process->run();
+//            if (!$process->isSuccessful()) {
+//                throw new ProcessFailedException($process);
+//            }
+//            $phpPath = $process->getOutput();
+            $phpPath = "/opt/remi/php74/root/usr/bin/php";
+            if( !file_exists($phpPath) ) {
+                $phpPath = "/bin/php";
+            }
+
+            if( !file_exists($phpPath) ) {
+                $phpPath = "php";
+            }
+        }
+
+        return $phpPath;
     }
 
 //    public function gitVersion() {
@@ -1610,18 +1604,77 @@ class UserServiceUtil {
         ////////////////////// EOF 3) UnpaidInvoiceReminder (at 6 am every Monday) //////////////////////
         
     }
-    //can use bundle: https://github.com/j-guyon/CommandSchedulerBundle
+
+    //Can use package: https://packagist.org/packages/hellogerard/jobby
     //verify: crontab -u www-data -l
     //Create cron jobs:
     //1) swiftMailer (implemented on email util (EmailUtil->createEmailCronJob))
     //2) importFellowshipApplications (every hour)
     //3) UnpaidInvoiceReminder (at 6 am every Monday)
     public function createCronsLinux() {
-
-        return "Not implemented for Symfony >=4";
-
         $logger = $this->container->get('logger');
         $logger->notice("Creating cron jobs for Linux");
+        $projectDir = $this->container->get('kernel')->getProjectDir();
+
+        //////////////////// 1) swiftMailer (implemented on email util (EmailUtil->createEmailCronJob)) ////////////////////
+        $this->createEmailCronLinux();
+        //////////////////// EOF 1) swiftMailer (implemented on email util (EmailUtil->createEmailCronJob)) ////////////////////
+
+    }
+    public function createEmailCronLinux() {
+        $logger = $this->container->get('logger');
+        $logger->notice("Creating cron jobs for Linux");
+        $projectDir = $this->container->get('kernel')->getProjectDir();
+
+        //$emailUtil = $this->container->get('user_mailer_utility');
+        //$createEmailCronJob = $emailUtil->createEmailCronJobLinux();
+        $phpPath = $this->getPhpPath();
+        $emailCronJobCommand = $phpPath." ".$projectDir.DIRECTORY_SEPARATOR."bin/console cron:swift --env=prod";
+
+        $mailerFlushQueueFrequency = 15; //in minuts
+
+//            ->setMinute('*/' . $mailerFlushQueueFrequency) //every $mailerFlushQueueFrequency minutes
+//            ->setHour('*')
+//            ->setDayOfMonth('*')
+//            ->setMonth('*')
+//            ->setDayOfWeek('*')
+//            ->setCommand($emailCronJobCommand);
+
+        $emailCronJob = "*/$mailerFlushQueueFrequency * * * *" . " " . $emailCronJobCommand;
+
+        $cronJobName = "cron:swift";
+        if( $this->getCronStatusLinux($cronJobName,true) === false ) {
+
+            //*/10 * * * * /usr/bin/php /opt/test.php
+            $res = exec($emailCronJob, $crontab);
+
+            //echo "crontab=$res <br>";
+            dump($crontab);
+
+            $logger->notice("Created $cronJobName cron job");
+        }
+
+        $res = "Created email cron job: ".$emailCronJobCommand;
+
+        $logger->notice("Created email cron job: ".$emailCronJobCommand);
+
+        exit($res);
+
+        return $res;
+    }
+
+    //can use bundle: https://github.com/j-guyon/CommandSchedulerBundle
+    //verify: crontab -u www-data -l
+    //Create cron jobs:
+    //1) swiftMailer (implemented on email util (EmailUtil->createEmailCronJob))
+    //2) importFellowshipApplications (every hour)
+    //3) UnpaidInvoiceReminder (at 6 am every Monday)
+    public function createCronsLinux_Sf3() {
+
+        //return "Not implemented for Symfony >=4";
+
+        $logger = $this->container->get('logger');
+        $logger->notice("Creating cron jobs for Linux for Symfony 3 using yzalis/crontab");
 
         $projectDir = $this->container->get('kernel')->getProjectDir();
         $crontab = new Crontab();
@@ -1649,7 +1702,7 @@ class UserServiceUtil {
             $crontab->addJob($job);
             //$crontab->write();
             $crontab->getCrontabFileHandler()->write($crontab);
-            $logger->notice("Created importfellapp cron job");
+            $logger->notice("Created swift cron job");
         }
 
         $logger->notice("Created email cron job: ".$emailCronJobCommand);
@@ -1754,7 +1807,42 @@ class UserServiceUtil {
             return $this->getCronStatusLinux($cronJobName);
         }
     }
-    public function getCronStatusLinux($cronJobName) {
+
+    //https://stackoverflow.com/questions/4926258/how-to-check-if-cronjob-exists-with-php
+    public function getCronStatusLinux($cronJobName, $asBoolean=false) {
+        //$cronJobName = "Swiftmailer";
+        //$command = 'SchTasks | FINDSTR "'.$cronJobName.'"';
+        $command = "/usr/bin/crontab -l -u apache";
+
+        //$res = exec($command);
+        exec($command, $crontab);
+
+        if( isset($crontab)&&is_array($crontab) ) {
+
+            $crontab = array_flip($crontab);
+
+            if( isset($crontab[$cronJobName]) ) {
+                if( $asBoolean ) {
+                    $res = true;
+                } else {
+                    //$res = "Cron job status: " . $crontab->render();
+                    $res = '<font color="green">Cron job status: '.$res.'.</font>';
+                }
+            } else {
+                if( $asBoolean ) {
+                    $res = false;
+                } else {
+                    //$res = "Cron job status: " . $crontab->render();
+                    $res = '<font color="red">Cron job status: not found.</font>';
+                }
+            }
+
+        }
+
+        //exit($res);
+        return $res;
+    }
+    public function getCronStatusLinux_Sf3($cronJobName) {
 
         return "Not implemented for Symfony >=4";
 
