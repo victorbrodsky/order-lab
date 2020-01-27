@@ -1665,7 +1665,7 @@ class UserServiceUtil {
         return $res;
     }
 
-    public function addCronJobLinux( $command, $cronFile = 'order-cron' ) {
+    public function addCronJobLinux1( $command, $cronFile = 'order-cron' ) {
         //$cron_file = 'cron_filename';
 
         $projectDir = $this->container->get('kernel')->getProjectDir();
@@ -1688,6 +1688,19 @@ class UserServiceUtil {
         // Install the cron
         ///usr/bin/crontab
         $res = exec('/usr/bin/crontab '.$cronFile);
+
+        return $res;
+    }
+
+    public function addCronJobLinux( $command ) {
+        //$cron_file = 'cron_filename';
+
+        //$projectDir = $this->container->get('kernel')->getProjectDir();
+        //$cronFile = $projectDir . DIRECTORY_SEPARATOR . "var" . DIRECTORY_SEPARATOR  .$cronFile;
+
+        ///usr/bin/crontab
+        //exec('echo -e "`crontab -l`\n30 9 * * * /path/to/script" | crontab -');
+        $res = exec('echo -e "`crontab -l`\n'.$command.'" | crontab -');
 
         return $res;
     }
