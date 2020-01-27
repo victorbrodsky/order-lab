@@ -1835,6 +1835,7 @@ class UserServiceUtil {
         //$res = exec($command);
         $execRes = exec($command, $crontab);
 
+        echo "Exec: $command <br>";
         dump($execRes);
         dump($crontab);
 
