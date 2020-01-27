@@ -487,7 +487,7 @@ class EmailUtil {
     //run: php bin/console cron:swift --env=prod
     public function createEmailCronJobLinux() {
 
-        return "Not implemented for Symfony >=4";
+        //return "Not implemented for Symfony >=4";
 
         $userSecUtil = $this->container->get('user_security_utility');
         $userServiceUtil = $this->get('user_service_utility');
@@ -508,6 +508,7 @@ class EmailUtil {
         //create cron job
         if( $useSpool && $mailerFlushQueueFrequency ) {
 
+            echo "create crontab commandJobName=cron:swift <br>";
             $res = $userServiceUtil->createEmailCronLinux($mailerFlushQueueFrequency);
 
             return $res;
@@ -516,7 +517,6 @@ class EmailUtil {
             $commandJobName = "cron:swift";
             echo "remove crontab commandJobName=".$commandJobName."<br>";
             $res = $userServiceUtil->removeCronJobLinuxByCommandName($commandJobName);
-exit('111');
             if( $res ) {
                 $session = $this->container->get('session');
                 $session->getFlashBag()->add(
@@ -525,6 +525,8 @@ exit('111');
                 );
             }
         }
+
+        exit('111');
 
         return null;
     }
