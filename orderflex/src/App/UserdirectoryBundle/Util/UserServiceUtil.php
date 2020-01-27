@@ -1648,12 +1648,14 @@ class UserServiceUtil {
             //*/10 * * * * /usr/bin/php /opt/test.php
             //$res = exec($emailCronJob, $crontab);
             //$res = exec('echo -e "`crontab -l`\n30 9 * * * /path/to/script" | crontab -');
-            $res = $this->addCronJobLinux($emailCronJob);
+//            $res = $this->addCronJobLinux($emailCronJob);
 
             //echo "crontab=$res <br>";
-            dump($res);
+            //dump($res);
 
             $logger->notice("Created $cronJobName cron job");
+        } else {
+            echo "$cronJobName already exists";
         }
 
         $res = "Created email cron job: ".$emailCronJob;
@@ -1661,33 +1663,6 @@ class UserServiceUtil {
         $logger->notice("Created email cron job: ".$emailCronJob);
 
         exit($res);
-
-        return $res;
-    }
-
-    public function addCronJobLinux1( $command, $cronFile = 'order-cron' ) {
-        //$cron_file = 'cron_filename';
-
-        $projectDir = $this->container->get('kernel')->getProjectDir();
-
-        $cronFile = $projectDir . DIRECTORY_SEPARATOR . "var" . DIRECTORY_SEPARATOR  .$cronFile;
-
-        if( file_exists($cronFile) ) {
-            echo "The file $cronFile exists";
-        } else {
-            echo "The file $cronFile does not exist";
-            // Create the file
-            touch($cronFile);
-            // Make it writable
-            chmod($cronFile, 0755);
-        }
-
-        // Save the cron
-        file_put_contents($cronFile, $command);
-
-        // Install the cron
-        ///usr/bin/crontab
-        $res = exec('/usr/bin/crontab '.$cronFile);
 
         return $res;
     }
@@ -1857,7 +1832,7 @@ class UserServiceUtil {
         $command = "/usr/bin/crontab -l -u apache";
 
         //$res = exec($command);
-        exec($command, $crontab);
+        $execRes = exec($command, $crontab);
 
         if( isset($crontab)&&is_array($crontab) ) {
 
@@ -1868,7 +1843,7 @@ class UserServiceUtil {
                     $res = true;
                 } else {
                     //$res = "Cron job status: " . $crontab->render();
-                    $res = '<font color="green">Cron job status: '.$res.'.</font>';
+                    $res = '<font color="green">Cron job status: '.$execRes.'.</font>';
                 }
             } else {
                 if( $asBoolean ) {
@@ -1881,7 +1856,9 @@ class UserServiceUtil {
 
         }
 
-        //exit($res);
+        echo "res=$res <br>";
+        echo "execRes=$execRes <br>";
+        exit("111");
         return $res;
     }
     public function getCronStatusLinux_Sf3($cronJobName) {
