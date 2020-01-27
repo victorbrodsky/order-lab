@@ -1864,7 +1864,8 @@ class UserServiceUtil {
 
         echo "res=$res <br>";
         echo "execRes=$execRes <br>";
-        exit("111");
+        //exit("111");
+
         return $res;
     }
     public function getCronStatusLinux_Sf3($cronJobName) {
