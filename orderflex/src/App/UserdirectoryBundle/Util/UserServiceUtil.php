@@ -1648,22 +1648,24 @@ class UserServiceUtil {
             //*/10 * * * * /usr/bin/php /opt/test.php
             //$res = exec($emailCronJob, $crontab);
             //$res = exec('echo -e "`crontab -l`\n30 9 * * * /path/to/script" | crontab -');
-//            $res = $this->addCronJobLinux($emailCronJob);
+            $res = $this->addCronJobLinux($emailCronJob);
 
             //echo "crontab=$res <br>";
             //dump($res);
 
-            echo "Created $cronJobName cron job <br>";
-            $logger->notice("Created $cronJobName cron job");
+            $res = "Created $cronJobName cron job";
+            echo "$res <br>";
+            //$logger->notice($res);
         } else {
-            echo "$cronJobName already exists <br>";
+            $res = "$cronJobName already exists";
+            echo "$res <br>";
         }
 
-        $res = "Created email cron job: ".$emailCronJob;
+        //$res = "Created email cron job: ".$emailCronJob;
 
-        $logger->notice("Created email cron job: ".$emailCronJob);
+        $logger->notice($res);
 
-        exit($res);
+        //exit($res);
 
         return $res;
     }
@@ -1830,15 +1832,15 @@ class UserServiceUtil {
     public function getCronStatusLinux($cronJobName, $asBoolean=false) {
         //$cronJobName = "Swiftmailer";
         //$command = 'SchTasks | FINDSTR "'.$cronJobName.'"';
-        $command = "/usr/bin/crontab -l -u apache";
+        //$command = "/usr/bin/crontab -l -u apache";
         $command = "/usr/bin/crontab -l";
 
         //$res = exec($command);
         $execRes = exec($command, $crontab);
 
-        echo "Exec: $command <br>";
-        dump($execRes);
-        dump($crontab);
+        //echo "Exec: $command <br>";
+        //dump($execRes);
+        //dump($crontab);
 
         if( isset($crontab) && is_array($crontab) ) {
 
@@ -1879,13 +1881,12 @@ class UserServiceUtil {
                 } else {
                     $res = '<font color="red">Cron job status: not found.</font>';
                 }
-
             }
 
         }
 
-        echo "res=$res <br>";
-        echo "existedCronJob=$existedCronJob <br>";
+        //echo "res=$res <br>";
+        //echo "existedCronJob=$existedCronJob <br>";
         //exit("111");
 
         return $res;
