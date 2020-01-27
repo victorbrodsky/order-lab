@@ -1705,11 +1705,11 @@ class UserServiceUtil {
             //dump($res);
 
             $res = "Created $cronJobName cron job";
-            echo "$res <br>";
+            //echo "$res <br>";
             //$logger->notice($res);
         } else {
             $res = "$cronJobName already exists";
-            echo "$res <br>";
+            //echo "$res <br>";
         }
 
         //$res = "Created email cron job: ".$emailCronJob;

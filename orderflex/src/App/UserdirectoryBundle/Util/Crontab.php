@@ -99,24 +99,8 @@ class Crontab {
 
     static public function removeJob($job = '') {
         if (self::doesJobExist($job)) {
-
             $jobs = self::getJobs();
-
-            //echo "removeJob=$job <br>";
-            //echo "All jobs: <br>";
-            //dump($jobs);
-
-            //$key = array_search($job, $jobs);
-            //echo "key=$key <br>";
-            //unset($jobs[$key]);
-
             unset($jobs[array_search($job, $jobs)]);
-
-            $jobs = self::getJobs();
-            //echo "1job=$job <br>";
-            //echo "1jobs: <br>";
-            //dump($jobs);
-
             return self::saveJobs($jobs);
         } else {
             return false;
