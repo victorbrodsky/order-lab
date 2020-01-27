@@ -18,9 +18,9 @@ class Crontab {
     // $output = shell_exec('(crontab -l; echo "'.$job.'") | crontab -');
 
     static private function stringToArray($jobs = '') {
-        echo "1jobs=$jobs <br>";
+        //echo "1jobs=$jobs <br>";
         $jobs = trim($jobs);
-        echo "2jobs=$jobs <br>";
+        //echo "2jobs=$jobs <br>";
         $array = array();
         if (strpos($jobs, "\r\n") !== false) {
             $array = explode("\r\n", trim($jobs)); // trim() gets rid of the last \r\n
