@@ -490,9 +490,10 @@ class EmailUtil {
         return "Not implemented for Symfony >=4";
 
         $userSecUtil = $this->container->get('user_security_utility');
+        $userServiceUtil = $this->get('user_service_utility');
 
-        $projectDir = $this->container->get('kernel')->getProjectDir();
-        $cronJobName = "php ".$projectDir.DIRECTORY_SEPARATOR."bin/console cron:swift --env=prod";
+        //$projectDir = $this->container->get('kernel')->getProjectDir();
+        //$cronJobName = "php ".$projectDir.DIRECTORY_SEPARATOR."bin/console cron:swift --env=prod";
 
         $useSpool = $userSecUtil->getSiteSettingParameter('mailerSpool');
         //if( !$useSpool ) {
@@ -506,43 +507,25 @@ class EmailUtil {
         
         //create cron job
         if( $useSpool && $mailerFlushQueueFrequency ) {
-            $job = new Job();
-            $job
-                ->setMinute('*/' . $mailerFlushQueueFrequency)//every $mailerFlushQueueFrequency minutes
-                ->setHour('*')
-                ->setDayOfMonth('*')
-                ->setMonth('*')
-                ->setDayOfWeek('*')
-                ->setCommand($cronJobName);
 
-            $crontab = new Crontab();
-
-            //first delete existing cron job
-            $this->removeCronJob($crontab,$cronJobName);
-
-            if( !$this->isCronJobExists($crontab,$cronJobName) ) {
-                $crontab->addJob($job);
-                //$crontab->write();
-                $crontab->getCrontabFileHandler()->write($crontab);
-            }
-
-            $res = $crontab->render();
-            //echo "crontab res=".$res."<br>";
-            //exit('111');
+            $res = $userServiceUtil->createEmailCronLinux($mailerFlushQueueFrequency);
 
             return $res;
         } else {
             //remove cron job
-            $crontab = new Crontab();
+            //$crontab = new Crontab();
             //$res = $crontab->render();
             //echo "crontab res=".$res."<br>";
-            $res  = $this->removeCronJob($crontab,$cronJobName);
+            //$res  = $this->removeCronJob($crontab,$cronJobName);
+
+            $commandJobName = "cron:swift";
+            $res = $userServiceUtil->removeCronJobLinuxByCommandName($commandJobName);
 
             if( $res ) {
                 $session = $this->container->get('session');
                 $session->getFlashBag()->add(
                     'notice',
-                    "Removed Cron Job:" . $res
+                    "Removed Cron Job:" . $commandJobName
                 );
             }
         }
