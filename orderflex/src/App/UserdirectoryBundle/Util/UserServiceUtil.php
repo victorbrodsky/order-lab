@@ -1942,9 +1942,9 @@ class UserServiceUtil {
             return $cronJobFullName;
         } else {
             if( $cronJobFullName ) {
-                $resStr = '<font color="green">Cron job status: '.$cronJobFullName.'.</font>';
+                $resStr = '<font color="green">Cron job status '.$cronJobName.': '.$cronJobFullName.'.</font>';
             } else {
-                $resStr = '<font color="red">Cron job status: not found.</font>';
+                $resStr = '<font color="red">Cron job status '.$cronJobName.': not found.</font>';
             }
             return $resStr;
         }
