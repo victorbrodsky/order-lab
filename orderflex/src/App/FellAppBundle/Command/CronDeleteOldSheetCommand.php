@@ -25,30 +25,43 @@
 namespace App\FellAppBundle\Command;
 
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+//use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 
-class CronDeleteOldSheetCommand extends ContainerAwareCommand {
+class CronDeleteOldSheetCommand extends Command {
 
+    protected static $defaultName = 'cron:deleteoldsheetfellapp';
+    private $container;
+    private $em;
+
+    public function __construct(ContainerInterface $container, EntityManagerInterface $em)
+    {
+        parent::__construct();
+
+        $this->container = $container;
+        $this->em = $em;
+    }
 
     protected function configure() {
         $this
-            ->setName('cron:deleteoldsheetfellapp')
+            //->setName('cron:deleteoldsheetfellapp')
             ->setDescription('Delete Old Fellowship Application Spreadsheets from the server');
     }
 
     //php app/console cron:deleteoldsheetfellapp --env=prod
     protected function execute(InputInterface $input, OutputInterface $output) {
 
-        $logger = $this->getContainer()->get('logger');
+        $logger = $this->container->get('logger');
 
         //delete
-        $fellappImportPopulateUtil = $this->getContainer()->get('fellapp_importpopulate_util');
+        $fellappImportPopulateUtil = $this->container->get('fellapp_importpopulate_util');
         $deletedDocumentIds = $fellappImportPopulateUtil->deleteOldSheetFellApp();
         if( $deletedDocumentIds ) {
             $eventImport = 'FellApp Spreadsheet Deleted: '.$deletedDocumentIds;

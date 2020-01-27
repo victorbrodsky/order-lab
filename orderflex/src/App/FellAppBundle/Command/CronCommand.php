@@ -25,49 +25,63 @@
 namespace App\FellAppBundle\Command;
 
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+//use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 
-class CronCommand extends ContainerAwareCommand {
+class CronCommand extends Command {
+
+    protected static $defaultName = 'cron:importfellapp';
+    private $container;
+    private $em;
+
+    public function __construct(ContainerInterface $container, EntityManagerInterface $em)
+    {
+        parent::__construct();
+
+        $this->container = $container;
+        $this->em = $em;
+    }
 
 
     protected function configure() {
         $this
-            ->setName('cron:importfellapp')
+            //->setName('cron:importfellapp')
             ->setDescription('Import and Populate Fellowship Applications from Google Form');
     }
 
     //php app/console cron:importfellapp --env=prod
     protected function execute(InputInterface $input, OutputInterface $output) {
 
-        $logger = $this->getContainer()->get('logger');
+        $logger = $this->container->get('logger');
 
         //testing
-//        $fellappUtil = $this->getContainer()->get('fellapp_util');
-//        $em = $this->getContainer()->get('doctrine')->getEntityManager();
+//        $fellappUtil = $this->container->get('fellapp_util');
+//        $em = $this->container->get('doctrine')->getEntityManager();
 //        $fellowshipApplication = $em->getRepository('AppFellAppBundle:FellowshipApplication')->find(162); //162
 //        $fellappUtil->sendConfirmationEmailsOnApplicationPopulation($fellowshipApplication,$fellowshipApplication->getUser());
 //        exit('email test');
         //testing checkAndSendCompleteEmail
-//        $em = $this->getContainer()->get('doctrine')->getManager();
-//        $fellappRecLetterUtil = $this->getContainer()->get('fellapp_rec_letter_util');
+//        $em = $this->container->get('doctrine')->getManager();
+//        $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
 //        $fellapp = $em->getRepository('AppFellAppBundle:FellowshipApplication')->find(1414); //8-test,1414-collage
 //        $reference = $fellapp->getReferences()->first();
 //        $fellappRecLetterUtil->checkReferenceAlreadyHasLetter($fellapp,$reference);
 //        exit('eof test');
         //EOF testing
 
-        $fellappImportPopulateUtil = $this->getContainer()->get('fellapp_importpopulate_util');
+        $fellappImportPopulateUtil = $this->container->get('fellapp_importpopulate_util');
         $result = $fellappImportPopulateUtil->processFellAppFromGoogleDrive();
         $logger->notice("Cron job processing FellApp from Google Drive finished with result=".$result);
 
         if(1) {
-            $fellappRecLetterUtil = $this->getContainer()->get('fellapp_rec_letter_util');
+            $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
             $result2 = $fellappRecLetterUtil->processFellRecLetterFromGoogleDrive();
             $logger->notice("Cron job processing FellApp Recommendation Letters from Google Drive finished with result=" . $result2);
         }
@@ -103,7 +117,7 @@ class CronCommand extends ContainerAwareCommand {
 //        $result = $result . "; Populate: " . $eventPopulate;
 //
 //        //delete old
-//        $googlesheetmanagement = $this->getContainer()->get('fellapp_googlesheetmanagement');
+//        $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
 //        $deletedDocumentIds = $googlesheetmanagement->deleteOldSheetFellApp();
 //        if( $deletedDocumentIds ) {
 //            $eventDelete = 'FellApp Spreadsheet Deleted: '.$deletedDocumentIds;
@@ -123,8 +137,8 @@ class CronCommand extends ContainerAwareCommand {
 //    //php app/console cron:importfellapp --env=prod
 //    protected function execute_old(InputInterface $input, OutputInterface $output) {
 //
-//        $logger = $this->getContainer()->get('logger');
-//        $fellappUtil = $this->getContainer()->get('fellapp_util');
+//        $logger = $this->container->get('logger');
+//        $fellappUtil = $this->container->get('fellapp_util');
 //        $result = "";
 //
 //        //import
@@ -152,7 +166,7 @@ class CronCommand extends ContainerAwareCommand {
 //        $result = $result . "; Populate: " . $eventPopulate;
 //
 //        //delete
-//        $googlesheetmanagement = $this->getContainer()->get('fellapp_googlesheetmanagement');
+//        $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
 //        $deletedDocumentIds = $googlesheetmanagement->deleteOldSheetFellApp();
 //        if( $deletedDocumentIds ) {
 //            $evenstDelete = 'FellApp Spreadsheet Deleted: '.$deletedDocumentIds;

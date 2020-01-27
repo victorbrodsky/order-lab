@@ -107,10 +107,38 @@ services:
         tags:
             - { name: 'console.command', command: 'app:simple-tests' }
 
+    App\UserdirectoryBundle\Command\CronCommand:
+        tags:
+            - { name: 'console.command', command: 'cron:delete-orphan' }
+
+    App\UserdirectoryBundle\Command\SwiftCronCommand:
+        tags:
+            - { name: 'console.command', command: 'cron:swift' }
+
+    App\UserdirectoryBundle\Command\UtilCommand:
+        tags:
+            - { name: 'console.command', command: 'cron:util-command' }
+
+
     App\FellAppBundle\Command\GenerateReportRunCommand:
         tags:
             - { name: 'console.command', command: 'fellapp:generatereportrun' }
 
+    App\FellAppBundle\Command\CronCommand:
+        tags:
+            - { name: 'console.command', command: 'cron:importfellapp' }
+
+    App\FellAppBundle\Command\CronDeleteOldSheetCommand:
+        tags:
+            - { name: 'console.command', command: 'cron:deleteoldsheetfellapp' }
+
+    App\FellAppBundle\Command\GenerateReportCommand:
+        tags:
+            - { name: 'console.command', command: 'fellapp:generatereport' }
+
+    App\TranslationalResearchBundle\Command\CronCommand:
+        tags:
+            - { name: 'console.command', command: 'cron:invoice-reminder-emails' }
     ################## EOF Commands ##################
 
     logger:

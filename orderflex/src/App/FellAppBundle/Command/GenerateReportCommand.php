@@ -26,21 +26,33 @@ namespace App\FellAppBundle\Command;
 
 
 use App\FellAppBundle\Util\ReportGeneratorManager;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+//use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
+class GenerateReportCommand extends Command {
 
-class GenerateReportCommand extends ContainerAwareCommand {
+    protected static $defaultName = 'fellapp:generatereport';
+    private $container;
+    private $em;
 
+    public function __construct(ContainerInterface $container, EntityManagerInterface $em)
+    {
+        parent::__construct();
+
+        $this->container = $container;
+        $this->em = $em;
+    }
 
     protected function configure() {
         $this
-            ->setName('fellapp:generatereport')
+            //->setName('fellapp:generatereport')
             ->setDescription('Import and Populate Fellowship Applications from Google Form')
             ->addArgument(
                 'id',
@@ -55,7 +67,7 @@ class GenerateReportCommand extends ContainerAwareCommand {
 
         $id = $input->getArgument('id');
 
-        $fellappRepGen = $this->getContainer()->get('fellapp_reportgenerator');
+        $fellappRepGen = $this->container->get('fellapp_reportgenerator');
         
      if(1) {             
         $res = $fellappRepGen->generateFellAppReport( $id );
@@ -64,9 +76,9 @@ class GenerateReportCommand extends ContainerAwareCommand {
         $reportsUploadPathFellApp = "Reports";
         //$userUtil = new UserUtil();
         //$reportsUploadPathFellApp = $userUtil->getSiteSetting($this->em,'reportsUploadPathFellApp');
-        $uploadReportPath = 'Uploaded/' . $this->getContainer()->getParameter('fellapp.uploadpath').'/'.$reportsUploadPathFellApp;
-        //$reportPath = $this->getContainer()->get('kernel')->getRootDir() . '/../public/' . $uploadReportPath.'/';
-         $reportPath = $this->getContainer()->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $uploadReportPath . DIRECTORY_SEPARATOR;
+        $uploadReportPath = 'Uploaded/' . $this->container->getParameter('fellapp.uploadpath').'/'.$reportsUploadPathFellApp;
+        //$reportPath = $this->container->get('kernel')->getRootDir() . '/../public/' . $uploadReportPath.'/';
+         $reportPath = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $uploadReportPath . DIRECTORY_SEPARATOR;
 
          $outdir = $reportPath.'temp_'.$id.DIRECTORY_SEPARATOR;
         $applicationFilePath = $outdir . "application_ID" . $id . ".pdf";

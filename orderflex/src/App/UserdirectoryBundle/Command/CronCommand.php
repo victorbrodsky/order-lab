@@ -25,20 +25,33 @@
 namespace App\UserdirectoryBundle\Command;
 
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+//use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 
-class CronCommand extends ContainerAwareCommand {
+class CronCommand extends Command {
 
+    protected static $defaultName = 'cron:delete-orphan';
+    private $container;
+    private $em;
+
+    public function __construct(ContainerInterface $container, EntityManagerInterface $em)
+    {
+        parent::__construct();
+
+        $this->container = $container;
+        $this->em = $em;
+    }
 
     protected function configure() {
         $this
-            ->setName('cron:delete-orphan')
+            //->setName('cron:delete-orphan')
             ->setDescription('Cron job to delete orphan files older than 2 years of age');
     }
 
@@ -53,9 +66,9 @@ class CronCommand extends ContainerAwareCommand {
     //php app/console cron:delete-orphan --env=prod
     protected function execute(InputInterface $input, OutputInterface $output) {
 
-        $logger = $this->getContainer()->get('logger');
+        $logger = $this->container->get('logger');
 
-        $userSecUtil = $this->getContainer()->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
 
         // 2 years => 365*2 = 730 days
         $days = 730;

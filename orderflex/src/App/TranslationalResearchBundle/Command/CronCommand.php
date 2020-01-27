@@ -18,31 +18,45 @@
 
 namespace App\TranslationalResearchBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+//use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
-class CronCommand extends ContainerAwareCommand {
+class CronCommand extends Command {
+
+    protected static $defaultName = 'cron:invoice-reminder-emails';
+    private $container;
+    private $em;
+
+    public function __construct(ContainerInterface $container, EntityManagerInterface $em)
+    {
+        parent::__construct();
+
+        $this->container = $container;
+        $this->em = $em;
+    }
 
     protected function configure() {
         $this
-            ->setName('cron:invoice-reminder-emails')
+            //->setName('cron:invoice-reminder-emails')
             ->setDescription('Translational Research Unpaid Invoice Reminder Email');
     }
 
     //php app/console cron:invoice-reminder-emails --env=prod
     protected function execute(InputInterface $input, OutputInterface $output) {
 
-        //$logger = $this->getContainer()->get('logger');
-        //$fellappImportPopulateUtil = $this->getContainer()->get('fellapp_importpopulate_util');
+        //$logger = $this->container->get('logger');
+        //$fellappImportPopulateUtil = $this->container->get('fellapp_importpopulate_util');
         //$result = $fellappImportPopulateUtil->processFellAppFromGoogleDrive();
         //$logger->notice("Cron job processing FellApp from Google Drive finished with result=".$result);
         //$output->writeln($result);
 
-        $transresReminderUtil = $this->getContainer()->get('transres_reminder_util');
+        $transresReminderUtil = $this->container->get('transres_reminder_util');
 
         ////////////// unpaid invoices //////////////
         $results = $transresReminderUtil->sendReminderUnpaidInvoices();

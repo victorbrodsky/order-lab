@@ -69,7 +69,7 @@ class GenerateReportRunCommand extends Command {
         $logger->notice("Run Command: try run");
         //echo "testing Run Command: try run<br>"; //testing
         
-        //$result = ReportGeneratorManager::getInstance($this->getContainer())->tryRun();
+        //$result = ReportGeneratorManager::getInstance($this->container)->tryRun();
 
         //$argument = $input->getArgument('argument');
         //echo "argument=".$argument."<br>";

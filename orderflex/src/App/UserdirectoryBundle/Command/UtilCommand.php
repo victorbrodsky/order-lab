@@ -25,16 +25,29 @@
 namespace App\UserdirectoryBundle\Command;
 
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+//use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 //Execute some temporary, utility commands such as populate large data
-class UtilCommand extends ContainerAwareCommand {
+class UtilCommand extends Command {
 
+    protected static $defaultName = 'cron:util-command';
+    private $container;
+    private $em;
+
+    public function __construct(ContainerInterface $container, EntityManagerInterface $em)
+    {
+        parent::__construct();
+
+        $this->container = $container;
+        $this->em = $em;
+    }
 
     protected function configure() {
         $this
@@ -47,11 +60,11 @@ class UtilCommand extends ContainerAwareCommand {
     //php app/console cron:util-command --env=prod
     protected function execute(InputInterface $input, OutputInterface $output) {
 
-        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-        //$logger = $this->getContainer()->get('logger');
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        //$logger = $this->container->get('logger');
         $res = "EOF util-command";
 
-        //$calllogUtil = $this->getContainer()->get('calllog_util');
+        //$calllogUtil = $this->container->get('calllog_util');
         //$res = $calllogUtil->updateTextHtml();
         //exit("EOF updateTextHtmlAction. Res=".$res);
 
@@ -62,13 +75,13 @@ class UtilCommand extends ContainerAwareCommand {
             if (!$invoice) {
                 throw new \Exception("Invoice is not found by invoice number (oid) '" . $oid . "'");
             }
-            $transresRequestUtil = $this->getContainer()->get('transres_request_util');
+            $transresRequestUtil = $this->container->get('transres_request_util');
             $res = $transresRequestUtil->sendInvoicePDFByEmail($invoice);
         }
 
         if(0) {
             ///// rec letter ////////
-            $fellappRecLetterUtil = $this->getContainer()->get('fellapp_rec_letter_util');
+            $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
             $fellapp = $em->getRepository('AppFellAppBundle:FellowshipApplication')->find(1414); //8-testing, 1414-collage, 1439-live
             $references = $fellapp->getReferences();
             $reference = $references->first();
@@ -81,7 +94,7 @@ class UtilCommand extends ContainerAwareCommand {
             /////////////////////////
         }
 
-        $emailUtil = $this->getContainer()->get('user_mailer_utility');
+        $emailUtil = $this->container->get('user_mailer_utility');
         $emailUtil->testEmailWithAttachments();
         $res = "EOF testEmailWithAttachments";
 

@@ -33,7 +33,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 
-//class TestCommand extends ContainerAwareCommand
 class TestCommand extends Command
 {
     protected static $defaultName = 'app:simple-tests';
@@ -64,7 +63,7 @@ class TestCommand extends Command
         $fellappApplicationId = 1;
 
         //$reportsUploadPathFellApp = "Reports";
-        //$uploadpath = $this->getContainer()->getParameter('fellapp.uploadpath');
+        //$uploadpath = $this->container->getParameter('fellapp.uploadpath');
         //$uploadReportPath = 'Uploaded' . DIRECTORY_SEPARATOR . $uploadpath . DIRECTORY_SEPARATOR .$reportsUploadPathFellApp;
         $uploadReportPath = "Uploaded/fellapp/Reports";
 

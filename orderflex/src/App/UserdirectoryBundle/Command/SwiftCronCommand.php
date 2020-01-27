@@ -25,20 +25,32 @@
 namespace App\UserdirectoryBundle\Command;
 
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+//use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
+class SwiftCronCommand extends Command {
 
-class SwiftCronCommand extends ContainerAwareCommand {
+    protected static $defaultName = 'cron:swift';
+    private $container;
+    private $em;
 
+    public function __construct(ContainerInterface $container, EntityManagerInterface $em)
+    {
+        parent::__construct();
+
+        $this->container = $container;
+        $this->em = $em;
+    }
 
     protected function configure() {
         $this
-            ->setName('cron:swift')
+            //->setName('cron:swift')
             ->setDescription('Cron job to send emails from file spool');
     }
 
@@ -47,13 +59,13 @@ class SwiftCronCommand extends ContainerAwareCommand {
     protected function execute(InputInterface $input, OutputInterface $output) {
 
         //use custom sendSpooledEmails (mainly because of the google auth)
-        $emailUtil = $this->getContainer()->get('user_mailer_utility');
+        $emailUtil = $this->container->get('user_mailer_utility');
         $emailUtil->sendSpooledEmails();
         return true;
 
-        //$logger = $this->getContainer()->get('logger');
+        //$logger = $this->container->get('logger');
 
-        //$userSecUtil = $this->getContainer()->get('user_security_utility');
+        //$userSecUtil = $this->container->get('user_security_utility');
 
         $cmd = 'php bin/console swiftmailer:spool:send --env=prod';
 
