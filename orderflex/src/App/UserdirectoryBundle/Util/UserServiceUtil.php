@@ -1632,7 +1632,7 @@ class UserServiceUtil {
 
         $fellappCronJob = "0 * * * *" . " " . $fellappCronJobCommand; //0 minutes - every hour
 
-        if( $this->getCronStatusLinux($cronJobName,true) === false ) {
+        if( $this->getCronJobFullNameLinux($cronJobName) === false ) {
 
             $res = $this->addCronJobLinux($fellappCronJob);
 
@@ -1656,7 +1656,7 @@ class UserServiceUtil {
 
         $trpCronJob = "00 06 * * Mon" . " " . $trpCronJobCommand; //every monday (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat
 
-        if( $this->getCronStatusLinux($cronJobName,true) === false ) {
+        if( $this->getCronJobFullNameLinux($cronJobName) === false ) {
 
             $this->addCronJobLinux($trpCronJob);
 
@@ -1694,7 +1694,7 @@ class UserServiceUtil {
         $emailCronJob = "*/$mailerFlushQueueFrequency * * * *" . " " . $emailCronJobCommand;
 
         $cronJobName = "cron:swift";
-        if( $this->getCronStatusLinux($cronJobName,true) === false ) {
+        if( $this->getCronJobFullNameLinux($cronJobName) === false ) {
 
             //*/10 * * * * /usr/bin/php /opt/test.php
             //$res = exec($emailCronJob, $crontab);
@@ -1942,7 +1942,7 @@ class UserServiceUtil {
             return $cronJobFullName;
         } else {
             if( $cronJobFullName ) {
-                $resStr = '<font color="green">Cron job status: '.$cronJobName.'.</font>';
+                $resStr = '<font color="green">Cron job status: '.$cronJobFullName.'.</font>';
             } else {
                 $resStr = '<font color="red">Cron job status: not found.</font>';
             }
@@ -1990,50 +1990,50 @@ class UserServiceUtil {
 //        return $res;
     }
     //https://stackoverflow.com/questions/4926258/how-to-check-if-cronjob-exists-with-php
-    public function getCronStatusLinux_OLD($cronJobName, $asBoolean=false) {
-        //$cronJobName = "Swiftmailer";
-        //$command = 'SchTasks | FINDSTR "'.$cronJobName.'"';
-        //$command = "/usr/bin/crontab -l -u apache";
-        $command = "/usr/bin/crontab -l";
-
-        //$res = exec($command);
-        $execRes = exec($command, $crontab);
-
-        //echo "Exec: $command <br>";
-        //dump($execRes);
-        //dump($crontab);
-
-        if( isset($crontab) && is_array($crontab) ) {
-
-            $existedCronJob = "";
-            $res = false;
-            foreach( $crontab as $cronjob ) {
-                if( strpos($cronjob, $cronJobName) !== false ) {
-                    $res = true;
-                    $existedCronJob = $cronjob;
-                    break;
-                }
-            }
-
-
-            if( $asBoolean ) {
-                //$res = true;
-            } else {
-                if( $res ) {
-                    $res = '<font color="green">Cron job status: '.$existedCronJob.'.</font>';
-                } else {
-                    $res = '<font color="red">Cron job status: not found.</font>';
-                }
-            }
-
-        }
-
-        //echo "res=$res <br>";
-        //echo "existedCronJob=$existedCronJob <br>";
-        //exit("111");
-
-        return $res;
-    }
+//    public function getCronStatusLinux_OLD($cronJobName, $asBoolean=false) {
+//        //$cronJobName = "Swiftmailer";
+//        //$command = 'SchTasks | FINDSTR "'.$cronJobName.'"';
+//        //$command = "/usr/bin/crontab -l -u apache";
+//        $command = "/usr/bin/crontab -l";
+//
+//        //$res = exec($command);
+//        $execRes = exec($command, $crontab);
+//
+//        //echo "Exec: $command <br>";
+//        //dump($execRes);
+//        //dump($crontab);
+//
+//        if( isset($crontab) && is_array($crontab) ) {
+//
+//            $existedCronJob = "";
+//            $res = false;
+//            foreach( $crontab as $cronjob ) {
+//                if( strpos($cronjob, $cronJobName) !== false ) {
+//                    $res = true;
+//                    $existedCronJob = $cronjob;
+//                    break;
+//                }
+//            }
+//
+//
+//            if( $asBoolean ) {
+//                //$res = true;
+//            } else {
+//                if( $res ) {
+//                    $res = '<font color="green">Cron job status: '.$existedCronJob.'.</font>';
+//                } else {
+//                    $res = '<font color="red">Cron job status: not found.</font>';
+//                }
+//            }
+//
+//        }
+//
+//        //echo "res=$res <br>";
+//        //echo "existedCronJob=$existedCronJob <br>";
+//        //exit("111");
+//
+//        return $res;
+//    }
 //    public function getCronStatusLinux_Sf3($cronJobName) {
 //
 //        return "Not implemented for Symfony >=4";
