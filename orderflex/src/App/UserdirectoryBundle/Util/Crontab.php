@@ -19,7 +19,14 @@ class Crontab {
 
     static private function stringToArray($jobs = '') {
         $jobs = trim($jobs);
-        $array = explode("\r\n", trim($jobs)); // trim() gets rid of the last \r\n
+        $array = array();
+        if (strpos($jobs, "\r\n") !== false) {
+            $array = explode("\r\n", trim($jobs)); // trim() gets rid of the last \r\n
+        }
+        if (strpos($jobs, "\n") !== false) {
+            $array = explode("\n", trim($jobs)); // trim() gets rid of the last \r\n
+        }
+        //$array = explode("\r\n", trim($jobs)); // trim() gets rid of the last \r\n
         foreach ($array as $key => $item) {
             if ($item == '') {
                 unset($array[$key]);
