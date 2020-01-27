@@ -1922,7 +1922,7 @@ class UserServiceUtil {
         $crontab = new Crontab();
         $jobs = $crontab->getJobs();
 
-        dump($jobs);
+        //dump($jobs);
 
         if( isset($jobs) && is_array($jobs) ) {
 
