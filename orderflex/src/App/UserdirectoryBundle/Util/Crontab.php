@@ -79,6 +79,12 @@ class Crontab {
             echo "removeJob=$job <br>";
             $jobs = self::getJobs();
             unset($jobs[array_search($job, $jobs)]);
+
+            $jobs = self::getJobs();
+            //echo "1job=$job <br>";
+            echo "1jobs: <br>";
+            dump($jobs);
+
             return self::saveJobs($jobs);
         } else {
             return false;
