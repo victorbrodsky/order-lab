@@ -513,14 +513,10 @@ class EmailUtil {
             return $res;
         } else {
             //remove cron job
-            //$crontab = new Crontab();
-            //$res = $crontab->render();
-            //echo "crontab res=".$res."<br>";
-            //$res  = $this->removeCronJob($crontab,$cronJobName);
-
             $commandJobName = "cron:swift";
+            echo "remove crontab commandJobName=".$commandJobName."<br>";
             $res = $userServiceUtil->removeCronJobLinuxByCommandName($commandJobName);
-
+exit('111');
             if( $res ) {
                 $session = $this->container->get('session');
                 $session->getFlashBag()->add(

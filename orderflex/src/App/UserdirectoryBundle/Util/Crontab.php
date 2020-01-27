@@ -54,6 +54,8 @@ class Crontab {
 
     static public function doesJobExist($job = '') {
         $jobs = self::getJobs();
+        echo "job=$job <br>";
+        dump($jobs);
         if (in_array($job, $jobs)) {
             return true;
         } else {
