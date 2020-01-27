@@ -1637,11 +1637,8 @@ class UserServiceUtil {
             $res = $this->addCronJobLinux($fellappCronJob);
 
             $res = "Created $cronJobName cron job";
-            //echo "$res <br>";
-            //$logger->notice($res);
         } else {
             $res = "$cronJobName already exists";
-            //echo "$res <br>";
         }
 
         $logger->notice($res);
@@ -1657,15 +1654,10 @@ class UserServiceUtil {
         $trpCronJob = "00 06 * * Mon" . " " . $trpCronJobCommand; //every monday (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat
 
         if( $this->getCronJobFullNameLinux($cronJobName) === false ) {
-
             $this->addCronJobLinux($trpCronJob);
-
             $res = "Created $cronJobName cron job";
-            //echo "$res <br>";
-            //$logger->notice($res);
         } else {
             $res = "$cronJobName already exists";
-            //echo "$res <br>";
         }
 
         $logger->notice($res);
@@ -1678,87 +1670,27 @@ class UserServiceUtil {
         $logger->notice("Creating cron jobs for Linux");
         $projectDir = $this->container->get('kernel')->getProjectDir();
 
-        //$emailUtil = $this->container->get('user_mailer_utility');
-        //$createEmailCronJob = $emailUtil->createEmailCronJobLinux();
         $phpPath = $this->getPhpPath();
         $emailCronJobCommand = $phpPath." ".$projectDir.DIRECTORY_SEPARATOR."bin/console cron:swift --env=prod";
-
-        //$mailerFlushQueueFrequency = 15; //in minuts
-//            ->setMinute('*/' . $mailerFlushQueueFrequency) //every $mailerFlushQueueFrequency minutes
-//            ->setHour('*')
-//            ->setDayOfMonth('*')
-//            ->setMonth('*')
-//            ->setDayOfWeek('*')
-//            ->setCommand($emailCronJobCommand);
 
         $emailCronJob = "*/$mailerFlushQueueFrequency * * * *" . " " . $emailCronJobCommand;
 
         $cronJobName = "cron:swift";
         if( $this->getCronJobFullNameLinux($cronJobName) === false ) {
-
-            //*/10 * * * * /usr/bin/php /opt/test.php
-            //$res = exec($emailCronJob, $crontab);
-            //$res = exec('echo -e "`crontab -l`\n30 9 * * * /path/to/script" | crontab -');
-            $res = $this->addCronJobLinux($emailCronJob);
-
-            //echo "crontab=$res <br>";
-            //dump($res);
-
+            $this->addCronJobLinux($emailCronJob);
             $res = "Created $cronJobName cron job";
-            //echo "$res <br>";
-            //$logger->notice($res);
         } else {
             $res = "$cronJobName already exists";
-            //echo "$res <br>";
         }
 
-        //$res = "Created email cron job: ".$emailCronJob;
-
         $logger->notice($res);
-
-        //exit($res);
-
-        return $res;
-    }
-
-    public function addCronJobLinux_OLD( $command ) {
-        //$cron_file = 'cron_filename';
-
-        //$projectDir = $this->container->get('kernel')->getProjectDir();
-        //$cronFile = $projectDir . DIRECTORY_SEPARATOR . "var" . DIRECTORY_SEPARATOR  .$cronFile;
-
-        ///usr/bin/crontab
-        //exec('echo -e "`crontab -l`\n30 9 * * * /path/to/script" | crontab -');
-        $res = exec('echo -e "`crontab -l`\n'.$command.'" | crontab -');
-
-        return $res;
-    }
-    public function removeCronJobLinux_OLD( $command ) {
-        //$cron_file = 'cron_filename';
-
-        //$projectDir = $this->container->get('kernel')->getProjectDir();
-        //$cronFile = $projectDir . DIRECTORY_SEPARATOR . "var" . DIRECTORY_SEPARATOR  .$cronFile;
-
-        ///usr/bin/crontab
-        //exec('echo -e "`crontab -l`\n30 9 * * * /path/to/script" | crontab -');
-        $res = exec('echo -e "`crontab -l`\n'.$command.'" | crontab -');
 
         return $res;
     }
 
     public function addCronJobLinux( $fullCommand ) {
-        //$cron_file = 'cron_filename';
-
-        //$projectDir = $this->container->get('kernel')->getProjectDir();
-        //$cronFile = $projectDir . DIRECTORY_SEPARATOR . "var" . DIRECTORY_SEPARATOR  .$cronFile;
-
-        ///usr/bin/crontab
-        //exec('echo -e "`crontab -l`\n30 9 * * * /path/to/script" | crontab -');
-        //$res = exec('echo -e "`crontab -l`\n'.$command.'" | crontab -');
-
         $crontab = new Crontab();
         $res = $crontab->addJob($fullCommand);
-
         return $res;
     }
     public function removeCronJobLinuxByCommandName( $commandName ) {
@@ -1773,143 +1705,6 @@ class UserServiceUtil {
         return $res;
     }
 
-//    //can use bundle: https://github.com/j-guyon/CommandSchedulerBundle
-//    //verify: crontab -u www-data -l
-//    //Create cron jobs:
-//    //1) swiftMailer (implemented on email util (EmailUtil->createEmailCronJob))
-//    //2) importFellowshipApplications (every hour)
-//    //3) UnpaidInvoiceReminder (at 6 am every Monday)
-//    public function createCronsLinux_Sf3() {
-//
-//        //return "Not implemented for Symfony >=4";
-//
-//        $logger = $this->container->get('logger');
-//        $logger->notice("Creating cron jobs for Linux for Symfony 3 using yzalis/crontab");
-//
-//        $projectDir = $this->container->get('kernel')->getProjectDir();
-//        $crontab = new Crontab();
-//
-//
-//        //////////////////// 1) swiftMailer (implemented on email util (EmailUtil->createEmailCronJob)) ////////////////////
-//        //$emailUtil = $this->container->get('user_mailer_utility');
-//        //$createEmailCronJob = $emailUtil->createEmailCronJobLinux();
-//        $emailCronJobCommand = "php ".$projectDir.DIRECTORY_SEPARATOR."bin/console cron:swift --env=prod";
-//        $mailerFlushQueueFrequency = 15; //in minuts
-//
-//        $job = new Job();
-//        $job
-//            ->setMinute('*/' . $mailerFlushQueueFrequency)//every $mailerFlushQueueFrequency minutes
-//            ->setHour('*')
-//            ->setDayOfMonth('*')
-//            ->setMonth('*')
-//            ->setDayOfWeek('*')
-//            ->setCommand($emailCronJobCommand);
-//
-//        //first delete existing cron job
-//        //$this->removeCronJob($crontab,$fellappCronJobCommand);
-//
-//        if( !$this->isCronJobExists($crontab,$emailCronJobCommand) ) {
-//            $crontab->addJob($job);
-//            //$crontab->write();
-//            $crontab->getCrontabFileHandler()->write($crontab);
-//            $logger->notice("Created swift cron job");
-//        }
-//
-//        $logger->notice("Created email cron job: ".$emailCronJobCommand);
-//        //////////////////// EOF 1) swiftMailer (implemented on email util (EmailUtil->createEmailCronJob)) ////////////////////
-//
-//
-//        //////////////////// ImportFellowshipApplications ////////////////////
-//        //2) importFellowshipApplications (every hour)
-//        //Description: Import and Populate Fellowship Applications from Google Form
-//        //Command: php app/console cron:importfellapp --env=prod
-//        //Start in: E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2
-//        //$fellappCronJobName = "ImportFellowshipApplications";
-//
-//        $fellappCronJobCommand = "php ".$projectDir.DIRECTORY_SEPARATOR."bin/console cron:importfellapp --env=prod";
-//
-//        $job = new Job();
-//        $job
-//            ->setMinute('0') //at minute 0 => every hour
-//            ->setHour('*')
-//            ->setDayOfMonth('*')
-//            ->setMonth('*')
-//            ->setDayOfWeek('*')
-//            ->setCommand($fellappCronJobCommand);
-//
-//        //first delete existing cron job
-//        //$this->removeCronJob($crontab,$fellappCronJobCommand);
-//
-//        if( !$this->isCronJobExists($crontab,$fellappCronJobCommand) ) {
-//            $crontab->addJob($job);
-//            //$crontab->write();
-//            $crontab->getCrontabFileHandler()->write($crontab);
-//            $logger->notice("Created importfellapp cron job");
-//        }
-//
-//        //$res = $crontab->render();
-//        //////////////////// EOF ImportFellowshipApplications ////////////////////
-//
-//
-//        //////////////////// 3) UnpaidInvoiceReminder (at 6 am every Monday) ////////////////////
-//        //3) UnpaidInvoiceReminder (at 6 am every Monday)
-//        //Description: Send reminder emails for unpaid invoices. Run every week on every Monday at 6am.
-//        //Command: php app/console cron:invoice-reminder-emails --env=prod
-//        //Start in: E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2
-//        $fellappFrequency = 1; //hour
-//
-//        $trpCronJobCommand = "php ".$projectDir.DIRECTORY_SEPARATOR."bin/console cron:invoice-reminder-emails --env=prod";
-//
-//        $job = new Job();
-//        $job
-//            ->setMinute('00')
-//            ->setHour('06')
-//            ->setDayOfMonth('*')
-//            ->setMonth('*')
-//            ->setDayOfWeek('Mon') //every monday (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat
-//            ->setCommand($trpCronJobCommand);
-//
-//        //first delete existing cron job
-//        //$this->removeCronJob($crontab,$trpCronJobCommand);
-//
-//        if( !$this->isCronJobExists($crontab,$trpCronJobCommand) ) {
-//            $crontab->addJob($job);
-//            //$crontab->write();
-//            $crontab->getCrontabFileHandler()->write($crontab);
-//            $logger->notice("Created invoice-reminder-emails cron job");
-//        }
-//
-//        //$res = $crontab->render();
-//        //////////////////// EOF 3) UnpaidInvoiceReminder (at 6 am every Monday) ////////////////////
-//
-//        $res = $crontab->render();
-//        $logger->notice("Crontab render: ".$res);
-//
-//        return $res;
-//    }
-//    public function isCronJobExists($crontab,$commandName) {
-//        foreach($crontab->getJobs() as $job) {
-//            //echo "job=".$job.", command=".$job->getCommand()."<br>";
-//            if( $commandName == $job->getCommand() ) {
-//                //echo "remove job ". $job."<br>";
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
-//    public function removeCronJob($crontab,$commandName) {
-//        $resArr = array();
-//        foreach($crontab->getJobs() as $job) {
-//            //echo "job=".$job.", command=".$job->getCommand()."<br>";
-//            if( $commandName == $job->getCommand() ) {
-//                $resArr[] = $job."";
-//                $crontab->removeJob($job);
-//                $crontab->getCrontabFileHandler()->write($crontab);
-//            }
-//        }
-//        return implode("; ",$resArr);
-//    }
-
     public function getCronStatus($cronJobName) {
         if( $this->isWindows() ){
             return $this->getCronStatusWindows($cronJobName);
@@ -1920,10 +1715,9 @@ class UserServiceUtil {
 
     public function getCronJobFullNameLinux($cronJobName) {
         $crontab = new Crontab();
+
         //$jobs = $crontab->getJobsAsSimpleArray();
         $jobs = $crontab->getJobs();
-
-        //dump($jobs);
 
         if( isset($jobs) && is_array($jobs) ) {
 
@@ -1938,7 +1732,6 @@ class UserServiceUtil {
         return false;
     }
     public function getCronStatusLinux($cronJobName, $asBoolean=false) {
-        //$crontab = new Crontab();
         $cronJobFullName = $this->getCronJobFullNameLinux($cronJobName);
 
         if( $asBoolean ) {
@@ -1953,120 +1746,8 @@ class UserServiceUtil {
         }
 
         return false;
-
-//        //$res = exec($command);
-//        //$execRes = exec($command, $crontab);
-//
-//        //echo "Exec: $command <br>";
-//        //dump($execRes);
-//        //dump($crontab);
-//
-//        if( isset($jobs) && is_array($jobs) ) {
-//
-//            $existedCronJob = "";
-//            $res = false;
-//            foreach( $jobs as $job ) {
-//                if( strpos($job, $cronJobName) !== false ) {
-//                    $res = true;
-//                    $existedCronJob = $job;
-//                    break;
-//                }
-//            }
-//
-//
-//            if( $asBoolean ) {
-//                //$res = true;
-//            } else {
-//                if( $res ) {
-//                    $res = '<font color="green">Cron job status: '.$existedCronJob.'.</font>';
-//                } else {
-//                    $res = '<font color="red">Cron job status: not found.</font>';
-//                }
-//            }
-//
-//        }
-//
-//        //echo "res=$res <br>";
-//        //echo "existedCronJob=$existedCronJob <br>";
-//        //exit("111");
-//
-//        return $res;
     }
-    //https://stackoverflow.com/questions/4926258/how-to-check-if-cronjob-exists-with-php
-//    public function getCronStatusLinux_OLD($cronJobName, $asBoolean=false) {
-//        //$cronJobName = "Swiftmailer";
-//        //$command = 'SchTasks | FINDSTR "'.$cronJobName.'"';
-//        //$command = "/usr/bin/crontab -l -u apache";
-//        $command = "/usr/bin/crontab -l";
-//
-//        //$res = exec($command);
-//        $execRes = exec($command, $crontab);
-//
-//        //echo "Exec: $command <br>";
-//        //dump($execRes);
-//        //dump($crontab);
-//
-//        if( isset($crontab) && is_array($crontab) ) {
-//
-//            $existedCronJob = "";
-//            $res = false;
-//            foreach( $crontab as $cronjob ) {
-//                if( strpos($cronjob, $cronJobName) !== false ) {
-//                    $res = true;
-//                    $existedCronJob = $cronjob;
-//                    break;
-//                }
-//            }
-//
-//
-//            if( $asBoolean ) {
-//                //$res = true;
-//            } else {
-//                if( $res ) {
-//                    $res = '<font color="green">Cron job status: '.$existedCronJob.'.</font>';
-//                } else {
-//                    $res = '<font color="red">Cron job status: not found.</font>';
-//                }
-//            }
-//
-//        }
-//
-//        //echo "res=$res <br>";
-//        //echo "existedCronJob=$existedCronJob <br>";
-//        //exit("111");
-//
-//        return $res;
-//    }
-//    public function getCronStatusLinux_Sf3($cronJobName) {
-//
-//        return "Not implemented for Symfony >=4";
-//
-//        $crontab = new Crontab();
-//        $crontabRender = $crontab->render();
-//
-////        if( $crontabRender ) {
-////            //$res = "Cron job status: " . $crontab->render();
-////            $res = '<font color="green">Cron job status: '.$crontabRender.'.</font>';
-////        } else {
-////            $res = '<font color="red">Cron job status: not found.</font>';
-////        }
-//
-//        $res = '<font color="red">Cron job "'.$cronJobName.'" not found.</font>';
-//
-//        if( $crontabRender ) {
-//            $crontabRenderArr = explode("--env=prod",$crontabRender);
-//            foreach($crontabRenderArr as $crontabJob) {
-//                if (strpos($crontabJob, $cronJobName) !== false) {
-//                    $crontabJob = $crontabJob . " --env=prod";
-//                    $res = '<font color="green">Cron job "'.$cronJobName.'" exists: '.$crontabJob.'.</font>';
-//                    break;
-//                }
-//            }
-//        }
-//
-//        //exit($res);
-//        return $res;
-//    }
+
     public function getCronStatusWindows($cronJobName, $asBoolean=false) {
         //$cronJobName = "Swiftmailer";
         $command = 'SchTasks | FINDSTR "'.$cronJobName.'"';
@@ -2131,74 +1812,13 @@ class UserServiceUtil {
             $oExec = pclose(popen("start /B ". $cmd, "r"));
         }
         else {
-
-            if(0) {
-                $logger = $this->container->get('logger');
-                $logger->notice("Start execInBackground Linux");
-
-                //$output = shell_exec('ls -lart');
-                //$logger->notice("output=".$output);
-
-                //$oExec = exec($cmd . " > /dev/null &");
-
-                //echo "pwd=".exec('pwd');
-                //$oExec = shell_exec('pwd');
-                //echo "pwd oExec=".$oExec."<br>";
-                //$logger->notice("pwd oExec=$oExec");
-
-                //$cmd = "php /opt/order-lab/Scanorders2/bin/console fellapp:generatereportrun";
-                //echo "cmd=".$cmd."<br>";
-                //$oExec = shell_exec($cmd);
-                //$logger->notice("cmd oExec=$oExec");
-                //echo "cmd oExec=".$oExec."<br>";
-
-                echo exec("pwd", $o);
-                //print_r($o);
-                $o = implode(" ", $o);
-                $logger->notice("execInBackground pwd=$o");
-
-                //echo exec("/opt/rh/rh-php56/root/usr/bin/php --version",$o);
-                //echo "######<br>php --version:<br>";
-                //print_r($o);
-                //echo "######<br>";
-
-                //exec("whereis php",$phppath);
-                //$phppath = implode(" ",$phppath);
-                //print_r($phppath);
-                //php: /opt/rh/rh-php56/root/usr/bin/php
-                //$phppath = str_replace("php:","",$phppath);
-                //$phppath = str_replace(" ","",$phppath);
-                $phppath = "/opt/remi/php74/root/usr/bin/php";
-
-                $cmd = str_replace("php ", $phppath . " ", $cmd);
-                $logger->notice("execInBackground cmd=" . $cmd);
-
-                ///opt/rh/rh-php56/root/usr/bin/php ../bin/console fellapp:generatereportrun --env=prod
-                //$cmd = str_replace(" ../bin/console "," /opt/order-lab/Scanorders2/bin/console ",$cmd);
-                //$logger->notice("execInBackground cmd=".$cmd);
-
-                //echo "<br><br>######<br>cmd:<br>";
-                echo exec($cmd, $oExec);
-                //print_r($oExec);
-                //echo "######<br><br>";
-
-                //exec("ls",$o);
-                //print_r($o);
-
-                //$outputfile = "/opt/order-lab/Scanorders2/var/log/execout.txt";
-                //$pidfile = "/opt/order-lab/Scanorders2/var/log/execpid.txt";
-                //exec(sprintf("%s > %s 2>&1 & echo $! >> %s", $cmd, $outputfile, $pidfile));
-
-                //exit("exit");
-            } else {
-                $phppath = "/opt/remi/php74/root/usr/bin/php";
-                $cmd = str_replace("php ", $phppath . " ", $cmd);
-                $logger = $this->container->get('logger');
-                $logger->notice("execInBackground cmd=" . $cmd);
-                //echo exec($cmd, $oExec);
-                $oExec = exec($cmd . " > /dev/null &");
-            }
-
+            //$phppath = "/opt/remi/php74/root/usr/bin/php";
+            $phppath = $this->getPhpPath();
+            $cmd = str_replace("php ", $phppath . " ", $cmd);
+            $logger = $this->container->get('logger');
+            $logger->notice("execInBackground cmd=" . $cmd);
+            //echo exec($cmd, $oExec);
+            $oExec = exec($cmd . " > /dev/null &");
         }
 
         return $oExec;
@@ -2206,7 +1826,6 @@ class UserServiceUtil {
 
     public function getPublicFolderName() {
         $projectDir = $this->container->getParameter('kernel.project_dir');
-
         exit("projectDir=$projectDir");
     }
 
