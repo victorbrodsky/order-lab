@@ -1672,7 +1672,7 @@ class UserServiceUtil {
 
         $cronFile = $projectDir . DIRECTORY_SEPARATOR . "var" . DIRECTORY_SEPARATOR  .$cronFile;
 
-        if (file_exists($cronFile)) {
+        if( file_exists($cronFile) ) {
             echo "The file $cronFile exists";
         } else {
             echo "The file $cronFile does not exist";
@@ -1686,7 +1686,8 @@ class UserServiceUtil {
         file_put_contents($cronFile, $command);
 
         // Install the cron
-        $res = exec('crontab '.$cronFile);
+        ///usr/bin/crontab
+        $res = exec('/usr/bin/crontab '.$cronFile);
 
         return $res;
     }
