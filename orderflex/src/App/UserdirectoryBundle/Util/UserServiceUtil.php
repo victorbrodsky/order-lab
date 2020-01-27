@@ -1653,9 +1653,10 @@ class UserServiceUtil {
             //echo "crontab=$res <br>";
             //dump($res);
 
+            echo "Created $cronJobName cron job <br>";
             $logger->notice("Created $cronJobName cron job");
         } else {
-            echo "$cronJobName already exists";
+            echo "$cronJobName already exists <br>";
         }
 
         $res = "Created email cron job: ".$emailCronJob;
@@ -1833,6 +1834,9 @@ class UserServiceUtil {
 
         //$res = exec($command);
         $execRes = exec($command, $crontab);
+
+        dump($execRes);
+        dump($crontab);
 
         if( isset($crontab)&&is_array($crontab) ) {
 
