@@ -1764,8 +1764,8 @@ class UserServiceUtil {
     public function removeCronJobLinuxByCommandName( $commandName ) {
         $res = false;
         $cronJobFullName = $this->getCronJobFullNameLinux($commandName);
-        echo "cronJobFullName=[$cronJobFullName] <br>";
         if( $cronJobFullName ) {
+            echo "removeCronJobLinuxByCommandName: cronJobFullName=[$cronJobFullName] <br>";
             $crontab = new Crontab();
             $res = $crontab->removeJob($cronJobFullName);
         }
