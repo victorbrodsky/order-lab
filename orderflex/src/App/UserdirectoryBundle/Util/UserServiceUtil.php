@@ -1831,6 +1831,7 @@ class UserServiceUtil {
         //$cronJobName = "Swiftmailer";
         //$command = 'SchTasks | FINDSTR "'.$cronJobName.'"';
         $command = "/usr/bin/crontab -l -u apache";
+        $command = "/usr/bin/crontab -l";
 
         //$res = exec($command);
         $execRes = exec($command, $crontab);
