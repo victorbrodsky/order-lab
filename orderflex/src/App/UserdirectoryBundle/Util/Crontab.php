@@ -18,6 +18,7 @@ class Crontab {
     // $output = shell_exec('(crontab -l; echo "'.$job.'") | crontab -');
 
     static private function stringToArray($jobs = '') {
+        $jobs = trim($jobs);
         $array = explode("\r\n", trim($jobs)); // trim() gets rid of the last \r\n
         foreach ($array as $key => $item) {
             if ($item == '') {
@@ -32,11 +33,23 @@ class Crontab {
         return $string;
     }
 
-    static public function getJobs() {
+    static public function getJobs_ORIG() {
         $output = shell_exec('crontab -l');
-        dump($output);
+        //dump($output);
         return self::stringToArray($output);
     }
+
+    static public function getJobs() {
+        //$output = shell_exec('crontab -l');
+        $execRes = exec('crontab -l', $output);
+
+        dump($execRes);
+        dump($output);
+
+        return $output;
+    }
+
+
 
     static public function saveJobs($jobs = array()) {
         $output = shell_exec('echo "'.self::arrayToString($jobs).'" | crontab -');
