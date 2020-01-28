@@ -431,7 +431,15 @@ class TrpTest extends WebTestBase
         $crawler = $this->client->request('GET', '/translational-research/about');
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Current Version")')->count()
+            $crawler->filter('html:contains("PHP_VERSION")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Apache")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Symfony")')->count()
         );
         //$linkName = '/translational-research/about';
         //$this->testGetLink($linkName,"Current Version");
