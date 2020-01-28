@@ -64,6 +64,19 @@ class VacationTest extends WebTestBase
 //        );
     }
 
+    public function testCalendar() {
+        $this->logIn();
+        $crawler = $this->client->request('GET', '/vacation-request/away-calendar/');
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Away Calendar")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Mon")')->count()
+        );
+    }
+
     public function testEventLogAction() {
         $this->logIn();
 
