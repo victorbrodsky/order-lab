@@ -8,13 +8,18 @@
 
 namespace App\VacReqBundle\EventListener;
 
+
+
 use CalendarBundle\CalendarEvents;
-//use CalendarBundle\Entity\Event;
+use CalendarBundle\Entity\Event;
 use CalendarBundle\Event\CalendarEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+
+
+//Based on depreciated tattali/calendar-bundle
 
 class CalendarSubscriber implements EventSubscriberInterface
 {
@@ -30,45 +35,65 @@ class CalendarSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            CalendarEvents::SET_DATA => 'loadEvents',
+            CalendarEvents::SET_DATA => 'onCalendarSetData',
         ];
-
-//        return [
-//            CalendarEvents::SET_DATA => 'onCalendarSetData',
-//        ];
     }
 
-    public function loadEvents(CalendarEvent $calendarEvent)
-    {
-        //$vacreqUtil = $this->container->get('vacreq_util');
-        //$dateformat = 'M d Y';
+//    public function onCalendarSetData_ORIG(CalendarEvent $calendar)
+//    {
+//        //exit('111');
+//
+//        $start = $calendar->getStart();
+//        $end = $calendar->getEnd();
+//        $filters = $calendar->getFilters();
+//
+//        // You may want to make a custom query from your database to fill the calendar
+//
+//        $calendar->addEvent(new Event(
+//            'Event 1',
+//            new \DateTime('Tuesday this week'),
+//            new \DateTime('Wednesdays this week')
+//        ));
+//
+//        // If the end date is null or not defined, it creates a all day event
+//        $calendar->addEvent(new Event(
+//            'All day event',
+//            new \DateTime('Friday this week')
+//        ));
+//    }
 
-        $startDate = $calendarEvent->getStartDatetime();
-        $endDate = $calendarEvent->getEndDatetime();
+    public function onCalendarSetData(CalendarEvent $calendarEvent) {
+
+        $startDate = $calendarEvent->getStart();
+        $endDate = $calendarEvent->getEnd();
 
         // The original request so you can get filters from the calendar
         // Use the filter in your query for example
 
-        $request = $calendarEvent->getRequest();
-        $groupId = $request->get('groupId');
-        //echo "filter:".$filter.";";
+        $groupId = NULL;
+        $filters = $calendarEvent->getFilters();
+        $groupId = $filters['groupId'];
+        //echo "filter:".$groupId.";";
 
         $filter = array('groupId'=>$groupId);
 
         $this->setCalendar( $calendarEvent, "requestBusiness", $startDate, $endDate, $filter );
         $this->setCalendar( $calendarEvent, "requestVacation", $startDate, $endDate, $filter );
-
-        return;
     }
 
     public function setCalendar( $calendarEvent, $requestTypeStr, $startDate, $endDate, $filter ) {
+
         //echo "ID";
         $dateformat = 'M d Y';
 
         //$vacreqUtil = $this->container->get('vacreq_util');
         //$requests = $vacreqUtil->getApprovedRequestStartedBetweenDates( $requestTypeStr, $startDate, $endDate );
 
-        $groupId = $filter['groupId'];
+        if( isset($filter['groupId']) ) {
+            $groupId = $filter['groupId'];
+        } else {
+            $groupId = NULL;
+        }
 
         $repository = $this->em->getRepository('AppVacReqBundle:VacReqRequest');
         $dql = $repository->createQueryBuilder('request');
@@ -139,7 +164,7 @@ class CalendarSubscriber implements EventSubscriberInterface
             //echo "ID=".$request->getId();
 
             //check if dates not exact
-            $subjectUserId = $requestFull->getUser()->getId();
+            $subjectUserId = $requestFull->getUser()->getId()."-".$requestFull->getId();
             //init array with key as user id
             if( !array_key_exists($subjectUserId, $requestArr) ) {
                 $requestArr[$subjectUserId] = array();
@@ -205,23 +230,40 @@ class CalendarSubscriber implements EventSubscriberInterface
                 $backgroundColorCalendar = $backgroundColor;
             }
 
-            $eventEntity = new EventEntity($title, $startDate, $endDate, true);
+            //$title = "EventID=".$request->getId();
+            //echo $title;
+
+            $eventEntity = new Event($title, $startDate, $endDate);
 
             //optional calendar event settings
             $eventEntity->setAllDay(true); // default is false, set to true if this is an all day event
-            $eventEntity->setBgColor($backgroundColorCalendar); //set the background color of the event's label
-            $eventEntity->setFgColor('#2F4F4F'); //set the foreground color of the event's label
+            //$eventEntity->setBgColor($backgroundColorCalendar); //set the background color of the event's label
+            //$eventEntity->setFgColor('#2F4F4F'); //set the foreground color of the event's label
+
+            $eventEntity->setOptions([
+                'backgroundColor' => $backgroundColorCalendar,
+                'textColor' => '#2F4F4F',
+            ]);
 
             if( $url ) {
-                $eventEntity->setUrl($url); // url to send user to when event label is clicked
+                //$eventEntity->setUrl($url); // url to send user to when event label is clicked
+                $eventEntity->addOption(
+                    'url',
+                    $url
+                );
             }
-
-            //$eventEntity->setCssClass('my-custom-class'); // a custom class you may want to apply to event labels
 
             //finally, add the event to the CalendarEvent for displaying on the calendar
             $calendarEvent->addEvent($eventEntity);
 
-        }
+//            $calendarEvent->addEvent(new Event(
+//                'Event 1',
+//                new \DateTime('Tuesday this week'),
+//                new \DateTime('Wednesdays this week')
+//            ));
+
+        }//foreach
+
     }
 
 }

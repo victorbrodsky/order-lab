@@ -28,6 +28,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\ORM\EntityManager;
 
+//Based on depreciated adesigns/calendar-bundle
+
 //use ADesigns\CalendarBundle\Event\CalendarEvent;
 //use ADesigns\CalendarBundle\Entity\EventEntity;
 

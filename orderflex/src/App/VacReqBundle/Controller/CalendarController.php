@@ -36,11 +36,12 @@ class CalendarController extends Controller
 {
 
     /**
+     * Template("AppVacReqBundle/Calendar/calendar.html.twig")
      * show the names of people who are away that day (one name per "event"/line).
      *
      * @Route("/away-calendar/", name="vacreq_awaycalendar")
      * @Method({"GET"})
-     * @Template("AppVacReqBundle/Calendar/calendar.html.twig")
+     * @Template("AppVacReqBundle/Calendar/calendar-tattali.html.twig")
      */
     public function awayCalendarAction(Request $request) {
 

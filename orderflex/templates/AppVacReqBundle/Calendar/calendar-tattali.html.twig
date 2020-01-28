@@ -1,0 +1,160 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{% extends "AppVacReqBundle/Default/base.html.twig" %}
+
+
+{% block title %}
+    Away Calendar
+{% endblock %}
+
+
+
+{% block content %}
+
+    <input id="groupId" value="{{ groupId }}" style="display: none;">
+
+    <h4 class="text-info" align="center">
+        Away Calendar
+    </h4>
+
+    <p>
+    <div class="row">
+
+        {#<div class="col-xs-4">#}
+        {#</div>#}
+        {#{% if vacreqfilter.organizationalInstitutions is defined %}#}
+            {#<div class="col-xs-2" align="right">#}
+                {#{{ form_row(vacreqfilter.organizationalInstitutions) }}#}
+            {#</div>#}
+        {#{% endif %}#}
+        {#<div class="col-xs-6" align="left">#}
+            {#<button type="button" id="calendar-filter" class="btn btn-sm btn-default" onclick="submitFilter()">Filter</button>#}
+        {#</div>#}
+
+        <div class="col-xs-4">
+        </div>
+        <div class="col-xs-4">
+            {% if vacreqfilter.organizationalInstitutions is defined and vacreqfilter.organizationalInstitutions %}
+                {{ form_row(vacreqfilter.organizationalInstitutions) }}
+            {% endif %}
+        </div>
+        <div class="col-xs-4">
+        </div>
+
+    </div>
+    </p>
+
+
+    {#https://github.com/tattali/CalendarBundle#}
+    {#{% include '@Calendar/calendar.html' %}#}
+    <div id='calendar-holder'></div>
+
+{% endblock %}
+
+
+
+{% block additionalcss %}
+    {#<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/core@4.1.0/main.min.css">#}
+    {#<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@4.1.0/main.min.css">#}
+    {#<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@4.1.0/main.min.css">#}
+
+    <link rel="stylesheet" type="text/css" media="screen" href="{{ asset('orderassets/AppVacReqBundle/fullcalendar/packages/core/main.min.css') }}" />
+    <link rel="stylesheet" type="text/css" media="screen" href="{{ asset('orderassets/AppVacReqBundle/fullcalendar/packages/daygrid/main.min.css') }}" />
+    <link rel="stylesheet" type="text/css" media="screen" href="{{ asset('orderassets/AppVacReqBundle/fullcalendar/packages/timegrid/main.min.css') }}" />
+
+{% endblock %}
+
+{% block additionaljs %}
+
+    {#<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@4.1.0/main.min.js"></script>#}
+    {#<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@4.1.0/main.min.js"></script>#}
+    {#<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@4.1.0/main.min.js"></script>#}
+    {#<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@4.1.0/main.min.js"></script>#}
+
+    <script src="{{ asset('orderassets/AppVacReqBundle/fullcalendar/packages/core/main.min.js') }}"></script>
+    <script src="{{ asset('orderassets/AppVacReqBundle/fullcalendar/packages/interaction/main.min.js') }}"></script>
+    <script src="{{ asset('orderassets/AppVacReqBundle/fullcalendar/packages/daygrid/main.min.js') }}"></script>
+    <script src="{{ asset('orderassets/AppVacReqBundle/fullcalendar/packages/timegrid/main.min.js') }}"></script>
+
+    <script language="Javascript">
+
+        var vacreqcalendar;
+
+        $(document).ready(function() {
+
+            var groupId = $('#groupId').val();
+            constructVacreqCalendar(groupId);
+
+            //listener for calendar-filter
+            $('.organizationalInstitutions').change(function(){
+                submitFilter();
+            });
+
+        });
+
+        function constructVacreqCalendar( groupId ) {
+            var calendarEl = document.getElementById('calendar-holder');
+
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                defaultView: 'dayGridMonth',
+                editable: true,
+                eventSources: [
+                    {
+                        url: "/fc-load-events",
+                        method: "POST",
+                        extraParams: {
+                            filters: JSON.stringify({groupId: groupId})
+                        },
+                        error: function() {
+                            //alert('There was an error while fetching Calendar!');
+                        }
+                    },
+                ],
+                header: {
+                    left: 'prev,next today',
+                            center: 'title',
+                            right: 'dayGridMonth,timeGridWeek,timeGridDay',
+                },
+                plugins: [ 'interaction', 'dayGrid', 'timeGrid' ], // https://fullcalendar.io/docs/plugin-index
+                timeZone: 'UTC',
+            });
+            calendar.render();
+        }
+
+
+        function submitFilter() {
+            var groupId = $('.organizationalInstitutions').select2('val');
+            //console.log("groupId="+groupId);
+
+            var url = location.protocol + '//' + location.host + location.pathname; //window.location.href;
+
+            if( groupId ) {
+                if (url.indexOf('?') > -1) {
+                    url += '&group=' + groupId;
+                } else {
+                    url += '?group=' + groupId;
+                }
+            }
+
+            window.location.href = url;
+        }
+
+    </script>
+
+{% endblock %}
+
+

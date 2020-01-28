@@ -51,5 +51,7 @@ services:
 #        tags:
 #            - { name: kernel.event_listener, event: calendar.load_events, method: loadEvents }
 
-    App\EventSubscriber\CalendarSubscriber:
+    App\VacReqBundle\EventListener\CalendarSubscriber:
         arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+#        tags:
+#            - { name: kernel.event_listener, event: calendar.load_events, method: loadEvents }
