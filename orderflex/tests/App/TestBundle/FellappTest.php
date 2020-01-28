@@ -31,39 +31,39 @@ class FellappTest extends WebTestBase
         );
     }
 
-    public function testHomeAction() {
-        $this->logIn();
-
-        $this->client->followRedirects();
-
-        //?filter[startDates]=2022&filter[active]=1&filter[complete]=1&filter[interviewee]=1&filter[priority]=1&filter[accepted]=1&filter[acceptedandnotified]=1
-        $crawler = $this->client->request('GET', '/fellowship-applications/?filter[startDates]=2022&filter[active]=1&filter[complete]=1&filter[interviewee]=1&filter[priority]=1&filter[accepted]=1&filter[acceptedandnotified]=1');
-        //$crawler = $this->client->request('GET', '/fellowship-applications/?filter[startDates]=2022');
-
-
-        //$this->client->followRedirects();
-        //$crawler = $this->client->request('GET', '/fellowship-applications/');
-
-        //$content = $this->client->getResponse()->getContent();
-        //exit("content=$content");
-
+//    public function testHomeAction() {
+//        $this->logIn();
+//
+//        $this->client->followRedirects();
+//
+//        //?filter[startDates]=2022&filter[active]=1&filter[complete]=1&filter[interviewee]=1&filter[priority]=1&filter[accepted]=1&filter[acceptedandnotified]=1
+//        $crawler = $this->client->request('GET', '/fellowship-applications/?filter[startDates]=2022&filter[active]=1&filter[complete]=1&filter[interviewee]=1&filter[priority]=1&filter[accepted]=1&filter[acceptedandnotified]=1');
+//        //$crawler = $this->client->request('GET', '/fellowship-applications/?filter[startDates]=2022');
+//
+//
+//        //$this->client->followRedirects();
+//        //$crawler = $this->client->request('GET', '/fellowship-applications/');
+//
+//        //$content = $this->client->getResponse()->getContent();
+//        //exit("content=$content");
+//
+////        $this->assertGreaterThan(
+////            0,
+////            $crawler->filter('html:contains("Applications matching search criteria")')->count()
+////        );
 //        $this->assertGreaterThan(
 //            0,
-//            $crawler->filter('html:contains("Applications matching search criteria")')->count()
+//            $crawler->filter('html:contains("Medical School")')->count()
 //        );
-        $this->assertGreaterThan(
-            0,
-            $crawler->filter('html:contains("Medical School")')->count()
-        );
-        $this->assertGreaterThan(
-            0,
-            $crawler->filter('html:contains("Residency")')->count()
-        );
-        $this->assertGreaterThan(
-            0,
-            $crawler->filter('html:contains("Filter")')->count()
-        );
-    }
+//        $this->assertGreaterThan(
+//            0,
+//            $crawler->filter('html:contains("Residency")')->count()
+//        );
+//        $this->assertGreaterThan(
+//            0,
+//            $crawler->filter('html:contains("Filter")')->count()
+//        );
+//    }
 
     public function testEventLogAction() {
         $this->logIn();
