@@ -47,9 +47,21 @@ class FellappTest extends WebTestBase
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
 
+//        $this->assertGreaterThan(
+//            0,
+//            $crawler->filter('html:contains("Applications matching search criteria")')->count()
+//        );
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Applications matching search criteria")')->count()
+            $crawler->filter('html:contains("Medical School")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Residency")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Filter")')->count()
         );
     }
 
@@ -217,6 +229,7 @@ class FellappTest extends WebTestBase
         );
     }
 
+    //TODO: PHPUnit\\Framework\\Error\\Deprecated(code: 8192): implode(): Passing glue string after array is deprecated. Swap the parameters at /opt/order-lab/orderflex/vendor/google/apiclient/src/Google/Http/REST.php:134)
     //TODO: use Google API v2
 //    public function testFormConfig() {
 //        $this->logIn();
