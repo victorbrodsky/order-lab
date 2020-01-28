@@ -101,7 +101,7 @@ class VacationTest extends WebTestBase
         );
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Apache")')->count()
+            $crawler->filter('html:contains("Kernel")')->count()
         );
         $this->assertGreaterThan(
             0,
