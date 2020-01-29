@@ -1,6 +1,6 @@
 doctrine_migrations:
-#    dir_name: "%kernel.root_dir%/DoctrineMigrations"
-    dir_name: '%kernel.project_dir%/src/App/Migrations'
+    dir_name: '%kernel.project_dir%/src/Migrations'
+    #dir_name: '%kernel.project_dir%/src/App/Migrations'
 #    namespace: Application\Migrations
     namespace: DoctrineMigrations
     table_name: migration_versions
@@ -11,3 +11,5 @@ doctrine_migrations:
     organize_migrations: false # Version >=1.2 Possible values are: "BY_YEAR", "BY_YEAR_AND_MONTH", false
     custom_template: ~
     all_or_nothing: false
+    #check_database_platform: true
+
