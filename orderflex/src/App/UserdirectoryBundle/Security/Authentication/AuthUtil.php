@@ -588,8 +588,10 @@ class AuthUtil {
         $currentUrl = $request->getUri();
 
         $sitenameFull = parse_url($currentUrl, PHP_URL_PATH); ///order/directory/login_check
+        //echo "sitenameFull=$sitenameFull<br>";
         $sitenameArr = explode("/",$sitenameFull); ///order/directory/login_check
         $sitename = $sitenameArr[count($sitenameArr)-2];
+        //echo "sitename=$sitename<br>";
 
         //exit("sitename=$sitename");
 

@@ -516,6 +516,8 @@ class SecurityController extends Controller
 
 
     /**
+     * Use for ajax authentication on web page (i.e. CallLog "Finalize and Sign")
+     *
      * @Route("/authenticate-user/", name="employees_authenticate_user", options={"expose"=true})
      * @Method({"GET","POST"})
      */
@@ -541,7 +543,7 @@ class SecurityController extends Controller
         //echo "password=".$password."<br>";
 
         //create token
-        $providerKey = 'ldap_fellapp_firewall'; //firewall name, or here, anything
+        $providerKey = 'ldap_employees_firewall'; //'ldap_fellapp_firewall'; //firewall name, or here, anything
         $username = $user->getUsername();
         $userProvider = null;
 
