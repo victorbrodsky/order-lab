@@ -110,7 +110,7 @@ UPDATE public.user_siteparameters SET phantomjslinux='/opt/phantomjs-2.1.1-linux
 UPDATE public.user_siteparameters SET rasterizelinux='/opt/order-lab/orderflex/src/App/UserdirectoryBundle/Util/rasterize.js';
 UPDATE public.user_siteparameters SET pathmetaphone='/opt/Metaphone3/metaphone3.php';
 UPDATE public.user_siteparameters SET networkdrivepath='';
-UPDATE public.user_siteparameters SET libreofficeconverttopdfpathfellapplinux='/usr/bin';
+UPDATE public.user_siteparameters SET libreofficeconverttopdfpathfellapplinux='HOME=/tmp /usr/bin';
 
 UPDATE public.user_siteparameters SET allowpopulatefellapp=false;
 UPDATE public.user_siteparameters SET mailerspool=false;

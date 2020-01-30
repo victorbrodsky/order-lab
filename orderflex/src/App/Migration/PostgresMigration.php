@@ -16,6 +16,10 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
+//php bin/console doctrine:migrations:status
+//php bin/console doctrine:migrations:diff
+//php bin/console doctrine:migrations:migrate
+
 //In VersionYYYYMMDDHHMM.php
 //1) Add "use App\Migration\PostgresMigration;"
 //2) Rename after extends "AbstractMigration" to "PostgresMigration"

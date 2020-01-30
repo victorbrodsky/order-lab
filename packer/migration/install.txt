@@ -160,4 +160,7 @@ view-test.med.cornell.edu:
 openssl req -new -newkey rsa:2048 -nodes -keyout view-test.key -out view-test.csr	
 view.med.cornell.edu:
 openssl req -new -newkey rsa:2048 -nodes -keyout view.key -out view.csr
+
+PHP error:
+/etc/httpd/conf/ error_log
 	
