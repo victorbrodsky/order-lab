@@ -119,6 +119,8 @@ cd /usr/local/bin/
 git clone https://github.com/victorbrodsky/order-lab.git /opt/order-lab	
 sudo chmod a+x /opt/order-lab
 sudo chown -R apache:apache /opt/order-lab
+sudo chmod a+x /srv/order-lab
+sudo chown -R apache:apache /srv/order-lab
 
 ########## Modify httpd and php.ini (/etc/opt/rh/rh-php56/php.ini) ##########	
 #1) httpd.conf: 

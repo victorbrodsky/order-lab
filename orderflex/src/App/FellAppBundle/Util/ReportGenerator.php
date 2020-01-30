@@ -968,6 +968,7 @@ class ReportGenerator {
             //}
 
             $cmd = $cmd .' "'.$filePath.'"';
+            $logger->notice("LibreOffice=[".$cmd."]");
 
             $ext = pathinfo($filePath, PATHINFO_EXTENSION);
             if( $ext != 'pdf' ) { //TESTING!!!
