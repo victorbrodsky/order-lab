@@ -16,9 +16,11 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
-//php bin/console doctrine:migrations:status
-//php bin/console doctrine:migrations:diff
-//php bin/console doctrine:migrations:migrate
+//Update:   php bin/console doctrine:schema:update --force
+//Status:   php bin/console doctrine:migrations:status
+//Generate: php bin/console doctrine:migrations:diff
+//Migrate:  php bin/console doctrine:migrations:migrate
+//Skip:     php bin/console doctrine:migrations:version YYYYMMDDHHMMSS --add
 
 //In VersionYYYYMMDDHHMM.php
 //1) Add "use App\Migration\PostgresMigration;"
@@ -100,6 +102,7 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
         }
 
         //ALTER INDEX idx_15b668721aca1422 RENAME TO IDX_5AFC0F4BCD46F646
+        //ALTER INDEX uniq_821d2431c161af2500000 RENAME TO UNIQ_821D2431C161AF25
         if( strpos($sql, 'ALTER INDEX ') !== false && strpos($sql, ' RENAME TO ') !== false ) {
             $sqlArr = explode(" ",$sql);
             //if( count($sqlArr) == 6 ) {
@@ -131,9 +134,11 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
         $sqlIndex = trim($sqlIndex);
 
         if(
-            strpos($sqlIndex, 'IDX_') !== false ||
-            strpos($sqlIndex, 'idx_') !== false ||  //idx_15b668721aca1422
-            strpos($sqlIndex, '_idx') !== false     //CREATE INDEX oid_idx ON scan_message (oid)
+            strpos($sqlIndex, 'IDX_') !== false     ||
+            strpos($sqlIndex, 'idx_') !== false     ||  //idx_15b668721aca1422
+            strpos($sqlIndex, '_idx') !== false     ||    //CREATE INDEX oid_idx ON scan_message (oid)
+            strpos($sqlIndex, 'uniq_') !== false    ||
+            strpos($sqlIndex, 'UNIQ_') !== false
         ) {
             $processArr = $this->indexArr;
             $name = "index";
