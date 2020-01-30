@@ -933,8 +933,13 @@ class ReportGenerator {
         //$cmd = '"' . $libreOfficeConvertToPDFPathFellApp . '\\' . $libreOfficeConvertToPDFFilenameFellApp .
         //       '" ' . $libreOfficeConvertToPDFArgumentsdFellApp . ' "' . $outdir . '"';
 
-        $cmd = '"' . $libreOfficeConvertToPDFPathFellApp . DIRECTORY_SEPARATOR . $libreOfficeConvertToPDFFilenameFellApp .
-            '" ' . $libreOfficeConvertToPDFArgumentsdFellApp . ' "' . $outdir . '"';
+        if( $userServiceUtil->isWinOs() ) {
+            $cmd = '"' . $libreOfficeConvertToPDFPathFellApp . DIRECTORY_SEPARATOR . $libreOfficeConvertToPDFFilenameFellApp .
+                '" ' . $libreOfficeConvertToPDFArgumentsdFellApp . ' "' . $outdir . '"';
+        } else {
+            $cmd = $libreOfficeConvertToPDFPathFellApp . DIRECTORY_SEPARATOR . $libreOfficeConvertToPDFFilenameFellApp .
+                  ' ' . $libreOfficeConvertToPDFArgumentsdFellApp . ' ' . $outdir;
+        }
 
         //echo "cmd=" . $cmd . "<br>";
 
@@ -967,7 +972,12 @@ class ReportGenerator {
             //continue;
             //}
 
-            $cmd = $cmd .' "'.$filePath.'"';
+            if( $userServiceUtil->isWinOs() ) {
+                $cmd = $cmd .' "'.$filePath.'"';
+            } else {
+                $cmd = $cmd .' '.$filePath;
+            }
+
             $logger->notice("LibreOffice=[".$cmd."]");
 
             $ext = pathinfo($filePath, PATHINFO_EXTENSION);
@@ -1166,7 +1176,11 @@ class ReportGenerator {
         //$filenameMerged = str_replace("app\..","", $filenameMerged);
         $filenameMerged = $this->strReplace($filenameMerged);
 
-        $filenameMerged = '"'.$filenameMerged.'"';
+        if( $userServiceUtil->isWinOs() ) {
+            $filenameMerged = '"'.$filenameMerged.'"';
+        } else {
+            //do nothing
+        }
 
         //echo "filenameMerged=".$filenameMerged."<br>";
 
@@ -1215,7 +1229,11 @@ class ReportGenerator {
         }
 
         //$pdftkLocation = '"' . $pdftkPathFellApp . '\\' . $pdftkFilenameFellApp . '"';
-        $pdftkLocation = '"' . $pdftkPathFellApp . DIRECTORY_SEPARATOR . $pdftkFilenameFellApp . '"';
+        if( $userServiceUtil->isWinOs() ) {
+            $pdftkLocation = '"' . $pdftkPathFellApp . DIRECTORY_SEPARATOR . $pdftkFilenameFellApp . '"';
+        } else {
+            $pdftkLocation = $pdftkPathFellApp . DIRECTORY_SEPARATOR . $pdftkFilenameFellApp;
+        }
 
         //quick fix for c.med running on E:
         //collage is running on C:
@@ -1336,7 +1354,14 @@ class ReportGenerator {
             //echo "add merge: filepath=(".$file.") <br>";
 
             if( $withquotes ) {
-                $filesStr = $filesStr . ' ' . '"' . $file . '"';
+
+                //don't use quotes for Linux
+                $userServiceUtil = $this->container->get('user_service_utility');
+                if( $userServiceUtil->isWinOs() ) {
+                    $filesStr = $filesStr . ' ' . '"' . $file . '"';
+                } else {
+                    $filesStr = $filesStr . ' ' . $file;
+                }
             } else {
                 $filesStr = $filesStr . ' '  . $file;
             }
