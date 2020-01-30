@@ -121,7 +121,7 @@
                     {{ usermacros.showDocumentAsImage(fellapp.avatars|last,'Avatar',null,null,null,'snapshot-medium') }}
                 {% endif %}
             {% else %}
-                {% set avatarImage = asset('orderassets/appuserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
+                {% set avatarImage = asset('orderassets/AppUserdirectoryBundle/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
                 <a href="#panel-uploads">
                     <img src="{{ avatarImage }}" alt="Avatar" style="max-width:100%; max-height:100%;">
                 </a>
@@ -225,7 +225,7 @@
     {% endif %}
 
     {% if is_granted('ROLE_PLATFORM_DEMO') %}
-        {% set avatarImage = asset('orderassets/appuserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
+        {% set avatarImage = asset('orderassets/AppUserdirectoryBundle/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
         <img src="{{ avatarImage }}" alt="Avatar" style="max-width:100%; max-height:100%;">
     {% else %}
         {% if fellapp.avatars|length > 0 %}
