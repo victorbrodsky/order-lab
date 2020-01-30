@@ -9,14 +9,14 @@
 
 namespace App\DeidentifierBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
+//use Doctrine\ORM\Mapping as ORM;
 
 //Dummy class for GIT to create Entity folder. Empty folders are ignored by git.
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="deidentifier_dummy")
- */
+///**
+// * @ORM\Entity
+// * @ORM\Table(name="deidentifier_dummy")
+// */
 class Dummy
 {
 
