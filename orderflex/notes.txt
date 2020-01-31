@@ -328,3 +328,12 @@ RewriteRule (.*) http://157.139.226.86/order/$1 [R=301,L]
 RewriteRule (.*) http://view-test.med.cornell.edu/order/$1 [R=301,L]
 
 view.med.cornell.edu/order/
+
+PHP error:
+/etc/httpd/conf/ error_log
+
+[core:notice] [pid 12732] AH00052: child pid 14572 exit signal Segmentation fault (11)
+https://stackoverflow.com/questions/7745578/notice-child-pid-xxxx-exit-signal-segmentation-fault-11-in-apache-error-lo
+output_buffering = 8192
+output_buffering = Off
+

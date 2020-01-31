@@ -10,6 +10,6 @@ doctrine_migrations:
     name: Application Migrations
     organize_migrations: false # Version >=1.2 Possible values are: "BY_YEAR", "BY_YEAR_AND_MONTH", false
     custom_template: ~
-    all_or_nothing: false
+    all_or_nothing: true
     #check_database_platform: true
 

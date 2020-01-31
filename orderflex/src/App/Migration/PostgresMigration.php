@@ -18,8 +18,13 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 //Update:   php bin/console doctrine:schema:update --force
 //Status:   php bin/console doctrine:migrations:status
+
+//Pre-Generating: php bin/console cache:clear
+//Pre-Generating: php bin/console doctrine:cache:clear-metadata
 //Generate: php bin/console doctrine:migrations:diff
-//Migrate:  php bin/console doctrine:migrations:migrate
+
+//Migrate:  php bin/console doctrine:migrations:migrate --all-or-nothing
+
 //Skip:     php bin/console doctrine:migrations:version YYYYMMDDHHMMSS --add
 
 //In VersionYYYYMMDDHHMM.php
