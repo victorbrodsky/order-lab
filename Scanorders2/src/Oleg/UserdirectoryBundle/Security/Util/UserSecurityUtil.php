@@ -694,10 +694,12 @@ class UserSecurityUtil {
     }
 
 
-    public function getDefaultSourceSystemByRequest( $request )
+	public function getDefaultSourceSystemByRequest( $request )
     {
         $sitename = $request->query->get('sitename');
-        $sitename = '/order/'.$sitename.'/';
+        //$subdomain = "/order";
+        $subdomain = "";
+        $sitename = $subdomain.'/'.$sitename.'/';
         //echo "sitenamel=".$sitename."<br>";
         return $this->getDefaultSourceSystemByRequestUrl($sitename);
     }
@@ -712,13 +714,19 @@ class UserSecurityUtil {
 
         $defaultSourceSystemName = null;    //'ORDER Scan Order';
 
-        if( strpos($url, '/order/call-log-book/') !== false ) {
+        //$subdomain = "/order";
+        $subdomain = "";
+
+        if( strpos($url, $subdomain.'/call-log-book/') !== false ) {
             $defaultSourceSystemName = 'ORDER Call Log Book';
         }
-        if( strpos($url, '/order/deidentifier/') !== false ) {
+//        if( strpos($url, '/order/deidentifier/') !== false ) {
+//            $defaultSourceSystemName = 'ORDER Deidentifier';
+//        }
+        if( strpos($url, $subdomain.'/deidentifier/') !== false ) {
             $defaultSourceSystemName = 'ORDER Deidentifier';
         }
-        if( strpos($url, '/order/scan/') !== false ) {
+        if( strpos($url, $subdomain.'/scan/') !== false ) {
             $defaultSourceSystemName = 'ORDER Scan Order';  //'Scan Order';
         }
 
@@ -730,7 +738,7 @@ class UserSecurityUtil {
             return null;
         }
 
-        $source = $this->em->getRepository('OlegUserdirectoryBundle:SourceSystemList')->findOneByName($defaultSourceSystemName);
+        $source = $this->em->getRepository('AppUserdirectoryBundle:SourceSystemList')->findOneByName($defaultSourceSystemName);
 
         if( !$source ) {
             if( $this->container ) {

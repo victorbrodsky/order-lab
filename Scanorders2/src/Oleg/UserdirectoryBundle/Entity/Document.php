@@ -147,7 +147,9 @@ class Document {
      */
     private $entityId;
 
-
+	//private $subdomain = 'order'; //accommodate 'order' subdomain in view.med.cornell.edu/order/, however it should be independent on the url
+    private $subdomain = '';
+	
 
     public function __construct($creator=null) {
         $this->setCreator($creator);
@@ -550,7 +552,14 @@ class Document {
             $uniquename = $size . "-" . $uniquename;
         }
 
-        $path = $scheme . "://" . $serverName . "/order/" . $this->getUploadDirectory() . '/' . $uniquename;
+        //$path = $scheme . "://" . $serverName . "/order/" . $this->getUploadDirectory() . '/' . $uniquename;
+		if( $this->subdomain ) {
+            $subdomain = $this->subdomain . DIRECTORY_SEPARATOR;
+        } else {
+            $subdomain = '';
+        }
+
+        $path = $scheme . "://" . $serverName . DIRECTORY_SEPARATOR . $subdomain . $this->getUploadDirectory() . DIRECTORY_SEPARATOR . $uniquename;
 
         if ($onlyResize == false) {
             if ($size) {
@@ -597,7 +606,15 @@ class Document {
     }
 
     protected function getPrefixPath() {
-        return '../../../../order/';
+        //return '../../../../order/';
+		
+		if( $this->subdomain ) {
+            $subdomain = $this->subdomain . DIRECTORY_SEPARATOR;
+        } else {
+            $subdomain = '';
+        }
+
+        return '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . $subdomain;
     }
 
     public function getFileSystemPath() {
