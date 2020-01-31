@@ -336,4 +336,5 @@ PHP error:
 https://stackoverflow.com/questions/7745578/notice-child-pid-xxxx-exit-signal-segmentation-fault-11-in-apache-error-lo
 output_buffering = 8192
 output_buffering = Off
+Solution (?): downgrade PHP from 7.4.3 to 7.4.2 on view-test
 
