@@ -215,7 +215,7 @@ class PdfGenerator
             $context->setHost('localhost');
             //$context->setHost('collage.med.cornell.edu');
             $context->setScheme($connectionChannel);
-            $context->setBaseUrl('/order');
+            //$context->setBaseUrl('/order');
         }
 
         //exit("oid=".$invoice->getOid());
@@ -473,7 +473,7 @@ class PdfGenerator
             //http://192.168.37.128/order/app_dev.php/translational-research/download-invoice-pdf/49
             $context->setHost('localhost');
             $context->setScheme($connectionChannel);
-            $context->setBaseUrl('/order');
+            //$context->setBaseUrl('/order');
         }
 
         //invoice download
@@ -560,7 +560,7 @@ class PdfGenerator
                 $context->setHost('localhost');
                 //$context->setHost('127.0.0.1');
                 $context->setScheme($connectionChannel);
-                $context->setBaseUrl('/order');
+                //$context->setBaseUrl('/order');
             }
         }
 

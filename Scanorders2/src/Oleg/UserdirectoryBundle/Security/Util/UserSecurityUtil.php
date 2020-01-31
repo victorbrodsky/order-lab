@@ -2261,7 +2261,7 @@ class UserSecurityUtil {
             $context = $this->container->get('router')->getContext();
             $context->setHost($liveSiteHost);
             $context->setScheme($connectionChannel);
-            $context->setBaseUrl('/order');
+            //$context->setBaseUrl('/order');
         }
         return $this->container->get('router');
     }
