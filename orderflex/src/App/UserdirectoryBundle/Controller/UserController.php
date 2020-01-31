@@ -444,13 +444,25 @@ class UserController extends Controller
         }
 
         $params = array('filter'=>$filter,'time'=>$time,'limitFlag'=>100);
+
+        //echo "filter=[$filter] <br>";
+        $postfix = "";
+        if( $filter == 'one-page' ) {
+            //echo "reset filter=[$filter] <br>";
+            $filter = NULL;
+            $params['paginatorOption'] = "one-page";
+            $params['filter'] = $filter;
+            $postfix = " (All in One Page)";
+        }
+        //echo "after filter=[$filter] <br>";
+
         $res = $this->indexUser($request,$params);
 
         if( $filter == "" ) {
             if( $routeName == "employees_listusers_previous" ) {
-                $filter = "All Previous Employees";
+                $filter = "All Previous Employees".$postfix;
             } else {
-                $filter = "All Current Employees";
+                $filter = "All Current Employees".$postfix;
             }
         } else {
             $filter = $prefix . $filter;
@@ -468,6 +480,7 @@ class UserController extends Controller
         $filter = ( array_key_exists('filter', $params) ? $params['filter'] : null);
         $time = ( array_key_exists('time', $params) ? $params['time'] : 'all');
         $limitFlag = ( array_key_exists('limitFlag', $params) ? $params['limitFlag'] : null);
+        $paginatorOption = ( array_key_exists('paginatorOption', $params) ? $params['paginatorOption'] : null);
         $search = ( array_key_exists('search', $params) ? $params['search'] : null);
         $userid = ( array_key_exists('userid', $params) ? $params['userid'] : null);
         $all = ( array_key_exists('all', $params) ? $params['all'] : null);
@@ -637,6 +650,12 @@ class UserController extends Controller
         if( $limitFlag ) {
             //echo "use paginator limitFlag=$limitFlag<br>";
             $limit = $limitFlag; //1000;
+
+            if( $paginatorOption == "one-page" ) {
+                $paginationOnePage = $query->getResult();
+                $limit = count($paginationOnePage);
+            }
+
             $paginator  = $this->get('knp_paginator');
             $pagination = $paginator->paginate(
                 $query,

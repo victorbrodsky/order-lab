@@ -622,6 +622,17 @@ class UserServiceUtil {
         $href = '<li><a href="'.$linkUrl.'">'.'Employees'.'</a></li>';
         $res[] = $href;
 
+        //second common element (all in one page)
+        $linkUrl = $this->container->get('router')->generate(
+            $pathlink,
+            array(
+                'filter'=>'one-page',
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+        $href = '<li><a href="'.$linkUrl.'">'.'Employees in one page'.'</a></li>';
+        $res[] = $href;
+
 
         foreach($instTypes as $name=>$flag) {
             if( $name == 'hr' ) {
