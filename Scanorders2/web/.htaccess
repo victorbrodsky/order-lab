@@ -12,6 +12,11 @@ DirectoryIndex app.php
 		
     #test mod_rewrite
     #RewriteRule ^google.html$ http://www.google.com/ [R=301]
+	
+	#Redirect only /order/ requests. Admin can still access the system by using /orderadmin/
+	#Add to httpd.conf: Alias /orderadmin "E:\Program Files (x86)\Aperio/Spectrum/htdocs/order/scanorder/Scanorders2/web"
+	#RewriteCond %{REQUEST_URI} /order/
+	#RewriteRule (.*) https://view-test.med.cornell.edu/$1 [R=301,L]
 
     # Determine the RewriteBase automatically and set it as environment variable.
     # If you are using Apache aliases to do mass virtual hosting or installed the
