@@ -1077,8 +1077,8 @@ class AdminController extends Controller
 //            $userServiceUtil = $this->get('user_service_utility');
 //            $userServiceUtil->createCronsLinux();
 //        }
-        $userServiceUtil = $this->get('user_service_utility');
-        $userServiceUtil->createCrons();
+        //$userServiceUtil = $this->get('user_service_utility');
+        //$userServiceUtil->createCrons();
 
         return $msg;
     }
@@ -7783,6 +7783,28 @@ class AdminController extends Controller
         $formNodeUtil->createTestFormNodes();
 
         exit("Test Form Node Tree generated");
+    }
+
+    /**
+     * @Route("/list/generate-cron-jobs/", name="user_populate_cron_jobs")
+     * @Method("GET")
+     */
+    public function generateCronJobsAction(Request $request)
+    {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-nopermission') );
+        }
+
+        $userServiceUtil = $this->get('user_service_utility');
+        $userServiceUtil->createCrons();
+
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            'All cron Jobs are generated (Email, Fellowship Import, Unpaid Invoices).'
+        );
+
+        return $this->redirect($this->generateUrl('employees_siteparameters'));
+        //exit("Form Node Tree generated: ".$count);
     }
 
     //Blood Product Transfused

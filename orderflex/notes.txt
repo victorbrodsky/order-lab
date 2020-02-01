@@ -327,6 +327,12 @@ Redirect:
 RewriteRule (.*) http://157.139.226.86/order/$1 [R=301,L]
 RewriteRule (.*) http://view-test.med.cornell.edu/order/$1 [R=301,L]
 
+#Redirect only /order/ requests. Admin can still access the system by using /orderadmin/
+#Add to httpd.conf: Alias /orderadmin "E:\Program Files (x86)\Aperio/Spectrum/htdocs/order/scanorder/Scanorders2/web"
+RewriteCond %{REQUEST_URI} /order/
+RewriteRule (.*) https://view-test.med.cornell.edu/$1 [R=301,L]
+
+
 view.med.cornell.edu/order/
 
 PHP error:
@@ -340,4 +346,6 @@ Solution (?): downgrade PHP from 7.4.3 to 7.4.2 on view-test
 
 Switch to Apache user: su -s /bin/bash apache
 (Permission denied: Solution: prepend HOME=/tmp => HOME=/tmp /usr/bin/soffice)
+
+
 
