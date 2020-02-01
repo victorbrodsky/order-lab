@@ -94,7 +94,7 @@ $do$;
 UPDATE public.user_siteparameters SET connectionchannel='http';
 
 UPDATE public.user_siteparameters SET emailcriticalerror=false;
-UPDATE public.user_siteparameters SET p12keypathfellapp='/opt/order-lab/orderflex/src/App/FellAppBundle/Util/FellowshipApplication-f1d9f98353e5.p12';
+UPDATE public.user_siteparameters SET p12keypathfellapp='/srv/order-lab/orderflex/src/App/FellAppBundle/Util/FellowshipApplication-f1d9f98353e5.p12';
 
 UPDATE public.user_siteparameters SET pdftkfilenamefellapp='/usr/bin';
 UPDATE public.user_siteparameters SET libreofficeconverttopdffilenamefellapplinux='soffice';
@@ -107,8 +107,8 @@ UPDATE public.user_siteparameters SET gsfilenamefellapplinux='ghostscript';
 UPDATE public.user_siteparameters SET gsargumentsfellapplinux='-q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=###outputFile### -c .setpdfwrite -f ###inputFiles###';
 UPDATE public.user_siteparameters SET wkhtmltopdfpathlinux='/usr/bin/xvfb-run wkhtmltopdf';
 UPDATE public.user_siteparameters SET phantomjslinux='/opt/phantomjs-2.1.1-linux-x86_64/bin/phantomjs';
-UPDATE public.user_siteparameters SET rasterizelinux='/opt/order-lab/orderflex/src/App/UserdirectoryBundle/Util/rasterize.js';
-UPDATE public.user_siteparameters SET pathmetaphone='/opt/Metaphone3/metaphone3.php';
+UPDATE public.user_siteparameters SET rasterizelinux='/srv/order-lab/orderflex/src/App/UserdirectoryBundle/Util/rasterize.js';
+UPDATE public.user_siteparameters SET pathmetaphone='/srv/Metaphone3/metaphone3.php';
 UPDATE public.user_siteparameters SET networkdrivepath='';
 UPDATE public.user_siteparameters SET libreofficeconverttopdfpathfellapplinux='HOME=/tmp /usr/bin';
 
