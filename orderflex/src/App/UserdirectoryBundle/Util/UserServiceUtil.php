@@ -1438,7 +1438,7 @@ class UserServiceUtil {
             "SiteParameters"            => "settings/settings-id", //"settings",
             "VacReqUserCarryOver"       => "show",
             "Project"                   => "project/show",
-            "TransResRequest"           => "request/show",
+            "TransResRequest"           => "work-request/show",
             "DefaultReviewer"           => "default-reviewers/show",
             "Invoice"                   => "invoice/show",
         );

@@ -327,7 +327,7 @@ class SecurityController extends Controller
      * Check the server every 30 min (maxIdleTime) if the server timeout is ok ($lapse > $maxIdleTime).
      * If not, the server returns NOTOK flag and js open a dialog modal to continue.
      *
-     * @Route("/common/keepalive", name="keepalive")
+     * @Route("/common/keepalive", name="keepalive", options={"expose"=true})
      * @Method("GET")
      */
     public function keepAliveAction( Request $request )
@@ -400,9 +400,7 @@ class SecurityController extends Controller
     }
     
     /**
-     *
-     *
-     * @Route("/common/setserveractive", name="setserveractive")
+     * @Route("/common/setserveractive", name="setserveractive", options={"expose"=true})
      * @Method("GET")
      */
     public function setServerActiveAction( Request $request )

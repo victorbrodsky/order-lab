@@ -3446,10 +3446,10 @@ class AdminController extends Controller
         $elements['en'] = $language;
         $language = $languageBundle->getLanguageName('en_US');
         $elements['en_US'] = $language;
-        $language = $languageBundle->getLanguageName('fr');
-        $elements['fr'] = $language;
-        $language = $languageBundle->getLanguageName('de');
-        $elements['de'] = $language;
+        //$language = $languageBundle->getLanguageName('fr');
+        //$elements['fr'] = $language;
+        //$language = $languageBundle->getLanguageName('de');
+        //$elements['de'] = $language;
 
         //print_r($elements);
         //exit();
@@ -3531,10 +3531,10 @@ class AdminController extends Controller
         $elements['en'] = $language;
         $language = $localeBundle->getLocaleName('en_US');
         $elements['en_US'] = $language;
-        $language = $localeBundle->getLocaleName('fr');
-        $elements['fr'] = $language;
-        $language = $localeBundle->getLocaleName('de');
-        $elements['de'] = $language;
+//        $language = $localeBundle->getLocaleName('fr');
+//        $elements['fr'] = $language;
+//        $language = $localeBundle->getLocaleName('de');
+//        $elements['de'] = $language;
 
         //print_r($elements);
         //exit();

@@ -150,9 +150,9 @@ services:
 
     oleg.twig.extension.date:
         class: Twig_Extensions_Extension_Date
+        #arguments: ["@translator"]
         tags:
-             - { name: 'twig.extension' }
-
+            - { name: 'twig.extension' }
 
 
 oneup_uploader:

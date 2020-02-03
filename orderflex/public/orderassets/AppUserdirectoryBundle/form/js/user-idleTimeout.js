@@ -141,11 +141,12 @@ idleTimeoutClass.prototype.isServerActive = function () {
     //check if the other page is active
     //_serverActive = false;
     //var url = getCommonBaseUrl("common/isserveractive","employees");
-    var url = getCommonBaseUrl("common/keepalive","employees");
+    //var url = getCommonBaseUrl("common/keepalive","employees");
+    var url = Routing.generate('keepalive');
     //console.log("isServerActive url="+url);
     $.ajax({
         url: url,
-        type: 'GET',
+        //type: 'GET',
         //dataType: 'json',
         async: true,
         timeout: _ajaxTimeout,
@@ -220,11 +221,12 @@ idleTimeoutClass.prototype.setActive = function () {
         
         if( getLastActiveTimeDiff < timerIdleTime ) {
             //console.log("event setserveractive:  getLastActiveTimeDiff="+getLastActiveTimeDiff/1000+" sec");
-            var url = getCommonBaseUrl("common/setserveractive","employees");
+            //var url = getCommonBaseUrl("common/setserveractive","employees");
+            var url = Routing.generate('setserveractive');
             //console.log("url="+url);
             $.ajax({
                 url: url,
-                type: 'GET',
+                //type: 'GET',
                 //contentType: 'application/json',
                 //dataType: 'json',
                 async: true,

@@ -3442,9 +3442,9 @@ class ListController extends Controller
             $request->attributes->set('_route',$listRootName);
 
             if( strpos($listRootName, "_pathaction") === false ) {
-                return $this->forward('App\UserdirectoryBundle\Controller\ListController::index', array('request' => $request));
+                return $this->forward('App\UserdirectoryBundle\Controller\ListController::indexAction', array('request' => $request));
             } else {
-                return $this->forward('App\UserdirectoryBundle\Controller\ComplexListController::index', array('request' => $request));
+                return $this->forward('App\UserdirectoryBundle\Controller\ComplexListController::indexAction', array('request' => $request));
             }
 
         }
