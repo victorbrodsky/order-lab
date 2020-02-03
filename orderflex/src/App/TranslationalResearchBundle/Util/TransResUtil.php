@@ -3543,7 +3543,7 @@ class TransResUtil
 
         if( $search && $search != "prefetchmin" ) {
             if ($type == "oid") {
-                $dql->andWhere("LOWER(project.oid) LIKE LOWER(:oid) OR project.id LIKE :oid");
+                $dql->andWhere("LOWER(project.oid) LIKE LOWER(:oid) OR CAST(project.id AS varchar) LIKE :oid");
                 $dqlParameters["oid"] =  "%".$search."%";
             }
             if ($type == "title") {
@@ -3555,7 +3555,7 @@ class TransResUtil
                 $dqlParameters["pis"] = "%".$search."%";
             }
             if ($type == "all") {
-                $dql->andWhere("LOWER(project.oid) LIKE LOWER(:search) OR project.id LIKE :search OR LOWER(project.title) LIKE LOWER(:search) OR LOWER(principalInvestigatorsInfos.displayName) LIKE LOWER(:search)");
+                $dql->andWhere("LOWER(project.oid) LIKE LOWER(:search) OR CAST(project.id AS varchar) LIKE :search OR LOWER(project.title) LIKE LOWER(:search) OR LOWER(principalInvestigatorsInfos.displayName) LIKE LOWER(:search)");
                 $dqlParameters["search"] =  "%".$search."%";
             }
         }

@@ -139,7 +139,7 @@ class ComplexListController extends Controller
 
         if( $search ) {
 
-            $searchStr = "ent.id LIKE :search OR LOWER(ent.name) LIKE LOWER(:search) OR LOWER(ent.abbreviation) LIKE LOWER(:search) OR LOWER(ent.shortname) LIKE LOWER(:search) OR LOWER(ent.description) LIKE LOWER(:search)";
+            $searchStr = "CAST(ent.id AS varchar) LIKE :search OR LOWER(ent.name) LIKE LOWER(:search) OR LOWER(ent.abbreviation) LIKE LOWER(:search) OR LOWER(ent.shortname) LIKE LOWER(:search) OR LOWER(ent.description) LIKE LOWER(:search)";
 
             //search location: phone, building, room
             if( $mapper['pathname'] == 'locations' ) {
