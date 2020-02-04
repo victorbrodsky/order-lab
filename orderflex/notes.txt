@@ -347,5 +347,5 @@ Solution (?): downgrade PHP from 7.4.3 to 7.4.2 on view-test
 Switch to Apache user: su -s /bin/bash apache
 (Permission denied: Solution: prepend HOME=/tmp => HOME=/tmp /usr/bin/soffice)
 
-
+Sasl ldap: http://research.imb.uq.edu.au/~l.rathbone/ldap/gssapi.shtml
 

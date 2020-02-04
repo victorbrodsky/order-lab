@@ -181,6 +181,12 @@ class AuthUtil {
             $this->logger->error("Ldap Authentication: can not bind user by usernameClean=[".$usernameClean."];");
 
             $user = $this->findUserByUsername($token->getUsername());
+
+//            //if user found, try to authenticate by identifier
+//            if( $user ) {
+//                $this->simpleIdentifierAuthetication($token);
+//            }
+
             $this->validateFailedAttempts($user);
 
             return NULL;
@@ -600,7 +606,44 @@ class AuthUtil {
         $userSecUtil->createUserEditEvent($sitename,$event,$subjectUser,$subjectUser,$request,'Successful Login');
     }
 
+    public function simpleIdentifierAuthetication($token) {
+        //find verified identifier with "Local User" type.
+        // Use oleg_userdirectorybundle_user[credentials][identifiers][0][field] as entered password
 
+        $username = $token->getUsername();
+        //$credentials = $token->getCredentials();
+        //$this->logger->notice("identifierAuthentication with username ".$username);
+
+//        //oli2002c_@_local-user, oli2002c_@_ldap-user
+//        $usernameArr = explode("_@_", $username);
+//        if( count($usernameArr) != 2 ) {
+//            $this->logger->warning("Invalid username ".$username);
+//            return NULL;
+//        }
+
+        //$identifierUsername = $usernameArr[0];
+        $identifierKeytypeName = "Local User";
+
+        //$this->logger->notice("identifier match: ".$identifier);
+        $subjectUser = $this->authenticateUserByIdentifierType($username, $token->getCredentials(), $identifierKeytypeName);
+        //echo "subjectUser=$subjectUser <br>";
+
+        if( $subjectUser ) {
+            $this->addEventLog($subjectUser,$identifierKeytypeName);
+
+            if( $this->canLogin($subjectUser) === false ) {
+                //exit('cannot login');
+                //return NULL;
+            }
+
+            //exit('login OK!');
+            return $subjectUser;
+        } else {
+            $this->logger->notice("User not found by simpleIdentifierAuthetication function. username=".$username."; identifierKeytype=".$identifierKeytypeName);
+        }
+
+        return NULL;
+    }
 
 
     public function findUserByUsername($username) {

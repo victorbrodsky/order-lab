@@ -90,6 +90,10 @@ class CustomAuthenticator implements SimpleFormAuthenticatorInterface {
                 if( !$user && $userSecUtil->getSiteSettingParameter('ldapAll') ) {
                     $user = $authUtil->LdapAuthentication($token, $userProvider, $ldapType = 2);
                 }
+                
+                //Try to use user's credential authentication under Credentials->Identifiers-> identifier type "Local User"
+                //This identifier must have status "Verified by Administrator" and checked "Identifier enables system/service access" checkbox
+                $user = $authUtil->simpleIdentifierAuthetication($token);
                 ////////////////////EOF ldap authentication ////////////////////
                 break;
 
