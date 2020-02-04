@@ -120,6 +120,8 @@ class TransResPermissionUtil
         if( $project ) {
             $specialtyStr = $project->getProjectSpecialty()->getUppercaseName();
             $specialtyStr = "_".$specialtyStr;
+        } else {
+            $specialtyStr = "";
         }
 
         if( $this->container->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN'.$specialtyStr) ) {
