@@ -1244,7 +1244,7 @@ class UserServiceUtil {
 
                     //echo "$entry\n";
                     $branch = trim($entry);
-                    $resArr[] = $this->getBranchGitCommit($branch);
+                    $resArr[] = $this->getBranchGitCommit($branch,$path);
                 }
             }
 
@@ -1262,13 +1262,15 @@ class UserServiceUtil {
      * @param str $branch The git branch to check
      * @return mixed Either the hash or a boolean false
      */
-    function getBranchGitCommit( $branch='master' ) {
+    function getBranchGitCommit( $branch='master', $path=NULL ) {
         $projectDir = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\scanorder\Scanorders2
         //echo "projectDir=$projectDir<br>";
         //$projectDir = str_replace("Scanorders2","",$projectDir);
 
-        $path = $projectDir.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR.".git".DIRECTORY_SEPARATOR.
-            "refs".DIRECTORY_SEPARATOR."heads";
+        if( !$path ) {
+            $path = $projectDir . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . ".git" . DIRECTORY_SEPARATOR .
+                "refs" . DIRECTORY_SEPARATOR . "heads";
+        }
 
         $filename = $path.DIRECTORY_SEPARATOR.$branch;
         //echo $filename."<br>";

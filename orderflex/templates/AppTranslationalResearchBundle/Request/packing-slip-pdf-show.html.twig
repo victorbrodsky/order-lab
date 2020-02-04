@@ -53,10 +53,10 @@
             </div>
         </div>
         <div class="col-xs-7" align="right">
-            <p><h2><b>
+            <p><h4><b>
                 {#Packing Slip#}
                 {{ transres_request_util.getTransresSiteParameter('transresPackingSlipTitle',transresRequest) }}
-            </b></h2></p>
+            </b></h4></p>
             <p>
                 Work Request ID: <span id="work-request-id" style="color: {{ headlineColor }}">{{ transresRequest.oid }}</span>
             </p>
@@ -188,15 +188,15 @@
     <br>
     <hr>
 
-    <div align="left" style="opacity: {{ opacity }};">
-        <h6>
+    <div align="left" style="opacity: {{ opacity }}; font-size: 8px;">
+        {#<h6>#}
             {#Please contact us for more information about this slip.#}
             {{ transres_request_util.getTransresSiteParameter('transresPackingSlipFooter1',transresRequest) }}
-        </h6>
-        <h6>
+        {#</h6>#}
+        {#<h6>#}
             {#Translational Research Program • 1300 York Ave., F512, New York, NY 10065 • Tel: (212) 746-6255#}
             {{ transres_request_util.getTransresSiteParameter('transresPackingSlipFooter2',transresRequest) }}
-        </h6>
+        {#</h6>#}
     </div>
 
     {% if packingSlipFontSize is defined and packingSlipFontSize %}
