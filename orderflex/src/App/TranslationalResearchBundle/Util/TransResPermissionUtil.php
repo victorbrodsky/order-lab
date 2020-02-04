@@ -89,6 +89,8 @@ class TransResPermissionUtil
         $transresUtil = $this->container->get('transres_util');
         $transresRequestUtil = $this->container->get('transres_request_util');
 
+        $project = NULL;
+
         $processed = false;
         if( $invoice ) {
             if( $this->isUserAllowedAccessInvoiceBySpecialty($invoice) == false ) {
