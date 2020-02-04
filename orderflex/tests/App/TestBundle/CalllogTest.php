@@ -324,10 +324,10 @@ class CalllogTest extends WebTestBase
             0,
             $crawler->filter('html:contains("Amount of Time Spent in Minutes")')->count()
         );
-//        $this->assertGreaterThan(
-//            0,
-//            $crawler->filter('html:contains("Edit Entry")')->count() //Amend or Edit
-//        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Edit Entry")')->count() + $crawler->filter('html:contains("Amend Entry")')->count() //Amend or Edit
+        );
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("View Event Log")')->count()
