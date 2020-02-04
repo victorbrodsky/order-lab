@@ -1234,9 +1234,25 @@ class UserServiceUtil {
         $projectDir = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\scanorder\Scanorders2
         //echo "projectDir=$projectDir<br>";
         //$projectDir = str_replace("Scanorders2","",$projectDir);
-        $filename = $projectDir.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR.".git".DIRECTORY_SEPARATOR.
-            "refs".DIRECTORY_SEPARATOR."heads".DIRECTORY_SEPARATOR.$branch;
+
+        $path = $projectDir.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR.".git".DIRECTORY_SEPARATOR.
+            "refs".DIRECTORY_SEPARATOR."heads";
+
+        $filename = $path.DIRECTORY_SEPARATOR.$branch;
         echo $filename."<br>";
+
+        if ($handle = opendir($path)) {
+
+            while (false !== ($entry = readdir($handle))) {
+
+                if( $entry != "." && $entry != ".." ) {
+
+                    echo "$entry\n";
+                }
+            }
+
+            closedir($handle);
+        }
 
         if( file_exists($filename) ) {
             //OK
