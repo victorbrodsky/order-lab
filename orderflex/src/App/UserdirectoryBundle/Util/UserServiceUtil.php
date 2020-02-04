@@ -1236,7 +1236,7 @@ class UserServiceUtil {
         //$projectDir = str_replace("Scanorders2","",$projectDir);
         $filename = $projectDir.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR.".git".DIRECTORY_SEPARATOR.
             "refs".DIRECTORY_SEPARATOR."heads".DIRECTORY_SEPARATOR.$branch;
-        //echo $filename."<br>";
+        echo $filename."<br>";
 
         if( file_exists($filename) ) {
             //OK
