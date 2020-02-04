@@ -1196,7 +1196,7 @@ class UserServiceUtil {
 
     public function getGitVersionDate()
     {
-        $ver = $this->getCurrentGitCommit('master');
+        $ver = $this->getCurrentGitCommit();
         return $ver;
 
 
@@ -1226,11 +1226,43 @@ class UserServiceUtil {
     }
 
     /**
+     * Get all branches: the hash of the current git HEAD
+     */
+    function getCurrentGitCommit() {
+        $projectDir = $this->container->get('kernel')->getProjectDir();
+        $path = $projectDir.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR.".git"
+            .DIRECTORY_SEPARATOR."refs".DIRECTORY_SEPARATOR."heads";
+
+        $resArr = array();
+        $res = "";
+
+        if( $handle = opendir($path) ) {
+
+            while (false !== ($entry = readdir($handle))) {
+
+                if( $entry != "." && $entry != ".." ) {
+
+                    //echo "$entry\n";
+                    $branch = trim($entry);
+                    $resArr[] = $this->getBranchGitCommit($branch);
+                }
+            }
+
+            closedir($handle);
+        }
+
+        if( count($resArr) > 0 ) {
+            $res = implode("<br>",$resArr);
+        }
+
+        return $res;
+    }
+    /**
      * Get the hash of the current git HEAD
      * @param str $branch The git branch to check
      * @return mixed Either the hash or a boolean false
      */
-    function getCurrentGitCommit( $branch='master' ) {
+    function getBranchGitCommit( $branch='master' ) {
         $projectDir = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\scanorder\Scanorders2
         //echo "projectDir=$projectDir<br>";
         //$projectDir = str_replace("Scanorders2","",$projectDir);
@@ -1239,20 +1271,7 @@ class UserServiceUtil {
             "refs".DIRECTORY_SEPARATOR."heads";
 
         $filename = $path.DIRECTORY_SEPARATOR.$branch;
-        echo $filename."<br>";
-
-        if ($handle = opendir($path)) {
-
-            while (false !== ($entry = readdir($handle))) {
-
-                if( $entry != "." && $entry != ".." ) {
-
-                    echo "$entry\n";
-                }
-            }
-
-            closedir($handle);
-        }
+        //echo $filename."<br>";
 
         if( file_exists($filename) ) {
             //OK
@@ -1277,7 +1296,7 @@ class UserServiceUtil {
         }
 
         if ( $hash ) {
-            return "Current Version: " . $hash . "; " . $timestamp;
+            return "Current Version for $branch: " . $hash . "; " . $timestamp;
         } else {
             return false;
         }
