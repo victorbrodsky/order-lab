@@ -403,11 +403,13 @@ function setVacReqNavBar() {
         id = 'carryoverrequest';
     }
 
-    id = commonNavBar(full,id)
+    id = commonNavBar(full,id);
 
     if( full.indexOf("/vacation-request/re-identify") !== -1 ) {
         id = null;
     }
+
+    //console.log("id="+id);
 
     $('#nav-bar-'+id).addClass('active');
     //userAddActiveClass(id);
@@ -419,7 +421,7 @@ function setDeidentificatorNavBar() {
 
     var full = window.location.pathname;
 
-    id = commonNavBar(full,id)
+    id = commonNavBar(full,id);
 
     if( full.indexOf("/deidentifier/re-identify") !== -1 ) {
         id = null;
@@ -467,7 +469,7 @@ function setFellappNavBar() {
         id = 'fellappaccepted';
     }
 
-    id = commonNavBar(full,id)
+    id = commonNavBar(full,id);
 
 
     $('#nav-bar-'+id).addClass('active');
@@ -520,7 +522,7 @@ function setScanNavBar() {
         id = 'admin';
     }
 
-    id = commonNavBar(full,id)
+    id = commonNavBar(full,id);
 
 
     if( full.indexOf("/user/") !== -1 || full.indexOf("/edit-user-profile/") !== -1 ) {
@@ -555,7 +557,7 @@ function setDirectoryNavBar() {
         id = 'add';
     }   
 
-    id = commonNavBar(full,id)
+    id = commonNavBar(full,id);
     
     if( full.indexOf("/users/previous") !== -1 ) {
         id = 'userlist-previous';

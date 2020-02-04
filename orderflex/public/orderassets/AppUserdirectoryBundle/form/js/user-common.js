@@ -518,15 +518,23 @@ function getSitename() {
     //     var urlSite = urlArr[0];
     // }
 
+    var sitename = siteNameMapper();
+    if( sitename ) {
+        return sitename;
+    }
+
     //https://css-tricks.com/example/index.html?s=flexbox
     //window.location.host = "css-tricks.com"
     //window.location.pathname = "example/index.html"
+    //console.log("window.location.pathname="+window.location.pathname);
+
     var urlArr = window.location.pathname.split('/');
     var urlSite = urlArr[0];
+    //console.log("urlSite="+urlSite);
 
     //get rid of app_dev.php
     var urlfullClean = urlSite.replace("app_dev.php/", "");
-    var urlfullClean = urlSite.replace("index.php/", "");
+    var urlfullClean = urlSite.replace("index_dev.php/", "");
     //console.log("urlfullClean="+urlfullClean);
 
     var urlCleanArr =  urlfullClean.split("/");
@@ -537,6 +545,36 @@ function getSitename() {
     _sitename = sitename;
 
     //scan or employees
+    return sitename;
+}
+
+function siteNameMapper(full) {
+    var url = window.location.pathname;
+
+    var sitename = 'directory';
+
+    if( url.indexOf("directory") !== -1 ) {
+        sitename = 'directory';
+    }
+    if( url.indexOf("call-log-book") !== -1 ) {
+        sitename = 'call-log-book';
+    }
+    if( url.indexOf("fellowship-applications") !== -1 ) {
+        sitename = 'fellowship-applications';
+    }
+    if( url.indexOf("vacation-request") !== -1 ) {
+        sitename = 'vacation-request';
+    }
+    if( url.indexOf("translational-research") !== -1 ) {
+        sitename = 'translational-research';
+    }
+    if( url.indexOf("deidentifier") !== -1 ) {
+        sitename = 'deidentifier';
+    }
+    if( url.indexOf("scan") !== -1 ) {
+        sitename = 'scan';
+    }
+
     return sitename;
 }
 
