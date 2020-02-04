@@ -324,7 +324,7 @@ class EmailUtil {
                 DIRECTORY_SEPARATOR . "default";
             $spool = new \Swift_FileSpool($spoolPath);
             //$transport = \Swift_SpoolTransport::newInstance($spool);
-            $transport = \Swift_SpoolTransport($spool);
+            $transport = new \Swift_SpoolTransport($spool);
         } else {
             $transport = $this->getSmtpTransport();
             if( !$transport ) {

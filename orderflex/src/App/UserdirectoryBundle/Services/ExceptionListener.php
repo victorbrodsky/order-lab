@@ -25,15 +25,16 @@
 namespace App\UserdirectoryBundle\Services;
 
 
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
+//use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+//use Symfony\Component\HttpFoundation\Response;
+//use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
-use Symfony\Component\HttpKernel\Event\PostResponseEvent;
-use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+//use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+//use Symfony\Component\HttpKernel\Event\PostResponseEvent;
+//use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+//use Symfony\Component\HttpKernel\HttpKernelInterface;
+//use Symfony\Component\HttpFoundation\RedirectResponse;
 
 use App\UserdirectoryBundle\Util\UserUtil;
 
@@ -56,7 +57,7 @@ class ExceptionListener {
     }
 
 
-    public function onKernelException(GetResponseForExceptionEvent $event) {
+    public function onKernelException(ExceptionEvent $event) {
 
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
@@ -71,7 +72,7 @@ class ExceptionListener {
         $request = $event->getRequest();
 
         // You get the exception object from the received event
-        $exception = $event->getException();
+        $exception = $event->getThrowable();
 
 //        $message = sprintf(
 //            'Error: %s with code: %s',
@@ -82,6 +83,14 @@ class ExceptionListener {
 //        echo $exception->getCode();
         //echo "Trace: ".$exception->getTraceAsString()."<br>";
         //var_dump($exception->getTraceAsString());
+
+        //Ignore: Unable to create the storage directory (/srv/order-lab/orderflex/var/cache/prod/profiler)
+        if (strpos($exception->getMessage(), 'Unable to create the storage directory') !== false) {
+            return false;
+        }
+        if (strpos($exception->getMessage(), 'var/cache/') !== false) {
+            return false;
+        }
 
         $message = "Error: " . $exception->getMessage() . " with code" . $exception->getCode() .
             "<br>File: ".$exception->getFile() .
