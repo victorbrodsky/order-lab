@@ -56,17 +56,19 @@
     {% endif %}
 
     {% if routename == 'vacreq_incomingrequests' %}
+        {#incoming-requests#}
         {% if requestTypeAbbreviation == 'carryover' %}
-            {% set colspanRequestInfo = 5 %}
+            {% set colspanRequestInfo = 6 %}
         {% else %}
             {% set colspanRequestInfo = 9 %}
         {% endif %}
         {% set showUserInfo = true %}
     {% else %}
+        {#my-requests#}
         {% if requestTypeAbbreviation == 'carryover' %}
-            {% set colspanRequestInfo = 3 %}
+            {% set colspanRequestInfo = 4 %}
         {% else %}
-            {% set colspanRequestInfo = 6 %} {#2 fields less#}
+            {% set colspanRequestInfo = 7 %} {#2 fields less#}
         {% endif %}
         {% set showUserInfo = false %}
     {% endif %}
@@ -89,7 +91,7 @@
             {% endif %}
 
             {% if requestTypeAbbreviation == 'carryover' %}
-                <th colspan="5" class="text-center table-header-grey-gradient" style="border-left: 2px solid gray;">
+                <th colspan="4" class="text-center table-header-grey-gradient" style="border-left: 2px solid gray;">
                     Carry Over
                 </th>
             {% else %}
