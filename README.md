@@ -32,7 +32,7 @@ It includes several functional applications tied by LDAP/AD-capable single sign-
 
 ## Data Models
 
-The [core data models of the key objects are provided in UML and JPG formats](https://github.com/victorbrodsky/order-lab/tree/master/Scanorders2/uml), although additional attributes may have been added since their creation.
+The [core data models of the key objects are provided in UML and JPG formats](https://github.com/victorbrodsky/order-lab/tree/master/orderflex/uml), although additional attributes may have been added since their creation.
 
 
 ## Support
@@ -120,7 +120,7 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 
         bash deploy-order-digital-ocean.sh --token API-TOKEN-FROM-STEP-1 --parameters parameters.yml --dbuser dbusername --dbpass dbpassword --protocol http --domainname example.com
 
-	Note: If you get your SSL certificate from [Let's Encrypt](https://letsencrypt.org/), make sure to follow their recommendation to ensure the certificate gets updated in a timely fashion and to avoid expiration. [certbot](https://certbot.eff.org/lets-encrypt/ubuntuxenial-apache) and a [symfony bundle](https://packagist.org/packages/cert/letsencrypt-bundle) are available.  In the past, uncommenting (removing "#" from the beginning of) the line 289 in /order-lab/Scanorders2/app/config/security.yml file was necessary to enable SSL, but everything should be done automatically now and is controlled via the "Connection Channel" variable in Site Settings being set to either “https” or "http".
+	Note: If you get your SSL certificate from [Let's Encrypt](https://letsencrypt.org/), make sure to follow their recommendation to ensure the certificate gets updated in a timely fashion and to avoid expiration. [certbot](https://certbot.eff.org/lets-encrypt/ubuntuxenial-apache) and a [symfony bundle](https://packagist.org/packages/cert/letsencrypt-bundle) are available.  In the past, uncommenting (removing "#" from the beginning of) the line 289 in /order-lab/orderflex/app/config/security.yml file was necessary to enable SSL, but everything should be done automatically now and is controlled via the "Connection Channel" variable in Site Settings being set to either “https” or "http".
 
 6. If the browser window with this URL does not open automatically at the end of the previous step, visit http://IPADDRESS/order/directory/admin/first-time-login-generation-init/ (or either http://example.com/order/directory/admin/first-time-login-generation-init/ or https://example.com/order/directory/admin/first-time-login-generation-init/ depending on whether you used the domain name and the ssl certificate in the command above) to generate the initial Administrator account, where IPADDRESS is the IP address of the server. Wait until the site redirects to the log in screen (it might take a while.)
 
@@ -137,7 +137,7 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 
 9. Select the sites you would like to be accessible on the homepage besides the "Employee Directory" by visiting https://IPADDRESS/order/directory/admin/list-manager/id/2 , clicking the "Action" button to the right of the desired site name, and clicking "Edit", then putting a checkmark in the "Show Link On Home Page" and "Show Link in Navbar" fields, followed by clicking the "Update" button.
 
-10. To enable submission of applications for the Fellowship application site via Google services, use the files in the /order-lab/Scanorders2/src/Oleg/FellAppBundle/Util/GoogleForm folder with the [Google Apps Script](https://developers.google.com/apps-script/). Make sure to add your Google Apps Script API key on the Site Settings page http://IPADDRESS/order/directory/settings/.
+10. To enable submission of applications for the Fellowship application site via Google services, use the files in the /order-lab/orderflex/src/Oleg/FellAppBundle/Util/GoogleForm folder with the [Google Apps Script](https://developers.google.com/apps-script/). Make sure to add your Google Apps Script API key on the Site Settings page http://IPADDRESS/order/directory/settings/.
 
 11. If bulk import of the initial set of users is desired, download the [ImportUsersTemplate.xlsx](https://github.com/victorbrodsky/order-lab/tree/master/importLists) file from the /importLists folder, fill it out with the user details, and upload it back via the the Navigation bar's "Admin > Import Users" (http://IPADDRESS/order/directory/import-users/spreadsheet) function on the Employee Directory site.
 
@@ -149,7 +149,7 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 
         cd /usr/local/bin/order-lab
         git pull
-        cd Scanorders2
+        cd orderflex
         bash deploy_prod.sh
 
 Note: If you choose to use MySQL database on Linux instead of Postgres, you will need to increase the size of the sort buffer by setting "sort_buffer_size" to 512K in /etc/mysql/my.cnf.
@@ -218,7 +218,7 @@ Note: If you choose to use MySQL database on Linux instead of Postgres, you will
 		Centos:
 		bash deploy-order-digital-ocean.sh --token API-TOKEN-FROM-STEP-1 --parameters parameters.yml --dbuser dbusername --dbpass dbpassword --protocol http --domainname example.com --os centos
 
-	Note: If you get your SSL certificate from [Let's Encrypt](https://letsencrypt.org/), make sure to follow their recommendation to ensure the certificate gets updated in a timely fashion and to avoid expiration. [certbot](https://certbot.eff.org/lets-encrypt/ubuntuxenial-apache) and a [symfony bundle](https://packagist.org/packages/cert/letsencrypt-bundle) are available.  In the past, uncommenting (removing "#" from the beginning of) the line 289 in /order-lab/Scanorders2/app/config/security.yml file was necessary to enable SSL, but everything should be done automatically now and is controlled via the "Connection Channel" variable in Site Settings being set to either “https” or "http".
+	Note: If you get your SSL certificate from [Let's Encrypt](https://letsencrypt.org/), make sure to follow their recommendation to ensure the certificate gets updated in a timely fashion and to avoid expiration. [certbot](https://certbot.eff.org/lets-encrypt/ubuntuxenial-apache) and a [symfony bundle](https://packagist.org/packages/cert/letsencrypt-bundle) are available.  In the past, uncommenting (removing "#" from the beginning of) the line 289 in /order-lab/orderflex/app/config/security.yml file was necessary to enable SSL, but everything should be done automatically now and is controlled via the "Connection Channel" variable in Site Settings being set to either “https” or "http".
 
 	The full list of parameters for script deploy-order-digital-ocean.sh:
 	
@@ -255,7 +255,7 @@ Note: If you choose to use MySQL database on Linux instead of Postgres, you will
 
 10. Select the sites you would like to be accessible on the homepage besides the "Employee Directory" by visiting https://IPADDRESS/order/directory/admin/list-manager/id/2 , clicking the "Action" button to the right of the desired site name, and clicking "Edit", then putting a checkmark in the "Show Link On Home Page" and "Show Link in Navbar" fields, followed by clicking the "Update" button.
 
-11. To enable submission of applications for the Fellowship application site via Google services, use the files in the /order-lab/Scanorders2/src/Oleg/FellAppBundle/Util/GoogleForm folder with the [Google Apps Script](https://developers.google.com/apps-script/). Make sure to add your Google Apps Script API key on the Site Settings page http://IPADDRESS/order/directory/settings/.
+11. To enable submission of applications for the Fellowship application site via Google services, use the files in the /order-lab/orderflex/src/Oleg/FellAppBundle/Util/GoogleForm folder with the [Google Apps Script](https://developers.google.com/apps-script/). Make sure to add your Google Apps Script API key on the Site Settings page http://IPADDRESS/order/directory/settings/.
 
 12. If bulk import of the initial set of users is desired, download the [ImportUsersTemplate.xlsx](https://github.com/victorbrodsky/order-lab/tree/master/importLists) file from the /importLists folder, fill it out with the user details, and upload it back via the the Navigation bar's "Admin > Import Users" (http://IPADDRESS/order/directory/import-users/spreadsheet) function on the Employee Directory site.
 
@@ -267,7 +267,7 @@ Note: If you choose to use MySQL database on Linux instead of Postgres, you will
 
         cd /usr/local/bin/order-lab
         git pull
-        cd Scanorders2
+        cd orderflex
         bash deploy_prod.sh
 
 Note: If you choose to use MySQL database on Linux instead of Postgres, you will need to increase the size of the sort buffer by setting "sort_buffer_size" to 512K in /etc/mysql/my.cnf.
@@ -378,20 +378,20 @@ Symfony 3.4 with PHP 5.6:
 			 * icutu49.dll
 			 * icuuc49.dll
 
-	h) Set up an alias on the server directing Apache to the order-lab-master files. In the AMPPS tray menu, click the globe icon at the top of the window to open [http://localhost/AMPPS/](http://localhost/AMPPS/) in the web browser (recent versions of Firefox or Chrome are preferred). From this [AMPPS Home page](http://localhost/AMPPS/), various server settings can be configured. Open "Alias Manager", click "Add New", enter "order" under "Alias Name" and "C:/ORDER_LOCATION/order-lab-master/Scanorders2/web" (or "C:/ORDER_LOCATION/order-lab/Scanorders2/web" if you cloned using git) under "Path" (using backslashes in the file path, rather than forward slashes). Click "Create Alias". Now create a second alias with the name "ORDER" and the same path.
+	h) Set up an alias on the server directing Apache if the url contains some subdomain or prefix such as 'www.example.com/order'. In the AMPPS tray menu, click the globe icon at the top of the window to open [http://localhost/AMPPS/](http://localhost/AMPPS/) in the web browser (recent versions of Firefox or Chrome are preferred). From this [AMPPS Home page](http://localhost/AMPPS/), various server settings can be configured. Open "Alias Manager", click "Add New", enter "order" under "Alias Name" and "C:/ORDER_LOCATION/order-lab-master/orderflex/web" (or "C:/ORDER_LOCATION/order-lab/orderflex/web" if you cloned using git) under "Path" (using backslashes in the file path, rather than forward slashes). Click "Create Alias". Now create a second alias with the name "ORDER" and the same path.
 
 	If you are not using AMPPS, different Apache-PHP-MySQL stacks may require modifying the httpd.conf file directly by setting the alias to the order-lab www folder as follows:
 
 	If you unzipped the downloaded source code:
 
 			<VirtualHost *:80>
-				<Directory 'C:\ORDER_LOCATION\order-lab-master\Scanorders2\web\"
+				<Directory 'C:\ORDER_LOCATION\order-lab-master\orderflex\web\"
 					Options +FollowSymLinks -Includes
 					AllowOverride All  
 					Require all granted
 				</Directory>
-				Alias /order "C:\ORDER_LOCATION\order-lab-master\Scanorders2\web\"
-				Alias /ORDER "C:\ORDER_LOCATION\order-lab-master\Scanorders2\web\"
+				Alias /order "C:\ORDER_LOCATION\order-lab-master\orderflex\web\"
+				Alias /ORDER "C:\ORDER_LOCATION\order-lab-master\orderflex\web\"
 				RewriteRule ^/ORDER(.*)$ /order$1 [R=301]
 				ErrorLog ${APACHE_LOG_DIR}/error.log
 				CustomLog ${APACHE_LOG_DIR}/access.log combined
@@ -400,13 +400,13 @@ Symfony 3.4 with PHP 5.6:
 	Or if you cloned the source code using the git clone command:
 
 			<VirtualHost *:80>
-				<Directory 'C:\ORDER_LOCATION\order-lab\Scanorders2\web\"
+				<Directory 'C:\ORDER_LOCATION\order-lab\orderflex\web\"
 					Options +FollowSymLinks -Includes
 					AllowOverride All  
 					Require all granted
 				</Directory>
-				Alias /order "C:\ORDER_LOCATION\order-lab\Scanorders2\web\"
-				Alias /ORDER "C:\ORDER_LOCATION\order-lab\Scanorders2\web\"
+				Alias /order "C:\ORDER_LOCATION\order-lab\orderflex\web\"
+				Alias /ORDER "C:\ORDER_LOCATION\order-lab\orderflex\web\"
 				RewriteRule ^/ORDER(.*)$ /order$1 [R=301]
 				ErrorLog ${APACHE_LOG_DIR}/error.log
 				CustomLog ${APACHE_LOG_DIR}/access.log combined
@@ -421,15 +421,15 @@ Symfony 3.4 with PHP 5.6:
 
 4. Update and configure Symfony:
 
-	a) AMPPS uses MySQL and not MSSQL, so this parameter must be changed: Open the file "C:\ORDER_LOCATION\order-lab-master\Scanorders2\app\config\parameters.yml" (or "C:\ORDER_LOCATION\order-lab\Scanorders2\app\config\parameters.yml" if you used the git clone command) in a text editor. Replace the line "database_driver: pdo_sqlsrv" (useful for MSSQL Server) with "database_driver: pdo_mysql" (to use MySQL server we are using for these instructions). Save and close the file.
+	a) AMPPS uses MySQL and not MSSQL, so this parameter must be changed: Open the file "C:\ORDER_LOCATION\order-lab-master\orderflex\app\config\parameters.yml" (or "C:\ORDER_LOCATION\order-lab\orderflex\app\config\parameters.yml" if you used the git clone command) in a text editor. Replace the line "database_driver: pdo_sqlsrv" (useful for MSSQL Server) with "database_driver: pdo_mysql" (to use MySQL server we are using for these instructions). Save and close the file.
 
-	b) Open a Windows Command Prompt. Change the directory to the Scanorders2 folder by entering the command:
+	b) Open a Windows Command Prompt. Change the directory to the orderflex folder by entering the command:
 
-		cd C:\ORDER_LOCATION\order-lab-master\Scanorders2\
+		cd C:\ORDER_LOCATION\order-lab-master\orderflex\
 	
 	or, if you used the git clone command, run:
 
-		cd C:\ORDER_LOCATION\order-lab\Scanorders2\
+		cd C:\ORDER_LOCATION\order-lab\orderflex\
 
 	c) Update symfony vendors by entering the command:
 
@@ -467,7 +467,7 @@ Symfony 3.4 with PHP 5.6:
 	
 5. Deployment
 	
-	a) Run the deployment script: Open a Windows File Explorer window and navigate to "C:\ORDER_LOCATION\order-lab-master\Scanorders2\" (or to "C:\ORDER_LOCATION\order-lab\Scanorders2\" if you used the git clone command). Right click on an empty space in the window, and select "Git Bash here". In the Git Bash window that opens, enter the command "bash ./deploy_prod.sh". The script will take several minutes to run. "Deploy complete." will appear when it is finished.
+	a) Run the deployment script: Open a Windows File Explorer window and navigate to "C:\ORDER_LOCATION\order-lab-master\orderflex\" (or to "C:\ORDER_LOCATION\order-lab\orderflex\" if you used the git clone command). Right click on an empty space in the window, and select "Git Bash here". In the Git Bash window that opens, enter the command "bash ./deploy_prod.sh". The script will take several minutes to run. "Deploy complete." will appear when it is finished.
 		
 	b) Create the Administrator account with password 1234567890 by opening the following URL in your browser (specify the server's IP or domain name instead of "localhost"):
 
@@ -516,7 +516,7 @@ Symfony 3.4 with PHP 5.6:
 
 8. Select the sites you would like to be accessible on the homepage besides the "Employee Directory" by visiting https://IPADDRESS/order/directory/admin/list-manager/id/2 , clicking the "Action" button to the right of the desired site name, and clicking "Edit", then putting a checkmark in the "Show Link On Home Page" and "Show Link in Navbar" fields, followed by clicking the "Update" button.
 
-9. To enable submission of applications for the Fellowship application site via Google services, use the files in the /order-lab/Scanorders2/src/Oleg/FellAppBundle/Util/GoogleForm folder with the [Google Apps Script](https://developers.google.com/apps-script/). Make sure to add your Google Apps Script API key on the Site Settings page http://IPADDRESS/order/directory/settings/.
+9. To enable submission of applications for the Fellowship application site via Google services, use the files in the /order-lab/orderflex/src/Oleg/FellAppBundle/Util/GoogleForm folder with the [Google Apps Script](https://developers.google.com/apps-script/). Make sure to add your Google Apps Script API key on the Site Settings page http://IPADDRESS/order/directory/settings/.
 
 10. If bulk import of the initial set of users is desired, download the [ImportUsersTemplate.xlsx](https://github.com/victorbrodsky/order-lab/tree/master/importLists) file from the /importLists folder, fill it out with the user details, and upload it back via the the Navigation bar's "Admin > Import Users" (http://IPADDRESS/order/directory/import-users/spreadsheet) function on the Employee Directory site.
 
@@ -528,16 +528,16 @@ Symfony 3.4 with PHP 5.6:
 
         cd C:\ORDER_LOCATION\order-lab-master\
         git pull
-        cd Scanorders2
+        cd orderflex
         bash deploy_prod.sh (via details in step 5 (a) above)
 
 ## Developer Notes
 
 ### Test server links (accessible on the intranet only):
 
-[Configuration info](http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/config.php)
+[Configuration info](http://collage.med.cornell.edu/order/scanorder/orderflex/web/config.php)
 
-[Development mode](http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/app_dev.php/)
+[Development mode](http://collage.med.cornell.edu/order/scanorder/orderflex/web/app_dev.php/)
 
 [Production mode](http://collage.med.cornell.edu/order/)
 
@@ -553,7 +553,7 @@ Symfony 3.4 with PHP 5.6:
 	 php bin/console cache:clear --env=prod --no-debug or (php bin/console cache:clear --env=prod --no-debug --no-warmup)
 	 php bin/console assetic:dump --env=prod --no-debug
 
-### After modification of html, js or css files, run this single console script to clear cache and dump assets in /Scanorders2 folder:
+### After modification of html, js or css files, run this single console script to clear cache and dump assets in /orderflex folder:
 
 	 deploy_prod.sh
 
@@ -599,7 +599,7 @@ Symfony 3.4 with PHP 5.6:
 
 2) create symfony2 project: 
 
-	php "C:\Users\oli2002\Desktop\php\Composer\composer.phar" create-project symfony/framework-standard-edition Scanorders2
+	php "C:\Users\oli2002\Desktop\php\Composer\composer.phar" create-project symfony/framework-standard-edition orderflex
 
 3) create bundle: 
 
