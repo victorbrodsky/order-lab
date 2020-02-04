@@ -1296,7 +1296,7 @@ class UserServiceUtil {
         }
 
         if ( $hash ) {
-            return "Current Version for $branch: " . $hash . "; " . $timestamp;
+            return "Current Version for branch $branch: " . $hash . "; " . $timestamp;
         } else {
             return false;
         }
