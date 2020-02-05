@@ -468,7 +468,8 @@ class AdminController extends Controller
         //exit('exit runDeployScript');
     }
     public function runProcess($script) {
-        $process = new Process($script);
+        //$process = new Process($script);
+        $process = Process::fromShellCommandline($script);
         $process->setTimeout(1800); //sec; 1800 sec => 30 min
         $process->run();
         if (!$process->isSuccessful()) {

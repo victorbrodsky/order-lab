@@ -17,7 +17,7 @@ class FellappTest extends WebTestBase
         $phpVersion = phpversion();
         echo "[PHP=".$phpVersion."]";
         
-        $this->getTestClient();
+        //$this->getTestClient();
 
         $this->client->followRedirects();
         $crawler = $this->client->request('GET', '/fellowship-applications/login');

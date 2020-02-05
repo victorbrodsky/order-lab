@@ -17,7 +17,7 @@ class UserTest extends WebTestBase
         $phpVersion = phpversion();
         echo "[PHP=".$phpVersion."]";
 
-        $this->getTestClient();
+        //$this->getTestClient();
         $crawler = $this->client->request('GET', '/directory/login');
 
         //$content = $this->client->getResponse()->getContent();

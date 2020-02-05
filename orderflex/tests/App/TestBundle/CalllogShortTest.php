@@ -21,7 +21,7 @@ class CalllogShortTest extends WebTestBase
 
         //$calllogUtil = self::$container->get('calllog_util');
 
-        $this->getTestClient();
+        //$this->getTestClient();
         $this->client->followRedirects();
         $crawler = $this->client->request('GET', '/call-log-book/login');
 

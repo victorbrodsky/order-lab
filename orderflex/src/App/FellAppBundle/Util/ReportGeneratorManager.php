@@ -131,7 +131,8 @@ class ReportGeneratorManager {
         
         //Running Processes Asynchronously
         //$process = new Process('php ../bin/console fellapp:generatereportrun');
-        $process = new Process('php ..'.DIRECTORY_SEPARATOR.'bin'.DIRECTORY_SEPARATOR.'console fellapp:generatereportrun');
+        //$process = new Process('php ..'.DIRECTORY_SEPARATOR.'bin'.DIRECTORY_SEPARATOR.'console fellapp:generatereportrun');
+        $process = Process::fromShellCommandline('php ..'.DIRECTORY_SEPARATOR.'bin'.DIRECTORY_SEPARATOR.'console fellapp:generatereportrun');
         $process->mustRun();             
         
         $this->processes[] = $process;

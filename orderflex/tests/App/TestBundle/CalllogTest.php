@@ -17,7 +17,7 @@ class CalllogTest extends WebTestBase
         $phpVersion = phpversion();
         echo "[PHP=".$phpVersion."]";
         
-        $this->getTestClient();
+        //$this->getTestClient();
         $crawler = $this->client->request('GET', '/call-log-book/login');
 
         //$content = $this->client->getResponse()->getContent();

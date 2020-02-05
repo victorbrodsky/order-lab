@@ -35,7 +35,7 @@ use App\UserdirectoryBundle\Entity\Document;
 use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use App\UserdirectoryBundle\Util\UserUtil;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Bundle\FrameworkBundle\Tests\Functional\WebTestCase;
+//use Symfony\Bundle\FrameworkBundle\Tests\Functional\WebTestCase;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -43,7 +43,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 //use Symfony\Component\Process\Exception\ProcessFailedException;
-//use Symfony\Component\Process\Process;
+//use Symfony\Component\Process\Process as SymfonyProcess;
 
 use App\FellAppBundle\Entity\ReportQueue;
 use App\FellAppBundle\Entity\Process;
@@ -159,6 +159,7 @@ class ReportGenerator {
         //add as a new process only if argument is 'overwrite' or process is not created yet
         if( $processesDb == null ) {
             $process = new Process($id);
+            //$process = SymfonyProcess::fromShellCommandline($id);
             $process->setArgument($argument);
             $queue->addProcess($process);
             $this->em->flush();

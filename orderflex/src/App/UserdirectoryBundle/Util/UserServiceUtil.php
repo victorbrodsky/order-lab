@@ -1354,7 +1354,8 @@ class UserServiceUtil {
 
         $command = $phpPath . " " . $projectRoot . "/bin/console about";
 
-        $process = new Process($command);
+        //$process = new Process($command);
+        $process = Process::fromShellCommandline($command);
         $process->setTimeout(1800); //sec; 1800 sec => 30 min
         $process->run();
         if (!$process->isSuccessful()) {
@@ -1441,7 +1442,8 @@ class UserServiceUtil {
         //echo "pwd=[".exec("pwd")."]<br>";
 
         if( $linux ) {
-            $process = new Process($command);
+            //$process = new Process($command);
+            $process = Process::fromShellCommandline($command);
             $process->setTimeout(1800); //sec; 1800 sec => 30 min
             $process->run();
             if (!$process->isSuccessful()) {
