@@ -73,11 +73,10 @@ services:
 framework:
     workflows:
         transres_project:
-            type: 'state_machine'
+            type: state_machine
             marking_store:
-                type: 'single_state' # 'multiple_state' or 'single_state'
-                arguments:
-                    - 'state' #state keeps the marking state
+                type: method # 'multiple_state' or 'single_state'
+                property: state #state keeps the marking state
             supports:
                 - App\TranslationalResearchBundle\Entity\Project
             #Project has state which is equal to this place
@@ -184,11 +183,11 @@ framework:
                     to: final_approved
 
         transres_request_billing:
-            type: 'state_machine'
+            type: state_machine
             marking_store:
-                type: 'single_state' # 'multiple_state' or 'single_state'
-                arguments:
-                    - 'billingState' #state keeps the marking state
+                type: method # 'multiple_state' or 'single_state'
+                property: billingState
+                    #- 'billingState' #state keeps the marking state
             supports:
                 - App\TranslationalResearchBundle\Entity\TransResRequest
             places:
@@ -287,11 +286,11 @@ framework:
                     to: invoiced
 
         transres_request_progress:
-            type: 'state_machine'
+            type: state_machine
             marking_store:
-                type: 'single_state' # 'multiple_state' or 'single_state'
-                arguments:
-                    - 'progressState' #state keeps the marking state
+                type: method # 'multiple_state' or 'single_state'
+                property: progressState
+#                    - 'progressState' #state keeps the marking state
             supports:
                 - App\TranslationalResearchBundle\Entity\TransResRequest
             places:

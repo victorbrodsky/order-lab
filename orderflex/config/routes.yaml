@@ -105,6 +105,11 @@ scan_login_check:
 scan_logout:
     path:   /scan/logout
 
+#login_check:
+#    path: /directory/login_check
+#logout:
+#    path: /directory/logout
+
 employees_login_check:
     path:   /directory/login_check
 employees_logout:

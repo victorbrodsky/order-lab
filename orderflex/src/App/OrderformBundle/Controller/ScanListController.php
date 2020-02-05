@@ -51,7 +51,10 @@ class ScanListController extends ListController
         $listArr = $this->getList($request,1000000);
 
 
-        $listExcelHtml = $this->container->get('templating')->render('AppOrderformBundle/ListForm/list-excel.html.twig',
+        //$listExcelHtml = $this->container->get('templating')->render('AppOrderformBundle/ListForm/list-excel.html.twig',
+        //    $listArr
+        //);
+        $listExcelHtml = $this->get('twig')->render('AppOrderformBundle/ListForm/list-excel.html.twig',
             $listArr
         );
 

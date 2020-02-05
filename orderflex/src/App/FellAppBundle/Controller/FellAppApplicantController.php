@@ -36,6 +36,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use App\FellAppBundle\Entity\FellowshipApplication;
 use App\UserdirectoryBundle\Entity\User;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Twig\Environment;
 
 
 class FellAppApplicantController extends Controller {
@@ -608,28 +609,28 @@ class FellAppApplicantController extends Controller {
 
     } else {
 
-        $fellappUtil = $this->container->get('fellapp_util');
-        $entities = $fellappUtil->createInterviewApplicantList( $fellappIds );
-
-        $html = "";
-        foreach( $entities as $fellapp ) {
-            $interviewModalHtml = $this->container->get('templating')->render('AppFellAppBundle/Interview/applicant-interview-info.html.twig',
-                array(
-                    'entity' => $fellapp,
-                    'pathbase' => 'fellapp',
-                    'sitename' => $this->container->getParameter('fellapp.sitename')
-                )
-            );
-
-            $html = $html . '<div style="overflow: hidden; page-break-after:always;">'.
-                    $interviewModalHtml.
-                    '</div>';
-        }
-
-        $output = $this->get('knp_snappy.pdf')->getOutputFromHtml($html, array(
-            'cookie' => array(
-                'PHPSESSID' => $PHPSESSID
-            )));
+//        $fellappUtil = $this->container->get('fellapp_util');
+//        $entities = $fellappUtil->createInterviewApplicantList( $fellappIds );
+//
+//        $html = "";
+//        foreach( $entities as $fellapp ) {
+//            $interviewModalHtml = $this->container->get('templating')->render('AppFellAppBundle/Interview/applicant-interview-info.html.twig',
+//                array(
+//                    'entity' => $fellapp,
+//                    'pathbase' => 'fellapp',
+//                    'sitename' => $this->container->getParameter('fellapp.sitename')
+//                )
+//            );
+//
+//            $html = $html . '<div style="overflow: hidden; page-break-after:always;">'.
+//                    $interviewModalHtml.
+//                    '</div>';
+//        }
+//
+//        $output = $this->get('knp_snappy.pdf')->getOutputFromHtml($html, array(
+//            'cookie' => array(
+//                'PHPSESSID' => $PHPSESSID
+//            )));
 
 
     }
@@ -685,7 +686,15 @@ class FellAppApplicantController extends Controller {
         $fellappUtil = $this->container->get('fellapp_util');
         $entities = $fellappUtil->createInterviewApplicantList( $fellappIds );
 
-        $interviewsDocHtml = $this->container->get('templating')->render('AppFellAppBundle/Interview/applicants-interview-info-doc.html.twig',
+//        $interviewsDocHtml = $this->container->get('templating')->render('AppFellAppBundle/Interview/applicants-interview-info-doc.html.twig',
+//            array(
+//                'entities' => $entities,
+//                'pathbase' => 'fellapp',
+//                'cycle' => 'show',
+//                'sitename' => $this->container->getParameter('fellapp.sitename')
+//            )
+//        );
+        $interviewsDocHtml = $this->get('twig')->render('AppFellAppBundle/Interview/applicants-interview-info-doc.html.twig',
             array(
                 'entities' => $entities,
                 'pathbase' => 'fellapp',

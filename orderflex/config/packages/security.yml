@@ -138,7 +138,7 @@ security:
         #this firewall name must be the same as in the bundle's service.yml.
         external_ldap_firewall:
             pattern: ^/scan
-            logout_on_user_change: true
+            #logout_on_user_change: true
             #external: true
             #fr3d_ldap:  ~
             context: scan_auth
@@ -164,22 +164,15 @@ security:
 
         ldap_employees_firewall:
             pattern: ^/directory
-            logout_on_user_change: true
-            #fr3d_ldap:  ~
-            #ldap_authenticator: true
             context: scan_auth
             switch_user: true
             simple_form:
                 authenticator: custom_authenticator
-#                always_use_default_target_path: true
                 use_referer: true
                 success_handler: employees_authentication_handler
                 failure_handler: employees_authentication_handler
                 check_path: /directory/login_check
                 login_path: /directory/login
-                # login success redirecting options (read further below)
-#                default_target_path: /directory/
-#                target_path_parameter: _target_path
             logout:
                 path:   /directory/logout
                 target: /directory/login
@@ -189,11 +182,28 @@ security:
                 secret:      "%secret%"
                 lifetime: 28800 # 8 hours in seconds
                 path:     /directory
-#                always_remember_me: true
+
+#        ldap_employees_firewall:
+#            pattern: ^/directory
+#            context: scan_auth
+#            switch_user: true
+#            guard:
+#                #authenticators:
+#                #    - App\UserdirectoryBundle\Security\Authentication\CustomGuardAuthenticator
+#                authenticator: custom_guard_authenticator
+#            logout:
+#                path:   /directory/logout
+#                target: /directory/login
+#            anonymous:  true
+#            access_denied_url: /directory/access-requests/new/create
+#            remember_me:
+#                secret:      "%secret%"
+#                lifetime: 28800 # 8 hours in seconds
+#                path:     /directory
 
         ldap_fellapp_firewall:
             pattern: ^/fellowship-applications
-            logout_on_user_change: true
+            #logout_on_user_change: true
             context: scan_auth
 #            http_basic: ~
             switch_user: true
@@ -217,7 +227,7 @@ security:
 
         ldap_deidentifier_firewall:
             pattern: ^/deidentifier
-            logout_on_user_change: true
+            #logout_on_user_change: true
             context: scan_auth
             switch_user: true
             simple_form:
@@ -240,7 +250,7 @@ security:
 
         ldap_vacreq_firewall:
             pattern: ^/vacation-request
-            logout_on_user_change: true
+            #logout_on_user_change: true
             context: scan_auth
             switch_user: true
             simple_form:
@@ -263,7 +273,7 @@ security:
 
         ldap_calllog_firewall:
             pattern: ^/call-log-book
-            logout_on_user_change: true
+            #logout_on_user_change: true
             context: scan_auth
             switch_user: true
             simple_form:
@@ -286,7 +296,7 @@ security:
 
         ldap_translationalresearch_firewall:
             pattern: ^/translational-research
-            logout_on_user_change: true
+            #logout_on_user_change: true
             context: scan_auth
             switch_user: true
             simple_form:
@@ -309,7 +319,7 @@ security:
 
         foscomment_api_firewall:
             pattern: ^/api
-            logout_on_user_change: true
+            #logout_on_user_change: true
             context: scan_auth
             anonymous:  true
 #            remember_me:
