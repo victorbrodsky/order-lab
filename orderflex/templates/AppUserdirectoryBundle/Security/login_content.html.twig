@@ -79,8 +79,9 @@
 <input type="hidden" name="display_width" id="display_width" value="" />
 
 {% if user_security_utility.allowSiteLogin(sitename) %}
-    <form id="login-form" class="form-signin" action="{{ path(sitename~'_login_check') }}" method="post">
-        {#<form id="login-form" class="form-signin" method="post">#}
+    {#<form id="login-form" class="form-signin" action="{{ path(sitename~'_login_check') }}" method="post">#}
+    <form id="login-form" class="form-signin" method="post">
+    {#<form id="login-form" class="form-signin" action="{{ path(sitename~'_login') }}" method="post">#}
 
         <div class="row">
         <div class="col-xs-12">
@@ -112,9 +113,8 @@
         </div>
         </div>
 
-        <input type="hidden" name="_csrf_token"
-               value="{{ csrf_token('authenticate') }}"
-        >
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+        <input type="hidden" name="_sitename" id="sitename" value="{{ sitename }}" />
 
         <button class="btn btn-lg btn-primary btn-block" type="submit" >Log In</button>
 

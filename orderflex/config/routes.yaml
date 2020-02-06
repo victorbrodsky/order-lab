@@ -95,6 +95,9 @@ fellapp_instructions:
 idle-log-out:
     path:   /directory/idle-log-out
 
+#testlogin:
+#    path:   /directory/testlogin
+
 logout:
     path:   /directory/logout
 login:
@@ -115,6 +118,8 @@ employees_login_check:
 employees_logout:
     path:   /directory/logout
 
+#fellapp_login:
+#    path:   /fellowship-applications/login
 fellapp_login_check:
     path:   /fellowship-applications/login_check
 fellapp_logout:

@@ -160,27 +160,29 @@ class AuthUtil {
         return NULL;
     }
 
-
     public function LdapAuthentication($token, $userProvider, $ldapType=1) {
+        return $this->LdapAuthenticationByUsernamePassword($token->getUsername(),$token->getCredentials(),$ldapType);
+    }
+    public function LdapAuthenticationByUsernamePassword($username, $password, $ldapType=1) {
 
         $this->logger->notice("Ldap Authentication: ldapType=[$ldapType]");
 
         //get clean username
         $userSecUtil = $this->container->get('user_security_utility');
-        $usernameClean = $userSecUtil->createCleanUsername($token->getUsername());
-        $usernamePrefix = $userSecUtil->getUsernamePrefix($token->getUsername());
+        $usernameClean = $userSecUtil->createCleanUsername($username);
+        $usernamePrefix = $userSecUtil->getUsernamePrefix($username);
         //exit("usernameClean=[$usernameClean], susernamePrefix=[$usernamePrefix]");
 
         $searchRes = null;
 
         //if user exists in ldap, try bind this user and password
-        $ldapRes = $this->ldapBind($usernameClean,$token->getCredentials(),$ldapType);
+        $ldapRes = $this->ldapBind($usernameClean,$password,$ldapType);
         if( $ldapRes == NULL ) {
             //exit('ldap failed');
             //$this->logger->error("LdapAuthentication: can not bind user by usernameClean=[".$usernameClean."]; token=[".$token->getCredentials()."]");
             $this->logger->error("Ldap Authentication: can not bind user by usernameClean=[".$usernameClean."];");
 
-            $user = $this->findUserByUsername($token->getUsername());
+            $user = $this->findUserByUsername($username);
 
 //            //if user found, try to authenticate by identifier
 //            if( $user ) {
@@ -194,14 +196,14 @@ class AuthUtil {
         //exit('ldap success');
 
         //check if user already exists in DB
-        $user = $this->findUserByUsername($token->getUsername());
+        $user = $this->findUserByUsername($username);
         //echo "Ldap user =".$user."<br>";
 
         if( $user ) {
             //echo "DB user found=".$user->getUsername()."<br>";
             //exit();
 
-            $this->logger->notice("findUserByUsername: existing user found in DB by token->getUsername()=".$token->getUsername());
+            $this->logger->notice("findUserByUsername: existing user found in DB by token->getUsername()=".$username);
 
             if( $this->canLogin($user) === false ) {
                 $this->logger->warning("Ldap Authentication: User cannot login ".$user);
@@ -210,7 +212,7 @@ class AuthUtil {
 
             return $user;
         } else {
-            $this->logger->warning("findUserByUsername: Can not find existing user in DB by token->getUsername()=".$token->getUsername());
+            $this->logger->warning("findUserByUsername: Can not find existing user in DB by token->getUsername()=".$username);
         }
 
         //echo "1<br>";
@@ -226,8 +228,8 @@ class AuthUtil {
             $this->logger->notice("Ldap Authentication: user found by  usernameClean=" . $usernameClean);
         }
 
-        $this->logger->notice("LdapAuthentication: create a new user found by token->getUsername()=".$token->getUsername());
-        $user = $userSecUtil->constractNewUser($token->getUsername());
+        $this->logger->notice("LdapAuthentication: create a new user found by token->getUsername()=".$username);
+        $user = $userSecUtil->constractNewUser($username);
         //echo "user=".$user->getUsername()."<br>";
 
         $user->setCreatedby('ldap');

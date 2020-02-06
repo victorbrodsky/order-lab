@@ -43,9 +43,9 @@ function prep()
     #git remote update
     #git pull
 
-    echo "*** Update tables in Doctrine DB ***"
+    #echo "*** Update tables in Doctrine DB ***"
     #php $PROJECT_LOCAL_PATH/bin/console doctrine:schema:update --force
-    php $PROJECT_LOCAL_PATH/bin/console doctrine:schema:update
+    #php $PROJECT_LOCAL_PATH/bin/console doctrine:schema:update
 
     echo "*** Validate Doctrine DB ***"
     php $PROJECT_LOCAL_PATH/bin/console doctrine:schema:validate
@@ -57,20 +57,23 @@ function prep()
 
     echo "********* Prepare development/testing *********"
 
-    echo "*** Clear cache ***"
-    php $PROJECT_LOCAL_PATH/bin/console cache:clear --no-warmup
+    #echo "*** Clear cache ***"
+    #php $PROJECT_LOCAL_PATH/bin/console cache:clear --no-warmup
+
+    echo "*** Clear cache with warmup ***"
+    php $PROJECT_LOCAL_PATH/bin/console cache:clear --env=prod --no-debug
 
     #echo "*** Dump assets ***"
     #php $PROJECT_LOCAL_PATH/bin/console assetic:dump
 
 
     #By default, console commands run in the dev environment
-    echo "********* Prepare production *********"
+    #echo "********* Prepare production *********"
 
-    echo "*** Clear cache ***"
-    #php $PROJECT_LOCAL_PATH/app/console cache:clear --env=prod --no-debug --no-warmup
-    #php $PROJECT_LOCAL_PATH/app/console cache:clear --env=prod --no-debug --no-warmup
-    php $PROJECT_LOCAL_PATH/bin/console cache:clear --env=prod --no-debug
+    #echo "*** Clear cache ***"
+    #php $PROJECT_LOCAL_PATH/bin/console cache:clear --env=prod --no-debug --no-warmup
+    #php $PROJECT_LOCAL_PATH/bin/console cache:clear --env=prod --no-debug --no-warmup
+    #php $PROJECT_LOCAL_PATH/bin/console cache:clear --env=prod --no-debug
 
     #echo "*** Warmup cache ***"
     #php -d memory_limit=1024M $PROJECT_LOCAL_PATH/bin/console cache:warmup --env=prod

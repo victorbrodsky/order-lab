@@ -46,6 +46,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
 use Symfony\Component\Security\Core\Security;
 
@@ -56,6 +57,9 @@ class CustomGuardAuthenticator extends AbstractGuardAuthenticator {
     private $container;
     private $em;
     private $security;
+    //private $authUtil;
+    private $sitename;
+    private $userProvider;
 
     public function __construct(UserPasswordEncoderInterface $encoder, ContainerInterface $container, EntityManagerInterface $em, Security $security=null)
     {
@@ -63,6 +67,7 @@ class CustomGuardAuthenticator extends AbstractGuardAuthenticator {
         $this->container = $container;                //Service Container
         $this->em = $em;                //Entity Manager
         $this->security = $security;
+        //$this->authUtil = $authUtil;
     }
 
     /**
@@ -74,17 +79,62 @@ class CustomGuardAuthenticator extends AbstractGuardAuthenticator {
     {
         //return $request->headers->has('X-AUTH-TOKEN');
 
+        //return true;
+
+        //dump($this->security->getUser());
+        //exit('111');
+
         // if there is already an authenticated user (likely due to the session)
         // then return false and skip authentication: there is no need.
-//        if( $this->security->getUser() ) {
+        if( $this->security->getUser() ) {
+            return false;
+        }
+
+//        if( $this->container->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY') ) {
 //            return false;
 //        }
-        //exit('111');
+//        if( $this->container->get('security.authorization_checker')->isGranted('ROLE_USER') ) {
+//            return true;
+//        }
+
+        //exit('supports: route='.$request->attributes->get('_route')."; method=".$request->isMethod('POST'));
         // GOOD behavior: only authenticate (i.e. return true) on a specific route
-        return 'employees_login' === $request->attributes->get('_route') && $request->isMethod('POST');
+        //return 'employees_login' === $request->attributes->get('_route') && $request->isMethod('POST');
+
+        $route = $request->attributes->get('_route');
+
+        if( $route == 'employees_home' ) {
+            return false;
+        }
+        if( $route == 'fellapp_home' ) {
+            return false;
+        }
+        if( $route == 'vacreq_home' ) {
+            return false;
+        }
+        if( strpos($route, '_home') !== false ) {
+            return false;
+        }
+
+//        if( $route == 'login' ) {
+//            return true;
+//        }
+
+        if( $route == 'login' && $request->isMethod('POST') ) {
+            return true;
+        }
+        if( $route == 'fellapp_login' && $request->isMethod('POST') ) {
+            return true;
+        }
+        if( $route == 'vacreq_login' && $request->isMethod('POST') ) {
+            return true;
+        }
+        if( strpos($route, 'login') !== false && $request->isMethod('POST') ) {
+            return true;
+        }
 
         // the user is not logged in, so the authenticator should continue
-        //return true;
+        //return false;
     }
 
     /**
@@ -93,14 +143,18 @@ class CustomGuardAuthenticator extends AbstractGuardAuthenticator {
      */
     public function getCredentials(Request $request)
     {
+        //exit('getCredentials');
         //dump($request);
 
         $credentials = [
             'username' => $request->request->get('_username'),
             'password' => $request->request->get('_password'),
             'usernametype' => $request->request->get('_usernametype'),
+            'sitename' => $request->request->get('_sitename'),
             'csrf_token' => $request->request->get('_csrf_token'),
         ];
+
+        $this->sitename = $credentials['sitename'];
 
         //dump($credentials);
 
@@ -109,27 +163,33 @@ class CustomGuardAuthenticator extends AbstractGuardAuthenticator {
 //            $credentials['email']
 //        );
 
-        exit('111');
+        //exit('getCredentials');
 
         return $credentials;
     }
 
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
-        $token = new CsrfToken('authenticate', $credentials['csrf_token']);
-        if (!$this->csrfTokenManager->isTokenValid($token)) {
-            throw new InvalidCsrfTokenException();
-        }
+//        $token = new CsrfToken('authenticate', $credentials['csrf_token']);
+//        if (!$this->csrfTokenManager->isTokenValid($token)) {
+//            throw new InvalidCsrfTokenException();
+//        }
+
+        $this->userProvider = $userProvider;
 
         $username = $credentials['username'];
-        echo "username=$username<br>";
+        //echo "username=$username<br>";
 
-        if (null === $username) {
+        if( null === $username ) {
+            //exit("findUserByUsername: no user found");
             return;
         }
 
+        //$logger = $this->container->get('logger');
+        $authUtil = $this->container->get('authenticator_utility');
+
         //exit("before findUserByUsername");
-        return $this->findUserByUsername($username);
+        return $authUtil->findUserByUsername($username);
 
         // if a User object, checkCredentials() is called
         //return $this->em->getRepository(User::class)->findOneBy(['apiToken' => $apiToken]);
@@ -141,30 +201,80 @@ class CustomGuardAuthenticator extends AbstractGuardAuthenticator {
         // no credential check is needed in this case
 
         // return true to cause authentication success
-        return true;
+        //return true;
 
-        $token = $credentials['token'];
+        //$token = $credentials['token'];
+
+        //Request $request, $username, $password, $providerKey
+        $request = null;
+        $username = $credentials['username'];
+        $password = $credentials['password'];
+
+        //_security.<your providerKey>.target_path (e.g. _security.main.target_path if the name of your firewall is main)
+        $providerKey = 'ldap_employees_firewall';
+        //$token = $this->createToken($request, $username, $password, $providerKey);
+        //$token =  new UsernamePasswordToken($username, $password, $providerKey);
+        $unauthenticatedToken = new UsernamePasswordToken(
+            $username,
+            $password,
+            $providerKey
+        );
+
         //exit("before checkCredentials");
-        $this->authenticateToken($token,null,null);
+        //TokenInterface $token, UserProviderInterface $userProvider, $providerKey
+        $userProvider = $this->userProvider;
+        $usernamePasswordToken = $this->authenticateToken($unauthenticatedToken,null,$providerKey);
+        if( $usernamePasswordToken ) {
+            return true;
+        }
+        return false;
+
+        //$this->LdapAuthenticationStr($username, $password, $ldapType=1)
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
+        //exit("onAuthenticationSuccess");
         // on success, let the request continue
-        return null;
+        //return null;
+
+        //$credentials = $this->getCredentials($request);
+
+        //employees_authentication_handler
+        //fellapp_authentication_handler
+        //exit("sitename=".$this->sitename);
+        $authenticationSuccess = $this->container->get($this->sitename.'_authentication_handler');
+
+        //onAuthenticationSuccess(Request $request, TokenInterface $token)
+        return $authenticationSuccess->onAuthenticationSuccess($request,$token);
+
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
-        exit("before onAuthenticationFailure");
-        $data = [
-            'message' => strtr($exception->getMessageKey(), $exception->getMessageData())
+        //exit("onAuthenticationFailure");
 
-            // or to translate this message
-            // $this->translator->trans($exception->getMessageKey(), $exception->getMessageData())
-        ];
+//        $data = [
+//            'message' => strtr($exception->getMessageKey(), $exception->getMessageData())
+//
+//            // or to translate this message
+//            // $this->translator->trans($exception->getMessageKey(), $exception->getMessageData())
+//        ];
+//
+//        return new JsonResponse($data, Response::HTTP_FORBIDDEN);
 
-        return new JsonResponse($data, Response::HTTP_FORBIDDEN);
+
+        //$credentials = $this->getCredentials($request);
+
+        //employees_authentication_handler
+        $authenticationSuccess = $this->container->get('employees_authentication_handler');
+
+        return $authenticationSuccess->onAuthenticationFailure($request,$exception);
+
+    }
+
+    public function getSiteName() {
+
     }
 
     /**
@@ -172,6 +282,9 @@ class CustomGuardAuthenticator extends AbstractGuardAuthenticator {
      */
     public function start(Request $request, AuthenticationException $authException = null)
     {
+        //return $this->container->get('router')->generate('directory_testlogin');
+        //return $this->container->router->generate('directory_testlogin');
+
         $data = [
             // you might translate this message
             'message' => 'Authentication Required'
@@ -187,7 +300,8 @@ class CustomGuardAuthenticator extends AbstractGuardAuthenticator {
 
 
 
-    public function authenticateToken(TokenInterface $token, UserProviderInterface $userProvider, $providerKey)
+    //public function authenticateToken(TokenInterface $token, UserProviderInterface $userProvider, $providerKey)
+    public function authenticateToken($token, $userProvider, $providerKey)
     {
         //echo "CustomAuthenticator: username=".$token->getUsername()."<br>"; //", pwd=".$token->getCredentials()
         //exit();
@@ -317,5 +431,9 @@ class CustomGuardAuthenticator extends AbstractGuardAuthenticator {
         $user->resetFailedAttemptCounter(); //no need to flush. User will be updated by auth.
     }
 
+//    public function getLoginUrl() {
+//        exit('222');
+//        return $this->router->generate('directory_testlogin');
+//    }
 
 } 

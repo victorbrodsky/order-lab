@@ -36,7 +36,7 @@ class FellAppSecurityController extends SecurityController
     /**
      * @Route("/login", name="fellapp_login")
      *
-     * @Method("GET")
+     * #@Method("GET")
      * @Template()
      */
     public function loginAction( Request $request ) {

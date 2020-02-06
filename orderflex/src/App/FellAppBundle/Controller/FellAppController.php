@@ -59,6 +59,19 @@ class FellAppController extends Controller {
     public function indexAction(Request $request) {
         //echo "fellapp home <br>";
 
+        if(
+            false == $this->get('security.authorization_checker')->isGranted('ROLE_USER') ||              // authenticated (might be anonymous)
+            false == $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')    // authenticated (NON anonymous)
+        ){
+            return $this->redirect( $this->generateUrl('fellapp_login') );
+        }
+
+//        if(
+//            false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_USER')    // authenticated (NON anonymous)
+//        ){
+//            return $this->redirect( $this->generateUrl('fellapp_login') );
+//        }
+
 //        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_USER') ){
 //            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
 //        }
@@ -82,6 +95,7 @@ class FellAppController extends Controller {
         //testing
         //$memory_limit = ini_get('memory_limit');
         //echo "before memory_limit=$memory_limit <br>";
+
 
         $route = $request->get('_route');
         //echo "route".$route."<br>";

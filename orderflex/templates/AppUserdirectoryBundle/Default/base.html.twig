@@ -219,7 +219,13 @@
             <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
             <input type="hidden" id="maxIdleTime" value="{{app.session.get('maxIdleTime')}}" />
             <input type="hidden" id="siteEmail" value="{{app.session.get('siteEmail')}}" />
-            <input type="hidden" id="authuser_id" value="{{app.user.getId()}}" />
+
+            {% if app.user %}
+                {% set userId = app.user.getId() %}
+            {% else %}
+                {% set userId = null %}
+            {% endif %}
+            <input type="hidden" id="authuser_id" value="{{userId}}" />
 
         </div>
 

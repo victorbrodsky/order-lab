@@ -22,13 +22,13 @@
 # ./deploy1
 
 PARAM1="-full"
-PARAM2="-withdb"
+PARAM2="-nodb"
 #PARAM1=$1
 #PARAM2=$2
 
 echo
 echo "Example of full deploy(DB, casche, assetic updates and cache warmup): bash deploy_prod.sh"
-echo "Example of fast update twig and js scripts: bash deploy_prod.sh -fast -nodb"
+echo "Example of fast update twig and js scripts: bash deploy_prod.sh -fast -withdb"
 echo "Example of full deploy, except cache warmpup: bash deploy_prod.sh -fast"
 echo
 
@@ -97,7 +97,7 @@ function prep(){
     fi
 
     #echo "*** Create LEVENSHTEIN functions for fuzzy search ***"
-    #php $PROJECT_LOCAL_PATH/app/console jrk:levenshtein:install
+    #php $PROJECT_LOCAL_PATH/bin/console jrk:levenshtein:install
 
     echo "*** Install assets ***"
     #php bin/console assets:install public
@@ -105,20 +105,16 @@ function prep(){
 
     echo "*** Clear cache ***"
     #php bin/console cache:clear --no-warmup --env=prod
-    php $PROJECT_LOCAL_PATH/bin/console cache:clear --no-warmup --env=prod
-    #php $PROJECT_LOCAL_PATH/app/console cache:clear --env=prod --no-debug
-    #php $PROJECT_LOCAL_PATH/app/console cache:clear --env=prod --no-debug --no-warmup
+    #php $PROJECT_LOCAL_PATH/bin/console cache:clear --no-warmup --env=prod
+    #php $PROJECT_LOCAL_PATH/bin/console cache:clear --env=prod --no-debug --no-warmup
+    php $PROJECT_LOCAL_PATH/bin/console cache:clear --env=prod --no-debug
 
-    if [[ $PARAM1 != "-fast" ]]
-    then
-        echo "*** Warmup cache ***"
-        php -d memory_limit=1024M $PROJECT_LOCAL_PATH/bin/console cache:warmup --env=prod
-    fi
+    #if [[ $PARAM1 != "-fast" ]]
+    #then
+    #    echo "*** Warmup cache ***"
+    #    php -d memory_limit=1024M $PROJECT_LOCAL_PATH/bin/console cache:warmup --env=prod
+    #fi
 
-    echo "*** Dump assets ***"
-    #console: php bin/console assetic:dump --env=prod --no-debug
-    #php $PROJECT_LOCAL_PATH/bin/console assetic:dump --env=prod --no-debug
-    #php $PROJECT_LOCAL_PATH/app/console assetic:watch
 
     echo "*** Set permissions ***"
     chown -R www-data:www-data $PROJECT_LOCAL_PATH/var/cache
