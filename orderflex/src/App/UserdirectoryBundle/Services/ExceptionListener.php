@@ -84,6 +84,19 @@ class ExceptionListener {
         //echo "Trace: ".$exception->getTraceAsString()."<br>";
         //var_dump($exception->getTraceAsString());
 
+        //Ignore if client request is coming from IP
+        $ip = $this->get_client_ip();
+        if( $ip ) {
+
+            //$ip = "157.139.226.124";
+            //$ip = "localhost";
+            //exit("ip=".$ip);
+
+            if( $this->is_ip($ip) ) {
+                return false;
+            }
+        }
+
         //Ignore: Unable to create the storage directory (/srv/order-lab/orderflex/var/cache/prod/profiler)
         if (strpos($exception->getMessage(), 'Unable to create the storage directory') !== false) {
             return false;
@@ -280,6 +293,31 @@ class ExceptionListener {
         $count = count($loggers);
 
         return $count;
+    }
+
+    public function get_client_ip() {
+        $ipaddress = '';
+        if (getenv('HTTP_CLIENT_IP'))
+            $ipaddress = getenv('HTTP_CLIENT_IP');
+        else if(getenv('HTTP_X_FORWARDED_FOR'))
+            $ipaddress = getenv('HTTP_X_FORWARDED_FOR');
+        else if(getenv('HTTP_X_FORWARDED'))
+            $ipaddress = getenv('HTTP_X_FORWARDED');
+        else if(getenv('HTTP_FORWARDED_FOR'))
+            $ipaddress = getenv('HTTP_FORWARDED_FOR');
+        else if(getenv('HTTP_FORWARDED'))
+            $ipaddress = getenv('HTTP_FORWARDED');
+        else if(getenv('REMOTE_ADDR'))
+            $ipaddress = getenv('REMOTE_ADDR');
+        else
+            $ipaddress = 'UNKNOWN';
+        return $ipaddress;
+    }
+
+    function is_ip($str) {
+        $ret = filter_var($str, FILTER_VALIDATE_IP);
+
+        return $ret;
     }
 
 } 
