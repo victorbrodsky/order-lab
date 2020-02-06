@@ -135,25 +135,6 @@ security:
 
     firewalls:
 
-#        ldap_testlogin_firewall:
-#            pattern: ^/directory/testlogin
-#            context: scan_auth
-#            switch_user: true
-#            guard:
-#                #authenticators:
-#                #    - App\UserdirectoryBundle\Security\Authentication\CustomGuardAuthenticator
-#                authenticator: custom_guard_authenticator
-#                #entry_point: custom_guard_authenticator
-#            logout:
-#                path:   /directory/logout
-#                target: /directory/login
-#            anonymous:  true
-#            access_denied_url: /directory/access-requests/new/create
-#            remember_me:
-#                secret:      "%secret%"
-#                lifetime: 28800 # 8 hours in seconds
-#                path:     /directory
-
         #this firewall name must be the same as in the bundle's service.yml.
         external_ldap_firewall:
             pattern: ^/scan
@@ -181,66 +162,57 @@ security:
                 path:     /scan
 #                always_remember_me: true
 
-#        ldap_employees_firewall:
-#            pattern: ^/directory
-#            context: scan_auth
-#            switch_user: true
-#            simple_form:
-#                authenticator: custom_authenticator
-#                use_referer: true
-#                success_handler: employees_authentication_handler
-#                failure_handler: employees_authentication_handler
-#                check_path: /directory/login_check
-#                login_path: /directory/login
-#            logout:
-#                path:   /directory/logout
-#                target: /directory/login
-#            anonymous:  true
-#            access_denied_url: /directory/access-requests/new/create
-#            remember_me:
-#                secret:      "%secret%"
-#                lifetime: 28800 # 8 hours in seconds
-#                path:     /directory
-
         ldap_employees_firewall:
-              pattern: ^/directory
-              context: scan_auth
-              switch_user: true
-              guard:
-                  #authenticators:
-                  #    - App\UserdirectoryBundle\Security\Authentication\CustomGuardAuthenticator
-                  authenticator: custom_guard_authenticator
-                  #entry_point: custom_guard_authenticator
-#              form_login:
-#                  #authenticator: custom_authenticator
-#                  use_referer: true
-#                  success_handler: employees_authentication_handler
-#                  failure_handler: employees_authentication_handler
-#                  check_path: /directory/login_check
-#                  login_path: /directory/login
-              logout:
-                  path:   /directory/logout
-                  target: /directory/login
-              anonymous:  true
-              access_denied_url: /directory/access-requests/new/create
-              remember_me:
-                  secret:      "%secret%"
-                  lifetime: 28800 # 8 hours in seconds
-                  path:     /directory
+            pattern: ^/directory
+            context: scan_auth
+            switch_user: true
+            simple_form:
+                authenticator: custom_authenticator
+                use_referer: true
+                success_handler: employees_authentication_handler
+                failure_handler: employees_authentication_handler
+                check_path: /directory/login_check
+                login_path: /directory/login
+            logout:
+                path:   /directory/logout
+                target: /directory/login
+            anonymous:  true
+            access_denied_url: /directory/access-requests/new/create
+            remember_me:
+                secret:      "%secret%"
+                lifetime: 28800 # 8 hours in seconds
+                path:     /directory
+
+#        ldap_employees_firewall:
+#              pattern: ^/directoryTEST
+#              context: scan_auth
+#              switch_user: true
+#              guard:
+#                  authenticator: custom_guard_authenticator
+#                  #entry_point: custom_guard_authenticator
+#              logout:
+#                  path:   /directory/logout
+#                  target: /directory/login
+#              anonymous:  true
+#              access_denied_url: /directory/access-requests/new/create
+#              remember_me:
+#                  secret:      "%secret%"
+#                  lifetime: 28800 # 8 hours in seconds
+#                  path:     /directory
 
         ldap_fellapp_firewall:
             pattern: ^/fellowship-applications
             context: scan_auth
             switch_user: true
-#            simple_form:
-#                authenticator: custom_authenticator
-#                use_referer: true
-#                success_handler: fellapp_authentication_handler
-#                failure_handler: fellapp_authentication_handler
-#                check_path: /fellowship-applications/login_check
-#                login_path: /fellowship-applications/login
-            guard:
-                authenticator: custom_guard_authenticator
+            simple_form:
+                authenticator: custom_authenticator
+                use_referer: true
+                success_handler: fellapp_authentication_handler
+                failure_handler: fellapp_authentication_handler
+                check_path: /fellowship-applications/login_check
+                login_path: /fellowship-applications/login
+#            guard:
+#                authenticator: custom_guard_authenticator
                 #entry_point: custom_guard_authenticator
 #            form_login:
 #                  use_referer: true
@@ -287,15 +259,15 @@ security:
             #logout_on_user_change: true
             context: scan_auth
             switch_user: true
-#            simple_form:
-#                authenticator: custom_authenticator
-#                use_referer: true
-#                success_handler: vacreq_authentication_handler
-#                failure_handler: vacreq_authentication_handler
-#                check_path: /vacation-request/login_check
-#                login_path: /vacation-request/login
-            guard:
-                authenticator: custom_guard_authenticator
+            simple_form:
+                authenticator: custom_authenticator
+                use_referer: true
+                success_handler: vacreq_authentication_handler
+                failure_handler: vacreq_authentication_handler
+                check_path: /vacation-request/login_check
+                login_path: /vacation-request/login
+#            guard:
+#                authenticator: custom_guard_authenticator
             logout:
                 path:   /vacation-request/logout
                 target: /vacation-request/login

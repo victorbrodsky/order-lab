@@ -59,12 +59,12 @@ class FellAppController extends Controller {
     public function indexAction(Request $request) {
         //echo "fellapp home <br>";
 
-        if(
-            false == $this->get('security.authorization_checker')->isGranted('ROLE_USER') ||              // authenticated (might be anonymous)
-            false == $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')    // authenticated (NON anonymous)
-        ){
-            return $this->redirect( $this->generateUrl('fellapp_login') );
-        }
+//        if(
+//            false == $this->get('security.authorization_checker')->isGranted('ROLE_USER') ||              // authenticated (might be anonymous)
+//            false == $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')    // authenticated (NON anonymous)
+//        ){
+//            return $this->redirect( $this->generateUrl('fellapp_login') );
+//        }
 
 //        if(
 //            false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_USER')    // authenticated (NON anonymous)
