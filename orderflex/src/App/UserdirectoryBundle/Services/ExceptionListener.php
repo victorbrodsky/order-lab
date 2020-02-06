@@ -84,9 +84,11 @@ class ExceptionListener {
         //echo "Trace: ".$exception->getTraceAsString()."<br>";
         //var_dump($exception->getTraceAsString());
 
+        //$ipFiltering = true;
+        $ipFiltering = false;
         //Ignore if client request is coming from IP
         $ip = $this->get_client_ip();
-        if( $ip ) {
+        if( $ip && $ipFiltering ) {
 
             //$ip = "157.139.226.124";
             //$ip = "localhost";

@@ -351,8 +351,27 @@ Sasl ldap: http://research.imb.uq.edu.au/~l.rathbone/ldap/gssapi.shtml
 
 
 Errors "No route found":
-wls-wsat: Oracle WebLogic
-_vti_bin: SharePoint Web services
-struts2-rest-showcase: Tomcat Manager
-CFIDE: ColdFusion server
+https://157.139.226.124/wls-wsat: Oracle WebLogic
+https://157.139.226.124/_vti_bin: SharePoint Web services
+https://157.139.226.124/struts2-rest-showcase: Tomcat Manager
+https://157.139.226.124/CFIDE: ColdFusion server
+https://157.139.226.124/cgi-bin/awstats.pl: server report
+https://157.139.226.124/struts2-showcase: Apache
+https://157.139.226.124/~bin/true
+https://157.139.226.124/bb
+https://157.139.226.124/phpmyadmin
+https://157.139.226.124/conf/ssl/apache/integrity.key
+https://157.139.226.124/lcds
+https://157.139.226.124/lcds-samples
+https://157.139.226.124/blazeds: server-based Java remoting and web messaging
+https://157.139.226.124/messagebroker
+https://157.139.226.124/flex2gateway: ColdFusion
+https://iamahost/common/index.jsf
+https://157.139.226.124/AdvWorks
+https://157.139.226.124/ASPSamp
+https://157.139.226.124/scripts/tools/newdsn.exe
+https://157.139.226.124/blogs/xmlsrv/xmlrpc.php
+https://157.139.226.124/xmlsrv/xmlrpc.php
+https://157.139.226.124/server-status
+
 
