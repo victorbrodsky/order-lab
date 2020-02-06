@@ -351,6 +351,8 @@ Sasl ldap: http://research.imb.uq.edu.au/~l.rathbone/ldap/gssapi.shtml
 
 
 Errors "No route found":
+It just looks like a generic scan. They're looking for older exploitable versions of PhpMyAdmin, IIS, Joomla, etc.
+It looks like you are being scanned with a web vulnerability scanner
 https://157.139.226.124/wls-wsat: Oracle WebLogic
 https://157.139.226.124/_vti_bin: SharePoint Web services
 https://157.139.226.124/struts2-rest-showcase: Tomcat Manager
@@ -373,5 +375,13 @@ https://157.139.226.124/scripts/tools/newdsn.exe
 https://157.139.226.124/blogs/xmlsrv/xmlrpc.php
 https://157.139.226.124/xmlsrv/xmlrpc.php
 https://157.139.226.124/server-status
-
-
+https://157.139.226.124/Rapid7
+http://157.139.226.124/spiffymcgee.cfm
+https://157.139.226.124/administrator/manifests/files/joomla.xml
+https://157.139.226.124/joomla/administrator/manifests/files/joomla.xml
+https://157.139.226.124/jira/secure/Dashboard.jspa
+https://157.139.226.124/login.jsp
+http://157.139.226.124/owa/auth/logon.aspx
+https://157.139.226.124/servlet/
+http://157.139.226.124/wordpress/readme.html
+http://157.139.226.124/mediawiki/index.php?title=Main_Page

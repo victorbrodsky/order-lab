@@ -74,6 +74,8 @@ class ExceptionListener {
         // You get the exception object from the received event
         $exception = $event->getThrowable();
 
+        $ip = $this->get_client_ip();
+
 //        $message = sprintf(
 //            'Error: %s with code: %s',
 //            $exception->getMessage(),
@@ -87,7 +89,6 @@ class ExceptionListener {
         //$ipFiltering = true;
         $ipFiltering = false;
         //Ignore if client request is coming from IP
-        $ip = $this->get_client_ip();
         if( $ip && $ipFiltering ) {
 
             //$ip = "157.139.226.124";
@@ -126,6 +127,7 @@ class ExceptionListener {
             //. "<br>Code:".$exception->getCode()
             . "<br>Trace: ". $exception->getTraceAsString()
             ."<br>User: ".$user
+            ."<br>Client IP: ".$ip
         ;
 
         if( $request ) {
