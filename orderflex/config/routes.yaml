@@ -108,8 +108,8 @@ scan_login_check:
 scan_logout:
     path:   /scan/logout
 
-#login_check:
-#    path: /directory/login_check
+login_check:
+    path: /directory/login_check
 #logout:
 #    path: /directory/logout
 
