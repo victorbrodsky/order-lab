@@ -349,3 +349,10 @@ Switch to Apache user: su -s /bin/bash apache
 
 Sasl ldap: http://research.imb.uq.edu.au/~l.rathbone/ldap/gssapi.shtml
 
+
+Errors "No route found":
+wls-wsat: Oracle WebLogic
+_vti_bin: SharePoint Web services
+struts2-rest-showcase: Tomcat Manager
+CFIDE: ColdFusion server
+

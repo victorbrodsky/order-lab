@@ -92,7 +92,14 @@ class ExceptionListener {
             //$ip = "localhost";
             //exit("ip=".$ip);
 
+            //Ignore if client request is coming from localhost
+            if( $ip == 'localhost' ) {
+                //exit("1Ignore requests from=".$ip);
+                return false;
+            }
+
             if( $this->is_ip($ip) ) {
+                //exit("2Ignore requests from=".$ip);
                 return false;
             }
         }
