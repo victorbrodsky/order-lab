@@ -162,43 +162,43 @@ security:
                 path:     /scan
 #                always_remember_me: true
 
-        ldap_employees_firewall:
-            pattern: ^/directory
-            context: scan_auth
-            switch_user: true
-            simple_form:
-                authenticator: custom_authenticator
-                use_referer: true
-                success_handler: employees_authentication_handler
-                failure_handler: employees_authentication_handler
-                check_path: /directory/login_check
-                login_path: /directory/login
-            logout:
-                path:   /directory/logout
-                target: /directory/login
-            anonymous:  true
-            access_denied_url: /directory/access-requests/new/create
-            remember_me:
-                secret:      "%secret%"
-                lifetime: 28800 # 8 hours in seconds
-                path:     /directory
-
 #        ldap_employees_firewall:
-#              pattern: ^/directoryTEST
-#              context: scan_auth
-#              switch_user: true
-#              guard:
-#                  authenticator: custom_guard_authenticator
-#                  #entry_point: custom_guard_authenticator
-#              logout:
-#                  path:   /directory/logout
-#                  target: /directory/login
-#              anonymous:  true
-#              access_denied_url: /directory/access-requests/new/create
-#              remember_me:
-#                  secret:      "%secret%"
-#                  lifetime: 28800 # 8 hours in seconds
-#                  path:     /directory
+#            pattern: ^/directory
+#            context: scan_auth
+#            switch_user: true
+#            simple_form:
+#                authenticator: custom_authenticator
+#                use_referer: true
+#                success_handler: employees_authentication_handler
+#                failure_handler: employees_authentication_handler
+#                check_path: /directory/login_check
+#                login_path: /directory/login
+#            logout:
+#                path:   /directory/logout
+#                target: /directory/login
+#            anonymous:  true
+#            access_denied_url: /directory/access-requests/new/create
+#            remember_me:
+#                secret:      "%secret%"
+#                lifetime: 28800 # 8 hours in seconds
+#                path:     /directory
+
+        ldap_employees_firewall:
+              pattern: ^/directory
+              context: scan_auth
+              switch_user: true
+              guard:
+                  authenticator: custom_guard_authenticator
+                  #entry_point: custom_guard_authenticator
+              logout:
+                  path:   /directory/logout
+                  target: /directory/login
+              anonymous:  true
+              access_denied_url: /directory/access-requests/new/create
+              remember_me:
+                  secret:      "%secret%"
+                  lifetime: 28800 # 8 hours in seconds
+                  path:     /directory
 
         ldap_fellapp_firewall:
             pattern: ^/fellowship-applications

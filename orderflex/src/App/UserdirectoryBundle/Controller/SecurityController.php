@@ -52,13 +52,14 @@ class SecurityController extends Controller
 //    }
 
     /**
+     * #@Method("GET")
+     *
      * #@Route("/directory/testlogin", name="directory_testlogin")
      *
      * @Route("/directory/login", name="directory_login")
      *
      * @Route("/login", name="employees_login")
      *
-     * @Method("GET")
      * @Template()
      */
     public function loginAction( Request $request ) {

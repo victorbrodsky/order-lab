@@ -49,9 +49,11 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Security\Guard\Authenticator\AbstractFormLoginAuthenticator;
 
 
-class CustomGuardAuthenticator extends AbstractGuardAuthenticator {
+class CustomGuardAuthenticator extends AbstractFormLoginAuthenticator {
 
     private $encoder;
     private $container;
@@ -78,17 +80,16 @@ class CustomGuardAuthenticator extends AbstractGuardAuthenticator {
     public function supports(Request $request)
     {
         //return $request->headers->has('X-AUTH-TOKEN');
+        //return $request->attributes->get('_route') === 'employees_login' && $request->isMethod('POST');
 
-        //return true;
+//        $route = $request->attributes->get('_route');
+//        if( strpos($route, 'login') !== false && $request->isMethod('POST') ) {
+//            return true;
+//        }
+//        return false;
 
         //dump($this->security->getUser());
         //exit('111');
-
-        // if there is already an authenticated user (likely due to the session)
-        // then return false and skip authentication: there is no need.
-        if( $this->security->getUser() ) {
-            return false;
-        }
 
 //        if( $this->container->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY') ) {
 //            return false;
@@ -102,38 +103,66 @@ class CustomGuardAuthenticator extends AbstractGuardAuthenticator {
         //return 'employees_login' === $request->attributes->get('_route') && $request->isMethod('POST');
 
         $route = $request->attributes->get('_route');
+        echo '1 route='.$route."; Method=".$request->getMethod()."<br>";
+        //exit('111');
 
-        if( $route == 'employees_home' ) {
+        if( $route == 'main_common_home' ) {
             return false;
         }
-        if( $route == 'fellapp_home' ) {
+
+        // if there is already an authenticated user (likely due to the session)
+        // then return false and skip authentication: there is no need.
+        if( $this->security->getUser() ) {
+            echo 'User authenticated='.$this->security->getUser()."<br>";
             return false;
         }
-        if( $route == 'vacreq_home' ) {
+
+        //don't need auth on login page with GET
+        if( strpos($route, 'login') !== false && $request->isMethod('GET') ) {
             return false;
         }
-        if( strpos($route, '_home') !== false ) {
-            return false;
-        }
+
+//        if( $route == 'employees_home' ) {
+//            return false;
+//        }
+//        if( $route == 'fellapp_home' ) {
+//            return false;
+//        }
+//        if( $route == 'vacreq_home' ) {
+//            return false;
+//        }
+//        if( strpos($route, '_home') !== false ) {
+//            return false;
+//        }
 
 //        if( $route == 'login' ) {
 //            return true;
 //        }
 
-        if( $route == 'login' && $request->isMethod('POST') ) {
-            return true;
+//        if( $route == 'login' && $request->isMethod('POST') ) {
+//            return true;
+//        }
+//        if( $route == 'fellapp_login' && $request->isMethod('POST') ) {
+//            return true;
+//        }
+//        if( $route == 'vacreq_login' && $request->isMethod('POST') ) {
+//            return true;
+//        }
+        if( strpos($route, 'login') !== false ) {
+            echo '2 route='.$route."; Method=".$request->getMethod()."<br>";
+            //exit('222');
+            //return true;
+            if( $request->isMethod('POST') ) {
+                return true;
+            }
+            return false;
         }
-        if( $route == 'fellapp_login' && $request->isMethod('POST') ) {
-            return true;
-        }
-        if( $route == 'vacreq_login' && $request->isMethod('POST') ) {
-            return true;
-        }
-        if( strpos($route, 'login') !== false && $request->isMethod('POST') ) {
-            return true;
-        }
+//        if( strpos($route, 'login') !== false ) {
+//            return true;
+//        }
 
         // the user is not logged in, so the authenticator should continue
+        return true;
         //return false;
     }
 
@@ -234,6 +263,13 @@ class CustomGuardAuthenticator extends AbstractGuardAuthenticator {
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
+
+//        if ($targetPath = $this->getTargetPath($request->getSession(), $providerKey)) {
+//            return new RedirectResponse($targetPath);
+//        }
+//        // For example : return new RedirectResponse($this->router->generate('some_route'));
+//        throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
+
         //exit("onAuthenticationSuccess");
         // on success, let the request continue
         //return null;
@@ -277,6 +313,15 @@ class CustomGuardAuthenticator extends AbstractGuardAuthenticator {
 
     }
 
+    protected function getLoginUrl()
+    {
+        //exit('getLoginUrl');
+        // TODO: Implement getLoginUrl() method.
+        $url = $this->container->get('router')->generate('directory_login'); //$this->getLoginUrl();
+
+        return $url;
+    }
+
     /**
      * Called when authentication is needed, but it's not sent
      */
@@ -285,12 +330,15 @@ class CustomGuardAuthenticator extends AbstractGuardAuthenticator {
         //return $this->container->get('router')->generate('directory_testlogin');
         //return $this->container->router->generate('directory_testlogin');
 
-        $data = [
-            // you might translate this message
-            'message' => 'Authentication Required'
-        ];
+        $url = $this->getLoginUrl();
+        return new RedirectResponse($url);
 
-        return new JsonResponse($data, Response::HTTP_UNAUTHORIZED);
+//        $data = [
+//            // you might translate this message
+//            'message' => 'Authentication Required'
+//        ];
+//
+//        return new JsonResponse($data, Response::HTTP_UNAUTHORIZED);
     }
 
     public function supportsRememberMe()
