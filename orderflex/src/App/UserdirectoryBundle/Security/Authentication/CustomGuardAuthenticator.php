@@ -47,7 +47,7 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Csrf\CsrfToken;
-use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
+//use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Guard\Authenticator\AbstractFormLoginAuthenticator;
@@ -360,7 +360,7 @@ class CustomGuardAuthenticator extends AbstractFormLoginAuthenticator {
     //public function authenticateToken(TokenInterface $token, UserProviderInterface $userProvider, $providerKey)
     public function authenticateToken($token, $userProvider, $providerKey)
     {
-        //echo "CustomAuthenticator: username=".$token->getUsername()."<br>"; //", pwd=".$token->getCredentials()
+        //echo "CustomGuardAuthenticator: username=".$token->getUsername()."<br>"; //", pwd=".$token->getCredentials()
         //exit();
 
         $userSecUtil = $this->container->get('user_security_utility');

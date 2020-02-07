@@ -26,7 +26,7 @@ namespace App\UserdirectoryBundle\Security\Authentication;
 
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Http\Authentication\SimpleFormAuthenticatorInterface;
+//use Symfony\Component\Security\Http\Authentication\SimpleFormAuthenticatorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -35,7 +35,8 @@ use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 
-class CustomAuthenticator implements SimpleFormAuthenticatorInterface {
+//class CustomAuthenticator implements SimpleFormAuthenticatorInterface {
+class CustomAuthenticator {
 
     private $encoder;
     private $container;
