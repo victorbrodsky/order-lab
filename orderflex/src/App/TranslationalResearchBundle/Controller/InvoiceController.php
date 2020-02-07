@@ -54,6 +54,18 @@ class InvoiceController extends Controller
         $title = "List of Invoices";
         $metaTitle = null;
 
+        //Default variables
+        $irbNumber = NULL;
+        $fundingType = NULL;
+        $fundingNumber = NULL;
+        $version = NULL;
+        $totalMax = NULL;
+        $totalMin = NULL;
+        $endCreateDate = NULL;
+        $startCreateDate = NULL;
+        $idSearch = NULL;
+        $status = NULL;
+
         $repository = $em->getRepository('AppTranslationalResearchBundle:Invoice');
         $dql =  $repository->createQueryBuilder("invoice");
         $dql->select('invoice');

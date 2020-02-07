@@ -1692,7 +1692,14 @@ class FormNodeUtil
 
                     if( $table ) {
                         //html table
-                        if( $nameValueArr['showLabel'] ) {
+
+                        if( array_key_exists("showLabel",$nameValueArr) ) {
+                            $showLabel = $nameValueArr['showLabel'];
+                        } else {
+                            $showLabel = NULL;
+                        }
+
+                        if( $showLabel ) {
                             $formNodeName = $space . $space . $space . $nameValueArr['name'];
                         } else {
                             $formNodeName = null;
@@ -1716,7 +1723,13 @@ class FormNodeUtil
                         //XML
                         $fieldName = $this->makeXmlSafe($nameValueArr['name']);
                         $fieldValue = $this->makeXmlSafe($nameValueArr['value']);
-                        $showLabelValue = $this->makeXmlSafe($nameValueArr['showLabel']);
+                        
+                        if( array_key_exists("showLabel",$nameValueArr) ) {
+                            $showLabel = $nameValueArr['showLabel'];
+                        } else {
+                            $showLabel = NULL;
+                        }
+                        $showLabelValue = $this->makeXmlSafe($showLabel);
 
                         $result[] = $nameStartXml . $fieldName . $nameEndXml;
                         $result[] = $showlabelStartXml . $showLabelValue . $showlabelEndXml;

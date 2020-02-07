@@ -1065,8 +1065,8 @@ class RequestController extends Controller
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
-        set_time_limit(600); //600 seconds => 10 min
-        ini_set('memory_limit', '3072M');
+        //set_time_limit(600); //600 seconds => 10 min
+        //ini_set('memory_limit', '3072M');
 
         $transresUtil = $this->container->get('transres_util');
         $transresRequestUtil = $this->container->get('transres_request_util');
@@ -1075,6 +1075,7 @@ class RequestController extends Controller
         $routeName = $request->get('_route');
         $title = "Work Requests";
         $formnode = false;
+        $titleAdd = "";
 
 
         //TESTING
@@ -1392,7 +1393,6 @@ class RequestController extends Controller
                 );
             }
 
-            $titleAdd = "";
             //set filter's progressState or add a filter option "my projects only"
             if ($filterTypeLowerCase == strtolower("Submitted Requests for My Projects") ) {
                 //exit('start filtering '.$filterType);

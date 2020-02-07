@@ -67,7 +67,13 @@ class TreeController extends Controller {
 
         $formname = $filterform->getName();
         $formData = $request->query->get($formname);
-        $typesFilter = $formData['types'];
+
+        $typesFilter = NULL;
+        if( is_array($formData) ) {
+            if( array_key_exists('types',$formData) ) {
+                $typesFilter = $formData['types'];
+            }
+        }
         //print_r($typesFilter);
 
         $combobox = false;
