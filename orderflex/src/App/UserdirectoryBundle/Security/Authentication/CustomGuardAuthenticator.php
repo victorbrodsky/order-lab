@@ -94,6 +94,10 @@ class CustomGuardAuthenticator extends AbstractFormLoginAuthenticator {
             return false;
         }
 
+        if( $route == 'setserveractive' ) {
+            return false;
+        }
+
         //No need auth on login page with GET
         if( strpos($route, 'login') !== false ) {
             if( $request->isMethod('POST') ) {
