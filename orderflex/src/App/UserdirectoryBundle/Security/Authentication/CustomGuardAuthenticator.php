@@ -97,6 +97,12 @@ class CustomGuardAuthenticator extends AbstractFormLoginAuthenticator {
         if( $route == 'setserveractive' ) {
             return false;
         }
+        if( $route == 'keepalive' ) {
+            return false;
+        }
+        if( $route == 'getmaxidletime' ) {
+            return false;
+        }
 
         //No need auth on login page with GET
         if( strpos($route, 'login') !== false ) {
