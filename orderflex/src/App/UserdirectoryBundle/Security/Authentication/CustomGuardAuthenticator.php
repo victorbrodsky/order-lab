@@ -44,6 +44,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Csrf\CsrfToken;
@@ -103,6 +104,9 @@ class CustomGuardAuthenticator extends AbstractFormLoginAuthenticator {
         if( $route == 'getmaxidletime' ) {
             return false;
         }
+//        if( $route == 'main_maintenance' ) {
+//            return false;
+//        }
 
         //No need auth on login page with GET
         if( strpos($route, 'login') !== false ) {
@@ -151,7 +155,7 @@ class CustomGuardAuthenticator extends AbstractFormLoginAuthenticator {
         }
 
         if( !$url && $route == 'main_maintenance' ) {
-            $url = $this->container->get('router')->generate('employees_login');
+            $url = $this->container->get('router')->generate('main_maintenance');
         }
 
         if( !$url ) {
