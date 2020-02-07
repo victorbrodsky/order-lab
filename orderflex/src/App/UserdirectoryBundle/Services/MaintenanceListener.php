@@ -191,8 +191,8 @@ class MaintenanceListener {
                 //exit('token set');
             }
 
-            if( strpos($event->getRequest()->get('_route'),'login_check') !== false ) {
-//            if( strpos($event->getRequest()->get('_route'),'login') !== false ) {
+//            if( strpos($event->getRequest()->get('_route'),'login_check') !== false ) {
+            if( strpos($event->getRequest()->get('_route'),'login') !== false && $event->getRequest()->isMethod('POST') ) {
                 //exit('login check');
                 $url = $this->container->get('router')->generate($maintenanceRoute);
                 $response = new RedirectResponse($url);

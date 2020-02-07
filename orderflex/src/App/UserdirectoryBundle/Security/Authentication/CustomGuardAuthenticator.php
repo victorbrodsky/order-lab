@@ -150,6 +150,10 @@ class CustomGuardAuthenticator extends AbstractFormLoginAuthenticator {
             $url = $this->container->get('router')->generate($route);
         }
 
+        if( !$url && $route == 'main_maintenance' ) {
+            $url = $this->container->get('router')->generate('employees_login');
+        }
+
         if( !$url ) {
             $sitename = $this->getSiteName($route);
             $url = $this->container->get('router')->generate($sitename . '_login');
