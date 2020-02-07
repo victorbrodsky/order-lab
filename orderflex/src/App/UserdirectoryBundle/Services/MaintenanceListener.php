@@ -192,6 +192,7 @@ class MaintenanceListener {
             }
 
             if( strpos($event->getRequest()->get('_route'),'login_check') !== false ) {
+//            if( strpos($event->getRequest()->get('_route'),'login') !== false ) {
                 //exit('login check');
                 $url = $this->container->get('router')->generate($maintenanceRoute);
                 $response = new RedirectResponse($url);
