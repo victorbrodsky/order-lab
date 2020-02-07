@@ -37,7 +37,6 @@ class ScanSecurityController extends SecurityController
 
     /**
      * @Route("/login", name="scan_login")
-     * @Method("GET")
      * @Template()
      */
     public function loginAction( Request $request ) {

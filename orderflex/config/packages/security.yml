@@ -138,19 +138,17 @@ security:
         #this firewall name must be the same as in the bundle's service.yml.
         external_ldap_firewall:
             pattern: ^/scan
-            #logout_on_user_change: true
-            #external: true
-            #fr3d_ldap:  ~
             context: scan_auth
             switch_user: true
-            simple_form:
-                 authenticator: custom_authenticator
-#                 always_use_default_target_path: false
-                 use_referer: true
-                 success_handler: authentication_handler
-                 failure_handler: authentication_handler
-                 check_path: /scan/login_check
-                 login_path: /scan/login
+            guard:
+                  authenticator: custom_guard_authenticator
+#            simple_form:
+#                 authenticator: custom_authenticator
+#                 use_referer: true
+#                 success_handler: authentication_handler
+#                 failure_handler: authentication_handler
+#                 check_path: /scan/login_check
+#                 login_path: /scan/login
             logout:
                 path:   /scan/logout
                 target: /scan/login
@@ -233,16 +231,17 @@ security:
 
         ldap_deidentifier_firewall:
             pattern: ^/deidentifier
-            #logout_on_user_change: true
             context: scan_auth
             switch_user: true
-            simple_form:
-                authenticator: custom_authenticator
-                use_referer: true
-                success_handler: deidentifier_authentication_handler
-                failure_handler: deidentifier_authentication_handler
-                check_path: /deidentifier/login_check
-                login_path: /deidentifier/login
+            guard:
+                authenticator: custom_guard_authenticator
+#            simple_form:
+#                authenticator: custom_authenticator
+#                use_referer: true
+#                success_handler: deidentifier_authentication_handler
+#                failure_handler: deidentifier_authentication_handler
+#                check_path: /deidentifier/login_check
+#                login_path: /deidentifier/login
             logout:
                 path:   /deidentifier/logout
                 target: /deidentifier/login
@@ -256,16 +255,17 @@ security:
 
         ldap_vacreq_firewall:
             pattern: ^/vacation-request
-            #logout_on_user_change: true
             context: scan_auth
             switch_user: true
-            simple_form:
-                authenticator: custom_authenticator
-                use_referer: true
-                success_handler: vacreq_authentication_handler
-                failure_handler: vacreq_authentication_handler
-                check_path: /vacation-request/login_check
-                login_path: /vacation-request/login
+            guard:
+                authenticator: custom_guard_authenticator
+#            simple_form:
+#                authenticator: custom_authenticator
+#                use_referer: true
+#                success_handler: vacreq_authentication_handler
+#                failure_handler: vacreq_authentication_handler
+#                check_path: /vacation-request/login_check
+#                login_path: /vacation-request/login
 #            guard:
 #                authenticator: custom_guard_authenticator
             logout:
@@ -281,16 +281,17 @@ security:
 
         ldap_calllog_firewall:
             pattern: ^/call-log-book
-            #logout_on_user_change: true
             context: scan_auth
             switch_user: true
-            simple_form:
-                authenticator: custom_authenticator
-                use_referer: true
-                success_handler: calllog_authentication_handler
-                failure_handler: calllog_authentication_handler
-                check_path: /call-log-book/login_check
-                login_path: /call-log-book/login
+            guard:
+                authenticator: custom_guard_authenticator
+#            simple_form:
+#                authenticator: custom_authenticator
+#                use_referer: true
+#                success_handler: calllog_authentication_handler
+#                failure_handler: calllog_authentication_handler
+#                check_path: /call-log-book/login_check
+#                login_path: /call-log-book/login
             logout:
                 path:   /call-log-book/logout
                 target: /call-log-book/login
@@ -304,16 +305,17 @@ security:
 
         ldap_translationalresearch_firewall:
             pattern: ^/translational-research
-            #logout_on_user_change: true
             context: scan_auth
             switch_user: true
-            simple_form:
-                authenticator: custom_authenticator
-                use_referer: true
-                success_handler: translationalresearch_authentication_handler
-                failure_handler: translationalresearch_authentication_handler
-                check_path: /translational-research/login_check
-                login_path: /translational-research/login
+            guard:
+                authenticator: custom_guard_authenticator
+#            simple_form:
+#                authenticator: custom_authenticator
+#                use_referer: true
+#                success_handler: translationalresearch_authentication_handler
+#                failure_handler: translationalresearch_authentication_handler
+#                check_path: /translational-research/login_check
+#                login_path: /translational-research/login
             logout:
                 path:   /translational-research/logout
                 target: /translational-research/login

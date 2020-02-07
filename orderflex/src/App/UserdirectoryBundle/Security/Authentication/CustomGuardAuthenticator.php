@@ -179,7 +179,6 @@ class CustomGuardAuthenticator extends AbstractFormLoginAuthenticator {
     {
         //exit('getLoginUrl');
         $url = $this->container->get('router')->generate('directory_login'); //employees_login
-
         return $url;
     }
 
@@ -188,13 +187,9 @@ class CustomGuardAuthenticator extends AbstractFormLoginAuthenticator {
      */
     public function start(Request $request, AuthenticationException $authException = null)
     {
-        //return $this->container->get('router')->generate('directory_testlogin');
-        //return $this->container->router->generate('directory_testlogin');
-        //$url = $this->getLoginUrl();
-
         $route = $request->attributes->get('_route');
-        echo '1 route='.$route."; Method=".$request->getMethod()."<br>";
-        echo 'sitename='.$this->sitename."<br>";
+        //echo '1 route='.$route."; Method=".$request->getMethod()."<br>";
+        //echo 'sitename='.$this->sitename."<br>";
         //exit('111');
 
         $sitename = $this->getSiteName($route);
@@ -202,12 +197,6 @@ class CustomGuardAuthenticator extends AbstractFormLoginAuthenticator {
         $url = $this->container->get('router')->generate($sitename.'_login');
 
         return new RedirectResponse($url);
-
-//        $data = [
-//            // you might translate this message
-//            'message' => 'Authentication Required'
-//        ];
-//        return new JsonResponse($data, Response::HTTP_UNAUTHORIZED);
     }
 
     public function getSiteName($route) {

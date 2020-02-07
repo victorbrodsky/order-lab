@@ -35,8 +35,6 @@ class CallLogSecurityController extends SecurityController
 
     /**
      * @Route("/login", name="calllog_login")
-     *
-     * @Method("GET")
      * @Template()
      */
     public function loginAction( Request $request ) {

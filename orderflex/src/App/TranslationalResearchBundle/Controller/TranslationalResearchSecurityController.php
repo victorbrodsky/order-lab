@@ -36,8 +36,6 @@ class TranslationalResearchSecurityController extends SecurityController
 
     /**
      * @Route("/login", name="translationalresearch_login")
-     *
-     * @Method("GET")
      * @Template()
      */
     public function loginAction( Request $request ) {

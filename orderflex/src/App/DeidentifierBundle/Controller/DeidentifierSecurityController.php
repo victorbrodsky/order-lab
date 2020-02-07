@@ -35,8 +35,6 @@ class DeidentifierSecurityController extends SecurityController
 
     /**
      * @Route("/login", name="deidentifier_login")
-     *
-     * @Method("GET")
      * @Template()
      */
     public function loginAction( Request $request ) {

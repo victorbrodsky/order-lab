@@ -35,8 +35,6 @@ class VacReqSecurityController extends SecurityController
 
     /**
      * @Route("/login", name="vacreq_login")
-     *
-     * @Method("GET")
      * @Template()
      */
     public function loginAction( Request $request ) {

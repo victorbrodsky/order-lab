@@ -55,7 +55,6 @@ class SecurityController extends Controller
      * #@Method("GET")
      *
      * @Route("/directory/login", name="directory_login")
-     *
      * @Route("/login", name="employees_login")
      *
      * @Template()
