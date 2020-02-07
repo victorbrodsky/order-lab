@@ -204,15 +204,15 @@ security:
             pattern: ^/fellowship-applications
             context: scan_auth
             switch_user: true
-            simple_form:
-                authenticator: custom_authenticator
-                use_referer: true
-                success_handler: fellapp_authentication_handler
-                failure_handler: fellapp_authentication_handler
-                check_path: /fellowship-applications/login_check
-                login_path: /fellowship-applications/login
-#            guard:
-#                authenticator: custom_guard_authenticator
+#            simple_form:
+#                authenticator: custom_authenticator
+#                use_referer: true
+#                success_handler: fellapp_authentication_handler
+#                failure_handler: fellapp_authentication_handler
+#                check_path: /fellowship-applications/login_check
+#                login_path: /fellowship-applications/login
+            guard:
+                authenticator: custom_guard_authenticator
                 #entry_point: custom_guard_authenticator
 #            form_login:
 #                  use_referer: true

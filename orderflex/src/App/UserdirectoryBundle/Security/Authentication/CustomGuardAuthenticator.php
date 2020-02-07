@@ -103,24 +103,33 @@ class CustomGuardAuthenticator extends AbstractFormLoginAuthenticator {
         //return 'employees_login' === $request->attributes->get('_route') && $request->isMethod('POST');
 
         $route = $request->attributes->get('_route');
-        echo '1 route='.$route."; Method=".$request->getMethod()."<br>";
+        //echo '1 route='.$route."; Method=".$request->getMethod()."<br>";
         //exit('111');
 
+        //No need for auth on main_common_home (list of the systems)
         if( $route == 'main_common_home' ) {
             return false;
+        }
+
+        //No need auth on login page with GET
+        if( strpos($route, 'login') !== false ) {
+            if( $request->isMethod('POST') ) {
+                return true;
+            }
+            if( $request->isMethod('GET') ) {
+                return false;
+            }
         }
 
         // if there is already an authenticated user (likely due to the session)
         // then return false and skip authentication: there is no need.
         if( $this->security->getUser() ) {
-            echo 'User authenticated='.$this->security->getUser()."<br>";
+            //echo 'User authenticated='.$this->security->getUser()."<br>";
             return false;
         }
 
-        //don't need auth on login page with GET
-        if( strpos($route, 'login') !== false && $request->isMethod('GET') ) {
-            return false;
-        }
+        return false;
+        //return true;
 
 //        if( $route == 'employees_home' ) {
 //            return false;
@@ -148,22 +157,65 @@ class CustomGuardAuthenticator extends AbstractFormLoginAuthenticator {
 //        if( $route == 'vacreq_login' && $request->isMethod('POST') ) {
 //            return true;
 //        }
-        if( strpos($route, 'login') !== false ) {
-            echo '2 route='.$route."; Method=".$request->getMethod()."<br>";
-            //exit('222');
-            //return true;
-            if( $request->isMethod('POST') ) {
-                return true;
-            }
-            return false;
-        }
+//        if( strpos($route, 'login') !== false ) {
+//            echo '2 route='.$route."; Method=".$request->getMethod()."<br>";
+//            //exit('222');
+//            //return true;
+//            if( $request->isMethod('POST') ) {
+//                return true;
+//            }
+//            return false;
+//        }
 //        if( strpos($route, 'login') !== false ) {
 //            return true;
 //        }
 
         // the user is not logged in, so the authenticator should continue
-        return true;
+        //return true;
         //return false;
+    }
+
+    protected function getLoginUrl()
+    {
+        //exit('getLoginUrl');
+        $url = $this->container->get('router')->generate('directory_login'); //employees_login
+
+        return $url;
+    }
+
+    /**
+     * Called when authentication is needed, but it's not sent
+     */
+    public function start(Request $request, AuthenticationException $authException = null)
+    {
+        //return $this->container->get('router')->generate('directory_testlogin');
+        //return $this->container->router->generate('directory_testlogin');
+        //$url = $this->getLoginUrl();
+
+        $route = $request->attributes->get('_route');
+        echo '1 route='.$route."; Method=".$request->getMethod()."<br>";
+        echo 'sitename='.$this->sitename."<br>";
+        //exit('111');
+
+        $sitename = $this->getSiteName($route);
+
+        $url = $this->container->get('router')->generate($sitename.'_login');
+
+        return new RedirectResponse($url);
+
+//        $data = [
+//            // you might translate this message
+//            'message' => 'Authentication Required'
+//        ];
+//        return new JsonResponse($data, Response::HTTP_UNAUTHORIZED);
+    }
+
+    public function getSiteName($route) {
+
+        //sitename is the first string before '_';
+        $sitenameArr = explode('_',$route);
+
+        return $sitenameArr[0];
     }
 
     /**
@@ -307,38 +359,6 @@ class CustomGuardAuthenticator extends AbstractFormLoginAuthenticator {
 
         return $authenticationSuccess->onAuthenticationFailure($request,$exception);
 
-    }
-
-    public function getSiteName() {
-
-    }
-
-    protected function getLoginUrl()
-    {
-        //exit('getLoginUrl');
-        // TODO: Implement getLoginUrl() method.
-        $url = $this->container->get('router')->generate('directory_login'); //$this->getLoginUrl();
-
-        return $url;
-    }
-
-    /**
-     * Called when authentication is needed, but it's not sent
-     */
-    public function start(Request $request, AuthenticationException $authException = null)
-    {
-        //return $this->container->get('router')->generate('directory_testlogin');
-        //return $this->container->router->generate('directory_testlogin');
-
-        $url = $this->getLoginUrl();
-        return new RedirectResponse($url);
-
-//        $data = [
-//            // you might translate this message
-//            'message' => 'Authentication Required'
-//        ];
-//
-//        return new JsonResponse($data, Response::HTTP_UNAUTHORIZED);
     }
 
     public function supportsRememberMe()
