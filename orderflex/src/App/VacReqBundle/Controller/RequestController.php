@@ -274,6 +274,10 @@ class RequestController extends Controller
 
         //check for active access requests
         $accessreqs = $this->getActiveAccessReq();
+        $accessreqsCount = 0;
+        if( is_array($accessreqs) ) {
+            $accessreqsCount = count($accessreqs);
+        }
 
         //calculate approved vacation days in total.
         $bruteForce = false;
@@ -301,7 +305,7 @@ class RequestController extends Controller
             'entity' => $entity,
             'form' => $form->createView(),
             'cycle' => $cycle,
-            'accessreqs' => count($accessreqs),
+            'accessreqs' => $accessreqsCount,
             'carryoverPendingRequests' => count($carryoverPendingRequests),
             'requestTypeCarryOverId' => $requestTypeCarryOverId, //function
             'totalApprovedDaysString' => $totalApprovedDaysString, //function

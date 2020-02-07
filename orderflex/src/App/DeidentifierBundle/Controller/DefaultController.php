@@ -107,6 +107,10 @@ class DefaultController extends Controller
         //check for active access requests
         $accessreqs = $this->getActiveAccessReq();
         //echo "accessreq count=".count($accessreqs)."<br>";
+        $accessreqsCount = 0;
+        if( is_array($accessreqs) ) {
+            $accessreqsCount = count($accessreqs);
+        }
 
         $form = $this->createGenerateForm();
 
@@ -114,7 +118,7 @@ class DefaultController extends Controller
 
         return array(
             //'accessiontypes' => $accessionTypes,
-            'accessreqs' => count($accessreqs),
+            'accessreqs' => $accessreqsCount,
             'form' => $form->createView(),
             //'msg' => "test test test test"
         );

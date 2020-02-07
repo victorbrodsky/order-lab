@@ -77,12 +77,16 @@ class ScanOrderController extends Controller {
 
         //check for active access requests
         $accessreqs = $this->getActiveAccessReq();
+        $accessreqsCount = 0;
+        if( is_array($accessreqs) ) {
+            $accessreqsCount = count($accessreqs);
+        }
 
         return array(
             'unprocessed' => $unprocessed,
             'sliderequests' => $sliderequests,
             'accountreqs' => count($accountreqs),
-            'accessreqs' => count($accessreqs)
+            'accessreqs' => $accessreqsCount
         );
     }
 

@@ -491,6 +491,10 @@ class FellAppController extends Controller {
         }
 
         $accessreqs = $fellappUtil->getActiveAccessReq();
+        $accessreqsCount = 0;
+        if( is_array($accessreqs) ) {
+            $accessreqsCount = count($accessreqs);
+        }
 
         //use date from the filter ($startYearStr) instead of $currentYear
 
@@ -590,7 +594,7 @@ class FellAppController extends Controller {
             'fellappfilter' => $filterform->createView(),
             'startDate' => $startDate,
             'filter' => $fellSubspecId,
-            'accessreqs' => count($accessreqs),
+            'accessreqs' => $accessreqsCount,
             'currentYear' => $startYearStr, //$currentYear, //TODO: adopt the currentYear to currentYears in controller and html
             'hiddenTotal' => count($hiddenTotal),
             'archivedTotal' => count($archivedTotal),
