@@ -47,9 +47,11 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Csrf\CsrfToken;
-//use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+
+//use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
 use Symfony\Component\Security\Guard\Authenticator\AbstractFormLoginAuthenticator;
 
 
@@ -59,17 +61,19 @@ class CustomGuardAuthenticator extends AbstractFormLoginAuthenticator {
     private $container;
     private $em;
     private $security;
-    //private $authUtil;
+    private $csrfTokenManager;
     private $sitename;
     private $userProvider;
+    private $passwordToken;
 
-    public function __construct(UserPasswordEncoderInterface $encoder, ContainerInterface $container, EntityManagerInterface $em, Security $security=null)
+    public function __construct(UserPasswordEncoderInterface $encoder, ContainerInterface $container, EntityManagerInterface $em, Security $security=null, CsrfTokenManagerInterface $csrfTokenManager=null)
     {
         $this->encoder = $encoder;
         $this->container = $container;                //Service Container
         $this->em = $em;                //Entity Manager
         $this->security = $security;
-        //$this->authUtil = $authUtil;
+        $this->csrfTokenManager = $csrfTokenManager;
+        $this->passwordToken = NULL;
     }
 
     /**
@@ -238,12 +242,12 @@ class CustomGuardAuthenticator extends AbstractFormLoginAuthenticator {
         return $credentials;
     }
 
-    public function getUser($credentials, UserProviderInterface $userProvider)
+    public function getUserOrig($credentials, UserProviderInterface $userProvider)
     {
-//        $token = new CsrfToken('authenticate', $credentials['csrf_token']);
-//        if (!$this->csrfTokenManager->isTokenValid($token)) {
-//            throw new InvalidCsrfTokenException();
-//        }
+        $token = new CsrfToken('authenticate', $credentials['csrf_token']);
+        if( !$this->csrfTokenManager->isTokenValid($token) ) {
+            throw new InvalidCsrfTokenException();
+        }
 
         $this->userProvider = $userProvider;
 
@@ -251,21 +255,83 @@ class CustomGuardAuthenticator extends AbstractFormLoginAuthenticator {
         //echo "username=$username<br>";
 
         if( null === $username ) {
-            //exit("findUserByUsername: no user found");
-            return;
+            return false;
         }
 
         //$logger = $this->container->get('logger');
         $authUtil = $this->container->get('authenticator_utility');
 
         //exit("before findUserByUsername");
-        return $authUtil->findUserByUsername($username);
+        $user = $authUtil->findUserByUsername($username);
+
+        if( !$user ) {
+            //exit("findUserByUsername: no user found by username=".$username);
+            //check if user existed in LDAP => create a new user
+            //$user = $authUtil->createNewLdapUser($username);
+            //$user = $authUtil->getUserInLdap($username);
+
+            //Only for LDAP user: create user if not exists in DB and credentials are correct
+            //If user has Use LdapAuthenticationByUsernamePassword($username, $password, $ldapType=1)
+            $userSecUtil = $this->container->get('user_security_utility');
+            //$usernameClean = $userSecUtil->createCleanUsername($username);
+            $usernamePrefix = $userSecUtil->getUsernamePrefix($username);
+            if( $usernamePrefix == "ldap-user" || $usernamePrefix == "ldap2-user" ) {
+                $password = $credentials['password'];
+                $user = $authUtil->LdapAuthenticationByUsernamePassword($username, $password, $ldapType=1);
+            }
+        }
+
+        return $user;
 
         // if a User object, checkCredentials() is called
         //return $this->em->getRepository(User::class)->findOneBy(['apiToken' => $apiToken]);
     }
+    public function getUser($credentials, UserProviderInterface $userProvider)
+    {
+//        $token = new CsrfToken('authenticate', $credentials['csrf_token']);
+//        if (!$this->csrfTokenManager->isTokenValid($token)) {
+//            throw new InvalidCsrfTokenException();
+//        }
+
+        //Request $request, $username, $password, $providerKey
+        $request = null;
+        $username = $credentials['username'];
+        $password = $credentials['password'];
+
+        //_security.<your providerKey>.target_path (e.g. _security.main.target_path if the name of your firewall is main)
+        $providerKey = 'ldap_employees_firewall';
+        //$token = $this->createToken($request, $username, $password, $providerKey);
+        //$token =  new UsernamePasswordToken($username, $password, $providerKey);
+        $unauthenticatedToken = new UsernamePasswordToken(
+            $username,
+            $password,
+            $providerKey
+        );
+
+        //exit("before checkCredentials");
+        //TokenInterface $token, UserProviderInterface $userProvider, $providerKey
+        //$userProvider = $this->userProvider;
+        $usernamePasswordToken = $this->authenticateToken($unauthenticatedToken,null,$providerKey);
+        if( $usernamePasswordToken ) {
+            $this->passwordToken = $usernamePasswordToken;
+            $user = $usernamePasswordToken->getUser();
+            return $user;
+        }
+
+        $this->passwordToken = NULL;
+        return NULL;
+    }
 
     public function checkCredentials($credentials, UserInterface $user)
+    {
+        if( $this->passwordToken ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function checkCredentialsOrig($credentials, UserInterface $user)
     {
         // check credentials - e.g. make sure the password is valid
         // no credential check is needed in this case
@@ -292,7 +358,7 @@ class CustomGuardAuthenticator extends AbstractFormLoginAuthenticator {
 
         //exit("before checkCredentials");
         //TokenInterface $token, UserProviderInterface $userProvider, $providerKey
-        $userProvider = $this->userProvider;
+        //$userProvider = $this->userProvider;
         $usernamePasswordToken = $this->authenticateToken($unauthenticatedToken,null,$providerKey);
         if( $usernamePasswordToken ) {
             return true;

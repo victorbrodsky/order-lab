@@ -170,7 +170,7 @@ class AuthUtil {
         //get clean username
         $userSecUtil = $this->container->get('user_security_utility');
         $usernameClean = $userSecUtil->createCleanUsername($username);
-        $usernamePrefix = $userSecUtil->getUsernamePrefix($username);
+        //$usernamePrefix = $userSecUtil->getUsernamePrefix($username);
         //exit("usernameClean=[$usernameClean], susernamePrefix=[$usernamePrefix]");
 
         $searchRes = null;
@@ -218,17 +218,80 @@ class AuthUtil {
         //echo "1<br>";
 
         //////////////////// Construct a new user ////////////////////
+        if( !$user ) {
+            return $this->createNewLdapUser($username, $ldapType);
+        }
+
+        return NULL;
+
+//        $searchRes = $this->searchLdap($usernameClean,$ldapType);
+//
+//        if( $searchRes == NULL || count($searchRes) == 0 ) {
+//            $this->logger->error("Ldap Authentication: can not find user by usernameClean=" . $usernameClean);
+//            return NULL;
+//        } else {
+//            $this->logger->notice("Ldap Authentication: user found by  usernameClean=" . $usernameClean);
+//        }
+//
+//        $this->logger->notice("LdapAuthentication: create a new user found by token->getUsername()=".$username);
+//        $user = $userSecUtil->constractNewUser($username);
+//        //echo "user=".$user->getUsername()."<br>";
+//
+//        $user->setCreatedby('ldap');
+//
+//        //modify user: set keytype and primary public user id
+//        $userkeytype = $userSecUtil->getUsernameType($usernamePrefix);
+//
+//        if( !$userkeytype ) {
+//            $userUtil = new UserUtil();
+//            $count_usernameTypeList = $userUtil->generateUsernameTypes($this->em);
+//            $userkeytype = $userSecUtil->getUsernameType($this->usernamePrefix);
+//            //echo "userkeytype=".$userkeytype."<br>";
+//        }
+//
+//        $user->setKeytype($userkeytype);
+//        $user->setPrimaryPublicUserId($usernameClean);
+//
+//        if( $searchRes ) {
+//            $user->setEmail($searchRes['mail']);
+//            $user->setFirstName($searchRes['givenName']);
+//            $user->setLastName($searchRes['lastName']);
+//            $user->setDisplayName($searchRes['displayName']);
+//            $user->setPreferredPhone($searchRes['telephoneNumber']);
+//        }
+//
+//        //cwid is admin cwid
+//        //if( $user->getUsername() == "cwid1_@_ldap-user" || $user->getUsername() == "cwid2_@_ldap-user" ) {
+//        //    $user->addRole('ROLE_PLATFORM_ADMIN');
+//        //}
+//
+//        //exit('ldap ok');
+//
+//        //////////////////// save user to DB ////////////////////
+//        $userManager = $this->container->get('fos_user.user_manager');
+//        $userManager->updateUser($user);
+//        return $user;
+    }
+
+    //Guard auth requires if user exists
+    //$username - primaryPublicUserId and userkeytype (i.e. cwid1_@_ldap-user)
+    public function getUserInLdap( $username, $ldapType=1 ) {
+        // Construct a new LDAP user
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        $usernameClean = $userSecUtil->createCleanUsername($username);
+        $usernamePrefix = $userSecUtil->getUsernamePrefix($username);
 
         $searchRes = $this->searchLdap($usernameClean,$ldapType);
 
         if( $searchRes == NULL || count($searchRes) == 0 ) {
-            $this->logger->error("Ldap Authentication: can not find user by usernameClean=" . $usernameClean);
+            $this->logger->error("Ldap Search: can not find user by usernameClean=" . $usernameClean);
             return NULL;
         } else {
-            $this->logger->notice("Ldap Authentication: user found by  usernameClean=" . $usernameClean);
+            $this->logger->notice("Ldap Search: user found by  usernameClean=" . $usernameClean);
         }
 
-        $this->logger->notice("LdapAuthentication: create a new user found by token->getUsername()=".$username);
+        $this->logger->notice("Ldap Search: create a new user (not in DB) found by token->getUsername()=".$username);
         $user = $userSecUtil->constractNewUser($username);
         //echo "user=".$user->getUsername()."<br>";
 
@@ -248,18 +311,46 @@ class AuthUtil {
         $user->setPrimaryPublicUserId($usernameClean);
 
         if( $searchRes ) {
-            $user->setEmail($searchRes['mail']);
-            $user->setFirstName($searchRes['givenName']);
-            $user->setLastName($searchRes['lastName']);
-            $user->setDisplayName($searchRes['displayName']);
-            $user->setPreferredPhone($searchRes['telephoneNumber']);
+
+            //$user->setEmail($searchRes['mail']);
+            if( array_key_exists('mail', $searchRes) ) {
+                $user->setEmail($searchRes['mail']);
+            }
+
+            if( array_key_exists('givenName', $searchRes) ) {
+                $user->setFirstName($searchRes['givenName']);
+            }
+
+            if( array_key_exists('lastName', $searchRes) ) {
+                $user->setLastName($searchRes['lastName']);
+            }
+
+            if( array_key_exists('displayName', $searchRes) ) {
+                $user->setDisplayName($searchRes['displayName']);
+            }
+
+            if( array_key_exists('telephoneNumber', $searchRes) ) {
+                $user->setPreferredPhone($searchRes['telephoneNumber']);
+            }
+        }
+
+        return $user;
+    }
+
+    //$username - primaryPublicUserId and userkeytype (i.e. cwid1_@_ldap-user)
+    public function createNewLdapUser( $username, $ldapType=1 ) {
+        // Construct a new LDAP user
+        $user = $this->getUserInLdap($username,$ldapType);
+
+        if( !$user ) {
+            return NULL;
         }
 
         //cwid is admin cwid
         //if( $user->getUsername() == "cwid1_@_ldap-user" || $user->getUsername() == "cwid2_@_ldap-user" ) {
         //    $user->addRole('ROLE_PLATFORM_ADMIN');
         //}
-
+        //dump($user);
         //exit('ldap ok');
 
         //////////////////// save user to DB ////////////////////

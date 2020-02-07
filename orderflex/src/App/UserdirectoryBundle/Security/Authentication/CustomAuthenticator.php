@@ -35,7 +35,15 @@ use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 
+//Depreciated
+
 //class CustomAuthenticator implements SimpleFormAuthenticatorInterface {
+
+/**
+ * @author Oleg Ivanov <oli2002@med.cornell.edu>
+ *
+ * @deprecated since Symfony 4.2, use Guard instead (CustomGuardAuthenticator).
+ */
 class CustomAuthenticator {
 
     private $encoder;

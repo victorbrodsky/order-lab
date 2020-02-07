@@ -287,9 +287,12 @@ class UserSecurityUtil {
         $siteObject = $this->getSiteBySitename($sitename,true);
 
         $logger = new Logger($siteObject);
-        $logger->setUser($user);
-        $logger->setRoles($user->getRoles());
-        $logger->setUsername($user."");
+
+        if( $user ) {
+            $logger->setUser($user);
+            $logger->setRoles($user->getRoles());
+            $logger->setUsername($user . "");
+        }
 
         if( $request ) {
 
