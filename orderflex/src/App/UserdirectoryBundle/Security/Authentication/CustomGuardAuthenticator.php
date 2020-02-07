@@ -140,8 +140,20 @@ class CustomGuardAuthenticator extends AbstractFormLoginAuthenticator {
         //echo 'sitename='.$this->sitename."<br>";
         //exit('111');
 
-        $sitename = $this->getSiteName($route);
-        $url = $this->container->get('router')->generate($sitename.'_login');
+        $url = NULL;
+
+        if(
+            $route == 'setserveractive' ||
+            $route == 'keepalive' ||
+            $route == 'getmaxidletime'
+        ) {
+            $url = $this->container->get('router')->generate($route);
+        }
+
+        if( !$url ) {
+            $sitename = $this->getSiteName($route);
+            $url = $this->container->get('router')->generate($sitename . '_login');
+        }
 
         return new RedirectResponse($url);
     }
