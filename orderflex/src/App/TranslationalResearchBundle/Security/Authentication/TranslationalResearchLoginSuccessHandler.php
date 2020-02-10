@@ -94,7 +94,7 @@ class TranslationalResearchLoginSuccessHandler extends LoginSuccessHandler {
 
             //if( false == $this->secAuth->isGranted('ROLE_TRANSRES_REQUESTER') ) {
             //if roles has been added then redirect to account confirmation page
-            if( count($roleAddedArr) > 0 ) {
+            if( is_array($roleAddedArr) && count($roleAddedArr) > 0 ) {
 
                 ///////////////// Redirect to account confirmation page /////////////////
                 $confirmationUrl = $this->router->generate('translationalresearch_account_confirmation',

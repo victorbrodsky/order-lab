@@ -291,7 +291,11 @@ class RequestController extends Controller
         $remainingDaysString = $messages['remainingDaysString'];
 
         //get $requestTypeCarryOverId
+        $carryoverPendingRequestsCount = 0;
         $carryoverPendingRequests = $vacreqUtil->getPendingCarryOverRequests($user);
+        if( is_array($carryoverPendingRequests) ) {
+            $carryoverPendingRequestsCount = count($carryoverPendingRequests);
+        }
         $requestTypeCarryOver = $em->getRepository('AppVacReqBundle:VacReqRequestTypeList')->findOneByAbbreviation("carryover");
         if( $requestTypeCarryOver ) {
             $requestTypeCarryOverId = $requestTypeCarryOver->getId();
@@ -306,7 +310,7 @@ class RequestController extends Controller
             'form' => $form->createView(),
             'cycle' => $cycle,
             'accessreqs' => $accessreqsCount,
-            'carryoverPendingRequests' => count($carryoverPendingRequests),
+            'carryoverPendingRequests' => $carryoverPendingRequestsCount,
             'requestTypeCarryOverId' => $requestTypeCarryOverId, //function
             'totalApprovedDaysString' => $totalApprovedDaysString, //function
             'accruedDaysString' => $accruedDaysString, //getHeaderInfoMessages
