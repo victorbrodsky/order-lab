@@ -113,9 +113,9 @@ class CustomGuardAuthenticator extends AbstractFormLoginAuthenticator {
             if( $request->isMethod('POST') ) {
                 return true;
             }
-            if( $request->isMethod('GET') ) {
-                return false;
-            }
+//            if( $request->isMethod('GET') ) {
+//                return false;
+//            }
         }
 
         // if there is already an authenticated user (likely due to the session)
@@ -159,17 +159,45 @@ class CustomGuardAuthenticator extends AbstractFormLoginAuthenticator {
         }
 
         if( !$url ) {
-            $sitename = $this->getSiteName($route);
+            $sitename = $this->getSiteNameByRoute($route);
             $url = $this->container->get('router')->generate($sitename . '_login');
         }
 
         return new RedirectResponse($url);
     }
 
-    public function getSiteName($route) {
+    public function getSiteNameByRoute($route) {
         //sitename is the first string before '_';
-        $sitenameArr = explode('_',$route);
-        return $sitenameArr[0];
+        //$sitenameArr = explode('_',$route);
+        //return $sitenameArr[0];
+
+        //echo "route=$route <br>";
+        //exit('111');
+
+        if( strpos($route,'translationalresearch') !== false ) {
+            return "translationalresearch";
+        }
+        if( strpos($route,'vacreq') !== false ) {
+            return "vacreq";
+        }
+        if( strpos($route,'calllog') !== false ) {
+            return "calllog";
+        }
+        if( strpos($route,'fellapp') !== false ) {
+            return "fellapp";
+        }
+
+        if( strpos($route,'employees') !== false ) {
+            return "employees";
+        }
+        if( strpos($route,'deidentifier') !== false ) {
+            return "deidentifier";
+        }
+        if( strpos($route,'scan') !== false ) {
+            return "scan";
+        }
+
+        return "employees";
     }
 
     /**
