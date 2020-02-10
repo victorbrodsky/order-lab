@@ -25,7 +25,7 @@ framework:
         #http://blog.jmoz.co.uk/symfony2-warning-sessionstart-the-session-id/
         #storage_id: session.storage.filesystem
     #fragments: ~
-    fragments: { path: /_fragment }
+    fragments: {path: /_fragment}
     http_method_override: true
     profiler:
         collect: false

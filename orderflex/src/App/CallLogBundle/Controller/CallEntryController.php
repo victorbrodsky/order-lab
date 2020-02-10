@@ -51,7 +51,8 @@ use App\OrderformBundle\Helper\ErrorHelper;
 use App\UserdirectoryBundle\Entity\ModifierInfo;
 use App\UserdirectoryBundle\Entity\Spot;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+//use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -76,7 +77,7 @@ use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
 // https://packagist.org/packages/helios-ag/fm-summernote-bundle
 //helios-ag/fm-summernote-bundle
 
-class CallEntryController extends Controller
+class CallEntryController extends AbstractController
 {
 
 
