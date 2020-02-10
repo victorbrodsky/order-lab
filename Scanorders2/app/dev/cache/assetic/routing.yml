@@ -1,5 +1,0 @@
-_assetic:
-    resource: .
-    type: assetic
-_app:
-    resource: 'E:/Program Files (x86)/Aperio/Spectrum/htdocs/order/scanorder/Scanorders2/app/config/routing_dev.yml'
