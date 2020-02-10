@@ -394,3 +394,6 @@ http://157.139.226.124/owa/auth/logon.aspx
 https://157.139.226.124/servlet/
 http://157.139.226.124/wordpress/readme.html
 http://157.139.226.124/mediawiki/index.php?title=Main_Page
+
+
+"friendsofsymfony/user-bundle": "^2.1",

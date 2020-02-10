@@ -21,7 +21,7 @@ namespace App\UserdirectoryBundle\Controller;
 use App\UserdirectoryBundle\Form\HierarchyFilterType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -35,7 +35,7 @@ use App\OrderformBundle\Entity\PatientMrn;
 /**
  * @Route("/tree-util")
  */
-class TreeController extends Controller {
+class TreeController extends AbstractController {
 
 
     /**

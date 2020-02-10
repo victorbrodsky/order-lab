@@ -19,7 +19,7 @@ namespace App\FellAppBundle\Controller;
 
 use App\FellAppBundle\Entity\GoogleFormConfig;
 use App\FellAppBundle\Form\GoogleFormConfigType;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,7 +27,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class GoogleFormConfigController extends Controller
+class GoogleFormConfigController extends AbstractController
 {
 
     /**

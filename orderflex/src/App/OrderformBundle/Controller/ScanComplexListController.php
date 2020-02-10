@@ -22,7 +22,7 @@ use App\UserdirectoryBundle\Controller\ComplexListController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;

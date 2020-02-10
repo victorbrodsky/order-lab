@@ -34,7 +34,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 //use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 use Symfony\Component\Form\FormError;
@@ -77,7 +77,7 @@ use App\UserdirectoryBundle\Util\CropAvatar;
 use App\UserdirectoryBundle\Entity\Grant;
 
 //abstract class UserController extends AbstractController
-class UserController extends Controller
+class UserController extends AbstractController
 {
 
 //    public static function getSubscribedServices()

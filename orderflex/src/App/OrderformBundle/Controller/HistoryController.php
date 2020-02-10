@@ -20,7 +20,7 @@ namespace App\OrderformBundle\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -32,7 +32,7 @@ use App\UserdirectoryBundle\Util\UserUtil;
 /**
  * History controller.
  */
-class HistoryController extends Controller
+class HistoryController extends AbstractController
 {
 
 //    /**

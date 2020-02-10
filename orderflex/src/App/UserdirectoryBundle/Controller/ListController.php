@@ -24,7 +24,7 @@ use App\UserdirectoryBundle\Entity\UsernameType;
 use App\UserdirectoryBundle\Form\ListFilterType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -38,7 +38,7 @@ use App\UserdirectoryBundle\Form\GenericListType;
  * Common list controller
  * @Route("/admin")
  */
-class ListController extends Controller
+class ListController extends AbstractController
 {
 
     protected $sitename = "employees";

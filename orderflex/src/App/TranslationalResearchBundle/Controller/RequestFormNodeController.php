@@ -29,7 +29,7 @@ use App\TranslationalResearchBundle\Entity\Project;
 use App\TranslationalResearchBundle\Entity\TransResRequest;
 use App\TranslationalResearchBundle\Form\FilterRequestType;
 use App\TranslationalResearchBundle\Form\TransResRequestType;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -42,7 +42,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @Route("formnode")
  */
-class RequestFormNodeController extends Controller
+class RequestFormNodeController extends AbstractController
 {
 
     /**

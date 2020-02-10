@@ -19,7 +19,7 @@ namespace App\OrderformBundle\Controller;
 
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -34,7 +34,7 @@ use App\OrderformBundle\Helper\FormHelper;
  *
  * @Route("/scan")
  */
-class ScanController extends Controller
+class ScanController extends AbstractController
 {
 
     /**

@@ -18,7 +18,7 @@
 namespace App\OrderformBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -30,7 +30,7 @@ use App\OrderformBundle\Form\StatusType;
  *
  * @Route("/status")
  */
-class StatusController extends Controller
+class StatusController extends AbstractController
 {
 
 //    /**

@@ -23,7 +23,7 @@ use App\UserdirectoryBundle\Entity\User;
 use App\UserdirectoryBundle\Form\LabelType;
 use App\UserdirectoryBundle\Security\Util\UserSecurityUtil;
 use App\UserdirectoryBundle\Util\UserUtil;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -31,7 +31,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 
-class HomeController extends Controller {
+class HomeController extends AbstractController {
 
     public function mainCommonHomeAction() {
 

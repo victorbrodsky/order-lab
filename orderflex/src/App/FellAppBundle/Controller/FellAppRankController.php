@@ -31,7 +31,7 @@ use App\UserdirectoryBundle\Entity\Reference;
 use App\FellAppBundle\Form\FellAppFilterType;
 use App\FellAppBundle\Form\FellowshipApplicationType;
 use App\UserdirectoryBundle\Util\UserUtil;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
@@ -44,7 +44,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 
 
-class FellAppRankController extends Controller {
+class FellAppRankController extends AbstractController {
 
     /**
      * @Route("/rank/edit/{fellappid}", name="fellapp_rank_edit")

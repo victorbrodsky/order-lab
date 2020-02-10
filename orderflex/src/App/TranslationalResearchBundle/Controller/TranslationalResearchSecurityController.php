@@ -19,7 +19,7 @@ namespace App\TranslationalResearchBundle\Controller;
 
 
 use App\UserdirectoryBundle\Controller\SecurityController;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\SecurityContext;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;

@@ -42,7 +42,7 @@ use App\OrderformBundle\Entity\PatientListHierarchyGroupType;
 use App\OrderformBundle\Entity\PatientRecordStatusList;
 use App\OrderformBundle\Entity\ResearchGroupType;
 //use App\OrderformBundle\Entity\SystemAccountRequestType;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;

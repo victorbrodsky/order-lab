@@ -30,7 +30,7 @@ use App\VacReqBundle\Form\VacReqRequestType;
 use App\VacReqBundle\Form\VacReqUserCarryOverType;
 use App\VacReqBundle\Form\VacReqUserComboboxType;
 use App\VacReqBundle\Form\VacReqUserType;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -40,7 +40,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 
 
-class CarryOverController extends Controller
+class CarryOverController extends AbstractController
 {
 
 

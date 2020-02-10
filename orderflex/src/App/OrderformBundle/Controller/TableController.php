@@ -30,7 +30,7 @@ use App\OrderformBundle\Entity\PartParttitle;
 use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -115,7 +115,7 @@ use App\OrderformBundle\Entity\ScanOrder;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
-class TableController extends Controller {
+class TableController extends AbstractController {
 
     /**
      * @Route("/scan-order/multi-slide-table-view/{id}/amend", name="table_amend", requirements={"id" = "\d+"})
