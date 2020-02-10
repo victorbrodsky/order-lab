@@ -297,6 +297,15 @@ On the interface I’m looking at, a green tick appears above the dropdown list.
 git push origin :master
 5) Continue on I(3)
 
+Rename master-new to master on local and remote:
+0) Create master-new (sf5). When ready to switch master-new to master:
+1a) In master: git branch -m master master-old                  # rename master-old on local (master-old to master)
+1b) In master-new: git branch -m master-new master              # rename master on local (master-new to master)
+2) Set default branch on github to master-new in admin panel
+3) git push origin :master                                      # delete master on remote (git push -f origin :master)
+4) git push -f origin master                                    # push local branch master (master-new) to remote master
+5) git push origin --delete sf5                                 # delete duplicate branch sf5
+
 After renaming remote branch, git pull to local:
 git fetch --all
 git reset --hard origin/{{your branch name}}
