@@ -55,7 +55,7 @@ class DataQualityController extends CallEntryController
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $securityUtil = $this->get('order_security_utility');
-        $em = $this->getDoctrine()->getManager();
+        //$em = $this->getDoctrine()->getManager();
 
         $title = "Merge Patient Records";
 

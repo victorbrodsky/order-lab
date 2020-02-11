@@ -86,6 +86,7 @@ services:
         resource: '../src/App/*/*/Controller'
         tags: ['controller.service_arguments']
 
+
 #    App\UserdirectoryBundle\Controller\UserController: ~
 
     # add more service definitions when explicit configuration is needed
@@ -101,6 +102,12 @@ services:
 #        arguments: ['@logger']
 #        tags:
 #            - { name: monolog.logger, channel: app }
+
+    #App\CallLogBundle\Controller\DataQualityController:
+    #    arguments:  ["@service_container", "@doctrine.orm.entity_manager"]
+    #App\CallLogBundle\Controller\CallEntryController: ~
+    #    arguments:  ["@service_container", "@doctrine.orm.entity_manager"]
+
 
     ################## Commands ##################
     App\UserdirectoryBundle\Command\TestCommand:
