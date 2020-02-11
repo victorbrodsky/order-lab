@@ -55,7 +55,7 @@ fos_user:
     user_class: App\UserdirectoryBundle\Entity\User
     from_email:
         address: oli2002@med.cornell.edu
-        sender_name: App Ivanov
+        sender_name: Oleg Ivanov
 
 fos_comment:
     db_driver: orm

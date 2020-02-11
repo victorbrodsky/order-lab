@@ -5,7 +5,10 @@ security:
         strategy: affirmative
 
     encoders:
-        FOS\UserBundle\Model\UserInterface: sha512
+        App\UserdirectoryBundle\Entity\User:
+            algorithm: auto
+        #FOS\UserBundle\Model\UserInterface: sha512
+
 #        FOS\UserBundle\Model\UserInterface:
 #            id: security.encoder.scrypt
 #        FOS\UserBundle\Model\UserInterface: bcrypt
