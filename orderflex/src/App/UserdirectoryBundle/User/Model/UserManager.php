@@ -23,8 +23,8 @@ use Doctrine\ORM\EntityManagerInterface;
  *
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  */
-class UserManager implements UserManagerInterface {
-    
+class UserManager { //implements UserManagerInterface {
+
 //    private $passwordUpdater;
 //    private $canonicalFieldsUpdater;
 //
