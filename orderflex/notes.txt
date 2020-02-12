@@ -397,3 +397,39 @@ http://157.139.226.124/mediawiki/index.php?title=Main_Page
 
 
 "friendsofsymfony/user-bundle": "^2.1",
+oneup/uploader-bundle
+friendsofsymfony/user-bundle
+
+
+"symfony/apache-pack": "^1.0",
+"symfony/asset": "4.4.*",
+"symfony/console": "^4.4",
+"symfony/dotenv": "^4.4",
+"symfony/expression-language": "^4.4",
+"symfony/flex": "^1.6",
+"symfony/form": "4.4.*",
+"symfony/framework-bundle": "^4.4",
+"symfony/http-client": "4.4.*",
+"symfony/intl": "4.4.*",
+"symfony/mailer": "4.4.*",
+"symfony/monolog-bundle": "^3.5",
+"symfony/orm-pack": "*",
+"symfony/process": "4.4.*",
+"symfony/security-bundle": "4.4.*",
+"symfony/serializer-pack": "*",
+"symfony/swiftmailer-bundle": "^3.4",
+"symfony/translation": "4.4.*",
+"symfony/twig-pack": "*",
+"symfony/validator": "4.4.*",
+"symfony/web-link": "4.4.*",
+"symfony/webpack-encore-bundle": "^1.7",
+"symfony/workflow": "^4.4",
+"symfony/yaml": "^4.4",
+
+"extra": {
+        "symfony": {
+            "allow-contrib": false,
+            "require": "4.4.*"
+        }
+    }
+
