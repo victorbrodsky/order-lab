@@ -42,6 +42,9 @@ use App\UserdirectoryBundle\Entity\Logger;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Encoder\EncoderFactory;
+use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 //use Crontab\Crontab;
 //use Crontab\Job;
@@ -1879,7 +1882,19 @@ class UserServiceUtil {
         exit("projectDir=$projectDir");
     }
 
+    public function getUserEncoder($user) {
+//        $defaultEncoder = new MessageDigestPasswordEncoder('sha512', true, 5000);
+//        $encoders = [
+//            User::class => $defaultEncoder, // Your user class. This line specify you ant sha512 encoder for this user class
+//        ];
+//
+//        $encoderFactory = new EncoderFactory($encoders);
+//        $encoder = $encoderFactory->getEncoder($user);
 
+        $encoder = $this->container->get('security.password_encoder');
+
+        return $encoder;
+    }
 
 
 

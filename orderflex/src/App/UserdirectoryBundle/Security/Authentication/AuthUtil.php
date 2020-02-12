@@ -100,26 +100,31 @@ class AuthUtil {
 //            }
 
             if(0) {
-                $encoderService = $this->container->get('security.encoder_factory');
-                $encoder = $encoderService->getEncoder($user);
-
-                if ($encoder->isPasswordValid($user->getPassword(), $token->getCredentials(), $user->getSalt())) {
-                    //exit('password invalid ['.$token->getCredentials().']');
-                    return $user;
-                } else {
-                    $this->validateFailedAttempts($user);
-                    $this->logger->notice("Local Authentication: password is invalid");
-                    return NULL;
-                }
+//                $encoderService = $this->container->get('security.encoder_factory');
+//                $encoder = $encoderService->getEncoder($user);
+//
+//                if ($encoder->isPasswordValid($user->getPassword(), $token->getCredentials(), $user->getSalt())) {
+//                    //exit('password invalid ['.$token->getCredentials().']');
+//                    return $user;
+//                } else {
+//                    $this->validateFailedAttempts($user);
+//                    $this->logger->notice("Local Authentication: password is invalid");
+//                    return NULL;
+//                }
             } else {
-                $defaultEncoder = new MessageDigestPasswordEncoder('sha512', true, 5000);
-                $encoders = [
-                    User::class => $defaultEncoder, // Your user class. This line specify you ant sha512 encoder for this user class
-                ];
-
-                $encoderFactory = new EncoderFactory($encoders);
-                $encoder = $encoderFactory->getEncoder($user);
-                if ($encoder->isPasswordValid($user->getPassword(), $token->getCredentials(), $user->getSalt())) {
+//                $defaultEncoder = new MessageDigestPasswordEncoder('sha512', true, 5000);
+//                $encoders = [
+//                    User::class => $defaultEncoder, // Your user class. This line specify you ant sha512 encoder for this user class
+//                ];
+//
+//                $encoderFactory = new EncoderFactory($encoders);
+//                $encoder = $encoderFactory->getEncoder($user);
+                //$userServiceUtil = $this->container->get('user_service_utility');
+                //$encoder = $userServiceUtil->getUserEncoder($user);
+                //$encodeRes = $encoder->isPasswordValid($user->getPassword(), $token->getCredentials(), $user->getSalt());
+                $encoder = $this->container->get('security.password_encoder');
+                $encodeRes = $encoder->isPasswordValid($user,$token->getCredentials());
+                if( $encodeRes ) {
                     //exit('password invalid ['.$token->getCredentials().']');
                     return $user;
                 } else {
@@ -354,7 +359,8 @@ class AuthUtil {
         //exit('ldap ok');
 
         //////////////////// save user to DB ////////////////////
-        $userManager = $this->container->get('fos_user.user_manager');
+        //$userManager = $this->container->get('fos_user.user_manager');
+        $userManager = $this->container->get('user_manager');
         $userManager->updateUser($user);
 
         return $user;
@@ -501,7 +507,8 @@ class AuthUtil {
         //exit('ldap ok');
 
         //////////////////// save user to DB ////////////////////
-        $userManager = $this->container->get('fos_user.user_manager');
+        //$userManager = $this->container->get('fos_user.user_manager');
+        $userManager = $this->container->get('user_manager');
         $userManager->updateUser($user);
 
         return $user;
@@ -740,7 +747,8 @@ class AuthUtil {
 
 
     public function findUserByUsername($username) {
-        $userManager = $this->container->get('fos_user.user_manager');
+        //$userManager = $this->container->get('fos_user.user_manager');
+        $userManager = $this->container->get('user_manager');
         $username = trim($username);
         $username = strtolower($username);
         $user = $userManager->findUserByUsername($username);

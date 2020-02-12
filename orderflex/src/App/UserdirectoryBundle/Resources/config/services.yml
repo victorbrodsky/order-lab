@@ -48,14 +48,13 @@ parameters:
 
 
 #fos user bundle
-fos_user:
-    db_driver: orm
-#    model_manager_name: default
-    firewall_name: main
-    user_class: App\UserdirectoryBundle\Entity\User
-    from_email:
-        address: oli2002@med.cornell.edu
-        sender_name: Oleg Ivanov
+#fos_user:
+#    db_driver: orm
+#    firewall_name: main
+#    user_class: App\UserdirectoryBundle\Entity\User
+#    from_email:
+#        address: oli2002@med.cornell.edu
+#        sender_name: Oleg Ivanov
 
 fos_comment:
     db_driver: orm
@@ -192,6 +191,12 @@ services:
     user_service_utility:
         class: App\UserdirectoryBundle\Util\UserServiceUtil
         arguments: ["@doctrine.orm.entity_manager", "@security.token_storage", "@service_container"]
+
+    user_password_updater:
+        class: App\UserdirectoryBundle\User\Model\PasswordUpdater
+    user_manager:
+        class: App\UserdirectoryBundle\User\Model\UserManager
+        arguments: ["@doctrine.orm.entity_manager", "@user_password_updater"]
 
 #    user_cache_clear:
 #        class: Symfony\Bundle\FrameworkBundle\Command\CacheClearCommand

@@ -1585,7 +1585,8 @@ class UserController extends AbstractController
         //echo "user id=".$id."<br>";
         //exit();
 
-        $userManager = $this->container->get('fos_user.user_manager');
+        //$userManager = $this->container->get('fos_user.user_manager');
+        $userManager = $this->container->get('user_manager');
         $user = $userManager->createUser();
 
         $creator = $this->get('security.token_storage')->getToken()->getUser();
@@ -1721,7 +1722,8 @@ class UserController extends AbstractController
 
         $userGenerator = $this->container->get('user_generator');
 
-        $userManager = $this->container->get('fos_user.user_manager');
+        //$userManager = $this->container->get('fos_user.user_manager');
+        $userManager = $this->container->get('user_manager');
         $user = $userManager->createUser();
 
         $creator = $this->get('security.token_storage')->getToken()->getUser();
@@ -2399,7 +2401,8 @@ class UserController extends AbstractController
         $author = $this->get('security.token_storage')->getToken()->getUser();
 
         //$user = new User();
-        $userManager = $this->container->get('fos_user.user_manager');
+        //$userManager = $this->container->get('fos_user.user_manager');
+        $userManager = $this->container->get('user_manager');
         $user = $userManager->createUser();
 
         $user->setCreatedby('manual');
@@ -2541,10 +2544,10 @@ class UserController extends AbstractController
         );
     }
 
-    protected function getEngine()
-    {
-        return $this->container->getParameter('fos_user.template.engine');
-    }
+//    protected function getEngine()
+//    {
+//        return $this->container->getParameter('fos_user.template.engine');
+//    }
     ////////////////////// EOF Create New User //////////////////////
 
 

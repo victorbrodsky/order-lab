@@ -17,6 +17,7 @@
 
 namespace App\UserdirectoryBundle\Entity;
 
+use App\UserdirectoryBundle\User\Model\UserBase;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -26,7 +27,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping\AttributeOverrides;
 use Doctrine\ORM\Mapping\AttributeOverride;
 
-use FOS\UserBundle\Model\User as BaseUser;
+//use FOS\UserBundle\Model\User as BaseUser;
 
 //Use FOSUser bundle: https://github.com/FriendsOfSymfony/FOSUserBundle/blob/master/Resources/doc/index.md
 //User is a reserved keyword in SQL so you cannot use it as table name
@@ -75,7 +76,7 @@ use FOS\UserBundle\Model\User as BaseUser;
  *      )
  * })
  */
-class User extends BaseUser {
+class User extends UserBase {
 
     /**
      * @ORM\Id
@@ -303,6 +304,8 @@ class User extends BaseUser {
 
     function __construct( $addobjects=true )
     {
+        parent::__construct();
+
         $this->infos = new ArrayCollection();
         $this->locations = new ArrayCollection();
         $this->administrativeTitles = new ArrayCollection();
@@ -347,7 +350,7 @@ class User extends BaseUser {
 
         $this->setCreateDate(new \DateTime());
 
-        parent::__construct();
+        //parent::__construct();
     }
 
     /**
@@ -2386,6 +2389,5 @@ class User extends BaseUser {
 
     //TODO: create dynamic roles as in http://php-and-symfony.matthiasnoback.nl/2012/07/symfony2-security-creating-dynamic-roles-using-roleinterface/
     //ROLE_DEIDENTIFICATOR_USE: if one of the user role has DEIDENTIFICATOR site then create this role. It will solve security.yml problem
-
-
+    
 }

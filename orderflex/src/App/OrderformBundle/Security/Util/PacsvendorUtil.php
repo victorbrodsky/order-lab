@@ -62,7 +62,8 @@ class PacsvendorUtil {
 
         if( $AuthResult && isset($AuthResult['UserId']) && $AuthResult['ReturnCode'] == 0 ) {
 
-            $userManager = $serviceContainer->get('fos_user.user_manager');
+            //$userManager = $serviceContainer->get('fos_user.user_manager');
+            $userManager = $serviceContainer->get('user_manager');
 
             $user = $userManager->findUserByUsername($token->getUsername());
 

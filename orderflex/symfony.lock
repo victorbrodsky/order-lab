@@ -129,9 +129,6 @@
             "./config/packages/fos_rest.yaml"
         ]
     },
-    "friendsofsymfony/user-bundle": {
-        "version": "v2.1.2"
-    },
     "gedmo/doctrine-extensions": {
         "version": "v2.4.38"
     },

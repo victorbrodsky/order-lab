@@ -1474,13 +1474,18 @@ class UtilController extends AbstractController {
 
         //$encoder = $this->container->get('security.password_encoder');
         //$encoded = $encoder->encodePassword($subjectUser, $userpassword);
-        //$bool = StringUtils::equals($subjectUser->getPassword(), $encoded);
+        //$encodeRes = StringUtils::equals($subjectUser->getPassword(), $encoded);
 
-        $encoderService = $this->get('security.encoder_factory');
-        $encoder = $encoderService->getEncoder($user);
-        $bool = $encoder->isPasswordValid($subjectUser->getPassword(), $userpassword, $user->getSalt());
+        //$encoderService = $this->get('security.encoder_factory');
+        //$encoder = $encoderService->getEncoder($user);
+        //$userServiceUtil = $this->get('user_service_utility');
+        //$encoder = $userServiceUtil->getUserEncoder($user);
+        $encoder = $this->get('security.password_encoder');
 
-        if( $bool ) {
+        //$encodeRes = $encoder->isPasswordValid($subjectUser->getPassword(), $userpassword, $user->getSalt());
+        $encodeRes = $encoder->isPasswordValid($user,$userpassword);
+
+        if( $encodeRes ) {
             $output = 'ok';
         }
 

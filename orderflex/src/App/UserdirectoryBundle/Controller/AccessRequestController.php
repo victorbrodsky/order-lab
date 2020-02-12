@@ -1630,7 +1630,8 @@ class AccessRequestController extends AbstractController
             $newUsername = $user->createUniqueUsername();
 
             //check if user already exists in DB
-            $userManager = $this->container->get('fos_user.user_manager');
+            //$userManager = $this->container->get('fos_user.user_manager');
+            $userManager = $this->container->get('user_manager');
             $newUserDb = $userManager->findUserByUsername($newUsername);
             if( $newUserDb ) {
                 //Error
@@ -1834,13 +1835,18 @@ class AccessRequestController extends AbstractController
             }
 
             //generate random password
-            $tokenGenerator = $this->container->get('fos_user.util.token_generator');
-            $plainPassword = substr($tokenGenerator->generateToken(), 0, 8); // 8 chars
+            //$tokenGenerator = $this->container->get('fos_user.util.token_generator');
+            //$plainPassword = substr($tokenGenerator->generateToken(), 0, 8); // 8 chars
+            $userManager = $this->container->get('user_manager');
+            $plainPassword = substr($userManager->generateToken(), 0, 8); // 8 chars
             //exit("set password=[".$plainPassword."]");
 
             //encode password
-            $encoderService = $this->container->get('security.encoder_factory');
-            $encoder = $encoderService->getEncoder($user);
+            //$encoderService = $this->container->get('security.encoder_factory');
+            //$encoder = $encoderService->getEncoder($user);
+            //$userServiceUtil = $this->container->get('user_service_utility');
+            //$encoder = $userServiceUtil->getUserEncoder($user);
+            $encoder = $this->container->get('security.password_encoder');
             $encoded = $encoder->encodePassword($plainPassword, $user->getSalt());
             //exit("set encoded=[".$encoded."]");
 

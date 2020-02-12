@@ -781,7 +781,8 @@ class UserSecurityUtil {
             return $user;
         }
 
-        $userManager = $serviceContainer->get('fos_user.user_manager');
+        //$userManager = $serviceContainer->get('fos_user.user_manager');
+        $userManager = $this->container->get('user_manager');
         $userSecUtil = $serviceContainer->get('user_security_utility');
 
         $author = $userSecUtil->findSystemUser();
