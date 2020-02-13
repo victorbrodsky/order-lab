@@ -104,7 +104,7 @@
 		   "git pull",
            "git rev-parse HEAD",		   
 	       "sudo chmod +x /usr/local/bin/order-lab/orderflex/deploy_prod.sh",
-	       "bash /usr/local/bin/order-lab/orderflex/deploy_prod.sh",
+	       "bash /usr/local/bin/order-lab/orderflex/deploy_prod.sh -withdb",
 	       "sudo chown -R apache:apache /usr/local/bin/order-lab",		           
            "sudo chown -R apache:apache /usr/local/bin/order-lab/.git/",
 		   "echo @### PostgreSQL Version end of installation ###",		
