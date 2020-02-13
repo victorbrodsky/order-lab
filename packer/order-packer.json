@@ -139,7 +139,7 @@
 		   "git pull",
            "git rev-parse HEAD",		   
 	       "sudo chmod +x /usr/local/bin/order-lab/Scanorders2/deploy_prod.sh",
-	       "bash /usr/local/bin/order-lab/Scanorders2/deploy_prod.sh",
+	       "bash /usr/local/bin/order-lab/Scanorders2/deploy_prod.sh -withdb",
 	       "sudo chown -R www-data:www-data /usr/local/bin/order-lab",		           
            "sudo chown -R www-data:www-data /usr/local/bin/order-lab/.git/"			   
          ]    

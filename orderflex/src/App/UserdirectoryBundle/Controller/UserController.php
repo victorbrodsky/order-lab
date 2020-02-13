@@ -2402,6 +2402,7 @@ class UserController extends AbstractController
 
         //$user = new User();
         //$userManager = $this->container->get('fos_user.user_manager');
+        $userSecUtil = $this->get('user_security_utility');
         $userManager = $this->container->get('user_manager');
         $user = $userManager->createUser();
 
@@ -2450,17 +2451,17 @@ class UserController extends AbstractController
 
         //Check if username is email
         $thisUsername = $user->getPrimaryPublicUserId();
-        $user = $this->findUserByUsernameAsEmail($thisUsername);
-        if( $user ) {
-            $error = new FormError("User [$user] already exists with ID=".$user->getId());
+        $userCheck = $userSecUtil->findUserByUsernameAsEmail($thisUsername);
+        if( $userCheck ) {
+            $error = new FormError("User [$userCheck] already exists with ID=".$userCheck->getId());
             $form->get('primaryPublicUserId')->addError($error);
+        } else {
+            $userCheck = $userSecUtil->getUserByUserstr($thisUsername);
+            if( $userCheck ) {
+                $error = new FormError("User [$userCheck] already exists with ID=".$userCheck->getId());
+                $form->get('primaryPublicUserId')->addError($error);
+            }
         }
-        $user = $this->getUserByUserstr($thisUsername);
-        if( $user ) {
-            $error = new FormError("User [$user] already exists with ID=".$user->getId());
-            $form->get('primaryPublicUserId')->addError($error);
-        }
-
 
 //        echo "loc errors:<br>";or NYP 
 //        print_r($form->getErrors());
