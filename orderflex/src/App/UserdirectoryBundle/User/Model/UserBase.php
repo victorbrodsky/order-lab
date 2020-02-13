@@ -15,6 +15,20 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
+//https://github.com/FriendsOfSymfony/FOSUserBundle/blob/master/Resources/config/doctrine-mapping/User.orm.xml
+//<field name="username" column="username" type="string" length="180" />
+//<field name="usernameCanonical" column="username_canonical" type="string" length="180" unique="true" />
+//<field name="email" column="email" type="string" length="180" />
+//<field name="emailCanonical" column="email_canonical" type="string" length="180" unique="true" />
+//<field name="enabled" column="enabled" type="boolean" />
+//<field name="salt" column="salt" type="string" nullable="true" />
+//<field name="password" column="password" type="string" />
+//<field name="lastLogin" column="last_login" type="datetime" nullable="true" />
+//<field name="confirmationToken" column="confirmation_token" type="string" length="180" unique="true" nullable="true" />
+//<field name="passwordRequestedAt" column="password_requested_at" type="datetime" nullable="true" />
+//<field name="roles" column="roles" type="array" />
+
+
 /**
  * Storage agnostic user object.
  * Based on Fos User:
@@ -35,12 +49,12 @@ abstract class UserBase implements UserInterface #, GroupableInterface
     protected $id;
 
     /**
-     * @ORM\Column(name="username", type="string", nullable=true)
+     * @ORM\Column(name="username", type="string", length=180)
      */
     protected $username;
 
     /**
-     * @ORM\Column(name="username_canonical", type="string", nullable=true)
+     * @ORM\Column(name="username_canonical", type="string", length=180)
      */
     protected $usernameCanonical;
 
@@ -57,7 +71,7 @@ abstract class UserBase implements UserInterface #, GroupableInterface
     /**
      * @var bool
      *
-     * @ORM\Column(name="enabled", type="boolean", nullable=true)
+     * @ORM\Column(name="enabled", type="boolean")
      */
     protected $enabled;
 
@@ -71,7 +85,7 @@ abstract class UserBase implements UserInterface #, GroupableInterface
     /**
      * Encrypted password. Must be persisted.
      *
-     * @ORM\Column(name="password", type="string", nullable=true)
+     * @ORM\Column(name="password", type="string")
      */
     protected $password;
 
@@ -92,7 +106,7 @@ abstract class UserBase implements UserInterface #, GroupableInterface
      *
      * @var string|null
      *
-     * @ORM\Column(name="confirmation_token", type="string", nullable=true)
+     * @ORM\Column(name="confirmation_token", type="string", length=180, nullable=true)
      */
     protected $confirmationToken;
 
@@ -111,7 +125,7 @@ abstract class UserBase implements UserInterface #, GroupableInterface
     /**
      * @var array
      *
-     * @ORM\Column(name="roles", type="array", nullable=true)
+     * @ORM\Column(name="roles", type="array")
      */
     protected $roles;
 
