@@ -399,21 +399,21 @@ class UserSecurityUtil {
 
     //Get CWID
     public function createCleanUsername($username) {
-        return User::createCleanUsername($username);
-        //$user = new User();
-        //return $user->createCleanUsername($username);
+        //return User::createCleanUsername($username);
+        $user = new User();
+        return $user->createCleanUsername($username);
     }
 
     public function getUsernamePrefix($username) {
-        return User::getUsernamePrefix($username);
-        //$user = new User();
-        //return $user->getUsernamePrefix($username);
+        //return User::getUsernamePrefix($username);
+        $user = new User();
+        return $user->getUsernamePrefix($username);
     }
 
     public function usernameIsValid($username) {
-        return User::usernameIsValid($username);
-        //$user = new User();
-        //return $user->usernameIsValid($username);
+        //return User::usernameIsValid($username);
+        $user = new User();
+        return $user->usernameIsValid($username);
     }
 
     //array of emails for Admin users

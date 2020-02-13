@@ -1541,6 +1541,23 @@ class User extends UserBase {
 
 
     //////////////////// util methods ////////////////////////
+//    /**
+//     * {@inheritdoc}
+//     */
+//    public function canonicalize($string)
+//    {
+//        if (null === $string) {
+//            return;
+//        }
+//
+//        $encoding = mb_detect_encoding($string);
+//        $result = $encoding
+//            ? mb_convert_case($string, MB_CASE_LOWER, $encoding)
+//            : mb_convert_case($string, MB_CASE_LOWER);
+//
+//        return $result;
+//    }
+    
     public function getCleanUsername() {
         return $this->createCleanUsername( $this->getUsername() );
     }
