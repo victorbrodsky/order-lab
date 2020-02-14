@@ -433,6 +433,12 @@ friendsofsymfony/user-bundle
         }
     }
 
+Bundles are not compatible with Symfony 5:
+friendsofsymfony/comment-bundle (TRP comments)
+knplabs/knp-paginator-bundle (sorting and pages at the bottom of the lists)
+oneup/uploader-bundle (files uploading)
+stof/doctrine-extensions-bundle (tree hierarchies in DB)
+
 
 Symfony extends Auto-injection of the container for Controller is deprecated since Symfony 4.2. Configure it as a service instead.
 The "twig.exception_controller" configuration key has been deprecated in Symfony 4.4, set it to "null" and use "framework.error_controller" configuration key instead.
