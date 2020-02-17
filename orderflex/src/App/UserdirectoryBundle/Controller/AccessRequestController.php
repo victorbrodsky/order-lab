@@ -123,7 +123,8 @@ class AccessRequestController extends AbstractController
 
                 //flush changes for user roles
                 if( !$testing ) {
-                    $em->flush($user);
+                    //$em->flush($user);
+                    $em->flush();
                 }
 
                 //EventLog
@@ -1024,13 +1025,15 @@ class AccessRequestController extends AbstractController
             if( $request->request->has('accessrequest-approve') ) {
                 $this->changeStatus( $accReq, "approve", $entity, $request, $sendEmail );
                 $em->persist($accReq);
-                $em->flush($accReq);
+                //$em->flush($accReq);
+                $em->flush();
             }
 
             if( $request->request->has('accessrequest-decline') ) {
                 $this->changeStatus( $accReq, "decline", $entity, $request, $sendEmail );
                 $em->persist($accReq);
-                $em->flush($accReq);
+                //$em->flush($accReq);
+                $em->flush();
             }
             /////////////// EOF update status //////////////////////
 
@@ -1055,7 +1058,8 @@ class AccessRequestController extends AbstractController
         }
 
         $em->persist($entity);
-        $em->flush($entity);
+        //$em->flush($entity);
+        $em->flush();
         ///////////////// EOF update roles /////////////////
     }
 

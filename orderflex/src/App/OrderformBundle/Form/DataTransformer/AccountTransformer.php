@@ -138,7 +138,8 @@ class AccountTransformer implements DataTransformerInterface
             $newEntity->setOrderinlist($nextorder);
             
             $this->em->persist($newEntity);
-            $this->em->flush($newEntity);
+            //$this->em->flush($newEntity);
+            $this->em->flush();
 
             return $newEntity;
         } else {

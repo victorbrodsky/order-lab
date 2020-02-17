@@ -244,7 +244,8 @@ class AdminController extends AbstractController
                 }
                 $entity = $entities[0];
                 $entity->setConnectionChannel("https");
-                $em->flush($entity);
+                //$em->flush($entity);
+                $em->flush();
             }
 
             $logger->notice('Start updateApplication');
@@ -2020,7 +2021,8 @@ class AdminController extends AbstractController
                 //echo "approver=".$approver."<br>";
                 if( $approver ) {
                     $approver->addRole($entity);
-                    $em->flush($approver);
+                    //$em->flush($approver);
+                    $em->flush();
                     //echo "user found by cwid=".$cwid."<br>";
                 } else {
                     //exit("user not found by cwid=".$cwid);
@@ -2033,7 +2035,8 @@ class AdminController extends AbstractController
                 //echo "supervisor=".$supervisor."<br>";
                 if( $supervisor ) {
                     $supervisor->addRole($entity);
-                    $em->flush($supervisor);
+                    //$em->flush($supervisor);
+                    $em->flush();
                     //echo "user found by cwid=".$cwid."<br>";
                 } else {
                     //exit("user not found by cwid=".$cwid);
@@ -3094,7 +3097,8 @@ class AdminController extends AbstractController
             //$allInst->setOrganizationalGroupType($levelInstitution);
 
             $em->persist($allInst);
-            $em->flush($allInst);
+            //$em->flush($allInst);
+            $em->flush();
             $count++;
         }
 
@@ -3109,7 +3113,8 @@ class AdminController extends AbstractController
             $allCollaborationInst->addType($collaborationType);
             //$allCollaborationInst->setOrganizationalGroupType($levelInstitution);
             $em->persist($allCollaborationInst);
-            $em->flush($allCollaborationInst);
+            //$em->flush($allCollaborationInst);
+            $em->flush();
             $count++;
         }
 
@@ -4825,7 +4830,8 @@ class AdminController extends AbstractController
                     //exit("No floor found by name " . $locationFloor);
                     $floor = $userSecUtil->getObjectByNameTransformer($username,$locationFloor,"UserdirectoryBundle","FloorList");
                     $em->persist($floor);
-                    $em->flush($floor);
+                    //$em->flush($floor);
+                    $em->flush();
                 }
                 //$floor = $em->getRepository('AppUserdirectoryBundle:FloorList')->findOneByName($locationFloor);
                 if( !$floor ) {
@@ -7010,13 +7016,15 @@ class AdminController extends AbstractController
             $listEntity->setListRootName($listRootName);
 
             $em->persist($listEntity);
-            $em->flush($listEntity);
+            //$em->flush($listEntity);
+            $em->flush();
 
             //set linkToListId the same as ID
             if( $listEntity->getId() ) {
                 $listEntity->setLinkToListId($listEntity->getId());
                 $em->persist($listEntity);
-                $em->flush($listEntity);
+                //$em->flush($listEntity);
+                $em->flush();
             }
 
             $count = $count + 10;
@@ -7169,7 +7177,8 @@ class AdminController extends AbstractController
                 if( !$userSettings->getOrganizationalGroupDefault() ) {
                     $userSettings->setOrganizationalGroupDefault($pathology);
                     $em->persist($userSettings);
-                    $em->flush($userSettings);
+                    //$em->flush($userSettings);
+                    $em->flush();
                     $count++;
                 } else {
                     //exit('OrganizationalGroupDefault='.$userSettings->getOrganizationalGroupDefault());
@@ -7179,7 +7188,8 @@ class AdminController extends AbstractController
                 $userSettings->setOrganizationalGroupDefault($pathology);
                 $user->setPerSiteSettings($userSettings);
                 $em->persist($userSettings);
-                $em->flush($userSettings);
+                //$em->flush($userSettings);
+                $em->flush();
                 $count++;
             }
             $totalCount++;
@@ -7225,7 +7235,8 @@ class AdminController extends AbstractController
             $site = $siteMap[$logger->getSiteName()];
             if( $site ) {
                 $logger->setSite($site);
-                $em->flush($logger);
+                //$em->flush($logger);
+                $em->flush();
 
                 $count++;
             }
@@ -7708,7 +7719,8 @@ class AdminController extends AbstractController
             if( $flush ) {
                 $logger->notice("generateAdministratorAction: before flush administrator=".$administrator);
                 $em->persist($administrator);
-                $em->flush($administrator);
+                //$em->flush($administrator);
+                $em->flush();
                 $logger->notice("generateAdministratorAction: after flush administrator=".$administrator);
                 //echo "flash ";
             } else {
@@ -7741,7 +7753,8 @@ class AdminController extends AbstractController
 
             $logger->notice("generateAdministratorAction: before flush new administrator=".$administrator);
             $em->persist($administrator);
-            $em->flush($administrator);
+            //$em->flush($administrator);
+            $em->flush();
             $logger->notice("generateAdministratorAction: after flush new administrator=".$administrator);
         }
 
@@ -9213,7 +9226,8 @@ class AdminController extends AbstractController
 
             $msg = $msg . "<br><br>";
 
-            $em->flush($user);
+            //$em->flush($user);
+            $em->flush();
 
             //exit($msg);
         }
@@ -9272,7 +9286,8 @@ class AdminController extends AbstractController
                 $user->setUsernameForce($newUsername);
                 $user->setUsernameCanonicalForce($newUsername);
                 echo $count.": Update postfix for " . $user . " to [" . $user->getUsername() . "],[" .$user->getUsernameCanonical(). "]<br>";
-                $em->flush($user);
+                //$em->flush($user);
+                $em->flush();
             }
             elseif ( $user->getUsernamePrefix() == "aperio" )
             {
@@ -9281,7 +9296,8 @@ class AdminController extends AbstractController
                 $user->setUsernameForce($newUsername);
                 $user->setUsernameCanonicalForce($newUsername);
                 echo $count.": Update postfix for " . $user . " to [" . $user->getUsername() . "],[" .$user->getUsernameCanonical(). "]<br>";
-                $em->flush($user);
+                //$em->flush($user);
+                $em->flush();
             } else {
                 echo $count." user is OK ".$user."<br>";
             }
