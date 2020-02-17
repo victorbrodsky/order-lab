@@ -100,7 +100,7 @@ class UserController extends AbstractController
         //print_r($ver);
         //exit('1');
 
-        //testing error
+        testing error
 
         //testing
 //        $authUtil = $this->get('authenticator_utility');
