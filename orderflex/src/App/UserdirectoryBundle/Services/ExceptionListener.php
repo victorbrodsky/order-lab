@@ -86,8 +86,8 @@ class ExceptionListener {
         //echo "Trace: ".$exception->getTraceAsString()."<br>";
         //var_dump($exception->getTraceAsString());
 
-        $ipFiltering = true; //Don't send Kernela exception if the server IP is used (vulnerability scan by ITS).
-        //$ipFiltering = false;
+        $ipFiltering = true; //Don't send Kernel exception if the server IP is used (vulnerability scan by ITS).
+        $ipFiltering = false;
         //Ignore if client request is coming from IP
         if( $ip && $ipFiltering ) {
 
