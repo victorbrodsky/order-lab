@@ -87,23 +87,32 @@ class ExceptionListener {
         //var_dump($exception->getTraceAsString());
 
         $ipFiltering = true; //Don't send Kernel exception if the server IP is used (vulnerability scan by ITS).
-        $ipFiltering = false;
+        //$ipFiltering = false;
         //Ignore if client request is coming from IP
-        if( $ip && $ipFiltering ) {
-
-            //$ip = "localhost";
-            //exit("ip=".$ip);
+        if( $ipFiltering ) {
 
             //Ignore if client request is coming from localhost
-            if( $ip == 'localhost' ) {
-                //exit("1Ignore requests from=".$ip);
+//            if( $ip == 'localhost' ) {
+//                //exit("1Ignore requests from=".$ip);
+//                return false;
+//            }
+//            if( $this->is_ip($ip) ) {
+//                //exit("2Ignore requests from=".$ip);
+//                return false;
+//            }
+
+            $hostname = $request->getHost();
+            //echo "getHost=$hostname1 <br>";
+            //use $_SERVER[HTTP_HOST] to get www.example.com
+            //$hostname2 = str_replace('.','',$_SERVER[HTTP_HOST]);
+            //echo "HTTP_HOST=$hostname2 <br>";
+            $logger->notice("hostname=$hostname");
+
+            //check if numeric
+            if( is_numeric($hostname) ) {
                 return false;
             }
 
-            if( $this->is_ip($ip) ) {
-                //exit("2Ignore requests from=".$ip);
-                return false;
-            }
         }
 
         //Ignore: Unable to create the storage directory (/srv/order-lab/orderflex/var/cache/prod/profiler)
