@@ -64,7 +64,7 @@ class CallLogSiteParametersController extends SiteParametersController
      * @Method("GET")
      * @Template("AppUserdirectoryBundle/SiteParameters/edit.html.twig")
      */
-    public function editAction(Request $request,$id)
+    public function editAction(Request $request, $id)
     {
         return $this->editParameters($request,$id,'ROLE_CALLLOG_PATHOLOGY_ATTENDING');
     }
@@ -85,13 +85,12 @@ class CallLogSiteParametersController extends SiteParametersController
     /**
      * Resources page
      *
-     * @Route("/edit-resources/", name="calllog_siteparameters_resources_edit")
+     * @Route("/edit-resources/show", name="calllog_siteparameters_resources_edit")
      * @Method("GET")
      * @Template("AppCallLogBundle/SiteParameters/edit.html.twig")
      */
     public function editResourcesAction( Request $request )
     {
-
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_CALLLOG_PATHOLOGY_ATTENDING') ) {
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
