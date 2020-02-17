@@ -102,10 +102,7 @@ class ExceptionListener {
 //            }
 
             $hostname = $request->getHost();
-            //echo "getHost=$hostname1 <br>";
-            //use $_SERVER[HTTP_HOST] to get www.example.com
-            //$hostname2 = str_replace('.','',$_SERVER[HTTP_HOST]);
-            //echo "HTTP_HOST=$hostname2 <br>";
+            $hostname = str_replace('.','',$hostname);
             $logger->notice("hostname=$hostname");
 
             //check if numeric
