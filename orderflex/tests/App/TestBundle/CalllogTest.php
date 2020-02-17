@@ -512,8 +512,8 @@ class CalllogTest extends WebTestBase
         $crawler = $this->client->request('GET', '/call-log-book/settings/edit-resources/');
         //$crawler = $this->client->request('GET', '/call-log-book/settings/1/edit?param=calllogResources');
 
-        $content = $this->client->getResponse()->getContent();
-        exit("content=$content");
+        //$content = $this->client->getResponse()->getContent();
+        //exit("content=$content");
 
         $this->assertGreaterThan(
             0,
