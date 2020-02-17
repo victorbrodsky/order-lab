@@ -1,5 +1,5 @@
 controllers:
-    resource: ../../src/App/*/Controller/
+    resource: ../../src/App/*/*/Controller/
     type: annotation
 
 #OrderformBundle_controllers:
