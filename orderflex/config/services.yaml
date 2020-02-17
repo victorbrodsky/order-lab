@@ -189,12 +189,12 @@ oneup_uploader:
             storage:
                 directory: 'Uploaded/%calllog.uploadpath%'
 
-sensio_framework_extra:
-    router:      { annotations: true } # Deprecated; use routing annotations of Symfony core instead
-    request:     { converters: true, auto_convert: true }
-    view:        { annotations: true }
-    cache:       { annotations: true }
-    security:    { annotations: true }
-    psr_message: { enabled: false } # Defaults to true if the PSR-7 bridge is installed
+#sensio_framework_extra:
+#    router:      { annotations: true } # Deprecated; use routing annotations of Symfony core instead
+#    request:     { converters: true, auto_convert: true }
+#    view:        { annotations: true }
+#    cache:       { annotations: true }
+#    security:    { annotations: true }
+#    psr_message: { enabled: false } # Defaults to true if the PSR-7 bridge is installed
 
 
