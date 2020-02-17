@@ -107,6 +107,7 @@ class ExceptionListener {
 
             //check if numeric
             if( is_numeric($hostname) ) {
+                $logger->notice("Ignoring numeric hostname=$hostname");
                 return false;
             }
 
