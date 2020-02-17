@@ -509,7 +509,7 @@ class CalllogTest extends WebTestBase
     public function testResourcesEditAction() {
         $this->logIn();
         $this->client->followRedirects();
-        $crawler = $this->client->request('GET', '/call-log-book/settings/edit-resources/');
+        $crawler = $this->client->request('GET', '/call-log-book/settings/edit-resources/show');
         //$crawler = $this->client->request('GET', '/call-log-book/settings/1/edit?param=calllogResources');
 
         //$content = $this->client->getResponse()->getContent();
