@@ -26,6 +26,52 @@ class TrpTest extends WebTestBase
         );
     }
 
+    public function testProjectAction() {
+        $this->logIn();
+
+        unset($_GET['sort']);
+        $crawler = $this->client->request('GET', '/translational-research/projects/');
+
+        //$content = $this->client->getResponse()->getContent();
+        //exit("content=$content");
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Project Requests")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("New Project Request")')->count()
+        );
+
+        //link Edit invoice
+        $link = $crawler->selectLink('Review Project')->link();
+        $crawler = $this->client->click($link);
+
+        //$content = $this->client->getResponse()->getContent();
+        //exit("content=$content");
+
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Review Project request ")')->count()
+        );
+//        $this->assertGreaterThan(
+//            0,
+//            $crawler->filter('html:contains("Add Comment Without Changing Status")')->count()
+//        );
+//        $this->assertGreaterThan(
+//            0,
+//            $crawler->filter('html:contains("Type your comment here...")')->count()
+//        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Approve Project Request")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Reject Project Request")')->count()
+        );
+    }
+
     public function testShowProjectApplication() {
         //return;
 
@@ -444,24 +490,6 @@ class TrpTest extends WebTestBase
         //$linkName = '/translational-research/about';
         //$this->testGetLink($linkName,"Current Version");
         //$this->testGetLink($linkName);
-    }
-
-    public function testProjectAction() {
-        $this->logIn();
-
-        unset($_GET['sort']);
-        $crawler = $this->client->request('GET', '/translational-research/projects/');
-
-        //$content = $this->client->getResponse()->getContent();
-        //exit("content=$content");
-        $this->assertGreaterThan(
-            0,
-            $crawler->filter('html:contains("Project Requests")')->count()
-        );
-        $this->assertGreaterThan(
-            0,
-            $crawler->filter('html:contains("New Project Request")')->count()
-        );
     }
 
     public function testNewProjectAction() {
