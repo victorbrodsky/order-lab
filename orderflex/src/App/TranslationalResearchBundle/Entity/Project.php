@@ -1936,7 +1936,7 @@ class Project {
 
     //"IRB with PI FirstName LastName expires on MM/DD/YYYY."
     public function getIrbInfo($humanName=null) {
-        $info = "Not provided IRB#";
+        $info = "No provided IRB number";
 
         if( $this->getIrbNumber() ) {
             if( !$humanName ) {
@@ -1964,7 +1964,7 @@ class Project {
 
         //$info = '<div class="well">'.$info.'</div>';
         $info = '<p class="text-primary">'.$info.'</p>';
-        
+
         return $info;
     }
 
