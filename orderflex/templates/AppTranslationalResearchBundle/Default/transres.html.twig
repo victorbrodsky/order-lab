@@ -805,7 +805,7 @@
         {% if actionLinks|length > 0 and cycle == "show" %}
             {#{{ render(controller('AppTranslationalResearchBundle:Project:threadComments', { 'id': threadId })) }}#}
             {#include async.html.twig threadId={{ threadId }}<br>#}
-            {% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': threadId} %}
+            {% include '@FOSComment/Thread/async.html.twig' with {'id': threadId} %}
             {#{{ render(controller('AppTranslationalResearchBundle:Project:threadComments', { 'id': threadId })) }}#}
         {% else %}
             {{ render(controller('App\\TranslationalResearchBundle\\Controller\\ProjectController::threadCommentsShowAction', { 'id': threadId })) }}
@@ -878,7 +878,7 @@
                 </p>
             {% endfor %}
 
-            {% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': threadId} %}
+            {% include '@FOSComment/Thread/async.html.twig' with {'id': threadId} %}
         </div>
     {% endif %}
 {% endmacro %}

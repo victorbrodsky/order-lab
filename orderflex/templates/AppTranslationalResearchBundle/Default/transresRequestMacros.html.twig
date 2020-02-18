@@ -218,7 +218,7 @@
             {% endfor %}
 
             <p>
-            {% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': threadId} %}
+            {% include '@FOSComment/Thread/async.html.twig' with {'id': threadId} %}
             </p>
         </div>
     {% endif %}
