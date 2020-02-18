@@ -5391,6 +5391,29 @@ class TransResUtil
         return $res;
     }
 
+    public function showHumanTissueFormViewUrl($project) {
+        //get human tissue form view url
+        $humanTissueForms = null;
+        $humanTissueUrlArr = array();
+        $humanTissueForms = $project->getHumanTissueForms();
+        if( count($humanTissueForms) > 0 ) {
+            foreach($humanTissueForms as $humanTissueForm) {
+                $humanTissueUrl = $this->container->get('router')->generate(
+                    'fellapp_file_view',
+                    array(
+                        'id'=>$humanTissueForm->getId()
+                    )
+                );
+                $thisLink = "<a target='_blank' href=".$humanTissueUrl.">".$humanTissueForm->getOriginalnameClean()."</a>";
+                $humanTissueUrlArr[] = $thisLink;
+            }
+
+            $humanTissueForms = "Human Tissue Form: " . implode(", ",$humanTissueUrlArr) . "";
+        }
+
+        return $humanTissueForms;
+    }
+
     public function getTransresSiteProjectParameter( $fieldName, $project=null, $projectSpecialty=null ) {
 
         if( !$fieldName ) {

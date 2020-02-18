@@ -857,6 +857,9 @@
                 {#"IRB with PI FirstName LastName expires on MM/DD/YYYY."#}
                 {{ project.getIrbInfo(transres_util.getHumanName())|raw }}
 
+                {#get human tissue forms view url#}
+                {{ transres_util.showHumanTissueFormViewUrl(project)|raw }}
+
                 {#{% set irbExpDate = transres_formnode_util.getProjectFormNodeFieldByName(project,"IRB Expiration Date") %}#}
                 {% set irbExpDate = project.getIrbExpirationDate() %}
                 {% if irbExpDate %}
