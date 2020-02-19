@@ -110,7 +110,9 @@ services:
     #    arguments:  ["@service_container", "@doctrine.orm.entity_manager"]
 
 #    App\VacReqBundle\Controller\ApproverController:
-#        arguments: ["@service_container"]
+#        arguments: ["@vacreq_util"]
+#        bind:
+#            $vacreqUtil: '@vacreq_util'
 
 
     ################## Commands ##################

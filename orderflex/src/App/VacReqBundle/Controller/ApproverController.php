@@ -17,6 +17,7 @@
 
 namespace App\VacReqBundle\Controller;
 
+use App\VacReqBundle\Util\VacReqUtil;
 use Doctrine\ORM\EntityRepository;
 use App\UserdirectoryBundle\Entity\Roles;
 use App\UserdirectoryBundle\Form\SimpleUserType;
@@ -45,12 +46,19 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ApproverController extends AbstractController
 {
+    protected $vacreqUtil;
+
+    public function __construct( VacReqUtil $vacreqUtil ) {
+        $this->vacreqUtil = $vacreqUtil;
+        //parent::setContainer(null);
+    }
 
     /**
      * @Route("/groups/", name="vacreq_approvers")
      * @Method({"GET", "POST"})
      * @Template("AppVacReqBundle/Approver/approvers-list.html.twig")
      */
+    //public function myRequestsAction(Request $request, VacReqUtil $vacreqUtil)
     public function myRequestsAction(Request $request)
     {
 
@@ -58,7 +66,8 @@ class ApproverController extends AbstractController
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
-        $vacreqUtil = $this->get('vacreq_util');
+        //$vacreqUtil = $this->get('vacreq_util');
+        $vacreqUtil = $this->vacreqUtil;
         $user = $this->get('security.token_storage')->getToken()->getUser();
         //$em = $this->getDoctrine()->getManager();
 
@@ -138,7 +147,9 @@ class ApproverController extends AbstractController
         $organizationalGroupInstitution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($groupId);
 
         //vacreq_util
-        $vacreqUtil = $this->get('vacreq_util');
+        //$vacreqUtil = $this->get('vacreq_util');
+        $vacreqUtil = $this->vacreqUtil;
+        //$vacreqUtil = $this->container->get('vacreq_util');
         $settings = $vacreqUtil->getSettingsByInstitution($groupId);
 
         return array(
@@ -195,7 +206,8 @@ class ApproverController extends AbstractController
         $organizationalGroupInstitution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($institutionId);
 
         //vacreq_util
-        $vacreqUtil = $this->get('vacreq_util');
+        //$vacreqUtil = $this->get('vacreq_util');
+        $vacreqUtil = $this->vacreqUtil;
         $settings = $vacreqUtil->getSettingsByInstitution($institutionId);
 
         return array(
@@ -243,9 +255,9 @@ class ApproverController extends AbstractController
         }
         //echo "approvers=".count($approvers)."<br>";
 
-        $vacreqUtil = $this->get('vacreq_util');
+        //$vacreqUtil = $this->get('vacreq_util');
         $partialRoleNames = array('ROLE_VACREQ_APPROVER','ROLE_VACREQ_SUPERVISOR');
-        if( $vacreqUtil->hasRoleNameAndGroup($partialRoleNames, $institutionId) == false ) {
+        if( $this->vacreqUtil->hasRoleNameAndGroup($partialRoleNames, $institutionId) == false ) {
             return $this->redirect($this->generateUrl('vacreq-nopermission'));
         }
 
@@ -308,9 +320,9 @@ class ApproverController extends AbstractController
         $em = $this->getDoctrine()->getManager();
 
         //check if logged in user has approver role for $instid
-        $vacreqUtil = $this->get('vacreq_util');
+        //$vacreqUtil = $this->get('vacreq_util');
         $partialRoleNames = array('ROLE_VACREQ_APPROVER','ROLE_VACREQ_SUPERVISOR');
-        if( $vacreqUtil->hasRoleNameAndGroup($partialRoleNames, $instid) == false) {
+        if( $this->vacreqUtil->hasRoleNameAndGroup($partialRoleNames, $instid) == false) {
             return $this->redirect($this->generateUrl('vacreq-nopermission'));
         }
 
@@ -388,9 +400,9 @@ class ApproverController extends AbstractController
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
         //check if logged in user has approver role for $instid
-        $vacreqUtil = $this->get('vacreq_util');
+        //$vacreqUtil = $this->get('vacreq_util');
         $partialRoleNames = array('ROLE_VACREQ_APPROVER','ROLE_VACREQ_SUPERVISOR');
-        if( $vacreqUtil->hasRoleNameAndGroup($partialRoleNames, $instid) == false) {
+        if( $this->vacreqUtil->hasRoleNameAndGroup($partialRoleNames, $instid) == false) {
             return $this->redirect($this->generateUrl('vacreq-nopermission'));
         }
 
@@ -469,9 +481,9 @@ class ApproverController extends AbstractController
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
         //check if logged in user has approver role for $instid
-        $vacreqUtil = $this->get('vacreq_util');
+        //$vacreqUtil = $this->get('vacreq_util');
         $partialRoleNames = array('ROLE_VACREQ_APPROVER','ROLE_VACREQ_SUPERVISOR');
-        if( $vacreqUtil->hasRoleNameAndGroup($partialRoleNames, $instid) == false) {
+        if( $this->vacreqUtil->hasRoleNameAndGroup($partialRoleNames, $instid) == false) {
             return $this->redirect($this->generateUrl('vacreq-nopermission'));
         }
 
@@ -543,9 +555,9 @@ class ApproverController extends AbstractController
         $em = $this->getDoctrine()->getManager();
 
         //check if logged in user has approver role for $instid
-        $vacreqUtil = $this->get('vacreq_util');
+        //$vacreqUtil = $this->get('vacreq_util');
         $partialRoleNames = array('ROLE_VACREQ_APPROVER','ROLE_VACREQ_SUPERVISOR');
-        if( $vacreqUtil->hasRoleNameAndGroup($partialRoleNames, $instid) == false ) {
+        if( $this->vacreqUtil->hasRoleNameAndGroup($partialRoleNames, $instid) == false ) {
             exit('no permission');
             return $this->redirect($this->generateUrl('vacreq-nopermission'));
         }
@@ -923,8 +935,8 @@ class ApproverController extends AbstractController
         //$user = $this->get('security.token_storage')->getToken()->getUser();
 
         //vacreq_util
-        $vacreqUtil = $this->get('vacreq_util');
-        $entity = $vacreqUtil->getSettingsByInstitution($instid);
+        //$vacreqUtil = $this->get('vacreq_util');
+        $entity = $this->vacreqUtil->getSettingsByInstitution($instid);
 
         $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($instid);
         if( !$institution ) {
@@ -990,14 +1002,14 @@ class ApproverController extends AbstractController
         }
 
         //vacreq_util
-        $vacreqUtil = $this->get('vacreq_util');
-        $entity = $vacreqUtil->getSettingsByInstitution($instid);
+        //$vacreqUtil = $this->get('vacreq_util');
+        $entity = $this->vacreqUtil->getSettingsByInstitution($instid);
 
         if( !$entity ) {
             $entity = new VacReqSettings($institution);
         }
 
-        $res = $vacreqUtil->settingsAddRemoveUsers( $entity, $users );
+        $res = $this->vacreqUtil->settingsAddRemoveUsers( $entity, $users );
 
 //        foreach( explode(",",$users) as $emailUserStr ) {
 //
@@ -1060,7 +1072,7 @@ class ApproverController extends AbstractController
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
         //vacreq_util
-        $vacreqUtil = $this->get('vacreq_util');
+        //$vacreqUtil = $this->get('vacreq_util');
 
         $userids = null;
 
@@ -1072,18 +1084,18 @@ class ApproverController extends AbstractController
         $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus');
         $groupParams['exceptPermissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus-carryover');
         $groupParams['statusArr'] = array('default','user-added');
-        $groups = $vacreqUtil->getGroupsByPermission($user,$groupParams);
+        $groups = $this->vacreqUtil->getGroupsByPermission($user,$groupParams);
         //echo "groups=".count($groups)."<br>";
 
         //accrued days up to this month calculated by vacationAccruedDaysPerMonth
-        $accruedDays = $vacreqUtil->getAccruedDaysUpToThisMonth();
+        $accruedDays = $this->vacreqUtil->getAccruedDaysUpToThisMonth();
 
         //Current Academic Year
 //        $currentYear = new \DateTime();
 //        $currentYear = $currentYear->format('Y');
 //        $previousYear = $currentYear - 1;
 //        $yearRange = $previousYear."-".$currentYear;
-        $yearRange = $vacreqUtil->getCurrentAcademicYearRange();
+        $yearRange = $this->vacreqUtil->getCurrentAcademicYearRange();
 
         /////////////// users filter form ///////////////////
         $filterform = $this->createFormBuilder()
@@ -1150,11 +1162,11 @@ class ApproverController extends AbstractController
 
         //echo "groupId=".$groupId."<br>";
         $em = $this->getDoctrine()->getManager();
-        $vacreqUtil = $this->get('vacreq_util');
+        //$vacreqUtil = $this->get('vacreq_util');
 
         //find role submitters by institution
         //$submitters = $vacreqUtil->getSubmittersFromSubmittedRequestsByGroup($groupId);
-        $submitters = $vacreqUtil->getUsersByGroupId($groupId,"ROLE_VACREQ_SUBMITTER");
+        $submitters = $this->vacreqUtil->getUsersByGroupId($groupId,"ROLE_VACREQ_SUBMITTER");
 
         //filter users
         if( $userids ) {
@@ -1178,19 +1190,19 @@ class ApproverController extends AbstractController
         //$previousYear = $currentYear - 1;
         //$yearRanges[] = $previousYear."-".$currentYear;
         //$yearRange = $vacreqUtil->getCurrentAcademicYearRange();
-        $yearRanges[] = $vacreqUtil->getCurrentAcademicYearRange();
+        $yearRanges[] = $this->vacreqUtil->getCurrentAcademicYearRange();
 
         //Current Academic Year - 1
         //$currentYear = $currentYear - 1;
         //$previousYear = $currentYear - 1;
         //$yearRanges[] = $previousYear."-".$currentYear;
-        $yearRanges[] = $vacreqUtil->getPreviousAcademicYearRange();
+        $yearRanges[] = $this->vacreqUtil->getPreviousAcademicYearRange();
 
         //Current Academic Year - 2
         //$currentYear = $currentYear - 1;
         //$previousYear = $currentYear - 1;
         //$yearRanges[] = $previousYear."-".$currentYear;
-        $yearRanges[] = $vacreqUtil->getPreviousAcademicYearRange(1);
+        $yearRanges[] = $this->vacreqUtil->getPreviousAcademicYearRange(1);
 
         $yearRangesColor = array('#c1e2b3','#d0e9c6','#dff0d8');
 
@@ -1200,7 +1212,7 @@ class ApproverController extends AbstractController
             'groupName' => $group."",
             'yearRanges' => $yearRanges,
             'yearRangesColor' => $yearRangesColor,
-            'totalAllocatedDays' => $vacreqUtil->getTotalAccruedDays()
+            'totalAllocatedDays' => $this->vacreqUtil->getTotalAccruedDays()
         );
     }
 

@@ -1349,7 +1349,7 @@ class ProjectController extends AbstractController
             $transresUtil->setEventLog($project,$eventType,$msg.$eventResetMsg,$testing);
 
             return $this->redirectToRoute('translationalresearch_project_show', array('id' => $project->getId()));
-        }
+        }//submit form
 
         $eventType = "Project Viewed";
 
