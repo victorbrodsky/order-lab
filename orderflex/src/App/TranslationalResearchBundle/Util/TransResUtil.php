@@ -926,11 +926,23 @@ class TransResUtil
         return false;
     }
 
-    public function removeReviewsFromProject($project, $originalReviews, $currentReviews) {
-        foreach ($originalReviews as $originalReview) {
+    //Use removeCommitteeReview instead of removeElement.
+    // Otherwise id is null:
+    //Error: An exception occurred while executing
+    // 'UPDATE transres_committeeReview SET primaryReview = ?, id = ?, reviewer = ?, updatedate = ?
+    // WHERE id = ?' with params [1, null, 209, "2020-02-19 18:27:10", 10318]:
+    // SQLSTATE[23502]: Not null violation: 7 ERROR: null value in column "id" violates not-null constraint
+    // DETAIL: Failing row contains (null, 3337, 209, t, committee_review, 2019-12-17 18:04:49, 2020-02-19 18:27:10, null, null, null). with code0
+    public function removeReviewsFromProject($project, $originalReviews, $reviewClass) {
+        //$reviewClass = "CommitteeReview";
+        $getterMethod = "get".$reviewClass."s";
+        $removeMethod = "remove".$reviewClass;
+        $currentReviews = $project->$getterMethod();
+        foreach( $originalReviews as $originalReview ) {
             if (false === $currentReviews->contains($originalReview)) {
                 // remove the Task from the Tag
-                $currentReviews->removeElement($originalReview);
+                //$currentReviews->removeElement($originalReview);
+                $project->$removeMethod($originalReview);
 
                 // if it was a many-to-one relationship, remove the relationship like this
                 $originalReview->setProject(null);
@@ -943,6 +955,23 @@ class TransResUtil
         }
         return $project;
     }
+//    public function removeReviewsFromProject_ORIG($project, $originalReviews, $currentReviews) {
+//        foreach ($originalReviews as $originalReview) {
+//            if (false === $currentReviews->contains($originalReview)) {
+//                // remove the Task from the Tag
+//                $currentReviews->removeElement($originalReview);
+//
+//                // if it was a many-to-one relationship, remove the relationship like this
+//                $originalReview->setProject(null);
+//
+//                $this->em->persist($originalReview);
+//
+//                // if you wanted to delete the Tag entirely, you can also do that
+//                $this->em->remove($originalReview);
+//            }
+//        }
+//        return $project;
+//    }
 
     //Change review's decision according to the current state, because we search pending project assigned to me by decision == NULL
     public function resetReviewDecision($project, $review=null)

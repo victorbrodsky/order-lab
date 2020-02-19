@@ -28,7 +28,8 @@ namespace App\TranslationalResearchBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 //https://stackoverflow.com/questions/6076180/doctrine2-doesnt-set-sequence-to-default-for-id-column-postgres
-//PostgreSQL use $id: @GeneratedValue(strategy="IDENTITY")
+//PostgreSQL use $id (@ORM\GeneratedValue(strategy="AUTO")): @ORM\GeneratedValue(strategy="IDENTITY")
+//CREATE SEQUENCE data_sample_id_seq INCREMENT BY 1 MINVALUE 1 START 1;
 
 /**
  * @ORM\MappedSuperclass
@@ -42,7 +43,7 @@ class ReviewBase
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 

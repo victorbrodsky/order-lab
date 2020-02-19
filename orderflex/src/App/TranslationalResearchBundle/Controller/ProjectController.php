@@ -1187,10 +1187,15 @@ class ProjectController extends AbstractController
             $msg = "Project request " . $project->getOid() . " has been successfully updated";
 
             //////////// remove the relationship between the review and the project ////////////
-            $transresUtil->removeReviewsFromProject($project, $originalIrbReviews, $project->getIrbReviews());
-            $transresUtil->removeReviewsFromProject($project, $originalAdminReviews, $project->getAdminReviews());
-            $transresUtil->removeReviewsFromProject($project, $originalCommitteeReviews, $project->getCommitteeReviews());
-            $transresUtil->removeReviewsFromProject($project, $originalFinalReviews, $project->getFinalReviews());
+//            $transresUtil->removeReviewsFromProject($project, $originalIrbReviews, $project->getIrbReviews());
+//            $transresUtil->removeReviewsFromProject($project, $originalAdminReviews, $project->getAdminReviews());
+//            $transresUtil->removeReviewsFromProject($project, $originalCommitteeReviews, $project->getCommitteeReviews());
+//            $transresUtil->removeReviewsFromProject($project, $originalFinalReviews, $project->getFinalReviews());
+
+            $transresUtil->removeReviewsFromProject($project, $originalIrbReviews, "IrbReview");
+            $transresUtil->removeReviewsFromProject($project, $originalAdminReviews, "AdminReview");
+            $transresUtil->removeReviewsFromProject($project, $originalCommitteeReviews, "CommitteeReview");
+            $transresUtil->removeReviewsFromProject($project, $originalFinalReviews, "FinalReview");
             //////////// EOF remove the relationship between the review and the project ////////////
 
             //exit("clickedButton=".$form->getClickedButton()->getName());

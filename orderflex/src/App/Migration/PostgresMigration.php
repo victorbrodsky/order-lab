@@ -87,6 +87,12 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
             return FALSE;
         }
 
+        //CREATE SEQUENCE transres_committeereview_id_seq
+        if( strpos($sql, 'CREATE SEQUENCE ') !== false ) {
+            echo $this->counter.":###Ignore2 ".$sql.$newline;
+            return FALSE;
+        }
+
         //Case: DROP INDEX idx_d267b39c33f7837
         if( strpos($sql, 'DROP INDEX ') !== false ) {
             $sqlArr = explode(" ",$sql);
@@ -102,7 +108,7 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
         //ALTER TABLE calllog_calllogentrymessage_document ADD PRIMARY KEY (message_id, document_id)
         //Always skip: Primary keys are already exists
         if( strpos($sql, ' ADD PRIMARY KEY ') !== FALSE ) {
-            echo $this->counter.":###Ignore2 ".$sql.$newline;
+            echo $this->counter.":###Ignore3 ".$sql.$newline;
             return FALSE;
         }
 
