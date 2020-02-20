@@ -363,8 +363,16 @@ class CalllogTest extends WebTestBase
 //            ->eq(0) // select the second link in the list
 //            ->link()
 //        ;
-        $link = $crawler->selectLink('Edit Entry')->link();
+
+        if( $crawler->filter('html:contains("Edit Entry")')->count() > 0 ) {
+            $editAmendLink = "Edit Entry";
+        }
+        if( $crawler->filter('html:contains("Amend Entry")')->count() > 0 ) {
+            $editAmendLink = "Amend Entry";
+        }
+        $link = $crawler->selectLink($editAmendLink)->link();
         $crawler = $this->client->click($link);
+
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Encounter Info")')->count()
