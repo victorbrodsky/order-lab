@@ -1636,11 +1636,11 @@ class DashboardController extends AbstractController
         $loggers = $query->getResult();
 
 
-        //2) Thank you for your submission! Your project request has been received and assigned the following ID of APCP2202.
+        //2) Thank you for your submission! Your project request 'Project Title' has been received and assigned the following ID of APCP2202.
         if( count($loggers) == 0 ) {
             $dql = $repository->createQueryBuilder("logger");
             $dql->where("logger.entityName = 'Project' AND logger.entityId = '".$project->getId()."'");
-            $dql->andWhere("logger.event LIKE :eventStr AND logger.event LIKE :eventStr2");
+            $dql->andWhere("logger.event LIKE :eventStr AND logger.event LIKE :eventStr2 AND logger.event LIKE :eventStr3");
 
             $dql->orderBy("logger.id","DESC");
             $query = $em->createQuery($dql);
@@ -1649,13 +1649,15 @@ class DashboardController extends AbstractController
             $requestOid = str_replace("APCP","",$requestOid);
             $requestOid = str_replace("HP","",$requestOid);
             $requestOid = "P".$requestOid;
-            $search1 = "Thank you for your submission! Your project request has been received and assigned the following ID of ";
+            $search1 = "Thank you for your submission! Your project request "; //"Thank you for your submission! Your project request has been received and assigned the following ID of ";
             $search2 = $requestOid;
+            $search3 = "has been received and assigned the following ID of ";
             //echo "try 2: [$search1] AND [$search2] <br>";
             $query->setParameters(
                 array(
                     'eventStr' => '%'.$search1.'%',
                     'eventStr2' => '%'.$search2.'%',
+                    'eventStr3' => '%'.$search3.'%',
                 )
             );
 

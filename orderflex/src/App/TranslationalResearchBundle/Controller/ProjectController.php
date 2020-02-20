@@ -1030,17 +1030,17 @@ class ProjectController extends AbstractController
                 // the status of your project request, submit your subsequent work requests
                 // (upon project request approval), and see your associated invoices (if any) as well.
                 $emailSubject = "Your project request has been received and assigned the following ID: ".$project->getOid();
-                $msg = "Thank you for your submission! Your project request has been received and assigned the following ID of ".$project->getOid().
-                    " and will be reviewed.".
-                    " You should receive notifications of approval status updates by email.".
-                    " You can also log back in to this site to review the status of your project request, ".
-                    "submit your subsequent work requests (upon project request approval), and see your associated invoices (if any) as well.";
+//                $msg = "Thank you for your submission! Your project request has been received and assigned the following ID of ".$project->getOid().
+//                    " and will be reviewed.".
+//                    " You should receive notifications of approval status updates by email.".
+//                    " You can also log back in to this site to review the status of your project request, ".
+//                    "submit your subsequent work requests (upon project request approval), and see your associated invoices (if any) as well.";
                 //Thank you for your submission! Your project request has been received and assigned the ID of APCP28.
                 // It will be reviewed and you should receive notifications regarding its approval status by email.
                 // You can also log back into this web site to review the status of your project request,
                 // submit your subsequent work requests (upon project request approval),
                 // and see your associated invoices (if any) as well.
-                $msg = "Thank you for your submission! Your project request has been received and assigned the following ID of ".$project->getOid().".".
+                $msg = "Thank you for your submission! Your project request '".$project->getTitle()."' has been received and assigned the following ID of ".$project->getOid().".".
                     " It will be reviewed and you should receive notifications regarding its approval status by email.".
                     " You can also log back into the Translational Research web site to review the status of your project request, ".
                     "submit your subsequent work requests (upon project request approval), and see your associated invoices (if any) as well.";

@@ -92,16 +92,22 @@ class ExceptionListener {
         if( $ipFiltering ) {
 
             //Ignore if client request is coming from localhost
-//            if( $ip == 'localhost' ) {
-//                //exit("1Ignore requests from=".$ip);
-//                return false;
-//            }
 //            if( $this->is_ip($ip) ) {
 //                //exit("2Ignore requests from=".$ip);
 //                return false;
 //            }
 
             $hostname = $request->getHost();
+
+            if( $hostname == 'localhost' ) {
+                $logger->notice("Ignoring hostname=$hostname");
+                return false;
+            }
+            if( $hostname == 'iamahost' ) {
+                $logger->notice("Ignoring hostname=$hostname");
+                return false;
+            }
+
             $hostname = str_replace('.','',$hostname);
             $logger->notice("hostname=$hostname");
 
@@ -110,6 +116,7 @@ class ExceptionListener {
                 $logger->notice("Ignoring numeric hostname=$hostname");
                 return false;
             }
+
 
         }
 
