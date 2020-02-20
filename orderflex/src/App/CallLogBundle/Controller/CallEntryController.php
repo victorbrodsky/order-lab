@@ -85,11 +85,11 @@ class CallEntryController extends AbstractController
 
 //    protected $calllogUtil;
 //    protected $userServiceUtil;
-//    protected $paginator;
-//    public function __construct( CallLogUtil $calllogUtil, UserServiceUtil $userServiceUtil, PaginatorInterface $paginator ) {
+////    protected $paginator;
+//    public function __construct( CallLogUtil $calllogUtil, UserServiceUtil $userServiceUtil ) {
 //        $this->calllogUtil = $calllogUtil;
 //        $this->userServiceUtil = $userServiceUtil;
-//        $this->paginator = $paginator;
+////        $this->paginator = $paginator;
 //    }
 
     /**
@@ -101,7 +101,8 @@ class CallEntryController extends AbstractController
      *
      * @Template("AppCallLogBundle/CallLog/home.html.twig")
      */
-    public function homeAction(Request $request, PaginatorInterface $paginator)
+//    public function homeAction(Request $request, PaginatorInterface $paginator, CallLogUtil $calllogUtil)
+    public function homeAction(Request $request)
     {
         if( false == $this->get('security.authorization_checker')->isGranted("ROLE_CALLLOG_USER") ){
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
@@ -112,12 +113,12 @@ class CallEntryController extends AbstractController
         //$results = $userServiceUtil->getFuzzyTest();
         //exit("<br>exit");
 
-        //$calllogUtil = $this->get('user_service_utility');
+        $calllogUtil = $this->get('user_service_utility');
         //echo $calllogUtil->getInstalledSoftware()."<br>";
 
         $em = $this->getDoctrine()->getManager();
-        //$calllogUtil = $this->get('calllog_util');
-        $calllogUtil = $this->calllogUtil;
+        $calllogUtil = $this->get('calllog_util');
+        //$calllogUtil = $this->calllogUtil;
         $route = $request->get('_route');
         $title = "Call Case List";
         $alerts = false;
@@ -163,7 +164,7 @@ class CallEntryController extends AbstractController
 //        );
         $paginationParams = array('wrap-queries'=>true);
 
-        //$paginator  = $this->get('knp_paginator');
+        $paginator  = $this->get('knp_paginator');
         $messages = $paginator->paginate(
             $query,
             $request->query->get('page', 1), /*page number*/
@@ -223,8 +224,8 @@ class CallEntryController extends AbstractController
     {
 
         $em = $this->getDoctrine()->getManager();
-        //$calllogUtil = $this->get('calllog_util');
-        $calllogUtil = $this->calllogUtil;
+        $calllogUtil = $this->get('calllog_util');
+        //$calllogUtil = $this->calllogUtil;
         //$userServiceUtil = $this->get('user_service_utility');
         //$userSecUtil = $this->get('user_security_utility');
         //$sitename = $this->container->getParameter('calllog.sitename');
@@ -1173,8 +1174,8 @@ class CallEntryController extends AbstractController
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $securityUtil = $this->get('order_security_utility');
-        //$calllogUtil = $this->get('calllog_util');
-        $calllogUtil = $this->calllogUtil;
+        $calllogUtil = $this->get('calllog_util');
+        //$calllogUtil = $this->calllogUtil;
         $userSecUtil = $this->get('user_security_utility');
         $orderUtil = $this->get('scanorder_utility');
         $em = $this->getDoctrine()->getManager();
@@ -1444,8 +1445,8 @@ class CallEntryController extends AbstractController
         $securityUtil = $this->get('order_security_utility');
         $userSecUtil = $this->get('user_security_utility');
         $orderUtil = $this->get('scanorder_utility');
-        //$calllogUtil = $this->get('calllog_util');
-        $calllogUtil = $this->calllogUtil;
+        $calllogUtil = $this->get('calllog_util');
+        //$calllogUtil = $this->calllogUtil;
         $em = $this->getDoctrine()->getManager();
 
         $testing = false;
@@ -1930,8 +1931,8 @@ class CallEntryController extends AbstractController
     public function createCalllogEntryForm($message, $mrntype=null, $mrn=null, $cycle, $readonlyEncounter=false, $showPreviousEncounters=false) {
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
-        //$calllogUtil = $this->get('calllog_util');
-        $calllogUtil = $this->calllogUtil;
+        $calllogUtil = $this->get('calllog_util');
+        //$calllogUtil = $this->calllogUtil;
         $userSecUtil = $this->container->get('user_security_utility');
         $sitename = $this->container->getParameter('calllog.sitename');
 
@@ -2022,8 +2023,8 @@ class CallEntryController extends AbstractController
     public function createCalllogEntryMessage($user,$permittedInstitutions,$system,$messageCategoryId=null) {
         $em = $this->getDoctrine()->getManager();
         $orderUtil = $this->get('scanorder_utility');
-        //$calllogUtil = $this->get('calllog_util');
-        $calllogUtil = $this->calllogUtil;
+        $calllogUtil = $this->get('calllog_util');
+        //$calllogUtil = $this->calllogUtil;
 
         $message = new Message();
         $message->setPurpose("For Internal Use by the Department of Pathology for Call Log Book");
@@ -2145,8 +2146,8 @@ class CallEntryController extends AbstractController
             return $this->redirect($this->generateUrl('calllog-nopermission'));
         }
 
-        //$calllogUtil = $this->get('calllog_util');
-        $calllogUtil = $this->calllogUtil;
+        $calllogUtil = $this->get('calllog_util');
+        //$calllogUtil = $this->calllogUtil;
         $searchedArr = array();
 
         //$currentUrl = trim($request->get('currentUrl'));
@@ -2332,8 +2333,8 @@ class CallEntryController extends AbstractController
         $searchArr = array();
 
         if( $mrntype ) {
-            //$calllogUtil = $this->get('calllog_util');
-            $calllogUtil = $this->calllogUtil;
+            $calllogUtil = $this->get('calllog_util');
+            //$calllogUtil = $this->calllogUtil;
             $mrntype = $calllogUtil->convertAutoGeneratedMrntype($mrntype,true);
         }
 
@@ -2812,8 +2813,8 @@ class CallEntryController extends AbstractController
 
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
-        //$calllogUtil = $this->get('calllog_util');
-        $calllogUtil = $this->calllogUtil;
+        $calllogUtil = $this->get('calllog_util');
+        //$calllogUtil = $this->calllogUtil;
 
         $mrn = trim($request->get('mrn'));
         $mrntype = trim($request->get('mrntype')); //ID
@@ -3251,8 +3252,8 @@ class CallEntryController extends AbstractController
 
         //$userSecUtil = $this->get('user_security_utility');
         $userServiceUtil = $this->get('user_service_utility');
-        //$calllogUtil = $this->get('calllog_util');
-        $calllogUtil = $this->calllogUtil;
+        $calllogUtil = $this->get('calllog_util');
+        //$calllogUtil = $this->calllogUtil;
         $route = $request->get('_route');
 
         $pathPostfix = "";

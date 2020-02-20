@@ -34,6 +34,7 @@ use App\OrderformBundle\Entity\PatientMiddleName;
 use App\OrderformBundle\Entity\PatientMrn;
 use App\OrderformBundle\Entity\PatientSex;
 use App\OrderformBundle\Entity\PatientSuffix;
+use App\UserdirectoryBundle\Security\Util\UserSecurityUtil;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -46,12 +47,11 @@ use Symfony\Component\HttpFoundation\Response;
 class DataQualityController extends CallEntryController
 {
 
-    protected $calllogUtil;
-
-    public function __construct( CallLogUtil $calllogUtil ) {
-        $this->calllogUtil = $calllogUtil;
-        //$this->userServiceUtil = $this->get('user_service_utility');//user_service_utility;
-    }
+//    protected $calllogUtil;
+//    public function __construct( CallLogUtil $calllogUtil ) {
+//        $this->calllogUtil = $calllogUtil;
+//        //$this->userServiceUtil = $this->get('user_service_utility');//user_service_utility;
+//    }
 
     /**
      * @Route("/merge-patient-records", name="calllog_merge_patient_records", options={"expose"=true})
@@ -109,13 +109,13 @@ class DataQualityController extends CallEntryController
     /**
      * @Route("/merge-patient-records-ajax", name="calllog_merge_patient_records_ajax", options={"expose"=true})
      */
-    public function mergePatientAjaxAction(Request $request)
+    public function mergePatientAjaxAction(Request $request, CallLogUtil $calllogUtil)
     {
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
         //$securityUtil = $this->get('order_security_utility');
-        //$calllogUtil = $this->get('calllog_util');
-        $calllogUtil = $this->calllogUtil;
+        $calllogUtil = $this->get('calllog_util');
+        //$calllogUtil = $this->calllogUtil;
         $em = $this->getDoctrine()->getManager();
 
         $response = new Response();
@@ -344,6 +344,7 @@ class DataQualityController extends CallEntryController
      * @Template("AppCallLogBundle/DataQuality/un-merge-records.html.twig")
      */
     public function unmergePatientAction(Request $request)
+    //public function unmergePatientAction(Request $request, UserSecurityUtil $securityUtil)
     {
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -403,13 +404,13 @@ class DataQualityController extends CallEntryController
     /**
      * @Route("/set-master-patient-record-ajax", name="calllog_set_master_patient_record_ajax", options={"expose"=true})
      */
-    public function setMasterPatientAjaxAction(Request $request)
+    public function setMasterPatientAjaxAction(Request $request, CallLogUtil $calllogUtil)
     {
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
         //$securityUtil = $this->get('order_security_utility');
         //$calllogUtil = $this->get('calllog_util');
-        $calllogUtil = $this->calllogUtil;
+        //$calllogUtil = $this->calllogUtil;
         $em = $this->getDoctrine()->getManager();
 
         //$system = $securityUtil->getDefaultSourceSystem(); //'scanorder';
@@ -447,13 +448,13 @@ class DataQualityController extends CallEntryController
     /**
      * @Route("/unmerge-patient-records-ajax", name="calllog_unmerge_patient_records_ajax", options={"expose"=true})
      */
-    public function unmergePatientAjaxAction(Request $request)
+    public function unmergePatientAjaxAction(Request $request, CallLogUtil $calllogUtil)
     {
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
         //$securityUtil = $this->get('order_security_utility');
         //$calllogUtil = $this->get('calllog_util');
-        $calllogUtil = $this->calllogUtil;
+        //$calllogUtil = $this->calllogUtil;
         $em = $this->getDoctrine()->getManager();
 
         //$system = $securityUtil->getDefaultSourceSystem(); //'scanorder';
@@ -686,8 +687,8 @@ class DataQualityController extends CallEntryController
     public function createPatientForm($patient, $mrntype=null, $mrn=null) {
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
-        //$calllogUtil = $this->get('calllog_util');
-        $calllogUtil = $this->calllogUtil;
+        $calllogUtil = $this->get('calllog_util');
+        //$calllogUtil = $this->calllogUtil;
         $userSecUtil = $this->container->get('user_security_utility');
         $sitename = $this->container->getParameter('calllog.sitename');
 
