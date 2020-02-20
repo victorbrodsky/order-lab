@@ -47,3 +47,8 @@ services:
         arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
 
+    App\CallLogBundle\Controller\CallEntryController:
+        arguments: ["@calllog_util","@user_service_utility"]
+    App\CallLogBundle\Controller\DataQualityController:
+        arguments: ["@calllog_util","@user_service_utility"]
+

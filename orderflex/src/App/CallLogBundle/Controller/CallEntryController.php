@@ -21,6 +21,8 @@ namespace App\CallLogBundle\Controller;
 
 
 
+use App\CallLogBundle\Util\CallLogUtil;
+use App\UserdirectoryBundle\Util\UserServiceUtil;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\CallLogBundle\Form\CalllogFilterType;
 use App\CallLogBundle\Form\CalllogMessageType;
@@ -50,6 +52,7 @@ use App\OrderformBundle\Form\DataTransformer\MrnTypeTransformer;
 use App\OrderformBundle\Helper\ErrorHelper;
 use App\UserdirectoryBundle\Entity\ModifierInfo;
 use App\UserdirectoryBundle\Entity\Spot;
+use Knp\Component\Pager\PaginatorInterface;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 //use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -80,6 +83,14 @@ use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
 class CallEntryController extends AbstractController
 {
 
+//    protected $calllogUtil;
+//    protected $userServiceUtil;
+//    protected $paginator;
+//    public function __construct( CallLogUtil $calllogUtil, UserServiceUtil $userServiceUtil, PaginatorInterface $paginator ) {
+//        $this->calllogUtil = $calllogUtil;
+//        $this->userServiceUtil = $userServiceUtil;
+//        $this->paginator = $paginator;
+//    }
 
     /**
      * Case List Page
@@ -90,7 +101,7 @@ class CallEntryController extends AbstractController
      *
      * @Template("AppCallLogBundle/CallLog/home.html.twig")
      */
-    public function homeAction(Request $request)
+    public function homeAction(Request $request, PaginatorInterface $paginator)
     {
         if( false == $this->get('security.authorization_checker')->isGranted("ROLE_CALLLOG_USER") ){
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
@@ -105,7 +116,8 @@ class CallEntryController extends AbstractController
         //echo $calllogUtil->getInstalledSoftware()."<br>";
 
         $em = $this->getDoctrine()->getManager();
-        $calllogUtil = $this->get('calllog_util');
+        //$calllogUtil = $this->get('calllog_util');
+        $calllogUtil = $this->calllogUtil;
         $route = $request->get('_route');
         $title = "Call Case List";
         $alerts = false;
@@ -151,7 +163,7 @@ class CallEntryController extends AbstractController
 //        );
         $paginationParams = array('wrap-queries'=>true);
 
-        $paginator  = $this->get('knp_paginator');
+        //$paginator  = $this->get('knp_paginator');
         $messages = $paginator->paginate(
             $query,
             $request->query->get('page', 1), /*page number*/
@@ -211,8 +223,9 @@ class CallEntryController extends AbstractController
     {
 
         $em = $this->getDoctrine()->getManager();
-        $calllogUtil = $this->get('calllog_util');
-        $userServiceUtil = $this->get('user_service_utility');
+        //$calllogUtil = $this->get('calllog_util');
+        $calllogUtil = $this->calllogUtil;
+        //$userServiceUtil = $this->get('user_service_utility');
         //$userSecUtil = $this->get('user_security_utility');
         //$sitename = $this->container->getParameter('calllog.sitename');
 
@@ -916,7 +929,7 @@ class CallEntryController extends AbstractController
             }
             if( $calllogsearchtype == 'Last Name' || $calllogsearchtype == 'Last Name similar to' ) {
                 if( $metaphone ) {
-                    $userServiceUtil->getMetaphoneLike("lastname.field", "lastname.fieldMetaphone", $calllogsearch, $dql, $queryParameters);
+                    $this->userServiceUtil->getMetaphoneLike("lastname.field", "lastname.fieldMetaphone", $calllogsearch, $dql, $queryParameters);
                 } else {
                     $dql->andWhere("lastname.status='valid'");
                     $dql->andWhere("LOWER(lastname.field) LIKE LOWER(:search)");
@@ -1160,7 +1173,8 @@ class CallEntryController extends AbstractController
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $securityUtil = $this->get('order_security_utility');
-        $calllogUtil = $this->get('calllog_util');
+        //$calllogUtil = $this->get('calllog_util');
+        $calllogUtil = $this->calllogUtil;
         $userSecUtil = $this->get('user_security_utility');
         $orderUtil = $this->get('scanorder_utility');
         $em = $this->getDoctrine()->getManager();
@@ -1430,7 +1444,8 @@ class CallEntryController extends AbstractController
         $securityUtil = $this->get('order_security_utility');
         $userSecUtil = $this->get('user_security_utility');
         $orderUtil = $this->get('scanorder_utility');
-        $calllogUtil = $this->get('calllog_util');
+        //$calllogUtil = $this->get('calllog_util');
+        $calllogUtil = $this->calllogUtil;
         $em = $this->getDoctrine()->getManager();
 
         $testing = false;
@@ -1915,7 +1930,8 @@ class CallEntryController extends AbstractController
     public function createCalllogEntryForm($message, $mrntype=null, $mrn=null, $cycle, $readonlyEncounter=false, $showPreviousEncounters=false) {
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
-        $calllogUtil = $this->get('calllog_util');
+        //$calllogUtil = $this->get('calllog_util');
+        $calllogUtil = $this->calllogUtil;
         $userSecUtil = $this->container->get('user_security_utility');
         $sitename = $this->container->getParameter('calllog.sitename');
 
@@ -2006,7 +2022,8 @@ class CallEntryController extends AbstractController
     public function createCalllogEntryMessage($user,$permittedInstitutions,$system,$messageCategoryId=null) {
         $em = $this->getDoctrine()->getManager();
         $orderUtil = $this->get('scanorder_utility');
-        $calllogUtil = $this->get('calllog_util');
+        //$calllogUtil = $this->get('calllog_util');
+        $calllogUtil = $this->calllogUtil;
 
         $message = new Message();
         $message->setPurpose("For Internal Use by the Department of Pathology for Call Log Book");
@@ -2128,7 +2145,8 @@ class CallEntryController extends AbstractController
             return $this->redirect($this->generateUrl('calllog-nopermission'));
         }
 
-        $calllogUtil = $this->get('calllog_util');
+        //$calllogUtil = $this->get('calllog_util');
+        $calllogUtil = $this->calllogUtil;
         $searchedArr = array();
 
         //$currentUrl = trim($request->get('currentUrl'));
@@ -2256,7 +2274,7 @@ class CallEntryController extends AbstractController
     // and to verify before creating patient if already exists (calllog_create_patient)
     public function searchPatient( $request, $evenlog=false, $params=null, $turnOffMetaphone=false ) {
 
-        $userServiceUtil = $this->get('user_service_utility');
+        //$userServiceUtil = $this->get('user_service_utility');
 
         $mrntype = trim($request->get('mrntype')); //ID of mrn type
         $mrn = trim($request->get('mrn'));
@@ -2314,7 +2332,8 @@ class CallEntryController extends AbstractController
         $searchArr = array();
 
         if( $mrntype ) {
-            $calllogUtil = $this->get('calllog_util');
+            //$calllogUtil = $this->get('calllog_util');
+            $calllogUtil = $this->calllogUtil;
             $mrntype = $calllogUtil->convertAutoGeneratedMrntype($mrntype,true);
         }
 
@@ -2446,7 +2465,7 @@ class CallEntryController extends AbstractController
                 $statusStr = "(lastname.status = :statusValid OR lastname.status = :statusAlias)";
 
                 if( $metaphone ) {
-                    $lastnameCriterion = $userServiceUtil->getMetaphoneStrLike("lastname.field","lastname.fieldMetaphone",$lastname,$parameters);
+                    $lastnameCriterion = $this->userServiceUtil->getMetaphoneStrLike("lastname.field","lastname.fieldMetaphone",$lastname,$parameters);
                     if( $lastnameCriterion ) {
                         $searchCriterionArr[] = $lastnameCriterion . " AND " . $statusStr;
 
@@ -2487,7 +2506,7 @@ class CallEntryController extends AbstractController
                 $statusStr = "(firstname.status = :statusValid OR firstname.status = :statusAlias)";
 
                 if( $metaphone ) {
-                    $firstnameCriterion = $userServiceUtil->getMetaphoneStrLike("firstname.field","firstname.fieldMetaphone",$firstname,$parameters);
+                    $firstnameCriterion = $this->userServiceUtil->getMetaphoneStrLike("firstname.field","firstname.fieldMetaphone",$firstname,$parameters);
                     if( $firstnameCriterion ) {
                         $searchCriterionArr[] = $firstnameCriterion . " AND " . $statusStr;
 
@@ -2526,7 +2545,7 @@ class CallEntryController extends AbstractController
                 if( $metaphone ) {
 
                     $lastnameStatusStr = "(lastname.status = :statusValid OR lastname.status = :statusAlias)";
-                    $lastnameCriterion = $userServiceUtil->getMetaphoneStrLike("lastname.field","lastname.fieldMetaphone",$lastname,$parameters,"lastname");
+                    $lastnameCriterion = $this->userServiceUtil->getMetaphoneStrLike("lastname.field","lastname.fieldMetaphone",$lastname,$parameters,"lastname");
                     if ($lastnameCriterion) {
                         $searchCriterionArr[] = $lastnameCriterion . " AND " . $lastnameStatusStr;
                         //$searchCriterionArr[] = $lastnameCriterion;
@@ -2538,7 +2557,7 @@ class CallEntryController extends AbstractController
                     }
 
                     $firstnameStatusStr = "(firstname.status = :statusValid OR firstname.status = :statusAlias)";
-                    $firstnameCriterion = $userServiceUtil->getMetaphoneStrLike("firstname.field","firstname.fieldMetaphone",$firstname,$parameters,"firstname");
+                    $firstnameCriterion = $this->userServiceUtil->getMetaphoneStrLike("firstname.field","firstname.fieldMetaphone",$firstname,$parameters,"firstname");
                     if ($firstnameCriterion) {
                         $searchCriterionArr[] = $firstnameCriterion . " AND " . $firstnameStatusStr;
                         //$searchCriterionArr[] = $firstnameCriterion;
@@ -2793,7 +2812,8 @@ class CallEntryController extends AbstractController
 
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
-        $calllogUtil = $this->get('calllog_util');
+        //$calllogUtil = $this->get('calllog_util');
+        $calllogUtil = $this->calllogUtil;
 
         $mrn = trim($request->get('mrn'));
         $mrntype = trim($request->get('mrntype')); //ID
@@ -3231,7 +3251,8 @@ class CallEntryController extends AbstractController
 
         //$userSecUtil = $this->get('user_security_utility');
         $userServiceUtil = $this->get('user_service_utility');
-        $calllogUtil = $this->get('calllog_util');
+        //$calllogUtil = $this->get('calllog_util');
+        $calllogUtil = $this->calllogUtil;
         $route = $request->get('_route');
 
         $pathPostfix = "";

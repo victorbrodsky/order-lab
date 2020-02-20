@@ -18,6 +18,7 @@
 namespace App\CallLogBundle\Controller;
 
 use App\CallLogBundle\Form\CalllogPatientType;
+use App\CallLogBundle\Util\CallLogUtil;
 use App\OrderformBundle\Entity\Encounter;
 use App\OrderformBundle\Entity\EncounterPatfirstname;
 use App\OrderformBundle\Entity\EncounterPatlastname;
@@ -45,6 +46,12 @@ use Symfony\Component\HttpFoundation\Response;
 class DataQualityController extends CallEntryController
 {
 
+    protected $calllogUtil;
+
+    public function __construct( CallLogUtil $calllogUtil ) {
+        $this->calllogUtil = $calllogUtil;
+        //$this->userServiceUtil = $this->get('user_service_utility');//user_service_utility;
+    }
 
     /**
      * @Route("/merge-patient-records", name="calllog_merge_patient_records", options={"expose"=true})
@@ -107,7 +114,8 @@ class DataQualityController extends CallEntryController
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
         //$securityUtil = $this->get('order_security_utility');
-        $calllogUtil = $this->get('calllog_util');
+        //$calllogUtil = $this->get('calllog_util');
+        $calllogUtil = $this->calllogUtil;
         $em = $this->getDoctrine()->getManager();
 
         $response = new Response();
@@ -400,7 +408,8 @@ class DataQualityController extends CallEntryController
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
         //$securityUtil = $this->get('order_security_utility');
-        $calllogUtil = $this->get('calllog_util');
+        //$calllogUtil = $this->get('calllog_util');
+        $calllogUtil = $this->calllogUtil;
         $em = $this->getDoctrine()->getManager();
 
         //$system = $securityUtil->getDefaultSourceSystem(); //'scanorder';
@@ -443,7 +452,8 @@ class DataQualityController extends CallEntryController
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
         //$securityUtil = $this->get('order_security_utility');
-        $calllogUtil = $this->get('calllog_util');
+        //$calllogUtil = $this->get('calllog_util');
+        $calllogUtil = $this->calllogUtil;
         $em = $this->getDoctrine()->getManager();
 
         //$system = $securityUtil->getDefaultSourceSystem(); //'scanorder';
@@ -676,7 +686,8 @@ class DataQualityController extends CallEntryController
     public function createPatientForm($patient, $mrntype=null, $mrn=null) {
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
-        $calllogUtil = $this->get('calllog_util');
+        //$calllogUtil = $this->get('calllog_util');
+        $calllogUtil = $this->calllogUtil;
         $userSecUtil = $this->container->get('user_security_utility');
         $sitename = $this->container->getParameter('calllog.sitename');
 
