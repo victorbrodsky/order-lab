@@ -125,7 +125,7 @@ class DefaultController extends AbstractController
     }
 
     public function createGenerateForm() {
-        $securityUtil = $this->get('order_security_utility');
+        $securityUtil = $this->get('user_security_utility');
         $userSecUtil = $this->container->get('user_security_utility');
         $user = $this->get('security.token_storage')->getToken()->getUser();
         //permittedInstitutions for generation
@@ -217,7 +217,7 @@ class DefaultController extends AbstractController
         $pagination = null;
 
         //Search across all institutions that are listed in PHI Scope of the user by default
-        $securityUtil = $this->get('order_security_utility');
+        $securityUtil = $this->get('user_security_utility');
         $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
         $permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
         $orderUtil = $this->get('scanorder_utility');
@@ -474,7 +474,7 @@ class DefaultController extends AbstractController
         }
 
         //set source
-        $securityUtil = $this->get('order_security_utility');
+        $securityUtil = $this->get('user_security_utility');
         $source = $securityUtil->getDefaultSourceSystem($this->container->getParameter('deidentifier.sitename'));
         if( !$source ) {
             throw $this->createNotFoundException('Unable to find Deidentifier in SourceSystemList by name='."ORDER Deidentifier");
@@ -692,7 +692,7 @@ class DefaultController extends AbstractController
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $status = 'deidentified-valid';
-        $securityUtil = $this->get('order_security_utility');
+        $securityUtil = $this->get('user_security_utility');
         $source = $securityUtil->getDefaultSourceSystem($this->container->getParameter('deidentifier.sitename'));
         if( !$source ) {
             throw $this->createNotFoundException('Unable to find Deidentifier in SourceSystemList by name='."ORDER Deidentifier");

@@ -27,8 +27,11 @@ namespace App\UserdirectoryBundle\Util;
 
 
 use App\UserdirectoryBundle\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface;
 
 
 class UserDownloadUtil {
@@ -42,9 +45,9 @@ class UserDownloadUtil {
     private $headerSize = 11;
     private $headerFont = "Calibri";
 
-    public function __construct( $em, $secTokenStorage, $container ) {
+    public function __construct( EntityManagerInterface $em, ContainerInterface $container ) {
         $this->em = $em;
-        $this->secTokenStorage = $secTokenStorage;
+        $this->secTokenStorage = $container->get('security.token_storage');
         $this->container = $container;
     }
 

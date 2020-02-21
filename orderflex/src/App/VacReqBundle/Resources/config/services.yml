@@ -39,11 +39,11 @@ services:
 
     vacreq_util:
         class: App\VacReqBundle\Util\VacReqUtil
-        arguments: ["@doctrine.orm.entity_manager", "@security.token_storage", "@security.authorization_checker", "@service_container"]
+#        arguments: ["@doctrine.orm.entity_manager", "@security.token_storage", "@security.authorization_checker", "@service_container"]
 
     vacreq_import_data:
         class: App\VacReqBundle\Util\VacReqImportData
-        arguments: ["@doctrine.orm.entity_manager", "@security.token_storage", "@service_container"]
+        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
 #    vacreq_awaycalendar_listener:
 #        class: App\VacReqBundle\EventListener\CalendarEventListener

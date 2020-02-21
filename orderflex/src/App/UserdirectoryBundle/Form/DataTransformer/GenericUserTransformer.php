@@ -21,7 +21,7 @@ use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Doctrine\Common\Persistence\ObjectManager;
 use App\UserdirectoryBundle\Entity\User;
-use App\UserdirectoryBundle\Security\Util\UserSecurityUtil;
+use App\UserdirectoryBundle\Util\UserSecurityUtil;
 
 
 class GenericUserTransformer implements DataTransformerInterface

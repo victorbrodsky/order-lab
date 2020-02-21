@@ -20,13 +20,17 @@ namespace App\VacReqBundle\Util;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\PersistentCollection;
 use App\VacReqBundle\Entity\VacReqCarryOver;
 use App\VacReqBundle\Entity\VacReqUserCarryOver;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use Psr\Container\ContainerInterface;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface;
 use Symfony\Component\Validator\Constraints\Date;
 
 //use Box\Spout\Common\Type;
@@ -52,16 +56,16 @@ class VacReqUtil
 {
 
     protected $em;
-    protected $secToken;
-    protected $secAuth;
+    protected $security;
+    //protected $secAuth;
     protected $container;
 
 
-    public function __construct( $em, $secToken, $secAuth, $container ) {
+    public function __construct( EntityManagerInterface $em, Security $security, ContainerInterface $container ) {
 
         $this->em = $em;
-        $this->secToken = $secToken;
-        $this->secAuth = $secAuth;
+        $this->security = $security;
+        //$this->secAuth = $secAuth;
         $this->container = $container;
 
     }
@@ -2423,7 +2427,7 @@ class VacReqUtil
 
         //2) get user's supervisor groups
         //to get the select filter with all groups under the supervisor group, find the first upper supervisor of this group.
-        if( $this->secAuth->isGranted('ROLE_VACREQ_SUPERVISOR') ) {
+        if( $this->security->isGranted('ROLE_VACREQ_SUPERVISOR') ) {
             $subjectUser = $user;
         } else {
             $groupParams['asSupervisor'] = true;
@@ -2474,14 +2478,14 @@ class VacReqUtil
 
             $roles = new ArrayCollection();
 
-            if( count($roles)==0 && $this->secAuth->isGranted('ROLE_VACREQ_ADMIN') ) {
+            if( count($roles)==0 && $this->security->isGranted('ROLE_VACREQ_ADMIN') ) {
                 //echo "roles try 1<br>";
                 if( !$asUser ) {
                     $roles = $this->em->getRepository('AppUserdirectoryBundle:User')->
                     findRolesByObjectActionInstitutionSite($objectStr, $actionStr, null, 'vacreq', null);
                 }
             }
-            if( count($roles)==0 && ($this->secAuth->isGranted('ROLE_VACREQ_SUPERVISOR') || $asSupervisor) ) {
+            if( count($roles)==0 && ($this->security->isGranted('ROLE_VACREQ_SUPERVISOR') || $asSupervisor) ) {
                 //echo "roles for ROLE_VACREQ_SUPERVISOR<br>";
                 //echo "roles try 2<br>";
                 if( !$asUser ) {
@@ -2517,7 +2521,7 @@ class VacReqUtil
             //echo "### EOF ".$actionStr.": final role count=".count($roles)."### <br>";
 
 //            $adminRole = false;
-//            if( $this->secAuth->isGranted('ROLE_VACREQ_ADMIN') ) {
+//            if( $this->security->isGranted('ROLE_VACREQ_ADMIN') ) {
 //                //echo "admin<br>";
 //                $adminRole = true;
 //            }
@@ -2637,7 +2641,7 @@ class VacReqUtil
         //get user's roles by site and role name array
         $submitterRoles = new ArrayCollection();
         foreach( $roleSubStrArr as $roleSubStr ) {
-            if( $this->secAuth->isGranted('ROLE_VACREQ_ADMIN') || $this->secAuth->isGranted('ROLE_VACREQ_SUPERVISOR') ) {
+            if( $this->security->isGranted('ROLE_VACREQ_ADMIN') || $this->security->isGranted('ROLE_VACREQ_SUPERVISOR') ) {
                 //find all submitter role's institution
                 $submitterSubRoles = $this->em->getRepository('AppUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName("vacreq",$roleSubStr);
             } else {
@@ -2674,7 +2678,7 @@ class VacReqUtil
                 //get only institutions from the same institutional tree:
                 //  if submitter has CYTOPATHOLOGY submitter role, then the each resulting institution should be equal or be a parent of CYTOPATHOLOGY
                 //check if this institution is equal or under user's site institution
-                if( $this->secAuth->isGranted('ROLE_VACREQ_ADMIN') == false ) {
+                if( $this->security->isGranted('ROLE_VACREQ_ADMIN') == false ) {
                     if( $this->em->getRepository('AppUserdirectoryBundle:Institution')->isNodeUnderParentnodes($userInsts, $institution) == false ) {
                         //echo "remove institution=".$institution."<br>";
                         continue;
@@ -2779,11 +2783,11 @@ class VacReqUtil
 
     //$rolePartialNameArr - array of roles partial names. For example, array('ROLE_VACREQ_APPROVER','ROLE_VACREQ_SUPERVISOR')
     public function hasRoleNameAndGroup( $rolePartialNameArr, $institutionId=null ) {
-        if( $this->secAuth->isGranted('ROLE_VACREQ_ADMIN') ) {
+        if( $this->security->isGranted('ROLE_VACREQ_ADMIN') ) {
             return true;
         }
 
-        $user = $this->secToken->getToken()->getUser();
+        $user = $this->security->getUser();
         //$sitename = "vacreq";
 
         //TODO: fix this by permission
@@ -3276,7 +3280,7 @@ class VacReqUtil
 
     public function getPendingCarryOverRequests($user) {
 
-        if( $this->secAuth->isGranted('ROLE_VACREQ_SUPERVISOR') == false ) {
+        if( $this->security->isGranted('ROLE_VACREQ_SUPERVISOR') == false ) {
            return null;
         }
 

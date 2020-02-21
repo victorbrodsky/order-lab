@@ -34,7 +34,7 @@ use App\OrderformBundle\Entity\PatientMiddleName;
 use App\OrderformBundle\Entity\PatientMrn;
 use App\OrderformBundle\Entity\PatientSex;
 use App\OrderformBundle\Entity\PatientSuffix;
-use App\UserdirectoryBundle\Security\Util\UserSecurityUtil;
+use App\UserdirectoryBundle\Util\UserSecurityUtil;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -61,7 +61,7 @@ class DataQualityController extends CallEntryController
     {
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
-        $securityUtil = $this->get('order_security_utility');
+        $securityUtil = $this->get('user_security_utility');
         //$em = $this->getDoctrine()->getManager();
 
         $title = "Merge Patient Records";
@@ -113,7 +113,7 @@ class DataQualityController extends CallEntryController
     {
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
-        //$securityUtil = $this->get('order_security_utility');
+        //$securityUtil = $this->get('user_security_utility');
         $calllogUtil = $this->get('calllog_util');
         //$calllogUtil = $this->calllogUtil;
         $em = $this->getDoctrine()->getManager();
@@ -348,7 +348,7 @@ class DataQualityController extends CallEntryController
     {
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
-        $securityUtil = $this->get('order_security_utility');
+        $securityUtil = $this->get('user_security_utility');
         //$em = $this->getDoctrine()->getManager();
 
         $system = $securityUtil->getDefaultSourceSystem($this->container->getParameter('calllog.sitename'));
@@ -408,7 +408,7 @@ class DataQualityController extends CallEntryController
     {
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
-        //$securityUtil = $this->get('order_security_utility');
+        //$securityUtil = $this->get('user_security_utility');
         //$calllogUtil = $this->get('calllog_util');
         //$calllogUtil = $this->calllogUtil;
         $em = $this->getDoctrine()->getManager();
@@ -452,7 +452,7 @@ class DataQualityController extends CallEntryController
     {
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
-        //$securityUtil = $this->get('order_security_utility');
+        //$securityUtil = $this->get('user_security_utility');
         //$calllogUtil = $this->get('calllog_util');
         //$calllogUtil = $this->calllogUtil;
         $em = $this->getDoctrine()->getManager();
@@ -549,7 +549,7 @@ class DataQualityController extends CallEntryController
     public function findAndEditPatientAction(Request $request) {
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
-        $securityUtil = $this->get('order_security_utility');
+        $securityUtil = $this->get('user_security_utility');
         //$em = $this->getDoctrine()->getManager();
 
         $system = $securityUtil->getDefaultSourceSystem($this->container->getParameter('calllog.sitename'));
@@ -638,7 +638,7 @@ class DataQualityController extends CallEntryController
     {
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
-        $securityUtil = $this->get('order_security_utility');
+        $securityUtil = $this->get('user_security_utility');
         $em = $this->getDoctrine()->getManager();
 
         $title = "Merge Patient Records";

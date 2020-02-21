@@ -180,7 +180,7 @@ abstract class BasePermissionVoter extends Voter {
         //$subject: string (i.e. "FellowshipApplication") or entity
 //        if( is_object($subject) ) {
 //
-//            $securityUtil = $this->container->get('order_security_utility');
+//            $securityUtil = $this->container->get('user_security_utility');
 //            //minimum requirement: subject must be under user's permitted/collaborated institutions
 //            //don't perform this check for dummy, empty objects
 //            if( $subject->getId() && $subject->getInstitution() ) {
@@ -251,7 +251,7 @@ abstract class BasePermissionVoter extends Voter {
 //        //$subject: string (i.e. "FellowshipApplication") or entity
 //        if( is_object($subject) ) {
 //            //echo "subject is object <br>";
-//            $securityUtil = $this->container->get('order_security_utility');
+//            $securityUtil = $this->container->get('user_security_utility');
 //
 //            //don't perform this check for dummy, empty objects
 //            if( $subject->getId() && $subject->getInstitution() ) {
@@ -349,7 +349,7 @@ abstract class BasePermissionVoter extends Voter {
         //$subject: string (i.e. "FellowshipApplication") or entity
         if( is_object($subject) ) {
             //echo "subject is object <br>";
-            $securityUtil = $this->container->get('order_security_utility');
+            $securityUtil = $this->container->get('user_security_utility');
 
             //don't perform this check for dummy, empty objects
             if( $subject->getId() && $subject->getInstitution() ) {

@@ -173,7 +173,7 @@ class HistoryController extends AbstractController
             throw $this->createNotFoundException('Unable to find History entity.');
         }
 
-        $securityUtil = $this->get('order_security_utility');
+        $securityUtil = $this->get('user_security_utility');
         $user = $this->get('security.token_storage')->getToken()->getUser();
         if( $entity && !$securityUtil->hasUserPermission($entity->getMessage(),$user) ) {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
@@ -204,7 +204,7 @@ class HistoryController extends AbstractController
             throw $this->createNotFoundException('Unable to find History entity.');
         }
 
-        $securityUtil = $this->get('order_security_utility');
+        $securityUtil = $this->get('user_security_utility');
         $user = $this->get('security.token_storage')->getToken()->getUser();
         if( $entity && !$securityUtil->hasUserPermission($entity->getMessage(),$user) ) {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
@@ -255,7 +255,7 @@ class HistoryController extends AbstractController
             throw $this->createNotFoundException('Unable to find History entity.');
         }
 
-        $securityUtil = $this->get('order_security_utility');
+        $securityUtil = $this->get('user_security_utility');
         $user = $this->get('security.token_storage')->getToken()->getUser();
         if( $entity && !$securityUtil->hasUserPermission($entity->getMessage(),$user) ) {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
@@ -347,7 +347,7 @@ class HistoryController extends AbstractController
         $entities = $em->getRepository('AppOrderformBundle:History')->findByCurrentid($id,array('changedate'=>'DESC'));
         //echo "hist count=".count($entities)."<br>";
 
-        $securityUtil = $this->get('order_security_utility');
+        $securityUtil = $this->get('user_security_utility');
         if( count($entities)>0 && !$securityUtil->hasUserPermission($entities[0]->getMessage(),$user) ) {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }

@@ -86,7 +86,7 @@ abstract class BaseVoter extends Voter {
         }
 
         $user = $token->getUser();
-        $securityUtil = $this->container->get('order_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
         //exit('1');
         //minimum requirement: subject must be under user's permitted/collaborated institutions
         //don't perform this check for dummy, empty objects
@@ -157,7 +157,7 @@ abstract class BaseVoter extends Voter {
         }
 
         $user = $token->getUser();
-        $securityUtil = $this->container->get('order_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
 
         //minimum requirement: subject must be under user's permitted/collaborated institutions
         if( $securityUtil->isObjectUnderUserPermittedCollaboratedInstitutions( $subject, $user, array("Union") ) == false ) {

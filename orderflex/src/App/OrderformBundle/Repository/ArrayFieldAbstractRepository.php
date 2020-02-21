@@ -18,11 +18,12 @@
 namespace App\OrderformBundle\Repository;
 
 //use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\UserdirectoryBundle\Util\UserSecurityUtil;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 
 use App\OrderformBundle\Entity\Patient;
-use App\OrderformBundle\Security\Util\SecurityUtil;
+use App\OrderformBundle\Util\SecurityUtil;
 use Doctrine\ORM\Mapping\ClassMetadata;
 //use Doctrine\Persistence\ManagerRegistry;
 
@@ -40,7 +41,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     {
         parent::__construct($em, $class);
 
-        $securityUtil = new SecurityUtil($em,null,null,null);
+        $securityUtil = new UserSecurityUtil($this->_em,null);
         $this->source = $securityUtil->getDefaultSourceSystem();
     }
     //https://stackoverflow.com/questions/48024235/cannot-autowire-service-argument-references-class-but-no-such-service-exists
@@ -565,7 +566,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         }
 
         //default source
-        $securityUtil = new SecurityUtil($this->_em,null,null,null);
+        $securityUtil = new UserSecurityUtil($this->_em,null);
         $source = $securityUtil->getDefaultSourceSystem();
 
         $class = new \ReflectionClass($entity);

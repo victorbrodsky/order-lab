@@ -6,7 +6,7 @@ parameters:
 
 twig:
     globals:
-        order_security_utility: "@order_security_utility"
+        user_security_utility: "@user_security_utility"
         scan_sitename: '%scan.sitename%'
 
 
@@ -24,7 +24,7 @@ services:
         autoconfigure: true
         public: true
         class: App\OrderformBundle\Form\CustomType\ScanCustomSelectorType
-        arguments: ["@doctrine.orm.entity_manager","@security.token_storage", "@service_container"]
+        arguments: ["@doctrine.orm.entity_manager","@service_container"]
         tags:
             - { name: form.type, alias: scan_custom_selector }
 
@@ -34,9 +34,9 @@ services:
         arguments:  ["@service_container", "@doctrine.orm.entity_manager"]
 
     #security utility
-    order_security_utility:
-        class: App\OrderformBundle\Security\Util\SecurityUtil
-        arguments: ["@doctrine.orm.entity_manager", "@security.token_storage", "@security.authorization_checker", "@service_container"]
+#    order_security_utility:
+#        class: App\OrderformBundle\Util\SecurityUtil
+#        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
     #scanorder utility
     scanorder_utility:

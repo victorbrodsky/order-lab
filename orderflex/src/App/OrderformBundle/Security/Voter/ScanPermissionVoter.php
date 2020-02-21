@@ -110,7 +110,7 @@ class ScanPermissionVoter extends BasePermissionVoter {
         $subjectInstitution = $subject->getInstitution();
         if( $subjectInstitution ) {
             $user = $token->getUser();
-            $securityUtil = $this->container->get('order_security_utility');
+            $securityUtil = $this->container->get('user_security_utility');
             $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
             $userChiefServices = $userSiteSettings->getChiefServices();
             if ($this->em->getRepository('AppUserdirectoryBundle:Institution')->isNodeUnderParentnodes($userChiefServices, $subjectInstitution)) {

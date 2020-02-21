@@ -31,7 +31,7 @@ use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransf
 use App\OrderformBundle\Form\SlideReturnRequestType;
 use App\OrderformBundle\Form\FilterSlideReturnRequestType;
 use App\OrderformBundle\Entity\SlideReturnRequest;
-use App\OrderformBundle\Security\Util\SecurityUtil;
+use App\OrderformBundle\Util\SecurityUtil;
 use App\OrderformBundle\Entity\History;
 use App\OrderformBundle\Entity\SlideText;
 use App\UserdirectoryBundle\Util\UserUtil;
@@ -58,7 +58,7 @@ class SlideReturnRequestController extends AbstractController
         $orderUtil = $this->get('scanorder_utility');
 
         //check if user has at least one institution
-        $securityUtil = $this->get('order_security_utility');
+        $securityUtil = $this->get('user_security_utility');
         $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
         if( !$userSiteSettings ) {
             $orderUtil->setWarningMessageNoInstitution($user);
@@ -316,7 +316,7 @@ class SlideReturnRequestController extends AbstractController
                 throw $this->createNotFoundException('Unable to find Message (Scan Order) entity with id='.$scanorderId);
             }
 
-            $securityUtil = $this->get('order_security_utility');
+            $securityUtil = $this->get('user_security_utility');
             if( $message && !$securityUtil->isUserAllowOrderActions($message, $user, array('show')) ) {
                 return $this->redirect( $this->generateUrl('scan-nopermission') );
             }
@@ -344,7 +344,7 @@ class SlideReturnRequestController extends AbstractController
         $orderUtil = $this->get('scanorder_utility');
         $orderUtil->setLastOrderWithProxyuser($user,$slideReturnRequest->getMessage());
 
-        $securityUtil = $this->get('order_security_utility');
+        $securityUtil = $this->get('user_security_utility');
         $permittedInst = $securityUtil->getUserPermittedInstitutions($user);
 
         $permittedInst = $orderUtil->getAllScopeInstitutions($permittedInst,$message);
@@ -462,7 +462,7 @@ class SlideReturnRequestController extends AbstractController
 
     //local function used only in Slide Return Request Controller
     public function getSlideReturnRequestInstitutionQueryCriterion($user) {
-        $securityUtil = $this->container->get('order_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
         $institutions = $securityUtil->getUserPermittedInstitutions($user);
         $instStr = "";
         foreach( $institutions as $inst ) {
@@ -605,7 +605,7 @@ class SlideReturnRequestController extends AbstractController
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $message = $entity->getMessage();
-        $securityUtil = $this->get('order_security_utility');
+        $securityUtil = $this->get('user_security_utility');
         if( $message && !$securityUtil->hasUserPermission($message,$user,array("Union"),array("changestatus")) ) {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }

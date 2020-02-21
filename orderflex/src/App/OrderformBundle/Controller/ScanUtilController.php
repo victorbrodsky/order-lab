@@ -881,7 +881,7 @@ class ScanUtilController extends UtilController {
 
         $em = $this->getDoctrine()->getManager();
         $loggedUser = $this->get('security.token_storage')->getToken()->getUser();
-        $securityUtil = $this->get('order_security_utility');
+        $securityUtil = $this->get('user_security_utility');
         $cycle = $request->query->get('cycle');
 
         $output = array();

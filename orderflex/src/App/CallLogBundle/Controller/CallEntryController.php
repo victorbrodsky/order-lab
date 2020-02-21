@@ -1173,7 +1173,7 @@ class CallEntryController extends AbstractController
         //1) search box: MRN,Name...
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
-        $securityUtil = $this->get('order_security_utility');
+        $securityUtil = $this->get('user_security_utility');
         $calllogUtil = $this->get('calllog_util');
         //$calllogUtil = $this->calllogUtil;
         $userSecUtil = $this->get('user_security_utility');
@@ -1442,7 +1442,7 @@ class CallEntryController extends AbstractController
         //case 2: patient does not exists: create a new encounter to DB
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
-        $securityUtil = $this->get('order_security_utility');
+        $securityUtil = $this->get('user_security_utility');
         $userSecUtil = $this->get('user_security_utility');
         $orderUtil = $this->get('scanorder_utility');
         $calllogUtil = $this->get('calllog_util');
@@ -2788,7 +2788,7 @@ class CallEntryController extends AbstractController
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
-        $securityUtil = $this->get('order_security_utility');
+        $securityUtil = $this->get('user_security_utility');
         $userSecUtil = $this->get('user_security_utility');
         $withEncounter = false;
         $res = array();
@@ -3170,7 +3170,7 @@ class CallEntryController extends AbstractController
 //    public function getCurrentUserInstitution($user)
 //    {
 //        $em = $this->getDoctrine()->getManager();
-//        $securityUtil = $this->get('order_security_utility');
+//        $securityUtil = $this->get('user_security_utility');
 //
 //        $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
 //        $institution = $userSiteSettings->getDefaultInstitution();

@@ -87,7 +87,7 @@ use App\OrderformBundle\Form\SlideMultiType;
 
 use App\OrderformBundle\Helper\ErrorHelper;
 use App\OrderformBundle\Helper\ScanEmailUtil;
-use App\OrderformBundle\Security\Util\SecurityUtil;
+use App\OrderformBundle\Util\SecurityUtil;
 use App\UserdirectoryBundle\Util\UserUtil;
 
 use App\OrderformBundle\Form\DataTransformer\ProcedureTransformer;
@@ -134,7 +134,7 @@ class TableController extends AbstractController {
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
         //check if user has at least one institution
-        $securityUtil = $this->get('order_security_utility');
+        $securityUtil = $this->get('user_security_utility');
         $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
         if( !$userSiteSettings ) {
             $orderUtil = $this->get('scanorder_utility');
@@ -164,7 +164,7 @@ class TableController extends AbstractController {
             $actions = array('edit');
         }
 
-        $secUtil = $this->get('order_security_utility');
+        $secUtil = $this->get('user_security_utility');
         if( $message && !$secUtil->isUserAllowOrderActions($message, $user, $actions) ) {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
@@ -497,7 +497,7 @@ class TableController extends AbstractController {
         $userSecUtil = $this->get('user_security_utility');
 
         //check if user has at least one institution
-        $securityUtil = $this->get('order_security_utility');
+        $securityUtil = $this->get('user_security_utility');
         $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
         if( !$userSiteSettings ) {
             $orderUtil->setWarningMessageNoInstitution($user);
@@ -810,7 +810,7 @@ class TableController extends AbstractController {
         $force = true; //true - create fields even if the value is empty
         $status = "valid";
         $provider = $this->get('security.token_storage')->getToken()->getUser();
-        $securityUtil = $this->get('order_security_utility');
+        $securityUtil = $this->get('user_security_utility');
         $system = $securityUtil->getDefaultSourceSystem();    //'scanorder';
         $em = $this->getDoctrine()->getManager();
 

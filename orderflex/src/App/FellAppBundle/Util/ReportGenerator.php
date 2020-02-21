@@ -39,6 +39,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
@@ -66,7 +67,8 @@ class ReportGenerator {
     protected $runningGenerationReport;
     //protected $env;
 
-    public function __construct( EntityManagerInterface $em, ContainerInterface $container, Session $session ) {
+    //public function __construct( EntityManagerInterface $em, ContainerInterface $container, Session $session ) {
+    public function __construct( EntityManagerInterface $em, ContainerInterface $container, SessionInterface $session ) {
         $this->em = $em;
         $this->container = $container;
         $this->session = $session;

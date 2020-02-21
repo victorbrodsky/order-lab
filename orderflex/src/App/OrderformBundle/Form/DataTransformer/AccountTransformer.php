@@ -32,7 +32,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 
 use App\OrderformBundle\Entity\Account;
 use App\UserdirectoryBundle\Entity\User;
-use App\UserdirectoryBundle\Security\Util\UserSecurityUtil;
+use App\UserdirectoryBundle\Util\UserSecurityUtil;
 
 class AccountTransformer implements DataTransformerInterface
 {
@@ -122,7 +122,7 @@ class AccountTransformer implements DataTransformerInterface
             //echo "user=".$this->user."<br>"; //user must be an object (exist in DB)
             if( !$this->user instanceof User ) {
                 //user = system user
-                $userSecUtil = new UserSecurityUtil($this->em,null,null,null);
+                $userSecUtil = new UserSecurityUtil($this->em,null);
                 $this->user = $userSecUtil->findSystemUser();
             }
 

@@ -31,7 +31,7 @@ use App\TranslationalResearchBundle\Entity\CommitteeReview;
 use App\TranslationalResearchBundle\Entity\Project;
 use App\TranslationalResearchBundle\Entity\TransResRequest;
 use App\UserdirectoryBundle\Security\Authentication\AuthUtil;
-use App\UserdirectoryBundle\Security\Util\UserSecurityUtil;
+use App\UserdirectoryBundle\Util\UserSecurityUtil;
 use App\UserdirectoryBundle\Util\UserUtil;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 use Symfony\Component\Validator\Constraints\DateTime;

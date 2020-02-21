@@ -34,7 +34,7 @@ class CropAvatar {
     private $uploadPostfix = "upload";
     private $msg;
 
-    function __construct($src, $data, $file, $uploadPath) {
+    function __construct($src=null, $data=null, $file=null, $uploadPath=null) {
 
         //echo "__DIR__=".__DIR__." ";
         $webPath = __DIR__.'/../../../../public/';

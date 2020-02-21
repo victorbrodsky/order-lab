@@ -21,7 +21,7 @@ namespace App\UserdirectoryBundle\Controller;
 use App\UserdirectoryBundle\Entity\SiteList;
 use App\UserdirectoryBundle\Entity\User;
 use App\UserdirectoryBundle\Form\LabelType;
-use App\UserdirectoryBundle\Security\Util\UserSecurityUtil;
+use App\UserdirectoryBundle\Util\UserSecurityUtil;
 use App\UserdirectoryBundle\Util\UserUtil;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -158,7 +158,7 @@ class HomeController extends AbstractController {
         //$user = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByUsername( $username."_@_". $usernamePrefix);
 
 
-        $userSecUtil = new UserSecurityUtil($em,null,null,null);
+        $userSecUtil = new UserSecurityUtil($em,null);
         $systemuser = $userSecUtil->findSystemUser();
 
         //$this->generateSitenameList($systemuser);

@@ -31,6 +31,9 @@ namespace App\UserdirectoryBundle\Util;
 use App\UserdirectoryBundle\Entity\Permission;
 use App\UserdirectoryBundle\Entity\SiteParameters;
 use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
+use Doctrine\ORM\EntityManagerInterface;
+//use Psr\Container\ContainerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Sinergi\BrowserDetector\Browser;
 use Sinergi\BrowserDetector\Os;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
@@ -44,7 +47,9 @@ use Symfony\Component\Process\Process;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface;
 
 //use Crontab\Crontab;
 //use Crontab\Job;
@@ -52,13 +57,13 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class UserServiceUtil {
 
     protected $em;
-    protected $secTokenStorage;
+    protected $security;
     protected $container;
     protected $m3;
 
-    public function __construct( $em, $secTokenStorage, $container ) {
+    public function __construct( EntityManagerInterface $em, Security $security, ContainerInterface $container ) {
         $this->em = $em;
-        $this->secTokenStorage = $secTokenStorage;
+        $this->security = $security;
         $this->container = $container;
     }
 
@@ -78,7 +83,7 @@ class UserServiceUtil {
     public function convertFromUtcToUserTimezone($datetime,$user=null) {
 
         if( !$user ) {
-            $user = $this->secTokenStorage->getToken()->getUser();
+            $user = $this->security->getUser();
         }
 
         //$user_tz = 'America/New_York';
@@ -146,7 +151,7 @@ class UserServiceUtil {
     //the timestamp must change based on the timezone set in Global User Preferences > TimeZone of the currently logged in user's profile
     public function getSubmitterInfo( $message, $user=null ) {
         if( !$user ) {
-            $user = $this->secTokenStorage->getToken()->getUser();
+            $user = $this->security->getUser();
         }
         $info = $this->getOrderDateStr($message,$user);
         if( $message && $message->getProvider() ) {
@@ -164,7 +169,7 @@ class UserServiceUtil {
         $info = "";
         if( $message->getOrderdate() ) {
             if( !$user ) {
-                $user = $this->secTokenStorage->getToken()->getUser();
+                $user = $this->security->getUser();
             }
             $orderDate = $message->getOrderdate();
             //$orderDate = $this->convertFromUserTzToUserTz($orderDate,$message->getProvider(),$user);
@@ -220,7 +225,7 @@ class UserServiceUtil {
         $info = $dateTz->format('m/d/Y') . " at " . $timeTz->format('h:i a') . " (" . $tz . ")";
         
         //TODO: add timezone in the user's timezone
-        //$user = $this->secTokenStorage->getToken()->getUser();
+        //$user = $this->security->getUser();
         //$dateTime = new \DateTime();
         //$dateTime->setDate($date);
         //$dateTime->setTime($time);
@@ -1290,7 +1295,7 @@ class UserServiceUtil {
 
         $timestamp = filemtime($filename);
         if( $timestamp ) {
-            $user = $this->secTokenStorage->getToken()->getUser();
+            $user = $this->security->getUser();
             //$timestamp = date("F d Y H:i:s.",$timestamp);
             //$dateTime = new \DateTime($timestamp);
             $dateTime = new \DateTime();

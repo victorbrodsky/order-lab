@@ -69,7 +69,7 @@ class ArrayFieldType extends AbstractType
 //
 //            $source = null;
 //            if( $this->params['em'] && $this->params['sitename'] ) {
-//                $securityUtil = $this->params['container']->get('order_security_utility');
+//                $securityUtil = $this->params['container']->get('user_security_utility');
 //                $source = $securityUtil->getDefaultSourceSystem($this->params['sitename']);
 //            }
 //            $builder->add('source','hidden',array(
@@ -160,7 +160,7 @@ class ArrayFieldType extends AbstractType
 
                         if (!$otherObject['id'] && !$otherObject['source'] && $this->params['em'] && $this->params['sitename']) {
                             //get source
-                            $securityUtil = $this->params['container']->get('order_security_utility');
+                            $securityUtil = $this->params['container']->get('user_security_utility');
                             $source = $securityUtil->getDefaultSourceSystem($this->params['sitename']);
                             //echo $otherObject['id'] . ": set source=" . $source . "<br>";
                             $otherObject['source'] = $source->getId();
@@ -221,7 +221,7 @@ class ArrayFieldType extends AbstractType
                         $source = null;
                         if ($this->params['sitename'] && !$thisSource) {
                             //echo "FormEvent source=".$thisSource."<br>";
-                            $securityUtil = $this->params['container']->get('order_security_utility');
+                            $securityUtil = $this->params['container']->get('user_security_utility');
                             $source = $securityUtil->getDefaultSourceSystem($this->params['sitename']);
                         }
 

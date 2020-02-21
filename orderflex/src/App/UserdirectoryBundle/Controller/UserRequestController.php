@@ -446,7 +446,7 @@ class UserRequestController extends AbstractController
         $params['requestedScanOrderInstitutionScope'] = $requestedScanOrderInstitutionScope;
 
         //Roles
-        $securityUtil = $this->get('order_security_utility');
+        $securityUtil = $this->get('user_security_utility');
         $rolesArr = $securityUtil->getSiteRolesKeyValue($this->siteName);
         $params['roles'] = $rolesArr;
 

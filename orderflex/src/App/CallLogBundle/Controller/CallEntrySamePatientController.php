@@ -72,7 +72,7 @@ class CallEntrySamePatientController extends CallEntryController
         //1) search box: MRN,Name...
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
-        $securityUtil = $this->get('order_security_utility');
+        $securityUtil = $this->get('user_security_utility');
         $calllogUtil = $this->get('calllog_util');
         $userSecUtil = $this->get('user_security_utility');
         $orderUtil = $this->get('scanorder_utility');
@@ -87,7 +87,7 @@ class CallEntrySamePatientController extends CallEntryController
         //echo "mrntype=".$mrntype."<br>";
 
         //check if user has at least one institution
-        //$securityUtil = $this->get('order_security_utility');
+        //$securityUtil = $this->get('user_security_utility');
         $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
         if( !$userSiteSettings ) {
             $orderUtil->setWarningMessageNoInstitution($user);
@@ -307,7 +307,7 @@ class CallEntrySamePatientController extends CallEntryController
         //case 2: patient does not exists: create a new encounter to DB
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
-        $securityUtil = $this->get('order_security_utility');
+        $securityUtil = $this->get('user_security_utility');
         $userSecUtil = $this->get('user_security_utility');
         $orderUtil = $this->get('scanorder_utility');
         $calllogUtil = $this->get('calllog_util');

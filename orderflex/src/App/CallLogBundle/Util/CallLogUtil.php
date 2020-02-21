@@ -116,7 +116,7 @@ class CallLogUtil
     public function createPatientMergeMrn( $provider, $patient, $mrnId ) {
 
         //Source System: ORDER Call Log Book
-        $securityUtil = $this->container->get('order_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
         $sourcesystem = $securityUtil->getDefaultSourceSystem($this->container->getParameter('calllog.sitename'));
         if( !$sourcesystem ) {
             $msg = 'Source system not found by name ORDER Call Log Book';
@@ -147,7 +147,7 @@ class CallLogUtil
     public function createWithCheckPatientMergeMrn( $provider, $patient, $mrnId ) {
 
         //Source System: ORDER Call Log Book
-        $securityUtil = $this->container->get('order_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
         $sourcesystem = $securityUtil->getDefaultSourceSystem($this->container->getParameter('calllog.sitename'));
         if( !$sourcesystem ) {
             $msg = 'Source system not found by name ORDER Call Log Book';
@@ -446,7 +446,7 @@ class CallLogUtil
     //set master patient: create a new, valid masterMergeRecord and set all others to invalid
     public function setMasterPatientRecord( $patients, $masterMergeRecordId, $provider ) {
 
-        $securityUtil = $this->container->get('order_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
         $sourcesystem = $securityUtil->getDefaultSourceSystem($this->container->getParameter('calllog.sitename'));
         if( !$sourcesystem ) {
             $msg = 'Source system not found by name ORDER Call Log Book';
@@ -3626,7 +3626,7 @@ class CallLogUtil
 
         if(0) {
             //////////// get new encounter //////////////
-            $securityUtil = $this->container->get('order_security_utility');
+            $securityUtil = $this->container->get('user_security_utility');
             $userSecUtil = $this->container->get('user_security_utility');
             $user = $this->container->get('security.token_storage')->getToken()->getUser();
             $system = $securityUtil->getDefaultSourceSystem($this->container->getParameter('calllog.sitename'));

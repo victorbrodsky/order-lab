@@ -21,7 +21,7 @@ use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Doctrine\Common\Persistence\ObjectManager;
 use App\UserdirectoryBundle\Entity\User;
-use App\UserdirectoryBundle\Security\Util\UserSecurityUtil;
+use App\UserdirectoryBundle\Util\UserSecurityUtil;
 
 
 class GenericManyToManyTransformer implements DataTransformerInterface
@@ -194,7 +194,7 @@ class GenericManyToManyTransformer implements DataTransformerInterface
             //echo "user=".$this->user."<br>"; //user must be an object (exist in DB)
             if( !$this->user instanceof User ) {
                 //user = system user
-                $userSecUtil = new UserSecurityUtil($this->em,null,null,null);
+                $userSecUtil = new UserSecurityUtil($this->em,null);
                 $this->user = $userSecUtil->findSystemUser();
             }
 
@@ -231,7 +231,7 @@ class GenericManyToManyTransformer implements DataTransformerInterface
         $newEntity = new $fullClassName();
 
         //add default type
-        $userSecUtil = new UserSecurityUtil($this->em,null,null,null);
+        $userSecUtil = new UserSecurityUtil($this->em,null);
         $newEntity = $userSecUtil->addDefaultType($newEntity,$this->params);
 
         $newEntity = $this->populateEntity($newEntity);

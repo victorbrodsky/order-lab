@@ -18,13 +18,14 @@
 namespace App\OrderformBundle\Repository;
 
 
-use App\OrderformBundle\Security\Util\SecurityUtil;
+use App\OrderformBundle\Util\SecurityUtil;
 use App\OrderformBundle\Entity\PatientLastName;
 use App\OrderformBundle\Entity\PatientFirstName;
 use App\OrderformBundle\Entity\PatientMiddleName;
 use App\OrderformBundle\Entity\PatientSex;
 use App\OrderformBundle\Entity\DataQualityAge;
 use App\OrderformBundle\Entity\PatientSuffix;
+use App\UserdirectoryBundle\Util\UserSecurityUtil;
 
 
 /**
@@ -63,7 +64,7 @@ class EncounterRepository extends ArrayFieldAbstractRepository
 
         $patient = $encounter->getParent();
 
-        $securityUtil = new SecurityUtil($this->_em,null,null,null);
+        $securityUtil = new UserSecurityUtil($this->_em,null);
         $source = $securityUtil->getDefaultSourceSystem($sitename);
         //$status = self::STATUS_VALID;
 

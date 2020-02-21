@@ -116,7 +116,7 @@ class PatientController extends AbstractController
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
         //check if user has at least one institution
-        $securityUtil = $this->get('order_security_utility');
+        $securityUtil = $this->get('user_security_utility');
         $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
         if( !$userSiteSettings ) {
             $orderUtil = $this->get('scanorder_utility');
@@ -258,7 +258,7 @@ class PatientController extends AbstractController
         //echo "fullname=".$entity->getFullPatientName(false)."<br>";
         //exit('1');
 
-        $securityUtil = $this->get('order_security_utility');
+        $securityUtil = $this->get('user_security_utility');
         if( $entity && !$securityUtil->hasUserPermission($entity,$user,array("Union","Intersection"),array("show")) ) {
             //exit("showPatient: no permission to show patient");
             return $this->redirect( $this->generateUrl('scan-nopermission') );
@@ -386,7 +386,7 @@ class PatientController extends AbstractController
         }
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
-        $securityUtil = $this->get('order_security_utility');
+        $securityUtil = $this->get('user_security_utility');
         if( $entity && !$securityUtil->hasUserPermission($entity,$user,array("Union"),array("edit")) ) {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
@@ -520,7 +520,7 @@ class PatientController extends AbstractController
         }
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
-        $securityUtil = $this->get('order_security_utility');
+        $securityUtil = $this->get('user_security_utility');
         if ($entity && !$securityUtil->hasUserPermission($entity, $user, array("Union"), array("edit"))) {
             return $this->redirect($this->generateUrl('scan-nopermission'));
         }
@@ -699,7 +699,7 @@ class PatientController extends AbstractController
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
-        $securityUtil = $this->get('order_security_utility');
+        $securityUtil = $this->get('user_security_utility');
         $status = 'valid';
         $system = $securityUtil->getDefaultSourceSystem();
         $em = $this->getDoctrine()->getManager();
@@ -1017,7 +1017,7 @@ class PatientController extends AbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
-        $securityUtil = $this->get('order_security_utility');
+        $securityUtil = $this->get('user_security_utility');
 
         $system = $securityUtil->getDefaultSourceSystem();
         $status = 'valid';
@@ -1552,7 +1552,7 @@ class PatientController extends AbstractController
     public function createSpecificMessage( $messageCategoryStr ) {
 
         $em = $this->getDoctrine()->getManager();
-        $securityUtil = $this->get('order_security_utility');
+        $securityUtil = $this->get('user_security_utility');
 
         $userSecurity = $this->get('security.token_storage')->getToken()->getUser();
         $user = $em->getRepository('AppUserdirectoryBundle:User')->find($userSecurity->getId());

@@ -21,7 +21,8 @@ use App\OrderformBundle\Entity\DataQualityMrnAcc;
 use App\OrderformBundle\Form\DataTransformer\AccessionTypeTransformer;
 use App\OrderformBundle\Entity\Block;
 use App\OrderformBundle\Entity\Accession;
-use App\OrderformBundle\Security\Util\SecurityUtil;
+use App\OrderformBundle\Util\SecurityUtil;
+use App\UserdirectoryBundle\Util\UserSecurityUtil;
 
 //use Doctrine\ORM\EntityManagerInterface;
 //use Doctrine\ORM\EntityRepository;
@@ -248,7 +249,7 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
 
         $acctype = $em->getRepository('AppOrderformBundle:AccessionType')->findOneByName("Auto-generated Accession Number");
 
-        $securityUtil = new SecurityUtil($this->_em,null,null,null);
+        $securityUtil = new UserSecurityUtil($this->_em,null);
         $source = $securityUtil->getDefaultSourceSystem();
 
         //we should have only one key field !!!

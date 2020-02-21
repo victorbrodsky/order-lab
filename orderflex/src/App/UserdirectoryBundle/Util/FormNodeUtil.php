@@ -19,9 +19,13 @@ namespace App\UserdirectoryBundle\Util;
 
 use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use App\UserdirectoryBundle\Form\DataTransformer\SingleUserWrapperTransformer;
+use Doctrine\ORM\EntityManagerInterface;
+use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use App\UserdirectoryBundle\Entity\FormNode;
 use App\UserdirectoryBundle\Entity\ObjectTypeText;
+use Symfony\Component\Security\Core\Security;
+//use Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface;
 
 
 /**
@@ -33,13 +37,13 @@ class FormNodeUtil
 {
 
     protected $em;
-    protected $secTokenStorage;
+    protected $security;
     protected $container;
 
-    public function __construct($em, $secTokenStorage, $container)
+    public function __construct(EntityManagerInterface $em, Security $security, ContainerInterface $container)
     {
         $this->em = $em;
-        $this->secTokenStorage = $secTokenStorage;
+        $this->security = $security;
         $this->container = $container;
     }
     
@@ -69,7 +73,7 @@ class FormNodeUtil
 
         /////// create a new EventLog attempt with id $eventLogId (to make the actions atomic) ///////
         //create logger which must be deleted on successfully update cache
-        $user = $this->secTokenStorage->getToken()->getUser();
+        $user = $this->security->getUser();
         $eventAttempt = "Attempt of cache for form nodes for holderEntity:<br>" . $holderEntity . "<br><br>formNodeHolder:<br>".$formNodeHolder;
         //$sitename,$event,$user,$subjectEntities,$request,$action='Unknown Event'
         $eventLogAttempt = $userSecUtil->createUserEditEvent(
@@ -313,7 +317,7 @@ class FormNodeUtil
 
                 if( $bundleName ) {
 
-                    $creator = $this->secTokenStorage->getToken()->getUser();
+                    $creator = $this->security->getUser();
 
                     $transformer = new GenericTreeTransformer($this->em, $creator, $className, $bundleName);
 
@@ -716,7 +720,7 @@ class FormNodeUtil
             $formNode->getObjectTypeName() != "Form Field - Dropdown Menu"
         ) {
 
-            $creator = $this->secTokenStorage->getToken()->getUser();
+            $creator = $this->security->getUser();
             $transformer = new GenericTreeTransformer($this->em, $creator, "PathologyResultSignatoriesList", "UserdirectoryBundle");
             //$userWrapperTransformer = new SingleUserWrapperTransformer($this->em, $this->container, $creator, 'UserWrapper');
 
@@ -833,7 +837,7 @@ class FormNodeUtil
                 $bundleName = $bundleNameArr[1];
             }
             if( $bundleName ) {
-                $creator = $this->secTokenStorage->getToken()->getUser();
+                $creator = $this->security->getUser();
                 $transformer = new GenericTreeTransformer($this->em, $creator, $className, $bundleName);
                 //echo "thisValue=".$thisValue."<br>";
                 if ( strval($thisValue) != strval(intval($thisValue)) ) {
@@ -904,7 +908,7 @@ class FormNodeUtil
         $listClassName = $receivedValueEntityNamespace."\\".$receivedValueEntityName;
         $newListElement = new $listClassName();
         //$newListElement = new ObjectTypeText();
-        $creator = $this->secTokenStorage->getToken()->getUser();
+        $creator = $this->security->getUser();
         $name = "";
         $count = null;
         $userSecUtil->setDefaultList($newListElement,$count,$creator,$name);

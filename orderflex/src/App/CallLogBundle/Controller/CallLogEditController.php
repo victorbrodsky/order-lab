@@ -49,7 +49,7 @@ class CallLogEditController extends CallEntryController
 
         //$userServiceUtil = $this->get('user_service_utility');
         //$user = $this->get('security.token_storage')->getToken()->getUser();
-        //$securityUtil = $this->get('order_security_utility');
+        //$securityUtil = $this->get('user_security_utility');
         //$userSecUtil = $this->get('user_security_utility');
         //$orderUtil = $this->get('scanorder_utility');
         //$calllogUtil = $this->get('calllog_util');
@@ -191,7 +191,7 @@ class CallLogEditController extends CallEntryController
 
         $userSecUtil = $this->get('user_security_utility');
         $calllogUtil = $this->get('calllog_util');
-        $securityUtil = $this->get('order_security_utility');
+        $securityUtil = $this->get('user_security_utility');
         $userServiceUtil = $this->get('user_service_utility');
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
@@ -455,7 +455,7 @@ class CallLogEditController extends CallEntryController
         //exit('update entry');
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
-        $securityUtil = $this->get('order_security_utility');
+        $securityUtil = $this->get('user_security_utility');
         $userSecUtil = $this->get('user_security_utility');
         $orderUtil = $this->get('scanorder_utility');
         $calllogUtil = $this->get('calllog_util');

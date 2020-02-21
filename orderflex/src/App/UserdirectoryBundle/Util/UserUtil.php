@@ -36,7 +36,7 @@ use App\UserdirectoryBundle\Entity\AdministrativeTitle;
 use App\UserdirectoryBundle\Entity\Logger;
 use App\UserdirectoryBundle\Entity\UsernameType;
 use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
-use App\UserdirectoryBundle\Security\Util\UserSecurityUtil;
+use App\UserdirectoryBundle\Util\UserSecurityUtil;
 use Sinergi\BrowserDetector\Browser;
 use Sinergi\BrowserDetector\Os;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -152,7 +152,7 @@ class UserUtil {
             $logger->setEntityId($eventEntity->getId());
 
             //create EventObjectTypeList if not exists
-            $userSecUtil = new UserSecurityUtil($em,null,null,null);
+            $userSecUtil = new UserSecurityUtil($em,null);
             $eventObjectType = $userSecUtil->getObjectByNameTransformer($user,$className,'UserdirectoryBundle','EventObjectTypeList');
             if( $eventObjectType ) {
                 $logger->setObjectType($eventObjectType);
@@ -312,7 +312,7 @@ class UserUtil {
 
     public function createSystemUser( $em, $userkeytype, $default_time_zone ) {
 
-        $userSecUtil = new UserSecurityUtil($em,null,null,null);
+        $userSecUtil = new UserSecurityUtil($em,null);
 
         $found_user = $userSecUtil->findSystemUser();
 

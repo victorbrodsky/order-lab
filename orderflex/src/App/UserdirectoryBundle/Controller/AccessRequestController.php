@@ -261,7 +261,7 @@ class AccessRequestController extends AbstractController
             //throw $this->createNotFoundException('Unable to find User.');
         }
 
-        $secUtil = $this->get('order_security_utility');
+        $secUtil = $this->get('user_security_utility');
         $userAccessReq = $secUtil->getUserAccessRequest($user,$sitename);
 
         $sitenameFull = $this->siteNameStr;
@@ -443,7 +443,7 @@ class AccessRequestController extends AbstractController
         //$user->setAppliedforaccess('active');
         //$user->setAppliedforaccessdate( new \DateTime() );
 
-        $secUtil = $this->get('order_security_utility');
+        $secUtil = $this->get('user_security_utility');
         $userAccessReq = $secUtil->getUserAccessRequest($user,$sitename);
 
         $sitenameFull = $this->siteNameStr;
@@ -908,7 +908,7 @@ class AccessRequestController extends AbstractController
         ////////////////// lowest roles /////////////////////
 //        //if a user does not have any siteroles => pre-populate the Role with a role that has the lowest permissions on this site
 //        //user's roles associated with this site
-//        $securityUtil = $this->get('order_security_utility');
+//        $securityUtil = $this->get('user_security_utility');
 //        $siteRoles = $securityUtil->getUserRolesBySite( $entity, $this->siteName );
 //        if( count($siteRoles) == 0 ) {
 //            //pre-populate the Role with a role that has the lowest permissions on this site
@@ -921,7 +921,7 @@ class AccessRequestController extends AbstractController
         ////////////////// EOF lowest roles /////////////////////
 
         //Roles
-        $securityUtil = $this->get('order_security_utility');
+        $securityUtil = $this->get('user_security_utility');
         $rolesArr = $securityUtil->getSiteRolesKeyValue($this->siteName);
 
         $params = array(
@@ -973,7 +973,7 @@ class AccessRequestController extends AbstractController
         }
 
         //Original Roles not associated with this site
-        $securityUtil = $this->get('order_security_utility');
+        $securityUtil = $this->get('user_security_utility');
         $originalOtherRoles = $securityUtil->getUserRolesBySite( $entity, $this->siteName, false );
 
         $rolesArr = $securityUtil->getSiteRolesKeyValue($this->siteName);
@@ -1154,7 +1154,7 @@ class AccessRequestController extends AbstractController
 
         $this->addLowestRolesToUser( $entity, $this->siteName );
 
-        $securityUtil = $this->get('order_security_utility');
+        $securityUtil = $this->get('user_security_utility');
 
         //Roles
         $rolesArr = $securityUtil->getSiteRolesKeyValue($this->siteName);
@@ -1210,7 +1210,7 @@ class AccessRequestController extends AbstractController
         }
 
         //user's original not associated with this site
-        $securityUtil = $this->get('order_security_utility');
+        $securityUtil = $this->get('user_security_utility');
         $originalOtherRoles = $securityUtil->getUserRolesBySite( $entity, $this->siteName, false );
 
         $rolesArr = $securityUtil->getSiteRolesKeyValue($this->siteName);
@@ -1484,7 +1484,7 @@ class AccessRequestController extends AbstractController
     public function addLowestRolesToUser( $user, $sitename ) {
         //if a user does not have any siteroles => pre-populate the Role with a role that has the lowest permissions on this site
         //user's roles associated with this site
-        $securityUtil = $this->get('order_security_utility');
+        $securityUtil = $this->get('user_security_utility');
         $siteRoles = $securityUtil->getUserRolesBySite( $user, $sitename );
         if( count($siteRoles) == 0 ) {
             //pre-populate the Role with a role that has the lowest permissions on this site
@@ -1598,7 +1598,7 @@ class AccessRequestController extends AbstractController
 
         $em = $this->getDoctrine()->getManager();
         $currentUser = $this->get('security.token_storage')->getToken()->getUser();
-        $securityUtil = $this->get('order_security_utility');
+        $securityUtil = $this->get('user_security_utility');
         //$newline = "\r\n";
         $newline = "<br>";
 
@@ -1757,7 +1757,7 @@ class AccessRequestController extends AbstractController
 
         $em = $this->getDoctrine()->getManager();
         $currentUser = $this->get('security.token_storage')->getToken()->getUser();
-        $securityUtil = $this->get('order_security_utility');
+        $securityUtil = $this->get('user_security_utility');
         //$newline = "\r\n";
         $newline = "<br>";
 

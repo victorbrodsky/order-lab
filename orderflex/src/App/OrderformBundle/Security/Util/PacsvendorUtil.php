@@ -23,7 +23,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace App\OrderformBundle\Security\Util;
+namespace App\OrderformBundle\Util;
 
 use App\UserdirectoryBundle\Util\UserUtil;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;

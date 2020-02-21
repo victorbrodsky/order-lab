@@ -80,11 +80,11 @@ services:
     App\:
 #        resource: '../src/App/*/*'
 #        resource: '../src/App/*'
-        #resource: '../src/App/*/Util'
-        resource: '../src/App/*/*/Util/'
+        resource: '../src/App/*/Util'
+        #resource: '../src/App/*/*/Util/'
         # you can exclude directories or files
         # but if a service is unused, it's removed anyway
-        exclude: '../src/App/*/{DependencyInjection,Entity,Migrations,Tests,Kernel.php,Query,Repository,Security,Services,Util}'
+        exclude: '../src/App/*/{DependencyInjection,Entity,Migrations,Tests,Kernel.php,Query,Repository,Security,Services}'
 
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class

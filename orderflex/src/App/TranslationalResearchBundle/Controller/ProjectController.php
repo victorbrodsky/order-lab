@@ -431,8 +431,10 @@ class ProjectController extends AbstractController
             $dqlParameters["projectTypeId"] = $searchProjectType->getId();
             $advancedFilter++;
         }
+        //echo "searchTitle=$searchTitle <br>";
         if( $searchTitle ) {
-            $dql->andWhere("LOWER(project.title) LIKE (:title)");
+            //exit('111');
+            $dql->andWhere("LOWER(project.title) LIKE LOWER(:title)");
             $dqlParameters["title"] = "%".$searchTitle."%";
             $advancedFilter++;
         }

@@ -18,7 +18,8 @@
 namespace App\OrderformBundle\Repository;
 
 use App\OrderformBundle\Form\DataTransformer\MrnTypeTransformer;
-use App\OrderformBundle\Security\Util\SecurityUtil;
+use App\OrderformBundle\Util\SecurityUtil;
+use App\UserdirectoryBundle\Util\UserSecurityUtil;
 
 /**
  * PatientRepository
@@ -256,7 +257,7 @@ class PatientRepository extends ArrayFieldAbstractRepository
             return null;
         }
 
-        $securityUtil = new SecurityUtil($this->_em, null, null, null);
+        $securityUtil = new UserSecurityUtil($this->_em,null);
         $source = $securityUtil->getDefaultSourceSystem($sitename);
 
 //        foreach( $patient->getEncounter() as $encounter ) {

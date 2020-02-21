@@ -57,11 +57,11 @@ class CustomSelectorType extends AbstractType {
      * @param ObjectManager $om
      * @param ObjectManager $om
      */
-    public function __construct(ObjectManager $om, TokenStorageInterface $secTokenStorage, ContainerInterface $serviceContainer)
+    public function __construct(ObjectManager $om, ContainerInterface $serviceContainer)
     {
         $this->om = $om;
-        $this->secTokenStorage = $secTokenStorage;
         $this->serviceContainer = $serviceContainer;
+        $this->secTokenStorage = $serviceContainer->get('security.token_storage');
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)

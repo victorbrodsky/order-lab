@@ -114,7 +114,7 @@ class OrderUtil {
             throw new \Exception( 'Unable to find Message entity by id'.$id );
         }
 
-        $securityUtil = $this->container->get('order_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
         if( !$securityUtil->isUserAllowOrderActions($entity, $user, array('changestatus')) ) {
             $res = array();
             $res['result'] = 'nopermission';
@@ -400,7 +400,7 @@ class OrderUtil {
         $className = $class->getShortName();
         //echo "class name=".$className."<br>";
 
-        //$securityUtil = $this->container->get('order_security_utility');
+        //$securityUtil = $this->container->get('user_security_utility');
         //$source = $securityUtil->getDefaultSourceSystem();
 
         $count = 0;
@@ -545,7 +545,7 @@ class OrderUtil {
     //check if user's institution is under message's institution node
     //$collaborationTypesStrArr - array of collaboration types; if null - ignore collaboration
     public function getInstitutionQueryCriterion( $user, $collaborationTypesStrArr=array("Union") ) {
-        $securityUtil = $this->container->get('order_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
 
         $instStr = "";
         //return $instStr;
@@ -630,7 +630,7 @@ class OrderUtil {
         return $instStr;
     }
 //    public function getInstitutionQuerySingleMatchCriterion($user) {
-//        $securityUtil = $this->container->get('order_security_utility');
+//        $securityUtil = $this->container->get('user_security_utility');
 //        $institutions = $securityUtil->getUserPermittedInstitutions($user);
 //        $instStr = "";
 //        foreach( $institutions as $inst ) {
@@ -795,7 +795,7 @@ class OrderUtil {
     }
     public function getAtleastOneInstitutionPHI( $user ) {
         $permittedInstitutions = array();
-        $securityUtil = $this->container->get('order_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
         $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
         if( $userSiteSettings ) {
             $permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
@@ -817,7 +817,7 @@ class OrderUtil {
 
         if( is_object($user) && $user instanceof User ) {
 
-            $secUtil = $this->container->get('order_security_utility');
+            $secUtil = $this->container->get('user_security_utility');
 
             //service scope
             $userServices = $secUtil->getScanOrdersServicesScope($user);
@@ -845,7 +845,7 @@ class OrderUtil {
 //            echo "</pre>";
 
             //add all collaboration institutions
-            $securityUtil = $this->container->get('order_security_utility');
+            $securityUtil = $this->container->get('user_security_utility');
             $permittedInstitutions = $securityUtil->getUserPermittedInstitutions($user);
             foreach( $permittedInstitutions as $permittedInstitution ) {
 

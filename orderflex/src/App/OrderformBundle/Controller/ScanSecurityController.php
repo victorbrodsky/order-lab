@@ -28,7 +28,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\PhpBridgeSessionStorage;
 
-use App\OrderformBundle\Security\Util\PacsvendorUtil;
+use App\OrderformBundle\Util\PacsvendorUtil;
 
 use App\UserdirectoryBundle\Controller\SecurityController;
 

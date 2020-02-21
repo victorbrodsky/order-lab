@@ -25,7 +25,7 @@
 namespace App\UserdirectoryBundle\Security\Authentication;
 
 
-use App\OrderformBundle\Security\Util\PacsvendorUtil;
+use App\OrderformBundle\Util\PacsvendorUtil;
 use App\UserdirectoryBundle\Entity\User;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;

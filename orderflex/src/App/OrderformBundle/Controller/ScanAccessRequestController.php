@@ -162,7 +162,7 @@ class ScanAccessRequestController extends AccessRequestController
 
         //add WCMC institional scope to pacsvendor created users
         $creator = $this->get('security.token_storage')->getToken()->getUser();
-        $orderSecUtil = $this->container->get('order_security_utility');
+        $orderSecUtil = $this->container->get('user_security_utility');
         $orderSecUtil->addInstitutionalPhiScopeWCMC($entity,$creator);
     }
     public function removeOptionalDeclineRoles($entity) {

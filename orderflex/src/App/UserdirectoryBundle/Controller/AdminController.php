@@ -81,7 +81,7 @@ use App\UserdirectoryBundle\Entity\TransfusionReactionTypeList;
 use App\UserdirectoryBundle\Entity\WeekDaysList;
 use App\UserdirectoryBundle\Form\DataTransformer\SingleUserWrapperTransformer;
 use App\UserdirectoryBundle\Form\HierarchyFilterType;
-use App\UserdirectoryBundle\Security\Util\UserSecurityUtil;
+use App\UserdirectoryBundle\Util\UserSecurityUtil;
 use App\VacReqBundle\Entity\VacReqRequestTypeList;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 //use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -175,7 +175,7 @@ class AdminController extends AbstractController
         if (count($users) == 0) {
 
             //1) get systemuser
-            $userSecUtil = new UserSecurityUtil($em, null, null, null);
+            $userSecUtil = new UserSecurityUtil($em, null);
             $systemuser = $userSecUtil->findSystemUser();
 
             //$this->generateSitenameList($systemuser);

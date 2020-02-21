@@ -507,7 +507,7 @@ class ScanOrderController extends AbstractController {
         }
 
         //check if user has Per Site Settings
-        $securityUtil = $this->get('order_security_utility');
+        $securityUtil = $this->get('user_security_utility');
         $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
         if( !$userSiteSettings ) {
             return $criteriastr;
@@ -583,7 +583,7 @@ class ScanOrderController extends AbstractController {
 //        }
 //
 //        //check if user has Per Site Settings
-//        $securityUtil = $this->get('order_security_utility');
+//        $securityUtil = $this->get('user_security_utility');
 //        $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
 //        if( !$userSiteSettings ) {
 //            return $criteriastr;
@@ -925,7 +925,7 @@ class ScanOrderController extends AbstractController {
 
     public function getSearchViewArray( $request, $routeName, $service, $filter, $search, $searchObject, $page ) {
 
-        $securityUtil = $this->get('order_security_utility');
+        $securityUtil = $this->get('user_security_utility');
         $filter = $securityUtil->mysql_escape_mimic($filter);
         $search = $securityUtil->mysql_escape_mimic($search);
 
@@ -1227,7 +1227,7 @@ class ScanOrderController extends AbstractController {
 
     public function getDQL( $repository, $service, $filter, $search, $routeName, $withSearch = false ) {
 
-        $securityUtil = $this->get('order_security_utility');
+        $securityUtil = $this->get('user_security_utility');
         $filter = $securityUtil->mysql_escape_mimic($filter);
         $search = $securityUtil->mysql_escape_mimic($search);
 

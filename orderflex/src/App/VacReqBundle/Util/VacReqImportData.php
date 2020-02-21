@@ -29,6 +29,8 @@ use App\UserdirectoryBundle\Util\UserUtil;
 use App\VacReqBundle\Entity\VacReqRequest;
 use App\VacReqBundle\Entity\VacReqRequestBusiness;
 use App\VacReqBundle\Entity\VacReqRequestVacation;
+use Doctrine\ORM\EntityManagerInterface;
+use Psr\Container\ContainerInterface;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
 class VacReqImportData
@@ -39,7 +41,7 @@ class VacReqImportData
 
     private $usernamePrefix = 'ldap-user';
 
-    public function __construct( $em, $sc, $container ) {
+    public function __construct( EntityManagerInterface $em, ContainerInterface $container ) {
 
         $this->em = $em;
         $this->container = $container;

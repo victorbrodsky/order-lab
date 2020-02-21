@@ -792,7 +792,7 @@ class CallLogPatientController extends PatientController {
         }
 
         $em = $this->getDoctrine()->getManager();
-        $securityUtil = $this->get('order_security_utility');
+        $securityUtil = $this->get('user_security_utility');
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
         //$listname
@@ -885,7 +885,7 @@ class CallLogPatientController extends PatientController {
         }
 
         $em = $this->getDoctrine()->getManager();
-        $securityUtil = $this->get('order_security_utility');
+        $securityUtil = $this->get('user_security_utility');
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
         //listing patients whose notes have been updated in the last 96 hours

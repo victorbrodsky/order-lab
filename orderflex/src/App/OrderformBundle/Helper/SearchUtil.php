@@ -47,7 +47,7 @@ class SearchUtil {
         $search = ( array_key_exists('search', $params) ? $params['search'] : null);
         $exactmatch = ( array_key_exists('exactmatch', $params) ? $params['exactmatch'] : false);
 
-        $securityUtil = $this->container->get('order_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
         $search = $securityUtil->mysql_escape_mimic($search);
 
         $returnArr = array();
@@ -173,7 +173,7 @@ class SearchUtil {
 
     public function getSearchStr($field,$search,$exactmatch=false) {
 
-        $securityUtil = $this->container->get('order_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
         $search = $securityUtil->mysql_escape_mimic($search);
 
         $prefix = " '";

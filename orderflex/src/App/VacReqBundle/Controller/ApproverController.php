@@ -339,11 +339,11 @@ class ApproverController extends AbstractController
         }
 
         //Original Roles not associated with this site
-        //$securityUtil = $this->get('order_security_utility');
+        //$securityUtil = $this->get('user_security_utility');
         //$originalOtherRoles = $securityUtil->getUserRolesBySite( $subjectUser, 'vacreq', false );
 
         //Roles
-        //$securityUtil = $this->get('order_security_utility');
+        //$securityUtil = $this->get('user_security_utility');
         //$rolesArr = $securityUtil->getSiteRolesKeyValue('vacreq');
 
         $roles = $em->getRepository('AppUserdirectoryBundle:Roles')->findById($roleId);
@@ -424,7 +424,7 @@ class ApproverController extends AbstractController
             $roleArr = array();
         }
 
-        $securityUtil = $this->get('order_security_utility');
+        $securityUtil = $this->get('user_security_utility');
         $res = $securityUtil->addOnlySiteRoles($subjectUser,$roleArr,'vacreq');
 
         if( $res ) {

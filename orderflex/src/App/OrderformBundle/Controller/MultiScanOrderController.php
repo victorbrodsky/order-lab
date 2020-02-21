@@ -51,7 +51,7 @@ use App\OrderformBundle\Entity\ScanOrder;
 use App\OrderformBundle\Helper\ErrorHelper;
 use App\OrderformBundle\Helper\ScanEmailUtil;
 use App\UserdirectoryBundle\Util\UserUtil;
-use App\OrderformBundle\Security\Util\SecurityUtil;
+use App\OrderformBundle\Util\SecurityUtil;
 
 
 //ScanOrder joins Message + Scan
@@ -91,7 +91,7 @@ class MultiScanOrderController extends AbstractController {
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
         //check if user has at least one institution
-        $securityUtil = $this->get('order_security_utility');
+        $securityUtil = $this->get('user_security_utility');
         $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
         if( !$userSiteSettings ) {
             $orderUtil = $this->get('scanorder_utility');
@@ -355,7 +355,7 @@ class MultiScanOrderController extends AbstractController {
         $userSecUtil = $this->get('user_security_utility');
 
         //check if user has at least one institution
-        $securityUtil = $this->get('order_security_utility');
+        $securityUtil = $this->get('user_security_utility');
         $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
         if( !$userSiteSettings ) {
             $orderUtil->setWarningMessageNoInstitution($user);
@@ -549,7 +549,7 @@ class MultiScanOrderController extends AbstractController {
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
         //check if user has at least one institution
-        $securityUtil = $this->get('order_security_utility');
+        $securityUtil = $this->get('user_security_utility');
         $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
         if( !$userSiteSettings ) {
             $orderUtil = $this->get('scanorder_utility');

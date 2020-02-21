@@ -29,7 +29,7 @@ use App\OrderformBundle\Entity\Educational;
 use App\UserdirectoryBundle\Entity\GeoLocation;
 use App\UserdirectoryBundle\Entity\Institution;
 use App\UserdirectoryBundle\Entity\PerSiteSettings;
-use App\OrderformBundle\Security\Util\PacsvendorUtil;
+use App\OrderformBundle\Util\PacsvendorUtil;
 use App\UserdirectoryBundle\Entity\AdminComment;
 use App\UserdirectoryBundle\Entity\AdministrativeTitle;
 use App\UserdirectoryBundle\Entity\AppointmentTitle;
@@ -46,6 +46,8 @@ use App\UserdirectoryBundle\Entity\Training;
 use App\UserdirectoryBundle\Entity\User;
 use App\UserdirectoryBundle\Form\DataTransformer\GenericSelectTransformer;
 use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
+use Doctrine\ORM\EntityManagerInterface;
+use Psr\Container\ContainerInterface;
 
 class UserGenerator {
 
@@ -54,7 +56,7 @@ class UserGenerator {
 
     private $usernamePrefix = 'ldap-user';
 
-    public function __construct( $em, $container ) {
+    public function __construct( EntityManagerInterface $em, ContainerInterface $container ) {
         $this->em = $em;
         $this->container = $container;
     }
@@ -924,7 +926,7 @@ class UserGenerator {
 
             //**************** create PerSiteSettings for this user **************//
             //TODO: this should be located on scanorder site
-            $securityUtil = $this->container->get('order_security_utility');
+            $securityUtil = $this->container->get('user_security_utility');
             $perSiteSettings = $securityUtil->getUserPerSiteSettings($user);
             if( !$perSiteSettings ) {
                 $perSiteSettings = new PerSiteSettings($systemuser);
@@ -1848,7 +1850,7 @@ class UserGenerator {
 
             //**************** create PerSiteSettings for this user **************//
             //TODO: this should be located on scanorder site
-            $securityUtil = $this->container->get('order_security_utility');
+            $securityUtil = $this->container->get('user_security_utility');
             $perSiteSettings = $securityUtil->getUserPerSiteSettings($user);
             if( !$perSiteSettings ) {
                 $perSiteSettings = new PerSiteSettings($systemuser);

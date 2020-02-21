@@ -24,8 +24,10 @@
 
 namespace App\UserdirectoryBundle\Services;
 
+use Doctrine\ORM\EntityManagerInterface;
 use FOS\CommentBundle\Events;
 use FOS\CommentBundle\Event\CommentEvent;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class FosCommentListener implements EventSubscriberInterface {
@@ -40,12 +42,12 @@ class FosCommentListener implements EventSubscriberInterface {
 
     protected $secAuth;
 
-    public function __construct( $container, $secTokenStorage, $em )
+    public function __construct( EntityManagerInterface $em, ContainerInterface $container )
     {
         $this->container = $container;
         $this->em = $em;
 
-        $this->secTokenStorage = $secTokenStorage;  //$container->get('security.token_storage'); //$user = $this->secTokenStorage->getToken()->getUser();
+        $this->secTokenStorage = $container->get('security.token_storage');  //$container->get('security.token_storage'); //$user = $this->secTokenStorage->getToken()->getUser();
         $this->secAuth = $container->get('security.authorization_checker'); //$this->secAuth->isGranted("ROLE_USER")
     }
 
