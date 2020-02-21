@@ -70,6 +70,16 @@ services:
         public: true       # Allows optimizing the container by removing unused services; this also means
                                 # fetching services directly from the container via $container->get() won't work.
                                 # The best practice is to be explicit about your dependencies anyway.
+#        bind:
+#              App\CallLogBundle\Util\CallLogUtil $calllogUtil: "@calllog_util"
+
+    App\UserdirectoryBundle\Controller\TestBaseController:
+         bind:
+              App\CallLogBundle\Util\CallLogUtil $calllogUtil: "@calllog_util"
+    #    App\UserdirectoryBundle\Controller\TestBaseController:
+    #        arguments: ["@calllog_util","@user_service_utility"]
+    #    App\UserdirectoryBundle\Controller\TestController:
+    #        arguments: ["@calllog_util","@user_service_utility"]
 
 #    custom_authenticator:
 #        class:     App\UserdirectoryBundle\Security\Authentication\CustomAuthenticator
@@ -220,3 +230,5 @@ services:
 #        public: false
 #        arguments:
 #            $name: '@name'
+
+

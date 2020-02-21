@@ -113,7 +113,7 @@ class CallEntryController extends AbstractController
         //$results = $userServiceUtil->getFuzzyTest();
         //exit("<br>exit");
 
-        $calllogUtil = $this->get('user_service_utility');
+        //$calllogUtil = $this->get('user_service_utility');
         //echo $calllogUtil->getInstalledSoftware()."<br>";
 
         $em = $this->getDoctrine()->getManager();
