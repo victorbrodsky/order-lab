@@ -5422,7 +5422,7 @@ class TransResUtil
 
     public function showHumanTissueFormViewUrl($project) {
         //get human tissue form view url
-        $humanTissueForms = null;
+        $humanTissueFormsViewLink = null;
         $humanTissueUrlArr = array();
         $humanTissueForms = $project->getHumanTissueForms();
         if( count($humanTissueForms) > 0 ) {
@@ -5437,10 +5437,10 @@ class TransResUtil
                 $humanTissueUrlArr[] = $thisLink;
             }
 
-            $humanTissueForms = "Human Tissue Form: " . implode(", ",$humanTissueUrlArr) . "";
+            $humanTissueFormsViewLink = "Human Tissue Form: " . implode(", ",$humanTissueUrlArr) . "";
         }
 
-        return $humanTissueForms;
+        return $humanTissueFormsViewLink;
     }
 
     public function getTransresSiteProjectParameter( $fieldName, $project=null, $projectSpecialty=null ) {
