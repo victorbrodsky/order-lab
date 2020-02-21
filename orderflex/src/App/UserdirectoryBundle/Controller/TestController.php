@@ -8,6 +8,7 @@
 
 namespace App\UserdirectoryBundle\Controller;
 
+use App\CallLogBundle\Util\CallLogUtil;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 //use Symfony\Component\Routing\Annotation\Template;
@@ -27,14 +28,14 @@ class TestController extends AbstractController
      * @Route("/container/test/", name="user_test_container")
      * @Template("AppUserdirectoryBundle/Testing/testing.html.twig")
      */
-    public function testContainerAction() {
+    public function testContainerAction( CallLogUtil $calllogUtil ) {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
         $msg = "Container Test";
         $em = $this->getDoctrine()->getManager();
-        $calllogUtil = $this->get('calllog_util');
+        //$calllogUtil = $this->get('calllog_util');
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $user = $em->getRepository('AppUserdirectoryBundle:User')->find($user->getId());

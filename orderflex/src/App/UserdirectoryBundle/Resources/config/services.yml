@@ -73,12 +73,12 @@ services:
 #        bind:
 #              App\CallLogBundle\Util\CallLogUtil $calllogUtil: "@calllog_util"
 
-    App\UserdirectoryBundle\Controller\TestBaseController:
-         bind:
-              App\CallLogBundle\Util\CallLogUtil $calllogUtil: "@calllog_util"
+    App\UserdirectoryBundle\Controller\TestBaseController: ~
+#         bind:
+#              App\CallLogBundle\Util\CallLogUtil $calllogUtil: "@calllog_util"
     #    App\UserdirectoryBundle\Controller\TestBaseController:
     #        arguments: ["@calllog_util","@user_service_utility"]
-    #    App\UserdirectoryBundle\Controller\TestController:
+    App\UserdirectoryBundle\Controller\TestController: ~
     #        arguments: ["@calllog_util","@user_service_utility"]
 
 #    custom_authenticator:
