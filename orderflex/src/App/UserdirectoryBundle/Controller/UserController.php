@@ -3136,9 +3136,6 @@ class UserController extends AbstractController
     }
     public function updateUser(Request $request, $id, $sitename) {
 
-        //ini_set('max_execution_time', 300); //300 seconds = 5 minutes
-        //ini_set('memory_limit', '3072M');
-
         $em = $this->getDoctrine()->getManager();
         $logger = $this->container->get('logger');
         $loggedUser = $this->get('security.token_storage')->getToken()->getUser();
