@@ -3127,7 +3127,6 @@ class UserController extends AbstractController
      */
     public function updateUserAction(Request $request, $id)
     {
-        //exit('edit user');
         $secUtil = $this->get('user_security_utility');
         if( !$secUtil->isCurrentUser($id) && false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
@@ -3899,7 +3898,12 @@ class UserController extends AbstractController
 
         $em = $this->getDoctrine()->getManager();
         $data = $request->request->all();
-        $userwrappers = $data['userwrappers'];
+
+        if( array_key_exists('userwrappers',$data) ) {
+            $userwrappers = $data['userwrappers'];
+        } else {
+            $userwrappers = NULL;
+        }
 
 //        print "<pre>";
 //        print_r($userwrappers);

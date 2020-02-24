@@ -1465,7 +1465,6 @@
             <p>
                 <div>
                     <button class="btn btn-warning" name="btnSubmit" type="button" onclick="validateUser(this,{{entity.id}})">Update</button>
-                    {#<input id="user-submit-button" class="btn btn-warning" name="btnSubmit" type="submit" value="Update" onSubmit="return validateUser(this,{{entity.id}});">#}
                     <a class="btn btn-info" href="{{ path(sitename~'_showuser',{id:entity.id}) }}" type='button'>Cancel</a>
                 </div>
             </p>
