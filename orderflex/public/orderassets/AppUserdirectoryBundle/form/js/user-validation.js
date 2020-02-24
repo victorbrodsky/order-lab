@@ -20,6 +20,9 @@
 
 function validateUser(btnEl,origuserid) {
 
+    console.log("starting validateUser");
+    //return false;
+
     var lbtn = Ladda.create(btnEl);
     lbtn.start();
 
@@ -28,7 +31,7 @@ function validateUser(btnEl,origuserid) {
     if( typeof origuserid != "undefined" && origuserid != "" ) {
         var actionFlag = 'update';
     }
-    //console.log("actionFlag="+actionFlag+", origuserid="+origuserid);
+    console.log("actionFlag="+actionFlag+", origuserid="+origuserid);
 
     removeAllErrorAlerts();
 
@@ -75,7 +78,7 @@ function validateUser(btnEl,origuserid) {
         return false;
     }
 
-    //console.log("firstName="+firstName);
+    console.log("firstName="+firstName);
     if( firstName == "" ) {
         $('#userinfo').collapse('show');
         addErrorAlert("First Name is empty");
@@ -84,7 +87,7 @@ function validateUser(btnEl,origuserid) {
         return false;
     }
 
-    //console.log("lastName="+lastName);
+    console.log("lastName="+lastName);
     if( lastName == "" ) {
         $('#userinfo').collapse('show');
         addErrorAlert("Last Name is empty");
@@ -147,6 +150,7 @@ function validateUser(btnEl,origuserid) {
     //check duplicate SSN
     var ssn = $('#oleg_userdirectorybundle_user_credentials_ssn').val();
     ssn = trimWithCheck(ssn);
+    console.log("ssn="+ssn);
     var user = checkDuplicateIdentifier(ssn,'ssn');
     var userid = user.id;
     if( userid && (actionFlag == 'new' || userid != origuserid && actionFlag == 'update') ) {
@@ -172,6 +176,10 @@ function validateUser(btnEl,origuserid) {
         return false;
     }
 
+    console.log("eof validateUser");
+    $(this).trigger('click');
+    return true;
+    
     //return false; //testing
     $("#user-profile-form").submit();
 }

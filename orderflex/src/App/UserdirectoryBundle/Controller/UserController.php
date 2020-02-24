@@ -3125,6 +3125,7 @@ class UserController extends AbstractController
      */
     public function updateUserAction(Request $request, $id)
     {
+        exit('edit user');
         $secUtil = $this->get('user_security_utility');
         if( !$secUtil->isCurrentUser($id) && false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
@@ -3132,11 +3133,10 @@ class UserController extends AbstractController
 
         return $this->updateUser( $request, $id, $this->container->getParameter('employees.sitename') );
     }
-    public function updateUser(Request $request, $id, $sitename)
-    {
+    public function updateUser(Request $request, $id, $sitename) {
 
-        ini_set('max_execution_time', 300); //300 seconds = 5 minutes
-        ini_set('memory_limit', '3072M');
+        //ini_set('max_execution_time', 300); //300 seconds = 5 minutes
+        //ini_set('memory_limit', '3072M');
 
         $em = $this->getDoctrine()->getManager();
         $logger = $this->container->get('logger');
