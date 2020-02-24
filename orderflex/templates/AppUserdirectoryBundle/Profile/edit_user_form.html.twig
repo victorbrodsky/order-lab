@@ -43,6 +43,10 @@
 
 
     {{ form_start(form,{'attr': {'id': 'user-profile-form'}}) }}
+    {#{{ form_start(form, { 'action': path(sitename~'_user_update'), 'method': 'POST', 'attr': {'id': 'user-profile-form'} }) }}#}
+    {#{{ form_start(form,{'attr': {'id': 'user-profile-form'}, 'method': 'POST', 'action': path('employees_user_update',{'id':entity.id})}) }}#}
+    {#<form id="user-profile-form" name="oleg_userdirectorybundle_user" method="post" action={{ path('employees_user_update',{'id':entity.id}) }} >#}
+
 
         {% set publicCommentsPrototype = null %}
         {% set privateCommentsPrototype = null %}
@@ -1461,6 +1465,7 @@
             <p>
                 <div>
                     <button class="btn btn-warning" name="btnSubmit" type="button" onclick="validateUser(this,{{entity.id}})">Update</button>
+                    {#<input id="user-submit-button" class="btn btn-warning" name="btnSubmit" type="submit" value="Update" onSubmit="return validateUser(this,{{entity.id}});">#}
                     <a class="btn btn-info" href="{{ path(sitename~'_showuser',{id:entity.id}) }}" type='button'>Cancel</a>
                 </div>
             </p>
@@ -1473,7 +1478,7 @@
         {% endif %}
 
     {{ form_end(form,{'render_rest': false}) }}
-
+    {#</form>#}
 
     {% if userEditor == true or entity.id == app.user.getId() %}
         {% if cycle == "show_user" and cycle != "create_user" %}

@@ -3119,13 +3119,15 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/edit-user-profile/{id}", name="employees_user_update")
+     * //Method("PUT")
+     *
+     * @Route("/update-user-profile/{id}", name="employees_user_update")
      * @Method("PUT")
      * @Template("AppUserdirectoryBundle/Profile/edit_user.html.twig")
      */
     public function updateUserAction(Request $request, $id)
     {
-        exit('edit user');
+        //exit('edit user');
         $secUtil = $this->get('user_security_utility');
         if( !$secUtil->isCurrentUser($id) && false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );

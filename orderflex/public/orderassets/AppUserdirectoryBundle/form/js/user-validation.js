@@ -177,9 +177,9 @@ function validateUser(btnEl,origuserid) {
     }
 
     console.log("eof validateUser");
-    $(this).trigger('click');
-    return true;
-    
+    // $('#user-submit-button').trigger('click');
+    // return true;
+
     //return false; //testing
     $("#user-profile-form").submit();
 }
