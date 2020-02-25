@@ -27,6 +27,7 @@ namespace App\OrderformBundle\Controller;
 
 
 use App\OrderformBundle\Entity\PartParttitle;
+use App\OrderformBundle\Util\ScanEmailUtil;
 use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -86,7 +87,7 @@ use App\OrderformBundle\Entity\Research;
 use App\OrderformBundle\Form\SlideMultiType;
 
 use App\OrderformBundle\Helper\ErrorHelper;
-use App\OrderformBundle\Helper\ScanEmailUtil;
+//use App\OrderformBundle\Util\ScanEmailUtil;
 use App\OrderformBundle\Util\SecurityUtil;
 use App\UserdirectoryBundle\Util\UserUtil;
 
@@ -629,7 +630,7 @@ class TableController extends OrderAbstractController {
      * @Method("POST")
      * @Template("AppOrderformBundle/MultiScanOrder/newtable.html.twig")
      */
-    public function multyCreateAction(Request $request)
+    public function multyCreateAction(Request $request, ScanEmailUtil $scanEmailUtil)
     {
 
         //echo "table new controller !!!! <br>";
@@ -772,7 +773,8 @@ class TableController extends OrderAbstractController {
         $orderurl = $this->generateUrl( 'multy_show',array('id'=>$entity->getOid()), UrlGeneratorInterface::ABSOLUTE_URL );    //was $entity->getId()
 
         //email
-        $scanEmailUtil = new ScanEmailUtil($em,$this->container);
+        //$scanEmailUtil = new ScanEmailUtil($em,$this->container);
+        //$scanEmailUtil = $this->get('scanorder_email_utility');
         $scanEmailUtil->sendScanEmail( $user->getEmail(), $entity, $orderurl, null, $conflictStr, $submitStatusStr );
 
         if( isset($_POST['btnSaveOnIdleTimeout']) ) {

@@ -40,12 +40,16 @@ services:
 
     #scanorder utility
     scanorder_utility:
-        class: App\OrderformBundle\Helper\OrderUtil
+        class: App\OrderformBundle\Util\OrderUtil
         arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
     #patient utility
     search_utility:
-        class: App\OrderformBundle\Helper\SearchUtil
+        class: App\OrderformBundle\Util\SearchUtil
+        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+
+    scanorder_email_utility:
+        class: App\OrderformBundle\Util\ScanEmailUtil
         arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
     scan_role_voter:

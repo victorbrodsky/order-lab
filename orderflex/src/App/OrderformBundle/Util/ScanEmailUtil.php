@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace App\OrderformBundle\Helper;
+namespace App\OrderformBundle\Util;
 
 use App\UserdirectoryBundle\Util\EmailUtil;
 use App\UserdirectoryBundle\Util\UserUtil;

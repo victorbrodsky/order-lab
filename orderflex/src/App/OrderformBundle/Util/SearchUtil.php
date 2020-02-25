@@ -22,7 +22,7 @@
  * Time: 11:20 AM
  */
 
-namespace App\OrderformBundle\Helper;
+namespace App\OrderformBundle\Util;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;

@@ -49,7 +49,6 @@ use App\OrderformBundle\Entity\Encounter;
 use App\OrderformBundle\Entity\Endpoint;
 use App\OrderformBundle\Entity\ScanOrder;
 use App\OrderformBundle\Helper\ErrorHelper;
-use App\OrderformBundle\Helper\ScanEmailUtil;
 use App\UserdirectoryBundle\Util\UserUtil;
 use App\OrderformBundle\Util\SecurityUtil;
 
@@ -267,8 +266,8 @@ class MultiScanOrderController extends OrderAbstractController {
                 }
 
                 //email
-                $email = $user->getEmail();
-                $scanEmailUtil = new ScanEmailUtil($em,$this->container);
+                //$email = $user->getEmail();
+                //$scanEmailUtil = new ScanEmailUtil($em,$this->container);
 
                 $submitStatusStr = null;
                 if( isset($_POST['btnAmend']) ) {

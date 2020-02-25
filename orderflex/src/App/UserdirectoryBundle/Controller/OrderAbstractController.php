@@ -16,8 +16,8 @@ use App\FellAppBundle\Util\FellAppUtil;
 use App\FellAppBundle\Util\GoogleSheetManagement;
 use App\FellAppBundle\Util\RecLetterUtil;
 use App\FellAppBundle\Util\ReportGenerator;
-use App\OrderformBundle\Helper\OrderUtil;
-use App\OrderformBundle\Helper\SearchUtil;
+use App\OrderformBundle\Util\SearchUtil;
+use App\OrderformBundle\Util\OrderUtil;
 use App\TranslationalResearchBundle\Util\DashboardUtil;
 use App\TranslationalResearchBundle\Util\PdfGenerator;
 use App\TranslationalResearchBundle\Util\ReminderUtil;
@@ -94,7 +94,6 @@ class OrderAbstractController extends AbstractController {
 
         $subscribedServices['vacreq_util'] = '?'.VacReqUtil::class;
         $subscribedServices['vacreq_import_data'] = '?'.VacReqImportData::class;
-
 
         $subscribedServices['scanorder_utility'] = '?'.OrderUtil::class;
         $subscribedServices['search_utility'] = '?'.SearchUtil::class;

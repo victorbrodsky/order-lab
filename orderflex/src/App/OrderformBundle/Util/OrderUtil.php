@@ -23,7 +23,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace App\OrderformBundle\Helper;
+namespace App\OrderformBundle\Util;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
