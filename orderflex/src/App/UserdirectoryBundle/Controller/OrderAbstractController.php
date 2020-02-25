@@ -16,6 +16,8 @@ use App\FellAppBundle\Util\FellAppUtil;
 use App\FellAppBundle\Util\GoogleSheetManagement;
 use App\FellAppBundle\Util\RecLetterUtil;
 use App\FellAppBundle\Util\ReportGenerator;
+use App\OrderformBundle\Helper\OrderUtil;
+use App\OrderformBundle\Helper\SearchUtil;
 use App\TranslationalResearchBundle\Util\DashboardUtil;
 use App\TranslationalResearchBundle\Util\PdfGenerator;
 use App\TranslationalResearchBundle\Util\ReminderUtil;
@@ -34,7 +36,9 @@ use App\UserdirectoryBundle\Util\UserServiceUtil;
 use App\VacReqBundle\Util\VacReqImportData;
 use App\VacReqBundle\Util\VacReqUtil;
 use Knp\Component\Pager\PaginatorInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 //use Symfony\Component\Routing\Annotation\Route;
@@ -91,9 +95,16 @@ class OrderAbstractController extends AbstractController {
         $subscribedServices['vacreq_util'] = '?'.VacReqUtil::class;
         $subscribedServices['vacreq_import_data'] = '?'.VacReqImportData::class;
 
-        $subscribedServices['knp_paginator'] = '?'.PaginatorInterface::class;
 
-//        $subscribedServices['user_generator'] = '?'.UserGenerator::class;
+        $subscribedServices['scanorder_utility'] = '?'.OrderUtil::class;
+        $subscribedServices['search_utility'] = '?'.SearchUtil::class;
+        $subscribedServices['user_generator'] = '?'.UserGenerator::class;
+        $subscribedServices['user_generator'] = '?'.UserGenerator::class;
+
+        $subscribedServices['knp_paginator'] = '?'.PaginatorInterface::class;
+        $subscribedServices['kernel'] = '?'.KernelInterface::class;
+        $subscribedServices['logger'] = '?'.LoggerInterface::class;
+
 //        $subscribedServices['user_generator'] = '?'.UserGenerator::class;
 //        $subscribedServices['user_generator'] = '?'.UserGenerator::class;
 //        $subscribedServices['user_generator'] = '?'.UserGenerator::class;

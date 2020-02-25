@@ -180,7 +180,9 @@ class SiteParametersController extends OrderAbstractController
         //$rootDir = $this->container->get('kernel')->getRootDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\scanorder\Scanorders2\app
         //$rootDir = str_replace('app','',$rootDir);
         //$uploadPath = $rootDir . 'public' . DIRECTORY_SEPARATOR;
-        $uploadPath = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR;
+        $projectDir = $this->container->get('kernel')->getProjectDir();
+        //$projectDir = $this->getProjectDir();
+        $uploadPath = $projectDir . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR;
 
         return array(
             'entity'      => $entity,
