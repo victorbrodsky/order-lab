@@ -66,10 +66,10 @@ class SectionUserController extends UserController
             'cycle' => 'show_user',
             'teamType' => $teamType,
             //'postData' => $postData,
-            'sitename' => $this->container->getParameter('employees.sitename'),
+            'sitename' => $this->getParameter('employees.sitename'),
         );
 
-//        $showUserArr = $this->showUser($userid,$this->container->getParameter('employees.sitename'),false);
+//        $showUserArr = $this->showUser($userid,$this->getParameter('employees.sitename'),false);
 //
 //        $template = $this->render('AppUserdirectoryBundle/Profile/edit_user_only.html.twig',$showUserArr)->getContent();
 //
@@ -136,10 +136,10 @@ class SectionUserController extends UserController
             'userWrappers' => $userWrappers,
             'patients' => $patients,
             'cycle' => $cycle,
-            'sitename' => $this->container->getParameter('employees.sitename'),
+            'sitename' => $this->getParameter('employees.sitename'),
         );
 
-//        $showUserArr = $this->showUser($userid,$this->container->getParameter('employees.sitename'),false);
+//        $showUserArr = $this->showUser($userid,$this->getParameter('employees.sitename'),false);
 //
 //        $template = $this->render('AppUserdirectoryBundle/Profile/edit_user_only.html.twig',$showUserArr)->getContent();
 //

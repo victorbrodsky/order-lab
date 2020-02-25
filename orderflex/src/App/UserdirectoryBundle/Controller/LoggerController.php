@@ -48,7 +48,7 @@ class LoggerController extends OrderAbstractController
     public function indexAction(Request $request)
     {
         $params = array(
-            'sitename'=>$this->container->getParameter('employees.sitename')
+            'sitename'=>$this->getParameter('employees.sitename')
         );
         return $this->listLogger($params,$request);
     }
@@ -94,7 +94,7 @@ class LoggerController extends OrderAbstractController
         $entityName = 'User';
 
         $params = array(
-            'sitename'=>$this->container->getParameter('employees.sitename'),
+            'sitename'=>$this->getParameter('employees.sitename'),
             'entityNamespace'=>'App\UserdirectoryBundle\Entity',
             'entityName'=>$entityName,
             'entityId'=>$userid,
@@ -131,7 +131,7 @@ class LoggerController extends OrderAbstractController
         $entityName = 'User';
 
         $params = array(
-            'sitename'=>$this->container->getParameter('employees.sitename'),
+            'sitename'=>$this->getParameter('employees.sitename'),
             'entityNamespace'=>'App\UserdirectoryBundle\Entity',
             'entityName'=>$entityName,
             'entityId'=>$userid,
@@ -352,7 +352,7 @@ class LoggerController extends OrderAbstractController
 //            //print_r($row);
 //        }
 
-        $eventlogTitle = $this->container->getParameter('eventlog_title');
+        $eventlogTitle = $this->getParameter('eventlog_title');
 //        if( $filtered ) {
 //            $eventlogTitle = $eventlogTitle . " showing " . count($pagination) . " matching event(s)";
 //        }
@@ -719,7 +719,7 @@ class LoggerController extends OrderAbstractController
      */
     public function createAction(Request $request)
     {
-        return $this->createLogger($request,$this->container->getParameter('employees.sitename'));
+        return $this->createLogger($request,$this->getParameter('employees.sitename'));
     }
 
     protected function createLogger(Request $request, $sitename) {
@@ -779,10 +779,10 @@ class LoggerController extends OrderAbstractController
     public function newAction()
     {
         $userSecUtil = $this->get('user_security_utility');
-        $site = $userSecUtil->getSiteBySitename($this->container->getParameter('employees.sitename'));
+        $site = $userSecUtil->getSiteBySitename($this->getParameter('employees.sitename'));
 
         $entity = new Logger($site);
-        $form   = $this->createCreateForm($entity,$this->container->getParameter('employees.sitename'));
+        $form   = $this->createCreateForm($entity,$this->getParameter('employees.sitename'));
 
         return array(
             'entity' => $entity,

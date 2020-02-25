@@ -145,7 +145,7 @@ class DefaultController extends OrderAbstractController
 //            return null;
 //        }
 //        $userSecUtil = $this->get('user_security_utility');
-//        $accessreqs = $userSecUtil->getUserAccessRequestsByStatus($this->container->getParameter('employees.sitename'),AccessRequest::STATUS_ACTIVE);
+//        $accessreqs = $userSecUtil->getUserAccessRequestsByStatus($this->getParameter('employees.sitename'),AccessRequest::STATUS_ACTIVE);
 //        return $accessreqs;
 //    }
 

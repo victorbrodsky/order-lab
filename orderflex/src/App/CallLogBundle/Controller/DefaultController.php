@@ -38,7 +38,7 @@ class DefaultController extends OrderAbstractController
      */
     public function aboutAction(Request $request)
     {
-        return array('sitename' => $this->container->getParameter('calllog.sitename'));
+        return array('sitename' => $this->getParameter('calllog.sitename'));
     }
 
 
@@ -323,7 +323,7 @@ class DefaultController extends OrderAbstractController
         if( count($messages) ) {
             $eventType = "Call Log Cache Updated";
             $msgLog = $msg . ":<br>" . implode(", ",$messageIds);
-            $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $msgLog, $user, null, $request, $eventType);
+            $userSecUtil->createUserEditEvent($this->getParameter('calllog.sitename'), $msgLog, $user, null, $request, $eventType);
         }
 
         $this->get('session')->getFlashBag()->add(
@@ -377,7 +377,7 @@ class DefaultController extends OrderAbstractController
 
             //Event Log
             $eventType = "Call Log Cache Updated Manually";
-            $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $msg, $user, $message, $request, $eventType);
+            $userSecUtil->createUserEditEvent($this->getParameter('calllog.sitename'), $msg, $user, $message, $request, $eventType);
 
             return $this->redirect($this->generateUrl('calllog_callentry_view', array(
                 'messageOid' => $message->getOid(),
@@ -610,7 +610,7 @@ class DefaultController extends OrderAbstractController
 //
 //                //EventLog
 //                //$eventType = "Call Log Book Entry Updated";
-//                //$userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $msgLog, $user, $message, $request, $eventType);
+//                //$userSecUtil->createUserEditEvent($this->getParameter('calllog.sitename'), $msgLog, $user, $message, $request, $eventType);
 //            }
 //
 //            echo $msgLog . "<br>";

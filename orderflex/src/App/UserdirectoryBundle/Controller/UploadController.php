@@ -204,7 +204,7 @@ class UploadController extends OrderAbstractController {
      * @Method("GET")
      */
     public function downloadFileAction(Request $request, $id, $eventtype=null) {
-        return $this->downloadFileMethod($request,$id,$this->container->getParameter('employees.sitename'),$eventtype);
+        return $this->downloadFileMethod($request,$id,$this->getParameter('employees.sitename'),$eventtype);
     }
 
     public function downloadFileMethod($request,$id,$sitename=null,$eventtype=null) {
@@ -277,7 +277,7 @@ class UploadController extends OrderAbstractController {
      * @Method("GET")
      */
     public function viewFileAction( Request $request, $id, $eventtype=null, $viewType=null ) {
-        return $this->viewFileMethod($request,$id,$this->container->getParameter('employees.sitename'),$eventtype,$viewType);
+        return $this->viewFileMethod($request,$id,$this->getParameter('employees.sitename'),$eventtype,$viewType);
     }
 
     public function viewFileMethod($request,$id,$sitename=null,$eventtype=null,$viewType=null) {
@@ -474,10 +474,10 @@ class UploadController extends OrderAbstractController {
 
 
 
-        //return $this->container->get('templating')->renderResponse('FOSUserBundle/Profile/show.html.'.$this->container->getParameter('fos_user.template.engine'), array('user' => $user));
+        //return $this->container->get('templating')->renderResponse('FOSUserBundle/Profile/show.html.'.$this->getParameter('fos_user.template.engine'), array('user' => $user));
         return array(
             'form' => $form->createView(),
-            'sitename' => $this->container->getParameter('employees.sitename'),
+            'sitename' => $this->getParameter('employees.sitename'),
             'title' => 'Import Users'
         );
     }

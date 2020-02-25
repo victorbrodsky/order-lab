@@ -49,7 +49,7 @@ class ScanOrderController extends OrderAbstractController {
      * @Template("AppUserdirectoryBundle/Default/about.html.twig")
      */
     public function aboutAction( Request $request ) {
-        return array('sitename'=>$this->container->getParameter('scan.sitename'));
+        return array('sitename'=>$this->getParameter('scan.sitename'));
     }
 
     /**
@@ -125,7 +125,7 @@ class ScanOrderController extends OrderAbstractController {
             $services = $orderUtil->generateUserFilterOptions($user);
         }
 
-//        $adminemail = $this->container->getParameter('scanorder.adminemail');
+//        $adminemail = $this->getParameter('scanorder.adminemail');
 //        echo "adminemail=".$adminemail."<br>";
         //exit();
         //throw new \Exception( 'Test' );
@@ -749,7 +749,7 @@ class ScanOrderController extends OrderAbstractController {
             $accountreqs = $em->getRepository('AppUserdirectoryBundle:UserRequest')->findBy(
                 array(
                     "status"=>"active",
-                    "siteName"=>$this->container->getParameter('scan.sitename')
+                    "siteName"=>$this->getParameter('scan.sitename')
                 )
             );
         }
@@ -762,7 +762,7 @@ class ScanOrderController extends OrderAbstractController {
             return null;
         }
         $userSecUtil = $this->get('user_security_utility');
-        $accessreqs = $userSecUtil->getUserAccessRequestsByStatus($this->container->getParameter('scan.sitename'),AccessRequest::STATUS_ACTIVE);
+        $accessreqs = $userSecUtil->getUserAccessRequestsByStatus($this->getParameter('scan.sitename'),AccessRequest::STATUS_ACTIVE);
         return $accessreqs;
     }
 
@@ -846,7 +846,7 @@ class ScanOrderController extends OrderAbstractController {
             }
 
             $userSecUtil = $this->get('user_security_utility');
-            $site = $userSecUtil->getSiteBySitename($this->container->getParameter('scan.sitename'));
+            $site = $userSecUtil->getSiteBySitename($this->getParameter('scan.sitename'));
             $logger = new Logger($site);
             $logger->setUser($user);
             $logger->setRoles($roles);
@@ -899,7 +899,7 @@ class ScanOrderController extends OrderAbstractController {
             }
 
             $userSecUtil = $this->get('user_security_utility');
-            $site = $userSecUtil->getSiteBySitename($this->container->getParameter('scan.sitename'));
+            $site = $userSecUtil->getSiteBySitename($this->getParameter('scan.sitename'));
 
             $logger = new Logger($site);
             $logger->setUser($user);

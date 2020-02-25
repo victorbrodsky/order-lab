@@ -101,7 +101,7 @@ class CallEntrySamePatientController extends CallEntryController
 
         $title = "New Entry";
 
-        $system = $securityUtil->getDefaultSourceSystem($this->container->getParameter('calllog.sitename'));
+        $system = $securityUtil->getDefaultSourceSystem($this->getParameter('calllog.sitename'));
         $cycle = 'new';
         $formtype = 'call-entry';
         $readonlyPatient = false;
@@ -338,7 +338,7 @@ class CallEntrySamePatientController extends CallEntryController
 
         $title = "Save Entry";
 
-        $system = $securityUtil->getDefaultSourceSystem($this->container->getParameter('calllog.sitename'));
+        $system = $securityUtil->getDefaultSourceSystem($this->getParameter('calllog.sitename'));
         $status = 'valid';
         $cycle = 'new';
         $formtype = 'call-entry';
@@ -606,7 +606,7 @@ class CallEntrySamePatientController extends CallEntryController
                     }
 
                     if( !$testing ) {
-                        $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $eventStr, $user, $message, $request, $eventType);
+                        $userSecUtil->createUserEditEvent($this->getParameter('calllog.sitename'), $eventStr, $user, $message, $request, $eventType);
                     }
                 }
 

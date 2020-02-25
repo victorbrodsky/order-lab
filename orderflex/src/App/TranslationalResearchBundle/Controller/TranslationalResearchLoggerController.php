@@ -49,7 +49,7 @@ class TranslationalResearchLoggerController extends LoggerController
             return $this->redirect( $this->generateUrl('translationalresearch-nopermission') );
         }
 
-		$params = array('sitename'=>$this->container->getParameter('translationalresearch.sitename'));
+		$params = array('sitename'=>$this->getParameter('translationalresearch.sitename'));
         $loggerFormParams = $this->listLogger($params,$request);
 
         return $loggerFormParams;
@@ -69,7 +69,7 @@ class TranslationalResearchLoggerController extends LoggerController
         $entityName = 'User';
 
         $params = array(
-            'sitename'=>$this->container->getParameter('translationalresearch.sitename'),
+            'sitename'=>$this->getParameter('translationalresearch.sitename'),
             'entityNamespace'=>'App\UserdirectoryBundle\Entity',
             'entityName'=>$entityName,
             'entityId'=>$userid,
@@ -122,7 +122,7 @@ class TranslationalResearchLoggerController extends LoggerController
         }
 
         $params = array(
-            'sitename' => $this->container->getParameter('translationalresearch.sitename'),
+            'sitename' => $this->getParameter('translationalresearch.sitename'),
             //'objectType' => $objectType,
             //'objectId' => $objectId
             //'disabled' => true

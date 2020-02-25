@@ -77,7 +77,7 @@ class ScanUserController extends UserController
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
-        $userViewArr = $this->showUser($request,$id,$this->container->getParameter('scan.sitename'));
+        $userViewArr = $this->showUser($request,$id,$this->getParameter('scan.sitename'));
 
         if( $userViewArr === false ) {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
@@ -111,7 +111,7 @@ class ScanUserController extends UserController
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
-        $userViewArr = $this->editUser($request,$id,$this->container->getParameter('scan.sitename'));
+        $userViewArr = $this->editUser($request,$id,$this->getParameter('scan.sitename'));
 
         if( $userViewArr === false ) {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
@@ -145,8 +145,8 @@ class ScanUserController extends UserController
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
-        //$userViewArr = $this->updateUser( $request, $id, $this->container->getParameter('scan.sitename') );
-        return $this->updateUser( $request, $id, $this->container->getParameter('scan.sitename') );
+        //$userViewArr = $this->updateUser( $request, $id, $this->getParameter('scan.sitename') );
+        return $this->updateUser( $request, $id, $this->getParameter('scan.sitename') );
 
 
         ///////////////////////// moved to general user controller /////////////////////////
@@ -173,7 +173,7 @@ class ScanUserController extends UserController
         }
 
 
-        $userViewArr = $this->updateUser( $request, $id, $this->container->getParameter('scan.sitename') );
+        $userViewArr = $this->updateUser( $request, $id, $this->getParameter('scan.sitename') );
         return $this->redirect($this->generateUrl('scan_showuser', array('id' => $id)));
 
         //get scan user site setting form
@@ -250,7 +250,7 @@ class ScanUserController extends UserController
                 $user = $this->get('security.token_storage')->getToken()->getUser();
                 $event = "User information of ".$subjectuser." has been changed by ".$user.":"."<br>";
                 $event = $event . implode("<br>", $eventArr);
-                $secUtil->createUserEditEvent($this->container->getParameter('scan.sitename'),$event,$user,$subjectuser,$request,'User record updated');
+                $secUtil->createUserEditEvent($this->getParameter('scan.sitename'),$event,$user,$subjectuser,$request,'User record updated');
             }
             ////////////////////// EOF set Edit event log for Scan Settings //////////////////////
 
@@ -288,9 +288,9 @@ class ScanUserController extends UserController
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
-        $this->lockUnlock($request, $id, $status, $this->container->getParameter('scan.sitename'));
+        $this->lockUnlock($request, $id, $status, $this->getParameter('scan.sitename'));
 
-        return $this->redirect($this->generateUrl($this->container->getParameter('scan.sitename').'_listusers'));
+        return $this->redirect($this->generateUrl($this->getParameter('scan.sitename').'_listusers'));
     }
 
 

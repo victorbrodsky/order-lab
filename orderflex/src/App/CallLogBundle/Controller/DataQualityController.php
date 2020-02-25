@@ -66,7 +66,7 @@ class DataQualityController extends CallEntryController
 
         $title = "Merge Patient Records";
 
-        $system = $securityUtil->getDefaultSourceSystem($this->container->getParameter('calllog.sitename'));
+        $system = $securityUtil->getDefaultSourceSystem($this->getParameter('calllog.sitename'));
         $status = 'valid';
         $cycle = 'new';
 
@@ -321,7 +321,7 @@ class DataQualityController extends CallEntryController
         $eventType = "Merged Patient";
         $event = "Merged patients with ID#" . $id1 . " and ID# " . $id2 .":"."<br>";
         $event = $event . $msg;
-        $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $event, $user, $masterMergeRecordPatient, $request, $eventType);
+        $userSecUtil->createUserEditEvent($this->getParameter('calllog.sitename'), $event, $user, $masterMergeRecordPatient, $request, $eventType);
 
 
         $result = array();
@@ -351,7 +351,7 @@ class DataQualityController extends CallEntryController
         $securityUtil = $this->get('user_security_utility');
         //$em = $this->getDoctrine()->getManager();
 
-        $system = $securityUtil->getDefaultSourceSystem($this->container->getParameter('calllog.sitename'));
+        $system = $securityUtil->getDefaultSourceSystem($this->getParameter('calllog.sitename'));
         $status = 'valid';
         $cycle = 'new';
 
@@ -523,7 +523,7 @@ class DataQualityController extends CallEntryController
             $eventType = "Un-Merged Patient";
             $event = "Un-Merged " . count($unmergedPatients) . " Patient(s) with a master patient " . $masterId.":";
             $event = $event . $msg;
-            $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $event, $user, $unmergedPatients, $request, $eventType);
+            $userSecUtil->createUserEditEvent($this->getParameter('calllog.sitename'), $event, $user, $unmergedPatients, $request, $eventType);
         }
 
         $result = array();
@@ -552,7 +552,7 @@ class DataQualityController extends CallEntryController
         $securityUtil = $this->get('user_security_utility');
         //$em = $this->getDoctrine()->getManager();
 
-        $system = $securityUtil->getDefaultSourceSystem($this->container->getParameter('calllog.sitename'));
+        $system = $securityUtil->getDefaultSourceSystem($this->getParameter('calllog.sitename'));
         $status = 'valid';
         $cycle = 'new';
 
@@ -643,7 +643,7 @@ class DataQualityController extends CallEntryController
 
         $title = "Merge Patient Records";
 
-        $system = $securityUtil->getDefaultSourceSystem($this->container->getParameter('calllog.sitename'));
+        $system = $securityUtil->getDefaultSourceSystem($this->getParameter('calllog.sitename'));
         $status = 'valid';
         $cycle = 'new';
 
@@ -690,7 +690,7 @@ class DataQualityController extends CallEntryController
         $calllogUtil = $this->get('calllog_util');
         //$calllogUtil = $this->calllogUtil;
         $userSecUtil = $this->container->get('user_security_utility');
-        $sitename = $this->container->getParameter('calllog.sitename');
+        $sitename = $this->getParameter('calllog.sitename');
 
         ////////////////////////
 //        $query = $em->createQueryBuilder()
@@ -806,7 +806,7 @@ class DataQualityController extends CallEntryController
             //EventLog
             $userSecUtil = $this->container->get('user_security_utility');
             $eventType = "Task Updated";
-            $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $msg, $user, $message, $request, $eventType);
+            $userSecUtil->createUserEditEvent($this->getParameter('calllog.sitename'), $msg, $user, $message, $request, $eventType);
 
         } else {
             $error = true;

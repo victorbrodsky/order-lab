@@ -444,7 +444,7 @@ class ApproverController extends OrderAbstractController
             $eventType = "Business/Vacation Group Updated"; //"User record updated";
             $event = $organizationalGroupInstitution.": Roles of ".$subjectUser . " has been changed. Original roles: ".implode(", ",$originalUserSiteRoles).";<br> New roles:".implode(", ",$newUserSiteRoles);
             $userSecUtil = $this->container->get('user_security_utility');
-            $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$organizationalGroupInstitution,$request,$eventType);
+            $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'),$event,$user,$organizationalGroupInstitution,$request,$eventType);
 
             //Flash
             $this->get('session')->getFlashBag()->add(
@@ -522,8 +522,8 @@ class ApproverController extends OrderAbstractController
             $eventType = "Business/Vacation Group Updated";
             $event = $organizationalGroupInstitution.": User ".$subjectUser." has been removed as ".$role->getAlias();
             $userSecUtil = $this->container->get('user_security_utility');
-            //$userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$organizationalGroupInstitution,$request,$eventType);
-            $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$subjectUser,$request,$eventType);
+            //$userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'),$event,$user,$organizationalGroupInstitution,$request,$eventType);
+            $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'),$event,$user,$subjectUser,$request,$eventType);
 
             //Flash
             $this->get('session')->getFlashBag()->add(
@@ -659,7 +659,7 @@ class ApproverController extends OrderAbstractController
 
             //Event Log
             $userSecUtil = $this->container->get('user_security_utility');
-            $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'), $event, $user, $userObject, $request, $eventType);
+            $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'), $event, $user, $userObject, $request, $eventType);
         }
         //exit();
 
@@ -784,7 +784,7 @@ class ApproverController extends OrderAbstractController
                 //Event Log
                 $event = "New Business/Vacation Group " . $roleNameBase . " has been created for " . $institution->getName();
                 $userSecUtil = $this->container->get('user_security_utility');
-                $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'), $event, $user, $institution, $request, 'Business/Vacation Group Created');
+                $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'), $event, $user, $institution, $request, 'Business/Vacation Group Created');
 
                 //Flash
                 $this->get('session')->getFlashBag()->add(
@@ -841,7 +841,7 @@ class ApproverController extends OrderAbstractController
             //Event Log
             $event = "Business/Vacation Group [" . $institution->getTreeName() . "] has been removed by removing roles: ".implode(", ",$removedRoles);
             $userSecUtil = $this->container->get('user_security_utility');
-            $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'), $event, $user, $institution, $request, 'Business/Vacation Role Removed');
+            $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'), $event, $user, $institution, $request, 'Business/Vacation Role Removed');
 
             //Flash
             $this->get('session')->getFlashBag()->add(
@@ -901,7 +901,7 @@ class ApproverController extends OrderAbstractController
             $event = $institutionTreeName.": The role " . $roleName . " has been removed from the users: " . implode(", ", $userNamesArr);
             $userSecUtil = $this->container->get('user_security_utility');
             $user = $this->get('security.token_storage')->getToken()->getUser();
-            $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'), $event, $user, $institution, $request, $eventType);
+            $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'), $event, $user, $institution, $request, $eventType);
         }
 
         return $roleName;
@@ -1030,7 +1030,7 @@ class ApproverController extends OrderAbstractController
                 "; Original email users=".implode(", ",$originalUsers).
                 "; New email users=".implode(", ",$newUsers);
             $userSecUtil = $this->container->get('user_security_utility');
-            $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'), $event, $user, $institution, $request, 'Business/Vacation Group Updated');
+            $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'), $event, $user, $institution, $request, 'Business/Vacation Group Updated');
 
             //Flash
             $this->get('session')->getFlashBag()->add(

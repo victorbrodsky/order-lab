@@ -213,7 +213,7 @@ class CallEntryController extends OrderAbstractController
             'patientListId' => $defaultPatientListId,
             'shownavbarfilter' => false
             //'navbarfilterform' => $navbarfilterform->createView()
-            //'sitename' => $this->container->getParameter('calllog.sitename')
+            //'sitename' => $this->getParameter('calllog.sitename')
             //'calllogsearch' => $calllogsearch,
             //'calllogsearchtype' => $calllogsearchtype,
         );
@@ -227,7 +227,7 @@ class CallEntryController extends OrderAbstractController
         //$calllogUtil = $this->calllogUtil;
         //$userServiceUtil = $this->get('user_service_utility');
         //$userSecUtil = $this->get('user_security_utility');
-        //$sitename = $this->container->getParameter('calllog.sitename');
+        //$sitename = $this->getParameter('calllog.sitename');
 
         //$route = $request->get('_route');
         //$title = "Call Case List";
@@ -1074,7 +1074,7 @@ class CallEntryController extends OrderAbstractController
 //            'patientListId' => $defaultPatientListId,
 //            'shownavbarfilter' => false
 //            //'navbarfilterform' => $navbarfilterform->createView()
-//            //'sitename' => $this->container->getParameter('calllog.sitename')
+//            //'sitename' => $this->getParameter('calllog.sitename')
 //            //'calllogsearch' => $calllogsearch,
 //            //'calllogsearchtype' => $calllogsearchtype,
 //        );
@@ -1178,7 +1178,7 @@ class CallEntryController extends OrderAbstractController
         $userSecUtil = $this->get('user_security_utility');
         $orderUtil = $this->get('scanorder_utility');
         $em = $this->getDoctrine()->getManager();
-        //$sitename = $this->container->getParameter('calllog.sitename');
+        //$sitename = $this->getParameter('calllog.sitename');
 
         $mrn = trim($request->get('mrn'));
         $mrntype = trim($request->get('mrntype'));
@@ -1208,7 +1208,7 @@ class CallEntryController extends OrderAbstractController
         $title = "New Entry";
         $titleheadroom = null;
 
-        $system = $securityUtil->getDefaultSourceSystem($this->container->getParameter('calllog.sitename'));
+        $system = $securityUtil->getDefaultSourceSystem($this->getParameter('calllog.sitename'));
         $cycle = 'new';
         $formtype = 'call-entry';
         $readonlyPatient = false;
@@ -1470,7 +1470,7 @@ class CallEntryController extends OrderAbstractController
 
         $title = "Save Entry";
 
-        $system = $securityUtil->getDefaultSourceSystem($this->container->getParameter('calllog.sitename'));
+        $system = $securityUtil->getDefaultSourceSystem($this->getParameter('calllog.sitename'));
         $status = 'valid';
         $cycle = 'new';
         $formtype = 'call-entry';
@@ -1871,7 +1871,7 @@ class CallEntryController extends OrderAbstractController
                     //$eventStr = $eventStr . " submitted by " . $user;
 
                     if( !$testing ) {
-                        $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $eventStr, $user, $message, $request, $eventType); //Save Call Log Entry
+                        $userSecUtil->createUserEditEvent($this->getParameter('calllog.sitename'), $eventStr, $user, $message, $request, $eventType); //Save Call Log Entry
                     }
                 }
 
@@ -1933,7 +1933,7 @@ class CallEntryController extends OrderAbstractController
         $calllogUtil = $this->get('calllog_util');
         //$calllogUtil = $this->calllogUtil;
         $userSecUtil = $this->container->get('user_security_utility');
-        $sitename = $this->container->getParameter('calllog.sitename');
+        $sitename = $this->getParameter('calllog.sitename');
 
         //$patient = $message->getPatient()->first();
 
@@ -2754,7 +2754,7 @@ class CallEntryController extends OrderAbstractController
                 $eventType = "Patient Searched";
                 $event = "Patient searched by ".$searchBy;
                 $event = $event . "; found ".count($patients)." patient(s).";
-                $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'),$event,$user,$patientEntities,$request,$eventType); //searchPatient
+                $userSecUtil->createUserEditEvent($this->getParameter('calllog.sitename'),$event,$user,$patientEntities,$request,$eventType); //searchPatient
             }
 
         } else {
@@ -2974,7 +2974,7 @@ class CallEntryController extends OrderAbstractController
         }
 
         //Create a new Patient
-        $sourcesystem = $securityUtil->getDefaultSourceSystem($this->container->getParameter('calllog.sitename'));
+        $sourcesystem = $securityUtil->getDefaultSourceSystem($this->getParameter('calllog.sitename'));
         $status = 'valid';
 
         //$patient = new Patient(false,$status,$user,$sourcesystem);
@@ -3159,7 +3159,7 @@ class CallEntryController extends OrderAbstractController
 
         //log patient creation action
         $userSecUtil = $this->container->get('user_security_utility');
-        $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $event, $user, $patient, $request, $eventType); //Create a new Patient
+        $userSecUtil->createUserEditEvent($this->getParameter('calllog.sitename'), $event, $user, $patient, $request, $eventType); //Create a new Patient
 
         $response->setContent(json_encode($res));
         return $response;
@@ -3438,7 +3438,7 @@ class CallEntryController extends OrderAbstractController
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $eventType = "Call Log Book Entry Viewed";
         $eventStr = "Call Log Book Entry ID#".$message->getMessageOidVersion()." has been viewed by ".$user;
-        $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $eventStr, $user, $message, $request, $eventType); //View Call Log Entry
+        $userSecUtil->createUserEditEvent($this->getParameter('calllog.sitename'), $eventStr, $user, $message, $request, $eventType); //View Call Log Entry
 
         if( $formbased ) {
             return array(
@@ -3458,7 +3458,7 @@ class CallEntryController extends OrderAbstractController
                 'entityNamespace' => $classNamespace,
                 'entityName' => $className,
                 'entityId' => $message->getId(),
-                'sitename' => $this->container->getParameter('calllog.sitename'),
+                'sitename' => $this->getParameter('calllog.sitename'),
                 'titleheadroom' => $titleBody,
                 'formnodeTopHolderId' => $formnodeTopHolderId,
                 'eventObjectTypeId' => $eventObjectTypeId,
@@ -3481,7 +3481,7 @@ class CallEntryController extends OrderAbstractController
                 'entityNamespace' => $classNamespace,
                 'entityName' => $className,
                 'entityId' => $message->getId(),
-                'sitename' => $this->container->getParameter('calllog.sitename'),
+                'sitename' => $this->getParameter('calllog.sitename'),
                 'titleheadroom' => $titleBody,
                 'formnodeTopHolderId' => $formnodeTopHolderId,
                 'eventObjectTypeId' => $eventObjectTypeId,
@@ -3623,7 +3623,7 @@ class CallEntryController extends OrderAbstractController
         //An entry should be added to the Event Log, Titled "Call Log Book data exported".
         $eventType = "Call Log Book data exported";
         $eventDesc = "Call Log Book data exported on ".date('m/d/Y H:i')." by ".$user.". Exported entries count is ".count($entries);
-        $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $eventDesc, $user, $entries, $request, $eventType); //exportCsvAction
+        $userSecUtil->createUserEditEvent($this->getParameter('calllog.sitename'), $eventDesc, $user, $entries, $request, $eventType); //exportCsvAction
 
         //filename: The title of the file should be "Call-Log-Book-Entries-exported-on-[Timestamp]-by-[Logged-In-User-FirstName-LastName-(cwid)].csv .
         $userName = $user."";//->getUsernameOptimal();
@@ -3935,7 +3935,7 @@ class CallEntryController extends OrderAbstractController
 
         $useCache = TRUE; //default. Always use cache for export
 //        $userSecUtil = $this->container->get('user_security_utility');
-//        $sitename = $this->container->getParameter('calllog.sitename');
+//        $sitename = $this->getParameter('calllog.sitename');
 //        $useCache = $userSecUtil->getSiteSettingParameter('useCache',$sitename);
 //        if( !$useCache ) {
 //            $useCache = TRUE; //default

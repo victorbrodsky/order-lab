@@ -68,7 +68,7 @@ class FellAppUploadController extends UploadController {
 //        }
         /////// EOF ///////
 
-        return $this->downloadFileMethod($request,$id,$this->container->getParameter('fellapp.sitename'),$eventtype);
+        return $this->downloadFileMethod($request,$id,$this->getParameter('fellapp.sitename'),$eventtype);
     }
 
 
@@ -84,7 +84,7 @@ class FellAppUploadController extends UploadController {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
-        return $this->viewFileMethod($request,$id,$this->container->getParameter('fellapp.sitename'),$eventtype,$viewType);
+        return $this->viewFileMethod($request,$id,$this->getParameter('fellapp.sitename'),$eventtype,$viewType);
     }
 
 

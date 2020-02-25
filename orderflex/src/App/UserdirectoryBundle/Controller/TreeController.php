@@ -573,7 +573,7 @@ class TreeController extends OrderAbstractController {
      */
     public function createTopLevelRoot(Request $request) {
 //        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
-//            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
+//            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-order-nopermission') );
 //        }
 
         //$cycle = "new";

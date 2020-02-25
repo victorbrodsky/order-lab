@@ -60,7 +60,7 @@ class FellAppLoggerController extends LoggerController
         //2) keep only objects with fellowship type equal to a fellowship type of the user's role
 
         $params = array(
-            'sitename'=>$this->container->getParameter('fellapp.sitename')
+            'sitename'=>$this->getParameter('fellapp.sitename')
         );
         return $this->listLogger($params,$request);
     }
@@ -124,7 +124,7 @@ class FellAppLoggerController extends LoggerController
         $em = $this->getDoctrine()->getManager();
 
         $params = array(
-            'sitename' => $this->container->getParameter('fellapp.sitename'),
+            'sitename' => $this->getParameter('fellapp.sitename'),
 //            'hideObjectType' => true,
 //            'hideObjectId' => true,
 //            'hideIp' => true,
@@ -200,7 +200,7 @@ class FellAppLoggerController extends LoggerController
         //$loggerFormParams['titlePostfix'] = " for ".$objectType.": ".$objectId;//for FellowshipApplication: 162
         //Event Log showing 1 matching "Generate Accession Deidentifier ID" event(s) for user: firstname lastname - cwid
         //$loggerFormParams['titlePostfix'] = " matching \"".$eventType."\" event(s) for user: ".$user;
-        $eventlogTitle = $this->container->getParameter('eventlog_title');
+        $eventlogTitle = $this->getParameter('eventlog_title');
         if( $loggerFormParams['filtered'] ) {
             $loggerFormParams['eventLogTitle'] = $eventlogTitle . " showing " . count($loggerFormParams['pagination']) . " matching event(s)".
                 " for ".$objectType.": ".$objectId;

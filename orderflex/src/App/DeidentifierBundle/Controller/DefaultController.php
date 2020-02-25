@@ -50,7 +50,7 @@ class DefaultController extends OrderAbstractController
      * @Template("AppUserdirectoryBundle/Default/about.html.twig")
      */
     public function aboutAction( Request $request ) {
-        return array('sitename'=>$this->container->getParameter('deidentifier.sitename'));
+        return array('sitename'=>$this->getParameter('deidentifier.sitename'));
     }
 
     /**
@@ -254,7 +254,7 @@ class DefaultController extends OrderAbstractController
         //Event Log
         $event = "Deidentifier Search with Accession Type " . $accessionTypeObj ." and  Accession Number " . $accessionNumber;
         $userSecUtil = $this->container->get('user_security_utility');
-        $userSecUtil->createUserEditEvent($this->container->getParameter('deidentifier.sitename'),$event,$user,null,$request,'Search by Deidentifier ID conducted');
+        $userSecUtil->createUserEditEvent($this->getParameter('deidentifier.sitename'),$event,$user,null,$request,'Search by Deidentifier ID conducted');
 
         return array(
             'accessionTypeId' => $accessionType,
@@ -414,7 +414,7 @@ class DefaultController extends OrderAbstractController
         //$event = "Deidentifier Generate with Accession Type " . $accessionTypeObj .",  Accession Number " . $accessionNumber . " and Institution " . $institutionObj;
         $event = "Deidentifier ID ".$deidentifier." generated for ".$accessionTypeObj." ".$accessionNumber." (Institution: ".$institutionObj.")";
         $userSecUtil = $this->container->get('user_security_utility');
-        $userSecUtil->createUserEditEvent($this->container->getParameter('deidentifier.sitename'),$event,$user,$accession,$request,'Generate Accession Deidentifier ID');
+        $userSecUtil->createUserEditEvent($this->getParameter('deidentifier.sitename'),$event,$user,$accession,$request,'Generate Accession Deidentifier ID');
 
         //check for active access requests
         //$accessreqs = $this->getActiveAccessReq();
@@ -475,7 +475,7 @@ class DefaultController extends OrderAbstractController
 
         //set source
         $securityUtil = $this->get('user_security_utility');
-        $source = $securityUtil->getDefaultSourceSystem($this->container->getParameter('deidentifier.sitename'));
+        $source = $securityUtil->getDefaultSourceSystem($this->getParameter('deidentifier.sitename'));
         if( !$source ) {
             throw $this->createNotFoundException('Unable to find Deidentifier in SourceSystemList by name='."ORDER Deidentifier");
         }
@@ -693,7 +693,7 @@ class DefaultController extends OrderAbstractController
 
         $status = 'deidentified-valid';
         $securityUtil = $this->get('user_security_utility');
-        $source = $securityUtil->getDefaultSourceSystem($this->container->getParameter('deidentifier.sitename'));
+        $source = $securityUtil->getDefaultSourceSystem($this->getParameter('deidentifier.sitename'));
         if( !$source ) {
             throw $this->createNotFoundException('Unable to find Deidentifier in SourceSystemList by name='."ORDER Deidentifier");
         }
@@ -729,7 +729,7 @@ class DefaultController extends OrderAbstractController
             return null;
         }
         $userSecUtil = $this->get('user_security_utility');
-        $accessreqs = $userSecUtil->getUserAccessRequestsByStatus($this->container->getParameter('deidentifier.sitename'),AccessRequest::STATUS_ACTIVE);
+        $accessreqs = $userSecUtil->getUserAccessRequestsByStatus($this->getParameter('deidentifier.sitename'),AccessRequest::STATUS_ACTIVE);
         return $accessreqs;
     }
 

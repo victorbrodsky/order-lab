@@ -36,7 +36,7 @@ class DefaultController extends OrderAbstractController
 //            exit($statMachineType.": Found by transitionName=".$transitionName);
 //        }
 
-        return array('sitename'=>$this->container->getParameter('translationalresearch.sitename'));
+        return array('sitename'=>$this->getParameter('translationalresearch.sitename'));
     }
 
     /**
@@ -297,7 +297,7 @@ class DefaultController extends OrderAbstractController
      */
     public function generateAntibodyListAction(Request $request, $filename) {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
         //exit("generateAntibodyList: ".$filename);
@@ -331,7 +331,7 @@ class DefaultController extends OrderAbstractController
      */
     public function setPropertiesAntibodyListAction() {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
         $importUtil = $this->get('transres_import');
@@ -362,7 +362,7 @@ class DefaultController extends OrderAbstractController
      */
     public function updateInsertAntibodyListAction(Request $request) {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
         //exit("generateAntibodyList: ".$filename);
@@ -389,7 +389,7 @@ class DefaultController extends OrderAbstractController
      */
     public function syncIdAntibodyListAction(Request $request) {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
         exit("syncIdAntibodyListAction");
@@ -414,7 +414,7 @@ class DefaultController extends OrderAbstractController
      */
     public function updateProjectsImplicitDateAction( Request $request ) {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
         exit("updateProjectsImplicitDateAction: Not allowed");
@@ -461,7 +461,7 @@ class DefaultController extends OrderAbstractController
 //     */
     public function updateInvoicePaidDue( Request $request ) {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
         exit("updateInvoicePaidDue: Not allowed");
@@ -491,7 +491,7 @@ class DefaultController extends OrderAbstractController
 
     public function updateCommentObject(Request $request) {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
         $em = $this->getDoctrine()->getManager();

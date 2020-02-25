@@ -311,7 +311,7 @@ class RequestFormNodeController extends OrderAbstractController
             'entityNamespace' => $classNamespace,
             'entityName' => $className,
             'entityId' => $transresRequest->getId(),
-            'sitename' => $this->container->getParameter('translationalresearch.sitename'),
+            'sitename' => $this->getParameter('translationalresearch.sitename'),
         );
     }
 
@@ -325,7 +325,7 @@ class RequestFormNodeController extends OrderAbstractController
     public function showAction(Request $request, TransResRequest $transresRequest)
     {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
         $transresUtil = $this->container->get('transres_util');
@@ -382,7 +382,7 @@ class RequestFormNodeController extends OrderAbstractController
     public function indexAction(Request $request, Project $project)
     {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
         $transresUtil = $this->container->get('transres_util');
@@ -512,7 +512,7 @@ class RequestFormNodeController extends OrderAbstractController
     public function myRequestsAction(Request $request)
     {
         if (false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER')) {
-            return $this->redirect($this->generateUrl($this->container->getParameter('translationalresearch.sitename') . '-nopermission'));
+            return $this->redirect($this->generateUrl($this->getParameter('translationalresearch.sitename') . '-nopermission'));
         }
 
         $transresUtil = $this->container->get('transres_util');

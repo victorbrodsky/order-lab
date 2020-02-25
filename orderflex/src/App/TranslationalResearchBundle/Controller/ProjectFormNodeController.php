@@ -490,7 +490,7 @@ class ProjectFormNodeController extends ProjectController
             'entityNamespace' => $classNamespace,
             'entityName' => $className,
             'entityId' => $project->getId(),
-            'sitename' => $this->container->getParameter('translationalresearch.sitename'),
+            'sitename' => $this->getParameter('translationalresearch.sitename'),
         );
     }
 

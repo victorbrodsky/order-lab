@@ -125,7 +125,7 @@ class CallLogEditController extends CallEntryController
         );
 
         $eventType = "Call Log Book Entry Undeleted";
-        $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $msg, $user, $message, $request, $eventType);
+        $userSecUtil->createUserEditEvent($this->getParameter('calllog.sitename'), $msg, $user, $message, $request, $eventType);
 
         return $this->redirect($this->generateUrl('calllog_home'));
     }
@@ -164,7 +164,7 @@ class CallLogEditController extends CallEntryController
 
         //Event Log
         $eventType = "Call Log Book Entry Deleted";
-        $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $msg, $user, $message, $request, $eventType);
+        $userSecUtil->createUserEditEvent($this->getParameter('calllog.sitename'), $msg, $user, $message, $request, $eventType);
 
         return $msg;
     }
@@ -293,7 +293,7 @@ class CallLogEditController extends CallEntryController
         }
 
         ////////////////// add missing encounter fields //////////////////
-        $system = $securityUtil->getDefaultSourceSystem($this->container->getParameter('calllog.sitename'));
+        $system = $securityUtil->getDefaultSourceSystem($this->getParameter('calllog.sitename'));
 
 //        $existingEncounter = null;
 //        foreach( $message->getEncounter() as $encounter ) {
@@ -408,7 +408,7 @@ class CallLogEditController extends CallEntryController
         //$user = $this->get('security.token_storage')->getToken()->getUser();
         $eventType = "Call Log Book Entry Edit Accessed";
         $eventStr = "Call Log Book Entry ID#".$message->getMessageOidVersion()." has been viewed on the edit page by ".$user;
-        $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $eventStr, $user, $message, $request, $eventType); //View Call Log Entry
+        $userSecUtil->createUserEditEvent($this->getParameter('calllog.sitename'), $eventStr, $user, $message, $request, $eventType); //View Call Log Entry
 
 
         return array(
@@ -426,7 +426,7 @@ class CallLogEditController extends CallEntryController
             'entityNamespace' => $classNamespace,
             'entityName' => $className,
             'entityId' => $message->getId(),
-            'sitename' => $this->container->getParameter('calllog.sitename'),
+            'sitename' => $this->getParameter('calllog.sitename'),
             'titleheadroom' => $title,
             'formnodeTopHolderId' => $formnodeTopHolderId,
             'currentMessageStatus' => $latestMessageStatus,
@@ -486,7 +486,7 @@ class CallLogEditController extends CallEntryController
 
         $title = "Update Entry";
 
-        $system = $securityUtil->getDefaultSourceSystem($this->container->getParameter('calllog.sitename'));
+        $system = $securityUtil->getDefaultSourceSystem($this->getParameter('calllog.sitename'));
         $status = 'valid';
         $cycleForm = 'new';
         $formtype = 'call-entry';
@@ -853,7 +853,7 @@ class CallLogEditController extends CallEntryController
                     }
 
                     if( !$testing ) {
-                        $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $eventStr, $user, $message, $request, $eventType);
+                        $userSecUtil->createUserEditEvent($this->getParameter('calllog.sitename'), $eventStr, $user, $message, $request, $eventType);
                         $logger->notice("createUserEditEvent=".$msg);
                     }
                 }

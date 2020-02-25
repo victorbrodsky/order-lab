@@ -154,7 +154,7 @@ class PatientController extends OrderAbstractController
             'user' => $user,
             'em' => $em,
             'container' => $this->container,
-            'sitename' => $this->container->getParameter('scan.sitename'),
+            'sitename' => $this->getParameter('scan.sitename'),
             'datastructure' => 'datastructure', //'datastructure-patient'
         );
 
@@ -195,7 +195,7 @@ class PatientController extends OrderAbstractController
             'type' => 'show',
             'cycle' => 'new',
             'datastructure' => 'datastructure',
-            'sitename' => $this->container->getParameter('scan.sitename')
+            'sitename' => $this->getParameter('scan.sitename')
         );
     }
 
@@ -226,7 +226,7 @@ class PatientController extends OrderAbstractController
         }
 
         $parameters = array(
-            'sitename' => $this->container->getParameter('scan.sitename'),
+            'sitename' => $this->getParameter('scan.sitename'),
             'datastructure' => $datastructure,
             'tracker' => 'tracker',
             'editpath' => 'scan-patient-edit'
@@ -366,7 +366,7 @@ class PatientController extends OrderAbstractController
         }
 
         $parameters = array(
-            'sitename' => $this->container->getParameter('scan.sitename'),
+            'sitename' => $this->getParameter('scan.sitename'),
             'datastructure' => 'datastructure-patient',
             'tracker' => 'tracker',
             'updatepath' => 'scan_patient_update',
@@ -500,7 +500,7 @@ class PatientController extends OrderAbstractController
         }
 
         $parameters = array(
-            'sitename' => $this->container->getParameter('scan.sitename'),
+            'sitename' => $this->getParameter('scan.sitename'),
             'datastructure' => 'datastructure-patient',
             'tracker' => 'tracker',
             'updatepath' => 'scan_patient_update',
@@ -1035,7 +1035,7 @@ class PatientController extends OrderAbstractController
             $document->setUniquename($uniqueName);
             //$dir = 'Uploaded/scan-order/documents';
             //scan.uploadpath
-            $dir = 'Uploaded/'.$this->container->getParameter('scan.uploadpath');
+            $dir = 'Uploaded/'.$this->getParameter('scan.uploadpath');
             $document->setUploadDirectory($dir);
             $filename = $dir."/".$uniqueName;
             if( file_exists($filename) ) {

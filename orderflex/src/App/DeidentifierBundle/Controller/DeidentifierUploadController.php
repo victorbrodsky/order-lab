@@ -50,7 +50,7 @@ class DeidentifierUploadController extends UploadController {
      * @Method("GET")
      */
     public function downloadFileAction(Request $request,$id,$eventtype=null) {
-        return $this->downloadFileMethod($request,$id,$this->container->getParameter('deidentifier.sitename'),$eventtype);
+        return $this->downloadFileMethod($request,$id,$this->getParameter('deidentifier.sitename'),$eventtype);
     }
 
 
@@ -61,7 +61,7 @@ class DeidentifierUploadController extends UploadController {
      * @Method("GET")
      */
     public function viewFileAction(Request $request,$id,$eventtype=null, $viewType=null) {
-        return $this->viewFileMethod($request,$id,$this->container->getParameter('deidentifier.sitename'),$eventtype,$viewType);
+        return $this->viewFileMethod($request,$id,$this->getParameter('deidentifier.sitename'),$eventtype,$viewType);
     }
 
 

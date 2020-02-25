@@ -73,7 +73,7 @@ class FellAppApplicantController extends OrderAbstractController {
         return array(
             'entity' => $entity,
             'pathbase' => 'fellapp',
-            'sitename' => $this->container->getParameter('fellapp.sitename')
+            'sitename' => $this->getParameter('fellapp.sitename')
         );
     }
 
@@ -394,7 +394,7 @@ class FellAppApplicantController extends OrderAbstractController {
         $userSecUtil = $this->container->get('user_security_utility');
         $systemUser = $userSecUtil->findSystemUser();
         $event = $event . "<br>" . $emailStr;
-        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,$fellapp,$request,'Fellowship Application Rating Invitation Emails Resent');
+        $userSecUtil->createUserEditEvent($this->getParameter('fellapp.sitename'),$event,$systemUser,$fellapp,$request,'Fellowship Application Rating Invitation Emails Resent');
 
         //return $this->redirect( $this->generateUrl('fellapp_home') );
 
@@ -618,7 +618,7 @@ class FellAppApplicantController extends OrderAbstractController {
 //                array(
 //                    'entity' => $fellapp,
 //                    'pathbase' => 'fellapp',
-//                    'sitename' => $this->container->getParameter('fellapp.sitename')
+//                    'sitename' => $this->getParameter('fellapp.sitename')
 //                )
 //            );
 //
@@ -691,7 +691,7 @@ class FellAppApplicantController extends OrderAbstractController {
 //                'entities' => $entities,
 //                'pathbase' => 'fellapp',
 //                'cycle' => 'show',
-//                'sitename' => $this->container->getParameter('fellapp.sitename')
+//                'sitename' => $this->getParameter('fellapp.sitename')
 //            )
 //        );
         $interviewsDocHtml = $this->get('twig')->render('AppFellAppBundle/Interview/applicants-interview-info-doc.html.twig',
@@ -699,7 +699,7 @@ class FellAppApplicantController extends OrderAbstractController {
                 'entities' => $entities,
                 'pathbase' => 'fellapp',
                 'cycle' => 'show',
-                'sitename' => $this->container->getParameter('fellapp.sitename')
+                'sitename' => $this->getParameter('fellapp.sitename')
             )
         );
 
@@ -738,7 +738,7 @@ class FellAppApplicantController extends OrderAbstractController {
             'entities' => $entities,
             'pathbase' => 'fellapp',
             'cycle' => 'show',
-            'sitename' => $this->container->getParameter('fellapp.sitename')
+            'sitename' => $this->getParameter('fellapp.sitename')
         );
     }
 

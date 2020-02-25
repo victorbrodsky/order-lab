@@ -49,7 +49,7 @@ class VacReqLoggerController extends LoggerController
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
-		$params = array('sitename'=>$this->container->getParameter('vacreq.sitename'));
+		$params = array('sitename'=>$this->getParameter('vacreq.sitename'));
         $loggerFormParams = $this->listLogger($params,$request);
 
         return $loggerFormParams;
@@ -69,7 +69,7 @@ class VacReqLoggerController extends LoggerController
         $entityName = 'User';
 
         $params = array(
-            'sitename'=>$this->container->getParameter('vacreq.sitename'),
+            'sitename'=>$this->getParameter('vacreq.sitename'),
             'entityNamespace'=>'App\UserdirectoryBundle\Entity',
             'entityName'=>$entityName,
             'entityId'=>$userid,

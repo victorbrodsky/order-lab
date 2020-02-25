@@ -33,8 +33,8 @@ class TranslationalResearchUserController extends UserController
      * @Template("AppUserdirectoryBundle/Profile/show_user.html.twig")
      */
     public function showUserOptimizedAction( Request $request, $id ) {
-        //exit("sitename=".$this->container->getParameter('translationalresearch.sitename')); //result:translationalresearch
-        return $this->showUserOptimized($request, $id, $this->container->getParameter('translationalresearch.sitename'));
+        //exit("sitename=".$this->getParameter('translationalresearch.sitename')); //result:translationalresearch
+        return $this->showUserOptimized($request, $id, $this->getParameter('translationalresearch.sitename'));
     }
 
 
@@ -50,7 +50,7 @@ class TranslationalResearchUserController extends UserController
             return $this->redirect( $this->generateUrl('translationalresearch-nopermission') );
         }
 
-        $editUser = $this->editUser($request,$id, $this->container->getParameter('translationalresearch.sitename'));
+        $editUser = $this->editUser($request,$id, $this->getParameter('translationalresearch.sitename'));
 
         if( $editUser === false ) {
             return $this->redirect( $this->generateUrl('translationalresearch-nopermission') );
@@ -71,7 +71,7 @@ class TranslationalResearchUserController extends UserController
             return $this->redirect( $this->generateUrl('translationalresearch-nopermission') );
         }
 
-        return $this->updateUser( $request, $id, $this->container->getParameter('translationalresearch.sitename') );
+        return $this->updateUser( $request, $id, $this->getParameter('translationalresearch.sitename') );
     }
 
     /**
@@ -84,7 +84,7 @@ class TranslationalResearchUserController extends UserController
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
-        return $this->addNewUserAjax($request); //$this->container->getParameter('employees.sitename')
+        return $this->addNewUserAjax($request); //$this->getParameter('employees.sitename')
     }
     public function processOtherUserParam($user,$otherUserParam) {
         if( $otherUserParam == "hematopathology" ) {

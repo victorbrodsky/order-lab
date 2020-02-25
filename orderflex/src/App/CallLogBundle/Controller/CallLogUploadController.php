@@ -50,7 +50,7 @@ class CallLogUploadController extends UploadController {
      * @Method("GET")
      */
     public function downloadFileAction(Request $request,$id,$eventtype=null) {
-        return $this->downloadFileMethod($request,$id,$this->container->getParameter('calllog.sitename'),$eventtype);
+        return $this->downloadFileMethod($request,$id,$this->getParameter('calllog.sitename'),$eventtype);
     }
 
 
@@ -61,7 +61,7 @@ class CallLogUploadController extends UploadController {
      * @Method("GET")
      */
     public function viewFileAction(Request $request,$id,$eventtype=null, $viewType=null) {
-        return $this->viewFileMethod($request,$id,$this->container->getParameter('calllog.sitename'),$eventtype,$viewType);
+        return $this->viewFileMethod($request,$id,$this->getParameter('calllog.sitename'),$eventtype,$viewType);
     }
 
 

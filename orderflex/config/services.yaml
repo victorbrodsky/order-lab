@@ -99,25 +99,25 @@ services:
 #They should be injected via indexAction(CallLogUtil $calllogUtil)
     App\UserdirectoryBundle\Controller\:
         resource: '../src/App/UserdirectoryBundle/Controller/'
-        tags: ['controller.service_arguments']
+#        tags: ['controller.service_arguments']
     App\CallLogBundle\Controller\:
         resource: '../src/App/CallLogBundle/Controller/'
-        tags: ['controller.service_arguments']
+#        tags: ['controller.service_arguments']
     App\FellAppBundle\Controller\:
         resource: '../src/App/FellAppBundle/Controller/'
-        tags: ['controller.service_arguments']
+#        tags: ['controller.service_arguments']
     App\TranslationalResearchBundle\Controller\:
         resource: '../src/App/TranslationalResearchBundle/Controller/'
-        tags: ['controller.service_arguments']
+#        tags: ['controller.service_arguments']
     App\VacReqBundle\Controller\:
         resource: '../src/App/VacReqBundle/Controller/'
-        tags: ['controller.service_arguments']
+#        tags: ['controller.service_arguments']
     App\OrderformBundle\Controller\:
         resource: '../src/App/OrderformBundle/Controller/'
-        tags: ['controller.service_arguments']
+#        tags: ['controller.service_arguments']
     App\DeidentifierBundle\Controller\:
         resource: '../src/App/DeidentifierBundle/Controller/'
-        tags: ['controller.service_arguments']
+#        tags: ['controller.service_arguments']
 
 
 #    App\UserdirectoryBundle\Controller\UserController: ~

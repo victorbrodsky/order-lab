@@ -29,6 +29,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\PhpBridgeSessionStorage;
 
 use App\UserdirectoryBundle\Util\UserUtil;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class DeidentifierSecurityController extends SecurityController
 {
@@ -37,8 +38,8 @@ class DeidentifierSecurityController extends SecurityController
      * @Route("/login", name="deidentifier_login")
      * @Template()
      */
-    public function loginAction( Request $request ) {
-        return parent::loginAction($request);
+    public function loginAction( Request $request, AuthenticationUtils $authenticationUtils ) {
+        return parent::loginAction($request,$authenticationUtils);
     }
 
 
@@ -63,7 +64,7 @@ class DeidentifierSecurityController extends SecurityController
         $empty = $request->get('empty');
 
         return array(
-            'sitename' => $this->container->getParameter('deidentifier.sitename'),
+            'sitename' => $this->getParameter('deidentifier.sitename'),
             'empty' => $empty
         );
     }
@@ -91,7 +92,7 @@ class DeidentifierSecurityController extends SecurityController
 //        //exit();
 //        //return parent::accreqLogoutAction($request);
 //
-//        return $this->accreqLogout($request,$this->container->getParameter('deidentifier.sitename'));
+//        return $this->accreqLogout($request,$this->getParameter('deidentifier.sitename'));
 //    }
 
 

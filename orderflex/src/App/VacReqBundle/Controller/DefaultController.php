@@ -35,7 +35,7 @@ class DefaultController extends OrderAbstractController
      * @Template("AppUserdirectoryBundle/Default/about.html.twig")
      */
     public function aboutAction( Request $request ) {
-        return array('sitename'=>$this->container->getParameter('vacreq.sitename'));
+        return array('sitename'=>$this->getParameter('vacreq.sitename'));
     }
 
 //    /**

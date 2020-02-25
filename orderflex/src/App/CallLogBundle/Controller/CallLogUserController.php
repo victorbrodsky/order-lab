@@ -33,7 +33,7 @@ class CallLogUserController extends UserController
      * @Template("AppUserdirectoryBundle/Profile/show_user.html.twig")
      */
     public function showUserOptimizedAction( Request $request, $id ) {
-        return $this->showUserOptimized($request, $id, $this->container->getParameter('calllog.sitename'));
+        return $this->showUserOptimized($request, $id, $this->getParameter('calllog.sitename'));
     }
 
 
@@ -49,7 +49,7 @@ class CallLogUserController extends UserController
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
-        $editUser = $this->editUser($request,$id, $this->container->getParameter('calllog.sitename'));
+        $editUser = $this->editUser($request,$id, $this->getParameter('calllog.sitename'));
 
         if( $editUser === false ) {
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
@@ -70,7 +70,7 @@ class CallLogUserController extends UserController
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
-        return $this->updateUser( $request, $id, $this->container->getParameter('calllog.sitename') );
+        return $this->updateUser( $request, $id, $this->getParameter('calllog.sitename') );
     }
 
 }

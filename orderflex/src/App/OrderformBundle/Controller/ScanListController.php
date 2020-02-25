@@ -45,7 +45,7 @@ class ScanListController extends ListController
     {
 
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_SUBMITTER') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('scan.sitename').'-order-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('scan.sitename').'-order-nopermission') );
         }
 
         $listArr = $this->getList($request,1000000);
@@ -85,7 +85,7 @@ class ScanListController extends ListController
     {
 
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_ADMIN') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('scan.sitename').'-order-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('scan.sitename').'-order-nopermission') );
         }
 
         $routeName = $request->get('_route');
@@ -191,7 +191,7 @@ class ScanListController extends ListController
     public function indexAction(Request $request)
     {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_SUBMITTER') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('scan.sitename').'-order-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('scan.sitename').'-order-nopermission') );
         }
 
         return $this->getList($request);
@@ -253,7 +253,7 @@ class ScanListController extends ListController
     public function createAction(Request $request)
     {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('scan.sitename').'-order-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('scan.sitename').'-order-nopermission') );
         }
 
         return $this->createList($request);
@@ -315,7 +315,7 @@ class ScanListController extends ListController
     public function newAction(Request $request)
     {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('scan.sitename').'-order-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('scan.sitename').'-order-nopermission') );
         }
 
         return $this->newList($request);
@@ -377,7 +377,7 @@ class ScanListController extends ListController
     public function showAction(Request $request,$id)
     {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_SUBMITTER') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('scan.sitename').'-order-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('scan.sitename').'-order-nopermission') );
         }
 
         return $this->showList($request,$id,true);
@@ -439,7 +439,7 @@ class ScanListController extends ListController
     public function editAction(Request $request,$id)
     {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('scan.sitename').'-order-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('scan.sitename').'-order-nopermission') );
         }
 
         return $this->editList($request,$id);
@@ -501,7 +501,7 @@ class ScanListController extends ListController
     public function updateAction(Request $request, $id)
     {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('scan.sitename').'-order-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('scan.sitename').'-order-nopermission') );
         }
 
         return $this->updateList($request, $id);
@@ -781,7 +781,7 @@ class ScanListController extends ListController
      */
     public function deleteAction(Request $request, $id)
     {
-        return $this->redirect( $this->generateUrl($this->container->getParameter('scan.sitename').'-order-nopermission') );
+        return $this->redirect( $this->generateUrl($this->getParameter('scan.sitename').'-order-nopermission') );
         //return $this->deleteList($request, $id);
     }
     /////////////////// DELETE IS NOT USED /////////////////////////

@@ -353,7 +353,7 @@ class FormNodeController extends OrderAbstractController {
 
 
 //        $template = "OK";
-        //$showUserArr = $this->showUser($userid,$this->container->getParameter('employees.sitename'),false);
+        //$showUserArr = $this->showUser($userid,$this->getParameter('employees.sitename'),false);
 
         //$template = $this->render('AppUserdirectoryBundle/Profile/edit_user_only.html.twig',$showUserArr)->getContent();
 
@@ -547,7 +547,7 @@ class FormNodeController extends OrderAbstractController {
     public function formNodeTestAction(Request $request)
     {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
         $em = $this->getDoctrine()->getManager();

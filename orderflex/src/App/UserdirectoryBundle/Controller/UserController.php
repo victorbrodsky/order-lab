@@ -136,7 +136,7 @@ class UserController extends OrderAbstractController
         //$session = $request->getSession();
         //echo $session->get('_security_scan_auth');
 
-        return array('sitename'=>$this->container->getParameter('employees.sitename'));
+        return array('sitename'=>$this->getParameter('employees.sitename'));
     }
 
 
@@ -156,7 +156,7 @@ class UserController extends OrderAbstractController
 //        return $this->render('AppUserdirectoryBundle/Admin/users-content.html.twig',
 //            array(
 //                'entities' => $pagination,
-//                'sitename' => $this->container->getParameter('employees.sitename')
+//                'sitename' => $this->getParameter('employees.sitename')
 //            )
 //        );
 //    }
@@ -194,7 +194,7 @@ class UserController extends OrderAbstractController
         $render = $this->render('AppUserdirectoryBundle/Admin/users-content.html.twig',
             array(
                 'entities' => $pagination,
-                'sitename' => $this->container->getParameter('employees.sitename'),
+                'sitename' => $this->getParameter('employees.sitename'),
                 'postData' => $postData
             )
         );
@@ -202,7 +202,7 @@ class UserController extends OrderAbstractController
 
 //        $params = array(
 //            'entities' => $pagination,
-//            'sitename' => $this->container->getParameter('employees.sitename'),
+//            'sitename' => $this->getParameter('employees.sitename'),
 //            'postData' => $postData
 //        );
 //
@@ -1670,23 +1670,23 @@ class UserController extends OrderAbstractController
 
 //        $form = $this->createForm(new UserType($params), $user, array(
 //            'disabled' => false,
-//            'action' => $this->generateUrl( $this->container->getParameter('employees.sitename').'_create_user' ),
+//            'action' => $this->generateUrl( $this->getParameter('employees.sitename').'_create_user' ),
 //            'method' => 'POST',
 //        ));
         $form = $this->createForm(UserType::class, $user, array(
             'disabled' => false,
-            'action' => $this->generateUrl( $this->container->getParameter('employees.sitename').'_create_user' ),
+            'action' => $this->generateUrl( $this->getParameter('employees.sitename').'_create_user' ),
             'method' => 'POST',
             'form_custom_value' => $params,
         ));
 
-        //return $this->container->get('templating')->renderResponse('FOSUserBundle/Profile/show.html.'.$this->container->getParameter('fos_user.template.engine'), array('user' => $user));
+        //return $this->container->get('templating')->renderResponse('FOSUserBundle/Profile/show.html.'.$this->getParameter('fos_user.template.engine'), array('user' => $user));
         return array(
             'entity' => $user,
             'form' => $form->createView(),
             'cycle' => 'create_user',
             'user_id' => '',
-            'sitename' => $this->container->getParameter('employees.sitename'),
+            'sitename' => $this->getParameter('employees.sitename'),
             'userclone' => $subjectUser,
             'postData' => $request->query->all(),
             'title' => 'Create New User'
@@ -1802,23 +1802,23 @@ class UserController extends OrderAbstractController
 
 //        $form = $this->createForm(new UserType($params), $user, array(
 //            'disabled' => false,
-//            'action' => $this->generateUrl( $this->container->getParameter('employees.sitename').'_create_user' ),
+//            'action' => $this->generateUrl( $this->getParameter('employees.sitename').'_create_user' ),
 //            'method' => 'POST',
 //        ));
         $form = $this->createForm(UserSimpleType::class, $user, array(
             'disabled' => false,
-            //'action' => $this->generateUrl( $this->container->getParameter('employees.sitename').'_create_user' ),
+            //'action' => $this->generateUrl( $this->getParameter('employees.sitename').'_create_user' ),
             //'method' => 'POST',
             'form_custom_value' => $params,
         ));
 
-        //return $this->container->get('templating')->renderResponse('FOSUserBundle/Profile/show.html.'.$this->container->getParameter('fos_user.template.engine'), array('user' => $user));
+        //return $this->container->get('templating')->renderResponse('FOSUserBundle/Profile/show.html.'.$this->getParameter('fos_user.template.engine'), array('user' => $user));
         return array(
             'entity' => $user,
             'form' => $form->createView(),
             'cycle' => 'create_user',
             'user_id' => '',
-            'sitename' => $this->container->getParameter('employees.sitename'),
+            'sitename' => $this->getParameter('employees.sitename'),
             'userclone' => $subjectUser,
             'postData' => $request->query->all(),
             'ldapSearchByLastName' => false
@@ -1983,7 +1983,7 @@ class UserController extends OrderAbstractController
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
-        return $this->addNewUserAjax($request); //$this->container->getParameter('employees.sitename')
+        return $this->addNewUserAjax($request); //$this->getParameter('employees.sitename')
     }
     public function addNewUserAjax($request) {
 
@@ -2523,7 +2523,7 @@ class UserController extends OrderAbstractController
             $userAdmin = $this->get('security.token_storage')->getToken()->getUser();
             $event = "User account for ".$user." has been created by ".$userAdmin."<br>";
             $userSecUtil = $this->get('user_security_utility');
-            $userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'),$event,$userAdmin,$user,$request,'New user record added');
+            $userSecUtil->createUserEditEvent($this->getParameter('employees.sitename'),$event,$userAdmin,$user,$request,'New user record added');
 
             //check fellapp roles to sync with FellowshipSubspecialty
             $fellappUtil = $this->container->get('fellapp_util');
@@ -2537,7 +2537,7 @@ class UserController extends OrderAbstractController
                 }
             }
 
-            return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename').'_showuser',array('id' => $user->getId())));
+            return $this->redirect($this->generateUrl($this->getParameter('employees.sitename').'_showuser',array('id' => $user->getId())));
         }
 
         return array(
@@ -2545,7 +2545,7 @@ class UserController extends OrderAbstractController
             'form' => $form->createView(),
             'cycle' => 'create_user',
             'user_id' => '',
-            'sitename' => $this->container->getParameter('employees.sitename'),
+            'sitename' => $this->getParameter('employees.sitename'),
             'userclone' => null,
             'postData' => $request->query->all(),
             'title' => 'Create New User',
@@ -2554,7 +2554,7 @@ class UserController extends OrderAbstractController
 
 //    protected function getEngine()
 //    {
-//        return $this->container->getParameter('fos_user.template.engine');
+//        return $this->getParameter('fos_user.template.engine');
 //    }
     ////////////////////// EOF Create New User //////////////////////
 
@@ -2571,7 +2571,7 @@ class UserController extends OrderAbstractController
 //        echo "single email=".$user->getSingleEmail()."<br>";
 //        exit('111');
 
-        return $this->showUserOptimized( $request, $id, $this->container->getParameter('employees.sitename') );
+        return $this->showUserOptimized( $request, $id, $this->getParameter('employees.sitename') );
 
 //        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USER') ) { //!$secUtil->isCurrentUser($id) &&
 //            return $this->redirect( $this->generateUrl('employees-nopermission') );
@@ -2604,7 +2604,7 @@ class UserController extends OrderAbstractController
 //            'entity' => $entity,
 //            'cycle' => 'show_user',
 //            'user_id' => $id,
-//            'sitename' => $this->container->getParameter('employees.sitename'),
+//            'sitename' => $this->getParameter('employees.sitename'),
 //            'title' => 'Employee Profile ' . $entity->getUsernameOptimal()
 //            //'title' => 'Employee Profile ' . $entity['infos'][0]['displayName']
 //            //'title' => 'Employee Profile ' . $entity['displayName23']
@@ -2649,7 +2649,7 @@ class UserController extends OrderAbstractController
             'cycle' => 'show_user',
             'user_id' => $id,
             'title' => 'Employee Profile ' . $entity->getUsernameOptimal()
-            //'sitename' => $this->container->getParameter('employees.sitename'),
+            //'sitename' => $this->getParameter('employees.sitename'),
             //'title' => 'Employee Profile ' . $entity['infos'][0]['displayName']
             //'title' => 'Employee Profile ' . $entity['displayName23']
         );
@@ -2674,7 +2674,7 @@ class UserController extends OrderAbstractController
         //testing
 //        return array(
 //            'title' => 'empty',
-//            'sitename' => $this->container->getParameter('employees.sitename'),
+//            'sitename' => $this->getParameter('employees.sitename'),
 //            'user_id' => 1           
 //        );
         
@@ -2727,7 +2727,7 @@ class UserController extends OrderAbstractController
             'entity' => $entity,           
             'cycle' => 'show_user',
             'user_id' => $id,
-            'sitename' => $this->container->getParameter('employees.sitename'),          
+            'sitename' => $this->getParameter('employees.sitename'),
             //'title' => 'Employee Profile ' . $entity->getUsernameOptimal()
             //'title' => 'Employee Profile ' . $entity['infos'][0]['displayName'] 
             'title' => 'Employee Profile ' . $entity['displayName23'],           
@@ -2755,7 +2755,7 @@ class UserController extends OrderAbstractController
         }
 
         //echo "id=".$id."<br>";
-        $showUser = $this->showUser($request,$id,$this->container->getParameter('employees.sitename'),false);
+        $showUser = $this->showUser($request,$id,$this->getParameter('employees.sitename'),false);
 
         if( $showUser === false ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
@@ -2779,7 +2779,7 @@ class UserController extends OrderAbstractController
         $userid = $request->query->get('userid');
         //echo "userid=".$userid."<br>";
 
-        $showUserArr = $this->showUser($request,$userid,$this->container->getParameter('employees.sitename'),false);
+        $showUserArr = $this->showUser($request,$userid,$this->getParameter('employees.sitename'),false);
 
         $template = $this->render('AppUserdirectoryBundle/Profile/edit_user_only.html.twig',$showUserArr)->getContent();
 
@@ -2804,7 +2804,7 @@ class UserController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
-        $showUser = $this->showUser($request,$id,$this->container->getParameter('employees.sitename'));
+        $showUser = $this->showUser($request,$id,$this->getParameter('employees.sitename'));
 
         if( $showUser === false ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
@@ -2879,7 +2879,7 @@ class UserController extends OrderAbstractController
 //        var_dump($request->query);
 //        echo "</pre>";
 
-        //return $this->container->get('templating')->renderResponse('FOSUserBundle/Profile/show.html.'.$this->container->getParameter('fos_user.template.engine'), array('user' => $user));
+        //return $this->container->get('templating')->renderResponse('FOSUserBundle/Profile/show.html.'.$this->getParameter('fos_user.template.engine'), array('user' => $user));
         return array(
             'entity' => $entity,
             'form' => $form->createView(),
@@ -2905,7 +2905,7 @@ class UserController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
-        $editUser = $this->editUser($request,$id, $this->container->getParameter('employees.sitename'));
+        $editUser = $this->editUser($request,$id, $this->getParameter('employees.sitename'));
 
         if( $editUser === false ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
@@ -3137,7 +3137,7 @@ class UserController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
-        return $this->updateUser( $request, $id, $this->container->getParameter('employees.sitename') );
+        return $this->updateUser( $request, $id, $this->getParameter('employees.sitename') );
     }
     public function updateUser(Request $request, $id, $sitename) {
 
@@ -3656,7 +3656,7 @@ class UserController extends OrderAbstractController
             }
 
             //redirect only if this was called by the same controller class
-            //if( $sitename == $this->container->getParameter('employees.sitename') ) {
+            //if( $sitename == $this->getParameter('employees.sitename') ) {
                 return $this->redirect($this->generateUrl($sitename.'_showuser', array('id' => $id)));
             //}
         }
@@ -4231,9 +4231,9 @@ class UserController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
-        $this->lockUnlock($request, $id, $status, $this->container->getParameter('employees.sitename'));
+        $this->lockUnlock($request, $id, $status, $this->getParameter('employees.sitename'));
 
-        return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename').'_listusers'));
+        return $this->redirect($this->generateUrl($this->getParameter('employees.sitename').'_listusers'));
     }
 
     public function lockUnlock($request, $id, $status, $sitename) {
@@ -4579,7 +4579,7 @@ class UserController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
-        $uploadPath = "Uploaded/".$this->container->getParameter('employees.avataruploadpath');
+        $uploadPath = "Uploaded/".$this->getParameter('employees.avataruploadpath');
 
         //$baseUrl = $this->container->get('router')->getContext()->getBaseUrl();
         //echo "baseUrl=".$baseUrl." ";
@@ -4754,7 +4754,7 @@ class UserController extends OrderAbstractController
         $event .= " by ".$userAdmin->getUsernameOptimal()." and account locked";
         $userSecUtil = $this->get('user_security_utility');
         $userSecUtil->createUserEditEvent(
-            $this->container->getParameter('employees.sitename'),
+            $this->getParameter('employees.sitename'),
             $event,
             $userAdmin,
             $subjectUser,
@@ -5234,12 +5234,12 @@ class UserController extends OrderAbstractController
 //    {
 //        //echo "user=".$user."; redirectPath=".$redirectPath."; specialty=".$specialty."<br>";
 //        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
-//            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+//            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
 //        }
 //
 //        $em = $this->getDoctrine()->getManager();
 //        $user = $this->get('security.token_storage')->getToken()->getUser();
-//        $sitename = $this->container->getParameter('translationalresearch.sitename');
+//        $sitename = $this->getParameter('translationalresearch.sitename');
 //        $cycle = "new";
 //
 //        if( count($user->getAdministrativeTitles()) == 0 ) {

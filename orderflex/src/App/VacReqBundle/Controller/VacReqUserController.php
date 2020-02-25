@@ -33,7 +33,7 @@ class VacReqUserController extends UserController
      * @Template("AppUserdirectoryBundle/Profile/show_user.html.twig")
      */
     public function showUserOptimizedAction( Request $request, $id ) {
-        return $this->showUserOptimized($request, $id, $this->container->getParameter('vacreq.sitename'));
+        return $this->showUserOptimized($request, $id, $this->getParameter('vacreq.sitename'));
     }
 
 
@@ -49,7 +49,7 @@ class VacReqUserController extends UserController
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
-        $editUser = $this->editUser($request,$id, $this->container->getParameter('vacreq.sitename'));
+        $editUser = $this->editUser($request,$id, $this->getParameter('vacreq.sitename'));
 
         if( $editUser === false ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
@@ -70,7 +70,7 @@ class VacReqUserController extends UserController
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
-        return $this->updateUser( $request, $id, $this->container->getParameter('vacreq.sitename') );
+        return $this->updateUser( $request, $id, $this->getParameter('vacreq.sitename') );
     }
 
 }

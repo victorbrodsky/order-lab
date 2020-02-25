@@ -33,7 +33,7 @@ class DeidentifierUserController extends UserController
      * @Template("AppUserdirectoryBundle/Profile/show_user.html.twig")
      */
     public function showUserOptimizedAction( Request $request, $id ) {
-        return $this->showUserOptimized($request, $id, $this->container->getParameter('deidentifier.sitename'));
+        return $this->showUserOptimized($request, $id, $this->getParameter('deidentifier.sitename'));
     }
 
 
@@ -49,7 +49,7 @@ class DeidentifierUserController extends UserController
             return $this->redirect( $this->generateUrl('deidentifier-nopermission') );
         }
 
-        $editUser = $this->editUser($request,$id, $this->container->getParameter('deidentifier.sitename'));
+        $editUser = $this->editUser($request,$id, $this->getParameter('deidentifier.sitename'));
 
         if( $editUser === false ) {
             return $this->redirect( $this->generateUrl('deidentifier-nopermission') );
@@ -70,7 +70,7 @@ class DeidentifierUserController extends UserController
             return $this->redirect( $this->generateUrl('deidentifier-nopermission') );
         }
 
-        return $this->updateUser( $request, $id, $this->container->getParameter('deidentifier.sitename') );
+        return $this->updateUser( $request, $id, $this->getParameter('deidentifier.sitename') );
     }
 
 }

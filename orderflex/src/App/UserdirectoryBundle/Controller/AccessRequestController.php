@@ -56,7 +56,7 @@ class AccessRequestController extends OrderAbstractController
     protected $roleUnapproved;
 
     public function __construct() {
-        $this->siteName = 'employees'; //controller is not setup yet, so we can't use $this->container->getParameter('employees.sitename');
+        $this->siteName = 'employees'; //controller is not setup yet, so we can't use $this->getParameter('employees.sitename');
         $this->siteNameShowuser = 'employees';
         $this->siteNameStr = 'Employee Directory';
         $this->roleBanned = 'ROLE_USERDIRECTORY_BANNED';
@@ -179,7 +179,7 @@ class AccessRequestController extends OrderAbstractController
         if( false === $userSecUtil->hasGlobalUserRole($this->roleUnapproved,$user) ) {
 
             //relogin the user, because when admin approves accreq, the user must relogin to update the role in security context. Or update security context (How?)
-            //return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename').'_login'));
+            //return $this->redirect($this->generateUrl($this->getParameter('employees.sitename').'_login'));
 
             $this->get('session')->getFlashBag()->add(
                 'warning',
@@ -271,7 +271,7 @@ class AccessRequestController extends OrderAbstractController
             $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
             $dateStr = $transformer->transform($userAccessReq->getCreatedate());
 
-            $text = "You have requested access to ".$sitenameFull." on " . $dateStr . ". Your request has not been approved yet. Please contact the system administrator by emailing ".$this->container->getParameter('default_system_email')." if you have any questions.";
+            $text = "You have requested access to ".$sitenameFull." on " . $dateStr . ". Your request has not been approved yet. Please contact the system administrator by emailing ".$this->getParameter('default_system_email')." if you have any questions.";
 
             //$this->get('security.context')->setToken(null);
             //$this->get('request')->getSession()->invalidate();
@@ -284,7 +284,7 @@ class AccessRequestController extends OrderAbstractController
 
             $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
             $dateStr = $transformer->transform($userAccessReq->getCreatedate());
-            $text = 'You have requested access to '.$sitenameFull.' on '.$dateStr.'. Your request has been declined. Please contact the system administrator by emailing '.$this->container->getParameter('default_system_email').' if you have any questions.';
+            $text = 'You have requested access to '.$sitenameFull.' on '.$dateStr.'. Your request has been declined. Please contact the system administrator by emailing '.$this->getParameter('default_system_email').' if you have any questions.';
 
             return $this->render('AppUserdirectoryBundle/AccessRequest/request_confirmation.html.twig',array('text'=>$text,'sitename'=>$sitename,'pendinguser'=>true));
         }
@@ -307,7 +307,7 @@ class AccessRequestController extends OrderAbstractController
             $this->get('session')->getFlashBag()->add(
                 'warning',
                 "You don't have permission to visit this site because you have UNAPPROVED role."."<br>".
-                "Please contact site system administrator ".$this->container->getParameter('default_system_email')."<br>".
+                "Please contact site system administrator ".$this->getParameter('default_system_email')."<br>".
                 "You can try to " . "<a href=".$this->generateUrl($sitename.'_logout',UrlGeneratorInterface::ABSOLUTE_URL).">Re-Login</a>"
             );
             return $this->redirect( $this->generateUrl('main_common_home') );
@@ -466,7 +466,7 @@ class AccessRequestController extends OrderAbstractController
 
             $text = "You have requested access to ".$sitenameFull." on " . $dateStr . ". " .
                 "The status of your request is " . $userAccessReq->getStatusStr() . "." .
-                "Please contact the system administrator by emailing ".$this->container->getParameter('default_system_email')." if you have any questions.";
+                "Please contact the system administrator by emailing ".$this->getParameter('default_system_email')." if you have any questions.";
 
             return $this->render('AppUserdirectoryBundle/AccessRequest/request_confirmation.html.twig',array('text'=>$text,'sitename'=>$sitename,'pendinguser'=>true));
         }
@@ -1529,7 +1529,7 @@ class AccessRequestController extends OrderAbstractController
             return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
         }
 
-        //return $this->generatedUsers($request,$this->container->getParameter('employees.sitename'));
+        //return $this->generatedUsers($request,$this->getParameter('employees.sitename'));
 
         //exit("Under implementation for " . $this->siteName);
 

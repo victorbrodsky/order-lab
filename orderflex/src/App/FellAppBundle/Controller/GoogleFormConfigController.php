@@ -72,7 +72,7 @@ class GoogleFormConfigController extends OrderAbstractController
             $em->flush();
 
             $event = "Google Fellowship Application Form Configuration has been updated by " . $user;
-            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$entity,$request,'Google Form Config Updated');
+            $userSecUtil->createUserEditEvent($this->getParameter('fellapp.sitename'),$event,$user,$entity,$request,'Google Form Config Updated');
 
             return $this->redirect($this->generateUrl('fellapp_google_form_config_show'));
         }
@@ -87,7 +87,7 @@ class GoogleFormConfigController extends OrderAbstractController
             'entity' => $entity,
             'configFileContent' => $configFileContent,
             'cycle' => $cycle,
-            'sitename' => $this->container->getParameter('fellapp.sitename')
+            'sitename' => $this->getParameter('fellapp.sitename')
         );
     }
 
@@ -318,7 +318,7 @@ class GoogleFormConfigController extends OrderAbstractController
 
         //exit("update drive");
 
-        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$eventMsg,$user,$entity,$request,$eventType);
+        $userSecUtil->createUserEditEvent($this->getParameter('fellapp.sitename'),$eventMsg,$user,$entity,$request,$eventType);
 
         return $this->redirect($this->generateUrl('fellapp_google_form_config_show'));
     }

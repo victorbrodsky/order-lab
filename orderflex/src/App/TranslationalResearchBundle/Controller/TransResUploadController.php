@@ -50,7 +50,7 @@ class TransResUploadController extends UploadController {
      * @Method("GET")
      */
     public function downloadFileAction(Request $request,$id,$eventtype=null) {
-        return $this->downloadFileMethod($request,$id,$this->container->getParameter('translationalresearch.sitename'),$eventtype);
+        return $this->downloadFileMethod($request,$id,$this->getParameter('translationalresearch.sitename'),$eventtype);
     }
 
 
@@ -62,7 +62,7 @@ class TransResUploadController extends UploadController {
      */
     public function viewFileAction(Request $request,$id,$eventtype=null, $viewType=null) {
         //exit("viewType=".$viewType);
-        return $this->viewFileMethod($request,$id,$this->container->getParameter('translationalresearch.sitename'),$eventtype,$viewType);
+        return $this->viewFileMethod($request,$id,$this->getParameter('translationalresearch.sitename'),$eventtype,$viewType);
     }
 
 

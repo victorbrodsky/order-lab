@@ -17,7 +17,7 @@ class TransResSignUpController extends SignUpController
 
 
     public function __construct() {
-        $this->siteName = 'translationalresearch'; //controller is not setup yet, so we can't use $this->container->getParameter('employees.sitename');
+        $this->siteName = 'translationalresearch'; //controller is not setup yet, so we can't use $this->getParameter('employees.sitename');
         $this->siteNameShowuser = 'translationalresearch';
         $this->siteNameStr = 'Translational Research';
         $this->pathHome = 'translationalresearch_home';

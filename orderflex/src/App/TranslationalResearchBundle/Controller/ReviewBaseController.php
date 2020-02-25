@@ -88,7 +88,7 @@ class ReviewBaseController extends OrderAbstractController
         }
 
         if( $transresUtil->isUserAllowedReview($review) === false ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
         $form = $this->createReviewForm($request, $review, $cycle, $stateStr);
@@ -113,7 +113,7 @@ class ReviewBaseController extends OrderAbstractController
     public function editAction(Request $request, $stateStr, $reviewId)
     {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -136,7 +136,7 @@ class ReviewBaseController extends OrderAbstractController
         //echo "reviewID=".$review->getId();
 
         if( $transresUtil->isUserAllowedReview($review) === false || $transresUtil->isReviewCorrespondsToState($review) === false ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
 //        $disabled = true;

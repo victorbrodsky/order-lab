@@ -44,7 +44,7 @@ class UserRequestController extends OrderAbstractController
     protected $roleEditor;
 
     public function __construct() {
-        $this->siteName = 'employees'; //controller is not setup yet, so we can't use $this->container->getParameter('employees.sitename');
+        $this->siteName = 'employees'; //controller is not setup yet, so we can't use $this->getParameter('employees.sitename');
         $this->siteNameShowuser = 'employees';
         $this->siteNameStr = 'Employee Directory';
         $this->roleEditor = 'ROLE_USERDIRECTORY_EDITOR';

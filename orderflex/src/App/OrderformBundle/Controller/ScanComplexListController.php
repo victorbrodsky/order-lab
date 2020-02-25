@@ -50,10 +50,10 @@ class ScanComplexListController extends ComplexListController
     public function indexAction(Request $request)
     {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('scan.sitename').'-order-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('scan.sitename').'-order-nopermission') );
         }
 
-        return $this->getList($request,$this->container->getParameter('scan.sitename'));
+        return $this->getList($request,$this->getParameter('scan.sitename'));
     }
 
 
@@ -73,14 +73,14 @@ class ScanComplexListController extends ComplexListController
         $routeName = $request->get('_route');
 
         if(
-            $routeName == $this->container->getParameter('scan.sitename')."_labtests_pathaction_edit_standalone"
+            $routeName == $this->getParameter('scan.sitename')."_labtests_pathaction_edit_standalone"
         ) {
             if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
-                return $this->redirect( $this->generateUrl($this->container->getParameter('scan.sitename').'-order-nopermission') );
+                return $this->redirect( $this->generateUrl($this->getParameter('scan.sitename').'-order-nopermission') );
             }
         }
 
-        return $this->showList($request,$id,$this->container->getParameter('scan.sitename'));
+        return $this->showList($request,$id,$this->getParameter('scan.sitename'));
     }
 
 
@@ -94,10 +94,10 @@ class ScanComplexListController extends ComplexListController
     {
 
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('scan.sitename').'-order-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('scan.sitename').'-order-nopermission') );
         }
 
-        return $this->newList($request,$this->container->getParameter('scan.sitename'));
+        return $this->newList($request,$this->getParameter('scan.sitename'));
     }
 
 
@@ -111,10 +111,10 @@ class ScanComplexListController extends ComplexListController
     {
 
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('scan.sitename').'-order-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('scan.sitename').'-order-nopermission') );
         }
 
-        return $this->createList($request,$this->container->getParameter('scan.sitename'));
+        return $this->createList($request,$this->getParameter('scan.sitename'));
     }
 
 
@@ -128,10 +128,10 @@ class ScanComplexListController extends ComplexListController
     {
 
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('scan.sitename').'-order-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('scan.sitename').'-order-nopermission') );
         }
 
-        return $this->updateList($request,$id,$this->container->getParameter('scan.sitename'));
+        return $this->updateList($request,$id,$this->getParameter('scan.sitename'));
     }
 
 

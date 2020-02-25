@@ -482,7 +482,7 @@ class AdminController extends OrderAbstractController
 //    public function clearCache() {
 //        //echo exec('whoami') . "<br>";
 //
-//        $appPath = $this->container->getParameter('kernel.root_dir');
+//        $appPath = $this->getParameter('kernel.root_dir');
 //        echo "appPath=".$appPath."<br>";
 //
 //        $dirSep = DIRECTORY_SEPARATOR;
@@ -510,7 +510,7 @@ class AdminController extends OrderAbstractController
 //
 //    }
 //    public function getCachePath() {
-//        $appPath = $this->container->getParameter('kernel.root_dir');
+//        $appPath = $this->getParameter('kernel.root_dir');
 //        echo "appPath=".$appPath."<br>";
 //
 //        $dirSep = DIRECTORY_SEPARATOR;
@@ -529,11 +529,11 @@ class AdminController extends OrderAbstractController
 //    public function clearCacheByService() {
 //
 //        //$fs = new Filesystem();
-//        //$fs->remove($this->container->getParameter('kernel.cache_dir'));
+//        //$fs->remove($this->getParameter('kernel.cache_dir'));
 //        //return;
 //
 //        $command = $this->container->get('user_cache_clear');
-//        $input = new ArgvInput(array('--env=' . $this->container->getParameter('kernel.environment')));
+//        $input = new ArgvInput(array('--env=' . $this->getParameter('kernel.environment')));
 //        $output = new ConsoleOutput();
 //        $command->run($input, $output);
 //        //exit($output);
@@ -541,7 +541,7 @@ class AdminController extends OrderAbstractController
 //    public function installAssets() {
 //        $dirSep = DIRECTORY_SEPARATOR;
 //
-//        $appPath = $this->container->getParameter('kernel.root_dir');
+//        $appPath = $this->getParameter('kernel.root_dir');
 //        echo "appPath=".$appPath."<br>";
 //
 //        if( 1 ) {
@@ -587,7 +587,7 @@ class AdminController extends OrderAbstractController
 //        $command = $this->container->get('user_install_assets');
 //        $input = new ArgvInput(
 //            array(
-//                '--env=' . $this->container->getParameter('kernel.environment'),
+//                '--env=' . $this->getParameter('kernel.environment'),
 //                //'--symlink',
 //                //'--relative'
 //            )
@@ -803,7 +803,7 @@ class AdminController extends OrderAbstractController
         //$userServiceUtil->createCronsLinux();
         //exit('eof createCronsLinux');
 
-        //$default_time_zone = $this->container->getParameter('default_time_zone');
+        //$default_time_zone = $this->getParameter('default_time_zone');
 
         //$count_EventTypeListSync = $this->syncEventTypeListDb(); //must be the first to update already existing objects. Can run on empty DB
 
@@ -4888,7 +4888,7 @@ class AdminController extends OrderAbstractController
         $userUtil = new UserUtil();
         $em = $this->getDoctrine()->getManager();
         $systemuser = $userUtil->createSystemUser($em,null,null);  //$this->get('security.token_storage')->getToken()->getUser();
-        $default_time_zone = $this->container->getParameter('default_time_zone');
+        $default_time_zone = $this->getParameter('default_time_zone');
         //echo "systemuser ".$systemuser.", id=".$systemuser->getId()."<br>";
 
 //        $em = $this->getDoctrine()->getManager();
@@ -4954,7 +4954,7 @@ class AdminController extends OrderAbstractController
 
             //record user log create
             $event = "User ".$user." has been created by ".$systemuser."<br>";
-            $userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'),$event,$systemuser,$user,null,'New user record added');
+            $userSecUtil->createUserEditEvent($this->getParameter('employees.sitename'),$event,$systemuser,$user,null,'New user record added');
 
             $em->persist($user);
             $em->flush();
@@ -7069,7 +7069,7 @@ class AdminController extends OrderAbstractController
     {
 
         if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
-            return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename') . '-nopermission'));
+            return $this->redirect($this->generateUrl($this->getParameter('employees.sitename') . '-nopermission'));
         }
 
         $userSecUtil = $this->container->get('user_security_utility');
@@ -7112,7 +7112,7 @@ class AdminController extends OrderAbstractController
     {
 
         if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
-            return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename') . '-nopermission'));
+            return $this->redirect($this->generateUrl($this->getParameter('employees.sitename') . '-nopermission'));
         }
 
         $userSecUtil = $this->container->get('user_security_utility');
@@ -7204,7 +7204,7 @@ class AdminController extends OrderAbstractController
     public function convertLoggerSitenameToSiteObectAction() {
 
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -7528,10 +7528,10 @@ class AdminController extends OrderAbstractController
     public function institutionTreeAction(Request $request)
     {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_OBSERVER') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
-        return $this->compositeTree($request,$this->container->getParameter('employees.sitename'));
+        return $this->compositeTree($request,$this->getParameter('employees.sitename'));
     }
 
     public function compositeTree(Request $request, $sitename)
@@ -7745,7 +7745,7 @@ class AdminController extends OrderAbstractController
             $encodedPassword = $encoder->encodePassword($administrator, "1234567890");
             $administrator->setPassword($encodedPassword);
 
-            $default_time_zone = $this->container->getParameter('default_time_zone');
+            $default_time_zone = $this->getParameter('default_time_zone');
             $administrator->getPreferences()->setTimezone($default_time_zone);
 
             $res = "New $primaryPublicUserId account has been created";
@@ -7768,7 +7768,7 @@ class AdminController extends OrderAbstractController
     public function generateFormNodeAction(Request $request)
     {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
         $formNodeUtil = $this->get('user_formnode_utility');
@@ -7790,7 +7790,7 @@ class AdminController extends OrderAbstractController
     public function generateTestFormNodeAction(Request $request)
     {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
         $formNodeUtil = $this->get('user_formnode_utility');
@@ -7806,7 +7806,7 @@ class AdminController extends OrderAbstractController
     public function generateCronJobsAction(Request $request)
     {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
         $userServiceUtil = $this->get('user_service_utility');
@@ -8922,7 +8922,7 @@ class AdminController extends OrderAbstractController
     public function addMDUsersToPathologyResultSignatoriesList(Request $request)
     {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -9067,7 +9067,7 @@ class AdminController extends OrderAbstractController
      */
     public function generatePatientMetaphoneNameKeyAction() {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
         $userServiceUtil = $this->get('user_service_utility');
@@ -9132,7 +9132,7 @@ class AdminController extends OrderAbstractController
     public function opcacheResetAction()
     {
         if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
-            return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename') . '-nopermission'));
+            return $this->redirect($this->generateUrl($this->getParameter('employees.sitename') . '-nopermission'));
         }
 
         $opcache_reset = opcache_reset();
@@ -9147,7 +9147,7 @@ class AdminController extends OrderAbstractController
     public function updateUserRolesAction()
     {
         if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
-            return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename') . '-nopermission'));
+            return $this->redirect($this->generateUrl($this->getParameter('employees.sitename') . '-nopermission'));
         }
 
         //testing
@@ -9255,7 +9255,7 @@ class AdminController extends OrderAbstractController
     public function updateUserPostfixAction()
     {
         if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
-            return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename') . '-nopermission'));
+            return $this->redirect($this->generateUrl($this->getParameter('employees.sitename') . '-nopermission'));
         }
 
         exit("not permitted. It has been used only for changing user's postfix once.");

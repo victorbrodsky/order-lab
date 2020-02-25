@@ -31,7 +31,7 @@ class TransResSiteParametersController extends OrderAbstractController
 //    public function indexAction(Request $request, $specialtyStr)
 //    {
 //        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ) {
-//            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+//            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
 //        }
 //
 //
@@ -51,7 +51,7 @@ class TransResSiteParametersController extends OrderAbstractController
 //    public function newAction(Request $request, $specialtyStr)
 //    {
 //        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ) {
-//            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+//            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
 //        }
 //
 //        //$em = $this->getDoctrine()->getManager();
@@ -105,7 +105,7 @@ class TransResSiteParametersController extends OrderAbstractController
     public function showAction(Request $request, $specialtyStr)
     {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
         $transresRequestUtil = $this->get('transres_request_util');
@@ -138,7 +138,7 @@ class TransResSiteParametersController extends OrderAbstractController
     public function showContentAction(Request $request, $specialtyStr)
     {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
         $transresRequestUtil = $this->get('transres_request_util');
@@ -171,7 +171,7 @@ class TransResSiteParametersController extends OrderAbstractController
     {
 
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
         $cycle = "edit";

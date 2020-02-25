@@ -37,7 +37,7 @@ class DashboardTurnAroundStatController extends DashboardController
         ) {
             //ok
         } else {
-            return $this->redirect($this->generateUrl($this->container->getParameter('translationalresearch.sitename') . '-nopermission'));
+            return $this->redirect($this->generateUrl($this->getParameter('translationalresearch.sitename') . '-nopermission'));
         }
 
         //exit("Under construction");

@@ -42,7 +42,7 @@ class InvoiceController extends OrderAbstractController
     public function indexAction(Request $request, TransResRequest $transresRequest=null, $invoicetype=null)
     {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -695,7 +695,7 @@ class InvoiceController extends OrderAbstractController
     public function newAction(Request $request, TransResRequest $transresRequest)
     {
         //if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_BILLING_ADMIN') ) {
-        //    return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+        //    return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
         //}
 
         //$em = $this->getDoctrine()->getManager();
@@ -778,7 +778,7 @@ class InvoiceController extends OrderAbstractController
     public function showAction(Request $request, $oid)
     {
 //        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
-//            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+//            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
 //        }
 
         $transresUtil = $this->container->get('transres_util');
@@ -848,7 +848,7 @@ class InvoiceController extends OrderAbstractController
     {
 
 //        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_BILLING_ADMIN') ) {
-//            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+//            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
 //        }
 
         $em = $this->getDoctrine()->getManager();
@@ -1012,7 +1012,7 @@ class InvoiceController extends OrderAbstractController
         //exit("Delete is not allowed.");
 
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
         $transresUtil = $this->get('transres_util');
@@ -1061,7 +1061,7 @@ class InvoiceController extends OrderAbstractController
         }
 
 //        if( false === $transresPermissionUtil->isInvoiceBillingContact($invoice,$user) ) {
-//            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+//            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
 //        }
 
         // Check if user allowed to access by the project's specialty
@@ -1141,7 +1141,7 @@ class InvoiceController extends OrderAbstractController
         }
 
 //        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
-//            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+//            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
 //        }
 
         //$em = $this->getDoctrine()->getManager();
@@ -1194,7 +1194,7 @@ class InvoiceController extends OrderAbstractController
     public function downloadRecentPdfAction(Request $request, Invoice $invoice)
     {
 //        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
-//            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+//            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
 //        }
 
         //$em = $this->getDoctrine()->getManager();
@@ -1220,7 +1220,7 @@ class InvoiceController extends OrderAbstractController
 //            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') &&
 //            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE_APCP')
 //        ) {
-//            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+//            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
 //        }
 
         // Check if user allowed to access by the project's specialty
@@ -1381,7 +1381,7 @@ class InvoiceController extends OrderAbstractController
         }
 
 //        if( false === $transresPermissionUtil->isInvoiceBillingContact($invoice,$user) ) {
-//            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+//            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
 //        }
 
         // Check if user allowed to access by the project's specialty
@@ -1498,7 +1498,7 @@ class InvoiceController extends OrderAbstractController
         }
 
 //        if( false === $transresRequestUtil->isInvoiceBillingContact($invoice,$user) ) {
-//            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+//            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
 //        }
 
         // Check if user allowed to access by the project's specialty
@@ -1590,7 +1590,7 @@ class InvoiceController extends OrderAbstractController
         }
 
 //        if( false === $transresRequestUtil->isInvoiceBillingContact($invoice,$user) ) {
-//            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+//            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
 //        }
 
         // Check if user allowed to access by the project's specialty

@@ -76,7 +76,7 @@ class CallLogPatientController extends PatientController {
         $showtreedepth = 2;
 
         $params = array(
-            'sitename' => $this->container->getParameter('calllog.sitename'),
+            'sitename' => $this->getParameter('calllog.sitename'),
             'datastructure' => 'datastructure-patient',
             'tracker' => 'tracker',
             'editpath' => 'calllog_patient_edit',
@@ -160,7 +160,7 @@ class CallLogPatientController extends PatientController {
         //echo "showtreedepth=".$showtreedepth."<br>";
 
         $params = array(
-            'sitename' => $this->container->getParameter('calllog.sitename'),
+            'sitename' => $this->getParameter('calllog.sitename'),
             'datastructure' => 'datastructure-patient',
             //'datastructure' => 'datastructure', //images are shown only if the 'datastructure' parameters is set to 'datastructure'
             'tracker' => 'tracker',
@@ -188,7 +188,7 @@ class CallLogPatientController extends PatientController {
         $showtreedepth = 2;
 
         $params = array(
-            'sitename' => $this->container->getParameter('calllog.sitename'),
+            'sitename' => $this->getParameter('calllog.sitename'),
             'datastructure' => 'datastructure-patient',
             'tracker' => 'tracker',
             'updatepath' => 'calllog_patient_update',
@@ -289,7 +289,7 @@ class CallLogPatientController extends PatientController {
         //echo "showtreedepth=".$showtreedepth."<br>";
 
         $params = array(
-            'sitename' => $this->container->getParameter('calllog.sitename'),
+            'sitename' => $this->getParameter('calllog.sitename'),
             'datastructure' => 'datastructure-patient',
             'tracker' => 'tracker',
             'updatepath' => 'calllog_patient_update',
@@ -314,7 +314,7 @@ class CallLogPatientController extends PatientController {
         }
 
         $params = array(
-            'sitename' => $this->container->getParameter('calllog.sitename'),
+            'sitename' => $this->getParameter('calllog.sitename'),
             'datastructure' => 'datastructure-patient',
             'tracker' => 'tracker',
             'updatepath' => 'calllog_patient_update',
@@ -614,7 +614,7 @@ class CallLogPatientController extends PatientController {
             $changeSetStr = $patient->obtainChangeObjectStr();
             $eventStr = $event . "<br>Changes:<br>".$changeSetStr;
 
-            $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $eventStr, $user, $patient, $request, $eventType);
+            $userSecUtil->createUserEditEvent($this->getParameter('calllog.sitename'), $eventStr, $user, $patient, $request, $eventType);
             ///////// EOF Event Log /////////////////
 
             //return $this->redirectToRoute('calllog_patient_view_by_mrn', array('mrn' => $mrnNumber, 'mrntype' => $mrnTypeId, 'show-tree-depth' => 2));
@@ -851,7 +851,7 @@ class CallLogPatientController extends PatientController {
 
         //create patient form for "Add Patient" section
         $status = 'invalid';
-        $system = $securityUtil->getDefaultSourceSystem($this->container->getParameter('calllog.sitename'));
+        $system = $securityUtil->getDefaultSourceSystem($this->getParameter('calllog.sitename'));
         $newPatient = new Patient(true,$status,$user,$system);
         $newEncounter = new Encounter(true,'dummy',$user,$system);
         $newPatient->addEncounter($newEncounter);
@@ -944,7 +944,7 @@ class CallLogPatientController extends PatientController {
 
         //create patient form for "Add Patient" section
 //        $status = 'invalid';
-//        $system = $securityUtil->getDefaultSourceSystem($this->container->getParameter('calllog.sitename'));
+//        $system = $securityUtil->getDefaultSourceSystem($this->getParameter('calllog.sitename'));
 //        $newPatient = new Patient(true,$status,$user,$system);
 //        $newEncounter = new Encounter(true,'dummy',$user,$system);
 //        $newPatient->addEncounter($newEncounter);
@@ -1143,7 +1143,7 @@ class CallLogPatientController extends PatientController {
 
         $testing = $request->query->get('testing');
 
-        //$showUserArr = $this->showUser($userid,$this->container->getParameter('employees.sitename'),false);
+        //$showUserArr = $this->showUser($userid,$this->getParameter('employees.sitename'),false);
         //$template = $this->render('AppUserdirectoryBundle/Profile/edit_user_only.html.twig',$showUserArr)->getContent();
 
         //child nodes of "Pathology Call Log Entry"
@@ -1435,7 +1435,7 @@ class CallLogPatientController extends PatientController {
 
         $testing = $request->query->get('testing');
 
-        //$showUserArr = $this->showUser($userid,$this->container->getParameter('employees.sitename'),false);
+        //$showUserArr = $this->showUser($userid,$this->getParameter('employees.sitename'),false);
         //$template = $this->render('AppUserdirectoryBundle/Profile/edit_user_only.html.twig',$showUserArr)->getContent();
 
         //child nodes of "Pathology Call Log Entry"
@@ -1569,7 +1569,7 @@ class CallLogPatientController extends PatientController {
         $em = $this->getDoctrine()->getManager();
         $calllogUtil = $this->get('calllog_util');
         $userSecUtil = $this->container->get('user_security_utility');
-        $sitename = $this->container->getParameter('calllog.sitename');
+        $sitename = $this->getParameter('calllog.sitename');
 
         if( !$mrntype ) {
             //$mrntype = 1;

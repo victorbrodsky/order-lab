@@ -29,6 +29,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\PhpBridgeSessionStorage;
 
 use App\UserdirectoryBundle\Util\UserUtil;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class CallLogSecurityController extends SecurityController
 {
@@ -37,9 +38,9 @@ class CallLogSecurityController extends SecurityController
      * @Route("/login", name="calllog_login")
      * @Template()
      */
-    public function loginAction( Request $request ) {
+    public function loginAction( Request $request, AuthenticationUtils $authenticationUtils ) {
         //exit('calllog: loginAction');
-        return parent::loginAction($request);
+        return parent::loginAction($request,$authenticationUtils);
     }
 
 
@@ -65,7 +66,7 @@ class CallLogSecurityController extends SecurityController
         $empty = $request->get('empty');
 
         return array(
-            'sitename' => $this->container->getParameter('calllog.sitename'),
+            'sitename' => $this->getParameter('calllog.sitename'),
             'empty' => $empty
         );
     }

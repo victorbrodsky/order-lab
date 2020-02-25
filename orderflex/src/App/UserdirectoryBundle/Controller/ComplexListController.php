@@ -53,10 +53,10 @@ class ComplexListController extends OrderAbstractController
     public function indexAction(Request $request)
     {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_OBSERVER') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
-        return $this->getList($request,$this->container->getParameter('employees.sitename'));
+        return $this->getList($request,$this->getParameter('employees.sitename'));
     }
     public function getList($request,$sitename) {
 
@@ -218,11 +218,11 @@ class ComplexListController extends OrderAbstractController
             $routeName == "employees_grants_pathaction_edit_standalone"
         ) {
             if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
-                return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-nopermission') );
+                return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
             }
         }
 
-        return $this->showList($request,$id,$this->container->getParameter('employees.sitename'));
+        return $this->showList($request,$id,$this->getParameter('employees.sitename'));
     }
     public function showList(Request $request, $id, $sitename)
     {
@@ -271,10 +271,10 @@ class ComplexListController extends OrderAbstractController
     {
 
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
-        return $this->newList($request,$this->container->getParameter('employees.sitename'));
+        return $this->newList($request,$this->getParameter('employees.sitename'));
     }
     public function newList(Request $request, $sitename)
     {
@@ -319,10 +319,10 @@ class ComplexListController extends OrderAbstractController
     {
 
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
-        return $this->createList($request,$this->container->getParameter('employees.sitename'));
+        return $this->createList($request,$this->getParameter('employees.sitename'));
     }
     public function createList( Request $request, $sitename )
     {
@@ -435,10 +435,10 @@ class ComplexListController extends OrderAbstractController
     {
 
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
-        return $this->updateList($request,$id,$this->container->getParameter('employees.sitename'));
+        return $this->updateList($request,$id,$this->getParameter('employees.sitename'));
     }
     public function updateList( Request $request, $id, $sitename )
     {

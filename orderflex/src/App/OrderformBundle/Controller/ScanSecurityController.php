@@ -31,6 +31,7 @@ use Symfony\Component\HttpFoundation\Session\Storage\PhpBridgeSessionStorage;
 use App\OrderformBundle\Util\PacsvendorUtil;
 
 use App\UserdirectoryBundle\Controller\SecurityController;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class ScanSecurityController extends SecurityController
 {
@@ -39,8 +40,8 @@ class ScanSecurityController extends SecurityController
      * @Route("/login", name="scan_login")
      * @Template()
      */
-    public function loginAction( Request $request ) {
-        return parent::loginAction($request);
+    public function loginAction( Request $request, AuthenticationUtils $authenticationUtils ) {
+        return parent::loginAction($request,$authenticationUtils);
     }
 
 
@@ -54,7 +55,7 @@ class ScanSecurityController extends SecurityController
         return parent::idlelogoutAction($request,$flag);
 
 //        $userSecUtil = $this->get('user_security_utility');
-//        $sitename = $this->container->getParameter('scan.sitename');
+//        $sitename = $this->getParameter('scan.sitename');
 //        return $userSecUtil->idleLogout( $request, $sitename, $flag );
     }
 
@@ -71,7 +72,7 @@ class ScanSecurityController extends SecurityController
 //        $options = array();
 //        $em = $this->getDoctrine()->getManager();
 //        $userUtil = new UserUtil();
-//        $options['sitename'] = $this->container->getParameter('scan.sitename');
+//        $options['sitename'] = $this->getParameter('scan.sitename');
 //        $options['eventtype'] = "Login Page Visit";
 //        $options['event'] = "Scan Order login page visit";
 //        $options['serverresponse'] = "";
@@ -93,7 +94,7 @@ class ScanSecurityController extends SecurityController
         $empty = $request->get('empty');
 
         return array(
-            'sitename' => $this->container->getParameter('scan.sitename'),
+            'sitename' => $this->getParameter('scan.sitename'),
             'empty' => $empty
         );
     }

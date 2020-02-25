@@ -49,7 +49,7 @@ class ScanUploadController extends UploadController {
      * @Method("GET")
      */
     public function downloadFileAction(Request $request, $id, $eventtype=null) {
-        return $this->downloadFileMethod($request,$id,$this->container->getParameter('scan.sitename'),$eventtype);
+        return $this->downloadFileMethod($request,$id,$this->getParameter('scan.sitename'),$eventtype);
     }
 
     /**
@@ -59,7 +59,7 @@ class ScanUploadController extends UploadController {
      * @Method("GET")
      */
     public function viewFileAction(Request $request,$id,$eventtype=null, $viewType=null) {
-        return $this->viewFileMethod($request,$id,$this->container->getParameter('scan.sitename'),$eventtype,$viewType);
+        return $this->viewFileMethod($request,$id,$this->getParameter('scan.sitename'),$eventtype,$viewType);
     }
 
 

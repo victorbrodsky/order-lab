@@ -148,13 +148,13 @@ class ScanAdminController extends AdminController
     {
 
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('scan.sitename').'-order-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('scan.sitename').'-order-nopermission') );
         }
 
         //$max_exec_time = ini_get('max_execution_time');
         //ini_set('max_execution_time', 900); //900 seconds = 15 minutes
 
-        //$default_time_zone = $this->container->getParameter('default_time_zone');
+        //$default_time_zone = $this->getParameter('default_time_zone');
 
         $msg = $this->generateScanorderAll();
 
@@ -178,7 +178,7 @@ class ScanAdminController extends AdminController
         $max_exec_time = ini_get('max_execution_time');
         ini_set('max_execution_time', 900); //900 seconds = 15 minutes
 
-        //$default_time_zone = $this->container->getParameter('default_time_zone');
+        //$default_time_zone = $this->getParameter('default_time_zone');
 
 
         $count_pattype = $this->generatePatientType();
@@ -277,7 +277,7 @@ class ScanAdminController extends AdminController
     {
 
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('scan.sitename').'-order-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('scan.sitename').'-order-nopermission') );
         }
 
         $count = $this->generateStains();
@@ -672,7 +672,7 @@ class ScanAdminController extends AdminController
 //        exit('disabled');
 //
 //        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-//            return $this->redirect( $this->generateUrl($this->container->getParameter('scan.sitename').'-order-nopermission') );
+//            return $this->redirect( $this->generateUrl($this->getParameter('scan.sitename').'-order-nopermission') );
 //        }
 //
 //        $em = $this->getDoctrine()->getManager();
@@ -707,7 +707,7 @@ class ScanAdminController extends AdminController
     public function removeAllOrdersStainsAction() {
 
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('scan.sitename').'-order-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('scan.sitename').'-order-nopermission') );
         }
 
         //1) remove messages with patients: danger !!!
@@ -2440,10 +2440,10 @@ class ScanAdminController extends AdminController
     public function institutionTreeAction(Request $request)
     {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('scan.sitename').'-order-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('scan.sitename').'-order-nopermission') );
         }
 
-        return $this->compositeTree($request,$this->container->getParameter('scan.sitename'));
+        return $this->compositeTree($request,$this->getParameter('scan.sitename'));
     }
 
     public function getMapper($routeName) {

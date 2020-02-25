@@ -56,7 +56,7 @@ class DefaultController extends OrderAbstractController
      * @Template("AppUserdirectoryBundle/Default/about.html.twig")
      */
     public function aboutAction( Request $request ) {
-        return array('sitename'=>$this->container->getParameter('fellapp.sitename'));
+        return array('sitename'=>$this->getParameter('fellapp.sitename'));
     }
 
 
@@ -75,7 +75,7 @@ class DefaultController extends OrderAbstractController
         //exit("not allowed");
 
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('fellapp.sitename').'-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('fellapp.sitename').'-nopermission') );
         }
 
         $emailUtil = $this->container->get('user_mailer_utility');
@@ -127,7 +127,7 @@ class DefaultController extends OrderAbstractController
         exit("not allowed. one time run method.");
 
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('fellapp.sitename').'-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('fellapp.sitename').'-nopermission') );
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -181,7 +181,7 @@ class DefaultController extends OrderAbstractController
         exit("not allowed");
 
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('fellapp.sitename').'-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('fellapp.sitename').'-nopermission') );
         }
 
         $userServiceUtil = $this->get('user_service_utility');

@@ -60,7 +60,7 @@ class RequestIndexController extends OrderAbstractController
         //$totalApprovedDaysString = $vacreqUtil->getApprovedDaysString($user);
 
         $params = array(
-            'sitename' => $this->container->getParameter('vacreq.sitename'),
+            'sitename' => $this->getParameter('vacreq.sitename'),
             'subjectUser' => $user,
             'title' => "My Business Travel & Vacation Requests",
 //            'totalApprovedDaysString' => $totalApprovedDaysString,
@@ -90,7 +90,7 @@ class RequestIndexController extends OrderAbstractController
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $params = array(
-            'sitename' => $this->container->getParameter('vacreq.sitename'),
+            'sitename' => $this->getParameter('vacreq.sitename'),
             'approver' => $user,
             'title' => "Incoming Business Travel & Vacation Requests",
             'filterShowUser' => true

@@ -234,12 +234,12 @@ class TranslationalResearchAccessRequestController extends AccessRequestControll
     {
         //echo "user=".$user."; redirectPath=".$redirectPath."; specialty=".$specialty."<br>";
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
-        $sitename = $this->container->getParameter('translationalresearch.sitename');
+        $sitename = $this->getParameter('translationalresearch.sitename');
         $cycle = "new";
 
         if( count($user->getAdministrativeTitles()) == 0 ) {

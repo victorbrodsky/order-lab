@@ -10,13 +10,32 @@ namespace App\UserdirectoryBundle\Controller;
 
 use App\CallLogBundle\Util\CallLogUtil;
 
+use App\CallLogBundle\Util\CallLogUtilForm;
+use App\FellAppBundle\Util\FellAppImportPopulateUtil;
+use App\FellAppBundle\Util\FellAppUtil;
+use App\FellAppBundle\Util\GoogleSheetManagement;
+use App\FellAppBundle\Util\RecLetterUtil;
+use App\FellAppBundle\Util\ReportGenerator;
+use App\TranslationalResearchBundle\Util\DashboardUtil;
+use App\TranslationalResearchBundle\Util\PdfGenerator;
+use App\TranslationalResearchBundle\Util\ReminderUtil;
+use App\TranslationalResearchBundle\Util\TransResFormNodeUtil;
+use App\TranslationalResearchBundle\Util\TransResImportData;
+use App\TranslationalResearchBundle\Util\TransResPermissionUtil;
+use App\TranslationalResearchBundle\Util\TransResRequestUtil;
+use App\TranslationalResearchBundle\Util\TransResUtil;
 use App\UserdirectoryBundle\User\Model\UserManager;
 use App\UserdirectoryBundle\Util\EmailUtil;
 use App\UserdirectoryBundle\Util\FormNodeUtil;
+use App\UserdirectoryBundle\Util\UserDownloadUtil;
 use App\UserdirectoryBundle\Util\UserGenerator;
 use App\UserdirectoryBundle\Util\UserSecurityUtil;
 use App\UserdirectoryBundle\Util\UserServiceUtil;
+use App\VacReqBundle\Util\VacReqImportData;
+use App\VacReqBundle\Util\VacReqUtil;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 //use Symfony\Component\Routing\Annotation\Route;
 //use Symfony\Component\Routing\Annotation\Template;
@@ -39,6 +58,8 @@ class OrderAbstractController extends AbstractController {
     {
         $subscribedServices = parent::getSubscribedServices();
 
+        //$subscribedServices['security.authentication_utils'] = '?'.AuthenticationUtils::class;
+
         $subscribedServices['user_security_utility'] = '?'.UserSecurityUtil::class;
         $subscribedServices['user_generator'] = '?'.UserGenerator::class;
         $subscribedServices['user_download_utility'] = '?'.UserDownloadUtil::class;
@@ -47,11 +68,38 @@ class OrderAbstractController extends AbstractController {
         $subscribedServices['user_service_utility'] = '?'.UserServiceUtil::class;
         $subscribedServices['user_manager'] = '?'.UserManager::class;
 
+
         $subscribedServices['calllog_util'] = '?'.CallLogUtil::class;
+        $subscribedServices['calllog_util_form'] = '?'.CallLogUtilForm::class;
+
+        $subscribedServices['fellapp_util'] = '?'.FellAppUtil::class;
+        $subscribedServices['fellapp_importpopulate_util'] = '?'.FellAppImportPopulateUtil::class;
+        $subscribedServices['fellapp_reportgenerator'] = '?'.ReportGenerator::class;
+        $subscribedServices['fellapp_googlesheetmanagement'] = '?'.GoogleSheetManagement::class;
+        $subscribedServices['fellapp_rec_letter_util'] = '?'.RecLetterUtil::class;
+
+        $subscribedServices['transres_util'] = '?'.TransResUtil::class;
+        $subscribedServices['transres_request_util'] = '?'.TransResRequestUtil::class;
+        $subscribedServices['transres_permission_util'] = '?'.TransResPermissionUtil::class;
+        $subscribedServices['transres_formnode_util'] = '?'.TransResFormNodeUtil::class;
+
+        $subscribedServices['transres_pdf_generator'] = '?'.PdfGenerator::class;
+        $subscribedServices['transres_import'] = '?'.TransResImportData::class;
+        $subscribedServices['transres_dashboard'] = '?'.DashboardUtil::class;
+        $subscribedServices['transres_reminder_util'] = '?'.ReminderUtil::class;
+
+        $subscribedServices['vacreq_util'] = '?'.VacReqUtil::class;
+        $subscribedServices['vacreq_import_data'] = '?'.VacReqImportData::class;
+
+        $subscribedServices['knp_paginator'] = '?'.PaginatorInterface::class;
 
 //        $subscribedServices['user_generator'] = '?'.UserGenerator::class;
 //        $subscribedServices['user_generator'] = '?'.UserGenerator::class;
 //        $subscribedServices['user_generator'] = '?'.UserGenerator::class;
+//        $subscribedServices['user_generator'] = '?'.UserGenerator::class;
+//        $subscribedServices['user_generator'] = '?'.UserGenerator::class;
+//        $subscribedServices['user_generator'] = '?'.UserGenerator::class;
+
 
         return $subscribedServices;
     }

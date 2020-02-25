@@ -246,7 +246,7 @@ class RequestController extends OrderAbstractController
 
             //Event Log
             $event = $requestName . " for ".$entity->getUser()." has been submitted. Confirmation email has been sent to ".$approversNameStr;
-            $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
+            $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
 
             //exit('exit event='.$event);
 
@@ -262,7 +262,7 @@ class RequestController extends OrderAbstractController
                 $resCarryOverRequest = $vacreqUtil->processVacReqCarryOverRequest($entity,true); //new carryover request
                 $carryOverWarningMessageLog = $resCarryOverRequest['carryOverWarningMessageLog'];
                 $eventType = "Existing Days Carry Over Request Created";
-                $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$carryOverWarningMessageLog,$user,$entity,$request,$eventType);
+                $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'),$carryOverWarningMessageLog,$user,$entity,$request,$eventType);
             }
 
             if( $testing ) {
@@ -656,11 +656,11 @@ class RequestController extends OrderAbstractController
                 $event .= implode("<br>", $changedInfoArr);
             }
 
-            $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
+            $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
 
             if( $carryOverWarningMessageLog ) {
                 $eventType = 'Existing Days Carry Over Request Updated';
-                $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$carryOverWarningMessageLog,$user,$entity,$request,$eventType);
+                $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'),$carryOverWarningMessageLog,$user,$entity,$request,$eventType);
             }
 
             if( $routName == 'vacreq_review' ) {
@@ -971,7 +971,7 @@ class RequestController extends OrderAbstractController
 
                 //Event Log
                 $userSecUtil = $this->container->get('user_security_utility');
-                $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'), $event, $user, $entity, $request, $eventType);
+                $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'), $event, $user, $entity, $request, $eventType);
 
             }
 
@@ -1098,7 +1098,7 @@ class RequestController extends OrderAbstractController
 
         //Event Log
         $userSecUtil = $this->container->get('user_security_utility');
-        $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'), $eventSubject, $user, $entity, $request, $eventType);
+        $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'), $eventSubject, $user, $entity, $request, $eventType);
 
         return $this->redirectToRoute("vacreq_myrequests",array('filter[requestType]'=>$entity->getRequestType()->getId()));
     }
@@ -1173,7 +1173,7 @@ class RequestController extends OrderAbstractController
 
         //Event Log
         $userSecUtil = $this->container->get('user_security_utility');
-        $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'), $eventSubject, $user, $entity, $request, $eventType);
+        $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'), $eventSubject, $user, $entity, $request, $eventType);
 
         //set confirmation email to submitter and email users
         $vacreqUtil = $this->get('vacreq_util');
@@ -1464,7 +1464,7 @@ class RequestController extends OrderAbstractController
             return null;
         }
         $userSecUtil = $this->get('user_security_utility');
-        $accessreqs = $userSecUtil->getUserAccessRequestsByStatus($this->container->getParameter('vacreq.sitename'),AccessRequest::STATUS_ACTIVE);
+        $accessreqs = $userSecUtil->getUserAccessRequestsByStatus($this->getParameter('vacreq.sitename'),AccessRequest::STATUS_ACTIVE);
         return $accessreqs;
     }
 

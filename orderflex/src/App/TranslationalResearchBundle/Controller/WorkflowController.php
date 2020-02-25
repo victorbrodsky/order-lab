@@ -315,7 +315,7 @@ class WorkflowController extends OrderAbstractController
             $transresUtil->isUserAllowedFromThisStateByProjectOrReview($project) === false
         ) {
             //exit("no permission");
-            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
         //echo $review->getId().": transitionName=".$transitionName."<br>";
@@ -356,7 +356,7 @@ class WorkflowController extends OrderAbstractController
             $transresRequestUtil->isRequestStateReviewer($transresRequest,$statMachineType) === false
         ) {
             //exit("no permission");
-            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
         //echo $transresRequest->getId().": transitionName=".$transitionName."<br>";

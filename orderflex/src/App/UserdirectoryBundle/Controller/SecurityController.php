@@ -31,6 +31,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\PhpBridgeSessionStorage;
 
 use App\UserdirectoryBundle\Util\UserUtil;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends OrderAbstractController
 {
@@ -59,7 +60,7 @@ class SecurityController extends OrderAbstractController
      *
      * @Template()
      */
-    public function loginAction( Request $request ) {
+    public function loginAction( Request $request, AuthenticationUtils $authenticationUtils ) {
         //exit('user: loginAction');
         $userSecUtil = $this->get('user_security_utility');
 
@@ -67,25 +68,25 @@ class SecurityController extends OrderAbstractController
         //echo "routename=".$routename."<br>";
 
         if( $routename == "employees_login" ) {
-            $sitename = $this->container->getParameter('employees.sitename');
+            $sitename = $this->getParameter('employees.sitename');
         }
         if( $routename == "fellapp_login" ) {
-            $sitename = $this->container->getParameter('fellapp.sitename');
+            $sitename = $this->getParameter('fellapp.sitename');
         }
         if( $routename == "deidentifier_login" ) {
-            $sitename = $this->container->getParameter('deidentifier.sitename');
+            $sitename = $this->getParameter('deidentifier.sitename');
         }
         if( $routename == "scan_login" ) {
-            $sitename = $this->container->getParameter('scan.sitename');
+            $sitename = $this->getParameter('scan.sitename');
         }
         if( $routename == "vacreq_login" ) {
-            $sitename = $this->container->getParameter('vacreq.sitename');
+            $sitename = $this->getParameter('vacreq.sitename');
         }
         if( $routename == "calllog_login" ) {
-            $sitename = $this->container->getParameter('calllog.sitename');
+            $sitename = $this->getParameter('calllog.sitename');
         }
         if( $routename == "translationalresearch_login" ) {
-            $sitename = $this->container->getParameter('translationalresearch.sitename');
+            $sitename = $this->getParameter('translationalresearch.sitename');
         }
         //exit('sitename='.$sitename);
 
@@ -97,8 +98,8 @@ class SecurityController extends OrderAbstractController
         $session->set('browserWarningInfo', $browserInfo);
         /////////////// EOF set browser info ///////////////
 
-        //$sitename = $this->container->getParameter('employees.sitename');
-        $formArr = $this->loginPage($sitename);
+        //$sitename = $this->getParameter('employees.sitename');
+        $formArr = $this->loginPage($sitename,$authenticationUtils);
 
         if( $formArr == null ) {
             return $this->redirect( $this->generateUrl('main_common_home') );
@@ -165,7 +166,7 @@ class SecurityController extends OrderAbstractController
 
     }
 
-    public function loginPage($sitename) {
+    public function loginPage($sitename,$authenticationUtils) {
 
         if(
             $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')    // authenticated (NON anonymous)
@@ -174,7 +175,9 @@ class SecurityController extends OrderAbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
-        $helper = $this->get('security.authentication_utils');
+
+        //$helper = $this->get('security.authentication_utils');
+        //$authenticationUtils = $this->get('security.authentication_utils');
 
         //Symfony < 2.6 deprecated methods
         //$request = $this->get('request_stack')->getCurrentRequest();
@@ -191,10 +194,13 @@ class SecurityController extends OrderAbstractController
 //        }
 
         //get error
-        $error = $helper->getLastAuthenticationError();
+        //$error = $helper->getLastAuthenticationError();
+        $error = $authenticationUtils->getLastAuthenticationError();
 
         //get original username entered by a user in login form
-        $lastUsername = $helper->getLastUsername();
+        //$lastUsername = $helper->getLastUsername();
+        $lastUsername = $authenticationUtils->getLastUsername();
+
         $lastUsernameArr = explode("_@_", $lastUsername);
         $lastUsername = $lastUsernameArr[0];
 
@@ -233,25 +239,25 @@ class SecurityController extends OrderAbstractController
     {
         $routename = $request->get('_route');
         if( $routename == "employees_idlelogout" ) {
-            $sitename = $this->container->getParameter('employees.sitename');
+            $sitename = $this->getParameter('employees.sitename');
         }
         if( $routename == "fellapp_idlelogout" ) {
-            $sitename = $this->container->getParameter('fellapp.sitename');
+            $sitename = $this->getParameter('fellapp.sitename');
         }
         if( $routename == "deidentifier_idlelogout" ) {
-            $sitename = $this->container->getParameter('deidentifier.sitename');
+            $sitename = $this->getParameter('deidentifier.sitename');
         }
         if( $routename == "scan_idlelogout" ) {
-            $sitename = $this->container->getParameter('scan.sitename');
+            $sitename = $this->getParameter('scan.sitename');
         }
         if( $routename == "vacreq_idlelogout" ) {
-            $sitename = $this->container->getParameter('vacreq.sitename');
+            $sitename = $this->getParameter('vacreq.sitename');
         }
         if( $routename == "calllog_idlelogout" ) {
-            $sitename = $this->container->getParameter('calllog.sitename');
+            $sitename = $this->getParameter('calllog.sitename');
         }
         if( $routename == "translationalresearch_idlelogout" ) {
-            $sitename = $this->container->getParameter('translationalresearch.sitename');
+            $sitename = $this->getParameter('translationalresearch.sitename');
         }
 
         $userSecUtil = $this->get('user_security_utility');
@@ -272,32 +278,32 @@ class SecurityController extends OrderAbstractController
 
         $routename = $request->get('_route');
         if( $routename == "employees_setloginvisit" ) {
-            $options['sitename'] = $this->container->getParameter('employees.sitename');
+            $options['sitename'] = $this->getParameter('employees.sitename');
             $options['event'] = "Employee Directory login page visit";
         }
         if( $routename == "fellapp_setloginvisit" ) {
-            $options['sitename'] = $this->container->getParameter('fellapp.sitename');
+            $options['sitename'] = $this->getParameter('fellapp.sitename');
             $options['event'] = "Fellowship Applications login page visit";
         }
         if( $routename == "deidentifier_setloginvisit" ) {
-            $options['sitename'] = $this->container->getParameter('deidentifier.sitename');
+            $options['sitename'] = $this->getParameter('deidentifier.sitename');
             $options['event'] = "Deidentifier System login page visit";
         }
         if( $routename == "scan_setloginvisit" ) {
             //scan uses its own setLoginAttempt
-            $options['sitename'] = $this->container->getParameter('scan.sitename');
+            $options['sitename'] = $this->getParameter('scan.sitename');
             $options['event'] = "Scan Order login page visit";
         }
         if( $routename == "vacreq_setloginvisit" ) {
-            $options['sitename'] = $this->container->getParameter('vacreq.sitename');
+            $options['sitename'] = $this->getParameter('vacreq.sitename');
             $options['event'] = "Vacation Request login page visit";
         }
         if( $routename == "calllog_setloginvisit" ) {
-            $options['sitename'] = $this->container->getParameter('calllog.sitename');
+            $options['sitename'] = $this->getParameter('calllog.sitename');
             $options['event'] = "Call Log Book login page visit";
         }
         if( $routename == "translationalresearch_setloginvisit" ) {
-            $options['sitename'] = $this->container->getParameter('translationalresearch.sitename');
+            $options['sitename'] = $this->getParameter('translationalresearch.sitename');
             $options['event'] = "Translational Research login page visit";
         }
 
@@ -467,7 +473,7 @@ class SecurityController extends OrderAbstractController
         $empty = $request->get('empty');
 
         return array(
-            'sitename' => $this->container->getParameter('employees.sitename'),
+            'sitename' => $this->getParameter('employees.sitename'),
             'empty' => $empty
         );
     }
@@ -506,7 +512,7 @@ class SecurityController extends OrderAbstractController
 //        $this->get('security.token_storage')->setToken(null);
 //        //$this->get('request')->getSession()->invalidate();
 //
-//        return $this->accreqLogout($request,$this->container->getParameter('employees.sitename'));
+//        return $this->accreqLogout($request,$this->getParameter('employees.sitename'));
 //    }
 //
 //    public function accreqLogout($request,$sitename) {

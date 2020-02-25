@@ -33,7 +33,7 @@ class FellAppUserController extends UserController
      * @Template("AppUserdirectoryBundle/Profile/show_user.html.twig")
      */
     public function showUserOptimizedAction( Request $request, $id ) {
-        return $this->showUserOptimized($request, $id, $this->container->getParameter('fellapp.sitename'));
+        return $this->showUserOptimized($request, $id, $this->getParameter('fellapp.sitename'));
     }
 
     /**
@@ -48,7 +48,7 @@ class FellAppUserController extends UserController
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
-        $editUser = $this->editUser($request,$id, $this->container->getParameter('fellapp.sitename'));
+        $editUser = $this->editUser($request,$id, $this->getParameter('fellapp.sitename'));
 
         if( $editUser === false ) {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
@@ -69,7 +69,7 @@ class FellAppUserController extends UserController
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
-        return $this->updateUser( $request, $id, $this->container->getParameter('fellapp.sitename') );
+        return $this->updateUser( $request, $id, $this->getParameter('fellapp.sitename') );
     }
 
 }

@@ -590,7 +590,7 @@ class RequestController extends OrderAbstractController
             return $this->redirectToRoute('translationalresearch_request_show', array('id' => $transresRequest->getId()));
         }
 
-        //$sitename = $this->container->getParameter('translationalresearch.sitename');
+        //$sitename = $this->getParameter('translationalresearch.sitename');
         //$defaultAccessionType = $userSecUtil->getSiteSettingParameter('accessionType',$sitename);
         $projectSpecialty = $project->getProjectSpecialty();
         $projectSpecialtyAbbreviation = $projectSpecialty->getAbbreviation();
@@ -621,7 +621,7 @@ class RequestController extends OrderAbstractController
             'entityNamespace' => $classNamespace,
             'entityName' => $className,
             'entityId' => $transresRequest->getId(),
-            'sitename' => $this->container->getParameter('translationalresearch.sitename'),
+            'sitename' => $this->getParameter('translationalresearch.sitename'),
             'routeName' => $request->get('_route'),
             //'handsometableData' => json_encode($jsonData)
             'handsometableData' => $jsonData,
@@ -991,7 +991,7 @@ class RequestController extends OrderAbstractController
 //            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER') &&
 //            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN')
 //        ) {
-//            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+//            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
 //        }
 
         $transresUtil = $this->container->get('transres_util');
@@ -1059,10 +1059,10 @@ class RequestController extends OrderAbstractController
 //            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER') &&
 //            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN')
 //        ) {
-//            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+//            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
 //        }
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
         //set_time_limit(600); //600 seconds => 10 min
@@ -1314,7 +1314,7 @@ class RequestController extends OrderAbstractController
                         "You project specialty $thisProjectSpecialty conflicting with your allowed specialty"
                     );
 
-                    return $this->redirect($this->generateUrl($this->container->getParameter('translationalresearch.sitename') . '-nopermission'));
+                    return $this->redirect($this->generateUrl($this->getParameter('translationalresearch.sitename') . '-nopermission'));
                 }
             }
 
@@ -2453,7 +2453,7 @@ class RequestController extends OrderAbstractController
     public function feeScheduleAction(Request $request)
     {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -2542,7 +2542,7 @@ class RequestController extends OrderAbstractController
     {
         exit("Not Available");
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
         set_time_limit(600); //600 seconds => 10 min

@@ -49,7 +49,7 @@ class DeidentifierLoggerController extends LoggerController
             return $this->redirect( $this->generateUrl('deidentifier-nopermission') );
         }
 
-		$params = array('sitename'=>$this->container->getParameter('deidentifier.sitename'));
+		$params = array('sitename'=>$this->getParameter('deidentifier.sitename'));
         $loggerFormParams = $this->listLogger($params,$request);
 
         return $loggerFormParams;
@@ -73,7 +73,7 @@ class DeidentifierLoggerController extends LoggerController
         $entityName = 'User';
 
         $params = array(
-            'sitename'=>$this->container->getParameter('deidentifier.sitename'),
+            'sitename'=>$this->getParameter('deidentifier.sitename'),
             'entityNamespace'=>'App\UserdirectoryBundle\Entity',
             'entityName'=>$entityName,
             'entityId'=>$userid,
@@ -130,7 +130,7 @@ class DeidentifierLoggerController extends LoggerController
 
 
         $params = array(
-            'sitename' => $this->container->getParameter('deidentifier.sitename'),
+            'sitename' => $this->getParameter('deidentifier.sitename'),
             'hideEventType' => true,
         );
         $loggerFormParams = $this->listLogger($params,$request);
@@ -209,7 +209,7 @@ class DeidentifierLoggerController extends LoggerController
         ///////////// EOF make sure eventTypes and users are set /////////////
 
         $params = array(
-            'sitename' => $this->container->getParameter('deidentifier.sitename'),
+            'sitename' => $this->getParameter('deidentifier.sitename'),
             //'hideObjectType' => true,
             //'hideObjectId' => true,
             //'hideUser' => true,
@@ -240,7 +240,7 @@ class DeidentifierLoggerController extends LoggerController
         $eventType = $em->getRepository('AppUserdirectoryBundle:EventTypeList')->find($eventTypes[0]);
         $user = $em->getRepository('AppUserdirectoryBundle:User')->find($users[0]);
 
-        $eventlogTitle = $this->container->getParameter('eventlog_title');
+        $eventlogTitle = $this->getParameter('eventlog_title');
         if( $loggerFormParams['filtered'] ) {
             $loggerFormParams['eventLogTitle'] = $eventlogTitle . " showing " . count($loggerFormParams['pagination']) . " matching ".
             "\"".$eventType."\" event(s) for user: ".$user;

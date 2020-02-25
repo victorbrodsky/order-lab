@@ -50,7 +50,7 @@ class CallLogLoggerController extends LoggerController
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
-		$params = array('sitename'=>$this->container->getParameter('calllog.sitename'));
+		$params = array('sitename'=>$this->getParameter('calllog.sitename'));
         $loggerFormParams = $this->listLogger($params,$request);
 
         return $loggerFormParams;
@@ -70,7 +70,7 @@ class CallLogLoggerController extends LoggerController
         $entityName = 'User';
 
         $params = array(
-            'sitename'=>$this->container->getParameter('calllog.sitename'),
+            'sitename'=>$this->getParameter('calllog.sitename'),
             'entityNamespace'=>'App\UserdirectoryBundle\Entity',
             'entityName'=>$entityName,
             'entityId'=>$userid,
@@ -174,7 +174,7 @@ class CallLogLoggerController extends LoggerController
         }
         ///////////// EOF make sure eventTypes and users are set /////////////
         $params = array(
-            'sitename' => $this->container->getParameter('calllog.sitename'),
+            'sitename' => $this->getParameter('calllog.sitename'),
             'showCapacity' => true,
             'entityId' => $user->getId()
             //'hideObjectType' => true,
@@ -216,7 +216,7 @@ class CallLogLoggerController extends LoggerController
 
         //Event Log showing 1 matching "New Call Log Book Entry Submitted" event(s) for user:
         //$loggerFormParams['titlePostfix'] = " matching \"".$eventType."\" event(s) for user: ".$user;
-        $eventlogTitle = $this->container->getParameter('eventlog_title');
+        $eventlogTitle = $this->getParameter('eventlog_title');
         if( $loggerFormParams['filtered'] ) {
             $loggerFormParams['eventLogTitle'] = $eventlogTitle . " showing " . count($loggerFormParams['pagination']) . " matching ".
                 "\"".$eventType."\" event(s) and \"" .$objectType.  "\" object(s) for user: ".$user;
@@ -345,7 +345,7 @@ class CallLogLoggerController extends LoggerController
         //echo "$objectTypes, $objectId <br>";
         //exit();
 
-        $params = array('sitename'=>$this->container->getParameter('calllog.sitename'));
+        $params = array('sitename'=>$this->getParameter('calllog.sitename'));
 
         //$filterform = $this->createLoggerFilter($request,$params);
         //$filterform->handleRequest($request);

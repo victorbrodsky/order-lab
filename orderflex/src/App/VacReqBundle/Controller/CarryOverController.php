@@ -86,7 +86,7 @@ class CarryOverController extends OrderAbstractController
 ////            $eventType = "Business/Vacation Request Created";
 //            $event = "Carry Over Days for ".$subjectUser." has been updated";
 ////            $userSecUtil = $this->container->get('user_security_utility');
-////            $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
+////            $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
 //
 //            //Flash
 //            $this->get('session')->getFlashBag()->add(
@@ -149,7 +149,7 @@ class CarryOverController extends OrderAbstractController
             $eventType = "Carry Over Request Updated";
             $event = "Carry Over Days for ".$subjectUser." has been updated:<br>".$userCarryOver->getCarryOverInfo();
             $userSecUtil = $this->container->get('user_security_utility');
-            $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$userCarryOver,$request,$eventType);
+            $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'),$event,$user,$userCarryOver,$request,$eventType);
 
             //Flash
             $this->get('session')->getFlashBag()->add(

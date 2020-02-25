@@ -266,7 +266,7 @@ class ListController extends OrderAbstractController
     public function indexAction(Request $request)
     {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_OBSERVER') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
         return $this->getList($request);
@@ -742,7 +742,7 @@ class ListController extends OrderAbstractController
     public function createAction(Request $request)
     {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
         return $this->createList($request);
@@ -1048,7 +1048,7 @@ class ListController extends OrderAbstractController
     public function newAction(Request $request)
     {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
         return $this->newList($request);
@@ -1317,7 +1317,7 @@ class ListController extends OrderAbstractController
     {
 
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_OBSERVER') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
         $showEditBtn = false;
@@ -1580,7 +1580,7 @@ class ListController extends OrderAbstractController
     public function editAction(Request $request,$id)
     {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
         
         return $this->editList($request,$id);
@@ -1881,7 +1881,7 @@ class ListController extends OrderAbstractController
     public function updateAction(Request $request, $id)
     {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
         return $this->updateList($request, $id);
@@ -1969,7 +1969,7 @@ class ListController extends OrderAbstractController
                     //echo "event=".$event."<br>";
                     //print_r($removedCollections);
                     //exit();
-                    $userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'),$event,$user,$entity,$request,'Role Permission Updated');
+                    $userSecUtil->createUserEditEvent($this->getParameter('employees.sitename'),$event,$user,$entity,$request,'Role Permission Updated');
                 }
                 //exit();
 
@@ -2010,7 +2010,7 @@ class ListController extends OrderAbstractController
 
             //EventLog
             $event = "List Updated by $user";
-            $userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'),$event,$user,$entity,$request,'List Updated');
+            $userSecUtil->createUserEditEvent($this->getParameter('employees.sitename'),$event,$user,$entity,$request,'List Updated');
 
             return $this->redirect($this->generateUrl($pathbase.'_show'.$this->postPath, array('id' => $id)));
         }
@@ -3362,10 +3362,10 @@ class ListController extends OrderAbstractController
     public function deleteAction(Request $request, $id)
     {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
-        return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-nopermission') );
+        return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         //return $this->deleteList($request, $id);
     }
     public function deleteList($request, $id) {
@@ -3508,21 +3508,21 @@ class ListController extends OrderAbstractController
 
         //exit("pathbase=".$pathbase);
         if( $pathbase == "translationalresearchfeesschedule" || $pathbase == "antibodies" || $pathbase == "transresrequestcategorytypes") {
-            $additionalSitename = $this->container->getParameter('translationalresearch.sitename');
+            $additionalSitename = $this->getParameter('translationalresearch.sitename');
             if (
                 false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') &&
                 false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN')
             ) {
-                return $this->redirect($this->generateUrl($this->container->getParameter('translationalresearch.sitename') . '-nopermission'));
+                return $this->redirect($this->generateUrl($this->getParameter('translationalresearch.sitename') . '-nopermission'));
             }
         } elseif( $pathbase == "visastatus" ) {
-            $additionalSitename = $this->container->getParameter('fellapp.sitename');
+            $additionalSitename = $this->getParameter('fellapp.sitename');
             if( false === $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_ADMIN') ) {
-                return $this->redirect($this->generateUrl($this->container->getParameter('fellapp.sitename') . '-nopermission'));
+                return $this->redirect($this->generateUrl($this->getParameter('fellapp.sitename') . '-nopermission'));
             }
         } else {
             if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
-                return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename').'-nopermission'));
+                return $this->redirect($this->generateUrl($this->getParameter('employees.sitename').'-nopermission'));
             }
         }
 
@@ -3553,7 +3553,7 @@ class ListController extends OrderAbstractController
             //echo "event=".$event."<br>";
             //print_r($removedCollections);
             //exit();
-            $userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'),$event,$user,$entity,$request,'List Updated');
+            $userSecUtil->createUserEditEvent($this->getParameter('employees.sitename'),$event,$user,$entity,$request,'List Updated');
 
             if( $additionalSitename ) {
                 $userSecUtil->createUserEditEvent($additionalSitename,$event,$user,$entity,$request,'List Updated');

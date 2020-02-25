@@ -29,6 +29,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\PhpBridgeSessionStorage;
 
 use App\UserdirectoryBundle\Util\UserUtil;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class VacReqSecurityController extends SecurityController
 {
@@ -37,9 +38,9 @@ class VacReqSecurityController extends SecurityController
      * @Route("/login", name="vacreq_login")
      * @Template()
      */
-    public function loginAction( Request $request ) {
+    public function loginAction( Request $request, AuthenticationUtils $authenticationUtils ) {
         //exit('vacreq: loginAction');
-        return parent::loginAction($request);
+        return parent::loginAction($request,$authenticationUtils);
     }
 
 
@@ -65,7 +66,7 @@ class VacReqSecurityController extends SecurityController
         $empty = $request->get('empty');
 
         return array(
-            'sitename' => $this->container->getParameter('vacreq.sitename'),
+            'sitename' => $this->getParameter('vacreq.sitename'),
             'empty' => $empty
         );
     }

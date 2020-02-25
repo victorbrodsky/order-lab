@@ -50,7 +50,7 @@ class ProjectController extends OrderAbstractController
     public function homeAction()
     {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
         $transresUtil = $this->container->get('transres_util');
@@ -89,7 +89,7 @@ class ProjectController extends OrderAbstractController
 
         //TODO: check performance   scan_perSiteSettings?
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
         //test: only 12 queries vs ~800 queries in regular run
@@ -1378,7 +1378,7 @@ class ProjectController extends OrderAbstractController
             'entityNamespace' => $classNamespace,
             'entityName' => $className,
             'entityId' => $project->getId(),
-            'sitename' => $this->container->getParameter('translationalresearch.sitename'),
+            'sitename' => $this->getParameter('translationalresearch.sitename'),
         );
     }
 
@@ -1393,7 +1393,7 @@ class ProjectController extends OrderAbstractController
     public function showAction(Request $request, Project $project)
     {
 //        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
-//            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+//            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
 //        }
 
 //        $transresUtil = $this->container->get('transres_util');
@@ -1952,7 +1952,7 @@ class ProjectController extends OrderAbstractController
     public function deleteAction(Request $request, Project $project)
     {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
         $form = $this->createDeleteForm($project);
@@ -1974,7 +1974,7 @@ class ProjectController extends OrderAbstractController
     public function deleteProjectAction(Request $request, Project $project)
     {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
         $transresUtil = $this->container->get('transres_util');
@@ -2010,7 +2010,7 @@ class ProjectController extends OrderAbstractController
     public function deleteMultipleProjectsAction(Request $request)
     {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
         set_time_limit(600); //600 seconds => 10 min
@@ -2275,7 +2275,7 @@ class ProjectController extends OrderAbstractController
     public function setStateAction(Request $request, Project $project)
     {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
         $transresUtil = $this->container->get('transres_util');

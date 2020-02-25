@@ -46,7 +46,7 @@ class SignUpController extends OrderAbstractController
     protected $roleAdmins;
 
     public function __construct() {
-        $this->siteName = 'employees'; //controller is not setup yet, so we can't use $this->container->getParameter('employees.sitename');
+        $this->siteName = 'employees'; //controller is not setup yet, so we can't use $this->getParameter('employees.sitename');
         $this->siteNameShowuser = 'employees';
         $this->siteNameStr = 'Employee Directory';
         $this->pathHome = 'employees_home';
@@ -391,7 +391,7 @@ class SignUpController extends OrderAbstractController
 
         return false; //Fatal error: Cannot declare class App\UserdirectoryBundle\Util\ReCaptchaResponse, because the name is already in use
 
-        //$dir = $this->container->getParameter('kernel.root_dir'); //app
+        //$dir = $this->getParameter('kernel.root_dir'); //app
         //echo "dir=".$dir."<br>";
         //current dir is "C:\bla\bla\ORDER\scanorder\Scanorders2\app"
         //require_once "../src/App/UserdirectoryBundle/Util/RecaptchaLib.php";
@@ -617,7 +617,7 @@ class SignUpController extends OrderAbstractController
         );
         $form = $this->createForm(UserSimpleType::class, $user, array(
             'disabled' => false,
-            //'action' => $this->generateUrl( $this->container->getParameter('employees.sitename').'_create_user' ),
+            //'action' => $this->generateUrl( $this->getParameter('employees.sitename').'_create_user' ),
             //'method' => 'POST',
             'form_custom_value' => $params,
         ));

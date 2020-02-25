@@ -178,7 +178,7 @@ class ReferenceController extends OrderAbstractController
         $eventType = 'Fellowship Application Updated';
         $userSecUtil = $this->container->get('user_security_utility');
         $user = $this->get('security.token_storage')->getToken()->getUser();
-        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$msg,$user,$reference,$request,$eventType);
+        $userSecUtil->createUserEditEvent($this->getParameter('fellapp.sitename'),$msg,$user,$reference,$request,$eventType);
 
         $this->get('session')->getFlashBag()->add(
             'notice',

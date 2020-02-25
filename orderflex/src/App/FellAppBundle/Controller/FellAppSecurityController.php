@@ -29,6 +29,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\PhpBridgeSessionStorage;
 
 use App\UserdirectoryBundle\Util\UserUtil;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class FellAppSecurityController extends SecurityController
 {
@@ -37,8 +38,8 @@ class FellAppSecurityController extends SecurityController
      * @Route("/login", name="fellapp_login")
      * @Template()
      */
-    public function loginAction( Request $request ) {
-        return parent::loginAction($request);
+    public function loginAction( Request $request, AuthenticationUtils $authenticationUtils ) {
+        return parent::loginAction($request,$authenticationUtils);
     }
 
 
@@ -64,7 +65,7 @@ class FellAppSecurityController extends SecurityController
         $empty = $request->get('empty');
 
         return array(
-            'sitename' => $this->container->getParameter('fellapp.sitename'),
+            'sitename' => $this->getParameter('fellapp.sitename'),
             'empty' => $empty
         );
     }
@@ -80,7 +81,7 @@ class FellAppSecurityController extends SecurityController
     {
         return parent::idlelogoutAction($request,$flag);
 //        $userSecUtil = $this->get('user_security_utility');
-//        $sitename = $this->container->getParameter('fellapp.sitename');
+//        $sitename = $this->getParameter('fellapp.sitename');
 //        return $userSecUtil->idleLogout( $request, $sitename, $flag );
     }
 
@@ -98,7 +99,7 @@ class FellAppSecurityController extends SecurityController
 //        $options = array();
 //        $em = $this->getDoctrine()->getManager();
 //        $userUtil = new UserUtil();
-//        $options['sitename'] = $this->container->getParameter('scan.sitename');
+//        $options['sitename'] = $this->getParameter('scan.sitename');
 //        $options['eventtype'] = "Login Page Visit";
 //        $options['event'] = "Scan Order login page visit";
 //        $options['serverresponse'] = "";

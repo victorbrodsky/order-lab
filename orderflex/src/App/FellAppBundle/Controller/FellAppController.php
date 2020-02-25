@@ -579,10 +579,10 @@ class FellAppController extends OrderAbstractController {
         }
 
         //emailAcceptSubject emailAcceptBody
-        $acceptedEmailSubject = $userSecUtil->getSiteSettingParameter('acceptedEmailSubject',$this->container->getParameter('fellapp.sitename'));
-        $acceptedEmailBody = $userSecUtil->getSiteSettingParameter('acceptedEmailBody',$this->container->getParameter('fellapp.sitename'));
-        $rejectedEmailSubject = $userSecUtil->getSiteSettingParameter('rejectedEmailSubject',$this->container->getParameter('fellapp.sitename'));
-        $rejectedEmailBody = $userSecUtil->getSiteSettingParameter('rejectedEmailBody',$this->container->getParameter('fellapp.sitename'));
+        $acceptedEmailSubject = $userSecUtil->getSiteSettingParameter('acceptedEmailSubject',$this->getParameter('fellapp.sitename'));
+        $acceptedEmailBody = $userSecUtil->getSiteSettingParameter('acceptedEmailBody',$this->getParameter('fellapp.sitename'));
+        $rejectedEmailSubject = $userSecUtil->getSiteSettingParameter('rejectedEmailSubject',$this->getParameter('fellapp.sitename'));
+        $rejectedEmailBody = $userSecUtil->getSiteSettingParameter('rejectedEmailBody',$this->getParameter('fellapp.sitename'));
 
 
         return array(
@@ -640,7 +640,7 @@ class FellAppController extends OrderAbstractController {
 //            return null;
 //        }
 //        $userSecUtil = $this->get('user_security_utility');
-//        $accessreqs = $userSecUtil->getUserAccessRequestsByStatus($this->container->getParameter('fellapp.sitename'),AccessRequest::STATUS_ACTIVE);
+//        $accessreqs = $userSecUtil->getUserAccessRequestsByStatus($this->getParameter('fellapp.sitename'),AccessRequest::STATUS_ACTIVE);
 //        return $accessreqs;
 //    }
 
@@ -749,7 +749,7 @@ class FellAppController extends OrderAbstractController {
 
         //event log
         //$event = "Fellowship Application with ID".$id." has been ".$actionStr." by ".$user;
-        //$userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$entity,$request,$eventType);
+        //$userSecUtil->createUserEditEvent($this->getParameter('fellapp.sitename'),$event,$user,$entity,$request,$eventType);
         
         return $this->render('AppFellAppBundle/Form/new.html.twig', $args);
     }
@@ -932,7 +932,7 @@ class FellAppController extends OrderAbstractController {
             'entity' => $entity,
             'pathbase' => 'fellapp',
             'cycle' => $cycle,
-            'sitename' => $this->container->getParameter('fellapp.sitename'),
+            'sitename' => $this->getParameter('fellapp.sitename'),
             'route' => $routeName
         );
     }
@@ -1088,7 +1088,7 @@ class FellAppController extends OrderAbstractController {
                 $event = $event . $reportsDiffInfoStr;
                 //echo "Diff event=".$event."<br>";
                 //$userSecUtil = $this->get('user_security_utility');
-                $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$entity,$request,'Fellowship Application Updated');
+                $userSecUtil->createUserEditEvent($this->getParameter('fellapp.sitename'),$event,$user,$entity,$request,'Fellowship Application Updated');
             }
 
             $em = $this->getDoctrine()->getManager();
@@ -1118,7 +1118,7 @@ class FellAppController extends OrderAbstractController {
             //$userSecUtil = $this->container->get('user_security_utility');
             //$user = $em->getRepository('AppUserdirectoryBundle:User')->find($user->getId()); //fetch user from DB otherwise keytype is null
             $event = "Fellowship Application with ID " . $id . " has been updated by " . $user;
-            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$entity,$request,'Fellowship Application Updated');
+            $userSecUtil->createUserEditEvent($this->getParameter('fellapp.sitename'),$event,$user,$entity,$request,'Fellowship Application Updated');
             //exit('event='.$event);
 
             return $this->redirect($this->generateUrl('fellapp_show',array('id' => $entity->getId())));
@@ -1144,7 +1144,7 @@ class FellAppController extends OrderAbstractController {
             'entity' => $entity,
             'pathbase' => 'fellapp',
             'cycle' => $cycle,
-            'sitename' => $this->container->getParameter('fellapp.sitename')
+            'sitename' => $this->getParameter('fellapp.sitename')
         );
     }
     //EOF -NOT-USED
@@ -1252,7 +1252,7 @@ class FellAppController extends OrderAbstractController {
                 $event = $event . "<br>" . implode("<br>", $removedCollections);
                 $event = $event . $reportsDiffInfoStr;
                 //echo "Diff event=".$event."<br>";
-                $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$entity,$request,'Fellowship Application Updated');
+                $userSecUtil->createUserEditEvent($this->getParameter('fellapp.sitename'),$event,$user,$entity,$request,'Fellowship Application Updated');
             }
 
             $em = $this->getDoctrine()->getManager();
@@ -1279,7 +1279,7 @@ class FellAppController extends OrderAbstractController {
             //set logger for update
             //$user = $em->getRepository('AppUserdirectoryBundle:User')->find($user->getId()); //fetch user from DB otherwise keytype is null
             $event = "Fellowship Application with ID " . $id . " has been updated by " . $user;
-            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$entity,$request,'Fellowship Application Updated');
+            $userSecUtil->createUserEditEvent($this->getParameter('fellapp.sitename'),$event,$user,$entity,$request,'Fellowship Application Updated');
             //exit('event='.$event);
 
             //return $this->redirect($this->generateUrl('fellapp_show',array('id' => $entity->getId())));
@@ -1313,7 +1313,7 @@ class FellAppController extends OrderAbstractController {
             //$user = $em->getRepository('AppUserdirectoryBundle:User')->find($user->getId()); //fetch user from DB otherwise keytype is null
             $event = "Fellowship Application with ID".$id." has been ".$actionStr." by ".$user;
 
-            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$entity,$request,$eventType);
+            $userSecUtil->createUserEditEvent($this->getParameter('fellapp.sitename'),$event,$user,$entity,$request,$eventType);
         }
 
         return array(
@@ -1321,7 +1321,7 @@ class FellAppController extends OrderAbstractController {
             'entity' => $entity,
             'pathbase' => 'fellapp',
             'cycle' => $cycle,
-            'sitename' => $this->container->getParameter('fellapp.sitename')
+            'sitename' => $this->getParameter('fellapp.sitename')
         );
     }
     private function createFellAppEditForm( FellowshipApplication $entity, $cycle )
@@ -1592,7 +1592,7 @@ class FellAppController extends OrderAbstractController {
             $applicant->setPassword("");
             $applicant->setCreatedby('manual');
 
-            $default_time_zone = $this->container->getParameter('default_time_zone');
+            $default_time_zone = $this->getParameter('default_time_zone');
             $applicant->getPreferences()->setTimezone($default_time_zone);
             $applicant->setLocked(true);
 
@@ -1635,7 +1635,7 @@ class FellAppController extends OrderAbstractController {
             //set logger for update
             $userSecUtil = $this->container->get('user_security_utility');
             $event = "Fellowship Application with ID " . $fellowshipApplication->getId() . " has been created by " . $user;
-            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$fellowshipApplication,$request,'Fellowship Application Updated');
+            $userSecUtil->createUserEditEvent($this->getParameter('fellapp.sitename'),$event,$user,$fellowshipApplication,$request,'Fellowship Application Updated');
 
 
             return $this->redirect($this->generateUrl('fellapp_show',array('id' => $fellowshipApplication->getId())));
@@ -1649,7 +1649,7 @@ class FellAppController extends OrderAbstractController {
             'entity' => $fellowshipApplication,
             'pathbase' => 'fellapp',
             'cycle' => 'new',
-            'sitename' => $this->container->getParameter('fellapp.sitename')
+            'sitename' => $this->getParameter('fellapp.sitename')
         );
 
     }
@@ -1870,7 +1870,7 @@ class FellAppController extends OrderAbstractController {
 
         $userSecUtil = $this->container->get('user_security_utility');
         $event = $eventType . '; application ID ' . $fellapp->getID() . ' by user ' . $user;
-        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$fellapp,$request,$eventType);
+        $userSecUtil->createUserEditEvent($this->getParameter('fellapp.sitename'),$event,$user,$fellapp,$request,$eventType);
         
         return $event;
     }
@@ -1941,7 +1941,7 @@ class FellAppController extends OrderAbstractController {
                         'fellapp' => $fellapp,
                         'interviews' => $interviews,
                         'cycle' => $cycle,
-                        'sitename' => $this->container->getParameter('fellapp.sitename')
+                        'sitename' => $this->getParameter('fellapp.sitename')
                     );
                 }
             }
@@ -1958,7 +1958,7 @@ class FellAppController extends OrderAbstractController {
                     'fellapp' => $fellapp,
                     'interviews' => $interviews,
                     'cycle' => $cycle,
-                    'sitename' => $this->container->getParameter('fellapp.sitename')
+                    'sitename' => $this->getParameter('fellapp.sitename')
                 );
             }
         }
@@ -2060,7 +2060,7 @@ class FellAppController extends OrderAbstractController {
             'entity' => $interview,
             'pathbase' => 'fellapp',
             'cycle' => $cycle,
-            'sitename' => $this->container->getParameter('fellapp.sitename')
+            'sitename' => $this->getParameter('fellapp.sitename')
         );
 
     }
@@ -2155,7 +2155,7 @@ class FellAppController extends OrderAbstractController {
             $user = $this->get('security.token_storage')->getToken()->getUser();
             //$event = $eventType . '; application ID ' . $fellapp->getId();
             $event = 'Fellowship Interview Evaluation for applicant '.$applicant->getUsernameOptimal().' (ID: '.$fellapp->getId().') has been submitted by ' . $user->getUsernameOptimal();
-            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$fellapp,$request,$eventType);
+            $userSecUtil->createUserEditEvent($this->getParameter('fellapp.sitename'),$event,$user,$fellapp,$request,$eventType);
 
             //return $this->redirect( $this->generateUrl('fellapp_home'));
 
@@ -2173,7 +2173,7 @@ class FellAppController extends OrderAbstractController {
             'entity' => $interview,
             'pathbase' => 'fellapp',
             'cycle' => $cycle,
-            'sitename' => $this->container->getParameter('fellapp.sitename')
+            'sitename' => $this->getParameter('fellapp.sitename')
         );
 
     }
@@ -2215,7 +2215,7 @@ class FellAppController extends OrderAbstractController {
 //            'entity' => $interview,
 //            'pathbase' => 'fellapp',
 //            'cycle' => $cycle,
-//            'sitename' => $this->container->getParameter('fellapp.sitename')
+//            'sitename' => $this->getParameter('fellapp.sitename')
 //        );
 //
 //    }
@@ -2520,7 +2520,7 @@ class FellAppController extends OrderAbstractController {
         //event log
         $userSecUtil = $this->container->get('user_security_utility');
         $event = "Report for Fellowship Application with ID".$id." has been downloaded by ".$user;
-        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$entity,null,'Complete Fellowship Application PDF Downloaded');
+        $userSecUtil->createUserEditEvent($this->getParameter('fellapp.sitename'),$event,$user,$entity,null,'Complete Fellowship Application PDF Downloaded');
 
         $reportDocument = $entity->getRecentReport();
         //echo "report=".$reportDocument."<br>";

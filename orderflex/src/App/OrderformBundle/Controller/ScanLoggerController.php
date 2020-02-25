@@ -45,7 +45,7 @@ class ScanLoggerController extends LoggerController
      */
     public function indexAction(Request $request)
     {
-		$params = array('sitename'=>$this->container->getParameter('scan.sitename'));
+		$params = array('sitename'=>$this->getParameter('scan.sitename'));
         return $this->listLogger($params,$request);
     }
 
@@ -67,7 +67,7 @@ class ScanLoggerController extends LoggerController
         $entityName = 'User';
 
         $params = array(
-            'sitename'=>$this->container->getParameter('scan.sitename'),
+            'sitename'=>$this->getParameter('scan.sitename'),
             'entityNamespace'=>'App\UserdirectoryBundle\Entity',
             'entityName'=>$entityName,
             'entityId'=>$userid,

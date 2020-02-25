@@ -30,6 +30,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\PhpBridgeSessionStorage;
 
 use App\UserdirectoryBundle\Util\UserUtil;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class TranslationalResearchSecurityController extends SecurityController
 {
@@ -38,9 +39,9 @@ class TranslationalResearchSecurityController extends SecurityController
      * @Route("/login", name="translationalresearch_login")
      * @Template()
      */
-    public function loginAction( Request $request ) {
+    public function loginAction( Request $request, AuthenticationUtils $authenticationUtils ) {
         //exit('translationalresearch: loginAction');
-        return parent::loginAction($request);
+        return parent::loginAction($request,$authenticationUtils);
     }
 
 
@@ -67,7 +68,7 @@ class TranslationalResearchSecurityController extends SecurityController
         $additionalMessage = $request->get('additionalMessage');
 
         return array(
-            'sitename' => $this->container->getParameter('translationalresearch.sitename'),
+            'sitename' => $this->getParameter('translationalresearch.sitename'),
             'empty' => $empty,
             'additionalMessage' => $additionalMessage
         );
