@@ -75,7 +75,6 @@ class OrderAbstractController extends AbstractController {
         $subscribedServices['user_service_utility'] = '?'.UserServiceUtil::class;
         $subscribedServices['user_manager'] = '?'.UserManager::class;
 
-
         $subscribedServices['calllog_util'] = '?'.CallLogUtil::class;
         $subscribedServices['calllog_util_form'] = '?'.CallLogUtilForm::class;
 
@@ -109,7 +108,7 @@ class OrderAbstractController extends AbstractController {
 
         $subscribedServices['fos_comment.manager.comment'] = '?'.CommentManagerInterface::class;
         $subscribedServices['fos_comment.manager.thread'] = '?'.ThreadManagerInterface::class;
-//        $subscribedServices['fos_comment'] = '?'.CommentInterface::class; 
+//        $subscribedServices['fos_comment'] = '?'.CommentInterface::class;
 
 //        $subscribedServices['user_generator'] = '?'.UserGenerator::class;
 //        $subscribedServices['user_generator'] = '?'.UserGenerator::class;

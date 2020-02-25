@@ -206,7 +206,7 @@ services:
         class: App\UserdirectoryBundle\User\Model\PasswordUpdater
     user_manager:
         class: App\UserdirectoryBundle\User\Model\UserManager
-        arguments: ["@doctrine.orm.entity_manager", "@user_password_updater"]
+#        arguments: ["@doctrine.orm.entity_manager", "@user_password_updater"]
 
 #    user_cache_clear:
 #        class: Symfony\Bundle\FrameworkBundle\Command\CacheClearCommand
