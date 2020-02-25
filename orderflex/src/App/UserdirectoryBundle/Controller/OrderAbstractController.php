@@ -109,7 +109,7 @@ class OrderAbstractController extends AbstractController {
 
         $subscribedServices['fos_comment.manager.comment'] = '?'.CommentManagerInterface::class;
         $subscribedServices['fos_comment.manager.thread'] = '?'.ThreadManagerInterface::class;
-//        $subscribedServices['fos_comment'] = '?'.CommentInterface::class;
+//        $subscribedServices['fos_comment'] = '?'.CommentInterface::class; 
 
 //        $subscribedServices['user_generator'] = '?'.UserGenerator::class;
 //        $subscribedServices['user_generator'] = '?'.UserGenerator::class;
