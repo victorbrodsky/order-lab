@@ -23,7 +23,7 @@ use App\TranslationalResearchBundle\Entity\Project;
 use App\TranslationalResearchBundle\Form\FilterType;
 use App\TranslationalResearchBundle\Form\ProjectStateType;
 use App\TranslationalResearchBundle\Form\ProjectType;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -40,7 +40,7 @@ use Symfony\Component\Workflow\Transition;
 // * @Route("project")
 // */
 
-class ProjectController extends AbstractController
+class ProjectController extends OrderAbstractController
 {
 
     /**

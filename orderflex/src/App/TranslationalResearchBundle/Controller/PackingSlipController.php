@@ -33,8 +33,8 @@ use App\TranslationalResearchBundle\Entity\TransResRequest;
 use App\TranslationalResearchBundle\Form\FilterRequestType;
 use App\TranslationalResearchBundle\Form\TransResRequestType;
 use App\UserdirectoryBundle\Entity\User;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-//use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\UserdirectoryBundle\Controller\OrderAbstractController;
+//use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -48,7 +48,7 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
  *
  * @Route("work-request")
  */
-class PackingSlipController extends AbstractController
+class PackingSlipController extends OrderAbstractController
 {
 
     /**

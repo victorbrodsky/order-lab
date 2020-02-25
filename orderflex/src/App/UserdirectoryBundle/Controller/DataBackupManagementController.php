@@ -26,13 +26,13 @@ namespace App\UserdirectoryBundle\Controller;
 
 
 use Doctrine\DBAL\Configuration;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 
-class DataBackupManagementController extends AbstractController
+class DataBackupManagementController extends OrderAbstractController
 {
 
     /**

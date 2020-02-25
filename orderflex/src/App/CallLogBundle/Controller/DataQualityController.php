@@ -35,7 +35,7 @@ use App\OrderformBundle\Entity\PatientMrn;
 use App\OrderformBundle\Entity\PatientSex;
 use App\OrderformBundle\Entity\PatientSuffix;
 use App\UserdirectoryBundle\Util\UserSecurityUtil;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;

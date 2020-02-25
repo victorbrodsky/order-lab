@@ -21,7 +21,7 @@ namespace App\UserdirectoryBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -37,7 +37,7 @@ use App\UserdirectoryBundle\Security\Authentication\AuthUtil;
 /**
  * @Route("/util")
  */
-class UtilController extends AbstractController {
+class UtilController extends OrderAbstractController {
 
 
     /**

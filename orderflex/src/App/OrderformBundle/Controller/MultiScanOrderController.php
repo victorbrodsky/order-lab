@@ -22,7 +22,7 @@ namespace App\OrderformBundle\Controller;
 use App\UserdirectoryBundle\Entity\InstitutionWrapper;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -58,7 +58,7 @@ use App\OrderformBundle\Util\SecurityUtil;
 /**
  * Message controller.
  */
-class MultiScanOrderController extends AbstractController {
+class MultiScanOrderController extends OrderAbstractController {
 
     private $datastructure = null;
     //for testing data structure

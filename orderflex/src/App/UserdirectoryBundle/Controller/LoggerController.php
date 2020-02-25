@@ -22,7 +22,7 @@ use App\UserdirectoryBundle\Form\LoggerFilterType;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -35,7 +35,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @Route("/event-log")
  */
-class LoggerController extends AbstractController
+class LoggerController extends OrderAbstractController
 {
 
     /**

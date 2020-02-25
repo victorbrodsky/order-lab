@@ -45,7 +45,7 @@ use App\OrderformBundle\Entity\PatientSuffix;
 use App\OrderformBundle\Helper\ErrorHelper;
 use App\UserdirectoryBundle\Entity\ModifierInfo;
 use App\UserdirectoryBundle\Entity\Spot;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;

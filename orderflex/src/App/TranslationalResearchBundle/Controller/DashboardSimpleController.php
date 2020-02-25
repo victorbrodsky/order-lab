@@ -4,7 +4,7 @@ namespace App\TranslationalResearchBundle\Controller;
 
 use App\TranslationalResearchBundle\Form\FilterDashboardType;
 use App\UserdirectoryBundle\Util\LargeFileDownloader;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -16,7 +16,7 @@ use Symfony\Component\Validator\Constraints\Date;
 /**
  * @Route("simple-dashboard")
  */
-class DashboardSimpleController extends AbstractController
+class DashboardSimpleController extends OrderAbstractController
 {
 
     private $width = 1200;

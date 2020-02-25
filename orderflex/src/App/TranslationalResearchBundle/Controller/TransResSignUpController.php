@@ -5,7 +5,7 @@ namespace App\TranslationalResearchBundle\Controller;
 
 use App\UserdirectoryBundle\Controller\SignUpController;
 use App\UserdirectoryBundle\Entity\SignUp;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Form\FormError;

@@ -21,7 +21,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -40,7 +40,7 @@ use App\UserdirectoryBundle\Entity\AccessRequest;
  *
  * @Route("/")
  */
-class ScanOrderController extends AbstractController {
+class ScanOrderController extends OrderAbstractController {
 
     protected $limit = 50;
 

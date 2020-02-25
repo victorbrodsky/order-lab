@@ -5,7 +5,7 @@ namespace App\TranslationalResearchBundle\Controller;
 use App\TranslationalResearchBundle\Entity\IrbReview;
 use App\TranslationalResearchBundle\Entity\Project;
 use App\TranslationalResearchBundle\Form\ReviewBaseType;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @Route("review")
  */
-class ReviewBaseController extends AbstractController
+class ReviewBaseController extends OrderAbstractController
 {
     /**
      * Lists all irbReview entities.

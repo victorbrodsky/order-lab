@@ -29,7 +29,6 @@ use App\UserdirectoryBundle\Form\SimpleUserType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
-//use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -45,7 +44,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 /**
  * AccessRequest controller.
  */
-class AccessRequestController extends AbstractController
+class AccessRequestController extends OrderAbstractController
 {
 
     protected $router;

@@ -5,7 +5,7 @@ namespace App\TranslationalResearchBundle\Controller;
 use App\TranslationalResearchBundle\Entity\TransResSiteParameters;
 
 use App\TranslationalResearchBundle\Form\SiteParameterType;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -18,7 +18,7 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
  *
  * @Route("site-parameters")
  */
-class TransResSiteParametersController extends AbstractController
+class TransResSiteParametersController extends OrderAbstractController
 {
 
 //    /**

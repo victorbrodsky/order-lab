@@ -19,7 +19,7 @@ namespace App\UserdirectoryBundle\Controller;
 
 
 use App\UserdirectoryBundle\Security\Authentication\AuthUtil;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 //use Symfony\Component\Security\Core\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -32,7 +32,7 @@ use Symfony\Component\HttpFoundation\Session\Storage\PhpBridgeSessionStorage;
 
 use App\UserdirectoryBundle\Util\UserUtil;
 
-class SecurityController extends AbstractController
+class SecurityController extends OrderAbstractController
 {
 
 //    /**

@@ -22,7 +22,7 @@ use App\UserdirectoryBundle\Form\ListFilterType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,7 +37,7 @@ use App\UserdirectoryBundle\Util\UserUtil;
 use App\UserdirectoryBundle\Entity\Location;
 
 
-class ComplexListController extends AbstractController
+class ComplexListController extends OrderAbstractController
 {
 
 

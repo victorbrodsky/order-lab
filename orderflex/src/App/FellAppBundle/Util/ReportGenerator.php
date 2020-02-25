@@ -34,7 +34,7 @@ use App\FellAppBundle\Form\FellowshipApplicationType;
 use App\UserdirectoryBundle\Entity\Document;
 use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use App\UserdirectoryBundle\Util\UserUtil;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\UserdirectoryBundle\Controller\OrderAbstractController;
 //use Symfony\Bundle\FrameworkBundle\Tests\Functional\WebTestCase;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\Filesystem\Exception\IOException;

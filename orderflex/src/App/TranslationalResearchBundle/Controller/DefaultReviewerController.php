@@ -4,7 +4,7 @@ namespace App\TranslationalResearchBundle\Controller;
 
 use App\TranslationalResearchBundle\Entity\DefaultReviewer;
 use App\TranslationalResearchBundle\Entity\SpecialtyList;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Defaultreviewer controller.
  */
-class DefaultReviewerController extends AbstractController
+class DefaultReviewerController extends OrderAbstractController
 {
 
     /**

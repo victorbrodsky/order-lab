@@ -33,7 +33,7 @@ use App\VacReqBundle\Form\VacReqUserCarryOverType;
 use App\VacReqBundle\Form\VacReqUserComboboxType;
 use App\VacReqBundle\Form\VacReqUserType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -44,7 +44,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 //vacreq site
 
-class ApproverController extends AbstractController
+class ApproverController extends OrderAbstractController
 {
     protected $vacreqUtil;
 

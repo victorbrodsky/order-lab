@@ -25,7 +25,7 @@ use App\UserdirectoryBundle\Entity\UserInfo;
 use App\UserdirectoryBundle\Form\ResetPasswordType;
 use App\UserdirectoryBundle\Form\UserSimpleType;
 use App\UserdirectoryBundle\Util\UserUtil;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Form\FormError;
@@ -34,7 +34,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 
-class SignUpController extends AbstractController
+class SignUpController extends OrderAbstractController
 {
 
     protected $router;

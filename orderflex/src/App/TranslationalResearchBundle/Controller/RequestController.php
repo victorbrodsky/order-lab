@@ -36,7 +36,7 @@ use App\TranslationalResearchBundle\Form\FilterRequestType;
 use App\TranslationalResearchBundle\Form\TransResRequestType;
 use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use App\UserdirectoryBundle\Form\ListFilterType;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -49,7 +49,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 /**
  * Request FormNode controller.
  */
-class RequestController extends AbstractController
+class RequestController extends OrderAbstractController
 {
 
     /**

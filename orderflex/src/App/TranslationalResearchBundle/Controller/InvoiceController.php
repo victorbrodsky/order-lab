@@ -7,7 +7,7 @@ use App\TranslationalResearchBundle\Entity\Invoice;
 use App\TranslationalResearchBundle\Entity\TransResRequest;
 use App\TranslationalResearchBundle\Form\FilterInvoiceType;
 use App\TranslationalResearchBundle\Form\InvoiceType;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -22,7 +22,7 @@ use App\UserdirectoryBundle\Entity\User;
  *
  * @Route("invoice")
  */
-class InvoiceController extends AbstractController
+class InvoiceController extends OrderAbstractController
 {
 
     //* @Route("/list-all/", name="translationalresearch_invoice_index_all")

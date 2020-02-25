@@ -21,7 +21,7 @@ use App\UserdirectoryBundle\Entity\User;
 use App\VacReqBundle\Entity\VacReqRequest;
 use App\VacReqBundle\Form\VacReqFilterType;
 use App\VacReqBundle\Form\VacReqRequestType;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -32,7 +32,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 //vacreq site
 
-class RequestIndexController extends AbstractController
+class RequestIndexController extends OrderAbstractController
 {
 
     /**

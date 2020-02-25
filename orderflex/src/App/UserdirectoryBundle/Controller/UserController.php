@@ -33,8 +33,8 @@ use App\UserdirectoryBundle\Security\Authentication\AuthUtil;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-//use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+//use App\UserdirectoryBundle\Controller\OrderAbstractController;
+use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 use Symfony\Component\Form\FormError;
@@ -76,8 +76,8 @@ use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use App\UserdirectoryBundle\Util\CropAvatar;
 use App\UserdirectoryBundle\Entity\Grant;
 
-//abstract class UserController extends AbstractController
-class UserController extends AbstractController
+//abstract class UserController extends OrderAbstractController
+class UserController extends OrderAbstractController
 {
 
 //    public static function getSubscribedServices()
@@ -412,8 +412,13 @@ class UserController extends AbstractController
         if( !$this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_ADMIN') ) {
             return null;
         }
-        $userSecUtil = $this->get('user_security_utility');
-        $accessreqs = $userSecUtil->getUserAccessRequestsByStatus($this->container->getParameter('employees.sitename'),AccessRequest::STATUS_ACTIVE);
+        //$userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
+        //$sitename = $this->container->getParameter('employees.sitename');
+        //$sitename = $this->container->get('parameter_bag')->get('employees.sitename');
+        $sitename = $this->getParameter('employees.sitename');
+
+        $accessreqs = $userSecUtil->getUserAccessRequestsByStatus($sitename,AccessRequest::STATUS_ACTIVE);
         return $accessreqs;
     }
 

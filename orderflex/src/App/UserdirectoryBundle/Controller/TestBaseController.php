@@ -9,7 +9,7 @@
 namespace App\UserdirectoryBundle\Controller;
 
 use App\CallLogBundle\Util\CallLogUtil;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 //use Symfony\Component\Routing\Annotation\Template;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -20,18 +20,15 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 /**
  * @Route("/test")
  */
-class TestBaseController extends AbstractController {
-
-//    protected $calllogUtil;
-//    public function __construct( CallLogUtil $calllogUtil ) {
-//        $this->calllogUtil = $calllogUtil;
-//    }
+class TestBaseController extends OrderAbstractController
+{
 
     /**
      * @Route("/container/testbase/", name="user_testbase_container")
      * @Template("AppUserdirectoryBundle/Testing/testing.html.twig")
      */
-    public function testBaseContainerAction( CallLogUtil $calllogUtil ) {
+    public function testbaseContainerAction() {
+    //public function testContainerAction( CallLogUtil $calllogUtil ) {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
@@ -44,7 +41,13 @@ class TestBaseController extends AbstractController {
         $user = $em->getRepository('AppUserdirectoryBundle:User')->find($user->getId());
         $msg = $msg . "; user=$user";
 
-        $id = $calllogUtil->getNextEncounterGeneratedId();
+        //$id = $calllogUtil->getNextEncounterGeneratedId();
+        //$msg = $msg . "; id=$id";
+
+        //$this->container ContainerInterface $container
+        //https://github.com/symfony/symfony/blob/5.0/src/Symfony/Bundle/FrameworkBundle/Controller/AbstractController.php
+        $calllogUtilDirect = $this->container->get('calllog_util');
+        $id = $calllogUtilDirect->getNextEncounterGeneratedId();
         $msg = $msg . "; id=$id";
 
         $this->get('session')->getFlashBag()->add(
@@ -57,5 +60,6 @@ class TestBaseController extends AbstractController {
             'title' => "TestBaseController"
         );
     }
+
 
 }

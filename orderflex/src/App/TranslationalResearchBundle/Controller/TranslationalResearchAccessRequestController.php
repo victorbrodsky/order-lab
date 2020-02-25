@@ -23,7 +23,7 @@ use App\UserdirectoryBundle\Controller\AuthorizedUserController;
 use App\UserdirectoryBundle\Entity\AdministrativeTitle;
 use App\UserdirectoryBundle\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;

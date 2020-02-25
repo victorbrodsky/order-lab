@@ -19,7 +19,7 @@ namespace App\OrderformBundle\Controller;
 
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -43,7 +43,7 @@ use App\OrderformBundle\Entity\Patient;
  *
  * @Route("/message")
  */
-class MessageController extends AbstractController {
+class MessageController extends OrderAbstractController {
 
     /**
      * Lists all Message entities.

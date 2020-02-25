@@ -83,8 +83,7 @@ use App\UserdirectoryBundle\Form\DataTransformer\SingleUserWrapperTransformer;
 use App\UserdirectoryBundle\Form\HierarchyFilterType;
 use App\UserdirectoryBundle\Util\UserSecurityUtil;
 use App\VacReqBundle\Entity\VacReqRequestTypeList;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-//use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+//use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -155,7 +154,7 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 /**
  * @Route("/admin")
  */
-class AdminController extends AbstractController
+class AdminController extends OrderAbstractController
 {
 
     /**
