@@ -273,7 +273,7 @@
                     {{ formmacros.field(form.email) }}
                 </div>
 
-                {% if messageForm is defined %}
+                {% if messageForm is defined and messageForm.accession is defined %}
                     {#{% for encounter in form.encounter %}#}
                         {#{% for procedure in encounter.procedure %}#}
                             {% for accession in messageForm.accession %}
