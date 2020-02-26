@@ -2651,6 +2651,18 @@ class CallLogUtil
         return $keytypemrn;
     }
 
+    public function getAccessionTypes() {
+        $accessionTypes = $this->em->getRepository('AppOrderformBundle:AccessionType')->findBy( array('type'=>array('default','user-added')) );
+
+        $accessionTypeArr = array();
+        foreach( $accessionTypes as $accessionType) {
+            $accessionTypeObject = array('id'=>$accessionType->getId(),'text'=>$accessionType."");
+            $accessionTypeArr[] = $accessionTypeObject;
+        }
+
+        return $accessionTypes;
+    }
+
     public function addDefaultLocation($encounter,$user,$system) {
 
         $sitename = $this->container->getParameter('calllog.sitename');

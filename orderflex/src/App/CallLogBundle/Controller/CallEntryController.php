@@ -22,6 +22,8 @@ namespace App\CallLogBundle\Controller;
 
 
 use App\CallLogBundle\Util\CallLogUtil;
+use App\OrderformBundle\Entity\Accession;
+use App\OrderformBundle\Entity\AccessionAccession;
 use App\UserdirectoryBundle\Util\UserServiceUtil;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\CallLogBundle\Form\CalllogFilterType;
@@ -1963,6 +1965,10 @@ class CallEntryController extends OrderAbstractController
             $mrntype = $defaultMrnType->getId();
         }
 
+        //accessiontype
+        $accessiontypes = $calllogUtil->getAccessionTypes();
+        //accessionnumber
+
         if( $cycle == 'show' ) {
             $disabled = true;
         } else {
@@ -2003,7 +2009,8 @@ class CallEntryController extends OrderAbstractController
             'attendingPhysicians-readonly' => false,
             'referringProviders-readonly' => false,
             'readonlyLocationType' => true, //lock the "Location Type" field (with the default "Encounter Location" value in it)
-            'enableDocumentUpload' => $enableDocumentUpload
+            'enableDocumentUpload' => $enableDocumentUpload,
+            'accessiontypes' => $accessiontypes
         );
 
         $form = $this->createForm(
@@ -2073,6 +2080,16 @@ class CallEntryController extends OrderAbstractController
 
         //add patient
         //$message->addPatient($patient);
+
+        //add accession for patient info section
+        $accession = new Accession();
+        $status='invalid';
+        $provider=null;
+        $source=null;
+        $accession->addAccession( new AccessionAccession($status,$provider,$source) );
+        $message->addAccession($accession);
+        $accessions = $message->getAccession();
+        //echo "accessions count=".count($accessions)."<br>";
 
         return $message;
     }

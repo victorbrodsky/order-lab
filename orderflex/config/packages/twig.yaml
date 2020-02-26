@@ -9,6 +9,7 @@ twig:
     form_themes:
         - 'form_div_layout.html.twig'
         #- 'form/form_errors.html.twig'
+    exception_controller: null
 
 #    default_path: '%kernel.project_dir%/src/App/UserdirectoryBundle/Resources/views'
 #    default_path: '%kernel.project_dir%/templates'

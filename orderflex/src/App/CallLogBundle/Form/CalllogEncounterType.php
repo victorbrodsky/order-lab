@@ -443,6 +443,22 @@ class CalllogEncounterType extends AbstractType
             },
         ));
 
+
+//        $builder->add('procedure', CollectionType::class, array(
+//            'entry_type' => CalllogProcedureType::class,
+//            'entry_options' => array(
+//                'form_custom_value' => $this->params,
+//                'form_custom_value_entity' => $this->entity
+//            ),
+//            'required' => false,
+//            'allow_add' => true,
+//            'allow_delete' => true,
+//            'label' => false,//" ",
+//            'by_reference' => false,
+//            'prototype' => true,
+//            'prototype_name' => '__procedure__',
+//        ));
+
     }
 
 

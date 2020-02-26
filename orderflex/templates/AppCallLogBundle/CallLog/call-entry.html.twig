@@ -82,7 +82,7 @@
 
         {% for patientForm in form.patient %}
 
-            {{ calllogmacros.patientInfoSection(patientForm,cycle,holderId,'Patient Info',formtype) }}
+            {{ calllogmacros.patientInfoSection(patientForm,cycle,holderId,'Patient Info',formtype,form) }}
 
             {#List previous entries#}
             <button id="calllog-list-previous-entries-btn"

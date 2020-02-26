@@ -133,6 +133,21 @@ class CalllogMessageType extends AbstractType
             ));
         //}
 
+        $builder->add('accession', CollectionType::class, array(
+            'entry_type' => CalllogAccessionType::class,
+            'entry_options' => array(
+                'form_custom_value' => $this->params,
+                'form_custom_value_entity' => $this->entity
+            ),
+            'required' => false,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'label' => false,//" ",
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__accession__',
+        ));
+
         if( $this->params['previousEncounters'] ) {
             if (1) {
                 $builder->add('encounterKeytype', TextType::class, array(
@@ -185,6 +200,8 @@ class CalllogMessageType extends AbstractType
             'mapped' => false,
             'attr' => array('class' => 'message-previousEncounterId')
         ));
+
+
 
         /////////////////////////////////////// messageCategory ///////////////////////////////////////
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {

@@ -159,7 +159,7 @@
 {% endmacro %}
 
 {#form - patient form#}
-{% macro patientInfoSection(form,cycle,holderId,title,formtype) %}
+{% macro patientInfoSection(form,cycle,holderId,title,formtype,messageForm) %}
 
     {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
 
@@ -272,6 +272,19 @@
                     {{ formmacros.field(form.phone) }}
                     {{ formmacros.field(form.email) }}
                 </div>
+
+                {% if messageForm is defined %}
+                    {#{% for encounter in form.encounter %}#}
+                        {#{% for procedure in encounter.procedure %}#}
+                            {% for accession in messageForm.accession %}
+                                    {% for accessionaccession in accession.accession %}
+                                        {{ formmacros.field(accessionaccession.keytype) }}
+                                        {{ formmacros.field(accessionaccession.field) }}
+                                    {% endfor %}
+                            {% endfor %}
+                        {#{% endfor %}#}
+                    {#{% endfor %}#}
+                {% endif %}
 
                 {% if readonlyEncounter %}
                     {% set reenterPatientIdPrefix = "_always_hidden" %}
