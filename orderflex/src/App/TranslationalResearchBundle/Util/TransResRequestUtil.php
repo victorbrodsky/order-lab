@@ -1666,7 +1666,8 @@ class TransResRequestUtil
     public function getDefaultStaticLogo() {
         //<img src="{{ asset(bundleFileName) }}" alt="{{ title }}"/>
         $filename = "wcmc_logo.jpg";
-        $bundleFileName = "bundles\\olegtranslationalresearch\\images\\".$filename;
+        //$bundleFileName = "bundles\\olegtranslationalresearch\\images\\".$filename;
+        $bundleFileName = "orderassets\\AppTranslationalResearchBundle\\images\\".$filename;
         return $bundleFileName;
     }
 

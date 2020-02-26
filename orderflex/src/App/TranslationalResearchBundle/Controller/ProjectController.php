@@ -2477,8 +2477,10 @@ class ProjectController extends OrderAbstractController
         //exit("ids=".$ids);
         //exit("limit=".$limit);
 
-        if( count($ids) == 0 ) {
-            exit("No Projects to Export to Excel");
+        if( $ids ) {
+            if( is_array($ids) && count($ids) == 0 ) {
+                exit("No Projects to Export to Excel");
+            }
         }
 
         if( !$ids ) {

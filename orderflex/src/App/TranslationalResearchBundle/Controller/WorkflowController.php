@@ -115,7 +115,7 @@ class WorkflowController extends OrderAbstractController
 //        }
 
         //$bundleFileName = '@AppTranslationalResearchBundle/Resources/public/images/'.$filename;
-        $bundleFileName = "bundles\\olegtranslationalresearch\\images\\".$filename;
+        $bundleFileName = "orderassets\\AppTranslationalResearchBundle\\images\\".$filename;
 
 //        $imagename = "Project Workflow";
 //

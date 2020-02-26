@@ -52,6 +52,8 @@ class CallLogSiteParametersController extends SiteParametersController
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
+        //exit("calllog indexAction");
+
         $this->getOrCreateNewCallLogParameters();
 
         return $this->indexParameters($request);
@@ -66,6 +68,7 @@ class CallLogSiteParametersController extends SiteParametersController
      */
     public function editAction(Request $request, $id)
     {
+        //exit("calllog editAction");
         return $this->editParameters($request,$id,'ROLE_CALLLOG_PATHOLOGY_ATTENDING');
     }
 

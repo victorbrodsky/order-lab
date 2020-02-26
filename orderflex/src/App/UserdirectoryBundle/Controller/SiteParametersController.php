@@ -83,6 +83,7 @@ class SiteParametersController extends OrderAbstractController
 //        }
 
         //testing
+        //exit("user indexAction");
         //$connection_channel = $this->getParameter('connection_channel');
         //echo "connection_channel=".$connection_channel."<br>";
 
@@ -204,6 +205,7 @@ class SiteParametersController extends OrderAbstractController
      */
     public function editAction(Request $request,$id)
     {
+        //exit("user editAction");
         return $this->editParameters($request,$id);
     }
 
