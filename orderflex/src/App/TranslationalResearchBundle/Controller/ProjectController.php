@@ -24,9 +24,10 @@ use App\TranslationalResearchBundle\Form\FilterType;
 use App\TranslationalResearchBundle\Form\ProjectStateType;
 use App\TranslationalResearchBundle\Form\ProjectType;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -44,8 +45,7 @@ class ProjectController extends OrderAbstractController
 {
 
     /**
-     * @Route("/", name="translationalresearch_home")
-     * @Method("GET")
+     * @Route("/", name="translationalresearch_home", methods={"GET"})
      */
     public function homeAction()
     {
@@ -70,19 +70,18 @@ class ProjectController extends OrderAbstractController
     /**
      * Lists all project entities.
      *
-     * @Route("/projects/", name="translationalresearch_project_index")
-     * @Route("/my-projects/", name="translationalresearch_my_project_index")
-     * @Route("/projects-where-i-am-the-requester/", name="translationalresearch_my_request_project_index")
-     * @Route("/draft-projects-where-i-am-the-requester/", name="translationalresearch_my_request_project_draft_index")
-     * @Route("/projects-i-have-reviewed/", name="translationalresearch_my_reviewed_project_index")
-     * @Route("/projects-pending-my-review/", name="translationalresearch_my_pending_review_project_index")
-     * @Route("/projects-awaiting-additional-info-to-be-reviewed/", name="translationalresearch_my_missinginfo_review_project_index")
+     * @Route("/projects/", name="translationalresearch_project_index", methods={"GET"})
+     * @Route("/my-projects/", name="translationalresearch_my_project_index", methods={"GET"})
+     * @Route("/projects-where-i-am-the-requester/", name="translationalresearch_my_request_project_index", methods={"GET"})
+     * @Route("/draft-projects-where-i-am-the-requester/", name="translationalresearch_my_request_project_draft_index", methods={"GET"})
+     * @Route("/projects-i-have-reviewed/", name="translationalresearch_my_reviewed_project_index", methods={"GET"})
+     * @Route("/projects-pending-my-review/", name="translationalresearch_my_pending_review_project_index", methods={"GET"})
+     * @Route("/projects-awaiting-additional-info-to-be-reviewed/", name="translationalresearch_my_missinginfo_review_project_index", methods={"GET"})
      *
-     * @Route("/active-project-requests-with-expired-approval/", name="translationalresearch_active_expired_project_index")
-     * @Route("/active-project-requests-with-approval-expiring-soon/", name="translationalresearch_active_expired_soon_project_index")
+     * @Route("/active-project-requests-with-expired-approval/", name="translationalresearch_active_expired_project_index", methods={"GET"})
+     * @Route("/active-project-requests-with-approval-expiring-soon/", name="translationalresearch_active_expired_soon_project_index", methods={"GET"})
      *
      * @Template("AppTranslationalResearchBundle/Project/index.html.twig")
-     * @Method("GET")
      */
     public function indexAction(Request $request)
     {
@@ -873,9 +872,8 @@ class ProjectController extends OrderAbstractController
     /**
      * Select new project specialty
      *
-     * @Route("/project/new", name="translationalresearch_project_new_selector")
+     * @Route("/project/new", name="translationalresearch_project_new_selector", methods={"GET","POST"})
      * @Template("AppTranslationalResearchBundle/Project/new-project-selector.html.twig")
-     * @Method({"GET", "POST"})
      */
     public function newProjectSelectorAction(Request $request)
     {
@@ -898,9 +896,8 @@ class ProjectController extends OrderAbstractController
     /**
      * Select new project specialty
      *
-     * @Route("/project/new/{specialtyStr}", name="translationalresearch_project_new")
+     * @Route("/project/new/{specialtyStr}", name="translationalresearch_project_new", methods={"GET","POST"})
      * @Template("AppTranslationalResearchBundle/Project/new.html.twig")
-     * @Method({"GET", "POST"})
      */
     public function newProjectAction(Request $request, $specialtyStr)
     {
@@ -1098,9 +1095,8 @@ class ProjectController extends OrderAbstractController
      * Get Project Edit page
      * Originally edit form generates a new entity Project with new id and same oid.
      *
-     * @Route("/project/edit/{id}", name="translationalresearch_project_edit")
+     * @Route("/project/edit/{id}", name="translationalresearch_project_edit", methods={"GET","POST"})
      * @Template("AppTranslationalResearchBundle/Project/edit.html.twig")
-     * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, Project $project)
     {
@@ -1386,9 +1382,8 @@ class ProjectController extends OrderAbstractController
     /**
      * Finds and displays a project entity.
      *
-     * @Route("/project/show/{id}", name="translationalresearch_project_show")
+     * @Route("/project/show/{id}", name="translationalresearch_project_show", methods={"GET"})
      * @Template("AppTranslationalResearchBundle/Project/show.html.twig")
-     * @Method("GET")
      */
     public function showAction(Request $request, Project $project)
     {
@@ -1469,9 +1464,8 @@ class ProjectController extends OrderAbstractController
     /**
      * Finds and displays a review form for this project entity.
      *
-     * @Route("/project/review/{id}", name="translationalresearch_project_review")
+     * @Route("/project/review/{id}", name="translationalresearch_project_review", methods={"GET"})
      * @Template("AppTranslationalResearchBundle/Project/review.html.twig")
-     * @Method("GET")
      */
     public function reviewAction(Request $request, Project $project)
     {
@@ -1573,9 +1567,8 @@ class ProjectController extends OrderAbstractController
     /**
      * Finds and displays a resubmit form for this project entity.
      *
-     * @Route("/project/resubmit/{id}", name="translationalresearch_project_resubmit")
+     * @Route("/project/resubmit/{id}", name="translationalresearch_project_resubmit", methods={"GET"})
      * @Template("AppTranslationalResearchBundle/Project/review.html.twig")
-     * @Method("GET")
      */
     public function resubmitAction(Request $request, Project $project)
     {
@@ -1614,9 +1607,8 @@ class ProjectController extends OrderAbstractController
 //    /**
 //     * Displays a form to edit an existing project entity.
 //     *
-//     * @Route("/project/{id}/simple/edit", name="translationalresearch_project_simple_edit")
+//     * @Route("/project/{id}/simple/edit", name="translationalresearch_project_simple_edit", methods={"GET","POST"})
 //     * @Template("AppTranslationalResearchBundle/Project/edit.html.twig")
-//     * @Method({"GET", "POST"})
 //     */
 //    public function editAction(Request $request, Project $project)
 //    {
@@ -1744,8 +1736,7 @@ class ProjectController extends OrderAbstractController
     /**
      * Cancel project
      *
-     * @Route("/cancel-project/{id}", name="translationalresearch_project_cancel")
-     * @Method("GET")
+     * @Route("/cancel-project/{id}", name="translationalresearch_project_cancel", methods={"GET"})
      */
     public function cancelAction(Request $request, Project $project)
     {
@@ -1799,8 +1790,7 @@ class ProjectController extends OrderAbstractController
     /**
      * Close project
      *
-     * @Route("/close-project/{id}", name="translationalresearch_project_close")
-     * @Method("GET")
+     * @Route("/close-project/{id}", name="translationalresearch_project_close", methods={"GET"})
      */
     public function closeAction(Request $request, Project $project)
     {
@@ -1872,8 +1862,7 @@ class ProjectController extends OrderAbstractController
     /**
      * Approve project
      *
-     * @Route("/approve-project/{id}", name="translationalresearch_project_approve")
-     * @Method("GET")
+     * @Route("/approve-project/{id}", name="translationalresearch_project_approve", methods={"GET"})
      */
     public function approveAction(Request $request, Project $project)
     {
@@ -1946,8 +1935,7 @@ class ProjectController extends OrderAbstractController
     /**
      * Deletes a project entity.
      *
-     * @Route("/project-delete/{id}", name="translationalresearch_project_delete")
-     * @Method("DELETE")
+     * @Route("/project-delete/{id}", name="translationalresearch_project_delete", methods={"DELETE"})
      */
     public function deleteAction(Request $request, Project $project)
     {
@@ -1968,8 +1956,7 @@ class ProjectController extends OrderAbstractController
     /**
      * Deletes a project entity.
      *
-     * @Route("/project-delete-get/{id}", name="translationalresearch_project_delete_get")
-     * @Method("GET")
+     * @Route("/project-delete-get/{id}", name="translationalresearch_project_delete_get", methods={"GET"})
      */
     public function deleteProjectAction(Request $request, Project $project)
     {
@@ -2004,8 +1991,7 @@ class ProjectController extends OrderAbstractController
     /**
      * Deletes a project entity.
      *
-     * @Route("/delete-multiple-projects/", name="translationalresearch_projects_multiple_delete")
-     * @Method("GET")
+     * @Route("/delete-multiple-projects/", name="translationalresearch_projects_multiple_delete", methods={"GET"})
      */
     public function deleteMultipleProjectsAction(Request $request)
     {
@@ -2268,9 +2254,8 @@ class ProjectController extends OrderAbstractController
 
 
     /**
-     * @Route("/project/set-state/{id}", name="translationalresearch_project_set_state")
+     * @Route("/project/set-state/{id}", name="translationalresearch_project_set_state", methods={"GET","POST"})
      * @Template("AppTranslationalResearchBundle/Project/set-state.html.twig")
-     * @Method({"GET","POST"})
      */
     public function setStateAction(Request $request, Project $project)
     {
@@ -2319,9 +2304,8 @@ class ProjectController extends OrderAbstractController
     }
 
     /**
-     * @Route("/project/thread-comments/{id}", name="translationalresearch_project_thread_comments")
+     * @Route("/project/thread-comments/{id}", name="translationalresearch_project_thread_comments", methods={"GET"})
      * @Template("AppTranslationalResearchBundle/Project/thread-comments.html.twig")
-     * @Method({"GET"})
      */
     public function threadCommentsAction(Request $request, $id)
     {
@@ -2351,9 +2335,8 @@ class ProjectController extends OrderAbstractController
     }
 
     /**
-     * @Route("/project/thread-comments/show/{id}", name="translationalresearch_project_thread_comments_show")
+     * @Route("/project/thread-comments/show/{id}", name="translationalresearch_project_thread_comments_show", methods={"GET"})
      * @Template("AppTranslationalResearchBundle/Project/thread-comments.html.twig")
-     * @Method({"GET"})
      */
     public function threadCommentsShowAction(Request $request, $id)
     {
@@ -2397,9 +2380,8 @@ class ProjectController extends OrderAbstractController
     /**
      * Finds and displays a resubmit form for this project entity.
      *
-     * @Route("/project/ajax/{id}", name="translationalresearch_get_project_ajax", options={"expose"=true})
+     * @Route("/project/ajax/{id}", name="translationalresearch_get_project_ajax", methods={"GET"}, options={"expose"=true})
      * @Template("AppTranslationalResearchBundle/Project/review.html.twig")
-     * @Method("GET")
      */
     public function getProjectAction(Request $request, Project $project)
     {

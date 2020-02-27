@@ -21,9 +21,10 @@ namespace App\TranslationalResearchBundle\Controller;
 use App\UserdirectoryBundle\Controller\SecurityController;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Symfony\Component\Security\Core\SecurityContext;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -46,9 +47,7 @@ class TranslationalResearchSecurityController extends SecurityController
 
 
     /**
-     * @Route("/setloginvisit/", name="translationalresearch_setloginvisit")
-     *
-     * @Method("GET")
+     * @Route("/setloginvisit/", name="translationalresearch_setloginvisit", methods={"GET"})
      */
     public function setAjaxLoginVisit( Request $request )
     {
@@ -58,8 +57,7 @@ class TranslationalResearchSecurityController extends SecurityController
 
 
     /**
-     * @Route("/no-permission", name="translationalresearch-nopermission")
-     * @Method("GET")
+     * @Route("/no-permission", name="translationalresearch-nopermission", methods={"GET"})
      * @Template("AppUserdirectoryBundle/Security/nopermission.html.twig")
      */
     public function actionNoPermission( Request $request )

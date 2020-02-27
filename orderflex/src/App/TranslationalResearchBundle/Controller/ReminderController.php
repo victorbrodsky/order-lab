@@ -8,9 +8,10 @@ use App\TranslationalResearchBundle\Entity\TransResRequest;
 use App\TranslationalResearchBundle\Form\FilterInvoiceType;
 use App\TranslationalResearchBundle\Form\InvoiceType;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -22,9 +23,8 @@ class ReminderController extends OrderAbstractController
 {
     
     /**
-     * @Route("/unpaid-invoice-reminder/show-summary", name="translationalresearch_unpaid_invoice_reminder_show")
-     * @Route("/unpaid-invoice-reminder/send-emails", name="translationalresearch_unpaid_invoice_reminder_send")
-     * @Method({"GET"})
+     * @Route("/unpaid-invoice-reminder/show-summary", name="translationalresearch_unpaid_invoice_reminder_show", methods={"GET"})
+     * @Route("/unpaid-invoice-reminder/send-emails", name="translationalresearch_unpaid_invoice_reminder_send", methods={"GET"})
      */
     public function unpaidInvoiceReminderAction( Request $request )
     {
@@ -101,9 +101,8 @@ class ReminderController extends OrderAbstractController
     /**
      * http://127.0.0.1/order/translational-research/project-request-review-reminder/show-summary
      *
-     * @Route("/project-request-review-reminder/show-summary", name="translationalresearch_project_reminder_show")
-     * @Route("/project-request-review-reminder/send-emails", name="translationalresearch_project_reminder_send")
-     * @Method({"GET"})
+     * @Route("/project-request-review-reminder/show-summary", name="translationalresearch_project_reminder_show", methods={"GET"})
+     * @Route("/project-request-review-reminder/send-emails", name="translationalresearch_project_reminder_send", methods={"GET"})
      */
     public function projectReminderAction( Request $request )
     {
@@ -214,16 +213,15 @@ class ReminderController extends OrderAbstractController
     /**
      * http://127.0.0.1/order/translational-research/work-request-pending-reminder/show-summary
      *
-     * @Route("/work-request-pending-reminder/show-summary", name="translationalresearch_request_pending_reminder_show")
-     * @Route("/work-request-pending-reminder/send-emails",  name="translationalresearch_request_pending_reminder_send")
+     * @Route("/work-request-pending-reminder/show-summary", name="translationalresearch_request_pending_reminder_show", methods={"GET"})
+     * @Route("/work-request-pending-reminder/send-emails",  name="translationalresearch_request_pending_reminder_send", methods={"GET"})
      *
-     * @Route("/work-request-completed-not-notified-reminder/show-summary", name="translationalresearch_request_completed_reminder_show")
-     * @Route("/work-request-completed-not-notified-reminder/send-emails",  name="translationalresearch_request_completed_reminder_send")
+     * @Route("/work-request-completed-not-notified-reminder/show-summary", name="translationalresearch_request_completed_reminder_show", methods={"GET"})
+     * @Route("/work-request-completed-not-notified-reminder/send-emails",  name="translationalresearch_request_completed_reminder_send", methods={"GET"})
      *
-     * @Route("/work-request-completed-no-invoice-issued-reminder/show-summary", name="translationalresearch_request_completed_no_invoice_issued_reminder_show")
-     * @Route("/work-request-completed-no-invoice-issued-reminder/send-emails",  name="translationalresearch_request_completed_no_invoice_issued_reminder_send")
+     * @Route("/work-request-completed-no-invoice-issued-reminder/show-summary", name="translationalresearch_request_completed_no_invoice_issued_reminder_show", methods={"GET"})
+     * @Route("/work-request-completed-no-invoice-issued-reminder/send-emails",  name="translationalresearch_request_completed_no_invoice_issued_reminder_send", methods={"GET"})
      *
-     * @Method({"GET"})
      */
     public function delayedRequestReminderAction( Request $request )
     {

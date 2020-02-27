@@ -29,9 +29,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use App\TranslationalResearchBundle\Entity\Project;
 use App\TranslationalResearchBundle\Entity\SpecialtyList;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
 
@@ -44,9 +45,8 @@ class ProjectFormNodeController extends ProjectController
     /**
      * Creates a new project entity with formnode.
      *
-     * @Route("/project/new", name="translationalresearch_project_new_selector")
+     * @Route("/project/new", name="translationalresearch_project_new_selector", methods={"GET","POST"})
      * @Template("AppTranslationalResearchBundle/Project/new-project-selector.html.twig")
-     * @Method({"GET", "POST"})
      */
     public function newProjectSelectorAction(Request $request)
     {
@@ -70,9 +70,8 @@ class ProjectFormNodeController extends ProjectController
     /**
      * Creates a new project entity with formnode.
      *
-     * @Route("/project/formnode/new/{specialtyStr}", name="translationalresearch_project_formnode_new")
+     * @Route("/project/formnode/new/{specialtyStr}", name="translationalresearch_project_formnode_new", methods={"GET","POST"})
      * @Template("AppTranslationalResearchBundle/Project/new.html.twig")
-     * @Method({"GET", "POST"})
      */
     public function newFormNodeAction(Request $request, $specialtyStr)
     {
@@ -268,9 +267,8 @@ class ProjectFormNodeController extends ProjectController
      * Get Project Edit page
      * Originally edit form generates a new entity Project with new id and same oid.
      *
-     * @Route("/project/formnode/edit/{id}", name="translationalresearch_project_formnode_edit")
+     * @Route("/project/formnode/edit/{id}", name="translationalresearch_project_formnode_edit", methods={"GET","POST"})
      * @Template("AppTranslationalResearchBundle/Project/edit.html.twig")
-     * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, Project $project)
     {
@@ -528,8 +526,7 @@ class ProjectFormNodeController extends ProjectController
 
 
     /**
-     * @Route("/project/generate-form-node-tree/", name="translationalresearch_generate_form_node_tree")
-     * @Method("GET")
+     * @Route("/project/generate-form-node-tree/", name="translationalresearch_generate_form_node_tree", methods={"GET"})
      */
     public function generateFormNodeAction(Request $request)
     {

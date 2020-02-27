@@ -4,16 +4,17 @@ namespace App\TranslationalResearchBundle\Controller;
 
 use App\UserdirectoryBundle\Util\LargeFileDownloader;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
 class DefaultController extends OrderAbstractController
 {
 
     /**
-     * @Route("/about", name="translationalresearch_about_page")
+     * @Route("/about", name="translationalresearch_about_page", methods={"GET"})
      * @Template("AppUserdirectoryBundle/Default/about.html.twig")
      */
     public function aboutAction( Request $request ) {
@@ -40,9 +41,8 @@ class DefaultController extends OrderAbstractController
     }
 
     /**
-     * @Route("/thanks-for-downloading/{id}/{sitename}", name="translationalresearch_thankfordownloading")
+     * @Route("/thanks-for-downloading/{id}/{sitename}", name="translationalresearch_thankfordownloading", methods={"GET"})
      * @Template("AppUserdirectoryBundle/Default/thanksfordownloading.html.twig")
-     * @Method("GET")
      */
     public function thankfordownloadingAction(Request $request, $id, $sitename) {
         return array(
@@ -53,9 +53,8 @@ class DefaultController extends OrderAbstractController
 
 
 //    /**
-//     * @Route("/", name="translationalresearch_home")
+//     * @Route("/", name="translationalresearch_home", methods={"GET"})
 //     * @Template("AppTranslationalResearchBundle/Default/index.html.twig")
-//     * @Method("GET")
 //     */
 //    public function indexAction( Request $request ) {
 //
@@ -98,8 +97,7 @@ class DefaultController extends OrderAbstractController
      * 3) Run Steps 1, 2, 3 and 4
      * 4) Run Step 5
      * 
-     * @Route("/import-old-data/{startRow}", name="translationalresearch_import_old_data")
-     * @Method({"GET"})
+     * @Route("/import-old-data/{startRow}", name="translationalresearch_import_old_data", methods={"GET"})
      */
     public function importOldDataAction(Request $request, $startRow=null) {
 

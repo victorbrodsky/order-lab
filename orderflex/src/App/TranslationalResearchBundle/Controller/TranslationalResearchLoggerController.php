@@ -20,9 +20,10 @@ namespace App\TranslationalResearchBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 use App\UserdirectoryBundle\Entity\Logger;
 use App\UserdirectoryBundle\Form\LoggerType;
 
@@ -39,8 +40,7 @@ class TranslationalResearchLoggerController extends LoggerController
     /**
      * Lists all Logger entities.
      *
-     * @Route("/", name="translationalresearch_logger")
-     * @Method("GET")
+     * @Route("/", name="translationalresearch_logger", methods={"GET"})
      * @Template("AppTranslationalResearchBundle/Logger/index.html.twig")
      */
     public function indexAction(Request $request)
@@ -57,8 +57,7 @@ class TranslationalResearchLoggerController extends LoggerController
 
 
     /**
-     * @Route("/user/{id}/all", name="translationalresearch_logger_user_all")
-     * @Method("GET")
+     * @Route("/user/{id}/all", name="translationalresearch_logger_user_all", methods={"GET"})
      * @Template("AppTranslationalResearchBundle/Logger/index.html.twig")
      */
     public function getAuditLogAllAction(Request $request)
@@ -87,8 +86,7 @@ class TranslationalResearchLoggerController extends LoggerController
 //    /**
 //     * Generation Log with eventTypes = "Generate Vacation Request"
 //     *
-//     * @Route("/generation-log/", name="translationalresearch_generation_log")
-//     * @Method("GET")
+//     * @Route("/generation-log/", name="translationalresearch_generation_log", methods={"GET"})
 //     * @Template("AppTranslationalResearchBundle/Logger/index.html.twig")
 //     */
 //    public function generationLogAction(Request $request)
@@ -100,8 +98,7 @@ class TranslationalResearchLoggerController extends LoggerController
 //    /**
 //     * Generation Log with eventTypes = "Generate Vacation Request" and users = current user id
 //     *
-//     * @Route("/event-log-per-user-per-event-type/", name="translationalresearch_my_generation_log")
-//     * @Method("GET")
+//     * @Route("/event-log-per-user-per-event-type/", name="translationalresearch_my_generation_log", methods={"GET"})
 //     * @Template("AppTranslationalResearchBundle/Logger/index.html.twig")
 //     */
 //    public function myGenerationLogAction(Request $request)
@@ -111,8 +108,7 @@ class TranslationalResearchLoggerController extends LoggerController
 
     /**
      *
-     * @Route("/event-log-per-object/", name="translationalresearch_event-log-per-object_log")
-     * @Method("GET")
+     * @Route("/event-log-per-object/", name="translationalresearch_event-log-per-object_log", methods={"GET"})
      * @Template("AppTranslationalResearchBundle/Logger/index.html.twig")
      */
     public function transresEventLogPerObjectAction(Request $request)

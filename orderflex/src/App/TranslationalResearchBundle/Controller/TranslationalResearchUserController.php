@@ -18,9 +18,10 @@
 namespace App\TranslationalResearchBundle\Controller;
 
 use App\UserdirectoryBundle\Controller\UserController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
 class TranslationalResearchUserController extends UserController
@@ -28,8 +29,7 @@ class TranslationalResearchUserController extends UserController
 
     /**
      * Optimized show user
-     * @Route("/user/{id}", name="translationalresearch_showuser", requirements={"id" = "\d+"}, options={"expose"=true})
-     * @Method("GET")
+     * @Route("/user/{id}", name="translationalresearch_showuser", methods={"GET"}, requirements={"id" = "\d+"}, options={"expose"=true})
      * @Template("AppUserdirectoryBundle/Profile/show_user.html.twig")
      */
     public function showUserOptimizedAction( Request $request, $id ) {
@@ -39,8 +39,7 @@ class TranslationalResearchUserController extends UserController
 
 
     /**
-     * @Route("/edit-user-profile/{id}", name="translationalresearch_user_edit", requirements={"id" = "\d+"})
-     * @Method("GET")
+     * @Route("/edit-user-profile/{id}", name="translationalresearch_user_edit", methods={"GET"}, requirements={"id" = "\d+"})
      * @Template("AppUserdirectoryBundle/Profile/edit_user.html.twig")
      */
     public function editUserAction(Request $request, $id)
@@ -60,8 +59,7 @@ class TranslationalResearchUserController extends UserController
     }
 
     /**
-     * @Route("/edit-user-profile/{id}", name="translationalresearch_user_update")
-     * @Method("PUT")
+     * @Route("/edit-user-profile/{id}", name="translationalresearch_user_update", methods={"PUT"})
      * @Template("AppUserdirectoryBundle/Profile/edit_user.html.twig")
      */
     public function updateUserAction(Request $request, $id)
@@ -75,8 +73,7 @@ class TranslationalResearchUserController extends UserController
     }
 
     /**
-     * @Route("/add-new-user-ajax/", name="translationalresearch_add_new_user_ajax", options={"expose"=true})
-     * @Method("POST")
+     * @Route("/add-new-user-ajax/", name="translationalresearch_add_new_user_ajax", methods={"POST"}, options={"expose"=true})
      */
     public function addNewUserAjaxAction(Request $request)
     {
