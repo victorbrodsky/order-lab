@@ -21,9 +21,10 @@ use App\OrderformBundle\Entity\ExternalId;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 
 use App\OrderformBundle\Entity\ImageAnalysisAlgorithmList;
 use App\OrderformBundle\Entity\ImageAnalysisOrder;
@@ -86,8 +87,7 @@ class PatientController extends OrderAbstractController
     /**
      * Lists all Patient entities.
      *
-     * @Route("/", name="scan-patient-list")
-     * @Method("GET")
+     * @Route("/", name="scan-patient-list", methods={"GET"})
      * @Template()
      */
     public function indexAction(Request $request)
@@ -106,8 +106,7 @@ class PatientController extends OrderAbstractController
     /**
      * New Patient.
      *
-     * @Route("/data-structure", name="scan-patient-new")
-     * @Method("GET")
+     * @Route("/data-structure", name="scan-patient-new", methods={"GET"})
      * @Template("AppOrderformBundle/Patient/new.html.twig")
      */
     public function newPatientAction()
@@ -203,9 +202,8 @@ class PatientController extends OrderAbstractController
     /**
      * Finds and displays a Patient entity.
      *
-     * @Route("/{id}", name="scan-patient-show")
-     * @Route("/info/{id}", name="scan-patient-info-show")
-     * @Method("GET")
+     * @Route("/{id}", name="scan-patient-show", methods={"GET"})
+     * @Route("/info/{id}", name="scan-patient-info-show", methods={"GET"})
      * @Template("AppOrderformBundle/Patient/new.html.twig")
      */
     public function showAction( Request $request, $id )
@@ -353,8 +351,7 @@ class PatientController extends OrderAbstractController
     /**
      * Displays a form to edit an existing Patient entity.
      *
-     * @Route("/{id}/edit", name="scan-patient-edit")
-     * @Method("GET")
+     * @Route("/{id}/edit", name="scan-patient-edit", methods={"GET"})
      * @Template("AppOrderformBundle/Patient/new.html.twig")
      */
     public function editAction( Request $request, $id )
@@ -487,8 +484,7 @@ class PatientController extends OrderAbstractController
     /**
      * Edits an existing Patient entity.
      *
-     * @Route("/{id}/edit", name="scan_patient_update")
-     * @Method("POST")
+     * @Route("/{id}/edit", name="scan_patient_update", methods={"POST"})
      * @Template("AppOrderformBundle/Patient/new.html.twig")
      */
     public function updateAction( Request $request, $id )
@@ -689,8 +685,7 @@ class PatientController extends OrderAbstractController
 
     //create Test Patient
     /**
-     * @Route("/data-structure/new-test-patient", name="scan_testpatient_new")
-     * @Method("GET")
+     * @Route("/data-structure/new-test-patient", name="scan_testpatient_new", methods={"GET"})
      * @Template("AppOrderformBundle/Patient/new.html.twig")
      */
     public function newTestPatientAction() {

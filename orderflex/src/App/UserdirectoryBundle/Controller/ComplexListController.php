@@ -19,7 +19,7 @@ namespace App\UserdirectoryBundle\Controller;
 
 
 use App\UserdirectoryBundle\Form\ListFilterType;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -42,7 +42,6 @@ class ComplexListController extends OrderAbstractController
 {
 
 
-    //     * @Method("GET")
     /**
      * @Route("/list/locations/", name="employees_locations_pathaction_list", methods={"GET"})
      * @Route("/list/buildings/", name="employees_buildings_pathaction_list", methods={"GET"})
@@ -204,7 +203,6 @@ class ComplexListController extends OrderAbstractController
      * @Route("/admin/grants/edit/{id}", name="employees_grants_pathaction_edit_standalone", methods={"GET"}, requirements={"id" = "\d+"})
      *
      *
-     * @Method("GET")
      * @Template("AppUserdirectoryBundle/ComplexList/new.html.twig")
      */
     public function showListAction(Request $request, $id)
@@ -265,7 +263,6 @@ class ComplexListController extends OrderAbstractController
      * @Route("/admin/research-labs/new", name="employees_researchlabs_pathaction_new_standalone", methods={"GET"})
      * @Route("/admin/grants/new", name="employees_grants_pathaction_new_standalone", methods={"GET"})
      *
-     * @Method("GET")
      * @Template("AppUserdirectoryBundle/ComplexList/new.html.twig")
      */
     public function newListAction(Request $request)
@@ -313,7 +310,6 @@ class ComplexListController extends OrderAbstractController
      * @Route("/admin/research-labs/new", name="employees_researchlabs_pathaction_new_post_standalone", methods={"POST"})
      * @Route("/admin/grants/new", name="employees_grants_pathaction_new_post_standalone", methods={"POST"})
      *
-     * @Method("POST")
      * @Template("AppUserdirectoryBundle/ComplexList/new.html.twig")
      */
     public function createListAction( Request $request )
@@ -429,7 +425,6 @@ class ComplexListController extends OrderAbstractController
      * @Route("/admin/research-labs/update/{id}", name="employees_researchlabs_pathaction_edit_put_standalone", methods={"PUT"},requirements={"id" = "\d+"})
      * @Route("/admin/grants/update/{id}", name="employees_grants_pathaction_edit_put_standalone", methods={"PUT"},requirements={"id" = "\d+"})
      *
-     * @Method("PUT")
      * @Template("AppUserdirectoryBundle/ComplexList/new.html.twig")
      */
     public function updateListAction( Request $request, $id )

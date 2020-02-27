@@ -20,9 +20,10 @@ namespace App\TranslationalResearchBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 
 use App\UserdirectoryBundle\Controller\SiteParametersController;
 
@@ -39,8 +40,7 @@ class TranslationalResearchSiteParametersController extends SiteParametersContro
     /**
      * Lists all SiteParameters entities.
      *
-     * @Route("/", name="translationalresearch_siteparameters")
-     * @Method("GET")
+     * @Route("/", name="translationalresearch_siteparameters", methods={"GET"})
      * @Template("AppUserdirectoryBundle/SiteParameters/index.html.twig")
      */
     public function indexAction(Request $request)
@@ -54,8 +54,7 @@ class TranslationalResearchSiteParametersController extends SiteParametersContro
     /**
      * Displays a form to edit an existing SiteParameters entity.
      *
-     * @Route("/{id}/edit", name="translationalresearch_siteparameters_edit")
-     * @Method("GET")
+     * @Route("/{id}/edit", name="translationalresearch_siteparameters_edit", methods={"GET"})
      * @Template("AppUserdirectoryBundle/SiteParameters/edit.html.twig")
      */
     public function editAction(Request $request,$id)
@@ -66,8 +65,7 @@ class TranslationalResearchSiteParametersController extends SiteParametersContro
     /**
      * Edits an existing SiteParameters entity.
      *
-     * @Route("/{id}", name="translationalresearch_siteparameters_update")
-     * @Method("PUT")
+     * @Route("/{id}", name="translationalresearch_siteparameters_update", methods={"PUT"})
      * @Template("AppUserdirectoryBundle/SiteParameters/edit.html.twig")
      */
     public function updateAction(Request $request, $id)

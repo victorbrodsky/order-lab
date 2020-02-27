@@ -20,9 +20,10 @@ namespace App\CallLogBundle\Controller;
 
 use App\UserdirectoryBundle\Controller\SecurityController;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -45,9 +46,7 @@ class CallLogSecurityController extends SecurityController
 
 
     /**
-     * @Route("/setloginvisit/", name="calllog_setloginvisit")
-     *
-     * @Method("GET")
+     * @Route("/setloginvisit/", name="calllog_setloginvisit", methods={"GET"})
      */
     public function setAjaxLoginVisit( Request $request )
     {
@@ -57,8 +56,7 @@ class CallLogSecurityController extends SecurityController
 
 
     /**
-     * @Route("/no-permission", name="calllog-nopermission")
-     * @Method("GET")
+     * @Route("/no-permission", name="calllog-nopermission", methods={"GET"})
      * @Template("AppUserdirectoryBundle/Security/nopermission.html.twig")
      */
     public function actionNoPermission( Request $request )

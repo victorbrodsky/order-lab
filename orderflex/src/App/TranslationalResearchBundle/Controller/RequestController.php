@@ -37,8 +37,9 @@ use App\TranslationalResearchBundle\Form\TransResRequestType;
 use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use App\UserdirectoryBundle\Form\ListFilterType;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -55,10 +56,9 @@ class RequestController extends OrderAbstractController
     /**
      * Creates a new request entity with formnode.
      *
-     * @Route("/project/{id}/work-request/new/", name="translationalresearch_request_new")
-     * @Route("/work-request/new/", name="translationalresearch_new_standalone_request")
+     * @Route("/project/{id}/work-request/new/", name="translationalresearch_request_new", methods={"GET","POST"})
+     * @Route("/work-request/new/", name="translationalresearch_new_standalone_request", methods={"GET","POST"})
      * @Template("AppTranslationalResearchBundle/Request/new.html.twig")
-     * @Method({"GET", "POST"})
      */
     public function newFormNodeAction(Request $request, Project $project=null)
     {
@@ -301,9 +301,8 @@ class RequestController extends OrderAbstractController
     /**
      * Get TransResRequest Edit page
      *
-     * @Route("/work-request/edit/{id}", name="translationalresearch_request_edit")
+     * @Route("/work-request/edit/{id}", name="translationalresearch_request_edit", methods={"GET","POST"})
      * @Template("AppTranslationalResearchBundle/Request/new.html.twig")
-     * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, TransResRequest $transresRequest)
     {
@@ -890,10 +889,9 @@ class RequestController extends OrderAbstractController
     /**
      * Displays the list of requests for the given project.
      *
-     * @Route("/work-request/show/{id}", name="translationalresearch_request_show")
-     * @Route("/work-request/show-with-packingslip/{id}", name="translationalresearch_request_show_with_packingslip")
+     * @Route("/work-request/show/{id}", name="translationalresearch_request_show", methods={"GET"})
+     * @Route("/work-request/show-with-packingslip/{id}", name="translationalresearch_request_show_with_packingslip", methods={"GET"})
      * @Template("AppTranslationalResearchBundle/Request/new.html.twig")
-     * @Method("GET")
      */
     public function showAction(Request $request, TransResRequest $transresRequest)
     {
@@ -981,9 +979,8 @@ class RequestController extends OrderAbstractController
     /**
      * Finds and displays all requests for the given project
      *
-     * @Route("/project/{id}/requests", name="translationalresearch_request_index")
+     * @Route("/project/{id}/requests", name="translationalresearch_request_index", methods={"GET"})
      * @Template("AppTranslationalResearchBundle/Request/index.html.twig")
-     * @Method("GET")
      */
     public function indexAction(Request $request, Project $project)
     {
@@ -1026,9 +1023,8 @@ class RequestController extends OrderAbstractController
     /**
      * Finds and displays the filtered requests lists
      *
-     * @Route("/work-requests/list/", name="translationalresearch_request_index_filter")
+     * @Route("/work-requests/list/", name="translationalresearch_request_index_filter", methods={"GET"})
      * @Template("AppTranslationalResearchBundle/Request/index.html.twig")
-     * @Method("GET")
      */
     public function myRequestsAction(Request $request)
     {
@@ -2094,8 +2090,7 @@ class RequestController extends OrderAbstractController
 //    }
 
     /**
-     * @Route("/download-spreadsheet/", name="translationalresearch_download_request_spreadsheet")
-     * @Method({"POST"})
+     * @Route("/download-spreadsheet/", name="translationalresearch_download_request_spreadsheet", methods={"POST"})
      */
     public function downloadInvoicesCsvAction( Request $request ) {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
@@ -2285,8 +2280,7 @@ class RequestController extends OrderAbstractController
 
 
     /**
-     * @Route("/request/generate-form-node-tree/", name="translationalresearch_generate_form_node_tree_request")
-     * @Method("GET")
+     * @Route("/request/generate-form-node-tree/", name="translationalresearch_generate_form_node_tree_request", methods={"GET"})
      */
     public function generateFormNodeAction(Request $request)
     {
@@ -2306,9 +2300,8 @@ class RequestController extends OrderAbstractController
     /**
      * Finds and displays a progress review form for this request entity.
      *
-     * @Route("/work-request/progress/review/{id}", name="translationalresearch_request_review_progress_state")
+     * @Route("/work-request/progress/review/{id}", name="translationalresearch_request_review_progress_state", methods={"GET"})
      * @Template("AppTranslationalResearchBundle/Request/review.html.twig")
-     * @Method("GET")
      */
     public function reviewProgressAction(Request $request, TransResRequest $transresRequest)
     {
@@ -2358,9 +2351,8 @@ class RequestController extends OrderAbstractController
     /**
      * Finds and displays a billing review form for this request entity.
      *
-     * @Route("/work-request/billing/review/{id}", name="translationalresearch_request_review_billing_state")
+     * @Route("/work-request/billing/review/{id}", name="translationalresearch_request_review_billing_state", methods={"GET"})
      * @Template("AppTranslationalResearchBundle/Request/review.html.twig")
-     * @Method("GET")
      */
     public function reviewBillingAction(Request $request, TransResRequest $transresRequest)
     {
@@ -2403,8 +2395,7 @@ class RequestController extends OrderAbstractController
 
 
     /**
-     * @Route("/request/update-irb-exp-date/", name="translationalresearch_update_irb_exp_date", options={"expose"=true})
-     * @Method({"GET", "POST"})
+     * @Route("/request/update-irb-exp-date/", name="translationalresearch_update_irb_exp_date", methods={"GET","POST"}, options={"expose"=true})
      */
     public function updateIrbExpDateAction( Request $request ) {
         //set permission: project irb reviewer or admin
@@ -2482,9 +2473,8 @@ class RequestController extends OrderAbstractController
 
 
     /**
-     * @Route("/request/fee-schedule", name="translationalresearchfeesschedule-list")
+     * @Route("/request/fee-schedule", name="translationalresearchfeesschedule-list", methods={"GET"})
      * @Template("AppTranslationalResearchBundle/Request/fee-schedule.html.twig")
-     * @Method("GET")
      */
     public function feeScheduleAction(Request $request)
     {
@@ -2571,8 +2561,7 @@ class RequestController extends OrderAbstractController
     /**
      * Deletes a request entity.
      *
-     * @Route("/delete-multiple-requests/", name="translationalresearch_requests_multiple_delete")
-     * @Method("GET")
+     * @Route("/delete-multiple-requests/", name="translationalresearch_requests_multiple_delete", methods={"GET"})
      */
     public function deleteMultipleProjectsAction(Request $request)
     {
@@ -2633,8 +2622,7 @@ class RequestController extends OrderAbstractController
      * http://127.0.0.1/order/translational-research/project-typeahead-search/oid/100/APCP33
      *
      * Used by typeahead js
-     * @Route("/project-typeahead-search/{type}/{limit}/{search}", name="translationalresearch_project_typeahead_search", options={"expose"=true})
-     * @Method("GET")
+     * @Route("/project-typeahead-search/{type}/{limit}/{search}", name="translationalresearch_project_typeahead_search", methods={"GET"}, options={"expose"=true})
      */
     public function getUserDataSearchAction(Request $request) {
 

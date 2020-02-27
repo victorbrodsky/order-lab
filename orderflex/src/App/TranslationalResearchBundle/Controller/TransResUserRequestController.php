@@ -25,9 +25,10 @@
 namespace App\TranslationalResearchBundle\Controller;
 
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use App\UserdirectoryBundle\Controller\UserRequestController;
 
@@ -46,8 +47,7 @@ class TransResUserRequestController extends UserRequestController
     /**
      * Displays a form to create a new UserRequest entity.
      *
-     * @Route("/account-requests/new", name="translationalresearch_accountrequest_new")
-     * @Method("GET")
+     * @Route("/account-requests/new", name="translationalresearch_accountrequest_new", methods={"GET"})
      * @Template("AppUserdirectoryBundle/UserRequest/account_request.html.twig")
      */
     public function newAction()
@@ -58,8 +58,7 @@ class TransResUserRequestController extends UserRequestController
     /**
      * Creates a new UserRequest entity.
      *
-     * @Route("/account-requests/new", name="translationalresearch_accountrequest_create")
-     * @Method("POST")
+     * @Route("/account-requests/new", name="translationalresearch_accountrequest_create", methods={"POST"})
      * @Template("AppUserdirectoryBundle/UserRequest/account_request.html.twig")
      */
     public function createAction(Request $request)
@@ -71,8 +70,7 @@ class TransResUserRequestController extends UserRequestController
     /**
      * Lists all UserRequest entities.
      *
-     * @Route("/account-requests", name="translationalresearch_accountrequest")
-     * @Method("GET")
+     * @Route("/account-requests", name="translationalresearch_accountrequest", methods={"GET"})
      * @Template("AppUserdirectoryBundle/UserRequest/index.html.twig")
      */
     public function indexAction( Request $request )
@@ -82,8 +80,7 @@ class TransResUserRequestController extends UserRequestController
 
 
     /**
-     * @Route("/account-requests/{id}/{status}/status", name="translationalresearch_accountrequest_status", requirements={"id" = "\d+"})
-     * @Method("GET")
+     * @Route("/account-requests/{id}/{status}/status", name="translationalresearch_accountrequest_status", methods={"GET"}, requirements={"id" = "\d+"})
      * @Template("AppUserdirectoryBundle/UserRequest/index.html.twig")
      */
     public function statusAction($id, $status)
@@ -94,8 +91,7 @@ class TransResUserRequestController extends UserRequestController
     /**
      * Update (Approve) a new UserRequest entity.
      *
-     * @Route("/account-requests-approve", name="translationalresearch_accountrequest_approve")
-     * @Method("POST")
+     * @Route("/account-requests-approve", name="translationalresearch_accountrequest_approve", methods={"POST"})
      * @Template("AppUserdirectoryBundle/UserRequest/index.html.twig")
      */
     public function approveUserAccountRequestAction(Request $request)

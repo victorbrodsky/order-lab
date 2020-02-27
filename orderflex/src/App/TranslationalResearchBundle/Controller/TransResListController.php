@@ -19,9 +19,9 @@ namespace App\TranslationalResearchBundle\Controller;
 
 use App\UserdirectoryBundle\Controller\ListController;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
 class TransResListController extends ListController
@@ -32,7 +32,6 @@ class TransResListController extends ListController
     /**
      * @Route("/list/translational-research-work-request-products-and-services/", name="transresrequestcategorytypes-list_translationalresearch", methods={"GET"})
      *
-     * @Method("GET")
      * @Template("AppUserdirectoryBundle/ListForm/index.html.twig")
      */
     public function indexAction(Request $request)
@@ -49,10 +48,8 @@ class TransResListController extends ListController
     }
 
     //Custom Antibody list
-    //@Method("GET")
     /**
      * @Route("/list/antibodies/", name="antibodies-list_translationalresearch", methods={"GET"})
-     * @Method("GET")
      * @Template("AppTranslationalResearchBundle/Request/antibodies.html.twig")
      */
     public function indexAntibodiesAction(Request $request)
@@ -73,11 +70,9 @@ class TransResListController extends ListController
     }
 
 
-    //@Method("POST")
     /**
      * @Route("/list/translational-research-work-request-products-and-services/", name="transresrequestcategorytypes_create_translationalresearch", methods={"POST"})
      * @Route("/list/antibodies/", name="antibodies_create_translationalresearch", methods={"POST"})
-     * @Method("POST")
      * @Template("AppUserdirectoryBundle/ListForm/new.html.twig")
      */
     public function createAction(Request $request)
@@ -98,7 +93,6 @@ class TransResListController extends ListController
      * @Route("/list/translational-research-work-request-products-and-services/new", name="transresrequestcategorytypes_new_translationalresearch", methods={"GET"})
      * @Route("/list/antibodies/new", name="antibodies_new_translationalresearch", methods={"GET"})
      *
-     * @Method("GET")
      * @Template("AppUserdirectoryBundle/ListForm/new.html.twig")
      */
     public function newAction(Request $request)
@@ -117,7 +111,6 @@ class TransResListController extends ListController
      * @Route("/list/translational-research-work-request-products-and-services/{id}", name="transresrequestcategorytypes_show_translationalresearch", methods={"GET"})
      * @Route("/list/antibodies/{id}", name="antibodies_show_translationalresearch", methods={"GET"})
      *
-     * @Method("GET")
      * @Template("AppUserdirectoryBundle/ListForm/show.html.twig")
      */
     public function showAction(Request $request,$id)
@@ -137,7 +130,6 @@ class TransResListController extends ListController
      * @Route("/list/translational-research-work-request-products-and-services/{id}/edit", name="transresrequestcategorytypes_edit_translationalresearch", methods={"GET"})
      * @Route("/list/antibodies/{id}/edit", name="antibodies_edit_translationalresearch", methods={"GET"})
      *
-     * @Method("GET")
      * @Template("AppUserdirectoryBundle/ListForm/edit.html.twig")
      */
     public function editAction(Request $request,$id)
@@ -156,7 +148,6 @@ class TransResListController extends ListController
      * @Route("/list/translational-research-work-request-products-and-services/{id}", name="transresrequestcategorytypes_update_translationalresearch", methods={"PUT"})
      * @Route("/list/antibodies/{id}", name="antibodies_update_translationalresearch", methods={"PUT"})
      *
-     * @Method("PUT")
      * @Template("AppUserdirectoryBundle/ListForm/edit.html.twig")
      */
     public function updateAction(Request $request, $id)

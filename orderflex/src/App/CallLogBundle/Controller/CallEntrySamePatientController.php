@@ -46,9 +46,10 @@ use App\OrderformBundle\Helper\ErrorHelper;
 use App\UserdirectoryBundle\Entity\ModifierInfo;
 use App\UserdirectoryBundle\Entity\Spot;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -291,9 +292,8 @@ class CallEntrySamePatientController extends CallEntryController
 
     /**
      * Save Call Log Entry Same Patient
-     * @Route("/entry/same-patient/save", name="calllog_save_entry_same_patient", options={"expose"=true})
+     * @Route("/entry/same-patient/save", name="calllog_save_entry_same_patient", methods={"POST"}, options={"expose"=true})
      * @Template("AppCallLogBundle/CallLog/call-entry-same-patient.html.twig")
-     * @Method("POST")
      */
     public function saveEntrySamePatientAction(Request $request)
     {

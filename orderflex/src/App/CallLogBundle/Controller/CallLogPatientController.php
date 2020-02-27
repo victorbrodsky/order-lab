@@ -41,8 +41,9 @@ use App\OrderformBundle\Entity\PatientSuffix;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 use App\OrderformBundle\Controller\PatientController;
@@ -60,8 +61,7 @@ class CallLogPatientController extends PatientController {
     /**
      * Finds and displays a Patient entity.
      *
-     * @Route("/patient/info/{id}", name="calllog_patient_show", options={"expose"=true})
-     * @Method("GET")
+     * @Route("/patient/info/{id}", name="calllog_patient_show", methods={"GET"}, options={"expose"=true})
      * @Template("AppOrderformBundle/Patient/new.html.twig")
      */
     public function showAction( Request $request, $id )
@@ -90,8 +90,7 @@ class CallLogPatientController extends PatientController {
      * Displays a form to view an existing Patient entity by mrn.
      * Test 'show-tree-depth': http://localhost/order/call-log-book/patient/view-patient-record?mrn=testmrn-1&mrntype=16&show-tree-depth=2
      *
-     * @Route("/patient/view-patient-record", name="calllog_patient_view_by_mrn", options={"expose"=true})
-     * @Method("GET")
+     * @Route("/patient/view-patient-record", name="calllog_patient_view_by_mrn", methods={"GET"}, options={"expose"=true})
      * @Template("AppOrderformBundle/Patient/new.html.twig")
      */
     public function viewPatientByMrnAction( Request $request )
@@ -175,8 +174,7 @@ class CallLogPatientController extends PatientController {
     /**
      * Displays a form to edit an existing Patient entity by id.
      *
-     * @Route("/patient/{id}/edit", name="calllog_patient_edit", options={"expose"=true})
-     * @Method("GET")
+     * @Route("/patient/{id}/edit", name="calllog_patient_edit", methods={"GET"}, options={"expose"=true})
      * @Template("AppOrderformBundle/Patient/new.html.twig")
      */
     public function editAction( Request $request, $id )
@@ -208,8 +206,7 @@ class CallLogPatientController extends PatientController {
      *
      * ////Route("/patient/edit-by-mrn/{mrn}/{mrntype}", name="calllog_patient_edit_by_mrn", options={"expose"=true})
      *
-     * @Route("/patient/edit-patient-record", name="calllog_patient_edit_by_mrn", options={"expose"=true})
-     * @Method("GET")
+     * @Route("/patient/edit-patient-record", name="calllog_patient_edit_by_mrn", methods={"GET"}, options={"expose"=true})
      * @Template("AppOrderformBundle/Patient/new.html.twig")
      */
     public function editPatientByMrnAction( Request $request )
@@ -303,8 +300,7 @@ class CallLogPatientController extends PatientController {
     /**
      * Edits an existing Patient entity.
      *
-     * @Route("/patient/{id}/edit", name="calllog_patient_update", options={"expose"=true})
-     * @Method("POST")
+     * @Route("/patient/{id}/edit", name="calllog_patient_update", methods={"POST"}, options={"expose"=true})
      * @Template("AppOrderformBundle/Patient/new.html.twig")
      */
     public function updateAction( Request $request, $id )
@@ -327,9 +323,8 @@ class CallLogPatientController extends PatientController {
     /**
      * Displays a form to edit patient info only (not encounters)
      *
-     * @Route("/patient-demographics/{id}", name="calllog_single_patient_view")
+     * @Route("/patient-demographics/{id}", name="calllog_single_patient_view", methods={"GET"})
      * @Template("AppCallLogBundle/DataQuality/single-patient-edit.html.twig")
-     * @Method("GET")
      */
     public function patientSingleViewAction(Request $request, Patient $patient)
     {
@@ -357,9 +352,8 @@ class CallLogPatientController extends PatientController {
     /**
      * Displays a form to edit patient info only (not encounters)
      *
-     * @Route("/patient-demographics/edit/{id}", name="calllog_single_patient_edit")
+     * @Route("/patient-demographics/edit/{id}", name="calllog_single_patient_edit", methods={"GET","POST"})
      * @Template("AppCallLogBundle/DataQuality/single-patient-edit.html.twig")
-     * @Method({"GET", "POST"})
      */
     public function patientSingleEditAction(Request $request, Patient $patient)
     {
@@ -1074,8 +1068,7 @@ class CallLogPatientController extends PatientController {
 
     //calllog-list-previous-entries
     /**
-     * @Route("/patient/list-previous-entries/", name="calllog-list-previous-entries", options={"expose"=true})
-     * @Method({"GET", "POST"})
+     * @Route("/patient/list-previous-entries/", name="calllog-list-previous-entries", methods={"GET","POST"}, options={"expose"=true})
      */
     public function listPatientPreviousEntriesAction(Request $request)
     {
@@ -1364,8 +1357,7 @@ class CallLogPatientController extends PatientController {
     }
 
     /**
-     * @Route("/patient/list-previous-tasks/", name="calllog-list-previous-tasks", options={"expose"=true})
-     * @Method({"GET", "POST"})
+     * @Route("/patient/list-previous-tasks/", name="calllog-list-previous-tasks", methods={"GET","POST"}, options={"expose"=true})
      */
     public function listPatientPreviousTasksAction(Request $request)
     {
@@ -1606,8 +1598,7 @@ class CallLogPatientController extends PatientController {
     /**
      * Get previous encounters for a given patient. Use previous entries (listPatientPreviousEntriesAction) html result?
      *
-     * @Route("/patient/get-previous-encounters", name="calllog-get-previous-encounters", options={"expose"=true})
-     * @Method("GET")
+     * @Route("/patient/get-previous-encounters", name="calllog-get-previous-encounters", methods={"GET"}, options={"expose"=true})
      */
     public function getPreviousEncountersAction(Request $request)
     {
@@ -1646,8 +1637,7 @@ class CallLogPatientController extends PatientController {
     /**
      * Get previous encounter info by id
      *
-     * @Route("/patient/get-encounter-by-id", name="calllog-get-encounter-by-id", options={"expose"=true})
-     * @Method("GET")
+     * @Route("/patient/get-encounter-by-id", name="calllog-get-encounter-by-id", methods={"GET"}, options={"expose"=true})
      */
     public function getEncounterByIdAction(Request $request)
     {

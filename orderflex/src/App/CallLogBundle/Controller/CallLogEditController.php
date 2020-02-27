@@ -24,9 +24,10 @@ use App\UserdirectoryBundle\Entity\ModifierInfo;
 use App\UserdirectoryBundle\Entity\Spot;
 use App\UserdirectoryBundle\Entity\Tracker;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -37,9 +38,8 @@ class CallLogEditController extends CallEntryController
 {
 
     /**
-     * @Route("/delete/{messageOid}/{messageVersion}", name="calllog_delete")
+     * @Route("/delete/{messageOid}/{messageVersion}", name="calllog_delete", methods={"GET"})
      * @Template("AppUserdirectoryBundle/Default/about.html.twig")
-     * @Method("GET")
      */
     public function deleteMessageAction(Request $request, $messageOid, $messageVersion)
     {
@@ -72,9 +72,8 @@ class CallLogEditController extends CallEntryController
 
 
     /**
-     * @Route("/un-delete/{messageOid}/{messageVersion}", name="calllog_undelete")
+     * @Route("/un-delete/{messageOid}/{messageVersion}", name="calllog_undelete", methods={"GET"})
      * @Template("AppUserdirectoryBundle/Default/about.html.twig")
-     * @Method("GET")
      */
     public function unDeleteMessageAction(Request $request, $messageOid, $messageVersion)
     {
@@ -172,11 +171,10 @@ class CallLogEditController extends CallEntryController
 
     /**
      * Get Call Log Entry Message Edit page
-     * @Route("/entry/edit/{messageOid}/{messageVersion}", name="calllog_callentry_edit")
-     * @Route("/entry/amend/{messageOid}/{messageVersion}", name="calllog_callentry_amend")
-     * @Route("/entry/edit-latest-encounter/{messageOid}/{messageVersion}", name="calllog_callentry_edit_latest_encounter")
-     * @Route("/entry/amend-latest-encounter/{messageOid}/{messageVersion}", name="calllog_callentry_amend_latest_encounter")
-     * @Method("GET")
+     * @Route("/entry/edit/{messageOid}/{messageVersion}", name="calllog_callentry_edit", methods={"GET"})
+     * @Route("/entry/amend/{messageOid}/{messageVersion}", name="calllog_callentry_amend", methods={"GET"})
+     * @Route("/entry/edit-latest-encounter/{messageOid}/{messageVersion}", name="calllog_callentry_edit_latest_encounter", methods={"GET"})
+     * @Route("/entry/amend-latest-encounter/{messageOid}/{messageVersion}", name="calllog_callentry_amend_latest_encounter", methods={"GET"})
      * @Template("AppCallLogBundle/CallLog/call-entry-edit.html.twig")
      */
     public function getCallLogEntryAction(Request $request, $messageOid, $messageVersion=null)
@@ -442,9 +440,8 @@ class CallLogEditController extends CallEntryController
 
     /**
      * Save/Update Call Log Entry
-     * @Route("/entry/update/{messageId}/{cycle}", name="calllog_update_entry", options={"expose"=true})
+     * @Route("/entry/update/{messageId}/{cycle}", name="calllog_update_entry", methods={"POST"}, options={"expose"=true})
      * @Template("AppCallLogBundle/CallLog/call-entry-edit.html.twig")
-     * @Method("POST")
      */
     public function updateEntryAction(Request $request, $messageId, $cycle)
     {
@@ -917,8 +914,7 @@ class CallLogEditController extends CallEntryController
 
     /**
      * Check if a new message/encounter version already exists for provided message/entry family.
-     * @Route("/entry/check-message-version", name="calllog-check-message-version", options={"expose"=true})
-     * @Method("GET")
+     * @Route("/entry/check-message-version", name="calllog-check-message-version", methods={"GET"}, options={"expose"=true})
      */
     public function checkMessageVersionAction(Request $request)
     {

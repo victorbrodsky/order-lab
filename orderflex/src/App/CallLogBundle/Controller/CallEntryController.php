@@ -57,9 +57,10 @@ use App\UserdirectoryBundle\Entity\Spot;
 use Knp\Component\Pager\PaginatorInterface;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -95,10 +96,10 @@ class CallEntryController extends OrderAbstractController
 
     /**
      * Case List Page
-     * @Route("/", name="calllog_home")
+     * @Route("/", name="calllog_home", methods={"GET"})
      *
      * Alerts: filtered case list
-     * @Route("/alerts/", name="calllog_alerts")
+     * @Route("/alerts/", name="calllog_alerts", methods={"GET"})
      *
      * @Template("AppCallLogBundle/CallLog/home.html.twig")
      */
@@ -1427,9 +1428,8 @@ class CallEntryController extends OrderAbstractController
 
     /**
      * Save Call Log Entry
-     * @Route("/entry/save", name="calllog_save_entry", options={"expose"=true})
+     * @Route("/entry/save", name="calllog_save_entry", methods={"POST"}, options={"expose"=true})
      * @Template("AppCallLogBundle/CallLog/call-entry.html.twig")
-     * @Method("POST")
      */
     public function saveEntryAction(Request $request)
     {
@@ -2099,8 +2099,7 @@ class CallEntryController extends OrderAbstractController
     /**
      * NOT USED (search is displayed in the home page)
      * Search Call Entry
-     * @Route("/callentry/search", name="calllog_search_callentry")
-     * @Method("GET")
+     * @Route("/callentry/search", name="calllog_search_callentry", methods={"GET"})
      * @Template()
      */
     public function searchCallEntryAction(Request $request)
@@ -2154,8 +2153,7 @@ class CallEntryController extends OrderAbstractController
 
     /**
      * Search Patient
-     * @Route("/patient/search", name="calllog_search_patient", options={"expose"=true})
-     * @Method("GET")
+     * @Route("/patient/search", name="calllog_search_patient", methods={"GET"}, options={"expose"=true})
      * @Template()
      */
     public function patientSearchAction(Request $request)
@@ -2795,8 +2793,7 @@ class CallEntryController extends OrderAbstractController
 
     /**
      * Create a new Patient
-     * @Route("/patient/create", name="calllog_create_patient", options={"expose"=true})
-     * @Method("GET")
+     * @Route("/patient/create", name="calllog_create_patient", methods={"GET"}, options={"expose"=true})
      * @Template()
      */
     public function createPatientAction(Request $request)
@@ -3210,8 +3207,7 @@ class CallEntryController extends OrderAbstractController
 
     /**
      * Get Patient Titles according to a new encounter date specified by nowStr
-     * @Route("/patient/title/", name="calllog_get_patient_title", options={"expose"=true})
-     * @Method("GET")
+     * @Route("/patient/title/", name="calllog_get_patient_title", methods={"GET"}, options={"expose"=true})
      */
     public function getPatientTitleAction(Request $request) {
 
@@ -3256,9 +3252,8 @@ class CallEntryController extends OrderAbstractController
     /**
      * Get Call Log Entry Message
      * TODO: make messageVersion can be null and find by messageOid only by the most recent version
-     * @Route("/entry/view/{messageOid}/{messageVersion}", name="calllog_callentry_view")
-     * @Route("/entry/view-latest-encounter/{messageOid}/{messageVersion}", name="calllog_callentry_view_latest_encounter")
-     * @Method("GET")
+     * @Route("/entry/view/{messageOid}/{messageVersion}", name="calllog_callentry_view", methods={"GET"})
+     * @Route("/entry/view-latest-encounter/{messageOid}/{messageVersion}", name="calllog_callentry_view_latest_encounter", methods={"GET"})
      * @Template("AppCallLogBundle/CallLog/call-entry-view.html.twig")
      */
     public function getCallLogEntryAction(Request $request, $messageOid, $messageVersion=null)

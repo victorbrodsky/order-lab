@@ -23,9 +23,10 @@ use App\CallLogBundle\Form\CalllogSiteParameterType;
 use App\UserdirectoryBundle\Entity\SiteParameters;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 
 use App\UserdirectoryBundle\Controller\SiteParametersController;
 
@@ -42,8 +43,7 @@ class CallLogSiteParametersController extends SiteParametersController
     /**
      * Lists all SiteParameters entities.
      *
-     * @Route("/", name="calllog_siteparameters")
-     * @Method("GET")
+     * @Route("/", name="calllog_siteparameters", methods={"GET"})
      * @Template("AppUserdirectoryBundle/SiteParameters/index.html.twig")
      */
     public function indexAction(Request $request)
@@ -62,8 +62,7 @@ class CallLogSiteParametersController extends SiteParametersController
     /**
      * Displays a form to edit an existing SiteParameters entity.
      *
-     * @Route("/{id}/edit", name="calllog_siteparameters_edit")
-     * @Method("GET")
+     * @Route("/{id}/edit", name="calllog_siteparameters_edit", methods={"GET"})
      * @Template("AppUserdirectoryBundle/SiteParameters/edit.html.twig")
      */
     public function editAction(Request $request, $id)
@@ -75,8 +74,7 @@ class CallLogSiteParametersController extends SiteParametersController
     /**
      * Edits an existing SiteParameters entity.
      *
-     * @Route("/{id}", name="calllog_siteparameters_update")
-     * @Method("PUT")
+     * @Route("/{id}", name="calllog_siteparameters_update", methods={"PUT"})
      * @Template("AppUserdirectoryBundle/SiteParameters/edit.html.twig")
      */
     public function updateAction(Request $request, $id)
@@ -88,8 +86,7 @@ class CallLogSiteParametersController extends SiteParametersController
     /**
      * Resources page
      *
-     * @Route("/edit-resources/show", name="calllog_siteparameters_resources_edit")
-     * @Method("GET")
+     * @Route("/edit-resources/show", name="calllog_siteparameters_resources_edit", methods={"GET"})
      * @Template("AppCallLogBundle/SiteParameters/edit.html.twig")
      */
     public function editResourcesAction( Request $request )
@@ -115,8 +112,7 @@ class CallLogSiteParametersController extends SiteParametersController
     /**
      * CalllogSiteParameter
      *
-     * @Route("/specific-site-parameters/edit/", name="calllog_siteparameters_edit_specific_site_parameters")
-     * @Method({"GET", "POST"})
+     * @Route("/specific-site-parameters/edit/", name="calllog_siteparameters_edit_specific_site_parameters", methods={"GET", "POST"})
      * @Template("AppCallLogBundle/SiteParameter/edit.html.twig")
      */
     public function calllogSiteParameterEditAction( Request $request ) {
@@ -154,8 +150,7 @@ class CallLogSiteParametersController extends SiteParametersController
     /**
      * CalllogSiteParameter Show
      *
-     * @Route("/specific-site-parameters/show/", name="calllog_siteparameters_show_specific_site_parameters")
-     * @Method("GET")
+     * @Route("/specific-site-parameters/show/", name="calllog_siteparameters_show_specific_site_parameters", methods={"GET"})
      * @Template("AppCallLogBundle/SiteParameter/edit-content.html.twig")
      */
     public function calllogSiteParameterShowAction( Request $request ) {

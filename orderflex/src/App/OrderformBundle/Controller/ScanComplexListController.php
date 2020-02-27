@@ -19,7 +19,7 @@ namespace App\OrderformBundle\Controller;
 
 
 use App\UserdirectoryBundle\Controller\ComplexListController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -99,7 +99,6 @@ class ScanComplexListController extends ComplexListController
 
 
     /**
-     * //@Method("POST")
      *
      * @Route("/admin/laboratory-tests/new", name="scan_labtests_pathaction_new_post_standalone", methods={"POST"})
      *
@@ -117,7 +116,6 @@ class ScanComplexListController extends ComplexListController
 
 
     /**
-     * //@Method("PUT")
      *
      * @Route("/admin/laboratory-tests/{id}", name="scan_labtests_pathaction_edit_put_standalone", methods={"PUT"},requirements={"id" = "\d+"})
      *

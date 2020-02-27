@@ -23,9 +23,10 @@ use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransf
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 use App\UserdirectoryBundle\Entity\Logger;
 use App\UserdirectoryBundle\Form\LoggerType;
 use Symfony\Component\HttpFoundation\Response;
@@ -41,8 +42,7 @@ class LoggerController extends OrderAbstractController
     /**
      * Lists all Logger entities.
      *
-     * @Route("/", name="employees_logger")
-     * @Method("GET")
+     * @Route("/", name="employees_logger", methods={"GET"})
      * @Template("AppUserdirectoryBundle/Logger/index.html.twig")
      */
     public function indexAction(Request $request)
@@ -56,8 +56,7 @@ class LoggerController extends OrderAbstractController
     /**
      * Lists all Logger entities across all sites.
      *
-     * @Route("/all-sites/", name="employees_logger_allsites")
-     * @Method("GET")
+     * @Route("/all-sites/", name="employees_logger_allsites", methods={"GET"})
      * @Template("AppUserdirectoryBundle/Logger/index.html.twig")
      */
     public function indexAllAction(Request $request)
@@ -71,9 +70,8 @@ class LoggerController extends OrderAbstractController
     /**
      * Lists audit log for a specific user
      *
-     * @Route("/user/{id}", name="employees_logger_user_with_id")
-     * @Route("/user", name="employees_logger_user")
-     * @Method("GET")
+     * @Route("/user/{id}", name="employees_logger_user_with_id", methods={"GET"})
+     * @Route("/user", name="employees_logger_user", methods={"GET"})
      * @Template("AppUserdirectoryBundle/Logger/logger_object.html.twig")
      */
     public function getAuditLogAction(Request $request)
@@ -109,8 +107,7 @@ class LoggerController extends OrderAbstractController
     }
 
     /**
-     * @Route("/user/{id}/all", name="employees_logger_user_all")
-     * @Method("GET")
+     * @Route("/user/{id}/all", name="employees_logger_user_all", methods={"GET"})
      * @Template("AppUserdirectoryBundle/Logger/index.html.twig")
      */
     public function getAuditLogAllAction(Request $request)
@@ -657,8 +654,7 @@ class LoggerController extends OrderAbstractController
 
 
     /**
-     * @Route("/find-subject-entity-by-object-type-id/{action}/{objectNamespace}/{objectType}/{objectId}", name="employees_find_subject_entity")
-     * @Method("GET")
+     * @Route("/find-subject-entity-by-object-type-id/{action}/{objectNamespace}/{objectType}/{objectId}", name="employees_find_subject_entity", methods={"GET"})
      */
     public function permissionActionSubjectEntityAction($action, $objectNamespace, $objectType, $objectId) {
 
@@ -693,8 +689,7 @@ class LoggerController extends OrderAbstractController
     /**
      * Displays an error message for the logger's "Object ID" url
      *
-     * @Route("/warning-message/", name="logger_warning_message")
-     * @Method("GET")
+     * @Route("/warning-message/", name="logger_warning_message", methods={"GET"})
      * @Template("AppUserdirectoryBundle/Logger/warning.html.twig")
      */
     public function warningLoggerAction(Request $request)
@@ -713,8 +708,7 @@ class LoggerController extends OrderAbstractController
     /**
      * Creates a new Logger entity.
      *
-     * @Route("/", name="employees_logger_create")
-     * @Method("POST")
+     * @Route("/", name="employees_logger_create", methods={"POST"})
      * @Template("AppUserdirectoryBundle/Logger/new.html.twig")
      */
     public function createAction(Request $request)
@@ -772,8 +766,7 @@ class LoggerController extends OrderAbstractController
     /**
      * Displays a form to create a new Logger entity.
      *
-     * @Route("/new", name="logger_new")
-     * @Method("GET")
+     * @Route("/new", name="logger_new", methods={"GET"})
      * @Template()
      */
     public function newAction()
@@ -793,8 +786,7 @@ class LoggerController extends OrderAbstractController
     /**
      * Finds and displays a Logger entity.
      *
-     * @Route("/{id}", name="logger_show")
-     * @Method("GET")
+     * @Route("/{id}", name="logger_show", methods={"GET"})
      * @Template()
      */
     public function showAction($id)
@@ -818,8 +810,7 @@ class LoggerController extends OrderAbstractController
     /**
      * Displays a form to edit an existing Logger entity.
      *
-     * @Route("/{id}/edit", name="logger_edit")
-     * @Method("GET")
+     * @Route("/{id}/edit", name="logger_edit", methods={"GET"})
      * @Template()
      */
     public function editAction($id)
@@ -863,8 +854,7 @@ class LoggerController extends OrderAbstractController
     /**
      * Edits an existing Logger entity.
      *
-     * @Route("/{id}", name="logger_update")
-     * @Method("PUT")
+     * @Route("/{id}", name="logger_update", methods={"PUT"})
      * @Template("AppUserdirectoryBundle/Logger/edit.html.twig")
      */
     public function updateAction(Request $request, $id)
@@ -896,8 +886,7 @@ class LoggerController extends OrderAbstractController
     /**
      * Deletes a Logger entity.
      *
-     * @Route("/{id}", name="logger_delete")
-     * @Method("DELETE")
+     * @Route("/{id}", name="logger_delete", methods={"DELETE"})
      */
     public function deleteAction(Request $request, $id)
     {
