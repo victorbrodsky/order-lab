@@ -689,7 +689,7 @@ class InvoiceController extends OrderAbstractController
      * Creates a new invoice entity.
      * //@Method({"GET", "POST"})
      *
-     * @Route("/new/{id}", name="translationalresearch_invoice_new", , methods={"GET","POST"})
+     * @Route("/new/{id}", name="translationalresearch_invoice_new", methods={"GET","POST"})
      * @Template("AppTranslationalResearchBundle/Invoice/new.html.twig")
      */
     public function newAction(Request $request, TransResRequest $transresRequest)
