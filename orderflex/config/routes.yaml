@@ -41,7 +41,7 @@ app_vacreq:
     prefix:   /vacation-request
     schemes:  ['%connection_channel%']
 
-App_calllog:
+app_calllog:
     resource: "App/CallLogBundle/Controller/"
     type:     annotation
     prefix:   /call-log-book

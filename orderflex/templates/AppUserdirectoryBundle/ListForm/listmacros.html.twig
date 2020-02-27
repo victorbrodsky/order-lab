@@ -491,7 +491,7 @@
 {% endmacro %}
 
 
-{% macro listNew( form, pathbase, postPath ) %}
+{% macro listNew( form, pathbase, postPath, entity ) %}
 
     {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
     {% import _self as listmacros %}
@@ -591,7 +591,7 @@
 
 
     {#additional attributes#}
-    {{ listmacros.additionalRelationships(form,entity) }}
+    {{ listmacros.additionalRelationships(form,entity,'new') }}
 
     {#permissionList attributes#}
     {{ listmacros.permissionListAttributes( form ) }}
@@ -725,7 +725,7 @@
 
 
     {#additional attributes#}
-    {{ listmacros.additionalRelationships(edit_form,entity) }}
+    {{ listmacros.additionalRelationships(edit_form,entity,cycle) }}
 
     {#permissionList attributes#}
     {{ listmacros.permissionListAttributes( edit_form ) }}
@@ -782,7 +782,7 @@
 
 
 {#additional attributes#}
-{% macro additionalRelationships( form, entity ) %}
+{% macro additionalRelationships( form, entity, cycle ) %}
     {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
     {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
 

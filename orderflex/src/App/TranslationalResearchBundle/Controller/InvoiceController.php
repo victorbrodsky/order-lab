@@ -8,9 +8,10 @@ use App\TranslationalResearchBundle\Entity\TransResRequest;
 use App\TranslationalResearchBundle\Form\FilterInvoiceType;
 use App\TranslationalResearchBundle\Form\InvoiceType;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -33,11 +34,10 @@ class InvoiceController extends OrderAbstractController
     /**
      * Lists all invoice entities.
      *
-     * @Route("/list-request/{id}", name="translationalresearch_invoice_index")
-     * @Route("/list/", name="translationalresearch_invoice_index_filter")
-     * @Route("/list/{invoicetype}", name="translationalresearch_invoice_index_type")
+     * @Route("/list-request/{id}", name="translationalresearch_invoice_index", methods={"GET"})
+     * @Route("/list/", name="translationalresearch_invoice_index_filter", methods={"GET"})
+     * @Route("/list/{invoicetype}", name="translationalresearch_invoice_index_type", methods={"GET"})
      * @Template("AppTranslationalResearchBundle/Invoice/index.html.twig")
-     * @Method("GET")
      */
     public function indexAction(Request $request, TransResRequest $transresRequest=null, $invoicetype=null)
     {
@@ -687,10 +687,10 @@ class InvoiceController extends OrderAbstractController
 
     /**
      * Creates a new invoice entity.
+     * //@Method({"GET", "POST"})
      *
-     * @Route("/new/{id}", name="translationalresearch_invoice_new")
+     * @Route("/new/{id}", name="translationalresearch_invoice_new", , methods={"GET","POST"})
      * @Template("AppTranslationalResearchBundle/Invoice/new.html.twig")
-     * @Method({"GET", "POST"})
      */
     public function newAction(Request $request, TransResRequest $transresRequest)
     {
@@ -771,9 +771,8 @@ class InvoiceController extends OrderAbstractController
     /**
      * Finds and displays a invoice entity.
      *
-     * @Route("/show/{oid}", name="translationalresearch_invoice_show")
+     * @Route("/show/{oid}", name="translationalresearch_invoice_show", methods={"GET"})
      * @Template("AppTranslationalResearchBundle/Invoice/new.html.twig")
-     * @Method("GET")
      */
     public function showAction(Request $request, $oid)
     {
@@ -840,9 +839,8 @@ class InvoiceController extends OrderAbstractController
     /**
      * Displays a form to edit an existing invoice entity.
      *
-     * @Route("/edit/{oid}", name="translationalresearch_invoice_edit")
+     * @Route("/edit/{oid}", name="translationalresearch_invoice_edit", methods={"GET","POST"})
      * @Template("AppTranslationalResearchBundle/Invoice/new.html.twig")
-     * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, $oid)
     {
@@ -1004,8 +1002,7 @@ class InvoiceController extends OrderAbstractController
     /**
      * Deletes a invoice entity.
      *
-     * @Route("/delete/{id}", name="translationalresearch_invoice_delete")
-     * @Method("DELETE")
+     * @Route("/delete/{id}", name="translationalresearch_invoice_delete", methods={"DELETE"})
      */
     public function deleteAction(Request $request, Invoice $invoice)
     {
@@ -1043,8 +1040,7 @@ class InvoiceController extends OrderAbstractController
     /**
      * Generate Invoice PDF
      *
-     * @Route("/generate-invoice-pdf/{id}", name="translationalresearch_invoice_generate_pdf")
-     * @Method("GET")
+     * @Route("/generate-invoice-pdf/{id}", name="translationalresearch_invoice_generate_pdf", methods={"GET"})
      */
     public function generateInvoicePdfAction(Request $request, $id) {
 
@@ -1111,9 +1107,8 @@ class InvoiceController extends OrderAbstractController
     /**
      * Show PDF version of invoice
      *
-     * @Route("/download-invoice-pdf/{id}", name="translationalresearch_invoice_download")
+     * @Route("/download-invoice-pdf/{id}", name="translationalresearch_invoice_download", methods={"GET"})
      * @Template("AppTranslationalResearchBundle/Invoice/pdf-show.html.twig")
-     * @Method("GET")
      */
     public function downloadPdfAction(Request $request, Invoice $invoice)
     {
@@ -1187,9 +1182,8 @@ class InvoiceController extends OrderAbstractController
     /**
      * Show the most recent PDF version of invoice
      *
-     * @Route("/download-recent-invoice-pdf/{id}", name="translationalresearch_invoice_download_recent")
+     * @Route("/download-recent-invoice-pdf/{id}", name="translationalresearch_invoice_download_recent", methods={"GET"})
      * @Template("AppTranslationalResearchBundle/Invoice/pdf-show.html.twig")
-     * @Method("GET")
      */
     public function downloadRecentPdfAction(Request $request, Invoice $invoice)
     {
@@ -1340,8 +1334,7 @@ class InvoiceController extends OrderAbstractController
 
 
     /**
-     * @Route("/get-billto-info/", name="translationalresearch_invoice_get_billto_info", options={"expose"=true})
-     * @Method({"GET"})
+     * @Route("/get-billto-info/", name="translationalresearch_invoice_get_billto_info", methods={"GET"}, options={"expose"=true})
      */
     public function getBillToInfoAction( Request $request ) {
         //set permission: project irb reviewer or admin
@@ -1366,8 +1359,7 @@ class InvoiceController extends OrderAbstractController
     }
 
     /**
-     * @Route("/send-invoice-pdf-by-email/{oid}", name="translationalresearch_invoice_send_pdf_email")
-     * @Method({"GET"})
+     * @Route("/send-invoice-pdf-by-email/{oid}", name="translationalresearch_invoice_send_pdf_email", methods={"GET"})
      */
     public function sendByEmailAction( Request $request, $oid ) {
         $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -1478,8 +1470,7 @@ class InvoiceController extends OrderAbstractController
     }
 
     /**
-     * @Route("/change-status/{oid}", name="translationalresearch_invoice_change_status")
-     * @Method({"GET"})
+     * @Route("/change-status/{oid}", name="translationalresearch_invoice_change_status", methods={"GET"})
      */
     public function changeStatusAction( Request $request, $oid ) {
 
@@ -1559,8 +1550,7 @@ class InvoiceController extends OrderAbstractController
     }
 
     /**
-     * @Route("/update-invoice-ajax/", name="translationalresearch_invoice_update_ajax", options={"expose"=true})
-     * @Method({"POST"})
+     * @Route("/update-invoice-ajax/", name="translationalresearch_invoice_update_ajax", methods={"POST"}, options={"expose"=true})
      */
     public function updateInvoiceAjaxAction( Request $request ) {
 //        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_BILLING_ADMIN') ) {
@@ -1699,8 +1689,7 @@ class InvoiceController extends OrderAbstractController
 
 
     /**
-     * @Route("/download-spreadsheet/", name="translationalresearch_download_spreadsheet")
-     * @Method({"POST"})
+     * @Route("/download-spreadsheet/", name="translationalresearch_download_invoice_spreadsheet", methods={"POST"})
      */
     public function downloadInvoicesCsvAction( Request $request ) {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {

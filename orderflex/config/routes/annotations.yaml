@@ -1,6 +1,6 @@
-controllers:
-    resource: ../../src/App/*/*/Controller/
-    type: annotation
+#controllers:
+#    resource: ../../src/App/*/*/Controller/
+#    type: annotation
 
 #OrderformBundle_controllers:
 #    resource: ../../src/App/OrderformBundle/Controller/

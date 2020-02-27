@@ -5331,6 +5331,154 @@ class TransResUtil
         //echo "count=".$count."<br>";
         //return $count;
     }
+    public function getMatchingStrRequestByDqlParameters($dql,$dqlParameters) {
+        $dql->select('invoice.id,invoice.total,invoice.paid,invoice.due,invoice.createDate');
+        //$dql->groupBy('invoice.id');
+
+        $query = $dql->getQuery();
+
+        if( count($dqlParameters) > 0 ) {
+            $query->setParameters($dqlParameters);
+        }
+
+        $results = $query->getScalarResult();
+        //print_r($results);
+        //echo "<br><br>";
+
+        //All Invoices (188 matching for Total: $61,591.00, Paid: $30,000.00, Unpaid: $31591.00)
+
+        $invoiceIds = array();
+        $totalSum = 0;
+        $paidSum = 0;
+        $dueSum = 0;
+        //$totalSum = $this->toDecimal($totalSum);
+
+        //use createDate to get min and max dates
+        $minDate = null;
+        $maxDate = null;
+
+        $counter = 0;
+        foreach($results as $idParams) {
+            //echo "id=".$idTotal.":$total"."<br>";
+            //print_r($idTotal);
+            $id = $idParams['id'];
+            $total = $idParams['total'];
+            $paid = $idParams['paid'];
+            $due = $idParams['due'];
+            //$total = $this->toDecimal($total);
+            //echo "id=".$id.": $$total"."<br>";
+            $totalSum = $totalSum + $total;
+            $paidSum = $paidSum + $paid;
+            $dueSum = $dueSum + $due;
+
+            //min and max dates
+            $createDateStr = $idParams['createDate']; //2018-01-30 17:24:39
+            if( $createDateStr ) {
+                //echo $id.": createDateStr=$createDateStr<br>";
+                //$createDate = \DateTime::createFromFormat('Y-m-d H:i:s', $createDateStr);
+                //$createDate = strtotime($createDateStr);
+                $createDate = new \DateTime($createDateStr);
+                //echo $id."origDate=$createDateStr; newDate=".$createDate->format("m/d/Y")."<br>";
+
+                if( !$minDate ) {
+                    $minDate = $createDate;
+                }
+                if( !$maxDate ) {
+                    $maxDate = $createDate;
+                }
+
+                if( $createDate && $minDate ) {
+                    //echo $id.": start comparing dates:<br>";
+                    if( $createDate < $minDate ) {
+                        //echo $id.": assign mindate<br>";
+                        $minDate = $createDate;
+                    }
+                    if( $createDate > $maxDate ) {
+                        //echo $id.": assign maxdate<br>";
+                        $maxDate = $createDate;
+                    }
+                } else {
+                    //echo $id.": NO comparing dates:<br>";
+                }
+            }
+
+            $invoiceIds[] = $id;
+
+            $counter++;
+        }//foreach
+
+//        if( !$minDate ) {
+//            echo "no min date<br>";
+//        }
+//        if( !$maxDate ) {
+//            echo "no max date<br>";
+//        }
+
+        $dateStr = "";
+        if( $minDate && $maxDate ) {
+            $minDateStr = $minDate->format("m/d/Y");
+            $maxDateStr = $maxDate->format("m/d/Y");
+            //echo "minDate=$minDateStr; maxDate=$maxDateStr <br>";
+            //$minDateStr = $minDate;
+            //$maxDateStr = $maxDate;
+            //over X months [MM/DD/YYYY]-[MM/DD/YYYY]
+            $diff = $maxDate->diff($minDate);
+            if( $diff ) {
+                $diffMonth = (($diff->format('%y') * 12) + $diff->format('%m')); //full months difference;
+                $diffDays = $diff->days;
+                //$diffDays = intval($diffDays);
+            }
+            //echo "days=".$diffDays."<br>";
+            //echo "months=".$diffMonth."<br>";
+
+//            if( $diffMonth == 1 ) {
+//                $diffMonthStr = "over " . $diffMonth . " month ";
+//            } elseif( $diffMonth > 1 ) {
+//                $diffMonthStr = "over " . $diffMonth . " months ";
+//            } else {
+//                $diffMonthStr = "over less than a month ";
+//            }
+
+            $diffMonthStr = "";
+
+            //Case 1) date1-date2 <=28 days then you could just say “over less than a month”
+            if( $diffDays <= 28 ) {
+                $diffMonthStr = "over less than a month ";
+            }
+
+            //Case 2) if the difference is >= 29 days but <2 months, then show “over about X weeks”
+            if( $diffDays >= 29 && $diffMonth < 2 ) {
+                $weeks = round($diffDays/7);
+                $diffMonthStr = "over about $weeks weeks ";
+            }
+
+            //Case 3) anything 2 months and more is “over X months”
+            if( $diffMonth >= 2 ) {
+                $diffMonthStr = "over $diffMonth months ";
+            }
+
+            $dateStr = " " . $diffMonthStr . $minDateStr . "-" . $maxDateStr;
+        } else {
+            //echo "no min/max date<br>";
+        }
+
+        //123 matching for $456
+        if( $counter ) {
+            //544 matching over X months [MM/DD/YYYY]-[MM/DD/YYYY]
+            $result = $counter . " matching$dateStr; Total: $" . $this->getNumberFormat($totalSum) . ", Paid: $" . $this->getNumberFormat($paidSum) . ", Unpaid: $" . $this->getNumberFormat($dueSum);
+        } else {
+            $result = $counter . " matching";
+        }
+
+        //exit($result);
+
+        $resultArr = array(
+            'resultStr' => $result,
+            'ids' => $invoiceIds
+        );
+
+        return $resultArr;
+    }
 
     public function getAppropriatedUsers() {
         //$users = $this->em->getRepository('AppUserdirectoryBundle:User')->findAll();

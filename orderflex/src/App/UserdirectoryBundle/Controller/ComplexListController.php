@@ -20,7 +20,8 @@ namespace App\UserdirectoryBundle\Controller;
 
 use App\UserdirectoryBundle\Form\ListFilterType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
@@ -43,10 +44,10 @@ class ComplexListController extends OrderAbstractController
 
     //     * @Method("GET")
     /**
-     * @Route("/list/locations/", name="employees_locations_pathaction_list")
-     * @Route("/list/buildings/", name="employees_buildings_pathaction_list")
-     * @Route("/list/research-labs/", name="employees_researchlabs_pathaction_list")
-     * @Route("/list/grants/", name="employees_grants_pathaction_list")
+     * @Route("/list/locations/", name="employees_locations_pathaction_list", methods={"GET"})
+     * @Route("/list/buildings/", name="employees_buildings_pathaction_list", methods={"GET"})
+     * @Route("/list/research-labs/", name="employees_researchlabs_pathaction_list", methods={"GET"})
+     * @Route("/list/grants/", name="employees_grants_pathaction_list", methods={"GET"})
      *
      * @Template("AppUserdirectoryBundle/ComplexList/index.html.twig")
      */
@@ -190,17 +191,17 @@ class ComplexListController extends OrderAbstractController
 
 
     /**
-     * @Route("/location/show/{id}", name="employees_locations_pathaction_show_standalone", requirements={"id" = "\d+"})
-     * @Route("/location/edit/{id}", name="employees_locations_pathaction_edit_standalone", requirements={"id" = "\d+"})
+     * @Route("/location/show/{id}", name="employees_locations_pathaction_show_standalone", methods={"GET"}, requirements={"id" = "\d+"})
+     * @Route("/location/edit/{id}", name="employees_locations_pathaction_edit_standalone", methods={"GET"}, requirements={"id" = "\d+"})
      *
-     * @Route("/buildings/show/{id}", name="employees_buildings_pathaction_show_standalone", requirements={"id" = "\d+"})
-     * @Route("/admin/buildings/edit/{id}", name="employees_buildings_pathaction_edit_standalone", requirements={"id" = "\d+"})
+     * @Route("/buildings/show/{id}", name="employees_buildings_pathaction_show_standalone", methods={"GET"}, requirements={"id" = "\d+"})
+     * @Route("/admin/buildings/edit/{id}", name="employees_buildings_pathaction_edit_standalone", methods={"GET"}, requirements={"id" = "\d+"})
      *
-     * @Route("/research-labs/show/{id}", name="employees_researchlabs_pathaction_show_standalone", requirements={"id" = "\d+"})
-     * @Route("/admin/research-labs/edit/{id}", name="employees_researchlabs_pathaction_edit_standalone", requirements={"id" = "\d+"})
+     * @Route("/research-labs/show/{id}", name="employees_researchlabs_pathaction_show_standalone", methods={"GET"}, requirements={"id" = "\d+"})
+     * @Route("/admin/research-labs/edit/{id}", name="employees_researchlabs_pathaction_edit_standalone", methods={"GET"}, requirements={"id" = "\d+"})
      *
-     * @Route("/grants/show/{id}", name="employees_grants_pathaction_show_standalone", requirements={"id" = "\d+"})
-     * @Route("/admin/grants/edit/{id}", name="employees_grants_pathaction_edit_standalone", requirements={"id" = "\d+"})
+     * @Route("/grants/show/{id}", name="employees_grants_pathaction_show_standalone", methods={"GET"}, requirements={"id" = "\d+"})
+     * @Route("/admin/grants/edit/{id}", name="employees_grants_pathaction_edit_standalone", methods={"GET"}, requirements={"id" = "\d+"})
      *
      *
      * @Method("GET")
@@ -259,10 +260,10 @@ class ComplexListController extends OrderAbstractController
 
 
     /**
-     * @Route("/location/new", name="employees_locations_pathaction_new_standalone")
-     * @Route("/admin/buildings/new", name="employees_buildings_pathaction_new_standalone")
-     * @Route("/admin/research-labs/new", name="employees_researchlabs_pathaction_new_standalone")
-     * @Route("/admin/grants/new", name="employees_grants_pathaction_new_standalone")
+     * @Route("/location/new", name="employees_locations_pathaction_new_standalone", methods={"GET"})
+     * @Route("/admin/buildings/new", name="employees_buildings_pathaction_new_standalone", methods={"GET"})
+     * @Route("/admin/research-labs/new", name="employees_researchlabs_pathaction_new_standalone", methods={"GET"})
+     * @Route("/admin/grants/new", name="employees_grants_pathaction_new_standalone", methods={"GET"})
      *
      * @Method("GET")
      * @Template("AppUserdirectoryBundle/ComplexList/new.html.twig")
@@ -307,10 +308,10 @@ class ComplexListController extends OrderAbstractController
 
 
     /**
-     * @Route("/location/new", name="employees_locations_pathaction_new_post_standalone")
-     * @Route("/admin/buildings/new", name="employees_buildings_pathaction_new_post_standalone")
-     * @Route("/admin/research-labs/new", name="employees_researchlabs_pathaction_new_post_standalone")
-     * @Route("/admin/grants/new", name="employees_grants_pathaction_new_post_standalone")
+     * @Route("/location/new", name="employees_locations_pathaction_new_post_standalone", methods={"POST"})
+     * @Route("/admin/buildings/new", name="employees_buildings_pathaction_new_post_standalone", methods={"POST"})
+     * @Route("/admin/research-labs/new", name="employees_researchlabs_pathaction_new_post_standalone", methods={"POST"})
+     * @Route("/admin/grants/new", name="employees_grants_pathaction_new_post_standalone", methods={"POST"})
      *
      * @Method("POST")
      * @Template("AppUserdirectoryBundle/ComplexList/new.html.twig")
@@ -423,10 +424,10 @@ class ComplexListController extends OrderAbstractController
 
 
     /**
-     * @Route("/location/update/{id}", name="employees_locations_pathaction_edit_put_standalone",requirements={"id" = "\d+"})
-     * @Route("/admin/buildings/update/{id}", name="employees_buildings_pathaction_edit_put_standalone",requirements={"id" = "\d+"})
-     * @Route("/admin/research-labs/update/{id}", name="employees_researchlabs_pathaction_edit_put_standalone",requirements={"id" = "\d+"})
-     * @Route("/admin/grants/update/{id}", name="employees_grants_pathaction_edit_put_standalone",requirements={"id" = "\d+"})
+     * @Route("/location/update/{id}", name="employees_locations_pathaction_edit_put_standalone", methods={"PUT"},requirements={"id" = "\d+"})
+     * @Route("/admin/buildings/update/{id}", name="employees_buildings_pathaction_edit_put_standalone", methods={"PUT"},requirements={"id" = "\d+"})
+     * @Route("/admin/research-labs/update/{id}", name="employees_researchlabs_pathaction_edit_put_standalone", methods={"PUT"},requirements={"id" = "\d+"})
+     * @Route("/admin/grants/update/{id}", name="employees_grants_pathaction_edit_put_standalone", methods={"PUT"},requirements={"id" = "\d+"})
      *
      * @Method("PUT")
      * @Template("AppUserdirectoryBundle/ComplexList/new.html.twig")

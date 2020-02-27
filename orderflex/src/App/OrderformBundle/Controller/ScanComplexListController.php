@@ -20,7 +20,8 @@ namespace App\OrderformBundle\Controller;
 
 use App\UserdirectoryBundle\Controller\ComplexListController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
@@ -42,9 +43,8 @@ class ScanComplexListController extends ComplexListController
 
 
     /**
-     * @Route("/list/laboratoty-tests/", name="scan_labtests_pathaction_list")
+     * @Route("/list/laboratoty-tests/", name="scan_labtests_pathaction_list", methods={"GET"})
      *
-     * @Method("GET")
      * @Template("AppUserdirectoryBundle/ComplexList/index.html.twig")
      */
     public function indexAction(Request $request)
@@ -60,11 +60,9 @@ class ScanComplexListController extends ComplexListController
 
 
     /**
-     * @Route("/laboratory-tests/show/{id}", name="scan_labtests_pathaction_show_standalone", requirements={"id" = "\d+"})
-     * @Route("/admin/laboratory-tests/edit/{id}", name="scan_labtests_pathaction_edit_standalone", requirements={"id" = "\d+"})
+     * @Route("/laboratory-tests/show/{id}", name="scan_labtests_pathaction_show_standalone", methods={"GET"}, requirements={"id" = "\d+"})
+     * @Route("/admin/laboratory-tests/edit/{id}", name="scan_labtests_pathaction_edit_standalone", methods={"GET"}, requirements={"id" = "\d+"})
      *
-     *
-     * @Method("GET")
      * @Template("AppUserdirectoryBundle/ComplexList/new.html.twig")
      */
     public function showListAction(Request $request, $id)
@@ -85,9 +83,8 @@ class ScanComplexListController extends ComplexListController
 
 
     /**
-     * @Route("/admin/laboratory-tests/new", name="scan_labtests_pathaction_new_standalone")
+     * @Route("/admin/laboratory-tests/new", name="scan_labtests_pathaction_new_standalone", methods={"GET"})
      *
-     * @Method("GET")
      * @Template("AppUserdirectoryBundle/ComplexList/new.html.twig")
      */
     public function newListAction(Request $request)
@@ -102,9 +99,10 @@ class ScanComplexListController extends ComplexListController
 
 
     /**
-     * @Route("/admin/laboratory-tests/new", name="scan_labtests_pathaction_new_post_standalone")
+     * //@Method("POST")
      *
-     * @Method("POST")
+     * @Route("/admin/laboratory-tests/new", name="scan_labtests_pathaction_new_post_standalone", methods={"POST"})
+     *
      * @Template("AppUserdirectoryBundle/ComplexList/new.html.twig")
      */
     public function createListAction( Request $request )
@@ -119,9 +117,11 @@ class ScanComplexListController extends ComplexListController
 
 
     /**
-     * @Route("/admin/laboratory-tests/{id}", name="scan_labtests_pathaction_edit_put_standalone",requirements={"id" = "\d+"})
+     * //@Method("PUT")
      *
-     * @Method("PUT")
+     * @Route("/admin/laboratory-tests/{id}", name="scan_labtests_pathaction_edit_put_standalone", methods={"PUT"},requirements={"id" = "\d+"})
+     *
+     *
      * @Template("AppUserdirectoryBundle/ComplexList/new.html.twig")
      */
     public function updateListAction( Request $request, $id )

@@ -18,9 +18,10 @@
 namespace App\FellAppBundle\Controller;
 
 use App\UserdirectoryBundle\Controller\ListController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
 class FellAppListController extends ListController
@@ -29,9 +30,8 @@ class FellAppListController extends ListController
     protected $postPath = "_fellapp";
 
     /**
-     * @Route("/list/visa-status/", name="visastatus-list_fellapp")
+     * @Route("/list/visa-status/", name="visastatus-list_fellapp", methods={"GET"})
      *
-     * @Method("GET")
      * @Template("AppUserdirectoryBundle/ListForm/index.html.twig")
      */
     public function indexVisaStatusesAction(Request $request)
@@ -44,9 +44,8 @@ class FellAppListController extends ListController
     }
 
     /**
-     * @Route("/list/visa-status/", name="visastatus_create_fellapp")
+     * @Route("/list/visa-status/", name="visastatus_create_fellapp", methods={"POST"})
      *
-     * @Method("POST")
      * @Template("AppUserdirectoryBundle/ListForm/new.html.twig")
      */
     public function createAction(Request $request)
@@ -59,9 +58,8 @@ class FellAppListController extends ListController
     }
 
     /**
-     * @Route("/list/visa-status/new", name="visastatus_new_fellapp")
+     * @Route("/list/visa-status/new", name="visastatus_new_fellapp", methods={"GET"})
      *
-     * @Method("GET")
      * @Template("AppUserdirectoryBundle/ListForm/new.html.twig")
      */
     public function newAction(Request $request)
@@ -74,9 +72,8 @@ class FellAppListController extends ListController
     }
 
     /**
-     * @Route("/list/visa-status/{id}", name="visastatus_show_fellapp")
+     * @Route("/list/visa-status/{id}", name="visastatus_show_fellapp", methods={"GET"})
      *
-     * @Method("GET")
      * @Template("AppUserdirectoryBundle/ListForm/show.html.twig")
      */
     public function showAction(Request $request,$id)
@@ -90,9 +87,8 @@ class FellAppListController extends ListController
     }
 
     /**
-     * @Route("/list/visa-status/{id}/edit", name="visastatus_edit_fellapp")
+     * @Route("/list/visa-status/{id}/edit", name="visastatus_edit_fellapp", methods={"GET"})
      *
-     * @Method("GET")
      * @Template("AppUserdirectoryBundle/ListForm/edit.html.twig")
      */
     public function editAction(Request $request,$id)
@@ -105,9 +101,8 @@ class FellAppListController extends ListController
     }
 
     /**
-     * @Route("/list/visa-status/{id}", name="visastatus_update_fellapp")
+     * @Route("/list/visa-status/{id}", name="visastatus_update_fellapp", methods={"PUT"})
      *
-     * @Method("PUT")
      * @Template("AppUserdirectoryBundle/ListForm/edit.html.twig")
      */
     public function updateAction(Request $request, $id)

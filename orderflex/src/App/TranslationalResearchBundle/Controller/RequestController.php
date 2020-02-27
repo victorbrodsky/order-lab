@@ -1996,8 +1996,15 @@ class RequestController extends OrderAbstractController
             //$allGlobalRequests = $em->getRepository('AppTranslationalResearchBundle:TransResRequest')->findAll();
             //$title = $title . " (Matching " . count($allTransresRequests) . ", Total " . count($allGlobalRequests) . ")";
             $allTransresRequests = $transresUtil->getTotalRequestCountByDqlParameters($dql,$dqlParameters);
+
+            //$matchingStrInvoiceStr = $matchingStrWorkRequest['resultStr'];
+            //$matchingStrWorkRequestIds = $matchingStrWorkRequest['ids'];
+            $matchingStrWorkRequestIds = array(1,2,3);
+            
             $allGlobalRequests = $transresUtil->getTotalRequestCount();
             $title = $title . " (Matching " . $allTransresRequests . ", Total " . $allGlobalRequests . $requestTotalFeeHtml . ")";
+            
+            $matchingStrWorkRequestIds = implode("-",$matchingStrWorkRequestIds);
 
 //            if( $timer ) {
 //                $event = $stopwatch->stop('GetTitle');
@@ -2033,7 +2040,8 @@ class RequestController extends OrderAbstractController
             'requestTotalFeeHtml' => null, //$requestTotalFeeHtml
             'advancedFilter' => $advancedFilter,
             'project' => $project,
-            'eventObjectTypeId' => $eventObjectTypeId
+            'eventObjectTypeId' => $eventObjectTypeId,
+            'matchingStrWorkRequestIds' => $matchingStrWorkRequestIds,
             //'filterDisable' => $filterDisable, //testing
             //'hideaction' => true,    //testing
             //'hiderows' => true,      //testing
@@ -2084,6 +2092,34 @@ class RequestController extends OrderAbstractController
 //
 //        );
 //    }
+
+    /**
+     * @Route("/download-spreadsheet/", name="translationalresearch_download_request_spreadsheet")
+     * @Method({"POST"})
+     */
+    public function downloadInvoicesCsvAction( Request $request ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
+        exit('not implemented yet');
+
+        $transresRequestUtil = $this->get('transres_request_util');
+
+        $ids = $request->request->get('ids');
+        //echo "ids=".$ids."<br>";
+        //exit('111');
+
+        $idsArr = explode('-', $ids);
+        $idsArr = array_reverse($idsArr);
+
+        //$fileName = "Invoices".".xlsx"; //cell type can not be set in xlsx
+        $fileName = "Invoices".".csv";
+
+        $transresRequestUtil->createtInvoicesCsvSpout( $idsArr, $fileName );
+
+        exit();
+    }
 
 
 
