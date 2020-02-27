@@ -2082,14 +2082,16 @@ class CallEntryController extends OrderAbstractController
         //$message->addPatient($patient);
 
         //add accession for patient info section
-        $accession = new Accession();
-        $status='invalid';
-        $provider=null;
-        $source=null;
-        $accession->addAccession( new AccessionAccession($status,$provider,$source) );
-        $message->addAccession($accession);
-        $accessions = $message->getAccession();
-        //echo "accessions count=".count($accessions)."<br>";
+        if(0) {
+            $accession = new Accession();
+            $status = 'invalid';
+            $provider = null;
+            $source = null;
+            $accession->addAccession(new AccessionAccession($status, $provider, $source));
+            $message->addAccession($accession);
+            $accessions = $message->getAccession();
+            //echo "accessions count=".count($accessions)."<br>";
+        }
 
         return $message;
     }
