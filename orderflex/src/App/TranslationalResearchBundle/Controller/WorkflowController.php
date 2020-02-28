@@ -28,9 +28,10 @@ namespace App\TranslationalResearchBundle\Controller;
 use App\TranslationalResearchBundle\Entity\Project;
 use App\TranslationalResearchBundle\Entity\TransResRequest;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Exception\LogicException;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -170,8 +171,7 @@ class WorkflowController extends OrderAbstractController
      * NOT USED - this is a particulra case for testing
      * https://symfony.com/doc/current/workflow/usage.html
      *
-     * @Route("/to-irb-review/{id}", name="translationalresearch_to_irb_review")
-     * @Method("GET")
+     * @Route("/to-irb-review/{id}", name="translationalresearch_to_irb_review", methods={"GET"})
      */
     public function toIrbReviewAction( Project $project )
     {
@@ -229,8 +229,7 @@ class WorkflowController extends OrderAbstractController
      * NOT USED
      * https://symfony.com/doc/current/workflow/usage.html
      *
-     * @Route("/project-transition-state/{transitionName}/{to}/{id}", name="translationalresearch_transition_state_action")
-     * @Method("GET")
+     * @Route("/project-transition-state/{transitionName}/{to}/{id}", name="translationalresearch_transition_state_action", methods={"GET"})
      */
     public function transitionStateAction( $transitionName, $to, Project $project )
     {
@@ -283,8 +282,7 @@ class WorkflowController extends OrderAbstractController
      * Change state of the project (by id) and make transition to this place indicated by transitionName
      * https://symfony.com/doc/current/workflow/usage.html
      *
-     * @Route("/project-transition/{transitionName}/{id}", name="translationalresearch_transition_action")
-     * @Method("GET")
+     * @Route("/project-transition/{transitionName}/{id}", name="translationalresearch_transition_action", methods={"GET"})
      */
     public function transitionAction( $transitionName, Project $project )
     {
@@ -301,8 +299,7 @@ class WorkflowController extends OrderAbstractController
      * Change state of the project (by id) and make transition to this place indicated by transitionName
      * https://symfony.com/doc/current/workflow/usage.html
      *
-     * @Route("/project-review-transition/{transitionName}/{id}/{reviewId}", name="translationalresearch_transition_action_by_review")
-     * @Method("GET")
+     * @Route("/project-review-transition/{transitionName}/{id}/{reviewId}", name="translationalresearch_transition_action_by_review", methods={"GET"})
      */
     public function transitionReviewAction( $transitionName, Project $project, $reviewId )
     {
@@ -341,8 +338,7 @@ class WorkflowController extends OrderAbstractController
      * Change state of the request (by id) and make transition to this place indicated by transitionName
      * https://symfony.com/doc/current/workflow/usage.html
      *
-     * @Route("/request-review-transition/{transitionName}/{id}/{statMachineType}", name="translationalresearch_request_transition_action_by_review")
-     * @Method("GET")
+     * @Route("/request-review-transition/{transitionName}/{id}/{statMachineType}", name="translationalresearch_request_transition_action_by_review", methods={"GET"})
      */
     public function transitionRequestReviewAction( $transitionName, TransResRequest $transresRequest, $statMachineType )
     {

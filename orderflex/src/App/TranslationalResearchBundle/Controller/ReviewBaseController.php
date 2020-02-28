@@ -6,9 +6,10 @@ use App\TranslationalResearchBundle\Entity\IrbReview;
 use App\TranslationalResearchBundle\Entity\Project;
 use App\TranslationalResearchBundle\Form\ReviewBaseType;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -21,9 +22,8 @@ class ReviewBaseController extends OrderAbstractController
     /**
      * Lists all irbReview entities.
      *
-     * @Route("/{stateStr}", name="translationalresearch_review_index")
+     * @Route("/{stateStr}", name="translationalresearch_review_index", methods={"GET"})
      * @Template("AppTranslationalResearchBundle/Review/index.html.twig")
-     * @Method("GET")
      */
     public function indexAction(Request $request, $stateStr)
     {
@@ -39,9 +39,8 @@ class ReviewBaseController extends OrderAbstractController
     /**
      * Creates a new irbReview entity.
      *
-     * @Route("/new", name="translationalresearch_review_new")
+     * @Route("/new", name="translationalresearch_review_new", methods={"GET","POST"})
      * @Template("AppTranslationalResearchBundle/Review/new.html.twig")
-     * @Method({"GET", "POST"})
      */
     public function newAction(Request $request)
     {
@@ -66,9 +65,8 @@ class ReviewBaseController extends OrderAbstractController
     /**
      * Finds and displays a Review entity.
      *
-     * @Route("/{stateStr}/{reviewId}/show", name="translationalresearch_review_show")
+     * @Route("/{stateStr}/{reviewId}/show", name="translationalresearch_review_show", methods={"GET"})
      * @Template("AppTranslationalResearchBundle/Review/edit.html.twig")
-     * @Method("GET")
      */
     public function showAction(Request $request, $stateStr, $reviewId)
     {
@@ -106,9 +104,8 @@ class ReviewBaseController extends OrderAbstractController
     /**
      * Displays a form to edit an existing irbReview entity.
      *
-     * @Route("/{stateStr}/{reviewId}/submit", name="translationalresearch_review_edit")
+     * @Route("/{stateStr}/{reviewId}/submit", name="translationalresearch_review_edit", methods={"GET","POST"})
      * @Template("AppTranslationalResearchBundle/Review/edit.html.twig")
-     * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, $stateStr, $reviewId)
     {
@@ -194,8 +191,7 @@ class ReviewBaseController extends OrderAbstractController
 //    /**
 //     * Deletes a irbReview entity.
 //     *
-//     * @Route("/{id}", name="translationalresearch_review_delete")
-//     * @Method("DELETE")
+//     * @Route("/{id}", name="translationalresearch_review_delete", methods={"DELETE"})
 //     */
 //    public function deleteAction(Request $request, IrbReview $irbReview)
 //    {

@@ -170,8 +170,7 @@ class TranslationalResearchAccessRequestController extends AccessRequestControll
     }
 
 //    /**
-//     * @Route("/add-authorized-user/submit/", name="translationalresearch_add_authorized_user_submit")
-//     * @Method("POST")
+//     * @Route("/add-authorized-user/submit/", name="translationalresearch_add_authorized_user_submit", methods={"POST"})
 //     * @Template("AppUserdirectoryBundle/AccessRequest/add_authorized_user.html.twig")
 //     */
 //    public function addAuthorizedUserSubmitAction( Request $request )

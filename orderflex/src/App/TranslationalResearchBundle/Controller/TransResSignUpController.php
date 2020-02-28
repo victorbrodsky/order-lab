@@ -6,8 +6,9 @@ namespace App\TranslationalResearchBundle\Controller;
 use App\UserdirectoryBundle\Controller\SignUpController;
 use App\UserdirectoryBundle\Entity\SignUp;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -28,8 +29,7 @@ class TransResSignUpController extends SignUpController
     /**
      * Lists all signUp entities.
      *
-     * @Route("/signup-list", name="translationalresearch_signup_index")
-     * @Method("GET")
+     * @Route("/signup-list", name="translationalresearch_signup_index", methods={"GET"})
      */
     public function indexAction()
     {
@@ -40,8 +40,7 @@ class TransResSignUpController extends SignUpController
      * http://localhost/order/directory/sign-up/new
      * Creates a new signUp entity.
      *
-     * @Route("/sign-up", name="translationalresearch_signup_new")
-     * @Method({"GET", "POST"})
+     * @Route("/sign-up", name="translationalresearch_signup_new", methods={"GET","POST"})
      */
     public function newSignUpAction(Request $request)
     {
@@ -49,8 +48,7 @@ class TransResSignUpController extends SignUpController
     }
 
     /**
-     * @Route("/activate-account/{registrationLinkID}", name="translationalresearch_activate_account")
-     * @Method({"GET", "POST"})
+     * @Route("/activate-account/{registrationLinkID}", name="translationalresearch_activate_account", methods={"GET","POST"})
      */
     public function activateAccountAction(Request $request, $registrationLinkID)
     {
@@ -60,8 +58,7 @@ class TransResSignUpController extends SignUpController
     /**
      * Finds and displays a signUp entity.
      *
-     * @Route("/signup-show/{id}", name="translationalresearch_signup_show")
-     * @Method("GET")
+     * @Route("/signup-show/{id}", name="translationalresearch_signup_show", methods={"GET"})
      */
     public function showAction(SignUp $signUp)
     {
@@ -71,8 +68,7 @@ class TransResSignUpController extends SignUpController
     /**
      * Displays a form to edit an existing signUp entity.
      *
-     * @Route("/signup-edit/{id}", name="translationalresearch_signup_edit")
-     * @Method({"GET", "POST"})
+     * @Route("/signup-edit/{id}", name="translationalresearch_signup_edit", methods={"GET","POST"})
      */
     public function editAction(Request $request, SignUp $signUp)
     {
@@ -82,8 +78,7 @@ class TransResSignUpController extends SignUpController
     /**
      * Deletes a signUp entity.
      *
-     * @Route("/signup-delete/{id}", name="translationalresearch_signup_delete")
-     * @Method("DELETE")
+     * @Route("/signup-delete/{id}", name="translationalresearch_signup_delete", methods={"DELETE"})
      */
     public function deleteAction(Request $request, SignUp $signUp)
     {
@@ -91,8 +86,7 @@ class TransResSignUpController extends SignUpController
     }
 
     /**
-     * @Route("/forgot-password", name="translationalresearch_forgot_password")
-     * @Method({"GET", "POST"})
+     * @Route("/forgot-password", name="translationalresearch_forgot_password", methods={"GET","POST"})
      */
     public function forgotPasswordAction(Request $request)
     {
@@ -102,8 +96,7 @@ class TransResSignUpController extends SignUpController
     /**
      * http://localhost/order/directory/reset-password
      *
-     * @Route("/reset-password/{resetPasswordLinkID}", name="translationalresearch_reset_password")
-     * @Method({"GET", "POST"})
+     * @Route("/reset-password/{resetPasswordLinkID}", name="translationalresearch_reset_password", methods={"GET","POST"})
      */
     public function resetPasswordAction(Request $request, $resetPasswordLinkID)
     {

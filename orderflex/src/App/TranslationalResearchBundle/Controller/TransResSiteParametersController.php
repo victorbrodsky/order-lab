@@ -6,9 +6,10 @@ use App\TranslationalResearchBundle\Entity\TransResSiteParameters;
 
 use App\TranslationalResearchBundle\Form\SiteParameterType;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -24,9 +25,8 @@ class TransResSiteParametersController extends OrderAbstractController
 //    /**
 //     * Lists all SiteParameters entities.
 //     *
-//     * @Route("/list/{specialtyStr}", name="translationalresearch_standalone_siteparameters_index")
+//     * @Route("/list/{specialtyStr}", name="translationalresearch_standalone_siteparameters_index", methods={"GET"})
 //     * @Template("AppTranslationalResearchBundle/SiteParameters/index.html.twig")
-//     * @Method("GET")
 //     */
 //    public function indexAction(Request $request, $specialtyStr)
 //    {
@@ -44,9 +44,8 @@ class TransResSiteParametersController extends OrderAbstractController
 //    /**
 //     * Creates a new SiteParameters entity.
 //     *
-//     * @Route("/new/{specialtyStr}", name="translationalresearch_standalone_siteparameters_new")
+//     * @Route("/new/{specialtyStr}", name="translationalresearch_standalone_siteparameters_new", methods={"GET","POST"})
 //     * @Template("AppTranslationalResearchBundle/SiteParameters/new.html.twig")
-//     * @Method({"GET", "POST"})
 //     */
 //    public function newAction(Request $request, $specialtyStr)
 //    {
@@ -98,9 +97,8 @@ class TransResSiteParametersController extends OrderAbstractController
     /**
      * Finds and displays site parameters entity.
      *
-     * @Route("/show/{specialtyStr}", name="translationalresearch_standalone_siteparameters_show")
+     * @Route("/show/{specialtyStr}", name="translationalresearch_standalone_siteparameters_show", methods={"GET"})
      * @Template("AppTranslationalResearchBundle/SiteParameters/new.html.twig")
-     * @Method("GET")
      */
     public function showAction(Request $request, $specialtyStr)
     {
@@ -131,9 +129,8 @@ class TransResSiteParametersController extends OrderAbstractController
     /**
      * Finds and displays site parameters entity.
      *
-     * @Route("/show-content/{specialtyStr}", name="translationalresearch_standalone_siteparameters_show_content")
+     * @Route("/show-content/{specialtyStr}", name="translationalresearch_standalone_siteparameters_show_content", methods={"GET"})
      * @Template("AppTranslationalResearchBundle/SiteParameters/show-content.html.twig")
-     * @Method("GET")
      */
     public function showContentAction(Request $request, $specialtyStr)
     {
@@ -163,9 +160,8 @@ class TransResSiteParametersController extends OrderAbstractController
     /**
      * Displays a form to edit an existing entity.
      *
-     * @Route("/edit/{specialtyStr}", name="translationalresearch_standalone_siteparameters_edit")
+     * @Route("/edit/{specialtyStr}", name="translationalresearch_standalone_siteparameters_edit", methods={"GET","POST"})
      * @Template("AppTranslationalResearchBundle/SiteParameters/new.html.twig")
-     * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, $specialtyStr)
     {
