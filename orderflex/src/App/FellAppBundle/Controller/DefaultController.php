@@ -19,11 +19,12 @@ namespace App\FellAppBundle\Controller;
 
 use App\FellAppBundle\Entity\FellowshipApplication;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\Routing\Annotation\Route;
 
 class DefaultController extends OrderAbstractController
 {
@@ -39,9 +40,8 @@ class DefaultController extends OrderAbstractController
 
 
     /**
-     * @Route("/thanks-for-downloading/{id}/{sitename}", name="fellapp_thankfordownloading")
+     * @Route("/thanks-for-downloading/{id}/{sitename}", name="fellapp_thankfordownloading", methods={"GET"})
      * @Template("AppUserdirectoryBundle/Default/thanksfordownloading.html.twig")
-     * @Method("GET")
      */
     public function thankfordownloadingAction(Request $request, $id, $sitename) {
         return array(

@@ -21,9 +21,10 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 use App\OrderformBundle\Entity\History;
 use App\OrderformBundle\Form\HistoryType;
 use App\OrderformBundle\Helper\OrderUtil;
@@ -38,8 +39,7 @@ class HistoryController extends OrderAbstractController
 //    /**
 //     * Lists all History entities.
 //     *
-//     * @Route("/scan-order/progress-and-comments/", name="history")
-//     * @Method("GET")
+//     * @Route("/scan-order/progress-and-comments/", name="history", methods={"GET"})
 //     * @Template()
 //     */
 //    public function indexAction()
@@ -95,8 +95,7 @@ class HistoryController extends OrderAbstractController
     /**
      * Creates a new History entity.
      *
-     * @Route("/scan-order/progress-and-comments/new", name="history_create")
-     * @Method("POST")
+     * @Route("/scan-order/progress-and-comments/new", name="history_create", methods={"POST"})
      * @Template("AppOrderformBundle/History/new.html.twig")
      */
     public function createAction(Request $request)
@@ -141,8 +140,7 @@ class HistoryController extends OrderAbstractController
     /**
      * Displays a form to create a new History entity.
      *
-     * @Route("/scan-order/progress-and-comments/new", name="history_new")
-     * @Method("GET")
+     * @Route("/scan-order/progress-and-comments/new", name="history_new", methods={"GET"})
      * @Template()
      */
     public function newAction()
@@ -159,8 +157,7 @@ class HistoryController extends OrderAbstractController
     /**
      * Finds and displays a History entity.
      *
-     * @Route("/scan-order/progress-and-comments/{id}", name="history_show", requirements={"id" = "\d+"})
-     * @Method("GET")
+     * @Route("/scan-order/progress-and-comments/{id}", name="history_show", methods={"GET"}, requirements={"id" = "\d+"})
      * @Template()
      */
     public function showAction($id)
@@ -190,8 +187,7 @@ class HistoryController extends OrderAbstractController
     /**
      * Displays a form to edit an existing History entity.
      *
-     * @Route("/scan-order/progress-and-comments/{id}/edit", name="history_edit", requirements={"id" = "\d+"})
-     * @Method("GET")
+     * @Route("/scan-order/progress-and-comments/{id}/edit", name="history_edit", methods={"GET"}, requirements={"id" = "\d+"})
      * @Template()
      */
     public function editAction($id)
@@ -241,8 +237,7 @@ class HistoryController extends OrderAbstractController
     /**
      * Edits an existing History entity.
      *
-     * @Route("/scan-order/progress-and-comments/{id}", name="history_update", requirements={"id" = "\d+"})
-     * @Method("PUT")
+     * @Route("/scan-order/progress-and-comments/{id}", name="history_update", methods={"PUT"}, requirements={"id" = "\d+"})
      * @Template("AppOrderformBundle/History/edit.html.twig")
      */
     public function updateAction(Request $request, $id)
@@ -280,8 +275,7 @@ class HistoryController extends OrderAbstractController
     /**
      * Deletes a History entity.
      *
-     * @Route("/scan-order/progress-and-comments/{id}", name="history_delete", requirements={"id" = "\d+"})
-     * @Method("DELETE")
+     * @Route("/scan-order/progress-and-comments/{id}", name="history_delete", methods={"DELETE"}, requirements={"id" = "\d+"})
      */
     public function deleteAction(Request $request, $id)
     {
@@ -327,8 +321,7 @@ class HistoryController extends OrderAbstractController
     /**
      * Finds and displays a History entity for Message.
      *
-     * @Route("/scan-order/{id}/progress-and-comments", name="history_message_show", requirements={"id" = "\d+"})
-     * @Method("GET")
+     * @Route("/scan-order/{id}/progress-and-comments", name="history_message_show", methods={"GET"}, requirements={"id" = "\d+"})
      * @Template("AppOrderformBundle/History/index.html.twig")
      */
     public function showHistoryMessageAction($id)
@@ -490,8 +483,7 @@ class HistoryController extends OrderAbstractController
     /**
      * Finds and displays a History entity for Message.
      *
-     * @Route("/scan-order/progress-and-comments/create", name="history_message_new")
-     * @Method("POST")
+     * @Route("/scan-order/progress-and-comments/create", name="history_message_new", methods={"POST"})
      * @Template("AppOrderformBundle/History/index.html.twig")
      */
     public function createHistoryMessageAction(Request $request)
@@ -542,8 +534,7 @@ class HistoryController extends OrderAbstractController
     /**
      * Finds and displays a History entity for Message.
      *
-     * @Route("/scan-order/progress-and-comments/notviewedcomments", name="history_not_viewed_comments")
-     * @Method("GET")
+     * @Route("/scan-order/progress-and-comments/notviewedcomments", name="history_not_viewed_comments", methods={"GET"})
      * @Template("AppOrderformBundle/History/index.html.twig")
      */
     public function notViewedCommentsAction()
@@ -568,8 +559,7 @@ class HistoryController extends OrderAbstractController
     /**
      * Finds and displays a History entity for Message.
      *
-     * @Route("/scan-order/progress-and-comments/notviewedadmincomments", name="history_not_viewed_admincomments")
-     * @Method("GET")
+     * @Route("/scan-order/progress-and-comments/notviewedadmincomments", name="history_not_viewed_admincomments", methods={"GET"})
      * @Template("AppOrderformBundle/History/index.html.twig")
      */
     public function notViewedAdminCommentsAction()

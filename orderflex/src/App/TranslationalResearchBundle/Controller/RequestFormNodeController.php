@@ -30,9 +30,10 @@ use App\TranslationalResearchBundle\Entity\TransResRequest;
 use App\TranslationalResearchBundle\Form\FilterRequestType;
 use App\TranslationalResearchBundle\Form\TransResRequestType;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -48,10 +49,9 @@ class RequestFormNodeController extends OrderAbstractController
     /**
      * Creates a new request entity with formnode.
      *
-     * @Route("/project/{id}/request/new/", name="translationalresearch_request_formnode_new")
-     * @Route("/request/new/", name="translationalresearch_new_standalone_request_formnode")
+     * @Route("/project/{id}/request/new/", name="translationalresearch_request_formnode_new", methods={"GET", "POST"})
+     * @Route("/request/new/", name="translationalresearch_new_standalone_request_formnode", methods={"GET", "POST"})
      * @Template("AppTranslationalResearchBundle/RequestFormnode/new.html.twig")
-     * @Method({"GET", "POST"})
      */
     public function newFormNodeAction(Request $request, Project $project=null)
     {
@@ -178,9 +178,8 @@ class RequestFormNodeController extends OrderAbstractController
     /**
      * Get TransResRequest Edit page
      *
-     * @Route("/work-request/edit/{id}", name="translationalresearch_request_formnode_edit")
+     * @Route("/work-request/edit/{id}", name="translationalresearch_request_formnode_edit", methods={"GET", "POST"})
      * @Template("AppTranslationalResearchBundle/RequestFormnode/edit.html.twig")
-     * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, TransResRequest $transresRequest)
     {
@@ -318,9 +317,8 @@ class RequestFormNodeController extends OrderAbstractController
     /**
      * Finds and displays a request entity.
      *
-     * @Route("/work-request/show/{id}", name="translationalresearch_request_formnode_show")
+     * @Route("/work-request/show/{id}", name="translationalresearch_request_formnode_show", methods={"GET"})
      * @Template("AppTranslationalResearchBundle/RequestFormnode/show.html.twig")
-     * @Method("GET")
      */
     public function showAction(Request $request, TransResRequest $transresRequest)
     {
@@ -375,9 +373,8 @@ class RequestFormNodeController extends OrderAbstractController
     /**
      * Finds and displays all project's requests
      *
-     * @Route("/project/{id}/requests", name="translationalresearch_request_formnode_index")
+     * @Route("/project/{id}/requests", name="translationalresearch_request_formnode_index", methods={"GET"})
      * @Template("AppTranslationalResearchBundle/RequestFormnode/index.html.twig")
-     * @Method("GET")
      */
     public function indexAction(Request $request, Project $project)
     {
@@ -504,10 +501,9 @@ class RequestFormNodeController extends OrderAbstractController
     /**
      * Finds and displays all my requests
      *
-     * @Route("/my-requests", name="translationalresearch_my_requests_formnode")
-     * @Route("/all-requests", name="translationalresearch_all_requests_formnode")
+     * @Route("/my-requests", name="translationalresearch_my_requests_formnode", methods={"GET"})
+     * @Route("/all-requests", name="translationalresearch_all_requests_formnode", methods={"GET"})
      * @Template("AppTranslationalResearchBundle/RequestFormnode/all-requests.html.twig")
-     * @Method("GET")
      */
     public function myRequestsAction(Request $request)
     {
@@ -741,8 +737,7 @@ class RequestFormNodeController extends OrderAbstractController
 
 
     /**
-     * @Route("/request/generate-form-node-tree/", name="translationalresearch_generate_form_node_tree_request_formnode")
-     * @Method("GET")
+     * @Route("/request/generate-form-node-tree/", name="translationalresearch_generate_form_node_tree_request_formnode", methods={"GET"})
      */
     public function generateFormNodeAction(Request $request)
     {
@@ -762,9 +757,8 @@ class RequestFormNodeController extends OrderAbstractController
     /**
      * Finds and displays a progress review form for this request entity.
      *
-     * @Route("/request/progress/review/{id}", name="translationalresearch_request_formnode_review_progress_state")
+     * @Route("/request/progress/review/{id}", name="translationalresearch_request_formnode_review_progress_state", methods={"GET"})
      * @Template("AppTranslationalResearchBundle/RequestFormnode/review.html.twig")
-     * @Method("GET")
      */
     public function reviewProgressAction(Request $request, TransResRequest $transresRequest)
     {
@@ -800,9 +794,8 @@ class RequestFormNodeController extends OrderAbstractController
     /**
      * Finds and displays a billing review form for this request entity.
      *
-     * @Route("/request/billing/review/{id}", name="translationalresearch_request_formnode_review_billing_state")
+     * @Route("/request/billing/review/{id}", name="translationalresearch_request_formnode_review_billing_state", methods={"GET"})
      * @Template("AppTranslationalResearchBundle/RequestFormnode/review.html.twig")
-     * @Method("GET")
      */
     public function reviewBillingAction(Request $request, TransResRequest $transresRequest)
     {
@@ -838,8 +831,7 @@ class RequestFormNodeController extends OrderAbstractController
 
 
     /**
-     * @Route("/request/update-irb-exp-date/", name="translationalresearch_formnode_update_irb_exp_date", options={"expose"=true})
-     * @Method({"GET", "POST"})
+     * @Route("/request/update-irb-exp-date/", name="translationalresearch_formnode_update_irb_exp_date", methods={"GET","POST"}, options={"expose"=true})
      */
     public function updateIrbExpDateAction( Request $request ) {
         //set permission: project irb reviewer or admin

@@ -20,20 +20,20 @@ namespace App\UserdirectoryBundle\Controller;
 
 
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\Routing\Annotation\Route;
 
 
 class DefaultController extends OrderAbstractController
 {
 
     /**
-     * @Route("/thanks-for-downloading/{id}/{sitename}", name="common_thankfordownloading")
+     * @Route("/thanks-for-downloading/{id}/{sitename}", name="common_thankfordownloading", methods={"GET"})
      * @Template("AppUserdirectoryBundle/Default/thanksfordownloading.html.twig")
-     * @Method("GET")
      */
     public function thankfordownloadingAction(Request $request, $id, $sitename) {
         return array(
@@ -44,9 +44,8 @@ class DefaultController extends OrderAbstractController
 
 
     /**
-     * @Route("/show-system-log", name="employees_show_system_log")
+     * @Route("/show-system-log", name="employees_show_system_log", methods={"GET"})
      * @Template("AppUserdirectoryBundle/Default/show-system-log.html.twig")
-     * @Method("GET")
      */
     public function showSystemLogAction(Request $request) {
 
@@ -77,9 +76,8 @@ class DefaultController extends OrderAbstractController
     }
 
     /**
-     * @Route("/show-system-test-error-log", name="employees_show_system_test_error_log")
+     * @Route("/show-system-test-error-log", name="employees_show_system_test_error_log", methods={"GET"})
      * @Template("AppUserdirectoryBundle/Default/show-system-log.html.twig")
-     * @Method("GET")
      */
     public function showSystemTestLogAction(Request $request) {
 

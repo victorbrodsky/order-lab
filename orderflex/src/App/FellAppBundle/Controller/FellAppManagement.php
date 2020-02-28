@@ -41,9 +41,10 @@ use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransf
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
@@ -52,8 +53,7 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 class FellAppManagement extends OrderAbstractController {
 
     /**
-     * @Route("/fellowship-types-settings", name="fellapp_fellowshiptype_settings")
-     * @Method("GET")
+     * @Route("/fellowship-types-settings", name="fellapp_fellowshiptype_settings", methods={"GET"})
      * @Template("AppFellAppBundle/Management/management.html.twig")
      */
     public function felltypeSettingsAction(Request $request) {
@@ -96,8 +96,7 @@ class FellAppManagement extends OrderAbstractController {
     }
 
     /**
-     * @Route("/add-fellowship-application-type", name="fellapp_fellowship_application_type_add")
-     * @Method({"GET", "POST"})
+     * @Route("/add-fellowship-application-type", name="fellapp_fellowship_application_type_add", methods={"GET","POST"})
      * @Template("AppFellAppBundle/Management/new-fellowship-application-type.html.twig")
      */
     public function addFellowshipApplicationTypeAction(Request $request )
@@ -251,8 +250,7 @@ class FellAppManagement extends OrderAbstractController {
      * It should ONLY remove/strip all of THIS GROUP's roles from all users.
      * Do not delete the roles themselves and do not delete the organizational group from the Institution tree.
      *
-     * @Route("/fellowship-application-type-remove/{fellaptypeid}", name="fellapp_fellowship_application_type_remove")
-     * @Method({"GET", "POST"})
+     * @Route("/fellowship-application-type-remove/{fellaptypeid}", name="fellapp_fellowship_application_type_remove", methods={"GET","POST"})
      */
     public function removeFellowshipApplicationTypeAction(Request $request, $fellaptypeid )
     {
@@ -309,8 +307,7 @@ class FellAppManagement extends OrderAbstractController {
 
 
     /**
-     * @Route("/fellowship-type/show/{id}", name="fellapp_fellowshiptype_setting_show")
-     * @Method("GET")
+     * @Route("/fellowship-type/show/{id}", name="fellapp_fellowshiptype_setting_show", methods={"GET"})
      * @Template("AppFellAppBundle/Management/new.html.twig")
      */
     public function showAction(Request $request, $id) {
@@ -347,8 +344,7 @@ class FellAppManagement extends OrderAbstractController {
     }
 
     /**
-     * @Route("/fellowship-type/edit/{id}", name="fellapp_fellowshiptype_setting_edit")
-     * @Method({"GET", "POST"})
+     * @Route("/fellowship-type/edit/{id}", name="fellapp_fellowshiptype_setting_edit", methods={"GET","POST"})
      * @Template("AppFellAppBundle/Management/new.html.twig")
      */
     public function editAction(Request $request, $id) {
@@ -508,8 +504,7 @@ class FellAppManagement extends OrderAbstractController {
 
 
     /**
-     * @Route("/populate-default", name="fellapp_populate_default")
-     * @Method("GET")
+     * @Route("/populate-default", name="fellapp_populate_default", methods={"GET"})
      * @Template("AppFellAppBundle/Management/management.html.twig")
      */
     public function populateDefaultAction(Request $request) {
@@ -724,8 +719,7 @@ class FellAppManagement extends OrderAbstractController {
 
 
     /**
-     * @Route("/update-inst-user-role", name="fellapp_update_inst_user_role")
-     * @Method("GET")
+     * @Route("/update-inst-user-role", name="fellapp_update_inst_user_role", methods={"GET"})
      */
     public function updateUserInstRoleAction(Request $request)
     {

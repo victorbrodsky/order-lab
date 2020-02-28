@@ -26,10 +26,10 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-
+use Symfony\Component\Routing\Annotation\Route;
 use App\UserdirectoryBundle\Entity\SiteParameters;
 use App\UserdirectoryBundle\Form\SiteParametersType;
 use App\UserdirectoryBundle\Util\UserUtil;
@@ -46,8 +46,7 @@ class SiteParametersController extends OrderAbstractController
     /**
      * Lists all SiteParameters entities.
      *
-     * @Route("/settings-id/{id}", name="employees_siteparameters_id")
-     * @Method("GET")
+     * @Route("/settings-id/{id}", name="employees_siteparameters_id", methods={"GET"})
      * @Template("AppUserdirectoryBundle/SiteParameters/index.html.twig")
      */
     public function indexIdAction(Request $request, $id=null)
@@ -64,8 +63,7 @@ class SiteParametersController extends OrderAbstractController
     /**
      * Lists all SiteParameters entities.
      *
-     * @Route("/", name="employees_siteparameters")
-     * @Method("GET")
+     * @Route("/", name="employees_siteparameters", methods={"GET"})
      * @Template("AppUserdirectoryBundle/SiteParameters/index.html.twig")
      */
     public function indexAction(Request $request)
@@ -199,8 +197,7 @@ class SiteParametersController extends OrderAbstractController
     /**
      * Displays a form to edit an existing SiteParameters entity.
      *
-     * @Route("/{id}/edit", name="employees_siteparameters_edit")
-     * @Method("GET")
+     * @Route("/{id}/edit", name="employees_siteparameters_edit", methods={"GET"})
      * @Template("AppUserdirectoryBundle/SiteParameters/edit.html.twig")
      */
     public function editAction(Request $request,$id)
@@ -252,8 +249,7 @@ class SiteParametersController extends OrderAbstractController
     /**
      * Edits an existing SiteParameters entity.
      *
-     * @Route("/{id}", name="employees_siteparameters_update")
-     * @Method("PUT")
+     * @Route("/{id}", name="employees_siteparameters_update", methods={"PUT"})
      * @Template("AppUserdirectoryBundle/SiteParameters/edit.html.twig")
      */
     public function updateAction(Request $request, $id)
@@ -374,8 +370,7 @@ class SiteParametersController extends OrderAbstractController
     /**
      * Edits an existing SiteParameters entity.
      *
-     * @Route("/organizational-group-default-management/{id}", name="employees_management_organizationalgroupdefault")
-     * @Method({"GET","POST"})
+     * @Route("/organizational-group-default-management/{id}", name="employees_management_organizationalgroupdefault", methods={"GET", "POST"})
      * @Template("AppUserdirectoryBundle/SiteParameters/group-management-form.html.twig")
      */
     public function manageOrgGroupDefaultAction(Request $request, $id)
@@ -575,8 +570,7 @@ class SiteParametersController extends OrderAbstractController
     /**
      * Initial Configuration Completed
      *
-     * @Route("/initial-configuration", name="employees_initial_configuration")
-     * @Method({"GET","POST"})
+     * @Route("/initial-configuration", name="employees_initial_configuration", methods={"GET", "POST"})
      * @Template("AppUserdirectoryBundle/SiteParameters/initial-configuration.html.twig")
      */
     public function initialConfigurationAction(Request $request)

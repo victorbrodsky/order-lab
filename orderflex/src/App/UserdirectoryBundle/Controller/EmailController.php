@@ -20,19 +20,19 @@ namespace App\UserdirectoryBundle\Controller;
 
 
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\Routing\Annotation\Route;
 
 
 class EmailController extends OrderAbstractController
 {
 
     /**
-     * @Route("/send-queued-emails/", name="employees_send_spooled_emails")
-     * @Method({"GET"})
+     * @Route("/send-queued-emails/", name="employees_send_spooled_emails", methods={"GET"})
      */
     public function sendSpooledEmailsAction(Request $request)
     {
@@ -66,9 +66,8 @@ class EmailController extends OrderAbstractController
     }
     
     /**
-     * @Route("/send-a-test-email/", name="employees_emailtest")
+     * @Route("/send-a-test-email/", name="employees_emailtest", methods={"GET","POST"})
      * @Template("AppUserdirectoryBundle/Email/email-test.html.twig")
-     * @Method({"GET","POST"})
      */
     public function emailTestAction(Request $request)
     {

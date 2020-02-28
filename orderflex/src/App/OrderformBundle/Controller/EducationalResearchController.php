@@ -20,9 +20,10 @@ namespace App\OrderformBundle\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 
 use App\OrderformBundle\Entity\Educational;
 use App\OrderformBundle\Form\EducationalType;
@@ -39,9 +40,8 @@ class EducationalResearchController extends OrderAbstractController {
     /**
      * Displays a form to edit an existing entity.
      *
-     * @Route("/educational/{id}/edit", name="educational_edit")
-     * @Route("/research/{id}/edit", name="research_edit")
-     * @Method("GET")
+     * @Route("/educational/{id}/edit", name="educational_edit", methods={"GET"})
+     * @Route("/research/{id}/edit", name="research_edit", methods={"GET"})
      */
     public function editAction(Request $request, $id)
     {
@@ -74,9 +74,8 @@ class EducationalResearchController extends OrderAbstractController {
     /**
      * Edits an existing entity.
      *
-     * @Route("/educational/{id}/edit", name="educational_update")
-     * @Route("/research/{id}/edit", name="research_update")
-     * @Method("PUT")
+     * @Route("/educational/{id}/edit", name="educational_update", methods={"PUT"})
+     * @Route("/research/{id}/edit", name="research_update", methods={"PUT"})
      */
     public function updateAction(Request $request, $id)
     {

@@ -20,9 +20,10 @@ namespace App\VacReqBundle\Controller;
 
 use App\UserdirectoryBundle\Controller\SecurityController;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -45,9 +46,8 @@ class VacReqSecurityController extends SecurityController
 
 
     /**
-     * @Route("/setloginvisit/", name="vacreq_setloginvisit")
+     * @Route("/setloginvisit/", name="vacreq_setloginvisit", methods={"GET"})
      *
-     * @Method("GET")
      */
     public function setAjaxLoginVisit( Request $request )
     {
@@ -57,8 +57,7 @@ class VacReqSecurityController extends SecurityController
 
 
     /**
-     * @Route("/no-permission", name="vacreq-nopermission")
-     * @Method("GET")
+     * @Route("/no-permission", name="vacreq-nopermission", methods={"GET"})
      * @Template("AppUserdirectoryBundle/Security/nopermission.html.twig")
      */
     public function actionNoPermission( Request $request )

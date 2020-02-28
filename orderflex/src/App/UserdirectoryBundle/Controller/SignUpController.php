@@ -26,8 +26,9 @@ use App\UserdirectoryBundle\Form\ResetPasswordType;
 use App\UserdirectoryBundle\Form\UserSimpleType;
 use App\UserdirectoryBundle\Util\UserUtil;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -57,8 +58,7 @@ class SignUpController extends OrderAbstractController
     /**
      * Lists all signUp entities.
      *
-     * @Route("/signup-list", name="employees_signup_index")
-     * @Method("GET")
+     * @Route("/signup-list", name="employees_signup_index", methods={"GET"})
      */
     public function indexAction()
     {
@@ -78,8 +78,7 @@ class SignUpController extends OrderAbstractController
      * http://localhost/order/directory/sign-up
      * Creates a new signUp entity.
      *
-     * @Route("/sign-up", name="employees_signup_new")
-     * @Method({"GET", "POST"})
+     * @Route("/sign-up", name="employees_signup_new", methods={"GET","POST"})
      */
     public function newSignUpAction(Request $request)
     {
@@ -417,8 +416,7 @@ class SignUpController extends OrderAbstractController
     }
 
     /**
-     * @Route("/activate-account/{registrationLinkID}", name="employees_activate_account")
-     * @Method({"GET", "POST"})
+     * @Route("/activate-account/{registrationLinkID}", name="employees_activate_account", methods={"GET", "POST"})
      */
     public function activateAccountAction(Request $request, $registrationLinkID)
     {
@@ -711,8 +709,7 @@ class SignUpController extends OrderAbstractController
     /**
      * Finds and displays a signUp entity.
      *
-     * @Route("/signup-show/{id}", name="employees_signup_show")
-     * @Method("GET")
+     * @Route("/signup-show/{id}", name="employees_signup_show", methods={"GET"})
      */
     public function showAction(SignUp $signUp)
     {
@@ -736,8 +733,7 @@ class SignUpController extends OrderAbstractController
     /**
      * Displays a form to edit an existing signUp entity.
      *
-     * @Route("/signup-edit/{id}", name="employees_signup_edit")
-     * @Method({"GET", "POST"})
+     * @Route("/signup-edit/{id}", name="employees_signup_edit", methods={"GET", "POST"})
      */
     public function editAction(Request $request, SignUp $signUp)
     {
@@ -766,8 +762,7 @@ class SignUpController extends OrderAbstractController
     /**
      * Deletes a signUp entity.
      *
-     * @Route("/signup-delete/{id}", name="employees_signup_delete")
-     * @Method("DELETE")
+     * @Route("/signup-delete/{id}", name="employees_signup_delete", methods={"DELETE"})
      */
     public function deleteAction(Request $request, SignUp $signUp)
     {
@@ -955,8 +950,7 @@ class SignUpController extends OrderAbstractController
     /**
      * http://localhost/order/directory/forgot-password
      *
-     * @Route("/forgot-password", name="employees_forgot_password")
-     * @Method({"GET", "POST"})
+     * @Route("/forgot-password", name="employees_forgot_password", methods={"GET", "POST"})
      */
     public function forgotPasswordAction(Request $request)
     {
@@ -1181,8 +1175,7 @@ class SignUpController extends OrderAbstractController
     /**
      * http://localhost/order/directory/reset-password/d902aea8d5bdc7141
      *
-     * @Route("/reset-password/{resetPasswordLinkID}", name="employees_reset_password")
-     * @Method({"GET", "POST"})
+     * @Route("/reset-password/{resetPasswordLinkID}", name="employees_reset_password", methods={"GET", "POST"})
      */
     public function resetPasswordAction(Request $request, $resetPasswordLinkID)
     {

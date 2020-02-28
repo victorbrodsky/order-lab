@@ -22,9 +22,10 @@ use App\VacReqBundle\Entity\VacReqRequest;
 use App\VacReqBundle\Form\VacReqFilterType;
 use App\VacReqBundle\Form\VacReqRequestType;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -38,8 +39,7 @@ class RequestIndexController extends OrderAbstractController
     /**
      * Creates a new VacReqRequest entity.
      *
-     * @Route("/my-requests/", name="vacreq_myrequests")
-     * @Method({"GET", "POST"})
+     * @Route("/my-requests/", name="vacreq_myrequests", methods={"GET", "POST"})
      * @Template("AppVacReqBundle/Request/index.html.twig")
      */
     public function myRequestsAction(Request $request)
@@ -76,8 +76,7 @@ class RequestIndexController extends OrderAbstractController
     /**
      * Creates a new VacReqRequest entity.
      *
-     * @Route("/incoming-requests/", name="vacreq_incomingrequests")
-     * @Method({"GET", "POST"})
+     * @Route("/incoming-requests/", name="vacreq_incomingrequests", methods={"GET", "POST"})
      * @Template("AppVacReqBundle/Request/index.html.twig")
      */
     public function incomingRequestsAction(Request $request)

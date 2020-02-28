@@ -29,9 +29,10 @@ use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 
 use App\FellAppBundle\Entity\FellowshipApplication;
 use App\UserdirectoryBundle\Entity\User;
@@ -44,8 +45,7 @@ class FellAppApplicantController extends OrderAbstractController {
 
 
     /**
-     * @Route("/interview-modal/{id}", name="fellapp_interview_modal")
-     * @Method("GET")
+     * @Route("/interview-modal/{id}", name="fellapp_interview_modal", methods={"GET"})
      * @Template("AppFellAppBundle/Interview/modal.html.twig")
      */
     public function interviewModalAction(Request $request, $id) {
@@ -81,8 +81,7 @@ class FellAppApplicantController extends OrderAbstractController {
 
 
     /**
-     * @Route("/interview-score-rank/{id}", name="fellapp_interviewe_score_rank")
-     * @Method("GET")
+     * @Route("/interview-score-rank/{id}", name="fellapp_interviewe_score_rank", methods={"GET"})
      */
     public function intervieweScoreRankAction(Request $request, $id) {
 
@@ -185,8 +184,7 @@ class FellAppApplicantController extends OrderAbstractController {
 
 
     /**
-     * @Route("/invite-interviewers-to-rate/{id}", name="fellapp_inviteinterviewerstorate")
-     * @Method("GET")
+     * @Route("/invite-interviewers-to-rate/{id}", name="fellapp_inviteinterviewerstorate", methods={"GET"})
      */
     public function inviteInterviewersToRateAction(Request $request, $id) {
 
@@ -233,8 +231,7 @@ class FellAppApplicantController extends OrderAbstractController {
     }
 
     /**
-     * @Route("/invite-interviewer-to-rate/{interviewId}", name="fellapp_invite_single_interviewer_to_rate")
-     * @Method("GET")
+     * @Route("/invite-interviewer-to-rate/{interviewId}", name="fellapp_invite_single_interviewer_to_rate", methods={"GET"})
      */
     public function inviteSingleInterviewerToRateAction(Request $request, $interviewId) {
 
@@ -457,9 +454,8 @@ class FellAppApplicantController extends OrderAbstractController {
 
 
     /**
- * @Route("/invite-observers-to-view/{id}", name="fellapp_inviteobservers")
- * @Method("GET")
- */
+     * @Route("/invite-observers-to-view/{id}", name="fellapp_inviteobservers", methods={"GET"})
+     */
     public function inviteObserversToRateAction(Request $request, $id) {
 
         if( false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_DIRECTOR') ){
@@ -554,8 +550,7 @@ class FellAppApplicantController extends OrderAbstractController {
 
 
     /**
-     * @Route("/download-interview-applicants-list-pdf/{currentYear}/{fellappTypeId}/{fellappIds}", name="fellapp_download_interview_applicants_list_pdf")
-     * @Method("GET")
+     * @Route("/download-interview-applicants-list-pdf/{currentYear}/{fellappTypeId}/{fellappIds}", name="fellapp_download_interview_applicants_list_pdf", methods={"GET"})
      */
     public function downloadInterviewApplicantsListAction(Request $request, $currentYear, $fellappTypeId, $fellappIds) {
 
@@ -649,8 +644,7 @@ class FellAppApplicantController extends OrderAbstractController {
 
 
     /**
-     * @Route("/download-interview-applicants-list-doc/{currentYear}/{fellappTypeId}/{fellappIds}", name="fellapp_download_interview_applicants_list_doc")
-     * @Method("GET")
+     * @Route("/download-interview-applicants-list-doc/{currentYear}/{fellappTypeId}/{fellappIds}", name="fellapp_download_interview_applicants_list_doc", methods={"GET"})
      */
     public function downloadInterviewApplicantsListDocAction(Request $request, $currentYear, $fellappTypeId, $fellappIds) {
 
@@ -717,8 +711,7 @@ class FellAppApplicantController extends OrderAbstractController {
     }
 
     /**
-     * @Route("/interview-applicants-list/{fellappIds}", name="fellapp_interview_applicants_list")
-     * @Method("GET")
+     * @Route("/interview-applicants-list/{fellappIds}", name="fellapp_interview_applicants_list", methods={"GET"})
      * @Template("AppFellAppBundle/Interview/applicants-interview-info.html.twig")
      */
     public function showInterviewApplicantsListAction(Request $request, $fellappIds) {

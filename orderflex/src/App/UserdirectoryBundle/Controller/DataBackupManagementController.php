@@ -27,9 +27,10 @@ namespace App\UserdirectoryBundle\Controller;
 
 use Doctrine\DBAL\Configuration;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
 class DataBackupManagementController extends OrderAbstractController
@@ -46,9 +47,8 @@ class DataBackupManagementController extends OrderAbstractController
      * http://www.php-mysql-tutorial.com/wikis/mysql-tutorials/using-php-to-backup-mysql-databases.aspx
      * https://www.phpclasses.org/package/5761-PHP-Dump-a-Microsoft-SQL-server-database.html#view_files/files/29084
      *
-     * @Route("/data-backup-management/", name="employees_data_backup_management")
+     * @Route("/data-backup-management/", name="employees_data_backup_management", methods={"GET"})
      * @Template("AppUserdirectoryBundle/DataBackup/data_backup_management.html.twig")
-     * @Method("GET")
      */
     public function dataBackupManagementAction(Request $request) {
 
@@ -86,9 +86,8 @@ class DataBackupManagementController extends OrderAbstractController
     /**
      * //@Template("AppUserdirectoryBundle/DataBackup/create_backup.html.twig")
      *
-     * @Route("/create-backup/", name="employees_create_backup")
+     * @Route("/create-backup/", name="employees_create_backup", methods={"GET"})
      * @Template("AppUserdirectoryBundle/DataBackup/data_backup_management.html.twig")
-     * @Method("GET")
      */
     public function createBackupAction(Request $request) {
 
@@ -145,9 +144,8 @@ class DataBackupManagementController extends OrderAbstractController
 
 
     /**
-     * @Route("/restore-backup/{backupFilePath}", name="employees_restore_backup", options={"expose"=true})
+     * @Route("/restore-backup/{backupFilePath}", name="employees_restore_backup", methods={"GET"}, options={"expose"=true})
      * @Template("AppUserdirectoryBundle/DataBackup/data_backup_management.html.twig")
-     * @Method("GET")
      */
     public function restoreBackupAction( Request $request, $backupFilePath ) {
 

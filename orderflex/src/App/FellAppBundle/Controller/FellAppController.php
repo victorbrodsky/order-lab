@@ -36,9 +36,10 @@ use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransf
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Validator\Constraints\DateTime;
@@ -940,8 +941,7 @@ class FellAppController extends OrderAbstractController {
 
     /**
      * -NOT-USED
-     * @Route("/update-NOT-USED/{id}", name="fellapp_update-NOT-USED")
-     * @Method("PUT")
+     * @Route("/update-NOT-USED/{id}", name="fellapp_update-NOT-USED", methods={"PUT"})
      * @Template("AppFellAppBundle/Form/new.html.twig")
      */
     public function updateNotUsedAction(Request $request, $id) {
@@ -1153,10 +1153,9 @@ class FellAppController extends OrderAbstractController {
      * Separate edit/update controller action to insure csrf token is valid
      * Displays a form to edit an existing fellapp entity.
      *
-     * @Route("/edit/{id}", name="fellapp_edit")
-     * @Route("/edit-with-default-interviewers/{id}", name="fellapp_edit_default_interviewers")
+     * @Route("/edit/{id}", name="fellapp_edit", methods={"GET","POST"})
+     * @Route("/edit-with-default-interviewers/{id}", name="fellapp_edit_default_interviewers", methods={"GET","POST"})
      * @Template("AppFellAppBundle/Form/edit.html.twig")
-     * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, FellowshipApplication $entity)
     {
@@ -1496,8 +1495,7 @@ class FellAppController extends OrderAbstractController {
     }
 
     /**
-     * @Route("/applicant/new", name="fellapp_create_applicant")
-     * @Method("POST")
+     * @Route("/applicant/new", name="fellapp_create_applicant", methods={"POST"})
      * @Template("AppFellAppBundle/Form/new.html.twig")
      */
     public function createApplicantAction( Request $request )
@@ -1746,9 +1744,8 @@ class FellAppController extends OrderAbstractController {
 
 
     /**
-     * @Route("/change-status/{id}/{status}", name="fellapp_status")
-     * @Route("/status/{id}/{status}", name="fellapp_status_email")
-     * @Method("GET")
+     * @Route("/change-status/{id}/{status}", name="fellapp_status", methods={"GET"})
+     * @Route("/status/{id}/{status}", name="fellapp_status_email", methods={"GET"})
      */
     public function statusAction( Request $request, $id, $status ) {
 
@@ -1877,8 +1874,7 @@ class FellAppController extends OrderAbstractController {
 
 
 //    /**
-//     * @Route("/status-sync/", name="fellapp_sincstatus")
-//     * @Method("GET")
+//     * @Route("/status-sync/", name="fellapp_sincstatus", methods={"GET"})
 //     */
 //    public function syncStatusAction( Request $request ) {
 //
@@ -1901,9 +1897,8 @@ class FellAppController extends OrderAbstractController {
 //    }
 
     /**
-     * @Route("/application-evaluation/show/{id}", name="fellapp_application_show")
-     * @Route("/application-evaluation/{id}", name="fellapp_application_edit")
-     * @Method("GET")
+     * @Route("/application-evaluation/show/{id}", name="fellapp_application_show", methods={"GET"})
+     * @Route("/application-evaluation/{id}", name="fellapp_application_edit", methods={"GET"})
      * @Template("AppFellAppBundle/Interview/interview_selector.html.twig")
      */
     public function applicationAction( Request $request, FellowshipApplication $fellapp )
@@ -1967,9 +1962,8 @@ class FellAppController extends OrderAbstractController {
     }
 
     /**
-     * @Route("/interview-evaluation/show/{id}", name="fellapp_interview_show")
-     * @Route("/interview-evaluation/{id}", name="fellapp_interview_edit")
-     * @Method("GET")
+     * @Route("/interview-evaluation/show/{id}", name="fellapp_interview_show", methods={"GET"})
+     * @Route("/interview-evaluation/{id}", name="fellapp_interview_edit", methods={"GET"})
      * @Template("AppFellAppBundle/Interview/new.html.twig")
      */
     public function interviewAction( Request $request, $id ) {
@@ -2066,8 +2060,7 @@ class FellAppController extends OrderAbstractController {
     }
 
     /**
-     * @Route("/interview/update/{id}", name="fellapp_interview_update")
-     * @Method("POST")
+     * @Route("/interview/update/{id}", name="fellapp_interview_update", methods={"POST"})
      * @Template("AppFellAppBundle/Interview/new.html.twig")
      */
     public function interviewUpdateAction( Request $request, $id ) {
@@ -2180,9 +2173,8 @@ class FellAppController extends OrderAbstractController {
 
 
 //    /**
-//     * @Route("/interview/new/{fellappid}/{interviewid}", name="fellapp_interview_new")
-//     * @Route("/interview/new/{fellappid}/{interviewid}", name="fellapp_interview_new")
-//     * @Method("GET")
+//     * @Route("/interview/new/{fellappid}/{interviewid}", name="fellapp_interview_new", methods={"GET"})
+//     * @Route("/interview/new/{fellappid}/{interviewid}", name="fellapp_interview_new", methods={"GET"})
 //     * @Template("AppFellAppBundle/Interview/new.html.twig")
 //     */
 //    public function createInterviewAction( Request $request ) {
@@ -2449,8 +2441,7 @@ class FellAppController extends OrderAbstractController {
 //     * NOT USED NOW
 //     * update report by js
 //     *
-//     * @Route("/update-report/", name="fellapp_update_report", options={"expose"=true})
-//     * @Method("POST")
+//     * @Route("/update-report/", name="fellapp_update_report", methods={"POST"}, options={"expose"=true})
 //     */
 //    public function updateReportAction(Request $request) {
 //
@@ -2483,9 +2474,8 @@ class FellAppController extends OrderAbstractController {
      * https://github.com/KnpLabs/KnpSnappyBundle
      * https://github.com/devandclick/EnseparHtml2pdfBundle
      *
-     * @Route("/download-pdf/{id}", name="fellapp_download_pdf")
-     * @Route("/view-pdf/{id}", name="fellapp_view_pdf")
-     * @Method("GET")
+     * @Route("/download-pdf/{id}", name="fellapp_download_pdf", methods={"GET"})
+     * @Route("/view-pdf/{id}", name="fellapp_view_pdf", methods={"GET"})
      */
     public function downloadReportAction(Request $request, $id) {
 
@@ -2560,8 +2550,7 @@ class FellAppController extends OrderAbstractController {
 
     /**
      * Download itinerary
-     * @Route("/download-itinerary-pdf/{id}", name="fellapp_download_itinerary_pdf")
-     * @Method("GET")
+     * @Route("/download-itinerary-pdf/{id}", name="fellapp_download_itinerary_pdf", methods={"GET"})
      */
     public function downloadItineraryAction(Request $request, $id) {
 
@@ -2723,8 +2712,7 @@ class FellAppController extends OrderAbstractController {
     }
 
     /**
-     * @Route("/send-rejection-emails-action/", name="fellapp_send_rejection_emails_action", options={"expose"=true})
-     * @Method("POST")
+     * @Route("/send-rejection-emails-action/", name="fellapp_send_rejection_emails_action", methods={"POST"}, options={"expose"=true})
      * @Template("AppFellAppBundle/Form/send-notification-emails.html.twig")
      */
     public function sendRejectionEmailsAction(Request $request) {
@@ -2886,8 +2874,7 @@ class FellAppController extends OrderAbstractController {
     /**
      * Show home page
      *
-     * @Route("/test", name="fellapp_test")
-     * @Method("GET")
+     * @Route("/test", name="fellapp_test", methods={"GET"})
      */
     public function testAction() {
 

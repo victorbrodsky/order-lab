@@ -24,9 +24,10 @@ use App\VacReqBundle\Entity\VacReqRequestVacation;
 use App\VacReqBundle\Form\VacReqRequestType;
 use App\VacReqBundle\Util\VacReqImportData;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -41,11 +42,10 @@ class RequestController extends OrderAbstractController
     /**
      * Creates a new VacReqRequest entity.
      *
-     * @Route("/", name="vacreq_home")
-     * @Route("/new", name="vacreq_new")
-     * @Route("/carry-over-request/new", name="vacreq_carryoverrequest")
+     * @Route("/", name="vacreq_home", methods={"GET", "POST"})
+     * @Route("/new", name="vacreq_new", methods={"GET", "POST"})
+     * @Route("/carry-over-request/new", name="vacreq_carryoverrequest", methods={"GET", "POST"})
      *
-     * @Method({"GET", "POST"})
      * @Template("AppVacReqBundle/Request/edit.html.twig")
      */
     public function newAction(Request $request)
@@ -326,9 +326,8 @@ class RequestController extends OrderAbstractController
     /**
      * Show: Finds and displays a VacReqRequest entity.
      *
-     * @Route("/show/{id}", name="vacreq_show")
+     * @Route("/show/{id}", name="vacreq_show", methods={"GET"})
      *
-     * @Method("GET")
      * @Template("AppVacReqBundle/Request/edit.html.twig")
      */
     public function showAction(Request $request, $id)
@@ -378,10 +377,9 @@ class RequestController extends OrderAbstractController
     /**
      * Edit: Displays a form to edit an existing VacReqRequest entity.
      *
-     * @Route("/edit/{id}", name="vacreq_edit")
-     * @Route("/review/{id}", name="vacreq_review")
+     * @Route("/edit/{id}", name="vacreq_edit", methods={"GET", "POST"})
+     * @Route("/review/{id}", name="vacreq_review", methods={"GET", "POST"})
      *
-     * @Method({"GET", "POST"})
      * @Template("AppVacReqBundle/Request/edit.html.twig")
      */
     public function editAction(Request $request, $id)
@@ -700,9 +698,8 @@ class RequestController extends OrderAbstractController
 
     /**
      * approved, rejected, pending, canceled
-     * @Route("/status/{id}/{requestName}/{status}", name="vacreq_status_change")
-     * @Route("/estatus/{id}/{requestName}/{status}", name="vacreq_status_email_change")
-     * @Method({"GET"})
+     * @Route("/status/{id}/{requestName}/{status}", name="vacreq_status_change", methods={"GET"})
+     * @Route("/estatus/{id}/{requestName}/{status}", name="vacreq_status_email_change", methods={"GET"})
      * @Template("AppVacReqBundle/Request/edit.html.twig")
      */
     public function statusAction(Request $request, $id, $requestName, $status) {
@@ -996,8 +993,7 @@ class RequestController extends OrderAbstractController
 
     /**
      * submitter can submit a "cancellation-request" for an entire, already approved request
-     * @Route("/status-cancellation-request/{id}", name="vacreq_status_cancellation-request")
-     * @Method({"GET"})
+     * @Route("/status-cancellation-request/{id}", name="vacreq_status_cancellation-request", methods={"GET"})
      */
     public function statusCancellationRequestAction(Request $request, $id) {
         $em = $this->getDoctrine()->getManager();
@@ -1108,9 +1104,8 @@ class RequestController extends OrderAbstractController
      * cancellation-request => cancellation-request-approved => canceled
      * cancellation-request => cancellation-request-rejected => approved
      *
-     * @Route("/cancellation-request/status/{id}/{status}", name="vacreq_status_cancellation-request_change")
-     * @Route("/cancellation-request/estatus/{id}/{status}", name="vacreq_status_cancellation-request_email_change")
-     * @Method({"GET"})
+     * @Route("/cancellation-request/status/{id}/{status}", name="vacreq_status_cancellation-request_change", methods={"GET"})
+     * @Route("/cancellation-request/estatus/{id}/{status}", name="vacreq_status_cancellation-request_email_change", methods={"GET"})
      */
     public function statusCancellationRequestChaneAction(Request $request, $id, $status) {
         $em = $this->getDoctrine()->getManager();
@@ -1193,8 +1188,7 @@ class RequestController extends OrderAbstractController
     }
 
     /**
-     * @Route("/send-reminder-email/{id}", name="vacreq_send_reminder_email")
-     * @Method({"GET"})
+     * @Route("/send-reminder-email/{id}", name="vacreq_send_reminder_email", methods={"GET"})
      */
     public function sendReminderEmailAction(Request $request, $id)
     {
@@ -1474,8 +1468,7 @@ class RequestController extends OrderAbstractController
 
     ////////////////////////////// service and testing methods //////////////////////////////////
     /**
-     * @Route("/import-old-data/", name="vacreq_import_old_data")
-     * @Method({"GET"})
+     * @Route("/import-old-data/", name="vacreq_import_old_data", methods={"GET"})
      */
     public function importOldDataAction(Request $request) {
 
@@ -1499,8 +1492,7 @@ class RequestController extends OrderAbstractController
 
 
     /**
-     * @Route("/delete-imported-old-data/", name="vacreq_delete_imported_old_data")
-     * @Method({"GET"})
+     * @Route("/delete-imported-old-data/", name="vacreq_delete_imported_old_data", methods={"GET"})
      */
     public function deleteImportedOldDataAction(Request $request) {
 
@@ -1561,8 +1553,7 @@ class RequestController extends OrderAbstractController
 
 
     /**
-     * @Route("/setdates-imported-old-data/", name="vacreq_setdates_imported_old_data")
-     * @Method({"GET"})
+     * @Route("/setdates-imported-old-data/", name="vacreq_setdates_imported_old_data", methods={"GET"})
      */
     public function setdatesImportedOldDataAction(Request $request) {
 
@@ -1631,8 +1622,7 @@ class RequestController extends OrderAbstractController
 
     /**
      * TODO: clean overlap approved vacation requests
-     * @Route("/overlaps/", name="vacreq_overlaps")
-     * @Method({"GET"})
+     * @Route("/overlaps/", name="vacreq_overlaps", methods={"GET"})
      */
     public function getOverlapRequestsAction(Request $request)
     {
@@ -1706,8 +1696,7 @@ class RequestController extends OrderAbstractController
 
 
     /**
-     * @Route("/update-carryover/", name="vacreq_update_carryover")
-     * @Method({"GET"})
+     * @Route("/update-carryover/", name="vacreq_update_carryover", methods={"GET"})
      */
     public function getUpdateCarryOverRequestsAction(Request $request)
     {

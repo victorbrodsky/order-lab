@@ -23,9 +23,10 @@ use App\UserdirectoryBundle\Controller\SiteParametersController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 
 use App\UserdirectoryBundle\Entity\SiteParameters;
 use App\UserdirectoryBundle\Form\SiteParametersType;
@@ -42,8 +43,7 @@ class FellAppSiteParametersController extends SiteParametersController
     /**
      * Lists all SiteParameters entities.
      *
-     * @Route("/site-settings/", name="fellapp_sitesettings_siteparameters")
-     * @Method("GET")
+     * @Route("/site-settings/", name="fellapp_sitesettings_siteparameters", methods={"GET"})
      * @Template("AppUserdirectoryBundle/SiteParameters/site-index.html.twig")
      */
     public function indexSiteSettingsAction(Request $request)
@@ -57,8 +57,7 @@ class FellAppSiteParametersController extends SiteParametersController
     /**
      * Lists all SiteParameters entities.
      *
-     * @Route("/", name="fellapp_siteparameters")
-     * @Method("GET")
+     * @Route("/", name="fellapp_siteparameters", methods={"GET"})
      * @Template("AppUserdirectoryBundle/SiteParameters/index.html.twig")
      */
     public function indexAction(Request $request)
@@ -72,8 +71,7 @@ class FellAppSiteParametersController extends SiteParametersController
     /**
      * Displays a form to edit an existing SiteParameters entity.
      *
-     * @Route("/{id}/edit", name="fellapp_siteparameters_edit")
-     * @Method("GET")
+     * @Route("/{id}/edit", name="fellapp_siteparameters_edit", methods={"GET"})
      * @Template("AppUserdirectoryBundle/SiteParameters/edit.html.twig")
      */
     public function editAction(Request $request,$id)
@@ -84,8 +82,7 @@ class FellAppSiteParametersController extends SiteParametersController
     /**
      * Edits an existing SiteParameters entity.
      *
-     * @Route("/{id}", name="fellapp_siteparameters_update")
-     * @Method("PUT")
+     * @Route("/{id}", name="fellapp_siteparameters_update", methods={"PUT"})
      * @Template("AppUserdirectoryBundle/SiteParameters/edit.html.twig")
      */
     public function updateAction(Request $request, $id)
@@ -97,8 +94,7 @@ class FellAppSiteParametersController extends SiteParametersController
     /**
      * FellAppSiteParameter
      *
-     * @Route("/specific-site-parameters/edit/", name="fellapp_siteparameters_edit_specific_site_parameters")
-     * @Method({"GET", "POST"})
+     * @Route("/specific-site-parameters/edit/", name="fellapp_siteparameters_edit_specific_site_parameters", methods={"GET","POST"})
      * @Template("AppFellAppBundle/SiteParameter/edit.html.twig")
      */
     public function fellappSiteParameterEditAction( Request $request ) {
@@ -135,8 +131,7 @@ class FellAppSiteParametersController extends SiteParametersController
     /**
      * FellAppSiteParameter Show
      *
-     * @Route("/specific-site-parameters/show/", name="fellapp_siteparameters_show_specific_site_parameters")
-     * @Method("GET")
+     * @Route("/specific-site-parameters/show/", name="fellapp_siteparameters_show_specific_site_parameters", methods={"GET"})
      * @Template("AppFellAppBundle/SiteParameter/edit-content.html.twig")
      */
     public function fellappSiteParameterShowAction( Request $request ) {

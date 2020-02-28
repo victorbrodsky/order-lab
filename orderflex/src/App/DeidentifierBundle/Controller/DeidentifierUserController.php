@@ -18,9 +18,10 @@
 namespace App\DeidentifierBundle\Controller;
 
 use App\UserdirectoryBundle\Controller\UserController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
 class DeidentifierUserController extends UserController
@@ -28,8 +29,7 @@ class DeidentifierUserController extends UserController
 
     /**
      * Optimized show user
-     * @Route("/user/{id}", name="deidentifier_showuser", requirements={"id" = "\d+"}, options={"expose"=true})
-     * @Method("GET")
+     * @Route("/user/{id}", name="deidentifier_showuser", methods={"GET"}, requirements={"id" = "\d+"}, options={"expose"=true})
      * @Template("AppUserdirectoryBundle/Profile/show_user.html.twig")
      */
     public function showUserOptimizedAction( Request $request, $id ) {
@@ -38,8 +38,7 @@ class DeidentifierUserController extends UserController
 
 
     /**
-     * @Route("/edit-user-profile/{id}", name="deidentifier_user_edit", requirements={"id" = "\d+"})
-     * @Method("GET")
+     * @Route("/edit-user-profile/{id}", name="deidentifier_user_edit", methods={"GET"}, requirements={"id" = "\d+"})
      * @Template("AppUserdirectoryBundle/Profile/edit_user.html.twig")
      */
     public function editUserAction(Request $request, $id)
@@ -59,8 +58,7 @@ class DeidentifierUserController extends UserController
     }
 
     /**
-     * @Route("/edit-user-profile/{id}", name="deidentifier_user_update")
-     * @Method("PUT")
+     * @Route("/edit-user-profile/{id}", name="deidentifier_user_update", methods={"PUT"})
      * @Template("AppUserdirectoryBundle/Profile/edit_user.html.twig")
      */
     public function updateUserAction(Request $request, $id)

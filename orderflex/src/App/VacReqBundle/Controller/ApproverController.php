@@ -34,9 +34,10 @@ use App\VacReqBundle\Form\VacReqUserComboboxType;
 use App\VacReqBundle\Form\VacReqUserType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
@@ -54,8 +55,7 @@ class ApproverController extends OrderAbstractController
     }
 
     /**
-     * @Route("/groups/", name="vacreq_approvers")
-     * @Method({"GET", "POST"})
+     * @Route("/groups/", name="vacreq_approvers", methods={"GET", "POST"})
      * @Template("AppVacReqBundle/Approver/approvers-list.html.twig")
      */
     //public function myRequestsAction(Request $request, VacReqUtil $vacreqUtil)
@@ -108,8 +108,7 @@ class ApproverController extends OrderAbstractController
     /**
      * Display a collapse for a given carry over request group submitters
      *
-     * @Route("/carry-over-request-group/{groupId}", name="vacreq_carry_over_request_group_list")
-     * @Method({"GET", "POST"})
+     * @Route("/carry-over-request-group/{groupId}", name="vacreq_carry_over_request_group_list", methods={"GET", "POST"})
      * @Template("AppVacReqBundle/Approver/carry-over-request-group-list.html.twig")
      */
     public function carryOverRequestGroupAction(Request $request, $groupId)
@@ -166,8 +165,7 @@ class ApproverController extends OrderAbstractController
     /**
      * Display a collapse for a given organizational institution
      *
-     * @Route("/organizational-institutions/{institutionId}", name="vacreq_orginst_list")
-     * @Method({"GET", "POST"})
+     * @Route("/organizational-institutions/{institutionId}", name="vacreq_orginst_list", methods={"GET", "POST"})
      * @Template("AppVacReqBundle/Approver/orginst-list.html.twig")
      */
     public function organizationalInstitutionAction(Request $request, $institutionId)
@@ -224,8 +222,7 @@ class ApproverController extends OrderAbstractController
     /**
      * General management page for a given organizational institution
      *
-     * @Route("/manage-group/{institutionId}", name="vacreq_orginst_management")
-     * @Method({"GET", "POST"})
+     * @Route("/manage-group/{institutionId}", name="vacreq_orginst_management", methods={"GET", "POST"})
      * @Template("AppVacReqBundle/Approver/orginst-management.html.twig")
      */
     public function orgInstManagementAction(Request $request, $institutionId)
@@ -300,8 +297,7 @@ class ApproverController extends OrderAbstractController
     /**
      * A particular management page for a given organizational institution and user to show a well to update the role or remove a user
      *
-     * @Route("/organizational-institution-user-management/{userid}/{instid}/{roleId}", name="vacreq_orginst_user_management")
-     * @Method({"GET", "POST"})
+     * @Route("/organizational-institution-user-management/{userid}/{instid}/{roleId}", name="vacreq_orginst_user_management", methods={"GET", "POST"})
      * @Template("AppVacReqBundle/Approver/orginst-user-management.html.twig")
      */
     public function userManagementAction(Request $request, $userid, $instid, $roleId )
@@ -378,8 +374,7 @@ class ApproverController extends OrderAbstractController
      * Update for a userManagementAction page
      * Don't use it: We don't need to update the roles from the Group Management page. We need only add or remove user.
      *
-     * @Route("/organizational-institution-user-update/{userid}/{instid}/{roleIds}", name="vacreq_orginst_user_update", options={"expose"=true})
-     * @Method({"GET", "POST"})
+     * @Route("/organizational-institution-user-update/{userid}/{instid}/{roleIds}", name="vacreq_orginst_user_update", methods={"GET", "POST"}, options={"expose"=true})
      * @Template("AppVacReqBundle/Approver/orginst-user-management.html.twig")
      */
     public function userManagementUpdateAction(Request $request, $userid, $instid, $roleIds )
@@ -460,8 +455,7 @@ class ApproverController extends OrderAbstractController
 
 
     /**
-     * @Route("/organizational-institution-user-remove/{userid}/{instid}/{roleId}", name="vacreq_orginst_user_remove")
-     * @Method({"GET", "POST"})
+     * @Route("/organizational-institution-user-remove/{userid}/{instid}/{roleId}", name="vacreq_orginst_user_remove", methods={"GET", "POST"})
      * @Template("AppVacReqBundle/Approver/orginst-user-management.html.twig")
      */
     public function removeUserAction(Request $request, $userid, $instid, $roleId )
@@ -537,8 +531,7 @@ class ApproverController extends OrderAbstractController
     }
 
     /**
-     * @Route("/organizational-institution-user-add/{instid}/{roleId}/{btnName}", name="vacreq_orginst_add_user")
-     * @Method({"GET", "POST"})
+     * @Route("/organizational-institution-user-add/{instid}/{roleId}/{btnName}", name="vacreq_orginst_add_user", methods={"GET", "POST"})
      * @Template("AppVacReqBundle/Approver/orginst-user-add.html.twig")
      */
     public function addUserAction(Request $request, $instid, $roleId, $btnName )
@@ -592,8 +585,7 @@ class ApproverController extends OrderAbstractController
     }
 
     /**
-     * @Route("/organizational-institution-user-add-action/{instid}/{roleId}", name="vacreq_orginst_add_action_user")
-     * @Method({"GET","POST"})
+     * @Route("/organizational-institution-user-add-action/{instid}/{roleId}", name="vacreq_orginst_add_action_user", methods={"GET", "POST"})
      */
     public function addRoleToUserAction(Request $request, $instid, $roleId )
     {
@@ -675,8 +667,7 @@ class ApproverController extends OrderAbstractController
 
 
     /**
-     * @Route("/add-group", name="vacreq_group_add")
-     * @Method({"GET", "POST"})
+     * @Route("/add-group", name="vacreq_group_add", methods={"GET", "POST"})
      * @Template("AppVacReqBundle/Approver/orginst-add.html.twig")
      */
     public function addGroupAction(Request $request )
@@ -809,8 +800,7 @@ class ApproverController extends OrderAbstractController
      * Do not delete the roles themselves and do not delete the organizational group from the Institution tree.
      * //TODO: Why is this "Group" still shown? How do I delete it in order for it not to show on this page? https://bitbucket.org/weillcornellpathology/call-logbook-plan/issues/32/fixes-for-gina
      *
-     * @Route("/organizational-institution-remove/{instid}", name="vacreq_group_remove")
-     * @Method({"GET", "POST"})
+     * @Route("/organizational-institution-remove/{instid}", name="vacreq_group_remove", methods={"GET", "POST"})
      * @Template("AppVacReqBundle/Approver/orginst-user-add.html.twig")
      */
     public function removeGroupAction(Request $request, $instid )
@@ -924,8 +914,7 @@ class ApproverController extends OrderAbstractController
 
 
     /**
-     * @Route("/organizational-institution-emailusers/{instid}", name="vacreq_orginst_emailusers")
-     * @Method({"GET", "POST"})
+     * @Route("/organizational-institution-emailusers/{instid}", name="vacreq_orginst_emailusers", methods={"GET", "POST"})
      * @Template("AppVacReqBundle/Approver/orginst-emailusers.html.twig")
      */
     public function emailUsersAction(Request $request, $instid)
@@ -984,8 +973,7 @@ class ApproverController extends OrderAbstractController
         );
     }
     /**
-     * @Route("/organizational-institution-emailusers-update/{instid}/{users}", name="vacreq_orginst_emailusers_update", options={"expose"=true})
-     * @Method({"GET", "POST"})
+     * @Route("/organizational-institution-emailusers-update/{instid}/{users}", name="vacreq_orginst_emailusers_update", methods={"GET", "POST"}, options={"expose"=true})
      */
     public function emailUsersUpdateAction(Request $request, $instid, $users)
     {
@@ -1051,8 +1039,7 @@ class ApproverController extends OrderAbstractController
 
     //My Group vacreq_mygroup
     /**
-     * @Route("/my-group/", name="vacreq_mygroup")
-     * @Method({"GET", "POST"})
+     * @Route("/my-group/", name="vacreq_mygroup", methods={"GET", "POST"})
      * @Template("AppVacReqBundle/Group/mygroup.html.twig")
      */
     public function myGroupAction(Request $request)
@@ -1146,8 +1133,7 @@ class ApproverController extends OrderAbstractController
     }
 
     /**
-     * @Route("/my-single-group/{groupId}/{userids}", name="vacreq_mysinglegroup")
-     * @Method({"GET", "POST"})
+     * @Route("/my-single-group/{groupId}/{userids}", name="vacreq_mysinglegroup", methods={"GET", "POST"})
      * @Template("AppVacReqBundle/Group/my-single-group.html.twig")
      */
     public function mySingleGroupAction( Request $request, $groupId, $userids )

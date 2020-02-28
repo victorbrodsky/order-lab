@@ -20,9 +20,10 @@ namespace App\OrderformBundle\Controller;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 
 use App\OrderformBundle\Entity\Message;
 use App\OrderformBundle\Form\MessageType;
@@ -48,8 +49,7 @@ class MessageController extends OrderAbstractController {
     /**
      * Lists all Message entities.
      *
-     * @Route("/", name="message")
-     * @Method("GET")
+     * @Route("/", name="message", methods={"GET"})
      * @Template()
      */
     public function indexAction() {
@@ -74,8 +74,7 @@ class MessageController extends OrderAbstractController {
     /**
      * Finds and displays a Message entity.
      *
-     * @Route("/{id}", name="scan_message_show")
-     * @Method("GET")
+     * @Route("/{id}", name="scan_message_show", methods={"GET"})
      * @Template()
      */
     public function showAction($id)
@@ -120,8 +119,7 @@ class MessageController extends OrderAbstractController {
     /**
      * Creates a new Message entity.
      *
-     * @Route("/", name="message_create")
-     * @Method("POST")
+     * @Route("/", name="message_create", methods={"POST"})
      * @Template("AppOrderformBundle/Message/new_orig.html.twig")
      */
     public function createAction(Request $request)
@@ -169,8 +167,7 @@ class MessageController extends OrderAbstractController {
     /**
      * Displays a form to create a new Message entity.
      *
-     * @Route("/new", name="message_new")
-     * @Method("GET")
+     * @Route("/new", name="message_new", methods={"GET"})
      * @Template("AppOrderformBundle/Message/new_orig.html.twig")
      */
     public function newAction()
@@ -196,8 +193,7 @@ class MessageController extends OrderAbstractController {
     /**
      * Displays a form to edit an existing Message entity.
      *
-     * @Route("/{id}/edit", name="message_edit")
-     * @Method("GET")
+     * @Route("/{id}/edit", name="message_edit", methods={"GET"})
      * @Template()
      */
     public function editAction($id)
@@ -223,8 +219,7 @@ class MessageController extends OrderAbstractController {
     /**
      * Edits an existing Message entity.
      *
-     * @Route("/{id}", name="message_update")
-     * @Method("PUT")
+     * @Route("/{id}", name="message_update", methods={"PUT"})
      * @Template("AppOrderformBundle/Message/edit.html.twig")
      */
     public function updateAction(Request $request, $id)
@@ -257,8 +252,7 @@ class MessageController extends OrderAbstractController {
     /**
      * Deletes a Message entity.
      *
-     * @Route("/{id}", name="message_delete")
-     * @Method("DELETE")
+     * @Route("/{id}", name="message_delete", methods={"DELETE"})
      */
     public function deleteAction(Request $request, $id)
     {

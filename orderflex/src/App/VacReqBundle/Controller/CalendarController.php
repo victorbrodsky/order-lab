@@ -20,9 +20,10 @@ namespace App\VacReqBundle\Controller;
 
 use App\VacReqBundle\Form\VacReqCalendarFilterType;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -39,8 +40,7 @@ class CalendarController extends OrderAbstractController
      * Template("AppVacReqBundle/Calendar/calendar.html.twig")
      * show the names of people who are away that day (one name per "event"/line).
      *
-     * @Route("/away-calendar/", name="vacreq_awaycalendar")
-     * @Method({"GET"})
+     * @Route("/away-calendar/", name="vacreq_awaycalendar", methods={"GET"})
      * @Template("AppVacReqBundle/Calendar/calendar-tattali.html.twig")
      */
     public function awayCalendarAction(Request $request) {

@@ -24,21 +24,21 @@
 
 namespace App\UserdirectoryBundle\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 class SectionUserController extends UserController
 {
 
 
     /**
-     * @Route("/my-team-ajax/", name="employees_my_team")
+     * @Route("/my-team-ajax/", name="employees_my_team", methods={"GET","POST"})
      * @Template("AppUserdirectoryBundle/SectionUser/my-team.html.twig")
-     * @Method({"GET", "POST"})
      */
     public function myTeamAction( Request $request ) {
 
@@ -82,9 +82,8 @@ class SectionUserController extends UserController
 
 
     /**
-     * @Route("/user-wrapper-ajax", name="employees_user_wrapper_ajax", options={"expose"=true})
+     * @Route("/user-wrapper-ajax", name="employees_user_wrapper_ajax", methods={"GET","POST"}, options={"expose"=true})
      * @Template("AppUserdirectoryBundle/SectionUser/user-wrapper.html.twig")
-     * @Method({"GET", "POST"})
      */
     public function userWrapperAction( Request $request ) {
 

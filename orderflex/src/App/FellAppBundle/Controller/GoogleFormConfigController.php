@@ -20,21 +20,21 @@ namespace App\FellAppBundle\Controller;
 use App\FellAppBundle\Entity\GoogleFormConfig;
 use App\FellAppBundle\Form\GoogleFormConfigType;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class GoogleFormConfigController extends OrderAbstractController
 {
 
     /**
-     * @Route("/form-status-and-appearance/edit", name="fellapp_google_form_config_edit")
-     * @Route("/form-status-and-appearance/show", name="fellapp_google_form_config_show")
+     * @Route("/form-status-and-appearance/edit", name="fellapp_google_form_config_edit", methods={"GET", "PUT"})
+     * @Route("/form-status-and-appearance/show", name="fellapp_google_form_config_show", methods={"GET", "PUT"})
      * @Template("AppFellAppBundle/GoogleFormConfig/google-form-config.html.twig")
-     * @Method({"GET", "PUT"})
      */
     public function GoogleFormConfigAction(Request $request) {
 
@@ -157,8 +157,7 @@ class GoogleFormConfigController extends OrderAbstractController
 
 
     /**
-     * @Route("/google-form-config-update-drive", name="fellapp_google_form_config_update_drive")
-     * @Method({"GET"})
+     * @Route("/google-form-config-update-drive", name="fellapp_google_form_config_update_drive", methods={"GET"})
      */
     public function GoogleFormConfigUpdateDriveAction(Request $request) {
 

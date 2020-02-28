@@ -26,9 +26,9 @@ namespace App\FellAppBundle\Controller;
 
 use App\UserdirectoryBundle\Util\LargeFileDownloader;
 use Symfony\Component\HttpFoundation\Request;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\Routing\Annotation\Route;
 use App\UserdirectoryBundle\Controller\UploadController;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -36,8 +36,7 @@ use Symfony\Component\HttpFoundation\Response;
 class FellAppUploadController extends UploadController {
 
     /**
-     * @Route("/file-delete", name="fellapp_file_delete")
-     * @Method({"GET", "POST", "DELETE"})
+     * @Route("/file-delete", name="fellapp_file_delete", methods={"GET", "POST", "DELETE"})
      */
     public function deleteFileAction(Request $request) {
         if( false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_DIRECTOR') ){
@@ -51,8 +50,7 @@ class FellAppUploadController extends UploadController {
     /**
      * $id - document id
      *
-     * @Route("/file-download/{id}/{eventtype}", name="fellapp_file_download", requirements={"id" = "\d+"})
-     * @Method("GET")
+     * @Route("/file-download/{id}/{eventtype}", name="fellapp_file_download", methods={"GET"}, requirements={"id" = "\d+"})
      */
     public function downloadFileAction(Request $request,$id,$eventtype=null) {
 
@@ -75,8 +73,7 @@ class FellAppUploadController extends UploadController {
     /**
      * $id - document id
      *
-     * @Route("/file-view/{id}/{viewType}/{eventtype}", name="fellapp_file_view", requirements={"id" = "\d+"})
-     * @Method("GET")
+     * @Route("/file-view/{id}/{viewType}/{eventtype}", name="fellapp_file_view", methods={"GET"}, requirements={"id" = "\d+"})
      */
     public function viewFileAction(Request $request,$id,$eventtype=null,$viewType=null) {
 

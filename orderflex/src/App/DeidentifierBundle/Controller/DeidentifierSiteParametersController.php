@@ -20,10 +20,10 @@ namespace App\DeidentifierBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-
+use Symfony\Component\Routing\Annotation\Route;
 use App\UserdirectoryBundle\Controller\SiteParametersController;
 
 
@@ -39,8 +39,7 @@ class DeidentifierSiteParametersController extends SiteParametersController
     /**
      * Lists all SiteParameters entities.
      *
-     * @Route("/", name="deidentifier_siteparameters")
-     * @Method("GET")
+     * @Route("/", name="deidentifier_siteparameters", methods={"GET"})
      * @Template("AppUserdirectoryBundle/SiteParameters/index.html.twig")
      */
     public function indexAction(Request $request)
@@ -54,8 +53,7 @@ class DeidentifierSiteParametersController extends SiteParametersController
     /**
      * Displays a form to edit an existing SiteParameters entity.
      *
-     * @Route("/{id}/edit", name="deidentifier_siteparameters_edit")
-     * @Method("GET")
+     * @Route("/{id}/edit", name="deidentifier_siteparameters_edit", methods={"GET"})
      * @Template("AppUserdirectoryBundle/SiteParameters/edit.html.twig")
      */
     public function editAction(Request $request,$id)
@@ -66,8 +64,7 @@ class DeidentifierSiteParametersController extends SiteParametersController
     /**
      * Edits an existing SiteParameters entity.
      *
-     * @Route("/{id}", name="deidentifier_siteparameters_update")
-     * @Method("PUT")
+     * @Route("/{id}", name="deidentifier_siteparameters_update", methods={"PUT"})
      * @Template("AppUserdirectoryBundle/SiteParameters/edit.html.twig")
      */
     public function updateAction(Request $request, $id)

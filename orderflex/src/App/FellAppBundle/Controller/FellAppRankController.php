@@ -38,17 +38,17 @@ use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransf
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 
 
 
 class FellAppRankController extends OrderAbstractController {
 
     /**
-     * @Route("/rank/edit/{fellappid}", name="fellapp_rank_edit")
-     * @Method("GET")
+     * @Route("/rank/edit/{fellappid}", name="fellapp_rank_edit", methods={"GET"})
      * @Template("AppFellAppBundle/Rank/rank_modal.html.twig")
      */
     public function rankEditAction(Request $request, $fellappid) {
@@ -86,8 +86,7 @@ class FellAppRankController extends OrderAbstractController {
 
 
     /**
-     * @Route("/rank/update-ajax/{fellappid}", name="fellapp_rank_update")
-     * @Method("PUT")
+     * @Route("/rank/update-ajax/{fellappid}", name="fellapp_rank_update", methods={"PUT"})
      */
     public function rankUpdateAjaxAction(Request $request, $fellappid) {
 
@@ -154,8 +153,7 @@ class FellAppRankController extends OrderAbstractController {
     /**
      * NOT USED
      *
-     * @Route("/rank/update/{fellappid}", name="fellapp_rank_update")
-     * @Method("PUT")
+     * @Route("/rank/update/{fellappid}", name="fellapp_rank_update", methods={"PUT"})
      */
     public function rankUpdateAction(Request $request, $fellappid) {
 

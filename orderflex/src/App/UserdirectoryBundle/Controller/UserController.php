@@ -30,10 +30,10 @@ use App\UserdirectoryBundle\Form\DataTransformer\GenericSelectTransformer;
 use App\UserdirectoryBundle\Form\LabelType;
 use App\UserdirectoryBundle\Form\UserSimpleType;
 use App\UserdirectoryBundle\Security\Authentication\AuthUtil;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-//use App\UserdirectoryBundle\Controller\OrderAbstractController;
+use Symfony\Component\Routing\Annotation\Route;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
@@ -47,10 +47,10 @@ use Symfony\Component\Config\Definition\Exception\ForbiddenOverwriteException;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
-use FOS\UserBundle\FOSUserEvents;
-use FOS\UserBundle\Event\FormEvent;
-use FOS\UserBundle\Event\GetResponseUserEvent;
-use FOS\UserBundle\Event\UserEvent;
+//use FOS\UserBundle\FOSUserEvents;
+//use FOS\UserBundle\Event\FormEvent;
+//use FOS\UserBundle\Event\GetResponseUserEvent;
+//use FOS\UserBundle\Event\UserEvent;
 
 use App\UserdirectoryBundle\Entity\User;
 use App\UserdirectoryBundle\Util\UserUtil;
@@ -429,9 +429,8 @@ class UserController extends OrderAbstractController
 
 
     /**
-     * @Route("/users", name="employees_listusers")
-     * @Route("/users/previous", name="employees_listusers_previous")
-     * @Method("GET")
+     * @Route("/users", name="employees_listusers", methods={"GET"})
+     * @Route("/users/previous", name="employees_listusers_previous", methods={"GET"})
      * @Template("AppUserdirectoryBundle/Admin/users.html.twig")
      */
     public function indexUserAction(Request $request)
@@ -1573,9 +1572,8 @@ class UserController extends OrderAbstractController
 
     ////////////////////// Create New User //////////////////////
     /**
-     * @Route("/user/new", name="employees_new_user")
-     * @Route("/user/new/clone/{id}", name="employees_new_user_clone", requirements={"id" = "\d+"})
-     * @Method("GET")
+     * @Route("/user/new", name="employees_new_user", methods={"GET"})
+     * @Route("/user/new/clone/{id}", name="employees_new_user_clone", methods={"GET"}, requirements={"id" = "\d+"})
      * @Template("AppUserdirectoryBundle/Profile/edit_user.html.twig")
      */
     public function newUserAction(Request $request,$id=null)
@@ -1697,8 +1695,7 @@ class UserController extends OrderAbstractController
     /**
      * url: http://localhost/order/directory/user/new/simple-ajax-form/
      *
-     * @Route("/user/new/simple-ajax-form/", name="employees_new_simple_user", options={"expose"=true})
-     * @Method("GET")
+     * @Route("/user/new/simple-ajax-form/", name="employees_new_simple_user", methods={"GET"}, options={"expose"=true})
      * @Template("AppUserdirectoryBundle/Profile/new_simple_user.html.twig")
      */
     public function newSimpleUserAction(Request $request)
@@ -1829,8 +1826,7 @@ class UserController extends OrderAbstractController
     /**
      * Test: http://127.0.0.1/order/directory/get-map-email-usernametype-ajax
      *
-     * @Route("/get-map-email-usernametype-ajax/", name="employees_get_map_email_usernametype", options={"expose"=true})
-     * @Method("GET")
+     * @Route("/get-map-email-usernametype-ajax/", name="employees_get_map_email_usernametype", methods={"GET"}, options={"expose"=true})
      */
     public function getMapEmailUsernameTypeAction(Request $request)
     {
@@ -1863,8 +1859,7 @@ class UserController extends OrderAbstractController
     /**
      * Test: http://127.0.0.1/order/directory/search-user-ldap-ajax/?searchvalue=oli2002&type=primaryPublicUserId
      *
-     * @Route("/search-user-ldap-ajax/", name="employees_search_user_ldap_ajax", options={"expose"=true})
-     * @Method("GET")
+     * @Route("/search-user-ldap-ajax/", name="employees_search_user_ldap_ajax", methods={"GET"}, options={"expose"=true})
      */
     public function searchUserLdapAjaxAction(Request $request)
     {
@@ -1974,8 +1969,7 @@ class UserController extends OrderAbstractController
     /**
      * {"GET", "POST"}
      *
-     * @Route("/add-new-user-ajax/", name="employees_add_new_user_ajax", options={"expose"=true})
-     * @Method("POST")
+     * @Route("/add-new-user-ajax/", name="employees_add_new_user_ajax", methods={"POST"}, options={"expose"=true})
      */
     public function addNewUserAjaxAction(Request $request)
     {
@@ -2390,8 +2384,7 @@ class UserController extends OrderAbstractController
 
 
     /**
-     * @Route("/user/new", name="employees_create_user")
-     * @Method("POST")
+     * @Route("/user/new", name="employees_create_user", methods={"POST"})
      * @Template("AppUserdirectoryBundle/Profile/edit_user.html.twig")
      */
     public function createUserAction( Request $request )
@@ -2561,8 +2554,7 @@ class UserController extends OrderAbstractController
 
     /**
      * Optimized show user
-     * @Route("/user/{id}", name="employees_showuser", requirements={"id" = "\d+"}, options={"expose"=true})
-     * @Method("GET")
+     * @Route("/user/{id}", name="employees_showuser", methods={"GET"}, requirements={"id" = "\d+"}, options={"expose"=true})
      * @Template("AppUserdirectoryBundle/Profile/show_user.html.twig")
      */
     public function showUserOptimizedAction( Request $request, $id )
@@ -2658,8 +2650,7 @@ class UserController extends OrderAbstractController
     /**
      * This is testing custom hydration: not effective for a single entity
      * 
-     * @Route("/user/optimized/customh/{id}", name="employees_showuser_optimized_customh", requirements={"id" = "\d+"}, options={"expose"=true})
-     * @Method("GET")
+     * @Route("/user/optimized/customh/{id}", name="employees_showuser_optimized_customh", methods={"GET"}, requirements={"id" = "\d+"}, options={"expose"=true})
      * @Template("AppUserdirectoryBundle/Profile/show_user.html.twig")
      */
     public function showUserOptimizedCustomhAction(Request $request, $id)
@@ -2743,8 +2734,7 @@ class UserController extends OrderAbstractController
     /**
      * Second part of the user view profile
      * 
-     * @Route("/user/only/{id}", name="employees_showuser_only")
-     * @Method("GET")
+     * @Route("/user/only/{id}", name="employees_showuser_only", methods={"GET"})
      * @Template("AppUserdirectoryBundle/Profile/edit_user_only.html.twig")
      */
     public function showOnlyUserAction(Request $request, $id)
@@ -2767,8 +2757,7 @@ class UserController extends OrderAbstractController
     /**
      * Second part of the user view profile
      *
-     * @Route("/user/only-ajax/", name="employees_showuser_only_ajax", options={"expose"=true})
-     * @Method({"GET", "POST"})
+     * @Route("/user/only-ajax/", name="employees_showuser_only_ajax", methods={"GET","POST"}, options={"expose"=true})
      */
     public function showOnlyAjaxUserAction(Request $request)
     {
@@ -2792,9 +2781,8 @@ class UserController extends OrderAbstractController
     /**
      * route "employees_showuser_object" is the old user profile view (slow)
      * 
-     * @Route("/user/show/{id}", name="employees_showuser_notstrict")
-     * @Route("/user/object/{id}", name="employees_showuser_object", requirements={"id" = "\d+"}, options={"expose"=true})
-     * @Method("GET")
+     * @Route("/user/show/{id}", name="employees_showuser_notstrict", methods={"GET"})
+     * @Route("/user/object/{id}", name="employees_showuser_object", methods={"GET"}, requirements={"id" = "\d+"}, options={"expose"=true})
      * @Template("AppUserdirectoryBundle/Profile/edit_user.html.twig")
      */
     public function showUserAction(Request $request, $id)
@@ -2894,8 +2882,7 @@ class UserController extends OrderAbstractController
     }
 
     /**
-     * @Route("/edit-user-profile/{id}", name="employees_user_edit", requirements={"id" = "\d+"})
-     * @Method("GET")
+     * @Route("/edit-user-profile/{id}", name="employees_user_edit", methods={"GET"}, requirements={"id" = "\d+"})
      * @Template("AppUserdirectoryBundle/Profile/edit_user.html.twig")
      */
     public function editUserAction(Request $request, $id)
@@ -3126,8 +3113,7 @@ class UserController extends OrderAbstractController
     /**
      * //Method("PUT")
      *
-     * @Route("/update-user-profile/{id}", name="employees_user_update")
-     * @Method("PUT")
+     * @Route("/update-user-profile/{id}", name="employees_user_update", methods={"PUT"})
      * @Template("AppUserdirectoryBundle/Profile/edit_user.html.twig")
      */
     public function updateUserAction(Request $request, $id)
@@ -4162,8 +4148,7 @@ class UserController extends OrderAbstractController
     /**
      * Generate users from excel
      *
-     * @Route("/user/generate", name="generate_users")
-     * @Method("GET")
+     * @Route("/user/generate", name="generate_users", methods={"GET"})
      * @Template("AppUserdirectoryBundle/Admin/users.html.twig")
      */
     public function generateUsersAction()
@@ -4221,8 +4206,7 @@ class UserController extends OrderAbstractController
 
 
     /**
-     * @Route("/lockunlock/change/{id}/{status}", name="employees_lockunlock_change", requirements={"id" = "\d+"})
-     * @Method("GET")
+     * @Route("/lockunlock/change/{id}/{status}", name="employees_lockunlock_change", methods={"GET"}, requirements={"id" = "\d+"})
      * @Template()
      */
     public function lockUnlockChangeAction(Request $request, $id, $status) {
@@ -4551,8 +4535,7 @@ class UserController extends OrderAbstractController
 
 
     /**
-     * @Route("/user/save-avatar", name="employees_save_avatar")
-     * @Method("POST")
+     * @Route("/user/save-avatar", name="employees_save_avatar", methods={"POST"})
      * @Template("AppUserdirectoryBundle/Admin/users.html.twig")
      */
     public function saveAvatarAction(Request $request)
@@ -4647,8 +4630,7 @@ class UserController extends OrderAbstractController
     }
 
     /**
-     * @Route("/user/impersonate/{id}", name="employees_user_impersonate")
-     * @Method("GET")
+     * @Route("/user/impersonate/{id}", name="employees_user_impersonate", methods={"GET"})
      * @Template("AppUserdirectoryBundle/Profile/show_user.html.twig")
      */
     public function impersonateUserAction(Request $request, $id)
@@ -4671,8 +4653,7 @@ class UserController extends OrderAbstractController
 
 
     /**
-     * @Route("/user/employment-terminate/{id}", name="employees_user_employment_terminate")
-     * @Method("GET")
+     * @Route("/user/employment-terminate/{id}", name="employees_user_employment_terminate", methods={"GET"})
      * @Template("AppUserdirectoryBundle/Profile/show_user.html.twig")
      */
     public function employmentTerminateAction(Request $request, $id)
@@ -5005,8 +4986,7 @@ class UserController extends OrderAbstractController
     }
 
     /**
-     * @Route("/label/user/preview/{id}", name="employees_user_label_preview")
-     * @Method({"GET","POST"})
+     * @Route("/label/user/preview/{id}", name="employees_user_label_preview", methods={"GET","POST"})
      * @Template("AppUserdirectoryBundle/Labels/label_user_preview.html.twig")
      */
     public function averySingleUserPrintAction(Request $request, $id) {
@@ -5087,8 +5067,7 @@ class UserController extends OrderAbstractController
         );
     }
     /**
-     * @Route("/label/users/preview/", name="employees_users_label_preview")
-     * @Method({"GET","POST"})
+     * @Route("/label/users/preview/", name="employees_users_label_preview", methods={"GET","POST"})
      * @Template("AppUserdirectoryBundle/Labels/label_user_preview.html.twig")
      */
     public function averyMultipleUsersPrintAction(Request $request) {
@@ -5226,9 +5205,8 @@ class UserController extends OrderAbstractController
 
 
 //    /**
-//     * @Route("/account-creation/", name="employees_account_creation")
+//     * @Route("/account-creation/", name="employees_account_creation", methods={"GET","POST"})
 //     * @Template("AppTranslationalResearchBundle/AccessRequest/account_confirmation.html.twig")
-//     * @Method({"GET", "POST"})
 //     */
 //    public function accountConfirmationAction(Request $request)
 //    {

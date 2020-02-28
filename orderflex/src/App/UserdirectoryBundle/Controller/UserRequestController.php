@@ -22,9 +22,10 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
 use App\UserdirectoryBundle\Entity\UserRequest;
@@ -53,8 +54,7 @@ class UserRequestController extends OrderAbstractController
     /**
      * Lists all UserRequest entities.
      *
-     * @Route("/account-requests", name="employees_accountrequest")
-     * @Method("GET")
+     * @Route("/account-requests", name="employees_accountrequest", methods={"GET"})
      * @Template("AppUserdirectoryBundle/UserRequest/index.html.twig")
      */
     public function indexAction( Request $request )
@@ -123,8 +123,7 @@ class UserRequestController extends OrderAbstractController
     /**
      * Creates a new UserRequest entity.
      *
-     * @Route("/account-requests/new", name="employees_accountrequest_create")
-     * @Method("POST")
+     * @Route("/account-requests/new", name="employees_accountrequest_create", methods={"POST"})
      * @Template("AppUserdirectoryBundle/UserRequest/account_request.html.twig")
      */
     public function createAction(Request $request)
@@ -182,8 +181,7 @@ class UserRequestController extends OrderAbstractController
     /**
      * Displays a form to create a new UserRequest entity.
      *
-     * @Route("/account-requests/new", name="employees_accountrequest_new")
-     * @Method("GET")
+     * @Route("/account-requests/new", name="employees_accountrequest_new", methods={"GET"})
      * @Template("AppUserdirectoryBundle/UserRequest/account_request.html.twig")
      */
     public function newAction()
@@ -217,8 +215,7 @@ class UserRequestController extends OrderAbstractController
     /**
      * Finds and displays a UserRequest entity.
      *
-     * @Route("/account-requests/{id}", name="employees_accountrequest_show", requirements={"id" = "\d+"})
-     * @Method("GET")
+     * @Route("/account-requests/{id}", name="employees_accountrequest_show", methods={"GET"}, requirements={"id" = "\d+"})
      * @Template()
      */
     public function showAction($id)
@@ -248,8 +245,7 @@ class UserRequestController extends OrderAbstractController
     
     
     /**
-     * @Route("/account-requests/{id}/{status}/status", name="employees_accountrequest_status", requirements={"id" = "\d+"})
-     * @Method("GET")
+     * @Route("/account-requests/{id}/{status}/status", name="employees_accountrequest_status", methods={"GET"}, requirements={"id" = "\d+"})
      * @Template("AppUserdirectoryBundle/UserRequest/index.html.twig")
      */
     public function statusAction($id, $status)
@@ -277,8 +273,7 @@ class UserRequestController extends OrderAbstractController
     /**
      * Update (Approve) a new UserRequest entity.
      *
-     * @Route("/account-requests-approve", name="employees_accountrequest_approve")
-     * @Method("POST")
+     * @Route("/account-requests-approve", name="employees_accountrequest_approve", methods={"POST"})
      * @Template("AppUserdirectoryBundle/UserRequest/index.html.twig")
      */
     public function approveUserAccountRequestAction(Request $request)
@@ -504,8 +499,7 @@ class UserRequestController extends OrderAbstractController
     /**
      * Displays a form to edit an existing UserRequest entity.
      *
-     * @Route("/account-requests/{id}/edit", name="employees_accountrequest_edit", requirements={"id" = "\d+"})
-     * @Method("GET")
+     * @Route("/account-requests/{id}/edit", name="employees_accountrequest_edit", methods={"GET"}, requirements={"id" = "\d+"})
      * @Template()
      */
     public function editAction($id)
@@ -539,8 +533,7 @@ class UserRequestController extends OrderAbstractController
     /**
      * Edits an existing UserRequest entity.
      *
-     * @Route("/account-requests/{id}", name="employees_accountrequest_update", requirements={"id" = "\d+"})
-     * @Method("PUT")
+     * @Route("/account-requests/{id}", name="employees_accountrequest_update", methods={"PUT"}, requirements={"id" = "\d+"})
      * @Template("AppUserdirectoryBundle/UserRequest/edit.html.twig")
      */
     public function updateAction(Request $request, $id)
@@ -586,8 +579,7 @@ class UserRequestController extends OrderAbstractController
     /**
      * Deletes a UserRequest entity.
      *
-     * @Route("/account-requests/{id}", name="employees_accountrequest_delete", requirements={"id" = "\d+"})
-     * @Method("DELETE")
+     * @Route("/account-requests/{id}", name="employees_accountrequest_delete", methods={"DELETE"}, requirements={"id" = "\d+"})
      */
     public function deleteAction(Request $request, $id)
     {

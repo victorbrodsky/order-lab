@@ -23,18 +23,18 @@ use App\FellAppBundle\Entity\Reference;
 use App\FellAppBundle\Form\GoogleFormConfigType;
 use App\UserdirectoryBundle\Entity\GeoLocation;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\Routing\Annotation\Route;
 
 class ReferenceController extends OrderAbstractController
 {
 
     /**
-     * @Route("/invite-references-submit-letters/{id}", name="fellapp_invite_references_submit_letters")
-     * @Method({"GET"})
+     * @Route("/invite-references-submit-letters/{id}", name="fellapp_invite_references_submit_letters", methods={"GET"})
      */
     public function InviteReferencesToSubmitLettersAction(Request $request, FellowshipApplication $fellapp) {
 
@@ -106,8 +106,7 @@ class ReferenceController extends OrderAbstractController
 
 
     /**
-     * @Route("/invite-reference-submit-letter/{id}/{referenceid}", name="fellapp_invite_reference_submit_letter")
-     * @Method({"GET"})
+     * @Route("/invite-reference-submit-letter/{id}/{referenceid}", name="fellapp_invite_reference_submit_letter", methods={"GET"})
      */
     public function InviteReferenceToSubmitLetterAction(Request $request, FellowshipApplication $fellapp, $referenceid) {
 
@@ -147,8 +146,7 @@ class ReferenceController extends OrderAbstractController
     }
 
     /**
-     * @Route("/reference-letter-received/{id}", name="fellapp_reference_letter_received")
-     * @Method("GET")
+     * @Route("/reference-letter-received/{id}", name="fellapp_reference_letter_received", methods={"GET"})
      */
     public function ReferenceLetterReceivedAction( Request $request, Reference $reference ) {
 

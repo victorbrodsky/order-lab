@@ -22,9 +22,10 @@ use App\UserdirectoryBundle\Security\Authentication\AuthUtil;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 //use Symfony\Component\Security\Core\Security;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -37,8 +38,7 @@ class SecurityController extends OrderAbstractController
 {
 
 //    /**
-//     * @Route("/login_check", name="employees_login_check")
-//     * @Method("POST")
+//     * @Route("/login_check", name="employees_login_check", methods={"POST"})
 //     * @Template("AppUserdirectoryBundle/Security/login.html.twig")
 //     */
 //    public function loginCheckAction( Request $request )
@@ -53,7 +53,7 @@ class SecurityController extends OrderAbstractController
 //    }
 
     /**
-     * #@Method("GET")
+     * //@Method("GET")
      *
      * @Route("/directory/login", name="directory_login")
      * @Route("/login", name="employees_login")
@@ -265,9 +265,7 @@ class SecurityController extends OrderAbstractController
     }
 
     /**
-     * @Route("/setloginvisit/", name="employees_setloginvisit")
-     *
-     * @Method("GET")
+     * @Route("/setloginvisit/", name="employees_setloginvisit", methods={"GET"})
      */
     public function setAjaxLoginVisit( Request $request )
     {
@@ -335,8 +333,7 @@ class SecurityController extends OrderAbstractController
      * Check the server every 30 min (maxIdleTime) if the server timeout is ok ($lapse > $maxIdleTime).
      * If not, the server returns NOTOK flag and js open a dialog modal to continue.
      *
-     * @Route("/common/keepalive", name="keepalive", options={"expose"=true})
-     * @Method("GET")
+     * @Route("/common/keepalive", name="keepalive", methods={"GET"}, options={"expose"=true})
      */
     public function keepAliveAction( Request $request )
     {
@@ -408,8 +405,7 @@ class SecurityController extends OrderAbstractController
     }
     
     /**
-     * @Route("/common/setserveractive", name="setserveractive", options={"expose"=true})
-     * @Method("GET")
+     * @Route("/common/setserveractive", name="setserveractive", methods={"GET"}, options={"expose"=true})
      */
     public function setServerActiveAction( Request $request )
     {
@@ -429,8 +425,7 @@ class SecurityController extends OrderAbstractController
 
 
     /**
-     * @Route("/common/getmaxidletime", name="getmaxidletime")
-     * @Method("GET")
+     * @Route("/common/getmaxidletime", name="getmaxidletime", methods={"GET"})
      */
     public function getmaxidletimeAction( Request $request )
     {
@@ -464,8 +459,7 @@ class SecurityController extends OrderAbstractController
 
 
     /**
-     * @Route("/no-permission", name="employees-nopermission")
-     * @Method("GET")
+     * @Route("/no-permission", name="employees-nopermission", methods={"GET"})
      * @Template("AppUserdirectoryBundle/Security/nopermission.html.twig")
      */
     public function actionNoPermission( Request $request )
@@ -524,8 +518,7 @@ class SecurityController extends OrderAbstractController
     /**
      * Use for ajax authentication on web page (i.e. CallLog "Finalize and Sign")
      *
-     * @Route("/authenticate-user/", name="employees_authenticate_user", options={"expose"=true})
-     * @Method({"GET","POST"})
+     * @Route("/authenticate-user/", name="employees_authenticate_user", methods={"GET","POST"}, options={"expose"=true})
      */
     public function authenticateUserAction( Request $request )
     {

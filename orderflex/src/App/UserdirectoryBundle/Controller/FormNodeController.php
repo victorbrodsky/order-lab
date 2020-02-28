@@ -27,9 +27,10 @@ namespace App\UserdirectoryBundle\Controller;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 
 
 class FormNodeController extends OrderAbstractController {
@@ -42,8 +43,7 @@ class FormNodeController extends OrderAbstractController {
     /**
      * Second part of the user view profile
      *
-     * @Route("/formnode-fields/", name="employees_formnode_fields", options={"expose"=true})
-     * @Method({"GET", "POST"})
+     * @Route("/formnode-fields/", name="employees_formnode_fields", methods={"GET","POST"}, options={"expose"=true})
      * @Template("AppUserdirectoryBundle/FormNode/formnode_fields.html.twig")
      */
     public function getFormNodeFieldsAction( Request $request )
@@ -541,8 +541,7 @@ class FormNodeController extends OrderAbstractController {
 
     /**
      * Use: https://github.com/Atlantic18/DoctrineExtensions/blob/v2.4.x/doc/tree.md
-     * @Route("/form-node-tree-test/", name="employees_form-node-tree-test")
-     * @Method("GET")
+     * @Route("/form-node-tree-test/", name="employees_form-node-tree-test", methods={"GET"})
      */
     public function formNodeTestAction(Request $request)
     {

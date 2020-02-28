@@ -18,9 +18,10 @@
 namespace App\VacReqBundle\Controller;
 
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -40,8 +41,7 @@ class DefaultController extends OrderAbstractController
 
 //    /**
 //     * @Route("/", name="vacreq_home")
-//     * @Template("AppVacReqBundle/Request/index.html.twig")
-//     * @Method("GET")
+//     * @Template("AppVacReqBundle/Request/index.html.twig", methods={"GET"})
 //     */
 //    public function indexAction()
 //    {
@@ -62,8 +62,7 @@ class DefaultController extends OrderAbstractController
     /**
      * //@Route("/download-spreadsheet-with-ids/{ids}", name="vacreq_download_spreadsheet_get_ids")
      *
-     * @Route("/download-spreadsheet/", name="vacreq_download_spreadsheet")
-     * @Method({"POST"})
+     * @Route("/download-spreadsheet/", name="vacreq_download_spreadsheet", methods={"POST"})
      */
     public function downloadExcelAction( Request $request ) {
         if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_USER') ) {

@@ -84,9 +84,10 @@ use App\UserdirectoryBundle\Form\HierarchyFilterType;
 use App\UserdirectoryBundle\Util\UserSecurityUtil;
 use App\VacReqBundle\Entity\VacReqRequestTypeList;
 //use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\ArgvInput;
@@ -625,8 +626,7 @@ class AdminController extends OrderAbstractController
     /**
      * Admin Page
      *
-     * @Route("/lists/", name="user_admin_index")
-     * @Method("GET")
+     * @Route("/lists/", name="user_admin_index", methods={"GET"})
      * @Template("AppUserdirectoryBundle/Admin/index.html.twig")
      */
     public function indexAction()
@@ -652,8 +652,7 @@ class AdminController extends OrderAbstractController
     /**
      * Admin Page
      *
-     * @Route("/hierarchies/", name="user_admin_hierarchy_index")
-     * @Method("GET")
+     * @Route("/hierarchies/", name="user_admin_hierarchy_index", methods={"GET"})
      * @Template("AppUserdirectoryBundle/Admin/hierarchy-index.html.twig")
      */
     public function indexHierarchyAction()
@@ -693,8 +692,7 @@ class AdminController extends OrderAbstractController
     /**
      * Populate DB
      *
-     * @Route("/populate-all-site-lists-with-default-values", name="user_generate_all_site")
-     * @Method("GET")
+     * @Route("/populate-all-site-lists-with-default-values", name="user_generate_all_site", methods={"GET"})
      * @Template("AppUserdirectoryBundle/Admin/index.html.twig")
      */
     public function generateAllSiteAction()
@@ -731,8 +729,7 @@ class AdminController extends OrderAbstractController
     /**
      * Populate DB ( 3) Populate All Lists with Default Values (Part B) )
      *
-     * @Route("/populate-all-lists-with-default-values", name="user_generate_all")
-     * @Method("GET")
+     * @Route("/populate-all-lists-with-default-values", name="user_generate_all", methods={"GET"})
      * @Template("AppUserdirectoryBundle/Admin/index.html.twig")
      */
     public function generateAllAction()
@@ -1087,8 +1084,7 @@ class AdminController extends OrderAbstractController
 
 
     /**
-     * @Route("/populate-residency-specialties-with-default-values", name="generate_residencyspecialties")
-     * @Method("GET")
+     * @Route("/populate-residency-specialties-with-default-values", name="generate_residencyspecialties", methods={"GET"})
      * @Template()
      */
     public function generateResidencySpecialtiesAction()
@@ -1118,8 +1114,7 @@ class AdminController extends OrderAbstractController
 
 
     /**
-     * @Route("/populate-country-city-list-with-default-values", name="generate_country_city")
-     * @Method("GET")
+     * @Route("/populate-country-city-list-with-default-values", name="generate_country_city", methods={"GET"})
      * @Template()
      */
     public function generateProcedureAction()
@@ -6572,8 +6567,7 @@ class AdminController extends OrderAbstractController
 
     /**
      *
-     * @Route("/populate-class-url/", name="user_populate_class_url")
-     * @Method("GET")
+     * @Route("/populate-class-url/", name="user_populate_class_url", methods={"GET"})
      */
     public function populateClassUrlAction( Request $request=null ) {
         $this->populateClassUrl();
@@ -6628,8 +6622,7 @@ class AdminController extends OrderAbstractController
 
     /**
      * populate Platform List Manager Root List: url="order/directory/admin/list-manager-populate/"
-     * @Route("/list/generate-empty-lists/{withcustom}", name="user_populate_platform_list_manager")
-     * @Method("GET")
+     * @Route("/list/generate-empty-lists/{withcustom}", name="user_populate_platform_list_manager", methods={"GET"})
      */
     public function generatePlatformListManagerList( Request $request=null, $withcustom=null ) {
 
@@ -7062,8 +7055,7 @@ class AdminController extends OrderAbstractController
 
 
     /**
-     * @Route("/set-institution-employment-period/", name="user_institution_employment_period")
-     * @Method("GET")
+     * @Route("/set-institution-employment-period/", name="user_institution_employment_period", methods={"GET"})
      */
     public function setInstitutionEmploymentPeriodAction()
     {
@@ -7105,8 +7097,7 @@ class AdminController extends OrderAbstractController
 
     /**
      * For all users in the live C.MED system EXCEPT FELLOWSHIP APPLICANTS, set "Pathology and Laboratory Medicine"
-     * @Route("/set-default-org-group/", name="user_set-default-org-group")
-     * @Method("GET")
+     * @Route("/set-default-org-group/", name="user_set-default-org-group", methods={"GET"})
      */
     public function setDefaultOrgGroupAction()
     {
@@ -7198,8 +7189,7 @@ class AdminController extends OrderAbstractController
     }
 
     /**
-     * @Route("/convert-logger-site/", name="user_convert-logger-site")
-     * @Method("GET")
+     * @Route("/convert-logger-site/", name="user_convert-logger-site", methods={"GET"})
      */
     public function convertLoggerSitenameToSiteObectAction() {
 
@@ -7256,8 +7246,7 @@ class AdminController extends OrderAbstractController
     /**
      * http://hosthame/order/directory/admin/sync-db/
      *
-     * @Route("/sync-db/", name="user_sync_db")
-     * @Method("GET")
+     * @Route("/sync-db/", name="user_sync_db", methods={"GET"})
      */
     public function syncEventTypeListDbAction()
     {
@@ -7518,12 +7507,10 @@ class AdminController extends OrderAbstractController
     ////////////////// Employee Tree Util //////////////////////
     //to initialize JS, add "getJstree('OrderformBundle','MessageCategory');" to user-formReady.js
     /**
-     * @Route("/list/institutional-tree/", name="employees_tree_institutiontree_list")
-     * @Route("/list/comment-tree/", name="employees_tree_commenttree_list")
-     * @Route("/list/form-tree/", name="employees_tree_formnode_list")
-     * @Route("/list/message-categories-tree/", name="employees_tree_messagecategories_list")
-     *
-     * @Method("GET")
+     * @Route("/list/institutional-tree/", name="employees_tree_institutiontree_list", methods={"GET"})
+     * @Route("/list/comment-tree/", name="employees_tree_commenttree_list", methods={"GET"})
+     * @Route("/list/form-tree/", name="employees_tree_formnode_list", methods={"GET"})
+     * @Route("/list/message-categories-tree/", name="employees_tree_messagecategories_list", methods={"GET"})
      */
     public function institutionTreeAction(Request $request)
     {
@@ -7762,8 +7749,7 @@ class AdminController extends OrderAbstractController
     }
 
     /**
-     * @Route("/list/generate-form-node-tree/", name="employees_generate_form_node_tree")
-     * @Method("GET")
+     * @Route("/list/generate-form-node-tree/", name="employees_generate_form_node_tree", methods={"GET"})
      */
     public function generateFormNodeAction(Request $request)
     {
@@ -7784,8 +7770,7 @@ class AdminController extends OrderAbstractController
     }
 
     /**
-     * @Route("/list/generate-test-form-node-tree/", name="employees_generate_test_form_node_tree")
-     * @Method("GET")
+     * @Route("/list/generate-test-form-node-tree/", name="employees_generate_test_form_node_tree", methods={"GET"})
      */
     public function generateTestFormNodeAction(Request $request)
     {
@@ -7800,8 +7785,7 @@ class AdminController extends OrderAbstractController
     }
 
     /**
-     * @Route("/list/generate-cron-jobs/", name="user_populate_cron_jobs")
-     * @Method("GET")
+     * @Route("/list/generate-cron-jobs/", name="user_populate_cron_jobs", methods={"GET"})
      */
     public function generateCronJobsAction(Request $request)
     {
@@ -8916,8 +8900,7 @@ class AdminController extends OrderAbstractController
 
     //add all MD users to "Pathology Result Signatories" (set the name of each list item to "FirstName LastName, MD" and set the "Object ID" to the corresponding user ID)
     /**
-     * @Route("/list/add-mdusers-to-pathology-result-signatories/", name="employees_add-mdusers-to-pathology-result-signatories")
-     * @Method("GET")
+     * @Route("/list/add-mdusers-to-pathology-result-signatories/", name="employees_add-mdusers-to-pathology-result-signatories", methods={"GET"})
      */
     public function addMDUsersToPathologyResultSignatoriesList(Request $request)
     {
@@ -9005,8 +8988,7 @@ class AdminController extends OrderAbstractController
     /**
      * Remove all "Pathology Fellowship Applicant" users from PathologyResultSignatoriesList
      *
-     * @Route("/list/remove-fellapp-mdusers-to-pathology-result-signatories/", name="employees_remove-fellapp-mdusers-to-pathology-result-signatories")
-     * @Method("GET")
+     * @Route("/list/remove-fellapp-mdusers-to-pathology-result-signatories/", name="employees_remove-fellapp-mdusers-to-pathology-result-signatories", methods={"GET"})
      */
     public function removeFellappMDUsersToPathologyResultSignatoriesList(Request $request) {
         $em = $this->getDoctrine()->getManager();

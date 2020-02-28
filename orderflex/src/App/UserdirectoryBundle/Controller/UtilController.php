@@ -22,8 +22,9 @@ namespace App\UserdirectoryBundle\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
@@ -41,8 +42,7 @@ class UtilController extends OrderAbstractController {
 
 
     /**
-     * @Route("/common/generic/{name}", name="employees_get_generic_select2")
-     * @Method("GET")
+     * @Route("/common/generic/{name}", name="employees_get_generic_select2", methods={"GET"})
      */
     public function getGenericAction( Request $request, $name ) {
 
@@ -125,8 +125,7 @@ class UtilController extends OrderAbstractController {
 
 
     /**
-     * @Route("/common/fellowshipsubspecialty", name="get-fellowshipsubspecialty-by-parent")
-     * @Method({"GET", "POST"})
+     * @Route("/common/fellowshipsubspecialty", name="get-fellowshipsubspecialty-by-parent", methods={"GET","POST"})
      */
     public function getDepartmentAction(Request $request) {
 
@@ -185,8 +184,7 @@ class UtilController extends OrderAbstractController {
     }
 
     /**
-     * @Route("/common/traininginstitution", name="employees_get_traininginstitution")
-     * @Method({"GET"})
+     * @Route("/common/traininginstitution", name="employees_get_traininginstitution", methods={"GET"})
      */
     public function getTrainingInstitutionAction(Request $request) {
 
@@ -232,8 +230,7 @@ class UtilController extends OrderAbstractController {
     }
 
     /**
-     * @Route("/common/institution-all", name="employees_get_institution_all", options={"expose"=true})
-     * @Method({"GET", "POST"})
+     * @Route("/common/institution-all", name="employees_get_institution_all", methods={"GET","POST"}, options={"expose"=true})
      */
     public function setInstitutionTreeAction(Request $request) {
 
@@ -254,8 +251,7 @@ class UtilController extends OrderAbstractController {
         return $response;
     }
     /**
-     * @Route("/common/institution-old/", name="employees_get_institution", options={"expose"=true})
-     * @Method({"GET", "POST"})
+     * @Route("/common/institution-old/", name="employees_get_institution", methods={"GET","POST"}, options={"expose"=true})
      */
     public function getInstitutionAction(Request $request) {
 
@@ -292,8 +288,7 @@ class UtilController extends OrderAbstractController {
     }
 
     /**
-     * @Route("/common/patientlists", name="employees_get_patientlists", options={"expose"=true})
-     * @Method({"GET", "POST"})
+     * @Route("/common/patientlists", name="employees_get_patientlists", methods={"GET","POST"}, options={"expose"=true})
      */
     public function getPatientListsAction(Request $request) {
         $calllogUtil = $this->get('calllog_util');
@@ -315,8 +310,7 @@ class UtilController extends OrderAbstractController {
 
 
 //    /**
-//     * @Route("/common/commenttype", name="employees_get_commenttype")
-//     * @Method("GET")
+//     * @Route("/common/commenttype", name="employees_get_commenttype", methods={"GET"})
 //     */
 //    public function getCommenttypeAction() {
 //
@@ -340,8 +334,7 @@ class UtilController extends OrderAbstractController {
 
 
     /**
-     * @Route("/common/locationusers", name="employees_get_locationusers")
-     * @Method("GET")
+     * @Route("/common/locationusers", name="employees_get_locationusers", methods={"GET"})
      */
     public function getLocationUsersAction() {
 
@@ -383,8 +376,7 @@ class UtilController extends OrderAbstractController {
     /**
      * get all users except fellowship
      *
-     * @Route("/common/genericusers/{usertype}", name="employees_get_genericusers")
-     * @Method("GET")
+     * @Route("/common/genericusers/{usertype}", name="employees_get_genericusers", methods={"GET"})
      */
     public function getGenericUsersAction(Request $request, $usertype=null) {
 
@@ -419,8 +411,7 @@ class UtilController extends OrderAbstractController {
     }
 
     /**
-     * @Route("/common/building", name="employees_get_building")
-     * @Method("GET")
+     * @Route("/common/building", name="employees_get_building", methods={"GET"})
      */
     public function getBuildingsAction(Request $request) {
 
@@ -485,8 +476,7 @@ class UtilController extends OrderAbstractController {
 
 
     /**
-     * @Route("/common/location", name="employees_get_location")
-     * @Method("GET")
+     * @Route("/common/location", name="employees_get_location", methods={"GET"})
      */
     public function getLocationAction() {
 
@@ -540,8 +530,7 @@ class UtilController extends OrderAbstractController {
     }
 
     /**
-     * @Route("/common/locationName", name="employees_get_locationname")
-     * @Method("GET")
+     * @Route("/common/locationName", name="employees_get_locationname", methods={"GET"})
      */
     public function getLocationNameAction() {
 
@@ -586,8 +575,7 @@ class UtilController extends OrderAbstractController {
     }
 
     /**
-     * @Route("/common/get-location-by-name/", name="employees_get_location_by_name", options={"expose"=true})
-     * @Method("GET")
+     * @Route("/common/get-location-by-name/", name="employees_get_location_by_name", methods={"GET"}, options={"expose"=true})
      */
     public function getLocationByNameAction(Request $request) {
 
@@ -722,8 +710,7 @@ class UtilController extends OrderAbstractController {
     /**
      * check if location can be deleted
      *
-     * @Route("/common/location/delete/{id}", name="employees_location_delete", requirements={"id" = "\d+"})
-     * @Method("GET")
+     * @Route("/common/location/delete/{id}", name="employees_location_delete", methods={"GET"}, requirements={"id" = "\d+"})
      */
     public function getLocationCheckDeleteAction($id) {
         $em = $this->getDoctrine()->getManager();
@@ -754,8 +741,7 @@ class UtilController extends OrderAbstractController {
 
 
     /**
-     * @Route("/common/researchlab/{id}/{subjectUser}", name="employees_get_researchlab")
-     * @Method("GET")
+     * @Route("/common/researchlab/{id}/{subjectUser}", name="employees_get_researchlab", methods={"GET"})
      */
     public function getResearchlabByIdAction( $id, $subjectUser=null ) {
 
@@ -834,8 +820,7 @@ class UtilController extends OrderAbstractController {
     /**
      * check if researchlab can be deleted
      *
-     * @Route("/common/researchlab/deletefromuser/{id}/{subjectUser}", name="employees_researchlab_deletefromuser")
-     * @Method("DELETE")
+     * @Route("/common/researchlab/deletefromuser/{id}/{subjectUser}", name="employees_researchlab_deletefromuser", methods={"DELETE"})
      */
     public function researchLabDeleteAction($id, $subjectUser=null) {
 
@@ -881,8 +866,7 @@ class UtilController extends OrderAbstractController {
 
 
     /**
-     * @Route("/common/grant/{id}/{subjectUser}", name="employees_get_grant")
-     * @Method("GET")
+     * @Route("/common/grant/{id}/{subjectUser}", name="employees_get_grant", methods={"GET"})
      */
     public function getGrantByIdAction( $id, $subjectUser=null ) {
        
@@ -992,8 +976,7 @@ class UtilController extends OrderAbstractController {
     /**
      * check if grant can be deleted
      *
-     * @Route("/common/grant/deletefromuser/{id}/{subjectUser}", name="employees_grant_deletefromuser")
-     * @Method("DELETE")
+     * @Route("/common/grant/deletefromuser/{id}/{subjectUser}", name="employees_grant_deletefromuser", methods={"DELETE"})
      */
     public function grantDeleteAction($id, $subjectUser=null) {
 
@@ -1029,8 +1012,7 @@ class UtilController extends OrderAbstractController {
 
 
     /**
-     * @Route("/cwid", name="employees_check_cwid")
-     * @Method("GET")
+     * @Route("/cwid", name="employees_check_cwid", methods={"GET"})
      */
     public function checkCwidAction(Request $request) {
 
@@ -1057,8 +1039,7 @@ class UtilController extends OrderAbstractController {
 
 
     /**
-     * @Route("/ssn", name="employees_check_ssn")
-     * @Method("GET")
+     * @Route("/ssn", name="employees_check_ssn", methods={"GET"})
      */
     public function checkSsnAction(Request $request) {
 
@@ -1099,8 +1080,7 @@ class UtilController extends OrderAbstractController {
 
     /**
      * Identifier (i.e. EIN)
-     * @Route("/ein", name="employees_check_ein")
-     * @Method("GET")
+     * @Route("/ein", name="employees_check_ein", methods={"GET"})
      */
     public function checkEinAction(Request $request) {
 
@@ -1141,8 +1121,7 @@ class UtilController extends OrderAbstractController {
 
 
     /**
-     * @Route("/usertype-userid", name="employees_check_usertype-userid")
-     * @Method("GET")
+     * @Route("/usertype-userid", name="employees_check_usertype-userid", methods={"GET"})
      */
     public function checkUsertypeUseridAction(Request $request) {
 
@@ -1174,8 +1153,7 @@ class UtilController extends OrderAbstractController {
      * Check if this cwid exists in LDAP active directory
      * http://localhost/order/directory/util/ldap-usertype-userid?userId=cwid
      *
-     * @Route("/ldap-usertype-userid", name="employees_check_ldap-usertype-userid", options={"expose"=true})
-     * @Method("GET")
+     * @Route("/ldap-usertype-userid", name="employees_check_ldap-usertype-userid", methods={"GET"}, options={"expose"=true})
      */
     public function checkCWIDUsertypeUseridAction(Request $request) {
 
@@ -1212,8 +1190,7 @@ class UtilController extends OrderAbstractController {
 
     /**
      * Used by typeahead js
-     * @Route("/common/user-data-search/{type}/{limit}/{search}", name="employees_user-data-search", options={"expose"=true})
-     * @Method("GET")
+     * @Route("/common/user-data-search/{type}/{limit}/{search}", name="employees_user-data-search", methods={"GET"}, options={"expose"=true})
      */
     public function getUserDataSearchAction(Request $request) {
 
@@ -1399,8 +1376,7 @@ class UtilController extends OrderAbstractController {
     /**
      * It is used in User mrn type where the link is created between user and patient
      *
-     * @Route("/common/mrntype-identifier", name="employees_check_mrntype_identifier")
-     * @Method("GET")
+     * @Route("/common/mrntype-identifier", name="employees_check_mrntype_identifier", methods={"GET"})
      */
     public function checkMrntypeIdentifierAction(Request $request) {
 
@@ -1449,8 +1425,7 @@ class UtilController extends OrderAbstractController {
     }
 
     /**
-     * @Route("/common/check-user-password", name="employees_check_user_password", options={"expose"=true})
-     * @Method("POST")
+     * @Route("/common/check-user-password", name="employees_check_user_password", methods={"POST"}, options={"expose"=true})
      */
     public function checkUserPasswordAction( Request $request ) {
 

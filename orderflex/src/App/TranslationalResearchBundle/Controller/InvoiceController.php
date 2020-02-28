@@ -687,7 +687,6 @@ class InvoiceController extends OrderAbstractController
 
     /**
      * Creates a new invoice entity.
-     * //@Method({"GET", "POST"})
      *
      * @Route("/new/{id}", name="translationalresearch_invoice_new", methods={"GET","POST"})
      * @Template("AppTranslationalResearchBundle/Invoice/new.html.twig")
@@ -1714,9 +1713,8 @@ class InvoiceController extends OrderAbstractController
     }
 
 //    /**
-//     * @Route("/unpaid-invoice-reminder/show-summary", name="translationalresearch_unpaid_invoice_reminder_show")
-//     * @Route("/unpaid-invoice-reminder/send-emails", name="translationalresearch_unpaid_invoice_reminder_send")
-//     * @Method({"GET"})
+//     * @Route("/unpaid-invoice-reminder/show-summary", name="translationalresearch_unpaid_invoice_reminder_show", methods={"GET"})
+//     * @Route("/unpaid-invoice-reminder/send-emails", name="translationalresearch_unpaid_invoice_reminder_send", methods={"GET"})
 //     */
 //    public function unpaidInvoiceReminderAction( Request $request )
 //    {

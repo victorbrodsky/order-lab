@@ -29,9 +29,10 @@ use App\UserdirectoryBundle\Form\SimpleUserType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
 use App\UserdirectoryBundle\Entity\AccessRequest;
@@ -68,8 +69,7 @@ class AccessRequestController extends OrderAbstractController
     /**
      * This url "/access-requests/new/create" is set in security.yml as access_denied_url parameter
      *
-     * @Route("/access-requests/new/create", name="employees_access_request_new_plain")
-     * @Method("GET")
+     * @Route("/access-requests/new/create", name="employees_access_request_new_plain", methods={"GET"})
      * @Template("AppUserdirectoryBundle/AccessRequest/access_request.html.twig")
      */
     public function accessRequestCreatePlainAction(Request $request)
@@ -217,8 +217,7 @@ class AccessRequestController extends OrderAbstractController
     /**
      * Used to reqdirect from LoginSuccessHandler if a user has role roleBanned or roleUnapproved
      *
-     * @Route("/access-requests/new", name="employees_access_request_new")
-     * @Method("GET")
+     * @Route("/access-requests/new", name="employees_access_request_new", methods={"GET"})
      * @Template("AppUserdirectoryBundle/AccessRequest/access_request.html.twig")
      */
     public function accessRequestCreateAction()
@@ -397,8 +396,7 @@ class AccessRequestController extends OrderAbstractController
 //     * (all are from http://c.med.cornell.edu/order/scan/account-requests/new except
 //     * the name of the field "Reason for account request" is changed to "Reason for access request)
 //     *
-//     * @Route("/access-requests/details/new", name="employees_access_request_details_new")
-//     * @Method("GET")
+//     * @Route("/access-requests/details/new", name="employees_access_request_details_new", methods={"GET"})
 //     * @Template("AppUserdirectoryBundle/AccessRequest/access_request.html.twig")
 //     */
 //    public function accessRequestDetailsAction()
@@ -414,8 +412,7 @@ class AccessRequestController extends OrderAbstractController
      /**
       * On click button: Yes, please!
       *
-      * @Route("/access-requests/new/pending", name="employees_access_request_create")
-      * @Method("POST")
+      * @Route("/access-requests/new/pending", name="employees_access_request_create", methods={"POST"})
       * @Template("AppUserdirectoryBundle/AccessRequest/access_request.html.twig")
       */
     public function accessRequestAction(Request $request)
@@ -600,8 +597,7 @@ class AccessRequestController extends OrderAbstractController
     /**
      * No, thanks.
      *
-     * @Route("/no-thanks-access-requests/{sitename}", name="employees_no_thanks_accessrequest")
-     * @Method("GET")
+     * @Route("/no-thanks-access-requests/{sitename}", name="employees_no_thanks_accessrequest", methods={"GET"})
      * @Template()
      */
     public function noThanksAccessRequestAction( Request $request, $sitename )
@@ -618,8 +614,7 @@ class AccessRequestController extends OrderAbstractController
     /**
      * Lists all Access Request.
      *
-     * @Route("/access-requests", name="employees_accessrequest_list")
-     * @Method("GET")
+     * @Route("/access-requests", name="employees_accessrequest_list", methods={"GET"})
      * @Template("AppUserdirectoryBundle/AccessRequest/access_request_list.html.twig")
      */
     public function accessRequestIndexAction(Request $request)
@@ -691,8 +686,7 @@ class AccessRequestController extends OrderAbstractController
 
 
     /**
-     * @Route("/access-requests/change-status/{id}/{status}", name="employees_accessrequest_change", requirements={"id" = "\d+"})
-     * @Method("GET")
+     * @Route("/access-requests/change-status/{id}/{status}", name="employees_accessrequest_change", methods={"GET"}, requirements={"id" = "\d+"})
      * @Template()
      */
     public function accessRequestChangeAction(Request $request, $id, $status)
@@ -876,8 +870,7 @@ class AccessRequestController extends OrderAbstractController
 
     //access request management page with the process to force the admin to select the "PHI Scope" Institution(s) and "Role(s)"
     /**
-     * @Route("/access-requests/{id}", name="employees_accessrequest_management", requirements={"id" = "\d+"})
-     * @Method("GET")
+     * @Route("/access-requests/{id}", name="employees_accessrequest_management", methods={"GET"}, requirements={"id" = "\d+"})
      * @Template("AppUserdirectoryBundle/AccessRequest/access_request_management.html.twig")
      */
     public function accessRequestManagementAction( Request $request, $id )
@@ -947,8 +940,7 @@ class AccessRequestController extends OrderAbstractController
     }
 
     /**
-     * @Route("/access-requests/submit/{id}", name="employees_accessrequest_management_submit", requirements={"id" = "\d+"})
-     * @Method("POST")
+     * @Route("/access-requests/submit/{id}", name="employees_accessrequest_management_submit", methods={"POST"}, requirements={"id" = "\d+"})
      * @Template("AppUserdirectoryBundle/AccessRequest/access_request_management.html.twig")
      */
     public function accessRequestManagementSubmitAction( Request $request, $id )
@@ -1064,8 +1056,7 @@ class AccessRequestController extends OrderAbstractController
 
 
     /**
-     * @Route("/deny-access-request/{userId}", name="employees_accessrequest_remove", requirements={"userId" = "\d+"})
-     * @Method("GET")
+     * @Route("/deny-access-request/{userId}", name="employees_accessrequest_remove", methods={"GET"}, requirements={"userId" = "\d+"})
      * @Template()
      */
     public function accessRequestRemoveAction(Request $request,$userId)
@@ -1081,8 +1072,7 @@ class AccessRequestController extends OrderAbstractController
     }
 
     /**
-     * @Route("/revoke-access-authorization/{userId}", name="employees_authorization_remove", requirements={"userId" = "\d+"})
-     * @Method("GET")
+     * @Route("/revoke-access-authorization/{userId}", name="employees_authorization_remove", methods={"GET"}, requirements={"userId" = "\d+"})
      * @Template()
      */
     public function authorizationRemoveAction(Request $request, $userId)
@@ -1132,8 +1122,7 @@ class AccessRequestController extends OrderAbstractController
 
 
     /**
-     * @Route("/authorization-user-manager/{id}", name="employees_authorization_user_management", requirements={"id" = "\d+"})
-     * @Method("GET")
+     * @Route("/authorization-user-manager/{id}", name="employees_authorization_user_management", methods={"GET"}, requirements={"id" = "\d+"})
      * @Template("AppUserdirectoryBundle/AccessRequest/access_request_management.html.twig")
      */
     public function authorizationManagementAction( Request $request, $id )
@@ -1189,8 +1178,7 @@ class AccessRequestController extends OrderAbstractController
     }
 
     /**
-     * @Route("/authorization-user-manager/submit/{id}", name="employees_authorization_user_management_submit", requirements={"id" = "\d+"})
-     * @Method("POST")
+     * @Route("/authorization-user-manager/submit/{id}", name="employees_authorization_user_management_submit", methods={"POST"}, requirements={"id" = "\d+"})
      * @Template("AppUserdirectoryBundle/AccessRequest/access_request_management.html.twig")
      */
     public function authorizationManagementSubmitAction( Request $request, $id )
@@ -1266,8 +1254,7 @@ class AccessRequestController extends OrderAbstractController
 
 
     /**
-     * @Route("/authorized-users/", name="employees_authorized_users")
-     * @Method("GET")
+     * @Route("/authorized-users/", name="employees_authorized_users", methods={"GET"})
      * @Template("AppUserdirectoryBundle/AccessRequest/authorized_users.html.twig")
      */
     public function authorizedUsersAction( Request $request )
@@ -1377,8 +1364,7 @@ class AccessRequestController extends OrderAbstractController
 
 
     /**
-     * @Route("/add-authorized-user/", name="employees_add_authorized_user")
-     * @Method("GET")
+     * @Route("/add-authorized-user/", name="employees_add_authorized_user", methods={"GET"})
      * @Template("AppUserdirectoryBundle/AccessRequest/add_authorized_user.html.twig")
      */
     public function addAuthorizedUserAction( Request $request )
@@ -1497,8 +1483,7 @@ class AccessRequestController extends OrderAbstractController
 
 
 //    /**
-//     * @Route("/add-authorized-user/submit/", name="employees_add_authorized_user_submit")
-//     * @Method("POST")
+//     * @Route("/add-authorized-user/submit/", name="employees_add_authorized_user_submit", methods={"POST"})
 //     * @Template("AppUserdirectoryBundle/AccessRequest/add_authorized_user.html.twig")
 //     */
 //    public function addAuthorizedUserSubmitAction( Request $request )
@@ -1516,8 +1501,7 @@ class AccessRequestController extends OrderAbstractController
 
 
     /**
-     * @Route("/generated-users/", name="employees_generated_users")
-     * @Method("GET")
+     * @Route("/generated-users/", name="employees_generated_users", methods={"GET"})
      * @Template("AppUserdirectoryBundle/AccessRequest/generated_users.html.twig")
      */
     public function generatedUsersAction(Request $request)
@@ -1585,9 +1569,8 @@ class AccessRequestController extends OrderAbstractController
     }
 
     /**
-     * @Route("/generated-user/{id}", name="employees_generated_user_management")
+     * @Route("/generated-user/{id}", name="employees_generated_user_management", methods={"GET","POST"})
      * @Template("AppUserdirectoryBundle/AccessRequest/generated_user_management.html.twig")
-     * @Method({"GET", "POST"})
      */
     public function generatedUserManagementAction(Request $request, User $user)
     {
@@ -1745,8 +1728,7 @@ class AccessRequestController extends OrderAbstractController
     }
 
     /**
-     * @Route("/generated-user/approve/{id}", name="employees_generated_user_approve")
-     * @Method({"GET", "POST"})
+     * @Route("/generated-user/approve/{id}", name="employees_generated_user_approve", methods={"GET","POST"})
      */
     public function generatedUserApproveAction(Request $request, User $user)
     {

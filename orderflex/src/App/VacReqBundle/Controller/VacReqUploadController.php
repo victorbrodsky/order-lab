@@ -26,8 +26,9 @@ namespace App\VacReqBundle\Controller;
 
 use App\UserdirectoryBundle\Util\LargeFileDownloader;
 use Symfony\Component\HttpFoundation\Request;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\Routing\Annotation\Route;
 
 use App\UserdirectoryBundle\Controller\UploadController;
 use Symfony\Component\HttpFoundation\Response;
@@ -36,8 +37,7 @@ use Symfony\Component\HttpFoundation\Response;
 class VacReqUploadController extends UploadController {
 
     /**
-     * @Route("/file-delete", name="vacreq_file_delete")
-     * @Method({"GET", "POST", "DELETE"})
+     * @Route("/file-delete", name="vacreq_file_delete", methods={"GET", "POST", "DELETE"})
      */
     public function deleteFileAction(Request $request) {
         return $this->deleteFileMethod($request);
@@ -46,8 +46,7 @@ class VacReqUploadController extends UploadController {
     /**
      * $id - document id
      *
-     * @Route("/file-download/{id}/{eventtype}", name="vacreq_file_download", requirements={"id" = "\d+"})
-     * @Method("GET")
+     * @Route("/file-download/{id}/{eventtype}", name="vacreq_file_download", methods={"GET"}, requirements={"id" = "\d+"})
      */
     public function downloadFileAction(Request $request,$id,$eventtype=null) {
         return $this->downloadFileMethod($request,$id,$this->getParameter('vacreq.sitename'),$eventtype);
@@ -57,8 +56,7 @@ class VacReqUploadController extends UploadController {
     /**
      * $id - document id
      *
-     * @Route("/file-view/{id}/{viewType}/{eventtype}", name="vacreq_file_view", requirements={"id" = "\d+"})
-     * @Method("GET")
+     * @Route("/file-view/{id}/{viewType}/{eventtype}", name="vacreq_file_view", methods={"GET"}, requirements={"id" = "\d+"})
      */
     public function viewFileAction(Request $request,$id,$eventtype=null, $viewType=null) {
         return $this->viewFileMethod($request,$id,$this->getParameter('vacreq.sitename'),$eventtype,$viewType);

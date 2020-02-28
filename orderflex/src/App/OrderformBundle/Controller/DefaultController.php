@@ -18,19 +18,19 @@
 namespace App\OrderformBundle\Controller;
 
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\Routing\Annotation\Route;
 
 class DefaultController extends OrderAbstractController
 {
 
     /**
-     * @Route("/thanks-for-downloading/{id}/{sitename}", name="scan_thankfordownloading")
+     * @Route("/thanks-for-downloading/{id}/{sitename}", name="scan_thankfordownloading", methods={"GET"})
      * @Template("AppUserdirectoryBundle/Default/thanksfordownloading.html.twig")
-     * @Method("GET")
      */
     public function thankfordownloadingAction(Request $request, $id, $sitename) {
         return array(

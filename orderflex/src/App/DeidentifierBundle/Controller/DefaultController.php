@@ -34,9 +34,10 @@ use App\OrderformBundle\Entity\Accession;
 use App\OrderformBundle\Entity\AccessionAccession;
 use App\UserdirectoryBundle\Entity\AccessRequest;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -54,9 +55,8 @@ class DefaultController extends OrderAbstractController
     }
 
     /**
-     * @Route("/navbar/{accessionTypeStr}/{accessionTypeId}/{accessionNumber}", name="deidentifier_navbar")
+     * @Route("/navbar/{accessionTypeStr}/{accessionTypeId}/{accessionNumber}", name="deidentifier_navbar", methods={"GET"})
      * @Template("AppDeidentifierBundle/Default/navbar.html.twig")
-     * @Method("GET")
      */
     public function deidentifierNavbarAction( Request $request, $accessionTypeStr, $accessionTypeId, $accessionNumber ) {
 
@@ -89,9 +89,8 @@ class DefaultController extends OrderAbstractController
     }
 
     /**
-     * @Route("/", name="deidentifier_home")
+     * @Route("/", name="deidentifier_home", methods={"GET"})
      * @Template("AppDeidentifierBundle/Default/index.html.twig")
-     * @Method("GET")
      */
     public function indexAction( Request $request ) {
 
@@ -185,9 +184,8 @@ class DefaultController extends OrderAbstractController
     /**
      * Search for Accession Number
      *
-     * @Route("/re-identify/", name="deidentifier_search")
+     * @Route("/re-identify/", name="deidentifier_search", methods={"GET"})
      * @Template("AppDeidentifierBundle/Search/search.html.twig")
-     * @Method("GET")
      */
     public function searchAction( Request $request ) {
 
@@ -287,9 +285,8 @@ class DefaultController extends OrderAbstractController
 
 
     /**
-     * @Route("/generate/", name="deidentifier_generate")
+     * @Route("/generate/", name="deidentifier_generate", methods={"GET"})
      * @Template("AppDeidentifierBundle/Default/index.html.twig")
-     * @Method("GET")
      */
     public function generateAction( Request $request ) {
 

@@ -23,9 +23,10 @@ use App\UserdirectoryBundle\Entity\InstitutionWrapper;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -67,9 +68,8 @@ class MultiScanOrderController extends OrderAbstractController {
     /**
      * Creates a new Message entity.
      *
-     * @Route("/scan-order/one-slide/create", name="singleorder_create")
-     * @Route("/scan-order/multi-slide/create", name="multi_create")
-     * @Method("POST")
+     * @Route("/scan-order/one-slide/create", name="singleorder_create", methods={"POST"})
+     * @Route("/scan-order/multi-slide/create", name="multi_create", methods={"POST"})
      * @Template("AppOrderformBundle/MultiScanOrder/new.html.twig")
      */
     public function multyCreateAction(Request $request)
@@ -315,8 +315,7 @@ class MultiScanOrderController extends OrderAbstractController {
     }
 
     /**
-     * @Route("/scan-order/submitted/successfully", name="scan-order-submitted-get")
-     * @Method("GET")
+     * @Route("/scan-order/submitted/successfully", name="scan-order-submitted-get", methods={"GET"})
      */
     public function thanksScanorderGetAction(Request $request) {
 
@@ -335,9 +334,8 @@ class MultiScanOrderController extends OrderAbstractController {
     /**
      * Displays a form to create a new Message + Scan entities.
      *
-     * @Route("/scan-order/one-slide/new", name="single_new")
-     * @Route("/scan-order/multi-slide/new", name="multi_new")
-     * @Method("GET")
+     * @Route("/scan-order/one-slide/new", name="single_new", methods={"GET"})
+     * @Route("/scan-order/multi-slide/new", name="multi_new", methods={"GET"})
      * @Template("AppOrderformBundle/MultiScanOrder/new.html.twig")
      */
     public function newMultyAction(Request $request)
@@ -527,11 +525,10 @@ class MultiScanOrderController extends OrderAbstractController {
 
     /**
      * Displays a form to view, update, amend an Message + Scan entities. $id is oid of the message object
-     * @Route("/scan-order/{id}/edit", name="multy_edit", requirements={"id" = "\d+"})
-     * @Route("/scan-order/{id}/amend", name="order_amend", requirements={"id" = "\d+"})
-     * @Route("/scan-order/{id}/show", name="multy_show", requirements={"id" = "\d+"})
-     * @Route("/scan-order/data-structure/{id}/show", name="scan_datastructure", requirements={"id" = "\d+"})
-     * @Method("GET")
+     * @Route("/scan-order/{id}/edit", name="multy_edit", methods={"GET"}, requirements={"id" = "\d+"})
+     * @Route("/scan-order/{id}/amend", name="order_amend", methods={"GET"}, requirements={"id" = "\d+"})
+     * @Route("/scan-order/{id}/show", name="multy_show", methods={"GET"}, requirements={"id" = "\d+"})
+     * @Route("/scan-order/data-structure/{id}/show", name="scan_datastructure", methods={"GET"}, requirements={"id" = "\d+"})
      * @Template("AppOrderformBundle/MultiScanOrder/new.html.twig")
      */
     public function showMultyAction( Request $request, $id, $type = "show" )
@@ -903,8 +900,7 @@ class MultiScanOrderController extends OrderAbstractController {
 
     /**
      * Displays a form to create a new Message + Scan entities.
-     * @Route("/scan-order/download/{id}", name="download_file", requirements={"id" = "\d+"})
-     * @Method("GET")
+     * @Route("/scan-order/download/{id}", name="download_file", methods={"GET"}, requirements={"id" = "\d+"})
      */
     public function downloadAction($id) {
 

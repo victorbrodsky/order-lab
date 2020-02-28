@@ -22,9 +22,10 @@ use App\OrderformBundle\Entity\PatientMrn;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 use App\OrderformBundle\Form\PatientType;
@@ -129,8 +130,8 @@ class CheckController extends OrderAbstractController {
 
     /**
      * Find an element in DB
-     * @Route("/patient/check", name="get-patientdata")
-     * @Method("GET")   //TODO: use POST?
+     * @Route("/patient/check", name="get-patientdata", methods={"GET"})
+     * //TODO: use POST?
      */
     public function getPatientAction(Request $request) {
 
@@ -206,8 +207,7 @@ class CheckController extends OrderAbstractController {
 
     /**
      * Create new element with status RESERVED
-     * @Route("/patient/generate", name="create-mrn")
-     * @Method("GET")
+     * @Route("/patient/generate", name="create-mrn", methods={"GET"})
      */
     public function createPatientAction(Request $request) {
 
@@ -256,8 +256,7 @@ class CheckController extends OrderAbstractController {
 
     /**
      * TODO: test on collage. DELETE might not work with a new php version and ajax calls (symfony bug?)?
-     * @Route("/patient/delete/{key}", name="delete-mrn-keytype")
-     * @Method({"POST", "DELETE"})
+     * @Route("/patient/delete/{key}", name="delete-mrn-keytype", methods={"POST","DELETE"})
      */
     public function deleteMrnAction( Request $request ) {
         //echo "deleteMrnAction key=".$key."<br>";
@@ -292,8 +291,7 @@ class CheckController extends OrderAbstractController {
     /************************ ACCESSION *************************/
     /**
      * Find accession by #
-     * @Route("/accession/check", name="get-accession")
-     * @Method("GET")
+     * @Route("/accession/check", name="get-accession", methods={"GET"})
      */
     public function getAccessionAction(Request $request) {
 
@@ -461,8 +459,7 @@ class CheckController extends OrderAbstractController {
 
     /**
      * Get next available Accession from DB
-     * @Route("/accession/generate", name="create-accession")
-     * @Method("GET")
+     * @Route("/accession/generate", name="create-accession", methods={"GET"})
      */
     public function createAccessionAction(Request $request) {
 
@@ -509,8 +506,7 @@ class CheckController extends OrderAbstractController {
     }
 
     /**
-     * @Route("/accession/delete/{key}", name="delete-accession")
-     * @Method({"POST", "DELETE"})
+     * @Route("/accession/delete/{key}", name="delete-accession", methods={"POST", "DELETE"})
      */
     public function deleteAccessionAction(Request $request) {
 
@@ -543,8 +539,7 @@ class CheckController extends OrderAbstractController {
     /************************ PART *************************/
     /**
      * Get Part from DB if existed
-     * @Route("/part/check", name="get-part")
-     * @Method("GET")
+     * @Route("/part/check", name="get-part", methods={"GET"})
      */
     public function getPartAction(Request $request) {
 
@@ -605,8 +600,7 @@ class CheckController extends OrderAbstractController {
 
     /**
      * Get next available Part from DB by giving Accession number
-     * @Route("/part/generate", name="create-part")
-     * @Method("GET")
+     * @Route("/part/generate", name="create-part", methods={"GET"})
      */
     public function createPartAction(Request $request) {
 
@@ -647,8 +641,7 @@ class CheckController extends OrderAbstractController {
     }
 
     /**
-     * @Route("/part/delete/{key}", name="delete-part")
-     * @Method({"POST", "DELETE"})
+     * @Route("/part/delete/{key}", name="delete-part", methods={"POST", "DELETE"})
      */
     public function deletePartAction(Request $request) {
 
@@ -679,8 +672,7 @@ class CheckController extends OrderAbstractController {
     /************************ BLOCK *************************/
     /**
      * Get BLOCK from DB if existed
-     * @Route("/block/check", name="get-block")
-     * @Method("GET")
+     * @Route("/block/check", name="get-block", methods={"GET"})
      */
     public function getBlockAction(Request $request) {
 
@@ -741,8 +733,7 @@ class CheckController extends OrderAbstractController {
 
     /**
      * Get next available Block from DB by giving Accession number and Part name
-     * @Route("/block/generate", name="create-block")
-     * @Method("GET")
+     * @Route("/block/generate", name="create-block", methods={"GET"})
      */
     public function createBlockAction(Request $request) {
         $partname = trim($request->get('parentkey'));
@@ -786,8 +777,7 @@ class CheckController extends OrderAbstractController {
     }
 
     /**
-     * @Route("/block/delete/{key}", name="delete-block")
-     * @Method({"POST", "DELETE"})
+     * @Route("/block/delete/{key}", name="delete-block", methods={"POST", "DELETE"})
      */
     public function deleteBlockAction(Request $request) {
 
@@ -817,9 +807,8 @@ class CheckController extends OrderAbstractController {
 
     //get keytype ids by keytype string for handsontable
     /**
-     * @Route("/accession/keytype/{keytype}", name="get-accession-keytypeid")
-     * @Route("/patient/keytype/{keytype}", name="get-patient-keytypeid")
-     * @Method("GET")
+     * @Route("/accession/keytype/{keytype}", name="get-accession-keytypeid", methods={"GET"})
+     * @Route("/patient/keytype/{keytype}", name="get-patient-keytypeid", methods={"GET"})
      */
     public function getKeytypeIdAction(Request $request, $keytype) {
 
@@ -845,8 +834,7 @@ class CheckController extends OrderAbstractController {
     }
 
 //    /**
-//     * @Route("/userrole", name="get-user-role")
-//     * @Method("POST")
+//     * @Route("/userrole", name="get-user-role", methods={"POST"})
 //     */
 //    public function getUserRoleAction(Request $request) {
 //

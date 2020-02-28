@@ -31,9 +31,10 @@ use App\VacReqBundle\Form\VacReqUserCarryOverType;
 use App\VacReqBundle\Form\VacReqUserComboboxType;
 use App\VacReqBundle\Form\VacReqUserType;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -45,8 +46,7 @@ class CarryOverController extends OrderAbstractController
 
 
 //    /**
-//     * @Route("/carry-over-request/review/{id}", name="vacreq_carryoverrequest_review")
-//     * @Method({"GET", "POST"})
+//     * @Route("/carry-over-request/review/{id}", name="vacreq_carryoverrequest_review", methods={"GET", "POST"})
 //     * @Template("AppVacReqBundle/CarryOver/carryoverrequest.html.twig")
 //     */
 //    public function carryOverRequestReviewAction(Request $request, $id)
@@ -108,8 +108,7 @@ class CarryOverController extends OrderAbstractController
 
 
     /**
-     * @Route("/carry-over-vacation-days/{userId}", name="vacreq_carryover")
-     * @Method({"GET", "POST"})
+     * @Route("/carry-over-vacation-days/{userId}", name="vacreq_carryover", methods={"GET", "POST"})
      * @Template("AppVacReqBundle/Group/carryover.html.twig")
      */
     public function carryOverAction(Request $request, $userId)
@@ -249,9 +248,8 @@ class CarryOverController extends OrderAbstractController
 
     /**
      * approved, rejected, pending, canceled
-     * @Route("/carry-over-vacation-days/status/{id}/{requestName}/{status}", name="vacreq_status_change_carryover")
-     * @Route("/carry-over-vacation-days/estatus/{id}/{requestName}/{status}", name="vacreq_status_email_change_carryover")
-     * @Method({"GET"})
+     * @Route("/carry-over-vacation-days/status/{id}/{requestName}/{status}", name="vacreq_status_change_carryover", methods={"GET"})
+     * @Route("/carry-over-vacation-days/estatus/{id}/{requestName}/{status}", name="vacreq_status_email_change_carryover", methods={"GET"})
      * @Template("AppVacReqBundle/Request/edit.html.twig")
      */
     public function statusAction(Request $request, $id, $requestName, $status) {

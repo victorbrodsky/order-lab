@@ -20,17 +20,17 @@ namespace App\OrderformBundle\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 
 
 class DataReviewController extends OrderAbstractController {
       
 
     /**
-     * @Route("/scan-order/{id}/data-review", name="scan-order-data-review-full", requirements={"id" = "\d+"})
-     * @Method("GET")
+     * @Route("/scan-order/{id}/data-review", name="scan-order-data-review-full", methods={"GET"}, requirements={"id" = "\d+"})
      * @Template("AppOrderformBundle/DataReview/index-order.html.twig")
      */
     public function getDataReviewAction($id) {

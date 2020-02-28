@@ -22,8 +22,9 @@ use App\UserdirectoryBundle\Form\HierarchyFilterType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
@@ -41,8 +42,7 @@ class TreeController extends OrderAbstractController {
     /**
      * Get tree structure by parent
      *
-     * @Route("/common/composition-tree/", name="employees_get_composition_tree", options={"expose"=true})
-     * @Method({"GET", "POST"})
+     * @Route("/common/composition-tree/", name="employees_get_composition_tree", methods={"GET","POST"}, options={"expose"=true})
      */
     public function getTreeByParentAction(Request $request) {
        
@@ -387,8 +387,7 @@ class TreeController extends OrderAbstractController {
 
 
     /**
-     * @Route("/tree/action", name="employees_tree_edit_node", options={"expose"=true})
-     * @Method({"POST"})
+     * @Route("/tree/action", name="employees_tree_edit_node", methods={"POST"}, options={"expose"=true})
      */
     public function setTreeAction(Request $request) {
 
@@ -568,8 +567,7 @@ class TreeController extends OrderAbstractController {
 
 
     /**
-     * @Route("/tree/create-root/", name="employees_tree_create_root", options={"expose"=true})
-     * @Method({"GET","POST"})
+     * @Route("/tree/create-root/", name="employees_tree_create_root", methods={"GET","POST"}, options={"expose"=true})
      */
     public function createTopLevelRoot(Request $request) {
 //        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {

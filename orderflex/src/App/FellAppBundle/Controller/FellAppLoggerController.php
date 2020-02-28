@@ -21,9 +21,10 @@ use Doctrine\ORM\Query\ResultSetMapping;
 use App\UserdirectoryBundle\Controller\LoggerController;
 use Symfony\Component\HttpFoundation\Request;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 use App\UserdirectoryBundle\Entity\Logger;
 use App\UserdirectoryBundle\Form\LoggerType;
 
@@ -38,8 +39,7 @@ class FellAppLoggerController extends LoggerController
     /**
      * Lists all Logger entities.
      *
-     * @Route("/", name="fellapp_logger")
-     * @Method("GET")
+     * @Route("/", name="fellapp_logger", methods={"GET"})
      * @Template("AppFellAppBundle/Logger/index.html.twig")
      */
     public function indexAction(Request $request)
@@ -69,8 +69,7 @@ class FellAppLoggerController extends LoggerController
     /**
      * Filter by Object Type "FellowshipApplication" and Object ID
      *
-     * @Route("/application-log/{id}", name="fellapp_application_log")
-     * @Method("GET")
+     * @Route("/application-log/{id}", name="fellapp_application_log", methods={"GET"})
      * @Template("AppFellAppBundle/Logger/index.html.twig")
      */
     public function applicationLogAction(Request $request,$id) {
@@ -115,8 +114,7 @@ class FellAppLoggerController extends LoggerController
     /**
      * Filter by Object Type "FellowshipApplication" and Object ID
      *
-     * @Route("/event-log-per-object/", name="fellapp_event-log-per-object_log")
-     * @Method("GET")
+     * @Route("/event-log-per-object/", name="fellapp_event-log-per-object_log", methods={"GET"})
      * @Template("AppFellAppBundle/Logger/index.html.twig")
      */
     public function applicationPerObjectLogAction(Request $request) {

@@ -46,7 +46,6 @@ class ListController extends OrderAbstractController
     protected $postPath = null;
 
     //@Method({"GET","POST"}) @Method("GET") //TODO: why method GET does not work for handleRequest https://symfony.com/doc/current/form/action_method.html
-    //@Method("GET")
     /**
      * Lists all entities.
      *
@@ -526,7 +525,6 @@ class ListController extends OrderAbstractController
 
     /**
      * Creates a new entity.
-     * //@Method("POST")
      *
      * @Route("/list/list-manager/", name="platformlistmanager_create", methods={"POST"})
      * @Route("/list/source-systems/", name="sourcesystems_create", methods={"POST"})
@@ -1668,7 +1666,6 @@ class ListController extends OrderAbstractController
     }
     /**
      * Edits an existing entity.
-     * //@Method("PUT")
      *
      *
      * @Route("/list-manager/{id}", name="platformlistmanager_update", methods={"PUT"})
@@ -2154,7 +2151,6 @@ class ListController extends OrderAbstractController
 //     * @Route("/division/new/parent/{pid}", name="divisions_new_with_parent")
 //     * @Route("/service/new/parent/{pid}", name="services_new_with_parent")
 //     * @Route("/service/new/parent/{pid}", name="services_new_with_parent")
-//     * @Method("GET")
 //     * @Template("AppUserdirectoryBundle/ListForm/new.html.twig")
 //     */
 //    public function newNodeWithParentAction(Request $request,$pid)
@@ -3151,7 +3147,6 @@ class ListController extends OrderAbstractController
     /////////////////// DELETE IS NOT USED /////////////////////////
     /**
      * Deletes a entity.
-     * //@Method("DELETE")
      *
      * @Route("/list-manager/{id}", name="platformlistmanager_delete", methods={"DELETE"})
      * @Route("/list/source-systems/{id}", name="sourcesystems_delete", methods={"DELETE"})
@@ -3424,7 +3419,6 @@ class ListController extends OrderAbstractController
     /**
      * Platform List Manager Root List
      * /order/list-manager/list?id=70 => show Roles list (assuming that listName=Roles == listId=70)
-     * //@Method("GET")
      *
      * @Route("/list-manager/id/{listId}", name="platform_list_manager", methods={"GET"})
      *

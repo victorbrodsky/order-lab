@@ -43,9 +43,10 @@ use App\OrderformBundle\Entity\PatientRecordStatusList;
 use App\OrderformBundle\Entity\ResearchGroupType;
 //use App\OrderformBundle\Entity\SystemAccountRequestType;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -83,8 +84,7 @@ class ScanAdminController extends AdminController
     /**
      * Admin Page
      *
-     * @Route("/lists/", name="admin_index")
-     * @Method("GET")
+     * @Route("/lists/", name="admin_index", methods={"GET"})
      * @Template("AppOrderformBundle/Admin/index.html.twig")
      */
     public function indexAction()
@@ -110,8 +110,7 @@ class ScanAdminController extends AdminController
     /**
      * Admin Page
      *
-     * @Route("/hierarchies/", name="scan_admin_hierarchy_index")
-     * @Method("GET")
+     * @Route("/hierarchies/", name="scan_admin_hierarchy_index", methods={"GET"})
      * @Template("AppOrderformBundle/Admin/hierarchy-index.html.twig")
      */
     public function indexHierarchyAction()
@@ -140,8 +139,7 @@ class ScanAdminController extends AdminController
     /**
      * Populate DB
      *
-     * @Route("/populate-all-lists-with-default-values", name="generate_all")
-     * @Method("GET")
+     * @Route("/populate-all-lists-with-default-values", name="generate_all", methods={"GET"})
      * @Template()
      */
     public function generateAllAction()
@@ -269,8 +267,7 @@ class ScanAdminController extends AdminController
     /**
      * Populate DB
      *
-     * @Route("/populate-stain-list-with-default-values", name="generate_stain")
-     * @Method("GET")
+     * @Route("/populate-stain-list-with-default-values", name="generate_stain", methods={"GET"})
      * @Template()
      */
     public function generateStainAction()
@@ -306,8 +303,7 @@ class ScanAdminController extends AdminController
     /**
      * Populate DB
      *
-     * @Route("/populate-organ-list-with-default-values", name="generate_organ")
-     * @Method("GET")
+     * @Route("/populate-organ-list-with-default-values", name="generate_organ", methods={"GET"})
      * @Template()
      */
     public function generateOrganAction()
@@ -341,8 +337,7 @@ class ScanAdminController extends AdminController
     /**
      * Populate DB
      *
-     * @Route("/populate-procedure-types-list-with-default-values", name="generate_procedure")
-     * @Method("GET")
+     * @Route("/populate-procedure-types-list-with-default-values", name="generate_procedure", methods={"GET"})
      * @Template()
      */
     public function generateProcedureAction()
@@ -377,8 +372,7 @@ class ScanAdminController extends AdminController
 //    /**
 //     * Populate DB
 //     *
-//     * @Route("/genpathservice", name="generate_pathservice")
-//     * @Method("GET")
+//     * @Route("/genpathservice", name="generate_pathservice", methods={"GET"})
 //     * @Template()
 //     */
 //    public function generatePathServiceAction()
@@ -409,8 +403,7 @@ class ScanAdminController extends AdminController
     /**
      * Populate DB
      *
-     * @Route("/genslidetype", name="generate_slidetype")
-     * @Method("GET")
+     * @Route("/genslidetype", name="generate_slidetype", methods={"GET"})
      * @Template()
      */
     public function generateSlideTypeAction()
@@ -441,8 +434,7 @@ class ScanAdminController extends AdminController
     /**
      * Populate DB
      *
-     * @Route("/genmrntype", name="generate_mrntype")
-     * @Method("GET")
+     * @Route("/genmrntype", name="generate_mrntype", methods={"GET"})
      * @Template()
      */
     public function generateMrnTypeAction()
@@ -663,8 +655,7 @@ class ScanAdminController extends AdminController
 //    /**
 //     * Remove disabled stains
 //     *
-//     * @Route("/remove-disabled-stains", name="remove-disabled-stains")
-//     * @Method("GET")
+//     * @Route("/remove-disabled-stains", name="remove-disabled-stains", methods={"GET"})
 //     * @Template()
 //     */
 //    public function removeDeactivatedStainsAction() {
@@ -700,8 +691,7 @@ class ScanAdminController extends AdminController
     /**
      * Remove all stains: Danger function: will remove all orders (patients) and stains
      *
-     * @Route("/remove-all-stains", name="remove-all-stains")
-     * @Method("GET")
+     * @Route("/remove-all-stains", name="remove-all-stains", methods={"GET"})
      * @Template()
      */
     public function removeAllOrdersStainsAction() {
@@ -2430,12 +2420,10 @@ class ScanAdminController extends AdminController
     ////////////////// Scan Tree Util //////////////////////
     //to initialize JS, add "getJstree('OrderformBundle','MessageCategory');" to formReady.js
     /**
-     * @Route("/list/research-project-titles-tree/", name="scan_tree_researchprojecttitles_list")
-     * @Route("/list/educational-course-titles-tree/", name="scan_tree_educationalcoursetitles_list")
-     * @Route("/list/message-categories-tree/", name="scan_tree_messagecategories_list")
-     * @Route("/list/patient-lists-tree/", name="scan_tree_patientlisthierarchy_list")
-     *
-     * @Method("GET")
+     * @Route("/list/research-project-titles-tree/", name="scan_tree_researchprojecttitles_list", methods={"GET"})
+     * @Route("/list/educational-course-titles-tree/", name="scan_tree_educationalcoursetitles_list", methods={"GET"})
+     * @Route("/list/message-categories-tree/", name="scan_tree_messagecategories_list", methods={"GET"})
+     * @Route("/list/patient-lists-tree/", name="scan_tree_patientlisthierarchy_list", methods={"GET"})
      */
     public function institutionTreeAction(Request $request)
     {
@@ -2506,8 +2494,7 @@ class ScanAdminController extends AdminController
      * replace the old prefix NOENCOUNTERIDPROVIDED with a new prefix AUTOGENERATEDENCOUNTERID
      * http://localhost/order/scan/admin/fix-autogenerated-id/
      *
-     * @Route("/fix-autogenerated-id/", name="scan_admin_fix-autogenerated-id")
-     * @Method("GET")
+     * @Route("/fix-autogenerated-id/", name="scan_admin_fix-autogenerated-id", methods={"GET"})
      */
     public function fixAutogeneratedIdAction()
     {
