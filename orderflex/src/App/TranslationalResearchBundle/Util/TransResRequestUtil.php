@@ -139,6 +139,70 @@ class TransResRequestUtil
         return $subTotal;
     }
 
+    public function getTransResRequestProductInfoArr( $request ) {
+        $subTotal = 0;
+        $totalProducts = 0;
+        $productInfoArr = array();
+
+        foreach($request->getProducts() as $product) {
+            $requested = $product->getRequested();
+            $completed = $product->getCompleted();
+
+            $categoryStr = NULL;
+            $category = $product->getCategory();
+            if( $category ) {
+                $categoryStr = $category->getShortInfo();
+            }
+
+            $comment = $product->getComment();
+            $note = $product->getNote();
+            //echo "requested=$requested <br>";
+            $fee = 0;
+            $units = 0;
+            if( $category ) {
+                $fee = $category->getFee();
+            }
+            if( $requested ) {
+                $units = intval($requested);
+            }
+            if( $completed ) {
+                $units = intval($completed);
+            }
+            //echo "units=$units; fee=$fee <br>";
+            if( $fee && $units ) {
+                $subTotal = $subTotal + ($units * intval($fee));
+            }
+
+//            'productRequested' => $requested,
+//            'productCompleted' => $completed,
+//            'productCategory' => $category,
+//            'productComment' => $comment,
+//            'productNote' => $note,
+            $productInfoArr[] = array(
+                'productRequested' => $requested,
+                'productCompleted' => $completed,
+                'productCategory' => $categoryStr,
+                'productComment' => $comment,
+                'productNote' => $note
+            );
+
+            $totalProducts++;
+        }
+
+        $res = array(
+            'totalProducts' => $totalProducts,
+            'totalFee' => $subTotal,
+            'productInfoArr' => $productInfoArr
+//            'productRequested' => $requested,
+//            'productCompleted' => $completed,
+//            'productCategory' => $category,
+//            'productComment' => $comment,
+//            'productNote' => $note,
+        );
+
+        return $res;
+    }
+
     //NOT USED
     public function getTransResRequestFormnodeFeeHtml( $request ) {
 
@@ -4087,6 +4151,272 @@ class TransResRequestUtil
         $data[10] = $totalTotal;
         $data[11] = $paidTotal;
         $data[12] = $dueTotal;
+        //$writer->addRowWithStyle($data,$footerStyle);
+        $spoutRow = WriterEntityFactory::createRowFromArray($data, $footerStyle);
+        $writer->addRow($spoutRow);
+
+        $writer->close();
+    }
+
+
+    public function createtWorkRequestCsvSpout( $ids, $fileName, $limit=null ) {
+        //$writer = WriterFactory::create(Type::XLSX); //cell type can not be set in xlsx
+        //$writer = WriterFactory::create(Type::CSV);
+        $writer = WriterEntityFactory::createCSVWriter();
+        $writer->openToBrowser($fileName);
+
+        $headerStyle = (new StyleBuilder())
+            ->setFontBold()
+            //->setFontItalic()
+            ->setFontSize(12)
+            ->setFontColor(Color::BLACK)
+            ->setShouldWrapText()
+            ->setBackgroundColor(Color::toARGB("E0E0E0"))
+            ->build();
+
+        $regularStyle = (new StyleBuilder())
+            ->setFontSize(10)
+            //->setShouldWrapText()
+            ->build();
+
+        $border = (new BorderBuilder())
+            ->setBorderBottom(Color::GREEN, Border::WIDTH_THIN, Border::STYLE_DASHED)
+            ->build();
+        $footerStyle = (new StyleBuilder())
+            ->setFontBold()
+            //->setFontItalic()
+            ->setFontSize(12)
+            ->setFontColor(Color::BLACK)
+            ->setShouldWrapText()
+            ->setBackgroundColor(Color::toARGB("EBF1DE"))
+            ->setBorder($border)
+            ->build();
+
+        $spoutRow = WriterEntityFactory::createRowFromArray(
+            [
+                'Work Request ID',                          //0 - A
+                'Submitter',                                //1 - B
+                'Submitted',                                //2 - C
+                'Fund Number',                              //3 - D
+                'Completion Status',                        //4 - E
+                'Billing Status',                           //5 - F
+                'Total Fees (Total Work Request Fee)',      //6 - G
+                'Invoices',                                 //7 - H
+                'Invoice Status',                           //8 - I
+                'Invoice Total (Total Amount of the most recent issued Invoice)',                            //9 - J
+                'Invoice Paid',                             //10 - K
+                'Invoice Due',                              //11 - L
+
+                'Products/Services Category',               //12 - M
+                "Requestd Quantity",                        //13
+                "Completed Quantity",                       //14
+                "Comment",                                  //15
+                "Note (TRP tech)"                           //16
+            ],
+            $headerStyle
+        );
+        $writer->addRow($spoutRow);
+
+        $count = 0;
+        $countRequest = 0;
+        $countInvoices = 0;
+        $totalTotalFees = 0;
+        $totalInvoiceFees = 0;
+        $paidTotal = 0;
+        $dueTotal = 0;
+        $productServices = 0;
+
+        foreach( $ids as $requestId ) {
+
+            if( $limit && ($count++ > $limit) ) {
+                break;
+            }
+
+            $transResRequest = $this->em->getRepository('AppTranslationalResearchBundle:TransResRequest')->find($requestId);
+            if( !$transResRequest ) {
+                continue;
+            }
+
+            $countRequest++;
+
+            $data = array();
+
+            $data[0] = $transResRequest->getOid();
+
+            $data[1] = $transResRequest->getSubmitter();
+
+            $createdDateStr = NULL;
+            $createdDate = $transResRequest->getCreateDate();
+            if( $createdDate ) {
+                $createdDateStr = $createdDate->format('m/d/Y');
+            }
+            $data[2] = $createdDateStr;
+
+            $data[3] = $transResRequest->getFundedAccountNumber();
+
+            $data[4] = $this->getProgressStateLabelByName($transResRequest->getProgressState());
+
+            $data[5] = $this->getBillingStateLabelByName($transResRequest->getProgressState());
+
+            $productInfoArr = $this->getTransResRequestProductInfoArr($transResRequest);
+//                'totalProducts' => $totalProducts,
+//                'totalFee' => $subTotal,
+//                'productRequested' => $requested,
+//                'productCompleted' => $completed,
+//                'productCategory' => $category,
+//                'productComment' => $comment,
+//                'productNote' => $note,
+
+            //            'Total Fees',                       //6 - G
+            $totalFee = $productInfoArr['totalFee'];
+            $data[6] = $totalFee;
+            $totalTotalFees = $totalTotalFees + $totalFee;
+
+//            'Invoices',                         //7 - H
+            $invoiceCount = 0;
+            $invoices = $transResRequest->getInvoices();
+            if( $invoices ) {
+                $invoiceCount = count($invoices);
+            }
+            $countInvoices = $countInvoices + $invoiceCount;
+            $data[7] = $invoiceCount;
+            
+//            'Invoice Status',                   //8 - I
+            $status = NULL;
+            $latestInvoice = $this->getLatestInvoice($transResRequest);
+            if( $latestInvoice && $latestInvoice->getOid() ) {
+                $status = $latestInvoice->getStatus();
+            }
+            $data[8] = $status;
+
+//            'Invoice Total',                    //9 - J
+            $invoicesInfos = $this->getInvoicesInfosByRequest($transResRequest);
+//            $invoicesInfos['count'] = $count;
+//            $invoicesInfos['total'] = $total;
+//            $invoicesInfos['paid'] = $paid;
+//            $invoicesInfos['due'] = $due;
+            $invoiceFees = $invoicesInfos['total'];
+            $data[9] = $invoiceFees;
+            $totalInvoiceFees = $totalInvoiceFees + $invoiceFees;
+
+//            'Invoice Paid',                     //10 - K
+            $data[10] = $invoicesInfos['paid'];
+            $paidTotal = $paidTotal + $invoicesInfos['paid'];
+
+//            'Invoice Due',                      //11 - L
+            $data[11] = $invoicesInfos['due'];
+            $dueTotal = $dueTotal + $invoicesInfos['due'];
+
+//            'Products/Services',                //12 - M
+//                'totalProducts' => $totalProducts,
+//                'totalFee' => $subTotal,
+//                'productRequested' => $requested,
+//                'productCompleted' => $completed,
+//                'productCategory' => $category,
+//                'productComment' => $comment,
+//                'productNote' => $note,
+
+            $productArr = $productInfoArr['productInfoArr'];
+            $productServices = $productServices + $productInfoArr['totalProducts'];
+            if( $productInfoArr['totalProducts'] > 0 ) {
+                $productData = array();
+                $productData[0] = null;
+                $productData[1] = null;
+                $productData[2] = null;
+                $productData[3] = null;
+                $productData[4] = null;
+                $productData[5] = null;
+                $productData[6] = null;
+                $productData[7] = null;
+                $productData[8] = null;
+                $productData[9] = null;
+                $productData[10] = null;
+                $productData[11] = null;
+                $productData[12] = null;
+
+                $productData[13] = "Product or Service";
+                $productData[14] = "Requestd Quantity";
+                $productData[15] = "Completed Quantity";
+                $productData[16] = "Comment";
+                $productData[17] = "Note (TRP tech)";
+
+//                'Products/Services Category',               //12 - M
+//                "Requestd Quantity",                        //13
+//                "Completed Quantity",                       //14
+//                "Comment",                                  //15
+//                "Note (TRP tech)"                           //16
+
+                //$writer->addRowWithStyle($data,$footerStyle);
+                //$productSpoutRow = WriterEntityFactory::createRowFromArray($productData, $footerStyle);
+                //$writer->addRow($productSpoutRow);
+
+                foreach( $productArr as $productInfo ) {
+//                    $productInfoArr[] = array(
+//                        'productRequested' => $requested,
+//                        'productCompleted' => $completed,
+//                        'productCategory' => $category,
+//                        'productComment' => $comment,
+//                        'productNote' => $note
+//                    );
+
+                    $thisProductData = array();
+                    $thisProductData[0] = null;
+                    $thisProductData[1] = null;
+                    $thisProductData[2] = null;
+                    $thisProductData[3] = null;
+                    $thisProductData[4] = null;
+                    $thisProductData[5] = null;
+                    $thisProductData[6] = null;
+                    $thisProductData[7] = null;
+                    $thisProductData[8] = null;
+                    $thisProductData[9] = null;
+                    $thisProductData[10] = null;
+                    $thisProductData[11] = null;
+
+                    $thisProductData[12] = $productInfo["productCategory"]; //"Product or Service";
+                    $thisProductData[13] = $productInfo["productRequested"]; //"Requestd Quantity";
+                    $thisProductData[14] = $productInfo["productCompleted"]; //"Completed Quantity";
+                    $thisProductData[15] = $productInfo["productComment"]; //"Comment";
+                    $thisProductData[16] = $productInfo["productNote"]; //"Note (TRP tech)";
+
+                    $thisProductSpoutRow = WriterEntityFactory::createRowFromArray($thisProductData, $regularStyle);
+                    $writer->addRow($thisProductSpoutRow);
+
+                }
+
+            } else {
+                $data[12] = NULL;
+                $data[13] = NULL;
+                $data[14] = NULL;
+                $data[15] = NULL;
+                $data[16] = NULL;
+            }
+
+
+            //$writer->addRowWithStyle($data,$regularStyle);
+            $spoutRow = WriterEntityFactory::createRowFromArray($data, $regularStyle);
+            $writer->addRow($spoutRow);
+
+        }//invoices
+
+        $data = array();
+        $data[0] = "Total Number of Work Requests";
+        $data[1] = $countRequest;
+        $data[2] = null;
+        $data[3] = null;
+        $data[4] = null;
+        $data[5] = null;
+        $data[6] = $totalInvoiceFees;
+        $data[7] = $countInvoices;
+        $data[8] = null;
+        $data[9] = null;
+        $data[10] = $paidTotal;
+        $data[11] = $dueTotal;
+        $data[12] = $productServices;
+        $data[13] = NULL;
+        $data[14] = NULL;
+        $data[15] = NULL;
+        $data[16] = NULL;
         //$writer->addRowWithStyle($data,$footerStyle);
         $spoutRow = WriterEntityFactory::createRowFromArray($data, $footerStyle);
         $writer->addRow($spoutRow);

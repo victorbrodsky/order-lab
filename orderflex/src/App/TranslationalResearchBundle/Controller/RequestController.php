@@ -1991,11 +1991,11 @@ class RequestController extends OrderAbstractController
             //echo "allFilteredTransresRequests=".count($allFilteredTransresRequests)."<br>";
             //$allGlobalRequests = $em->getRepository('AppTranslationalResearchBundle:TransResRequest')->findAll();
             //$title = $title . " (Matching " . count($allTransresRequests) . ", Total " . count($allGlobalRequests) . ")";
-            $allTransresRequests = $transresUtil->getTotalRequestCountByDqlParameters($dql,$dqlParameters);
+            //$allTransresRequests = $transresUtil->getTotalRequestCountByDqlParameters($dql,$dqlParameters);
+            $matchingStrWorkRequestIds = $transresUtil->getMatchingRequestArrByDqlParameters($dql,$dqlParameters);
+            $allTransresRequests = count($matchingStrWorkRequestIds);
 
-            //$matchingStrInvoiceStr = $matchingStrWorkRequest['resultStr'];
-            //$matchingStrWorkRequestIds = $matchingStrWorkRequest['ids'];
-            $matchingStrWorkRequestIds = array(1,2,3);
+            //$matchingStrWorkRequestIds = array(1,2,3);
             
             $allGlobalRequests = $transresUtil->getTotalRequestCount();
             $title = $title . " (Matching " . $allTransresRequests . ", Total " . $allGlobalRequests . $requestTotalFeeHtml . ")";
@@ -2097,8 +2097,6 @@ class RequestController extends OrderAbstractController
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
-        exit('not implemented yet');
-
         $transresRequestUtil = $this->get('transres_request_util');
 
         $ids = $request->request->get('ids');
@@ -2109,9 +2107,9 @@ class RequestController extends OrderAbstractController
         $idsArr = array_reverse($idsArr);
 
         //$fileName = "Invoices".".xlsx"; //cell type can not be set in xlsx
-        $fileName = "Invoices".".csv";
+        $fileName = "WorkRequests".".csv";
 
-        $transresRequestUtil->createtInvoicesCsvSpout( $idsArr, $fileName );
+        $transresRequestUtil->createtWorkRequestCsvSpout( $idsArr, $fileName );
 
         exit();
     }
