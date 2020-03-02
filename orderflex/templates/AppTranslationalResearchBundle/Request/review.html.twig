@@ -148,14 +148,12 @@
 
         var tableFormCycle = '{{ cycle }}';
         if( tableFormCycle != "new" ) {
-            //var _handsometableDataArr = {{ handsometableData|json_encode|raw }};
-            //handsonTableInit(_handsometableDataArr, tableFormCycle);
 
             getComboboxAccessionType(null,true);
 
             var _handsometableDataArr = {{ handsometableData|json_encode|raw }};
-            console.log('init _handsometableDataArr:');
-            console.log(_handsometableDataArr);
+            //console.log('init _handsometableDataArr:');
+            //console.log(_handsometableDataArr);
 
             //handsonTableInit(_handsometableDataArr, tableFormCycle);
 

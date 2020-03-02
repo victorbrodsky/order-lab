@@ -2342,7 +2342,7 @@ class RequestController extends OrderAbstractController
             'cycle' => $cycle,
             'statMachineType' => 'progress',
             'title' => "Completion Progress Status Update for Work Request ".$transresRequest->getOid(),
-            'handsometableData' => $jsonData
+            'handsometableData' => $jsonData //Error in twig: var _handsometableDataArr = {{ handsometableData|json_encode|raw }}; => Variable "handsometableData" does not exist.
         );
     }
 
@@ -2381,6 +2381,9 @@ class RequestController extends OrderAbstractController
         $msg = "Request ".$transresRequest->getOid() ." has been viewed on the billing review page.";
         $transresUtil->setEventLog($transresRequest,$eventType,$msg);
 
+        //get Table $jsonData
+        $jsonData = $this->getTableData($transresRequest);
+
         return array(
             'transresRequest' => $transresRequest,
             'project' => $transresRequest->getProject(),
@@ -2388,6 +2391,8 @@ class RequestController extends OrderAbstractController
             'cycle' => $cycle,
             'statMachineType' => 'billing',
             'title' => "Billing Progress Status Update for Work Request ".$transresRequest->getOid(),
+            'handsometableData' => $jsonData //Error in twig: var _handsometableDataArr = {{ handsometableData|json_encode|raw }}; => Variable "handsometableData" does not exist.
+
         );
     }
 
