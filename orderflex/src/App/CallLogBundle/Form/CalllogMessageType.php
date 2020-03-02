@@ -150,7 +150,7 @@ class CalllogMessageType extends AbstractType
                 'prototype_name' => '__accession__',
             ));
         }
-        if(1) {
+        if(0) {
             //As not-mapped accession type and number
             $builder->add( 'accessionType', EntityType::class, array(
                 'class' => 'AppOrderformBundle:AccessionType',
