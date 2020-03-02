@@ -589,6 +589,12 @@ function findCalllogPatient(holderId,formtype,mrntype,mrn) {
     var email = holder.find(".patient-email").val();
     email = trimWithCheck(email);
 
+    var accessionnumber = holder.find(".accessionnumber-mask").val();
+    accessionnumber = trimWithCheck(accessionnumber);
+
+    var accessiontype = holder.find(".accessiontype").select2('val');
+    accessiontype = trimWithCheck(accessiontype);
+
     //console.log('mrntype='+mrntype+", mrn="+mrn+", dob="+dob+", lastname="+lastname+", firstname="+firstname);
 
     if( email ) {
@@ -616,7 +622,7 @@ function findCalllogPatient(holderId,formtype,mrntype,mrn) {
         }
     }
 
-    if( mrn && mrntype || dob && lastname || dob && lastname && firstname || lastname  || phone || email ) {
+    if( mrn && mrntype || accessionnumber && accessiontype || dob && lastname || dob && lastname && firstname || lastname  || phone || email ) {
         var andSearchStr = "";
         if( phone ) {
             andSearchStr = andSearchStr + " Phone: " + phone;
@@ -627,6 +633,9 @@ function findCalllogPatient(holderId,formtype,mrntype,mrn) {
         //ok
         if( !searchedStr && mrn && mrntype ) {
             searchedStr = " (searched for MRN Type: "+holder.find(".mrntype-combobox").select2('data').text+"; MRN: "+mrn;
+        }
+        if( !searchedStr && accessionnumber && accessiontype ) {
+            searchedStr = " (searched for Accession Type: "+holder.find(".accessiontype").select2('data').text+"; Accession Number: "+accessionnumber;
         }
         if( !searchedStr && dob && lastname ) {
             var firstnameStr = "";
@@ -663,14 +672,14 @@ function findCalllogPatient(holderId,formtype,mrntype,mrn) {
     } else {
         //holder.find('#calllog-danger-box').html("Please enter at least an MRN or Last Name and Date of Birth.");
         //holder.find('#calllog-danger-box').html("Please enter at least an MRN or Last Name.");
-        holder.find('#calllog-danger-box').html("Please enter at least an MRN, Last Name, Date of Birth, Patient's Phone or Email.");
+        holder.find('#calllog-danger-box').html("Please enter at least an MRN, Last Name, Date of Birth, Patient's Phone, Email or Accession.");
         holder.find('#calllog-danger-box').show(_transTime);
         calllogStopBtn(lbtn);
         return false;
     }
 
     var singleMatch = false;
-    if( (mrn && mrntype) || (dob && lastname) ) {
+    if( (mrn && mrntype) || (accessionnumber && accessiontype) || (dob && lastname) ) {
         singleMatch = true;
     }
 
@@ -685,7 +694,7 @@ function findCalllogPatient(holderId,formtype,mrntype,mrn) {
         url: url,
         timeout: _ajaxTimeout,
         async: true,
-        data: {mrntype: mrntype, mrn: mrn, dob: dob, lastname: lastname, firstname: firstname, phone: phone, email: email, formtype: formtype, metaphone: metaphone },
+        data: {mrntype: mrntype, mrn: mrn, accessionnumber: accessionnumber, accessiontype: accessiontype, dob: dob, lastname: lastname, firstname: firstname, phone: phone, email: email, formtype: formtype, metaphone: metaphone },
     }).success(function(resData) {
         var dataOk = false;
         var data = resData.patients;

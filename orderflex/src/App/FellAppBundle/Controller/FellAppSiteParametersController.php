@@ -94,7 +94,7 @@ class FellAppSiteParametersController extends SiteParametersController
     /**
      * FellAppSiteParameter
      *
-     * @Route("/specific-site-parameters/edit/", name="fellapp_siteparameters_edit_specific_site_parameters", methods={"GET","POST"})
+     * @Route("/specific-site-parameters/edit-page/", name="fellapp_siteparameters_edit_specific_site_parameters", methods={"GET","POST"})
      * @Template("AppFellAppBundle/SiteParameter/edit.html.twig")
      */
     public function fellappSiteParameterEditAction( Request $request ) {
@@ -110,7 +110,7 @@ class FellAppSiteParametersController extends SiteParametersController
         $form = $this->createFellAppSiteParameterForm($fellappSiteParameter,$cycle);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if( $form->isSubmitted() && $form->isValid() ) {
             $em = $this->getDoctrine()->getManager();
 
             //exit('submit');

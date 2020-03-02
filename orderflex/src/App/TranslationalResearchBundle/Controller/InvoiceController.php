@@ -65,6 +65,8 @@ class InvoiceController extends OrderAbstractController
         $startCreateDate = NULL;
         $idSearch = NULL;
         $status = NULL;
+        $startDate = NULL;
+        $endDate = NULL;
 
         $repository = $em->getRepository('AppTranslationalResearchBundle:Invoice');
         $dql =  $repository->createQueryBuilder("invoice");

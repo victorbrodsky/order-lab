@@ -126,7 +126,16 @@ class CalllogSiteParameter
      */
     private $enableDocumentUpload;
 
-
+    /**
+     * @ORM\ManyToOne(targetEntity="App\OrderformBundle\Entity\AccessionType", cascade={"persist"})
+     */
+    private $defaultAccessionType;
+    
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $defaultAccessionPrefix;
+    
 
     public function __construct() {
         $this->setEnableDocumentUpload(true);
@@ -358,5 +367,40 @@ class CalllogSiteParameter
         $this->enableDocumentUpload = $enableDocumentUpload;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getDefaultAccessionType()
+    {
+        return $this->defaultAccessionType;
+    }
+
+    /**
+     * @param mixed $defaultAccessionType
+     */
+    public function setDefaultAccessionType($defaultAccessionType)
+    {
+        $this->defaultAccessionType = $defaultAccessionType;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDefaultAccessionPrefix()
+    {
+        return $this->defaultAccessionPrefix;
+    }
+
+    /**
+     * @param mixed $defaultAccessionPrefix
+     */
+    public function setDefaultAccessionPrefix($defaultAccessionPrefix)
+    {
+        $this->defaultAccessionPrefix = $defaultAccessionPrefix;
+    }
+
+    
+
+    
 
 }

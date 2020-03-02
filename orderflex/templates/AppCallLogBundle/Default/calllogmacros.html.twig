@@ -273,17 +273,21 @@
                     {{ formmacros.field(form.email) }}
                 </div>
 
-                {% if messageForm is defined and messageForm.accession is defined %}
-                    {#{% for encounter in form.encounter %}#}
-                        {#{% for procedure in encounter.procedure %}#}
-                            {% for accession in messageForm.accession %}
-                                    {% for accessionaccession in accession.accession %}
-                                        {{ formmacros.field(accessionaccession.keytype) }}
-                                        {{ formmacros.field(accessionaccession.field) }}
-                                    {% endfor %}
-                            {% endfor %}
-                        {#{% endfor %}#}
+                {#{% if messageForm is defined and messageForm.accession is defined %}#}
+                    {#{% for accession in messageForm.accession %}#}
+                            {#{% for accessionaccession in accession.accession %}#}
+                                {#{{ formmacros.field(accessionaccession.keytype) }}#}
+                                {#{{ formmacros.field(accessionaccession.field) }}#}
+                            {#{% endfor %}#}
                     {#{% endfor %}#}
+                {#{% endif %}#}
+                {% if messageForm is defined %}
+                    {% if messageForm.accessionType is defined %}
+                        {{ formmacros.field(messageForm.accessionType) }}
+                    {% endif %}
+                    {% if messageForm.accessionNumber is defined %}
+                        {{ formmacros.field(messageForm.accessionNumber) }}
+                    {% endif %}
                 {% endif %}
 
                 {% if readonlyEncounter %}

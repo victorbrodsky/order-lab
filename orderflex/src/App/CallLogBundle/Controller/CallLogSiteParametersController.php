@@ -67,7 +67,7 @@ class CallLogSiteParametersController extends SiteParametersController
      */
     public function editAction(Request $request, $id)
     {
-        //exit("calllog editAction");
+        //exit("calllog editAction id=".$id);
         return $this->editParameters($request,$id,'ROLE_CALLLOG_PATHOLOGY_ATTENDING');
     }
 
@@ -112,10 +112,12 @@ class CallLogSiteParametersController extends SiteParametersController
     /**
      * CalllogSiteParameter
      *
-     * @Route("/specific-site-parameters/edit/", name="calllog_siteparameters_edit_specific_site_parameters", methods={"GET", "POST"})
+     * @Route("/specific-site-parameters/edit-page/", name="calllog_siteparameters_edit_specific_site_parameters", methods={"GET", "POST"})
      * @Template("AppCallLogBundle/SiteParameter/edit.html.twig")
      */
     public function calllogSiteParameterEditAction( Request $request ) {
+
+        //exit('calllogSiteParameterEditAction');
 
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_CALLLOG_PATHOLOGY_ATTENDING') ) {
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
@@ -129,7 +131,7 @@ class CallLogSiteParametersController extends SiteParametersController
         $form = $this->createCalllogSiteParameterForm($calllogSiteParameter,$cycle);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if( $form->isSubmitted() && $form->isValid() ) {
             $em = $this->getDoctrine()->getManager();
 
             //exit('submit');

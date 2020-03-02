@@ -18,12 +18,14 @@
 
     <h4 class="text-info" align="center">
         {{ title|raw }}
-        <label
-            for="download-spreadsheet-form" tabindex="0"
-            data-toggle="tooltip"
-            title="Download the spreadsheet with matching work requests">
-            <span class="fa fa-file-excel-o" aria-hidden="true"></span>
-        </label>
+        {% if matchingStrWorkRequestIds %}
+            <label
+                for="download-spreadsheet-form" tabindex="0"
+                data-toggle="tooltip"
+                title="Download the spreadsheet with matching work requests">
+                <span class="fa fa-file-excel-o" aria-hidden="true"></span>
+            </label>
+        {% endif %}
     </h4>
 
     <form action="{{ path('translationalresearch_download_request_spreadsheet') }}" method="post">

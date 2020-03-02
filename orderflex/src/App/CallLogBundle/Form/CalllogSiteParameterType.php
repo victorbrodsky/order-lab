@@ -78,6 +78,29 @@ class CalllogSiteParameterType extends AbstractType
             },
         ));
 
+        $builder->add('defaultAccessionType', EntityType::class, array(
+            'class' => 'AppOrderformBundle:AccessionType',
+            'choice_label' => 'name',
+            'label' => 'Default Accession Type:',
+            'required'=> false,
+            //'multiple' => false,
+            'attr' => array('class'=>'combobox'),
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->where("list.type = :typedef OR list.type = :typeadd")
+                    ->orderBy("list.orderinlist","ASC")
+                    ->setParameters( array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                    ));
+            },
+        ));
+
+        $builder->add('defaultAccessionPrefix', null, array(
+            'label' => 'Default Accession Prefix:',
+            'attr' => array('class' => 'form-control geo-field-county')
+        ));
+
         $builder->add('city', null, array(
             'label' => 'City:',
             'required' => false,

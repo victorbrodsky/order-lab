@@ -134,6 +134,7 @@ class CalllogMessageType extends AbstractType
         //}
 
         if(0) {
+            //As object
             $builder->add('accession', CollectionType::class, array(
                 'entry_type' => CalllogAccessionType::class,
                 'entry_options' => array(
@@ -147,6 +148,34 @@ class CalllogMessageType extends AbstractType
                 'by_reference' => false,
                 'prototype' => true,
                 'prototype_name' => '__accession__',
+            ));
+        }
+        if(1) {
+            //As not-mapped accession type and number
+            $builder->add( 'accessionType', EntityType::class, array(
+                'class' => 'AppOrderformBundle:AccessionType',
+                //'choice_label' => 'name',
+                'label' => 'Accession Type:',
+                'required' => false,
+                'multiple' => false,
+                'mapped' => false,
+                'data' => $this->params['defaultAccessionType'],
+                'attr' => array('class' => 'combobox combobox-width accessiontype'),
+                'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.orderinlist","ASC")
+                        ->setParameters( array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
+            ));
+            $builder->add('accessionNumber', null, array(
+                'label' => 'Accession Number:',
+                'required' => false,
+                'mapped' => false,
+                'attr' => array('class' => 'form-control keyfield accessionnumber-mask')
             ));
         }
 

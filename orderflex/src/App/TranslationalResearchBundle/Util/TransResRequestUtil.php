@@ -4228,6 +4228,10 @@ class TransResRequestUtil
 
         foreach( $ids as $requestId ) {
 
+            if( !$requestId ) {
+                continue;
+            }
+
             if( $limit && ($count++ > $limit) ) {
                 break;
             }

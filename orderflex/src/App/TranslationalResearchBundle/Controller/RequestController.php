@@ -2092,7 +2092,7 @@ class RequestController extends OrderAbstractController
     /**
      * @Route("/download-spreadsheet/", name="translationalresearch_download_request_spreadsheet", methods={"POST"})
      */
-    public function downloadInvoicesCsvAction( Request $request ) {
+    public function downloadRequestsCsvAction( Request $request ) {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
@@ -2102,6 +2102,10 @@ class RequestController extends OrderAbstractController
         $ids = $request->request->get('ids');
         //echo "ids=".$ids."<br>";
         //exit('111');
+
+        if( !$ids ) {
+            exit("No work requests found");
+        }
 
         $idsArr = explode('-', $ids);
         $idsArr = array_reverse($idsArr);
