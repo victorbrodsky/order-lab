@@ -650,7 +650,8 @@ class UserSecurityUtil {
         //$logger->notice("usersec: timezone=".date_default_timezone_get());
 
         $em->persist($eventLog);
-        $em->flush($eventLog);
+//        $em->flush($eventLog);
+        $em->flush();
 
         if( $saveEventObjectType ) {
             $em->flush($eventObjectType);
